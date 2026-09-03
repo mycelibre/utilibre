@@ -1,8 +1,42 @@
 # Test record and verification guide
 
-Infrastructure baseline: 2026-08-30. The upstream-FOSS-only cutover requires a
-fresh release regression; older results below are retained only as dated
-historical evidence.
+Infrastructure baseline: 2026-08-30. The upstream-FOSS-only cutover completed
+the fresh release regression recorded below; older results are retained only
+as dated historical evidence.
+
+## 2026-09-03 upstream-FOSS-only release regression
+
+Commit `c354cbec4b31b1debb12fab236b2f01f372da941` was built, published, and
+deployed by recreating only the portal container. The release checks produced
+the following results:
+
+- the production-included FOSS policy gate accepted 16 catalog records and
+  kept all 31 retired route pairs blocked;
+- ESLint and TypeScript completed without errors; the SearXNG pagination and
+  query-redaction regressions passed; Vitest passed 48/48 tests across eight
+  files; and npm reported zero known vulnerabilities;
+- Playwright passed 48/48 applicable desktop/mobile tests; 12 explicitly
+  live-only private-preview checks were skipped in the loopback run;
+- the launch validator and Compose model passed, as did all 27 secret-free
+  configuration-validator tests;
+- the production Docker build ran the policy gate inside its build context and
+  produced a 56.6 MB portal image;
+- through the public HTTPS edge, all 62 English/Spanish retired URLs and six
+  representative method/path combinations in the former developer namespace
+  returned 404; four catalog routes and the exact published source revision
+  responded correctly;
+- a live browser check found the same 14 launchable records in English and
+  Spanish, confirmed every catalog launch uses a separate tab with opener
+  isolation, and found no horizontal overflow at 375 CSS pixels; and
+- the public status endpoint reported all 13 configured upstream applications
+  operational at the time of the check. This is a point-in-time result, not an
+  uptime claim.
+
+The Impeccable source detector and rendered desktop/mobile checks had no
+remaining findings after line-height and long-line-width corrections. The
+`cream-palette` detector rule has one narrow documented exception for the
+selected Useful Field Ledger paper surface; no other finding was suppressed or
+left standing.
 
 ## Historical 2026-09-03 frontend release regression (superseded)
 
