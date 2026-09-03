@@ -1,0 +1,43 @@
+.env
+.env.*
+!.env.example
+node_modules/
+portal/node_modules/
+portal/dist/
+portal/public/vendor/
+portal/playwright-report/
+portal/test-results/
+coverage/
+__pycache__/
+*.py[cod]
+backups/
+runtime/
+data/anubis/
+config/searxng/limiter.toml
+secrets/*
+!secrets/README.md
+**/secrets/*
+!**/secrets/README.md
+deployment/utilibre/data/
+deployment/utilibre/.env
+# Operational reports can contain host inventory, generated topics, owner
+# bootstrap material, or before-change snapshots. Publish only reports that
+# have been deliberately curated and named here.
+deployment/utilibre/reports/*
+!deployment/utilibre/reports/browser-acceptance.md
+deployment/utilibre/compose.yaml.before-*
+*.log
+*.pid
+*.swp
+.DS_Store
+
+# Local agent tooling and generated design-review artifacts are not part of
+# the application source or deployment. Keep the final design contract and
+# surface brief, but omit session state, vendored skills, mocks, and captures.
+.agents/
+.codex/
+skills-lock.json
+.impeccable/*
+!.impeccable/design.json
+!.impeccable/surfaces/
+!.impeccable/surfaces/**

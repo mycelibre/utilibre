@@ -1,0 +1,310 @@
+# Utilibre application routes
+#
+# Additive fragment for the existing edge Caddyfile. It does not replace the
+# utilibre.org block. It includes exact-host routes for Cobalt's tunnel,
+# SearXNG, Redlib, and the ten additional applications. If an exact-host block
+# already exists on the edge, merge it instead of creating a duplicate. The
+# application VM ports listen only on its private address. Set
+# `UTILIBRE_APP_IP` in Caddy's service environment on the edge VM; keep the
+# actual private address out of this public fragment.
+#
+# Before applying:
+#   1. back up the edge Caddyfile;
+#   2. paste these complete site blocks without changing existing blocks;
+#   3. run `caddy fmt --overwrite /path/to/Caddyfile`;
+#   4. run `caddy validate --config /path/to/Caddyfile`;
+#   5. reload Caddy (do not restart it merely to apply this fragment);
+#   6. test both the new routes and the existing Cobalt/SearXNG routes.
+#
+# Cloudflare Network Error Logging was disabled on 2026-09-03, and accepted
+# public responses checked afterward contained neither NEL nor Report-To. Keep
+# both headers absent in release/regression checks. Cloudflare remains the
+# public proxy; Caddy cannot remove a response header added downstream.
+#
+# REQUIRED CLIENT-IP PRECONDITION: on the actual edge, merge the Cloudflare
+# trusted-proxy block documented in docs/edge-routing.md into Caddy's existing
+# global options, verify Caddy >= 2.8, and prove the origin accepts 80/443 only
+# from Cloudflare. The {client_ip} placeholder below is trustworthy only after
+# that peer validation. Without it, it safely remains the direct peer address,
+# but SearXNG users will share limiter buckets by Cloudflare edge/POP.
+
+(utilibre_app_proxy) {
+	encode zstd gzip
+
+	header {
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+	}
+}
+
+(utilibre_proxy_headers) {
+	header_up Host {host}
+	header_up X-Forwarded-Host {host}
+	header_up X-Forwarded-Proto {scheme}
+	# Forward Caddy's peer-validated address, never the raw inbound header.
+	header_up X-Forwarded-For {client_ip}
+	header_up X-Real-IP {client_ip}
+}
+
+media.utilibre.org {
+	@tunnel {
+		method GET
+		path /tunnel
+	}
+
+	handle @tunnel {
+		header {
+			Cache-Control "private, no-store"
+			Referrer-Policy "no-referrer"
+			X-Content-Type-Options "nosniff"
+			X-Robots-Tag "noindex, nofollow, noarchive"
+		}
+
+		reverse_proxy http://{$UTILIBRE_APP_IP}:9000 {
+			import utilibre_proxy_headers
+			transport http {
+				dial_timeout 5s
+				response_header_timeout 60s
+				read_timeout 1h
+				write_timeout 1h
+			}
+		}
+	}
+
+	handle {
+		respond "Not found" 404
+	}
+}
+
+search.utilibre.org {
+	request_body {
+		max_size 64KB
+	}
+
+	header {
+		-Server
+		Referrer-Policy "no-referrer"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		X-Robots-Tag "noindex, nofollow"
+	}
+
+	@private_diagnostics path /config /stats /stats/* /metrics /metrics/*
+	respond @private_diagnostics 404
+
+	@search_non_post {
+		path /search
+		not method POST
+	}
+	respond @search_non_post 405
+
+	reverse_proxy http://{$UTILIBRE_APP_IP}:8888 {
+		import utilibre_proxy_headers
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 20s
+			read_timeout 60s
+			write_timeout 60s
+		}
+	}
+}
+
+redlib.utilibre.org {
+	# Anubis trusts CF-Connecting-IP for its per-visitor challenge state. This is
+	# safe only while this origin is reachable exclusively through Cloudflare.
+	# Do not publish the edge origin directly or accept this header from another
+	# untrusted ingress.
+	request_body {
+		max_size 64KB
+	}
+
+	header {
+		-Server
+		Referrer-Policy "no-referrer"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()"
+		X-Robots-Tag "noindex, nofollow, noarchive"
+	}
+
+	reverse_proxy http://{$UTILIBRE_APP_IP}:3002 {
+		import utilibre_proxy_headers
+		# CVE-class request-target override headers must not cross this boundary.
+		# Anubis 1.27.0 is patched, and these removals are defense in depth.
+		header_up -X-Original-URI
+		header_up -X-Forwarded-Uri
+		header_down -Strict-Transport-Security
+		header_down -Alt-Svc
+		header_down -Via
+		header_down -Reddit-Io-Info
+		header_down -Reddit-Stats
+		header_down -X-Imo-Features
+		header_down -X-Reddit-Ct
+		# Active health originates at Caddy rather than Cloudflare, so provide a
+		# fixed synthetic loopback identity only for that health request.
+		health_uri /info
+		health_status 2xx
+		health_interval 30s
+		health_timeout 5s
+		health_headers {
+			CF-Connecting-IP 127.0.0.1
+		}
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 30s
+			read_timeout 1h
+			write_timeout 1h
+		}
+	}
+}
+
+notify.utilibre.org {
+	import utilibre_app_proxy
+
+	reverse_proxy http://{$UTILIBRE_APP_IP}:2586 {
+		import utilibre_proxy_headers
+		# Avoid buffering ntfy's event streams. Caddy handles WebSocket upgrades
+		# automatically; no manual Connection/Upgrade headers are needed.
+		flush_interval -1
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 30s
+		}
+	}
+}
+
+pdf.utilibre.org {
+	import utilibre_app_proxy
+
+	reverse_proxy http://{$UTILIBRE_APP_IP}:3101 {
+		import utilibre_proxy_headers
+		# BentoPDF already emits isolation headers. Replace them at the proxy
+		# boundary so the browser receives one coherent policy rather than both
+		# the upstream's credentialless value and the public require-corp policy.
+		# Do not replace or weaken BentoPDF's Content-Security-Policy.
+		header_down Cross-Origin-Opener-Policy "same-origin"
+		header_down Cross-Origin-Embedder-Policy "require-corp"
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 30s
+		}
+	}
+}
+
+convert.utilibre.org {
+	import utilibre_app_proxy
+
+	reverse_proxy http://{$UTILIBRE_APP_IP}:3102 {
+		import utilibre_proxy_headers
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 30s
+		}
+	}
+}
+
+tools.utilibre.org {
+	import utilibre_app_proxy
+
+	reverse_proxy http://{$UTILIBRE_APP_IP}:3103 {
+		import utilibre_proxy_headers
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 30s
+		}
+	}
+}
+
+monitor.utilibre.org {
+	import utilibre_app_proxy
+	# Healthchecks pages may contain account and monitoring data.
+	header Cache-Control "private, no-store"
+
+	reverse_proxy http://{$UTILIBRE_APP_IP}:3104 {
+		import utilibre_proxy_headers
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 60s
+		}
+	}
+}
+
+send.utilibre.org {
+	import utilibre_app_proxy
+
+	reverse_proxy http://{$UTILIBRE_APP_IP}:3105 {
+		import utilibre_proxy_headers
+		# Caddy handles PairDrop's WebSocket upgrade automatically.
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 30s
+		}
+	}
+}
+
+rss.utilibre.org {
+	import utilibre_app_proxy
+	# FreshRSS is an authenticated reader; do not let shared caches retain pages.
+	header Cache-Control "private, no-store"
+
+	reverse_proxy http://{$UTILIBRE_APP_IP}:3106 {
+		import utilibre_proxy_headers
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 60s
+		}
+	}
+}
+
+feeds.utilibre.org {
+	import utilibre_app_proxy
+
+	reverse_proxy http://{$UTILIBRE_APP_IP}:3107 {
+		import utilibre_proxy_headers
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 45s
+		}
+	}
+}
+
+paste.utilibre.org {
+	import utilibre_app_proxy
+	# This prevents intermediary caching of encrypted payload responses. It does
+	# not weaken or replace PrivateBin's upstream Content-Security-Policy.
+	header Cache-Control "no-store"
+
+	reverse_proxy http://{$UTILIBRE_APP_IP}:3108 {
+		import utilibre_proxy_headers
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 30s
+		}
+	}
+}
+
+wakapi.utilibre.org {
+	import utilibre_app_proxy
+	# Dashboard and API responses are user-specific.
+	header Cache-Control "private, no-store"
+
+	reverse_proxy http://{$UTILIBRE_APP_IP}:3109 {
+		import utilibre_proxy_headers
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 60s
+		}
+	}
+}
+
+# Crab Fit was reviewed but is not deployed. Do not enable either block until
+# the documented source, privacy, proxy-trust, and maintenance issues are fixed
+# and the deployment is reviewed again.
+#
+# when.utilibre.org {
+#     reverse_proxy http://{$UTILIBRE_APP_IP}:3110
+# }
+#
+# when-api.utilibre.org {
+#     reverse_proxy http://{$UTILIBRE_APP_IP}:3111
+# }

@@ -1,0 +1,29 @@
+diff --git a/lib/middleware/template.tsx b/lib/middleware/template.tsx
+--- a/lib/middleware/template.tsx
++++ b/lib/middleware/template.tsx
+@@ -95,13 +95,24 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
+         }
+     }
+
++    let atomlink = ctx.req.url;
++    const publicBaseUrl = process.env.UTILIBRE_RSSHUB_PUBLIC_URL;
++    if (publicBaseUrl) {
++        const requestUrl = new URL(ctx.req.url);
++        const publicUrl = new URL(publicBaseUrl);
++        publicUrl.pathname = requestUrl.pathname;
++        publicUrl.search = requestUrl.search;
++        publicUrl.hash = '';
++        atomlink = publicUrl.href;
++    }
++
+     const currentDate = new Date();
+     const result = {
+         lastBuildDate: currentDate.toUTCString(),
+         updated: currentDate.toISOString(),
+         ttl,
+-        atomlink: ctx.req.url,
++        atomlink,
+         ...data,
+     };
+
+     if (config.isPackage) {

@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /api/
+Disallow: /_portal/
+Disallow: /healthz
+Disallow: /en/tools
+Disallow: /es/herramientas
+Disallow: /en/status
+Disallow: /es/estado

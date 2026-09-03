@@ -1,0 +1,9 @@
+node_modules
+dist
+test-results
+playwright-report
+.eslintcache
+coverage
+public/vendor
+tests
+playwright.config.ts

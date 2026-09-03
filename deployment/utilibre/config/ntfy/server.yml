@@ -1,0 +1,28 @@
+base-url: "https://notify.utilibre.org"
+listen-http: ":80"
+log-level: "info"
+behind-proxy: true
+proxy-forwarded-header: "X-Forwarded-For"
+# Caddy replaces X-Forwarded-For with one normalized client address, so there
+# is no intermediary chain for ntfy to strip. This setting does not authenticate
+# the connecting proxy; the application-VM firewall must allow this port only
+# from the edge VM.
+proxy-trusted-hosts: ""
+
+cache-file: "/var/lib/ntfy/cache.db"
+cache-duration: "12h"
+attachment-cache-dir: "/var/lib/ntfy/attachments"
+attachment-file-size-limit: "10M"
+attachment-total-size-limit: "5G"
+attachment-expiry-duration: "3h"
+visitor-attachment-total-size-limit: "50M"
+visitor-attachment-daily-bandwidth-limit: "250M"
+visitor-message-daily-limit: 1000
+visitor-request-limit-burst: 60
+visitor-request-limit-replenish: "5s"
+global-topic-limit: 15000
+upstream-base-url: "https://ntfy.sh"
+
+enable-signup: false
+enable-login: false
+enable-reservations: false

@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-02T06:41:31Z",
+  "title": "Design System: Utilibre",
+  "extensions": {
+    "breakpoints": [
+      {
+        "name": "rail-compact",
+        "value": "78rem",
+        "purpose": "Narrows the task rail from 17rem to 13rem and tightens the four-column catalog ledger."
+      },
+      {
+        "name": "mobile-shell",
+        "value": "58rem",
+        "purpose": "Switches the masthead to a menu shell, turns the task rail into a horizontal scroller, and reflows ledger records while keeping an action edge."
+      },
+      {
+        "name": "narrow-stack",
+        "value": "39rem",
+        "purpose": "Stacks search, catalog processing, actions, tool grids, and result lists into one readable sequence."
+      }
+    ],
+    "motion": [
+      {
+        "name": "document-scroll",
+        "value": "smooth",
+        "purpose": "Used for document scrolling; becomes auto under prefers-reduced-motion: reduce. No decorative transitions or keyframe animation ship."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The default ink action used for tool operations and configured external actions.",
+      "html": "<button class=\"ds-button-primary\" type=\"button\">Process file</button>",
+      "css": ".ds-button-primary { min-height: 2.8rem; padding: 0.62rem 0.9rem; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--ink); border-radius: 0; color: var(--paper); background: var(--ink); font-family: var(--font-body); font-weight: 750; cursor: pointer; } .ds-button-primary:hover { color: var(--paper); background: var(--rust); border-color: var(--rust); } .ds-button-primary:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } .ds-button-primary:disabled { opacity: 0.55; cursor: not-allowed; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "A structurally equal but visually quieter action for refresh, reset, and companion operations.",
+      "html": "<button class=\"ds-button-secondary\" type=\"button\">Refresh status</button>",
+      "css": ".ds-button-secondary { min-height: 2.8rem; padding: 0.62rem 0.9rem; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--ink); border-radius: 0; color: var(--ink); background: transparent; font-family: var(--font-body); font-weight: 750; cursor: pointer; } .ds-button-secondary:hover { color: var(--paper); background: var(--rust); border-color: var(--rust); } .ds-button-secondary:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } .ds-button-secondary:disabled { opacity: 0.55; cursor: not-allowed; }"
+    },
+    {
+      "name": "Catalog Launch",
+      "kind": "button",
+      "refersTo": "catalog-launch",
+      "description": "The horizontally ruled launch action that forms the ledger's aligned right edge.",
+      "html": "<a class=\"ds-catalog-launch\" href=\"#\">Open</a>",
+      "css": ".ds-catalog-launch { min-width: 8rem; min-height: 2.85rem; padding: 0.65rem 0.45rem; display: inline-flex; align-items: center; justify-content: center; border-block: 2px solid var(--ink); border-radius: 0; color: var(--ink); background: transparent; font-family: var(--font-body); font-size: 0.875rem; font-weight: 800; line-height: 1.15; text-align: center; text-decoration: none; } .ds-catalog-launch:hover { color: var(--paper); background: var(--ink); } .ds-catalog-launch:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }"
+    },
+    {
+      "name": "Catalog Search",
+      "kind": "input",
+      "refersTo": "input-default",
+      "description": "The joined field-and-action used to search the public utility catalog.",
+      "html": "<form class=\"ds-catalog-search\" role=\"search\"><label for=\"ds-catalog-query\">SEARCH TOOLS</label><div class=\"ds-catalog-search-control\"><input id=\"ds-catalog-query\" type=\"search\" placeholder=\"PDF, images, web search…\"><button type=\"submit\">Search</button></div></form>",
+      "css": ".ds-catalog-search label { display: block; margin-block-end: 0.45rem; color: var(--ink); font: 700 0.8125rem/1.2 var(--font-meta); letter-spacing: 0.07em; text-transform: uppercase; } .ds-catalog-search-control { display: grid; grid-template-columns: minmax(0, 1fr) auto; } .ds-catalog-search input { min-height: 3.15rem; padding: 0.68rem 0.78rem; border: 2px solid var(--ink); border-inline-end: 0; border-radius: 0; color: var(--ink); background: transparent; font-family: var(--font-body); } .ds-catalog-search input::placeholder { color: var(--ink-soft); opacity: 1; } .ds-catalog-search button { min-height: 3.15rem; padding-inline: 1.25rem; border: 2px solid var(--ink); border-radius: 0; color: var(--paper); background: var(--ink); font-family: var(--font-body); font-weight: 750; cursor: pointer; } .ds-catalog-search button:hover { color: var(--paper); background: var(--rust); border-color: var(--rust); } .ds-catalog-search :focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } @media (max-width: 39rem) { .ds-catalog-search-control { grid-template-columns: 1fr; gap: 0.45rem; } .ds-catalog-search input { border-inline-end: 2px solid var(--ink); } .ds-catalog-search button { width: 100%; } }"
+    },
+    {
+      "name": "Task Index",
+      "kind": "nav",
+      "description": "The numbered task taxonomy: a ruled rail on desktop and a horizontal text index on mobile.",
+      "html": "<nav class=\"ds-task-index\" aria-label=\"Browse by task\"><p class=\"ds-task-guideword\">BROWSE BY TASK</p><p class=\"ds-task-cue\">5 TASKS · SCROLL →</p><ol><li><a href=\"#\"><span>01</span><strong>Find &amp; browse</strong></a></li><li><a href=\"#\"><span>02</span><strong>Files &amp; media</strong></a></li><li><a href=\"#\"><span>03</span><strong>PDF &amp; documents</strong></a></li></ol></nav>",
+      "css": ".ds-task-index { position: relative; } .ds-task-guideword { margin: 0 0 1.65rem; color: var(--rust); font: 700 0.8125rem/1.5 var(--font-meta); letter-spacing: 0.075em; } .ds-task-cue { display: none; } .ds-task-index ol { margin: 0; padding: 0; list-style: none; border-block-start: 1px solid var(--ink); } .ds-task-index li { border-block-end: 1px solid var(--rule); } .ds-task-index a { padding-block: 0.75rem; display: grid; grid-template-columns: 2.15rem minmax(0, 1fr); gap: 0.55rem; color: var(--ink); font-family: var(--font-body); text-decoration: none; } .ds-task-index a span { color: var(--rust); font: 0.75rem/1.7 var(--font-meta); } .ds-task-index a:hover strong { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.35em; } .ds-task-index a:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } @media (max-width: 58rem) { .ds-task-index { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 0.8rem; } .ds-task-guideword { min-width: 0; margin-block-end: 0.5rem; } .ds-task-cue { display: block; grid-column: 2; grid-row: 1; margin: 0; color: var(--ink-soft); font: 0.75rem/1.5 var(--font-meta); letter-spacing: 0.075em; text-align: end; } .ds-task-index ol { grid-column: 1 / -1; display: flex; gap: 1.1rem; overflow-x: auto; border-block-start: 0; } .ds-task-index li { flex: 0 0 auto; border: 0; } .ds-task-index a { display: block; padding-block: 0.55rem 0.75rem; } .ds-task-index a span { margin-inline-end: 0.35rem; } }"
+    },
+    {
+      "name": "Processing Labels",
+      "kind": "chip",
+      "description": "Underlined factual labels for browser, server, intermediary, and outside-service handling; deliberately not pills.",
+      "html": "<div class=\"ds-processing-labels\" aria-label=\"Processing path\"><span class=\"ds-processing-local\">LOCAL</span><span class=\"ds-processing-server\">SERVER</span><span class=\"ds-processing-proxy\">PROXY</span><span class=\"ds-processing-external\">EXTERNAL</span></div>",
+      "css": ".ds-processing-labels { display: flex; flex-wrap: wrap; gap: 0.35rem 0.65rem; } .ds-processing-labels span { padding-block-end: 0.06rem; border-block-end: 1px solid currentColor; font: 700 0.75rem/1.35 var(--font-meta); letter-spacing: 0.055em; } .ds-processing-local { color: var(--lichen); } .ds-processing-server { color: var(--rust); } .ds-processing-proxy { color: var(--blue); } .ds-processing-external { color: var(--ink-soft); }"
+    },
+    {
+      "name": "Catalog Ledger Row",
+      "kind": "custom",
+      "description": "The signature comparison record aligning coordinate, task, processing facts, explicit upstream credit, and launch action.",
+      "html": "<article class=\"ds-ledger-row\"><div class=\"ds-ledger-coordinate\">01</div><div class=\"ds-ledger-content\"><h3>Web search</h3><p>Search selected sources with SearXNG, hosted by Utilibre. Queries go upstream from this server instead of your browser.</p><p class=\"ds-ledger-attribution\"><a href=\"#\">Upstream source: SearXNG</a></p></div><div class=\"ds-ledger-processing\"><div class=\"ds-ledger-labels\"><span class=\"ds-ledger-server\">SERVER</span><span class=\"ds-ledger-proxy\">PROXY</span></div><p>Utilibre handles the request and contacts another service on your behalf.</p></div><div class=\"ds-ledger-action\"><a class=\"ds-ledger-launch\" href=\"#\">Open</a></div></article>",
+      "css": ".ds-ledger-row { min-height: 9rem; display: grid; grid-template-columns: 5rem minmax(16rem, 1.35fr) minmax(14rem, 0.9fr) 8rem; gap: 1.4rem; align-items: center; border-block-end: 1px solid var(--rule); color: var(--ink); font-family: var(--font-body); } .ds-ledger-row:hover { background: color-mix(in srgb, var(--paper-pale) 45%, transparent); } .ds-ledger-coordinate { align-self: start; padding-block-start: 1.45rem; color: var(--rust); font: 700 0.75rem/1.5 var(--font-meta); letter-spacing: 0.075em; } .ds-ledger-content, .ds-ledger-processing { min-width: 0; padding-block: 1.15rem; } .ds-ledger-content h3 { margin: 0 0 0.35rem; font: 600 1.5rem/1.08 var(--font-display); letter-spacing: -0.025em; } .ds-ledger-content p, .ds-ledger-processing p { margin: 0; color: var(--ink-soft); } .ds-ledger-content > p:not(.ds-ledger-attribution) { max-width: 58ch; font-size: 0.9375rem; line-height: 1.42; } .ds-ledger-attribution { margin-block-start: 0.35rem; } .ds-ledger-attribution a { min-height: 2.75rem; display: inline-flex; align-items: center; color: var(--ink-soft); font: 0.75rem/1.25 var(--font-meta); } .ds-ledger-processing p { max-width: 40ch; margin-block-start: 0.55rem; font-size: 0.875rem; line-height: 1.44; } .ds-ledger-labels { display: flex; flex-wrap: wrap; gap: 0.35rem 0.65rem; } .ds-ledger-labels span { border-block-end: 1px solid currentColor; font: 700 0.75rem/1.35 var(--font-meta); letter-spacing: 0.055em; } .ds-ledger-server { color: var(--rust); } .ds-ledger-proxy { color: var(--blue); } .ds-ledger-action { justify-self: end; min-width: 0; display: grid; gap: 0.38rem; text-align: center; } .ds-ledger-launch { min-width: 8rem; min-height: 2.85rem; padding: 0.65rem 0.45rem; display: inline-flex; align-items: center; justify-content: center; border-block: 2px solid var(--ink); color: var(--ink); font-size: 0.875rem; font-weight: 800; text-decoration: none; } .ds-ledger-launch:hover { color: var(--paper); background: var(--ink); } .ds-ledger-row a:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } @media (max-width: 58rem) { .ds-ledger-row { grid-template-columns: 3rem minmax(0, 1fr) 6.8rem; grid-template-rows: auto auto; gap: 0.25rem 0.8rem; padding-block: 1rem; } .ds-ledger-coordinate { grid-row: 1 / span 2; padding-block-start: 0.15rem; } .ds-ledger-content { padding: 0; } .ds-ledger-processing { grid-column: 2; padding: 0.35rem 0 0; } .ds-ledger-action { grid-column: 3; grid-row: 1 / span 2; } .ds-ledger-launch { min-width: 6.8rem; } } @media (max-width: 39rem) { .ds-ledger-row { grid-template-columns: 2.2rem minmax(0, 1fr); grid-template-rows: auto auto auto; } .ds-ledger-coordinate { grid-row: 1 / span 3; } .ds-ledger-action { grid-column: 2; grid-row: 3; justify-self: stretch; padding-block-start: 0.6rem; } .ds-ledger-launch { width: 100%; min-width: 0; } }"
+    },
+    {
+      "name": "Tool Panel",
+      "kind": "card",
+      "description": "A flat bounded work area for portal-native utilities, using one rule and a pale paper tone instead of elevation.",
+      "html": "<section class=\"ds-tool-panel\"><label for=\"ds-tool-field\">Input</label><textarea id=\"ds-tool-field\" placeholder=\"Paste text here\"></textarea><p class=\"ds-tool-notice\">Processing happens in this browser.</p></section>",
+      "css": ".ds-tool-panel { max-width: 54rem; padding: clamp(1rem, 3vw, 2rem); border: 1px solid var(--ink); border-radius: 0; color: var(--ink); background: var(--paper-pale); font-family: var(--font-body); } .ds-tool-panel label { display: block; margin-block-end: 0.35rem; font-weight: 700; } .ds-tool-panel textarea { width: 100%; min-height: 8rem; padding: 0.68rem 0.78rem; border: 1px solid var(--ink); border-radius: 0; color: var(--ink); background: transparent; font: inherit; resize: vertical; } .ds-tool-panel textarea::placeholder { color: var(--ink-soft); opacity: 1; } .ds-tool-panel textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } .ds-tool-notice { padding: 0.65rem 0; border-block: 1px solid var(--rule); color: var(--ink-soft); font-size: 0.9375rem; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Useful Field Ledger",
+    "overview": "Utilibre is a cultivated working catalog: warm, bookish, public-service, plainspoken, technically competent, and quietly witty. Its visual world combines uncoated paper, official coral and charcoal, factual lichen/rust/blue accents, numbered task indexing, and ruled comparison records. It should feel authored by an independent operator rather than startup-polished.\n\nThe ledger is useful before it is expressive. Names, task descriptions, processing facts, and actions share one comparable reading structure; humor and personality live in careful language rather than decoration. Mycelial relationships may inform information adjacency, but the shipped interface uses no ornamental network motif.",
+    "keyCharacteristics": [
+      "Warm paper fields with official coral and charcoal.",
+      "Newsreader names the work; Atkinson Hyperlegible Next explains and operates it; Courier New records metadata.",
+      "A numbered task rail and one aligned launch edge organize the catalog.",
+      "Single and double rules replace elevated card shells.",
+      "Factual accents always accompany written processing labels.",
+      "Square controls, generous focus, and bilingual wrapping keep the system direct and usable."
+    ],
+    "rules": [
+      {
+        "name": "The Coral Ration Rule",
+        "body": "Coral marks identity, focus, and decisive state; it is not a body-text color or ambient decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Factual Accent Rule",
+        "body": "Lichen, rust, blue, green, and red never carry meaning alone; a written label or state accompanies the color.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three-Voice Rule",
+        "body": "Serif names the work, the hyperlegible sans explains and operates it, and monospace records facts; never swap those jobs for novelty.",
+        "section": "typography"
+      },
+      {
+        "name": "The Literal Interface Rule",
+        "body": "The closer text sits to an action, risk, or repeated state, the less personality it carries; personality belongs in page-level explanation, never in uncertainty.",
+        "section": "copy"
+      },
+      {
+        "name": "The One Launch Edge Rule",
+        "body": "On wide layouts every primary catalog action meets the same right edge; on narrow layouts the edge becomes the full row width instead of disappearing.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Ledger Rule",
+        "body": "A tonal surface or border must identify a real interaction boundary, state, or working area; content grouping alone earns spacing and a rule.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Square Means Operable Rule",
+        "body": "Rectangular enclosure is reserved for things a visitor can operate or for bounded tool work; catalog prose remains open on the paper.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Focus Is Structural Rule",
+        "body": "Every keyboard-focusable element receives a 3px coral outline with a 4px offset; hover styling never substitutes for it.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do use the supplied coral lockup on light paper and the supplied white lockup on dark paper without redrawing either asset.",
+      "Do keep tool name, task description, processing labels, data-flow note, and launch action comparable at a glance.",
+      "Do preserve the 3px focus outline, 4px offset, written states, and touch-friendly control heights.",
+      "Do let English and Spanish wrap naturally through the same source order and hierarchy.",
+      "Do keep support calm, factual, and subordinate to finding and opening a tool.",
+      "Do name upstream software directly and describe Utilibre as its host or integrator."
+    ],
+    "donts": [
+      "Don't introduce a SaaS hero, generic card wall, gradients, glass, glows, decorative grids, or a fake terminal.",
+      "Don't turn processing states into excessive pills, generic privacy shields, or color-only claims.",
+      "Don't use decorative mycelial gimmicks, ornamental animation, or rounded rectangles around every item.",
+      "Don't add shadows to catalog records, navigation, buttons, fields, or ordinary content containers.",
+      "Don't make support sticky, urgent, guilt-driven, or conditional on access.",
+      "Don't put jokes in controls, repeated states, errors, privacy facts, warnings, legal text, or recovery instructions."
+    ]
+  }
+}

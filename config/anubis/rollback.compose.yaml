@@ -1,0 +1,9 @@
+# Emergency ingress rollback only. Stop Anubis first, then layer this file over
+# compose.yaml to republish Redlib directly on the same private host port.
+services:
+  redlib:
+    ports:
+      - target: 8080
+        published: "${REDLIB_PORT:-3002}"
+        host_ip: "${PRIVATE_BIND_IP:?Set PRIVATE_BIND_IP}"
+        protocol: tcp

@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-03",
+  "integrationStatus": "applied-with-current-runtime-state",
+  "notes": {
+    "en": "Integrated into the public portal after DNS and edge-route checks. Cloudflare Bot Fight Mode was disabled on 2026-09-03 so standard ntfy clients can use the public endpoint.",
+    "es": "Integrado en el portal público después de comprobar el DNS y las rutas perimetrales. Bot Fight Mode de Cloudflare se desactivó el 3 de septiembre de 2026 para que los clientes comunes de ntfy puedan usar el servicio público."
+  },
+  "services": [
+    {
+      "id": "ntfy",
+      "url": "https://notify.utilibre.org",
+      "name": { "en": "Push notifications", "es": "Notificaciones push" },
+      "description": {
+        "en": "Send and receive programmable notifications with ntfy, hosted by Utilibre, for scripts, servers and devices.",
+        "es": "Envía y recibe notificaciones programables con ntfy, alojado por Utilibre, para scripts, servidores y dispositivos."
+      },
+      "privacyLabels": ["server", "proxy"],
+      "privacyNote": {
+        "en": "Messages expire after 12 hours and attachments after three hours; neither cache enters longer-lived backups. Cloudflare handles the public connection. For supported iOS delivery, ntfy.sh receives the message ID and a SHA-256 hash of this instance's topic URL, but not the message body or attachment.",
+        "es": "Los mensajes vencen después de 12 horas y los archivos adjuntos después de tres horas; ninguna caché entra en copias de seguridad de mayor duración. Cloudflare gestiona la conexión pública. Para la entrega compatible con iOS, ntfy.sh recibe el identificador del mensaje y un hash SHA-256 de la URL del tema en esta instancia, pero no el cuerpo del mensaje ni el archivo adjunto."
+      },
+      "accountStatus": "anonymous-topics",
+      "operationalStatus": "operational"
+    },
+    {
+      "id": "bentopdf",
+      "url": "https://pdf.utilibre.org",
+      "name": { "en": "PDF tools", "es": "Herramientas PDF" },
+      "description": {
+        "en": "Edit PDFs without giving the server a copy. Processed in your browser.",
+        "es": "Edita archivos PDF sin darle una copia al servidor. Procesado en tu navegador."
+      },
+      "processingNotice": { "en": "Processed in your browser", "es": "Procesado en tu navegador" },
+      "privacyLabels": ["local", "external"],
+      "privacyNote": {
+        "en": "PDF content stays in the browser. Some operations fetch executable WASM/runtime assets from jsDelivr, which reveals the browser's network address to that CDN but does not upload the selected PDF.",
+        "es": "El contenido PDF permanece en el navegador. Algunas operaciones descargan recursos ejecutables WASM del CDN jsDelivr; eso revela la dirección de red del navegador a ese CDN, pero no sube el PDF seleccionado."
+      },
+      "accountStatus": "none",
+      "operationalStatus": "operational"
+    },
+    {
+      "id": "vert",
+      "url": "https://convert.utilibre.org",
+      "name": { "en": "File converter", "es": "Convertidor de archivos" },
+      "description": {
+        "en": "Convert useful file formats locally—because uploading a file just to change its extension's more capable cousin is unnecessary. Processed in your browser.",
+        "es": "Convierte formatos útiles de forma local; subir un archivo solo para cambiarlo al primo más capaz de su extensión es innecesario. Procesado en tu navegador."
+      },
+      "processingNotice": { "en": "Processed in your browser", "es": "Procesado en tu navegador" },
+      "privacyLabels": ["local", "external"],
+      "privacyNote": {
+        "en": "Core conversions run locally. Some optional conversion engines may load code from an external CDN; files are not sent to a VERT conversion daemon.",
+        "es": "Las conversiones principales ocurren localmente. Algunos motores opcionales pueden cargar código desde un CDN externo; los archivos no se envían a un servidor de conversión VERT."
+      },
+      "accountStatus": "none",
+      "operationalStatus": "operational"
+    },
+    {
+      "id": "omnitools",
+      "url": "https://tools.utilibre.org",
+      "name": { "en": "Everyday tools", "es": "Herramientas útiles" },
+      "description": {
+        "en": "Practical text, data and file utilities that do the work on your device. Processed in your browser.",
+        "es": "Herramientas prácticas para texto, datos y archivos que trabajan en tu dispositivo. Procesado en tu navegador."
+      },
+      "processingNotice": { "en": "Processed in your browser", "es": "Procesado en tu navegador" },
+      "privacyLabels": ["local"],
+      "accountStatus": "none",
+      "operationalStatus": "operational"
+    },
+    {
+      "id": "healthchecks",
+      "url": "https://monitor.utilibre.org",
+      "name": { "en": "Cron monitoring", "es": "Monitoreo de tareas" },
+      "description": {
+        "en": "Know when scheduled jobs stop checking in—preferably before the humans do. Accounts are beta and available on request.",
+        "es": "Entérate cuando una tarea programada deja de reportarse, de preferencia antes que los humanos. Las cuentas están en beta y se ofrecen por solicitud."
+      },
+      "privacyLabels": ["server", "proxy"],
+      "privacyNote": {
+        "en": "Monitoring and account records are stored in PostgreSQL. Email notifications and account-recovery messages pass through the configured SMTP relay to the recipient's mail provider. Registration is closed.",
+        "es": "Los registros de monitoreo y de cuentas se guardan en PostgreSQL. Las notificaciones por correo y los mensajes de recuperación pasan por el servidor SMTP configurado hasta el proveedor de correo de la persona destinataria. El registro está cerrado."
+      },
+      "accountStatus": "beta-on-request",
+      "operationalStatus": "operational"
+    },
+    {
+      "id": "pairdrop",
+      "url": "https://send.utilibre.org",
+      "name": { "en": "Send files", "es": "Enviar archivos" },
+      "description": {
+        "en": "Send text and files directly between devices when network conditions allow. Without TURN, especially stubborn networks may refuse to cooperate.",
+        "es": "Envía texto y archivos directamente entre dispositivos cuando la red lo permite. Sin TURN, algunas redes particularmente tercas pueden negarse a cooperar."
+      },
+      "privacyLabels": ["server", "external"],
+      "accountStatus": "none",
+      "operationalStatus": "operational"
+    },
+    {
+      "id": "freshrss",
+      "url": "https://rss.utilibre.org",
+      "name": { "en": "RSS reader", "es": "Lector RSS" },
+      "description": {
+        "en": "A focused place for the sites you chose, in the order they published—not the order an algorithm found profitable. Accounts are beta and available on request.",
+        "es": "Un lugar tranquilo para los sitios que elegiste, en el orden en que publicaron y no en el que un algoritmo consideró rentable. Las cuentas están en beta y se ofrecen por solicitud."
+      },
+      "privacyLabels": ["server", "proxy"],
+      "accountStatus": "beta-on-request",
+      "operationalStatus": "operational"
+    },
+    {
+      "id": "rsshub",
+      "url": "https://feeds.utilibre.org",
+      "name": { "en": "RSS generator", "es": "Generador RSS" },
+      "description": {
+        "en": "Turn supported public sources into feeds. It cannot make an upstream site reliable, but it can make it subscribable.",
+        "es": "Convierte fuentes públicas compatibles en feeds. No puede volver confiable al sitio de origen, pero sí puede volverlo suscribible."
+      },
+      "privacyLabels": ["server", "proxy"],
+      "accountStatus": "none",
+      "operationalStatus": "operational"
+    },
+    {
+      "id": "privatebin",
+      "url": "https://paste.utilibre.org",
+      "name": { "en": "Encrypted paste", "es": "Texto cifrado" },
+      "description": {
+        "en": "Share short-lived encrypted text. Encryption happens in the browser; the decryption key stays in the URL fragment and does not reach the server.",
+        "es": "Comparte texto cifrado de corta duración. El cifrado ocurre en el navegador; la clave queda en el fragmento de la URL y no llega al servidor."
+      },
+      "privacyLabels": ["local", "server"],
+      "accountStatus": "none",
+      "operationalStatus": "operational"
+    },
+    {
+      "id": "wakapi",
+      "url": "https://wakapi.utilibre.org",
+      "name": { "en": "Coding statistics", "es": "Estadísticas de programación" },
+      "description": {
+        "en": "Keep your coding-time statistics on Utilibre instead of turning every keystroke into somebody else's business model. Accounts are beta and available on request.",
+        "es": "Guarda tus estadísticas de programación en Utilibre en lugar de convertir cada pulsación en el modelo de negocio de alguien más. Las cuentas están en beta y se ofrecen por solicitud."
+      },
+      "privacyLabels": ["server"],
+      "accountStatus": "beta-on-request",
+      "operationalStatus": "operational"
+    },
+    {
+      "id": "crabfit",
+      "url": "https://when.utilibre.org",
+      "apiUrl": "https://when-api.utilibre.org",
+      "name": { "en": "Find a time", "es": "Coordinar horario" },
+      "description": {
+        "en": "Deferred after source review. The current code needs substantial maintenance and privacy work before it can be published safely.",
+        "es": "Aplazado después de revisar el código. La versión actual necesita bastante trabajo de mantenimiento y privacidad antes de poder publicarse de forma segura."
+      },
+      "privacyLabels": ["server"],
+      "accountStatus": "none",
+      "operationalStatus": "not-deployed",
+      "publish": false,
+      "deferralReason": {
+        "en": "The current upstream source is stale and its documented PostgreSQL self-hosting path, proxy-aware rate limiting, analytics removal and bilingual behavior require material code changes and a new review.",
+        "es": "El código actual está desactualizado y su despliegue con PostgreSQL, los límites conscientes del proxy, la eliminación de analítica y el comportamiento bilingüe requieren cambios importantes y una nueva revisión."
+      }
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+# Minimal overlay on the image's maintained defaults.
+use_default_settings:
+  engines:
+    keep_only:
+      - arxiv
+      - bing
+      - bing images
+      - bing news
+      - bing videos
+      - currency
+      - dailymotion
+      - fynd
+      - github
+      - google cse
+      - mdn
+      - photon
+      - pubmed
+      - reuters
+      - semantic scholar
+      - stackoverflow
+      - wikicommons.images
+      - wikicommons.videos
+      - wikinews
+      - wikipedia
+      - wiktionary
+      - wiby
+      - youtube
+
+# `keep_only` does not override an engine's upstream `disabled` flag. Explicit
+# overrides below keep a small general-web mix enabled and weight the broad,
+# bilingual contributor above niche indexes. Specialist engines remain in
+# their own tabs and do not join an ordinary General search unless upstream
+# assigns them to that category.
+engines:
+  - name: bing
+    disabled: false
+    weight: 1.0
+  - name: fynd
+    disabled: false
+    # Fynd's current next-page URL carries `sx`/`psx` state in addition to the
+    # numeric offset.  The generic XPath engine cannot preserve that state, so
+    # advertising paging repeats page-one results.  Keep Fynd as a first-page
+    # complement until its upstream SearXNG definition supports the cursor.
+    paging: false
+    weight: 0.8
+  - name: google cse
+    disabled: false
+    weight: 3.0
+  - name: wikipedia
+    display_type:
+      - infobox
+      - list
+    weight: 1.5
+  - name: wiby
+    disabled: false
+    weight: 0.4
+
+general:
+  debug: false
+  # The upstream UI has one instance name for every locale; keep it neutral.
+  instance_name: "SearXNG"
+  enable_metrics: false
+  open_metrics: ""
+
+search:
+  safe_search: 1
+  autocomplete: ""
+  favicon_resolver: ""
+  default_lang: "auto"
+  # Bound anonymous fan-out to the useful depth of the current broad-engine
+  # mix. Google CSE already stops at five; beyond that only the niche Wiby
+  # index contributes, and deeper requests add upstream load without a useful
+  # comparison set.
+  max_page: 5
+  # This instance has one outbound identity. Give an upstream that refuses it
+  # time to recover instead of retrying every three minutes and extending the
+  # block. These values match the current public-instance guidance.
+  suspended_times:
+    SearxEngineAccessDenied: 86400
+    SearxEngineCaptcha: 86400
+    SearxEngineTooManyRequests: 3600
+  formats:
+    - html
+
+server:
+  secret_key: "overridden-by-SEARXNG_SECRET"
+  limiter: true
+  public_instance: true
+  image_proxy: true
+  method: "POST"
+  default_http_headers:
+    X-Content-Type-Options: nosniff
+    X-Robots-Tag: noindex, nofollow
+    Referrer-Policy: no-referrer
+
+ui:
+  static_use_hash: true
+  default_locale: ""
+  query_in_title: false
+
+outgoing:
+  request_timeout: 4.0
+  max_request_timeout: 12.0
+  pool_connections: 50
+  pool_maxsize: 10
+
+valkey:
+  url: valkey://valkey:6379/0

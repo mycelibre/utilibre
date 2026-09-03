@@ -1,0 +1,16 @@
+{
+  "REPLACE_WITH_UUIDV4": {
+    "name": "portal-gateway",
+    "allowedServices": [
+      "youtube",
+      "tiktok",
+      "twitter",
+      "instagram",
+      "reddit",
+      "pinterest",
+      "bsky",
+      "dailymotion",
+      "facebook"
+    ]
+  }
+}

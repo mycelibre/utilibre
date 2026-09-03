@@ -1,0 +1,51 @@
+diff --git a/src/settings.rs b/src/settings.rs
+index 84cd41a..bfcc8bf 100644
+--- a/src/settings.rs
++++ b/src/settings.rs
+@@ -117,14 +117,7 @@ fn set_cookies_method(req: Request<Body>, remove_cookies: bool) -> Response<Body
+ 	let form = url::form_urlencoded::parse(query).collect::<HashMap<_, _>>();
+
+ 	let path = match form.get("redirect") {
+-		Some(value) => {
+-			let value = value.replace("%26", "&").replace("%23", "#");
+-			if value.starts_with('/') {
+-				value
+-			} else {
+-				format!("/{value}")
+-			}
+-		}
++		Some(value) => safe_redirect_path(value),
+ 		None => "/".to_string(),
+ 	};
+
+@@ -263,6 +256,30 @@ fn set_cookies_method(req: Request<Body>, remove_cookies: bool) -> Response<Body
+ 	response
+ }
+
++fn safe_redirect_path(value: &str) -> String {
++	let value = value.replace("%26", "&").replace("%23", "#");
++	let path = if value.starts_with('/') { value } else { format!("/{value}") };
++	if path.starts_with("//") || path.starts_with("/\\") {
++		"/".to_string()
++	} else {
++		path
++	}
++}
++
++#[cfg(test)]
++mod redirect_tests {
++	use super::safe_redirect_path;
++
++	#[test]
++	fn permits_only_local_absolute_paths() {
++		assert_eq!(safe_redirect_path("/r/rust?sort=new"), "/r/rust?sort=new");
++		assert_eq!(safe_redirect_path("//example.com"), "/");
++		assert_eq!(safe_redirect_path("/\\example.com"), "/");
++		assert_eq!(safe_redirect_path("https://example.com"), "/https://example.com");
++		assert_eq!(safe_redirect_path("relative/path"), "/relative/path");
++	}
++}
++
+ /// Set cookies using response "Set-Cookie" header
+ pub async fn restore(req: Request<Body>) -> Result<Response<Body>, String> {
+ 	Ok(set_cookies_method(req, true))

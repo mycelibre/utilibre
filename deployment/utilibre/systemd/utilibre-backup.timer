@@ -1,0 +1,14 @@
+[Unit]
+Description=Run the Utilibre local backup every night
+Documentation=file:///opt/utilibre/docs/BACKUP-RESTORE.md
+
+[Timer]
+# 02:17 in Guatemala, even though the host itself uses UTC.
+OnCalendar=*-*-* 02:17:00 America/Guatemala
+RandomizedDelaySec=10m
+AccuracySec=1m
+Persistent=true
+Unit=utilibre-backup.service
+
+[Install]
+WantedBy=timers.target

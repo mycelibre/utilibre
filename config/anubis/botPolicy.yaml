@@ -1,0 +1,98 @@
+# Utilibre Redlib ingress policy for Anubis v1.27.0.
+# Keep the two updater rules before the upstream default policy import.
+bots:
+  - name: redlib-instance-info
+    path_regex: ^/info/?$
+    action: ALLOW
+  - name: redlib-instance-updater
+    action: ALLOW
+    expression:
+      all:
+        - 'method == "GET"'
+        - 'path == "/"'
+        - 'userAgent.matches("^(libreddit|redlib)-instance-updater/[0-9.]+$")'
+  # Current v1.27.0 upstream defaults, except the two optional Thoth
+  # geo/ASN enrichment rules. Utilibre does not subscribe to Thoth, so keeping
+  # those rules would only emit warnings and would not add protection.
+  - import: (data)/bots/_deny-pathological.yaml
+  - import: (data)/bots/aggressive-brazilian-scrapers.yaml
+  - import: (data)/meta/ai-block-aggressive.yaml
+  - import: (data)/crawlers/_allow-good.yaml
+  - import: (data)/clients/x-firefox-ai.yaml
+  - import: (data)/crawlers/xai.yaml
+  - import: (data)/common/keep-internet-working.yaml
+  - name: generic-browser
+    user_agent_regex: Mozilla|Opera
+    action: WEIGH
+    weight:
+      adjust: 10
+
+dnsbl: false
+
+honeypot:
+  enabled: true
+  implementation: naive
+
+openGraph:
+  enabled: false
+  considerHost: false
+  ttl: 24h
+
+status_codes:
+  CHALLENGE: 200
+  DENY: 200
+
+metrics:
+  bind: "127.0.0.1:9090"
+  network: tcp
+  debug: false
+
+logging:
+  sink: stdio
+  level: WARN
+  asn: false
+
+store:
+  backend: bbolt
+  parameters:
+    path: /data/anubis.bdb
+
+# These are the v1.27.0 upstream defaults. Declaring them explicitly prevents
+# a custom policy file from falling back to the legacy difficulty-4 challenge.
+thresholds:
+  - name: minimal-suspicion
+    expression: weight <= 0
+    action: ALLOW
+  - name: mild-suspicion
+    expression:
+      all:
+        - weight > 0
+        - weight < 10
+    action: CHALLENGE
+    challenge:
+      algorithm: metarefresh
+      difficulty: 1
+  - name: moderate-suspicion
+    expression:
+      all:
+        - weight >= 10
+        - weight < 20
+    action: CHALLENGE
+    challenge:
+      algorithm: fast
+      difficulty: 2
+  - name: mild-proof-of-work
+    expression:
+      all:
+        - weight >= 20
+        - weight < 30
+    action: CHALLENGE
+    challenge:
+      algorithm: fast
+      difficulty: 4
+  - name: extreme-suspicion
+    expression: weight >= 30
+    action: CHALLENGE
+    challenge:
+      algorithm: fast
+      difficulty: 6
