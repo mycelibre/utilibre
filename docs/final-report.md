@@ -66,10 +66,11 @@ Report date: 2026-08-31
 > and factual processing/source annotations. English and Spanish have equal
 > routes, metadata, error states, and responsive behavior. The default catalog
 > is a cross-category editorial selection; mobile retains Featured and A–Z
-> modes. All catalog launches and external source/support destinations open in
+> modes. All catalog launches and configured external destinations open in
 > a separate tab. Account requirements are disclosed for Healthchecks,
-> FreshRSS, and Wakapi. The optional GitHub Sponsors link is configured, and
-> the support page explicitly asks visitors to consider upstream maintainers.
+> FreshRSS, and Wakapi. The donation area remains present, but GitHub Sponsors
+> is not active yet, so no donation destination is published. The support page
+> explicitly asks visitors to consider upstream maintainers.
 >
 > Four issues from the independent Impeccable design assessment were fixed:
 > mobile catalog-mode parity, retrieval within the long software inventory,
@@ -86,9 +87,9 @@ Report date: 2026-08-31
 > The exact post-remediation source passed the production build, ESLint,
 > TypeScript, 43/43 unit/server tests, and 64/64 desktop/mobile browser tests.
 > A fresh public browser check passed the updated catalog, grouped software
-> disclosure, JSON action states, localized 404, donation destination, new-tab
-> behavior, and absence of CSP/page/request failures outside the deliberately
-> requested 404. Separate live acceptance exercised every deployed service and
+> disclosure, JSON action states, localized 404, honest unconfigured-donation
+> state, new-tab behavior, and absence of CSP/page/request failures outside the
+> deliberately requested 404. Separate live acceptance exercised every deployed service and
 > representative real operations; this is strong release evidence, not a
 > promise that every possible input or changing upstream will work forever.
 >

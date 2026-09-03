@@ -12,8 +12,8 @@ release source passed:
   redaction regressions;
 - 64/64 Playwright combinations across desktop Chromium and a Pixel 7-sized
   profile against the built Node server;
-- focused public desktop/mobile checks for the configured donation link,
-  Featured/A–Z parity, all catalog launches opening separately, grouped
+- focused public desktop/mobile checks for the honest unconfigured-donation
+  state, Featured/A–Z parity, all catalog launches opening separately, grouped
   software disclosure, JSON output gating, localized HTTP 404 recovery, and
   the `/es/support` 308 alias; and
 - two independent Impeccable assessment tracks. The source detector returned
@@ -40,7 +40,8 @@ The ignored production configuration now uses an immutable revision URL for
 `SOURCE_CODE_URL` and the repository issue tracker for `CONTACT_URL`. The
 strict launch validator passes. The portal was rebuilt and recreated without
 restarting the other services; its public configuration endpoint returned the
-expected source, contact, and donation destinations afterward.
+expected source and contact destinations and no inactive donation URL
+afterward.
 
 This record separates automated, private-host, and still-manual checks. It does
 not claim that private smoke requests constitute a public production launch.
