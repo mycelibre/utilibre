@@ -1,8 +1,10 @@
 # Test record and verification guide
 
-Infrastructure baseline: 2026-08-30. Latest release regression: 2026-09-03.
+Infrastructure baseline: 2026-08-30. The upstream-FOSS-only cutover requires a
+fresh release regression; older results below are retained only as dated
+historical evidence.
 
-## 2026-09-03 frontend release regression
+## Historical 2026-09-03 frontend release regression (superseded)
 
 After the public frontend redesign and final Impeccable remediation, the exact
 release source passed:
@@ -22,9 +24,9 @@ release source passed:
   no-transform` to HTML; the public response contains no challenge-platform
   bootstrap and fresh browser contexts report no CSP/page error.
 
-The PDF implementation remains route-lazy and triggers Vite's 500 kB chunk
-warning. This is a performance note, not a build failure or initial-catalog
-payload. The older measurements below remain dated evidence rather than the
+The retired PDF implementation was route-lazy and triggered Vite's 500 kB
+chunk warning. That observation does not describe the upstream-FOSS-only
+portal. The older measurements below remain dated evidence rather than the
 current aggregate test count.
 
 ## 2026-09-03 source publication and launch metadata
@@ -43,51 +45,16 @@ restarting the other services; its public configuration endpoint returned the
 expected source and contact destinations and no inactive donation URL
 afterward.
 
-## 2026-09-03 Developer-category release regression
+## Retired 2026-09-03 Developer implementation record
 
-The exact Developer-category source passed the production build, ESLint,
-TypeScript, 89/89 Vitest unit/server checks, and the dependency audit with zero
-known production vulnerabilities. The configuration validator passed 27/27
-regressions, and both base and strict launch validation passed. Against the built Node server, Playwright
-passed 96 checks across desktop Chromium and a Pixel 7-sized profile; 16
-private-preview/public-service checks were intentionally skipped because that
-run targeted the isolated loopback release server. The Vite harness separately
-passed 14 focused Developer checks with its two Node-server-only API checks
-skipped. The focused sources cover:
-
-- HS256/HS384/HS512 JWT signing, decoding, claim interpretation, and optional
-  verification without equating decode with trust;
-- SHA-256/SHA-384/SHA-512 webhook HMAC input, bounded HTTP↔cURL conversion,
-  local OpenAPI JSON/YAML inspection without remote-reference resolution,
-  SHA text hashes, regex/cron bounds, timestamps, and UUID generation/inspection;
-- opaque webhook receiver/read capability separation, a 12 KiB body limit,
-  retained-event/header/memory limits, omission of Authorization, Cookie, hop-by-hop, and recognized
-  forwarding/proxy/client-address headers, slow-body and read concurrency,
-  paged responses, deletion races, atomic capacity changes, expiry/deletion,
-  and independent authenticated/denied rate limits;
-- DNS public-host normalization, record-type/result bounds, sanitized failures,
-  and the absence of a generic server-side HTTP inspection proxy; and
-- independent webhook/DNS kill switches returning 404 without disabling the
-  rest of the portal.
-
-Browser release coverage loads every English and Spanish Developer route;
-exercises representative local tools while rejecting external or
-content-bearing processing requests; proves browser-direct HTTP, CORS-visible
-header, WebSocket, and SSE surfaces do not call a Utilibre relay; and exercises
-a temporary inbox plus valid/invalid DNS requests against the built Node
-server. It also verifies keyboard focus restoration after asynchronous actions,
-same-document catalog jump focus, named live logs, and localized Spanish JWT
-claim and binary-message output. The server tests cover token-protected reads,
-exact raw/body encoding,
-stripped Authorization/Cookie/dynamic hop-by-hop/forwarding headers, the 12 KiB
-boundary, paged reads, slow/aborted requests, deletion/expiry cleanup, late
-framing headers, and fail-closed connection handling. Owned loopback fixtures
-are used instead of unrelated public APIs or sockets.
-
-The separate edge VM still requires the manual log and client-attribution
-checks below: no opaque receiver path/body or management Authorization value in
-edge logs, adapted Caddy configuration validation, two real clients receiving
-distinct limiter identities, and a forged forwarded chain having no effect.
+The portal-native Developer category and its webhook/DNS API were tested on
+2026-09-03, then removed because original Utilibre task implementations do not
+meet the upstream-FOSS-only policy. Those passing results are not release
+evidence for the current portal and must not be used to re-enable the routes.
+The replacement regression must prove the retired routes and API namespace
+return 404, every launchable catalog capability maps to an approved independent
+self-hostable FOSS application, and the public build contains no orphaned task
+implementation or task-specific runtime dependency.
 
 This record separates automated, private-host, and still-manual checks. It does
 not claim that private smoke requests constitute a public production launch.
@@ -154,23 +121,19 @@ PRIVATE_PREVIEW_REDDIT_URL=http://PRIVATE_BIND_IP:REDLIB_PORT \
 ```
 
 This exercises the complete desktop/mobile suite through the built portal on
-the deployed private HTTP origin. In addition to the local-tool, bilingual,
-mobile, and accessibility checks, it asserts that the origin is not a secure
-context, UUID and SHA-256/SHA-512 tools and copy still work through local
-fallbacks, hashing the selected fixture causes no network request, SearXNG
-completes its browser link-token search flow with HTTP 200, and the configured
-Redlib link uses only the fixed operator origin. It also aborts the
-first request for a real lazy image-tool chunk to simulate an open tab crossing
-a deployment; the portal reloads once, fetches the replacement chunk, renders
-the requested tool, and clears its recovery marker. Public HTTPS is still the
-preferred browser environment and remains mandatory for launch.
+the deployed private HTTP origin. It covers the bilingual catalog, mobile and
+accessibility behavior, upstream attribution and launch URLs, SearXNG's browser
+link-token flow, and the configured Redlib origin. It must also confirm that
+retired portal-native tool routes and developer APIs return 404. Public HTTPS
+is still the preferred browser environment and remains mandatory for launch.
 
 Recorded baseline results, followed by the current private-preview handoff:
 
 - the 20/20 validator Node regressions passed, including launch-service,
   Redlib profile/catalog/origin, rimgo/public-Imgur block, IPv4/IPv6
   private-address, exact private-preview, and preview-at-launch rejection cases;
-- the production Vite build completed; the large lazy PDF chunk produced a size warning, not a build failure;
+- the production Vite build completed; its retired local-PDF chunk produced a
+  size warning at that historical revision;
 - ESLint and TypeScript completed without errors;
 - `npm test` passed the SearXNG redaction regression followed by 23/23 Vitest
   tests across the route, i18n/catalog, browser utility, and portal-server suites;
@@ -178,10 +141,9 @@ Recorded baseline results, followed by the current private-preview handoff:
 - Playwright passed 42/42 project/test combinations, with no skips, across
   desktop Chromium and a Pixel 7-sized Chromium profile against the actual
   deployed private-IP HTTP portal, real SearXNG endpoint, and real Redlib
-  endpoint—not the Vite development server. This included all local-tool and
-  bilingual checks, `isSecureContext=false` fallbacks, SearXNG's token-backed
-  result flow, Redlib backend/portal integration, and forced stale lazy-chunk
-  failure/reload recovery; and
+  endpoint—not the Vite development server. This historical run included the
+  now-retired local-tool checks, SearXNG's token-backed result flow, Redlib
+  backend/portal integration, and stale lazy-chunk recovery; and
 - a missing static-asset path returned a real 404 rather than the SPA document. The raw SearXNG smoke query was absent from recent logs.
 
 Rerun the complete command set after changing any source, dependency, runtime configuration, or test. A historical pass is not evidence for a modified tree.
@@ -259,36 +221,32 @@ Automated browser coverage verifies:
 
 - Spanish browser preference selects `/es/` on first use;
 - a manual language choice is stored locally and wins on the next root visit;
-- changing language preserves the equivalent current tool route;
+- changing language preserves the equivalent current information or catalog route;
 - all public information pages render in English and Spanish with an `h1`, matching HTML `lang`, and non-empty translated metadata;
 - accented Spanish strings render without `undefined`/`null` placeholders;
-- the 375-by-812 mobile layout has no horizontal overflow on a representative long Spanish tool;
+- the 375-by-812 mobile layout has no horizontal overflow on representative long Spanish catalog content;
 - the skip link receives keyboard focus and moves focus to the main region;
-- tool inputs have associated labels or accessible names, status regions are polite live regions, and reduced-motion styling removes transitions; and
+- interactive catalog controls have associated labels or accessible names and reduced-motion styling removes transitions; and
 - optional support links are absent when their URL is not configured.
 
 This is meaningful regression coverage, not a complete WCAG conformance audit. Before launch, manually review contrast, zoom/reflow, keyboard order, errors, downloads, screen-reader announcements, and all pages with at least one commonly used screen reader.
 
-## Local-tool behavior and no-upload evidence
+## Upstream-FOSS catalog policy and launch evidence
 
-Playwright loads each required route and its known static assets, then attaches HTTP(S)-request and WebSocket observers **before** placing a user's fixture file or entered content into the page. It keeps those observers active through selection/input, processing, and status/output checks (including immediate processing downloads). The original local-tool suite asserts zero processing-time requests after its assets settle. Developer-tool checks permit same-origin GET/HEAD requests for lazily loaded static code or workers, but reject every external or content-bearing request. Representative tests cover:
+The policy regression imports the same catalog used by the public interface and
+requires each launchable capability to reference an approved provider record.
+That provider must be an independently maintained, self-hostable FOSS
+application with a source URL, license, exact reviewed version, and documented
+integration type. A library, browser API, or Utilibre's own AGPL license is not
+sufficient evidence that a user-facing task has an upstream application.
 
-- image resize, compression, PNG/JPEG/WebP conversion, and metadata-removal re-encoding;
-- PDF merge, page extraction, rotation, and reordering, including output page-count/rotation checks;
-- SHA-256, SHA-512 code paths and file information including browser-reported MIME caveat and image dimensions;
-- JSON formatting, minification and download, Base64 Unicode round trip and invalid input, URL encoding and decoding, and secure UUID generation;
-- JWT decode/generate/verify, webhook HMAC verification, OpenAPI JSON/YAML
-  inspection, HTTP↔cURL conversion, bounded regex/cron workers, timestamp
-  conversion, SHA text hashes, and UUID inspection;
-- QR generation, local image reading, output download, and display-before-opening behavior; and
-- strict private-URL routing, including rejection of lookalike hosts and the absence of a user-controlled destination host.
-
-The configured-service browser regression also confirms that Redlib appears on
-the homepage, service/status/software/privacy views, and private router only
-when its catalog ID and fixed public URL are enabled. It never derives the
-destination host from pasted Reddit input.
-
-The original local-tool tests permit only initial same-origin static asset requests before monitoring begins. The newer developer checks may observe a later same-origin `GET` or `HEAD` for a code split or disposable worker; they still reject cross-origin traffic and same-origin methods that could carry the entered payload. The selected fixture or entered content is never intentionally sent in a request. Browser extensions and browser/OS telemetry are outside this application's control and were not part of the isolated Playwright context.
+Browser coverage verifies visible upstream attribution, bilingual discovery,
+and configured launch destinations. It also requests every retired
+portal-native route and the former developer API namespace and expects 404.
+Only the narrow Cobalt adapter may implement task-specific portal behavior;
+its tests prove that the capability remains supplied by pinned upstream Cobalt
+and that the adapter retains its existing validation, authentication, rate, and
+response bounds.
 
 ## Portal and security checks
 
@@ -301,19 +259,13 @@ Unit and private integration checks cover:
 - real 404 responses for missing static assets rather than an HTML SPA fallback;
 - missing/wrong Origin rejection on the media gateway;
 - rejection of private IPv4, private IPv6, localhost, unsupported schemes, credentials, explicit ports, malformed hosts, and oversized media request bodies;
-- strict private-router source and destination rules;
 - coalescing of concurrent high-level status calls and the server's 15-second default in-memory status snapshot, which prevents one public caller per internal probe;
 - Cobalt missing/invalid key rejection and acceptance of the generated matching portal key; and
 - stable public error codes rather than raw upstream error bodies;
-- temporary webhook capability separation, omission of Authorization, Cookie,
-  hop-by-hop, and recognized forwarding/proxy/client-address headers,
-  body/event/process-memory/rate/deadline/concurrency ceilings, paged reads,
-  deletion-during-upload and atomic-capacity cleanup, and
-  independent fail-closed disablement;
-- DNS public-host and record-type validation, timeout/result/error bounds, and
-  independent fail-closed disablement; and
-- absence of a generic server-side HTTP/header proxy under the developer API
-  namespace.
+- absence of webhook, DNS, generic HTTP/header proxy, and other retired
+  developer API behavior; and
+- catalog-policy rejection of any launchable entry without an approved
+  independently maintained, self-hostable FOSS application provider.
 
 The private-preview server regression also admits only an exact generated
 Cobalt URL on the configured private origin, exact `/tunnel` path, and required

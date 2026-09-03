@@ -4,6 +4,11 @@ Last reviewed: 2026-08-28
 
 This is a screening document, not a deployment list. None of the projects below is included in milestone 1. A candidate must still pass an egress smoke test, an abuse review, a privacy/data-flow review, a pinned-image review, and a measured resource test before it can be added.
 
+Every future candidate must also pass the mandatory application-provider gate
+in [`FOSS_POLICY.md`](../FOSS_POLICY.md): it must be an independently maintained,
+self-hostable FOSS application. Libraries and original portal implementations
+cannot substitute for an upstream application.
+
 Only the candidates' own repositories and deployment material were used for this review. Commit dates below are the newest commit observed on the named branch at review time. Resource numbers are deliberately broad planning envelopes inferred from the documented architecture; they are **not measurements on this host**. A future deployment must replace them with idle and active measurements.
 
 ## Summary

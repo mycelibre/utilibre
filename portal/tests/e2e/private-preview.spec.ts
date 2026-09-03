@@ -35,32 +35,6 @@ test('public portal loads its catalog outside an edge-reserved API namespace', a
   expect(serviceLinks.some((href) => /^http:\/\/(?:10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)/.test(href))).toBe(false);
 });
 
-test('direct private HTTP preview keeps UUID and SHA-2 tools local and functional', async ({ page }) => {
-  test.skip(!preview, 'Set PRIVATE_PREVIEW_BASE_URL to exercise the live private HTTP deployment.');
-
-  await page.goto(`${preview}/en/tools/uuid`);
-  await expect(page.locator('.tool-panel')).toBeVisible();
-  expect(await page.evaluate(() => window.isSecureContext)).toBe(false);
-  await expect(page.getByLabel('Output')).toHaveValue(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
-  await page.getByRole('button', { name: 'Copy' }).click();
-  await expect(page.getByRole('status')).toContainText('Copied');
-
-  await page.goto(`${preview}/en/tools/file-hashes`);
-  await expect(page.locator('.tool-panel')).toBeVisible();
-  await page.waitForLoadState('networkidle');
-  const requests: string[] = [];
-  page.on('request', (request) => requests.push(request.url()));
-  await page.locator('input[type=file]').setInputFiles({ name: 'abc.txt', mimeType: 'text/plain', buffer: Buffer.from('abc') });
-  await page.getByRole('button', { name: 'Calculate hashes' }).click();
-  await expect(page.getByRole('status')).toContainText('Done');
-  await expect(page.locator('dd').first()).toHaveText('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
-  await expect(page.locator('dd').nth(1)).toHaveText('ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f');
-  expect(requests).toEqual([]);
-
-  await page.goto(`${preview}/en/software`);
-  await expect(page.getByRole('heading', { name: '@noble/hashes' })).toBeVisible();
-});
-
 test('direct private SearXNG preview returns an actual result list', async ({ page }) => {
   test.skip(!previewSearch, 'Set PRIVATE_PREVIEW_SEARCH_URL to exercise live private SearXNG.');
   await page.goto(`${previewSearch}/`);
@@ -138,21 +112,4 @@ test('live portal on port 8080 links deployed services through public subdomains
     await expect(card.getByRole('link', { name: `Open: ${name}` })).toHaveAttribute('href', url);
   }
   await expect(page.getByRole('heading', { name: 'Find a time', exact: true })).toHaveCount(0);
-});
-
-test('an open page recovers once when a deployment replaces a lazy tool chunk', async ({ page }) => {
-  test.skip(!preview, 'Set PRIVATE_PREVIEW_BASE_URL to exercise the live private HTTP deployment.');
-
-  let intercepted = 0;
-  await page.route('**/assets/image-*.js', async (route) => {
-    intercepted += 1;
-    if (intercepted === 1) await route.abort('failed');
-    else await route.continue();
-  });
-  await page.goto(`${preview}/en/`);
-  await page.getByRole('link', { name: 'Open: Resize an image' }).click();
-  await expect(page).toHaveURL(/\/en\/tools\/image-resize$/);
-  await expect(page.locator('.tool-panel')).toBeVisible();
-  expect(intercepted).toBeGreaterThanOrEqual(2);
-  expect(await page.evaluate(() => sessionStorage.getItem('portal.stale-chunk-reload'))).toBeNull();
 });

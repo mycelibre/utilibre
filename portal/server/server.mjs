@@ -4,7 +4,6 @@ import { request as httpsRequest } from 'node:https';
 import { isIP } from 'node:net';
 import { extname, join, normalize } from 'node:path';
 import { clearTimeout, setTimeout } from 'node:timers';
-import { createDeveloperApi } from './developer-api.mjs';
 
 const PORT = positiveInt(process.env.PORT, 8080);
 const LISTEN_ADDRESS = process.env.LISTEN_ADDRESS || '0.0.0.0';
@@ -28,20 +27,12 @@ const MAX_REQUEST_HEADERS = 100;
 const STATUS_CACHE_MS = positiveInt(process.env.STATUS_CACHE_SECONDS, 15) * 1000;
 const ENABLED_SERVICES = new Set(csv(process.env.ENABLED_SERVICES || 'cobalt,searxng'));
 const DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE === 'es' ? 'es' : 'en';
-const WEBHOOK_INBOX_ENABLED = process.env.WEBHOOK_INBOX_ENABLED !== '0';
-const DNS_LOOKUP_ENABLED = process.env.DNS_LOOKUP_ENABLED !== '0';
 const PUBLIC_NTFY_HEALTH_URL = publicNtfyHealthUrl(process.env.PUBLIC_NTFY_URL || '');
 const STATUS_SERVICES = parseStatusServices(process.env.STATUS_SERVICES || '').filter(({ id }) => ENABLED_SERVICES.has(id));
 const SERVICE_HOST_ALLOWLIST = new Set(csv(process.env.COBALT_ALLOWED_HOSTS || defaultMediaHosts()).map((host) => host.toLowerCase()));
 const buckets = new Map();
 let activeMediaRequests = 0;
 let activeMediaBodyReads = 0;
-const developerApi = createDeveloperApi({
-  webhookEnabled: WEBHOOK_INBOX_ENABLED,
-  dnsEnabled: DNS_LOOKUP_ENABLED,
-  allowManagementRequest: (request) => originAllowed(request),
-  getClientKey: trustedClientIp,
-});
 let statusSnapshot = null;
 let statusCheck = null;
 const bucketSweep = setInterval(() => {
@@ -67,11 +58,11 @@ const MIME = new Map([
 const server = createServer(async (request, response) => {
   const requestUrl = parseRequestTarget(request.url);
   if (!requestUrl) {
-    setSecurityHeaders(response, '/');
+    setSecurityHeaders(response);
     setCrawlerHeaders(response, '/');
     return rejectServerRequest(request, response, 400, { error: 'invalid_request_target' }, { 'Cache-Control': 'no-store' });
   }
-  setSecurityHeaders(response, requestUrl.pathname);
+  setSecurityHeaders(response);
   setCrawlerHeaders(response, requestUrl.pathname);
 
   try {
@@ -98,7 +89,6 @@ const server = createServer(async (request, response) => {
       if (!ENABLED_SERVICES.has('cobalt')) return rejectServerRequest(request, response, 404, { error: 'not_found' });
       return await serveMediaRequest(request, response);
     }
-    if (await developerApi.handle(request, response, requestUrl)) return;
     if (requestUrl.pathname.startsWith('/api/') || requestUrl.pathname.startsWith('/_portal/')) {
       return json(response, 404, { error: 'not_found' }, { 'Cache-Control': 'no-store' });
     }
@@ -129,7 +119,6 @@ server.maxConnections = 512;
 server.listen(PORT, LISTEN_ADDRESS, () => {
   console.warn(`portal listening on ${LISTEN_ADDRESS}:${PORT}`);
 });
-server.on('close', () => developerApi.close());
 
 function parseRequestTarget(target) {
   if (typeof target !== 'string' || !target.startsWith('/')) return null;
@@ -144,9 +133,7 @@ function parseRequestTarget(target) {
 }
 
 function routeAcceptsRequestBody(pathname, method) {
-  if (method === 'POST' && ['/_portal/media', '/api/media', '/_portal/developer/dns'].includes(pathname)) return true;
-  return ['DELETE', 'PATCH', 'POST', 'PUT'].includes(method || '')
-    && /^\/_portal\/developer\/webhooks\/[A-Za-z0-9_-]{32}$/.test(pathname);
+  return method === 'POST' && ['/_portal/media', '/api/media'].includes(pathname);
 }
 
 function requestHasDeclaredBody(request) {
@@ -169,20 +156,14 @@ function rejectServerRequest(request, response, status, payload, additionalHeade
   return json(response, status, payload, additionalHeaders);
 }
 
-function setSecurityHeaders(response, pathname) {
-  const connectSources = externalNetworkToolPath(pathname) ? "'self' https: wss:" : "'self'";
-  response.setHeader('Content-Security-Policy', `default-src 'self'; base-uri 'none'; connect-src ${connectSources}; font-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' blob: data:; media-src 'self' blob:; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; worker-src 'self'`);
+function setSecurityHeaders(response) {
+  response.setHeader('Content-Security-Policy', "default-src 'self'; base-uri 'none'; connect-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' blob: data:; media-src 'self' blob:; object-src 'none'; script-src 'self'; style-src 'self'; worker-src 'self'");
   response.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
   response.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
   response.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()');
   response.setHeader('Referrer-Policy', 'no-referrer');
   response.setHeader('X-Content-Type-Options', 'nosniff');
   response.setHeader('X-Frame-Options', 'DENY');
-}
-
-function externalNetworkToolPath(pathname) {
-  return /^\/en\/tools\/(?:http-request|http-headers|websocket|sse)\/?$/.test(pathname)
-    || /^\/es\/herramientas\/(?:solicitud-http|cabeceras-http|websocket|eventos-sse)\/?$/.test(pathname);
 }
 
 function setCrawlerHeaders(response, pathname) {
@@ -282,12 +263,12 @@ function noScriptFallback(language, projectName) {
       <main id="main-content" class="page-shell">
         <header class="page-header">
           <p class="ledger-guideword">${name}</p>
-          <h1>Herramientas gratuitas para el navegador y servicios alojados de forma independiente</h1>
-          <p class="hero-lead">${name} es un portal público bilingüe de herramientas web gratuitas de software libre, respetuosas con la privacidad y alojadas en infraestructura propia.</p>
+          <h1>Herramientas libres gratuitas alojadas de forma independiente</h1>
+          <p class="hero-lead">${name} es un catálogo público bilingüe de aplicaciones de software libre alojadas en infraestructura propia.</p>
         </header>
         <section class="section prose" aria-labelledby="javascript-required">
           <h2 id="javascript-required">Este portal necesita JavaScript</h2>
-          <p>El catálogo interactivo y las herramientas que se ejecutan en el navegador están construidos con JavaScript, por lo que no están disponibles en esta versión básica.</p>
+          <p>El catálogo necesita su configuración pública en tiempo de ejecución, por lo que los enlaces no están disponibles en esta versión básica.</p>
           <p>Los enlaces a servicios alojados dependen de la configuración activa del servidor. Esta página estática no los muestra porque podrían estar desactualizados.</p>
           <p>Activa JavaScript y vuelve a cargar esta página para usar el catálogo y las herramientas.</p>
           <p><a href="/en/" lang="en" hreflang="en">Read this information in English</a></p>
@@ -299,12 +280,12 @@ function noScriptFallback(language, projectName) {
       <main id="main-content" class="page-shell">
         <header class="page-header">
           <p class="ledger-guideword">${name}</p>
-          <h1>Free browser tools and independently hosted services</h1>
-          <p class="hero-lead">${name} is a bilingual public portal for free, privacy-respecting, self-hosted open-source web tools.</p>
+          <h1>Free, independently hosted FOSS tools</h1>
+          <p class="hero-lead">${name} is a bilingual public catalog of FOSS applications hosted on independently operated infrastructure.</p>
         </header>
         <section class="section prose" aria-labelledby="javascript-required">
           <h2 id="javascript-required">This portal needs JavaScript</h2>
-          <p>The interactive catalog and browser tools are built in JavaScript, so they are not available in this fallback.</p>
+          <p>The catalog needs its public runtime configuration, so service links are not available in this fallback.</p>
           <p>Hosted service links depend on the server's current configuration. This static page does not list them because the result could be out of date.</p>
           <p>Enable JavaScript and reload this page to use the catalog and tools.</p>
           <p><a href="/es/" lang="es" hreflang="es">Leer esta información en español</a></p>
@@ -325,10 +306,10 @@ function loadPageMetadata() {
 function pageMetadata(pathname, language) {
   const normalized = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;
   const home = PAGE_METADATA[`/${language}`] ?? {
-    title: language === 'es' ? 'Herramientas gratuitas y servicios alojados de forma independiente' : 'Free browser tools and independently hosted services',
+    title: language === 'es' ? 'Herramientas libres gratuitas alojadas de forma independiente' : 'Free, independently hosted FOSS tools',
     description: language === 'es'
-      ? 'Encuentra herramientas gratuitas para el navegador y servicios de software libre alojados de forma independiente. Sin anuncios ni rastreo de comportamiento.'
-      : 'Find free browser tools and independently hosted open-source services. No ads or behavioral tracking.',
+      ? 'Encuentra herramientas de software libre alojadas de forma independiente, con notas claras sobre el flujo de datos. Sin anuncios ni rastreo de comportamiento.'
+      : 'Find independently hosted FOSS tools with clear data-flow notes. No ads or behavioral tracking.',
     robots: 'index,follow',
     alternates: { en: '/en/', es: '/es/' },
   };
@@ -405,8 +386,6 @@ function servePublicConfig(response) {
     publicFeedsUrl: publicServiceUrl(process.env.PUBLIC_FEEDS_URL),
     publicPasteUrl: publicServiceUrl(process.env.PUBLIC_PASTE_URL),
     publicWakapiUrl: publicServiceUrl(process.env.PUBLIC_WAKAPI_URL),
-    webhookInboxEnabled: WEBHOOK_INBOX_ENABLED,
-    dnsLookupEnabled: DNS_LOOKUP_ENABLED,
     enabledServices: [...ENABLED_SERVICES],
     defaultLanguage: DEFAULT_LANGUAGE,
   }, { 'Cache-Control': 'no-store' });

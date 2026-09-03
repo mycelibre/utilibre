@@ -45,13 +45,13 @@ MiB RAM**; adding optional rimgo makes **4.50 CPUs and 3,328 MiB RAM**. These
 are ceilings, not reservations or expected simultaneous use. Launch memory
 reservations total 608 MiB.
 
-No representative active peak was measured. A successful SearXNG HTML query and a rimgo gallery/media smoke request completed, but sampling their tiny one-off requests would not provide a defensible production peak. The documented Dailymotion example resolved through the portal and Cobalt; its tunnel delivered a first chunk before controlled cancellation. That exercise did not complete the download or enter a demonstrated FFmpeg-heavy path, and no resource sample or soak was recorded for it. The portal's browser tests exercised the original local tools, but the processing load was in the test browser rather than the portal container. The later Developer-category implementation has not received a separate production resource sample; its local and browser-direct work runs on the visitor's device, while webhook/DNS work remains inside the existing portal ceiling and the explicit bounds below.
+No representative active peak was measured. A successful SearXNG HTML query and a rimgo gallery/media smoke request completed, but sampling their tiny one-off requests would not provide a defensible production peak. The documented Dailymotion example resolved through the portal and Cobalt; its tunnel delivered a first chunk before controlled cancellation. That exercise did not complete the download or enter a demonstrated FFmpeg-heavy path, and no resource sample or soak was recorded for it. Earlier portal-native browser and Developer tools were retired under the upstream-FOSS-only policy; their historical browser-side observations are not part of the current operating profile.
 
 ## Disk footprint and temporary storage
 
 | Component | Approximate image virtual size | Persistent disk | Bounded temporary storage |
 | --- | ---: | --- | --- |
-| Portal | 229 MB after the 2026-09-03 Developer-category rebuild | None | `/tmp` tmpfs, 32 MiB; webhook events additionally use bounded process memory, never disk |
+| Portal | 56.6 MB (`56,553,405` bytes), measured after the upstream-FOSS-only cleanup | None | `/tmp` tmpfs, 32 MiB; media rate state uses bounded process memory, never disk |
 | Cobalt | 438 MB | None; no media volume | Read-only root and no writable media volume; short-lived tunnel state is held in process memory |
 | SearXNG | 374 MB | Named `searxng-cache` volume; rebuildable, not a query-history database | `/tmp` tmpfs, 128 MiB |
 | Valkey | 65.8 MB | None; RDB and AOF disabled | `/tmp` tmpfs, 16 MiB; `/data` tmpfs, 128 MiB; `maxmemory` 96 MiB |
@@ -88,11 +88,11 @@ code path never buffers bytes in memory or kernel/container storage layers.
 
 - **CPU/RAM:** measured 18.63–22.44 MiB with effectively idle point CPU; static delivery and small validation/status operations should remain light. Ceiling: 0.50 CPU and 256 MiB.
 - **Persistent/temporary disk:** no database or volume; 32 MiB tmpfs for temporary runtime needs. Static assets live in the immutable image.
-- **Ingress/egress:** ordinarily small HTML, JavaScript, CSS, and self-hosted WASM responses. Local tools add no processing traffic after their assets load. HTTP/WebSocket/SSE developer tools connect browser-to-destination and do not consume portal relay bandwidth. `POST /_portal/media` accepts at most an 8 KiB JSON body. A webhook receiver request accepts at most 12 KiB of body data and retains at most 32 headers/32 KiB with an explicit truncation flag; event reads return at most 10 events/192 KiB per page. DNS requests accept at most 4 KiB and return at most 64 KiB/100 records.
+- **Ingress/egress:** ordinarily small HTML, JavaScript, and CSS responses plus high-level status checks. `POST /_portal/media` accepts at most an 8 KiB JSON body and is the only task-specific portal request. Catalog launches navigate to separately hosted upstream applications rather than relaying their task traffic through the portal.
 - **Database:** none.
-- **Memory-only developer state:** access to each webhook inbox expires after 15 minutes; process references are removed on the next request or periodic sweep, normally within another minute. Each inbox retains at most 25 events/1 MiB. A derived client can hold at most three active inboxes, 75 retained events, and 2 MiB. Process-wide ceilings are 100 inboxes, 2,048 events, and 16 MiB of retained event data; the limiter holds at most 4,096 keys. DNS has no history store.
-- **Likely abuse:** media request floods, oversized/malformed JSON, spoofed proxy headers, arbitrary URL attempts, repeated status calls, webhook receiver floods/capability guessing, and DNS amplification or resolver exhaustion attempts.
-- **Controls:** exact Origin checks for media, inbox creation, and DNS; bearer-token inbox management; separate unguessable receiver/read capabilities; omission of Authorization, Cookie, hop-by-hop, and recognized forwarding/proxy/client-address webhook headers while other custom headers remain visible to the read capability; strict provider/URL/hostname/record-type validation; private literal/special-use address rejection; fixed upstream/resolver functions; operation-specific rate, deadline, pagination, connection, and capacity limits; maximum 16 media body readers before the two-job upstream ceiling, 32 webhook bodies globally/four per inbox, 32 event-list responses globally/two per inbox, and eight DNS requests including body receipt; ten-second media-body, 45-second upstream-media, ten-second developer body/list-response, and four-second DNS resolver deadlines; a fail-closed 431 at the 100-header boundary; IPv6 /64 application rate keys; fixed high-level status targets; independent webhook/DNS kill switches; and container ceilings. No generic server HTTP proxy or webhook forwarding/replay endpoint exists.
+- **Memory-only state:** media limiter counters clear after their configured window and sweep interval or on portal restart.
+- **Likely abuse:** media request floods, oversized/malformed JSON, spoofed proxy headers, arbitrary URL attempts, and repeated status calls.
+- **Controls:** exact Origin checks for media; strict provider/URL validation; private literal-address rejection; fixed upstream functions; media rate, body-read, upstream deadline, response-size, and concurrency limits; a fail-closed 431 at the 100-header boundary; IPv6 /64 application rate keys; fixed high-level status targets; and container ceilings. No generic server HTTP proxy, webhook receiver, or DNS lookup endpoint exists.
 
 ### Cobalt
 
@@ -208,8 +208,8 @@ No defensible bytes-per-user forecast can be derived from the smoke tests. The o
    create sustained uncorrelated traffic; this is one reason the profile is off.
 4. **SearXNG image proxy:** normal HTML is small, but image proxying and
    automated fan-out can increase both directions.
-5. **Portal static assets:** bounded and cacheable; the self-hosted QR WASM is
-   about 1.5 MiB and the lazy PDF JavaScript chunk is about 587 KiB.
+5. **Portal static assets:** bounded and cacheable. The replacement image must
+   be measured after the upstream-FOSS-only cleanup.
 
 Before broader public announcement or public-instance listing, determine the
 provider's transfer quota and alerting. Inspect aggregate daily interface/
@@ -220,7 +220,7 @@ cannot be explained. Do not infer safety from low idle RAM.
 
 - All services use `restart: unless-stopped`; explicit operator stops remain stopped.
 - Health checks exist for portal, Cobalt, SearXNG, Valkey, Anubis, and Redlib. Anubis waits for healthy Redlib and SearXNG waits for healthy Valkey at creation, but readiness is still verified after every restart.
-- Portal rate counters and webhook inboxes/events/read-token hashes, Cobalt tunnel metadata, and Valkey limiter state are memory-only and reset on restart. Resetting counters is an availability/abuse tradeoff, not persistence failure; clearing webhook inboxes on restart is the documented retention boundary.
+- Portal media rate counters, Cobalt tunnel metadata, and Valkey limiter state are memory-only and reset on restart. Resetting counters is an availability/abuse tradeoff, not persistence failure.
 - Portal, Cobalt, Valkey, Anubis, Redlib, and rimgo use read-only roots. Portal/SearXNG/Anubis/Redlib/Valkey temporary locations are bounded tmpfs. Docker logs rotate at 10 MB times three files per container by default.
 - The only persistent volume, `searxng-cache`, may be removed to clear rebuildable cache. It should not contain downloaded media or deliberate query history.
 - A service can be disabled quickly with `docker compose stop SERVICE`; disabling SearXNG also permits stopping Valkey. Use the optional profile explicitly when addressing rimgo.
@@ -273,11 +273,10 @@ After edge routing and source firewalling are installed—but before broad annou
 4. one English and one Spanish SearXNG search through the real edge limiter path;
 5. one small Redlib community/post/media request through the real edge,
    including Range/cancellation observation and a redirect-patch regression;
-6. one temporary webhook inbox through the real edge, including the 12 KiB body rejection boundary, omission of Authorization, Cookie, hop-by-hop, and recognized forwarding/proxy/client-address headers, preservation of an ordinary custom signature header, token-protected read/delete, expiry/restart cleanup, and an access-log review that does not retain the opaque receiver path or body;
-7. one valid and one rejected DNS query plus a short controlled concurrency check within the eight-request ceiling, without repeatedly targeting third-party resolvers;
-8. independent `WEBHOOK_INBOX_ENABLED=0` and `DNS_LOOKUP_ENABLED=0` fail-closed checks;
-9. short controlled concurrency within published limits, without targeting third-party services repeatedly;
-10. per-service network counters and host free disk before/after those checks; and
-11. reachability from the edge plus rejection from one authorized external test host.
+6. one catalog-policy check proving every launchable entry maps to an approved
+   independently maintained, self-hostable FOSS application;
+7. short controlled concurrency within published limits, without targeting third-party services repeatedly;
+8. per-service network counters and host free disk before/after those checks; and
+9. reachability from the edge plus rejection from one authorized external test host.
 
 Document observed peaks and revise ceilings only when the measurements justify it. If the host approaches a ceiling, prefer stopping the affected service over raising limits speculatively.

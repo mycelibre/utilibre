@@ -57,7 +57,7 @@ matching Cobalt key pair; `init-secrets.mjs` does that without printing the key.
 
 With the default ports, the private destinations are:
 
-- portal and browser tools: `http://PRIVATE_BIND_IP:8080/`;
+- public portal and its two upstream-integration routes: `http://PRIVATE_BIND_IP:8080/`;
 - SearXNG: `http://PRIVATE_BIND_IP:8888/`;
 - Anubis/Redlib ingress: `http://PRIVATE_BIND_IP:3002/` (production policy
   requires the trusted Cloudflare client-address header; do not expose this as
@@ -66,7 +66,10 @@ With the default ports, the private destinations are:
 
 Port `9000` is not a user interface. Media preparation still enters through the portal's same-origin `/_portal/media`; the portal keeps the Cobalt key server-side and accepts only an exact preview tunnel URL from the configured Cobalt origin. Do not expose or use Cobalt's API root as a general private proxy.
 
-Modern browsers treat a private-IP HTTP origin as less trustworthy than HTTPS. The portal provides local fallbacks for UUID generation, SHA-256/SHA-512 hashing, and copy behavior so the tested tools remain usable, but HTTPS is still preferred and is mandatory for public deployment. Test the target browsers in the final HTTPS topology before launch.
+Modern browsers treat a private-IP HTTP origin as less trustworthy than HTTPS.
+The catalog remains usable for private validation, but HTTPS is mandatory for
+public deployment. Test the target browsers and every upstream handoff in the
+final HTTPS topology before launch.
 
 To resume an already prepared preview, do not rerun the initializer:
 
@@ -131,7 +134,6 @@ Edit `.env` and replace every `REPLACE_*` value. Important relationships are:
 - `COBALT_PUBLIC_API_URL` is the HTTPS media hostname with a trailing slash. Cobalt-generated tunnel links use it.
 - `PUBLIC_SEARCH_URL` is the public SearXNG URL with a trailing slash.
 - `PUBLIC_REDDIT_URL` is the Redlib HTTPS origin with a trailing slash and must match `PUBLIC_REDDIT_HOST`/`ANUBIS_PUBLIC_HOST` when Redlib is enabled. `ANUBIS_REAL_IP_HEADER=CF-Connecting-IP` is safe only while Cloudflare is the sole ingress to the edge origin. `PUBLIC_YOUTUBE_URL` stays empty while Invidious is deferred; `PUBLIC_IMGUR_URL` stays empty because rimgo 1.4.2 is launch-blocked.
-- `WEBHOOK_INBOX_ENABLED=1` and `DNS_LOOKUP_ENABLED=1` enable the two bounded developer-network APIs independently. Set either to `0` and recreate only the portal to remove that catalog launch and make the corresponding API return 404. These are emergency switches, not substitutes for the edge request ceiling or application limits.
 - `ENABLED_SERVICES=cobalt,searxng,redlib` and `COMPOSE_PROFILES=privacy-frontends` form the launch set. Remove `redlib`, the profile, and its public URL together to disable it cleanly.
 - `TZ=America/Guatemala` controls supported container-local timestamps; it does not change the host time zone.
 
@@ -294,7 +296,7 @@ client-address headers at the real edge.
 
 This section is not used by `PRIVATE_PREVIEW=1`. It is mandatory before any public launch.
 
-Apply the mappings in [edge-routing.md](edge-routing.md) on the Caddy edge VM. The critical rule is that the public media hostname routes only `GET /tunnel`; it must not expose Cobalt's root API, session endpoints, or a catch-all path. The browser sends processing requests to the portal's same-origin `/_portal/media` endpoint, which validates the request and supplies the Cobalt key internally. The developer webhook and DNS APIs remain under the existing portal hostname and 16 KiB edge request ceiling; do not add another hostname, a broader body exception, or a generic HTTP proxy route. Configure the edge not to retain opaque webhook receiver paths, bodies, or management Authorization headers.
+Apply the mappings in [edge-routing.md](edge-routing.md) on the Caddy edge VM. The critical rule is that the public media hostname routes only `GET /tunnel`; it must not expose Cobalt's root API, session endpoints, or a catch-all path. The browser sends processing requests to the portal's same-origin `/_portal/media` endpoint, which validates the request and supplies the Cobalt key internally. The retired `/_portal/developer/*` namespace must remain a 404; do not add another hostname, a broader body exception, a webhook receiver, a DNS resolver, or a generic HTTP proxy route.
 
 After validating and reloading Caddy on the edge, verify:
 

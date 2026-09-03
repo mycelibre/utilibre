@@ -1,3 +1,4 @@
+/** Generates collision-resistant DOM identifiers for portal controls. */
 export function secureRandomUuid(forceFallback = false): string {
   if (!forceFallback && typeof globalThis.crypto?.randomUUID === 'function') return globalThis.crypto.randomUUID();
   if (typeof globalThis.crypto?.getRandomValues !== 'function') throw new Error('secure_random_unavailable');

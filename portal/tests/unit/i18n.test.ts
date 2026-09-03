@@ -61,21 +61,13 @@ describe('bilingual content', () => {
     }
   });
 
-  it('marks every browser-only tool as local and not uploaded', () => {
-    const browserTools = catalog.filter((entry) => entry.kind === 'tool' && entry.labels.length === 1 && entry.labels[0] === 'local');
-    for (const tool of browserTools) {
-      expect(tool.labels).toEqual(['local']);
-      expect(tool.filesUploaded).toBe(false);
-      expect(tool.upstreamServices).toEqual([]);
+  it('ties every public entry to an independently maintained upstream application', () => {
+    for (const entry of catalog) {
+      expect(entry.providerId.length).toBeGreaterThan(1);
+      expect(entry.upstreamProject.length).toBeGreaterThan(1);
+      expect(entry.upstreamSourceUrl).toMatch(/^https:\/\//);
+      expect(entry.implementation).toMatch(/^(upstream-application|integration-glue)$/);
     }
-  });
-
-  it('keeps developer network tools on their declared browser or server boundary', () => {
-    for (const id of ['http-request', 'http-headers', 'websocket', 'sse']) {
-      expect(catalog.find((entry) => entry.id === id)?.labels).toEqual(['local', 'external']);
-    }
-    expect(catalog.find((entry) => entry.id === 'webhook-inbox')?.labels).toEqual(['server']);
-    expect(catalog.find((entry) => entry.id === 'dns-lookup')?.labels).toEqual(['server', 'proxy']);
   });
 
   it('marks only the verified account-backed services with their public access mode', () => {

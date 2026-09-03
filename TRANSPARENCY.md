@@ -1,14 +1,21 @@
 # Transparency
 
-Utilibre is an independently operated convenience layer around browser-local
-utilities and separately hosted Free and Open Source Software. It makes the
-services easier to find and explains their data paths. It did not create the
-upstream applications or inherit credit for them by running Docker Compose.
+Utilibre is an independently operated catalog and hosting layer for
+independently maintained Free and Open Source Software applications. It makes
+those applications easier to find and explains their data paths. Utilibre does
+not create substitute end-user tools or inherit credit for upstream work by
+running Docker Compose.
+
+Original Utilibre code is glue only: cataloging, bilingual navigation,
+configuration, disclosure, narrowly scoped gateways, testing, and security or
+deployment integration. A programming library or browser API alone does not
+qualify a new catalog tool. If no suitable self-hostable FOSS application can
+be verified, Utilibre does not offer that capability.
 
 ## Upstream work
 
-Each hosted application and bundled library is identified by project, source,
-version, license, purpose, and local-modification state in
+Each hosted application is identified by project, source, version, license,
+purpose, and local-modification state in
 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md),
 [`docs/licenses.md`](docs/licenses.md), and the second-stack
 [`SOURCE_MANIFEST.md`](deployment/utilibre/SOURCE_MANIFEST.md). Where Utilibre
@@ -37,11 +44,11 @@ deploying it.
 ## Service and privacy claims
 
 The portal reports specific, implementation-backed facts rather than claiming
-absolute privacy, anonymity, security, retention, or uptime. Some operations
-remain in the browser; others necessarily reach Utilibre's servers or outside
-providers. Cloudflare is the current public proxy and processes ordinary
-connection and request metadata. Details and unresolved verification duties
-are documented in [`docs/privacy.md`](docs/privacy.md),
+absolute privacy, anonymity, security, retention, or uptime. Some upstream
+applications perform work in the browser; others necessarily reach Utilibre's
+servers or outside providers. Cloudflare is the current public proxy and
+processes ordinary connection and request metadata. Details and unresolved
+verification duties are documented in [`docs/privacy.md`](docs/privacy.md),
 [`docs/security.md`](docs/security.md), and
 [`docs/final-report.md`](docs/final-report.md).
 

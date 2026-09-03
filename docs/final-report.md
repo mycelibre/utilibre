@@ -2,6 +2,14 @@
 
 Report date: 2026-08-31
 
+> **Policy correction (2026-09-03):** this is a historical report. Its
+> descriptions and passing tests for original portal-native browser tools and
+> custom developer endpoints are superseded by
+> [`FOSS_POLICY.md`](../FOSS_POLICY.md). Those routes, implementations,
+> dependencies, and endpoints have been removed. Current public capabilities
+> come only from reviewed, independently maintained, self-hostable FOSS
+> applications; Utilibre's own code is integration glue.
+
 > **Post-report production change (2026-08-30):** the historical private-preview
 > baseline below predates the Redlib abuse gate. Public Redlib traffic now
 > follows `Cloudflare → Caddy edge → private port 3002/Anubis 1.27.0 → internal
@@ -210,7 +218,10 @@ The Cobalt frontend is this project's own interface. It does not copy Cobalt's o
 - **Invidious and Invidious Companion:** not present in Compose; no PostgreSQL container or volume exists.
 - **rimgo public activation:** image/profile exists for controlled private evaluation, but it is absent from the default enabled-service list and has no public DNS/TLS/Caddy route.
 - **Cobalt YouTube extraction:** disabled in the current default/live policy; this is separate from the deferred Invidious browsing frontend.
-- **YouTube and Imgur private-router destinations:** unavailable unless the corresponding reviewed local frontend is genuinely enabled. Reddit routes to the configured Redlib origin; the router never manufactures a destination from visitor input.
+- **Private-router scope:** the current integration accepts only public Reddit
+  hostnames and routes only to the configured Redlib origin. Historical
+  YouTube and Imgur branches were removed with the upstream-FOSS policy
+  correction; the router never manufactures a destination from visitor input.
 
 Launch validation rejects both `rimgo` in `ENABLED_SERVICES` and a populated `PUBLIC_IMGUR_URL` until an official fixed release is pinned and reviewed.
 

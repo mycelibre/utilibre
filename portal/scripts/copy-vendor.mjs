@@ -3,10 +3,6 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const destination = join(root, 'public', 'vendor', 'zxing_full.wasm');
-await mkdir(dirname(destination), { recursive: true });
-await copyFile(join(root, 'node_modules', 'zxing-wasm', 'dist', 'full', 'zxing_full.wasm'), destination);
-
 for (const [sourceName, destinationName] of [
   ['LICENSE', 'LICENSE.txt'],
   ['THIRD_PARTY_NOTICES.md', 'THIRD_PARTY_NOTICES.txt'],

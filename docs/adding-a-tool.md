@@ -1,164 +1,92 @@
-# Adding a browser tool
+# Adding a public tool
 
-Follow the bilingual voice and safety rules in `docs/copy-style.md`. Tool
-descriptions are normally literal; humor belongs in page-level explanation,
-not controls, repeated states, errors, warnings, recovery, or privacy claims.
+Utilibre does not build end-user tools. It hosts independently maintained,
+self-hostable FOSS applications and adds only the glue needed to catalog,
+configure, route, secure, and operate them. The complete rule is in
+[`FOSS_POLICY.md`](../FOSS_POLICY.md).
 
-Add a tool only when it solves a distinct, useful problem. A new card is not a
-goal by itself. Milestone-1 tools are deliberately browser-side: after the
-application and any self-hosted static assets load, selected files and entered
-content must not leave the browser.
+If the proposed capability has no qualifying upstream application, stop. Do
+not implement it with browser APIs, a reusable library, copied snippets, or
+original server code. A useful omission is better than a catalog entry whose
+provenance has to be explained sideways.
 
-## 1. Define the behavior and data flow
+## 1. Establish the upstream application
 
-Before coding, write down:
+Verify all of the following from primary upstream sources:
 
-- the exact input, output, supported formats, size limitations, and failure
-  modes;
-- whether standard browser APIs are sufficient;
-- every network request needed after the page loads;
-- transient browser memory use and whether object URLs, workers, or WASM are
-  involved;
-- metadata, animation, color, quality, password, or format limitations users
-  need to understand;
-- the dependency's current maintenance status, exact version, license, source,
-  and browser bundle cost, if a library is needed.
+- project and active independent maintainer;
+- complete source and FOSS license, including the exact license variant;
+- supported self-hosting method;
+- exact release, commit, image digest, and build inputs;
+- runtime assets, telemetry, CDNs, external calls, accounts, cookies, storage,
+  retention, and logs;
+- resource needs, public-abuse surface, update cadence, and rollback path; and
+- modification/source-publication obligations.
 
-If the operation needs server processing, do not describe it as a local tool.
-Review it as a service, assign `SERVER` and any `PROXY`/`EXTERNAL` labels, and
-follow [adding-a-service.md](adding-a-service.md).
+A FOSS library is not a public application provider. It may be a dependency of
+the portal or upstream application, but it cannot justify an original Utilibre
+utility.
 
-Do not add a CDN, remote font, analytics request, telemetry SDK, account, or
-server upload merely for convenience. A dependency's JavaScript and WASM must
-be pinned and self-hosted.
+## 2. Pass the service-admission review
 
-## 2. Add a stable catalog entry
+Follow [`adding-a-service.md`](adding-a-service.md) for viability, deployment,
+network, security, privacy, license, localization, resource, and private-test
+requirements. Static browser applications still follow that process: their
+visitor data may stay local, but their build, runtime assets, CSP, external
+requests, and update path still require review.
 
-Add one entry to `portal/src/catalog/catalog.ts`. A local tool normally uses
-the `localTool()` helper and must have:
+Do not expose a generic proxy, arbitrary network target, anonymous receiver,
+or account system merely because an upstream supports it. Configure only the
+public surface that fits the documented threat model and available resources.
 
-- a stable lowercase-hyphenated `id`;
-- a useful category (`image`, `pdf`, `file`, or `utility`);
-- natural English and neutral Spanish names and descriptions;
-- both language-aware slugs;
-- truthful `LOCAL` data flow, no upload, browser-only temporary storage,
-  retention, and logging statements;
-- dependency project name, license, source URL, installed version, and
-  modification status when third-party code is involved. The visible source
-  treatment must credit that project rather than implying Utilibre authorship.
+## 3. Register the provider before the catalog entry
 
-The catalog drives cards, routes, transparency details, status/inventory
-content, and software disclosures. Do not duplicate the same facts in an
-unrelated component.
+Add a reviewed public-application record with `reviewStatus: 'deployed'` to
+`portal/src/catalog/upstreams.ts` only after the review passes. Record:
 
-If a genuinely new category is necessary, extend `CatalogCategory`, add its
-translation key, render it in `renderTools()`, and test the resulting layout.
-Prefer an existing category when it describes the tool accurately.
+- official project and source URL;
+- license and every applicable license-evidence URL;
+- exact reviewed source and immutable artifact reference;
+- official self-hosting and current-maintenance evidence;
+- the repository review document;
+- exact installed version;
+- self-hosting integration type;
+- approval state and review date; and
+- the invariant that the maintainer is independent of Utilibre.
 
-## 3. Implement and dispatch the tool
+Then add the bilingual catalog entry. It must reference the deployed provider;
+visible name, source, license, and version metadata come from that record. A
+deferred provider may be documented but cannot become launchable.
 
-Place focused code under `portal/src/tools/`. Use the helpers in
-`portal/src/utilities/dom.ts` for labelled fields, buttons, live status regions,
-downloads, and DOM creation. Keep user-visible text out of the module; request
-it through the supplied `Translate` function.
+Original portal code is permitted only for a narrow integration. Set
+`portalSurface: 'integration-glue'`, document why the upstream application
+still performs the actual task, and keep the adapter smaller than the
+capability it exposes. Use `kind: 'integration'` and
+`implementation: 'integration-glue'` when the catalog record itself is only a
+router. A service such as Cobalt remains `kind: 'service'` and
+`implementation: 'upstream-application'` because the upstream application
+performs the task, even though its portal surface is glue.
 
-Update the dispatch in `renderToolPage()` in `portal/src/pages/pages.ts` and,
-where applicable, its tool-ID union. Existing families are lazily imported:
-
-- `image-*` → `tools/image.ts`
-- `pdf-*` → `tools/pdf.ts`
-- `file-*` → `tools/files.ts`
-- JSON/Base64/URL/UUID → `tools/text.ts`
-- QR tools → `tools/qr.ts`
-
-A separate module is appropriate when a tool has a distinct dependency or
-enough logic to justify its own lazy chunk. Handle malformed, unsupported, and
-oversized input without exposing raw library exceptions. Release resources:
-close `ImageBitmap` objects, revoke object URLs when no longer useful, discard
-large buffers, and restore disabled controls in `finally` blocks.
-
-For static WASM or worker assets, copy the exact pinned file locally during
-`prebuild`/`predev`; never retain a library's default CDN fallback. Update the
-portal Content Security Policy only for a concrete local requirement, and keep
-`connect-src` restricted.
-
-## 4. Translate every public string
-
-Add stable keys to both:
-
-- `portal/src/i18n/en.ts`
-- `portal/src/i18n/es.ts`
-
-Translate the title, description, labels, help, placeholders, warnings,
-buttons, validation, empty/loading/success/error states, accessibility names,
-page metadata, and any format limitation. Spanish is an equal interface, not a
-fallback copy. Do not use national flags for language selection.
-
-Use `« »` for Spanish quotations and prefer “software libre” for libre-licensed
-open-source software. Translate comic intent only when it remains natural;
-otherwise omit the joke.
-
-`es.ts` is typed against the English dictionary, and the unit suite requires
-exact key parity. See [adding-a-language.md](adding-a-language.md) for broader
-i18n architecture.
-
-## 5. Test the privacy claim and behavior
-
-Add unit tests for pure parsing/transformation rules under
-`portal/tests/unit/`. Add a Playwright test under `portal/tests/e2e/` that:
-
-1. opens the tool and waits for all code/WASM/worker assets;
-2. selects or enters a small deterministic fixture;
-3. attaches request monitoring only after assets are ready;
-4. performs the operation and checks the actual output/status/download;
-5. permits only expected same-origin `GET`/`HEAD` loads for lazy code or workers,
-   and asserts there was no external or content-bearing request, beacon,
-   WebSocket, or form submission during processing (a fully settled tool may
-   use the stricter zero-request assertion);
-6. repeats relevant UI assertions at a mobile viewport and in Spanish.
-
-Cover invalid and unusually large input without exhausting the test host. Test
-keyboard order, visible focus, associated labels, semantic headings, live
-status announcements, contrast, and reduced-motion behavior. Blob/object URLs
-are local browser mechanisms and should not be mistaken for network uploads.
+## 4. Validate and release
 
 Run from `portal/`:
 
 ```sh
 npm ci --ignore-scripts
+npm run test:foss-policy
 npm run lint
 npm run typecheck
 npm test
-npm run build
 npm run test:e2e
 npm audit
 ```
 
-Playwright requires its supported Chromium browser to be installed once; see
-the test section in the repository README.
+`npm run build` invokes the FOSS policy test before Vite. Also run Compose
+validation, private deployment checks, the upstream application's functional
+acceptance tests, and the documented public-path checks. Confirm English and
+Spanish copy, keyboard use, narrow and wide layouts, loading/failure states,
+source attribution, and every claimed data boundary.
 
-## 6. Update disclosure and licenses
-
-If a dependency changes, update together:
-
-- exact versions in `package.json` and `package-lock.json`;
-- the catalog license/source/version fields;
-- the public Software inventory when it is a major component;
-- `THIRD_PARTY_NOTICES.md` and `docs/licenses.md`;
-- privacy and resource documentation if data flow, memory use, or static asset
-  size changes.
-
-Preserve license and attribution files. Re-run the no-upload tests after any
-dependency, Vite, worker, WASM, or CSP change.
-
-## Completion checklist
-
-- The tool is useful and not a duplicate made to inflate the catalog.
-- English and Spanish routes are directly linkable and switching language
-  preserves the tool.
-- The catalog describes real data flow and limitations.
-- No selected content is transmitted after assets load.
-- Output and invalid-input behavior are tested, including mobile and keyboard
-  use.
-- All dependencies are pinned, FOSS-compatible, self-hosted, and disclosed.
-- Build, lint, type check, unit tests, browser tests, and dependency review pass.
+If the application later becomes unmaintained, changes license, adds
+unacceptable telemetry, exceeds safe resource limits, or cannot be operated
+without weakening the boundary, mark it deferred and remove its launch URL.

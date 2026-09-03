@@ -112,7 +112,7 @@ components:
 
 **Creative North Star: "The Useful Field Ledger"**
 
-Utilibre is a cultivated working catalog: warm, bookish, public-service, plainspoken, technically competent, and quietly witty. Its visual world combines uncoated paper, official coral and charcoal, factual lichen/rust/blue accents, numbered task indexing, and ruled comparison records. It should feel authored by an independent operator rather than startup-polished.
+Utilibre is a cultivated working catalog: warm, bookish, public-service, plainspoken, technically competent, and quietly witty. Its visual world combines uncoated paper, official coral and charcoal, factual lichen/rust/blue accents, numbered task indexing, and ruled comparison records. Every record visibly belongs to an independently maintained FOSS application; the portal is the field guide, not the specimen. It should feel authored by an independent operator rather than startup-polished.
 
 The ledger is useful before it is expressive. Names, task descriptions, processing facts, and actions share one comparable reading structure; humor and personality live in careful language rather than decoration. Mycelial relationships may inform information adjacency, but the shipped interface uses no ornamental network motif.
 
@@ -216,7 +216,7 @@ The masthead ends with a 2px ink rule. The official horizontal logo is 9.45rem w
 
 ### Task Index
 
-Six numbered task links form the desktop rail, separated by 1px rules. Rust coordinates and bold body labels provide scan anchors; the selected task is underlined rather than filled. The Developer entry is a peer task group, not a dashboard detached from the public catalog. Below 58rem the same source order becomes a horizontal text scroller with a small written scroll cue—never a row of pills.
+Five numbered task links form the desktop rail, separated by 1px rules. Rust coordinates and bold body labels provide scan anchors; the selected task is underlined rather than filled. Empty or speculative categories are not shown. Below 58rem the same source order becomes a horizontal text scroller with a small written scroll cue—never a row of pills.
 
 ### Search
 
@@ -224,17 +224,17 @@ The search label uses the metadata voice. On wider screens a transparent 2px ink
 
 ### Catalog Ledger
 
-This is the signature component: numbered coordinates, serif tool names, plain descriptions, underlined processing labels, a concrete data-flow note, and one aligned launch edge. Every upstream-backed record places a labeled project-source link beneath its task description; the launch column is reserved for launching. This keeps credit readable in Spanish and prevents task-first labels from implying that Utilibre created the hosted interface. A 2px rule opens the list, 1px rules divide records, and a quiet paper-pale mix marks row hover. At 58rem the processing note moves below the description; at 39rem the launch action follows both as a full-width control.
+This is the signature component: numbered coordinates, serif tool names, plain descriptions, underlined processing labels, a concrete data-flow note, and one aligned launch edge. Every record places a labeled upstream-project source link beneath its task description; entries without an approved provider never render. The launch column is reserved for launching. This keeps credit readable in Spanish and prevents task-first labels from implying that Utilibre created the hosted interface. A 2px rule opens the list, 1px rules divide records, and a quiet paper-pale mix marks row hover. At 58rem the processing note moves below the description; at 39rem the launch action follows both as a full-width control.
 
 ### Buttons and Fields
 
 Primary buttons are ink-on-paper inversions with a 2px border, at least 2.8rem high, and weight 750; hover changes both border and fill to rust. Secondary buttons keep the same geometry with a transparent fill. Disabled controls use 0.55 opacity. Standard fields are transparent, square, at least 3rem high, and use a 1px ink border; the search field intentionally strengthens that border to 2px.
 
-### Processing Labels, Notices, and Tool Panels
+### Processing Labels, Notices, and Integration Panels
 
-Local, server, proxy, and external labels use the metadata voice, an underline, and their factual semantic color. Notices and status messages use horizontal rules instead of filled alerts. Tool work is bounded by one 1px ink rectangle on paper-pale with no shadow; success and error states change text and rule color together.
+Local, server, proxy, and external labels use the metadata voice, an underline, and their factual semantic color. Notices and status messages use horizontal rules instead of filled alerts. The two permitted portal integration surfaces are bounded by one 1px ink rectangle on paper-pale with no shadow; success and error states change text and rule color together.
 
-Developer tools use the same working-panel grammar as other portal-native tools. Dense outputs such as claims, endpoints, response headers, DNS records, and event logs use ruled tables or bounded code regions with horizontal overflow where needed; they do not become dashboard cards. Every network-capable surface states its route before the operable fields: browser to destination, sender to temporary Utilibre memory, or browser through Utilibre's DNS resolver. Limits and CORS/browser constraints are written facts, not icon-only warnings.
+Original Utilibre interface code may explain, route, configure, or adapt an approved upstream application; it may not implement the visitor's underlying utility. The URL router and Cobalt adapter follow the same restrained panel grammar and state their data flow before the operable fields. Future applications retain their own upstream interfaces and receive catalog treatment rather than a locally invented imitation.
 
 **The Focus Is Structural Rule.** Every keyboard-focusable element receives a 3px coral outline with a 4px offset; hover styling never substitutes for it.
 

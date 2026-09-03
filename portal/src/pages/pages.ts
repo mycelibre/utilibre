@@ -1,15 +1,10 @@
-import { catalog, catalogEntry, localized, reviewedServices, type CatalogEntry, type CatalogCategory, type DiscoveryGroup, type OperationalStatus } from '../catalog/catalog';
+import { catalog, catalogEntry, localized, reviewedServices, type CatalogEntry, type DiscoveryGroup, type OperationalStatus } from '../catalog/catalog';
 import { discoveryGroups, discoverEntries, entryLaunchable, launchableEntries, serviceConfigured, serviceEnabled, type CatalogDiscoveryState } from '../catalog/discovery';
 import { renderCatalogList } from '../components/catalog-ledger';
 import { privacyLabels } from '../components/privacy-labels';
 import type { PublicConfig } from '../config';
 import type { Language, TranslationKey } from '../i18n';
 import { routePath, type Route, type StaticPage } from '../routes';
-import type { ImageToolId } from '../tools/image';
-import type { PdfToolId } from '../tools/pdf';
-import type { FileToolId } from '../tools/files';
-import type { TextToolId } from '../tools/text';
-import type { DeveloperToolId } from '../tools/developer-ui';
 import { append, disableActionButton, element, type Translate } from '../utilities/dom';
 
 export async function renderPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): Promise<HTMLElement> {
@@ -165,11 +160,13 @@ function renderServices(language: Language, config: PublicConfig, t: Translate):
 
 function renderTools(language: Language, config: PublicConfig, t: Translate): HTMLElement {
   const main = pageHeader(t('tools.title'), t('tools.intro'));
-  for (const category of ['image', 'pdf', 'file', 'utility', 'developer'] as CatalogCategory[]) {
+  for (const group of discoveryGroups) {
+    const entries = catalog.filter((item) => item.discoveryGroup === group && entryLaunchable(item, config));
+    if (!entries.length) continue;
     const section = element('section', 'section');
-    section.append(element('h2', '', t(`category.${category}` as TranslationKey)));
-    const entries = catalog.filter((item) => item.kind === 'tool' && item.category === category && entryLaunchable(item, config));
-    section.append(renderCatalogList(entries, language, config, t, { ariaLabel: t(`category.${category}` as TranslationKey), headingLevel: 3, processingNote: 'summary', showSource: true }));
+    const label = discoveryGroupLabel(group, t);
+    section.append(element('h2', '', label));
+    section.append(renderCatalogList(entries, language, config, t, { ariaLabel: label, headingLevel: 3, processingNote: 'summary', showSource: true }));
     main.append(section);
   }
   return main;
@@ -187,7 +184,6 @@ function renderPrivacy(config: PublicConfig, t: Translate): HTMLElement {
   return prosePage(t('privacy.title'), t('privacy.intro'), [
     ['privacy.portal.title', 'privacy.portal.body'],
     ['privacy.local.title', 'privacy.local.body'],
-    ['privacy.developer.title', 'privacy.developer.body'],
     ['privacy.cobalt.title', 'privacy.cobalt.body'],
     ['privacy.search.title', 'privacy.search.body'],
     ...redlibSections,
@@ -204,9 +200,6 @@ async function renderToolPage(id: string, language: Language, config: PublicConf
   if (id === 'cobalt' && !serviceEnabled(config, 'cobalt')) {
     return prosePage(localized(entry.name, language), t('services.notConfigured'), [], t);
   }
-  if (entry.configBooleanKey && !config[entry.configBooleanKey]) {
-    return prosePage(localized(entry.name, language), t('services.notConfigured'), [], t);
-  }
   const main = pageHeader(localized(entry.name, language), localized(entry.description, language), 'tool-page');
   const disclosure = element('section', 'tool-disclosure');
   append(disclosure, privacyLabels(entry.labels, t), element('p', '', localized(entry.dataFlow, language)));
@@ -218,16 +211,8 @@ async function renderToolPage(id: string, language: Language, config: PublicConf
   }
   main.append(disclosure);
   let tool: HTMLElement;
-  if (id.startsWith('image-')) tool = (await import('../tools/image')).renderImageTool(id as ImageToolId, t);
-  else if (id.startsWith('pdf-')) tool = (await import('../tools/pdf')).renderPdfTool(id as PdfToolId, t);
-  else if (id.startsWith('file-')) tool = (await import('../tools/files')).renderFileTool(id as FileToolId, t);
-  else if (['json', 'base64', 'url-encoding'].includes(id)) tool = (await import('../tools/text')).renderTextTool(id as TextToolId, t);
-  else if (['webhook-signature', 'openapi', 'jwt-inspect', 'jwt-generate', 'http-curl', 'regex', 'cron', 'timestamp', 'text-hashes', 'uuid', 'http-request', 'http-headers', 'websocket', 'sse', 'webhook-inbox', 'dns-lookup'].includes(id)) {
-    tool = (await import('../tools/developer-ui')).renderDeveloperTool(id as DeveloperToolId, language, t);
-  }
-  else if (id === 'private-router') tool = (await import('../tools/private-router')).renderPrivateRouter(t, config);
+  if (id === 'private-router') tool = (await import('../tools/private-router')).renderPrivateRouter(t, config);
   else if (id === 'cobalt') tool = (await import('../tools/media')).renderMediaTool(t, routePath('acceptable', language));
-  else if (id === 'qr-generate' || id === 'qr-read') tool = (await import('../tools/qr')).renderQrTool(id, t);
   else tool = element('p', 'notice', t('tool.error.generic'));
   main.append(tool);
   return main;
@@ -396,10 +381,8 @@ function renderSoftware(config: PublicConfig, t: Translate): HTMLElement {
     { group: 'hosted', name: 'PrivateBin', version: '2.0.6', license: 'Zlib', upstream: 'https://github.com/PrivateBin/PrivateBin/tree/2.0.6', modification: t('software.notModified'), purpose: t('software.purpose.privatebin') },
     { group: 'hosted', name: 'Wakapi', version: '2.17.6', license: 'MIT', upstream: 'https://github.com/muety/wakapi/tree/2.17.6', modification: t('software.notModified'), purpose: t('software.purpose.wakapi') },
     { group: 'infrastructure', name: 'PostgreSQL', version: '17.11-alpine', license: 'PostgreSQL License', upstream: 'https://github.com/postgres/postgres', modification: t('software.notModified'), purpose: t('software.purpose.postgresql') },
-    { group: 'browser', name: '@cantoo/pdf-lib', version: '2.9.1', license: 'MIT', upstream: 'https://github.com/cantoo-scribe/pdf-lib', modification: t('software.notModified'), purpose: t('software.purpose.pdf') },
-    { group: 'browser', name: '@noble/hashes', version: '2.3.0', license: 'MIT', upstream: 'https://github.com/paulmillr/noble-hashes', modification: t('software.notModified'), purpose: t('software.purpose.hashes') },
-    { group: 'browser', name: 'zxing-wasm / ZXing-C++ / Zint', version: '3.1.3', license: 'MIT / Apache-2.0 / BSD-3-Clause', upstream: 'https://github.com/Sec-ant/zxing-wasm', modification: t('software.notModified'), purpose: t('software.purpose.qr') },
-    { group: 'browser', name: 'yaml', version: '2.9.0', license: 'ISC', upstream: 'https://github.com/eemeli/yaml/tree/v2.9.0', modification: t('software.notModified'), purpose: t('software.purpose.yaml') },
+    { group: 'browser', name: 'Newsreader', version: '5.3.0 package', license: 'OFL-1.1', upstream: 'https://github.com/productiontype/Newsreader', modification: t('software.notModified'), purpose: t('software.purpose.fonts') },
+    { group: 'browser', name: 'Atkinson Hyperlegible Next', version: '5.3.0 package', license: 'OFL-1.1', upstream: 'https://github.com/googlefonts/atkinson-hyperlegible-next', modification: t('software.notModified'), purpose: t('software.purpose.fonts') },
     { group: 'build', name: 'Vite', version: '8.2.2', license: 'MIT', upstream: 'https://github.com/vitejs/vite', modification: t('software.notModified'), purpose: t('software.purpose.vite') },
     { group: 'build', name: 'TypeScript', version: '6.0.3', license: 'Apache-2.0', upstream: 'https://github.com/microsoft/TypeScript', modification: t('software.notModified'), purpose: t('software.purpose.typescript') },
   ];
@@ -509,7 +492,6 @@ function discoveryGroupLabel(group: DiscoveryGroup, t: Translate): string {
     documents: 'discovery.documents',
     'text-data': 'discovery.textData',
     'feeds-monitoring': 'discovery.feeds',
-    developer: 'discovery.developer',
   };
   return t(keys[group]);
 }

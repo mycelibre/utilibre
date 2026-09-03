@@ -5,11 +5,14 @@ repository. The inventory was checked against `portal/package-lock.json`, the
 pinned container references in `compose.yaml`, and the upstream sources on
 2026-09-03.
 
-The portal and integration code in this repository are licensed under
-AGPL-3.0-or-later; see `LICENSE`. The development-assistance disclosure and
-project role are recorded in [`TRANSPARENCY.md`](TRANSPARENCY.md). Each
-component below remains under its own license. Nothing here grants rights to
-an upstream name, logo, or trademark.
+Utilibre hosts independently maintained FOSS applications. Its original code
+is limited to catalog, localization, routing, configuration, disclosure,
+security hardening, and other integration glue; it is not the implementation
+of a cataloged end-user tool. That glue is licensed under AGPL-3.0-or-later;
+see `LICENSE`. The development-assistance disclosure and project role are
+recorded in [`TRANSPARENCY.md`](TRANSPARENCY.md). Each component below remains
+under its own license. Nothing here grants rights to an upstream name, logo,
+or trademark.
 The Cobalt web frontend, assets, mascot, and branding are not included.
 
 The separately managed `deployment/utilibre` Compose stack has its own exact
@@ -143,89 +146,22 @@ INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, WHETHER IN AN ACTION OF
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF THE USE OR INABILITY TO USE
 THE FONT SOFTWARE OR FROM OTHER DEALINGS IN THE FONT SOFTWARE.
 
-## Browser-delivered runtime software
+## Portal browser runtime
 
-The production browser bundle includes or may include the following code. The
-libraries are not source-patched; Vite performs ordinary bundling and
-minification. The `zxing-wasm` binary is copied verbatim from the pinned npm
-package and self-hosted.
+The production portal does not bundle a third-party end-user tool library.
+Its browser code is limited to the bilingual catalog, navigation, disclosure,
+status, and launch integration around independently maintained FOSS
+applications. The self-hosted font files listed above are the only npm assets
+intentionally copied into the browser build.
 
-| Component | Version | License | Source |
-| --- | --- | --- | --- |
-| @cantoo/pdf-lib | 2.9.1 | MIT | <https://github.com/cantoo-scribe/pdf-lib> |
-| @noble/hashes | 2.3.0 | MIT | <https://github.com/paulmillr/noble-hashes> |
-| @pdf-lib/standard-fonts | 1.0.0 | MIT | <https://github.com/Hopding/standard-fonts> |
-| @pdf-lib/upng | 1.0.1 | MIT | <https://github.com/Hopding/upng> |
-| color | 4.2.3 | MIT | <https://github.com/Qix-/color> |
-| color-convert | 2.0.1 | MIT | <https://github.com/Qix-/color-convert> |
-| color-name | 1.1.4 | MIT | <https://github.com/colorjs/color-name> |
-| color-string | 1.9.1 | MIT | <https://github.com/Qix-/color-string> |
-| html-entities | 2.6.0 | MIT | <https://github.com/mdevils/html-entities> |
-| is-arrayish | 0.3.4 | MIT | <https://github.com/Qix-/node-is-arrayish> |
-| node-html-better-parser | 1.5.9 | MIT | <https://github.com/Sharcoux/node-html-parser> |
-| pako | 2.2.0 | MIT AND Zlib | <https://github.com/nodeca/pako> |
-| simple-swizzle | 0.2.4 | MIT | <https://github.com/Qix-/node-simple-swizzle> |
-| tagged-tag | 1.0.0 | MIT | <https://github.com/sindresorhus/tagged-tag> |
-| tslib | 2.8.1 | 0BSD | <https://github.com/microsoft/tslib> |
-| type-fest | 5.8.0 | MIT OR CC0-1.0; this distribution relies on the MIT option | <https://github.com/sindresorhus/type-fest> |
-| yaml | 2.9.0 | ISC | <https://github.com/eemeli/yaml/tree/v2.9.0> |
-| @types/emscripten | 1.41.5 | MIT; compile-time declarations only | <https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/emscripten> |
-| zxing-wasm | 3.1.3 | MIT | <https://github.com/Sec-ant/zxing-wasm/tree/v3.1.3> |
-| ZXing-C++ embedded in zxing-wasm | commit `a17fd9dc65d6aa0dd2f660fdfca7a6a6613d938f` | Apache-2.0 | <https://github.com/zxing-cpp/zxing-cpp/tree/a17fd9dc65d6aa0dd2f660fdfca7a6a6613d938f> |
-| Zint/libzueci backend embedded in ZXing-C++ | commit `55541e139e62b9209b71cd9b0ba9010cec28b1d9` | BSD-3-Clause | <https://github.com/zint/zint/tree/55541e139e62b9209b71cd9b0ba9010cec28b1d9> |
-| stb_image and stb_image_write embedded in zxing-wasm | exact upstream revision not recorded by the zxing-wasm 3.1.3 build recipe | Public domain or MIT; this distribution relies on the MIT option | <https://github.com/nothings/stb> |
+The packages formerly used for portal-native PDF, hashing, OpenAPI, and QR
+tools were removed when Utilibre adopted its upstream-FOSS-only policy. Their
+notices are no longer active distribution notices for the current build.
 
-The checked `zxing_full.wasm` has SHA-256
-`23f1b4a6b683742623b1e945993fdf8b49a1a3b5ae2719cc70389164d50f70d7`.
-`zxing-wasm` exports the same digest and the ZXing-C++ commit shown above. Its
-tagged CMake recipe fetches `stb` without a commit, so the exact stb revision in
-the published binary is an upstream provenance limitation. stb's applicable
-MIT terms are reproduced below.
+### Anubis MIT notice
 
-### yaml 2.9.0 ISC notice
-
-The following text is reproduced exactly from `yaml@2.9.0`'s installed
-`LICENSE` file:
-
-> Copyright Eemeli Aro <eemeli@gmail.com>
->
-> Permission to use, copy, modify, and/or distribute this software for any purpose
-> with or without fee is hereby granted, provided that the above copyright notice
-> and this permission notice appear in all copies.
->
-> THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-> REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-> FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-> INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-> OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-> TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-> THIS SOFTWARE.
-
-### MIT notices
-
-The MIT terms below apply to the MIT components above and to the Anubis
-container/challenge entry in the service inventory below. Copyright notices
-preserved from their packages or source trees include:
-
-- Copyright (c) 2019 Andrew Dillon (`@cantoo/pdf-lib`)
-- Copyright (c) 2022 Paul Miller (`@noble/hashes`)
-- Copyright (c) 2018 Andrew Dillon (`@pdf-lib/standard-fonts`)
-- Copyright (c) 2017 Photopea (`@pdf-lib/upng`)
-- Copyright (c) Microsoft Corporation (`@types/emscripten`)
-- Copyright (c) 2012 Heather Arthur (`color`)
-- Copyright (c) 2011-2016 Heather Arthur (`color-convert`)
-- Copyright (c) 2015 Dmitry Ivanov (`color-name`)
-- Copyright (c) 2011 Heather Arthur (`color-string`)
-- Copyright (c) 2021 Dulin Marat (`html-entities`)
-- Copyright (c) 2015 JD Ballard (`is-arrayish`)
-- Copyright 2019 Tao Qiufeng (`node-html-better-parser`)
-- Copyright (c) 2014-2017 Vitaly Puzrin and Andrei Tuputcyn (`pako`,
-  excluding its Zlib-licensed ported code)
-- Copyright (c) 2015 Josh Junon (`simple-swizzle`)
-- Copyright (c) Sindre Sorhus (`tagged-tag` and `type-fest`)
-- Copyright (c) 2023 Ze-Zheng Wu (`zxing-wasm`)
-- Copyright (c) 2017 Sean Barrett (`stb_image` and `stb_image_write`)
-- Copyright (c) 2025 Xe Iaso <me@xeiaso.net> (Anubis challenge/gate software)
+The MIT terms below apply to the separately hosted Anubis challenge/gate
+software. Copyright (c) 2025 Xe Iaso <me@xeiaso.net>.
 
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal
@@ -245,81 +181,6 @@ preserved from their packages or source trees include:
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 > SOFTWARE.
 
-### pako ported Zlib code
-
-The `pako` `lib/zlib` port is based on Zlib 1.3.2. Copyright (C) 1995-2013
-Jean-loup Gailly and Mark Adler; JavaScript port contributions copyright (C)
-2014-2017 Vitaly Puzrin and Andrey Tupitsin.
-
-> This software is provided 'as-is', without any express or implied warranty.
-> In no event will the authors be held liable for any damages arising from the
-> use of this software.
->
-> Permission is granted to anyone to use this software for any purpose,
-> including commercial applications, and to alter it and redistribute it
-> freely, subject to the following restrictions:
->
-> 1. The origin of this software must not be misrepresented; you must not claim
->    that you wrote the original software. If you use this software in a
->    product, an acknowledgment in the product documentation would be
->    appreciated but is not required.
-> 2. Altered source versions must be plainly marked as such, and must not be
->    misrepresented as being the original software.
-> 3. This notice may not be removed or altered from any source distribution.
-
-### tslib 0BSD notice
-
-Copyright (c) Microsoft Corporation.
-
-> Permission to use, copy, modify, and/or distribute this software for any
-> purpose with or without fee is hereby granted.
->
-> THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-> REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-> AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-> INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-> LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-> OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-> PERFORMANCE OF THIS SOFTWARE.
-
-### ZXing-C++ Apache-2.0 notice
-
-ZXing-C++ is copyright its contributors, including Nu-book Inc., the ZXing
-authors, Axel Waggershauser, and other contributors identified in the source.
-The wrapper file used to construct the WebAssembly binary carries copyrights
-for Nu-book Inc., Axel Waggershauser, and Ze-Zheng Wu. It is licensed under
-Apache License 2.0. The complete license text follows later in this file.
-
-### Zint/libzueci BSD-3-Clause notice
-
-The embedded Zint backend is copyright (C) 2008-2025 Robin Stuart and its
-contributors. Embedded libzueci code is copyright (C) 2022 gitlost and other
-copyright holders identified in the source.
-
-> Redistribution and use in source and binary forms, with or without
-> modification, are permitted provided that the following conditions are met:
->
-> 1. Redistributions of source code must retain the above copyright notice,
->    this list of conditions and the following disclaimer.
-> 2. Redistributions in binary form must reproduce the above copyright
->    notice, this list of conditions and the following disclaimer in the
->    documentation and/or other materials provided with the distribution.
-> 3. Neither the name of the project nor the names of its contributors may be
->    used to endorse or promote products derived from this software without
->    specific prior written permission.
->
-> THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-> AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-> IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-> ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-> LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-> CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-> SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-> INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-> CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-> ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-> POSSIBILITY OF SUCH DAMAGE.
-
 ## Build and test tools
 
 These packages are development dependencies and are not intentionally shipped
@@ -337,9 +198,9 @@ artifacts are recorded in `portal/package-lock.json`.
 | @types/node | 26.4.0 | MIT | <https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/node> |
 
 Development-only transitive packages additionally use MIT, Apache-2.0,
-BSD-2-Clause, BSD-3-Clause, ISC, MPL-2.0, BlueOak-1.0.0, and 0BSD-compatible
-licenses. A complete name/version/license grouping is in `docs/licenses.md`;
-the lockfile remains the authoritative resolution record.
+BSD-2-Clause, BSD-3-Clause, ISC, MPL-2.0, BlueOak-1.0.0, and OFL-1.1 licenses.
+License-family counts are in `docs/licenses.md`; the lockfile remains the
+authoritative name, version, and artifact resolution record.
 
 ## Containerized and reviewed services
 

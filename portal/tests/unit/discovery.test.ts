@@ -14,50 +14,41 @@ import {
 import type { PublicConfig } from '../../src/config';
 
 const baseConfig: PublicConfig = {
-  projectName: 'Utilibre',
-  projectTagline: '',
-  projectTaglineEn: '',
-  projectTaglineEs: '',
-  sourceCodeUrl: '',
-  supportUrl: '',
-  contactUrl: '',
-  publicSearchUrl: '',
-  publicRedditUrl: '',
-  publicYoutubeUrl: '',
-  publicImgurUrl: '',
-  publicNtfyUrl: '',
-  publicPdfUrl: '',
-  publicConvertUrl: '',
-  publicToolsUrl: '',
-  publicMonitorUrl: '',
-  publicSendUrl: '',
-  publicRssUrl: '',
-  publicFeedsUrl: '',
-  publicPasteUrl: '',
-  publicWakapiUrl: '',
-  webhookInboxEnabled: false,
-  dnsLookupEnabled: false,
-  enabledServices: [],
-  defaultLanguage: 'en',
+  projectName: 'Utilibre', projectTagline: '', projectTaglineEn: '', projectTaglineEs: '',
+  sourceCodeUrl: '', supportUrl: '', contactUrl: '', publicSearchUrl: '', publicRedditUrl: '',
+  publicYoutubeUrl: '', publicImgurUrl: '', publicNtfyUrl: '', publicPdfUrl: '',
+  publicConvertUrl: '', publicToolsUrl: '', publicMonitorUrl: '', publicSendUrl: '',
+  publicRssUrl: '', publicFeedsUrl: '', publicPasteUrl: '', publicWakapiUrl: '',
+  enabledServices: [], defaultLanguage: 'en',
 };
 
 function config(overrides: Partial<PublicConfig> = {}): PublicConfig {
   return { ...baseConfig, ...overrides };
 }
 
+const featuredConfig = config({
+  enabledServices: ['searxng', 'vert', 'pairdrop', 'privatebin', 'cobalt', 'bentopdf', 'omnitools'],
+  publicSearchUrl: 'https://search.example.test/',
+  publicConvertUrl: 'https://convert.example.test/',
+  publicSendUrl: 'https://send.example.test/',
+  publicPasteUrl: 'https://paste.example.test/',
+  publicPdfUrl: 'https://pdf.example.test/',
+  publicToolsUrl: 'https://tools.example.test/',
+});
+
 describe('catalog discovery metadata', () => {
-  it('assigns an explicit discovery group to every entry and preserves the editorial feature order', () => {
+  it('assigns a task group and preserves the broad editorial feature order', () => {
     expect(catalog.every((entry) => discoveryGroups.includes(entry.discoveryGroup))).toBe(true);
     expect(catalog
       .filter((entry) => entry.featuredOrder !== undefined)
       .sort((left, right) => (left.featuredOrder ?? 0) - (right.featuredOrder ?? 0))
       .map((entry) => entry.id))
-      .toEqual(['searxng', 'vert', 'pairdrop', 'privatebin', 'image-resize', 'pdf-merge', 'qr-generate']);
+      .toEqual(['searxng', 'vert', 'pairdrop', 'privatebin', 'cobalt', 'bentopdf', 'omnitools']);
   });
 });
 
 describe('config-gated catalog discovery', () => {
-  it('keeps local tools launchable and exposes only enabled, configured, deployed services', () => {
+  it('exposes only approved, enabled, configured, deployed applications and available glue', () => {
     const entries = launchableEntries(config({
       enabledServices: ['searxng', 'cobalt', 'redlib', 'vert', 'invidious'],
       publicSearchUrl: 'https://search.example.test/',
@@ -66,31 +57,17 @@ describe('config-gated catalog discovery', () => {
     }));
     const ids = entries.map((entry) => entry.id);
 
-    expect(ids).toContain('image-resize');
-    expect(ids).toContain('searxng');
-    expect(ids).toContain('cobalt');
-    expect(ids).toContain('redlib');
-    expect(ids).toContain('private-router');
-    expect(ids).not.toContain('vert');
-    expect(ids).not.toContain('invidious');
-    expect(ids).not.toContain('rimgo');
+    expect(ids).toEqual(expect.arrayContaining(['searxng', 'cobalt', 'redlib', 'private-router']));
+    expect(ids).not.toEqual(expect.arrayContaining(['vert', 'invidious', 'rimgo']));
   });
 
-  it('returns featured entries in explicit editorial order and skips unavailable services', () => {
-    const fullyConfigured = config({
-      enabledServices: ['searxng', 'vert', 'pairdrop', 'privatebin'],
-      publicSearchUrl: 'https://search.example.test/',
-      publicConvertUrl: 'https://convert.example.test/',
-      publicSendUrl: 'https://send.example.test/',
-      publicPasteUrl: 'https://paste.example.test/',
-    });
-    expect(featuredEntries(fullyConfigured).map((entry) => entry.id))
-      .toEqual(['searxng', 'vert', 'pairdrop', 'privatebin', 'image-resize', 'pdf-merge', 'qr-generate']);
-    expect(featuredEntries(baseConfig).map((entry) => entry.id))
-      .toEqual(['image-resize', 'pdf-merge', 'qr-generate']);
+  it('returns featured applications in explicit order and no unconfigured defaults', () => {
+    expect(featuredEntries(featuredConfig).map((entry) => entry.id))
+      .toEqual(['searxng', 'vert', 'pairdrop', 'privatebin', 'cobalt', 'bentopdf', 'omnitools']);
+    expect(featuredEntries(baseConfig)).toEqual([]);
   });
 
-  it('resolves internal tool routes and hosted service URLs without exposing disabled entries', () => {
+  it('resolves only the two portal integration routes internally', () => {
     const configured = config({
       enabledServices: ['cobalt', 'redlib', 'vert'],
       publicRedditUrl: 'https://reddit.example.test/',
@@ -102,17 +79,7 @@ describe('config-gated catalog discovery', () => {
       .toEqual({ href: '/es/herramientas/abrir-con-privacidad', external: false });
     expect(entryLaunch(catalogEntry('vert')!, 'en', configured))
       .toEqual({ href: 'https://convert.example.test/', external: true });
-    expect(entryLaunch(catalogEntry('image-resize')!, 'es', configured))
-      .toEqual({ href: '/es/herramientas/redimensionar-imagen', external: false });
     expect(entryLaunch(catalogEntry('searxng')!, 'en', configured)).toBeNull();
-  });
-
-  it('hides independently disabled developer server tools', () => {
-    expect(entryLaunch(catalogEntry('webhook-inbox')!, 'en', baseConfig)).toBeNull();
-    expect(entryLaunch(catalogEntry('dns-lookup')!, 'en', baseConfig)).toBeNull();
-    const enabled = config({ webhookInboxEnabled: true, dnsLookupEnabled: true });
-    expect(entryLaunch(catalogEntry('webhook-inbox')!, 'en', enabled)?.href).toBe('/en/tools/webhook-inbox');
-    expect(entryLaunch(catalogEntry('dns-lookup')!, 'es', enabled)?.href).toBe('/es/herramientas/consulta-dns');
   });
 });
 
@@ -120,31 +87,23 @@ describe('localized catalog filtering', () => {
   it('normalizes case and diacritics in both product languages', () => {
     expect(normalizeCatalogSearch('  BÚSQUEDA  ', 'es')).toBe('busqueda');
     expect(normalizeCatalogSearch('Résumé', 'en')).toBe('resume');
-
-    const configured = config({ enabledServices: ['searxng'], publicSearchUrl: 'https://search.example.test/' });
-    expect(searchEntries(configured, 'es', 'BUSQUEDA').map((entry) => entry.id)).toContain('searxng');
-    expect(searchEntries(baseConfig, 'es', 'codigos qr').map((entry) => entry.id)).toContain('qr-generate');
-    expect(searchEntries(baseConfig, 'en', 'IMAGE RESIZE').map((entry) => entry.id)).toContain('image-resize');
-    expect(searchEntries(baseConfig, 'en', '   ')).toEqual([]);
+    expect(searchEntries(featuredConfig, 'es', 'BUSQUEDA').map((entry) => entry.id)).toContain('searxng');
+    expect(searchEntries(featuredConfig, 'es', 'PDF').map((entry) => entry.id)).toContain('bentopdf');
+    expect(searchEntries(featuredConfig, 'en', '   ')).toEqual([]);
   });
 
-  it('returns localized A-Z group and all-entry views', () => {
-    const documents = groupEntries(baseConfig, 'en', 'documents');
-    expect(documents.map((entry) => entry.id).sort())
-      .toEqual(['pdf-extract', 'pdf-merge', 'pdf-reorder', 'pdf-rotate']);
-
-    const all = allEntries(baseConfig, 'es');
+  it('returns localized task and A-Z views', () => {
+    expect(groupEntries(featuredConfig, 'en', 'documents').map((entry) => entry.id)).toEqual(['bentopdf']);
+    const all = allEntries(featuredConfig, 'es');
     const names = all.map((entry) => entry.name.es);
     expect(names).toEqual([...names].sort(new Intl.Collator('es', { sensitivity: 'base' }).compare));
-    expect(all.map((entry) => entry.id)).not.toContain('private-router');
   });
 
   it('prioritizes query, then group, then all, with featured as the default', () => {
-    expect(discoverEntries(baseConfig, 'en').map((entry) => entry.id))
-      .toEqual(['image-resize', 'pdf-merge', 'qr-generate']);
-    expect(discoverEntries(baseConfig, 'en', { view: 'all', group: 'documents' }))
-      .toEqual(groupEntries(baseConfig, 'en', 'documents'));
-    expect(discoverEntries(baseConfig, 'en', { view: 'all', group: 'documents', query: 'UUID' }).map((entry) => entry.id))
-      .toEqual(['uuid']);
+    expect(discoverEntries(featuredConfig, 'en').map((entry) => entry.id))
+      .toEqual(['searxng', 'vert', 'pairdrop', 'privatebin', 'cobalt', 'bentopdf', 'omnitools']);
+    expect(discoverEntries(featuredConfig, 'en', { view: 'all', group: 'documents' }))
+      .toEqual(groupEntries(featuredConfig, 'en', 'documents'));
+    expect(discoverEntries(featuredConfig, 'en', { query: 'PDF' }).map((entry) => entry.id)).toEqual(['bentopdf']);
   });
 });

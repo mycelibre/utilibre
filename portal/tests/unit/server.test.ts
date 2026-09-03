@@ -88,9 +88,10 @@ describe('portal server security boundaries', () => {
     expect(englishNoScript).toContain('This portal needs JavaScript');
     expect(englishNoScript).toContain('Hosted service links depend on the server\'s current configuration.');
     expect([...englishNoScript.matchAll(/href="([^"]+)"/g)].map((match) => match[1])).toEqual(['/es/']);
-    const tool = await fetch(`${base}/en/tools/file-hashes`);
-    expect(tool.headers.get('x-robots-tag')).toBe('noindex, nofollow');
-    expect(await tool.text()).toContain('<html lang="en">');
+    const retiredTool = await fetch(`${base}/en/tools/file-hashes`);
+    expect(retiredTool.status).toBe(404);
+    expect(retiredTool.headers.get('x-robots-tag')).toBe('noindex, nofollow');
+    expect(await retiredTool.text()).toContain('<html lang="en">');
     const spanish = await fetch(`${base}/es/privacidad`);
     const spanishShell = await spanish.text();
     expect(spanishShell).toContain('<html lang="es">');
@@ -184,8 +185,8 @@ describe('portal server security boundaries', () => {
     expect(config.supportUrl).toBe('');
     expect(config.defaultLanguage).toBe('es');
     expect(config.enabledServices).toEqual(['cobalt', 'searxng', 'ntfy']);
-    expect(config.webhookInboxEnabled).toBe(true);
-    expect(config.dnsLookupEnabled).toBe(true);
+    expect(config).not.toHaveProperty('webhookInboxEnabled');
+    expect(config).not.toHaveProperty('dnsLookupEnabled');
     expect(config.publicSearchUrl).toBe('http://10.23.0.2:8888/');
     expect(config.publicNtfyUrl).toBe('http://10.23.0.2:2586/');
     expect(JSON.stringify(config)).not.toContain('EDGE_PROXY_IP');
@@ -217,67 +218,28 @@ describe('portal server security boundaries', () => {
     expect((await fetch(`${base}/api/media/tunnel-extra`)).status).toBe(404);
   });
 
-  it('broadens outbound connections only on browser-direct network tool documents', async () => {
-    const ordinary = await fetch(`${base}/en/tools/json`);
-    expect(ordinary.headers.get('content-security-policy')).toContain("connect-src 'self';");
-    const network = await fetch(`${base}/en/tools/http-request`);
-    expect(network.headers.get('content-security-policy')).toContain("connect-src 'self' https: wss:;");
-    const spanishSocket = await fetch(`${base}/es/herramientas/websocket`);
-    expect(spanishSocket.headers.get('content-security-policy')).toContain("connect-src 'self' https: wss:;");
-  });
-
-  it('integrates bounded temporary webhook inboxes without exposing read access in the receive URL', async () => {
-    const created = await fetch(`${base}/_portal/developer/webhook-inboxes`, {
-      method: 'POST',
-      headers: { Origin: base },
-    });
-    expect(created.status).toBe(201);
-    const payload = await created.json() as { inbox: { id: string; receivePath: string; limits: { bodyBytes: number } }; readToken: string };
-    expect(payload.inbox.id).toMatch(/^[A-Za-z0-9_-]{32}$/);
-    expect(payload.inbox.receivePath).not.toContain(payload.readToken);
-    expect(payload.inbox.limits.bodyBytes).toBe(12 * 1024);
-
-    const received = await fetch(`${base}${payload.inbox.receivePath}?event=test`, {
-      method: 'POST',
-      headers: { Authorization: 'Bearer sender-secret', Cookie: 'session=private', 'Content-Type': 'application/json', 'X-Hub-Signature-256': 'sha256=test' },
-      body: '{"ok":true}',
-    });
-    expect(received.status).toBe(202);
-    const events = await fetch(`${base}/_portal/developer/webhook-inboxes/${payload.inbox.id}/events`, {
-      headers: { Origin: base, Authorization: `Bearer ${payload.readToken}` },
-    });
-    expect(events.status).toBe(200);
-    const listed = await events.json() as { events: Array<{ headers: Record<string, string>; body: { value: string } }> };
-    expect(listed.events).toHaveLength(1);
-    expect(listed.events[0]?.headers.authorization).toBeUndefined();
-    expect(listed.events[0]?.headers.cookie).toBeUndefined();
-    expect(listed.events[0]?.headers['x-hub-signature-256']).toBe('sha256=test');
-    expect(listed.events[0]?.body.value).toBe('{"ok":true}');
-  });
-
-  it('groups trusted IPv6 client identities by /64 for developer rate limits', async () => {
-    const statuses: number[] = [];
-    for (let index = 1; index <= 11; index += 1) {
-      const response = await fetch(`${base}/_portal/developer/webhook-inboxes`, {
-        method: 'POST',
-        headers: { Origin: base, 'X-Forwarded-For': `2001:db8:1234:5678::${index}` },
-      });
-      statuses.push(response.status);
-      if (response.ok) {
-        const created = await response.json() as { inbox: { id: string }; readToken: string };
-        const deleted = await fetch(`${base}/_portal/developer/webhook-inboxes/${created.inbox.id}`, {
-          method: 'DELETE',
-          headers: {
-            Origin: base,
-            'X-Forwarded-For': `2001:db8:1234:5678::${index}`,
-            Authorization: `Bearer ${created.readToken}`,
-          },
-        });
-        expect(deleted.status).toBe(204);
-      }
+  it('keeps the portal document connection policy same-origin', async () => {
+    for (const path of ['/en/', '/en/tools/open-privately', '/en/tools/http-request']) {
+      const response = await fetch(`${base}${path}`);
+      expect(response.headers.get('content-security-policy')).toContain("connect-src 'self';");
+      expect(response.headers.get('content-security-policy')).not.toContain('https: wss:');
     }
-    expect(statuses.slice(0, 10)).toEqual(Array(10).fill(201));
-    expect(statuses[10]).toBe(429);
+  });
+
+  it('does not expose retired developer APIs', async () => {
+    for (const path of [
+      '/_portal/developer/webhook-inboxes',
+      '/_portal/developer/webhook-inboxes/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/events',
+      '/_portal/developer/dns',
+    ]) expect((await fetch(`${base}${path}`)).status).toBe(404);
+
+    const receiver = await fetch(`${base}/_portal/developer/webhooks/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{"retired":true}',
+    });
+    expect(receiver.status).toBe(400);
+    expect(await receiver.json()).toEqual({ error: 'unexpected_request_body' });
   });
 
   it('coalesces and briefly caches high-level status checks', async () => {

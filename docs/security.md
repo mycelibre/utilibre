@@ -23,10 +23,9 @@ The deployment is not launch-ready unless all of these remain true:
 - Valkey and any future database have no host port;
 - portal and SearXNG forwarded client headers are trusted only from the exact edge address; Cobalt's upstream private-peer trust exception is accepted only behind exact edge-source firewalling;
 - Anubis accepts `CF-Connecting-IP` only while the edge origin is Cloudflare-only, and direct Redlib/Anubis metrics remain unpublished;
-- local browser tools have no content-processing network request;
-- browser-direct HTTP, header, WebSocket, and event-stream tools never turn the application VM into a relay;
-- temporary webhook inboxes remain memory-only, bounded, token-separated, and unable to forward or replay requests;
-- DNS lookup accepts only normalized public hostnames and an explicit record-type allowlist, with no arbitrary resolver/target input;
+- every public catalog capability names an independently maintained,
+  self-hostable FOSS application; portal code remains catalog, localization,
+  routing, configuration, or narrow upstream-integration glue;
 - no personal upstream account cookies/tokens or Docker socket mount exist;
 - secrets and private addresses remain untracked and absent from public documentation.
 
@@ -82,84 +81,26 @@ the intended client even though the root API still requires its key.
 
 Origin checking is not bot authentication—non-browser clients can forge an Origin. The IP rate limit, concurrency cap, Cobalt key, duration limit, provider selection, private binding, and edge policy remain necessary. No Turnstile or remote challenge script is used, avoiding a third-party browser dependency but leaving sophisticated automation as a residual abuse risk.
 
-### Developer API boundary
+### Portal API boundary
 
-The Developer category does not add a generic server-side HTTP client. HTTP
-requests, CORS-visible header inspection, WebSockets, and server-sent events go
-from the visitor's browser to the destination. That keeps destination-controlled
-CORS and the visitor's own network boundary in place rather than exposing the
-application VM to arbitrary URLs, redirects, DNS rebinding, cloud metadata, or
-private peers. The browser can still contact destinations reachable from the
-visitor's device; that is a browser-side action and the UI identifies it as
-external. The WebSocket API can attach cookies already held for the endpoint
-and provides no credentials-omit option. Fetch redirects are followed, and a
-CORS-visible error can occur after a destination or redirect target received
-the request; the interface warns against untrusted state-changing destinations
-and blind retries.
+The portal exposes only fixed health, sanitized configuration, high-level
+status, and Cobalt media-adapter functions. It has no webhook receiver, DNS
+resolver, generic HTTP requester, response-header proxy, arbitrary status URL,
+or browser-network testing surface. Unknown `/_portal/*` and `/api/*` paths
+return 404.
 
-The fixed webhook API applies:
-
-- a same-origin check for inbox creation, plus bearer-token authorization for
-  read/delete management;
-- independent 192-bit opaque receiver IDs and read tokens, with only the token
-  hash retained and timing-safe comparison used;
-- a 15-minute access TTL, 12 KiB body limit, ten-second body deadline, and the
-  newest events retained up to 25 events/1 MiB per inbox, with oldest-event
-  eviction when a later accepted event crosses a retention bound; global
-  ceilings remain 100 inboxes, 2,048 events, and 16 MiB;
-- four active receivers per inbox and 32 process-wide, plus event-list pages of
-  at most 10 events/192 KiB with two active responses per inbox and 32
-  process-wide;
-- separate per-client creation/ingestion, per-inbox ingestion, authenticated
-  per-inbox management, broad client backstop, and rejected-authentication rate
-  buckets with a 4,096-key ceiling;
-- derived-client ownership ceilings of three active inboxes, 75 retained
-  events, and 2 MiB across those inboxes;
-- validation that a trusted edge supplied exactly one client address, with IPv6
-  identities normalized to a /64 rate key; this trades some shared-prefix
-  fairness for resistance to address rotation;
-- omission of Authorization, Cookie, standard hop-by-hop, and recognized
-  forwarding/client-address and proxy headers while preserving ordinary
-  webhook signature headers; retained headers are capped at 32/32 KiB and carry
-  a truncation flag; custom headers, queries, and bodies remain readable to the
-  holder of the read capability;
-- textual webhook bodies are kept as captured UTF-8 while binary/invalid UTF-8
-  bodies are exposed as Base64; the UI distinguishes a formatted JSON preview
-  and warns that text or clipboard handling can normalize line endings; and
-- memory-only storage, no forwarding/replay, no database, and no filesystem
-  write. Access stops at expiry; process references are removed on the next
-  related request or periodic sweep, normally within another minute, or
-  earlier on deletion or portal restart. This is not a forensic
-  memory-zeroing claim.
-
-The DNS API requires an allowed same-origin management request, permits only A,
-AAAA, CAA, CNAME, MX, NS, SOA, SRV, and TXT, normalizes IDNs, and rejects
-literal IPs, single-label/special-use names, credentials, ports, and malformed
-hostnames. Defaults cap it at 60 requests per client per five minutes, eight
-concurrent resolver calls, four seconds, 100 records, and 64 KiB. Resolver
-failures map to public codes without internal addresses or error text.
-
-The portal HTTP server also caps header receipt at ten seconds and rejects the
-100-field boundary with 431 before routing,
-request receipt at 20 seconds, keep-alive at five seconds/100 requests, and
-concurrent connections at 512. Early developer-API rejections close incomplete
-request bodies. All routes other than the fixed media resolver, webhook receiver,
-and DNS lookup reject declared bodies and close incomplete requests, preventing
-body stalls on health, static, configuration, status, and unknown routes. These
-are application safeguards in addition to edge limits.
-
-Media JSON bodies have a separate ten-second read deadline and a ceiling of 16
-concurrent body readers before the stricter two-request Cobalt gateway ceiling.
-
-`WEBHOOK_INBOX_ENABLED` and `DNS_LOOKUP_ENABLED` are independent fail-closed
-switches. Each disabled surface returns 404 and disappears from discovery
-without taking down the portal or the other surface. The edge's 16 KiB portal
-request ceiling remains above the 12 KiB webhook body limit; no route-specific
-increase is required.
+The portal HTTP server caps header receipt at ten seconds and rejects the
+100-field boundary with 431 before routing, request receipt at 20 seconds,
+keep-alive at five seconds/100 requests, and concurrent connections at 512.
+All routes other than the fixed media resolver reject declared bodies and close
+incomplete requests, preventing body stalls on health, static, configuration,
+status, and unknown routes. Media JSON bodies have a separate ten-second read
+deadline and a ceiling of 16 concurrent body readers before the stricter
+two-request Cobalt gateway ceiling.
 
 ### SSRF and redirect review
 
-The portal cannot be configured by a public request to fetch an arbitrary HTTP hostname. The Cobalt target begins with a strict provider allowlist and rejects literal private addresses. There is no portal streaming/fetch fallback; tokenized media delivery uses the separately restricted Cobalt hostname. Status checks come only from operator environment configuration and accept `http` plus a simple Docker service hostname; visitors cannot supply a status URL. Concurrent status callers share a bounded in-flight check and short memory cache rather than launching unbounded internal probes. The DNS tool is a distinct resolver operation with explicit record types and public-hostname validation; it never opens an HTTP connection or accepts a user-selected DNS server.
+The portal cannot be configured by a public request to fetch an arbitrary HTTP hostname. The Cobalt target begins with a strict provider allowlist and rejects literal private addresses. There is no portal streaming/fetch fallback; tokenized media delivery uses the separately restricted Cobalt hostname. Status checks come only from operator environment configuration and accept `http` plus a simple Docker service hostname; visitors cannot supply a status URL. Concurrent status callers share a bounded in-flight check and short memory cache rather than launching unbounded internal probes.
 
 Residual SSRF risk remains inside provider extraction: the portal does not resolve DNS before the request and cannot enforce every redirect or secondary URL that Cobalt/provider code follows. A compromised allowlisted domain, DNS rebinding, extractor vulnerability, or hostile upstream response therefore depends on Cobalt's controls and Docker/network egress. The service network currently has unrestricted outbound Internet access and access to its peers. This is a documented unresolved defense-in-depth gap; add an egress policy only after enumerating real provider endpoints, DNS needs, CDNs, redirects, and update traffic so that it does not silently break extraction.
 
@@ -167,11 +108,9 @@ Do not add a generic fetch endpoint, proxy parameter, arbitrary status URL, priv
 
 ### Open redirects and external navigation
 
-The private router accepts exact HTTPS source hosts with no credentials/port. It creates the destination from an operator-configured base URL and an allowlisted path/query subset. A visitor cannot supply the destination hostname. Unit and browser tests cover lookalikes, credentials, ports, private addresses, and unsupported schemes.
-
 The optional rimgo 1.4.2 profile remains disabled. Its reviewed `/search` handler has an unanchored Imgur-URL rewrite that can yield a protocol-relative, visitor-controlled external redirect. No public Caddy route is provided. A path denial would not make this version suitable for publication; an official fixed release must be pinned and pass fresh maintenance, security, and abuse-control review first.
 
-Cobalt may legitimately return an external HTTP(S) media URL. The portal rejects returned URLs containing credentials, localhost, private/link-local/reserved literal addresses, or a non-HTTP(S) scheme, except for the narrowly matched private-preview Cobalt `/tunnel` URL described above. It does not assert that every other permitted hostname belongs to the original provider. Authenticity therefore depends on the trusted pinned Cobalt build and the upstream response. The UI does not open it automatically and marks external delivery. QR URLs likewise open only after a warning and explicit click. A visitor can choose a QR URL that points to their own local network in the browser, but the portal server does not fetch decoded QR content.
+Cobalt may legitimately return an external HTTP(S) media URL. The portal rejects returned URLs containing credentials, localhost, private/link-local/reserved literal addresses, or a non-HTTP(S) scheme, except for the narrowly matched private-preview Cobalt `/tunnel` URL described above. It does not assert that every other permitted hostname belongs to the original provider. Authenticity therefore depends on the trusted pinned Cobalt build and the upstream response. The UI does not open it automatically and marks external delivery.
 
 ### Redlib policy exception and abuse boundary
 
@@ -233,30 +172,27 @@ These limitations must stay visible in public documentation.
 
 The portal server emits:
 
-- a Content Security Policy restricted to self-hosted resources, `blob:`/`data:` images, local blob media, no objects, no base URI, same-origin forms, and no framing. Most routes permit same-origin connections only; the four exact browser-direct developer-tool documents permit `https:`/`wss:` connections and use full-document navigation so that exception cannot remain on another SPA route;
+- a Content Security Policy restricted to self-hosted resources, `blob:`/`data:` images, no objects, no base URI, same-origin forms, same-origin connections, and no framing;
 - `Referrer-Policy: no-referrer`;
 - `Permissions-Policy` disabling camera, microphone, geolocation, payment, USB, and browsing topics;
 - `X-Content-Type-Options: nosniff`;
 - `X-Frame-Options: DENY`;
 - `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Resource-Policy: same-origin`;
-- `X-Robots-Tag` for APIs, health, tool, and status routes.
+- `X-Robots-Tag` for APIs, health, and status routes.
 
 HTML responses also use `Cache-Control: no-cache, no-transform`. The
 `no-transform` directive is deliberate: intermediaries must not rewrite the
 document or append executable markup that is outside the portal's restrictive
 CSP. Versioned static assets remain separately immutable.
 
-`'wasm-unsafe-eval'` is the deliberate CSP exception required by the self-hosted QR WebAssembly module. There are no inline scripts, external script hosts, analytics, remote fonts, or service workers. The app uses `textContent`/DOM construction rather than inserting untrusted HTML.
+There are no inline scripts, external script hosts, analytics, remote fonts, or service workers. The app uses `textContent`/DOM construction rather than inserting untrusted HTML.
 
 HSTS is an edge decision and is intentionally not assumed. Add it only after all covered names are permanently HTTPS-ready. Crawler controls reduce load; they are not authorization.
 
-A private-IP HTTP origin is not a secure context in normal browsers. The portal
-uses `crypto.getRandomValues()` for its local UUID fallback, bundled
-`@noble/hashes` SHA-2 for local hashing when Web Crypto digest is unavailable,
-and a local copy fallback when the Clipboard API is withheld. These fallbacks
-keep the corresponding tools local; they do not add transport encryption or
-server authentication. HTTPS remains preferred for private use and mandatory
-for the public service.
+A private-IP HTTP origin is not a secure context in normal browsers. Portal
+catalog and navigation behavior does not treat private HTTP as transport
+security. HTTPS remains preferred for private use and mandatory for the public
+service.
 
 ### Container hardening
 
@@ -292,7 +228,7 @@ on restart. Docker logs use `json-file` rotation with configurable `10m × 3`
 defaults.
 
 The portal has no access logger and never deliberately prints submitted media
-URLs or local-tool input. `RUST_LOG=warn` suppresses Redlib informational logs,
+URLs. `RUST_LOG=warn` suppresses Redlib informational logs,
 including paths that print an emulated device identity or OAuth token prefix,
 while retaining warnings/errors and its startup line. Reviewed warning/error
 paths do not intentionally include visitor URLs or queries. Known portal
@@ -309,18 +245,14 @@ cookies must not be logged.
 | Private-preview interception | Exact private binding, explicit preview gate, no trusted edge headers, narrow returned tunnel rule | Plain HTTP can be observed or changed by a hostile private-network peer; restrict clients and move to HTTPS for launch |
 | Unrestricted Cobalt API | File API key, exact CORS, same-origin portal gateway, edge exposes only GET tunnel | A leaked key or misconfigured edge catch-all is critical; rotate key and remove route |
 | SSRF/internal scanning | Initial scheme/host/IP/port validation; fixed internal endpoints | DNS, redirects, and extractor secondary fetches depend on Cobalt; no egress ACL yet |
-| Developer HTTP proxy abuse | HTTP/header/WebSocket/SSE operations are browser-direct; no server fetch or relay endpoint exists | Destination CORS limits visibility; the visitor's browser can still reach its own network and WebSocket may attach destination cookies, both disclosed in the UI |
-| Webhook inbox abuse or capability leak | Independent opaque receive/read capabilities, body/event/header/memory/rate/deadline/concurrency limits, paged reads, specified header omission, 15-minute access TTL, no forwarding/replay, kill switch | Anyone with a receiver URL can write until expiry; Cloudflare/Caddy see inbound requests and must not log receiver paths/bodies |
-| DNS resolver abuse | Public-hostname and record-type allowlists, special-use/IP rejection, rate/concurrency/time/result caps, independent kill switch | Public recursive queries still consume resolver/network capacity; disable the surface if aggregate use becomes unreasonable |
-| Arbitrary redirect | Strict private-router host mapping; no automatic navigation; tracked Redlib settings-redirect patch | Cobalt/QR external URLs require user click but can still be deceptive; repeat Redlib redirect tests after every upstream rebase |
+| Arbitrary redirect | The portal's Redlib-only router accepts fixed Reddit hosts and hands off to one configured Redlib origin; Cobalt external results require an explicit click; tracked Redlib settings-redirect patch | A Cobalt external result can still be deceptive; repeat router and Redlib redirect tests after every upstream rebase |
 | Forwarded-header spoofing | Exact edge peer trust | Breaks if Docker source preservation or a new upstream proxy changes; verify effective client IP |
 | Request flood/search/Reddit scraping | Portal and Cobalt rate limits, two-job cap, SearXNG limiter/Valkey, HTML-only search, Anubis proof-of-work gate, Redlib noindex and container limits | Anubis is not volumetric DDoS protection; distributed botnets can solve/evade per-IP controls and media hotlinking remains expensive; stop the service when controls are insufficient |
 | Oversized/long media | 8 KiB request, 30-minute duration target, 45-second API wait, resource limits | Approximately 500 MB output target is not technically enforced by this Cobalt release |
-| Browser memory exhaustion | Image 80-million-pixel/16,384-dimension processing guard and warnings; bounded OpenAPI input/tree traversal; bounded WebSocket log/session handling | Image decode precedes the pixel check; PDF/hash/QR byte size is not capped because processing is local; pathological YAML within 2 MiB can stall its tab during synchronous parsing; a browser materializes an incoming WebSocket frame before the page can enforce its frame limit |
 | Temporary-media persistence | Cobalt read-only root and no media volume | Verify after success/failure/cancel/restart; do not claim forensic erasure of RAM/storage layers |
 | Container breakout | Non-root where compatible, cap drop, no-new-privileges, read-only roots, PID/resource limits, no Docker socket | Shared kernel, default seccomp, writable SearXNG exception, and outbound peer network remain |
 | Secret disclosure | Ignored files, file mounts, `0700` directory, sanitized config endpoint | Root/Docker operators can read secrets; backups must be encrypted; SearXNG secret is in env metadata |
-| Supply-chain compromise | Exact versions/digests, lockfile, FOSS inventory, tests | No automatic patching; upstream images/native WASM still require periodic scan/provenance review |
+| Supply-chain compromise | Exact versions/digests, lockfile, FOSS inventory, tests | No automatic patching; upstream images and applications still require periodic scan/provenance review |
 | Sensitive logs | No portal access log, Redlib `RUST_LOG=warn`, error mapping, size rotation, edge no-query/path guidance | Upstream startup/error logs can contain details; Redlib and edge path/cookie retention must be checked; edge/daemon retention is operator-controlled |
 | Weak preference-cookie attributes | Redlib cookies are first-party and HTTP-only; public traffic is HTTPS at the edge | Pinned upstream omits `Secure`/`SameSite`; cookies can encode subscriptions/interests and direct private HTTP has no confidentiality |
 | Crawler load | noindex headers, HTML-only search output, no public directory registration | Robots can ignore directives; rate limits/firewall remain necessary |
@@ -339,12 +271,12 @@ npm run build
 npm run test:e2e
 ```
 
-The server tests check fixed security headers, public-config sanitization, Origin rejection, malformed/ambiguous request targets, private/unsupported media URLs, IPv6 /64 rate grouping, and absence of arbitrary API paths. Developer API tests cover opaque capability separation; omission of Authorization, Cookie, hop-by-hop, and recognized forwarding/proxy/client-address headers; memory/body/event/rate/deadline/concurrency limits; paged reads; deletion-during-upload and atomic-capacity behavior; DNS normalization/SOA/allowlists/error mapping; independent kill switches; and the absence of a server-side HTTP inspection proxy. URL-router tests cover lookalike hosts, credentials, ports, private addresses, and schemes. Local developer unit tests cover all supported JWT/HMAC algorithms, conservative HTTP↔cURL rejection, bounded OpenAPI summaries, regex and cron bounds, timestamps, text hashes, and UUID inspection. Browser tests monitor processing-time HTTP(S) requests for representative local tools.
+The server tests check fixed security headers, public-config sanitization, Origin rejection, malformed/ambiguous request targets, private/unsupported media URLs, IPv6 /64 rate grouping, and absence of arbitrary API paths. Catalog policy tests require every launchable capability to reference an approved, independently maintained, self-hostable FOSS application and reject a library or Utilibre-authored implementation as the capability provider. Browser tests cover bilingual catalog discovery, launch behavior, accessibility, and upstream attribution.
 
 Preview regressions additionally cover exact private-IP HTTP configuration,
 public-launch rejection of preview mode, publication of private search/Redlib URLs,
-the exact allowed private Cobalt `/tunnel` result, rejection of other private
-result paths, and UUID/SHA-2/copy fallbacks when secure-context APIs are absent.
+the exact allowed private Cobalt `/tunnel` result, and rejection of other private
+result paths.
 
 After starting Compose privately, also run:
 

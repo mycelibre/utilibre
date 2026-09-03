@@ -9,7 +9,6 @@ export const discoveryGroups: readonly DiscoveryGroup[] = [
   'documents',
   'text-data',
   'feeds-monitoring',
-  'developer',
 ];
 
 export interface CatalogLaunch {
@@ -34,17 +33,13 @@ export function serviceConfigured(config: PublicConfig, entry: CatalogEntry): bo
 }
 
 export function privateRouterAvailable(config: PublicConfig): boolean {
-  return (
-    (serviceEnabled(config, 'invidious') && Boolean(config.publicYoutubeUrl))
-    || (serviceEnabled(config, 'redlib') && Boolean(config.publicRedditUrl))
-    || (serviceEnabled(config, 'rimgo') && Boolean(config.publicImgurUrl))
-  );
+  return serviceEnabled(config, 'redlib') && Boolean(config.publicRedditUrl);
 }
 
 export function entryLaunch(entry: CatalogEntry, language: Language, config: PublicConfig): CatalogLaunch | null {
   if (!entryLaunchable(entry, config)) return null;
 
-  if (entry.kind === 'tool' || entry.id === 'cobalt') {
+  if (entry.kind === 'integration' || entry.id === 'cobalt') {
     return { href: toolPath(entry.id, language), external: false };
   }
 
@@ -54,8 +49,7 @@ export function entryLaunch(entry: CatalogEntry, language: Language, config: Pub
 
 export function entryLaunchable(entry: CatalogEntry, config: PublicConfig): boolean {
   if (entry.id === 'private-router') return privateRouterAvailable(config);
-  if (entry.configBooleanKey && !config[entry.configBooleanKey]) return false;
-  if (entry.kind === 'tool') return true;
+  if (entry.kind === 'integration') return true;
   return entry.operationalStatus !== 'not-deployed' && serviceConfigured(config, entry);
 }
 

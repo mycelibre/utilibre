@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { catalog, localized } from '../../src/catalog/catalog';
 import { toolPath } from '../../src/routes';
 
-const featuredIds = ['searxng', 'vert', 'pairdrop', 'privatebin', 'image-resize', 'pdf-merge', 'qr-generate'] as const;
+const featuredIds = ['searxng', 'vert', 'pairdrop', 'privatebin', 'cobalt', 'bentopdf', 'omnitools'] as const;
 
 const baseConfig = {
   projectName: 'Utilibre', projectTagline: '', projectTaglineEn: '', projectTaglineEs: '',
@@ -16,10 +16,21 @@ const baseConfig = {
 const featuredConfig = {
   ...baseConfig,
   publicSearchUrl: 'https://search.utility.test/',
+  publicRedditUrl: 'https://reddit.utility.test/',
+  publicNtfyUrl: 'https://notify.utility.test/',
   publicConvertUrl: 'https://convert.utility.test/',
   publicSendUrl: 'https://send.utility.test/',
   publicPasteUrl: 'https://paste.utility.test/',
-  enabledServices: ['searxng', 'vert', 'pairdrop', 'privatebin'],
+  publicPdfUrl: 'https://pdf.utility.test/',
+  publicToolsUrl: 'https://tools.utility.test/',
+  publicMonitorUrl: 'https://monitor.utility.test/',
+  publicRssUrl: 'https://rss.utility.test/',
+  publicFeedsUrl: 'https://feeds.utility.test/',
+  publicWakapiUrl: 'https://code.utility.test/',
+  enabledServices: [
+    'searxng', 'cobalt', 'redlib', 'ntfy', 'bentopdf', 'vert', 'omnitools',
+    'healthchecks', 'pairdrop', 'freshrss', 'rsshub', 'privatebin', 'wakapi',
+  ],
 };
 
 async function mockConfig(page: Page, config: Record<string, unknown>): Promise<void> {
@@ -35,15 +46,16 @@ function languageNavigation(page: Page, name: 'Choose language' | 'Elegir idioma
 }
 
 test('Spanish is complete, preserves tools when switched, and fits a mobile viewport', async ({ page }) => {
+  await mockConfig(page, { ...baseConfig, publicRedditUrl: 'https://reddit.utility.test/', enabledServices: ['redlib'] });
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto('/es/herramientas/redimensionar-imagen');
+  await page.goto('/es/herramientas/abrir-con-privacidad');
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Redimensionar una imagen');
-  await expect(page.getByLabel('Elegir un archivo')).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Abrir un enlace de Reddit con Redlib');
+  await expect(page.getByLabel('URL pública compatible')).toBeVisible();
   await expect(page.locator('body')).not.toContainText(/\b(undefined|null)\b/);
   await languageNavigation(page, 'Elegir idioma').getByRole('link', { name: 'EN', exact: true }).click();
-  await expect(page).toHaveURL(/\/en\/tools\/image-resize$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Resize an image');
+  await expect(page).toHaveURL(/\/en\/tools\/open-privately$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Open a Reddit link through Redlib');
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
   expect(overflow).toBe(false);
 });
@@ -195,7 +207,7 @@ test('software inventory is grouped and uses descriptive source links', async ({
   const jump = page.getByRole('navigation', { name: 'Jump to a software group' });
   await expect(jump.getByRole('link')).toHaveCount(6);
   await expect(page.getByRole('heading', { level: 2, name: 'Hosted applications' })).toBeVisible();
-  await expect(page.getByRole('heading', { level: 2, name: 'Browser libraries' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Browser assets' })).toBeVisible();
   const searx = page.getByRole('heading', { level: 3, name: 'SearXNG' }).locator('..');
   await expect(searx.getByRole('link', { name: 'Upstream source: SearXNG' })).toHaveAttribute('href', 'https://github.com/searxng/searxng');
   await expect(searx.getByRole('link', { name: 'Source for the local modification: SearXNG' })).toHaveAttribute('href', 'https://github.com/utility/project/tree/revision');
@@ -427,8 +439,9 @@ test('transparency page discloses AI assistance equally in English and Spanish',
   await expect(page.getByText(/se desarrolló con amplia asistencia de OpenAI Codex/)).toBeVisible();
 });
 
-test('every tool route is bilingual, labelled, and mobile-safe', async ({ page }) => {
-  const entries = catalog.filter((entry) => entry.kind === 'tool' && entry.slug);
+test('every portal integration route is bilingual, labelled, and mobile-safe', async ({ page }) => {
+  await mockConfig(page, { ...featuredConfig, publicRedditUrl: 'https://reddit.utility.test/', enabledServices: [...featuredConfig.enabledServices, 'redlib'] });
+  const entries = catalog.filter((entry) => entry.slug);
   for (const language of ['en', 'es'] as const) {
     for (const entry of entries) {
       await page.goto(toolPath(entry.id, language));
@@ -452,19 +465,7 @@ test('every tool route is bilingual, labelled, and mobile-safe', async ({ page }
 });
 
 test('representative validation errors are translated into Spanish', async ({ page }) => {
-  await page.goto('/es/herramientas/hashes-archivo');
-  await page.getByRole('button', { name: 'Calcular hashes' }).click();
-  await expect(page.getByRole('status')).toContainText('Primero elige un archivo');
-
-  await page.goto('/es/herramientas/combinar-pdf');
-  await page.getByRole('button', { name: 'Combinar y descargar' }).click();
-  await expect(page.getByRole('status')).toContainText('Elige al menos dos archivos');
-
-  await page.goto('/es/herramientas/json');
-  await page.getByLabel('Entrada').fill('{no válido');
-  await page.getByRole('button', { name: 'Dar formato a JSON' }).click();
-  await expect(page.getByRole('status')).toContainText('JSON no válido');
-
+  await mockConfig(page, { ...baseConfig, publicRedditUrl: 'https://reddit.utility.test/', enabledServices: ['redlib'] });
   await page.goto('/es/herramientas/abrir-con-privacidad');
   await page.getByLabel('URL pública compatible').fill('no es una URL');
   await page.getByRole('button', { name: 'Revisar URL' }).click();
@@ -472,8 +473,9 @@ test('representative validation errors are translated into Spanish', async ({ pa
 });
 
 test('keyboard focus, semantic labels, reduced motion, and optional links are accessible', async ({ page }) => {
+  await mockConfig(page, { ...baseConfig, publicRedditUrl: 'https://reddit.utility.test/', enabledServices: ['redlib'] });
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/en/tools/image-resize');
+  await page.goto('/en/tools/open-privately');
   await page.keyboard.press('Tab');
   await expect(page.locator('.skip-link')).toBeFocused();
   await page.keyboard.press('Enter');
@@ -510,7 +512,7 @@ test('skip-link activation is retained while public configuration is still loadi
     await route.continue();
   });
 
-  const navigation = page.goto('/en/tools/image-resize');
+  const navigation = page.goto('/en/tools/open-privately');
   await configRequested;
   await page.keyboard.press('Tab');
   await expect(page.locator('.skip-link')).toBeFocused();

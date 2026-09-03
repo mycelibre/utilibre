@@ -15,8 +15,6 @@ describe('public runtime configuration', () => {
       return new Response(JSON.stringify({
         projectName: 'Utilibre test',
         publicSearchUrl: 'https://search.example.test/',
-        webhookInboxEnabled: true,
-        dnsLookupEnabled: true,
         enabledServices: ['searxng', 42, null],
         defaultLanguage: 'es',
       }), { headers: { 'Content-Type': 'application/json; charset=utf-8' } });
@@ -25,8 +23,6 @@ describe('public runtime configuration', () => {
     await expect(loadPublicConfig()).resolves.toMatchObject({
       projectName: 'Utilibre test',
       publicSearchUrl: 'https://search.example.test/',
-      webhookInboxEnabled: true,
-      dnsLookupEnabled: true,
       enabledServices: ['searxng'],
       defaultLanguage: 'es',
     });

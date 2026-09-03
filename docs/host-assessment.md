@@ -93,7 +93,7 @@ other projects. Never substitute a broad, unreviewed Docker prune.
 
 The configured launch deployment is intentionally limited to:
 
-- the lightweight portal server and static browser tools;
+- the lightweight catalog server and its narrow upstream-integration glue;
 - one protected Cobalt instance;
 - one SearXNG instance;
 - one internal, memory-only Valkey limiter; and

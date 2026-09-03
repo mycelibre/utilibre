@@ -1,7 +1,9 @@
 # Utilibre
 
-This repository provides a small, bilingual portal for privacy-respecting
-services and useful browser-side tools. Operators can configure the portal's
+This repository provides a small, bilingual catalog and hosting stack for
+privacy-respecting FOSS applications. Every public capability comes from an
+independently maintained, self-hostable upstream application; Utilibre's own
+code is limited to integration glue. Operators can configure the portal's
 displayed site name with `PROJECT_NAME`; the deployment examples, service URLs,
 and supplied identity assets use Utilibre.
 
@@ -22,13 +24,17 @@ independent human code review is claimed. Review the source, test evidence,
 and known limitations before relying on or deploying it. The fuller disclosure
 is in [`TRANSPARENCY.md`](TRANSPARENCY.md).
 
+The mandatory admission and retroactive-removal rule is documented in
+[`FOSS_POLICY.md`](FOSS_POLICY.md). If no reviewed upstream FOSS application
+exists for a proposed capability, Utilibre does not offer it.
+
 ## Deployment state
 
 Current public state was revalidated on 2026-09-03:
 
 | Scope | Components | Verified state |
 | --- | --- | --- |
-| Public portal | Utilibre portal 0.1.0 | English/Spanish catalog, information pages, and browser-local tools are live through Cloudflare and a separate Caddy edge. The production build, unit suite, desktop/mobile browser suite, and post-deploy browser regression pass. |
+| Public portal | Utilibre portal 0.1.0 | English/Spanish catalog, information pages, and two narrow upstream integration routes are live through Cloudflare and a separate Caddy edge. Original portal-native tools have been retired under the FOSS-only policy. |
 | Core services | Cobalt 11.7.1, SearXNG 2026.8.22, Valkey 9.1.1 | Cobalt's public portal gateway is restricted to the tested provider allowlist. SearXNG's public URL, limiter state, query-log redaction, and pages 1–3 pagination pass. Valkey is internal and ephemeral. |
 | Reddit frontend | Anubis 1.27.0 → locally patched Redlib `a4d36e9` | Public traffic passes through the bounded browser challenge before Docker-network-only Redlib. The gate raises common scraping cost; it is not a DDoS or availability guarantee. Reddit can change or block the upstream method. |
 | Additional public services | ntfy, BentoPDF, VERT, OmniTools, Healthchecks, PairDrop, FreshRSS, RSSHub, PrivateBin, Wakapi | All ten public endpoints and their container health checks pass. PostgreSQL and the second Valkey instance remain internal. Healthchecks, FreshRSS, and Wakapi require provisioned accounts; public signup is closed. |
@@ -36,8 +42,8 @@ Current public state was revalidated on 2026-09-03:
 
 The latest post-deploy sample had all 18 deployed containers healthy with zero
 restarts and all 13 public status entries operational. Representative real
-operations passed for each application class, including browser-local file
-work, SearXNG pagination, ntfy delivery, RSSHub feed generation, BentoPDF/VERT
+operations passed for each application class, including upstream browser-side
+file work, SearXNG pagination, ntfy delivery, RSSHub feed generation, BentoPDF/VERT
 conversion, PairDrop transfer, and PrivateBin encryption/deletion. These are
 bounded release checks, not uptime statistics or a promise about every input
 and changing upstream.
@@ -59,11 +65,9 @@ prelaunch measurements and later corrections remain in
 
 ## 1. Purpose
 
-The portal has two equally important parts:
-
-- prominent self-hosted services that reduce direct contact with selected
-  upstream platforms; and
-- focused tools that process selected files or entered content in the browser.
+The portal catalogs and hosts selected upstream FOSS applications. Some reduce
+direct contact with selected platforms; others perform file, text, or sharing
+work in the visitor's browser through their own upstream interfaces.
 
 It is a public utility, not a commercial SaaS product or a catalog padded for
 search traffic. Server-side work is used only where it provides real value.
@@ -75,8 +79,10 @@ search traffic. Server-side work is used only where it provides real value.
   public registration closed.
 - Voluntary support only, with no priority, feature, or limit advantage.
 - English and neutral Spanish as equal first-class interfaces.
-- Browser-side processing whenever practical and no upload claim beyond what
-  has actually been tested.
+- Every public capability supplied by an independently maintained,
+  self-hostable FOSS application; original Utilibre code is glue only.
+- Browser-side processing where the selected upstream supports it, with no
+  upload claim beyond what has actually been tested.
 - Minimal retention and bounded operational logs, without claiming “zero
   logs,” anonymity, or untraceability.
 - Official, pinned upstream releases; no `latest` tags or unattended major
@@ -99,7 +105,7 @@ Caddy edge VM (public DNS, HTTPS, TLS, public routing)
 operator-controlled private network
    |
 Application VM
-   +-- portal: static application + narrow config/status/media/developer endpoints
+   +-- portal: static catalog + narrow config/status/Cobalt-adapter endpoints
    +-- Cobalt: authenticated internal processing API
    +-- SearXNG -- internal-only, ephemeral Valkey limiter state
    +-- Anubis -> Redlib: challenge gate, then English-only Reddit frontend
@@ -112,12 +118,10 @@ Valkey is reachable only on an internal Docker network. The portal's small Node
 server serves this application and its fixed endpoints; it is not a generic
 reverse proxy or network scanner.
 
-Local browser tools follow `Browser only; no file or content upload after
-application assets load`. The HTTP tester, CORS-visible header viewer,
-WebSocket tester, and server-sent events viewer instead connect from the
-visitor's browser directly to the destination they enter; the portal is not an
-HTTP relay for those tools. The temporary webhook inbox and DNS lookup use two
-fixed, bounded portal endpoints described below. Cobalt follows `Browser →
+Browser-side work is supplied by upstream applications such as BentoPDF, VERT,
+OmniTools, and PrivateBin; each catalog record states its observed boundary and
+any external runtime requests. The portal does not provide a generic HTTP,
+webhook, DNS, WebSocket, or event-stream tester. Cobalt follows `Browser →
 portal gateway → Cobalt → source platform`, after which delivery may use
 this server or a direct upstream URL. SearXNG follows `Browser → edge →
 SearXNG → selected search engines`. Redlib follows `Browser → Cloudflare
@@ -136,7 +140,7 @@ and [firewall design](docs/firewall.md).
 
 ### Portal and status
 
-The TypeScript/Vite portal bundles self-hosted fonts and JavaScript/WASM, uses a
+The TypeScript/Vite portal bundles self-hosted fonts and JavaScript, uses a
 minimal Node server, no database, no account system, no analytics, and no
 nonessential cookies. It includes directly linkable English and Spanish public
 pages for About, Transparency, Privacy, Acceptable use, Support, Status,
@@ -279,100 +283,23 @@ has no Compose service, database, port, or live navigation destination. Its
 configuration directory explains the deferral; future candidates are reviewed in
 [frontend-candidates.md](docs/frontend-candidates.md).
 
-## 5. Current portal-native tools
+## 5. Public capability policy
 
-All of these tools run after their self-hosted assets load without intentionally
-uploading selected files or entered content:
+Every end-user capability must be provided by a complete, independently
+maintained, self-hostable FOSS application. Utilibre's original code is limited
+to catalog, configuration, routing, security, deployment, and narrow adapter
+glue. A FOSS library or browser API is not a qualifying application provider.
 
-- Images: resize with optional aspect-ratio preservation; compress JPEG/WebP;
-  convert PNG/JPEG/WebP; decode and re-encode to remove common metadata.
-- PDFs: merge, extract page ranges, rotate all pages, and create an exact page
-  order with the maintained `@cantoo/pdf-lib` fork.
-- Files: SHA-256 and SHA-512 through Web Crypto when available, with bundled
-  `@noble/hashes` 2.3.0 as the local private-HTTP fallback; browser-visible
-  file details and image dimensions. Browser-reported MIME types are not
-  authoritative.
-- Text/data: JSON validation/format/minify/copy/download; UTF-8 Base64;
-  component or complete-URL encoding.
-- QR: local generation/download and local image reading through self-hosted
-  `zxing-wasm`. Decoded URLs are shown with a warning and never opened
-  automatically.
-- Privacy-frontend router: strict browser-side recognition of YouTube, Reddit,
-  and Imgur hosts, routing only to a corresponding configured local frontend.
-  Lookalike hosts and arbitrary destinations are rejected. Reddit routes to the
-  configured Redlib origin when `redlib` is enabled; Invidious and rimgo remain
-  unavailable by default.
+This rule was applied retroactively on 2026-09-03. The 31 original portal tool
+routes, including the custom webhook and DNS endpoints, were removed.
+BentoPDF, VERT, and OmniTools already provide upstream alternatives for many
+of those tasks. The Redlib-only URL router remains because it only validates a
+Reddit URL and hands off to the configured Redlib application; the Cobalt page
+remains a narrow adapter to the Cobalt application.
 
-Image re-encoding can alter quality, color profiles, animation, orientation,
-transparency, and unsupported metadata. Large PDFs and images can consume
-substantial memory in the visitor's tab. These limitations appear in both
-languages.
-
-The Developer category adds the following local operations:
-
-- decode JWT headers and claims, or generate and optionally verify HMAC JWTs
-  using HS256, HS384, or HS512. Decoding is explicitly not presented as
-  signature verification;
-- verify SHA-256, SHA-384, or SHA-512 HMAC webhook signatures;
-- inspect OpenAPI 3.x or Swagger 2.0 JSON/YAML documents, endpoints, and
-  references. This is a bounded structural inspection, not full standards
-  validation, and it does not fetch remote references. Parsing happens
-  synchronously in the visitor's tab, so a pathological document within the
-  2 MiB input ceiling can still make that tab briefly unresponsive;
-- convert a conservative supported subset of raw HTTP requests and cURL
-  commands without executing either one;
-- test JavaScript regular expressions in a disposable, 750-millisecond worker
-  with bounded input/output, and preview standard five-field cron expressions
-  in UTC in a disposable, one-second worker with a bounded search horizon;
-- convert timestamps; calculate SHA-1, SHA-256, SHA-384, or SHA-512 text
-  hashes; and generate or inspect UUID values.
-
-Four developer tools use the visitor's browser as the network client:
-
-- the HTTP request tester and server-sent events viewer use browser fetch with
-  credentials omitted, while an Authorization header entered explicitly in
-  the HTTP tester is sent to the chosen destination. Fetch redirects are
-  followed, and a CORS-visible failure can occur after delivery;
-- the header viewer makes a browser-direct request and can show only response
-  headers exposed to scripts by the destination's CORS policy; and
-- the WebSocket tester connects directly without a Utilibre relay. Browsers
-  supply an Origin and may attach existing cookies for the destination; the
-  WebSocket API provides no credentials-omit switch. A received frame is
-  materialized by the browser before the page can close a connection for
-  exceeding its per-frame limit.
-
-The temporary webhook inbox is the only developer tool that accepts arbitrary
-request bodies at the portal. Each opaque inbox becomes inaccessible after 15
-minutes, accepts at most 12 KiB of body per request, and retains the newest
-events up to 25 events/1 MiB; later accepted events can evict the oldest. It
-retains at most 32 headers/32 KiB per event, flags header truncation,
-omits Authorization, Cookie, standard hop-by-hop, and recognized
-proxy/client-address headers from the displayed record, and has no forwarding,
-replay, database, or persistent storage. Other custom headers, query parameters,
-and bodies remain visible to anyone with the read capability. A derived client
-may hold at most three active inboxes, 75 retained events, and 2 MiB. Body
-receipt, event-list pages, response concurrency, rate keys, and total process
-memory are separately bounded. Valid text is shown as captured UTF-8; other
-bodies are shown as Base64 and must be decoded back to bytes before byte-exact
-signature verification. Browser clipboard and text controls can normalize line
-endings, so the original sender payload remains the safest verification input.
-Expired process references are removed on the next request or periodic sweep,
-normally within another minute; this is logical cleanup, not forensic erasure.
-DNS lookup sends one validated public hostname and an
-allowlisted record type through the application VM's resolver. It is not a
-general network scanner. `WEBHOOK_INBOX_ENABLED` and `DNS_LOOKUP_ENABLED` are
-independent emergency switches; setting either to `0` and recreating the portal
-hides its catalog entry and makes its API return 404.
-
-There is deliberately no generic server-side HTTP request or header-inspection
-proxy. Browser CORS restrictions are inconvenient, but turning the application
-VM into an SSRF surface would be worse.
-
-The portal also rejects the conservative 100-header boundary with HTTP 431
-before routing, because Node can otherwise stop exposing later headers while
-its HTTP parser still honors a late body-framing header. Media JSON receipt is
-limited to 16 concurrent body readers and ten seconds before the existing
-two-job Cobalt request ceiling applies.
+New capabilities must pass [the public capability policy](FOSS_POLICY.md), the
+[service-admission process](docs/adding-a-service.md), and the automated
+`npm run test:foss-policy` gate before they can appear in the catalog.
 
 ## 6. System requirements
 
@@ -476,9 +403,8 @@ The browser reaches generated
 `http://PRIVATE_BIND_IP:9000/tunnel?...` links only after media preparation
 through the portal; do not treat port `9000` as a UI or expose its API root.
 Private preview sends plaintext HTTP across the network, so allow only the
-intended preview client(s). The portal includes local UUID, SHA-2, and copy
-fallbacks for browsers that restrict secure-context APIs on private HTTP, but
-HTTPS is still preferred and remains mandatory for public launch.
+intended preview client(s). Use it to verify the catalog and fixed upstream
+handoffs; HTTPS remains mandatory for public launch.
 
 The normal edge-proxied/public preparation follows. Do not use the preview
 initializer when `.env` already exists.
@@ -531,7 +457,6 @@ tokens, or backup archives. The most important settings are:
 | `PORTAL_PRIVATE_PREVIEW`, `PORTAL_EDGE_PROXY_IP` | Optional portal-only cutover settings. They let the portal trust the exact live edge without recreating an already-running Cobalt or SearXNG container. They do not put those backends into launch mode. |
 | `PORTAL_PUBLIC_ORIGIN` | Optional portal-only HTTPS Origin allowlist used by the same-origin media endpoint during a staged cutover. |
 | `PORTAL_COBALT_BROWSER_URL`, `PORTAL_COBALT_RESULT_SOURCE_URL` | Browser-visible public media URL and the exact URL currently emitted by Cobalt. The portal rewrites only an exact `/tunnel?...` match; it never exposes the private source URL to the browser. |
-| `WEBHOOK_INBOX_ENABLED`, `DNS_LOOKUP_ENABLED` | Independent developer-API kill switches. Each defaults to `1`; set one to `0` and recreate only the portal to hide and disable that surface without affecting the other tools. |
 | `PORTAL_PORT`, `COBALT_PORT`, `SEARXNG_PORT`, `REDLIB_PORT` | Private host ports; defaults are 8080, 9000, 8888, and 3002. |
 | `PUBLIC_*_HOST`, `ANUBIS_PUBLIC_HOST` | Public mode uses the edge-side hostname plan. `ANUBIS_PUBLIC_HOST` must exactly match the Redlib public hostname. |
 | `PUBLIC_PORTAL_ORIGIN` | Exact HTTPS origin with no trailing slash for launch; private preview uses exact `http://PRIVATE_BIND_IP:PORTAL_PORT`. Used by portal and Cobalt origin checks. |
@@ -588,12 +513,12 @@ npm run test:e2e
 npm audit
 ```
 
-The Playwright suite runs desktop and mobile Chromium. Its local-tool tests wait
-for application/WASM assets, begin monitoring before the visitor selects a
-file or enters content, perform real image/PDF/hash/JSON/QR operations, then
-assert that processing caused no HTTP(S), fetch, XHR, beacon, WebSocket, or form
-request. Browser installation may additionally require the official
-Playwright OS-dependency command for the development machine.
+The Playwright suite runs desktop and mobile Chromium. It checks the bilingual
+catalog, both permitted integration routes, external launch behavior, responsive
+layout, keyboard access, and localized errors. Separate deployment acceptance
+tests exercise representative operations in the hosted upstream applications.
+Browser installation may additionally require the official Playwright
+OS-dependency command for the development machine.
 
 The historical pre-Anubis run passed the 20-case configuration-validator suite, 23
 Vitest/server tests, and 42/42 desktop/mobile Playwright cases against the live
@@ -782,13 +707,13 @@ complete threat review and remaining production checks in
 
 ## 15. Privacy and data retention
 
-The catalog is the source for each tool/service's labels, flow, upstreams,
+The catalog is the source for each application/integration's labels, flow, upstreams,
 upload behavior, temporary storage, retention, logging, license, version, and
 status.
 
-- `LOCAL`: selected image/PDF/file/text/QR content stays in the tab after
-  assets load. The server sees normal static page/asset requests, not the
-  selected content.
+- `LOCAL`: the named upstream application performs the described operation in
+  the browser after its assets load. The exact catalog record states what was
+  tested and whether selected content is sent anywhere.
 - `SERVER`: the application VM performs part of an operation.
 - `PROXY`: the application VM contacts an upstream on the visitor's behalf.
 - `EXTERNAL`: the browser can contact an upstream directly for part of the
@@ -806,9 +731,8 @@ bbolt challenge records expire logically after 30 minutes, though freed pages
 can remain in the database file until compaction/deletion. This state is for
 abuse control, not analytics or cross-site profiling.
 
-No media
-volume, portal database, search-query database, analytics store, or local-tool
-upload area exists. Cobalt's
+No media volume, portal database, search-query database, analytics store, or
+portal-native tool upload area exists. Cobalt's
 short-lived tunnel state may live in process memory and media delivery varies
 between streaming through the VM and a direct upstream URL; it is not honest to
 claim media never touches the server.
@@ -1090,12 +1014,12 @@ edge/firewall guidance, privacy/license records, and private tests.
 
 Follow [adding-a-service.md](docs/adding-a-service.md).
 
-## 22. Adding another browser tool
+## 22. Adding another tool
 
-Prefer standard browser APIs; pin and self-host a maintained FOSS dependency
-only when necessary. Add one structured catalog record and complete English/
-Spanish strings, lazy-load heavy code, map errors, document limitations, and
-add a real post-asset no-network Playwright test.
+Do not implement the capability in Utilibre. Identify a complete,
+independently maintained, self-hostable FOSS application, pass the service
+admission review, register its evidence, and integrate it with glue only. If no
+such application exists, omit the capability.
 
 Follow [adding-a-tool.md](docs/adding-a-tool.md).
 
@@ -1133,11 +1057,6 @@ Anubis is an unmodified MIT-licensed upstream image at 1.27.0, official commit
 Xe Iaso's copyright and MIT notice when redistributing the image or substantial
 software portions. Local policy/environment configuration is published here;
 there is no proprietary fork.
-
-The OpenAPI inspector bundles unmodified `yaml` 2.9.0 under the ISC license.
-Its exact Eemeli Aro copyright, permission, and disclaimer text is reproduced
-in `THIRD_PARTY_NOTICES.md`; the inspector does not fetch remote references or
-claim complete OpenAPI standards validation.
 
 The exact service/runtime/browser/toolchain inventory, modification status,
 source URLs, attribution, and disclosure obligations are in
@@ -1287,8 +1206,10 @@ never put secrets or private addresses into public documentation.
   bandwidth budget; establish a manual low-disk check.
 - Review exact-image vulnerabilities/SBOMs, current upstream release notes,
   licenses, source links, edge log fields, and log retention.
-- Navigate every public page and tool in English and Spanish with keyboard,
-  screen-reader checks, reduced motion, dark/light modes, and mobile widths.
+- Navigate every portal page and bilingual integration surface in English and
+  Spanish with keyboard, screen-reader checks, reduced motion, dark/light
+  modes, and mobile widths. Verify each upstream application's documented
+  language availability separately.
 - Confirm Redlib's English-only upstream interface, OAuth/client emulation,
   crawler exposure, and Reddit-blocking risk remain acceptable; publish the
   local redirect patch and complete source at `SOURCE_CODE_URL`.

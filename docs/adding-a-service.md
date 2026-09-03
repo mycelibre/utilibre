@@ -6,11 +6,17 @@ deploy it. Start by updating the viability review in
 [frontend-candidates.md](frontend-candidates.md), using current official
 documentation and the canonical source repository.
 
+The non-negotiable admission rule is in [`FOSS_POLICY.md`](../FOSS_POLICY.md):
+the capability provider must be a complete, independently maintained,
+self-hostable FOSS application. A library, browser API, original Utilibre
+implementation, or merely source-available project does not qualify.
+
 ## 1. Pass the viability gate
 
 Record and verify:
 
-- upstream service represented and distinct public value;
+- upstream application, independent maintainer, complete self-hosting path,
+  and distinct public value;
 - active maintenance, exact release/commit, supported official deployment,
   image registry/digest, architecture support, and license;
 - required database/cache, credentials, cookies, tokens, accounts, or private
@@ -91,7 +97,9 @@ keys, tokens, database passwords, or personal credentials.
 
 ## 4. Integrate the public portal
 
-Add a complete service entry to `portal/src/catalog/catalog.ts`, including:
+First add the approved provider and its license evidence to
+`portal/src/catalog/upstreams.ts`. Then add a complete service entry to
+`portal/src/catalog/catalog.ts`, including:
 
 - stable ID, bilingual name and description, and category;
 - the exact upstream project name and official source URL, rendered visibly so

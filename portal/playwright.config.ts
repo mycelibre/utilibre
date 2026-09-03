@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const externalBaseUrl = process.env.E2E_BASE_URL;
+const localPort = process.env.E2E_PORT || '4174';
+const localBaseUrl = `http://127.0.0.1:${localPort}`;
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -9,12 +11,12 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: 'list',
   use: {
-    baseURL: externalBaseUrl || 'http://127.0.0.1:4173',
+    baseURL: externalBaseUrl || localBaseUrl,
     trace: 'retain-on-failure',
   },
   webServer: externalBaseUrl ? undefined : {
-    command: 'npm run dev -- --port 4173',
-    url: 'http://127.0.0.1:4173/en/',
+    command: `npm run dev -- --port ${localPort}`,
+    url: `${localBaseUrl}/en/`,
     reuseExistingServer: !process.env.CI,
   },
   projects: [

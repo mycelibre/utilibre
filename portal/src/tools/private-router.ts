@@ -1,9 +1,7 @@
 import type { PublicConfig } from '../config';
 import { actionButton, append, element, labelledInput, setStatus, statusRegion, toolPanel, type Translate } from '../utilities/dom';
 
-type PrivateTarget = 'youtube' | 'reddit' | 'imgur';
-
-interface RoutedUrl { target: PrivateTarget; path: string; search: string; }
+interface RoutedUrl { target: 'reddit'; path: string; search: string; }
 
 export function renderPrivateRouter(t: Translate, config: PublicConfig): HTMLElement {
   const panel = toolPanel();
@@ -17,9 +15,8 @@ export function renderPrivateRouter(t: Translate, config: PublicConfig): HTMLEle
     if (!validPublicUrlShape(field.input.value)) return setStatus(status, t('router.invalid'), 'error');
     const routed = routePrivateUrl(field.input.value);
     if (!routed) return setStatus(status, t('router.unsupported'), 'error');
-    const serviceId = routed.target === 'youtube' ? 'invidious' : routed.target === 'reddit' ? 'redlib' : 'rimgo';
-    const configured = config.enabledServices.includes(serviceId);
-    const base = configured ? (routed.target === 'youtube' ? config.publicYoutubeUrl : routed.target === 'reddit' ? config.publicRedditUrl : config.publicImgurUrl) : '';
+    const configured = config.enabledServices.includes('redlib');
+    const base = configured ? config.publicRedditUrl : '';
     if (!base) return setStatus(status, t('router.notDeployed'), 'error');
     try {
       const destination = new URL(base);
@@ -28,7 +25,9 @@ export function renderPrivateRouter(t: Translate, config: PublicConfig): HTMLEle
       const label = element('p', '', `${t('router.destination')}: ${destination.hostname}`);
       const link = element('a', 'button', t('router.continue'));
       link.href = destination.href;
+      link.target = '_blank';
       link.rel = 'noopener noreferrer';
+      link.ariaLabel = `${t('router.continue')} (${t('a11y.opensNewTab')})`;
       append(result, label, link);
       setStatus(status, t('router.ready'), 'success');
     } catch { setStatus(status, t('router.notDeployed'), 'error'); }
@@ -43,22 +42,6 @@ export function routePrivateUrl(value: string): RoutedUrl | null {
   try { url = new URL(value); } catch { return null; }
   if (url.protocol !== 'https:' || url.username || url.password || url.port) return null;
   const host = url.hostname.toLowerCase().replace(/\.$/, '');
-  if (['youtube.com', 'www.youtube.com', 'm.youtube.com', 'music.youtube.com', 'youtu.be'].includes(host)) {
-    const output = new URL('https://local.invalid/');
-    if (host === 'youtu.be') {
-      const id = url.pathname.split('/').filter(Boolean)[0];
-      if (!id || !/^[A-Za-z0-9_-]{6,20}$/.test(id)) return null;
-      output.pathname = '/watch';
-      output.searchParams.set('v', id);
-      copyAllowedParameters(url, output, ['t', 'start', 'list', 'index']);
-    } else {
-      const path = safePath(url.pathname);
-      if (!path) return null;
-      output.pathname = path;
-      copyAllowedParameters(url, output, ['v', 't', 'start', 'list', 'index']);
-    }
-    return { target: 'youtube', path: output.pathname, search: output.search };
-  }
   if (['reddit.com', 'www.reddit.com', 'old.reddit.com', 'new.reddit.com', 'np.reddit.com', 'redd.it'].includes(host)) {
     const output = new URL('https://local.invalid/');
     const path = safePath(url.pathname);
@@ -66,10 +49,6 @@ export function routePrivateUrl(value: string): RoutedUrl | null {
     output.pathname = path;
     copyAllowedParameters(url, output, ['sort', 't', 'context', 'depth', 'after', 'before']);
     return { target: 'reddit', path: output.pathname, search: output.search };
-  }
-  if (['imgur.com', 'www.imgur.com', 'm.imgur.com', 'i.imgur.com'].includes(host)) {
-    const path = safePath(url.pathname);
-    return path ? { target: 'imgur', path, search: '' } : null;
   }
   return null;
 }

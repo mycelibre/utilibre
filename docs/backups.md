@@ -13,7 +13,7 @@ The milestone-1 stack has no account database and no persistent user-media store
 | Edge Caddy configuration and non-recreatable state | Yes for full-site recovery | Private and outside this repository | Back up on the edge VM using its established procedure; normally let Caddy reissue public certificates rather than copying private keys |
 | Host firewall/security-group policy | Yes for full-site recovery | Infrastructure-sensitive and outside this repository | Export through the authoritative firewall/provider mechanism |
 
-The source archive script includes `portal/` and `scripts/` but excludes `.env`, `secrets/`, the generated `config/searxng/limiter.toml`, other generated runtime data, dependencies, builds, browser-test output, and generated QR WebAssembly. Those omitted public build artifacts are reproducible from the exact lockfile. The generated limiter also contains the exact private edge address and must not enter a public archive.
+The source archive script includes `portal/` and `scripts/` but excludes `.env`, `secrets/`, the generated `config/searxng/limiter.toml`, other generated runtime data, dependencies, builds, and browser-test output. Those omitted public build artifacts are reproducible from the exact lockfile. The generated limiter also contains the exact private edge address and must not enter a public archive.
 
 ## What is intentionally not backed up
 
@@ -25,8 +25,7 @@ The source archive script includes `portal/` and `scripts/` but excludes `.env`,
 | Docker `json-file` logs and host journals | Operational/possibly sensitive, rotated, and not application state |
 | Cobalt media or tunnel state | No media volume exists; tunnel metadata is short-lived process memory |
 | Redlib OAuth/device/connection state and transient page/media buffers | No database or volume exists; state is process memory or bounded tmpfs and clears on restart |
-| Temporary webhook inboxes, events, read-token hashes, and developer rate counters | These are deliberately process-memory-only and clear on expiry, explicit deletion, or portal restart; restoring them would violate the advertised temporary boundary |
-| Portal/local-tool inputs and results | They never intentionally reach server storage |
+| Portal integration form state | It exists only in the visitor's browser and is not authoritative application data |
 | rimgo memory cache | Optional, non-authoritative, and cleared on restart |
 | `config/searxng/limiter.toml` | Ignored file deterministically regenerated from the tracked template and exact edge address |
 | Container writable layers/images | Pulled images are digest-pinned and Redlib is reproducibly source-built from the backed-up patch/build recipe; an optional image export is an update rollback artifact, not user data |
@@ -131,12 +130,10 @@ sh scripts/check-health.sh
 sh scripts/verify-network.sh
 ```
 
-Reapply the application-VM firewall through its authoritative procedure. Restore/validate the separate edge Caddy configuration only after private health and unauthorized-host checks pass. Run the bilingual browser, local no-upload, API-authentication, and network-exposure tests before reopening public traffic.
+Reapply the application-VM firewall through its authoritative procedure. Restore/validate the separate edge Caddy configuration only after private health and unauthorized-host checks pass. Run the bilingual portal, upstream-application acceptance, API-authentication, and network-exposure tests before reopening public traffic.
 
 Because limiter state starts empty, watch SearXNG and portal request rates
-closely after a restore. Every temporary webhook receiver from before the
-restart is invalid; do not attempt to reconstruct it from edge logs. Start
-Anubis with a new empty bbolt file but the
+closely after a restore. Start Anubis with a new empty bbolt file but the
 restored stable key. Watch Redlib requests and egress closely; cache warm-up can
 make initial searches and Reddit pages slower.
 

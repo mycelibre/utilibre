@@ -77,7 +77,6 @@ document.addEventListener('click', (event) => {
   if (destination.origin !== window.location.origin) return;
   const parsed = parseRoute(destination.pathname);
   if (!parsed) return;
-  if (requiresNetworkDocument(route) || requiresNetworkDocument(parsed)) return;
   if (destination.pathname === window.location.pathname
     && destination.search === window.location.search
     && destination.hash) {
@@ -99,11 +98,6 @@ function resolveInitialRoute(): Route {
   const destination = routePath('home', language);
   history.replaceState({}, '', destination);
   return { language, page: 'home' };
-}
-
-function requiresNetworkDocument(candidate: Route): boolean {
-  return candidate.page === 'tool'
-    && ['http-request', 'http-headers', 'websocket', 'sse'].includes(candidate.toolId ?? '');
 }
 
 async function render(focusAfter?: string): Promise<void> {
