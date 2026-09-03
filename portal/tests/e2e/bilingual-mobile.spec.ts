@@ -199,6 +199,11 @@ test('software inventory is grouped and uses descriptive source links', async ({
   const searx = page.getByRole('heading', { level: 3, name: 'SearXNG' }).locator('..');
   await expect(searx.getByRole('link', { name: 'Upstream source: SearXNG' })).toHaveAttribute('href', 'https://github.com/searxng/searxng');
   await expect(searx.getByRole('link', { name: 'Source for the local modification: SearXNG' })).toHaveAttribute('href', 'https://github.com/utility/project/tree/revision');
+
+  const hostedHeading = page.getByRole('heading', { level: 2, name: 'Hosted applications' });
+  await jump.getByRole('link', { name: 'Hosted applications' }).click();
+  await expect(page).toHaveURL(/#software-hosted$/);
+  await expect(hostedHeading).toBeFocused();
 });
 
 test('unknown routes return a useful localized 404 and the common Spanish alias redirects', async ({ page }) => {

@@ -168,6 +168,7 @@ package and self-hosted.
 | tagged-tag | 1.0.0 | MIT | <https://github.com/sindresorhus/tagged-tag> |
 | tslib | 2.8.1 | 0BSD | <https://github.com/microsoft/tslib> |
 | type-fest | 5.8.0 | MIT OR CC0-1.0; this distribution relies on the MIT option | <https://github.com/sindresorhus/type-fest> |
+| yaml | 2.9.0 | ISC | <https://github.com/eemeli/yaml/tree/v2.9.0> |
 | @types/emscripten | 1.41.5 | MIT; compile-time declarations only | <https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/emscripten> |
 | zxing-wasm | 3.1.3 | MIT | <https://github.com/Sec-ant/zxing-wasm/tree/v3.1.3> |
 | ZXing-C++ embedded in zxing-wasm | commit `a17fd9dc65d6aa0dd2f660fdfca7a6a6613d938f` | Apache-2.0 | <https://github.com/zxing-cpp/zxing-cpp/tree/a17fd9dc65d6aa0dd2f660fdfca7a6a6613d938f> |
@@ -180,6 +181,25 @@ The checked `zxing_full.wasm` has SHA-256
 tagged CMake recipe fetches `stb` without a commit, so the exact stb revision in
 the published binary is an upstream provenance limitation. stb's applicable
 MIT terms are reproduced below.
+
+### yaml 2.9.0 ISC notice
+
+The following text is reproduced exactly from `yaml@2.9.0`'s installed
+`LICENSE` file:
+
+> Copyright Eemeli Aro <eemeli@gmail.com>
+>
+> Permission to use, copy, modify, and/or distribute this software for any purpose
+> with or without fee is hereby granted, provided that the above copyright notice
+> and this permission notice appear in all copies.
+>
+> THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+> REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+> FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+> INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+> OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+> TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+> THIS SOFTWARE.
 
 ### MIT notices
 

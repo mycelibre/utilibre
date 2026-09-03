@@ -10,6 +10,9 @@ The bilingual public Privacy and Transparency pages are generated from centraliz
 |---|---|---|---|
 | Portal page | Requested path and ordinary HTTP headers forwarded by the edge | Nothing from portal code | Static browser cache; no portal database |
 | Local browser tool | Only later static-asset requests, if an asset was not already loaded; never the selected file/content intentionally | Nothing from the tool | Working data in browser memory; generated downloads on the visitor's device |
+| Browser-direct developer request | Only ordinary requests for the portal page/assets; the entered destination, headers, body, and messages do not pass through Utilibre | The chosen HTTPS, WSS, or HTTPS event-stream destination receives a direct browser connection and the data the visitor sends | Bounded working output in browser memory; destination policy controls its own state |
+| Temporary webhook inbox | Receiver path, sender network/request metadata, retained headers/query, and up to 12 KiB of body per event | Cloudflare and the Caddy edge process the inbound request before it reaches the portal | Access ends after 15 minutes; process references are normally removed within another minute; 25 events/1 MiB per inbox; no database or forwarding |
+| DNS lookup | Submitted public hostname and record type; short-lived derived-client rate counter | The application VM resolver and contacted DNS servers receive the query | No query history; bounded process-memory rate state |
 | Open through a privacy frontend | Nothing while parsing | Nothing until the visitor follows the generated local-frontend link | Pasted URL in the page's live DOM/memory only |
 | Cobalt media | Full submitted public URL, output mode/quality, Origin, and client address used for rate limiting | Full target URL and extraction requests from Cobalt; possibly a later direct browser request to a provider/CDN | In-memory rate bucket and tunnel metadata; no media volume |
 | SearXNG search | Search terms, preferences, ordinary headers, and client address for limiting | Query and engine-specific parameters from the application VM | Memory-only Valkey limiter state, re-creatable cache, optional first-party preferences cookie |
@@ -50,7 +53,7 @@ Browser caching may retain versioned JavaScript, CSS, PDF code, and QR WebAssemb
 
 ## Local browser tools
 
-Images, PDFs, file hashes/information, JSON, Base64 text, URL encoding, UUID generation, and QR generation/reading execute in browser JavaScript, browser APIs, bundled PDF code, or self-hosted WebAssembly. They do not submit a form, fetch a processing endpoint, open a WebSocket, send a beacon, or use an external CDN after required assets have loaded.
+Images, PDFs, file hashes/information, JSON, Base64 text, URL encoding, UUID generation/inspection, QR generation/reading, JWT/HMAC operations, OpenAPI inspection, HTTP↔cURL conversion, regex/cron evaluation, timestamp conversion, and text hashing execute in browser JavaScript, browser APIs, bundled PDF/YAML code, disposable local workers, or self-hosted WebAssembly. They do not submit a form, fetch a processing endpoint, open a WebSocket, send a beacon, or use an external CDN after required assets have loaded.
 
 Specific local data handling includes:
 
@@ -60,12 +63,106 @@ Specific local data handling includes:
 - SHA-256 and SHA-512 use Web Crypto after reading the selected file into browser memory;
 - file information reads the browser-provided filename, size, MIME label, modification time, and optional decoded image dimensions; the MIME label is not authoritative;
 - JSON, UTF-8 Base64, and URL transformations use local JavaScript strings;
-- UUIDs use `crypto.randomUUID()`;
+- UUID generation uses a cryptographically secure UUIDv4 source and inspection parses the supplied value locally;
+- JWT decoding, HMAC signing, and verification use local JavaScript and Web Crypto. Supported JWT algorithms are HS256, HS384, and HS512; decoding a token does not prove its signature is valid;
+- webhook-signature verification uses local HMAC SHA-256, SHA-384, or SHA-512 with a visitor-supplied payload, signature, and secret;
+- OpenAPI inspection parses at most 2 MiB of JSON or YAML with the bundled `yaml` library, inspects a bounded document tree, and lists rather than fetches remote references. It is a basic structural check, not full OpenAPI standards validation;
+- the HTTP↔cURL converter parses and prints a conservative subset but never executes the request or command; file-backed, shell, and credential-file options are rejected;
+- arbitrary JavaScript regular expressions run in a disposable worker with a 750-millisecond deadline, 512-character pattern limit, 50,000-character input limit, and bounded displayed matches/captures;
+- standard five-field cron expressions run in a separate disposable worker with a one-second deadline, UTC semantics, eight requested previews, and a five-year search horizon; an exhausted horizon is reported rather than treated as a match;
+- timestamp conversion and SHA-1/SHA-256/SHA-384/SHA-512 text hashing use local JavaScript/Web Crypto; and
 - QR generation/reading uses the self-hosted `zxing_full.wasm`; a decoded URL is displayed with a warning and opens only after an explicit click.
 
 Working data remains in the tab's memory until references are released, the page is reloaded/closed, or the browser reclaims it. A browser or operating system can write memory, caches, crash reports, clipboard data, or downloaded results to the visitor's device; extensions can also observe pages and file selections. Those device-side behaviors are outside this server's control. Very large inputs can consume substantial client memory.
 
 Automated browser tests attach network monitoring after assets are ready and exercise representative image, PDF, hash, text, and QR operations. The tests fail on an HTTP(S) processing request. Code review and the restrictive `connect-src 'self'` policy provide additional defense, but neither can control a malicious browser extension or a locally modified build.
+
+## Browser-direct developer connections
+
+The HTTP request tester, CORS-visible response-header viewer, WebSocket tester,
+and server-sent events viewer are intentionally **not** local-only tools. The
+visitor's browser connects to the destination entered in the form; the Utilibre
+server does not receive or relay that destination request. The destination
+therefore sees the visitor's network address and the request metadata supplied
+by the browser, and can retain data under its own policy. DNS, TLS, browser
+extensions, the visitor's network, and other ordinary intermediaries remain in
+the path. The public portal CSP permits HTTPS and WSS destinations; the browser
+also blocks mixed content where applicable.
+
+The HTTP and event-stream fetches use `credentials: 'omit'`, so ambient browser
+cookies and HTTP authentication credentials are not requested for those
+fetches. An Authorization header that the visitor explicitly enters in the
+HTTP tester is sent. Browser-forbidden headers such as Cookie, Host, Origin,
+Referer, proxy headers, and `Sec-*` cannot be entered through the tool. The
+interface displays at most 1 MiB of an HTTP response and bounds event-stream
+bytes, events, and buffer size. Fetch redirects are followed. A displayed CORS
+failure can happen after the destination or a redirect target already received
+the request, so it is not evidence that a state-changing operation did not run.
+These display limits do not limit what the remote endpoint itself records.
+
+Cross-origin response bodies and headers are readable only when the destination
+permits them through CORS. The header viewer is therefore not a complete remote
+security-header audit: it shows only what browser JavaScript can see. The
+WebSocket API has a different boundary. It sends an Origin and offers no
+credentials-omit option, so the browser may attach cookies already stored for
+the selected endpoint. Utilibre cannot inspect or suppress those cookies. Its
+visible session log and message sizes are bounded and disappear with the tab.
+The browser materializes an incoming frame before the page can inspect and
+close the connection for an oversized frame.
+
+The four exact network-tool routes receive an operation-specific CSP allowing
+`https:` and `wss:` connections. Other portal routes retain `connect-src
+'self'`, and moving into or out of a network-tool route performs a full
+document navigation so the exception does not leak across SPA views.
+
+## Temporary webhook inbox and DNS lookup
+
+Creating a webhook inbox produces independent opaque receiver and read
+capabilities. The receiver URL accepts `POST`, `PUT`, `PATCH`, and `DELETE`
+from a webhook sender; the read token
+stays in the creating tab and is sent only in same-origin Authorization headers
+when listing or deleting the inbox. The server stores only a hash of that read
+token. Anyone who learns the receiver URL can submit requests until the inbox
+expires, so it should be treated as a short-lived secret.
+
+Cloudflare and the separate Caddy edge process an incoming webhook before the
+portal. The portal retains the method, query, selected headers, content
+type, timestamp, and up to 12 KiB of text or Base64-encoded body data in process
+memory. Each event retains no more than 32 selected headers totaling 32
+KiB. Authorization, Cookie, standard hop-by-hop, and recognized forwarding,
+client-address, and proxy headers are deliberately omitted; signature headers such as
+`X-Hub-Signature-256`, other custom headers, query parameters, and request bodies
+remain available to anyone holding the read capability. Each event says when
+the retained header set was truncated. Inbox access expires after 15 minutes.
+It retains the newest events up to 25 events/1 MiB, so a later accepted event
+can evict the oldest. Process references are logically
+removed on the next request or periodic sweep, normally within another minute,
+and earlier by explicit deletion or portal restart. Process-wide ceilings are 100 inboxes,
+2,048 events, and 16 MiB. A derived client is limited to three active inboxes,
+75 retained events, and 2 MiB. There is no database, disk persistence, forwarding,
+or replay feature. Logical removal releases application references; it is not
+a forensic claim that process, kernel, or host memory is immediately zeroed.
+
+Valid textual bodies are displayed as captured UTF-8, with a separate formatted
+JSON preview when applicable. Non-textual or invalid UTF-8 bodies are displayed
+as a reversible Base64 representation, not mislabeled as raw text. Byte-exact
+signature checks should use decoded bytes or the sender's original bytes;
+clipboard and text controls may normalize line endings.
+
+The portal does not intentionally print webhook bodies or read tokens. A normal
+edge access log can still record the opaque receiver path and sender network
+address, and an edge configured to log request bodies would see the payload.
+The portal route must therefore use the same no-sensitive-path/body logging
+discipline as other capability URLs.
+
+DNS lookup sends a normalized public hostname and one of A, AAAA, CAA, CNAME,
+MX, NS, SOA, SRV, or TXT to the application VM resolver. The resolver and DNS
+servers can observe that query. Literal IPs, single-label and special-use names,
+and malformed hostnames are rejected; this is not an arbitrary network scanner.
+The portal does not keep query history. Derived-client rate state exists only
+in process memory and clears on expiry or restart. IPv6 identities are grouped
+by /64 for application rate limits: this resists trivial address rotation, but
+visitors sharing one delegated prefix can also share an allowance.
 
 ## Language and theme storage
 
@@ -121,7 +218,7 @@ Cobalt may return either:
 
 The interface carries SERVER, PROXY, and EXTERNAL labels because both delivery classes are possible. `Referrer-Policy: no-referrer` and `rel="noopener noreferrer"` reduce referrer disclosure from the portal, but the destination still observes a direct connection.
 
-As deployed, Cobalt has a read-only root filesystem, no writable media mount, and no persistent volume. It streams through process memory/pipes and keeps encrypted tunnel metadata in process memory for about 90 seconds by default. TTL expiry or container restart clears that metadata. There is no claim that network buffers or process memory never touch host RAM/swap; the assessed host has no swap, but that can change operationally.
+As deployed, Cobalt has a read-only root filesystem, no writable media mount, and no persistent volume. It streams through process memory/pipes and keeps encrypted tunnel metadata in process memory for about 90 seconds by default. TTL expiry or container restart clears that metadata. There is no claim that network buffers or process memory never touch host RAM/swap; the assessed host has 4 GiB of swap as of 2026-09-03, and that can change operationally.
 
 The portal intentionally does not log the submitted URL. Cobalt has operational error output but no configured access logger in this stack; upstream error details may still be sensitive and must be reviewed before sharing. The dedicated edge route must not log `/tunnel` query strings because they contain short-lived tunnel state. Docker log retention is size-based, not a promise of a fixed number of days.
 
@@ -234,6 +331,8 @@ described above; either `NEL` or `Report-To` returning is a release regression.
 |---|---|---|---|
 | Portal stdout/stderr | Startup and generic operational errors; no normal access log | Docker `json-file`, 10 MB × 3 files by default | Host/Docker operators |
 | Portal media limiter | Client address, count, and expiry in process memory | Configured window plus at most 60 seconds; earlier on next request/restart | Portal process and host/Docker operators |
+| Portal webhook inbox | Opaque receiver ID, read-token hash, retained request metadata, and bounded event body in process memory | Access ends after 15 minutes; process references are normally removed within another minute and earlier on explicit deletion or portal restart | Anyone with the read token through the API; portal and host/Docker operators can access process memory |
+| Portal developer rate state | Salted derived-client/inbox counters in process memory | Configured windows; all cleared on portal restart | Portal process and host/Docker operators |
 | Cobalt stdout/stderr | Upstream operational output; no configured access log | Docker `json-file`, 10 MB × 3 | Host/Docker operators |
 | SearXNG stdout/stderr | Operational errors; access log expected disabled; Python log records pass through the local query-redaction hook | Docker `json-file`, 10 MB × 3 | Host/Docker operators |
 | Valkey stdout/stderr | Warning level | Docker `json-file`, 10 MB × 3 | Host/Docker operators |
@@ -244,11 +343,11 @@ described above; either `NEL` or `Report-To` returning is a release regression.
 | Redlib stdout/stderr | `RUST_LOG=warn`; informational device/token messages suppressed; startup and OAuth/rate-limit failures can still be emitted; no intended per-request access log | Docker `json-file`, 10 MB × 3 | Host/Docker operators |
 | Redlib OAuth/device state | Spoofed token, randomized device identity, and connection state in process memory | Token lifetime/process lifetime; all cleared on restart | Redlib process and host/Docker operators; Reddit receives the emulated identity |
 | Redlib preference cookies | Optional non-auth settings/subscriptions/filters in first-party HTTP-only cookies; pinned upstream omits `Secure` and `SameSite` | Up to approximately 52 weeks or earlier visitor clearing/removal | Visitor browser and Redlib when sent with a request |
-| Edge Caddy | Not controlled by this repository | Operator must choose and document; recommendation is no sensitive query strings and no more than seven days for coarse security logs | Edge operators |
+| Edge Caddy | Not controlled by this repository | Operator must choose and document; recommendation is no sensitive query strings, webhook receiver paths/bodies, or more than seven days for coarse security logs | Edge operators |
 | Cloudflare public proxy; browser NEL disabled 2026-09-03 | Cloudflare processes every public request and its connection metadata; accepted responses checked after the change contained neither `NEL` nor `Report-To` | Cloudflare account/policy dependent; keep NEL disabled, verify both headers remain absent, and review account analytics retention before broad telemetry claims | Cloudflare and authorized account operators |
 | Docker daemon/journal | Container lifecycle and daemon errors, host-policy dependent | Host policy, outside Compose rotation | Host operators |
 
-The size cap bounds disk use but does not map to an exact number of hours or days. Container deletion can remove its local log file; backups intentionally exclude logs. Never intentionally add media URLs, query terms, selected filenames, PDF names, QR contents, Base64/JSON text, authentication headers, cookies, or tunnel query strings to logs.
+The size cap bounds disk use but does not map to an exact number of hours or days. Container deletion can remove its local log file; backups intentionally exclude logs. Never intentionally add media URLs, query terms, selected filenames, PDF names, QR contents, Base64/JSON text, developer-tool input, webhook receiver paths/bodies/read tokens, authentication headers, cookies, or tunnel query strings to logs.
 
 ## Operator launch obligations
 
@@ -263,6 +362,7 @@ Before making hostnames public, the operator must:
   edge-added markup;
 - restrict application ports to the exact edge source and test from an unauthorized network;
 - verify Caddy does not expose Cobalt API POST/session paths;
+- verify the portal edge accepts the 12 KiB webhook payload within its 16 KiB request ceiling without logging receiver paths or bodies, and that both developer API kill switches fail closed independently;
 - verify the Redlib edge does not retain paths, queries, referrers, or cookies, that its local redirect patch stays same-origin, and that Anubis's real-client header cannot be spoofed around the Cloudflare-only origin;
 - verify ordinary browsers are challenged, `/info` and exact instance-updater requests remain usable, the signing key survives restart, and neither Anubis metrics nor direct Redlib is host-published;
 - accept and disclose Redlib's Android OAuth/client and browser/TLS emulation, English-only UI, crawler risk, and possible Reddit blocking;

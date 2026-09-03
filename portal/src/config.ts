@@ -20,6 +20,8 @@ export interface PublicConfig {
   publicFeedsUrl: string;
   publicPasteUrl: string;
   publicWakapiUrl: string;
+  webhookInboxEnabled: boolean;
+  dnsLookupEnabled: boolean;
   enabledServices: string[];
   defaultLanguage: 'en' | 'es';
 }
@@ -46,6 +48,8 @@ const defaults: PublicConfig = {
   publicFeedsUrl: '',
   publicPasteUrl: '',
   publicWakapiUrl: '',
+  webhookInboxEnabled: false,
+  dnsLookupEnabled: false,
   enabledServices: [],
   defaultLanguage: 'en',
 };
@@ -83,6 +87,8 @@ async function requestPublicConfig(signal: AbortSignal): Promise<PublicConfig> {
   return {
     ...defaults,
     ...Object.fromEntries(Object.entries(value).filter(([, item]) => typeof item === 'string')),
+    webhookInboxEnabled: value.webhookInboxEnabled === true,
+    dnsLookupEnabled: value.dnsLookupEnabled === true,
     enabledServices: Array.isArray(value.enabledServices) ? value.enabledServices.filter((item): item is string => typeof item === 'string') : [],
     defaultLanguage: value.defaultLanguage === 'es' ? 'es' : 'en',
   };

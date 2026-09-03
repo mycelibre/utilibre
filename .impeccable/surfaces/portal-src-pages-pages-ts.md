@@ -11,6 +11,8 @@ related_targets: ["portal/src/main.ts","portal/src/styles/main.css","portal/src/
 
 The bilingual homepage and shared public shell serve ordinary visitors arriving to complete a task. They must understand the premise, find a useful tool, inspect its data path, and launch it without first reading project history.
 
+The Developer catalog extension serves visitors testing or inspecting data and network interfaces. It inherits the field-ledger world and keeps the boundary of each operation visible before the visitor runs it.
+
 ## Direction contract
 
 **THESIS:** A useful field ledger makes unlike utilities directly comparable; it refuses the startup hero, card wall, and any homepage that opens with one category selected.
@@ -37,6 +39,10 @@ current, and every shipping raster comes from the supplied documented logo kit.
 - Result-dependent controls stay disabled until valid output exists. Unknown application routes receive localized 404 metadata and a direct catalog recovery action; the common `/es/support` alias redirects to its canonical route.
 - The support surface distinguishes infrastructure support from upstream development and invites visitors, without pressure, to support the people who build the hosted tools.
 - Existing routes, APIs, runtime configuration, status behavior, localization, metadata, and deployment boundaries remain intact.
+- Developer tools are separate catalog records, not a dashboard. Local tools keep secrets and payloads in tab memory; browser-direct tools never fall back to an undisclosed Utilibre proxy.
+- The HTTP request, WebSocket, SSE, and browser-direct header tools disclose browser CORS and header limits. They omit credentials and retain no request history after the tab closes.
+- The webhook receiver is intentionally temporary and bounded: opaque endpoints, memory-only events, short expiry, strict size/count/rate limits, and no forwarding or replay.
+- DNS is the only general intermediary lookup in this extension. Arbitrary server-side URL fetching remains out of scope unless redirects, address resolution, and connection targets can all be constrained against SSRF.
 
 ## Copy contract
 

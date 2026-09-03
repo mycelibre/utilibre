@@ -15,7 +15,7 @@ Configure these edge-side variables or replace the equivalent placeholders in th
 
 | Public destination | Private upstream | Protocol | Active health path | WebSockets | Streaming | Request-body ceiling | Real client address |
 |---|---|---|---|---|---|---|---|
-| Portal host | `APP_VM_PRIVATE_IP:PORTAL_PORT` | HTTP | `/healthz` | No | No | 16 KiB | Required for portal rate limiting |
+| Portal host | `APP_VM_PRIVATE_IP:PORTAL_PORT` | HTTP | `/healthz` | No portal-relayed WebSocket; the developer tester connects browser-to-destination | Webhook bodies are ordinary bounded requests, not streams | 16 KiB | Required for portal media, webhook, and DNS rate limiting |
 | Media host | `APP_VM_PRIVATE_IP:COBALT_PORT` | HTTP | `/` (edge-to-upstream only) | No | Yes; potentially long-lived | none; GET only | Useful for tunnel abuse limits |
 | Search host | `APP_VM_PRIVATE_IP:SEARXNG_PORT` | HTTP | `/healthz` | No | No | 64 KiB | Required for SearXNG's limiter |
 | Reddit host | `APP_VM_PRIVATE_IP:REDLIB_PORT` | HTTP | `/info` with a fixed synthetic health-only `CF-Connecting-IP` | No | Yes; Reddit media is proxied | 64 KiB | Required by Anubis; see the Cloudflare trust boundary below |
@@ -32,6 +32,7 @@ For an IPv6 application address, define the edge-side `APP_VM_PRIVATE_IP` substi
 - Preserve the request `Host` and `Origin` headers. Caddy's normal `reverse_proxy` behavior does this.
 - Let Caddy set `X-Forwarded-For`, `X-Forwarded-Proto`, and `X-Forwarded-Host`; do not copy an untrusted inbound `X-Forwarded-For` value verbatim. The deployed application fragment must forward Caddy's normalized `{client_ip}`, not `{remote_host}` and not raw `CF-Connecting-IP`.
 - The portal trusts forwarded client information only when its direct peer equals the exact `EDGE_PROXY_IP` in `.env`.
+- Keep `/_portal/developer/*` on the portal host behind the existing 16 KiB body ceiling. The webhook implementation caps event bodies at 12 KiB; do not add a larger route exception. Avoid logging the opaque `/webhooks/ID` receiver path or request body. The read token travels only in same-origin management Authorization headers and must not be copied into an edge log.
 - SearXNG's generated limiter file trusts only loopback and that same exact edge address.
 - Do not proxy the Cobalt hostname with a catch-all. Only `GET /tunnel` is public.
 - Preserve query strings on `/tunnel`; they carry Cobalt's short-lived encrypted tunnel state. Avoid logging those query strings.
@@ -75,6 +76,11 @@ must be the sole configured client-IP input here: unlike an inbound XFF chain,
 Cloudflare documents it as one address. Same-zone Cloudflare Workers can alter
 the related input, so keep unreviewed Workers out of this route.
 
+The explicit `header_up` overwrite in each example is required. Caddy's normal
+trusted-proxy handling can otherwise preserve or append an inbound XFF chain;
+the portal deliberately rejects ambiguous lists and would then group visitors
+under the edge peer's shared rate key.
+
 The header rule is not an origin-access control. At the edge firewall or
 security group, allow public 80/443 only from the same current Cloudflare IPv4
 and IPv6 ranges, plus separately reviewed management/monitoring paths that do
@@ -116,6 +122,9 @@ The examples use Caddy environment substitutions such as `{$PUBLIC_PORTAL_HOST}`
 	header @non_indexable X-Robots-Tag "noindex, nofollow, noarchive"
 
 	reverse_proxy http://{$APP_VM_PRIVATE_IP}:{$PORTAL_PORT} {
+		# Overwrite a Cloudflare-supplied chain with Caddy's normalized client.
+		header_up X-Forwarded-For {client_ip}
+		header_up X-Real-IP {client_ip}
 		health_uri /healthz
 		health_status 2xx
 		health_interval 30s
@@ -130,7 +139,7 @@ The examples use Caddy environment substitutions such as `{$PUBLIC_PORTAL_HOST}`
 }
 ```
 
-The portal origin already supplies a restrictive Content Security Policy, cross-origin policies, `Referrer-Policy`, `Permissions-Policy`, frame denial, and `X-Content-Type-Options`. Caddy should preserve those response headers. Do not weaken the CSP to add analytics, remote fonts, a JavaScript CDN, or embedded donation widgets.
+The portal origin already supplies a restrictive Content Security Policy, cross-origin policies, `Referrer-Policy`, `Permissions-Policy`, frame denial, and `X-Content-Type-Options`. Four exact developer-tool documents carry their own `https:`/`wss:` connection exception for browser-direct HTTP, header, WebSocket, and event-stream testing; other documents remain self-only. Caddy should preserve those response headers and must not apply a broader CSP. Do not weaken it to add analytics, remote fonts, a JavaScript CDN, or embedded donation widgets.
 
 ### Cobalt tunnel only
 
@@ -151,6 +160,8 @@ The portal origin already supplies a restrictive Content Security Policy, cross-
 		}
 
 		reverse_proxy http://{$APP_VM_PRIVATE_IP}:{$COBALT_PORT} {
+			header_up X-Forwarded-For {client_ip}
+			header_up X-Real-IP {client_ip}
 			health_uri /
 			health_status 2xx
 			health_interval 30s
@@ -200,6 +211,8 @@ The approximately 500 MB result-size policy is a published target, not a Cobalt-
 	respond @search_non_post 405
 
 	reverse_proxy http://{$APP_VM_PRIVATE_IP}:{$SEARXNG_PORT} {
+		header_up X-Forwarded-For {client_ip}
+		header_up X-Real-IP {client_ip}
 		health_uri /healthz
 		health_status 2xx
 		health_interval 30s
@@ -236,6 +249,8 @@ SearXNG's own application route can accept query-string GET searches even when i
 	}
 
 	reverse_proxy http://{$APP_VM_PRIVATE_IP}:{$REDLIB_PORT} {
+		header_up X-Forwarded-For {client_ip}
+		header_up X-Real-IP {client_ip}
 		header_up -X-Original-URI
 		header_up -X-Forwarded-Uri
 		header_down -Strict-Transport-Security
@@ -315,6 +330,7 @@ The snippets also do not enable Caddy access logs. If the edge has global or sit
 
 - do not log Cobalt `/tunnel` query strings;
 - do not log search query strings or request bodies;
+- do not log temporary webhook receiver paths, request bodies, or management Authorization headers;
 - do not log Redlib paths, query strings, preference cookies, or referrers;
 - avoid full referrers and sensitive cookies;
 - rotate logs by size and time and set a documented short retention period;

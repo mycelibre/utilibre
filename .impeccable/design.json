@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-02T06:41:31Z",
+  "generatedAt": "2026-09-03T17:52:49Z",
   "title": "Design System: Utilibre",
   "extensions": {
     "breakpoints": [
@@ -64,8 +64,8 @@
     {
       "name": "Task Index",
       "kind": "nav",
-      "description": "The numbered task taxonomy: a ruled rail on desktop and a horizontal text index on mobile.",
-      "html": "<nav class=\"ds-task-index\" aria-label=\"Browse by task\"><p class=\"ds-task-guideword\">BROWSE BY TASK</p><p class=\"ds-task-cue\">5 TASKS · SCROLL →</p><ol><li><a href=\"#\"><span>01</span><strong>Find &amp; browse</strong></a></li><li><a href=\"#\"><span>02</span><strong>Files &amp; media</strong></a></li><li><a href=\"#\"><span>03</span><strong>PDF &amp; documents</strong></a></li></ol></nav>",
+      "description": "The six-part numbered task taxonomy: a ruled rail on desktop and a horizontal text index on mobile.",
+      "html": "<nav class=\"ds-task-index\" aria-label=\"Browse by task\"><p class=\"ds-task-guideword\">BROWSE BY TASK</p><p class=\"ds-task-cue\">6 TASKS · SCROLL →</p><ol><li><a href=\"#\"><span>01</span><strong>Find &amp; browse</strong></a></li><li><a href=\"#\"><span>02</span><strong>Files &amp; media</strong></a></li><li><a href=\"#\"><span>03</span><strong>PDF &amp; documents</strong></a></li><li><a href=\"#\"><span>06</span><strong>Developer tools</strong></a></li></ol></nav>",
       "css": ".ds-task-index { position: relative; } .ds-task-guideword { margin: 0 0 1.65rem; color: var(--rust); font: 700 0.8125rem/1.5 var(--font-meta); letter-spacing: 0.075em; } .ds-task-cue { display: none; } .ds-task-index ol { margin: 0; padding: 0; list-style: none; border-block-start: 1px solid var(--ink); } .ds-task-index li { border-block-end: 1px solid var(--rule); } .ds-task-index a { padding-block: 0.75rem; display: grid; grid-template-columns: 2.15rem minmax(0, 1fr); gap: 0.55rem; color: var(--ink); font-family: var(--font-body); text-decoration: none; } .ds-task-index a span { color: var(--rust); font: 0.75rem/1.7 var(--font-meta); } .ds-task-index a:hover strong { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.35em; } .ds-task-index a:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } @media (max-width: 58rem) { .ds-task-index { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 0.8rem; } .ds-task-guideword { min-width: 0; margin-block-end: 0.5rem; } .ds-task-cue { display: block; grid-column: 2; grid-row: 1; margin: 0; color: var(--ink-soft); font: 0.75rem/1.5 var(--font-meta); letter-spacing: 0.075em; text-align: end; } .ds-task-index ol { grid-column: 1 / -1; display: flex; gap: 1.1rem; overflow-x: auto; border-block-start: 0; } .ds-task-index li { flex: 0 0 auto; border: 0; } .ds-task-index a { display: block; padding-block: 0.55rem 0.75rem; } .ds-task-index a span { margin-inline-end: 0.35rem; } }"
     },
     {

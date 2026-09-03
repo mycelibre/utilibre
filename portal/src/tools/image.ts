@@ -1,4 +1,4 @@
-import { actionButton, append, downloadBlob, element, fileStem, formatBytes, labelledInput, labelledSelect, setStatus, statusRegion, toolPanel, type Translate } from '../utilities/dom';
+import { actionButton, append, disableActionButton, downloadBlob, element, fileStem, formatBytes, labelledInput, labelledSelect, setStatus, statusRegion, toolPanel, type Translate } from '../utilities/dom';
 import { secureRandomUuid } from '../utilities/random';
 
 export type ImageToolId = 'image-resize' | 'image-compress' | 'image-convert' | 'image-metadata';
@@ -90,7 +90,7 @@ export function renderImageTool(id: ImageToolId, t: Translate): HTMLElement {
   process.addEventListener('click', async () => {
     if (!loaded) return setStatus(status, t('tool.error.fileRequired'), 'error');
     setStatus(status, t('tool.processing'));
-    process.disabled = true;
+    const finishAction = disableActionButton(process);
     try {
       const outputWidth = id === 'image-resize' ? validDimension(width.input.value) : loaded.bitmap.width;
       const outputHeight = id === 'image-resize' ? validDimension(height.input.value) : loaded.bitmap.height;
@@ -124,7 +124,7 @@ export function renderImageTool(id: ImageToolId, t: Translate): HTMLElement {
           : t('tool.error.generic');
       setStatus(status, message, 'error');
     } finally {
-      process.disabled = false;
+      finishAction();
     }
   });
 

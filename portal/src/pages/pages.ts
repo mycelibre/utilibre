@@ -9,7 +9,8 @@ import type { ImageToolId } from '../tools/image';
 import type { PdfToolId } from '../tools/pdf';
 import type { FileToolId } from '../tools/files';
 import type { TextToolId } from '../tools/text';
-import { append, element, type Translate } from '../utilities/dom';
+import type { DeveloperToolId } from '../tools/developer-ui';
+import { append, disableActionButton, element, type Translate } from '../utilities/dom';
 
 export async function renderPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): Promise<HTMLElement> {
   if (route.page === 'tool' && route.toolId) return renderToolPage(route.toolId, route.language, config, t);
@@ -164,7 +165,7 @@ function renderServices(language: Language, config: PublicConfig, t: Translate):
 
 function renderTools(language: Language, config: PublicConfig, t: Translate): HTMLElement {
   const main = pageHeader(t('tools.title'), t('tools.intro'));
-  for (const category of ['image', 'pdf', 'file', 'utility'] as CatalogCategory[]) {
+  for (const category of ['image', 'pdf', 'file', 'utility', 'developer'] as CatalogCategory[]) {
     const section = element('section', 'section');
     section.append(element('h2', '', t(`category.${category}` as TranslationKey)));
     const entries = catalog.filter((item) => item.kind === 'tool' && item.category === category && entryLaunchable(item, config));
@@ -186,6 +187,7 @@ function renderPrivacy(config: PublicConfig, t: Translate): HTMLElement {
   return prosePage(t('privacy.title'), t('privacy.intro'), [
     ['privacy.portal.title', 'privacy.portal.body'],
     ['privacy.local.title', 'privacy.local.body'],
+    ['privacy.developer.title', 'privacy.developer.body'],
     ['privacy.cobalt.title', 'privacy.cobalt.body'],
     ['privacy.search.title', 'privacy.search.body'],
     ...redlibSections,
@@ -202,6 +204,9 @@ async function renderToolPage(id: string, language: Language, config: PublicConf
   if (id === 'cobalt' && !serviceEnabled(config, 'cobalt')) {
     return prosePage(localized(entry.name, language), t('services.notConfigured'), [], t);
   }
+  if (entry.configBooleanKey && !config[entry.configBooleanKey]) {
+    return prosePage(localized(entry.name, language), t('services.notConfigured'), [], t);
+  }
   const main = pageHeader(localized(entry.name, language), localized(entry.description, language), 'tool-page');
   const disclosure = element('section', 'tool-disclosure');
   append(disclosure, privacyLabels(entry.labels, t), element('p', '', localized(entry.dataFlow, language)));
@@ -216,7 +221,10 @@ async function renderToolPage(id: string, language: Language, config: PublicConf
   if (id.startsWith('image-')) tool = (await import('../tools/image')).renderImageTool(id as ImageToolId, t);
   else if (id.startsWith('pdf-')) tool = (await import('../tools/pdf')).renderPdfTool(id as PdfToolId, t);
   else if (id.startsWith('file-')) tool = (await import('../tools/files')).renderFileTool(id as FileToolId, t);
-  else if (['json', 'base64', 'url-encoding', 'uuid'].includes(id)) tool = (await import('../tools/text')).renderTextTool(id as TextToolId, t);
+  else if (['json', 'base64', 'url-encoding'].includes(id)) tool = (await import('../tools/text')).renderTextTool(id as TextToolId, t);
+  else if (['webhook-signature', 'openapi', 'jwt-inspect', 'jwt-generate', 'http-curl', 'regex', 'cron', 'timestamp', 'text-hashes', 'uuid', 'http-request', 'http-headers', 'websocket', 'sse', 'webhook-inbox', 'dns-lookup'].includes(id)) {
+    tool = (await import('../tools/developer-ui')).renderDeveloperTool(id as DeveloperToolId, language, t);
+  }
   else if (id === 'private-router') tool = (await import('../tools/private-router')).renderPrivateRouter(t, config);
   else if (id === 'cobalt') tool = (await import('../tools/media')).renderMediaTool(t, routePath('acceptable', language));
   else if (id === 'qr-generate' || id === 'qr-read') tool = (await import('../tools/qr')).renderQrTool(id, t);
@@ -299,7 +307,7 @@ function renderStatus(language: Language, config: PublicConfig, t: Translate): H
   append(section, list, refresh, message);
   main.append(section);
   const load = async (): Promise<void> => {
-    refresh.disabled = true;
+    const finishAction = disableActionButton(refresh);
     message.textContent = t('status.loading');
     try {
       const response = await fetch('/_portal/status', { credentials: 'omit', cache: 'no-store' });
@@ -316,7 +324,7 @@ function renderStatus(language: Language, config: PublicConfig, t: Translate): H
       const locale = language === 'es' ? 'es' : 'en';
       message.textContent = payload.checkedAt ? `${t('status.checked')}: ${new Date(payload.checkedAt).toLocaleString(locale)}` : t('status.checked');
     } catch { message.textContent = t('status.error'); }
-    finally { refresh.disabled = false; }
+    finally { finishAction(); }
   };
   refresh.addEventListener('click', () => { void load(); });
   void load();
@@ -391,6 +399,7 @@ function renderSoftware(config: PublicConfig, t: Translate): HTMLElement {
     { group: 'browser', name: '@cantoo/pdf-lib', version: '2.9.1', license: 'MIT', upstream: 'https://github.com/cantoo-scribe/pdf-lib', modification: t('software.notModified'), purpose: t('software.purpose.pdf') },
     { group: 'browser', name: '@noble/hashes', version: '2.3.0', license: 'MIT', upstream: 'https://github.com/paulmillr/noble-hashes', modification: t('software.notModified'), purpose: t('software.purpose.hashes') },
     { group: 'browser', name: 'zxing-wasm / ZXing-C++ / Zint', version: '3.1.3', license: 'MIT / Apache-2.0 / BSD-3-Clause', upstream: 'https://github.com/Sec-ant/zxing-wasm', modification: t('software.notModified'), purpose: t('software.purpose.qr') },
+    { group: 'browser', name: 'yaml', version: '2.9.0', license: 'ISC', upstream: 'https://github.com/eemeli/yaml/tree/v2.9.0', modification: t('software.notModified'), purpose: t('software.purpose.yaml') },
     { group: 'build', name: 'Vite', version: '8.2.2', license: 'MIT', upstream: 'https://github.com/vitejs/vite', modification: t('software.notModified'), purpose: t('software.purpose.vite') },
     { group: 'build', name: 'TypeScript', version: '6.0.3', license: 'Apache-2.0', upstream: 'https://github.com/microsoft/TypeScript', modification: t('software.notModified'), purpose: t('software.purpose.typescript') },
   ];
@@ -406,6 +415,7 @@ function renderSoftware(config: PublicConfig, t: Translate): HTMLElement {
     const section = element('section', 'section software-group');
     const heading = element('h2', '', group.label);
     heading.id = `software-${group.id}`;
+    heading.tabIndex = -1;
     section.append(heading);
     const list = element('div', 'software-list');
     for (const itemData of inventory.filter((item) => item.group === group.id)) {
@@ -499,6 +509,7 @@ function discoveryGroupLabel(group: DiscoveryGroup, t: Translate): string {
     documents: 'discovery.documents',
     'text-data': 'discovery.textData',
     'feeds-monitoring': 'discovery.feeds',
+    developer: 'discovery.developer',
   };
   return t(keys[group]);
 }

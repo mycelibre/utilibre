@@ -12,6 +12,10 @@ describe('language-aware routes', () => {
     expect(route).not.toBeNull();
     expect(translatedPath(route!, 'es')).toBe('/es/herramientas/combinar-pdf');
     expect(toolPath('pdf-merge', 'en')).toBe('/en/tools/pdf-merge');
+
+    const developer = parseRoute('/es/herramientas/verificar-firma-webhook');
+    expect(developer?.toolId).toBe('webhook-signature');
+    expect(translatedPath(developer!, 'en')).toBe('/en/tools/webhook-signature');
   });
 
   it('does not accept a path without a supported language prefix', () => {

@@ -35,6 +35,8 @@ const baseConfig: PublicConfig = {
   publicFeedsUrl: '',
   publicPasteUrl: '',
   publicWakapiUrl: '',
+  webhookInboxEnabled: false,
+  dnsLookupEnabled: false,
   enabledServices: [],
   defaultLanguage: 'en',
 };
@@ -103,6 +105,14 @@ describe('config-gated catalog discovery', () => {
     expect(entryLaunch(catalogEntry('image-resize')!, 'es', configured))
       .toEqual({ href: '/es/herramientas/redimensionar-imagen', external: false });
     expect(entryLaunch(catalogEntry('searxng')!, 'en', configured)).toBeNull();
+  });
+
+  it('hides independently disabled developer server tools', () => {
+    expect(entryLaunch(catalogEntry('webhook-inbox')!, 'en', baseConfig)).toBeNull();
+    expect(entryLaunch(catalogEntry('dns-lookup')!, 'en', baseConfig)).toBeNull();
+    const enabled = config({ webhookInboxEnabled: true, dnsLookupEnabled: true });
+    expect(entryLaunch(catalogEntry('webhook-inbox')!, 'en', enabled)?.href).toBe('/en/tools/webhook-inbox');
+    expect(entryLaunch(catalogEntry('dns-lookup')!, 'es', enabled)?.href).toBe('/es/herramientas/consulta-dns');
   });
 });
 

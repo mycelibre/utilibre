@@ -1,7 +1,10 @@
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer, request as httpRequest } from 'node:http';
 import { request as httpsRequest } from 'node:https';
+import { isIP } from 'node:net';
 import { extname, join, normalize } from 'node:path';
+import { clearTimeout, setTimeout } from 'node:timers';
+import { createDeveloperApi } from './developer-api.mjs';
 
 const PORT = positiveInt(process.env.PORT, 8080);
 const LISTEN_ADDRESS = process.env.LISTEN_ADDRESS || '0.0.0.0';
@@ -19,14 +22,26 @@ const MEDIA_RATE_WINDOW_MS = positiveInt(process.env.MEDIA_RATE_WINDOW_SECONDS, 
 const MEDIA_RATE_LIMIT = positiveInt(process.env.MEDIA_RATE_LIMIT, 10);
 const MEDIA_MAX_CONCURRENT = positiveInt(process.env.MEDIA_MAX_CONCURRENT, 2);
 const MEDIA_REQUEST_TIMEOUT_MS = positiveInt(process.env.MEDIA_REQUEST_TIMEOUT_SECONDS, 45) * 1000;
+const MEDIA_BODY_MAX_CONCURRENT = 16;
+const MEDIA_BODY_TIMEOUT_MS = 10_000;
+const MAX_REQUEST_HEADERS = 100;
 const STATUS_CACHE_MS = positiveInt(process.env.STATUS_CACHE_SECONDS, 15) * 1000;
 const ENABLED_SERVICES = new Set(csv(process.env.ENABLED_SERVICES || 'cobalt,searxng'));
 const DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE === 'es' ? 'es' : 'en';
+const WEBHOOK_INBOX_ENABLED = process.env.WEBHOOK_INBOX_ENABLED !== '0';
+const DNS_LOOKUP_ENABLED = process.env.DNS_LOOKUP_ENABLED !== '0';
 const PUBLIC_NTFY_HEALTH_URL = publicNtfyHealthUrl(process.env.PUBLIC_NTFY_URL || '');
 const STATUS_SERVICES = parseStatusServices(process.env.STATUS_SERVICES || '').filter(({ id }) => ENABLED_SERVICES.has(id));
 const SERVICE_HOST_ALLOWLIST = new Set(csv(process.env.COBALT_ALLOWED_HOSTS || defaultMediaHosts()).map((host) => host.toLowerCase()));
 const buckets = new Map();
 let activeMediaRequests = 0;
+let activeMediaBodyReads = 0;
+const developerApi = createDeveloperApi({
+  webhookEnabled: WEBHOOK_INBOX_ENABLED,
+  dnsEnabled: DNS_LOOKUP_ENABLED,
+  allowManagementRequest: (request) => originAllowed(request),
+  getClientKey: trustedClientIp,
+});
 let statusSnapshot = null;
 let statusCheck = null;
 const bucketSweep = setInterval(() => {
@@ -50,11 +65,26 @@ const MIME = new Map([
 ]);
 
 const server = createServer(async (request, response) => {
-  setSecurityHeaders(response);
-  const requestUrl = new URL(request.url || '/', 'http://portal.invalid');
+  const requestUrl = parseRequestTarget(request.url);
+  if (!requestUrl) {
+    setSecurityHeaders(response, '/');
+    setCrawlerHeaders(response, '/');
+    return rejectServerRequest(request, response, 400, { error: 'invalid_request_target' }, { 'Cache-Control': 'no-store' });
+  }
+  setSecurityHeaders(response, requestUrl.pathname);
   setCrawlerHeaders(response, requestUrl.pathname);
 
   try {
+    // Node stops populating request.headers/rawHeaders at maxHeadersCount even
+    // though llhttp can still act on a later framing header. Reject the
+    // conservative boundary before routing so a hidden Content-Length or
+    // Transfer-Encoding cannot turn a bodyless route into a slow body sink.
+    if (request.rawHeaders.length / 2 >= MAX_REQUEST_HEADERS) {
+      return rejectServerRequest(request, response, 431, { error: 'too_many_headers' }, { 'Cache-Control': 'no-store' });
+    }
+    if (!routeAcceptsRequestBody(requestUrl.pathname, request.method) && requestHasDeclaredBody(request)) {
+      return rejectServerRequest(request, response, 400, { error: 'unexpected_request_body' }, { 'Cache-Control': 'no-store' });
+    }
     if (requestUrl.pathname === '/healthz') {
       return json(response, 200, { status: 'ok' }, { 'Cache-Control': 'no-store' });
     }
@@ -65,9 +95,10 @@ const server = createServer(async (request, response) => {
       return await serveStatus(response);
     }
     if (['/_portal/media', '/api/media'].includes(requestUrl.pathname) && request.method === 'POST') {
-      if (!ENABLED_SERVICES.has('cobalt')) return json(response, 404, { error: 'not_found' });
+      if (!ENABLED_SERVICES.has('cobalt')) return rejectServerRequest(request, response, 404, { error: 'not_found' });
       return await serveMediaRequest(request, response);
     }
+    if (await developerApi.handle(request, response, requestUrl)) return;
     if (requestUrl.pathname.startsWith('/api/') || requestUrl.pathname.startsWith('/_portal/')) {
       return json(response, 404, { error: 'not_found' }, { 'Cache-Control': 'no-store' });
     }
@@ -83,22 +114,75 @@ const server = createServer(async (request, response) => {
     return serveStatic(requestUrl.pathname, request.method === 'HEAD', request.headers['accept-language'], response);
   } catch (error) {
     console.error('request_failed', error instanceof Error ? error.message : 'unknown');
+    if (response.destroyed || response.writableEnded) return;
+    if (response.headersSent) return response.destroy();
     return json(response, 500, { error: 'internal_error' }, { 'Cache-Control': 'no-store' });
   }
 });
 
+server.headersTimeout = 10_000;
+server.requestTimeout = 20_000;
+server.keepAliveTimeout = 5_000;
+server.maxHeadersCount = MAX_REQUEST_HEADERS;
+server.maxRequestsPerSocket = 100;
+server.maxConnections = 512;
 server.listen(PORT, LISTEN_ADDRESS, () => {
   console.warn(`portal listening on ${LISTEN_ADDRESS}:${PORT}`);
 });
+server.on('close', () => developerApi.close());
 
-function setSecurityHeaders(response) {
-  response.setHeader('Content-Security-Policy', "default-src 'self'; base-uri 'none'; connect-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' blob: data:; media-src 'self' blob:; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; worker-src 'self'");
+function parseRequestTarget(target) {
+  if (typeof target !== 'string' || !target.startsWith('/')) return null;
+  try {
+    // Concatenation keeps a leading `//` or backslash-normalized path under
+    // the fixed synthetic authority instead of letting WHATWG URL resolution
+    // reinterpret it as an attacker-selected network-path authority.
+    return new URL(`http://portal.invalid${target}`);
+  } catch {
+    return null;
+  }
+}
+
+function routeAcceptsRequestBody(pathname, method) {
+  if (method === 'POST' && ['/_portal/media', '/api/media', '/_portal/developer/dns'].includes(pathname)) return true;
+  return ['DELETE', 'PATCH', 'POST', 'PUT'].includes(method || '')
+    && /^\/_portal\/developer\/webhooks\/[A-Za-z0-9_-]{32}$/.test(pathname);
+}
+
+function requestHasDeclaredBody(request) {
+  if (request.headers['transfer-encoding']) return true;
+  const value = request.headers['content-length'];
+  if (value === undefined) return false;
+  if (Array.isArray(value) || typeof value !== 'string') return true;
+  return !/^0+$/.test(value);
+}
+
+function rejectServerRequest(request, response, status, payload, additionalHeaders = {}) {
+  if (!request.complete) {
+    request.resume();
+    response.shouldKeepAlive = false;
+    response.once('finish', () => {
+      if (!request.complete && !request.destroyed) request.destroy();
+    });
+    return json(response, status, payload, { Connection: 'close', ...additionalHeaders });
+  }
+  return json(response, status, payload, additionalHeaders);
+}
+
+function setSecurityHeaders(response, pathname) {
+  const connectSources = externalNetworkToolPath(pathname) ? "'self' https: wss:" : "'self'";
+  response.setHeader('Content-Security-Policy', `default-src 'self'; base-uri 'none'; connect-src ${connectSources}; font-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' blob: data:; media-src 'self' blob:; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; worker-src 'self'`);
   response.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
   response.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
   response.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()');
   response.setHeader('Referrer-Policy', 'no-referrer');
   response.setHeader('X-Content-Type-Options', 'nosniff');
   response.setHeader('X-Frame-Options', 'DENY');
+}
+
+function externalNetworkToolPath(pathname) {
+  return /^\/en\/tools\/(?:http-request|http-headers|websocket|sse)\/?$/.test(pathname)
+    || /^\/es\/herramientas\/(?:solicitud-http|cabeceras-http|websocket|eventos-sse)\/?$/.test(pathname);
 }
 
 function setCrawlerHeaders(response, pathname) {
@@ -321,23 +405,32 @@ function servePublicConfig(response) {
     publicFeedsUrl: publicServiceUrl(process.env.PUBLIC_FEEDS_URL),
     publicPasteUrl: publicServiceUrl(process.env.PUBLIC_PASTE_URL),
     publicWakapiUrl: publicServiceUrl(process.env.PUBLIC_WAKAPI_URL),
+    webhookInboxEnabled: WEBHOOK_INBOX_ENABLED,
+    dnsLookupEnabled: DNS_LOOKUP_ENABLED,
     enabledServices: [...ENABLED_SERVICES],
     defaultLanguage: DEFAULT_LANGUAGE,
   }, { 'Cache-Control': 'no-store' });
 }
 
 async function serveMediaRequest(request, response) {
-  if (!originAllowed(request)) return json(response, 403, { error: 'origin_not_allowed' });
+  if (!originAllowed(request)) return rejectServerRequest(request, response, 403, { error: 'origin_not_allowed' });
   const clientIp = trustedClientIp(request);
-  if (!takeRateToken(clientIp)) return json(response, 429, { error: 'rate_limited' }, { 'Retry-After': String(Math.ceil(MEDIA_RATE_WINDOW_MS / 1000)) });
-  if (activeMediaRequests >= MEDIA_MAX_CONCURRENT) return json(response, 503, { error: 'busy' }, { 'Retry-After': '15' });
+  if (!takeRateToken(clientIp)) return rejectServerRequest(request, response, 429, { error: 'rate_limited' }, { 'Retry-After': String(Math.ceil(MEDIA_RATE_WINDOW_MS / 1000)) });
+  if (activeMediaRequests >= MEDIA_MAX_CONCURRENT || activeMediaBodyReads >= MEDIA_BODY_MAX_CONCURRENT) {
+    return rejectServerRequest(request, response, 503, { error: 'busy' }, { 'Retry-After': '15' });
+  }
 
   let input;
+  activeMediaBodyReads += 1;
   try {
-    input = JSON.parse(await readLimitedBody(request, 8192));
+    input = JSON.parse(await readLimitedBody(request, 8192, MEDIA_BODY_TIMEOUT_MS));
   } catch (error) {
-    const code = error instanceof Error && error.message === 'too_large' ? 413 : 400;
-    return json(response, code, { error: code === 413 ? 'request_too_large' : 'invalid_request' });
+    const reason = error instanceof Error ? error.message : '';
+    const code = reason === 'too_large' ? 413 : reason === 'body_timeout' ? 408 : 400;
+    const publicError = code === 413 ? 'request_too_large' : code === 408 ? 'request_timeout' : 'invalid_request';
+    return rejectServerRequest(request, response, code, { error: publicError });
+  } finally {
+    activeMediaBodyReads -= 1;
   }
   const requestBody = validateMediaInput(input);
   if (!requestBody) return json(response, 400, { error: 'unsupported_url' });
@@ -475,13 +568,14 @@ function originAllowed(request, allowMissing = false) {
 }
 
 function trustedClientIp(request) {
+  const peer = validIpAddress(request.socket.remoteAddress);
   if (trustedProxy(request)) {
-    // The edge examples overwrite this header. Choosing the rightmost value is
-    // also safe if a future trusted edge appends its directly observed client.
-    const forwarded = lastHeader(request.headers['x-forwarded-for']);
-    if (forwarded) return normalizeIp(forwarded);
+    // The documented edge overwrites this with one address. Reject ambiguous
+    // lists even from that peer rather than guessing which element is trusted.
+    const forwarded = singleIpHeader(request.headers['x-forwarded-for']);
+    if (forwarded) return clientRateKey(forwarded);
   }
-  return normalizeIp(request.socket.remoteAddress || 'unknown');
+  return peer ? clientRateKey(peer) : 'unknown';
 }
 
 function trustedProxy(request) {
@@ -501,15 +595,27 @@ function takeRateToken(key) {
   return true;
 }
 
-async function readLimitedBody(request, limit) {
-  const chunks = [];
-  let total = 0;
-  for await (const chunk of request) {
-    total += chunk.length;
-    if (total > limit) throw new Error('too_large');
-    chunks.push(chunk);
+async function readLimitedBody(request, limit, timeoutMs = 10_000) {
+  let timer;
+  try {
+    return await Promise.race([
+      (async () => {
+        const chunks = [];
+        let total = 0;
+        for await (const chunk of request) {
+          total += chunk.length;
+          if (total > limit) throw new Error('too_large');
+          chunks.push(chunk);
+        }
+        return Buffer.concat(chunks).toString('utf8');
+      })(),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('body_timeout')), timeoutMs);
+      }),
+    ]);
+  } finally {
+    if (timer) clearTimeout(timer);
   }
-  return Buffer.concat(chunks).toString('utf8');
 }
 
 function json(response, status, payload, additional = {}) {
@@ -570,8 +676,34 @@ function defaultMediaHosts() {
 function csv(value) { return value.split(',').map((item) => item.trim()).filter(Boolean); }
 function positiveInt(value, fallback) { const parsed = Number.parseInt(String(value ?? ''), 10); return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback; }
 function normalizeIp(value) { return value.trim().replace(/^::ffff:/, '').replace(/^\[|\]$/g, ''); }
+function validIpAddress(value) {
+  const normalized = normalizeIp(typeof value === 'string' ? value : '');
+  return isIP(normalized) ? normalized : '';
+}
+function singleIpHeader(value) {
+  if (Array.isArray(value)) {
+    if (value.length !== 1) return '';
+    return singleIpHeader(value[0]);
+  }
+  if (typeof value !== 'string' || value.includes(',')) return '';
+  return validIpAddress(value);
+}
+function clientRateKey(value) {
+  if (isIP(value) !== 6) return value;
+  try {
+    const canonical = new URL(`http://[${value}]/`).hostname.slice(1, -1);
+    const [left = '', right = ''] = canonical.split('::');
+    const leftWords = left ? left.split(':') : [];
+    const rightWords = right ? right.split(':') : [];
+    const missing = 8 - leftWords.length - rightWords.length;
+    const words = [...leftWords, ...Array.from({ length: Math.max(0, missing) }, () => '0'), ...rightWords];
+    if (words.length !== 8) return value;
+    return `${words.slice(0, 4).map((word) => Number.parseInt(word || '0', 16).toString(16)).join(':')}::/64`;
+  } catch {
+    return value;
+  }
+}
 function firstHeader(value) { return Array.isArray(value) ? value[0] || '' : typeof value === 'string' ? value.split(',')[0]?.trim() || '' : ''; }
-function lastHeader(value) { return Array.isArray(value) ? value.at(-1) || '' : typeof value === 'string' ? value.split(',').at(-1)?.trim() || '' : ''; }
 function safeDecode(value) { try { return decodeURIComponent(value); } catch { return '/'; } }
 function publicText(value, fallback, limit) { const text = typeof value === 'string' ? value.trim() : ''; return (text || fallback).slice(0, limit).replace(/[<>\r\n]/g, ''); }
 function publicUrl(value) { if (!value) return ''; try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password ? url.href : ''; } catch { return ''; } }

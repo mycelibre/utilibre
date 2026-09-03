@@ -20,12 +20,24 @@ const functionallyCoveredToolIds = [
   'base64',
   'url-encoding',
   'uuid',
+  'webhook-signature',
+  'openapi',
+  'jwt-inspect',
+  'jwt-generate',
+  'http-curl',
+  'regex',
+  'cron',
+  'timestamp',
+  'text-hashes',
   'qr-generate',
   'qr-read',
 ] as const;
 
 test('functional scenarios account for every local catalog tool', () => {
-  const catalogToolIds = catalog.filter((entry) => entry.kind === 'tool').map((entry) => entry.id).sort();
+  const catalogToolIds = catalog
+    .filter((entry) => entry.kind === 'tool' && (entry.id === 'private-router' || (entry.labels.length === 1 && entry.labels[0] === 'local')))
+    .map((entry) => entry.id)
+    .sort();
   expect([...functionallyCoveredToolIds].sort()).toEqual(catalogToolIds);
 });
 
@@ -71,6 +83,7 @@ test('image processing stays local after assets load', async ({ page }) => {
     expect(output.readUInt32BE(20)).toBe(2);
   });
   await expect(page.getByRole('status')).toContainText('Done');
+  await expect(page.getByRole('button', { name: 'Resize and download' })).toBeFocused();
 });
 
 test('image compression, PNG/JPEG/WebP conversion, and metadata re-encoding stay local', async ({ page }) => {
@@ -227,8 +240,8 @@ test('file information and remaining text utilities stay local', async ({ page }
   const output = page.locator('textarea');
   await expect(output).toHaveValue(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
   await assertNoProcessingNetwork(page, async () => {
-    await page.getByRole('button', { name: 'Generate 10 UUIDs' }).click();
-    await expect(page.getByRole('status')).toContainText('Done');
+    await page.getByRole('button', { name: 'Generate 10 UUIDv4 values' }).click();
+    await expect(page.getByRole('status')).toContainText('Complete');
   });
   expect((await output.inputValue()).split('\n')).toHaveLength(10);
 });

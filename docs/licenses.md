@@ -93,6 +93,7 @@ matter operationally and are separate from FOSS license compatibility.
 | --- | --- | --- | --- | --- | --- | --- |
 | `@cantoo/pdf-lib` | 2.9.1 | Browser-side PDF merge/extract/rotate/reorder | MIT | <https://github.com/cantoo-scribe/pdf-lib> | No; mechanically bundled/minified | Preserve copyright and MIT permission/disclaimer |
 | `@noble/hashes` | 2.3.0 | Browser-side SHA-256/SHA-512 fallback when Web Crypto digest is unavailable on private HTTP | MIT | <https://github.com/paulmillr/noble-hashes> | No; mechanically bundled/minified | Preserve Paul Miller copyright and MIT permission/disclaimer |
+| `yaml` | 2.9.0 | Browser-side parsing for the bounded OpenAPI JSON/YAML inspector; remote references are listed but never fetched | ISC | <https://github.com/eemeli/yaml/tree/v2.9.0> | No; mechanically bundled/minified | Preserve Eemeli Aro copyright and the exact ISC permission/disclaimer in `THIRD_PARTY_NOTICES.md` |
 | `zxing-wasm` | 3.1.3 | Browser-side QR generation and reading | MIT wrapper, Apache-2.0 ZXing-C++, BSD-3-Clause Zint/libzueci, public-domain-or-MIT stb | <https://github.com/Sec-ant/zxing-wasm/tree/v3.1.3> | No; JS is bundled and official WASM copied verbatim | Preserve all notices; Apache license copy; BSD binary notice; see `THIRD_PARTY_NOTICES.md` |
 | `pako` override | 2.2.0 | Pins the PDF library's compression dependency | MIT AND Zlib | <https://github.com/nodeca/pako/tree/2.2.0> | No | Preserve MIT and Zlib notices and do not misrepresent ported Zlib code |
 
@@ -117,6 +118,7 @@ The following is the complete non-development package closure recorded in
 - **MIT AND Zlib:** `pako@2.2.0`
 - **MIT OR CC0-1.0 (MIT option selected):** `type-fest@5.8.0`
 - **0BSD:** `tslib@2.8.1`
+- **ISC:** `yaml@2.9.0`
 - **MIT:** `@cantoo/pdf-lib@2.9.1`, `@noble/hashes@2.3.0`, `@pdf-lib/standard-fonts@1.0.0`,
   `@pdf-lib/upng@1.0.1`, `@types/emscripten@1.41.5`,
   `color-convert@2.0.1`, `color-name@1.1.4`, `color-string@1.9.1`,
@@ -396,6 +398,7 @@ This table expands the lockfile rather than treating transitive software as an u
 | `which` | 2.0.2 | development | `ISC` | [npm tarball](https://registry.npmjs.org/which/-/which-2.0.2.tgz) | ISC notice; no reciprocal source requirement |
 | `why-is-node-running` | 2.3.0 | development | `MIT` | [npm tarball](https://registry.npmjs.org/why-is-node-running/-/why-is-node-running-2.3.0.tgz) | MIT notice; no reciprocal source requirement |
 | `word-wrap` | 1.2.5 | development | `MIT` | [npm tarball](https://registry.npmjs.org/word-wrap/-/word-wrap-1.2.5.tgz) | MIT notice; no reciprocal source requirement |
+| `yaml` | 2.9.0 | runtime | `ISC` | [npm tarball](https://registry.npmjs.org/yaml/-/yaml-2.9.0.tgz) | Preserve Eemeli Aro copyright and ISC permission/disclaimer; no reciprocal source requirement |
 | `yocto-queue` | 0.1.0 | development | `MIT` | [npm tarball](https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz) | MIT notice; no reciprocal source requirement |
 | `zxing-wasm` | 3.1.3 | runtime | `MIT` | [npm tarball](https://registry.npmjs.org/zxing-wasm/-/zxing-wasm-3.1.3.tgz) | MIT notice; no reciprocal source requirement |
 

@@ -4,6 +4,7 @@ description: A Useful Field Ledger for free, independently run public web utilit
 colors:
   brand-coral: "#d85a30"
   paper: "#eee7d7"
+  paper-deep: "#e4dbc7"
   paper-pale: "#f5efe3"
   ink: "#2c2c2a"
   ink-soft: "#536057"
@@ -15,6 +16,7 @@ colors:
   error: "#8e2d25"
   success: "#355f42"
   dark-paper: "#242522"
+  dark-paper-deep: "#1c1e1b"
   dark-paper-pale: "#2d2f2a"
   dark-ink: "#f2ebdd"
   dark-ink-soft: "#b7c0b7"
@@ -129,13 +131,13 @@ The palette behaves like ink and annotations on paper: coral is official and rar
 
 ### Primary
 
-- **Utilibre Coral** (`colors.brand-coral`): the official lockup, text selection, native form accent, and rare identity emphasis.
+- **Utilibre Coral** (`colors.brand-coral`): the official lockup, native form accent, and rare identity emphasis.
 - **Focus Coral** (`colors.focus`, `colors.dark-focus`): the keyboard outline; the dark override brightens it without changing its semantic role.
 
 ### Secondary
 
 - **Field Lichen** (`colors.lichen`, `colors.dark-lichen`): browser-local processing when a label also states the meaning.
-- **Ledger Rust** (`colors.rust`, `colors.dark-rust`): row coordinates, guidewords, server processing, link hover, and primary-control hover.
+- **Ledger Rust** (`colors.rust`, `colors.dark-rust`): row coordinates, guidewords, server processing, link hover, text selection, and primary-control hover.
 
 ### Tertiary
 
@@ -210,11 +212,11 @@ The form language is square. Controls, fields, language states, search actions, 
 
 ### Masthead and Navigation
 
-The masthead ends with a 2px ink rule. The official horizontal logo is 9.45rem wide on desktop and 8.5rem below 58rem; coral appears on light paper and the white lockup appears on dark paper. Active navigation uses a 2px underline. The active language is an inverse square; the system-theme and menu controls are outlined squares that invert on hover.
+The masthead ends with a 2px ink rule. The official horizontal logo is 9.45rem wide on desktop and 8.5rem below 58rem; coral appears on light paper and the white lockup appears on dark paper. Active navigation uses a 2px underline. The active language is an inverse square; the system-theme and menu controls use an ink-soft outline with at least 3:1 boundary contrast and invert on hover.
 
 ### Task Index
 
-Five numbered task links form the desktop rail, separated by 1px rules. Rust coordinates and bold body labels provide scan anchors; the selected task is underlined rather than filled. Below 58rem the same source order becomes a horizontal text scroller with a small written scroll cue—never a row of pills.
+Six numbered task links form the desktop rail, separated by 1px rules. Rust coordinates and bold body labels provide scan anchors; the selected task is underlined rather than filled. The Developer entry is a peer task group, not a dashboard detached from the public catalog. Below 58rem the same source order becomes a horizontal text scroller with a small written scroll cue—never a row of pills.
 
 ### Search
 
@@ -231,6 +233,8 @@ Primary buttons are ink-on-paper inversions with a 2px border, at least 2.8rem h
 ### Processing Labels, Notices, and Tool Panels
 
 Local, server, proxy, and external labels use the metadata voice, an underline, and their factual semantic color. Notices and status messages use horizontal rules instead of filled alerts. Tool work is bounded by one 1px ink rectangle on paper-pale with no shadow; success and error states change text and rule color together.
+
+Developer tools use the same working-panel grammar as other portal-native tools. Dense outputs such as claims, endpoints, response headers, DNS records, and event logs use ruled tables or bounded code regions with horizontal overflow where needed; they do not become dashboard cards. Every network-capable surface states its route before the operable fields: browser to destination, sender to temporary Utilibre memory, or browser through Utilibre's DNS resolver. Limits and CORS/browser constraints are written facts, not icon-only warnings.
 
 **The Focus Is Structural Rule.** Every keyboard-focusable element receives a 3px coral outline with a 4px offset; hover styling never substitutes for it.
 

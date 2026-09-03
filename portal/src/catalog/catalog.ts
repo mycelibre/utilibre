@@ -1,10 +1,10 @@
 import type { Language } from '../i18n/index.ts';
 
 export type PrivacyLabel = 'local' | 'server' | 'proxy' | 'external';
-export type CatalogCategory = 'service' | 'image' | 'pdf' | 'file' | 'utility';
+export type CatalogCategory = 'service' | 'image' | 'pdf' | 'file' | 'utility' | 'developer';
 export type CatalogKind = 'service' | 'tool';
 export type OperationalStatus = 'operational' | 'degraded' | 'unavailable' | 'maintenance' | 'not-deployed';
-export type DiscoveryGroup = 'find' | 'files' | 'documents' | 'text-data' | 'feeds-monitoring';
+export type DiscoveryGroup = 'find' | 'files' | 'documents' | 'text-data' | 'feeds-monitoring' | 'developer';
 export type AccountAccess = 'closed-registration' | 'invite-required';
 
 export interface LocalizedText {
@@ -23,6 +23,7 @@ export interface CatalogEntry {
   description: LocalizedText;
   slug?: Record<Language, string>;
   configUrlKey?: string;
+  configBooleanKey?: 'webhookInboxEnabled' | 'dnsLookupEnabled';
   labels: PrivacyLabel[];
   dataFlow: LocalizedText;
   upstreamServices: string[];
@@ -71,6 +72,33 @@ function localTool(entry: Pick<CatalogEntry, 'id' | 'category' | 'discoveryGroup
     upstreamProject: entry.upstreamProject ?? '',
     upstreamSourceUrl: entry.upstreamSourceUrl ?? '',
     installedVersion: entry.installedVersion ?? '0.1.0',
+    modified: false,
+    operationalStatus: 'operational',
+  };
+}
+
+function browserExternalTool(entry: Pick<CatalogEntry, 'id' | 'name' | 'description' | 'slug' | 'dataFlow'>): CatalogEntry {
+  return {
+    ...entry,
+    kind: 'tool',
+    category: 'developer',
+    discoveryGroup: 'developer',
+    labels: ['local', 'external'],
+    upstreamServices: [],
+    filesUploaded: false,
+    temporaryStorage: browserMemory,
+    retention: {
+      en: 'Utilibre retains none of the entered request data. The destination can retain what it receives under its own policy.',
+      es: 'Utilibre no conserva los datos de la solicitud ingresada. El destino puede conservar lo que recibe según su propia política.',
+    },
+    logging: {
+      en: 'The portal does not intentionally log the destination, headers, or body. The destination and network intermediaries can log the direct connection.',
+      es: 'El portal no registra intencionalmente el destino, las cabeceras ni el cuerpo. El destino y los intermediarios de red pueden registrar la conexión directa.',
+    },
+    license: 'AGPL-3.0-or-later',
+    upstreamProject: '',
+    upstreamSourceUrl: '',
+    installedVersion: '0.1.0',
     modified: false,
     operationalStatus: 'operational',
   };
@@ -281,9 +309,46 @@ export const catalog: CatalogEntry[] = [
   localTool({ id: 'json', category: 'utility', discoveryGroup: 'text-data', name: { en: 'JSON formatter', es: 'Formateador JSON' }, description: { en: 'Validate, format or minify JSON in your browser.', es: 'Valida, formatea o minifica JSON en tu navegador.' }, slug: { en: 'tools/json', es: 'herramientas/json' } }),
   localTool({ id: 'base64', category: 'utility', discoveryGroup: 'text-data', name: { en: 'Base64 text', es: 'Texto Base64' }, description: { en: 'Encode and decode UTF-8 text. Encoding is useful; it is still not encryption.', es: 'Codifica y decodifica texto UTF-8. La codificación es útil, pero sigue sin ser cifrado.' }, slug: { en: 'tools/base64', es: 'herramientas/base64' } }),
   localTool({ id: 'url-encoding', category: 'utility', discoveryGroup: 'text-data', name: { en: 'URL encoding', es: 'Codificación URL' }, description: { en: 'Encode or decode a URL component or complete URL in your browser.', es: 'Codifica o decodifica un componente o una URL completa en tu navegador.' }, slug: { en: 'tools/url-encoding', es: 'herramientas/codificacion-url' } }),
-  localTool({ id: 'uuid', category: 'utility', discoveryGroup: 'text-data', name: { en: 'UUID generator', es: 'Generador de UUID' }, description: { en: 'Generate random version 4 UUIDs using the browser’s cryptographic random source.', es: 'Genera UUID aleatorios de versión 4 con la fuente criptográfica del navegador.' }, slug: { en: 'tools/uuid', es: 'herramientas/uuid' } }),
+  localTool({ id: 'uuid', category: 'developer', discoveryGroup: 'developer', name: { en: 'UUID generator and inspector', es: 'Generador e inspector de UUID' }, description: { en: 'Generate cryptographically random UUIDv4 values or inspect the version and variant of an existing UUID.', es: 'Genera UUIDv4 aleatorios con una fuente criptográfica o examina la versión y la variante de un UUID existente.' }, slug: { en: 'tools/uuid', es: 'herramientas/uuid' } }),
   localTool({ id: 'qr-generate', category: 'utility', discoveryGroup: 'text-data', featuredOrder: 7, name: { en: 'Generate QR codes', es: 'Generar códigos QR' }, description: { en: 'Generate a QR code from text without sending the text to the server.', es: 'Genera un código QR a partir de texto sin enviarlo al servidor.' }, slug: { en: 'tools/qr-generate', es: 'herramientas/generar-qr' }, license: 'AGPL-3.0-or-later integration; MIT / Apache-2.0 / BSD-3-Clause libraries', upstreamProject: 'zxing-wasm', upstreamSourceUrl: 'https://github.com/Sec-ant/zxing-wasm', installedVersion: 'zxing-wasm 3.1.3' }),
   localTool({ id: 'qr-read', category: 'utility', discoveryGroup: 'text-data', name: { en: 'Read a QR image', es: 'Leer una imagen QR' }, description: { en: 'Read a QR image locally, then show the destination before anything opens.', es: 'Lee una imagen QR localmente y muestra el destino antes de abrir cualquier cosa.' }, slug: { en: 'tools/qr-read', es: 'herramientas/leer-qr' }, license: 'AGPL-3.0-or-later integration; MIT / Apache-2.0 / BSD-3-Clause libraries', upstreamProject: 'zxing-wasm', upstreamSourceUrl: 'https://github.com/Sec-ant/zxing-wasm', installedVersion: 'zxing-wasm 3.1.3' }),
+  localTool({ id: 'webhook-signature', category: 'developer', discoveryGroup: 'developer', name: { en: 'Webhook signature verifier', es: 'Verificador de firmas webhook' }, description: { en: 'Verify an HMAC webhook signature against a payload and secret in this browser.', es: 'Verifica en este navegador una firma HMAC de webhook con su contenido y secreto.' }, slug: { en: 'tools/webhook-signature', es: 'herramientas/verificar-firma-webhook' } }),
+  localTool({ id: 'openapi', category: 'developer', discoveryGroup: 'developer', name: { en: 'OpenAPI inspector', es: 'Inspector de OpenAPI' }, description: { en: 'Parse a local OpenAPI JSON or YAML document, inspect endpoints, and run basic structural checks without resolving remote references.', es: 'Analiza un documento OpenAPI JSON o YAML local, examina sus rutas y realiza comprobaciones estructurales básicas sin resolver referencias remotas.' }, slug: { en: 'tools/openapi', es: 'herramientas/openapi' }, license: 'AGPL-3.0-or-later integration; ISC library', upstreamProject: 'yaml', upstreamSourceUrl: 'https://github.com/eemeli/yaml/tree/v2.9.0', installedVersion: 'yaml 2.9.0' }),
+  localTool({ id: 'jwt-inspect', category: 'developer', discoveryGroup: 'developer', name: { en: 'JWT inspector', es: 'Inspector de JWT' }, description: { en: 'Decode JWT headers and claims locally. Decoding alone does not verify a signature.', es: 'Decodifica localmente cabeceras y atributos de un JWT. Decodificar no verifica por sí solo una firma.' }, slug: { en: 'tools/jwt-inspect', es: 'herramientas/inspeccionar-jwt' } }),
+  localTool({ id: 'jwt-generate', category: 'developer', discoveryGroup: 'developer', name: { en: 'JWT generator', es: 'Generador de JWT' }, description: { en: 'Create an HMAC-signed JWT locally from JSON claims and a secret you provide.', es: 'Crea localmente un JWT firmado con HMAC a partir de atributos JSON y un secreto que proporciones.' }, slug: { en: 'tools/jwt-generate', es: 'herramientas/generar-jwt' } }),
+  localTool({ id: 'http-curl', category: 'developer', discoveryGroup: 'developer', name: { en: 'HTTP and cURL converter', es: 'Conversor de HTTP y cURL' }, description: { en: 'Convert a raw HTTP request to a conservative cURL command, or parse a supported cURL command back into a request.', es: 'Convierte una solicitud HTTP sin procesar en un comando cURL conservador o interpreta un comando cURL compatible como solicitud.' }, slug: { en: 'tools/http-curl', es: 'herramientas/http-curl' } }),
+  localTool({ id: 'regex', category: 'developer', discoveryGroup: 'developer', name: { en: 'Regular expression tester', es: 'Probador de expresiones regulares' }, description: { en: 'Test a JavaScript regular expression against text locally with bounded input and result limits.', es: 'Prueba localmente una expresión regular de JavaScript con límites de entrada y resultados.' }, slug: { en: 'tools/regex', es: 'herramientas/expresiones-regulares' } }),
+  localTool({ id: 'cron', category: 'developer', discoveryGroup: 'developer', name: { en: 'Cron expression tester', es: 'Probador de expresiones cron' }, description: { en: 'Validate a standard five-field cron expression and preview its next scheduled times locally.', es: 'Valida localmente una expresión cron estándar de cinco campos y muestra sus próximas fechas programadas.' }, slug: { en: 'tools/cron', es: 'herramientas/cron' } }),
+  localTool({ id: 'timestamp', category: 'developer', discoveryGroup: 'developer', name: { en: 'Timestamp converter', es: 'Conversor de marcas de tiempo' }, description: { en: 'Convert Unix timestamps in seconds or milliseconds to readable dates, and dates back to timestamps.', es: 'Convierte marcas de tiempo Unix en segundos o milisegundos a fechas legibles, y fechas a marcas de tiempo.' }, slug: { en: 'tools/timestamp', es: 'herramientas/marcas-de-tiempo' } }),
+  localTool({ id: 'text-hashes', category: 'developer', discoveryGroup: 'developer', name: { en: 'Text hash generator', es: 'Generador de hashes de texto' }, description: { en: 'Calculate SHA-1, SHA-256, SHA-384, and SHA-512 digests of text in this browser.', es: 'Calcula en este navegador resúmenes SHA-1, SHA-256, SHA-384 y SHA-512 de un texto.' }, slug: { en: 'tools/text-hashes', es: 'herramientas/hashes-texto' } }),
+  browserExternalTool({ id: 'http-request', name: { en: 'HTTP request tester', es: 'Probador de solicitudes HTTP' }, description: { en: 'Send an HTTP request directly from this browser and inspect the response when the destination permits cross-origin access.', es: 'Envía una solicitud HTTP directamente desde este navegador y examina la respuesta cuando el destino permite el acceso entre orígenes.' }, slug: { en: 'tools/http-request', es: 'herramientas/solicitud-http' }, dataFlow: { en: 'Browser → destination entered by the visitor. Utilibre does not proxy the request.', es: 'Navegador → destino ingresado por la persona visitante. Utilibre no retransmite la solicitud.' } }),
+  browserExternalTool({ id: 'http-headers', name: { en: 'CORS-visible response headers', es: 'Cabeceras de respuesta visibles por CORS' }, description: { en: 'Request a URL directly from this browser and show only the response headers its CORS policy exposes to scripts.', es: 'Solicita una URL directamente desde este navegador y muestra únicamente las cabeceras de respuesta que su política CORS expone a los scripts.' }, slug: { en: 'tools/http-headers', es: 'herramientas/cabeceras-http' }, dataFlow: { en: 'Browser → destination entered by the visitor. The portal server never fetches the URL.', es: 'Navegador → destino ingresado por la persona visitante. El servidor del portal nunca solicita esa URL.' } }),
+  browserExternalTool({ id: 'websocket', name: { en: 'WebSocket tester', es: 'Probador de WebSocket' }, description: { en: 'Open a WebSocket directly from this browser, exchange text messages, and inspect a bounded session log.', es: 'Abre un WebSocket directamente desde este navegador, intercambia mensajes de texto y examina un registro limitado de la sesión.' }, slug: { en: 'tools/websocket', es: 'herramientas/websocket' }, dataFlow: { en: 'Browser ↔ WebSocket endpoint entered by the visitor. Utilibre does not relay messages.', es: 'Navegador ↔ extremo WebSocket ingresado por la persona visitante. Utilibre no retransmite los mensajes.' } }),
+  browserExternalTool({ id: 'sse', name: { en: 'Server-sent events viewer', es: 'Visor de eventos enviados por servidor' }, description: { en: 'Connect directly to an HTTP event stream and inspect a bounded list of events in this tab.', es: 'Conéctate directamente a un flujo de eventos HTTP y examina una lista limitada de eventos en esta pestaña.' }, slug: { en: 'tools/sse', es: 'herramientas/eventos-sse' }, dataFlow: { en: 'Browser ← event-stream endpoint entered by the visitor. Utilibre does not relay events.', es: 'Navegador ← extremo de flujo de eventos ingresado por la persona visitante. Utilibre no retransmite los eventos.' } }),
+  {
+    id: 'webhook-inbox', kind: 'tool', category: 'developer', discoveryGroup: 'developer',
+    name: { en: 'Temporary webhook inbox', es: 'Buzón temporal de webhooks' },
+    description: { en: 'Create a temporary URL for POST, PUT, PATCH, or DELETE and inspect the newest retained requests. Access expires after 15 minutes.', es: 'Crea una URL temporal para POST, PUT, PATCH o DELETE y examina las solicitudes más recientes que se conserven. El acceso vence a los 15 minutos.' },
+    slug: { en: 'tools/webhook-inbox', es: 'herramientas/buzon-webhook' }, configBooleanKey: 'webhookInboxEnabled', labels: ['server'],
+    dataFlow: { en: 'Webhook sender → Cloudflare and Caddy edge → Utilibre portal memory → this browser.', es: 'Emisor del webhook → Cloudflare y perímetro Caddy → memoria del portal Utilibre → este navegador.' },
+    upstreamServices: [], filesUploaded: true,
+    temporaryStorage: { en: 'The newest events—method, headers, query, and up to 12 KiB of body data each—are kept only in portal process memory, up to 25 events/1 MiB per inbox.', es: 'Los eventos más recientes —método, cabeceras, consulta y hasta 12 KiB de cuerpo cada uno— se guardan únicamente en la memoria del proceso del portal, hasta 25 eventos o 1 MiB por buzón.' },
+    retention: { en: 'Access expires after 15 minutes. Process references are logically removed on the next request or periodic sweep, normally within another minute, and earlier on deletion or portal restart.', es: 'El acceso vence a los 15 minutos. Las referencias del proceso se eliminan lógicamente con la siguiente solicitud o limpieza periódica, normalmente dentro del minuto siguiente, y antes al eliminar el buzón o reiniciar el portal.' },
+    logging: { en: 'Payload bodies and read tokens are not intentionally logged. Normal edge logs can record the opaque receive path and network address.', es: 'Los cuerpos y los tokens de lectura no se registran intencionalmente. Los registros normales del perímetro pueden incluir la ruta opaca de recepción y la dirección de red.' },
+    license: 'AGPL-3.0-or-later', upstreamProject: '', upstreamSourceUrl: '', installedVersion: '0.1.0', modified: false, operationalStatus: 'operational',
+  },
+  {
+    id: 'dns-lookup', kind: 'tool', category: 'developer', discoveryGroup: 'developer',
+    name: { en: 'DNS lookup', es: 'Consulta DNS' },
+    description: { en: 'Query a bounded set of public DNS record types through the application VM resolver.', es: 'Consulta un conjunto limitado de tipos de registro DNS públicos mediante el resolvedor de la VM de aplicaciones.' },
+    slug: { en: 'tools/dns-lookup', es: 'herramientas/consulta-dns' }, configBooleanKey: 'dnsLookupEnabled', labels: ['server', 'proxy'],
+    dataFlow: { en: 'Browser → Utilibre portal → application VM DNS resolver → DNS servers.', es: 'Navegador → portal Utilibre → resolvedor DNS de la VM de aplicaciones → servidores DNS.' },
+    upstreamServices: ['Application VM DNS resolver and DNS servers'], filesUploaded: false,
+    temporaryStorage: { en: 'The hostname and short-lived rate-limit counters exist in process memory while the query runs.', es: 'El nombre de host y los contadores temporales de límite existen en la memoria del proceso mientras se realiza la consulta.' },
+    retention: { en: 'Utilibre does not store a DNS query history. Rate-limit counters expire automatically or on restart.', es: 'Utilibre no guarda un historial de consultas DNS. Los contadores de límite vencen automáticamente o al reiniciar.' },
+    logging: { en: 'The portal does not intentionally log submitted hostnames. Operational resolver errors can reach rotated logs without the query payload.', es: 'El portal no registra intencionalmente los nombres de host ingresados. Los errores operativos del resolvedor pueden llegar a registros rotados sin el contenido de la consulta.' },
+    license: 'AGPL-3.0-or-later', upstreamProject: '', upstreamSourceUrl: '', installedVersion: '0.1.0', modified: false, operationalStatus: 'operational',
+  },
 ];
 
 export function localized(text: LocalizedText, language: Language): string {
@@ -294,5 +359,5 @@ export function catalogEntry(id: string): CatalogEntry | undefined {
   return catalog.find((entry) => entry.id === id);
 }
 
-export const localTools = catalog.filter((entry) => entry.kind === 'tool' && entry.id !== 'private-router');
+export const localTools = catalog.filter((entry) => entry.kind === 'tool' && entry.labels.length === 1 && entry.labels[0] === 'local');
 export const reviewedServices = catalog.filter((entry) => entry.kind === 'service');

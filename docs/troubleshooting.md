@@ -362,6 +362,46 @@ The portal checks only the fixed internal URLs in `STATUS_SERVICES`, with a shor
 
 Do not expose internal details on the public status page to make diagnosis easier. Diagnose with Compose on the VM.
 
+## A Developer network tool is unavailable or cannot connect
+
+The temporary webhook inbox and DNS lookup are independently controlled by
+`WEBHOOK_INBOX_ENABLED` and `DNS_LOOKUP_ENABLED`. A disabled surface is absent
+from discovery and its API returns 404. Check the intended private `.env`
+values without posting the full environment, then recreate only the portal:
+
+```sh
+docker compose up -d --no-deps --force-recreate portal
+docker compose ps portal
+curl --fail --show-error http://PRIVATE_BIND_IP:PORTAL_PORT/healthz
+```
+
+An inbox creation or DNS request with a missing/foreign Origin returns 403 by
+design. Webhook event bodies above 12 KiB return 413; the edge's 16 KiB portal
+ceiling should remain in place and must not be raised to work around that
+limit. Inbox access also ends after 15 minutes. Its process references are
+removed on the next related request or periodic sweep, normally within another
+minute, or earlier on explicit deletion or portal restart. A missing inbox is
+not reconstructed from logs.
+
+DNS accepts only A, AAAA, CAA, CNAME, MX, NS, SOA, SRV, and TXT for normalized
+public hostnames. Literal IPs, single-label/internal/special-use names, and
+malformed names are intentionally rejected. Repeated 429/503 responses mean a
+rate or capacity boundary is working; wait for its retry interval rather than
+widening the limits during unexplained traffic. Either API can be disabled
+without affecting local or browser-direct tools.
+
+HTTP 431 from the portal means the request reached the conservative 100-header
+boundary and was rejected before routing. Reduce the sender's headers; do not
+raise the portal limit merely to accept an unexpectedly large header set.
+
+The HTTP tester, CORS-visible header viewer, WebSocket tester, and SSE viewer
+do not call the portal API. On the public site they require an HTTPS/WSS
+destination. A fetch can fail because the destination does not permit CORS,
+and the header viewer can show only CORS-exposed headers. WebSocket connections
+also send a browser Origin and may carry existing destination cookies. Do not
+add a server proxy or weaken the site-wide CSP to make an unwilling destination
+readable.
+
 ## High memory, CPU, or an OOM kill
 
 ```sh

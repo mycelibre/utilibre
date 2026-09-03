@@ -1,4 +1,4 @@
-import { actionButton, append, element, labelledInput, labelledSelect, setStatus, statusRegion, toolPanel, type Translate } from '../utilities/dom';
+import { actionButton, append, disableActionButton, element, labelledInput, labelledSelect, setStatus, statusRegion, toolPanel, type Translate } from '../utilities/dom';
 
 interface MediaResult {
   status?: string;
@@ -24,7 +24,7 @@ export function renderMediaTool(t: Translate, acceptablePath: string): HTMLEleme
 
   submit.addEventListener('click', async () => {
     result.replaceChildren();
-    submit.disabled = true;
+    const finishAction = disableActionButton(submit);
     setStatus(status, t('media.processing'));
     try {
       const response = await fetch('/_portal/media', {
@@ -48,7 +48,7 @@ export function renderMediaTool(t: Translate, acceptablePath: string): HTMLEleme
       try { message = t(key); } catch { message = t('media.error.generic'); }
       setStatus(status, message || t('media.error.generic'), 'error');
     } finally {
-      submit.disabled = false;
+      finishAction();
     }
   });
 

@@ -1,5 +1,5 @@
 import { PDFDocument, degrees } from '@cantoo/pdf-lib';
-import { actionButton, append, downloadBlob, element, fileStem, labelledInput, labelledSelect, setStatus, statusRegion, toolPanel, type Translate } from '../utilities/dom';
+import { actionButton, append, disableActionButton, downloadBlob, element, fileStem, labelledInput, labelledSelect, setStatus, statusRegion, toolPanel, type Translate } from '../utilities/dom';
 
 export type PdfToolId = 'pdf-merge' | 'pdf-extract' | 'pdf-rotate' | 'pdf-reorder';
 
@@ -30,7 +30,7 @@ export function renderPdfTool(id: PdfToolId, t: Translate): HTMLElement {
     if (files.length < (id === 'pdf-merge' ? 2 : 1)) {
       return setStatus(status, id === 'pdf-merge' ? t('tool.error.filesRequired') : t('tool.error.fileRequired'), 'error');
     }
-    process.disabled = true;
+    const finishAction = disableActionButton(process);
     setStatus(status, t('tool.processing'));
     try {
       let output: PDFDocument;
@@ -61,7 +61,7 @@ export function renderPdfTool(id: PdfToolId, t: Translate): HTMLElement {
       const selectionError = error instanceof Error && ['range', 'empty', 'permutation'].includes(error.message);
       setStatus(status, selectionError ? t('pdf.invalidSelection') : t('tool.error.invalidPdf'), 'error');
     } finally {
-      process.disabled = false;
+      finishAction();
     }
   });
 

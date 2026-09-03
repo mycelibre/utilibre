@@ -1,6 +1,6 @@
 # Test record and verification guide
 
-Test date: 2026-08-30
+Infrastructure baseline: 2026-08-30. Latest release regression: 2026-09-03.
 
 ## 2026-09-03 frontend release regression
 
@@ -42,6 +42,52 @@ strict launch validator passes. The portal was rebuilt and recreated without
 restarting the other services; its public configuration endpoint returned the
 expected source and contact destinations and no inactive donation URL
 afterward.
+
+## 2026-09-03 Developer-category release regression
+
+The exact Developer-category source passed the production build, ESLint,
+TypeScript, 89/89 Vitest unit/server checks, and the dependency audit with zero
+known production vulnerabilities. The configuration validator passed 27/27
+regressions, and both base and strict launch validation passed. Against the built Node server, Playwright
+passed 96 checks across desktop Chromium and a Pixel 7-sized profile; 16
+private-preview/public-service checks were intentionally skipped because that
+run targeted the isolated loopback release server. The Vite harness separately
+passed 14 focused Developer checks with its two Node-server-only API checks
+skipped. The focused sources cover:
+
+- HS256/HS384/HS512 JWT signing, decoding, claim interpretation, and optional
+  verification without equating decode with trust;
+- SHA-256/SHA-384/SHA-512 webhook HMAC input, bounded HTTP↔cURL conversion,
+  local OpenAPI JSON/YAML inspection without remote-reference resolution,
+  SHA text hashes, regex/cron bounds, timestamps, and UUID generation/inspection;
+- opaque webhook receiver/read capability separation, a 12 KiB body limit,
+  retained-event/header/memory limits, omission of Authorization, Cookie, hop-by-hop, and recognized
+  forwarding/proxy/client-address headers, slow-body and read concurrency,
+  paged responses, deletion races, atomic capacity changes, expiry/deletion,
+  and independent authenticated/denied rate limits;
+- DNS public-host normalization, record-type/result bounds, sanitized failures,
+  and the absence of a generic server-side HTTP inspection proxy; and
+- independent webhook/DNS kill switches returning 404 without disabling the
+  rest of the portal.
+
+Browser release coverage loads every English and Spanish Developer route;
+exercises representative local tools while rejecting external or
+content-bearing processing requests; proves browser-direct HTTP, CORS-visible
+header, WebSocket, and SSE surfaces do not call a Utilibre relay; and exercises
+a temporary inbox plus valid/invalid DNS requests against the built Node
+server. It also verifies keyboard focus restoration after asynchronous actions,
+same-document catalog jump focus, named live logs, and localized Spanish JWT
+claim and binary-message output. The server tests cover token-protected reads,
+exact raw/body encoding,
+stripped Authorization/Cookie/dynamic hop-by-hop/forwarding headers, the 12 KiB
+boundary, paged reads, slow/aborted requests, deletion/expiry cleanup, late
+framing headers, and fail-closed connection handling. Owned loopback fixtures
+are used instead of unrelated public APIs or sockets.
+
+The separate edge VM still requires the manual log and client-attribution
+checks below: no opaque receiver path/body or management Authorization value in
+edge logs, adapted Caddy configuration validation, two real clients receiving
+distinct limiter identities, and a forged forwarded chain having no effect.
 
 This record separates automated, private-host, and still-manual checks. It does
 not claim that private smoke requests constitute a public production launch.
@@ -225,12 +271,15 @@ This is meaningful regression coverage, not a complete WCAG conformance audit. B
 
 ## Local-tool behavior and no-upload evidence
 
-Playwright loads each required route and static asset, waits for the tool and lazy/WASM assets to settle, then attaches HTTP(S)-request and WebSocket observers **before** placing a user's fixture file or entered content into the page. It keeps those observers active through selection/input, processing, and status/output checks (including immediate processing downloads), and asserts that no network communication occurs. Representative tests cover:
+Playwright loads each required route and its known static assets, then attaches HTTP(S)-request and WebSocket observers **before** placing a user's fixture file or entered content into the page. It keeps those observers active through selection/input, processing, and status/output checks (including immediate processing downloads). The original local-tool suite asserts zero processing-time requests after its assets settle. Developer-tool checks permit same-origin GET/HEAD requests for lazily loaded static code or workers, but reject every external or content-bearing request. Representative tests cover:
 
 - image resize, compression, PNG/JPEG/WebP conversion, and metadata-removal re-encoding;
 - PDF merge, page extraction, rotation, and reordering, including output page-count/rotation checks;
 - SHA-256, SHA-512 code paths and file information including browser-reported MIME caveat and image dimensions;
 - JSON formatting, minification and download, Base64 Unicode round trip and invalid input, URL encoding and decoding, and secure UUID generation;
+- JWT decode/generate/verify, webhook HMAC verification, OpenAPI JSON/YAML
+  inspection, HTTP↔cURL conversion, bounded regex/cron workers, timestamp
+  conversion, SHA text hashes, and UUID inspection;
 - QR generation, local image reading, output download, and display-before-opening behavior; and
 - strict private-URL routing, including rejection of lookalike hosts and the absence of a user-controlled destination host.
 
@@ -239,13 +288,14 @@ the homepage, service/status/software/privacy views, and private router only
 when its catalog ID and fixed public URL are enabled. It never derives the
 destination host from pasted Reddit input.
 
-The test permits only the initial same-origin static asset requests before monitoring begins. Once assets are ready, the selected fixture/content has not yet been supplied; from that point no fetch, XMLHttpRequest, beacon, WebSocket, form submission, or other HTTP(S) request is expected. The selected fixtures' file content is never sent in a request. Browser extensions and browser/OS telemetry are outside this application's control and were not part of the isolated Playwright context.
+The original local-tool tests permit only initial same-origin static asset requests before monitoring begins. The newer developer checks may observe a later same-origin `GET` or `HEAD` for a code split or disposable worker; they still reject cross-origin traffic and same-origin methods that could carry the entered payload. The selected fixture or entered content is never intentionally sent in a request. Browser extensions and browser/OS telemetry are outside this application's control and were not part of the isolated Playwright context.
 
 ## Portal and security checks
 
 Unit and private integration checks cover:
 
-- fixed health response and browser security headers;
+- fixed health response and browser security headers, including raw-socket
+  rejection and closure of incomplete bodies on bodyless routes;
 - sanitized public configuration with no server-held Cobalt key or internal URL;
 - 404 behavior for arbitrary `/_portal/*` and legacy `/api/*` routes;
 - real 404 responses for missing static assets rather than an HTML SPA fallback;
@@ -254,7 +304,16 @@ Unit and private integration checks cover:
 - strict private-router source and destination rules;
 - coalescing of concurrent high-level status calls and the server's 15-second default in-memory status snapshot, which prevents one public caller per internal probe;
 - Cobalt missing/invalid key rejection and acceptance of the generated matching portal key; and
-- stable public error codes rather than raw upstream error bodies.
+- stable public error codes rather than raw upstream error bodies;
+- temporary webhook capability separation, omission of Authorization, Cookie,
+  hop-by-hop, and recognized forwarding/proxy/client-address headers,
+  body/event/process-memory/rate/deadline/concurrency ceilings, paged reads,
+  deletion-during-upload and atomic-capacity cleanup, and
+  independent fail-closed disablement;
+- DNS public-host and record-type validation, timeout/result/error bounds, and
+  independent fail-closed disablement; and
+- absence of a generic server-side HTTP/header proxy under the developer API
+  namespace.
 
 The private-preview server regression also admits only an exact generated
 Cobalt URL on the configured private origin, exact `/tunnel` path, and required

@@ -25,6 +25,7 @@ The source archive script includes `portal/` and `scripts/` but excludes `.env`,
 | Docker `json-file` logs and host journals | Operational/possibly sensitive, rotated, and not application state |
 | Cobalt media or tunnel state | No media volume exists; tunnel metadata is short-lived process memory |
 | Redlib OAuth/device/connection state and transient page/media buffers | No database or volume exists; state is process memory or bounded tmpfs and clears on restart |
+| Temporary webhook inboxes, events, read-token hashes, and developer rate counters | These are deliberately process-memory-only and clear on expiry, explicit deletion, or portal restart; restoring them would violate the advertised temporary boundary |
 | Portal/local-tool inputs and results | They never intentionally reach server storage |
 | rimgo memory cache | Optional, non-authoritative, and cleared on restart |
 | `config/searxng/limiter.toml` | Ignored file deterministically regenerated from the tracked template and exact edge address |
@@ -133,7 +134,9 @@ sh scripts/verify-network.sh
 Reapply the application-VM firewall through its authoritative procedure. Restore/validate the separate edge Caddy configuration only after private health and unauthorized-host checks pass. Run the bilingual browser, local no-upload, API-authentication, and network-exposure tests before reopening public traffic.
 
 Because limiter state starts empty, watch SearXNG and portal request rates
-closely after a restore. Start Anubis with a new empty bbolt file but the
+closely after a restore. Every temporary webhook receiver from before the
+restart is invalid; do not attempt to reconstruct it from edge logs. Start
+Anubis with a new empty bbolt file but the
 restored stable key. Watch Redlib requests and egress closely; cache warm-up can
 make initial searches and Reddit pages slower.
 

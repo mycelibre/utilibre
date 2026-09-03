@@ -31,6 +31,18 @@ function focusMainContent(main: HTMLElement): void {
   main.scrollIntoView({ block: 'start' });
 }
 
+function focusHashTarget(hash: string): boolean {
+  if (!hash.startsWith('#') || hash.length < 2) return false;
+  let id: string;
+  try { id = decodeURIComponent(hash.slice(1)); } catch { return false; }
+  const target = document.getElementById(id);
+  if (!target) return false;
+  if (target.tabIndex < 0) target.tabIndex = -1;
+  target.focus({ preventScroll: true });
+  target.scrollIntoView({ block: 'start' });
+  return true;
+}
+
 // Register this before configuration loading or the first render. A keyboard
 // user can reach the skip link while the module is still awaiting configuration,
 // and its target does not exist until the application has rendered.
@@ -53,7 +65,7 @@ await render();
 
 window.addEventListener('popstate', () => {
   route = parseRoute(window.location.pathname) ?? { language: preferredLanguage(config.defaultLanguage), page: 'home' };
-  void render();
+  void render(window.location.hash || undefined);
 });
 
 document.addEventListener('click', (event) => {
@@ -65,6 +77,15 @@ document.addEventListener('click', (event) => {
   if (destination.origin !== window.location.origin) return;
   const parsed = parseRoute(destination.pathname);
   if (!parsed) return;
+  if (requiresNetworkDocument(route) || requiresNetworkDocument(parsed)) return;
+  if (destination.pathname === window.location.pathname
+    && destination.search === window.location.search
+    && destination.hash) {
+    event.preventDefault();
+    history.pushState({}, '', destination.href);
+    focusHashTarget(destination.hash);
+    return;
+  }
   event.preventDefault();
   history.pushState({}, '', destination.href);
   route = parsed;
@@ -78,6 +99,11 @@ function resolveInitialRoute(): Route {
   const destination = routePath('home', language);
   history.replaceState({}, '', destination);
   return { language, page: 'home' };
+}
+
+function requiresNetworkDocument(candidate: Route): boolean {
+  return candidate.page === 'tool'
+    && ['http-request', 'http-headers', 'websocket', 'sse'].includes(candidate.toolId ?? '');
 }
 
 async function render(focusAfter?: string): Promise<void> {
@@ -97,7 +123,7 @@ async function render(focusAfter?: string): Promise<void> {
     pendingSkipFocus = false;
     focusMainContent(page);
   } else if (focusAfter) {
-    document.querySelector<HTMLElement>(focusAfter)?.focus();
+    focusHashTarget(focusAfter);
   }
 }
 

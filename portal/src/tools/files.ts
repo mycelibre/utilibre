@@ -1,4 +1,4 @@
-import { actionButton, append, element, formatBytes, labelledInput, setStatus, statusRegion, toolPanel, type Translate } from '../utilities/dom';
+import { actionButton, append, disableActionButton, element, formatBytes, labelledInput, setStatus, statusRegion, toolPanel, type Translate } from '../utilities/dom';
 import { sha2Digests } from '../utilities/hashes';
 
 export type FileToolId = 'file-hashes' | 'file-info';
@@ -13,7 +13,7 @@ export function renderFileTool(id: FileToolId, t: Translate): HTMLElement {
   process.addEventListener('click', async () => {
     const file = fileField.input.files?.[0];
     if (!file) return setStatus(status, t('tool.error.fileRequired'), 'error');
-    process.disabled = true;
+    const finishAction = disableActionButton(process);
     output.replaceChildren();
     setStatus(status, t('tool.processing'));
     try {
@@ -40,7 +40,7 @@ export function renderFileTool(id: FileToolId, t: Translate): HTMLElement {
     } catch {
       setStatus(status, t('tool.error.generic'), 'error');
     } finally {
-      process.disabled = false;
+      finishAction();
     }
   });
 

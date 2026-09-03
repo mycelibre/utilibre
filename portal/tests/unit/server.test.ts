@@ -1,6 +1,7 @@
 import { spawn, type ChildProcess } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { createServer, type Server, type ServerResponse } from 'node:http';
+import { createConnection } from 'node:net';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 const port = 43891;
@@ -36,6 +37,7 @@ describe('portal server security boundaries', () => {
         ...process.env,
         PORT: String(port),
         LISTEN_ADDRESS: '127.0.0.1',
+        EDGE_PROXY_IP: '127.0.0.1',
         MEDIA_ALLOWED_ORIGINS: base,
         ENABLED_SERVICES: 'cobalt,searxng,ntfy',
         DEFAULT_LANGUAGE: 'es',
@@ -104,6 +106,47 @@ describe('portal server security boundaries', () => {
     expect(await preferredEnglish.text()).toContain('<html lang="en">');
   });
 
+  it('rejects malformed absolute request targets without terminating the process', async () => {
+    const rawResponse = await rawHttpRequest('GET http://[ HTTP/1.1\r\nHost: portal.invalid\r\nConnection: close\r\n\r\n');
+    expect(rawResponse).toMatch(/^HTTP\/1\.1 400 /);
+    expect(rawResponse).toContain('"error":"invalid_request_target"');
+
+    const networkPath = await rawHttpRequest('GET //evil.example/healthz HTTP/1.1\r\nHost: portal.invalid\r\nConnection: close\r\n\r\n');
+    expect(networkPath).toMatch(/^HTTP\/1\.1 404 /);
+    expect(server.exitCode).toBeNull();
+    expect((await fetch(`${base}/healthz`)).status).toBe(200);
+  });
+
+  it('rejects and closes declared bodies on bodyless routes', async () => {
+    const rawResponse = await rawHttpRequestWithoutBodyCompletion(
+      'GET /healthz HTTP/1.1\r\nHost: portal.invalid\r\nContent-Length: 100\r\n\r\n',
+    );
+    expect(rawResponse).toMatch(/^HTTP\/1\.1 400 /);
+    expect(rawResponse).toContain('Connection: close');
+    expect(rawResponse).toContain('"error":"unexpected_request_body"');
+    expect(server.exitCode).toBeNull();
+    expect((await fetch(`${base}/healthz`)).status).toBe(200);
+
+    const rejectedMedia = await rawHttpRequestWithoutBodyCompletion(
+      'POST /_portal/media HTTP/1.1\r\nHost: portal.invalid\r\nOrigin: https://evil.example\r\nContent-Length: 100\r\n\r\n',
+    );
+    expect(rejectedMedia).toMatch(/^HTTP\/1\.1 403 /);
+    expect(rejectedMedia).toContain('Connection: close');
+    expect(server.exitCode).toBeNull();
+  });
+
+  it('fails closed when a framing header can fall beyond the retained header limit', async () => {
+    const earlyHeaders = Array.from({ length: 100 }, (_, index) => `X-Filler-${index}: value`).join('\r\n');
+    const rawResponse = await rawHttpRequestWithoutBodyCompletion(
+      `GET /healthz HTTP/1.1\r\nHost: portal.invalid\r\n${earlyHeaders}\r\nContent-Length: 100\r\n\r\n`,
+    );
+    expect(rawResponse).toMatch(/^HTTP\/1\.1 431 /);
+    expect(rawResponse).toContain('Connection: close');
+    expect(rawResponse).toContain('"error":"too_many_headers"');
+    expect(server.exitCode).toBeNull();
+    expect((await fetch(`${base}/healthz`)).status).toBe(200);
+  });
+
   it('returns a real 404 for missing static assets instead of the SPA shell', async () => {
     for (const path of ['/assets/obsolete-tool.js', '/vendor/obsolete-tool.wasm', '/missing.svg']) {
       const response = await fetch(`${base}${path}`);
@@ -141,6 +184,8 @@ describe('portal server security boundaries', () => {
     expect(config.supportUrl).toBe('');
     expect(config.defaultLanguage).toBe('es');
     expect(config.enabledServices).toEqual(['cobalt', 'searxng', 'ntfy']);
+    expect(config.webhookInboxEnabled).toBe(true);
+    expect(config.dnsLookupEnabled).toBe(true);
     expect(config.publicSearchUrl).toBe('http://10.23.0.2:8888/');
     expect(config.publicNtfyUrl).toBe('http://10.23.0.2:2586/');
     expect(JSON.stringify(config)).not.toContain('EDGE_PROXY_IP');
@@ -170,6 +215,69 @@ describe('portal server security boundaries', () => {
     expect((await fetch(`${base}/api/proxy?url=http://127.0.0.1`)).status).toBe(404);
     expect((await fetch(`${base}/api/media/tunnel`)).status).toBe(404);
     expect((await fetch(`${base}/api/media/tunnel-extra`)).status).toBe(404);
+  });
+
+  it('broadens outbound connections only on browser-direct network tool documents', async () => {
+    const ordinary = await fetch(`${base}/en/tools/json`);
+    expect(ordinary.headers.get('content-security-policy')).toContain("connect-src 'self';");
+    const network = await fetch(`${base}/en/tools/http-request`);
+    expect(network.headers.get('content-security-policy')).toContain("connect-src 'self' https: wss:;");
+    const spanishSocket = await fetch(`${base}/es/herramientas/websocket`);
+    expect(spanishSocket.headers.get('content-security-policy')).toContain("connect-src 'self' https: wss:;");
+  });
+
+  it('integrates bounded temporary webhook inboxes without exposing read access in the receive URL', async () => {
+    const created = await fetch(`${base}/_portal/developer/webhook-inboxes`, {
+      method: 'POST',
+      headers: { Origin: base },
+    });
+    expect(created.status).toBe(201);
+    const payload = await created.json() as { inbox: { id: string; receivePath: string; limits: { bodyBytes: number } }; readToken: string };
+    expect(payload.inbox.id).toMatch(/^[A-Za-z0-9_-]{32}$/);
+    expect(payload.inbox.receivePath).not.toContain(payload.readToken);
+    expect(payload.inbox.limits.bodyBytes).toBe(12 * 1024);
+
+    const received = await fetch(`${base}${payload.inbox.receivePath}?event=test`, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer sender-secret', Cookie: 'session=private', 'Content-Type': 'application/json', 'X-Hub-Signature-256': 'sha256=test' },
+      body: '{"ok":true}',
+    });
+    expect(received.status).toBe(202);
+    const events = await fetch(`${base}/_portal/developer/webhook-inboxes/${payload.inbox.id}/events`, {
+      headers: { Origin: base, Authorization: `Bearer ${payload.readToken}` },
+    });
+    expect(events.status).toBe(200);
+    const listed = await events.json() as { events: Array<{ headers: Record<string, string>; body: { value: string } }> };
+    expect(listed.events).toHaveLength(1);
+    expect(listed.events[0]?.headers.authorization).toBeUndefined();
+    expect(listed.events[0]?.headers.cookie).toBeUndefined();
+    expect(listed.events[0]?.headers['x-hub-signature-256']).toBe('sha256=test');
+    expect(listed.events[0]?.body.value).toBe('{"ok":true}');
+  });
+
+  it('groups trusted IPv6 client identities by /64 for developer rate limits', async () => {
+    const statuses: number[] = [];
+    for (let index = 1; index <= 11; index += 1) {
+      const response = await fetch(`${base}/_portal/developer/webhook-inboxes`, {
+        method: 'POST',
+        headers: { Origin: base, 'X-Forwarded-For': `2001:db8:1234:5678::${index}` },
+      });
+      statuses.push(response.status);
+      if (response.ok) {
+        const created = await response.json() as { inbox: { id: string }; readToken: string };
+        const deleted = await fetch(`${base}/_portal/developer/webhook-inboxes/${created.inbox.id}`, {
+          method: 'DELETE',
+          headers: {
+            Origin: base,
+            'X-Forwarded-For': `2001:db8:1234:5678::${index}`,
+            Authorization: `Bearer ${created.readToken}`,
+          },
+        });
+        expect(deleted.status).toBe(204);
+      }
+    }
+    expect(statuses.slice(0, 10)).toEqual(Array(10).fill(201));
+    expect(statuses[10]).toBe(429);
   });
 
   it('coalesces and briefly caches high-level status checks', async () => {
@@ -241,4 +349,30 @@ function mediaRequest(url: string, extra: Record<string, unknown> = {}): Promise
 function sendFake(response: ServerResponse, status: number, body: unknown): void {
   response.writeHead(status, { 'Content-Type': 'application/json' });
   response.end(JSON.stringify(body));
+}
+
+function rawHttpRequest(payload: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const socket = createConnection({ host: '127.0.0.1', port });
+    let response = '';
+    socket.setEncoding('utf8');
+    socket.setTimeout(2_000, () => socket.destroy(new Error('raw HTTP request timed out')));
+    socket.on('connect', () => socket.end(payload));
+    socket.on('data', (chunk) => { response += chunk; });
+    socket.on('end', () => resolve(response));
+    socket.on('error', reject);
+  });
+}
+
+function rawHttpRequestWithoutBodyCompletion(payload: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const socket = createConnection({ host: '127.0.0.1', port });
+    let response = '';
+    socket.setEncoding('utf8');
+    socket.setTimeout(2_000, () => socket.destroy(new Error('raw HTTP request timed out')));
+    socket.on('connect', () => socket.write(payload));
+    socket.on('data', (chunk) => { response += chunk; });
+    socket.on('end', () => resolve(response));
+    socket.on('error', reject);
+  });
 }

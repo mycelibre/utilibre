@@ -99,7 +99,7 @@ Caddy edge VM (public DNS, HTTPS, TLS, public routing)
 operator-controlled private network
    |
 Application VM
-   +-- portal: static application + narrow config/status/media endpoints
+   +-- portal: static application + narrow config/status/media/developer endpoints
    +-- Cobalt: authenticated internal processing API
    +-- SearXNG -- internal-only, ephemeral Valkey limiter state
    +-- Anubis -> Redlib: challenge gate, then English-only Reddit frontend
@@ -112,12 +112,17 @@ Valkey is reachable only on an internal Docker network. The portal's small Node
 server serves this application and its fixed endpoints; it is not a generic
 reverse proxy or network scanner.
 
-Browser tools follow `Browser only; no file or content upload after application
-assets load`. Cobalt follows `Browser → portal gateway → Cobalt → source
-platform`, after which delivery may use this server or a direct upstream URL.
-SearXNG follows `Browser → edge → SearXNG → selected search engines`.
-Redlib follows `Browser → Cloudflare → edge → Anubis → Redlib → Reddit`;
-accepted pages and media are proxied through the application VM.
+Local browser tools follow `Browser only; no file or content upload after
+application assets load`. The HTTP tester, CORS-visible header viewer,
+WebSocket tester, and server-sent events viewer instead connect from the
+visitor's browser directly to the destination they enter; the portal is not an
+HTTP relay for those tools. The temporary webhook inbox and DNS lookup use two
+fixed, bounded portal endpoints described below. Cobalt follows `Browser →
+portal gateway → Cobalt → source platform`, after which delivery may use
+this server or a direct upstream URL. SearXNG follows `Browser → edge →
+SearXNG → selected search engines`. Redlib follows `Browser → Cloudflare
+→ edge → Anubis → Redlib → Reddit`; accepted pages and media are
+proxied through the application VM.
 
 The explicit private-preview topology temporarily replaces the edge hop with
 `trusted private client → direct HTTP → exact PRIVATE_BIND_IP ports`. It sets
@@ -274,7 +279,7 @@ has no Compose service, database, port, or live navigation destination. Its
 configuration directory explains the deferral; future candidates are reviewed in
 [frontend-candidates.md](docs/frontend-candidates.md).
 
-## 5. Current local browser tools
+## 5. Current portal-native tools
 
 All of these tools run after their self-hosted assets load without intentionally
 uploading selected files or entered content:
@@ -288,7 +293,7 @@ uploading selected files or entered content:
   file details and image dimensions. Browser-reported MIME types are not
   authoritative.
 - Text/data: JSON validation/format/minify/copy/download; UTF-8 Base64;
-  component or complete-URL encoding; secure UUIDv4 generation.
+  component or complete-URL encoding.
 - QR: local generation/download and local image reading through self-hosted
   `zxing-wasm`. Decoded URLs are shown with a warning and never opened
   automatically.
@@ -302,6 +307,72 @@ Image re-encoding can alter quality, color profiles, animation, orientation,
 transparency, and unsupported metadata. Large PDFs and images can consume
 substantial memory in the visitor's tab. These limitations appear in both
 languages.
+
+The Developer category adds the following local operations:
+
+- decode JWT headers and claims, or generate and optionally verify HMAC JWTs
+  using HS256, HS384, or HS512. Decoding is explicitly not presented as
+  signature verification;
+- verify SHA-256, SHA-384, or SHA-512 HMAC webhook signatures;
+- inspect OpenAPI 3.x or Swagger 2.0 JSON/YAML documents, endpoints, and
+  references. This is a bounded structural inspection, not full standards
+  validation, and it does not fetch remote references. Parsing happens
+  synchronously in the visitor's tab, so a pathological document within the
+  2 MiB input ceiling can still make that tab briefly unresponsive;
+- convert a conservative supported subset of raw HTTP requests and cURL
+  commands without executing either one;
+- test JavaScript regular expressions in a disposable, 750-millisecond worker
+  with bounded input/output, and preview standard five-field cron expressions
+  in UTC in a disposable, one-second worker with a bounded search horizon;
+- convert timestamps; calculate SHA-1, SHA-256, SHA-384, or SHA-512 text
+  hashes; and generate or inspect UUID values.
+
+Four developer tools use the visitor's browser as the network client:
+
+- the HTTP request tester and server-sent events viewer use browser fetch with
+  credentials omitted, while an Authorization header entered explicitly in
+  the HTTP tester is sent to the chosen destination. Fetch redirects are
+  followed, and a CORS-visible failure can occur after delivery;
+- the header viewer makes a browser-direct request and can show only response
+  headers exposed to scripts by the destination's CORS policy; and
+- the WebSocket tester connects directly without a Utilibre relay. Browsers
+  supply an Origin and may attach existing cookies for the destination; the
+  WebSocket API provides no credentials-omit switch. A received frame is
+  materialized by the browser before the page can close a connection for
+  exceeding its per-frame limit.
+
+The temporary webhook inbox is the only developer tool that accepts arbitrary
+request bodies at the portal. Each opaque inbox becomes inaccessible after 15
+minutes, accepts at most 12 KiB of body per request, and retains the newest
+events up to 25 events/1 MiB; later accepted events can evict the oldest. It
+retains at most 32 headers/32 KiB per event, flags header truncation,
+omits Authorization, Cookie, standard hop-by-hop, and recognized
+proxy/client-address headers from the displayed record, and has no forwarding,
+replay, database, or persistent storage. Other custom headers, query parameters,
+and bodies remain visible to anyone with the read capability. A derived client
+may hold at most three active inboxes, 75 retained events, and 2 MiB. Body
+receipt, event-list pages, response concurrency, rate keys, and total process
+memory are separately bounded. Valid text is shown as captured UTF-8; other
+bodies are shown as Base64 and must be decoded back to bytes before byte-exact
+signature verification. Browser clipboard and text controls can normalize line
+endings, so the original sender payload remains the safest verification input.
+Expired process references are removed on the next request or periodic sweep,
+normally within another minute; this is logical cleanup, not forensic erasure.
+DNS lookup sends one validated public hostname and an
+allowlisted record type through the application VM's resolver. It is not a
+general network scanner. `WEBHOOK_INBOX_ENABLED` and `DNS_LOOKUP_ENABLED` are
+independent emergency switches; setting either to `0` and recreating the portal
+hides its catalog entry and makes its API return 404.
+
+There is deliberately no generic server-side HTTP request or header-inspection
+proxy. Browser CORS restrictions are inconvenient, but turning the application
+VM into an SSRF surface would be worse.
+
+The portal also rejects the conservative 100-header boundary with HTTP 431
+before routing, because Node can otherwise stop exposing later headers while
+its HTTP parser still honors a late body-framing header. Media JSON receipt is
+limited to 16 concurrent body readers and ten seconds before the existing
+two-job Cobalt request ceiling applies.
 
 ## 6. System requirements
 
@@ -460,6 +531,7 @@ tokens, or backup archives. The most important settings are:
 | `PORTAL_PRIVATE_PREVIEW`, `PORTAL_EDGE_PROXY_IP` | Optional portal-only cutover settings. They let the portal trust the exact live edge without recreating an already-running Cobalt or SearXNG container. They do not put those backends into launch mode. |
 | `PORTAL_PUBLIC_ORIGIN` | Optional portal-only HTTPS Origin allowlist used by the same-origin media endpoint during a staged cutover. |
 | `PORTAL_COBALT_BROWSER_URL`, `PORTAL_COBALT_RESULT_SOURCE_URL` | Browser-visible public media URL and the exact URL currently emitted by Cobalt. The portal rewrites only an exact `/tunnel?...` match; it never exposes the private source URL to the browser. |
+| `WEBHOOK_INBOX_ENABLED`, `DNS_LOOKUP_ENABLED` | Independent developer-API kill switches. Each defaults to `1`; set one to `0` and recreate only the portal to hide and disable that surface without affecting the other tools. |
 | `PORTAL_PORT`, `COBALT_PORT`, `SEARXNG_PORT`, `REDLIB_PORT` | Private host ports; defaults are 8080, 9000, 8888, and 3002. |
 | `PUBLIC_*_HOST`, `ANUBIS_PUBLIC_HOST` | Public mode uses the edge-side hostname plan. `ANUBIS_PUBLIC_HOST` must exactly match the Redlib public hostname. |
 | `PUBLIC_PORTAL_ORIGIN` | Exact HTTPS origin with no trailing slash for launch; private preview uses exact `http://PRIVATE_BIND_IP:PORTAL_PORT`. Used by portal and Cobalt origin checks. |
@@ -1061,6 +1133,11 @@ Anubis is an unmodified MIT-licensed upstream image at 1.27.0, official commit
 Xe Iaso's copyright and MIT notice when redistributing the image or substantial
 software portions. Local policy/environment configuration is published here;
 there is no proprietary fork.
+
+The OpenAPI inspector bundles unmodified `yaml` 2.9.0 under the ISC license.
+Its exact Eemeli Aro copyright, permission, and disclaimer text is reproduced
+in `THIRD_PARTY_NOTICES.md`; the inspector does not fetch remote references or
+claim complete OpenAPI standards validation.
 
 The exact service/runtime/browser/toolchain inventory, modification status,
 source URLs, attribution, and disclosure obligations are in

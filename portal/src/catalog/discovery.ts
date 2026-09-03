@@ -9,6 +9,7 @@ export const discoveryGroups: readonly DiscoveryGroup[] = [
   'documents',
   'text-data',
   'feeds-monitoring',
+  'developer',
 ];
 
 export interface CatalogLaunch {
@@ -53,6 +54,7 @@ export function entryLaunch(entry: CatalogEntry, language: Language, config: Pub
 
 export function entryLaunchable(entry: CatalogEntry, config: PublicConfig): boolean {
   if (entry.id === 'private-router') return privateRouterAvailable(config);
+  if (entry.configBooleanKey && !config[entry.configBooleanKey]) return false;
   if (entry.kind === 'tool') return true;
   return entry.operationalStatus !== 'not-deployed' && serviceConfigured(config, entry);
 }

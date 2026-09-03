@@ -111,8 +111,10 @@ Add unit tests for pure parsing/transformation rules under
 2. selects or enters a small deterministic fixture;
 3. attaches request monitoring only after assets are ready;
 4. performs the operation and checks the actual output/status/download;
-5. asserts there was no HTTP(S) request, fetch, XHR, beacon, WebSocket, or form
-   submission during processing;
+5. permits only expected same-origin `GET`/`HEAD` loads for lazy code or workers,
+   and asserts there was no external or content-bearing request, beacon,
+   WebSocket, or form submission during processing (a fully settled tool may
+   use the stricter zero-request assertion);
 6. repeats relevant UI assertions at a mobile viewport and in Spanish.
 
 Cover invalid and unusually large input without exhausting the test host. Test

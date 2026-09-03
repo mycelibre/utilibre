@@ -131,6 +131,7 @@ Edit `.env` and replace every `REPLACE_*` value. Important relationships are:
 - `COBALT_PUBLIC_API_URL` is the HTTPS media hostname with a trailing slash. Cobalt-generated tunnel links use it.
 - `PUBLIC_SEARCH_URL` is the public SearXNG URL with a trailing slash.
 - `PUBLIC_REDDIT_URL` is the Redlib HTTPS origin with a trailing slash and must match `PUBLIC_REDDIT_HOST`/`ANUBIS_PUBLIC_HOST` when Redlib is enabled. `ANUBIS_REAL_IP_HEADER=CF-Connecting-IP` is safe only while Cloudflare is the sole ingress to the edge origin. `PUBLIC_YOUTUBE_URL` stays empty while Invidious is deferred; `PUBLIC_IMGUR_URL` stays empty because rimgo 1.4.2 is launch-blocked.
+- `WEBHOOK_INBOX_ENABLED=1` and `DNS_LOOKUP_ENABLED=1` enable the two bounded developer-network APIs independently. Set either to `0` and recreate only the portal to remove that catalog launch and make the corresponding API return 404. These are emergency switches, not substitutes for the edge request ceiling or application limits.
 - `ENABLED_SERVICES=cobalt,searxng,redlib` and `COMPOSE_PROFILES=privacy-frontends` form the launch set. Remove `redlib`, the profile, and its public URL together to disable it cleanly.
 - `TZ=America/Guatemala` controls supported container-local timestamps; it does not change the host time zone.
 
@@ -293,7 +294,7 @@ client-address headers at the real edge.
 
 This section is not used by `PRIVATE_PREVIEW=1`. It is mandatory before any public launch.
 
-Apply the mappings in [edge-routing.md](edge-routing.md) on the Caddy edge VM. The critical rule is that the public media hostname routes only `GET /tunnel`; it must not expose Cobalt's root API, session endpoints, or a catch-all path. The browser sends processing requests to the portal's same-origin `/_portal/media` endpoint, which validates the request and supplies the Cobalt key internally.
+Apply the mappings in [edge-routing.md](edge-routing.md) on the Caddy edge VM. The critical rule is that the public media hostname routes only `GET /tunnel`; it must not expose Cobalt's root API, session endpoints, or a catch-all path. The browser sends processing requests to the portal's same-origin `/_portal/media` endpoint, which validates the request and supplies the Cobalt key internally. The developer webhook and DNS APIs remain under the existing portal hostname and 16 KiB edge request ceiling; do not add another hostname, a broader body exception, or a generic HTTP proxy route. Configure the edge not to retain opaque webhook receiver paths, bodies, or management Authorization headers.
 
 After validating and reloading Caddy on the edge, verify:
 

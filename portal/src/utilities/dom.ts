@@ -55,6 +55,34 @@ export function actionButton(text: string, secondary = false): HTMLButtonElement
   return button;
 }
 
+export function disableActionButton(button: HTMLButtonElement): () => void {
+  const restoreFocus = document.activeElement === button;
+  button.disabled = true;
+  let finished = false;
+  return () => {
+    if (finished) return;
+    finished = true;
+    button.disabled = false;
+    restoreActionFocus(button, restoreFocus);
+  };
+}
+
+export function swapActionButtonFocus(disable: HTMLButtonElement, enable: HTMLButtonElement): void {
+  const moveFocus = document.activeElement === disable;
+  disable.disabled = true;
+  enable.disabled = false;
+  if (moveFocus && enable.isConnected) enable.focus();
+}
+
+export function restoreActionFocus(button: HTMLButtonElement, requested: boolean): void {
+  const active = document.activeElement;
+  if (requested
+    && button.isConnected
+    && (!active || active === document.body || active === document.documentElement)) {
+    button.focus();
+  }
+}
+
 export function statusRegion(initial: string): HTMLDivElement {
   const status = element('div', 'status-message', initial);
   status.role = 'status';

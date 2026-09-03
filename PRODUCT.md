@@ -28,9 +28,11 @@ Privacy is communicated through specific data-flow and retention facts, not slog
 
 ## Operating Context
 
-The portal currently exposes 18 bilingual portal-native tool routes and 12 separately hosted public services. The runtime catalog in `portal/src/catalog/catalog.ts` is the product inventory source of truth, including structured upstream-project credit. Public URLs and enabled service IDs come from `/_portal/config`; current service health comes from `/_portal/status`. A point-in-time health response is not an uptime claim.
+The portal currently exposes 33 bilingual portal-native tool routes and 12 separately hosted public services. The runtime catalog in `portal/src/catalog/catalog.ts` is the product inventory source of truth, including structured upstream-project credit. Public URLs and enabled service IDs come from `/_portal/config`; current service health comes from `/_portal/status`. A point-in-time health response is not an uptime claim.
 
 Browser-local tools handle selected content in browser memory unless the visitor explicitly downloads a result. Server-backed services have distinct, operation-specific boundaries. BentoPDF, VERT, and OmniTools are umbrella services; the portal does not maintain a verified inventory of every utility they contain.
+
+The Developer category preserves those distinctions instead of presenting every tool as “local.” JWT decode/generate, HMAC verification, bounded OpenAPI JSON/YAML inspection, HTTP↔cURL conversion, bounded regex and UTC cron workers, timestamp conversion, text hashing, and UUID generation/inspection are local. The HTTP tester, CORS-visible response-header viewer, WebSocket tester, and server-sent events viewer connect from the browser directly to the destination selected by the visitor. The temporary webhook inbox is a bounded, memory-only server operation, and DNS lookup is a bounded server intermediary operation. There is no generic server-side HTTP proxy. The webhook and DNS server surfaces have independent operator kill switches.
 
 Invidious, rimgo, and Crab Fit are not public services. Empty source, support, contact, YouTube, or Imgur configuration must remain absent from the interface rather than being replaced with invented destinations.
 
@@ -45,6 +47,7 @@ The deployment runs on modest operator-controlled infrastructure behind Cloudfla
 - Keep the catalog consolidated rather than duplicating service facts across components.
 - Show only metadata supported by the runtime catalog or configuration. The present schema has no universal structured account-requirement or language-availability field; do not infer one silently.
 - Preserve `GET /healthz`, config/status endpoints and their legacy aliases, and the constrained media POST API with its current request schema and bilingual error keys.
+- Preserve the bounded `/_portal/developer` webhook-inbox and DNS endpoints, including their independent kill switches, same-origin inbox-creation/DNS checks, token-protected inbox management, rate/capacity limits, and no-store responses. Do not broaden them into a generic fetch, forwarding, replay, or network-scanning API.
 - Preserve localized initial metadata, hreflang output, robots/noindex rules, missing-asset 404 behavior, lazy-chunk recovery, and the QR WASM build step.
 - Return genuine localized 404 responses for unknown application routes, preserve useful recovery links, and redirect documented cross-language aliases to their canonical route.
 - Never expose internal service targets, container names, credentials, API keys, or private infrastructure details to the browser.
@@ -83,7 +86,7 @@ English and neutral Spanish are equal product languages. Spanish is authored nat
 - `portal/src/i18n/en.ts` and `portal/src/i18n/es.ts` are equal interface dictionaries; automated tests require key parity.
 - `docs/privacy.md`, `docs/copy-style.md`, deployment records, and service-specific documentation provide claims, data-flow, resource, and launch/defer evidence.
 - Unit, server, bilingual/mobile, native-tool, deployment-integration, and add-on browser suites cover the present behavior. Historical passing results are not evidence that a redesigned build passes.
-- No testimonials, usage metrics, public uptime history, donation destination, source-code destination, contact destination, or universal account metadata are presently configured.
+- No testimonials, usage metrics, public uptime history, donation destination, or universal account metadata are presently configured. Source and public issue-tracker destinations are configured; the donation destination remains honestly absent until GitHub Sponsors is ready.
 
 ## Product Principles
 

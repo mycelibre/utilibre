@@ -1,6 +1,6 @@
 # Sanitized host assessment
 
-Initial audit: 2026-08-28; updated after Redlib build/testing: 2026-08-30
+Initial audit: 2026-08-28; updated after Redlib build/testing: 2026-08-30; current capacity rechecked: 2026-09-03
 
 This is an internal, deliberately sanitized inventory of the application VM. It records the facts needed to justify the milestone-1 architecture without publishing the host name, MAC addresses, private addresses, public addresses, provider, physical location, SSH details, or other identifying data. The private bind address belongs only in the ignored `.env` file.
 
@@ -8,8 +8,9 @@ This is an internal, deliberately sanitized inventory of the application VM. It 
 
 The VM has enough CPU, memory, and disk headroom for the portal, Cobalt,
 SearXNG, SearXNG's small Valkey limiter, and Redlib under the conservative
-Compose limits. It does not have swap, so those limits and bounded tmpfs/log
-settings are important. Invidious remains unsuitable because its official
+Compose limits. It now has 4 GiB of swap, but that is recovery headroom rather
+than application capacity; the limits and bounded tmpfs/log settings remain
+important. Invidious remains unsuitable because its official
 public-instance bandwidth, storage, database, rotating-egress, and operational
 requirements are far larger than this project's intended envelope. Redlib was
 approved as a narrow operator policy exception after this capacity review;
@@ -25,8 +26,8 @@ No pre-existing production container or data was displaced. No firewall, route, 
 | CPU architecture | `x86_64` | All selected upstream images provide a compatible build. |
 | Logical CPU count | 8 | The configured launch ceilings including Anubis and Redlib total 4.00 CPUs, leaving capacity for the host and short bursts. |
 | Memory | 15 GiB installed; approximately 14 GiB was available in the initial quiet snapshot | The launch ceiling including Anubis and Redlib is 3,072 MiB. Quiet measurements remain far below it; see [resource-usage.md](resource-usage.md). |
-| Swap | None | A runaway process cannot spill to swap. Memory ceilings, bounded tmpfs mounts, and host-level memory observation are launch requirements. |
-| Root filesystem | One approximately 99 GiB ext4 filesystem; about 85 GiB free after the Redlib build/test pass | Adequate for the pinned images and rebuildable cache, but media, build cache, and logs must not persist without bounds. |
+| Swap | 4.0 GiB configured and effectively unused in the 2026-09-03 capacity snapshot | Treat it as failure tolerance, not as a reason to raise application ceilings. Memory ceilings, bounded tmpfs mounts, and host-level observation remain launch requirements. |
+| Root filesystem | One approximately 99 GiB ext4 filesystem; about 85 GiB free after the Redlib build/test pass and 68 GiB after the 2026-09-03 release builds | Adequate for the pinned images and rebuildable cache, but media, build cache, and logs must not persist without bounds. |
 | Project location | A dedicated Git working tree below an operator home directory | Repository files, ignored runtime configuration, and host secrets remain separate from Docker volumes. |
 | Separate project/data filesystem | None observed | Docker data, build cache, logs, and the repository compete for the same root filesystem. |
 | Host time zone | UTC | Containers use `TZ=America/Guatemala` where supported; correctness does not depend on the host's display time zone. |
