@@ -81,7 +81,7 @@ Report date: 2026-08-31
 > `Cache-Control: no-cache, no-transform`; public responses contain no
 > challenge-platform injection, while the restrictive CSP remains unchanged.
 > The deployed portal image ID is
-> `sha256:aa0465f0bd168dbf14db9e7aaac3816c3f748df784ee81bf370940f5f5d8607d`.
+> `sha256:5a7efab3dd940451444409a2a26feb935d5bd61e4838924fd4a3830d842579ac`.
 >
 > The exact post-remediation source passed the production build, ESLint,
 > TypeScript, 43/43 unit/server tests, and 64/64 desktop/mobile browser tests.
@@ -91,6 +91,18 @@ Report date: 2026-08-31
 > requested 404. Separate live acceptance exercised every deployed service and
 > representative real operations; this is strong release evidence, not a
 > promise that every possible input or changing upstream will work forever.
+>
+> **Post-report source publication (2026-09-03):** the reviewed 174-entry
+> application and deployment tree was published to the public
+> [`mycelibre/utilibre`](https://github.com/mycelibre/utilibre) repository. The
+> initial application-source commit is
+> `1bbeecd4e34a841c0b3466db711b64839aa57c14`; later documentation-only release
+> commits retain the same application source. GitHub recognizes the repository
+> as AGPL-3.0, the approved copyright notice is © 2026 Mycelibre contributors,
+> and the supplied Utilibre identity assets are explicitly outside the software
+> license. An index-only Gitleaks 8.28.0 scan found no leaks. The live portal
+> now exposes an immutable revision URL as `SOURCE_CODE_URL`, uses the public
+> GitHub issue tracker as `CONTACT_URL`, and passes the strict launch validator.
 
 ## Current production state (authoritative addendum)
 
@@ -145,18 +157,14 @@ statements in that baseline:
 - The host now has 4 GiB of swap (unused in the final sample), 15 GiB RAM with
   about 12 GiB available, and a 99 GiB root filesystem with about 70 GiB free.
 
-Remaining manual launch work is concrete: keep the ntfy client-compatibility
-and Cloudflare NEL-header checks green, publish the exact source and set
-`SOURCE_CODE_URL`,
-configure `CONTACT_URL`, verify the Cloudflare-only origin firewall and global
-Caddy client-IP trust beyond the verified ntfy path, and
+Remaining operational work is concrete: keep the ntfy client-compatibility
+and Cloudflare NEL-header checks green, verify the Cloudflare-only origin
+firewall and global Caddy client-IP trust beyond the verified ntfy path, and
 review/apply the latest generated edge fragment on the actual edge VM. On
 2026-09-03 the shared backend `.env` was aligned with the verified public
-hostnames, HTTPS service URLs, exact application bind, and exact edge peer.
-The base validator passes; the strict launch validator now fails only for the
-intentionally unset `SOURCE_CODE_URL` and `CONTACT_URL`. Those two values need
-real operator-owned destinations and must not be invented from unrelated
-project or homepage URLs.
+hostnames, HTTPS service URLs, exact application bind, exact edge peer,
+immutable source revision, and public GitHub issue-tracker contact. The base
+validator and strict launch validator pass.
 
 The numbered milestone report below is the retained prelaunch baseline. It no
 longer describes the live topology: the portal and catalogued services now
@@ -563,18 +571,19 @@ Public wording therefore avoids “anonymous,” “untraceable,” “zero logs
   as an official unmodified build.
 - Optional rimgo is AGPL-3.0-only and unmodified. If enabled, link its exact source; publish a modified fork if changed.
 - Valkey is BSD-3-Clause. Browser dependencies carry MIT, Apache-2.0, BSD-3-Clause, Zlib, 0BSD, and other compatible notices recorded in [licenses.md](licenses.md) and [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
-- Preserve all notices. Configure an accurate operator copyright notice before release.
+- Preserve all notices. The approved original-work notice is
+  `Copyright © 2026 Mycelibre contributors`.
 - Cobalt's upstream image includes a static FFmpeg/GPL closure. Pulling the official image is distinct from redistributing/mirroring it; perform the documented GPL corresponding-source/SBOM review before any mirror or redistribution.
 
-No noncommercial-only asset or dependency is used. Invidious and deferred
-rimgo code are not distributed by the public portal; the locally built Redlib
-binary carries the source obligations above.
+No noncommercial-only software dependency or third-party interface asset is
+used. The supplied Utilibre identity assets are separately excluded from the
+AGPL software grant. Invidious and deferred rimgo code are not distributed by
+the public portal; the locally built Redlib binary carries the source
+obligations above.
 
-The destination GitHub repository currently has one license-only initial
-commit. The application tree is attached to that history locally but has not
-yet been committed or published, so there is still no immutable public project
-revision to identify as the deployed source. Publishing the reviewed tree and
-setting `SOURCE_CODE_URL` to that exact revision remain release gates.
+The public GitHub repository contains the reviewed application tree, complete
+deployment/build material, local SearXNG runtime hook, and Redlib patch/build
+recipe. The live `SOURCE_CODE_URL` identifies the exact deployed revision.
 
 ## 26. Tests performed
 
@@ -646,7 +655,6 @@ Details and limits are in [testing.md](testing.md).
 ## 27. Tests that could not be performed
 
 - Real edge Caddy validation/reload, public DNS/TLS, HSTS decision, and final-hostname route tests.
-- Launch configuration validation with `node scripts/validate-config.mjs --launch`, because final public values/source do not yet exist.
 - Reachability from the actual edge and rejection from an unauthorized private host, public Internet, and unintended IPv6 path.
 - Complete Cobalt tunnel delivery, a direct-result response, an FFmpeg-processing result, repeated cancellation/restart cleanup, and the cancellation path through the final Caddy edge. The current evidence is one resolved Dailymotion item whose ranged tunnel request returned initial data before the client cancelled, not a complete download or resource soak.
 - Representative active concurrency, FFmpeg peaks, sustained bandwidth, soak, and provider transfer-cost measurements.
@@ -654,9 +662,6 @@ Details and limits are in [testing.md](testing.md).
 - Encrypted-private backup/clean-host restore, rollback, long soak, and permanent-removal rehearsal on a separate clean host.
 - Manual WCAG AA audit with a real screen reader, zoom/reflow review, and broad Firefox/WebKit/Safari coverage.
 - Container/native dependency vulnerability and provenance/SBOM scanning beyond npm audit.
-- Creation and publication of the first reviewed application-source commit;
-  the remote currently contains only its initial license file, so there is no
-  immutable application revision for `SOURCE_CODE_URL`.
 - Redlib through the real edge: final HSTS-header stripping, access-log
   redaction/exclusion, preference-cookie behavior over HTTPS, media Range and
   cancellation, effective edge crawler/rate control, unauthorized-source
@@ -692,17 +697,23 @@ or Invidious database credential is required for the launch deployment. Redlib
 obtains its own spoofed OAuth token as described above. The reserved Invidious
 database placeholders must remain empty while that service is deferred.
 
-## 29. Manual steps before public launch
+## 29. Historical prelaunch steps and remaining operations
 
-1. Resolve the repository license/copyright decision, commit the reviewed
-   application tree on top of the existing license-only history, publish that
-   exact revision, and configure its public `SOURCE_CODE_URL`.
-2. Replace the current preview values with an edge/public mode-0600 `.env`:
+Steps 1–4 were completed on 2026-09-03. They remain here as the required
+sequence for a fresh deployment; steps 5 onward retain the outstanding
+operational verification work.
+
+1. Publish the reviewed application tree and configure its immutable public
+   `SOURCE_CODE_URL`. **Completed.**
+2. Replace preview values with an edge/public mode-0600 `.env`:
    set `PRIVATE_PREVIEW=0`, fill portal/media/search/Redlib HTTPS and edge
    placeholders, enable the matching Redlib profile/catalog ID, and leave only
-   deferred Invidious/rimgo URLs empty.
-3. Generate/validate Cobalt keys, generate the SearXNG secret, and run `node scripts/render-config.mjs`.
-4. Run `node scripts/validate-config.mjs --launch`; do not continue until it validates final project/source/contact/host/network values and their relationships.
+   deferred Invidious/rimgo URLs empty. **Completed.**
+3. Generate/validate Cobalt keys, generate the SearXNG secret, and run
+   `node scripts/render-config.mjs`. **Completed.**
+4. Run `node scripts/validate-config.mjs --launch`; do not continue until it
+   validates final project/source/contact/host/network values and their
+   relationships. **Completed.**
 5. Make and verify an encrypted recovery archive; re-run Compose validation, build/lint/type/unit/E2E/audit, private health, network, mount, log-rotation, and resource checks.
 6. On the application/edge network, apply an operator-reviewed firewall rule allowing application ports only from the exact edge. This is mandatory for Cobalt's broader private/ULA proxy-trust exception. Verify denial from unauthorized IPv4/IPv6/external sources.
 7. Manually add and validate the documented four Caddy sites. Prove that media
@@ -797,10 +808,15 @@ Do not run a broad Docker prune or delete `.env`, secrets, backups, edge routes,
 
 ## Launch checklist
 
-- [ ] The complete tree has a reviewed initial commit, that exact revision is published, and `SOURCE_CODE_URL` points to it.
-- [ ] `PRIVATE_PREVIEW=0`; final project name, source, contact, HTTPS origin/hosts, private bind, and separate edge peer are configured without committing secrets; `node scripts/validate-config.mjs --launch` passes.
-- [ ] Cobalt keys and SearXNG secret are generated, validated, rendered, and recoverably backed up.
-- [ ] Core build, lint, type, unit, E2E, audit, Compose, health, network, and resource checks pass on the exact release.
+- [x] The complete tree has a reviewed initial commit, an exact revision is
+  public, and `SOURCE_CODE_URL` points to the deployed revision.
+- [x] `PRIVATE_PREVIEW=0`; final project name, source, contact, HTTPS
+  origin/hosts, private bind, and separate edge peer are configured without
+  committing secrets; `node scripts/validate-config.mjs --launch` passes.
+- [x] Cobalt keys and SearXNG secret are generated, validated, rendered, and
+  recoverably backed up.
+- [x] Core build, lint, type, unit, E2E, audit, Compose, health, network, and
+  resource checks pass on the exact release.
 - [ ] Application ports accept only the edge source—including Cobalt's broader private/ULA trust exception; database/cache ports and unintended IPv6/public listeners are absent.
 - [ ] Manual Caddy config validates; media exposes exact tunnel GET only,
   SearX denies diagnostics/non-POST search, Redlib strips upstream HSTS-zero,

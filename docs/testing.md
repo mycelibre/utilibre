@@ -27,6 +27,21 @@ warning. This is a performance note, not a build failure or initial-catalog
 payload. The older measurements below remain dated evidence rather than the
 current aggregate test count.
 
+## 2026-09-03 source publication and launch metadata
+
+The reviewed 174-entry source tree was published to the public
+[`mycelibre/utilibre`](https://github.com/mycelibre/utilibre) repository under
+AGPL-3.0-or-later. The exact staged index excluded private `.env` files,
+credentials, runtime data, generated build/vendor output, agent artifacts, and
+non-curated reports. A redacted Gitleaks 8.28.0 scan of an index-only export
+reported no leaks. GitHub recognizes the repository license as AGPL-3.0.
+
+The ignored production configuration now uses an immutable revision URL for
+`SOURCE_CODE_URL` and the repository issue tracker for `CONTACT_URL`. The
+strict launch validator passes. The portal was rebuilt and recreated without
+restarting the other services; its public configuration endpoint returned the
+expected source, contact, and donation destinations afterward.
+
 This record separates automated, private-host, and still-manual checks. It does
 not claim that private smoke requests constitute a public production launch.
 The original baseline below was recorded with portal, Cobalt, SearXNG, Valkey,
@@ -72,11 +87,10 @@ It requires the launch services and aligned Redlib profile/catalog/origin
 settings, rejects rimgo and `PUBLIC_IMGUR_URL` until an official fixed release
 is pinned/reviewed, and requires final non-reserved public hosts, project name,
 source URL, contact URL, private bind/edge addresses, and their cross-field
-relationships. It was not recorded as a launch pass because the source and
-contact destinations did not yet exist. As of 2026-09-03, the workspace
-configuration contains the verified public host/origin plan and the base
-validator passes. The strict gate now reports only the absent `SOURCE_CODE_URL`
-and `CONTACT_URL`; both require real operator-owned destinations.
+relationships. As of 2026-09-03, the workspace configuration contains the
+verified public host/origin plan, immutable public source revision, and public
+issue-tracker contact destination; both the base validator and strict launch
+gate pass.
 
 The live private-IP HTTP run is opt-in because it targets the running Compose
 portal rather than Playwright's loopback development server. `E2E_BASE_URL`
@@ -369,7 +383,8 @@ The following are launch gates, not silently assumed passes:
 - sustained/concurrent public Redlib behavior, media egress, preference-cookie
   behavior over HTTPS, Reddit blocking over time, and unauthorized-source
   rejection; Invidious remains intentionally undeployed; and
-- creation and publication of an initial reviewed Git commit. The repository currently has no source revision that can satisfy the public `SOURCE_CODE_URL` launch requirement.
+- publication checks for future releases, including an index-only secret scan
+  and updating `SOURCE_CODE_URL` to the new immutable deployed revision.
 
 Do not load-test or repeatedly probe upstream search/media platforms. Use owned or explicitly authorized media and keep any concurrency exercise within the documented public limits.
 
