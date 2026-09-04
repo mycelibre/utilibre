@@ -155,7 +155,6 @@ export const es: Record<keyof typeof EnglishDictionary, string> = {
   'support.body': 'Las donaciones ayudan a cubrir el alojamiento y el mantenimiento. Usar Utilibre es gratis. Mantenerlo en funcionamiento no.',
   'support.conditions': 'Las donaciones son totalmente opcionales. No habilitan funciones, aumentan límites, dan prioridad ni cambian el trato de nadie.',
   'support.link': 'Visitar la página externa de apoyo',
-  'support.unconfigured': 'No hay un enlace de donaciones configurado. El acceso y los límites no cambian.',
   'support.upstream.title': 'Apoya a quienes crean las herramientas',
   'support.upstream.body': 'Utilibre aloja e integra estas herramientas. La mayor parte del trabajo de creación y mantenimiento la realizan quienes desarrollan los proyectos originales. Si decides donar, considera apoyar también directamente a esos proyectos.',
   'support.upstream.link': 'Ver proyectos originales y enlaces al código fuente',

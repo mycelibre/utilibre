@@ -36,7 +36,7 @@ groups are:
 | Settings | Purpose |
 | --- | --- |
 | project name, language taglines, and `DEFAULT_LANGUAGE` | Public identity and bilingual fallback |
-| source, contact, and optional support URLs | Verified public project destinations; empty optional links stay hidden |
+| source, contact, and optional support URLs | Verified public project destinations; without a valid HTTPS support URL, donation navigation, content, and routes stay hidden |
 | `PRIVATE_BIND_IP` and `EDGE_PROXY_IP` | Exact application listener and trusted edge peer; never wildcards or subnets |
 | private-preview switches | Trusted private HTTP preview only; production requires edge-proxied mode |
 | public SearXNG and Redlib URLs | Browser-visible origins for the retained core applications |

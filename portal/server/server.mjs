@@ -12,6 +12,8 @@ const MAX_REQUEST_HEADERS = 100;
 const STATUS_CACHE_MS = positiveInt(process.env.STATUS_CACHE_SECONDS, 15) * 1000;
 const ENABLED_SERVICES = new Set(csv(process.env.ENABLED_SERVICES || 'searxng'));
 const DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE === 'es' ? 'es' : 'en';
+const SUPPORT_URL = publicUrl(process.env.SUPPORT_URL);
+const SUPPORT_VISIBLE = Boolean(SUPPORT_URL);
 const STATUS_SERVICES = parseStatusServices(process.env.STATUS_SERVICES || '').filter(({ id }) => ENABLED_SERVICES.has(id));
 let statusSnapshot = null;
 let statusCheck = null;
@@ -67,9 +69,13 @@ const server = createServer(async (request, response) => {
       response.writeHead(405, { Allow: 'GET, HEAD' });
       return response.end();
     }
+    if (requestUrl.pathname === '/page-metadata.json') {
+      response.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' });
+      return response.end(request.method === 'HEAD' ? undefined : 'Not found');
+    }
     const redirect = canonicalRouteRedirect(requestUrl.pathname);
     if (redirect) {
-      response.writeHead(308, { Location: `${redirect}${requestUrl.search}`, 'Cache-Control': 'public, max-age=86400' });
+      response.writeHead(308, { Location: `${redirect}${requestUrl.search}`, 'Cache-Control': 'no-store' });
       return response.end();
     }
     return serveStatic(requestUrl.pathname, request.method === 'HEAD', request.headers['accept-language'], response);
@@ -140,6 +146,7 @@ function setCrawlerHeaders(response, pathname) {
     || pathname.startsWith('/_portal/')
     || /^\/(?:en\/tools|es\/herramientas)(?:\/|$)/.test(pathname)
     || /^\/(?:en\/status|es\/estado)(?:\/|$)/.test(pathname)
+    || (!SUPPORT_VISIBLE && isSupportPath(pathname))
   ) response.setHeader('X-Robots-Tag', 'noindex, nofollow');
 }
 
@@ -172,13 +179,19 @@ function serveStatic(pathname, headOnly, acceptLanguage, response) {
 
 function canonicalRouteRedirect(pathname) {
   const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
-  return normalized === '/es/support' ? '/es/apoyar' : '';
+  return SUPPORT_VISIBLE && normalized === '/es/support' ? '/es/apoyar' : '';
 }
 
 function knownPagePath(pathname) {
   if (pathname === '/') return true;
   const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
+  if (!SUPPORT_VISIBLE && isSupportPath(normalized)) return false;
   return Boolean(PAGE_METADATA[normalized]);
+}
+
+function isSupportPath(pathname) {
+  const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
+  return normalized === '/en/support' || normalized === '/es/apoyar' || normalized === '/es/support';
 }
 
 function isStaticAssetPath(pathname) {
@@ -280,6 +293,7 @@ function pageMetadata(pathname, language) {
   };
   if (normalized === '/') return home;
   const notFound = PAGE_METADATA[`__not-found-${language}`] ?? { ...home, robots: 'noindex,nofollow' };
+  if (!SUPPORT_VISIBLE && isSupportPath(normalized)) return notFound;
   return PAGE_METADATA[normalized] ?? notFound;
 }
 
@@ -333,7 +347,7 @@ function servePublicConfig(response) {
     projectTaglineEn: publicText(process.env.PROJECT_TAGLINE_EN, '', 180),
     projectTaglineEs: publicText(process.env.PROJECT_TAGLINE_ES, '', 180),
     sourceCodeUrl: publicUrl(process.env.SOURCE_CODE_URL),
-    supportUrl: publicUrl(process.env.SUPPORT_URL),
+    supportUrl: SUPPORT_URL,
     contactUrl: publicUrl(process.env.CONTACT_URL),
     publicSearchUrl: publicServiceUrl(process.env.PUBLIC_SEARCH_URL),
     publicRedditUrl: publicServiceUrl(process.env.PUBLIC_REDDIT_URL),

@@ -149,7 +149,8 @@ upstream credit; Utilibre never implies authorship or affiliation.
   later release still passes.
 - No testimonials, public uptime history, universal account access, or
   donation destination should be claimed unless independently configured and
-  verified.
+  verified. Without a valid donation destination, its navigation, appeals,
+  page, metadata, and aliases remain unavailable.
 
 ## Accessibility and inclusion
 

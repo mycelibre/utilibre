@@ -117,54 +117,59 @@ test('language links preserve homepage query state', async ({ page }) => {
   await expect(page.getByRole('searchbox', { name: 'Buscar herramientas' })).toHaveValue('RSS');
 });
 
-test('internal support routes remain available without an external support URL', async ({ page }) => {
+test('donation surfaces stay hidden without a configured support destination', async ({ page }) => {
   await mockConfig(page, { ...baseConfig, supportUrl: '' });
 
   await page.goto('/en/');
-  await expect(page.getByRole('link', { name: 'How support works' })).toHaveAttribute('href', '/en/support');
-  await page.getByRole('link', { name: 'How support works' }).click();
-  await expect(page).toHaveURL(/\/en\/support$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'Support' })).toBeVisible();
-  await expect(page.getByText('Donations are entirely optional. They do not unlock features, raise limits, create priority, or change how anyone is treated.')).toBeVisible();
-  await expect(page.getByText('No donation link is configured. Access and limits are unchanged.')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Visit the external support page' })).toHaveCount(0);
-  await expect(page.getByRole('heading', { level: 2, name: 'Support the people who build the tools' })).toBeVisible();
-  await expect(page.getByText('Utilibre hosts and integrates these tools. Most of the work to create and maintain them is done by their upstream developers. If you choose to donate, please consider supporting those projects directly too.')).toBeVisible();
-  const englishProjects = page.getByRole('link', { name: 'See upstream projects and source links' });
-  await expect(englishProjects).toHaveAttribute('href', '/en/software');
-  await englishProjects.click();
-  await expect(page).toHaveURL(/\/en\/software$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'Software and licenses' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'How support works' })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Support', exact: true })).toHaveCount(0);
+  await expect(page.locator('.main-nav a[href="/en/support"], .footer-links a[href="/en/support"]')).toHaveCount(0);
+  await expect(page.getByText('Donations help cover hosting and maintenance.')).toHaveCount(0);
 
-  await page.goto('/es/apoyar');
-  await expect(page.getByRole('heading', { level: 1, name: 'Apoya a Utilibre' })).toBeVisible();
-  await expect(page.getByText('Las donaciones son totalmente opcionales. No habilitan funciones, aumentan límites, dan prioridad ni cambian el trato de nadie.')).toBeVisible();
-  await expect(page.getByText('No hay un enlace de donaciones configurado. El acceso y los límites no cambian.')).toBeVisible();
-  await expect(page.getByRole('heading', { level: 2, name: 'Apoya a quienes crean las herramientas' })).toBeVisible();
-  await expect(page.getByText('Utilibre aloja e integra estas herramientas. La mayor parte del trabajo de creación y mantenimiento la realizan quienes desarrollan los proyectos originales. Si decides donar, considera apoyar también directamente a esos proyectos.')).toBeVisible();
-  const spanishProjects = page.getByRole('link', { name: 'Ver proyectos originales y enlaces al código fuente' });
-  await expect(spanishProjects).toHaveAttribute('href', '/es/software');
-  await spanishProjects.click();
-  await expect(page).toHaveURL(/\/es\/software$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'Software y licencias' })).toBeVisible();
+  await page.goto('/en/transparency');
+  await expect(page.getByRole('heading', { level: 2, name: 'Funding and donations' })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Visit the external support page' })).toHaveCount(0);
+
+  for (const [path, heading, catalogPath] of [
+    ['/en/support', 'Page not found', '/en/'],
+    ['/es/apoyar', 'Página no encontrada', '/es/'],
+    ['/es/support', 'Página no encontrada', '/es/'],
+  ] as const) {
+    const response = await page.goto(path);
+    if (process.env.E2E_BASE_URL) expect(response?.status()).toBe(404);
+    await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible();
+    await expect(page.getByRole('link', { name: path.startsWith('/es/') ? 'Volver al catálogo' : 'Return to the catalog' }))
+      .toHaveAttribute('href', catalogPath);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', new RegExp(`${catalogPath}$`));
+  }
 });
 
 test('configured support destination is explicit and opens separately', async ({ page }) => {
   await mockConfig(page, { ...baseConfig, supportUrl: 'https://support.utility.test/' });
+
+  await page.goto('/en/');
+  await expect(page.getByRole('link', { name: 'How support works' })).toHaveAttribute('href', '/en/support');
+  await expect(page.locator('.main-nav a[href="/en/support"]')).toHaveCount(1);
+  await expect(page.locator('.footer-links a[href="/en/support"]')).toHaveCount(1);
 
   await page.goto('/en/support');
   const englishSupport = page.getByRole('link', { name: 'Visit the external support page' });
   await expect(englishSupport).toHaveAttribute('href', 'https://support.utility.test/');
   await expect(englishSupport).toHaveAttribute('target', '_blank');
   await expect(englishSupport).toHaveAttribute('rel', 'noopener noreferrer');
-  await expect(page.getByText('No donation link is configured. Access and limits are unchanged.')).toHaveCount(0);
+  await expect(languageNavigation(page, 'Choose language').getByRole('link', { name: 'ES', exact: true }))
+    .toHaveAttribute('href', '/es/apoyar');
 
   await page.goto('/es/apoyar');
   const spanishSupport = page.getByRole('link', { name: 'Visitar la página externa de apoyo' });
   await expect(spanishSupport).toHaveAttribute('href', 'https://support.utility.test/');
   await expect(spanishSupport).toHaveAttribute('target', '_blank');
   await expect(spanishSupport).toHaveAttribute('rel', 'noopener noreferrer');
-  await expect(page.getByText('No hay un enlace de donaciones configurado. El acceso y los límites no cambian.')).toHaveCount(0);
+
+  await page.goto('/en/transparency');
+  await expect(page.getByRole('heading', { level: 2, name: 'Funding and donations' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Visit the external support page' }))
+    .toHaveAttribute('href', 'https://support.utility.test/');
 });
 
 test('mobile catalog keeps featured and complete-catalog modes available', async ({ page }) => {
@@ -206,7 +211,7 @@ test('software inventory is grouped and uses descriptive source links', async ({
   await expect(hostedHeading).toBeFocused();
 });
 
-test('unknown routes return a useful localized 404 and the common Spanish alias redirects', async ({ page }) => {
+test('unknown and retired routes return a useful localized 404', async ({ page }) => {
   await mockConfig(page, featuredConfig);
   const missing = await page.goto('/en/definitely-not-a-page');
   if (process.env.E2E_BASE_URL) expect(missing?.status()).toBe(404);
@@ -218,12 +223,6 @@ test('unknown routes return a useful localized 404 and the common Spanish alias 
     await page.goto(removedPath);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(removedPath.startsWith('/es/') ? 'Página no encontrada' : 'Page not found');
     await expect(page.locator('[data-catalog-id="cobalt"]')).toHaveCount(0);
-  }
-
-  if (process.env.E2E_BASE_URL) {
-    await page.goto('/es/support');
-    await expect(page).toHaveURL(/\/es\/apoyar$/);
-    await expect(page.getByRole('heading', { level: 1, name: 'Apoya a Utilibre' })).toBeVisible();
   }
 });
 
@@ -407,7 +406,7 @@ test('all public pages render in both languages without missing strings', async 
   const paths = [
     ['', ''], ['services', 'servicios'], ['tools', 'herramientas'], ['about', 'acerca'],
     ['transparency', 'transparencia'], ['privacy', 'privacidad'], ['acceptable-use', 'uso-aceptable'],
-    ['support', 'apoyar'], ['status', 'estado'], ['software', 'software'],
+    ['status', 'estado'], ['software', 'software'],
     ['privacy-labels', 'etiquetas-privacidad'],
   ];
   for (const [enPath, esPath] of paths) {
@@ -488,7 +487,8 @@ test('keyboard focus, semantic labels, reduced motion, and optional links are ac
   const motion = await page.locator('.button').evaluate((item) => getComputedStyle(item).transitionDuration);
   expect(Number.parseFloat(motion)).toBeLessThanOrEqual(0.001);
   await page.goto('/en/support');
-  await expect(page.getByRole('link', { name: 'Open the external support page' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { level: 1, name: 'Page not found' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Support', exact: true })).toHaveCount(0);
 });
 
 test('skip-link activation is retained while public configuration is still loading', async ({ page }) => {

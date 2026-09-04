@@ -190,7 +190,7 @@ English and neutral Spanish receive equal editorial review. Spanish uses `« »`
 
 The global shell is capped at 76rem with fluid page padding. The desktop masthead and homepage share a 17rem task rail; the ledger workspace occupies the remaining width. The finder pairs a flexible task statement with a 20–29.5rem search region. Catalog records use four comparable jobs: a 5rem coordinate, a flexible name/description column, a processing column, and an 8rem action edge.
 
-At 78rem the task rail narrows to 13rem, ledger coordinates and gaps tighten, and launch actions remain edge-aligned. At 58rem the masthead becomes a menu shell, the task index becomes a horizontally scrolling text index with an explicit cue, support follows the catalog, and records reflow to coordinate/content/action with processing beneath the description. At 39rem search controls stack, each record becomes one readable vertical sequence, and the launch action takes the full available width. Long Spanish copy adds height; it is not truncated or answered with smaller type.
+At 78rem the task rail narrows to 13rem, ledger coordinates and gaps tighten, and launch actions remain edge-aligned. At 58rem the masthead becomes a menu shell, the task index becomes a horizontally scrolling text index with an explicit cue, configured support follows the catalog, and records reflow to coordinate/content/action with processing beneath the description. At 39rem search controls stack, each record becomes one readable vertical sequence, and the launch action takes the full available width. Long Spanish copy adds height; it is not truncated or answered with smaller type. When support is unconfigured, the task rail continues through the catalog without leaving a blank donation slot.
 
 Featured and complete-catalog modes remain visible at every width. Supporting reference links may move to the footer on narrow screens, but the visitor must never lose the direct path to the full A–Z inventory. Trust metadata steps up from the 12px desktop floor to the 13px label step on narrow screens.
 
@@ -252,7 +252,7 @@ Result-dependent actions remain disabled until valid output exists and return to
 - Do keep service name, task description, processing labels, data-flow note, and launch action comparable at a glance.
 - Do preserve the 3px focus outline, 4px offset, written states, and touch-friendly control heights.
 - Do let English and Spanish wrap naturally through the same source order and hierarchy.
-- Do keep support calm, factual, and subordinate to finding and opening a service.
+- Do omit every donation surface until a verified destination is configured; then keep support calm, factual, and subordinate to finding and opening a service.
 - Do name upstream software directly and describe Utilibre as its host or integrator.
 
 ### Don't:
@@ -261,5 +261,5 @@ Result-dependent actions remain disabled until valid output exists and return to
 - Don't turn processing states into excessive pills, generic privacy shields, or color-only claims.
 - Don't use decorative mycelial gimmicks, ornamental animation, or rounded rectangles around every item.
 - Don't add shadows to catalog records, navigation, buttons, fields, or ordinary content containers.
-- Don't make support sticky, urgent, guilt-driven, or conditional on access.
+- Don't expose an empty donation page or placeholder link, or make configured support sticky, urgent, guilt-driven, or conditional on access.
 - Don't put jokes in controls, repeated states, errors, privacy facts, warnings, legal text, or recovery instructions.

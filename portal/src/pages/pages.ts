@@ -8,6 +8,7 @@ import { routePath, type Route, type StaticPage } from '../routes';
 import { append, disableActionButton, element, type Translate } from '../utilities/dom';
 
 export async function renderPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): Promise<HTMLElement> {
+  if (route.page === 'support' && !config.supportUrl) return renderNotFound(route.language, t);
   if (route.page === 'tool' && route.toolId) return renderToolPage(route.toolId, route.language, config, t);
   if (route.page === 'home') return renderHome(route.language, config, t, searchParams);
   if (route.page === 'services') return renderServices(route.language, config, t);
@@ -25,7 +26,7 @@ export async function renderPage(route: Route, config: PublicConfig, t: Translat
 
 function renderHome(language: Language, config: PublicConfig, t: Translate, searchParams: URLSearchParams): HTMLElement {
   const main = pageContainer('home-page');
-  const layout = element('div', 'home-ledger-layout');
+  const layout = element('div', config.supportUrl ? 'home-ledger-layout' : 'home-ledger-layout home-ledger-layout-no-support');
   const state = discoveryState(searchParams);
   const entries = discoverEntries(config, language, state);
   const isFeaturedDefault = !state.query && !state.group && state.view !== 'all';
@@ -129,12 +130,14 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   }
   append(workspace, finder, catalogSection);
 
-  const support = element('aside', 'ledger-support');
-  const supportLink = element('a', '', t('home.support.link'));
-  supportLink.href = routePath('support', language);
-  append(support, element('h2', '', t('home.support.title')), element('p', '', t('home.support.body')), supportLink);
-
-  append(layout, index, workspace, support);
+  append(layout, index, workspace);
+  if (config.supportUrl) {
+    const support = element('aside', 'ledger-support');
+    const supportLink = element('a', '', t('home.support.link'));
+    supportLink.href = routePath('support', language);
+    append(support, element('h2', '', t('home.support.title')), element('p', '', t('home.support.body')), supportLink);
+    layout.append(support);
+  }
   main.append(layout);
   return main;
 }
@@ -209,11 +212,9 @@ async function renderToolPage(id: string, language: Language, config: PublicConf
 
 function renderTransparency(language: Language, config: PublicConfig, t: Translate): HTMLElement {
   const main = pageHeader(t('transparency.title'), '');
-  main.append(
-    infoSection(t('transparency.why.title'), t('transparency.why.body')),
-    infoSection(t('transparency.model.title'), t('transparency.model.body')),
-    infoSection(t('transparency.development.title'), t('transparency.development.body')),
-  );
+  main.append(infoSection(t('transparency.why.title'), t('transparency.why.body')));
+  if (config.supportUrl) main.append(infoSection(t('transparency.model.title'), t('transparency.model.body')));
+  main.append(infoSection(t('transparency.development.title'), t('transparency.development.body')));
   const infrastructure = infoSection(t('transparency.infrastructure.title'), t('transparency.infrastructure.body'));
   const diagram = element('pre', 'architecture-diagram', t('transparency.infrastructure.diagram'));
   infrastructure.append(diagram);
@@ -262,7 +263,7 @@ function renderSupport(language: Language, config: PublicConfig, t: Translate): 
   const main = pageHeader(t('support.title'), t('support.body'));
   const section = element('section', 'section');
   section.append(element('p', '', t('support.conditions')));
-  section.append(config.supportUrl ? externalLink(config.supportUrl, t('support.link'), 'button') : element('p', 'notice', t('support.unconfigured')));
+  section.append(externalLink(config.supportUrl, t('support.link'), 'button'));
   main.append(section);
   const upstreamLink = element('a', 'text-link', t('support.upstream.link'));
   upstreamLink.href = routePath('software', language);
@@ -545,7 +546,7 @@ export function pageMeta(route: Route, config: PublicConfig, t: Translate): { ti
     const entry = catalogEntry(route.toolId);
     return { title: entry ? localized(entry.name, route.language) : t('common.notFound.title'), description: entry ? localized(entry.description, route.language) : t('common.notFound.body'), robots: 'noindex,nofollow' };
   }
-  if (route.page === 'not-found') {
+  if (route.page === 'not-found' || (route.page === 'support' && !config.supportUrl)) {
     return { title: t('common.notFound.title'), description: t('common.notFound.body'), robots: 'noindex,nofollow' };
   }
   const key = route.page;

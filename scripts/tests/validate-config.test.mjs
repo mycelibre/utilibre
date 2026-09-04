@@ -75,6 +75,13 @@ test('accepts the retained four-service launch set', () => {
   assert.equal(validateLaunch(launchValues()).ENABLED_SERVICES, 'searxng,redlib,freshrss,privatebin');
 });
 
+test('accepts an optional public HTTPS support destination', () => {
+  assert.equal(
+    validateLaunch(launchValues({ SUPPORT_URL: 'https://github.com/sponsors/mycelibre' })).SUPPORT_URL,
+    'https://github.com/sponsors/mycelibre',
+  );
+});
+
 test('accepts an assigned direct private preview', () => {
   const result = validateEnvironmentValues(previewValues(), { assignedAddresses: new Set([bindIp]) });
   assert.equal(result.PUBLIC_PORTAL_ORIGIN, `http://${bindIp}:8080`);

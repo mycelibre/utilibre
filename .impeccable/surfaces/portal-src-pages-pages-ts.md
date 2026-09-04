@@ -19,9 +19,9 @@ The public catalog contains SearXNG, FreshRSS, Redlib, and PrivateBin. RSSHub is
 
 **OWN-WORLD:** Uncoated paper, official charcoal and coral, lichen facts, bookish names, plain operational copy, square controls, double group rules, and one aligned launch edge.
 
-**STORY:** The visitor sees the complete small hosted set, understands what each service does and where data goes, opens one, then may learn why the project exists or support the work.
+**STORY:** The visitor sees the complete small hosted set, understands what each service does and where data goes, opens one, then may learn why the project exists. A support path appears only after its real destination is configured.
 
-**FIRST VIEWPORT:** Official masthead; three-task index with no active category; compact task heading and labeled search; the first records of the four-service ledger. Support stays quiet in the rail and follows the catalog on mobile.
+**FIRST VIEWPORT:** Official masthead; three-task index with no active category; compact task heading and labeled search; the first records of the four-service ledger. Unconfigured support leaves no placeholder or blank rail; configured support stays quiet and follows the catalog on mobile.
 
 **FORM:** Code-led Useful Field Ledger, second finalist, seed `356eafe7`.
 
@@ -31,14 +31,14 @@ The public catalog contains SearXNG, FreshRSS, Redlib, and PrivateBin. RSSHub is
 
 - The default view is a deliberate cross-task ordering, not a claimed donation, usage, popularity, or uptime ranking.
 - Category controls change the visible catalog only after deliberate activation. Search works across the admitted inventory.
-- `/en/support` and `/es/apoyar` always exist; an external donation action appears only when `SUPPORT_URL` is configured.
-- The support surface distinguishes infrastructure support from upstream development and invites visitors, without pressure, to support the people who build the hosted applications.
+- `/en/support`, `/es/apoyar`, donation navigation, homepage and transparency content, and the `/es/support` alias exist only when `SUPPORT_URL` resolves to a valid public HTTPS destination. Otherwise they fail closed to localized, non-indexable 404s.
+- When configured, the support surface distinguishes infrastructure support from upstream development and invites visitors, without pressure, to support the people who build the hosted applications.
 - Every public service is supplied by an independently maintained, reviewed FOSS application. Portal code may provide discovery, configuration, status, and narrow integration glue only.
 - FreshRSS truthfully shows that an account is required and public registration is closed; the site does not imply that the planned request workflow is already open.
 - RSSHub, databases, caches, and anti-abuse infrastructure never receive public catalog records merely because they run in containers.
 - Hosted service links open in a new tab and include a visible and accessible new-tab cue.
 - Existing retained routes, runtime configuration, status behavior, localization, metadata, and deployment boundaries remain intact.
-- Unknown application routes receive localized 404 metadata and a direct catalog recovery action; the common `/es/support` alias redirects to its canonical page.
+- Unknown application routes receive localized 404 metadata and a direct catalog recovery action; the common `/es/support` alias redirects only while support is configured.
 - The Redlib URL router validates only supported Reddit destinations in the browser, then opens the fixed configured Redlib origin. It never becomes a generic redirector or proxy.
 
 ## Copy contract

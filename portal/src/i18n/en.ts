@@ -153,7 +153,6 @@ export const en = {
   'support.body': 'Donations help cover hosting and maintenance. Free to use. Not free to run.',
   'support.conditions': 'Donations are entirely optional. They do not unlock features, raise limits, create priority, or change how anyone is treated.',
   'support.link': 'Visit the external support page',
-  'support.unconfigured': 'No donation link is configured. Access and limits are unchanged.',
   'support.upstream.title': 'Support the people who build the tools',
   'support.upstream.body': 'Utilibre hosts and integrates these tools. Most of the work to create and maintain them is done by their upstream developers. If you choose to donate, please consider supporting those projects directly too.',
   'support.upstream.link': 'See upstream projects and source links',

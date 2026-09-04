@@ -30,6 +30,12 @@ export function parseRoute(pathname: string): Route | null {
   return tool ? { language, page: 'tool', toolId: tool.id } : { language, page: 'not-found' };
 }
 
+export function availableRoute(route: Route, supportAvailable: boolean): Route {
+  return route.page === 'support' && !supportAvailable
+    ? { language: route.language, page: 'not-found' }
+    : route;
+}
+
 export function routePath(page: Exclude<StaticPage, 'not-found'>, language: Language): string {
   const suffix = staticPaths[page][language];
   return `/${language}/${suffix}${suffix ? '' : ''}`;

@@ -16,8 +16,10 @@ item only from current evidence on the exact release revision.
   copy agree factually.
 - [ ] FreshRSS is labeled operator-provisioned; no copy claims that account
   requests or registration are open.
-- [ ] Donations unlock nothing and verified upstream support links remain
-  visible where appropriate.
+- [ ] With `SUPPORT_URL` empty, no donation navigation, appeal, page, metadata,
+  or alias is public; with a verified HTTPS value, the bilingual surfaces return.
+- [ ] When donation surfaces are enabled, donations unlock nothing and verified
+  upstream support links remain visible where appropriate.
 
 ## Configuration and secrets
 

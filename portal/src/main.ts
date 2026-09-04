@@ -1,7 +1,7 @@
 import { loadPublicConfig, type PublicConfig } from './config';
 import { preferredLanguage, setLanguagePreference, translate, type Language } from './i18n';
 import { pageMeta, renderPage } from './pages/pages';
-import { parseRoute, routePath, translatedPath, type Route } from './routes';
+import { availableRoute, parseRoute, routePath, translatedPath, type Route } from './routes';
 import { append, element } from './utilities/dom';
 import '@fontsource-variable/newsreader/wght.css';
 import '@fontsource-variable/atkinson-hyperlegible-next/wght.css';
@@ -64,7 +64,10 @@ applyTheme(activeTheme);
 await render();
 
 window.addEventListener('popstate', () => {
-  route = parseRoute(window.location.pathname) ?? { language: preferredLanguage(config.defaultLanguage), page: 'home' };
+  route = availableRoute(
+    parseRoute(window.location.pathname) ?? { language: preferredLanguage(config.defaultLanguage), page: 'home' },
+    Boolean(config.supportUrl),
+  );
   void render(window.location.hash || undefined);
 });
 
@@ -87,13 +90,13 @@ document.addEventListener('click', (event) => {
   }
   event.preventDefault();
   history.pushState({}, '', destination.href);
-  route = parsed;
+  route = availableRoute(parsed, Boolean(config.supportUrl));
   void render(destination.hash || '#main-content');
 });
 
 function resolveInitialRoute(): Route {
   const parsed = parseRoute(window.location.pathname);
-  if (parsed) return parsed;
+  if (parsed) return availableRoute(parsed, Boolean(config.supportUrl));
   const language = preferredLanguage(config.defaultLanguage);
   const destination = routePath('home', language);
   history.replaceState({}, '', destination);
@@ -152,6 +155,7 @@ function renderHeader(currentRoute: Route, t: (key: Parameters<typeof translate>
     ['home', 'nav.catalog'], ['privacy', 'nav.privacy'], ['about', 'footer.about'], ['status', 'nav.status'], ['support', 'footer.support'],
   ];
   for (const [page, key] of links) {
+    if (page === 'support' && !config.supportUrl) continue;
     const link = element('a', '', t(key));
     link.href = routePath(page, currentRoute.language);
     if (currentRoute.page === page) link.ariaCurrent = 'page';
@@ -205,6 +209,7 @@ function renderFooter(currentRoute: Route, t: (key: Parameters<typeof translate>
     ['about', 'footer.about'], ['transparency', 'nav.transparency'], ['privacy', 'nav.privacy'], ['acceptable', 'footer.acceptable'], ['support', 'footer.support'], ['status', 'nav.status'], ['software', 'footer.software'], ['labels', 'footer.labels'],
   ];
   for (const [page, key] of items) {
+    if (page === 'support' && !config.supportUrl) continue;
     const link = element('a', '', t(key));
     link.href = routePath(page, currentRoute.language);
     links.append(link);

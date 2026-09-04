@@ -276,6 +276,8 @@ p { max-width: 75ch; }
   border-inline-end: 1px solid var(--rule);
 }
 
+.home-ledger-layout-no-support .ledger-index { grid-row: 1 / span 2; }
+
 .ledger-guideword,
 .ledger-folio,
 .task-scroll-cue,

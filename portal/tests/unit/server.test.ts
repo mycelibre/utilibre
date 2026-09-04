@@ -99,7 +99,7 @@ describe('portal server security boundaries', () => {
   });
 
   it('returns real 404s for missing assets, routes, and retired APIs', async () => {
-    for (const path of ['/assets/obsolete-tool.js', '/vendor/obsolete-tool.wasm', '/missing.svg']) {
+    for (const path of ['/assets/obsolete-tool.js', '/vendor/obsolete-tool.wasm', '/missing.svg', '/page-metadata.json']) {
       const response = await fetch(`${base}${path}`);
       expect(response.status, path).toBe(404);
       expect(response.headers.get('content-type')).toContain('text/plain');
@@ -118,10 +118,49 @@ describe('portal server security boundaries', () => {
     ]) expect((await fetch(`${base}${path}`)).status, path).toBe(404);
   });
 
-  it('preserves the localized support alias', async () => {
-    const response = await fetch(`${base}/es/support?from=old-link`, { redirect: 'manual' });
-    expect(response.status).toBe(308);
-    expect(response.headers.get('location')).toBe('/es/apoyar?from=old-link');
+  it('returns localized 404s for donation routes when no valid destination is configured', async () => {
+    for (const [path, title] of [
+      ['/en/support', 'Page not found'],
+      ['/es/apoyar', 'Página no encontrada'],
+      ['/es/support', 'Página no encontrada'],
+    ]) {
+      const response = await fetch(`${base}${path}`, { redirect: 'manual' });
+      expect(response.status, path).toBe(404);
+      expect(response.headers.get('location'), path).toBeNull();
+      expect(response.headers.get('x-robots-tag'), path).toBe('noindex, nofollow');
+      expect(await response.text(), path).toContain(`<title>${title} — unsafe utility</title>`);
+    }
+  });
+
+  it('publishes donation routes and the Spanish alias only with a valid HTTPS destination', async () => {
+    const configuredPort = port + 1;
+    const configuredBase = `http://127.0.0.1:${configuredPort}`;
+    const configuredServer = spawn(process.execPath, ['server/server.mjs'], {
+      cwd: process.cwd(),
+      env: {
+        ...process.env,
+        PORT: String(configuredPort),
+        LISTEN_ADDRESS: '127.0.0.1',
+        SUPPORT_URL: 'https://github.com/sponsors/mycelibre',
+      },
+      stdio: 'ignore',
+    });
+    try {
+      for (let attempt = 0; attempt < 40; attempt += 1) {
+        try { if ((await fetch(`${configuredBase}/healthz`)).ok) break; } catch { /* Startup is still in progress. */ }
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+      expect((await fetch(`${configuredBase}/en/support`)).status).toBe(200);
+      expect((await fetch(`${configuredBase}/es/apoyar`)).status).toBe(200);
+      const alias = await fetch(`${configuredBase}/es/support?from=old-link`, { redirect: 'manual' });
+      expect(alias.status).toBe(308);
+      expect(alias.headers.get('location')).toBe('/es/apoyar?from=old-link');
+      expect(alias.headers.get('cache-control')).toBe('no-store');
+      const config = await (await fetch(`${configuredBase}/_portal/config`)).json() as Record<string, unknown>;
+      expect(config.supportUrl).toBe('https://github.com/sponsors/mycelibre');
+    } finally {
+      configuredServer.kill('SIGTERM');
+    }
   });
 
   it('serves the license and third-party notices as browser-readable text', async () => {

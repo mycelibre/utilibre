@@ -59,6 +59,11 @@ privacy/acceptable-use/software/status content, titles, descriptions, and Open
 Graph text. Do not leave backend/library error text untranslated; map it to a
 stable key.
 
+Keep donation keys complete even when the surface is disabled. The portal must
+omit its navigation, homepage appeal, transparency block, page, and aliases
+whenever no valid HTTPS `SUPPORT_URL` is configured; a future configured value
+must restore a complete translated surface without a code change.
+
 ## 3. Extend types, detection, and selection
 
 In `portal/src/i18n/index.ts`:
@@ -145,10 +150,11 @@ npm run test:e2e
 
 - A fluent reviewer has checked the complete public interface.
 - First-visit detection and local preference behave as documented.
-- Switching language preserves every static page and tool.
+- Switching language preserves every available static page and tool; disabled
+  donation paths resolve to the localized not-found surface.
 - `<html lang>`, `hreflang`, title, description, and Open Graph text are right.
-- Public policy, privacy, status, software, donation, and error content are
-  complete.
+- Public policy, privacy, status, software, error, and conditionally enabled
+  donation content are complete.
 - Catalog privacy disclosures and translated slugs have no gaps.
 - Mobile, keyboard, screen-reader naming, and longer-label layouts pass.
 - No language preference leaves the browser or requires an account.

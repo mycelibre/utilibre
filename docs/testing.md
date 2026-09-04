@@ -70,6 +70,11 @@ Verify:
 - config/status success, failure, timeout, caching, and sanitized output;
 - GET/HEAD-only static behavior, body rejection, header boundary, timeouts,
   missing-asset 404s, and localized unknown-route 404s;
+- empty or invalid `SUPPORT_URL` removes donation navigation and content, makes
+  both canonical donation paths and the Spanish alias real localized 404s, and
+  emits recovery metadata instead of indexable donation metadata;
+- a valid HTTPS `SUPPORT_URL` restores the bilingual page, homepage and shell
+  links, external action, language mapping, and uncached Spanish alias;
 - no arbitrary status target, generic proxy, upload, webhook, DNS, or media
   endpoint; and
 - no ads, analytics, remote fonts, third-party scripts, or invented account

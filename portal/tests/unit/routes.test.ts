@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseRoute, toolPath, translatedPath } from '../../src/routes';
+import { availableRoute, parseRoute, toolPath, translatedPath } from '../../src/routes';
 
 describe('language-aware routes', () => {
   it('parses translated tool slugs', () => {
@@ -21,5 +21,14 @@ describe('language-aware routes', () => {
 
   it('does not accept a path without a supported language prefix', () => {
     expect(parseRoute('/tools/json')).toBeNull();
+  });
+
+  it('makes donation routes unavailable until a destination is configured', () => {
+    const english = parseRoute('/en/support')!;
+    const spanish = parseRoute('/es/apoyar')!;
+    expect(availableRoute(english, false)).toEqual({ language: 'en', page: 'not-found' });
+    expect(availableRoute(spanish, false)).toEqual({ language: 'es', page: 'not-found' });
+    expect(availableRoute(english, true)).toBe(english);
+    expect(availableRoute(spanish, true)).toBe(spanish);
   });
 });
