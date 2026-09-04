@@ -12,6 +12,24 @@ if [ -r .env ]; then
 fi
 
 failed=0
+
+for service in postgres valkey freshrss rsshub privatebin; do
+  cid=$(docker compose ps -q "$service" 2>/dev/null || true)
+  if [ -z "$cid" ]; then
+    printf '%-12s FAIL missing container\n' "$service"
+    failed=1
+    continue
+  fi
+  state=$(docker inspect -f '{{.State.Status}}' "$cid")
+  health=$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "$cid")
+  if [ "$state" != running ] || { [ "$health" != healthy ] && [ "$health" != none ]; }; then
+    printf '%-12s FAIL state=%s health=%s\n' "$service" "$state" "$health"
+    failed=1
+  else
+    printf '%-12s state=%s health=%s\n' "$service" "$state" "$health"
+  fi
+done
+
 check_http() {
   name=$1
   url=$2
@@ -19,46 +37,29 @@ check_http() {
   code=$(curl -sS -o /dev/null -w '%{http_code}' --connect-timeout 3 --max-time 12 \
     -H "Host: $host" -H 'X-Forwarded-Proto: https' "$url" 2>/dev/null || true)
   case "$code" in
-    2??|3??) printf '%-14s HTTP %s\n' "$name" "$code" ;;
-    *) printf '%-14s FAIL HTTP %s\n' "$name" "${code:-000}"; failed=1 ;;
+    2??|3??) printf '%-12s HTTP %s\n' "$name" "$code" ;;
+    *) printf '%-12s FAIL HTTP %s\n' "$name" "${code:-000}"; failed=1 ;;
   esac
 }
 
-for service in postgres valkey ntfy bentopdf vert omnitools healthchecks pairdrop freshrss rsshub privatebin wakapi; do
-  cid=$(docker compose ps -q "$service" 2>/dev/null || true)
-  if [ -z "$cid" ]; then
-    printf '%-14s FAIL missing container\n' "$service"
-    failed=1
-    continue
-  fi
-  state=$(docker inspect -f '{{.State.Status}}' "$cid")
-  health=$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "$cid")
-  if [ "$state" != running ] || { [ "$health" != healthy ] && [ "$health" != none ]; }; then
-    printf '%-14s FAIL state=%s health=%s\n' "$service" "$state" "$health"
-    failed=1
-  else
-    printf '%-14s state=%s health=%s\n' "$service" "$state" "$health"
-  fi
-done
-
-check_http ntfy "http://${APP_BIND_IP}:${NTFY_PORT}/v1/health" notify.utilibre.org
-check_http bentopdf "http://${APP_BIND_IP}:${BENTOPDF_PORT}/" pdf.utilibre.org
-check_http vert "http://${APP_BIND_IP}:${VERT_PORT}/" convert.utilibre.org
-check_http omnitools "http://${APP_BIND_IP}:${OMNITOOLS_PORT}/" tools.utilibre.org
-check_http healthchecks "http://${APP_BIND_IP}:${HEALTHCHECKS_PORT}/api/v3/status/" monitor.utilibre.org
-check_http pairdrop "http://${APP_BIND_IP}:${PAIRDROP_PORT}/" send.utilibre.org
 check_http freshrss "http://${APP_BIND_IP}:${FRESHRSS_PORT}/i/" rss.utilibre.org
-check_http rsshub "http://${APP_BIND_IP}:${RSSHUB_PORT}/healthz" feeds.utilibre.org
 check_http privatebin "http://${APP_BIND_IP}:${PRIVATEBIN_PORT}/" paste.utilibre.org
-check_http wakapi "http://${APP_BIND_IP}:${WAKAPI_PORT}/api/health" wakapi.utilibre.org
 
-if ! docker compose exec -T postgres psql -U postgres -Atqc \
-  "SELECT datname FROM pg_database WHERE datname IN ('healthchecks','freshrss','wakapi','crabfit') ORDER BY datname" \
-  | grep -q healthchecks; then
-  echo "postgres databases FAIL"
+if ! docker compose exec -T freshrss php -r \
+  '$body = @file_get_contents("http://rsshub:1200/healthz"); exit($body === false ? 1 : 0);'; then
+  echo "rsshub internal reachability FAIL"
   failed=1
 else
-  echo "postgres databases OK"
+  echo "rsshub internal reachability OK"
+fi
+
+databases=$(docker compose exec -T postgres psql -U postgres -Atqc \
+  "SELECT datname FROM pg_database WHERE datistemplate = false AND datname <> 'postgres' ORDER BY datname" 2>/dev/null || true)
+if [ "$databases" != freshrss ]; then
+  echo "postgres application databases FAIL"
+  failed=1
+else
+  echo "postgres application databases OK"
 fi
 
 if [ "$(docker compose exec -T valkey valkey-cli ping 2>/dev/null || true)" != PONG ]; then
@@ -66,14 +67,6 @@ if [ "$(docker compose exec -T valkey valkey-cli ping 2>/dev/null || true)" != P
   failed=1
 else
   echo "valkey OK"
-fi
-
-wakapi_health=$(curl -sS --max-time 8 "http://${APP_BIND_IP}:${WAKAPI_PORT}/api/health" 2>/dev/null || true)
-if ! printf '%s\n' "$wakapi_health" | grep -Eq '(^db=1$|"db"[[:space:]]*:[[:space:]]*(1|true))'; then
-  echo "wakapi database health FAIL"
-  failed=1
-else
-  echo "wakapi database health OK"
 fi
 
 disk_free=$(df -P "$root_dir" | awk 'NR==2 {gsub("%", "", $5); print 100-$5}')

@@ -1,5 +1,5 @@
 [Unit]
-Description=Restrict Utilibre ntfy to the edge proxy
+Description=Restrict Utilibre container ingress to the edge proxy
 Documentation=https://docs.docker.com/engine/network/packet-filtering-firewalls/
 Requires=docker.service
 After=docker.service
@@ -7,9 +7,9 @@ PartOf=docker.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/sbin/utilibre-ntfy-firewall apply
-ExecReload=/usr/local/sbin/utilibre-ntfy-firewall apply
-ExecStop=/usr/local/sbin/utilibre-ntfy-firewall remove
+ExecStart=/usr/local/sbin/utilibre-edge-firewall apply
+ExecReload=/usr/local/sbin/utilibre-edge-firewall apply
+ExecStop=/usr/local/sbin/utilibre-edge-firewall remove
 RemainAfterExit=yes
 
 [Install]

@@ -1,80 +1,131 @@
 # Public capability policy
 
-Effective 2026-09-03, every end-user capability offered by Utilibre must be
+Effective 2026-09-03, Utilibre operates an end-user capability only when it is
 provided by an independently maintained, self-hostable Free and Open Source
-Software application.
+Software application **and** public operation removes a meaningful access
+barrier.
 
-This rule applies to the existing catalog and to every future addition. If a
-suitable upstream application cannot be identified, licensed, reviewed,
-self-hosted, and operated safely, Utilibre does not offer the capability.
+This rule applies retroactively and to every future addition. The existence of
+useful source code or a working container is not enough.
 
-## What qualifies
+## Access-gap test
 
-A public application must have all of the following:
+The default admission question is:
+
+> Does Utilibre's hosting make useful FOSS accessible to people who otherwise
+> could not realistically use it?
+
+An application can pass when there is no stable, project-operated,
+permanently useful free hosted service, or when the official free tier is too
+restricted to make the application genuinely useful. A temporary demo or
+trial is not a permanent free service. The existence of an unrelated
+community instance is useful context, but not proof that a stable upstream
+service exists.
+
+An application that already has a reliable, useful official free service is
+normally excluded from Utilibre's operated inventory.
+
+## Required operating qualities
+
+Passing the access-gap test is not enough. Before deployment, Utilibre must be
+able to show that:
+
+- one installation can safely separate unrelated users where accounts or
+  stored data are involved;
+- CPU, memory, persistent storage, temporary storage, and outbound traffic are
+  reasonably bounded for the available infrastructure;
+- users can export and delete persistent data;
+- registration, upload, messaging, fetching, and proxy features can be
+  constrained so the service is not an obvious spam, malware,
+  credential-theft, open-proxy, or unlawful-distribution platform;
+- backups, recovery, inactivity, retention, and service-retirement behavior
+  can be explained before accepting user data; and
+- operating a free instance complements the upstream project rather than
+  obscuring or misrepresenting its paid hosting and support options.
+
+If any of these conditions cannot be met, the application is omitted or kept
+internal.
+
+## FOSS and provenance requirements
+
+A public application must also have:
 
 - an identifiable upstream project maintained independently of Utilibre;
-- source code available under a verified FOSS license;
-- a supported way to self-host the complete application;
-- an exact reviewed version, commit, image digest, or equivalent artifact pin;
-- documented data flow, storage, logging, external contacts, resource use, and
-  public-abuse considerations;
-- visible upstream attribution and source access in the public catalog; and
-- a reviewed provider record with `reviewStatus: 'deployed'` in
-  `portal/src/catalog/upstreams.ts`.
+- complete source code under a verified FOSS license;
+- a supported self-hosting path;
+- an exact reviewed version, commit, image digest, or equivalent immutable
+  artifact reference;
+- documented data flow, storage, logging, external contacts, resource use,
+  public-abuse risks, and maintenance expectations;
+- visible upstream attribution and source access; and
+- a reviewed provider record in the portal inventory.
 
-A source-available repository, a package on npm, a browser API, or a FOSS
-library is not by itself a qualifying application. Libraries may support the
-portal or an upstream application, but they cannot be presented as the
-provider of an original Utilibre tool.
+A source-available repository, package, browser API, reusable library, or
+container image is not by itself a qualifying public application.
 
 ## What Utilibre may write
 
 Original Utilibre code is limited to integration glue:
 
 - the bilingual catalog, navigation, accessibility, and explanatory pages;
-- configuration and status presentation;
-- fixed routing between a visitor and an approved upstream application;
-- narrowly scoped adapters required to keep upstream credentials server-side;
-- deployment configuration, security headers, rate limits, and compatibility
-  patches around an approved upstream application; and
+- configuration and high-level status presentation;
+- fixed routing to an approved application;
+- narrowly scoped adapters needed to keep application credentials server-side;
+- deployment configuration, security headers, rate limits, and documented
+  compatibility or security patches; and
 - tests and documentation for those integrations.
 
 Glue must not become the implementation of the visitor's task. The current
-URL router is permitted because it only validates a Reddit destination and
-hands the visitor to the configured Redlib application. The Cobalt form and gateway are
-permitted because Cobalt remains the application that resolves and processes
-the request.
+Reddit URL router is permitted because it validates a destination and hands
+the visitor to Redlib, which performs the task.
+
+## Account policy
+
+Open registration is not the default for persistent services. Before a
+request-based account process opens, Utilibre must publish:
+
+- who may request access and how requests are handled without intrusive proof
+  of identity or need;
+- quotas and prohibited uses;
+- export, deletion, account-recovery, and inactivity behavior;
+- backup scope and its limitations;
+- the operator's technical access to server-side data; and
+- retirement notice and export expectations.
+
+Until that process exists, the public copy must say that access is
+operator-provisioned. It must not imply that account requests are currently
+open.
 
 ## Admission gate
 
 Before an entry becomes launchable:
 
-1. Record the upstream, immutable artifact, license evidence, self-hosting
-   evidence, maintenance evidence, and review document in
-   `portal/src/catalog/upstreams.ts`.
-2. Complete the viability, security, privacy, license, resource, and
-   maintenance review in `docs/adding-a-service.md`.
-3. Pin and privately test the exact artifact.
-4. Add the catalog entry and public attribution from the deployed provider
-   record.
-5. Run `npm run test:foss-policy`, the full portal test suite, deployment
-   validation, and the documented live checks.
+1. Document the access gap and why another operated instance is necessary.
+2. Record the upstream, immutable artifact, license and self-hosting evidence,
+   maintenance evidence, official hosted-service terms, and review date.
+3. Complete the viability, security, privacy, abuse, resource, export,
+   deletion, backup, and retirement review in
+   [`docs/adding-a-service.md`](docs/adding-a-service.md).
+4. Pin and privately test the exact artifact.
+5. Add the provider and catalog records with accurate English and Spanish
+   account, data, and external-recipient copy.
+6. Add public routing only after the deployment and edge gates pass.
+7. Run the focused FOSS-policy test, full portal tests, deployment validation,
+   and documented live checks.
 
-`npm run build` runs the focused FOSS policy test first. The catalog also
-asserts the same invariant when imported. A launchable entry with no approved
-application provider therefore fails closed.
+A catalog record, private listener, old test result, or license notice is not
+evidence that a service is public. Runtime enablement, public routing, and
+current checks must agree.
 
-## Retroactive application
+## Current application of the policy
 
-The policy review retired 31 portal-native tool routes whose capability was
-implemented by Utilibre code, browser APIs, or libraries. Their source,
-dependencies, server endpoints, and public catalog entries were removed. The
-existing independently maintained hosted applications remain available.
-There are two visitor-facing glue surfaces: the Cobalt adapter and the
-Redlib-only URL router. Cobalt is classified as a catalog service because
-Cobalt implements the underlying task, while its `portalSurface` records the
-glue UI explicitly; the router itself is an integration record.
+The strategic review retains SearXNG, FreshRSS, Redlib, and PrivateBin as the
+small operated set. RSSHub is internal FreshRSS support, not a public route
+catalog. Its intended operator-approved route set is policy rather than a
+technical allowlist in the current stock runtime, so that boundary remains an
+account-opening gate.
 
-Historical reports may describe the retired implementation. They are retained
-as a record of what was tested at the time and must carry a superseded-policy
-notice rather than being presented as current product documentation.
+Applications removed by the strategic reset are not pending releases or an
+external directory. Old catalog, status, route, deployment, test, and license
+inventory entries are removed with the application when no shipped code or
+asset still requires attribution.

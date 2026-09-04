@@ -106,8 +106,9 @@ or processing results indexable.
 
 ## 5. Review upstream-interface limitations
 
-SearXNG, rimgo, and any future frontend manage their own localization. Enable
-the language only through a clean, officially supported preference/default
+SearXNG, Redlib, FreshRSS, PrivateBin, and future applications manage their
+own localization. Enable a language only through a clean, officially
+supported preference/default
 mechanism. Do not fork an upstream application only to match the portal's
 selector. Document an upstream interface that lacks the language, and keep
 that limitation distinct from the fully translated portal.

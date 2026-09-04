@@ -32,7 +32,7 @@ test('Redlib routing remains local glue until the visitor follows the result', a
 
   await assertNoProcessingNetwork(page, async () => {
     await page.getByLabel('Supported public URL').fill('https://old.reddit.com/r/privacy?sort=top&redirect=https://evil.example');
-    await page.getByRole('button', { name: 'Check URL' }).click();
+    await page.getByLabel('Supported public URL').press('Enter');
     await expect(page.getByRole('status')).toContainText('Destination recognized');
   });
   await expect(page.locator('.router-result a')).toHaveAttribute('href', 'https://reddit.utility.test/r/privacy?sort=top');

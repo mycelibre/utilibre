@@ -5,8 +5,6 @@ import { toolPath } from '../routes';
 
 export const discoveryGroups: readonly DiscoveryGroup[] = [
   'find',
-  'files',
-  'documents',
   'text-data',
   'feeds-monitoring',
 ];
@@ -27,7 +25,8 @@ export function serviceEnabled(config: PublicConfig, id: string): boolean {
 }
 
 export function serviceConfigured(config: PublicConfig, entry: CatalogEntry): boolean {
-  if (entry.kind !== 'service' || !serviceEnabled(config, entry.id)) return false;
+  if (entry.kind !== 'service') return false;
+  if (!serviceEnabled(config, entry.id)) return false;
   if (!entry.configUrlKey) return true;
   return Boolean(configValue(config, entry.configUrlKey));
 }
@@ -39,12 +38,12 @@ export function privateRouterAvailable(config: PublicConfig): boolean {
 export function entryLaunch(entry: CatalogEntry, language: Language, config: PublicConfig): CatalogLaunch | null {
   if (!entryLaunchable(entry, config)) return null;
 
-  if (entry.kind === 'integration' || entry.id === 'cobalt') {
+  if (entry.kind === 'integration') {
     return { href: toolPath(entry.id, language), external: false };
   }
 
-  const href = entry.configUrlKey ? configValue(config, entry.configUrlKey) : '';
-  return href ? { href, external: /^https?:\/\//i.test(href) } : null;
+  const base = entry.configUrlKey ? configValue(config, entry.configUrlKey) : '';
+  return base ? { href: base, external: /^https?:\/\//i.test(base) } : null;
 }
 
 export function entryLaunchable(entry: CatalogEntry, config: PublicConfig): boolean {

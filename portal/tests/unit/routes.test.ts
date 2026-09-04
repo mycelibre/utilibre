@@ -8,10 +8,15 @@ describe('language-aware routes', () => {
   });
 
   it('preserves the current tool when languages change', () => {
-    const route = parseRoute('/en/tools/download-media');
+    const route = parseRoute('/en/tools/open-privately');
     expect(route).not.toBeNull();
-    expect(translatedPath(route!, 'es')).toBe('/es/herramientas/descargar-contenido');
-    expect(toolPath('cobalt', 'en')).toBe('/en/tools/download-media');
+    expect(translatedPath(route!, 'es')).toBe('/es/herramientas/abrir-con-privacidad');
+    expect(toolPath('private-router', 'en')).toBe('/en/tools/open-privately');
+  });
+
+  it('returns localized not-found routes for the removed Cobalt adapter', () => {
+    expect(parseRoute('/en/tools/download-media')?.page).toBe('not-found');
+    expect(parseRoute('/es/herramientas/descargar-contenido')?.page).toBe('not-found');
   });
 
   it('does not accept a path without a supported language prefix', () => {

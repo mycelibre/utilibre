@@ -8,7 +8,7 @@ if [ -z "${service}" ]; then
 fi
 
 case "${service}" in
-  portal|cobalt|searxng|valkey|anubis|redlib|rimgo) ;;
+  portal|searxng|valkey|anubis|redlib) ;;
   *) echo "Unknown service: ${service}" >&2; exit 1 ;;
 esac
 

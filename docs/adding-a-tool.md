@@ -12,7 +12,10 @@ provenance has to be explained sideways.
 
 ## 1. Establish the upstream application
 
-Verify all of the following from primary upstream sources:
+First establish that operating the application removes a real access barrier.
+If the project already provides a stable, genuinely useful permanent free
+service, exclude it from the operated inventory. Then verify all of the
+following from primary upstream sources:
 
 - project and active independent maintainer;
 - complete source and FOSS license, including the exact license variant;
@@ -20,8 +23,11 @@ Verify all of the following from primary upstream sources:
 - exact release, commit, image digest, and build inputs;
 - runtime assets, telemetry, CDNs, external calls, accounts, cookies, storage,
   retention, and logs;
-- resource needs, public-abuse surface, update cadence, and rollback path; and
-- modification/source-publication obligations.
+- resource needs, public-abuse surface, update cadence, and rollback path;
+- modification/source-publication obligations;
+- safe separation of unrelated users, if applicable; and
+- export, deletion, inactivity, backup, and retirement behavior for stored
+  user data.
 
 A FOSS library is not a public application provider. It may be a dependency of
 the portal or upstream application, but it cannot justify an original Utilibre
@@ -63,9 +69,8 @@ Original portal code is permitted only for a narrow integration. Set
 still performs the actual task, and keep the adapter smaller than the
 capability it exposes. Use `kind: 'integration'` and
 `implementation: 'integration-glue'` when the catalog record itself is only a
-router. A service such as Cobalt remains `kind: 'service'` and
-`implementation: 'upstream-application'` because the upstream application
-performs the task, even though its portal surface is glue.
+router. The current Reddit URL router is the model: it validates and maps a
+destination, while Redlib performs the browsing task.
 
 ## 4. Validate and release
 

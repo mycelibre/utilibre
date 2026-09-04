@@ -8,18 +8,8 @@ export interface PublicConfig {
   contactUrl: string;
   publicSearchUrl: string;
   publicRedditUrl: string;
-  publicYoutubeUrl: string;
-  publicImgurUrl: string;
-  publicNtfyUrl: string;
-  publicPdfUrl: string;
-  publicConvertUrl: string;
-  publicToolsUrl: string;
-  publicMonitorUrl: string;
-  publicSendUrl: string;
   publicRssUrl: string;
-  publicFeedsUrl: string;
   publicPasteUrl: string;
-  publicWakapiUrl: string;
   enabledServices: string[];
   defaultLanguage: 'en' | 'es';
 }
@@ -34,18 +24,8 @@ const defaults: PublicConfig = {
   contactUrl: '',
   publicSearchUrl: '',
   publicRedditUrl: '',
-  publicYoutubeUrl: '',
-  publicImgurUrl: '',
-  publicNtfyUrl: '',
-  publicPdfUrl: '',
-  publicConvertUrl: '',
-  publicToolsUrl: '',
-  publicMonitorUrl: '',
-  publicSendUrl: '',
   publicRssUrl: '',
-  publicFeedsUrl: '',
   publicPasteUrl: '',
-  publicWakapiUrl: '',
   enabledServices: [],
   defaultLanguage: 'en',
 };

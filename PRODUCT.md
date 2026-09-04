@@ -8,102 +8,154 @@ web
 
 ## Users
 
-Utilibre serves ordinary English- and Spanish-speaking visitors who need to finish a practical web task quickly: search, transform a file, share information, use a temporary utility, or reach public content through an alternative frontend. The portal itself should not demand an account, payment, specialist knowledge, or a lesson about the project before they can act. A few upstream applications require a provisioned account; those exceptions must be labeled before launch.
+Utilibre serves English- and Spanish-speaking people who would benefit from
+useful free software but cannot reasonably operate their own server. Visitors
+should be able to understand what is available, what happens to their data,
+and how to obtain access without specialist knowledge.
 
-The primary job is to find the right tool within seconds, understand what it does and what happens to their data, decide whether to trust it, and open it with minimal friction.
+Some services are anonymous. Persistent personal services may require an
+operator-provisioned account. A future request process must be simple,
+privacy-respecting, and clearly labeled; Utilibre must not imply that account
+requests are open before that process actually exists.
 
-## Product Purpose
+## Product purpose
 
-Utilibre is a bilingual public portal for free, privacy-respecting, self-hosted FOSS applications. Every visitor-facing capability comes from an independently maintained upstream application; Utilibre provides only the catalog, hosting, configuration, routing, and narrow integration glue.
+Utilibre is a bilingual public utility that operates selected Free and Open
+Source Software. Its value is not the number of applications in the catalog.
+Its value is removing a real access barrier: installation, configuration,
+maintenance, monitoring, and safe public operation that an ordinary user
+would otherwise have to provide.
 
-It is a small independent digital public utility and a contribution to the digital commons—not a startup, SaaS platform, lead-generation site, commercial app store, enterprise dashboard, or generic privacy brand. Services are free to use. Voluntary donations may help cover infrastructure, but must never unlock features, remove limits, or interrupt the primary task.
+The concise public promise is:
 
-## Positioning
+> Free hosted access to useful open-source software that normally requires
+> your own server or a paid account.
 
-The public interface should feel like a living catalog of useful digital utilities: cultivated, precise, approachable, and visibly independent. Its identity may draw on a restrained mycelial-network metaphor—separate tools connected into a useful ecosystem—but the metaphor must organize information rather than decorate it.
+Utilibre is not a startup, software marketplace, generic privacy brand, or
+museum of healthy containers. Use is free. Donations may cover infrastructure
+but never unlock features, increase priority, or change account decisions.
+People who can afford an upstream project's official hosting should be
+encouraged to support it.
 
-The experience should sit between a contemporary field guide, a well-designed public-service catalog, and an idiosyncratic independent publication. It must not resemble a startup landing page, software marketplace, dashboard, fantasy forest, generic eco-brand, or novelty mushroom theme.
+## Service admission rule
 
-Privacy is communicated through specific data-flow and retention facts, not slogans, fear, shield imagery, or impossible guarantees. Utilibre does not claim anonymity, untraceability, universal uptime, or complete security.
+Utilibre may operate an application when there is no stable,
+project-operated, permanently useful free hosted service, or when the official
+free tier is too restricted to make the application genuinely useful.
 
-## Operating Context
+That access-gap test is necessary but not sufficient. A candidate must also:
 
-The portal currently exposes 13 configured upstream FOSS applications plus two bilingual portal integration surfaces: a constrained Cobalt adapter and a URL router that hands Reddit links to Redlib. In catalog semantics Cobalt remains a service because Cobalt implements the underlying task; its `portalSurface` is explicitly integration glue. The runtime catalog in `portal/src/catalog/catalog.ts` is the product inventory source of truth. The closed provider registry in `portal/src/catalog/upstreams.ts` records the independently maintained application, source, license and self-hosting evidence, reviewed artifact, and deployment state behind every entry. Public URLs and enabled service IDs come from `/_portal/config`; current service health comes from `/_portal/status`. A point-in-time health response is not an uptime claim.
+1. be a complete, independently maintained, self-hostable FOSS application;
+2. safely separate unrelated users when accounts or stored data are involved;
+3. have reasonably bounded CPU, storage, and outbound-traffic costs;
+4. let users export and delete their data where persistent data exists; and
+5. avoid becoming an obvious spam, malware, open-proxy, credential-theft, or
+   unlawful-file-distribution service.
 
-Upstream applications have distinct, operation-specific boundaries. BentoPDF, VERT, OmniTools, and PrivateBin perform substantial work in the browser; other services process or relay requests on Utilibre infrastructure. The catalog describes each boundary. BentoPDF, VERT, and OmniTools are umbrella applications, so the portal does not claim a verified inventory of every utility they contain.
+Applications that already have a stable, useful official free service do not
+belong in the operated inventory. A demo, trial, or severely restricted free
+tier does not automatically close the access gap. Community instances are
+considered useful context, but their temporary existence is not treated as a
+permanent project-operated service.
 
-Utilibre does not implement an end-user utility merely because the browser or a FOSS library makes it convenient. The 31 former portal-native utility routes, including the custom webhook and DNS endpoints, were retired under the policy in `FOSS_POLICY.md`. A developer category may return only after complete upstream FOSS applications pass the ordinary service-admission review.
+The complete implementation and licensing requirements are in
+[`FOSS_POLICY.md`](FOSS_POLICY.md).
 
-Invidious, rimgo, and Crab Fit are not public services. Empty source, support, contact, YouTube, or Imgur configuration must remain absent from the interface rather than being replaced with invented destinations.
+## Current direction
 
-The bilingual support routes, `/en/support` and `/es/apoyar`, are stable even when the optional external `SUPPORT_URL` is unset. The redesign should reserve a calm, deliberate place for voluntary support and explain that donations do not change access, limits, priority, or treatment. It must present the honest unconfigured state instead of inventing a payment destination.
+The intentionally small operated set is:
 
-The deployment runs on modest operator-controlled infrastructure behind Cloudflare and a separate Caddy edge. The Vite/TypeScript catalog is served by the existing Node server. Existing upstream application APIs, public service URLs, CSP, container topology, edge rules, private targets, deployment behavior, and reverse-proxy assumptions are product constraints, not redesign material.
+- **SearXNG**, where additional independently operated instances contribute to
+  the project's decentralized public infrastructure;
+- **FreshRSS**, as a persistent feed reader for provisioned users once a
+  documented request process is ready;
+- **Redlib**, retained conditionally while it remains useful and operable
+  within its disclosed upstream fragility and bandwidth risks; and
+- **PrivateBin**, retained as a small ancillary encrypted-paste service rather
+  than a headline product.
 
-## FOSS Capability Rule
+The deployment defines RSSHub only as internal support for operator-approved
+feeds that make FreshRSS more useful. It has no public route or catalog entry,
+but the stock runtime does not technically allowlist routes. That gap must be
+resolved or explicitly contained before unrelated-user account requests open.
 
-The rule in `FOSS_POLICY.md` applies retroactively and going forward: every offered capability must be a complete, independently maintained, self-hostable FOSS application with verified license and source evidence. A browser API or reusable library does not qualify as the application. If no reviewed upstream exists, the capability is omitted. Original Utilibre code is limited to integration glue and may not become the implementation of the visitor's task.
+Applications removed by the strategic reset are not a pending release batch,
+external directory, or active inventory. The earlier catalog expansion no
+longer shapes the deployment or roadmap.
 
-## Capabilities and Constraints
+## Account model
 
-- Help visitors discover tools by real tasks and meaningful categories, then launch them directly.
-- Preserve every existing English and Spanish information route. Retired noncompliant tool routes must remain genuine localized 404s rather than silently returning as original Utilibre implementations.
-- Keep the catalog consolidated rather than duplicating service facts across components.
-- Show only metadata supported by the runtime catalog or configuration. Account access is structured where verified; language availability is not universal and must not be inferred silently.
-- Preserve `GET /healthz`, config/status endpoints and their legacy aliases, and the constrained media POST API with its current request schema and bilingual error keys.
-- Keep the retired `/_portal/developer/*` namespace unavailable. Do not replace it with original request, webhook, DNS, forwarding, replay, or network-scanning functionality.
-- Preserve localized initial metadata, hreflang output, robots/noindex rules, missing-asset 404 behavior, and lazy-chunk recovery.
-- Return genuine localized 404 responses for unknown application routes, preserve useful recovery links, and redirect documented cross-language aliases to their canonical route.
-- Never expose internal service targets, container names, credentials, API keys, or private infrastructure details to the browser.
-- Add no advertising, analytics, tracking scripts, remote fonts, unnecessary CDNs, premium tier, donor-only behavior, fake urgency, social proof, testimonials, usage statistics, endorsements, or project affiliations.
-- Give voluntary support a visible but subordinate place in the site architecture; never use a modal, sticky plea, countdown, guilt language, or interruption before a visitor reaches a tool.
-- Keep assets self-hosted where practical and visual dependencies modest. Prefer semantic HTML and CSS over large effect packages.
-- Remain fast and coherent on modest devices and connections, from narrow mobile screens to large displays and at enlarged text sizes.
-- Remain useful without JavaScript wherever practical; configuration-dependent catalog links must fail honestly and accessibly.
+Completely open registration invites disposable accounts and abuse;
+permanently closed registration defeats the purpose of hosting persistent
+applications. The intended middle ground is request-based access with:
 
-## Brand Commitments
+- no payment or intrusive proof of need;
+- transparent, conservative quotas;
+- export and deletion paths;
+- a published inactivity policy;
+- clear backup, continuity, and retirement expectations;
+- no uptime guarantee; and
+- advance notice and reasonable export time when a service is retired where
+  circumstances permit.
 
-The public name is Utilibre. The voice is clear before clever: intelligent without showing off, technically informed but understandable to nontechnical people, quietly funny through understatement and precise observation, and confident only where the implementation supports the claim. Utilibre sounds like a competent independent maintainer, not a comedian dressed as one.
+This is a product direction, not a statement that an account-request channel
+is already operating. Persistent services remain provisioned-only until the
+workflow, capacity, backups, and user-facing terms are ready.
 
-Useful information comes first. A normal content block may carry one comic idea; repeated interface text, errors, recovery, warnings, privacy and security facts, legal terms, service state, and donation conditions remain literal. Self-deprecation may address maintenance, dependency churn, server costs, or the operator's workload, but never security, reliability, backups, competence, or visitor trust. The visitor is never the subject of the joke.
+## Positioning and voice
 
-Copy must not sound corporate, grandiose, juvenile, desperate for donations, falsely rebellious, alarmist, smug, meme-driven, or theatrically anti-corporate. It avoids startup slogans, forced hacker jargon, cute names for serious functions, excessive exclamation marks, and claims that the service survives by luck, duct tape, or prayer. Fungal language is permitted only once or twice across the shipping site as a subtle metaphor, never as a mascot voice.
+The public interface should feel like a precise, approachable public-service
+directory. It should distinguish three things without ambiguity:
 
-Hosted interfaces and libraries retain clear upstream-project credit. Utilibre states that it hosts or integrates the work and documents local modifications; it never implies authorship of an upstream interface.
+- services operated by Utilibre;
+- internal infrastructure that supports those services; and
+- ordinary external destinations opened from an operated application.
 
-English and neutral Spanish are equal product languages. Spanish is authored naturally rather than translated mechanically, uses `« »` for quotations, and prefers “software libre” for libre-licensed open-source software. Comic intent is translated only when it remains natural; otherwise the joke is dropped. Neither language is presented with a national flag, and language choice should persist with the corresponding route and relevant interface state.
+Privacy is explained through concrete data flow, storage, retention, and
+operator-access facts. Utilibre does not claim anonymity, untraceability,
+universal uptime, or complete security.
 
-## Visual Commitments
+The voice is clear before clever: technically informed, calm, and understandable
+to non-specialists. English and neutral Spanish are equal product languages.
+Spanish copy uses natural wording, `« »` quotation marks, and “software
+libre” where that term is appropriate. Hosted interfaces retain visible
+upstream credit; Utilibre never implies authorship or affiliation.
 
-- Use one coherent identity built around an indexed, connected public-utility catalog.
-- Favor warm paper, mineral, ink, lichen, moss, rust, and spore-like accents over generic technology blue or purple gradients.
-- Pair a characterful open-licensed display face with an exceptionally legible text face; reserve monospace for technical metadata, URLs, state, or shortcuts.
-- Use abstract local marks, branching rules, indexing, rhythm, or sparse texture only when they clarify relationships.
-- Avoid generic card walls, bento grids, glassmorphism, neon glow, giant gradient headlines, nested rounded containers, excessive pills, decorative blobs, stock art, emoji icon systems, fake terminals, meaningless particles, and ornamental animation.
-- Motion may reveal hierarchy, confirm actions, or communicate a real state. It must never delay access, carry essential information alone, or ignore reduced-motion preferences.
+## Product constraints
 
-## Evidence on Hand
+- Keep the operated catalog deliberately small.
+- Put the visitor's task and access conditions before the project story.
+- Never expose internal targets, credentials, container names, or private
+  infrastructure details to the browser.
+- Keep status statements point-in-time and avoid uptime promises.
+- Add no advertising, behavioral analytics, tracking scripts, remote fonts,
+  donor privileges, fake urgency, testimonials, or invented usage figures.
+- Keep public applications independently stoppable and removable.
+- Publish concrete data-handling, account, export, deletion, and retirement
+  terms before accepting persistent user data.
+- Omit a capability when no reviewed application passes the access, safety,
+  sustainability, and licensing gates.
 
-- `portal/src/catalog/catalog.ts` defines the runtime application inventory, bilingual descriptions and slugs, privacy disclosures, and baseline status; `portal/src/catalog/upstreams.ts` is the closed capability-provider registry.
-- `portal/src/routes.ts` defines the stable bilingual information and tool routes.
-- `portal/src/config.ts` and `portal/server/server.mjs` define sanitized public configuration, health, metadata, API, and security boundaries.
-- `portal/src/i18n/en.ts` and `portal/src/i18n/es.ts` are equal interface dictionaries; automated tests require key parity.
-- `docs/privacy.md`, `docs/copy-style.md`, deployment records, and service-specific documentation provide claims, data-flow, resource, and launch/defer evidence.
-- Policy, unit, server, bilingual/mobile, deployment-integration, and upstream-application browser suites cover the present behavior. Historical passing results are not evidence that a later build passes.
-- No testimonials, usage metrics, public uptime history, donation destination, or universal account metadata are presently configured. Source and public issue-tracker destinations are configured; the donation destination remains honestly absent until GitHub Sponsors is ready.
+## Evidence and sources of truth
 
-## Product Principles
+- `portal/src/catalog/catalog.ts` defines the public application inventory and
+  bilingual service facts.
+- `portal/src/catalog/upstreams.ts` records reviewed application provenance,
+  source, license, and deployment state.
+- Runtime configuration determines which reviewed entries are actually
+  launchable; a catalog record alone is not evidence of deployment.
+- `docs/services.md`, `docs/privacy.md`, and operational documentation describe
+  the current boundaries. Historical test results are not evidence that a
+  later release still passes.
+- No testimonials, public uptime history, universal account access, or
+  donation destination should be claimed unless independently configured and
+  verified.
 
-1. Put the task before the project story.
-2. Make the catalog faster to scan than a wall of interchangeable cards.
-3. State concrete data handling and operational limits instead of promising privacy by adjective.
-4. Treat English and Spanish as equal products in copy, metadata, errors, navigation, accessibility, and responsive behavior.
-5. Preserve approved upstream service boundaries and deployment behavior; retired original endpoints are not compatibility requirements.
-6. Keep the portal public: no ads, tracking, payment gate, paid advantage, or donor privilege. Label the few upstream applications that require provisioned accounts.
-7. Prefer sustainable restraint: bounded dependencies, modest motion, honest states, and no feature or service invented to fill a layout.
+## Accessibility and inclusion
 
-## Accessibility & Inclusion
-
-Use semantic landmarks and native controls, a logical heading hierarchy, complete keyboard navigation, highly visible focus, touch-friendly targets, accessible names, associated validation and errors, useful live regions, sufficient contrast, and a sensible source order. No information may depend on motion, hover, color, or JavaScript alone when a practical static alternative exists.
-
-Long Spanish copy, long tool names, missing metadata, errors, loading, empty and unavailable states must wrap and remain operable. Important text must not be truncated. The design should support text enlargement and 200% zoom without fixed text containers or overlapping controls.
+Use semantic landmarks and controls, logical heading structure, complete
+keyboard navigation, visible focus, touch-friendly targets, sufficient
+contrast, and useful error and status announcements. No information may
+depend on motion, hover, color, or JavaScript alone when a practical static
+alternative exists. Long Spanish copy, unavailable states, and account-access
+conditions must wrap and remain readable at enlarged text sizes.

@@ -28,16 +28,9 @@ head_row() {
 }
 
 printf '%-16s %-18s %-28s %s\n' SERVICE PINNED UPSTREAM URL
-release_row ntfy v2.28.0 binwiederhier/ntfy
-release_row bentopdf v2.8.8 alam00000/bentopdf
-head_row vert e0ffd343 VERT-sh/VERT main
-release_row omnitools v0.6.0 iib0011/omni-tools
-release_row healthchecks v4.3 healthchecks/healthchecks
-release_row pairdrop v1.11.2 schlagmichdoch/PairDrop
 release_row freshrss 1.29.1 FreshRSS/FreshRSS
 head_row rsshub 40aca954 DIYgod/RSSHub master
 release_row privatebin 2.0.6 PrivateBin/PrivateBin
-release_row wakapi 2.17.6 muety/wakapi
 
 echo
 echo "No images were pulled and no containers were changed. Resolve and review a new digest manually."

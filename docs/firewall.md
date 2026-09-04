@@ -1,42 +1,43 @@
 # Firewall and network exposure
 
-Application ports must be reachable only from the Caddy edge VM over the
-private network. This repository does not automatically change the general host
-firewall because the active firewall system and the purpose of existing rules
-must be verified by the operator first. The additional-services deployment now
-includes a narrowly scoped ntfy `DOCKER-USER` helper; it was installed on the
-application VM and verified on 2026-09-03. Other service and edge rules remain
-operator-managed.
+Application ports must be reachable only from the separate Caddy edge VM over
+the private network. The repository includes an opt-in Docker-aware helper and
+systemd unit. They are deliberately not enabled by a normal deployment: an
+operator must first verify the active firewall and keep an edge-side test
+session available so a bad source address cannot silently cut off every public
+service.
 
-The ntfy helper, unit, installation procedure, and rollback live under
-`deployment/utilibre/`. It matches the original destination
-`${APP_BIND_IP}:${NTFY_PORT}`, allows the exact verified `EDGE_PROXY_IP`, has no
-input-interface assumption, and leaves host-local output untouched. This
-documents one deployed application-VM control; it does not claim that the edge
-VM's complete firewall was inspected.
+## Required exposure
+
+The only host-published application ports are:
+
+- `PORTAL_PORT`;
+- `SEARXNG_PORT`;
+- `REDLIB_PORT`, which terminates at Anubis;
+- `FRESHRSS_PORT`; and
+- `PRIVATEBIN_PORT`.
+
+Never permit or publish PostgreSQL `5432`, Valkey `6379`, RSSHub `1200`,
+Anubis metrics, direct Redlib, the Docker API, or application debug/admin
+listeners. Bind every published port to the exact private application address,
+not `0.0.0.0` or `::`.
 
 ## Layered controls
 
-Use all applicable layers:
+1. Give the application VM a stable private address reachable by the edge.
+2. Bind Compose listeners to that exact address.
+3. Permit retained ports only from the exact edge peer at the network firewall
+   or security-group layer.
+4. Add a Docker-aware host firewall rule where Docker forwarding/NAT requires
+   it.
+5. Test from the edge, another private host, and a controlled external host.
 
-1. Give the application VM a stable RFC1918, WireGuard, or Tailscale address reachable by the edge VM.
-2. Set `PRIVATE_BIND_IP` to that exact address. Compose refuses an unset value; `scripts/verify-network.sh` refuses wildcard values.
-3. Permit the configured TCP ports only from the exact `EDGE_PROXY_IP` at the private-network firewall or security-group layer.
-4. Apply a host firewall rule that also accounts for Docker's forwarding/NAT behavior.
-5. Test from the edge, another private-network host, and an external controlled host.
+Binding is not a substitute for filtering, and a firewall rule is not
+permission to use a wildcard binding.
 
-Launch ports are `PORTAL_PORT`, `COBALT_PORT`, `SEARXNG_PORT`, and
-`REDLIB_PORT` (Anubis ingress; Redlib has no host port) when the
-`privacy-frontends` profile is enabled. Add
-`RIMGO_PORT` only for controlled optional evaluation. Never permit or publish
-Valkey `6379`, PostgreSQL `5432`, Docker API `2375/2376`, metrics, debug, or
-container-only ports.
+## Inspect before editing
 
-Binding a published port to a private address is essential, but it is not a substitute for filtering. Conversely, a firewall rule is not permission to use a wildcard Docker binding.
-
-## Discover the active firewall before editing it
-
-Read-only checks include:
+Use read-only checks first:
 
 ```sh
 sudo nft list ruleset
@@ -46,59 +47,99 @@ sudo ufw status verbose
 docker info
 ```
 
-The presence of a command does not prove that it is the authoritative firewall. Determine whether Docker is using its iptables or nftables backend, whether a cloud/network ACL also applies, and how rules persist across boot. Preserve unrelated production rules.
+Determine whether Docker uses iptables or nftables, how rules persist across
+boot, and whether a cloud/network ACL also applies. Preserve unrelated rules
+and management access.
 
-## UFW-style host rules
+## UFW-style illustration
 
-The following illustrates the intended policy; replace every uppercase token and include only deployed ports:
+Replace every token and include only deployed ports:
 
 ```sh
 sudo ufw allow in on PRIVATE_INTERFACE proto tcp from EDGE_PROXY_IP to PRIVATE_BIND_IP port PORTAL_PORT
-sudo ufw allow in on PRIVATE_INTERFACE proto tcp from EDGE_PROXY_IP to PRIVATE_BIND_IP port COBALT_PORT
 sudo ufw allow in on PRIVATE_INTERFACE proto tcp from EDGE_PROXY_IP to PRIVATE_BIND_IP port SEARXNG_PORT
 sudo ufw allow in on PRIVATE_INTERFACE proto tcp from EDGE_PROXY_IP to PRIVATE_BIND_IP port REDLIB_PORT
+sudo ufw allow in on PRIVATE_INTERFACE proto tcp from EDGE_PROXY_IP to PRIVATE_BIND_IP port FRESHRSS_PORT
+sudo ufw allow in on PRIVATE_INTERFACE proto tcp from EDGE_PROXY_IP to PRIVATE_BIND_IP port PRIVATEBIN_PORT
 ```
 
-Add explicit denies according to the host's existing default policy and management requirements. Do not paste a broad deny rule that could lock out SSH or another application.
+Docker NAT can bypass an operator's expected UFW `INPUT` policy. Pair this
+with a Docker-aware forwarding rule or enforce the exact source restriction in
+the upstream private-network firewall, then verify from an unauthorized host.
 
-Docker-published traffic can be diverted by Docker NAT before UFW's normal `INPUT` rules and may bypass the policy an operator expects. UFW-only rules are therefore not sufficient evidence. Pair them with a Docker-aware forwarding rule or enforce the source restriction in the upstream private-network firewall, then test from an unauthorized host.
+## Docker-aware filtering
 
-## iptables with Docker's `DOCKER-USER` chain
-
-Docker documents `DOCKER-USER` as the place for user filtering before Docker's own forwarding accept rules. At that point destination NAT may already have changed the visible address and port. Match the original destination with conntrack rather than guessing a container address.
-
-For each published port, an operator can adapt this pattern after checking the current chain and interface names:
+Docker documents `DOCKER-USER` as the user filtering point before its own
+forwarding accept rules. Destination NAT has already changed the visible
+tuple, so the supplied helper matches the original destination and port with
+conntrack. It derives the one interface that owns `PRIVATE_BIND_IP`, permits
+the exact `EDGE_PROXY_IP` to continue through any pre-existing `DOCKER-USER`
+rules, and drops every other source for each of the five retained ports.
 
 ```sh
-sudo iptables -I DOCKER-USER 1 -i PRIVATE_INTERFACE -p tcp \
-  -s EDGE_PROXY_IP -m conntrack \
-  --ctorigdst PRIVATE_BIND_IP --ctorigdstport PORTAL_PORT -j ACCEPT
-
-sudo iptables -I DOCKER-USER 2 -i PRIVATE_INTERFACE -p tcp \
-  -m conntrack \
-  --ctorigdst PRIVATE_BIND_IP --ctorigdstport PORTAL_PORT -j DROP
+sudo deployment/utilibre/scripts/utilibre-edge-firewall validate
 ```
 
-Repeat the allow-then-drop pair for Cobalt, SearXNG, Redlib, and optional
-rimgo. Integrate established/related handling and rule ordering with the
-existing ruleset; inserting all rules at position 1 repeatedly reverses their
-order. Conntrack matching can add processing cost, so use a
-network/security-group source restriction as the first layer where available.
-Configure persistence using the distribution's supported mechanism.
+Validation reads only the five port values, `PRIVATE_BIND_IP`, and
+`EDGE_PROXY_IP` from the root-owned `.env`; it never sources the file or prints
+its contents. It refuses symlinks, permissive modes, public addresses,
+ambiguous interfaces, duplicate ports, and an inconsistent route. The helper
+uses its own alternating `UTILIBRE-EDGE-A` and `UTILIBRE-EDGE-B` chains and one
+tagged jump. It never flushes `DOCKER-USER`, `INPUT`, `OUTPUT`, or an unrelated
+chain. Re-applying an unchanged policy is a no-op; a changed policy is built
+and verified before its jump replaces the prior one.
 
-Do not use this example for IPv6 unchanged. If an IPv6 address is bound, build and test an equivalent IPv6 policy. The default deployment should not bind IPv6 unless a private IPv6 route to the edge is intentionally configured.
+This policy is IPv4-only by design. Do not add an IPv6 listener until an
+equivalent, tested IPv6 policy exists.
 
-## nftables-style policy
+## Safe installation and activation
 
-With Docker's nftables backend, create an operator-owned forward chain at an appropriate priority and match the connection's original destination tuple. The exact base-chain priority and coexistence rules depend on the installed Docker version and current ruleset. The intended rule order is:
+Do this from the application VM while another operator session is available
+on the edge VM. Installing the files is harmless; activating the unit changes
+packet filtering.
 
-```nftables
-ct state established,related accept
-meta l4proto tcp ip saddr EDGE_PROXY_IP ct original ip daddr PRIVATE_BIND_IP ct original proto-dst { PORTAL_PORT, COBALT_PORT, SEARXNG_PORT, REDLIB_PORT } accept
-meta l4proto tcp ct original ip daddr PRIVATE_BIND_IP ct original proto-dst { PORTAL_PORT, COBALT_PORT, SEARXNG_PORT, REDLIB_PORT } drop
+```sh
+sudo install -m 0755 deployment/utilibre/scripts/utilibre-edge-firewall \
+  /usr/local/sbin/utilibre-edge-firewall
+sudo install -m 0644 deployment/utilibre/systemd/utilibre-edge-firewall.service \
+  /etc/systemd/system/utilibre-edge-firewall.service
+sudo systemctl daemon-reload
+sudo /usr/local/sbin/utilibre-edge-firewall validate
 ```
 
-Treat this as a policy fragment, not a complete replacement ruleset. Validate syntax against the installed nftables version, add the correct hook/interface context, include `RIMGO_PORT` only when deployed, and load it through the host's existing persistent firewall configuration. Never flush the live ruleset merely to install these rules.
+Before first activation, retain a root-only diagnostic snapshot. Do not use a
+full-table restore as routine rollback because that could overwrite unrelated
+rules added after the snapshot.
+
+```sh
+sudo install -d -m 0700 /var/lib/utilibre-edge-firewall
+sudo sh -c 'umask 077; set -C; /usr/sbin/iptables-save -t filter > /var/lib/utilibre-edge-firewall/before-first-enable.rules'
+```
+
+Then, with the edge-side session ready to test all five private listeners:
+
+```sh
+sudo systemctl enable --now utilibre-edge-firewall.service
+sudo /usr/local/sbin/utilibre-edge-firewall status
+```
+
+Immediately verify the portal, SearXNG, Redlib through Anubis, FreshRSS, and
+PrivateBin from the edge VM, then verify their normal HTTPS names from a
+controlled external host. Run the local health checks on the application VM.
+Finally, confirm from a different private-network source that every retained
+port is rejected or times out. A test from the application VM itself does not
+exercise the forwarded `DOCKER-USER` path and is not a substitute.
+
+If any allowed request fails, roll back only the managed policy:
+
+```sh
+sudo systemctl disable --now utilibre-edge-firewall.service
+sudo /usr/local/sbin/utilibre-edge-firewall remove
+```
+
+The unit reapplies the policy with Docker on later boots and removes only its
+tagged jump and dedicated chains when stopped. Re-run the edge, external, and
+unauthorized-source checks after Docker or firewall upgrades.
 
 ## Verification
 
@@ -108,26 +149,19 @@ On the application VM:
 sh scripts/verify-network.sh
 ss -lntp
 docker compose ps
-docker port public-utility-portal-1
-docker port public-utility-cobalt-1
-docker port public-utility-searxng-1
-docker port public-utility-redlib-1
+(cd deployment/utilibre && docker compose ps)
 ```
 
-Compose-generated container names can differ when `COMPOSE_PROJECT_NAME` changes; use `docker compose ps -q SERVICE` with `docker inspect` if a literal name is absent.
+From the edge, each retained private listener should respond. From an
+unauthorized private host and a controlled external host, all five ports
+should time out or be rejected. Also verify:
 
-From the edge VM, each deployed private health endpoint should succeed. From an unauthorized private host, all project ports should time out or be rejected. From a controlled external host, test the application VM's public address directly; the private-bound ports must not be reachable.
+- neither database/cache nor RSSHub has a host listener;
+- direct Redlib and Anubis metrics are container-network-only;
+- DNS resolves only to the edge;
+- the rules survive a planned firewall reload; and
+- removed application ports and hostnames no longer resolve or accept
+  traffic.
 
-Also verify:
-
-- no listener on host ports `5432` or `6379` was created by this project;
-- the public media hostname rejects `POST /` and every path except exact `GET /tunnel`;
-- the public Reddit hostname reaches Anubis, accepted requests reach Redlib only on Docker's service network, and the application port is not reachable from any other source;
-- the edge can still reach services after a container restart;
-- rules persist after a planned firewall reload (a VM reboot is not required for this test);
-- IPv6 does not provide an unintended alternate path;
-- DNS resolves only to the edge VM, never to the application VM.
-
-Robots directives, CORS, API keys, and unguessable URLs are not firewall controls.
-
-For the installed Docker release, re-check Docker's official [packet-filtering and firewall overview](https://docs.docker.com/engine/network/packet-filtering-firewalls/) and [`DOCKER-USER`/conntrack guidance](https://docs.docker.com/engine/network/firewall-iptables/) before changing rules.
+Crawler directives, CORS, cookies, and unguessable URLs are not firewall
+controls.

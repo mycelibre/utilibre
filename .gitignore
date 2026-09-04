@@ -24,7 +24,6 @@ deployment/utilibre/.env
 # bootstrap material, or before-change snapshots. Publish only reports that
 # have been deliberately curated and named here.
 deployment/utilibre/reports/*
-!deployment/utilibre/reports/browser-acceptance.md
 deployment/utilibre/compose.yaml.before-*
 *.log
 *.pid

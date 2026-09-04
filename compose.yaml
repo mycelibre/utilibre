@@ -38,52 +38,19 @@ services:
       CONTACT_URL: ${CONTACT_URL:-}
       PUBLIC_SEARCH_URL: ${PUBLIC_SEARCH_URL:-}
       PUBLIC_REDDIT_URL: ${PUBLIC_REDDIT_URL:-}
-      PUBLIC_YOUTUBE_URL: ${PUBLIC_YOUTUBE_URL:-}
-      PUBLIC_IMGUR_URL: ${PUBLIC_IMGUR_URL:-}
-      PUBLIC_NTFY_URL: ${PUBLIC_NTFY_URL:-}
-      PUBLIC_PDF_URL: ${PUBLIC_PDF_URL:-}
-      PUBLIC_CONVERT_URL: ${PUBLIC_CONVERT_URL:-}
-      PUBLIC_TOOLS_URL: ${PUBLIC_TOOLS_URL:-}
-      PUBLIC_MONITOR_URL: ${PUBLIC_MONITOR_URL:-}
-      PUBLIC_SEND_URL: ${PUBLIC_SEND_URL:-}
       PUBLIC_RSS_URL: ${PUBLIC_RSS_URL:-}
-      PUBLIC_FEEDS_URL: ${PUBLIC_FEEDS_URL:-}
       PUBLIC_PASTE_URL: ${PUBLIC_PASTE_URL:-}
-      PUBLIC_WAKAPI_URL: ${PUBLIC_WAKAPI_URL:-}
-      ENABLED_SERVICES: ${ENABLED_SERVICES:-cobalt,searxng}
+      ENABLED_SERVICES: ${ENABLED_SERVICES:-searxng,redlib,freshrss,privatebin}
       DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE:-en}
       PRIVATE_PREVIEW: ${PORTAL_PRIVATE_PREVIEW:-${PRIVATE_PREVIEW:-0}}
       PRIVATE_BIND_IP: ${PRIVATE_BIND_IP:?Set PRIVATE_BIND_IP}
       EDGE_PROXY_IP: ${PORTAL_EDGE_PROXY_IP:-${EDGE_PROXY_IP:-}}
-      COBALT_INTERNAL_URL: http://cobalt:9000/
-      COBALT_PUBLIC_API_URL: ${PORTAL_COBALT_BROWSER_URL:-${COBALT_PUBLIC_API_URL:?Set COBALT_PUBLIC_API_URL}}
-      COBALT_RESULT_SOURCE_URL: ${PORTAL_COBALT_RESULT_SOURCE_URL:-${COBALT_PUBLIC_API_URL:?Set COBALT_PUBLIC_API_URL}}
-      COBALT_API_KEY_FILE: /run/secrets/portal-cobalt-key
-      COBALT_ALLOWED_HOSTS: ${COBALT_ALLOWED_HOSTS:-dailymotion.com,dai.ly}
-      MEDIA_ALLOWED_ORIGINS: ${PORTAL_PUBLIC_ORIGIN:-${PUBLIC_PORTAL_ORIGIN:?Set PUBLIC_PORTAL_ORIGIN}}
-      MEDIA_RATE_WINDOW_SECONDS: ${MEDIA_RATE_WINDOW_SECONDS:-600}
-      MEDIA_RATE_LIMIT: ${MEDIA_RATE_LIMIT:-10}
-      MEDIA_MAX_CONCURRENT: ${MEDIA_MAX_CONCURRENT:-2}
-      MEDIA_REQUEST_TIMEOUT_SECONDS: ${MEDIA_REQUEST_TIMEOUT_SECONDS:-45}
       STATUS_CACHE_SECONDS: ${STATUS_CACHE_SECONDS:-15}
       STATUS_SERVICES: >-
-        cobalt=http://cobalt:9000/,
         searxng=http://searxng:8080/healthz,
         redlib=http://redlib:8080/settings,
-        ntfy=${PUBLIC_NTFY_URL:?Set PUBLIC_NTFY_URL}v1/health,
-        bentopdf=http://${PRIVATE_BIND_IP}:${BENTOPDF_PORT:-3101}/,
-        vert=http://${PRIVATE_BIND_IP}:${VERT_PORT:-3102}/,
-        omnitools=http://${PRIVATE_BIND_IP}:${OMNITOOLS_PORT:-3103}/,
-        healthchecks=http://${PRIVATE_BIND_IP}:${HEALTHCHECKS_PORT:-3104}/api/v3/status/#host=monitor.utilibre.org,
-        pairdrop=http://${PRIVATE_BIND_IP}:${PAIRDROP_PORT:-3105}/,
         freshrss=http://${PRIVATE_BIND_IP}:${FRESHRSS_PORT:-3106}/i/,
-        rsshub=http://${PRIVATE_BIND_IP}:${RSSHUB_PORT:-3107}/healthz,
-        privatebin=http://${PRIVATE_BIND_IP}:${PRIVATEBIN_PORT:-3108}/,
-        wakapi=http://${PRIVATE_BIND_IP}:${WAKAPI_PORT:-3109}/api/health,
-        rimgo=http://rimgo:3000/
-    secrets:
-      - source: portal_cobalt_key
-        target: portal-cobalt-key
+        privatebin=http://${PRIVATE_BIND_IP}:${PRIVATEBIN_PORT:-3108}/
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
     healthcheck:
@@ -102,58 +69,6 @@ services:
           pids: 128
         reservations:
           memory: 64M
-    logging: *default-logging
-
-  cobalt:
-    image: ghcr.io/imputnet/cobalt:11.7.1-a636575@sha256:63186dd68afd57ce3bb1f62cc4c139f5fa95b9c3e87a3cf5c6e4c7a570523f62
-    init: true
-    restart: unless-stopped
-    read_only: true
-    <<: *default-security
-    ports:
-      - target: 9000
-        published: "${COBALT_PORT:-9000}"
-        host_ip: "${PRIVATE_BIND_IP:?Set PRIVATE_BIND_IP}"
-        protocol: tcp
-    environment:
-      TZ: ${TZ:-America/Guatemala}
-      API_URL: ${COBALT_PUBLIC_API_URL:?Set COBALT_PUBLIC_API_URL}
-      API_PORT: "9000"
-      API_INSTANCE_COUNT: "1"
-      API_KEY_URL: file:///run/secrets/cobalt-keys.json
-      API_AUTH_REQUIRED: "1"
-      CORS_WILDCARD: "0"
-      CORS_URL: ${PUBLIC_PORTAL_ORIGIN:?Set PUBLIC_PORTAL_ORIGIN}
-      DURATION_LIMIT: ${COBALT_DURATION_LIMIT_SECONDS:-1800}
-      TUNNEL_LIFESPAN: ${COBALT_TUNNEL_LIFESPAN_SECONDS:-90}
-      RATELIMIT_WINDOW: ${COBALT_RATELIMIT_WINDOW_SECONDS:-60}
-      RATELIMIT_MAX: ${COBALT_RATELIMIT_MAX:-30}
-      TUNNEL_RATELIMIT_WINDOW: ${COBALT_TUNNEL_RATELIMIT_WINDOW_SECONDS:-60}
-      TUNNEL_RATELIMIT_MAX: ${COBALT_TUNNEL_RATELIMIT_MAX:-120}
-      PROCESSING_PRIORITY: ${COBALT_PROCESSING_PRIORITY:-10}
-      FORCE_LOCAL_PROCESSING: never
-      YOUTUBE_ALLOW_BETTER_AUDIO: "0"
-      ENABLE_DEPRECATED_YOUTUBE_HLS: never
-      DISABLED_SERVICES: ${COBALT_DISABLED_SERVICES:-bilibili,bluesky,facebook,instagram,loom,ok,pinterest,reddit,rutube,snapchat,soundcloud,streamable,tiktok,tumblr,twitch,twitter,vimeo,vk,youtube}
-    secrets:
-      - source: cobalt_keys
-        target: cobalt-keys.json
-    healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:9000/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
-    networks:
-      - services
-    deploy:
-      resources:
-        limits:
-          cpus: "${COBALT_CPU_LIMIT:-1.50}"
-          memory: ${COBALT_MEMORY_LIMIT:-1536M}
-          pids: ${COBALT_PIDS_LIMIT:-256}
-        reservations:
-          memory: ${COBALT_MEMORY_RESERVATION:-256M}
     logging: *default-logging
 
   searxng:
@@ -339,42 +254,6 @@ services:
           memory: ${REDLIB_MEMORY_RESERVATION:-32M}
     logging: *default-logging
 
-  rimgo:
-    profiles: ["optional"]
-    image: codeberg.org/rimgo/rimgo:1.4.2@sha256:569800892522c7dd7d47290ce80d5c1fbb451609ce0d983c545a5d203ca93048
-    restart: unless-stopped
-    read_only: true
-    user: "65534:65534"
-    <<: *default-security
-    ports:
-      - target: 3000
-        published: "${RIMGO_PORT:-3001}"
-        host_ip: "${PRIVATE_BIND_IP:?Set PRIVATE_BIND_IP}"
-        protocol: tcp
-    environment:
-      PORT: "3000"
-      ADDRESS: "0.0.0.0"
-      PROTOCOL_DETECTION: "1"
-      SECURE: "1"
-      FORCE_WEBP: "0"
-      PRIVACY_POLICY: ${PUBLIC_PORTAL_ORIGIN:?Set PUBLIC_PORTAL_ORIGIN}/en/privacy
-      PRIVACY_NOT_COLLECTED: "0"
-      PRIVACY_IP: "1"
-      PRIVACY_URL: "1"
-      PRIVACY_DEVICE: "1"
-      PRIVACY_DIAGNOSTICS: "1"
-    networks:
-      - services
-    deploy:
-      resources:
-        limits:
-          cpus: "${RIMGO_CPU_LIMIT:-0.50}"
-          memory: ${RIMGO_MEMORY_LIMIT:-256M}
-          pids: 128
-        reservations:
-          memory: 32M
-    logging: *default-logging
-
 networks:
   services:
     driver: bridge
@@ -386,9 +265,5 @@ volumes:
   searxng-cache:
 
 secrets:
-  cobalt_keys:
-    file: ./secrets/cobalt-keys.json
-  portal_cobalt_key:
-    file: ./secrets/portal-cobalt-key
   anubis_ed25519:
     file: ./secrets/anubis-ed25519-key.hex

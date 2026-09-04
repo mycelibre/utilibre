@@ -22,8 +22,7 @@
     "test:searx-redaction": "python3 ../scripts/test-searx-redaction.py",
     "test:foss-policy": "node scripts/check-foss-policy.ts",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
-    "test:public:bentopdf": "E2E_BASE_URL=https://utilibre.org PUBLIC_PDF_BASE_URL=https://pdf.utilibre.org playwright test tests/e2e/public-bentopdf-isolation.spec.ts --project=chromium"
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

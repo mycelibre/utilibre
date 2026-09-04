@@ -4,17 +4,27 @@ import { networkInterfaces } from 'node:os';
 import { pathToFileURL } from 'node:url';
 
 const repository = new URL('../', import.meta.url);
-const linkedServices = [
-  { id: 'ntfy', hostKey: 'PUBLIC_NTFY_HOST', urlKey: 'PUBLIC_NTFY_URL', portKey: 'NTFY_PORT' },
-  { id: 'bentopdf', hostKey: 'PUBLIC_PDF_HOST', urlKey: 'PUBLIC_PDF_URL', portKey: 'BENTOPDF_PORT' },
-  { id: 'vert', hostKey: 'PUBLIC_CONVERT_HOST', urlKey: 'PUBLIC_CONVERT_URL', portKey: 'VERT_PORT' },
-  { id: 'omnitools', hostKey: 'PUBLIC_TOOLS_HOST', urlKey: 'PUBLIC_TOOLS_URL', portKey: 'OMNITOOLS_PORT' },
-  { id: 'healthchecks', hostKey: 'PUBLIC_MONITOR_HOST', urlKey: 'PUBLIC_MONITOR_URL', portKey: 'HEALTHCHECKS_PORT' },
-  { id: 'pairdrop', hostKey: 'PUBLIC_SEND_HOST', urlKey: 'PUBLIC_SEND_URL', portKey: 'PAIRDROP_PORT' },
+
+const services = [
+  { id: 'searxng', hostKey: 'PUBLIC_SEARCH_HOST', urlKey: 'PUBLIC_SEARCH_URL', portKey: 'SEARXNG_PORT' },
+  { id: 'redlib', hostKey: 'PUBLIC_REDDIT_HOST', urlKey: 'PUBLIC_REDDIT_URL', portKey: 'REDLIB_PORT' },
   { id: 'freshrss', hostKey: 'PUBLIC_RSS_HOST', urlKey: 'PUBLIC_RSS_URL', portKey: 'FRESHRSS_PORT' },
-  { id: 'rsshub', hostKey: 'PUBLIC_FEEDS_HOST', urlKey: 'PUBLIC_FEEDS_URL', portKey: 'RSSHUB_PORT' },
   { id: 'privatebin', hostKey: 'PUBLIC_PASTE_HOST', urlKey: 'PUBLIC_PASTE_URL', portKey: 'PRIVATEBIN_PORT' },
-  { id: 'wakapi', hostKey: 'PUBLIC_WAKAPI_HOST', urlKey: 'PUBLIC_WAKAPI_URL', portKey: 'WAKAPI_PORT' },
+];
+const allowedServices = new Set(services.map(({ id }) => id));
+
+// Stale settings should fail loudly instead of silently republishing a service
+// that the project deliberately retired.
+const retiredSettings = [
+  'PUBLIC_MEDIA_HOST', 'COBALT_PUBLIC_API_URL', 'PORTAL_COBALT_BROWSER_URL',
+  'PORTAL_COBALT_RESULT_SOURCE_URL', 'PUBLIC_YOUTUBE_HOST', 'PUBLIC_YOUTUBE_URL',
+  'PUBLIC_IMGUR_HOST', 'PUBLIC_IMGUR_URL', 'PUBLIC_NTFY_HOST', 'PUBLIC_NTFY_URL',
+  'PUBLIC_PDF_HOST', 'PUBLIC_PDF_URL', 'PUBLIC_CONVERT_HOST', 'PUBLIC_CONVERT_URL',
+  'PUBLIC_TOOLS_HOST', 'PUBLIC_TOOLS_URL', 'PUBLIC_DEVELOPER_TOOLS_HOST',
+  'PUBLIC_DEVELOPER_TOOLS_URL', 'PUBLIC_OPENAPI_HOST', 'PUBLIC_OPENAPI_URL',
+  'PUBLIC_MONITOR_HOST', 'PUBLIC_MONITOR_URL', 'PUBLIC_SEND_HOST', 'PUBLIC_SEND_URL',
+  'PUBLIC_FEEDS_HOST', 'PUBLIC_FEEDS_URL', 'PUBLIC_WAKAPI_HOST', 'PUBLIC_WAKAPI_URL',
+  'INVIDIOUS_DB_USER', 'INVIDIOUS_DB_PASSWORD', 'INVIDIOUS_DB_NAME',
 ];
 
 export async function loadValidatedEnvironment({ launch = false } = {}) {
@@ -70,142 +80,67 @@ export function validateEnvironmentValues(values, { launch = false, assignedAddr
   if (launch && portalPrivatePreview) errors.push('PORTAL_PRIVATE_PREVIEW must be 0 for public launch.');
 
   const portalOrigin = values.PORTAL_PUBLIC_ORIGIN || values.PUBLIC_PORTAL_ORIGIN;
-  const portalCobaltBrowserUrl = values.PORTAL_COBALT_BROWSER_URL || values.COBALT_PUBLIC_API_URL;
-  const portalCobaltResultSourceUrl = values.PORTAL_COBALT_RESULT_SOURCE_URL || values.COBALT_PUBLIC_API_URL;
   if (portalPrivatePreview) {
     validatePreviewServiceUrl('PORTAL_PUBLIC_ORIGIN', portalOrigin, bindIp, values.PORTAL_PORT ?? defaultPort('PORTAL_PORT'), false, errors);
-    validatePreviewServiceUrl('PORTAL_COBALT_BROWSER_URL', portalCobaltBrowserUrl, bindIp, values.COBALT_PORT ?? defaultPort('COBALT_PORT'), true, errors);
   } else {
-    const portalOriginHost = validateHostname('PORTAL_PUBLIC_ORIGIN_HOST', hostnameFromUrl(portalOrigin), true, true, errors);
-    const portalCobaltHost = validateHostname('PORTAL_COBALT_BROWSER_URL_HOST', hostnameFromUrl(portalCobaltBrowserUrl), true, true, errors);
-    validateServiceUrl('PORTAL_PUBLIC_ORIGIN', portalOrigin, portalOriginHost, false, errors);
-    validateServiceUrl('PORTAL_COBALT_BROWSER_URL', portalCobaltBrowserUrl, portalCobaltHost, true, errors);
+    const portalHost = validateHostname('PUBLIC_PORTAL_HOST', values.PUBLIC_PORTAL_HOST || hostnameFromUrl(portalOrigin), true, launch, errors);
+    validateServiceUrl('PORTAL_PUBLIC_ORIGIN', portalOrigin, portalHost, false, errors);
   }
-  validatePreviewOrPublicServiceUrl(
-    'PORTAL_COBALT_RESULT_SOURCE_URL',
-    portalCobaltResultSourceUrl,
-    bindIp,
-    values.COBALT_PORT ?? defaultPort('COBALT_PORT'),
-    true,
-    errors,
-  );
 
   const secret = values.SEARXNG_SECRET ?? '';
   if (!/^[a-f0-9]{64}$/i.test(secret) || isPlaceholder(secret)) {
     errors.push('SEARXNG_SECRET must be a non-placeholder 32-byte hexadecimal secret (64 characters).');
   }
 
-  const enabled = csv(values.ENABLED_SERVICES ?? 'cobalt,searxng');
-  const allowedServices = new Set(['cobalt', 'searxng', 'redlib', 'rimgo', ...linkedServices.map(({ id }) => id)]);
-  for (const id of enabled) if (!allowedServices.has(id)) errors.push(`ENABLED_SERVICES contains unsupported ID: ${id}`);
+  const enabled = csv(values.ENABLED_SERVICES ?? 'searxng,redlib,freshrss,privatebin');
+  if (new Set(enabled).size !== enabled.length) errors.push('ENABLED_SERVICES must not contain duplicate IDs.');
+  for (const id of enabled) if (!allowedServices.has(id)) errors.push(`ENABLED_SERVICES contains unsupported or retired ID: ${id}`);
+  if (!enabled.includes('searxng')) errors.push('ENABLED_SERVICES must include searxng.');
+
   const composeProfiles = csv(values.COMPOSE_PROFILES ?? '');
   if (enabled.includes('redlib') !== composeProfiles.includes('privacy-frontends')) {
     errors.push('Redlib requires both ENABLED_SERVICES=...redlib... and the privacy-frontends entry in COMPOSE_PROFILES; enable or disable both together.');
   }
+  const unknownProfiles = composeProfiles.filter((profile) => profile !== 'privacy-frontends');
+  if (unknownProfiles.length) errors.push(`COMPOSE_PROFILES contains unsupported entries: ${unknownProfiles.join(', ')}`);
   if (!['en', 'es'].includes(values.DEFAULT_LANGUAGE ?? 'en')) errors.push('DEFAULT_LANGUAGE must be en or es.');
 
   if (launch) {
-    for (const id of ['cobalt', 'searxng']) {
-      if (!enabled.includes(id)) errors.push(`ENABLED_SERVICES must include ${id} for launch.`);
-    }
-    if (enabled.includes('rimgo')) {
-      errors.push('ENABLED_SERVICES must not include rimgo for launch until an official fixed release is pinned and reviewed.');
-    }
-    const requiredHosts = ['PUBLIC_PORTAL_HOST', 'PUBLIC_MEDIA_HOST', 'PUBLIC_SEARCH_HOST'];
-    if (enabled.includes('redlib')) requiredHosts.push('PUBLIC_REDDIT_HOST');
-    for (const service of linkedServices) if (enabled.includes(service.id)) requiredHosts.push(service.hostKey);
-    for (const key of requiredHosts) {
-      if (!(values[key] ?? '').trim()) errors.push(`${key} must be set explicitly for launch.`);
+    if (!(values.PUBLIC_PORTAL_HOST ?? '').trim()) errors.push('PUBLIC_PORTAL_HOST must be set explicitly for launch.');
+    for (const service of services) if (enabled.includes(service.id) && !(values[service.hostKey] ?? '').trim()) {
+      errors.push(`${service.hostKey} must be set explicitly for launch.`);
     }
     validateLaunchUrl('SOURCE_CODE_URL', values.SOURCE_CODE_URL, errors);
     validateLaunchUrl('CONTACT_URL', values.CONTACT_URL, errors);
   }
   if ((values.SUPPORT_URL ?? '').trim()) validateLaunchUrl('SUPPORT_URL', values.SUPPORT_URL, errors);
-  const portalPort = values.PORTAL_PORT ?? defaultPort('PORTAL_PORT');
-  const cobaltPort = values.COBALT_PORT ?? defaultPort('COBALT_PORT');
-  const searxngPort = values.SEARXNG_PORT ?? defaultPort('SEARXNG_PORT');
-  const redlibPort = values.REDLIB_PORT ?? defaultPort('REDLIB_PORT');
-  if (privatePreview && !launch) {
-    validatePreviewHostname('PUBLIC_PORTAL_HOST', values.PUBLIC_PORTAL_HOST, bindIp, errors);
-    validatePreviewHostname('PUBLIC_MEDIA_HOST', values.PUBLIC_MEDIA_HOST, bindIp, errors);
-    validatePreviewHostname('PUBLIC_SEARCH_HOST', values.PUBLIC_SEARCH_HOST, bindIp, errors);
-    validatePreviewServiceUrl('PUBLIC_PORTAL_ORIGIN', values.PUBLIC_PORTAL_ORIGIN, bindIp, portalPort, false, errors);
-    validatePreviewServiceUrl('COBALT_PUBLIC_API_URL', values.COBALT_PUBLIC_API_URL, bindIp, cobaltPort, true, errors);
-    validatePreviewOrPublicServiceUrl('PUBLIC_SEARCH_URL', values.PUBLIC_SEARCH_URL, bindIp, searxngPort, true, errors);
-    if (enabled.includes('redlib')) {
-      validatePreviewHostname('PUBLIC_REDDIT_HOST', values.PUBLIC_REDDIT_HOST, bindIp, errors);
-      validatePreviewOrPublicServiceUrl('PUBLIC_REDDIT_URL', values.PUBLIC_REDDIT_URL, bindIp, redlibPort, true, errors);
-    } else if ((values.PUBLIC_REDDIT_URL ?? '').trim()) {
-      errors.push('PUBLIC_REDDIT_URL must stay empty while redlib is not enabled.');
-    }
-    for (const service of linkedServices) {
-      if (enabled.includes(service.id)) {
+
+  for (const service of services) {
+    if (enabled.includes(service.id)) {
+      if (privatePreview && !launch) {
         validatePreviewHostname(service.hostKey, values[service.hostKey], bindIp, errors);
-        validatePreviewOrPublicServiceUrl(service.urlKey, values[service.urlKey], bindIp, values[service.portKey] ?? defaultPort(service.portKey), true, errors);
-      } else if ((values[service.urlKey] ?? '').trim()) {
-        errors.push(`${service.urlKey} must stay empty while ${service.id} is not enabled.`);
-      }
-    }
-  } else {
-    const portalHost = validateHostname('PUBLIC_PORTAL_HOST', values.PUBLIC_PORTAL_HOST || hostnameFromUrl(values.PUBLIC_PORTAL_ORIGIN), true, launch, errors);
-    const mediaHost = validateHostname('PUBLIC_MEDIA_HOST', values.PUBLIC_MEDIA_HOST || hostnameFromUrl(values.COBALT_PUBLIC_API_URL), true, launch, errors);
-    const searchHost = validateHostname('PUBLIC_SEARCH_HOST', values.PUBLIC_SEARCH_HOST || hostnameFromUrl(values.PUBLIC_SEARCH_URL), true, launch, errors);
-    validateServiceUrl('PUBLIC_PORTAL_ORIGIN', values.PUBLIC_PORTAL_ORIGIN, portalHost, false, errors);
-    validateServiceUrl('COBALT_PUBLIC_API_URL', values.COBALT_PUBLIC_API_URL, mediaHost, true, errors);
-    validateServiceUrl('PUBLIC_SEARCH_URL', values.PUBLIC_SEARCH_URL, searchHost, true, errors);
-    if (enabled.includes('redlib')) {
-      const redditHost = validateHostname('PUBLIC_REDDIT_HOST', values.PUBLIC_REDDIT_HOST || hostnameFromUrl(values.PUBLIC_REDDIT_URL), true, launch, errors);
-      validateServiceUrl('PUBLIC_REDDIT_URL', values.PUBLIC_REDDIT_URL, redditHost, true, errors);
-    } else if ((values.PUBLIC_REDDIT_URL ?? '').trim()) {
-      errors.push('PUBLIC_REDDIT_URL must stay empty while redlib is not enabled.');
-    }
-    for (const service of linkedServices) {
-      if (enabled.includes(service.id)) {
+        validatePreviewOrPublicServiceUrl(
+          service.urlKey,
+          values[service.urlKey],
+          bindIp,
+          values[service.portKey] ?? defaultPort(service.portKey),
+          true,
+          errors,
+        );
+      } else {
         const host = validateHostname(service.hostKey, values[service.hostKey] || hostnameFromUrl(values[service.urlKey]), true, launch, errors);
         validateServiceUrl(service.urlKey, values[service.urlKey], host, true, errors);
-      } else if ((values[service.urlKey] ?? '').trim()) {
-        errors.push(`${service.urlKey} must stay empty while ${service.id} is not enabled.`);
       }
+    } else if ((values[service.urlKey] ?? '').trim() || (values[service.hostKey] ?? '').trim()) {
+      errors.push(`${service.urlKey} and ${service.hostKey} must stay empty while ${service.id} is disabled.`);
     }
   }
 
-  if (enabled.includes('redlib')) {
-    let expectedAnubisHost = '';
-    try { expectedAnubisHost = normalizeHost(new URL(values.PUBLIC_REDDIT_URL ?? '').hostname); } catch { /* URL validation above reports this. */ }
-    const anubisHost = normalizeHost(values.ANUBIS_PUBLIC_HOST ?? '');
-    if (!anubisHost || (expectedAnubisHost && anubisHost !== expectedAnubisHost)) {
-      errors.push('ANUBIS_PUBLIC_HOST must be the exact hostname used by PUBLIC_REDDIT_URL.');
-    }
-    const cookieSecure = values.ANUBIS_COOKIE_SECURE ?? 'true';
-    const cookiePartitioned = values.ANUBIS_COOKIE_PARTITIONED ?? 'true';
-    if (!['true', 'false'].includes(cookieSecure)) errors.push('ANUBIS_COOKIE_SECURE must be true or false.');
-    if (!['true', 'false'].includes(cookiePartitioned)) errors.push('ANUBIS_COOKIE_PARTITIONED must be true or false.');
-    if (launch && cookieSecure !== 'true') errors.push('ANUBIS_COOKIE_SECURE must be true for public launch.');
-    if (cookieSecure === 'false' && cookiePartitioned !== 'false') {
-      errors.push('ANUBIS_COOKIE_PARTITIONED must be false when ANUBIS_COOKIE_SECURE is false.');
-    }
-  }
-
-  if (launch && (values.PUBLIC_IMGUR_URL ?? '').trim()) {
-    errors.push('PUBLIC_IMGUR_URL must stay empty for launch until an official fixed rimgo release is pinned and reviewed.');
-  } else if (!launch && enabled.includes('rimgo')) {
-    const imgurHost = validateHostname('PUBLIC_IMGUR_HOST', values.PUBLIC_IMGUR_HOST, true, launch, errors);
-    validateServiceUrl('PUBLIC_IMGUR_URL', values.PUBLIC_IMGUR_URL, imgurHost, true, errors);
-  } else if ((values.PUBLIC_IMGUR_URL ?? '').trim()) {
-    errors.push('PUBLIC_IMGUR_URL must stay empty while rimgo is not enabled.');
-  }
-  if ((values.PUBLIC_YOUTUBE_URL ?? '').trim()) errors.push('PUBLIC_YOUTUBE_URL must stay empty because Invidious is deferred in this Compose project.');
-  for (const key of ['INVIDIOUS_DB_USER', 'INVIDIOUS_DB_PASSWORD', 'INVIDIOUS_DB_NAME']) {
-    if ((values[key] ?? '').trim()) errors.push(`${key} must stay empty because Invidious is deferred in this Compose project.`);
-  }
+  if (enabled.includes('redlib')) validateAnubis(values, { launch }, errors);
 
   const ports = [
     'PORTAL_PORT',
-    'COBALT_PORT',
-    'SEARXNG_PORT',
-    ...(enabled.includes('redlib') ? ['REDLIB_PORT'] : []),
-    ...(enabled.includes('rimgo') ? ['RIMGO_PORT'] : []),
-    ...linkedServices.filter(({ id }) => enabled.includes(id)).map(({ portKey }) => portKey),
+    ...services.filter(({ id }) => enabled.includes(id)).map(({ portKey }) => portKey),
   ];
   const seenPorts = new Map();
   for (const key of ports) {
@@ -215,26 +150,8 @@ export function validateEnvironmentValues(values, { launch = false, assignedAddr
     else seenPorts.set(value, key);
   }
 
-  for (const key of [
-    'COBALT_DURATION_LIMIT_SECONDS',
-    'COBALT_TUNNEL_LIFESPAN_SECONDS',
-    'COBALT_RATELIMIT_WINDOW_SECONDS',
-    'COBALT_RATELIMIT_MAX',
-    'COBALT_TUNNEL_RATELIMIT_WINDOW_SECONDS',
-    'COBALT_TUNNEL_RATELIMIT_MAX',
-    'MEDIA_RATE_WINDOW_SECONDS',
-    'MEDIA_RATE_LIMIT',
-    'MEDIA_MAX_CONCURRENT',
-    'MEDIA_REQUEST_TIMEOUT_SECONDS',
-    'STATUS_CACHE_SECONDS',
-    'COBALT_PIDS_LIMIT',
-    'REDLIB_PIDS_LIMIT',
-    'DOCKER_LOG_MAX_FILES',
-  ]) {
+  for (const key of ['STATUS_CACHE_SECONDS', 'REDLIB_PIDS_LIMIT', 'DOCKER_LOG_MAX_FILES']) {
     if (values[key] !== undefined && (!/^\d+$/.test(values[key]) || Number(values[key]) < 1)) errors.push(`${key} must be a positive integer.`);
-  }
-  if (values.COBALT_PROCESSING_PRIORITY !== undefined && (!/^\d+$/.test(values.COBALT_PROCESSING_PRIORITY) || Number(values.COBALT_PROCESSING_PRIORITY) > 19)) {
-    errors.push('COBALT_PROCESSING_PRIORITY must be an integer from 0 through 19; larger values are invalid and negative values would raise FFmpeg priority.');
   }
   const valkeyLimit = memoryBytes(values.VALKEY_MEMORY_LIMIT ?? '128M');
   const valkeyMaximum = memoryBytes(values.VALKEY_MAXMEMORY ?? '96mb');
@@ -254,8 +171,29 @@ export function validateEnvironmentValues(values, { launch = false, assignedAddr
     errors.push('REDLIB_SFW_ONLY must be on or off.');
   }
 
+  for (const key of retiredSettings) if ((values[key] ?? '').trim()) {
+    errors.push(`${key} belongs to a retired service and must be removed or left empty.`);
+  }
+
   if (errors.length) throw new Error(`Configuration validation failed:\n- ${errors.join('\n- ')}`);
   return values;
+}
+
+function validateAnubis(values, { launch }, errors) {
+  let expectedAnubisHost = '';
+  try { expectedAnubisHost = normalizeHost(new URL(values.PUBLIC_REDDIT_URL ?? '').hostname); } catch { /* URL validation reports this. */ }
+  const anubisHost = normalizeHost(values.ANUBIS_PUBLIC_HOST ?? '');
+  if (!anubisHost || (expectedAnubisHost && anubisHost !== expectedAnubisHost)) {
+    errors.push('ANUBIS_PUBLIC_HOST must be the exact hostname used by PUBLIC_REDDIT_URL.');
+  }
+  const cookieSecure = values.ANUBIS_COOKIE_SECURE ?? 'true';
+  const cookiePartitioned = values.ANUBIS_COOKIE_PARTITIONED ?? 'true';
+  if (!['true', 'false'].includes(cookieSecure)) errors.push('ANUBIS_COOKIE_SECURE must be true or false.');
+  if (!['true', 'false'].includes(cookiePartitioned)) errors.push('ANUBIS_COOKIE_PARTITIONED must be true or false.');
+  if (launch && cookieSecure !== 'true') errors.push('ANUBIS_COOKIE_SECURE must be true for public launch.');
+  if (cookieSecure === 'false' && cookiePartitioned !== 'false') {
+    errors.push('ANUBIS_COOKIE_PARTITIONED must be false when ANUBIS_COOKIE_SECURE is false.');
+  }
 }
 
 function validatePrivateIp(name, value, errors) {
@@ -309,15 +247,10 @@ function validatePreviewServiceUrl(name, value, bindIp, expectedPort, trailingSl
   let url;
   try { url = new URL(value ?? ''); } catch { return errors.push(`${name} must be a valid direct private-preview HTTP URL.`); }
   const effectivePort = url.port || (url.protocol === 'http:' ? '80' : '');
-  if (
-    url.protocol !== 'http:'
-    || url.username
-    || url.password
-    || url.search
-    || url.hash
-    || normalizedIp(url.hostname) !== bindIp
-    || effectivePort !== String(expectedPort)
-  ) errors.push(`${name} must use direct HTTP on PRIVATE_BIND_IP and its configured service port while PRIVATE_PREVIEW=1.`);
+  if (url.protocol !== 'http:' || url.username || url.password || url.search || url.hash
+      || normalizedIp(url.hostname) !== bindIp || effectivePort !== String(expectedPort)) {
+    errors.push(`${name} must use direct HTTP on PRIVATE_BIND_IP and its configured service port while PRIVATE_PREVIEW=1.`);
+  }
   if (url.pathname !== '/') errors.push(`${name} must not contain a path.`);
   if (trailingSlash && !(value ?? '').endsWith('/')) errors.push(`${name} must end with a slash.`);
   if (!trailingSlash && (value ?? '').endsWith('/')) errors.push(`${name} must be an origin without a trailing slash.`);
@@ -326,9 +259,7 @@ function validatePreviewServiceUrl(name, value, bindIp, expectedPort, trailingSl
 function validatePreviewOrPublicServiceUrl(name, value, bindIp, expectedPort, trailingSlash, errors) {
   let url;
   try { url = new URL(value ?? ''); } catch { return errors.push(`${name} must be a valid service URL.`); }
-  if (url.protocol !== 'https:') {
-    return validatePreviewServiceUrl(name, value, bindIp, expectedPort, trailingSlash, errors);
-  }
+  if (url.protocol !== 'https:') return validatePreviewServiceUrl(name, value, bindIp, expectedPort, trailingSlash, errors);
   const hostname = validateHostname(`${name}_HOST`, url.hostname, true, true, errors);
   return validateServiceUrl(name, value, hostname, trailingSlash, errors);
 }
@@ -371,7 +302,7 @@ async function localAddresses() {
 }
 
 function normalizedIp(value) {
-  const cleaned = value.trim().replace(/^\[|\]$/g, '').replace(/%.+$/, '');
+  const cleaned = String(value).trim().replace(/^\[|\]$/g, '').replace(/%.+$/, '');
   if (isIP(cleaned) !== 6) return cleaned;
   try { return new URL(`http://[${cleaned}]`).hostname.replace(/^\[|\]$/g, '').toLowerCase(); } catch { return cleaned.toLowerCase(); }
 }
@@ -383,20 +314,10 @@ function csv(value) { return value.split(',').map((item) => item.trim()).filter(
 function defaultPort(key) {
   return ({
     PORTAL_PORT: '8080',
-    COBALT_PORT: '9000',
     SEARXNG_PORT: '8888',
     REDLIB_PORT: '3002',
-    RIMGO_PORT: '3001',
-    NTFY_PORT: '2586',
-    BENTOPDF_PORT: '3101',
-    VERT_PORT: '3102',
-    OMNITOOLS_PORT: '3103',
-    HEALTHCHECKS_PORT: '3104',
-    PAIRDROP_PORT: '3105',
     FRESHRSS_PORT: '3106',
-    RSSHUB_PORT: '3107',
     PRIVATEBIN_PORT: '3108',
-    WAKAPI_PORT: '3109',
   })[key];
 }
 function memoryBytes(value) {

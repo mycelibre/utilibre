@@ -21,10 +21,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?Set POSTGRES_ADMIN_PASSWORD}
       POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=trust"
-      HEALTHCHECKS_DB_PASSWORD: ${HEALTHCHECKS_DB_PASSWORD:?Set HEALTHCHECKS_DB_PASSWORD}
       FRESHRSS_DB_PASSWORD: ${FRESHRSS_DB_PASSWORD:?Set FRESHRSS_DB_PASSWORD}
-      WAKAPI_DB_PASSWORD: ${WAKAPI_DB_PASSWORD:?Set WAKAPI_DB_PASSWORD}
-      CRABFIT_DB_PASSWORD: ${CRABFIT_DB_PASSWORD:?Set CRABFIT_DB_PASSWORD}
       TZ: ${TZ:-America/Guatemala}
     command:
       - postgres
@@ -84,235 +81,6 @@ services:
     pids_limit: 100
     logging: *default-logging
 
-  ntfy:
-    image: docker.io/binwiederhier/ntfy:v2.28.0@sha256:6ef4b819f722fccdc036af611c4774cfdc2de821ab74fdd48bbf4c9d6f8973da
-    user: "1000:1000"
-    init: true
-    restart: unless-stopped
-    read_only: true
-    <<: *default-security
-    cap_drop: [ALL]
-    command: ["serve", "--config", "/etc/ntfy/server.yml"]
-    ports:
-      - target: 80
-        published: "${NTFY_PORT:-2586}"
-        host_ip: "${APP_BIND_IP:?Set APP_BIND_IP}"
-        protocol: tcp
-    environment:
-      TZ: ${TZ:-America/Guatemala}
-    volumes:
-      - ./config/ntfy/server.yml:/etc/ntfy/server.yml:ro
-      - ./data/ntfy:/var/lib/ntfy
-    tmpfs:
-      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777,uid=1000,gid=1000
-    healthcheck:
-      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1/v1/health | grep -q '\"healthy\":true'"]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    # This dedicated network keeps other application containers away from
-    # ntfy's private listener while retaining DNS and HTTPS egress for the
-    # supported iOS relay.
-    networks: [ntfy-egress]
-    mem_limit: 512m
-    cpus: 0.5
-    pids_limit: 128
-    logging: *default-logging
-
-  bentopdf:
-    image: ghcr.io/alam00000/bentopdf:2.8.8@sha256:6ef493c8e3bdbaa26c9bfcec330377ae95116fa00660ca0342769063197b1952
-    restart: unless-stopped
-    read_only: true
-    <<: *default-security
-    cap_drop: [ALL]
-    ports:
-      - target: 8080
-        published: "${BENTOPDF_PORT:-3101}"
-        host_ip: "${APP_BIND_IP:?Set APP_BIND_IP}"
-        protocol: tcp
-    # The public edge is the single authority for COOP/COEP. BentoPDF's
-    # upstream files otherwise add a second, conflicting COEP value.
-    volumes:
-      - ./config/bentopdf/security-headers.conf:/etc/nginx/security-headers.conf:ro
-      - ./config/bentopdf/security-headers-docs.conf:/etc/nginx/security-headers-docs.conf:ro
-    tmpfs:
-      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
-      - /etc/nginx/tmp:rw,nosuid,nodev,noexec,size=32m,mode=0755,uid=101,gid=101
-      - /var/cache/nginx:rw,nosuid,nodev,noexec,size=32m,mode=0755,uid=101,gid=101
-      - /var/run:rw,nosuid,nodev,noexec,size=4m,mode=0755
-    healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/"]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-    networks: [frontend]
-    mem_limit: 384m
-    cpus: 0.5
-    pids_limit: 128
-    logging: *default-logging
-
-  vert:
-    build:
-      context: ./src/vert
-      dockerfile: ../../config/vert/Dockerfile.utilibre
-      args:
-        PUB_ENV: production
-        PUB_HOSTNAME: convert.utilibre.org
-        PUB_PLAUSIBLE_URL: ""
-        PUB_VERTD_URL: ""
-        PUB_DISABLE_ALL_EXTERNAL_REQUESTS: "true"
-        PUB_DISABLE_FAILURE_BLOCKS: "false"
-        PUB_DONATION_URL: ${DONATION_URL:-}
-        PUB_STRIPE_KEY: ""
-    image: utilibre-vert:e0ffd343
-    pull_policy: never
-    restart: unless-stopped
-    read_only: true
-    <<: *default-security
-    cap_drop: [ALL]
-    # The stock nginx master starts as root, creates temp paths, then drops to
-    # its worker UID. These are the minimum capabilities its tested entrypoint
-    # needs; the VERT application itself remains static.
-    cap_add: [NET_BIND_SERVICE, CHOWN, SETGID, SETUID]
-    ports:
-      - target: 80
-        published: "${VERT_PORT:-3102}"
-        host_ip: "${APP_BIND_IP:?Set APP_BIND_IP}"
-        protocol: tcp
-    tmpfs:
-      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
-      - /var/cache/nginx:rw,nosuid,nodev,noexec,size=32m,mode=0755
-      - /var/run:rw,nosuid,nodev,noexec,size=4m,mode=0755
-    healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/"]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-    networks: [frontend]
-    mem_limit: 512m
-    cpus: 0.5
-    pids_limit: 128
-    logging: *default-logging
-
-  omnitools:
-    image: docker.io/iib0011/omni-tools:0.6.0@sha256:ceb5acc317daf387634f7f212cefe4722fd1243ad1cba74203f25254195b6c69
-    restart: unless-stopped
-    read_only: true
-    <<: *default-security
-    cap_drop: [ALL]
-    cap_add: [NET_BIND_SERVICE, CHOWN, SETGID, SETUID]
-    ports:
-      - target: 80
-        published: "${OMNITOOLS_PORT:-3103}"
-        host_ip: "${APP_BIND_IP:?Set APP_BIND_IP}"
-        protocol: tcp
-    tmpfs:
-      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
-      - /var/cache/nginx:rw,nosuid,nodev,noexec,size=32m,mode=0755
-      - /var/run:rw,nosuid,nodev,noexec,size=4m,mode=0755
-    healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/"]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-    networks: [frontend]
-    mem_limit: 384m
-    cpus: 0.5
-    pids_limit: 128
-    logging: *default-logging
-
-  healthchecks:
-    image: docker.io/healthchecks/healthchecks:v4.3@sha256:cd7bcd94350818b3944f82eb5995f48bdeab8c8627977578a569ffa73f56f56f
-    init: true
-    restart: unless-stopped
-    read_only: true
-    <<: *default-security
-    cap_drop: [ALL]
-    ports:
-      - target: 8000
-        published: "${HEALTHCHECKS_PORT:-3104}"
-        host_ip: "${APP_BIND_IP:?Set APP_BIND_IP}"
-        protocol: tcp
-    extra_hosts:
-      - "mx.mailgt.dev=${SMTP_RELAY_IP:?Set SMTP_RELAY_IP}"
-    environment:
-      DEBUG: "False"
-      DB: postgres
-      DB_HOST: postgres
-      DB_PORT: "5432"
-      DB_NAME: healthchecks
-      DB_USER: healthchecks
-      DB_PASSWORD: ${HEALTHCHECKS_DB_PASSWORD:?Set HEALTHCHECKS_DB_PASSWORD}
-      DB_SSLMODE: prefer
-      DB_TARGET_SESSION_ATTRS: read-write
-      SECRET_KEY: ${HEALTHCHECKS_SECRET_KEY:?Set HEALTHCHECKS_SECRET_KEY}
-      SITE_ROOT: https://monitor.utilibre.org
-      SITE_NAME: Utilibre Monitor
-      SITE_LOGO_URL: /static/img/utilibre-logo-coral.svg
-      ALLOWED_HOSTS: monitor.utilibre.org
-      REGISTRATION_OPEN: "False"
-      DJANGO_SETTINGS_MODULE: hc.settings_utilibre
-      SECURE_PROXY_SSL_HEADER: HTTP_X_FORWARDED_PROTO,https
-      EMAIL_HOST: mx.mailgt.dev
-      EMAIL_PORT: "26"
-      EMAIL_USE_TLS: "True"
-      EMAIL_USE_SSL: "False"
-      DEFAULT_FROM_EMAIL: "Utilibre Monitor <no-reply@utilibre.org>"
-      TZ: ${TZ:-America/Guatemala}
-    volumes:
-      - ./config/healthchecks/settings_utilibre.py:/opt/healthchecks/hc/settings_utilibre.py:ro
-      - ./config/healthchecks/utilibre-logo-coral.svg:/opt/healthchecks/static-collected/img/utilibre-logo-coral.svg:ro
-    tmpfs:
-      - /tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777
-    depends_on:
-      postgres:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "./fetchstatus.py"]
-      interval: 30s
-      timeout: 6s
-      retries: 8
-      start_period: 45s
-    networks: [frontend, backend]
-    mem_limit: 1280m
-    cpus: 1.0
-    pids_limit: 256
-    logging: *default-logging
-
-  pairdrop:
-    image: ghcr.io/schlagmichdoch/pairdrop:v1.11.2@sha256:c4b30977264a76e335740089e693a52a0d0d616330dec7f93c7b96beef7b4a02
-    init: true
-    restart: unless-stopped
-    read_only: true
-    <<: *default-security
-    cap_drop: [ALL]
-    ports:
-      - target: 3000
-        published: "${PAIRDROP_PORT:-3105}"
-        host_ip: "${APP_BIND_IP:?Set APP_BIND_IP}"
-        protocol: tcp
-    environment:
-      DEBUG_MODE: "false"
-      RATE_LIMIT: "1"
-      WS_FALLBACK: "false"
-      RTC_CONFIG: "false"
-      SIGNALING_SERVER: "false"
-      IPV6_LOCALIZE: "false"
-      TZ: ${TZ:-America/Guatemala}
-    tmpfs:
-      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
-    healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-    networks: [frontend]
-    mem_limit: 512m
-    cpus: 0.5
-    pids_limit: 128
-    logging: *default-logging
-
   freshrss:
     image: docker.io/freshrss/freshrss:1.29.1@sha256:ab6b363102ccdbc39f6a62db926f567c61a5289bf25ba460f1c34423d8cc1a4d
     init: true
@@ -346,23 +114,16 @@ services:
     pids_limit: 256
     logging: *default-logging
 
+  # RSSHub is private support infrastructure for FreshRSS. It has no host port
+  # or public edge route. Its dedicated second network provides upstream egress
+  # without joining the network used by host-published applications.
   rsshub:
-    build:
-      context: ./config/rsshub
-      dockerfile: Dockerfile.utilibre
-      args:
-        RSSHUB_BASE_IMAGE: ghcr.io/diygod/rsshub@sha256:0e0ee34e7288664ada039a816835ee28cc86767412d2c23f64e37a7320908f6c
-    image: utilibre-rsshub:40aca954-public-origin-p2
+    image: ghcr.io/diygod/rsshub@sha256:0e0ee34e7288664ada039a816835ee28cc86767412d2c23f64e37a7320908f6c
     init: true
     restart: unless-stopped
     read_only: true
     <<: *default-security
     cap_drop: [ALL]
-    ports:
-      - target: 1200
-        published: "${RSSHUB_PORT:-3107}"
-        host_ip: "${APP_BIND_IP:?Set APP_BIND_IP}"
-        protocol: tcp
     environment:
       NODE_ENV: production
       CACHE_TYPE: redis
@@ -379,7 +140,6 @@ services:
       FILTER_REGEX_ENGINE: re2
       ALLOW_USER_HOTLINK_TEMPLATE: "false"
       ENABLE_REMOTE_DEBUGGING: "false"
-      UTILIBRE_RSSHUB_PUBLIC_URL: ${RSSHUB_PUBLIC_URL:-https://feeds.utilibre.org/}
       TZ: ${TZ:-America/Guatemala}
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=128m,mode=1777
@@ -392,7 +152,7 @@ services:
       timeout: 5s
       retries: 8
       start_period: 30s
-    networks: [frontend, backend]
+    networks: [backend, rsshub-egress]
     mem_limit: 1536m
     cpus: 1.5
     pids_limit: 256
@@ -418,7 +178,6 @@ services:
       - ./data/privatebin:/srv/data
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777
-      # s6 copies and executes its supervised run scripts from /run.
       - /run:rw,exec,nosuid,nodev,size=16m,mode=0755,uid=65534,gid=82
       - /var/lib/nginx/tmp:rw,nosuid,nodev,noexec,size=32m,mode=0755,uid=65534,gid=82
     healthcheck:
@@ -432,70 +191,9 @@ services:
     pids_limit: 128
     logging: *default-logging
 
-  wakapi:
-    image: ghcr.io/muety/wakapi:2.17.6@sha256:00662767731a6797d4be02cbc6c3f32b7ff8d0c683ee10ec5612856d4efbb3bf
-    init: true
-    restart: unless-stopped
-    read_only: true
-    <<: *default-security
-    cap_drop: [ALL]
-    ports:
-      - target: 3000
-        published: "${WAKAPI_PORT:-3109}"
-        host_ip: "${APP_BIND_IP:?Set APP_BIND_IP}"
-        protocol: tcp
-    environment:
-      ENVIRONMENT: prod
-      WAKAPI_PUBLIC_URL: https://wakapi.utilibre.org
-      WAKAPI_DB_TYPE: postgres
-      WAKAPI_DB_HOST: postgres
-      WAKAPI_DB_PORT: "5432"
-      WAKAPI_DB_NAME: wakapi
-      WAKAPI_DB_USER: wakapi
-      WAKAPI_DB_PASSWORD: ${WAKAPI_DB_PASSWORD:?Set WAKAPI_DB_PASSWORD}
-      WAKAPI_DB_SSL: "false"
-      WAKAPI_DB_MAX_CONNECTIONS: "5"
-      WAKAPI_PASSWORD_SALT: ${WAKAPI_PASSWORD_SALT:?Set WAKAPI_PASSWORD_SALT}
-      WAKAPI_ALLOW_SIGNUP: ${WAKAPI_ALLOW_SIGNUP:-false}
-      WAKAPI_OIDC_ALLOW_SIGNUP: "false"
-      # The upstream public landing page contains hosted-service claims and a
-      # remotely loaded badge that do not describe this independent instance.
-      # Redirect anonymous root requests to Wakapi's own login page instead.
-      WAKAPI_DISABLE_FRONTPAGE: "true"
-      # Wakapi's image defaults this to true for plain-HTTP deployments. Public
-      # access is HTTPS-only through Caddy, so authentication cookies must be
-      # restricted to secure transport.
-      WAKAPI_INSECURE_COOKIES: "false"
-      WAKAPI_EXPOSE_METRICS: "false"
-      WAKAPI_MAIL_ENABLED: "false"
-      WAKAPI_TRUSTED_HEADER_AUTH: "false"
-      WAKAPI_TRUST_REVERSE_PROXY_IPS: ${EDGE_PROXY_IP:?Set EDGE_PROXY_IP}
-      WAKAPI_DATA_RETENTION_MONTHS: "12"
-      WAKAPI_DATA_CLEANUP_TIME: "0 0 6 * * 0"
-      WAKAPI_MAX_INACTIVE_MONTHS: "12"
-      WAKAPI_HEARTBEAT_MAX_AGE: "4320h"
-      WAKAPI_OPTIMIZE_DATABASE_TIME: "0 0 8 1 * *"
-      TZ: ${TZ:-America/Guatemala}
-    tmpfs:
-      - /tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777
-    depends_on:
-      postgres:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "/app/healthcheck"]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    networks: [frontend, backend]
-    mem_limit: 768m
-    cpus: 1.0
-    pids_limit: 256
-    logging: *default-logging
-
 networks:
-  ntfy-egress:
-    name: utilibre-services_ntfy-egress
+  rsshub-egress:
+    name: utilibre-services_rsshub-egress
   frontend:
     name: utilibre-services_frontend
   backend:

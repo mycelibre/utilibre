@@ -13,32 +13,8 @@ final_dir="$backup_root/daily-$timestamp"
 incomplete_dir=$(mktemp -d "$backup_root/.incomplete-$timestamp.XXXXXX")
 log_file="$incomplete_dir/backup.log"
 
-ping_monitor() {
-  suffix=${1:-}
-  [ -n "${BACKUP_HEALTHCHECK_PATH:-}" ] || return 0
-  if ! curl -fsS -o /dev/null --connect-timeout 3 --max-time 10 \
-    -H 'Host: monitor.utilibre.org' -H 'X-Forwarded-Proto: https' \
-    "http://${APP_BIND_IP}:${HEALTHCHECKS_PORT}${BACKUP_HEALTHCHECK_PATH}${suffix}"; then
-    echo "Warning: could not update the local backup monitor" >&2
-  fi
-}
-
-notify_owner() {
-  [ -n "${NTFY_ADMIN_TOPIC:-}" ] || return 0
-  if ! curl -fsS -o /dev/null --connect-timeout 3 --max-time 10 \
-    -H 'Title: Utilibre backup failed' -H 'Priority: high' \
-    --data 'The nightly local backup failed. Review the root-only backup log on the application VM.' \
-    "http://${APP_BIND_IP}:${NTFY_PORT}/${NTFY_ADMIN_TOPIC}"; then
-    echo "Warning: could not send the local ntfy failure alert" >&2
-  fi
-}
-
 cleanup() {
   status=$?
-  if [ "$status" -ne 0 ]; then
-    ping_monitor /fail
-    notify_owner
-  fi
   if [ "$status" -ne 0 ] && [ -d "$incomplete_dir" ]; then
     if [ -f "$log_file" ]; then
       cp "$log_file" "$backup_root/failed-$timestamp.log"
@@ -60,19 +36,15 @@ if ! flock -n 9; then
 fi
 
 cd "$root_dir"
+exec 3>&1
 exec >"$log_file" 2>&1
 echo "Backup started: $(date -u --iso-8601=seconds)"
-ping_monitor /start
 
 mkdir -p "$incomplete_dir/postgres" "$incomplete_dir/files"
-for database in healthchecks freshrss wakapi crabfit; do
-  docker compose exec -T postgres pg_dump -U postgres -Fc "$database" > "$incomplete_dir/postgres/$database.dump"
-done
+docker compose exec -T postgres pg_dump -U postgres -Fc freshrss > "$incomplete_dir/postgres/freshrss.dump"
 
 tar -C "$root_dir" -czf "$incomplete_dir/files/configuration.tar.gz" \
-  compose.yaml .env .env.example README.md SOURCE_MANIFEST.md config scripts system systemd edge portal docs secrets
-# ntfy messages and attachments are expiring caches. Neither is copied into
-# longer-lived backups; its configuration is already in configuration.tar.gz.
+  compose.yaml .env .env.example README.md SOURCE_MANIFEST.md config scripts system systemd edge docs secrets
 tar -C "$root_dir/data" -czf "$incomplete_dir/files/freshrss-data.tar.gz" freshrss
 tar -C "$root_dir/data" -czf "$incomplete_dir/files/privatebin-data.tar.gz" privatebin
 
@@ -80,7 +52,6 @@ tar -C "$root_dir/data" -czf "$incomplete_dir/files/privatebin-data.tar.gz" priv
 echo "Backup completed: $(date -u --iso-8601=seconds)"
 mv "$incomplete_dir" "$final_dir"
 incomplete_dir=
-ping_monitor
 
 if [ "$(date -u +%u)" -eq 7 ]; then
   cp -al "$final_dir" "$backup_root/weekly-$timestamp"
@@ -90,4 +61,4 @@ find "$backup_root" -maxdepth 1 -type d -name 'daily-*' -printf '%T@ %p\n' | sor
 find "$backup_root" -maxdepth 1 -type d -name 'weekly-*' -printf '%T@ %p\n' | sort -nr | awk 'NR>4 {print $2}' | while IFS= read -r old; do rm -rf -- "$old"; done
 
 trap - EXIT HUP INT TERM
-printf '%s\n' "$final_dir"
+printf '%s\n' "$final_dir" >&3

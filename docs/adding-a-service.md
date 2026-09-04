@@ -2,14 +2,14 @@
 
 Backend additions have public abuse, privacy, bandwidth, license, and upstream
 compatibility consequences. The existence of a Docker image is not a reason to
-deploy it. Start by updating the viability review in
-[frontend-candidates.md](frontend-candidates.md), using current official
-documentation and the canonical source repository.
+deploy it. Start with current official documentation and the canonical source
+repository.
 
 The non-negotiable admission rule is in [`FOSS_POLICY.md`](../FOSS_POLICY.md):
 the capability provider must be a complete, independently maintained,
-self-hostable FOSS application. A library, browser API, original Utilibre
-implementation, or merely source-available project does not qualify.
+self-hostable FOSS application, and Utilibre's operation must remove a real
+access barrier. A library, browser API, original Utilibre implementation, or
+merely source-available project does not qualify.
 
 ## 1. Pass the viability gate
 
@@ -17,6 +17,9 @@ Record and verify:
 
 - upstream application, independent maintainer, complete self-hosting path,
   and distinct public value;
+- the stable project-operated hosted offering, its permanent free tier and
+  practical limits, and why a clearly labeled external link would not solve
+  the access problem;
 - active maintenance, exact release/commit, supported official deployment,
   image registry/digest, architecture support, and license;
 - required database/cache, credentials, cookies, tokens, accounts, or private
@@ -28,7 +31,9 @@ Record and verify:
 - upstream blocking/hostility, terms, legal concerns, and public-instance
   reliability;
 - SSRF, open-proxy, arbitrary redirect, oversized-response, registration,
-  scraping, and relay risks.
+  scraping, and relay risks; and
+- multi-user separation, export, deletion, account recovery, inactivity,
+  backup, and retirement behavior where the application stores user data.
 
 Defer the service if it needs personal account cookies, unofficial credential
 workarounds, fragile evasion, an unreasonable bandwidth budget, or a bundled
@@ -66,10 +71,11 @@ For an approved service:
 - add firewall policy examples and an external exposure test, but do not alter
   the host firewall automatically.
 
-An API or media service should expose the narrowest useful public route. Cobalt
-is the model: browser processing requests enter the portal's same-origin,
-validated gateway; the separate media hostname exposes exact `GET /tunnel`
-only. Do not create a generic proxy endpoint.
+An API, feed, or media service should expose the narrowest useful public route.
+RSSHub is intentionally internal FreshRSS support and its generic route
+surface is not a public product. Stock RSSHub does not enforce the intended
+operator-approved route set, so that gap remains an unrelated-user account
+gate. Do not create a generic proxy endpoint.
 
 ## 3. Add Compose configuration conservatively
 
@@ -195,8 +201,9 @@ conservative limits and a documented way to stop it independently:
 docker compose stop SERVICE
 ```
 
-Promote an optional service only after its compatibility, abuse controls,
-localization, logs, retention, resource use, and data flow match the catalog.
+Promote an optional service only after its access-gap case, compatibility,
+abuse controls, localization, logs, retention, resource use, export/deletion
+behavior, and data flow match the catalog.
 If a provider blocks the VM or the service becomes unstable, remove its portal
 URL/card and edge route, mark it deferred, and keep the rest of the utility
 working.

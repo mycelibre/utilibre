@@ -3,7 +3,7 @@ set -eu
 
 usage() {
   echo "Usage: $0 BACKUP_DIR TARGET (--rehearsal|--live)" >&2
-  echo "Targets: healthchecks freshrss wakapi crabfit privatebin freshrss-files" >&2
+  echo "Targets: freshrss privatebin freshrss-files" >&2
   exit 2
 }
 
@@ -50,7 +50,6 @@ database_live_restore() {
   dump="$backup_dir/postgres/$database.dump"
   [ -f "$dump" ] || { echo "Database dump not found" >&2; exit 1; }
   service=$database
-  [ "$database" = crabfit ] && service=
   previous_db="${database}_pre_restore_$(date -u +%Y%m%d%H%M%S)"
 
   [ -z "$service" ] || docker compose stop "$service"
@@ -115,7 +114,7 @@ file_live_restore() {
 }
 
 case "$target" in
-  healthchecks|freshrss|wakapi|crabfit)
+  freshrss)
     if [ "$mode" = --rehearsal ]; then
       database_rehearsal "$target"
     else

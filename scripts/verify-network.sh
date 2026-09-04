@@ -12,16 +12,12 @@ env_value() {
 
 task_bind_ip=$(env_value PRIVATE_BIND_IP)
 task_portal_port=$(env_value PORTAL_PORT)
-task_cobalt_port=$(env_value COBALT_PORT)
 task_search_port=$(env_value SEARXNG_PORT)
 task_redlib_port=$(env_value REDLIB_PORT)
-task_rimgo_port=$(env_value RIMGO_PORT)
 task_enabled_services=$(env_value ENABLED_SERVICES)
 task_portal_port=${task_portal_port:-8080}
-task_cobalt_port=${task_cobalt_port:-9000}
 task_search_port=${task_search_port:-8888}
 task_redlib_port=${task_redlib_port:-3002}
-task_rimgo_port=${task_rimgo_port:-3001}
 
 case "${task_bind_ip}" in
   ""|0.0.0.0|::|"[::]")
@@ -51,16 +47,11 @@ verify_bound_port() {
 }
 
 verify_bound_port "${task_portal_port}" portal
-verify_bound_port "${task_cobalt_port}" cobalt
 verify_bound_port "${task_search_port}" searxng
 
 case ",${task_enabled_services}," in
   *,redlib,*) verify_bound_port "${task_redlib_port}" redlib-anubis ;;
 esac
-
-if docker compose --profile optional ps --services --status running | grep -qx rimgo; then
-  verify_bound_port "${task_rimgo_port}" rimgo
-fi
 
 if ss -lnt | grep -Eq ":(5432|6379)[[:space:]]"; then
   echo "A database/cache port is listening on the host. Determine its owner; this project does not publish those ports." >&2

@@ -1,6 +1,6 @@
 ---
 name: Utilibre
-description: A Useful Field Ledger for free, independently run public web utilities.
+description: A Useful Field Ledger for a deliberately small set of independently hosted FOSS services.
 colors:
   brand-coral: "#d85a30"
   paper: "#eee7d7"
@@ -112,7 +112,7 @@ components:
 
 **Creative North Star: "The Useful Field Ledger"**
 
-Utilibre is a cultivated working catalog: warm, bookish, public-service, plainspoken, technically competent, and quietly witty. Its visual world combines uncoated paper, official coral and charcoal, factual lichen/rust/blue accents, numbered task indexing, and ruled comparison records. Every record visibly belongs to an independently maintained FOSS application; the portal is the field guide, not the specimen. It should feel authored by an independent operator rather than startup-polished.
+Utilibre is a cultivated working catalog: warm, bookish, public-service, plainspoken, technically competent, and quietly witty. Its visual world combines uncoated paper, official coral and charcoal, factual lichen/rust/blue accents, numbered task indexing, and ruled comparison records. The catalog is deliberately small: every hosted application must clear the project's access-gap, safety, and maintenance criteria, and every record visibly belongs to its independent upstream. The portal is the field guide, not the specimen. It should feel authored by an independent operator rather than startup-polished.
 
 The ledger is useful before it is expressive. Names, task descriptions, processing facts, and actions share one comparable reading structure; humor and personality live in careful language rather than decoration. Mycelial relationships may inform information adjacency, but the shipped interface uses no ornamental network motif.
 
@@ -120,7 +120,7 @@ The ledger is useful before it is expressive. Names, task descriptions, processi
 
 - Warm paper fields with official coral and charcoal.
 - Newsreader names the work; Atkinson Hyperlegible Next explains and operates it; Courier New records metadata.
-- A numbered task rail and one aligned launch edge organize the catalog.
+- A compact numbered task rail and one aligned launch edge organize the catalog.
 - Single and double rules replace elevated card shells.
 - Factual accents always accompany written processing labels.
 - Square controls, generous focus, and bilingual wrapping keep the system direct and usable.
@@ -169,7 +169,7 @@ The palette behaves like ink and annotations on paper: coral is official and rar
 
 - **Display** (600, `clamp(2.35rem, 5vw, 4.8rem)`, 1.08): general page titles; the catalog finder uses `clamp(2.25rem, 3vw, 3.35rem)`, while operational tool titles cap at `4rem`.
 - **Headline** (600, `clamp(1.7rem, 3vw, 2.6rem)`, 1.08): major sections and catalog groups.
-- **Title** (600, `1.5rem`, 1.08): tool names and comparable record titles.
+- **Title** (600, `1.5rem`, 1.08): service names and comparable record titles.
 - **Body** (400, `1.0625rem`, 1.5): descriptions, instructions, navigation, and prose, normally held to a 75-character measure or less.
 - **UI and Small Copy** (`0.9375rem` / `0.875rem`): compact controls, supporting explanations, processing notes, and secondary links.
 - **Label and Micro** (700, `0.8125rem` / `0.75rem`, 1.2, `0.07em`): uppercase search labels and guidewords use the larger step; coordinates, result counts, and compact metadata use the 12px floor.
@@ -178,7 +178,7 @@ The palette behaves like ink and annotations on paper: coral is official and rar
 
 ## Copy Voice
 
-Copy is clear before clever and sounds like a competent independent maintainer. Task information leads; dry humor arrives, when earned, as one short observation after the literal setup. A normal block gets at most one comic idea. Catalog lists keep at least one-third of descriptions completely literal, and the shipping catalog normally keeps nearly all tool descriptions literal.
+Copy is clear before clever and sounds like a competent independent maintainer. Task information leads; dry humor arrives, when earned, as one short observation after the literal setup. A normal block gets at most one comic idea. Catalog lists keep at least one-third of descriptions completely literal, and the shipping catalog normally keeps nearly all service descriptions literal.
 
 Navigation, controls, loading, confirmations, validation, errors, recovery, privacy and security facts, legal terms, status, and donation conditions never carry jokes. Self-deprecation may concern maintenance, dependency churn, hosting costs, or operator workload, but never reliability, backups, security, competence, or visitor trust. Upstream applications and libraries are named explicitly; Utilibre describes itself as host or integrator, not author.
 
@@ -216,7 +216,7 @@ The masthead ends with a 2px ink rule. The official horizontal logo is 9.45rem w
 
 ### Task Index
 
-Five numbered task links form the desktop rail, separated by 1px rules. Rust coordinates and bold body labels provide scan anchors; the selected task is underlined rather than filled. Empty or speculative categories are not shown. Below 58rem the same source order becomes a horizontal text scroller with a small written scroll cue—never a row of pills.
+Three numbered task links form the current desktop rail, separated by 1px rules. Rust coordinates and bold body labels provide scan anchors; the selected task is underlined rather than filled. Empty or speculative categories are not shown, so the count may change only when the admitted catalog does. Below 58rem the same source order becomes a horizontal text scroller with a small written scroll cue—never a row of pills.
 
 ### Search
 
@@ -224,17 +224,17 @@ The search label uses the metadata voice. On wider screens a transparent 2px ink
 
 ### Catalog Ledger
 
-This is the signature component: numbered coordinates, serif tool names, plain descriptions, underlined processing labels, a concrete data-flow note, and one aligned launch edge. Every record places a labeled upstream-project source link beneath its task description; entries without an approved provider never render. The launch column is reserved for launching. This keeps credit readable in Spanish and prevents task-first labels from implying that Utilibre created the hosted interface. A 2px rule opens the list, 1px rules divide records, and a quiet paper-pale mix marks row hover. At 58rem the processing note moves below the description; at 39rem the launch action follows both as a full-width control.
+This is the signature component: numbered coordinates, serif service names, plain descriptions, underlined processing labels, a concrete data-flow note, and one aligned launch edge. Every record places a labeled upstream-project source link beneath its task description; entries without an approved provider never render. The launch column is reserved for launching. This keeps credit readable in Spanish and prevents task-first labels from implying that Utilibre created the hosted interface. A 2px rule opens the list, 1px rules divide records, and a quiet paper-pale mix marks row hover. At 58rem the processing note moves below the description; at 39rem the launch action follows both as a full-width control.
 
 ### Buttons and Fields
 
 Primary buttons are ink-on-paper inversions with a 2px border, at least 2.8rem high, and weight 750; hover changes both border and fill to rust. Secondary buttons keep the same geometry with a transparent fill. Disabled controls use 0.55 opacity. Standard fields are transparent, square, at least 3rem high, and use a 1px ink border; the search field intentionally strengthens that border to 2px.
 
-### Processing Labels, Notices, and Integration Panels
+### Processing Labels, Notices, and Integration Panel
 
-Local, server, proxy, and external labels use the metadata voice, an underline, and their factual semantic color. Notices and status messages use horizontal rules instead of filled alerts. The two permitted portal integration surfaces are bounded by one 1px ink rectangle on paper-pale with no shadow; success and error states change text and rule color together.
+Local, server, proxy, and external labels use the metadata voice, an underline, and their factual semantic color. Notices and status messages use horizontal rules instead of filled alerts. The sole current portal integration surface is bounded by one 1px ink rectangle on paper-pale with no shadow; success and error states change text and rule color together.
 
-Original Utilibre interface code may explain, route, configure, or adapt an approved upstream application; it may not implement the visitor's underlying utility. The URL router and Cobalt adapter follow the same restrained panel grammar and state their data flow before the operable fields. Future applications retain their own upstream interfaces and receive catalog treatment rather than a locally invented imitation.
+Original Utilibre interface code may explain, route, configure, or adapt an approved upstream application; it may not implement the visitor's underlying utility. The narrow Redlib URL router follows the restrained panel grammar and states its data flow before the operable field. Future applications retain their own upstream interfaces and receive catalog treatment rather than a locally invented imitation.
 
 **The Focus Is Structural Rule.** Every keyboard-focusable element receives a 3px coral outline with a 4px offset; hover styling never substitutes for it.
 
@@ -249,10 +249,10 @@ Result-dependent actions remain disabled until valid output exists and return to
 ### Do:
 
 - Do use the supplied coral lockup on light paper and the supplied white lockup on dark paper without redrawing either asset.
-- Do keep tool name, task description, processing labels, data-flow note, and launch action comparable at a glance.
+- Do keep service name, task description, processing labels, data-flow note, and launch action comparable at a glance.
 - Do preserve the 3px focus outline, 4px offset, written states, and touch-friendly control heights.
 - Do let English and Spanish wrap naturally through the same source order and hierarchy.
-- Do keep support calm, factual, and subordinate to finding and opening a tool.
+- Do keep support calm, factual, and subordinate to finding and opening a service.
 - Do name upstream software directly and describe Utilibre as its host or integrator.
 
 ### Don't:

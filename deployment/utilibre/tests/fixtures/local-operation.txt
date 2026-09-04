@@ -1,2 +1,0 @@
-Utilibre browser-local acceptance test.
-This deliberately harmless text should never be uploaded to a conversion service.

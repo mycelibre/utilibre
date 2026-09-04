@@ -5,6 +5,7 @@ import { assertFossCatalogPolicy, reviewedFossProviders } from '../../src/catalo
 import { parseRoute } from '../../src/routes';
 
 const retiredRoutes: ReadonlyArray<readonly [string, string]> = [
+  ['download-media', 'descargar-contenido'],
   ['image-resize', 'redimensionar-imagen'],
   ['image-compress', 'comprimir-imagen'],
   ['image-convert', 'convertir-imagen'],
@@ -39,22 +40,23 @@ const retiredRoutes: ReadonlyArray<readonly [string, string]> = [
 ];
 
 describe('FOSS-only public capability policy', () => {
-  it('accepts only independently maintained, self-hostable FOSS application providers', () => {
+  it('accepts only the retained independently maintained hosted applications', () => {
     expect(() => assertFossCatalogPolicy(catalog)).not.toThrow();
-    expect(catalog).toHaveLength(16);
+    expect(catalog).toHaveLength(5);
     expect(catalog.every((entry) => entry.upstreamProject && entry.upstreamSourceUrl && entry.license && entry.installedVersion)).toBe(true);
     expect(catalog.filter((entry) => entry.kind === 'integration').map((entry) => entry.id)).toEqual(['private-router']);
-    expect(catalog.find((entry) => entry.id === 'private-router')?.implementation).toBe('integration-glue');
-    expect(catalog.filter((entry) => entry.portalSurface === 'integration-glue').map((entry) => entry.id)).toEqual(['cobalt', 'private-router']);
+    expect(catalog.filter((entry) => entry.portalSurface === 'integration-glue').map((entry) => entry.id)).toEqual(['private-router']);
 
     const referencedProviders = new Set(catalog.map((entry) => entry.providerId));
     expect([...referencedProviders].sort()).toEqual(Object.keys(reviewedFossProviders).sort());
+    expect([...referencedProviders].sort()).toEqual(['freshrss', 'privatebin', 'redlib', 'searxng']);
+
     const repositoryRoot = new URL('../../../', import.meta.url);
     for (const provider of Object.values(reviewedFossProviders)) {
       expect(provider.role).toBe('public-application');
       expect(provider.maintainer).toBe('independent-upstream');
       expect(provider.selfHostable).toBe(true);
-      expect(provider.reviewedSourceUrl).toMatch(/(?:\/tree\/|\/src\/tag\/)/);
+      expect(provider.reviewedSourceUrl).toMatch(/\/tree\//);
       expect(provider.reviewedSourceUrl).not.toMatch(/\/(?:main|master|current|latest)(?:\/|$)/i);
       expect(provider.licenseEvidenceUrls.length).toBeGreaterThan(0);
       for (const evidenceUrl of provider.licenseEvidenceUrls) expect(evidenceUrl).toMatch(/^https:\/\//);
@@ -68,16 +70,24 @@ describe('FOSS-only public capability policy', () => {
     }
   });
 
-  it('keeps original browser and server tool implementations out of the application tree', () => {
+  it('keeps every eliminated and unpublished application out of public inventory', () => {
+    const removed = ['bentopdf', 'cobalt', 'healthchecks', 'ittools', 'ntfy', 'omnitools', 'pairdrop', 'rsshub', 'swagger-editor', 'vert', 'wakapi'];
+    for (const id of removed) {
+      expect(reviewedFossProviders).not.toHaveProperty(id);
+      expect(catalog.find((entry) => entry.id === id)).toBeUndefined();
+    }
+  });
+
+  it('keeps only the Redlib URL parser as portal-native tool code', () => {
     const toolFiles = walkFiles(new URL('../../src/tools/', import.meta.url)).sort();
-    expect(toolFiles).toEqual(['media.ts', 'private-router.ts']);
+    expect(toolFiles).toEqual(['private-router.ts']);
 
     const serverSource = readFileSync(new URL('../../server/server.mjs', import.meta.url), 'utf8');
     expect(serverSource).not.toMatch(/\/_portal\/developer|webhook-inbox|webhook-inboxes|dnsLookup|DNS_LOOKUP/);
   });
 
   it('fails closed for every retired bilingual tool route', () => {
-    expect(retiredRoutes).toHaveLength(31);
+    expect(retiredRoutes).toHaveLength(32);
     for (const [english, spanish] of retiredRoutes) {
       expect(parseRoute(`/en/tools/${english}`)?.page).toBe('not-found');
       expect(parseRoute(`/es/herramientas/${spanish}`)?.page).toBe('not-found');

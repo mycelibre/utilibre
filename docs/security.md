@@ -1,328 +1,188 @@
 # Security review
 
-This is a public Internet service even though its application ports are private. The threat model assumes malicious visitors, automated clients, crafted URLs/files, hostile upstream responses, provider blocking, compromised dependencies, spoofed proxy headers, and resource-exhaustion attempts. It does not assume that Caddy, Docker root, or the application host is already compromised; those are privileged trust boundaries.
-
-The public topology currently includes Cloudflare before Caddy. A separate
-`PRIVATE_PREVIEW=1` workflow still exists for controlled setup: in that mode
-`EDGE_PROXY_IP` is empty, the portal ignores forwarding headers, and the
-generated SearXNG limiter trusts no edge address beyond loopback. Preview
-ports must be limited to the exact operator client or an equally controlled
-management network. Anubis's production `CF-Connecting-IP` trust is not a
-general private-preview trust mechanism.
-
-## Security invariants
-
-The deployment is not launch-ready unless all of these remain true:
-
-- every published Compose port binds to one exact private-network address;
-- only the edge VM can reach those ports;
-- public DNS reaches Cloudflare and the operator's Caddy edge terminates the origin-side public route;
-- the public media hostname exposes exact `GET /tunnel` only, never Cobalt's API root or session routes;
-- Cobalt's processing API requires its file-based API key and wildcard CORS is disabled;
-- only the portal container receives the matching client key;
-- Valkey and any future database have no host port;
-- portal and SearXNG forwarded client headers are trusted only from the exact edge address; Cobalt's upstream private-peer trust exception is accepted only behind exact edge-source firewalling;
-- Anubis accepts `CF-Connecting-IP` only while the edge origin is Cloudflare-only, and direct Redlib/Anubis metrics remain unpublished;
-- every public catalog capability names an independently maintained,
-  self-hostable FOSS application; portal code remains catalog, localization,
-  routing, configuration, or narrow upstream-integration glue;
-- no personal upstream account cookies/tokens or Docker socket mount exist;
-- secrets and private addresses remain untracked and absent from public documentation.
-
-`PRIVATE_PREVIEW=1` is an explicit non-launch exception to the edge/TLS and
-edge-only reachability invariants. The launch validator rejects that mode,
-empty edge trust, and private HTTP/IP service URLs. Before public routing, set
-preview mode to `0`, configure the separate exact edge and HTTPS origins, render
-again, and pass `node scripts/validate-config.mjs --launch`.
-
-Run [deployment.md](deployment.md), [edge-routing.md](edge-routing.md), and [firewall.md](firewall.md) checks after every networking or proxy change.
-
-## Implemented controls
-
-### Network and proxy boundary
-
-Compose requires `PRIVATE_BIND_IP` for portal, Cobalt, SearXNG, Anubis (the
-Redlib ingress), and optional rimgo host mappings. It publishes neither direct
-Redlib nor Valkey. Docker bridge
-networking is used; there is no host network, privileged container, API
-gateway, local reverse proxy, or Docker socket mount.
-
-The portal accepts forwarded client information only if the TCP peer matches exact `EDGE_PROXY_IP`; otherwise it rate-limits the socket peer and ignores forwarded values. In public mode the rendered SearXNG limiter trusts only loopback and that same exact edge address. In private preview an empty edge value is deliberate, so the portal trusts no forwarded peer and the renderer omits the edge entry. Caddy's normal behavior must discard spoofable inbound forwarding values from untrusted clients before adding its own.
-
-The pinned Cobalt 11.7.1 application is an upstream exception: its Express configuration trusts loopback and unique-local/private proxy peers rather than this repository's exact `EDGE_PROXY_IP`. Its private listener must therefore be reachable only from the edge VM, and the edge must overwrite forwarding headers. Until the documented firewall/external-exposure check passes, a private-network peer could spoof the address used by Cobalt's tunnel limiter. No unsupported source patch is applied; this residual must be rechecked on update.
-
-Network binding does not supersede a firewall. Docker NAT can bypass rules an operator expects from UFW, so edge-source filtering and an unauthorized-host test are mandatory.
-
-### Cobalt gateway and API boundary
-
-`POST /_portal/media` applies the following before Cobalt:
-
-- exact allowed Origin; a missing, `null`, or foreign Origin is rejected;
-- body limit of 8,192 bytes and URL length limit of 2,048 characters;
-- JSON object schema reduced to URL, video quality, and download mode;
-- HTTP(S) only, with credentials and explicit ports rejected;
-- exact provider hostname or subdomain suffix from the operator allowlist;
-- literal loopback, private/link-local IPv4, multicast/reserved IPv4, and all IPv6 literals rejected;
-- fixed safe Cobalt options: no local processing, no better-audio mode, no user filename template, and metadata disabled;
-- per-client in-memory rate limit (10 per 10 minutes by default);
-- global portal concurrency ceiling of two and upstream response timeout of 45 seconds;
-- maximum 1 MiB accepted Cobalt JSON response, stable error mapping, and CR/LF removal from filenames/forwarded response headers;
-- picker/batch and local-processing results rejected.
-
-Cobalt independently requires the UUID API key, restricts CORS to the portal origin, applies its rate settings, targets a 30-minute media duration where the extractor can determine it, uses lower FFmpeg priority, disables selected fragile services, and mounts no private account cookies. The edge route is a second independent boundary: only tokenized `GET /tunnel` is public.
-
-Private preview has no edge route, so the browser must reach the configured
-private Cobalt port for generated tunnel downloads. The portal admits a
-private returned URL only when preview mode is active, its origin exactly
-matches `COBALT_PUBLIC_API_URL`, and its path is exactly `/tunnel`; credentials,
-fragments, other paths, and other private origins remain rejected. Because the
-Cobalt API port is then reachable by the preview client, firewall that port to
-the intended client even though the root API still requires its key.
-
-Origin checking is not bot authentication—non-browser clients can forge an Origin. The IP rate limit, concurrency cap, Cobalt key, duration limit, provider selection, private binding, and edge policy remain necessary. No Turnstile or remote challenge script is used, avoiding a third-party browser dependency but leaving sophisticated automation as a residual abuse risk.
-
-### Portal API boundary
-
-The portal exposes only fixed health, sanitized configuration, high-level
-status, and Cobalt media-adapter functions. It has no webhook receiver, DNS
-resolver, generic HTTP requester, response-header proxy, arbitrary status URL,
-or browser-network testing surface. Unknown `/_portal/*` and `/api/*` paths
-return 404.
-
-The portal HTTP server caps header receipt at ten seconds and rejects the
-100-field boundary with 431 before routing, request receipt at 20 seconds,
-keep-alive at five seconds/100 requests, and concurrent connections at 512.
-All routes other than the fixed media resolver reject declared bodies and close
-incomplete requests, preventing body stalls on health, static, configuration,
-status, and unknown routes. Media JSON bodies have a separate ten-second read
-deadline and a ceiling of 16 concurrent body readers before the stricter
-two-request Cobalt gateway ceiling.
-
-### SSRF and redirect review
-
-The portal cannot be configured by a public request to fetch an arbitrary HTTP hostname. The Cobalt target begins with a strict provider allowlist and rejects literal private addresses. There is no portal streaming/fetch fallback; tokenized media delivery uses the separately restricted Cobalt hostname. Status checks come only from operator environment configuration and accept `http` plus a simple Docker service hostname; visitors cannot supply a status URL. Concurrent status callers share a bounded in-flight check and short memory cache rather than launching unbounded internal probes.
-
-Residual SSRF risk remains inside provider extraction: the portal does not resolve DNS before the request and cannot enforce every redirect or secondary URL that Cobalt/provider code follows. A compromised allowlisted domain, DNS rebinding, extractor vulnerability, or hostile upstream response therefore depends on Cobalt's controls and Docker/network egress. The service network currently has unrestricted outbound Internet access and access to its peers. This is a documented unresolved defense-in-depth gap; add an egress policy only after enumerating real provider endpoints, DNS needs, CDNs, redirects, and update traffic so that it does not silently break extraction.
-
-Do not add a generic fetch endpoint, proxy parameter, arbitrary status URL, private-IP exception, user cookie import, or redirect-following gateway workaround.
-
-### Open redirects and external navigation
-
-The optional rimgo 1.4.2 profile remains disabled. Its reviewed `/search` handler has an unanchored Imgur-URL rewrite that can yield a protocol-relative, visitor-controlled external redirect. No public Caddy route is provided. A path denial would not make this version suitable for publication; an official fixed release must be pinned and pass fresh maintenance, security, and abuse-control review first.
-
-Cobalt may legitimately return an external HTTP(S) media URL. The portal rejects returned URLs containing credentials, localhost, private/link-local/reserved literal addresses, or a non-HTTP(S) scheme, except for the narrowly matched private-preview Cobalt `/tunnel` URL described above. It does not assert that every other permitted hostname belongs to the original provider. Authenticity therefore depends on the trusted pinned Cobalt build and the upstream response. The UI does not open it automatically and marks external delivery.
-
-### Redlib policy exception and abuse boundary
-
-The Redlib deployment is an explicit operator-approved exception to the
-project's original prohibition on unofficial credential workarounds. At pinned
-official commit
-[`a4d36e954cf1bd64f209cd8868c5a29edc81b374`](https://github.com/redlib-org/redlib/tree/a4d36e954cf1bd64f209cd8868c5a29edc81b374),
-upstream emulates an official Reddit Android client and OAuth identity, obtains
-and refreshes spoofed tokens, adds official-client-like headers, and uses
-browser/TLS-fingerprint emulation. It creates randomized device state in
-process. No personal Reddit account, cookie, password, or operator-supplied
-token is configured. This reduces direct visitor contact with Reddit; it does
-not make the integration official or prevent Reddit from identifying/blocking
-the application VM's egress.
-
-The reviewed upstream settings redirect accepts paths beginning with `//` and
-backslash forms that browsers can interpret as another host. This repository
-therefore builds Redlib from source and applies the small tracked patch in
-`config/redlib/` before compilation. The patch rejects scheme-relative and
-backslash redirect targets. Tests must cover encoded/unencoded variants and
-confirm the `Location` header remains same-origin. Complete modified source and
-build wiring must remain available through `SOURCE_CODE_URL` under Redlib's
-AGPL-3.0-only license.
-
-Redlib has no built-in public per-client rate limiter, so the private host port
-now terminates at unmodified Anubis 1.27.0. The gate uses the current default
-tiered policy without unsupported Thoth integration; an ordinary browser
-normally receives a mild difficulty-2 proof-of-work challenge. `/info` and the
-exact official Redlib/Libreddit instance-updater user agents have narrow allow
-rules. This raises the cost of indiscriminate scraping but does not provide
-volumetric DDoS protection, defeat distributed solvers, or prevent Reddit from
-blocking the application VM's egress.
-
-Anubis trusts `CF-Connecting-IP` only because the edge origin is intended to be
-Cloudflare-only. An alternate route that accepts a visitor-supplied value would
-let visitors choose the address used for challenge state. Keep the origin
-restricted to Cloudflare, strip `X-Original-URI` and `X-Forwarded-Uri` at Caddy,
-and retest after any CDN or edge topology change. Direct Redlib and Anubis's
-localhost metrics port must remain unpublished. The bbolt challenge database
-is an ignored bind mount; the stable Ed25519 key is an ignored read-only secret.
-Neither value belongs in source, logs, reports, or container environment dumps.
-
-The remaining defenses are exact private binding, edge-only firewalling,
-CPU/RAM/PID/tmpfs ceilings, indexing and RSS disabled, edge noindex/crawler
-guidance, and operational observation. Distributed abuse and media hotlinking
-remain launch risks; stop the Redlib/Anubis pair rather than widening resources
-when those risks materialize.
-
-Redlib runs with HSTS expiry set to zero because public HTTPS and HSTS policy
-belong to the edge, but pinned upstream still emits an explicit
-`Strict-Transport-Security: max-age=0`; the documented Caddy route strips that
-upstream header. Optional Redlib preference cookies are HTTP-only but lack
-`Secure` and `SameSite` attributes in this source. They are not authentication
-cookies, but the missing attributes remain a browser-defense limitation; do
-not invent an unverified Caddy cookie rewrite. Its upstream UI is English-only.
-These limitations must stay visible in public documentation.
-
-### Browser security
-
-The portal server emits:
-
-- a Content Security Policy restricted to self-hosted resources, `blob:`/`data:` images, no objects, no base URI, same-origin forms, same-origin connections, and no framing;
-- `Referrer-Policy: no-referrer`;
-- `Permissions-Policy` disabling camera, microphone, geolocation, payment, USB, and browsing topics;
-- `X-Content-Type-Options: nosniff`;
-- `X-Frame-Options: DENY`;
-- `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Resource-Policy: same-origin`;
-- `X-Robots-Tag` for APIs, health, and status routes.
-
-HTML responses also use `Cache-Control: no-cache, no-transform`. The
-`no-transform` directive is deliberate: intermediaries must not rewrite the
-document or append executable markup that is outside the portal's restrictive
-CSP. Versioned static assets remain separately immutable.
-
-There are no inline scripts, external script hosts, analytics, remote fonts, or service workers. The app uses `textContent`/DOM construction rather than inserting untrusted HTML.
-
-HSTS is an edge decision and is intentionally not assumed. Add it only after all covered names are permanently HTTPS-ready. Crawler controls reduce load; they are not authorization.
-
-A private-IP HTTP origin is not a secure context in normal browsers. Portal
-catalog and navigation behavior does not treat private HTTP as transport
-security. HTTPS remains preferred for private use and mandatory for the public
-service.
-
-### Container hardening
-
-All services drop every Linux capability, set `no-new-privileges`, define
-PID/CPU/memory ceilings, rotate logs, and use `restart: unless-stopped`. Pulled
-images and build bases are digest-pinned; Redlib additionally pins the exact
-official Git commit/checksum. Health checks exist for portal, Cobalt, SearXNG,
-Valkey, Anubis, and Redlib.
-
-| Service | User/root filesystem | Writable locations and exception |
-|---|---|---|
-| Portal | Image runs as non-root `node`; read-only root | 32 MiB tmpfs at `/tmp`; file-based key mount is read-only |
-| Cobalt | Official image runs as non-root; read-only root | API-key database mount only; no writable media volume or tmpfs |
-| SearXNG | Official entrypoint/user behavior; root filesystem not forced read-only | Read-only `/etc/searxng` directory mount, named cache, and 128 MiB `/tmp` tmpfs; writable-root and no explicit Compose user are compatibility exceptions |
-| Valkey | Explicit `999:1000`; read-only root | 16 MiB `/tmp` and 128 MiB `/data` tmpfs; RDB and AOF disabled |
-| Anubis | Official image user `1000`; read-only root | 16 MiB `/tmp`; writable ignored bbolt directory at `/data`; read-only Ed25519 key and policy mounts; metrics on container loopback only |
-| Redlib | Upstream-created non-root `redlib`; read-only root | 32 MiB `/tmp` tmpfs; no database, secret mount, or persistent volume |
-| rimgo | Explicit unprivileged `65534:65534`; read-only root | No volume; no in-image health command because it is a minimal/scratch-style image |
-
-Compose local secrets are bind-mounted rather than Swarm secret objects. Keep `.env` mode `0600`. The generator makes the host `secrets/` directory mode `0700` and the two files mode `0444`; the file readability is required by different non-root container UIDs, while the non-traversable directory protects them from other host users. Both mounts are read-only. Verify these modes after restore. The SearXNG secret is an environment variable and is visible to Docker/root operators through container metadata; host/Docker access is therefore privileged.
-
-The deployment relies on Docker's default seccomp and host AppArmor/SELinux policy; it does not ship a custom profile. Image digest pinning prevents silent tag movement but also prevents automatic security updates. Follow the deliberate update procedure and scan the exact images/dependencies before launch and after each pin change.
-
-Mounting all of `config/searxng/` at `/etc/searxng` is intentional: it overrides the official image-declared volume so Compose does not create an anonymous configuration volume outside the documented persistence model. `config/searxng/limiter.toml` contains the exact trusted edge address, is generated locally, ignored by Git, excluded from backups, and regenerated after restore. The same mount makes the source-visible `sitecustomize.py` query-redaction hook available through `PYTHONPATH`; it redacts rendered Python log records but is a defense in depth, not proof that every future upstream/native logging path is covered.
-
-### Persistence and logging controls
-
-Cobalt, Redlib, and rimgo have no persistent media volume. Portal, Cobalt, and
-Redlib roots are read-only. SearXNG temporary files and portal/Redlib/Valkey
-temporary paths use size-bounded tmpfs. Only the re-creatable SearXNG cache
-volume persists; Redlib OAuth/connection state and Valkey limiter state clear
-on restart. Docker logs use `json-file` rotation with configurable `10m × 3`
-defaults.
-
-The portal has no access logger and never deliberately prints submitted media
-URLs. `RUST_LOG=warn` suppresses Redlib informational logs,
-including paths that print an emulated device identity or OAuth token prefix,
-while retaining warnings/errors and its startup line. Reviewed warning/error
-paths do not intentionally include visitor URLs or queries. Known portal
-upstream errors are mapped to bilingual public messages rather than exposing
-raw responses or stack traces. Edge access logging remains a manual launch
-decision; tunnel queries, search queries, Redlib paths/queries, and preference
-cookies must not be logged.
-
-## Threat review
-
-| Threat | Current control | Remaining issue / response |
-|---|---|---|
-| Direct public access to app ports | Exact private binding; ntfy additionally has a deployed application-VM `DOCKER-USER` rule restricted to the configured and verified `EDGE_PROXY_IP` | The ntfy private-hop test passed on 2026-09-03; equivalent controls for other ports and the edge VM's complete firewall remain operator-managed and must be verified |
-| Private-preview interception | Exact private binding, explicit preview gate, no trusted edge headers, narrow returned tunnel rule | Plain HTTP can be observed or changed by a hostile private-network peer; restrict clients and move to HTTPS for launch |
-| Unrestricted Cobalt API | File API key, exact CORS, same-origin portal gateway, edge exposes only GET tunnel | A leaked key or misconfigured edge catch-all is critical; rotate key and remove route |
-| SSRF/internal scanning | Initial scheme/host/IP/port validation; fixed internal endpoints | DNS, redirects, and extractor secondary fetches depend on Cobalt; no egress ACL yet |
-| Arbitrary redirect | The portal's Redlib-only router accepts fixed Reddit hosts and hands off to one configured Redlib origin; Cobalt external results require an explicit click; tracked Redlib settings-redirect patch | A Cobalt external result can still be deceptive; repeat router and Redlib redirect tests after every upstream rebase |
-| Forwarded-header spoofing | Exact edge peer trust | Breaks if Docker source preservation or a new upstream proxy changes; verify effective client IP |
-| Request flood/search/Reddit scraping | Portal and Cobalt rate limits, two-job cap, SearXNG limiter/Valkey, HTML-only search, Anubis proof-of-work gate, Redlib noindex and container limits | Anubis is not volumetric DDoS protection; distributed botnets can solve/evade per-IP controls and media hotlinking remains expensive; stop the service when controls are insufficient |
-| Oversized/long media | 8 KiB request, 30-minute duration target, 45-second API wait, resource limits | Approximately 500 MB output target is not technically enforced by this Cobalt release |
-| Temporary-media persistence | Cobalt read-only root and no media volume | Verify after success/failure/cancel/restart; do not claim forensic erasure of RAM/storage layers |
-| Container breakout | Non-root where compatible, cap drop, no-new-privileges, read-only roots, PID/resource limits, no Docker socket | Shared kernel, default seccomp, writable SearXNG exception, and outbound peer network remain |
-| Secret disclosure | Ignored files, file mounts, `0700` directory, sanitized config endpoint | Root/Docker operators can read secrets; backups must be encrypted; SearXNG secret is in env metadata |
-| Supply-chain compromise | Exact versions/digests, lockfile, FOSS inventory, tests | No automatic patching; upstream images and applications still require periodic scan/provenance review |
-| Sensitive logs | No portal access log, Redlib `RUST_LOG=warn`, error mapping, size rotation, edge no-query/path guidance | Upstream startup/error logs can contain details; Redlib and edge path/cookie retention must be checked; edge/daemon retention is operator-controlled |
-| Weak preference-cookie attributes | Redlib cookies are first-party and HTTP-only; public traffic is HTTPS at the edge | Pinned upstream omits `Secure`/`SameSite`; cookies can encode subscriptions/interests and direct private HTTP has no confidentiality |
-| Crawler load | noindex headers, HTML-only search output, no public directory registration | Robots can ignore directives; rate limits/firewall remain necessary |
-| Cloudflare bot challenge breaks API clients | Bot Fight Mode disabled for the zone; host-specific ntfy skip rule retained; public stock-client health and live delivery regression check | Re-enabling Bot Fight Mode breaks ntfy because that feature cannot be bypassed by a custom Skip rule; rely on scoped application/edge limits and rerun the check after Cloudflare changes |
-| Upstream blocking/legal abuse | Curated services, acceptable-use policy, no personal account cookies or DRM workarounds; Redlib exception is explicitly disclosed | Reddit can block the spoofed Android OAuth/TLS-emulation mechanism or the server IP; disable rather than escalating to personal credentials |
-
-## Security tests
-
-Run the repository tests from `portal/`:
-
-```sh
-npm run lint
-npm run typecheck
-npm test
-npm run build
-npm run test:e2e
-```
-
-The server tests check fixed security headers, public-config sanitization, Origin rejection, malformed/ambiguous request targets, private/unsupported media URLs, IPv6 /64 rate grouping, and absence of arbitrary API paths. Catalog policy tests require every launchable capability to reference an approved, independently maintained, self-hostable FOSS application and reject a library or Utilibre-authored implementation as the capability provider. Browser tests cover bilingual catalog discovery, launch behavior, accessibility, and upstream attribution.
-
-Preview regressions additionally cover exact private-IP HTTP configuration,
-public-launch rejection of preview mode, publication of private search/Redlib URLs,
-the exact allowed private Cobalt `/tunnel` result, and rejection of other private
-result paths.
-
-After starting Compose privately, also run:
-
-```sh
-sh scripts/check-health.sh
-sh scripts/verify-network.sh
-docker compose ps
-docker stats --no-stream
-```
-
-From the edge and an unauthorized controlled host, perform the exposure/API tests in the deployment and firewall documents. Do not load-test or repeatedly probe third-party platforms.
-
-## Ongoing production checks and open hardening items
-
-Items already satisfied must be rechecked after every topology/update change;
-unresolved items must be completed before a broader announcement or public
-instance listing:
-
-- disable `PRIVATE_PREVIEW`, restore the exact separate edge trust and HTTPS service origins, re-render, and pass the launch validator;
-- maintain and externally verify edge-only firewall rules. ntfy's narrow
-  application-VM rule was deployed and its private hop verified on 2026-09-03;
-  other application ports and the edge VM's complete firewall remain outside
-  that evidence;
-- install/validate the narrow Caddy mappings and confirm actual edge access-log fields/retention;
-- verify Cloudflare Network Error Logging remains disabled and public
-  `NEL`/`Report-To` headers remain absent. The setting was disabled on
-  2026-09-03; either header returning is a release regression;
-- confirm accepted portal HTML preserves `Cache-Control: no-cache,
-  no-transform`, contains no injected `/cdn-cgi/challenge-platform/` script,
-  and produces no CSP violation from edge-added markup;
-- keep Cloudflare Bot Fight Mode disabled and run
-  `deployment/utilibre/scripts/check-ntfy-public.sh`; any non-2xx,
-  `cf-mitigated`, failed live delivery, cached replay, `NEL`, or `Report-To`
-  result blocks release;
-- validate Redlib's same-origin redirect patch, proxied media/Range behavior, English-only disclosure, and effective crawler/abuse controls through the real edge;
-- repeat the verified ntfy client-address check after topology changes, and
-  confirm Docker presents the edge's source address as expected for every
-  other service that trusts forwarded identity;
-- perform an exact-image vulnerability/SBOM review and establish a patch cadence;
-- verify Cobalt cleanup after successful, failed, cancelled, and restarted requests;
-- decide how to alert on low disk without adding external telemetry;
-- document that the 500 MB Cobalt result target is unenforced and monitor bandwidth manually;
-- retain SearXNG's writable-root/no-explicit-user exception unless an official supported hardening method is tested;
-- accept the outbound/peer-network residual risk or implement a tested egress policy;
-- leave rimgo undeployed until an official fixed release is pinned and fully reviewed; egress, Range behavior, logging, and edge abuse controls must then pass as separate gates;
-- keep the Redlib OAuth/client and TLS/browser emulation policy exception explicit and stop it if Reddit blocking or public abuse becomes unreasonable;
-- do not enable Invidious without a new official-upstream, credential, resource, privacy, and security review.
-
-Prefer stopping one service over weakening these controls or risking the host. Commands and rollback guidance are in [troubleshooting.md](troubleshooting.md) and [updates.md](updates.md).
+Utilibre is an Internet service even though application listeners are private.
+The threat model assumes malicious input, automated scraping, credential
+stuffing, spam, oversized requests, storage exhaustion, upstream blocking,
+container compromise, and operator error. This document records controls and
+residual risks; it is not a claim of complete security.
+
+## Boundary summary
+
+- Cloudflare and the separate Caddy edge are the only public ingress path.
+- Application listeners bind to one exact private address and accept traffic
+  only from the exact edge peer.
+- Databases, caches, RSSHub, Anubis metrics, and direct Redlib have no host or
+  public port.
+- Containers drop capabilities and use `no-new-privileges`, read-only roots,
+  bounded tmpfs, resource ceilings, and rotated logs where their official
+  images permit it.
+- The portal exposes only static files and fixed config/status endpoints; it
+  has no generic proxy, upload, webhook, DNS, or media API.
+- Persistent user data is limited to FreshRSS/PostgreSQL and PrivateBin
+  ciphertext, plus operational Anubis state and secrets.
+
+## Edge and proxy trust
+
+The application VM must not be directly reachable from the Internet. Caddy
+must overwrite forwarded-client headers and derive addresses only from trusted
+Cloudflare ranges. Applications trust only the exact edge peer. A spoofable
+client header can defeat limiting or Anubis policy.
+
+Public DNS points only to the edge. Firewall verification must include Docker
+forwarding/NAT behavior, unauthorized private hosts, and IPv6. See
+[`firewall.md`](firewall.md) and [`edge-routing.md`](edge-routing.md).
+
+## Portal
+
+The portal server rejects malformed targets, declared bodies on bodyless
+routes, excess headers, unsupported methods, and unknown API paths. It has
+short header/request timeouts, connection ceilings, fixed status targets, and
+a restrictive CSP. Public config is sanitized and does not expose secrets or
+internal destinations.
+
+Retired APIs and application routes must remain absent. In particular, do not
+restore a generic fetcher, media adapter, webhook receiver, DNS resolver, or
+network-scanning surface for compatibility with old links.
+
+## SearXNG
+
+Primary risks are search automation, engine fan-out, slow upstreams, image
+proxy bandwidth, query disclosure, and engine bans. Controls include the
+official limiter, exact trusted proxy, private Valkey, curated engines, HTML
+output, no public metrics/general API formats, query-log redaction, and
+container resource limits.
+
+Limiter state is ephemeral and clears on restart. The local logging hook is
+defense in depth, not a proof that every future upstream log line is safe.
+Review engine behavior, limiter parsing, output formats, image proxying, and
+logs on every version change.
+
+## Redlib and Anubis
+
+Redlib is a crawler and media-relay risk. Anubis adds browser work before most
+requests but does not stop distributed automation or volumetric traffic.
+Cloudflare remains the outer traffic boundary. Direct Redlib and Anubis
+metrics stay container-only.
+
+The upstream Redlib implementation emulates a Reddit Android OAuth client and
+browser/TLS behavior. This is an explicit operator-approved exception, not a
+pattern for new services. Reddit can block it, and its behavior must be
+re-reviewed on every pin. The local source build applies redirect hardening;
+keep the patch and regression tests with the complete corresponding source.
+
+Preserve Range/streaming behavior only on the Redlib route, observe aggregate
+bandwidth, disable indexing, and stop the pair if abuse or upstream blocking
+becomes unreasonable. Do not log complete browsing paths or cookies.
+
+## FreshRSS
+
+FreshRSS creates the largest account-security responsibility in the retained
+set. Keep public self-registration closed. Require strong generated initial
+credentials, transport all public use through HTTPS, protect the admin
+account, and keep database credentials out of browser and edge configuration.
+
+Before request-based accounts open, verify:
+
+- unrelated users cannot read, share, export, or delete one another's data;
+- login, recovery, API-password, session, CSRF, and brute-force behavior;
+- safe import size and type limits;
+- whether arbitrary feed fetching can reach private, loopback, link-local,
+  cloud-metadata, Docker-service, or credential-bearing URLs;
+- whether redirects, DNS rebinding, or feed enclosures cross the intended
+  egress boundary;
+- account quotas, deletion, export, inactivity, and incident procedures; and
+- restore tests that do not overwrite live user state.
+
+FreshRSS legitimately needs the internal backend for PostgreSQL and intended
+RSSHub feeds. That makes server-side feed fetching and SSRF review especially
+important. Do not call the installation safely open to unrelated users until
+this gate passes.
+
+## Internal RSSHub
+
+RSSHub has no public route or host port. Its generic route catalog is not a
+public product. Only operator-approved routes needed by FreshRSS should be
+documented or used. Disable unsafe user-supplied domains, remote debugging, hotlink
+templates, and file logs; retain request deadlines, cache bounds, resource
+ceilings, and private Valkey.
+
+An authenticated FreshRSS user may still be able to attempt internal RSSHub
+routes by subscribing to a Docker-network URL. Treat that as part of the
+FreshRSS/RSSHub multi-user and SSRF gate, not as proof that network privacy
+alone is sufficient.
+
+## PrivateBin
+
+PrivateBin's server stores encrypted content, so the operator normally cannot
+moderate plaintext. Anonymous creation can attract illegal or abusive data,
+link spam, storage exhaustion, and request floods. Controls include a roughly
+2 MiB application limit, short expiry choices, disabled uploads and
+discussion, application traffic limiting, edge body/rate limits, bounded
+storage monitoring, and a safe abuse/deletion procedure.
+
+Encryption does not authenticate a paste sender, prevent someone with the full
+URL from reading it, hide request metadata, or erase backup copies
+immediately. Do not log full paste or deletion URLs.
+
+## Accounts and authorization
+
+FreshRSS access remains operator-provisioned. A planned request-based model is
+not open registration. Before announcing requests, publish eligibility,
+quotas, recovery, export, deletion, inactivity, backup, acceptable-use, and
+retirement terms. Account decisions and limits must not depend on donations.
+
+Administrative interfaces should not be linked from the public catalog. Use
+separate strong operator credentials, minimal operator access, and a recorded
+offboarding/rotation procedure.
+
+## Secrets
+
+- Keep `.env`, Anubis keys, PostgreSQL credentials, and FreshRSS credentials
+  outside version control with restrictive permissions.
+- Generate secrets locally; never paste them into issues, logs, screenshots,
+  shell history, or expanded Compose output.
+- Rotate credentials after suspected exposure and document which state must be
+  invalidated or restarted.
+- Keep the public AGPL source offer free of secrets while including all source,
+  patches, and build/install material required by the licenses.
+
+## Persistence and backups
+
+Backups contain sensitive account and ciphertext data. Encrypt them, restrict
+operator access, keep them outside the live data paths, test restores in an
+isolated location, and delete expired generations. A live account/paste
+deletion cannot erase an older backup immediately; publish the retention
+window before accepting broader user data.
+
+Never solve a low-disk event with an unreviewed recursive delete or broad
+Docker prune. Stop the affected service, identify exact growth, preserve needed
+state, and use the documented removal procedure.
+
+## Update and supply-chain controls
+
+Pin images by immutable version and digest; pin Redlib source and build bases.
+Review upstream release notes, license, artifacts, dependencies, migration and
+rollback behavior before updating one application at a time. Re-run security,
+privacy, localization, resource, and public-path checks. No unattended image
+updater or floating `latest` tag belongs in production.
+
+## Incident priorities
+
+1. Remove the affected public route or stop the service without widening any
+   other boundary.
+2. Preserve the minimum evidence needed, without copying sensitive queries,
+   paths, credentials, or paste URLs into public channels.
+3. Rotate exposed secrets and invalidate affected sessions where possible.
+4. Restore only from a verified, isolated backup when integrity is understood.
+5. Notify affected users when the incident and available contact information
+   make that appropriate.
+6. Document the factual impact and update controls before re-enabling access.
+
+## Residual risks
+
+Cloudflare and the edge process all public traffic; upstream engines and sites
+can log server requests; Redlib can break or be blocked; FreshRSS feed fetching
+has an SSRF and content-ingestion surface; anonymous encrypted pastes can be
+abused; container and dependency vulnerabilities remain possible; and an
+operator with host or backup access can access persistent server data. These
+risks must remain visible in public copy and operating decisions.

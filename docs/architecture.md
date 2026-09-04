@@ -2,216 +2,173 @@
 
 ## Scope and trust boundaries
 
-Milestone 1 is a small static portal with narrow, fixed application APIs and
-three separately hosted user-facing backend services in this root stack.
-Public TLS and hostname routing belong to a separate Caddy edge VM. The
-application VM neither installs nor runs a general-purpose reverse proxy.
+Utilibre uses two Compose projects on one application VM and a separately
+managed public edge. The application VM does not run a general-purpose public
+reverse proxy.
 
 ```text
 Visitor browser
-   │ public HTTPS
-   ▼
-Cloudflare                             public CDN/proxy; NEL disabled 2026-09-03
-   │ public HTTPS
-   ▼
-Caddy edge VM                         outside this repository
-   │ private-network HTTP
-   ├── portal hostname ─────────────► portal:8080
-   ├── media hostname, GET /tunnel ─► cobalt:9000
-   ├── search hostname ─────────────► searxng:8080 ──► selected search engines
-   └── Reddit hostname ─────────────► Anubis:8080 ─► redlib:8080 ─► Reddit
+   | public HTTPS
+   v
+Cloudflare
+   | public HTTPS
+   v
+Caddy edge VM
+   | private-network HTTP
+   +--> portal
+   +--> SearXNG --> selected search engines
+   +--> Anubis --> Redlib --> Reddit
+   +--> FreshRSS --> subscribed feed origins
+   +--> PrivateBin
+
 Application VM / Docker
-   ├── services bridge ─► Internet-facing upstream platforms
-   └── search-state bridge (internal) ─► Valkey only
+   +-- public-utility services network
+   +-- private SearXNG/Valkey network
+   +-- utilibre-services frontend network
+   +-- utilibre-services internal backend
+       +-- FreshRSS + PostgreSQL
+       +-- internal RSSHub + private Valkey
 ```
 
-The numbers after container names are container ports. The host-side ports are configurable and bind to one exact `PRIVATE_BIND_IP`; see [edge-routing.md](edge-routing.md). Public DNS must resolve to the edge VM, never to the application VM.
+Public DNS resolves to the edge VM, never directly to the application VM.
+Host-published application listeners bind to one exact private address and
+must be filtered so only the edge can reach them.
 
 The principal trust zones are:
 
-1. **Browser:** untrusted input and navigation into separately hosted upstream applications. Browser extensions, the operating system, and a visitor's device are outside the server operator's control.
-2. **Cloudflare:** current public ingress for all Utilibre hostnames. It processes public request and traffic metadata. Network Error Logging was disabled on 2026-09-03; accepted public responses checked afterward contained neither `NEL` nor `Report-To`, and their continued absence is a release-regression requirement.
-3. **Caddy edge VM:** public TLS endpoint behind Cloudflare and intended source of forwarded client headers. The portal and generated SearXNG configuration trust its exact address; Cobalt's documented upstream exception is described in the security review. Its configuration and logs are operator-managed outside this repository.
-4. **Application VM:** Docker Engine, repository, private configuration, and service logs. Only operators with host access belong here.
-5. **Service network:** portal, Cobalt, SearXNG, Anubis, Redlib, and optional rimgo. It has outbound access because the upstream-facing services legitimately contact external platforms. Anubis is a narrowly configured gate for Redlib, not a general application proxy.
-6. **Search-state network:** an internal Docker bridge shared only by SearXNG and Valkey. Valkey has no host port and no Internet route on this network.
-7. **External upstreams:** search engines and public media platforms. They have their own policies and observe requests made by the server; a direct Cobalt result also exposes the visitor's request to the media delivery host.
+1. **Browser.** Untrusted input, application JavaScript, cookies, extensions,
+   and local storage live here.
+2. **Cloudflare.** Current public ingress. It processes connection and request
+   metadata under the operator's Cloudflare configuration.
+3. **Caddy edge VM.** TLS endpoint and source of trusted forwarded-client
+   headers. Its configuration and logs are outside the application Compose
+   projects.
+4. **Application VM.** Docker Engine, repositories, application state,
+   secrets, logs, and operator access.
+5. **Public-utility networks.** Portal, SearXNG, Anubis, and Redlib. Only
+   SearXNG shares the separate internal search-state network with its Valkey.
+6. **Additional-application networks.** FreshRSS and PrivateBin accept traffic
+   through private-bound host ports. PostgreSQL and RSSHub's Valkey remain on
+   the internal backend. RSSHub joins that backend for cache/FreshRSS traffic
+   and a non-published egress-capable network to contact source sites.
+7. **External recipients.** Search engines, Reddit, subscribed feed origins,
+   and any external link intentionally opened by a visitor.
 
 ## Components
 
 | Component | Responsibility | Public exposure | Persistent state |
-|---|---|---|---|
-| Caddy edge VM | DNS destination, TLS, public routing, request ceilings, and optional edge logs | Public, outside this repository | Certificates and edge configuration, managed separately |
-| Portal | Static bilingual catalog, public configuration, high-level status, and the constrained Cobalt adapter | Private-bound host port reached through edge | No database; media rate counters exist only in process memory |
-| Cobalt | Extracts supported public media information and streams or redirects delivery | Private-bound host port; edge exposes only `GET /tunnel` | No media volume; short-lived process memory |
-| SearXNG | Sends a query to selected search engines and renders results | Private-bound host port reached through edge | Re-creatable cache only |
-| Valkey | SearXNG abuse-limiter counters | Container network only | Memory/tmpfs only; cleared on restart |
-| Anubis 1.27.0 | Applies a browser proof-of-work policy before forwarding accepted Redlib traffic | Private-bound host port reached through edge | bbolt challenge state and a stable signing key; no content database |
-| Redlib | Retrieves and renders public Reddit pages and proxies associated media | Docker service network only, behind Anubis | None; optional preferences are browser cookies |
-| rimgo | Privately tested optional Imgur frontend, disabled by policy | No public route; launch-blocked at pinned 1.4.2 | No volume; small in-memory cache when running |
+| --- | --- | --- | --- |
+| Caddy edge VM | TLS, public routing, request controls, and optional edge logs | Public; managed outside the Compose projects | Certificates, configuration, and any enabled logs |
+| Portal | Bilingual catalog, public configuration, and high-level status | Private-bound port reached through the edge | No database |
+| SearXNG | Sends searches to selected engines and renders results | Private-bound port reached through the edge | Re-creatable cache |
+| Root Valkey | SearXNG limiter/cache state | Docker network only | Memory/tmpfs; cleared on restart |
+| Anubis | Browser challenge before accepted Redlib traffic | Private-bound Redlib ingress reached through the edge | Challenge database and stable signing key |
+| Redlib | Retrieves Reddit pages and proxies associated media | Docker network only behind Anubis | No server database; optional preferences are browser cookies |
+| FreshRSS | Feed reader, refresh jobs, and account interface | Private-bound port reached through the edge | Application data/extensions plus its PostgreSQL database |
+| PostgreSQL | FreshRSS database | Internal Docker network only | Host bind-mounted database directory |
+| RSSHub | Intended operator-approved feed generation for FreshRSS | Docker networks only; no host or edge route | Re-creatable cache only |
+| Additional Valkey | RSSHub cache | Internal Docker network only | Memory/tmpfs; cleared on restart |
+| PrivateBin | Browser-encrypted paste storage and retrieval | Private-bound port reached through the edge | Ciphertext and paste metadata in a host bind mount |
 
-Redlib is enabled only when the `privacy-frontends` profile and `redlib`
-catalog ID agree. Invidious is reviewed but not present in Compose. It has no
-catalog launch or public route.
+## Portal server
 
-## Browser application
+The production portal contains built static assets and a small Node server.
+Its non-static surface is fixed:
 
-The portal uses TypeScript and Vite without a UI framework. The production image contains built static assets plus a small Node HTTP server. That server serves only this portal; its non-static endpoints are fixed application functions rather than a generic proxy:
+- `GET /healthz` returns a minimal health response;
+- `GET /_portal/config` and the legacy fixed alias return sanitized public
+  presentation values and enabled service IDs;
+- `GET /_portal/status` and the legacy fixed alias check only a configured
+  allowlist of internal health targets and return high-level states; and
+- unknown `/_portal/*` or `/api/*` paths return 404.
 
-- `GET /healthz` returns `{ "status": "ok" }`.
-- `GET /_portal/config` returns a sanitized allowlist of public presentation values and enabled-service IDs.
-- `GET /_portal/status` checks only operator-configured health targets accepted by a strict parser, discards response bodies, and returns high-level states. Internal HTTP targets are limited to Compose names or the exact private bind address; ntfy is the sole HTTPS exception and must exactly equal the configured public ntfy health URL so its isolated public client path is tested.
-- `POST /_portal/media` validates and rate-limits one Cobalt request, supplies the server-held API key, and maps upstream errors to stable public codes.
-- all other `/_portal/*` paths return 404. In particular, the portal has no
-  webhook receiver, DNS resolver, generic HTTP requester, response-header
-  proxy, or arbitrary status target. The former `/api/*` paths remain local
-  compatibility aliases only for the fixed portal functions.
+The portal has no arbitrary URL fetcher, media resolver, webhook receiver,
+DNS resolver, network scanner, upload store, or account system. Internal
+addresses and response bodies are never returned by the public status API.
 
-The static server accepts only origin-form request targets, normalizes requested paths, refuses non-GET/HEAD methods outside the fixed API endpoints, and falls back to the SPA entry document only within the built distribution directory. Only the fixed media resolver may declare a request body; other routes return 400 and close an incomplete body rather than leaving a keep-alive socket occupied. Header receipt is limited to ten seconds; requests at the conservative 100-field boundary are rejected with 431 before routing. Request receipt is limited to 20 seconds, keep-alive to five seconds and 100 requests, and the process accepts at most 512 concurrent connections.
+The portal's Reddit URL router runs in the browser. It accepts only reviewed
+Reddit hostnames and path/query shapes, then creates a link on the configured
+Redlib origin. It does not proxy the request.
 
-English and Spanish dictionaries are centralized under `portal/src/i18n/`. Routes carry the language, the root selects a saved choice or browser preference, and switching language maps to the equivalent current route. `portal/src/catalog/catalog.ts` is the structured source for names, descriptions, data flows, labels, status, versions, and license metadata used across cards and transparency pages.
-
-The initial `/_portal/config` request has a five-second client-side deadline. If the endpoint fails, returns an unexpected response, or does not settle, the browser renders with conservative defaults: runtime-configured hosted services and optional links remain absent. With JavaScript disabled, the Node server returns an English or Spanish static fallback that identifies Utilibre and explains why it cannot safely list the active catalog. The fallback links only to its equivalent page in the other language. Full catalog and informational-page rendering without JavaScript would require server rendering or prerendering and is not implemented.
-
-Portal pages retain `connect-src 'self'`. User-facing applications run on
-their own configured origins with their own reviewed policies; the catalog
-opens those applications instead of broadening the portal's connection policy.
-
-## Data-flow sequences
-
-### Catalog navigation and upstream application
-
-```text
-Browser ──GET HTML/JS/CSS──► edge ──► portal catalog
-Browser ──explicit launch navigation──► separately hosted upstream application
-```
-
-The portal performs discovery, localization, attribution, and launch routing.
-It does not implement the launched task. Processing and data-handling behavior
-after navigation belong to the independently maintained FOSS application and
-are described in its catalog record and the privacy documentation.
-
-### Media request
-
-```text
-Browser ──URL + quality/mode──► edge ──► POST /_portal/media
-portal ──validated request + API key──► Cobalt
-Cobalt ──provider request──► supported public media platform
-
-delivery A: Browser ──short-lived tunnel URL──► edge ──► Cobalt ──► provider
-delivery B: Browser ──returned HTTPS/HTTP media URL────────────────► provider/CDN
-```
-
-The API key never enters browser code. Cobalt's private host port is published only because the edge must stream `/tunnel`; the edge example rejects every other public path and method. The portal rejects picker/batch and local-processing responses. Media JSON receipt has a ten-second deadline and at most 16 concurrent body readers; validated work then enters the existing two-request upstream gateway ceiling.
+## Main data flows
 
 ### Search
 
 ```text
-Browser ──search form──► edge ──► SearXNG ──► selected search engines
-                                      │
-                                      └──► Valkey limiter counters
+Browser --> edge --> SearXNG --> selected external search engines
+                           |
+                           +--> private Valkey limiter state
 ```
 
-Search engines see the query from the application VM. `image_proxy` keeps configured result images behind SearXNG instead of automatically loading them from an engine into the visitor's browser. Clicking a result is an intentional direct navigation to that external site.
+Search engines receive the query from the application VM. SearXNG may proxy
+result images according to its configuration. Opening a result is a direct
+navigation to the result site.
 
 ### Reddit browsing
 
 ```text
-Browser ──page/path, request metadata and optional preference cookie──► edge
-edge ──► Anubis ──accepted request──► Redlib ──spoofed Android OAuth/client request with TLS/browser emulation──► Reddit
-Browser ◄──HTML, images, video and other proxied media── Anubis ◄── Redlib ◄── Reddit
+Browser --> edge --> Anubis --> Redlib --> Reddit
+Browser <-- rendered pages and proxied media <-- Redlib <-- Reddit
 ```
 
-A fresh ordinary browser normally completes Anubis's mild difficulty-2
-proof-of-work challenge before Redlib receives the request. Anubis stores
-short-lived challenge records in bbolt with a logical 30-minute TTL and sets a
-24-hour host-only Secure, HttpOnly, SameSite=Lax, Partitioned authorization
-cookie after success. `/info` and exact official Redlib/Libreddit
-instance-updater requests are allowed without an interactive challenge. The
-gate increases scraper cost; it is not volumetric DDoS protection and cannot
-prevent distributed automation or Reddit-side blocking.
+Redlib is operationally fragile: its upstream Android client emulation and
+browser/TLS behavior can be blocked by Reddit at any time. It uses no personal
+Reddit account supplied by a Utilibre visitor. The local source build includes
+the documented redirect-hardening patch.
 
-Redlib's upstream interface is English-only. The portal describes and links it
-in both supported languages, but does not fork the upstream UI for Spanish.
-Redlib uses no personal Reddit account, cookie, or operator-supplied token.
-Instead, the operator explicitly accepted upstream's Android OAuth identity and
-token spoofing plus TLS/browser-fingerprint emulation. That mechanism may be
-blocked by Reddit at any time. The local source build also applies the tracked
-scheme-relative/backslash redirect hardening patch from `config/redlib/`.
+### FreshRSS and internal RSSHub
 
-### Private URL router
+```text
+Browser --> edge --> FreshRSS --> subscribed public feed origins
+                         |
+                         +--> PostgreSQL
+                         +--> internal RSSHub route --> source site
+```
 
-The pasted URL is parsed in browser JavaScript. Only exact Reddit hostnames,
-HTTPS, selected path segments, and a small query-parameter allowlist survive.
-The destination hostname comes only from the configured Redlib URL. Nothing is
-sent until the visitor activates the resulting link; at that point Redlib
-receives the routed path.
+FreshRSS stores persistent user and subscription state. RSSHub is not a
+public feed-generation endpoint: it has no host or edge route. The stock
+runtime does not allowlist routes, however, so a FreshRSS user able to submit
+an arbitrary subscription URL may be able to address more than the intended
+operator-approved set. That boundary must be enforced or explicitly contained
+before unrelated-user access opens.
+
+### PrivateBin
+
+```text
+Browser --ciphertext + metadata--> edge --> PrivateBin storage
+Browser <--ciphertext------------- edge <-- PrivateBin storage
+
+URL fragment containing decryption key stays in the browser
+```
+
+The server can see request metadata, ciphertext size, expiry metadata, and
+traffic timing. It does not receive the URL-fragment decryption key during
+ordinary use. File uploads and discussions are disabled; the configured paste
+size and expiry choices bound individual records.
 
 ### Status
 
-The browser calls `/_portal/status`; the portal checks a fixed set of health URLs with a 2.5-second timeout and redirects disabled. Most are internal HTTP targets. ntfy is intentionally checked through its exact configured public HTTPS health URL because network isolation prevents the portal container from reaching ntfy directly and the public client path is the useful one to verify. Concurrent callers share one in-flight check and the result is held in process memory for 15 seconds by default, preventing public request fan-out. The public response contains a service ID and high-level state only. It exposes no container name, address, resource measurement, response body, or stack trace.
-
-## Docker topology and lifecycle
-
-The configured Compose launch application starts portal, Cobalt, SearXNG,
-Valkey, Anubis, and Redlib; Anubis and Redlib are selected through the
-`privacy-frontends` profile.
-rimgo is behind the separate `optional` profile. Every service uses
-`restart: unless-stopped`, a health check where compatible, rotated `json-file`
-logs, CPU/memory/PID limits, dropped Linux capabilities, and
-`no-new-privileges`. The portal, Cobalt, Valkey, Anubis, Redlib, and rimgo have
-read-only root filesystems; SearXNG has a documented writable-root exception
-for its official initialization and cache behavior.
-
-No service uses host networking, privileged mode, the Docker socket, a host filesystem write mount, or a published database/cache port. Compose mounts the entire host `config/searxng/` directory read-only at `/etc/searxng`. It contains the tracked settings, limiter template, query-log redaction module, and ignored generated `limiter.toml`. The directory mount deliberately overrides the official image's `/etc/searxng` `VOLUME`, preventing Docker from creating an untracked anonymous configuration volume. Compose secrets are read-only container mounts sourced from the host's non-traversable `secrets/` directory.
-
-The `services` bridge is intentionally not marked internal: Cobalt, SearXNG,
-Anubis, Redlib, and optional rimgo share the bridge; Redlib and optional rimgo
-must reach their upstreams. This also means container
-compromise has an outbound path and peer reachability within that bridge; it is
-a residual risk discussed in [security.md](security.md).
+The portal checks a fixed list of internal health URLs with redirects disabled
+and a short timeout. Concurrent callers share an in-flight check and a short
+memory cache. The response contains service IDs, high-level states, and a
+timestamp, not historical availability or internal diagnostics.
 
 ## Persistence model
 
-There is no portal database and no account system. The only persistent Docker volume is:
+The root Compose project persists only re-creatable SearXNG cache plus the
+Anubis challenge database and its signing key. Redlib and the portal have no
+content database. Root Valkey state is intentionally ephemeral.
 
-- `searxng-cache`: re-creatable application/cache data, not a search-history database.
-
-Cobalt, portal, Valkey, Redlib, and rimgo have no persistent volumes. The
-portal's media rate counters exist only in process memory and clear on restart.
-Cobalt's
-root filesystem is read-only and no writable media directory is mounted.
-Redlib's only writable location is its bounded memory-backed `/tmp`; OAuth and
-connection state are process-local and end on restart. SearXNG and portal
-`/tmp` paths and Valkey `/tmp` and `/data` are memory-backed tmpfs. Valkey has
-RDB snapshots and AOF disabled, so all limiter state vanishes on restart.
-Anubis is the deliberate exception: ignored `data/anubis/` holds its bbolt
-challenge database and ignored `secrets/` holds the stable Ed25519 signing
-key. Challenge rows expire logically after 30 minutes, though freed database
-pages can remain in the bbolt file until compaction or deletion; neither store
-contains Reddit page bodies by design.
-Detailed backup and erasure consequences are in [backups.md](backups.md).
+The additional project persists FreshRSS application data/extensions,
+PostgreSQL data, and PrivateBin ciphertext. RSSHub and its Valkey cache are
+re-creatable. Those persistent directories require backup, restore, erasure,
+capacity, and retirement procedures before broader account access opens. See
+[`backups.md`](backups.md).
 
 ## Deliberate omissions
 
-The application architecture has no Kubernetes, API gateway, general reverse
-proxy on the application VM, portal database, account service, portal-native
-end-user utility implementation, webhook receiver, DNS lookup service,
-project-run browser analytics service, message queue, background-worker system,
-external monitoring agent, or persistent media store. Every catalog launch
-must resolve to an independently maintained, self-hostable FOSS application;
-the portal contributes only catalog, localization, routing, configuration, and
-narrow integration glue. Cloudflare remains an external
-public-ingress processor even though its Network Error Logging was disabled on
-2026-09-03. Accepted public responses checked afterward contained neither
-`NEL` nor `Report-To`; releases must continue checking that both stay absent.
-These omissions reduce resource use and the quantity of sensitive state.
-
-Invidious is deferred because its database/Companion, bandwidth, anti-bot, and
-operational requirements do not fit a conservative first milestone. Redlib's
-credential/client emulation was accepted as an explicit operator policy
-exception, not silently reclassified as an official Reddit integration. rimgo
-1.4.2 remains private-evaluation-only because of its reviewed external
-redirect; only an official fixed release that passes a complete new review may
-be reconsidered, and public-abuse controls remain a separate gate. See
-[viability-matrix.md](viability-matrix.md).
+The architecture has no public database/cache port, Docker socket mount, host
+networking, wildcard application binding, portal-native end-user utility,
+generic proxy, persistent media store, advertising system, or behavioral
+analytics. RSSHub has no public listener. Applications removed during the
+strategic reset have no place in the active topology.

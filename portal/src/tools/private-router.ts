@@ -7,10 +7,14 @@ export function renderPrivateRouter(t: Translate, config: PublicConfig): HTMLEle
   const panel = toolPanel();
   const field = labelledInput(t('router.label'), 'url', { placeholder: t('router.placeholder') });
   const check = actionButton(t('router.button'));
+  const form = element('form', 'tool-form');
+  form.noValidate = true;
+  check.type = 'submit';
   const status = statusRegion(t('router.explanation'));
   const result = element('div', 'router-result');
 
-  check.addEventListener('click', () => {
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
     result.replaceChildren();
     if (!validPublicUrlShape(field.input.value)) return setStatus(status, t('router.invalid'), 'error');
     const routed = routePrivateUrl(field.input.value);
@@ -33,7 +37,8 @@ export function renderPrivateRouter(t: Translate, config: PublicConfig): HTMLEle
     } catch { setStatus(status, t('router.notDeployed'), 'error'); }
   });
 
-  append(panel, field.wrapper, check, status, result, element('p', 'notice', t('router.explanation')));
+  append(form, field.wrapper, check);
+  append(panel, form, status, result, element('p', 'notice', t('router.explanation')));
   return panel;
 }
 

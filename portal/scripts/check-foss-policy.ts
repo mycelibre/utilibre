@@ -4,6 +4,7 @@ import { assertFossCatalogPolicy, reviewedFossProviders } from '../src/catalog/u
 import { parseRoute } from '../src/routes.ts';
 
 const retiredRoutes: ReadonlyArray<readonly [string, string]> = [
+  ['download-media', 'descargar-contenido'],
   ['image-resize', 'redimensionar-imagen'],
   ['image-compress', 'comprimir-imagen'],
   ['image-convert', 'convertir-imagen'],
@@ -55,12 +56,12 @@ for (const [providerId, provider] of Object.entries(reviewedFossProviders)) {
 }
 
 const toolFiles = walkFiles(new URL('../src/tools/', import.meta.url)).sort();
-assert(toolFiles.join('\n') === 'media.ts\nprivate-router.ts', `Unexpected portal-native tool implementation found:\n${toolFiles.join('\n')}`);
+assert(toolFiles.join('\n') === 'private-router.ts', `Unexpected portal-native tool implementation found:\n${toolFiles.join('\n')}`);
 
 const serverSource = readFileSync(new URL('../server/server.mjs', import.meta.url), 'utf8');
 assert(!/\/_portal\/developer|webhook-inbox|webhook-inboxes|dnsLookup|DNS_LOOKUP/.test(serverSource), 'Retired developer API behavior remains in the portal server');
 
-assert(retiredRoutes.length === 31, 'The retired-route regression list changed unexpectedly');
+assert(retiredRoutes.length === 32, 'The retired-route regression list changed unexpectedly');
 for (const [english, spanish] of retiredRoutes) {
   assert(parseRoute(`/en/tools/${english}`)?.page === 'not-found', `Retired route /en/tools/${english} is public again`);
   assert(parseRoute(`/es/herramientas/${spanish}`)?.page === 'not-found', `Retired route /es/herramientas/${spanish} is public again`);

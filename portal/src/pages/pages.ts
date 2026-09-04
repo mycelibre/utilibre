@@ -1,5 +1,5 @@
 import { catalog, catalogEntry, localized, reviewedServices, type CatalogEntry, type DiscoveryGroup, type OperationalStatus } from '../catalog/catalog';
-import { discoveryGroups, discoverEntries, entryLaunchable, launchableEntries, serviceConfigured, serviceEnabled, type CatalogDiscoveryState } from '../catalog/discovery';
+import { discoveryGroups, discoverEntries, entryLaunchable, serviceConfigured, type CatalogDiscoveryState } from '../catalog/discovery';
 import { renderCatalogList } from '../components/catalog-ledger';
 import { privacyLabels } from '../components/privacy-labels';
 import type { PublicConfig } from '../config';
@@ -150,11 +150,7 @@ function renderServices(language: Language, config: PublicConfig, t: Translate):
     processingNote: 'full',
     showSource: true,
   }));
-  const deferred = element('section', 'section');
-  deferred.append(element('h2', '', t('services.reviewedTitle')));
-  const deferredEntries = reviewedServices.filter((item) => item.operationalStatus === 'not-deployed' && !serviceEnabled(config, item.id));
-  deferred.append(renderDeferredServices(deferredEntries, language, t));
-  append(main, deployed, deferred);
+  main.append(deployed);
   return main;
 }
 
@@ -184,11 +180,8 @@ function renderPrivacy(config: PublicConfig, t: Translate): HTMLElement {
   return prosePage(t('privacy.title'), t('privacy.intro'), [
     ['privacy.portal.title', 'privacy.portal.body'],
     ['privacy.local.title', 'privacy.local.body'],
-    ['privacy.cobalt.title', 'privacy.cobalt.body'],
     ['privacy.search.title', 'privacy.search.body'],
     ...redlibSections,
-    ['privacy.invidious.title', 'privacy.invidious.body'],
-    ['privacy.rimgo.title', serviceEnabled(config, 'rimgo') ? 'privacy.rimgo.enabled' : 'privacy.rimgo.disabled'],
     ['privacy.logs.title', 'privacy.logs.body'],
     ['privacy.storage.title', 'privacy.storage.body'],
   ], t);
@@ -197,9 +190,6 @@ function renderPrivacy(config: PublicConfig, t: Translate): HTMLElement {
 async function renderToolPage(id: string, language: Language, config: PublicConfig, t: Translate): Promise<HTMLElement> {
   const entry = catalogEntry(id);
   if (!entry) return prosePage(t('common.notFound.title'), t('common.notFound.body'), [], t);
-  if (id === 'cobalt' && !serviceEnabled(config, 'cobalt')) {
-    return prosePage(localized(entry.name, language), t('services.notConfigured'), [], t);
-  }
   const main = pageHeader(localized(entry.name, language), localized(entry.description, language), 'tool-page');
   const disclosure = element('section', 'tool-disclosure');
   append(disclosure, privacyLabels(entry.labels, t), element('p', '', localized(entry.dataFlow, language)));
@@ -212,7 +202,6 @@ async function renderToolPage(id: string, language: Language, config: PublicConf
   main.append(disclosure);
   let tool: HTMLElement;
   if (id === 'private-router') tool = (await import('../tools/private-router')).renderPrivateRouter(t, config);
-  else if (id === 'cobalt') tool = (await import('../tools/media')).renderMediaTool(t, routePath('acceptable', language));
   else tool = element('p', 'notice', t('tool.error.generic'));
   main.append(tool);
   return main;
@@ -297,17 +286,18 @@ function renderStatus(language: Language, config: PublicConfig, t: Translate): H
     try {
       const response = await fetch('/_portal/status', { credentials: 'omit', cache: 'no-store' });
       if (!response.ok) throw new Error('status');
-      const payload = await response.json() as { checkedAt?: string; services?: Array<{ id: string; status: OperationalStatus }> };
-      const states = new Map(payload.services?.map((item) => [item.id, item.status]));
+      const payload = await response.json() as unknown;
+      const states = observedStatusStates(payload);
       list.replaceChildren();
       for (const entry of reviewedServices) {
         const configured = serviceConfigured(config, entry);
-        const observed = states.get(entry.id) ?? 'degraded';
+        const observed = states.get(entry.id) ?? 'unknown';
         const state = configured ? moreSevereStatus(entry.operationalStatus, observed) : 'not-deployed';
         list.append(statusItem(localized(entry.name, language), state, t));
       }
       const locale = language === 'es' ? 'es' : 'en';
-      message.textContent = payload.checkedAt ? `${t('status.checked')}: ${new Date(payload.checkedAt).toLocaleString(locale)}` : t('status.checked');
+      const checkedAt = statusCheckedAt(payload);
+      message.textContent = checkedAt ? `${t('status.checked')}: ${new Date(checkedAt).toLocaleString(locale)}` : t('status.checked');
     } catch { message.textContent = t('status.error'); }
     finally { finishAction(); }
   };
@@ -317,14 +307,38 @@ function renderStatus(language: Language, config: PublicConfig, t: Translate): H
 }
 
 function moreSevereStatus(declared: OperationalStatus, observed: OperationalStatus): OperationalStatus {
+  if (observed === 'unknown') return 'unknown';
   const severity: Record<OperationalStatus, number> = {
     operational: 0,
     degraded: 1,
     maintenance: 2,
     unavailable: 3,
     'not-deployed': 4,
+    unknown: 5,
   };
   return severity[declared] >= severity[observed] ? declared : observed;
+}
+
+const observedStatuses = new Set<OperationalStatus>(['operational', 'degraded', 'unavailable', 'maintenance']);
+
+function observedStatusStates(payload: unknown): Map<string, OperationalStatus> {
+  const states = new Map<string, OperationalStatus>();
+  if (!payload || typeof payload !== 'object' || !Array.isArray((payload as { services?: unknown }).services)) return states;
+  for (const item of (payload as { services: unknown[] }).services) {
+    if (!item || typeof item !== 'object') continue;
+    const { id, status } = item as { id?: unknown; status?: unknown };
+    if (typeof id === 'string' && typeof status === 'string' && observedStatuses.has(status as OperationalStatus)) {
+      states.set(id, status as OperationalStatus);
+    }
+  }
+  return states;
+}
+
+function statusCheckedAt(payload: unknown): string | undefined {
+  if (!payload || typeof payload !== 'object') return undefined;
+  const checkedAt = (payload as { checkedAt?: unknown }).checkedAt;
+  if (typeof checkedAt !== 'string' || !Number.isFinite(Date.parse(checkedAt))) return undefined;
+  return checkedAt;
 }
 
 function renderSoftware(config: PublicConfig, t: Translate): HTMLElement {
@@ -347,7 +361,6 @@ function renderSoftware(config: PublicConfig, t: Translate): HTMLElement {
     { id: 'infrastructure', label: t('software.group.infrastructure') },
     { id: 'browser', label: t('software.group.browser') },
     { id: 'build', label: t('software.group.build') },
-    { id: 'reviewed', label: t('software.group.reviewed') },
   ] as const;
   type SoftwareGroup = (typeof groups)[number]['id'];
   type SoftwareItem = {
@@ -363,23 +376,13 @@ function renderSoftware(config: PublicConfig, t: Translate): HTMLElement {
   const inventory: SoftwareItem[] = [
     { group: 'portal', name: t('software.portalName'), version: '0.1.0', license: 'AGPL-3.0-or-later', upstream: config.sourceCodeUrl, modification: t('software.original'), purpose: t('software.purpose.portal') },
     { group: 'portal', name: 'Node.js / Alpine Linux', version: '24.14.0 / 3.23', license: 'MIT / component-specific', upstream: 'https://github.com/nodejs/node/tree/v24.14.0', modification: t('software.notModified'), purpose: t('software.purpose.node') },
-    { group: 'hosted', name: 'Cobalt API', version: '11.7.1-a636575', license: 'AGPL-3.0-only', upstream: 'https://github.com/imputnet/cobalt', modification: t('software.notModified'), purpose: t('software.purpose.cobalt') },
-    { group: 'hosted', name: 'FFmpeg / ffmpeg-static', version: '6.1.1 / 5.3.0', license: 'GPL-3.0-or-later; build-dependent', upstream: 'https://github.com/eugeneware/ffmpeg-static/tree/5.3.0', modification: t('software.notModified'), purpose: t('software.purpose.ffmpeg') },
     { group: 'hosted', name: 'SearXNG', version: '2026.8.22-9fea41204', license: 'AGPL-3.0-or-later', upstream: 'https://github.com/searxng/searxng', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.searxng') },
     { group: 'infrastructure', name: 'Valkey', version: '9.1.1-alpine', license: 'BSD-3-Clause', upstream: 'https://github.com/valkey-io/valkey/tree/9.1.1', modification: t('software.notModified'), purpose: t('software.purpose.valkey') },
     { group: 'hosted', name: 'Redlib', version: 'a4d36e9 + local redirect hardening', license: 'AGPL-3.0-only', upstream: 'https://github.com/redlib-org/redlib/tree/a4d36e954cf1bd64f209cd8868c5a29edc81b374', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.redlib') },
     { group: 'hosted', name: 'Anubis', version: '1.27.0', license: 'MIT', upstream: 'https://github.com/TecharoHQ/anubis/tree/v1.27.0', modification: t('software.imageUnmodifiedConfigured'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.anubis') },
-    { group: 'reviewed', name: 'rimgo', version: '1.4.2 (optional)', license: 'AGPL-3.0-only', upstream: 'https://codeberg.org/rimgo/rimgo/src/tag/v1.4.2', modification: t('software.notModified'), purpose: t('software.purpose.rimgo') },
-    { group: 'hosted', name: 'ntfy', version: 'v2.28.0', license: 'Apache-2.0 / GPL-2.0 (dual license)', upstream: 'https://github.com/binwiederhier/ntfy/tree/v2.28.0', modification: t('software.notModified'), purpose: t('software.purpose.ntfy') },
-    { group: 'hosted', name: 'BentoPDF', version: 'v2.8.8', license: 'AGPL-3.0-only', upstream: 'https://github.com/alam00000/bentopdf/tree/v2.8.8', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.bentopdf') },
-    { group: 'hosted', name: 'VERT', version: 'e0ffd34310f9c988b16e22334b13e18de030b0ae', license: 'AGPL-3.0-only', upstream: 'https://github.com/VERT-sh/VERT/tree/e0ffd34310f9c988b16e22334b13e18de030b0ae', modification: t('software.notModified'), purpose: t('software.purpose.vert') },
-    { group: 'hosted', name: 'OmniTools', version: 'v0.6.0', license: 'MIT', upstream: 'https://github.com/iib0011/omni-tools/tree/v0.6.0', modification: t('software.notModified'), purpose: t('software.purpose.omnitools') },
-    { group: 'hosted', name: 'Healthchecks', version: 'v4.3', license: 'BSD-3-Clause', upstream: 'https://github.com/healthchecks/healthchecks/tree/v4.3', modification: t('software.notModified'), purpose: t('software.purpose.healthchecks') },
-    { group: 'hosted', name: 'PairDrop', version: 'v1.11.2', license: 'GPL-3.0-only', upstream: 'https://github.com/schlagmichdoch/PairDrop/tree/v1.11.2', modification: t('software.notModified'), purpose: t('software.purpose.pairdrop') },
     { group: 'hosted', name: 'FreshRSS', version: '1.29.1', license: 'AGPL-3.0', upstream: 'https://github.com/FreshRSS/FreshRSS/tree/1.29.1', modification: t('software.notModified'), purpose: t('software.purpose.freshrss') },
-    { group: 'hosted', name: 'RSSHub', version: '40aca9548e99eefd519ff7abbb937560fc037c95', license: 'AGPL-3.0', upstream: 'https://github.com/DIYgod/RSSHub/tree/40aca9548e99eefd519ff7abbb937560fc037c95', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.rsshub') },
     { group: 'hosted', name: 'PrivateBin', version: '2.0.6', license: 'Zlib', upstream: 'https://github.com/PrivateBin/PrivateBin/tree/2.0.6', modification: t('software.notModified'), purpose: t('software.purpose.privatebin') },
-    { group: 'hosted', name: 'Wakapi', version: '2.17.6', license: 'MIT', upstream: 'https://github.com/muety/wakapi/tree/2.17.6', modification: t('software.notModified'), purpose: t('software.purpose.wakapi') },
+    { group: 'infrastructure', name: 'RSSHub', version: '40aca954', license: 'AGPL-3.0', upstream: 'https://github.com/DIYgod/RSSHub/tree/40aca9548e99eefd519ff7abbb937560fc037c95', modification: t('software.notModified'), purpose: t('software.purpose.rsshub') },
     { group: 'infrastructure', name: 'PostgreSQL', version: '17.11-alpine', license: 'PostgreSQL License', upstream: 'https://github.com/postgres/postgres', modification: t('software.notModified'), purpose: t('software.purpose.postgresql') },
     { group: 'browser', name: 'Newsreader', version: '5.3.0 package', license: 'OFL-1.1', upstream: 'https://github.com/productiontype/Newsreader', modification: t('software.notModified'), purpose: t('software.purpose.fonts') },
     { group: 'browser', name: 'Atkinson Hyperlegible Next', version: '5.3.0 package', license: 'OFL-1.1', upstream: 'https://github.com/googlefonts/atkinson-hyperlegible-next', modification: t('software.notModified'), purpose: t('software.purpose.fonts') },
@@ -488,8 +491,6 @@ function catalogUrl(language: Language, state: CatalogDiscoveryState): string {
 function discoveryGroupLabel(group: DiscoveryGroup, t: Translate): string {
   const keys: Record<DiscoveryGroup, TranslationKey> = {
     find: 'discovery.find',
-    files: 'discovery.files',
-    documents: 'discovery.documents',
     'text-data': 'discovery.textData',
     'feeds-monitoring': 'discovery.feeds',
   };
@@ -510,30 +511,8 @@ function catalogStateCode(state: CatalogDiscoveryState): string {
   return '00';
 }
 
-function renderDeferredServices(entries: CatalogEntry[], language: Language, t: Translate): HTMLOListElement {
-  const list = element('ol', 'catalog-ledger-list deferred-service-list');
-  entries.forEach((entry, index) => {
-    const item = element('li', 'catalog-ledger-item');
-    const article = element('article', 'catalog-ledger-row deferred-service-row');
-    const coordinate = element('div', 'catalog-ledger-coordinate');
-    const number = element('span', 'catalog-ledger-number', String(index + 1).padStart(2, '0'));
-    number.ariaHidden = 'true';
-    coordinate.append(number);
-    const content = element('div', 'catalog-ledger-content');
-    append(content, element('h3', '', localized(entry.name, language)), element('p', 'catalog-ledger-description', localized(entry.description, language)));
-    const processing = element('div', 'catalog-ledger-processing');
-    append(processing, privacyLabels(entry.labels, t), element('p', 'catalog-ledger-flow', localized(entry.deferralReason ?? entry.retention, language)));
-    const action = element('div', 'catalog-ledger-action');
-    if (entry.upstreamSourceUrl) action.append(externalLink(entry.upstreamSourceUrl, entry.upstreamSourceUrl.replace(/^https?:\/\//, ''), 'catalog-ledger-source'));
-    append(article, coordinate, content, processing, action);
-    item.append(article);
-    list.append(item);
-  });
-  return list;
-}
-
 function deployedEntries(config: PublicConfig): CatalogEntry[] {
-  return launchableEntries(config).filter((entry) => entry.kind === 'service' || entry.id === 'private-router');
+  return catalog.filter((entry) => entry.kind === 'service' && entryLaunchable(entry, config));
 }
 
 function redlibConfigured(config: PublicConfig): boolean {

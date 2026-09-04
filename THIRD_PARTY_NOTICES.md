@@ -13,14 +13,12 @@ see `LICENSE`. The development-assistance disclosure and project role are
 recorded in [`TRANSPARENCY.md`](TRANSPARENCY.md). Each component below remains
 under its own license. Nothing here grants rights to an upstream name, logo,
 or trademark.
-The Cobalt web frontend, assets, mascot, and branding are not included.
 
 The separately managed `deployment/utilibre` Compose stack has its own exact
 application, image, source-revision, license, and modification inventory in
 [`deployment/utilibre/SOURCE_MANIFEST.md`](deployment/utilibre/SOURCE_MANIFEST.md).
-That manifest covers ntfy, BentoPDF, VERT, OmniTools, Healthchecks, PairDrop,
-FreshRSS, RSSHub, PrivateBin, Wakapi, PostgreSQL, Valkey, and the deferred Crab
-Fit review; those applications are not bundled into the portal browser assets.
+That manifest covers FreshRSS, internal RSSHub, PrivateBin, PostgreSQL, and
+Valkey. Those applications are not bundled into the portal browser assets.
 
 ## Project-supplied identity assets
 
@@ -154,10 +152,6 @@ status, and launch integration around independently maintained FOSS
 applications. The self-hosted font files listed above are the only npm assets
 intentionally copied into the browser build.
 
-The packages formerly used for portal-native PDF, hashing, OpenAPI, and QR
-tools were removed when Utilibre adopted its upstream-FOSS-only policy. Their
-notices are no longer active distribution notices for the current build.
-
 ### Anubis MIT notice
 
 The MIT terms below apply to the separately hosted Anubis challenge/gate
@@ -202,7 +196,7 @@ BSD-2-Clause, BSD-3-Clause, ISC, MPL-2.0, BlueOak-1.0.0, and OFL-1.1 licenses.
 License-family counts are in `docs/licenses.md`; the lockfile remains the
 authoritative name, version, and artifact resolution record.
 
-## Containerized and reviewed services
+## Current containerized services
 
 Compose references pulled images by version and digest. Redlib is instead
 built from an exact official source commit/checksum and digest-pinned builder
@@ -213,21 +207,11 @@ services are disclosed below.
 
 | Component | Pinned/reviewed version | License | Source | Modification status |
 | --- | --- | --- | --- | --- |
-| Cobalt API | 11.7.1, source commit `a636575b09de1fc55d9b8cd98cac88f5f2f16b42` | AGPL-3.0-only (upstream uses the deprecated `AGPL-3.0` identifier without an “or later” grant) | <https://github.com/imputnet/cobalt/tree/a636575b09de1fc55d9b8cd98cac88f5f2f16b42> | Unmodified image; local configuration only |
-| ffmpeg-static used by Cobalt | 5.3.0, carrying FFmpeg 6.1.1 static binaries | GPL-3.0-or-later package; the binary's own build license/source must also be preserved | <https://github.com/eugeneware/ffmpeg-static/tree/5.3.0> and <https://ffmpeg.org/> | Supplied inside upstream Cobalt image, not modified here |
 | SearXNG | 2026.8.22-9fea41204, source commit `9fea41204fdfa7a5cfa15b0ebd12904c520478ce`, + local log-redaction hook | AGPL-3.0-or-later | <https://github.com/searxng/searxng/tree/9fea41204fdfa7a5cfa15b0ebd12904c520478ce>; local hook: `config/searxng/sitecustomize.py` | Official image unchanged; after recognizing a query marker, the locally authored hook discards the untrusted remainder of the rendered log record |
 | Valkey | 9.1.1 | BSD-3-Clause; individual files can carry other compatible notices identified by SPDX metadata | <https://github.com/valkey-io/valkey/tree/9.1.1> | Unmodified image; persistence disabled and `/data` supplied as tmpfs by local runtime configuration |
 | Anubis | 1.27.0, commit `d39e26cedcc96bea5e4915297c756e7eec74aaf7`, image `ghcr.io/techarohq/anubis:v1.27.0@sha256:8828275668b7bc675679f100970f9714f731388fbbf66ae94de8aca952e3fc4a` | MIT | <https://github.com/TecharoHQ/anubis/tree/d39e26cedcc96bea5e4915297c756e7eec74aaf7> | Unmodified official image; local policy/environment configuration only. Its first-party challenge UI is delivered on the Redlib origin |
 | Redlib | official commit `a4d36e954cf1bd64f209cd8868c5a29edc81b374` (2026-04-24), local image `public-utility-redlib:0.36.0-a4d36e9-p1` + redirect hardening | AGPL-3.0-only | <https://github.com/redlib-org/redlib/tree/a4d36e954cf1bd64f209cd8868c5a29edc81b374>; local patch/build context: `config/redlib/` | Built from source and modified locally to reject scheme-relative/backslash settings redirects; runtime configuration also disables application HSTS expiry, indexing, RSS, HLS, and autoplay |
-| rimgo (optional profile) | 1.4.2, commit `d2be8e221522dfe7a06452e2002dcf6dad569d1a` | AGPL-3.0-only | <https://codeberg.org/rimgo/rimgo/src/tag/v1.4.2> | Unmodified image; not enabled by default |
 | Node.js portal runtime | 24.14.0 on Alpine 3.23 | Node.js MIT; Alpine packages retain their own licenses | <https://github.com/nodejs/node/tree/v24.14.0> and <https://github.com/nodejs/docker-node> | Official base image; application added in a new image layer |
-
-Cobalt's exact upstream lockfile contains its full JavaScript dependency
-closure. Its README specifically acknowledges FFmpeg, youtube.js, Express, and
-the other direct API dependencies. Any operator who redistributes the Cobalt
-image rather than merely pulling it from upstream must also satisfy every
-license and source-offer obligation in that image, particularly the GPL terms
-for the static FFmpeg build.
 
 `config/searxng/sitecustomize.py` is original integration code licensed
 AGPL-3.0-or-later with the rest of this repository. Compose mounts it read-only
@@ -249,14 +233,9 @@ charge to network users. Preserve upstream copyright/license notices and mark
 the redirect change as local; do not describe this image as an unmodified
 official Redlib release.
 
-Reviewed but not installed:
-
-| Component | Reviewed version | License | Source |
-| --- | --- | --- | --- |
-| Invidious | 2.20260804.1, commit `48c6110a83fc788b4199daf737279b71950cc0db` | AGPL-3.0-only | <https://github.com/iv-org/invidious/tree/v2.20260804.1> |
-| Invidious Companion | reviewed official 2026-08 build | AGPL-3.0-only | <https://github.com/iv-org/invidious-companion> |
-
-No code or assets from these deferred projects are distributed by the portal.
+The separately managed active services and their exact image digests are
+listed in `deployment/utilibre/SOURCE_MANIFEST.md`. RSSHub is internal,
+unmodified FreshRSS support and has no public route.
 
 ## Source-offer and attribution practice
 
@@ -270,9 +249,9 @@ No code or assets from these deferred projects are distributed by the portal.
   code, publish the complete corresponding integration/modified source and
   build/install scripts at no charge to network users, identify the change and
   date, and link that source from the public Software page.
-- Cobalt, Valkey, Anubis, and rimgo use configuration-only integration. SearXNG's
-  local `sitecustomize.py` hook changes runtime logging behavior even though
-  the official container image bytes remain unchanged. Redlib is the other
+- Valkey and Anubis use configuration-only integration. SearXNG's local
+  `sitecustomize.py` hook changes runtime logging behavior even though the
+  official container image bytes remain unchanged. Redlib is the other
   explicit exception: it is source-built with a local security patch and is a
   modified binary distribution/network service.
 - Factual project names identify dependencies only. Do not copy upstream

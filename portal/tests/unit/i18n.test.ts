@@ -76,16 +76,8 @@ describe('bilingual content', () => {
       .map((entry) => [entry.id, entry.accountAccess]));
 
     expect(accountAccess).toEqual({
-      healthchecks: 'closed-registration',
       freshrss: 'closed-registration',
-      wakapi: 'invite-required',
     });
-    expect(catalog.find((entry) => entry.id === 'ntfy')?.accountAccess).toBeUndefined();
-  });
-
-  it('marks the locally adjusted BentoPDF and RSSHub deployments as modified', () => {
-    expect(catalog.find((entry) => entry.id === 'bentopdf')?.modified).toBe(true);
-    expect(catalog.find((entry) => entry.id === 'rsshub')?.modified).toBe(true);
   });
 
   it('discloses the local parsing and later proxy navigation of the private router', () => {
@@ -104,30 +96,4 @@ describe('bilingual content', () => {
     expect(redlib?.installedVersion).toContain('a4d36e9');
   });
 
-  it('states ntfy retention and supported iOS relay metadata in both languages', () => {
-    const ntfy = catalog.find((entry) => entry.id === 'ntfy');
-    expect(ntfy?.operationalStatus).toBe('operational');
-    expect(ntfy?.dataFlow.en).toContain('Cloudflare');
-    expect(ntfy?.dataFlow.en).toContain('message ID');
-    expect(ntfy?.dataFlow.en).toContain('SHA-256');
-    expect(ntfy?.dataFlow.en).toContain('does not send the message body or attachment');
-    expect(ntfy?.retention.en).toContain('12 hours');
-    expect(ntfy?.retention.en).toContain('three hours');
-    expect(ntfy?.dataFlow.es).toContain('Cloudflare');
-    expect(ntfy?.dataFlow.es).toContain('identificador del mensaje');
-    expect(ntfy?.dataFlow.es).toContain('SHA-256');
-    expect(ntfy?.dataFlow.es).toContain('no envía el cuerpo del mensaje ni el archivo adjunto');
-    expect(ntfy?.retention.es).toContain('12 horas');
-    expect(ntfy?.retention.es).toContain('tres horas');
-  });
-
-  it('discloses Healthchecks mail delivery in both languages', () => {
-    const healthchecks = catalog.find((entry) => entry.id === 'healthchecks');
-    expect(healthchecks?.labels).toEqual(['server', 'proxy']);
-    expect(healthchecks?.upstreamServices).toContain('Configured SMTP relay and recipient mail providers');
-    expect(healthchecks?.dataFlow.en).toContain('recipient’s mail provider');
-    expect(healthchecks?.dataFlow.es).toContain('proveedor de correo');
-    expect(healthchecks?.logging.en).toContain('Outgoing mail uses');
-    expect(healthchecks?.logging.es).toContain('El correo saliente usa');
-  });
 });

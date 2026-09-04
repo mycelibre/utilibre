@@ -50,7 +50,7 @@ servers or outside providers. Cloudflare is the current public proxy and
 processes ordinary connection and request metadata. Details and unresolved
 verification duties are documented in [`docs/privacy.md`](docs/privacy.md),
 [`docs/security.md`](docs/security.md), and
-[`docs/final-report.md`](docs/final-report.md).
+[`docs/services.md`](docs/services.md).
 
 Use is free. There are no advertisements, behavioral analytics, premium
 features, donor-only access, or donor priority. Donations are voluntary and

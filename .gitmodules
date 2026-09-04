@@ -1,3 +1,0 @@
-[submodule "deployment/utilibre/src/vert"]
-	path = deployment/utilibre/src/vert
-	url = https://github.com/VERT-sh/VERT.git

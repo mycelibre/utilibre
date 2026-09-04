@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-03T17:52:49Z",
+  "generatedAt": "2026-09-04T00:04:00Z",
   "title": "Design System: Utilibre",
   "extensions": {
     "breakpoints": [
@@ -17,7 +17,7 @@
       {
         "name": "narrow-stack",
         "value": "39rem",
-        "purpose": "Stacks search, catalog processing, actions, tool grids, and result lists into one readable sequence."
+        "purpose": "Stacks search, catalog processing, actions, the Redlib router, and result lists into one readable sequence."
       }
     ],
     "motion": [
@@ -33,8 +33,8 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "The default ink action used for tool operations and configured external actions.",
-      "html": "<button class=\"ds-button-primary\" type=\"button\">Process file</button>",
+      "description": "The default ink action used for the Redlib URL check and configured external actions.",
+      "html": "<button class=\"ds-button-primary\" type=\"submit\">Check URL</button>",
       "css": ".ds-button-primary { min-height: 2.8rem; padding: 0.62rem 0.9rem; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--ink); border-radius: 0; color: var(--paper); background: var(--ink); font-family: var(--font-body); font-weight: 750; cursor: pointer; } .ds-button-primary:hover { color: var(--paper); background: var(--rust); border-color: var(--rust); } .ds-button-primary:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } .ds-button-primary:disabled { opacity: 0.55; cursor: not-allowed; }"
     },
     {
@@ -57,15 +57,15 @@
       "name": "Catalog Search",
       "kind": "input",
       "refersTo": "input-default",
-      "description": "The joined field-and-action used to search the public utility catalog.",
-      "html": "<form class=\"ds-catalog-search\" role=\"search\"><label for=\"ds-catalog-query\">SEARCH TOOLS</label><div class=\"ds-catalog-search-control\"><input id=\"ds-catalog-query\" type=\"search\" placeholder=\"PDF, images, web search…\"><button type=\"submit\">Search</button></div></form>",
+      "description": "The joined field-and-action used to search the small hosted-service catalog.",
+      "html": "<form class=\"ds-catalog-search\" role=\"search\"><label for=\"ds-catalog-query\">SEARCH SERVICES</label><div class=\"ds-catalog-search-control\"><input id=\"ds-catalog-query\" type=\"search\" placeholder=\"Web search, RSS, encrypted text…\"><button type=\"submit\">Search</button></div></form>",
       "css": ".ds-catalog-search label { display: block; margin-block-end: 0.45rem; color: var(--ink); font: 700 0.8125rem/1.2 var(--font-meta); letter-spacing: 0.07em; text-transform: uppercase; } .ds-catalog-search-control { display: grid; grid-template-columns: minmax(0, 1fr) auto; } .ds-catalog-search input { min-height: 3.15rem; padding: 0.68rem 0.78rem; border: 2px solid var(--ink); border-inline-end: 0; border-radius: 0; color: var(--ink); background: transparent; font-family: var(--font-body); } .ds-catalog-search input::placeholder { color: var(--ink-soft); opacity: 1; } .ds-catalog-search button { min-height: 3.15rem; padding-inline: 1.25rem; border: 2px solid var(--ink); border-radius: 0; color: var(--paper); background: var(--ink); font-family: var(--font-body); font-weight: 750; cursor: pointer; } .ds-catalog-search button:hover { color: var(--paper); background: var(--rust); border-color: var(--rust); } .ds-catalog-search :focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } @media (max-width: 39rem) { .ds-catalog-search-control { grid-template-columns: 1fr; gap: 0.45rem; } .ds-catalog-search input { border-inline-end: 2px solid var(--ink); } .ds-catalog-search button { width: 100%; } }"
     },
     {
       "name": "Task Index",
       "kind": "nav",
-      "description": "The six-part numbered task taxonomy: a ruled rail on desktop and a horizontal text index on mobile.",
-      "html": "<nav class=\"ds-task-index\" aria-label=\"Browse by task\"><p class=\"ds-task-guideword\">BROWSE BY TASK</p><p class=\"ds-task-cue\">6 TASKS · SCROLL →</p><ol><li><a href=\"#\"><span>01</span><strong>Find &amp; browse</strong></a></li><li><a href=\"#\"><span>02</span><strong>Files &amp; media</strong></a></li><li><a href=\"#\"><span>03</span><strong>PDF &amp; documents</strong></a></li><li><a href=\"#\"><span>06</span><strong>Developer tools</strong></a></li></ol></nav>",
+      "description": "The three-part task taxonomy: a ruled rail on desktop and a horizontal text index on mobile.",
+      "html": "<nav class=\"ds-task-index\" aria-label=\"Browse by task\"><p class=\"ds-task-guideword\">BROWSE BY TASK</p><p class=\"ds-task-cue\">3 TASKS · SCROLL →</p><ol><li><a href=\"#\"><span>01</span><strong>Find &amp; browse</strong></a></li><li><a href=\"#\"><span>02</span><strong>Text &amp; data</strong></a></li><li><a href=\"#\"><span>03</span><strong>Feeds</strong></a></li></ol></nav>",
       "css": ".ds-task-index { position: relative; } .ds-task-guideword { margin: 0 0 1.65rem; color: var(--rust); font: 700 0.8125rem/1.5 var(--font-meta); letter-spacing: 0.075em; } .ds-task-cue { display: none; } .ds-task-index ol { margin: 0; padding: 0; list-style: none; border-block-start: 1px solid var(--ink); } .ds-task-index li { border-block-end: 1px solid var(--rule); } .ds-task-index a { padding-block: 0.75rem; display: grid; grid-template-columns: 2.15rem minmax(0, 1fr); gap: 0.55rem; color: var(--ink); font-family: var(--font-body); text-decoration: none; } .ds-task-index a span { color: var(--rust); font: 0.75rem/1.7 var(--font-meta); } .ds-task-index a:hover strong { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.35em; } .ds-task-index a:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } @media (max-width: 58rem) { .ds-task-index { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 0.8rem; } .ds-task-guideword { min-width: 0; margin-block-end: 0.5rem; } .ds-task-cue { display: block; grid-column: 2; grid-row: 1; margin: 0; color: var(--ink-soft); font: 0.75rem/1.5 var(--font-meta); letter-spacing: 0.075em; text-align: end; } .ds-task-index ol { grid-column: 1 / -1; display: flex; gap: 1.1rem; overflow-x: auto; border-block-start: 0; } .ds-task-index li { flex: 0 0 auto; border: 0; } .ds-task-index a { display: block; padding-block: 0.55rem 0.75rem; } .ds-task-index a span { margin-inline-end: 0.35rem; } }"
     },
     {
@@ -85,18 +85,18 @@
     {
       "name": "Tool Panel",
       "kind": "card",
-      "description": "A flat bounded work area for portal-native utilities, using one rule and a pale paper tone instead of elevation.",
-      "html": "<section class=\"ds-tool-panel\"><label for=\"ds-tool-field\">Input</label><textarea id=\"ds-tool-field\" placeholder=\"Paste text here\"></textarea><p class=\"ds-tool-notice\">Processing happens in this browser.</p></section>",
-      "css": ".ds-tool-panel { max-width: 54rem; padding: clamp(1rem, 3vw, 2rem); border: 1px solid var(--ink); border-radius: 0; color: var(--ink); background: var(--paper-pale); font-family: var(--font-body); } .ds-tool-panel label { display: block; margin-block-end: 0.35rem; font-weight: 700; } .ds-tool-panel textarea { width: 100%; min-height: 8rem; padding: 0.68rem 0.78rem; border: 1px solid var(--ink); border-radius: 0; color: var(--ink); background: transparent; font: inherit; resize: vertical; } .ds-tool-panel textarea::placeholder { color: var(--ink-soft); opacity: 1; } .ds-tool-panel textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } .ds-tool-notice { padding: 0.65rem 0; border-block: 1px solid var(--rule); color: var(--ink-soft); font-size: 0.9375rem; }"
+      "description": "The flat bounded work area for the sole portal-native Redlib URL router, using one rule and a pale paper tone instead of elevation.",
+      "html": "<section class=\"ds-tool-panel\"><form><label for=\"ds-tool-field\">Supported public URL</label><input id=\"ds-tool-field\" type=\"url\" placeholder=\"https://www.reddit.com/r/…\"><button type=\"submit\">Check URL</button></form><p class=\"ds-tool-notice\">The URL is parsed in this browser. A generated link can use only the configured Redlib instance.</p></section>",
+      "css": ".ds-tool-panel { max-width: 54rem; padding: clamp(1rem, 3vw, 2rem); border: 1px solid var(--ink); border-radius: 0; color: var(--ink); background: var(--paper-pale); font-family: var(--font-body); } .ds-tool-panel label { display: block; margin-block-end: 0.35rem; font-weight: 700; } .ds-tool-panel input { width: 100%; min-height: 3rem; padding: 0.68rem 0.78rem; border: 1px solid var(--ink); border-radius: 0; color: var(--ink); background: transparent; font: inherit; } .ds-tool-panel input::placeholder { color: var(--ink-soft); opacity: 1; } .ds-tool-panel input:focus-visible, .ds-tool-panel button:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } .ds-tool-panel button { min-height: 2.8rem; margin-block-start: 1rem; padding: 0.62rem 0.9rem; border: 2px solid var(--ink); border-radius: 0; color: var(--paper); background: var(--ink); font: 750 1rem/1.2 var(--font-body); } .ds-tool-notice { padding: 0.65rem 0; border-block: 1px solid var(--rule); color: var(--ink-soft); font-size: 0.9375rem; }"
     }
   ],
   "narrative": {
     "northStar": "The Useful Field Ledger",
-    "overview": "Utilibre is a cultivated working catalog: warm, bookish, public-service, plainspoken, technically competent, and quietly witty. Its visual world combines uncoated paper, official coral and charcoal, factual lichen/rust/blue accents, numbered task indexing, and ruled comparison records. It should feel authored by an independent operator rather than startup-polished.\n\nThe ledger is useful before it is expressive. Names, task descriptions, processing facts, and actions share one comparable reading structure; humor and personality live in careful language rather than decoration. Mycelial relationships may inform information adjacency, but the shipped interface uses no ornamental network motif.",
+    "overview": "Utilibre is a cultivated working catalog: warm, bookish, public-service, plainspoken, technically competent, and quietly witty. Its visual world combines uncoated paper, official coral and charcoal, factual lichen/rust/blue accents, numbered task indexing, and ruled comparison records. The catalog is deliberately small: every hosted application must clear the project's access-gap, safety, and maintenance criteria, and every record visibly belongs to its independent upstream. The portal is the field guide, not the specimen. It should feel authored by an independent operator rather than startup-polished.\n\nThe ledger is useful before it is expressive. Names, task descriptions, processing facts, and actions share one comparable reading structure; humor and personality live in careful language rather than decoration. Mycelial relationships may inform information adjacency, but the shipped interface uses no ornamental network motif.",
     "keyCharacteristics": [
       "Warm paper fields with official coral and charcoal.",
       "Newsreader names the work; Atkinson Hyperlegible Next explains and operates it; Courier New records metadata.",
-      "A numbered task rail and one aligned launch edge organize the catalog.",
+      "A compact numbered task rail and one aligned launch edge organize the catalog.",
       "Single and double rules replace elevated card shells.",
       "Factual accents always accompany written processing labels.",
       "Square controls, generous focus, and bilingual wrapping keep the system direct and usable."
@@ -145,10 +145,10 @@
     ],
     "dos": [
       "Do use the supplied coral lockup on light paper and the supplied white lockup on dark paper without redrawing either asset.",
-      "Do keep tool name, task description, processing labels, data-flow note, and launch action comparable at a glance.",
+      "Do keep service name, task description, processing labels, data-flow note, and launch action comparable at a glance.",
       "Do preserve the 3px focus outline, 4px offset, written states, and touch-friendly control heights.",
       "Do let English and Spanish wrap naturally through the same source order and hierarchy.",
-      "Do keep support calm, factual, and subordinate to finding and opening a tool.",
+      "Do keep support calm, factual, and subordinate to finding and opening a service.",
       "Do name upstream software directly and describe Utilibre as its host or integrator."
     ],
     "donts": [

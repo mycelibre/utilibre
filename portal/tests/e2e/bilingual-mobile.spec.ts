@@ -2,14 +2,12 @@ import { expect, test, type Page } from '@playwright/test';
 import { catalog, localized } from '../../src/catalog/catalog';
 import { toolPath } from '../../src/routes';
 
-const featuredIds = ['searxng', 'vert', 'pairdrop', 'privatebin', 'cobalt', 'bentopdf', 'omnitools'] as const;
+const featuredIds = ['searxng', 'freshrss', 'redlib', 'privatebin'] as const;
 
 const baseConfig = {
   projectName: 'Utilibre', projectTagline: '', projectTaglineEn: '', projectTaglineEs: '',
   sourceCodeUrl: '', supportUrl: '', contactUrl: '', publicSearchUrl: '', publicRedditUrl: '',
-  publicYoutubeUrl: '', publicImgurUrl: '', publicNtfyUrl: '', publicPdfUrl: '',
-  publicConvertUrl: '', publicToolsUrl: '', publicMonitorUrl: '', publicSendUrl: '',
-  publicRssUrl: '', publicFeedsUrl: '', publicPasteUrl: '', publicWakapiUrl: '',
+  publicRssUrl: '', publicPasteUrl: '',
   enabledServices: [], defaultLanguage: 'en',
 } as const;
 
@@ -17,20 +15,9 @@ const featuredConfig = {
   ...baseConfig,
   publicSearchUrl: 'https://search.utility.test/',
   publicRedditUrl: 'https://reddit.utility.test/',
-  publicNtfyUrl: 'https://notify.utility.test/',
-  publicConvertUrl: 'https://convert.utility.test/',
-  publicSendUrl: 'https://send.utility.test/',
   publicPasteUrl: 'https://paste.utility.test/',
-  publicPdfUrl: 'https://pdf.utility.test/',
-  publicToolsUrl: 'https://tools.utility.test/',
-  publicMonitorUrl: 'https://monitor.utility.test/',
   publicRssUrl: 'https://rss.utility.test/',
-  publicFeedsUrl: 'https://feeds.utility.test/',
-  publicWakapiUrl: 'https://code.utility.test/',
-  enabledServices: [
-    'searxng', 'cobalt', 'redlib', 'ntfy', 'bentopdf', 'vert', 'omnitools',
-    'healthchecks', 'pairdrop', 'freshrss', 'rsshub', 'privatebin', 'wakapi',
-  ],
+  enabledServices: ['searxng', 'redlib', 'freshrss', 'privatebin'],
 };
 
 async function mockConfig(page: Page, config: Record<string, unknown>): Promise<void> {
@@ -80,12 +67,12 @@ test('browser language preference uses the first supported language', async ({ b
   await context.close();
 });
 
-test('default discovery is neutral and configured featured utilities follow editorial order', async ({ page }) => {
+test('default discovery is neutral and retained hosted services follow editorial order', async ({ page }) => {
   await mockConfig(page, featuredConfig);
   await page.goto('/en/');
 
   await expect(page.locator('.task-navigation a[aria-current="page"]')).toHaveCount(0);
-  await expect(page.locator('.ledger-reference-links a[aria-current="page"]')).toHaveText('Featured utilities');
+  await expect(page.locator('.ledger-reference-links a[aria-current="page"]')).toHaveText('Hosted services');
   await expect(catalogRows(page)).toHaveCount(featuredIds.length);
   expect(await catalogRows(page).evaluateAll((rows) => rows.map((row) => (row as HTMLElement).dataset.catalogId))).toEqual(featuredIds);
   const launchLinks = page.locator('.catalog-ledger-launch');
@@ -94,6 +81,7 @@ test('default discovery is neutral and configured featured utilities follow edit
     await expect(link).toHaveAttribute('target', '_blank');
     await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     await expect(link).toHaveAttribute('aria-label', /opens in a new tab/);
+    await expect(link.locator('.catalog-ledger-external-cue')).toHaveText('↗');
   }
   await expect(page.locator('[data-catalog-id="searxng"]').getByRole('link', { name: 'Upstream source: SearXNG' }))
     .toHaveAttribute('href', 'https://github.com/searxng/searxng');
@@ -104,12 +92,12 @@ test('task selection activates one category and Spanish search crosses categorie
   await page.goto('/es/');
   await expect(page.locator('.task-navigation a[aria-current="page"]')).toHaveCount(0);
 
-  await page.getByRole('navigation', { name: 'Explorar por tarea' }).getByRole('link', { name: /Archivos y multimedia/ }).click();
-  await expect(page).toHaveURL(/\/es\/\?group=files#catalog$/);
+  await page.getByRole('navigation', { name: 'Explorar por tarea' }).getByRole('link', { name: /Fuentes RSS/ }).click();
+  await expect(page).toHaveURL(/\/es\/\?group=feeds-monitoring#catalog$/);
   const currentTasks = page.locator('.task-navigation a[aria-current="page"]');
   await expect(currentTasks).toHaveCount(1);
-  await expect(currentTasks).toContainText('Archivos y multimedia');
-  expect(await catalogRows(page).evaluateAll((rows) => rows.every((row) => (row as HTMLElement).dataset.discoveryGroup === 'files'))).toBe(true);
+  await expect(currentTasks).toContainText('Fuentes RSS');
+  expect(await catalogRows(page).evaluateAll((rows) => rows.every((row) => (row as HTMLElement).dataset.discoveryGroup === 'feeds-monitoring'))).toBe(true);
 
   await page.getByLabel('Buscar herramientas').fill('busqueda');
   await page.getByRole('button', { name: 'Buscar', exact: true }).click();
@@ -121,12 +109,12 @@ test('task selection activates one category and Spanish search crosses categorie
 
 test('language links preserve homepage query state', async ({ page }) => {
   await mockConfig(page, featuredConfig);
-  await page.goto('/en/?q=PDF');
+  await page.goto('/en/?q=RSS');
   const spanish = languageNavigation(page, 'Choose language').getByRole('link', { name: 'ES', exact: true });
-  await expect(spanish).toHaveAttribute('href', /\/es\/\?q=PDF$/);
+  await expect(spanish).toHaveAttribute('href', /\/es\/\?q=RSS$/);
   await spanish.click();
-  await expect(page).toHaveURL(/\/es\/\?q=PDF$/);
-  await expect(page.getByRole('searchbox', { name: 'Buscar herramientas' })).toHaveValue('PDF');
+  await expect(page).toHaveURL(/\/es\/\?q=RSS$/);
+  await expect(page.getByRole('searchbox', { name: 'Buscar herramientas' })).toHaveValue('RSS');
 });
 
 test('internal support routes remain available without an external support URL', async ({ page }) => {
@@ -185,12 +173,12 @@ test('mobile catalog keeps featured and complete-catalog modes available', async
   await page.goto('/en/');
 
   const modes = page.locator('.ledger-reference-links');
-  await expect(modes.getByRole('link', { name: 'Featured utilities' })).toBeVisible();
-  const all = modes.getByRole('link', { name: 'All tools, A–Z' });
+  await expect(modes.getByRole('link', { name: 'Hosted services' })).toBeVisible();
+  const all = modes.getByRole('link', { name: 'Everything hosted, A–Z' });
   await expect(all).toBeVisible();
   await all.click();
   await expect(page).toHaveURL(/\/en\/\?view=all#catalog$/);
-  await expect(page.getByRole('heading', { level: 2, name: 'All tools, A–Z' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Everything hosted, A–Z' })).toBeVisible();
   const rows = catalogRows(page);
   expect(await rows.count()).toBeGreaterThan(featuredIds.length);
   await expect(rows.locator('.catalog-ledger-launch')).toHaveCount(await rows.count());
@@ -205,7 +193,7 @@ test('software inventory is grouped and uses descriptive source links', async ({
   await page.goto('/en/software');
 
   const jump = page.getByRole('navigation', { name: 'Jump to a software group' });
-  await expect(jump.getByRole('link')).toHaveCount(6);
+  await expect(jump.getByRole('link')).toHaveCount(5);
   await expect(page.getByRole('heading', { level: 2, name: 'Hosted applications' })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: 'Browser assets' })).toBeVisible();
   const searx = page.getByRole('heading', { level: 3, name: 'SearXNG' }).locator('..');
@@ -225,6 +213,12 @@ test('unknown routes return a useful localized 404 and the common Spanish alias 
   await expect(page).toHaveTitle(/Page not found/);
   await expect(page.getByRole('heading', { level: 1, name: 'Page not found' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Return to the catalog' })).toHaveAttribute('href', '/en/');
+
+  for (const removedPath of ['/en/tools/download-media', '/es/herramientas/descargar-contenido']) {
+    await page.goto(removedPath);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(removedPath.startsWith('/es/') ? 'Página no encontrada' : 'Page not found');
+    await expect(page.locator('[data-catalog-id="cobalt"]')).toHaveCount(0);
+  }
 
   if (process.env.E2E_BASE_URL) {
     await page.goto('/es/support');
@@ -253,8 +247,8 @@ test('configured Redlib appears across the portal and routes only to its fixed h
     json: {
       projectName: 'Public utility', projectTagline: '', projectTaglineEn: '', projectTaglineEs: '',
       sourceCodeUrl: '', supportUrl: '', contactUrl: '', publicSearchUrl: 'https://search.utility.test/',
-      publicRedditUrl: 'https://reddit.utility.test/redlib/', publicYoutubeUrl: '', publicImgurUrl: '',
-      enabledServices: ['cobalt', 'searxng', 'redlib'], defaultLanguage: 'en',
+      publicRedditUrl: 'https://reddit.utility.test/redlib/',
+      enabledServices: ['searxng', 'redlib'], defaultLanguage: 'en',
     },
   }));
   await page.route('**/_portal/status', async (route) => route.fulfill({
@@ -281,29 +275,21 @@ test('configured Redlib appears across the portal and routes only to its fixed h
   await expect(page.getByText('La interfaz de Redlib está solo en inglés.', { exact: false })).toBeVisible();
 });
 
-test('enabled Utilibre services appear bilingually while deferred Crab Fit stays hidden', async ({ page }) => {
+test('only retained Utilibre services appear when stale service IDs are still configured', async ({ page }) => {
   const services = [
-    { key: 'publicNtfyUrl', id: 'ntfy', en: 'Push notifications', es: 'Notificaciones push', url: 'https://notify.utility.test/' },
-    { key: 'publicPdfUrl', id: 'bentopdf', en: 'PDF tools', es: 'Herramientas PDF', url: 'https://pdf.utility.test/' },
-    { key: 'publicConvertUrl', id: 'vert', en: 'File converter', es: 'Convertidor de archivos', url: 'https://convert.utility.test/' },
-    { key: 'publicToolsUrl', id: 'omnitools', en: 'Everyday tools', es: 'Herramientas útiles', url: 'https://tools.utility.test/' },
-    { key: 'publicMonitorUrl', id: 'healthchecks', en: 'Cron monitoring', es: 'Monitoreo de tareas', url: 'https://monitor.utility.test/' },
-    { key: 'publicSendUrl', id: 'pairdrop', en: 'Send files', es: 'Enviar archivos', url: 'https://send.utility.test/' },
+    { key: 'publicSearchUrl', id: 'searxng', en: 'Web search', es: 'Búsqueda web', url: 'https://search.utility.test/' },
+    { key: 'publicRedditUrl', id: 'redlib', en: 'Redlib for Reddit', es: 'Redlib para Reddit', url: 'https://reddit.utility.test/' },
     { key: 'publicRssUrl', id: 'freshrss', en: 'RSS reader', es: 'Lector RSS', url: 'https://rss.utility.test/' },
-    { key: 'publicFeedsUrl', id: 'rsshub', en: 'RSS generator', es: 'Generador RSS', url: 'https://feeds.utility.test/' },
     { key: 'publicPasteUrl', id: 'privatebin', en: 'Encrypted paste', es: 'Texto cifrado', url: 'https://paste.utility.test/' },
-    { key: 'publicWakapiUrl', id: 'wakapi', en: 'Coding statistics', es: 'Estadísticas de programación', url: 'https://wakapi.utility.test/' },
   ] as const;
   const serviceUrls = Object.fromEntries(services.map((service) => [service.key, service.url]));
+  const removedIds = ['cobalt', 'ntfy', 'bentopdf', 'vert', 'omnitools', 'ittools', 'swagger-editor', 'healthchecks', 'pairdrop', 'rsshub', 'wakapi'];
 
   await page.route('**/_portal/config', async (route) => route.fulfill({
     json: {
       projectName: 'Public utility', projectTagline: '', projectTaglineEn: '', projectTaglineEs: '',
-      sourceCodeUrl: '', supportUrl: '', contactUrl: '', publicSearchUrl: '', publicRedditUrl: '',
-      publicYoutubeUrl: '', publicImgurUrl: '', ...serviceUrls,
-      // Even an enabled ID and configured-looking URL must not advertise a deferred service.
-      publicCrabfitUrl: 'https://when.utility.test/',
-      enabledServices: [...services.map((service) => service.id), 'crabfit'], defaultLanguage: 'en',
+      sourceCodeUrl: '', supportUrl: '', contactUrl: '', ...serviceUrls,
+      enabledServices: [...services.map((service) => service.id), ...removedIds], defaultLanguage: 'en',
     },
   }));
   await page.route('**/_portal/status', async (route) => route.fulfill({
@@ -321,43 +307,26 @@ test('enabled Utilibre services appear bilingually while deferred Crab Fit stays
       await expect(row.getByRole('heading', { name: service[language], exact: true })).toBeVisible();
       await expect(row.getByRole('link', { name: `${language === 'es' ? 'Abrir' : 'Open'}: ${service[language]}` })).toHaveAttribute('href', service.url);
     }
-    const accessNotices = {
-      healthchecks: language === 'es'
-        ? 'Acceso: Se requiere una cuenta · Registro público cerrado'
-        : 'Access: Account required · Public registration closed',
-      freshrss: language === 'es'
-        ? 'Acceso: Se requiere una cuenta · Registro público cerrado'
-        : 'Access: Account required · Public registration closed',
-      wakapi: language === 'es'
-        ? 'Acceso: Se requiere una cuenta · Solo con invitación; registro público cerrado'
-        : 'Access: Account required · Invite-only; public registration closed',
-    } as const;
-    await expect(page.locator('.catalog-ledger-access')).toHaveCount(3);
-    for (const [id, notice] of Object.entries(accessNotices)) {
-      await expect(page.locator(`[data-catalog-id="${id}"] .catalog-ledger-access`)).toHaveText(notice);
-    }
-    await expect(page.locator('[data-catalog-id="ntfy"] .catalog-ledger-access')).toHaveCount(0);
-    await expect(page.getByRole('heading', { name: language === 'es' ? 'Coordinar horario' : 'Find a time', exact: true })).toHaveCount(0);
-    await expect(page.locator('a[href*="when.utility.test"]')).toHaveCount(0);
+    await expect(page.locator('.catalog-ledger-access')).toHaveCount(1);
+    await expect(page.locator('[data-catalog-id="freshrss"] .catalog-ledger-access')).toHaveText(language === 'es'
+      ? 'Acceso: Se requiere una cuenta · Registro público cerrado'
+      : 'Access: Account required · Public registration closed');
+    for (const id of removedIds) await expect(page.locator(`[data-catalog-id="${id}"]`)).toHaveCount(0);
   }
 
   await page.goto('/en/status');
-  await expect(page.getByRole('heading', { name: 'Push notifications', exact: true }).locator('..')).toContainText('Operational');
-  await expect(page.getByRole('heading', { name: 'Cron monitoring', exact: true }).locator('..')).toContainText('Operational');
+  await expect(page.getByRole('heading', { name: 'Web search', exact: true }).locator('..')).toContainText('Operational');
+  await expect(page.getByRole('heading', { name: 'RSS reader', exact: true }).locator('..')).toContainText('Operational');
 });
 
-test('software inventory credits the deployed Utilibre services and their data stores bilingually', async ({ page }) => {
+test('software inventory credits only retained Utilibre services and their data stores bilingually', async ({ page }) => {
   const deployedProjects = {
-    ntfy: { facts: 'v2.28.0 · Apache-2.0 / GPL-2.0 (dual license)', source: 'https://github.com/binwiederhier/ntfy/tree/v2.28.0' },
-    BentoPDF: { facts: 'v2.8.8 · AGPL-3.0-only', source: 'https://github.com/alam00000/bentopdf/tree/v2.8.8' },
-    VERT: { facts: 'e0ffd34310f9c988b16e22334b13e18de030b0ae · AGPL-3.0-only', source: 'https://github.com/VERT-sh/VERT/tree/e0ffd34310f9c988b16e22334b13e18de030b0ae' },
-    OmniTools: { facts: 'v0.6.0 · MIT', source: 'https://github.com/iib0011/omni-tools/tree/v0.6.0' },
-    Healthchecks: { facts: 'v4.3 · BSD-3-Clause', source: 'https://github.com/healthchecks/healthchecks/tree/v4.3' },
-    PairDrop: { facts: 'v1.11.2 · GPL-3.0-only', source: 'https://github.com/schlagmichdoch/PairDrop/tree/v1.11.2' },
+    SearXNG: { facts: '2026.8.22-9fea41204 · AGPL-3.0-or-later', source: 'https://github.com/searxng/searxng' },
+    Redlib: { facts: 'a4d36e9 + local redirect hardening · AGPL-3.0-only', source: 'https://github.com/redlib-org/redlib/tree/a4d36e954cf1bd64f209cd8868c5a29edc81b374' },
+    Anubis: { facts: '1.27.0 · MIT', source: 'https://github.com/TecharoHQ/anubis/tree/v1.27.0' },
     FreshRSS: { facts: '1.29.1 · AGPL-3.0', source: 'https://github.com/FreshRSS/FreshRSS/tree/1.29.1' },
-    RSSHub: { facts: '40aca9548e99eefd519ff7abbb937560fc037c95 · AGPL-3.0', source: 'https://github.com/DIYgod/RSSHub/tree/40aca9548e99eefd519ff7abbb937560fc037c95' },
     PrivateBin: { facts: '2.0.6 · Zlib', source: 'https://github.com/PrivateBin/PrivateBin/tree/2.0.6' },
-    Wakapi: { facts: '2.17.6 · MIT', source: 'https://github.com/muety/wakapi/tree/2.17.6' },
+    RSSHub: { facts: '40aca954 · AGPL-3.0', source: 'https://github.com/DIYgod/RSSHub/tree/40aca9548e99eefd519ff7abbb937560fc037c95' },
     PostgreSQL: { facts: '17.11-alpine · PostgreSQL License', source: 'https://github.com/postgres/postgres' },
     Valkey: { facts: '9.1.1-alpine · BSD-3-Clause', source: 'https://github.com/valkey-io/valkey/tree/9.1.1' },
   } as const;
@@ -373,10 +342,32 @@ test('software inventory credits the deployed Utilibre services and their data s
       await expect(source).toHaveAttribute('target', '_blank');
       await expect(source).toHaveAttribute('rel', 'noopener noreferrer');
     }
-    const localModification = language === 'es' ? 'Con modificaciones locales' : 'Locally modified';
-    await expect(page.getByRole('heading', { name: 'BentoPDF', exact: true }).locator('..')).toContainText(localModification);
-    await expect(page.getByRole('heading', { name: 'RSSHub', exact: true }).locator('..')).toContainText(localModification);
+    for (const removed of ['Cobalt API', 'BentoPDF', 'VERT', 'OmniTools', 'Healthchecks', 'PairDrop', 'Wakapi']) {
+      await expect(page.getByRole('heading', { name: removed, exact: true })).toHaveCount(0);
+    }
   }
+});
+
+test('status page does not invent degradation when observations are missing or malformed', async ({ page }) => {
+  await page.route('**/_portal/config', async (route) => route.fulfill({
+    json: {
+      projectName: 'Public utility', projectTagline: '', projectTaglineEn: '', projectTaglineEs: '',
+      sourceCodeUrl: '', supportUrl: '', contactUrl: '',
+      publicSearchUrl: 'https://search.utility.test/', publicRedditUrl: 'https://reddit.utility.test/',
+      enabledServices: ['searxng', 'redlib'], defaultLanguage: 'en',
+    },
+  }));
+  await page.route('**/_portal/status', async (route) => route.fulfill({
+    json: {
+      checkedAt: 'not-a-date',
+      services: [{ id: 'searxng', status: 'definitely-fine' }, { id: 42, status: 'operational' }],
+    },
+  }));
+
+  await page.goto('/en/status');
+  await expect(page.getByRole('heading', { name: 'Web search', exact: true }).locator('..')).toContainText('Not checked');
+  await expect(page.getByRole('heading', { name: 'Redlib for Reddit', exact: true }).locator('..')).toContainText('Not checked');
+  await expect(page.getByRole('status')).toHaveText('Last checked');
 });
 
 test('software page links the published repository license and notices bilingually', async ({ page }) => {
