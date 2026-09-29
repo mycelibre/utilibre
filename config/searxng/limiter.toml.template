@@ -14,4 +14,6 @@ link_token = true
 [botdetection.ip_lists]
 block_ip = []
 pass_ip = []
-pass_searxng_org = false
+# Permit the official check.searx.space monitors through the application
+# limiter. Client addresses must still come from the exact trusted edge.
+pass_searxng_org = true

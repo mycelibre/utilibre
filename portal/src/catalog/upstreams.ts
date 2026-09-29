@@ -33,12 +33,12 @@ export interface ReviewedFossProvider {
 export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider> = {
   searxng: {
     project: 'SearXNG', sourceUrl: 'https://github.com/searxng/searxng',
-    reviewedSourceUrl: 'https://github.com/searxng/searxng/tree/9fea41204fdfa7a5cfa15b0ebd12904c520478ce',
-    license: 'AGPL-3.0-or-later', licenseEvidenceUrls: ['https://github.com/searxng/searxng/blob/9fea41204fdfa7a5cfa15b0ebd12904c520478ce/LICENSE'],
+    reviewedSourceUrl: 'https://github.com/searxng/searxng/tree/4e2c1ea7f468c9d1b16206e9d4079999a2eb0627',
+    license: 'AGPL-3.0-or-later', licenseEvidenceUrls: ['https://github.com/searxng/searxng/blob/4e2c1ea7f468c9d1b16206e9d4079999a2eb0627/LICENSE'],
     selfHostingEvidenceUrl: 'https://docs.searxng.org/admin/installation-docker.html', maintenanceEvidenceUrl: 'https://github.com/searxng/searxng/commits/master/',
-    artifactReference: 'docker.io/searxng/searxng:2026.8.22-9fea41204@sha256:11a9b34cdc0b1ec2b991470a2762ecb5a1a531898289fb51dcd015260450729e',
-    installedVersion: '2026.8.22-9fea41204 + local log redaction hook', integration: 'container', reviewStatus: 'deployed', reviewDocument: 'docs/services.md',
-    role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-09-03',
+    artifactReference: 'docker.io/searxng/searxng:2026.9.29-4e2c1ea7f@sha256:3284e8900e9b3e5df284ae8c48a26851ae2eff6f99b4b0b18ec3da5a4d9095c3',
+    installedVersion: '2026.9.29-4e2c1ea7f + local log redaction hook', integration: 'container', reviewStatus: 'deployed', reviewDocument: 'docs/services.md',
+    role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-09-29',
   },
   redlib: {
     project: 'Redlib', sourceUrl: 'https://github.com/redlib-org/redlib',

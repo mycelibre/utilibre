@@ -2,6 +2,12 @@
 
 Initial review: 2026-08-30; pagination/public-instance follow-up: 2026-09-02
 
+Historical review: source links below identify the version tested at those
+dates. The 2026-09-29 application upgrade retains the engine selection and
+weights; bounded English/Spanish public browser checks passed again. See
+[the upgrade and listing status](searxng-public-instance.md) for the current pin
+and remaining migration work. This was not a new full engine-quality review.
+
 ## Short answer
 
 Useful public SearXNG instances do not have a hidden “good results” setting.

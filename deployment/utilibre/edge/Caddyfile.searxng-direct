@@ -1,0 +1,50 @@
+# Pending migration, NOT the deployed edge configuration.
+# Replace ONLY the search.utilibre.org site block with this fragment after
+# completing docs/searxng-public-instance.md. Do not import both search blocks.
+# Requires Caddy >= 2.8; validate using the actual edge version and full config.
+
+search.utilibre.org {
+	# GET searches are needed by upstream monitoring. Keep their query strings
+	# out of access logs; separately review the edge's runtime/error logging.
+	log_skip
+	request_body {
+		max_size 64KB
+	}
+
+	header {
+		-Server
+		Referrer-Policy "no-referrer"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		X-Robots-Tag "noindex, nofollow"
+	}
+
+	# /config is upstream's public, sanitized instance metadata, not settings.yml.
+	# searx.space needs it for version/engine discovery. Stats stay private.
+	@private_diagnostics path /stats /stats/* /metrics /metrics/*
+	respond @private_diagnostics 404
+	@search_unsupported_method {
+		path /search
+		not method GET POST
+	}
+	respond @search_unsupported_method 405
+
+	reverse_proxy http://{$UTILIBRE_APP_IP}:8888 {
+		# Direct clients: trust the socket peer, never visitor-supplied identity
+		# headers or global Cloudflare client_ip handling for other hostnames.
+		header_up Host {host}
+		header_up X-Forwarded-Host {host}
+		header_up X-Forwarded-Proto {scheme}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Real-IP {remote_host}
+		header_up -Forwarded
+		header_up -CF-Connecting-IP
+		header_up -True-Client-IP
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 20s
+			read_timeout 60s
+			write_timeout 60s
+		}
+	}
+}

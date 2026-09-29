@@ -36,6 +36,13 @@ so re-test rather than enabling a broad default set.
 also overrides the upstream image's `/etc/searxng` volume and prevents an
 untracked anonymous configuration volume.
 
+The 2026-09-29 update uses upstream's curl-cffi networking defaults; the retired
+HTTPX `pool_maxsize` setting is omitted. The instance footer links to this
+configuration and its local logging integration. Official searx.space monitors
+are permitted by `pass_searxng_org`, with the existing exact-edge client-IP
+trust unchanged. Public listing still depends on the separate
+[direct-HTTPS migration](../../docs/searxng-public-instance.md).
+
 `sitecustomize.py` is original AGPL-3.0-or-later integration code. It is loaded
 through Python's documented `sitecustomize` mechanism. When it recognizes a
 `q`/`query` field or an HTTP(S) URL query, it retains the trusted prefix and
