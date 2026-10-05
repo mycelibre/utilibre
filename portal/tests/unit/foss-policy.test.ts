@@ -78,6 +78,17 @@ describe('FOSS-only public capability policy', () => {
     }
   });
 
+  it('discloses the added search recipients without presenting them as hosted services', () => {
+    const search = catalog.find((entry) => entry.id === 'searxng');
+    expect(search?.upstreamServices).toEqual(expect.arrayContaining([
+      'Mwmbl', 'Ask Ubuntu', 'Super User', 'ManKier',
+      'Google Custom Search web/images (Blackle partner identifier)',
+    ]));
+    for (const name of ['Mwmbl', 'Ask Ubuntu', 'Super User', 'ManKier']) {
+      expect(catalog.some((entry) => entry.upstreamProject === name)).toBe(false);
+    }
+  });
+
   it('keeps only the Redlib URL parser as portal-native tool code', () => {
     const toolFiles = walkFiles(new URL('../../src/tools/', import.meta.url)).sort();
     expect(toolFiles).toEqual(['private-router.ts']);

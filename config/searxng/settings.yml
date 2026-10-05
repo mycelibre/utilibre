@@ -3,6 +3,7 @@ use_default_settings:
   engines:
     keep_only:
       - arxiv
+      - askubuntu
       - bing
       - bing images
       - bing news
@@ -12,12 +13,16 @@ use_default_settings:
       - fynd
       - github
       - google cse
+      - google cse images
+      - mankier
       - mdn
+      - mwmbl
       - photon
       - pubmed
       - reuters
       - semantic scholar
       - stackoverflow
+      - superuser
       - wikicommons.images
       - wikicommons.videos
       - wikinews
@@ -46,6 +51,25 @@ engines:
   - name: google cse
     disabled: false
     weight: 3.0
+  - name: mwmbl
+    disabled: false
+    # Fast independent complement, not a replacement for broad bilingual
+    # results. Its small index has no language filter or pagination.
+    weight: 0.3
+  # These additions stay in their specialist tabs; they must not increase
+  # upstream fan-out for an ordinary General search.
+  - name: google cse images
+    disabled: false
+    categories: [images]
+  - name: askubuntu
+    disabled: false
+    categories: [it, "q&a"]
+  - name: superuser
+    disabled: false
+    categories: [it, "q&a"]
+  - name: mankier
+    disabled: false
+    categories: [it]
   - name: wikipedia
     display_type:
       - infobox

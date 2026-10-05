@@ -8,6 +8,10 @@ weights; bounded English/Spanish public browser checks passed again. See
 [the upgrade and listing status](searxng-public-instance.md) for the current pin
 and remaining migration work. This was not a new full engine-quality review.
 
+The [2026-10-05 follow-up](#2026-10-05-engine-expansion) below adds five tested
+engines. The older tables remain a record of the initial assessment, not the
+complete current allowlist.
+
 ## Short answer
 
 Useful public SearXNG instances do not have a hidden “good results” setting.
@@ -240,3 +244,92 @@ egress remains the documented choice.
 - Disable a consistently failing engine rather than broadening the set.
 - Keep diagnostics, `/stats/errors`, and preferences controls protected by the
   public edge configuration.
+
+## 2026-10-05 engine expansion
+
+The public PrivAU configuration exposed 230 selectable engines with 53 enabled
+by default; this deployment exposed 23. These are configuration counts, not
+proof that each engine can return useful results from either server.
+
+Twenty additional candidates were checked in a loopback-only temporary
+container using the same official pinned image as production. JSON output and
+the disabled application limiter were confined to that isolated canary; the
+public instance's HTML-only policy, limiter, client-IP trust, and suspension
+windows were not relaxed. Probes used fixed, innocuous search terms, sequential
+requests, and stopped a failing engine rather than retrying a refusal. After
+DuckDuckGo Images returned access denied, no further DuckDuckGo-family checks
+were sent. No credentials, proxy rotation, or TLS-verification bypass was used.
+
+Five engines were selected, increasing the allowlist to 28:
+
+| Addition | Category / default | Useful-result checks | Observed response time |
+| --- | --- | --- | --- |
+| Mwmbl | General, enabled, weight 0.3 | Python programming: 73; Guatemala: 76 | 0.11–0.18 s |
+| Google CSE Images | Images only, enabled | quetzal bird (English): 20; volcán de agua (Spanish): 20 | 0.39–0.43 s |
+| Ask Ubuntu | IT / Q&A, enabled | wifi: 10; systemd: 10 | 0.17–0.22 s |
+| Super User | IT / Q&A, enabled | ssh: 10; backup: 10 | 0.18–0.23 s |
+| ManKier | IT, enabled | curl: 20; systemctl: 1 | 0.05–0.08 s |
+
+These counts are result rows, not the upstream's estimated hit totals. They
+are bounded observations, not uptime guarantees or a performance benchmark.
+The technical sources were checked with relevant English terminology. Mwmbl
+also returned rows for `historia de Guatemala`, but it has no language filter
+and its mixed-language results were noisy. It is a small-index complement,
+not a replacement for Google CSE's broader bilingual results. Its low weight
+limits its influence on ranking; it still receives General queries. The other
+four additions only receive queries when their categories/engines are selected.
+
+Google CSE Images uses the same unofficial Google Custom Search integration
+and Blackle partner identifier already disclosed for web results. Ask Ubuntu
+and Super User use the Stack Exchange API; ManKier uses its public API. Their
+external recipients are included in the portal catalog and bilingual privacy
+copy. No public API format was enabled and no account or paid API was added.
+Ask Ubuntu and Super User share the Stack Exchange API's IP-based quota with
+the existing Stack Overflow integration; they are not unlimited independent
+backends. Keep them out of General and revisit admission if the technical tab
+begins hitting upstream quotas or backoff responses. See the
+[Stack Exchange throttling policy](https://api.stackexchange.com/docs/throttle).
+
+Candidates not enabled:
+
+- Google: access denied; Brave: rate limited; Yahoo: parser error; Qwant:
+  CAPTCHA; Yep: access denied. Startpage remains upstream-inactive and was
+  not reactivated or probed.
+- DuckDuckGo web: certificate validation failed; verification was not disabled.
+  Images initially returned 67 rows, then access denied on the Spanish check.
+  News/videos returned initial rows but were not admitted after that family
+  refusal prevented a second check.
+- Arch Linux Wiki, PyPI, and Etymonline: zero parsed rows for normal test terms.
+- Europe PMC: returned 20 useful rows in both probes, but the pinned
+  [integration](https://github.com/searxng/searxng/blob/4e2c1ea7f468c9d1b16206e9d4079999a2eb0627/searx/engines/europepmc.py)
+  stores the raw query plus page number as a persistent pagination-cache key.
+  The engine-cache default expiry is seven days. This needs a separate privacy
+  fix before admission; no Europe PMC queries were sent through production.
+- OpenAlex and Crossref both returned useful English/Spanish results, but were
+  deferred for quota-aware integration. OpenAlex's documented keyless budget
+  is approximately 100 search calls per day, shared by the server address;
+  Crossref's public pool permits only one concurrent request. Automatically
+  adding them to every Science search would spend those shared allowances.
+  See [OpenAlex access limits](https://help.openalex.org/api/authentication/),
+  [OpenAlex example costs](https://help.openalex.org/access/example-costs/), and
+  [Crossref access limits](https://www.crossref.org/documentation/retrieve-metadata/rest-api/access-and-authentication/).
+
+After deployment, normal Chromium sessions through the existing Caddy edge
+(public hostname and verified TLS, resolving to its private address from this
+VM) confirmed 28 enabled engines and successful English/Spanish General
+searches. Mwmbl contributed to both; the Spanish query retained relevant
+Google CSE results at the top. Each new specialist returned real result cards,
+and an IT search returned contributions from all three new technical sources.
+Google CSE Images page two returned 20 new image URLs; Ask Ubuntu and Super
+User each returned 10 new question URLs on page two. A Google image thumbnail
+was fetched through the same-origin image proxy (HTTP 200, image/jpeg).
+JSON and CSV search formats still returned HTTP 403, and health returned 200.
+No public DNS, IPv6, firewall, or edge configuration was changed.
+
+The engine/pagination and log-redaction regression checks, 47 portal unit
+tests, 50 desktop/mobile browser tests, 18 configuration-validator tests,
+lint, type checking, launch validation, Compose validation, and the production
+portal build passed. The public limiter, long upstream suspension windows,
+five-page limit, and Fynd's first-page-only override remain unchanged.
+A check on another day remains useful because upstream availability and
+blocking can change; no recurring task is installed by this change.

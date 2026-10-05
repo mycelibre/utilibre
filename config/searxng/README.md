@@ -1,12 +1,20 @@
 # SearXNG configuration
 
 `settings.yml` is a small overlay on the pinned official defaults. Its General
-category deliberately combines Google CSE, Wikipedia, Bing, Fynd, and Wiby,
+category deliberately combines Google CSE, Wikipedia, Bing, Fynd, Wiby, and Mwmbl,
 with explicit weights to put the most useful bilingual contributor ahead of
 noisier niche indexes. Curated specialist engines provide image, news, video,
 IT, science, map, and dictionary results without joining every ordinary web
 search. `keep_only` retains an upstream engine's `disabled` value, so required
 credential-free engines are enabled explicitly.
+
+The 2026-10-05 expansion adds five engines after bounded checks from this VM:
+Mwmbl (General, weight 0.3), Google CSE Images (Images), and Ask Ubuntu,
+Super User, and ManKier (IT). There are 28 retained engines. Mwmbl is a
+small-index complement with no language filtering or paging; it must not
+displace the stronger bilingual contributor. Specialist additions are
+explicitly kept out of General. See the dated review for successful-result
+counts, rejected candidates, privacy/quota exclusions, and test limitations.
 
 Fynd is deliberately first-page-only. Its current pagination links require
 per-search `sx`/`psx` state as well as an offset, while the maintained generic
