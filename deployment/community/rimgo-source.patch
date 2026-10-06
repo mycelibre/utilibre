@@ -12,7 +12,7 @@ index 8db6a73..9389dde 100644
 +.env*
 diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
 new file mode 100644
-index 0000000..41c0828
+index 0000000..9a5719b
 --- /dev/null
 +++ b/Dockerfile.utilibre
 @@ -0,0 +1,15 @@
@@ -23,7 +23,7 @@ index 0000000..41c0828
 +FROM golang:1.26-alpine@sha256:8ac98ca534ac3f51e1f420a1dd2c15e74c75cfa0f23f3ad27eb5d7236c349a0c AS build
 +WORKDIR /src
 +COPY --from=assets /src .
-+RUN go test ./... && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -X codeberg.org/rimgo/rimgo/pages.VersionInfo=d2be8e2-utilibre-p2" -o /rimgo .
++RUN go test ./... && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -X codeberg.org/rimgo/rimgo/pages.VersionInfo=d2be8e2-utilibre-p3" -o /rimgo .
 +FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0
 +RUN apk add --no-cache ca-certificates
 +WORKDIR /app
@@ -33,10 +33,10 @@ index 0000000..41c0828
 +CMD ["/app/rimgo"]
 diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
 new file mode 100644
-index 0000000..76a74d5
+index 0000000..ee4a548
 --- /dev/null
 +++ b/UTILIBRE-SOURCE.txt
-@@ -0,0 +1,16 @@
+@@ -0,0 +1,22 @@
 +Rimgo on Utilibre
 +Upstream: https://codeberg.org/rimgo/rimgo
 +Revision: d2be8e221522dfe7a06452e2002dcf6dad569d1a
@@ -49,7 +49,13 @@ index 0000000..76a74d5
 +Build dependencies refreshed with the accompanying lockfile. No upload support,
 +visitor account system, personal upstream credentials or challenge solver added.
 +
-+Build: docker build -f Dockerfile.utilibre -t utilibre-rimgo:d2be8e2-p1 .
++Patch p3 additionally serializes same-host request admission so concurrent media
++requests share the first 429 cooldown; waiting requests respect cancellation.
++Visitor Referer/Forwarded/IP headers are stripped as defense in depth. HTTP/2
++negotiation is restored for the custom verified transport. This does not remove
++Imgur's upstream block. Offline tests cover concurrency, cancellation and headers.
++
++Build: docker build -f Dockerfile.utilibre -t utilibre-rimgo:d2be8e2-p3 .
 +Use deployment/compose.rimgo.yaml with its gateway and firewall rules. Application
 +and gateway logs are disabled; edge/Cloudflare processing and logging are disclosed
 +in the native privacy configuration. Temporary content caches remain in memory.
@@ -262,7 +268,7 @@ index 0000000..2523163
 +done
 diff --git a/deployment/compose.rimgo.yaml b/deployment/compose.rimgo.yaml
 new file mode 100644
-index 0000000..e3fefd4
+index 0000000..704ab1c
 --- /dev/null
 +++ b/deployment/compose.rimgo.yaml
 @@ -0,0 +1,48 @@
@@ -279,7 +285,7 @@ index 0000000..e3fefd4
 +services:
 +  rimgo:
 +    <<: *runtime
-+    image: utilibre-rimgo:d2be8e2-p2
++    image: utilibre-rimgo:d2be8e2-p3
 +    user: "65534:65534"
 +    mem_limit: 384m
 +    environment:
@@ -1581,10 +1587,10 @@ index 0072bd1..eb2a089 100644
  	c.Set("Content-Length", res.Header.Get("Content-Length"))
 diff --git a/utils/outbound.go b/utils/outbound.go
 new file mode 100644
-index 0000000..ad3952f
+index 0000000..c61556d
 --- /dev/null
 +++ b/utils/outbound.go
-@@ -0,0 +1,166 @@
+@@ -0,0 +1,189 @@
 +package utils
 +
 +// Utilibre deployment hardening: fixed public Imgur destinations, bounded
@@ -1674,6 +1680,7 @@ index 0000000..ad3952f
 +type cooldowns struct {
 +	mu    sync.Mutex
 +	until map[string]time.Time
++	gates map[string]chan struct{}
 +}
 +
 +func retryDelay(value string, now time.Time) time.Duration {
@@ -1699,6 +1706,25 @@ index 0000000..ad3952f
 +	}
 +	if t.cooldown != nil {
 +		t.cooldown.mu.Lock()
++		if t.cooldown.gates == nil {
++			t.cooldown.gates = make(map[string]chan struct{})
++		}
++		host := request.URL.Hostname()
++		gate := t.cooldown.gates[host]
++		if gate == nil {
++			gate = make(chan struct{}, 1)
++			t.cooldown.gates[host] = gate
++		}
++		t.cooldown.mu.Unlock()
++		// An album's simultaneous image requests must observe the first denial
++		// before contacting the same upstream. There are only five allowed hosts.
++		select {
++		case gate <- struct{}{}:
++			defer func() { <-gate }()
++		case <-request.Context().Done():
++			return nil, request.Context().Err()
++		}
++		t.cooldown.mu.Lock()
 +		remaining := time.Until(t.cooldown.until[request.URL.Hostname()])
 +		t.cooldown.mu.Unlock()
 +		if remaining > 0 {
@@ -1710,6 +1736,9 @@ index 0000000..ad3952f
 +	safe.Header.Del("Cookie")
 +	safe.Header.Del("Authorization")
 +	safe.Header.Del("Proxy-Authorization")
++	for _, name := range []string{"Referer", "Forwarded", "X-Forwarded-For", "X-Real-IP"} {
++		safe.Header.Del(name)
++	}
 +	response, err := t.inner.RoundTrip(safe)
 +	if err != nil {
 +		cancel()
@@ -1740,7 +1769,7 @@ index 0000000..ad3952f
 +}
 +
 +func init() {
-+	transport := &http.Transport{DialContext: publicDial, TLSHandshakeTimeout: 8 * time.Second,
++	transport := &http.Transport{DialContext: publicDial, ForceAttemptHTTP2: true, TLSHandshakeTimeout: 8 * time.Second,
 +		ResponseHeaderTimeout: 12 * time.Second, MaxResponseHeaderBytes: 64 << 10,
 +		MaxIdleConns: 20, MaxIdleConnsPerHost: 4, MaxConnsPerHost: 16, IdleConnTimeout: 30 * time.Second}
 +	http.DefaultTransport = publicTransport{inner: transport, cooldown: &cooldowns{until: make(map[string]time.Time)}}
@@ -1753,18 +1782,21 @@ index 0000000..ad3952f
 +}
 diff --git a/utils/outbound_test.go b/utils/outbound_test.go
 new file mode 100644
-index 0000000..a8fb8d0
+index 0000000..600bfd4
 --- /dev/null
 +++ b/utils/outbound_test.go
-@@ -0,0 +1,67 @@
+@@ -0,0 +1,135 @@
 +package utils
 +
 +import (
++	"context"
 +	"io"
 +	"net/http"
 +	"net/netip"
 +	"net/url"
 +	"strings"
++	"sync"
++	"sync/atomic"
 +	"testing"
 +	"time"
 +)
@@ -1822,6 +1854,71 @@ index 0000000..a8fb8d0
 +	}
 +	if !publicIP(netip.MustParseAddr("140.82.112.3")) {
 +		t.Fatal("public GitHub IP rejected")
++	}
++}
++
++func TestConcurrentRequestsShareCooldown(t *testing.T) {
++	var calls atomic.Int32
++	transport := publicTransport{cooldown: &cooldowns{until: make(map[string]time.Time)}, inner: fakeTransport(func(r *http.Request) (*http.Response, error) {
++		calls.Add(1)
++		time.Sleep(20 * time.Millisecond)
++		return &http.Response{StatusCode: 429, Header: http.Header{}, Body: io.NopCloser(strings.NewReader("limited")), Request: r}, nil
++	})}
++	var workers sync.WaitGroup
++	for range 16 {
++		workers.Add(1)
++		go func() {
++			defer workers.Done()
++			req, _ := http.NewRequest("GET", "https://i.imgur.com/example.jpg", nil)
++			response, err := transport.RoundTrip(req)
++			if err != nil || response.StatusCode != 429 {
++				t.Errorf("expected denial: %v", err)
++				return
++			}
++			response.Body.Close()
++		}()
++	}
++	workers.Wait()
++	if calls.Load() != 1 {
++		t.Fatalf("concurrent requests contacted rejected upstream %d times", calls.Load())
++	}
++}
++
++func TestVisitorIdentityIsNotForwarded(t *testing.T) {
++	transport := publicTransport{inner: fakeTransport(func(r *http.Request) (*http.Response, error) {
++		for _, name := range []string{"Cookie", "Authorization", "Proxy-Authorization", "Referer", "Forwarded", "X-Forwarded-For", "X-Real-IP"} {
++			if r.Header.Get(name) != "" {
++				t.Errorf("forwarded %s", name)
++			}
++		}
++		return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader("ok")), Request: r}, nil
++	})}
++	req, _ := http.NewRequest("GET", "https://i.imgur.com/example.jpg", nil)
++	for _, name := range []string{"Cookie", "Authorization", "Proxy-Authorization", "Referer", "Forwarded", "X-Forwarded-For", "X-Real-IP"} {
++		req.Header.Set(name, "private")
++	}
++	response, err := transport.RoundTrip(req)
++	if err != nil {
++		t.Fatal(err)
++	}
++	response.Body.Close()
++	if req.Header.Get("Cookie") != "private" {
++		t.Fatal("mutated caller headers")
++	}
++}
++
++func TestCancelledWaitDoesNotContactUpstream(t *testing.T) {
++	gate := make(chan struct{}, 1)
++	gate <- struct{}{}
++	transport := publicTransport{cooldown: &cooldowns{until: make(map[string]time.Time), gates: map[string]chan struct{}{"i.imgur.com": gate}}, inner: fakeTransport(func(r *http.Request) (*http.Response, error) {
++		t.Fatal("cancelled request reached upstream")
++		return nil, nil
++	})}
++	ctx, cancel := context.WithCancel(context.Background())
++	cancel()
++	req, _ := http.NewRequestWithContext(ctx, "GET", "https://i.imgur.com/example.jpg", nil)
++	if _, err := transport.RoundTrip(req); err != context.Canceled {
++		t.Fatalf("expected cancellation, got %v", err)
 +	}
 +}
 diff --git a/utils/request.go b/utils/request.go

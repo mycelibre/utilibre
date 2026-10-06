@@ -83,7 +83,8 @@ Other replacements reviewed October 6:
 - [Watcharr](https://github.com/sbondCo/Watcharr) is an account-based watched-list
   service, not an anonymous IMDb reader. TMDB-based movie browsers also require
   operator API registration and terms acceptance. No verified LibreMDB drop-in
-  has been deployed, and its obsolete runtime remains stopped.
+  was deployed in that replacement review. The later private LibreMDB repair
+  below supersedes the obsolete-runtime blocker, not the public data-use gate.
 
 ### Reader comparison follow-up — October 6, 21:36 UTC
 
@@ -124,6 +125,71 @@ production deployment or privacy setting was changed during these comparisons.
   a visitor's network but would disclose their IP to the upstream; approval and
   accurate privacy wording are needed before changing our configuration. Native
   JSONP/direct-media mode has not been enabled.
+
+### Privacy-preserving repairs — October 6, 22:00 UTC
+
+The operator explicitly rejected direct browser connections to Fandom. Keep
+`bw_strict_proxy=true`, JSONP and suggestions disabled, and the same-origin CSP.
+Do not enable a direct-media fallback or borrow another public instance as an
+upstream. The public catalog still distinguishes visible inventory from a
+verified launch; none of these three was newly enabled for public launch.
+
+**BreezeWiki:** deployed gateway changes disable error logs that could include
+visitor addresses/article URLs, strip visitor identity headers before the
+application, and restrict form submissions to the same origin. Four regression
+tests in `deployment/expanded/tests/wiki-privacy.test.mjs` enforce these settings.
+Public article text and the new headers were verified. Chromium's network
+diagnostics confirmed an external independent-wiki logo was blocked by CSP,
+not fetched; a Playwright `request` event alone is not proof of network contact.
+The proxied Fandom image still returns 403. Its complete source archive was
+refreshed, with the previous archive preserved.
+
+**Rimgo:** deployed `utilibre-rimgo:d2be8e2-p3`
+(`sha256:00855ed0135e8a27b524759651b8da7727685fda86740fa75f0fdac23d7886c2`).
+Per-host admission now serializes response-header retrieval so simultaneous
+image requests see the first 429 cooldown, rather than all reaching Imgur.
+Waiting requests honor cancellation, visitor identity headers are removed,
+and the custom transport negotiates HTTP/2. Five offline transport tests cover
+destination policy, cooldowns, concurrent requests, cancellation and headers.
+The public version and media response were checked: the video remains 429,
+`no-store`, Retry-After 601. This is a retry/privacy fix, **not restored playback**.
+The source patch and complete archive match the deployed p3 changes.
+
+**LibreMDB:** privately repaired the darlopvil fork at `b233f4e24acfb4afbe55b7c13798832ca8068086`.
+Node 24.21.0 / Next 16.4.0 replace the unsupported runtime. Package audit reports
+zero known vulnerabilities in the reviewed lockfile. The patch also fixes an
+over-broad media URL regex: exact HTTPS hosts, public DNS answers passed directly
+to TLS, no redirects, bounded responses/time/concurrency and fixed outgoing
+headers. Untrusted HTML is sanitized, browser resources remain same-origin,
+and error pages do not expose server stacks. GraphQL results have a bounded
+16 MiB / 64-entry RAM cache with timed deletion after ten minutes. It fails
+closed unless `UTILIBRE_PRIVATE_EVALUATION=true`.
+
+Desktop/mobile checks passed for search `Up`, movie `tt1049413`, and visible
+proxied images (17 desktop / 16 mobile), with no third-party browser requests,
+JavaScript errors or horizontal overflow. Invalid destinations are rejected and
+the invalid-title error discloses no server stack. Four offline security tests
+and the production build pass. Impeccable's hardening checks guided these
+privacy/error checks while preserving the upstream interface. This sample does
+not certify every title, person, list or trailer. React 18 is supported but
+deprecated by Next 16; migrate it before Next 17.
+
+The private test container was stopped after verification. It has an explicit
+`libremdb-review` Compose profile, a loopback-only binding and no application
+logs. No public Caddy route, portal launch, monitoring or directory submission
+was added: IMDb public data-use permission remains unresolved. The software's
+AGPL license is separate from permission to use IMDb's data.
+
+To reproduce the private check, apply `deployment/community/libremdb-private-source.patch`
+to a pristine checkout of the pinned fork, then:
+
+```sh
+docker build -f deployment/community/Dockerfile.libremdb-private \
+  -t utilibre-libremdb:b233f4e-p1 /opt/utilibre/community-src/libremdb-fork
+docker compose -f deployment/community/compose.evaluation.yaml --profile libremdb-review up -d --no-deps libremdb
+node deployment/community/check-libremdb-private.mjs
+docker compose -f deployment/community/compose.evaluation.yaml --profile libremdb-review stop libremdb
+```
 
 ### Existing schedules
 

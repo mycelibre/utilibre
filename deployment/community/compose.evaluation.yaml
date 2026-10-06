@@ -57,19 +57,21 @@ services:
       retries: 3
   libremdb:
     <<: *runtime
-    image: ghcr.io/zyachel/libremdb@sha256:9f65a47fe64133045b4cfaa48e5ef73371c55c62b3d5bf42f7584a90dfd1c1ee
+    # Explicit private evaluation only; IMDb public-use permission is unresolved.
+    profiles: [libremdb-review]
+    image: utilibre-libremdb:b233f4e-p1
     user: "65534:65534"
     environment:
       NEXT_TELEMETRY_DISABLED: "1"
-      NEXT_PUBLIC_URL: https://imdb.utilibre.org
+      NEXT_PUBLIC_URL: http://127.0.0.1:3144
       NEXT_PUBLIC_INSTANCE_MAIN_URL: https://utilibre.org
       NEXT_PUBLIC_INSTANCE_NAME: Utilibre
-      AXIOS_USERAGENT: Mozilla/5.0 (X11; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0
-      AXIOS_ACCEPT: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+      UTILIBRE_PRIVATE_EVALUATION: "true"
       USE_REDIS: "false"
+    logging: {driver: none}
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
-      - /opt/app/.next/cache:rw,nosuid,nodev,noexec,size=32m,uid=65534,gid=65534
+      - /app/.next/cache:rw,nosuid,nodev,noexec,size=32m,uid=65534,gid=65534
     ports: ["127.0.0.1:3144:3000"]
     networks:
       movies: {ipv4_address: 172.29.78.10}

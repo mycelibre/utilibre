@@ -1,0 +1,4274 @@
+diff --git a/.dockerignore b/.dockerignore
+new file mode 100644
+index 0000000..a6169b2
+--- /dev/null
++++ b/.dockerignore
+@@ -0,0 +1,6 @@
++.git
++node_modules
++.next
++.env*
++*.tsbuildinfo
++artifacts
+diff --git a/.gitignore b/.gitignore
+index fdab8f5..23b84f0 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -35,8 +35,7 @@ dev/*
+ 
+ # other lockfiles 
+ yarn.lock
+-package-lock.json
+ 
+ # docker
+ docker-compose.yml
+-dump.rdb
+\ No newline at end of file
++dump.rdb
+diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
+new file mode 100644
+index 0000000..c74a697
+--- /dev/null
++++ b/Dockerfile.utilibre
+@@ -0,0 +1,19 @@
++FROM node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 AS build
++WORKDIR /app
++ENV NEXT_TELEMETRY_DISABLED=1 NODE_OPTIONS=--max-old-space-size=2048
++COPY package.json package-lock.json ./
++RUN npm ci --ignore-scripts --no-audit --no-fund
++COPY . .
++ENV NEXT_PUBLIC_URL=http://127.0.0.1:3144 NEXT_PUBLIC_INSTANCE_MAIN_URL=https://utilibre.org NEXT_PUBLIC_INSTANCE_NAME=Utilibre USE_REDIS=false
++RUN npm run test:security && npm run build -- --webpack
++
++FROM node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
++WORKDIR /app
++ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000 USE_REDIS=false
++COPY --from=build --chown=node:node /app/.next/standalone ./
++COPY --from=build --chown=node:node /app/.next/static ./.next/static
++COPY --from=build --chown=node:node /app/public ./public
++COPY --from=build /app/LICENSE ./LICENSE
++USER node
++EXPOSE 3000
++CMD ["node", "server.js"]
+diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
+new file mode 100644
+index 0000000..f06d19c
+--- /dev/null
++++ b/UTILIBRE-SOURCE.txt
+@@ -0,0 +1,36 @@
++LibreMDB private evaluation on Utilibre, 2026-10-06
++Upstream fork: https://github.com/darlopvil/libremdb-fork
++Revision: b233f4e24acfb4afbe55b7c13798832ca8068086
++Original project: https://github.com/zyachel/libremdb
++License: upstream AGPL notices and LICENSE retained.
++
++This is not a public launch. The IMDb GraphQL API explicitly excludes public
++use in its response, and a permitted public operating basis is unresolved.
++Its FOSS software license does not grant rights to IMDb's data.
++
++Compatibility/security patches: Node 24.21.0, Next 16.4.0, updated dependencies,
++modern Link/Image APIs, TypeScript fixes, exact media-host checks with checked
++public DNS answers passed directly to the TLS socket, no automatic redirects,
++fixed server-side request headers, bounded bodies/time/concurrency, host denial
++cooldowns and bounded ten-minute memory-only GraphQL cache with timed deletion.
++Visitor credentials/headers are not forwarded. Untrusted HTML is sanitized;
++same-origin CSP prevents automatic third-party browser connections. Error stacks
++are not rendered. Native operator metadata remains; no custom return link added.
++
++Build with the npm package-lock.json and Dockerfile.utilibre, not the upstream
++Dockerfile/pnpm lockfile. React 18 remains supported but deprecated by Next 16;
++React 19 migration is required before a future Next 17 upgrade.
++
++docker build -f Dockerfile.utilibre -t utilibre-libremdb:b233f4e-p1 .
++
++Use the explicit libremdb-review profile in Utilibre's compose.evaluation.yaml.
++Binding must remain 127.0.0.1:3144, with no public reverse-proxy route.
++UTILIBRE_PRIVATE_EVALUATION=true enables private GraphQL checks; absent/false
++fails closed. No upstream accounts, cookies, API keys or challenge solver.
++
++Tests: npm run test:security; Utilibre deployment/community/check-libremdb-private.mjs.
++Verified sample: search Up, title tt1049413, visible proxied images on desktop
++and mobile, no automatic third-party requests, malformed media URLs rejected.
++Trailers, every movie/person/list and all upstream schema variations are not
++certified by this sample. Media responses are bounded to 16 MiB per request.
++No automatic public launch, public monitoring or instance-list submission.
+diff --git a/next.config.mjs b/next.config.mjs
+index c9286df..26f53bd 100644
+--- a/next.config.mjs
++++ b/next.config.mjs
+@@ -1,7 +1,17 @@
+ /** @type {import('next').NextConfig} */
+ const nextConfig = {
+   reactStrictMode: true,
+-  swcMinify: true,
++  output: 'standalone',
++  cacheMaxMemorySize: 20 * 1024 * 1024,
++  async headers() {
++    return [{source: '/:path*', headers: [
++      {key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"},
++      {key: 'Referrer-Policy', value: 'no-referrer'},
++      {key: 'X-Content-Type-Options', value: 'nosniff'},
++      {key: 'X-Frame-Options', value: 'DENY'},
++      {key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()'},
++    ]}];
++  },
+   async redirects() {
+     return [
+       {
+@@ -21,13 +31,10 @@ const nextConfig = {
+   // la configuración global. El redimensionado ya lo hace IMDb vía
+   // modifyIMDbImg (400px pesa 54 KB frente a 326 KB del original).
+   images: {
+-    domains: ['m.media-amazon.com'],
++    unoptimized: true,
+   },
+   experimental: {
+-    images: {
+-      allowFutureImage: true,
+-    },
+-    isrMemoryCacheSize: 20 * 1024 * 1024,
++    cpus: 2,
+   },
+   poweredByHeader: false,
+ };
+diff --git a/package-lock.json b/package-lock.json
+new file mode 100644
+index 0000000..d1376ea
+--- /dev/null
++++ b/package-lock.json
+@@ -0,0 +1,2418 @@
++{
++  "name": "libremdb",
++  "version": "4.5.0",
++  "lockfileVersion": 3,
++  "requires": true,
++  "packages": {
++    "": {
++      "name": "libremdb",
++      "version": "4.5.0",
++      "license": "AGPL-3.0-or-later",
++      "dependencies": {
++        "axios": "1.20.0",
++        "cheerio": "1.2.0",
++        "ioredis": "^5.3.2",
++        "ipaddr.js": "2.3.0",
++        "next": "16.4.0",
++        "react": "18.3.1",
++        "react-dom": "18.3.1",
++        "sanitize-html": "2.18.0",
++        "sharp": "^0.35.3"
++      },
++      "devDependencies": {
++        "@types/node": "^24.0.0",
++        "@types/react": "18.3.31",
++        "@types/react-dom": "^18.3.0",
++        "sass": "^1.62.1",
++        "typescript": "5.9.3"
++      },
++      "engines": {
++        "node": ">=24 <25"
++      }
++    },
++    "node_modules/@emnapi/runtime": {
++      "version": "1.11.3",
++      "resolved": "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.11.3.tgz",
++      "integrity": "sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==",
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "tslib": "^2.4.0"
++      }
++    },
++    "node_modules/@img/colour": {
++      "version": "1.1.0",
++      "resolved": "https://registry.npmjs.org/@img/colour/-/colour-1.1.0.tgz",
++      "integrity": "sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@img/sharp-darwin-arm64": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-darwin-arm64/-/sharp-darwin-arm64-0.35.5.tgz",
++      "integrity": "sha512-QRUlFQ0WxvdWyqqG/WtI3iupfD5rBzmCHXSdPsY91sAtVtTo7Q4cb6zOccZ3gqEqkr0f1As1ehLqmEpDsRf+lg==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-darwin-arm64": "1.3.4"
++      }
++    },
++    "node_modules/@img/sharp-darwin-x64": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-darwin-x64/-/sharp-darwin-x64-0.35.5.tgz",
++      "integrity": "sha512-+BR255RhDlpygUpOc/Jdt1nT6DQ3XG/ERo5wbcdOf5Q320dKtPCKPLR1LJs9VGXRaMa8l1uUa0tkCNOXiAxZUw==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-darwin-x64": "1.3.4"
++      }
++    },
++    "node_modules/@img/sharp-freebsd-wasm32": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-freebsd-wasm32/-/sharp-freebsd-wasm32-0.35.5.tgz",
++      "integrity": "sha512-Y/z91nEZ4uIBX5X3nfTovjU9lHNKFYbL2lpHCLVNmXQK03VIZvXBBt0KxbPGp2SdGSF+2mQU4e+hQaWOt86iAw==",
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "freebsd"
++      ],
++      "dependencies": {
++        "@img/sharp-wasm32": "0.35.5"
++      },
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-darwin-arm64": {
++      "version": "1.3.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.3.4.tgz",
++      "integrity": "sha512-5R89nBYiRdUlSWJxPhO+GVtaXzXSxKnRu/xqMn3KTA3L9EB9Oy/P+Nn2f2vlhPuUdy/Zusb2DarbyTpGCfEDuw==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-darwin-x64": {
++      "version": "1.3.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-darwin-x64/-/sharp-libvips-darwin-x64-1.3.4.tgz",
++      "integrity": "sha512-iR2OKH80yi0U+dUplyh3/xdpFvps6YkCwsXenIJxqxR1v9o+xtKTGbS9H7cps+2Vxjc8B1j96p75NmTGjIhtpQ==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-arm": {
++      "version": "1.3.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-arm/-/sharp-libvips-linux-arm-1.3.4.tgz",
++      "integrity": "sha512-LmRtTsOHuvM2+wlO2Db37dx5MiZhB0FvSunciw48YjdOkZz9KAiRbm8ujeMOA1INqmei5NapFxYEK1D1ZSidmw==",
++      "cpu": [
++        "arm"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-arm64": {
++      "version": "1.3.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-arm64/-/sharp-libvips-linux-arm64-1.3.4.tgz",
++      "integrity": "sha512-Y3dgX/6lE2QhQb+Gxy0WZxfg9MEm/JBjamZpS2IklP7xIQoKN4hzAm7KcMVGtaVDt3neE9OKBC7vAfonA/Lr1A==",
++      "cpu": [
++        "arm64"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-ppc64": {
++      "version": "1.3.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-ppc64/-/sharp-libvips-linux-ppc64-1.3.4.tgz",
++      "integrity": "sha512-Le6boB8Tai0Nis+gIxIpKx68UDVVIqdR8Tin5Yf1z2LJJQLDJvCDRqRu+jC2qCoD+eIomonmOwB4smBRxfVpYQ==",
++      "cpu": [
++        "ppc64"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-riscv64": {
++      "version": "1.3.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-riscv64/-/sharp-libvips-linux-riscv64-1.3.4.tgz",
++      "integrity": "sha512-aHkkIEHPRdQEegJN20MLmGtxYD9R2wQr3Cwpddnu5+YKMt6Uzax7S9h5gpZTo8wyrGuZSlfQ63OevL5mTyOC7Q==",
++      "cpu": [
++        "riscv64"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-s390x": {
++      "version": "1.3.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-s390x/-/sharp-libvips-linux-s390x-1.3.4.tgz",
++      "integrity": "sha512-ra/mB6MikESDUO7Yg+Mi95bFBb9GsObURuhnOv3OqknjGe9sZrG8tCe9q0xSIGrtLgvgw0gKnFWcK4blSgQOuQ==",
++      "cpu": [
++        "s390x"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-x64": {
++      "version": "1.3.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.3.4.tgz",
++      "integrity": "sha512-GJ//SSXbnwSDes02umB3nDJLFcQzw8a18V8fyhqr6tV515tOEMdImjjxj1AoafMRz56F3PHgftnj1QEKSU1zkw==",
++      "cpu": [
++        "x64"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linuxmusl-arm64": {
++      "version": "1.3.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-arm64/-/sharp-libvips-linuxmusl-arm64-1.3.4.tgz",
++      "integrity": "sha512-hvulFwtjUcagsis6BBxHwGFwWoNZjgYmULGVrZcyfNbjA8hKILbRxGg15/7w5HDyXHXUos/j6baAWqnCyQ2DWA==",
++      "cpu": [
++        "arm64"
++      ],
++      "libc": [
++        "musl"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linuxmusl-x64": {
++      "version": "1.3.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.3.4.tgz",
++      "integrity": "sha512-6zXKeE/p39I1AmA3cJG35eyBGNqNddLnUXjhwBnsGjFPWqf5VKkDBEqaEkPDoTEtkxwi2vv8Tcr2mDyP4So7Fg==",
++      "cpu": [
++        "x64"
++      ],
++      "libc": [
++        "musl"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-linux-arm": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-arm/-/sharp-linux-arm-0.35.5.tgz",
++      "integrity": "sha512-LEaXK2WdXVK5ykcw0buWyPMsmLLL2vpHLD6yrNSW+JGEL3BZPA4tpKN6iaMc4AxTTAoaX/sU1rOL51lcIz48ZQ==",
++      "cpu": [
++        "arm"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-arm": "1.3.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-arm64": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-arm64/-/sharp-linux-arm64-0.35.5.tgz",
++      "integrity": "sha512-LYVx5JTsOM2CBzmxreh+nl64/3H6Xb09iSLknqH47z2T2DFFxDeFLP5y4dJwe6H7uGQlHPyEEtIqyo3DYsRwdQ==",
++      "cpu": [
++        "arm64"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-arm64": "1.3.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-ppc64": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-ppc64/-/sharp-linux-ppc64-0.35.5.tgz",
++      "integrity": "sha512-QVxAAq8evVRI9ia2vqgwrmWucn5Dfv+JdWzj75pD8omHLPSP7f8p20O8jxzjCcuCEQEOtYOZUmX1hkiZ0kdevA==",
++      "cpu": [
++        "ppc64"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-ppc64": "1.3.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-riscv64": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-riscv64/-/sharp-linux-riscv64-0.35.5.tgz",
++      "integrity": "sha512-LtdreXguaavKODPIfzJ4kffx7UNt1omwtK0rch4EBbbSTXPnxWmYSayXdLJw0fJzQ97kHt1gL/yh4tvU+nCyRQ==",
++      "cpu": [
++        "riscv64"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-riscv64": "1.3.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-s390x": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-s390x/-/sharp-linux-s390x-0.35.5.tgz",
++      "integrity": "sha512-UZasTOFiYzotTsGOCu42BfUzP6Tu6Do/947iRm1RsLKvlllxwGcn4RN27LibGWceix4Y+Pmw3jsnTcCQIgWjqA==",
++      "cpu": [
++        "s390x"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-s390x": "1.3.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-x64": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-x64/-/sharp-linux-x64-0.35.5.tgz",
++      "integrity": "sha512-SxFtLTeJInhAA9Q836kux2vZNeOBQEx658qvbboZScr0wIARym3IcGmW7KpVD5sbVg0Ojy+udFQdayYIZyoNog==",
++      "cpu": [
++        "x64"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-x64": "1.3.4"
++      }
++    },
++    "node_modules/@img/sharp-linuxmusl-arm64": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linuxmusl-arm64/-/sharp-linuxmusl-arm64-0.35.5.tgz",
++      "integrity": "sha512-9HbMclmI1zlNkFRs3z9/eBtDjfD0sGlrX1z6b1qwmiFY5ElDLh4BC0LPBdVp7z1DXFiKlIcznf+ZlsuZzLxQqg==",
++      "cpu": [
++        "arm64"
++      ],
++      "libc": [
++        "musl"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linuxmusl-arm64": "1.3.4"
++      }
++    },
++    "node_modules/@img/sharp-linuxmusl-x64": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linuxmusl-x64/-/sharp-linuxmusl-x64-0.35.5.tgz",
++      "integrity": "sha512-4KOphqB035HrVdqLZfCgMzzERrQkkzOwRhl4OAkRO1YCldbaFjySXMaK534Mo0V+LndnlJk+sbUyLeU0ULyD1A==",
++      "cpu": [
++        "x64"
++      ],
++      "libc": [
++        "musl"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linuxmusl-x64": "1.3.4"
++      }
++    },
++    "node_modules/@img/sharp-wasm32": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-wasm32/-/sharp-wasm32-0.35.5.tgz",
++      "integrity": "sha512-Ptsga1su4tQx+LLF1ECS9U6nz5kmrXKo6XVbtR48Ke3ZRxxgaWBu7IDtEe1quo8hiupwm6WFqxVlXaSf7IINGQ==",
++      "license": "Apache-2.0 AND LGPL-3.0-or-later AND MIT",
++      "optional": true,
++      "dependencies": {
++        "@emnapi/runtime": "^1.11.3"
++      },
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-webcontainers-wasm32": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-webcontainers-wasm32/-/sharp-webcontainers-wasm32-0.35.5.tgz",
++      "integrity": "sha512-hfhF/FmoQyTUkA0bIKFOtw536BQSeBMe6BF6QyWlrPxT754+TFLaZ7sKKTfvvM0yJgKgaYTwnFCIZ/GuDw5SUA==",
++      "cpu": [
++        "wasm32"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "dependencies": {
++        "@img/sharp-wasm32": "0.35.5"
++      },
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-win32-arm64": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-win32-arm64/-/sharp-win32-arm64-0.35.5.tgz",
++      "integrity": "sha512-X4t7g+7ZA5DKblCBEXGjUqqemj4vczING/5viFwAL8h4N3qYeyjwdCvRLHi4EdOUI+2Z7UFlp1VM+p/AuEtm6Q==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "Apache-2.0 AND LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-win32-ia32": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-win32-ia32/-/sharp-win32-ia32-0.35.5.tgz",
++      "integrity": "sha512-5Zm82LoBc43nhwNybZlG7Y1KO//Zhsn306fQl29ZOuStHLGTo3BWL83q3cznX0poxSAMuYL1On/BHBxkBeKr6A==",
++      "cpu": [
++        "ia32"
++      ],
++      "license": "Apache-2.0 AND LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": "^20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-win32-x64": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-win32-x64/-/sharp-win32-x64-0.35.5.tgz",
++      "integrity": "sha512-x76eH0vEiHlcMQu8Y8IenntaACtddpT6W0wmXtWrnKcnKI7ME5DdgqhAD6SEWOEl1v2zDvkZDhFA9KnURwpfqg==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "Apache-2.0 AND LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@ioredis/commands": {
++      "version": "1.10.0",
++      "resolved": "https://registry.npmjs.org/@ioredis/commands/-/commands-1.10.0.tgz",
++      "integrity": "sha512-UmeW7z4LfctwoQ5wkhVzgq8tXkreED2xZGpX+Bg+zA+WJFZCT6c062AfCK/Dfk81xZnnwdhJCUMkitihRaoC2Q==",
++      "license": "MIT"
++    },
++    "node_modules/@next/env": {
++      "version": "16.4.0",
++      "resolved": "https://registry.npmjs.org/@next/env/-/env-16.4.0.tgz",
++      "integrity": "sha512-pyLlT5oafGlX8X7xjgGNXz5dNIDSxREm+qD6i9VLSZiZFopA/XWl8NM/KPmLx/8EG/++c49iid3gNWSQW1+2dQ==",
++      "license": "MIT"
++    },
++    "node_modules/@next/swc-darwin-arm64": {
++      "version": "16.4.0",
++      "resolved": "https://registry.npmjs.org/@next/swc-darwin-arm64/-/swc-darwin-arm64-16.4.0.tgz",
++      "integrity": "sha512-yyZ+9MgViAKLLb5l1gPBGjRwnq3teNLb5Zx6JEw8LzNSTjlsnp+baUHFxTgl7PpjCmKf48VQfyipG1eBflb48Q==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-darwin-x64": {
++      "version": "16.4.0",
++      "resolved": "https://registry.npmjs.org/@next/swc-darwin-x64/-/swc-darwin-x64-16.4.0.tgz",
++      "integrity": "sha512-RePEEejEj1Auf5s9qEcG0JbcDP3ceNUS/ofNX8AhxzgIjTVlZIHMatlp16YplcSMpsVo/ZMQHJTjbMYJznjGUg==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-linux-arm64-gnu": {
++      "version": "16.4.0",
++      "resolved": "https://registry.npmjs.org/@next/swc-linux-arm64-gnu/-/swc-linux-arm64-gnu-16.4.0.tgz",
++      "integrity": "sha512-HhsyCqd+NpmvDDVY/LqkAN24f+QVvXh3ie+PfcwKinWL2Mu826JymQxJXGjAIfmJ4VlHjp4Pe/nZtXtUoEMAqw==",
++      "cpu": [
++        "arm64"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-linux-arm64-musl": {
++      "version": "16.4.0",
++      "resolved": "https://registry.npmjs.org/@next/swc-linux-arm64-musl/-/swc-linux-arm64-musl-16.4.0.tgz",
++      "integrity": "sha512-sN9Pf+Zh+RpZAOmbR7d8KAA8T61CVhawtbEJ2Bk6QrRzx6Z/6haaF4UiwBzytM96GRRRWZh9/WALIEO3npMamA==",
++      "cpu": [
++        "arm64"
++      ],
++      "libc": [
++        "musl"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-linux-x64-gnu": {
++      "version": "16.4.0",
++      "resolved": "https://registry.npmjs.org/@next/swc-linux-x64-gnu/-/swc-linux-x64-gnu-16.4.0.tgz",
++      "integrity": "sha512-D5M5xLWQVd1CvR+L7BickM1weRfmM41x3L1NWcnKY/oyJJqr1qwaCgmu3dMAhLBOMdZwSuDCRV6DJRRpiUkbDQ==",
++      "cpu": [
++        "x64"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-linux-x64-musl": {
++      "version": "16.4.0",
++      "resolved": "https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-16.4.0.tgz",
++      "integrity": "sha512-8d5WLS6a9YalqpOgXdlbvonFu+sIgjA+CO6tGzetrpPVcUL56foa7B7664h41rAlbLi5fJwK4vWji3zf4QDy+w==",
++      "cpu": [
++        "x64"
++      ],
++      "libc": [
++        "musl"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-win32-arm64-msvc": {
++      "version": "16.4.0",
++      "resolved": "https://registry.npmjs.org/@next/swc-win32-arm64-msvc/-/swc-win32-arm64-msvc-16.4.0.tgz",
++      "integrity": "sha512-sQuOIiW3snb48UwrBcDMvFA/u03qtw2LeuSIxFIQ9AJuW9UG/4Ddsfo+eV73PnZwBhyncMtsKVh7PrzMol2/fA==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-win32-x64-msvc": {
++      "version": "16.4.0",
++      "resolved": "https://registry.npmjs.org/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-16.4.0.tgz",
++      "integrity": "sha512-6/33lCuxpdHUy27RegyGM/5uTpF7YZd3UR4D0gpkOA/tWY5YR7msbQjqPgCZmSmxrrTLGCXYA4A8vT2H5DPGTQ==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@parcel/watcher": {
++      "version": "2.6.0",
++      "resolved": "https://registry.npmjs.org/@parcel/watcher/-/watcher-2.6.0.tgz",
++      "integrity": "sha512-7FNeNl8NCE7aINx7WXiKQrPYZWC/hvrTsmk6zmxbI7LTXE7hVek/n8AfVgpe2y82zl3w0HvCHN0bVKMBoJcC0w==",
++      "hasInstallScript": true,
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "detect-libc": "^2.0.3",
++        "is-glob": "^4.0.3",
++        "node-addon-api": "^7.0.0",
++        "picomatch": "^4.0.4"
++      },
++      "engines": {
++        "node": ">= 10.0.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/parcel"
++      },
++      "optionalDependencies": {
++        "@parcel/watcher-android-arm64": "2.6.0",
++        "@parcel/watcher-darwin-arm64": "2.6.0",
++        "@parcel/watcher-darwin-x64": "2.6.0",
++        "@parcel/watcher-freebsd-x64": "2.6.0",
++        "@parcel/watcher-linux-arm-glibc": "2.6.0",
++        "@parcel/watcher-linux-arm-musl": "2.6.0",
++        "@parcel/watcher-linux-arm64-glibc": "2.6.0",
++        "@parcel/watcher-linux-arm64-musl": "2.6.0",
++        "@parcel/watcher-linux-x64-glibc": "2.6.0",
++        "@parcel/watcher-linux-x64-musl": "2.6.0",
++        "@parcel/watcher-win32-arm64": "2.6.0",
++        "@parcel/watcher-win32-x64": "2.6.0"
++      }
++    },
++    "node_modules/@parcel/watcher-android-arm64": {
++      "version": "2.6.0",
++      "resolved": "https://registry.npmjs.org/@parcel/watcher-android-arm64/-/watcher-android-arm64-2.6.0.tgz",
++      "integrity": "sha512-trgpLSCKRC/huFjXX/Smh+0sWe4+YtKfktIToiMl59ghz7z+qkH6kMvNnUbLyRs9N11t8l4svSCs1+5B3rOAhA==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "android"
++      ],
++      "engines": {
++        "node": ">= 10.0.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/parcel"
++      }
++    },
++    "node_modules/@parcel/watcher-darwin-arm64": {
++      "version": "2.6.0",
++      "resolved": "https://registry.npmjs.org/@parcel/watcher-darwin-arm64/-/watcher-darwin-arm64-2.6.0.tgz",
++      "integrity": "sha512-Y3QV0gl7Q1zbfueunkWIERICbEojQFCgpyG7YqOGNFLsckXyI1xu9mAIUpKY9QBYzBtSkN8dBPwd3yiAO9ovMw==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">= 10.0.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/parcel"
++      }
++    },
++    "node_modules/@parcel/watcher-darwin-x64": {
++      "version": "2.6.0",
++      "resolved": "https://registry.npmjs.org/@parcel/watcher-darwin-x64/-/watcher-darwin-x64-2.6.0.tgz",
++      "integrity": "sha512-Ohv6OpzhUfKYD7Beb8kDvG0jbIxORCYY1JRdZnaBtnjjkJxgD7ZVL0nw2sCYd0yTMKTvz3nnTnOF3cDifK+kvw==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">= 10.0.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/parcel"
++      }
++    },
++    "node_modules/@parcel/watcher-freebsd-x64": {
++      "version": "2.6.0",
++      "resolved": "https://registry.npmjs.org/@parcel/watcher-freebsd-x64/-/watcher-freebsd-x64-2.6.0.tgz",
++      "integrity": "sha512-5HmXvDgs8VK+74jF9y9/2FE3/OnlcKmc56tjmSrEuZjpSZOGL+fvAu+HKJBdPs9uwoP2hE6TlSUpXZ/C5jUFmQ==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "freebsd"
++      ],
++      "engines": {
++        "node": ">= 10.0.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/parcel"
++      }
++    },
++    "node_modules/@parcel/watcher-linux-arm-glibc": {
++      "version": "2.6.0",
++      "resolved": "https://registry.npmjs.org/@parcel/watcher-linux-arm-glibc/-/watcher-linux-arm-glibc-2.6.0.tgz",
++      "integrity": "sha512-Ps/hui3A+vMbjdqlqAowK2ZL8+BO8dBjxeWXj6npTBs3jx4wWmbPpaLuqwrQrSqIVMCnpWo238bJ1U37GhQOYg==",
++      "cpu": [
++        "arm"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10.0.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/parcel"
++      }
++    },
++    "node_modules/@parcel/watcher-linux-arm-musl": {
++      "version": "2.6.0",
++      "resolved": "https://registry.npmjs.org/@parcel/watcher-linux-arm-musl/-/watcher-linux-arm-musl-2.6.0.tgz",
++      "integrity": "sha512-9c6AUHgHoG+IY88MRIHupztQiQnrbqHYQjkM2btA+Bf/wQnQMuiD0Wfk1EVv3TlNT3x41uU71rn6E4xh/+zvkw==",
++      "cpu": [
++        "arm"
++      ],
++      "libc": [
++        "musl"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10.0.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/parcel"
++      }
++    },
++    "node_modules/@parcel/watcher-linux-arm64-glibc": {
++      "version": "2.6.0",
++      "resolved": "https://registry.npmjs.org/@parcel/watcher-linux-arm64-glibc/-/watcher-linux-arm64-glibc-2.6.0.tgz",
++      "integrity": "sha512-yHRqS2owEXe6Hic9z6Mh1ECsCd+ODVOGvZDyciqRd21+v+o+DnXMOrw50DSpIG2sb8GPEaPPmfeCAWKPJdq46g==",
++      "cpu": [
++        "arm64"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10.0.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/parcel"
++      }
++    },
++    "node_modules/@parcel/watcher-linux-arm64-musl": {
++      "version": "2.6.0",
++      "resolved": "https://registry.npmjs.org/@parcel/watcher-linux-arm64-musl/-/watcher-linux-arm64-musl-2.6.0.tgz",
++      "integrity": "sha512-WhB2e/V7rqdHHWZusBSPuy5Ei8S6lSz6FE5TKKQz5h3a0O+C+mhY7vxU9b/stqvMb8beLnPY82ZrFTLKs+SrKA==",
++      "cpu": [
++        "arm64"
++      ],
++      "libc": [
++        "musl"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10.0.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/parcel"
++      }
++    },
++    "node_modules/@parcel/watcher-linux-x64-glibc": {
++      "version": "2.6.0",
++      "resolved": "https://registry.npmjs.org/@parcel/watcher-linux-x64-glibc/-/watcher-linux-x64-glibc-2.6.0.tgz",
++      "integrity": "sha512-ulGE6x6Oz6iAwg75T8YQSoguBWasniIbX+QWpaYPcCnDOpdWX3k+4xbEYPZVLxOuoJI+svJJPD3sEj8G7lrQ3A==",
++      "cpu": [
++        "x64"
++      ],
++      "libc": [
++        "glibc"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10.0.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/parcel"
++      }
++    },
++    "node_modules/@parcel/watcher-linux-x64-musl": {
++      "version": "2.6.0",
++      "resolved": "https://registry.npmjs.org/@parcel/watcher-linux-x64-musl/-/watcher-linux-x64-musl-2.6.0.tgz",
++      "integrity": "sha512-tkBYKt7YQrjIJWYDnto2YgO8MRkjlMTSNoRHzsXinBqbLdeOM3L32wPZJvIZxqaLMfSlS/4sUjH/6STVP/XDLw==",
++      "cpu": [
++        "x64"
++      ],
++      "libc": [
++        "musl"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10.0.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/parcel"
++      }
++    },
++    "node_modules/@parcel/watcher-win32-arm64": {
++      "version": "2.6.0",
++      "resolved": "https://registry.npmjs.org/@parcel/watcher-win32-arm64/-/watcher-win32-arm64-2.6.0.tgz",
++      "integrity": "sha512-gIZAP23jaHjGWasY/TY6yL7NHFClf0Ga7FN+iINvk+KN94rhm94lYZhFsbYFNcA04/onvGD9kKmiJLJB2HbNwQ==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">= 10.0.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/parcel"
++      }
++    },
++    "node_modules/@parcel/watcher-win32-x64": {
++      "version": "2.6.0",
++      "resolved": "https://registry.npmjs.org/@parcel/watcher-win32-x64/-/watcher-win32-x64-2.6.0.tgz",
++      "integrity": "sha512-cA+/pXV2YkfxlIcXOQ5fSWqAzzPyD78/x5qbK/I0vUkrlYHA8TIz+MXjAbGouguKVSI4bOmkTSJ1/poVSsgt+A==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">= 10.0.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/parcel"
++      }
++    },
++    "node_modules/@swc/helpers": {
++      "version": "0.5.23",
++      "resolved": "https://registry.npmjs.org/@swc/helpers/-/helpers-0.5.23.tgz",
++      "integrity": "sha512-5lSsMOTXURePglDfvuAQUqkGek9Hg2kksOYay2m0+XR++b2NWYL/4sWyuvVBIs8oKnJaxkdi9whaL/sqN13afw==",
++      "license": "Apache-2.0",
++      "dependencies": {
++        "tslib": "^2.8.0"
++      }
++    },
++    "node_modules/@types/node": {
++      "version": "24.19.1",
++      "resolved": "https://registry.npmjs.org/@types/node/-/node-24.19.1.tgz",
++      "integrity": "sha512-aS3/DG0oM05K0RIXXP+hKjinGG5IgSSVGzswZxW3O0sS3pH4/fycXundUC9XsszgKCk4gHXylTEK6hyFxVxnoQ==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "undici-types": ">=7.24.0 <7.24.7"
++      }
++    },
++    "node_modules/@types/prop-types": {
++      "version": "15.7.15",
++      "resolved": "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.15.tgz",
++      "integrity": "sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/@types/react": {
++      "version": "18.3.31",
++      "resolved": "https://registry.npmjs.org/@types/react/-/react-18.3.31.tgz",
++      "integrity": "sha512-vfEqpXTvwT91yhmwdfouStN2hSKwTvyRs8qpLfADyrq/kxDw0hZM7Wk9Ug1FELj8hIby+S/+kQCSRFF32nv2Qw==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@types/prop-types": "*",
++        "csstype": "^3.2.2"
++      }
++    },
++    "node_modules/@types/react-dom": {
++      "version": "18.3.7",
++      "resolved": "https://registry.npmjs.org/@types/react-dom/-/react-dom-18.3.7.tgz",
++      "integrity": "sha512-MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ==",
++      "dev": true,
++      "license": "MIT",
++      "peerDependencies": {
++        "@types/react": "^18.0.0"
++      }
++    },
++    "node_modules/agent-base": {
++      "version": "6.0.2",
++      "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-6.0.2.tgz",
++      "integrity": "sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==",
++      "license": "MIT",
++      "dependencies": {
++        "debug": "4"
++      },
++      "engines": {
++        "node": ">= 6.0.0"
++      }
++    },
++    "node_modules/asynckit": {
++      "version": "0.4.0",
++      "resolved": "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz",
++      "integrity": "sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==",
++      "license": "MIT"
++    },
++    "node_modules/axios": {
++      "version": "1.20.0",
++      "resolved": "https://registry.npmjs.org/axios/-/axios-1.20.0.tgz",
++      "integrity": "sha512-r8aOh8j9cGKpgQAqpzrUHnSIc6a59Y3Xf/cv8sy1DrHCkZHzQGEuoq1tARk6qSyDdtQGSDgpb9kFlruzPvrgwg==",
++      "license": "MIT",
++      "dependencies": {
++        "follow-redirects": "^1.16.0",
++        "form-data": "^4.0.6",
++        "https-proxy-agent": "^5.0.1",
++        "proxy-from-env": "^2.1.0"
++      }
++    },
++    "node_modules/baseline-browser-mapping": {
++      "version": "2.11.27",
++      "resolved": "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.11.27.tgz",
++      "integrity": "sha512-ElY12DaROGuan+lMmZ8Cvo/ZUbXPe7Enc/9VU/b1T3Kp4dwytRcNdR8DoSJN5SNJT/CuvcCA0DHDVmMOCePdRQ==",
++      "license": "Apache-2.0",
++      "bin": {
++        "baseline-browser-mapping": "dist/cli.cjs"
++      },
++      "engines": {
++        "node": ">=6.0.0"
++      }
++    },
++    "node_modules/boolbase": {
++      "version": "1.0.0",
++      "resolved": "https://registry.npmjs.org/boolbase/-/boolbase-1.0.0.tgz",
++      "integrity": "sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==",
++      "license": "ISC"
++    },
++    "node_modules/call-bind-apply-helpers": {
++      "version": "1.0.2",
++      "resolved": "https://registry.npmjs.org/call-bind-apply-helpers/-/call-bind-apply-helpers-1.0.2.tgz",
++      "integrity": "sha512-Sp1ablJ0ivDkSzjcaJdxEunN5/XvksFJ2sMBFfq6x0ryhQV/2b/KwFe21cMpmHtPOSij8K99/wSfoEuTObmuMQ==",
++      "license": "MIT",
++      "dependencies": {
++        "es-errors": "^1.3.0",
++        "function-bind": "^1.1.2"
++      },
++      "engines": {
++        "node": ">= 0.4"
++      }
++    },
++    "node_modules/caniuse-lite": {
++      "version": "1.0.30001814",
++      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001814.tgz",
++      "integrity": "sha512-/Uaf1lAzr59XcMpW0o96WoEfr+VXK2OX4U9AgFoiSHsVJ4HppnIFUjtYzsyDH2+tgANaQb2/oxYGwCPapN1FpA==",
++      "funding": [
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/browserslist"
++        },
++        {
++          "type": "tidelift",
++          "url": "https://tidelift.com/funding/github/npm/caniuse-lite"
++        },
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "CC-BY-4.0"
++    },
++    "node_modules/cheerio": {
++      "version": "1.2.0",
++      "resolved": "https://registry.npmjs.org/cheerio/-/cheerio-1.2.0.tgz",
++      "integrity": "sha512-WDrybc/gKFpTYQutKIK6UvfcuxijIZfMfXaYm8NMsPQxSYvf+13fXUJ4rztGGbJcBQ/GF55gvrZ0Bc0bj/mqvg==",
++      "license": "MIT",
++      "dependencies": {
++        "cheerio-select": "^2.1.0",
++        "dom-serializer": "^2.0.0",
++        "domhandler": "^5.0.3",
++        "domutils": "^3.2.2",
++        "encoding-sniffer": "^0.2.1",
++        "htmlparser2": "^10.1.0",
++        "parse5": "^7.3.0",
++        "parse5-htmlparser2-tree-adapter": "^7.1.0",
++        "parse5-parser-stream": "^7.1.2",
++        "undici": "^7.19.0",
++        "whatwg-mimetype": "^4.0.0"
++      },
++      "engines": {
++        "node": ">=20.18.1"
++      },
++      "funding": {
++        "url": "https://github.com/cheeriojs/cheerio?sponsor=1"
++      }
++    },
++    "node_modules/cheerio-select": {
++      "version": "2.1.0",
++      "resolved": "https://registry.npmjs.org/cheerio-select/-/cheerio-select-2.1.0.tgz",
++      "integrity": "sha512-9v9kG0LvzrlcungtnJtpGNxY+fzECQKhK4EGJX2vByejiMX84MFNQw4UxPJl3bFbTMw+Dfs37XaIkCwTZfLh4g==",
++      "license": "BSD-2-Clause",
++      "dependencies": {
++        "boolbase": "^1.0.0",
++        "css-select": "^5.1.0",
++        "css-what": "^6.1.0",
++        "domelementtype": "^2.3.0",
++        "domhandler": "^5.0.3",
++        "domutils": "^3.0.1"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/fb55"
++      }
++    },
++    "node_modules/chokidar": {
++      "version": "5.0.0",
++      "resolved": "https://registry.npmjs.org/chokidar/-/chokidar-5.0.0.tgz",
++      "integrity": "sha512-TQMmc3w+5AxjpL8iIiwebF73dRDF4fBIieAqGn9RGCWaEVwQ6Fb2cGe31Yns0RRIzii5goJ1Y7xbMwo1TxMplw==",
++      "devOptional": true,
++      "license": "MIT",
++      "dependencies": {
++        "readdirp": "^5.0.0"
++      },
++      "engines": {
++        "node": ">= 20.19.0"
++      },
++      "funding": {
++        "url": "https://paulmillr.com/funding/"
++      }
++    },
++    "node_modules/client-only": {
++      "version": "0.0.1",
++      "resolved": "https://registry.npmjs.org/client-only/-/client-only-0.0.1.tgz",
++      "integrity": "sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==",
++      "license": "MIT"
++    },
++    "node_modules/cluster-key-slot": {
++      "version": "1.1.1",
++      "resolved": "https://registry.npmjs.org/cluster-key-slot/-/cluster-key-slot-1.1.1.tgz",
++      "integrity": "sha512-rwHwUfXL40Chm1r08yrhU3qpUvdVlgkKNeyeGPOxnW8/SyVDvgRaed/Uz54AqWNaTCAThlj6QAs3TZcKI0xDEw==",
++      "license": "Apache-2.0",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/combined-stream": {
++      "version": "1.0.8",
++      "resolved": "https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.8.tgz",
++      "integrity": "sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==",
++      "license": "MIT",
++      "dependencies": {
++        "delayed-stream": "~1.0.0"
++      },
++      "engines": {
++        "node": ">= 0.8"
++      }
++    },
++    "node_modules/css-select": {
++      "version": "5.2.2",
++      "resolved": "https://registry.npmjs.org/css-select/-/css-select-5.2.2.tgz",
++      "integrity": "sha512-TizTzUddG/xYLA3NXodFM0fSbNizXjOKhqiQQwvhlspadZokn1KDy0NZFS0wuEubIYAV5/c1/lAr0TaaFXEXzw==",
++      "license": "BSD-2-Clause",
++      "dependencies": {
++        "boolbase": "^1.0.0",
++        "css-what": "^6.1.0",
++        "domhandler": "^5.0.2",
++        "domutils": "^3.0.1",
++        "nth-check": "^2.0.1"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/fb55"
++      }
++    },
++    "node_modules/css-what": {
++      "version": "6.2.2",
++      "resolved": "https://registry.npmjs.org/css-what/-/css-what-6.2.2.tgz",
++      "integrity": "sha512-u/O3vwbptzhMs3L1fQE82ZSLHQQfto5gyZzwteVIEyeaY5Fc7R4dapF/BvRoSYFeqfBk4m0V1Vafq5Pjv25wvA==",
++      "license": "BSD-2-Clause",
++      "engines": {
++        "node": ">= 6"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/fb55"
++      }
++    },
++    "node_modules/csstype": {
++      "version": "3.2.3",
++      "resolved": "https://registry.npmjs.org/csstype/-/csstype-3.2.3.tgz",
++      "integrity": "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/dayjs": {
++      "version": "1.11.23",
++      "resolved": "https://registry.npmjs.org/dayjs/-/dayjs-1.11.23.tgz",
++      "integrity": "sha512-QDTCU0M0MxR3hQfnlDJfwekQiaanm1ubOD231u73WBckQ/fsamwRLiE2GBz6D3a/xF1NgfiDLJjXBa1hYOYTtQ==",
++      "license": "MIT"
++    },
++    "node_modules/debug": {
++      "version": "4.4.3",
++      "resolved": "https://registry.npmjs.org/debug/-/debug-4.4.3.tgz",
++      "integrity": "sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==",
++      "license": "MIT",
++      "dependencies": {
++        "ms": "^2.1.3"
++      },
++      "engines": {
++        "node": ">=6.0"
++      },
++      "peerDependenciesMeta": {
++        "supports-color": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/deepmerge": {
++      "version": "4.3.1",
++      "resolved": "https://registry.npmjs.org/deepmerge/-/deepmerge-4.3.1.tgz",
++      "integrity": "sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/delayed-stream": {
++      "version": "1.0.0",
++      "resolved": "https://registry.npmjs.org/delayed-stream/-/delayed-stream-1.0.0.tgz",
++      "integrity": "sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.4.0"
++      }
++    },
++    "node_modules/denque": {
++      "version": "2.1.0",
++      "resolved": "https://registry.npmjs.org/denque/-/denque-2.1.0.tgz",
++      "integrity": "sha512-HVQE3AAb/pxF8fQAoiqpvg9i3evqug3hoiwakOyZAwJm+6vZehbkYXZ0l4JxS+I3QxM97v5aaRNhj8v5oBhekw==",
++      "license": "Apache-2.0",
++      "engines": {
++        "node": ">=0.10"
++      }
++    },
++    "node_modules/detect-libc": {
++      "version": "2.1.2",
++      "resolved": "https://registry.npmjs.org/detect-libc/-/detect-libc-2.1.2.tgz",
++      "integrity": "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==",
++      "license": "Apache-2.0",
++      "engines": {
++        "node": ">=8"
++      }
++    },
++    "node_modules/dom-serializer": {
++      "version": "2.0.0",
++      "resolved": "https://registry.npmjs.org/dom-serializer/-/dom-serializer-2.0.0.tgz",
++      "integrity": "sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==",
++      "license": "MIT",
++      "dependencies": {
++        "domelementtype": "^2.3.0",
++        "domhandler": "^5.0.2",
++        "entities": "^4.2.0"
++      },
++      "funding": {
++        "url": "https://github.com/cheeriojs/dom-serializer?sponsor=1"
++      }
++    },
++    "node_modules/domelementtype": {
++      "version": "2.3.0",
++      "resolved": "https://registry.npmjs.org/domelementtype/-/domelementtype-2.3.0.tgz",
++      "integrity": "sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fb55"
++        }
++      ],
++      "license": "BSD-2-Clause"
++    },
++    "node_modules/domhandler": {
++      "version": "5.0.3",
++      "resolved": "https://registry.npmjs.org/domhandler/-/domhandler-5.0.3.tgz",
++      "integrity": "sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==",
++      "license": "BSD-2-Clause",
++      "dependencies": {
++        "domelementtype": "^2.3.0"
++      },
++      "engines": {
++        "node": ">= 4"
++      },
++      "funding": {
++        "url": "https://github.com/fb55/domhandler?sponsor=1"
++      }
++    },
++    "node_modules/domutils": {
++      "version": "3.2.2",
++      "resolved": "https://registry.npmjs.org/domutils/-/domutils-3.2.2.tgz",
++      "integrity": "sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==",
++      "license": "BSD-2-Clause",
++      "dependencies": {
++        "dom-serializer": "^2.0.0",
++        "domelementtype": "^2.3.0",
++        "domhandler": "^5.0.3"
++      },
++      "funding": {
++        "url": "https://github.com/fb55/domutils?sponsor=1"
++      }
++    },
++    "node_modules/dunder-proto": {
++      "version": "1.0.1",
++      "resolved": "https://registry.npmjs.org/dunder-proto/-/dunder-proto-1.0.1.tgz",
++      "integrity": "sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==",
++      "license": "MIT",
++      "dependencies": {
++        "call-bind-apply-helpers": "^1.0.1",
++        "es-errors": "^1.3.0",
++        "gopd": "^1.2.0"
++      },
++      "engines": {
++        "node": ">= 0.4"
++      }
++    },
++    "node_modules/encoding-sniffer": {
++      "version": "0.2.1",
++      "resolved": "https://registry.npmjs.org/encoding-sniffer/-/encoding-sniffer-0.2.1.tgz",
++      "integrity": "sha512-5gvq20T6vfpekVtqrYQsSCFZ1wEg5+wW0/QaZMWkFr6BqD3NfKs0rLCx4rrVlSWJeZb5NBJgVLswK/w2MWU+Gw==",
++      "license": "MIT",
++      "dependencies": {
++        "iconv-lite": "^0.6.3",
++        "whatwg-encoding": "^3.1.1"
++      },
++      "funding": {
++        "url": "https://github.com/fb55/encoding-sniffer?sponsor=1"
++      }
++    },
++    "node_modules/entities": {
++      "version": "4.5.0",
++      "resolved": "https://registry.npmjs.org/entities/-/entities-4.5.0.tgz",
++      "integrity": "sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==",
++      "license": "BSD-2-Clause",
++      "engines": {
++        "node": ">=0.12"
++      },
++      "funding": {
++        "url": "https://github.com/fb55/entities?sponsor=1"
++      }
++    },
++    "node_modules/es-define-property": {
++      "version": "1.0.1",
++      "resolved": "https://registry.npmjs.org/es-define-property/-/es-define-property-1.0.1.tgz",
++      "integrity": "sha512-e3nRfgfUZ4rNGL232gUgX06QNyyez04KdjFrF+LTRoOXmrOgFKDg4BCdsjW8EnT69eqdYGmRpJwiPVYNrCaW3g==",
++      "license": "MIT",
++      "engines": {
++        "node": ">= 0.4"
++      }
++    },
++    "node_modules/es-errors": {
++      "version": "1.3.0",
++      "resolved": "https://registry.npmjs.org/es-errors/-/es-errors-1.3.0.tgz",
++      "integrity": "sha512-Zf5H2Kxt2xjTvbJvP2ZWLEICxA6j+hAmMzIlypy4xcBg1vKVnx89Wy0GbS+kf5cwCVFFzdCFh2XSCFNULS6csw==",
++      "license": "MIT",
++      "engines": {
++        "node": ">= 0.4"
++      }
++    },
++    "node_modules/es-object-atoms": {
++      "version": "1.1.2",
++      "resolved": "https://registry.npmjs.org/es-object-atoms/-/es-object-atoms-1.1.2.tgz",
++      "integrity": "sha512-HWcBoN6NileqtSydK2FqHbS/LoDd2pqrnQHLyJzBj4kOp/ky2MWMN694xOfkK8/SnUsW2DH7EfyVlydKCsm1Zw==",
++      "license": "MIT",
++      "dependencies": {
++        "es-errors": "^1.3.0"
++      },
++      "engines": {
++        "node": ">= 0.4"
++      }
++    },
++    "node_modules/es-set-tostringtag": {
++      "version": "2.1.0",
++      "resolved": "https://registry.npmjs.org/es-set-tostringtag/-/es-set-tostringtag-2.1.0.tgz",
++      "integrity": "sha512-j6vWzfrGVfyXxge+O0x5sh6cvxAog0a/4Rdd2K36zCMV5eJ+/+tOAngRO8cODMNWbVRdVlmGZQL2YS3yR8bIUA==",
++      "license": "MIT",
++      "dependencies": {
++        "es-errors": "^1.3.0",
++        "get-intrinsic": "^1.2.6",
++        "has-tostringtag": "^1.0.2",
++        "hasown": "^2.0.2"
++      },
++      "engines": {
++        "node": ">= 0.4"
++      }
++    },
++    "node_modules/escape-string-regexp": {
++      "version": "4.0.0",
++      "resolved": "https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz",
++      "integrity": "sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=10"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/sindresorhus"
++      }
++    },
++    "node_modules/follow-redirects": {
++      "version": "1.16.1",
++      "resolved": "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.16.1.tgz",
++      "integrity": "sha512-FNvFGzoMLWmE6Yj9spb/zjd7yiNCHiAW9/Tg9CXrQ8wuu32HtlJOwWO11OJafl5FfY3DxTdQ0vj42zU1kvv5jg==",
++      "funding": [
++        {
++          "type": "individual",
++          "url": "https://github.com/sponsors/RubenVerborgh"
++        }
++      ],
++      "license": "MIT",
++      "engines": {
++        "node": ">=4.0"
++      },
++      "peerDependenciesMeta": {
++        "debug": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/form-data": {
++      "version": "4.0.6",
++      "resolved": "https://registry.npmjs.org/form-data/-/form-data-4.0.6.tgz",
++      "integrity": "sha512-vKatAh4SlVfgbv+YtmhiRjhEMJsYpsG1Y2rMQtR+SVSbytsSD1YGzDIcrAJmdFec88u/+VoGmxnl+80gL1tRCQ==",
++      "license": "MIT",
++      "dependencies": {
++        "asynckit": "^0.4.0",
++        "combined-stream": "^1.0.8",
++        "es-set-tostringtag": "^2.1.0",
++        "hasown": "^2.0.4",
++        "mime-types": "^2.1.35"
++      },
++      "engines": {
++        "node": ">= 6"
++      }
++    },
++    "node_modules/function-bind": {
++      "version": "1.1.2",
++      "resolved": "https://registry.npmjs.org/function-bind/-/function-bind-1.1.2.tgz",
++      "integrity": "sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==",
++      "license": "MIT",
++      "funding": {
++        "url": "https://github.com/sponsors/ljharb"
++      }
++    },
++    "node_modules/get-intrinsic": {
++      "version": "1.3.0",
++      "resolved": "https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.3.0.tgz",
++      "integrity": "sha512-9fSjSaos/fRIVIp+xSJlE6lfwhES7LNtKaCBIamHsjr2na1BiABJPo0mOjjz8GJDURarmCPGqaiVg5mfjb98CQ==",
++      "license": "MIT",
++      "dependencies": {
++        "call-bind-apply-helpers": "^1.0.2",
++        "es-define-property": "^1.0.1",
++        "es-errors": "^1.3.0",
++        "es-object-atoms": "^1.1.1",
++        "function-bind": "^1.1.2",
++        "get-proto": "^1.0.1",
++        "gopd": "^1.2.0",
++        "has-symbols": "^1.1.0",
++        "hasown": "^2.0.2",
++        "math-intrinsics": "^1.1.0"
++      },
++      "engines": {
++        "node": ">= 0.4"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/ljharb"
++      }
++    },
++    "node_modules/get-proto": {
++      "version": "1.0.1",
++      "resolved": "https://registry.npmjs.org/get-proto/-/get-proto-1.0.1.tgz",
++      "integrity": "sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==",
++      "license": "MIT",
++      "dependencies": {
++        "dunder-proto": "^1.0.1",
++        "es-object-atoms": "^1.0.0"
++      },
++      "engines": {
++        "node": ">= 0.4"
++      }
++    },
++    "node_modules/gopd": {
++      "version": "1.2.0",
++      "resolved": "https://registry.npmjs.org/gopd/-/gopd-1.2.0.tgz",
++      "integrity": "sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==",
++      "license": "MIT",
++      "engines": {
++        "node": ">= 0.4"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/ljharb"
++      }
++    },
++    "node_modules/has-symbols": {
++      "version": "1.1.0",
++      "resolved": "https://registry.npmjs.org/has-symbols/-/has-symbols-1.1.0.tgz",
++      "integrity": "sha512-1cDNdwJ2Jaohmb3sg4OmKaMBwuC48sYni5HUw2DvsC8LjGTLK9h+eb1X6RyuOHe4hT0ULCW68iomhjUoKUqlPQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">= 0.4"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/ljharb"
++      }
++    },
++    "node_modules/has-tostringtag": {
++      "version": "1.0.2",
++      "resolved": "https://registry.npmjs.org/has-tostringtag/-/has-tostringtag-1.0.2.tgz",
++      "integrity": "sha512-NqADB8VjPFLM2V0VvHUewwwsw0ZWBaIdgo+ieHtK3hasLz4qeCRjYcqfB6AQrBggRKppKF8L52/VqdVsO47Dlw==",
++      "license": "MIT",
++      "dependencies": {
++        "has-symbols": "^1.0.3"
++      },
++      "engines": {
++        "node": ">= 0.4"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/ljharb"
++      }
++    },
++    "node_modules/hasown": {
++      "version": "2.0.4",
++      "resolved": "https://registry.npmjs.org/hasown/-/hasown-2.0.4.tgz",
++      "integrity": "sha512-T2UbfbBEF32wiepXIsMlTW9+dDYC6wMh/t/vYA4tuOMKqWz/n3vr1NFSxQiyP+zk2mXsoMA/i/7qV6LKut1t1A==",
++      "license": "MIT",
++      "dependencies": {
++        "function-bind": "^1.1.2"
++      },
++      "engines": {
++        "node": ">= 0.4"
++      }
++    },
++    "node_modules/htmlparser2": {
++      "version": "10.1.0",
++      "resolved": "https://registry.npmjs.org/htmlparser2/-/htmlparser2-10.1.0.tgz",
++      "integrity": "sha512-VTZkM9GWRAtEpveh7MSF6SjjrpNVNNVJfFup7xTY3UpFtm67foy9HDVXneLtFVt4pMz5kZtgNcvCniNFb1hlEQ==",
++      "funding": [
++        "https://github.com/fb55/htmlparser2?sponsor=1",
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fb55"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "domelementtype": "^2.3.0",
++        "domhandler": "^5.0.3",
++        "domutils": "^3.2.2",
++        "entities": "^7.0.1"
++      }
++    },
++    "node_modules/htmlparser2/node_modules/entities": {
++      "version": "7.0.1",
++      "resolved": "https://registry.npmjs.org/entities/-/entities-7.0.1.tgz",
++      "integrity": "sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA==",
++      "license": "BSD-2-Clause",
++      "engines": {
++        "node": ">=0.12"
++      },
++      "funding": {
++        "url": "https://github.com/fb55/entities?sponsor=1"
++      }
++    },
++    "node_modules/https-proxy-agent": {
++      "version": "5.0.1",
++      "resolved": "https://registry.npmjs.org/https-proxy-agent/-/https-proxy-agent-5.0.1.tgz",
++      "integrity": "sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==",
++      "license": "MIT",
++      "dependencies": {
++        "agent-base": "6",
++        "debug": "4"
++      },
++      "engines": {
++        "node": ">= 6"
++      }
++    },
++    "node_modules/iconv-lite": {
++      "version": "0.6.3",
++      "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.6.3.tgz",
++      "integrity": "sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==",
++      "license": "MIT",
++      "dependencies": {
++        "safer-buffer": ">= 2.1.2 < 3.0.0"
++      },
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/immutable": {
++      "version": "5.1.9",
++      "resolved": "https://registry.npmjs.org/immutable/-/immutable-5.1.9.tgz",
++      "integrity": "sha512-m8nVez3rwrgmWxtLMt1ZYXB2Lv7OKYn/disyxAlSDYAlKSlFoPPfIAmAM/M5xqL4m4C/wAPw7S2/CNaUii1Hxg==",
++      "devOptional": true,
++      "license": "MIT"
++    },
++    "node_modules/ioredis": {
++      "version": "5.11.1",
++      "resolved": "https://registry.npmjs.org/ioredis/-/ioredis-5.11.1.tgz",
++      "integrity": "sha512-ehuGcf94bQXhfagULNXrJdfnWO38v070jxSx/qE87Kjzmu2fU7ro5EFAb+OPituLqgfyuQaym5DlrNydW2sJ9A==",
++      "license": "MIT",
++      "dependencies": {
++        "@ioredis/commands": "1.10.0",
++        "cluster-key-slot": "1.1.1",
++        "debug": "4.4.3",
++        "denque": "2.1.0",
++        "redis-errors": "1.2.0",
++        "redis-parser": "3.0.0",
++        "standard-as-callback": "2.1.0"
++      },
++      "engines": {
++        "node": ">=12.22.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/ioredis"
++      }
++    },
++    "node_modules/ipaddr.js": {
++      "version": "2.3.0",
++      "resolved": "https://registry.npmjs.org/ipaddr.js/-/ipaddr.js-2.3.0.tgz",
++      "integrity": "sha512-Zv/pA+ciVFbCSBBjGfaKUya/CcGmUHzTydLMaTwrUUEM2DIEO3iZvueGxmacvmN50fGpGVKeTXpb2LcYQxeVdg==",
++      "license": "MIT",
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/is-extglob": {
++      "version": "2.1.1",
++      "resolved": "https://registry.npmjs.org/is-extglob/-/is-extglob-2.1.1.tgz",
++      "integrity": "sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ==",
++      "license": "MIT",
++      "optional": true,
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/is-glob": {
++      "version": "4.0.3",
++      "resolved": "https://registry.npmjs.org/is-glob/-/is-glob-4.0.3.tgz",
++      "integrity": "sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==",
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "is-extglob": "^2.1.1"
++      },
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/is-plain-object": {
++      "version": "5.1.0",
++      "resolved": "https://registry.npmjs.org/is-plain-object/-/is-plain-object-5.1.0.tgz",
++      "integrity": "sha512-bUi/yjmtKYcRVUtWRGr0UA6xEFh2I6zWUwMrUXB3s7bmYCaZ8a+0ZsTRkrawh/mzlSD1Y0Ph8bp/U+TvBpWDNw==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/js-tokens": {
++      "version": "4.0.0",
++      "resolved": "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz",
++      "integrity": "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==",
++      "license": "MIT"
++    },
++    "node_modules/launder": {
++      "version": "1.7.2",
++      "resolved": "https://registry.npmjs.org/launder/-/launder-1.7.2.tgz",
++      "integrity": "sha512-DLg3HPnHUfBi5/MxMLmJD12dmlMpFEC2HgMW6vkZ/9JR0RU00kXoRGvDxAvFmdO0o610OA77i4FgNTLucmhDVg==",
++      "license": "MIT",
++      "dependencies": {
++        "dayjs": "^1.11.23"
++      }
++    },
++    "node_modules/loose-envify": {
++      "version": "1.4.0",
++      "resolved": "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz",
++      "integrity": "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==",
++      "license": "MIT",
++      "dependencies": {
++        "js-tokens": "^3.0.0 || ^4.0.0"
++      },
++      "bin": {
++        "loose-envify": "cli.js"
++      }
++    },
++    "node_modules/math-intrinsics": {
++      "version": "1.1.0",
++      "resolved": "https://registry.npmjs.org/math-intrinsics/-/math-intrinsics-1.1.0.tgz",
++      "integrity": "sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==",
++      "license": "MIT",
++      "engines": {
++        "node": ">= 0.4"
++      }
++    },
++    "node_modules/mime-db": {
++      "version": "1.52.0",
++      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.52.0.tgz",
++      "integrity": "sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==",
++      "license": "MIT",
++      "engines": {
++        "node": ">= 0.6"
++      }
++    },
++    "node_modules/mime-types": {
++      "version": "2.1.35",
++      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.35.tgz",
++      "integrity": "sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==",
++      "license": "MIT",
++      "dependencies": {
++        "mime-db": "1.52.0"
++      },
++      "engines": {
++        "node": ">= 0.6"
++      }
++    },
++    "node_modules/ms": {
++      "version": "2.1.3",
++      "resolved": "https://registry.npmjs.org/ms/-/ms-2.1.3.tgz",
++      "integrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==",
++      "license": "MIT"
++    },
++    "node_modules/nanoid": {
++      "version": "3.3.20",
++      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.20.tgz",
++      "integrity": "sha512-uKdg2G3GNCKQn9byYOpxbGqrT2fGO5KRt5J/8b3pok8rT6qxGWF6hxMyJiEYtAf+FVyYuD9hRaDqX5uPFYJ4ZQ==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "MIT",
++      "bin": {
++        "nanoid": "bin/nanoid.cjs"
++      },
++      "engines": {
++        "node": "^10 || ^12 || ^13.7 || ^14 || >=15.0.1"
++      }
++    },
++    "node_modules/next": {
++      "version": "16.4.0",
++      "resolved": "https://registry.npmjs.org/next/-/next-16.4.0.tgz",
++      "integrity": "sha512-N2C+9q89Z/oLrsepSRS4jRMtwmUZAoZuAHU0e9T6+sAB5DdhADmrnOW+zjYijlrYFmVfmQhGVGy9eMFoB7UgKg==",
++      "license": "MIT",
++      "dependencies": {
++        "@next/env": "16.4.0",
++        "@swc/helpers": "0.5.23",
++        "baseline-browser-mapping": "^2.9.19",
++        "caniuse-lite": "^1.0.30001579",
++        "postcss": "8.5.23",
++        "styled-jsx": "5.1.6"
++      },
++      "bin": {
++        "next": "dist/bin/next"
++      },
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "optionalDependencies": {
++        "@next/swc-darwin-arm64": "16.4.0",
++        "@next/swc-darwin-x64": "16.4.0",
++        "@next/swc-linux-arm64-gnu": "16.4.0",
++        "@next/swc-linux-arm64-musl": "16.4.0",
++        "@next/swc-linux-x64-gnu": "16.4.0",
++        "@next/swc-linux-x64-musl": "16.4.0",
++        "@next/swc-win32-arm64-msvc": "16.4.0",
++        "@next/swc-win32-x64-msvc": "16.4.0",
++        "sharp": "^0.35.4"
++      },
++      "peerDependencies": {
++        "@opentelemetry/api": "^1.1.0",
++        "@playwright/test": "^1.51.1",
++        "babel-plugin-react-compiler": "*",
++        "react": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0",
++        "react-dom": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0",
++        "sass": "^1.3.0"
++      },
++      "peerDependenciesMeta": {
++        "@opentelemetry/api": {
++          "optional": true
++        },
++        "@playwright/test": {
++          "optional": true
++        },
++        "babel-plugin-react-compiler": {
++          "optional": true
++        },
++        "sass": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/node-addon-api": {
++      "version": "7.1.1",
++      "resolved": "https://registry.npmjs.org/node-addon-api/-/node-addon-api-7.1.1.tgz",
++      "integrity": "sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==",
++      "license": "MIT",
++      "optional": true
++    },
++    "node_modules/nth-check": {
++      "version": "2.1.1",
++      "resolved": "https://registry.npmjs.org/nth-check/-/nth-check-2.1.1.tgz",
++      "integrity": "sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==",
++      "license": "BSD-2-Clause",
++      "dependencies": {
++        "boolbase": "^1.0.0"
++      },
++      "funding": {
++        "url": "https://github.com/fb55/nth-check?sponsor=1"
++      }
++    },
++    "node_modules/parse-srcset": {
++      "version": "1.0.2",
++      "resolved": "https://registry.npmjs.org/parse-srcset/-/parse-srcset-1.0.2.tgz",
++      "integrity": "sha512-/2qh0lav6CmI15FzA3i/2Bzk2zCgQhGMkvhOhKNcBVQ1ldgpbfiNTVslmooUmWJcADi1f1kIeynbDRVzNlfR6Q==",
++      "license": "MIT"
++    },
++    "node_modules/parse5": {
++      "version": "7.3.0",
++      "resolved": "https://registry.npmjs.org/parse5/-/parse5-7.3.0.tgz",
++      "integrity": "sha512-IInvU7fabl34qmi9gY8XOVxhYyMyuH2xUNpb2q8/Y+7552KlejkRvqvD19nMoUW/uQGGbqNpA6Tufu5FL5BZgw==",
++      "license": "MIT",
++      "dependencies": {
++        "entities": "^6.0.0"
++      },
++      "funding": {
++        "url": "https://github.com/inikulin/parse5?sponsor=1"
++      }
++    },
++    "node_modules/parse5-htmlparser2-tree-adapter": {
++      "version": "7.1.0",
++      "resolved": "https://registry.npmjs.org/parse5-htmlparser2-tree-adapter/-/parse5-htmlparser2-tree-adapter-7.1.0.tgz",
++      "integrity": "sha512-ruw5xyKs6lrpo9x9rCZqZZnIUntICjQAd0Wsmp396Ul9lN/h+ifgVV1x1gZHi8euej6wTfpqX8j+BFQxF0NS/g==",
++      "license": "MIT",
++      "dependencies": {
++        "domhandler": "^5.0.3",
++        "parse5": "^7.0.0"
++      },
++      "funding": {
++        "url": "https://github.com/inikulin/parse5?sponsor=1"
++      }
++    },
++    "node_modules/parse5-parser-stream": {
++      "version": "7.1.2",
++      "resolved": "https://registry.npmjs.org/parse5-parser-stream/-/parse5-parser-stream-7.1.2.tgz",
++      "integrity": "sha512-JyeQc9iwFLn5TbvvqACIF/VXG6abODeB3Fwmv/TGdLk2LfbWkaySGY72at4+Ty7EkPZj854u4CrICqNk2qIbow==",
++      "license": "MIT",
++      "dependencies": {
++        "parse5": "^7.0.0"
++      },
++      "funding": {
++        "url": "https://github.com/inikulin/parse5?sponsor=1"
++      }
++    },
++    "node_modules/parse5/node_modules/entities": {
++      "version": "6.0.1",
++      "resolved": "https://registry.npmjs.org/entities/-/entities-6.0.1.tgz",
++      "integrity": "sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g==",
++      "license": "BSD-2-Clause",
++      "engines": {
++        "node": ">=0.12"
++      },
++      "funding": {
++        "url": "https://github.com/fb55/entities?sponsor=1"
++      }
++    },
++    "node_modules/picocolors": {
++      "version": "1.1.1",
++      "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
++      "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==",
++      "license": "ISC"
++    },
++    "node_modules/picomatch": {
++      "version": "4.0.7",
++      "resolved": "https://registry.npmjs.org/picomatch/-/picomatch-4.0.7.tgz",
++      "integrity": "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==",
++      "license": "MIT",
++      "optional": true,
++      "engines": {
++        "node": ">=12"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/jonschlinkert"
++      }
++    },
++    "node_modules/postcss": {
++      "version": "8.5.23",
++      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.23.tgz",
++      "integrity": "sha512-g50586zr4bZmwFiTlflMu8E0bDTb5I5gertgwAKmsdUlTQIhZtunzUlD1WSzwcVWPoAVpsrA6vlfCD7oXvRwgg==",
++      "funding": [
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/postcss/"
++        },
++        {
++          "type": "tidelift",
++          "url": "https://tidelift.com/funding/github/npm/postcss"
++        },
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "nanoid": "^3.3.16",
++        "picocolors": "^1.1.1",
++        "source-map-js": "^1.2.1"
++      },
++      "engines": {
++        "node": "^10 || ^12 || >=14"
++      }
++    },
++    "node_modules/proxy-from-env": {
++      "version": "2.1.0",
++      "resolved": "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-2.1.0.tgz",
++      "integrity": "sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=10"
++      }
++    },
++    "node_modules/react": {
++      "version": "18.3.1",
++      "resolved": "https://registry.npmjs.org/react/-/react-18.3.1.tgz",
++      "integrity": "sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==",
++      "license": "MIT",
++      "dependencies": {
++        "loose-envify": "^1.1.0"
++      },
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/react-dom": {
++      "version": "18.3.1",
++      "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz",
++      "integrity": "sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==",
++      "license": "MIT",
++      "dependencies": {
++        "loose-envify": "^1.1.0",
++        "scheduler": "^0.23.2"
++      },
++      "peerDependencies": {
++        "react": "^18.3.1"
++      }
++    },
++    "node_modules/readdirp": {
++      "version": "5.1.1",
++      "resolved": "https://registry.npmjs.org/readdirp/-/readdirp-5.1.1.tgz",
++      "integrity": "sha512-Kko+Y5XQ6fM+Ce3dq3m9YGxnacYZYl9cA1wZjaF3Vbry2L3i1qVg8+CAgNPsXRArPMUMCaOR7oa9Nqntc43JKA==",
++      "devOptional": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">= 20.19.0"
++      },
++      "funding": {
++        "type": "individual",
++        "url": "https://paulmillr.com/funding/"
++      }
++    },
++    "node_modules/redis-errors": {
++      "version": "1.2.0",
++      "resolved": "https://registry.npmjs.org/redis-errors/-/redis-errors-1.2.0.tgz",
++      "integrity": "sha512-1qny3OExCf0UvUV/5wpYKf2YwPcOqXzkwKKSmKHiE6ZMQs5heeE/c8eXK+PNllPvmjgAbfnsbpkGZWy8cBpn9w==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=4"
++      }
++    },
++    "node_modules/redis-parser": {
++      "version": "3.0.0",
++      "resolved": "https://registry.npmjs.org/redis-parser/-/redis-parser-3.0.0.tgz",
++      "integrity": "sha512-DJnGAeenTdpMEH6uAJRK/uiyEIH9WVsUmoLwzudwGJUwZPp80PDBWPHXSAGNPwNvIXAbe7MSUB1zQFugFml66A==",
++      "license": "MIT",
++      "dependencies": {
++        "redis-errors": "^1.0.0"
++      },
++      "engines": {
++        "node": ">=4"
++      }
++    },
++    "node_modules/safer-buffer": {
++      "version": "2.1.2",
++      "resolved": "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz",
++      "integrity": "sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==",
++      "license": "MIT"
++    },
++    "node_modules/sanitize-html": {
++      "version": "2.18.0",
++      "resolved": "https://registry.npmjs.org/sanitize-html/-/sanitize-html-2.18.0.tgz",
++      "integrity": "sha512-CvY+PV+NBhxe3BnjFI5f//vEDKLULm9OlZArso7gdgVsWvanBuq9PNDx+/2llfL+8XFYa/UNBxvqRBg3TWU2Ug==",
++      "license": "MIT",
++      "dependencies": {
++        "deepmerge": "^4.3.1",
++        "escape-string-regexp": "^4.0.0",
++        "htmlparser2": "^12.0.0",
++        "is-plain-object": "^5.1.0",
++        "launder": "^1.7.2",
++        "parse-srcset": "^1.0.2",
++        "postcss": "^8.5.27"
++      },
++      "engines": {
++        "node": ">=22.12.0"
++      }
++    },
++    "node_modules/sanitize-html/node_modules/dom-serializer": {
++      "version": "3.1.1",
++      "resolved": "https://registry.npmjs.org/dom-serializer/-/dom-serializer-3.1.1.tgz",
++      "integrity": "sha512-4MEa38/QexBob6gFNwu+EGdWvhJ1OKuNwdYY3Y3NyeWDQfnGeDYQUDfIRzWu5B5gsv03so2Uxd28YC6zrsx3Lw==",
++      "license": "MIT",
++      "dependencies": {
++        "domelementtype": "^3.0.0",
++        "domhandler": "^6.0.0",
++        "entities": "^8.0.0"
++      },
++      "engines": {
++        "node": ">=20.19.0"
++      },
++      "funding": {
++        "type": "github",
++        "url": "https://github.com/cheeriojs/dom-serializer?sponsor=1"
++      }
++    },
++    "node_modules/sanitize-html/node_modules/domelementtype": {
++      "version": "3.0.0",
++      "resolved": "https://registry.npmjs.org/domelementtype/-/domelementtype-3.0.0.tgz",
++      "integrity": "sha512-umCQid3jKbDmVjx8jGaW7uUykm4DEUeyV21hPxNMo2nV955DhUThwqyOIDtreepP31hl84X7G5U9ZfsWvIB3Pg==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fb55"
++        }
++      ],
++      "license": "BSD-2-Clause",
++      "engines": {
++        "node": ">=20.19.0"
++      }
++    },
++    "node_modules/sanitize-html/node_modules/domhandler": {
++      "version": "6.0.1",
++      "resolved": "https://registry.npmjs.org/domhandler/-/domhandler-6.0.1.tgz",
++      "integrity": "sha512-gYzvtM72ZtxQO0T048kd6HWSbbGCNOUwcnfQ01cqIJ4X2IYKFFHZ5mKvrQETcFXxsRObZulDaKmy//R7TPtsBg==",
++      "license": "BSD-2-Clause",
++      "dependencies": {
++        "domelementtype": "^3.0.0"
++      },
++      "engines": {
++        "node": ">=20.19.0"
++      },
++      "funding": {
++        "type": "github",
++        "url": "https://github.com/fb55/domhandler?sponsor=1"
++      }
++    },
++    "node_modules/sanitize-html/node_modules/domutils": {
++      "version": "4.0.2",
++      "resolved": "https://registry.npmjs.org/domutils/-/domutils-4.0.2.tgz",
++      "integrity": "sha512-qI4JLRKnSzqFqr7hAlS5xQDusBCjKSEG4t4+7aNrIQMHBcsC2TGEhuyABJdYkgSewL57PNLYEiibY2iPKhKpaA==",
++      "license": "BSD-2-Clause",
++      "dependencies": {
++        "dom-serializer": "^3.0.0",
++        "domelementtype": "^3.0.0",
++        "domhandler": "^6.0.0"
++      },
++      "engines": {
++        "node": ">=20.19.0"
++      },
++      "funding": {
++        "type": "github",
++        "url": "https://github.com/fb55/domutils?sponsor=1"
++      }
++    },
++    "node_modules/sanitize-html/node_modules/entities": {
++      "version": "8.1.0",
++      "resolved": "https://registry.npmjs.org/entities/-/entities-8.1.0.tgz",
++      "integrity": "sha512-kxL7msIffSuh9aaFAMD7rxAIuTRMAHMeBtgHW2yUdWw732ZNh4MehkF2gdjvtdmikkaIP9bFDDJOPlsvm7avrA==",
++      "license": "BSD-2-Clause",
++      "engines": {
++        "node": ">=20.19.0"
++      },
++      "funding": {
++        "url": "https://github.com/fb55/entities?sponsor=1"
++      }
++    },
++    "node_modules/sanitize-html/node_modules/htmlparser2": {
++      "version": "12.0.0",
++      "resolved": "https://registry.npmjs.org/htmlparser2/-/htmlparser2-12.0.0.tgz",
++      "integrity": "sha512-Tz7u1i95/g2x2jz81+x0FBVhBhY5aRTvD3tXXdFaljuNdzDLJ8UGNRrTcj2cgQvAg3iW/h77Fz15nLW0L0CrZw==",
++      "funding": [
++        "https://github.com/fb55/htmlparser2?sponsor=1",
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fb55"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "domelementtype": "^3.0.0",
++        "domhandler": "^6.0.0",
++        "domutils": "^4.0.2",
++        "entities": "^8.0.0"
++      },
++      "engines": {
++        "node": ">=20.19.0"
++      }
++    },
++    "node_modules/sanitize-html/node_modules/postcss": {
++      "version": "8.5.29",
++      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.29.tgz",
++      "integrity": "sha512-49cGhUbXj8Qenv0iTMxA1cFBzxXoctpC9Ujd77t1WcbJIr6nF/eI7g/8MgxrYldFRuAXvja7xQRwavoW7kgrxQ==",
++      "funding": [
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/postcss/"
++        },
++        {
++          "type": "tidelift",
++          "url": "https://tidelift.com/funding/github/npm/postcss"
++        },
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "nanoid": "^3.3.19",
++        "picocolors": "^1.1.1",
++        "source-map-js": "^1.2.2"
++      },
++      "engines": {
++        "node": "^10 || ^12 || >=14"
++      }
++    },
++    "node_modules/sass": {
++      "version": "1.105.1",
++      "resolved": "https://registry.npmjs.org/sass/-/sass-1.105.1.tgz",
++      "integrity": "sha512-1CnAWPyrrnVQzXGB/DUep1vYCKCm1CIBr+YxjjiW6wk9qtzemnGP4qicH56T2F9S4Hjtv/Ne3jDz8JqfdDU4oA==",
++      "devOptional": true,
++      "license": "MIT",
++      "dependencies": {
++        "chokidar": "^5.0.0",
++        "immutable": "^5.1.5",
++        "source-map-js": ">=0.6.2 <2.0.0"
++      },
++      "bin": {
++        "sass": "sass.js"
++      },
++      "engines": {
++        "node": ">=20.19.0"
++      },
++      "optionalDependencies": {
++        "@parcel/watcher": "^2.4.1"
++      }
++    },
++    "node_modules/scheduler": {
++      "version": "0.23.2",
++      "resolved": "https://registry.npmjs.org/scheduler/-/scheduler-0.23.2.tgz",
++      "integrity": "sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==",
++      "license": "MIT",
++      "dependencies": {
++        "loose-envify": "^1.1.0"
++      }
++    },
++    "node_modules/semver": {
++      "version": "7.8.5",
++      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz",
++      "integrity": "sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==",
++      "license": "ISC",
++      "bin": {
++        "semver": "bin/semver.js"
++      },
++      "engines": {
++        "node": ">=10"
++      }
++    },
++    "node_modules/sharp": {
++      "version": "0.35.5",
++      "resolved": "https://registry.npmjs.org/sharp/-/sharp-0.35.5.tgz",
++      "integrity": "sha512-Ywn4OnzGukp7CDMrp08RQ50YKmuwG47brZgIVPTvBaaAfQlRlygrRqSrxdCiL9M+LlzLBiJ68IR1QqvzHyjC7g==",
++      "license": "Apache-2.0",
++      "dependencies": {
++        "@img/colour": "^1.1.0",
++        "detect-libc": "^2.1.2",
++        "semver": "^7.8.5"
++      },
++      "engines": {
++        "node": ">=20.9.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-darwin-arm64": "0.35.5",
++        "@img/sharp-darwin-x64": "0.35.5",
++        "@img/sharp-freebsd-wasm32": "0.35.5",
++        "@img/sharp-libvips-darwin-arm64": "1.3.4",
++        "@img/sharp-libvips-darwin-x64": "1.3.4",
++        "@img/sharp-libvips-linux-arm": "1.3.4",
++        "@img/sharp-libvips-linux-arm64": "1.3.4",
++        "@img/sharp-libvips-linux-ppc64": "1.3.4",
++        "@img/sharp-libvips-linux-riscv64": "1.3.4",
++        "@img/sharp-libvips-linux-s390x": "1.3.4",
++        "@img/sharp-libvips-linux-x64": "1.3.4",
++        "@img/sharp-libvips-linuxmusl-arm64": "1.3.4",
++        "@img/sharp-libvips-linuxmusl-x64": "1.3.4",
++        "@img/sharp-linux-arm": "0.35.5",
++        "@img/sharp-linux-arm64": "0.35.5",
++        "@img/sharp-linux-ppc64": "0.35.5",
++        "@img/sharp-linux-riscv64": "0.35.5",
++        "@img/sharp-linux-s390x": "0.35.5",
++        "@img/sharp-linux-x64": "0.35.5",
++        "@img/sharp-linuxmusl-arm64": "0.35.5",
++        "@img/sharp-linuxmusl-x64": "0.35.5",
++        "@img/sharp-webcontainers-wasm32": "0.35.5",
++        "@img/sharp-win32-arm64": "0.35.5",
++        "@img/sharp-win32-ia32": "0.35.5",
++        "@img/sharp-win32-x64": "0.35.5"
++      },
++      "peerDependenciesMeta": {
++        "@types/node": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/source-map-js": {
++      "version": "1.2.2",
++      "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.2.tgz",
++      "integrity": "sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==",
++      "license": "BSD-3-Clause",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/standard-as-callback": {
++      "version": "2.1.0",
++      "resolved": "https://registry.npmjs.org/standard-as-callback/-/standard-as-callback-2.1.0.tgz",
++      "integrity": "sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==",
++      "license": "MIT"
++    },
++    "node_modules/styled-jsx": {
++      "version": "5.1.6",
++      "resolved": "https://registry.npmjs.org/styled-jsx/-/styled-jsx-5.1.6.tgz",
++      "integrity": "sha512-qSVyDTeMotdvQYoHWLNGwRFJHC+i+ZvdBRYosOFgC+Wg1vx4frN2/RG/NA7SYqqvKNLf39P2LSRA2pu6n0XYZA==",
++      "license": "MIT",
++      "dependencies": {
++        "client-only": "0.0.1"
++      },
++      "engines": {
++        "node": ">= 12.0.0"
++      },
++      "peerDependencies": {
++        "react": ">= 16.8.0 || 17.x.x || ^18.0.0-0 || ^19.0.0-0"
++      },
++      "peerDependenciesMeta": {
++        "@babel/core": {
++          "optional": true
++        },
++        "babel-plugin-macros": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/tslib": {
++      "version": "2.8.1",
++      "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz",
++      "integrity": "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==",
++      "license": "0BSD"
++    },
++    "node_modules/typescript": {
++      "version": "5.9.3",
++      "resolved": "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz",
++      "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
++      "dev": true,
++      "license": "Apache-2.0",
++      "bin": {
++        "tsc": "bin/tsc",
++        "tsserver": "bin/tsserver"
++      },
++      "engines": {
++        "node": ">=14.17"
++      }
++    },
++    "node_modules/undici": {
++      "version": "7.30.0",
++      "resolved": "https://registry.npmjs.org/undici/-/undici-7.30.0.tgz",
++      "integrity": "sha512-dkrQXeHSaoamnItlYbmzG0wFYrM0ZwDxCIg0A7aKjTyyhh9svRzCNFEzV+Vm05/yehjCzjDZ31KXfGEjYSztDQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=20.18.1"
++      }
++    },
++    "node_modules/undici-types": {
++      "version": "7.24.6",
++      "resolved": "https://registry.npmjs.org/undici-types/-/undici-types-7.24.6.tgz",
++      "integrity": "sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/whatwg-encoding": {
++      "version": "3.1.1",
++      "resolved": "https://registry.npmjs.org/whatwg-encoding/-/whatwg-encoding-3.1.1.tgz",
++      "integrity": "sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==",
++      "deprecated": "Use @exodus/bytes instead for a more spec-conformant and faster implementation",
++      "license": "MIT",
++      "dependencies": {
++        "iconv-lite": "0.6.3"
++      },
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/whatwg-mimetype": {
++      "version": "4.0.0",
++      "resolved": "https://registry.npmjs.org/whatwg-mimetype/-/whatwg-mimetype-4.0.0.tgz",
++      "integrity": "sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=18"
++      }
++    }
++  }
++}
+diff --git a/package.json b/package.json
+index 1d0a47d..c43b842 100644
+--- a/package.json
++++ b/package.json
+@@ -14,28 +14,28 @@
+     "dev": "next dev",
+     "build": "next build",
+     "start": "next start",
+-    "lint": "next lint"
++    "lint": "tsc --noEmit",
++    "test:security": "node --test test/security.test.mjs"
+   },
+   "dependencies": {
+-    "axios": "^0.27.2",
+-    "cheerio": "1.0.0-rc.12",
++    "axios": "1.20.0",
++    "cheerio": "1.2.0",
+     "ioredis": "^5.3.2",
+-    "next": "12.2.5",
+-    "react": "18.2.0",
+-    "react-dom": "18.2.0",
++    "next": "16.4.0",
++    "react": "18.3.1",
++    "react-dom": "18.3.1",
++    "ipaddr.js": "2.3.0",
++    "sanitize-html": "2.18.0",
+     "sharp": "^0.35.3"
+   },
+   "devDependencies": {
+-    "@types/node": "18.7.3",
+-    "@types/react": "18.0.17",
+-    "@types/react-dom": "18.0.6",
+-    "eslint": "8.22.0",
+-    "eslint-config-next": "12.2.5",
++    "@types/node": "^24.0.0",
++    "@types/react": "18.3.31",
++    "@types/react-dom": "^18.3.0",
+     "sass": "^1.62.1",
+-    "typescript": "4.7.4"
++    "typescript": "5.9.3"
+   },
+   "engines": {
+-    "node": " ^18.17.0 || ^20.3.0 || >=21.0.0",
+-    "pnpm": ">=8.0.0"
++    "node": ">=24 <25"
+   }
+ }
+diff --git a/src/components/card/CardBasic.tsx b/src/components/card/CardBasic.tsx
+index cbb4217..aa967ad 100644
+--- a/src/components/card/CardBasic.tsx
++++ b/src/components/card/CardBasic.tsx
+@@ -1,5 +1,5 @@
+ import { ComponentPropsWithoutRef, CSSProperties, ReactNode } from 'react';
+-import Image from 'next/future/image';
++import Image from 'next/image';
+ import Card from './Card';
+ import { getProxiedIMDbImgUrl, modifyIMDbImg } from 'src/utils/helpers';
+ import styles from 'src/styles/modules/components/card/card-basic.module.scss';
+diff --git a/src/components/card/CardCast.tsx b/src/components/card/CardCast.tsx
+index 6a54fa7..5c9af4e 100644
+--- a/src/components/card/CardCast.tsx
++++ b/src/components/card/CardCast.tsx
+@@ -2,7 +2,7 @@ import Card from './Card';
+ import styles from 'src/styles/modules/components/card/card-cast.module.scss';
+ import { Fragment, type ComponentPropsWithoutRef, type ReactNode } from 'react';
+ import Link from 'next/link';
+-import Image from 'next/future/image';
++import Image from 'next/image';
+ import { modifyIMDbImg, getProxiedIMDbImgUrl } from 'src/utils/helpers';
+ import type { Cast } from 'src/interfaces/shared/title';
+ 
+@@ -17,36 +17,36 @@ type Props = {
+ const CardCast = ({ link, name, image, children, roles, ...rest }: Props) => {
+   return (
+     <Card hoverable {...rest}>
+-      <Link href={link}>
+-        <a className={styles.item}>
+-          <div className={styles.imgContainer}>
+-            {image ? (
+-              <Image
+-                unoptimized src={getProxiedIMDbImgUrl(modifyIMDbImg(image, 400))}
+-                alt=''
+-                fill
+-                className={styles.img}
+-                sizes='200px'
+-              />
+-            ) : (
+-              <svg className={styles.imgNA}>
+-                <use href='/svg/sprite.svg#icon-image-slash' />
+-              </svg>
+-            )}
+-          </div>
+-          <div className={styles.textContainer}>
+-            <p className={`heading ${styles.name}`}>{name}</p>
+-            <p className={styles.role}>
+-              {roles.map((role, i) => (
+-                <Fragment key={i}>
+-                  {role.characters?.join(', ')}
+-                  {role.attributes && <span> ({role.attributes.join(', ')})</span>}
+-                </Fragment>
+-              ))}
+-            </p>
+-            {children}
+-          </div>
+-        </a>
++      <Link href={link} className={styles.item}>
++
++        <div className={styles.imgContainer}>
++          {image ? (
++            <Image
++              unoptimized src={getProxiedIMDbImgUrl(modifyIMDbImg(image, 400))}
++              alt=''
++              fill
++              className={styles.img}
++              sizes='200px'
++            />
++          ) : (
++            <svg className={styles.imgNA}>
++              <use href='/svg/sprite.svg#icon-image-slash' />
++            </svg>
++          )}
++        </div>
++        <div className={styles.textContainer}>
++          <p className={`heading ${styles.name}`}>{name}</p>
++          <p className={styles.role}>
++            {roles.map((role, i) => (
++              <Fragment key={i}>
++                {role.characters?.join(', ')}
++                {role.attributes && <span> ({role.attributes.join(', ')})</span>}
++              </Fragment>
++            ))}
++          </p>
++          {children}
++        </div>
++
+       </Link>
+     </Card>
+   );
+diff --git a/src/components/card/CardResult.tsx b/src/components/card/CardResult.tsx
+index b2f8421..e32edd7 100644
+--- a/src/components/card/CardResult.tsx
++++ b/src/components/card/CardResult.tsx
+@@ -1,6 +1,6 @@
+ import { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
+ import Link from 'next/link';
+-import Image from 'next/future/image';
++import Image from 'next/image';
+ import Card from './Card';
+ import { modifyIMDbImg, getProxiedIMDbImgUrl } from 'src/utils/helpers';
+ import styles from 'src/styles/modules/components/card/card-result.module.scss';
+@@ -41,8 +41,8 @@ const CardResult = <T extends 'li' | 'section' | 'div' = 'li'>({
+     >
+       <div className={styles.imgContainer}>{ImageComponent}</div>
+       <div className={styles.info}>
+-        <Link href={link}>
+-          <a className={`heading ${styles.heading}`}>{name}</a>
++        <Link href={link} className={`heading ${styles.heading}`}>
++          {name}
+         </Link>
+         {children}
+       </div>
+diff --git a/src/components/card/CardTitle.tsx b/src/components/card/CardTitle.tsx
+index b50f212..f378252 100644
+--- a/src/components/card/CardTitle.tsx
++++ b/src/components/card/CardTitle.tsx
+@@ -2,7 +2,7 @@ import Card from './Card';
+ import styles from 'src/styles/modules/components/card/card-title.module.scss';
+ import { ComponentPropsWithoutRef, ReactNode } from 'react';
+ import Link from 'next/link';
+-import Image from 'next/future/image';
++import Image from 'next/image';
+ import { formatNumber, modifyIMDbImg, getProxiedIMDbImgUrl } from 'src/utils/helpers';
+ 
+ type Props = {
+@@ -20,41 +20,41 @@ const CardTitle = ({ link, name, year, image, ratings, titleType, children, ...r
+ 
+   return (
+     <Card hoverable {...rest}>
+-      <Link href={link}>
+-        <a className={styles.item}>
+-          <div className={styles.imgContainer}>
+-            {image ? (
+-              <Image
+-                unoptimized src={getProxiedIMDbImgUrl(modifyIMDbImg(image, 400))}
+-                alt=''
+-                fill
+-                className={styles.img}
+-                sizes='200px'
+-              />
+-            ) : (
+-              <svg className={styles.imgNA}>
+-                <use href='/svg/sprite.svg#icon-image-slash' />
++      <Link href={link} className={styles.item}>
++
++        <div className={styles.imgContainer}>
++          {image ? (
++            <Image
++              unoptimized src={getProxiedIMDbImgUrl(modifyIMDbImg(image, 400))}
++              alt=''
++              fill
++              className={styles.img}
++              sizes='200px'
++            />
++          ) : (
++            <svg className={styles.imgNA}>
++              <use href='/svg/sprite.svg#icon-image-slash' />
++            </svg>
++          )}
++        </div>
++        <div className={styles.textContainer}>
++          <p className={`heading ${styles.name}`}>{name}</p>
++          <p>
++            <span>{titleType}</span>
++            <span>{years && ` (${years})`}</span>
++          </p>
++          {ratings?.avg && (
++            <p className={styles.rating}>
++              <span className={styles.ratingNum}>{ratings.avg}</span>
++              <svg className={styles.ratingIcon}>
++                <use href='/svg/sprite.svg#icon-rating'></use>
+               </svg>
+-            )}
+-          </div>
+-          <div className={styles.textContainer}>
+-            <p className={`heading ${styles.name}`}>{name}</p>
+-            <p>
+-              <span>{titleType}</span>
+-              <span>{years && ` (${years})`}</span>
++              <span> ({formatNumber(ratings.numVotes)} votes)</span>
+             </p>
+-            {ratings?.avg && (
+-              <p className={styles.rating}>
+-                <span className={styles.ratingNum}>{ratings.avg}</span>
+-                <svg className={styles.ratingIcon}>
+-                  <use href='/svg/sprite.svg#icon-rating'></use>
+-                </svg>
+-                <span> ({formatNumber(ratings.numVotes)} votes)</span>
+-              </p>
+-            )}
+-            <div className={styles.children}>{children}</div>
+-          </div>
+-        </a>
++          )}
++          <div className={styles.children}>{children}</div>
++        </div>
++
+       </Link>
+     </Card>
+   );
+diff --git a/src/components/error/ErrorInfo.tsx b/src/components/error/ErrorInfo.tsx
+index 8043afd..7818788 100644
+--- a/src/components/error/ErrorInfo.tsx
++++ b/src/components/error/ErrorInfo.tsx
+@@ -57,8 +57,8 @@ const ErrorInfo = ({ message, statusCode, misc, originalPath, stack }: Props) =>
+         ) : (
+           <p>
+             Go back to{' '}
+-            <Link href='/'>
+-              <a className='link'>the homepage</a>
++            <Link href='/' className='link'>
++              the homepage
+             </Link>
+             , or view this route{' '}
+             <a
+@@ -74,8 +74,8 @@ const ErrorInfo = ({ message, statusCode, misc, originalPath, stack }: Props) =>
+         )}
+         <p>
+           If you think this shouldn't happen,{' '}
+-          <Link href='/contact'>
+-            <a className='link'>let it be known</a>
++          <Link href='/contact' className='link'>
++            let it be known
+           </Link>
+           .
+         </p>
+diff --git a/src/components/find/Title.tsx b/src/components/find/Title.tsx
+index 7055ef5..34187ab 100644
+--- a/src/components/find/Title.tsx
++++ b/src/components/find/Title.tsx
+@@ -1,3 +1,4 @@
++import {safeHtml} from 'src/utils/safeHtml.mjs';
+ import { formatNumber, formatTime } from 'src/utils/helpers';
+ import { CardResult } from 'src/components/card';
+ import { Titles } from 'src/interfaces/shared/search';
+@@ -24,7 +25,7 @@ const Title = ({ title }: Props) => {
+         )}
+       </ul>
+       {title.plot && (
+-        <p className={styles.plot} dangerouslySetInnerHTML={{__html: title.plot}}></p>
++        <p className={styles.plot} dangerouslySetInnerHTML={{__html: safeHtml(title.plot)}}></p>
+       )}
+     </CardResult>
+   );
+diff --git a/src/components/layout/Footer.tsx b/src/components/layout/Footer.tsx
+index 15a6a65..5804d8a 100644
+--- a/src/components/layout/Footer.tsx
++++ b/src/components/layout/Footer.tsx
+@@ -18,13 +18,13 @@ const Footer = () => {
+         <ul className={styles.list}>
+           {links.map(link => (
+             <li className={styles.nav__item} key={link.path}>
+-              <Link href={link.path}>
+-                <a
+-                  className={styles.nav__link}
+-                  aria-current={pathname === link.path ? 'page' : undefined}
+-                >
+-                  {link.text}
+-                </a>
++              <Link
++                href={link.path}
++                className={styles.nav__link}
++                aria-current={pathname === link.path ? 'page' : undefined}>
++
++                {link.text}
++
+               </Link>
+             </li>
+           ))}
+diff --git a/src/components/layout/Header.tsx b/src/components/layout/Header.tsx
+index 5154742..1d1b4c4 100644
+--- a/src/components/layout/Header.tsx
++++ b/src/components/layout/Header.tsx
+@@ -8,13 +8,13 @@ const Header = ({ full, originalPath }: Props) => {
+   return (
+     <header id='header' className={`${styles.header} ${full ? styles.header__about : ''}`}>
+       <div className={styles.topbar}>
+-        <Link href='/find'>
+-          <a aria-label='go to homepage' className={styles.logo}>
+-            <svg className={styles.logo__icon} role='img' aria-hidden>
+-              <use href='/svg/sprite.svg#icon-logo'></use>
+-            </svg>
+-            <span className={styles.logo__text}>libremdb</span>
+-          </a>
++        <Link href='/find' aria-label='go to homepage' className={styles.logo}>
++
++          <svg className={styles.logo__icon} role='img' aria-hidden>
++            <use href='/svg/sprite.svg#icon-logo'></use>
++          </svg>
++          <span className={styles.logo__text}>libremdb</span>
++
+         </Link>
+         {full && (
+           <nav className={styles.nav}>
+@@ -45,12 +45,12 @@ const Header = ({ full, originalPath }: Props) => {
+             </svg>
+           </a>
+           <Link href='/find'>
+-            <a>
+-              <span className='visually-hidden'>Search</span>
+-              <svg className='icon' role='img' aria-hidden>
+-                <use href='/svg/sprite.svg#icon-search'></use>
+-              </svg>
+-            </a>
++
++            <span className='visually-hidden'>Search</span>
++            <svg className='icon' role='img' aria-hidden>
++              <use href='/svg/sprite.svg#icon-search'></use>
++            </svg>
++
+           </Link>
+           <ThemeToggler className={styles.themeToggler} />
+         </div>
+diff --git a/src/components/list/Images.tsx b/src/components/list/Images.tsx
+index 1a67747..2bbd47f 100644
+--- a/src/components/list/Images.tsx
++++ b/src/components/list/Images.tsx
+@@ -1,4 +1,4 @@
+-import Image from 'next/future/image';
++import Image from 'next/image';
+ import { modifyIMDbImg, getProxiedIMDbImgUrl } from 'src/utils/helpers';
+ import type { DataImage } from 'src/interfaces/shared/list';
+ import styles from 'src/styles/modules/components/list/images.module.scss';
+@@ -16,7 +16,7 @@ const Images = ({ images }: Props) => {
+             <figure className={styles.imgContainer} key={image.imageId}>
+               <Image
+                 unoptimized src={getProxiedIMDbImgUrl(modifyIMDbImg(image.image!, 400))}
+-                alt={image.caption ?? undefined}
++                alt={image.caption ?? ''}
+                 fill
+                 className={styles.img}
+                 sizes='200px'
+diff --git a/src/components/list/Meta.tsx b/src/components/list/Meta.tsx
+index f5ffe5b..207c4d2 100644
+--- a/src/components/list/Meta.tsx
++++ b/src/components/list/Meta.tsx
+@@ -9,8 +9,8 @@ type Props = {
+ };
+ const Meta = ({ meta, kind }: Props) => {
+   const by = meta.by.id ? (
+-    <Link href={`/user/${meta.by.id}`}>
+-      <a className='link'>{meta.by.name}</a>
++    <Link href={`/user/${meta.by.id}`} className='link'>
++      {meta.by.name}
+     </Link>
+   ) : (
+     meta.by.name
+diff --git a/src/components/list/Names.tsx b/src/components/list/Names.tsx
+index e15abe4..1cff13e 100644
+--- a/src/components/list/Names.tsx
++++ b/src/components/list/Names.tsx
+@@ -1,4 +1,5 @@
+-import Image from 'next/future/image';
++import {safeHtml} from 'src/utils/safeHtml.mjs';
++import Image from 'next/image';
+ import { modifyIMDbImg, getProxiedIMDbImgUrl } from 'src/utils/helpers';
+ import { Card } from 'src/components/card';
+ import type { DataName } from 'src/interfaces/shared/list';
+@@ -46,7 +47,7 @@ const Name = ({ about, image, jobs, knownFor, name, url }: Props['names'][number
+             </li>
+           ))}
+         </ul>
+-        <p className={styles.about} dangerouslySetInnerHTML={{__html: about}}></p>
++        <p className={styles.about} dangerouslySetInnerHTML={{__html: safeHtml(about)}}></p>
+       </div>
+     </Card>
+   );
+diff --git a/src/components/list/OptionalLink.tsx b/src/components/list/OptionalLink.tsx
+index a6ec02f..202786f 100644
+--- a/src/components/list/OptionalLink.tsx
++++ b/src/components/list/OptionalLink.tsx
+@@ -8,8 +8,8 @@ const OptionalLink = ({
+ }: { href?: string | null; children: ReactNode } & Omit<ComponentPropsWithoutRef<'a'>, 'href'>) => (
+   <>
+     {href ? (
+-      <Link href={href}>
+-        <a {...rest}>{children}</a>
++      <Link href={href} {...rest}>
++        {children}
+       </Link>
+     ) : (
+       children
+diff --git a/src/components/list/Titles.tsx b/src/components/list/Titles.tsx
+index 8c55910..904c3fb 100644
+--- a/src/components/list/Titles.tsx
++++ b/src/components/list/Titles.tsx
+@@ -1,4 +1,4 @@
+-import Image from 'next/future/image';
++import Image from 'next/image';
+ import { formatNumber, formatTime, getProxiedIMDbImgUrl, modifyIMDbImg } from 'src/utils/helpers';
+ import { Card } from 'src/components/card';
+ import type { DataTitle } from 'src/interfaces/shared/list';
+diff --git a/src/components/media/Media.tsx b/src/components/media/Media.tsx
+index e5e66dd..f8b2c40 100644
+--- a/src/components/media/Media.tsx
++++ b/src/components/media/Media.tsx
+@@ -1,4 +1,4 @@
+-import Image from 'next/future/image';
++import Image from 'next/image';
+ import Link from 'next/link';
+ import type { Media as TMedia } from 'src/interfaces/shared';
+ import { getProxiedIMDbImgUrl, modifyIMDbImg } from 'src/utils/helpers';
+@@ -42,8 +42,8 @@ const Media = ({ className, media }: Props) => {
+ 
+                   <p>
+                     {trailer.caption}:{' '}
+-                    <Link href={getProxiedIMDbImgUrl(trailer.urls[0]?.url)}>
+-                      <a className='link'>link</a>
++                    <Link href={getProxiedIMDbImgUrl(trailer.urls[0]?.url)} className='link'>
++                      link
+                     </Link>
+                   </p>
+                 </video>
+@@ -52,19 +52,19 @@ const Media = ({ className, media }: Props) => {
+ 
+             {!!media.videos.total &&
+               media.videos.videos.map(video => (
+-                <Link href={`/video/${video.id}`} key={video.id}>
+-                  <a className={styles.video}>
+-                    <Image unoptimized
+-                      className={styles.video__img}
+-                      src={getProxiedIMDbImgUrl(modifyIMDbImg(video.thumbnail))}
+-                      alt=''
+-                      fill
+-                      sizes='400px'
+-                    />
+-                    <p className={styles.video__caption}>
+-                      {video.caption} ({video.runtime}s)
+-                    </p>
+-                  </a>
++                <Link href={`/video/${video.id}`} key={video.id} className={styles.video}>
++
++                  <Image unoptimized
++                    className={styles.video__img}
++                    src={getProxiedIMDbImgUrl(modifyIMDbImg(video.thumbnail))}
++                    alt=''
++                    fill
++                    sizes='400px'
++                  />
++                  <p className={styles.video__caption}>
++                    {video.caption} ({video.runtime}s)
++                  </p>
++
+                 </Link>
+               ))}
+           </div>
+diff --git a/src/components/name/Bio.tsx b/src/components/name/Bio.tsx
+index a362279..ce5bd4b 100644
+--- a/src/components/name/Bio.tsx
++++ b/src/components/name/Bio.tsx
+@@ -1,3 +1,4 @@
++import {safeHtml} from 'src/utils/safeHtml.mjs';
+ import styles from 'src/styles/modules/components/name/did-you-know.module.scss';
+ 
+ type Props = { bio: string };
+@@ -5,7 +6,7 @@ type Props = { bio: string };
+ const Bio = ({ bio }: Props) => (
+   <section className={styles.bio}>
+     <h2 className='heading heading__secondary'>About</h2>
+-    <div dangerouslySetInnerHTML={{ __html: bio }} />
++    <div dangerouslySetInnerHTML={{ __html: safeHtml(bio) }} />
+   </section>
+ );
+ 
+diff --git a/src/components/name/Credits.tsx b/src/components/name/Credits.tsx
+index 6e5b012..63725dd 100644
+--- a/src/components/name/Credits.tsx
++++ b/src/components/name/Credits.tsx
+@@ -1,10 +1,10 @@
+-import { Credits } from 'src/interfaces/shared/name';
++import type { Credits as CreditsData } from 'src/interfaces/shared/name';
+ import { CardTitle } from 'src/components/card';
+ import styles from 'src/styles/modules/components/name/credits.module.scss';
+ 
+ type Props = {
+   className: string;
+-  data: Credits;
++  data: CreditsData;
+ };
+ 
+ const Credits = ({ className, data }: Props) => {
+diff --git a/src/components/name/DidYouKnow.tsx b/src/components/name/DidYouKnow.tsx
+index 86a5801..1de28a3 100644
+--- a/src/components/name/DidYouKnow.tsx
++++ b/src/components/name/DidYouKnow.tsx
+@@ -1,9 +1,10 @@
++import {safeHtml} from 'src/utils/safeHtml.mjs';
+ import Link from 'next/link';
+-import { DidYouKnow } from 'src/interfaces/shared/name';
++import type { DidYouKnow as DidYouKnowData } from 'src/interfaces/shared/name';
+ import styles from 'src/styles/modules/components/name/did-you-know.module.scss';
+ 
+ type Props = {
+-  data: DidYouKnow;
++  data: DidYouKnowData;
+ };
+ 
+ const DidYouKnow = ({ data }: Props) => (
+@@ -16,19 +17,19 @@ const DidYouKnow = ({ data }: Props) => (
+         {!!data.trivia?.total && (
+           <section>
+             <h3 className='heading heading__tertiary'>Trivia</h3>
+-            <div dangerouslySetInnerHTML={{ __html: data.trivia.html }}></div>
++            <div dangerouslySetInnerHTML={{ __html: safeHtml(data.trivia.html) }}></div>
+           </section>
+         )}
+         {!!data.quotes?.total && (
+           <section>
+             <h3 className='heading heading__tertiary'>Quotes</h3>
+-            <div dangerouslySetInnerHTML={{ __html: data.quotes.html }}></div>
++            <div dangerouslySetInnerHTML={{ __html: safeHtml(data.quotes.html) }}></div>
+           </section>
+         )}
+         {!!data.trademark?.total && (
+           <section>
+             <h3 className='heading heading__tertiary'>Trademark</h3>
+-            <div dangerouslySetInnerHTML={{ __html: data.trademark.html }}></div>
++            <div dangerouslySetInnerHTML={{ __html: safeHtml(data.trademark.html) }}></div>
+           </section>
+         )}
+         {!!data.nicknames.length && (
+@@ -42,8 +43,8 @@ const DidYouKnow = ({ data }: Props) => (
+             <h3 className='heading heading__tertiary'>Salary</h3>
+             <p>
+               <span>{data.salary.value} in </span>
+-              <Link href={`/title/${data.salary.title.id}`}>
+-                <a className={'link'}>{data.salary.title.text}</a>
++              <Link href={`/title/${data.salary.title.id}`} className={'link'}>
++                {data.salary.title.text}
+               </Link>
+               <span> ({data.salary.title.year})</span>
+             </p>
+diff --git a/src/components/name/Info.tsx b/src/components/name/Info.tsx
+index bfc526c..ce8fcb5 100644
+--- a/src/components/name/Info.tsx
++++ b/src/components/name/Info.tsx
+@@ -1,10 +1,12 @@
++import {safeHtml} from 'src/utils/safeHtml.mjs';
+ import Link from 'next/link';
+ import { useRouter } from 'next/router';
+-import Name, { PersonalDetails } from 'src/interfaces/shared/name';
++import type Name from 'src/interfaces/shared/name';
++import type { PersonalDetails as PersonalDetailsData } from 'src/interfaces/shared/name';
+ import styles from 'src/styles/modules/components/name/info.module.scss';
+ 
+ type Props = {
+-  info: PersonalDetails;
++  info: PersonalDetailsData;
+   accolades: Name['accolades'];
+ };
+ 
+@@ -30,8 +32,8 @@ const PersonalDetails = ({ info, accolades }: Props) => {
+             {accolades.wins} wins and {accolades.nominations} nominations in total
+           </p>
+           <p>
+-            <Link href={`/name/${nameId}/awards`}>
+-              <a className='link'>View all awards</a>
++            <Link href={`/name/${nameId}/awards`} className='link'>
++              View all awards
+             </Link>
+           </p>
+         </div>
+@@ -72,8 +74,8 @@ const PersonalDetails = ({ info, accolades }: Props) => {
+               <span>
+                 {' '}
+                 in{' '}
+-                <Link href={`/search/name?birth_place=${info.birth.location}`}>
+-                  <a className='link'>{info.birth.location}</a>
++                <Link href={`/search/name?birth_place=${info.birth.location}`} className='link'>
++                  {info.birth.location}
+                 </Link>
+               </span>
+             </p>
+@@ -86,8 +88,8 @@ const PersonalDetails = ({ info, accolades }: Props) => {
+                 <span>
+                   {' '}
+                   in{' '}
+-                  <Link href={`/search/name?death_place=${info.death.location}`}>
+-                    <a className='link'>{info.death.location}</a>
++                  <Link href={`/search/name?death_place=${info.death.location}`} className='link'>
++                    {info.death.location}
+                   </Link>
+                 </span>
+               )}
+@@ -150,7 +152,7 @@ const PersonalDetails = ({ info, accolades }: Props) => {
+               {info.otherWorks.map((work, i) => (
+                 <span key={work.text}>
+                   {!!i && ', '}
+-                  <span dangerouslySetInnerHTML={{ __html: work.text }} />
++                  <span dangerouslySetInnerHTML={{ __html: safeHtml(work.text) }} />
+                 </span>
+               ))}
+             </p>
+@@ -176,8 +178,8 @@ export default PersonalDetails;
+ 
+ const renderPersonNameWithLink = (person: { name: string; id: string | null }) =>
+   person.id ? (
+-    <Link href={`/name/${person.id}`}>
+-      <a className='link'>{person.name}</a>
++    <Link href={`/name/${person.id}`} className='link'>
++      {person.name}
+     </Link>
+   ) : (
+     <span>{person.name}</span>
+diff --git a/src/components/title/Basic.tsx b/src/components/title/Basic.tsx
+index e3d4900..b716813 100644
+--- a/src/components/title/Basic.tsx
++++ b/src/components/title/Basic.tsx
+@@ -1,13 +1,13 @@
+ import { Fragment } from 'react';
+ import Link from 'next/link';
+ import { CardBasic } from 'src/components/card';
+-import { Basic } from 'src/interfaces/shared/title';
++import type { Basic as BasicData } from 'src/interfaces/shared/title';
+ import { formatNumber, formatTime } from 'src/utils/helpers';
+ import styles from 'src/styles/modules/components/title/basic.module.scss';
+ 
+ type Props = {
+   className: string;
+-  data: Basic;
++  data: BasicData;
+ };
+ 
+ const Basic = ({ data, className }: Props) => {
+@@ -80,8 +80,8 @@ const Basic = ({ data, className }: Props) => {
+           {data.genres.map((genre, i) => (
+             <Fragment key={genre.id}>
+               {i > 0 && ', '}
+-              <Link href={`/search/title?genres=${genre.id}`}>
+-                <a className={styles.link}>{genre.text}</a>
++              <Link href={`/search/title?genres=${genre.id}`} className={styles.link}>
++                {genre.text}
+               </Link>
+             </Fragment>
+           ))}
+@@ -94,8 +94,8 @@ const Basic = ({ data, className }: Props) => {
+           {data.interests.map((interest, i) => (
+             <Fragment key={interest.id}>
+               {i > 0 && ', '}
+-              <Link href={`/interest/${interest.id}`}>
+-                <a className={styles.link}>{interest.text}</a>
++              <Link href={`/interest/${interest.id}`} className={styles.link}>
++                {interest.text}
+               </Link>
+             </Fragment>
+           ))}
+@@ -112,8 +112,8 @@ const Basic = ({ data, className }: Props) => {
+           {crewType.crew.map((crew, i) => (
+             <Fragment key={crew.id}>
+               {i > 0 && ', '}
+-              <Link href={`/name/${crew.id}`}>
+-                <a className={styles.link}>{crew.name}</a>
++              <Link href={`/name/${crew.id}`} className={styles.link}>
++                {crew.name}
+               </Link>
+             </Fragment>
+           ))}
+diff --git a/src/components/title/Cast.tsx b/src/components/title/Cast.tsx
+index 688d70a..f1a6158 100644
+--- a/src/components/title/Cast.tsx
++++ b/src/components/title/Cast.tsx
+@@ -1,10 +1,10 @@
+ import { CardCast } from 'src/components/card';
+-import { Cast } from 'src/interfaces/shared/title';
++import type { Cast as CastData } from 'src/interfaces/shared/title';
+ import styles from 'src/styles/modules/components/title/cast.module.scss';
+ 
+ type Props = {
+   className: string;
+-  cast: Cast;
++  cast: CastData;
+ };
+ 
+ const Cast = ({ className, cast }: Props) => {
+diff --git a/src/components/title/DidYouKnow.tsx b/src/components/title/DidYouKnow.tsx
+index 66c5ab2..4feb889 100644
+--- a/src/components/title/DidYouKnow.tsx
++++ b/src/components/title/DidYouKnow.tsx
+@@ -1,9 +1,10 @@
++import {safeHtml} from 'src/utils/safeHtml.mjs';
+ import Link from 'next/link';
+-import { DidYouKnow } from 'src/interfaces/shared/title';
++import type { DidYouKnow as DidYouKnowData } from 'src/interfaces/shared/title';
+ import styles from 'src/styles/modules/components/title/did-you-know.module.scss';
+ 
+ type Props = {
+-  data: DidYouKnow;
++  data: DidYouKnowData;
+ };
+ 
+ const DidYouKnow = ({ data }: Props) => {
+@@ -23,7 +24,7 @@ const DidYouKnow = ({ data }: Props) => {
+             <h3 className='heading heading__tertiary'>Trivia</h3>
+             <div
+               className={styles.item__desc}
+-              dangerouslySetInnerHTML={{ __html: data.trivia.html }}
++              dangerouslySetInnerHTML={{ __html: safeHtml(data.trivia.html) }}
+             ></div>
+           </div>
+         )}
+@@ -32,7 +33,7 @@ const DidYouKnow = ({ data }: Props) => {
+             <h3 className='heading heading__tertiary'>Goofs</h3>
+             <div
+               className={styles.item__desc}
+-              dangerouslySetInnerHTML={{ __html: data.goofs.html }}
++              dangerouslySetInnerHTML={{ __html: safeHtml(data.goofs.html) }}
+             ></div>
+           </div>
+         )}
+@@ -45,8 +46,8 @@ const DidYouKnow = ({ data }: Props) => {
+               <div className={styles.quotes} key={i}>
+                 <p className={styles.quote}>
+                   {line.name && (
+-                    <Link href={`/name/${line.id}`}>
+-                      <a className={'link'}>{line.name}</a>
++                    <Link href={`/name/${line.id}`} className={'link'}>
++                      {line.name}
+                     </Link>
+                   )}
+                   {line.stageDirection && <i> [{line.stageDirection}] </i>}
+@@ -61,7 +62,7 @@ const DidYouKnow = ({ data }: Props) => {
+             <h3 className='heading heading__tertiary'>Crazy credits</h3>
+             <div
+               className={styles.item__desc}
+-              dangerouslySetInnerHTML={{ __html: data.crazyCredits.html }}
++              dangerouslySetInnerHTML={{ __html: safeHtml(data.crazyCredits.html) }}
+             ></div>
+           </div>
+         )}
+@@ -71,7 +72,7 @@ const DidYouKnow = ({ data }: Props) => {
+             <div
+               className={styles.item__desc}
+               dangerouslySetInnerHTML={{
+-                __html: data.alternativeVersions.html,
++                __html: safeHtml(data.alternativeVersions.html),
+               }}
+             ></div>
+           </div>
+@@ -81,8 +82,8 @@ const DidYouKnow = ({ data }: Props) => {
+             <h3 className='heading heading__tertiary'>Connections</h3>
+             <p className={styles.item__desc}>
+               <span>{data.connections.startText} </span>
+-              <Link href={`/title/${data.connections.title.id}`}>
+-                <a className={'link'}>{data.connections.title.text}</a>
++              <Link href={`/title/${data.connections.title.id}`} className={'link'}>
++                {data.connections.title.text}
+               </Link>
+               <span> ({data.connections.title.year})</span>
+             </p>
+@@ -98,7 +99,7 @@ const DidYouKnow = ({ data }: Props) => {
+                   <div
+                     key={html}
+                     className={styles.item__desc}
+-                    dangerouslySetInnerHTML={{ __html: html }}
++                    dangerouslySetInnerHTML={{ __html: safeHtml(html) }}
+                   ></div>
+                 ))}
+             </div>
+diff --git a/src/components/title/Info.tsx b/src/components/title/Info.tsx
+index 7513523..2761ed3 100644
+--- a/src/components/title/Info.tsx
++++ b/src/components/title/Info.tsx
+@@ -1,11 +1,12 @@
++import {safeHtml} from 'src/utils/safeHtml.mjs';
+ import Link from 'next/link';
+ import { useRouter } from 'next/router';
+-import { Info } from 'src/interfaces/shared/title';
++import type { Info as InfoData } from 'src/interfaces/shared/title';
+ import { formatMoney, formatTime } from 'src/utils/helpers';
+ import styles from 'src/styles/modules/components/title/info.module.scss';
+ 
+ type Props = {
+-  info: Info;
++  info: InfoData;
+   className: string;
+ };
+ 
+@@ -35,8 +36,8 @@ const Info = ({ info, className }: Props) => {
+             <p>
+               <span>Series: </span>
+               <span>
+-                <Link href={`/title/${meta.infoEpisode.series.id}`}>
+-                  <a className={'link'}>{meta.infoEpisode.series.title}</a>
++                <Link href={`/title/${meta.infoEpisode.series.id}`} className={'link'}>
++                  {meta.infoEpisode.series.title}
+                 </Link>
+                 <span>
+                   {' '}
+@@ -47,15 +48,15 @@ const Info = ({ info, className }: Props) => {
+             </p>
+             {meta.infoEpisode.prevId && (
+               <p>
+-                <Link href={`/title/${meta.infoEpisode.prevId}`}>
+-                  <a className="link">Go to previous episode</a>
++                <Link href={`/title/${meta.infoEpisode.prevId}`} className="link">
++                  Go to previous episode
+                 </Link>
+               </p>
+             )}
+             {meta.infoEpisode.nextId && (
+               <p>
+-                <Link href={`/title/${meta.infoEpisode.nextId}`}>
+-                  <a className="link">Go to next episode</a>
++                <Link href={`/title/${meta.infoEpisode.nextId}`} className="link">
++                  Go to next episode
+                 </Link>
+               </p>
+             )}
+@@ -85,8 +86,8 @@ const Info = ({ info, className }: Props) => {
+               </p>
+             )}
+             <p>
+-              <Link href={`/title/${titleId}/episodes`}>
+-                <a className="link">See all Episodes</a>
++              <Link href={`/title/${titleId}/episodes`} className="link">
++                See all Episodes
+               </Link>
+            
+             </p>
+@@ -98,8 +99,8 @@ const Info = ({ info, className }: Props) => {
+         <div className={styles.accolades__container}>
+           {accolades.topRating && (
+             <p>
+-              <Link href={`/chart/top`}>
+-                <a className="link">Top rated (#{accolades.topRating})</a>
++              <Link href={`/chart/top`} className="link">
++                Top rated (#{accolades.topRating})
+               </Link>
+             </p>
+           )}
+@@ -116,8 +117,8 @@ const Info = ({ info, className }: Props) => {
+             total
+           </p>
+           <p>
+-            <Link href={`/title/${titleId}/awards`}>
+-              <a className="link">View all awards</a>
++            <Link href={`/title/${titleId}/awards`} className="link">
++              View all awards
+             </Link>
+           </p>
+         </div>
+@@ -130,40 +131,40 @@ const Info = ({ info, className }: Props) => {
+               <li className={styles.keywords__item} key={word}>
+                 <Link
+                   href={`/search/keyword/?keywords=${word.replace(/\s/g, '-')}`}
+-                >
+-                  <a className="link">{word}</a>
++                  className="link">
++                  {word}
+                 </Link>
+               </li>
+             ))}
+           </ul>
+         </section>
+       )}
+-            {!!faqs?.total && (
+-        <section className={styles.faqs}>
+-          <h2 className='heading heading__secondary'>FAQs</h2>
+-          <div className={styles.faqs__container}>
+-            {faqs.questions.map(faq => (
+-              <details key={faq.id}>
+-                <summary className='link'>
+-                  {faq.isSpoiler ? '[Spoiler] ' : ''}
+-                  {faq.question}
+-                </summary>
+-                {faq.answer ? (
+-                  <div dangerouslySetInnerHTML={{ __html: faq.answer }} />
+-                ) : (
+-                  <p>No answer available.</p>
+-                )}
+-              </details>
+-            ))}
+-            {faqs.total > faqs.questions.length && (
+-              <p>
+-                Showing {faqs.questions.length} of {faqs.total} questions
+-              </p>
+-            )}
+-          </div>
+-        </section>
++      {!!faqs?.total && (
++  <section className={styles.faqs}>
++    <h2 className='heading heading__secondary'>FAQs</h2>
++    <div className={styles.faqs__container}>
++      {faqs.questions.map(faq => (
++        <details key={faq.id}>
++          <summary className='link'>
++            {faq.isSpoiler ? '[Spoiler] ' : ''}
++            {faq.question}
++          </summary>
++          {faq.answer ? (
++            <div dangerouslySetInnerHTML={{ __html: safeHtml(faq.answer) }} />
++          ) : (
++            <p>No answer available.</p>
++          )}
++        </details>
++      ))}
++      {faqs.total > faqs.questions.length && (
++        <p>
++          Showing {faqs.questions.length} of {faqs.total} questions
++        </p>
+       )}
+-         
++    </div>
++  </section>
++)}
++
+       {!!Object.keys(details).length && (
+         <section className={styles.details}>
+           <h2 className="heading heading__secondary">Details</h2>
+@@ -204,10 +205,8 @@ const Info = ({ info, className }: Props) => {
+                 {details.countriesOfOrigin.map((country, i) => (
+                   <span key={country.id}>
+                     {!!i && ', '}
+-                    <Link
+-                      href={`/search/title/?country_of_origin=${country.id}`}
+-                    >
+-                      <a className="link">{country.text}</a>
++                    <Link href={`/search/title/?country_of_origin=${country.id}`} className="link">
++                      {country.text}
+                     </Link>
+                   </span>
+                 ))}
+@@ -232,8 +231,8 @@ const Info = ({ info, className }: Props) => {
+                 {details.languages.map((lang, i) => (
+                   <span key={lang.id}>
+                     {!!i && ', '}
+-                    <Link href={`/search/title/?primary_language=${lang.id}`}>
+-                      <a className="link">{lang.text}</a>
++                    <Link href={`/search/title/?primary_language=${lang.id}`} className="link">
++                      {lang.text}
+                     </Link>
+                   </span>
+                 ))}
+@@ -264,8 +263,8 @@ const Info = ({ info, className }: Props) => {
+                 {details.filmingLocations.locations.map((loc, i) => (
+                   <span key={loc}>
+                     {!!i && ', '}
+-                    <Link href={`/search/title/?locations=${loc}`}>
+-                      <a className="link">{loc}</a>
++                    <Link href={`/search/title/?locations=${loc}`} className="link">
++                      {loc}
+                     </Link>
+                   </span>
+                 ))}
+@@ -277,8 +276,8 @@ const Info = ({ info, className }: Props) => {
+                 {details.production.companies.map((co, i) => (
+                   <span key={co.id}>
+                     {!!i && ', '}
+-                    <Link href={`/company/${co.id}`}>
+-                      <a className="link">{co.name}</a>
++                    <Link href={`/company/${co.id}`} className="link">
++                      {co.name}
+                     </Link>
+                   </span>
+                 ))}
+@@ -356,8 +355,8 @@ const Info = ({ info, className }: Props) => {
+                   {technicalSpecs.colorations.map((color, i) => (
+                     <span key={color.id}>
+                       {!!i && ', '}
+-                      <Link href={`/search/title/?colors=${color.id}`}>
+-                        <a className="link">{color.name}</a>
++                      <Link href={`/search/title/?colors=${color.id}`} className="link">
++                        {color.name}
+                       </Link>
+                     </span>
+                   ))}
+@@ -371,8 +370,8 @@ const Info = ({ info, className }: Props) => {
+                   {technicalSpecs.soundMixes?.map((sound, i) => (
+                     <span key={sound.id}>
+                       {!!i && ', '}
+-                      <Link href={`/search/title/?sound_mixes=${sound.id}`}>
+-                        <a className="link">{sound.name}</a>
++                      <Link href={`/search/title/?sound_mixes=${sound.id}`} className="link">
++                        {sound.name}
+                       </Link>
+                     </span>
+                   ))}
+diff --git a/src/components/title/MoreLikeThis.tsx b/src/components/title/MoreLikeThis.tsx
+index 5364d21..d27c068 100644
+--- a/src/components/title/MoreLikeThis.tsx
++++ b/src/components/title/MoreLikeThis.tsx
+@@ -1,10 +1,10 @@
+ import { CardTitle } from 'src/components/card';
+-import { MoreLikeThis } from 'src/interfaces/shared/title';
++import type { MoreLikeThis as MoreLikeThisData } from 'src/interfaces/shared/title';
+ import styles from 'src/styles/modules/components/title/more-like-this.module.scss';
+ 
+ type Props = {
+   className: string;
+-  data: MoreLikeThis;
++  data: MoreLikeThisData;
+ };
+ 
+ const MoreLikeThis = ({ className, data }: Props) => {
+diff --git a/src/components/title/Reviews.tsx b/src/components/title/Reviews.tsx
+index e90bfea..9141db2 100644
+--- a/src/components/title/Reviews.tsx
++++ b/src/components/title/Reviews.tsx
+@@ -1,3 +1,4 @@
++import {safeHtml} from 'src/utils/safeHtml.mjs';
+ import { useRouter } from 'next/router';
+ import Link from 'next/link';
+ import type { Reviews as TReviews } from 'src/interfaces/shared/title';
+@@ -28,7 +29,7 @@ const Reviews = ({ reviews }: Props) => {
+                   <div
+                     className={styles.review__text}
+                     dangerouslySetInnerHTML={{
+-                      __html: featuredReview.review.html,
++                      __html: safeHtml(featuredReview.review.html),
+                     }}
+                   ></div>
+                   <footer className={styles.review__metadata}>
+@@ -37,8 +38,8 @@ const Reviews = ({ reviews }: Props) => {
+                       <span>
+                         {' '}
+                         by{' '}
+-                        <Link href={`/user/${featuredReview.reviewer.id}`}>
+-                          <a className='link'>{featuredReview.reviewer.name}</a>
++                        <Link href={`/user/${featuredReview.reviewer.id}`} className='link'>
++                          {featuredReview.reviewer.name}
+                         </Link>
+                       </span>
+                     </p>
+@@ -55,7 +56,7 @@ const Reviews = ({ reviews }: Props) => {
+       {reviews.ai?.summary && (
+         <details className={styles.reviewAi}>
+           <summary className='heading heading__tertiary'>AI Summary</summary>
+-          <p dangerouslySetInnerHTML={{ __html: reviews.ai.summary }} />
++          <p dangerouslySetInnerHTML={{ __html: safeHtml(reviews.ai.summary) }} />
+           <ul>
+             {reviews.ai.themes.map(theme => (
+               <li key={theme.id}>{theme.text}</li>
+@@ -108,20 +109,20 @@ const ReviewStats = ({ reviews }: { reviews: Props['reviews'] }) => {
+   return (
+     <div className={styles.reviewStats}>
+       <p>
+-        <Link href={`/title/${titleId}/reviews`}>
+-          <a className='link'>{formatNumber(reviews.numUserReviews)} User reviews</a>
++        <Link href={`/title/${titleId}/reviews`} className='link'>
++          {formatNumber(reviews.numUserReviews)}User reviews
+         </Link>
+       </p>
+       {reviews.numCriticReviews != null && (
+         <p>
+-          <Link href={`/title/${titleId}/externalreviews`}>
+-            <a className='link'>{formatNumber(reviews.numCriticReviews)} Critic reviews</a>
++          <Link href={`/title/${titleId}/externalreviews`} className='link'>
++            {formatNumber(reviews.numCriticReviews)}Critic reviews
+           </Link>
+         </p>
+       )}
+       <p>
+-        <Link href={`/title/${titleId}/criticreviews`}>
+-          <a className='link'> {reviews.metacriticScore} Metascore</a>
++        <Link href={`/title/${titleId}/criticreviews`} className='link'>
++           {reviews.metacriticScore}Metascore
+         </Link>
+       </p>
+     </div>
+diff --git a/src/components/titleEpisodes/Episodes.tsx b/src/components/titleEpisodes/Episodes.tsx
+index 4bf5628..dd455f2 100644
+--- a/src/components/titleEpisodes/Episodes.tsx
++++ b/src/components/titleEpisodes/Episodes.tsx
+@@ -1,5 +1,5 @@
+ import Link from 'next/link';
+-import Image from 'next/future/image';
++import Image from 'next/image';
+ import { modifyIMDbImg, formatTime, formatNumber, getProxiedIMDbImgUrl } from 'src/utils/helpers';
+ import TitleEpisodes from 'src/interfaces/shared/titleEpisodes';
+ import styles from 'src/styles/modules/components/titleEpisodes/episodes.module.scss';
+diff --git a/src/components/titleReviews/Reviews.tsx b/src/components/titleReviews/Reviews.tsx
+index 36134ed..23c20ed 100644
+--- a/src/components/titleReviews/Reviews.tsx
++++ b/src/components/titleReviews/Reviews.tsx
+@@ -1,3 +1,4 @@
++import {safeHtml} from 'src/utils/safeHtml.mjs';
+ import TitleReviews from 'src/interfaces/shared/titleReviews';
+ import styles from 'src/styles/modules/components/titleReviews/reviews.module.scss';
+ import Link from 'next/link';
+@@ -36,8 +37,8 @@ const Review = ({
+     <article className={styles.reviews__reviewContainer}>
+       <details className={styles.review}>
+         <summary className={styles.review__summary}>
+-          <Link href={by.link ?? '#'}>
+-            <a className='link'>{by.name}</a>
++          <Link href={by.link ?? '#'} className='link'>
++            {by.name}
+           </Link>
+           <time>{date}</time>
+           <p className={styles.review__misc}>
+@@ -67,7 +68,7 @@ const Review = ({
+           <div
+             className={styles.review__text}
+             dangerouslySetInnerHTML={{
+-              __html: reviewHtml,
++              __html: safeHtml(reviewHtml),
+             }}
+           />
+         )}
+diff --git a/src/pages/about/index.tsx b/src/pages/about/index.tsx
+index c5cdeca..e9e3a5f 100644
+--- a/src/pages/about/index.tsx
++++ b/src/pages/about/index.tsx
+@@ -208,10 +208,10 @@ const About = () => {
+                   imdb.com/title/tt1049413
+                 </a>
+                 ` to `
+-                <Link href='/title/tt1049413'>
+-                  <a className='link'>
+-                    {process.env.NEXT_PUBLIC_URL || ''}/title/tt1049413
+-                  </a>
++                <Link href='/title/tt1049413' className='link'>
++
++                  {process.env.NEXT_PUBLIC_URL || ''}/title/tt1049413
++
+                 </Link>
+                 ` . To avoid changing the URLs manually, you can use extensions
+                 like{' '}
+@@ -298,8 +298,8 @@ const About = () => {
+               </summary>
+               <p className={styles.faq__description}>
+                 That's great! I've a couple of{' '}
+-                <Link href='/contact'>
+-                  <a className='link'>contact methods</a>
++                <Link href='/contact' className='link'>
++                  contact methods
+                 </Link>
+                 . Send your beautiful suggestions(or complaints), or just drop a
+                 hi.
+diff --git a/src/pages/api/media_proxy.ts b/src/pages/api/media_proxy.ts
+index a2fc29f..b6ca2d6 100644
+--- a/src/pages/api/media_proxy.ts
++++ b/src/pages/api/media_proxy.ts
+@@ -1,94 +1,39 @@
+-import { NextApiRequest, NextApiResponse } from 'next';
+-import { AxiosRequestHeaders } from 'axios';
+-import redis from 'src/utils/redis';
+-import axiosInstance from 'src/utils/axiosInstance';
+-import { mediaKey } from 'src/utils/constants/keys';
++import {NextApiRequest, NextApiResponse} from 'next';
++import axios from 'axios';
++import {checkedMediaURL, MEDIA_LIMIT, upstreamAgent, remainingCooldown, observeDenial} from 'src/utils/privateUpstream.mjs';
+ 
+-const dontCacheMedia =
+-  process.env.USE_REDIS_FOR_API_ONLY === 'true' || process.env.USE_REDIS !== 'true';
+-
+-const ttl = process.env.REDIS_CACHE_TTL_MEDIA ?? 30 * 60;
+-
+-const getCleanReqHeaders = (headers: NextApiRequest['headers']) => {
+-  const cleanHeaders: AxiosRequestHeaders = {};
+-
+-  if (headers.accept) cleanHeaders.accept = headers.accept;
+-  if (headers.range) cleanHeaders.range = headers.range;
+-  if (headers['accept-encoding'])
+-    cleanHeaders['accept-encoding'] = headers['accept-encoding'].toString();
+-
+-  return cleanHeaders;
+-};
+-
+-const resHeadersArr = ['content-range', 'content-length', 'content-type', 'accept-ranges'];
+-
+-// checks if a url is pointing towards a video/image from imdb
+-const regex =
+-  /^https:\/\/((m\.)?media-amazon\.com|imdb-video\.media-imdb\.com).*\.(jpg|jpeg|png|mp4|gif|webp).*$/;
++const kinds = new Set(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/avif', 'video/mp4']);
++let active = 0;
+ 
+ export default async function handler(req: NextApiRequest, res: NextApiResponse) {
++  res.setHeader('Cache-Control', 'no-store');
++  res.setHeader('Content-Security-Policy', "default-src 'none'; sandbox");
++  if (!['GET', 'HEAD'].includes(req.method || '')) return res.status(405).end();
++  let url: string;
++  try {url = checkedMediaURL(req.query.url);} catch {return res.status(400).end('Invalid media URL');}
++  const host = new URL(url).hostname;
++  const wait = remainingCooldown(host);
++  if (wait) {res.setHeader('Retry-After', wait); return res.status(503).end('Media temporarily unavailable');}
++  if (active >= 8) {res.setHeader('Retry-After', '5'); return res.status(503).end('Please retry later');}
++  const range = req.headers.range;
++  if (range && !/^bytes=\d{1,12}-\d{0,12}$/.test(range)) return res.status(416).end();
++  active++;
+   try {
+-    const mediaUrl = req.query.url as string | undefined;
+-    const requestHeaders = getCleanReqHeaders(req.headers);
+-
+-    // 1. returning if query is illegal
+-    if (!mediaUrl || !regex.test(mediaUrl))
+-      return res.status(400).json({
+-        success: false,
+-        message: 'Invalid query',
+-      });
+-
+-    // 2. sending streamed response if redis, or redis for media isn't enabled
+-    if (dontCacheMedia) {
+-      const mediaRes = await axiosInstance.get(mediaUrl, {
+-        responseType: 'stream',
+-        headers: requestHeaders,
+-      });
+-
+-      // chromium browsers want a 206 response with specific headers. so, we gotta pass them on.
+-      res.statusCode = mediaRes.status;
+-      resHeadersArr.forEach(key => {
+-        const val = mediaRes.headers[key];
+-        if (val) res.setHeader(key, val);
+-      });
+-      mediaRes.data.pipe(res);
+-      return;
+-    }
+-
+-    // 3. else if resourced is cached, sending it
+-    const cachedMedia = await redis.getBuffer(mediaKey(mediaUrl));
+-
+-    if (cachedMedia) {
+-      res.setHeader('x-cached', 'true');
+-      res.send(cachedMedia);
+-      return;
++    const response = await axios.request({url, method: req.method, responseType: 'arraybuffer',
++      httpsAgent: upstreamAgent, proxy: false, maxRedirects: 0, timeout: 20000,
++      maxContentLength: MEDIA_LIMIT, maxBodyLength: 0, validateStatus: () => true,
++      headers: {'User-Agent': 'Utilibre-LibreMDB-private-evaluation/1.0', 'Accept-Encoding': 'identity', ...(range ? {Range: range} : {})}});
++    const delay = observeDenial(host, response.status, response.headers['retry-after']);
++    if (delay) {res.setHeader('Retry-After', delay); return res.status(503).end('Media temporarily unavailable');}
++    const kind = String(response.headers['content-type'] || '').split(';')[0].toLowerCase();
++    if (![200, 206].includes(response.status) || !kinds.has(kind)) return res.status(502).end('Media unavailable');
++    res.status(response.status).setHeader('Content-Type', kind);
++    res.setHeader('Cache-Control', 'private, max-age=300');
++    for (const name of ['content-range', 'accept-ranges']) {
++      if (response.headers[name]) res.setHeader(name, response.headers[name]);
+     }
+-
+-    // 4. else getting, caching and sending response
+-    const { data } = await axiosInstance(mediaUrl, {
+-      responseType: 'arraybuffer',
+-    });
+-
+-    // saving in redis for 30 minutes
+-    await redis.setex(mediaKey(mediaUrl), ttl, Buffer.from(data));
+-
+-    // sending media
+-    res.setHeader('x-cached', 'false');
+-    res.send(data);
+-
+-    // sending token response on any error
+-  } catch {
+-    res.status(404);
+-    res.json({
+-      success: false,
+-      message: 'something went wrong',
+-    });
+-    return;
+-  }
++    res.end(req.method === 'HEAD' ? undefined : response.data);
++  } catch {res.status(502).end('Media unavailable');} finally {active--;}
+ }
+ 
+-export const config = {
+-  api: {
+-    responseLimit: false,
+-  },
+-};
++export const config = {api: {responseLimit: false}};
+diff --git a/src/pages/find/index.tsx b/src/pages/find/index.tsx
+index 444d176..576e621 100644
+--- a/src/pages/find/index.tsx
++++ b/src/pages/find/index.tsx
+@@ -53,7 +53,8 @@ type Data = (
+ export const getServerSideProps: GetServerSideProps<Data, FindQueryParams> = async ctx => {
+   // sample query str: find/?q=babylon&s=tt&ttype=ft&exact=true
+   const queryObj = ctx.query as FindQueryParams;
+-  const query = queryObj.q?.trim();
++  const query = typeof queryObj.q === 'string' ? queryObj.q.trim().slice(0, 200) : '';
++  if (query) queryObj.q = query;
+   const originalPath = ctx.resolvedUrl;
+ 
+   if (!query) return { props: { data: { title: null, results: null }, error: null, originalPath } };
+diff --git a/src/pages/privacy/index.tsx b/src/pages/privacy/index.tsx
+index 012baf4..997f010 100644
+--- a/src/pages/privacy/index.tsx
++++ b/src/pages/privacy/index.tsx
+@@ -22,7 +22,18 @@ const Privacy = () => {
+               >
+                 Information collected
+               </h2>
+-              <p className={styles.item__text}>No information is collected.</p>
++              <p className={styles.item__text}>
++                This is a private Utilibre evaluation, not a public service.
++                Queries and responses may remain in a bounded memory cache for
++                up to ten minutes. They are not saved as a search history. The
++                evaluation container does not retain application logs.
++              </p>
++              <p className={styles.item__text}>
++                IMDb and its media hosts receive requests from this server.
++                Visitor cookies, authorization headers and IP-address headers
++                are not forwarded. Images, fonts and scripts load through this
++                instance; links you deliberately open elsewhere leave it.
++              </p>
+             </section>
+             <section className={styles.item}>
+               <h2
+@@ -63,9 +74,9 @@ const Privacy = () => {
+                 Version:&nbsp;
+                 <a
+                   className='link'
+-                  href={`https://github.com/zyachel/libremdb/tree/v${packageInfo.version}`}
++                  href='https://github.com/darlopvil/libremdb-fork/tree/b233f4e24acfb4afbe55b7c13798832ca8068086'
+                 >
+-                  {packageInfo.version}
++                  {packageInfo.version} (b233f4e, Utilibre private-evaluation patch)
+                 </a>
+               </p>
+             </section>
+@@ -73,7 +84,7 @@ const Privacy = () => {
+ 
+           <footer className={styles.metadata}>
+             <p>
+-              Privacy policy last updated on <time>31 october, 2022.</time>
++              Evaluation privacy notes updated on <time dateTime='2026-10-06'>October 6, 2026</time>.
+             </p>
+             <p>
+               You can see the full revision history of this privacy policy on
+diff --git a/src/pages/title/[titleId]/index.tsx b/src/pages/title/[titleId]/index.tsx
+index 0b6ecb4..0f39444 100644
+--- a/src/pages/title/[titleId]/index.tsx
++++ b/src/pages/title/[titleId]/index.tsx
+@@ -74,7 +74,6 @@ export const getServerSideProps: GetServerSideProps<Data, Params> = async ctx =>
+       statusCode: err.statusCode,
+       stack: err.format(),
+     };
+-    console.error(err);
+     return { props: { error, data: null, originalPath } };
+   }
+ };
+diff --git a/src/pages/title/[titleId]/trivia/index.tsx b/src/pages/title/[titleId]/trivia/index.tsx
+index 2e2c692..3894e8f 100644
+--- a/src/pages/title/[titleId]/trivia/index.tsx
++++ b/src/pages/title/[titleId]/trivia/index.tsx
+@@ -1,3 +1,4 @@
++import {safeHtml} from 'src/utils/safeHtml.mjs';
+ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+ import Meta from 'src/components/meta/Meta';
+ import Layout from 'src/components/layout';
+@@ -48,10 +49,10 @@ const TriviaPage = ({ data, error, originalPath }: Props) => {
+               {item.isSpoiler ? (
+                 <details className={styles.spoiler}>
+                   <summary>Spoiler — click to reveal</summary>
+-                  <div dangerouslySetInnerHTML={{ __html: item.html }} />
++                  <div dangerouslySetInnerHTML={{ __html: safeHtml(item.html) }} />
+                 </details>
+               ) : (
+-                <div dangerouslySetInnerHTML={{ __html: item.html }} />
++                <div dangerouslySetInnerHTML={{ __html: safeHtml(item.html) }} />
+               )}
+             </div>
+           ))}
+diff --git a/src/styles/abstracts/_mixins.scss b/src/styles/abstracts/_mixins.scss
+index 55e0c2d..8f65969 100644
+--- a/src/styles/abstracts/_mixins.scss
++++ b/src/styles/abstracts/_mixins.scss
+@@ -28,7 +28,7 @@
+ }
+ 
+ @mixin colors($color: 'light') {
+-  $color-map: map-get(v.$themes, $color);
++  $color-map: map.get(v.$themes, $color);
+ 
+   @each $prop, $val in $color-map {
+     --clr-#{$prop}: #{$val};
+@@ -95,4 +95,4 @@
+ @mixin focus-rules {
+   outline: 3px solid var(--clr-highlight);
+   outline-offset: 0.2em;
+-}
+\ No newline at end of file
++}
+diff --git a/src/styles/abstracts/variables/_themes.scss b/src/styles/abstracts/variables/_themes.scss
+index 536c3a1..3a907a8 100644
+--- a/src/styles/abstracts/variables/_themes.scss
++++ b/src/styles/abstracts/variables/_themes.scss
+@@ -45,7 +45,7 @@ $_dark: (
+   link: hsl(339, 95%, 80%),
+   link-muted: hsl(344, 79%, 80%),
+   fill: hsl(339, 75%, 64%),
+-  fill-muted: hsl(0, 0, 35%),
++  fill-muted: hsl(0, 0%, 35%),
+   shadow: hsla(0, 0%, 0%, 1),
+   highlight: hsl(176, 43%, 46%),
+   gradient: (
+diff --git a/src/utils/helpers.ts b/src/utils/helpers.ts
+index 36c1475..cbab8f9 100644
+--- a/src/utils/helpers.ts
++++ b/src/utils/helpers.ts
+@@ -87,6 +87,8 @@ export const AppError = class extends Error {
+   }
+ 
+   format() {
++    // Production error pages must not disclose request details or server paths.
++    if (process.env.NODE_ENV === 'production') return '';
+     let str = '';
+     let cur: Error | null = this;
+     let depth = 0;
+@@ -108,7 +110,7 @@ export const cleanQueryStr = (record: Record<string, string>, filterable: string
+   const urlSearchParams = new URLSearchParams();
+ 
+   filterable.forEach(key => {
+-    if (record[key]) urlSearchParams.append(key, record[key].trim());
++    if (typeof record[key] === 'string') urlSearchParams.append(key, record[key].trim().slice(0, 200));
+   });
+   return urlSearchParams.toString();
+ };
+@@ -145,4 +147,4 @@ const BR_RE = /<br\s*\/?>/gi;
+ 
+ export function htmlToText(html: string) {
+   return html.replace(BR_RE, ' ').replace(TAG_RE, '');
+-}
+\ No newline at end of file
++}
+diff --git a/src/utils/imdbGraphql.ts b/src/utils/imdbGraphql.ts
+index f0e2f8e..792c57a 100644
+--- a/src/utils/imdbGraphql.ts
++++ b/src/utils/imdbGraphql.ts
+@@ -1,28 +1,61 @@
+ import axios from 'axios';
++import {upstreamAgent, remainingCooldown, observeDenial} from './privateUpstream.mjs';
++import {AppError} from './helpers';
+ 
+-// Transporte compartido para la API GraphQL interna de IMDb.
+-// Sin auth; el header x-imdb-client-name identifica al cliente web oficial de IMDb.
+-const graphqlInstance = axios.create({
+-  baseURL: 'https://api.graphql.imdb.com/',
+-  timeout: 50000,
+-    headers: {
+-    'Content-Type': 'application/json',
+-    'x-imdb-client-name': 'imdb-web-next-localized',
+-    // localización de los datos que devuelve IMDb: hacen falta las dos
+-    // cabeceras. Solo el idioma da la variante hispanoamericana; solo el
+-    // país no cambia el idioma de las sinopsis.
+-    ...(process.env.IMDB_LANGUAGE && { 'x-imdb-user-language': process.env.IMDB_LANGUAGE }),
+-    ...(process.env.IMDB_COUNTRY && { 'x-imdb-user-country': process.env.IMDB_COUNTRY }),
+-    ...(process.env.AXIOS_LANGUAGE && { 'Accept-Language': process.env.AXIOS_LANGUAGE }),
++// Private evaluation only: public use of this data API has not been authorized.
++const host = 'api.graphql.imdb.com';
++const graphql = axios.create({
++  baseURL: 'https://' + host + '/', httpsAgent: upstreamAgent, proxy: false,
++  timeout: 20000, maxRedirects: 0, maxContentLength: 4 * 1024 * 1024,
++  maxBodyLength: 128 * 1024, validateStatus: () => true,
++  headers: {
++    'Content-Type': 'application/json', 'x-imdb-client-name': 'imdb-web-next-localized',
++    'User-Agent': 'Utilibre-LibreMDB-private-evaluation/1.0',
++    ...(process.env.IMDB_LANGUAGE && {'x-imdb-user-language': process.env.IMDB_LANGUAGE}),
++    ...(process.env.IMDB_COUNTRY && {'x-imdb-user-country': process.env.IMDB_COUNTRY}),
+   },
+ });
++let active = false;
++let lastCall = 0;
++const cache = new Map<string, {body: string; expires: number; timer: ReturnType<typeof setTimeout> | null}>();
++let cacheBytes = 0;
++function removeCached(query: string) {
++  const entry = cache.get(query);
++  if (!entry) return;
++  if (entry.timer) clearTimeout(entry.timer);
++  cacheBytes -= Buffer.byteLength(entry.body);
++  cache.delete(query);
++}
+ 
+ const fetchImdbGraphql = async (query: string) => {
+-  const res = await graphqlInstance.post('', { query });
+-  if (res.data?.errors) {
+-    throw new Error(`IMDb GraphQL error: ${JSON.stringify(res.data.errors)}`);
+-  }
+-  return res.data.data;
++  if (process.env.UTILIBRE_PRIVATE_EVALUATION !== 'true') throw new AppError('Private evaluation is disabled', 503);
++  if (!query || query.length > 64000) throw new AppError('Invalid query', 400);
++  const cached = cache.get(query);
++  if (cached && cached.expires > Date.now()) return JSON.parse(cached.body);
++  if (remainingCooldown(host)) throw new AppError('IMDb temporarily unavailable; please try later', 503);
++  if (active) throw new AppError('Another request is running; please try again shortly', 503);
++  active = true;
++  try {
++    await new Promise(resolve => setTimeout(resolve, Math.max(0, 750 - (Date.now() - lastCall))));
++    lastCall = Date.now();
++    const response = await graphql.post('', {query});
++    if (observeDenial(host, response.status, response.headers['retry-after'])) throw new AppError('IMDb temporarily unavailable; please try later', 503);
++    if (response.status !== 200 || response.data?.errors || !response.data?.data) throw new AppError('IMDb returned an unavailable response', 502);
++    const body = JSON.stringify(response.data.data);
++    removeCached(query);
++    const entry = {body, expires: Date.now() + 600000, timer: null as ReturnType<typeof setTimeout> | null};
++    cache.set(query, entry);
++    cacheBytes += Buffer.byteLength(body);
++    entry.timer = setTimeout(() => removeCached(query), 600000);
++    entry.timer.unref();
++    while (cache.size > 64 || cacheBytes > 16 * 1024 * 1024) {
++      const key = cache.keys().next().value!;
++      removeCached(key);
++    }
++    return JSON.parse(body);
++  } catch (error) {
++    if (error instanceof AppError) throw error;
++    throw new AppError('IMDb could not be reached; please try later', 502);
++  } finally {active = false;}
+ };
+-
+-export default fetchImdbGraphql;
+\ No newline at end of file
++export default fetchImdbGraphql;
+diff --git a/src/utils/privateUpstream.mjs b/src/utils/privateUpstream.mjs
+new file mode 100644
+index 0000000..aa7c3d8
+--- /dev/null
++++ b/src/utils/privateUpstream.mjs
+@@ -0,0 +1,51 @@
++import https from 'node:https';
++import {lookup} from 'node:dns';
++import ipaddr from 'ipaddr.js';
++
++const mediaHosts = new Set(['m.media-amazon.com', 'media-amazon.com', 'imdb-video.media-imdb.com']);
++const hosts = new Set([...mediaHosts, 'api.graphql.imdb.com']);
++export const MEDIA_LIMIT = 16 * 1024 * 1024;
++
++export function checkedMediaURL(value) {
++  if (typeof value !== 'string' || value.length > 8192 || /[\x00-\x20\\]/.test(value)) throw new Error('Invalid media URL');
++  const url = new URL(value);
++  if (url.protocol !== 'https:' || !mediaHosts.has(url.hostname) || url.username || url.password ||
++      (url.port && url.port !== '443') || url.hash || !/\.(jpg|jpeg|png|mp4|gif|webp|avif)$/i.test(url.pathname)) {
++    throw new Error('Invalid media URL');
++  }
++  return url.href;
++}
++
++export function publicAddress(value) {
++  try {return ipaddr.process(value).range() === 'unicast';} catch {return false;}
++}
++
++export function privateLookup(host, options, done) {
++  if (!hosts.has(host)) return done(new Error('Destination denied'));
++  lookup(host, {family: 4, all: true}, (error, addresses) => {
++    if (error || !addresses?.length || addresses.some(({address}) => !publicAddress(address))) {
++      return done(new Error('Upstream address unavailable'));
++    }
++    if (typeof options === 'object' && options.all) return done(null, addresses);
++    done(null, addresses[0].address, addresses[0].family);
++  });
++}
++
++export const upstreamAgent = new https.Agent({lookup: privateLookup, maxSockets: 4, keepAlive: true});
++
++export function retryDelay(value, now = Date.now()) {
++  const seconds = /^\d+$/.test(String(value)) ? Number(value) : (Date.parse(value) - now) / 1000;
++  return Number.isFinite(seconds) ? Math.max(600, Math.ceil(seconds)) : 600;
++}
++
++// Process-local, bounded by the fixed upstream set. No visitor keys.
++const cooldown = new Map();
++export function remainingCooldown(host, now = Date.now()) {
++  return Math.max(0, Math.ceil(((cooldown.get(host) || 0) - now) / 1000));
++}
++export function observeDenial(host, status, retry, now = Date.now()) {
++  if (!hosts.has(host) || ![403, 406, 429].includes(status)) return 0;
++  const seconds = retryDelay(retry, now);
++  cooldown.set(host, Math.max(cooldown.get(host) || 0, now + seconds * 1000));
++  return seconds;
++}
+diff --git a/src/utils/safeHtml.mjs b/src/utils/safeHtml.mjs
+new file mode 100644
+index 0000000..380d8cd
+--- /dev/null
++++ b/src/utils/safeHtml.mjs
+@@ -0,0 +1,14 @@
++import sanitizeHtml from 'sanitize-html';
++
++// Preserve prose formatting, never executable HTML, embedded media or tracking.
++export function safeHtml(value) {
++  if (typeof value !== 'string' || value.length > 1024 * 1024) return '';
++  return sanitizeHtml(value, {
++    allowedTags: ['p', 'br', 'b', 'strong', 'i', 'em', 'ul', 'ol', 'li', 'blockquote', 'span', 'a'],
++    allowedAttributes: {a: ['href']}, allowedSchemes: [], allowProtocolRelative: false,
++    transformTags: {
++      a: (_tag, attrs) => ({tagName: 'a', attribs:
++        /^\/(?![\/\\])[^\\\x00-\x20]*$/.test(attrs.href || '') ? {href: attrs.href} : {}}),
++    },
++  });
++}
+diff --git a/test/security.test.mjs b/test/security.test.mjs
+new file mode 100644
+index 0000000..ede400d
+--- /dev/null
++++ b/test/security.test.mjs
+@@ -0,0 +1,34 @@
++import assert from 'node:assert/strict';
++import test from 'node:test';
++import {checkedMediaURL, publicAddress, retryDelay, observeDenial, remainingCooldown} from '../src/utils/privateUpstream.mjs';
++import {safeHtml} from '../src/utils/safeHtml.mjs';
++
++test('media URLs require exact public HTTPS destinations', () => {
++  assert.equal(checkedMediaURL('https://m.media-amazon.com/images/M/example.jpg'), 'https://m.media-amazon.com/images/M/example.jpg');
++  for (const value of [undefined, ['https://m.media-amazon.com/a.jpg'], 'http://m.media-amazon.com/a.jpg',
++    'https://m.media-amazon.com.evil.test/a.jpg', 'https://m.media-amazon.com@127.0.0.1/a.jpg',
++    'https://user:password@m.media-amazon.com/a.jpg', 'https://127.0.0.1/a.jpg',
++    'https://m.media-amazon.com:8080/a.jpg', 'https://m.media-amazon.com/a.svg',
++    'https://m.media-amazon.com/a.jpg#fragment', 'https://m.media-amazon.com\\@evil.test/a.jpg']) {
++    assert.throws(() => checkedMediaURL(value));
++  }
++});
++test('private, reserved and mapped addresses are rejected', () => {
++  for (const address of ['127.0.0.1', '10.10.1.3', '169.254.169.254', '100.64.0.1', '192.0.2.1', '::1', '::ffff:127.0.0.1', 'fc00::1', '2001:db8::1', 'nonsense']) assert.equal(publicAddress(address), false, address);
++  assert.equal(publicAddress('1.1.1.1'), true);
++});
++test('untrusted prose cannot embed tracking, scripts, forms or external links', () => {
++  const html = safeHtml('<p>Hello <em>world</em><img src="https://tracker.test/a"><script>alert(1)</script><a href="javascript:alert(1)" onclick="alert(2)">bad</a><a href="//tracker.test/">external</a><a href="/title/tt123">local</a><form action="https://tracker.test/"><input></form></p>');
++  assert.match(html, /<em>world<\/em>/);
++  assert.match(html, /href="\/title\/tt123"/);
++  assert.doesNotMatch(html, /tracker|script|onclick|<img|<form|<input/);
++  assert.equal(safeHtml(null), '');
++});
++test('denial cooldown respects longer waits and separates hosts', () => {
++  assert.equal(retryDelay('0'), 600);
++  assert.equal(retryDelay('900'), 900);
++  assert.equal(retryDelay('Thu, 01 Jan 1970 00:20:00 GMT', 0), 1200);
++  observeDenial('m.media-amazon.com', 429, '1800', 0);
++  assert.equal(remainingCooldown('m.media-amazon.com', 1000), 1799);
++  assert.equal(remainingCooldown('api.graphql.imdb.com', 1000), 0);
++});
+diff --git a/tsconfig.json b/tsconfig.json
+index ecb4332..1e4ca71 100644
+--- a/tsconfig.json
++++ b/tsconfig.json
+@@ -1,7 +1,11 @@
+ {
+   "compilerOptions": {
+     "target": "ES2015",
+-    "lib": ["dom", "dom.iterable", "esnext"],
++    "lib": [
++      "dom",
++      "dom.iterable",
++      "esnext"
++    ],
+     "allowJs": true,
+     "skipLibCheck": true,
+     "strict": true,
+@@ -9,16 +13,25 @@
+     "noEmit": true,
+     "esModuleInterop": true,
+     "module": "esnext",
+-    "moduleResolution": "node",
++    "moduleResolution": "bundler",
+     "resolveJsonModule": true,
+     "isolatedModules": true,
+-    "jsx": "preserve",
++    "jsx": "react-jsx",
+     "incremental": true,
+     "baseUrl": ".",
+     "paths": {
+-      "src": ["src/*"]
++      "src": [
++        "src/*"
++      ]
+     }
+   },
+-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+-  "exclude": ["node_modules", "dev"]
++  "include": [
++    "next-env.d.ts",
++    "**/*.ts",
++    "**/*.tsx"
++  ],
++  "exclude": [
++    "node_modules",
++    "dev"
++  ]
+ }

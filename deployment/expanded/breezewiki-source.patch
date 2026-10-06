@@ -321,13 +321,14 @@ index 0000000..11a6ca6
 +iptables -w -C INPUT -s 172.29.71.10 -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s 172.29.71.10 -m conntrack --ctstate NEW -j DROP
 diff --git a/deployment/wiki-gateway.conf b/deployment/wiki-gateway.conf
 new file mode 100644
-index 0000000..127679f
+index 0000000..7b33298
 --- /dev/null
 +++ b/deployment/wiki-gateway.conf
-@@ -0,0 +1,62 @@
+@@ -0,0 +1,76 @@
 +worker_processes 1;
 +pid /tmp/nginx.pid;
-+error_log /dev/stderr warn;
++# Nginx error messages can include visitor addresses and requested article URLs.
++error_log /dev/null;
 +events { worker_connections 256; }
 +http {
 +  include /etc/nginx/mime.types;
@@ -353,7 +354,8 @@ index 0000000..127679f
 +    add_header Referrer-Policy no-referrer always;
 +    add_header X-Content-Type-Options nosniff always;
 +    add_header X-Frame-Options DENY always;
-+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" always;
++    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
++    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" always;
 +    location /utilibre-source/ { alias /srv/utilibre-source/; autoindex off; }
 +    location ~ ^/(static/|proxy$) {
 +      limit_req zone=wiki_assets burst=80;
@@ -362,6 +364,12 @@ index 0000000..127679f
 +      proxy_pass $wiki_backend;
 +      proxy_set_header Host wiki.utilibre.org;
 +      proxy_set_header Cookie "";
++      proxy_set_header Authorization "";
++      proxy_set_header Proxy-Authorization "";
++      proxy_set_header Referer "";
++      proxy_set_header Forwarded "";
++      proxy_set_header X-Forwarded-For "";
++      proxy_set_header X-Real-IP "";
 +      proxy_hide_header Set-Cookie;
 +      proxy_cache wiki_cache;
 +      proxy_cache_valid 200 5m;
@@ -377,6 +385,12 @@ index 0000000..127679f
 +      proxy_set_header Host $host;
 +      proxy_set_header X-Forwarded-Proto https;
 +      proxy_set_header Cookie "";
++      proxy_set_header Authorization "";
++      proxy_set_header Proxy-Authorization "";
++      proxy_set_header Referer "";
++      proxy_set_header Forwarded "";
++      proxy_set_header X-Forwarded-For "";
++      proxy_set_header X-Real-IP "";
 +      proxy_hide_header Set-Cookie;
 +      proxy_cache wiki_cache;
 +      proxy_cache_valid 200 5m;
