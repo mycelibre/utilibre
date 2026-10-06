@@ -1,0 +1,556 @@
+diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
+new file mode 100644
+index 0000000..28ae5c3
+--- /dev/null
++++ b/Dockerfile.utilibre
+@@ -0,0 +1,14 @@
++# Binternet 9bb70ef26c8b79a315e77b79bfd346433d55cbb6 plus binternet-source.patch.
++FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0 AS application
++RUN apk add --no-cache php84 php84-fpm php84-dom php84-curl php84-openssl php84-fileinfo ca-certificates
++WORKDIR /app
++COPY . .
++RUN php84 -l search.php && php84 -l image_proxy.php && php84 -l misc/utilibre-http.php \
++    && php84 tests/utilibre-http.php
++USER 65534:65534
++ENTRYPOINT ["php-fpm84", "-F", "-y", "/etc/php84/utilibre-fpm.conf"]
++
++FROM nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8 AS gateway
++COPY --from=application /app /app
++USER 101:101
++ENTRYPOINT ["nginx", "-g", "daemon off;"]
+diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
+new file mode 100644
+index 0000000..6240485
+--- /dev/null
++++ b/UTILIBRE-SOURCE.txt
+@@ -0,0 +1,21 @@
++Binternet on Utilibre — modified build 9bb70ef-p1, 2026-10-06
++Upstream: https://github.com/Ahwxorg/Binternet
++Revision: 9bb70ef26c8b79a315e77b79bfd346433d55cbb6
++License: upstream GPL version 3; see LICENSE.
++
++Changes: fixed-host HTTPS requests with public IPv4 resolution pinning;
++no redirects or environment proxies; TLS verification, 20-second deadlines
++and 8 MiB response caps; image MIME allowlist; escaped upstream author names;
++validated search/pagination parameters and truthful empty/error states;
++accessible search labels and zoom; matching deployed-source link.
++No accounts, shared personal cookies, uploads or database. Anonymous Pinterest
++pagination tokens are passed through the pagination URL. Searches/image requests
++reach Pinterest from the server. Clicking author links leaves for Pinterest.
++
++Dockerfile.utilibre builds application and gateway targets. The accompanying
++deployment/ directory contains the PHP-FPM, nginx, Compose and firewall settings.
++Use the paths documented in the Utilibre repository when deploying those files:
++https://github.com/mycelibre/utilibre/tree/main/deployment/community
++The supplied source archive contains no production secrets or visitor data.
++Native Donate/Legal/Source links keep their upstream meanings. No custom
++Utilibre navigation button was added. The upstream interface is English-only.
+diff --git a/deployment/additions-firewall.sh b/deployment/additions-firewall.sh
+new file mode 100644
+index 0000000..5dae969
+--- /dev/null
++++ b/deployment/additions-firewall.sh
+@@ -0,0 +1,16 @@
++#!/bin/sh
++# Only these new application IPs; no unrelated host traffic is changed.
++set -eu
++chain=UTILIBRE-ADDITIONS-OUT
++iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
++iptables -w -F "$chain"
++iptables -w -A "$chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++for network in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/4 240.0.0.0/4; do
++  iptables -w -A "$chain" -d "$network" -j DROP
++done
++iptables -w -A "$chain" -p tcp -m multiport --dports 80,443 -j RETURN
++iptables -w -A "$chain" -j DROP
++for address in 172.29.74.10 172.29.75.10 172.29.76.10 172.29.77.10 172.29.78.10 172.29.79.10 172.29.80.10 172.29.81.10 172.29.82.10 172.29.85.10; do
++  iptables -w -C DOCKER-USER -s "$address" -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$chain"
++  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
++done
+diff --git a/deployment/binternet-fpm.conf b/deployment/binternet-fpm.conf
+new file mode 100644
+index 0000000..748d797
+--- /dev/null
++++ b/deployment/binternet-fpm.conf
+@@ -0,0 +1,25 @@
++[global]
++error_log = /proc/self/fd/2
++daemonize = no
++[www]
++listen = 0.0.0.0:9000
++listen.allowed_clients = 172.29.85.20
++pm = ondemand
++pm.max_children = 6
++pm.process_idle_timeout = 10s
++pm.max_requests = 150
++request_terminate_timeout = 25s
++clear_env = yes
++catch_workers_output = yes
++decorate_workers_output = no
++php_admin_value[memory_limit] = 32M
++php_admin_value[max_execution_time] = 22
++php_admin_value[output_buffering] = 65536
++php_admin_value[error_log] = /proc/self/fd/2
++php_admin_flag[log_errors] = on
++php_admin_flag[display_errors] = off
++php_admin_flag[expose_php] = off
++php_admin_flag[file_uploads] = off
++php_admin_flag[allow_url_fopen] = off
++php_admin_value[open_basedir] = /app:/etc/ssl/certs:/tmp:/proc/self/fd
++php_admin_value[disable_functions] = exec,passthru,shell_exec,system,proc_open,popen
+diff --git a/deployment/binternet-gateway.conf b/deployment/binternet-gateway.conf
+new file mode 100644
+index 0000000..b5f3345
+--- /dev/null
++++ b/deployment/binternet-gateway.conf
+@@ -0,0 +1,75 @@
++worker_processes 1;
++pid /tmp/nginx.pid;
++error_log /dev/stderr warn;
++events { worker_connections 192; }
++http {
++  include /etc/nginx/mime.types;
++  access_log off;
++  server_tokens off;
++  absolute_redirect off;
++  client_body_temp_path /tmp/client;
++  proxy_temp_path /tmp/proxy;
++  fastcgi_temp_path /tmp/fastcgi;
++  uwsgi_temp_path /tmp/uwsgi;
++  scgi_temp_path /tmp/scgi;
++  set_real_ip_from 10.10.1.3;
++  real_ip_header X-Forwarded-For;
++  real_ip_recursive on;
++  resolver 127.0.0.11 valid=10s ipv6=off;
++  limit_req_zone $binary_remote_addr zone=binternet_search:1m rate=10r/m;
++  limit_req_zone $server_name zone=binternet_global:1m rate=1r/s;
++  limit_req_zone $binary_remote_addr zone=binternet_images:2m rate=12r/s;
++  limit_conn_zone $binary_remote_addr zone=binternet_conn:1m;
++  limit_req_status 429;
++  limit_conn_status 429;
++  limit_req_log_level notice;
++  limit_conn_log_level notice;
++  server {
++    listen 8080;
++    root /app;
++    index index.php;
++    client_max_body_size 1k;
++    limit_conn binternet_conn 32;
++    if ($request_method !~ ^(GET|HEAD)$) { return 405; }
++    add_header Content-Security-Policy "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'" always;
++    add_header Referrer-Policy no-referrer always;
++    add_header X-Content-Type-Options nosniff always;
++    add_header X-Frame-Options DENY always;
++    location /utilibre-source/ { alias /srv/utilibre-source/; autoindex off; }
++    location ~ ^/(static/|misc/.*\.css$) { try_files $uri =404; }
++    location ~ ^/(index|search|image_proxy|donate)\.php$ {
++      set $php binternet:9000;
++      include /etc/nginx/fastcgi_params;
++      fastcgi_param SCRIPT_FILENAME /app$fastcgi_script_name;
++      fastcgi_param HTTP_HOST binternet.utilibre.org;
++      fastcgi_param HTTPS on;
++      fastcgi_param HTTP_AUTHORIZATION "";
++      fastcgi_param HTTP_COOKIE "";
++      fastcgi_pass $php;
++      fastcgi_read_timeout 30s;
++      fastcgi_max_temp_file_size 0;
++      fastcgi_hide_header X-Powered-By;
++      fastcgi_hide_header Set-Cookie;
++      limit_req zone=binternet_images burst=100 nodelay;
++      limit_rate 1m;
++    }
++    location = /search.php {
++      limit_req zone=binternet_search burst=5 nodelay;
++      limit_req zone=binternet_global burst=3;
++      set $php binternet:9000;
++      include /etc/nginx/fastcgi_params;
++      fastcgi_param SCRIPT_FILENAME /app/search.php;
++      fastcgi_param HTTP_HOST binternet.utilibre.org;
++      fastcgi_param HTTPS on;
++      fastcgi_param HTTP_AUTHORIZATION "";
++      fastcgi_param HTTP_COOKIE "";
++      fastcgi_pass $php;
++      fastcgi_read_timeout 30s;
++      fastcgi_max_temp_file_size 0;
++      fastcgi_hide_header X-Powered-By;
++      fastcgi_hide_header Set-Cookie;
++    }
++    location = / { rewrite ^ /index.php last; }
++    location / { return 404; }
++  }
++}
+diff --git a/deployment/compose.binternet.yaml b/deployment/compose.binternet.yaml
+new file mode 100644
+index 0000000..121e8ce
+--- /dev/null
++++ b/deployment/compose.binternet.yaml
+@@ -0,0 +1,34 @@
++name: utilibre-binternet
++x-runtime: &runtime
++  restart: unless-stopped
++  read_only: true
++  cap_drop: [ALL]
++  security_opt: [no-new-privileges:true]
++  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
++  mem_limit: 256m
++  cpus: 0.5
++  pids_limit: 64
++  logging: {driver: json-file, options: {max-size: 5m, max-file: "2"}}
++services:
++  binternet:
++    <<: *runtime
++    image: utilibre-binternet:9bb70ef-p1
++    user: "65534:65534"
++    volumes: ["./binternet-fpm.conf:/etc/php84/utilibre-fpm.conf:ro"]
++    networks:
++      binternet: {ipv4_address: 172.29.85.10}
++  gateway:
++    <<: *runtime
++    image: utilibre-binternet-gateway:9bb70ef-p1
++    user: "101:101"
++    ports: ["10.10.1.43:3150:8080"]
++    volumes:
++      - ./binternet-gateway.conf:/etc/nginx/nginx.conf:ro
++      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
++    networks:
++      binternet: {ipv4_address: 172.29.85.20}
++    depends_on: [binternet]
++networks:
++  binternet:
++    enable_ipv6: false
++    ipam: {config: [{subnet: 172.29.85.0/24}]}
+diff --git a/deployment/firewall.sh b/deployment/firewall.sh
+new file mode 100644
+index 0000000..07e2ee7
+--- /dev/null
++++ b/deployment/firewall.sh
+@@ -0,0 +1,13 @@
++#!/bin/sh
++# Limit only the explicitly listed new application ports. Existing services,
++# SSH, host INPUT policy, and unrelated Docker traffic are not changed.
++set -eu
++chain=UTILIBRE-TOOLS
++iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
++iptables -w -F "$chain"
++for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150; do
++  iptables -w -A "$chain" -s 10.10.1.3 -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j RETURN
++  iptables -w -A "$chain" -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j DROP
++done
++iptables -w -A "$chain" -j RETURN
++iptables -w -C DOCKER-USER -i eth0 -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -i eth0 -j "$chain"
+diff --git a/image_proxy.php b/image_proxy.php
+index 528288e..7e485e8 100644
+--- a/image_proxy.php
++++ b/image_proxy.php
+@@ -1,19 +1,29 @@
+ <?php
+ 
+-require "misc/tools.php";
+-
+-$url = $_REQUEST["url"];
+-$requested_root_domain = get_root_domain($url);
+-
+-$allowed_domains = array("pinimg.com", "i.pinimg.com", "pinterest.com");
+-
+-if (in_array($requested_root_domain, $allowed_domains))
+-{
+-  $image = $url;
+-  $image_src = request($image);
+-
+-  header("Content-Type: image/png");
+-  echo $image_src;
++require_once "misc/utilibre-http.php";
++$url = $_GET['url'] ?? '';
++if (!is_string($url) || strlen($url) > 2048 || !utilibre_valid_url($url, ['i.pinimg.com'])) {
++    http_response_code(400);
++    exit('Invalid image URL');
++}
++try {
++    $body = '';
++    $ch = utilibre_curl($url, ['i.pinimg.com'], $body);
++    $success = curl_exec($ch);
++    $status = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
++    curl_close($ch);
++    if ($success === false || $status !== 200) throw new RuntimeException('Image unavailable');
++    $mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($body);
++    if (!in_array($mime, ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/avif'], true)) {
++        http_response_code(415);
++        exit('Unsupported image type');
++    }
++    header('Content-Type: ' . $mime);
++    header('Cache-Control: public, max-age=3600');
++    echo $body;
++} catch (Throwable $error) {
++    http_response_code(502);
++    echo 'Image temporarily unavailable';
+ }
+ 
+ ?>
+diff --git a/index.php b/index.php
+index 33f82cb..6cfba5a 100644
+--- a/index.php
++++ b/index.php
+@@ -7,9 +7,9 @@
+         <p>A privacy respecting Pinterest image search</p>
+         <form class="searchContainer " action="search.php" method="get" autocomplete="off">
+         <div id="inputWrapper">
+-          <input type="text" name="q" autofocus/>
++          <input type="text" name="q" aria-label="Search Pinterest images" required autofocus/>
+           <button class="" type="submit">Search</button>
+         </div>
+-
++        </form>
+     </div>
+ <?php require "misc/footer.php"; ?>
+diff --git a/misc/footer.php b/misc/footer.php
+index 878f02d..7e480b0 100644
+--- a/misc/footer.php
++++ b/misc/footer.php
+@@ -1,5 +1,6 @@
+ <footer>
+   <a href="https://github.com/Ahwxorg/binternet/" target="_blank">Source code</a>
++  <a href="/utilibre-source/binternet-utilibre.tar.gz">Deployed source</a>
+   <a href="./donate.php" target="_blank">Donate</a>
+   <a href="https://github.com/Ahwxorg/binternet#legal-notice" target="_blank">Legal notice</a>
+ 
+@@ -8,4 +9,4 @@ if (isset($images)) {
+   echo "<br><br>";
+   print(count($images). " images found");
+ }
+-?>
+\ No newline at end of file
++?>
+diff --git a/misc/header.php b/misc/header.php
+index bde3e42..c749826 100644
+--- a/misc/header.php
++++ b/misc/header.php
+@@ -1,7 +1,7 @@
+ <!DOCTYPE html >
+ <html lang="en">
+   <head>
+-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
++    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+     <meta charset="UTF-8"/>
+     <meta name="description" content="A privacy respecting Pinterest image search"/>
+     <meta name="referrer" content="no-referrer"/>
+diff --git a/misc/utilibre-http.php b/misc/utilibre-http.php
+new file mode 100644
+index 0000000..dd4038e
+--- /dev/null
++++ b/misc/utilibre-http.php
+@@ -0,0 +1,42 @@
++<?php
++// Exact public upstreams, pinned IPv4, no redirects/proxy, bounded bodies.
++function utilibre_valid_url(string $url, array $hosts): bool {
++    $p = parse_url($url);
++    return $p !== false && ($p['scheme'] ?? '') === 'https'
++        && in_array(strtolower($p['host'] ?? ''), $hosts, true)
++        && !isset($p['user']) && !isset($p['pass']) && !isset($p['fragment'])
++        && (!isset($p['port']) || $p['port'] === 443);
++}
++function utilibre_public_ip(string $ip): bool {
++    if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) return false;
++    $n = ip2long($ip);
++    foreach (['100.64.0.0/10', '192.0.0.0/24', '198.18.0.0/15'] as $cidr) {
++        [$base, $bits] = explode('/', $cidr);
++        $mask = -1 << (32 - (int)$bits);
++        if (($n & $mask) === (ip2long($base) & $mask)) return false;
++    }
++    return true;
++}
++function utilibre_curl(string $url, array $hosts, &$body) {
++    if (!utilibre_valid_url($url, $hosts)) throw new RuntimeException('Destination denied');
++    $host = parse_url($url, PHP_URL_HOST);
++    $addresses = gethostbynamel($host);
++    if (!$addresses) throw new RuntimeException('Resolution failed');
++    foreach ($addresses as $ip) if (!utilibre_public_ip($ip)) throw new RuntimeException('Address denied');
++    $body = '';
++    $ch = curl_init($url);
++    curl_setopt_array($ch, [
++        CURLOPT_RETURNTRANSFER => false, CURLOPT_FOLLOWLOCATION => false,
++        CURLOPT_PROTOCOLS => CURLPROTO_HTTPS, CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTPS,
++        CURLOPT_PROXY => '', CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
++        CURLOPT_RESOLVE => ["$host:443:" . $addresses[0]],
++        CURLOPT_CONNECTTIMEOUT => 5, CURLOPT_TIMEOUT => 20, CURLOPT_ENCODING => '',
++        CURLOPT_SSL_VERIFYPEER => true, CURLOPT_SSL_VERIFYHOST => 2,
++        CURLOPT_WRITEFUNCTION => static function ($ch, string $chunk) use (&$body): int {
++            if (strlen($body) + strlen($chunk) > 8 * 1024 * 1024) return 0;
++            $body .= $chunk;
++            return strlen($chunk);
++        },
++    ]);
++    return $ch;
++}
+diff --git a/search.php b/search.php
+index db32c47..9123a71 100644
+--- a/search.php
++++ b/search.php
+@@ -1,14 +1,25 @@
+-<?php require "misc/header.php"; ?>
++<?php
++require_once "misc/utilibre-http.php";
++$query = isset($_GET['q']) && is_string($_GET['q']) ? trim($_GET['q']) : '';
++$bookmark = isset($_GET['bookmark']) && is_string($_GET['bookmark']) ? $_GET['bookmark'] : null;
++$csrftoken = isset($_GET['csrftoken']) && is_string($_GET['csrftoken']) ? $_GET['csrftoken'] : null;
++if ((isset($_GET['bookmark']) && !is_string($_GET['bookmark'])) ||
++    (isset($_GET['csrftoken']) && !is_string($_GET['csrftoken'])) ||
++    strlen($query) < 1 || strlen($query) > 64 || strlen($bookmark ?? '') > 4096 ||
++    ($csrftoken !== null && !preg_match('/^[A-Za-z0-9_-]{1,256}$/D', $csrftoken))) {
++    http_response_code(400);
++    exit('Enter a search of 1–64 bytes. Invalid pagination parameters.');
++}
++require "misc/header.php"; ?>
+ <title>
+ <?php
+-$query = htmlspecialchars(trim($_REQUEST["q"] ?? ''));
+-echo $query ?: 'Search' . ' - Binternet';
++echo htmlspecialchars($query, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+ ?> - Binternet</title>
+ </head>
+ <body>
+     <form class="search-container" method="get" autocomplete="off">
+         <h1><a class="no-decoration accent" href="./">Binternet</a></h1>
+-        <input type="text" name="q" placeholder="Search Image"
++        <input type="text" name="q" placeholder="Search Image" aria-label="Search Pinterest images" required
+             <?php
+             // Validate query length
+             if (strlen($query) < 1 || strlen($query) > 64) {
+@@ -21,10 +32,6 @@ echo $query ?: 'Search' . ' - Binternet';
+     </form>
+ 
+ <?php
+-// Fetching query and optional parameters
+-$bookmark = $_GET["bookmark"] ?? null;
+-$csrftoken = $_GET["csrftoken"] ?? null;
+-
+ // Pinterest API endpoint
+ $url = "https://www.pinterest.com/resource/BaseSearchResource/get/";
+ 
+@@ -38,14 +45,14 @@ class SearchResult
+ 
+ // Header function to capture CSRF token from response
+ $header_function = function ($ch, $rawheader) use (&$csrftoken) {
+-    if (preg_match('/^set-cookie:\s*csrftoken=([^;]*)/', $rawheader, $matches)) {
++    if (preg_match('/^set-cookie:\s*csrftoken=([A-Za-z0-9_-]{1,256});/i', $rawheader, $matches)) {
+         $csrftoken = $matches[1];
+     }
+     return strlen($rawheader);
+ };
+ 
+ // Prepare CURL object for search request
+-$prepare_search_curl_obj = function ($query, $bookmark) use ($url, $header_function, $csrftoken) {
++$prepare_search_curl_obj = function ($query, $bookmark, &$response) use ($url, $header_function, $csrftoken) {
+     $data_param_obj = [
+         "options" => [
+             "query" => $query,
+@@ -77,8 +84,7 @@ $prepare_search_curl_obj = function ($query, $bookmark) use ($url, $header_funct
+     }
+ 
+     $finalurl = $bookmark === null ? "$url?data=$data_param" : $url;
+-    $ch = curl_init($finalurl);
+-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
++    $ch = utilibre_curl($finalurl, ['www.pinterest.com'], $response);
+     curl_setopt($ch, CURLOPT_HEADERFUNCTION, $header_function);
+     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+     
+@@ -92,29 +98,40 @@ $prepare_search_curl_obj = function ($query, $bookmark) use ($url, $header_funct
+ 
+ // Function to perform the search and display results
+ $search = function ($query, $bookmark) use ($prepare_search_curl_obj) {
+-    $ch = $prepare_search_curl_obj($query, $bookmark);
+-    $response = curl_exec($ch);
+-    $data = json_decode($response);
++    $response = '';
++    $data = null;
++    try {
++        $ch = $prepare_search_curl_obj($query, $bookmark, $response);
++        $success = curl_exec($ch);
++        $status = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
++        curl_close($ch);
++        if ($success === false || $status !== 200) throw new RuntimeException('Upstream unavailable');
++        $data = json_decode($response);
++    } catch (Throwable $error) {
++        http_response_code(502);
++    }
+     
+     $images = [];
+     echo "<div class='img-container'>";
+     
+-    if ($data && isset($data->resource_response->data->results)) {
++    if ($data && isset($data->resource_response->data->results) && is_array($data->resource_response->data->results)) {
+         foreach ($data->resource_response->data->results as $result) {
+-            $image = $result->images->orig;
+-            $authorName = $result->pinner->full_name;
+-            $authorUser = $result->pinner->username;
+-            $url = $image->url;
++            $url = $result->images->orig->url ?? '';
++            if (!is_string($url) || !utilibre_valid_url($url, ['i.pinimg.com'])) continue;
++            $authorName = htmlspecialchars($result->pinner->full_name ?? 'Pinterest contributor', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
++            $authorUser = rawurlencode($result->pinner->username ?? '');
++            $proxyUrl = '/image_proxy.php?url=' . rawurlencode($url);
+             $images[] = $url;
+             echo "<div class='img-result'>";
+-            echo "<a href='/image_proxy.php?url=" . htmlspecialchars($url) . "'>";
+-            echo "<img loading='lazy' src='/image_proxy.php?url=" . htmlspecialchars($url) . "'>";
++            echo "<a href='$proxyUrl'>";
++            echo "<img loading='lazy' alt='Image by $authorName' src='$proxyUrl'></a>";
+ 	    echo "<p>image by: <a class='uploader' href='https://pinterest.com/" . $authorUser . "'>" . $authorName . "</a></p>";
+-	    echo "</a>";
+             echo "</div>";
+         }
++        if (!$images) echo '<p>No images found. Try a different search.</p>';
+     } else {
+-        echo "<p>No results found.</p>";
++        http_response_code(502);
++        echo "<p>Pinterest could not be reached. Please try again later.</p>";
+     }
+     
+     echo "</div>";
+@@ -122,7 +139,8 @@ $search = function ($query, $bookmark) use ($prepare_search_curl_obj) {
+     $result = new SearchResult();
+     $result->images = $images;
+     
+-    if (isset($data->resource_response->bookmark)) {
++    if (isset($data->resource_response->bookmark) && is_string($data->resource_response->bookmark) &&
++        $data->resource_response->bookmark !== '-end-' && $data->resource_response->bookmark !== '') {
+         $result->bookmark = $data->resource_response->bookmark;
+     }
+     
+@@ -135,9 +153,9 @@ $result = $search($query, $bookmark);
+ if ($result->bookmark !== null) {
+     $query_encoded = urlencode($query);
+     $bookmark_encoded = urlencode($result->bookmark);
+-    $csrftoken_encoded = $csrftoken ? urlencode($csrftoken) : "";
++    $csrf_query = $csrftoken ? '&csrftoken=' . urlencode($csrftoken) : '';
+ 
+-    echo "<h2 style=\"text-align: center;\"><a href=\"/search.php?q=$query_encoded&bookmark=$bookmark_encoded&csrftoken=$csrftoken_encoded\">Next page</a></h2><br><br><br>";
++    echo "<h2 style=\"text-align: center;\"><a href=\"/search.php?q=$query_encoded&bookmark=$bookmark_encoded$csrf_query\">Next page</a></h2><br><br><br>";
+ }
+ 
+ include "misc/footer.php";
+diff --git a/tests/utilibre-http.php b/tests/utilibre-http.php
+new file mode 100644
+index 0000000..39cd04b
+--- /dev/null
++++ b/tests/utilibre-http.php
+@@ -0,0 +1,20 @@
++<?php
++require __DIR__ . '/../misc/utilibre-http.php';
++$checks = 0;
++function check(bool $condition): void {
++    global $checks;
++    if (!$condition) throw new RuntimeException('Validation regression');
++    $checks++;
++}
++check(utilibre_valid_url('https://i.pinimg.com/a.jpg', ['i.pinimg.com']));
++foreach (['http://i.pinimg.com/a', 'https://i.pinimg.com.evil.test/a',
++          'https://i.pinimg.com@127.0.0.1/a', 'https://user@i.pinimg.com/a',
++          'https://i.pinimg.com:444/a', 'https://i.pinimg.com/a#b',
++          'https://127.0.0.1/a', 'https://[::1]/a', 'file:///etc/passwd'] as $url) {
++    check(!utilibre_valid_url($url, ['i.pinimg.com']));
++}
++foreach (['127.0.0.1', '10.10.1.3', '172.29.85.20', '192.168.1.1',
++          '169.254.169.254', '100.64.0.1', '198.18.0.1', '192.0.0.8',
++          '0.0.0.0', '255.255.255.255', '::1'] as $ip) check(!utilibre_public_ip($ip));
++check(utilibre_public_ip('1.1.1.1'));
++echo "$checks Binternet URL/address checks passed.\n";

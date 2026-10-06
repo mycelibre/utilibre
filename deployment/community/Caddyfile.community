@@ -119,3 +119,11 @@ twitch.utilibre.org {
 		header_up X-Forwarded-For {client_ip}
 	}
 }
+
+binternet.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3150 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}

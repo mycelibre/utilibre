@@ -98,7 +98,7 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
     publicPythonUrl: 'https://python.utility.test/', publicTranscribeUrl: 'https://transcribe.utility.test/',
     publicWakapiUrl: 'https://wakapi.utility.test/',
     publicResumeUrl: 'https://cv.utility.test/', publicDesignUrl: 'https://design.utility.test/', publicBudgetUrl: 'https://budget.utility.test/',
-    listedServices: ['whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub'],
+    listedServices: ['whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet'],
     enabledServices: catalog.filter((entry) => entry.kind === 'service').map((entry) => entry.id),
   };
   await mockConfig(page, config);
@@ -129,7 +129,7 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
     if (language === 'es') await expect(page.locator('h1')).toHaveText('¿Qué necesitás hacer?');
     await page.screenshot({ path: testInfo.outputPath(`toolbox-${language}.png`), fullPage: false });
     await page.goto(`/${language}/?view=all`);
-    for (const id of ['dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub']) {
+    for (const id of ['dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet']) {
       const row = page.locator(`[data-catalog-id="${id}"]`);
       await expect(row).toBeVisible();
       await expect(row.locator('.catalog-ledger-launch')).toHaveCount(0);

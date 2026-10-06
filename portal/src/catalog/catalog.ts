@@ -207,6 +207,7 @@ function readerEvaluations(): CatalogEntry[] {
     { id: 'safetwitch', name: { en: 'Watch Twitch · SafeTwitch', es: 'Ver Twitch · SafeTwitch' }, description: { en: 'Watch public Twitch channels without an account. Live chat is disabled.', es: 'Mirá canales públicos de Twitch sin cuenta. El chat en vivo está desactivado.' }, reason: { en: 'Live video and Spanish mobile tests passed on the protected backend. The public HTTPS route is still pending.', es: 'Las pruebas de video en vivo y de español en móvil pasaron en el servidor protegido. Falta activar la ruta HTTPS pública.' }, upstream: 'Twitch' },
     { id: 'anonymousoverflow', name: { en: 'Read Stack Overflow', es: 'Leer Stack Overflow' }, description: { en: 'Read programming questions and answers with AnonymousOverflow.', es: 'Leé preguntas y respuestas de programación con AnonymousOverflow.' }, reason: { en: 'Article retrieval passed on the protected backend. The public HTTPS route is still pending.', es: 'La lectura de artículos pasó en el servidor protegido. Falta activar la ruta HTTPS pública.' }, upstream: 'Stack Exchange' },
     { id: 'gothub', name: { en: 'Read GitHub · GotHub', es: 'Leer GitHub · GotHub' }, description: { en: 'Browse public GitHub repositories through a lightweight reader.', es: 'Explorá repositorios públicos de GitHub con una interfaz liviana.' }, reason: { en: 'The hardened backend passes repository/file checks. Public HTTPS still needs the separate Caddy route.', es: 'El servidor actualizado pasó las pruebas de repositorios y archivos. Falta activar la ruta HTTPS en el servidor Caddy.' }, upstream: 'GitHub' },
+    { id: 'binternet', name: { en: 'Search Pinterest · Binternet', es: 'Buscar en Pinterest · Binternet' }, description: { en: 'Search public Pinterest images without an account. The tool interface is in English.', es: 'Buscá imágenes públicas de Pinterest sin cuenta. La interfaz de la herramienta está en inglés.' }, reason: { en: 'Search, images and pagination work on the protected backend. Public HTTPS still needs the separate Caddy route.', es: 'La búsqueda, las imágenes y la paginación funcionan en el servidor protegido. Falta activar la ruta HTTPS en el servidor Caddy.' }, upstream: 'Pinterest and its image CDN' },
   ];
   return entries.map((entry) => ({
     id: entry.id, ...providerMetadata(entry.id), kind: 'service', implementation: 'upstream-application',
@@ -217,7 +218,7 @@ function readerEvaluations(): CatalogEntry[] {
     temporaryStorage: { en: 'Private evaluation only; this is not a file storage service.', es: 'Solo en evaluación privada; no es un servicio de almacenamiento de archivos.' },
     retention: { en: 'Public retention settings are not yet established. Do not send personal data.', es: 'Todavía no hay una política de conservación para uso público. No enviés datos personales.' },
     logging: { en: 'Evaluation logging and upstream retention vary by application; no public no-logging claim is made.', es: 'Los registros de prueba y la conservación del proveedor varían según la aplicación; no afirmamos que un servicio público carezca de registros.' },
-    modified: false, operationalStatus: 'maintenance',
+    modified: entry.id === 'binternet', operationalStatus: 'maintenance',
   }));
 }
 

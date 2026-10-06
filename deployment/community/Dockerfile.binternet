@@ -1,0 +1,14 @@
+# Binternet 9bb70ef26c8b79a315e77b79bfd346433d55cbb6 plus binternet-source.patch.
+FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0 AS application
+RUN apk add --no-cache php84 php84-fpm php84-dom php84-curl php84-openssl php84-fileinfo ca-certificates
+WORKDIR /app
+COPY . .
+RUN php84 -l search.php && php84 -l image_proxy.php && php84 -l misc/utilibre-http.php \
+    && php84 tests/utilibre-http.php
+USER 65534:65534
+ENTRYPOINT ["php-fpm84", "-F", "-y", "/etc/php84/utilibre-fpm.conf"]
+
+FROM nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8 AS gateway
+COPY --from=application /app /app
+USER 101:101
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

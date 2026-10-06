@@ -87,6 +87,7 @@ homepage, successful content retrieval, and public readiness are separate checks
 | SafeTwitch 2.4.5-p1 | app LAN 3146; proposed `twitch.utilibre.org` | Source-built static frontend and Go 1.26 backend, bounded Twitch/CDN-only proxy, image MIME checks, fixed URL-safe playlist encoding, gateway quotas/cache and explicit follow-lookup bounds. Real live-video frames decode and time advances; EN desktop/ES mobile, images and following lookups pass with no third-party browser requests in the tested workflow. Chat is disabled. Caddy HTTPS remains pending; long recordings/clips and every upstream feature are not validated. |
 | AnonymousOverflow 937cfee-p1 | app LAN 3147; proposed `overflow.utilibre.org` | Hardened current-Go/dependency build renders a real question and answers. govulncheck reports no reachable vulnerabilities. Fixed-host short-link fetching, bounded JSON cache and quota/backoff tests pass; invalid media tokens are denied. Source published; Caddy HTTPS pending. |
 | GotHub 24bedc8-p1 | app LAN 3148; `gothub.utilibre.org` | Hardened Go 1.26.8 build; govulncheck reports no vulnerabilities. Bounded GitHub-only egress, gateway limits and full modified source supplied. Local repository/file content passes; public HTTPS still returns 525 pending the separate Caddy block. Upstream seeks maintainers. |
+| Binternet 9bb70ef-p1 | app LAN 3150; `binternet.utilibre.org` | GPL-3.0 source build on PHP 8.4.21. Desktop/mobile Pinterest search, images and pagination pass on the protected backend. HTTPS exact-host/DNS-pinned requests, response/time limits, image MIME checks, escaped author text and gateway quotas added. Public Caddy route remains pending. English UI; no native Utilibre return-link option. |
 
 Runtime recipes are `deployment/community/compose*.yaml`. Unready evaluation services
 have loopback listeners; reviewed gateways use Caddy-only LAN listeners. Both use
@@ -99,6 +100,20 @@ are used where available; Priviblur requires the complete Spanish preference
 restore URL, not only a `language` parameter. Experimental entries are searchable
 in the bilingual catalog and software list, with no launch links and no claim
 of public availability; they are not featured on the default homepage.
+
+Binternet also restarts automatically. Its full modified source is available at
+`/utilibre-source/binternet-utilibre.tar.gz` and the patch/build/configuration
+are tracked under `deployment/community/`. It has no database, visitor account,
+uploads or persistent image cache; bounded images are held in worker memory.
+Searches and image requests go to Pinterest and its image CDN from this server.
+Author links leave the instance for Pinterest. Gateway access logs are disabled,
+but error logs and any edge/upstream retention still apply. Pagination URLs carry
+anonymous Pinterest CSRF tokens, never a shared personal login cookie.
+Broken upstream `api.php` and non-public PHP files are denied by the gateway.
+Binternet's official instance list excludes Cloudflare-proxied hosts. DNS was
+confirmed direct after the operator's update; submission still needs working
+public HTTPS. Tor/onion access was discussed, not installed or promised as
+upstream anonymity. No cryptocurrency wallet or donation address was configured.
 
 Merge `deployment/community/Caddyfile.community` on the separate edge VM,
 preserving the existing Cloudflare-only trusted proxy ranges. The file supplies

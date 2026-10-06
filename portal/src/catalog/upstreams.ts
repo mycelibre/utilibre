@@ -1,4 +1,4 @@
-export type FossProviderId = 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'dumb' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris';
+export type FossProviderId = 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'dumb' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris' | 'binternet';
 
 export type ReviewedLicense =
   | 'AGPL-3.0'
@@ -38,6 +38,7 @@ export interface ReviewedFossProvider {
  * never enables a public route or opens registrations.
  */
 export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider> = {
+  binternet: { ...toolboxProvider('Binternet', 'Ahwxorg/Binternet', '9bb70ef26c8b79a315e77b79bfd346433d55cbb6', 'GPL-3.0', '9bb70ef-p1 · hardened build · public edge pending', 'source:9bb70ef26c8b79a315e77b79bfd346433d55cbb6+deployment/community/binternet-source.patch'), reviewStatus: 'staged', integration: 'source-build' },
   pollaris: {
     project: 'Pollaris', sourceUrl: 'https://framagit.org/pollaris/pollaris',
     reviewedSourceUrl: 'https://framagit.org/pollaris/pollaris/-/tree/b6ab5b3309e858a02c042350be82cc7a9c599246',

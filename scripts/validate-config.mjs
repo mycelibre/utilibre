@@ -35,7 +35,7 @@ const services = [
   { id: 'pollaris', hostKey: 'PUBLIC_POLLARIS_HOST', urlKey: 'PUBLIC_POLLARIS_URL', portKey: 'POLLARIS_PORT' },
 ];
 const allowedServices = new Set(services.map(({ id }) => id));
-const listableServices = new Set([...allowedServices, 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub']);
+const listableServices = new Set([...allowedServices, 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet']);
 
 // Stale settings should fail loudly instead of silently republishing a service
 // that the project deliberately retired.

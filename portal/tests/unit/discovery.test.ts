@@ -43,7 +43,7 @@ describe('catalog discovery metadata', () => {
     expect(catalog.map((entry) => entry.id)).toEqual([
       'pollaris',
       'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd',
-      'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub',
+      'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet',
       'whisper-web', 'jupyterlite',
       'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma',
       'bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools',
