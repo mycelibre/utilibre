@@ -87,7 +87,7 @@ homepage, successful content retrieval, and public readiness are separate checks
 | SafeTwitch 2.4.5-p1 | app LAN 3146; proposed `twitch.utilibre.org` | Source-built static frontend and Go 1.26 backend, bounded Twitch/CDN-only proxy, image MIME checks, fixed URL-safe playlist encoding, gateway quotas/cache and explicit follow-lookup bounds. Real live-video frames decode and time advances; EN desktop/ES mobile, images and following lookups pass with no third-party browser requests in the tested workflow. Chat is disabled. Caddy HTTPS remains pending; long recordings/clips and every upstream feature are not validated. |
 | AnonymousOverflow 937cfee-p1 | app LAN 3147; proposed `overflow.utilibre.org` | Hardened current-Go/dependency build renders a real question and answers. govulncheck reports no reachable vulnerabilities. Fixed-host short-link fetching, bounded JSON cache and quota/backoff tests pass; invalid media tokens are denied. Source published; Caddy HTTPS pending. |
 | GotHub 24bedc8-p1 | app LAN 3148; `gothub.utilibre.org` | Hardened Go 1.26.8 build; govulncheck reports no vulnerabilities. Bounded GitHub-only egress, gateway limits and full modified source supplied. Local repository/file content passes; public HTTPS still returns 525 pending the separate Caddy block. Upstream seeks maintainers. |
-| Binternet 9bb70ef-p1 | app LAN 3150; `binternet.utilibre.org` | GPL-3.0 source build on PHP 8.4.21. Desktop/mobile Pinterest search, images and pagination pass on the protected backend. HTTPS exact-host/DNS-pinned requests, response/time limits, image MIME checks, escaped author text and gateway quotas added. Public Caddy route remains pending. English UI; no native Utilibre return-link option. |
+| Binternet 9bb70ef-p1 | app LAN 3150; `binternet.utilibre.org` | GPL-3.0 source build on PHP 8.4.21. Desktop/mobile Pinterest search, images and pagination pass on the protected backend. HTTPS exact-host/DNS-pinned requests, response/time limits, image MIME checks, escaped author text and gateway quotas added. Caddy now serves verified TLS through its private address; outside-network connectivity is not yet confirmed. English UI; no native Utilibre return-link option. |
 
 Runtime recipes are `deployment/community/compose*.yaml`. Unready evaluation services
 have loopback listeners; reviewed gateways use Caddy-only LAN listeners. Both use
@@ -111,8 +111,8 @@ but error logs and any edge/upstream retention still apply. Pagination URLs carr
 anonymous Pinterest CSRF tokens, never a shared personal login cookie.
 Broken upstream `api.php` and non-public PHP files are denied by the gateway.
 Binternet's official instance list excludes Cloudflare-proxied hosts. DNS was
-confirmed direct after the operator's update; submission still needs working
-public HTTPS. Tor/onion access was discussed, not installed or promised as
+confirmed direct after the operator's update; submission still needs confirmed
+outside-network access. Tor/onion access was discussed, not installed or promised as
 upstream anonymity. No cryptocurrency wallet or donation address was configured.
 
 Merge `deployment/community/Caddyfile.community` on the separate edge VM,
