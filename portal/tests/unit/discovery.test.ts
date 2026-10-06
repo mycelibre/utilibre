@@ -14,6 +14,7 @@ import {
 import type { PublicConfig } from '../../src/config';
 
 const baseConfig: PublicConfig = {
+  publicLyricsUrl: '',
   publicMumbleUrl: '',
   publicDegoogUrl: '',
   publicBooksUrl: '', publicQrToolsUrl: '', publicInstagramUrl: '', publicFourgetUrl: '', publicOverflowUrl: '', publicTwitchUrl: '',
@@ -48,7 +49,7 @@ describe('catalog discovery metadata', () => {
     expect(catalog.map((entry) => entry.id)).toEqual([
       'pollaris',
       'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd',
-      'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'kittygram', 'rimgo', 'mumble', 'biblioreads', 'gothub', 'binternet',
+      'lrclib', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'kittygram', 'rimgo', 'mumble', 'biblioreads', 'gothub', 'binternet',
       'translite', 'whisper-web', 'jupyterlite',
       'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma',
       'bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'qr-offline', 'ittools',
@@ -60,7 +61,7 @@ describe('catalog discovery metadata', () => {
     expect(catalog.filter((entry) => entry.featuredOrder !== undefined)
       .sort((left, right) => (left.featuredOrder ?? 0) - (right.featuredOrder ?? 0))
       .map((entry) => entry.id))
-      .toEqual(['bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite', 'biblioreads', 'fourget', 'anonymousoverflow', 'safetwitch', 'qr-offline', 'kittygram', 'rimgo', 'mumble', 'degoog']);
+      .toEqual(['bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite', 'biblioreads', 'fourget', 'anonymousoverflow', 'safetwitch', 'qr-offline', 'kittygram', 'rimgo', 'mumble', 'degoog', 'lrclib']);
   });
 
   it('keeps unrequested retired applications out of the catalog', () => {
@@ -71,6 +72,14 @@ describe('catalog discovery metadata', () => {
 });
 
 describe('config-gated catalog discovery', () => {
+  it('replaces Dumb with explicitly enabled LRCLIB and does not invent Spanish support', () => {
+    expect(catalogEntry('dumb')).toBeUndefined();
+    const entry = catalogEntry('lrclib')!;
+    expect(entry.upstreamProject).toBe('LRCLIB');
+    expect(entryLaunch(entry, 'es', config({publicLyricsUrl:'https://lyrics.utilibre.org/'}))).toBeNull();
+    expect(entryLaunch(entry, 'es', config({publicLyricsUrl:'https://lyrics.utilibre.org/',enabledServices:['lrclib']}))?.href).toBe('https://lyrics.utilibre.org/');
+    expect(entry.help?.es).toContain('inglés');
+  });
   it('opens Mumble in its native client only when explicitly enabled', () => {
     const entry=catalogEntry('mumble')!;
     const url='mumble://mumble.utilibre.org:64738/';

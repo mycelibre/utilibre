@@ -13,14 +13,16 @@ x-runtime: &runtime
     options: {max-size: 5m, max-file: "2"}
 services:
   dumb:
+    # Compatibility service key; LRCLIB replaces the stateless Dumb image here.
+    # This preserves the protected network address and existing Caddy target.
     <<: *runtime
-    image: ghcr.io/rramiachraf/dumb@sha256:de231df0313999b834b5ccc7cf0b5d426fc6b42bfdd984f7f7c322b3d9db3907
+    image: utilibre-lrclib:f37c070-p1
     user: "65532:65532"
     environment: {PORT: "5555"}
     networks:
       lyrics: {ipv4_address: 172.29.76.10}
     healthcheck:
-      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:5555/]
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:5555/healthz]
       interval: 30s
       timeout: 5s
       retries: 3

@@ -34,6 +34,7 @@ const additions = [
   ['Kittygram', 'https://gram.utilibre.org/'],
   ['QR Tools', 'https://qrtools.utilibre.org/'],
   ['DeGoog', 'https://degoog.utilibre.org/'],
+  ['LRCLIB lyrics', 'https://lyrics.utilibre.org/healthz'],
 ];
 const program = `
 const {io}=require('socket.io-client');

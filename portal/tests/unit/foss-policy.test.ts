@@ -50,7 +50,7 @@ describe('FOSS-only public capability policy', () => {
 
     const referencedProviders = new Set(catalog.map((entry) => entry.providerId));
     expect([...referencedProviders].sort()).toEqual(Object.keys(reviewedFossProviders).sort());
-    expect([...referencedProviders].sort()).toEqual(['actual', 'anonymousoverflow', 'bentopdf', 'biblioreads', 'binternet', 'breezewiki', 'degoog', 'drawio', 'dumb', 'fmd', 'fourget', 'freshrss', 'gothub', 'hatsh', 'ittools', 'jupyterlite', 'kittygram', 'libremdb', 'mezzo', 'miniqr', 'mumble', 'ntfy', 'omnitools', 'pairdrop', 'penpot', 'pollaris', 'privatebin', 'priviblur', 'qr-offline', 'rallly', 'reactive-resume', 'redlib', 'rimgo', 'rssbridge', 'safetwitch', 'searxng', 'translite', 'uptime-kuma', 'vert', 'wakapi', 'whisper-web', 'yopass']);
+    expect([...referencedProviders].sort()).toEqual(['actual', 'anonymousoverflow', 'bentopdf', 'biblioreads', 'binternet', 'breezewiki', 'degoog', 'drawio', 'fmd', 'fourget', 'freshrss', 'gothub', 'hatsh', 'ittools', 'jupyterlite', 'kittygram', 'libremdb', 'lrclib', 'mezzo', 'miniqr', 'mumble', 'ntfy', 'omnitools', 'pairdrop', 'penpot', 'pollaris', 'privatebin', 'priviblur', 'qr-offline', 'rallly', 'reactive-resume', 'redlib', 'rimgo', 'rssbridge', 'safetwitch', 'searxng', 'translite', 'uptime-kuma', 'vert', 'wakapi', 'whisper-web', 'yopass']);
 
     const repositoryRoot = new URL('../../../', import.meta.url);
     for (const provider of Object.values(reviewedFossProviders)) {

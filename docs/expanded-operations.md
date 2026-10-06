@@ -8,7 +8,7 @@ application gateways bind `10.10.1.43`. Preserve its existing Cloudflare-only tr
 | Priviblur | tumblr.utilibre.org | 3139 |
 | Mezzo | tenor.utilibre.org | 3140 |
 | FMD | fmd.utilibre.org | 3141 |
-| Dumb | lyrics.utilibre.org | 3142 — upstream blocked |
+| LRCLIB (replaces Dumb) | lyrics.utilibre.org | 3142 |
 | 4get | 4get.utilibre.org | 3145 |
 | SafeTwitch | twitch.utilibre.org | 3146 |
 | AnonymousOverflow | overflow.utilibre.org | 3147 |
@@ -30,6 +30,62 @@ TCP/UDP forwarding; keep its join password separate from SuperUser credentials.
 Credentials are private in `/opt/utilibre/mumble/runtime.env`, not in this repo.
 
 ## Scheduled maintenance
+
+### Lyrics replacement
+
+LRCLIB's MIT-licensed official web client replaces Dumb at the same hostname
+and port. It searches the LRCLIB catalog, not Genius: annotations, Genius links
+and artist biographies are not preserved. The upstream interface is English.
+The portal explains this in both languages. No custom Utilibre return link was
+added, following the native-settings-only rule.
+
+Pinned frontend: `tranxuanthang/lrclib-homepage` commit
+`f37c07042be1af5fdcc7932d090af32141089751`, with
+`deployment/community/lrclib-source.patch`. The production image contains only
+static frontend assets and a dependency-free Node 24 read-only adapter. The
+frontend's production dependency audit is clean; older build-only Tailwind/Vite
+tooling still has advisories and is not exposed as a development server.
+
+The adapter only calls LRCLIB's documented `/api/search`. It sends an identifying
+User-Agent, no visitor headers, serializes requests with a 500 ms gap, and honors
+Retry-After (minimum 60 seconds; 403 pauses ten minutes). Responses are limited
+to 2 MiB, with an 8 MiB / 128-entry / ten-minute RAM cache. No account, publish
+API, arbitrary proxy target, persistent search history or search logging.
+Cloudflare/Caddy remain in the data path. Public browser tests confirm that CSP
+blocks Cloudflare's injected inline challenge script; the app itself works
+without enabling that script. Health monitoring checks only local liveness,
+not continuous upstream searches.
+
+Build from the pinned checkout with the patch applied:
+
+```sh
+docker build --build-context integration=/home/ubuntu/freetools/deployment/community \
+  -f /home/ubuntu/freetools/deployment/community/Dockerfile.lrclib \
+  -t utilibre-lrclib:f37c070-p1 /opt/utilibre/community-src/lrclib-homepage
+docker compose -f deployment/community/compose.additions.yaml up -d --no-deps dumb
+docker exec utilibre-additions-dumb-gateway-1 nginx -t
+docker exec utilibre-additions-dumb-gateway-1 nginx -s reload
+LRCLIB_CHECK_URL=https://lyrics.utilibre.org node deployment/community/check-lrclib.mjs
+```
+
+The Compose service key `dumb` is retained solely to preserve its private network
+address/firewall and existing gateway. Its image is now LRCLIB; the public
+catalog ID is `lrclib`. The previous stateless Dumb image remains available for
+rollback, but still cannot retrieve Genius content. No visitor data was removed.
+
+Other replacements reviewed October 6:
+
+- [Phantom](https://codeberg.org/phantom-org/phantom) at `5517e140` still fetches
+  Fandom's blocked media host. Its proxy uses string-prefix URL authorization,
+  follows redirects and reads unbounded bodies; not deployed as a safe drop-in.
+- [Rimgu](https://codeberg.org/3np/rimgu) explicitly recommends Rimgo instead
+  while its own development is paused. No verified Imgur replacement found.
+- [Watcharr](https://github.com/sbondCo/Watcharr) is an account-based watched-list
+  service, not an anonymous IMDb reader. TMDB-based movie browsers also require
+  operator API registration and terms acceptance. No verified LibreMDB drop-in
+  has been deployed, and its obsolete runtime remains stopped.
+
+### Existing schedules
 
 ```sh
 systemctl list-timers 'utilibre-*' --no-pager

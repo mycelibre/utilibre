@@ -42,6 +42,7 @@ export interface PublicConfig {
   publicFourgetUrl: string;
   publicOverflowUrl: string;
   publicTwitchUrl: string;
+  publicLyricsUrl: string;
   publicDegoogUrl: string;
   publicMumbleUrl: string;
   searxngDeployedVersion: string;
@@ -94,6 +95,7 @@ const defaults: PublicConfig = {
   publicFourgetUrl: '',
   publicOverflowUrl: '',
   publicTwitchUrl: '',
+  publicLyricsUrl: '',
   publicDegoogUrl: '',
   publicMumbleUrl: '',
   searxngDeployedVersion: '',

@@ -1,4 +1,4 @@
-export type FossProviderId = 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'dumb' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris' | 'binternet' | 'translite' | 'biblioreads' | 'qr-offline' | 'kittygram' | 'rimgo' | 'mumble';
+export type FossProviderId = 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'lrclib' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris' | 'binternet' | 'translite' | 'biblioreads' | 'qr-offline' | 'kittygram' | 'rimgo' | 'mumble';
 
 export type ReviewedLicense =
   | 'AGPL-3.0'
@@ -38,6 +38,7 @@ export interface ReviewedFossProvider {
  * never enables a public route or opens registrations.
  */
 export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider> = {
+  lrclib: { ...toolboxProvider('LRCLIB', 'tranxuanthang/lrclib-homepage', 'f37c07042be1af5fdcc7932d090af32141089751', 'MIT', 'f37c070-p1 · cached read-only API · replaces Dumb', 'source:f37c07042be1af5fdcc7932d090af32141089751+deployment/community/lrclib-source.patch'), reviewStatus: 'deployed', integration: 'source-build' },
   kittygram: { ...forgeEvaluationProvider('Kittygram', 'https://codeberg.org/irelephant/kittygram', '5931c21c0990d4b216e97166dd78c03c9965567a', 'AGPL-3.0', 'LICENSE', '5931c21-p1 · public profile/post/video tested', 'source:5931c21c0990d4b216e97166dd78c03c9965567a+deployment/community/kittygram-source.patch'), reviewStatus: 'deployed' },
   rimgo: forgeEvaluationProvider('Rimgo', 'https://codeberg.org/rimgo/rimgo', 'd2be8e221522dfe7a06452e2002dcf6dad569d1a', 'AGPL-3.0', 'LICENSE', 'd2be8e2-p2 · Imgur media currently rate-limited', 'source:d2be8e221522dfe7a06452e2002dcf6dad569d1a+deployment/community/rimgo-source.patch'),
   mumble: { ...toolboxProvider('Mumble', 'mumble-voip/mumble', 'v1.5.915', 'BSD-3-Clause', '1.5.915 · password-protected · TCP voice verified', 'mumblevoip/mumble-server:v1.5.915@sha256:018ad3515932e513d8fdc970df918373a2664c4da32b09a89a4aaee28eb7507a'), reviewStatus: 'deployed' },
@@ -56,7 +57,6 @@ export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider>
     reviewStatus: 'deployed', reviewDocument: 'docs/toolbox-review.md',
     role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-06',
   },
-  dumb: { ...toolboxProvider('Dumb', 'rramiachraf/dumb', 'f5581074850bc31ed7df1ce96e8f428179bf0abb', 'MIT', 'f558107 · Go 1.26.8 · Genius requests blocked', 'ghcr.io/rramiachraf/dumb@sha256:de231df0313999b834b5ccc7cf0b5d426fc6b42bfdd984f7f7c322b3d9db3907'), reviewStatus: 'staged' },
   libremdb: { ...toolboxProvider('LibreMDB', 'zyachel/libremdb', 'd0793f59b5f090fe0d29341e3a173cfa92884307', 'AGPL-3.0', 'Private test stopped · runtime and IMDb blockers', 'ghcr.io/zyachel/libremdb@sha256:9f65a47fe64133045b4cfaa48e5ef73371c55c62b3d5bf42f7584a90dfd1c1ee'), reviewStatus: 'staged' },
   degoog: { ...toolboxProvider('DeGoog', 'degoog-org/degoog', '4a9bcc74f0fceaa33efbab4777f063274cce23d6', 'AGPL-3.0', '1.0.0 · three licensed SearXNG engines', 'ghcr.io/degoog-org/degoog:1.0.0@sha256:e1ce8ee724a4514d269b74088424e579322bdfcf718256c1c5dd2cbb5aaf510c'), reviewStatus: 'deployed' },
   anonymousoverflow: { ...toolboxProvider('AnonymousOverflow', 'httpjamesm/AnonymousOverflow', '937cfeefd6dcbab92ef572671f16d4d3be6abad3', 'MPL-2.0', '937cfee-p1 · hardened build', 'source:937cfeefd6dcbab92ef572671f16d4d3be6abad3+deployment/community/anonymousoverflow-source.patch'), reviewStatus: 'deployed', integration: 'source-build' },

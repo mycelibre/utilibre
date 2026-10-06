@@ -12,8 +12,8 @@ degoog.utilibre.org {
 # These routes are for this app VM only. Do not expose port 3135 (Kuma admin).
 # Rallly uses its restricted gateway and invitation-only Utilibre OIDC login.
 # Public HTTPS still requires applying this file on that separate VM.
-# Do not expose private evaluation ports 3143 or 3144. Dumb (3142) already has
-# an edge route, but Genius content still fails despite its healthy homepage.
+# Do not expose private evaluation ports 3143 or 3144. LRCLIB replaces Dumb on
+# the existing lyrics.utilibre.org route (3142); no edge change is necessary.
 # Rimgo (3153) likewise has an upstream media blocker; its block is prepared,
 # not proof that the service is ready to launch.
 

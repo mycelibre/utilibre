@@ -1,0 +1,20 @@
+# The context is the pinned lrclib-homepage checkout with the published patch.
+FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --ignore-scripts --no-audit --no-fund
+COPY src ./src
+COPY public ./public
+COPY index.html vite.config.js postcss.config.js tailwind.config.js ./
+RUN npm run build
+
+FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1
+WORKDIR /app
+COPY --from=build /app/dist ./dist
+COPY LICENSE ./dist/LICENSE
+COPY --from=integration lrclib-server.mjs lrclib-server.test.mjs ./
+RUN node --test lrclib-server.test.mjs
+USER 65532:65532
+ENV NODE_ENV=production
+EXPOSE 5555
+CMD ["node", "lrclib-server.mjs"]

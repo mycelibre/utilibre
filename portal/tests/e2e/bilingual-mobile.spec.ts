@@ -105,15 +105,17 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
     publicDegoogUrl: 'https://degoog.utility.test/', publicQrToolsUrl: 'https://qrtools.utility.test/',
     publicInstagramUrl: 'https://gram.utility.test/',
     publicMumbleUrl: 'mumble://mumble.utilibre.org:64738/',
+    publicLyricsUrl: 'https://lyrics.utility.test/',
     publicResumeUrl: 'https://cv.utility.test/', publicDesignUrl: 'https://design.utility.test/', publicBudgetUrl: 'https://budget.utility.test/',
-    listedServices: ['whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet', 'translite'],
+    listedServices: ['whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'lrclib', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet', 'translite'],
     enabledServices: catalog.filter((entry) => entry.kind === 'service').map((entry) => entry.id),
   };
   await mockConfig(page, config);
   for (const language of ['en', 'es'] as const) {
     await page.emulateMedia({ colorScheme: language === 'es' ? 'dark' : 'light' });
     await page.goto(`/${language}/`);
-    await expect(catalogRows(page)).toHaveCount(38);
+    await expect(catalogRows(page)).toHaveCount(39);
+    await expect(page.locator('[data-catalog-id="lrclib"] .catalog-ledger-launch')).toHaveAttribute('href', 'https://lyrics.utility.test/');
     await expect(page.locator('.task-navigation a')).toHaveCount(9);
     await expect(page.locator('.task-scroll-cue')).toHaveText(language==='es'?'9 grupos · deslizá':'9 groups · scroll');
     const mumbleLink=page.locator('[data-catalog-id="mumble"] .catalog-ledger-launch');
@@ -151,7 +153,7 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
     if (language === 'es') await expect(page.locator('h1')).toHaveText('¿Qué necesitás hacer?');
     await page.screenshot({ path: testInfo.outputPath(`toolbox-${language}.png`), fullPage: false });
     await page.goto(`/${language}/?view=all`);
-    for (const id of ['dumb', 'libremdb']) {
+    for (const id of ['libremdb']) {
       const row = page.locator(`[data-catalog-id="${id}"]`);
       await expect(row).toBeVisible();
       await expect(row.locator('.catalog-ledger-launch')).toHaveCount(0);

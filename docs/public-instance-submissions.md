@@ -27,7 +27,12 @@ Kittygram and TransLite; Gitfield access is needed for Mezzo. 4get uses distribu
 operator-maintained lists rather than a central acceptance workflow. FMD's
 alternative-implementations page is not a directory of public hosted instances.
 
-Do not submit broken deployments as healthy: Rimgo playback, Dumb, LibreMDB and
+LRCLIB's official frontend now replaces Dumb at `lyrics.utilibre.org`.
+No official instance directory was found in the reviewed frontend/server
+repositories. This deployment is a read-only client of the public LRCLIB API,
+not an independent LRCLIB database mirror; do not submit it as one.
+
+Do not submit broken deployments as healthy: Rimgo playback, LibreMDB and
 BreezeWiki's complete page workflow still have upstream failures. Mumble is
 password-protected with verified public TCP voice and inbound UDP routing;
 it is not an open server, and public UDP audio remains unverified.

@@ -2,7 +2,34 @@
 
 ## Public-reader expansion checkpoint — October 6, after the edge update
 
-### Latest checkpoint — October 6, QR/Gram/DeGoog launch
+### Latest checkpoint — October 6, LRCLIB replacement
+
+**39 services are enabled: 38 web services plus password-protected Mumble.**
+With the operator's approval to use suitable replacements, LRCLIB replaces
+blocked Dumb at `https://lyrics.utilibre.org/`, using the existing LAN port3142.
+The official [MIT frontend](https://github.com/tranxuanthang/lrclib-homepage/tree/f37c07042be1af5fdcc7932d090af32141089751)
+uses the documented [LRCLIB search API](https://lrclib.net/docs) through a
+bounded, read-only Utilibre adapter. No account/key is required. This provides
+lyrics, not Genius annotations or a Genius URL redirector.
+
+Public desktop/mobile search, lyrics preview, keyboard dismissal and recovery
+states pass. Those workflows make no direct third-party browser requests.
+CSP intentionally blocks Cloudflare's injected inline security script without
+breaking the application. Application search logs are absent; edge/upstream
+retention is separate. RAM cache:8MiB/128entries/ten-minute freshness;
+sequential upstream calls, 500ms spacing, and Retry-After-aware backoff.
+The browser dependency audit reports no production advisories; build-only
+Tailwind/Vite tooling retains advisories and is not present in the serving image.
+Upstream attribution/license and the pinned-source patch are retained.
+
+No safe, verified drop-in was found for the remaining IMDb/Fandom/Imgur readers.
+Phantom's current proxy validation needs security work and uses the same blocked
+Fandom media source. Rimgu's maintainer recommends Rimgo. Watcharr changes the
+movie offering to an account-based watched-list service. Details and reproduction
+commands are in [expanded operations](expanded-operations.md#lyrics-replacement).
+Off-site backups remain explicitly deferred; existing local schedules are unchanged.
+
+### Previous checkpoint — October 6, QR/Gram/DeGoog launch
 
 **38 services are enabled: 37 web services plus password-protected Mumble.**
 Relevant public web workflows and Mumble's TCP voice fallback have passed;

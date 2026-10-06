@@ -43,9 +43,10 @@ const services = [
   { id: 'fourget', hostKey: 'PUBLIC_FOURGET_HOST', urlKey: 'PUBLIC_FOURGET_URL', portKey: 'FOURGET_PORT' },
   { id: 'anonymousoverflow', hostKey: 'PUBLIC_OVERFLOW_HOST', urlKey: 'PUBLIC_OVERFLOW_URL', portKey: 'OVERFLOW_PORT' },
   { id: 'safetwitch', hostKey: 'PUBLIC_TWITCH_HOST', urlKey: 'PUBLIC_TWITCH_URL', portKey: 'SAFETWITCH_PORT' },
+  { id: 'lrclib', hostKey: 'PUBLIC_LYRICS_HOST', urlKey: 'PUBLIC_LYRICS_URL', portKey: 'LRCLIB_PORT' },
 ];
 const allowedServices = new Set([...services.map(({ id }) => id), 'mumble']);
-const listableServices = new Set([...allowedServices, 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet', 'rimgo', 'mumble']);
+const listableServices = new Set([...allowedServices, 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet', 'rimgo', 'mumble']);
 
 // Stale settings should fail loudly instead of silently republishing a service
 // that the project deliberately retired.
