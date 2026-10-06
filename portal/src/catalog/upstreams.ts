@@ -87,7 +87,7 @@ export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider>
     license: 'AGPL-3.0', licenseEvidenceUrls: ['https://gitdab.com/cadence/breezewiki/src/commit/6d09507b6e7ecec0cbac4c2c4eb223c10ccc23a4/LICENSE'],
     selfHostingEvidenceUrl: 'https://docs.breezewiki.com/Running_BreezeWiki.html', maintenanceEvidenceUrl: 'https://gitdab.com/cadence/breezewiki/commits/branch/master',
     artifactReference: 'source:6d09507b6e7ecec0cbac4c2c4eb223c10ccc23a4+deployment/expanded/breezewiki-source.patch',
-    installedVersion: '6d09507-p1 · articles work; image CDN currently denies requests',
+    installedVersion: '6d09507-p2 · bounded rejection backoff; image CDN still denies requests',
     integration: 'source-build', reviewStatus: 'deployed', reviewDocument: 'docs/toolbox-review.md', role: 'public-application',
     maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-06',
   },

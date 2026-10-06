@@ -55,7 +55,7 @@ services:
 
   breezewiki:
     <<: *runtime
-    image: utilibre-breezewiki:6d09507-p1
+    image: utilibre-breezewiki:6d09507-p2
     read_only: true
     user: "1000:1000"
     environment:

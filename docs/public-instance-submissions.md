@@ -5,6 +5,11 @@ and [SearXNG request941](https://github.com/searxng/searx-instances/issues/941)
 are existing requests, not claims of acceptance. SearXNG has its two-week wait label.
 
 The token can push operator forks but cannot create upstream pull requests.
+The Priviblur REST submission was retried on October 6 at 20:16 UTC and again
+returned403 (`Resource not accessible by personal access token`); no PR was
+created. Own-repository workflow writes work, which does not grant upstream
+repository access. Use the prepared comparisons in an authenticated browser or
+configure suitable forge authentication on the VM; do not put tokens in this file.
 These changes are prepared, **not submitted or accepted**:
 
 | Service | Prepared upstream comparison |
@@ -24,5 +29,5 @@ alternative-implementations page is not a directory of public hosted instances.
 
 Do not submit broken deployments as healthy: Rimgo playback, Dumb, LibreMDB and
 BreezeWiki's complete page workflow still have upstream failures. Mumble is
-password-protected with verified public TCP voice; it is not an open server,
-and public UDP audio remains unverified.
+password-protected with verified public TCP voice and inbound UDP routing;
+it is not an open server, and public UDP audio remains unverified.

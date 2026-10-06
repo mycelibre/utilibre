@@ -1,35 +1,39 @@
 diff --git a/.dockerignore b/.dockerignore
 new file mode 100644
-index 0000000..3223fb7
+index 0000000..56abe70
 --- /dev/null
 +++ b/.dockerignore
-@@ -0,0 +1,5 @@
+@@ -0,0 +1,6 @@
 +.git
 +compiled
 +**/compiled
 +storage
 +.env*
++__pycache__
 diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
 new file mode 100644
-index 0000000..df0a1e4
+index 0000000..be61422
 --- /dev/null
 +++ b/Dockerfile.utilibre
-@@ -0,0 +1,12 @@
+@@ -0,0 +1,15 @@
 +FROM python:3.13-slim@sha256:3dd7cc108ec1493442514f5c2a871af6af0ec31d768ff6e378a93340c3b3db5f
 +RUN apt-get update && apt-get install -y --no-install-recommends racket ca-certificates curl git libfontconfig1 libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libjpeg62-turbo libpng16-16t64 && rm -rf /var/lib/apt/lists/*
 +WORKDIR /app
 +ENV PLTUSERHOME=/opt/racket-user
-+COPY . .
++COPY req.rktd info.rkt ./
 +RUN raco pkg install --batch --auto --no-docs --skip-installed req-lib \
-+    && raco req -d \
++    && raco req -d
++COPY . .
++RUN python -m unittest test_utilibre_transport.py \
 +    && raco make dist.rkt \
++    && python test_proxy_response.py \
 +    && racket --version > /app/UTILIBRE-RACKET-VERSION.txt
 +USER 1000:1000
 +EXPOSE 10416
 +CMD ["python", "utilibre-transport.py"]
 diff --git a/UTILIBRE-RACKET-PACKAGES.txt b/UTILIBRE-RACKET-PACKAGES.txt
 new file mode 100644
-index 0000000..38a5a57
+index 0000000..1f5a725
 --- /dev/null
 +++ b/UTILIBRE-RACKET-PACKAGES.txt
 @@ -0,0 +1,229 @@
@@ -258,16 +262,16 @@ index 0000000..38a5a57
 + overeasy*              f7cff9a14b313c4a51e1dcd47bb3aa4fe7d50526    (catalog "overeasy")
 + req-lib                75eacbbbe7f929b10f97fd884f33a01cbad099ae    (catalog "req-lib" "https://gitlab.com/xgqt/racket-req.git?path=src%2Freq-lib")
 + resource-pool-lib*     323ca977ab55f526582f322f148cf684b79896c3    (catalog "resource-pool-lib" "https://github.com/Bogdanp/racket-resource-pool.git?path=resource-pool-lib")
-+ sequence-tools-lib*    18e2fc68ce957bcde5b954d3f864a5e520f57728    (catalog "sequence-tools-lib" "https://github.com/racket/racket.git?path=pkgs%2Fsequence-tools-lib")
++ sequence-tools-lib*    c34560bcaeb98d448589c038df64a52112479ca7    (catalog "sequence-tools-lib" "https://github.com/racket/racket.git?path=pkgs%2Fsequence-tools-lib")
 + thread-utils*          f81ebfaf8453acb3a938917c1a505c94af92ef87    (catalog "thread-utils" "https://github.com/Kalimehtar/thread-utils.git")
 + threading-lib*         e79cfe551740baf9f696f452d7507a6f2ed00a05    (catalog "threading-lib" "git://github.com/lexi-lambda/threading?path=threading-lib")
 + typed-ini-lib*         93d9806b9d3bedd1ad1f0c38c03bd230c6d8ffda    (catalog "typed-ini-lib" "https://gitlab.com/xgqt/racket-ini.git?path=src%2Ftyped-ini-lib")
 diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
 new file mode 100644
-index 0000000..7de1675
+index 0000000..a71fcf1
 --- /dev/null
 +++ b/UTILIBRE-SOURCE.txt
-@@ -0,0 +1,20 @@
+@@ -0,0 +1,26 @@
 +BreezeWiki on Utilibre
 +Upstream https://gitdab.com/cadence/breezewiki
 +Revision 6d09507b6e7ecec0cbac4c2c4eb223c10ccc23a4
@@ -282,6 +286,12 @@ index 0000000..7de1675
 +workers, response size/deadline limits are enforced. JSONP is off; images/styles
 +remain proxied. Article/category/file renderers now pass the strict-proxy setting
 +to the tree updater. The existing source link points to this corresponding archive.
++
++Patch p2: concurrent requests share a bounded, per-upstream rejection cooldown
++(at least ten minutes, respecting longer Retry-After values). Fandom article and
++image hosts have independent cooldowns. Upstream challenge HTML is not relayed;
++image destinations must return media/CSS, and proxied responses have a sandboxed
++CSP. Six offline unit tests cover cooldowns, concurrency, MIME and URL controls.
 +
 +Build with Dockerfile.utilibre. It installs Debian-maintained Racket and resolves
 +dependencies listed in req.rktd. UTILIBRE-RACKET-PACKAGES.txt records exact package
@@ -446,10 +456,10 @@ index 364e461..b7e8c8d 100644
                `(p "This file may be copyrighted. Consider licensing and fair use law before reusing it."))
           (p "Uploaded by "
 diff --git a/src/page-proxy.rkt b/src/page-proxy.rkt
-index cd94603..4ca7276 100644
+index cd94603..38f898b 100644
 --- a/src/page-proxy.rkt
 +++ b/src/page-proxy.rkt
-@@ -20,7 +20,7 @@
+@@ -20,14 +20,18 @@
      [(? string? dest)
       (if (is-fandom-url? dest)
           (response-handler ; catches and reports errors
@@ -458,6 +468,18 @@ index cd94603..4ca7276 100644
              (with-handlers ([exn:fail? (λ (e) ; cleans up and re-throws
                                           (easy:response-close! dest-r)
                                           (raise e))])
+               (response/output
+                #:code (easy:response-status-code dest-r)
+                #:mime-type (easy:response-headers-ref dest-r 'content-type)
+-               #:headers (build-headers always-headers)
++               #:headers (append (build-headers always-headers)
++                                 (list (header #"Content-Security-Policy" #"default-src 'none'; sandbox")
++                                       (header #"Cache-Control" (if (>= (easy:response-status-code dest-r) 400) #"no-store" #"public, max-age=300")))
++                                 (let ([retry (easy:response-headers-ref dest-r 'retry-after)])
++                                   (if retry (list (header #"Retry-After" retry)) '())))
+                (λ (out)
+                  (copy-port (easy:response-output dest-r) out)
+                  (easy:response-close! dest-r))))))
 diff --git a/src/page-wiki.rkt b/src/page-wiki.rkt
 index d87cb96..a0d22b4 100644
 --- a/src/page-wiki.rkt
@@ -484,12 +506,129 @@ index d87cb96..a0d22b4 100644
               (easy:response-status-code dest-res)
               (easy:response-body dest-res)))]))
 -
+diff --git a/test_proxy_response.py b/test_proxy_response.py
+new file mode 100644
+index 0000000..7178b96
+--- /dev/null
++++ b/test_proxy_response.py
+@@ -0,0 +1,47 @@
++"""Offline integration check of Racket's media response, not just its compiler."""
++import http.server
++import os
++import subprocess
++import threading
++import time
++import urllib.error
++import urllib.request
++
++class RejectedMedia(http.server.BaseHTTPRequestHandler):
++    def log_message(self, *_): pass
++    def do_GET(self):
++        self.send_response(403)
++        self.send_header("Content-Type", "text/plain")
++        self.send_header("Retry-After", "600")
++        self.end_headers()
++        self.wfile.write(b"Upstream unavailable")
++
++adapter = http.server.HTTPServer(("127.0.0.1", 10417), RejectedMedia)
++threading.Thread(target=adapter.serve_forever, daemon=True).start()
++app = subprocess.Popen(["racket", "dist.rkt"], stdout=subprocess.DEVNULL,
++                       env={**os.environ, "bw_bind_host": "127.0.0.1", "bw_log_outgoing": "false"})
++try:
++    ready = False
++    for _ in range(100):
++        if app.poll() is not None: raise RuntimeError("Racket server exited")
++        try:
++            with urllib.request.urlopen("http://127.0.0.1:10416/", timeout=1): ready = True
++            break
++        except (urllib.error.URLError, TimeoutError): time.sleep(0.1)
++    if not ready: raise RuntimeError("Racket server did not start")
++    try:
++        urllib.request.urlopen("http://127.0.0.1:10416/proxy?dest=https%3A%2F%2Fstatic.wikia.nocookie.net%2Ftest.png", timeout=5)
++        raise AssertionError("Upstream denial was converted to success")
++    except urllib.error.HTTPError as response:
++        assert response.code == 403, response.read()
++        assert response.headers["Retry-After"] == "600"
++        assert response.headers["Cache-Control"] == "no-store"
++        assert "sandbox" in response.headers["Content-Security-Policy"]
++        assert response.read() == b"Upstream unavailable"
++    print("Racket media response integration passed without upstream requests.")
++finally:
++    app.terminate()
++    try: app.wait(timeout=5)
++    except subprocess.TimeoutExpired: app.kill(); app.wait()
++    adapter.shutdown()
++    adapter.server_close()
+diff --git a/test_utilibre_transport.py b/test_utilibre_transport.py
+new file mode 100644
+index 0000000..58dc14e
+--- /dev/null
++++ b/test_utilibre_transport.py
+@@ -0,0 +1,58 @@
++import concurrent.futures
++import importlib.util
++import unittest
++from unittest.mock import patch
++
++spec = importlib.util.spec_from_file_location("transport", "utilibre-transport.py")
++transport = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(transport)
++IMAGE = "https://static.wikia.nocookie.net/example/images/a/b/image.png"
++
++class TransportTests(unittest.TestCase):
++    def setUp(self):
++        transport.COOLDOWNS.clear()
++
++    def test_denials_are_not_proxied_or_repeated(self):
++        with patch.object(transport, "_fetch", return_value=(403, "text/html", b"<script>challenge</script>", None)) as upstream:
++            first = transport.fetch(IMAGE)
++            second = transport.fetch(IMAGE + "?other-image=1")
++        self.assertEqual(upstream.call_count, 1)
++        self.assertEqual(first[0], 403)
++        self.assertEqual(second[0], 403)
++        self.assertNotIn(b"<script>", first[2])
++        self.assertGreaterEqual(int(second[3]), 599)
++
++    def test_concurrent_image_requests_share_cooldown(self):
++        with patch.object(transport, "_fetch", return_value=(429, "text/plain", b"blocked", "900")) as upstream:
++            with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
++                results = list(pool.map(transport.fetch, [IMAGE] * 12))
++        self.assertEqual(upstream.call_count, 1)
++        self.assertTrue(all(result[0] == 429 for result in results))
++        self.assertTrue(all(int(result[3]) >= 899 for result in results))
++
++    def test_image_denial_does_not_block_articles(self):
++        with patch.object(transport, "_fetch", side_effect=[(403, "text/html", b"challenge", None), (200, "text/html", b"article", None)]) as upstream:
++            transport.fetch(IMAGE)
++            result = transport.fetch("https://minecraft.fandom.com/wiki/Minecraft")
++        self.assertEqual(upstream.call_count, 2)
++        self.assertEqual(result[2], b"article")
++
++    def test_media_type_validation(self):
++        with patch.object(transport, "_fetch", return_value=(200, "text/html", b"<script>challenge</script>", None)):
++            self.assertEqual(transport.fetch(IMAGE)[0], 502)
++        with patch.object(transport, "_fetch", return_value=(200, "image/png", b"PNG", None)):
++            self.assertEqual(transport.fetch(IMAGE)[2], b"PNG")
++
++    def test_retry_after(self):
++        self.assertEqual(transport.retry_delay("900"), 900)
++        self.assertEqual(transport.retry_delay("30"), 600)
++        self.assertEqual(transport.retry_delay(None), 600)
++        self.assertEqual(transport.retry_delay("junk"), 600)
++        with patch.object(transport.time, "time", return_value=0):
++            self.assertEqual(transport.retry_delay("Thu, 01 Jan 1970 00:20:00 GMT"), 1200)
++
++    def test_destinations_remain_restricted(self):
++        for value in ["http://static.wikia.nocookie.net/a", "https://127.0.0.1/a", "https://evil.test/a", "https://user:pass@minecraft.fandom.com/", "https://minecraft.fandom.com:444/"]:
++            with self.assertRaises(ValueError): transport.fetch(value)
++
++if __name__ == "__main__": unittest.main()
 diff --git a/utilibre-transport.py b/utilibre-transport.py
 new file mode 100644
-index 0000000..aa3a4a7
+index 0000000..d7dc7a9
 --- /dev/null
 +++ b/utilibre-transport.py
-@@ -0,0 +1,145 @@
+@@ -0,0 +1,190 @@
 +"""Ordinary verified HTTPS transport; no browser impersonation or challenge solver.
 +
 +Loopback-only adapter for BreezeWiki's Racket client. Restricts every destination,
@@ -497,6 +636,8 @@ index 0000000..aa3a4a7
 +identity. TLS certificates are always verified. Upstream denials remain denials.
 +"""
 +import concurrent.futures
++from collections import OrderedDict
++from email.utils import parsedate_to_datetime
 +import http.client
 +import http.server
 +import ipaddress
@@ -511,6 +652,20 @@ index 0000000..aa3a4a7
 +
 +CONTEXT = ssl.create_default_context()
 +MAX_BODY = 12 * 1024 * 1024
++COOLDOWNS = OrderedDict()
++COOLDOWN_LOCK = threading.Lock()
++FETCH_LOCKS = [threading.Lock() for _ in range(64)]
++
++def retry_delay(value):
++    """Honor upstream Retry-After, with a ten-minute minimum after rejection."""
++    try:
++        seconds = int(value)
++    except (TypeError, ValueError):
++        try:
++            seconds = int(parsedate_to_datetime(value).timestamp() - time.time())
++        except (TypeError, ValueError, OverflowError):
++            seconds = 0
++    return max(600, seconds)
 +
 +def checked_url(value):
 +    if len(value) > 8192 or any(ord(c) < 32 for c in value):
@@ -522,7 +677,7 @@ index 0000000..aa3a4a7
 +        raise ValueError("Destination denied")
 +    return url
 +
-+def fetch(value, theme=""):
++def _fetch(value, theme=""):
 +    deadline = time.monotonic() + 20
 +    for hop in range(4):
 +        url = checked_url(value)
@@ -551,7 +706,7 @@ index 0000000..aa3a4a7
 +                value = urllib.parse.urljoin(value,headers["location"])
 +                checked_url(value)
 +                continue
-+            return status, headers.get("content-type", "application/octet-stream"), body
++            return status, headers.get("content-type", "application/octet-stream"), body, headers.get("retry-after")
 +        connection = http.client.HTTPSConnection(url.hostname, timeout=10, context=CONTEXT)
 +        raw = socket.create_connection(addresses[0][4], timeout=5)
 +        try:
@@ -576,11 +731,37 @@ index 0000000..aa3a4a7
 +                if not chunk: break
 +                body.extend(chunk)
 +                if len(body) > MAX_BODY: raise ValueError("Response too large")
-+            return response.status, response.getheader("Content-Type", "application/octet-stream"), bytes(body)
++            return response.status, response.getheader("Content-Type", "application/octet-stream"), bytes(body), response.getheader("Retry-After")
 +        finally:
 +            connection.close()
 +            raw.close()
 +    raise ValueError("Redirect limit")
++
++def fetch(value, theme=""):
++    host = checked_url(value).hostname
++    # Serialize requests for the same upstream host. An image-heavy page must
++    # not issue dozens of challenges after the first image has been refused.
++    with FETCH_LOCKS[hash(host) % len(FETCH_LOCKS)]:
++        with COOLDOWN_LOCK:
++            until, status = COOLDOWNS.get(host, (0, 503))
++        remaining = int(until - time.monotonic()) + 1
++        if remaining > 0:
++            return status, "text/plain; charset=utf-8", b"Upstream access temporarily unavailable. Please retry later.", str(remaining)
++        status, kind, body, retry = _fetch(value, theme)
++        if status in (403, 406, 429):
++            delay = retry_delay(retry)
++            with COOLDOWN_LOCK:
++                COOLDOWNS[host] = (time.monotonic() + delay, status)
++                COOLDOWNS.move_to_end(host)
++                while len(COOLDOWNS) > 256:
++                    COOLDOWNS.popitem(last=False)
++            # Never serve an upstream challenge document on Utilibre's origin.
++            return status, "text/plain; charset=utf-8", b"Upstream access temporarily unavailable. Please retry later.", str(delay)
++        if host == "static.wikia.nocookie.net" and status == 200:
++            mime = kind.split(";", 1)[0].strip().lower()
++            if not (mime.startswith(("image/", "audio/", "video/")) or mime == "text/css"):
++                return 502, "text/plain; charset=utf-8", b"Upstream returned an unexpected media type.", None
++        return status, kind, body, retry
 +
 +class Handler(http.server.BaseHTTPRequestHandler):
 +    def log_message(self, *_): pass
@@ -590,15 +771,18 @@ index 0000000..aa3a4a7
 +            values = urllib.parse.parse_qs(request.query, strict_parsing=True)
 +            if request.path != "/fetch" or set(values) != {"url"} or len(values["url"]) != 1:
 +                raise ValueError("Invalid request")
-+            status, kind, body = fetch(values["url"][0], self.headers.get("Cookie", ""))
++            status, kind, body, retry = fetch(values["url"][0], self.headers.get("Cookie", ""))
 +        except ValueError:
-+            status, kind, body = 400, "text/plain", b"Invalid upstream request"
++            status, kind, body, retry = 400, "text/plain", b"Invalid upstream request", None
 +        except Exception:
-+            status, kind, body = 502, "text/plain", b"Upstream request failed"
++            status, kind, body, retry = 502, "text/plain", b"Upstream request failed", None
 +        try:
 +            self.send_response(status)
 +            self.send_header("Content-Type", kind)
 +            self.send_header("Content-Length", str(len(body)))
++            self.send_header("X-Content-Type-Options", "nosniff")
++            if status >= 400: self.send_header("Cache-Control", "no-store")
++            if retry and retry.isdecimal(): self.send_header("Retry-After", retry)
 +            self.send_header("Connection", "close")
 +            self.end_headers()
 +            self.wfile.write(body)

@@ -21,7 +21,7 @@ application gateways bind `10.10.1.43`. Preserve its existing Cloudflare-only tr
 | Kittygram | gram.utilibre.org | 3154 |
 | QR Tools | qrtools.utilibre.org | 3155 |
 | DeGoog | degoog.utilibre.org | 3156 |
-| Mumble | mumble.utilibre.org | 64738 TCP **and** UDP — public TCP voice verified; UDP unverified |
+| Mumble | mumble.utilibre.org | 64738 TCP **and** UDP — TCP voice and inbound UDP routing verified; UDP audio not yet tested |
 
 DeGoog's direct port 3143, LibreMDB's 3144 and Kuma administration 3135 remain
 loopback-only. Do not route them through Caddy. The current Caddy HTTP blocks are
@@ -55,6 +55,8 @@ visitor queries or backup contents. It cannot independently detect whole-VM loss
 No automatic deletion policy was chosen for new snapshots. The backup guards
 refuse new runs below 5 GiB free and notify the operator. Off-site storage still
 needs an operator-provided destination; on-host snapshots are not disaster recovery.
+The operator explicitly deferred off-site backup work on October 6; keep the
+existing local schedules unchanged and do not purchase or provision storage.
 
 ## Recheck the new launches
 
@@ -80,10 +82,15 @@ Reader tests make real upstream requests: do not loop them against
 429/challenge responses. Rimgo's cooldown honors longer upstream Retry-After
 values and otherwise waits ten minutes; its state is in memory.
 
-Rimgo's older Cloudflare media cache still contains error responses with a
-one-year TTL. Purge cached content for `rimgo.utilibre.org` in Cloudflare after
-this deployment. Newly fetched errors already use `no-store`; purging does not
-remove the separate Imgur rate limit. Do not purge unrelated Utilibre hosts.
+Rimgo's previously stale public media URL was rechecked at 20:15 and 20:27 UTC:
+`CF-Cache-Status: BYPASS`, `Cache-Control: no-store`, `Retry-After: 601`.
+That cache problem is resolved for the tested URL, but the separate Imgur429
+persists. Do not repeatedly retry or purge unrelated Utilibre hosts.
+
+BreezeWiki p2 adds per-host rejection backoff (minimum ten minutes; longer
+upstream Retry-After is respected), strips upstream challenge documents, and
+sandboxes media responses. Six offline transport tests and a Racket response
+integration test guard this behavior. This does not remove Fandom's image block.
 
 DeGoog uses official 1.0.0 plus three pinned AGPL SearXNG engines. Run
 `init-degoog.mjs` only for private credential initialization; run
@@ -101,11 +108,30 @@ Use a [Mumble client](https://www.mumble.info/downloads/), not a web browser:
 - Certificate: self-signed. Compare its SHA-256 fingerprint before accepting it:
   `83:FA:6A:F8:C6:79:77:E0:FE:4E:DA:3B:1F:6C:83:D6:E5:B2:49:60:CA:96:9E:DD:87:FD:86:E1:4C:38:EB:01`
 
-Public TCP authentication and voice fallback are verified. Public UDP voice
-still needs a normal external-client test; allow/forward UDP64738 as well as
-TCP64738. The Kuma monitor is explicitly a private TCP-listener check, not a
-claim that this public UDP path is monitored. The join password is separate
-from the private SuperUser administrator password.
+Public TCP authentication and voice fallback are verified. A credential-free
+[GitHub-runner check](https://github.com/mycelibre/utilibre/actions/runs/37525936562)
+also verified pinned TLS and rejection of invalid credentials. Its tagged UDP
+packets (nonce `5574696cc9adeaa7`) reached the application VM and the Mumble
+container at `172.29.92.10:64738` on October 6 at 20:22 UTC. Inbound UDP forwarding
+is therefore verified. This is not an authenticated UDP audio/return-path test.
+Public status pings stay disabled (`ALLOWPING=false`); missing unauthenticated
+ping replies are not a firewall failure. No Mumble firewall change was needed.
+The Kuma monitor remains an explicitly private TCP-listener check. The join
+password is separate from the private SuperUser administrator password.
+
+The manual `Mumble external connectivity` workflow sends no production secrets.
+It emits three small UDP probes and reports **sent**, not **delivered**. To repeat,
+capture only those tagged packets on the application VM while dispatching it:
+
+```sh
+timeout 60 tcpdump -i any -nn -XX 'udp dst port 64738 and udp[8:4] = 0 and udp[12:4] = 0x5574696c'
+# Run separately while the capture is active:
+gh workflow run mumble-external.yml
+```
+
+Compare the full eight-byte nonce printed by the workflow with the capture;
+do not capture unrelated voice packets or treat a green send-only step as UDP
+audio verification. The workflow is manual-only, not recurring monitoring.
 
 En español: instalá un cliente de Mumble, conectate a `mumble.utilibre.org` en
 el puerto `64738` y pedí la contraseña a `admin@utilibre.org`. Compará la huella
