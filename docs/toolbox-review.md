@@ -8,8 +8,8 @@ homepage, successful content retrieval, and public readiness are separate checks
 | Application | Listener | Verified / remaining work |
 | --- | --- | --- |
 | Rallly 4.15.3 | app LAN 3123; `poll.utilibre.org` | Healthy app/database; native Utilibre OIDC, verified-email/approved-group policy, email-login bypass routes blocked. Public HTTPS returns 525, so completed login, poll creation and guest voting are not yet verified. |
-| Priviblur 251a8e6 | app LAN 3139; `tumblr.utilibre.org` | Tumblr staff blog rendered; security dependency updates, private-network egress blocks and RAM-only cache. Public HTTPS 525. Modified-source archive linked prominently. |
-| Mezzo 1.4.0 | app LAN 3140; `tenor.utilibre.org` | A real GIF search returned results. Public HTTPS 525; final media/browser test pending. |
+| Priviblur 251a8e6 | app LAN 3139; `tumblr.utilibre.org` | Tumblr staff blog and an individual post rendered; security dependency updates, private-network egress blocks and RAM-only cache. Public HTTPS 525. Modified-source archive linked prominently. |
+| Mezzo 1.4.0 | app LAN 3140; `tenor.utilibre.org` | A real GIF search returned results and a proxied GIF returned HTTP 200 with image/gif. Public HTTPS 525; final public browser test pending. |
 | FMD Server 0.17.0 | app LAN 3141; `fmd.utilibre.org` | Invitation token required. Two synthetic accounts demonstrated opaque-location round-trip and account separation, then both accounts/data were deleted. HTTPS 525 and real Android/push tests remain. |
 | Dumb | app LAN 3142; proposed `lyrics.utilibre.org` | Homepage works, but Genius search fails and a lyric URL returns a soft error. Not publicly advertised as working. |
 | DeGoog 1.0.0 core | loopback 3143 | Public-instance lockdown denies unauthenticated settings API reads/writes. Indexer defaults off. No engines installed: the separate official extensions repository has no identified license. |
@@ -34,6 +34,14 @@ preserving the existing Cloudflare-only trusted proxy ranges. The file supplies
 Rallly, Priviblur, Mezzo and FMD routes; adding a route does not complete their
 end-to-end tests. Do not publish the loopback evaluations. Do not open FMD
 registration or replace its Android authentication with a browser login gate.
+The unsupported `lyrics.utilibre.org` block has now been removed from the
+deployment file so applying it does not expose a nonfunctional reader. The
+remaining Caddyfile passes local adaptation and provisioning validation; this
+does not establish successful certificate issuance or connectivity on the edge.
+The same-day public recheck found 21 of the 22 previously enabled service roots
+reachable over HTTPS. SearXNG's public IPv4 connection timed out and IPv6 failed
+from this VM; its local `/healthz` returned OK. Do not report every service live
+until this path and the four new TLS routes have passed external checks.
 
 Rallly uses the AGPL distribution without purchasing a key or altering license
 checks. Native `instance_settings.footer_links` contains English/Spanish return

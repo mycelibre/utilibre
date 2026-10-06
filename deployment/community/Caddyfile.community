@@ -3,6 +3,9 @@
 # is used. Never trust visitor-supplied CF-Connecting-IP from arbitrary peers.
 # These routes are for this app VM only. Do not expose port 3135 (Kuma admin).
 # Rallly uses its restricted gateway and invitation-only Utilibre OIDC login.
+# Public HTTPS still requires applying this file on that separate VM.
+# Do not expose private evaluation ports 3143-3148. Dumb (3142) is also
+# omitted: Genius content requests fail despite its healthy homepage.
 
 bridge.utilibre.org {
 	encode zstd gzip
@@ -72,14 +75,6 @@ tenor.utilibre.org {
 fmd.utilibre.org {
 	encode zstd gzip
 	reverse_proxy 10.10.1.43:3141 {
-		header_up X-Real-IP {client_ip}
-		header_up X-Forwarded-For {client_ip}
-	}
-}
-
-lyrics.utilibre.org {
-	encode zstd gzip
-	reverse_proxy 10.10.1.43:3142 {
 		header_up X-Real-IP {client_ip}
 		header_up X-Forwarded-For {client_ip}
 	}
