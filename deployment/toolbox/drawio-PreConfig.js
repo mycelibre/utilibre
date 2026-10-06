@@ -7,6 +7,11 @@ window.EXPORT_URL = '';
 window.PLANT_URL = '';
 window.DRAWIO_GITLAB_URL = '';
 window.DRAWIO_CONFIG = { defaultFonts: ['Arial', 'Helvetica', 'Times New Roman', 'Courier New'] };
+// Native Minimal UI fits narrow screens. Preserve explicit theme choices and
+// the regular desktop UI; no custom toolbar or upstream markup changes.
+if (!urlParams['ui'] && window.matchMedia('(max-width: 600px)').matches) {
+  urlParams['ui'] = 'min';
+}
 urlParams['offline'] = '1';
 urlParams['local'] = '1';
 urlParams['noDevice'] = '0';

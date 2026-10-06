@@ -47,7 +47,7 @@ services:
   safetwitch:
     <<: *runtime
     restart: unless-stopped
-    image: utilibre-safetwitch:caeb85a-p1
+    image: utilibre-safetwitch:ddee63e-p2
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     ports: ["10.10.1.43:3146:8080"]

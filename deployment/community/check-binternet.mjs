@@ -1,10 +1,14 @@
-// Protected-backend functional check; this does not establish public TLS.
+// Default: protected backend. An explicit public origin can use public DNS or
+// --edge for verified TLS via the known Caddy VM (not an external network test).
 import assert from 'node:assert/strict';
 import { mkdtemp } from 'node:fs/promises';
+import { request as httpsRequest } from 'node:https';
 import { chromium } from '../../portal/node_modules/playwright-core/index.mjs';
 const origin = process.env.BINTERNET_CHECK_ORIGIN || 'http://10.10.1.43:3150';
 const screenshots = await mkdtemp('/tmp/utilibre-binternet-check-');
-const browser = await chromium.launch({ headless: true });
+const edge = process.argv.includes('--edge');
+assert.ok(!edge || origin === 'https://binternet.utilibre.org', 'Only the reviewed Caddy host can use edge mode');
+const browser = await chromium.launch({ headless: true, args: edge ? ['--host-resolver-rules=MAP binternet.utilibre.org 10.10.1.3'] : [] });
 const external = new Set();
 const errors = [];
 try {
@@ -38,17 +42,31 @@ try {
     }
     await context.close();
   }
+  // BrowserContext.request does not honor Chromium resolver rules, and the app
+  // intentionally denies browser fetch() via CSP. Keep that policy unchanged.
   const api = await browser.newContext();
+  async function status(path, method='GET', body) {
+    if (!edge) return (await api.request.fetch(origin + path, {method,data:body})).status();
+    return new Promise((resolve,reject) => {
+      const request = httpsRequest(new URL(path, origin), {
+        method, family:4, timeout:20000,
+        lookup:(_host,_options,callback) => callback(null,'10.10.1.3',4),
+      }, response => { response.resume(); resolve(response.statusCode); });
+      request.on('error',reject);
+      request.on('timeout',()=>request.destroy(new Error('Caddy probe timed out')));
+      request.end(body);
+    });
+  }
   for (const path of ['/api.php', '/misc/utilibre-http.php', '/.git/config', '/tests/utilibre-http.php', '/Dockerfile.utilibre']) {
-    assert.equal((await api.request.get(origin + path)).status(), 404, path);
+    assert.equal(await status(path), 404, path);
   }
   for (const url of ['http://127.0.0.1/', 'https://10.10.1.3/', 'https://i.pinimg.com.evil.test/a', 'https://i.pinimg.com@127.0.0.1/a', 'file:///etc/passwd']) {
-    assert.equal((await api.request.get(`${origin}/image_proxy.php?url=${encodeURIComponent(url)}`)).status(), 400);
+    assert.equal(await status(`/image_proxy.php?url=${encodeURIComponent(url)}`), 400);
   }
-  assert.equal((await api.request.post(origin + '/search.php', { data: 'q=test' })).status(), 405);
+  assert.equal(await status('/search.php', 'POST', 'q=test'), 405);
   assert.equal(external.size, 0, `Unexpected browser recipients: ${[...external].join(', ')}`);
   assert.equal(errors.length, 0, errors.join('; '));
-  console.log(`Binternet: desktop/mobile search, loaded images, pagination, proxy denials and same-origin browser requests passed. Screenshots: ${screenshots}`);
+  console.log(`Binternet (${edge ? 'verified HTTPS via private Caddy edge, not independent public network' : origin.startsWith('https:') ? 'public DNS route' : 'protected backend'}): desktop/mobile search, loaded images, pagination, proxy denials and same-origin browser requests passed. Screenshots: ${screenshots}`);
 } finally {
   await browser.close();
 }

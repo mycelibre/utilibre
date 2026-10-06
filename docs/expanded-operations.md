@@ -3,6 +3,42 @@
 Work from `/home/ubuntu/freetools`. Caddy is on a separate VM at `10.10.1.3`;
 application gateways bind `10.10.1.43`. Preserve its existing Cloudflare-only trust.
 
+## Functional regression checks
+
+The October 6 audit/fixes are recorded in [the toolbox review](toolbox-review.md).
+These checks use synthetic data. They do not enumerate every application feature.
+
+```sh
+node deployment/expanded/check-whisper.mjs
+node deployment/expanded/check-jupyter.mjs
+node deployment/community/check-pairdrop.mjs
+node deployment/community/check-safetwitch.mjs
+node deployment/community/check-fmd.mjs
+node deployment/community/check-pollaris.mjs
+# App-VM public-IP hairpin limitation: explicitly test verified TLS via Caddy.
+# These two routes are NOT independent external-network availability checks.
+node scripts/check-searxng-browser.mjs https://search.utilibre.org/ 10.10.1.3
+BINTERNET_CHECK_ORIGIN=https://binternet.utilibre.org node deployment/community/check-binternet.mjs --edge
+```
+
+Whisper is `81869ed-p2` (same-origin models, 128 MiB file guard, microphone cleanup
+and retry/error recovery). draw.io is `32.0.2-p3` (native narrow-screen UI and
+content-versioned config). SafeTwitch is `ddee63e-p2`; the earlier `caeb85a` source
+metadata was wrong. Its full source now uses the verified checkout's real base.
+Do not disable media proxying or broaden CSP to repair upstream blocks.
+
+Whisper rebuilding/source publication is documented in its `UTILIBRE-SOURCE.txt`
+inside the public archive. After reviewed source changes, run
+`node deployment/expanded/publish-whisper-source.mjs`; SafeTwitch uses
+`sh deployment/community/publish-safetwitch-source.sh`. Both retain previous
+archives. Serving images contain static output, not build-time Node dependencies.
+
+The portal's `STATUS_SERVICES` now covers all 38 launched web services, including
+the eight newer entries previously shown as unknown. These are private HTTP
+liveness checks, not end-to-end workflows. Mumble remains unknown on this HTTP
+page; its separate Kuma check observes only private TCP, not public UDP voice.
+`node --test deployment/community/tests/portal-status.test.mjs` guards coverage.
+
 | Newer service | Public hostname | Application-VM port |
 | --- | --- | --- |
 | Priviblur | tumblr.utilibre.org | 3139 |

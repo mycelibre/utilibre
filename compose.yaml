@@ -112,7 +112,15 @@ services:
         pollaris=http://${PRIVATE_BIND_IP}:3149/,
         binternet=http://${PRIVATE_BIND_IP}:3150/,
         gothub=http://${PRIVATE_BIND_IP}:3148/,
-        translite=http://${PRIVATE_BIND_IP}:3152/
+        translite=http://${PRIVATE_BIND_IP}:3152/,
+        biblioreads=http://${PRIVATE_BIND_IP}:3151/,
+        fourget=http://${PRIVATE_BIND_IP}:3145/,
+        anonymousoverflow=http://${PRIVATE_BIND_IP}:3147/,
+        safetwitch=http://${PRIVATE_BIND_IP}:3146/,
+        kittygram=http://${PRIVATE_BIND_IP}:3154/,
+        qr-offline=http://${PRIVATE_BIND_IP}:3155/,
+        degoog=http://${PRIVATE_BIND_IP}:3156/,
+        lrclib=http://${PRIVATE_BIND_IP}:3142/healthz
     volumes:
       - /opt/utilibre/update-public:/run/utilibre-updates:ro
     tmpfs:

@@ -309,6 +309,9 @@ test('software spacing separates sources and groups at bilingual viewport sizes'
     await page.setViewportSize({ width, height: 1000 });
     for (const language of ['en', 'es']) {
       await page.goto(`/${language}/software`);
+      // The shell can finish loading before its async runtime config renders
+      // the software inventory. Fonts being ready does not prove DOM readiness.
+      await expect(page.locator('.software-group').first()).toBeVisible();
       await page.evaluate(() => document.fonts.ready);
       const layout = await page.evaluate(() => {
         const header = document.querySelector('.page-header')!.getBoundingClientRect();

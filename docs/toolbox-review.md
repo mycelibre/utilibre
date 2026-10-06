@@ -2,6 +2,60 @@
 
 ## Public-reader expansion checkpoint — October 6, after the edge update
 
+### Latest functional audit — October 6
+
+The enabled inventory remains **39 services**; no requested service was hidden.
+
+- **Whisper Web:** deployed `81869ed-p2`. Fixed unreadable audio failing silently,
+  failed model downloads poisoning retries, unreleased AudioContexts/blob URLs,
+  and microphone tracks remaining live after Stop/Close. Late microphone
+  permission is discarded safely; denied permission has bilingual guidance.
+  Files are limited to 128 MiB before decoding. Public desktop/mobile-emulation
+  tests cover invalid-file recovery, a deliberately failed model request followed
+  by successful speech transcription/TXT export, and microphone lifecycle.
+  No audio uploads or external browser requests occurred. Production dependency
+  audit is clean; 22 development-tooling advisories remain outside the static
+  serving image. Physical phones and long recordings remain unverified.
+- **draw.io:** deployed `32.0.2-p3`. Native Minimal UI on screens≤600px fixes
+  narrow-screen overflow; explicit UI choices and desktop defaults remain.
+  Content-versioned configuration/loader URLs fix Cloudflare serving stale
+  JavaScript. Public Spanish/mobile layout fits 390px. Cloud accounts and remote
+  export remain disabled. No custom navigation was added.
+- **SafeTwitch:** deployed `ddee63e-p2`. Lazy preview images reserve their size;
+  media admission now fits the native 50-thumbnail gallery (64/IP, 96 global).
+  Existing request-rate, upstream socket/body limits and same-origin proxying
+  remain. Public desktop/Spanish-mobile image scrolling, real decoded live
+  video and privacy checks pass without the observed intermittent 429.
+  Source audit corrected an older metadata error: the actual frontend checkout
+  is `ddee63ebbe8b7b74d8f6ed3869cd7958934746d7`, not `caeb85a`.
+- **Portal status:** added the eight missing newer web-service targets. All 38
+  launched web services now have private HTTP liveness checks, with a regression
+  test against the reviewed inventory. Mumble remains unknown on this HTTP page;
+  its separate private TCP monitor does not prove public UDP voice.
+- **Rechecks:** FMD invitation/data isolation and Pollaris create/vote/export/delete
+  passed with disposable data cleaned up. PairDrop transferred an exact-byte
+  synthetic file through public HTTPS/WebSocket signaling and WebRTC; both
+  browsers were on this test machine, not different restrictive NATs. JupyterLite
+  executed Python, pandas CSV and matplotlib examples publicly. GotHub,
+  BiblioReads, DeGoog and TransLite workflow/privacy checks passed.
+- **Network diagnosis:** search and Binternet's public-IP path times out from
+  this app VM. Verified HTTPS through the actual Caddy VM passes search in both
+  languages and Binternet search/images/pagination. Checkers explicitly label
+  that route; it is not independent external availability evidence. No TLS,
+  anti-abuse or browser-CSP bypass was used to make a check pass.
+
+The portal passes 63 unit and 56 browser tests. A flaky software-spacing test now
+waits for the asynchronously rendered inventory before measuring it; no layout
+assertions were removed. 48 deployment/security tests and 3 audio-lifecycle unit
+tests pass. All 39 Kuma liveness monitors and host resource thresholds are healthy.
+Published Whisper/SafeTwitch archives match public-download SHA256 hashes; source
+and deployment recipes are preserved, with previous archives retained.
+
+The existing Fandom-image 403, Imgur-media 429 and IMDb public-data-use gate remain
+unresolved; no privacy-weakening fallback was introduced. Off-site backups remain
+deferred. These checks are representative workflows, not a claim that every
+feature, device or upstream connector is verified.
+
 ### Latest checkpoint — October 6, LRCLIB replacement
 
 **39 services are enabled: 38 web services plus password-protected Mumble.**

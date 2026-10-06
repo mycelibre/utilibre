@@ -85,7 +85,7 @@ services:
       - *source
   drawio:
     <<: *static
-    image: utilibre-drawio:32.0.2-p1
+    image: utilibre-drawio:32.0.2-p3
     build: {context: ., dockerfile: Dockerfile.drawio}
     ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3111:8080"]
     volumes:

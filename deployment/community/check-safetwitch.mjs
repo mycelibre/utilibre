@@ -39,6 +39,17 @@ try {
     await page.waitForURL(`${origin}/`);
     await page.locator('a[href*="/directory/category/"], a[href*="/directory/game/"]').first().waitFor();
     await page.waitForFunction(() => [...document.images].filter(i => i.complete && i.naturalWidth > 0).length >= 3);
+    const previews = page.locator('a[href*="/directory/game/"] img');
+    assert.ok(await previews.count() >= 20, 'Discovery must contain a real gallery');
+    assert.ok(await previews.evaluateAll(images => images.every(i => i.loading === 'lazy' && i.width > 0 && i.height > 0)), 'Previews reserve space and load lazily');
+    // The browser chooses its lazy-loading lookahead, so do not assume an exact
+    // number of downloaded thumbnails on fast desktop connections.
+    const laterPreview = previews.nth(18);
+    await laterPreview.scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => {
+      const img = document.querySelectorAll('a[href*="/directory/game/"] img')[18];
+      return img?.complete && img.naturalWidth > 0;
+    }, null, { timeout: 30000 });
     assert.equal(await page.evaluate(() => localStorage.getItem('language')), lang === 'es' ? 'es-ES' : 'en-US');
     await page.goto(`${origin}/privacy`);
     await page.getByRole('heading', { name: lang === 'es' ? 'Privacidad de esta instancia' : 'Privacy on this instance' }).waitFor();

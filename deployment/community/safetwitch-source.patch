@@ -1,10 +1,10 @@
 diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
 new file mode 100644
-index 0000000..b1492f7
+index 0000000..1685a33
 --- /dev/null
 +++ b/Dockerfile.utilibre
 @@ -0,0 +1,18 @@
-+# Context: SafeTwitch caeb85a77be3b18a6916d2caa626d09e94d1f8b2 plus published patch.
++# Context: SafeTwitch ddee63ebbe8b7b74d8f6ed3869cd7958934746d7 plus published patch.
 +FROM node:24.14.0-alpine3.23@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS build
 +WORKDIR /src
 +COPY package.json package-lock.json ./
@@ -24,13 +24,15 @@ index 0000000..b1492f7
 +ENTRYPOINT ["nginx", "-g", "daemon off;"]
 diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
 new file mode 100644
-index 0000000..0c46f46
+index 0000000..711d49b
 --- /dev/null
 +++ b/UTILIBRE-SOURCE.txt
-@@ -0,0 +1,20 @@
+@@ -0,0 +1,27 @@
 +Utilibre SafeTwitch frontend, 2026-10-06
 +Upstream: https://codeberg.org/SafeTwitch/safetwitch
-+Revision: caeb85a77be3b18a6916d2caa626d09e94d1f8b2 (2.4.5)
++Revision: ddee63ebbe8b7b74d8f6ed3869cd7958934746d7
++Correction: earlier metadata said caeb85a; that was not the checkout used for
++the build. The actual upstream HEAD and corresponding patch base are pinned here.
 +Translations: https://codeberg.org/SafeTwitch/safetwitch-translations
 +Translation revision: 830be6ece56dbffaadbbad4d435feababc030584 (included)
 +License: AGPL-3.0; upstream and translation licenses/notices preserved.
@@ -38,8 +40,13 @@ index 0000000..0c46f46
 +Changes: current locked dependencies, static Node 24 build, disabled production
 +devtools, URL-protocol validation for profile links, disabled live-chat component,
 +instance-specific EN/ES privacy text and corresponding-source links, undefined
-+route/array guards required by current TypeScript. No custom Utilibre return UI.
-+Build: docker build -f Dockerfile.utilibre -t utilibre-safetwitch:caeb85a-p1 .
++route/array guards required by current TypeScript. P2 reserves preview image
++dimensions and lazily loads off-screen category/channel/video images. The former
++50-image burst could hit the gateway's 48-connection ceiling. The matching
++gateway permits64 media connections per IP (96 globally), retaining request-rate
++and outbound socket/body limits and private same-origin proxying. No custom
++Utilibre return UI.
++Build: docker build -f Dockerfile.utilibre -t utilibre-safetwitch:ddee63e-p2 .
 +The public domain/native locale settings are in that Dockerfile.
 +Deploy with the matching gateway/compose/firewall from:
 +https://github.com/mycelibre/utilibre/tree/main/deployment/community
@@ -48,6 +55,200 @@ index 0000000..0c46f46
 +tools processing this fixed source tree. They are not installed in the static
 +nginx runtime or shipped as browser modules. Do not use this build toolchain to
 +compile untrusted visitor-supplied projects. This is not an independent audit.
+diff --git a/deployment/check-safetwitch.mjs b/deployment/check-safetwitch.mjs
+new file mode 100644
+index 0000000..5787d47
+--- /dev/null
++++ b/deployment/check-safetwitch.mjs
+@@ -0,0 +1,92 @@
++// Backend mode tests a loopback TLS bridge, not the public edge/certificate.
++import assert from 'node:assert/strict';
++import { createServer } from 'node:https';
++import { request } from 'node:http';
++import { mkdtemp, readFile, rm } from 'node:fs/promises';
++import { execFileSync } from 'node:child_process';
++import { chromium } from '../../portal/node_modules/playwright-core/index.mjs';
++const origin = 'https://twitch.utilibre.org';
++const local = process.argv.includes('--backend');
++let proxy, directory, browser;
++const sockets = new Set();
++try {
++  if (local) {
++    directory = await mkdtemp('/tmp/utilibre-twitch-tls-');
++    execFileSync('openssl', ['req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-days', '1',
++      '-subj', '/CN=twitch.utilibre.org', '-addext', 'subjectAltName=DNS:twitch.utilibre.org',
++      '-keyout', `${directory}/key.pem`, '-out', `${directory}/cert.pem`], { stdio: 'ignore' });
++    proxy = createServer({ key: await readFile(`${directory}/key.pem`), cert: await readFile(`${directory}/cert.pem`) }, (req, res) => {
++      const upstream = request({ host: '10.10.1.43', port: 3146, path: req.url, method: req.method, agent: false,
++        headers: { ...req.headers, host: 'twitch.utilibre.org' }, timeout: 35000 }, response => {
++        res.writeHead(response.statusCode, response.headers); response.pipe(res);
++      });
++      upstream.on('timeout', () => upstream.destroy());
++      res.on('close', () => upstream.destroy());
++      upstream.on('error', () => { if (!res.headersSent) res.writeHead(502); res.end(); }); req.pipe(upstream);
++    });
++    proxy.on('connection', socket => { sockets.add(socket); socket.on('close', () => sockets.delete(socket)); });
++    await new Promise((resolve, reject) => { proxy.once('error', reject); proxy.listen(443, '127.0.0.1', resolve); });
++  }
++  browser = await chromium.launch({ headless: true, args: local ? ['--host-resolver-rules=MAP twitch.utilibre.org 127.0.0.1', '--no-proxy-server'] : [] });
++  for (const [lang, width] of [['en', 1280], ['es', 390]]) {
++    const context = await browser.newContext({ ignoreHTTPSErrors: local, viewport: { width, height: 900 }, locale: 'en-US' });
++    const page = await context.newPage();
++    const external = new Set(), errors = [], failed = [];
++    page.on('request', request => { if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== origin) external.add(new URL(request.url()).hostname); });
++    page.on('pageerror', error => errors.push(error.message));
++    page.on('response', response => { if (response.status() >= 400) failed.push({ path: new URL(response.url()).pathname, status: response.status(), server: response.headers()['server'], cache: response.headers()['cf-cache-status'] }); });
++    await page.goto(`${origin}/utilibre-language.html?lang=${lang}`);
++    await page.waitForURL(`${origin}/`);
++    await page.locator('a[href*="/directory/category/"], a[href*="/directory/game/"]').first().waitFor();
++    await page.waitForFunction(() => [...document.images].filter(i => i.complete && i.naturalWidth > 0).length >= 3);
++    const previews = page.locator('a[href*="/directory/game/"] img');
++    assert.ok(await previews.count() >= 20, 'Discovery must contain a real gallery');
++    assert.ok(await previews.evaluateAll(images => images.every(i => i.loading === 'lazy' && i.width > 0 && i.height > 0)), 'Previews reserve space and load lazily');
++    // The browser chooses its lazy-loading lookahead, so do not assume an exact
++    // number of downloaded thumbnails on fast desktop connections.
++    const laterPreview = previews.nth(18);
++    await laterPreview.scrollIntoViewIfNeeded();
++    await page.waitForFunction(() => {
++      const img = document.querySelectorAll('a[href*="/directory/game/"] img')[18];
++      return img?.complete && img.naturalWidth > 0;
++    }, null, { timeout: 30000 });
++    assert.equal(await page.evaluate(() => localStorage.getItem('language')), lang === 'es' ? 'es-ES' : 'en-US');
++    await page.goto(`${origin}/privacy`);
++    await page.getByRole('heading', { name: lang === 'es' ? 'Privacidad de esta instancia' : 'Privacy on this instance' }).waitFor();
++    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);
++    if (process.argv.includes('--screenshots')) await page.screenshot({ path: `/tmp/utilibre-twitch-${lang}-${width}.png`, fullPage: true });
++    if (lang === 'en') {
++      await page.goto(`${origin}/jynxzi`);
++      const video = page.locator('video').first();
++      await video.waitFor();
++      await video.evaluate(v => { v.muted = true; return v.play(); });
++      await page.waitForFunction(() => { const v=document.querySelector('video'); return v && v.currentTime > 2 && v.videoWidth > 0; }, null, { timeout: 30000 });
++      console.log('Decoded live video frames and playback progressed beyond two seconds.');
++      await video.evaluate(v => v.pause());
++      for (const endpoint of ['isLive', 'followingStreamer']) {
++        const result = await page.evaluate(async endpoint => {
++          const response = await fetch(`/api/users/${endpoint}/bulk`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ streamers: ['jynxzi'] }) });
++          return { status: response.status, body: await response.json() };
++        }, endpoint);
++        assert.equal(result.status, 200);
++        assert.equal(result.body.status, 'ok');
++      }
++    }
++    assert.deepEqual([...external], [], 'Unexpected third-party browser connections');
++    assert.deepEqual(errors, [], 'Browser JavaScript errors');
++    assert.deepEqual(failed, [], 'HTTP failures during ordinary use');
++    if (lang === 'en') {
++      const denied = await page.evaluate(async () => {
++        const r = await fetch('/api/users/isLive/bulk', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ streamers: Array(36).fill('jynxzi') }) });
++        return r.status;
++      });
++      assert.equal(denied, 400, 'Oversized follow lookup must be denied');
++    }
++    console.log(`SafeTwitch ${lang}/${width}: discovery images, locale, privacy page and first-party-only requests passed.`);
++    await context.close();
++  }
++} finally {
++  if (browser) await browser.close();
++  if (proxy) { for (const socket of sockets) socket.destroy(); proxy.closeAllConnections(); await new Promise(resolve => proxy.close(resolve)); }
++  if (directory) await rm(directory, { recursive: true });
++}
+diff --git a/deployment/safetwitch-evaluation.conf b/deployment/safetwitch-evaluation.conf
+new file mode 100644
+index 0000000..26689e0
+--- /dev/null
++++ b/deployment/safetwitch-evaluation.conf
+@@ -0,0 +1,90 @@
++worker_processes 1;
++pid /tmp/nginx.pid;
++error_log /dev/stderr warn;
++events { worker_connections 256; }
++http {
++  include /etc/nginx/mime.types;
++  access_log off;
++  server_tokens off;
++  absolute_redirect off;
++  client_body_temp_path /tmp/client;
++  proxy_temp_path /tmp/proxy;
++  fastcgi_temp_path /tmp/fastcgi;
++  uwsgi_temp_path /tmp/uwsgi;
++  scgi_temp_path /tmp/scgi;
++  resolver 127.0.0.11 valid=10s ipv6=off;
++  set_real_ip_from 10.10.1.3;
++  real_ip_header X-Forwarded-For;
++  real_ip_recursive on;
++  limit_req_zone $binary_remote_addr zone=twitch_api:2m rate=4r/s;
++  limit_req_zone $server_name zone=twitch_api_global:1m rate=4r/s;
++  limit_req_zone $binary_remote_addr zone=twitch_media:2m rate=8r/s;
++  limit_req_zone $server_name zone=twitch_media_global:1m rate=20r/s;
++  limit_conn_zone $binary_remote_addr zone=connections:1m;
++  limit_conn_zone $server_name zone=global_connections:1m;
++  limit_req_status 429;
++  limit_conn_status 429;
++  limit_req_log_level notice;
++  limit_conn_log_level notice;
++  proxy_cache_path /tmp/cache keys_zone=twitch_cache:1m max_size=16m inactive=2m;
++  map "$request_method:$uri" $allowed_method {
++    default 0;
++    ~^(GET|HEAD): 1;
++    "POST:/api/users/isLive/bulk" 1;
++    "POST:/api/users/followingStreamer/bulk" 1;
++  }
++  server {
++    listen 8080;
++    root /app;
++    client_max_body_size 16k;
++    limit_conn connections 48;
++    limit_conn global_connections 96;
++    if ($allowed_method = 0) { return 405; }
++    add_header Referrer-Policy no-referrer always;
++    add_header X-Content-Type-Options nosniff always;
++    add_header X-Frame-Options DENY always;
++    add_header Cross-Origin-Resource-Policy same-origin always;
++    proxy_hide_header Access-Control-Allow-Origin;
++    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'; worker-src 'self' blob:; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" always;
++    location = /utilibre-language.html { alias /srv/language/language.html; }
++    location = /utilibre-language.js { alias /srv/language/language.js; }
++    location /utilibre-source/ { alias /srv/utilibre-source/; autoindex off; }
++    location ~ (^/ws/|/\.) { return 404; }
++    location ^~ /api/chat { return 403; }
++    location / { try_files $uri $uri/ /index.html; }
++    location /api/ {
++      limit_req zone=twitch_api burst=20 nodelay;
++      limit_req zone=twitch_api_global burst=20;
++      set $backend http://safetwitch-backend:7000;
++      proxy_pass $backend;
++      proxy_set_header X-Forwarded-For $remote_addr;
++      proxy_set_header Authorization "";
++      proxy_set_header Cookie "";
++      proxy_set_header Host twitch.utilibre.org;
++      proxy_cache twitch_cache;
++      proxy_cache_valid 200 30s;
++      proxy_cache_lock on;
++      proxy_cache_key $request_uri;
++      proxy_read_timeout 30s;
++      proxy_max_temp_file_size 0;
++    }
++    location /proxy/ {
++      # The native discovery response contains 50 thumbnails. Its normal burst
++      # must fit even when a browser preloads all lazy images. Global concurrency
++      # and request-rate limits stay bounded; upstream sockets are bounded too.
++      limit_conn connections 64;
++      limit_conn global_connections 96;
++      limit_req zone=twitch_media burst=120 nodelay;
++      limit_req zone=twitch_media_global burst=120;
++      set $backend http://safetwitch-backend:7000;
++      proxy_pass $backend;
++      proxy_set_header X-Forwarded-For $remote_addr;
++      proxy_set_header Authorization "";
++      proxy_set_header Cookie "";
++      proxy_set_header Host twitch.utilibre.org;
++      proxy_read_timeout 30s;
++      proxy_max_temp_file_size 0;
++      limit_rate 1m;
++    }
++  }
++}
 diff --git a/package-lock.json b/package-lock.json
 index fe3cb29..3ba9f06 100644
 --- a/package-lock.json
@@ -6790,6 +6991,32 @@ index 11c95a7..820d18b 100644
    "dependencies": {
      "@intlify/unplugin-vue-i18n": "^11.0.0",
      "@tailwindcss/forms": "^0.5.3",
+diff --git a/src/components/CategoryPreview.vue b/src/components/CategoryPreview.vue
+index dadc42a..edfbc80 100644
+--- a/src/components/CategoryPreview.vue
++++ b/src/components/CategoryPreview.vue
+@@ -26,7 +26,7 @@ export default {
+ <template>
+   <div class="bg-crust w-40 lg:w-[11rem] md:w-[13.5rem] rounded-lg">
+     <router-link :to="`/directory/game/${encodeURIComponent(category.name)}`">
+-      <img :src="category.image" class="rounded-lg rounded-b-none w-full" />
++      <img :src="category.image" :alt="category.displayName || category.name" loading="lazy" decoding="async" width="285" height="380" class="rounded-lg rounded-b-none w-full h-auto" />
+     </router-link>
+ 
+     <div class="p-2">
+diff --git a/src/components/ChannelPreview.vue b/src/components/ChannelPreview.vue
+index ba9fa70..24b622f 100644
+--- a/src/components/ChannelPreview.vue
++++ b/src/components/ChannelPreview.vue
+@@ -17,7 +17,7 @@ export default {
+   <router-link v-if="channelData" :to="'/' + channelData.username">
+     <div class="p-3 rounded-lg bg-crust w-max max-w-lg max-h-28">
+       <div class="inline-flex space-x-3">
+-        <img :src="channelData.pfp" class="rounded-full w-20" />
++        <img :src="channelData.pfp" alt="" loading="lazy" decoding="async" width="80" height="80" class="rounded-full w-20" />
+         <div>
+           <div class="inline-flex w-full justify-between">
+             <h1 class="text-contrast text-3xl font-bold">{{ channelData.username }}</h1>
 diff --git a/src/components/FooterView.vue b/src/components/FooterView.vue
 index f74ae06..c6b4b23 100644
 --- a/src/components/FooterView.vue
@@ -6817,6 +7044,25 @@ index f74ae06..c6b4b23 100644
 +    </p>
    </div>
  </template>
+diff --git a/src/components/StreamPreview.vue b/src/components/StreamPreview.vue
+index 19c55be..3227a41 100644
+--- a/src/components/StreamPreview.vue
++++ b/src/components/StreamPreview.vue
+@@ -61,12 +61,12 @@ export default {
+   <div v-if="data.stream">
+     <div class="bg-crust rounded-lg w-[23rem] md:w-[27rem]">
+       <RouterLink :to="'/' + data.login">
+-        <img :src="data.stream.preview" class="rounded-lg rounded-b-none" />
++        <img :src="data.stream.preview" :alt="data.stream.title" loading="lazy" decoding="async" width="440" height="248" class="rounded-lg rounded-b-none w-full h-auto" />
+       </RouterLink>
+       <div class="text-contrast p-2 inline-flex space-x-2 w-full h-16">
+         <div class="inline-flex">
+           <div class="inline-flex">
+-            <img :src="data.pfp" class="rounded-full w-12 mr-2" />
++            <img :src="data.pfp" alt="" loading="lazy" decoding="async" width="48" height="48" class="rounded-full w-12 mr-2" />
+             <div class="w-full">
+               <p class="font-bold w-[18rem] md:w-[23rem] truncate" :title="data.stream.title">
+                 {{ data.stream.title }}
 diff --git a/src/components/user/AboutTab.vue b/src/components/user/AboutTab.vue
 index 0363fc6..803fc23 100644
 --- a/src/components/user/AboutTab.vue
@@ -6843,6 +7089,32 @@ index 0363fc6..803fc23 100644
            <v-icon :name="getIconName(link.type)" class="w-6 h-6 mr-1"></v-icon>
            <span>{{ link.name }}</span>
          </a>
+diff --git a/src/components/user/VideoPreview.vue b/src/components/user/VideoPreview.vue
+index 31d576d..f0b60de 100644
+--- a/src/components/user/VideoPreview.vue
++++ b/src/components/user/VideoPreview.vue
+@@ -2,10 +2,10 @@
+   <div class="min-w-[300px]">
+     <div class="relative">
+       <RouterLink v-if="videoData.type === 'vod'" :to="'/videos/' + videoData.id">
+-        <img :src="videoData.preview" class="rounded-md" width="300" />
++        <img :src="videoData.preview" :alt="videoData.title" loading="lazy" decoding="async" class="rounded-md" width="300" height="169" />
+       </RouterLink>
+       <RouterLink v-else :to="`${$route.params.username}/clip/${videoData.id}`">
+-        <img :src="videoData.preview" class="rounded-md" width="300" />
++        <img :src="videoData.preview" :alt="videoData.title" loading="lazy" decoding="async" class="rounded-md" width="300" height="169" />
+       </RouterLink>
+       <p
+         class="absolute bottom-2 right-2 bg-secondary bg-opacity-70 p-1 py-0.5 rounded-md text-xs font-bold"
+@@ -22,7 +22,7 @@
+     <div class="pt-2 space-x-2">
+       <div class="space-x-2 inline-flex">
+         <RouterLink :to="'/game/' + videoData.game.name">
+-          <img :src="videoData.game.image" />
++          <img :src="videoData.game.image" :alt="videoData.game.displayName || videoData.game.name" loading="lazy" decoding="async" width="40" height="53" />
+         </RouterLink>
+ 
+         <div class="w-full">
 diff --git a/src/mixins.ts b/src/mixins.ts
 index 676fef9..9bf4605 100644
 --- a/src/mixins.ts

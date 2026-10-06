@@ -1,4 +1,4 @@
-# Context: SafeTwitch caeb85a77be3b18a6916d2caa626d09e94d1f8b2 plus published patch.
+# Context: SafeTwitch ddee63ebbe8b7b74d8f6ed3869cd7958934746d7 plus published patch.
 FROM node:24.14.0-alpine3.23@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS build
 WORKDIR /src
 COPY package.json package-lock.json ./
