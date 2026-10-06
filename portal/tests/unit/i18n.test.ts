@@ -4,6 +4,13 @@ import { en } from '../../src/i18n/en';
 import { es } from '../../src/i18n/es';
 
 describe('bilingual content', () => {
+  it('uses Guatemalan voseo in Utilibre-owned Spanish copy', () => {
+    expect(es['home.title']).toContain('necesitás');
+    expect(es['home.catalog.empty']).toContain('Borrá');
+    expect(catalog.find((entry) => entry.id === 'freshrss')?.help?.es).toContain('tenés');
+    const spanish = [...Object.values(es), ...catalog.map((entry) => `${entry.description.es} ${entry.help?.es ?? ''}`)].join(' ');
+    expect(spanish).not.toMatch(/\b(tienes|puedes|necesitas|quieres|haz|elige|navega)\b/i);
+  });
   it('has exactly the same stable keys in English and Spanish', () => {
     expect(Object.keys(es).sort()).toEqual(Object.keys(en).sort());
     expect(Object.values(es).every((value) => value.trim().length > 0)).toBe(true);
@@ -25,17 +32,16 @@ describe('bilingual content', () => {
     expect(es['software.documents.notices']).toContain('THIRD_PARTY_NOTICES');
   });
 
-  it('discloses Cloudflare while recording NEL as disabled in both languages', () => {
+  it('explains the public data path without exposing operator release instructions', () => {
     const english = en['privacy.portal.body'];
     const spanish = es['privacy.portal.body'];
-    expect(english).toContain('Cloudflare remains an external processor');
-    expect(english).toContain('disabled on September 3, 2026');
-    expect(english).toContain('neither NEL nor Report-To');
-    expect(english).toContain('should be checked before each release');
-    expect(spanish).toContain('Cloudflare sigue siendo un procesador externo');
-    expect(spanish).toContain('se desactivó el 3 de septiembre de 2026');
-    expect(spanish).toContain('no contenían NEL ni Report-To');
-    expect(spanish).toContain('Se debe comprobar');
+    expect(english).toContain('Cloudflare');
+    expect(english).toContain('network address and request headers');
+    expect(english).toContain('Search uses a direct HTTPS connection');
+    expect(english).not.toContain('should be checked before each release');
+    expect(spanish).toContain('Cloudflare');
+    expect(spanish).toContain('dirección de red');
+    expect(spanish).not.toContain('Se debe comprobar');
   });
 
   it('discloses AI-assisted development without claiming an independent audit', () => {
@@ -77,6 +83,11 @@ describe('bilingual content', () => {
 
     expect(accountAccess).toEqual({
       freshrss: 'closed-registration',
+      'reactive-resume': 'invite-required',
+      penpot: 'invite-required',
+      actual: 'invite-required',
+      rallly: 'closed-registration',
+      wakapi: 'invite-required',
     });
   });
 

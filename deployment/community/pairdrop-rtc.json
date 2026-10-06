@@ -1,0 +1,4 @@
+{
+  "sdpSemantics": "unified-plan",
+  "iceServers": [{"urls": "stun:stun.cloudflare.com:3478"}]
+}

@@ -1,9 +1,15 @@
-export type FossProviderId = 'searxng' | 'redlib' | 'freshrss' | 'privatebin';
+export type FossProviderId = 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi';
 
 export type ReviewedLicense =
   | 'AGPL-3.0'
   | 'AGPL-3.0-only'
   | 'AGPL-3.0-or-later'
+  | 'MIT'
+  | 'GPL-3.0'
+  | 'Apache-2.0'
+  | 'Unlicense'
+  | 'BSD-3-Clause'
+  | 'MPL-2.0'
   | 'Zlib';
 
 export interface ReviewedFossProvider {
@@ -17,8 +23,8 @@ export interface ReviewedFossProvider {
   artifactReference: string;
   installedVersion: string;
   integration: 'container' | 'source-build';
-  reviewStatus: 'deployed';
-  reviewDocument: 'docs/services.md';
+  reviewStatus: 'deployed' | 'staged';
+  reviewDocument: 'docs/services.md' | 'docs/toolbox-review.md';
   role: 'public-application';
   maintainer: 'independent-upstream';
   selfHostable: true;
@@ -27,10 +33,39 @@ export interface ReviewedFossProvider {
 
 /**
  * Closed registry for applications Utilibre actually presents as hosted
- * services. A reviewed project with no public Utilibre service does not belong
- * in this visitor-facing inventory.
+ * services or explicitly requested, labeled pending services. Being listed
+ * never enables a public route or opens registrations.
  */
 export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider> = {
+  'reactive-resume': toolboxProvider('Reactive Resume', 'reactive-resume/reactive-resume', 'bc71f636c02a80ac6d731e17d2ee13501275295c', 'MIT', '6.0.0 · approved-account pilot', 'ghcr.io/reactive-resume/reactive-resume:v6.0.0@sha256:29f418bd46d23f1d7cd9a73ec7f6bc46681926cb1ff617ac388064f45ee790d0'),
+  penpot: toolboxProvider('Penpot', 'penpot/penpot', 'cf46b53bcb61c2a9be8f202bec03647a5470d43d', 'MPL-2.0', '2.18.2 · approved-account pilot', 'penpotapp/frontend:2.18.2@sha256:3619f48cbdd0c9197ad23bd3db1c9b4391d7c9c3137e22e806cd7f9c945c1c8e'),
+  actual: { ...toolboxProvider('Actual Budget', 'actualbudget/actual', 'v26.10.0', 'MIT', '26.10.0 · approved-account pilot', 'actualbudget/actual-server:26.10.0@sha256:24645e971da6bb1a1f953d6859e307a0b29be1e8b4130a35b3220c209b5b860c'), licenseEvidenceUrls: ['https://github.com/actualbudget/actual/blob/v26.10.0/LICENSE.txt'] },
+  rallly: { ...toolboxProvider('Rallly', 'lukevella/rallly', '1e5d48ad410daac9700c38c1947aad94c362ab82', 'AGPL-3.0', '4.15.3 · staged, not running', 'lukevella/rallly:4.15.3@sha256:8cd979aefe8d06e1822bc67054eb2d31088cdb831aa3f7b5615b3768f35431d9'), reviewStatus: 'staged' },
+  wakapi: { ...toolboxProvider('Wakapi', 'muety/wakapi', '347f1f45ae2863d9499236471317a76630c5308f', 'MIT', '2.18.1 · local copy and empty-state fixes', 'source:347f1f45ae2863d9499236471317a76630c5308f+deployment/expanded/Dockerfile.wakapi'), integration: 'source-build' },
+  breezewiki: {
+    project: 'BreezeWiki', sourceUrl: 'https://gitdab.com/cadence/breezewiki',
+    reviewedSourceUrl: 'https://gitdab.com/cadence/breezewiki/src/commit/6d09507b6e7ecec0cbac4c2c4eb223c10ccc23a4',
+    license: 'AGPL-3.0', licenseEvidenceUrls: ['https://gitdab.com/cadence/breezewiki/src/commit/6d09507b6e7ecec0cbac4c2c4eb223c10ccc23a4/LICENSE'],
+    selfHostingEvidenceUrl: 'https://docs.breezewiki.com/Running_BreezeWiki.html', maintenanceEvidenceUrl: 'https://gitdab.com/cadence/breezewiki/commits/branch/master',
+    artifactReference: 'distribution-sha256:f1b9bc650a02a4c36c09574620a513c89707a3b7a4db38daf6e2673238593688',
+    installedVersion: 'Official compiled distribution · f1b9bc65 · source revision not established',
+    integration: 'source-build', reviewStatus: 'deployed', reviewDocument: 'docs/toolbox-review.md', role: 'public-application',
+    maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-06',
+  },
+  jupyterlite: { ...toolboxProvider('JupyterLite', 'jupyterlite/jupyterlite', 'bf64167c041060af9025f5c5b5485f871fe90bb6', 'BSD-3-Clause', '0.8.5 · Python kernel 0.8.6', 'source:bf64167c041060af9025f5c5b5485f871fe90bb6+deployment/expanded/Dockerfile.jupyter'), licenseEvidenceUrls: ['https://github.com/jupyterlite/jupyterlite/blob/bf64167c041060af9025f5c5b5485f871fe90bb6/LICENSE'] },
+  'whisper-web': toolboxProvider('Whisper Web', 'xenova/whisper-web', '81869ed62970ff4373509b6004a6c9a3f0c5b64d', 'MIT', '81869ed · local models pilot', 'source:81869ed62970ff4373509b6004a6c9a3f0c5b64d+deployment/expanded/Dockerfile.whisper'),
+  rssbridge: { ...toolboxProvider('RSS-Bridge', 'RSS-Bridge/rss-bridge', 'b39964cee3e4b0babe739d47a604c2323fd270f0', 'Unlicense', '2025-08-05', 'rssbridge/rss-bridge:2025-08-05@sha256:569f01f3faecd0d34d702e01b34eb0a769f7bedb84caf6dff29821d18b46f971'), licenseEvidenceUrls: ['https://github.com/RSS-Bridge/rss-bridge/blob/b39964cee3e4b0babe739d47a604c2323fd270f0/UNLICENSE'] },
+  ntfy: toolboxProvider('ntfy', 'binwiederhier/ntfy', '10cb6506f836dbb00bb77e3b52669f6ace37f555', 'Apache-2.0', '2.28.0', 'binwiederhier/ntfy:v2.28.0@sha256:6ef4b819f722fccdc036af611c4774cfdc2de821ab74fdd48bbf4c9d6f8973da'),
+  yopass: toolboxProvider('Yopass', 'jhaals/yopass', '34d8bbcc4aac14dbf326d46dc69d26895b7f5282', 'Apache-2.0', '14.10.0', 'jhaals/yopass:14.10.0@sha256:6c33d9c813f77bae70787e1bce76710840ff654f454998b01f8dacc0a7988fd3'),
+  pairdrop: toolboxProvider('PairDrop', 'schlagmichdoch/PairDrop', '4862ba3067be1a0f2e0d1e94861dc9200b5bfeea', 'GPL-3.0', '1.11.2', 'ghcr.io/schlagmichdoch/pairdrop:v1.11.2@sha256:c4b30977264a76e335740089e693a52a0d0d616330dec7f93c7b96beef7b4a02'),
+  'uptime-kuma': toolboxProvider('Uptime Kuma', 'louislam/uptime-kuma', 'c98982ac60eccb74cdab1d04c30e18057895ce87', 'MIT', '2.5.5', 'louislam/uptime-kuma:2.5.5@sha256:c74379ac4509ce2d2c2633f509e67003ee2e45b6e995c5e43fc101f45a0e1fbe'),
+  bentopdf: toolboxProvider('BentoPDF', 'alam00000/bentopdf', 'f96cd4e5166f3d51393dfe9f3c440b5bb77802f1', 'AGPL-3.0', '2.8.8', 'ghcr.io/alam00000/bentopdf-simple:2.8.8@sha256:3d62b8f8eece5fe947026ac3925ff08fda245b3d6ba2c3916b94da91e0010c74'),
+  vert: toolboxProvider('VERT', 'VERT-sh/VERT', 'c7b9f3921d6f8722c1dc1515799b461622777068', 'AGPL-3.0', 'c7b9f39 · local processing build', 'source:c7b9f3921d6f8722c1dc1515799b461622777068+deployment/toolbox/Dockerfile.vert'),
+  hatsh: toolboxProvider('hat.sh', 'sh-dv/hat.sh', '540d3ccfd2a12b4ed96b78a776c764f899678b6c', 'MIT', '2.3.6', 'source:540d3ccfd2a12b4ed96b78a776c764f899678b6c+deployment/toolbox/Dockerfile.hatsh'),
+  omnitools: toolboxProvider('OmniTools', 'iib0011/omni-tools', '922b28ce154e8f22da4a721472889717a95f7562', 'MIT', '0.6.0', 'docker.io/iib0011/omni-tools:0.6.0@sha256:ceb5acc317daf387634f7f212cefe4722fd1243ad1cba74203f25254195b6c69'),
+  ittools: toolboxProvider('IT Tools', 'CorentinTh/it-tools', '5732483fc24a6e6818839060bdf3cc7d9d324b9f', 'GPL-3.0', '2024.10.22', 'docker.io/corentinth/it-tools:2024.10.22-7ca5933@sha256:8b8128748339583ca951af03dfe02a9a4d7363f61a216226fc28030731a5a61f'),
+  drawio: toolboxProvider('draw.io', 'jgraph/drawio', 'v32.0.2', 'Apache-2.0', '32.0.2 · local files', 'release:v32.0.2+deployment/toolbox/Dockerfile.drawio'),
+  miniqr: toolboxProvider('Mini QR', 'lyqht/mini-qr', 'v0.33.0', 'GPL-3.0', '0.33.0', 'release:v0.33.0+deployment/toolbox/Dockerfile.miniqr'),
   searxng: {
     project: 'SearXNG', sourceUrl: 'https://github.com/searxng/searxng',
     reviewedSourceUrl: 'https://github.com/searxng/searxng/tree/4e2c1ea7f468c9d1b16206e9d4079999a2eb0627',
@@ -81,8 +116,21 @@ export interface FossCatalogRecord {
 }
 
 const reviewedLicenses = new Set<ReviewedLicense>([
-  'AGPL-3.0', 'AGPL-3.0-only', 'AGPL-3.0-or-later', 'Zlib',
+  'AGPL-3.0', 'AGPL-3.0-only', 'AGPL-3.0-or-later', 'Zlib', 'MIT', 'GPL-3.0', 'Apache-2.0', 'Unlicense', 'BSD-3-Clause', 'MPL-2.0',
 ]);
+
+function toolboxProvider(project: string, repo: string, revision: string, license: ReviewedLicense, installedVersion: string, artifactReference: string): ReviewedFossProvider {
+  const sourceUrl = `https://github.com/${repo}`;
+  return {
+    project, sourceUrl, reviewedSourceUrl: `${sourceUrl}/tree/${revision}`, license,
+    licenseEvidenceUrls: [`${sourceUrl}/blob/${revision}/LICENSE`],
+    selfHostingEvidenceUrl: `${sourceUrl}/tree/${revision}#readme`,
+    maintenanceEvidenceUrl: `${sourceUrl}/commits`, artifactReference, installedVersion,
+    integration: artifactReference.startsWith('source:') || artifactReference.startsWith('release:') ? 'source-build' : 'container',
+    reviewStatus: 'deployed', reviewDocument: 'docs/toolbox-review.md', role: 'public-application',
+    maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-05',
+  };
+}
 
 export function assertFossCatalogPolicy(entries: readonly FossCatalogRecord[]): void {
   for (const entry of entries) {

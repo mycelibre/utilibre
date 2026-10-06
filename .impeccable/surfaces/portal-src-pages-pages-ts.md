@@ -46,7 +46,7 @@ The public catalog contains SearXNG, FreshRSS, Redlib, and PrivateBin. RSSHub is
 - Lead with the task or verified fact. One normal block may carry one dry comic idea after the literal setup.
 - Keep navigation, controls, repeated states, errors, recovery, warnings, privacy and security facts, legal text, status, and donation conditions literal.
 - Catalog descriptions stay task-first and mostly literal. Every row names its upstream project beside the source link; Utilibre is the host or integrator, not the implied author.
-- English and neutral Spanish are equal authored surfaces. Spanish uses `« »`, defaults to “software libre” for libre-licensed projects, and drops jokes that do not translate naturally.
+- English and Spanish are equal authored surfaces. Spanish uses consistent Guatemalan voseo, `« »`, and “software libre”; infinitive action labels remain valid. Upstream applications keep their own translations.
 - Fungal language is absent from this surface unless a single structural metaphor earns its place later.
 
 ## Implementation record

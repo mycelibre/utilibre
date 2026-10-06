@@ -42,21 +42,21 @@ const retiredRoutes: ReadonlyArray<readonly [string, string]> = [
 describe('FOSS-only public capability policy', () => {
   it('accepts only the retained independently maintained hosted applications', () => {
     expect(() => assertFossCatalogPolicy(catalog)).not.toThrow();
-    expect(catalog).toHaveLength(5);
+    expect(catalog).toHaveLength(25);
     expect(catalog.every((entry) => entry.upstreamProject && entry.upstreamSourceUrl && entry.license && entry.installedVersion)).toBe(true);
     expect(catalog.filter((entry) => entry.kind === 'integration').map((entry) => entry.id)).toEqual(['private-router']);
     expect(catalog.filter((entry) => entry.portalSurface === 'integration-glue').map((entry) => entry.id)).toEqual(['private-router']);
 
     const referencedProviders = new Set(catalog.map((entry) => entry.providerId));
     expect([...referencedProviders].sort()).toEqual(Object.keys(reviewedFossProviders).sort());
-    expect([...referencedProviders].sort()).toEqual(['freshrss', 'privatebin', 'redlib', 'searxng']);
+    expect([...referencedProviders].sort()).toEqual(['actual', 'bentopdf', 'breezewiki', 'drawio', 'freshrss', 'hatsh', 'ittools', 'jupyterlite', 'miniqr', 'ntfy', 'omnitools', 'pairdrop', 'penpot', 'privatebin', 'rallly', 'reactive-resume', 'redlib', 'rssbridge', 'searxng', 'uptime-kuma', 'vert', 'wakapi', 'whisper-web', 'yopass']);
 
     const repositoryRoot = new URL('../../../', import.meta.url);
     for (const provider of Object.values(reviewedFossProviders)) {
       expect(provider.role).toBe('public-application');
       expect(provider.maintainer).toBe('independent-upstream');
       expect(provider.selfHostable).toBe(true);
-      expect(provider.reviewedSourceUrl).toMatch(/\/tree\//);
+      expect(provider.reviewedSourceUrl).toMatch(/\/(?:tree|src\/commit)\//);
       expect(provider.reviewedSourceUrl).not.toMatch(/\/(?:main|master|current|latest)(?:\/|$)/i);
       expect(provider.licenseEvidenceUrls.length).toBeGreaterThan(0);
       for (const evidenceUrl of provider.licenseEvidenceUrls) expect(evidenceUrl).toMatch(/^https:\/\//);
@@ -71,7 +71,7 @@ describe('FOSS-only public capability policy', () => {
   });
 
   it('keeps every eliminated and unpublished application out of public inventory', () => {
-    const removed = ['bentopdf', 'cobalt', 'healthchecks', 'ittools', 'ntfy', 'omnitools', 'pairdrop', 'rsshub', 'swagger-editor', 'vert', 'wakapi'];
+    const removed = ['cobalt', 'healthchecks', 'rsshub', 'swagger-editor'];
     for (const id of removed) {
       expect(reviewedFossProviders).not.toHaveProperty(id);
       expect(catalog.find((entry) => entry.id === id)).toBeUndefined();

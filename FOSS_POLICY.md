@@ -10,6 +10,17 @@ useful source code or a working container is not enough.
 
 ## Access-gap test
 
+Operator update, 2026-10-05: a useful, no-account browser tool may also qualify
+as a complementary public utility even when its upstream offers free hosting.
+The operator explicitly approved the toolbox in `docs/toolbox-review.md`.
+The safety, provenance and verification gates still apply. The historical
+access-gap-only exclusion below does not override this approved expansion.
+
+The October 6 request additionally admits RSS-Bridge, ntfy, Yopass, PairDrop
+and Uptime Kuma under the same verification gates. Rallly remains disabled
+pending account/email setup and an appropriate operating/licensing decision.
+The historic retirement of ntfy and PairDrop is superseded by this request.
+
 The default admission question is:
 
 > Does Utilibre's hosting make useful FOSS accessible to people who otherwise

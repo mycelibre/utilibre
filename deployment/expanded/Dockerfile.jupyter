@@ -1,0 +1,10 @@
+FROM python:3.13-slim@sha256:3dd7cc108ec1493442514f5c2a871af6af0ec31d768ff6e378a93340c3b3db5f AS build
+WORKDIR /work
+RUN pip install --no-cache-dir jupyterlite-core==0.8.5 jupyterlite-pyodide-kernel==0.8.6 jupyter-server==2.21.1 jupyterlab-server==2.28.1 jupyterlab-language-pack-es-ES==4.5.post3
+COPY jupyter/ /work/
+RUN jupyter lite build --contents contents --output-dir /site && pip freeze > /site/build-requirements.txt
+WORKDIR /work/es
+RUN jupyter lite build --contents ../contents --output-dir /site/es
+FROM nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+COPY --from=build /site /usr/share/nginx/html
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

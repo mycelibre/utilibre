@@ -1,0 +1,6 @@
+# Merge on the separate Caddy VM; preserve its existing global trust settings.
+# This is the identity service only. Do not put anonymous tools behind login.
+auth.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3138
+}

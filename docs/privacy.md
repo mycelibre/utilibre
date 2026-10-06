@@ -7,6 +7,27 @@ intermediary or make an operator unable to access server-side data.
 
 ## Summary
 
+The expanded toolbox and its per-tool disclosures are documented in
+[the deployment review](toolbox-review.md) and the portal's tool details.
+Browser-based processing does not mean that page requests, model downloads
+or signaling connections are invisible to the hosting infrastructure.
+
+Approved-account pilots use Authentik at `auth.utilibre.org`. It stores email,
+name, password hashes, authenticator settings, sessions and authentication
+events (configured for 30 days; container logs rotate by size). Email recovery
+uses the configured mail relay and requires the existing authenticator.
+App-specific sessions can survive identity-provider logout: signing out of
+Utilibre is not a promise of immediate logout from every tool.
+
+Reactive Resume stores CVs/assets and Penpot stores designs/team permissions.
+Actual synchronizes budgets; its optional end-to-end encryption must be enabled
+by the user and is not automatic. Administrators can access unencrypted
+server data. Wakapi stores editor-supplied activity metadata with three-month
+raw-data retention; leaderboards and imports are disabled. Sharing starts
+private in the tested account pilots. Backups are presently on this VM, not
+off-site; keep independent exports. For account deletion or lost MFA, contact
+`admin@utilibre.org` without sending passwords or private documents.
+
 | Surface | Utilibre receives | External recipients | Persistent state |
 | --- | --- | --- | --- |
 | Portal | Page/config/status requests and ordinary connection metadata | Cloudflare and the edge process public traffic | No account or request-history database |

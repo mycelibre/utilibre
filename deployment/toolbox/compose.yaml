@@ -1,0 +1,110 @@
+name: utilibre-toolbox
+
+x-static: &static
+  restart: unless-stopped
+  read_only: true
+  user: "101:101"
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+  networks: [tools]
+  mem_limit: 192m
+  cpus: 0.5
+  pids_limit: 64
+  healthcheck:
+    test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+  logging:
+    driver: json-file
+    options: {max-size: 10m, max-file: "3"}
+
+x-source: &source /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+
+services:
+  bentopdf:
+    <<: *static
+    image: utilibre-bentopdf:2.8.8-p1
+    build:
+      context: .
+      dockerfile: Dockerfile.artifact
+      args: {ARTIFACT_IMAGE: "ghcr.io/alam00000/bentopdf-simple:2.8.8@sha256:3d62b8f8eece5fe947026ac3925ff08fda245b3d6ba2c3916b94da91e0010c74"}
+    ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3101:8080"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./security-assets.conf:/etc/nginx/tool-security.conf:ro
+      - *source
+  vert:
+    <<: *static
+    image: utilibre-vert:c7b9f39-p1
+    build:
+      context: ${TOOLBOX_SOURCE_ROOT:-/opt/utilibre/src}/vert
+      dockerfile: ${TOOLBOX_CONFIG_ROOT:-/home/ubuntu/freetools/deployment/toolbox}/Dockerfile.vert
+      additional_contexts:
+        integration: ${TOOLBOX_CONFIG_ROOT:-/home/ubuntu/freetools/deployment/toolbox}
+    ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3102:8080"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./security-local.conf:/etc/nginx/tool-security.conf:ro
+      - *source
+  omnitools:
+    <<: *static
+    image: utilibre-omnitools:0.6.0-p1
+    build:
+      context: .
+      dockerfile: Dockerfile.artifact
+      args: {ARTIFACT_IMAGE: "docker.io/iib0011/omni-tools:0.6.0@sha256:ceb5acc317daf387634f7f212cefe4722fd1243ad1cba74203f25254195b6c69"}
+    ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3103:8080"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./security-assets.conf:/etc/nginx/tool-security.conf:ro
+      - *source
+  ittools:
+    <<: *static
+    image: utilibre-ittools:2024.10.22-p1
+    build:
+      context: .
+      dockerfile: Dockerfile.artifact
+      args: {ARTIFACT_IMAGE: "docker.io/corentinth/it-tools:2024.10.22-7ca5933@sha256:8b8128748339583ca951af03dfe02a9a4d7363f61a216226fc28030731a5a61f"}
+    ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3109:8080"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./security-local.conf:/etc/nginx/tool-security.conf:ro
+      - *source
+  hatsh:
+    <<: *static
+    image: utilibre-hatsh:2.3.6-p1
+    build:
+      context: ${TOOLBOX_SOURCE_ROOT:-/opt/utilibre/src}/hatsh
+      dockerfile: ${TOOLBOX_CONFIG_ROOT:-/home/ubuntu/freetools/deployment/toolbox}/Dockerfile.hatsh
+    ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3110:8080"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./security-local.conf:/etc/nginx/tool-security.conf:ro
+      - *source
+  drawio:
+    <<: *static
+    image: utilibre-drawio:32.0.2-p1
+    build: {context: ., dockerfile: Dockerfile.drawio}
+    ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3111:8080"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./security-local.conf:/etc/nginx/tool-security.conf:ro
+      - *source
+  miniqr:
+    <<: *static
+    image: utilibre-miniqr:0.33.0-p1
+    build:
+      context: ${TOOLBOX_SOURCE_ROOT:-/opt/utilibre/src}/mini-qr
+      dockerfile: ${TOOLBOX_CONFIG_ROOT:-/home/ubuntu/freetools/deployment/toolbox}/Dockerfile.miniqr
+    ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3112:8080"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./security-local.conf:/etc/nginx/tool-security.conf:ro
+      - *source
+
+networks:
+  # Docker internal bridges do not publish ports on this host's Engine version.
+  # The runtime serves static files only; no database or outbound fetch API.
+  tools: {}

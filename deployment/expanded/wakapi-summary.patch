@@ -1,0 +1,70 @@
+diff --git a/static/assets/js/login.js b/static/assets/js/login.js
+index 466b813..ca8d8e3 100644
+--- a/static/assets/js/login.js
++++ b/static/assets/js/login.js
+@@ -1,5 +1,6 @@
+ document.addEventListener('DOMContentLoaded', () => {
+   const webAuthnButton = document.getElementById("webauthn_login");
++  if (!webAuthnButton) return; // Passwordless OIDC-only installations omit this control.
+   webAuthnButton.onclick = () => {
+     fetch("webauthn/options/", {
+       method: "GET",
+@@ -31,4 +32,4 @@ document.addEventListener('DOMContentLoaded', () => {
+         }
+       });
+   };
+-});
+\ No newline at end of file
++});
+diff --git a/static/assets/js/summary.js b/static/assets/js/summary.js
+index a2fc5c3..5239298 100644
+--- a/static/assets/js/summary.js
++++ b/static/assets/js/summary.js
+@@ -723,7 +723,8 @@ function updateNumTotal() {
+     //  We don't have a 'topN' for the DailyProjectStats & Timeline
+     //  So there isn't a input for it.
+     for (let i = 0; i < data.length - 2; i++) {
+-        document.querySelector(`span[data-entity='${i}']`).innerText = data[i].length.toString()
++        const total = document.querySelector(`span[data-entity='${i}']`)
++        if (total) total.innerText = data[i].length.toString()
+     }
+ }
+ 
+@@ -737,4 +738,4 @@ window.addEventListener('load', function () {
+     togglePlaceholders(getPresentDataMask())
+     draw()
+     updateNumTotal()
+-})
+\ No newline at end of file
++})
+diff --git a/views/summary.tpl.html b/views/summary.tpl.html
+index 387e7c0..17f4351 100644
+--- a/views/summary.tpl.html
++++ b/views/summary.tpl.html
+@@ -13,7 +13,7 @@
+ 
+ {{ template "alerts.tpl.html" . }}
+ 
+-{{ if and .Summary .SharedLoggedInViewModel.User.HasData }}
++{{ if .Summary }}
+ {{ template "time-picker.tpl.html" . }}
+ {{ template "entity-filter.tpl.html" . }}
+ {{ end }}
+@@ -26,7 +26,7 @@
+         <div class="flex-grow justify-start">
+             <div class="flex-grow p-4 text-sm border-2 border-orange-500 rounded shadow text-foreground align-middle mb-4 md:mb-0">
+                 <span class="iconify inline mr-1" data-icon="emojione-v1:warning"></span>
+-                Some of&nbsp;&nbsp;your data is older than this instance's data retention period. This will cause old data to be deleted, unless you opt for a subscription. Go to <a class="font-semibold text-accent" href="settings#subscription">Settings → Subscription</a> for more details.
++                Some of your activity is older than this instance's retention period and will be deleted. Donations do not change the retention limit.
+             </div>
+         </div>
+         {{ end }}
+@@ -350,7 +350,7 @@
+             </p>
+             {{ if gt .DataRetentionMonths 0 }}
+             <p>
+-                By default, Wakapi will keep your coding activity for {{ .DataRetentionMonths }} months. If you want <strong>unlimited data storage</strong> or simply <strong>support the project</strong> (which the authors would very much appreciate 😊), you can opt for a paid subscription for <strong>only 5 € / month</strong>. Go to <a href="settings#subscription" class="text-secondary hover:text-foreground" rel="noreferrer noopener">Settings → Subscription</a> to purchase one.
++                Utilibre keeps raw coding activity for {{ .DataRetentionMonths }} months. This service is free; donations do not change access or retention limits.
+             </p>
+             {{ end }}
+             <div class="w-full pt-10 flex flex-col space-y-4">

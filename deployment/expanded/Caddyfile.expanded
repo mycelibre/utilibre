@@ -1,0 +1,43 @@
+# Import on the separate Caddy VM. Keep existing global and Cloudflare trust
+# settings. DNS must point these hosts to the same HTTPS edge.
+# These static applications execute visitor code/audio in the browser.
+python.utilibre.org {
+	encode zstd gzip
+	header >Cross-Origin-Embedder-Policy credentialless
+	header >Cross-Origin-Opener-Policy same-origin
+	reverse_proxy 10.10.1.43:3133
+}
+
+transcribe.utilibre.org {
+	encode zstd gzip
+	header >Cross-Origin-Embedder-Policy credentialless
+	header >Cross-Origin-Opener-Policy same-origin
+	reverse_proxy 10.10.1.43:3137
+}
+
+# Replace any old Wakapi block; port 3109 belongs to IT Tools.
+# Approved-account pilot, not open public registration.
+wakapi.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3136
+}
+
+cv.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3130
+}
+
+design.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3131
+}
+
+budget.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3132
+}
+
+# NOT ACTIVE: do not advertise these until their remaining gates are resolved.
+# poll.utilibre.org   -> 10.10.1.43:3123 (Rallly multi-user licensing decision pending)
+# wiki.utilibre.org   -> 10.10.1.43:3134 (Fandom currently blocks page retrieval)
+# Keep 3135 (Kuma administration) private.

@@ -1,0 +1,19 @@
+base-url: https://notify.utilibre.org
+listen-http: :8080
+cache-duration: 1h
+behind-proxy: true
+proxy-forwarded-header: X-Real-IP
+auth-default-access: read-write
+enable-signup: false
+enable-login: false
+enable-reservations: false
+message-size-limit: 4k
+global-topic-limit: 1000
+visitor-subscription-limit: 10
+visitor-request-limit-burst: 30
+visitor-request-limit-replenish: 10s
+visitor-message-daily-limit: 100
+log-level: warn
+# Deliberately no attachments, outgoing email, phone calls or upstream relay.
+# Cache is RAM-only and lost on restart. Topics are public, not private vaults.
+# Instant iOS background delivery is unavailable without the upstream relay.

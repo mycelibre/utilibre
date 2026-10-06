@@ -5,8 +5,8 @@ export type PrivacyLabel = 'local' | 'server' | 'proxy' | 'external';
 export type CatalogCategory = 'service' | 'utility';
 export type CatalogKind = 'service' | 'integration';
 export type OperationalStatus = 'operational' | 'degraded' | 'unavailable' | 'maintenance' | 'not-deployed' | 'unknown';
-export type DiscoveryGroup = 'find' | 'text-data' | 'feeds-monitoring';
-export type AccountAccess = 'closed-registration' | 'invite-required';
+export type DiscoveryGroup = 'find' | 'files' | 'text-data' | 'feeds-monitoring';
+export type AccountAccess = 'closed-registration' | 'invite-required' | 'owner-only';
 
 export interface LocalizedText {
   en: string;
@@ -25,6 +25,10 @@ export interface CatalogEntry {
   accountAccess?: AccountAccess;
   name: LocalizedText;
   description: LocalizedText;
+  launchLabel?: LocalizedText;
+  help?: LocalizedText;
+  unavailableReason?: LocalizedText;
+  quickLinks?: { path: string; label: LocalizedText }[];
   slug?: Record<Language, string>;
   configUrlKey?: string;
   labels: PrivacyLabel[];
@@ -60,10 +64,59 @@ function providerMetadata(providerId: FossProviderId): Pick<CatalogEntry, 'provi
 }
 
 export const catalog: CatalogEntry[] = [
+  ...expandedTools(),
+  browserTool('whisper-web', 'files', 17, 'publicTranscribeUrl',
+    { en: 'Transcribe audio · pilot', es: 'Transcribir audio · piloto' },
+    { en: 'Turn a short recording into downloadable text with Whisper Web.', es: 'Convertí una grabación corta en texto descargable con Whisper Web.' },
+    { en: 'Transcribe audio', es: 'Transcribir audio' }, false,
+    { en: 'Start with a short recording and review the transcript for mistakes. Audio is processed on your device; the model and processing files are downloaded from Utilibre. First use downloads tens of megabytes. Only the small quantized model is offered. Long recordings and low-memory phones are not yet validated. The upstream interface is in English; Spanish speech is supported. Model files are Apache-2.0 licensed.', es: 'Empezá con una grabación corta y revisá los errores de la transcripción. El audio se procesa en tu dispositivo; el modelo y los componentes se descargan de Utilibre. El primer uso descarga decenas de megabytes. Solo ofrecemos el modelo pequeño cuantizado. Todavía no validamos grabaciones largas ni teléfonos con poca memoria. La interfaz está en inglés, pero admite audio en español. Los archivos del modelo usan la licencia Apache-2.0.' }),
+  browserTool('jupyterlite', 'text-data', 18, 'publicPythonUrl',
+    { en: 'Python notebooks', es: 'Cuadernos de Python' },
+    { en: 'Try Python, explore a CSV and draw charts in your browser with JupyterLite.', es: 'Probá Python, explorá un CSV y hacé gráficas en tu navegador con JupyterLite.' },
+    { en: 'Try Python', es: 'Probar Python' }, true,
+    { en: 'Start with the included example notebook. Python runs in your browser, not on our server. Save important notebooks with File → Download: browser storage is not a backup and clearing site data can erase your work. Python and optional packages download from jsDelivr and Python package repositories. Desktop packages are not all supported; this is not JupyterHub.', es: 'Empezá con el cuaderno de ejemplo. Python se ejecuta en tu navegador, no en nuestro servidor. Guardá los cuadernos importantes con Archivo → Descargar: el almacenamiento del navegador no es una copia de respaldo y borrar los datos del sitio puede eliminar tu trabajo. Python y los paquetes opcionales se descargan de jsDelivr y repositorios de Python. No todos los paquetes de escritorio funcionan; esto no es JupyterHub.' }),
+  ...communityTools(),
+  browserTool('bentopdf', 'files', 1, 'publicPdfUrl',
+    { en: 'PDF & OCR', es: 'PDF y OCR' },
+    { en: 'Merge, split, compress or edit PDFs. Turn scans into searchable text.', es: 'Uní, dividí, comprimí y editá PDF. Extraé texto de páginas escaneadas con OCR.' },
+    { en: 'Edit a PDF', es: 'Editar un PDF' }, true,
+    { en: 'Choose a tool, select your files, then download the result. OCR works best with clear printed text; review its output, especially handwriting. Processing libraries, OCR language data and fonts may download from jsDelivr or githack. Online certificate validation and remote-URL imports are not provided.', es: 'Elegí una herramienta, seleccioná tus archivos y descargá el resultado. El OCR funciona mejor con texto impreso nítido; revisá el resultado, especialmente la escritura a mano. Las bibliotecas, idiomas de OCR y fuentes pueden descargarse de jsDelivr o githack. No ofrecemos validación de certificados en línea ni importación de URL remotas.' },
+    [{ path: 'ocr-pdf.html', label: { en: 'Recognize text (OCR)', es: 'Reconocer texto (OCR)' } }]),
+  browserTool('vert', 'files', 2, 'publicConvertUrl',
+    { en: 'Convert files', es: 'Convertir archivos' },
+    { en: 'Convert images, audio and documents with VERT. Available formats depend on your browser; remote video conversion is off.', es: 'Convertí imágenes, audio y documentos con VERT. Los formatos disponibles dependen del navegador; la conversión remota de vídeo está desactivada.' },
+    { en: 'Convert a file', es: 'Convertir un archivo' }, false,
+    { en: 'Select a file and choose an available output format. Conversion runs on your device. Server video conversion, analytics and embedded payments are disabled; unsupported formats remain unavailable.', es: 'Seleccioná un archivo y un formato de salida disponible. La conversión ocurre en tu dispositivo. La conversión de vídeo en servidores, la analítica y los pagos integrados están desactivados; los formatos incompatibles no están disponibles.' }),
+  browserTool('omnitools', 'files', 3, 'publicToolsUrl',
+    { en: 'Everyday tools', es: 'Herramientas cotidianas' },
+    { en: 'Resize images, trim media and work with text, lists and data using OmniTools.', es: 'Redimensioná imágenes, recortá contenido multimedia y trabajá con texto, listas y datos con OmniTools.' },
+    { en: 'Choose a tool', es: 'Elegir herramienta' }, true,
+    { en: 'Search for a task, add your input and save the result. Files are processed in the browser. Some tools download processing components from jsDelivr or unpkg; these providers receive download requests, not your selected files.', es: 'Buscá una tarea, agregá los datos y guardá el resultado. Los archivos se procesan en el navegador. Algunas herramientas descargan componentes de jsDelivr o unpkg; estos proveedores reciben solicitudes de descarga, no los archivos seleccionados.' }),
+  browserTool('hatsh', 'files', 4, 'publicEncryptUrl',
+    { en: 'Encrypt or decrypt files', es: 'Cifrar o descifrar archivos' },
+    { en: 'Protect files with a password or key using hat.sh. Keep the password safe: Utilibre cannot recover it.', es: 'Protegé archivos con una contraseña o clave usando hat.sh. Guardá la contraseña: Utilibre no puede recuperarla.' },
+    { en: 'Encrypt / decrypt', es: 'Cifrar / descifrar' }, false,
+    { en: 'Choose Encrypt or Decrypt, select a file and follow the password or key instructions. Save the downloaded result. Keys and files stay in your browser; closing the tab does not delete downloaded files. This is not a file-sharing or backup service.', es: 'Elegí cifrar o descifrar, seleccioná un archivo y seguí las instrucciones de contraseña o clave. Guardá el resultado descargado. Las claves y los archivos permanecen en tu navegador; cerrar la pestaña no elimina las descargas. No es un servicio para compartir archivos ni para copias de seguridad.' }),
+  browserTool('drawio', 'files', 5, 'publicDrawUrl',
+    { en: 'Draw diagrams', es: 'Crear diagramas' },
+    { en: 'Make flowcharts, plans and diagrams with draw.io. Save your work to your own device.', es: 'Creá diagramas de flujo, planos y esquemas con draw.io. Guardá el trabajo en tu dispositivo.' },
+    { en: 'Draw a diagram', es: 'Crear un diagrama' }, false,
+    { en: 'Start a blank diagram or template, then save or export it. Cloud accounts, collaboration and server-side export are disabled. Browser storage can retain diagrams and preferences; clear this site’s storage on shared devices.', es: 'Empezá con un diagrama vacío o una plantilla y luego guardá o exportá el trabajo. Las cuentas en la nube, la colaboración y la exportación en servidores están desactivadas. El navegador puede guardar diagramas y preferencias; borrá los datos del sitio si compartís el dispositivo.' }),
+  browserTool('miniqr', 'text-data', 6, 'publicQrUrl',
+    { en: 'Create & scan QR codes', es: 'Crear y leer códigos QR' },
+    { en: 'Create styled QR codes for links, Wi-Fi and contact details, or read a code from an image with Mini QR.', es: 'Creá códigos QR con estilo para enlaces, Wi-Fi y contactos, o leé un código en una imagen con Mini QR.' },
+    { en: 'Create / scan QR', es: 'Crear / leer QR' }, false,
+    { en: 'Enter your content, customize the code and download it. Scanning can use an image or your camera after permission. Anyone who scans the result can read its contents: QR codes do not encrypt passwords. QR history storage is disabled.', es: 'Escribí el contenido, personalizá el código y descargalo. Para leerlo, usá una imagen o la cámara después de dar permiso. Cualquiera que lea el resultado puede ver su contenido: un QR no cifra contraseñas. El historial de códigos está desactivado.' }),
+  browserTool('ittools', 'text-data', 7, 'publicDeveloperToolsUrl',
+    { en: 'Developer tools', es: 'Herramientas de desarrollo' },
+    { en: 'Format JSON, inspect JWTs, encode text, generate UUIDs and test regular expressions with IT Tools.', es: 'Dale formato a JSON, inspeccioná JWT, codificá texto, generá UUID y probá expresiones regulares con IT Tools.' },
+    { en: 'Open IT Tools', es: 'Abrir IT Tools' }, false,
+    { en: 'Search for a tool or press Ctrl+K. Use the examples to check the expected input. Token inspection does not verify authenticity. Favorites and interface preferences may remain in browser storage. Upstream support links fund the developer, not Utilibre.', es: 'Buscá una herramienta o presioná Ctrl+K. Los ejemplos muestran el formato esperado. Inspeccionar un token no verifica su autenticidad. Los favoritos y preferencias pueden permanecer en el navegador. Los enlaces de apoyo del proyecto financian a su desarrollador, no a Utilibre.' }),
   {
-    id: 'searxng', ...providerMetadata('searxng'), kind: 'service', implementation: 'upstream-application', category: 'service', discoveryGroup: 'find', featuredOrder: 1, configUrlKey: 'publicSearchUrl',
+    id: 'searxng', ...providerMetadata('searxng'), kind: 'service', implementation: 'upstream-application', category: 'service', discoveryGroup: 'find', featuredOrder: 8, configUrlKey: 'publicSearchUrl',
     name: { en: 'Web search', es: 'Búsqueda web' },
-    description: { en: 'Search selected sources with SearXNG, hosted by Utilibre. Queries go upstream from this server instead of your browser.', es: 'Busca en fuentes seleccionadas con SearXNG, alojado por Utilibre. Las consultas salen hacia los buscadores externos desde el servidor, no desde tu navegador.' },
+    description: { en: 'Search the web, images, news and research with SearXNG. Utilibre sends your query to selected search engines.', es: 'Buscá en la web, imágenes, noticias e investigaciones con SearXNG. Utilibre envía la consulta a buscadores seleccionados.' },
+    launchLabel: { en: 'Search the web', es: 'Buscar en la web' },
     labels: ['server', 'proxy'],
     dataFlow: { en: 'Browser → Caddy edge VM → application VM/SearXNG → selected search engines', es: 'Navegador → VM perimetral con Caddy → VM de aplicaciones/SearXNG → motores de búsqueda seleccionados' },
     upstreamServices: ['Bing', 'Google Custom Search web/images (Blackle partner identifier)', 'Fynd', 'Wiby', 'Mwmbl', 'Wikipedia', 'DuckDuckGo currency endpoint', 'Bing Images/News/Videos', 'Wikimedia Commons', 'Wikinews', 'Wiktionary', 'GitHub', 'MDN', 'Stack Overflow', 'Ask Ubuntu', 'Super User', 'ManKier', 'arXiv', 'PubMed', 'Semantic Scholar', 'Reuters', 'YouTube', 'Dailymotion', 'Photon'], filesUploaded: false,
@@ -73,10 +126,11 @@ export const catalog: CatalogEntry[] = [
     modified: true, operationalStatus: 'operational',
   },
   {
-    id: 'freshrss', ...providerMetadata('freshrss'), kind: 'service', implementation: 'upstream-application', category: 'service', discoveryGroup: 'feeds-monitoring', featuredOrder: 2, configUrlKey: 'publicRssUrl',
+    id: 'freshrss', ...providerMetadata('freshrss'), kind: 'service', implementation: 'upstream-application', category: 'service', discoveryGroup: 'feeds-monitoring', featuredOrder: 11, configUrlKey: 'publicRssUrl',
     accountAccess: 'closed-registration',
     name: { en: 'RSS reader', es: 'Lector RSS' },
-    description: { en: 'Read and organize RSS and Atom subscriptions with FreshRSS.', es: 'Lee y organiza suscripciones RSS y Atom con FreshRSS.' },
+    description: { en: 'Follow new articles from your favorite websites in FreshRSS. For existing account holders only.', es: 'Seguí los artículos nuevos de tus sitios favoritos en FreshRSS. Solo para personas que ya tienen una cuenta.' },
+    help: { en: 'RSS feeds let you follow websites in one reader. New accounts and account requests are not open. Existing users can change the interface language in FreshRSS settings.', es: 'Los canales RSS permiten seguir sitios web desde un solo lector. No se aceptan registros ni solicitudes de cuentas nuevas. Si ya tenés una cuenta, podés cambiar el idioma en los ajustes de FreshRSS.' },
     labels: ['server', 'proxy'],
     dataFlow: { en: 'Browser → Caddy edge VM → application VM/FreshRSS; the server fetches subscribed feed URLs and stores account, subscription and reading data in PostgreSQL.', es: 'Navegador → VM perimetral con Caddy → VM de aplicaciones/FreshRSS; el servidor consulta los feeds suscritos y guarda cuentas, suscripciones y lectura en PostgreSQL.' },
     upstreamServices: ['Websites and feed hosts selected by account holders'], filesUploaded: false,
@@ -86,9 +140,9 @@ export const catalog: CatalogEntry[] = [
     modified: false, operationalStatus: 'operational',
   },
   {
-    id: 'redlib', ...providerMetadata('redlib'), kind: 'service', implementation: 'upstream-application', category: 'service', discoveryGroup: 'find', featuredOrder: 3, configUrlKey: 'publicRedditUrl',
+    id: 'redlib', ...providerMetadata('redlib'), kind: 'service', implementation: 'upstream-application', category: 'service', discoveryGroup: 'find', featuredOrder: 9, configUrlKey: 'publicRedditUrl',
     name: { en: 'Redlib for Reddit', es: 'Redlib para Reddit' },
-    description: { en: 'Browse public Reddit through Redlib. A typical first visit uses a proof-of-work browser challenge; JavaScript is required, and Reddit may still block this server.', es: 'Navega contenido público de Reddit mediante Redlib. Una primera visita normal usa una prueba de trabajo en el navegador; requiere JavaScript y Reddit aún puede bloquear este servidor.' },
+    description: { en: 'Read public Reddit posts with Redlib. The first visit may need a browser check; JavaScript is required, and Reddit can sometimes block access.', es: 'Leé publicaciones públicas de Reddit con Redlib. La primera visita puede requerir una verificación del navegador; necesita JavaScript y Reddit puede bloquear el acceso.' },
     labels: ['server', 'proxy'],
     dataFlow: { en: 'Browser → Cloudflare → Caddy edge VM → application VM/Anubis → Redlib → Reddit. A typical first visit must complete Anubis’s local proof-of-work challenge. Redlib proxies page data and media.', es: 'Navegador → Cloudflare → VM perimetral con Caddy → VM de aplicaciones/Anubis → Redlib → Reddit. En la primera visita, el navegador debe completar la prueba de trabajo local de Anubis. Redlib retransmite páginas y contenido multimedia.' },
     upstreamServices: ['Reddit'], filesUploaded: false,
@@ -98,9 +152,9 @@ export const catalog: CatalogEntry[] = [
     modified: true, operationalStatus: 'operational',
   },
   {
-    id: 'privatebin', ...providerMetadata('privatebin'), kind: 'service', implementation: 'upstream-application', category: 'service', discoveryGroup: 'text-data', featuredOrder: 4, configUrlKey: 'publicPasteUrl',
+    id: 'privatebin', ...providerMetadata('privatebin'), kind: 'service', implementation: 'upstream-application', category: 'service', discoveryGroup: 'text-data', featuredOrder: 10, configUrlKey: 'publicPasteUrl',
     name: { en: 'Encrypted paste', es: 'Texto cifrado' },
-    description: { en: 'Share short-lived encrypted text with PrivateBin. Encryption happens in the browser; the decryption key stays in the URL fragment and does not reach the server.', es: 'Comparte texto cifrado que caduca con PrivateBin. El cifrado ocurre en el navegador; la clave de descifrado queda en el fragmento de la URL y no llega al servidor.' },
+    description: { en: 'Share short-lived encrypted text with PrivateBin. Encryption happens in the browser; the decryption key stays in the URL fragment and does not reach the server.', es: 'Compartí texto cifrado que caduca con PrivateBin. El cifrado ocurre en el navegador; la clave de descifrado queda en el fragmento de la URL y no llega al servidor.' },
     labels: ['local', 'server'],
     dataFlow: { en: 'The browser encrypts text, then sends ciphertext through the edge to PrivateBin. The decryption key remains after # in the URL and is not included in the HTTP request.', es: 'El navegador cifra el texto y envía el contenido cifrado mediante el borde a PrivateBin. La clave queda después de # en la URL y no se incluye en la solicitud HTTP.' },
     upstreamServices: [], filesUploaded: false,
@@ -112,10 +166,10 @@ export const catalog: CatalogEntry[] = [
   {
     id: 'private-router', ...providerMetadata('redlib'), kind: 'integration', implementation: 'integration-glue', portalSurface: 'integration-glue', category: 'utility', discoveryGroup: 'find',
     name: { en: 'Open a Reddit link through Redlib', es: 'Abrir un enlace de Reddit con Redlib' },
-    description: { en: 'Check a public Reddit URL, then open the matching path in this Redlib instance.', es: 'Comprueba una URL pública de Reddit y abre la ruta correspondiente en esta instancia de Redlib.' },
+    description: { en: 'Check a public Reddit URL, then open the matching path in this Redlib instance.', es: 'Revisá una URL pública de Reddit y abrí la ruta correspondiente en esta instancia de Redlib.' },
     slug: { en: 'tools/open-privately', es: 'herramientas/abrir-con-privacidad' },
     labels: ['local', 'server', 'proxy'],
-    dataFlow: { en: 'The pasted URL is parsed only in the browser. If you choose Continue, the browser opens the fixed Redlib instance, which contacts Reddit.', es: 'La URL pegada se analiza solo en el navegador. Si eliges Continuar, el navegador abre la instancia fija de Redlib, que se comunica con Reddit.' },
+    dataFlow: { en: 'The pasted URL is parsed only in the browser. If you choose Continue, the browser opens the fixed Redlib instance, which contacts Reddit.', es: 'La URL pegada se analiza solo en el navegador. Si elegís Continuar, el navegador abre la instancia fija de Redlib, que se comunica con Reddit.' },
     upstreamServices: ['Reddit'], filesUploaded: false,
     temporaryStorage: browserMemory,
     retention: { en: 'Parsing is not retained. A chosen frontend navigation follows that service’s stated retention policy.', es: 'El análisis no se conserva. La navegación elegida sigue la política de conservación de esa interfaz.' },
@@ -128,8 +182,160 @@ export function localized(text: LocalizedText, language: Language): string {
   return text[language];
 }
 
+function expandedTools(): CatalogEntry[] {
+  const entries: Array<{
+    id: FossProviderId; group: DiscoveryGroup; name: LocalizedText;
+    description: LocalizedText; reason: LocalizedText; help: LocalizedText;
+    data: LocalizedText;
+  }> = [
+    {
+      id: 'reactive-resume', group: 'files', name: { en: 'CV builder · Reactive Resume', es: 'Crear un CV · Reactive Resume' },
+      description: { en: 'Build a résumé with templates and download it. Sign in with an approved Utilibre account.', es: 'Armá tu currículum con plantillas y descargalo. Iniciá sesión con una cuenta de Utilibre aprobada.' },
+      reason: { en: 'Access is not enabled in this portal configuration.', es: 'El acceso no está habilitado en esta configuración del portal.' },
+      help: { en: 'Use the Utilibre sign-in button. Documents start private; publish only when you intend to share them. AI features are disabled. Keep your own exports.', es: 'Usá el botón de acceso de Utilibre. Los documentos empiezan privados; publicalos solo si querés compartirlos. La IA está desactivada. Guardá tus propias exportaciones.' },
+      data: { en: 'Résumé content and uploaded assets are stored on Utilibre. This is not a browser-only tool or end-to-end encrypted storage.', es: 'El contenido del currículum y los archivos se guardan en Utilibre. No es una herramienta que funcione solo en tu navegador ni almacenamiento con cifrado de extremo a extremo.' },
+    },
+    {
+      id: 'penpot', group: 'files', name: { en: 'Collaborative design · Penpot', es: 'Diseño colaborativo · Penpot' },
+      description: { en: 'Design interfaces and prototypes together. Access is approved individually for this pilot.', es: 'Diseñá interfaces y prototipos en equipo. El acceso a este piloto se aprueba individualmente.' },
+      reason: { en: 'Access is not enabled in this portal configuration.', es: 'El acceso no está habilitado en esta configuración del portal.' },
+      help: { en: 'Use Utilibre sign-in. Invite only intended collaborators to your team and keep exported copies of important work. Public registration is closed.', es: 'Ingresá con Utilibre. Invitá a tu equipo solo a quienes deban colaborar y guardá copias exportadas de los trabajos importantes. El registro público está cerrado.' },
+      data: { en: 'Design documents and assets are stored on Utilibre and shared with authorized collaborators. This is not end-to-end encrypted storage.', es: 'Los documentos de diseño y archivos se guardan en Utilibre y se comparten con colaboradores autorizados. No es almacenamiento con cifrado de extremo a extremo.' },
+    },
+    {
+      id: 'actual', group: 'text-data', name: { en: 'Personal budgets · Actual Budget', es: 'Presupuesto personal · Actual Budget' },
+      description: { en: 'Plan a household budget with your own approved account. Bank connections are not enabled.', es: 'Planificá el presupuesto de tu hogar con tu propia cuenta aprobada. Las conexiones bancarias están desactivadas.' },
+      reason: { en: 'Access is not enabled in this portal configuration.', es: 'El acceso no está habilitado en esta configuración del portal.' },
+      help: { en: 'Choose Sign in with OpenID to use Utilibre. Accounts have separate budgets. Enable budget encryption yourself if you need it, and keep your own exports.', es: 'Elegí Sign in with OpenID para ingresar con Utilibre. Cada cuenta tiene sus propios presupuestos. Activá el cifrado del presupuesto si lo necesitás y guardá tus propias exportaciones.' },
+      data: { en: 'Actual keeps a local copy and synchronizes budgets with Utilibre. End-to-end encryption is optional, not enabled automatically; server administrators can access unencrypted budgets.', es: 'Actual conserva una copia local y sincroniza los presupuestos con Utilibre. El cifrado de extremo a extremo es opcional, no automático; la administración del servidor puede acceder a presupuestos sin cifrar.' },
+    },
+    {
+      id: 'rallly', group: 'text-data', name: { en: 'Meeting polls · Rallly', es: 'Encuestas para reuniones · Rallly' },
+      description: { en: 'Find a meeting time with a group. Rallly is prepared but not running yet.', es: 'Encontrá un horario para reunirte con un grupo. Rallly está preparado, pero todavía no está en funcionamiento.' },
+      reason: { en: 'Upstream asks for a paid self-hosting license for multiple users. A decision is pending; no purchase has been made.', es: 'El proyecto solicita una licencia paga de autoalojamiento para varios usuarios. Falta decidir cómo seguir; no se hizo ninguna compra.' },
+      help: { en: 'This pinned self-hosted release does not offer anonymous poll creation. No shared organizer account or license bypass is provided. The launch date is not established.', es: 'Esta versión autoalojada no permite crear encuestas anónimamente. No ofrecemos una cuenta compartida de organización ni evitamos las restricciones de licencia. Todavía no hay fecha de apertura.' },
+      data: { en: 'An enabled installation would store polls, participant responses and organizer accounts on the server. This staged instance currently accepts none of that data.', es: 'Una instalación habilitada guardaría encuestas, respuestas y cuentas de organización en el servidor. Esta instancia preparada todavía no recibe esos datos.' },
+    },
+    {
+      id: 'breezewiki', group: 'find', name: { en: 'Read wikis · BreezeWiki', es: 'Leer wikis · BreezeWiki' },
+      description: { en: 'Read Fandom articles through a simpler interface. Article retrieval is currently blocked upstream.', es: 'Leé artículos de Fandom con una interfaz más sencilla. El sitio de origen está bloqueando la consulta de artículos.' },
+      reason: { en: 'The application is installed, but Fandom is rejecting its article requests. Reading is unavailable.', es: 'La aplicación está instalada, pero Fandom rechaza las solicitudes de artículos. La lectura no está disponible.' },
+      help: { en: 'This is a reader, not a wiki-editing platform. Tested article requests failed; the service is not advertised as working and no upstream-blocking bypass is offered.', es: 'Es un lector, no una plataforma para editar wikis. Las consultas de prueba fallaron; no presentamos el servicio como funcional ni ofrecemos formas de evitar el bloqueo del sitio de origen.' },
+      data: { en: 'The server requests public wiki pages and proxies content. Private-network destinations are blocked; temporary caches and connection metadata remain part of the service.', es: 'El servidor consulta páginas públicas de wikis y retransmite contenido. Los destinos de redes privadas están bloqueados; el servicio utiliza cachés temporales y datos de conexión.' },
+    },
+    {
+      id: 'wakapi', group: 'text-data', name: { en: 'Coding activity · Wakapi', es: 'Actividad de programación · Wakapi' },
+      description: { en: 'Track coding activity by project, language and editor with an approved Utilibre account.', es: 'Consultá tu actividad de programación por proyecto, lenguaje y editor con una cuenta de Utilibre aprobada.' },
+      reason: { en: 'Public access is not configured on this portal.', es: 'El acceso público no está configurado en este portal.' },
+      help: { en: 'Choose Login with Utilibre. Configure your editor explicitly to send activity here and keep its API key private. Account recovery is handled by Utilibre login, not a separate Wakapi password.', es: 'Elegí Login with Utilibre. Configurá tu editor expresamente para enviar actividad acá y mantené privada su clave API. Recuperá el acceso desde el inicio de sesión de Utilibre, no con una contraseña separada de Wakapi.' },
+      data: { en: 'Configured editor clients send coding-activity metadata to Utilibre. The server stores it for reporting; raw activity retention is configured to three months. Public leaderboards and imports are disabled.', es: 'Los editores configurados envían metadatos de actividad a Utilibre. El servidor los guarda para generar informes; la conservación de actividad original está configurada en tres meses. Las clasificaciones públicas y las importaciones están desactivadas.' },
+    },
+  ];
+  return entries.map((entry, index) => ({
+    id: entry.id, ...providerMetadata(entry.id), kind: 'service', implementation: 'upstream-application',
+    category: 'service', discoveryGroup: entry.group, featuredOrder: 19 + index,
+    configUrlKey: ({ 'reactive-resume': 'publicResumeUrl', penpot: 'publicDesignUrl', actual: 'publicBudgetUrl', wakapi: 'publicWakapiUrl' } as Record<string,string>)[entry.id],
+    accountAccess: entry.id === 'breezewiki' ? undefined : entry.id === 'rallly' ? 'closed-registration' : 'invite-required',
+    name: entry.name, description: entry.description, help: entry.help, unavailableReason: entry.reason,
+    labels: entry.id === 'breezewiki' ? ['server', 'proxy'] : ['server'],
+    dataFlow: entry.data, upstreamServices: entry.id === 'breezewiki' ? ['Fandom'] : [],
+    filesUploaded: ['reactive-resume', 'penpot', 'actual'].includes(entry.id),
+    temporaryStorage: entry.data,
+    retention: entry.id === 'breezewiki'
+      ? { en: 'Short-lived server caches; upstream access is currently blocked.', es: 'Cachés breves en el servidor; el acceso al origen está bloqueado.' }
+      : { en: 'Persistent account data requires an operator-managed retention, export and deletion process. Public enrollment is not open.', es: 'Los datos persistentes necesitan un proceso de conservación, exportación y eliminación gestionado por la administración. La inscripción pública no está abierta.' },
+    logging: { en: 'Operational diagnostics and the HTTPS edge can retain request metadata. Do not treat this as an anonymous service.', es: 'Los diagnósticos operativos y el servidor HTTPS pueden conservar metadatos de solicitudes. No lo considerés un servicio anónimo.' },
+    modified: entry.id === 'wakapi',
+    operationalStatus: entry.id === 'rallly' ? 'not-deployed' : entry.id === 'breezewiki' ? 'unavailable' : 'operational',
+  }));
+}
+
+function browserTool(
+  providerId: FossProviderId, discoveryGroup: DiscoveryGroup, featuredOrder: number, configUrlKey: string,
+  name: LocalizedText, description: LocalizedText, launchLabel: LocalizedText, externalAssets: boolean,
+  help: LocalizedText, quickLinks?: CatalogEntry['quickLinks'],
+): CatalogEntry {
+  return {
+    id: providerId, ...providerMetadata(providerId), kind: 'service', implementation: 'upstream-application',
+    category: 'service', discoveryGroup, featuredOrder, configUrlKey, name, description, launchLabel, quickLinks,
+    help,
+    unavailableReason: ['jupyterlite', 'whisper-web'].includes(providerId)
+      ? { en: 'Installed and tested; the public HTTPS connection is not ready yet.', es: 'Ya está instalada y probada; la conexión HTTPS pública todavía no está lista.' }
+      : undefined,
+    labels: externalAssets ? ['local', 'external'] : ['local'], filesUploaded: false,
+    dataFlow: externalAssets
+      ? { en: 'Your browser processes the files. It also downloads processing components from external CDNs; those services receive your network address and download request. Selected files are not uploaded for processing.', es: 'Tu navegador procesa los archivos. También descarga componentes de CDN externas, que reciben tu dirección de red y la solicitud de descarga. Los archivos seleccionados no se suben para procesarlos.' }
+      : { en: 'Utilibre serves the application. Files, passwords and entered content are processed in your browser, not uploaded to an application server.', es: 'Utilibre sirve la aplicación. Los archivos, contraseñas y datos ingresados se procesan en tu navegador, sin subirlos a un servidor de aplicaciones.' },
+    upstreamServices: providerId === 'jupyterlite' ? ['jsDelivr Python runtime', 'Python package repositories'] : providerId === 'bentopdf' ? ['jsDelivr / unpkg processing assets', 'githack OCR fonts'] : externalAssets ? ['jsDelivr / unpkg processing assets'] : [],
+    temporaryStorage: browserMemory,
+    retention: { en: 'Utilibre stores no input files for these tools. Downloads remain on your device; application caches, preferences or local drafts can remain in browser storage until you clear the site’s data. Read the tool-specific help before using a shared device.', es: 'Utilibre no almacena los archivos ingresados en estas herramientas. Las descargas quedan en tu dispositivo; las cachés, preferencias o borradores locales pueden permanecer en el navegador hasta que borres los datos del sitio. Leé la ayuda antes de usar un dispositivo compartido.' },
+    logging: { en: 'Tool web-server access logs are disabled. Bounded error logs can contain request metadata. Cloudflare and the separate HTTPS edge see connections and asset requests, not browser-local file contents; their retention is separate.', es: 'El registro de accesos del servidor de herramientas está desactivado. Los registros limitados de errores pueden incluir metadatos. Cloudflare y el borde HTTPS reciben conexiones y solicitudes de recursos, no el contenido de archivos procesado localmente; su conservación es independiente.' },
+    modified: ['vert', 'drawio', 'whisper-web'].includes(providerId), operationalStatus: 'operational',
+  };
+}
+
 export function catalogEntry(id: string): CatalogEntry | undefined {
   return catalog.find((entry) => entry.id === id);
+}
+
+function communityTools(): CatalogEntry[] {
+  const logging: LocalizedText = {
+    en: 'Bounded operational logs may contain network addresses and request identifiers. Edge logging is separate. No advertising analytics are added.',
+    es: 'Los registros operativos limitados pueden contener direcciones de red e identificadores de solicitudes. Los registros del borde son independientes. No agregamos analítica publicitaria.',
+  };
+  type CommunitySpec = Pick<CatalogEntry, 'id' | 'providerId' | 'discoveryGroup' | 'configUrlKey' | 'name' | 'description' | 'help' | 'labels' | 'dataFlow' | 'upstreamServices' | 'retention'> & Partial<Pick<CatalogEntry, 'quickLinks'>>;
+  const specs: CommunitySpec[] = [
+    {
+      id: 'rssbridge', providerId: 'rssbridge', discoveryGroup: 'feeds-monitoring', configUrlKey: 'publicBridgeUrl',
+      name: { en: 'Create an RSS feed', es: 'Crear un canal RSS' },
+      description: { en: 'Follow selected sources with RSS-Bridge: GitHub Trending, The Guardian and Ars Technica. No account needed.', es: 'Seguí fuentes seleccionadas con RSS-Bridge: GitHub Trending, The Guardian y Ars Technica. No necesitás una cuenta.' },
+      help: { en: 'Choose a source and copy its Atom or RSS URL into your feed reader. Only these three connectors are enabled. Cached results and request limits protect the source websites; feeds can break when those sites change.', es: 'Elegí una fuente y copiá su URL Atom o RSS en tu lector. Solo están habilitados estos tres conectores. La caché y los límites de solicitudes protegen los sitios originales; los canales pueden fallar si esos sitios cambian.' },
+      labels: ['server', 'proxy'], upstreamServices: ['GitHub', 'The Guardian', 'Ars Technica'],
+      dataFlow: { en: 'Utilibre receives the feed request and fetches the selected public website on the server. Arbitrary URL connectors and private-network destinations are blocked.', es: 'Utilibre recibe la solicitud del canal y consulta el sitio público seleccionado desde el servidor. Se bloquean los conectores de URL arbitrarias y los destinos de redes privadas.' },
+      retention: { en: 'Feed responses are cached in bounded, temporary storage and disappear on restart. No reader accounts or subscription database are created.', es: 'Las respuestas se guardan en una caché temporal limitada y desaparecen al reiniciar. No se crean cuentas ni una base de datos de suscripciones.' },
+    },
+    {
+      id: 'ntfy', providerId: 'ntfy', discoveryGroup: 'feeds-monitoring', configUrlKey: 'publicNotifyUrl',
+      name: { en: 'Push notifications', es: 'Notificaciones' },
+      description: { en: 'Send simple alerts to a browser or compatible ntfy app. Topics are public: do not send passwords or private information.', es: 'Enviá avisos a un navegador o una aplicación compatible con ntfy. Los temas son públicos: no son para contraseñas ni información privada.' },
+      help: { en: 'Choose a long, unpredictable topic name and subscribe before sending a test. Anyone who knows the topic can read or publish. Limit: 100 messages per IP per day, 4 KB each. No attachments, email or phone delivery. Instant iOS relay and browser Web Push are not enabled; keep the web page connected or use a compatible client.', es: 'Elegí un nombre de tema largo e impredecible y suscribite antes de enviar una prueba. Cualquiera que conozca el tema puede leer o publicar. Límite: 100 mensajes por IP al día, de 4 KB cada uno. Sin adjuntos, correo ni llamadas. No están habilitados el reenvío instantáneo para iOS ni Web Push; mantené la página conectada o usá un cliente compatible.' },
+      labels: ['server'], upstreamServices: [],
+      dataFlow: { en: 'The server receives readable message bodies and topic names, then sends them to subscribers. This is not end-to-end encrypted.', es: 'El servidor recibe los mensajes legibles y los nombres de temas, y los envía a quienes se suscriben. No hay cifrado de extremo a extremo.' },
+      retention: { en: 'Messages are cached in memory for one hour and disappear on restart. Subscriber devices may retain notifications longer.', es: 'Los mensajes se conservan en memoria durante una hora y desaparecen al reiniciar. Los dispositivos receptores pueden conservarlos por más tiempo.' },
+    },
+    {
+      id: 'yopass', providerId: 'yopass', discoveryGroup: 'text-data', configUrlKey: 'publicSecretUrl',
+      name: { en: 'Share a one-time secret', es: 'Compartir un secreto una sola vez' },
+      description: { en: 'Encrypt a short message with Yopass and share a link that works once. Expires after one hour.', es: 'Cifrá un mensaje breve con Yopass y compartí un enlace que funciona una sola vez. Vence después de una hora.' },
+      help: { en: 'Enter a short message, encrypt it and share the complete link privately. Revealing the message consumes the secret, including during your own test. Save anything important elsewhere. Uploads are disabled; encrypted payloads are limited to 10 KB.', es: 'Ingresá un mensaje breve, cifralo y compartí el enlace completo en privado. Revelar el mensaje consume el secreto, incluso si lo hacés para probarlo. Guardá lo importante en otro lugar. No se admiten archivos; el contenido cifrado tiene un límite de 10 KB.' },
+      labels: ['local', 'server'], upstreamServices: [],
+      dataFlow: { en: 'The browser encrypts the message. Utilibre stores ciphertext; the decryption key remains in the URL fragment, outside the HTTP request.', es: 'El navegador cifra el mensaje. Utilibre almacena el contenido cifrado; la clave queda en el fragmento de la URL, fuera de la solicitud HTTP.' },
+      retention: { en: 'Ciphertext is kept in memory until the first retrieval or one hour, whichever comes first. Restarting the service can remove it sooner. No recovery or backup.', es: 'El contenido cifrado queda en memoria hasta la primera consulta o durante una hora, lo que ocurra primero. Un reinicio puede eliminarlo antes. No hay recuperación ni copia de seguridad.' },
+    },
+    {
+      id: 'pairdrop', providerId: 'pairdrop', discoveryGroup: 'files', configUrlKey: 'publicDropUrl',
+      name: { en: 'Send files between devices', es: 'Enviar archivos entre dispositivos' },
+      description: { en: 'Open PairDrop on both devices and send files directly between their browsers. Both must stay online.', es: 'Abrí PairDrop en ambos dispositivos y enviá archivos directamente entre sus navegadores. Ambos deben permanecer conectados.' },
+      help: { en: 'Open the site on both devices. Choose the receiving device, select files and accept on the receiver. Use pairing or a temporary room across networks. There is no relay fallback, so restrictive networks may not connect. Verify the recipient before sending.', es: 'Abrí el sitio en ambos dispositivos. Elegí el receptor, seleccioná los archivos y aceptá en el otro dispositivo. Usá el emparejamiento o una sala temporal entre redes distintas. No hay retransmisión alternativa: algunas redes restrictivas no permiten conectarse. Verificá quién recibe antes de enviar.' },
+      labels: ['local', 'server', 'external'], upstreamServices: ['Cloudflare STUN'],
+      dataFlow: { en: 'Utilibre exchanges connection metadata. Cloudflare STUN helps discover network addresses. File contents travel over an encrypted WebRTC connection between devices, without server file storage or WebSocket file relay.', es: 'Utilibre intercambia metadatos de conexión. STUN de Cloudflare ayuda a descubrir las direcciones de red. Los archivos viajan por una conexión WebRTC cifrada entre dispositivos, sin almacenamiento de archivos ni retransmisión por WebSocket en el servidor.' },
+      retention: { en: 'Connection state is temporary. Pairing information can persist in browser storage, and downloaded files remain on the receiving device. STUN-provider metadata retention is separate.', es: 'El estado de conexión es temporal. El emparejamiento puede persistir en el navegador y los archivos descargados quedan en el dispositivo receptor. La conservación de metadatos del proveedor STUN es independiente.' },
+    },
+    {
+      id: 'uptime-kuma', providerId: 'uptime-kuma', discoveryGroup: 'feeds-monitoring', configUrlKey: 'publicStatusUrl',
+      name: { en: 'Service uptime', es: 'Disponibilidad de los servicios' },
+      description: { en: 'See public HTTPS checks and recent availability history for Utilibre services.', es: 'Consultá las comprobaciones HTTPS y el historial reciente de disponibilidad de Utilibre.' },
+      help: { en: 'Checks run every five minutes and test HTTP responses, not every feature. This monitor is on the application VM: it cannot independently report a complete VM outage. History starts with this deployment; no uptime guarantee is offered.', es: 'Las comprobaciones ocurren cada cinco minutos y revisan respuestas HTTP, no todas las funciones. El monitor está en la VM de aplicaciones: no puede informar de manera independiente si esa VM deja de funcionar. El historial comienza con este despliegue; no hay garantía de disponibilidad.' },
+      labels: ['server'], upstreamServices: ['Public Utilibre service endpoints'],
+      dataFlow: { en: 'Uptime Kuma checks Utilibre endpoints and publishes availability results. Public visitors cannot access the administration interface.', es: 'Uptime Kuma consulta los servicios de Utilibre y publica los resultados. Las visitas públicas no pueden acceder a la administración.' },
+      retention: { en: 'Monitor history is retained for 30 days. No visitor account is needed; connection metadata may appear in operational edge logs.', es: 'El historial se conserva durante 30 días. No necesitás una cuenta; los metadatos de conexión pueden aparecer en los registros operativos del borde.' },
+    },
+  ];
+  return specs.map((spec, index) => ({
+    ...spec, ...providerMetadata(spec.providerId), kind: 'service', implementation: 'upstream-application',
+    category: 'service', featuredOrder: 12 + index, filesUploaded: false,
+    temporaryStorage: spec.retention, logging, modified: false, operationalStatus: 'operational',
+  }));
 }
 
 assertFossCatalogPolicy(catalog);

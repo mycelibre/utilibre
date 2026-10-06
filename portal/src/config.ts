@@ -10,6 +10,25 @@ export interface PublicConfig {
   publicRedditUrl: string;
   publicRssUrl: string;
   publicPasteUrl: string;
+  publicPdfUrl: string;
+  publicConvertUrl: string;
+  publicToolsUrl: string;
+  publicDeveloperToolsUrl: string;
+  publicEncryptUrl: string;
+  publicDrawUrl: string;
+  publicQrUrl: string;
+  publicBridgeUrl: string;
+  publicNotifyUrl: string;
+  publicSecretUrl: string;
+  publicDropUrl: string;
+  publicStatusUrl: string;
+  publicPythonUrl: string;
+  publicTranscribeUrl: string;
+  publicWakapiUrl: string;
+  publicResumeUrl: string;
+  publicDesignUrl: string;
+  publicBudgetUrl: string;
+  listedServices: string[];
   enabledServices: string[];
   defaultLanguage: 'en' | 'es';
 }
@@ -26,6 +45,25 @@ const defaults: PublicConfig = {
   publicRedditUrl: '',
   publicRssUrl: '',
   publicPasteUrl: '',
+  publicPdfUrl: '',
+  publicConvertUrl: '',
+  publicToolsUrl: '',
+  publicDeveloperToolsUrl: '',
+  publicEncryptUrl: '',
+  publicDrawUrl: '',
+  publicQrUrl: '',
+  publicBridgeUrl: '',
+  publicNotifyUrl: '',
+  publicSecretUrl: '',
+  publicDropUrl: '',
+  publicStatusUrl: '',
+  publicPythonUrl: '',
+  publicTranscribeUrl: '',
+  publicWakapiUrl: '',
+  publicResumeUrl: '',
+  publicDesignUrl: '',
+  publicBudgetUrl: '',
+  listedServices: [],
   enabledServices: [],
   defaultLanguage: 'en',
 };
@@ -64,6 +102,7 @@ async function requestPublicConfig(signal: AbortSignal): Promise<PublicConfig> {
     ...defaults,
     ...Object.fromEntries(Object.entries(value).filter(([, item]) => typeof item === 'string')),
     enabledServices: Array.isArray(value.enabledServices) ? value.enabledServices.filter((item): item is string => typeof item === 'string') : [],
+    listedServices: Array.isArray(value.listedServices) ? value.listedServices.filter((item): item is string => typeof item === 'string') : [],
     defaultLanguage: value.defaultLanguage === 'es' ? 'es' : 'en',
   };
 }

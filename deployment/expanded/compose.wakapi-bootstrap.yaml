@@ -1,0 +1,6 @@
+# Bootstrap is loopback-only even after the regular service uses the edge.
+services:
+  wakapi:
+    ports: !override ["127.0.0.1:3136:3000"]
+    environment:
+      WAKAPI_ALLOW_SIGNUP: "true"

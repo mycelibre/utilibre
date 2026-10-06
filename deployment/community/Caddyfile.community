@@ -1,0 +1,54 @@
+# Merge on the existing Caddy VM, preserving its TLS and trusted-proxy setup.
+# For proxied DNS, Caddy must trust ONLY Cloudflare networks before {client_ip}
+# is used. Never trust visitor-supplied CF-Connecting-IP from arbitrary peers.
+# These routes are for this app VM only. Do not expose port 3135 (Kuma admin).
+# Keep poll.utilibre.org disabled until SMTP/support/licensing setup is complete.
+
+bridge.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3120 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+notify.utilibre.org {
+	request_body {
+		max_size 16KB
+	}
+	reverse_proxy 10.10.1.43:3121 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+		flush_interval -1
+	}
+}
+secret.utilibre.org {
+	request_body {
+		max_size 16KB
+	}
+	header Cache-Control no-store
+	reverse_proxy 10.10.1.43:3122 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+drop.utilibre.org {
+	request_body {
+		max_size 64KB
+	}
+	reverse_proxy 10.10.1.43:3124 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+status.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3125
+}
+
+# poll.utilibre.org {
+#     request_body { max_size 64KB }
+#     reverse_proxy 10.10.1.43:3123 {
+#         header_up X-Real-IP {client_ip}
+#         header_up X-Forwarded-For {client_ip}
+#     }
+# }

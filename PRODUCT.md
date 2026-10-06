@@ -39,6 +39,26 @@ encouraged to support it.
 
 ## Service admission rule
 
+Operator update, 2026-10-05: useful no-account browser tools are also admitted
+when they complement the collection, even if the upstream offers free hosting.
+The requested PDF/OCR, conversion, encryption, diagram, QR and developer tools
+are reviewed in `docs/toolbox-review.md`. This supersedes the access-gap-only
+exclusion below for this approved expansion; safety and FOSS requirements
+remain mandatory. Runtime enablement must reflect public verification.
+
+Operator update, 2026-10-06: the current delivery also includes RSS-Bridge,
+ntfy, Yopass, PairDrop and a public Uptime Kuma status page. Rallly is requested
+but remains disabled until its organizer/account and email setup is resolved.
+Liberapay replaces Stripe; no donation recipient may be inferred. These
+explicit requests supersede the earlier retirement of ntfy and PairDrop.
+
+Operator update, 2026-10-06: list all requested expanded tools in the public
+GUI even while setup is pending. Visible inventory and launch enablement are
+separate controls; a pending entry must explain its restriction and must not
+offer a dead launch action. This overrides the earlier hidden-pending-inventory
+rule only for these explicitly requested applications. It does not open
+registrations or change their operating safeguards.
+
 Utilibre may operate an application when there is no stable,
 project-operated, permanently useful free hosted service, or when the official
 free tier is too restricted to make the application genuinely useful.
@@ -116,8 +136,8 @@ operator-access facts. Utilibre does not claim anonymity, untraceability,
 universal uptime, or complete security.
 
 The voice is clear before clever: technically informed, calm, and understandable
-to non-specialists. English and neutral Spanish are equal product languages.
-Spanish copy uses natural wording, `« »` quotation marks, and “software
+to non-specialists. English and Spanish are equal product languages.
+Spanish copy uses consistent Guatemalan voseo (podés, elegí, guardá), natural wording, `« »` quotation marks, and “software
 libre” where that term is appropriate. Hosted interfaces retain visible
 upstream credit; Utilibre never implies authorship or affiliation.
 
@@ -151,6 +171,21 @@ upstream credit; Utilibre never implies authorship or affiliation.
   donation destination should be claimed unless independently configured and
   verified. Without a valid donation destination, its navigation, appeals,
   page, metadata, and aliases remain unavailable.
+
+## Requested next batch — not yet approved for public launch
+
+Finish and verify the current batch before deploying further services. The
+operator's next-batch shortlist, in supplied priority order, is Reactive
+Resume, Penpot, curated feed expansion, JupyterLite, BreezeWiki, Actual Budget
+and Wakapi. Whisper Web is also shortlisted for browser-local transcription.
+Recheck stable releases, licenses and operating requirements before acting.
+No donation-conversion or income forecast is established by this shortlist.
+
+Account-based additions need private defaults, user separation, recovery,
+export/deletion and tested backups. Pilot controls are especially important
+for Penpot, Actual and Wakapi. No bank integrations are requested. Whisper Web
+needs ordinary-laptop/mobile testing, long-recording and recovery tests, and a
+network audit of model/application downloads before any no-upload claim.
 
 ## Accessibility and inclusion
 

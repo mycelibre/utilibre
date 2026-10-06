@@ -1,0 +1,37 @@
+# Merge these routes into the Caddy VM's existing configuration. Do not replace
+# the whole Caddyfile or duplicate existing pdf/convert/tools site blocks.
+# Keep the VM's established TLS issuer/certificate policy for these hostnames.
+# App-provided CSP/COOP/COEP headers must pass through unchanged (no global CSP
+# or require-corp override). Disable Cloudflare Rocket Loader for these sites.
+
+pdf.utilibre.org {
+	encode zstd gzip
+	# Replace the old edge require-corp header rather than appending to it.
+	header >Cross-Origin-Embedder-Policy credentialless
+	header >Cross-Origin-Opener-Policy same-origin
+	reverse_proxy 10.10.1.43:3101
+}
+convert.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3102
+}
+tools.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3103
+}
+dev.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3109
+}
+hat.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3110
+}
+draw.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3111
+}
+qr.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3112
+}

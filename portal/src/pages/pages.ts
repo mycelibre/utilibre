@@ -1,5 +1,6 @@
 import { catalog, catalogEntry, localized, reviewedServices, type CatalogEntry, type DiscoveryGroup, type OperationalStatus } from '../catalog/catalog';
 import { discoveryGroups, discoverEntries, entryLaunchable, serviceConfigured, type CatalogDiscoveryState } from '../catalog/discovery';
+import { localizedSupportUrl } from '../catalog/locale-links';
 import { renderCatalogList } from '../components/catalog-ledger';
 import { privacyLabels } from '../components/privacy-labels';
 import type { PublicConfig } from '../config';
@@ -19,7 +20,7 @@ export async function renderPage(route: Route, config: PublicConfig, t: Translat
   if (route.page === 'acceptable') return renderAcceptable(config, t);
   if (route.page === 'support') return renderSupport(route.language, config, t);
   if (route.page === 'status') return renderStatus(route.language, config, t);
-  if (route.page === 'software') return renderSoftware(config, t);
+  if (route.page === 'software') return renderSoftware(route.language, config, t);
   if (route.page === 'labels') return renderLabelGuide(t);
   return renderNotFound(route.language, t);
 }
@@ -106,7 +107,6 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   const title = element('h2', '', stateLabel);
   title.id = 'catalog-title';
   heading.append(title);
-  if (isFeaturedDefault) heading.append(element('p', 'catalog-editorial-note', t('home.catalog.intro')));
   const processing = element('span', 'catalog-ledger-column-label', t('home.catalog.processing'));
   const launch = element('span', 'catalog-ledger-column-label catalog-ledger-column-action', t('home.catalog.open'));
   processing.ariaHidden = 'true';
@@ -183,6 +183,7 @@ function renderPrivacy(config: PublicConfig, t: Translate): HTMLElement {
   return prosePage(t('privacy.title'), t('privacy.intro'), [
     ['privacy.portal.title', 'privacy.portal.body'],
     ['privacy.local.title', 'privacy.local.body'],
+    ['privacy.tools.title', 'privacy.tools.body'],
     ['privacy.search.title', 'privacy.search.body'],
     ...redlibSections,
     ['privacy.logs.title', 'privacy.logs.body'],
@@ -244,7 +245,7 @@ function renderTransparency(language: Language, config: PublicConfig, t: Transla
   }
   main.append(inventory);
   if (config.supportUrl) {
-    const link = externalLink(config.supportUrl, t('support.link'));
+    const link = externalLink(localizedSupportUrl(config.supportUrl, language), t('support.link'));
     main.append(infoSection(t('support.title'), t('support.body'), link));
   }
   return main;
@@ -263,7 +264,8 @@ function renderSupport(language: Language, config: PublicConfig, t: Translate): 
   const main = pageHeader(t('support.title'), t('support.body'));
   const section = element('section', 'section');
   section.append(element('p', '', t('support.conditions')));
-  section.append(externalLink(config.supportUrl, t('support.link'), 'button'));
+  section.append(externalLink(localizedSupportUrl(config.supportUrl, language), t('support.link'), 'button'));
+  section.append(element('p', '', t('support.privacy')));
   main.append(section);
   const upstreamLink = element('a', 'text-link', t('support.upstream.link'));
   upstreamLink.href = routePath('software', language);
@@ -342,10 +344,15 @@ function statusCheckedAt(payload: unknown): string | undefined {
   return checkedAt;
 }
 
-function renderSoftware(config: PublicConfig, t: Translate): HTMLElement {
+function renderSoftware(language: Language, config: PublicConfig, t: Translate): HTMLElement {
   const main = pageHeader(t('software.title'), t('software.intro'));
-  if (config.sourceCodeUrl) main.append(externalLink(config.sourceCodeUrl, t('software.source'), 'button'));
-  const legalDocuments = element('ul');
+  main.classList.add('software-page');
+  if (config.sourceCodeUrl) {
+    const actions = element('div', 'software-actions');
+    actions.append(externalLink(config.sourceCodeUrl, t('software.source'), 'button'));
+    main.querySelector('.page-header')?.append(actions);
+  }
+  const legalDocuments = element('ul', 'software-documents');
   const licenseItem = element('li');
   const licenseLink = element('a', 'text-link', t('software.documents.license'));
   licenseLink.href = '/legal/LICENSE.txt';
@@ -375,7 +382,7 @@ function renderSoftware(config: PublicConfig, t: Translate): HTMLElement {
     purpose: string;
   };
   const inventory: SoftwareItem[] = [
-    { group: 'portal', name: t('software.portalName'), version: '0.1.0', license: 'AGPL-3.0-or-later', upstream: config.sourceCodeUrl, modification: t('software.original'), purpose: t('software.purpose.portal') },
+    { group: 'portal', name: t('software.portalName'), version: '0.1.0', license: 'AGPL-3.0-or-later', upstream: config.sourceCodeUrl, modifiedSource: config.publicPdfUrl ? new URL('/utilibre-source/utilibre-integration.tar.gz', config.publicPdfUrl).href : undefined, modification: t('software.original'), purpose: t('software.purpose.portal') },
     { group: 'portal', name: 'Node.js / Alpine Linux', version: '24.14.0 / 3.23', license: 'MIT / component-specific', upstream: 'https://github.com/nodejs/node/tree/v24.14.0', modification: t('software.notModified'), purpose: t('software.purpose.node') },
     { group: 'hosted', name: 'SearXNG', version: '2026.9.29-4e2c1ea7f', license: 'AGPL-3.0-or-later', upstream: 'https://github.com/searxng/searxng', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.searxng') },
     { group: 'infrastructure', name: 'Valkey', version: '9.1.1-alpine', license: 'BSD-3-Clause', upstream: 'https://github.com/valkey-io/valkey/tree/9.1.1', modification: t('software.notModified'), purpose: t('software.purpose.valkey') },
@@ -390,6 +397,18 @@ function renderSoftware(config: PublicConfig, t: Translate): HTMLElement {
     { group: 'build', name: 'Vite', version: '8.2.2', license: 'MIT', upstream: 'https://github.com/vitejs/vite', modification: t('software.notModified'), purpose: t('software.purpose.vite') },
     { group: 'build', name: 'TypeScript', version: '6.0.3', license: 'Apache-2.0', upstream: 'https://github.com/microsoft/TypeScript', modification: t('software.notModified'), purpose: t('software.purpose.typescript') },
   ];
+  for (const entry of reviewedServices.filter((entry) => serviceConfigured(config, entry))) {
+    if (inventory.some((item) => item.name === entry.upstreamProject)) continue;
+    const baseUrl = entry.configUrlKey ? (config as unknown as Record<string, string>)[entry.configUrlKey] : '';
+    inventory.push({
+      group: 'hosted', name: entry.upstreamProject, version: entry.installedVersion,
+      license: entry.license, upstream: entry.upstreamSourceUrl,
+      modification: t(entry.modified ? 'software.modified' : 'software.imageUnmodifiedConfigured'),
+      modifiedSource: entry.labels.includes('local') && !entry.labels.includes('server') && baseUrl
+        ? new URL('/utilibre-source/', baseUrl).href : config.sourceCodeUrl,
+      purpose: localized(entry.description, language),
+    });
+  }
   const jump = element('nav', 'software-jump');
   jump.ariaLabel = t('software.jump');
   for (const group of groups) {
@@ -414,10 +433,12 @@ function renderSoftware(config: PublicConfig, t: Translate): HTMLElement {
         element('p', '', `${t('software.purposeLabel')}: ${itemData.purpose}`),
         element('p', 'software-modification', itemData.modification),
       );
-      if (itemData.upstream) item.append(externalLink(itemData.upstream, `${t('software.upstreamSource')}: ${itemData.name}`));
+      const sources = element('div', 'software-sources');
+      if (itemData.upstream) sources.append(externalLink(itemData.upstream, `${t('software.upstreamSource')}: ${itemData.name}`));
       if (itemData.modifiedSource && itemData.modifiedSource !== itemData.upstream) {
-        item.append(externalLink(itemData.modifiedSource, `${t('software.modifiedSource')}: ${itemData.name}`));
+        sources.append(externalLink(itemData.modifiedSource, `${t('software.modifiedSource')}: ${itemData.name}`));
       }
+      if (sources.childElementCount) item.append(sources);
       list.append(item);
     }
     section.append(list);
@@ -491,6 +512,7 @@ function catalogUrl(language: Language, state: CatalogDiscoveryState): string {
 
 function discoveryGroupLabel(group: DiscoveryGroup, t: Translate): string {
   const keys: Record<DiscoveryGroup, TranslationKey> = {
+    files: 'discovery.files',
     find: 'discovery.find',
     'text-data': 'discovery.textData',
     'feeds-monitoring': 'discovery.feeds',

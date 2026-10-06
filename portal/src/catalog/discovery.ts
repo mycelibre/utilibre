@@ -2,8 +2,10 @@ import { catalog, localized, type CatalogEntry, type DiscoveryGroup } from './ca
 import type { PublicConfig } from '../config';
 import type { Language } from '../i18n';
 import { toolPath } from '../routes';
+import { localizedServiceUrl } from './locale-links';
 
 export const discoveryGroups: readonly DiscoveryGroup[] = [
+  'files',
   'find',
   'text-data',
   'feeds-monitoring',
@@ -27,7 +29,7 @@ export function serviceEnabled(config: PublicConfig, id: string): boolean {
 export function serviceConfigured(config: PublicConfig, entry: CatalogEntry): boolean {
   if (entry.kind !== 'service') return false;
   if (!serviceEnabled(config, entry.id)) return false;
-  if (!entry.configUrlKey) return true;
+  if (!entry.configUrlKey) return false;
   return Boolean(configValue(config, entry.configUrlKey));
 }
 
@@ -43,13 +45,17 @@ export function entryLaunch(entry: CatalogEntry, language: Language, config: Pub
   }
 
   const base = entry.configUrlKey ? configValue(config, entry.configUrlKey) : '';
-  return base ? { href: base, external: /^https?:\/\//i.test(base) } : null;
+  return base ? { href: localizedServiceUrl(entry.id, base, language), external: /^https?:\/\//i.test(base) } : null;
 }
 
 export function entryLaunchable(entry: CatalogEntry, config: PublicConfig): boolean {
   if (entry.id === 'private-router') return privateRouterAvailable(config);
   if (entry.kind === 'integration') return true;
-  return entry.operationalStatus !== 'not-deployed' && serviceConfigured(config, entry);
+  return !['not-deployed', 'maintenance', 'unavailable'].includes(entry.operationalStatus) && serviceConfigured(config, entry);
+}
+
+export function visibleEntries(config: PublicConfig): CatalogEntry[] {
+  return catalog.filter((entry) => entryLaunchable(entry, config) || config.listedServices.includes(entry.id));
 }
 
 export function launchableEntries(config: PublicConfig): CatalogEntry[] {
@@ -57,17 +63,17 @@ export function launchableEntries(config: PublicConfig): CatalogEntry[] {
 }
 
 export function featuredEntries(config: PublicConfig): CatalogEntry[] {
-  return launchableEntries(config)
+  return visibleEntries(config)
     .filter((entry) => entry.featuredOrder !== undefined)
     .sort((left, right) => (left.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (right.featuredOrder ?? Number.MAX_SAFE_INTEGER));
 }
 
 export function allEntries(config: PublicConfig, language: Language): CatalogEntry[] {
-  return sortByName(launchableEntries(config), language);
+  return sortByName(visibleEntries(config), language);
 }
 
 export function groupEntries(config: PublicConfig, language: Language, group: DiscoveryGroup): CatalogEntry[] {
-  return sortByName(launchableEntries(config).filter((entry) => entry.discoveryGroup === group), language);
+  return sortByName(visibleEntries(config).filter((entry) => entry.discoveryGroup === group), language);
 }
 
 export function searchEntries(config: PublicConfig, language: Language, query: string): CatalogEntry[] {
@@ -78,6 +84,7 @@ export function searchEntries(config: PublicConfig, language: Language, query: s
   return allEntries(config, language).filter((entry) => {
     const searchable = normalizeCatalogSearch([
       entry.id,
+      entry.upstreamProject,
       localized(entry.name, language),
       localized(entry.description, language),
     ].join(' '), language);

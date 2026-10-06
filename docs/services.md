@@ -11,6 +11,16 @@ promise.
 
 ## Operated public services
 
+The October 6 expansion adds BentoPDF/OCR, VERT, OmniTools, IT Tools, hat.sh,
+draw.io, Mini QR, RSS-Bridge, ntfy, Yopass, PairDrop, public Uptime Kuma status,
+JupyterLite and Whisper Web. Reactive Resume, Penpot, Actual Budget and Wakapi
+use approved Utilibre accounts through Authentik; they are not anonymous tools.
+Public self-registration remains closed. The portal lists Rallly and BreezeWiki
+as unavailable, not working services. Current endpoints, licensing, privacy
+boundaries and verification are in [the deployment review](toolbox-review.md).
+
+The original services retain these boundaries:
+
 | Application | Practical role and boundary | Access |
 | --- | --- | --- |
 | SearXNG | Metasearch. Utilibre sends queries to selected external engines and returns their results. Additional independently operated instances support SearXNG's decentralized model. | No application account |

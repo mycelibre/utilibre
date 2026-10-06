@@ -1,5 +1,6 @@
 import { localized, type AccountAccess, type CatalogEntry } from '../catalog/catalog';
 import { entryLaunch } from '../catalog/discovery';
+import { localizedServiceUrl } from '../catalog/locale-links';
 import type { PublicConfig } from '../config';
 import type { Language } from '../i18n';
 import { append, element, type Translate } from '../utilities/dom';
@@ -88,8 +89,12 @@ export function renderCatalogRow(
 
   const action = element('div', 'catalog-ledger-action');
   const launch = entryLaunch(entry, language, config);
+  if (!launch) {
+    action.append(element('p', 'catalog-ledger-unavailable', t('home.catalog.unavailable')));
+    content.append(element('p', 'catalog-ledger-access', entry.unavailableReason ? localized(entry.unavailableReason, language) : t('home.catalog.awaitingAccess')));
+  }
   if (launch) {
-    const launchText = t('home.catalog.open');
+    const launchText = entry.accountAccess ? t('home.catalog.signIn') : entry.launchLabel ? localized(entry.launchLabel, language) : t('home.catalog.open');
     const link = element('a', 'catalog-ledger-launch', launchText);
     link.href = launch.href;
     link.target = '_blank';
@@ -101,13 +106,39 @@ export function renderCatalogRow(
       link.append(' ', cue);
     }
     action.append(link);
+    for (const shortcut of entry.quickLinks ?? []) {
+      const quick = element('a', 'catalog-quick-link', localized(shortcut.label, language));
+      quick.href = localizedServiceUrl(entry.id, launch.href, language, shortcut.path);
+      quick.target = '_blank';
+      quick.rel = 'noopener noreferrer';
+      quick.ariaLabel = `${localized(shortcut.label, language)} (${t('a11y.opensNewTab')})`;
+      action.append(quick);
+    }
   }
+  const details = element('details', 'catalog-help');
+  details.append(element('summary', '', t('home.catalog.help')));
+  if (entry.help) details.append(element('p', '', localized(entry.help, language)));
+  if (entry.accountAccess === 'invite-required') {
+    const request = element('a', 'text-link', t('home.catalog.requestAccount'));
+    request.href = 'mailto:admin@utilibre.org?subject=Utilibre%20account%20request';
+    details.append(request, element('p', '', t('home.catalog.accountRecovery')));
+  }
+  details.append(element('p', '', localized(entry.dataFlow, language)));
+  if (launch && entry.labels.includes('local') && !entry.labels.includes('server')) {
+    const source = element('a', 'text-link', t('software.documents.sourceBundle'));
+    source.href = new URL('utilibre-source/', launch.href).href;
+    source.target = '_blank';
+    source.rel = 'noopener noreferrer';
+    details.append(source);
+  }
+  processing.append(details);
   append(article, coordinate, content, processing, action);
   item.append(article);
   return item;
 }
 
 function accountAccessText(access: AccountAccess, t: Translate): string {
+  if (access === 'owner-only') return t('home.catalog.accessOwner');
   return access === 'invite-required'
     ? t('home.catalog.accessInvite')
     : t('home.catalog.accessClosed');

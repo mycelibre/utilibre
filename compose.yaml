@@ -40,6 +40,25 @@ services:
       PUBLIC_REDDIT_URL: ${PUBLIC_REDDIT_URL:-}
       PUBLIC_RSS_URL: ${PUBLIC_RSS_URL:-}
       PUBLIC_PASTE_URL: ${PUBLIC_PASTE_URL:-}
+      PUBLIC_PDF_URL: ${PUBLIC_PDF_URL:-}
+      PUBLIC_CONVERT_URL: ${PUBLIC_CONVERT_URL:-}
+      PUBLIC_TOOLS_URL: ${PUBLIC_TOOLS_URL:-}
+      PUBLIC_DEVELOPER_TOOLS_URL: ${PUBLIC_DEVELOPER_TOOLS_URL:-}
+      PUBLIC_ENCRYPT_URL: ${PUBLIC_ENCRYPT_URL:-}
+      PUBLIC_DRAW_URL: ${PUBLIC_DRAW_URL:-}
+      PUBLIC_QR_URL: ${PUBLIC_QR_URL:-}
+      PUBLIC_BRIDGE_URL: ${PUBLIC_BRIDGE_URL:-}
+      PUBLIC_NOTIFY_URL: ${PUBLIC_NOTIFY_URL:-}
+      PUBLIC_SECRET_URL: ${PUBLIC_SECRET_URL:-}
+      PUBLIC_DROP_URL: ${PUBLIC_DROP_URL:-}
+      PUBLIC_STATUS_URL: ${PUBLIC_STATUS_URL:-}
+      PUBLIC_PYTHON_URL: ${PUBLIC_PYTHON_URL:-}
+      PUBLIC_TRANSCRIBE_URL: ${PUBLIC_TRANSCRIBE_URL:-}
+      PUBLIC_WAKAPI_URL: ${PUBLIC_WAKAPI_URL:-}
+      PUBLIC_RESUME_URL: ${PUBLIC_RESUME_URL:-}
+      PUBLIC_DESIGN_URL: ${PUBLIC_DESIGN_URL:-}
+      PUBLIC_BUDGET_URL: ${PUBLIC_BUDGET_URL:-}
+      LISTED_SERVICES: ${LISTED_SERVICES:-}
       ENABLED_SERVICES: ${ENABLED_SERVICES:-searxng,redlib,freshrss,privatebin}
       DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE:-en}
       PRIVATE_PREVIEW: ${PORTAL_PRIVATE_PREVIEW:-${PRIVATE_PREVIEW:-0}}
@@ -50,7 +69,25 @@ services:
         searxng=http://searxng:8080/healthz,
         redlib=http://redlib:8080/settings,
         freshrss=http://${PRIVATE_BIND_IP}:${FRESHRSS_PORT:-3106}/i/,
-        privatebin=http://${PRIVATE_BIND_IP}:${PRIVATEBIN_PORT:-3108}/
+        privatebin=http://${PRIVATE_BIND_IP}:${PRIVATEBIN_PORT:-3108}/,
+        bentopdf=http://${PRIVATE_BIND_IP}:3101/,
+        vert=http://${PRIVATE_BIND_IP}:3102/,
+        omnitools=http://${PRIVATE_BIND_IP}:3103/,
+        ittools=http://${PRIVATE_BIND_IP}:3109/,
+        hatsh=http://${PRIVATE_BIND_IP}:3110/,
+        drawio=http://${PRIVATE_BIND_IP}:3111/,
+        miniqr=http://${PRIVATE_BIND_IP}:3112/,
+        rssbridge=http://${PRIVATE_BIND_IP}:3120/,
+        ntfy=http://${PRIVATE_BIND_IP}:3121/v1/health,
+        yopass=http://${PRIVATE_BIND_IP}:3122/,
+        pairdrop=http://${PRIVATE_BIND_IP}:3124/,
+        uptime-kuma=http://${PRIVATE_BIND_IP}:3125/api/status-page/utilibre,
+        jupyterlite=http://${PRIVATE_BIND_IP}:3133/lab/index.html,
+        whisper-web=http://${PRIVATE_BIND_IP}:3137/,
+        wakapi=http://${PRIVATE_BIND_IP}:3136/,
+        reactive-resume=http://${PRIVATE_BIND_IP}:3130/,
+        penpot=http://${PRIVATE_BIND_IP}:3131/,
+        actual=http://${PRIVATE_BIND_IP}:3132/
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
     healthcheck:

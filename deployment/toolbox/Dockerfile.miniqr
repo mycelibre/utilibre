@@ -1,0 +1,10 @@
+FROM node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402 AS build
+WORKDIR /app
+ENV HUSKY=0 VITE_ENABLE_ANALYTICS=false VITE_HIDE_CREDITS=false VITE_DISABLE_LOCAL_STORAGE=true VITE_QR_CREATE_SIMPLE_FULL_MODE_TOGGLE=true VITE_APP_VERSION=0.33.0
+COPY . .
+RUN npm install -g pnpm@10.0.0 && pnpm install --frozen-lockfile
+RUN pnpm build
+FROM nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+COPY --from=build /app/dist /usr/share/nginx/html
+ADD --chmod=644 https://raw.githubusercontent.com/lyqht/mini-qr/v0.33.0/LICENSE /usr/share/nginx/html/LICENSE.txt
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

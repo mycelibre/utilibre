@@ -1,0 +1,6 @@
+# First startup only. Remove this override after verifying owner provisioning.
+services:
+  worker:
+    environment:
+      AUTHENTIK_BOOTSTRAP_EMAIL: admin@utilibre.org
+      AUTHENTIK_BOOTSTRAP_PASSWORD_HASH: ${AUTHENTIK_BOOTSTRAP_PASSWORD_HASH:?Run init-private.mjs}

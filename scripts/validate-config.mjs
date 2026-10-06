@@ -10,8 +10,27 @@ const services = [
   { id: 'redlib', hostKey: 'PUBLIC_REDDIT_HOST', urlKey: 'PUBLIC_REDDIT_URL', portKey: 'REDLIB_PORT' },
   { id: 'freshrss', hostKey: 'PUBLIC_RSS_HOST', urlKey: 'PUBLIC_RSS_URL', portKey: 'FRESHRSS_PORT' },
   { id: 'privatebin', hostKey: 'PUBLIC_PASTE_HOST', urlKey: 'PUBLIC_PASTE_URL', portKey: 'PRIVATEBIN_PORT' },
+  { id: 'bentopdf', hostKey: 'PUBLIC_PDF_HOST', urlKey: 'PUBLIC_PDF_URL', portKey: 'BENTOPDF_PORT' },
+  { id: 'vert', hostKey: 'PUBLIC_CONVERT_HOST', urlKey: 'PUBLIC_CONVERT_URL', portKey: 'VERT_PORT' },
+  { id: 'omnitools', hostKey: 'PUBLIC_TOOLS_HOST', urlKey: 'PUBLIC_TOOLS_URL', portKey: 'OMNITOOLS_PORT' },
+  { id: 'ittools', hostKey: 'PUBLIC_DEVELOPER_TOOLS_HOST', urlKey: 'PUBLIC_DEVELOPER_TOOLS_URL', portKey: 'ITTOOLS_PORT' },
+  { id: 'hatsh', hostKey: 'PUBLIC_ENCRYPT_HOST', urlKey: 'PUBLIC_ENCRYPT_URL', portKey: 'HATSH_PORT' },
+  { id: 'drawio', hostKey: 'PUBLIC_DRAW_HOST', urlKey: 'PUBLIC_DRAW_URL', portKey: 'DRAWIO_PORT' },
+  { id: 'miniqr', hostKey: 'PUBLIC_QR_HOST', urlKey: 'PUBLIC_QR_URL', portKey: 'MINIQR_PORT' },
+  { id: 'rssbridge', hostKey: 'PUBLIC_BRIDGE_HOST', urlKey: 'PUBLIC_BRIDGE_URL', portKey: 'RSSBRIDGE_PORT' },
+  { id: 'ntfy', hostKey: 'PUBLIC_NOTIFY_HOST', urlKey: 'PUBLIC_NOTIFY_URL', portKey: 'NTFY_PORT' },
+  { id: 'yopass', hostKey: 'PUBLIC_SECRET_HOST', urlKey: 'PUBLIC_SECRET_URL', portKey: 'YOPASS_PORT' },
+  { id: 'pairdrop', hostKey: 'PUBLIC_DROP_HOST', urlKey: 'PUBLIC_DROP_URL', portKey: 'PAIRDROP_PORT' },
+  { id: 'uptime-kuma', hostKey: 'PUBLIC_STATUS_HOST', urlKey: 'PUBLIC_STATUS_URL', portKey: 'KUMA_PUBLIC_PORT' },
+  { id: 'jupyterlite', hostKey: 'PUBLIC_PYTHON_HOST', urlKey: 'PUBLIC_PYTHON_URL', portKey: 'JUPYTERLITE_PORT' },
+  { id: 'whisper-web', hostKey: 'PUBLIC_TRANSCRIBE_HOST', urlKey: 'PUBLIC_TRANSCRIBE_URL', portKey: 'WHISPER_PORT' },
+  { id: 'wakapi', hostKey: 'PUBLIC_WAKAPI_HOST', urlKey: 'PUBLIC_WAKAPI_URL', portKey: 'WAKAPI_PORT' },
+  { id: 'reactive-resume', hostKey: 'PUBLIC_RESUME_HOST', urlKey: 'PUBLIC_RESUME_URL', portKey: 'RESUME_PORT' },
+  { id: 'penpot', hostKey: 'PUBLIC_DESIGN_HOST', urlKey: 'PUBLIC_DESIGN_URL', portKey: 'PENPOT_PORT' },
+  { id: 'actual', hostKey: 'PUBLIC_BUDGET_HOST', urlKey: 'PUBLIC_BUDGET_URL', portKey: 'ACTUAL_PORT' },
 ];
 const allowedServices = new Set(services.map(({ id }) => id));
+const listableServices = new Set([...allowedServices, 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki']);
 
 // Stale settings should fail loudly instead of silently republishing a service
 // that the project deliberately retired.
@@ -19,11 +38,9 @@ const retiredSettings = [
   'PUBLIC_MEDIA_HOST', 'COBALT_PUBLIC_API_URL', 'PORTAL_COBALT_BROWSER_URL',
   'PORTAL_COBALT_RESULT_SOURCE_URL', 'PUBLIC_YOUTUBE_HOST', 'PUBLIC_YOUTUBE_URL',
   'PUBLIC_IMGUR_HOST', 'PUBLIC_IMGUR_URL', 'PUBLIC_NTFY_HOST', 'PUBLIC_NTFY_URL',
-  'PUBLIC_PDF_HOST', 'PUBLIC_PDF_URL', 'PUBLIC_CONVERT_HOST', 'PUBLIC_CONVERT_URL',
-  'PUBLIC_TOOLS_HOST', 'PUBLIC_TOOLS_URL', 'PUBLIC_DEVELOPER_TOOLS_HOST',
-  'PUBLIC_DEVELOPER_TOOLS_URL', 'PUBLIC_OPENAPI_HOST', 'PUBLIC_OPENAPI_URL',
+  'PUBLIC_OPENAPI_HOST', 'PUBLIC_OPENAPI_URL',
   'PUBLIC_MONITOR_HOST', 'PUBLIC_MONITOR_URL', 'PUBLIC_SEND_HOST', 'PUBLIC_SEND_URL',
-  'PUBLIC_FEEDS_HOST', 'PUBLIC_FEEDS_URL', 'PUBLIC_WAKAPI_HOST', 'PUBLIC_WAKAPI_URL',
+  'PUBLIC_FEEDS_HOST', 'PUBLIC_FEEDS_URL',
   'INVIDIOUS_DB_USER', 'INVIDIOUS_DB_PASSWORD', 'INVIDIOUS_DB_NAME',
 ];
 
@@ -95,6 +112,9 @@ export function validateEnvironmentValues(values, { launch = false, assignedAddr
   const enabled = csv(values.ENABLED_SERVICES ?? 'searxng,redlib,freshrss,privatebin');
   if (new Set(enabled).size !== enabled.length) errors.push('ENABLED_SERVICES must not contain duplicate IDs.');
   for (const id of enabled) if (!allowedServices.has(id)) errors.push(`ENABLED_SERVICES contains unsupported or retired ID: ${id}`);
+  for (const id of (values.LISTED_SERVICES || '').split(',').map((value) => value.trim()).filter(Boolean)) {
+    if (!listableServices.has(id)) errors.push(`LISTED_SERVICES contains unsupported or retired ID: ${id}`);
+  }
   if (!enabled.includes('searxng')) errors.push('ENABLED_SERVICES must include searxng.');
 
   const composeProfiles = csv(values.COMPOSE_PROFILES ?? '');
@@ -318,6 +338,10 @@ function defaultPort(key) {
     REDLIB_PORT: '3002',
     FRESHRSS_PORT: '3106',
     PRIVATEBIN_PORT: '3108',
+    BENTOPDF_PORT: '3101', VERT_PORT: '3102', OMNITOOLS_PORT: '3103',
+    ITTOOLS_PORT: '3109', HATSH_PORT: '3110', DRAWIO_PORT: '3111', MINIQR_PORT: '3112',
+    RSSBRIDGE_PORT: '3120', NTFY_PORT: '3121', YOPASS_PORT: '3122', PAIRDROP_PORT: '3124', KUMA_PUBLIC_PORT: '3125',
+    JUPYTERLITE_PORT: '3133', WHISPER_PORT: '3137',
   })[key];
 }
 function memoryBytes(value) {

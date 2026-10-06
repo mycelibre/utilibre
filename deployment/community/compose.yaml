@@ -1,0 +1,167 @@
+name: utilibre-community
+
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+  mem_limit: 256m
+  cpus: 0.5
+  pids_limit: 96
+  logging:
+    driver: json-file
+    options: {max-size: 10m, max-file: "3"}
+
+services:
+  rssbridge:
+    <<: *runtime
+    image: rssbridge/rss-bridge:2025-08-05@sha256:569f01f3faecd0d34d702e01b34eb0a769f7bedb84caf6dff29821d18b46f971
+    user: "33:33"
+    entrypoint: [/bin/sh, -ec]
+    command: ["mkdir -p /run/php; nginx -c /etc/nginx/utilibre.conf; exec php-fpm8.2 --fpm-config /etc/php/8.2/fpm/utilibre.conf --nodaemonize"]
+    volumes:
+      - ./rssbridge.ini.php:/app/config.ini.php:ro
+      - ./rssbridge-nginx.conf:/etc/nginx/utilibre.conf:ro
+      - ./rssbridge-fpm.conf:/etc/php/8.2/fpm/utilibre.conf:ro
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
+      - /run:rw,nosuid,nodev,noexec,size=16m,mode=1777
+      - /app/cache:rw,nosuid,nodev,noexec,size=128m,uid=33,gid=33
+    networks:
+      feeds: {ipv4_address: 172.29.70.10}
+    ports: ["10.10.1.43:3120:8080"]
+    healthcheck:
+      test: [CMD, php, -r, "exit(file_get_contents('http://127.0.0.1:8080/') === false ? 1 : 0);"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  ntfy:
+    <<: *runtime
+    image: binwiederhier/ntfy:v2.28.0@sha256:6ef4b819f722fccdc036af611c4774cfdc2de821ab74fdd48bbf4c9d6f8973da
+    user: "1000:1000"
+    command: [serve]
+    volumes: ["./ntfy.yml:/etc/ntfy/server.yml:ro"]
+    networks: [front]
+    ports: ["10.10.1.43:3121:8080"]
+    healthcheck:
+      test: [CMD, wget, -q, --spider, http://127.0.0.1:8080/v1/health]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  yopass:
+    <<: *runtime
+    image: jhaals/yopass:14.10.0@sha256:6c33d9c813f77bae70787e1bce76710840ff654f454998b01f8dacc0a7988fd3
+    command: ["--database=redis", "--redis=redis://secret-cache:6379/0", "--disable-upload", "--force-onetime-secrets", "--force-expiration=1h", "--default-expiry=1h", "--max-length=10000", "--cors-allow-origin=https://secret.utilibre.org", "--privacy-notice-url=https://utilibre.org/en/privacy"]
+    networks: [secrets]
+    depends_on: [secret-cache]
+    healthcheck:
+      test: [CMD, /yopass-server, --health-check, --database=redis, --redis=redis://secret-cache:6379/0]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  secret-cache:
+    <<: *runtime
+    image: valkey/valkey:9.1.1-alpine@sha256:de31910896150d5e754a07d57d227cfdde4e258ddd0d1aa4607f2d2f95843715
+    user: "999:1000"
+    command: [valkey-server, --save, "", --appendonly, "no", --maxmemory, 64mb, --maxmemory-policy, noeviction, --loglevel, warning]
+    tmpfs: ["/data:rw,nosuid,nodev,noexec,size=8m,uid=999,gid=1000"]
+    mem_limit: 96m
+    networks: [secrets]
+
+  pairdrop:
+    <<: *runtime
+    image: ghcr.io/schlagmichdoch/pairdrop:v1.11.2@sha256:c4b30977264a76e335740089e693a52a0d0d616330dec7f93c7b96beef7b4a02
+    user: "1000:1000"
+    environment:
+      PORT: "3000"
+      RATE_LIMIT: "1"
+      DEBUG_MODE: "false"
+      WS_FALLBACK: "false"
+      RTC_CONFIG: /config/rtc.json
+      IPV6_LOCALIZE: "4"
+      PRIVACYPOLICY_BUTTON_ACTIVE: "true"
+      PRIVACYPOLICY_BUTTON_LINK: https://utilibre.org/en/privacy
+    volumes:
+      - ./pairdrop-rtc.json:/config/rtc.json:ro
+      - ../toolbox/language.html:/home/node/app/public/utilibre-language.html:ro
+      - ../toolbox/language.js:/home/node/app/public/utilibre-language.js:ro
+    networks: [front]
+    ports: ["10.10.1.43:3124:3000"]
+
+  uptime-kuma:
+    <<: *runtime
+    image: louislam/uptime-kuma:2.5.5@sha256:c74379ac4509ce2d2c2633f509e67003ee2e45b6e995c5e43fc101f45a0e1fbe
+    user: "1000:1000"
+    environment:
+      UPTIME_KUMA_DB_TYPE: sqlite
+      UPTIME_KUMA_HOST: 0.0.0.0
+      UPTIME_KUMA_PORT: "3001"
+    volumes: ["/opt/utilibre/community-data/kuma:/app/data"]
+    networks: [front]
+    # Administration is localhost-only. Public status uses the restricted gateway.
+    ports: ["127.0.0.1:3135:3001"]
+    mem_limit: 512m
+    cpus: 1
+
+  gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: "101:101"
+    entrypoint: [nginx, -g, "daemon off;"]
+    volumes:
+      - ./gateway.conf:/etc/nginx/nginx.conf:ro
+      - ../toolbox/language.html:/srv/utilibre-language/language.html:ro
+      - ../toolbox/language.js:/srv/utilibre-language/language.js:ro
+    ports: ["10.10.1.43:3122:8082", "10.10.1.43:3125:8085"]
+    networks: [front, secrets]
+    depends_on: [yopass, uptime-kuma]
+
+  rallly:
+    <<: *runtime
+    profiles: [rallly]
+    image: lukevella/rallly:4.15.3@sha256:8cd979aefe8d06e1822bc67054eb2d31088cdb831aa3f7b5615b3768f35431d9
+    environment:
+      DATABASE_URL: postgres://rallly:${RALLLY_DB_PASSWORD:-UNCONFIGURED}@rallly-db:5432/rallly
+      SECRET_PASSWORD: ${RALLLY_SECRET_PASSWORD:-UNCONFIGURED}
+      NEXT_PUBLIC_BASE_URL: https://poll.utilibre.org
+      SUPPORT_EMAIL: ${RALLLY_SUPPORT_EMAIL:-}
+      REGISTRATION_ENABLED: "false"
+      EMAIL_LOGIN_ENABLED: "false"
+      RATE_LIMIT_ENABLED: "true"
+      NEXT_TELEMETRY_DISABLED: "1"
+    ports: ["10.10.1.43:3123:3000"]
+    networks: [front, polls]
+    depends_on:
+      rallly-db: {condition: service_healthy}
+    mem_limit: 768m
+    cpus: 1
+
+  rallly-db:
+    <<: *runtime
+    profiles: [rallly]
+    image: postgres@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
+    user: "70:70"
+    environment:
+      POSTGRES_USER: rallly
+      POSTGRES_DB: rallly
+      POSTGRES_PASSWORD: ${RALLLY_DB_PASSWORD:-UNCONFIGURED}
+    volumes: ["/opt/utilibre/community-data/rallly-db:/var/lib/postgresql/data"]
+    tmpfs: ["/var/run/postgresql:rw,nosuid,nodev,noexec,size=16m,uid=70,gid=70"]
+    networks: [polls]
+    mem_limit: 256m
+    healthcheck:
+      test: [CMD, pg_isready, -U, rallly]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  feeds:
+    ipam: {config: [{subnet: 172.29.70.0/24}]}
+  front: {}
+  secrets: {internal: true}
+  polls: {internal: true}

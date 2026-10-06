@@ -8,12 +8,22 @@ or paid tiers.
 
 ## Tools
 
-- **SearXNG** — Search the web across multiple search engines.
-- **Redlib** — Browse public Reddit. A browser challenge may be required;
-  availability depends on Reddit.
-- **PrivateBin** — Share text encrypted in your browser.
-- **FreshRSS** — Follow RSS and Atom feeds. Accounts are currently set up by
-  the operator; public account requests are not open yet.
+- Search and feeds: **SearXNG, Redlib, FreshRSS, RSS-Bridge**.
+- Files and everyday work: **BentoPDF** (including OCR), **VERT, OmniTools,
+  IT Tools, hat.sh, draw.io, Mini QR**.
+- Sharing and notifications: **PrivateBin, Yopass, PairDrop, ntfy**.
+- Browser-based learning and transcription: **JupyterLite, Whisper Web**.
+- Approved-account pilots: **Reactive Resume, Penpot, Actual Budget, Wakapi**,
+  with shared Utilibre login, email verification and MFA. Public registration
+  remains closed; request access at **admin@utilibre.org**.
+- Service status: **Uptime Kuma**.
+
+FreshRSS retains its separate operator-provisioned accounts. Redlib depends
+on Reddit availability. **Rallly** remains staged pending a multi-user licensing
+decision; **BreezeWiki** is unavailable because upstream requests fail.
+See the [deployment review](docs/toolbox-review.md) for limits and checks.
+
+Optional donations: [Liberapay](https://liberapay.com/mycelibre/donate).
 
 Utilibre hosts and maintains these services. The software is built by their
 respective open-source communities.

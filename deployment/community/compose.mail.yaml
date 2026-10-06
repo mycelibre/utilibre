@@ -1,0 +1,12 @@
+# Prepared relay settings, not proof of delivery. Keep the Rallly profile off
+# until the relay, account enrollment and licensing configuration are verified.
+services:
+  rallly:
+    environment:
+      SUPPORT_EMAIL: admin@utilibre.org
+      NOREPLY_EMAIL: no-reply@utilibre.org
+      SMTP_HOST: 10.10.1.20
+      SMTP_PORT: "26"
+      SMTP_SECURE: "false"
+      SMTP_REJECT_UNAUTHORIZED: "true"
+      # Intentionally no SMTP_USER or SMTP_PWD: the relay has no authentication.

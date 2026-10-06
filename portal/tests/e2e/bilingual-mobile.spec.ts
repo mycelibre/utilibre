@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { catalog, localized } from '../../src/catalog/catalog';
 import { toolPath } from '../../src/routes';
 
-const featuredIds = ['searxng', 'freshrss', 'redlib', 'privatebin'] as const;
+const featuredIds = ['searxng', 'redlib', 'privatebin', 'freshrss'] as const;
 
 const baseConfig = {
   projectName: 'Utilibre', projectTagline: '', projectTaglineEn: '', projectTaglineEs: '',
@@ -72,7 +72,7 @@ test('default discovery is neutral and retained hosted services follow editorial
   await page.goto('/en/');
 
   await expect(page.locator('.task-navigation a[aria-current="page"]')).toHaveCount(0);
-  await expect(page.locator('.ledger-reference-links a[aria-current="page"]')).toHaveText('Hosted services');
+  await expect(page.locator('.ledger-reference-links a[aria-current="page"]')).toHaveText('Tools & services');
   await expect(catalogRows(page)).toHaveCount(featuredIds.length);
   expect(await catalogRows(page).evaluateAll((rows) => rows.map((row) => (row as HTMLElement).dataset.catalogId))).toEqual(featuredIds);
   const launchLinks = page.locator('.catalog-ledger-launch');
@@ -85,6 +85,57 @@ test('default discovery is neutral and retained hosted services follow editorial
   }
   await expect(page.locator('[data-catalog-id="searxng"]').getByRole('link', { name: 'Upstream source: SearXNG' }))
     .toHaveAttribute('href', 'https://github.com/searxng/searxng');
+});
+
+test('expanded toolbox is gated, bilingual, and launches within the first mobile viewport', async ({ page }, testInfo) => {
+  if (testInfo.project.name === 'mobile') await page.setViewportSize({ width: 375, height: 812 });
+  const config = { ...featuredConfig, supportUrl: 'https://liberapay.com/example-donation-fixture/',
+    publicPdfUrl: 'https://pdf.utility.test/', publicConvertUrl: 'https://convert.utility.test/',
+    publicToolsUrl: 'https://tools.utility.test/', publicDeveloperToolsUrl: 'https://dev.utility.test/',
+    publicEncryptUrl: 'https://hat.utility.test/', publicDrawUrl: 'https://draw.utility.test/', publicQrUrl: 'https://qr.utility.test/',
+    publicBridgeUrl: 'https://bridge.utility.test/', publicNotifyUrl: 'https://notify.utility.test/',
+    publicSecretUrl: 'https://secret.utility.test/', publicDropUrl: 'https://drop.utility.test/', publicStatusUrl: 'https://status.utility.test/',
+    publicPythonUrl: 'https://python.utility.test/', publicTranscribeUrl: 'https://transcribe.utility.test/',
+    publicWakapiUrl: 'https://wakapi.utility.test/',
+    publicResumeUrl: 'https://cv.utility.test/', publicDesignUrl: 'https://design.utility.test/', publicBudgetUrl: 'https://budget.utility.test/',
+    listedServices: ['whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi'],
+    enabledServices: catalog.filter((entry) => entry.kind === 'service').map((entry) => entry.id),
+  };
+  await mockConfig(page, config);
+  for (const language of ['en', 'es'] as const) {
+    await page.emulateMedia({ colorScheme: language === 'es' ? 'dark' : 'light' });
+    await page.goto(`/${language}/`);
+    await expect(catalogRows(page)).toHaveCount(24);
+    for (const id of ['rallly', 'breezewiki']) {
+      const row = page.locator(`[data-catalog-id="${id}"]`);
+      await expect(row.locator('.catalog-ledger-unavailable')).toHaveText(language === 'es' ? 'Todavía no disponible' : 'Not open yet');
+      await expect(row.locator('.catalog-ledger-launch')).toHaveCount(0);
+    }
+    for (const id of ['reactive-resume', 'penpot', 'actual', 'wakapi']) {
+      const row = page.locator(`[data-catalog-id="${id}"]`);
+      await expect(row.locator('.catalog-ledger-access')).toContainText(language === 'es' ? 'Solo con invitación' : 'Invite-only');
+      await expect(row.locator('.catalog-ledger-launch')).toHaveCount(1);
+      await row.locator('.catalog-help summary').click();
+      await expect(row.locator('a[href^="mailto:admin@utilibre.org"]')).toBeVisible();
+      await row.locator('.catalog-help summary').click();
+    }
+    await page.evaluate(() => document.fonts.ready);
+    await expect(page.locator('[data-catalog-id="bentopdf"] .catalog-quick-link')).toHaveAttribute('href', `https://pdf.utility.test/${language === 'es' ? 'es/' : ''}ocr-pdf.html`);
+    const first = await page.locator('.catalog-ledger-launch').first().boundingBox();
+    expect(first).not.toBeNull();
+    expect(first!.y + first!.height).toBeLessThan(page.viewportSize()!.height);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await expect(page.locator('.donate-button')).toBeVisible();
+    if (language === 'es') await expect(page.locator('h1')).toHaveText('¿Qué necesitás hacer?');
+    await page.screenshot({ path: testInfo.outputPath(`toolbox-${language}.png`), fullPage: false });
+    await page.goto(`/${language}/software`);
+    await expect(page.getByRole('heading', { name: 'BentoPDF', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'RSS-Bridge', exact: true })).toBeVisible();
+  }
+  await mockConfig(page, { ...config, enabledServices: featuredConfig.enabledServices, listedServices: [] });
+  await page.goto('/en/');
+  await expect(catalogRows(page)).toHaveCount(4);
+  await expect(page.locator('[data-catalog-id="yopass"]')).toHaveCount(0);
 });
 
 test('task selection activates one category and Spanish search crosses categories without diacritics', async ({ page }) => {
@@ -149,11 +200,11 @@ test('configured support destination is explicit and opens separately', async ({
 
   await page.goto('/en/');
   await expect(page.getByRole('link', { name: 'How support works' })).toHaveAttribute('href', '/en/support');
-  await expect(page.locator('.main-nav a[href="/en/support"]')).toHaveCount(1);
+  await expect(page.locator('.donate-button[href="/en/support"]')).toHaveCount(1);
   await expect(page.locator('.footer-links a[href="/en/support"]')).toHaveCount(1);
 
   await page.goto('/en/support');
-  const englishSupport = page.getByRole('link', { name: 'Visit the external support page' });
+  const englishSupport = page.getByRole('link', { name: 'Donate via Liberapay' });
   await expect(englishSupport).toHaveAttribute('href', 'https://support.utility.test/');
   await expect(englishSupport).toHaveAttribute('target', '_blank');
   await expect(englishSupport).toHaveAttribute('rel', 'noopener noreferrer');
@@ -161,29 +212,40 @@ test('configured support destination is explicit and opens separately', async ({
     .toHaveAttribute('href', '/es/apoyar');
 
   await page.goto('/es/apoyar');
-  const spanishSupport = page.getByRole('link', { name: 'Visitar la página externa de apoyo' });
+  const spanishSupport = page.getByRole('link', { name: 'Donar mediante Liberapay' });
   await expect(spanishSupport).toHaveAttribute('href', 'https://support.utility.test/');
   await expect(spanishSupport).toHaveAttribute('target', '_blank');
   await expect(spanishSupport).toHaveAttribute('rel', 'noopener noreferrer');
 
   await page.goto('/en/transparency');
   await expect(page.getByRole('heading', { level: 2, name: 'Funding and donations' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Visit the external support page' }))
+  await expect(page.getByRole('link', { name: 'Donate via Liberapay' }))
     .toHaveAttribute('href', 'https://support.utility.test/');
 });
 
-test('mobile catalog keeps featured and complete-catalog modes available', async ({ page }) => {
+test('Liberapay donation links follow the portal language without changing the recipient', async ({ page }) => {
+  await mockConfig(page, { ...baseConfig, supportUrl: 'https://liberapay.com/mycelibre/donate' });
+  for (const [language, supportPath] of [['en', '/en/support'], ['es', '/es/apoyar']] as const) {
+    await page.goto(supportPath);
+    const link = page.locator('main a.button');
+    await expect(link).toHaveAttribute('href', `https://${language}.liberapay.com/mycelibre/donate`);
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+});
+
+test('mobile catalog keeps the complete-catalog action available without duplicating the active mode', async ({ page }) => {
   await mockConfig(page, featuredConfig);
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/en/');
 
   const modes = page.locator('.ledger-reference-links');
-  await expect(modes.getByRole('link', { name: 'Hosted services' })).toBeVisible();
-  const all = modes.getByRole('link', { name: 'Everything hosted, A–Z' });
+  await expect(modes.locator('a[aria-current="page"]')).toHaveText('Tools & services');
+  const all = modes.getByRole('link', { name: 'A–Z tool catalog' });
   await expect(all).toBeVisible();
   await all.click();
   await expect(page).toHaveURL(/\/en\/\?view=all#catalog$/);
-  await expect(page.getByRole('heading', { level: 2, name: 'Everything hosted, A–Z' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'A–Z tool catalog' })).toBeVisible();
   const rows = catalogRows(page);
   expect(await rows.count()).toBeGreaterThan(featuredIds.length);
   await expect(rows.locator('.catalog-ledger-launch')).toHaveCount(await rows.count());
@@ -209,6 +271,32 @@ test('software inventory is grouped and uses descriptive source links', async ({
   await jump.getByRole('link', { name: 'Hosted applications' }).click();
   await expect(page).toHaveURL(/#software-hosted$/);
   await expect(hostedHeading).toBeFocused();
+});
+
+test('software spacing separates sources and groups at bilingual viewport sizes', async ({ page }) => {
+  await mockConfig(page, { ...featuredConfig, sourceCodeUrl: 'https://github.com/utility/project/tree/revision' });
+  for (const width of [375, 768, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    for (const language of ['en', 'es']) {
+      await page.goto(`/${language}/software`);
+      await page.evaluate(() => document.fonts.ready);
+      const layout = await page.evaluate(() => {
+        const header = document.querySelector('.page-header')!.getBoundingClientRect();
+        const action = document.querySelector('.software-actions')!.getBoundingClientRect();
+        const groups = [...document.querySelectorAll('.software-group')];
+        const separated = [...document.querySelectorAll('.software-sources')].every(sources => {
+          const links = [...sources.querySelectorAll('a')].map(a => a.getBoundingClientRect());
+          return links.every((link, i) => i === 0 || link.top >= links[i - 1]!.bottom || link.left - links[i - 1]!.right >= 16);
+        });
+        const groupGaps = groups.slice(1).map((group, i) => group.querySelector('h2')!.getBoundingClientRect().top - groups[i]!.querySelector('.software-list')!.getBoundingClientRect().bottom);
+        return { overflow: document.documentElement.scrollWidth > innerWidth, separated, actionInsideHeader: action.bottom < header.bottom, groupGaps };
+      });
+      expect(layout.overflow).toBe(false);
+      expect(layout.separated).toBe(true);
+      expect(layout.actionInsideHeader).toBe(true);
+      expect(layout.groupGaps.every(gap => gap >= 24 && gap <= 48)).toBe(true);
+    }
+  }
 });
 
 test('unknown and retired routes return a useful localized 404', async ({ page }) => {
@@ -304,12 +392,12 @@ test('only retained Utilibre services appear when stale service IDs are still co
       const row = page.locator(`.catalog-ledger-row[data-catalog-id="${service.id}"]`);
       await expect(row, `${service.id} should be visible in ${language}`).toBeVisible();
       await expect(row.getByRole('heading', { name: service[language], exact: true })).toBeVisible();
-      await expect(row.getByRole('link', { name: `${language === 'es' ? 'Abrir' : 'Open'}: ${service[language]}` })).toHaveAttribute('href', service.url);
+      await expect(row.locator('.catalog-ledger-launch')).toHaveAttribute('href', service.url);
     }
     await expect(page.locator('.catalog-ledger-access')).toHaveCount(1);
     await expect(page.locator('[data-catalog-id="freshrss"] .catalog-ledger-access')).toHaveText(language === 'es'
-      ? 'Acceso: Se requiere una cuenta · Registro público cerrado'
-      : 'Access: Account required · Public registration closed');
+      ? 'Acceso: Solo cuentas existentes · No se ofrecen cuentas nuevas'
+      : 'Access: Existing accounts only · New accounts unavailable');
     for (const id of removedIds) await expect(page.locator(`[data-catalog-id="${id}"]`)).toHaveCount(0);
   }
 

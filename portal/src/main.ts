@@ -152,7 +152,7 @@ function renderHeader(currentRoute: Route, t: (key: Parameters<typeof translate>
   nav.id = 'main-navigation';
   nav.ariaLabel = t('a11y.menu');
   const links: Array<[Parameters<typeof routePath>[0], Parameters<typeof translate>[1]]> = [
-    ['home', 'nav.catalog'], ['privacy', 'nav.privacy'], ['about', 'footer.about'], ['status', 'nav.status'], ['support', 'footer.support'],
+    ['home', 'nav.catalog'], ['privacy', 'nav.privacy'], ['about', 'footer.about'], ['status', 'nav.status'],
   ];
   for (const [page, key] of links) {
     if (page === 'support' && !config.supportUrl) continue;
@@ -189,6 +189,11 @@ function renderHeader(currentRoute: Route, t: (key: Parameters<typeof translate>
     theme.ariaLabel = themeAccessibleLabel(next, t);
   });
   append(controls, language, theme);
+  if (config.supportUrl) {
+    const donate = element('a', 'donate-button', t('footer.support'));
+    donate.href = routePath('support', currentRoute.language);
+    controls.append(donate);
+  }
   append(inner, brand, purpose, toggle, nav, controls);
   header.append(inner);
   toggle.addEventListener('click', () => {

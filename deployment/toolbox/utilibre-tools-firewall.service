@@ -1,0 +1,14 @@
+[Unit]
+Description=Restrict Utilibre tool listeners to the separate Caddy edge
+Requires=docker.service
+After=docker.service network-online.target
+PartOf=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh /home/ubuntu/freetools/deployment/toolbox/firewall.sh
+ExecStart=/bin/sh /home/ubuntu/freetools/deployment/community/rssbridge-firewall.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=docker.service
