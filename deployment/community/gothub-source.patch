@@ -1,6 +1,6 @@
 diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
 new file mode 100644
-index 0000000..46b43d4
+index 0000000..e0e4f42
 --- /dev/null
 +++ b/Dockerfile.utilibre
 @@ -0,0 +1,16 @@
@@ -9,7 +9,7 @@ index 0000000..46b43d4
 +COPY go.mod go.sum ./
 +RUN go mod download
 +COPY . .
-+RUN go test ./... && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -X codeberg.org/gothub/gothub/utils.Branch=24bedc8-utilibre-p1" -o /gothub .
++RUN go test ./... && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -X codeberg.org/gothub/gothub/utils.Branch=24bedc8-utilibre-p2" -o /gothub .
 +FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0
 +RUN apk add --no-cache ca-certificates
 +WORKDIR /app
@@ -22,10 +22,10 @@ index 0000000..46b43d4
 +CMD ["/app/gothub", "serve"]
 diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
 new file mode 100644
-index 0000000..be963a0
+index 0000000..5f8dbac
 --- /dev/null
 +++ b/UTILIBRE-SOURCE.txt
-@@ -0,0 +1,18 @@
+@@ -0,0 +1,19 @@
 +GotHub deployment, 2026-10-06
 +Upstream: https://codeberg.org/gothub/gothub
 +Revision: 24bedc80bed5fc4f72a8f140c97cb38fc2e67ed2 (default dev branch)
@@ -35,11 +35,12 @@ index 0000000..be963a0
 +HTTPS transport with public-IP-pinned dialing, response limits and deadlines;
 +no forwarded user credentials; bounded correctly keyed response cache;
 +corrected media alt escaping, release download URL and gist hostname;
-+closed HTTP response bodies and handled failed requests; modified-source link.
++closed HTTP response bodies and handled failed requests; modified-source link;
++read-only-safe static compression and versioned asset URLs (p2).
 +This is a public reader, not a Git clone/archive service. Responses over 8 MiB
 +are refused. No custom Utilibre return link has been injected into the UI.
 +
-+Build: docker build -f Dockerfile.utilibre -t utilibre-gothub:24bedc8-p1 .
++Build: docker build -f Dockerfile.utilibre -t utilibre-gothub:24bedc8-p2 .
 +Run recipes, public gateway and network policy:
 +https://github.com/mycelibre/utilibre/tree/main/deployment/community
 +The archive includes the complete patched source, go.mod/go.sum and Dockerfile.
@@ -548,7 +549,7 @@ index 543b500..b4aa049 100644
  		// I need a better way to do this
  		return c.Status(404).Render("error", fiber.Map{
 diff --git a/serve/serve.go b/serve/serve.go
-index b617de9..10c4893 100644
+index b617de9..78823a4 100644
 --- a/serve/serve.go
 +++ b/serve/serve.go
 @@ -39,7 +39,7 @@ func Serve(port string) {
@@ -560,18 +561,33 @@ index b617de9..10c4893 100644
  		ProxyHeader:             fiber.HeaderXForwardedFor,
  		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
  			code := fiber.StatusInternalServerError
-@@ -62,7 +62,9 @@ func Serve(port string) {
+@@ -62,7 +62,13 @@ func Serve(port string) {
  	})
  
  	app.Use(cache.New(cache.Config{
 -		Expiration: 5 * time.Minute,
++		Next: func(c *fiber.Ctx) bool {
++			path := c.Path()
++			return strings.HasPrefix(path, "/css/") || path == "/robots.txt" || path == "/favicon.ico" || path == "/logo.svg"
++		},
 +		Expiration:   5 * time.Minute,
 +		MaxBytes:     32 << 20,
 +		KeyGenerator: func(c *fiber.Ctx) string { return c.OriginalURL() },
  	}))
  	// For debugging purposes
  	// app.Use(logger.New(logger.Config{
-@@ -200,10 +202,10 @@ func Serve(port string) {
+@@ -87,7 +93,9 @@ func Serve(port string) {
+ 	})
+ 
+ 	staticConfig := fiber.Static{
+-		Compress: true,
++		// Fiber's static precompression writes beside the source files. The
++		// container is read-only; the streaming middleware above handles gzip.
++		Compress: false,
+ 		// Cache-Control: max-age=31536000
+ 		MaxAge: 31536000,
+ 	}
+@@ -200,10 +208,10 @@ func Serve(port string) {
  	app.Get("/:user/:repo/releases/tag/:release", pages.ReleaseView)
  	app.Get("/:user/:repo/releases/download/:release/:item", func(c *fiber.Ctx) error {
  		if proxying == "true" {
@@ -584,7 +600,7 @@ index b617de9..10c4893 100644
  			return nil
  		}
  	})
-@@ -245,4 +247,4 @@ func Serve(port string) {
+@@ -245,4 +253,4 @@ func Serve(port string) {
  		val = port
  	}
  	log.Fatal(app.Listen(":" + val))
@@ -793,9 +809,30 @@ index bd93b99..1b0798b 100644
 +	return c.Send(body)
  }
 diff --git a/views/header.html b/views/header.html
-index e53f8ce..b6be7aa 100644
+index e53f8ce..fe5b273 100644
 --- a/views/header.html
 +++ b/views/header.html
+@@ -6,9 +6,9 @@
+     {{ else }}
+     <title>GotHub</title>
+     {{ end }}
+-    <link rel="stylesheet" href="/css/global.css">
++    <link rel="stylesheet" href="/css/global.css?v=24bedc8-p2">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
++    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=24bedc8-p2">
+   </head>
+   <body>
+     <nav>
+@@ -16,7 +16,7 @@
+       <div class="navbar">
+         <a href="/" style="text-decoration: none" class="brand"
+           ><img
+-            src="/logo.svg"
++            src="/logo.svg?v=24bedc8-p2"
+             class="navbarImg"
+             height="30"
+             width="30"
 @@ -26,7 +26,7 @@
          <div class="navbar-links">
            <a href="/explore">Explore</a>

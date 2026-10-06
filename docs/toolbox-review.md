@@ -2,6 +2,56 @@
 
 ## Public-reader expansion checkpoint — October 6, after the edge update
 
+### TransLite addition — October 6
+
+Installed `gospodin/translite` at reviewed revision
+`7b4b8e51359338219463f14c2a06211b6998a11e` (Unlicense), with PHP8.5.11 on
+Alpine3.24. The requested `80600f5` changes its CI build action; this newer pinned
+revision incorporates subsequent input-validation fixes. The protected gateway
+is `10.10.1.43:3152`; only the separate Caddy VM can reach it over the LAN.
+All four engines—Google, DeepL, Yandex and DuckDuckGo—returned actual English ↔
+Spanish translations from this VM. This is a point-in-time functional check,
+not a promise that unofficial provider endpoints will remain available.
+
+Public `translate.utilibre.org` is now live. The same desktop/mobile translation,
+four-engine API, native engine-switching, secure-cookie, input-limit and privacy
+checks pass over verified public HTTPS. The bilingual catalog enables its launch
+link. The Caddy block is in `deployment/community/Caddyfile.community`. Recheck
+with `node deployment/community/check-translite.mjs` without `--backend`.
+Backend tests use temporary loopback TLS solely to exercise secure cookies;
+they do not verify the public certificate. Cloudflare injects its security script
+into public HTML; application JavaScript remains opt-in. No external browser
+requests were observed in the tested public workflow, and CSP was not relaxed.
+
+Changes: POST-only text submission, server-enforced 2,000-character limit,
+restricted provider hostnames, verified TLS with public-IP-pinned connections,
+2MiB/15-second upstream limits, provider cooldown, quotas and private-network
+firewall rules. No normal application or gateway request/error logs. Caddy,
+Cloudflare and upstream operational records are separate. Referrers are sent
+only within this origin, preserving same-origin POST checks without off-site
+referrer disclosure. Cross-site POSTs are denied, but ordinary inbound links work.
+
+No shared translation-content cache: only language lists are cached across
+requests. Short-lived RAM sessions may hold text during engine/language changes;
+they expire after five minutes of inactivity, are collected by subsequent
+requests, and disappear on restart. Preference cookies last up to90days. There
+are no accounts, uploads, database or persistent visitor-data volume. Audio is
+disabled because upstream audio links put submitted text in GET URLs. Provider
+selection is explicit: multi-engine mode sends the text to every selected
+provider. This is not local, confidential or end-to-end encrypted translation.
+
+Native UI is English; Spanish portal links use the supported `tl=es` target,
+not an invented interface-locale parameter. Mobile form text is enlarged to16px
+without changing the upstream layout. There is no native external-return-link
+setting; no custom Utilibre navigation was added. Matching modified source is
+published at `/utilibre-source/translite-utilibre.tar.gz`, with build, gateway,
+network rules and source patch in `deployment/community`. A private database
+backup is unnecessary for this stateless service; deployment source is tracked.
+
+Run `check-translite.mjs --backend` for browser and input/privacy regressions.
+The source build also runs25 fixed-host/private-IP/cache tests. This is a scoped
+deployment review, not an independent security audit.
+
 ### Pollaris and LibreDNS addition — October 6
 
 Pollaris 1.2.3 (`b6ab5b3309e858a02c042350be82cc7a9c599246`, AGPL-3.0-or-later)
@@ -86,8 +136,8 @@ homepage, successful content retrieval, and public readiness are separate checks
 | 4get 03ba5d7-p2 | app LAN 3145; proposed `4get.utilibre.org` | Bounded public-IP image fetching, redirect validation, ImageMagick resource/coder restrictions and fixed JPEG resizing. Real Wiby/DuckDuckGo searches and image resizing pass. Source published; Caddy HTTPS pending. No rotating proxies or challenge bypasses. |
 | SafeTwitch 2.4.5-p1 | app LAN 3146; proposed `twitch.utilibre.org` | Source-built static frontend and Go 1.26 backend, bounded Twitch/CDN-only proxy, image MIME checks, fixed URL-safe playlist encoding, gateway quotas/cache and explicit follow-lookup bounds. Real live-video frames decode and time advances; EN desktop/ES mobile, images and following lookups pass with no third-party browser requests in the tested workflow. Chat is disabled. Caddy HTTPS remains pending; long recordings/clips and every upstream feature are not validated. |
 | AnonymousOverflow 937cfee-p1 | app LAN 3147; proposed `overflow.utilibre.org` | Hardened current-Go/dependency build renders a real question and answers. govulncheck reports no reachable vulnerabilities. Fixed-host short-link fetching, bounded JSON cache and quota/backoff tests pass; invalid media tokens are denied. Source published; Caddy HTTPS pending. |
-| GotHub 24bedc8-p1 | app LAN 3148; `gothub.utilibre.org` | Hardened Go 1.26.8 build; govulncheck reports no vulnerabilities. Bounded GitHub-only egress, gateway limits and full modified source supplied. Local repository/file content passes; public HTTPS still returns 525 pending the separate Caddy block. Upstream seeks maintainers. |
-| Binternet 9bb70ef-p1 | app LAN 3150; `binternet.utilibre.org` | GPL-3.0 source build on PHP 8.4.21. Desktop/mobile Pinterest search, images and pagination pass on the protected backend. HTTPS exact-host/DNS-pinned requests, response/time limits, image MIME checks, escaped author text and gateway quotas added. Caddy now serves verified TLS through its private address; outside-network connectivity is not yet confirmed. English UI; no native Utilibre return-link option. |
+| GotHub 24bedc8-p2 | app LAN 3148; `gothub.utilibre.org` | Live. Fixed static compression writing into the read-only container (gzip requests previously404). Versioned asset URLs avoid cached errors. Public desktop/mobile styling, repository and file checks pass. Bounded GitHub-only egress, gateway limits and full modified source supplied. Upstream seeks maintainers. |
+| Binternet 9bb70ef-p1 | app LAN 3150; `binternet.utilibre.org` | Live; operator confirmed public search/images. GPL-3.0 source build on PHP 8.4.21. Desktop/mobile search, images and pagination passed; restricted outbound requests, response/time limits, image validation and gateway quotas. Separate Tor frontend passed homepage/search/images/pagination through an independent Tor client. English UI; no native Utilibre return-link option. |
 
 Runtime recipes are `deployment/community/compose*.yaml`. Unready evaluation services
 have loopback listeners; reviewed gateways use Caddy-only LAN listeners. Both use
@@ -111,9 +161,30 @@ but error logs and any edge/upstream retention still apply. Pagination URLs carr
 anonymous Pinterest CSRF tokens, never a shared personal login cookie.
 Broken upstream `api.php` and non-public PHP files are denied by the gateway.
 Binternet's official instance list excludes Cloudflare-proxied hosts. DNS was
-confirmed direct after the operator's update; submission still needs confirmed
-outside-network access. Tor/onion access was discussed, not installed or promised as
-upstream anonymity. No cryptocurrency wallet or donation address was configured.
+confirmed direct after the operator's update and public access was confirmed.
+The clearnet/onion listing branch was pushed to `mycelibre/Binternet`, but GitHub
+refused upstream PR creation with the current token. It is **not submitted/listed**:
+[prepared comparison](https://github.com/Ahwxorg/Binternet/compare/main...mycelibre:utilibre-public-instance-20261006?expand=1).
+No cryptocurrency wallet or donation address was configured.
+
+Binternet's onion address is
+`http://ued2jl2ahvngdegugysin2fa6malo6omyf33j5tpfgex47erv453wbad.onion/`.
+The separate Tor 0.4.9.13 service reaches its own restricted nginx/PHP frontend
+through a Unix socket, with no published TCP listener, SOCKS port, control port
+or exit-relay role. The clearnet response advertises `Onion-Location`, and the
+portal offers a Tor Browser link. Tor protects the visitor connection; Pinterest
+requests still leave through the ordinary application-server connection.
+Onion requests have a shared budget rather than pretending client IPs are known.
+The private onion identity is backed up with mode-restricted community snapshots;
+archive/checksum verification passed on October 6. These backups are on-host,
+not off-site. Do not publish the identity files. Recipes and corresponding source
+are included in the public modified-source archive; no keys are included.
+
+GotHub's `check-gothub.mjs` covers the gzip/identity stylesheet regression plus
+desktop/mobile rendering and real repository/file content over public HTTPS.
+`publish-gothub-source.sh` retains an earlier archive before publishing matching
+patched source. No custom return-link navigation was added. Other reader routes
+(`overflow`, `4get`, `twitch`) still returned525 on the latest October6 check.
 
 Merge `deployment/community/Caddyfile.community` on the separate edge VM,
 preserving the existing Cloudflare-only trusted proxy ranges. The file supplies

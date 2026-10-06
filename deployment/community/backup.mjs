@@ -1,6 +1,6 @@
 // Online snapshots using PostgreSQL pg_dump and SQLite's backup API.
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, openSync, closeSync, writeFileSync } from 'node:fs';
+import { mkdirSync, openSync, closeSync, writeFileSync, existsSync } from 'node:fs';
 const target = `/opt/utilibre/community-backups/${new Date().toISOString().replace(/[:.]/g, '-')}`;
 mkdirSync(target, { recursive: true, mode: 0o700 });
 function capture(name, cmd, args) {
@@ -23,5 +23,9 @@ assert dst.execute('PRAGMA integrity_check').fetchall()==[('ok',)]
 dst.close();src.close()`, `${target}/${filename}`, source]);
 capture('private-config.tar.gz', 'tar', ['-czf', '-', '-C', '/home/ubuntu/freetools', 'deployment/community/.env.rallly', 'secrets/uptime-kuma-admin.json', '-C', '/opt/utilibre/community-data', 'fmd-private', 'degoog-private', 'degoog']);
 const files = ['rallly.dump', 'pollaris.dump', 'pollaris-private.tar.gz', 'fmd.sqlite', 'kuma.sqlite', 'private-config.tar.gz'];
+if (existsSync('/opt/utilibre/community-data/binternet-tor/binternet/hostname')) {
+  capture('binternet-onion-identity.tar.gz', 'tar', ['-czf', '-', '-C', '/opt/utilibre/community-data/binternet-tor', 'binternet']);
+  files.push('binternet-onion-identity.tar.gz');
+}
 writeFileSync(`${target}/SHA256SUMS`, execFileSync('sha256sum', files, { cwd: target }), { mode: 0o600 });
 console.log(target);

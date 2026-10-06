@@ -14,6 +14,10 @@ describe('donation language links', () => {
 });
 
 describe('verified upstream language links', () => {
+  it('sets the native TransLite translation target, without inventing a UI locale', () => {
+    expect(localizedServiceUrl('translite', 'https://translate.test/', 'es')).toBe('https://translate.test/?tl=es');
+    expect(localizedServiceUrl('translite', 'https://translate.test/', 'en')).toBe('https://translate.test/?tl=en');
+  });
   it('uses the native Rallly locale cookie handoff', () => {
     expect(localizedServiceUrl('rallly', 'https://poll.test/', 'es')).toBe('https://poll.test/utilibre-language?lang=es');
   });

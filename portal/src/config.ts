@@ -33,6 +33,9 @@ export interface PublicConfig {
   publicTenorUrl: string;
   publicFmdUrl: string;
   publicPollarisUrl: string;
+  publicBinternetUrl: string;
+  publicGothubUrl: string;
+  publicTranslateUrl: string;
   searxngDeployedVersion: string;
   listedServices: string[];
   enabledServices: string[];
@@ -74,6 +77,9 @@ const defaults: PublicConfig = {
   publicTenorUrl: '',
   publicFmdUrl: '',
   publicPollarisUrl: '',
+  publicBinternetUrl: '',
+  publicGothubUrl: '',
+  publicTranslateUrl: '',
   searxngDeployedVersion: '',
   listedServices: [],
   enabledServices: [],

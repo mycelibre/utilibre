@@ -1,0 +1,49 @@
+name: utilibre-binternet-onion
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+  mem_limit: 192m
+  cpus: 0.35
+  pids_limit: 64
+  logging: {driver: json-file, options: {max-size: 5m, max-file: "2"}}
+services:
+  binternet-onion:
+    <<: *runtime
+    image: utilibre-binternet:9bb70ef-p1
+    user: "65534:65534"
+    volumes: ["./binternet-onion-fpm.conf:/etc/php84/utilibre-fpm.conf:ro"]
+    networks:
+      application: {ipv4_address: 172.29.86.10}
+  gateway:
+    <<: *runtime
+    image: utilibre-binternet-gateway:9bb70ef-p1
+    user: "101:101"
+    volumes:
+      - ./binternet-onion-gateway.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+      - /opt/utilibre/community-data/binternet-onion-socket:/run/onion
+    networks:
+      application: {ipv4_address: 172.29.86.20}
+    depends_on: [binternet-onion]
+  tor:
+    <<: *runtime
+    image: utilibre-tor:0.4.9.13
+    user: "101:101"
+    mem_limit: 256m
+    volumes:
+      - ./binternet-torrc:/etc/tor/torrc:ro
+      - /opt/utilibre/community-data/binternet-tor:/var/lib/tor
+      - /opt/utilibre/community-data/binternet-onion-socket:/run/onion:ro
+    networks:
+      tor: {ipv4_address: 172.29.87.10}
+    depends_on: [gateway]
+networks:
+  application:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.86.0/24}]}
+  tor:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.87.0/24}]}

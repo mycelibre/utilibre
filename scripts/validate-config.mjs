@@ -33,6 +33,9 @@ const services = [
   { id: 'mezzo', hostKey: 'PUBLIC_TENOR_HOST', urlKey: 'PUBLIC_TENOR_URL', portKey: 'MEZZO_PORT' },
   { id: 'fmd', hostKey: 'PUBLIC_FMD_HOST', urlKey: 'PUBLIC_FMD_URL', portKey: 'FMD_PORT' },
   { id: 'pollaris', hostKey: 'PUBLIC_POLLARIS_HOST', urlKey: 'PUBLIC_POLLARIS_URL', portKey: 'POLLARIS_PORT' },
+  { id: 'binternet', hostKey: 'PUBLIC_BINTERNET_HOST', urlKey: 'PUBLIC_BINTERNET_URL', portKey: 'BINTERNET_PORT' },
+  { id: 'gothub', hostKey: 'PUBLIC_GOTHUB_HOST', urlKey: 'PUBLIC_GOTHUB_URL', portKey: 'GOTHUB_PORT' },
+  { id: 'translite', hostKey: 'PUBLIC_TRANSLATE_HOST', urlKey: 'PUBLIC_TRANSLATE_URL', portKey: 'TRANSLITE_PORT' },
 ];
 const allowedServices = new Set(services.map(({ id }) => id));
 const listableServices = new Set([...allowedServices, 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet']);

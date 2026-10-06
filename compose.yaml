@@ -63,6 +63,9 @@ services:
       PUBLIC_TENOR_URL: ${PUBLIC_TENOR_URL:-}
       PUBLIC_FMD_URL: ${PUBLIC_FMD_URL:-}
       PUBLIC_POLLARIS_URL: ${PUBLIC_POLLARIS_URL:-}
+      PUBLIC_BINTERNET_URL: ${PUBLIC_BINTERNET_URL:-}
+      PUBLIC_GOTHUB_URL: ${PUBLIC_GOTHUB_URL:-}
+      PUBLIC_TRANSLATE_URL: ${PUBLIC_TRANSLATE_URL:-}
       LISTED_SERVICES: ${LISTED_SERVICES:-}
       ENABLED_SERVICES: ${ENABLED_SERVICES:-searxng,redlib,freshrss,privatebin}
       DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE:-en}
@@ -97,7 +100,10 @@ services:
         priviblur=http://${PRIVATE_BIND_IP}:3139/,
         mezzo=http://${PRIVATE_BIND_IP}:3140/,
         fmd=http://${PRIVATE_BIND_IP}:3141/,
-        pollaris=http://${PRIVATE_BIND_IP}:3149/
+        pollaris=http://${PRIVATE_BIND_IP}:3149/,
+        binternet=http://${PRIVATE_BIND_IP}:3150/,
+        gothub=http://${PRIVATE_BIND_IP}:3148/,
+        translite=http://${PRIVATE_BIND_IP}:3152/
     volumes:
       - /opt/utilibre/update-public:/run/utilibre-updates:ro
     tmpfs:

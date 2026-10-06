@@ -31,6 +31,9 @@ export function localizedServiceUrl(id: string, base: string, language: Language
     url.searchParams.set('lng', language);
   } else if (id === 'drawio') {
     url.searchParams.set('lang', language);
+  } else if (id === 'translite' && !path) {
+    // Native translation target, not a claim that the interface is localized.
+    url.searchParams.set('tl', language);
   } else if (id === 'reactive-resume') {
     url.searchParams.set('locale', language === 'es' ? 'es-ES' : 'en-US');
   } else if (['vert', 'ittools', 'yopass', 'pairdrop', 'uptime-kuma', 'penpot', 'pollaris', 'safetwitch'].includes(id) && !path) {

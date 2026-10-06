@@ -85,7 +85,7 @@ services:
     depends_on: [anonymousoverflow]
   gothub:
     <<: *runtime
-    image: utilibre-gothub:24bedc8-p1
+    image: utilibre-gothub:24bedc8-p2
     restart: unless-stopped
     environment:
       DOCKER: "true"

@@ -1,0 +1,14 @@
+# Reviewed TransLite 7b4b8e51359338219463f14c2a06211b6998a11e + source patch.
+FROM alpine:3.24@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 AS application
+RUN apk add --no-cache php85 php85-fpm php85-dom php85-curl php85-openssl php85-session php85-mbstring php85-pecl-apcu php85-pecl-brotli ca-certificates
+WORKDIR /app
+COPY . .
+RUN find config pages parsers public tests -name '*.php' -exec php85 -l '{}' ';' && php85 -d apc.enable_cli=1 tests/utilibre.php
+USER 65534:65534
+WORKDIR /app/public
+ENTRYPOINT ["php-fpm85", "-F", "-y", "/etc/php85/utilibre-fpm.conf"]
+
+FROM nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8 AS gateway
+COPY --from=application /app/public/static /app/public/static
+USER 101:101
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

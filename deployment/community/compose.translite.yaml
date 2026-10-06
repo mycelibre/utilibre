@@ -1,0 +1,36 @@
+name: utilibre-translite
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+  mem_limit: 320m
+  cpus: 0.5
+  pids_limit: 64
+  logging: {driver: none}
+services:
+  translite:
+    <<: *runtime
+    image: utilibre-translite:7b4b8e5-p1
+    user: "65534:65534"
+    environment:
+      ENABLED_ENGINES: google,deepl,yandex,ddg
+    volumes: ["./translite-fpm.conf:/etc/php85/utilibre-fpm.conf:ro"]
+    networks:
+      translate: {ipv4_address: 172.29.89.10}
+  gateway:
+    <<: *runtime
+    image: utilibre-translite-gateway:7b4b8e5-p1
+    user: "101:101"
+    ports: ["10.10.1.43:3152:8080"]
+    volumes:
+      - ./translite-gateway.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    networks:
+      translate: {ipv4_address: 172.29.89.20}
+    depends_on: [translite]
+networks:
+  translate:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.89.0/24}]}

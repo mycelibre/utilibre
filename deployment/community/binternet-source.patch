@@ -45,12 +45,24 @@ index 0000000..6240485
 +The supplied source archive contains no production secrets or visitor data.
 +Native Donate/Legal/Source links keep their upstream meanings. No custom
 +Utilibre navigation button was added. The upstream interface is English-only.
+diff --git a/deployment/Dockerfile.tor b/deployment/Dockerfile.tor
+new file mode 100644
+index 0000000..ab7cb81
+--- /dev/null
++++ b/deployment/Dockerfile.tor
+@@ -0,0 +1,6 @@
++FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0
++RUN apk add --no-cache tor=0.4.9.13-r0 curl \
++    && mkdir -p /var/lib/tor /run/onion \
++    && chown 101:101 /var/lib/tor /run/onion
++USER 101:101
++ENTRYPOINT ["tor", "-f", "/etc/tor/torrc"]
 diff --git a/deployment/additions-firewall.sh b/deployment/additions-firewall.sh
 new file mode 100644
-index 0000000..5dae969
+index 0000000..f2562ed
 --- /dev/null
 +++ b/deployment/additions-firewall.sh
-@@ -0,0 +1,16 @@
+@@ -0,0 +1,31 @@
 +#!/bin/sh
 +# Only these new application IPs; no unrelated host traffic is changed.
 +set -eu
@@ -63,8 +75,23 @@ index 0000000..5dae969
 +done
 +iptables -w -A "$chain" -p tcp -m multiport --dports 80,443 -j RETURN
 +iptables -w -A "$chain" -j DROP
-+for address in 172.29.74.10 172.29.75.10 172.29.76.10 172.29.77.10 172.29.78.10 172.29.79.10 172.29.80.10 172.29.81.10 172.29.82.10 172.29.85.10; do
++for address in 172.29.74.10 172.29.75.10 172.29.76.10 172.29.77.10 172.29.78.10 172.29.79.10 172.29.80.10 172.29.81.10 172.29.82.10 172.29.85.10 172.29.86.10 172.29.89.10; do
 +  iptables -w -C DOCKER-USER -s "$address" -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$chain"
++  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
++done
++# Tor needs public relay TCP ports beyond 443, but no host/private-network access.
++# .20 is reserved for the short-lived independent verification client.
++tor_chain=UTILIBRE-TOR-OUT
++iptables -w -S "$tor_chain" >/dev/null 2>&1 || iptables -w -N "$tor_chain"
++iptables -w -F "$tor_chain"
++iptables -w -A "$tor_chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++for network in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/4 240.0.0.0/4; do
++  iptables -w -A "$tor_chain" -d "$network" -j DROP
++done
++iptables -w -A "$tor_chain" -p tcp -j RETURN
++iptables -w -A "$tor_chain" -j DROP
++for address in 172.29.87.10 172.29.87.20; do
++  iptables -w -C DOCKER-USER -s "$address" -j "$tor_chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$tor_chain"
 +  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
 +done
 diff --git a/deployment/binternet-fpm.conf b/deployment/binternet-fpm.conf
@@ -100,10 +127,10 @@ index 0000000..748d797
 +php_admin_value[disable_functions] = exec,passthru,shell_exec,system,proc_open,popen
 diff --git a/deployment/binternet-gateway.conf b/deployment/binternet-gateway.conf
 new file mode 100644
-index 0000000..b5f3345
+index 0000000..8af6c01
 --- /dev/null
 +++ b/deployment/binternet-gateway.conf
-@@ -0,0 +1,75 @@
+@@ -0,0 +1,76 @@
 +worker_processes 1;
 +pid /tmp/nginx.pid;
 +error_log /dev/stderr warn;
@@ -141,6 +168,7 @@ index 0000000..b5f3345
 +    add_header Referrer-Policy no-referrer always;
 +    add_header X-Content-Type-Options nosniff always;
 +    add_header X-Frame-Options DENY always;
++    add_header Onion-Location "http://ued2jl2ahvngdegugysin2fa6malo6omyf33j5tpfgex47erv453wbad.onion$request_uri" always;
 +    location /utilibre-source/ { alias /srv/utilibre-source/; autoindex off; }
 +    location ~ ^/(static/|misc/.*\.css$) { try_files $uri =404; }
 +    location ~ ^/(index|search|image_proxy|donate)\.php$ {
@@ -179,6 +207,197 @@ index 0000000..b5f3345
 +    location / { return 404; }
 +  }
 +}
+diff --git a/deployment/binternet-onion-fpm.conf b/deployment/binternet-onion-fpm.conf
+new file mode 100644
+index 0000000..2eb8f28
+--- /dev/null
++++ b/deployment/binternet-onion-fpm.conf
+@@ -0,0 +1,25 @@
++[global]
++error_log = /proc/self/fd/2
++daemonize = no
++[www]
++listen = 0.0.0.0:9000
++listen.allowed_clients = 172.29.86.20
++pm = ondemand
++pm.max_children = 3
++pm.process_idle_timeout = 10s
++pm.max_requests = 150
++request_terminate_timeout = 25s
++clear_env = yes
++catch_workers_output = yes
++decorate_workers_output = no
++php_admin_value[memory_limit] = 32M
++php_admin_value[max_execution_time] = 22
++php_admin_value[output_buffering] = 65536
++php_admin_value[error_log] = /proc/self/fd/2
++php_admin_flag[log_errors] = on
++php_admin_flag[display_errors] = off
++php_admin_flag[expose_php] = off
++php_admin_flag[file_uploads] = off
++php_admin_flag[allow_url_fopen] = off
++php_admin_value[open_basedir] = /app:/etc/ssl/certs:/tmp:/proc/self/fd
++php_admin_value[disable_functions] = exec,passthru,shell_exec,system,proc_open,popen
+diff --git a/deployment/binternet-onion-gateway.conf b/deployment/binternet-onion-gateway.conf
+new file mode 100644
+index 0000000..274fa9e
+--- /dev/null
++++ b/deployment/binternet-onion-gateway.conf
+@@ -0,0 +1,71 @@
++worker_processes 1;
++pid /tmp/nginx.pid;
++error_log /dev/stderr warn;
++events { worker_connections 128; }
++http {
++  include /etc/nginx/mime.types;
++  access_log off;
++  server_tokens off;
++  absolute_redirect off;
++  client_body_temp_path /tmp/client;
++  proxy_temp_path /tmp/proxy;
++  fastcgi_temp_path /tmp/fastcgi;
++  uwsgi_temp_path /tmp/uwsgi;
++  scgi_temp_path /tmp/scgi;
++  resolver 127.0.0.11 valid=10s ipv6=off;
++  # Onion clients have no trustworthy individual IP. Apply shared budgets,
++  # never visitor-supplied IP headers or one clearnet user's per-IP quota.
++  limit_req_zone $server_name zone=onion_search:1m rate=30r/m;
++  limit_req_zone $server_name zone=onion_images:1m rate=12r/s;
++  limit_conn_zone $server_name zone=onion_connections:1m;
++  limit_req_status 429;
++  limit_conn_status 429;
++  limit_req_log_level notice;
++  limit_conn_log_level notice;
++  server {
++    listen unix:/run/onion/http.sock;
++    root /app;
++    client_max_body_size 1k;
++    limit_conn onion_connections 32;
++    if ($request_method !~ ^(GET|HEAD)$) { return 405; }
++    add_header Content-Security-Policy "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'" always;
++    add_header Referrer-Policy no-referrer always;
++    add_header X-Content-Type-Options nosniff always;
++    add_header X-Frame-Options DENY always;
++    location /utilibre-source/ { alias /srv/utilibre-source/; autoindex off; }
++    location ~ ^/(static/|misc/.*\.css$) { try_files $uri =404; }
++    location ~ ^/(index|image_proxy|donate)\.php$ {
++      set $php binternet-onion:9000;
++      include /etc/nginx/fastcgi_params;
++      fastcgi_param SCRIPT_FILENAME /app$fastcgi_script_name;
++      fastcgi_param HTTP_AUTHORIZATION "";
++      fastcgi_param HTTP_COOKIE "";
++      fastcgi_param HTTP_X_FORWARDED_FOR "";
++      fastcgi_param HTTP_X_REAL_IP "";
++      fastcgi_pass $php;
++      fastcgi_read_timeout 30s;
++      fastcgi_max_temp_file_size 0;
++      fastcgi_hide_header X-Powered-By;
++      fastcgi_hide_header Set-Cookie;
++      limit_req zone=onion_images burst=100 nodelay;
++      limit_rate 256k;
++    }
++    location = /search.php {
++      limit_req zone=onion_search burst=4;
++      set $php binternet-onion:9000;
++      include /etc/nginx/fastcgi_params;
++      fastcgi_param SCRIPT_FILENAME /app/search.php;
++      fastcgi_param HTTP_AUTHORIZATION "";
++      fastcgi_param HTTP_COOKIE "";
++      fastcgi_param HTTP_X_FORWARDED_FOR "";
++      fastcgi_param HTTP_X_REAL_IP "";
++      fastcgi_pass $php;
++      fastcgi_read_timeout 30s;
++      fastcgi_max_temp_file_size 0;
++      fastcgi_hide_header X-Powered-By;
++      fastcgi_hide_header Set-Cookie;
++    }
++    location = / { rewrite ^ /index.php last; }
++    location / { return 404; }
++  }
++}
+diff --git a/deployment/binternet-torrc b/deployment/binternet-torrc
+new file mode 100644
+index 0000000..ddc6318
+--- /dev/null
++++ b/deployment/binternet-torrc
+@@ -0,0 +1,22 @@
++DataDirectory /var/lib/tor
++RunAsDaemon 0
++SocksPort 0
++ControlPort 0
++ORPort 0
++ExitRelay 0
++ExitPolicy reject *:*
++ClientOnly 1
++ClientUseIPv6 0
++SafeLogging 1
++Log notice stdout
++MaxMemInQueues 64 MB
++BandwidthRate 1 MB
++BandwidthBurst 2 MB
++HiddenServiceDir /var/lib/tor/binternet
++HiddenServiceVersion 3
++HiddenServicePort 80 unix:/run/onion/http.sock
++HiddenServiceMaxStreams 32
++HiddenServiceMaxStreamsCloseCircuit 1
++HiddenServiceEnableIntroDoSDefense 1
++HiddenServiceEnableIntroDoSRatePerSec 5
++HiddenServiceEnableIntroDoSBurstPerSec 20
+diff --git a/deployment/compose.binternet-onion.yaml b/deployment/compose.binternet-onion.yaml
+new file mode 100644
+index 0000000..ec99582
+--- /dev/null
++++ b/deployment/compose.binternet-onion.yaml
+@@ -0,0 +1,49 @@
++name: utilibre-binternet-onion
++x-runtime: &runtime
++  restart: unless-stopped
++  read_only: true
++  cap_drop: [ALL]
++  security_opt: [no-new-privileges:true]
++  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
++  mem_limit: 192m
++  cpus: 0.35
++  pids_limit: 64
++  logging: {driver: json-file, options: {max-size: 5m, max-file: "2"}}
++services:
++  binternet-onion:
++    <<: *runtime
++    image: utilibre-binternet:9bb70ef-p1
++    user: "65534:65534"
++    volumes: ["./binternet-onion-fpm.conf:/etc/php84/utilibre-fpm.conf:ro"]
++    networks:
++      application: {ipv4_address: 172.29.86.10}
++  gateway:
++    <<: *runtime
++    image: utilibre-binternet-gateway:9bb70ef-p1
++    user: "101:101"
++    volumes:
++      - ./binternet-onion-gateway.conf:/etc/nginx/nginx.conf:ro
++      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
++      - /opt/utilibre/community-data/binternet-onion-socket:/run/onion
++    networks:
++      application: {ipv4_address: 172.29.86.20}
++    depends_on: [binternet-onion]
++  tor:
++    <<: *runtime
++    image: utilibre-tor:0.4.9.13
++    user: "101:101"
++    mem_limit: 256m
++    volumes:
++      - ./binternet-torrc:/etc/tor/torrc:ro
++      - /opt/utilibre/community-data/binternet-tor:/var/lib/tor
++      - /opt/utilibre/community-data/binternet-onion-socket:/run/onion:ro
++    networks:
++      tor: {ipv4_address: 172.29.87.10}
++    depends_on: [gateway]
++networks:
++  application:
++    enable_ipv6: false
++    ipam: {config: [{subnet: 172.29.86.0/24}]}
++  tor:
++    enable_ipv6: false
++    ipam: {config: [{subnet: 172.29.87.0/24}]}
 diff --git a/deployment/compose.binternet.yaml b/deployment/compose.binternet.yaml
 new file mode 100644
 index 0000000..121e8ce
@@ -221,7 +440,7 @@ index 0000000..121e8ce
 +    ipam: {config: [{subnet: 172.29.85.0/24}]}
 diff --git a/deployment/firewall.sh b/deployment/firewall.sh
 new file mode 100644
-index 0000000..07e2ee7
+index 0000000..b6c1a16
 --- /dev/null
 +++ b/deployment/firewall.sh
 @@ -0,0 +1,13 @@
@@ -232,7 +451,7 @@ index 0000000..07e2ee7
 +chain=UTILIBRE-TOOLS
 +iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
 +iptables -w -F "$chain"
-+for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150; do
++for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3152; do
 +  iptables -w -A "$chain" -s 10.10.1.3 -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j RETURN
 +  iptables -w -A "$chain" -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j DROP
 +done

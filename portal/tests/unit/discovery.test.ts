@@ -22,7 +22,9 @@ const baseConfig: PublicConfig = {
   publicBridgeUrl: '', publicNotifyUrl: '', publicSecretUrl: '', publicDropUrl: '', publicStatusUrl: '',
   publicPythonUrl: '', publicTranscribeUrl: '', publicWakapiUrl: '', listedServices: [],
   publicResumeUrl: '', publicDesignUrl: '', publicBudgetUrl: '',
-  publicPollUrl: '', publicTumblrUrl: '', publicTenorUrl: '', publicFmdUrl: '', publicPollarisUrl: '',
+  publicPollUrl: '', publicTumblrUrl: '', publicTenorUrl: '', publicFmdUrl: '', publicPollarisUrl: '', publicBinternetUrl: '',
+  publicGothubUrl: '',
+  publicTranslateUrl: '',
   searxngDeployedVersion: '',
 };
 
@@ -44,7 +46,7 @@ describe('catalog discovery metadata', () => {
       'pollaris',
       'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd',
       'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet',
-      'whisper-web', 'jupyterlite',
+      'translite', 'whisper-web', 'jupyterlite',
       'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma',
       'bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools',
       'searxng', 'freshrss', 'redlib', 'privatebin', 'private-router',
@@ -55,7 +57,7 @@ describe('catalog discovery metadata', () => {
     expect(catalog.filter((entry) => entry.featuredOrder !== undefined)
       .sort((left, right) => (left.featuredOrder ?? 0) - (right.featuredOrder ?? 0))
       .map((entry) => entry.id))
-      .toEqual(['bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris']);
+      .toEqual(['bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite']);
   });
 
   it('keeps unrequested retired applications out of the catalog', () => {

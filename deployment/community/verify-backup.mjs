@@ -3,6 +3,13 @@ import { openSync, closeSync, realpathSync, writeFileSync, existsSync } from 'no
 const target = realpathSync(process.argv[2] || '');
 if (!/^\/opt\/utilibre\/community-backups\/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z$/.test(target)) throw Error('Pass one exact community-backups snapshot directory');
 execFileSync('sha256sum', ['--check', 'SHA256SUMS'], { cwd: target, stdio: 'inherit' });
+if (existsSync(`${target}/binternet-onion-identity.tar.gz`)) {
+  const names = execFileSync('tar', ['-tzf', `${target}/binternet-onion-identity.tar.gz`], { encoding: 'utf8' }).split('\n');
+  for (const file of ['hostname', 'hs_ed25519_public_key', 'hs_ed25519_secret_key']) {
+    if (!names.includes(`binternet/${file}`)) throw Error('Incomplete onion identity backup');
+  }
+  console.log('Onion identity archive structure verified; no key material printed.');
+}
 const name = `utilibre-community-restore-${process.pid}`;
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8' });
 let created = false;

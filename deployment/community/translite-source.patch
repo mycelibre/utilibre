@@ -1,0 +1,605 @@
+diff --git a/.dockerignore b/.dockerignore
+index 01c093c..658cf56 100644
+--- a/.dockerignore
++++ b/.dockerignore
+@@ -1,8 +1,4 @@
++.git
++.forgejo
+ ansible
+-Dockerfile
+-.dockerignore
+-.gitignore
+-*.json
+-LICENSE
+-**/*.md
+-*.yaml
++renovate.json
+diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
+new file mode 100644
+index 0000000..a0bfad2
+--- /dev/null
++++ b/Dockerfile.utilibre
+@@ -0,0 +1,14 @@
++# Reviewed TransLite 7b4b8e51359338219463f14c2a06211b6998a11e + source patch.
++FROM alpine:3.24@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 AS application
++RUN apk add --no-cache php85 php85-fpm php85-dom php85-curl php85-openssl php85-session php85-mbstring php85-pecl-apcu php85-pecl-brotli ca-certificates
++WORKDIR /app
++COPY . .
++RUN find config pages parsers public tests -name '*.php' -exec php85 -l '{}' ';' && php85 -d apc.enable_cli=1 tests/utilibre.php
++USER 65534:65534
++WORKDIR /app/public
++ENTRYPOINT ["php-fpm85", "-F", "-y", "/etc/php85/utilibre-fpm.conf"]
++
++FROM nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8 AS gateway
++COPY --from=application /app/public/static /app/public/static
++USER 101:101
++ENTRYPOINT ["nginx", "-g", "daemon off;"]
+diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
+new file mode 100644
+index 0000000..4436bb3
+--- /dev/null
++++ b/UTILIBRE-SOURCE.txt
+@@ -0,0 +1,15 @@
++TransLite deployment, 2026-10-06
++Upstream: https://codeberg.org/gospodin/translite
++Revision: 7b4b8e51359338219463f14c2a06211b6998a11e
++License: Unlicense; original LICENSE and notices retained.
++
++Utilibre modifications: required POST, 2,000-character server limit, no shared
++translation-content cache, request-local memoization, language-only APCu cache,
++bounded verified HTTPS with fixed hosts and public-IP-pinned dialing, upstream
++failure cooldown, controlled engine list, no text-bearing audio URLs, short-lived
++RAM sessions, secure cookies, privacy notice and matching modified-source link.
++No custom Utilibre return-link navigation was added.
++
++Build both targets with Dockerfile.utilibre, using compose.translite.yaml and
++the FPM/gateway/network policy from the Utilibre deployment repository.
++No passwords, private data or API keys are needed for this source build.
+diff --git a/config/config.php b/config/config.php
+index c0a2387..4066eb2 100644
+--- a/config/config.php
++++ b/config/config.php
+@@ -1,7 +1,7 @@
+ <?php
+ $config = (object) [
+     "hl" => "en",
+-    "ttl" => 604_800,
++    "ttl" => 86_400,
+     "parser" => "google",
+     "maxLinkLength" => 600, //adjust for server configuration
+     "parsers" => [
+@@ -48,11 +48,15 @@ $config = (object) [
+         "translate" => "t",
+         "clearText" => "c"
+     ],
+-    "usePOST" => false,
++    "usePOST" => true,
+     "jsEnabled" => false,
+     "selected_parsers_array" => [],
+ ];
+ 
++// The operator enables only engines that passed content tests from this host.
++$enabled = array_filter(explode(',', getenv('ENABLED_ENGINES') ?: 'google'));
++$config->parsers = array_intersect_key($config->parsers, array_flip(array_merge($enabled, ['multi'])));
++if (count($enabled) < 2) unset($config->parsers['multi']);
+ $maxLinkLength = filter_var(getenv('MAX_LINK_LENGTH'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+ if ($maxLinkLength !== false) {
+     $config->maxLinkLength = $maxLinkLength;
+diff --git a/deployment/additions-firewall.sh b/deployment/additions-firewall.sh
+new file mode 100644
+index 0000000..f2562ed
+--- /dev/null
++++ b/deployment/additions-firewall.sh
+@@ -0,0 +1,31 @@
++#!/bin/sh
++# Only these new application IPs; no unrelated host traffic is changed.
++set -eu
++chain=UTILIBRE-ADDITIONS-OUT
++iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
++iptables -w -F "$chain"
++iptables -w -A "$chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++for network in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/4 240.0.0.0/4; do
++  iptables -w -A "$chain" -d "$network" -j DROP
++done
++iptables -w -A "$chain" -p tcp -m multiport --dports 80,443 -j RETURN
++iptables -w -A "$chain" -j DROP
++for address in 172.29.74.10 172.29.75.10 172.29.76.10 172.29.77.10 172.29.78.10 172.29.79.10 172.29.80.10 172.29.81.10 172.29.82.10 172.29.85.10 172.29.86.10 172.29.89.10; do
++  iptables -w -C DOCKER-USER -s "$address" -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$chain"
++  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
++done
++# Tor needs public relay TCP ports beyond 443, but no host/private-network access.
++# .20 is reserved for the short-lived independent verification client.
++tor_chain=UTILIBRE-TOR-OUT
++iptables -w -S "$tor_chain" >/dev/null 2>&1 || iptables -w -N "$tor_chain"
++iptables -w -F "$tor_chain"
++iptables -w -A "$tor_chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++for network in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/4 240.0.0.0/4; do
++  iptables -w -A "$tor_chain" -d "$network" -j DROP
++done
++iptables -w -A "$tor_chain" -p tcp -j RETURN
++iptables -w -A "$tor_chain" -j DROP
++for address in 172.29.87.10 172.29.87.20; do
++  iptables -w -C DOCKER-USER -s "$address" -j "$tor_chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$tor_chain"
++  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
++done
+diff --git a/deployment/compose.translite.yaml b/deployment/compose.translite.yaml
+new file mode 100644
+index 0000000..b90a735
+--- /dev/null
++++ b/deployment/compose.translite.yaml
+@@ -0,0 +1,36 @@
++name: utilibre-translite
++x-runtime: &runtime
++  restart: unless-stopped
++  read_only: true
++  cap_drop: [ALL]
++  security_opt: [no-new-privileges:true]
++  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
++  mem_limit: 320m
++  cpus: 0.5
++  pids_limit: 64
++  logging: {driver: none}
++services:
++  translite:
++    <<: *runtime
++    image: utilibre-translite:7b4b8e5-p1
++    user: "65534:65534"
++    environment:
++      ENABLED_ENGINES: google,deepl,yandex,ddg
++    volumes: ["./translite-fpm.conf:/etc/php85/utilibre-fpm.conf:ro"]
++    networks:
++      translate: {ipv4_address: 172.29.89.10}
++  gateway:
++    <<: *runtime
++    image: utilibre-translite-gateway:7b4b8e5-p1
++    user: "101:101"
++    ports: ["10.10.1.43:3152:8080"]
++    volumes:
++      - ./translite-gateway.conf:/etc/nginx/nginx.conf:ro
++      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
++    networks:
++      translate: {ipv4_address: 172.29.89.20}
++    depends_on: [translite]
++networks:
++  translate:
++    enable_ipv6: false
++    ipam: {config: [{subnet: 172.29.89.0/24}]}
+diff --git a/deployment/firewall.sh b/deployment/firewall.sh
+new file mode 100644
+index 0000000..b6c1a16
+--- /dev/null
++++ b/deployment/firewall.sh
+@@ -0,0 +1,13 @@
++#!/bin/sh
++# Limit only the explicitly listed new application ports. Existing services,
++# SSH, host INPUT policy, and unrelated Docker traffic are not changed.
++set -eu
++chain=UTILIBRE-TOOLS
++iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
++iptables -w -F "$chain"
++for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3152; do
++  iptables -w -A "$chain" -s 10.10.1.3 -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j RETURN
++  iptables -w -A "$chain" -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j DROP
++done
++iptables -w -A "$chain" -j RETURN
++iptables -w -C DOCKER-USER -i eth0 -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -i eth0 -j "$chain"
+diff --git a/deployment/translite-fpm.conf b/deployment/translite-fpm.conf
+new file mode 100644
+index 0000000..e7e93e8
+--- /dev/null
++++ b/deployment/translite-fpm.conf
+@@ -0,0 +1,38 @@
++[global]
++error_log = /proc/self/fd/2
++daemonize = no
++[www]
++listen = 0.0.0.0:9000
++listen.allowed_clients = 172.29.89.20
++chdir = /app/public
++pm = ondemand
++pm.max_children = 6
++pm.process_idle_timeout = 10s
++pm.max_requests = 100
++request_terminate_timeout = 45s
++clear_env = yes
++env[ENABLED_ENGINES] = $ENABLED_ENGINES
++env[PREF_TL] = en
++catch_workers_output = no
++php_admin_value[memory_limit] = 48M
++php_admin_value[max_execution_time] = 40
++php_admin_value[post_max_size] = 24K
++php_admin_value[max_input_vars] = 80
++php_admin_value[error_log] = /dev/null
++php_admin_flag[log_errors] = off
++php_admin_flag[display_errors] = off
++php_admin_flag[expose_php] = off
++php_admin_flag[file_uploads] = off
++php_admin_flag[allow_url_fopen] = off
++php_admin_value[open_basedir] = /app:/etc/ssl/certs:/tmp:/dev/null
++php_admin_value[disable_functions] = exec,passthru,shell_exec,system,proc_open,popen
++php_admin_value[session.save_path] = /tmp
++php_admin_value[session.gc_maxlifetime] = 300
++php_admin_value[session.gc_probability] = 1
++php_admin_value[session.gc_divisor] = 1
++php_admin_flag[session.use_strict_mode] = on
++php_admin_flag[session.use_only_cookies] = on
++php_admin_flag[session.cookie_secure] = on
++php_admin_flag[session.cookie_httponly] = on
++php_admin_value[session.cookie_samesite] = Lax
++php_admin_value[apc.shm_size] = 8M
+diff --git a/deployment/translite-gateway.conf b/deployment/translite-gateway.conf
+new file mode 100644
+index 0000000..011e04a
+--- /dev/null
++++ b/deployment/translite-gateway.conf
+@@ -0,0 +1,75 @@
++worker_processes 1;
++pid /tmp/nginx.pid;
++error_log /dev/null;
++events { worker_connections 128; }
++http {
++  include /etc/nginx/mime.types;
++  access_log off;
++  server_tokens off;
++  client_body_temp_path /tmp/client;
++  fastcgi_temp_path /tmp/fastcgi;
++  proxy_temp_path /tmp/proxy;
++  uwsgi_temp_path /tmp/uwsgi;
++  scgi_temp_path /tmp/scgi;
++  set_real_ip_from 10.10.1.3;
++  real_ip_header X-Forwarded-For;
++  real_ip_recursive on;
++  limit_req_zone $binary_remote_addr zone=translate_client:2m rate=12r/m;
++  limit_req_zone $server_name zone=translate_global:1m rate=40r/m;
++  limit_conn_zone $binary_remote_addr zone=translate_connections:1m;
++  limit_req_status 429;
++  limit_conn_status 429;
++  map "$request_method:$http_sec_fetch_site" $cross_site_write {
++    default 0;
++    "POST:cross-site" 1;
++  }
++  map $http_origin $bad_origin {
++    default 1;
++    "" 0;
++    "https://translate.utilibre.org" 0;
++  }
++  server {
++    listen 8080;
++    root /app/public;
++    client_max_body_size 24k;
++    client_body_buffer_size 24k;
++    client_body_timeout 10s;
++    limit_conn translate_connections 4;
++    if ($request_method !~ ^(GET|HEAD|POST)$) { return 405; }
++    if ($bad_origin) { return 403; }
++    if ($cross_site_write) { return 403; }
++    add_header Cache-Control "no-store" always;
++    add_header Referrer-Policy same-origin always;
++    add_header X-Content-Type-Options nosniff always;
++    add_header X-Frame-Options DENY always;
++    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
++    add_header Content-Security-Policy "default-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'" always;
++    location = /healthz { return 200 "ok\n"; }
++    location /static/ {
++      if ($request_method !~ ^(GET|HEAD)$) { return 405; }
++      try_files $uri =404;
++    }
++    location /utilibre-source/ {
++      if ($request_method !~ ^(GET|HEAD)$) { return 405; }
++      alias /srv/utilibre-source/;
++      autoindex off;
++    }
++    location = /api/tts { return 404; }
++    location ~ ^/(\.git|config|parsers|pages|tests|Dockerfile|composer) { return 404; }
++    location ~ ^/(|settings|settings/set|settings/reset|api|api/translate|api/get_languages|api/additional_data|api/swap|api/toengine/(google|deepl|yandex|ddg|multi)|api/clear_text)$ {
++      limit_req zone=translate_client burst=15 nodelay;
++      limit_req zone=translate_global burst=20 nodelay;
++      include /etc/nginx/fastcgi_params;
++      fastcgi_param SCRIPT_FILENAME /app/public/index.php;
++      fastcgi_param SCRIPT_NAME /index.php;
++      fastcgi_param HTTPS on;
++      fastcgi_param HTTP_PROXY "";
++      fastcgi_param HTTP_AUTHORIZATION "";
++      fastcgi_pass 172.29.89.10:9000;
++      fastcgi_read_timeout 50s;
++      fastcgi_buffering off;
++      fastcgi_max_temp_file_size 0;
++    }
++    location / { return 404; }
++  }
++}
+diff --git a/pages/elements/header.php b/pages/elements/header.php
+index 5de8848..0f19e53 100644
+--- a/pages/elements/header.php
++++ b/pages/elements/header.php
+@@ -14,3 +14,4 @@
+         <header class="center">
+             <h1><a href="/">TransLite</a></h1>
+         </header>
++        <p class="center" style="width:var(--page-width)">Text is sent through Utilibre to the provider you select. Multiple engines sends it to each selected provider. Do not submit passwords or confidential information. Up to 2,000 characters; audio is disabled.</p>
+diff --git a/pages/page.php b/pages/page.php
+index 1951b39..5cd6386 100644
+--- a/pages/page.php
++++ b/pages/page.php
+@@ -3,9 +3,10 @@ class HTML
+ {
+     function showHash()
+     {
+-        $hash = substr(trim(file_get_contents("../.git/refs/heads/master")), 0, 7);
++        $hash = '7b4b8e5';
+         $url = "https://codeberg.org/gospodin/translite/commit/{$hash}";
+         echo "<a href=\"{$url}\" target=\"_blank\">Commit: {$hash}</a>";
++        echo ' <a href="/utilibre-source/translite-utilibre.tar.gz">Modified source</a>';
+     }
+     function renderHTML()
+     {
+diff --git a/pages/settings.php b/pages/settings.php
+index 7dad05c..7237983 100644
+--- a/pages/settings.php
++++ b/pages/settings.php
+@@ -85,11 +85,11 @@ class Settings extends HTML
+     function printPOSTToggle()
+     {
+         $checked = $this->config->usePOST ? "checked" : "";
+-        echo "<input type=\"checkbox\" id=\"usePOST\" {$checked} name=\"post\" />";
++        echo '<input type="checkbox" id="usePOST" checked disabled name="post" />';
+     }
+     private function setSetting($name, $value)
+     {
+-        setcookie($name, $value, time() + (86_400 * 90), path: "/");
++        setcookie($name, $value, ['expires' => time() + 86_400 * 90, 'path' => '/', 'secure' => true, 'httponly' => true, 'samesite' => 'Lax']);
+     }
+     private function resetSetting($name)
+     {
+diff --git a/pages/settings.view.php b/pages/settings.view.php
+index 84ec68b..f12aec8 100644
+--- a/pages/settings.view.php
++++ b/pages/settings.view.php
+@@ -23,8 +23,8 @@
+     </div>
+     <div class="setting-toggle">
+         <label for="usePOST">
+-            Use POST for translation
+-            <small class="setting-description">GET limits text to <?php echo (int) $this->config->maxLinkLength ?> characters in this form; encoded URLs may also hit server limits. POST sends text in the request body and removes this form limit, but server and translation engine limits still apply. Translation links will not include the text.</small>
++            Keep text out of translation URLs
++            <small class="setting-description">POST is required on this instance. The limit is 2,000 characters. Audio is disabled because upstream audio links include text in URLs.</small>
+         </label>
+         <?php $this->printPOSTToggle() ?>
+     </div>
+diff --git a/pages/translate.php b/pages/translate.php
+index e718140..7849dd4 100644
+--- a/pages/translate.php
++++ b/pages/translate.php
+@@ -50,15 +50,8 @@ class Translate extends HTML
+             if (($this->request['sl'] ?? null) == "auto" && is_string($sourceLang)
+                 && $sourceLang !== "" && $sourceLang !== "auto" && isset($this->parser->getLanguages('sl')[$sourceLang])
+             ) {
+-                $query = $this->request;
+-                $query['sl'] = $sourceLang;
+-                if (!$this->config->usePOST) {
+-                    header("Location: ./?".http_build_query($query));
+-                } else {
+-                    $_SESSION['request'] = $query;
+-                    header("Location: ./");
+-                }
+-                die();
++                // Display the detected language without persisting/re-submitting text.
++                $this->request['sl'] = $sourceLang;
+             }
+         }
+     }
+@@ -258,6 +251,8 @@ class Translate extends HTML
+     }
+     function TTSLink($mui, $text)
+     {
++        // Upstream audio embeds text in GET URLs; disabled for this deployment.
++        return null;
+         if (!method_exists($this->parser, 'tts')) {
+             return null;
+         }
+@@ -323,10 +318,7 @@ class Translate extends HTML
+     }
+     function printMaxLength()
+     {
+-        if ($this->config->usePOST) {
+-            return;
+-        }
+-        echo "maxlength=\"{$this->config->maxLinkLength}\"";
++        echo 'maxlength="2000"';
+     }
+     function printPronunciation($mui)
+     {
+diff --git a/parsers/parser.php b/parsers/parser.php
+index 36c677e..556f61a 100644
+--- a/parsers/parser.php
++++ b/parsers/parser.php
+@@ -1,4 +1,5 @@
+ <?php
++require_once __DIR__ . '/utilibre-http.php';
+ 
+ class TranslationData implements JsonSerializable
+ {
+@@ -172,6 +173,7 @@ class UpstreamException extends Exception
+ abstract class Parser
+ {
+     protected $config;
++    private $requestCache = [];
+     function __construct($config)
+     {
+         $this->config = $config;
+@@ -179,6 +181,13 @@ abstract class Parser
+     // $fetch should throw on failure so that errors are never cached
+     protected function cached($key, $fetch)
+     {
++        // Only language lists survive the request. Never store translation
++        // text/results in shared APCu; keep duplicate calls within a request cheap.
++        if (!str_starts_with($key, 'google_langs_') && $key !== 'langs_ddg') {
++            $safeKey = hash('sha256', $key);
++            if (!array_key_exists($safeKey, $this->requestCache)) $this->requestCache[$safeKey] = $fetch();
++            return $this->requestCache[$safeKey];
++        }
+         $cached = apcu_fetch($key);
+         if ($cached !== false) {
+             return $cached;
+@@ -189,25 +198,7 @@ abstract class Parser
+     }
+     function fetch($url, $postFields = null, $headers = null)
+     {
+-        $request = curl_init($url);
+-        curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+-        curl_setopt($request, CURLOPT_CONNECTTIMEOUT, 5);
+-        curl_setopt($request, CURLOPT_TIMEOUT, 20);
+-        if (!is_null($postFields)) {
+-            curl_setopt($request, CURLOPT_POSTFIELDS, $postFields);
+-        }
+-        if (!is_null($headers)) {
+-            curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
+-        }
+-        $body = curl_exec($request);
+-        if ($body === false) {
+-            throw new UpstreamException("Request failed: " . curl_error($request));
+-        }
+-        $status = curl_getinfo($request, CURLINFO_RESPONSE_CODE);
+-        if ($status < 200 || $status >= 300) {
+-            throw new UpstreamException("Upstream returned HTTP {$status}");
+-        }
+-        return ["body" => $body, "contentType" => curl_getinfo($request, CURLINFO_CONTENT_TYPE)];
++        return utilibre_fetch($url, $postFields, $headers);
+     }
+     function requestGet($url)
+     {
+diff --git a/parsers/utilibre-http.php b/parsers/utilibre-http.php
+new file mode 100644
+index 0000000..26f3411
+--- /dev/null
++++ b/parsers/utilibre-http.php
+@@ -0,0 +1,55 @@
++<?php
++// Fixed upstreams, public pinned IPv4, verified HTTPS, no redirects or proxy.
++function utilibre_valid_url(string $url): bool {
++    $p = parse_url($url);
++    return $p !== false && ($p['scheme'] ?? '') === 'https'
++        && in_array(strtolower($p['host'] ?? ''), [
++            'translate.googleapis.com', 'translate.google.com', 'www2.deepl.com',
++            'dict.deepl.com', 'translate.yandex.net', 'dictionary.yandex.net', 'duckduckgo.com',
++        ], true)
++        && !isset($p['user']) && !isset($p['pass']) && !isset($p['fragment'])
++        && (!isset($p['port']) || $p['port'] === 443);
++}
++function utilibre_public_ip(string $ip): bool {
++    if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) return false;
++    $n = ip2long($ip);
++    foreach (['100.64.0.0/10', '192.0.0.0/24', '198.18.0.0/15'] as $cidr) {
++        [$base, $bits] = explode('/', $cidr);
++        $mask = -1 << (32 - (int)$bits);
++        if (($n & $mask) === (ip2long($base) & $mask)) return false;
++    }
++    return true;
++}
++function utilibre_fetch(string $url, $postFields = null, $headers = null): array {
++    if (!utilibre_valid_url($url)) throw new UpstreamException('Destination denied');
++    $host = parse_url($url, PHP_URL_HOST);
++    if (apcu_exists('cooldown_' . $host)) throw new UpstreamException('Provider temporarily unavailable; try again later.');
++    $addresses = gethostbynamel($host);
++    if (!$addresses) throw new UpstreamException('Provider resolution failed');
++    foreach ($addresses as $ip) if (!utilibre_public_ip($ip)) throw new UpstreamException('Address denied');
++    $body = '';
++    $ch = curl_init($url);
++    curl_setopt_array($ch, [
++        CURLOPT_RETURNTRANSFER => false, CURLOPT_FOLLOWLOCATION => false,
++        CURLOPT_PROTOCOLS => CURLPROTO_HTTPS, CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTPS,
++        CURLOPT_PROXY => '', CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
++        CURLOPT_RESOLVE => ["$host:443:" . $addresses[0]],
++        CURLOPT_CONNECTTIMEOUT => 5, CURLOPT_TIMEOUT => 15, CURLOPT_ENCODING => '',
++        CURLOPT_SSL_VERIFYPEER => true, CURLOPT_SSL_VERIFYHOST => 2,
++        CURLOPT_WRITEFUNCTION => static function ($ch, string $chunk) use (&$body): int {
++            if (strlen($body) + strlen($chunk) > 2 * 1024 * 1024) return 0;
++            $body .= $chunk;
++            return strlen($chunk);
++        },
++    ]);
++    if ($postFields !== null) curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
++    if ($headers !== null) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
++    $ok = curl_exec($ch);
++    $status = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
++    $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
++    if ($ok === false || $status < 200 || $status >= 300) {
++        apcu_store('cooldown_' . $host, true, $status === 429 ? 120 : 30);
++        throw new UpstreamException('Provider temporarily unavailable' . ($status ? " (HTTP {$status})" : '') . '.');
++    }
++    return ['body' => $body, 'contentType' => $contentType];
++}
+diff --git a/public/index.php b/public/index.php
+index 9aadf8e..0afdce6 100644
+--- a/public/index.php
++++ b/public/index.php
+@@ -1,5 +1,23 @@
+ <?php
++header('Cache-Control: no-store');
++// Preserve same-origin POST Origin checks, without sending off-site referrers.
++header('Referrer-Policy: same-origin');
++if (isset($_GET['text']) || ($_SERVER['REQUEST_METHOD'] === 'GET' && preg_match('#^/(settings/(set|reset)|api/(translate|additional_data|tts|swap|toengine|clear_text))#', $_SERVER['REQUEST_URI']))) {
++    header('Allow: POST');
++    http_response_code(405);
++    exit('Submit text using the form, not a URL.');
++}
++foreach (['text', 'sl', 'tl', 'engine'] as $key) {
++    if (isset($_POST[$key]) && !is_string($_POST[$key])) {
++        http_response_code(400); exit('Invalid form value.');
++    }
++}
++if (isset($_POST['text']) && (!mb_check_encoding($_POST['text'], 'UTF-8') || mb_strlen($_POST['text'], 'UTF-8') > 2000)) {
++    http_response_code(413); exit('Limit: 2,000 characters per translation.');
++}
+ session_start();
++if (isset($_SESSION['writtenAt']) && time() - $_SESSION['writtenAt'] > 300) $_SESSION = [];
++$_SESSION['writtenAt'] = time();
+ $config = include "../config/config.php";
+ require_once $config->parsers[$config->parser]->file;
+ $parserClassName = ucfirst($config->parser) . "Parser";
+diff --git a/public/static/styles.css b/public/static/styles.css
+index bdfdc68..84071ef 100644
+--- a/public/static/styles.css
++++ b/public/static/styles.css
+@@ -72,6 +72,13 @@ body {
+     background-color: var(--background-color);
+ }
+ 
++/* Keep native form text legible and avoid automatic input zoom on phones. */
++textarea {
++    font-family: inherit;
++    font-size: 1rem;
++    line-height: 1.5;
++}
++
+ header {
+     background-color: var(--header-background-color);
+     color: var(--header-text-color);
+diff --git a/tests/utilibre.php b/tests/utilibre.php
+new file mode 100644
+index 0000000..7fba0d3
+--- /dev/null
++++ b/tests/utilibre.php
+@@ -0,0 +1,22 @@
++<?php
++require_once __DIR__ . '/../parsers/parser.php';
++function check($ok, $message) { if (!$ok) throw new Exception($message); }
++foreach (['https://translate.googleapis.com/translate_a/single', 'https://www2.deepl.com/jsonrpc', 'https://duckduckgo.com/translation.js'] as $url) check(utilibre_valid_url($url), $url);
++foreach (['http://translate.googleapis.com/', 'https://127.0.0.1/', 'https://translate.googleapis.com.evil.test/', 'https://user@translate.googleapis.com/', 'file:///etc/passwd', 'https://translate.googleapis.com:8080/', 'https://translate.googleapis.com/#x'] as $url) check(!utilibre_valid_url($url), $url);
++foreach (['127.0.0.1','10.10.1.3','172.29.89.20','192.168.1.1','169.254.169.254','100.64.0.1','198.18.0.1','192.0.0.1','0.0.0.0','::1'] as $ip) check(!utilibre_public_ip($ip), $ip);
++check(utilibre_public_ip('8.8.8.8'), 'Public address');
++class TestParser extends Parser {
++    function getLanguages($mui) { return []; }
++    function sample($key, $fetch) { return $this->cached($key, $fetch); }
++}
++apcu_clear_cache();
++$parser = new TestParser((object)['ttl'=>300]);
++$calls = 0;
++$fetch = function() use (&$calls) { ++$calls; return 'synthetic translation'; };
++check($parser->sample('en_es_private_text', $fetch) === 'synthetic translation', 'Result');
++$parser->sample('en_es_private_text', $fetch);
++check($calls === 1, 'Request-local memoization');
++check(apcu_cache_info()['num_entries'] === 0, 'No shared translation caching');
++$parser->sample('google_langs_en', fn()=>['en'=>'English']);
++check(apcu_cache_info()['num_entries'] === 1, 'Language-list caching only');
++echo "25 URL/IP/cache checks passed\n";

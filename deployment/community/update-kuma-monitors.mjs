@@ -25,6 +25,8 @@ const additions = [
   ['FMD Server', 'https://fmd.utilibre.org/'],
   ['Pollaris', 'https://pollaris.utilibre.org/'],
   ['Utilibre login', 'https://auth.utilibre.org/'],
+  ['GotHub', 'https://gothub.utilibre.org/'],
+  ['TransLite', 'https://translate.utilibre.org/'],
 ];
 const program = `
 const {io}=require('socket.io-client');
@@ -51,7 +53,7 @@ socket.on('connect',async()=>{try{
   }
   config.description='HTTPS availability checks every five minutes from the application VM. SearXNG uses its /healthz endpoint through the private Caddy edge. These are not full workflow tests or independent outage monitoring. / Comprobaciones HTTPS cada cinco minutos desde la VM de aplicaciones. SearXNG usa /healthz a través del servidor Caddy privado. No son pruebas de uso completas ni monitoreo independiente de caídas.';
   await call('saveStatusPage','utilibre',config,config.icon||'',groups);
-  console.log('Status page updated: 13 additional services; SearXNG private-edge liveness labeled; existing settings/history preserved.');
+  console.log('Status page updated: verified public services reconciled; SearXNG private-edge liveness labeled; existing settings/history preserved.');
   clearTimeout(deadline);socket.disconnect();process.exit(0);
 }catch(e){console.error(e.message);socket.disconnect();process.exit(1)}});
 `;
