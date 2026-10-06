@@ -81,6 +81,23 @@ export const catalog: CatalogEntry[] = [
   },
   ...expandedTools(),
   ...readerEvaluations(),
+  ...newInstallations(),
+  {
+    id: 'biblioreads', ...providerMetadata('biblioreads'), kind: 'service', implementation: 'upstream-application',
+    category: 'service', discoveryGroup: 'reading', featuredOrder: 44, configUrlKey: 'publicBooksUrl',
+    name: { en: 'Find books · BiblioReads', es: 'Buscar libros · BiblioReads' },
+    description: { en: 'Read public Goodreads book information and keep a library in your browser.', es: 'Consultá información pública de libros de Goodreads y guardá una biblioteca en tu navegador.' },
+    launchLabel: { en: 'Find a book', es: 'Buscar un libro' },
+    help: { en: 'Search for a title or paste a Goodreads book link. Use Library → Settings → Export to save a backup. The interface is in English. This does not sign in to Goodreads or synchronize your library between devices.', es: 'Buscá un título o pegá un enlace de Goodreads. Usá Library → Settings → Export para guardar una copia. La interfaz está en inglés. No inicia sesión en Goodreads ni sincroniza tu biblioteca entre dispositivos.' },
+    unavailableReason: { en: 'Access is not enabled in this portal configuration.', es: 'El acceso no está habilitado en esta configuración del portal.' },
+    labels: ['server', 'proxy', 'local'],
+    dataFlow: { en: 'Browser → Cloudflare/Caddy → Utilibre → Goodreads and its Amazon-hosted API/image services. Providers see server requests. Covers are fetched through Utilibre; library records stay in browser storage.', es: 'Navegador → Cloudflare/Caddy → Utilibre → Goodreads y sus servicios de API e imágenes alojados en Amazon. Los proveedores ven las solicitudes del servidor. Las portadas pasan por Utilibre; tu biblioteca queda en el navegador.' },
+    upstreamServices: ['Goodreads', 'Amazon AppSync', 'Goodreads/Amazon image CDN'], filesUploaded: false,
+    temporaryStorage: { en: 'Bounded in-memory image cache; browser-local saved books, authors and quotes. The application service worker may retain visited pages and API responses on this device.', es: 'Caché limitada de imágenes en memoria; libros, autores y citas guardados en el navegador. El service worker puede conservar páginas visitadas y respuestas de la API en este dispositivo.' },
+    retention: { en: 'Cover cache expires after one hour or restart. Browser data remains until you delete it; clearing site data can erase your library. Export important records. Edge and provider retention are separate.', es: 'La caché de portadas vence tras una hora o al reiniciar. Los datos del navegador permanecen hasta que los borrés; borrar los datos del sitio puede eliminar tu biblioteca. Exportá lo importante. El borde y los proveedores tienen sus propias políticas de conservación.' },
+    logging: { en: 'Application and gateway logging are disabled. Cloudflare/Caddy and upstream providers may retain operational metadata. Search queries appear in page URLs and browser history.', es: 'Los registros de la aplicación y su intermediario están desactivados. Cloudflare/Caddy y los proveedores pueden conservar metadatos operativos. Las búsquedas aparecen en las direcciones de las páginas y en el historial.' },
+    modified: true, operationalStatus: 'operational',
+  },
   {
     id: 'gothub', ...providerMetadata('gothub'), kind: 'service', implementation: 'upstream-application',
     category: 'service', discoveryGroup: 'text-data', featuredOrder: 42, configUrlKey: 'publicGothubUrl',
@@ -169,6 +186,11 @@ export const catalog: CatalogEntry[] = [
     { en: 'Create styled QR codes for links, Wi-Fi and contact details, or read a code from an image with Mini QR.', es: 'Creá códigos QR con estilo para enlaces, Wi-Fi y contactos, o leé un código en una imagen con Mini QR.' },
     { en: 'Create / scan QR', es: 'Crear / leer QR' }, false,
     { en: 'Enter your content, customize the code and download it. Scanning can use an image or your camera after permission. Anyone who scans the result can read its contents: QR codes do not encrypt passwords. QR history storage is disabled.', es: 'Escribí el contenido, personalizá el código y descargalo. Para leerlo, usá una imagen o la cámara después de dar permiso. Cualquiera que lea el resultado puede ver su contenido: un QR no cifra contraseñas. El historial de códigos está desactivado.' }),
+  browserTool('qr-offline', 'design', 48, 'publicQrToolsUrl',
+    { en: 'QR codes · Offline QR', es: 'Códigos QR · Offline QR' },
+    { en: 'A second QR creator and camera scanner, with PNG, SVG and PDF downloads. No account required.', es: 'Otra opción para crear códigos QR y leerlos con la cámara, con descargas en PNG, SVG y PDF. Sin cuenta.' },
+    { en: 'Create / scan QR', es: 'Crear / leer QR' }, false,
+    { en: 'Choose a QR type, enter its content and download the result. Camera scanning asks for permission and shows the result before you choose to open it. Codes and camera frames are processed locally. QR history is not saved; language, theme and offline application files can remain in your browser. QR codes do not encrypt their contents.', es: 'Elegí un tipo de QR, ingresá el contenido y descargá el resultado. El lector pide permiso para usar la cámara y muestra el contenido antes de que decidás abrirlo. Los códigos y las imágenes de la cámara se procesan en tu dispositivo. No se guarda un historial de QR; el idioma, el tema y los archivos para usar la aplicación sin conexión pueden quedar en el navegador. Los códigos QR no cifran su contenido.' }),
   browserTool('ittools', 'text-data', 7, 'publicDeveloperToolsUrl',
     { en: 'Developer tools', es: 'Herramientas de desarrollo' },
     { en: 'Format JSON, inspect JWTs, encode text, generate UUIDs and test regular expressions with IT Tools.', es: 'Dale formato a JSON, inspeccioná JWT, codificá texto, generá UUID y probá expresiones regulares con IT Tools.' },
@@ -244,6 +266,40 @@ export function localized(text: LocalizedText, language: Language): string {
   return text[language];
 }
 
+function newInstallations(): CatalogEntry[] {
+  const readers: Array<{id: 'kittygram' | 'rimgo'; name: LocalizedText; description: LocalizedText; reason: LocalizedText}> = [
+    {id:'kittygram', name:{en:'Read Instagram · Kittygram',es:'Leer Instagram · Kittygram'}, description:{en:'Read public Instagram profiles and posts without signing in.',es:'Leé perfiles y publicaciones públicas de Instagram sin iniciar sesión.'}, reason:{en:'Profiles, posts, images and video pass backend tests. Public HTTPS activation is pending.',es:'Los perfiles, publicaciones, imágenes y videos pasaron las pruebas del servidor. Falta activar HTTPS público.'}},
+    {id:'rimgo', name:{en:'View Imgur · Rimgo',es:'Ver Imgur · Rimgo'}, description:{en:'Read public Imgur albums through an alternative interface.',es:'Consultá álbumes públicos de Imgur con una interfaz alternativa.'}, reason:{en:'Installed, but Imgur currently rate-limits media from this server. Albums alone do not make the service usable.',es:'Instalado, pero Imgur limita las imágenes y videos de este servidor. Recibir solo los datos del álbum no basta para usarlo.'}},
+  ];
+  return [
+    ...readers.map((entry): CatalogEntry => ({
+      id:entry.id,...providerMetadata(entry.id),kind:'service',implementation:'upstream-application',category:'service',discoveryGroup:'media',
+      name:entry.name,description:entry.description,featuredOrder:entry.id==='kittygram'?49:50,
+      configUrlKey:entry.id==='kittygram'?'publicInstagramUrl':undefined,
+      launchLabel:{en:'Open reader',es:'Abrir lector'},unavailableReason:entry.reason,
+      help:entry.id==='kittygram'?{en:'Public posts only; no login, posting or private-account access. The interface has no Spanish translation in this version. Instagram can block retrieval. Return to Utilibre through the native operator link on the homepage.',es:'Solo publicaciones públicas; no permite iniciar sesión, publicar ni acceder a cuentas privadas. Esta versión no incluye traducción al español. Instagram puede bloquear el acceso. Volvé a Utilibre desde el enlace del operador en la página principal.'}:entry.reason,
+      labels:['server','proxy'],filesUploaded:false,upstreamServices:[entry.id==='kittygram'?'Instagram':'Imgur'],
+      dataFlow:{en:'Browser → Cloudflare/Caddy → Utilibre → upstream content provider. Content and media are proxied through Utilibre; the operator can see requests. This is not anonymous or confidential browsing.',es:'Navegador → Cloudflare/Caddy → Utilibre → proveedor del contenido. Las páginas e imágenes pasan por Utilibre; el operador puede ver las solicitudes. No es navegación anónima ni confidencial.'},
+      temporaryStorage:{en:'Bounded in-memory content caches and request counters. No visitor account database.',es:'Cachés limitadas en memoria y contadores de solicitudes. No hay una base de datos de cuentas de visitantes.'},
+      retention:entry.id==='kittygram'?{en:'Public-profile lookup cache is limited to a 64 MiB RAM filesystem; Valkey cache to 128 MiB; media gateway cache to 96 MiB with five-minute freshness. Restarting clears these caches. Signed language/theme cookies last up to 90 days.',es:'La caché de perfiles públicos usa hasta 64 MiB en memoria; Valkey, hasta 128 MiB; y la caché de imágenes, hasta 96 MiB con cinco minutos de vigencia. Reiniciar borra estas cachés. Las cookies firmadas de idioma y tema duran hasta 90 días.'}:{en:'Parsed API caches are size-limited and expire automatically. Restarting clears them; upstream and edge retention are separate.',es:'Las cachés de la API tienen límites de tamaño y vencen automáticamente. Reiniciar las borra; el proveedor y el borde tienen sus propias políticas.'},
+      logging:{en:'Application and local gateway logging are disabled. Cloudflare, the edge and upstream providers may retain operational/security metadata.',es:'Los registros de la aplicación y su intermediario local están desactivados. Cloudflare, el borde y los proveedores pueden conservar metadatos operativos o de seguridad.'},
+      modified:true,operationalStatus:entry.id==='kittygram'?'operational':'unavailable',
+    })),
+    {
+      id:'mumble',...providerMetadata('mumble'),kind:'service',implementation:'upstream-application',category:'service',discoveryGroup:'media',featuredOrder:51,
+      name:{en:'Voice chat · Mumble',es:'Chat de voz · Mumble'},description:{en:'Low-latency group voice chat using the Mumble desktop or mobile client.',es:'Conversá por voz en grupo con un cliente de Mumble para computadora o teléfono.'},
+      help:{en:'Installed as a password-protected local pilot. Public TCP/UDP routing and the admission policy must be configured before invitations can be used remotely. This is not a browser call tool.',es:'Instalado como piloto local con contraseña. Falta configurar la ruta pública TCP/UDP y la política de acceso para usar invitaciones a distancia. No es una herramienta de llamadas en el navegador.'},
+      unavailableReason:{en:'Local pilot only: public voice networking and admission policy are pending.',es:'Solo piloto local: faltan la conexión pública de voz y la política de acceso.'},
+      labels:['server'],filesUploaded:false,upstreamServices:[],
+      dataFlow:{en:'Mumble client → encrypted connection → Utilibre voice server → other participants. The server relays decrypted voice; this is not end-to-end encryption. Participants can record.',es:'Cliente de Mumble → conexión cifrada → servidor de voz de Utilibre → otras personas. El servidor retransmite la voz descifrada; no hay cifrado de extremo a extremo. Otras personas pueden grabar.'},
+      temporaryStorage:{en:'Transient voice packets in memory; channel settings, registered identities and the server certificate use SQLite.',es:'Paquetes de voz temporales en memoria; los canales, identidades registradas y el certificado usan SQLite.'},
+      retention:{en:'No server recording is configured. Registered identities and channel settings persist until removed; private backups can retain them.',es:'No se configuró grabación en el servidor. Las identidades registradas y los canales permanecen hasta que se borren; las copias privadas pueden conservarlos.'},
+      logging:{en:'Console/file and database event logs are disabled for this pilot. Network-level records may still exist.',es:'Los registros de consola, archivo y eventos de base de datos están desactivados en este piloto. Pueden existir registros de red.'},
+      modified:false,operationalStatus:'maintenance',
+    },
+  ];
+}
+
 function readerEvaluations(): CatalogEntry[] {
   const entries: { id: FossProviderId; name: LocalizedText; description: LocalizedText; reason: LocalizedText; upstream: string }[] = [
     { id: 'dumb', name: { en: 'Read lyrics · Dumb', es: 'Leer letras · Dumb' }, description: { en: 'Read public Genius lyrics through an alternative interface.', es: 'Leé letras públicas de Genius con una interfaz alternativa.' }, reason: { en: 'Not available: Genius is blocking requests from this server.', es: 'No disponible: Genius bloquea las solicitudes de este servidor.' }, upstream: 'Genius' },
@@ -253,6 +309,7 @@ function readerEvaluations(): CatalogEntry[] {
     { id: 'safetwitch', name: { en: 'Watch Twitch · SafeTwitch', es: 'Ver Twitch · SafeTwitch' }, description: { en: 'Watch public Twitch channels without an account. Live chat is disabled.', es: 'Mirá canales públicos de Twitch sin cuenta. El chat en vivo está desactivado.' }, reason: { en: 'Live video and Spanish mobile tests passed on the protected backend. The public HTTPS route is still pending.', es: 'Las pruebas de video en vivo y de español en móvil pasaron en el servidor protegido. Falta activar la ruta HTTPS pública.' }, upstream: 'Twitch' },
     { id: 'anonymousoverflow', name: { en: 'Read Stack Overflow', es: 'Leer Stack Overflow' }, description: { en: 'Read programming questions and answers with AnonymousOverflow.', es: 'Leé preguntas y respuestas de programación con AnonymousOverflow.' }, reason: { en: 'Article retrieval passed on the protected backend. The public HTTPS route is still pending.', es: 'La lectura de artículos pasó en el servidor protegido. Falta activar la ruta HTTPS pública.' }, upstream: 'Stack Exchange' },
   ];
+  const publicReaders: Partial<Record<FossProviderId, string>> = { fourget: 'publicFourgetUrl', anonymousoverflow: 'publicOverflowUrl', safetwitch: 'publicTwitchUrl' };
   return entries.map((entry) => ({
     id: entry.id, ...providerMetadata(entry.id), kind: 'service', implementation: 'upstream-application',
     category: 'service', discoveryGroup: ['degoog', 'fourget'].includes(entry.id) ? 'find' : ['anonymousoverflow', 'gothub'].includes(entry.id) ? 'text-data' : 'media', name: entry.name, description: entry.description,
@@ -263,6 +320,17 @@ function readerEvaluations(): CatalogEntry[] {
     retention: { en: 'Public retention settings are not yet established. Do not send personal data.', es: 'Todavía no hay una política de conservación para uso público. No enviés datos personales.' },
     logging: { en: 'Evaluation logging and upstream retention vary by application; no public no-logging claim is made.', es: 'Los registros de prueba y la conservación del proveedor varían según la aplicación; no afirmamos que un servicio público carezca de registros.' },
     modified: false, operationalStatus: 'maintenance',
+    ...(publicReaders[entry.id] ? {
+      configUrlKey: publicReaders[entry.id], featuredOrder: {fourget: 45, anonymousoverflow: 46, safetwitch: 47}[entry.id as 'fourget' | 'anonymousoverflow' | 'safetwitch'],
+      launchLabel: { en: 'Open tool', es: 'Abrir herramienta' },
+      help: entry.id === 'safetwitch' ? {en: 'Browse public Twitch channels. The Spanish portal selects the native Spanish interface. Chat is disabled; follows are browser-local. Export settings before clearing site data.', es: 'Explorá canales públicos de Twitch. El portal en español selecciona la interfaz en español. El chat está desactivado; los canales seguidos quedan en el navegador. Exportá los ajustes antes de borrar los datos del sitio.'} : entry.id === 'anonymousoverflow' ? {en: 'Replace stackoverflow.com in a question link with overflow.utilibre.org. Read-only; no accounts or posting. The interface is in English.', es: 'Reemplazá stackoverflow.com en el enlace de una pregunta por overflow.utilibre.org. Solo permite leer; no tiene cuentas ni publicaciones. La interfaz está en inglés.'} : {en: 'Choose a provider and search. Providers can fail or rate-limit requests independently. The interface is in English.', es: 'Elegí un proveedor y buscá. Cada proveedor puede fallar o limitar solicitudes por separado. La interfaz está en inglés.'},
+      unavailableReason: {en:'Access is not enabled in this portal configuration.',es:'El acceso no está habilitado en esta configuración del portal.'},
+      dataFlow: {en:`Browser → Cloudflare/Caddy → Utilibre → ${entry.upstream}. Upstream providers see server requests, not a direct browser connection in the tested workflows.`,es:`Navegador → Cloudflare/Caddy → Utilibre → ${entry.upstream}. En los flujos probados, los proveedores ven solicitudes del servidor, no conexiones directas de tu navegador.`},
+      temporaryStorage: {en:'Bounded server caches and rate-limit counters; local preferences may remain in your browser. No server-side user account is created.',es:'Cachés limitadas y contadores de solicitudes en el servidor; las preferencias pueden quedar en tu navegador. No se crea una cuenta en el servidor.'},
+      retention: {en:'Server caches expire automatically or clear on restart. Browser preferences remain until removed. Upstream and edge retention are separate; this is not a confidential browsing service.',es:'Las cachés del servidor vencen automáticamente o se borran al reiniciar. Las preferencias del navegador permanecen hasta que las borrés. El borde y los proveedores tienen sus propias políticas; no es un servicio de navegación confidencial.'},
+      logging: {en:'Gateway access logs are disabled. Rotating operational/error logs and upstream/edge records may contain request metadata.',es:'Los registros de acceso del intermediario están desactivados. Los errores y registros operativos rotativos del servicio, del borde y de los proveedores pueden contener metadatos de solicitudes.'},
+      modified: true, operationalStatus: 'operational' as const,
+    } : {}),
   }));
 }
 
@@ -302,9 +370,9 @@ function expandedTools(): CatalogEntry[] {
     },
     {
       id: 'breezewiki', group: 'reading', name: { en: 'Read wikis · BreezeWiki', es: 'Leer wikis · BreezeWiki' },
-      description: { en: 'Read Fandom articles through a simpler interface. Article retrieval is currently blocked upstream.', es: 'Leé artículos de Fandom con una interfaz más sencilla. El sitio de origen está bloqueando la consulta de artículos.' },
-      reason: { en: 'The application is installed, but Fandom is rejecting its article requests. Reading is unavailable.', es: 'La aplicación está instalada, pero Fandom rechaza las solicitudes de artículos. La lectura no está disponible.' },
-      help: { en: 'This is a reader, not a wiki-editing platform. Tested article requests failed; the service is not advertised as working and no upstream-blocking bypass is offered.', es: 'Es un lector, no una plataforma para editar wikis. Las consultas de prueba fallaron; no presentamos el servicio como funcional ni ofrecemos formas de evitar el bloqueo del sitio de origen.' },
+      description: { en: 'Read Fandom articles through a simpler interface. Image retrieval is currently unreliable.', es: 'Leé artículos de Fandom con una interfaz más sencilla. La carga de imágenes todavía falla.' },
+      reason: { en: 'Article retrieval is fixed, but Fandom’s image CDN still rejects requests. Full-page tests do not pass yet.', es: 'La consulta de artículos ya funciona, pero el proveedor de imágenes de Fandom sigue rechazando solicitudes. Las pruebas de páginas completas aún no pasan.' },
+      help: { en: 'This is a reader, not a wiki-editing platform. Article text works in tested pages; many images fail upstream. We have not enabled the launch link because the complete reading workflow still fails.', es: 'Es un lector, no una plataforma para editar wikis. El texto funciona en las páginas probadas, pero muchas imágenes fallan en el sitio de origen. No habilitamos el enlace de acceso porque el flujo completo de lectura sigue fallando.' },
       data: { en: 'The server requests public wiki pages and proxies content. Private-network destinations are blocked; temporary caches and connection metadata remain part of the service.', es: 'El servidor consulta páginas públicas de wikis y retransmite contenido. Los destinos de redes privadas están bloqueados; el servicio utiliza cachés temporales y datos de conexión.' },
     },
     {
@@ -364,7 +432,7 @@ function browserTool(
     id: providerId, ...providerMetadata(providerId), kind: 'service', implementation: 'upstream-application',
     category: 'service', discoveryGroup, featuredOrder, configUrlKey, name, description, launchLabel, quickLinks,
     help,
-    unavailableReason: ['jupyterlite', 'whisper-web'].includes(providerId)
+    unavailableReason: ['jupyterlite', 'whisper-web', 'qr-offline'].includes(providerId)
       ? { en: 'Installed and tested; the public HTTPS connection is not ready yet.', es: 'Ya está instalada y probada; la conexión HTTPS pública todavía no está lista.' }
       : undefined,
     labels: externalAssets ? ['local', 'external'] : ['local'], filesUploaded: false,
@@ -375,7 +443,7 @@ function browserTool(
     temporaryStorage: browserMemory,
     retention: { en: 'Utilibre stores no input files for these tools. Downloads remain on your device; application caches, preferences or local drafts can remain in browser storage until you clear the site’s data. Read the tool-specific help before using a shared device.', es: 'Utilibre no almacena los archivos ingresados en estas herramientas. Las descargas quedan en tu dispositivo; las cachés, preferencias o borradores locales pueden permanecer en el navegador hasta que borres los datos del sitio. Leé la ayuda antes de usar un dispositivo compartido.' },
     logging: { en: 'Tool web-server access logs are disabled. Bounded error logs can contain request metadata. Cloudflare and the separate HTTPS edge see connections and asset requests, not browser-local file contents; their retention is separate.', es: 'El registro de accesos del servidor de herramientas está desactivado. Los registros limitados de errores pueden incluir metadatos. Cloudflare y el borde HTTPS reciben conexiones y solicitudes de recursos, no el contenido de archivos procesado localmente; su conservación es independiente.' },
-    modified: ['vert', 'drawio', 'whisper-web'].includes(providerId), operationalStatus: 'operational',
+    modified: ['vert', 'drawio', 'whisper-web', 'qr-offline'].includes(providerId), operationalStatus: 'operational',
   };
 }
 

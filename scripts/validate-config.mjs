@@ -36,9 +36,15 @@ const services = [
   { id: 'binternet', hostKey: 'PUBLIC_BINTERNET_HOST', urlKey: 'PUBLIC_BINTERNET_URL', portKey: 'BINTERNET_PORT' },
   { id: 'gothub', hostKey: 'PUBLIC_GOTHUB_HOST', urlKey: 'PUBLIC_GOTHUB_URL', portKey: 'GOTHUB_PORT' },
   { id: 'translite', hostKey: 'PUBLIC_TRANSLATE_HOST', urlKey: 'PUBLIC_TRANSLATE_URL', portKey: 'TRANSLITE_PORT' },
+  { id: 'biblioreads', hostKey: 'PUBLIC_BOOKS_HOST', urlKey: 'PUBLIC_BOOKS_URL', portKey: 'BIBLIOREADS_PORT' },
+  { id: 'qr-offline', hostKey: 'PUBLIC_QRTOOLS_HOST', urlKey: 'PUBLIC_QRTOOLS_URL', portKey: 'QR_OFFLINE_PORT' },
+  { id: 'kittygram', hostKey: 'PUBLIC_INSTAGRAM_HOST', urlKey: 'PUBLIC_INSTAGRAM_URL', portKey: 'KITTYGRAM_PORT' },
+  { id: 'fourget', hostKey: 'PUBLIC_FOURGET_HOST', urlKey: 'PUBLIC_FOURGET_URL', portKey: 'FOURGET_PORT' },
+  { id: 'anonymousoverflow', hostKey: 'PUBLIC_OVERFLOW_HOST', urlKey: 'PUBLIC_OVERFLOW_URL', portKey: 'OVERFLOW_PORT' },
+  { id: 'safetwitch', hostKey: 'PUBLIC_TWITCH_HOST', urlKey: 'PUBLIC_TWITCH_URL', portKey: 'SAFETWITCH_PORT' },
 ];
 const allowedServices = new Set(services.map(({ id }) => id));
-const listableServices = new Set([...allowedServices, 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet']);
+const listableServices = new Set([...allowedServices, 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet', 'rimgo', 'mumble']);
 
 // Stale settings should fail loudly instead of silently republishing a service
 // that the project deliberately retired.
@@ -123,7 +129,8 @@ export function validateEnvironmentValues(values, { launch = false, assignedAddr
   const enabled = csv(values.ENABLED_SERVICES ?? 'searxng,redlib,freshrss,privatebin');
   if (new Set(enabled).size !== enabled.length) errors.push('ENABLED_SERVICES must not contain duplicate IDs.');
   for (const id of enabled) if (!allowedServices.has(id)) errors.push(`ENABLED_SERVICES contains unsupported or retired ID: ${id}`);
-  for (const id of (values.LISTED_SERVICES || '').split(',').map((value) => value.trim()).filter(Boolean)) {
+  const listed = csv(values.LISTED_SERVICES || '');
+  for (const id of listed) {
     if (!listableServices.has(id)) errors.push(`LISTED_SERVICES contains unsupported or retired ID: ${id}`);
   }
   if (!enabled.includes('searxng')) errors.push('ENABLED_SERVICES must include searxng.');
@@ -146,8 +153,11 @@ export function validateEnvironmentValues(values, { launch = false, assignedAddr
   }
   if ((values.SUPPORT_URL ?? '').trim()) validateLaunchUrl('SUPPORT_URL', values.SUPPORT_URL, errors);
 
+  const configured = service => Boolean((values[service.urlKey] ?? '').trim() || (values[service.hostKey] ?? '').trim());
   for (const service of services) {
-    if (enabled.includes(service.id)) {
+    // Explicitly listed installations may have a prepared address without a
+    // public launch. The portal still requires ENABLED_SERVICES separately.
+    if (enabled.includes(service.id) || listed.includes(service.id) && configured(service)) {
       if (privatePreview && !launch) {
         validatePreviewHostname(service.hostKey, values[service.hostKey], bindIp, errors);
         validatePreviewOrPublicServiceUrl(
@@ -171,7 +181,7 @@ export function validateEnvironmentValues(values, { launch = false, assignedAddr
 
   const ports = [
     'PORTAL_PORT',
-    ...services.filter(({ id }) => enabled.includes(id)).map(({ portKey }) => portKey),
+    ...services.filter(service => enabled.includes(service.id) || listed.includes(service.id) && configured(service)).map(({ portKey }) => portKey),
   ];
   const seenPorts = new Map();
   for (const key of ports) {

@@ -131,6 +131,18 @@ test('rejects public configuration for a disabled retained service', () => {
   );
 });
 
+test('validates prepared addresses for explicitly listed installations without enabling them', () => {
+  const staged = launchValues({
+    LISTED_SERVICES: 'qr-offline,kittygram',
+    PUBLIC_QRTOOLS_HOST: 'qrtools.utilibre.org', PUBLIC_QRTOOLS_URL: 'https://qrtools.utilibre.org/', QR_OFFLINE_PORT: '3155',
+    PUBLIC_INSTAGRAM_HOST: 'gram.utilibre.org', PUBLIC_INSTAGRAM_URL: 'https://gram.utilibre.org/', KITTYGRAM_PORT: '3154',
+  });
+  assert.equal(validateLaunch(staged).ENABLED_SERVICES, launchValues().ENABLED_SERVICES);
+  assert.throws(() => validateLaunch({...staged, PUBLIC_INSTAGRAM_URL: 'http://gram.utilibre.org/'}), /PUBLIC_INSTAGRAM_URL/);
+  assert.throws(() => validateLaunch({...staged, KITTYGRAM_PORT: '3155'}), /conflicts with QR_OFFLINE_PORT/);
+  assert.throws(() => validateLaunch({...staged, LISTED_SERVICES: ''}), /must stay empty/);
+});
+
 test('rejects Redlib profile mismatches', () => {
   assert.throws(
     () => validateLaunch(launchValues({ COMPOSE_PROFILES: '' })),

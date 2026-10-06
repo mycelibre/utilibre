@@ -1,0 +1,637 @@
+diff --git a/.dockerignore b/.dockerignore
+new file mode 100644
+index 0000000..3223fb7
+--- /dev/null
++++ b/.dockerignore
+@@ -0,0 +1,5 @@
++.git
++compiled
++**/compiled
++storage
++.env*
+diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
+new file mode 100644
+index 0000000..df0a1e4
+--- /dev/null
++++ b/Dockerfile.utilibre
+@@ -0,0 +1,12 @@
++FROM python:3.13-slim@sha256:3dd7cc108ec1493442514f5c2a871af6af0ec31d768ff6e378a93340c3b3db5f
++RUN apt-get update && apt-get install -y --no-install-recommends racket ca-certificates curl git libfontconfig1 libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libjpeg62-turbo libpng16-16t64 && rm -rf /var/lib/apt/lists/*
++WORKDIR /app
++ENV PLTUSERHOME=/opt/racket-user
++COPY . .
++RUN raco pkg install --batch --auto --no-docs --skip-installed req-lib \
++    && raco req -d \
++    && raco make dist.rkt \
++    && racket --version > /app/UTILIBRE-RACKET-VERSION.txt
++USER 1000:1000
++EXPOSE 10416
++CMD ["python", "utilibre-transport.py"]
+diff --git a/UTILIBRE-RACKET-PACKAGES.txt b/UTILIBRE-RACKET-PACKAGES.txt
+new file mode 100644
+index 0000000..38a5a57
+--- /dev/null
++++ b/UTILIBRE-RACKET-PACKAGES.txt
+@@ -0,0 +1,229 @@
++Installation-wide:
++ Package[*=auto]                 Checksum                                    Source
++ 2d*                             bf0fd5085deed9a171bb66f18ee393652e353c8f    (catalog "2d" "git://github.com/racket/2d?path=2d#4b70b2dc77a9e8d2497a2c7373cacd659a3de23c")
++ 2d-doc*                         c1851c0d397e88bff09db95c3140b14e3ccacaa5    (catalog "2d-doc" "git://github.com/racket/2d?path=2d-doc#4b70b2dc77a9e8d2497a2c7373cacd659a3de23c")
++ 2d-lib*                         d9bf53f190ca7124a52c3531aa3782fabf3f2923    (catalog "2d-lib" "git://github.com/racket/2d?path=2d-lib#4b70b2dc77a9e8d2497a2c7373cacd659a3de23c")
++ algol60*                        ba9c5019ac243ad771f16570350c2fe9307e8c8a    (catalog "algol60" "git://github.com/racket/algol60#ddc6046986103ab486419e17823a52ff6a559555")
++ at-exp-lib*                     54983b0996a25e8633e1011f808d9597d1cef3c5    (catalog "at-exp-lib")
++ base*                           42ebf3c799192e9d6a4b6025f0be00343eb07151    (catalog "base")
++ cext-lib*                       67593b49fdedad703785ac485742784e1ebb635c    (catalog "cext-lib" "git://github.com/racket/cext-lib?path=cext-lib#6c32f1c8365fbce7232f7fb35f8e68cd7619f007")
++ class-iop-lib*                  7ab2d2dafaa54cd811c2efe7eec71f5fe183a73c    (catalog "class-iop-lib" "git://github.com/racket/class-iop?path=class-iop-lib#f640064b50109887c40da6df3d3cebf635040794")
++ compatibility*                  bcf42268e256238a8c2c42cf18f08b5e6f6100d1    (catalog "compatibility" "git://github.com/racket/compatibility/?path=compatibility#a393782feeb140dceda4bdcf3747659d9cfa82a6")
++ compatibility-doc*              4e6dd2df6c7c83028d01e8061ebbfa7ce41c3769    (catalog "compatibility-doc" "git://github.com/racket/compatibility/?path=compatibility-doc#a393782feeb140dceda4bdcf3747659d9cfa82a6")
++ compatibility-lib*              be7cb351598bd2716524be8bc769ace47509cffa    (catalog "compatibility-lib" "git://github.com/racket/compatibility/?path=compatibility-lib#a393782feeb140dceda4bdcf3747659d9cfa82a6")
++ compiler*                       c315f17c2c8f8546f55d4647d938625f7ece62d6    (catalog "compiler")
++ compiler-lib*                   adcbc6c26002e451c3ac92e41fc4119abb14ac72    (catalog "compiler-lib")
++ contract-profile*               66222510f3d7b1d08bf4dd08c498ede600f1d994    (catalog "contract-profile" "git://github.com/racket/contract-profile#95d980a076126b8e4e4284e912f2a7d9d3ab6860")
++ data*                           1330a326e3dccc9e8b00d37ea50a9414fea13c8f    (catalog "data" "git://github.com/racket/data/?path=data#0f85d3ced88a1e39c08153ffae5951f32b43cd81")
++ data-doc*                       15a06535a4d7595fc3232f2d47883a67540b98e4    (catalog "data-doc" "git://github.com/racket/data/?path=data-doc#0f85d3ced88a1e39c08153ffae5951f32b43cd81")
++ data-enumerate-lib*             71a308f2d992647f0bbd3bbdf391734515b21dec    (catalog "data-enumerate-lib" "git://github.com/racket/data/?path=data-enumerate-lib#0f85d3ced88a1e39c08153ffae5951f32b43cd81")
++ data-lib*                       db340a218185d95a115512dd777f9e1cdf6dc81a    (catalog "data-lib" "git://github.com/racket/data/?path=data-lib#0f85d3ced88a1e39c08153ffae5951f32b43cd81")
++ datalog*                        05682fc5c10cb7f0514ae60798ac38b59e4af3c9    (catalog "datalog" "git://github.com/racket/datalog#3a30258c7a11f6f1836f52590e26542c11865714")
++ db*                             6893eba3077f05f6cc42f5010048d4736dc22172    (catalog "db" "git://github.com/racket/db/?path=db#fe5771bdc49f873aad8e1eede0f89ac3d36f6355")
++ db-doc*                         610b959b0c0e3f326e3621037efa4c199ba32f96    (catalog "db-doc" "git://github.com/racket/db/?path=db-doc#fe5771bdc49f873aad8e1eede0f89ac3d36f6355")
++ db-lib*                         b283c523e5c29c5bf3574096059f4e9394ea5da5    (catalog "db-lib" "git://github.com/racket/db/?path=db-lib#fe5771bdc49f873aad8e1eede0f89ac3d36f6355")
++ deinprogramm*                   cfbd542b58a8ec39df8dd450c939b8d320cd8f52    (catalog "deinprogramm" "git://github.com/racket/deinprogramm?path=deinprogramm#19b387829072ebdade8c77ada0ef4fbd7cc53cfc")
++ deinprogramm-doc*               84d1585b166de9fe415d319c9a7e532654a46f83    (catalog "deinprogramm-doc" "https://github.com/racket/deinprogramm.git?path=deinprogramm-doc#19b387829072ebdade8c77ada0ef4fbd7cc53cfc")
++ deinprogramm-lib*               9fed8f6196f3cecfccea8267f52de9759e6d8a57    (catalog "deinprogramm-lib" "https://github.com/racket/deinprogramm.git?path=deinprogramm-lib#19b387829072ebdade8c77ada0ef4fbd7cc53cfc")
++ deinprogramm-signature*         7d4f040f9e54518835caad93bd1cf079b50a52cf    (catalog "deinprogramm-signature" "git://github.com/racket/deinprogramm?path=deinprogramm-signature#19b387829072ebdade8c77ada0ef4fbd7cc53cfc")
++ deinprogramm-tool*              ee32694a476870db7ba33041ecdee30431889ee0    (catalog "deinprogramm-tool" "https://github.com/racket/deinprogramm.git?path=deinprogramm-tool#19b387829072ebdade8c77ada0ef4fbd7cc53cfc")
++ distributed-places*             f49bba9b6c9953b0e846ca4585c63e39ed042fea    (catalog "distributed-places" "git://github.com/racket/distributed-places/?path=distributed-places#4e75977ab091999dfd7de765e7807fabc06a6bf3")
++ distributed-places-doc*         5f36a625e14b08ce3536704a9a0506d9681bb6fa    (catalog "distributed-places-doc" "git://github.com/racket/distributed-places/?path=distributed-places-doc#4e75977ab091999dfd7de765e7807fabc06a6bf3")
++ distributed-places-lib*         99abc15a73d1631e5e5ee362129ee47bf166f6c3    (catalog "distributed-places-lib" "git://github.com/racket/distributed-places/?path=distributed-places-lib#4e75977ab091999dfd7de765e7807fabc06a6bf3")
++ draw*                           bfeba464041a3b9f40b1846b2c39ee2485783f50    (catalog "draw" "git://github.com/racket/draw/?path=draw#57b2e050a287e4f0c7e26662d4850c6ac62935c3")
++ draw-doc*                       9713a3a991e35283543eacae3dedb5b6c70d9231    (catalog "draw-doc" "git://github.com/racket/draw/?path=draw-doc#57b2e050a287e4f0c7e26662d4850c6ac62935c3")
++ draw-lib*                       e60e1e442d9fd5d24470103cd524b07a7f27a962    (catalog "draw-lib" "git://github.com/racket/draw/?path=draw-lib#57b2e050a287e4f0c7e26662d4850c6ac62935c3")
++ drracket*                       ee54d08699437c8239256e16eb986c393bc88c28    (catalog "drracket" "git://github.com/racket/drracket/?path=drracket#f489a643235b1ae550edc8a3192ad038ab10ff35")
++ drracket-plugin-lib*            3c29f8e7f84e980e242d95f5575c3c905420ad58    (catalog "drracket-plugin-lib" "git://github.com/racket/drracket/?path=drracket-plugin-lib#f489a643235b1ae550edc8a3192ad038ab10ff35")
++ drracket-tool*                  6cb94002f1b0d47f32af8b4940e3c246d525c73d    (catalog "drracket-tool" "git://github.com/racket/drracket/?path=drracket-tool#f489a643235b1ae550edc8a3192ad038ab10ff35")
++ drracket-tool-doc*              4b0734cbfaf15027702e7c89be0e4aa5f5cc373e    (catalog "drracket-tool-doc" "git://github.com/racket/drracket/?path=drracket-tool-doc#f489a643235b1ae550edc8a3192ad038ab10ff35")
++ drracket-tool-lib*              9e78ef5375d1a96683a46b5495ddbdfcd3271f05    (catalog "drracket-tool-lib" "git://github.com/racket/drracket/?path=drracket-tool-lib#f489a643235b1ae550edc8a3192ad038ab10ff35")
++ drracket-tool-text-lib*         fc93f8a8488feeca1d66795dba32475659c21cd4    (catalog "drracket-tool-text-lib" "git://github.com/racket/drracket/?path=drracket-tool-text-lib#f489a643235b1ae550edc8a3192ad038ab10ff35")
++ ds-store*                       18ced54aaafe1f965d99b8c0a9ebc89392dfba5b    (catalog "ds-store" "git://github.com/racket/ds-store/?path=ds-store#949ca63dd00522b3ab8aec2d71c543ece8266872")
++ ds-store-doc*                   f97b58dacff4d51e15ede383567e68f1daeba0c2    (catalog "ds-store-doc" "git://github.com/racket/ds-store/?path=ds-store-doc#949ca63dd00522b3ab8aec2d71c543ece8266872")
++ ds-store-lib*                   9c133e36669b0de8f82811c55971f21750eb40d9    (catalog "ds-store-lib" "git://github.com/racket/ds-store/?path=ds-store-lib#949ca63dd00522b3ab8aec2d71c543ece8266872")
++ dynext-lib*                     9146174f5083bbe052a0e8006d629f877ec397fc    (catalog "dynext-lib" "git://github.com/racket/cext-lib?path=dynext-lib#6c32f1c8365fbce7232f7fb35f8e68cd7619f007")
++ eli-tester*                     28e661bbc0c03c280808408d1b69f5dd16910d6c    (catalog "eli-tester" "git://github.com/racket/eli-tester#036e07d43a1f478ea1750881d5591d983ce1ffaf")
++ eopl*                           1120b7c27f27ffce447651f1a824b9b77023fdfb    (catalog "eopl" "git://github.com/racket/eopl#d313612cd68709eb43b753941b550a2d4b18b516")
++ errortrace*                     39611f5684e1641d1d70eb04ccb2d03df7813ab3    (catalog "errortrace" "git://github.com/racket/errortrace/?path=errortrace#6fb1bd2a1c2de8af52d2bc85d096347381d17fee")
++ errortrace-doc*                 f665a1158039d396acdaf5c6c4f25da198166417    (catalog "errortrace-doc" "git://github.com/racket/errortrace/?path=errortrace-doc#6fb1bd2a1c2de8af52d2bc85d096347381d17fee")
++ errortrace-lib*                 02a1714b49e80e900b4cc8a5c034d780bc83548f    (catalog "errortrace-lib" "git://github.com/racket/errortrace/?path=errortrace-lib#6fb1bd2a1c2de8af52d2bc85d096347381d17fee")
++ expeditor*                      870f438d7ce70bb3872f75ede69a6a7f8ad9324e    (catalog "expeditor" "https://github.com/racket/expeditor.git?path=expeditor#aad241246d474725ae1a095f6ed42bdb14360fd5")
++ expeditor-doc*                  198ef73ad5ba42fcea5d81004c1fda2fa57bf82a    (catalog "expeditor-doc" "https://github.com/racket/expeditor.git?path=expeditor-doc#aad241246d474725ae1a095f6ed42bdb14360fd5")
++ expeditor-lib*                  56166c877897692ce3f2c216fa1d6f52a8cc95ac    (catalog "expeditor-lib" "https://github.com/racket/expeditor.git?path=expeditor-lib#aad241246d474725ae1a095f6ed42bdb14360fd5")
++ frtime*                         6d336f1b90440aa35a55249151e04eeb0b32c7c8    (catalog "frtime" "git://github.com/racket/frtime#a3c93aeae3e3d2a421afb7269ff282c573507cd0")
++ future-visualizer*              cb5dc040fad67c65173dca5b62e903291cb2d702    (catalog "future-visualizer" "git://github.com/racket/future-visualizer/?path=future-visualizer#cdbbb2c6530ad4dd9346dba247c41235727b7ecb")
++ future-visualizer-pict*         a452273a0aa0ae6151bbc44468f5a4795aa3ab55    (catalog "future-visualizer-pict" "https://github.com/racket/future-visualizer.git?path=future-visualizer-pict#cdbbb2c6530ad4dd9346dba247c41235727b7ecb")
++ future-visualizer-typed*        84333db4e511471724a26020950b690c4a9f60f8    (catalog "future-visualizer-typed" "git://github.com/racket/future-visualizer/?path=future-visualizer-typed#cdbbb2c6530ad4dd9346dba247c41235727b7ecb")
++ games*                          75dd6af32f94f8e253b346e28ad735db90d421f5    (catalog "games" "git://github.com/racket/games/#eba5c6fa54c524871badb8b0e205fe37640d6c3e")
++ gui*                            bd750ceb077b3055186ebc8a0bad3cbd32ef837e    (catalog "gui" "git://github.com/racket/gui/?path=gui#cb920d90d8a6867860a9b1bb41f85355fd44852e")
++ gui-doc*                        72c9e9b09e2aad79827f41eac2bd81c0aba791b4    (catalog "gui-doc" "git://github.com/racket/gui/?path=gui-doc#cb920d90d8a6867860a9b1bb41f85355fd44852e")
++ gui-lib*                        59ca119bb58ea6d57a2dc1a02ccbefd1eedd0639    (catalog "gui-lib" "git://github.com/racket/gui/?path=gui-lib#cb920d90d8a6867860a9b1bb41f85355fd44852e")
++ gui-pkg-manager-lib*            2fa48ac9a5e64dc4f715b732326cc6e82c89c483    (catalog "gui-pkg-manager-lib" "git://github.com/racket/gui-pkg-manager/?path=gui-pkg-manager-lib#1cbf111b5a11d5461d1b176c0c2d02660e5cb5dd")
++ htdp*                           19f1649b5c4dfdeefea23a2fd34a4fd49b7d6648    (catalog "htdp" "git://github.com/racket/htdp/?path=htdp#b05d449ace25c5a93d3e48f974cc2ab1fcf81732")
++ htdp-doc*                       548fd679b637babaab643739d419ae684cfe31d9    (catalog "htdp-doc" "git://github.com/racket/htdp/?path=htdp-doc#b05d449ace25c5a93d3e48f974cc2ab1fcf81732")
++ htdp-lib*                       70d2a153793843bfaf16a84fb23127a7064d329e    (catalog "htdp-lib" "git://github.com/racket/htdp/?path=htdp-lib#b05d449ace25c5a93d3e48f974cc2ab1fcf81732")
++ html*                           3d8a7af6ec3f4a30d9f1021f39a16af715e33775    (catalog "html" "git://github.com/racket/html/?path=html#9331d4f7169f8c5932f8d2ae721b2a96515ac895")
++ html-doc*                       50a4e87875835683d20f8d682a8c2b52e339a99f    (catalog "html-doc" "git://github.com/racket/html/?path=html-doc#9331d4f7169f8c5932f8d2ae721b2a96515ac895")
++ html-lib*                       b47aa9d9fe2c20137859650bd2d94ca7d32aa371    (catalog "html-lib" "git://github.com/racket/html/?path=html-lib#9331d4f7169f8c5932f8d2ae721b2a96515ac895")
++ icons*                          399008ed6a12a566e02c447cfb63d33212726c60    (catalog "icons" "git://github.com/racket/icons#14b164c20e1214ffa1e7585d0b6597d5c3f0351a")
++ images*                         d1086aaa94929be834edb5a67f5075d041b2fe10    (catalog "images" "git://github.com/racket/images/?path=images#b3d032087d9544a0561b61fedc09adc2c63ed29d")
++ images-doc*                     aa9f3fc3952b970589f47edd927bdf47846bd75b    (catalog "images-doc" "git://github.com/racket/images/?path=images-doc#b3d032087d9544a0561b61fedc09adc2c63ed29d")
++ images-gui-lib*                 7bbf16335c3a76d680c9d76af86cd84142e522d6    (catalog "images-gui-lib" "git://github.com/racket/images/?path=images-gui-lib#b3d032087d9544a0561b61fedc09adc2c63ed29d")
++ images-lib*                     7f8cff3fe14f54d93ed79e1588342eddc30c1154    (catalog "images-lib" "git://github.com/racket/images/?path=images-lib#b3d032087d9544a0561b61fedc09adc2c63ed29d")
++ lazy*                           493667c1ccfe2547c7b8504f60de113d95c37330    (catalog "lazy" "git://github.com/racket/lazy#985fb8dde464388b52efb6654f87c61b5ec56ddc")
++ macro-debugger*                 cf86265b343dbdd1465c5edd55b8415dbfa2ec68    (catalog "macro-debugger" "git://github.com/racket/macro-debugger/?path=macro-debugger#047c36a4d6a0b15a31d0fa7509999b9bf2c5f295")
++ macro-debugger-text-lib*        9473d72d4fb5ba87910ba1c82c622808249040a4    (catalog "macro-debugger-text-lib" "git://github.com/racket/macro-debugger/?path=macro-debugger-text-lib#047c36a4d6a0b15a31d0fa7509999b9bf2c5f295")
++ main-distribution               4a56b11e5516feb73bfeea362c31ee87888af79e    (catalog "main-distribution" "git://github.com/racket/main-distribution#df36b6bb46f038f6e22a19b7b9d7d061b9631600")
++ make*                           f2badd11ef4c5b38af05c9086bbe3269dcca9f62    (catalog "make" "git://github.com/racket/make#7493795aba151f7164caf497003746dd049b8ae4")
++ math*                           8388ceeaceb7ce4eedac4b353540da3a565c3960    (catalog "math" "git://github.com/racket/math/?path=math#f69552c38622b46823341db1a2fd7a097b236007")
++ math-doc*                       593e5a62d1d0844fd6276808cdbc614a500949f7    (catalog "math-doc" "git://github.com/racket/math/?path=math-doc#f69552c38622b46823341db1a2fd7a097b236007")
++ math-lib*                       20c0a7b5ba309c8f425bf017d222da9709cf6465    (catalog "math-lib" "git://github.com/racket/math/?path=math-lib#f69552c38622b46823341db1a2fd7a097b236007")
++ mysterx*                        8eae5530727a8f50d99de66f0322ff35037e277a    (catalog "mysterx" "git://github.com/racket/mysterx#905834527683db700b87ba2b510c07aa0c688de4")
++ mzcom*                          8ef49297ea2272691a8f7cdbba0d935d78f7fb60    (catalog "mzcom" "git://github.com/racket/mzcom#14a3d57e7020e5fc65d60d20849ca6378f4d4def")
++ mzscheme*                       4ca7ef81511728161a340d9597dca3e84c5a57b3    (catalog "mzscheme" "git://github.com/racket/mzscheme/?path=mzscheme#64d63a78795b4bf3f9ac451ff727ae45183d4cb5")
++ mzscheme-doc*                   c98b600fc807f36a9f73df3d0d1c9775bede7afa    (catalog "mzscheme-doc" "git://github.com/racket/mzscheme/?path=mzscheme-doc#64d63a78795b4bf3f9ac451ff727ae45183d4cb5")
++ mzscheme-lib*                   e3acb26ae940e82b29a78d8eb4bb0c718e635bb7    (catalog "mzscheme-lib" "git://github.com/racket/mzscheme/?path=mzscheme-lib#64d63a78795b4bf3f9ac451ff727ae45183d4cb5")
++ net*                            a4a20937370126b17f04020255459ae178cb06ca    (catalog "net")
++ net-cookies*                    4d2c1f5fa73a68b013dc1442ebb12aee26cf2b54    (catalog "net-cookies" "git://github.com/RenaissanceBug/racket-cookies?path=net-cookies#01bad8ad41f212bebc0d2019b3fc383faaaf7bef")
++ net-cookies-doc*                329f9a7c8cff83428ef22feaee9eb57cae159fcd    (catalog "net-cookies-doc" "git://github.com/RenaissanceBug/racket-cookies?path=net-cookies-doc#01bad8ad41f212bebc0d2019b3fc383faaaf7bef")
++ net-cookies-lib*                3ef2db72a47bc33a7ffec1e007f051552e470189    (catalog "net-cookies-lib" "git://github.com/RenaissanceBug/racket-cookies?path=net-cookies-lib#01bad8ad41f212bebc0d2019b3fc383faaaf7bef")
++ net-doc*                        7039c7fbbf137c332d40b1bab634c9a99e6f24a3    (catalog "net-doc")
++ net-lib*                        1eba00067345849b23e1fdc739aef1cbbdcd08bd    (catalog "net-lib")
++ optimization-coach*             ad040b671cf2d061bdeaa2627931e52dd16086a6    (catalog "optimization-coach" "github://github.com/stamourv/optimization-coach/master#dbd6cf06613bf285b4540301ea86dd87239eab7d")
++ option-contract*                e8cff2dad1aec27c588803856d56daa2286d7392    (catalog "option-contract" "git://github.com/racket/option-contract?path=option-contract#50d72f706ef944689e21b65a6c94b3c819989c59")
++ option-contract-doc*            464f78a8b170e1ff1e36d0657cbd1745181414c9    (catalog "option-contract-doc" "git://github.com/racket/option-contract?path=option-contract-doc#50d72f706ef944689e21b65a6c94b3c819989c59")
++ option-contract-lib*            ddd746d0ea3c041b62326f91dc7a7497afe9fd3d    (catalog "option-contract-lib" "git://github.com/racket/option-contract?path=option-contract-lib#50d72f706ef944689e21b65a6c94b3c819989c59")
++ parser-tools*                   d84cb35ba82a3724e8d69b1d857e2c136861dca1    (catalog "parser-tools" "git://github.com/racket/parser-tools/?path=parser-tools#1fe9d2d3f30302a744914d14f33683d9f8fd41bc")
++ parser-tools-doc*               980e52398bb8ac6fa5474a24f25a569e2c9d5ade    (catalog "parser-tools-doc" "git://github.com/racket/parser-tools/?path=parser-tools-doc#1fe9d2d3f30302a744914d14f33683d9f8fd41bc")
++ parser-tools-lib*               4cc314419495e667f5411fee92d1f830cebc394a    (catalog "parser-tools-lib" "git://github.com/racket/parser-tools/?path=parser-tools-lib#1fe9d2d3f30302a744914d14f33683d9f8fd41bc")
++ pconvert-lib*                   a9c719ce38894e50d01fc78163a76bd9d0312f1f    (catalog "pconvert-lib" "git://github.com/racket/pconvert?path=pconvert-lib#0a09c615441004773c75edebcb91b35fc9a5243b")
++ pict*                           fd1a6dabe9f938b019a302d40d1b708f6e95c62f    (catalog "pict" "git://github.com/racket/pict/?path=pict#0948ecd79f58338d571d17ce4f724dbf2356ebf6")
++ pict-doc*                       5af05397ffaecbb461aea81895317b238b8a1364    (catalog "pict-doc" "git://github.com/racket/pict/?path=pict-doc#0948ecd79f58338d571d17ce4f724dbf2356ebf6")
++ pict-lib*                       b689ba4abccb16e16d179d0ed5c06f45485065bb    (catalog "pict-lib" "git://github.com/racket/pict/?path=pict-lib#0948ecd79f58338d571d17ce4f724dbf2356ebf6")
++ pict-snip*                      659f77fb3813e6e1dccb9ca94774838188371aa2    (catalog "pict-snip" "git://github.com/racket/pict-snip/?path=pict-snip#cd389ba6471a045c791e2dd6e483e356017499d8")
++ pict-snip-doc*                  724b0b361a2702d40dddbaa48b8da79215fadca5    (catalog "pict-snip-doc" "git://github.com/racket/pict-snip/?path=pict-snip-doc#cd389ba6471a045c791e2dd6e483e356017499d8")
++ pict-snip-lib*                  e76e5715178c467f51697637878c036589307275    (catalog "pict-snip-lib" "git://github.com/racket/pict-snip/?path=pict-snip-lib#cd389ba6471a045c791e2dd6e483e356017499d8")
++ picturing-programs*             7e8dc7d5de4719a8ceb09c64544c5899c6e790cd    (catalog "picturing-programs" "git://github.com/racket/picturing-programs#23fc427fed7cfe81d2a84644333ce797c98a0a08")
++ plai*                           1ed5efb3f37523d58da4ab37d19d8367cd0c65ff    (catalog "plai" "git://github.com/racket/plai?path=plai#96c8807a2acde9249f124498e46650223a47e24a")
++ plai-doc*                       d3adc655a82eba4df5c79291f27580349b73a386    (catalog "plai-doc" "git://github.com/racket/plai?path=plai-doc#96c8807a2acde9249f124498e46650223a47e24a")
++ plai-lib*                       d687a141da7c0d6fd0a4aec0073457284b371700    (catalog "plai-lib" "git://github.com/racket/plai?path=plai-lib#96c8807a2acde9249f124498e46650223a47e24a")
++ planet*                         5f8cf129407f2b85ce5943273c0b1e4b99a5384b    (catalog "planet" "git://github.com/racket/planet/?path=planet#350f5da48d98303fe6ee510892c958ed46766154")
++ planet-doc*                     fe499b207758f657c5a2661678f25d2ef0cb9ea4    (catalog "planet-doc" "git://github.com/racket/planet/?path=planet-doc#350f5da48d98303fe6ee510892c958ed46766154")
++ planet-lib*                     f99538ec9455cd9edb87a04f71eb9de3a3a0a9c3    (catalog "planet-lib" "git://github.com/racket/planet/?path=planet-lib#350f5da48d98303fe6ee510892c958ed46766154")
++ plot*                           fc131f070f10f3acfcc1b63f7fc07e5828841f6d    (catalog "plot" "git://github.com/racket/plot/?path=plot#a14222e19736f75bdb9c660ca9c3b78c6e2ee9b3")
++ plot-compat*                    fa41570878403eb20b916731fe1b19aac6d0cabc    (catalog "plot-compat" "git://github.com/racket/plot/?path=plot-compat#a14222e19736f75bdb9c660ca9c3b78c6e2ee9b3")
++ plot-doc*                       74646efb3d54ca7f8de333cf526ab85476745a28    (catalog "plot-doc" "git://github.com/racket/plot/?path=plot-doc#a14222e19736f75bdb9c660ca9c3b78c6e2ee9b3")
++ plot-gui-lib*                   2981320a32da81b0923ebae6d4168658db961c2c    (catalog "plot-gui-lib" "git://github.com/racket/plot/?path=plot-gui-lib#a14222e19736f75bdb9c660ca9c3b78c6e2ee9b3")
++ plot-lib*                       3154d5b43eb7fadb5b8039b72687034fbb847f29    (catalog "plot-lib" "git://github.com/racket/plot/?path=plot-lib#a14222e19736f75bdb9c660ca9c3b78c6e2ee9b3")
++ preprocessor*                   b258265965f49e300e9e03ad05b8f0e473164c8e    (catalog "preprocessor" "git://github.com/racket/preprocessor#8e683244eea9dd5526324529f972947f7111810f")
++ profile*                        f55ed019c9131be6110f98c84b0b414f1adc97c0    (catalog "profile" "git://github.com/racket/profile/?path=profile#9abad640b1a335c04656f9de975f41e76b89608e")
++ profile-doc*                    4fde72c426fc7bb1146edf58e0bf323a68fea71e    (catalog "profile-doc" "git://github.com/racket/profile/?path=profile-doc#9abad640b1a335c04656f9de975f41e76b89608e")
++ profile-lib*                    92e6aaca11b3e737d9227b3f6db8c71f623f6fc8    (catalog "profile-lib" "git://github.com/racket/profile/?path=profile-lib#9abad640b1a335c04656f9de975f41e76b89608e")
++ quickscript*                    a91c11a574b110d236b80035863b9482d6364a9e    (catalog "quickscript" "https://github.com/Metaxal/quickscript.git#5870a5a6087275b984c38a5761f2a8c62fc8f7a2")
++ r5rs*                           879453735fa7e6560d5c7b46e769372b2fce1379    (catalog "r5rs" "git://github.com/racket/r5rs/?path=r5rs#b2672d845419893d69e96453fe4d6d3d587ae22f")
++ r5rs-doc*                       e5a7425391a096d537f5b6a9f63373ed5f3805d5    (catalog "r5rs-doc" "git://github.com/racket/r5rs/?path=r5rs-doc#b2672d845419893d69e96453fe4d6d3d587ae22f")
++ r5rs-lib*                       0754646316f947719e2f3fdeb82a95e596d21bac    (catalog "r5rs-lib" "git://github.com/racket/r5rs/?path=r5rs-lib#b2672d845419893d69e96453fe4d6d3d587ae22f")
++ r6rs*                           5a3b005d23d08fb15bc453a64b497c4fee24e2f7    (catalog "r6rs" "git://github.com/racket/r6rs/?path=r6rs#850b1278e327897bba4b245fc696dee66ceead02")
++ r6rs-doc*                       a29cc225e6b51eebfb5f765de3f72b8d66e45cd4    (catalog "r6rs-doc" "git://github.com/racket/r6rs/?path=r6rs-doc#850b1278e327897bba4b245fc696dee66ceead02")
++ r6rs-lib*                       0467cf70db65d2687bc94e8ba26e3dcbae6b8725    (catalog "r6rs-lib" "git://github.com/racket/r6rs/?path=r6rs-lib#850b1278e327897bba4b245fc696dee66ceead02")
++ racket-cheat*                   32bedcafbcc97825064c07d4334375692b1ae8e6    (catalog "racket-cheat" "git://github.com/jeapostrophe/racket-cheat#6e79a13b9e24969a87c8a1c191d38ee4f4c55cf9")
++ racket-doc*                     f8d72500c9fa11b52f97bc0dad52df43201063a2    (catalog "racket-doc")
++ racket-index*                   4c9e6d8df80c12d28ad04dacc2dd31caa35360c7    (catalog "racket-index")
++ racket-lib                      84eb4b8cfd30fe9a7808e6d3127f5c94b7cb3fb7    (catalog "racket-lib")
++ racklog*                        6802af410297dd2f7fa527e47539d2f0813133d8    (catalog "racklog" "git://github.com/racket/racklog#5e1277066f3f6fcb7a385835ace312ca3e2e4760")
++ rackunit*                       0bf96c4dfa00215bfafc1a695bc3bba8785b97f5    (catalog "rackunit" "git://github.com/racket/rackunit/?path=rackunit#66bd6a38229c82dd35759c4ef20921c911637973")
++ rackunit-doc*                   e8c850578ea32ae1ba6c14eaf4adc69535b8a5d6    (catalog "rackunit-doc" "git://github.com/racket/rackunit/?path=rackunit-doc#66bd6a38229c82dd35759c4ef20921c911637973")
++ rackunit-gui*                   54d3f641cc3c8fd5e76abb32e3d88626a152870d    (catalog "rackunit-gui" "git://github.com/racket/rackunit/?path=rackunit-gui#66bd6a38229c82dd35759c4ef20921c911637973")
++ rackunit-lib*                   7ab6dcaa52844399ebfa47f861e8e80a7602aba9    (catalog "rackunit-lib" "git://github.com/racket/rackunit/?path=rackunit-lib#66bd6a38229c82dd35759c4ef20921c911637973")
++ rackunit-plugin-lib*            65b0d258b81acf22450a123e0347a3cee2715e69    (catalog "rackunit-plugin-lib" "git://github.com/racket/rackunit/?path=rackunit-plugin-lib#66bd6a38229c82dd35759c4ef20921c911637973")
++ rackunit-typed*                 051744aec091b7a07d99b616ef4e7ab1447ee18d    (catalog "rackunit-typed" "https://github.com/racket/rackunit.git?path=rackunit-typed#66bd6a38229c82dd35759c4ef20921c911637973")
++ readline*                       8d366d32cefc3a319dcceece772aaa71bbe9f746    (catalog "readline" "git://github.com/racket/readline/?path=readline#df55a811d57d6677959fde479106bc43b99d6bdd")
++ readline-doc*                   9c95ba3b18a6f0dbe912ab7096dcb71894ccfede    (catalog "readline-doc" "git://github.com/racket/readline/?path=readline-doc#df55a811d57d6677959fde479106bc43b99d6bdd")
++ readline-lib*                   96fdd90ea4d32bfa01b278c8d1872507e87e20cf    (catalog "readline-lib" "git://github.com/racket/readline/?path=readline-lib#df55a811d57d6677959fde479106bc43b99d6bdd")
++ realm*                          422c616359d9f85644b63d1fda7d6fd84985a2a9    (catalog "realm" "git://github.com/racket/realm#d4509a0c42171f4ffbdd67b9acb0b774957be02b")
++ redex*                          faae2bf05fed1078e9cef6929a26c984c15a4474    (catalog "redex" "git://github.com/racket/redex/?path=redex#1becfbac857a2306c800d2f87bf64c2414d3ff9a")
++ redex-benchmark*                1633795877933b6e7fc6f51b0050dbf3e112d8ae    (catalog "redex-benchmark" "git://github.com/racket/redex/?path=redex-benchmark#1becfbac857a2306c800d2f87bf64c2414d3ff9a")
++ redex-doc*                      47df0967ced83513d6fdc2fcaeba350862125bff    (catalog "redex-doc" "git://github.com/racket/redex/?path=redex-doc#1becfbac857a2306c800d2f87bf64c2414d3ff9a")
++ redex-examples*                 9d38ade9867f0fde0289dbc7be32080d6c75865d    (catalog "redex-examples" "git://github.com/racket/redex/?path=redex-examples#1becfbac857a2306c800d2f87bf64c2414d3ff9a")
++ redex-gui-lib*                  cb5374a7877eb49e08097278c7582d10db70d7a7    (catalog "redex-gui-lib" "git://github.com/racket/redex/?path=redex-gui-lib#1becfbac857a2306c800d2f87bf64c2414d3ff9a")
++ redex-lib*                      8d287f6211873189d0b0ce0154e124f2d7ffa085    (catalog "redex-lib" "git://github.com/racket/redex/?path=redex-lib#1becfbac857a2306c800d2f87bf64c2414d3ff9a")
++ redex-pict-lib*                 bd0edf02644663e23a8410e9882c4f254f31227f    (catalog "redex-pict-lib" "git://github.com/racket/redex/?path=redex-pict-lib#1becfbac857a2306c800d2f87bf64c2414d3ff9a")
++ sandbox-lib*                    f469b5475da98eb4820fefe41c3f3b4df7eaf402    (catalog "sandbox-lib")
++ sasl*                           b25c5de8f21d803ecb627328b22ed2b338e5055c    (catalog "sasl" "https://github.com/racket/sasl.git?path=sasl#961c9f07287c963236aec8f541ddb1335782db48")
++ sasl-doc*                       c5edcdb9e6417524aad10bb098b20fbf29df8818    (catalog "sasl-doc" "https://github.com/racket/sasl.git?path=sasl-doc#961c9f07287c963236aec8f541ddb1335782db48")
++ sasl-lib*                       30d3522e36080bb5ed14021ba617a75593255b25    (catalog "sasl-lib" "https://github.com/racket/sasl.git?path=sasl-lib#961c9f07287c963236aec8f541ddb1335782db48")
++ scheme-doc*                     eb94f8bc68d8535df01b5a575fdcb08d86037818    (catalog "scheme-doc")
++ scheme-lib*                     c225d4adb1256f37b061afbad7838ce6b5a62db7    (catalog "scheme-lib" "git://github.com/racket/scheme-lib#408f9398ec237b791ca103bb9e1400df1cef18f5")
++ schemeunit*                     6e854d6632f62f0b6ce22829d55f949e0e2cfd4a    (catalog "schemeunit" "git://github.com/racket/rackunit/?path=schemeunit#66bd6a38229c82dd35759c4ef20921c911637973")
++ scribble*                       63f540f5b3286b31de854a71b7aa8b7975e55eac    (catalog "scribble" "git://github.com/racket/scribble/?path=scribble#c95a16a41636d112ea436335b014c808acba2842")
++ scribble-doc*                   64a8511ea08dfd823a331d241bd2c32f98fdd75c    (catalog "scribble-doc" "git://github.com/racket/scribble/?path=scribble-doc#c95a16a41636d112ea436335b014c808acba2842")
++ scribble-html-lib*              0a4559b0a1ed31c034321d34eefd2bdf84a3e538    (catalog "scribble-html-lib" "git://github.com/racket/scribble/?path=scribble-html-lib#c95a16a41636d112ea436335b014c808acba2842")
++ scribble-lib*                   d1f7b2879634cc267e155469fe529b9e8b022ea3    (catalog "scribble-lib" "git://github.com/racket/scribble/?path=scribble-lib#c95a16a41636d112ea436335b014c808acba2842")
++ scribble-text-lib*              0d8004d864fcb8d5523fcb20000fa7933260f7b6    (catalog "scribble-text-lib" "git://github.com/racket/scribble/?path=scribble-text-lib#c95a16a41636d112ea436335b014c808acba2842")
++ serialize-cstruct-lib*          9df43a25d18d457b300dad2a6c8b373f8d8c30a0    (catalog "serialize-cstruct-lib" "git://github.com/racket/serialize-cstruct-lib#cabf4188a34c70af2f6a376fc3b0f55d035a2ab7")
++ sgl*                            ec9b3d51ffeac73177cd3ea16a67783a2b1f9488    (catalog "sgl" "git://github.com/racket/sgl#d1906923a74a362a2bfb32f3b9bfe1351f4d1534")
++ shell-completion*               a6b4b50e6c36fae4a7b95a4b5e2e650a16a5e9c9    (catalog "shell-completion" "git://github.com/racket/shell-completion#3bc582e4167a46ade43dfd50df06a2e6e08e90ab")
++ simple-tree-text-markup*        209afeb3f89952ee1ec711b23e344fc6f10a2246    (catalog "simple-tree-text-markup" "https://github.com/racket/simple-tree-text-markup.git?path=simple-tree-text-markup#06bbcd3651e518a53cffa5f8484fe127574fed06")
++ simple-tree-text-markup-doc*    da521ea3e4229d5d3d0c7f439735224316fa9664    (catalog "simple-tree-text-markup-doc" "https://github.com/racket/simple-tree-text-markup.git?path=simple-tree-text-markup-doc#06bbcd3651e518a53cffa5f8484fe127574fed06")
++ simple-tree-text-markup-lib*    0228332ef81fef6620576c5e0e555223fb81fc09    (catalog "simple-tree-text-markup-lib" "https://github.com/racket/simple-tree-text-markup.git?path=simple-tree-text-markup-lib#06bbcd3651e518a53cffa5f8484fe127574fed06")
++ slatex*                         7b470c4e82e6ced335e1b7909ffca324d07fba57    (catalog "slatex" "git://github.com/racket/slatex#47e1d3e3e33d826bc2b26f9e8998eb235b23a9a5")
++ slideshow*                      bc09ec250d354842d14d44f595dab7ea6fc2b17c    (catalog "slideshow" "git://github.com/racket/slideshow/?path=slideshow#7c445d257842becc8dcd864d9448e60b77a1475d")
++ slideshow-doc*                  3a182c2ae10c8b5fb42e5b32466341fa5212c014    (catalog "slideshow-doc" "git://github.com/racket/slideshow/?path=slideshow-doc#7c445d257842becc8dcd864d9448e60b77a1475d")
++ slideshow-exe*                  7f9e1832ce2aa608818d5961bc5972420b483c2c    (catalog "slideshow-exe" "git://github.com/racket/slideshow/?path=slideshow-exe#7c445d257842becc8dcd864d9448e60b77a1475d")
++ slideshow-lib*                  298bad818485fd3369f9285e76d1c655f615dcd2    (catalog "slideshow-lib" "git://github.com/racket/slideshow/?path=slideshow-lib#7c445d257842becc8dcd864d9448e60b77a1475d")
++ slideshow-plugin*               dce2bb2839e57ff85cc9900d6e2db294e11cfa78    (catalog "slideshow-plugin" "git://github.com/racket/slideshow/?path=slideshow-plugin#7c445d257842becc8dcd864d9448e60b77a1475d")
++ snip*                           52ccea3674be0fb0e22dfeee8f7fe49e49c13c08    (catalog "snip" "git://github.com/racket/snip/?path=snip#883d29239170a3eb6dc68ed49714c596b940bc64")
++ snip-lib*                       5ca159bbf714a85feb5d1d60a8b9942d4ec17cd5    (catalog "snip-lib" "git://github.com/racket/snip/?path=snip-lib#883d29239170a3eb6dc68ed49714c596b940bc64")
++ source-syntax*                  650711beacc13f8f37f9cf16ff99c81e05a554b2    (catalog "source-syntax" "git://github.com/racket/typed-racket/?path=source-syntax#fe2d19e1672de14420f7173af82722d1246e99c4")
++ srfi*                           dcff71a79d50e37f060ff0749d15be70de437ec1    (catalog "srfi" "git://github.com/racket/srfi/?path=srfi#cab009da67adf40737ae7ff02cd7c8bd6316d61d")
++ srfi-doc*                       35eabf654dadbffdb637d037a3985fc9afb47d40    (catalog "srfi-doc" "git://github.com/racket/srfi/?path=srfi-doc#cab009da67adf40737ae7ff02cd7c8bd6316d61d")
++ srfi-lib*                       a4fb7a7427e8ccda67028cb31d01eec901c8005d    (catalog "srfi-lib" "git://github.com/racket/srfi/?path=srfi-lib#cab009da67adf40737ae7ff02cd7c8bd6316d61d")
++ srfi-lite-lib*                  bdaf2aeac3c58fd12ec6b6a42ee13b18b58659cb    (catalog "srfi-lite-lib" "git://github.com/racket/srfi/?path=srfi-lite-lib#cab009da67adf40737ae7ff02cd7c8bd6316d61d")
++ string-constants*               cdfedeb2018becfaacec98126e81a6e9a3c79bad    (catalog "string-constants" "git://github.com/racket/string-constants/?path=string-constants#d25cb1ab4db7be56fda00effcc3a657b7a33c1c8")
++ string-constants-doc*           ccc65af3becfaa1a3800fa846a5cefd57cdd1bd4    (catalog "string-constants-doc" "git://github.com/racket/string-constants/?path=string-constants-doc#d25cb1ab4db7be56fda00effcc3a657b7a33c1c8")
++ string-constants-lib*           064ae707afcd83b21a9590b8715cda8b2db741b0    (catalog "string-constants-lib" "git://github.com/racket/string-constants/?path=string-constants-lib#d25cb1ab4db7be56fda00effcc3a657b7a33c1c8")
++ swindle*                        171e25a0f13bf779c0cfa2e187e7f59fa3d071d9    (catalog "swindle" "git://github.com/racket/swindle#2d57ccb91e1193b8591c6aab72ae1aba3c19bf96")
++ syntax-color*                   6ce2bf67b07315527a96786d36ffd5e8825e6dd5    (catalog "syntax-color" "git://github.com/racket/syntax-color/?path=syntax-color#ed90fe2eaa64f2bb761b9463094c139aaabad832")
++ syntax-color-doc*               62db3fc0136e1537e0265d3d3eca20e5eaccbd1b    (catalog "syntax-color-doc" "git://github.com/racket/syntax-color/?path=syntax-color-doc#ed90fe2eaa64f2bb761b9463094c139aaabad832")
++ syntax-color-lib*               cc327c4f6162dc6acd6a7048749067814bf5a31e    (catalog "syntax-color-lib" "git://github.com/racket/syntax-color/?path=syntax-color-lib#ed90fe2eaa64f2bb761b9463094c139aaabad832")
++ testing-util-lib*               e5120a23fc6227446c29777cce70787a7bda5a92    (catalog "testing-util-lib" "git://github.com/racket/rackunit/?path=testing-util-lib#66bd6a38229c82dd35759c4ef20921c911637973")
++ tex-table*                      b433133dac5b645f8e5555807d81d15600cbaec3    (catalog "tex-table" "git://github.com/racket/gui/?path=tex-table#cb920d90d8a6867860a9b1bb41f85355fd44852e")
++ trace*                          c84997007ad90105311bd3834216d7848a97daa8    (catalog "trace" "git://github.com/racket/trace#7878c9ed33da27810a55d8bdd603f56dd4c89fb7")
++ typed-racket*                   bf471c40aa046fa3f5b84679f86d4063d920e7a0    (catalog "typed-racket" "git://github.com/racket/typed-racket/?path=typed-racket#fe2d19e1672de14420f7173af82722d1246e99c4")
++ typed-racket-compatibility*     f815db419251fe7b5ecb23a863c73f8ae5b14eb6    (catalog "typed-racket-compatibility" "git://github.com/racket/typed-racket/?path=typed-racket-compatibility#fe2d19e1672de14420f7173af82722d1246e99c4")
++ typed-racket-doc*               d64591302e37240462e3c38967b8aeca2a366be9    (catalog "typed-racket-doc" "git://github.com/racket/typed-racket/?path=typed-racket-doc#fe2d19e1672de14420f7173af82722d1246e99c4")
++ typed-racket-lib*               dc9ba22a642b471b0aeae92273e8986cb2ffd39f    (catalog "typed-racket-lib" "git://github.com/racket/typed-racket/?path=typed-racket-lib#fe2d19e1672de14420f7173af82722d1246e99c4")
++ typed-racket-more*              da9f5538ea40a4a5e73be7f7b460da5a558c5c18    (catalog "typed-racket-more" "git://github.com/racket/typed-racket/?path=typed-racket-more#fe2d19e1672de14420f7173af82722d1246e99c4")
++ unix-socket*                    114923d6c155f490de72b84ab828175796ba4861    (catalog "unix-socket" "git://github.com/racket/unix-socket?path=unix-socket#698eade65ae2cd8b747ba08a3820950e385b2a81")
++ unix-socket-doc*                8c0043173965e2df802e85bb74acfabcecc0edbe    (catalog "unix-socket-doc" "git://github.com/racket/unix-socket?path=unix-socket-doc#698eade65ae2cd8b747ba08a3820950e385b2a81")
++ unix-socket-lib*                342130da277bf4fce5e50155589e6b74b69ac118    (catalog "unix-socket-lib" "git://github.com/racket/unix-socket?path=unix-socket-lib#698eade65ae2cd8b747ba08a3820950e385b2a81")
++ web-server*                     9d73262ada60d8fbc88b9a4974472b8692b2a39e    (catalog "web-server" "git://github.com/racket/web-server/?path=web-server#87a1e58a9b92c621f7d96c76de1da39587f04140")
++ web-server-doc*                 73e2554e0d05b222cbc84e299a60fe0bbde4e2aa    (catalog "web-server-doc" "git://github.com/racket/web-server/?path=web-server-doc#87a1e58a9b92c621f7d96c76de1da39587f04140")
++ web-server-lib*                 9a02711814b84e7061889678c37da913b840fbbb    (catalog "web-server-lib" "git://github.com/racket/web-server/?path=web-server-lib#87a1e58a9b92c621f7d96c76de1da39587f04140")
++ wxme*                           4efe4ea8838ca80402a803fb87e0ebdb6c617b1b    (catalog "wxme" "git://github.com/racket/wxme/?path=wxme#555a380a63e63977fec77c4063d58f6bdf646249")
++ wxme-lib*                       3457c9b4ec01153ed0e76e524b577d7fd8300a44    (catalog "wxme-lib" "git://github.com/racket/wxme/?path=wxme-lib#555a380a63e63977fec77c4063d58f6bdf646249")
++ xrepl*                          701265cc48360544533af859a1c6a021b9e5dd52    (catalog "xrepl" "git://github.com/racket/xrepl/?path=xrepl#3240161a25073e204cb7618deac5a632f6477aa5")
++ xrepl-doc*                      06c07c52e587c0597b7db689a2da0708d6f2a001    (catalog "xrepl-doc" "git://github.com/racket/xrepl/?path=xrepl-doc#3240161a25073e204cb7618deac5a632f6477aa5")
++ xrepl-lib*                      7459ed6f140cb8dda8bb2fb2d498c594b0248034    (catalog "xrepl-lib" "git://github.com/racket/xrepl/?path=xrepl-lib#3240161a25073e204cb7618deac5a632f6477aa5")
++ zo-lib*                         c1cf2d2e8913b0e99f6f5fa1a1811d3e61a0e432    (catalog "zo-lib")
++User-specific for installation "8.16":
++ Package[*=auto]        Checksum                                    Source
++ actor-lib*             0d46e1f039bbc22372171a077884f28ccd283c93    (catalog "actor-lib" "https://github.com/Bogdanp/racket-actor.git?path=actor-lib")
++ colorize*              c45489d9dd5c55c7853c2906d1e0ec012eaab085    (catalog "colorize" "https://github.com/yanyingwang/colorize.git")
++ ejs*                   0b5662f923de3f27b90bf337488ea84e773446df    (catalog "ejs" "https://github.com/jessealama/ejs.git")
++ finalizer*             74517770d70b786a3df48fd20ea9ea8059e4a641    (catalog "finalizer" "git://github.com/Kalimehtar/finalizer")
++ html-writing*          d0e12121d24dc7f1aebbac048bae09fa1f6507b6    (catalog "html-writing")
++ http-easy-lib*         d099f4025f93b5938b7a66db821aa4888e2a2afc    (catalog "http-easy-lib" "https://github.com/Bogdanp/racket-http-easy.git?path=http-easy-lib")
++ ini-lib*               93d9806b9d3bedd1ad1f0c38c03bd230c6d8ffda    (catalog "ini-lib" "https://gitlab.com/xgqt/racket-ini.git?path=src%2Fini-lib")
++ json-pointer*          b42f51894d252871e53dd874fcdf7e7aedbd5134    (catalog "json-pointer" "https://github.com/jessealama/json-pointer.git")
++ mcfly*                 e670b083eefe6ac27c23cc9423bac0f31720d58c    (catalog "mcfly")
++ memo*                  3ecfa4ad20c38ce97fedaed848d08348e92c56d3    (catalog "memo" "https://github.com/BourgondAries/memo.git")
++ nested-hash*           c562dbe1cf54d8604e56db14526f03c9b6c75b5b    (catalog "nested-hash" "https://github.com/BourgondAries/nested-hash.git")
++ overeasy*              f7cff9a14b313c4a51e1dcd47bb3aa4fe7d50526    (catalog "overeasy")
++ req-lib                75eacbbbe7f929b10f97fd884f33a01cbad099ae    (catalog "req-lib" "https://gitlab.com/xgqt/racket-req.git?path=src%2Freq-lib")
++ resource-pool-lib*     323ca977ab55f526582f322f148cf684b79896c3    (catalog "resource-pool-lib" "https://github.com/Bogdanp/racket-resource-pool.git?path=resource-pool-lib")
++ sequence-tools-lib*    18e2fc68ce957bcde5b954d3f864a5e520f57728    (catalog "sequence-tools-lib" "https://github.com/racket/racket.git?path=pkgs%2Fsequence-tools-lib")
++ thread-utils*          f81ebfaf8453acb3a938917c1a505c94af92ef87    (catalog "thread-utils" "https://github.com/Kalimehtar/thread-utils.git")
++ threading-lib*         e79cfe551740baf9f696f452d7507a6f2ed00a05    (catalog "threading-lib" "git://github.com/lexi-lambda/threading?path=threading-lib")
++ typed-ini-lib*         93d9806b9d3bedd1ad1f0c38c03bd230c6d8ffda    (catalog "typed-ini-lib" "https://gitlab.com/xgqt/racket-ini.git?path=src%2Ftyped-ini-lib")
+diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
+new file mode 100644
+index 0000000..7de1675
+--- /dev/null
++++ b/UTILIBRE-SOURCE.txt
+@@ -0,0 +1,20 @@
++BreezeWiki on Utilibre
++Upstream https://gitdab.com/cadence/breezewiki
++Revision 6d09507b6e7ecec0cbac4c2c4eb223c10ccc23a4
++Original AGPL-3.0 license and notices are preserved.
++
++Changes: the Racket HTTP client uses a loopback-only adapter for Fandom requests.
++The adapter uses Python's standard TLS-verifying HTTPS client for Fandom APIs,
++and curl with its genuine default user agent for the static image CDN. API
++requests identify as BreezeWiki. It forwards no visitor credentials/IP and does not impersonate a
++browser, solve challenges, rotate proxies, or use third-party mirrors. Upstream
++rejections remain errors. HTTPS destination allowlisting, DNS/IP pinning, bounded
++workers, response size/deadline limits are enforced. JSONP is off; images/styles
++remain proxied. Article/category/file renderers now pass the strict-proxy setting
++to the tree updater. The existing source link points to this corresponding archive.
++
++Build with Dockerfile.utilibre. It installs Debian-maintained Racket and resolves
++dependencies listed in req.rktd. UTILIBRE-RACKET-PACKAGES.txt records exact package
++checksums of the deployed build. Keep source and deployment configuration together
++when distributing modifications. Runtime is non-root/read-only with RAM-only
++storage. App and edge availability are separate checks.
+diff --git a/deployment/wiki-firewall.sh b/deployment/wiki-firewall.sh
+new file mode 100644
+index 0000000..11a6ca6
+--- /dev/null
++++ b/deployment/wiki-firewall.sh
+@@ -0,0 +1,15 @@
++#!/bin/sh
++# Apply only to the pinned BreezeWiki container IP; redirects and DNS
++# rebinding must not open a route into the host or private network.
++set -eu
++chain=UTILIBRE-WIKI-OUT
++iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
++iptables -w -F "$chain"
++iptables -w -A "$chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++for network in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/4 240.0.0.0/4; do
++  iptables -w -A "$chain" -d "$network" -j DROP
++done
++iptables -w -A "$chain" -p tcp -m multiport --dports 80,443 -j RETURN
++iptables -w -A "$chain" -j DROP
++iptables -w -C DOCKER-USER -s 172.29.71.10 -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s 172.29.71.10 -j "$chain"
++iptables -w -C INPUT -s 172.29.71.10 -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s 172.29.71.10 -m conntrack --ctstate NEW -j DROP
+diff --git a/deployment/wiki-gateway.conf b/deployment/wiki-gateway.conf
+new file mode 100644
+index 0000000..127679f
+--- /dev/null
++++ b/deployment/wiki-gateway.conf
+@@ -0,0 +1,62 @@
++worker_processes 1;
++pid /tmp/nginx.pid;
++error_log /dev/stderr warn;
++events { worker_connections 256; }
++http {
++  include /etc/nginx/mime.types;
++  access_log off;
++  server_tokens off;
++  client_body_temp_path /tmp/client;
++  proxy_temp_path /tmp/proxy;
++  fastcgi_temp_path /tmp/fastcgi;
++  uwsgi_temp_path /tmp/uwsgi;
++  scgi_temp_path /tmp/scgi;
++  set_real_ip_from 10.10.1.3;
++  real_ip_header X-Real-IP;
++  limit_req_zone $binary_remote_addr zone=wiki:1m rate=30r/m;
++  limit_req_zone $binary_remote_addr zone=wiki_assets:1m rate=8r/s;
++  limit_conn_zone $binary_remote_addr zone=connections:1m;
++  limit_req_status 429;
++  proxy_cache_path /tmp/cache levels=1:2 keys_zone=wiki_cache:8m max_size=64m inactive=10m;
++  resolver 127.0.0.11 valid=10s ipv6=off;
++  server {
++    listen 8080;
++    client_max_body_size 1k;
++    if ($request_method !~ ^(GET|HEAD)$) { return 405; }
++    add_header Referrer-Policy no-referrer always;
++    add_header X-Content-Type-Options nosniff always;
++    add_header X-Frame-Options DENY always;
++    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" always;
++    location /utilibre-source/ { alias /srv/utilibre-source/; autoindex off; }
++    location ~ ^/(static/|proxy$) {
++      limit_req zone=wiki_assets burst=80;
++      limit_conn connections 32;
++      set $wiki_backend http://breezewiki:10416;
++      proxy_pass $wiki_backend;
++      proxy_set_header Host wiki.utilibre.org;
++      proxy_set_header Cookie "";
++      proxy_hide_header Set-Cookie;
++      proxy_cache wiki_cache;
++      proxy_cache_valid 200 5m;
++      proxy_cache_lock on;
++      proxy_read_timeout 30s;
++      proxy_max_temp_file_size 0;
++    }
++    location / {
++      limit_req zone=wiki burst=20 nodelay;
++      limit_conn connections 6;
++      set $wiki_backend http://breezewiki:10416;
++      proxy_pass $wiki_backend;
++      proxy_set_header Host $host;
++      proxy_set_header X-Forwarded-Proto https;
++      proxy_set_header Cookie "";
++      proxy_hide_header Set-Cookie;
++      proxy_cache wiki_cache;
++      proxy_cache_valid 200 5m;
++      proxy_cache_lock on;
++      proxy_connect_timeout 10s;
++      proxy_read_timeout 30s;
++      proxy_max_temp_file_size 16m;
++    }
++  }
++}
+diff --git a/src/application-globals.rkt b/src/application-globals.rkt
+index b6ea380..ddb5082 100644
+--- a/src/application-globals.rkt
++++ b/src/application-globals.rkt
+@@ -51,7 +51,7 @@
+                 (div (p
+                       (img (@ (class "my-logo") (src ,(get-static-url "breezewiki.svg")))))
+                      (p
+-                      (a (@ (href "https://gitdab.com/cadence/breezewiki"))
++                      (a (@ (href "/utilibre-source/breezewiki-utilibre.tar.gz"))
+                          ,(format "~a source code" (config-get 'application_name))))
+                      (p
+                       (a (@ (href "https://docs.breezewiki.com"))
+diff --git a/src/fandom-request.rkt b/src/fandom-request.rkt
+index 89e5276..79daca3 100644
+--- a/src/fandom-request.rkt
++++ b/src/fandom-request.rkt
+@@ -54,7 +54,7 @@
+      (define host (format "~a.fandom.com" wikiname))
+      (log-outgoing wikiname path)
+      (define res
+-       (get dest-url
++       (get (string-append "http://127.0.0.1:10417/fetch?" (params->query `(("url" . ,dest-url))))
+             #:timeouts timeouts
+             #:headers (hash-set (or headers no-headers) 'Host host)))
+      (when (memq (response-status-code res) '(403 406))
+diff --git a/src/page-category.rkt b/src/page-category.rkt
+index 22fb2b4..67432d1 100644
+--- a/src/page-category.rkt
++++ b/src/page-category.rkt
+@@ -9,6 +9,7 @@
+          web-server/http
+          (only-in web-server/dispatchers/dispatch next-dispatcher)
+          "application-globals.rkt"
++         "config.rkt"
+          "endpoints.rkt"
+          "../lib/tree-updater.rkt"
+          "../lib/url-utils.rkt"
+@@ -41,7 +42,7 @@
+    #:head-data head-data
+    #:siteinfo siteinfo
+    `(div
+-     ,(update-tree-wiki page wikiname)
++     ,(update-tree-wiki page wikiname #:strict-proxy? (config-true? 'strict_proxy))
+      (hr)
+      (h2 ,(format "All Pages in ~a" title))
+      (div (@ (class "mw-parser-output"))
+diff --git a/src/page-file.rkt b/src/page-file.rkt
+index 364e461..b7e8c8d 100644
+--- a/src/page-file.rkt
++++ b/src/page-file.rkt
+@@ -9,6 +9,7 @@
+          web-server/http
+          (only-in web-server/dispatchers/dispatch next-dispatcher)
+          "application-globals.rkt"
++         "config.rkt"
+          "endpoints.rkt"
+          "../lib/tree-updater.rkt"
+          "../lib/url-utils.rkt"
+@@ -107,7 +108,7 @@
+    `(div ,(get-media-html maybe-proxied-image-url (jp "/imageinfo/0" imageinfo-inner))
+          (p (a (@ (href ,maybe-proxied-image-url)) "Download original file"))
+          ,(if (pair? (jp "/parse/sections" wikipage))
+-              (update-tree-wiki (html->xexp (preprocess-html-wiki (jp "/parse/text" wikipage ""))) wikiname)
++              (update-tree-wiki (html->xexp (preprocess-html-wiki (jp "/parse/text" wikipage ""))) wikiname #:strict-proxy? (config-true? 'strict_proxy))
+               ; file license info wasn't displayed in the description (example: /lgbtqia/wiki/File:Rainbow_Flag1.svg)
+               `(p "This file may be copyrighted. Consider licensing and fair use law before reusing it."))
+          (p "Uploaded by "
+diff --git a/src/page-proxy.rkt b/src/page-proxy.rkt
+index cd94603..4ca7276 100644
+--- a/src/page-proxy.rkt
++++ b/src/page-proxy.rkt
+@@ -20,7 +20,7 @@
+     [(? string? dest)
+      (if (is-fandom-url? dest)
+          (response-handler ; catches and reports errors
+-          (let ([dest-r (easy:get dest #:stream? #t)])
++          (let ([dest-r (easy:get (string-append "http://127.0.0.1:10417/fetch?" (params->query `(("url" . ,dest)))) #:stream? #t)])
+             (with-handlers ([exn:fail? (λ (e) ; cleans up and re-throws
+                                          (easy:response-close! dest-r)
+                                          (raise e))])
+diff --git a/src/page-wiki.rkt b/src/page-wiki.rkt
+index d87cb96..a0d22b4 100644
+--- a/src/page-wiki.rkt
++++ b/src/page-wiki.rkt
+@@ -10,6 +10,7 @@
+          web-server/dispatchers/dispatch
+          ; my libs
+          "application-globals.rkt"
++         "config.rkt"
+          "endpoints.rkt"
+          "../lib/tree-updater.rkt"
+          "../lib/url-utils.rkt"
+@@ -44,7 +45,7 @@
+    (define head-data ((head-data-getter wikiname) wikipage))
+    (define body
+      (generate-wiki-page
+-      (update-tree-wiki page wikiname)
++      (update-tree-wiki page wikiname #:strict-proxy? (config-true? 'strict_proxy))
+       #:req req
+       #:source-url source-url
+       #:wikiname wikiname
+@@ -182,4 +183,3 @@
+              path
+              (easy:response-status-code dest-res)
+              (easy:response-body dest-res)))]))
+-
+diff --git a/utilibre-transport.py b/utilibre-transport.py
+new file mode 100644
+index 0000000..aa3a4a7
+--- /dev/null
++++ b/utilibre-transport.py
+@@ -0,0 +1,145 @@
++"""Ordinary verified HTTPS transport; no browser impersonation or challenge solver.
++
++Loopback-only adapter for BreezeWiki's Racket client. Restricts every destination,
++pins public DNS answers, bounds workers/response size/time, and forwards no visitor
++identity. TLS certificates are always verified. Upstream denials remain denials.
++"""
++import concurrent.futures
++import http.client
++import http.server
++import ipaddress
++import re
++import signal
++import socket
++import ssl
++import subprocess
++import threading
++import time
++import urllib.parse
++
++CONTEXT = ssl.create_default_context()
++MAX_BODY = 12 * 1024 * 1024
++
++def checked_url(value):
++    if len(value) > 8192 or any(ord(c) < 32 for c in value):
++        raise ValueError("Invalid URL")
++    url = urllib.parse.urlsplit(value)
++    host = url.hostname or ""
++    allowed = re.fullmatch(r"[a-z0-9-]+\.fandom\.com", host) or host == "static.wikia.nocookie.net"
++    if not allowed or url.scheme != "https" or url.port not in (None, 443) or url.username or url.password or url.fragment:
++        raise ValueError("Destination denied")
++    return url
++
++def fetch(value, theme=""):
++    deadline = time.monotonic() + 20
++    for hop in range(4):
++        url = checked_url(value)
++        addresses = socket.getaddrinfo(url.hostname, 443, socket.AF_INET, socket.SOCK_STREAM)
++        if not addresses or any(not ipaddress.ip_address(a[4][0]).is_global for a in addresses):
++            raise ValueError("Address denied")
++        if url.hostname == "static.wikia.nocookie.net":
++            # Use curl itself with its genuine default user agent, not a forged
++            # browser identity. No cookies, proxies, redirect following or retry.
++            result = subprocess.run([
++                "curl", "--silent", "--show-error", "--noproxy", "*",
++                "--proto", "=https", "--max-time", "20", "--connect-timeout", "5",
++                "--max-filesize", str(MAX_BODY), "--resolve",
++                f"{url.hostname}:443:{addresses[0][4][0]}",
++                "--dump-header", "-", "--output", "-", "--url", value,
++            ], capture_output=True, timeout=22, check=True)
++            head, separator, body = result.stdout.partition(b"\r\n\r\n")
++            if not separator or len(head) > 65536 or len(body) > MAX_BODY:
++                raise ValueError("Invalid CDN response")
++            lines = head.decode("latin1").split("\r\n")
++            status = int(lines[0].split()[1])
++            headers = dict(line.split(":", 1) for line in lines[1:] if ":" in line)
++            headers = {key.lower(): item.strip() for key,item in headers.items()}
++            if status in (301,302,303,307,308):
++                if hop == 3 or not headers.get("location"): raise ValueError("Redirect denied")
++                value = urllib.parse.urljoin(value,headers["location"])
++                checked_url(value)
++                continue
++            return status, headers.get("content-type", "application/octet-stream"), body
++        connection = http.client.HTTPSConnection(url.hostname, timeout=10, context=CONTEXT)
++        raw = socket.create_connection(addresses[0][4], timeout=5)
++        try:
++            connection.sock = CONTEXT.wrap_socket(raw, server_hostname=url.hostname)
++            headers = {"User-Agent": "BreezeWiki/1.0 (https://wiki.utilibre.org)", "Accept-Encoding": "identity", "Connection": "close"}
++            if theme in ("theme=dark", "theme=light"): headers["Cookie"] = theme
++            path = urllib.parse.urlunsplit(("", "", url.path or "/", url.query, ""))
++            connection.request("GET", path, headers=headers)
++            response = connection.getresponse()
++            if response.status in (301,302,303,307,308):
++                location = response.getheader("Location")
++                if hop == 3 or not location: raise ValueError("Redirect denied")
++                value = urllib.parse.urljoin(value, location)
++                checked_url(value)
++                continue
++            declared = response.getheader("Content-Length")
++            if declared and int(declared) > MAX_BODY: raise ValueError("Response too large")
++            body = bytearray()
++            while True:
++                if time.monotonic() > deadline: raise TimeoutError("Upstream deadline")
++                chunk = response.read(65536)
++                if not chunk: break
++                body.extend(chunk)
++                if len(body) > MAX_BODY: raise ValueError("Response too large")
++            return response.status, response.getheader("Content-Type", "application/octet-stream"), bytes(body)
++        finally:
++            connection.close()
++            raw.close()
++    raise ValueError("Redirect limit")
++
++class Handler(http.server.BaseHTTPRequestHandler):
++    def log_message(self, *_): pass
++    def do_GET(self):
++        try:
++            request = urllib.parse.urlsplit(self.path)
++            values = urllib.parse.parse_qs(request.query, strict_parsing=True)
++            if request.path != "/fetch" or set(values) != {"url"} or len(values["url"]) != 1:
++                raise ValueError("Invalid request")
++            status, kind, body = fetch(values["url"][0], self.headers.get("Cookie", ""))
++        except ValueError:
++            status, kind, body = 400, "text/plain", b"Invalid upstream request"
++        except Exception:
++            status, kind, body = 502, "text/plain", b"Upstream request failed"
++        try:
++            self.send_response(status)
++            self.send_header("Content-Type", kind)
++            self.send_header("Content-Length", str(len(body)))
++            self.send_header("Connection", "close")
++            self.end_headers()
++            self.wfile.write(body)
++        except (BrokenPipeError, ConnectionResetError): pass
++
++class Server(http.server.HTTPServer):
++    request_queue_size = 16
++    def __init__(self):
++        super().__init__(("127.0.0.1",10417), Handler)
++        self.pool = concurrent.futures.ThreadPoolExecutor(max_workers=4)
++        self.slots = threading.BoundedSemaphore(16)
++    def process_request(self, request, address):
++        if not self.slots.acquire(blocking=False):
++            self.shutdown_request(request)
++            return
++        def work():
++            try:
++                request.settimeout(25)
++                self.finish_request(request, address)
++            finally:
++                self.shutdown_request(request)
++                self.slots.release()
++        self.pool.submit(work)
++
++if __name__ == "__main__":
++    server = Server()
++    threading.Thread(target=server.serve_forever, daemon=True).start()
++    app = subprocess.Popen(["racket", "dist.rkt"])
++    def stop(*_): app.terminate()
++    signal.signal(signal.SIGTERM, stop)
++    signal.signal(signal.SIGINT, stop)
++    try: raise SystemExit(app.wait())
++    finally:
++        server.shutdown()
++        server.server_close()
++        server.pool.shutdown(wait=False, cancel_futures=True)

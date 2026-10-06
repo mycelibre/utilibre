@@ -1,0 +1,48 @@
+name: utilibre-rimgo
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+  cpus: 1
+  pids_limit: 128
+  logging: {driver: none}
+services:
+  rimgo:
+    <<: *runtime
+    image: utilibre-rimgo:d2be8e2-p1
+    user: "65534:65534"
+    mem_limit: 384m
+    environment:
+      ADDRESS: 0.0.0.0
+      PORT: "3000"
+      SECURE: "true"
+      PRIVACY_POLICY: https://utilibre.org/en/privacy
+      PRIVACY_MESSAGE: "Hosted by Utilibre. The application and its local gateway do not retain access logs. Our public edge and Cloudflare process requests and may retain operational/security metadata. Imgur sees requests from this server, not your browser."
+      PRIVACY_COUNTRY: Germany
+      PRIVACY_PROVIDER: Hetzner
+      PRIVACY_CLOUDFLARE: "true"
+      PRIVACY_NOT_COLLECTED: "false"
+      PRIVACY_IP: "true"
+      PRIVACY_URL: "true"
+      PRIVACY_DEVICE: "true"
+    networks:
+      images: {ipv4_address: 172.29.90.10}
+  gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: "101:101"
+    mem_limit: 128m
+    entrypoint: [nginx, -g, "daemon off;"]
+    ports: ["10.10.1.43:3153:8080"]
+    volumes:
+      - ./rimgo-gateway.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    networks:
+      images: {ipv4_address: 172.29.90.20}
+    depends_on: [rimgo]
+networks:
+  images:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.90.0/24}]}

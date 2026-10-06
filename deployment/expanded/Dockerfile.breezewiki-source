@@ -1,0 +1,12 @@
+FROM python:3.13-slim@sha256:3dd7cc108ec1493442514f5c2a871af6af0ec31d768ff6e378a93340c3b3db5f
+RUN apt-get update && apt-get install -y --no-install-recommends racket ca-certificates curl git libfontconfig1 libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libjpeg62-turbo libpng16-16t64 && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+ENV PLTUSERHOME=/opt/racket-user
+COPY . .
+RUN raco pkg install --batch --auto --no-docs --skip-installed req-lib \
+    && raco req -d \
+    && raco make dist.rkt \
+    && racket --version > /app/UTILIBRE-RACKET-VERSION.txt
+USER 1000:1000
+EXPOSE 10416
+CMD ["python", "utilibre-transport.py"]

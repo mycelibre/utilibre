@@ -4,8 +4,10 @@
 # These routes are for this app VM only. Do not expose port 3135 (Kuma admin).
 # Rallly uses its restricted gateway and invitation-only Utilibre OIDC login.
 # Public HTTPS still requires applying this file on that separate VM.
-# Do not expose private evaluation ports 3143 or 3144. Dumb (3142) is also
-# omitted: Genius content requests fail despite its healthy homepage.
+# Do not expose private evaluation ports 3143 or 3144. Dumb (3142) already has
+# an edge route, but Genius content still fails despite its healthy homepage.
+# Rimgo (3153) likewise has an upstream media blocker; its block is prepared,
+# not proof that the service is ready to launch.
 
 bridge.utilibre.org {
 	encode zstd gzip
@@ -123,6 +125,43 @@ twitch.utilibre.org {
 translate.utilibre.org {
 	encode zstd gzip
 	reverse_proxy 10.10.1.43:3152 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+
+lyrics.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3142 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+
+biblioreads.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3151 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+
+qrtools.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3155
+}
+
+rimgo.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3153 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+
+gram.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3154 {
 		header_up X-Real-IP {client_ip}
 		header_up X-Forwarded-For {client_ip}
 	}

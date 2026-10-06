@@ -1,0 +1,26 @@
+FROM openresty/openresty:alpine-fat@sha256:2b1e555eab8e174c5fa60054200f9e312870f219aa49acce75b8c5144dea3d99 AS builder
+RUN apk add --no-cache openssl-dev sqlite-dev
+RUN luarocks install lapis 1.19.0 \
+    && luarocks install lua-resty-http \
+    && luarocks install lua-cjson \
+    && luarocks install htmlparser \
+    && luarocks install lua-resty-openssl \
+    && luarocks install lua-resty-redis \
+    && luarocks install lapis-redis \
+    && luarocks install lsqlite3 \
+    && luarocks install luautf8 \
+    && luarocks list --porcelain > /tmp/UTILIBRE-LUA-PACKAGES.txt
+FROM openresty/openresty:alpine@sha256:b3a6f1f432eabdbda4adcb6ec3e6461e621782eaa82dbe67154ddd1afd109569
+RUN apk add --no-cache openssl sqlite sqlite-libs
+COPY --from=builder /usr/local/openresty/luajit/share/lua/ /usr/local/openresty/luajit/share/lua/
+COPY --from=builder /usr/local/openresty/luajit/lib/ /usr/local/openresty/luajit/lib/
+COPY --from=builder /usr/local/openresty/luajit/bin/lapis /usr/local/openresty/luajit/bin/lapis
+COPY --from=builder /tmp/UTILIBRE-LUA-PACKAGES.txt /usr/share/UTILIBRE-LUA-PACKAGES.txt
+WORKDIR /app
+COPY . .
+COPY config.example.lua config.lua
+COPY nginx.example.conf nginx.conf
+RUN ln -s /tmp/nginx.conf.compiled /app/nginx.conf.compiled && mkdir -p /app/logs
+USER 65534:65534
+EXPOSE 8080
+CMD ["sh", "-c", "lapis migrate docker && exec lapis serve docker"]

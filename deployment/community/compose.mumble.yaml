@@ -1,0 +1,45 @@
+name: utilibre-mumble
+services:
+  mumble:
+    image: mumblevoip/mumble-server:v1.5.915@sha256:018ad3515932e513d8fdc970df918373a2664c4da32b09a89a4aaee28eb7507a
+    restart: unless-stopped
+    read_only: true
+    user: "10000:10000"
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=16m,mode=1777"]
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 64
+    logging: {driver: none}
+    env_file: /opt/utilibre/mumble/runtime.env
+    environment:
+      MUMBLE_CONFIG_REGISTER_NAME: Utilibre
+      MUMBLE_CONFIG_REGISTER_URL: https://utilibre.org
+      MUMBLE_CONFIG_REGISTER_HOSTNAME: ""
+      MUMBLE_CONFIG_REGISTER_PASSWORD: ""
+      MUMBLE_CONFIG_WELCOMETEXT: '<br/>Utilibre invitation-only voice pilot. / Piloto de voz con invitación. <a href="https://utilibre.org">Utilibre</a> · <a href="https://utilibre.org/en/privacy">Privacy</a><br/>Voice is relayed through this server, not end-to-end encrypted. Participants can record. / La voz pasa por este servidor; no tiene cifrado de extremo a extremo. Otras personas pueden grabar.'
+      MUMBLE_CONFIG_USERS: "20"
+      MUMBLE_CONFIG_BANDWIDTH: "96000"
+      MUMBLE_CONFIG_MESSAGEBURST: "5"
+      MUMBLE_CONFIG_MESSAGELIMIT: "1"
+      MUMBLE_CONFIG_CHANNELCOUNTLIMIT: "20"
+      MUMBLE_CONFIG_TEXTMESSAGELENGTH: "2000"
+      MUMBLE_CONFIG_ALLOWHTML: "false"
+      MUMBLE_CONFIG_ALLOWPING: "false"
+      MUMBLE_CONFIG_BONJOUR: "false"
+      MUMBLE_CONFIG_REMEMBERCHANNEL: "false"
+      MUMBLE_CONFIG_LOGDAYS: "-1"
+      MUMBLE_CONFIG_LOGFILE: /dev/null
+      MUMBLE_CONFIG_ICE: ""
+    ports:
+      - "127.0.0.1:64738:64738/tcp"
+      - "127.0.0.1:64738:64738/udp"
+    volumes:
+      - /opt/utilibre/mumble/data:/data
+    networks:
+      voice: {ipv4_address: 172.29.92.10}
+networks:
+  voice:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.92.0/24}]}

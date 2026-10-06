@@ -1,0 +1,38 @@
+name: utilibre-biblioreads
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+  cpus: 1
+  pids_limit: 128
+  logging: {driver: none}
+services:
+  biblioreads:
+    <<: *runtime
+    image: utilibre-biblioreads:9508abc-p1
+    user: "1000:1000"
+    mem_limit: 768m
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
+      - /app/.next/cache:rw,nosuid,nodev,noexec,size=32m,uid=1000,gid=1000
+    networks:
+      books: {ipv4_address: 172.29.88.10}
+  gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: "101:101"
+    mem_limit: 128m
+    entrypoint: [nginx, -g, "daemon off;"]
+    ports: ["10.10.1.43:3151:8080"]
+    volumes:
+      - ./biblioreads-gateway.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    networks:
+      books: {ipv4_address: 172.29.88.20}
+    depends_on: [biblioreads]
+networks:
+  books:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.88.0/24}]}

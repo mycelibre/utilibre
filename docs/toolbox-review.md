@@ -2,6 +2,78 @@
 
 ## Public-reader expansion checkpoint — October 6, after the edge update
 
+### Latest checkpoint — October 6, 18:00 UTC
+
+This checkpoint supersedes older pending-route notes below. **34 services have
+passed public HTTPS/workflow checks.** BiblioReads, 4get, AnonymousOverflow and
+SafeTwitch are now public, enabled in the catalog, and monitored. The catalog has
+43 records covering42 independently maintained applications and one integration.
+
+- **BiblioReads:** `biblioreads.utilibre.org`, LAN3151, revision9508abc-p1.
+  Node24/Next15/React19 source build; production npm audit reports zero advisories.
+  Build-only PWA dependencies still have advisories; this is not a claim of zero
+  vulnerabilities. Public desktop/mobile search, book/cover retrieval, library
+  export/delete and native operator link pass. Outbound HTTPS uses allowed hosts,
+  public-IP-pinned sockets, size/time/concurrency limits and no visitor credentials.
+  Covers are same-origin, resized by Sharp, with a bounded one-hour RAM cache.
+  Browser-local library/PWA storage is disclosed; no account or Goodreads login.
+- **Second QR tool:** QR Generator Offline, MIT, revision0fde700-p1,
+  `qrtools.utilibre.org`, LAN3155. Mini QR remains available separately.
+  PNG/SVG/PDF export, QR decoding, Spanish handoff, synthetic camera-stream UI,
+  offline loading and desktop/mobile checks pass. This does not certify every
+  physical phone camera. External fonts/CDNs removed; jsPDF/JSZip bundled with a
+  lockfile and clean npm audit. QR history is memory-only; the service worker
+  stores application assets and preferences may remain locally. Camera tracks
+  stop on exit; decoded links only open HTTP(S) after an explicit action.
+  Public HTTPS still returns525: the supplied Caddy block must be applied.
+- **Kittygram:** `gram.utilibre.org` replaces the initially proposed Instagram
+  hostname at the operator's request. LAN3154, AGPL3 revision5931c21-p1. Public
+  profile/post, proxied images and real video playback pass at the new hostname
+  through the protected backend on desktop/mobile, without external browser
+  requests. Native operator link configured; upstream has no Spanish translation.
+  Media uses exact CDN suffixes, verified TLS, time/size limits, RAM caches and
+  restricted egress. No Instagram login/cookies or public JSON API. Signing
+  credentials are private and backed up. Public HTTPS still returns525; apply
+  the revised Gram block on Caddy before enabling its portal launch.
+- **Rimgo:** revisiond2be8e2-p1 on LAN3153, AGPL3. Installed with bounded HTTPS-only
+  transport, fixed upstream hosts, private-address denial and bounded API caches.
+  Removed response caching that retained upstream media errors and mishandled
+  range responses. Album data works; Imgur media still returns429 even directly
+  from the host. Not launch-ready or eligible for a directory submission yet.
+- **Mumble:** official BSD3 image1.5.915 pinned by digest. Password-protected local
+  pilot on127.0.0.1:64738 TCP/UDP,20users, no recording/event logs, no new outbound
+  connections. TLS/protobuf authentication and wrong-password rejection pass.
+  Native welcome link returns to Utilibre. Public networking and the admission
+  policy remain operator decisions; ordinary HTTP Caddy configuration cannot
+  carry Mumble's TCP/UDP protocol. The pilot uses a self-signed certificate.
+
+BreezeWiki now runs pinned6d09507-p1 from source with strict image proxying and a
+bounded, verified-TLS transport adapter. Actual articles now return200; its image
+CDN still returns403 for many images. Full-page browser tests therefore fail.
+Dumb was checked last as requested: upstream main is stillf558107 from September26,
+and direct Genius search returns403 while the public reader returns500. LibreMDB
+also remains blocked: its old Node18/Next12 image is stopped, and IMDb returns an
+AWS WAF JavaScript challenge rather than title JSON. No challenge solvers, shared
+login cookies or rotating proxies were added. DeGoog extensions still lack an
+identified license. Screego inventory found no installation; prior user wording
+asked to find it, not to install it.
+
+Source archives and reproducible build/gateway recipes are published for modified
+deployments; publisher scripts preserve prior archives. The new on-host snapshot
+`/opt/utilibre/community-backups/2026-10-06T17-53-56-714Z` includes Mumble SQLite,
+Mumble/Kittygram private configuration and the onion identity. PostgreSQL restore,
+SQLite integrity, archive structure and checksums pass. Backups are **not off-site**.
+
+Directory state: PrivateBin is listed; Redlib/SearXNG requests remain open.
+RSS-Bridge, ntfy, Priviblur and Binternet have prepared fork branches, not submitted
+PRs, because the token cannot create them. BiblioReads' upstream accepts instance
+issues, but an actual createIssue attempt was denied by token permissions on
+October6. AO's hub reads its main repository's`instances.json`; submission still
+needs write permission. SafeTwitch/GotHub need Codeberg credentials. 4get's list is
+distributed: an existing operator must add our address. Do not describe any of
+these unfinished requests as published. Exact remaining states are maintained in
+`deployment/community/delivery-checklist.json`.
+
 ### TransLite addition — October 6
 
 Installed `gospodin/translite` at reviewed revision

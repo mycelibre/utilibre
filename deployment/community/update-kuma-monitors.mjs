@@ -27,6 +27,10 @@ const additions = [
   ['Utilibre login', 'https://auth.utilibre.org/'],
   ['GotHub', 'https://gothub.utilibre.org/'],
   ['TransLite', 'https://translate.utilibre.org/'],
+  ['BiblioReads', 'https://biblioreads.utilibre.org/'],
+  ['4get', 'https://4get.utilibre.org/'],
+  ['AnonymousOverflow', 'https://overflow.utilibre.org/'],
+  ['SafeTwitch', 'https://twitch.utilibre.org/'],
 ];
 const program = `
 const {io}=require('socket.io-client');

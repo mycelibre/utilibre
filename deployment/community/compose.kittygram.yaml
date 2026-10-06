@@ -1,0 +1,63 @@
+name: utilibre-kittygram
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+  cpus: 1
+  pids_limit: 128
+  logging: {driver: none}
+services:
+  kittygram:
+    <<: *runtime
+    image: utilibre-kittygram:5931c21-p1
+    user: "65534:65534"
+    mem_limit: 384m
+    env_file: /opt/utilibre/kittygram/runtime.env
+    environment:
+      PORT: "8080"
+      NUM_WORKERS: "2"
+      CODE_CACHE: "on"
+      REDIS_HOST: 172.29.91.30
+      REDIS_PORT: "6379"
+      DISABLE_LOGGING: "true"
+      ALLOW_JSON: "false"
+      REQUIRE_API_TOKEN: "true"
+      RATELIMIT_REQUEST_LIMIT: "100"
+      RATELIMIT_WINDOW_SIZE: "660"
+      RESOLVER: 127.0.0.11
+      ABOUT_MESSAGE: '<p>Hosted by <a href="https://utilibre.org">Utilibre</a>. Public Instagram content only; no Instagram login or cookies. Media is fetched by this server. Temporary caches are held in memory. Our edge and Cloudflare process requests and may retain operational/security metadata. <a href="https://utilibre.org/en/privacy">Privacy</a> · <a href="/utilibre-source/kittygram-utilibre.tar.gz">Deployed source</a></p>'
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
+      - /app/logs:rw,nosuid,nodev,noexec,size=4m,uid=65534,gid=65534
+      - /data:rw,nosuid,nodev,noexec,size=64m,uid=65534,gid=65534
+    networks:
+      instagram: {ipv4_address: 172.29.91.10}
+    depends_on: [cache]
+  cache:
+    <<: *runtime
+    image: valkey/valkey@sha256:de31910896150d5e754a07d57d227cfdde4e258ddd0d1aa4607f2d2f95843715
+    user: "999:999"
+    mem_limit: 192m
+    command: [valkey-server, --save, "", --appendonly, "no", --maxmemory, 128mb, --maxmemory-policy, allkeys-lru]
+    networks:
+      instagram: {ipv4_address: 172.29.91.30}
+  gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: "101:101"
+    mem_limit: 128m
+    tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=128m,mode=1777"]
+    entrypoint: [nginx, -g, "daemon off;"]
+    ports: ["10.10.1.43:3154:8080"]
+    volumes:
+      - ./kittygram-gateway.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    networks:
+      instagram: {ipv4_address: 172.29.91.20}
+    depends_on: [kittygram]
+networks:
+  instagram:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.91.0/24}]}

@@ -14,6 +14,10 @@ describe('donation language links', () => {
 });
 
 describe('verified upstream language links', () => {
+  it('selects Offline QR Spanish through the deployed language parameter', () => {
+    expect(localizedServiceUrl('qr-offline', 'https://qrtools.test/', 'es')).toBe('https://qrtools.test/?lang=es');
+    expect(localizedServiceUrl('qr-offline', 'https://qrtools.test/', 'en')).toBe('https://qrtools.test/?lang=en');
+  });
   it('sets the native TransLite translation target, without inventing a UI locale', () => {
     expect(localizedServiceUrl('translite', 'https://translate.test/', 'es')).toBe('https://translate.test/?tl=es');
     expect(localizedServiceUrl('translite', 'https://translate.test/', 'en')).toBe('https://translate.test/?tl=en');

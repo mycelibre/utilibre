@@ -55,7 +55,7 @@ services:
 
   breezewiki:
     <<: *runtime
-    image: utilibre-breezewiki:dist-f1b9bc6
+    image: utilibre-breezewiki:6d09507-p1
     read_only: true
     user: "1000:1000"
     environment:
@@ -70,7 +70,7 @@ services:
       XDG_CACHE_HOME: /tmp/cache
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
-      - /opt/breezewiki/storage:rw,nosuid,nodev,noexec,size=32m,uid=1000,gid=1000
+      - /app/storage:rw,nosuid,nodev,noexec,size=32m,uid=1000,gid=1000
     networks:
       wiki: {ipv4_address: 172.29.71.10}
     mem_limit: 768m

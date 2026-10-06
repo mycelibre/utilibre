@@ -1,0 +1,1781 @@
+diff --git a/.dockerignore b/.dockerignore
+index 8db6a73..9389dde 100644
+--- a/.dockerignore
++++ b/.dockerignore
+@@ -1,3 +1,3 @@
+-.env
+-tmp
+-static/app.css
+\ No newline at end of file
++.git
++node_modules
++.env*
+diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
+new file mode 100644
+index 0000000..dd1d01f
+--- /dev/null
++++ b/Dockerfile.utilibre
+@@ -0,0 +1,15 @@
++FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS assets
++WORKDIR /src
++COPY . .
++RUN npm ci --ignore-scripts && npm run build
++FROM golang:1.26-alpine@sha256:8ac98ca534ac3f51e1f420a1dd2c15e74c75cfa0f23f3ad27eb5d7236c349a0c AS build
++WORKDIR /src
++COPY --from=assets /src .
++RUN go test ./... && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -X codeberg.org/rimgo/rimgo/pages.VersionInfo=d2be8e2-utilibre-p1" -o /rimgo .
++FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0
++RUN apk add --no-cache ca-certificates
++WORKDIR /app
++COPY --from=build /rimgo /app/rimgo
++USER 65534:65534
++EXPOSE 3000
++CMD ["/app/rimgo"]
+diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
+new file mode 100644
+index 0000000..76a74d5
+--- /dev/null
++++ b/UTILIBRE-SOURCE.txt
+@@ -0,0 +1,16 @@
++Rimgo on Utilibre
++Upstream: https://codeberg.org/rimgo/rimgo
++Revision: d2be8e221522dfe7a06452e2002dcf6dad569d1a
++License: AGPL-3.0; original notices retained.
++
++Utilibre changes: fixed HTTPS-only Imgur destinations with public DNS/IP pinning,
++redirect validation, bounded connections/time/body sizes, credential stripping,
++bounded parsed-result caches, sequential parsing to avoid concurrent slice writes,
++closed response bodies, media type/size restrictions, and deployed-source link.
++Build dependencies refreshed with the accompanying lockfile. No upload support,
++visitor account system, personal upstream credentials or challenge solver added.
++
++Build: docker build -f Dockerfile.utilibre -t utilibre-rimgo:d2be8e2-p1 .
++Use deployment/compose.rimgo.yaml with its gateway and firewall rules. Application
++and gateway logs are disabled; edge/Cloudflare processing and logging are disclosed
++in the native privacy configuration. Temporary content caches remain in memory.
+diff --git a/api/client.go b/api/client.go
+index 6b9de21..b6c58f2 100644
+--- a/api/client.go
++++ b/api/client.go
+@@ -1,21 +1,42 @@
+ package api
+ 
+ import (
++	"encoding/json"
++	"sync"
+ 	"time"
+ 
+ 	"github.com/patrickmn/go-cache"
+ )
+ 
+ type Client struct {
+-    ClientID string
+-    Cache    *cache.Cache
++	ClientID string
++	Cache    *boundedCache
+ }
+ 
+-func NewClient(clientId string) (*Client) {
+-    client := Client{
+-        ClientID: clientId,
+-        Cache: cache.New(15*time.Minute, 15*time.Minute),
+-    }
+-    
+-    return &client
+-}
+\ No newline at end of file
++type boundedCache struct {
++	inner *cache.Cache
++	lock  sync.Mutex
++}
++
++func (c *boundedCache) Get(key string) (interface{}, bool) { return c.inner.Get(key) }
++func (c *boundedCache) Set(key string, value interface{}, duration time.Duration) {
++	encoded, err := json.Marshal(value)
++	if err != nil || len(encoded) > 256<<10 {
++		return
++	}
++	c.lock.Lock()
++	defer c.lock.Unlock()
++	if c.inner.ItemCount() >= 128 {
++		c.inner.Flush()
++	}
++	c.inner.Set(key, value, duration)
++}
++
++func NewClient(clientId string) *Client {
++	client := Client{
++		ClientID: clientId,
++		Cache:    &boundedCache{inner: cache.New(15*time.Minute, 15*time.Minute)},
++	}
++
++	return &client
++}
+diff --git a/api/comments.go b/api/comments.go
+index 3243b94..88d4fc5 100644
+--- a/api/comments.go
++++ b/api/comments.go
+@@ -46,7 +46,7 @@ func (client *Client) FetchComments(galleryID string) ([]Comment, error) {
+ 		func(key, value gjson.Result) bool {
+ 			wg.Add(1)
+ 
+-			go func() {
++			func() {
+ 				defer wg.Done()
+ 				comments = append(comments, parseComment(value))
+ 			}()
+@@ -81,7 +81,7 @@ func parseComment(data gjson.Result) Comment {
+ 		func(key, value gjson.Result) bool {
+ 			wg.Add(1)
+ 
+-			go func() {
++			func() {
+ 				defer wg.Done()
+ 				comments = append(comments, parseComment(value))
+ 			}()
+diff --git a/api/tag.go b/api/tag.go
+index 2533af7..ecd7caf 100644
+--- a/api/tag.go
++++ b/api/tag.go
+@@ -60,6 +60,7 @@ func (client *Client) FetchTag(tag string, sort string, page string) (Tag, error
+ 		return Tag{}, err
+ 	}
+ 
++	defer res.Body.Close()
+ 	body, err := io.ReadAll(res.Body)
+ 	if err != nil {
+ 		return Tag{}, err
+diff --git a/api/trending.go b/api/trending.go
+index b69a345..ece618a 100644
+--- a/api/trending.go
++++ b/api/trending.go
+@@ -63,6 +63,7 @@ func (client *Client) FetchTrending(section, sort, page string) ([]Submission, e
+ 		return []Submission{}, err
+ 	}
+ 
++	defer res.Body.Close()
+ 	body, err := io.ReadAll(res.Body)
+ 	if err != nil {
+ 		return []Submission{}, err
+@@ -76,7 +77,7 @@ func (client *Client) FetchTrending(section, sort, page string) ([]Submission, e
+ 		func(key, value gjson.Result) bool {
+ 			wg.Add(1)
+ 
+-			go func() {
++			func() {
+ 				defer wg.Done()
+ 				posts = append(posts, Submission{
+ 					Id:    value.Get("id").String(),
+diff --git a/api/user.go b/api/user.go
+index 576373f..01d1013 100644
+--- a/api/user.go
++++ b/api/user.go
+@@ -46,6 +46,7 @@ func (client *Client) FetchUser(username string) (User, error) {
+ 		return User{}, err
+ 	}
+ 
++	defer res.Body.Close()
+ 	body, err := io.ReadAll(res.Body)
+ 	if err != nil {
+ 		return User{}, err
+@@ -87,7 +88,7 @@ func (client *Client) FetchSubmissions(username string, sort string, page string
+ 		func(key, value gjson.Result) bool {
+ 			wg.Add(1)
+ 
+-			go func() {
++			func() {
+ 				defer wg.Done()
+ 
+ 				submissions = append(submissions, parseSubmission(value))
+@@ -122,6 +123,7 @@ func (client *Client) FetchUserFavorites(username string, sort string, page stri
+ 		return []Submission{}, err
+ 	}
+ 
++	defer res.Body.Close()
+ 	body, err := io.ReadAll(res.Body)
+ 	if err != nil {
+ 		return []Submission{}, err
+@@ -136,7 +138,7 @@ func (client *Client) FetchUserFavorites(username string, sort string, page stri
+ 		func(key, value gjson.Result) bool {
+ 			wg.Add(1)
+ 
+-			go func() {
++			func() {
+ 				defer wg.Done()
+ 
+ 				submissions = append(submissions, parseSubmission(value))
+@@ -176,6 +178,7 @@ func (client *Client) FetchUserComments(username string) ([]Comment, error) {
+ 		return []Comment{}, err
+ 	}
+ 
++	defer res.Body.Close()
+ 	body, err := io.ReadAll(res.Body)
+ 	if err != nil {
+ 		return []Comment{}, err
+diff --git a/deployment/additions-firewall.sh b/deployment/additions-firewall.sh
+new file mode 100644
+index 0000000..2523163
+--- /dev/null
++++ b/deployment/additions-firewall.sh
+@@ -0,0 +1,42 @@
++#!/bin/sh
++# Only these new application IPs; no unrelated host traffic is changed.
++set -eu
++chain=UTILIBRE-ADDITIONS-OUT
++iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
++iptables -w -F "$chain"
++iptables -w -A "$chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++iptables -w -A "$chain" -s 172.29.91.10 -d 172.29.91.30 -p tcp --dport 6379 -j RETURN
++for network in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/4 240.0.0.0/4; do
++  iptables -w -A "$chain" -d "$network" -j DROP
++done
++iptables -w -A "$chain" -p tcp -m multiport --dports 80,443 -j RETURN
++iptables -w -A "$chain" -j DROP
++for address in 172.29.74.10 172.29.75.10 172.29.76.10 172.29.77.10 172.29.78.10 172.29.79.10 172.29.80.10 172.29.81.10 172.29.82.10 172.29.85.10 172.29.86.10 172.29.88.10 172.29.89.10 172.29.90.10 172.29.91.10; do
++  iptables -w -C DOCKER-USER -s "$address" -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$chain"
++  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
++done
++# Static QR hosting and the local Mumble pilot need replies only, never new outbound connections.
++static_chain=UTILIBRE-STATIC-OUT
++iptables -w -S "$static_chain" >/dev/null 2>&1 || iptables -w -N "$static_chain"
++iptables -w -F "$static_chain"
++iptables -w -A "$static_chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++iptables -w -A "$static_chain" -j DROP
++for address in 172.29.92.10 172.29.93.10; do
++  iptables -w -C DOCKER-USER -s "$address" -j "$static_chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$static_chain"
++  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
++done
++# Tor needs public relay TCP ports beyond 443, but no host/private-network access.
++# .20 is reserved for the short-lived independent verification client.
++tor_chain=UTILIBRE-TOR-OUT
++iptables -w -S "$tor_chain" >/dev/null 2>&1 || iptables -w -N "$tor_chain"
++iptables -w -F "$tor_chain"
++iptables -w -A "$tor_chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++for network in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/4 240.0.0.0/4; do
++  iptables -w -A "$tor_chain" -d "$network" -j DROP
++done
++iptables -w -A "$tor_chain" -p tcp -j RETURN
++iptables -w -A "$tor_chain" -j DROP
++for address in 172.29.87.10 172.29.87.20; do
++  iptables -w -C DOCKER-USER -s "$address" -j "$tor_chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$tor_chain"
++  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
++done
+diff --git a/deployment/compose.rimgo.yaml b/deployment/compose.rimgo.yaml
+new file mode 100644
+index 0000000..b51579f
+--- /dev/null
++++ b/deployment/compose.rimgo.yaml
+@@ -0,0 +1,48 @@
++name: utilibre-rimgo
++x-runtime: &runtime
++  restart: unless-stopped
++  read_only: true
++  cap_drop: [ALL]
++  security_opt: [no-new-privileges:true]
++  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
++  cpus: 1
++  pids_limit: 128
++  logging: {driver: none}
++services:
++  rimgo:
++    <<: *runtime
++    image: utilibre-rimgo:d2be8e2-p1
++    user: "65534:65534"
++    mem_limit: 384m
++    environment:
++      ADDRESS: 0.0.0.0
++      PORT: "3000"
++      SECURE: "true"
++      PRIVACY_POLICY: https://utilibre.org/en/privacy
++      PRIVACY_MESSAGE: "Hosted by Utilibre. The application and its local gateway do not retain access logs. Our public edge and Cloudflare process requests and may retain operational/security metadata. Imgur sees requests from this server, not your browser."
++      PRIVACY_COUNTRY: Germany
++      PRIVACY_PROVIDER: Hetzner
++      PRIVACY_CLOUDFLARE: "true"
++      PRIVACY_NOT_COLLECTED: "false"
++      PRIVACY_IP: "true"
++      PRIVACY_URL: "true"
++      PRIVACY_DEVICE: "true"
++    networks:
++      images: {ipv4_address: 172.29.90.10}
++  gateway:
++    <<: *runtime
++    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
++    user: "101:101"
++    mem_limit: 128m
++    entrypoint: [nginx, -g, "daemon off;"]
++    ports: ["10.10.1.43:3153:8080"]
++    volumes:
++      - ./rimgo-gateway.conf:/etc/nginx/nginx.conf:ro
++      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
++    networks:
++      images: {ipv4_address: 172.29.90.20}
++    depends_on: [rimgo]
++networks:
++  images:
++    enable_ipv6: false
++    ipam: {config: [{subnet: 172.29.90.0/24}]}
+diff --git a/deployment/firewall.sh b/deployment/firewall.sh
+new file mode 100644
+index 0000000..66c462b
+--- /dev/null
++++ b/deployment/firewall.sh
+@@ -0,0 +1,13 @@
++#!/bin/sh
++# Limit only the explicitly listed new application ports. Existing services,
++# SSH, host INPUT policy, and unrelated Docker traffic are not changed.
++set -eu
++chain=UTILIBRE-TOOLS
++iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
++iptables -w -F "$chain"
++for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3151 3152 3153 3154 3155; do
++  iptables -w -A "$chain" -s 10.10.1.3 -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j RETURN
++  iptables -w -A "$chain" -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j DROP
++done
++iptables -w -A "$chain" -j RETURN
++iptables -w -C DOCKER-USER -i eth0 -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -i eth0 -j "$chain"
+diff --git a/deployment/rimgo-gateway.conf b/deployment/rimgo-gateway.conf
+new file mode 100644
+index 0000000..cebe4f1
+--- /dev/null
++++ b/deployment/rimgo-gateway.conf
+@@ -0,0 +1,51 @@
++worker_processes 1;
++pid /tmp/nginx.pid;
++error_log /dev/null;
++events { worker_connections 128; }
++http {
++  include /etc/nginx/mime.types;
++  access_log off;
++  server_tokens off;
++  client_body_temp_path /tmp/client;
++  proxy_temp_path /tmp/proxy;
++  fastcgi_temp_path /tmp/fastcgi;
++  uwsgi_temp_path /tmp/uwsgi;
++  scgi_temp_path /tmp/scgi;
++  set_real_ip_from 10.10.1.3;
++  real_ip_header X-Forwarded-For;
++  real_ip_recursive on;
++  limit_req_zone $binary_remote_addr zone=rimgo_pages:2m rate=30r/m;
++  limit_req_zone $binary_remote_addr zone=rimgo_media:2m rate=8r/s;
++  limit_conn_zone $binary_remote_addr zone=rimgo_connections:1m;
++  limit_req_status 429;
++  limit_conn_status 429;
++  server {
++    listen 8080;
++    client_max_body_size 1k;
++    limit_conn rimgo_connections 24;
++    if ($request_method !~ ^(GET|HEAD)$) { return 405; }
++    add_header Referrer-Policy no-referrer always;
++    add_header X-Content-Type-Options nosniff always;
++    add_header X-Frame-Options DENY always;
++    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
++    add_header Content-Security-Policy "default-src 'self'; script-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'" always;
++    proxy_set_header Host rimgo.utilibre.org;
++    proxy_set_header X-Forwarded-Proto https;
++    proxy_set_header Cookie "";
++    proxy_set_header Authorization "";
++    proxy_set_header X-Forwarded-For "";
++    proxy_set_header X-Real-IP "";
++    proxy_hide_header Set-Cookie;
++    proxy_max_temp_file_size 0;
++    proxy_read_timeout 30s;
++    location /utilibre-source/ { alias /srv/utilibre-source/; autoindex off; }
++    location ~* (^/static/|\.(jpg|jpeg|png|gif|webp|avif|mp4|webm)$|/(avatar|cover)$) {
++      limit_req zone=rimgo_media burst=48 nodelay;
++      proxy_pass http://172.29.90.10:3000;
++    }
++    location / {
++      limit_req zone=rimgo_pages burst=16 nodelay;
++      proxy_pass http://172.29.90.10:3000;
++    }
++  }
++}
+diff --git a/main.go b/main.go
+index 7877ca3..91c5683 100644
+--- a/main.go
++++ b/main.go
+@@ -5,14 +5,12 @@ import (
+ 	"fmt"
+ 	"net/http"
+ 	"os"
+-	"time"
+ 
+ 	"codeberg.org/rimgo/rimgo/pages"
+ 	"codeberg.org/rimgo/rimgo/static"
+ 	"codeberg.org/rimgo/rimgo/utils"
+ 	"codeberg.org/rimgo/rimgo/views"
+ 	"github.com/gofiber/fiber/v2"
+-	"github.com/gofiber/fiber/v2/middleware/cache"
+ 	"github.com/gofiber/fiber/v2/middleware/filesystem"
+ 	"github.com/gofiber/fiber/v2/middleware/recover"
+ 	"github.com/gofiber/template/handlebars/v2"
+@@ -92,15 +90,9 @@ func main() {
+ 			MaxAge: 2592000,
+ 			Root:   http.FS(static.GetFiles()),
+ 		}))
+-		app.Use(cache.New(cache.Config{
+-			Expiration: 30 * time.Minute,
+-			MaxBytes:   25000000,
+-			KeyGenerator: func(c *fiber.Ctx) string {
+-				return utils.GetInstanceUrl(c) + c.OriginalURL()
+-			},
+-			CacheControl:         true,
+-			StoreResponseHeaders: true,
+-		}))
++		// Parsed API results already use a bounded cache. Do not cache HTTP
++		// responses here: upstream denial images/429s and range responses must
++		// not be replayed for thirty minutes as if they were successful media.
+ 	}
+ 
+ 	app.Get("/robots.txt", func(c *fiber.Ctx) error {
+diff --git a/package-lock.json b/package-lock.json
+new file mode 100644
+index 0000000..cb0b113
+--- /dev/null
++++ b/package-lock.json
+@@ -0,0 +1,1086 @@
++{
++	"name": "rimgo-utilibre-p1",
++	"lockfileVersion": 3,
++	"requires": true,
++	"packages": {
++		"": {
++			"name": "rimgo-utilibre-p1",
++			"devDependencies": {
++				"@tailwindcss/cli": "^4.1.5",
++				"tailwindcss": "^4.1.5"
++			}
++		},
++		"node_modules/@jridgewell/gen-mapping": {
++			"version": "0.3.13",
++			"resolved": "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.3.13.tgz",
++			"integrity": "sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==",
++			"dev": true,
++			"license": "MIT",
++			"dependencies": {
++				"@jridgewell/sourcemap-codec": "^1.5.0",
++				"@jridgewell/trace-mapping": "^0.3.24"
++			}
++		},
++		"node_modules/@jridgewell/remapping": {
++			"version": "2.3.5",
++			"resolved": "https://registry.npmjs.org/@jridgewell/remapping/-/remapping-2.3.5.tgz",
++			"integrity": "sha512-LI9u/+laYG4Ds1TDKSJW2YPrIlcVYOwi2fUC6xB43lueCjgxV4lffOCZCtYFiH6TNOX+tQKXx97T4IKHbhyHEQ==",
++			"dev": true,
++			"license": "MIT",
++			"dependencies": {
++				"@jridgewell/gen-mapping": "^0.3.5",
++				"@jridgewell/trace-mapping": "^0.3.24"
++			}
++		},
++		"node_modules/@jridgewell/resolve-uri": {
++			"version": "3.1.2",
++			"resolved": "https://registry.npmjs.org/@jridgewell/resolve-uri/-/resolve-uri-3.1.2.tgz",
++			"integrity": "sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==",
++			"dev": true,
++			"license": "MIT",
++			"engines": {
++				"node": ">=6.0.0"
++			}
++		},
++		"node_modules/@jridgewell/sourcemap-codec": {
++			"version": "1.6.0",
++			"resolved": "https://registry.npmjs.org/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.6.0.tgz",
++			"integrity": "sha512-T7jf+5zgsZHwNJ4lvQ7/aezbyk0nNX+zJVWpmHA7VYsEx7a7qr5Rg5IbtJFqkgze5Y2sruq1RUY8Q837Od7iFw==",
++			"dev": true,
++			"license": "MIT"
++		},
++		"node_modules/@jridgewell/trace-mapping": {
++			"version": "0.3.31",
++			"resolved": "https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.31.tgz",
++			"integrity": "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==",
++			"dev": true,
++			"license": "MIT",
++			"dependencies": {
++				"@jridgewell/resolve-uri": "^3.1.0",
++				"@jridgewell/sourcemap-codec": "^1.4.14"
++			}
++		},
++		"node_modules/@parcel/watcher": {
++			"version": "2.6.0",
++			"resolved": "https://registry.npmjs.org/@parcel/watcher/-/watcher-2.6.0.tgz",
++			"integrity": "sha512-7FNeNl8NCE7aINx7WXiKQrPYZWC/hvrTsmk6zmxbI7LTXE7hVek/n8AfVgpe2y82zl3w0HvCHN0bVKMBoJcC0w==",
++			"dev": true,
++			"hasInstallScript": true,
++			"license": "MIT",
++			"dependencies": {
++				"detect-libc": "^2.0.3",
++				"is-glob": "^4.0.3",
++				"node-addon-api": "^7.0.0",
++				"picomatch": "^4.0.4"
++			},
++			"engines": {
++				"node": ">= 10.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			},
++			"optionalDependencies": {
++				"@parcel/watcher-android-arm64": "2.6.0",
++				"@parcel/watcher-darwin-arm64": "2.6.0",
++				"@parcel/watcher-darwin-x64": "2.6.0",
++				"@parcel/watcher-freebsd-x64": "2.6.0",
++				"@parcel/watcher-linux-arm-glibc": "2.6.0",
++				"@parcel/watcher-linux-arm-musl": "2.6.0",
++				"@parcel/watcher-linux-arm64-glibc": "2.6.0",
++				"@parcel/watcher-linux-arm64-musl": "2.6.0",
++				"@parcel/watcher-linux-x64-glibc": "2.6.0",
++				"@parcel/watcher-linux-x64-musl": "2.6.0",
++				"@parcel/watcher-win32-arm64": "2.6.0",
++				"@parcel/watcher-win32-x64": "2.6.0"
++			}
++		},
++		"node_modules/@parcel/watcher-android-arm64": {
++			"version": "2.6.0",
++			"resolved": "https://registry.npmjs.org/@parcel/watcher-android-arm64/-/watcher-android-arm64-2.6.0.tgz",
++			"integrity": "sha512-trgpLSCKRC/huFjXX/Smh+0sWe4+YtKfktIToiMl59ghz7z+qkH6kMvNnUbLyRs9N11t8l4svSCs1+5B3rOAhA==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"android"
++			],
++			"engines": {
++				"node": ">= 10.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/@parcel/watcher-darwin-arm64": {
++			"version": "2.6.0",
++			"resolved": "https://registry.npmjs.org/@parcel/watcher-darwin-arm64/-/watcher-darwin-arm64-2.6.0.tgz",
++			"integrity": "sha512-Y3QV0gl7Q1zbfueunkWIERICbEojQFCgpyG7YqOGNFLsckXyI1xu9mAIUpKY9QBYzBtSkN8dBPwd3yiAO9ovMw==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"darwin"
++			],
++			"engines": {
++				"node": ">= 10.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/@parcel/watcher-darwin-x64": {
++			"version": "2.6.0",
++			"resolved": "https://registry.npmjs.org/@parcel/watcher-darwin-x64/-/watcher-darwin-x64-2.6.0.tgz",
++			"integrity": "sha512-Ohv6OpzhUfKYD7Beb8kDvG0jbIxORCYY1JRdZnaBtnjjkJxgD7ZVL0nw2sCYd0yTMKTvz3nnTnOF3cDifK+kvw==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"darwin"
++			],
++			"engines": {
++				"node": ">= 10.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/@parcel/watcher-freebsd-x64": {
++			"version": "2.6.0",
++			"resolved": "https://registry.npmjs.org/@parcel/watcher-freebsd-x64/-/watcher-freebsd-x64-2.6.0.tgz",
++			"integrity": "sha512-5HmXvDgs8VK+74jF9y9/2FE3/OnlcKmc56tjmSrEuZjpSZOGL+fvAu+HKJBdPs9uwoP2hE6TlSUpXZ/C5jUFmQ==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"freebsd"
++			],
++			"engines": {
++				"node": ">= 10.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/@parcel/watcher-linux-arm-glibc": {
++			"version": "2.6.0",
++			"resolved": "https://registry.npmjs.org/@parcel/watcher-linux-arm-glibc/-/watcher-linux-arm-glibc-2.6.0.tgz",
++			"integrity": "sha512-Ps/hui3A+vMbjdqlqAowK2ZL8+BO8dBjxeWXj6npTBs3jx4wWmbPpaLuqwrQrSqIVMCnpWo238bJ1U37GhQOYg==",
++			"cpu": [
++				"arm"
++			],
++			"dev": true,
++			"libc": [
++				"glibc"
++			],
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 10.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/@parcel/watcher-linux-arm-musl": {
++			"version": "2.6.0",
++			"resolved": "https://registry.npmjs.org/@parcel/watcher-linux-arm-musl/-/watcher-linux-arm-musl-2.6.0.tgz",
++			"integrity": "sha512-9c6AUHgHoG+IY88MRIHupztQiQnrbqHYQjkM2btA+Bf/wQnQMuiD0Wfk1EVv3TlNT3x41uU71rn6E4xh/+zvkw==",
++			"cpu": [
++				"arm"
++			],
++			"dev": true,
++			"libc": [
++				"musl"
++			],
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 10.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/@parcel/watcher-linux-arm64-glibc": {
++			"version": "2.6.0",
++			"resolved": "https://registry.npmjs.org/@parcel/watcher-linux-arm64-glibc/-/watcher-linux-arm64-glibc-2.6.0.tgz",
++			"integrity": "sha512-yHRqS2owEXe6Hic9z6Mh1ECsCd+ODVOGvZDyciqRd21+v+o+DnXMOrw50DSpIG2sb8GPEaPPmfeCAWKPJdq46g==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"libc": [
++				"glibc"
++			],
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 10.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/@parcel/watcher-linux-arm64-musl": {
++			"version": "2.6.0",
++			"resolved": "https://registry.npmjs.org/@parcel/watcher-linux-arm64-musl/-/watcher-linux-arm64-musl-2.6.0.tgz",
++			"integrity": "sha512-WhB2e/V7rqdHHWZusBSPuy5Ei8S6lSz6FE5TKKQz5h3a0O+C+mhY7vxU9b/stqvMb8beLnPY82ZrFTLKs+SrKA==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"libc": [
++				"musl"
++			],
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 10.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/@parcel/watcher-linux-x64-glibc": {
++			"version": "2.6.0",
++			"resolved": "https://registry.npmjs.org/@parcel/watcher-linux-x64-glibc/-/watcher-linux-x64-glibc-2.6.0.tgz",
++			"integrity": "sha512-ulGE6x6Oz6iAwg75T8YQSoguBWasniIbX+QWpaYPcCnDOpdWX3k+4xbEYPZVLxOuoJI+svJJPD3sEj8G7lrQ3A==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"libc": [
++				"glibc"
++			],
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 10.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/@parcel/watcher-linux-x64-musl": {
++			"version": "2.6.0",
++			"resolved": "https://registry.npmjs.org/@parcel/watcher-linux-x64-musl/-/watcher-linux-x64-musl-2.6.0.tgz",
++			"integrity": "sha512-tkBYKt7YQrjIJWYDnto2YgO8MRkjlMTSNoRHzsXinBqbLdeOM3L32wPZJvIZxqaLMfSlS/4sUjH/6STVP/XDLw==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"libc": [
++				"musl"
++			],
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 10.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/@parcel/watcher-win32-arm64": {
++			"version": "2.6.0",
++			"resolved": "https://registry.npmjs.org/@parcel/watcher-win32-arm64/-/watcher-win32-arm64-2.6.0.tgz",
++			"integrity": "sha512-gIZAP23jaHjGWasY/TY6yL7NHFClf0Ga7FN+iINvk+KN94rhm94lYZhFsbYFNcA04/onvGD9kKmiJLJB2HbNwQ==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"win32"
++			],
++			"engines": {
++				"node": ">= 10.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/@parcel/watcher-win32-x64": {
++			"version": "2.6.0",
++			"resolved": "https://registry.npmjs.org/@parcel/watcher-win32-x64/-/watcher-win32-x64-2.6.0.tgz",
++			"integrity": "sha512-cA+/pXV2YkfxlIcXOQ5fSWqAzzPyD78/x5qbK/I0vUkrlYHA8TIz+MXjAbGouguKVSI4bOmkTSJ1/poVSsgt+A==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"win32"
++			],
++			"engines": {
++				"node": ">= 10.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/@tailwindcss/cli": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/cli/-/cli-4.3.0.tgz",
++			"integrity": "sha512-X9kdlqyMopO9fewbgHsEeuy31YzMHbdZ9VsKt004tB+mxSg1CNbyhZYCzvhciN0AM4R4b5lvIprPjtNq7iQxpQ==",
++			"dev": true,
++			"license": "MIT",
++			"dependencies": {
++				"@parcel/watcher": "^2.5.1",
++				"@tailwindcss/node": "4.3.0",
++				"@tailwindcss/oxide": "4.3.0",
++				"enhanced-resolve": "^5.21.0",
++				"mri": "^1.2.0",
++				"picocolors": "^1.1.1",
++				"tailwindcss": "4.3.0"
++			},
++			"bin": {
++				"tailwindcss": "dist/index.mjs"
++			}
++		},
++		"node_modules/@tailwindcss/cli/node_modules/tailwindcss": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/tailwindcss/-/tailwindcss-4.3.0.tgz",
++			"integrity": "sha512-y6nxMGB1nMW9R6k96e5gdIFzcfL/gTJRNaqGes1YvkLnPVXzWgbqFF2yLC0T8G774n24cx3Pe8XrKoniCOAH+Q==",
++			"dev": true,
++			"license": "MIT"
++		},
++		"node_modules/@tailwindcss/node": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/node/-/node-4.3.0.tgz",
++			"integrity": "sha512-aFb4gUhFOgdh9AXo4IzBEOzBkkAxm9VigwDJnMIYv3lcfXCJVesNfbEaBl4BNgVRyid92AmdviqwBUBRKSeY3g==",
++			"dev": true,
++			"license": "MIT",
++			"dependencies": {
++				"@jridgewell/remapping": "^2.3.5",
++				"enhanced-resolve": "^5.21.0",
++				"jiti": "^2.6.1",
++				"lightningcss": "1.32.0",
++				"magic-string": "^0.30.21",
++				"source-map-js": "^1.2.1",
++				"tailwindcss": "4.3.0"
++			}
++		},
++		"node_modules/@tailwindcss/node/node_modules/tailwindcss": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/tailwindcss/-/tailwindcss-4.3.0.tgz",
++			"integrity": "sha512-y6nxMGB1nMW9R6k96e5gdIFzcfL/gTJRNaqGes1YvkLnPVXzWgbqFF2yLC0T8G774n24cx3Pe8XrKoniCOAH+Q==",
++			"dev": true,
++			"license": "MIT"
++		},
++		"node_modules/@tailwindcss/oxide": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/oxide/-/oxide-4.3.0.tgz",
++			"integrity": "sha512-F7HZGBeN9I0/AuuJS5PwcD8xayx5ri5GhjYUDBEVYUkexyA/giwbDNjRVrxSezE3T250OU2K/wp/ltWx3UOefg==",
++			"dev": true,
++			"license": "MIT",
++			"engines": {
++				"node": ">= 20"
++			},
++			"optionalDependencies": {
++				"@tailwindcss/oxide-android-arm64": "4.3.0",
++				"@tailwindcss/oxide-darwin-arm64": "4.3.0",
++				"@tailwindcss/oxide-darwin-x64": "4.3.0",
++				"@tailwindcss/oxide-freebsd-x64": "4.3.0",
++				"@tailwindcss/oxide-linux-arm-gnueabihf": "4.3.0",
++				"@tailwindcss/oxide-linux-arm64-gnu": "4.3.0",
++				"@tailwindcss/oxide-linux-arm64-musl": "4.3.0",
++				"@tailwindcss/oxide-linux-x64-gnu": "4.3.0",
++				"@tailwindcss/oxide-linux-x64-musl": "4.3.0",
++				"@tailwindcss/oxide-wasm32-wasi": "4.3.0",
++				"@tailwindcss/oxide-win32-arm64-msvc": "4.3.0",
++				"@tailwindcss/oxide-win32-x64-msvc": "4.3.0"
++			}
++		},
++		"node_modules/@tailwindcss/oxide-android-arm64": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/oxide-android-arm64/-/oxide-android-arm64-4.3.0.tgz",
++			"integrity": "sha512-TJPiq67tKlLuObP6RkwvVGDoxCMBVtDgKkLfa/uyj7/FyxvQwHS+UOnVrXXgbEsfUaMgiVvC4KbJnRr26ho4Ng==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"android"
++			],
++			"engines": {
++				"node": ">= 20"
++			}
++		},
++		"node_modules/@tailwindcss/oxide-darwin-arm64": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/oxide-darwin-arm64/-/oxide-darwin-arm64-4.3.0.tgz",
++			"integrity": "sha512-oMN/WZRb+SO37BmUElEgeEWuU8E/HXRkiODxJxLe1UTHVXLrdVSgfaJV7pSlhRGMSOiXLuxTIjfsF3wYvz8cgQ==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"darwin"
++			],
++			"engines": {
++				"node": ">= 20"
++			}
++		},
++		"node_modules/@tailwindcss/oxide-darwin-x64": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/oxide-darwin-x64/-/oxide-darwin-x64-4.3.0.tgz",
++			"integrity": "sha512-N6CUmu4a6bKVADfw77p+iw6Yd9Q3OBhe0veaDX+QazfuVYlQsHfDgxBrsjQ/IW+zywL8mTrNd0SdJT/zgtvMdA==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"darwin"
++			],
++			"engines": {
++				"node": ">= 20"
++			}
++		},
++		"node_modules/@tailwindcss/oxide-freebsd-x64": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/oxide-freebsd-x64/-/oxide-freebsd-x64-4.3.0.tgz",
++			"integrity": "sha512-zDL5hBkQdH5C6MpqbK3gQAgP80tsMwSI26vjOzjJtNCMUo0lFgOItzHKBIupOZNQxt3ouPH7RPhvNhiTfCe5CQ==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"freebsd"
++			],
++			"engines": {
++				"node": ">= 20"
++			}
++		},
++		"node_modules/@tailwindcss/oxide-linux-arm-gnueabihf": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/oxide-linux-arm-gnueabihf/-/oxide-linux-arm-gnueabihf-4.3.0.tgz",
++			"integrity": "sha512-R06HdNi7A7OEoMsf6d4tjZ71RCWnZQPHj2mnotSFURjNLdBC+cIgXQ7l81CqeoiQftjf6OOblxXMInMgN2VzMA==",
++			"cpu": [
++				"arm"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 20"
++			}
++		},
++		"node_modules/@tailwindcss/oxide-linux-arm64-gnu": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/oxide-linux-arm64-gnu/-/oxide-linux-arm64-gnu-4.3.0.tgz",
++			"integrity": "sha512-qTJHELX8jetjhRQHCLilkVLmybpzNQAtaI/gaoVoidn/ufbNDbAo8KlK2J+yPoc8wQxvDxCmh/5lr8nC1+lTbg==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"libc": [
++				"glibc"
++			],
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 20"
++			}
++		},
++		"node_modules/@tailwindcss/oxide-linux-arm64-musl": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/oxide-linux-arm64-musl/-/oxide-linux-arm64-musl-4.3.0.tgz",
++			"integrity": "sha512-Z6sukiQsngnWO+l39X4pPbiWT81IC+PLKF+PHxIlyZbGNb9MODfYlXEVlFvej5BOZInWX01kVyzeLvHsXhfczQ==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"libc": [
++				"musl"
++			],
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 20"
++			}
++		},
++		"node_modules/@tailwindcss/oxide-linux-x64-gnu": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/oxide-linux-x64-gnu/-/oxide-linux-x64-gnu-4.3.0.tgz",
++			"integrity": "sha512-DRNdQRpSGzRGfARVuVkxvM8Q12nh19l4BF/G7zGA1oe+9wcC6saFBHTISrpIcKzhiXtSrlSrluCfvMuledoCTQ==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"libc": [
++				"glibc"
++			],
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 20"
++			}
++		},
++		"node_modules/@tailwindcss/oxide-linux-x64-musl": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/oxide-linux-x64-musl/-/oxide-linux-x64-musl-4.3.0.tgz",
++			"integrity": "sha512-Z0IADbDo8bh6I7h2IQMx601AdXBLfFpEdUotft86evd/8ZPflZe9COPO8Q1vw+pfLWIUo9zN/JGZvwuAJqduqg==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"libc": [
++				"musl"
++			],
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 20"
++			}
++		},
++		"node_modules/@tailwindcss/oxide-wasm32-wasi": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.3.0.tgz",
++			"integrity": "sha512-HNZGOUxEmElksYR7S6sC5jTeNGpobAsy9u7Gu0AskJ8/20FR9GqebUyB+HBcU/ax6BHuiuJi+Oda4B+YX6H1yA==",
++			"bundleDependencies": [
++				"@napi-rs/wasm-runtime",
++				"@emnapi/core",
++				"@emnapi/runtime",
++				"@tybys/wasm-util",
++				"@emnapi/wasi-threads",
++				"tslib"
++			],
++			"cpu": [
++				"wasm32"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"dependencies": {
++				"@emnapi/core": "^1.10.0",
++				"@emnapi/runtime": "^1.10.0",
++				"@emnapi/wasi-threads": "^1.2.1",
++				"@napi-rs/wasm-runtime": "^1.1.4",
++				"@tybys/wasm-util": "^0.10.1",
++				"tslib": "^2.8.1"
++			},
++			"engines": {
++				"node": ">=14.0.0"
++			}
++		},
++		"node_modules/@tailwindcss/oxide-win32-arm64-msvc": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/oxide-win32-arm64-msvc/-/oxide-win32-arm64-msvc-4.3.0.tgz",
++			"integrity": "sha512-Pe+RPVTi1T+qymuuRpcdvwSVZjnll/f7n8gBxMMh3xLTctMDKqpdfGimbMyioqtLhUYZxdJ9wGNhV7MKHvgZsQ==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"win32"
++			],
++			"engines": {
++				"node": ">= 20"
++			}
++		},
++		"node_modules/@tailwindcss/oxide-win32-x64-msvc": {
++			"version": "4.3.0",
++			"resolved": "https://registry.npmjs.org/@tailwindcss/oxide-win32-x64-msvc/-/oxide-win32-x64-msvc-4.3.0.tgz",
++			"integrity": "sha512-Mvrf2kXW/yeW/OTezZlCGOirXRcUuLIBx/5Y12BaPM7wJoryG6dfS/NJL8aBPqtTEx/Vm4T4vKzFUcKDT+TKUA==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"license": "MIT",
++			"optional": true,
++			"os": [
++				"win32"
++			],
++			"engines": {
++				"node": ">= 20"
++			}
++		},
++		"node_modules/detect-libc": {
++			"version": "2.1.2",
++			"resolved": "https://registry.npmjs.org/detect-libc/-/detect-libc-2.1.2.tgz",
++			"integrity": "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==",
++			"dev": true,
++			"license": "Apache-2.0",
++			"engines": {
++				"node": ">=8"
++			}
++		},
++		"node_modules/enhanced-resolve": {
++			"version": "5.26.0",
++			"resolved": "https://registry.npmjs.org/enhanced-resolve/-/enhanced-resolve-5.26.0.tgz",
++			"integrity": "sha512-9vhedylFonb2YGogzUKX6+Ja72gOJbN1QHAqdrvqLwhdl/QWbKopzoUC9EbQNVsAns/bx/4uyqalrQAoy1IByw==",
++			"dev": true,
++			"license": "MIT",
++			"dependencies": {
++				"graceful-fs": "^4.2.4",
++				"tapable": "^2.3.3"
++			},
++			"engines": {
++				"node": ">=10.13.0"
++			}
++		},
++		"node_modules/graceful-fs": {
++			"version": "4.2.11",
++			"resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.11.tgz",
++			"integrity": "sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==",
++			"dev": true,
++			"license": "ISC"
++		},
++		"node_modules/is-extglob": {
++			"version": "2.1.1",
++			"resolved": "https://registry.npmjs.org/is-extglob/-/is-extglob-2.1.1.tgz",
++			"integrity": "sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ==",
++			"dev": true,
++			"license": "MIT",
++			"engines": {
++				"node": ">=0.10.0"
++			}
++		},
++		"node_modules/is-glob": {
++			"version": "4.0.3",
++			"resolved": "https://registry.npmjs.org/is-glob/-/is-glob-4.0.3.tgz",
++			"integrity": "sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==",
++			"dev": true,
++			"license": "MIT",
++			"dependencies": {
++				"is-extglob": "^2.1.1"
++			},
++			"engines": {
++				"node": ">=0.10.0"
++			}
++		},
++		"node_modules/jiti": {
++			"version": "2.7.0",
++			"resolved": "https://registry.npmjs.org/jiti/-/jiti-2.7.0.tgz",
++			"integrity": "sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==",
++			"dev": true,
++			"license": "MIT",
++			"bin": {
++				"jiti": "lib/jiti-cli.mjs"
++			}
++		},
++		"node_modules/lightningcss": {
++			"version": "1.32.0",
++			"resolved": "https://registry.npmjs.org/lightningcss/-/lightningcss-1.32.0.tgz",
++			"integrity": "sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ==",
++			"dev": true,
++			"license": "MPL-2.0",
++			"dependencies": {
++				"detect-libc": "^2.0.3"
++			},
++			"engines": {
++				"node": ">= 12.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			},
++			"optionalDependencies": {
++				"lightningcss-android-arm64": "1.32.0",
++				"lightningcss-darwin-arm64": "1.32.0",
++				"lightningcss-darwin-x64": "1.32.0",
++				"lightningcss-freebsd-x64": "1.32.0",
++				"lightningcss-linux-arm-gnueabihf": "1.32.0",
++				"lightningcss-linux-arm64-gnu": "1.32.0",
++				"lightningcss-linux-arm64-musl": "1.32.0",
++				"lightningcss-linux-x64-gnu": "1.32.0",
++				"lightningcss-linux-x64-musl": "1.32.0",
++				"lightningcss-win32-arm64-msvc": "1.32.0",
++				"lightningcss-win32-x64-msvc": "1.32.0"
++			}
++		},
++		"node_modules/lightningcss-android-arm64": {
++			"version": "1.32.0",
++			"resolved": "https://registry.npmjs.org/lightningcss-android-arm64/-/lightningcss-android-arm64-1.32.0.tgz",
++			"integrity": "sha512-YK7/ClTt4kAK0vo6w3X+Pnm0D2cf2vPHbhOXdoNti1Ga0al1P4TBZhwjATvjNwLEBCnKvjJc2jQgHXH0NEwlAg==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"license": "MPL-2.0",
++			"optional": true,
++			"os": [
++				"android"
++			],
++			"engines": {
++				"node": ">= 12.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/lightningcss-darwin-arm64": {
++			"version": "1.32.0",
++			"resolved": "https://registry.npmjs.org/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.32.0.tgz",
++			"integrity": "sha512-RzeG9Ju5bag2Bv1/lwlVJvBE3q6TtXskdZLLCyfg5pt+HLz9BqlICO7LZM7VHNTTn/5PRhHFBSjk5lc4cmscPQ==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"license": "MPL-2.0",
++			"optional": true,
++			"os": [
++				"darwin"
++			],
++			"engines": {
++				"node": ">= 12.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/lightningcss-darwin-x64": {
++			"version": "1.32.0",
++			"resolved": "https://registry.npmjs.org/lightningcss-darwin-x64/-/lightningcss-darwin-x64-1.32.0.tgz",
++			"integrity": "sha512-U+QsBp2m/s2wqpUYT/6wnlagdZbtZdndSmut/NJqlCcMLTWp5muCrID+K5UJ6jqD2BFshejCYXniPDbNh73V8w==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"license": "MPL-2.0",
++			"optional": true,
++			"os": [
++				"darwin"
++			],
++			"engines": {
++				"node": ">= 12.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/lightningcss-freebsd-x64": {
++			"version": "1.32.0",
++			"resolved": "https://registry.npmjs.org/lightningcss-freebsd-x64/-/lightningcss-freebsd-x64-1.32.0.tgz",
++			"integrity": "sha512-JCTigedEksZk3tHTTthnMdVfGf61Fky8Ji2E4YjUTEQX14xiy/lTzXnu1vwiZe3bYe0q+SpsSH/CTeDXK6WHig==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"license": "MPL-2.0",
++			"optional": true,
++			"os": [
++				"freebsd"
++			],
++			"engines": {
++				"node": ">= 12.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/lightningcss-linux-arm-gnueabihf": {
++			"version": "1.32.0",
++			"resolved": "https://registry.npmjs.org/lightningcss-linux-arm-gnueabihf/-/lightningcss-linux-arm-gnueabihf-1.32.0.tgz",
++			"integrity": "sha512-x6rnnpRa2GL0zQOkt6rts3YDPzduLpWvwAF6EMhXFVZXD4tPrBkEFqzGowzCsIWsPjqSK+tyNEODUBXeeVHSkw==",
++			"cpu": [
++				"arm"
++			],
++			"dev": true,
++			"license": "MPL-2.0",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 12.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/lightningcss-linux-arm64-gnu": {
++			"version": "1.32.0",
++			"resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.32.0.tgz",
++			"integrity": "sha512-0nnMyoyOLRJXfbMOilaSRcLH3Jw5z9HDNGfT/gwCPgaDjnx0i8w7vBzFLFR1f6CMLKF8gVbebmkUN3fa/kQJpQ==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"libc": [
++				"glibc"
++			],
++			"license": "MPL-2.0",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 12.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/lightningcss-linux-arm64-musl": {
++			"version": "1.32.0",
++			"resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.32.0.tgz",
++			"integrity": "sha512-UpQkoenr4UJEzgVIYpI80lDFvRmPVg6oqboNHfoH4CQIfNA+HOrZ7Mo7KZP02dC6LjghPQJeBsvXhJod/wnIBg==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"libc": [
++				"musl"
++			],
++			"license": "MPL-2.0",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 12.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/lightningcss-linux-x64-gnu": {
++			"version": "1.32.0",
++			"resolved": "https://registry.npmjs.org/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.32.0.tgz",
++			"integrity": "sha512-V7Qr52IhZmdKPVr+Vtw8o+WLsQJYCTd8loIfpDaMRWGUZfBOYEJeyJIkqGIDMZPwPx24pUMfwSxxI8phr/MbOA==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"libc": [
++				"glibc"
++			],
++			"license": "MPL-2.0",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 12.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/lightningcss-linux-x64-musl": {
++			"version": "1.32.0",
++			"resolved": "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.32.0.tgz",
++			"integrity": "sha512-bYcLp+Vb0awsiXg/80uCRezCYHNg1/l3mt0gzHnWV9XP1W5sKa5/TCdGWaR/zBM2PeF/HbsQv/j2URNOiVuxWg==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"libc": [
++				"musl"
++			],
++			"license": "MPL-2.0",
++			"optional": true,
++			"os": [
++				"linux"
++			],
++			"engines": {
++				"node": ">= 12.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/lightningcss-win32-arm64-msvc": {
++			"version": "1.32.0",
++			"resolved": "https://registry.npmjs.org/lightningcss-win32-arm64-msvc/-/lightningcss-win32-arm64-msvc-1.32.0.tgz",
++			"integrity": "sha512-8SbC8BR40pS6baCM8sbtYDSwEVQd4JlFTOlaD3gWGHfThTcABnNDBda6eTZeqbofalIJhFx0qKzgHJmcPTnGdw==",
++			"cpu": [
++				"arm64"
++			],
++			"dev": true,
++			"license": "MPL-2.0",
++			"optional": true,
++			"os": [
++				"win32"
++			],
++			"engines": {
++				"node": ">= 12.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/lightningcss-win32-x64-msvc": {
++			"version": "1.32.0",
++			"resolved": "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.32.0.tgz",
++			"integrity": "sha512-Amq9B/SoZYdDi1kFrojnoqPLxYhQ4Wo5XiL8EVJrVsB8ARoC1PWW6VGtT0WKCemjy8aC+louJnjS7U18x3b06Q==",
++			"cpu": [
++				"x64"
++			],
++			"dev": true,
++			"license": "MPL-2.0",
++			"optional": true,
++			"os": [
++				"win32"
++			],
++			"engines": {
++				"node": ">= 12.0.0"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/parcel"
++			}
++		},
++		"node_modules/magic-string": {
++			"version": "0.30.21",
++			"resolved": "https://registry.npmjs.org/magic-string/-/magic-string-0.30.21.tgz",
++			"integrity": "sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==",
++			"dev": true,
++			"license": "MIT",
++			"dependencies": {
++				"@jridgewell/sourcemap-codec": "^1.5.5"
++			}
++		},
++		"node_modules/mri": {
++			"version": "1.2.0",
++			"resolved": "https://registry.npmjs.org/mri/-/mri-1.2.0.tgz",
++			"integrity": "sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==",
++			"dev": true,
++			"license": "MIT",
++			"engines": {
++				"node": ">=4"
++			}
++		},
++		"node_modules/node-addon-api": {
++			"version": "7.1.1",
++			"resolved": "https://registry.npmjs.org/node-addon-api/-/node-addon-api-7.1.1.tgz",
++			"integrity": "sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==",
++			"dev": true,
++			"license": "MIT"
++		},
++		"node_modules/picocolors": {
++			"version": "1.1.1",
++			"resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
++			"integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==",
++			"dev": true,
++			"license": "ISC"
++		},
++		"node_modules/picomatch": {
++			"version": "4.0.7",
++			"resolved": "https://registry.npmjs.org/picomatch/-/picomatch-4.0.7.tgz",
++			"integrity": "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==",
++			"dev": true,
++			"license": "MIT",
++			"engines": {
++				"node": ">=12"
++			},
++			"funding": {
++				"url": "https://github.com/sponsors/jonschlinkert"
++			}
++		},
++		"node_modules/source-map-js": {
++			"version": "1.2.2",
++			"resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.2.tgz",
++			"integrity": "sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==",
++			"dev": true,
++			"license": "BSD-3-Clause",
++			"engines": {
++				"node": ">=0.10.0"
++			}
++		},
++		"node_modules/tailwindcss": {
++			"version": "4.3.3",
++			"resolved": "https://registry.npmjs.org/tailwindcss/-/tailwindcss-4.3.3.tgz",
++			"integrity": "sha512-gOhV3P7ufE62QDGg1zVaTgCR+EtPv92k2nIhVcVKcLmxT1sUBsQGhnZj175j+MqRt4zLF7ic+sCYjfhxMxj7YQ==",
++			"dev": true,
++			"license": "MIT"
++		},
++		"node_modules/tapable": {
++			"version": "2.3.3",
++			"resolved": "https://registry.npmjs.org/tapable/-/tapable-2.3.3.tgz",
++			"integrity": "sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==",
++			"dev": true,
++			"license": "MIT",
++			"engines": {
++				"node": ">=6"
++			},
++			"funding": {
++				"type": "opencollective",
++				"url": "https://opencollective.com/webpack"
++			}
++		}
++	}
++}
+diff --git a/pages/media.go b/pages/media.go
+index 0072bd1..ecc7df2 100644
+--- a/pages/media.go
++++ b/pages/media.go
+@@ -35,11 +35,11 @@ func handleMedia(c *fiber.Ctx, url string) error {
+ 	utils.SetHeaders(c)
+ 
+ 	if utils.Config.ForceWebp &&
+-	!strings.HasSuffix(c.Path(), ".webp") &&
+-	c.Get("Sec-Fetch-Dest") == "image" && 
+-	c.Query("no_webp") == "" && 
+-	c.Accepts("image/webp") == "image/webp" && 
+-	!strings.HasPrefix(c.Path(), "/stack") {
++		!strings.HasSuffix(c.Path(), ".webp") &&
++		c.Get("Sec-Fetch-Dest") == "image" &&
++		c.Query("no_webp") == "" &&
++		c.Accepts("image/webp") == "image/webp" &&
++		!strings.HasPrefix(c.Path(), "/stack") {
+ 		url = strings.ReplaceAll(url, ".png", ".webp")
+ 		url = strings.ReplaceAll(url, ".jpg", ".webp")
+ 		url = strings.ReplaceAll(url, ".jpeg", ".webp")
+@@ -68,11 +68,20 @@ func handleMedia(c *fiber.Ctx, url string) error {
+ 	}
+ 
+ 	if res.StatusCode == 404 || strings.Contains(res.Request.URL.String(), "error/404") {
++		res.Body.Close()
+ 		return utils.RenderError(c, 404)
+ 	} else if res.StatusCode == 429 {
++		res.Body.Close()
+ 		return utils.RenderError(c, 429)
+ 	}
+ 
++	kind, _, _ := mime.ParseMediaType(res.Header.Get("Content-Type"))
++	allowed := map[string]bool{"image/jpeg": true, "image/png": true, "image/gif": true, "image/webp": true, "image/avif": true, "video/mp4": true, "video/webm": true}
++	if !allowed[kind] || (res.StatusCode != 200 && res.StatusCode != 206) {
++		res.Body.Close()
++		return utils.RenderError(c, 502)
++	}
++	c.Status(res.StatusCode)
+ 	c.Set("Accept-Ranges", "bytes")
+ 	c.Set("Content-Type", res.Header.Get("Content-Type"))
+ 	c.Set("Content-Length", res.Header.Get("Content-Length"))
+diff --git a/utils/outbound.go b/utils/outbound.go
+new file mode 100644
+index 0000000..bb2e4a8
+--- /dev/null
++++ b/utils/outbound.go
+@@ -0,0 +1,124 @@
++package utils
++
++// Utilibre deployment hardening: fixed public Imgur destinations, bounded
++// response bodies and deadlines, including default HTTP clients.
++import (
++	"context"
++	"errors"
++	"io"
++	"net"
++	"net/http"
++	"net/netip"
++	"net/url"
++	"time"
++)
++
++const responseLimit int64 = 8 << 20
++
++var hosts = map[string]bool{
++	"imgur.com": true, "www.imgur.com": true, "api.imgur.com": true,
++	"i.imgur.com": true, "i.stack.imgur.com": true,
++}
++
++func allowedURL(u *url.URL) bool {
++	return u.Scheme == "https" && u.User == nil && (u.Port() == "" || u.Port() == "443") && hosts[u.Hostname()]
++}
++
++func publicIP(ip netip.Addr) bool {
++	ip = ip.Unmap()
++	if !ip.IsGlobalUnicast() || ip.IsPrivate() || ip.IsLoopback() || ip.IsLinkLocalUnicast() {
++		return false
++	}
++	for _, cidr := range []string{"0.0.0.0/8", "100.64.0.0/10", "192.0.0.0/24", "192.0.2.0/24", "198.18.0.0/15", "198.51.100.0/24", "203.0.113.0/24", "240.0.0.0/4", "2001:db8::/32"} {
++		if netip.MustParsePrefix(cidr).Contains(ip) {
++			return false
++		}
++	}
++	return true
++}
++
++func publicDial(ctx context.Context, network, address string) (net.Conn, error) {
++	host, port, err := net.SplitHostPort(address)
++	if err != nil || !hosts[host] || port != "443" {
++		return nil, errors.New("upstream destination denied")
++	}
++	addresses, err := net.DefaultResolver.LookupNetIP(ctx, "ip", host)
++	if err != nil {
++		return nil, err
++	}
++	for _, ip := range addresses {
++		if !publicIP(ip) {
++			return nil, errors.New("non-public upstream address denied")
++		}
++	}
++	dialer := net.Dialer{Timeout: 8 * time.Second}
++	for _, ip := range addresses {
++		connection, e := dialer.DialContext(ctx, network, net.JoinHostPort(ip.String(), port))
++		if e == nil {
++			return connection, nil
++		}
++	}
++	return nil, errors.New("upstream connection failed")
++}
++
++type boundedBody struct {
++	io.ReadCloser
++	remaining int64
++	cancel    context.CancelFunc
++}
++
++func (b *boundedBody) Read(p []byte) (int, error) {
++	if b.remaining <= 0 {
++		b.Close()
++		return 0, errors.New("upstream response exceeds size limit")
++	}
++	if int64(len(p)) > b.remaining {
++		p = p[:b.remaining]
++	}
++	n, err := b.ReadCloser.Read(p)
++	b.remaining -= int64(n)
++	return n, err
++}
++func (b *boundedBody) Close() error { b.cancel(); return b.ReadCloser.Close() }
++
++type publicTransport struct{ inner http.RoundTripper }
++
++func (t publicTransport) RoundTrip(request *http.Request) (*http.Response, error) {
++	if !allowedURL(request.URL) || (request.Method != "GET" && request.Method != "HEAD") {
++		return nil, errors.New("upstream request denied")
++	}
++	ctx, cancel := context.WithTimeout(request.Context(), 20*time.Second)
++	safe := request.Clone(ctx)
++	safe.Header.Del("Cookie")
++	safe.Header.Del("Authorization")
++	safe.Header.Del("Proxy-Authorization")
++	response, err := t.inner.RoundTrip(safe)
++	if err != nil {
++		cancel()
++		return nil, err
++	}
++	limit := responseLimit
++	if request.URL.Hostname() == "i.imgur.com" || request.URL.Hostname() == "i.stack.imgur.com" {
++		limit = 128 << 20
++	}
++	if response.ContentLength > limit {
++		response.Body.Close()
++		cancel()
++		return nil, errors.New("upstream response exceeds size limit")
++	}
++	response.Body = &boundedBody{response.Body, limit, cancel}
++	return response, nil
++}
++
++func init() {
++	transport := &http.Transport{DialContext: publicDial, TLSHandshakeTimeout: 8 * time.Second,
++		ResponseHeaderTimeout: 12 * time.Second, MaxResponseHeaderBytes: 64 << 10,
++		MaxIdleConns: 20, MaxIdleConnsPerHost: 4, MaxConnsPerHost: 16, IdleConnTimeout: 30 * time.Second}
++	http.DefaultTransport = publicTransport{transport}
++	http.DefaultClient = &http.Client{Timeout: 20 * time.Second, CheckRedirect: func(req *http.Request, via []*http.Request) error {
++		if len(via) >= 4 || !allowedURL(req.URL) {
++			return errors.New("upstream redirect denied")
++		}
++		return nil
++	}}
++}
+diff --git a/utils/outbound_test.go b/utils/outbound_test.go
+new file mode 100644
+index 0000000..4a097df
+--- /dev/null
++++ b/utils/outbound_test.go
+@@ -0,0 +1,30 @@
++package utils
++
++import (
++	"net/netip"
++	"net/url"
++	"testing"
++)
++
++func TestDestinationPolicy(t *testing.T) {
++	for _, raw := range []string{"http://github.com/", "https://github.com:8443/", "https://github.com.evil.invalid/", "https://token@github.com/", "https://127.0.0.1/", "https://example.org/"} {
++		u, _ := url.Parse(raw)
++		if allowedURL(u) {
++			t.Fatalf("accepted %s", raw)
++		}
++	}
++	for _, raw := range []string{"https://imgur.com/a/j2sOQkJ", "https://i.imgur.com/example.jpg"} {
++		u, _ := url.Parse(raw)
++		if !allowedURL(u) {
++			t.Fatalf("rejected %s", raw)
++		}
++	}
++	for _, raw := range []string{"127.0.0.1", "10.10.1.20", "169.254.169.254", "100.64.0.1", "::1", "::ffff:10.10.1.20", "fc00::1", "fe80::1", "192.0.2.1"} {
++		if publicIP(netip.MustParseAddr(raw)) {
++			t.Fatalf("accepted %s", raw)
++		}
++	}
++	if !publicIP(netip.MustParseAddr("140.82.112.3")) {
++		t.Fatal("public GitHub IP rejected")
++	}
++}
+diff --git a/utils/request.go b/utils/request.go
+index 181847c..35e79f9 100644
+--- a/utils/request.go
++++ b/utils/request.go
+@@ -17,11 +17,11 @@ func GetJSON(url string) (gjson.Result, error) {
+ 
+ 	SetReqHeaders(req)
+ 
+-	client := http.Client{}
+-	res, err := client.Do(req)
++	res, err := http.DefaultClient.Do(req)
+ 	if err != nil {
+ 		return gjson.Result{}, err
+ 	}
++	defer res.Body.Close()
+ 	rateLimitRemaining := res.Header.Get("X-RateLimit-UserRemaining")
+ 	if rateLimitRemaining != "" {
+ 		ratelimit, _ := strconv.Atoi(rateLimitRemaining)
+@@ -35,7 +35,7 @@ func GetJSON(url string) (gjson.Result, error) {
+ 		return gjson.Result{}, err
+ 	}
+ 
+-	switch (res.StatusCode) {
++	switch res.StatusCode {
+ 	case 200:
+ 		return gjson.Parse(string(body)), nil
+ 	case 429:
+@@ -43,4 +43,4 @@ func GetJSON(url string) (gjson.Result, error) {
+ 	default:
+ 		return gjson.Result{}, fmt.Errorf("received status %s, expected 200 OK.\n%s", res.Status, string(body))
+ 	}
+-}
+\ No newline at end of file
++}
+diff --git a/views/partials/footer.hbs b/views/partials/footer.hbs
+index 3aab847..492cc4a 100644
+--- a/views/partials/footer.hbs
++++ b/views/partials/footer.hbs
+@@ -6,9 +6,9 @@
+         <h1 class="text-md font-extrabold">rimgo</h1>
+       </div>
+     </a>
+-    <a href="https://codeberg.org/rimgo/rimgo">Source Code</a>
++    <a href="/utilibre-source/rimgo-utilibre.tar.gz">Source Code</a>
+     <a href="/about">About</a>
+     <a href="/privacy">Privacy</a>
+   </div>
+   <p class="text-md text-slate-200">rimgo does not allow uploads or host any content. Issues with content should be reported to Imgur.</p>
+-</footer>
+\ No newline at end of file
++</footer>

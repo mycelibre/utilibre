@@ -1,0 +1,489 @@
+diff --git a/.dockerignore b/.dockerignore
+index a257edf..c2110a8 100644
+--- a/.dockerignore
++++ b/.dockerignore
+@@ -1,26 +1,6 @@
+-fastcgi_temp/
++.git
++*.sqlite*
++.env*
++config.lua
+ nginx.conf.compiled
+-proxy_temp/
+-scgi_temp/
+-logs/
+-uwsgi_temp/
+-client_body_temp/
+-
+-*.kate-swp
+-
+-kittygram-dev-1.rockspec
+-/luarocks
+-/lua
+-/lua_modules
+-/.luarocks
+-
+-.git/
+-.gitignore
+-Dockerfile
+-.dockerignore
+-LICENSE
+-readme.md
+-instances.json
+-lib/disused/
+-
+-*.sqlite
++logs
+diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
+new file mode 100644
+index 0000000..0088347
+--- /dev/null
++++ b/Dockerfile.utilibre
+@@ -0,0 +1,26 @@
++FROM openresty/openresty:alpine-fat@sha256:2b1e555eab8e174c5fa60054200f9e312870f219aa49acce75b8c5144dea3d99 AS builder
++RUN apk add --no-cache openssl-dev sqlite-dev
++RUN luarocks install lapis 1.19.0 \
++    && luarocks install lua-resty-http \
++    && luarocks install lua-cjson \
++    && luarocks install htmlparser \
++    && luarocks install lua-resty-openssl \
++    && luarocks install lua-resty-redis \
++    && luarocks install lapis-redis \
++    && luarocks install lsqlite3 \
++    && luarocks install luautf8 \
++    && luarocks list --porcelain > /tmp/UTILIBRE-LUA-PACKAGES.txt
++FROM openresty/openresty:alpine@sha256:b3a6f1f432eabdbda4adcb6ec3e6461e621782eaa82dbe67154ddd1afd109569
++RUN apk add --no-cache openssl sqlite sqlite-libs
++COPY --from=builder /usr/local/openresty/luajit/share/lua/ /usr/local/openresty/luajit/share/lua/
++COPY --from=builder /usr/local/openresty/luajit/lib/ /usr/local/openresty/luajit/lib/
++COPY --from=builder /usr/local/openresty/luajit/bin/lapis /usr/local/openresty/luajit/bin/lapis
++COPY --from=builder /tmp/UTILIBRE-LUA-PACKAGES.txt /usr/share/UTILIBRE-LUA-PACKAGES.txt
++WORKDIR /app
++COPY . .
++COPY config.example.lua config.lua
++COPY nginx.example.conf nginx.conf
++RUN ln -s /tmp/nginx.conf.compiled /app/nginx.conf.compiled && mkdir -p /app/logs
++USER 65534:65534
++EXPOSE 8080
++CMD ["sh", "-c", "lapis migrate docker && exec lapis serve docker"]
+diff --git a/UTILIBRE-LUA-PACKAGES.txt b/UTILIBRE-LUA-PACKAGES.txt
+new file mode 100644
+index 0000000..5b486fd
+--- /dev/null
++++ b/UTILIBRE-LUA-PACKAGES.txt
+@@ -0,0 +1,18 @@
++ansicolors	1.0.2-3	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++argparse	0.7.2-1	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++date	2.2.1-2	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++etlua	1.3.0-1	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++htmlparser	0.3.9-1	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++lapis	1.19.0-1	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++lapis-redis	1.0.0-1	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++loadkit	1.1.0-1	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++lpeg	1.1.0-2	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++lsqlite3	0.9.7-1	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++lua-cjson	2.1.0.10-1	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++lua-resty-http	0.18.0-0	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++lua-resty-openssl	1.9.0-1	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++lua-resty-redis	0.27-0	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++luaossl	20260910-0	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++luasocket	3.1.0-1	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++luautf8	0.2.1-1	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
++pgmoon	1.18.0-1	installed	/usr/local/openresty/luajit/lib/luarocks/rocks-5.1
+diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
+new file mode 100644
+index 0000000..1e1e439
+--- /dev/null
++++ b/UTILIBRE-SOURCE.txt
+@@ -0,0 +1,18 @@
++Kittygram on Utilibre
++Upstream: https://codeberg.org/irelephant/kittygram
++Revision: 5931c21c0990d4b216e97166dd78c03c9965567a
++License: AGPL-3.0; original notices retained.
++
++Utilibre changes: HTTPS-only media allowlist using exact CDN suffix boundaries,
++verified TLS, time/body limits, no double URL decoding, bounded cookie lifetime,
++read-only/non-root runtime support, disabled request logs and native operator/source
++disclosures. No Instagram account cookies, third-party proxies or HTTP impersonation
++sidecar are used. Public API/token registration is blocked at the gateway.
++
++Build: docker build -f Dockerfile.utilibre -t utilibre-kittygram:5931c21-p1 .
++Lapis version is pinned; UTILIBRE-LUA-PACKAGES.txt records build module versions.
++Git LFS image assets are included as actual files. SQLite public-profile lookup
++cache (64 MiB filesystem) and Valkey cache (128 MiB maximum) are RAM-only. Native
++language/theme preferences use a signed Secure/HttpOnly/SameSite=Lax cookie.
++Generate a private signing secret with deployment/init-kittygram.mjs; it is not
++part of corresponding source. No user account database is hosted by this service.
+diff --git a/app.lua b/app.lua
+index d3c1c06..5d69cca 100644
+--- a/app.lua
++++ b/app.lua
+@@ -55,8 +55,8 @@ end)
+ 
+ -- set cookie attributes. This code sets cookies to last for 7300 days.
+ app.cookie_attributes = function(self)
+-    local expires = date(true):adddays(7300):fmt("${http}")
+-    return "Expires=" .. expires .. "; Path=/; HttpOnly"
++    local expires = date(true):adddays(90):fmt("${http}")
++    return "Expires=" .. expires .. "; Path=/; HttpOnly; Secure; SameSite=Lax"
+ end
+ 
+ local function render_error(self, error)
+diff --git a/config.example.lua b/config.example.lua
+index 4b22c46..2c05712 100644
+--- a/config.example.lua
++++ b/config.example.lua
+@@ -41,7 +41,7 @@ config({ "development", "production", "docker" }, {
+     require_api_token = true, -- Whether to require a token to use the api. Does not apply to the status or info endpoints.
+     api_token_expire_length = 365 * 86400, -- How long an api token should last for before expiring, in seconds.
+     sqlite = {
+-        database = "kittygram.sqlite",
++        database = "/data/kittygram.sqlite",
+     },
+     redis = {
+         host = "127.0.0.1",
+diff --git a/deployment/additions-firewall.sh b/deployment/additions-firewall.sh
+new file mode 100644
+index 0000000..2523163
+--- /dev/null
++++ b/deployment/additions-firewall.sh
+@@ -0,0 +1,42 @@
++#!/bin/sh
++# Only these new application IPs; no unrelated host traffic is changed.
++set -eu
++chain=UTILIBRE-ADDITIONS-OUT
++iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
++iptables -w -F "$chain"
++iptables -w -A "$chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++iptables -w -A "$chain" -s 172.29.91.10 -d 172.29.91.30 -p tcp --dport 6379 -j RETURN
++for network in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/4 240.0.0.0/4; do
++  iptables -w -A "$chain" -d "$network" -j DROP
++done
++iptables -w -A "$chain" -p tcp -m multiport --dports 80,443 -j RETURN
++iptables -w -A "$chain" -j DROP
++for address in 172.29.74.10 172.29.75.10 172.29.76.10 172.29.77.10 172.29.78.10 172.29.79.10 172.29.80.10 172.29.81.10 172.29.82.10 172.29.85.10 172.29.86.10 172.29.88.10 172.29.89.10 172.29.90.10 172.29.91.10; do
++  iptables -w -C DOCKER-USER -s "$address" -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$chain"
++  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
++done
++# Static QR hosting and the local Mumble pilot need replies only, never new outbound connections.
++static_chain=UTILIBRE-STATIC-OUT
++iptables -w -S "$static_chain" >/dev/null 2>&1 || iptables -w -N "$static_chain"
++iptables -w -F "$static_chain"
++iptables -w -A "$static_chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++iptables -w -A "$static_chain" -j DROP
++for address in 172.29.92.10 172.29.93.10; do
++  iptables -w -C DOCKER-USER -s "$address" -j "$static_chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$static_chain"
++  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
++done
++# Tor needs public relay TCP ports beyond 443, but no host/private-network access.
++# .20 is reserved for the short-lived independent verification client.
++tor_chain=UTILIBRE-TOR-OUT
++iptables -w -S "$tor_chain" >/dev/null 2>&1 || iptables -w -N "$tor_chain"
++iptables -w -F "$tor_chain"
++iptables -w -A "$tor_chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++for network in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/4 240.0.0.0/4; do
++  iptables -w -A "$tor_chain" -d "$network" -j DROP
++done
++iptables -w -A "$tor_chain" -p tcp -j RETURN
++iptables -w -A "$tor_chain" -j DROP
++for address in 172.29.87.10 172.29.87.20; do
++  iptables -w -C DOCKER-USER -s "$address" -j "$tor_chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$tor_chain"
++  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
++done
+diff --git a/deployment/compose.kittygram.yaml b/deployment/compose.kittygram.yaml
+new file mode 100644
+index 0000000..9798977
+--- /dev/null
++++ b/deployment/compose.kittygram.yaml
+@@ -0,0 +1,63 @@
++name: utilibre-kittygram
++x-runtime: &runtime
++  restart: unless-stopped
++  read_only: true
++  cap_drop: [ALL]
++  security_opt: [no-new-privileges:true]
++  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
++  cpus: 1
++  pids_limit: 128
++  logging: {driver: none}
++services:
++  kittygram:
++    <<: *runtime
++    image: utilibre-kittygram:5931c21-p1
++    user: "65534:65534"
++    mem_limit: 384m
++    env_file: /opt/utilibre/kittygram/runtime.env
++    environment:
++      PORT: "8080"
++      NUM_WORKERS: "2"
++      CODE_CACHE: "on"
++      REDIS_HOST: 172.29.91.30
++      REDIS_PORT: "6379"
++      DISABLE_LOGGING: "true"
++      ALLOW_JSON: "false"
++      REQUIRE_API_TOKEN: "true"
++      RATELIMIT_REQUEST_LIMIT: "100"
++      RATELIMIT_WINDOW_SIZE: "660"
++      RESOLVER: 127.0.0.11
++      ABOUT_MESSAGE: '<p>Hosted by <a href="https://utilibre.org">Utilibre</a>. Public Instagram content only; no Instagram login or cookies. Media is fetched by this server. Temporary caches are held in memory. Our edge and Cloudflare process requests and may retain operational/security metadata. <a href="https://utilibre.org/en/privacy">Privacy</a> · <a href="/utilibre-source/kittygram-utilibre.tar.gz">Deployed source</a></p>'
++    tmpfs:
++      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
++      - /app/logs:rw,nosuid,nodev,noexec,size=4m,uid=65534,gid=65534
++      - /data:rw,nosuid,nodev,noexec,size=64m,uid=65534,gid=65534
++    networks:
++      instagram: {ipv4_address: 172.29.91.10}
++    depends_on: [cache]
++  cache:
++    <<: *runtime
++    image: valkey/valkey@sha256:de31910896150d5e754a07d57d227cfdde4e258ddd0d1aa4607f2d2f95843715
++    user: "999:999"
++    mem_limit: 192m
++    command: [valkey-server, --save, "", --appendonly, "no", --maxmemory, 128mb, --maxmemory-policy, allkeys-lru]
++    networks:
++      instagram: {ipv4_address: 172.29.91.30}
++  gateway:
++    <<: *runtime
++    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
++    user: "101:101"
++    mem_limit: 128m
++    tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=128m,mode=1777"]
++    entrypoint: [nginx, -g, "daemon off;"]
++    ports: ["10.10.1.43:3154:8080"]
++    volumes:
++      - ./kittygram-gateway.conf:/etc/nginx/nginx.conf:ro
++      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
++    networks:
++      instagram: {ipv4_address: 172.29.91.20}
++    depends_on: [kittygram]
++networks:
++  instagram:
++    enable_ipv6: false
++    ipam: {config: [{subnet: 172.29.91.0/24}]}
+diff --git a/deployment/firewall.sh b/deployment/firewall.sh
+new file mode 100644
+index 0000000..66c462b
+--- /dev/null
++++ b/deployment/firewall.sh
+@@ -0,0 +1,13 @@
++#!/bin/sh
++# Limit only the explicitly listed new application ports. Existing services,
++# SSH, host INPUT policy, and unrelated Docker traffic are not changed.
++set -eu
++chain=UTILIBRE-TOOLS
++iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
++iptables -w -F "$chain"
++for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3151 3152 3153 3154 3155; do
++  iptables -w -A "$chain" -s 10.10.1.3 -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j RETURN
++  iptables -w -A "$chain" -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j DROP
++done
++iptables -w -A "$chain" -j RETURN
++iptables -w -C DOCKER-USER -i eth0 -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -i eth0 -j "$chain"
+diff --git a/deployment/init-kittygram.mjs b/deployment/init-kittygram.mjs
+new file mode 100644
+index 0000000..5d2da49
+--- /dev/null
++++ b/deployment/init-kittygram.mjs
+@@ -0,0 +1,8 @@
++import {mkdir,writeFile} from 'node:fs/promises';
++import {randomBytes} from 'node:crypto';
++const root='/opt/utilibre/kittygram';
++await mkdir(root,{recursive:true,mode:0o700});
++try {
++  await writeFile(`${root}/runtime.env`,`SECRET=${randomBytes(48).toString('hex')}\n`,{flag:'wx',mode:0o600});
++  console.log('Created private Kittygram signing secret.');
++}catch(error){if(error.code!=='EEXIST')throw error;console.log('Preserved existing Kittygram signing secret.');}
+diff --git a/deployment/kittygram-gateway.conf b/deployment/kittygram-gateway.conf
+new file mode 100644
+index 0000000..d746c75
+--- /dev/null
++++ b/deployment/kittygram-gateway.conf
+@@ -0,0 +1,58 @@
++worker_processes 1;
++pid /tmp/nginx.pid;
++error_log /dev/null;
++events { worker_connections 128; }
++http {
++  include /etc/nginx/mime.types;
++  access_log off;
++  server_tokens off;
++  client_body_temp_path /tmp/client;
++  proxy_temp_path /tmp/proxy;
++  fastcgi_temp_path /tmp/fastcgi;
++  uwsgi_temp_path /tmp/uwsgi;
++  scgi_temp_path /tmp/scgi;
++  proxy_cache_path /tmp/media-cache levels=1:2 keys_zone=kitty_cache:2m max_size=96m inactive=10m;
++  set_real_ip_from 10.10.1.3;
++  real_ip_header X-Forwarded-For;
++  real_ip_recursive on;
++  limit_req_zone $binary_remote_addr zone=kitty_pages:2m rate=20r/m;
++  limit_req_zone $binary_remote_addr zone=kitty_media:2m rate=8r/s;
++  limit_conn_zone $binary_remote_addr zone=kitty_connections:1m;
++  limit_req_status 429;
++  limit_conn_status 429;
++  server {
++    listen 8080;
++    client_max_body_size 8k;
++    limit_conn kitty_connections 24;
++    if ($request_method !~ ^(GET|HEAD|POST)$) { return 405; }
++    add_header Referrer-Policy no-referrer always;
++    add_header X-Content-Type-Options nosniff always;
++    add_header X-Frame-Options DENY always;
++    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
++    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'" always;
++    proxy_set_header Host gram.utilibre.org;
++    proxy_set_header X-Forwarded-Proto https;
++    proxy_set_header Authorization "";
++    proxy_set_header X-Forwarded-For "";
++    proxy_set_header X-Real-IP "";
++    proxy_max_temp_file_size 0;
++    proxy_read_timeout 45s;
++    location /utilibre-source/ { alias /srv/utilibre-source/; autoindex off; }
++    location /api { return 404; }
++    location ~ ^/(static/|proxy|media) {
++      if ($request_method !~ ^(GET|HEAD)$) { return 405; }
++      limit_req zone=kitty_media burst=80 nodelay;
++      proxy_cache kitty_cache;
++      proxy_cache_key "$scheme$proxy_host$request_uri";
++      proxy_cache_valid 200 5m;
++      proxy_cache_lock on;
++      proxy_ignore_headers Set-Cookie;
++      proxy_hide_header Set-Cookie;
++      proxy_pass http://172.29.91.10:8080;
++    }
++    location / {
++      limit_req zone=kitty_pages burst=12 nodelay;
++      proxy_pass http://172.29.91.10:8080;
++    }
++  }
++}
+diff --git a/lib/http.lua b/lib/http.lua
+index bb46493..0c78759 100644
+--- a/lib/http.lua
++++ b/lib/http.lua
+@@ -51,6 +51,8 @@ end
+ 
+ local function resty_request(url, opts)
+     local httpc = http.new()
++    httpc:set_timeouts(5000, 10000, 20000)
++    opts.ssl_verify = true
+ 
+     local headers
+     if opts.headers and type(opts.headers) == "table" then
+diff --git a/lib/media_proxy.lua b/lib/media_proxy.lua
+index ded77a1..f98f517 100644
+--- a/lib/media_proxy.lua
++++ b/lib/media_proxy.lua
+@@ -11,8 +11,12 @@ local WHITELIST = {
+ }
+ 
+ app:get("/mediaproxy", function(self)
+-    local image_uri = util.unescape(self.params.url)
++    if type(self.params.url) ~= "string" or #self.params.url > 8192 then
++        return { status = 400, "Invalid URL", layout = false }
++    end
++    local image_uri = self.params.url
+     local httpc = http.new()
++    httpc:set_timeouts(5000, 10000, 10000)
+     local parsed_uri = httpc:parse_uri(image_uri)
+ 
+     if not parsed_uri then
+@@ -20,10 +24,14 @@ app:get("/mediaproxy", function(self)
+     end
+ 
+     local scheme, host, port, path = unpack(parsed_uri)
++    local authority = image_uri:match("^https://([^/]+)/")
++    if scheme ~= "https" or port ~= 443 or (authority ~= host and authority ~= host .. ":443") then
++        return { status = 400, "HTTPS media URL required", layout = false }
++    end
+ 
+     local allowed = false
+     for _, domain in ipairs(WHITELIST) do
+-        if host == domain or ngx.re.find(host, [[\.]] .. domain .. "$", "jo") then
++        if host == domain or host:sub(-#("." .. domain)) == "." .. domain then
+             allowed = true
+             break
+         end
+@@ -37,6 +45,8 @@ app:get("/mediaproxy", function(self)
+         scheme = scheme,
+         host = host,
+         port = 443,
++        ssl_verify = true,
++        ssl_server_name = host,
+     }
+ 
+     if err then
+@@ -57,11 +67,23 @@ app:get("/mediaproxy", function(self)
+         return { status = 502, "Request Failed" }
+     end
+ 
++    local content_type = res.headers["Content-Type"] or ""
++    if (res.status ~= 200 and res.status ~= 206) or not (content_type:match("^image/") or content_type:match("^video/")) then
++        httpc:close()
++        return { status = 502, "Media unavailable", layout = false }
++    end
++    local maximum = 128 * 1024 * 1024
++    if tonumber(res.headers["Content-Length"] or 0) > maximum then
++        httpc:close()
++        return { status = 413, "Media too large", layout = false }
++    end
++
+     ngx.status = res.status
+     ngx.header.content_type = res.headers["Content-Type"]
+     ngx.header.content_length = res.headers["Content-Length"]
+     ngx.header.content_range = res.headers["Content-Range"]
+ 
++    local length, started = 0, ngx.now()
+     repeat
+         local buffer, err = res.body_reader(8192)
+         if err then
+@@ -70,9 +92,12 @@ app:get("/mediaproxy", function(self)
+         end
+ 
+         if buffer then
++            length = length + #buffer
++            if length > maximum or ngx.now() - started > 60 then break end
+             ngx.print(buffer)
+         end
+     until not buffer
++    httpc:close()
+ 
+     return {
+         skip_render = true,
+diff --git a/nginx.example.conf b/nginx.example.conf
+index fbfe1cd..aa05b06 100644
+--- a/nginx.example.conf
++++ b/nginx.example.conf
+@@ -1,5 +1,5 @@
+ worker_processes ${{NUM_WORKERS}};
+-error_log stderr notice;
++error_log /dev/null;
+ daemon off;
+ pid logs/nginx.pid;
+ 
+@@ -11,12 +11,26 @@ env REDIS_HOST;
+ env REDIS_PORT;
+ env ENABLE_ATOM;
+ env BASE_ATOM_PATH;
++env SECRET;
++env DISABLE_LOGGING;
++env ABOUT_MESSAGE;
++env REQUIRE_API_TOKEN;
++env RATELIMIT_WINDOW_SIZE;
++env RATELIMIT_REQUEST_LIMIT;
+ 
+ events {
+   worker_connections 1024;
+ }
+ 
+ http {
++  access_log off;
++  client_body_temp_path /tmp/client;
++  proxy_temp_path /tmp/proxy;
++  fastcgi_temp_path /tmp/fastcgi;
++  uwsgi_temp_path /tmp/uwsgi;
++  scgi_temp_path /tmp/scgi;
++  client_max_body_size 8k;
++  client_body_buffer_size 8k;
+   include mime.types;
+   lua_shared_dict web_state 5m;
+   lua_package_path "./?/?.lua;./?/init.lua;;";

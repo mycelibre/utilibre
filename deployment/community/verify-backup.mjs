@@ -11,6 +11,12 @@ if (existsSync(`${target}/binternet-onion-identity.tar.gz`)) {
   console.log('Onion identity archive structure verified; no key material printed.');
 }
 const name = `utilibre-community-restore-${process.pid}`;
+if (existsSync(`${target}/additional-private-config.tar.gz`)) {
+  const names = execFileSync('tar', ['-tzf', `${target}/additional-private-config.tar.gz`], { encoding: 'utf8' }).trim().split('\n');
+  if (!names.length || names.some(file => !['mumble/runtime.env', 'kittygram/runtime.env'].includes(file))) throw Error('Unexpected additional private archive content');
+  if (existsSync(`${target}/mumble.sqlite`) && !names.includes('mumble/runtime.env')) throw Error('Missing Mumble private configuration');
+  console.log('Additional private configuration archive structure verified; no credentials printed.');
+}
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8' });
 let created = false;
 try {
@@ -36,15 +42,15 @@ try {
     const tables = docker('exec', name, 'psql', '-U', 'postgres', '-d', 'pollaris', '-Atc', "SELECT count(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('poll','vote','users')").trim();
     if (Number(tables) !== 3) throw Error('Pollaris application tables did not restore');
   }
-  for (const filename of ['fmd.sqlite', 'kuma.sqlite']) {
-    if (filename === 'kuma.sqlite' && !existsSync(`${target}/${filename}`)) continue;
+  for (const filename of ['fmd.sqlite', 'kuma.sqlite', 'mumble.sqlite']) {
+    if (filename !== 'fmd.sqlite' && !existsSync(`${target}/${filename}`)) continue;
     execFileSync('python3', ['-c', `import sqlite3,sys
 c=sqlite3.connect('file:'+sys.argv[1]+'?mode=ro',uri=True)
 assert c.execute('PRAGMA integrity_check').fetchall()==[('ok',)]
 assert c.execute("SELECT count(*) FROM sqlite_master WHERE type='table'").fetchone()[0]>0
 c.close()`, `${target}/${filename}`]);
   }
-  writeFileSync(`${target}/RESTORE-VERIFIED.txt`, `${new Date().toISOString()}\nRallly PostgreSQL restore, Pollaris restore (when included), FMD SQLite integrity and Kuma SQLite integrity (when included) passed. This is not a full Android, monitoring or SSO workflow test. Backup remains on this VM, not off-site.\n`, { mode: 0o600 });
+  writeFileSync(`${target}/RESTORE-VERIFIED.txt`, `${new Date().toISOString()}\nRallly PostgreSQL restore, Pollaris restore (when included), FMD SQLite integrity, Kuma and Mumble SQLite integrity (when included) passed. Private configuration archive structure checked. This is not a full Android, voice, monitoring or SSO workflow test. Backup remains on this VM, not off-site.\n`, { mode: 0o600 });
   console.log('Community PostgreSQL restore and SQLite backup integrity passed; private snapshot remains on-host.');
 } finally {
   if (created) docker('rm', '-f', name);

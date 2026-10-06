@@ -34,7 +34,7 @@ try {
     const external = new Set(), errors = [], failed = [];
     page.on('request', request => { if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== origin) external.add(new URL(request.url()).hostname); });
     page.on('pageerror', error => errors.push(error.message));
-    page.on('response', response => { if (response.status() >= 400) failed.push({ path: new URL(response.url()).pathname.slice(0,45), status: response.status() }); });
+    page.on('response', response => { if (response.status() >= 400) failed.push({ path: new URL(response.url()).pathname, status: response.status(), server: response.headers()['server'], cache: response.headers()['cf-cache-status'] }); });
     await page.goto(`${origin}/utilibre-language.html?lang=${lang}`);
     await page.waitForURL(`${origin}/`);
     await page.locator('a[href*="/directory/category/"], a[href*="/directory/game/"]').first().waitFor();

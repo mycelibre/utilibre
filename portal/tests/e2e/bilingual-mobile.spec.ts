@@ -100,6 +100,8 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
     publicBinternetUrl: 'https://binternet.utility.test/',
     publicGothubUrl: 'https://gothub.utility.test/',
     publicTranslateUrl: 'https://translate.utility.test/',
+    publicBooksUrl: 'https://books.utility.test/', publicFourgetUrl: 'https://4get.utility.test/',
+    publicOverflowUrl: 'https://overflow.utility.test/', publicTwitchUrl: 'https://twitch.utility.test/',
     publicResumeUrl: 'https://cv.utility.test/', publicDesignUrl: 'https://design.utility.test/', publicBudgetUrl: 'https://budget.utility.test/',
     listedServices: ['whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet', 'translite'],
     enabledServices: catalog.filter((entry) => entry.kind === 'service').map((entry) => entry.id),
@@ -108,7 +110,9 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
   for (const language of ['en', 'es'] as const) {
     await page.emulateMedia({ colorScheme: language === 'es' ? 'dark' : 'light' });
     await page.goto(`/${language}/`);
-    await expect(catalogRows(page)).toHaveCount(30);
+    await expect(catalogRows(page)).toHaveCount(34);
+    await expect(page.locator('[data-catalog-id="biblioreads"] .catalog-ledger-launch')).toHaveAttribute('href', 'https://books.utility.test/');
+    await expect(page.locator('[data-catalog-id="safetwitch"] .catalog-ledger-launch')).toHaveAttribute('href', `https://twitch.utility.test/utilibre-language.html?lang=${language}`);
     await expect(page.locator('[data-catalog-id="gothub"] .catalog-ledger-launch')).toHaveAttribute('href', 'https://gothub.utility.test/');
     await expect(page.locator('[data-catalog-id="translite"] .catalog-ledger-launch')).toHaveAttribute('href', `https://translate.utility.test/?tl=${language}`);
     await expect(page.locator('[data-catalog-id="binternet"] .catalog-ledger-launch')).toHaveAttribute('href', 'https://binternet.utility.test/');
@@ -136,7 +140,7 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
     if (language === 'es') await expect(page.locator('h1')).toHaveText('¿Qué necesitás hacer?');
     await page.screenshot({ path: testInfo.outputPath(`toolbox-${language}.png`), fullPage: false });
     await page.goto(`/${language}/?view=all`);
-    for (const id of ['dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow']) {
+    for (const id of ['dumb', 'libremdb', 'degoog']) {
       const row = page.locator(`[data-catalog-id="${id}"]`);
       await expect(row).toBeVisible();
       await expect(row.locator('.catalog-ledger-launch')).toHaveCount(0);

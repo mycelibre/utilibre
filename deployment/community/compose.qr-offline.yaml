@@ -1,0 +1,29 @@
+name: utilibre-qr-offline
+services:
+  qr-offline:
+    image: utilibre-qr-offline:0fde700-p1
+    restart: unless-stopped
+    read_only: true
+    user: "101:101"
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 64
+    logging: {driver: none}
+    ports: ["10.10.1.43:3155:8080"]
+    volumes:
+      - ./qr-offline-nginx.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    networks:
+      qr: {ipv4_address: 172.29.93.10}
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+networks:
+  qr:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.93.0/24}]}

@@ -17,6 +17,8 @@ export interface PublicConfig {
   publicEncryptUrl: string;
   publicDrawUrl: string;
   publicQrUrl: string;
+  publicQrToolsUrl: string;
+  publicInstagramUrl: string;
   publicBridgeUrl: string;
   publicNotifyUrl: string;
   publicSecretUrl: string;
@@ -36,6 +38,10 @@ export interface PublicConfig {
   publicBinternetUrl: string;
   publicGothubUrl: string;
   publicTranslateUrl: string;
+  publicBooksUrl: string;
+  publicFourgetUrl: string;
+  publicOverflowUrl: string;
+  publicTwitchUrl: string;
   searxngDeployedVersion: string;
   listedServices: string[];
   enabledServices: string[];
@@ -61,6 +67,8 @@ const defaults: PublicConfig = {
   publicEncryptUrl: '',
   publicDrawUrl: '',
   publicQrUrl: '',
+  publicQrToolsUrl: '',
+  publicInstagramUrl: '',
   publicBridgeUrl: '',
   publicNotifyUrl: '',
   publicSecretUrl: '',
@@ -80,6 +88,10 @@ const defaults: PublicConfig = {
   publicBinternetUrl: '',
   publicGothubUrl: '',
   publicTranslateUrl: '',
+  publicBooksUrl: '',
+  publicFourgetUrl: '',
+  publicOverflowUrl: '',
+  publicTwitchUrl: '',
   searxngDeployedVersion: '',
   listedServices: [],
   enabledServices: [],

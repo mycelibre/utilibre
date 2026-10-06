@@ -14,6 +14,7 @@ import {
 import type { PublicConfig } from '../../src/config';
 
 const baseConfig: PublicConfig = {
+  publicBooksUrl: '', publicQrToolsUrl: '', publicInstagramUrl: '', publicFourgetUrl: '', publicOverflowUrl: '', publicTwitchUrl: '',
   projectName: 'Utilibre', projectTagline: '', projectTaglineEn: '', projectTaglineEs: '',
   sourceCodeUrl: '', supportUrl: '', contactUrl: '', publicSearchUrl: '', publicRedditUrl: '',
   publicRssUrl: '', publicPasteUrl: '', enabledServices: [], defaultLanguage: 'en',
@@ -45,10 +46,10 @@ describe('catalog discovery metadata', () => {
     expect(catalog.map((entry) => entry.id)).toEqual([
       'pollaris',
       'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd',
-      'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet',
+      'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'kittygram', 'rimgo', 'mumble', 'biblioreads', 'gothub', 'binternet',
       'translite', 'whisper-web', 'jupyterlite',
       'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma',
-      'bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools',
+      'bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'qr-offline', 'ittools',
       'searxng', 'freshrss', 'redlib', 'privatebin', 'private-router',
     ]);
     expect(catalog.every((entry) => discoveryGroups.includes(entry.discoveryGroup))).toBe(true);
@@ -57,7 +58,7 @@ describe('catalog discovery metadata', () => {
     expect(catalog.filter((entry) => entry.featuredOrder !== undefined)
       .sort((left, right) => (left.featuredOrder ?? 0) - (right.featuredOrder ?? 0))
       .map((entry) => entry.id))
-      .toEqual(['bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite']);
+      .toEqual(['bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite', 'biblioreads', 'fourget', 'anonymousoverflow', 'safetwitch', 'qr-offline', 'kittygram', 'rimgo', 'mumble']);
   });
 
   it('keeps unrequested retired applications out of the catalog', () => {
@@ -68,6 +69,14 @@ describe('catalog discovery metadata', () => {
 });
 
 describe('config-gated catalog discovery', () => {
+  it('keeps prepared Gram and QR addresses unlaunchable until explicitly enabled', () => {
+    const pending = config({ listedServices: ['kittygram', 'qr-offline'], publicInstagramUrl: 'https://gram.utilibre.org/', publicQrToolsUrl: 'https://qrtools.utilibre.org/' });
+    expect(entryLaunch(catalogEntry('kittygram')!, 'en', pending)).toBeNull();
+    expect(entryLaunch(catalogEntry('qr-offline')!, 'es', pending)).toBeNull();
+    const ready = {...pending, enabledServices: ['kittygram', 'qr-offline']};
+    expect(entryLaunch(catalogEntry('kittygram')!, 'es', ready)?.href).toBe('https://gram.utilibre.org/');
+    expect(entryLaunch(catalogEntry('qr-offline')!, 'es', ready)?.href).toBe('https://qrtools.utilibre.org/?lang=es');
+  });
   it('lists explicitly requested pending services without enabling their launch', () => {
     const listedServices = ['whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd'];
     const pending = config({ listedServices });
