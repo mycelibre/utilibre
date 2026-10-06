@@ -17,7 +17,7 @@ x-runtime: &runtime
 services:
   jupyterlite:
     <<: *runtime
-    image: utilibre-jupyterlite:0.8.5-p1
+    image: utilibre-jupyterlite:0.8.5-p2
     read_only: true
     user: "101:101"
     volumes:

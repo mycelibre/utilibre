@@ -2,7 +2,7 @@
 # For proxied DNS, Caddy must trust ONLY Cloudflare networks before {client_ip}
 # is used. Never trust visitor-supplied CF-Connecting-IP from arbitrary peers.
 # These routes are for this app VM only. Do not expose port 3135 (Kuma admin).
-# Keep poll.utilibre.org disabled until SMTP/support/licensing setup is complete.
+# Rallly uses its restricted gateway and invitation-only Utilibre OIDC login.
 
 bridge.utilibre.org {
 	encode zstd gzip
@@ -45,10 +45,42 @@ status.utilibre.org {
 	reverse_proxy 10.10.1.43:3125
 }
 
-# poll.utilibre.org {
-#     request_body { max_size 64KB }
-#     reverse_proxy 10.10.1.43:3123 {
-#         header_up X-Real-IP {client_ip}
-#         header_up X-Forwarded-For {client_ip}
-#     }
-# }
+poll.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3123 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+
+tumblr.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3139 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+
+tenor.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3140 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+
+fmd.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3141 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+
+lyrics.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3142 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}

@@ -1,0 +1,15 @@
+# Build with /opt/utilibre/community-src/4get at 03ba5d7 as the context.
+FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0
+RUN apk add --no-cache apache2 php84 php84-apache2 php84-fileinfo php84-openssl \
+  php84-iconv php84-dom php84-sodium php84-curl php84-pecl-apcu \
+  php84-pecl-imagick php84-mbstring ca-certificates font-dejavu
+WORKDIR /var/www/html/4get
+COPY . .
+ENV FOURGET_SERVER_NAME="4get · Utilibre" FOURGET_API_ENABLED=0
+RUN cp docker/apache/http/httpd.conf /etc/apache2/httpd.conf \
+  && sed -i -e 's/Listen 80/Listen 8080/' -e 's/ServerTokens OS/ServerTokens Prod/' \
+     -e 's/ServerSignature On/ServerSignature Off/' /etc/apache2/httpd.conf \
+  && php84 docker/gen_config.php
+USER 100:101
+EXPOSE 8080
+CMD ["httpd", "-DFOREGROUND", "-c", "PidFile /tmp/httpd.pid", "-c", "Mutex file:/tmp default"]

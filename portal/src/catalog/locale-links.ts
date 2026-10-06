@@ -15,6 +15,10 @@ export function localizedServiceUrl(id: string, base: string, language: Language
   if (id === 'jupyterlite') {
     url.pathname = language === 'es' ? '/es/lab/index.html' : '/lab/index.html';
     url.search = new URLSearchParams({ path: language === 'es' ? 'Empeza-aqui.ipynb' : 'Start-here.ipynb' }).toString();
+  } else if (id === 'priviblur' && !path) {
+    url.pathname = '/settings/restore';
+    // Upstream requires all boolean preferences even for a language change.
+    url.search = new URLSearchParams({ language: language === 'es' ? 'es' : 'en_US', theme: 'auto', expand_posts: 'off', version: '1' }).toString();
   } else if (id === 'bentopdf') {
     url.pathname = url.pathname.replace(/^\/(en|es)(?=\/|$)/, '');
     // English pages are at the root; this release has no /en directory.

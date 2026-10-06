@@ -14,6 +14,9 @@ describe('donation language links', () => {
 });
 
 describe('verified upstream language links', () => {
+  it('restores a complete valid Priviblur preference set for Spanish', () => {
+    expect(localizedServiceUrl('priviblur', 'https://tumblr.test/', 'es')).toBe('https://tumblr.test/settings/restore?language=es&theme=auto&expand_posts=off&version=1');
+  });
   it('uses real Bento language pages, including task shortcuts', () => {
     expect(localizedServiceUrl('bentopdf', 'https://pdf.test/', 'es')).toBe('https://pdf.test/es/');
     expect(localizedServiceUrl('bentopdf', 'https://pdf.test/es/', 'en', 'ocr-pdf.html')).toBe('https://pdf.test/ocr-pdf.html');

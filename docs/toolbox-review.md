@@ -1,5 +1,87 @@
 # Browser toolbox review — 2026-10-06
 
+## Public-reader expansion checkpoint — October 6, 12:50 UTC
+
+This section supersedes older deployment states below. Installation, a passing
+homepage, successful content retrieval, and public readiness are separate checks.
+
+| Application | Listener | Verified / remaining work |
+| --- | --- | --- |
+| Rallly 4.15.3 | app LAN 3123; `poll.utilibre.org` | Healthy app/database; native Utilibre OIDC, verified-email/approved-group policy, email-login bypass routes blocked. Public HTTPS returns 525, so completed login, poll creation and guest voting are not yet verified. |
+| Priviblur 251a8e6 | app LAN 3139; `tumblr.utilibre.org` | Tumblr staff blog rendered; security dependency updates, private-network egress blocks and RAM-only cache. Public HTTPS 525. Modified-source archive linked prominently. |
+| Mezzo 1.4.0 | app LAN 3140; `tenor.utilibre.org` | A real GIF search returned results. Public HTTPS 525; final media/browser test pending. |
+| FMD Server 0.17.0 | app LAN 3141; `fmd.utilibre.org` | Invitation token required. Two synthetic accounts demonstrated opaque-location round-trip and account separation, then both accounts/data were deleted. HTTPS 525 and real Android/push tests remain. |
+| Dumb | app LAN 3142; proposed `lyrics.utilibre.org` | Homepage works, but Genius search fails and a lyric URL returns a soft error. Not publicly advertised as working. |
+| DeGoog 1.0.0 core | loopback 3143 | Public-instance lockdown denies unauthenticated settings API reads/writes. Indexer defaults off. No engines installed: the separate official extensions repository has no identified license. |
+| LibreMDB | loopback 3144, stopped | IMDb search/title requests failed. Published image contains Node 18 / Next.js 12; public deployment requires a supported build and working upstream access. |
+| 4get 03ba5d7 | loopback 3145 | Built with Apache and PHP 8.4 on Alpine 3.23; real DuckDuckGo and Wiby searches passed. No rotating proxies or browser-challenge workarounds. Public gateway/abuse review remains. |
+| SafeTwitch | loopback 3146 | Discovery API returns real categories. Static frontend served by current pinned nginx; old backend has unrestricted URL-fetch routes. Must harden and test playback before opening publicly. |
+| AnonymousOverflow | loopback 3147 | Real Stack Overflow question and answers rendered through the API. Public runtime/security, quota/cache and HTTPS checks remain. |
+| GotHub 24bedc8 | loopback 3148 | Public Utilibre GitHub repository rendered. Image uses Alpine 3.16 and older dependencies; update and review before exposing it. Upstream seeks maintainers. |
+
+Runtime recipes are `deployment/community/compose*.yaml`. Evaluation services
+have loopback listeners, capability drops, read-only roots, resource limits,
+disabled IPv6, and firewall blocks on private/host destinations. These controls
+are not an independent security audit or a complete open-proxy defense. The
+reader evaluation stack does not restart automatically. Native language settings
+are used where available; Priviblur requires the complete Spanish preference
+restore URL, not only a `language` parameter. Experimental entries are searchable
+in the bilingual catalog and software list, with no launch links and no claim
+of public availability; they are not featured on the default homepage.
+
+Merge `deployment/community/Caddyfile.community` on the separate edge VM,
+preserving the existing Cloudflare-only trusted proxy ranges. The file supplies
+Rallly, Priviblur, Mezzo and FMD routes; adding a route does not complete their
+end-to-end tests. Do not publish the loopback evaluations. Do not open FMD
+registration or replace its Android authentication with a browser login gate.
+
+Rallly uses the AGPL distribution without purchasing a key or altering license
+checks. Native `instance_settings.footer_links` contains English/Spanish return
+links and the matching upstream source. All three temporary Rallly QA identities
+were retired: groups cleared, passwords made unusable, sessions/tokens/MFA
+fixtures revoked; no owner credentials were changed. The approved callback
+could not complete because of public TLS, while the outsider policy rejected
+access. Community snapshot `2026-10-06T12-31-17-122Z` passed a disposable
+PostgreSQL restore and FMD SQLite integrity checks. It is on-host only and
+unscheduled, not a complete backup/recovery service.
+
+### Public directories
+
+- PrivateBin: **published**, confirmed in the [official directory](https://privatebin.info/directory/)
+  on October 6. Automated geolocation shows the Cloudflare edge, not necessarily
+  the origin's country.
+- RSS-Bridge: row prepared on `mycelibre/rss-bridge:utilibre-public-instance-20261006`;
+  [create the pull request](https://github.com/RSS-Bridge/rss-bridge/compare/master...mycelibre:utilibre-public-instance-20261006?expand=1).
+  GitHub refused PR creation: the current personal token lacks permission.
+  The row discloses Germany/Hetzner, Cloudflare and the three enabled bridges.
+- ntfy: same credential blocker;
+  [prepared comparison](https://github.com/binwiederhier/ntfy/compare/main...mycelibre:ntfy:utilibre-public-instance-20261006?expand=1).
+- Existing [Redlib PR 117](https://github.com/redlib-org/redlib-instances/pull/117)
+  and [SearXNG request 941](https://github.com/searxng/searx-instances/issues/941)
+  remain open. No duplicate requests created.
+- Priviblur, Mezzo, Dumb, LibreMDB, DeGoog, 4get, SafeTwitch, AnonymousOverflow
+  and GotHub are **not submitted**: public readiness is incomplete. Mezzo and
+  Codeberg submissions also need forge credentials. No third-party public-host
+  directory was found in the FMD project's documentation; its community-server
+  page lists alternative implementations, not hosted instances.
+
+### Other requested assessments
+
+From [Private.coffee's services](https://private.coffee/services.html), the
+strongest third-party candidates are CyberChef (browser-only data tools),
+HedgeDoc (collaborative Markdown), CryptPad (encrypted documents; requires a
+separate sandbox origin and storage operations), and FacilMap (shared maps;
+disclose external tiles/routing). No general recommendation was treated as
+permission to install it. Their own projects were excluded from this shortlist.
+
+No current Utilibre tool replaces EteSync's encrypted contacts/calendar/task
+synchronization. Matrix is worth an invitation-only pilot if there is an actual
+community and capacity for moderation, media retention, updates and recovery;
+it was not installed. Syncplay is feasible and Apache-2.0 licensed, but requires
+desktop clients/players and a separate TCP/TLS endpoint (normally 8999), not a
+normal Caddy HTTP route. It synchronizes playback rather than storing/sharing
+videos. It too was assessed, not installed.
+
 ## Current checkpoint: approved-account pilots
 
 This checkpoint supersedes the historical private-setup notes below.
@@ -28,11 +110,29 @@ This checkpoint supersedes the historical private-setup notes below.
 - Wakapi has a small published patch for free-service retention wording and
   empty-account/OIDC-only UI errors. Public registration, paid subscriptions,
   imports and leaderboards are disabled. Raw activity retention is 3 months.
-- Rallly remains stopped: upstream asks multi-user operators to purchase a
-  self-hosting license (honor system). No license was purchased. BreezeWiki
-  remains unavailable because Fandom article requests fail.
-- A return-to-Utilibre link inside every upstream app was assessed, not deployed.
-  Native links are preferable; apps without them need maintained source patches.
+- Rallly remains staged, not publicly enabled. Licensing is not itself a
+  mandatory-purchase blocker: the developer's [May 30 clarification](https://github.com/lukevella/rallly/discussions/1714)
+  confirms the AGPL code may be self-hosted without purchasing a key. The
+  [commercial terms](https://rallly.co/terms-of-use) expressly preserve
+  open-source rights. No paid license was purchased and no license checks were
+  modified; operational readiness still needs testing before launch.
+- Return links use native settings only: SearXNG custom footer links,
+  PrivateBin `main.info`, PairDrop's About-page custom button, Uptime Kuma's
+  status-page Markdown footer, authentik's flow footer, and JupyterLite's
+  built-in Help menu configuration. Spanish/English links are provided where
+  multiple links are supported; PairDrop has one bilingual-titled button.
+  JupyterLite opens the matching-language portal in a new tab. No upstream
+  source patches, injected scripts, custom plugins or proxy rewriting were
+  added for navigation. Other apps are unchanged.
+- BreezeWiki has two independent blockers: `wiki.utilibre.org` returns
+  Cloudflare 525 and the Caddy private endpoint also fails its TLS handshake;
+  its healthy backend returns 503 on tested articles because Fandom rejects
+  server-side requests. Native JSONP/browser fetching is currently disabled.
+  Enabling it would expose visitors' IP addresses/requests to Fandom and load
+  its scripts; this requires an explicit privacy decision. It also requires
+  bounded POST support in the gateway (currently GET/HEAD-only, 1 KB bodies),
+  working public HTTPS on the separate Caddy VM, and end-to-end article tests.
+  Neither the mode nor the public route was enabled by this navigation change.
 
 Fresh verified snapshots: identity `2026-10-06T03-32-46-594Z`, expanded apps
 `2026-10-06T03-32-52-667Z` under their respective `/opt/utilibre/*-backups/`

@@ -65,6 +65,7 @@ function providerMetadata(providerId: FossProviderId): Pick<CatalogEntry, 'provi
 
 export const catalog: CatalogEntry[] = [
   ...expandedTools(),
+  ...readerEvaluations(),
   browserTool('whisper-web', 'files', 17, 'publicTranscribeUrl',
     { en: 'Transcribe audio · pilot', es: 'Transcribir audio · piloto' },
     { en: 'Turn a short recording into downloadable text with Whisper Web.', es: 'Convertí una grabación corta en texto descargable con Whisper Web.' },
@@ -182,6 +183,29 @@ export function localized(text: LocalizedText, language: Language): string {
   return text[language];
 }
 
+function readerEvaluations(): CatalogEntry[] {
+  const entries: { id: FossProviderId; name: LocalizedText; description: LocalizedText; reason: LocalizedText; upstream: string }[] = [
+    { id: 'dumb', name: { en: 'Read lyrics · Dumb', es: 'Leer letras · Dumb' }, description: { en: 'Read public Genius lyrics through an alternative interface.', es: 'Leé letras públicas de Genius con una interfaz alternativa.' }, reason: { en: 'Not available: Genius is blocking requests from this server.', es: 'No disponible: Genius bloquea las solicitudes de este servidor.' }, upstream: 'Genius' },
+    { id: 'libremdb', name: { en: 'Look up films · LibreMDB', es: 'Consultar películas · LibreMDB' }, description: { en: 'Browse film information from IMDb through an alternative reader.', es: 'Consultá información de películas de IMDb con una interfaz alternativa.' }, reason: { en: 'Not available: the application needs security updates and usable IMDb responses.', es: 'No disponible: la aplicación necesita actualizaciones de seguridad y respuestas utilizables de IMDb.' }, upstream: 'IMDb' },
+    { id: 'degoog', name: { en: 'Search with DeGoog', es: 'Buscar con DeGoog' }, description: { en: 'An additional search interface being evaluated alongside SearXNG.', es: 'Una interfaz de búsqueda adicional que estamos evaluando junto a SearXNG.' }, reason: { en: 'Not available: search engines are not installed; extension licensing needs clarification.', es: 'No disponible: faltan motores de búsqueda y debemos aclarar la licencia de las extensiones.' }, upstream: 'Search providers, if enabled later' },
+    { id: 'fourget', name: { en: 'Search with 4get', es: 'Buscar con 4get' }, description: { en: 'Search different providers through a lightweight interface.', es: 'Buscá en distintos proveedores con una interfaz liviana.' }, reason: { en: 'Private testing only. Public access and safety checks are not complete.', es: 'Solo en pruebas privadas. Faltan las verificaciones de seguridad y acceso público.' }, upstream: 'Selected search providers' },
+    { id: 'safetwitch', name: { en: 'Watch Twitch · SafeTwitch', es: 'Ver Twitch · SafeTwitch' }, description: { en: 'Browse public Twitch channels through an alternative interface.', es: 'Explorá canales públicos de Twitch con una interfaz alternativa.' }, reason: { en: 'Private testing only. Video proxy security and playback checks are pending.', es: 'Solo en pruebas privadas. Falta verificar la seguridad del intermediario de video y la reproducción.' }, upstream: 'Twitch' },
+    { id: 'anonymousoverflow', name: { en: 'Read Stack Overflow', es: 'Leer Stack Overflow' }, description: { en: 'Read programming questions and answers with AnonymousOverflow.', es: 'Leé preguntas y respuestas de programación con AnonymousOverflow.' }, reason: { en: 'Article retrieval passed private testing. Public security and HTTPS checks are pending.', es: 'La lectura de un artículo pasó la prueba privada. Faltan las verificaciones de seguridad y HTTPS público.' }, upstream: 'Stack Exchange' },
+    { id: 'gothub', name: { en: 'Read GitHub · GotHub', es: 'Leer GitHub · GotHub' }, description: { en: 'Browse public GitHub repositories through a lightweight reader.', es: 'Explorá repositorios públicos de GitHub con una interfaz liviana.' }, reason: { en: 'Private testing passed for a repository. Runtime updates and public checks are pending.', es: 'La prueba privada de un repositorio funcionó. Faltan actualizar el entorno y verificar el acceso público.' }, upstream: 'GitHub' },
+  ];
+  return entries.map((entry) => ({
+    id: entry.id, ...providerMetadata(entry.id), kind: 'service', implementation: 'upstream-application',
+    category: 'service', discoveryGroup: 'find', name: entry.name, description: entry.description,
+    help: entry.reason, unavailableReason: entry.reason, labels: ['server', 'proxy'],
+    dataFlow: { en: 'Not open to visitors. Evaluation requests are sent by Utilibre to the upstream provider, which sees the server address and request.', es: 'No está abierto al público. Utilibre envía las solicitudes de prueba al proveedor, que ve la dirección del servidor y la solicitud.' },
+    upstreamServices: [entry.upstream], filesUploaded: false,
+    temporaryStorage: { en: 'Private evaluation only; this is not a file storage service.', es: 'Solo en evaluación privada; no es un servicio de almacenamiento de archivos.' },
+    retention: { en: 'Public retention settings are not yet established. Do not send personal data.', es: 'Todavía no hay una política de conservación para uso público. No enviés datos personales.' },
+    logging: { en: 'Evaluation logging and upstream retention vary by application; no public no-logging claim is made.', es: 'Los registros de prueba y la conservación del proveedor varían según la aplicación; no afirmamos que un servicio público carezca de registros.' },
+    modified: false, operationalStatus: 'maintenance',
+  }));
+}
+
 function expandedTools(): CatalogEntry[] {
   const entries: Array<{
     id: FossProviderId; group: DiscoveryGroup; name: LocalizedText;
@@ -211,10 +235,10 @@ function expandedTools(): CatalogEntry[] {
     },
     {
       id: 'rallly', group: 'text-data', name: { en: 'Meeting polls · Rallly', es: 'Encuestas para reuniones · Rallly' },
-      description: { en: 'Find a meeting time with a group. Rallly is prepared but not running yet.', es: 'Encontrá un horario para reunirte con un grupo. Rallly está preparado, pero todavía no está en funcionamiento.' },
-      reason: { en: 'Upstream asks for a paid self-hosting license for multiple users. A decision is pending; no purchase has been made.', es: 'El proyecto solicita una licencia paga de autoalojamiento para varios usuarios. Falta decidir cómo seguir; no se hizo ninguna compra.' },
-      help: { en: 'This pinned self-hosted release does not offer anonymous poll creation. No shared organizer account or license bypass is provided. The launch date is not established.', es: 'Esta versión autoalojada no permite crear encuestas anónimamente. No ofrecemos una cuenta compartida de organización ni evitamos las restricciones de licencia. Todavía no hay fecha de apertura.' },
-      data: { en: 'An enabled installation would store polls, participant responses and organizer accounts on the server. This staged instance currently accepts none of that data.', es: 'Una instalación habilitada guardaría encuestas, respuestas y cuentas de organización en el servidor. Esta instancia preparada todavía no recibe esos datos.' },
+      description: { en: 'Find a meeting time with a group. Installed; public access is being completed.', es: 'Encontrá un horario para reunirte con un grupo. Ya está instalado; estamos completando el acceso público.' },
+      reason: { en: 'The HTTPS route and final login checks are pending. This is not a license-payment block.', es: 'Faltan la ruta HTTPS y las pruebas finales de acceso. No está bloqueado por el pago de una licencia.' },
+      help: { en: 'Organizers will use approved Utilibre accounts; invited participants can vote as guests. The stock AGPL release keeps its Rallly branding. Public access stays closed until login and poll tests pass.', es: 'Quienes organicen usarán cuentas aprobadas de Utilibre; las personas invitadas podrán votar sin cuenta. La versión AGPL conserva la marca Rallly. El acceso sigue cerrado hasta terminar las pruebas de ingreso y encuestas.' },
+      data: { en: 'Polls, participant responses and organizer accounts are stored on Utilibre, not end-to-end encrypted. Share poll links only with intended participants.', es: 'Las encuestas, respuestas y cuentas de organización se guardan en Utilibre, sin cifrado de extremo a extremo. Compartí los enlaces solo con las personas que quieras invitar.' },
     },
     {
       id: 'breezewiki', group: 'find', name: { en: 'Read wikis · BreezeWiki', es: 'Leer wikis · BreezeWiki' },
@@ -230,23 +254,44 @@ function expandedTools(): CatalogEntry[] {
       help: { en: 'Choose Login with Utilibre. Configure your editor explicitly to send activity here and keep its API key private. Account recovery is handled by Utilibre login, not a separate Wakapi password.', es: 'Elegí Login with Utilibre. Configurá tu editor expresamente para enviar actividad acá y mantené privada su clave API. Recuperá el acceso desde el inicio de sesión de Utilibre, no con una contraseña separada de Wakapi.' },
       data: { en: 'Configured editor clients send coding-activity metadata to Utilibre. The server stores it for reporting; raw activity retention is configured to three months. Public leaderboards and imports are disabled.', es: 'Los editores configurados envían metadatos de actividad a Utilibre. El servidor los guarda para generar informes; la conservación de actividad original está configurada en tres meses. Las clasificaciones públicas y las importaciones están desactivadas.' },
     },
+    {
+      id: 'priviblur', group: 'find', name: { en: 'Read Tumblr · Priviblur', es: 'Leer Tumblr · Priviblur' },
+      description: { en: 'Read public Tumblr blogs without a Tumblr account. Public HTTPS is pending.', es: 'Leé blogs públicos de Tumblr sin una cuenta de Tumblr. Falta habilitar el acceso HTTPS público.' },
+      reason: { en: 'Blog retrieval works on the application server; the public HTTPS route is not ready.', es: 'La lectura funciona en el servidor de aplicaciones; la ruta HTTPS pública todavía no está lista.' },
+      help: { en: 'For public posts only, not private accounts. Spanish is available in Settings. This build updates security dependencies and publishes its modified source.', es: 'Solo sirve para publicaciones públicas, no para cuentas privadas. Podés elegir español en Ajustes. Esta versión actualiza dependencias de seguridad y publica su código modificado.' },
+      data: { en: 'Utilibre requests public Tumblr content and media on your behalf. Tumblr sees server requests; Cloudflare handles public HTTPS. Preferences use a first-party cookie. No personal Tumblr account is used.', es: 'Utilibre consulta contenido público y archivos de Tumblr por vos. Tumblr recibe solicitudes del servidor; Cloudflare gestiona el HTTPS público. Las preferencias usan una cookie propia. No usamos una cuenta personal de Tumblr.' },
+    },
+    {
+      id: 'mezzo', group: 'find', name: { en: 'Find GIFs · Mezzo', es: 'Buscar GIF · Mezzo' },
+      description: { en: 'Search and view Tenor GIFs through a simpler interface. Public HTTPS is pending.', es: 'Buscá y mirá GIF de Tenor con una interfaz más sencilla. Falta habilitar el acceso HTTPS público.' },
+      reason: { en: 'Search works on the application server; the public HTTPS route is not ready.', es: 'La búsqueda funciona en el servidor de aplicaciones; la ruta HTTPS pública todavía no está lista.' },
+      help: { en: 'Search for a GIF or paste a Tenor link. No account is needed. The current upstream interface is in English.', es: 'Buscá un GIF o pegá un enlace de Tenor. No necesitás una cuenta. La interfaz actual del proyecto está en inglés.' },
+      data: { en: 'Utilibre fetches Tenor pages and media, with short-lived metadata caches. Tenor receives server requests; Cloudflare handles public HTTPS. No analytics or advertising is added.', es: 'Utilibre consulta páginas y archivos de Tenor, con cachés temporales de metadatos. Tenor recibe solicitudes del servidor; Cloudflare gestiona el HTTPS público. No agregamos analítica ni publicidad.' },
+    },
+    {
+      id: 'fmd', group: 'feeds-monitoring', name: { en: 'Find your Android · FMD', es: 'Encontrar tu Android · FMD' },
+      description: { en: 'Locate your own Android device with the FMD app. Invitation-only pilot; HTTPS is pending.', es: 'Localizá tu propio dispositivo Android con la app FMD. Piloto por invitación; falta habilitar HTTPS.' },
+      reason: { en: 'Installed with registration-token protection. Public HTTPS and a real-device test are still required.', es: 'Está instalado con registro protegido por un token. Faltan el HTTPS público y una prueba con un dispositivo real.' },
+      help: { en: 'Install FMD Android on your own device, then request a registration invitation. FMD has its own device credentials, not Utilibre web login. Keep recovery credentials safe; this is not a guaranteed recovery service. Map tiles and your chosen push provider are external connections.', es: 'Instalá FMD Android en tu propio dispositivo y pedí una invitación de registro. FMD usa credenciales propias, no el inicio de sesión web de Utilibre. Guardá los datos de recuperación; no garantizamos recuperar dispositivos. Los mapas y el proveedor de notificaciones que elijás son conexiones externas.' },
+      data: { en: 'Device account metadata and encrypted location/picture records are stored on Utilibre. Limits: 300 locations and 5 pictures per account. Push URLs and connection metadata are not hidden from the server. Backups are currently on this VM, not off-site.', es: 'Utilibre guarda metadatos de la cuenta del dispositivo y registros cifrados de ubicación e imágenes. Límites: 300 ubicaciones y 5 imágenes por cuenta. El servidor puede ver las URL de notificaciones y metadatos de conexión. Los respaldos están en esta misma VM, no fuera del servidor.' },
+    },
   ];
   return entries.map((entry, index) => ({
     id: entry.id, ...providerMetadata(entry.id), kind: 'service', implementation: 'upstream-application',
     category: 'service', discoveryGroup: entry.group, featuredOrder: 19 + index,
-    configUrlKey: ({ 'reactive-resume': 'publicResumeUrl', penpot: 'publicDesignUrl', actual: 'publicBudgetUrl', wakapi: 'publicWakapiUrl' } as Record<string,string>)[entry.id],
-    accountAccess: entry.id === 'breezewiki' ? undefined : entry.id === 'rallly' ? 'closed-registration' : 'invite-required',
+    configUrlKey: ({ 'reactive-resume': 'publicResumeUrl', penpot: 'publicDesignUrl', actual: 'publicBudgetUrl', wakapi: 'publicWakapiUrl', rallly: 'publicPollUrl', priviblur: 'publicTumblrUrl', mezzo: 'publicTenorUrl', fmd: 'publicFmdUrl' } as Record<string,string>)[entry.id],
+    accountAccess: ['breezewiki', 'priviblur', 'mezzo'].includes(entry.id) ? undefined : 'invite-required',
     name: entry.name, description: entry.description, help: entry.help, unavailableReason: entry.reason,
-    labels: entry.id === 'breezewiki' ? ['server', 'proxy'] : ['server'],
-    dataFlow: entry.data, upstreamServices: entry.id === 'breezewiki' ? ['Fandom'] : [],
-    filesUploaded: ['reactive-resume', 'penpot', 'actual'].includes(entry.id),
+    labels: ['breezewiki', 'priviblur', 'mezzo'].includes(entry.id) ? ['server', 'proxy'] : ['server'],
+    dataFlow: entry.data, upstreamServices: entry.id === 'breezewiki' ? ['Fandom'] : entry.id === 'priviblur' ? ['Tumblr'] : entry.id === 'mezzo' ? ['Tenor'] : entry.id === 'fmd' ? ['Map tiles', 'User-selected push provider'] : [],
+    filesUploaded: ['reactive-resume', 'penpot', 'actual', 'fmd'].includes(entry.id),
     temporaryStorage: entry.data,
-    retention: entry.id === 'breezewiki'
+    retention: ['priviblur', 'mezzo', 'fmd'].includes(entry.id) ? entry.data : entry.id === 'breezewiki'
       ? { en: 'Short-lived server caches; upstream access is currently blocked.', es: 'Cachés breves en el servidor; el acceso al origen está bloqueado.' }
       : { en: 'Persistent account data requires an operator-managed retention, export and deletion process. Public enrollment is not open.', es: 'Los datos persistentes necesitan un proceso de conservación, exportación y eliminación gestionado por la administración. La inscripción pública no está abierta.' },
     logging: { en: 'Operational diagnostics and the HTTPS edge can retain request metadata. Do not treat this as an anonymous service.', es: 'Los diagnósticos operativos y el servidor HTTPS pueden conservar metadatos de solicitudes. No lo considerés un servicio anónimo.' },
-    modified: entry.id === 'wakapi',
-    operationalStatus: entry.id === 'rallly' ? 'not-deployed' : entry.id === 'breezewiki' ? 'unavailable' : 'operational',
+    modified: ['wakapi', 'priviblur'].includes(entry.id),
+    operationalStatus: ['rallly', 'priviblur', 'mezzo', 'fmd'].includes(entry.id) ? 'maintenance' : entry.id === 'breezewiki' ? 'unavailable' : 'operational',
   }));
 }
 

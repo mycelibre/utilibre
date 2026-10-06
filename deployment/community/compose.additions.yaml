@@ -1,0 +1,96 @@
+name: utilibre-additions
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  mem_limit: 256m
+  cpus: 1
+  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+  logging:
+    driver: json-file
+    options: {max-size: 5m, max-file: "2"}
+services:
+  dumb:
+    <<: *runtime
+    image: ghcr.io/rramiachraf/dumb@sha256:de231df0313999b834b5ccc7cf0b5d426fc6b42bfdd984f7f7c322b3d9db3907
+    user: "65532:65532"
+    environment: {PORT: "5555"}
+    networks:
+      lyrics: {ipv4_address: 172.29.76.10}
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:5555/]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+  dumb-gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: "101:101"
+    entrypoint: [nginx, -g, "daemon off;"]
+    ports: ["10.10.1.43:3142:8080"]
+    volumes:
+      - ./dumb-gateway.conf:/etc/nginx/nginx.conf:ro
+    networks: [lyrics]
+    depends_on: [dumb]
+  mezzo:
+    <<: *runtime
+    image: gitfield.org/fsky/mezzo:latest@sha256:f8643c2525c96b3c5708bb737f71759bfc4c01a745301a8a7dbcba609f9c6416
+    user: "65532:65532"
+    environment:
+      MEZZO_PORT: "8006"
+      MEZZO_CACHE_GIF_TTL: 2h
+      MEZZO_CACHE_GIF_MAX: "500"
+      MEZZO_CACHE_SEARCH_TTL: 20m
+      MEZZO_CACHE_SEARCH_MAX: "200"
+      MEZZO_CACHE_PROFILE_TTL: 1h
+      MEZZO_CACHE_PROFILE_MAX: "100"
+    networks:
+      tenor: {ipv4_address: 172.29.74.10}
+  mezzo-gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: "101:101"
+    entrypoint: [nginx, -g, "daemon off;"]
+    ports: ["10.10.1.43:3140:8080"]
+    volumes:
+      - ./mezzo-gateway.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    networks: [tenor]
+    depends_on: [mezzo]
+  fmd:
+    <<: *runtime
+    image: registry.gitlab.com/fmd-foss/fmd-server:0.17.0-alpine@sha256:e4a7f5538aa3febe938159ee2db337ccdb50d340d7009784c5a851f152df48e0
+    user: "1000:1000"
+    command: [--config, /etc/fmd-server/config.yml]
+    volumes:
+      - /opt/utilibre/community-data/fmd-db:/var/lib/fmd-server/db
+      - /opt/utilibre/community-data/fmd-private/config.yml:/etc/fmd-server/config.yml:ro
+    networks:
+      devices: {ipv4_address: 172.29.75.10}
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+  fmd-gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: "101:101"
+    entrypoint: [nginx, -g, "daemon off;"]
+    ports: ["10.10.1.43:3141:8080"]
+    volumes:
+      - ./fmd-gateway.conf:/etc/nginx/nginx.conf:ro
+    networks: [devices]
+    depends_on: [fmd]
+networks:
+  lyrics:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.76.0/24}]}
+  tenor:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.74.0/24}]}
+  devices:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.75.0/24}]}

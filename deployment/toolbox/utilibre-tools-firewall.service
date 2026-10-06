@@ -8,6 +8,9 @@ PartOf=docker.service
 Type=oneshot
 ExecStart=/bin/sh /home/ubuntu/freetools/deployment/toolbox/firewall.sh
 ExecStart=/bin/sh /home/ubuntu/freetools/deployment/community/rssbridge-firewall.sh
+ExecStart=/bin/sh /home/ubuntu/freetools/deployment/expanded/wiki-firewall.sh
+ExecStart=/bin/sh /home/ubuntu/freetools/deployment/community/priviblur-firewall.sh
+ExecStart=/bin/sh /home/ubuntu/freetools/deployment/community/additions-firewall.sh
 RemainAfterExit=yes
 
 [Install]

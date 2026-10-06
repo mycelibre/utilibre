@@ -28,6 +28,7 @@ apps = {
     "penpot": ("Penpot", "https://design.utilibre.org", "/api/auth/oidc/callback"),
     "actual": ("Actual Budget", "https://budget.utilibre.org", "/openid/callback"),
     "wakapi": ("Wakapi", "https://wakapi.utilibre.org", "/oidc/utilibre/callback"),
+    "rallly": ("Rallly", "https://poll.utilibre.org", "/api/auth/callback/oidc"),
 }
 
 with transaction.atomic():
@@ -131,5 +132,5 @@ with transaction.atomic():
     fd = os.open(path, os.O_CREAT | os.O_WRONLY | os.O_TRUNC, 0o600)
     with os.fdopen(fd, "w") as target:
         json.dump(credentials, target)
-print("Four group-restricted OIDC clients configured; exact HTTPS callbacks; minimal verified claims.")
+print(f"{len(apps)} group-restricted OIDC clients configured; exact HTTPS callbacks; minimal verified claims.")
 print("Invitation-only enrollment configured. Public registration is still closed. Owner credentials unchanged.")

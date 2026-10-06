@@ -1,0 +1,55 @@
+name: utilibre-priviblur
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  mem_limit: 384m
+  cpus: 1
+  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+  logging:
+    driver: json-file
+    options: {max-size: 5m, max-file: "2"}
+services:
+  priviblur:
+    <<: *runtime
+    image: utilibre-priviblur:251a8e6-p1
+    user: "1000:1000"
+    environment:
+      PRIVIBLUR_ACCESS_LOG: "false"
+    volumes: ["./priviblur.toml:/priviblur/config.toml:ro"]
+    networks:
+      tumblr: {ipv4_address: 172.29.73.10}
+    depends_on: [cache]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/robots.txt', timeout=5)"]
+      interval: 30s
+      timeout: 8s
+      start_period: 30s
+      retries: 3
+  cache:
+    <<: *runtime
+    image: valkey/valkey:9.1.1-alpine@sha256:de31910896150d5e754a07d57d227cfdde4e258ddd0d1aa4607f2d2f95843715
+    user: "999:1000"
+    command: [valkey-server, --save, "", --appendonly, "no", --maxmemory, 96mb, --maxmemory-policy, allkeys-lru, --loglevel, warning]
+    tmpfs: ["/data:rw,nosuid,nodev,noexec,size=8m,uid=999,gid=1000"]
+    mem_limit: 144m
+    networks:
+      tumblr: {ipv4_address: 172.29.73.11}
+  gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: "101:101"
+    entrypoint: [nginx, -g, "daemon off;"]
+    volumes:
+      - ./priviblur-gateway.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    ports: ["10.10.1.43:3139:8080"]
+    networks: [tumblr]
+    depends_on:
+      priviblur: {condition: service_healthy}
+networks:
+  tumblr:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.73.0/24}]}

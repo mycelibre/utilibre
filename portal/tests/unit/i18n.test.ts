@@ -86,8 +86,9 @@ describe('bilingual content', () => {
       'reactive-resume': 'invite-required',
       penpot: 'invite-required',
       actual: 'invite-required',
-      rallly: 'closed-registration',
+      rallly: 'invite-required',
       wakapi: 'invite-required',
+      fmd: 'invite-required',
     });
   });
 

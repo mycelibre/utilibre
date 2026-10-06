@@ -1,0 +1,27 @@
+Utilibre Priviblur build 251a8e6-p1, 2026-10-06
+
+Upstream: https://github.com/syeopite/priviblur
+Revision: 251a8e67c64d792b3c8c141860ccaa227ce62e4d
+License and original notices: upstream/LICENSE and upstream source files.
+
+Changes: five security-related Python dependency version updates (including
+the compatible yarl version), plus a prominent modified-build/source link.
+No Tumblr account credentials, cookies, API keys, analytics or ads are added.
+The user interface and reader implementation otherwise remain upstream code.
+
+Build from this archive's root with Docker BuildKit:
+  docker build --build-context upstream=./upstream -f Dockerfile.priviblur \
+    -t utilibre-priviblur:251a8e6-p1 .
+
+The upstream directory includes the public Git metadata required by the version
+check. The build applies priviblur-source-notice.patch, installs the pinned
+priviblur-requirements.txt and compiles the upstream translations. The included
+build-requirements.txt records the runtime packages from the deployed image.
+
+Deployment: mount your own config.toml at /priviblur/config.toml, use a separate
+Redis-compatible cache, and terminate HTTPS at a trusted reverse proxy. Utilibre's
+non-secret integration configuration is in deployment/community in:
+  https://github.com/mycelibre/utilibre
+
+Production secrets, cache contents, user data and private configuration are not
+part of this source archive. The source notice URL must serve this archive.

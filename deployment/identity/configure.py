@@ -11,7 +11,16 @@ tenant = get_current_tenant()
 tenant.avatars = "initials"  # Do not send email-derived hashes to Gravatar.
 tenant.event_retention = "days=30"
 tenant.impersonation = False
-tenant.save(update_fields=["avatars", "event_retention", "impersonation"])
+# Native flow-footer links only; preserve any other operator-defined links.
+return_links = [
+    {"name": "Volver a Utilibre", "href": "https://utilibre.org/es/"},
+    {"name": "Back to Utilibre", "href": "https://utilibre.org/en/"},
+]
+return_urls = {link["href"] for link in return_links}
+tenant.footer_links = [
+    link for link in (tenant.footer_links or []) if link.get("href") not in return_urls
+] + return_links
+tenant.save(update_fields=["avatars", "event_retention", "impersonation", "footer_links"])
 
 owner = User.objects.get(username="akadmin")
 if owner.email != "admin@utilibre.org" or not owner.has_usable_password():

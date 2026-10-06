@@ -98,15 +98,15 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
     publicPythonUrl: 'https://python.utility.test/', publicTranscribeUrl: 'https://transcribe.utility.test/',
     publicWakapiUrl: 'https://wakapi.utility.test/',
     publicResumeUrl: 'https://cv.utility.test/', publicDesignUrl: 'https://design.utility.test/', publicBudgetUrl: 'https://budget.utility.test/',
-    listedServices: ['whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi'],
+    listedServices: ['whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub'],
     enabledServices: catalog.filter((entry) => entry.kind === 'service').map((entry) => entry.id),
   };
   await mockConfig(page, config);
   for (const language of ['en', 'es'] as const) {
     await page.emulateMedia({ colorScheme: language === 'es' ? 'dark' : 'light' });
     await page.goto(`/${language}/`);
-    await expect(catalogRows(page)).toHaveCount(24);
-    for (const id of ['rallly', 'breezewiki']) {
+    await expect(catalogRows(page)).toHaveCount(27);
+    for (const id of ['rallly', 'breezewiki', 'priviblur', 'mezzo', 'fmd']) {
       const row = page.locator(`[data-catalog-id="${id}"]`);
       await expect(row.locator('.catalog-ledger-unavailable')).toHaveText(language === 'es' ? 'Todavía no disponible' : 'Not open yet');
       await expect(row.locator('.catalog-ledger-launch')).toHaveCount(0);
@@ -128,6 +128,12 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
     await expect(page.locator('.donate-button')).toBeVisible();
     if (language === 'es') await expect(page.locator('h1')).toHaveText('¿Qué necesitás hacer?');
     await page.screenshot({ path: testInfo.outputPath(`toolbox-${language}.png`), fullPage: false });
+    await page.goto(`/${language}/?view=all`);
+    for (const id of ['dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub']) {
+      const row = page.locator(`[data-catalog-id="${id}"]`);
+      await expect(row).toBeVisible();
+      await expect(row.locator('.catalog-ledger-launch')).toHaveCount(0);
+    }
     await page.goto(`/${language}/software`);
     await expect(page.getByRole('heading', { name: 'BentoPDF', exact: true })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'RSS-Bridge', exact: true })).toBeVisible();

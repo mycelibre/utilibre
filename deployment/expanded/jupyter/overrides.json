@@ -1,5 +1,4 @@
 {
-  "@jupyterlab/translation-extension:plugin": {"locale": "es_ES"},
   "@jupyterlab/mainmenu-extension:plugin": {
     "menus": [
       {
@@ -8,8 +7,8 @@
           {
             "command": "help:open",
             "args": {
-              "text": "Volver a Utilibre",
-              "url": "https://utilibre.org/es/",
+              "text": "Back to Utilibre",
+              "url": "https://utilibre.org/en/",
               "newBrowserTab": true
             },
             "rank": 0

@@ -1,6 +1,7 @@
 [main]
 name = "PrivateBin at Utilibre"
 basepath = "https://paste.utilibre.org/"
+info = "<a href='https://utilibre.org/es/'>Volver a Utilibre</a> · <a href='https://utilibre.org/en/'>Back to Utilibre</a> · <a href='https://privatebin.info/'>PrivateBin</a>"
 discussion = false
 opendiscussion = false
 password = true

@@ -28,6 +28,10 @@ export interface PublicConfig {
   publicResumeUrl: string;
   publicDesignUrl: string;
   publicBudgetUrl: string;
+  publicPollUrl: string;
+  publicTumblrUrl: string;
+  publicTenorUrl: string;
+  publicFmdUrl: string;
   listedServices: string[];
   enabledServices: string[];
   defaultLanguage: 'en' | 'es';
@@ -63,6 +67,10 @@ const defaults: PublicConfig = {
   publicResumeUrl: '',
   publicDesignUrl: '',
   publicBudgetUrl: '',
+  publicPollUrl: '',
+  publicTumblrUrl: '',
+  publicTenorUrl: '',
+  publicFmdUrl: '',
   listedServices: [],
   enabledServices: [],
   defaultLanguage: 'en',

@@ -89,6 +89,8 @@ general:
 brand:
   custom:
     links:
+      "Volver a Utilibre": https://utilibre.org/es/
+      "Back to Utilibre": https://utilibre.org/en/
       "Instance source": https://github.com/mycelibre/utilibre/tree/main/config/searxng
 
 search:

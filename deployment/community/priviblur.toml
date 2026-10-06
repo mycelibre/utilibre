@@ -1,0 +1,28 @@
+[deployment]
+host = "0.0.0.0"
+port = 8000
+domain = "tumblr.utilibre.org"
+https = true
+workers = 1
+
+[cache]
+url = "redis://172.29.73.11:6379/0"
+cache_feed_for = 3600
+cache_blog_feed_for = 3600
+cache_blog_post_for = 900
+
+[priviblur_backend]
+main_response_timeout = 15
+image_response_timeout = 20
+
+[default_user_preferences]
+theme = "auto"
+language = "en_US"
+
+[logging]
+sanic_logging_level = 40
+priviblur_logging_level = 40
+priviblur_extractor_logging_level = 40
+
+[misc]
+dev_mode = false

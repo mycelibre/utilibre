@@ -1,0 +1,58 @@
+# Operator-only evaluation. These ports intentionally do not bind the Caddy LAN.
+name: utilibre-evaluation
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  mem_limit: 512m
+  cpus: 1
+  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+  logging:
+    driver: json-file
+    options: {max-size: 5m, max-file: "2"}
+services:
+  degoog:
+    <<: *runtime
+    image: ghcr.io/degoog-org/degoog:1.0.0@sha256:e1ce8ee724a4514d269b74088424e579322bdfcf718256c1c5dd2cbb5aaf510c
+    user: "1000:1000"
+    entrypoint: [bun, run, src/server/index.ts]
+    env_file: /opt/utilibre/community-data/degoog-private/runtime.env
+    environment:
+      DEGOOG_PORT: "4444"
+      DEGOOG_PUBLIC_INSTANCE: "true"
+      DEGOOG_WIZARD: "false"
+      DEGOOG_DISTRUST_PROXY: "1"
+      DEGOOG_CACHE_TTL_MS: "600000"
+      DEGOOG_CACHE_SHORT_TTL_MS: "60000"
+      DEGOOG_CACHE_MAX_ENTRIES: "200"
+    volumes: ["/opt/utilibre/community-data/degoog:/app/data"]
+    ports: ["127.0.0.1:3143:4444"]
+    networks:
+      search: {ipv4_address: 172.29.77.10}
+  libremdb:
+    <<: *runtime
+    image: ghcr.io/zyachel/libremdb@sha256:9f65a47fe64133045b4cfaa48e5ef73371c55c62b3d5bf42f7584a90dfd1c1ee
+    user: "65534:65534"
+    environment:
+      NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_URL: https://imdb.utilibre.org
+      NEXT_PUBLIC_INSTANCE_MAIN_URL: https://utilibre.org
+      NEXT_PUBLIC_INSTANCE_NAME: Utilibre
+      AXIOS_USERAGENT: Mozilla/5.0 (X11; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0
+      AXIOS_ACCEPT: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+      USE_REDIS: "false"
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
+      - /opt/app/.next/cache:rw,nosuid,nodev,noexec,size=32m,uid=65534,gid=65534
+    ports: ["127.0.0.1:3144:3000"]
+    networks:
+      movies: {ipv4_address: 172.29.78.10}
+networks:
+  search:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.77.0/24}]}
+  movies:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.78.0/24}]}

@@ -22,6 +22,7 @@ const baseConfig: PublicConfig = {
   publicBridgeUrl: '', publicNotifyUrl: '', publicSecretUrl: '', publicDropUrl: '', publicStatusUrl: '',
   publicPythonUrl: '', publicTranscribeUrl: '', publicWakapiUrl: '', listedServices: [],
   publicResumeUrl: '', publicDesignUrl: '', publicBudgetUrl: '',
+  publicPollUrl: '', publicTumblrUrl: '', publicTenorUrl: '', publicFmdUrl: '',
 };
 
 function config(overrides: Partial<PublicConfig> = {}): PublicConfig {
@@ -39,7 +40,8 @@ const hostedConfig = config({
 describe('catalog discovery metadata', () => {
   it('keeps reviewed applications and one narrow integration', () => {
     expect(catalog.map((entry) => entry.id)).toEqual([
-      'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi',
+      'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd',
+      'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub',
       'whisper-web', 'jupyterlite',
       'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma',
       'bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools',
@@ -49,7 +51,7 @@ describe('catalog discovery metadata', () => {
     expect(catalog.filter((entry) => entry.featuredOrder !== undefined)
       .sort((left, right) => (left.featuredOrder ?? 0) - (right.featuredOrder ?? 0))
       .map((entry) => entry.id))
-      .toEqual(['bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi']);
+      .toEqual(['bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd']);
   });
 
   it('keeps unrequested retired applications out of the catalog', () => {
@@ -61,7 +63,7 @@ describe('catalog discovery metadata', () => {
 
 describe('config-gated catalog discovery', () => {
   it('lists explicitly requested pending services without enabling their launch', () => {
-    const listedServices = ['whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi'];
+    const listedServices = ['whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd'];
     const pending = config({ listedServices });
     expect(featuredEntries(pending).map((entry) => entry.id)).toEqual(listedServices);
     for (const entry of featuredEntries(pending)) expect(entryLaunch(entry, 'es', pending)).toBeNull();

@@ -28,9 +28,13 @@ const services = [
   { id: 'reactive-resume', hostKey: 'PUBLIC_RESUME_HOST', urlKey: 'PUBLIC_RESUME_URL', portKey: 'RESUME_PORT' },
   { id: 'penpot', hostKey: 'PUBLIC_DESIGN_HOST', urlKey: 'PUBLIC_DESIGN_URL', portKey: 'PENPOT_PORT' },
   { id: 'actual', hostKey: 'PUBLIC_BUDGET_HOST', urlKey: 'PUBLIC_BUDGET_URL', portKey: 'ACTUAL_PORT' },
+  { id: 'rallly', hostKey: 'PUBLIC_POLL_HOST', urlKey: 'PUBLIC_POLL_URL', portKey: 'RALLLY_PORT' },
+  { id: 'priviblur', hostKey: 'PUBLIC_TUMBLR_HOST', urlKey: 'PUBLIC_TUMBLR_URL', portKey: 'PRIVIBLUR_PORT' },
+  { id: 'mezzo', hostKey: 'PUBLIC_TENOR_HOST', urlKey: 'PUBLIC_TENOR_URL', portKey: 'MEZZO_PORT' },
+  { id: 'fmd', hostKey: 'PUBLIC_FMD_HOST', urlKey: 'PUBLIC_FMD_URL', portKey: 'FMD_PORT' },
 ];
 const allowedServices = new Set(services.map(({ id }) => id));
-const listableServices = new Set([...allowedServices, 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki']);
+const listableServices = new Set([...allowedServices, 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub']);
 
 // Stale settings should fail loudly instead of silently republishing a service
 // that the project deliberately retired.
@@ -342,6 +346,8 @@ function defaultPort(key) {
     ITTOOLS_PORT: '3109', HATSH_PORT: '3110', DRAWIO_PORT: '3111', MINIQR_PORT: '3112',
     RSSBRIDGE_PORT: '3120', NTFY_PORT: '3121', YOPASS_PORT: '3122', PAIRDROP_PORT: '3124', KUMA_PUBLIC_PORT: '3125',
     JUPYTERLITE_PORT: '3133', WHISPER_PORT: '3137',
+    WAKAPI_PORT: '3136', RESUME_PORT: '3130', PENPOT_PORT: '3131', ACTUAL_PORT: '3132',
+    RALLLY_PORT: '3123', PRIVIBLUR_PORT: '3139', MEZZO_PORT: '3140', FMD_PORT: '3141',
   })[key];
 }
 function memoryBytes(value) {

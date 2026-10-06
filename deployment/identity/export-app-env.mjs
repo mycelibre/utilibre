@@ -5,6 +5,7 @@ const clients = JSON.parse(readFileSync('/opt/utilibre/identity-data/data/privat
 const destination = new URL('../expanded/.env', import.meta.url);
 let contents = readFileSync(destination, 'utf8');
 for (const [app, values] of Object.entries(clients)) {
+  if (app === 'rallly') continue; // community/init-rallly.mjs owns its private env.
   for (const key of ['client_id', 'client_secret']) {
     const name = `${app.toUpperCase()}_OIDC_${key.toUpperCase()}`;
     const value = values[key];

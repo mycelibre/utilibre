@@ -1,0 +1,13 @@
+FROM codeberg.org/safetwitch/safetwitch@sha256:2c0dfc35c13d8c4ad5babd2f14307d16779203df041419d95f52559221a2e7a8 AS assets
+FROM nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+COPY --from=assets /app /app
+USER root
+# Expand upstream's native build placeholders. No UI/navigation code changes.
+RUN find /app -type f \( -name '*.js' -o -name '*.html' \) -exec sed -i \
+  -e 's|SAFETWITCH_BACKEND_DOMAIN_PLACEHOLDER|127.0.0.1:3146|g' \
+  -e 's|SAFETWITCH_INSTANCE_DOMAIN_PLACEHOLDER|127.0.0.1:3146|g' \
+  -e 's|SAFETWITCH_HTTPS_PLACEHOLDER|false|g' \
+  -e 's|SAFETWITCH_DEFAULT_LOCALE_PLACEHOLDER|en|g' \
+  -e 's|SAFETWITCH_FALLBACK_LOCALE_PLACEHOLDER|en|g' \
+  -e 's|SAFETWITCH_DEFAULT_THEME_PLACEHOLDER|dark|g' {} +
+USER 101

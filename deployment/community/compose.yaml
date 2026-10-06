@@ -85,6 +85,9 @@ services:
       IPV6_LOCALIZE: "4"
       PRIVACYPOLICY_BUTTON_ACTIVE: "true"
       PRIVACYPOLICY_BUTTON_LINK: https://utilibre.org/en/privacy
+      CUSTOM_BUTTON_ACTIVE: "true"
+      CUSTOM_BUTTON_LINK: https://utilibre.org/
+      CUSTOM_BUTTON_TITLE: "Volver a Utilibre / Back to Utilibre"
     volumes:
       - ./pairdrop-rtc.json:/config/rtc.json:ro
       - ../toolbox/language.html:/home/node/app/public/utilibre-language.html:ro
@@ -128,17 +131,53 @@ services:
       DATABASE_URL: postgres://rallly:${RALLLY_DB_PASSWORD:-UNCONFIGURED}@rallly-db:5432/rallly
       SECRET_PASSWORD: ${RALLLY_SECRET_PASSWORD:-UNCONFIGURED}
       NEXT_PUBLIC_BASE_URL: https://poll.utilibre.org
-      SUPPORT_EMAIL: ${RALLLY_SUPPORT_EMAIL:-}
-      REGISTRATION_ENABLED: "false"
+      SUPPORT_EMAIL: admin@utilibre.org
+      INITIAL_ADMIN_EMAIL: admin@utilibre.org
+      NOREPLY_EMAIL: no-reply@utilibre.org
+      # OIDC provisions accounts only after authentik's approved-group policy.
+      # The gateway blocks alternative authentication APIs, not just their UI.
+      REGISTRATION_ENABLED: "true"
       EMAIL_LOGIN_ENABLED: "false"
+      OIDC_NAME: Utilibre
+      OIDC_DISCOVERY_URL: https://auth.utilibre.org/application/o/rallly/.well-known/openid-configuration
+      OIDC_CLIENT_ID: ${RALLLY_OIDC_CLIENT_ID:-UNCONFIGURED}
+      OIDC_CLIENT_SECRET: ${RALLLY_OIDC_CLIENT_SECRET:-UNCONFIGURED}
+      SMTP_HOST: mx.mailgt.dev
+      SMTP_PORT: "26"
+      SMTP_SECURE: "false"
+      SMTP_REJECT_UNAUTHORIZED: "true"
+      SMTP_DEBUG: "false"
       RATE_LIMIT_ENABLED: "true"
       NEXT_TELEMETRY_DISABLED: "1"
-    ports: ["10.10.1.43:3123:3000"]
-    networks: [front, polls]
+    extra_hosts: ["mx.mailgt.dev:10.10.1.20"]
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777
+      - /app/apps/web/.next/cache:rw,nosuid,nodev,noexec,size=64m,uid=1001,gid=1001
+    networks: [polls, poll-egress]
     depends_on:
       rallly-db: {condition: service_healthy}
     mem_limit: 768m
     cpus: 1
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 8s
+      start_period: 60s
+      retries: 3
+
+  rallly-gateway:
+    <<: *runtime
+    profiles: [rallly]
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: "101:101"
+    entrypoint: [nginx, -g, "daemon off;"]
+    volumes:
+      - ./rallly-gateway.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    ports: ["10.10.1.43:3123:8080"]
+    networks: [front, polls]
+    depends_on:
+      rallly: {condition: service_healthy}
 
   rallly-db:
     <<: *runtime
@@ -165,3 +204,4 @@ networks:
   front: {}
   secrets: {internal: true}
   polls: {internal: true}
+  poll-egress: {}

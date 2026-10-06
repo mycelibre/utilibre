@@ -42,14 +42,14 @@ const retiredRoutes: ReadonlyArray<readonly [string, string]> = [
 describe('FOSS-only public capability policy', () => {
   it('accepts only the retained independently maintained hosted applications', () => {
     expect(() => assertFossCatalogPolicy(catalog)).not.toThrow();
-    expect(catalog).toHaveLength(25);
+    expect(catalog).toHaveLength(35);
     expect(catalog.every((entry) => entry.upstreamProject && entry.upstreamSourceUrl && entry.license && entry.installedVersion)).toBe(true);
     expect(catalog.filter((entry) => entry.kind === 'integration').map((entry) => entry.id)).toEqual(['private-router']);
     expect(catalog.filter((entry) => entry.portalSurface === 'integration-glue').map((entry) => entry.id)).toEqual(['private-router']);
 
     const referencedProviders = new Set(catalog.map((entry) => entry.providerId));
     expect([...referencedProviders].sort()).toEqual(Object.keys(reviewedFossProviders).sort());
-    expect([...referencedProviders].sort()).toEqual(['actual', 'bentopdf', 'breezewiki', 'drawio', 'freshrss', 'hatsh', 'ittools', 'jupyterlite', 'miniqr', 'ntfy', 'omnitools', 'pairdrop', 'penpot', 'privatebin', 'rallly', 'reactive-resume', 'redlib', 'rssbridge', 'searxng', 'uptime-kuma', 'vert', 'wakapi', 'whisper-web', 'yopass']);
+    expect([...referencedProviders].sort()).toEqual(['actual', 'anonymousoverflow', 'bentopdf', 'breezewiki', 'degoog', 'drawio', 'dumb', 'fmd', 'fourget', 'freshrss', 'gothub', 'hatsh', 'ittools', 'jupyterlite', 'libremdb', 'mezzo', 'miniqr', 'ntfy', 'omnitools', 'pairdrop', 'penpot', 'privatebin', 'priviblur', 'rallly', 'reactive-resume', 'redlib', 'rssbridge', 'safetwitch', 'searxng', 'uptime-kuma', 'vert', 'wakapi', 'whisper-web', 'yopass']);
 
     const repositoryRoot = new URL('../../../', import.meta.url);
     for (const provider of Object.values(reviewedFossProviders)) {

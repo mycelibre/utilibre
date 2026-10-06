@@ -1,0 +1,10 @@
+diff --git a/src/templates/base.jinja b/src/templates/base.jinja
+--- a/src/templates/base.jinja
++++ b/src/templates/base.jinja
+@@ -81,5 +81,6 @@
+         <footer class="page-footer">
+             <span>{{ translate(request.ctx.language, "footer_version_text", substitution=app.ctx.VERSION) }}</span>
++            <a href="/utilibre-source/priviblur-utilibre.tar.gz">Utilibre modified build · Código modificado y fuente</a>
+             <a href="https://www.github.com/syeopite/priviblur">{{ translate(request.ctx.language, "footer_source_link_text",) }}</a>
+             <a href="https://www.github.com/syeopite/priviblur#donate">{{ translate(request.ctx.language, "footer_donate_link_text",) }}</a>
+             <a href="/priviblur/licences">{{ translate(request.ctx.language, "footer_licences_link_text",) }}</a>
