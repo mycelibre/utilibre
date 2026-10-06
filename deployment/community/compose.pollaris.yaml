@@ -1,0 +1,83 @@
+name: utilibre-pollaris
+
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+  mem_limit: 256m
+  cpus: 0.5
+  pids_limit: 96
+  logging:
+    driver: json-file
+    options: {max-size: 5m, max-file: "2"}
+
+x-application: &application
+  <<: *runtime
+  image: utilibre-pollaris:1.2.3-p1
+  user: "82:82"
+  env_file: [/opt/utilibre/community-data/pollaris-private/application.env]
+  extra_hosts: ["mx.mailgt.dev:10.10.1.20"]
+  volumes:
+    - /opt/utilibre/community-data/pollaris-var:/app/var
+    - ./pollaris.ini:/usr/local/etc/php/conf.d/utilibre.ini:ro
+    - ./pollaris-monolog.yaml:/app/config/packages/monolog.yaml:ro
+    - ./pollaris-fpm.conf:/usr/local/etc/php-fpm.d/zz-utilibre.conf:ro
+  depends_on:
+    pollaris-db: {condition: service_healthy}
+
+services:
+  pollaris:
+    <<: *application
+    networks:
+      polls: {ipv4_address: 172.29.83.10}
+    mem_limit: 384m
+    cpus: 1
+  worker:
+    <<: *application
+    command: [php, bin/console, messenger:consume, async, scheduler_default, --time-limit=3600, --memory-limit=128M, --no-interaction]
+    networks:
+      polls: {ipv4_address: 172.29.83.11}
+      mail: {ipv4_address: 172.29.84.11}
+  gateway:
+    <<: *runtime
+    image: utilibre-pollaris-gateway:1.2.3-p1
+    user: "101:101"
+    volumes:
+      - ./pollaris-gateway.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+      - ../toolbox/language.html:/srv/utilibre-language/language.html:ro
+      - ../toolbox/language.js:/srv/utilibre-language/language.js:ro
+    ports: ["10.10.1.43:3149:8080", "127.0.0.1:3159:8081"]
+    networks:
+      polls: {ipv4_address: 172.29.83.20}
+      front: {}
+    depends_on: [pollaris]
+    healthcheck:
+      test: [CMD, wget, -q, --spider, http://127.0.0.1:8080/]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+  pollaris-db:
+    <<: *runtime
+    image: postgres@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
+    user: "70:70"
+    env_file: [/opt/utilibre/community-data/pollaris-private/database.env]
+    volumes: ["/opt/utilibre/community-data/pollaris-db:/var/lib/postgresql/data"]
+    tmpfs: ["/var/run/postgresql:rw,nosuid,nodev,noexec,size=16m,uid=70,gid=70"]
+    networks:
+      polls: {ipv4_address: 172.29.83.30}
+    healthcheck:
+      test: [CMD, pg_isready, -U, pollaris]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  front: {}
+  polls:
+    internal: true
+    ipam: {config: [{subnet: 172.29.83.0/24}]}
+  mail:
+    ipam: {config: [{subnet: 172.29.84.0/24}]}

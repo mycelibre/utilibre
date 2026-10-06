@@ -1,0 +1,16 @@
+FROM golang:1.26-alpine@sha256:8ac98ca534ac3f51e1f420a1dd2c15e74c75cfa0f23f3ad27eb5d7236c349a0c AS build
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN go test ./... && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -X codeberg.org/gothub/gothub/utils.Branch=24bedc8-utilibre-p1" -o /gothub .
+FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0
+RUN apk add --no-cache ca-certificates
+WORKDIR /app
+COPY --from=build /gothub /app/gothub
+COPY --from=build /src/views /app/views
+COPY --from=build /src/public /app/public
+USER 65534:65534
+ENV DOCKER=true
+EXPOSE 3000
+CMD ["/app/gothub", "serve"]

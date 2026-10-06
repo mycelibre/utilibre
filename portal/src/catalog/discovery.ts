@@ -5,9 +5,14 @@ import { toolPath } from '../routes';
 import { localizedServiceUrl } from './locale-links';
 
 export const discoveryGroups: readonly DiscoveryGroup[] = [
-  'files',
   'find',
+  'reading',
+  'files',
+  'media',
+  'privacy',
+  'design',
   'text-data',
+  'planning',
   'feeds-monitoring',
 ];
 

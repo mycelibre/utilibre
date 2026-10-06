@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily guarded SearXNG update review
+
+[Timer]
+OnCalendar=*-*-* 02:20:00 UTC
+RandomizedDelaySec=10min
+Persistent=true
+Unit=utilibre-searx-update.service
+
+[Install]
+WantedBy=timers.target

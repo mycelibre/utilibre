@@ -62,6 +62,7 @@ services:
       PUBLIC_TUMBLR_URL: ${PUBLIC_TUMBLR_URL:-}
       PUBLIC_TENOR_URL: ${PUBLIC_TENOR_URL:-}
       PUBLIC_FMD_URL: ${PUBLIC_FMD_URL:-}
+      PUBLIC_POLLARIS_URL: ${PUBLIC_POLLARIS_URL:-}
       LISTED_SERVICES: ${LISTED_SERVICES:-}
       ENABLED_SERVICES: ${ENABLED_SERVICES:-searxng,redlib,freshrss,privatebin}
       DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE:-en}
@@ -91,7 +92,14 @@ services:
         wakapi=http://${PRIVATE_BIND_IP}:3136/,
         reactive-resume=http://${PRIVATE_BIND_IP}:3130/,
         penpot=http://${PRIVATE_BIND_IP}:3131/,
-        actual=http://${PRIVATE_BIND_IP}:3132/
+        actual=http://${PRIVATE_BIND_IP}:3132/,
+        rallly=http://${PRIVATE_BIND_IP}:3123/,
+        priviblur=http://${PRIVATE_BIND_IP}:3139/,
+        mezzo=http://${PRIVATE_BIND_IP}:3140/,
+        fmd=http://${PRIVATE_BIND_IP}:3141/,
+        pollaris=http://${PRIVATE_BIND_IP}:3149/
+    volumes:
+      - /opt/utilibre/update-public:/run/utilibre-updates:ro
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
     healthcheck:
@@ -113,7 +121,7 @@ services:
     logging: *default-logging
 
   searxng:
-    image: docker.io/searxng/searxng:2026.9.29-4e2c1ea7f@sha256:3284e8900e9b3e5df284ae8c48a26851ae2eff6f99b4b0b18ec3da5a4d9095c3
+    image: ${SEARXNG_IMAGE:-docker.io/searxng/searxng:2026.10.4-d48c4b555@sha256:76b0bf285aca014c7191fc4d9234c4bfb358624ac33d8883833d496c059ec072}
     restart: unless-stopped
     ports:
       - target: 8080

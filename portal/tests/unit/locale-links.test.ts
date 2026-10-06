@@ -14,6 +14,9 @@ describe('donation language links', () => {
 });
 
 describe('verified upstream language links', () => {
+  it('uses the native Rallly locale cookie handoff', () => {
+    expect(localizedServiceUrl('rallly', 'https://poll.test/', 'es')).toBe('https://poll.test/utilibre-language?lang=es');
+  });
   it('restores a complete valid Priviblur preference set for Spanish', () => {
     expect(localizedServiceUrl('priviblur', 'https://tumblr.test/', 'es')).toBe('https://tumblr.test/settings/restore?language=es&theme=auto&expand_posts=off&version=1');
   });
@@ -29,7 +32,7 @@ describe('verified upstream language links', () => {
     expect(localizedServiceUrl('reactive-resume', 'https://cv.test/', 'es')).toBe('https://cv.test/?locale=es-ES');
   });
   it('uses a fixed handoff for local preference apps and does not guess for unsupported apps', () => {
-    for (const id of ['vert', 'ittools', 'yopass', 'pairdrop', 'uptime-kuma', 'penpot']) {
+    for (const id of ['vert', 'ittools', 'yopass', 'pairdrop', 'uptime-kuma', 'penpot', 'pollaris']) {
       expect(localizedServiceUrl(id, 'https://tool.test/', 'es')).toBe('https://tool.test/utilibre-language.html?lang=es');
     }
     for (const id of ['miniqr', 'hatsh', 'rssbridge', 'redlib']) {

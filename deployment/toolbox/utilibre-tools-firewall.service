@@ -11,6 +11,7 @@ ExecStart=/bin/sh /home/ubuntu/freetools/deployment/community/rssbridge-firewall
 ExecStart=/bin/sh /home/ubuntu/freetools/deployment/expanded/wiki-firewall.sh
 ExecStart=/bin/sh /home/ubuntu/freetools/deployment/community/priviblur-firewall.sh
 ExecStart=/bin/sh /home/ubuntu/freetools/deployment/community/additions-firewall.sh
+ExecStart=/bin/sh /home/ubuntu/freetools/deployment/community/pollaris-firewall.sh
 RemainAfterExit=yes
 
 [Install]

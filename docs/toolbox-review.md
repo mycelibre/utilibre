@@ -2,28 +2,91 @@
 
 ## Public-reader expansion checkpoint — October 6, after the edge update
 
+### Pollaris and LibreDNS addition — October 6
+
+Pollaris 1.2.3 (`b6ab5b3309e858a02c042350be82cc7a9c599246`, AGPL-3.0-or-later)
+is installed with PHP 8.5.11, PostgreSQL 17.11, an async/cleanup worker and a
+restricted nginx gateway. Composer's production-dependency audit reported no
+known security advisories. Backend browser tests pass poll creation, anonymous
+guest voting, CSV export, administrator-route denial, native Spanish preferences
+and deletion. Synthetic polls/responses were removed. The SMTP relay accepted
+one deployment test to the operator. This is not proof of inbox delivery.
+
+Public `pollaris.utilibre.org` now passes the same creation, anonymous voting,
+CSV export, denied administrator routes, Spanish handoff and deletion workflow
+over verified HTTPS. Pollaris is enabled in the bilingual catalog. The app
+listener is `10.10.1.43:3149`, restricted to Caddy; the block is in `Caddyfile.community`.
+Do not expose `127.0.0.1:3159`, the administrative listener. `admin@utilibre.org`
+owns the native admin account; its randomly generated password is stored in
+`/opt/utilibre/community-data/pollaris-private/admin.json` (0600), not Git.
+Use a private SSH tunnel to administer it. No general user account is required.
+No custom return-link UI was added: upstream offers template overrides, not a
+native external-footer setting. Spanish portal entry submits the app's native
+CSRF-protected preferences form. Rallly now sets its native locale cookie through
+a fixed HTTPS handoff too; public Spanish HTML was verified.
+
+Recipes: `compose.pollaris.yaml`, `Dockerfile.pollaris`, `init-pollaris.mjs`,
+`init-pollaris-admin.mjs`, and `check-pollaris.mjs`. In the community directory:
+
+```sh
+docker compose -f compose.pollaris.yaml up -d --wait pollaris-db
+docker compose -f compose.pollaris.yaml run --rm --no-deps pollaris php bin/console doctrine:migrations:migrate --no-interaction
+docker compose -f compose.pollaris.yaml up -d
+node check-pollaris.mjs --backend
+# After the edge is ready, repeat WITHOUT --backend to test real public HTTPS.
+```
+
+The backend test uses a short-lived, loopback-only TLS proxy; its self-signed
+certificate exception is confined to that test and does not certify public TLS.
+Polls are not end-to-end encrypted. The private administration URL is a bearer
+credential. Native expiration deletes completed polls six months after their
+closing date and incomplete closed polls after seven days. Request bodies are
+limited to 128 KiB; writes, page requests, processes and memory are bounded.
+No normal nginx/FPM access logs; operational warnings use rotated Docker logs.
+Only the worker can contact the specific SMTP relay; the database has no public
+port, and the web application has no external network.
+
+LibreDNS was assessed, **not installed**. The supplied URL is a group; its
+[`libredns-cfg`](https://gitlab.com/libreops/libredns/libredns-cfg) project is a
+whole-host Ansible deployment of PowerDNS Recursor, dnsdist, nginx, certificates,
+networking and monitoring, tailored to LibreOps' addresses. Its configuration
+also deliberately uses `dnssec=process-no-validate`. Running it unchanged on this
+shared host would be inappropriate. A public DNS service deserves a separately
+planned, monitored resolver deployment, direct encrypted endpoints and a clear
+query-privacy policy. No host DNS, network configuration or DNS ports were changed.
+LibreDNS itself offers [DoH and DoT](https://libredns.gr/), not a browser toolbox.
+
+The daily community snapshot job now includes Pollaris's database, secret
+configuration and scheduler state alongside Rallly and FMD. The job performs an
+isolated PostgreSQL restore and SQLite integrity check, sends a generic failure
+alert, refuses to start with less than 5 GiB free, and never prunes backups.
+Backups remain on this VM; an off-site destination is still needed. The unrelated
+identity/expanded-app snapshots retain their separate scheduling status below.
+
 This section supersedes older deployment states below. Installation, a passing
 homepage, successful content retrieval, and public readiness are separate checks.
 
 | Application | Listener | Verified / remaining work |
 | --- | --- | --- |
-| Rallly 4.15.3 | app LAN 3123; `poll.utilibre.org` | Public HTTPS and native Utilibre OIDC now pass: two approved synthetic users reached account setup; the non-approved user was denied. Email-login bypass routes remain blocked. Onboarding, poll creation and guest voting still need end-to-end verification. |
-| Priviblur 251a8e6 | app LAN 3139; `tumblr.utilibre.org` | Tumblr staff blog and an individual post rendered locally; security dependency updates, private-network egress blocks and RAM-only cache. Public HTTPS now responds successfully; public content/media and Spanish browser checks remain. Modified-source archive linked prominently. |
-| Mezzo 1.4.0 | app LAN 3140; `tenor.utilibre.org` | A real local GIF search returned results and a proxied GIF returned HTTP 200 with image/gif. Public HTTPS now responds successfully; final public content/browser test pending. |
-| FMD Server 0.17.0 | app LAN 3141; `fmd.utilibre.org` | Invitation token required. Two synthetic accounts demonstrated opaque-location round-trip and account separation, then both accounts/data were deleted. Public HTTPS now responds successfully; public API and real Android/push tests remain. |
+| Rallly 4.15.3 | app LAN 3123; `poll.utilibre.org` | Live. Public OIDC + MFA, onboarding, poll creation, anonymous guest voting, CSV export and deletion pass. A second organizer's deletion attempt returned 403. Email-login bypass routes remain blocked. Stock licensing reminder is disclosed; no checks were modified. |
+| Priviblur 251a8e6-p1 | app LAN 3139; `tumblr.utilibre.org` | Live. Public blog/media and Spanish preferences pass after tuning media-specific limits. Patched dependencies, private-network egress blocks and RAM-only cache; full modified-source archive linked prominently. |
+| Mezzo 1.4.0 | app LAN 3140; `tenor.utilibre.org` | Live. Public GIF search and all 31 displayed images loaded without HTTP errors. Media-specific limits avoid throttling ordinary results. |
+| FMD Server 0.17.0 | app LAN 3141; `fmd.utilibre.org` | Live invitation-only pilot. Public synthetic API registration, opaque-location round-trip, account separation, unauthenticated denial and cleanup pass. Real Android GPS/push/cryptographic end-to-end testing still needs an operator device. No Spanish UI in this release. |
 | Dumb | app LAN 3142; proposed `lyrics.utilibre.org` | Homepage works, but Genius search fails and a lyric URL returns a soft error. Not publicly advertised as working. |
 | DeGoog 1.0.0 core | loopback 3143 | Public-instance lockdown denies unauthenticated settings API reads/writes. Indexer defaults off. No engines installed: the separate official extensions repository has no identified license. |
 | LibreMDB | loopback 3144, stopped | IMDb search/title requests failed. Published image contains Node 18 / Next.js 12; public deployment requires a supported build and working upstream access. |
-| 4get 03ba5d7 | loopback 3145 | Built with Apache and PHP 8.4 on Alpine 3.23; real DuckDuckGo and Wiby searches passed. No rotating proxies or browser-challenge workarounds. Public gateway/abuse review remains. |
+| 4get 03ba5d7-p2 | app LAN 3145; proposed `4get.utilibre.org` | Bounded public-IP image fetching, redirect validation, ImageMagick resource/coder restrictions and fixed JPEG resizing. Real Wiby/DuckDuckGo searches and image resizing pass. Source published; Caddy HTTPS pending. No rotating proxies or challenge bypasses. |
 | SafeTwitch | loopback 3146 | Discovery API returns real categories. Static frontend served by current pinned nginx; old backend has unrestricted URL-fetch routes. Must harden and test playback before opening publicly. |
-| AnonymousOverflow | loopback 3147 | Real Stack Overflow question and answers rendered through the API. Reachability-aware govulncheck found 14 advisories across three old dependency modules. Dependency/runtime remediation, quota/cache and public HTTPS checks remain. |
-| GotHub 24bedc8 | loopback 3148 | Public Utilibre GitHub repository rendered. Image uses Alpine 3.16 and older dependencies; update and review before exposing it. Upstream seeks maintainers. |
+| AnonymousOverflow 937cfee-p1 | app LAN 3147; proposed `overflow.utilibre.org` | Hardened current-Go/dependency build renders a real question and answers. govulncheck reports no reachable vulnerabilities. Fixed-host short-link fetching, bounded JSON cache and quota/backoff tests pass; invalid media tokens are denied. Source published; Caddy HTTPS pending. |
+| GotHub 24bedc8-p1 | app LAN 3148; `gothub.utilibre.org` | Hardened Go 1.26.8 build; govulncheck reports no vulnerabilities. Bounded GitHub-only egress, gateway limits and full modified source supplied. Local repository/file content passes; public HTTPS still returns 525 pending the separate Caddy block. Upstream seeks maintainers. |
 
-Runtime recipes are `deployment/community/compose*.yaml`. Evaluation services
-have loopback listeners, capability drops, read-only roots, resource limits,
+Runtime recipes are `deployment/community/compose*.yaml`. Unready evaluation services
+have loopback listeners; reviewed gateways use Caddy-only LAN listeners. Both use
+capability drops, read-only roots, resource limits,
 disabled IPv6, and firewall blocks on private/host destinations. These controls
 are not an independent security audit or a complete open-proxy defense. The
-reader evaluation stack does not restart automatically. Native language settings
+unready reader evaluations do not restart automatically; 4get, AnonymousOverflow
+and GotHub now do. Native language settings
 are used where available; Priviblur requires the complete Spanish preference
 restore URL, not only a `language` parameter. Experimental entries are searchable
 in the bilingual catalog and software list, with no launch links and no claim
@@ -46,18 +109,27 @@ returns OK and the operator confirms public search works. Treat this as a
 vantage-specific connectivity failure, not evidence of a general search outage.
 No SearXNG limiter or proxy-trust configuration was weakened for these probes.
 
+The catalog now has nine categories and 27 enabled services. JupyterLite's real
+Pyodide kernel executed a calculation, a pandas CSV example and a matplotlib chart
+in the browser. Initial "No Kernel" while it downloads is not a missing kernel.
+
 Rallly uses the AGPL distribution without purchasing a key or altering license
 checks. Native `instance_settings.footer_links` contains English/Spanish return
-links and the matching upstream source. The original three QA identities remain
+links and the matching upstream source. A further fresh `20261006c` run completed
+the entire poll/vote/export/delete workflow. Its three identity-provider accounts
+were disabled and their sessions, MFA fixtures and OAuth tokens retired. Its two
+synthetic app users, polls, workspaces and anonymous guest record were deleted.
+The original three QA identities remain
 retired. A fresh `20261006b` run verified public password + MFA login, completed
 the approved OIDC callback, and rejected the outsider. All three fresh identities
 were then retired too: groups cleared, passwords made unusable, sessions/tokens/
 MFA fixtures revoked. The two empty synthetic Rallly accounts and their app
 sessions were deleted; no owner credentials or real user data were changed.
 Run-specific QA scripts refuse credential overwrites or reused usernames.
-Community snapshot `2026-10-06T12-31-17-122Z` passed a disposable
-PostgreSQL restore and FMD SQLite integrity checks. It is on-host only and
-unscheduled, not a complete backup/recovery service.
+Community snapshots passed disposable PostgreSQL restores and FMD SQLite
+integrity checks, including Pollaris after its addition. The daily 04:10 UTC
+timer is enabled and its first run passed. Backups remain on-host only, not a
+complete backup/recovery service.
 
 ### Public directories
 
@@ -73,8 +145,12 @@ unscheduled, not a complete backup/recovery service.
 - Existing [Redlib PR 117](https://github.com/redlib-org/redlib-instances/pull/117)
   and [SearXNG request 941](https://github.com/searxng/searx-instances/issues/941)
   remain open. No duplicate requests created.
-- Priviblur, Mezzo, Dumb, LibreMDB, DeGoog, 4get, SafeTwitch, AnonymousOverflow
-  and GotHub are **not submitted**: public readiness is incomplete. Mezzo and
+- Priviblur: source-disclosing row prepared on
+  `mycelibre/priviblur:utilibre-public-instance-20261006`;
+  [prepared comparison](https://github.com/syeopite/priviblur/compare/master...mycelibre:utilibre-public-instance-20261006?expand=1).
+  No upstream pull request has been created.
+- Mezzo, Dumb, LibreMDB, DeGoog, 4get, SafeTwitch, AnonymousOverflow
+  and GotHub are **not submitted**. Mezzo and
   Codeberg submissions also need forge credentials. No third-party public-host
   directory was found in the FMD project's documentation; its community-server
   page lists alternative implementations, not hosted instances.
@@ -124,12 +200,12 @@ This checkpoint supersedes the historical private-setup notes below.
 - Wakapi has a small published patch for free-service retention wording and
   empty-account/OIDC-only UI errors. Public registration, paid subscriptions,
   imports and leaderboards are disabled. Raw activity retention is 3 months.
-- Rallly remains staged, not publicly enabled. Licensing is not itself a
+- Rallly is now live as described above. Licensing is not itself a
   mandatory-purchase blocker: the developer's [May 30 clarification](https://github.com/lukevella/rallly/discussions/1714)
   confirms the AGPL code may be self-hosted without purchasing a key. The
   [commercial terms](https://rallly.co/terms-of-use) expressly preserve
   open-source rights. No paid license was purchased and no license checks were
-  modified; operational readiness still needs testing before launch.
+  modified; the current workflow tests are recorded above.
 - Return links use native settings only: SearXNG custom footer links,
   PrivateBin `main.info`, PairDrop's About-page custom button, Uptime Kuma's
   status-page Markdown footer, authentik's flow footer, and JupyterLite's

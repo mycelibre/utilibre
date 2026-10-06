@@ -1,0 +1,405 @@
+diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
+new file mode 100644
+index 0000000..030304c
+--- /dev/null
++++ b/Dockerfile.utilibre
+@@ -0,0 +1,17 @@
++# Build with the 03ba5d7 source plus fourget-source.patch as the context.
++FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0
++RUN apk add --no-cache apache2 php84 php84-apache2 php84-fileinfo php84-openssl \
++  php84-iconv php84-dom php84-sodium php84-curl php84-pecl-apcu \
++  php84-pecl-imagick php84-mbstring ca-certificates font-dejavu \
++  imagemagick-jpeg imagemagick-webp imagemagick-heic
++WORKDIR /var/www/html/4get
++COPY . .
++ENV FOURGET_SERVER_NAME="4get · Utilibre" FOURGET_API_ENABLED=0
++RUN cp docker/apache/http/httpd.conf /etc/apache2/httpd.conf \
++  && cp UTILIBRE-imagemagick-policy.xml /etc/ImageMagick-7/policy.xml \
++  && sed -i -e 's/Listen 80/Listen 8080/' -e 's/ServerTokens OS/ServerTokens Prod/' \
++     -e 's/ServerSignature On/ServerSignature Off/' /etc/apache2/httpd.conf \
++  && php84 docker/gen_config.php
++USER 100:101
++EXPOSE 8080
++CMD ["httpd", "-DFOREGROUND", "-c", "PidFile /tmp/httpd.pid", "-c", "Mutex file:/tmp default"]
+diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
+new file mode 100644
+index 0000000..9372aed
+--- /dev/null
++++ b/UTILIBRE-SOURCE.txt
+@@ -0,0 +1,13 @@
++4get: Utilibre deployment, 2026-10-06.
++Base: https://git.lolcat.ca/lolcat/4get
++Revision: 03ba5d7b5ed3dc91b3e7d8b6278d8f52818a99ae
++License: GNU AGPL-3.0-only; original notices are retained.
++
++Changes: Apache/PHP 8.4 Alpine runtime; URL validation on every redirect;
++validated public IPv4 addresses pinned to connections; no environment proxy;
++8 MiB decompressed response bound; image/audio MIME restrictions; bounded
++ImageMagick resources; local corresponding-source link. API access is disabled.
++
++Build: docker build -f Dockerfile.utilibre -t utilibre-4get:03ba5d7-p2 .
++Gateway and firewall: https://github.com/mycelibre/utilibre/tree/main/deployment/community
++This source archive contains no production secrets or user data.
+diff --git a/UTILIBRE-imagemagick-policy.xml b/UTILIBRE-imagemagick-policy.xml
+new file mode 100644
+index 0000000..80798e2
+--- /dev/null
++++ b/UTILIBRE-imagemagick-policy.xml
+@@ -0,0 +1,14 @@
++<policymap>
++  <policy domain="resource" name="memory" value="64MiB"/>
++  <policy domain="resource" name="map" value="64MiB"/>
++  <policy domain="resource" name="disk" value="0"/>
++  <policy domain="resource" name="width" value="8192"/>
++  <policy domain="resource" name="height" value="8192"/>
++  <policy domain="resource" name="list-length" value="32"/>
++  <policy domain="resource" name="thread" value="1"/>
++  <policy domain="resource" name="time" value="20"/>
++  <policy domain="delegate" rights="none" pattern="*"/>
++  <policy domain="path" rights="none" pattern="@*"/>
++  <policy domain="coder" rights="none" pattern="*"/>
++  <policy domain="coder" rights="read|write" pattern="{PNG,JPEG,JPG,GIF,WEBP,AVIF,HEIC,ICO}"/>
++</policymap>
+diff --git a/lib/curlproxy.php b/lib/curlproxy.php
+index 313ab01..c5407b3 100644
+--- a/lib/curlproxy.php
++++ b/lib/curlproxy.php
+@@ -79,6 +79,10 @@ class proxy{
+ 	public function validateurl($url){
+ 		
+ 		$url_parts = parse_url($url);
++		if (!$url_parts || isset($url_parts['user']) || isset($url_parts['pass']) ||
++			isset($url_parts['port']) && !in_array($url_parts['port'], [80, 443], true)) {
++			return false;
++		}
+ 		
+ 		// check if required parts are there
+ 		if(
+@@ -141,6 +145,25 @@ class proxy{
+ 		$this->clientcache();
+ 		
+ 		$curl = curl_init();
++		// Pin the checked public IPv4 result; do not allow a second DNS lookup
++		// to turn a safe hostname into a private-network request.
++		$parts = parse_url($url);
++		$ip = gethostbyname($parts['host']);
++		if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)
++			|| preg_match('/^100\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\./', $ip)) {
++			throw new Exception('Non-public upstream denied');
++		}
++		$port = $parts['port'] ?? ($parts['scheme'] === 'https' ? 443 : 80);
++		curl_setopt($curl, CURLOPT_RESOLVE, [$parts['host'] . ':' . $port . ':' . $ip]);
++		curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
++		curl_setopt($curl, CURLOPT_PROXY, '');
++		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
++		$boundedPayload = '';
++		curl_setopt($curl, CURLOPT_WRITEFUNCTION, function($handle, $chunk) use (&$boundedPayload) {
++			if (strlen($boundedPayload) + strlen($chunk) > 8 * 1024 * 1024) return 0;
++			$boundedPayload .= $chunk;
++			return strlen($chunk);
++		});
+ 		
+ 		curl_setopt($curl, CURLOPT_URL, $url);
+ 		curl_setopt($curl, CURLOPT_ENCODING, ""); // default encoding
+@@ -192,7 +215,6 @@ class proxy{
+ 				break;
+ 		}
+ 		
+-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+ 		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+ 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+ 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+@@ -204,14 +226,14 @@ class proxy{
+ 		curl_setopt(
+ 			$curl,
+ 			CURLOPT_PROGRESSFUNCTION,
+-			function($downloadsize, $downloaded, $uploadsize, $uploaded
++			function($handle, $downloadsize, $downloaded, $uploadsize, $uploaded
+ 		){
+ 			
+-			// if $downloaded exceeds 100MB, fuck off
+-			return ($downloaded > 100000000) ? 1 : 0;
++			return ($downloaded > 8 * 1024 * 1024) ? 1 : 0;
+ 		});
+ 		
+-		$body = curl_exec($curl);
++		curl_exec($curl);
++		$body = $boundedPayload;
+ 		
+ 		if(curl_errno($curl)){
+ 			
+@@ -344,197 +366,20 @@ class proxy{
+ 	}
+ 	
+ 	private function stream($url, $referer, $format){
+-		
+-		$this->clientcache();
+-		
+-		$this->url = $url;
+-		$this->format = $format;
+-		
+-		// sanitize URL
+-		if($this->validateurl($url) === false){
+-			
+-			throw new Exception("Invalid URL");
+-		}
+-		
+-		$curl = curl_init();
+-		
+-		// set headers
+-		if($referer === null){
+-			$referer = explode("/", $url, 4);
+-			array_pop($referer);
+-			
+-			$referer = implode("/", $referer);
+-		}
+-		
+-		switch($format){
+-			
+-			case "image":
+-				curl_setopt(
+-					$curl,
+-					CURLOPT_HTTPHEADER,
+-					[
+-						"User-Agent: " . config::USER_AGENT,
+-						"Accept: image/avif,image/webp,*/*",
+-						"Accept-Language: en-US,en;q=0.5",
+-						"Accept-Encoding: gzip, deflate, br",
+-						"DNT: 1",
+-						"Connection: keep-alive",
+-						"Referer: {$referer}"
+-					]
+-				);
+-				break;
+-			
+-			case "audio":
+-				curl_setopt(
+-					$curl,
+-					CURLOPT_HTTPHEADER,
+-					[
+-						"User-Agent: " . config::USER_AGENT,
+-						"Accept: audio/webm,audio/ogg,audio/wav,audio/*;q=0.9,application/ogg;q=0.7,video/*;q=0.6,*/*;q=0.5",
+-						"Accept-Language: en-US,en;q=0.5",
+-						"Accept-Encoding: gzip, deflate, br",
+-						"DNT: 1",
+-						"Connection: keep-alive",
+-						"Referer: {$referer}"
+-					]
+-				);
+-				break;
+-		}
+-		
+-		// follow redirects
+-		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+-		curl_setopt($curl, CURLOPT_MAXREDIRS, 5);
+-		curl_setopt($curl, CURLOPT_AUTOREFERER, 5);
+-		
+-		// set url
+-		curl_setopt($curl, CURLOPT_URL, $url);
+-		curl_setopt($curl, CURLOPT_ENCODING, ""); // default encoding
+-		
+-		// timeout + disable ssl
+-		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+-		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
+-		curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+-		
+-		curl_setopt(
+-			$curl,
+-			CURLOPT_WRITEFUNCTION,
+-			function($c, $data){
+-				
+-				if(curl_getinfo($c, CURLINFO_HTTP_CODE) !== 200){
+-					
+-					throw new Exception("Serber returned a non-200 code");
+-				}
+-				
+-				echo $data;
+-				return strlen($data);
+-			}
+-		);
+-		
+-		$this->empty_header = false;
+-		$this->cont = false;
+-		$this->headers_tmp = [];
+-		$this->headers = [];
+-		curl_setopt(
+-			$curl,
+-			CURLOPT_HEADERFUNCTION,
+-			function($c, $header){
+-				
+-				$head = trim($header);
+-				$len = strlen($head);
+-				
+-				if($len === 0){
+-					
+-					$this->empty_header = true;
+-					$this->headers_tmp = [];
+-				}else{
+-					
+-					$this->empty_header = false;
+-					$this->headers_tmp[] = $head;
+-				}
+-				
+-				foreach($this->headers_tmp as $h){
+-					
+-					// parse headers
+-					$h = explode(":", $h, 2);
+-					
+-					if(count($h) !== 2){
+-						
+-						if(curl_getinfo($c, CURLINFO_HTTP_CODE) !== 200){
+-							
+-							// not HTTP 200, probably a redirect
+-							$this->cont = false;
+-						}else{
+-							
+-							$this->cont = true;
+-						}
+-						
+-						// is HTTP 200, just ignore that line
+-						continue;
+-					}
+-					
+-					$this->headers[strtolower(trim($h[0]))] = trim($h[1]);
+-				}
+-				
+-				if(
+-					$this->cont &&
+-					$this->empty_header
+-				){
+-					
+-					// get content type
+-					if(isset($this->headers["content-type"])){
+-						
+-						$octet_check = stripos($this->headers["content-type"], "octet-stream");
+-						
+-						if(
+-							stripos($this->headers["content-type"], $this->format) === false &&
+-							$octet_check === false
+-						){
+-							
+-							throw new Exception("Resource reported invalid Content-Type");
+-						}
+-						
+-					}else{
+-						
+-						throw new Exception("Resource is not an {$this->format} (no Content-Type)");
+-					}
+-					
+-					$filetype = explode("/", $this->headers["content-type"]);
+-					
+-					if(!isset($filetype[1])){
+-						
+-						throw new Exception("Malformed Content-Type header");
+-					}
+-					
+-					if($octet_check !== false){
+-						
+-						$filetype[1] = "jpeg";
+-					}
+-					
+-					header("Content-Type: {$this->format}/{$filetype[1]}");
+-					
+-					// give payload size
+-					if(isset($this->headers["content-length"])){
+-						
+-						header("Content-Length: {$this->headers["content-length"]}");
+-					}
+-					
+-					// give filename
+-					$this->getfilenameheader($this->headers, $this->url, $filetype[1]);
+-				}
+-				
+-				return strlen($header);
+-			}
+-		);
+-		
+-		curl_exec($curl);
+-		
+-		if(curl_errno($curl)){
+-			
+-			throw new Exception(curl_error($curl));
++		// Use the bounded fetcher so every redirect is resolved and validated.
++		$payload = $this->get($url, self::req_web, false, $referer);
++		$mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($payload["body"]);
++		$allowed = $format === "image"
++			? ["image/png", "image/jpeg", "image/gif", "image/webp", "image/avif"]
++			: ["audio/mpeg", "audio/ogg", "audio/wav", "audio/webm", "video/webm"];
++		if (!in_array($mime, $allowed, true)) {
++			throw new Exception("Unsupported media type");
+ 		}
+-		
+-		curl_close($curl);
++		header("Content-Type: " . $mime);
++		header("Content-Length: " . strlen($payload["body"]));
++		header("X-Content-Type-Options: nosniff");
++		header("Content-Security-Policy: default-src 'none'; sandbox");
++		echo $payload["body"];
+ 	}
+ 	
+ 	public function getfilenameheader($headers, $url, $filetype = "jpg"){
+diff --git a/proxy.php b/proxy.php
+index 730358b..716d0a7 100644
+--- a/proxy.php
++++ b/proxy.php
+@@ -3,6 +3,10 @@
+ include "data/config.php";
+ include "lib/curlproxy.php";
+ $proxy = new proxy();
++Imagick::setResourceLimit(Imagick::RESOURCETYPE_MEMORY, 64 * 1024 * 1024);
++Imagick::setResourceLimit(Imagick::RESOURCETYPE_MAP, 64 * 1024 * 1024);
++Imagick::setResourceLimit(Imagick::RESOURCETYPE_DISK, 0);
++Imagick::setResourceLimit(Imagick::RESOURCETYPE_THREAD, 1);
+ 
+ if(!isset($_GET["i"])){
+ 	
+@@ -93,6 +97,10 @@ try{
+ 	
+ 	// resize image ourselves
+ 	$payload = $proxy->get($_GET["i"], $proxy::req_image, true);
++	$mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($payload["body"]);
++	if (!in_array($mime, ["image/png", "image/jpeg", "image/gif", "image/webp", "image/avif", "image/heic", "image/x-icon", "image/vnd.microsoft.icon"], true)) {
++		throw new Exception("Unsupported image type");
++	}
+ 	
+ 	// get image format & set imagick
+ 	$image = null;
+@@ -100,10 +108,8 @@ try{
+ 	
+ 	try{
+ 		
+-		if($format !== false){
+-			$image->setFormat($format);
+-		}
+-		
++		// Let the image decoder inspect the validated bytes. setFormat() here
++		// forces a blob format and breaks later JPEG output with ImageMagick 7.
+ 		$image->readImageBlob($payload["body"]);
+ 		
+ 		$image_width = $image->getImageWidth();
+@@ -155,9 +161,9 @@ try{
+ 		$image->setImageAlphaChannel(Imagick::ALPHACHANNEL_REMOVE);
+ 		
+ 		$image->stripImage();
+-		$image->setFormat("jpeg");
++		$image->setImageFormat("jpeg");
+ 		$image->setImageCompressionQuality(90);
+-		$image->setImageCompression(Imagick::COMPRESSION_JPEG2000);
++		$image->setImageCompression(Imagick::COMPRESSION_JPEG);
+ 		
+ 		$image->resizeImage($image_width, $image_height, Imagick::FILTER_LANCZOS, 1);
+ 		
+diff --git a/template/home.html b/template/home.html
+index 2e11d99..7ee57f6 100644
+--- a/template/home.html
++++ b/template/home.html
+@@ -28,7 +28,7 @@
+ 					<div class="autocomplete"></div>
+ 				</div>
+ 			</form>
+-			<a href="settings">Settings</a> • <a href="instances">Instances</a> • <a href="https://bsky.app/profile/4getisdown.bsky.social">News</a> • <a href="api.txt">API</a> • <a href="about">About</a> • <a href="https://git.lolcat.ca/lolcat/4get">Source</a><br>
++			<a href="settings">Settings</a> • <a href="instances">Instances</a> • <a href="https://bsky.app/profile/4getisdown.bsky.social">News</a> • <a href="api.txt">API</a> • <a href="about">About</a> • <a href="/utilibre-source/4get-utilibre.tar.gz">Source (modified)</a><br>
+ 			<a href="/donate"><b>Donate to the project</b></a>
+ 			<div class="subtext">
+ 				<a href="https://4get.ca">Clearnet</a> • <a href="http://4getwebfrq5zr4sxugk6htxvawqehxtdgjrbcn2oslllcol2vepa23yd.onion">Tor</a> • <a href="https://lolcat.ca">Report a problem</a><br>

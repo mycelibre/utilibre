@@ -32,6 +32,7 @@ const services = [
   { id: 'priviblur', hostKey: 'PUBLIC_TUMBLR_HOST', urlKey: 'PUBLIC_TUMBLR_URL', portKey: 'PRIVIBLUR_PORT' },
   { id: 'mezzo', hostKey: 'PUBLIC_TENOR_HOST', urlKey: 'PUBLIC_TENOR_URL', portKey: 'MEZZO_PORT' },
   { id: 'fmd', hostKey: 'PUBLIC_FMD_HOST', urlKey: 'PUBLIC_FMD_URL', portKey: 'FMD_PORT' },
+  { id: 'pollaris', hostKey: 'PUBLIC_POLLARIS_HOST', urlKey: 'PUBLIC_POLLARIS_URL', portKey: 'POLLARIS_PORT' },
 ];
 const allowedServices = new Set(services.map(({ id }) => id));
 const listableServices = new Set([...allowedServices, 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub']);
@@ -109,6 +110,9 @@ export function validateEnvironmentValues(values, { launch = false, assignedAddr
   }
 
   const secret = values.SEARXNG_SECRET ?? '';
+  if (values.SEARXNG_IMAGE && !/^(?:docker\.io\/)?searxng\/searxng(?::[A-Za-z0-9_.-]+)?@sha256:[0-9a-f]{64}$/.test(values.SEARXNG_IMAGE)) {
+    errors.push('SEARXNG_IMAGE must be an immutable official SearXNG image reference.');
+  }
   if (!/^[a-f0-9]{64}$/i.test(secret) || isPlaceholder(secret)) {
     errors.push('SEARXNG_SECRET must be a non-placeholder 32-byte hexadecimal secret (64 characters).');
   }

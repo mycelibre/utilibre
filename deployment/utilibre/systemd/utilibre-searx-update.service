@@ -1,0 +1,19 @@
+[Unit]
+Description=Test and update only Utilibre SearXNG, with rollback and email
+After=docker.service network-online.target
+Requires=docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/ubuntu/freetools
+Environment=PATH=/root/.nvm/versions/node/v24.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/bin/python3 /home/ubuntu/freetools/scripts/searxng-maintain.py --apply --notify
+TimeoutStartSec=30min
+TimeoutStopSec=3min
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=read-only
+ReadWritePaths=/home/ubuntu/freetools

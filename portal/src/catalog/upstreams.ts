@@ -1,4 +1,4 @@
-export type FossProviderId = 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'dumb' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub';
+export type FossProviderId = 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'dumb' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris';
 
 export type ReviewedLicense =
   | 'AGPL-3.0'
@@ -38,29 +38,40 @@ export interface ReviewedFossProvider {
  * never enables a public route or opens registrations.
  */
 export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider> = {
+  pollaris: {
+    project: 'Pollaris', sourceUrl: 'https://framagit.org/pollaris/pollaris',
+    reviewedSourceUrl: 'https://framagit.org/pollaris/pollaris/-/tree/b6ab5b3309e858a02c042350be82cc7a9c599246',
+    license: 'AGPL-3.0-or-later', licenseEvidenceUrls: ['https://framagit.org/pollaris/pollaris/-/blob/b6ab5b3309e858a02c042350be82cc7a9c599246/LICENSE.txt'],
+    selfHostingEvidenceUrl: 'https://framagit.org/pollaris/pollaris/-/blob/1.2.3/docs/administrators/install.md',
+    maintenanceEvidenceUrl: 'https://framagit.org/pollaris/pollaris/-/releases',
+    artifactReference: 'source:b6ab5b3309e858a02c042350be82cc7a9c599246+deployment/community/Dockerfile.pollaris',
+    installedVersion: '1.2.3 · PHP 8.5 · account-free polls', integration: 'source-build',
+    reviewStatus: 'deployed', reviewDocument: 'docs/toolbox-review.md',
+    role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-06',
+  },
   dumb: { ...toolboxProvider('Dumb', 'rramiachraf/dumb', 'f5581074850bc31ed7df1ce96e8f428179bf0abb', 'MIT', 'Private test · Genius requests blocked · image/source match unverified', 'ghcr.io/rramiachraf/dumb@sha256:de231df0313999b834b5ccc7cf0b5d426fc6b42bfdd984f7f7c322b3d9db3907'), reviewStatus: 'staged' },
   libremdb: { ...toolboxProvider('LibreMDB', 'zyachel/libremdb', 'd0793f59b5f090fe0d29341e3a173cfa92884307', 'AGPL-3.0', 'Private test stopped · runtime and IMDb blockers', 'ghcr.io/zyachel/libremdb@sha256:9f65a47fe64133045b4cfaa48e5ef73371c55c62b3d5bf42f7584a90dfd1c1ee'), reviewStatus: 'staged' },
   degoog: { ...toolboxProvider('DeGoog', 'degoog-org/degoog', '4a9bcc74f0fceaa33efbab4777f063274cce23d6', 'AGPL-3.0', '1.0.0 core · private evaluation · no engines installed', 'ghcr.io/degoog-org/degoog:1.0.0@sha256:e1ce8ee724a4514d269b74088424e579322bdfcf718256c1c5dd2cbb5aaf510c'), reviewStatus: 'staged' },
-  anonymousoverflow: { ...toolboxProvider('AnonymousOverflow', 'httpjamesm/AnonymousOverflow', '937cfeefd6dcbab92ef572671f16d4d3be6abad3', 'MPL-2.0', 'Private evaluation · article test passed · public review pending', 'ghcr.io/httpjamesm/anonymousoverflow@sha256:1c48541f6d32faa97e0e4bfcc916c7993520271a496ad02454b5496ea5ef5a4b'), reviewStatus: 'staged' },
-  fourget: forgeEvaluationProvider('4get', 'https://git.lolcat.ca/lolcat/4get', '03ba5d7b5ed3dc91b3e7d8b6278d8f52818a99ae', 'AGPL-3.0-only', 'license.txt', 'Private evaluation · Apache/PHP 8.4 build', 'source:03ba5d7b5ed3dc91b3e7d8b6278d8f52818a99ae+deployment/community/Dockerfile.4get'),
+  anonymousoverflow: { ...toolboxProvider('AnonymousOverflow', 'httpjamesm/AnonymousOverflow', '937cfeefd6dcbab92ef572671f16d4d3be6abad3', 'MPL-2.0', '937cfee-p1 · hardened build · public edge pending', 'source:937cfeefd6dcbab92ef572671f16d4d3be6abad3+deployment/community/anonymousoverflow-source.patch'), reviewStatus: 'staged', integration: 'source-build' },
+  fourget: forgeEvaluationProvider('4get', 'https://git.lolcat.ca/lolcat/4get', '03ba5d7b5ed3dc91b3e7d8b6278d8f52818a99ae', 'AGPL-3.0-only', 'license.txt', '03ba5d7-p2 · hardened build · public edge pending', 'source:03ba5d7b5ed3dc91b3e7d8b6278d8f52818a99ae+deployment/community/fourget-source.patch'),
   safetwitch: forgeEvaluationProvider('SafeTwitch', 'https://codeberg.org/SafeTwitch/safetwitch', 'caeb85a77be3b18a6916d2caa626d09e94d1f8b2', 'AGPL-3.0', 'LICENSE', '2.4.5 frontend · private evaluation · proxy hardening pending', 'source:caeb85a77be3b18a6916d2caa626d09e94d1f8b2+deployment/community/Dockerfile.safetwitch-evaluation'),
-  gothub: forgeEvaluationProvider('GotHub', 'https://codeberg.org/gothub/gothub', '24bedc80bed5fc4f72a8f140c97cb38fc2e67ed2', 'AGPL-3.0', 'LICENSE', '24bedc8 · private evaluation · runtime updates pending', 'codeberg.org/gothub/gothub@sha256:d6ac0ba6e669d70b67f41dd4f64c53b35faf055f76790f9069642d611a3bd994'),
+  gothub: forgeEvaluationProvider('GotHub', 'https://codeberg.org/gothub/gothub', '24bedc80bed5fc4f72a8f140c97cb38fc2e67ed2', 'AGPL-3.0', 'LICENSE', '24bedc8-p1 · hardened build · public edge pending', 'source:24bedc80bed5fc4f72a8f140c97cb38fc2e67ed2+deployment/community/gothub-source.patch'),
   'reactive-resume': toolboxProvider('Reactive Resume', 'reactive-resume/reactive-resume', 'bc71f636c02a80ac6d731e17d2ee13501275295c', 'MIT', '6.0.0 · approved-account pilot', 'ghcr.io/reactive-resume/reactive-resume:v6.0.0@sha256:29f418bd46d23f1d7cd9a73ec7f6bc46681926cb1ff617ac388064f45ee790d0'),
   penpot: toolboxProvider('Penpot', 'penpot/penpot', 'cf46b53bcb61c2a9be8f202bec03647a5470d43d', 'MPL-2.0', '2.18.2 · approved-account pilot', 'penpotapp/frontend:2.18.2@sha256:3619f48cbdd0c9197ad23bd3db1c9b4391d7c9c3137e22e806cd7f9c945c1c8e'),
   actual: { ...toolboxProvider('Actual Budget', 'actualbudget/actual', 'v26.10.0', 'MIT', '26.10.0 · approved-account pilot', 'actualbudget/actual-server:26.10.0@sha256:24645e971da6bb1a1f953d6859e307a0b29be1e8b4130a35b3220c209b5b860c'), licenseEvidenceUrls: ['https://github.com/actualbudget/actual/blob/v26.10.0/LICENSE.txt'] },
-  rallly: { ...toolboxProvider('Rallly', 'lukevella/rallly', '1e5d48ad410daac9700c38c1947aad94c362ab82', 'AGPL-3.0', '4.15.3 · installed, public HTTPS pending', 'lukevella/rallly:4.15.3@sha256:8cd979aefe8d06e1822bc67054eb2d31088cdb831aa3f7b5615b3768f35431d9'), reviewStatus: 'staged' },
-  priviblur: { ...toolboxProvider('Priviblur', 'syeopite/priviblur', '251a8e67c64d792b3c8c141860ccaa227ce62e4d', 'AGPL-3.0', '251a8e6 · security dependency updates · HTTPS pending', 'source:251a8e67c64d792b3c8c141860ccaa227ce62e4d+deployment/community/Dockerfile.priviblur'), reviewStatus: 'staged' },
+  rallly: toolboxProvider('Rallly', 'lukevella/rallly', '1e5d48ad410daac9700c38c1947aad94c362ab82', 'AGPL-3.0', '4.15.3 · approved-account organizers', 'lukevella/rallly:4.15.3@sha256:8cd979aefe8d06e1822bc67054eb2d31088cdb831aa3f7b5615b3768f35431d9'),
+  priviblur: toolboxProvider('Priviblur', 'syeopite/priviblur', '251a8e67c64d792b3c8c141860ccaa227ce62e4d', 'AGPL-3.0', '251a8e6 · security dependency updates', 'source:251a8e67c64d792b3c8c141860ccaa227ce62e4d+deployment/community/Dockerfile.priviblur'),
   mezzo: {
-    ...toolboxProvider('Mezzo', 'fsky/mezzo', 'v1.4.0', 'AGPL-3.0-or-later', '1.4.0 · HTTPS pending', 'gitfield.org/fsky/mezzo@sha256:f8643c2525c96b3c5708bb737f71759bfc4c01a745301a8a7dbcba609f9c6416'),
+    ...toolboxProvider('Mezzo', 'fsky/mezzo', 'v1.4.0', 'AGPL-3.0-or-later', '1.4.0', 'gitfield.org/fsky/mezzo@sha256:f8643c2525c96b3c5708bb737f71759bfc4c01a745301a8a7dbcba609f9c6416'),
     sourceUrl: 'https://gitfield.org/fsky/mezzo', reviewedSourceUrl: 'https://gitfield.org/fsky/mezzo/src/commit/9cb99bd6a8570bb104021a094b1e598c8dda49db',
     licenseEvidenceUrls: ['https://gitfield.org/fsky/mezzo/src/tag/v1.4.0/LICENSE'],
-    selfHostingEvidenceUrl: 'https://gitfield.org/fsky/mezzo#run-your-own-instance', maintenanceEvidenceUrl: 'https://gitfield.org/fsky/mezzo/releases', reviewStatus: 'staged',
+    selfHostingEvidenceUrl: 'https://gitfield.org/fsky/mezzo#run-your-own-instance', maintenanceEvidenceUrl: 'https://gitfield.org/fsky/mezzo/releases', reviewStatus: 'deployed',
   },
   fmd: {
-    ...toolboxProvider('FMD Server', 'fmd-foss/fmd-server', 'v0.17.0', 'GPL-3.0-or-later', '0.17.0 · invitation-only · HTTPS pending', 'registry.gitlab.com/fmd-foss/fmd-server@sha256:e4a7f5538aa3febe938159ee2db337ccdb50d340d7009784c5a851f152df48e0'),
+    ...toolboxProvider('FMD Server', 'fmd-foss/fmd-server', 'v0.17.0', 'GPL-3.0-or-later', '0.17.0 · invitation-only device pilot', 'registry.gitlab.com/fmd-foss/fmd-server@sha256:e4a7f5538aa3febe938159ee2db337ccdb50d340d7009784c5a851f152df48e0'),
     sourceUrl: 'https://gitlab.com/fmd-foss/fmd-server', reviewedSourceUrl: 'https://gitlab.com/fmd-foss/fmd-server/-/tree/v0.17.0',
     licenseEvidenceUrls: ['https://gitlab.com/fmd-foss/fmd-server/-/blob/v0.17.0/LICENSE'],
-    selfHostingEvidenceUrl: 'https://fmd-foss.org/docs/fmd-server/installation/overview/', maintenanceEvidenceUrl: 'https://gitlab.com/fmd-foss/fmd-server/-/tags', reviewStatus: 'staged',
+    selfHostingEvidenceUrl: 'https://fmd-foss.org/docs/fmd-server/installation/overview/', maintenanceEvidenceUrl: 'https://gitlab.com/fmd-foss/fmd-server/-/tags', reviewStatus: 'deployed',
   },
   wakapi: { ...toolboxProvider('Wakapi', 'muety/wakapi', '347f1f45ae2863d9499236471317a76630c5308f', 'MIT', '2.18.1 · local copy and empty-state fixes', 'source:347f1f45ae2863d9499236471317a76630c5308f+deployment/expanded/Dockerfile.wakapi'), integration: 'source-build' },
   breezewiki: {
@@ -89,12 +100,12 @@ export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider>
   miniqr: toolboxProvider('Mini QR', 'lyqht/mini-qr', 'v0.33.0', 'GPL-3.0', '0.33.0', 'release:v0.33.0+deployment/toolbox/Dockerfile.miniqr'),
   searxng: {
     project: 'SearXNG', sourceUrl: 'https://github.com/searxng/searxng',
-    reviewedSourceUrl: 'https://github.com/searxng/searxng/tree/4e2c1ea7f468c9d1b16206e9d4079999a2eb0627',
+    reviewedSourceUrl: 'https://github.com/searxng/searxng/tree/d48c4b555421e824342c51d68482dd0898e54d0f',
     license: 'AGPL-3.0-or-later', licenseEvidenceUrls: ['https://github.com/searxng/searxng/blob/4e2c1ea7f468c9d1b16206e9d4079999a2eb0627/LICENSE'],
     selfHostingEvidenceUrl: 'https://docs.searxng.org/admin/installation-docker.html', maintenanceEvidenceUrl: 'https://github.com/searxng/searxng/commits/master/',
-    artifactReference: 'docker.io/searxng/searxng:2026.9.29-4e2c1ea7f@sha256:3284e8900e9b3e5df284ae8c48a26851ae2eff6f99b4b0b18ec3da5a4d9095c3',
-    installedVersion: '2026.9.29-4e2c1ea7f + local log redaction hook', integration: 'container', reviewStatus: 'deployed', reviewDocument: 'docs/services.md',
-    role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-09-29',
+    artifactReference: 'docker.io/searxng/searxng:2026.10.4-d48c4b555@sha256:76b0bf285aca014c7191fc4d9234c4bfb358624ac33d8883833d496c059ec072',
+    installedVersion: '2026.10.4-d48c4b555 + local log redaction hook', integration: 'container', reviewStatus: 'deployed', reviewDocument: 'docs/services.md',
+    role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-06',
   },
   redlib: {
     project: 'Redlib', sourceUrl: 'https://github.com/redlib-org/redlib',

@@ -2,7 +2,50 @@
 
 Updates are deliberate, one service at a time. Production uses immutable
 version/digest pins; Redlib is built from an exact source commit and pinned
-base images. There is no unattended updater and no floating `latest` tag.
+base images. SearXNG has the guarded, daily updater below; other services
+remain manual. Production never runs a floating `latest` tag.
+
+## Guarded SearXNG automation
+
+`scripts/searxng-maintain.py` checks the official registry, resolves an immutable
+image, checks source/license labels, and refuses unexpected image formats or
+manual configuration/runtime drift. Run from the repository:
+
+```sh
+python3 scripts/test-searxng-maintain.py
+python3 scripts/searxng-maintain.py --check
+python3 scripts/searxng-maintain.py --stage --notify
+python3 scripts/searxng-maintain.py --apply --notify
+```
+
+Check is the default. Stage runs a disposable loopback-only SearXNG and Valkey
+project with a fresh secret/cache. It verifies actual English/Spanish browser
+searches, not just `/healthz`. Apply first verifies the old deployment, tests
+the candidate, saves a private configuration backup, then replaces **only**
+the SearXNG container. Post-update searches use verified HTTPS through the
+private Caddy edge; failure restores and re-tests the previous image.
+Limiter/proxy-trust policies remain intact. No application gets Docker access.
+
+The root `.env` gets only an immutable `SEARXNG_IMAGE` override after success.
+State, configuration backups and interrupted-update journals live under
+`/var/lib/utilibre-searx-updater` (private); the non-secret deployed-version
+manifest is `/opt/utilibre/update-public/searxng.json`. Old images/backups are
+retained. A failed rollback retains its journal; the next apply attempts safe
+recovery and stops for review. Do not prune images needed for rollback.
+
+The systemd units in `deployment/utilibre/systemd/` run daily at 02:20 UTC with
+up to ten minutes' jitter. Enable only after a successful stage and notification
+test. Pause with `systemctl disable --now utilibre-searx-update.timer` (this does
+not interrupt an active run). Review `journalctl -u utilibre-searx-update` and
+the private `last-run.json`. The verified STARTTLS relay sends updates/failures
+to `admin@utilibre.org`. An outstanding update becomes urgent after five days
+and overdue after seven; a newer daily release does not reset that clock.
+
+This automation cannot guarantee the listing's uptime/freshness requirements:
+registry failures, upstream regressions and failed notification delivery need
+operator attention. Public-IP checks from this VM are not independent uptime
+evidence; retain an external monitor. Automatic rollbacks cover this stateless
+search service, **not** schema-migrating databases or other applications.
 
 ## Before every update
 

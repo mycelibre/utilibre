@@ -32,6 +32,8 @@ export interface PublicConfig {
   publicTumblrUrl: string;
   publicTenorUrl: string;
   publicFmdUrl: string;
+  publicPollarisUrl: string;
+  searxngDeployedVersion: string;
   listedServices: string[];
   enabledServices: string[];
   defaultLanguage: 'en' | 'es';
@@ -71,6 +73,8 @@ const defaults: PublicConfig = {
   publicTumblrUrl: '',
   publicTenorUrl: '',
   publicFmdUrl: '',
+  publicPollarisUrl: '',
+  searxngDeployedVersion: '',
   listedServices: [],
   enabledServices: [],
   defaultLanguage: 'en',

@@ -414,7 +414,7 @@ test('only retained Utilibre services appear when stale service IDs are still co
 
 test('software inventory credits only retained Utilibre services and their data stores bilingually', async ({ page }) => {
   const deployedProjects = {
-    SearXNG: { facts: '2026.9.29-4e2c1ea7f · AGPL-3.0-or-later', source: 'https://github.com/searxng/searxng' },
+    SearXNG: { facts: '2026.10.4-d48c4b555 · AGPL-3.0-or-later', source: 'https://github.com/searxng/searxng' },
     Redlib: { facts: 'a4d36e9 + local redirect hardening · AGPL-3.0-only', source: 'https://github.com/redlib-org/redlib/tree/a4d36e954cf1bd64f209cd8868c5a29edc81b374' },
     Anubis: { facts: '1.27.0 · MIT', source: 'https://github.com/TecharoHQ/anubis/tree/v1.27.0' },
     FreshRSS: { facts: '1.29.1 · AGPL-3.0', source: 'https://github.com/FreshRSS/FreshRSS/tree/1.29.1' },

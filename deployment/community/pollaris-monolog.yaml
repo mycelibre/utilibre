@@ -1,0 +1,14 @@
+# Normal access/request and deprecation logging are off. Operational warnings
+# go to Docker's size-rotated stderr log instead of an unbounded disk file.
+monolog:
+  handlers:
+    main:
+      type: stream
+      path: php://stderr
+      level: warning
+      channels: ["!event", "!request", "!deprecation"]
+      formatter: monolog.formatter.json
+    console:
+      type: console
+      process_psr_3_messages: false
+      channels: ["!event", "!doctrine", "!deprecation"]

@@ -4,7 +4,7 @@
 # These routes are for this app VM only. Do not expose port 3135 (Kuma admin).
 # Rallly uses its restricted gateway and invitation-only Utilibre OIDC login.
 # Public HTTPS still requires applying this file on that separate VM.
-# Do not expose private evaluation ports 3143-3148. Dumb (3142) is also
+# Do not expose private evaluation ports 3143, 3144 or 3146. Dumb (3142) is also
 # omitted: Genius content requests fail despite its healthy homepage.
 
 bridge.utilibre.org {
@@ -75,6 +75,38 @@ tenor.utilibre.org {
 fmd.utilibre.org {
 	encode zstd gzip
 	reverse_proxy 10.10.1.43:3141 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+
+gothub.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3148 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+
+pollaris.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3149 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+
+4get.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3145 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+
+overflow.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3147 {
 		header_up X-Real-IP {client_ip}
 		header_up X-Forwarded-For {client_ip}
 	}

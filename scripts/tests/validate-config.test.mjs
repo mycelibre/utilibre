@@ -75,6 +75,14 @@ test('accepts the retained four-service launch set', () => {
   assert.equal(validateLaunch(launchValues()).ENABLED_SERVICES, 'searxng,redlib,freshrss,privatebin');
 });
 
+test('permits only an immutable official SearXNG image override', () => {
+  const pin = `docker.io/searxng/searxng:2026.10.4-d48c4b555@sha256:${'a'.repeat(64)}`;
+  assert.equal(validateLaunch(launchValues({ SEARXNG_IMAGE: pin })).SEARXNG_IMAGE, pin);
+  for (const image of ['searxng/searxng:latest', 'docker.io/searxng/searxng:latest', pin.replace('searxng/searxng', 'stranger/searxng')]) {
+    assert.throws(() => validateLaunch(launchValues({ SEARXNG_IMAGE: image })), /SEARXNG_IMAGE/);
+  }
+});
+
 test('accepts an optional public HTTPS support destination', () => {
   assert.equal(
     validateLaunch(launchValues({ SUPPORT_URL: 'https://github.com/sponsors/mycelibre' })).SUPPORT_URL,

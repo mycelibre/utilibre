@@ -1,0 +1,807 @@
+diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
+new file mode 100644
+index 0000000..46b43d4
+--- /dev/null
++++ b/Dockerfile.utilibre
+@@ -0,0 +1,16 @@
++FROM golang:1.26-alpine@sha256:8ac98ca534ac3f51e1f420a1dd2c15e74c75cfa0f23f3ad27eb5d7236c349a0c AS build
++WORKDIR /src
++COPY go.mod go.sum ./
++RUN go mod download
++COPY . .
++RUN go test ./... && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -X codeberg.org/gothub/gothub/utils.Branch=24bedc8-utilibre-p1" -o /gothub .
++FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0
++RUN apk add --no-cache ca-certificates
++WORKDIR /app
++COPY --from=build /gothub /app/gothub
++COPY --from=build /src/views /app/views
++COPY --from=build /src/public /app/public
++USER 65534:65534
++ENV DOCKER=true
++EXPOSE 3000
++CMD ["/app/gothub", "serve"]
+diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
+new file mode 100644
+index 0000000..be963a0
+--- /dev/null
++++ b/UTILIBRE-SOURCE.txt
+@@ -0,0 +1,18 @@
++GotHub deployment, 2026-10-06
++Upstream: https://codeberg.org/gothub/gothub
++Revision: 24bedc80bed5fc4f72a8f140c97cb38fc2e67ed2 (default dev branch)
++License: GNU AGPL-3.0; see LICENSE. Original notices retained.
++
++Utilibre modifications: current Go/dependency versions; destination-allowlisted
++HTTPS transport with public-IP-pinned dialing, response limits and deadlines;
++no forwarded user credentials; bounded correctly keyed response cache;
++corrected media alt escaping, release download URL and gist hostname;
++closed HTTP response bodies and handled failed requests; modified-source link.
++This is a public reader, not a Git clone/archive service. Responses over 8 MiB
++are refused. No custom Utilibre return link has been injected into the UI.
++
++Build: docker build -f Dockerfile.utilibre -t utilibre-gothub:24bedc8-p1 .
++Run recipes, public gateway and network policy:
++https://github.com/mycelibre/utilibre/tree/main/deployment/community
++The archive includes the complete patched source, go.mod/go.sum and Dockerfile.
++No runtime credentials or private user content are required to build it.
+diff --git a/go.mod b/go.mod
+index 9dc1a79..361051f 100644
+--- a/go.mod
++++ b/go.mod
+@@ -1,58 +1,54 @@
+ module codeberg.org/gothub/gothub
+ 
+-go 1.20
++go 1.26.0
+ 
+ require (
+ 	github.com/alecthomas/chroma/v2 v2.7.0
+ 	github.com/carlmjohnson/requests v0.23.3
+ 	github.com/enescakir/emoji v1.0.0
+ 	github.com/gocolly/colly v1.2.0
+-	github.com/gofiber/fiber/v2 v2.43.0
++	github.com/gofiber/fiber/v2 v2.52.15
+ 	github.com/gofiber/template v1.8.0
+ 	github.com/joho/godotenv v1.5.1
+-	github.com/microcosm-cc/bluemonday v1.0.23
++	github.com/microcosm-cc/bluemonday v1.0.27
+ 	github.com/spf13/cobra v1.6.1
+ 	github.com/tidwall/gjson v1.14.4
++	github.com/valyala/fasthttp v1.75.0
+ )
+ 
+ require (
+ 	github.com/PuerkitoBio/goquery v1.8.1 // indirect
+-	github.com/andybalholm/brotli v1.0.5 // indirect
+ 	github.com/andybalholm/cascadia v1.3.1 // indirect
+ 	github.com/antchfx/htmlquery v1.3.0 // indirect
+-	github.com/antchfx/xmlquery v1.3.15 // indirect
+-	github.com/antchfx/xpath v1.2.4 // indirect
++	github.com/antchfx/xmlquery v1.5.2 // indirect
++	github.com/antchfx/xpath v1.3.9 // indirect
+ 	github.com/aymerick/douceur v0.2.0 // indirect
+ 	github.com/dlclark/regexp2 v1.8.1 // indirect
+ 	github.com/gobwas/glob v0.2.3 // indirect
+ 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+-	github.com/golang/protobuf v1.5.3 // indirect
+-	github.com/google/go-cmp v0.5.9 // indirect
+-	github.com/google/uuid v1.3.0 // indirect
+-	github.com/gorilla/css v1.0.0 // indirect
++	github.com/golang/protobuf v1.5.4 // indirect
++	github.com/google/uuid v1.6.0 // indirect
++	github.com/gorilla/css v1.0.1 // indirect
+ 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+ 	github.com/kennygrant/sanitize v1.2.4 // indirect
+-	github.com/klauspost/compress v1.16.3 // indirect
++	github.com/klauspost/compress v1.20.1 // indirect
+ 	github.com/mattn/go-colorable v0.1.13 // indirect
+-	github.com/mattn/go-isatty v0.0.18 // indirect
+-	github.com/mattn/go-runewidth v0.0.14 // indirect
+-	github.com/philhofer/fwd v1.1.2 // indirect
++	github.com/mattn/go-isatty v0.0.20 // indirect
++	github.com/mattn/go-runewidth v0.0.16 // indirect
++	github.com/molecule-man/go-brrr v1.1.1 // indirect
++	github.com/philhofer/fwd v1.1.3-0.20240916144458-20a13a1f6b7c // indirect
+ 	github.com/rivo/uniseg v0.4.4 // indirect
+ 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
+-	github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94 // indirect
+-	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
+ 	github.com/spf13/pflag v1.0.5 // indirect
+ 	github.com/stretchr/testify v1.8.1 // indirect
+ 	github.com/temoto/robotstxt v1.1.2 // indirect
+ 	github.com/tidwall/match v1.1.1 // indirect
+ 	github.com/tidwall/pretty v1.2.1 // indirect
+-	github.com/tinylib/msgp v1.1.8 // indirect
++	github.com/tinylib/msgp v1.2.5 // indirect
+ 	github.com/valyala/bytebufferpool v1.0.0 // indirect
+-	github.com/valyala/fasthttp v1.45.0 // indirect
+-	github.com/valyala/tcplisten v1.0.0 // indirect
+-	golang.org/x/net v0.8.0 // indirect
+-	golang.org/x/sys v0.6.0 // indirect
+-	golang.org/x/text v0.8.0 // indirect
++	golang.org/x/net v0.59.0 // indirect
++	golang.org/x/sys v0.48.0 // indirect
++	golang.org/x/text v0.42.0 // indirect
+ 	google.golang.org/appengine v1.6.7 // indirect
+-	google.golang.org/protobuf v1.30.0 // indirect
++	google.golang.org/protobuf v1.36.12 // indirect
+ )
+diff --git a/go.sum b/go.sum
+index 631cb76..97fea9b 100644
+--- a/go.sum
++++ b/go.sum
+@@ -57,24 +57,25 @@ github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAE
+ github.com/PuerkitoBio/goquery v1.8.1 h1:uQxhNlArOIdbrH1tr0UXwdVFgDcZDrZVdcpygAcwmWM=
+ github.com/PuerkitoBio/goquery v1.8.1/go.mod h1:Q8ICL1kNUJ2sXGoAhPGUdYDJvgQgHzJsnnd3H7Ho5jQ=
+ github.com/alecthomas/assert/v2 v2.2.1 h1:XivOgYcduV98QCahG8T5XTezV5bylXe+lBxLG2K2ink=
++github.com/alecthomas/assert/v2 v2.2.1/go.mod h1:pXcQ2Asjp247dahGEmsZ6ru0UVwnkhktn7S0bBDLxvQ=
+ github.com/alecthomas/chroma/v2 v2.7.0 h1:hm1rY6c/Ob4eGclpQ7X/A3yhqBOZNUTk9q+yhyLIViI=
+ github.com/alecthomas/chroma/v2 v2.7.0/go.mod h1:yrkMI9807G1ROx13fhe1v6PN2DDeaR73L3d+1nmYQtw=
+ github.com/alecthomas/repr v0.2.0 h1:HAzS41CIzNW5syS8Mf9UwXhNH1J9aix/BvDRf1Ml2Yk=
++github.com/alecthomas/repr v0.2.0/go.mod h1:Fr0507jx4eOXV7AlPV6AVZLYrLIuIeSOWtW57eE/O/4=
+ github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
+ github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
+ github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
+ github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
+-github.com/andybalholm/brotli v1.0.5 h1:8uQZIdzKmjc/iuPu7O2ioW48L81FgatrcpfFmiq/cCs=
+ github.com/andybalholm/brotli v1.0.5/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
+ github.com/andybalholm/cascadia v1.3.1 h1:nhxRkql1kdYCc8Snf7D5/D3spOX+dBgjA6u8x004T2c=
+ github.com/andybalholm/cascadia v1.3.1/go.mod h1:R4bJ1UQfqADjvDa4P6HZHLh/3OxWWEqc0Sk8XGwHqvA=
+ github.com/antchfx/htmlquery v1.3.0 h1:5I5yNFOVI+egyia5F2s/5Do2nFWxJz41Tr3DyfKD25E=
+ github.com/antchfx/htmlquery v1.3.0/go.mod h1:zKPDVTMhfOmcwxheXUsx4rKJy8KEY/PU6eXr/2SebQ8=
+-github.com/antchfx/xmlquery v1.3.15 h1:aJConNMi1sMha5G8YJoAIF5P+H+qG1L73bSItWHo8Tw=
+-github.com/antchfx/xmlquery v1.3.15/go.mod h1:zMDv5tIGjOxY/JCNNinnle7V/EwthZ5IT8eeCGJKRWA=
++github.com/antchfx/xmlquery v1.5.2 h1:RRKPmhm4gZOSSqDkbNVBHC+NwbE2grfPFssBI+/zkrg=
++github.com/antchfx/xmlquery v1.5.2/go.mod h1:2H6ruVAe9IVOxkuhoWR60XHc62EDYWL56IqCMZPTzac=
+ github.com/antchfx/xpath v1.2.3/go.mod h1:i54GszH55fYfBmoZXapTHN8T8tkcHfRgLyVwwqzXNcs=
+-github.com/antchfx/xpath v1.2.4 h1:dW1HB/JxKvGtJ9WyVGJ0sIoEcqftV3SqIstujI+B9XY=
+-github.com/antchfx/xpath v1.2.4/go.mod h1:i54GszH55fYfBmoZXapTHN8T8tkcHfRgLyVwwqzXNcs=
++github.com/antchfx/xpath v1.3.9 h1:muXJSod6jRzhsiUjvduNSxsRSptFZ2GOJ1oMD1QkPSA=
++github.com/antchfx/xpath v1.3.9/go.mod h1:i54GszH55fYfBmoZXapTHN8T8tkcHfRgLyVwwqzXNcs=
+ github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
+ github.com/armon/circbuf v0.0.0-20150827004946-bbbad097214e/go.mod h1:3U/XgcO3hCbHZ8TKRvWD2dDTCfh9M9ya+I9JpbB7O8o=
+ github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da/go.mod h1:Q73ZrmVTwzkszR9V5SSuryQ31EELlFMUz1kKyl939pY=
+@@ -155,8 +156,9 @@ github.com/gobwas/glob v0.2.3/go.mod h1:d3Ez4x06l9bZtSvzIay5+Yzi0fmZzPgnTbPcKjJA
+ github.com/gocolly/colly v1.2.0 h1:qRz9YAn8FIH0qzgNUw+HT9UN7wm1oF9OBAilwEWpyrI=
+ github.com/gocolly/colly v1.2.0/go.mod h1:Hof5T3ZswNVsOHYmba1u03W65HDWgpV5HifSuueE0EA=
+ github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
+-github.com/gofiber/fiber/v2 v2.43.0 h1:yit3E4kHf178B60p5CQBa/3v+WVuziWMa/G2ZNyLJB0=
+ github.com/gofiber/fiber/v2 v2.43.0/go.mod h1:mpS1ZNE5jU+u+BA4FbM+KKnUzJ4wzTK+FT2tG3tU+6I=
++github.com/gofiber/fiber/v2 v2.52.15 h1:Cov1uKeVPyu9q0jSrN60W+A8XNX+/WK8J7cy5osHLIk=
++github.com/gofiber/fiber/v2 v2.52.15/go.mod h1:YEcBbO/FB+5M1IZNBP9FO3J9281zgPAreiI1oqg8nDw=
+ github.com/gofiber/template v1.8.0 h1:jOn9RhxYO7rHTHGLNRpYfDoVm8b5GH/dtl15ZT5NifE=
+ github.com/gofiber/template v1.8.0/go.mod h1:jf2w+ioGUS5swf5C/VK+FyE+DI19uz+vXHCX/TIAxIk=
+ github.com/gogo/protobuf v1.1.1/go.mod h1:r8qH/GZQm5c6nD/R0oafs1akxWv10x8SbQlK7atdtwQ=
+@@ -193,8 +195,8 @@ github.com/golang/protobuf v1.4.3/go.mod h1:oDoupMAO8OvCJWAcko0GGGIgR6R6ocIYbsSw
+ github.com/golang/protobuf v1.5.0/go.mod h1:FsONVRAS9T7sI+LIUmWTfcYkHO4aIWwzhcaSAoJOfIk=
+ github.com/golang/protobuf v1.5.1/go.mod h1:DopwsBzvsk0Fs44TXzsVbJyPhcCPeIwnvohx4u74HPM=
+ github.com/golang/protobuf v1.5.2/go.mod h1:XVQd3VNwM+JqD3oG2Ue2ip4fOMUkwXdXDdiuN0vRsmY=
+-github.com/golang/protobuf v1.5.3 h1:KhyjKVUg7Usr/dYsdSqoFveMYd5ko72D+zANwlG1mmg=
+-github.com/golang/protobuf v1.5.3/go.mod h1:XVQd3VNwM+JqD3oG2Ue2ip4fOMUkwXdXDdiuN0vRsmY=
++github.com/golang/protobuf v1.5.4 h1:i7eJL8qZTpSEXOPTxNKhASYpMn+8e5Q6AdndVa1dWek=
++github.com/golang/protobuf v1.5.4/go.mod h1:lnTiLA8Wa4RWRcIUkrtSVa5nRhsEGBg48fD6rSs7xps=
+ github.com/golang/snappy v0.0.3/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
+ github.com/google/btree v0.0.0-20180813153112-4030bb1f1f0c/go.mod h1:lNA+9X1NB3Zf8V7Ke586lFgjr2dZNuvo3lPJSGZ5JPQ=
+ github.com/google/btree v1.0.0/go.mod h1:lNA+9X1NB3Zf8V7Ke586lFgjr2dZNuvo3lPJSGZ5JPQ=
+@@ -210,8 +212,9 @@ github.com/google/go-cmp v0.5.3/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/
+ github.com/google/go-cmp v0.5.4/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
+ github.com/google/go-cmp v0.5.5/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
+ github.com/google/go-cmp v0.5.6/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
+-github.com/google/go-cmp v0.5.9 h1:O2Tfq5qg4qc4AmwVlvv0oLiVAGB7enBSJ2x2DqQFi38=
+-github.com/google/go-cmp v0.5.9/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
++github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
++github.com/google/go-cmp v0.7.0 h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=
++github.com/google/go-cmp v0.7.0/go.mod h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX3N/iU=
+ github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
+ github.com/google/martian v2.1.0+incompatible/go.mod h1:9I4somxYTbIHy5NJKHRl3wXiIaQGbYVAs8BPL6v8lEs=
+ github.com/google/martian/v3 v3.0.0/go.mod h1:y5Zk1BBys9G+gd6Jrk0W3cC1+ELVxBWuIGO+w/tUAp0=
+@@ -233,14 +236,15 @@ github.com/google/pprof v0.0.0-20210609004039-a478d1d731e9/go.mod h1:kpwsk12EmLe
+ github.com/google/pprof v0.0.0-20210720184732-4bb14d4b1be1/go.mod h1:kpwsk12EmLew5upagYY7GY0pfYCcupk39gWOCRROcvE=
+ github.com/google/renameio v0.1.0/go.mod h1:KWCgfxg9yswjAJkECMjeO8J8rahYeXnNhOm40UhjYkI=
+ github.com/google/uuid v1.1.2/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+-github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
+ github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
++github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
++github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+ github.com/googleapis/gax-go/v2 v2.0.4/go.mod h1:0Wqv26UfaUD9n4G6kQubkQ+KchISgw+vpHVxEJEs9eg=
+ github.com/googleapis/gax-go/v2 v2.0.5/go.mod h1:DWXyrwAJ9X0FpwwEdw+IPEYBICEFu5mhpdKc/us6bOk=
+ github.com/googleapis/gax-go/v2 v2.1.0/go.mod h1:Q3nei7sK6ybPYH7twZdmQpAd1MKb7pfu6SK+H1/DsU0=
+ github.com/googleapis/gax-go/v2 v2.1.1/go.mod h1:hddJymUZASv3XPyGkUpKj8pPO47Rmb0eJc8R6ouapiM=
+-github.com/gorilla/css v1.0.0 h1:BQqNyPTi50JCFMTw/b67hByjMVXZRwGha6wxVGkeihY=
+-github.com/gorilla/css v1.0.0/go.mod h1:Dn721qIggHpt4+EFCcTLTU/vk5ySda2ReITrtgBl60c=
++github.com/gorilla/css v1.0.1 h1:ntNaBIghp6JmvWnxbZKANoLyuXTPZ4cAMlo6RyhlbO8=
++github.com/gorilla/css v1.0.1/go.mod h1:BvnYkspnSzMmwRK+b8/xgNPLiIuNZr6vbZBTPQ2A3b0=
+ github.com/grpc-ecosystem/grpc-gateway v1.16.0/go.mod h1:BDjrQk3hbvj6Nolgz8mAMFbcEtjT1g+wF4CSlocrBnw=
+ github.com/hashicorp/consul/api v1.11.0/go.mod h1:XjsvQN+RJGWI2TWy1/kqaE16HrR2J/FWgkYjdZQsX9M=
+ github.com/hashicorp/consul/sdk v0.8.0/go.mod h1:GBvyrGALthsZObzUGsfgHZQDXjg4lOjagTIwIR1vPms=
+@@ -273,6 +277,7 @@ github.com/hashicorp/memberlist v0.3.0/go.mod h1:MS2lj3INKhZjWNqd3N0m3J+Jxf3DAOn
+ github.com/hashicorp/serf v0.9.5/go.mod h1:UWDWwZeL5cuWDJdl0C6wrvrUwEqtQ4ZKBKKENpqIUyk=
+ github.com/hashicorp/serf v0.9.6/go.mod h1:TXZNMjZQijwlDvp+r0b63xZ45H7JmCmgg4gpTwn9UV4=
+ github.com/hexops/gotextdiff v1.0.3 h1:gitA9+qJrrTCsiCl7+kh75nPqQt1cx4ZkudSTLoUqJM=
++github.com/hexops/gotextdiff v1.0.3/go.mod h1:pSWU5MAI3yDq+fZBTazCSJysOMbxWL1BSow5/V2vxeg=
+ github.com/iancoleman/strcase v0.2.0/go.mod h1:iwCmte+B7n89clKwxIoIXy/HfoL7AsD47ZCWhYzw7ho=
+ github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
+ github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
+@@ -293,8 +298,9 @@ github.com/kennygrant/sanitize v1.2.4 h1:gN25/otpP5vAsO2djbMhF/LQX6R7+O1TB4yv8Nz
+ github.com/kennygrant/sanitize v1.2.4/go.mod h1:LGsjYYtgxbetdg5owWB2mpgUL6e2nfw2eObZ0u0qvak=
+ github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
+ github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
+-github.com/klauspost/compress v1.16.3 h1:XuJt9zzcnaz6a16/OU53ZjWp/v7/42WcR5t2a0PcNQY=
+ github.com/klauspost/compress v1.16.3/go.mod h1:ntbaceVETuRiXiv4DpjP66DpAtAGkEQskQzEyD//IeE=
++github.com/klauspost/compress v1.20.1 h1:T7kKElXUMXrUJ2E9QhQhxFtcK5rPyLdsGZvdbLMPdiQ=
++github.com/klauspost/compress v1.20.1/go.mod h1:LUdAzn7YLVvxLpc7y3V1m40wESHTgc1422pwwBSKYuI=
+ github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
+ github.com/kr/fs v0.1.0/go.mod h1:FFnZGqtBN9Gxj7eW1uZ42v5BccTP0vu6NEaFoC2HwRg=
+ github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515/go.mod h1:+0opPa2QZZtGFBFZlji/RkVcI2GknAs/DXo4wKdlNEc=
+@@ -320,14 +326,15 @@ github.com/mattn/go-isatty v0.0.12/go.mod h1:cbi8OIDigv2wuxKPP5vlRcQ1OAZbq2CE4Ky
+ github.com/mattn/go-isatty v0.0.14/go.mod h1:7GGIvUiUoEMVVmxf/4nioHXj79iQHKdU27kJ6hsGG94=
+ github.com/mattn/go-isatty v0.0.16/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
+ github.com/mattn/go-isatty v0.0.17/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
+-github.com/mattn/go-isatty v0.0.18 h1:DOKFKCQ7FNG2L1rbrmstDN4QVRdS89Nkh85u68Uwp98=
+-github.com/mattn/go-isatty v0.0.18/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
+-github.com/mattn/go-runewidth v0.0.14 h1:+xnbZSEeDbOIg5/mE6JF0w6n9duR1l3/WmbinWVwUuU=
++github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
++github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
+ github.com/mattn/go-runewidth v0.0.14/go.mod h1:Jdepj2loyihRzMpdS35Xk/zdY8IAYHsh153qUoGf23w=
++github.com/mattn/go-runewidth v0.0.16 h1:E5ScNMtiwvlvB5paMFdw9p4kSQzbXFikJ5SQO6TULQc=
++github.com/mattn/go-runewidth v0.0.16/go.mod h1:Jdepj2loyihRzMpdS35Xk/zdY8IAYHsh153qUoGf23w=
+ github.com/mattn/go-slim v0.0.4/go.mod h1:kXIwPrQbAZrhungtweoDO6qQQpUem6XkBg/mXykpoO0=
+ github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
+-github.com/microcosm-cc/bluemonday v1.0.23 h1:SMZe2IGa0NuHvnVNAZ+6B38gsTbi5e4sViiWJyDDqFY=
+-github.com/microcosm-cc/bluemonday v1.0.23/go.mod h1:mN70sk7UkkF8TUr2IGBpNN0jAgStuPzlK76QuruE/z4=
++github.com/microcosm-cc/bluemonday v1.0.27 h1:MpEUotklkwCSLeH+Qdx1VJgNqLlpY2KXwXFM08ygZfk=
++github.com/microcosm-cc/bluemonday v1.0.27/go.mod h1:jFi9vgW+H7c3V0lb6nR74Ib/DIB5OBs92Dimizgw2cA=
+ github.com/miekg/dns v1.0.14/go.mod h1:W1PPwlIAgtquWBMBEV9nkV9Cazfe8ScdGz/Lj7v3Nrg=
+ github.com/miekg/dns v1.1.26/go.mod h1:bPDLeHnStXmXAq1m/Ch/hvfNHr14JKNPMBo3VZKjuso=
+ github.com/miekg/dns v1.1.41/go.mod h1:p6aan82bvRIyn+zDIv9xYNUpwa73JcSh9BKwknJysuI=
+@@ -342,14 +349,17 @@ github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJ
+ github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
+ github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
+ github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
++github.com/molecule-man/go-brrr v1.1.1 h1:KYwusQhjtV3smALnhmafZf4OBrh7vP4p8O47DyUmmuY=
++github.com/molecule-man/go-brrr v1.1.1/go.mod h1:7ybW6/7gA3oKY45jOfVNjSJDtrr6ea4tzbsTkjmQDC4=
+ github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=
+ github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
+ github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
+ github.com/pascaldekloe/goe v0.1.0/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
+ github.com/pelletier/go-toml v1.9.4/go.mod h1:u1nR/EPcESfeI/szUZKdtJ0xRNbUoANCkoOuaOx1Y+c=
+ github.com/philhofer/fwd v1.1.1/go.mod h1:gk3iGcWd9+svBvR0sR+KPcfE+RNWozjowpeBVG3ZVNU=
+-github.com/philhofer/fwd v1.1.2 h1:bnDivRJ1EWPjUIRXV5KfORO897HTbpFAQddBdE8t7Gw=
+ github.com/philhofer/fwd v1.1.2/go.mod h1:qkPdfjR2SIEbspLqpe1tO4n5yICnr2DY7mqEx2tUTP0=
++github.com/philhofer/fwd v1.1.3-0.20240916144458-20a13a1f6b7c h1:dAMKvw0MlJT1GshSTtih8C2gDs04w8dReiOGXrGLNoY=
++github.com/philhofer/fwd v1.1.3-0.20240916144458-20a13a1f6b7c/go.mod h1:RqIHx9QI14HlwKwm98g9Re5prTQ6LdeRQn+gXJFxsJM=
+ github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+ github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+ github.com/pkg/sftp v1.10.1/go.mod h1:lYOWFsE0bwd1+KfKJaKeuokY15vzFx25BLbzYYoAxZI=
+@@ -379,10 +389,8 @@ github.com/ryanuber/columnize v0.0.0-20160712163229-9b3edd62028f/go.mod h1:sm1tb
+ github.com/sagikazarmark/crypt v0.3.0/go.mod h1:uD/D+6UF4SrIR1uGEv7bBNkNqLGqUr43MRiaGWX1Nig=
+ github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d h1:hrujxIzL1woJ7AwssoOcM/tq5JjjG2yYOc8odClEiXA=
+ github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d/go.mod h1:uugorj2VCxiV1x+LzaIdVa9b4S4qGAcH6cbhh4qVxOU=
+-github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94 h1:rmMl4fXJhKMNWl+K+r/fq4FbbKI+Ia2m9hYBLm2h4G4=
+ github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94/go.mod h1:90zrgN3D/WJsDd1iXHT96alCoN2KJo6/4x1DZC3wZs8=
+ github.com/savsgio/gotils v0.0.0-20220530130905-52f3993e8d6d/go.mod h1:Gy+0tqhJvgGlqnTF8CVGP0AaGRjwBtXs/a5PA0Y3+A4=
+-github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee h1:8Iv5m6xEo1NR1AvpV+7XmhI4r39LGNzwUL4YpMuL5vk=
+ github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee/go.mod h1:qwtSXrKuJh/zsFQ12yEE89xfCrGKK63Rr7ctU/uCo4g=
+ github.com/sean-/seed v0.0.0-20170313163322-e2103e2c3529/go.mod h1:DxrIzT+xaE7yg65j358z/aeFdxmN0P9QXhEzd20vsDc=
+ github.com/sirupsen/logrus v1.2.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
+@@ -423,14 +431,15 @@ github.com/tidwall/pretty v1.2.0/go.mod h1:ITEVvHYasfjBbM0u2Pg8T2nJnzm8xPwvNhhso
+ github.com/tidwall/pretty v1.2.1 h1:qjsOFOWWQl+N3RsoF5/ssm1pHmJJwhjlSbZ51I6wMl4=
+ github.com/tidwall/pretty v1.2.1/go.mod h1:ITEVvHYasfjBbM0u2Pg8T2nJnzm8xPwvNhhsoaGGjNU=
+ github.com/tinylib/msgp v1.1.6/go.mod h1:75BAfg2hauQhs3qedfdDZmWAPcFMAvJE5b9rGOMufyw=
+-github.com/tinylib/msgp v1.1.8 h1:FCXC1xanKO4I8plpHGH2P7koL/RzZs12l/+r7vakfm0=
+ github.com/tinylib/msgp v1.1.8/go.mod h1:qkpG+2ldGg4xRFmx+jfTvZPxfGFhi64BcnL9vkCm/Tw=
++github.com/tinylib/msgp v1.2.5 h1:WeQg1whrXRFiZusidTQqzETkRpGjFjcIhW6uqWH09po=
++github.com/tinylib/msgp v1.2.5/go.mod h1:ykjzy2wzgrlvpDCRc4LA8UXy6D8bzMSuAF3WD57Gok0=
+ github.com/tv42/httpunix v0.0.0-20150427012821-b75d8614f926/go.mod h1:9ESjWnEqriFuLhtthL60Sar/7RFoluCcXsuvEwTV5KM=
+ github.com/valyala/bytebufferpool v1.0.0 h1:GqA5TC/0021Y/b9FG4Oi9Mr3q7XYx6KllzawFIhcdPw=
+ github.com/valyala/bytebufferpool v1.0.0/go.mod h1:6bBcMArwyJ5K/AmCkWv1jt77kVWyCJ6HpOuEn7z0Csc=
+-github.com/valyala/fasthttp v1.45.0 h1:zPkkzpIn8tdHZUrVa6PzYd0i5verqiPSkgTd3bSUcpA=
+ github.com/valyala/fasthttp v1.45.0/go.mod h1:k2zXd82h/7UZc3VOdJ2WaUqt1uZ/XpXAfE9i+HBC3lA=
+-github.com/valyala/tcplisten v1.0.0 h1:rBHj/Xf+E1tRGZyWIWwJDiRY0zc1Js+CV5DqwacVSA8=
++github.com/valyala/fasthttp v1.75.0 h1:W3xrvNJHG60j2ZCjxpP8kkB+oPG8kh9/g1n4+3xUwNA=
++github.com/valyala/fasthttp v1.75.0/go.mod h1:JiVkPRZU124PuPsreV/s9dZRgG2lRK7wNEikdQ0Rk4s=
+ github.com/valyala/tcplisten v1.0.0/go.mod h1:T0xQ8SeCZGxckz9qRXTfG43PvQ/mcWh7FwZEA7Ioqkc=
+ github.com/yosssi/ace v0.0.5/go.mod h1:ALfIzm2vT7t5ZE7uoIZqF3TQ7SAOyupFZnkrF5id+K0=
+ github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
+@@ -466,6 +475,10 @@ golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPh
+ golang.org/x/crypto v0.0.0-20210817164053-32db794688a5/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
+ golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
+ golang.org/x/crypto v0.7.0/go.mod h1:pYwdfH91IfpZVANVyUOhSIPZaFoJGxTFbZhFTx+dXZU=
++golang.org/x/crypto v0.13.0/go.mod h1:y6Z2r+Rw4iayiXXAIxJIDAJ1zMW4yaTpebo8fPOliYc=
++golang.org/x/crypto v0.19.0/go.mod h1:Iy9bg/ha4yyC70EfRS8jz+B6ybOBKMaSxLj6P6oBDfU=
++golang.org/x/crypto v0.23.0/go.mod h1:CKFgDieR+mRhux2Lsu27y0fO304Db0wZe70UKqHu0v8=
++golang.org/x/crypto v0.31.0/go.mod h1:kDsLvtWBEx7MV9tJOj9bnXsPbxwJQ6csT/x4KIN4Ssk=
+ golang.org/x/exp v0.0.0-20190121172915-509febef88a4/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
+ golang.org/x/exp v0.0.0-20190306152737-a1d7652674e8/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
+ golang.org/x/exp v0.0.0-20190510132918-efd6b22b2522/go.mod h1:ZjyILWgesfNpC6sMxTJOJm9Kp84zZh5NQWvqDGG3Qr8=
+@@ -506,6 +519,9 @@ golang.org/x/mod v0.5.1/go.mod h1:5OXOZSfqPIIbmVBIIKWRFfZjPR0E5r58TLhUjH0a2Ro=
+ golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4/go.mod h1:jJ57K6gSWd91VN4djpZkiMVwK6gcyfeH4XE8wZrZaV4=
+ golang.org/x/mod v0.7.0/go.mod h1:iBbtSCu2XBx23ZKBPSOrRkjjQPZFPuis4dIYUhu/chs=
+ golang.org/x/mod v0.8.0/go.mod h1:iBbtSCu2XBx23ZKBPSOrRkjjQPZFPuis4dIYUhu/chs=
++golang.org/x/mod v0.12.0/go.mod h1:iBbtSCu2XBx23ZKBPSOrRkjjQPZFPuis4dIYUhu/chs=
++golang.org/x/mod v0.15.0/go.mod h1:hTbmBsO62+eylJbnUtE2MGJUyE7QWk4xUqPFrRgJ+7c=
++golang.org/x/mod v0.17.0/go.mod h1:hTbmBsO62+eylJbnUtE2MGJUyE7QWk4xUqPFrRgJ+7c=
+ golang.org/x/net v0.0.0-20180724234803-3673e40ba225/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
+ golang.org/x/net v0.0.0-20180826012351-8a410e7b638d/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
+ golang.org/x/net v0.0.0-20181023162649-9b4f9f5ad519/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
+@@ -555,8 +571,14 @@ golang.org/x/net v0.3.0/go.mod h1:MBQ8lrhLObU/6UmLb4fmbmk5OcyYmqtbGd/9yIeKjEE=
+ golang.org/x/net v0.5.0/go.mod h1:DivGGAXEgPSlEBzxGzZI+ZLohi+xUj054jfeKui00ws=
+ golang.org/x/net v0.6.0/go.mod h1:2Tu9+aMcznHK/AK1HMvgo6xiTLG5rD5rZLDS+rp2Bjs=
+ golang.org/x/net v0.7.0/go.mod h1:2Tu9+aMcznHK/AK1HMvgo6xiTLG5rD5rZLDS+rp2Bjs=
+-golang.org/x/net v0.8.0 h1:Zrh2ngAOFYneWTAIAPethzeaQLuHwhuBkuV6ZiRnUaQ=
+ golang.org/x/net v0.8.0/go.mod h1:QVkue5JL9kW//ek3r6jTKnTFis1tRmNAW2P1shuFdJc=
++golang.org/x/net v0.10.0/go.mod h1:0qNGK6F8kojg2nk9dLZ2mShWaEBan6FAoqfSigmmuDg=
++golang.org/x/net v0.15.0/go.mod h1:idbUs1IY1+zTqbi8yxTbhexhEEk5ur9LInksu6HrEpk=
++golang.org/x/net v0.21.0/go.mod h1:bIjVDfnllIU7BJ2DNgfnXvpSvtn8VRwhlsaeUTyUS44=
++golang.org/x/net v0.25.0/go.mod h1:JkAGAh7GEvH74S6FOH42FLoXpXbE/aqXSrIQjXgsiwM=
++golang.org/x/net v0.33.0/go.mod h1:HXLR5J+9DxmrqMwG9qjGCxZ+zKXxBru04zlTvWlWuN4=
++golang.org/x/net v0.59.0 h1:5zfYln+w5XCxwrnMMJPufRgNoXEaGxl0wo5GqPXyues=
++golang.org/x/net v0.59.0/go.mod h1:2DA/G1UfVbCpQPeWTmMPGY7Cs2PkBkwu743bVX5PIVg=
+ golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be/go.mod h1:N/0e6XlmueqKjAGxoOufVs8QHGRruUQn6yWY3a++T0U=
+ golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
+ golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
+@@ -587,6 +609,10 @@ golang.org/x/sync v0.0.0-20201207232520-09787c993a3a/go.mod h1:RxMgew5VJxzue5/jJ
+ golang.org/x/sync v0.0.0-20210220032951-036812b2e83c/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
+ golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
+ golang.org/x/sync v0.1.0/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
++golang.org/x/sync v0.3.0/go.mod h1:FU7BRWz2tNW+3quACPkgCx/L+uEAv1htQ0V83Z9Rj+Y=
++golang.org/x/sync v0.6.0/go.mod h1:Czt+wKu1gCyEFDUtn0jG5QVvpJ6rzVqr5aXyt9drQfk=
++golang.org/x/sync v0.7.0/go.mod h1:Czt+wKu1gCyEFDUtn0jG5QVvpJ6rzVqr5aXyt9drQfk=
++golang.org/x/sync v0.10.0/go.mod h1:Czt+wKu1gCyEFDUtn0jG5QVvpJ6rzVqr5aXyt9drQfk=
+ golang.org/x/sys v0.0.0-20180823144017-11551d06cbcc/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
+ golang.org/x/sys v0.0.0-20180830151530-49385e6e1522/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
+ golang.org/x/sys v0.0.0-20180905080454-ebe1bf3edb33/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
+@@ -659,14 +685,26 @@ golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab/go.mod h1:oPkhp1MJrh7nUepCBc
+ golang.org/x/sys v0.3.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+ golang.org/x/sys v0.4.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+ golang.org/x/sys v0.5.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+-golang.org/x/sys v0.6.0 h1:MVltZSvRTcU2ljQOhs94SXPftV6DCNnZViHeQps87pQ=
+ golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
++golang.org/x/sys v0.8.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
++golang.org/x/sys v0.12.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
++golang.org/x/sys v0.17.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
++golang.org/x/sys v0.20.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
++golang.org/x/sys v0.28.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
++golang.org/x/sys v0.48.0 h1:bbX/i/6MgT9BVLM9RT1thmxL04yeTAhbEz4SyadbXoo=
++golang.org/x/sys v0.48.0/go.mod h1:hNLxWAXmnKAxqDtdwIYC4bM9oQPEecfsnNMuSxOs3og=
++golang.org/x/telemetry v0.0.0-20240228155512-f48c80bd79b2/go.mod h1:TeRTkGYfJXctD9OcfyVLyj2J3IxLnKwHJR8f4D8a3YE=
+ golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
+ golang.org/x/term v0.0.0-20210927222741-03fcf44c2211/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=
+ golang.org/x/term v0.3.0/go.mod h1:q750SLmJuPmVoN1blW3UFBPREJfb1KmY3vwxfr+nFDA=
+ golang.org/x/term v0.4.0/go.mod h1:9P2UbLfCdcvo3p/nzKvsmas4TnlujnuoV9hGgYzW1lQ=
+ golang.org/x/term v0.5.0/go.mod h1:jMB1sMXY+tzblOD4FWmEbocvup2/aLOaQEp7JmGp78k=
+ golang.org/x/term v0.6.0/go.mod h1:m6U89DPEgQRMq3DNkDClhWw02AUbt2daBVO4cn4Hv9U=
++golang.org/x/term v0.8.0/go.mod h1:xPskH00ivmX89bAKVGSKKtLOWNx2+17Eiy94tnKShWo=
++golang.org/x/term v0.12.0/go.mod h1:owVbMEjm3cBLCHdkQu9b1opXd4ETQWc3BhuQGKgXgvU=
++golang.org/x/term v0.17.0/go.mod h1:lLRBjIVuehSbZlaOtGMbcMncT+aqLLLmKrsjNrUguwk=
++golang.org/x/term v0.20.0/go.mod h1:8UkIAJTvZgivsXaD6/pH6U9ecQzZ45awqEOzuCvwpFY=
++golang.org/x/term v0.27.0/go.mod h1:iMsnZpn0cago0GOrHO2+Y7u7JPn5AylBrcoWkElMTSM=
+ golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
+ golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
+ golang.org/x/text v0.3.1-0.20180807135948-17ff2d5776d2/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
+@@ -679,8 +717,14 @@ golang.org/x/text v0.3.7/go.mod h1:u+2+/6zg+i71rQMx5EYifcz6MCKuco9NR6JIITiCfzQ=
+ golang.org/x/text v0.5.0/go.mod h1:mrYo+phRRbMaCq/xk9113O4dZlRixOauAjOtrjsXDZ8=
+ golang.org/x/text v0.6.0/go.mod h1:mrYo+phRRbMaCq/xk9113O4dZlRixOauAjOtrjsXDZ8=
+ golang.org/x/text v0.7.0/go.mod h1:mrYo+phRRbMaCq/xk9113O4dZlRixOauAjOtrjsXDZ8=
+-golang.org/x/text v0.8.0 h1:57P1ETyNKtuIjB4SRd15iJxuhj8Gc416Y78H3qgMh68=
+ golang.org/x/text v0.8.0/go.mod h1:e1OnstbJyHTd6l/uOt8jFFHp6TRDWZR/bV3emEE/zU8=
++golang.org/x/text v0.9.0/go.mod h1:e1OnstbJyHTd6l/uOt8jFFHp6TRDWZR/bV3emEE/zU8=
++golang.org/x/text v0.13.0/go.mod h1:TvPlkZtksWOMsz7fbANvkp4WM8x/WCo/om8BMLbz+aE=
++golang.org/x/text v0.14.0/go.mod h1:18ZOQIKpY8NJVqYksKHtTdi31H5itFRjB5/qKTNYzSU=
++golang.org/x/text v0.15.0/go.mod h1:18ZOQIKpY8NJVqYksKHtTdi31H5itFRjB5/qKTNYzSU=
++golang.org/x/text v0.21.0/go.mod h1:4IBbMaMmOPCJ8SecivzSH54+73PCFmPWxNTLm+vZkEQ=
++golang.org/x/text v0.42.0 h1:JbOZXgfeCPU9gacVtYliJqOhD+zhrEqK4LfdpmlUZqI=
++golang.org/x/text v0.42.0/go.mod h1:ojzP1Z+2QtioaF8DTtO8K5q7JWVVYwZKenzujK0Zd0E=
+ golang.org/x/time v0.0.0-20181108054448-85acf8d2951c/go.mod h1:tRJNPiyCQ0inRvYxbN9jk5I+vvW/OXSQhTDSoE431IQ=
+ golang.org/x/time v0.0.0-20190308202827-9d24e82272b4/go.mod h1:tRJNPiyCQ0inRvYxbN9jk5I+vvW/OXSQhTDSoE431IQ=
+ golang.org/x/time v0.0.0-20191024005414-555d28b269f0/go.mod h1:tRJNPiyCQ0inRvYxbN9jk5I+vvW/OXSQhTDSoE431IQ=
+@@ -743,6 +787,10 @@ golang.org/x/tools v0.1.9/go.mod h1:nABZi5QlRsZVlzPpHl034qft6wpY4eDcsTt5AaioBiU=
+ golang.org/x/tools v0.1.12/go.mod h1:hNGJHUnrk76NpqgfD5Aqm5Crs+Hm0VOH/i9J2+nxYbc=
+ golang.org/x/tools v0.4.0/go.mod h1:UE5sM2OK9E/d67R0ANs2xJizIymRP5gJU295PvKXxjQ=
+ golang.org/x/tools v0.6.0/go.mod h1:Xwgl3UAJ/d3gWutnCtw505GrjyAbvKui8lOU390QaIU=
++golang.org/x/tools v0.13.0/go.mod h1:HvlwmtVNQAhOuCjW7xxvovg8wbNq7LwfXh/k7wXUl58=
++golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d/go.mod h1:aiJjzUbINMkxbQROHiO6hDPo2LHcIPhhQsa9DLh0yGk=
++golang.org/x/tools v0.49.0 h1:3NI7VXzL9+1WZD52Dx2ttoPwD5DWrFGpl9mFZDlmisI=
++golang.org/x/tools v0.49.0/go.mod h1:SJNXV9DBKT0UbdttsQjbfJlAE/q+y36++zo3uL3N0Oo=
+ golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
+ golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
+ golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
+@@ -891,8 +939,8 @@ google.golang.org/protobuf v1.25.0/go.mod h1:9JNX74DMeImyA3h4bdi1ymwjUzf21/xIlba
+ google.golang.org/protobuf v1.26.0-rc.1/go.mod h1:jlhhOSvTdKEhbULTjvd4ARK9grFBp09yW+WbY/TyQbw=
+ google.golang.org/protobuf v1.26.0/go.mod h1:9q0QmTI4eRPtz6boOQmLYwt+qCgq0jsYwAQnmE0givc=
+ google.golang.org/protobuf v1.27.1/go.mod h1:9q0QmTI4eRPtz6boOQmLYwt+qCgq0jsYwAQnmE0givc=
+-google.golang.org/protobuf v1.30.0 h1:kPPoIgf3TsEvrm0PFe15JQ+570QVxYzEvvHqChK+cng=
+-google.golang.org/protobuf v1.30.0/go.mod h1:HV8QOd/L58Z+nl8r43ehVNZIU/HEI6OcFqwMG9pJV4I=
++google.golang.org/protobuf v1.36.12 h1:pJOKDDOyeXErUroCihFAd5LQuwXBSpVnKGrj5o/fwxc=
++google.golang.org/protobuf v1.36.12/go.mod h1:HTf+CrKn2C3g5S8VImy6tdcUvCska2kB7j23XfzDpco=
+ gopkg.in/alecthomas/kingpin.v2 v2.2.6/go.mod h1:FMv+mEhP44yOT+4EoQTLFTRgOQ1FBLkstjWtayDeSgw=
+ gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+ gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+diff --git a/pages/commit.go b/pages/commit.go
+index c270d8f..0cb8bd4 100644
+--- a/pages/commit.go
++++ b/pages/commit.go
+@@ -38,7 +38,9 @@ func HandleCommit(c *fiber.Ctx) error {
+ 	resp, statusErr := http.Get("https://github.com/" + c.Params("user") + "/" + c.Params("repo") + "/commit/" + c.Params("commit") + "/")
+ 	if statusErr != nil {
+ 		log.Println(statusErr)
++		return c.Status(502).SendString("Upstream unavailable")
+ 	}
++	resp.Body.Close()
+ 	if resp.StatusCode == 404 {
+ 		// I need a better way to do this
+ 		return c.Status(404).Render("error", fiber.Map{
+diff --git a/pages/dirview.go b/pages/dirview.go
+index e2d920e..d008c16 100644
+--- a/pages/dirview.go
++++ b/pages/dirview.go
+@@ -67,7 +67,9 @@ func DirView(c *fiber.Ctx) error {
+ 	resp, statusErr := http.Get("https://github.com/" + c.Params("user") + "/" + c.Params("repo") + "/tree/" + c.Params("branch") + "/" + c.Params("+"))
+ 	if statusErr != nil {
+ 		log.Println(statusErr)
++		return c.Status(502).SendString("Upstream unavailable")
+ 	}
++	resp.Body.Close()
+ 	if resp.StatusCode == 404 {
+ 		// I need a better way to do this
+ 		return c.Status(404).Render("error", fiber.Map{
+diff --git a/pages/fileview.go b/pages/fileview.go
+index 320babb..10fa205 100644
+--- a/pages/fileview.go
++++ b/pages/fileview.go
+@@ -11,6 +11,7 @@ import (
+ 	"github.com/alecthomas/chroma/v2/styles"
+ 	"github.com/carlmjohnson/requests"
+ 	"github.com/gofiber/fiber/v2"
++	"html"
+ 	"html/template"
+ 	"net/http"
+ 	"path/filepath"
+@@ -47,7 +48,7 @@ func FileView(c *fiber.Ctx) error {
+ 					width: 100%;
+ 					height: 250px;
+ 				}`
+-		html := "<img src='data:" + mimeType + ";base64," + dstStr + "' alt=" + c.Params("+") + ">"
++		html := "<img src='data:" + mimeType + ";base64," + dstStr + "' alt=\"" + html.EscapeString(c.Params("+")) + "\">"
+ 		return c.Render("file", fiber.Map{
+ 			"title":      c.Params("+") + " | " + c.Params("user") + "/" + c.Params("repo"),
+ 			"branch":     utils.Branch,
+diff --git a/pages/gist.go b/pages/gist.go
+index 350800c..a17c07d 100644
+--- a/pages/gist.go
++++ b/pages/gist.go
+@@ -39,10 +39,12 @@ func HandleGist(c *fiber.Ctx) error {
+ 	var gistArray []Gist
+ 	var gistFilesArray []GistFiles
+ 
+-	resp, statusErr := http.Get("https://gists.github.com/" + c.Params("user") + "/" + c.Params("gistID"))
++	resp, statusErr := http.Get("https://gist.github.com/" + c.Params("user") + "/" + c.Params("gistID"))
+ 	if statusErr != nil {
+ 		log.Println(statusErr)
++		return c.Status(502).SendString("Upstream unavailable")
+ 	}
++	resp.Body.Close()
+ 	if resp.StatusCode == 404 {
+ 		// I need a better way to do this
+ 		return c.Status(404).Render("error", fiber.Map{
+diff --git a/pages/release.go b/pages/release.go
+index 96a6aeb..4b9cd09 100644
+--- a/pages/release.go
++++ b/pages/release.go
+@@ -44,7 +44,9 @@ func ReleaseView(c *fiber.Ctx) error {
+ 	resp, statusErr := http.Get("https://github.com/" + c.Params("user") + "/" + c.Params("repo") + "/releases/" + c.Params("release"))
+ 	if statusErr != nil {
+ 		log.Println(statusErr)
++		return c.Status(502).SendString("Upstream unavailable")
+ 	}
++	resp.Body.Close()
+ 	if resp.StatusCode == 404 {
+ 		// I need a better way to do this
+ 		return c.Status(404).Render("error", fiber.Map{
+@@ -127,4 +129,4 @@ func ReleaseView(c *fiber.Ctx) error {
+ 		"title":   "Release " + c.Params("release") + " for " + c.Params("user") + "/" + c.Params("repo"),
+ 		"release": releaseArray,
+ 	})
+-}
+\ No newline at end of file
++}
+diff --git a/pages/releases.go b/pages/releases.go
+index 29bcd7d..c492d43 100644
+--- a/pages/releases.go
++++ b/pages/releases.go
+@@ -23,7 +23,9 @@ func ReleasesView(c *fiber.Ctx) error {
+ 	resp, statusErr := http.Get("https://github.com/" + c.Params("user") + "/" + repoUrl + "/releases")
+ 	if statusErr != nil {
+ 		log.Println(statusErr)
++		return c.Status(502).SendString("Upstream unavailable")
+ 	}
++	resp.Body.Close()
+ 	if resp.StatusCode == 404 {
+ 		// I need a better way to do this
+ 		return c.Status(404).Render("error", fiber.Map{
+diff --git a/pages/repo.go b/pages/repo.go
+index dc79f92..6b13040 100644
+--- a/pages/repo.go
++++ b/pages/repo.go
+@@ -57,7 +57,9 @@ func HandleRepo(c *fiber.Ctx) error {
+ 	resp, statusErr := http.Get("https://github.com/" + c.Params("user") + "/" + repoUrl + branchExists)
+ 	if statusErr != nil {
+ 		log.Println(statusErr)
++		return c.Status(502).SendString("Upstream unavailable")
+ 	}
++	resp.Body.Close()
+ 	if resp.StatusCode == 404 {
+ 		// I need a better way to do this
+ 		return c.Status(404).Render("error", fiber.Map{
+diff --git a/pages/wiki.go b/pages/wiki.go
+index 543b500..b4aa049 100644
+--- a/pages/wiki.go
++++ b/pages/wiki.go
+@@ -33,7 +33,9 @@ func WikiView(c *fiber.Ctx) error {
+ 	resp, statusErr := http.Get("https://github.com/" + c.Params("user") + "/" + c.Params("repo") + "/wiki/" + c.Params("page"))
+ 	if statusErr != nil {
+ 		log.Println(statusErr)
++		return c.Status(502).SendString("Upstream unavailable")
+ 	}
++	resp.Body.Close()
+ 	if resp.StatusCode == 404 {
+ 		// I need a better way to do this
+ 		return c.Status(404).Render("error", fiber.Map{
+diff --git a/serve/serve.go b/serve/serve.go
+index b617de9..10c4893 100644
+--- a/serve/serve.go
++++ b/serve/serve.go
+@@ -39,7 +39,7 @@ func Serve(port string) {
+ 		AppName: "GotHub",
+ 		// kind of screwed up way to fix rate limits
+ 		EnableTrustedProxyCheck: true,
+-		TrustedProxies:          []string{"0.0.0.0/0"},
++		TrustedProxies:          []string{"172.29.82.20"},
+ 		ProxyHeader:             fiber.HeaderXForwardedFor,
+ 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+ 			code := fiber.StatusInternalServerError
+@@ -62,7 +62,9 @@ func Serve(port string) {
+ 	})
+ 
+ 	app.Use(cache.New(cache.Config{
+-		Expiration: 5 * time.Minute,
++		Expiration:   5 * time.Minute,
++		MaxBytes:     32 << 20,
++		KeyGenerator: func(c *fiber.Ctx) string { return c.OriginalURL() },
+ 	}))
+ 	// For debugging purposes
+ 	// app.Use(logger.New(logger.Config{
+@@ -200,10 +202,10 @@ func Serve(port string) {
+ 	app.Get("/:user/:repo/releases/tag/:release", pages.ReleaseView)
+ 	app.Get("/:user/:repo/releases/download/:release/:item", func(c *fiber.Ctx) error {
+ 		if proxying == "true" {
+-			utils.ProxyRequest(c, "https://github.com/"+c.Params("user")+"/"+c.Params("repo")+"/releases/download"+c.Params("release")+"/"+c.Params("item"))
++			utils.ProxyRequest(c, "https://github.com/"+c.Params("user")+"/"+c.Params("repo")+"/releases/download/"+c.Params("release")+"/"+c.Params("item"))
+ 			return nil
+ 		} else {
+-			c.Redirect("https://github.com/" + c.Params("user") + "/" + c.Params("repo") + "/releases/download" + c.Params("release") + "/" + c.Params("item"))
++			c.Redirect("https://github.com/" + c.Params("user") + "/" + c.Params("repo") + "/releases/download/" + c.Params("release") + "/" + c.Params("item"))
+ 			return nil
+ 		}
+ 	})
+@@ -245,4 +247,4 @@ func Serve(port string) {
+ 		val = port
+ 	}
+ 	log.Fatal(app.Listen(":" + val))
+-}
+\ No newline at end of file
++}
+diff --git a/utils/outbound.go b/utils/outbound.go
+new file mode 100644
+index 0000000..b41c5dd
+--- /dev/null
++++ b/utils/outbound.go
+@@ -0,0 +1,123 @@
++package utils
++
++// Utilibre deployment hardening: fixed public GitHub destinations, bounded
++// response bodies and deadlines. Includes default clients used by Colly.
++import (
++	"context"
++	"errors"
++	"io"
++	"net"
++	"net/http"
++	"net/netip"
++	"net/url"
++	"time"
++)
++
++const responseLimit int64 = 8 << 20
++
++var hosts = map[string]bool{
++	"github.com": true, "api.github.com": true, "gist.github.com": true,
++	"raw.githubusercontent.com": true, "avatars.githubusercontent.com": true,
++	"user-images.githubusercontent.com": true, "camo.githubusercontent.com": true,
++	"codeload.github.com": true, "objects.githubusercontent.com": true,
++	"release-assets.githubusercontent.com": true,
++}
++
++func allowedURL(u *url.URL) bool {
++	return u.Scheme == "https" && u.User == nil && (u.Port() == "" || u.Port() == "443") && hosts[u.Hostname()]
++}
++
++func publicIP(ip netip.Addr) bool {
++	ip = ip.Unmap()
++	if !ip.IsGlobalUnicast() || ip.IsPrivate() || ip.IsLoopback() || ip.IsLinkLocalUnicast() {
++		return false
++	}
++	for _, cidr := range []string{"0.0.0.0/8", "100.64.0.0/10", "192.0.0.0/24", "192.0.2.0/24", "198.18.0.0/15", "198.51.100.0/24", "203.0.113.0/24", "240.0.0.0/4", "2001:db8::/32"} {
++		if netip.MustParsePrefix(cidr).Contains(ip) {
++			return false
++		}
++	}
++	return true
++}
++
++func publicDial(ctx context.Context, network, address string) (net.Conn, error) {
++	host, port, err := net.SplitHostPort(address)
++	if err != nil || !hosts[host] || port != "443" {
++		return nil, errors.New("upstream destination denied")
++	}
++	addresses, err := net.DefaultResolver.LookupNetIP(ctx, "ip", host)
++	if err != nil {
++		return nil, err
++	}
++	for _, ip := range addresses {
++		if !publicIP(ip) {
++			return nil, errors.New("non-public upstream address denied")
++		}
++	}
++	dialer := net.Dialer{Timeout: 8 * time.Second}
++	for _, ip := range addresses {
++		connection, e := dialer.DialContext(ctx, network, net.JoinHostPort(ip.String(), port))
++		if e == nil {
++			return connection, nil
++		}
++	}
++	return nil, errors.New("upstream connection failed")
++}
++
++type boundedBody struct {
++	io.ReadCloser
++	remaining int64
++	cancel    context.CancelFunc
++}
++
++func (b *boundedBody) Read(p []byte) (int, error) {
++	if b.remaining <= 0 {
++		b.Close()
++		return 0, errors.New("upstream response exceeds size limit")
++	}
++	if int64(len(p)) > b.remaining {
++		p = p[:b.remaining]
++	}
++	n, err := b.ReadCloser.Read(p)
++	b.remaining -= int64(n)
++	return n, err
++}
++func (b *boundedBody) Close() error { b.cancel(); return b.ReadCloser.Close() }
++
++type publicTransport struct{ inner http.RoundTripper }
++
++func (t publicTransport) RoundTrip(request *http.Request) (*http.Response, error) {
++	if !allowedURL(request.URL) || (request.Method != "GET" && request.Method != "HEAD") {
++		return nil, errors.New("upstream request denied")
++	}
++	ctx, cancel := context.WithTimeout(request.Context(), 20*time.Second)
++	safe := request.Clone(ctx)
++	safe.Header.Del("Cookie")
++	safe.Header.Del("Authorization")
++	safe.Header.Del("Proxy-Authorization")
++	response, err := t.inner.RoundTrip(safe)
++	if err != nil {
++		cancel()
++		return nil, err
++	}
++	if response.ContentLength > responseLimit {
++		response.Body.Close()
++		cancel()
++		return nil, errors.New("upstream response exceeds size limit")
++	}
++	response.Body = &boundedBody{response.Body, responseLimit, cancel}
++	return response, nil
++}
++
++func init() {
++	transport := &http.Transport{DialContext: publicDial, TLSHandshakeTimeout: 8 * time.Second,
++		ResponseHeaderTimeout: 12 * time.Second, MaxResponseHeaderBytes: 64 << 10,
++		MaxIdleConns: 20, MaxIdleConnsPerHost: 4, MaxConnsPerHost: 16, IdleConnTimeout: 30 * time.Second}
++	http.DefaultTransport = publicTransport{transport}
++	http.DefaultClient = &http.Client{Timeout: 20 * time.Second, CheckRedirect: func(req *http.Request, via []*http.Request) error {
++		if len(via) >= 4 || !allowedURL(req.URL) {
++			return errors.New("upstream redirect denied")
++		}
++		return nil
++	}}
++}
+diff --git a/utils/outbound_test.go b/utils/outbound_test.go
+new file mode 100644
+index 0000000..764ba8e
+--- /dev/null
++++ b/utils/outbound_test.go
+@@ -0,0 +1,30 @@
++package utils
++
++import (
++	"net/netip"
++	"net/url"
++	"testing"
++)
++
++func TestDestinationPolicy(t *testing.T) {
++	for _, raw := range []string{"http://github.com/", "https://github.com:8443/", "https://github.com.evil.invalid/", "https://token@github.com/", "https://127.0.0.1/", "https://example.org/"} {
++		u, _ := url.Parse(raw)
++		if allowedURL(u) {
++			t.Fatalf("accepted %s", raw)
++		}
++	}
++	for _, raw := range []string{"https://github.com/mycelibre/utilibre", "https://raw.githubusercontent.com/a/b/main/README.md"} {
++		u, _ := url.Parse(raw)
++		if !allowedURL(u) {
++			t.Fatalf("rejected %s", raw)
++		}
++	}
++	for _, raw := range []string{"127.0.0.1", "10.10.1.20", "169.254.169.254", "100.64.0.1", "::1", "::ffff:10.10.1.20", "fc00::1", "fe80::1", "192.0.2.1"} {
++		if publicIP(netip.MustParseAddr(raw)) {
++			t.Fatalf("accepted %s", raw)
++		}
++	}
++	if !publicIP(netip.MustParseAddr("140.82.112.3")) {
++		t.Fatal("public GitHub IP rejected")
++	}
++}
+diff --git a/utils/proxyrequest.go b/utils/proxyrequest.go
+index bd93b99..1b0798b 100644
+--- a/utils/proxyrequest.go
++++ b/utils/proxyrequest.go
+@@ -2,16 +2,24 @@ package utils
+ 
+ import (
+ 	"github.com/gofiber/fiber/v2"
+-	"github.com/gofiber/fiber/v2/middleware/proxy"
+-	"github.com/valyala/fasthttp"
++	"io"
++	"net/http"
+ )
+ 
+ // ProxyRequest proxies requests to GitHub media
+ func ProxyRequest(c *fiber.Ctx, url string) error {
+-	if err := proxy.Do(c, url, &fasthttp.Client{ReadBufferSize: 16384}); err != nil {
+-		return err
++	response, err := http.Get(url)
++	if err != nil {
++		return c.Status(502).SendString("Upstream unavailable")
+ 	}
+-	// Remove Server header from response
+-	c.Response().Header.Del(fiber.HeaderServer)
+-	return nil
++	defer response.Body.Close()
++	if response.StatusCode != 200 {
++		return c.Status(502).SendString("Upstream unavailable")
++	}
++	body, err := io.ReadAll(response.Body)
++	if err != nil {
++		return c.Status(502).SendString("Upstream response unavailable or too large")
++	}
++	c.Set("Content-Type", response.Header.Get("Content-Type"))
++	return c.Send(body)
+ }
+diff --git a/views/header.html b/views/header.html
+index e53f8ce..b6be7aa 100644
+--- a/views/header.html
++++ b/views/header.html
+@@ -26,7 +26,7 @@
+         <div class="navbar-links">
+           <a href="/explore">Explore</a>
+           <a href="/about">About</a>
+-          <a href="https://codeberg.org/gothub/gothub">Source code</a>
++          <a href="/utilibre-source/gothub-utilibre.tar.gz">Source code (modified)</a>
+         </div>
+       </div>
+     </nav>

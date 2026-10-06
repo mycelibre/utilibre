@@ -22,7 +22,8 @@ const baseConfig: PublicConfig = {
   publicBridgeUrl: '', publicNotifyUrl: '', publicSecretUrl: '', publicDropUrl: '', publicStatusUrl: '',
   publicPythonUrl: '', publicTranscribeUrl: '', publicWakapiUrl: '', listedServices: [],
   publicResumeUrl: '', publicDesignUrl: '', publicBudgetUrl: '',
-  publicPollUrl: '', publicTumblrUrl: '', publicTenorUrl: '', publicFmdUrl: '',
+  publicPollUrl: '', publicTumblrUrl: '', publicTenorUrl: '', publicFmdUrl: '', publicPollarisUrl: '',
+  searxngDeployedVersion: '',
 };
 
 function config(overrides: Partial<PublicConfig> = {}): PublicConfig {
@@ -40,6 +41,7 @@ const hostedConfig = config({
 describe('catalog discovery metadata', () => {
   it('keeps reviewed applications and one narrow integration', () => {
     expect(catalog.map((entry) => entry.id)).toEqual([
+      'pollaris',
       'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd',
       'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub',
       'whisper-web', 'jupyterlite',
@@ -48,10 +50,12 @@ describe('catalog discovery metadata', () => {
       'searxng', 'freshrss', 'redlib', 'privatebin', 'private-router',
     ]);
     expect(catalog.every((entry) => discoveryGroups.includes(entry.discoveryGroup))).toBe(true);
+    expect(discoveryGroups).toHaveLength(9);
+    for (const group of discoveryGroups) expect(catalog.some((entry) => entry.discoveryGroup === group)).toBe(true);
     expect(catalog.filter((entry) => entry.featuredOrder !== undefined)
       .sort((left, right) => (left.featuredOrder ?? 0) - (right.featuredOrder ?? 0))
       .map((entry) => entry.id))
-      .toEqual(['bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd']);
+      .toEqual(['bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris']);
   });
 
   it('keeps unrequested retired applications out of the catalog', () => {
@@ -124,7 +128,7 @@ describe('localized catalog filtering', () => {
   });
 
   it('returns localized task and A–Z views', () => {
-    expect(groupEntries(hostedConfig, 'en', 'feeds-monitoring').map((entry) => entry.id)).toEqual(['freshrss']);
+    expect(groupEntries(hostedConfig, 'en', 'reading').map((entry) => entry.id)).toEqual(expect.arrayContaining(['freshrss', 'redlib', 'private-router']));
     const all = allEntries(hostedConfig, 'es');
     const names = all.map((entry) => entry.name.es);
     expect(names).toEqual([...names].sort(new Intl.Collator('es', { sensitivity: 'base' }).compare));

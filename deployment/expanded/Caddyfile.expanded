@@ -38,6 +38,6 @@ budget.utilibre.org {
 }
 
 # NOT ACTIVE: do not advertise these until their remaining gates are resolved.
-# poll.utilibre.org   -> 10.10.1.43:3123 (Rallly multi-user licensing decision pending)
+# Rallly is live; its block is in ../community/Caddyfile.community (do not duplicate).
 # wiki.utilibre.org   -> 10.10.1.43:3134 (Fandom currently blocks page retrieval)
 # Keep 3135 (Kuma administration) private.

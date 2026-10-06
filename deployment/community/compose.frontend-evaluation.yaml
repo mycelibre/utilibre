@@ -1,5 +1,5 @@
-# Private compatibility tests only. Do not change these bindings to 0.0.0.0.
-# Old upstream runtimes and unrestricted proxy routes require review before launch.
+# Reviewed reader gateways bind the app LAN and accept only the Caddy VM.
+# SafeTwitch remains loopback-only until its build/playback checks are complete.
 name: utilibre-reader-evaluation
 x-runtime: &runtime
   restart: "no"
@@ -15,14 +15,27 @@ x-runtime: &runtime
 services:
   fourget:
     <<: *runtime
-    image: utilibre-4get:03ba5d7-p1
+    restart: unless-stopped
+    image: utilibre-4get:03ba5d7-p2
     user: "100:101"
-    ports: ["127.0.0.1:3145:8080"]
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
       - /var/www/html/4get/icons:rw,nosuid,nodev,noexec,size=16m,mode=1777
     networks:
       fourget: {ipv4_address: 172.29.79.10}
+  fourget-gateway:
+    <<: *runtime
+    restart: unless-stopped
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: "101:101"
+    entrypoint: [nginx, -g, "daemon off;"]
+    ports: ["10.10.1.43:3145:8080"]
+    volumes:
+      - ./fourget-gateway.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    networks:
+      fourget: {ipv4_address: 172.29.79.20}
+    depends_on: [fourget]
   safetwitch-backend:
     <<: *runtime
     image: codeberg.org/safetwitch/safetwitch-backend@sha256:d9e5de75f5917438ad4d1e3e46b77d4fd6074272173eab0ef10ed0e73a1c93f8
@@ -43,16 +56,30 @@ services:
     networks: [twitch]
   anonymousoverflow:
     <<: *runtime
-    image: ghcr.io/httpjamesm/anonymousoverflow@sha256:1c48541f6d32faa97e0e4bfcc916c7993520271a496ad02454b5496ea5ef5a4b
+    restart: unless-stopped
+    image: utilibre-anonymousoverflow:937cfee-p1
     env_file: /opt/utilibre/community-data/overflow-private/runtime.env
-    environment: {APP_URL: "http://127.0.0.1:3147", SCRAPER: api, GIN_MODE: release}
-    ports: ["127.0.0.1:3147:8080"]
+    environment: {APP_URL: "https://overflow.utilibre.org", SCRAPER: api, GIN_MODE: release, DISABLE_RATELIMIT: "true"}
     healthcheck: {disable: true}
     networks:
       overflow: {ipv4_address: 172.29.81.10}
+  anonymousoverflow-gateway:
+    <<: *runtime
+    restart: unless-stopped
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: "101:101"
+    entrypoint: [nginx, -g, "daemon off;"]
+    ports: ["10.10.1.43:3147:8080"]
+    volumes:
+      - ./anonymousoverflow-gateway.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    networks:
+      overflow: {ipv4_address: 172.29.81.20}
+    depends_on: [anonymousoverflow]
   gothub:
     <<: *runtime
-    image: codeberg.org/gothub/gothub@sha256:d6ac0ba6e669d70b67f41dd4f64c53b35faf055f76790f9069642d611a3bd994
+    image: utilibre-gothub:24bedc8-p1
+    restart: unless-stopped
     environment:
       DOCKER: "true"
       GOTHUB_SETUP_COMPLETE: "true"
@@ -65,9 +92,21 @@ services:
       GOTHUB_INSTANCE_COUNTRY: Germany
       GOTHUB_INSTANCE_PROVIDER: Hetzner
       GOTHUB_INSTANCE_CLOUDFLARE: "true"
-    ports: ["127.0.0.1:3148:3000"]
     networks:
       gothub: {ipv4_address: 172.29.82.10}
+  gothub-gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    restart: unless-stopped
+    user: "101:101"
+    entrypoint: [nginx, -g, "daemon off;"]
+    ports: ["10.10.1.43:3148:8080"]
+    volumes:
+      - ./gothub-gateway.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    networks:
+      gothub: {ipv4_address: 172.29.82.20}
+    depends_on: [gothub]
 networks:
   fourget:
     enable_ipv6: false

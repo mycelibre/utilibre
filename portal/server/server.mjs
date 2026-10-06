@@ -375,10 +375,21 @@ function servePublicConfig(response) {
     publicTumblrUrl: publicServiceUrl(process.env.PUBLIC_TUMBLR_URL),
     publicTenorUrl: publicServiceUrl(process.env.PUBLIC_TENOR_URL),
     publicFmdUrl: publicServiceUrl(process.env.PUBLIC_FMD_URL),
+    publicPollarisUrl: publicServiceUrl(process.env.PUBLIC_POLLARIS_URL),
+    searxngDeployedVersion: deployedSearchVersion(),
     listedServices: csv(process.env.LISTED_SERVICES || ''),
     enabledServices: [...ENABLED_SERVICES],
     defaultLanguage: DEFAULT_LANGUAGE,
   }, { 'Cache-Control': 'no-store' });
+}
+
+function deployedSearchVersion() {
+  try {
+    const path = '/run/utilibre-updates/searxng.json';
+    if (statSync(path).size > 4096) return '';
+    const manifest = JSON.parse(readFileSync(path, 'utf8'));
+    return /^\d{4}\.\d{1,2}\.\d{1,2}-[0-9a-f]+$/.test(manifest.version || '') ? manifest.version : '';
+  } catch { return ''; }
 }
 
 function json(response, status, payload, additional = {}) {
