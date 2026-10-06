@@ -10,6 +10,7 @@ These checks use synthetic data. They do not enumerate every application feature
 
 ```sh
 node deployment/expanded/check-whisper.mjs
+node deployment/expanded/check-whisper-quality.mjs
 node deployment/expanded/check-jupyter.mjs
 node deployment/community/check-pairdrop.mjs
 node deployment/community/check-safetwitch.mjs
@@ -21,8 +22,15 @@ node scripts/check-searxng-browser.mjs https://search.utilibre.org/ 10.10.1.3
 BINTERNET_CHECK_ORIGIN=https://binternet.utilibre.org node deployment/community/check-binternet.mjs --edge
 ```
 
-Whisper is `81869ed-p2` (same-origin models, 128 MiB file guard, microphone cleanup
-and retry/error recovery). draw.io is `32.0.2-p3` (native narrow-screen UI and
+Whisper is `81869ed-p3` (same-origin models, 128 MiB file guard, microphone cleanup,
+retry/error recovery, repetition and silence guards). Its default is multilingual
+Small, about 253 MB downloaded on first transcription. Tiny remains an explicit
+lighter option. Language selection is visible and initialized to English/Spanish
+for those browser locales; otherwise Auto is shown accurately. Guards reject
+excessive repetition, duration-budget overruns and punctuation-only output instead
+of silently deduplicating/truncating it. These are not speech VAD or an accuracy
+guarantee. Windows/Opera, the reported failure environment, remains unverified.
+draw.io is `32.0.2-p3` (native narrow-screen UI and
 content-versioned config). SafeTwitch is `ddee63e-p2`; the earlier `caeb85a` source
 metadata was wrong. Its full source now uses the verified checkout's real base.
 Do not disable media proxying or broaden CSP to repair upstream blocks.

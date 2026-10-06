@@ -5,6 +5,7 @@ const root = '/opt/utilibre/expanded-src/whisper/public/models';
 const revisions = {
   'whisper-tiny': '5332fcc35e32a33b86612b9a57a89be7906102b1',
   'whisper-tiny.en': '79fb389fc764e7c395bd330e9531d9d32ada7049',
+  'whisper-small': '2d67713f236afa48a18992566e7647f6ca848e13',
 };
 const files = ['README.md', 'config.json', 'generation_config.json', 'preprocessor_config.json',
   'tokenizer.json', 'tokenizer_config.json', 'special_tokens_map.json', 'added_tokens.json',

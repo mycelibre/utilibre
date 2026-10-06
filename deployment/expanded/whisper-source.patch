@@ -1,15 +1,21 @@
 diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
 new file mode 100644
-index 0000000..1d6f3ec
+index 0000000..a8f45fd
 --- /dev/null
 +++ b/UTILIBRE-SOURCE.txt
-@@ -0,0 +1,26 @@
-+Whisper Web, Utilibre 81869ed-p2, 2026-10-06
+@@ -0,0 +1,35 @@
++Whisper Web, Utilibre 81869ed-p3, 2026-10-06
 +Base: https://github.com/xenova/whisper-web/tree/81869ed62970ff4373509b6004a6c9a3f0c5b64d
 +Upstream MIT license retained. Utilibre changes: same-origin model/WASM loading,
-+tiny quantized models only, no URL-import UI, bilingual pilot/error wording,
++small multilingual default and tiny fallback (quantized), no URL-import UI, bilingual pilot/error wording,
 +audio decoding/context cleanup, 128 MiB file guard, failed-model retry recovery,
 +microphone track release on stop/dismissal/late permission, and dependency fixes.
++The spoken-language control is visible and reflects actual settings. English and
++Spanish browser locales initialize that language; other locales initialize Auto.
++Digital silence and punctuation-only results are not successful transcriptions.
++Token budgets scale with audio duration; detected runaway repetition aborts with
++an explicit error and discards the result. Genuine brief repetition is not
++deduplicated. These checks do not guarantee accuracy or implement speech VAD.
 +
 +Build with Node24: npm ci --ignore-scripts, restore model files using the pinned
 +revisions and hashes in the published model manifest, copy onnxruntime-web/dist
@@ -29,7 +35,10 @@ index 0000000..1d6f3ec
 +and hash manifest are served at /models/LICENSE.txt and /models/manifest.json.
 +Audio remains on the visitor's device. Short-recording, export, failed-model
 +recovery, invalid-file and fake-microphone lifecycle tests pass; long recordings
-+and physical low-memory phones are not certified. No telemetry added.
++and physical low-memory phones are not certified. Windows/Opera is not certified;
++the operator reported repeated words/dashes there. Tests use Chromium on Linux.
++Small's model files total about 253 MB; Tiny's files about 46 MB, plus runtime.
++Model bytes are downloaded only when transcription is requested. No telemetry added.
 diff --git a/package-lock.json b/package-lock.json
 index bd32af1..a52a7ca 100644
 --- a/package-lock.json
@@ -2544,17 +2553,16 @@ index f065c74..bd19bff 100644
    }
  }
 diff --git a/src/App.tsx b/src/App.tsx
-index cf9844e..2fe23dc 100644
+index cf9844e..8d9c8ad 100644
 --- a/src/App.tsx
 +++ b/src/App.tsx
-@@ -14,11 +14,17 @@ function App() {
+@@ -14,11 +14,16 @@ function App() {
                  <h2 className='mt-3 mb-5 px-4 text-center text-1xl font-semibold tracking-tight text-slate-900 sm:text-2xl'>
                      ML-powered speech recognition directly in your browser
                  </h2>
 +                <p className='px-4 mb-4 text-center max-w-xl'>
-+                    Pilot: start with a short recording. The first use downloads a model of about 75 MB.
-+                    Download important transcripts. / Piloto: probá con una grabación corta.
-+                    El primer uso descarga un modelo de unos 75 MB. Descargá las transcripciones importantes.
++                    Pilot: choose the spoken language and check the result. Audio stays on your device; the model downloads on first use.
++                    {' '}/ Piloto: elegí el idioma hablado y revisá el resultado. Tu audio queda en este dispositivo; el modelo se descarga al usarlo.
 +                    {' '}File limit: 128 MiB. / Límite por archivo: 128 MiB.
 +                </p>
                  <AudioManager transcriber={transcriber} />
@@ -2567,7 +2575,7 @@ index cf9844e..2fe23dc 100644
                  <a
                      className='underline'
 diff --git a/src/components/AudioManager.tsx b/src/components/AudioManager.tsx
-index 6919a2d..03db593 100644
+index 6919a2d..70b5ac2 100644
 --- a/src/components/AudioManager.tsx
 +++ b/src/components/AudioManager.tsx
 @@ -1,4 +1,4 @@
@@ -2584,7 +2592,15 @@ index 6919a2d..03db593 100644
  
  function titleCase(str: string) {
      str = str.toLowerCase();
-@@ -131,6 +132,8 @@ export enum AudioSource {
+@@ -22,6 +23,7 @@ function titleCase(str: string) {
+ // https://help.openai.com/en/articles/7031512-whisper-api-faq
+ // https://github.com/openai/whisper/blob/248b6cb124225dd263bb9bd32d060b6517e067f8/whisper/tokenizer.py#L79
+ const LANGUAGES = {
++    auto: "detect automatically",
+     en: "english",
+     zh: "chinese",
+     de: "german",
+@@ -131,6 +133,8 @@ export enum AudioSource {
  
  export function AudioManager(props: { transcriber: Transcriber }) {
      const [progress, setProgress] = useState<number | undefined>(undefined);
@@ -2593,7 +2609,7 @@ index 6919a2d..03db593 100644
      const [audioData, setAudioData] = useState<
          | {
                buffer: AudioBuffer;
-@@ -146,6 +149,31 @@ export function AudioManager(props: { transcriber: Transcriber }) {
+@@ -146,6 +150,31 @@ export function AudioManager(props: { transcriber: Transcriber }) {
  
      const isAudioLoading = progress !== undefined;
  
@@ -2625,7 +2641,7 @@ index 6919a2d..03db593 100644
      const resetAudio = () => {
          setAudioData(undefined);
          setAudioDownloadUrl(undefined);
-@@ -171,28 +199,7 @@ export function AudioManager(props: { transcriber: Transcriber }) {
+@@ -171,28 +200,7 @@ export function AudioManager(props: { transcriber: Transcriber }) {
      };
  
      const setAudioFromRecording = async (data: Blob) => {
@@ -2655,8 +2671,37 @@ index 6919a2d..03db593 100644
      };
  
      const downloadAudioFromUrl = async (
-@@ -241,27 +248,11 @@ export function AudioManager(props: { transcriber: Transcriber }) {
+@@ -239,29 +247,40 @@ export function AudioManager(props: { transcriber: Transcriber }) {
+ 
+     return (
          <>
++            <label className='px-4 mt-2' htmlFor='spoken-language'>Spoken language / Idioma hablado</label>
++            <select
++                id='spoken-language'
++                className='mb-3 mx-4 p-2 border border-gray-300 rounded-lg text-base max-w-xs'
++                value={props.transcriber.multilingual ? props.transcriber.language : 'en'}
++                disabled={props.transcriber.isBusy}
++                onChange={(event) => {
++                    props.transcriber.setMultilingual(true);
++                    props.transcriber.setLanguage(event.target.value);
++                }}
++            >
++                {Object.entries(LANGUAGES).map(([key, name]) => <option key={key} value={key}>{titleCase(name)}</option>)}
++            </select>
++            <label className='px-4' htmlFor='speech-model'>Model / Modelo</label>
++            <select
++                id='speech-model'
++                className='mb-3 mx-4 p-2 border border-gray-300 rounded-lg text-base max-w-xs'
++                value={props.transcriber.model}
++                disabled={props.transcriber.isBusy}
++                onChange={(event) => {
++                    props.transcriber.setModel(event.target.value);
++                    props.transcriber.setMultilingual(true);
++                }}
++            >
++                <option value='Xenova/whisper-small'>Small · 253 MB · slower / más lento</option>
++                <option value='Xenova/whisper-tiny'>Tiny · 46 MB · lighter / más liviano</option>
++            </select>
              <div className='flex flex-col justify-center items-center rounded-lg bg-white shadow-xl shadow-black/5 ring-1 ring-slate-700/10'>
                  <div className='flex flex-row space-x-2 py-2 w-full px-2'>
 -                    <UrlTile
@@ -2685,7 +2730,7 @@ index 6919a2d..03db593 100644
                      />
                      {navigator.mediaDevices && (
                          <>
-@@ -269,6 +260,7 @@ export function AudioManager(props: { transcriber: Transcriber }) {
+@@ -269,6 +288,7 @@ export function AudioManager(props: { transcriber: Transcriber }) {
                              <RecordTile
                                  icon={<MicrophoneIcon />}
                                  text={"Record"}
@@ -2693,7 +2738,7 @@ index 6919a2d..03db593 100644
                                  setAudioData={(e) => {
                                      props.transcriber.onInputChange();
                                      setAudioFromRecording(e);
-@@ -283,6 +275,9 @@ export function AudioManager(props: { transcriber: Transcriber }) {
+@@ -283,6 +303,9 @@ export function AudioManager(props: { transcriber: Transcriber }) {
                      />
                  }
              </div>
@@ -2703,10 +2748,20 @@ index 6919a2d..03db593 100644
              {audioData && (
                  <>
                      <AudioPlayer
-@@ -370,13 +365,6 @@ function SettingsModal(props: {
+@@ -348,7 +371,7 @@ function SettingsTile(props: {
+ 
+     return (
+         <div className={props.className}>
+-            <Tile icon={props.icon} onClick={onClick} />
++            <Tile icon={props.icon} label='Settings / Configuración' onClick={onClick} disabled={props.transcriber.isBusy} />
+             <SettingsModal
+                 show={showModal}
+                 onSubmit={onSubmit}
+@@ -369,14 +392,8 @@ function SettingsModal(props: {
+ 
      const models = {
          // Original checkpoints
-         'Xenova/whisper-tiny': [41, 152],
+-        'Xenova/whisper-tiny': [41, 152],
 -        'Xenova/whisper-base': [77, 291],
 -        'Xenova/whisper-small': [249],
 -        'Xenova/whisper-medium': [776],
@@ -2714,10 +2769,32 @@ index 6919a2d..03db593 100644
 -        // Distil Whisper (English-only)
 -        'distil-whisper/distil-medium.en': [402],
 -        'distil-whisper/distil-large-v2': [767],
++        'Xenova/whisper-small': [253, 0],
++        'Xenova/whisper-tiny': [46, 152],
      };
      return (
          <Modal
-@@ -435,6 +423,7 @@ function SettingsModal(props: {
+@@ -387,9 +404,10 @@ function SettingsModal(props: {
+                     <label>Select the model to use.</label>
+                     <select
+                         className='mt-1 mb-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+-                        defaultValue={props.transcriber.model}
++                        value={props.transcriber.model}
+                         onChange={(e) => {
+                             props.transcriber.setModel(e.target.value);
++                            props.transcriber.setMultilingual(true);
+                         }}
+                     >
+                         {Object.keys(models)
+@@ -420,6 +438,7 @@ function SettingsModal(props: {
+                             <input
+                                 id='multilingual'
+                                 type='checkbox'
++                                disabled={props.transcriber.model !== 'Xenova/whisper-tiny'}
+                                 checked={props.transcriber.multilingual}
+                                 onChange={(e) => {
+                                     props.transcriber.setMultilingual(
+@@ -435,6 +454,7 @@ function SettingsModal(props: {
                              <input
                                  id='quantize'
                                  type='checkbox'
@@ -2725,7 +2802,16 @@ index 6919a2d..03db593 100644
                                  checked={props.transcriber.quantized}
                                  onChange={(e) => {
                                      props.transcriber.setQuantized(
-@@ -572,40 +561,20 @@ function UrlModal(props: {
+@@ -452,7 +472,7 @@ function SettingsModal(props: {
+                             <label>Select the source language.</label>
+                             <select
+                                 className='mt-1 mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+-                                defaultValue={props.transcriber.language}
++                                value={props.transcriber.language}
+                                 onChange={(e) => {
+                                     props.transcriber.setLanguage(
+                                         e.target.value,
+@@ -572,40 +592,20 @@ function UrlModal(props: {
  function FileTile(props: {
      icon: JSX.Element;
      text: string;
@@ -2771,7 +2857,7 @@ index 6919a2d..03db593 100644
  
          // Reset files
          elem.value = "";
-@@ -616,6 +585,7 @@ function FileTile(props: {
+@@ -616,6 +616,7 @@ function FileTile(props: {
              <Tile
                  icon={props.icon}
                  text={props.text}
@@ -2779,7 +2865,7 @@ index 6919a2d..03db593 100644
                  onClick={() => elem.click()}
              />
          </>
-@@ -625,6 +595,7 @@ function FileTile(props: {
+@@ -625,6 +626,7 @@ function FileTile(props: {
  function RecordTile(props: {
      icon: JSX.Element;
      text: string;
@@ -2787,7 +2873,7 @@ index 6919a2d..03db593 100644
      setAudioData: (data: Blob) => void;
  }) {
      const [showModal, setShowModal] = useState(false);
-@@ -646,7 +617,7 @@ function RecordTile(props: {
+@@ -646,7 +648,7 @@ function RecordTile(props: {
  
      return (
          <>
@@ -2796,7 +2882,7 @@ index 6919a2d..03db593 100644
              <RecordModal
                  show={showModal}
                  onSubmit={onSubmit}
-@@ -684,7 +655,7 @@ function RecordModal(props: {
+@@ -684,7 +686,7 @@ function RecordModal(props: {
              content={
                  <>
                      {"Record audio using your microphone"}
@@ -2805,14 +2891,17 @@ index 6919a2d..03db593 100644
                  </>
              }
              onClose={onClose}
-@@ -699,10 +670,12 @@ function Tile(props: {
+@@ -698,11 +700,15 @@ function RecordModal(props: {
+ function Tile(props: {
      icon: JSX.Element;
      text?: string;
++    label?: string;
      onClick?: () => void;
 +    disabled?: boolean;
  }) {
      return (
          <button
++            aria-label={props.label}
              onClick={props.onClick}
 +            disabled={props.disabled}
              className='flex items-center justify-center rounded-lg p-2 bg-blue text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-200'
@@ -2996,7 +3085,7 @@ index 5bdfe6d..84c91cc 100644
                      />
                  </audio>
 diff --git a/src/hooks/useTranscriber.ts b/src/hooks/useTranscriber.ts
-index 15d6811..4419418 100644
+index 15d6811..af94eec 100644
 --- a/src/hooks/useTranscriber.ts
 +++ b/src/hooks/useTranscriber.ts
 @@ -36,6 +36,7 @@ export interface Transcriber {
@@ -3015,7 +3104,7 @@ index 15d6811..4419418 100644
  
      const [progressItems, setProgressItems] = useState<ProgressItem[]>([]);
  
-@@ -109,9 +111,10 @@ export function useTranscriber(): Transcriber {
+@@ -109,9 +111,18 @@ export function useTranscriber(): Transcriber {
                  break;
              case "error":
                  setIsBusy(false);
@@ -3025,11 +3114,19 @@ index 15d6811..4419418 100644
 +                setIsModelLoading(false);
 +                setProgressItems([]);
 +                setTranscript(undefined);
-+                setError('Transcription could not finish. Check your connection for model downloads, then try again or choose a shorter recording. Your audio stays on this device. / La transcripción no pudo terminar. Revisá tu conexión para descargar el modelo y volvé a intentar, o elegí una grabación más corta. Tu audio queda en este dispositivo.');
++                if (['repetition', 'output_limit'].includes(message.data?.code)) {
++                    setError('The model produced excessive repetition or more text than this audio can support. The result was discarded. Check the spoken language and try another model or a clearer recording. / El modelo produjo repeticiones excesivas o demasiado texto para este audio. Se descartó el resultado. Revisá el idioma y probá otro modelo o una grabación más clara.');
++                } else if (message.data?.code === 'no_signal') {
++                    setError('No usable audio signal. Play the recording and check your microphone. / No se detectó una señal de audio utilizable. Escuchá la grabación y revisá el micrófono.');
++                } else if (message.data?.code === 'empty_transcript') {
++                    setError('No transcript was produced. Choose the spoken language and try another model or a clearer recording. / No se obtuvo una transcripción. Elegí el idioma hablado y probá otro modelo o una grabación más clara.');
++                } else {
++                    setError('Transcription could not finish. Check your connection for model downloads, then retry. If memory is limited, choose Tiny or a shorter recording. Your audio stays on this device. / La transcripción no pudo terminar. Revisá tu conexión y volvé a intentar. Si falta memoria, elegí Tiny o una grabación más corta. Tu audio queda en este dispositivo.');
++                }
                  break;
              case "done":
                  // Model file loaded: remove the progress item from the list.
-@@ -140,11 +143,14 @@ export function useTranscriber(): Transcriber {
+@@ -140,11 +151,14 @@ export function useTranscriber(): Transcriber {
  
      const onInputChange = useCallback(() => {
          setTranscript(undefined);
@@ -3044,7 +3141,7 @@ index 15d6811..4419418 100644
                  setTranscript(undefined);
                  setIsBusy(true);
  
-@@ -175,7 +181,7 @@ export function useTranscriber(): Transcriber {
+@@ -175,7 +189,7 @@ export function useTranscriber(): Transcriber {
                  });
              }
          },
@@ -3053,7 +3150,7 @@ index 15d6811..4419418 100644
      );
  
      const transcriber = useMemo(() => {
-@@ -183,6 +189,7 @@ export function useTranscriber(): Transcriber {
+@@ -183,6 +197,7 @@ export function useTranscriber(): Transcriber {
              onInputChange,
              isBusy,
              isModelLoading,
@@ -3061,7 +3158,7 @@ index 15d6811..4419418 100644
              progressItems,
              start: postRequest,
              output: transcript,
-@@ -200,6 +207,7 @@ export function useTranscriber(): Transcriber {
+@@ -200,6 +215,7 @@ export function useTranscriber(): Transcriber {
      }, [
          isBusy,
          isModelLoading,
@@ -3070,17 +3167,20 @@ index 15d6811..4419418 100644
          postRequest,
          transcript,
 diff --git a/src/utils/Constants.ts b/src/utils/Constants.ts
-index 9dffbbb..01861ca 100644
+index 9dffbbb..1b27f73 100644
 --- a/src/utils/Constants.ts
 +++ b/src/utils/Constants.ts
-@@ -28,7 +28,7 @@ export default {
+@@ -26,9 +26,9 @@ export default {
+     DEFAULT_AUDIO_URL: `https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/${
+         isMobileOrTablet ? "jfk" : "ted_60_16k"
      }.wav`,
-     DEFAULT_MODEL: "Xenova/whisper-tiny",
+-    DEFAULT_MODEL: "Xenova/whisper-tiny",
++    DEFAULT_MODEL: "Xenova/whisper-small",
      DEFAULT_SUBTASK: "transcribe",
 -    DEFAULT_LANGUAGE: "english",
 -    DEFAULT_QUANTIZED: isMobileOrTablet,
 -    DEFAULT_MULTILINGUAL: false,
-+    DEFAULT_LANGUAGE: "auto",
++    DEFAULT_LANGUAGE: navigator.language.toLowerCase().startsWith('es') ? 'es' : navigator.language.toLowerCase().startsWith('en') ? 'en' : 'auto',
 +    DEFAULT_QUANTIZED: true,
 +    DEFAULT_MULTILINGUAL: true,
  };
@@ -3107,13 +3207,55 @@ index 0000000..358e799
 +        await context.close().catch(() => {});
 +    }
 +}
+diff --git a/src/utils/TranscriptSafety.ts b/src/utils/TranscriptSafety.ts
+new file mode 100644
+index 0000000..974890d
+--- /dev/null
++++ b/src/utils/TranscriptSafety.ts
+@@ -0,0 +1,35 @@
++// These are conservative failure checks, not an accuracy score or speech detector.
++// Never silently deduplicate speech: a real "hola, hola, hola" must remain valid.
++export function hasRunawayRepetition(text: string): boolean {
++    const words = text.normalize('NFKC').toLowerCase().match(/[\p{L}\p{M}\p{N}]+/gu) ?? [];
++    for (let size = 1; size <= 8; size++) {
++        const cycles = Math.max(4, Math.ceil(24 / size));
++        const length = size * cycles;
++        if (words.length < length) continue;
++        const start = words.length - length;
++        if (words.slice(start).every((word, i) => word === words[start + i % size])) return true;
++    }
++    return false;
++}
++
++export function audioHasSignal(audio: Float32Array): boolean {
++    if (!audio.length) return false;
++    let energy = 0;
++    for (const value of audio) {
++        if (!Number.isFinite(value)) return false;
++        energy += value * value;
++    }
++    // Only reject digital silence/nearly zero input. Quiet speech is not filtered.
++    return Math.sqrt(energy / audio.length) > 0.00001;
++}
++
++export function hasTranscriptContent(text: string): boolean {
++    return /[\p{L}\p{N}]/u.test(text);
++}
++
++export function tokenLimitForAudio(seconds: number): number {
++    // Whisper processes up to 30 seconds at once. A short clip must not generate
++    // the full 448-token window. Hitting this generous limit is an error, not a
++    // successful but silently truncated transcript.
++    return Math.min(440, Math.max(48, Math.ceil(Math.min(seconds, 30) * 14 + 24)));
++}
 diff --git a/src/worker.js b/src/worker.js
-index 602edf3..b66082b 100644
+index 602edf3..6e8774c 100644
 --- a/src/worker.js
 +++ b/src/worker.js
-@@ -1,8 +1,12 @@
+@@ -1,8 +1,13 @@
  /* eslint-disable camelcase */
  import { pipeline, env } from "@xenova/transformers";
++import { audioHasSignal, hasRunawayRepetition, hasTranscriptContent, tokenLimitForAudio } from './utils/TranscriptSafety';
  
 -// Disable local models
 -env.allowLocalModels = false;
@@ -3126,7 +3268,7 @@ index 602edf3..b66082b 100644
  
  // Define model factories
  // Ensures only one model is created of each type
-@@ -29,7 +33,14 @@ class PipelineFactory {
+@@ -29,7 +34,14 @@ class PipelineFactory {
              });
          }
  
@@ -3142,7 +3284,7 @@ index 602edf3..b66082b 100644
      }
  }
  
-@@ -38,14 +49,20 @@ self.addEventListener("message", async (event) => {
+@@ -38,14 +50,20 @@ self.addEventListener("message", async (event) => {
  
      // Do some work...
      // TODO use message data
@@ -3159,12 +3301,73 @@ index 602edf3..b66082b 100644
 -    );
 +      );
 +    } catch (error) {
-+      self.postMessage({ status: 'error', data: { message: error.message || 'Transcription failed.' } });
++      self.postMessage({ status: 'error', data: { code: error.code, message: 'Transcription failed.' } });
 +      return;
 +    }
      if (transcript === null) return;
  
      // Send the result back to the main thread
+@@ -71,6 +89,9 @@ const transcribe = async (
+     language,
+ ) => {
+ 
++    if (!audioHasSignal(audio)) throw Object.assign(new Error('No usable audio signal'), { code: 'no_signal' });
++    const tokenLimit = tokenLimitForAudio(audio.length / 16000);
++
+     const isDistilWhisper = model.startsWith("distil-whisper/");
+ 
+     let modelName = model;
+@@ -85,7 +106,7 @@ const transcribe = async (
+         p.quantized = quantized;
+ 
+         if (p.instance !== null) {
+-            (await p.getInstance()).dispose();
++            await (await p.getInstance()).dispose();
+             p.instance = null;
+         }
+     }
+@@ -132,6 +153,15 @@ const transcribe = async (
+ 
+         // Update tokens of last chunk
+         last.tokens = [...item[0].output_token_ids];
++        const partialText = transcriber.tokenizer.decode(last.tokens, { skip_special_tokens: true });
++        if (hasRunawayRepetition(partialText)) {
++            throw Object.assign(new Error('Repetitive output'), { code: 'repetition' });
++        }
++        const chunkStart = (chunks_to_process.length - 1) * (isDistilWhisper ? 14 : 20);
++        const chunkLimit = tokenLimitForAudio(audio.length / 16000 - chunkStart);
++        if (last.tokens.length >= chunkLimit && last.tokens.at(-1) !== transcriber.model.config.eos_token_id) {
++            throw Object.assign(new Error('Output exceeds audio budget'), { code: 'output_limit' });
++        }
+ 
+         // Merge text chunks
+         // TODO optimise so we don't have to decode all chunks every time
+@@ -153,6 +183,7 @@ const transcribe = async (
+         // Greedy
+         top_k: 0,
+         do_sample: false,
++        max_new_tokens: tokenLimit,
+ 
+         // Sliding window
+         chunk_length_s: isDistilWhisper ? 20 : 30,
+@@ -169,14 +200,10 @@ const transcribe = async (
+         // Callback functions
+         callback_function: callback_function, // after each generation step
+         chunk_callback: chunk_callback, // after each chunk is processed
+-    }).catch((error) => {
+-        self.postMessage({
+-            status: "error",
+-            task: "automatic-speech-recognition",
+-            data: error,
+-        });
+-        return null;
+     });
+ 
++    if (hasRunawayRepetition(output.text)) throw Object.assign(new Error('Repetitive output'), { code: 'repetition' });
++    if (!hasTranscriptContent(output.text ?? '')) throw Object.assign(new Error('No transcript'), { code: 'empty_transcript' });
++
+     return output;
+ };
 diff --git a/tests/local-audio.test.mjs b/tests/local-audio.test.mjs
 new file mode 100644
 index 0000000..3cd55b2
@@ -3198,4 +3401,97 @@ index 0000000..3cd55b2
 +  };
 +  assert.equal(await decodeLocalAudio(new Blob(['synthetic']), 16000), decoded);
 +  assert.equal(closed, 1);
++});
+diff --git a/tests/transcript-safety.test.mjs b/tests/transcript-safety.test.mjs
+new file mode 100644
+index 0000000..41facdd
+--- /dev/null
++++ b/tests/transcript-safety.test.mjs
+@@ -0,0 +1,30 @@
++import assert from 'node:assert/strict';
++import test from 'node:test';
++import {audioHasSignal, hasRunawayRepetition, hasTranscriptContent, tokenLimitForAudio} from '../src/utils/TranscriptSafety.ts';
++
++test('three genuinely repeated greetings are preserved, not silently deduplicated',()=>{
++  assert.equal(hasRunawayRepetition('Hola, hola, hola.'),false);
++  assert.equal(hasRunawayRepetition('No, no, no. Sí, sí, sí.'),false);
++});
++test('runaway single words and multiword phrases are rejected',()=>{
++  assert.equal(hasRunawayRepetition('Hola. '.repeat(100)),true);
++  assert.equal(hasRunawayRepetition('Gracias por ver el video. '.repeat(8)),true);
++});
++test('normal prose, numbers and occasional repeated phrases remain valid',()=>{
++  assert.equal(hasRunawayRepetition('Tengo un problema con la aplicación. Mi cuenta no carga el saldo. Tengo un problema con la aplicación y necesito ayuda.'),false);
++  assert.equal(hasRunawayRepetition('uno dos tres cuatro cinco seis siete ocho nueve diez once doce trece catorce quince dieciséis diecisiete dieciocho diecinueve veinte veintiuno veintidós veintitrés veinticuatro'),false);
++});
++test('digital silence and malformed samples fail, quiet speech is retained',()=>{
++  assert.equal(audioHasSignal(new Float32Array(96000)),false);
++  assert.equal(audioHasSignal(new Float32Array([NaN])),false);
++  assert.equal(audioHasSignal(new Float32Array([0.0002,-0.0002])),true);
++});
++test('short recordings have bounded output and long chunks stay below context limit',()=>{
++  assert.equal(tokenLimitForAudio(6),108);
++  assert.equal(tokenLimitForAudio(0.5),48);
++  assert.equal(tokenLimitForAudio(600),440);
++});
++test('dashes or punctuation alone are not a successful transcript',()=>{
++  for (const text of ['', '--- — —', '... [ ]']) assert.equal(hasTranscriptContent(text),false);
++  for (const text of ['Hola.', 'こんにちは', '42']) assert.equal(hasTranscriptContent(text),true);
++});
+diff --git a/tests/worker-safety.test.mjs b/tests/worker-safety.test.mjs
+new file mode 100644
+index 0000000..6694c96
+--- /dev/null
++++ b/tests/worker-safety.test.mjs
+@@ -0,0 +1,51 @@
++import assert from 'node:assert/strict';
++import test from 'node:test';
++import {readFileSync} from 'node:fs';
++import * as safety from '../src/utils/TranscriptSafety.ts';
++const workerCode=readFileSync(new URL('../src/worker.js',import.meta.url),'utf8').replace(/^import .*;\s*$/gm,'');
++
++async function simulate(words,{silent=false,unique=false}={}) {
++  let handler,generated=0,loaded=0;
++  const messages=[];
++  const self={addEventListener:(_name,fn)=>{handler=fn;},postMessage:msg=>messages.push(msg)};
++  const env={backends:{onnx:{wasm:{}}}};
++  const decode=tokens=>tokens.filter(x=>x!==0).map(x=>unique?'word'+x:'hola').join(' ');
++  const pipeline=async()=>{
++    loaded++;
++    const transcriber=async(_audio,options)=>{
++      const tokens=[];
++      for(let i=0;i<words;i++){
++        generated++;tokens.push(i+1);options.callback_function([{output_token_ids:tokens}]);
++      }
++      return {text:decode(tokens),chunks:[{text:decode(tokens),timestamp:[0,6]}]};
++    };
++    transcriber.tokenizer={decode,_decode_asr:chunks=>[decode(chunks.flatMap(x=>x.tokens)),{chunks:[]}]};
++    transcriber.processor={feature_extractor:{config:{chunk_length:30}}};
++    transcriber.model={config:{max_source_positions:1500,eos_token_id:0}};
++    return transcriber;
++  };
++  new Function('pipeline','env','self',...Object.keys(safety),workerCode)(pipeline,env,self,...Object.values(safety));
++  await handler({data:{audio:new Float32Array(96000).fill(silent?0:0.05),model:'Xenova/whisper-tiny',multilingual:true,quantized:true,subtask:'transcribe',language:'es'}});
++  return {messages,generated,loaded};
++}
++test('worker stops hundreds of repeated greetings and never publishes success',async()=>{
++  const result=await simulate(400);
++  assert.ok(result.generated<=24);
++  assert.equal(result.messages.at(-1).data.code,'repetition');
++  assert.equal(result.messages.some(x=>x.status==='complete'),false);
++});
++test('worker preserves all three genuinely repeated greetings',async()=>{
++  const result=await simulate(3);
++  assert.equal(result.messages.at(-1).status,'complete');
++  assert.equal(result.messages.at(-1).data.text,'hola hola hola');
++});
++test('worker stops implausibly long output instead of silently truncating it',async()=>{
++  const result=await simulate(400,{unique:true});
++  assert.ok(result.generated<=108);
++  assert.equal(result.messages.at(-1).data.code,'output_limit');
++});
++test('digital silence is rejected before a model download',async()=>{
++  const result=await simulate(0,{silent:true});
++  assert.equal(result.loaded,0);
++  assert.equal(result.messages.at(-1).data.code,'no_signal');
 +});

@@ -2,6 +2,27 @@
 
 ## Public-reader expansion checkpoint — October 6, after the edge update
 
+### Whisper quality correction — October 6
+
+The operator reported Spanish "hola" becoming `[Susah]`, hundreds of repeated
+greetings and then dashes on Windows/Opera. The previous JFK-only check did not
+establish usable Spanish transcription; the broader success claim was too strong.
+
+Version `81869ed-p3` adds visible, accurate language/model controls, multilingual
+Small by default (253 MB of model files), and Tiny as a lighter option. All model
+and runtime requests stay same-origin; audio stays on-device. Repetition/duration
+limits abort and discard unreliable results, rather than silently deleting actual
+repeated speech. Silence/near-zero input and punctuation-only results are errors.
+There is no speech VAD or general quality guarantee.
+
+Thirteen audio/worker unit tests cover three genuine repeated words, 400 simulated
+repetitions, duration limits, silence and punctuation. A public Spanish fixture
+improved with Small, but another fixture still had errors; synthetic speech was
+not recognized perfectly. `check-whisper-quality.mjs` checks Spanish fixture
+content, digital silence, explicitly injected UI error recovery and privacy.
+The user's exact clip and Windows/Opera remain unverified. Prior browser tests
+use Chromium/Linux or mobile emulation, not the user's physical device.
+
 ### Latest functional audit — October 6
 
 The enabled inventory remains **39 services**; no requested service was hidden.

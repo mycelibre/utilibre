@@ -382,7 +382,7 @@ function renderSoftware(language: Language, config: PublicConfig, t: Translate):
     purpose: string;
   };
   const inventory: SoftwareItem[] = [
-    { group: 'portal', name: t('software.portalName'), version: '0.1.0', license: 'AGPL-3.0-or-later', upstream: config.sourceCodeUrl, modifiedSource: config.publicPdfUrl ? new URL('/utilibre-source/utilibre-integration.tar.gz', config.publicPdfUrl).href : undefined, modification: t('software.original'), purpose: t('software.purpose.portal') },
+    { group: 'portal', name: t('software.portalName'), version: '0.1.0', license: 'AGPL-3.0-or-later', upstream: config.sourceCodeUrl, modifiedSource: config.publicPdfUrl ? new URL(`/utilibre-source/utilibre-integration.tar.gz?revision=${encodeURIComponent(config.sourceCodeUrl)}`, config.publicPdfUrl).href : undefined, modification: t('software.original'), purpose: t('software.purpose.portal') },
     { group: 'portal', name: 'Node.js / Alpine Linux', version: '24.14.0 / 3.23', license: 'MIT / component-specific', upstream: 'https://github.com/nodejs/node/tree/v24.14.0', modification: t('software.notModified'), purpose: t('software.purpose.node') },
     { group: 'hosted', name: 'SearXNG', version: config.searxngDeployedVersion || '2026.10.4-d48c4b555', license: 'AGPL-3.0-or-later', upstream: 'https://github.com/searxng/searxng', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.searxng') },
     { group: 'infrastructure', name: 'Valkey', version: '9.1.1-alpine', license: 'BSD-3-Clause', upstream: 'https://github.com/valkey-io/valkey/tree/9.1.1', modification: t('software.notModified'), purpose: t('software.purpose.valkey') },
