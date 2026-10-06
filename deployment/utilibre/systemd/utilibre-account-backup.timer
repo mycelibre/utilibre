@@ -1,0 +1,11 @@
+[Unit]
+Description=Nightly identity and account-service backup verification
+
+[Timer]
+OnCalendar=*-*-* 04:40:00 UTC
+RandomizedDelaySec=5min
+Persistent=true
+Unit=utilibre-account-backup.service
+
+[Install]
+WantedBy=timers.target

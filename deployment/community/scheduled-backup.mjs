@@ -10,11 +10,14 @@ try {
   console.log(`Verified community snapshot: ${snapshot}`);
 } catch (error) {
   // Only a generic alert leaves the host: never email database errors/secrets.
-  try { execFileSync('python3', ['-c', `import smtplib,ssl
+  try { execFileSync('python3', ['-c', `import smtplib,ssl,socket
 from email.message import EmailMessage
+class Relay(smtplib.SMTP):
+ def _get_socket(self,host,port,timeout):
+  return socket.create_connection(('10.10.1.20',port),timeout)
 m=EmailMessage();m['From']='no-reply@utilibre.org';m['To']='admin@utilibre.org';m['Subject']='Utilibre community backup failed'
 m.set_content('The scheduled Rallly, FMD and Pollaris backup or restore check failed. Inspect utilibre-community-backup.service on the application VM. Existing backups were not removed.')
-with smtplib.SMTP('mx.mailgt.dev',26,timeout=15) as s:
+with Relay('mx.mailgt.dev',26,timeout=15) as s:
  s.starttls(context=ssl.create_default_context());s.send_message(m)
 `], { stdio: ['ignore', 'ignore', 'pipe'] }); } catch { console.error('Backup alert could not be delivered.'); }
   throw error;

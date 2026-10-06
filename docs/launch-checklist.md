@@ -1,5 +1,12 @@
 # Public launch checklist
 
+> Historical four-service reset checklist. It is **not** the active service
+> inventory: the operator subsequently requested the expanded deployment.
+> Use [the current delivery checklist](../deployment/community/delivery-checklist.json)
+> and [the latest deployment review](toolbox-review.md) for current services,
+> verified workflows and remaining blockers. Do not retire or hide requested
+> services to satisfy the obsolete inventory checks below.
+
 This checklist covers the post-reset portal, SearXNG, Redlib, FreshRSS,
 PrivateBin, internal RSSHub support, and the separate public edge. Check an
 item only from current evidence on the exact release revision.

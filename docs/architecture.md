@@ -2,9 +2,13 @@
 
 ## Scope and trust boundaries
 
-Utilibre uses two Compose projects on one application VM and a separately
-managed public edge. The application VM does not run a general-purpose public
-reverse proxy.
+Utilibre uses multiple isolated Compose projects on one application VM and a
+separately managed public edge. The diagram and base-component details below
+describe the original two projects, not the complete expanded deployment.
+Toolbox, identity, expanded and community projects are recorded in
+[expanded operations](expanded-operations.md) and the
+[deployment review](toolbox-review.md). The application VM does not run a
+general-purpose public reverse proxy.
 
 ```text
 Visitor browser

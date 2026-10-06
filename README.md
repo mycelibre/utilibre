@@ -8,20 +8,24 @@ or paid tiers.
 
 ## Tools
 
-- Search and feeds: **SearXNG, Redlib, FreshRSS, RSS-Bridge**.
+- Search: **SearXNG, 4get, DeGoog**.
+- Readers: **Redlib, Priviblur, Mezzo, AnonymousOverflow, GotHub,
+  Binternet, BiblioReads, Kittygram, SafeTwitch**.
+- Feeds: **FreshRSS, RSS-Bridge**.
 - Files and everyday work: **BentoPDF** (including OCR), **VERT, OmniTools,
-  IT Tools, hat.sh, draw.io, Mini QR**.
+  IT Tools, hat.sh, draw.io, Mini QR, QR Tools, TransLite**.
 - Sharing and notifications: **PrivateBin, Yopass, PairDrop, ntfy**.
 - Browser-based learning and transcription: **JupyterLite, Whisper Web**.
-- Approved-account pilots: **Reactive Resume, Penpot, Actual Budget, Wakapi**,
+- Approved-account pilots: **Reactive Resume, Penpot, Actual Budget, Wakapi, Rallly**,
   with shared Utilibre login, email verification and MFA. Public registration
   remains closed; request access at **admin@utilibre.org**.
-- Service status: **Uptime Kuma**.
+- Additional tools: **Pollaris, FMD**. Service status: **Uptime Kuma**.
 
-FreshRSS retains its separate operator-provisioned accounts. Redlib depends
-on Reddit availability. **Rallly** remains staged pending a multi-user licensing
-decision; **BreezeWiki** is unavailable because upstream requests fail.
-See the [deployment review](docs/toolbox-review.md) for limits and checks.
+**37 services are enabled as of October 6, 2026.** Access and privacy vary by
+tool; FreshRSS retains separate operator-provisioned accounts. Upstream sites
+can block readers. **Dumb, LibreMDB, BreezeWiki and Rimgo** still have upstream
+failures; password-protected **Mumble** awaits public TCP/UDP routing.
+See the [deployment review](docs/toolbox-review.md) for current checks and limits.
 
 Optional donations: [Liberapay](https://liberapay.com/mycelibre/donate).
 
@@ -33,6 +37,7 @@ respective open-source communities.
 - [Services and access](docs/services.md)
 - [Privacy](docs/privacy.md) and [security](docs/security.md)
 - [Deployment](docs/deployment.md) and [architecture](docs/architecture.md)
+- [Expanded ports and operations](docs/expanded-operations.md), [delivery checklist](deployment/community/delivery-checklist.json), and [instance submissions](docs/public-instance-submissions.md)
 - [Project purpose](PRODUCT.md), [software policy](FOSS_POLICY.md), and [contributing](CONTRIBUTING.md)
 - [All technical documentation](docs/)
 

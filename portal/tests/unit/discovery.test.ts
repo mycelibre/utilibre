@@ -14,6 +14,7 @@ import {
 import type { PublicConfig } from '../../src/config';
 
 const baseConfig: PublicConfig = {
+  publicDegoogUrl: '',
   publicBooksUrl: '', publicQrToolsUrl: '', publicInstagramUrl: '', publicFourgetUrl: '', publicOverflowUrl: '', publicTwitchUrl: '',
   projectName: 'Utilibre', projectTagline: '', projectTaglineEn: '', projectTaglineEs: '',
   sourceCodeUrl: '', supportUrl: '', contactUrl: '', publicSearchUrl: '', publicRedditUrl: '',
@@ -58,7 +59,7 @@ describe('catalog discovery metadata', () => {
     expect(catalog.filter((entry) => entry.featuredOrder !== undefined)
       .sort((left, right) => (left.featuredOrder ?? 0) - (right.featuredOrder ?? 0))
       .map((entry) => entry.id))
-      .toEqual(['bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite', 'biblioreads', 'fourget', 'anonymousoverflow', 'safetwitch', 'qr-offline', 'kittygram', 'rimgo', 'mumble']);
+      .toEqual(['bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite', 'biblioreads', 'fourget', 'anonymousoverflow', 'safetwitch', 'qr-offline', 'kittygram', 'rimgo', 'mumble', 'degoog']);
   });
 
   it('keeps unrequested retired applications out of the catalog', () => {
@@ -69,6 +70,12 @@ describe('catalog discovery metadata', () => {
 });
 
 describe('config-gated catalog discovery', () => {
+  it('launches the verified DeGoog deployment only when configured and enabled', () => {
+    const entry=catalogEntry('degoog')!;
+    expect(entryLaunch(entry,'es',config({publicDegoogUrl:'https://degoog.utility.test/'}))).toBeNull();
+    expect(entryLaunch(entry,'es',config({enabledServices:['degoog']}))).toBeNull();
+    expect(entryLaunch(entry,'es',config({enabledServices:['degoog'],publicDegoogUrl:'https://degoog.utility.test/'}))).not.toBeNull();
+  });
   it('keeps prepared Gram and QR addresses unlaunchable until explicitly enabled', () => {
     const pending = config({ listedServices: ['kittygram', 'qr-offline'], publicInstagramUrl: 'https://gram.utilibre.org/', publicQrToolsUrl: 'https://qrtools.utilibre.org/' });
     expect(entryLaunch(catalogEntry('kittygram')!, 'en', pending)).toBeNull();

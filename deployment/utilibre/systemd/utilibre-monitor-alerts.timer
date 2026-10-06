@@ -1,0 +1,11 @@
+[Unit]
+Description=Check Utilibre service and resource health every five minutes
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=5min
+RandomizedDelaySec=15s
+Unit=utilibre-monitor-alerts.service
+
+[Install]
+WantedBy=timers.target

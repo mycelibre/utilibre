@@ -1,0 +1,24 @@
+[Unit]
+Description=Utilibre identity and account snapshots with isolated restore checks
+Requires=docker.service
+After=docker.service network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/ubuntu/freetools
+Environment=PATH=/root/.nvm/versions/node/v24.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/bin/flock -n /run/utilibre-account-backup.lock /usr/bin/env node deployment/community/scheduled-account-backup.mjs
+ExecStopPost=/usr/bin/flock -n /run/utilibre-account-backup.lock /usr/bin/env node /home/ubuntu/freetools/deployment/community/scheduled-account-backup.mjs --recover
+UMask=0077
+TimeoutStartSec=15min
+TimeoutStopSec=3min
+Nice=10
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/opt/utilibre/identity-backups /opt/utilibre/expanded-backups /run
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

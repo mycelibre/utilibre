@@ -6,6 +6,7 @@ import { pathToFileURL } from 'node:url';
 const repository = new URL('../', import.meta.url);
 
 const services = [
+  { id: 'degoog', hostKey: 'PUBLIC_DEGOOG_HOST', urlKey: 'PUBLIC_DEGOOG_URL', portKey: 'DEGOOG_GATEWAY_PORT' },
   { id: 'searxng', hostKey: 'PUBLIC_SEARCH_HOST', urlKey: 'PUBLIC_SEARCH_URL', portKey: 'SEARXNG_PORT' },
   { id: 'redlib', hostKey: 'PUBLIC_REDDIT_HOST', urlKey: 'PUBLIC_REDDIT_URL', portKey: 'REDLIB_PORT' },
   { id: 'freshrss', hostKey: 'PUBLIC_RSS_HOST', urlKey: 'PUBLIC_RSS_URL', portKey: 'FRESHRSS_PORT' },

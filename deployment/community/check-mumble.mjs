@@ -8,8 +8,8 @@ function uint(field,value){return Buffer.concat([varint(field*8),varint(value)])
 function packet(type,body){const head=Buffer.alloc(6);head.writeUInt16BE(type);head.writeUInt32BE(body.length,2);return Buffer.concat([head,body])}
 async function authenticate(password){
   return new Promise((resolve,reject)=>{
-    // This is explicitly a loopback pilot certificate check, not public PKI.
-    const socket=connect({host:'127.0.0.1',port:64738,rejectUnauthorized:false});
+    // Private-network authentication test, not a claim of public PKI validation.
+    const socket=connect({host:'10.10.1.43',port:64738,rejectUnauthorized:false});
     const timer=setTimeout(()=>{socket.destroy();reject(Error('Mumble protocol timeout'))},10000);
     let pending=Buffer.alloc(0),fingerprint;
     socket.once('secureConnect',()=>{
@@ -33,5 +33,5 @@ async function authenticate(password){
 assert.equal((await authenticate('incorrect-test-password')).type,4,'Incorrect password must be denied');
 const good=await authenticate(env.MUMBLE_CONFIG_SERVER_PASSWORD);
 assert.equal(good.type,5,'Invitation password must reach ServerSync');
-console.log('Mumble loopback TLS and protocol authentication pass; wrong password rejected.');
+console.log('Mumble private-network TLS and protocol authentication pass; wrong password rejected.');
 console.log(`Pilot certificate SHA-256: ${good.fingerprint}`);

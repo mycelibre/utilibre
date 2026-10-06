@@ -2,7 +2,68 @@
 
 ## Public-reader expansion checkpoint — October 6, after the edge update
 
-### Latest checkpoint — October 6, 18:00 UTC
+### Latest checkpoint — October 6, QR/Gram/DeGoog launch
+
+**37 services are enabled and have passed their relevant public checks.**
+The current machine-readable inventory is
+[`delivery-checklist.json`](../deployment/community/delivery-checklist.json).
+Earlier checkpoints below are historical, not instructions to disable services.
+
+- **QR Tools:** public at `qrtools.utilibre.org:443`, backend3155, MIT build
+  `0fde700-p2`. Fixed the code being drawn off-center inside its image, including
+  worker/fallback rendering and SVG exports. Default margins now measure29pixels
+  on all four sides. Public desktop/Spanish-mobile generation, decoding,
+  PNG/SVG/PDF export, synthetic camera and offline tests pass. Versioned scripts
+  and a new service-worker cache avoid stale Cloudflare/browser assets.
+- **Kittygram:** public at `gram.utilibre.org`, backend3154. Actual profile,
+  post, image and video workflows pass on desktop/mobile without third-party
+  browser requests. Enabled in the portal and Kuma. No upstream Spanish UI exists.
+- **DeGoog:** public at `degoog.utilibre.org`, restricted gateway3156; direct
+  operator port3143 remains loopback-only. Official1.0.0 image identifies
+  revision4a9bcc74. Native SearXNG compatibility loads pinnedAGPL engines
+  Mwmbl, Open Library and Hacker News fromSearXNG d48c4b555; no code from the
+  unlicensed extension repository is installed. Real search, Spanish/mobile,
+  privacy and admin-route denial pass publicly. Native privacy text offers
+  return/source links. Search cache is boundedRAM, indexer/favicon persistence
+  are disabled, and application/gateway logs are disabled. The source archive
+  includes the exact core revision, engines, licenses and deployment material.
+- **Mumble:** the operator selected password protection. It is configured on
+  `10.10.1.43:64738` TCP and UDP; correct/incorrect-password protocol tests pass.
+  Public DNS remains Cloudflare-proxied. DNS-only and public TCP/UDP forwarding
+  are still needed. A normal Caddy HTTP block is insufficient; public voice is
+  not yet verified.
+- **Rimgo:** HTTPS is reachable, but Imgur media still returns429. The gateway
+  now removes the erroneous one-year cache header from errors, uses`no-store`
+  and supplies`Retry-After`. A per-upstream cooldown prevents repeated requests
+  for at least ten minutes, or longer when Imgur asks. This is not a playback fix.
+  Cloudflare still has older cached errors: an existing media URL returned a
+  cache HIT with the old one-year header, while a fresh cache key returned the
+  corrected `no-store`/`Retry-After` response. Purge only the Rimgo hostname's
+  cached content in Cloudflare; no Cloudflare API credential is available here.
+- **Dumb:** inspecting the deployed binary confirms base revisionf558107 and
+  Go1.26.8. Its build tree is markedmodified, so this is not a reproducibility
+  claim. Genius403/human challenges persist even with an ordinary browser;
+  replacing an already-current container does not resolve that denial.
+- **BreezeWiki/LibreMDB:** a fresh BreezeWiki check confirms article text200
+  but proxiedimage403. IMDb still requires responses the current reader cannot
+  retrieve; the vulnerable old LibreMDB runtime remains stopped. No challenge
+  solvers, shared login cookies, rotating proxies or direct-visitor image leakage
+  were introduced to bypass these failures.
+
+Account backups now run daily at04:40UTC; identity and expanded PostgreSQL/SQLite
+restore rehearsals passed. Interrupted-run recovery and low-disk/failure alerts
+are configured. A five-minute host watcher checks all37Kuma monitors plus
+disk/inode/memory thresholds and sends verified-STARTTLS mail through
+`10.10.1.20:26` while checking the certificate for`mx.mailgt.dev`. Its test was
+accepted by the relay. This is not independent monitoring of a wholeVM outage;
+backups remain on-host, not off-site. No old backups were deleted.
+
+Public-directory changes for AnonymousOverflow and DeGoog were pushed to
+`mycelibre` forks. Both actual PR-creation attempts were denied by GitHub token
+permissions. [Prepared submissions](public-instance-submissions.md) distinguish
+fork branches, submitted requests and published listings.
+
+### Previous checkpoint — October 6, 18:00 UTC
 
 This checkpoint supersedes older pending-route notes below. **34 services have
 passed public HTTPS/workflow checks.** BiblioReads, 4get, AnonymousOverflow and

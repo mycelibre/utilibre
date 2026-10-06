@@ -1,6 +1,12 @@
 # Deployment
 
-Utilibre runs two named Compose projects on the application VM. Public DNS,
+This guide covers the original two Compose projects. The expanded deployment
+also uses toolbox, identity, expanded and community projects; follow
+[expanded operations](expanded-operations.md) and the
+[current delivery checklist](../deployment/community/delivery-checklist.json)
+for those services. Do not remove their routes using this base-service guide.
+
+Public DNS,
 TLS, and routing remain on a separate Caddy edge VM. Application ports bind to
 one exact private address and must not be reachable from the Internet or
 unauthorized private hosts.
@@ -109,7 +115,7 @@ Anubis metrics, or direct Redlib.
 
 ## 6. Configure the edge
 
-Create only the retained routes:
+The original projects require these routes:
 
 - portal;
 - SearXNG;
@@ -117,7 +123,8 @@ Create only the retained routes:
 - FreshRSS; and
 - PrivateBin.
 
-Do not retain public routes or DNS records for removed applications. RSSHub is
+Retain the separately reviewed expanded routes in the community and expanded
+Caddy files. Do not retain routes for genuinely retired applications. RSSHub is
 internal and must not receive a route. Apply the method, body, header, timeout,
 and trusted-client rules in [`edge-routing.md`](edge-routing.md).
 

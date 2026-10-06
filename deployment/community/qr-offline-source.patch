@@ -100,14 +100,14 @@ index 0000000..2523163
 +done
 diff --git a/deployment/compose.qr-offline.yaml b/deployment/compose.qr-offline.yaml
 new file mode 100644
-index 0000000..c10a4b9
+index 0000000..344c1ce
 --- /dev/null
 +++ b/deployment/compose.qr-offline.yaml
 @@ -0,0 +1,29 @@
 +name: utilibre-qr-offline
 +services:
 +  qr-offline:
-+    image: utilibre-qr-offline:0fde700-p1
++    image: utilibre-qr-offline:0fde700-p2
 +    restart: unless-stopped
 +    read_only: true
 +    user: "101:101"
@@ -135,7 +135,7 @@ index 0000000..c10a4b9
 +    ipam: {config: [{subnet: 172.29.93.0/24}]}
 diff --git a/deployment/firewall.sh b/deployment/firewall.sh
 new file mode 100644
-index 0000000..66c462b
+index 0000000..a6d54ca
 --- /dev/null
 +++ b/deployment/firewall.sh
 @@ -0,0 +1,13 @@
@@ -146,7 +146,7 @@ index 0000000..66c462b
 +chain=UTILIBRE-TOOLS
 +iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
 +iptables -w -F "$chain"
-+for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3151 3152 3153 3154 3155; do
++for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3151 3152 3153 3154 3155 3156; do
 +  iptables -w -A "$chain" -s 10.10.1.3 -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j RETURN
 +  iptables -w -A "$chain" -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j DROP
 +done
@@ -188,7 +188,7 @@ index 0000000..7565999
 +  }
 +}
 diff --git a/public/index.html b/public/index.html
-index 210d7fe..5c68f5d 100644
+index 210d7fe..b783c79 100644
 --- a/public/index.html
 +++ b/public/index.html
 @@ -43,7 +43,7 @@
@@ -210,6 +210,15 @@ index 210d7fe..5c68f5d 100644
  
  	<!-- Critical CSS loaded immediately to prevent FOUC -->
  	<style>
+@@ -224,7 +221,7 @@
+ 	
+ 	<!-- External Libraries -->
+ 	<script src="js/libs/qrcode.min.js"></script>
+-	<script src="js/libs/qrcode-wrapper.js"></script>
++	<script src="js/libs/qrcode-wrapper.js?v=utilibre-p2"></script>
+ 	<script src="js/libs/jsQR.min.js"></script>
+ 	
+ 	<!-- QR Library Load Check -->
 @@ -305,7 +302,7 @@
  				<h2 data-i18n="scanner.heading">Scan QR Code</h2>
  				<div class="scanner-container">
@@ -228,15 +237,20 @@ index 210d7fe..5c68f5d 100644
  						<li><a href="https://github.com/jmarc9901/qr-code-generator-pwa/issues" target="_blank" rel="noopener" data-i18n="footer.reportIssue">Report Issue</a></li>
  						<li><a href="https://github.com/jmarc9901/qr-code-generator-pwa/blob/main/LICENSE" target="_blank" rel="noopener" data-i18n="footer.license">License</a></li>
  					</ul>
-@@ -717,4 +714,4 @@
- 	<script src="js/pwa.js"></script>
- 	<script src="js/app.js"></script>
+@@ -714,7 +711,7 @@
+ 	<script src="js/utils.js"></script>
+ 	<script src="js/validation.js"></script>
+ 	<script src="js/qr-types.js"></script>
+-	<script src="js/pwa.js"></script>
+-	<script src="js/app.js"></script>
++	<script src="js/pwa.js?v=utilibre-p2"></script>
++	<script src="js/app.js?v=utilibre-p2"></script>
  </body>
 -</html>
 \ No newline at end of file
 +</html>
 diff --git a/public/js/app.js b/public/js/app.js
-index cfebf07..5429667 100644
+index cfebf07..f6a705c 100644
 --- a/public/js/app.js
 +++ b/public/js/app.js
 @@ -28,6 +28,8 @@ class QRGeneratorApp {
@@ -248,7 +262,73 @@ index cfebf07..5429667 100644
  		const lang = navigator.language || navigator.userLanguage;
  		if (lang.startsWith('es')) return 'es';
  		if (lang.startsWith('pt')) return 'pt';
-@@ -947,21 +949,12 @@ class QRGeneratorApp {
+@@ -631,7 +633,7 @@ class QRGeneratorApp {
+             return new Promise((resolve, reject) => {
+                 try {
+                     // Create Web Worker
+-                    const worker = new Worker('js/qr-worker.js');
++                    const worker = new Worker('js/qr-worker.js?v=utilibre-p2');
+                     
+                     // Send data to worker
+                     worker.postMessage({ data, options });
+@@ -697,8 +699,10 @@ class QRGeneratorApp {
+             canvas.width = size;
+             canvas.height = size;
+             
+-            const cellSize = Math.floor(size / moduleCount);
+-            const margin = options.margin || 4;
++            const margin = options.margin ?? 4;
++            const unit = size / (moduleCount + 2 * margin);
++            const cellSize = unit >= 1 ? Math.floor(unit) : unit;
++            const offset = (size - moduleCount * cellSize) / 2;
+             
+             // Fill background
+             ctx.fillStyle = options.color?.light || '#FFFFFF';
+@@ -710,8 +714,8 @@ class QRGeneratorApp {
+             for (let row = 0; row < moduleCount; row++) {
+                 for (let col = 0; col < moduleCount; col++) {
+                     if (modules[row][col]) {
+-                        const x = margin + col * cellSize;
+-                        const y = margin + row * cellSize;
++                        const x = offset + col * cellSize;
++                        const y = offset + row * cellSize;
+                         ctx.fillRect(x, y, cellSize, cellSize);
+                     }
+                 }
+@@ -735,8 +739,10 @@ class QRGeneratorApp {
+             
+             // Get QR module count
+             const moduleCount = qrData.getModuleCount();
+-            const cellSize = Math.floor(size / moduleCount);
+-            const margin = options.margin || 4;
++            const margin = options.margin ?? 4;
++            const unit = size / (moduleCount + 2 * margin);
++            const cellSize = unit >= 1 ? Math.floor(unit) : unit;
++            const offset = (size - moduleCount * cellSize) / 2;
+             
+             // Fill background
+             ctx.fillStyle = options.color?.light || '#FFFFFF';
+@@ -748,8 +754,8 @@ class QRGeneratorApp {
+             for (let row = 0; row < moduleCount; row++) {
+                 for (let col = 0; col < moduleCount; col++) {
+                     if (qrData.isDark(row, col)) {
+-                        const x = margin + col * cellSize;
+-                        const y = margin + row * cellSize;
++                        const x = offset + col * cellSize;
++                        const y = offset + row * cellSize;
+                         ctx.fillRect(x, y, cellSize, cellSize);
+                     }
+                 }
+@@ -787,7 +793,7 @@ class QRGeneratorApp {
+ 						dark: options.foreground || '#000000',
+ 						light: options.background || '#FFFFFF'
+ 					},
+-					margin: options.margin || 4
++					margin: options.margin ?? 4
+ 				};
+ 
+ 				console.log('QR Options being applied:', qrOptions);
+@@ -947,21 +953,12 @@ class QRGeneratorApp {
  	}
  
  	loadHistory() {
@@ -273,7 +353,7 @@ index cfebf07..5429667 100644
  	}
  
  	// Theme Management
-@@ -990,9 +983,11 @@ class QRGeneratorApp {
+@@ -990,9 +987,11 @@ class QRGeneratorApp {
  	showToast(type, message) {
  		const container = document.getElementById('toastContainer');
  		if (!container) return;
@@ -285,7 +365,7 @@ index cfebf07..5429667 100644
  		toast.innerHTML = `
  			<div class="toast-header">
  				<span class="toast-title">${this.getToastTitle(type)}</span>
-@@ -1012,7 +1007,7 @@ class QRGeneratorApp {
+@@ -1012,7 +1011,7 @@ class QRGeneratorApp {
  			if (toast.parentElement) {
  				toast.remove();
  			}
@@ -294,7 +374,7 @@ index cfebf07..5429667 100644
  	}
  
  	getToastTitle(type) {
-@@ -1296,6 +1291,8 @@ class QRGeneratorApp {
+@@ -1296,6 +1295,8 @@ class QRGeneratorApp {
  
  	// QR Scanner functionality
  	initQRScanner() {
@@ -303,7 +383,7 @@ index cfebf07..5429667 100644
  		const startBtn = document.getElementById('startScannerBtn');
  		const stopBtn = document.getElementById('stopScannerBtn');
  		const video = document.getElementById('scannerVideo');
-@@ -1314,6 +1311,8 @@ class QRGeneratorApp {
+@@ -1314,6 +1315,8 @@ class QRGeneratorApp {
  				});
  				this._scannerStream = stream;
  				video.srcObject = stream;
@@ -312,7 +392,7 @@ index cfebf07..5429667 100644
  				startBtn.disabled = true;
  				stopBtn.disabled = false;
  				
-@@ -1326,6 +1325,7 @@ class QRGeneratorApp {
+@@ -1326,6 +1329,7 @@ class QRGeneratorApp {
  		});
  		
  		stopBtn?.addEventListener('click', () => {
@@ -320,7 +400,7 @@ index cfebf07..5429667 100644
  			if (stream) {
  				stream.getTracks().forEach(track => track.stop());
  				stream = null;
-@@ -1352,8 +1352,9 @@ class QRGeneratorApp {
+@@ -1352,8 +1356,9 @@ class QRGeneratorApp {
  			if (text) {
  				try {
  					// Try to parse as URL
@@ -332,7 +412,7 @@ index cfebf07..5429667 100644
  				} catch {
  					// If not a URL, show as alert
  					alert(text);
-@@ -1368,6 +1369,7 @@ class QRGeneratorApp {
+@@ -1368,6 +1373,7 @@ class QRGeneratorApp {
  		const ctx = canvas.getContext('2d');
  		
  		const scan = () => {
@@ -340,7 +420,7 @@ index cfebf07..5429667 100644
  			if (video.readyState === video.HAVE_ENOUGH_DATA) {
  				canvas.width = video.videoWidth;
  				canvas.height = video.videoHeight;
-@@ -1377,6 +1379,7 @@ class QRGeneratorApp {
+@@ -1377,6 +1383,7 @@ class QRGeneratorApp {
  				const code = jsQR(imageData.data, imageData.width, imageData.height);
  				
  				if (code) {
@@ -348,7 +428,16 @@ index cfebf07..5429667 100644
  					// QR code detected
  					const resultContent = document.getElementById('resultContent');
  					const scannerResult = document.getElementById('scannerResult');
-@@ -1463,7 +1466,7 @@ class QRGeneratorApp {
+@@ -1448,7 +1455,7 @@ class QRGeneratorApp {
+ 		const size = options.size || 256;
+ 		const foreground = options.foreground || '#000000';
+ 		const background = options.background || '#FFFFFF';
+-		const margin = options.margin || 4;
++		const margin = options.margin ?? 4;
+ 
+ 		const tempDiv = document.createElement('div');
+ 		tempDiv.style.position = 'absolute';
+@@ -1463,12 +1470,13 @@ class QRGeneratorApp {
  				color: { dark: foreground, light: background }
  			});
  
@@ -357,7 +446,15 @@ index cfebf07..5429667 100644
  			if (!qrData) throw new Error('QR Code not generated');
  
  			const moduleCount = qrData.getModuleCount();
-@@ -1537,7 +1540,7 @@ class QRGeneratorApp {
+-			const cellSize = Math.floor((size - 2 * margin) / moduleCount);
+-			const offset = Math.floor((size - moduleCount * cellSize) / 2);
++			const unit = size / (moduleCount + 2 * margin);
++			const cellSize = unit >= 1 ? Math.floor(unit) : unit;
++			const offset = (size - moduleCount * cellSize) / 2;
+ 
+ 			let rects = '';
+ 			for (let row = 0; row < moduleCount; row++) {
+@@ -1537,7 +1545,7 @@ class QRGeneratorApp {
  			}
  
  			const script = document.createElement('script');
@@ -366,7 +463,7 @@ index cfebf07..5429667 100644
  			script.integrity = 'sha512-XMVd2n9g32bQfPmf2M5i0HNYfQGVNbV5MdT5iFsEBlk0OkNfy+Bg2nZJvtx/fLXz1szpW/KYx/nG/rus79BYUA==';
  			script.crossOrigin = 'anonymous';
  			script.onload = () => resolve();
-@@ -1629,7 +1632,7 @@ class QRGeneratorApp {
+@@ -1629,7 +1637,7 @@ class QRGeneratorApp {
  		} else {
  			// Load jsPDF dynamically
  			const script = document.createElement('script');
@@ -491,25 +588,97 @@ index 98e917c..d16c41a 100644
 -};
 \ No newline at end of file
 +};
+diff --git a/public/js/libs/qrcode-wrapper.js b/public/js/libs/qrcode-wrapper.js
+index e093a09..94b8206 100644
+--- a/public/js/libs/qrcode-wrapper.js
++++ b/public/js/libs/qrcode-wrapper.js
+@@ -51,8 +51,10 @@
+         
+         // Get QR module count
+         var moduleCount = qrData.getModuleCount();
+-        var cellSize = Math.floor(size / moduleCount);
+-        var margin = options.margin || 4;
++        var margin = options.margin ?? 4;
++        var cellSize = size / (moduleCount + 2 * margin);
++        if (cellSize >= 1) cellSize = Math.floor(cellSize);
++        var offset = (size - moduleCount * cellSize) / 2;
+         
+         // Fill background
+         ctx.fillStyle = options.color?.light || '#FFFFFF';
+@@ -64,8 +66,8 @@
+         for (var row = 0; row < moduleCount; row++) {
+             for (var col = 0; col < moduleCount; col++) {
+                 if (qrData.isDark(row, col)) {
+-                    var x = margin + col * cellSize;
+-                    var y = margin + row * cellSize;
++                    var x = offset + col * cellSize;
++                    var y = offset + row * cellSize;
+                     ctx.fillRect(x, y, cellSize, cellSize);
+                 }
+             }
+diff --git a/public/js/pwa.js b/public/js/pwa.js
+index 92b1c74..ddd2a9c 100644
+--- a/public/js/pwa.js
++++ b/public/js/pwa.js
+@@ -21,7 +21,7 @@ class PWA {
+ 	async registerServiceWorker() {
+ 		if ('serviceWorker' in navigator) {
+ 			try {
+-				const registration = await navigator.serviceWorker.register('/sw.js');
++				const registration = await navigator.serviceWorker.register('/sw.js?v=utilibre-p2');
+ 				console.log('Service Worker registered:', registration);
+ 
+ 				// Handle updates
+diff --git a/public/js/qr-worker.js b/public/js/qr-worker.js
+index 3c78a7f..c5c0c44 100644
+--- a/public/js/qr-worker.js
++++ b/public/js/qr-worker.js
+@@ -40,7 +40,7 @@ self.addEventListener('message', (e) => {
+                 dark: options.foreground || '#000000',
+                 light: options.background || '#FFFFFF'
+             },
+-            margin: options.margin || 4,
++            margin: options.margin ?? 4,
+             errorCorrectionLevel: options.errorCorrectionLevel || 'M'
+         });
+         
+@@ -63,4 +63,4 @@ self.addEventListener('message', (e) => {
+             error: error.message
+         });
+     }
+-});
+\ No newline at end of file
++});
 diff --git a/public/sw.js b/public/sw.js
-index 5ab8c8c..32c661e 100644
+index 5ab8c8c..af49fc7 100644
 --- a/public/sw.js
 +++ b/public/sw.js
 @@ -1,5 +1,5 @@
  // Service Worker for QR Generator PWA
 -const VERSION = '1.0.1';
-+const VERSION = '1.0.1-utilibre-p1';
++const VERSION = '1.0.1-utilibre-p2';
  const CACHE_NAME = `qr-generator-v${VERSION}`;
  const STATIC_CACHE = `qr-generator-static-v${VERSION}`;
  const DYNAMIC_CACHE = `qr-generator-dynamic-v${VERSION}`;
-@@ -8,7 +8,6 @@ const DYNAMIC_CACHE = `qr-generator-dynamic-v${VERSION}`;
+@@ -8,14 +8,13 @@ const DYNAMIC_CACHE = `qr-generator-dynamic-v${VERSION}`;
  const STATIC_FILES = [
  	'/',
  	'/index.html',
 -	'/test-local-qr.html',
  	'/css/style.css',
- 	'/js/app.js',
+-	'/js/app.js',
++	'/js/app.js?v=utilibre-p2',
  	'/js/qr-types.js',
+-	'/js/pwa.js',
+-	'/js/qr-worker.js',
++	'/js/pwa.js?v=utilibre-p2',
++	'/js/qr-worker.js?v=utilibre-p2',
+ 	'/js/libs/qrcode.min.js',
+-	'/js/libs/qrcode-wrapper.js',
++	'/js/libs/qrcode-wrapper.js?v=utilibre-p2',
+ 	'/js/libs/qrcode-worker-wrapper.js',
+ 	'/manifest.json',
+ 	'/css/style.min.css',
 @@ -23,8 +22,13 @@ const STATIC_FILES = [
  	'/assets/icons/icon-512x512.png',
  	'/js/utils.js',

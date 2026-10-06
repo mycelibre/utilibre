@@ -1,0 +1,19 @@
+[Unit]
+Description=Utilibre service and resource alerts over verified SMTP
+After=docker.service network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/ubuntu/freetools
+Environment=PATH=/root/.nvm/versions/node/v24.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/bin/flock -n /run/utilibre-monitor-alerts.lock /usr/bin/env node deployment/community/monitor-alerts.mjs
+StateDirectory=utilibre-monitor-alerts
+StateDirectoryMode=0700
+UMask=0077
+TimeoutStartSec=50s
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/utilibre-monitor-alerts /run
+PrivateTmp=true
+NoNewPrivileges=true

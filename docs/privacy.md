@@ -37,8 +37,11 @@ off-site; keep independent exports. For account deletion or lost MFA, contact
 | PrivateBin | Ciphertext, expiry/deletion metadata, request size, and ordinary connection metadata | No content recipient is required beyond the public ingress path | Ciphertext and metadata until expiry or deletion |
 | Internal RSSHub | Route requests made from FreshRSS | Source sites used by the requested route | Re-creatable Valkey cache; no public account data store |
 
-All public requests currently pass through Cloudflare and a separate Caddy
-edge before reaching the application VM. Their handling and retention depend
+Most public HTTPS requests pass through Cloudflare and a separate Caddy edge
+before reaching the application VM. Binternet's HTTPS hostname is DNS-only,
+and its onion service uses Tor without Cloudflare or the public HTTPS edge.
+Mumble's planned public TCP/UDP route is also separate. Each tool's disclosure
+identifies its actual path. Edge handling and retention depend
 on operator configuration outside these Compose projects. Network Error
 Logging was disabled and its headers were absent in a recorded 2026-09-03
 check, but releases must verify that state rather than treating it as

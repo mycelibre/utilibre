@@ -1,4 +1,4 @@
-# Operator-only evaluation. These ports intentionally do not bind the Caddy LAN.
+# Direct application ports remain operator-only. DeGoog has a restricted LAN gateway.
 name: utilibre-evaluation
 x-runtime: &runtime
   restart: unless-stopped
@@ -23,14 +23,38 @@ services:
       DEGOOG_PORT: "4444"
       DEGOOG_PUBLIC_INSTANCE: "true"
       DEGOOG_WIZARD: "false"
-      DEGOOG_DISTRUST_PROXY: "1"
+      DEGOOG_DISTRUST_PROXY: "0"
       DEGOOG_CACHE_TTL_MS: "600000"
       DEGOOG_CACHE_SHORT_TTL_MS: "60000"
       DEGOOG_CACHE_MAX_ENTRIES: "200"
-    volumes: ["/opt/utilibre/community-data/degoog:/app/data"]
+      DEGOOG_SEARX_ENGINES_DIR: /opt/searx-engines
+      LOG_LEVEL: error
+      PYTHONDONTWRITEBYTECODE: "1"
+      DEGOOG_OUTGOING_ALLOWED_HOSTS: api.mwmbl.org,openlibrary.org,hn.algolia.com,archive.org,*.archive.org
+    logging: {driver: none}
+    volumes:
+      - /opt/utilibre/community-data/degoog:/app/data
+      - /opt/utilibre/community-src/degoog-searx-engines:/opt/searx-engines:ro
     ports: ["127.0.0.1:3143:4444"]
     networks:
       search: {ipv4_address: 172.29.77.10}
+  degoog-gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: "101:101"
+    mem_limit: 64m
+    logging: {driver: none}
+    volumes:
+      - ./degoog-gateway.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    ports: ["10.10.1.43:3156:8080"]
+    networks:
+      search: {ipv4_address: 172.29.77.20}
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/healthz]
+      interval: 30s
+      timeout: 5s
+      retries: 3
   libremdb:
     <<: *runtime
     image: ghcr.io/zyachel/libremdb@sha256:9f65a47fe64133045b4cfaa48e5ef73371c55c62b3d5bf42f7584a90dfd1c1ee

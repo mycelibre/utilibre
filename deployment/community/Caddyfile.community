@@ -1,4 +1,12 @@
 # Merge on the existing Caddy VM, preserving its TLS and trusted-proxy setup.
+degoog.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3156 {
+		header_up X-Real-IP {client_ip}
+		header_up X-Forwarded-For {client_ip}
+	}
+}
+
 # For proxied DNS, Caddy must trust ONLY Cloudflare networks before {client_ip}
 # is used. Never trust visitor-supplied CF-Connecting-IP from arbitrary peers.
 # These routes are for this app VM only. Do not expose port 3135 (Kuma admin).

@@ -31,14 +31,19 @@ const additions = [
   ['4get', 'https://4get.utilibre.org/'],
   ['AnonymousOverflow', 'https://overflow.utilibre.org/'],
   ['SafeTwitch', 'https://twitch.utilibre.org/'],
+  ['Kittygram', 'https://gram.utilibre.org/'],
+  ['QR Tools', 'https://qrtools.utilibre.org/'],
+  ['DeGoog', 'https://degoog.utilibre.org/'],
 ];
 const program = `
 const {io}=require('socket.io-client');
 const socket=io('http://127.0.0.1:3001',{transports:['websocket']});
+const notifications=new Promise(resolve=>socket.once('notificationList',resolve));
 const call=(name,...args)=>new Promise((resolve,reject)=>socket.timeout(15000).emit(name,...args,(err,r)=>err?reject(Error(name+' timed out')):r?.ok===false?reject(Error(name+' failed')):resolve(r)));
 const deadline=setTimeout(()=>process.exit(1),60000);
 socket.on('connect',async()=>{try{
   await call('login',${JSON.stringify(credentials)});
+  const defaults=Object.fromEntries((await notifications).filter(n=>n.isDefault).map(n=>[n.id,true]));
   const current=await new Promise(resolve=>{socket.once('monitorList',resolve);socket.emit('getMonitorList')});
   const monitors=Object.values(current||{});
   const search=monitors.find(m=>m.url==='https://search.utilibre.org/'||m.url==='https://search.utilibre.org/healthz');
@@ -52,7 +57,7 @@ socket.on('connect',async()=>{try{
   if(!extra){extra={name:'Additional services',monitorList:[]};groups.push(extra)}
   for(const [name,url] of ${JSON.stringify(additions)}){
     const prior=monitors.find(m=>m.url===url);
-    const id=prior?.id??(await call('add',{name,url,type:'http',method:'GET',interval:300,retryInterval:60,resendInterval:0,maxretries:2,timeout:20,active:true,accepted_statuscodes:['200-299'],maxredirects:5,ignoreTls:false,upsideDown:false,notificationIDList:{},conditions:[]})).monitorID;
+    const id=prior?.id??(await call('add',{name,url,type:'http',method:'GET',interval:300,retryInterval:60,resendInterval:0,maxretries:2,timeout:20,active:true,accepted_statuscodes:['200-299'],maxredirects:5,ignoreTls:false,upsideDown:false,notificationIDList:defaults,conditions:[]})).monitorID;
     if(!groups.some(g=>g.monitorList.some(m=>m.id===id)))extra.monitorList.push({id,sendUrl:false});
   }
   config.description='HTTPS availability checks every five minutes from the application VM. SearXNG uses its /healthz endpoint through the private Caddy edge. These are not full workflow tests or independent outage monitoring. / Comprobaciones HTTPS cada cinco minutos desde la VM de aplicaciones. SearXNG usa /healthz a través del servidor Caddy privado. No son pruebas de uso completas ni monitoreo independiente de caídas.';

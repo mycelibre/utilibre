@@ -1,6 +1,6 @@
 # Services and upstream applications
 
-Utilibre operates a deliberately small set of independently maintained FOSS
+Utilibre operates a reviewed collection of independently maintained FOSS
 applications. Admission depends on a real hosting access gap as well as
 license, safety, privacy, resource, export, deletion, and maintenance review.
 See [`FOSS_POLICY.md`](../FOSS_POLICY.md).
@@ -11,13 +11,20 @@ promise.
 
 ## Operated public services
 
-The October 6 expansion adds BentoPDF/OCR, VERT, OmniTools, IT Tools, hat.sh,
-draw.io, Mini QR, RSS-Bridge, ntfy, Yopass, PairDrop, public Uptime Kuma status,
-JupyterLite and Whisper Web. Reactive Resume, Penpot, Actual Budget and Wakapi
-use approved Utilibre accounts through Authentik; they are not anonymous tools.
-Public self-registration remains closed. The portal lists Rallly and BreezeWiki
-as unavailable, not working services. Current endpoints, licensing, privacy
-boundaries and verification are in [the deployment review](toolbox-review.md).
+The October 6 expansion has 37 enabled applications; see the concise
+[current tool list](../README.md#tools) and machine-readable
+[delivery checklist](../deployment/community/delivery-checklist.json).
+Reactive Resume, Penpot, Actual Budget, Wakapi and Rallly use approved Utilibre
+accounts through Authentik; they are not anonymous tools. Public
+self-registration remains closed for these account services. FMD and Pollaris
+have their own application-specific access and abuse controls.
+
+Dumb, LibreMDB, BreezeWiki and Rimgo remain visible with specific upstream
+failures, not claimed as usable. Password-protected Mumble works on the private
+network but awaits public TCP/UDP forwarding and DNS-only configuration.
+Current endpoints, licensing, privacy boundaries and workflow checks are in
+[the deployment review](toolbox-review.md); [operations](expanded-operations.md)
+records the newer ports, backup timers and alerting.
 
 The original services retain these boundaries:
 
@@ -92,6 +99,8 @@ requests are already open.
 The repository-root Compose project runs the portal, SearXNG, its private
 Valkey, and the Anubis/Redlib pair. The separate `utilibre-services` project
 runs FreshRSS, PrivateBin, internal RSSHub, PostgreSQL, and a private Valkey.
-The Cloudflare/Caddy public edge is managed separately. See
+Toolbox, identity, expanded and community applications use additional isolated
+Compose projects under `deployment/`. The Cloudflare/Caddy public edge is
+managed separately; Binternet also has a separate Tor onion gateway. See
 [`architecture.md`](architecture.md), [`configuration.md`](configuration.md),
 and [`deployment.md`](deployment.md).

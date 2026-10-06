@@ -1,7 +1,7 @@
 name: utilibre-qr-offline
 services:
   qr-offline:
-    image: utilibre-qr-offline:0fde700-p1
+    image: utilibre-qr-offline:0fde700-p2
     restart: unless-stopped
     read_only: true
     user: "101:101"

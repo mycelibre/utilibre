@@ -42,6 +42,7 @@ export interface PublicConfig {
   publicFourgetUrl: string;
   publicOverflowUrl: string;
   publicTwitchUrl: string;
+  publicDegoogUrl: string;
   searxngDeployedVersion: string;
   listedServices: string[];
   enabledServices: string[];
@@ -92,6 +93,7 @@ const defaults: PublicConfig = {
   publicFourgetUrl: '',
   publicOverflowUrl: '',
   publicTwitchUrl: '',
+  publicDegoogUrl: '',
   searxngDeployedVersion: '',
   listedServices: [],
   enabledServices: [],

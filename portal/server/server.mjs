@@ -385,6 +385,7 @@ function servePublicConfig(response) {
     publicFourgetUrl: publicServiceUrl(process.env.PUBLIC_FOURGET_URL),
     publicOverflowUrl: publicServiceUrl(process.env.PUBLIC_OVERFLOW_URL),
     publicTwitchUrl: publicServiceUrl(process.env.PUBLIC_TWITCH_URL),
+    publicDegoogUrl: publicServiceUrl(process.env.PUBLIC_DEGOOG_URL),
     searxngDeployedVersion: deployedSearchVersion(),
     listedServices: csv(process.env.LISTED_SERVICES || ''),
     enabledServices: [...ENABLED_SERVICES],

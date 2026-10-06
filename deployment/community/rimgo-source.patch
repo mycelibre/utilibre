@@ -12,7 +12,7 @@ index 8db6a73..9389dde 100644
 +.env*
 diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
 new file mode 100644
-index 0000000..dd1d01f
+index 0000000..41c0828
 --- /dev/null
 +++ b/Dockerfile.utilibre
 @@ -0,0 +1,15 @@
@@ -23,7 +23,7 @@ index 0000000..dd1d01f
 +FROM golang:1.26-alpine@sha256:8ac98ca534ac3f51e1f420a1dd2c15e74c75cfa0f23f3ad27eb5d7236c349a0c AS build
 +WORKDIR /src
 +COPY --from=assets /src .
-+RUN go test ./... && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -X codeberg.org/rimgo/rimgo/pages.VersionInfo=d2be8e2-utilibre-p1" -o /rimgo .
++RUN go test ./... && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -X codeberg.org/rimgo/rimgo/pages.VersionInfo=d2be8e2-utilibre-p2" -o /rimgo .
 +FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0
 +RUN apk add --no-cache ca-certificates
 +WORKDIR /app
@@ -262,7 +262,7 @@ index 0000000..2523163
 +done
 diff --git a/deployment/compose.rimgo.yaml b/deployment/compose.rimgo.yaml
 new file mode 100644
-index 0000000..b51579f
+index 0000000..e3fefd4
 --- /dev/null
 +++ b/deployment/compose.rimgo.yaml
 @@ -0,0 +1,48 @@
@@ -279,7 +279,7 @@ index 0000000..b51579f
 +services:
 +  rimgo:
 +    <<: *runtime
-+    image: utilibre-rimgo:d2be8e2-p1
++    image: utilibre-rimgo:d2be8e2-p2
 +    user: "65534:65534"
 +    mem_limit: 384m
 +    environment:
@@ -316,7 +316,7 @@ index 0000000..b51579f
 +    ipam: {config: [{subnet: 172.29.90.0/24}]}
 diff --git a/deployment/firewall.sh b/deployment/firewall.sh
 new file mode 100644
-index 0000000..66c462b
+index 0000000..a6d54ca
 --- /dev/null
 +++ b/deployment/firewall.sh
 @@ -0,0 +1,13 @@
@@ -327,7 +327,7 @@ index 0000000..66c462b
 +chain=UTILIBRE-TOOLS
 +iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
 +iptables -w -F "$chain"
-+for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3151 3152 3153 3154 3155; do
++for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3151 3152 3153 3154 3155 3156; do
 +  iptables -w -A "$chain" -s 10.10.1.3 -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j RETURN
 +  iptables -w -A "$chain" -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j DROP
 +done
@@ -335,10 +335,10 @@ index 0000000..66c462b
 +iptables -w -C DOCKER-USER -i eth0 -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -i eth0 -j "$chain"
 diff --git a/deployment/rimgo-gateway.conf b/deployment/rimgo-gateway.conf
 new file mode 100644
-index 0000000..cebe4f1
+index 0000000..e7e8c60
 --- /dev/null
 +++ b/deployment/rimgo-gateway.conf
-@@ -0,0 +1,51 @@
+@@ -0,0 +1,67 @@
 +worker_processes 1;
 +pid /tmp/nginx.pid;
 +error_log /dev/null;
@@ -360,6 +360,18 @@ index 0000000..cebe4f1
 +  limit_conn_zone $binary_remote_addr zone=rimgo_connections:1m;
 +  limit_req_status 429;
 +  limit_conn_status 429;
++  # Upstream handlers set a one-year cache header even on media errors.
++  # Never let a temporary denial become a long-lived browser/CDN failure.
++  map $status $safe_cache_control {
++    default "no-store";
++    200 "public, max-age=300";
++    206 "public, max-age=300";
++  }
++  map "$status:$upstream_http_retry_after" $safe_retry_after {
++    default "";
++    "429:" "600";
++    ~^429:.+ $upstream_http_retry_after;
++  }
 +  server {
 +    listen 8080;
 +    client_max_body_size 1k;
@@ -369,6 +381,10 @@ index 0000000..cebe4f1
 +    add_header X-Content-Type-Options nosniff always;
 +    add_header X-Frame-Options DENY always;
 +    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
++    proxy_hide_header Cache-Control;
++    proxy_hide_header Retry-After;
++    add_header Cache-Control $safe_cache_control always;
++    add_header Retry-After $safe_retry_after always;
 +    add_header Content-Security-Policy "default-src 'self'; script-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'" always;
 +    proxy_set_header Host rimgo.utilibre.org;
 +    proxy_set_header X-Forwarded-Proto https;
@@ -1521,7 +1537,7 @@ index 0000000..cb0b113
 +	}
 +}
 diff --git a/pages/media.go b/pages/media.go
-index 0072bd1..ecc7df2 100644
+index 0072bd1..eb2a089 100644
 --- a/pages/media.go
 +++ b/pages/media.go
 @@ -35,11 +35,11 @@ func handleMedia(c *fiber.Ctx, url string) error {
@@ -1541,7 +1557,7 @@ index 0072bd1..ecc7df2 100644
  		url = strings.ReplaceAll(url, ".png", ".webp")
  		url = strings.ReplaceAll(url, ".jpg", ".webp")
  		url = strings.ReplaceAll(url, ".jpeg", ".webp")
-@@ -68,11 +68,20 @@ func handleMedia(c *fiber.Ctx, url string) error {
+@@ -68,11 +68,21 @@ func handleMedia(c *fiber.Ctx, url string) error {
  	}
  
  	if res.StatusCode == 404 || strings.Contains(res.Request.URL.String(), "error/404") {
@@ -1549,6 +1565,7 @@ index 0072bd1..ecc7df2 100644
  		return utils.RenderError(c, 404)
  	} else if res.StatusCode == 429 {
 +		res.Body.Close()
++		c.Set("Retry-After", res.Header.Get("Retry-After"))
  		return utils.RenderError(c, 429)
  	}
  
@@ -1564,10 +1581,10 @@ index 0072bd1..ecc7df2 100644
  	c.Set("Content-Length", res.Header.Get("Content-Length"))
 diff --git a/utils/outbound.go b/utils/outbound.go
 new file mode 100644
-index 0000000..bb2e4a8
+index 0000000..ad3952f
 --- /dev/null
 +++ b/utils/outbound.go
-@@ -0,0 +1,124 @@
+@@ -0,0 +1,166 @@
 +package utils
 +
 +// Utilibre deployment hardening: fixed public Imgur destinations, bounded
@@ -1580,6 +1597,9 @@ index 0000000..bb2e4a8
 +	"net/http"
 +	"net/netip"
 +	"net/url"
++	"strconv"
++	"strings"
++	"sync"
 +	"time"
 +)
 +
@@ -1651,11 +1671,39 @@ index 0000000..bb2e4a8
 +}
 +func (b *boundedBody) Close() error { b.cancel(); return b.ReadCloser.Close() }
 +
-+type publicTransport struct{ inner http.RoundTripper }
++type cooldowns struct {
++	mu    sync.Mutex
++	until map[string]time.Time
++}
++
++func retryDelay(value string, now time.Time) time.Duration {
++	delay := 10 * time.Minute
++	if seconds, err := strconv.ParseUint(value, 10, 31); err == nil {
++		if proposed := time.Duration(seconds) * time.Second; proposed > delay {
++			delay = proposed
++		}
++	} else if date, err := http.ParseTime(value); err == nil && date.Sub(now) > delay {
++		delay = date.Sub(now)
++	}
++	return delay
++}
++
++type publicTransport struct {
++	inner    http.RoundTripper
++	cooldown *cooldowns
++}
 +
 +func (t publicTransport) RoundTrip(request *http.Request) (*http.Response, error) {
 +	if !allowedURL(request.URL) || (request.Method != "GET" && request.Method != "HEAD") {
 +		return nil, errors.New("upstream request denied")
++	}
++	if t.cooldown != nil {
++		t.cooldown.mu.Lock()
++		remaining := time.Until(t.cooldown.until[request.URL.Hostname()])
++		t.cooldown.mu.Unlock()
++		if remaining > 0 {
++			return &http.Response{StatusCode: 429, Header: http.Header{"Retry-After": []string{strconv.Itoa(int(remaining.Seconds()) + 1)}}, Body: io.NopCloser(strings.NewReader("")), Request: request}, nil
++		}
 +	}
 +	ctx, cancel := context.WithTimeout(request.Context(), 20*time.Second)
 +	safe := request.Clone(ctx)
@@ -1666,6 +1714,17 @@ index 0000000..bb2e4a8
 +	if err != nil {
 +		cancel()
 +		return nil, err
++	}
++	if response.StatusCode == 429 && t.cooldown != nil {
++		now := time.Now()
++		delay := retryDelay(response.Header.Get("Retry-After"), now)
++		t.cooldown.mu.Lock()
++		until := now.Add(delay)
++		if until.After(t.cooldown.until[request.URL.Hostname()]) {
++			t.cooldown.until[request.URL.Hostname()] = until
++		}
++		t.cooldown.mu.Unlock()
++		response.Header.Set("Retry-After", strconv.Itoa(int(delay.Seconds())+1))
 +	}
 +	limit := responseLimit
 +	if request.URL.Hostname() == "i.imgur.com" || request.URL.Hostname() == "i.stack.imgur.com" {
@@ -1684,7 +1743,7 @@ index 0000000..bb2e4a8
 +	transport := &http.Transport{DialContext: publicDial, TLSHandshakeTimeout: 8 * time.Second,
 +		ResponseHeaderTimeout: 12 * time.Second, MaxResponseHeaderBytes: 64 << 10,
 +		MaxIdleConns: 20, MaxIdleConnsPerHost: 4, MaxConnsPerHost: 16, IdleConnTimeout: 30 * time.Second}
-+	http.DefaultTransport = publicTransport{transport}
++	http.DefaultTransport = publicTransport{inner: transport, cooldown: &cooldowns{until: make(map[string]time.Time)}}
 +	http.DefaultClient = &http.Client{Timeout: 20 * time.Second, CheckRedirect: func(req *http.Request, via []*http.Request) error {
 +		if len(via) >= 4 || !allowedURL(req.URL) {
 +			return errors.New("upstream redirect denied")
@@ -1694,17 +1753,54 @@ index 0000000..bb2e4a8
 +}
 diff --git a/utils/outbound_test.go b/utils/outbound_test.go
 new file mode 100644
-index 0000000..4a097df
+index 0000000..a8fb8d0
 --- /dev/null
 +++ b/utils/outbound_test.go
-@@ -0,0 +1,30 @@
+@@ -0,0 +1,67 @@
 +package utils
 +
 +import (
++	"io"
++	"net/http"
 +	"net/netip"
 +	"net/url"
++	"strings"
 +	"testing"
++	"time"
 +)
++
++type fakeTransport func(*http.Request) (*http.Response, error)
++
++func (f fakeTransport) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
++
++func TestRateLimitCooldown(t *testing.T) {
++	calls := 0
++	transport := publicTransport{cooldown: &cooldowns{until: make(map[string]time.Time)}, inner: fakeTransport(func(r *http.Request) (*http.Response, error) {
++		calls++
++		return &http.Response{StatusCode: 429, Header: http.Header{"Retry-After": []string{"3600"}}, Body: io.NopCloser(strings.NewReader("limited")), Request: r}, nil
++	})}
++	for range 2 {
++		req, _ := http.NewRequest("GET", "https://i.imgur.com/example.jpg", nil)
++		response, err := transport.RoundTrip(req)
++		if err != nil || response.StatusCode != 429 {
++			t.Fatalf("expected rate limit: %v", err)
++		}
++		if response.Header.Get("Retry-After") == "" {
++			t.Fatal("missing retry delay")
++		}
++		response.Body.Close()
++	}
++	if calls != 1 {
++		t.Fatalf("retried rate-limited upstream %d times", calls)
++	}
++	now := time.Now().Truncate(time.Second)
++	if retryDelay("", now) != 10*time.Minute {
++		t.Fatal("missing default cooldown")
++	}
++	if retryDelay(now.Add(time.Hour).UTC().Format(http.TimeFormat), now) != time.Hour {
++		t.Fatal("HTTP-date Retry-After not respected")
++	}
++}
 +
 +func TestDestinationPolicy(t *testing.T) {
 +	for _, raw := range []string{"http://github.com/", "https://github.com:8443/", "https://github.com.evil.invalid/", "https://token@github.com/", "https://127.0.0.1/", "https://example.org/"} {

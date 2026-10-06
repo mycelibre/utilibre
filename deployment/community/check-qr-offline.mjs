@@ -39,6 +39,23 @@ try{
       return jsQR(ctx.getImageData(0,0,canvas.width,canvas.height).data,canvas.width,canvas.height)?.data;
     });
     assert.equal(decoded,'https://utilibre.org/es');
+    const alignment=await page.evaluate(()=>{
+      const img=document.querySelector('.qr-image'),preview=img.parentElement.getBoundingClientRect(),box=img.getBoundingClientRect();
+      const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;
+      const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0);
+      const pixels=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+      let left=canvas.width,right=-1,top=canvas.height,bottom=-1;
+      for(let y=0;y<canvas.height;y++)for(let x=0;x<canvas.width;x++){
+        if(pixels[(y*canvas.width+x)*4]<128){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y)}
+      }
+      return {left,right:canvas.width-1-right,top,bottom:canvas.height-1-bottom,dx:box.x+box.width/2-preview.x-preview.width/2,dy:box.y+box.height/2-preview.y-preview.height/2};
+    });
+    assert.ok(Math.abs(alignment.left-alignment.right)<=1,JSON.stringify(alignment));
+    assert.ok(Math.abs(alignment.top-alignment.bottom)<=1,JSON.stringify(alignment));
+    assert.ok(Math.abs(alignment.dx)<=1&&Math.abs(alignment.dy)<=1,JSON.stringify(alignment));
+    assert.ok(alignment.left>=16&&alignment.top>=16,'Default quiet zone is preserved');
+    await page.locator('#qrPreview').screenshot({path:`${output}/${name}-generated.png`});
+    console.log({name,alignment});
     assert.equal(await page.evaluate(()=>localStorage.getItem('qr-history')),null);
     for(const format of ['PNG','SVG','PDF']){
       console.log('Export',name,format);
