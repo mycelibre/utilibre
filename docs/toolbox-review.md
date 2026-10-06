@@ -57,11 +57,19 @@ query-privacy policy. No host DNS, network configuration or DNS ports were chang
 LibreDNS itself offers [DoH and DoT](https://libredns.gr/), not a browser toolbox.
 
 The daily community snapshot job now includes Pollaris's database, secret
-configuration and scheduler state alongside Rallly and FMD. The job performs an
+configuration and scheduler state alongside Rallly, FMD and Uptime Kuma. The job performs an
 isolated PostgreSQL restore and SQLite integrity check, sends a generic failure
 alert, refuses to start with less than 5 GiB free, and never prunes backups.
 Backups remain on this VM; an off-site destination is still needed. The unrelated
 identity/expanded-app snapshots retain their separate scheduling status below.
+
+The public status page now includes 28 monitors, preserving its existing
+settings and history. The SearXNG monitor uses verified HTTPS `/healthz` through
+the private Caddy edge, explicitly labeled: the public-IP route from this VM is
+unreachable, and a non-browser root request is correctly rate-limited. No limiter
+exception, forwarded-IP forgery or TLS bypass was added. Daily updater browser
+tests remain the separate functional-search check. These same-VM root/liveness
+monitors are neither complete workflow tests nor independent outage monitoring.
 
 This section supersedes older deployment states below. Installation, a passing
 homepage, successful content retrieval, and public readiness are separate checks.
@@ -76,7 +84,7 @@ homepage, successful content retrieval, and public readiness are separate checks
 | DeGoog 1.0.0 core | loopback 3143 | Public-instance lockdown denies unauthenticated settings API reads/writes. Indexer defaults off. No engines installed: the separate official extensions repository has no identified license. |
 | LibreMDB | loopback 3144, stopped | IMDb search/title requests failed. Published image contains Node 18 / Next.js 12; public deployment requires a supported build and working upstream access. |
 | 4get 03ba5d7-p2 | app LAN 3145; proposed `4get.utilibre.org` | Bounded public-IP image fetching, redirect validation, ImageMagick resource/coder restrictions and fixed JPEG resizing. Real Wiby/DuckDuckGo searches and image resizing pass. Source published; Caddy HTTPS pending. No rotating proxies or challenge bypasses. |
-| SafeTwitch | loopback 3146 | Discovery API returns real categories. Static frontend served by current pinned nginx; old backend has unrestricted URL-fetch routes. Must harden and test playback before opening publicly. |
+| SafeTwitch 2.4.5-p1 | app LAN 3146; proposed `twitch.utilibre.org` | Source-built static frontend and Go 1.26 backend, bounded Twitch/CDN-only proxy, image MIME checks, fixed URL-safe playlist encoding, gateway quotas/cache and explicit follow-lookup bounds. Real live-video frames decode and time advances; EN desktop/ES mobile, images and following lookups pass with no third-party browser requests in the tested workflow. Chat is disabled. Caddy HTTPS remains pending; long recordings/clips and every upstream feature are not validated. |
 | AnonymousOverflow 937cfee-p1 | app LAN 3147; proposed `overflow.utilibre.org` | Hardened current-Go/dependency build renders a real question and answers. govulncheck reports no reachable vulnerabilities. Fixed-host short-link fetching, bounded JSON cache and quota/backoff tests pass; invalid media tokens are denied. Source published; Caddy HTTPS pending. |
 | GotHub 24bedc8-p1 | app LAN 3148; `gothub.utilibre.org` | Hardened Go 1.26.8 build; govulncheck reports no vulnerabilities. Bounded GitHub-only egress, gateway limits and full modified source supplied. Local repository/file content passes; public HTTPS still returns 525 pending the separate Caddy block. Upstream seeks maintainers. |
 
@@ -86,7 +94,7 @@ capability drops, read-only roots, resource limits,
 disabled IPv6, and firewall blocks on private/host destinations. These controls
 are not an independent security audit or a complete open-proxy defense. The
 unready reader evaluations do not restart automatically; 4get, AnonymousOverflow
-and GotHub now do. Native language settings
+and GotHub now do; SafeTwitch also restarts automatically after its playback checks. Native language settings
 are used where available; Priviblur requires the complete Spanish preference
 restore URL, not only a `language` parameter. Experimental entries are searchable
 in the bilingual catalog and software list, with no launch links and no claim
@@ -101,13 +109,23 @@ The unsupported `lyrics.utilibre.org` block has now been removed from the
 deployment file so applying it does not expose a nonfunctional reader. The
 remaining Caddyfile passes local adaptation and provisioning validation; this
 does not establish successful certificate issuance or connectivity on the edge.
-The four new public routes now pass ordinary verified HTTPS GETs after the
+Rallly, Priviblur, Mezzo and FMD pass ordinary verified HTTPS GETs after the
 operator's edge update. The same-day recheck also found 21 of the 22 previously
 enabled service roots reachable from this VM. SearXNG's public IPv4 connection
 times out from this VM, and this VM has no IPv6 route; its local `/healthz`
 returns OK and the operator confirms public search works. Treat this as a
 vantage-specific connectivity failure, not evidence of a general search outage.
 No SearXNG limiter or proxy-trust configuration was weakened for these probes.
+
+SafeTwitch's complete frontend/backend source archives, locked dependencies and
+build material are linked from its footer. Its pinned translations submodule is
+included. The Go audit found no reachable or imported vulnerable packages; an
+unused-module advisory was also reported. Remaining frontend npm audit warnings
+are the unpatched `braces` recursion issue and build-only glob dependents; the
+static nginx runtime contains neither Node nor these build dependencies. Never
+use that toolchain to build untrusted visitor projects. The privacy copy explains
+that searches, opened channels and followed-channel lookups reach the proxy;
+browser-only preference storage does not mean all those requests stay local.
 
 The catalog now has nine categories and 27 enabled services. JupyterLite's real
 Pyodide kernel executed a calculation, a pandas CSV example and a matplotlib chart

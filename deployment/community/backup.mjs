@@ -11,14 +11,17 @@ function capture(name, cmd, args) {
 capture('rallly.dump', 'docker', ['exec', 'utilibre-community-rallly-db-1', 'pg_dump', '-U', 'rallly', '-d', 'rallly', '-Fc']);
 capture('pollaris.dump', 'docker', ['exec', 'utilibre-pollaris-pollaris-db-1', 'pg_dump', '-U', 'pollaris', '-d', 'pollaris', '-Fc']);
 capture('pollaris-private.tar.gz', 'tar', ['-czf', '-', '-C', '/opt/utilibre/community-data', 'pollaris-private', 'pollaris-var/share']);
-execFileSync('python3', ['-c', `import sqlite3,sys,os
+for (const [source, filename] of [
+  ['/opt/utilibre/community-data/fmd-db/fmd.sqlite', 'fmd.sqlite'],
+  ['/opt/utilibre/community-data/kuma/kuma.db', 'kuma.sqlite'],
+]) execFileSync('python3', ['-c', `import sqlite3,sys,os
 os.umask(0o077)
-src=sqlite3.connect('file:/opt/utilibre/community-data/fmd-db/fmd.sqlite?mode=ro',uri=True)
+src=sqlite3.connect('file:'+sys.argv[2]+'?mode=ro',uri=True)
 dst=sqlite3.connect(sys.argv[1])
 src.backup(dst)
 assert dst.execute('PRAGMA integrity_check').fetchall()==[('ok',)]
-dst.close();src.close()`, `${target}/fmd.sqlite`]);
-capture('private-config.tar.gz', 'tar', ['-czf', '-', '-C', '/home/ubuntu/freetools', 'deployment/community/.env.rallly', '-C', '/opt/utilibre/community-data', 'fmd-private', 'degoog-private', 'degoog']);
-const files = ['rallly.dump', 'pollaris.dump', 'pollaris-private.tar.gz', 'fmd.sqlite', 'private-config.tar.gz'];
+dst.close();src.close()`, `${target}/${filename}`, source]);
+capture('private-config.tar.gz', 'tar', ['-czf', '-', '-C', '/home/ubuntu/freetools', 'deployment/community/.env.rallly', 'secrets/uptime-kuma-admin.json', '-C', '/opt/utilibre/community-data', 'fmd-private', 'degoog-private', 'degoog']);
+const files = ['rallly.dump', 'pollaris.dump', 'pollaris-private.tar.gz', 'fmd.sqlite', 'kuma.sqlite', 'private-config.tar.gz'];
 writeFileSync(`${target}/SHA256SUMS`, execFileSync('sha256sum', files, { cwd: target }), { mode: 0o600 });
 console.log(target);

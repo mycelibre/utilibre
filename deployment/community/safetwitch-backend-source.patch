@@ -1,0 +1,857 @@
+diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
+new file mode 100644
+index 0000000..8b9f94c
+--- /dev/null
++++ b/Dockerfile.utilibre
+@@ -0,0 +1,12 @@
++FROM golang:1.26-alpine@sha256:8ac98ca534ac3f51e1f420a1dd2c15e74c75cfa0f23f3ad27eb5d7236c349a0c AS build
++WORKDIR /src
++COPY go.mod go.sum ./
++RUN go mod download
++COPY . .
++RUN go test ./... && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /safetwitch .
++FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0
++RUN apk add --no-cache ca-certificates
++COPY --from=build /safetwitch /safetwitch
++USER 65534:65534
++EXPOSE 7000
++ENTRYPOINT ["/safetwitch"]
+diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
+new file mode 100644
+index 0000000..2d9ef8d
+--- /dev/null
++++ b/UTILIBRE-SOURCE.txt
+@@ -0,0 +1,16 @@
++Utilibre SafeTwitch backend, 2026-10-06
++Upstream: https://codeberg.org/SafeTwitch/safetwitch-backend
++Revision: 91dda1ceb50822cc9b5306f6c1a92f7e8aaf747b
++License: AGPL-3.0; upstream license/notices preserved.
++
++Changes: Go 1.26/current locked dependencies; bounded Twitch/CDN-only HTTPS
++transport with public-IP DNS pinning and redirect checks; response size/deadline
++limits; closed response bodies; MIME checks; generic errors; fixed URL-safe
++playlist encoding; proxy regression tests; gateway-only forwarded-IP trust;
++disabled chat unless explicitly opted into; removed process-global locale race.
++Build: docker build -f Dockerfile.utilibre -t utilibre-safetwitch-backend:91dda1c-p1 .
++Do not set UTILIBRE_CHAT_ENABLED=true without separately reviewing the chat relay.
++Runtime URL=https://twitch.utilibre.org, PORT=7000, GIN_MODE=release.
++No visitor credentials or private upstream accounts are configured.
++Deploy only behind the matching bounded gateway and private-egress firewall:
++https://github.com/mycelibre/utilibre/tree/main/deployment/community
+diff --git a/extractor/twitch/Stream.go b/extractor/twitch/Stream.go
+index 5dc0135..87f0556 100644
+--- a/extractor/twitch/Stream.go
++++ b/extractor/twitch/Stream.go
+@@ -10,6 +10,9 @@ import (
+ func GetStream(streamerName string, withAudioOnly bool) (string, error) {
+ 
+ 	tokenwsig, err := getPlaybackAccessToken(streamerName, "")
++	if err != nil {
++		return "", err
++	}
+ 	token := tokenwsig.Token
+ 	signature := tokenwsig.Signature
+ 
+@@ -23,15 +26,19 @@ func GetStream(streamerName string, withAudioOnly bool) (string, error) {
+ 	}
+ 
+ 	req, err := http.NewRequest("GET", playlistUrl+params, nil)
+-	req.Header.Add("Client-Id", "ue6666qo983tsx6so1t0vnawi233wa")
+ 	if err != nil {
+ 		return "", err
+ 	}
++	req.Header.Add("Client-Id", "ue6666qo983tsx6so1t0vnawi233wa")
+ 
+ 	resp, err := http.DefaultClient.Do(req)
+ 	if err != nil {
+ 		return "", err
+ 	}
++	defer resp.Body.Close()
++	if resp.StatusCode != http.StatusOK {
++		return "", fmt.Errorf("playlist unavailable")
++	}
+ 
+ 	playlistFile, err := io.ReadAll(resp.Body)
+ 	if err != nil {
+@@ -48,21 +55,28 @@ func GetStream(streamerName string, withAudioOnly bool) (string, error) {
+ func GetSubPlaylist(rawurl string, isVOD bool) (string, error) {
+ 	req, err := http.NewRequest("GET", rawurl, nil)
+ 
+-	req.Header.Add("Client-Id", "ue6666qo983tsx6so1t0vnawi233wa")
+ 	if err != nil {
+ 		return "", err
+ 	}
++	req.Header.Add("Client-Id", "ue6666qo983tsx6so1t0vnawi233wa")
+ 
+ 	resp, err := http.DefaultClient.Do(req)
+ 	if err != nil {
+ 		return "", err
+ 	}
++	defer resp.Body.Close()
++	if resp.StatusCode != http.StatusOK {
++		return "", fmt.Errorf("playlist unavailable")
++	}
+ 
+ 	playlistFile, err := io.ReadAll(resp.Body)
+ 	if err != nil {
+ 		return "", err
+ 	}
+ 
++	if !strings.HasPrefix(string(playlistFile), "#EXTM3U") {
++		return "", fmt.Errorf("not a media playlist")
++	}
+ 	proxiedPlaylist := ProxyPlaylistFile(string(playlistFile), true, isVOD)
+ 	return proxiedPlaylist, nil
+ }
+diff --git a/extractor/twitch/VOD.go b/extractor/twitch/VOD.go
+index f335543..7efae86 100644
+--- a/extractor/twitch/VOD.go
++++ b/extractor/twitch/VOD.go
+@@ -62,15 +62,18 @@ func GetVODPlaylist(vodID string) ([]byte, error) {
+ 	// headers
+ 	req.Header.Add("Client-Id", "ue6666qo983tsx6so1t0vnawi233wa")
+ 
+-	client := &http.Client{}
+-	resp, err := client.Do(req)
++	resp, err := http.DefaultClient.Do(req)
+ 	if err != nil {
+ 		return []byte{}, err
+ 	}
++	defer resp.Body.Close()
+ 
+ 	if resp.StatusCode == 403 {
+ 		return []byte{}, errors.New("Video is sub-only")
+ 	}
++	if resp.StatusCode != http.StatusOK {
++		return []byte{}, errors.New("playlist unavailable")
++	}
+ 
+ 	body, err := io.ReadAll(resp.Body)
+ 	if err != nil {
+diff --git a/extractor/twitch/parser.go b/extractor/twitch/parser.go
+index a5dbda3..e7963f4 100644
+--- a/extractor/twitch/parser.go
++++ b/extractor/twitch/parser.go
+@@ -183,7 +183,7 @@ func ParseBadges(data gjson.Result) ([]structs.Badge, error) {
+ }
+ 
+ func StreamSubProxyUrl(url string, isVOD bool) string {
+-	encodedUrl := base64.StdEncoding.EncodeToString([]byte(url))
++	encodedUrl := base64.URLEncoding.EncodeToString([]byte(url))
+ 	backendUrl := os.Getenv("URL")
+ 
+ 	if isVOD {
+@@ -194,7 +194,7 @@ func StreamSubProxyUrl(url string, isVOD bool) string {
+ }
+ 
+ func StreamSegmentProxyUrl(url string) string {
+-	encodedUrl := base64.StdEncoding.EncodeToString([]byte(url))
++	encodedUrl := base64.URLEncoding.EncodeToString([]byte(url))
+ 	backendUrl := os.Getenv("URL")
+ 
+ 	return backendUrl + "/proxy/stream/segment/" + encodedUrl
+diff --git a/extractor/twitch/parser_utilibre_test.go b/extractor/twitch/parser_utilibre_test.go
+new file mode 100644
+index 0000000..2a0e29c
+--- /dev/null
++++ b/extractor/twitch/parser_utilibre_test.go
+@@ -0,0 +1,19 @@
++package twitch
++
++import (
++	"encoding/base64"
++	"strings"
++	"testing"
++)
++
++func TestProxyURLUsesURLSafeBase64(t *testing.T) {
++	t.Setenv("URL", "https://twitch.example")
++	upstream := "https://video.ttvnw.net/example???token=+++///&more=true"
++	for _, target := range []string{StreamSegmentProxyUrl(upstream), StreamSubProxyUrl(upstream, false)} {
++		encoded := strings.SplitN(target, "/proxy/stream/", 2)[1]
++		encoded = strings.SplitN(encoded, "/", 2)[1]
++		if strings.ContainsAny(encoded, "/+") { t.Fatal("path-unsafe base64") }
++		decoded, err := base64.URLEncoding.DecodeString(encoded)
++		if err != nil || string(decoded) != upstream { t.Fatal("proxy URL does not round-trip") }
++	}
++}
+diff --git a/extractor/twitch/twitchExtractor.go b/extractor/twitch/twitchExtractor.go
+index 4c04138..3ebd08e 100644
+--- a/extractor/twitch/twitchExtractor.go
++++ b/extractor/twitch/twitchExtractor.go
+@@ -20,7 +20,7 @@ func SetLanguage(code string) {
+ func call(url, method string, body io.Reader) (*http.Response, error) {
+ 	req, err := http.NewRequest(method, url, body)
+ 	if err != nil {
+-		return req.Response, err
++		return nil, err
+ 	}
+ 
+ 	req.Header.Add("Accept-Language", Language)
+diff --git a/extractor/utils.go b/extractor/utils.go
+index 738b432..90acd79 100644
+--- a/extractor/utils.go
++++ b/extractor/utils.go
+@@ -11,6 +11,11 @@ func GenGjsonQuery(i int, query string) string {
+ }
+ 
+ func ProxyUrl(url string) string {
++	// A missing upstream thumbnail is not a fetchable URL. Preserve its layout
++	// without sending the browser to a nonexistent /proxy/img/ endpoint.
++	if url == "" {
++		return "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
++	}
+ 	encodedUrl := b64.URLEncoding.EncodeToString([]byte(url))
+ 	backendUrl := os.Getenv("URL")
+ 
+diff --git a/go.mod b/go.mod
+index 8e9ff01..9131b29 100644
+--- a/go.mod
++++ b/go.mod
+@@ -1,39 +1,45 @@
+ module safetwitch-backend
+ 
+-go 1.20
++go 1.26.0
+ 
+ require (
+-	github.com/gin-contrib/gzip v0.0.6
+-	github.com/gin-gonic/gin v1.9.0
+-	github.com/gorilla/websocket v1.5.0
++	github.com/gin-contrib/gzip v1.2.8
++	github.com/gin-gonic/gin v1.12.0
++	github.com/gorilla/websocket v1.5.3
+ 	github.com/satori/go.uuid v1.2.0
+-	github.com/tidwall/gjson v1.14.4
++	github.com/tidwall/gjson v1.20.0
+ )
+ 
+ require (
+-	github.com/bytedance/sonic v1.8.8 // indirect
+-	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
+-	github.com/gin-contrib/sse v0.1.0 // indirect
+-	github.com/go-playground/locales v0.14.1 // indirect
+-	github.com/go-playground/universal-translator v0.18.1 // indirect
+-	github.com/go-playground/validator/v10 v10.13.0 // indirect
+-	github.com/goccy/go-json v0.10.2 // indirect
++	github.com/bytedance/gopkg v0.1.4 // indirect
++	github.com/bytedance/sonic v1.15.4 // indirect
++	github.com/bytedance/sonic/loader v0.5.2 // indirect
++	github.com/cloudwego/base64x v0.1.7 // indirect
++	github.com/gabriel-vasile/mimetype v1.4.15 // indirect
++	github.com/gin-contrib/sse v1.1.2 // indirect
++	github.com/go-playground/locales v0.14.2 // indirect
++	github.com/go-playground/universal-translator v0.18.2 // indirect
++	github.com/go-playground/validator/v10 v10.30.5 // indirect
++	github.com/goccy/go-json v0.11.2 // indirect
++	github.com/goccy/go-yaml v1.19.2 // indirect
+ 	github.com/json-iterator/go v1.1.12 // indirect
+-	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
+-	github.com/leodido/go-urn v1.2.4 // indirect
+-	github.com/mattn/go-isatty v0.0.18 // indirect
++	github.com/klauspost/cpuid/v2 v2.4.0 // indirect
++	github.com/leodido/go-urn v1.5.0 // indirect
++	github.com/mattn/go-isatty v0.0.24 // indirect
+ 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+ 	github.com/modern-go/reflect2 v1.0.2 // indirect
+-	github.com/pelletier/go-toml/v2 v2.0.7 // indirect
+-	github.com/tidwall/match v1.1.1 // indirect
+-	github.com/tidwall/pretty v1.2.1 // indirect
++	github.com/pelletier/go-toml/v2 v2.4.3 // indirect
++	github.com/quic-go/qpack v0.6.0 // indirect
++	github.com/quic-go/quic-go v0.63.0 // indirect
++	github.com/tidwall/match v1.2.0 // indirect
++	github.com/tidwall/pretty v1.2.2 // indirect
+ 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
+-	github.com/ugorji/go/codec v1.2.11 // indirect
+-	golang.org/x/arch v0.3.0 // indirect
+-	golang.org/x/crypto v0.9.0 // indirect
+-	golang.org/x/net v0.10.0 // indirect
+-	golang.org/x/sys v0.8.0 // indirect
+-	golang.org/x/text v0.9.0 // indirect
+-	google.golang.org/protobuf v1.30.0 // indirect
+-	gopkg.in/yaml.v3 v3.0.1 // indirect
++	github.com/ugorji/go/codec v1.3.2 // indirect
++	go.mongodb.org/mongo-driver/v2 v2.9.1 // indirect
++	golang.org/x/arch v0.31.0 // indirect
++	golang.org/x/crypto v0.57.0 // indirect
++	golang.org/x/net v0.59.0 // indirect
++	golang.org/x/sys v0.48.0 // indirect
++	golang.org/x/text v0.42.0 // indirect
++	google.golang.org/protobuf v1.36.12 // indirect
+ )
+diff --git a/go.sum b/go.sum
+index 8bbd91b..4885f5a 100644
+--- a/go.sum
++++ b/go.sum
+@@ -1,136 +1,103 @@
+-github.com/bytedance/sonic v1.5.0/go.mod h1:ED5hyg4y6t3/9Ku1R6dU/4KyJ48DZ4jPhfY1O2AihPM=
+-github.com/bytedance/sonic v1.8.8 h1:Kj4AYbZSeENfyXicsYppYKO0K2YWab+i2UTSY7Ukz9Q=
+-github.com/bytedance/sonic v1.8.8/go.mod h1:i736AoUSYt75HyZLoJW9ERYxcy6eaN6h4BZXU064P/U=
+-github.com/chenzhuoyu/base64x v0.0.0-20211019084208-fb5309c8db06/go.mod h1:DH46F32mSOjUmXrMHnKwZdA8wcEefY7UVqBKYGjpdQY=
+-github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 h1:qSGYFH7+jGhDF8vLC+iwCD4WpbV1EBDSzWkJODFLams=
+-github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311/go.mod h1:b583jCggY9gE99b6G5LEC39OIiVsWj+R97kbl5odCEk=
+-github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
++github.com/bytedance/gopkg v0.1.4 h1:oZnQwnX82KAIWb7033bEwtxvTqXcYMxDBaQxo5JJHWM=
++github.com/bytedance/gopkg v0.1.4/go.mod h1:v1zWfPm21Fb+OsyXN2VAHdL6TBb2L88anLQgdyje6R4=
++github.com/bytedance/sonic v1.15.4 h1:FgtV/4aBHpla9AxuMpuuzVUpa/Cf3izufkxNmnEzdI8=
++github.com/bytedance/sonic v1.15.4/go.mod h1:8e51yTPdY8M6t+vvGL1c2Y1xL9i+frEeIAQAEl75NUc=
++github.com/bytedance/sonic/loader v0.5.2 h1:0QtP1gevc1OZ6/H8Lb9BRZiCXd1Ftjd3OKuj1T1lBIo=
++github.com/bytedance/sonic/loader v0.5.2/go.mod h1:AR4NYCk5DdzZizZ5djGqQ92eEhCCcdf5x77udYiSJRo=
++github.com/cloudwego/base64x v0.1.7 h1:NppS+Fgzg5ovhn4NkUXaDT3x9jldgH5ToMCqzBSi2zI=
++github.com/cloudwego/base64x v0.1.7/go.mod h1:Cu1PV9zfrSf7ET2tIbWbbEy7jO7HHJ13q4X2SQ8aWYg=
+ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
+ github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+-github.com/gin-contrib/gzip v0.0.6 h1:NjcunTcGAj5CO1gn4N8jHOSIeRFHIbn51z6K+xaN4d4=
+-github.com/gin-contrib/gzip v0.0.6/go.mod h1:QOJlmV2xmayAjkNS2Y8NQsMneuRShOU/kjovCXNuzzk=
+-github.com/gin-contrib/sse v0.1.0 h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=
+-github.com/gin-contrib/sse v0.1.0/go.mod h1:RHrZQHXnP2xjPF+u1gW/2HnVO7nvIa9PG3Gm+fLHvGI=
+-github.com/gin-gonic/gin v1.8.1/go.mod h1:ji8BvRH1azfM+SYow9zQ6SZMvR8qOMZHmsCuWR9tTTk=
+-github.com/gin-gonic/gin v1.9.0 h1:OjyFBKICoexlu99ctXNR2gg+c5pKrKMuyjgARg9qeY8=
+-github.com/gin-gonic/gin v1.9.0/go.mod h1:W1Me9+hsUSyj3CePGrd1/QrKJMSJ1Tu/0hFEH89961k=
+-github.com/go-playground/assert/v2 v2.0.1/go.mod h1:VDjEfimB/XKnb+ZQfWdccd7VUvScMdVu0Titje2rxJ4=
++github.com/gabriel-vasile/mimetype v1.4.15 h1:05iP/CYtZ/w455R/KZM6rZ5ieAdh99UPtd+d3YzLmaI=
++github.com/gabriel-vasile/mimetype v1.4.15/go.mod h1:azpTcoLcDZRNgFou5j+APrqQx9HqVPWa6ijYQIIVswQ=
++github.com/gin-contrib/gzip v1.2.8 h1:wDb1thtVsSUe+126xHdgLiWcZqHdWXiBzdZj2yhdUM8=
++github.com/gin-contrib/gzip v1.2.8/go.mod h1:OiNBR7FxAwHN3iwoDtjj2RlypuONCk48zmtagvASfrc=
++github.com/gin-contrib/sse v1.1.2 h1:MU2fgl1RrdYTMcgJLtz2kJF+vPg3xrqaaKfUUU18tCo=
++github.com/gin-contrib/sse v1.1.2/go.mod h1:QXzuVkA0YO7o/gun03UI1Q+FTI8ZV/n5t03kIQAI89s=
++github.com/gin-gonic/gin v1.12.0 h1:b3YAbrZtnf8N//yjKeU2+MQsh2mY5htkZidOM7O0wG8=
++github.com/gin-gonic/gin v1.12.0/go.mod h1:VxccKfsSllpKshkBWgVgRniFFAzFb9csfngsqANjnLc=
+ github.com/go-playground/assert/v2 v2.2.0 h1:JvknZsQTYeFEAhQwI4qEt9cyV5ONwRHC+lYKSsYSR8s=
+-github.com/go-playground/locales v0.14.0/go.mod h1:sawfccIbzZTqEDETgFXqTho0QybSa7l++s0DH+LDiLs=
+-github.com/go-playground/locales v0.14.1 h1:EWaQ/wswjilfKLTECiXz7Rh+3BjFhfDFKv/oXslEjJA=
+-github.com/go-playground/locales v0.14.1/go.mod h1:hxrqLVvrK65+Rwrd5Fc6F2O76J/NuW9t0sjnWqG1slY=
+-github.com/go-playground/universal-translator v0.18.0/go.mod h1:UvRDBj+xPUEGrFYl+lu/H90nyDXpg0fqeB/AQUGNTVA=
+-github.com/go-playground/universal-translator v0.18.1 h1:Bcnm0ZwsGyWbCzImXv+pAJnYK9S473LQFuzCbDbfSFY=
+-github.com/go-playground/universal-translator v0.18.1/go.mod h1:xekY+UJKNuX9WP91TpwSH2VMlDf28Uj24BCp08ZFTUY=
+-github.com/go-playground/validator/v10 v10.10.0/go.mod h1:74x4gJWsvQexRdW8Pn3dXSGrTK4nAUsbPlLADvpJkos=
+-github.com/go-playground/validator/v10 v10.13.0 h1:cFRQdfaSMCOSfGCCLB20MHvuoHb/s5G8L5pu2ppK5AQ=
+-github.com/go-playground/validator/v10 v10.13.0/go.mod h1:dwu7+CG8/CtBiJFZDz4e+5Upb6OLw04gtBYw0mcG/z4=
+-github.com/goccy/go-json v0.9.7/go.mod h1:6MelG93GURQebXPDq3khkgXZkazVtN9CRI+MGFi0w8I=
+-github.com/goccy/go-json v0.10.2 h1:CrxCmQqYDkv1z7lO7Wbh2HN93uovUHgrECaO5ZrCXAU=
+-github.com/goccy/go-json v0.10.2/go.mod h1:6MelG93GURQebXPDq3khkgXZkazVtN9CRI+MGFi0w8I=
+-github.com/golang/protobuf v1.5.0/go.mod h1:FsONVRAS9T7sI+LIUmWTfcYkHO4aIWwzhcaSAoJOfIk=
+-github.com/google/go-cmp v0.5.5 h1:Khx7svrCpmxxtHBq5j2mp/xVjsi8hQMfNLvJFAlrGgU=
+-github.com/google/go-cmp v0.5.5/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
++github.com/go-playground/assert/v2 v2.2.0/go.mod h1:VDjEfimB/XKnb+ZQfWdccd7VUvScMdVu0Titje2rxJ4=
++github.com/go-playground/locales v0.14.2 h1:d8UmcrM6Nip0hfGZKLGpAvZH37XB4TS0xzK9B56YNCY=
++github.com/go-playground/locales v0.14.2/go.mod h1:hxrqLVvrK65+Rwrd5Fc6F2O76J/NuW9t0sjnWqG1slY=
++github.com/go-playground/universal-translator v0.18.2 h1:LCsMLC9RzmbUMNUPVYD15dmcjwYAJhmX8mPZRW4rAVU=
++github.com/go-playground/universal-translator v0.18.2/go.mod h1:67VZIMp5lQpDWlnStOct22q1bkdJGJqHghbOtmkawxk=
++github.com/go-playground/validator/v10 v10.30.5 h1:YyCXvVShZbs2Sm3Mb53eNOlhRXctSOzW5QJAouCTZL4=
++github.com/go-playground/validator/v10 v10.30.5/go.mod h1:wEqiaov48pXX1kjhc3Da8y0M0Dtg/BK7gurFBLgwFrQ=
++github.com/goccy/go-json v0.11.2 h1:jdZv93Tt4ioR8yW1CoNsvSxrcZlCXAUU1aZXN7gpXUA=
++github.com/goccy/go-json v0.11.2/go.mod h1:3NdmfEkZlB7YI5UFw/qdFKq8XN1aiWR0YyRPWZNQltY=
++github.com/goccy/go-yaml v1.19.2 h1:PmFC1S6h8ljIz6gMRBopkjP1TVT7xuwrButHID66PoM=
++github.com/goccy/go-yaml v1.19.2/go.mod h1:XBurs7gK8ATbW4ZPGKgcbrY1Br56PdM69F7LkFRi1kA=
++github.com/google/go-cmp v0.7.0 h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=
++github.com/google/go-cmp v0.7.0/go.mod h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX3N/iU=
+ github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
+-github.com/gorilla/websocket v1.5.0 h1:PPwGk2jz7EePpoHN/+ClbZu8SPxiqlu12wZP/3sWmnc=
+-github.com/gorilla/websocket v1.5.0/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
++github.com/gorilla/websocket v1.5.3 h1:saDtZ6Pbx/0u+bgYQ3q96pZgCzfhKXGPqt7kZ72aNNg=
++github.com/gorilla/websocket v1.5.3/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
+ github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=
+ github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHmT4TnhNGBo=
+-github.com/klauspost/cpuid/v2 v2.0.9/go.mod h1:FInQzS24/EEf25PyTYn52gqo7WaD8xa0213Md/qVLRg=
+-github.com/klauspost/cpuid/v2 v2.2.4 h1:acbojRNwl3o09bUq+yDCtZFc1aiwaAAxtcn8YkZXnvk=
+-github.com/klauspost/cpuid/v2 v2.2.4/go.mod h1:RVVoqg1df56z8g3pUjL/3lE5UfnlrJX8tyFgg4nqhuY=
+-github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
+-github.com/kr/pretty v0.2.1/go.mod h1:ipq/a2n7PKx3OHsz4KJII5eveXtPO4qwEXGdVfWzfnI=
+-github.com/kr/pretty v0.3.0 h1:WgNl7dwNpEZ6jJ9k1snq4pZsg7DOEN8hP9Xw0Tsjwk0=
+-github.com/kr/pretty v0.3.0/go.mod h1:640gp4NfQd8pI5XOwp5fnNeVWj67G7CFk/SaSQn7NBk=
+-github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
+-github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
+-github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
+-github.com/kr/text v0.2.0/go.mod h1:eLer722TekiGuMkidMxC/pM04lWEeraHUUmBw8l2grE=
+-github.com/leodido/go-urn v1.2.1/go.mod h1:zt4jvISO2HfUBqxjfIshjdMTYS56ZS/qv49ictyFfxY=
+-github.com/leodido/go-urn v1.2.4 h1:XlAE/cm/ms7TE/VMVoduSpNBoyc2dOxHs5MZSwAN63Q=
+-github.com/leodido/go-urn v1.2.4/go.mod h1:7ZrI8mTSeBSHl/UaRyKQW1qZeMgak41ANeCNaVckg+4=
+-github.com/mattn/go-isatty v0.0.14/go.mod h1:7GGIvUiUoEMVVmxf/4nioHXj79iQHKdU27kJ6hsGG94=
+-github.com/mattn/go-isatty v0.0.18 h1:DOKFKCQ7FNG2L1rbrmstDN4QVRdS89Nkh85u68Uwp98=
+-github.com/mattn/go-isatty v0.0.18/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
++github.com/klauspost/cpuid/v2 v2.4.0 h1:S6Hrbc7+ywsr0r+RLapfGBHfyefhCTwEh3A0tV913Dw=
++github.com/klauspost/cpuid/v2 v2.4.0/go.mod h1:19jmZ9mjzoF//ddRSUsv0zfBTJWh3QJh9FNxZTMrGxU=
++github.com/leodido/go-urn v1.5.0 h1:pLqT2kq1zpHW/1D18QMjMpdtX7cekxqtJJjg5ANyWw0=
++github.com/leodido/go-urn v1.5.0/go.mod h1:9BORnCDhdPBJNDEX+w1bJisa8yOKYi116VeO96s4ifE=
++github.com/mattn/go-isatty v0.0.24 h1:tGZZoVgT/KiqK1c8ocVLeDS8BSWMRd47J3Lbz7vsReI=
++github.com/mattn/go-isatty v0.0.24/go.mod h1:nMCL3Zebbrt45jsMDgnfIwz6ydEQApk5oEI3HqDio6A=
+ github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
+ github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w8PVh93nsPXa1VrQ6jlwL5oN8l14QlcNfg=
+ github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
+ github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9Gz0M=
+ github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
+-github.com/pelletier/go-toml/v2 v2.0.1/go.mod h1:r9LEWfGN8R5k0VXJ+0BkIe7MYkRdwZOjgMj2KwnJFUo=
+-github.com/pelletier/go-toml/v2 v2.0.7 h1:muncTPStnKRos5dpVKULv2FVd4bMOhNePj9CjgDb8Us=
+-github.com/pelletier/go-toml/v2 v2.0.7/go.mod h1:eumQOmlWiOPt5WriQQqoM5y18pDHwha2N+QD+EUNTek=
+-github.com/pkg/diff v0.0.0-20210226163009-20ebb0f2a09e/go.mod h1:pJLUxLENpZxwdsKMEsNbx1VGcRFpLqf3715MtcvvzbA=
+-github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
++github.com/pelletier/go-toml/v2 v2.4.3 h1:GTRvJQutkOSftxIFD5xw9aepkYNuPWmVJpffdDPYVpY=
++github.com/pelletier/go-toml/v2 v2.4.3/go.mod h1:2gIqNv+qfxSVS7cM2xJQKtLSTLUE9V8t9Stt+h56mCY=
+ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+-github.com/rogpeppe/go-internal v1.6.1/go.mod h1:xXDCJY+GAPziupqXw64V24skbSoqbTEfhy4qGm1nDQc=
+-github.com/rogpeppe/go-internal v1.8.0 h1:FCbCCtXNOY3UtUuHUYaghJg4y7Fd14rXifAYUAtL9R8=
+-github.com/rogpeppe/go-internal v1.8.0/go.mod h1:WmiCO8CzOY8rg0OYDC4/i/2WRWAB6poM+XZ2dLUbcbE=
++github.com/quic-go/go-ossfuzz-seeds v0.1.0 h1:APacT+iIaNF6fd8AGEiN3bT/Jtkd2jz4v4TzM7MFjy0=
++github.com/quic-go/go-ossfuzz-seeds v0.1.0/go.mod h1:3IOHRbJIc+L6YKMwfDtJAM9Vj9k0YY4muhuyUYk5tbk=
++github.com/quic-go/qpack v0.6.0 h1:g7W+BMYynC1LbYLSqRt8PBg5Tgwxn214ZZR34VIOjz8=
++github.com/quic-go/qpack v0.6.0/go.mod h1:lUpLKChi8njB4ty2bFLX2x4gzDqXwUpaO1DP9qMDZII=
++github.com/quic-go/quic-go v0.63.0 h1:LIFGHI4PFUhhw2dDD1ARHdCff143ffMHwZtbnbuJ78A=
++github.com/quic-go/quic-go v0.63.0/go.mod h1:RAro2j2yN9a9EiPACLHT9IB2NXCvGQmmo/alT0yYI0w=
+ github.com/satori/go.uuid v1.2.0 h1:0uYX9dsZ2yD7q2RtLRtPSdGDWzjeM3TbMJP9utgA0ww=
+ github.com/satori/go.uuid v1.2.0/go.mod h1:dA0hQrYB0VpLJoorglMZABFdXlWrHn1NEOzdhQKdks0=
+ github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
+ github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
+ github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=
++github.com/stretchr/objx v0.5.2/go.mod h1:FRsXN1f5AsAjCGJKqEizvkpNtU+EGNCLh3NxZ/8L+MA=
+ github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
+-github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
+-github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
+ github.com/stretchr/testify v1.7.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
+ github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO+kdMU+MU=
+-github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
+-github.com/stretchr/testify v1.8.2 h1:+h33VjcLVPDHtOdpUCuF+7gSuG3yGIftsP1YvFihtJ8=
+-github.com/stretchr/testify v1.8.2/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
+-github.com/tidwall/gjson v1.14.4 h1:uo0p8EbA09J7RQaflQ1aBRffTR7xedD2bcIVSYxLnkM=
+-github.com/tidwall/gjson v1.14.4/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
+-github.com/tidwall/match v1.1.1 h1:+Ho715JplO36QYgwN9PGYNhgZvoUSc9X2c80KVTi+GA=
+-github.com/tidwall/match v1.1.1/go.mod h1:eRSPERbgtNPcGhD8UCthc6PmLEQXEWd3PRB5JTxsfmM=
+-github.com/tidwall/pretty v1.2.0/go.mod h1:ITEVvHYasfjBbM0u2Pg8T2nJnzm8xPwvNhhsoaGGjNU=
+-github.com/tidwall/pretty v1.2.1 h1:qjsOFOWWQl+N3RsoF5/ssm1pHmJJwhjlSbZ51I6wMl4=
+-github.com/tidwall/pretty v1.2.1/go.mod h1:ITEVvHYasfjBbM0u2Pg8T2nJnzm8xPwvNhhsoaGGjNU=
++github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
++github.com/stretchr/testify v1.10.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
++github.com/stretchr/testify v1.12.1 h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWDWE=
++github.com/stretchr/testify v1.12.1/go.mod h1:MDEgiDPPsNp5cuIrHPPCyornHKgEVbtFUmoNlxoYthg=
++github.com/tidwall/gjson v1.20.0 h1:+agJ3rEzKcCXKDKo0ml26UROcpcAlnZyjq+TjbY5Fto=
++github.com/tidwall/gjson v1.20.0/go.mod h1:V37/opeE/JbLUOfH0QTXiNez2l0RUjYUhpT4szFQAfc=
++github.com/tidwall/match v1.2.0 h1:0pt8FlkOwjN2fPt4bIl4BoNxb98gGHN2ObFEDkrfZnM=
++github.com/tidwall/match v1.2.0/go.mod h1:eRSPERbgtNPcGhD8UCthc6PmLEQXEWd3PRB5JTxsfmM=
++github.com/tidwall/pretty v1.2.2 h1:dz1jrRuE7or/74V490B4/GP1pZm5WKlt2bgCP5A83w8=
++github.com/tidwall/pretty v1.2.2/go.mod h1:ITEVvHYasfjBbM0u2Pg8T2nJnzm8xPwvNhhsoaGGjNU=
+ github.com/twitchyliquid64/golang-asm v0.15.1 h1:SU5vSMR7hnwNxj24w34ZyCi/FmDZTkS4MhqMhdFk5YI=
+ github.com/twitchyliquid64/golang-asm v0.15.1/go.mod h1:a1lVb/DtPvCB8fslRZhAngC2+aY1QWCk3Cedj/Gdt08=
+-github.com/ugorji/go v1.2.7/go.mod h1:nF9osbDWLy6bDVv/Rtoh6QgnvNDpmCalQV5urGCCS6M=
+-github.com/ugorji/go/codec v1.2.7/go.mod h1:WGN1fab3R1fzQlVQTkfxVtIBhWDRqOviHU95kRgeqEY=
+-github.com/ugorji/go/codec v1.2.11 h1:BMaWp1Bb6fHwEtbplGBGJ498wD+LKlNSl25MjdZY4dU=
+-github.com/ugorji/go/codec v1.2.11/go.mod h1:UNopzCgEMSXjBc6AOMqYvWC1ktqTAfzJZUZgYf6w6lg=
+-golang.org/x/arch v0.0.0-20210923205945-b76863e36670/go.mod h1:5om86z9Hs0C8fWVUuoMHwpExlXzs5Tkyp9hOrfG7pp8=
+-golang.org/x/arch v0.3.0 h1:02VY4/ZcO/gBOH6PUaoiptASxtXU10jazRCP865E97k=
+-golang.org/x/arch v0.3.0/go.mod h1:5om86z9Hs0C8fWVUuoMHwpExlXzs5Tkyp9hOrfG7pp8=
+-golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
+-golang.org/x/crypto v0.9.0 h1:LF6fAI+IutBocDJ2OT0Q1g8plpYljMZ4+lty+dsqw3g=
+-golang.org/x/crypto v0.9.0/go.mod h1:yrmDGqONDYtNj3tH8X9dzUun2m2lzPa9ngI6/RUPGR0=
+-golang.org/x/net v0.0.0-20210226172049-e18ecbb05110/go.mod h1:m0MpNAwzfU5UDzcl9v0D8zg8gWTRqZa9RBIspLL5mdg=
+-golang.org/x/net v0.10.0 h1:X2//UzNDwYmtCLn7To6G58Wr6f5ahEAQgKNzv9Y951M=
+-golang.org/x/net v0.10.0/go.mod h1:0qNGK6F8kojg2nk9dLZ2mShWaEBan6FAoqfSigmmuDg=
+-golang.org/x/sys v0.0.0-20201119102817-f84b799fce68/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+-golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+-golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+-golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+-golang.org/x/sys v0.0.0-20220704084225-05e143d24a9e/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+-golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+-golang.org/x/sys v0.8.0 h1:EBmGv8NaZBZTWvrbjNoL6HVt+IVy3QDQpJs7VRIw3tU=
+-golang.org/x/sys v0.8.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+-golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
+-golang.org/x/text v0.3.3/go.mod h1:5Zoc/QRtKVWzQhOtBMvqHzDpF6irO9z98xDceosuGiQ=
+-golang.org/x/text v0.3.6/go.mod h1:5Zoc/QRtKVWzQhOtBMvqHzDpF6irO9z98xDceosuGiQ=
+-golang.org/x/text v0.9.0 h1:2sjJmO8cDvYveuX97RDLsxlyUxLl+GHoLxBiRdHllBE=
+-golang.org/x/text v0.9.0/go.mod h1:e1OnstbJyHTd6l/uOt8jFFHp6TRDWZR/bV3emEE/zU8=
+-golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
+-golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 h1:E7g+9GITq07hpfrRu66IVDexMakfv52eLZ2CXBWiKr4=
+-golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
+-google.golang.org/protobuf v1.26.0-rc.1/go.mod h1:jlhhOSvTdKEhbULTjvd4ARK9grFBp09yW+WbY/TyQbw=
+-google.golang.org/protobuf v1.28.0/go.mod h1:HV8QOd/L58Z+nl8r43ehVNZIU/HEI6OcFqwMG9pJV4I=
+-google.golang.org/protobuf v1.30.0 h1:kPPoIgf3TsEvrm0PFe15JQ+570QVxYzEvvHqChK+cng=
+-google.golang.org/protobuf v1.30.0/go.mod h1:HV8QOd/L58Z+nl8r43ehVNZIU/HEI6OcFqwMG9pJV4I=
++github.com/ugorji/go/codec v1.3.2 h1:zkEASHHyEClGeURfgNT9PJZVfAbs9oEX9QXggwWNJbc=
++github.com/ugorji/go/codec v1.3.2/go.mod h1:pRBVtBSKl77K30Bv8R2P+cLSGaTtex6fsA2Wjqmfxj4=
++go.mongodb.org/mongo-driver/v2 v2.9.1 h1:jewiFs2m1/VOQp8qhFshX6hWZ+EAXDhZHXExAUMcOgQ=
++go.mongodb.org/mongo-driver/v2 v2.9.1/go.mod h1:SHKN0IWkKmEVGHLjXnni6s4wPKX4v86FTgOeJJFuXcA=
++go.uber.org/mock v0.6.0 h1:hyF9dfmbgIX5EfOdasqLsWD6xqpNZlXblLB/Dbnwv3Y=
++go.uber.org/mock v0.6.0/go.mod h1:KiVJ4BqZJaMj4svdfmHM0AUx4NJYO8ZNpPnZn1Z+BBU=
++go.yaml.in/yaml/v3 v3.0.5 h1:N6y/pJk8buWs9NY5ERU2HSMfm+IuD/OtfdAnq6kESPw=
++go.yaml.in/yaml/v3 v3.0.5/go.mod h1:HVTZu1O7/Vkt2N+BFy8Zza+lnLsABggaTM2ZpNIGuKg=
++golang.org/x/arch v0.31.0 h1:22MlEb14/O/EPCYHFxsDdv5TuLD5dMjT5e2QeJw4ULk=
++golang.org/x/arch v0.31.0/go.mod h1:KcJSod3cqT2dKcjBxqTyGfbumNikqU9p5tHJinPJnuY=
++golang.org/x/crypto v0.57.0 h1:3ZVCjf8Ggz7zneR/EHRVx68Ctf+2pmIMP2UFhh9cC6M=
++golang.org/x/crypto v0.57.0/go.mod h1:Fdz0i5U6CoizGwLda9DttjSk6qlZo25zYNtR+ycvuZA=
++golang.org/x/net v0.59.0 h1:5zfYln+w5XCxwrnMMJPufRgNoXEaGxl0wo5GqPXyues=
++golang.org/x/net v0.59.0/go.mod h1:2DA/G1UfVbCpQPeWTmMPGY7Cs2PkBkwu743bVX5PIVg=
++golang.org/x/sys v0.48.0 h1:bbX/i/6MgT9BVLM9RT1thmxL04yeTAhbEz4SyadbXoo=
++golang.org/x/sys v0.48.0/go.mod h1:hNLxWAXmnKAxqDtdwIYC4bM9oQPEecfsnNMuSxOs3og=
++golang.org/x/text v0.42.0 h1:JbOZXgfeCPU9gacVtYliJqOhD+zhrEqK4LfdpmlUZqI=
++golang.org/x/text v0.42.0/go.mod h1:ojzP1Z+2QtioaF8DTtO8K5q7JWVVYwZKenzujK0Zd0E=
++google.golang.org/protobuf v1.36.12 h1:pJOKDDOyeXErUroCihFAd5LQuwXBSpVnKGrj5o/fwxc=
++google.golang.org/protobuf v1.36.12/go.mod h1:HTf+CrKn2C3g5S8VImy6tdcUvCska2kB7j23XfzDpco=
++gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
+ gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+-gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+-gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c h1:Hei/4ADfdWqJk1ZMxUNpqntNwaWcugrBjAiHlqqRiVk=
+-gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c/go.mod h1:JHkPIbrfpd72SG/EVd6muEfDQjcINNoR0C8j2r3qZ4Q=
+-gopkg.in/errgo.v2 v2.1.0/go.mod h1:hNsd1EY+bozCKY1Ytp96fpM3vjJbqLJn88ws8XvfDNI=
+-gopkg.in/yaml.v2 v2.4.0/go.mod h1:RDklbk79AGWmwhnvt/jBztapEOGDOx6ZbXqjP6csGnQ=
+ gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
+-gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
+-gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
+ gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
+-rsc.io/pdf v0.1.1/go.mod h1:n8OzWcQ6Sp37PL01nO98y4iUCRdTGarVfzxY20ICaU4=
+diff --git a/main.go b/main.go
+index 74e32dc..2667267 100644
+--- a/main.go
++++ b/main.go
+@@ -20,7 +20,7 @@ func ErrorHandler(c *gin.Context) {
+ 	if err != nil {
+ 		c.JSON(500, gin.H{
+ 			"status":  "error",
+-			"message": err.Error(),
++			"message": "Upstream request failed; please try again later",
+ 		})
+ 	}
+ }
+@@ -53,13 +53,17 @@ func main() {
+ 		log.Fatalln("ENV Variable 'URL' is not present")
+ 	}
+ 	router := gin.New()
++	router.SetTrustedProxies([]string{"172.29.80.20"})
+ 	router.Use(CORS())
+ 	router.Use(gzip.Gzip(gzip.BestCompression))
+ 	router.Use(gin.Recovery())
+ 
+-	go chat.BeginTwitchChatConnection()
++	if os.Getenv("UTILIBRE_CHAT_ENABLED") == "true" {
++		go chat.BeginTwitchChatConnection()
++	}
+ 
+-	router.Use(setLang)
++	// Avoid the upstream process-global mutable language race. UI translations
++	// remain browser-local; upstream metadata uses the default English locale.
+ 	router.Use(ErrorHandler)
+ 	routes.SetRoutes(router)
+ 	router.NoRoute(notFoundHandler)
+diff --git a/outbound.go b/outbound.go
+new file mode 100644
+index 0000000..00ce489
+--- /dev/null
++++ b/outbound.go
+@@ -0,0 +1,129 @@
++package main
++
++// Utilibre deployment hardening: bounded public Twitch/CDN destinations,
++// bounded response bodies and deadlines. Visitor credentials are never forwarded.
++import (
++	"context"
++	"errors"
++	"io"
++	"net"
++	"net/http"
++	"net/netip"
++	"net/url"
++	"strings"
++	"time"
++)
++
++const responseLimit int64 = 16 << 20
++
++var hosts = map[string]bool{
++	"gql.twitch.tv": true, "clips-media-assets2.twitch.tv": true, "vod-secure.twitch.tv": true,
++}
++
++func allowedHost(host string) bool {
++	return hosts[host] || strings.HasSuffix(host, ".ttvnw.net") || strings.HasSuffix(host, ".jtvnw.net") || strings.HasSuffix(host, ".twitchcdn.net") || strings.HasSuffix(host, ".cloudfront.net")
++}
++
++func allowedURL(u *url.URL) bool {
++	return u.Scheme == "https" && u.User == nil && (u.Port() == "" || u.Port() == "443") && allowedHost(u.Hostname())
++}
++
++func publicIP(ip netip.Addr) bool {
++	ip = ip.Unmap()
++	if !ip.IsGlobalUnicast() || ip.IsPrivate() || ip.IsLoopback() || ip.IsLinkLocalUnicast() {
++		return false
++	}
++	for _, cidr := range []string{"0.0.0.0/8", "100.64.0.0/10", "192.0.0.0/24", "192.0.2.0/24", "198.18.0.0/15", "198.51.100.0/24", "203.0.113.0/24", "240.0.0.0/4", "2001:db8::/32"} {
++		if netip.MustParsePrefix(cidr).Contains(ip) {
++			return false
++		}
++	}
++	return true
++}
++
++func publicDial(ctx context.Context, network, address string) (net.Conn, error) {
++	host, port, err := net.SplitHostPort(address)
++	if err != nil || !allowedHost(host) || port != "443" {
++		return nil, errors.New("upstream destination denied")
++	}
++	addresses, err := net.DefaultResolver.LookupNetIP(ctx, "ip", host)
++	if err != nil {
++		return nil, err
++	}
++	for _, ip := range addresses {
++		if !publicIP(ip) {
++			return nil, errors.New("non-public upstream address denied")
++		}
++	}
++	dialer := net.Dialer{Timeout: 8 * time.Second}
++	for _, ip := range addresses {
++		connection, e := dialer.DialContext(ctx, network, net.JoinHostPort(ip.String(), port))
++		if e == nil {
++			return connection, nil
++		}
++	}
++	return nil, errors.New("upstream connection failed")
++}
++
++type boundedBody struct {
++	io.ReadCloser
++	remaining int64
++	cancel    context.CancelFunc
++}
++
++func (b *boundedBody) Read(p []byte) (int, error) {
++	if b.remaining <= 0 {
++		b.Close()
++		return 0, errors.New("upstream response exceeds size limit")
++	}
++	if int64(len(p)) > b.remaining {
++		p = p[:b.remaining]
++	}
++	n, err := b.ReadCloser.Read(p)
++	b.remaining -= int64(n)
++	return n, err
++}
++func (b *boundedBody) Close() error { b.cancel(); return b.ReadCloser.Close() }
++
++type publicTransport struct{ inner http.RoundTripper }
++
++func (t publicTransport) RoundTrip(request *http.Request) (*http.Response, error) {
++	postAllowed := request.Method == "POST" && request.URL.Hostname() == "gql.twitch.tv" && request.URL.Path == "/gql"
++	if !allowedURL(request.URL) || (request.Method != "GET" && request.Method != "HEAD" && !postAllowed) {
++		return nil, errors.New("upstream request denied")
++	}
++	ctx, cancel := context.WithTimeout(request.Context(), 20*time.Second)
++	safe := request.Clone(ctx)
++	safe.Header.Del("Cookie")
++	safe.Header.Del("Authorization")
++	safe.Header.Del("Proxy-Authorization")
++	response, err := t.inner.RoundTrip(safe)
++	if err != nil {
++		cancel()
++		return nil, err
++	}
++	if response.ContentLength > responseLimit {
++		response.Body.Close()
++		cancel()
++		return nil, errors.New("upstream response exceeds size limit")
++	}
++	response.Body = &boundedBody{response.Body, responseLimit, cancel}
++	return response, nil
++}
++
++var OutboundTransport http.RoundTripper
++
++func init() {
++	transport := &http.Transport{DialContext: publicDial, TLSHandshakeTimeout: 8 * time.Second,
++		ResponseHeaderTimeout: 12 * time.Second, MaxResponseHeaderBytes: 64 << 10,
++		MaxIdleConns: 20, MaxIdleConnsPerHost: 4, MaxConnsPerHost: 16, IdleConnTimeout: 30 * time.Second}
++	OutboundTransport = publicTransport{transport}
++	http.DefaultClient = &http.Client{Transport: OutboundTransport, Timeout: 25 * time.Second,
++		CheckRedirect: func(req *http.Request, via []*http.Request) error {
++			if len(via) >= 4 || !allowedURL(req.URL) {
++				return errors.New("upstream redirect denied")
++			}
++			return nil
++		},
++	}
++}
+diff --git a/outbound_test.go b/outbound_test.go
+new file mode 100644
+index 0000000..f2deb83
+--- /dev/null
++++ b/outbound_test.go
+@@ -0,0 +1,27 @@
++package main
++
++import (
++	"net/netip"
++	"net/url"
++	"testing"
++)
++
++func TestOutboundPolicy(t *testing.T) {
++	for _, raw := range []string{"https://127.0.0.1/", "http://gql.twitch.tv/gql", "https://gql.twitch.tv.evil.invalid/", "https://user@gql.twitch.tv/", "https://example.org/", "https://gql.twitch.tv:8443/"} {
++		u, _ := url.Parse(raw)
++		if allowedURL(u) {
++			t.Fatalf("accepted %s", raw)
++		}
++	}
++	for _, raw := range []string{"https://gql.twitch.tv/gql", "https://usher.ttvnw.net/api/channel/hls/test.m3u8", "https://static-cdn.jtvnw.net/example.png", "https://video-weaver.test.hls.ttvnw.net/segment.ts"} {
++		u, _ := url.Parse(raw)
++		if !allowedURL(u) {
++			t.Fatalf("rejected %s", raw)
++		}
++	}
++	for _, raw := range []string{"10.10.1.20", "127.0.0.1", "169.254.169.254", "100.64.0.1", "::1", "fc00::1", "::ffff:192.168.0.1"} {
++		if publicIP(netip.MustParseAddr(raw)) {
++			t.Fatalf("accepted %s", raw)
++		}
++	}
++}
+diff --git a/routes/api/users/users.go b/routes/api/users/users.go
+index 89e0be7..fe5ba98 100644
+--- a/routes/api/users/users.go
++++ b/routes/api/users/users.go
+@@ -1,12 +1,21 @@
+ package users
+ 
+ import (
++	"regexp"
+ 	"safetwitch-backend/extractor"
+ 	"safetwitch-backend/extractor/twitch"
+ 
+ 	"github.com/gin-gonic/gin"
+ )
+ 
++var channelName = regexp.MustCompile(`^[A-Za-z0-9_]{1,25}$`)
++
++func validChannels(channels []string) bool {
++	if len(channels) == 0 || len(channels) > 35 { return false }
++	for _, name := range channels { if !channelName.MatchString(name) { return false } }
++	return true
++}
++
+ func Routes(route *gin.Engine) {
+ 	auth := route.Group("/api/users")
+ 
+@@ -40,6 +49,7 @@ func Routes(route *gin.Engine) {
+ 			return
+ 		}
+ 
++		if !validChannels(f.Streamers) { context.AbortWithStatus(400); return }
+ 		data, err := twitch.BulkCheckIfStreamerIsLive(f.Streamers)
+ 		if err != nil {
+ 			context.Error(err)
+@@ -56,6 +66,7 @@ func Routes(route *gin.Engine) {
+ 			return
+ 		}
+ 
++		if !validChannels(f.Streamers) { context.AbortWithStatus(400); return }
+ 		data, err := twitch.BulkFollowingUser(f.Streamers)
+ 		if err != nil {
+ 			context.Error(err)
+diff --git a/routes/proxy/proxy.go b/routes/proxy/proxy.go
+index 34f14df..fb2a6d1 100644
+--- a/routes/proxy/proxy.go
++++ b/routes/proxy/proxy.go
+@@ -26,16 +26,24 @@ func Routes(route *gin.Engine) {
+ 			context.Error(err)
+ 			return
+ 		}
++		defer imageResp.Body.Close()
++		if imageResp.StatusCode != 200 {
++			context.AbortWithStatus(502)
++			return
++		}
+ 		body, err := io.ReadAll(imageResp.Body)
+ 		if err != nil {
+ 			context.Error(err)
+ 			return
+ 		}
+ 
+-		contentType := imageResp.Header.Get("Content-Type")
++		contentType := http.DetectContentType(body)
++		if contentType != "image/png" && contentType != "image/jpeg" && contentType != "image/gif" && contentType != "image/webp" {
++			context.AbortWithStatus(415)
++			return
++		}
+ 
+ 		context.Data(200, contentType, body)
+-		context.JSON(imageResp.StatusCode, imageResp.Body)
+ 	})
+ 
+ 	auth.GET("/stream/:username/hls.m3u8", func(context *gin.Context) {
+@@ -82,6 +90,11 @@ func Routes(route *gin.Engine) {
+ 			context.Error(err)
+ 			return
+ 		}
++		defer segmentData.Body.Close()
++		if segmentData.StatusCode != 200 {
++			context.AbortWithStatus(502)
++			return
++		}
+ 
+ 		segment, err := io.ReadAll(segmentData.Body)
+ 		if err != nil {
+@@ -89,7 +102,7 @@ func Routes(route *gin.Engine) {
+ 			return
+ 		}
+ 
+-		context.Data(200, "application/text", segment)
++		context.Data(200, "video/mp2t", segment)
+ 	})
+ 
+ 	// vod
+@@ -136,6 +149,11 @@ func Routes(route *gin.Engine) {
+ 			context.Error(err)
+ 			return
+ 		}
++		defer segmentData.Body.Close()
++		if segmentData.StatusCode != 200 {
++			context.AbortWithStatus(502)
++			return
++		}
+ 
+ 		segment, err := io.ReadAll(segmentData.Body)
+ 		if err != nil {
+@@ -143,7 +161,7 @@ func Routes(route *gin.Engine) {
+ 			return
+ 		}
+ 
+-		context.Data(200, "application/text", segment)
++		context.Data(200, "video/mp2t", segment)
+ 	})
+ 
+ 	auth.GET("/clip/:clipUrl", func(context *gin.Context) {
+@@ -158,6 +176,7 @@ func Routes(route *gin.Engine) {
+ 			context.Error(err)
+ 			return
+ 		}
++		defer resp.Body.Close()
+ 
+ 		if resp.StatusCode != 200 {
+ 			err := errors.New("status was not 200")
+@@ -165,8 +184,7 @@ func Routes(route *gin.Engine) {
+ 			return
+ 		}
+ 
+-		defer resp.Body.Close()
+-
++		context.Header("Content-Type", "video/mp4")
+ 		_, err = io.Copy(context.Writer, resp.Body)
+ 		if err != nil {
+ 			context.Error(err)
+diff --git a/routes/root/root.go b/routes/root/root.go
+index b257da8..e20666e 100644
+--- a/routes/root/root.go
++++ b/routes/root/root.go
+@@ -1,6 +1,7 @@
+ package root
+ 
+ import (
++	"os"
+ 	"safetwitch-backend/extractor"
+ 	"safetwitch-backend/extractor/chat"
+ 
+@@ -13,6 +14,10 @@ func Routes(route *gin.Engine) {
+ 	auth.GET("", func(context *gin.Context) {
+ 		upgradeHeader := context.Request.Header.Get("Upgrade")
+ 		if upgradeHeader == "websocket" {
++			if os.Getenv("UTILIBRE_CHAT_ENABLED") != "true" {
++				context.AbortWithStatus(403)
++				return
++			}
+ 			chat.ServeWS(context)
+ 		} else {
+ 			context.JSON(200, extractor.FormatMessage("SafeTwitch backend running", true))

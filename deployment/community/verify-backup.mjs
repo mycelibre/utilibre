@@ -29,13 +29,16 @@ try {
     const tables = docker('exec', name, 'psql', '-U', 'postgres', '-d', 'pollaris', '-Atc', "SELECT count(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('poll','vote','users')").trim();
     if (Number(tables) !== 3) throw Error('Pollaris application tables did not restore');
   }
-  execFileSync('python3', ['-c', `import sqlite3,sys
+  for (const filename of ['fmd.sqlite', 'kuma.sqlite']) {
+    if (filename === 'kuma.sqlite' && !existsSync(`${target}/${filename}`)) continue;
+    execFileSync('python3', ['-c', `import sqlite3,sys
 c=sqlite3.connect('file:'+sys.argv[1]+'?mode=ro',uri=True)
 assert c.execute('PRAGMA integrity_check').fetchall()==[('ok',)]
 assert c.execute("SELECT count(*) FROM sqlite_master WHERE type='table'").fetchone()[0]>0
-c.close()`, `${target}/fmd.sqlite`]);
-  writeFileSync(`${target}/RESTORE-VERIFIED.txt`, `${new Date().toISOString()}\nRallly PostgreSQL restore, Pollaris restore (when included), and FMD SQLite integrity passed. This is not a full Android or SSO workflow test. Backup remains on this VM, not off-site.\n`, { mode: 0o600 });
-  console.log('Community PostgreSQL restore and FMD backup integrity passed; private snapshot remains on-host.');
+c.close()`, `${target}/${filename}`]);
+  }
+  writeFileSync(`${target}/RESTORE-VERIFIED.txt`, `${new Date().toISOString()}\nRallly PostgreSQL restore, Pollaris restore (when included), FMD SQLite integrity and Kuma SQLite integrity (when included) passed. This is not a full Android, monitoring or SSO workflow test. Backup remains on this VM, not off-site.\n`, { mode: 0o600 });
+  console.log('Community PostgreSQL restore and SQLite backup integrity passed; private snapshot remains on-host.');
 } finally {
   if (created) docker('rm', '-f', name);
 }

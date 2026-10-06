@@ -33,7 +33,7 @@ export function localizedServiceUrl(id: string, base: string, language: Language
     url.searchParams.set('lang', language);
   } else if (id === 'reactive-resume') {
     url.searchParams.set('locale', language === 'es' ? 'es-ES' : 'en-US');
-  } else if (['vert', 'ittools', 'yopass', 'pairdrop', 'uptime-kuma', 'penpot', 'pollaris'].includes(id) && !path) {
+  } else if (['vert', 'ittools', 'yopass', 'pairdrop', 'uptime-kuma', 'penpot', 'pollaris', 'safetwitch'].includes(id) && !path) {
     url.pathname = '/utilibre-language.html';
     url.search = new URLSearchParams({ lang: language }).toString();
     url.hash = '';

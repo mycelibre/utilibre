@@ -11,6 +11,7 @@
     'status.utilibre.org': { keys: ['locale'], path: '/status/utilibre' },
     'design.utilibre.org': { keys: ['penpot-global:app.util.i18n/locale'], path: '/', json: true },
     'pollaris.utilibre.org': { keys: [], path: '/', nativePreferences: true },
+    'twitch.utilibre.org': { keys: ['language'], path: '/', locales: { es: 'es-ES', en: 'en-US' } },
   }[location.hostname];
   if (!settings) return;
   document.documentElement.lang = lang;
@@ -29,7 +30,8 @@
       const saved = await fetch('/preferences', { method: 'POST', body: data, credentials: 'same-origin', referrer: `${location.origin}/` });
       if (!saved.ok) throw new Error('preferences_not_saved');
     }
-    for (const key of settings.keys) localStorage.setItem(key, settings.json ? JSON.stringify(lang) : lang);
+    const locale = settings.locales?.[lang] || lang;
+    for (const key of settings.keys) localStorage.setItem(key, settings.json ? JSON.stringify(locale) : locale);
     location.replace(settings.path);
   } catch {
     document.getElementById('message').textContent = lang === 'es'

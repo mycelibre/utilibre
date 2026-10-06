@@ -32,7 +32,7 @@ describe('verified upstream language links', () => {
     expect(localizedServiceUrl('reactive-resume', 'https://cv.test/', 'es')).toBe('https://cv.test/?locale=es-ES');
   });
   it('uses a fixed handoff for local preference apps and does not guess for unsupported apps', () => {
-    for (const id of ['vert', 'ittools', 'yopass', 'pairdrop', 'uptime-kuma', 'penpot', 'pollaris']) {
+    for (const id of ['vert', 'ittools', 'yopass', 'pairdrop', 'uptime-kuma', 'penpot', 'pollaris', 'safetwitch']) {
       expect(localizedServiceUrl(id, 'https://tool.test/', 'es')).toBe('https://tool.test/utilibre-language.html?lang=es');
     }
     for (const id of ['miniqr', 'hatsh', 'rssbridge', 'redlib']) {

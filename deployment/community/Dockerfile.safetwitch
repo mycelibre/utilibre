@@ -1,0 +1,18 @@
+# Context: SafeTwitch caeb85a77be3b18a6916d2caa626d09e94d1f8b2 plus published patch.
+FROM node:24.14.0-alpine3.23@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS build
+WORKDIR /src
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts --no-audit
+COPY . .
+ENV SAFETWITCH_BACKEND_DOMAIN=twitch.utilibre.org \
+    SAFETWITCH_INSTANCE_DOMAIN=twitch.utilibre.org \
+    SAFETWITCH_HTTPS=true \
+    SAFETWITCH_DEFAULT_LOCALE=en-US \
+    SAFETWITCH_FALLBACK_LOCALE=en-US \
+    SAFETWITCH_DEFAULT_THEME=dark \
+    SAFETWITCH_CHAT_ENABLED=false
+RUN npm run build
+FROM nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+COPY --from=build /src/dist /app
+USER 101:101
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

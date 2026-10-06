@@ -1,5 +1,5 @@
 # Reviewed reader gateways bind the app LAN and accept only the Caddy VM.
-# SafeTwitch remains loopback-only until its build/playback checks are complete.
+# All four readers passed bounded backend content/playback checks.
 name: utilibre-reader-evaluation
 x-runtime: &runtime
   restart: "no"
@@ -38,22 +38,29 @@ services:
     depends_on: [fourget]
   safetwitch-backend:
     <<: *runtime
-    image: codeberg.org/safetwitch/safetwitch-backend@sha256:d9e5de75f5917438ad4d1e3e46b77d4fd6074272173eab0ef10ed0e73a1c93f8
-    environment: {PORT: "7000", URL: "http://127.0.0.1:3146", GIN_MODE: release}
+    restart: unless-stopped
+    image: utilibre-safetwitch-backend:91dda1c-p1
+    mem_limit: 512m
+    environment: {PORT: "7000", URL: "https://twitch.utilibre.org", GIN_MODE: release, UTILIBRE_CHAT_ENABLED: "false", GOMEMLIMIT: 256MiB}
     networks:
       twitch: {ipv4_address: 172.29.80.10}
   safetwitch:
     <<: *runtime
-    image: utilibre-safetwitch-evaluation:caeb85a-p1
-    build:
-      context: .
-      dockerfile: Dockerfile.safetwitch-evaluation
+    restart: unless-stopped
+    image: utilibre-safetwitch:caeb85a-p1
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
-    ports: ["127.0.0.1:3146:8080"]
-    volumes: ["./safetwitch-evaluation.conf:/etc/nginx/nginx.conf:ro"]
+    ports: ["10.10.1.43:3146:8080"]
+    volumes:
+      - ./safetwitch-evaluation.conf:/etc/nginx/nginx.conf:ro
+      - ../toolbox/language.html:/srv/language/language.html:ro
+      - ../toolbox/language.js:/srv/language/language.js:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777"]
+    logging: {driver: json-file, options: {max-size: 5m, max-file: "2"}}
     depends_on: [safetwitch-backend]
-    networks: [twitch]
+    networks:
+      twitch: {ipv4_address: 172.29.80.20}
   anonymousoverflow:
     <<: *runtime
     restart: unless-stopped
