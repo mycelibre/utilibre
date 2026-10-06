@@ -85,6 +85,46 @@ Other replacements reviewed October 6:
   operator API registration and terms acceptance. No verified LibreMDB drop-in
   has been deployed, and its obsolete runtime remains stopped.
 
+### Reader comparison follow-up — October 6, 21:36 UTC
+
+Working instances are evidence to investigate, not proof that all frontends are
+universally broken. This follow-up changes the earlier LibreMDB diagnosis; no
+production deployment or privacy setting was changed during these comparisons.
+
+- **LibreMDB:** the [darlopvil fork](https://github.com/darlopvil/libremdb-fork)
+  at `b233f4e24acfb4afbe55b7c13798832ca8068086` replaces HTML extraction with
+  anonymous IMDb GraphQL POSTs. Using its documented request header, a minimal
+  title query from this application VM returned HTTP 200 and the correct title
+  for `tt1049413`. The earlier generic GraphQL rejection does **not** establish
+  that this method is blocked. This verifies data access, not the complete fork's
+  UI, full queries or media. The API response explicitly excludes public use;
+  [IMDb's published data-use conditions](https://help.imdb.com/article/imdb/general-information/can-i-use-imdb-data-in-my-software/G5JTRESSHJBBHTGX)
+  also restrict extraction and republication. Resolve the public-use basis before
+  launching this route. The fork still pins Next 12.2.5 and old dependencies, so
+  runtime/security modernization is independently required. No API credentials,
+  paid agreement, challenge solver or public deployment was added.
+- **Rimgo:** a bounded range request for `wG1nGfK.mp4` at `ri.nadeko.net`
+  returned HTTP 200, `video/mp4`, a content range and a valid MP4 signature;
+  the same path on `rimgo.utilibre.org` returned 429 with Retry-After 601.
+  Nadeko's [privacy page](https://ri.nadeko.net/privacy) identifies version
+  1.4.2 and Chile/Movistar hosting. This supports investigating outbound network
+  access; it does not prove every Hetzner address is blocked. Rimgo's
+  [provider guidance](https://rimgo.codeberg.page/docs/getting-started/unsupported-providers/)
+  documents this failure class. The app VM has no global IPv6 address/default
+  IPv6 route, regardless of the public edge's AAAA record. No external instance
+  was configured as our upstream; no new proxy/provider was provisioned.
+- **BreezeWiki:** browser checks loaded the same `/zelda/wiki/Link` article
+  at `breezewiki.nadeko.net` and `wiki.utilibre.org`. The other instance's
+  browser contacted `zelda.fandom.com` and referenced direct Fandom-CDN images;
+  ours retrieved the article server-side but its first proxied article image
+  returned 403. Media requests were deliberately bounded, so this is **not** a
+  full media-success claim for the other instance. Upstream's
+  [configuration guide](https://docs.breezewiki.com/Configuration.html) explains
+  the proxy/JSONP distinction. Direct browser media connections could work from
+  a visitor's network but would disclose their IP to the upstream; approval and
+  accurate privacy wording are needed before changing our configuration. Native
+  JSONP/direct-media mode has not been enabled.
+
 ### Existing schedules
 
 ```sh
