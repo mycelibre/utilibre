@@ -1,22 +1,22 @@
 # Browser toolbox review — 2026-10-06
 
-## Public-reader expansion checkpoint — October 6, 12:50 UTC
+## Public-reader expansion checkpoint — October 6, after the edge update
 
 This section supersedes older deployment states below. Installation, a passing
 homepage, successful content retrieval, and public readiness are separate checks.
 
 | Application | Listener | Verified / remaining work |
 | --- | --- | --- |
-| Rallly 4.15.3 | app LAN 3123; `poll.utilibre.org` | Healthy app/database; native Utilibre OIDC, verified-email/approved-group policy, email-login bypass routes blocked. Public HTTPS returns 525, so completed login, poll creation and guest voting are not yet verified. |
-| Priviblur 251a8e6 | app LAN 3139; `tumblr.utilibre.org` | Tumblr staff blog and an individual post rendered; security dependency updates, private-network egress blocks and RAM-only cache. Public HTTPS 525. Modified-source archive linked prominently. |
-| Mezzo 1.4.0 | app LAN 3140; `tenor.utilibre.org` | A real GIF search returned results and a proxied GIF returned HTTP 200 with image/gif. Public HTTPS 525; final public browser test pending. |
-| FMD Server 0.17.0 | app LAN 3141; `fmd.utilibre.org` | Invitation token required. Two synthetic accounts demonstrated opaque-location round-trip and account separation, then both accounts/data were deleted. HTTPS 525 and real Android/push tests remain. |
+| Rallly 4.15.3 | app LAN 3123; `poll.utilibre.org` | Public HTTPS and native Utilibre OIDC now pass: two approved synthetic users reached account setup; the non-approved user was denied. Email-login bypass routes remain blocked. Onboarding, poll creation and guest voting still need end-to-end verification. |
+| Priviblur 251a8e6 | app LAN 3139; `tumblr.utilibre.org` | Tumblr staff blog and an individual post rendered locally; security dependency updates, private-network egress blocks and RAM-only cache. Public HTTPS now responds successfully; public content/media and Spanish browser checks remain. Modified-source archive linked prominently. |
+| Mezzo 1.4.0 | app LAN 3140; `tenor.utilibre.org` | A real local GIF search returned results and a proxied GIF returned HTTP 200 with image/gif. Public HTTPS now responds successfully; final public content/browser test pending. |
+| FMD Server 0.17.0 | app LAN 3141; `fmd.utilibre.org` | Invitation token required. Two synthetic accounts demonstrated opaque-location round-trip and account separation, then both accounts/data were deleted. Public HTTPS now responds successfully; public API and real Android/push tests remain. |
 | Dumb | app LAN 3142; proposed `lyrics.utilibre.org` | Homepage works, but Genius search fails and a lyric URL returns a soft error. Not publicly advertised as working. |
 | DeGoog 1.0.0 core | loopback 3143 | Public-instance lockdown denies unauthenticated settings API reads/writes. Indexer defaults off. No engines installed: the separate official extensions repository has no identified license. |
 | LibreMDB | loopback 3144, stopped | IMDb search/title requests failed. Published image contains Node 18 / Next.js 12; public deployment requires a supported build and working upstream access. |
 | 4get 03ba5d7 | loopback 3145 | Built with Apache and PHP 8.4 on Alpine 3.23; real DuckDuckGo and Wiby searches passed. No rotating proxies or browser-challenge workarounds. Public gateway/abuse review remains. |
 | SafeTwitch | loopback 3146 | Discovery API returns real categories. Static frontend served by current pinned nginx; old backend has unrestricted URL-fetch routes. Must harden and test playback before opening publicly. |
-| AnonymousOverflow | loopback 3147 | Real Stack Overflow question and answers rendered through the API. Public runtime/security, quota/cache and HTTPS checks remain. |
+| AnonymousOverflow | loopback 3147 | Real Stack Overflow question and answers rendered through the API. Reachability-aware govulncheck found 14 advisories across three old dependency modules. Dependency/runtime remediation, quota/cache and public HTTPS checks remain. |
 | GotHub 24bedc8 | loopback 3148 | Public Utilibre GitHub repository rendered. Image uses Alpine 3.16 and older dependencies; update and review before exposing it. Upstream seeks maintainers. |
 
 Runtime recipes are `deployment/community/compose*.yaml`. Evaluation services
@@ -38,18 +38,24 @@ The unsupported `lyrics.utilibre.org` block has now been removed from the
 deployment file so applying it does not expose a nonfunctional reader. The
 remaining Caddyfile passes local adaptation and provisioning validation; this
 does not establish successful certificate issuance or connectivity on the edge.
-The same-day public recheck found 21 of the 22 previously enabled service roots
-reachable over HTTPS. SearXNG's public IPv4 connection timed out and IPv6 failed
-from this VM; its local `/healthz` returned OK. Do not report every service live
-until this path and the four new TLS routes have passed external checks.
+The four new public routes now pass ordinary verified HTTPS GETs after the
+operator's edge update. The same-day recheck also found 21 of the 22 previously
+enabled service roots reachable from this VM. SearXNG's public IPv4 connection
+times out from this VM, and this VM has no IPv6 route; its local `/healthz`
+returns OK and the operator confirms public search works. Treat this as a
+vantage-specific connectivity failure, not evidence of a general search outage.
+No SearXNG limiter or proxy-trust configuration was weakened for these probes.
 
 Rallly uses the AGPL distribution without purchasing a key or altering license
 checks. Native `instance_settings.footer_links` contains English/Spanish return
-links and the matching upstream source. All three temporary Rallly QA identities
-were retired: groups cleared, passwords made unusable, sessions/tokens/MFA
-fixtures revoked; no owner credentials were changed. The approved callback
-could not complete because of public TLS, while the outsider policy rejected
-access. Community snapshot `2026-10-06T12-31-17-122Z` passed a disposable
+links and the matching upstream source. The original three QA identities remain
+retired. A fresh `20261006b` run verified public password + MFA login, completed
+the approved OIDC callback, and rejected the outsider. All three fresh identities
+were then retired too: groups cleared, passwords made unusable, sessions/tokens/
+MFA fixtures revoked. The two empty synthetic Rallly accounts and their app
+sessions were deleted; no owner credentials or real user data were changed.
+Run-specific QA scripts refuse credential overwrites or reused usernames.
+Community snapshot `2026-10-06T12-31-17-122Z` passed a disposable
 PostgreSQL restore and FMD SQLite integrity checks. It is on-host only and
 unscheduled, not a complete backup/recovery service.
 

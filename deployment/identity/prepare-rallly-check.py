@@ -1,19 +1,24 @@
 """Create isolated, disposable Rallly QA identities; never modify owner accounts."""
 import json
 import os
+import re
 from pathlib import Path
 from secrets import token_urlsafe, token_hex
 from django.db import transaction
 from authentik.core.models import User, Group
 from authentik.stages.authenticator_totp.models import TOTPDevice
 
-target = Path('/data/private/rallly-check-users.json')
+run = os.environ.get('UTILIBRE_RALLLY_CHECK_RUN', '')
+if run and not re.fullmatch(r'[a-z0-9]{1,20}', run):
+    raise ValueError('QA run must be 1–20 lowercase letters or digits')
+run_suffix = '-' + run if run else ''
+target = Path('/data/private/rallly-check-users' + run_suffix + '.json')
 if target.exists():
     raise RuntimeError('Rallly QA credentials already exist; do not overwrite them')
 checks = []
 with transaction.atomic():
     for suffix in ['a', 'b', 'denied']:
-        username = 'utilibre-rallly-check-' + suffix
+        username = 'utilibre-rallly-check-' + suffix + run_suffix
         if User.objects.filter(username=username).exists():
             raise RuntimeError('QA username already exists')
         password, key = token_urlsafe(36), token_hex(20)
