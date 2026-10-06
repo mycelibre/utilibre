@@ -35,7 +35,7 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   const index = element('aside', 'ledger-index');
   index.ariaLabel = t('home.catalog.taskIndex');
   const guideword = element('p', 'ledger-guideword', t('home.catalog.taskIndex'));
-  const taskCue = element('p', 'task-scroll-cue', t('home.catalog.taskCue'));
+  const taskCue = element('p', 'task-scroll-cue', t('home.catalog.taskCue').replace('{count}', String(discoveryGroups.length)));
   const taskNav = element('nav', 'task-navigation');
   taskNav.ariaLabel = t('home.catalog.taskIndex');
   const taskList = element('ol', 'task-index-list');

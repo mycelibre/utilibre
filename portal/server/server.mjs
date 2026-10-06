@@ -386,6 +386,8 @@ function servePublicConfig(response) {
     publicOverflowUrl: publicServiceUrl(process.env.PUBLIC_OVERFLOW_URL),
     publicTwitchUrl: publicServiceUrl(process.env.PUBLIC_TWITCH_URL),
     publicDegoogUrl: publicServiceUrl(process.env.PUBLIC_DEGOOG_URL),
+    // Native-client launch only; never accept credentials or arbitrary schemes.
+    publicMumbleUrl: process.env.PUBLIC_MUMBLE_URL === 'mumble://mumble.utilibre.org:64738/' ? process.env.PUBLIC_MUMBLE_URL : '',
     searxngDeployedVersion: deployedSearchVersion(),
     listedServices: csv(process.env.LISTED_SERVICES || ''),
     enabledServices: [...ENABLED_SERVICES],

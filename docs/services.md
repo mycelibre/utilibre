@@ -11,7 +11,7 @@ promise.
 
 ## Operated public services
 
-The October 6 expansion has 37 enabled applications; see the concise
+The October 6 expansion has 38 enabled applications; see the concise
 [current tool list](../README.md#tools) and machine-readable
 [delivery checklist](../deployment/community/delivery-checklist.json).
 Reactive Resume, Penpot, Actual Budget, Wakapi and Rallly use approved Utilibre
@@ -20,8 +20,8 @@ self-registration remains closed for these account services. FMD and Pollaris
 have their own application-specific access and abuse controls.
 
 Dumb, LibreMDB, BreezeWiki and Rimgo remain visible with specific upstream
-failures, not claimed as usable. Password-protected Mumble works on the private
-network but awaits public TCP/UDP forwarding and DNS-only configuration.
+failures, not claimed as usable. Password-protected Mumble passes outside-network
+authentication and TCP voice loopback; public UDP audio remains unverified.
 Current endpoints, licensing, privacy boundaries and workflow checks are in
 [the deployment review](toolbox-review.md); [operations](expanded-operations.md)
 records the newer ports, backup timers and alerting.

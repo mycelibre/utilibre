@@ -104,6 +104,7 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
     publicOverflowUrl: 'https://overflow.utility.test/', publicTwitchUrl: 'https://twitch.utility.test/',
     publicDegoogUrl: 'https://degoog.utility.test/', publicQrToolsUrl: 'https://qrtools.utility.test/',
     publicInstagramUrl: 'https://gram.utility.test/',
+    publicMumbleUrl: 'mumble://mumble.utilibre.org:64738/',
     publicResumeUrl: 'https://cv.utility.test/', publicDesignUrl: 'https://design.utility.test/', publicBudgetUrl: 'https://budget.utility.test/',
     listedServices: ['whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet', 'translite'],
     enabledServices: catalog.filter((entry) => entry.kind === 'service').map((entry) => entry.id),
@@ -112,7 +113,12 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
   for (const language of ['en', 'es'] as const) {
     await page.emulateMedia({ colorScheme: language === 'es' ? 'dark' : 'light' });
     await page.goto(`/${language}/`);
-    await expect(catalogRows(page)).toHaveCount(37);
+    await expect(catalogRows(page)).toHaveCount(38);
+    await expect(page.locator('.task-navigation a')).toHaveCount(9);
+    await expect(page.locator('.task-scroll-cue')).toHaveText(language==='es'?'9 grupos · deslizá':'9 groups · scroll');
+    const mumbleLink=page.locator('[data-catalog-id="mumble"] .catalog-ledger-launch');
+    await expect(mumbleLink).toHaveAttribute('href','mumble://mumble.utilibre.org:64738/');
+    await expect(mumbleLink).not.toHaveAttribute('target','_blank');
     await expect(page.locator('[data-catalog-id="degoog"] .catalog-ledger-launch')).toHaveAttribute('href', 'https://degoog.utility.test/');
     await expect(page.locator('[data-catalog-id="qr-offline"] .catalog-ledger-launch')).toHaveAttribute('href', `https://qrtools.utility.test/?lang=${language}`);
     await expect(page.locator('[data-catalog-id="kittygram"] .catalog-ledger-launch')).toHaveAttribute('href', 'https://gram.utility.test/');

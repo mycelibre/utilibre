@@ -100,6 +100,10 @@ export function renderCatalogRow(
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     link.ariaLabel = `${launchText}: ${name} (${t('a11y.opensNewTab')})`;
+    if (launch.href.startsWith('mumble:')) {
+      link.removeAttribute('target');
+      link.ariaLabel = `${launchText}: ${name}`;
+    }
     if (launch.external) {
       const cue = element('span', 'catalog-ledger-external-cue', '↗');
       cue.ariaHidden = 'true';

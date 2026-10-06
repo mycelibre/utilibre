@@ -4,10 +4,14 @@
 
 ### Latest checkpoint — October 6, QR/Gram/DeGoog launch
 
-**37 services are enabled and have passed their relevant public checks.**
+**38 services are enabled: 37 web services plus password-protected Mumble.**
+Relevant public web workflows and Mumble's TCP voice fallback have passed;
+public Mumble UDP audio remains unverified.
 The current machine-readable inventory is
 [`delivery-checklist.json`](../deployment/community/delivery-checklist.json).
 Earlier checkpoints below are historical, not instructions to disable services.
+The mobile category cue now derives its count from the nine actual categories;
+the stale hard-coded "4 groups" text has been removed in both languages.
 
 - **QR Tools:** public at `qrtools.utilibre.org:443`, backend3155, MIT build
   `0fde700-p2`. Fixed the code being drawn off-center inside its image, including
@@ -29,9 +33,13 @@ Earlier checkpoints below are historical, not instructions to disable services.
   includes the exact core revision, engines, licenses and deployment material.
 - **Mumble:** the operator selected password protection. It is configured on
   `10.10.1.43:64738` TCP and UDP; correct/incorrect-password protocol tests pass.
-  Public DNS remains Cloudflare-proxied. DNS-only and public TCP/UDP forwarding
-  are still needed. A normal Caddy HTTP block is insufficient; public voice is
-  not yet verified.
+  Public DNS changed to the direct IPv4 address during final checks. An independent
+  Tor-routed check then passed public authentication and TCP voice loopback with
+  the server certificate pinned. A valid 20 ms Opus silence packet was relayed
+  exactly and separately decoded in Chromium. No other participant hears this
+  loopback probe. The app VM's direct timeout is consistent with NAT reflection
+  being absent, not proof of a public outage. Native client launch is enabled;
+  public UDP voice remains unverified. Credentials are never put in launch URLs.
 - **Rimgo:** HTTPS is reachable, but Imgur media still returns429. The gateway
   now removes the erroneous one-year cache header from errors, uses`no-store`
   and supplies`Retry-After`. A per-upstream cooldown prevents repeated requests
@@ -52,7 +60,8 @@ Earlier checkpoints below are historical, not instructions to disable services.
 
 Account backups now run daily at04:40UTC; identity and expanded PostgreSQL/SQLite
 restore rehearsals passed. Interrupted-run recovery and low-disk/failure alerts
-are configured. A five-minute host watcher checks all37Kuma monitors plus
+are configured. A five-minute host watcher checks Kuma's web-service monitors
+and Mumble's explicitly labeled private TCP monitor, plus
 disk/inode/memory thresholds and sends verified-STARTTLS mail through
 `10.10.1.20:26` while checking the certificate for`mx.mailgt.dev`. Its test was
 accepted by the relay. This is not independent monitoring of a wholeVM outage;

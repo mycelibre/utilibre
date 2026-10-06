@@ -21,7 +21,7 @@ application gateways bind `10.10.1.43`. Preserve its existing Cloudflare-only tr
 | Kittygram | gram.utilibre.org | 3154 |
 | QR Tools | qrtools.utilibre.org | 3155 |
 | DeGoog | degoog.utilibre.org | 3156 |
-| Mumble | mumble.utilibre.org | 64738 TCP **and** UDP — public route pending |
+| Mumble | mumble.utilibre.org | 64738 TCP **and** UDP — public TCP voice verified; UDP unverified |
 
 DeGoog's direct port 3143, LibreMDB's 3144 and Kuma administration 3135 remain
 loopback-only. Do not route them through Caddy. The current Caddy HTTP blocks are
@@ -63,10 +63,20 @@ node deployment/community/check-qr-offline.mjs
 node deployment/community/check-new-readers.mjs --only=gram
 node deployment/community/check-degoog.mjs
 node deployment/community/check-mumble.mjs
+# After the edge forwarding is applied; pins the private server certificate:
+node deployment/community/check-mumble.mjs --public
+# Optional outside-network test via a temporary local Tor SOCKS listener on9151:
+node deployment/community/check-mumble.mjs --tor --voice
 ```
 
-The Mumble check verifies private-network TLS/protocol authentication, not public
-UDP audio. Reader tests make real upstream requests: do not loop them against
+The default Mumble check verifies private-network TLS/protocol authentication.
+`--public` additionally checks public-hostname TCP authentication, not UDP audio.
+`--tor --voice` uses an independently routed TCP connection, pins the server's
+LAN certificate before sending credentials, and verifies a valid Opus silence
+packet through server loopback. No other participant hears the probe. This
+passed on October 6. A direct connection from the application VM times out
+despite working external TCP access, consistent with missing NAT reflection.
+Reader tests make real upstream requests: do not loop them against
 429/challenge responses. Rimgo's cooldown honors longer upstream Retry-After
 values and otherwise waits ten minutes; its state is in memory.
 
@@ -80,3 +90,24 @@ DeGoog uses official 1.0.0 plus three pinned AGPL SearXNG engines. Run
 `configure-degoog.mjs` to install/configure the curated engine set, then restart
 the DeGoog service. The script preserves existing identity/credentials and saves
 private pre-change settings. Its native privacy panel links the source archive.
+
+## Mumble
+
+Use a [Mumble client](https://www.mumble.info/downloads/), not a web browser:
+
+- Server: `mumble.utilibre.org`
+- Port: `64738`
+- Password: request access from `admin@utilibre.org`; it is not published here.
+- Certificate: self-signed. Compare its SHA-256 fingerprint before accepting it:
+  `83:FA:6A:F8:C6:79:77:E0:FE:4E:DA:3B:1F:6C:83:D6:E5:B2:49:60:CA:96:9E:DD:87:FD:86:E1:4C:38:EB:01`
+
+Public TCP authentication and voice fallback are verified. Public UDP voice
+still needs a normal external-client test; allow/forward UDP64738 as well as
+TCP64738. The Kuma monitor is explicitly a private TCP-listener check, not a
+claim that this public UDP path is monitored. The join password is separate
+from the private SuperUser administrator password.
+
+En español: instalá un cliente de Mumble, conectate a `mumble.utilibre.org` en
+el puerto `64738` y pedí la contraseña a `admin@utilibre.org`. Compará la huella
+del certificado antes de aceptarlo. La voz por TCP está verificada; falta
+verificar UDP desde una conexión externa. No compartás la contraseña de SuperUser.

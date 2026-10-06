@@ -38,7 +38,7 @@ export const es: Record<keyof typeof EnglishDictionary, string> = {
   'home.catalog.title': 'Servicios alojados',
   'home.catalog.intro': 'Una pequeña selección en la que el alojamiento independiente elimina una barrera de acceso real.',
   'home.catalog.taskIndex': 'Explorar por tarea',
-  'home.catalog.taskCue': '4 grupos · deslizá',
+  'home.catalog.taskCue': '{count} grupos · deslizá',
   'home.catalog.indexNote': 'Usá el índice de tareas, buscá o abrí el catálogo completo de A a Z.',
   'home.catalog.taskGroups': 'grupos de tareas',
   'home.catalog.featured': 'Herramientas',

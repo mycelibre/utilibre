@@ -44,7 +44,7 @@ const services = [
   { id: 'anonymousoverflow', hostKey: 'PUBLIC_OVERFLOW_HOST', urlKey: 'PUBLIC_OVERFLOW_URL', portKey: 'OVERFLOW_PORT' },
   { id: 'safetwitch', hostKey: 'PUBLIC_TWITCH_HOST', urlKey: 'PUBLIC_TWITCH_URL', portKey: 'SAFETWITCH_PORT' },
 ];
-const allowedServices = new Set(services.map(({ id }) => id));
+const allowedServices = new Set([...services.map(({ id }) => id), 'mumble']);
 const listableServices = new Set([...allowedServices, 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'dumb', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet', 'rimgo', 'mumble']);
 
 // Stale settings should fail loudly instead of silently republishing a service
@@ -135,6 +135,10 @@ export function validateEnvironmentValues(values, { launch = false, assignedAddr
     if (!listableServices.has(id)) errors.push(`LISTED_SERVICES contains unsupported or retired ID: ${id}`);
   }
   if (!enabled.includes('searxng')) errors.push('ENABLED_SERVICES must include searxng.');
+  if (enabled.includes('mumble') || values.PUBLIC_MUMBLE_URL) {
+    if (values.PUBLIC_MUMBLE_URL !== 'mumble://mumble.utilibre.org:64738/') errors.push('PUBLIC_MUMBLE_URL must be the exact credential-free Utilibre Mumble client URL.');
+    if (!enabled.includes('mumble') && !listed.includes('mumble')) errors.push('PUBLIC_MUMBLE_URL requires mumble to be enabled or explicitly listed.');
+  }
 
   const composeProfiles = csv(values.COMPOSE_PROFILES ?? '');
   if (enabled.includes('redlib') !== composeProfiles.includes('privacy-frontends')) {

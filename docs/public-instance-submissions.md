@@ -23,5 +23,6 @@ operator-maintained lists rather than a central acceptance workflow. FMD's
 alternative-implementations page is not a directory of public hosted instances.
 
 Do not submit broken deployments as healthy: Rimgo playback, Dumb, LibreMDB and
-BreezeWiki's complete page workflow still have upstream failures. Mumble remains
-password-protected and requires public TCP/UDP routing; it is not an open server.
+BreezeWiki's complete page workflow still have upstream failures. Mumble is
+password-protected with verified public TCP voice; it is not an open server,
+and public UDP audio remains unverified.

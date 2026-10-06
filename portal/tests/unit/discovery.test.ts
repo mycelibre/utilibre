@@ -14,6 +14,7 @@ import {
 import type { PublicConfig } from '../../src/config';
 
 const baseConfig: PublicConfig = {
+  publicMumbleUrl: '',
   publicDegoogUrl: '',
   publicBooksUrl: '', publicQrToolsUrl: '', publicInstagramUrl: '', publicFourgetUrl: '', publicOverflowUrl: '', publicTwitchUrl: '',
   projectName: 'Utilibre', projectTagline: '', projectTaglineEn: '', projectTaglineEs: '',
@@ -70,6 +71,12 @@ describe('catalog discovery metadata', () => {
 });
 
 describe('config-gated catalog discovery', () => {
+  it('opens Mumble in its native client only when explicitly enabled', () => {
+    const entry=catalogEntry('mumble')!;
+    const url='mumble://mumble.utilibre.org:64738/';
+    expect(entryLaunch(entry,'es',config({publicMumbleUrl:url}))).toBeNull();
+    expect(entryLaunch(entry,'es',config({enabledServices:['mumble'],publicMumbleUrl:url}))?.href).toBe(url);
+  });
   it('launches the verified DeGoog deployment only when configured and enabled', () => {
     const entry=catalogEntry('degoog')!;
     expect(entryLaunch(entry,'es',config({publicDegoogUrl:'https://degoog.utility.test/'}))).toBeNull();

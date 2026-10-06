@@ -75,6 +75,14 @@ test('accepts the retained four-service launch set', () => {
   assert.equal(validateLaunch(launchValues()).ENABLED_SERVICES, 'searxng,redlib,freshrss,privatebin');
 });
 
+test('allows only the reviewed credential-free Mumble native launch', () => {
+  const ENABLED_SERVICES=launchValues().ENABLED_SERVICES+',mumble';
+  assert.equal(validateLaunch(launchValues({ENABLED_SERVICES,PUBLIC_MUMBLE_URL:'mumble://mumble.utilibre.org:64738/'})).PUBLIC_MUMBLE_URL,'mumble://mumble.utilibre.org:64738/');
+  for(const PUBLIC_MUMBLE_URL of ['', 'javascript:alert(1)', 'mumble://user:secret@mumble.utilibre.org:64738/', 'mumble://elsewhere.example:64738/']){
+    assert.throws(()=>validateLaunch(launchValues({ENABLED_SERVICES,PUBLIC_MUMBLE_URL})),/PUBLIC_MUMBLE_URL/);
+  }
+});
+
 test('permits only an immutable official SearXNG image override', () => {
   const pin = `docker.io/searxng/searxng:2026.10.4-d48c4b555@sha256:${'a'.repeat(64)}`;
   assert.equal(validateLaunch(launchValues({ SEARXNG_IMAGE: pin })).SEARXNG_IMAGE, pin);

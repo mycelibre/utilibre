@@ -286,16 +286,18 @@ function newInstallations(): CatalogEntry[] {
       modified:true,operationalStatus:entry.id==='kittygram'?'operational':'unavailable',
     })),
     {
-      id:'mumble',...providerMetadata('mumble'),kind:'service',implementation:'upstream-application',category:'service',discoveryGroup:'media',featuredOrder:51,
-      name:{en:'Voice chat · Mumble',es:'Chat de voz · Mumble'},description:{en:'Low-latency group voice chat using the Mumble desktop or mobile client.',es:'Conversá por voz en grupo con un cliente de Mumble para computadora o teléfono.'},
-      help:{en:'Password-protected access was selected and is configured. The server listens on the private network; public DNS-only TCP/UDP routing still needs to reach it. This requires a Mumble client, not a browser.',es:'El acceso con contraseña ya está configurado. El servidor escucha en la red privada; falta conectarlo mediante DNS sin proxy y una ruta pública TCP/UDP. Necesitás un cliente de Mumble, no un navegador.'},
-      unavailableReason:{en:'Password protection is ready; public voice networking is still pending.',es:'La contraseña ya está configurada; falta la conexión pública de voz.'},
+      id:'mumble',...providerMetadata('mumble'),kind:'service',implementation:'upstream-application',category:'service',discoveryGroup:'media',featuredOrder:51,configUrlKey:'publicMumbleUrl',
+      name:{en:'Voice chat · Mumble',es:'Chat de voz · Mumble'},description:{en:'Password-protected group voice chat using a Mumble desktop or mobile client.',es:'Conversá por voz en grupo con contraseña y un cliente de Mumble para computadora o teléfono.'},
+      launchLabel:{en:'Open Mumble',es:'Abrir Mumble'},
+      help:{en:'Password-protected: request the join password from admin@utilibre.org. Connect a Mumble client to mumble.utilibre.org, port 64738. Public authentication and TCP voice fallback have been tested from outside the network; public UDP audio is not yet verified. Check the self-signed certificate fingerprint in the connection guide. This is not a browser call tool.',es:'Acceso con contraseña: pedila a admin@utilibre.org. Conectá un cliente de Mumble a mumble.utilibre.org, puerto 64738. Se verificaron el acceso público y la voz por TCP desde fuera de la red; falta verificar el audio UDP público. Compará la huella del certificado autofirmado con la guía de conexión. No funciona como llamada en el navegador.'},
+      quickLinks:[{path:'https://github.com/mycelibre/utilibre/blob/main/docs/expanded-operations.md#mumble',label:{en:'Connection guide',es:'Guía de conexión'}}],
+      unavailableReason:{en:'Mumble is not enabled in this portal configuration.',es:'Mumble no está habilitado en esta configuración del portal.'},
       labels:['server'],filesUploaded:false,upstreamServices:[],
       dataFlow:{en:'Mumble client → encrypted connection → Utilibre voice server → other participants. The server relays decrypted voice; this is not end-to-end encryption. Participants can record.',es:'Cliente de Mumble → conexión cifrada → servidor de voz de Utilibre → otras personas. El servidor retransmite la voz descifrada; no hay cifrado de extremo a extremo. Otras personas pueden grabar.'},
       temporaryStorage:{en:'Transient voice packets in memory; channel settings, registered identities and the server certificate use SQLite.',es:'Paquetes de voz temporales en memoria; los canales, identidades registradas y el certificado usan SQLite.'},
       retention:{en:'No server recording is configured. Registered identities and channel settings persist until removed; private backups can retain them.',es:'No se configuró grabación en el servidor. Las identidades registradas y los canales permanecen hasta que se borren; las copias privadas pueden conservarlos.'},
       logging:{en:'Console/file and database event logs are disabled for this pilot. Network-level records may still exist.',es:'Los registros de consola, archivo y eventos de base de datos están desactivados en este piloto. Pueden existir registros de red.'},
-      modified:false,operationalStatus:'maintenance',
+      modified:false,operationalStatus:'degraded',
     },
   ];
 }

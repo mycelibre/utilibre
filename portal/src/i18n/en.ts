@@ -36,7 +36,7 @@ export const en = {
   'home.catalog.title': 'Hosted services',
   'home.catalog.intro': 'A small set of services where independent hosting removes a real access barrier.',
   'home.catalog.taskIndex': 'Browse by task',
-  'home.catalog.taskCue': '4 groups · scroll',
+  'home.catalog.taskCue': '{count} groups · scroll',
   'home.catalog.indexNote': 'Use the task index, search, or open the full A–Z catalog.',
   'home.catalog.taskGroups': 'task groups',
   'home.catalog.featured': 'Tools & services',

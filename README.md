@@ -20,11 +20,13 @@ or paid tiers.
   with shared Utilibre login, email verification and MFA. Public registration
   remains closed; request access at **admin@utilibre.org**.
 - Additional tools: **Pollaris, FMD**. Service status: **Uptime Kuma**.
+- Native-client voice: password-protected **Mumble** (public TCP voice tested;
+  public UDP audio remains unverified).
 
-**37 services are enabled as of October 6, 2026.** Access and privacy vary by
+**38 services are enabled as of October 6, 2026.** Access and privacy vary by
 tool; FreshRSS retains separate operator-provisioned accounts. Upstream sites
 can block readers. **Dumb, LibreMDB, BreezeWiki and Rimgo** still have upstream
-failures; password-protected **Mumble** awaits public TCP/UDP routing.
+failures.
 See the [deployment review](docs/toolbox-review.md) for current checks and limits.
 
 Optional donations: [Liberapay](https://liberapay.com/mycelibre/donate).

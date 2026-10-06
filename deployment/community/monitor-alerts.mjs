@@ -22,7 +22,7 @@ try{
     if(!beat||!Number.isFinite(timestamp)||Date.now()-timestamp>20*60*1000)issues.push(`Stale monitoring: ${monitor.name}`);
     else if(beat.status!==1)issues.push(`Availability check failed: ${monitor.name}`);
   }
-  console.log(`Read ${monitors.length} public-service monitors.`);
+  console.log(`Read ${monitors.length} status-page monitors.`);
 }catch{issues.push('Kuma heartbeat API is unavailable or invalid')}
 const disk=statfsSync('/opt/utilibre');
 if(disk.bavail*disk.bsize<10*1024**3)issues.push('Application disk has less than 10 GiB free');
