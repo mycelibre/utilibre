@@ -1,0 +1,15 @@
+name: Mumble external connectivity
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  external-check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          persist-credentials: false
+      - name: Verify pinned TCP and send tagged UDP probes
+        run: node deployment/community/check-mumble-external.mjs
