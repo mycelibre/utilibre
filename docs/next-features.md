@@ -462,6 +462,22 @@ correct localized launch and All tasks selection. Desktop/mobile captures were
 inspected without overflow. Portal only was recreated; WBO's original start time
 remained 23:02:23 UTC and its board storage was untouched.
 
+## Collab public classification — 7 October 2026
+
+At the operator's request, Collab now belongs to Use now and the Images, audio
+and design category, not Pilots. It remains searchable in All tasks; the curated
+eight starter tasks are unchanged. Public pilot labels were removed without
+changing the anonymous room model, server-readable content, temporary storage,
+export warning, service limits or access controls. The existing status monitor
+was renamed to “Collab · WBO”, preserving its history.
+
+Release checks: typecheck, lint, build, configuration validation, 84 unit tests
+and six desktop/simulated-mobile guide/discovery tests passed. Tests explicitly
+assert that Collab appears in Use now and not Pilots. Direct catalogue routes:
+`/en/?view=public&q=wbo#catalog` and `/es/?view=public&q=wbo#catalog`.
+Portal-only rollback image: `public-utility-portal:pre-collab-use-now-20261007`.
+Do not restart WBO for this catalogue change: that would erase temporary boards.
+
 ## Primary references consulted
 
 - SearXNG Hostnames: https://docs.searxng.org/dev/plugins/hostnames.html

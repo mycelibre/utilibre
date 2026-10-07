@@ -3,7 +3,7 @@ import type { Language } from '../i18n';
 
 // Presentation of catalogue facts, not another service registry.
 export const startHereIds = ['bentopdf', 'vert', 'omni-compress-image', 'pairdrop', 'qr-offline', 'pollaris', 'drawio', 'excalidraw'] as const;
-export const pilotIds = new Set(['fmd', 'whisper-web', 'wbo']);
+export const pilotIds = new Set(['fmd', 'whisper-web']);
 export type AccessMode = 'anonymous' | 'open-registration' | 'approved' | 'existing' | 'password';
 export function accessMode(entry: CatalogEntry): AccessMode {
   if (entry.id === 'mumble') return 'password';

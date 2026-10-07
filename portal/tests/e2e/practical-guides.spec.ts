@@ -59,7 +59,7 @@ test('pilot and account views remain explicit, searchable and bookmarkable', asy
   expect(new URL(page.url()).searchParams.get('view')).toBe('pilots');
 });
 
-test('homepage search finds Collab without silently dropping its pilot limits', async ({ page }) => {
+test('Collab belongs to Use now and keeps its storage and privacy limits', async ({ page }) => {
   await page.route('**/_portal/config', route => route.fulfill({ json: {
     projectName: 'Utilibre', defaultLanguage: 'en', publicCollabUrl: 'https://collab.example/',
     enabledServices: ['wbo'], listedServices: [],
@@ -72,13 +72,16 @@ test('homepage search finds Collab without silently dropping its pilot limits', 
     expect(new URL(page.url()).searchParams.get('view')).toBe('all');
     const board = page.locator('[data-catalog-id="wbo"]');
     await expect(board).toContainText('Collab (WBO)');
-    await expect(board).toContainText(language === 'en' ? 'Temporary pilot: export before leaving' : 'Piloto temporal: exportá antes de salir');
+    await expect(board).toContainText(language === 'en' ? 'Temporary, server-readable' : 'temporales que el servidor puede leer');
+    await expect(board).not.toContainText(/pilot|piloto/i);
     await expect(board.locator('.catalog-ledger-launch')).toHaveAttribute('href', `https://collab.example/?lang=${language}`);
     await expect(page.locator('.catalog-mode-link[aria-current="page"]')).toHaveText(language === 'en' ? 'All tasks' : 'Todas las tareas');
     expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
     await page.goto(`/${language}/?q=Collab`);
     await expect(page.locator('[data-catalog-id="wbo"]')).toBeVisible();
     await page.goto(`/${language}/?view=public&q=Collab`);
+    await expect(page.locator('[data-catalog-id="wbo"]')).toBeVisible();
+    await page.goto(`/${language}/?view=pilots&q=Collab`);
     await expect(page.locator('[data-catalog-id="wbo"]')).toHaveCount(0);
   }
 });

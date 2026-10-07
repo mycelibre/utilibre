@@ -12,7 +12,7 @@ dst=sqlite3.connect(sys.argv[1]);src.backup(dst)
 assert dst.execute('PRAGMA integrity_check').fetchall()==[('ok',)]
 dst.close();src.close()`, `${backup}/kuma.sqlite`]);
 const additions = [
-  ['WBO · temporary pilot', 'https://collab.utilibre.org/'],
+  ['Collab · WBO', 'https://collab.utilibre.org/'],
   ['Markmap', 'https://mindmap.utilibre.org/'],
   ['Excalidraw', 'https://whiteboard.utilibre.org/'],
   ['SVGEdit', 'https://svg.utilibre.org/'],
@@ -73,6 +73,7 @@ socket.on('connect',async()=>{try{
   if(!extra){extra={name:'Additional services',monitorList:[]};groups.push(extra)}
   for(const [name,url] of ${JSON.stringify(selectedAdditions)}){
     const prior=monitors.find(m=>m.url===url);
+    if(prior?.url==='https://collab.utilibre.org/' && prior.name==='WBO · temporary pilot') await call('editMonitor',{...prior,name});
     const id=prior?.id??(await call('add',{name,url,type:'http',method:'GET',interval:300,retryInterval:60,resendInterval:0,maxretries:2,timeout:20,active:true,accepted_statuscodes:['200-299'],maxredirects:5,ignoreTls:false,upsideDown:false,notificationIDList:defaults,conditions:[]})).monitorID;
     if(!groups.some(g=>g.monitorList.some(m=>m.id===id)))extra.monitorList.push({id,sendUrl:false});
   }

@@ -52,16 +52,16 @@ const hostedConfig = config({
 });
 
 describe('catalog discovery metadata', () => {
-  it('makes the tested temporary whiteboard launchable without presenting it as a ready default', () => {
+  it('lists the tested temporary whiteboard in Use now, not pilots', () => {
     const setup = config({ enabledServices: ['wbo'], publicCollabUrl: 'https://collab.example/' });
     const board = catalogEntry('wbo')!;
     expect(entryLaunch(board, 'es', setup)?.href).toBe('https://collab.example/?lang=es');
-    expect(immediatelyUsable(board, setup)).toBe(false);
-    expect(discoverEntries(setup, 'en', { view: 'pilots' }).map(e => e.id)).toContain('wbo');
-    expect(discoverEntries(setup, 'en', { view: 'public' }).map(e => e.id)).not.toContain('wbo');
+    expect(immediatelyUsable(board, setup)).toBe(true);
+    expect(discoverEntries(setup, 'en', { view: 'pilots' }).map(e => e.id)).not.toContain('wbo');
+    expect(discoverEntries(setup, 'en', { view: 'public' }).map(e => e.id)).toContain('wbo');
     expect(discoverEntries(setup, 'en', { query: 'collab' }).map(e => e.id)).toEqual(['wbo']);
     expect(discoverEntries(setup, 'es', { query: 'pizarra compartida' }).map(e => e.id)).toEqual(['wbo']);
-    expect(discoverEntries(setup, 'en', { view: 'public', query: 'collab' })).toEqual([]);
+    expect(discoverEntries(setup, 'en', { view: 'public', query: 'collab' }).map(e => e.id)).toEqual(['wbo']);
   });
   it('keeps reviewed applications and one narrow integration', () => {
     expect(catalog.map((entry) => entry.id)).toEqual([
