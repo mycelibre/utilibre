@@ -70,7 +70,7 @@ export const catalog: CatalogEntry[] = [
   {
     id: 'wbo', ...providerMetadata('wbo'), kind: 'service', implementation: 'upstream-application',
     category: 'service', discoveryGroup: 'design', configUrlKey: 'publicCollabUrl',
-    name: { en: 'Draw together · temporary pilot', es: 'Dibujar en grupo · piloto temporal' },
+    name: { en: 'Draw together · Collab (WBO)', es: 'Dibujar en grupo · Collab (WBO)' },
     description: { en: 'Share a board with a small group without an account. For non-sensitive sketches only.', es: 'Compartí una pizarra con un grupo pequeño sin cuenta. Solo para bocetos sin datos sensibles.' },
     launchLabel: { en: 'Start a shared board', es: 'Crear una pizarra compartida' },
     help: { en: 'Create an unlisted board, share its address and draw together. Anyone with the link can read and edit. Download SVG before leaving: boards are lost on service restart and older objects are discarded above 256. Excalidraw remains the local-only alternative.', es: 'Creá una pizarra sin listar, compartí su dirección y dibujen juntos. Cualquiera con el enlace puede leer y editar. Descargá SVG antes de salir: las pizarras se pierden al reiniciar el servicio y se descartan objetos antiguos al superar 256. Excalidraw sigue siendo la alternativa local.' },

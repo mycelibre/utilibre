@@ -46,7 +46,7 @@ export function featuredEntries(config: PublicConfig): CatalogEntry[] {
 export function allEntries(config: PublicConfig, language: Language): CatalogEntry[] { return sortByName(visibleEntries(config).filter(e => e.id !== 'uptime-kuma'), language); }
 export function groupEntries(config: PublicConfig, language: Language, group: DiscoveryGroup): CatalogEntry[] { return allEntries(config, language).filter(e => entryGroup(e) === normalizeGroup(group)); }
 const synonyms: Record<string, string> = {
-  wbo: 'whiteboard shared collaboration group pizarra compartida colaborar grupo dibujar',
+  wbo: 'collab whiteboard shared collaboration group pizarra compartida colaborar grupo dibujar',
   markmap: 'mind map outline markdown study notes mapa mental esquema estudiar apuntes ideas',
   bentopdf: 'scan scanned text extract escaneo escaneado texto extraer juntar unir pdf ocr',
   vert: 'convert conversion convertir conversión formatos archivos',
@@ -66,7 +66,7 @@ function matches(entry: CatalogEntry, query: string, language: Language): boolea
 }
 export function searchEntries(config: PublicConfig, language: Language, query: string): CatalogEntry[] { return query.trim() ? allEntries(config, language).filter(e => matches(e, query, language)) : []; }
 export function discoverEntries(config: PublicConfig, language: Language, state: CatalogDiscoveryState = {}): CatalogEntry[] {
-  const view = state.view || 'featured';
+  const view = state.view || (state.query?.trim() ? 'all' : 'featured');
   let entries = allEntries(config, language);
   if (view === 'featured' && !state.query && !state.group) entries = featuredEntries(config);
   else if (view === 'public' || view === 'featured') entries = entries.filter(e => immediatelyUsable(e, config));

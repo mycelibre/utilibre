@@ -104,7 +104,7 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   submit.type = 'submit';
   append(searchControl, input, submit);
   append(form, label, searchControl);
-  for (const [key, value] of [['view', state.view === 'featured' ? 'public' : state.view], ['group', state.group]]) {
+  for (const [key, value] of [['view', state.view === 'featured' ? 'all' : state.view], ['group', state.group]]) {
     if (!value) continue;
     const hidden = element('input'); hidden.type = 'hidden'; hidden.name = key!; hidden.value = value; form.append(hidden);
   }
@@ -531,7 +531,7 @@ function discoveryState(searchParams: URLSearchParams): CatalogDiscoveryState {
   const query = (searchParams.get('q') ?? '').trim().slice(0, 160);
   const group = normalizeGroup(searchParams.get('group'));
   const candidate = searchParams.get('view') as CatalogView;
-  const view = catalogViews.includes(candidate) ? candidate : 'featured';
+  const view = catalogViews.includes(candidate) ? candidate : query ? 'all' : 'featured';
   return { query: query || undefined, group, view };
 }
 

@@ -431,6 +431,30 @@ HTTP200 as a downloadable binary; 498 reviewed integration source files were
 published, with the prior archive in `/opt/utilibre/source-update-Utzavg`.
 Public TURN remains disabled pending the network/certificate items above.
 
+## Collab discoverability follow-up — 7 October 2026
+
+The public app was already working, but the default eight-task starter selection
+excluded pilots and its record was named only “Draw together · temporary pilot”.
+The homepage search also silently limited new searches to the anonymous-ready
+view, so a visitor looking for Collab there received no result. All-tasks/pilot
+views did contain WBO; this was discovery friction, not a deployment outage.
+
+The task name now includes “Collab (WBO)” in both languages. Search initiated from
+Start here, or a direct query URL without an explicit view, searches all catalogue
+tasks and visibly selects All tasks. Explicit public/account/pilot and category
+filters remain scoped; the unsearched starter set stays unchanged. Pilot help now
+distinguishes usable experimental services from unavailable ones. WBO stays in the
+pilot classification with its non-sensitive/temporary-storage warning; no service,
+registration, retention, or access rule changed. Direct destination:
+`/en/?view=pilots&q=wbo#catalog` (Spanish: `/es/?view=pilots&q=wbo#catalog`).
+
+Focused checks cover EN/ES search, direct query URLs, visible view selection,
+working launch links, pilot warnings and explicit-filter preservation on desktop
+and simulated mobile. Typecheck/lint/build and the existing unit suite are the
+release gates. Portal-only rollback uses
+`public-utility-portal:pre-collab-discovery-20261007` and source reference `ff88935`;
+WBO itself must not be restarted or have its temporary boards erased for this UI fix.
+
 ## Primary references consulted
 
 - SearXNG Hostnames: https://docs.searxng.org/dev/plugins/hostnames.html

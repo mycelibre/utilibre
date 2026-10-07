@@ -59,6 +59,9 @@ describe('catalog discovery metadata', () => {
     expect(immediatelyUsable(board, setup)).toBe(false);
     expect(discoverEntries(setup, 'en', { view: 'pilots' }).map(e => e.id)).toContain('wbo');
     expect(discoverEntries(setup, 'en', { view: 'public' }).map(e => e.id)).not.toContain('wbo');
+    expect(discoverEntries(setup, 'en', { query: 'collab' }).map(e => e.id)).toEqual(['wbo']);
+    expect(discoverEntries(setup, 'es', { query: 'pizarra compartida' }).map(e => e.id)).toEqual(['wbo']);
+    expect(discoverEntries(setup, 'en', { view: 'public', query: 'collab' })).toEqual([]);
   });
   it('keeps reviewed applications and one narrow integration', () => {
     expect(catalog.map((entry) => entry.id)).toEqual([
@@ -241,6 +244,7 @@ describe('localized catalog filtering', () => {
     expect(discoverEntries(setup, 'en', { view: 'accounts' }).map(e => e.id)).toEqual(expect.arrayContaining(['rallly', 'mumble']));
     expect(allEntries(setup, 'en').map(e => e.id)).not.toContain('uptime-kuma');
     expect(entryLaunch(catalogEntry('fmd')!, 'en', setup)).not.toBeNull();
-    expect(discoverEntries(setup, 'es', { query: 'reunion' }).map(e => e.id)).toEqual(['pollaris']);
+    expect(discoverEntries(setup, 'es', { view: 'public', query: 'reunion' }).map(e => e.id)).toEqual(['pollaris']);
+    expect(discoverEntries(setup, 'es', { query: 'reunion' }).map(e => e.id)).toEqual(['rallly', 'pollaris']);
   });
 });
