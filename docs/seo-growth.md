@@ -136,6 +136,10 @@ lastmod is invented. Essential assets remain crawlable; search/filter URLs have
 noindex while private content remains protected by real access controls. The
 default public crawler policy is preserved, including existing training/search
 preferences; this task does not silently change publisher consent.
+OAI-SearchBot and GPTBot currently inherit the wildcard public crawl policy;
+there is no explicit GPTBot training opt-out. Search inclusion and training
+preference are separate owner choices. Genuine bot access through the CDN has
+not been established merely by using a bot-like request header.
 
 Structured data remains accurate WebSite/WebPage metadata. No fabricated
 SoftwareApplication ratings, FAQ/HowTo rich-result promises, hidden AI prompts,
@@ -400,6 +404,78 @@ Reusable tests: `node deployment/toolbox/check-pdf-tools.mjs` and
 `node deployment/community/check-qr-offline.mjs`. The PDF check's optional
 `--diagnostic-fresh-workers` output is explicitly **not** a production pass.
 
-Release state, measured outcomes and rollback are updated only after the
-production checks. No indexing, rankings, AI citations or traffic result is
-claimed by the implementation or tests.
+### Final production checkpoint
+
+Verified on 7 October 2026, completed by 13:13 UTC:
+
+- Deployed source revision `a6690d1625f18e2eb1978e5a7ccdd956d0797515`, following
+  the guide/reporting commit `21adc2d`. Both are pushed to GitHub. Only the portal
+  container was rebuilt/restarted; no upstream application or security policy
+  changed. Final documentation is a subsequent docs-only commit.
+- All 20 public sitemap URLs pass the live audit, including canonicals, unique
+  metadata, reciprocal language links, initial content, schema and CSP. Four
+  practice PDFs return correct content/type and noindex. Known trailing-slash
+  duplicates redirect 308; unknown pages and internal build files return 404.
+- All four guides have two real public launch links, localized PDF/QR Tools
+  destinations, no console errors or horizontal overflow at tested 1440px/390px
+  sizes, and only same-origin portal requests. Two representative no-JS routes
+  also retain both launch actions. Legitimate incoming attribution survives;
+  the canonical remains query-free.
+- The 200% text-resize check found a pre-existing rigid header/minimum-width
+  problem. The narrow responsive fix lets controls wrap and retains the actual
+  320px minimum independently of text size. Updated browser regressions and
+  final public checks pass at 780px dark and 375px light with 200% text size.
+  Screenshots were visually inspected, not merely captured.
+- Final source archive URL linked from `/en/software` returns 200 with the
+  matching revision parameter. The existing non-source public configuration
+  hash remains `068d41f1b1281e87c0b1d82d584ebccab88f9fdb2058a3b7cb5b2c225feea0bf`;
+  Whisper and service/account configuration are unchanged.
+- One scoped IndexNow notification for EN/ES home plus the four new guides
+  returned **202** after auditing all 20 pages. No other pages or visitor data
+  were submitted. Key validation/indexing can still be pending; do not repeat
+  this unchanged notification.
+- Build, typecheck, lint, FOSS policy, 70 unit tests, 60 browser tests and 16
+  reporting/notification tests pass. Full npm audit found zero known advisories
+  at the check time, not a guarantee of security. Container is healthy; the final
+  observation was 30.47 MiB of its existing 256 MiB limit.
+
+Before/after content: 16 → 20 canonical pages; no task-specific guide → two
+substantive bilingual guides; blanket IndexNow selection → explicit bounded
+selection; no aggregate reporting helper → locally validated, no-collection
+reporter. Browser JS grew from 178.10 kB (56.38 kB gzip) to 191.28 kB (61.58 kB
+gzip), chiefly bilingual guide content; final CSS is 24.53 kB (5.58 kB gzip).
+No extra browser dependency or third-party resource was added.
+
+The initial public guide-release lab sample (same VM, Chromium, unthrottled,
+one visit per route, desktop EN 1440px/mobile ES 390px) recorded LCP
+240/180/188/164 ms and CLS 0.0177/0.0040/0/0 for PDF EN, QR EN, PDF ES, QR ES.
+These are small diagnostic observations, not a controlled improvement study,
+field p75, mobile-network guarantee, or INP measurement. Local preview samples
+are not substituted for production. Review captures are retained locally in
+`/tmp/utilibre-growth-review/` and `/tmp/utilibre-growth-live/`; the claims and
+reproduction commands here persist if temporary files are removed.
+
+### Rollback and remaining dependencies
+
+Preserved pre-growth image: `public-utility-portal:pre-growth-20261007`, with source
+revision `c4ffe570f4c0efb850cab8f0ec6073e8dcfc59c9`. Its corresponding archive is
+preserved at
+`/opt/utilibre/source-update-hyFMh3/previous-utilibre-integration.tar.gz`.
+The final image manifest is
+`sha256:1063e27d792344d0a34905261af4e523838e8734c30178128c8ee2418066d876`.
+No database migration or deletion occurred. Local rollback artifacts are not
+an offsite backup.
+
+If rollback is needed, set the private `.env` `PORTAL_IMAGE` to that preserved
+tag and `SOURCE_CODE_URL` to the matching GitHub revision, preserve the current
+public archive before restoring the paired archive, then run
+`docker compose up -d --no-deps --wait --wait-timeout 60 portal`. Do not revert
+unrelated working files or restart other services. Recheck health and the old
+16-page sitemap; withdrawing new guides would be a reviewed removal, not grounds
+to redirect unknown URLs to the homepage. No rollback was needed or performed.
+
+Local/reporting tools and launch materials are complete. Search Console/Bing
+verification, effective Google AI setting inspection, actual reports and new
+community-post approval remain external owner dependencies. Real indexing,
+rankings, traffic, AI citations, task completions and repeat use remain
+**unavailable**, not measured successes or zero activity.
