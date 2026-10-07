@@ -191,6 +191,11 @@ the visitor selected dark mode. Four focused desktop/mobile guide tests and
 the production build pass. No detector exceptions or design-system changes
 were introduced. The previous guide release is retained as
 `public-utility-portal:pre-guide-style-fix-20261007` for a portal-only rollback.
+Follow-up deployed from `4da1b1a` and verified over public HTTPS: 24px guide
+index titles, 390px reflow, charcoal print text and a white print canvas from
+dark mode. Source disclosure points to that commit; no IndexNow resubmission
+was made for these cosmetic changes. Prior source archive is retained in
+`/opt/utilibre/source-update-znE4Fo/`.
 
 ## Creative-tool release — 7 October 2026
 
