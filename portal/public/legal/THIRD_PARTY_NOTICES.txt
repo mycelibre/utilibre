@@ -22,6 +22,13 @@ Valkey. Those applications are not bundled into the portal browser assets.
 
 ## Browser tool additions on October 7
 
+Excalidraw (MIT), SVGEdit (MIT application), CyberChef (Apache-2.0) and Image
+Scrubber (MIT root license) are separately hosted static applications. SVGEdit
+also contains Apache-2.0, ISC, LGPL-3.0-or-later and X11 components recorded in
+its preserved `licenseInfo.json`. The manifest and public source archives below
+include their exact revisions, notices, local security/configuration changes
+and build recipes. Application dependencies retain their own notices.
+
 ZIP Manager (MIT), RAWGraphs (Apache-2.0), AudioMass (MIT application) and
 miniPaint (MIT) retain their upstream notices. Exact revisions and license
 filenames are in `deployment/toolbox/browser-manifest.json`; public source

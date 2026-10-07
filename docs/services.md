@@ -24,8 +24,9 @@ promise.
 
 ## Operated public services
 
-The live inventory includes the October 7 ZIP Manager, RAWGraphs, AudioMass
-and miniPaint additions and direct links to six tasks within OmniTools. Those
+The live inventory includes the October 7 ZIP Manager, RAWGraphs, AudioMass,
+miniPaint, Excalidraw, SVGEdit, CyberChef and Image Scrubber additions, plus
+direct links to six tasks within OmniTools. Those
 shortcuts are not separate hosted applications. See the concise
 [current tool list](../README.md#tools) and machine-readable
 [delivery checklist](../deployment/community/delivery-checklist.json).

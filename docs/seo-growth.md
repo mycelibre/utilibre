@@ -2,6 +2,23 @@
 
 ## Creative-tool release — 7 October 2026
 
+Production checkpoint, 16:36 UTC: implementation `1b1bfd1` is on GitHub and
+deployed. Both live languages expose the four correct launch destinations;
+Excalidraw uses `?lng=en|es`, SVGEdit `?lang=en|es`. Desktop 1440px and mobile
+390px render without observed overflow or application exceptions. All 20
+canonical portal routes pass `npm --prefix portal run test:seo`. Each new
+tool has one description/canonical/OG URL, a root sitemap, real 404/405
+responses, and reachable noindex source archives. All four functional checks
+and portal/Kuma health checks pass. One scoped eight-page IndexNow notice
+returned 202: this is acceptance for validation, not indexing or ranking proof.
+
+Rollback: `public-utility-portal:pre-creative-tools-20261007` and the private
+environment snapshot `/opt/utilibre/creative-tools-rollback-20261007/portal.env`.
+Restore only affected keys/image, preserving other operator changes. The
+previous integration archive is retained under `/opt/utilibre/source-update-C0Jpvz/`.
+These are local rollback artifacts, not offsite backups. New tool containers
+have no server-side documents or database migrations. Source stays available.
+
 Four distinct tasks extend the existing bilingual task catalog: sketching with
 Excalidraw, editing SVG vectors, CyberChef transformations and covering details
 in photos. This is useful tool inventory, not four thin keyword landing pages.

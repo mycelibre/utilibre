@@ -14,7 +14,8 @@ or paid tiers.
 - Feeds: **FreshRSS, RSS-Bridge**.
 - Files and everyday work: **BentoPDF** (including OCR), **VERT, OmniTools,
   IT Tools, hat.sh, draw.io, Mini QR, QR Tools, TransLite, ZIP Manager**.
-- Browser editors: **RAWGraphs, AudioMass, miniPaint**, plus direct links to
+- Browser editors: **RAWGraphs, AudioMass, miniPaint, Excalidraw, SVGEdit**.
+- Local data and photo privacy: **CyberChef, Image Scrubber**, plus direct links to
   image, audio, CSV and text tasks in OmniTools.
 - Sharing and notifications: **PrivateBin, Yopass, PairDrop, ntfy**.
 - Browser-based learning: **JupyterLite**. Whisper is withdrawn from the catalog

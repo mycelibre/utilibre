@@ -7,6 +7,15 @@ intermediary or make an operator unable to access server-side data.
 
 ## Summary
 
+Excalidraw, SVGEdit, CyberChef and Image Scrubber also process task contents in
+the browser. Excalidraw cloud collaboration/export, remote SVG imports and
+CyberChef network operations are disabled; resources are served locally. Browser
+storage can retain drawings/preferences, and explicitly shared CyberChef recipe
+links can contain input. Image Scrubber exports a new PNG, leaves the original
+unchanged and does not guarantee anonymity. The Cloudflare edge still processes
+application-delivery metadata/security requests. See each tool's catalog help
+for limits; these statements do not cover every possible untested operation.
+
 The expanded toolbox and its per-tool disclosures are documented in
 [the deployment review](toolbox-review.md) and the portal's tool details.
 Browser-based processing does not mean that page requests, model downloads

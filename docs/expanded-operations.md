@@ -7,13 +7,15 @@ application gateways bind `10.10.1.43`. Preserve its existing Cloudflare-only tr
 
 The separate `deployment/toolbox/compose.browser.yaml` stack adds ZIP Manager
 on **3160**, RAWGraphs on **3161**, AudioMass on **3162**, and miniPaint on **3163**.
-The matching `zip`, `charts`, `audio`, and `paint` Caddy blocks are in
-`deployment/toolbox/Caddyfile.tools`. All four backends bind only `10.10.1.43`.
+The second batch adds Excalidraw **3164**, SVGEdit **3165**, CyberChef **3166**
+and Image Scrubber **3167**. Matching `zip`, `charts`, `audio`, `paint`,
+`whiteboard`, `svg`, `cyberchef` and `scrub` Caddy blocks are in
+`deployment/toolbox/Caddyfile.tools`. All eight backends bind only `10.10.1.43`.
 Their static server accepts the exact Caddy peer `10.10.1.3`, app-VM diagnostics
 and loopback; forwarded headers cannot bypass this allowlist. No host firewall
 was changed. Keep these ports closed to the Internet. Portal/Kuma liveness
 checks use public HTTPS because other containers are deliberately denied at
-the private listeners. The portal permits only these four exact public roots
+the private listeners. The portal permits only these eight exact public roots
 for their matching service IDs, requires a 2xx response, and does not follow
 redirects; arbitrary public probes, credentials and query parameters are rejected.
 
@@ -26,6 +28,7 @@ pins/configuration, not fictional user-data backups. Export browser work locally
 docker compose -f deployment/toolbox/compose.browser.yaml build
 docker compose -f deployment/toolbox/compose.browser.yaml up -d
 node deployment/toolbox/check-browser-tools.mjs
+node deployment/toolbox/check-creative-tools.mjs
 node deployment/toolbox/publish-browser-sources.mjs
 sh deployment/utilibre/scripts/update-check.sh
 ```
