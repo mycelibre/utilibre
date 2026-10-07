@@ -1,4 +1,8 @@
 export const en = {
+  'meta.pdf.title': 'Merge PDF files and recognize scanned text without an account',
+  'meta.pdf.description': 'Use BentoPDF on Utilibre to merge PDFs or recognize scanned text. Browser processing, practice files, clear steps and OCR limitations explained.',
+  'meta.qr.title': 'Create and scan QR codes without an account',
+  'meta.qr.description': 'Choose a free QR tool for links or Wi-Fi. Download PNG, SVG or PDF, test your code, and understand what a static QR reveals before sharing it.',
   'meta.home.title': 'Free online tools: PDF, files, QR codes & more',
   'meta.home.description': 'Use free, independently hosted open-source tools for PDFs, OCR, file conversion, QR codes and more. Clear privacy and account requirements. No behavioral tracking.',
   'meta.tools.title': 'Hosted tool catalog',

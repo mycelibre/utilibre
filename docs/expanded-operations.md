@@ -547,6 +547,10 @@ verificar UDP desde una conexión externa. No compartás la contraseña de Super
 
 ## Privacy-preserving SEO (2026-10-07)
 
+The follow-on [search and traffic foundation](seo-growth.md) records the current
+20-page scope, task guides, measurement limits, source updates, launch drafts and
+operating plan. The 16-page measurements below describe the earlier checkpoint.
+
 The audit found a JavaScript-only catalog, no XML sitemap, relative server-side
 language alternatives, and generic home-page search descriptions. The portal
 now renders its existing public components in the initial HTML, including
@@ -600,12 +604,12 @@ npm run typecheck
 npm run lint
 npm run test:e2e -- --workers=3
 npm run test:seo
-npm run seo:indexnow             # dry run; audit and public key check only
-npm run seo:indexnow -- --submit # one notification after a meaningful update
+npm run seo:indexnow -- --help  # explicit changed/removed URL selectors
+npm run seo:indexnow -- --url https://utilibre.org/en/pdf-tools # dry run
 ```
 
 The bounded SEO audit checks only the sitemap's allowlisted public pages.
-IndexNow sends those public URLs plus a public ownership-proof key; it never
+IndexNow sends only explicitly selected new/changed/removed public URLs plus a public ownership-proof key; it never
 sends visitor queries, logs, identifiers or private documents. Its acceptance
 does not guarantee indexing. Do not repeatedly submit unchanged URLs. Google
 Search Console and Bing Webmaster Tools account verification remain operator

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
 import { parseHTML } from 'linkedom';
+import { isPublicSeoPath } from './indexnow-selection.mjs';
 
 // Bounded read-only audit of the portal's public canonical pages. No analytics,
 // cookies, login, recursive crawler, third-party assets, or private tool content.
@@ -21,7 +22,7 @@ export async function auditSeo(origin = 'https://utilibre.org', { allowUnadverti
   for (const url of urls) {
     const target = new URL(url);
     assert(target.origin === origin && !target.search && !target.hash, 'Only this portal, without queries or fragments');
-    assert(/^\/(en|es)\/(?:about|acerca|privacy|privacidad|transparency|transparencia|acceptable-use|uso-aceptable|support|apoyar|software|privacy-labels|etiquetas-privacidad)?$/.test(target.pathname), 'Unexpected sitemap route: review its privacy/indexing status');
+    assert(isPublicSeoPath(target.pathname), 'Unexpected sitemap route: review its privacy/indexing status');
     const { response, text } = await readPublic(url);
     const { document } = parseHTML(text);
     assert(!response.headers.get('x-robots-tag')?.includes('noindex'), `${url}: header prevents indexing`);

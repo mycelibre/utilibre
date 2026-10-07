@@ -7,6 +7,7 @@ import type { PublicConfig } from '../config';
 import type { Language, TranslationKey } from '../i18n';
 import { routePath, type Route, type StaticPage } from '../routes';
 import { append, disableActionButton, element, type Translate } from '../utilities/dom';
+import { renderTaskGuide, guideLinks } from './task-guides';
 
 export async function renderPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): Promise<HTMLElement> {
   if (route.page === 'tool' && route.toolId) return renderToolPage(route.toolId, route.language, config, t);
@@ -28,6 +29,7 @@ export function renderStaticPage(route: Route, config: PublicConfig, t: Translat
   if (route.page === 'support') return renderSupport(route.language, config, t);
   if (route.page === 'software') return renderSoftware(route.language, config, t);
   if (route.page === 'labels') return renderLabelGuide(t);
+  if (route.page === 'pdf' || route.page === 'qr') return renderTaskGuide(route.page, route.language, config);
   return renderNotFound(route.language, t);
 }
 
@@ -74,6 +76,7 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   const software = element('a', 'catalog-context-link', t('footer.software'));
   software.href = routePath('software', language);
   append(references, featured, all, labels, software);
+  references.append(guideLinks(language));
   const folio = element('p', 'ledger-folio', `UTILIBRE · ${String(discoveryGroups.length).padStart(2, '0')} ${t('home.catalog.taskGroups')}`);
   append(index, guideword, taskCue, taskNav, note, references, folio);
 
@@ -599,6 +602,8 @@ export function pageMeta(route: Route, config: PublicConfig, t: Translate): { ti
     status: 'status.intro',
     software: 'software.intro',
     labels: 'labels.intro',
+    pdf: 'meta.pdf.description',
+    qr: 'meta.qr.description',
   };
   const descriptionKey = descriptionKeys[route.page as StaticPage];
   const description = descriptionKey ? t(descriptionKey) : title;

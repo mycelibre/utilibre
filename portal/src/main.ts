@@ -84,6 +84,9 @@ document.addEventListener('click', (event) => {
   if (anchor.classList.contains('skip-link')) return;
   const destination = new URL(anchor.href, window.location.href);
   if (destination.origin !== window.location.origin) return;
+  // Let the browser handle text-fragment navigation; pushState cannot perform
+  // its native text matching, highlighting and scrolling.
+  if (destination.hash.includes(':~:')) return;
   const parsed = parseRoute(destination.pathname);
   if (!parsed) return;
   if (destination.pathname === window.location.pathname

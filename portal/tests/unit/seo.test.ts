@@ -62,7 +62,7 @@ describe('public SEO without tracking or private-content indexing', () => {
     expect(response.status).toBe(200);
     const sitemap = await response.text();
     const urls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]!);
-    expect(urls).toHaveLength(16);
+    expect(urls).toHaveLength(20);
     expect(new Set(urls).size).toBe(urls.length);
     expect(sitemap).not.toContain('lastmod');
     const titles = new Set();
@@ -78,7 +78,7 @@ describe('public SEO without tracking or private-content indexing', () => {
       for (const language of ['en', 'es']) expect(document.querySelector(`link[hreflang="${language}"]`)?.getAttribute('href')).toMatch(new RegExp(`^https://public\\.example/${language}/`));
       titles.add(document.title);
     }
-    expect(titles.size).toBe(16);
+    expect(titles.size).toBe(20);
     const robots = await (await fetch(`${base}/robots.txt`)).text();
     expect(robots).toContain(`Sitemap: ${origin}/sitemap.xml`);
     expect(robots).toContain('Disallow: /_portal/');
@@ -100,6 +100,31 @@ describe('public SEO without tracking or private-content indexing', () => {
     expect(csp).not.toMatch(/unsafe-inline|unsafe-eval|https:/);
     expect(csp).toContain("connect-src 'self'");
     expect(response.headers.get('referrer-policy')).toBe('no-referrer');
+  });
+
+  it('renders useful task guides and practice files without enabling disabled tools', async () => {
+    for (const [language, path] of [['en', 'pdf-tools'], ['es', 'herramientas-pdf']]) {
+      const response = await fetch(`${base}/${language}/${path}?utm_source=example`);
+      const { document } = parseHTML(await response.text());
+      expect(response.status).toBe(200);
+      expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${origin}/${language}/${path}`);
+      expect(document.querySelector('#ocr')).not.toBeNull();
+      expect(document.querySelector('#merge')).not.toBeNull();
+      expect(document.querySelector('.guide-actions a')?.getAttribute('href')).toBe(`https://pdf.public.example/${language === 'es' ? 'es/' : ''}merge-pdf.html`);
+      expect(document.querySelectorAll('[download]')).toHaveLength(2);
+      expect(document.querySelector('#main-content')?.textContent).toContain('jsDelivr');
+      for (const letter of ['a', 'b']) {
+        const example = await fetch(`${base}/examples/pdf-${language}-${letter}.pdf`);
+        expect(example.status).toBe(200);
+        expect(example.headers.get('content-type')).toBe('application/pdf');
+        expect(example.headers.get('x-robots-tag')).toBe('noindex, nofollow');
+        expect(await example.text()).toMatch(/^%PDF-1.4/);
+      }
+    }
+    const { document } = parseHTML(await (await fetch(`${base}/en/qr-codes`)).text());
+    expect(document.querySelectorAll('.guide-actions a')).toHaveLength(0);
+    expect(document.querySelectorAll('.guide-actions .notice')).toHaveLength(2);
+    expect(document.querySelector('#main-content')?.textContent).toContain('does not encrypt');
   });
 
   it('keeps searches out of indexing and caches while making filtering work without JavaScript', async () => {

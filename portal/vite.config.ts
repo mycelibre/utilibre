@@ -6,11 +6,12 @@ import { es } from './src/i18n/es.ts';
 import { routePath, toolPath, translatedPath, type StaticPage } from './src/routes.ts';
 
 const dictionaries = { en, es } as const;
-const staticPages: Array<Exclude<StaticPage, 'not-found'>> = ['home', 'services', 'tools', 'about', 'transparency', 'privacy', 'acceptable', 'support', 'status', 'software', 'labels'];
+const staticPages: Array<Exclude<StaticPage, 'not-found'>> = ['home', 'services', 'tools', 'about', 'transparency', 'privacy', 'acceptable', 'support', 'status', 'software', 'labels', 'pdf', 'qr'];
 const descriptionKeys = {
   home: 'meta.home.description', services: 'services.intro', tools: 'tools.intro', about: 'about.body1',
   transparency: 'transparency.why.body', privacy: 'privacy.intro', acceptable: 'acceptable.intro',
   support: 'support.body', status: 'status.intro', software: 'software.intro', labels: 'labels.intro',
+  pdf: 'meta.pdf.description', qr: 'meta.qr.description',
 } as const;
 
 export default defineConfig({

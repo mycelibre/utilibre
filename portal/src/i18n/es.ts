@@ -1,6 +1,10 @@
 import type { en as EnglishDictionary } from './en.ts';
 
 export const es: Record<keyof typeof EnglishDictionary, string> = {
+  'meta.pdf.title': 'Unir PDF y reconocer texto escaneado sin cuenta',
+  'meta.pdf.description': 'Usá BentoPDF en Utilibre para unir PDF o reconocer texto escaneado. Procesamiento en el navegador, archivos de práctica, pasos y límites del OCR.',
+  'meta.qr.title': 'Crear y leer códigos QR gratis sin cuenta',
+  'meta.qr.description': 'Elegí una herramienta para crear QR de enlaces o Wi-Fi. Descargá PNG, SVG o PDF, probá tu código y conocé qué revela antes de compartirlo.',
   'meta.home.title': 'Herramientas gratis: PDF, archivos, códigos QR y más',
   'meta.home.description': 'Usá herramientas de software libre para PDF, OCR, convertir archivos y crear códigos QR. Alojamiento independiente, privacidad clara y sin rastreo de comportamiento.',
   'meta.tools.title': 'Catálogo de herramientas alojadas',

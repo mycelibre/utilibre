@@ -1,6 +1,7 @@
 import { copyFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import './build-guide-examples.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 for (const [sourceName, destinationName] of [

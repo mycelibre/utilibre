@@ -1,7 +1,7 @@
 import { catalog } from './catalog/catalog.ts';
 import type { Language } from './i18n/index.ts';
 
-export type StaticPage = 'home' | 'services' | 'tools' | 'about' | 'transparency' | 'privacy' | 'acceptable' | 'support' | 'status' | 'software' | 'labels' | 'not-found';
+export type StaticPage = 'home' | 'services' | 'tools' | 'about' | 'transparency' | 'privacy' | 'acceptable' | 'support' | 'status' | 'software' | 'labels' | 'pdf' | 'qr' | 'not-found';
 export interface Route { language: Language; page: StaticPage | 'tool'; toolId?: string; }
 
 const staticPaths: Record<Exclude<StaticPage, 'not-found'>, Record<Language, string>> = {
@@ -16,6 +16,8 @@ const staticPaths: Record<Exclude<StaticPage, 'not-found'>, Record<Language, str
   status: { en: 'status', es: 'estado' },
   software: { en: 'software', es: 'software' },
   labels: { en: 'privacy-labels', es: 'etiquetas-privacidad' },
+  pdf: { en: 'pdf-tools', es: 'herramientas-pdf' },
+  qr: { en: 'qr-codes', es: 'codigos-qr' },
 };
 
 export function parseRoute(pathname: string): Route | null {

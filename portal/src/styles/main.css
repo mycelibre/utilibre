@@ -525,6 +525,13 @@ p { max-width: 75ch; }
 .section > h2 { margin-block-end: 1.2rem; }
 .prose { max-width: 58rem; }
 .prose p { color: var(--ink-soft); }
+.guide-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-block-start: 1.4rem; }
+.guide-links { display: flex; flex-wrap: wrap; gap: 0.7rem 1.2rem; }
+.ledger-reference-links .guide-links { display: grid; }
+.task-guide .prose { max-width: 70ch; }
+.task-guide .prose li + li { margin-block-start: 0.75rem; }
+.task-guide .page-header > a { display: inline-block; margin-block-end: 1rem; }
+.task-guide .button { max-width: 100%; overflow-wrap: anywhere; }
 
 .privacy-labels-expanded { display: grid; gap: 0; border-block-start: 2px solid var(--ink); }
 .privacy-label-explanation { padding-block: 1rem; display: grid; grid-template-columns: 7rem 1fr; gap: 1rem; border-block-end: 1px solid var(--rule); }

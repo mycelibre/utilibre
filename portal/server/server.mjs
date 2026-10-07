@@ -33,6 +33,7 @@ const MIME = new Map([
   ['.json', 'application/json; charset=utf-8'],
   ['.map', 'application/json; charset=utf-8'],
   ['.png', 'image/png'],
+  ['.pdf', 'application/pdf'],
   ['.svg', 'image/svg+xml'],
   ['.txt', 'text/plain; charset=utf-8'],
   ['.wasm', 'application/wasm'],
@@ -209,6 +210,7 @@ function serveStatic(requestUrl, request, response) {
   response.writeHead(200, {
     'Content-Type': MIME.get(extension) || 'application/octet-stream',
     'Cache-Control': immutable ? 'public, max-age=31536000, immutable' : 'public, max-age=3600',
+    ...(extension === '.pdf' ? { 'X-Robots-Tag': 'noindex, nofollow' } : {}),
   });
   if (headOnly) return response.end();
   createReadStream(file).pipe(response);
