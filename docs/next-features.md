@@ -421,6 +421,16 @@ image/source reference and remove WBO enablement if rolling back discovery; do n
 revert the complete environment or the unrelated SearXNG update. Source archives
 are published from reviewed indexed files before the portal-only release.
 
+Deployment completed: `ff88935` was pushed and built/recreated **portal only**.
+Public checks at 23:12 UTC confirmed both new guide URLs, localized launch links,
+six instructions per guide, pilot-view visibility and no horizontal overflow at
+1280/390px. Screenshots were inspected. The read-only production SEO audit passed
+all 48 canonical pages. The public status page exposes WBO monitor49; no uptime
+percentage is inferred from this first observation. WBO source archive serves
+HTTP200 as a downloadable binary; 498 reviewed integration source files were
+published, with the prior archive in `/opt/utilibre/source-update-Utzavg`.
+Public TURN remains disabled pending the network/certificate items above.
+
 ## Primary references consulted
 
 - SearXNG Hostnames: https://docs.searxng.org/dev/plugins/hostnames.html
