@@ -46,7 +46,7 @@ do not remove unrelated containers/volumes. Source archives remain public.
 
 ## Capacity baseline — October 7, 2026
 
-### Root storage expansion — October 7, 16:39 UTC
+### Root storage expansion — October 7, 2026
 
 After the creative-tool release, the operator-requested expansion used existing
 unallocated space on the 130 GiB `/dev/sda`; no provider upgrade or purchase was
