@@ -1,5 +1,31 @@
 # Browser toolbox review — 2026-10-06
 
+## Dumb recheck — October 7
+
+The operator is correct that other instances work. Low-volume searches and a
+sample song page succeeded at `dumb.bloat.cat`, `genius.fsky.io` and
+`dumb.artemislena.eu`; their pages report `v.f558107`, matching the retained
+Utilibre image and current upstream main. The sample pages contain nonempty
+lyrics and annotations, not just HTTP 200 homepages. This does not establish
+their uptime or all-content coverage. A browser-client fetch to FSKY did not
+reproduce the successful plain-HTTP-client result, so access can vary by client.
+
+The original pinned image was tested privately on loopback port 3343, without
+changing LRCLIB or the public gateway. Search returns HTTP 500; the lyrics route
+returns an error page with misleading HTTP 200 and no lyrics. Direct Genius
+search/article requests, Chromium, and curl_cffi 0.16.3 with browser-compatible
+TLS all receive HTTP 403 with `cf-mitigated: challenge`. The separate official
+API responds HTTP 401 without credentials. No authentication bypass was tried.
+
+The reviewed upstream/fork changes did not provide a verified access fix.
+Network/IP treatment is a likely explanation, not proven solely by these
+tests. The next discriminating test needs another operator-controlled outbound
+IP, or configuration information from a working instance operator. No new
+hosting, paid proxy, operator contact, public-instance relay, shared account or
+visitor-side Genius requests were configured. The temporary test container was
+removed; the original image/source and live LRCLIB replacement are retained.
+**Dumb has not been restored.**
+
 ## Whisper withdrawn from the catalog — October 7
 
 At the operator's explicit request, Whisper is hidden from the English and Spanish
