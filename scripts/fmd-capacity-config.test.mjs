@@ -15,7 +15,8 @@ test('FMD separate static location matches only expected asset files',()=>{
   const rule=config.match(/location ~ (\S+) \{/)[1];
   const pattern=new RegExp(rule);
   assert(pattern.test('/assets/Home-example.js'));assert(pattern.test('/assets/styles.css'));
-  for(const path of ['/api/v2/data/location','/api/v2/account/register','/assets/api/v2/data/location','/assets/file.js/extra'])assert(!pattern.test(path));
+  for(const path of ['/theme-init.js','/manifest.json','/icon.svg','/favicon-32x32.png','/apple-touch-icon.png'])assert(pattern.test(path));
+  for(const path of ['/api/v2/data/location','/api/v2/account/register','/assets/api/v2/data/location','/assets/file.js/extra','/version','/arbitrary.js','/api/account.js'])assert(!pattern.test(path));
   assert.match(config,/if \(\$request_method !~ \^\(GET\|HEAD\)\$\)/);
   assert.match(config,/limit_req zone=fmd_assets burst=100 nodelay;/);
 });

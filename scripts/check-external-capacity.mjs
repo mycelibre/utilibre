@@ -16,7 +16,7 @@ try{
   if(pool.length<10)throw Error('Too few healthy front doors; no load sent');
   // Higher stages require a separate explicit dispatch after reviewing baseline.
   for(const rate of higher?[50,100]:[2.5,5,10,25]){
-    const result=await phase({name:'external-frontdoors',pool,mode:'public',rate,seconds:30,maxInflight:40});
+    const result=await phase({name:'external-frontdoors',pool,mode:'public',rate,seconds:30,maxInflight:80});
     report.phases.push(result);
     console.log(JSON.stringify({stage:rate,requests:result.requests,errors:result.errors,p95Ms:result.responseP95Ms,stopped:result.stopped}));
     if(result.stopped){report.stopped=result.stopped;break;}
