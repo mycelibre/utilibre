@@ -1,8 +1,10 @@
 User-agent: *
 Disallow: /api/
 Disallow: /_portal/
+Allow: /_portal/config$
 Disallow: /healthz
-Disallow: /en/tools
-Disallow: /es/herramientas
-Disallow: /en/status
-Disallow: /es/estado
+# The production server adds the configured sitemap URL (or disallows all
+# crawling for private previews). Public noindex pages must remain crawlable
+# so crawlers can see their noindex directive; robots.txt is not access control.
+Disallow: /page-metadata.json
+Disallow: /server-built/

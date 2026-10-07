@@ -221,7 +221,8 @@ test('donation surfaces stay hidden without a configured support destination', a
     await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible();
     await expect(page.getByRole('link', { name: path.startsWith('/es/') ? 'Volver al catálogo' : 'Return to the catalog' }))
       .toHaveAttribute('href', catalogPath);
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', new RegExp(`${catalogPath}$`));
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
   }
 });
 

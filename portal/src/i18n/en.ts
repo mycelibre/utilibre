@@ -1,6 +1,6 @@
 export const en = {
-  'meta.home.title': 'Free hosted access to useful FOSS',
-  'meta.home.description': 'Use a small set of independently hosted FOSS services with clear data-flow notes. No ads or behavioral tracking.',
+  'meta.home.title': 'Free online tools: PDF, files, QR codes & more',
+  'meta.home.description': 'Use free, independently hosted open-source tools for PDFs, OCR, file conversion, QR codes and more. Clear privacy and account requirements. No behavioral tracking.',
   'meta.tools.title': 'Hosted tool catalog',
   'meta.services.title': 'Hosted open-source services',
   'meta.about.title': 'About Utilibre',

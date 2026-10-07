@@ -24,7 +24,7 @@ export function renderCatalogList(
   options: CatalogLedgerOptions = {},
 ): HTMLOListElement {
   const list = element('ol', 'catalog-ledger-list');
-  if (options.ariaLabel) list.ariaLabel = options.ariaLabel;
+  if (options.ariaLabel) list.setAttribute('aria-label', options.ariaLabel);
 
   entries.forEach((entry, index) => {
     list.append(renderCatalogRow(entry, (options.indexOffset ?? 0) + index, language, config, t, options));
@@ -54,7 +54,7 @@ export function renderCatalogRow(
 
   const coordinate = element('div', 'catalog-ledger-coordinate');
   const number = element('span', 'catalog-ledger-number', String(index + 1).padStart(2, '0'));
-  number.ariaHidden = 'true';
+  number.setAttribute('aria-hidden', 'true');
   coordinate.append(number);
 
   const name = localized(entry.name, language);
@@ -77,7 +77,7 @@ export function renderCatalogRow(
     source.href = entry.upstreamSourceUrl;
     source.target = '_blank';
     source.rel = 'noopener noreferrer';
-    source.ariaLabel = sourceText;
+    source.setAttribute('aria-label', sourceText);
     attribution.append(source);
     content.append(attribution);
   }
@@ -99,14 +99,14 @@ export function renderCatalogRow(
     link.href = launch.href;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
-    link.ariaLabel = `${launchText}: ${name} (${t('a11y.opensNewTab')})`;
+    link.setAttribute('aria-label', `${launchText}: ${name} (${t('a11y.opensNewTab')})`);
     if (launch.href.startsWith('mumble:')) {
       link.removeAttribute('target');
-      link.ariaLabel = `${launchText}: ${name}`;
+      link.setAttribute('aria-label', `${launchText}: ${name}`);
     }
     if (launch.external) {
       const cue = element('span', 'catalog-ledger-external-cue', '↗');
-      cue.ariaHidden = 'true';
+      cue.setAttribute('aria-hidden', 'true');
       link.append(' ', cue);
     }
     action.append(link);
@@ -115,7 +115,7 @@ export function renderCatalogRow(
       quick.href = localizedServiceUrl(entry.id, launch.href, language, shortcut.path);
       quick.target = '_blank';
       quick.rel = 'noopener noreferrer';
-      quick.ariaLabel = `${localized(shortcut.label, language)} (${t('a11y.opensNewTab')})`;
+      quick.setAttribute('aria-label', `${localized(shortcut.label, language)} (${t('a11y.opensNewTab')})`);
       action.append(quick);
     }
   }

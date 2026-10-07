@@ -1,8 +1,8 @@
 import type { en as EnglishDictionary } from './en.ts';
 
 export const es: Record<keyof typeof EnglishDictionary, string> = {
-  'meta.home.title': 'Acceso gratuito a software libre alojado',
-  'meta.home.description': 'Usá una selección de servicios de software libre alojados de forma independiente, con notas claras sobre el flujo de datos. Sin anuncios ni rastreo de comportamiento.',
+  'meta.home.title': 'Herramientas gratis: PDF, archivos, códigos QR y más',
+  'meta.home.description': 'Usá herramientas de software libre para PDF, OCR, convertir archivos y crear códigos QR. Alojamiento independiente, privacidad clara y sin rastreo de comportamiento.',
   'meta.tools.title': 'Catálogo de herramientas alojadas',
   'meta.services.title': 'Servicios alojados de software libre',
   'meta.about.title': 'Acerca de Utilibre',

@@ -1,4 +1,5 @@
 export interface PublicConfig {
+  publicPortalOrigin: string;
   projectName: string;
   projectTagline: string;
   projectTaglineEn: string;
@@ -52,6 +53,7 @@ export interface PublicConfig {
 }
 
 const defaults: PublicConfig = {
+  publicPortalOrigin: '',
   projectName: 'Utilibre',
   projectTagline: '',
   projectTaglineEn: '',

@@ -14,6 +14,7 @@ import {
 import type { PublicConfig } from '../../src/config';
 
 const baseConfig: PublicConfig = {
+  publicPortalOrigin: 'https://utility.example',
   publicLyricsUrl: '',
   publicMumbleUrl: '',
   publicDegoogUrl: '',

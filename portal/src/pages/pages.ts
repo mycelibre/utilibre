@@ -9,8 +9,15 @@ import { routePath, type Route, type StaticPage } from '../routes';
 import { append, disableActionButton, element, type Translate } from '../utilities/dom';
 
 export async function renderPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): Promise<HTMLElement> {
-  if (route.page === 'support' && !config.supportUrl) return renderNotFound(route.language, t);
   if (route.page === 'tool' && route.toolId) return renderToolPage(route.toolId, route.language, config, t);
+  if (route.page === 'status') return renderStatus(route.language, config, t);
+  return renderStaticPage(route, config, t, searchParams);
+}
+
+// Synchronous public content is shared by the browser and server renderer.
+// No health probes, visitor data, tool code, or third-party fetches run here.
+export function renderStaticPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): HTMLElement {
+  if (route.page === 'support' && !config.supportUrl) return renderNotFound(route.language, t);
   if (route.page === 'home') return renderHome(route.language, config, t, searchParams);
   if (route.page === 'services') return renderServices(route.language, config, t);
   if (route.page === 'tools') return renderTools(route.language, config, t);
@@ -19,7 +26,6 @@ export async function renderPage(route: Route, config: PublicConfig, t: Translat
   if (route.page === 'about') return prosePage(t('about.title'), '', [['about.title', 'about.body1'], ['about.upstream.title', 'about.body2'], ['transparency.why.title', 'transparency.why.body']], t, true);
   if (route.page === 'acceptable') return renderAcceptable(config, t);
   if (route.page === 'support') return renderSupport(route.language, config, t);
-  if (route.page === 'status') return renderStatus(route.language, config, t);
   if (route.page === 'software') return renderSoftware(route.language, config, t);
   if (route.page === 'labels') return renderLabelGuide(t);
   return renderNotFound(route.language, t);
@@ -33,17 +39,17 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   const isFeaturedDefault = !state.query && !state.group && state.view !== 'all';
 
   const index = element('aside', 'ledger-index');
-  index.ariaLabel = t('home.catalog.taskIndex');
+  index.setAttribute('aria-label', t('home.catalog.taskIndex'));
   const guideword = element('p', 'ledger-guideword', t('home.catalog.taskIndex'));
   const taskCue = element('p', 'task-scroll-cue', t('home.catalog.taskCue').replace('{count}', String(discoveryGroups.length)));
   const taskNav = element('nav', 'task-navigation');
-  taskNav.ariaLabel = t('home.catalog.taskIndex');
+  taskNav.setAttribute('aria-label', t('home.catalog.taskIndex'));
   const taskList = element('ol', 'task-index-list');
   discoveryGroups.forEach((group, position) => {
     const item = element('li');
     const link = element('a');
     link.href = catalogUrl(language, { group });
-    if (state.group === group && !state.query) link.ariaCurrent = 'page';
+    if (state.group === group && !state.query) link.setAttribute('aria-current', 'page');
     append(
       link,
       element('span', 'task-number', String(position + 1).padStart(2, '0')),
@@ -56,13 +62,13 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
 
   const note = element('p', 'ledger-index-note', t('home.catalog.indexNote'));
   const references = element('nav', 'ledger-reference-links');
-  references.ariaLabel = t('home.catalog.title');
+  references.setAttribute('aria-label', t('home.catalog.title'));
   const featured = element('a', 'catalog-mode-link', t('home.catalog.featured'));
   featured.href = catalogUrl(language, {});
-  if (isFeaturedDefault) featured.ariaCurrent = 'page';
+  if (isFeaturedDefault) featured.setAttribute('aria-current', 'page');
   const all = element('a', 'catalog-mode-link', t('home.catalog.all'));
   all.href = catalogUrl(language, { view: 'all' });
-  if (!state.query && !state.group && state.view === 'all') all.ariaCurrent = 'page';
+  if (!state.query && !state.group && state.view === 'all') all.setAttribute('aria-current', 'page');
   const labels = element('a', 'catalog-context-link', t('footer.labels'));
   labels.href = routePath('labels', language);
   const software = element('a', 'catalog-context-link', t('footer.software'));
@@ -78,10 +84,10 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   append(finderCopy, element('h1', '', t('home.title')), element('p', '', localizedTagline || config.projectTagline || t('home.lead')));
   const form = element('form', 'catalog-search');
   form.setAttribute('role', 'search');
-  form.method = 'get';
-  form.action = routePath('home', language);
+  form.setAttribute('method', 'get');
+  form.setAttribute('action', routePath('home', language));
   const label = element('label', '', t('home.catalog.searchLabel'));
-  label.htmlFor = 'catalog-query';
+  label.setAttribute('for', 'catalog-query');
   const searchControl = element('div', 'catalog-search-control');
   const input = element('input');
   input.id = 'catalog-query';
@@ -102,15 +108,15 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   const catalogHeader = element('header', 'catalog-ledger-header');
   const stateLabel = catalogStateLabel(state, t);
   const stateCode = element('span', 'catalog-ledger-code', catalogStateCode(state));
-  stateCode.ariaHidden = 'true';
+  stateCode.setAttribute('aria-hidden', 'true');
   const heading = element('div', 'catalog-ledger-heading');
   const title = element('h2', '', stateLabel);
   title.id = 'catalog-title';
   heading.append(title);
   const processing = element('span', 'catalog-ledger-column-label', t('home.catalog.processing'));
   const launch = element('span', 'catalog-ledger-column-label catalog-ledger-column-action', t('home.catalog.open'));
-  processing.ariaHidden = 'true';
-  launch.ariaHidden = 'true';
+  processing.setAttribute('aria-hidden', 'true');
+  launch.setAttribute('aria-hidden', 'true');
   append(catalogHeader, stateCode, heading, processing, launch);
   const resultCount = element('p', 'catalog-result-count', `${entries.length} ${entries.length === 1 ? t('home.catalog.oneResult') : t('home.catalog.results')}`);
   resultCount.setAttribute('role', 'status');
@@ -278,7 +284,7 @@ function renderStatus(language: Language, config: PublicConfig, t: Translate): H
   const section = element('section', 'section');
   const list = element('div', 'status-list');
   const message = element('p', 'status-message', t('status.loading'));
-  message.role = 'status';
+  message.setAttribute('role', 'status');
   const refresh = element('button', 'button button-secondary', t('status.refresh'));
   refresh.type = 'button';
   append(section, list, refresh, message);
@@ -411,7 +417,7 @@ function renderSoftware(language: Language, config: PublicConfig, t: Translate):
     });
   }
   const jump = element('nav', 'software-jump');
-  jump.ariaLabel = t('software.jump');
+  jump.setAttribute('aria-label', t('software.jump'));
   for (const group of groups) {
     const link = element('a', '', group.label);
     link.href = `#software-${group.id}`;

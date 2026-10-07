@@ -11,6 +11,7 @@ ENV NODE_ENV=production \
     PORT=8080
 WORKDIR /app
 COPY --from=build --chown=node:node /app/dist ./dist
+COPY --from=build --chown=node:node /app/server-built ./server-built
 COPY --chown=node:node server ./server
 USER node
 EXPOSE 8080

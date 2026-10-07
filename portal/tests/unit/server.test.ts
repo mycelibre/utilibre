@@ -47,18 +47,18 @@ describe('portal server security boundaries', () => {
     expect(response.headers.get('x-robots-tag')).toBe('noindex, nofollow');
 
     const english = await fetch(`${base}/en/privacy?view=compact`);
-    expect(english.headers.get('x-robots-tag')).toBeNull();
-    expect(english.headers.get('cache-control')).toBe('no-cache, no-transform');
+    expect(english.headers.get('x-robots-tag')).toBe('noindex, nofollow');
+    expect(english.headers.get('cache-control')).toBe('no-store, no-transform');
     const englishShell = await english.text();
     expect(englishShell).toContain('<html lang="en">');
-    expect(englishShell).toContain('<link rel="canonical" href="/en/privacy" />');
+    expect(englishShell).not.toContain('<link rel="canonical"');
 
     const spanish = await fetch(`${base}/es/privacidad`);
     const spanishShell = await spanish.text();
     expect(spanishShell).toContain('<html lang="es">');
     expect(spanishShell).toContain('Ir al contenido principal');
-    expect(spanishShell).toContain('<link rel="canonical" href="/es/privacidad" />');
-    expect(spanishShell).toContain('hreflang="en" href="/en/privacy"');
+    expect(spanishShell).not.toContain('<link rel="canonical"');
+    expect(spanishShell).toContain('href="/en/privacy"');
 
     const preferredEnglish = await fetch(`${base}/`, { headers: { 'Accept-Language': 'en-US,en;q=0.9,es;q=0.8' } });
     expect(await preferredEnglish.text()).toContain('<html lang="en">');

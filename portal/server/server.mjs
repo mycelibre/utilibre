@@ -1,3 +1,7 @@
+import { createHash } from 'node:crypto';
+import { isIP } from 'node:net';
+import { gzipSync } from 'node:zlib';
+import { renderPublicShell, parseRoute, pageSeo, serializeStructuredData } from '../server-built/render.mjs';
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer, request as httpRequest } from 'node:http';
 import { extname, join, normalize } from 'node:path';
@@ -14,6 +18,9 @@ const ENABLED_SERVICES = new Set(csv(process.env.ENABLED_SERVICES || 'searxng'))
 const DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE === 'es' ? 'es' : 'en';
 const SUPPORT_URL = publicUrl(process.env.SUPPORT_URL);
 const SUPPORT_VISIBLE = Boolean(SUPPORT_URL);
+const PUBLIC_ORIGIN = publicOrigin(process.env.PUBLIC_PORTAL_ORIGIN);
+const HTML_CACHE = new Map();
+const INDEX_HTML = readFileSync(join(DIST, 'index.html'), 'utf8');
 const STATUS_SERVICES = parseStatusServices(process.env.STATUS_SERVICES || '').filter(({ id }) => ENABLED_SERVICES.has(id));
 let statusSnapshot = null;
 let statusCheck = null;
@@ -69,7 +76,10 @@ const server = createServer(async (request, response) => {
       response.writeHead(405, { Allow: 'GET, HEAD' });
       return response.end();
     }
-    if (requestUrl.pathname === '/page-metadata.json') {
+    if (requestUrl.pathname === '/robots.txt') return serveRobots(request.method === 'HEAD', response);
+    if (requestUrl.pathname === '/sitemap.xml') return serveSitemap(request.method === 'HEAD', response);
+    const assetPath = safeDecode(requestUrl.pathname).replace(/^\/+/, '');
+    if (assetPath === 'page-metadata.json' || assetPath.startsWith('server-built/')) {
       response.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' });
       return response.end(request.method === 'HEAD' ? undefined : 'Not found');
     }
@@ -78,7 +88,7 @@ const server = createServer(async (request, response) => {
       response.writeHead(308, { Location: `${redirect}${requestUrl.search}`, 'Cache-Control': 'no-store' });
       return response.end();
     }
-    return serveStatic(requestUrl.pathname, request.method === 'HEAD', request.headers['accept-language'], response);
+    return serveStatic(requestUrl, request, response);
   } catch (error) {
     console.error('request_failed', error instanceof Error ? error.message : 'unknown');
     if (response.destroyed || response.writableEnded) return;
@@ -141,7 +151,9 @@ function setSecurityHeaders(response) {
 
 function setCrawlerHeaders(response, pathname) {
   if (
-    pathname === '/healthz'
+    PRIVATE_PREVIEW
+    || !PUBLIC_ORIGIN
+    || pathname === '/healthz'
     || pathname.startsWith('/api/')
     || pathname.startsWith('/_portal/')
     || /^\/(?:en\/tools|es\/herramientas)(?:\/|$)/.test(pathname)
@@ -150,36 +162,90 @@ function setCrawlerHeaders(response, pathname) {
   ) response.setHeader('X-Robots-Tag', 'noindex, nofollow');
 }
 
-function serveStatic(pathname, headOnly, acceptLanguage, response) {
-  const decoded = safeDecode(pathname);
+function serveStatic(requestUrl, request, response) {
+  const decoded = safeDecode(requestUrl.pathname);
+  const headOnly = request.method === 'HEAD';
   const relative = decoded === '/' ? 'index.html' : decoded.replace(/^\/+/, '');
   const candidate = normalize(join(DIST, relative));
   const safeCandidate = candidate.startsWith(`${DIST}/`) || candidate === join(DIST, 'index.html');
   const requestedFile = safeCandidate && existsSync(candidate) && statSync(candidate).isFile() ? candidate : null;
   if (!requestedFile && isStaticAssetPath(decoded)) {
     response.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' });
-    return response.end('Not found');
+    return response.end(headOnly ? undefined : 'Not found');
   }
   const file = requestedFile ?? join(DIST, 'index.html');
+  if (file === join(DIST, 'index.html')) {
+    const language = staticShellLanguage(decoded, request.headers['accept-language']);
+    const statusCode = knownPagePath(decoded) ? 200 : 404;
+    // Only a finite set of canonical, query-free public pages is cached.
+    // Visitor searches are rendered once, never stored or logged.
+    const cacheable = statusCode === 200 && !requestUrl.search;
+    const cacheKey = `${decoded}:${language}`;
+    let document = cacheable ? HTML_CACHE.get(cacheKey) : null;
+    if (!document || Date.now() - document.createdAt > 30_000) {
+      document = localizedIndexHtml(INDEX_HTML, language, decoded, requestUrl.search);
+      document.gzip = gzipSync(document.html);
+      document.createdAt = Date.now();
+      if (cacheable) {
+        if (HTML_CACHE.size >= 32) HTML_CACHE.delete(HTML_CACHE.keys().next().value);
+        HTML_CACHE.set(cacheKey, document);
+      }
+    }
+    if (document.robots.startsWith('noindex')) response.setHeader('X-Robots-Tag', document.robots.replaceAll(',', ', '));
+    if (document.hash) response.setHeader('Content-Security-Policy', response.getHeader('Content-Security-Policy').replace("script-src 'self'", `script-src 'self' 'sha256-${document.hash}'`));
+    const gzip = (request.headers['accept-encoding'] ?? '').split(',').some((part) => /^gzip(?:\s*;\s*q=(?:1(?:\.0*)?|0\.\d*[1-9]\d*))?$/i.test(part.trim()));
+    const body = gzip ? document.gzip : document.html;
+    response.writeHead(statusCode, {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': requestUrl.search ? 'no-store, no-transform' : 'no-cache, no-transform',
+      'Vary': decoded === '/' ? 'Accept-Encoding, Accept-Language' : 'Accept-Encoding',
+      'Content-Length': Buffer.byteLength(body),
+      ...(gzip ? { 'Content-Encoding': 'gzip' } : {}),
+    });
+    return response.end(headOnly ? undefined : body);
+  }
   const extension = extname(file);
   const immutable = file.includes(`${join(DIST, 'assets')}/`);
-  const statusCode = !requestedFile && !knownPagePath(decoded) ? 404 : 200;
-  response.writeHead(statusCode, {
+  response.writeHead(200, {
     'Content-Type': MIME.get(extension) || 'application/octet-stream',
-    'Cache-Control': immutable ? 'public, max-age=31536000, immutable' : extension === '.html' ? 'no-cache, no-transform' : 'public, max-age=3600',
+    'Cache-Control': immutable ? 'public, max-age=31536000, immutable' : 'public, max-age=3600',
   });
   if (headOnly) return response.end();
-  if (file === join(DIST, 'index.html')) {
-    const language = staticShellLanguage(decoded, acceptLanguage);
-    const html = localizedIndexHtml(readFileSync(file, 'utf8'), language, decoded);
-    return response.end(html);
-  }
   createReadStream(file).pipe(response);
 }
 
 function canonicalRouteRedirect(pathname) {
+  if (pathname === '/index.html') return '/';
   const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
-  return SUPPORT_VISIBLE && normalized === '/es/support' ? '/es/apoyar' : '';
+  if (SUPPORT_VISIBLE && normalized === '/es/support') return '/es/apoyar';
+  if (!SUPPORT_VISIBLE && isSupportPath(normalized)) return '';
+  const metadata = PAGE_METADATA[normalized];
+  const canonical = metadata?.alternates?.[metadata.language];
+  return canonical && canonical !== pathname ? canonical : '';
+}
+
+function serveRobots(headOnly, response) {
+  const text = PRIVATE_PREVIEW || !PUBLIC_ORIGIN
+    ? 'User-agent: *\nDisallow: /\n'
+    : `User-agent: *\nDisallow: /api/\nDisallow: /_portal/\nAllow: /_portal/config$\nDisallow: /healthz\nDisallow: /page-metadata.json\nDisallow: /server-built/\nSitemap: ${PUBLIC_ORIGIN}/sitemap.xml\n`;
+  response.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache' });
+  response.end(headOnly ? undefined : text);
+}
+
+function serveSitemap(headOnly, response) {
+  // No subdomain user content, searches, login URLs, API routes, hidden tools,
+  // or fabricated last-modified timestamps belong in this inventory.
+  if (PRIVATE_PREVIEW || !PUBLIC_ORIGIN) {
+    response.writeHead(404, { 'Cache-Control': 'no-store' });
+    return response.end(headOnly ? undefined : 'Not found');
+  }
+  const paths = Object.entries(PAGE_METADATA)
+    .filter(([path, meta]) => path.startsWith('/') && meta.robots === 'index,follow' && (SUPPORT_VISIBLE || !isSupportPath(path)))
+    .map(([, meta]) => meta.alternates[meta.language]);
+  const urls = [...new Set(paths)].sort().map((path) => `  <url><loc>${escapeHtml(PUBLIC_ORIGIN + path)}</loc></url>`).join('\n');
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+  response.writeHead(200, { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache' });
+  response.end(headOnly ? undefined : xml);
 }
 
 function knownPagePath(pathname) {
@@ -216,60 +282,47 @@ function staticShellLanguage(pathname, acceptLanguage) {
   return supported[0]?.language ?? DEFAULT_LANGUAGE;
 }
 
-function localizedIndexHtml(html, language, pathname) {
+function localizedIndexHtml(html, language, pathname, search = '') {
   const skip = language === 'es' ? 'Ir al contenido principal' : 'Skip to main content';
-  const metadata = pageMetadata(pathname, language);
-  const projectName = publicText(process.env.PROJECT_NAME, 'Utilibre', 80);
-  const noscript = noScriptFallback(language, projectName);
-  const title = `${metadata.title} — ${projectName}`;
-  const canonical = `<link rel="canonical" href="${escapeAttribute(metadata.alternates[language])}" />`;
-  const alternates = `<link rel="alternate" hreflang="en" href="${escapeAttribute(metadata.alternates.en)}" />\n    <link rel="alternate" hreflang="es" href="${escapeAttribute(metadata.alternates.es)}" />`;
-  return html
-    .replace(/<html lang="[^"]+">/, `<html lang="${language}">`)
-    .replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(title)}</title>`)
-    .replace(/<meta name="robots" content="[^"]*"\s*\/>/, `<meta name="robots" content="${escapeAttribute(metadata.robots)}" />`)
-    .replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${escapeAttribute(metadata.description)}" />`)
-    .replace(/<meta property="og:title" content="[^"]*"\s*\/>/, `<meta property="og:title" content="${escapeAttribute(title)}" />`)
-    .replace(/<meta property="og:description" content="[^"]*"\s*\/>/, `<meta property="og:description" content="${escapeAttribute(metadata.description)}" />`)
-    .replace('</head>', `    ${canonical}\n    ${alternates}\n  </head>`)
-    .replace(/(<a class="skip-link" href="#main-content">)[^<]*(<\/a>)/, `$1${skip}$2`)
-    .replace(/<noscript>[\s\S]*?<\/noscript>/, () => noscript);
+  const config = publicConfig();
+  const route = !knownPagePath(pathname) ? { language, page: 'not-found' } : (parseRoute(pathname) ?? { language, page: 'home' });
+  const meta = pageSeo(route, config, search);
+  const structured = meta.structuredData ? serializeStructuredData(meta.structuredData) : '';
+  const canonical = meta.canonical ? `<link rel="canonical" href="${escapeAttribute(meta.canonical)}" />` : '';
+  const alternates = Object.entries(meta.alternates).map(([lang, href]) => `<link rel="alternate" hreflang="${lang}" href="${escapeAttribute(href)}" />`).join('\n    ');
+  const extra = [
+    canonical, alternates,
+    `<meta property="og:site_name" content="${escapeAttribute(config.projectName)}" />`,
+    `<meta property="og:url" content="${escapeAttribute(meta.canonical)}" />`,
+    `<meta property="og:image" content="${escapeAttribute(meta.image)}" />`,
+    `<meta property="og:image:alt" content="${escapeAttribute(config.projectName)} logo" />`,
+    '<meta name="twitter:card" content="summary" />',
+    structured ? `<script id="public-structured-data" type="application/ld+json">${structured}</script>` : '',
+  ].join('\n    ');
+  const shell = renderPublicShell(route, config, search);
+  return {
+    robots: meta.robots,
+    hash: structured ? createHash('sha256').update(structured).digest('base64') : '',
+    html: html
+      .replace(/<html lang="[^"]+">/, `<html lang="${language}">`)
+      .replace(/<title>[^<]*<\/title>/, () => `<title>${escapeHtml(meta.title)}</title>`)
+      .replace(/<meta name="robots" content="[^"]*"\s*\/>/, () => `<meta name="robots" content="${meta.robots}" />`)
+      .replace(/<meta name="description" content="[^"]*"\s*\/>/, () => `<meta name="description" content="${escapeAttribute(meta.description)}" />`)
+      .replace(/<meta property="og:title" content="[^"]*"\s*\/>/, () => `<meta property="og:title" content="${escapeAttribute(meta.title)}" />`)
+      .replace(/<meta property="og:description" content="[^"]*"\s*\/>/, () => `<meta property="og:description" content="${escapeAttribute(meta.description)}" />`)
+      .replace('</head>', () => `    ${extra}\n  </head>`)
+      .replace(/(<a class="skip-link" href="#main-content">)[^<]*(<\/a>)/, `$1${skip}$2`)
+      .replace('<div id="app"></div>', () => `<div id="app">${shell}</div>`)
+      .replace(/<noscript>[\s\S]*?<\/noscript>/, () => shell ? '' : noScriptFallback(language, meta.title)),
+  };
 }
 
-function noScriptFallback(language, projectName) {
-  const name = escapeHtml(projectName);
-  if (language === 'es') {
-    return `<noscript>
-      <main id="main-content" class="page-shell">
-        <header class="page-header">
-          <p class="ledger-guideword">${name}</p>
-          <h1>Acceso gratuito a servicios útiles de software libre</h1>
-          <p class="hero-lead">${name} aloja una selección pequeña de servicios que normalmente requieren un servidor propio o una cuenta de pago.</p>
-        </header>
-        <section class="section prose" aria-labelledby="javascript-required">
-          <h2 id="javascript-required">Este portal necesita JavaScript</h2>
-          <p>La lista de servicios necesita la configuración pública activa, por lo que sus enlaces no aparecen en esta versión básica.</p>
-          <p>Activa JavaScript y vuelve a cargar esta página para consultar y abrir los servicios.</p>
-          <p><a href="/en/" lang="en" hreflang="en">Read this information in English</a></p>
-        </section>
-      </main>
-    </noscript>`;
-  }
-  return `<noscript>
-      <main id="main-content" class="page-shell">
-        <header class="page-header">
-          <p class="ledger-guideword">${name}</p>
-          <h1>Free access to useful open-source services</h1>
-          <p class="hero-lead">${name} hosts a small selection of services that normally require your own server or a paid account.</p>
-        </header>
-        <section class="section prose" aria-labelledby="javascript-required">
-          <h2 id="javascript-required">This portal needs JavaScript</h2>
-          <p>The service list needs the active public configuration, so its links are unavailable in this fallback.</p>
-          <p>Enable JavaScript and reload this page to browse and open the services.</p>
-          <p><a href="/es/" lang="es" hreflang="es">Leer esta información en español</a></p>
-        </section>
-      </main>
-    </noscript>`;
+function noScriptFallback(language, title) {
+  const message = language === 'es'
+    ? 'Esta página interactiva necesita JavaScript. Podés explorar el catálogo sin activarlo.'
+    : 'This interactive page needs JavaScript. You can browse the public catalog without it.';
+  const label = language === 'es' ? 'Volver al catálogo' : 'Return to the catalog';
+  return `<noscript><main id="main-content" class="page-shell"><header class="page-header"><h1>${escapeHtml(title)}</h1></header><p>${message}</p><p><a href="/${language}/">${label}</a></p></main></noscript>`;
 }
 
 function loadPageMetadata() {
@@ -279,22 +332,6 @@ function loadPageMetadata() {
   } catch {
     return {};
   }
-}
-
-function pageMetadata(pathname, language) {
-  const normalized = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;
-  const home = PAGE_METADATA[`/${language}`] ?? {
-    title: language === 'es' ? 'Servicios útiles de software libre, alojados gratuitamente' : 'Useful open-source services, hosted for free',
-    description: language === 'es'
-      ? 'Accede a una selección pequeña de servicios de software libre con notas claras sobre el flujo de datos. Sin anuncios ni rastreo de comportamiento.'
-      : 'Access a small selection of open-source services with clear data-flow notes. No ads or behavioral tracking.',
-    robots: 'index,follow',
-    alternates: { en: '/en/', es: '/es/' },
-  };
-  if (normalized === '/') return home;
-  const notFound = PAGE_METADATA[`__not-found-${language}`] ?? { ...home, robots: 'noindex,nofollow' };
-  if (!SUPPORT_VISIBLE && isSupportPath(normalized)) return notFound;
-  return PAGE_METADATA[normalized] ?? notFound;
 }
 
 async function serveStatus(response) {
@@ -341,7 +378,12 @@ function requestStatus(url) {
 }
 
 function servePublicConfig(response) {
-  return json(response, 200, {
+  return json(response, 200, publicConfig(), { 'Cache-Control': 'no-store' });
+}
+
+function publicConfig() {
+  return {
+    publicPortalOrigin: PRIVATE_PREVIEW ? '' : PUBLIC_ORIGIN,
     projectName: publicText(process.env.PROJECT_NAME, 'Utilibre', 80),
     projectTagline: publicText(process.env.PROJECT_TAGLINE, '', 180),
     projectTaglineEn: publicText(process.env.PROJECT_TAGLINE_EN, '', 180),
@@ -393,7 +435,7 @@ function servePublicConfig(response) {
     listedServices: csv(process.env.LISTED_SERVICES || ''),
     enabledServices: [...ENABLED_SERVICES],
     defaultLanguage: DEFAULT_LANGUAGE,
-  }, { 'Cache-Control': 'no-store' });
+  };
 }
 
 function deployedSearchVersion() {
@@ -443,3 +485,14 @@ function publicServiceUrl(value) {
 }
 function escapeHtml(value) { return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 function escapeAttribute(value) { return escapeHtml(value).replace(/"/g, '&quot;'); }
+
+function publicOrigin(value) {
+  if (!value) return '';
+  try {
+    const url = new URL(value);
+    if (url.protocol !== 'https:' || url.username || url.password || url.pathname !== '/' || url.search || url.hash || url.port) return '';
+    const hostname = url.hostname.replace(/^\[|\]$/g, '');
+    if (isIP(hostname) || !hostname.includes('.') || /\.(?:localhost|local|internal)$/i.test(hostname)) return '';
+    return url.origin;
+  } catch { return ''; }
+}

@@ -1,8 +1,10 @@
 import { loadPublicConfig, type PublicConfig } from './config';
-import { preferredLanguage, setLanguagePreference, translate, type Language } from './i18n';
-import { pageMeta, renderPage } from './pages/pages';
-import { availableRoute, parseRoute, routePath, translatedPath, type Route } from './routes';
-import { append, element } from './utilities/dom';
+import { preferredLanguage, setLanguagePreference, translate } from './i18n';
+import { renderPage } from './pages/pages';
+import { availableRoute, parseRoute, routePath, type Route } from './routes';
+import { pageSeo, serializeStructuredData } from './seo';
+import { element } from './utilities/dom';
+import { renderHeader, renderFooter, type Theme } from './components/shell';
 import '@fontsource-variable/newsreader/wght.css';
 import '@fontsource-variable/atkinson-hyperlegible-next/wght.css';
 import './styles/main.css';
@@ -25,6 +27,7 @@ const applicationRoot = document.querySelector<HTMLDivElement>('#app');
 if (!applicationRoot) throw new Error('Missing application root');
 const app: HTMLDivElement = applicationRoot;
 let pendingSkipFocus = false;
+let firstRenderComplete = false;
 
 function focusMainContent(main: HTMLElement): void {
   main.focus();
@@ -48,6 +51,9 @@ function focusHashTarget(hash: string): boolean {
 // and its target does not exist until the application has rendered.
 document.querySelector<HTMLAnchorElement>('.skip-link')?.addEventListener('click', (event) => {
   event.preventDefault();
+  // SSR makes the target available before configuration finishes. Preserve
+  // that user's focus when the initial interactive shell replaces the HTML.
+  if (!firstRenderComplete) pendingSkipFocus = true;
   const main = document.querySelector<HTMLElement>('#main-content');
   if (!main) {
     pendingSkipFocus = true;
@@ -112,10 +118,19 @@ async function render(focusAfter?: string): Promise<void> {
   document.documentElement.lang = routeSnapshot.language;
   document.querySelector<HTMLElement>('.skip-link')!.textContent = t('a11y.skip');
   const shell = element('div', 'site-shell');
-  shell.append(renderHeader(routeSnapshot, t), page, renderFooter(routeSnapshot, t));
+  shell.append(renderHeader(routeSnapshot, config, t, {
+    theme: activeTheme, search: window.location.search, interactive: true,
+    onLanguage: setLanguagePreference,
+    onTheme: (next) => {
+      activeTheme = next;
+      try { localStorage.setItem('portal.theme', next); } catch { /* Optional local preference. */ }
+      applyTheme(next);
+    },
+  }), page, renderFooter(routeSnapshot, config, t));
   app.replaceChildren(shell);
+  firstRenderComplete = true;
   try { sessionStorage.removeItem(staleChunkReloadKey); } catch { /* Optional recovery state only. */ }
-  updateMetadata(routeSnapshot, t);
+  updateMetadata(routeSnapshot);
   if (pendingSkipFocus) {
     pendingSkipFocus = false;
     focusMainContent(page);
@@ -124,136 +139,36 @@ async function render(focusAfter?: string): Promise<void> {
   }
 }
 
-function renderHeader(currentRoute: Route, t: (key: Parameters<typeof translate>[1]) => string): HTMLElement {
-  const header = element('header', 'site-header');
-  const inner = element('div', 'header-inner');
-  const brand = element('a', 'brand');
-  brand.href = routePath('home', currentRoute.language);
-  brand.ariaLabel = t('a11y.home');
-  const coralLogo = element('img', 'brand-logo brand-logo-coral');
-  coralLogo.src = '/brand/svg/utilibre-logo-coral.svg';
-  coralLogo.alt = '';
-  coralLogo.width = 301;
-  coralLogo.height = 82;
-  coralLogo.setAttribute('aria-hidden', 'true');
-  const whiteLogo = element('img', 'brand-logo brand-logo-white');
-  whiteLogo.src = '/brand/svg/utilibre-logo-white.svg';
-  whiteLogo.alt = '';
-  whiteLogo.width = 301;
-  whiteLogo.height = 82;
-  whiteLogo.setAttribute('aria-hidden', 'true');
-  brand.append(coralLogo, whiteLogo);
-  const purpose = element('p', 'header-purpose', t('nav.tagline'));
-  const toggle = element('button', 'menu-toggle', t('nav.menu'));
-  toggle.type = 'button';
-  toggle.ariaExpanded = 'false';
-  toggle.setAttribute('aria-controls', 'main-navigation');
-  const nav = element('nav', 'main-nav');
-  nav.id = 'main-navigation';
-  nav.ariaLabel = t('a11y.menu');
-  const links: Array<[Parameters<typeof routePath>[0], Parameters<typeof translate>[1]]> = [
-    ['home', 'nav.catalog'], ['privacy', 'nav.privacy'], ['about', 'footer.about'], ['status', 'nav.status'],
-  ];
-  for (const [page, key] of links) {
-    if (page === 'support' && !config.supportUrl) continue;
-    const link = element('a', '', t(key));
-    link.href = routePath(page, currentRoute.language);
-    if (currentRoute.page === page) link.ariaCurrent = 'page';
-    nav.append(link);
-  }
-  const controls = element('div', 'header-controls');
-  const language = element('nav', 'language-switch');
-  language.ariaLabel = t('a11y.language');
-  for (const [index, code] of (['en', 'es'] as Language[]).entries()) {
-    if (index > 0) {
-      const separator = element('span', 'language-separator', '/');
-      separator.ariaHidden = 'true';
-      language.append(separator);
-    }
-    const link = element('a', '', code.toUpperCase());
-    link.lang = code;
-    link.href = `${translatedPath(currentRoute, code)}${window.location.search}`;
-    if (code === currentRoute.language) link.ariaCurrent = 'page';
-    link.addEventListener('click', () => setLanguagePreference(code));
-    language.append(link);
-  }
-  const theme = element('button', 'theme-toggle', themeText(activeTheme, t));
-  theme.type = 'button';
-  theme.ariaLabel = themeAccessibleLabel(activeTheme, t);
-  theme.addEventListener('click', () => {
-    const next = activeTheme === 'system' ? 'light' : activeTheme === 'light' ? 'dark' : 'system';
-    activeTheme = next;
-    try { localStorage.setItem('portal.theme', next); } catch { /* The theme still applies for this page view. */ }
-    applyTheme(next);
-    theme.textContent = themeText(next, t);
-    theme.ariaLabel = themeAccessibleLabel(next, t);
-  });
-  append(controls, language, theme);
-  if (config.supportUrl) {
-    const donate = element('a', 'donate-button', t('footer.support'));
-    donate.href = routePath('support', currentRoute.language);
-    controls.append(donate);
-  }
-  append(inner, brand, purpose, toggle, nav, controls);
-  header.append(inner);
-  toggle.addEventListener('click', () => {
-    const open = toggle.ariaExpanded !== 'true';
-    toggle.ariaExpanded = String(open);
-    toggle.textContent = open ? t('nav.close') : t('nav.menu');
-    nav.dataset.open = String(open);
-  });
-  return header;
-}
-
-function renderFooter(currentRoute: Route, t: (key: Parameters<typeof translate>[1]) => string): HTMLElement {
-  const footer = element('footer', 'site-footer');
-  const inner = element('div', 'footer-inner');
-  const links = element('nav', 'footer-links');
-  links.ariaLabel = t('a11y.menu');
-  const items: Array<[Parameters<typeof routePath>[0], Parameters<typeof translate>[1]]> = [
-    ['about', 'footer.about'], ['transparency', 'nav.transparency'], ['privacy', 'nav.privacy'], ['acceptable', 'footer.acceptable'], ['support', 'footer.support'], ['status', 'nav.status'], ['software', 'footer.software'], ['labels', 'footer.labels'],
-  ];
-  for (const [page, key] of items) {
-    if (page === 'support' && !config.supportUrl) continue;
-    const link = element('a', '', t(key));
-    link.href = routePath(page, currentRoute.language);
-    links.append(link);
-  }
-  if (config.sourceCodeUrl) {
-    const source = element('a', '', t('footer.source'));
-    source.href = config.sourceCodeUrl;
-    source.target = '_blank';
-    source.rel = 'noopener noreferrer';
-    links.append(source);
-  }
-  if (config.contactUrl) {
-    const contact = element('a', '', t('footer.contact'));
-    contact.href = config.contactUrl;
-    contact.target = '_blank';
-    contact.rel = 'noopener noreferrer';
-    links.append(contact);
-  }
-  append(inner, links, element('p', 'footer-statement', t('footer.statement')));
-  footer.append(inner);
-  return footer;
-}
-
-function updateMetadata(currentRoute: Route, t: (key: Parameters<typeof translate>[1]) => string): void {
-  const meta = pageMeta(currentRoute, config, t);
-  document.title = `${meta.title} — ${config.projectName}`;
+function updateMetadata(currentRoute: Route): void {
+  const meta = pageSeo(currentRoute, config, window.location.search, window.location.origin);
+  document.title = meta.title;
   setMeta('description', meta.description);
   setMeta('robots', meta.robots);
   setPropertyMeta('og:title', meta.title);
   setPropertyMeta('og:description', meta.description);
   setPropertyMeta('og:type', 'website');
-  setCanonical(new URL(translatedPath(currentRoute, currentRoute.language), window.location.origin).href);
+  setPropertyMeta('og:site_name', config.projectName);
+  setPropertyMeta('og:url', meta.canonical);
+  setPropertyMeta('og:image', meta.image);
+  setPropertyMeta('og:image:alt', `${config.projectName} logo`);
+  setMeta('twitter:card', 'summary');
+  if (meta.canonical) setCanonical(meta.canonical);
+  else document.querySelector('link[rel="canonical"]')?.remove();
   for (const existing of document.head.querySelectorAll('link[rel="alternate"][hreflang]')) existing.remove();
-  for (const language of ['en', 'es'] as Language[]) {
+  for (const [language, href] of Object.entries(meta.alternates)) {
     const link = document.createElement('link');
     link.rel = 'alternate';
     link.hreflang = language;
-    link.href = new URL(translatedPath(currentRoute, language), window.location.origin).href;
+    link.href = href;
     document.head.append(link);
+  }
+  document.getElementById('public-structured-data')?.remove();
+  if (meta.structuredData) {
+    const data = document.createElement('script');
+    data.id = 'public-structured-data';
+    data.type = 'application/ld+json';
+    data.textContent = serializeStructuredData(meta.structuredData);
+    document.head.append(data);
   }
 }
 
@@ -275,7 +190,6 @@ function setCanonical(href: string): void {
   link.href = href;
 }
 
-type Theme = 'system' | 'light' | 'dark';
 function savedTheme(): Theme {
   try {
     const value = localStorage.getItem('portal.theme');
@@ -285,5 +199,3 @@ function savedTheme(): Theme {
   }
 }
 function applyTheme(theme: Theme): void { if (theme === 'system') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = theme; }
-function themeText(theme: Theme, t: (key: Parameters<typeof translate>[1]) => string): string { return t(`theme.${theme}`); }
-function themeAccessibleLabel(theme: Theme, t: (key: Parameters<typeof translate>[1]) => string): string { return `${t('a11y.theme')}: ${themeText(theme, t)}`; }

@@ -13,7 +13,7 @@ export function privacyLabels(labels: PrivacyLabel[], t: Translate, withDescript
     } else {
       const description = t(`label.${label}.description` as TranslationKey);
       item.title = description;
-      item.ariaLabel = `${t(`label.${label}.name` as TranslationKey)}: ${description}`;
+      item.setAttribute('aria-label', `${t(`label.${label}.name` as TranslationKey)}: ${description}`);
       wrapper.append(item);
     }
   }

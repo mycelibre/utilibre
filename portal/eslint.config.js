@@ -2,7 +2,7 @@ import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist/**', 'node_modules/**', 'playwright-report/**', 'test-results/**', 'public/vendor/**'] },
+  { ignores: ['dist/**', 'server-built/**', 'node_modules/**', 'playwright-report/**', 'test-results/**', 'public/vendor/**'] },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -17,6 +17,10 @@ export default tseslint.config(
     files: ['server/**/*.mjs'],
     languageOptions: { globals: { AbortSignal: 'readonly', Buffer: 'readonly', console: 'readonly', fetch: 'readonly', process: 'readonly', setInterval: 'readonly', TextDecoder: 'readonly', URL: 'readonly' } },
     rules: { 'no-console': ['error', { allow: ['warn', 'error'] }] }
+  },
+  {
+    files: ['scripts/check-seo.mjs', 'scripts/submit-indexnow.mjs'],
+    languageOptions: { globals: { AbortSignal: 'readonly', Buffer: 'readonly', console: 'readonly', fetch: 'readonly', process: 'readonly', setTimeout: 'readonly', URL: 'readonly' } },
   },
   {
     files: ['tests/e2e/**/*.mjs'],

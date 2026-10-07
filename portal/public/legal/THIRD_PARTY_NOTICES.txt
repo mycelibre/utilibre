@@ -35,6 +35,15 @@ documentation. All rights in the identity assets remain reserved by their
 respective owner or owners; their presence here does not grant a trademark
 license or rights to use the Utilibre identity outside this project.
 
+## Server-side public-page rendering (2026-10-07)
+
+LinkeDOM 0.18.13 (ISC; <https://github.com/WebReflection/linkedom>) serializes
+the portal's own public components on the server. It does not run visitor code,
+fetch assets, add tracking, or appear in browser bundles. The production build
+includes the exact bundled transitive-package licenses in
+`server-built/THIRD_PARTY_NOTICES.txt`, also served at
+`/legal/server-renderer-notices.txt`. The lockfile pins the dependency tree.
+
 ## Self-hosted font assets
 
 The following exact npm packages are build-time dependencies. When imported

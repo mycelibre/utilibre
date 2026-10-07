@@ -544,3 +544,80 @@ En español: instalá un cliente de Mumble, conectate a `mumble.utilibre.org` en
 el puerto `64738` y pedí la contraseña a `admin@utilibre.org`. Compará la huella
 del certificado antes de aceptarlo. La voz por TCP está verificada; falta
 verificar UDP desde una conexión externa. No compartás la contraseña de SuperUser.
+
+## Privacy-preserving SEO (2026-10-07)
+
+The audit found a JavaScript-only catalog, no XML sitemap, relative server-side
+language alternatives, and generic home-page search descriptions. The portal
+now renders its existing public components in the initial HTML, including
+launch links, upstream credit, help/privacy details and account restrictions.
+This is the same content for visitors and crawlers, not bot-specific cloaking.
+Catalog search and category navigation also work without JavaScript. The
+existing layout, voseo, hidden Whisper configuration and service permissions
+are unchanged. Status checks and the Redlib URL integration still need JS.
+
+`PUBLIC_PORTAL_ORIGIN` supplies the canonical HTTPS origin; request Host and
+forwarded-host headers cannot change it. Private previews and missing/invalid
+origins fail closed to noindex and a crawl-disallow rule. Canonical URLs,
+English/Spanish/x-default links, WebSite/WebPage JSON-LD and local-logo share
+metadata agree between initial HTML and client navigation. No fake reviews,
+ratings, usage claims or special AI-ranking markup are used. Known slash/alias
+duplicates redirect; real 404s no longer claim to be the homepage.
+
+`https://utilibre.org/sitemap.xml` contains 16 canonical public information pages
+when donations are configured (14 otherwise). It does not enumerate searches,
+operational endpoints, tool logins, pastes, polls, budgets, résumés or other
+visitor documents. No dates are fabricated for `lastmod`. Search/filter URLs
+carry noindex and no-store; private tool authentication is unchanged. The
+public, sanitized config endpoint remains crawlable for JS rendering but has
+an X-Robots-Tag preventing indexing. Robots directives are not access control.
+
+Rendering uses pinned ISC-licensed LinkeDOM 0.18.13, bundled only into the server
+build outside the public directory. It executes no visitor scripts and makes
+no network requests. Bundled dependency licenses are published at
+`/legal/server-renderer-notices.txt`. HTML and gzip variants have a bounded,
+30-second memory cache only for query-free known pages. Queries are not cached
+or logged by the portal. CSP permits only the exact JSON-LD hash, without
+unsafe-inline/eval or external scripts. Fonts and share images remain local.
+Build dependencies brace-expansion and source-map-js were updated to resolve
+the two advisories found during the audit; npm audit then reported zero known
+vulnerabilities, not a guarantee of complete security.
+
+Verification: 69 unit tests; 58 desktop/mobile browser tests; TypeScript,
+ESLint and the FOSS policy gate. A live-configuration staging browser check
+confirmed 40 catalog records in each language with and without JavaScript,
+functional search, no horizontal overflow, no console/CSP errors, and only
+same-origin page requests. This is not a field Core Web Vitals certification.
+The Impeccable refinement checks kept the existing visual system; its detector
+reported no findings on the changed components.
+
+Maintenance commands (from `portal/`):
+
+```sh
+npm test
+npm run typecheck
+npm run lint
+npm run test:e2e -- --workers=3
+npm run test:seo
+npm run seo:indexnow             # dry run; audit and public key check only
+npm run seo:indexnow -- --submit # one notification after a meaningful update
+```
+
+The bounded SEO audit checks only the sitemap's allowlisted public pages.
+IndexNow sends those public URLs plus a public ownership-proof key; it never
+sends visitor queries, logs, identifiers or private documents. Its acceptance
+does not guarantee indexing. Do not repeatedly submit unchanged URLs. Google
+Search Console and Bing Webmaster Tools account verification remain operator
+tasks; DNS verification does not require installing visitor analytics. Submit
+the sitemap there once verified. Do not use Google's restricted Indexing API
+for these ordinary pages, buy links, or create thin keyword/AI doorway pages.
+
+Research checked against primary documentation on October 7, 2026:
+[JavaScript and server rendering](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics),
+[language alternatives](https://developers.google.com/search/docs/specialty/international/localized-versions),
+[sitemaps](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap),
+[site-name structured data](https://developers.google.com/search/docs/appearance/site-names),
+[structured-data policies](https://developers.google.com/search/docs/appearance/structured-data/sd-policies),
+[AI search features](https://developers.google.com/search/docs/appearance/ai-features),
+[spam policies](https://developers.google.com/search/docs/essentials/spam-policies),
+and [IndexNow](https://www.indexnow.org/documentation).
