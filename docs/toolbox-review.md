@@ -1,5 +1,61 @@
 # Browser toolbox review — 2026-10-06
 
+## Creative/local-data batch — 7 October 2026
+
+Scope: Excalidraw, SVGEdit, CyberChef and reviewed Image Scrubber.
+Exact commits, licensing and ports are in `deployment/toolbox/browser-manifest.json`.
+No LanguageTool, CryptPad or additional overlapping tools were deployed.
+Each application is static, independently removable, unprivileged, read-only,
+limited to 128 MiB / 0.5 CPU and reachable privately only from the edge/app host.
+Strict same-origin CSP remains in force; there is no new application backend,
+account database, analytics script, external font host or upload endpoint.
+
+- Excalidraw: local editing/export and native Spanish; removed hosted collaboration,
+  cloud export, AI and unconditional Simple Analytics injection. Fonts are local.
+  Drawings persist in browser storage; downloads remain the visitor's backup.
+- SVGEdit: local SVG creation/editing, native Spanish (some upstream dialogs are
+  untranslated), URL-supplied content/config/extensions disabled. MIT application
+  plus Apache-2.0, ISC, LGPL-3.0-or-later and X11 components, preserved in source.
+- Both builds integrity-pin DOMPurify 3.4.16; SVGEdit also pins fflate 0.8.3.
+  The remaining upstream lock graph is unchanged. Build-tool audit findings are
+  not equivalent to vulnerabilities in a deployed Node server: no Node server ships.
+- CyberChef: checksum-verified v11.5.0 release; no HTTP, DNS, map or RSA Verify
+  operations in the UI/config. Strict CSP independently prevents remote requests.
+  [RSA Verify's node-forge dependency has an unpatched signature-validation flaw](https://github.com/advisories/GHSA-86w9-cpqp-85rv)
+  (checked 7 October). Do not recommend security-critical crypto decisions here.
+  Runtime audit still flags browser-parser/crypto dependencies; this is not a
+  zero-advisory build. DOMPurify use here is string sanitization, not the affected
+  IN_PLACE/hook paths; malformed/large image or compression recipes can still
+  exhaust browser resources. Some rich HTML outputs are intentionally blocked.
+  URL input synchronization defaults off, but explicitly shared recipe URLs can
+  contain data. English interface, best on a larger screen.
+- Image Scrubber: upstream last functional commit is from 2020. Review found
+  filename/EXIF `innerHTML` injection; both now use text nodes. String-to-code
+  jscolor paths removed without enabling unsafe-eval. Opaque Paint is default;
+  export is a new raster PNG, not a modification of the original. File decoding
+  rejects unsupported/corrupt files, >25 MiB and >64 MP; output fits 2500 pixels.
+  Native service-worker paths/cache are scoped to this subdomain. Touch handlers
+  use their actual event argument. No anonymity or blur-security guarantee.
+
+Public traffic still passes through Cloudflare. Its challenge script can make
+same-origin security POSTs; these are distinct from an application file upload
+and are not described as zero-network activity. Browser tests record them.
+
+Reproduce checks with `node deployment/toolbox/check-creative-tools.mjs`.
+All four public HTTPS workflows pass on Chromium/Linux: Excalidraw PNG/SVG
+export and Spanish UI; SVGEdit export/reopen and stripping injected script/event
+handlers; CyberChef Base64 decoding and a known SHA-256 result; Image Scrubber
+hostile filename/EXIF display, opaque-paint PNG export without original metadata,
+and malformed-image rejection. File-picker fallbacks are explicitly exercised.
+No task uploads or third-party application requests were observed. This is not
+certification of every operation, physical phone, browser or large file.
+Portal checks pass: 76 unit tests, 60 desktop/mobile browser tests, 21 config
+tests, lint and typecheck. The independent catalog finish review returned
+`ship`; existing visual tokens/layout are unchanged.
+Public source archives include exact upstream code, notices and adaptation recipes.
+Rollback: disable only these four runtime launches and stop their compose services;
+no database migration or other application's state is involved.
+
 ## Browser tools added on October 7
 
 Four additional applications serve static assets only; selected files are

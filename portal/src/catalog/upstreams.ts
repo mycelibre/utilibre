@@ -1,4 +1,4 @@
-export type FossProviderId = 'zip-manager' | 'rawgraphs' | 'audiomass' | 'minipaint' | 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'lrclib' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris' | 'binternet' | 'translite' | 'biblioreads' | 'qr-offline' | 'kittygram' | 'rimgo' | 'mumble';
+export type FossProviderId = 'excalidraw' | 'svgedit' | 'cyberchef' | 'image-scrubber' | 'zip-manager' | 'rawgraphs' | 'audiomass' | 'minipaint' | 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'lrclib' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris' | 'binternet' | 'translite' | 'biblioreads' | 'qr-offline' | 'kittygram' | 'rimgo' | 'mumble';
 
 export type ReviewedLicense =
   | 'AGPL-3.0'
@@ -38,6 +38,10 @@ export interface ReviewedFossProvider {
  * never enables a public route or opens registrations.
  */
 export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider> = {
+  excalidraw: creativeProvider('Excalidraw', 'excalidraw/excalidraw', '53973c3a423fbd75a4ce68107786b4fcb90e4968', 'MIT', 'LICENSE', '53973c3-p1 · local-only'),
+  svgedit: creativeProvider('SVGEdit', 'SVG-Edit/svgedit', 'c44f061d2f9a626d2771cc931298af5a45522d87', 'MIT', 'LICENSE-MIT.txt', '7.4.2-p1 · includes Apache-2.0, ISC, LGPL-3.0-or-later and X11 components'),
+  cyberchef: creativeProvider('CyberChef', 'gchq/CyberChef', '8cd426dd4f40f1423912d5fad91b578a86a65112', 'Apache-2.0', 'LICENSE', '11.5.0-p1 · network operations and RSA Verify disabled'),
+  'image-scrubber': creativeProvider('Image Scrubber', 'everestpipkin/image-scrubber', '390b166cfc61326476ed9d6cb376291f87e35c23', 'MIT', 'LICENSE', '390b166-p1 · metadata display security fixes'),
   'zip-manager': browserProvider('ZIP Manager', 'gildas-lormeau/zip-manager', '3b77a599d823691cc3b7b81e0715b4655423e578', 'MIT', 'LICENSE.txt', '3b77a59-p1'),
   rawgraphs: browserProvider('RAWGraphs', 'rawgraphs/rawgraphs-app', 'b7b2909111cc029ccf418dc3e7d079e0f4c50d6f', 'Apache-2.0', 'LICENSE', '2.0.1-p1 · local data only'),
   audiomass: browserProvider('AudioMass', 'pkalogiros/AudioMass', '21f5ee1362a47be6f0dbe6e4969a15e43d21b044', 'MIT', 'LICENSE', '21f5ee1-p1'),
@@ -161,6 +165,10 @@ export interface FossCatalogRecord {
 const reviewedLicenses = new Set<ReviewedLicense>([
   'AGPL-3.0', 'AGPL-3.0-only', 'AGPL-3.0-or-later', 'Zlib', 'MIT', 'GPL-3.0', 'GPL-3.0-or-later', 'Apache-2.0', 'Unlicense', 'BSD-3-Clause', 'MPL-2.0',
 ]);
+
+function creativeProvider(project: string, repo: string, revision: string, license: ReviewedLicense, licenseFile: string, version: string): ReviewedFossProvider {
+  return { ...browserProvider(project, repo, revision, license, licenseFile, version), artifactReference: `source:${revision}+deployment/toolbox/prepare-creative-build.mjs` };
+}
 
 function browserProvider(project: string, repo: string, revision: string, license: ReviewedLicense, licenseFile: string, version: string): ReviewedFossProvider {
   const provider = toolboxProvider(project, repo, revision, license, version, `source:${revision}+deployment/toolbox/prepare-browser-build.mjs`);

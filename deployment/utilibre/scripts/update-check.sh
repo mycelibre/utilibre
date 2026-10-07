@@ -31,6 +31,10 @@ printf '%-16s %-18s %-28s %s\n' SERVICE PINNED UPSTREAM URL
 release_row freshrss 1.29.1 FreshRSS/FreshRSS
 head_row rsshub 40aca954 DIYgod/RSSHub master
 release_row privatebin 2.0.6 PrivateBin/PrivateBin
+head_row excalidraw 53973c3a423fbd75a4ce68107786b4fcb90e4968 excalidraw/excalidraw master
+head_row svgedit c44f061d2f9a626d2771cc931298af5a45522d87 SVG-Edit/svgedit master
+release_row cyberchef 11.5.0 gchq/CyberChef
+head_row image-scrubber 390b166cfc61326476ed9d6cb376291f87e35c23 everestpipkin/image-scrubber main
 head_row zip-manager 3b77a599d823691cc3b7b81e0715b4655423e578 gildas-lormeau/zip-manager main
 head_row rawgraphs b7b2909111cc029ccf418dc3e7d079e0f4c50d6f rawgraphs/rawgraphs-app master
 head_row audiomass 21f5ee1362a47be6f0dbe6e4969a15e43d21b044 pkalogiros/AudioMass production

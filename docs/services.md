@@ -1,5 +1,18 @@
 # Services and upstream applications
 
+Creative batch, 7 October 2026 (static applications; no accounts):
+
+| Application | Public address | Private edge target |
+| --- | --- | --- |
+| Excalidraw | https://whiteboard.utilibre.org/ | 10.10.1.43:3164 |
+| SVGEdit | https://svg.utilibre.org/ | 10.10.1.43:3165 |
+| CyberChef | https://cyberchef.utilibre.org/ | 10.10.1.43:3166 |
+| Image Scrubber | https://scrub.utilibre.org/ | 10.10.1.43:3167 |
+
+See the creative-batch section of [toolbox review](toolbox-review.md) for
+scope, disabled features, dependency limitations and exact reproducible checks.
+Caddy remains on its separate VM; merge `deployment/toolbox/Caddyfile.tools`.
+
 Utilibre operates a reviewed collection of independently maintained FOSS
 applications. Admission depends on a real hosting access gap as well as
 license, safety, privacy, resource, export, deletion, and maintenance review.

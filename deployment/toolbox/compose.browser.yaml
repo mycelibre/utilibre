@@ -72,5 +72,58 @@ services:
       - ./security-browser.conf:/etc/nginx/tool-security.conf:ro
       - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
 
+  excalidraw:
+    <<: *browser
+    image: utilibre-excalidraw:53973c3-p1
+    build:
+      context: /opt/utilibre/src/excalidraw
+      dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.excalidraw
+      additional_contexts: {integration: /home/ubuntu/freetools/deployment/toolbox}
+    ports: [{target: 8080, published: "3164", host_ip: "10.10.1.43"}]
+    volumes:
+      - ./nginx-browser.conf:/etc/nginx/nginx.conf:ro
+      - ./security-browser.conf:/etc/nginx/tool-security.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+  svgedit:
+    <<: *browser
+    image: utilibre-svgedit:c44f061-p1
+    build:
+      context: /opt/utilibre/src/svgedit
+      dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.svgedit
+      additional_contexts: {integration: /home/ubuntu/freetools/deployment/toolbox}
+    ports: [{target: 8080, published: "3165", host_ip: "10.10.1.43"}]
+    volumes:
+      - ./nginx-browser.conf:/etc/nginx/nginx.conf:ro
+      - ./security-browser.conf:/etc/nginx/tool-security.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+
+  image-scrubber:
+    <<: *browser
+    image: utilibre-image-scrubber:390b166-p1
+    build:
+      context: /opt/utilibre/src/image-scrubber
+      dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.image-scrubber
+      additional_contexts: {integration: /home/ubuntu/freetools/deployment/toolbox}
+    ports: [{target: 8080, published: "3167", host_ip: "10.10.1.43"}]
+    volumes:
+      - ./nginx-browser.conf:/etc/nginx/nginx.conf:ro
+      - ./security-browser.conf:/etc/nginx/tool-security.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+
+  cyberchef:
+    <<: *browser
+    image: utilibre-cyberchef:11.5.0-p1
+    build:
+      context: /opt/utilibre/src/cyberchef
+      dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.cyberchef
+      additional_contexts:
+        integration: /home/ubuntu/freetools/deployment/toolbox
+        artifacts: /opt/utilibre/artifacts
+    ports: [{target: 8080, published: "3166", host_ip: "10.10.1.43"}]
+    volumes:
+      - ./nginx-browser.conf:/etc/nginx/nginx.conf:ro
+      - ./security-browser.conf:/etc/nginx/tool-security.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+
 networks:
   browser: {}

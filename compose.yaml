@@ -75,6 +75,10 @@ services:
       PUBLIC_CHARTS_URL: ${PUBLIC_CHARTS_URL:-}
       PUBLIC_AUDIO_URL: ${PUBLIC_AUDIO_URL:-}
       PUBLIC_PAINT_URL: ${PUBLIC_PAINT_URL:-}
+      PUBLIC_WHITEBOARD_URL: ${PUBLIC_WHITEBOARD_URL:-}
+      PUBLIC_SVG_URL: ${PUBLIC_SVG_URL:-}
+      PUBLIC_CYBERCHEF_URL: ${PUBLIC_CYBERCHEF_URL:-}
+      PUBLIC_SCRUB_URL: ${PUBLIC_SCRUB_URL:-}
       PUBLIC_INSTAGRAM_URL: ${PUBLIC_INSTAGRAM_URL:-}
       PUBLIC_FOURGET_URL: ${PUBLIC_FOURGET_URL:-}
       PUBLIC_OVERFLOW_URL: ${PUBLIC_OVERFLOW_URL:-}
@@ -128,7 +132,11 @@ services:
         zip-manager=https://zip.utilibre.org/,
         rawgraphs=https://charts.utilibre.org/,
         audiomass=https://audio.utilibre.org/,
-        minipaint=https://paint.utilibre.org/
+        minipaint=https://paint.utilibre.org/,
+        excalidraw=https://whiteboard.utilibre.org/,
+        svgedit=https://svg.utilibre.org/,
+        cyberchef=https://cyberchef.utilibre.org/,
+        image-scrubber=https://scrub.utilibre.org/
     volumes:
       - /opt/utilibre/update-public:/run/utilibre-updates:ro
     tmpfs:

@@ -42,7 +42,7 @@ const retiredRoutes: ReadonlyArray<readonly [string, string]> = [
 describe('FOSS-only public capability policy', () => {
   it('accepts only the retained independently maintained hosted applications', () => {
     expect(() => assertFossCatalogPolicy(catalog)).not.toThrow();
-    expect(catalog).toHaveLength(53);
+    expect(catalog).toHaveLength(57);
     expect(catalog.find(entry => entry.id === 'translite')?.license).toBe('Unlicense');
     expect(catalog.every((entry) => entry.upstreamProject && entry.upstreamSourceUrl && entry.license && entry.installedVersion)).toBe(true);
     expect(catalog.filter((entry) => entry.kind === 'integration').map((entry) => entry.id)).toEqual(['private-router']);
@@ -50,7 +50,7 @@ describe('FOSS-only public capability policy', () => {
 
     const referencedProviders = new Set(catalog.map((entry) => entry.providerId));
     expect([...referencedProviders].sort()).toEqual(Object.keys(reviewedFossProviders).sort());
-    expect([...referencedProviders].sort()).toEqual(['actual', 'anonymousoverflow', 'audiomass', 'bentopdf', 'biblioreads', 'binternet', 'breezewiki', 'degoog', 'drawio', 'fmd', 'fourget', 'freshrss', 'gothub', 'hatsh', 'ittools', 'jupyterlite', 'kittygram', 'libremdb', 'lrclib', 'mezzo', 'minipaint', 'miniqr', 'mumble', 'ntfy', 'omnitools', 'pairdrop', 'penpot', 'pollaris', 'privatebin', 'priviblur', 'qr-offline', 'rallly', 'rawgraphs', 'reactive-resume', 'redlib', 'rimgo', 'rssbridge', 'safetwitch', 'searxng', 'translite', 'uptime-kuma', 'vert', 'wakapi', 'whisper-web', 'yopass', 'zip-manager']);
+    expect([...referencedProviders].sort()).toEqual(['actual', 'anonymousoverflow', 'audiomass', 'bentopdf', 'biblioreads', 'binternet', 'breezewiki', 'cyberchef', 'degoog', 'drawio', 'excalidraw', 'fmd', 'fourget', 'freshrss', 'gothub', 'hatsh', 'image-scrubber', 'ittools', 'jupyterlite', 'kittygram', 'libremdb', 'lrclib', 'mezzo', 'minipaint', 'miniqr', 'mumble', 'ntfy', 'omnitools', 'pairdrop', 'penpot', 'pollaris', 'privatebin', 'priviblur', 'qr-offline', 'rallly', 'rawgraphs', 'reactive-resume', 'redlib', 'rimgo', 'rssbridge', 'safetwitch', 'searxng', 'svgedit', 'translite', 'uptime-kuma', 'vert', 'wakapi', 'whisper-web', 'yopass', 'zip-manager']);
 
     const repositoryRoot = new URL('../../../', import.meta.url);
     for (const provider of Object.values(reviewedFossProviders)) {

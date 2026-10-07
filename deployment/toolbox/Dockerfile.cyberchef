@@ -1,0 +1,11 @@
+FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS build
+WORKDIR /app
+COPY LICENSE /app/LICENSE
+COPY --from=artifacts CyberChef_8cd426dd4f40f1423912d5fad91b578a86a65112.zip /release.zip
+RUN echo 'f6478925d3eaa16ec08626a85f5b85eed10d531a5e18700615fed7ecb024cccf  /release.zip' | sha256sum -c - && mkdir site && unzip -q /release.zip -d site && mv site/CyberChef_v11.5.0.html site/index.html
+COPY --from=integration prepare-creative-build.mjs /integration/prepare-creative-build.mjs
+COPY --from=integration cyberchef-local.js /app/site/utilibre-local.js
+RUN node /integration/prepare-creative-build.mjs cyberchef && node /integration/prepare-creative-build.mjs cyberchef package
+FROM nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+COPY --from=build /app/site /usr/share/nginx/html
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

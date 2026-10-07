@@ -5,6 +5,10 @@ const publicRoots = new Map([
   ['rawgraphs', 'https://charts.utilibre.org/'],
   ['audiomass', 'https://audio.utilibre.org/'],
   ['minipaint', 'https://paint.utilibre.org/'],
+  ['excalidraw', 'https://whiteboard.utilibre.org/'],
+  ['svgedit', 'https://svg.utilibre.org/'],
+  ['cyberchef', 'https://cyberchef.utilibre.org/'],
+  ['image-scrubber', 'https://scrub.utilibre.org/'],
 ]);
 
 export function parseStatusServices(value, privateBindIp) {

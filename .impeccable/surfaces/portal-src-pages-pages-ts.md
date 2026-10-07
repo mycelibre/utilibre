@@ -82,3 +82,27 @@ at `.impeccable/review/browser-tools/desktop.png`, the filtered Spanish image
 mobile capture at `.impeccable/review/browser-tools/mobile.png`, and six passing
 workflow logs. This review covers the bounded portal extension and supplied
 evidence; it does not establish coverage of every upstream interface or browser.
+
+### 2026-10-07 — Creative-tool extension and finish
+
+The user-approved Excalidraw, SVGEdit, CyberChef, and Image Scrubber extend the
+bilingual task catalog; this approval supersedes the earlier inventory limits
+above. Their records preserve task-first English and Guatemalan voseo, upstream
+credit, and explicit browser-storage, export, functional, and privacy limits.
+Of these additions, only Excalidraw and SVGEdit receive supported Spanish launch
+parameters; English-only interfaces and SVGEdit's partial translation are
+disclosed. Browser-local processing retains the Cloudflare edge caveat, and no
+unsupported return-link behavior is promised.
+
+The Useful Field Ledger remains intact: paper and factual accents, Newsreader
+headings, Atkinson Hyperlegible Next operating copy, ruled records, square
+controls, and the aligned launch edge. No tokens, components, or layout rules
+were added; `DESIGN.md`, its sidecar, and `PRODUCT.md` are unchanged by this note.
+
+Independent finish review: **SHIP**, with persistence and fidelity passing and
+no material fixes. The desktop and mobile captures in
+`.impeccable/review/creative-tools/` (`desktop.png`, `mobile.png`,
+`mobile-cyberchef.png`, `mobile-svg.png`, and `mobile-scrub.png`) rendered content
+without overflow. Validation passed 76 unit, 60 browser, and 21 configuration
+tests. This records the bounded portal extension; separate application export
+checks do not establish broader browser or capacity coverage.

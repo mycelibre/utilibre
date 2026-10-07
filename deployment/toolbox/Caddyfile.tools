@@ -51,6 +51,28 @@ audio.utilibre.org {
 	reverse_proxy 10.10.1.43:3162
 }
 paint.utilibre.org {
-	encode zstd gzip
-	reverse_proxy 10.10.1.43:3163
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3163
+}
+
+# Browser-tools second batch. Private app ports; public export/privacy checks
+# passed on October 7, including Image Scrubber's local security corrections.
+whiteboard.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3164
+}
+
+svg.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3165
+}
+
+cyberchef.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3166
+}
+
+scrub.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3167
 }

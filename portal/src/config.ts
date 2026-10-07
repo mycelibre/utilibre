@@ -23,6 +23,10 @@ export interface PublicConfig {
   publicChartsUrl: string;
   publicAudioUrl: string;
   publicPaintUrl: string;
+  publicWhiteboardUrl: string;
+  publicSvgUrl: string;
+  publicCyberchefUrl: string;
+  publicScrubUrl: string;
   publicInstagramUrl: string;
   publicBridgeUrl: string;
   publicNotifyUrl: string;
@@ -81,6 +85,10 @@ const defaults: PublicConfig = {
   publicChartsUrl: '',
   publicAudioUrl: '',
   publicPaintUrl: '',
+  publicWhiteboardUrl: '',
+  publicSvgUrl: '',
+  publicCyberchefUrl: '',
+  publicScrubUrl: '',
   publicInstagramUrl: '',
   publicBridgeUrl: '',
   publicNotifyUrl: '',

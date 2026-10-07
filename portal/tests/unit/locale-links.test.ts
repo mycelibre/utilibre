@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { localizedServiceUrl, localizedSupportUrl } from '../../src/catalog/locale-links';
 
+it('selects supported creative-tool languages without inventing translations', () => {
+  expect(localizedServiceUrl('excalidraw', 'https://whiteboard.test/', 'es')).toBe('https://whiteboard.test/?lng=es');
+  expect(localizedServiceUrl('svgedit', 'https://svg.test/', 'es')).toBe('https://svg.test/?lang=es');
+  for (const id of ['cyberchef', 'image-scrubber']) expect(localizedServiceUrl(id, 'https://tool.test/', 'es')).toBe('https://tool.test/');
+});
+
 describe('donation language links', () => {
   it('preserves the operator recipient and donation path across language changes', () => {
     expect(localizedSupportUrl('https://liberapay.com/mycelibre/donate', 'es')).toBe('https://es.liberapay.com/mycelibre/donate');

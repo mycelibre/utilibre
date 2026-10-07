@@ -1,6 +1,10 @@
 {
   "reviewed": "2026-10-07",
   "apps": [
+    {"id":"excalidraw","host":"whiteboard.utilibre.org","port":3164,"repository":"excalidraw/excalidraw","branch":"master","revision":"53973c3a423fbd75a4ce68107786b4fcb90e4968","license":"MIT","licenseFile":"LICENSE"},
+    {"id":"svgedit","host":"svg.utilibre.org","port":3165,"repository":"SVG-Edit/svgedit","branch":"master","revision":"c44f061d2f9a626d2771cc931298af5a45522d87","license":"MIT AND Apache-2.0 AND ISC AND LGPL-3.0-or-later AND X11","licenseFile":"LICENSE-MIT.txt"},
+    {"id":"cyberchef","host":"cyberchef.utilibre.org","port":3166,"repository":"gchq/CyberChef","branch":"master","revision":"8cd426dd4f40f1423912d5fad91b578a86a65112","license":"Apache-2.0","licenseFile":"LICENSE","release":"v11.5.0","asset":"CyberChef_8cd426dd4f40f1423912d5fad91b578a86a65112.zip","sha256":"f6478925d3eaa16ec08626a85f5b85eed10d531a5e18700615fed7ecb024cccf"},
+    {"id":"image-scrubber","host":"scrub.utilibre.org","port":3167,"repository":"everestpipkin/image-scrubber","branch":"main","revision":"390b166cfc61326476ed9d6cb376291f87e35c23","license":"MIT","licenseFile":"LICENSE"},
     {"id":"zip-manager","host":"zip.utilibre.org","port":3160,"repository":"gildas-lormeau/zip-manager","branch":"main","revision":"3b77a599d823691cc3b7b81e0715b4655423e578","license":"MIT","licenseFile":"LICENSE.txt"},
     {"id":"rawgraphs","host":"charts.utilibre.org","port":3161,"repository":"rawgraphs/rawgraphs-app","branch":"master","revision":"b7b2909111cc029ccf418dc3e7d079e0f4c50d6f","license":"Apache-2.0","licenseFile":"LICENSE"},
     {"id":"audiomass","host":"audio.utilibre.org","port":3162,"repository":"pkalogiros/AudioMass","branch":"production","revision":"21f5ee1362a47be6f0dbe6e4969a15e43d21b044","license":"MIT","licenseFile":"LICENSE"},

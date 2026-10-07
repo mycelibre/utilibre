@@ -6,6 +6,10 @@ import { pathToFileURL } from 'node:url';
 const repository = new URL('../', import.meta.url);
 
 const services = [
+  { id: 'excalidraw', hostKey: 'PUBLIC_WHITEBOARD_HOST', urlKey: 'PUBLIC_WHITEBOARD_URL', portKey: 'EXCALIDRAW_PORT' },
+  { id: 'svgedit', hostKey: 'PUBLIC_SVG_HOST', urlKey: 'PUBLIC_SVG_URL', portKey: 'SVGEDIT_PORT' },
+  { id: 'cyberchef', hostKey: 'PUBLIC_CYBERCHEF_HOST', urlKey: 'PUBLIC_CYBERCHEF_URL', portKey: 'CYBERCHEF_PORT' },
+  { id: 'image-scrubber', hostKey: 'PUBLIC_SCRUB_HOST', urlKey: 'PUBLIC_SCRUB_URL', portKey: 'IMAGE_SCRUBBER_PORT' },
   { id: 'zip-manager', hostKey: 'PUBLIC_ZIP_HOST', urlKey: 'PUBLIC_ZIP_URL', portKey: 'ZIP_MANAGER_PORT' },
   { id: 'rawgraphs', hostKey: 'PUBLIC_CHARTS_HOST', urlKey: 'PUBLIC_CHARTS_URL', portKey: 'RAWGRAPHS_PORT' },
   { id: 'audiomass', hostKey: 'PUBLIC_AUDIO_HOST', urlKey: 'PUBLIC_AUDIO_URL', portKey: 'AUDIOMASS_PORT' },

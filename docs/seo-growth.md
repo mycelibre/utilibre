@@ -1,5 +1,27 @@
 # Utilibre search and traffic foundation
 
+## Creative-tool release — 7 October 2026
+
+Four distinct tasks extend the existing bilingual task catalog: sketching with
+Excalidraw, editing SVG vectors, CyberChef transformations and covering details
+in photos. This is useful tool inventory, not four thin keyword landing pages.
+The existing EN/ES home, software, privacy and transparency pages derive their
+content/links from reviewed catalog records. Spanish uses voseo; native Spanish
+links are selected only for Excalidraw and SVGEdit. English-only interfaces and
+desktop-oriented workflows are disclosed before launch.
+
+Each new public tool root has its own canonical, description, robots file and
+one-URL sitemap with substantive 7 October modification date. No user files,
+recipe fragments, search parameters or private results enter sitemaps. Existing
+portal canonical URLs and the 20-page sitemap are preserved. Source/attribution,
+privacy limits and monitoring accompany the tools. Completion is tested with
+synthetic browser inputs, not inferred from launch clicks or a 200 response.
+
+There are no new tracking scripts/events, fabricated demand figures, indexing
+claims or ranking/traffic forecasts. Search-account/field-performance data remain
+unavailable. Meaningful portal updates may receive one scoped IndexNow notice
+after deployment; receipt is not indexing. Keep the existing 30/60/90-day plan.
+
 Research and implementation baseline: 7 October 2026. This is the operator
 handoff for making existing tools easier to find and use, not a forecast of
 rankings or donations. The initial focus is two useful bilingual task guides,
