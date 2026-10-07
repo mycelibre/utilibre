@@ -621,6 +621,17 @@ While that confirmed cache is stale, the explicit IndexNow option
 check and still validates every public page and privacy/security boundary.
 The ordinary SEO audit continues to flag the stale robots file until resolved.
 
+Resolved on October 7 after the operator's targeted purge: public robots.txt
+returns `CF-Cache-Status: BYPASS` and `Cache-Control: no-store`; the strict live
+audit passes all 16 pages. IndexNow accepted one notification for those 16 URLs
+with HTTP 202 (ownership validation/indexing may still be pending). Final
+English desktop and Spanish mobile checks show all 40 catalog records, working
+no-JS search, eight same-origin resources, no extra config request and no
+console/CSP errors. No layout overflow was observed. Existing service settings
+are unchanged apart from the public portal-origin field and source revision;
+Whisper remains disabled. These checks do not certify every hosted tool's
+functionality or guarantee search placement.
+
 Research checked against primary documentation on October 7, 2026:
 [JavaScript and server rendering](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics),
 [language alternatives](https://developers.google.com/search/docs/specialty/international/localized-versions),
