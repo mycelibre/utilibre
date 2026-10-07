@@ -116,9 +116,13 @@ Synthetic content only. Local unit/browser checks do not prove Internet reachabi
   timeline; use platform guidance for actual compatibility.
   Redlib's deployed backend returned 200 and 25 posts for the mapped
   `/r/Guatemala/new/?sort=new` destination; `/info` returned both native Utilibre
-  links. A browser request from this VM through the private edge returned 403;
-  that edge path is not verified by these backend results. No challenge or access
-  policy was disabled to obtain a successful check.
+  links. A browser request through **public DNS** also returned 200 for `/info`
+  and both links. The separate private-edge browser request returned 403, so that
+  edge path must not be used as a substitute for the working public path.
+  A headless public subreddit navigation did not reach post content within its
+  15-second content deadline; public challenge-to-content completion is therefore
+  not established by the backend check or the deliberately allowed `/info` route.
+  No challenge or access policy was disabled to obtain a successful check.
 - SearXNG: latest image staged then deployed using existing guarded updater;
   production EN/ES searches passed through private valid-HTTPS edge; 28 engines
   preserved; `/config` confirms plugin disabled by default and browser opt-in
@@ -168,6 +172,17 @@ Synthetic content only. Local unit/browser checks do not prove Internet reachabi
   validation, SearXNG pagination/redaction checks and optional Compose parsing passed.
   No extra portal dependency was added. Build output: main JS 323.04 kB raw /
   107.44 kB gzip; CSS 26.84 / 6.07 kB. These are bundle sizes, not field performance.
+- Production after release: all **46** sitemap pages passed the bounded HTTPS SEO
+  audit (HTML content, unique metadata, reciprocal language annotations, canonical,
+  robots, same-origin scripts and security headers). Six My Utilibre browser cases
+  passed on public DNS. Separate desktop/mobile smoke checks passed all six new
+  localized guides, opener/original-link/no-fetch behavior, both offline pages and
+  current QR links; no script errors or horizontal overflow. Unknown route returned
+  404. The configuration-mocking guide/router tests are development tests: running
+  them directly against production initially failed their fixture-host/count
+  assumptions because production embeds its real configuration in SSR HTML. The
+  separate live checks deliberately use the real configuration instead.
+  No indexing/rankings/traffic or field Core Web Vitals result is inferred.
 
 ## TURN option — disabled public profile
 
@@ -273,9 +288,22 @@ the pilot's tmpfs scenes. It does not touch Excalidraw or other services.
 
 Production permission already established for portal/existing service updates.
 QR p3 was deployed and its source archive published; Redlib recreated with native
-banner and no source patch; SearXNG updated by its guarded updater. Portal release
-verification is recorded below when deployment completes. Public TURN/WBO remain
+banner and no source patch; SearXNG updated by its guarded updater. Portal source
+release is `f8df3908e4b47bf0c33cf1c235478d198086ab33`, pushed to GitHub and built/
+deployed with portal-only Compose recreation on 2026-10-07. Public TURN/WBO remain
 disabled. No new public service requires a Caddy change for the portal/QR work.
+
+Rollback image: `public-utility-portal:pre-toolkit-20261007`, preserved image ID
+`sha256:ba753fe500d10fec11baf39b33018fc8eb28622485e0078ffe4e6eafd99b8dd2`.
+Private environment backup: `/var/lib/utilibre-portal-release-20261007-VHTGtY/environment.private`.
+Previous source URL ends in commit `d2ae9889c56e97a31c66826f4c01d23927ffbd48`.
+The previous integration archive is preserved in `/opt/utilibre/source-update-WkAdRX/`.
+New source archive includes 489 reviewed Git-indexed files, not unrelated exports.
+
+After checks, the synthetic TURN, WBO and old/new QR staging containers were
+stopped. WBO's temporary test drawings were discarded with its tmpfs; no visitor
+documents were present. Existing public PairDrop, QR and Excalidraw were untouched
+by that cleanup. Stopped pilot containers and images remain available for review.
 
 Before portal deployment tag the running image and retain the private environment
 backup. Run typecheck/lint/unit/browser/config/SEO checks, commit only scoped files,
