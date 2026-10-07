@@ -53,9 +53,28 @@ The serving container runs read-only as UID 101, drops all capabilities, denies
 new privileges, and is limited to 128 MiB / 0.5 CPU. Its observed idle memory
 was 2.27 MiB at 20:22 UTC; this is not a capacity or client-memory measurement.
 Portal checks passed 78 unit and 64 browser tests. English and Spanish starter
-guides and downloadable sample outlines are implemented; portal deployment
-is pending at this checkpoint. The resulting 58 catalogue records and 36
+guides and downloadable sample outlines are deployed in release
+`d2ae9889c56e97a31c66826f4c01d23927ffbd48`, pushed to GitHub. Public runtime
+configuration enables Markmap; the portal and tool containers are healthy.
+The resulting 58 catalogue records and 36
 canonical portal pages are not counts of independently deployed applications.
+
+Live routes: `/en/guides/mind-map`, `/es/guias/mapa-mental`; fixtures:
+`/examples/outline-en.md`, `/examples/outline-es.md`. The public Spanish
+guide-to-tool journey passed at 390 × 844 with simulated 150 ms latency,
+150,000 B/s download and 75,000 B/s upload. The tool became usable after
+2,033 ms in that one run; this is not field performance or real-phone evidence.
+The practice download and keyboard skip-to-outline action passed. Uptime Kuma
+monitor 48 checks Markmap every five minutes; it was added with
+`update-kuma-monitors.mjs --only=Markmap` without reconciling unrelated monitors.
+The portal status endpoint also reported Markmap operational.
+
+The release's bounded SEO audit completed for all 36 canonical portal pages.
+One IndexNow submission of the two guides, two guide indexes and two software
+pages returned **HTTP 403**; it was not retried. The public ownership-proof
+file still returns 200 with the expected contents. Acceptance/indexing are
+not established, and the reason for the external rejection is unresolved.
+No crawler-access or security policy was relaxed to force a notification.
 
 The final JavaScript asset is 335,165 bytes (133,726 bytes with local gzip),
 and CSS is 5,368 bytes (1,817 bytes with local gzip). The tested Latin font
@@ -77,6 +96,18 @@ using the private environment snapshot at
 `/opt/utilibre/markmap-rollback-6EeaSI/portal.env`. Disable the Markmap launch
 and stop only the new `markmap` service. It has no previous server-held user
 data; do not delete volumes or alter unrelated services.
+
+Concrete rollback: review the snapshot and restore only this release's changed
+public URL, service-list and `SOURCE_CODE_URL` fields in `.env`, preserving any
+subsequent unrelated configuration changes. Retag with
+`docker tag public-utility-portal:pre-markmap-20261007 public-utility-portal:0.1.0`,
+then `docker compose up -d --no-deps --no-build portal`. If the editor itself
+must be withdrawn, use
+`docker compose -f deployment/toolbox/compose.browser.yaml stop markmap`
+and coordinate removal/maintenance of its Caddy route; this does not erase
+visitors' browser drafts or downloads. Previous portal source archive is retained
+in `/opt/utilibre/source-update-QRXe70/`. The deployed Markmap image is
+`sha256:acefdc8da9f55f7a58dca3c9cd96f36a9195d34a79118891933103c065d18ba7`.
 
 Super Productivity was re-inspected at stable v19.1.0,
 [revision 42ded9f](https://github.com/super-productivity/super-productivity/tree/42ded9f31a132bf92633b0c78ad4ebf1d87c0f71).

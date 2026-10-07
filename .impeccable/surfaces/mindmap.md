@@ -42,7 +42,10 @@ the scoped implementation: storage consent no longer depends on rendering,
 successful storage is tracked, and the official logo replaces the improvised
 wordmark. The source archive and license links return HTTP 200. Portal tests
 passed 78 unit and 64 browser cases; the two starter guides and sample outlines
-are implemented, with portal deployment pending at this checkpoint.
+are deployed in portal release `d2ae9889c56e97a31c66826f4c01d23927ffbd48`.
+The public Spanish guide-to-tool journey, practice download and keyboard skip
+action also passed at 390 × 844 with simulated 150 ms latency and 150,000 B/s
+download. This is not real-phone or field-performance evidence.
 
 Limits remain explicit: SVG uses `foreignObject` text, Markdown is the editable
 backup, and saving is optional browser storage rather than a cloud backup.
