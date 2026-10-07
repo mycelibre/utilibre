@@ -1,10 +1,12 @@
-import { localized, type AccountAccess, type CatalogEntry } from '../catalog/catalog';
+import { localized, type CatalogEntry } from '../catalog/catalog';
+import { accessText, choiceNote, pilotIds, privacyAnswers } from '../catalog/guidance';
 import { entryLaunch } from '../catalog/discovery';
 import { localizedServiceUrl } from '../catalog/locale-links';
 import type { PublicConfig } from '../config';
 import type { Language } from '../i18n';
 import { append, element, type Translate } from '../utilities/dom';
 import { privacyLabels } from './privacy-labels';
+import { practicalGuides, practicalGuidePath } from '../pages/practical-guide-data';
 
 export interface CatalogLedgerOptions {
   ariaLabel?: string;
@@ -61,15 +63,19 @@ export function renderCatalogRow(
   const content = element('div', 'catalog-ledger-content');
   const headingTag = options.headingLevel === 2 ? 'h2' : 'h3';
   append(content, element(headingTag, '', name), element('p', 'catalog-ledger-description', localized(entry.description, language)));
-  if (entry.accountAccess) {
+  {
     const access = element('p', 'catalog-ledger-access');
     append(
       access,
       element('span', 'catalog-ledger-access-label', `${t('home.catalog.access')}:`),
-      ` ${accountAccessText(entry.accountAccess, t)}`,
+      ` ${accessText(entry, language)}`,
     );
     content.append(access);
   }
+  const note = choiceNote(entry, language);
+  if (note) content.append(element('p', 'catalog-ledger-limitation', note));
+  const guide = practicalGuides.find((guide) => guide.tools[0]?.id === entry.id || (entry.id === 'omni-compress-image' && guide.id === 'image'));
+  if (pilotIds.has(entry.id) || entry.operationalStatus !== 'operational') content.append(element('p', 'catalog-ledger-access', pilotIds.has(entry.id) ? (language === 'es' ? 'Piloto: uso completo aún no verificado' : 'Pilot: complete workflow not yet verified') : t(`status.${entry.operationalStatus}`)));
   if (options.showSource && entry.upstreamSourceUrl) {
     const sourceText = `${t('home.catalog.source')}: ${entry.upstreamProject || name}`;
     const attribution = element('p', 'catalog-ledger-attribution');
@@ -94,7 +100,10 @@ export function renderCatalogRow(
     content.append(element('p', 'catalog-ledger-access', entry.unavailableReason ? localized(entry.unavailableReason, language) : t('home.catalog.awaitingAccess')));
   }
   if (launch) {
-    const launchText = entry.accountAccess ? t('home.catalog.signIn') : entry.launchLabel ? localized(entry.launchLabel, language) : t('home.catalog.open');
+    const actionNames: Record<string, [string, string]> = { redlib: ['Read Reddit', 'Leer Reddit'], pairdrop: ['Send files', 'Enviar archivos'], rssbridge: ['Create a feed', 'Crear una fuente RSS'], ntfy: ['Send an alert', 'Enviar un aviso'], yopass: ['Share a secret', 'Compartir un secreto'] };
+    const actionName = actionNames[entry.id]?.[language === 'es' ? 1 : 0];
+    const specificLabel = entry.launchLabel && !['Open tool', 'Open'].includes(entry.launchLabel.en) ? localized(entry.launchLabel, language) : name.split(' · ')[0]!;
+    const launchText = entry.id === 'fmd' ? (language === 'es' ? 'Ingresar al piloto' : 'Pilot sign-in') : entry.accountAccess ? t('home.catalog.signIn') : actionName || specificLabel;
     const link = element('a', 'catalog-ledger-launch', launchText);
     link.href = launch.href;
     link.target = '_blank';
@@ -119,6 +128,7 @@ export function renderCatalogRow(
       action.append(quick);
     }
   }
+  if (guide) { const a = element('a', 'catalog-guide-link', language === 'es' ? 'Guía paso a paso' : 'Step-by-step guide'); a.href = practicalGuidePath(guide.id, language); a.setAttribute('aria-label', `${language === 'es' ? 'Guía' : 'Guide'}: ${guide.copy[language].title}`); action.append(a); }
   const details = element('details', 'catalog-help');
   details.append(element('summary', '', t('home.catalog.help')));
   if (entry.help) details.append(element('p', '', localized(entry.help, language)));
@@ -127,7 +137,9 @@ export function renderCatalogRow(
     request.href = 'mailto:admin@utilibre.org?subject=Utilibre%20account%20request';
     details.append(request, element('p', '', t('home.catalog.accountRecovery')));
   }
-  details.append(element('p', '', localized(entry.dataFlow, language)));
+  const privacy = element('dl', 'privacy-answers');
+  for (const [question, answer] of privacyAnswers(entry, language)) append(privacy, element('dt', '', question), element('dd', '', answer));
+  details.append(privacy);
   if (launch && entry.labels.includes('local') && !entry.labels.includes('server')) {
     const source = element('a', 'text-link', t('software.documents.sourceBundle'));
     source.href = new URL('/utilibre-source/', launch.href).href;
@@ -135,20 +147,13 @@ export function renderCatalogRow(
     source.rel = 'noopener noreferrer';
     details.append(source);
   }
-  processing.append(details);
-  append(article, coordinate, content, processing, action);
+  append(article, coordinate, content, processing, action, details);
   item.append(article);
   return item;
 }
 
-function accountAccessText(access: AccountAccess, t: Translate): string {
-  if (access === 'owner-only') return t('home.catalog.accessOwner');
-  return access === 'invite-required'
-    ? t('home.catalog.accessInvite')
-    : t('home.catalog.accessClosed');
-}
-
 function processingSummary(entry: CatalogEntry, t: Translate): string {
+  if (entry.id === 'pairdrop') return t('home.catalog.note.peerTransfer');
   const labels = new Set(entry.labels);
   const local = labels.has('local');
   const server = labels.has('server');

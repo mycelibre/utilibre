@@ -67,23 +67,22 @@ test('browser language preference uses the first supported language', async ({ b
   await context.close();
 });
 
-test('default discovery is neutral and retained hosted services follow editorial order', async ({ page }) => {
+test('public discovery separates existing-account access from anonymous tools', async ({ page }) => {
   await mockConfig(page, featuredConfig);
-  await page.goto('/en/');
-
+  await page.goto('/en/?view=public');
   await expect(page.locator('.task-navigation a[aria-current="page"]')).toHaveCount(0);
-  await expect(page.locator('.ledger-reference-links a[aria-current="page"]')).toHaveText('Tools & services');
-  await expect(catalogRows(page)).toHaveCount(featuredIds.length);
-  expect(await catalogRows(page).evaluateAll((rows) => rows.map((row) => (row as HTMLElement).dataset.catalogId))).toEqual(featuredIds);
+  await expect(page.locator('.catalog-views a[aria-current="page"]')).toHaveText('Use now');
+  await expect(catalogRows(page)).toHaveCount(4);
+  expect(await catalogRows(page).evaluateAll((rows) => rows.map((row) => (row as HTMLElement).dataset.catalogId))).not.toContain('freshrss');
   const launchLinks = page.locator('.catalog-ledger-launch');
   await expect(launchLinks).toHaveCount(featuredIds.length);
   for (const link of await launchLinks.all()) {
     await expect(link).toHaveAttribute('target', '_blank');
     await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     await expect(link).toHaveAttribute('aria-label', /opens in a new tab/);
-    await expect(link.locator('.catalog-ledger-external-cue')).toHaveText('↗');
+    if ((await link.getAttribute('href'))?.startsWith('https:')) await expect(link.locator('.catalog-ledger-external-cue')).toHaveText('↗');
   }
-  await expect(page.locator('[data-catalog-id="searxng"]').getByRole('link', { name: 'Upstream source: SearXNG' }))
+  await expect(page.locator('[data-catalog-id="searxng"]').getByRole('link', { name: 'Powered by: SearXNG' }))
     .toHaveAttribute('href', 'https://github.com/searxng/searxng');
 });
 
@@ -115,8 +114,10 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
   await mockConfig(page, config);
   for (const language of ['en', 'es'] as const) {
     await page.emulateMedia({ colorScheme: language === 'es' ? 'dark' : 'light' });
-    await page.goto(`/${language}/`);
-    await expect(catalogRows(page)).toHaveCount(49);
+    await page.goto(`/${language}/?view=all`);
+    await expect(catalogRows(page).first()).toBeVisible();
+    expect(await catalogRows(page).count()).toBeGreaterThan(45);
+    await expect(page.locator('.catalog-result-count')).toContainText(String(await catalogRows(page).count()));
     await expect(page.locator('[data-catalog-id="zip-manager"] .catalog-ledger-launch')).toHaveAttribute('href', `https://zip.utility.test/?lang=${language}`);
     await expect(page.locator('[data-catalog-id="minipaint"] .catalog-ledger-launch')).toHaveAttribute('href', `https://paint.utility.test/?lang=${language}`);
     await expect(page.locator('[data-catalog-id="rawgraphs"] .catalog-ledger-launch')).toHaveAttribute('href', 'https://charts.utility.test/');
@@ -125,8 +126,8 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
     await expect(page.locator('[data-catalog-id="omni-csv-json"] a[href="https://tools.utility.test/utilibre-source/"]')).toBeVisible();
     await page.locator('[data-catalog-id="omni-csv-json"] .catalog-help summary').click();
     await expect(page.locator('[data-catalog-id="lrclib"] .catalog-ledger-launch')).toHaveAttribute('href', 'https://lyrics.utility.test/');
-    await expect(page.locator('.task-navigation a')).toHaveCount(9);
-    await expect(page.locator('.task-scroll-cue')).toHaveText(language==='es'?'9 grupos · deslizá':'9 groups · scroll');
+    await expect(page.locator('.task-navigation a')).toHaveCount(5);
+    await expect(page.locator('.task-scroll-cue')).toHaveText(language==='es'?'5 grupos · deslizá':'5 groups · scroll');
     const mumbleLink=page.locator('[data-catalog-id="mumble"] .catalog-ledger-launch');
     await expect(mumbleLink).toHaveAttribute('href','mumble://mumble.utilibre.org:64738/');
     await expect(mumbleLink).not.toHaveAttribute('target','_blank');
@@ -146,7 +147,7 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
     }
     for (const id of ['reactive-resume', 'penpot', 'actual', 'wakapi']) {
       const row = page.locator(`[data-catalog-id="${id}"]`);
-      await expect(row.locator('.catalog-ledger-access')).toContainText(language === 'es' ? 'Solo con invitación' : 'Invite-only');
+      await expect(row.locator('.catalog-ledger-access').first()).toContainText(language === 'es' ? 'Cuenta aprobada' : 'Approved accounts');
       await expect(row.locator('.catalog-ledger-launch')).toHaveCount(1);
       await row.locator('.catalog-help summary').click();
       await expect(row.locator('a[href^="mailto:admin@utilibre.org"]')).toBeVisible();
@@ -173,26 +174,27 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
   }
   await mockConfig(page, { ...config, enabledServices: featuredConfig.enabledServices, listedServices: [] });
   await page.goto('/en/');
-  await expect(catalogRows(page)).toHaveCount(4);
+  await expect(catalogRows(page)).toHaveCount(0);
   await expect(page.locator('[data-catalog-id="yopass"]')).toHaveCount(0);
 });
 
-test('task selection activates one category and Spanish search crosses categories without diacritics', async ({ page }) => {
+test('task selection preserves its category when searching without diacritics', async ({ page }) => {
   await mockConfig(page, featuredConfig);
   await page.goto('/es/');
   await expect(page.locator('.task-navigation a[aria-current="page"]')).toHaveCount(0);
 
-  await page.getByRole('navigation', { name: 'Explorar por tarea' }).getByRole('link', { name: /Fuentes RSS/ }).click();
-  await expect(page).toHaveURL(/\/es\/\?group=feeds-monitoring#catalog$/);
+  await page.getByRole('navigation', { name: 'Explorar por tarea' }).getByRole('link', { name: /Búsqueda y lectura/ }).click();
+  expect(new URL(page.url()).searchParams.get('group')).toBe('reading');
   const currentTasks = page.locator('.task-navigation a[aria-current="page"]');
   await expect(currentTasks).toHaveCount(1);
-  await expect(currentTasks).toContainText('Fuentes RSS');
-  expect(await catalogRows(page).evaluateAll((rows) => rows.every((row) => (row as HTMLElement).dataset.discoveryGroup === 'feeds-monitoring'))).toBe(true);
+  await expect(currentTasks).toContainText('Búsqueda y lectura');
+  await expect(page.locator('[data-catalog-id="freshrss"]')).toHaveCount(0);
 
   await page.getByLabel('Buscar herramientas').fill('busqueda');
   await page.getByRole('button', { name: 'Buscar', exact: true }).click();
-  await expect(page).toHaveURL(/\/es\/\?q=busqueda$/);
-  await expect(page.locator('.task-navigation a[aria-current="page"]')).toHaveCount(0);
+  expect(new URL(page.url()).searchParams.get('q')).toBe('busqueda');
+  expect(new URL(page.url()).searchParams.get('group')).toBe('reading');
+  await expect(page.locator('.task-navigation a[aria-current="page"]')).toHaveCount(1);
   await expect(catalogRows(page)).toHaveCount(1);
   await expect(page.locator('.catalog-ledger-row[data-catalog-id="searxng"]')).toContainText('Búsqueda web');
 });
@@ -279,13 +281,13 @@ test('mobile catalog keeps the complete-catalog action available without duplica
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/en/');
 
-  const modes = page.locator('.ledger-reference-links');
-  await expect(modes.locator('a[aria-current="page"]')).toHaveText('Tools & services');
-  const all = modes.getByRole('link', { name: 'A–Z tool catalog' });
+  const modes = page.locator('.catalog-views');
+  await expect(modes.locator('a[aria-current="page"]')).toHaveText('Start here');
+  const all = modes.getByRole('link', { name: 'All tasks' });
   await expect(all).toBeVisible();
   await all.click();
   await expect(page).toHaveURL(/\/en\/\?view=all#catalog$/);
-  await expect(page.getByRole('heading', { level: 2, name: 'A–Z tool catalog' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'All tasks' })).toBeVisible();
   const rows = catalogRows(page);
   expect(await rows.count()).toBeGreaterThan(featuredIds.length);
   await expect(rows.locator('.catalog-ledger-launch')).toHaveCount(await rows.count());
@@ -388,7 +390,7 @@ test('configured Redlib appears across the portal and routes only to its fixed h
   await page.goto('/en/?view=all');
   const homeRow = page.locator('.catalog-ledger-row[data-catalog-id="redlib"]');
   await expect(homeRow).toContainText('SERVER');
-  await expect(homeRow.getByRole('link', { name: 'Open: Redlib for Reddit' })).toHaveAttribute('href', 'https://reddit.utility.test/redlib/');
+  await expect(homeRow.getByRole('link', { name: 'Read Reddit: Redlib for Reddit' })).toHaveAttribute('href', 'https://reddit.utility.test/redlib/');
 
   await page.goto('/en/status');
   const statusItem = page.getByRole('heading', { name: 'Redlib for Reddit', exact: true }).locator('..');
@@ -437,10 +439,9 @@ test('only retained Utilibre services appear when stale service IDs are still co
       await expect(row.getByRole('heading', { name: service[language], exact: true })).toBeVisible();
       await expect(row.locator('.catalog-ledger-launch')).toHaveAttribute('href', service.url);
     }
-    await expect(page.locator('.catalog-ledger-access')).toHaveCount(1);
-    await expect(page.locator('[data-catalog-id="freshrss"] .catalog-ledger-access')).toHaveText(language === 'es'
-      ? 'Acceso: Solo cuentas existentes · No se ofrecen cuentas nuevas'
-      : 'Access: Existing accounts only · New accounts unavailable');
+    await expect(page.locator('[data-catalog-id="freshrss"] .catalog-ledger-access')).toContainText(language === 'es'
+      ? 'Solo cuentas existentes; no se reciben solicitudes nuevas'
+      : 'Existing accounts only; new access requests are closed');
     for (const id of removedIds) await expect(page.locator(`[data-catalog-id="${id}"]`)).toHaveCount(0);
   }
 

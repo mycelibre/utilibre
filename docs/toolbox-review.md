@@ -1,5 +1,67 @@
 # Browser toolbox review — 2026-10-06
 
+## Next-batch assessment — 7 October 2026 (not activated)
+
+The catalogue/guide work takes precedence. None of these five candidates was
+added to production, public DNS, Caddy, registrations or the catalogue. The
+proposal is **Markmap and Super Productivity only**, after an owner launch
+decision and the release gates below. “Defer” is not a claim that a workflow
+passed. No candidate was built or browser-tested in this release; bundle sizes,
+client memory, mobile playback/fullscreen and export/restore remain unmeasured.
+
+Inspected pinned sources (license files/package metadata, not star counts):
+
+| Candidate and exact reviewed revision | Architecture, burden and overlap | Decision and material gate |
+| --- | --- | --- |
+| [Super Productivity](https://github.com/super-productivity/super-productivity/tree/71eb7780bcf5d6b1dfdcd39a8a8265547d040760), package 19.1.0, MIT | Angular browser build; Node 22 build stage, `buildFrontend:prodWeb`, static `dist/browser` served by nginx in the inspected Dockerfile. 15 direct runtime and 124 development dependencies in that manifest; not a small single-file tool. IndexedDB operation log; default sync disabled and provider null. Existing IT Tools chronometer overlaps timing, not persistent task planning, focus and work logs. | **Defer public launch; preferred pilot.** Build a stable release reproducibly off the request path. Keep sync/integrations/plugins/external backgrounds disabled by default. Test a fictional study task, timing, reload, JSON export, fresh-profile import and deletion. Desktop local-backup settings do not prove browser backups work. Inspect actual requests before a local-only claim. |
+| [Markmap](https://github.com/markmap/markmap/tree/122bf0500ee7aca4f023c2465f7e26bf023eec52), markmap-lib/view 0.18.12, MIT | Static browser libraries: Markdown parser, D3 rendering and optional syntax/math assets. pnpm/Vite build; 13 direct markmap-lib dependencies and two markmap-view dependencies (not an installed-size measurement). Existing draw.io/Excalidraw offer diagramming, but not this outline-first editing flow; no equivalent was located in deployed OmniTools/IT Tools source. | **Defer public launch; preferred first pilot.** Thin upstream-based editor, local assets, Markdown import/export and SVG. Reject `extraJs`, `extraCss` and imported parser overrides: the inspected frontmatter plugin normalizes them, it does not make arbitrary resources safe. Disable raw HTML or sanitize it, restrict URLs/images, and test hostile Markdown/frontmatter and exported HTML. No offline promise until the complete dependency path is tested. |
+| [BeepBox](https://github.com/johnnesky/beepbox/tree/355e510099d230d066d95074c16d748d59fe054c), MIT | TypeScript compiled to static editor/player/synth; Web Audio runs on the visitor's device. Song URL, local preferences and exports; no server synthesis needed. Existing AudioMass trims/edits recordings, not note-pattern composition. | **Defer, worthwhile later creative expansion.** Test playback, note editing, full-song URL reconstruction, WAV/MIDI/JSON and supported exports. `website/index.html` loads Google Fonts; MP3 loads `lamejs@1.2.0` from jsDelivr on demand. Vendor permitted assets/notices and remove the TinyURL action: it transmits the complete song URL. A full URL is not a confidential or durable backup. |
+| [Teleprompter](https://github.com/mjibulu/teleprompter/tree/25c797d66fa43673d2c34a39696287c7be975307), package 0.1.0, MIT | Current revision is **React 19 + Vite**, not the older assumed standalone HTML script. Four direct runtime dependencies; static production build, no application backend. `teleprompter:script:v1` in sessionStorage; text import/download, mirror/speed controls and Fullscreen API. No equivalent presentation-reading flow found in deployed Omni/IT source. | **Defer.** Limited project/version history requires a maintenance owner. Review all built requests, test export/reload/session loss, mirror, keyboard, pause and real-mobile fullscreen before recommending. No speech-recognition or AI backend. |
+| [Typings](https://github.com/briano1905/typings/tree/1a4d4cb8f74870a7b185ffbcc318d5992d9d3783), GPL-3.0, reviewed HEAD dated 11 May 2020 | Plain HTML/CSS/JS, no build server needed. Inspected HTML 2,944 B, CSS 2,280 B, main JS 14,794 B, words JSON 51,880 B (source bytes, not total/gzipped download). Preferences are 90-day cookies, not localStorage. Spanish dictionary includes accents and ñ. Existing utilities do not provide typing practice. | **Reject stock deployment; defer a privacy-clean fork.** HTML includes Google Analytics and CSS imports Google Fonts. Remove both before any pilot, use system/local fonts, retain GPL/source notices, expose Spanish selection and test accented input, preferences, WPM/accuracy and malformed theme inputs. Six-year-old reviewed HEAD is not evidence of active maintenance or certified assessment. |
+
+### Concrete first-batch preparation and acceptance
+
+- Keep both proposed pilots loopback/private only until approved. Reuse the
+  existing static-tool packaging and edge pattern; do not reserve public ports
+  or create another registry for this review. Pin source, lockfile and base
+  image; retain upstream notices and corresponding source archives.
+- Markmap example: a fictional three-section study outline → editable mind map
+  → SVG and Markdown downloads → reopen. Bundle dependencies; block arbitrary
+  remote images, script/style imports and unsafe links by default. Do not
+  invoke upstream asset loaders on imported frontmatter. HTML export, if
+  offered, must be independently safe and disclose any remaining network use.
+- Super Productivity example: create three study tasks, plan a focus session,
+  record time, export, clear only the disposable test profile, restore and
+  compare task titles/timing. Confirm no sync request without an explicit
+  opt-in. No shared account, default cloud destination or promise that browser
+  storage is a backup.
+- Measure compressed cold-load bytes, first usable interaction, export time
+  and memory on representative hardware. Static runtime means low *server
+  computation*, not zero bandwidth/client cost. Build CPU/RAM and production
+  file-serving RAM are different measurements; neither was benchmarked here.
+- Only after the gates pass: add at most these two cards, precise service
+  privacy records, English/Spanish starter guides, source/update notes and
+  public health monitoring. This release adds no candidate as an unfinished
+  public item and makes no traffic forecast.
+
+Primary evidence retrieved 7 October 2026: the pinned repositories above;
+[Super Productivity Dockerfile](https://github.com/super-productivity/super-productivity/blob/71eb7780bcf5d6b1dfdcd39a8a8265547d040760/Dockerfile),
+[default sync configuration](https://github.com/super-productivity/super-productivity/blob/71eb7780bcf5d6b1dfdcd39a8a8265547d040760/src/app/features/config/default-global-config.const.ts),
+[Markmap browser documentation](https://markmap.js.org/docs/markmap) and
+[frontmatter parser](https://github.com/markmap/markmap/blob/122bf0500ee7aca4f023c2465f7e26bf023eec52/packages/markmap-lib/src/plugins/frontmatter/index.ts),
+[BeepBox MP3 export](https://github.com/johnnesky/beepbox/blob/355e510099d230d066d95074c16d748d59fe054c/editor/ExportPrompt.ts),
+[teleprompter storage](https://github.com/mjibulu/teleprompter/blob/25c797d66fa43673d2c34a39696287c7be975307/src/tool/TeleprompterTool.tsx),
+[Typings HTML](https://github.com/briano1905/typings/blob/1a4d4cb8f74870a7b185ffbcc318d5992d9d3783/index.html),
+[styles](https://github.com/briano1905/typings/blob/1a4d4cb8f74870a7b185ffbcc318d5992d9d3783/style.css)
+and [preferences/scoring](https://github.com/briano1905/typings/blob/1a4d4cb8f74870a7b185ffbcc318d5992d9d3783/main.js).
+
+Comparison inspected `/opt/utilibre/src/omnitools/src/pages/tools` and
+`/opt/utilibre/src/it-tools/src/tools`; IT Tools has `chronometer`. Existing
+Omni task links remain separately discoverable. Source inspection is narrower
+than a full feature inventory or browser audit of the proposed applications.
+Whisper remains withdrawn; no transcription/model download evaluation was
+added to this batch.
+
 ## Creative/local-data batch — 7 October 2026
 
 Scope: Excalidraw, SVGEdit, CyberChef and reviewed Image Scrubber.

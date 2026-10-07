@@ -11,6 +11,7 @@ import { append, element } from '../utilities/dom';
 export function guideLinks(language: Language): HTMLElement {
   const group = element('div', 'guide-links');
   append(group,
+    link(routePath('guides', language), language === 'es' ? 'Guías paso a paso' : 'Step-by-step guides'),
     link(routePath('pdf', language), language === 'es' ? 'Ayuda para PDF y OCR' : 'PDF & OCR guide'),
     link(routePath('qr', language), language === 'es' ? 'Ayuda para códigos QR' : 'QR code guide'),
   );

@@ -1,5 +1,5 @@
 import { catalog, catalogEntry, localized, reviewedServices, type CatalogEntry, type DiscoveryGroup, type OperationalStatus } from '../catalog/catalog';
-import { discoveryGroups, discoverEntries, entryLaunchable, serviceConfigured, type CatalogDiscoveryState } from '../catalog/discovery';
+import { discoveryGroups, discoverEntries, entryGroup, entryLaunchable, serviceConfigured, normalizeGroup, catalogViews, type CatalogView, type CatalogDiscoveryState } from '../catalog/discovery';
 import { localizedSupportUrl } from '../catalog/locale-links';
 import { renderCatalogList } from '../components/catalog-ledger';
 import { privacyLabels } from '../components/privacy-labels';
@@ -7,7 +7,10 @@ import type { PublicConfig } from '../config';
 import type { Language, TranslationKey } from '../i18n';
 import { routePath, type Route, type StaticPage } from '../routes';
 import { append, disableActionButton, element, type Translate } from '../utilities/dom';
-import { renderTaskGuide, guideLinks } from './task-guides';
+import { renderTaskGuide } from './task-guides';
+import { renderPracticalGuides } from './practical-guides';
+import { practicalGuides } from './practical-guide-data';
+import { privacyAnswers } from '../catalog/guidance';
 
 export async function renderPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): Promise<HTMLElement> {
   if (route.page === 'tool' && route.toolId) return renderToolPage(route.toolId, route.language, config, t);
@@ -18,6 +21,7 @@ export async function renderPage(route: Route, config: PublicConfig, t: Translat
 // Synchronous public content is shared by the browser and server renderer.
 // No health probes, visitor data, tool code, or third-party fetches run here.
 export function renderStaticPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): HTMLElement {
+  if (route.page === 'guides' || route.page === 'guide') return renderPracticalGuides(route.language, config, route.guideId);
   if (route.page === 'support' && !config.supportUrl) return renderNotFound(route.language, t);
   if (route.page === 'home') return renderHome(route.language, config, t, searchParams);
   if (route.page === 'services') return renderServices(route.language, config, t);
@@ -38,7 +42,6 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   const layout = element('div', config.supportUrl ? 'home-ledger-layout' : 'home-ledger-layout home-ledger-layout-no-support');
   const state = discoveryState(searchParams);
   const entries = discoverEntries(config, language, state);
-  const isFeaturedDefault = !state.query && !state.group && state.view !== 'all';
 
   const index = element('aside', 'ledger-index');
   index.setAttribute('aria-label', t('home.catalog.taskIndex'));
@@ -50,8 +53,8 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   discoveryGroups.forEach((group, position) => {
     const item = element('li');
     const link = element('a');
-    link.href = catalogUrl(language, { group });
-    if (state.group === group && !state.query) link.setAttribute('aria-current', 'page');
+    link.href = catalogUrl(language, { ...state, group, view: state.view === 'featured' ? 'public' : state.view });
+    if (state.group === group) link.setAttribute('aria-current', 'page');
     append(
       link,
       element('span', 'task-number', String(position + 1).padStart(2, '0')),
@@ -65,18 +68,12 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   const note = element('p', 'ledger-index-note', t('home.catalog.indexNote'));
   const references = element('nav', 'ledger-reference-links');
   references.setAttribute('aria-label', t('home.catalog.title'));
-  const featured = element('a', 'catalog-mode-link', t('home.catalog.featured'));
-  featured.href = catalogUrl(language, {});
-  if (isFeaturedDefault) featured.setAttribute('aria-current', 'page');
-  const all = element('a', 'catalog-mode-link', t('home.catalog.all'));
-  all.href = catalogUrl(language, { view: 'all' });
-  if (!state.query && !state.group && state.view === 'all') all.setAttribute('aria-current', 'page');
   const labels = element('a', 'catalog-context-link', t('footer.labels'));
   labels.href = routePath('labels', language);
   const software = element('a', 'catalog-context-link', t('footer.software'));
   software.href = routePath('software', language);
-  append(references, featured, all, labels, software);
-  references.append(guideLinks(language));
+  append(references, labels, software);
+  const guideIndex = element('a', 'catalog-context-link', language === 'es' ? 'Guías paso a paso' : 'Step-by-step guides'); guideIndex.href = routePath('guides', language); references.append(guideIndex);
   const folio = element('p', 'ledger-folio', `UTILIBRE · ${String(discoveryGroups.length).padStart(2, '0')} ${t('home.catalog.taskGroups')}`);
   append(index, guideword, taskCue, taskNav, note, references, folio);
 
@@ -102,7 +99,21 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   submit.type = 'submit';
   append(searchControl, input, submit);
   append(form, label, searchControl);
+  for (const [key, value] of [['view', state.view === 'featured' ? 'public' : state.view], ['group', state.group]]) {
+    if (!value) continue;
+    const hidden = element('input'); hidden.type = 'hidden'; hidden.name = key!; hidden.value = value; form.append(hidden);
+  }
   append(finder, finderCopy, form);
+
+  const views = element('nav', 'catalog-views');
+  views.setAttribute('aria-label', language === 'es' ? 'Acceso a las herramientas' : 'Tool access');
+  for (const view of catalogViews) {
+    const link = element('a', 'catalog-mode-link', t(`home.catalog.${view}`));
+    link.href = catalogUrl(language, view === 'featured' ? {} : { ...state, view });
+    if (state.view === view) link.setAttribute('aria-current', 'page');
+    views.append(link);
+  }
+  const accessNote = element('p', 'catalog-view-note', t(`home.catalog.${state.view || 'featured'}Note`));
 
   const catalogSection = element('section', 'catalog-ledger');
   catalogSection.id = 'catalog';
@@ -117,7 +128,7 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   title.id = 'catalog-title';
   heading.append(title);
   const processing = element('span', 'catalog-ledger-column-label', t('home.catalog.processing'));
-  const launch = element('span', 'catalog-ledger-column-label catalog-ledger-column-action', t('home.catalog.open'));
+  const launch = element('span', 'catalog-ledger-column-label catalog-ledger-column-action', language === 'es' ? 'Acción' : 'Action');
   processing.setAttribute('aria-hidden', 'true');
   launch.setAttribute('aria-hidden', 'true');
   append(catalogHeader, stateCode, heading, processing, launch);
@@ -132,12 +143,12 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
     showSource: true,
   });
   append(catalogSection, catalogHeader, resultCount, list);
-  if (state.query || state.group || state.view === 'all') {
+  if (state.query || state.group || state.view !== 'featured') {
     const clear = element('a', 'catalog-clear', t('home.catalog.clear'));
     clear.href = catalogUrl(language, {});
     catalogSection.append(clear);
   }
-  append(workspace, finder, catalogSection);
+  append(workspace, finder, views, accessNote, catalogSection);
 
   append(layout, index, workspace);
   if (config.supportUrl) {
@@ -169,7 +180,7 @@ function renderServices(language: Language, config: PublicConfig, t: Translate):
 function renderTools(language: Language, config: PublicConfig, t: Translate): HTMLElement {
   const main = pageHeader(t('tools.title'), t('tools.intro'));
   for (const group of discoveryGroups) {
-    const entries = catalog.filter((item) => item.discoveryGroup === group && entryLaunchable(item, config));
+    const entries = catalog.filter((item) => item.id !== 'uptime-kuma' && entryGroup(item) === group && entryLaunchable(item, config));
     if (!entries.length) continue;
     const section = element('section', 'section');
     const label = discoveryGroupLabel(group, t);
@@ -231,12 +242,14 @@ function renderTransparency(language: Language, config: PublicConfig, t: Transla
   main.append(infrastructure);
   const inventory = element('section', 'section');
   inventory.append(element('h2', '', t('transparency.catalog.title')));
-  for (const entry of catalog) {
+  for (const entry of catalog.filter((entry) => !entry.id.startsWith('omni-') && entry.id !== 'whisper-web')) {
     const details = element('details', 'inventory-entry');
+    details.id = `privacy-${entry.id}`;
     const summary = element('summary');
     append(summary, element('span', '', localized(entry.name, language)), privacyLabels(entry.labels, t));
     const list = element('dl', 'result-list result-list-wide');
     append(list,
+      ...privacyAnswers(entry, language).map(([question, answer]) => dataRow(question, answer)),
       dataRow(t('transparency.field.flow'), localized(entry.dataFlow, language)),
       dataRow(t('transparency.field.upload'), entry.filesUploaded ? t('transparency.yes') : t('transparency.no')),
       dataRow(t('transparency.field.temporary'), localized(entry.temporaryStorage, language)),
@@ -279,6 +292,12 @@ function renderSupport(language: Language, config: PublicConfig, t: Translate): 
   const upstreamLink = element('a', 'text-link', t('support.upstream.link'));
   upstreamLink.href = routePath('software', language);
   main.append(infoSection(t('support.upstream.title'), t('support.upstream.body'), upstreamLink));
+  const es = language === 'es';
+  const contributions = infoSection(es ? 'También podés ayudar sin donar' : 'You can help without donating', es
+    ? 'Reportá una herramienta rota indicando la tarea, navegador y mensaje de error, sin adjuntar documentos privados, contraseñas ni enlaces de administración. Proponé una corrección o traducción de una guía, o compartí su enlace con alguien a quien le sirva.'
+    : 'Report a broken tool with the task, browser and error message, without attaching private documents, passwords or management links. Suggest a correction or translation for a guide, or share its link with someone who needs it.');
+  if (config.contactUrl) contributions.append(externalLink(config.contactUrl, es ? 'Reportar o proponer una mejora' : 'Report or suggest an improvement'));
+  const guides = element('a', 'text-link', es ? 'Elegir una guía para compartir' : 'Choose a guide to share'); guides.href = routePath('guides', language); contributions.append(guides); main.append(contributions);
   return main;
 }
 
@@ -505,23 +524,24 @@ function infoSection(title: string, body: string, extra?: HTMLElement): HTMLElem
 
 function discoveryState(searchParams: URLSearchParams): CatalogDiscoveryState {
   const query = (searchParams.get('q') ?? '').trim().slice(0, 160);
-  const candidateGroup = searchParams.get('group');
-  const group = discoveryGroups.includes(candidateGroup as DiscoveryGroup) ? candidateGroup as DiscoveryGroup : null;
-  const view = searchParams.get('view') === 'all' ? 'all' : 'featured';
+  const group = normalizeGroup(searchParams.get('group'));
+  const candidate = searchParams.get('view') as CatalogView;
+  const view = catalogViews.includes(candidate) ? candidate : 'featured';
   return { query: query || undefined, group, view };
 }
 
 function catalogUrl(language: Language, state: CatalogDiscoveryState): string {
   const params = new URLSearchParams();
   if (state.query?.trim()) params.set('q', state.query.trim());
-  else if (state.group) params.set('group', state.group);
-  else if (state.view === 'all') params.set('view', 'all');
+  if (state.group) params.set('group', state.group);
+  if (state.view && state.view !== 'featured') params.set('view', state.view);
   const query = params.toString();
   return `${routePath('home', language)}${query ? `?${query}` : ''}#catalog`;
 }
 
 function discoveryGroupLabel(group: DiscoveryGroup, t: Translate): string {
   const keys: Record<DiscoveryGroup, TranslationKey> = {
+    documents: 'discovery.documents', creative: 'discovery.creative', sharing: 'discovery.sharing', data: 'discovery.data',
     files: 'discovery.files',
     find: 'discovery.find',
     reading: 'discovery.reading',
@@ -538,8 +558,7 @@ function discoveryGroupLabel(group: DiscoveryGroup, t: Translate): string {
 function catalogStateLabel(state: CatalogDiscoveryState, t: Translate): string {
   if (state.query?.trim()) return t('home.catalog.searchLabel');
   if (state.group) return discoveryGroupLabel(state.group, t);
-  if (state.view === 'all') return t('home.catalog.all');
-  return t('home.catalog.featured');
+  return t(`home.catalog.${state.view || 'featured'}`);
 }
 
 function catalogStateCode(state: CatalogDiscoveryState): string {
@@ -579,6 +598,10 @@ function externalLink(href: string, text: string, className = 'text-link'): HTML
 }
 
 export function pageMeta(route: Route, config: PublicConfig, t: Translate): { title: string; description: string; robots: string } {
+  if (route.page === 'guide') {
+    const copy = practicalGuides.find((guide) => guide.id === route.guideId)?.copy[route.language];
+    return { title: copy?.title || t('common.notFound.title'), description: copy?.intro || '', robots: copy ? 'index,follow' : 'noindex,nofollow' };
+  }
   if (route.page === 'tool' && route.toolId) {
     const entry = catalogEntry(route.toolId);
     return { title: entry ? localized(entry.name, route.language) : t('common.notFound.title'), description: entry ? localized(entry.description, route.language) : t('common.notFound.body'), robots: 'noindex,nofollow' };
@@ -604,6 +627,7 @@ export function pageMeta(route: Route, config: PublicConfig, t: Translate): { ti
     labels: 'labels.intro',
     pdf: 'meta.pdf.description',
     qr: 'meta.qr.description',
+    guides: 'meta.guides.description',
   };
   const descriptionKey = descriptionKeys[route.page as StaticPage];
   const description = descriptionKey ? t(descriptionKey) : title;

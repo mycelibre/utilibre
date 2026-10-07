@@ -7,8 +7,8 @@ test('task guides preserve language, launch access, anchors and usable mobile la
     publicPdfUrl: 'https://pdf.utility.test/', publicQrToolsUrl: 'https://qrtools.utility.test/', publicQrUrl: 'https://qr.utility.test/',
     enabledServices: ['bentopdf', 'qr-offline', 'miniqr'], listedServices: [],
   } }));
-  await page.goto('/en/');
-  await page.getByRole('link', { name: 'PDF & OCR guide', exact: true }).click();
+  await page.goto('/en/guides');
+  await page.getByRole('link', { name: 'PDF / OCR', exact: true }).click();
   await expect(page).toHaveURL(/\/en\/pdf-tools$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Merge PDFs or recognize scanned text');
   await page.getByRole('navigation', { name: 'Choose language' }).getByRole('link', { name: 'ES', exact: true }).click();

@@ -1,8 +1,9 @@
 import { catalog } from './catalog/catalog.ts';
 import type { Language } from './i18n/index.ts';
+import { practicalGuides, practicalGuidePath } from './pages/practical-guide-data.ts';
 
-export type StaticPage = 'home' | 'services' | 'tools' | 'about' | 'transparency' | 'privacy' | 'acceptable' | 'support' | 'status' | 'software' | 'labels' | 'pdf' | 'qr' | 'not-found';
-export interface Route { language: Language; page: StaticPage | 'tool'; toolId?: string; }
+export type StaticPage = 'home' | 'services' | 'tools' | 'about' | 'transparency' | 'privacy' | 'acceptable' | 'support' | 'status' | 'software' | 'labels' | 'pdf' | 'qr' | 'guides' | 'not-found';
+export interface Route { language: Language; page: StaticPage | 'tool' | 'guide'; toolId?: string; guideId?: string; }
 
 const staticPaths: Record<Exclude<StaticPage, 'not-found'>, Record<Language, string>> = {
   home: { en: '', es: '' },
@@ -18,6 +19,7 @@ const staticPaths: Record<Exclude<StaticPage, 'not-found'>, Record<Language, str
   labels: { en: 'privacy-labels', es: 'etiquetas-privacidad' },
   pdf: { en: 'pdf-tools', es: 'herramientas-pdf' },
   qr: { en: 'qr-codes', es: 'codigos-qr' },
+  guides: { en: 'guides', es: 'guias' },
 };
 
 export function parseRoute(pathname: string): Route | null {
@@ -25,6 +27,8 @@ export function parseRoute(pathname: string): Route | null {
   const language = parts.shift();
   if (language !== 'en' && language !== 'es') return null;
   const rest = parts.join('/');
+  const guide = practicalGuides.find((item) => item.paths[language] === rest);
+  if (guide) return { language, page: 'guide', guideId: guide.id };
   for (const [page, paths] of Object.entries(staticPaths)) {
     if (paths[language] === rest) return { language, page: page as StaticPage };
   }
@@ -49,6 +53,7 @@ export function toolPath(id: string, language: Language): string {
 }
 
 export function translatedPath(route: Route, language: Language): string {
+  if (route.page === 'guide') return practicalGuidePath(route.guideId || '', language);
   if (route.page === 'tool' && route.toolId) return toolPath(route.toolId, language);
   if (route.page === 'tool') return routePath('tools', language);
   if (route.page === 'not-found') return routePath('home', language);

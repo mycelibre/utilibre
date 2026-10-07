@@ -1,5 +1,136 @@
 # Utilibre search and traffic foundation
 
+## Task-first catalogue and practical guides — 7 October 2026
+
+### Baseline, scope and coverage
+
+The historical snapshot's 54 default task cards is not a count of independent
+applications. The inspected repository has 57 catalogue records including
+shortcuts, status and withdrawn entries. “Open” was the action-column heading,
+not a broken filter. The important friction was an almost entirely featured
+inventory, unclear newcomer access, and too few completed task instructions.
+This release changes the portal, not service configuration, registrations,
+retention, accounts, DNS/Caddy, user data or donor privileges.
+
+| Priority / requirement | Implemented evidence and files | Validation / limit |
+| --- | --- | --- |
+| P1 Newcomer access vs availability | `catalog/guidance.ts`, `discovery.ts`, `catalog-ledger.ts`: anonymous, approved, existing-only, password/client and pilot distinctions; Rallly guest votes vs approved organizers | Role/filter unit and browser checks. FreshRSS gets no invitation CTA. FMD stays pilot; no device command sent. Mumble's shared password is not exposed. |
+| P1 Find a usable task | Five purposes; eight checked starters; public/accounts/pilots/all views; meaningful actions, synonyms, accent folding, legacy category aliases | Real configuration preview: 8 starter, 44 immediate, 7 account, 5 pilot/unavailable, 55 all task cards. Views overlap where appropriate; counts come from selection, not constants. Status stays global, excluded from productivity totals. |
+| P1 Specific privacy | Catalogue facts reused by `privacyAnswers`, card help, transparency and guides; encryption, recipients, storage, network metadata and verification distinguished | Focused deployed configuration and synthetic checks below. Exact edge/provider log retention and backup deletion remain unverified, explicitly not promised. |
+| P1 Complete workflows | `pages/practical-guide-data.ts`, `practical-guides.ts`, routes and examples | Six complete EN/ES guides, 12 pages plus two index pages; all download/action/language routes exercised. No fabricated screenshots. |
+| P2 Language/accessibility | Existing shell/i18n/CSS; native upstream language links; print stylesheet; guide links from cards | Desktop and mobile Chromium, keyboard/focus, 375–390px, 200% text-size reflow and print checks. Long Spanish headings now wrap. Physical devices not tested. |
+| P2 Useful discovery/SEO | SSR guide content, distinct titles/descriptions, canonical and reciprocal hreflang, 34-route sitemap | Unit checks plus separate production audit at release. Existing PDF/QR and service URLs retained; filtered pages remain excluded from indexing. No search outcome claim. |
+| P2 Support/trust | Existing support and transparency pages; approved contact/source channels for broken tools, corrections, translation and sharing | Donations remain optional and confer no access/limit/priority benefit. Financial figures and surplus policy were not available and were not invented. |
+| P3 Light operation and expansion | Existing static assets/templates; no framework/platform dependency; candidate assessment in `toolbox-review.md` | No new service activated. Proposed Markmap/Super Productivity need owner approval and specified security/workflow gates. |
+
+The eight starters are BentoPDF, VERT, OmniTools image compression, PairDrop,
+QR Tools, Pollaris, draw.io and Excalidraw. This is a readiness/usefulness
+selection, not a popularity ranking. All six distinct OmniTools task shortcuts
+remain. Account, unavailable and pilot entries were not deleted or hidden from
+their explicit views. LibreMDB, BreezeWiki and Rimgo are not asserted to work
+because other instances exist. Existing status observations are not an uptime
+history or a substitute for a task test.
+
+### Finished guides and practice files
+
+Guide indexes: `/en/guides` and `/es/guias`. Each guide includes prerequisites,
+real app links, ordered interface instructions, a fictional example, a success
+check, troubleshooting, task-specific privacy and next steps.
+
+| Task | English route | Spanish route | Fixture |
+| --- | --- | --- | --- |
+| Scanned document → useful text/share | `/en/guides/scanned-documents` | `/es/guias/documentos-escaneados` | `scan-en.pdf`, `scan-es.pdf`: raster-only fictional notices |
+| Prepare an image | `/en/guides/prepare-image` | `/es/guias/preparar-imagen` | `fictional-image.jpg`: 1200×800 generated graphic, hypothetical size target |
+| Cover private details | `/en/guides/private-photo` | `/es/guias/foto-privada` | Same fictional graphic; synthetic EXIF Artist and obvious fake details |
+| Organize a meeting | `/en/guides/meeting-poll` | `/es/guias/encuesta-reunion` | Fictional May 2030 options, explicit Guatemala UTC−06; readers replace dates |
+| CSV → chart | `/en/guides/csv-chart` | `/es/guias/csv-grafica` | `study-en.csv`, `study-es.csv`: 12/8/6 fictional hours, three UTF-8 rows |
+| Phone → computer file transfer | `/en/guides/file-transfer` | `/es/guias/transferir-archivo` | `transfer-example.txt`: harmless bilingual text |
+
+Fixtures are served under `/examples/`, about 220 KiB total; no personal data
+or licensed third-party image. The authoring recipe is
+`portal/scripts/build-practice-examples.mjs`, not a production/request-time
+dependency. The image embeds its programmatic origin; it is not a screenshot.
+Existing PDF merge fixtures remain generated by the existing build script.
+
+### Functional and privacy evidence
+
+Checked 7 October 2026 on this Linux host, Chromium desktop over public HTTPS,
+with small synthetic inputs. Configuration evidence is local deployed manifests
+and the source/version inventory, not merely the reference documentation.
+
+| Flow / version source | Observed result |
+| --- | --- |
+| BentoPDF 2.8.8; `check-pdf-tools.mjs` | Two-page merge reopened/read; raster-only English and Spanish notices produce searchable PDFs with extracted text. English OCR lost the accent in María; the guide explicitly requires checking/correcting names and accents. Spanish fixture was useful. No content upload observed; jsDelivr/rawcdn.githack component requests disclosed. |
+| miniPaint `a79733e`; `check-practice-guides.mjs` | 1200×800 JPEG → 600×400 PNG, reopened; 89,248 B output. Image/Resize control, not canvas-size control. |
+| RAWGraphs `b7b2909`; same script | Both exact guide CSVs parse; three bars preserve 12/8/6 values; SVG exports 4,042 B EN / 4,045 B ES. No row truncation or invented row cap. |
+| Image Scrubber pinned creative-tool build; same script | Opaque painted pixel `[0,0,0,255]`, flattened PNG 173,268 B; original EXIF Artist absent. No claim that every metadata class or visible identifying detail is automatically removed. |
+| Pollaris; `deployment/community/check-pollaris.mjs` | Fictional poll created, second isolated guest voted, CSV retrieved, administration protected; test poll deleted and returned 404. Guest voting is not account access to Rallly. |
+| PairDrop 1.11.2; `check-pairdrop.mjs` | Isolated sender/receiver contexts discovered peers, accepted transfer and downloaded exact bytes. Same test host/network only; not a physical phone or different NAT. Utilibre signaling, Cloudflare STUN; no TURN and `WS_FALLBACK=false`. |
+| QR Tools; `check-qr-offline.mjs` | Desktop/mobile-emulated creation, decoded PNG/SVG/PDF, simulated camera and offline checks passed. Not a physical camera test. Mini QR remains an explained alternative. |
+| OmniTools deployed task build; `check-omni-tasks.mjs` | Image editor exported 800×600 PNG 30,096 B; compression output 4,478 B. CDN component use observed for compression, no application upload. Other task/version checks remain in toolbox review. |
+| VERT; bounded browser check | JPEG conversion completed via its Convert tab; downloaded ZIP contained the named PNG. ZIP structure/name checked; no claim covering remote video (disabled) or every format. |
+| draw.io; bounded browser check | Shape → File/Export as/SVG → Export/OK produced 2,861 B SVG containing the shape. |
+| Excalidraw; `APP=whiteboard check-creative-tools.mjs` | Rectangle → PNG and SVG; Spanish UI; no application upload/external request observed. |
+| PrivateBin 2.0.6 | Ciphertext-only POST, complete-link read in separate browser context; server confirmed a subsequent read unavailable with burn-after-reading enabled. Tested 5-minute expiry choice; configured options 5m/10m/1h/1d/1w, optional password and burn. Expiry is not instant erasure from storage/backups. |
+| Yopass 14.10.0 | Ciphertext-only POST, native Reveal action yielded exact synthetic text; another retrieval blocked. Config forces one retrieval or one hour, whichever comes first; uploads disabled, memory-only Valkey cache. Recipients can retain copies. |
+| ntfy 2.28.0 | Anonymous publish and independent anonymous cached read on a random synthetic topic passed. Anonymous read/write, one-hour RAM cache, 4 KiB messages, no attachments/mail/phone/WebPush/iOS relay. Topic names are not asserted to be publicly indexed. |
+| TransLite `gospodin/translite` `7b4b8e5-p1` | Inspected provider adapter/config: submitted text goes through Utilibre to Google/DeepL/Yandex/DDG selection. 2,000-character POST limit, no shared translation cache; short in-memory session. Provider retention unknown. Not confused with a different TransLite project. |
+| BiblioReads deployed source/config | Outgoing searches use Goodreads/Amazon-hosted services via Utilibre; saved library and exports are local browser data. Clearing browser storage can lose it; no account/recovery promise. |
+
+Primary references checked: [PrivateBin](https://privatebin.info/),
+[Yopass](https://github.com/jhaals/yopass),
+[PairDrop hosting](https://github.com/schlagmichdoch/PairDrop/blob/v1.11.2/docs/host-your-own.md),
+[PairDrop FAQ](https://github.com/schlagmichdoch/PairDrop/blob/v1.11.2/docs/faq.md),
+[ntfy access control](https://docs.ntfy.sh/config/#access-control).
+Candidate exact revisions, primary source links and dated decisions are in
+[the toolbox assessment](toolbox-review.md#next-batch-assessment--7-october-2026-not-activated).
+
+The no-advertising/no-behavioral-tracking mission is preserved. Portal scripts
+and fonts are first-party; no analytics or new telemetry added. Existing tool
+adaptations remove known upstream analytics. Targeted network checks saw no
+behavioral tracker; they do not certify every optional upstream interaction.
+CDN/model downloads, Cloudflare security requests and STUN metadata are not
+silently conflated with uploading a user's document. Browser storage is not a
+backup. Account service save/restore and real-device FMD testing were not
+performed or claimed by this release.
+
+### Validation, operation and remaining dependencies
+
+Local release gates: typecheck, lint, production client/SSR build, 77 unit
+tests, 64 desktop/mobile browser tests, FOSS policy (57 records/32 retired
+routes), SearXNG pagination/log-redaction checks. The new browser suite visits
+all twelve guide pages, fixtures, language switches, account/pilot filters,
+empty counts, bookmarks, 200% text-size and print. Independent Impeccable finish
+review: **ship** at the supplied source/screenshot scope; no material fixes.
+Existing design retained; this is not a new visual identity.
+
+Representative guide simulation: 390×844 viewport, 1.6 Mbps / 150 ms artificial
+latency, local preview: CSV guide action available in 2,391 ms. This is a single
+laboratory navigation, not field LCP/INP, real-phone evidence or a capacity test.
+Client build approximately 265.5 kB JS / 87.4 kB gzip and 26.1 kB CSS / 5.9 kB
+gzip, plus selected self-hosted fonts. Guides do not preload hosted applications,
+OCR models, codecs or sample images. Source/version/update ownership remains in
+the catalogue FOSS metadata, existing pinned manifests and `docs/updates.md`;
+no second service registry or continuous testing platform was added.
+
+Exact external dependencies: an authorized Android test device for FMD; real
+phone and restrictive-network PairDrop checks; authorized accounts for recovery
+testing; owner-provided financial records/surplus policy if figures are ever
+published. Exact edge/provider retention is unavailable. PDF nonworker assets
+still show duplicate edge COEP values, while the checked worker paths and OCR
+flow pass; consolidate that separate-VM header configuration when the owner
+next edits Caddy. No new Caddy block is required for these portal pages.
+Search indexing, traffic, citations and field performance remain unmeasured.
+
+Release procedure: retain the current portal image and private environment,
+commit/push reviewed files only, publish the Git-indexed integration source,
+point `SOURCE_CODE_URL` to that immutable commit, then run
+`docker compose build portal && docker compose up -d --no-deps portal`.
+Audit production separately with `npm --prefix portal run test:seo`, verify
+guide downloads and real EN/ES navigation; notify IndexNow once for meaningful
+changed canonical pages only. Release evidence and exact rollback references
+are recorded below after deployment. No database migration is involved.
+
 ## Creative-tool release — 7 October 2026
 
 Production checkpoint, 16:36 UTC: implementation `1b1bfd1` is on GitHub and

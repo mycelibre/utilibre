@@ -4,14 +4,15 @@ import { catalog } from './src/catalog/catalog.ts';
 import { en } from './src/i18n/en.ts';
 import { es } from './src/i18n/es.ts';
 import { routePath, toolPath, translatedPath, type StaticPage } from './src/routes.ts';
+import { practicalGuides, practicalGuidePath } from './src/pages/practical-guide-data.ts';
 
 const dictionaries = { en, es } as const;
-const staticPages: Array<Exclude<StaticPage, 'not-found'>> = ['home', 'services', 'tools', 'about', 'transparency', 'privacy', 'acceptable', 'support', 'status', 'software', 'labels', 'pdf', 'qr'];
+const staticPages: Array<Exclude<StaticPage, 'not-found'>> = ['home', 'services', 'tools', 'about', 'transparency', 'privacy', 'acceptable', 'support', 'status', 'software', 'labels', 'pdf', 'qr', 'guides'];
 const descriptionKeys = {
   home: 'meta.home.description', services: 'services.intro', tools: 'tools.intro', about: 'about.body1',
   transparency: 'transparency.why.body', privacy: 'privacy.intro', acceptable: 'acceptable.intro',
   support: 'support.body', status: 'status.intro', software: 'software.intro', labels: 'labels.intro',
-  pdf: 'meta.pdf.description', qr: 'meta.qr.description',
+  pdf: 'meta.pdf.description', qr: 'meta.qr.description', guides: 'meta.guides.description',
 } as const;
 
 export default defineConfig({
@@ -36,6 +37,12 @@ export default defineConfig({
             description: dictionary[descriptionKeys[page]],
             robots: ['services', 'tools', 'status'].includes(page) ? 'noindex,nofollow' : 'index,follow',
             alternates: { en: translatedPath(route, 'en'), es: translatedPath(route, 'es') },
+          };
+        }
+        for (const guide of practicalGuides) {
+          output[metadataPath(practicalGuidePath(guide.id, language))] = {
+            language, title: guide.copy[language].title, description: guide.copy[language].intro,
+            robots: 'index,follow', alternates: { en: practicalGuidePath(guide.id, 'en'), es: practicalGuidePath(guide.id, 'es') },
           };
         }
         for (const entry of catalog.filter((item) => item.slug)) {

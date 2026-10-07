@@ -41,13 +41,13 @@ export function renderHeader(currentRoute: Route, config: PublicConfig, t: Trans
   nav.id = 'main-navigation';
   nav.setAttribute('aria-label', t('a11y.menu'));
   const links: Array<[Parameters<typeof routePath>[0], TranslationKey]> = [
-    ['home', 'nav.catalog'], ['privacy', 'nav.privacy'], ['about', 'footer.about'], ['status', 'nav.status'],
+    ['home', 'nav.catalog'], ['guides', 'nav.guides'], ['privacy', 'nav.privacy'], ['about', 'footer.about'], ['status', 'nav.status'],
   ];
   for (const [page, key] of links) {
     if (page === 'support' && !config.supportUrl) continue;
     const link = element('a', '', t(key));
     link.href = routePath(page, currentRoute.language);
-    if (currentRoute.page === page) link.setAttribute('aria-current', 'page');
+    if (currentRoute.page === page || (page === 'guides' && currentRoute.page === 'guide')) link.setAttribute('aria-current', 'page');
     nav.append(link);
   }
   const controls = element('div', 'header-controls');

@@ -5,7 +5,7 @@ export type PrivacyLabel = 'local' | 'server' | 'proxy' | 'external';
 export type CatalogCategory = 'service' | 'utility';
 export type CatalogKind = 'service' | 'integration';
 export type OperationalStatus = 'operational' | 'degraded' | 'unavailable' | 'maintenance' | 'not-deployed' | 'unknown';
-export type DiscoveryGroup = 'find' | 'reading' | 'files' | 'media' | 'privacy' | 'design' | 'text-data' | 'planning' | 'feeds-monitoring';
+export type DiscoveryGroup = 'find' | 'reading' | 'files' | 'media' | 'privacy' | 'design' | 'text-data' | 'planning' | 'feeds-monitoring' | 'documents' | 'creative' | 'sharing' | 'data';
 export type AccountAccess = 'closed-registration' | 'invite-required' | 'owner-only';
 
 export interface LocalizedText {
@@ -50,8 +50,8 @@ export interface CatalogEntry {
 }
 
 const browserMemory: LocalizedText = {
-  en: 'Working data exists only in this browser tab and is released when the page is reloaded or closed.',
-  es: 'Los datos de trabajo existen únicamente en esta pestaña y se liberan al recargarla o cerrarla.',
+  en: 'Active processing uses browser memory. Depending on the application, caches, preferences and local drafts can persist after the tab closes; see the retention details.',
+  es: 'El procesamiento activo usa memoria del navegador. Según la aplicación, las cachés, preferencias y borradores pueden persistir al cerrar la pestaña; revisá los detalles de conservación.',
 };
 
 function providerMetadata(providerId: FossProviderId): Pick<CatalogEntry, 'providerId' | 'license' | 'upstreamProject' | 'upstreamSourceUrl' | 'installedVersion' | 'portalSurface'> {
@@ -193,7 +193,7 @@ export const catalog: CatalogEntry[] = [
     { en: 'Enter your content, customize the code and download it. Scanning can use an image or your camera after permission. Anyone who scans the result can read its contents: QR codes do not encrypt passwords. QR history storage is disabled.', es: 'Escribí el contenido, personalizá el código y descargalo. Para leerlo, usá una imagen o la cámara después de dar permiso. Cualquiera que lea el resultado puede ver su contenido: un QR no cifra contraseñas. El historial de códigos está desactivado.' }),
   browserTool('qr-offline', 'design', 48, 'publicQrToolsUrl',
     { en: 'QR codes · Offline QR', es: 'Códigos QR · Offline QR' },
-    { en: 'A second QR creator and camera scanner, with PNG, SVG and PDF downloads. No account required.', es: 'Otra opción para crear códigos QR y leerlos con la cámara, con descargas en PNG, SVG y PDF. Sin cuenta.' },
+    { en: 'Create a QR code or read one with your camera. Download PNG, SVG or PDF, without an account.', es: 'Creá un código QR o leelo con la cámara. Descargá PNG, SVG o PDF, sin cuenta.' },
     { en: 'Create / scan QR', es: 'Crear / leer QR' }, false,
     { en: 'Choose a QR type, enter its content and download the result. Camera scanning asks for permission and shows the result before you choose to open it. Codes and camera frames are processed locally. QR history is not saved; language, theme and offline application files can remain in your browser. QR codes do not encrypt their contents.', es: 'Elegí un tipo de QR, ingresá el contenido y descargá el resultado. El lector pide permiso para usar la cámara y muestra el contenido antes de que decidás abrirlo. Los códigos y las imágenes de la cámara se procesan en tu dispositivo. No se guarda un historial de QR; el idioma, el tema y los archivos para usar la aplicación sin conexión pueden quedar en el navegador. Los códigos QR no cifran su contenido.' }),
   browserTool('ittools', 'text-data', 7, 'publicDeveloperToolsUrl',
@@ -243,12 +243,14 @@ export const catalog: CatalogEntry[] = [
   {
     id: 'privatebin', ...providerMetadata('privatebin'), kind: 'service', implementation: 'upstream-application', category: 'service', discoveryGroup: 'privacy', featuredOrder: 10, configUrlKey: 'publicPasteUrl',
     name: { en: 'Encrypted paste', es: 'Texto cifrado' },
-    description: { en: 'Share short-lived encrypted text with PrivateBin. Encryption happens in the browser; the decryption key stays in the URL fragment and does not reach the server.', es: 'Compartí texto cifrado que caduca con PrivateBin. El cifrado ocurre en el navegador; la clave de descifrado queda en el fragmento de la URL y no llega al servidor.' },
+    description: { en: 'Share encrypted text with an expiry using PrivateBin. Keep the complete sharing link private: it contains the key.', es: 'Compartí texto cifrado con vencimiento usando PrivateBin. Conservá el enlace completo en privado: contiene la clave.' },
+    launchLabel: { en: 'Share text', es: 'Compartir texto' },
+    help: { en: 'Paste text, choose an expiry and optionally a password or burn-after-reading. File uploads and discussion are disabled. Opening a one-time paste yourself can consume it. Recipients can keep copies.', es: 'Pegá texto, elegí vencimiento y, si te sirve, contraseña o eliminación tras leerlo. No se admiten archivos ni comentarios. Abrir vos un texto de una sola lectura puede consumirlo. El destinatario puede conservar copias.' },
     labels: ['local', 'server'],
     dataFlow: { en: 'The browser encrypts text, then sends ciphertext through the edge to PrivateBin. The decryption key remains after # in the URL and is not included in the HTTP request.', es: 'El navegador cifra el texto y envía el contenido cifrado mediante el borde a PrivateBin. La clave queda después de # en la URL y no se incluye en la solicitud HTTP.' },
     upstreamServices: [], filesUploaded: false,
     temporaryStorage: { en: 'Plaintext and keys exist in browser memory. The server persists only encrypted payloads and associated metadata in filesystem storage; file uploads are disabled.', es: 'El texto sin cifrar y las claves existen en la memoria del navegador. El servidor conserva solo contenido cifrado y metadatos asociados en el sistema de archivos; las cargas de archivos están desactivadas.' },
-    retention: { en: 'The default expiry is one day; choices range from five minutes to one week. Burn-after-reading can remove a paste sooner, and automatic purge is enabled.', es: 'El vencimiento predeterminado es un día; las opciones van de cinco minutos a una semana. Leer y destruir puede eliminar el texto antes, y la purga automática está habilitada.' },
+    retention: { en: 'Default expiry: one day; choices: five minutes, ten minutes, one hour, one day or one week. Optional burn-after-reading removes access sooner. Automatic purge is enabled; expiry is not proof of immediate erasure from storage or backups.', es: 'Vencimiento predeterminado: un día; opciones: cinco minutos, diez minutos, una hora, un día o una semana. La eliminación tras leerlo puede quitar el acceso antes. Hay purga automática; vencer no demuestra eliminación inmediata del almacenamiento o los respaldos.' },
     logging: { en: 'The application does not receive the decryption key or plaintext. Rotated web-server and edge logs may contain paste identifiers and request metadata, but should not include URL fragments.', es: 'La aplicación no recibe la clave ni el texto sin cifrar. Los registros rotados del servidor web y del borde pueden contener identificadores y metadatos de solicitud, pero no deben incluir fragmentos de URL.' },
     modified: false, operationalStatus: 'operational',
   },
@@ -309,7 +311,7 @@ function newInstallations(): CatalogEntry[] {
 
 function readerEvaluations(): CatalogEntry[] {
   const entries: { id: FossProviderId; name: LocalizedText; description: LocalizedText; reason: LocalizedText; upstream: string }[] = [
-    { id: 'lrclib', name: { en: 'Read lyrics · LRCLIB', es: 'Leer letras · LRCLIB' }, description: { en: 'Find plain and synchronized song lyrics without an account. Replaces Dumb.', es: 'Buscá letras de canciones, con o sin tiempos, sin crear una cuenta. Reemplaza a Dumb.' }, reason: { en: 'Access is not enabled in this portal configuration.', es: 'El acceso no está habilitado en esta configuración del portal.' }, upstream: 'LRCLIB' },
+    { id: 'lrclib', name: { en: 'Read lyrics · LRCLIB', es: 'Leer letras · LRCLIB' }, description: { en: 'Find plain and synchronized song lyrics without an account.', es: 'Buscá letras de canciones, con o sin tiempos, sin crear una cuenta.' }, reason: { en: 'Access is not enabled in this portal configuration.', es: 'El acceso no está habilitado en esta configuración del portal.' }, upstream: 'LRCLIB' },
     { id: 'libremdb', name: { en: 'Look up films · LibreMDB', es: 'Consultar películas · LibreMDB' }, description: { en: 'Browse film information from IMDb through an alternative reader.', es: 'Consultá información de películas de IMDb con una interfaz alternativa.' }, reason: { en: 'Private search and image tests passed. Public access awaits resolution of IMDb data-use permission.', es: 'Las pruebas privadas de búsqueda e imágenes pasaron. Falta resolver el permiso para ofrecer los datos de IMDb públicamente.' }, upstream: 'IMDb' },
     { id: 'degoog', name: { en: 'Search with DeGoog', es: 'Buscar con DeGoog' }, description: { en: 'Search the web, books and technology discussions with three selected engines.', es: 'Buscá en la web, libros y conversaciones de tecnología con tres motores seleccionados.' }, reason: { en: 'Access is not enabled in this portal configuration.', es: 'El acceso no está habilitado en esta configuración del portal.' }, upstream: 'Mwmbl, Open Library and Hacker News' },
     { id: 'fourget', name: { en: 'Search with 4get', es: 'Buscar con 4get' }, description: { en: 'Search different providers through a lightweight interface.', es: 'Buscá en distintos proveedores con una interfaz liviana.' }, reason: { en: 'Search and image tests passed on the protected backend. The public HTTPS route is still pending.', es: 'Las pruebas de búsqueda e imágenes pasaron en el servidor protegido. Falta activar la ruta HTTPS pública.' }, upstream: 'Selected search providers' },
@@ -490,7 +492,7 @@ function communityTools(): CatalogEntry[] {
     {
       id: 'ntfy', providerId: 'ntfy', discoveryGroup: 'feeds-monitoring', configUrlKey: 'publicNotifyUrl',
       name: { en: 'Push notifications', es: 'Notificaciones' },
-      description: { en: 'Send simple alerts to a browser or compatible ntfy app. Topics are public: do not send passwords or private information.', es: 'Enviá avisos a un navegador o una aplicación compatible con ntfy. Los temas son públicos: no son para contraseñas ni información privada.' },
+      description: { en: 'Send simple alerts to a browser or ntfy app. Anyone who knows a topic name can read and send messages there; do not use it for private information.', es: 'Enviá avisos a un navegador o ntfy. Cualquiera que conozca el nombre del tema puede leer y enviar mensajes ahí; no lo usés para información privada.' },
       help: { en: 'Choose a long, unpredictable topic name and subscribe before sending a test. Anyone who knows the topic can read or publish. Limit: 100 messages per IP per day, 4 KB each. No attachments, email or phone delivery. Instant iOS relay and browser Web Push are not enabled; keep the web page connected or use a compatible client.', es: 'Elegí un nombre de tema largo e impredecible y suscribite antes de enviar una prueba. Cualquiera que conozca el tema puede leer o publicar. Límite: 100 mensajes por IP al día, de 4 KB cada uno. Sin adjuntos, correo ni llamadas. No están habilitados el reenvío instantáneo para iOS ni Web Push; mantené la página conectada o usá un cliente compatible.' },
       labels: ['server'], upstreamServices: [],
       dataFlow: { en: 'The server receives readable message bodies and topic names, then sends them to subscribers. This is not end-to-end encrypted.', es: 'El servidor recibe los mensajes legibles y los nombres de temas, y los envía a quienes se suscriben. No hay cifrado de extremo a extremo.' },
@@ -499,7 +501,7 @@ function communityTools(): CatalogEntry[] {
     {
       id: 'yopass', providerId: 'yopass', discoveryGroup: 'privacy', configUrlKey: 'publicSecretUrl',
       name: { en: 'Share a one-time secret', es: 'Compartir un secreto una sola vez' },
-      description: { en: 'Encrypt a short message with Yopass and share a link that works once. Expires after one hour.', es: 'Cifrá un mensaje breve con Yopass y compartí un enlace que funciona una sola vez. Vence después de una hora.' },
+      description: { en: 'Encrypt a short message with Yopass. It expires at first retrieval or after one hour, whichever comes first.', es: 'Cifrá un mensaje breve con Yopass. Vence al consultarlo por primera vez o tras una hora, lo que ocurra primero.' },
       help: { en: 'Enter a short message, encrypt it and share the complete link privately. Revealing the message consumes the secret, including during your own test. Save anything important elsewhere. Uploads are disabled; encrypted payloads are limited to 10 KB.', es: 'Ingresá un mensaje breve, cifralo y compartí el enlace completo en privado. Revelar el mensaje consume el secreto, incluso si lo hacés para probarlo. Guardá lo importante en otro lugar. No se admiten archivos; el contenido cifrado tiene un límite de 10 KB.' },
       labels: ['local', 'server'], upstreamServices: [],
       dataFlow: { en: 'The browser encrypts the message. Utilibre stores ciphertext; the decryption key remains in the URL fragment, outside the HTTP request.', es: 'El navegador cifra el mensaje. Utilibre almacena el contenido cifrado; la clave queda en el fragmento de la URL, fuera de la solicitud HTTP.' },

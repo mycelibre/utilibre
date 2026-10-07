@@ -106,3 +106,39 @@ no material fixes. The desktop and mobile captures in
 without overflow. Validation passed 76 unit, 60 browser, and 21 configuration
 tests. This records the bounded portal extension; separate application export
 checks do not establish broader browser or capacity coverage.
+
+### 2026-10-07 — Task catalogue and practical-guide extension
+
+The user-approved extension supersedes the historical four-service inventory
+and no-selected-mode statements above. The catalogue serves an Operate task:
+five purpose groups, eight checked starter tasks when their runtime gates pass,
+and bookmarkable public, account, pilot/pending, and complete-inventory views.
+The initial view selects the starter set. Each record separates availability,
+role-specific access, processing/privacy, native-interface requirements, and
+task-verification limits. Launch labels name the action; PairDrop's summary
+distinguishes file transfer from signaling and STUN connections.
+
+Six practical workflows now have complete English and Spanish versions
+(twelve guide pages), a bilingual index, and fictional downloadable practice
+files. Their Read structure proceeds through prerequisites, actions, practice,
+steps, result checks, recovery, privacy, and next steps. Guides reuse the shared
+ledger typography and ruled sections, include print styling, and allow long
+Spanish headings to wrap at enlarged text sizes. The existing PDF/OCR and QR
+references remain linked from the index.
+
+The code-led Useful Field Ledger direction, seed `356eafe7`, is preserved:
+paper, charcoal, coral and factual lichen accents; Newsreader headings,
+Atkinson Hyperlegible Next operating copy, and compact monospace metadata;
+square controls, flat rules, structural focus, and the aligned launch edge.
+Access links, expandable disclosures, guide measures, and responsive spacing
+extend this surface without establishing new global tokens or rules.
+`DESIGN.md`, its sidecar, and `PRODUCT.md` are unchanged by this record.
+
+Independent finish review: **SHIP**, with persistence and fidelity passing and
+no material fixes requested. The review used source and supplied captures at
+`.impeccable/review/desktop.png`, `mobile.png`, `mobile-top.png`,
+`guide-desktop.png`, and `guide-mobile.png`; the reviewer did not run a browser.
+There was no separate QUALITY BAR card or approved comp for this incumbent
+extension. Functional evidence, test results, and deployment state belong to
+the catalogue-and-guides record in `docs/seo-growth.md`; this note does not
+establish broader device, network, or uptime coverage.

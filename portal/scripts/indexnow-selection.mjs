@@ -17,6 +17,13 @@ const publicPaths = new Set([
   '/en/privacy-labels', '/es/etiquetas-privacidad',
   '/en/pdf-tools', '/es/herramientas-pdf',
   '/en/qr-codes', '/es/codigos-qr',
+  '/en/guides', '/es/guias',
+  '/en/guides/scanned-documents', '/es/guias/documentos-escaneados',
+  '/en/guides/prepare-image', '/es/guias/preparar-imagen',
+  '/en/guides/private-photo', '/es/guias/foto-privada',
+  '/en/guides/meeting-poll', '/es/guias/encuesta-reunion',
+  '/en/guides/csv-chart', '/es/guias/csv-grafica',
+  '/en/guides/file-transfer', '/es/guias/transferir-archivo',
 ]);
 
 export function isPublicSeoPath(path) {
@@ -63,7 +70,7 @@ export function parseSelection(args) {
 
 export function selectAuditedUrls(selection, audit) {
   assert.equal(audit.origin, PUBLIC_ORIGIN, 'SEO audit must target https://utilibre.org');
-  assert(Array.isArray(audit.urls) && audit.urls.length > 0 && audit.urls.length <= MAX_NOTIFICATION_URLS, 'Unexpected audited sitemap size');
+  assert(Array.isArray(audit.urls) && audit.urls.length > 0 && audit.urls.length <= publicPaths.size, 'Unexpected audited sitemap size');
   const live = new Set(audit.urls.map(validatePublicUrl));
   assert(selection.changed.every((url) => live.has(url)), 'Every changed URL must pass the public sitemap audit');
   assert(selection.removed.every((url) => !live.has(url)), 'Remove retired URLs from the sitemap before notifying IndexNow');

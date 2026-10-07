@@ -5,6 +5,8 @@ import {
   discoverEntries,
   discoveryGroups,
   entryLaunch,
+  entryGroup,
+  immediatelyUsable,
   featuredEntries,
   groupEntries,
   launchableEntries,
@@ -61,9 +63,9 @@ describe('catalog discovery metadata', () => {
       'bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'qr-offline', 'ittools',
       'searxng', 'freshrss', 'redlib', 'privatebin', 'private-router',
     ]);
-    expect(catalog.every((entry) => discoveryGroups.includes(entry.discoveryGroup))).toBe(true);
-    expect(discoveryGroups).toHaveLength(9);
-    for (const group of discoveryGroups) expect(catalog.some((entry) => entry.discoveryGroup === group)).toBe(true);
+    expect(catalog.every((entry) => discoveryGroups.includes(entryGroup(entry)))).toBe(true);
+    expect(discoveryGroups).toHaveLength(5);
+    for (const group of discoveryGroups) expect(catalog.some((entry) => entryGroup(entry) === group)).toBe(true);
     expect(catalog.filter((entry) => entry.featuredOrder !== undefined)
       .sort((left, right) => (left.featuredOrder ?? 0) - (right.featuredOrder ?? 0))
       .map((entry) => entry.id))
@@ -134,8 +136,9 @@ describe('config-gated catalog discovery', () => {
   it('lists explicitly requested pending services without enabling their launch', () => {
     const listedServices = ['whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd'];
     const pending = config({ listedServices });
-    expect(featuredEntries(pending).map((entry) => entry.id)).toEqual(listedServices);
-    for (const entry of featuredEntries(pending)) expect(entryLaunch(entry, 'es', pending)).toBeNull();
+    expect(featuredEntries(pending)).toEqual([]);
+    expect(allEntries(pending, 'en').map((entry) => entry.id).sort()).toEqual([...listedServices].sort());
+    for (const entry of allEntries(pending, 'en')) expect(entryLaunch(entry, 'es', pending)).toBeNull();
     expect(searchEntries(pending, 'en', 'résumé').map((entry) => entry.id)).toContain('reactive-resume');
     expect(featuredEntries(config({ listedServices: ['cobalt', 'not-a-tool'] }))).toEqual([]);
   });
@@ -162,7 +165,8 @@ describe('config-gated catalog discovery', () => {
 
   it('returns retained hosted applications in explicit order and no unconfigured defaults', () => {
     expect(featuredEntries(hostedConfig).map((entry) => entry.id))
-      .toEqual(['searxng', 'redlib', 'privatebin', 'freshrss']);
+      .toEqual([]); // None of these services is in the deliberately small starter set.
+    expect(discoverEntries(hostedConfig, 'en', { view: 'public' }).map(e => e.id)).not.toContain('freshrss');
     expect(featuredEntries(baseConfig)).toEqual([]);
   });
 
@@ -199,12 +203,23 @@ describe('localized catalog filtering', () => {
     expect(names).toEqual([...names].sort(new Intl.Collator('es', { sensitivity: 'base' }).compare));
   });
 
-  it('prioritizes query, then group, then all, with hosted services as the default', () => {
+  it('combines access, category and query without exposing account services by default', () => {
     expect(discoverEntries(hostedConfig, 'en').map((entry) => entry.id))
-      .toEqual(['searxng', 'redlib', 'privatebin', 'freshrss']);
+      .toEqual([]);
     expect(discoverEntries(hostedConfig, 'en', { view: 'all', group: 'text-data' }))
       .toEqual(groupEntries(hostedConfig, 'en', 'text-data'));
     expect(discoverEntries(hostedConfig, 'en', { query: 'encrypted' }).map((entry) => entry.id))
       .toEqual(['privatebin']);
+    expect(discoverEntries(hostedConfig, 'en', { query: 'encrypted', group: 'reading' })).toEqual([]);
+    expect(discoverEntries(hostedConfig, 'en', { view: 'accounts', query: 'rss' }).map(e => e.id)).toEqual(['freshrss']);
+  });
+  it('keeps pilots and passwords separate from anonymous readiness, without deleting sign-in routes', () => {
+    const setup = config({ enabledServices: ['fmd', 'rallly', 'mumble', 'uptime-kuma', 'pollaris'], publicFmdUrl: 'https://fmd.example/', publicPollUrl: 'https://poll.example/', publicMumbleUrl: 'mumble://voice.example/', publicStatusUrl: 'https://status.example/', publicPollarisUrl: 'https://meet.example/' });
+    for (const id of ['fmd', 'rallly', 'mumble', 'uptime-kuma']) expect(immediatelyUsable(catalogEntry(id)!, setup)).toBe(false);
+    expect(discoverEntries(setup, 'en', { view: 'pilots' }).map(e => e.id)).toContain('fmd');
+    expect(discoverEntries(setup, 'en', { view: 'accounts' }).map(e => e.id)).toEqual(expect.arrayContaining(['rallly', 'mumble']));
+    expect(allEntries(setup, 'en').map(e => e.id)).not.toContain('uptime-kuma');
+    expect(entryLaunch(catalogEntry('fmd')!, 'en', setup)).not.toBeNull();
+    expect(discoverEntries(setup, 'es', { query: 'reunion' }).map(e => e.id)).toEqual(['pollaris']);
   });
 });

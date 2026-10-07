@@ -532,6 +532,7 @@ p { max-width: 75ch; }
 .task-guide .prose li + li { margin-block-start: 0.75rem; }
 .task-guide .page-header > a { display: inline-block; margin-block-end: 1rem; }
 .task-guide .button { max-width: 100%; overflow-wrap: anywhere; }
+.task-guide h1 { overflow-wrap: anywhere; }
 
 .privacy-labels-expanded { display: grid; gap: 0; border-block-start: 2px solid var(--ink); }
 .privacy-label-explanation { padding-block: 1rem; display: grid; grid-template-columns: 7rem 1fr; gap: 1rem; border-block-end: 1px solid var(--rule); }
@@ -774,4 +775,36 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+}
+
+/* Extend the existing ledger: access views are native, bookmarkable links. */
+.catalog-views { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border-block-end: 1px solid var(--rule); padding-block: 0.7rem; }
+.catalog-views a { display: inline-flex; align-items: center; min-height: 44px; text-underline-offset: 0.3em; }
+.catalog-views a[aria-current="page"] { font-weight: 700; text-decoration-thickness: 3px; }
+.catalog-view-note { margin-block: 0.8rem 1.4rem; max-width: 70ch; }
+.catalog-ledger-limitation { font-size: 0.95rem; margin-block: 0.45rem; }
+.catalog-ledger-row { row-gap: 0.4rem; }
+.catalog-guide-link { display: inline-block; padding-block: 0.55rem; }
+.catalog-ledger-row > .catalog-help { grid-column: 2 / -1; max-width: 75ch; width: 100%; margin: 0; }
+.privacy-answers { margin-block: 1rem; font-size: 1rem; line-height: 1.6; }
+.privacy-answers dt { font-weight: 700; margin-block-start: 1rem; }
+.privacy-answers dd { margin: 0.25rem 0 0.8rem; }
+.guide-index { max-width: 75ch; padding-inline-start: 1.5rem; }
+.guide-index li { padding-block: 1rem; border-block-end: 1px solid var(--rule); }
+.guide-index a { font-size: 1.3rem; font-weight: 600; }
+.task-guide .prose li { margin-block: 0.9rem; }
+.task-guide .guide-links { flex-wrap: wrap; }
+@media (max-width: 58rem) {
+  .ledger-reference-links { display: none; }
+  .catalog-ledger-row > .catalog-help { grid-column: 1 / -1; }
+  .catalog-views { gap: 0.2rem 1rem; }
+}
+@media print {
+  .site-header, .site-footer, .task-guide .guide-actions, .task-guide > nav { display: none !important; }
+  .task-guide { color: #111; background: white; margin: 0; padding: 0; }
+  .task-guide .prose { max-width: none; }
+  .task-guide h2 { break-after: avoid; }
+  .task-guide li { break-inside: avoid; }
+  .task-guide a { color: inherit; text-decoration: underline; }
+  .task-guide details { display: none; }
 }

@@ -34,7 +34,7 @@ describe('public SEO without tracking or private-content indexing', () => {
 
   it('renders real bilingual content, privacy details and launch links before JavaScript', async () => {
     for (const language of ['en', 'es']) {
-      const response = await fetch(`${base}/${language}/`);
+      const response = await fetch(`${base}/${language}/?view=all`);
       const html = await response.text();
       const { document } = parseHTML(html);
       expect(response.status).toBe(200);
@@ -45,7 +45,7 @@ describe('public SEO without tracking or private-content indexing', () => {
       expect(document.querySelector('[data-catalog-id="rawgraphs"] .catalog-ledger-launch')?.getAttribute('href')).toBe('https://charts.public.example/');
       expect(document.querySelector('[data-catalog-id="omni-csv-json"] .catalog-ledger-launch')?.getAttribute('href')).toBe(`https://tools.public.example/csv/csv-to-json?lng=${language}`);
       expect(document.querySelector('[data-catalog-id="bentopdf"] .catalog-ledger-launch')?.getAttribute('href')).toBe(`https://pdf.public.example/${language === 'es' ? 'es/' : ''}`);
-      expect(document.querySelector('[data-catalog-id="reactive-resume"] .catalog-ledger-access')?.textContent).toContain(language === 'es' ? 'Solo con invitación' : 'Invite-only');
+      expect(document.querySelector('[data-catalog-id="reactive-resume"] .catalog-ledger-access')?.textContent).toContain(language === 'es' ? 'Cuenta aprobada' : 'Approved accounts');
       expect(html).not.toContain('data-catalog-id="whisper-web"');
       expect(document.querySelector('label[for="catalog-query"]')).not.toBeNull();
       expect(document.querySelector('form[method="get"]')?.getAttribute('action')).toBe(`/${language}/`);
@@ -56,7 +56,7 @@ describe('public SEO without tracking or private-content indexing', () => {
       expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${origin}/${language}/`);
       expect(document.querySelector('link[hreflang="x-default"]')?.getAttribute('href')).toBe(`${origin}/en/`);
       expect(response.headers.get('content-encoding')).toBe('gzip');
-      expect(response.headers.get('x-robots-tag')).toBeNull();
+      expect(response.headers.get('x-robots-tag')).toBe('noindex, follow');
       expect(response.headers.get('set-cookie')).toBeNull();
       const scripts = [...document.querySelectorAll('script[src]')];
       expect(scripts.every((s) => s.getAttribute('src')?.startsWith('/assets/'))).toBe(true);
@@ -68,7 +68,7 @@ describe('public SEO without tracking or private-content indexing', () => {
     expect(response.status).toBe(200);
     const sitemap = await response.text();
     const urls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]!);
-    expect(urls).toHaveLength(20);
+    expect(urls).toHaveLength(34);
     expect(new Set(urls).size).toBe(urls.length);
     expect(sitemap).not.toContain('lastmod');
     const titles = new Set();
@@ -84,7 +84,7 @@ describe('public SEO without tracking or private-content indexing', () => {
       for (const language of ['en', 'es']) expect(document.querySelector(`link[hreflang="${language}"]`)?.getAttribute('href')).toMatch(new RegExp(`^https://public\\.example/${language}/`));
       titles.add(document.title);
     }
-    expect(titles.size).toBe(20);
+    expect(titles.size).toBe(34);
     const robots = await (await fetch(`${base}/robots.txt`)).text();
     expect(robots).toContain(`Sitemap: ${origin}/sitemap.xml`);
     expect(robots).toContain('Disallow: /_portal/');
@@ -142,7 +142,7 @@ describe('public SEO without tracking or private-content indexing', () => {
       expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${origin}/en/`);
       expect(document.getElementById('public-structured-data')).toBeNull();
       if (query === '?q=pdf') expect(document.querySelectorAll('[data-catalog-id]')).toHaveLength(1);
-      if (query === '?group=files') expect(document.querySelectorAll('[data-catalog-id]')).toHaveLength(3);
+      if (query === '?group=files') expect(document.querySelectorAll('[data-catalog-id]')).toHaveLength(2);
     }
     const response = await fetch(`${base}/en/?q=${encodeURIComponent('"><script>alert(1)</script>')}`);
     const html = await response.text();

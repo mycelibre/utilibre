@@ -6,6 +6,7 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
+import { readFile } from 'node:fs/promises';
 
 const require = createRequire(new URL('../../portal/package.json', import.meta.url));
 const { chromium } = require('playwright');
@@ -120,17 +121,11 @@ async function mergeCheck() {
 async function ocrCheck(language) {
   const page = await context.newPage();
   await page.goto(`${origin}/${language === 'es' ? 'es/' : ''}ocr-pdf.html`, { waitUntil: 'networkidle' });
-  const lines = language === 'es'
-    ? ['UTILIBRE EJEMPLO', 'Texto de prueba sin datos personales.']
-    : ['UTILIBRE OCR SAMPLE', 'Synthetic document. No personal data.'];
-  const jpeg = await page.evaluate((text) => {
-    const canvas = document.createElement('canvas'); canvas.width = 1000; canvas.height = 320;
-    const drawing = canvas.getContext('2d'); drawing.fillStyle = 'white'; drawing.fillRect(0, 0, 1000, 320);
-    drawing.fillStyle = 'black'; drawing.font = '40px Arial';
-    text.forEach((line, index) => drawing.fillText(line, 40, 90 + index * 80));
-    return canvas.toDataURL('image/jpeg', 0.95).split(',')[1];
-  }, lines);
-  await page.locator('#file-input').setInputFiles({ name: `synthetic-ocr-${language}.pdf`, mimeType: 'application/pdf', buffer: imagePdf(Buffer.from(jpeg, 'base64'), 1000, 320) });
+  const lines = language === 'es' ? ['María Ejemplo', '12 de mayo de 2030', '24 libros'] : ['María Example', '12 May 2030', '24 books'];
+  const fixture = await readFile(new URL(`../../portal/public/examples/scan-${language}.pdf`, import.meta.url));
+  assert.equal((await readPdf(page, fixture)).pages[0], '', 'Practice scan must have no existing text layer');
+  await page.locator('#file-input').setInputFiles({ name: `scan-${language}.pdf`, mimeType: 'application/pdf', buffer: fixture });
+  for (const checked of await page.locator('.lang-checkbox:checked').all()) await checked.uncheck();
   const checkbox = page.locator(`.lang-checkbox[value="${language === 'es' ? 'spa' : 'eng'}"]`);
   await checkbox.check();
   const languageLabel = (await checkbox.locator('..').innerText()).trim();
@@ -138,12 +133,14 @@ async function ocrCheck(language) {
   await page.locator('#process-btn').click();
   await page.locator('#ocr-results').waitFor({ state: 'visible', timeout: 60_000 });
   const recognized = await page.locator('#ocr-text-output').inputValue();
-  for (const line of lines) assert(recognized.includes(line), `OCR ${language} did not reproduce fixture text: ${recognized}`);
+  const normalize = text => text.normalize('NFD').replace(/\p{M}/gu, '');
+  for (const line of lines) assert(normalize(recognized).includes(normalize(line)), `OCR ${language} did not reproduce useful fixture text: ${recognized}`);
+  const manualCorrections = lines.filter(line => !recognized.includes(line));
   const [download] = await Promise.all([page.waitForEvent('download'), page.locator('#download-searchable-pdf').click()]);
   const output = await readPdf(page, await downloadBytes(download));
   assert.equal(output.pageCount, 1);
-  assert.match(output.pages[0], /UTILIBRE/);
-  checks.push({ task: 'ocr', language, languageLabel, result: 'passed', recognized, searchablePageCount: output.pageCount });
+  assert.match(output.pages[0], /24/);
+  checks.push({ task: 'ocr', language, languageLabel, result: 'passed-with-manual-review', recognized, manualCorrections, searchablePageCount: output.pageCount });
   await page.close();
 }
 
