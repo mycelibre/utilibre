@@ -1,4 +1,21 @@
 import { test, expect } from '@playwright/test';
+test('collection heading is separated from its selector in both languages', async ({ page }) => {
+  for (const path of ['/en/my-utilibre', '/es/mi-utilibre']) {
+    await page.goto(path);
+    await page.locator('#toolkit-collection').waitFor();
+    for (const fontSize of ['100%', '200%']) {
+      await page.evaluate(size => { document.documentElement.style.fontSize = size; }, fontSize);
+      const spacing = await page.evaluate(() => {
+        const selector = document.querySelector('#toolkit-collection')!.getBoundingClientRect();
+        const heading = document.querySelector('.toolkit-workspace > h2')!.getBoundingClientRect();
+        return { gap: heading.top - selector.bottom, minimum: parseFloat(getComputedStyle(document.documentElement).fontSize) * 1.5, overflow: document.documentElement.scrollWidth - innerWidth };
+      });
+      expect(spacing.gap).toBeGreaterThanOrEqual(spacing.minimum - 1);
+      if (fontSize === '100%') expect(spacing.overflow).toBeLessThanOrEqual(1);
+    }
+    await page.evaluate(() => { document.documentElement.style.fontSize = ''; });
+  }
+});
 test('local selections, keyboard order, export/import, preview and scoped reset', async ({ page, browser }) => {
   await page.goto('/en/my-utilibre');
   await page.getByLabel('Choose a tool to pin').selectOption('drawio'); await page.getByRole('button', { name: 'Pin tool', exact: true }).click();

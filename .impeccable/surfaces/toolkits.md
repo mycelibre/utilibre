@@ -112,6 +112,8 @@ the management section's state.
 ### Collection selector and records
 
 The labeled selector identifies the starting collection in its option text.
+The current collection heading has a 1.5rem gap above it, separating the selector
+from the tools it controls; this remains relative to text size in both languages.
 Each ordered record presents a tool name, written access and operational
 status, and named move/unpin actions. Available launches visibly append
 “new tab” or “pestaña nueva” and use `noopener noreferrer`. Unavailable and

@@ -318,6 +318,16 @@ may update on next online visit; do not delete visitors' browser data. Redlib ba
 rollback is a reviewed prior banner value and redlib-only recreation. SearXNG rollback
 is independently documented in `docs/updates.md`.
 
+Spacing follow-up (2026-10-07): the collection heading originally touched its
+selector (0px gap). A scoped 1.5rem heading margin now gives 24px at default text
+size, preserving all controls and storage behavior. Checked English/Spanish,
+desktop/mobile, and gap scaling at enlarged text size; eight toolkit browser
+tests passed. A separate pre-existing wide masthead overflow at CSS-only 200%
+root font size was observed; this local heading fix does not change global
+navigation or claim to resolve that unrelated text-enlargement issue. Rollback
+image for this CSS follow-up: `public-utility-portal:pre-toolkit-spacing-20261007`;
+restore the portal source reference to `f8df3908e4b47bf0c33cf1c235478d198086ab33`.
+
 ## Primary references consulted
 
 - SearXNG Hostnames: https://docs.searxng.org/dev/plugins/hostnames.html

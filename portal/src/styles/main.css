@@ -813,6 +813,7 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 .toolkit-list { padding-inline-start: 1.6rem; }
 .toolkit-shared:empty { display: none; }
 .toolkit-workspace { padding-block-start: 1.5rem; border-bottom: 0; padding-block-end: 0; }
+.toolkit-workspace > h2 { margin-block-start: 1.5rem; }
 .tool-page:has(.toolkit-workspace) { padding-block-end: 2rem; }
 .toolkit-list > li { padding: 1rem 0; border-bottom: 1px solid var(--rule); }
 .toolkit-name { font-weight: 700; overflow-wrap: anywhere; }
