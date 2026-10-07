@@ -437,6 +437,7 @@ function publicConfig() {
     publicSvgUrl: publicServiceUrl(process.env.PUBLIC_SVG_URL),
     publicCyberchefUrl: publicServiceUrl(process.env.PUBLIC_CYBERCHEF_URL),
     publicScrubUrl: publicServiceUrl(process.env.PUBLIC_SCRUB_URL),
+    publicMindmapUrl: publicServiceUrl(process.env.PUBLIC_MINDMAP_URL),
     publicInstagramUrl: publicServiceUrl(process.env.PUBLIC_INSTAGRAM_URL),
     publicFourgetUrl: publicServiceUrl(process.env.PUBLIC_FOURGET_URL),
     publicOverflowUrl: publicServiceUrl(process.env.PUBLIC_OVERFLOW_URL),

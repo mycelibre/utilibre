@@ -21,6 +21,18 @@ x-browser: &browser
     options: {max-size: 5m, max-file: "2"}
 
 services:
+  markmap:
+    <<: *browser
+    image: utilibre-markmap:0.18.12-p1
+    build:
+      context: ./markmap
+      dockerfile: ../Dockerfile.markmap
+      additional_contexts: {branding: /home/ubuntu/freetools/portal/public/brand}
+    ports: [{target: 8080, published: "3168", host_ip: "10.10.1.43"}]
+    volumes:
+      - ./nginx-browser.conf:/etc/nginx/nginx.conf:ro
+      - ./security-markmap.conf:/etc/nginx/tool-security.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
   zip-manager:
     <<: *browser
     image: utilibre-zip-manager:3b77a59-p1

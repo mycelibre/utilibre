@@ -8,6 +8,7 @@ Creative batch, 7 October 2026 (static applications; no accounts):
 | SVGEdit | https://svg.utilibre.org/ | 10.10.1.43:3165 |
 | CyberChef | https://cyberchef.utilibre.org/ | 10.10.1.43:3166 |
 | Image Scrubber | https://scrub.utilibre.org/ | 10.10.1.43:3167 |
+| Markmap | https://mindmap.utilibre.org/ | 10.10.1.43:3168 |
 
 See the creative-batch section of [toolbox review](toolbox-review.md) for
 scope, disabled features, dependency limitations and exact reproducible checks.

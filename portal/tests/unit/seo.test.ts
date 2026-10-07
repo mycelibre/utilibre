@@ -68,7 +68,7 @@ describe('public SEO without tracking or private-content indexing', () => {
     expect(response.status).toBe(200);
     const sitemap = await response.text();
     const urls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]!);
-    expect(urls).toHaveLength(34);
+    expect(urls).toHaveLength(36);
     expect(new Set(urls).size).toBe(urls.length);
     expect(sitemap).not.toContain('lastmod');
     const titles = new Set();
@@ -84,7 +84,7 @@ describe('public SEO without tracking or private-content indexing', () => {
       for (const language of ['en', 'es']) expect(document.querySelector(`link[hreflang="${language}"]`)?.getAttribute('href')).toMatch(new RegExp(`^https://public\\.example/${language}/`));
       titles.add(document.title);
     }
-    expect(titles.size).toBe(34);
+    expect(titles.size).toBe(36);
     const robots = await (await fetch(`${base}/robots.txt`)).text();
     expect(robots).toContain(`Sitemap: ${origin}/sitemap.xml`);
     expect(robots).toContain('Disallow: /_portal/');

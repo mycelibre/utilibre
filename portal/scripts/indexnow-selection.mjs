@@ -18,6 +18,7 @@ const publicPaths = new Set([
   '/en/pdf-tools', '/es/herramientas-pdf',
   '/en/qr-codes', '/es/codigos-qr',
   '/en/guides', '/es/guias',
+  '/en/guides/mind-map', '/es/guias/mapa-mental',
   '/en/guides/scanned-documents', '/es/guias/documentos-escaneados',
   '/en/guides/prepare-image', '/es/guias/preparar-imagen',
   '/en/guides/private-photo', '/es/guias/foto-privada',

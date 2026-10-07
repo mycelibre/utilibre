@@ -72,6 +72,7 @@ export function privacyAnswers(entry: CatalogEntry, language: Language): Array<[
 const checkedTasks = new Set(['bentopdf', 'vert', 'drawio', 'excalidraw', 'omni-compress-image', 'omni-image-editor', 'qr-offline', 'pollaris', 'pairdrop', 'rawgraphs', 'minipaint', 'image-scrubber', 'ntfy', 'yopass', 'privatebin']);
 export function verificationText(entry: CatalogEntry, language: Language): string {
   const es = language === 'es';
+  if (entry.id === 'markmap') return es ? 'Se comprobaron importación/exportación, borradores y entradas maliciosas con datos ficticios en Chromium de escritorio, el 7 de octubre de 2026. Vista de teléfono simulada; no es una prueba en un teléfono real. La disponibilidad HTTPS pública se comprueba por separado.' : 'Import/export, drafts and hostile inputs were checked with fictional data in desktop Chromium on 7 October 2026. Phone viewport simulated, not a real-phone test. Public HTTPS availability is checked separately.';
   if (pilotIds.has(entry.id)) return es ? 'Piloto: no se ha verificado el flujo completo en un dispositivo real autorizado.' : 'Pilot: the complete workflow on an authorized real device has not been verified.';
   if (checkedTasks.has(entry.id)) return es
     ? 'Tarea representativa comprobada el 7 de octubre de 2026 con datos ficticios. Las pruebas en navegadores de escritorio no garantizan todos los formatos, teléfonos o redes.'

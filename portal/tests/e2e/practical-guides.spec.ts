@@ -1,13 +1,14 @@
 import { expect, test } from '@playwright/test';
 import { practicalGuides, practicalGuidePath } from '../../src/pages/practical-guide-data';
 
-test('all twelve practical guides preserve language, real launch paths and downloadable fixtures', async ({ page }) => {
+test('all practical guides preserve language, real launch paths and downloadable fixtures', async ({ page }) => {
   await page.route('**/_portal/config', route => route.fulfill({ json: {
     projectName: 'Utilibre', publicPortalOrigin: 'https://utilibre.org', defaultLanguage: 'en',
     publicPdfUrl: 'https://pdf.example/', publicToolsUrl: 'https://tools.example/', publicPaintUrl: 'https://paint.example/',
     publicChartsUrl: 'https://charts.example/', publicScrubUrl: 'https://scrub.example/', publicDropUrl: 'https://drop.example/',
+    publicMindmapUrl: 'https://mindmap.example/',
     publicPasteUrl: 'https://paste.example/', publicEncryptUrl: 'https://encrypt.example/', publicPollarisUrl: 'https://pollaris.example/', publicPollUrl: 'https://poll.example/',
-    enabledServices: ['bentopdf', 'omnitools', 'minipaint', 'rawgraphs', 'image-scrubber', 'pairdrop', 'privatebin', 'hatsh', 'pollaris', 'rallly'], listedServices: [],
+    enabledServices: ['markmap', 'bentopdf', 'omnitools', 'minipaint', 'rawgraphs', 'image-scrubber', 'pairdrop', 'privatebin', 'hatsh', 'pollaris', 'rallly'], listedServices: [],
   } }));
   for (const guide of practicalGuides) {
     await page.goto(practicalGuidePath(guide.id, 'en'));

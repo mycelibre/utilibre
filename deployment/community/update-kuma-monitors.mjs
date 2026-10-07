@@ -12,6 +12,7 @@ dst=sqlite3.connect(sys.argv[1]);src.backup(dst)
 assert dst.execute('PRAGMA integrity_check').fetchall()==[('ok',)]
 dst.close();src.close()`, `${backup}/kuma.sqlite`]);
 const additions = [
+  ['Markmap', 'https://mindmap.utilibre.org/'],
   ['Excalidraw', 'https://whiteboard.utilibre.org/'],
   ['SVGEdit', 'https://svg.utilibre.org/'],
   ['CyberChef', 'https://cyberchef.utilibre.org/'],
@@ -43,6 +44,10 @@ const additions = [
   ['AudioMass', 'https://audio.utilibre.org/'],
   ['miniPaint', 'https://paint.utilibre.org/'],
 ];
+// A new-service release should not reconcile unrelated monitors/settings.
+const onlyName = process.argv.find(arg => arg.startsWith('--only='))?.slice(7);
+if (onlyName && !additions.some(([name]) => name === onlyName)) throw Error('Unknown monitor selection');
+const selectedAdditions = onlyName ? additions.filter(([name]) => name === onlyName) : additions;
 const program = `
 const {io}=require('socket.io-client');
 const socket=io('http://127.0.0.1:3001',{transports:['websocket']});
@@ -55,25 +60,29 @@ socket.on('connect',async()=>{try{
   const current=await new Promise(resolve=>{socket.once('monitorList',resolve);socket.emit('getMonitorList')});
   const monitors=Object.values(current||{});
   const search=monitors.find(m=>m.url==='https://search.utilibre.org/'||m.url==='https://search.utilibre.org/healthz');
-  if(!search)throw Error('Expected SearXNG monitor missing');
-  await call('editMonitor',{...search,name:'SearXNG health · HTTPS via private edge',url:'https://search.utilibre.org/healthz',ignoreTls:false,accepted_statuscodes:['200-299']});
+  if(!${Boolean(onlyName)}){
+    if(!search)throw Error('Expected SearXNG monitor missing');
+    await call('editMonitor',{...search,name:'SearXNG health · HTTPS via private edge',url:'https://search.utilibre.org/healthz',ignoreTls:false,accepted_statuscodes:['200-299']});
+  }
   const publicPage=await(await fetch('http://127.0.0.1:3001/api/status-page/utilibre')).json();
   const groups=publicPage.publicGroupList;
   if(!Array.isArray(groups)||!groups.length)throw Error('Existing public groups missing');
   const config=(await call('getStatusPage','utilibre')).config;
   let extra=groups.find(g=>g.name==='Additional services');
   if(!extra){extra={name:'Additional services',monitorList:[]};groups.push(extra)}
-  for(const [name,url] of ${JSON.stringify(additions)}){
+  for(const [name,url] of ${JSON.stringify(selectedAdditions)}){
     const prior=monitors.find(m=>m.url===url);
     const id=prior?.id??(await call('add',{name,url,type:'http',method:'GET',interval:300,retryInterval:60,resendInterval:0,maxretries:2,timeout:20,active:true,accepted_statuscodes:['200-299'],maxredirects:5,ignoreTls:false,upsideDown:false,notificationIDList:defaults,conditions:[]})).monitorID;
     if(!groups.some(g=>g.monitorList.some(m=>m.id===id)))extra.monitorList.push({id,sendUrl:false});
   }
+  if(!${Boolean(onlyName)}){
   const voice=monitors.find(m=>m.type==='port'&&m.hostname==='10.10.1.43'&&Number(m.port)===64738);
   const voiceId=voice?.id??(await call('add',{name:'Mumble · private TCP listener',type:'port',hostname:'10.10.1.43',port:64738,interval:300,retryInterval:60,resendInterval:0,maxretries:2,timeout:20,active:true,upsideDown:false,accepted_statuscodes:[],notificationIDList:defaults,conditions:[]})).monitorID;
   if(!groups.some(g=>g.monitorList.some(m=>m.id===voiceId)))extra.monitorList.push({id:voiceId,sendUrl:false});
   config.description='Checks every five minutes from the application VM. Web services use HTTPS; SearXNG uses /healthz through the private Caddy edge. Mumble checks only its private TCP listener, not public UDP audio. These are not full workflow tests or independent outage monitoring. / Comprobaciones cada cinco minutos desde la VM de aplicaciones. Las aplicaciones web usan HTTPS; SearXNG usa /healthz a través del Caddy privado. Mumble comprueba solo su puerto TCP privado, no el audio UDP público. No son pruebas de uso completas ni monitoreo independiente de caídas.';
+  }
   await call('saveStatusPage','utilibre',config,config.icon||'',groups);
-  console.log('Status page updated: verified public services reconciled; SearXNG private-edge liveness labeled; existing settings/history preserved.');
+  console.log('Status page updated: selected verified public services reconciled; existing history preserved.');
   clearTimeout(deadline);socket.disconnect();process.exit(0);
 }catch(e){console.error(e.message);socket.disconnect();process.exit(1)}});
 `;

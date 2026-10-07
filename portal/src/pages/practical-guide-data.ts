@@ -13,6 +13,47 @@ export interface PracticalGuide {
 // Access, privacy details and launch destinations come from the catalogue.
 export const practicalGuides: PracticalGuide[] = [
   {
+    id: 'mindmap', paths: { en: 'guides/mind-map', es: 'guias/mapa-mental' },
+    tools: [{ id: 'markmap', label: { en: 'Create a mind map with Markmap', es: 'Crear un mapa mental con Markmap' } }],
+    samples: [{ file: 'outline-{lang}.md', localized: true, label: { en: 'Fictional study outline (Markdown)', es: 'Esquema de estudio ficticio (Markdown)' } }],
+    copy: {
+      en: {
+        title: 'Turn an outline into a mind map',
+        intro: 'Use a short study outline to make a map, then save both an editable backup and an SVG picture. No account is needed.',
+        prerequisites: 'Use a current browser with JavaScript and file downloads. A keyboard and larger screen help with editing; the narrow layout places the preview below the outline. The practice data is fictional. The tool link appears only when public access is enabled.',
+        steps: [
+          'Download the fictional study outline below. Open Markmap, choose Import Markdown and select the .md file. Confirm replacement only if you no longer need the current outline. English and Spanish controls are available in the Language selector.',
+          'Read the Your outline field. A line beginning with # names the map; ## introduces a branch; a line starting with - adds a list item. The example has Read, Practice and Review branches. Change “Choose a chapter” to a specific fictional topic, such as “Read about rivers”.',
+          'Wait for the preview to update. Check that your changed text is on the correct branch. Choose Fit map after moving or zooming. The written outline is also a text version of the diagram; no information has to be conveyed by color alone.',
+          'Choose Download outline. This Markdown file is the editable backup. If you choose Keep a draft in this browser, the draft stays on this device and browser only. Do not enable that option on a shared computer; it is not a cloud backup.',
+          'Choose Download SVG, then open the saved image in a modern browser. Check the complete labels and branches. SVG text uses embedded HTML supported by browsers; some image editors may not display it correctly. Use the Markdown backup to make changes rather than treating SVG as an editable outline.',
+          'Check the backup: keep your downloads, choose Clear outline and confirm, then Import Markdown and select your saved .md file. Confirm that the edited topic and all three branches return. To remove a local draft, clear the outline or turn off draft saving. Keep sensitive originals and downloads private.',
+        ],
+        success: 'Your saved Markdown restores the edited outline, and the downloaded SVG opens with readable, complete labels. The example still has three meaningful branches, not just a decorative picture.',
+        troubleshooting: 'For a blank or oversized map, check the error message and simplify the outline. This editor limits input to 100,000 characters, 128 nesting levels and 2,000 nodes. Imported files must be UTF-8 text and no larger than 400 KB. Image loading, clickable links, HTML, math plugins and frontmatter settings are deliberately disabled. Use draw.io for free-positioned structured diagrams instead.',
+        privacy: 'The outline is processed on your device and is not uploaded by this build. Application files and fonts come from Utilibre; delivery providers still receive connection metadata. Optional drafts remain in local browser storage until removed, and clearing site data can erase them. This flow does not encrypt downloaded Markdown or SVG. Editing was tested after disconnecting an already-loaded page, not as a guaranteed offline installation.',
+        next: 'Use your saved outline to review the topic, or transfer the checked SVG with the phone-to-computer guide. Share only information the recipient should receive.',
+      },
+      es: {
+        title: 'Convertí un esquema en un mapa mental',
+        intro: 'Usá un esquema breve de estudio para crear un mapa y guardá una copia editable y una imagen SVG. No necesitás cuenta.',
+        prerequisites: 'Necesitás un navegador actual con JavaScript y descargas. Un teclado y una pantalla grande facilitan editar; en pantallas pequeñas, la vista previa aparece debajo del esquema. Los datos de práctica son ficticios. El enlace a la herramienta aparece solo cuando se habilita el acceso público.',
+        steps: [
+          'Descargá el esquema ficticio que aparece abajo. Abrí Markmap, elegí Importar Markdown y seleccioná el archivo .md. Confirmá el reemplazo solo si ya no necesitás el esquema actual. Podés elegir Español o English en Idioma.',
+          'Leé el campo Tu esquema. Una línea con # nombra el mapa; ## abre una rama; - agrega un elemento de lista. El ejemplo tiene Leer, Practicar y Repasar. Cambiá “Elegir un capítulo” por un tema ficticio concreto, por ejemplo “Leer sobre los ríos”.',
+          'Esperá la actualización de la vista previa. Comprobá que el texto modificado quede en la rama correcta. Usá Ajustar mapa después de moverlo o acercarlo. El esquema escrito también funciona como versión de texto; no necesitás depender solo del color.',
+          'Elegí Descargar esquema. Ese Markdown es la copia editable. Si activás Conservar un borrador en este navegador, queda solo en este dispositivo y navegador. No lo activés en una computadora compartida: no es un respaldo en la nube.',
+          'Elegí Descargar SVG y abrí la imagen guardada en un navegador moderno. Revisá las ramas y los rótulos completos. El texto del SVG usa HTML incrustado compatible con navegadores; algunos editores de imágenes pueden mostrarlo mal. Para editar, usá el respaldo Markdown, no la imagen SVG.',
+          'Comprobá el respaldo: conservá las descargas, elegí Borrar esquema y confirmá. Después usá Importar Markdown con tu .md guardado. Verificá que vuelvan el tema editado y las tres ramas. Para quitar un borrador local, borrá el esquema o desactivá el guardado. Conservá los originales y las descargas privadas fuera de dispositivos compartidos.',
+        ],
+        success: 'El Markdown guardado recupera tu esquema editado y el SVG descargado muestra rótulos legibles y completos. El ejemplo conserva tres ramas útiles, no solo una imagen decorativa.',
+        troubleshooting: 'Si el mapa queda vacío o demasiado grande, revisá el error y simplificá el esquema. Los límites son 100 000 caracteres, 128 niveles y 2000 nodos. Los archivos importados deben ser texto UTF-8 de hasta 400 KB. La carga de imágenes, enlaces clicables, HTML, extensiones matemáticas y opciones de frontmatter están desactivados a propósito. Para diagramas estructurados con posiciones libres, elegí draw.io.',
+        privacy: 'Esta versión procesa el esquema en tu dispositivo y no lo sube. La aplicación y las fuentes se descargan de Utilibre; los proveedores de distribución reciben metadatos de conexión. Los borradores opcionales quedan en el navegador hasta que los eliminés; borrar los datos del sitio puede perderlos. Markdown y SVG no se cifran al descargarse. Se probó editar después de desconectar una página ya cargada, no una instalación garantizada sin conexión.',
+        next: 'Repasá el tema con tu esquema guardado o transferí el SVG revisado usando la guía de teléfono a computadora. Compartí solo lo que el destinatario deba recibir.',
+      },
+    },
+  },
+  {
     id: 'scan', paths: { en: 'guides/scanned-documents', es: 'guias/documentos-escaneados' },
     tools: [{ id: 'bentopdf', path: 'ocr-pdf.html', label: { en: 'Recognize scanned text', es: 'Reconocer texto escaneado' } }, { id: 'privatebin', label: { en: 'Share checked text', es: 'Compartir texto revisado' } }],
     samples: [{ file: 'scan-{lang}.pdf', localized: true, label: { en: 'Fictional scanned notice (PDF)', es: 'Aviso escaneado ficticio (PDF)' } }],

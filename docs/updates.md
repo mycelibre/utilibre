@@ -49,6 +49,18 @@ search service, **not** schema-migrating databases or other applications.
 
 ## Before every update
 
+Markmap uses the pinned npm lock in `deployment/toolbox/markmap` (0.18.12-p1).
+Review library/parser/sanitizer advisories, then build the static image with
+`docker compose -f deployment/toolbox/compose.browser.yaml build markmap`.
+Retain the old image before recreating only that service. Run
+`node deployment/toolbox/check-markmap.mjs` privately, then with
+`MARKMAP_TEST_URL=https://mindmap.utilibre.org` after rollout. This includes
+hostile imports, export reopening and draft-removal/storage-failure regressions.
+Never turn on imported scripts, frontmatter resource loading or remote images
+merely to accommodate an upstream upgrade. Republish exact sources with
+`node deployment/toolbox/publish-markmap-source.mjs`; no server-held user data
+is involved. Detailed release/rollback evidence is in `docs/toolbox-review.md`.
+
 1. Read official release notes, security advisories, license changes, and
    migration/rollback instructions.
 2. Confirm the application still passes Utilibre's access-gap and operating

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Turn an outline into a mind map with Markmap. Edit locally, save Markdown and download SVG. No account needed.">
+  <meta name="referrer" content="no-referrer">
+  <title>Outline to mind map · Utilibre</title>
+  <link rel="canonical" href="https://mindmap.utilibre.org/">
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/main.js"></script>
+</head>
+<body>
+  <a class="skip" href="#outline" data-t="skip">Skip to the outline</a>
+  <header><a id="return" href="https://utilibre.org/en"><img src="/utilibre-logo-coral.svg" width="160" height="40" alt="Utilibre"></a><label><span data-t="language">Language</span> <select id="language"><option value="en">English</option><option value="es">Español</option></select></label></header>
+  <main>
+    <h1 data-t="title">Turn an outline into a mind map</h1>
+    <p class="intro" data-t="intro">Write headings and lists, preview your ideas, then download your work.</p>
+    <div class="actions" aria-label="Files" id="file-actions">
+      <button id="import" data-t="import">Import Markdown</button>
+      <input id="file" type="file" accept=".md,.markdown,.txt,text/plain,text/markdown" hidden>
+      <button id="markdown" data-t="markdown">Download outline</button>
+      <button id="svg" class="primary" data-t="svg">Download SVG</button>
+      <button id="clear" data-t="clear">Clear outline</button>
+    </div>
+    <div class="workspace">
+      <section class="editor" aria-labelledby="outline-label">
+        <h2><label id="outline-label" for="outline" data-t="outline">Your outline</label></h2>
+        <p id="syntax" data-t="syntax">Use # for a title, ## for a branch and - for a list item. Indent list items with spaces.</p>
+        <textarea id="outline" spellcheck="false" aria-describedby="syntax persistence" maxlength="100000"></textarea>
+        <label class="remember"><input type="checkbox" id="remember"><span data-t="remember">Keep a draft in this browser</span></label>
+        <p id="persistence" data-t="persistence">Off by default. Download the outline to keep an editable backup. Clearing browser data deletes saved drafts.</p>
+      </section>
+      <section class="preview" aria-labelledby="preview-label">
+        <div class="preview-head"><h2 id="preview-label" data-t="preview">Mind map preview</h2><button id="fit" data-t="fit">Fit map</button></div>
+        <p id="empty" hidden data-t="empty">Write a title or import an outline to begin.</p>
+        <svg id="map" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="map-title"><title id="map-title">Mind map of your outline</title></svg>
+        <p data-t="previewHelp">Drag to move and use the wheel or pinch to zoom. The editable outline also gives a text version of your map.</p>
+      </section>
+    </div>
+    <p id="status" role="status" aria-live="polite"></p>
+    <p id="error" role="alert" hidden></p>
+    <details><summary data-t="privacyTitle">Privacy, saving and supported Markdown</summary><div>
+      <p data-t="privacy">Your outline is processed on this device. This build does not upload it, load remote images or run imported scripts. Utilibre and its delivery providers receive connection metadata when serving the application; this is not an anonymity service.</p>
+      <p data-t="limits">Headings, lists, emphasis and inline code are supported. Raw HTML, image loading, clickable links, frontmatter options, math extensions and custom scripts/styles are not enabled. This editor accepts up to 100,000 characters, 128 nesting levels and 2,000 map nodes to limit browser freezes.</p>
+      <p data-t="exportHelp">Markdown is the editable backup. SVG is a picture with embedded text: reopen it in a modern browser to check it. Some image editors do not support this SVG text format. Keep sensitive downloads off shared devices. There is no cloud backup or share-by-link feature.</p>
+    </div></details>
+    <noscript>This editor needs JavaScript. It processes your outline in your browser.</noscript>
+  </main>
+  <footer><span data-t="powered">Powered by</span> <a href="https://github.com/markmap/markmap" rel="noreferrer">Markmap 0.18.12</a> · <a href="/THIRD_PARTY_NOTICES.txt" data-t="licenses">Licenses</a> · <a href="/utilibre-source/markmap-utilibre.tar.gz" data-t="source">Source and build recipe</a> · <a id="guide" href="https://utilibre.org/en/guides/mind-map" data-t="guide">Starter guide</a></footer>
+</body>
+</html>

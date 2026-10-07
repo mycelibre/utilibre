@@ -9,6 +9,7 @@ const publicRoots = new Map([
   ['svgedit', 'https://svg.utilibre.org/'],
   ['cyberchef', 'https://cyberchef.utilibre.org/'],
   ['image-scrubber', 'https://scrub.utilibre.org/'],
+  ['markmap', 'https://mindmap.utilibre.org/'],
 ]);
 
 export function parseStatusServices(value, privateBindIp) {

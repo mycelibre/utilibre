@@ -14,7 +14,7 @@ or paid tiers.
 - Feeds: **FreshRSS, RSS-Bridge**.
 - Files and everyday work: **BentoPDF** (including OCR), **VERT, OmniTools,
   IT Tools, hat.sh, draw.io, Mini QR, QR Tools, TransLite, ZIP Manager**.
-- Browser editors: **RAWGraphs, AudioMass, miniPaint, Excalidraw, SVGEdit**.
+- Browser editors: **RAWGraphs, AudioMass, miniPaint, Excalidraw, SVGEdit, Markmap**.
 - Local data and photo privacy: **CyberChef, Image Scrubber**, plus direct links to
   image, audio, CSV and text tasks in OmniTools.
 - Sharing and notifications: **PrivateBin, Yopass, PairDrop, ntfy**.

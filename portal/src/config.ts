@@ -27,6 +27,7 @@ export interface PublicConfig {
   publicSvgUrl: string;
   publicCyberchefUrl: string;
   publicScrubUrl: string;
+  publicMindmapUrl: string;
   publicInstagramUrl: string;
   publicBridgeUrl: string;
   publicNotifyUrl: string;
@@ -89,6 +90,7 @@ const defaults: PublicConfig = {
   publicSvgUrl: '',
   publicCyberchefUrl: '',
   publicScrubUrl: '',
+  publicMindmapUrl: '',
   publicInstagramUrl: '',
   publicBridgeUrl: '',
   publicNotifyUrl: '',

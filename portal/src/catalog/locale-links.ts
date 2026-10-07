@@ -29,7 +29,7 @@ export function localizedServiceUrl(id: string, base: string, language: Language
     url.pathname = `${language === 'es' ? '/es' : ''}${url.pathname || '/'}`;
   } else if (id === 'omnitools' || id === 'ntfy' || id === 'excalidraw') {
     url.searchParams.set('lng', language);
-  } else if (['drawio', 'qr-offline', 'zip-manager', 'minipaint', 'svgedit'].includes(id)) {
+  } else if (['drawio', 'qr-offline', 'zip-manager', 'minipaint', 'svgedit', 'markmap'].includes(id)) {
     url.searchParams.set('lang', language);
   } else if (id === 'translite' && !path) {
     // Native translation target, not a claim that the interface is localized.

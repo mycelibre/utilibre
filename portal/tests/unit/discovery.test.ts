@@ -16,6 +16,7 @@ import {
 import type { PublicConfig } from '../../src/config';
 
 const baseConfig: PublicConfig = {
+  publicMindmapUrl: '',
   publicWhiteboardUrl: '', publicSvgUrl: '', publicCyberchefUrl: '', publicScrubUrl: '',
   publicZipUrl: '', publicChartsUrl: '', publicAudioUrl: '', publicPaintUrl: '',
   publicPortalOrigin: 'https://utility.example',
@@ -57,7 +58,7 @@ describe('catalog discovery metadata', () => {
       'lrclib', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'kittygram', 'rimgo', 'mumble', 'biblioreads', 'gothub', 'binternet',
       'translite', 'whisper-web', 'jupyterlite',
       'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma',
-      'excalidraw', 'svgedit', 'cyberchef', 'image-scrubber',
+      'markmap', 'excalidraw', 'svgedit', 'cyberchef', 'image-scrubber',
       'zip-manager', 'rawgraphs', 'audiomass', 'minipaint',
       'omni-background', 'omni-image-editor', 'omni-compress-image', 'omni-trim-audio', 'omni-csv-json', 'omni-deduplicate',
       'bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'qr-offline', 'ittools',
@@ -69,7 +70,7 @@ describe('catalog discovery metadata', () => {
     expect(catalog.filter((entry) => entry.featuredOrder !== undefined)
       .sort((left, right) => (left.featuredOrder ?? 0) - (right.featuredOrder ?? 0))
       .map((entry) => entry.id))
-      .toEqual(['bentopdf', 'vert', 'zip-manager', 'omnitools', 'omni-background', 'omni-image-editor', 'omni-compress-image', 'omni-trim-audio', 'omni-csv-json', 'omni-deduplicate', 'hatsh', 'drawio', 'rawgraphs', 'audiomass', 'minipaint', 'excalidraw', 'svgedit', 'cyberchef', 'image-scrubber', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite', 'biblioreads', 'fourget', 'anonymousoverflow', 'safetwitch', 'qr-offline', 'kittygram', 'rimgo', 'mumble', 'degoog', 'lrclib']);
+      .toEqual(['bentopdf', 'vert', 'zip-manager', 'omnitools', 'omni-background', 'omni-image-editor', 'omni-compress-image', 'omni-trim-audio', 'omni-csv-json', 'omni-deduplicate', 'hatsh', 'drawio', 'rawgraphs', 'audiomass', 'minipaint', 'excalidraw', 'svgedit', 'cyberchef', 'image-scrubber', 'markmap', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite', 'biblioreads', 'fourget', 'anonymousoverflow', 'safetwitch', 'qr-offline', 'kittygram', 'rimgo', 'mumble', 'degoog', 'lrclib']);
   });
 
   it('keeps unrequested retired applications out of the catalog', () => {
@@ -80,6 +81,16 @@ describe('catalog discovery metadata', () => {
 });
 
 describe('config-gated catalog discovery', () => {
+  it('keeps a configured but unreleased mind map in pending discovery, not public tasks', () => {
+    const pending = config({ publicMindmapUrl: 'https://mindmap.example/', listedServices: ['markmap'] });
+    const entry = catalogEntry('markmap')!;
+    expect(entryLaunch(entry, 'es', pending)).toBeNull();
+    expect(discoverEntries(pending, 'es', { view: 'public' })).not.toContain(entry);
+    expect(discoverEntries(pending, 'es', { view: 'pilots' })).toContain(entry);
+    const released = { ...pending, enabledServices: ['markmap'] };
+    expect(entryLaunch(entry, 'es', released)?.href).toBe('https://mindmap.example/?lang=es');
+    expect(discoverEntries(released, 'es', { view: 'public', query: 'mapa mental' })).toContain(entry);
+  });
   it('opens searchable tasks directly in the configured parent application and language', () => {
     const enabled = config({ enabledServices: ['omnitools'], publicToolsUrl: 'https://tools.example.test/' });
     const task = catalogEntry('omni-background')!;

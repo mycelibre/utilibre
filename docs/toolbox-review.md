@@ -1,6 +1,100 @@
 # Browser toolbox review — 2026-10-06
 
-## Next-batch assessment — 7 October 2026 (not activated)
+## Markmap implemented — 7 October 2026
+
+Only **Markmap** was installed from the five candidates below. The restricted
+editor is live at [mindmap.utilibre.org](https://mindmap.utilibre.org), backed by
+the static `markmap` service at `10.10.1.43:3168`. Super Productivity, BeepBox,
+Teleprompter and Typings remain uninstalled and uncleared for public launch.
+The earlier source-only assessment is retained below as historical evidence.
+
+The integration pins `markmap-lib` and `markmap-view` 0.18.12. The npm release
+source is [revision 205367a](https://github.com/markmap/markmap/tree/205367a24603dc187f67da1658940c6cade20dce),
+rather than the newer source snapshot in the historical review. Upstream
+Markmap is MIT; the thin Utilibre editor is AGPL-3.0-or-later, matching this
+repository. The [public source archive](https://mindmap.utilibre.org/utilibre-source/markmap-utilibre.tar.gz)
+returned HTTP 200 and includes upstream source, integration, build recipe,
+lockfile and license notices. The publisher retains the previous archive.
+
+The editor supports English and Spanish, Markdown import/download, SVG
+download, and optional browser draft storage that is off by default. Markdown
+is the editable backup; SVG uses embedded text that some image editors cannot
+display. Draft removal runs independently of rendering, failed storage writes
+retain departure protection, and failed deletion never reports success.
+Imports are limited to UTF-8 text up to 400,000 bytes, 100,000 characters,
+128 nesting levels and 2,000 map nodes. These are safeguards, not a guarantee
+against every resource-exhaustion input.
+
+Hardening disables raw HTML, clickable links, image loading, frontmatter,
+math/highlighting plugins and dynamic asset loaders; DOMPurify 3.4.16 permits
+only inert inline formatting without attributes. All application assets and
+fonts are local. CSP restricts scripts to self without inline scripts or eval,
+blocks connections, frames, objects and workers, and permits inline styles
+needed by the renderer. No application upload endpoint or account store ships.
+Delivery providers still receive connection metadata. The unused indirect
+KaTeX dependency is pinned to 0.18.2 for
+[GHSA-238p-pmpm-9mq7](https://github.com/advisories/GHSA-238p-pmpm-9mq7).
+The lockfile audit had zero findings on 7 October; that is not a security
+guarantee. [Markmap JSON options](https://markmap.js.org/docs/json-options) and
+the advisory were checked on that date.
+
+The final public Chromium/Linux run passed at **2026-10-07T20:23:27.504Z**
+after an initial HTTPS 525 failure was resolved. Its 13 groups cover EN/ES,
+exact Markdown roundtrip, opt-in draft/reload/removal, removal after rendering
+failure, quota-failure departure protection, denied-deletion messaging, SVG
+reopening, hostile Markdown/frontmatter, oversized/invalid UTF-8 imports,
+390px layout, already-loaded offline editing, CSP and 404/405 responses.
+No external application requests or page errors were observed in that flow.
+There is no physical-phone, Firefox/Safari/Opera, fresh-load offline or PWA
+validation. Captures are in `.impeccable/captures/markmap/`. Independent finish
+review requested draft-state and official-logo fixes; those scoped fixes ship.
+
+The serving container runs read-only as UID 101, drops all capabilities, denies
+new privileges, and is limited to 128 MiB / 0.5 CPU. Its observed idle memory
+was 2.27 MiB at 20:22 UTC; this is not a capacity or client-memory measurement.
+Portal checks passed 78 unit and 64 browser tests. English and Spanish starter
+guides and downloadable sample outlines are implemented; portal deployment
+is pending at this checkpoint. The resulting 58 catalogue records and 36
+canonical portal pages are not counts of independently deployed applications.
+
+The final JavaScript asset is 335,165 bytes (133,726 bytes with local gzip),
+and CSS is 5,368 bytes (1,817 bytes with local gzip). The tested Latin font
+files total 92,080 bytes. These are measured built assets, not a field speed
+score; transfer encoding, caching and client device costs vary. No tool bundle
+is embedded or preloaded on the portal homepage.
+
+Recheck with `MARKMAP_TEST_URL=https://mindmap.utilibre.org node deployment/toolbox/check-markmap.mjs`.
+For updates, review the pinned source and advisories, rebuild from the lockfile
+using `Dockerfile.markmap`, rerun the private and public workflow checks, and
+republish corresponding source with `publish-markmap-source.mjs`. Keep the
+restricted parser/CSP settings and validate Markdown and SVG reopening before
+promoting a new image. Runtime configuration is in `compose.browser.yaml` and
+`security-markmap.conf`; the update monitor includes Markmap.
+
+Rollback the portal to `public-utility-portal:pre-markmap-20261007`
+(previous image `sha256:0d4d8eaa30b1fc53e840a11899a070e20c7021eebbbeae7caf142c5044639b4d`)
+using the private environment snapshot at
+`/opt/utilibre/markmap-rollback-6EeaSI/portal.env`. Disable the Markmap launch
+and stop only the new `markmap` service. It has no previous server-held user
+data; do not delete volumes or alter unrelated services.
+
+Super Productivity was re-inspected at stable v19.1.0,
+[revision 42ded9f](https://github.com/super-productivity/super-productivity/tree/42ded9f31a132bf92633b0c78ad4ebf1d87c0f71).
+Its full npm audit reported 59 dependency entries: 20 moderate, 32 high and
+7 critical. Omitting development dependencies misses Angular browser packages
+classified that way. Conversely, native/server/build-tool findings do not prove
+public-browser exploitability. Broad CSP and `new Function` plugin/bootstrap
+paths still require review; a hardened browser build and export/restore flow
+have not passed, so this candidate is not approved. Stock Typings was also
+rechecked and still has analytics, remote fonts and inline event handlers.
+Neither candidate has met its release gates; conditional installation
+authorization is not being treated as permission to skip them.
+
+## Historical next-batch assessment — 7 October 2026 (before implementation)
+
+The following records the earlier source-only review. Its “not activated”
+status and proposed launch gates describe that checkpoint; the implementation
+section above supersedes them for Markmap only.
 
 The catalogue/guide work takes precedence. None of these five candidates was
 added to production, public DNS, Caddy, registrations or the catalogue. The

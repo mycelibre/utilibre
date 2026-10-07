@@ -46,6 +46,7 @@ export function featuredEntries(config: PublicConfig): CatalogEntry[] {
 export function allEntries(config: PublicConfig, language: Language): CatalogEntry[] { return sortByName(visibleEntries(config).filter(e => e.id !== 'uptime-kuma'), language); }
 export function groupEntries(config: PublicConfig, language: Language, group: DiscoveryGroup): CatalogEntry[] { return allEntries(config, language).filter(e => entryGroup(e) === normalizeGroup(group)); }
 const synonyms: Record<string, string> = {
+  markmap: 'mind map outline markdown study notes mapa mental esquema estudiar apuntes ideas',
   bentopdf: 'scan scanned text extract escaneo escaneado texto extraer juntar unir pdf ocr',
   vert: 'convert conversion convertir conversión formatos archivos',
   pairdrop: 'phone computer transfer send archivo teléfono celular computadora transferir enviar',

@@ -539,6 +539,17 @@ export const reviewedServices = catalog.filter((entry) => entry.kind === 'servic
 
 function browserAdditions(): CatalogEntry[] {
   return [
+    {
+      ...browserTool('markmap', 'design', 5.8, 'publicMindmapUrl',
+        { en: 'Turn an outline into a mind map', es: 'Convertir un esquema en un mapa mental' },
+        { en: 'Write headings and lists with Markmap, then download an editable outline or SVG picture.', es: 'Escribí títulos y listas con Markmap y descargá un esquema editable o una imagen SVG.' },
+        { en: 'Create a mind map', es: 'Crear un mapa mental' }, false,
+        { en: 'Import Markdown or write an outline. Download Markdown for an editable backup and SVG for a picture to check in a browser. Draft saving is opt-in and local to this browser. No remote images, clickable links, executable imports, math plugins or cloud sharing. Up to 100,000 characters, 128 nesting levels and 2,000 nodes; smaller outlines work better on phones.', es: 'Importá Markdown o escribí un esquema. Descargá Markdown como copia editable y SVG como imagen para revisar en un navegador. El borrador se guarda solo si lo activás, en este navegador. Sin imágenes remotas, enlaces clicables, importaciones ejecutables, extensiones matemáticas ni nube. Hasta 100 000 caracteres, 128 niveles y 2000 nodos; en teléfonos convienen esquemas pequeños.' }),
+      modified: true,
+      unavailableReason: { en: 'Mind map access is temporarily disabled. Your downloaded outlines remain editable.', es: 'El acceso al mapa mental está deshabilitado por ahora. Los esquemas descargados siguen siendo editables.' },
+      temporaryStorage: { en: 'The outline stays in browser memory. Optional draft saving uses this browser’s local storage, not a server.', es: 'El esquema queda en la memoria del navegador. Si activás guardar el borrador, se usa el almacenamiento local de este navegador, no un servidor.' },
+      retention: { en: 'Saved drafts remain until you clear the outline, turn off draft saving or clear site data. Downloads remain wherever you save them. Browser storage is not a backup.', es: 'Los borradores permanecen hasta borrar el esquema, desactivar el guardado o borrar los datos del sitio. Las descargas quedan donde las guardés. El almacenamiento del navegador no es un respaldo.' },
+    },
     browserTool('excalidraw', 'design', 5.4, 'publicWhiteboardUrl',
       { en: 'Sketch ideas on a whiteboard', es: 'Dibujar ideas en una pizarra' },
       { en: 'Sketch diagrams and notes with Excalidraw, then download an image or editable drawing.', es: 'Bocetá diagramas y notas con Excalidraw; después descargá una imagen o un dibujo editable.' },
