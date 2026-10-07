@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 test('task guides preserve language, launch access, anchors and usable mobile layout', async ({ page }) => {
   await page.route('**/_portal/config', (route) => route.fulfill({ json: {
     projectName: 'Utilibre', publicPortalOrigin: 'https://utilibre.org', defaultLanguage: 'en',
+    supportUrl: 'https://liberapay.com/example/',
     publicPdfUrl: 'https://pdf.utility.test/', publicQrToolsUrl: 'https://qrtools.utility.test/', publicQrUrl: 'https://qr.utility.test/',
     enabledServices: ['bentopdf', 'qr-offline', 'miniqr'], listedServices: [],
   } }));
@@ -35,4 +36,9 @@ test('task guides preserve language, launch access, anchors and usable mobile la
     return event.defaultPrevented;
   });
   expect(intercepted).toBe(false);
+  for (const width of [780, 375]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+  }
 });

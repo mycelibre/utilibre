@@ -75,7 +75,7 @@
 * { box-sizing: border-box; }
 
 html {
-  min-width: 20rem;
+  min-width: 320px;
   background: var(--paper);
   color: var(--ink);
   scroll-behavior: smooth;
@@ -83,7 +83,7 @@ html {
 }
 
 body {
-  min-width: 20rem;
+  min-width: 320px;
   min-height: 100vh;
   margin: 0;
   background: var(--paper);
@@ -668,17 +668,19 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 }
 
 @media (max-width: 58rem) {
-  .header-inner { padding-block: 0.55rem; grid-template-columns: 1fr auto auto; }
+  .header-inner { padding-block: 0.55rem; display: flex; flex-wrap: wrap; gap: 0.55rem 1.5rem; }
+  .header-inner .brand { margin-inline-end: auto; }
   .brand-logo { width: 8.5rem; }
   .menu-toggle { display: inline-flex; }
   .main-nav {
+    flex-basis: 100%;
     grid-column: 1 / -1;
     display: none;
     padding-block: 0.65rem 0.15rem;
     border-block-start: 1px solid var(--rule);
   }
   .main-nav[data-open='true'] { display: flex; flex-wrap: wrap; }
-  .header-controls { justify-self: end; }
+  .header-controls { margin-inline-start: auto; max-width: 100%; flex-wrap: wrap; }
 
   .home-ledger-layout { min-height: 0; display: flex; flex-direction: column; }
   .ledger-index { padding: 0.65rem 0 0.4rem; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 0.8rem; border-inline-end: 0; }
@@ -738,7 +740,7 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 @media (max-width: 39rem) {
   body { font-size: var(--type-body-compact); }
   .header-inner { grid-template-columns: 1fr auto; gap: 0.55rem; }
-  .header-controls { grid-column: 1 / -1; justify-self: stretch; justify-content: space-between; border-block-start: 1px solid var(--rule); padding-block-start: 0.5rem; }
+  .header-controls { width: 100%; grid-column: 1 / -1; justify-self: stretch; justify-content: space-between; border-block-start: 1px solid var(--rule); padding-block-start: 0.5rem; }
   .main-nav { gap: 0.65rem 1.1rem; }
   .ledger-finder h1 { font-size: var(--type-finder-min); }
   .catalog-search-control { grid-template-columns: minmax(0, 1fr) auto; }
