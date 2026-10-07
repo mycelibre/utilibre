@@ -800,6 +800,7 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
   .catalog-views { gap: 0.2rem 1rem; }
 }
 @media print {
+  html, body { background: white; }
   .site-header, .site-footer, .task-guide .guide-actions, .task-guide > nav { display: none !important; }
   .task-guide { --ink: #2c2c2a; --ink-soft: #536057; color: var(--ink); background: white; margin: 0; padding: 0; }
   .task-guide .prose { max-width: none; }

@@ -29,6 +29,7 @@ test('all twelve practical guides preserve language, real launch paths and downl
   await expect(page.locator('.site-header')).toBeHidden();
   await expect(page.locator('main h1')).toBeVisible();
   await page.evaluate(() => { document.documentElement.dataset.theme = 'dark'; });
+  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(255, 255, 255)');
   await expect(page.locator('main')).toHaveCSS('color', 'rgb(44, 44, 42)');
   await expect(page.locator('.hero-lead')).toHaveCSS('color', 'rgb(83, 96, 87)');
 });
