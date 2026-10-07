@@ -54,3 +54,31 @@ The public catalog contains SearXNG, FreshRSS, Redlib, and PrivateBin. RSSHub is
 - Self-hosted Newsreader Variable provides the editorial voice; self-hosted Atkinson Hyperlegible Next provides the operating voice; Courier New is restricted to compact factual metadata.
 - Responsive changes occur at 78rem, 58rem, and 39rem, with the full behavior and token system recorded in `DESIGN.md`.
 - Portal HTML uses `Cache-Control: no-cache, no-transform` to preserve the strict CSP across the public intermediary; hashed assets remain immutable.
+
+### 2026-10-07 — Browser-tool extension and review
+
+The catalog adds ZIP Manager, RAWGraphs, AudioMass, and miniPaint, plus six
+direct OmniTools tasks: background removal, image editing, image compression,
+audio trimming, CSV-to-JSON conversion, and duplicate-line removal. Task rows
+inherit OmniTools availability and listing controls; they are shortcuts into
+the existing service. English and Spanish copy leads with the task, preserves
+Guatemalan voseo, and credits each upstream. Launch links select upstream
+language support where available; English-only interfaces are disclosed.
+
+Processing badges distinguish browser-local work from external asset
+downloads. Image compression and audio trimming disclose their CDN components;
+the background-removal model is hosted by Utilibre. Source-bundle links resolve
+from the service root even when a task opens at a deep link.
+
+The Useful Field Ledger system is unchanged: no CSS, token, or layout changes.
+`DESIGN.md`, its sidecar, and `PRODUCT.md` remain unchanged by this handoff.
+The four-service counts above describe an earlier catalog and are historical
+brief drift, not the current inventory; reconciling those sections remains an
+owner choice.
+
+Finish-review disposition: **SHIP**, with no material fixes requested. The
+reviewer inspected the staged diff, the filtered English audio desktop capture
+at `.impeccable/review/browser-tools/desktop.png`, the filtered Spanish image
+mobile capture at `.impeccable/review/browser-tools/mobile.png`, and six passing
+workflow logs. This review covers the bounded portal extension and supplied
+evidence; it does not establish coverage of every upstream interface or browser.

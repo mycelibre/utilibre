@@ -61,7 +61,7 @@ export default defineConfig({
     strictPort: true,
   },
   test: {
-    include: ['tests/unit/**/*.test.ts'],
+    include: ['tests/unit/**/*.test.{ts,js}'],
   },
 });
 

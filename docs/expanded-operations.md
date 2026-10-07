@@ -13,7 +13,9 @@ Their static server accepts the exact Caddy peer `10.10.1.3`, app-VM diagnostics
 and loopback; forwarded headers cannot bypass this allowlist. No host firewall
 was changed. Keep these ports closed to the Internet. Portal/Kuma liveness
 checks use public HTTPS because other containers are deliberately denied at
-the private listeners.
+the private listeners. The portal permits only these four exact public roots
+for their matching service IDs, requires a 2xx response, and does not follow
+redirects; arbitrary public probes, credentials and query parameters are rejected.
 
 Each new serving container is non-root, read-only, capability-free, limited to
 128 MiB/0.5 CPU/64 processes, with 32 MiB tmpfs and rotating error logs. Input

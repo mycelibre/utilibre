@@ -4,6 +4,8 @@ import { gzipSync } from 'node:zlib';
 import { renderPublicShell, parseRoute, pageSeo, serializeStructuredData } from '../server-built/render.mjs';
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer, request as httpRequest } from 'node:http';
+import { request as httpsRequest } from 'node:https';
+import { parseStatusServices } from './status-targets.mjs';
 import { extname, join, normalize } from 'node:path';
 
 const PORT = positiveInt(process.env.PORT, 8080);
@@ -21,7 +23,7 @@ const SUPPORT_VISIBLE = Boolean(SUPPORT_URL);
 const PUBLIC_ORIGIN = publicOrigin(process.env.PUBLIC_PORTAL_ORIGIN);
 const HTML_CACHE = new Map();
 const INDEX_HTML = readFileSync(join(DIST, 'index.html'), 'utf8');
-const STATUS_SERVICES = parseStatusServices(process.env.STATUS_SERVICES || '').filter(({ id }) => ENABLED_SERVICES.has(id));
+const STATUS_SERVICES = parseStatusServices(process.env.STATUS_SERVICES || '', PRIVATE_BIND_IP).filter(({ id }) => ENABLED_SERVICES.has(id));
 let statusSnapshot = null;
 let statusCheck = null;
 
@@ -367,7 +369,7 @@ async function checkStatuses() {
 
 function requestStatus(url) {
   return new Promise((resolve, reject) => {
-    const request = httpRequest(url, {
+    const request = (url.protocol === 'https:' ? httpsRequest : httpRequest)(url, {
       method: 'GET',
       timeout: 2500,
     }, (response) => {
@@ -458,23 +460,6 @@ function deployedSearchVersion() {
 function json(response, status, payload, additional = {}) {
   response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...additional });
   response.end(JSON.stringify(payload));
-}
-
-function parseStatusServices(value) {
-  return csv(value).flatMap((entry) => {
-    const separator = entry.indexOf('=');
-    if (separator < 1) return [];
-    const id = entry.slice(0, separator).trim();
-    try {
-      const url = new URL(entry.slice(separator + 1).trim());
-      if (!/^[a-z0-9-]+$/i.test(id) || url.hash) return [];
-      const targetIsInternalName = /^[a-z0-9-]+$/i.test(url.hostname);
-      const targetIsPrivateBind = PRIVATE_BIND_IP && normalizeIp(url.hostname) === PRIVATE_BIND_IP;
-      const privateHttpTarget = url.protocol === 'http:' && (targetIsInternalName || targetIsPrivateBind);
-      if (!privateHttpTarget) return [];
-      return [{ id, url, require2xx: false }];
-    } catch { return []; }
-  });
 }
 
 function csv(value) { return value.split(',').map((item) => item.trim()).filter(Boolean); }

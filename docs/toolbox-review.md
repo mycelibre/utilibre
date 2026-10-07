@@ -46,7 +46,7 @@ the public source index preserves these separate notices. A bilingual source
 and license link is visible in OmniTools itself, including its deep task pages;
 this is a source offer, not a custom return-navigation injection.
 
-Release checks: 72 portal unit tests, 60 desktop/mobile browser tests, 21
+Release checks: 74 portal unit tests, 60 desktop/mobile browser tests, 21
 configuration tests, lint, typecheck and production builds pass. All ten public
 synthetic workflows pass: four new application exports and six OmniTools tasks.
 Image compression reduced the fixture to 4,478 bytes; background removal
