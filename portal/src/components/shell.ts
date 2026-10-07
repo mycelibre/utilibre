@@ -7,6 +7,7 @@ export type Theme = 'system' | 'light' | 'dark';
 interface ShellOptions {
   theme?: Theme;
   search?: string;
+  hash?: string;
   interactive?: boolean;
   onLanguage?: (language: Language) => void;
   onTheme?: (theme: Theme) => void;
@@ -41,7 +42,7 @@ export function renderHeader(currentRoute: Route, config: PublicConfig, t: Trans
   nav.id = 'main-navigation';
   nav.setAttribute('aria-label', t('a11y.menu'));
   const links: Array<[Parameters<typeof routePath>[0], TranslationKey]> = [
-    ['home', 'nav.catalog'], ['guides', 'nav.guides'], ['privacy', 'nav.privacy'], ['about', 'footer.about'], ['status', 'nav.status'],
+    ['home', 'nav.catalog'], ['my', 'nav.my'], ['guides', 'nav.guides'], ['privacy', 'nav.privacy'], ['status', 'nav.status'],
   ];
   for (const [page, key] of links) {
     if (page === 'support' && !config.supportUrl) continue;
@@ -61,7 +62,7 @@ export function renderHeader(currentRoute: Route, config: PublicConfig, t: Trans
     }
     const link = element('a', '', code.toUpperCase());
     link.lang = code;
-    link.href = `${translatedPath(currentRoute, code)}${options.search ?? ''}`;
+    link.href = `${translatedPath(currentRoute, code)}${options.search ?? ''}${options.hash ?? ''}`;
     if (code === currentRoute.language) link.setAttribute('aria-current', 'page');
     link.setAttribute('hreflang', code);
     link.addEventListener('click', () => options.onLanguage?.(code));

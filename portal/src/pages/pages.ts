@@ -11,8 +11,11 @@ import { renderTaskGuide } from './task-guides';
 import { renderPracticalGuides } from './practical-guides';
 import { practicalGuides } from './practical-guide-data';
 import { privacyAnswers } from '../catalog/guidance';
+import { renderMyUtilibre } from './my-utilibre';
+import { renderOfflineTools } from './offline-tools';
 
 export async function renderPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): Promise<HTMLElement> {
+  if (route.page === 'my') return renderMyUtilibre(route.language, config, true);
   if (route.page === 'tool' && route.toolId) return renderToolPage(route.toolId, route.language, config, t);
   if (route.page === 'status') return renderStatus(route.language, config, t);
   return renderStaticPage(route, config, t, searchParams);
@@ -21,6 +24,8 @@ export async function renderPage(route: Route, config: PublicConfig, t: Translat
 // Synchronous public content is shared by the browser and server renderer.
 // No health probes, visitor data, tool code, or third-party fetches run here.
 export function renderStaticPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): HTMLElement {
+  if (route.page === 'offline') return renderOfflineTools(route.language, config);
+  if (route.page === 'my') return renderMyUtilibre(route.language, config);
   if (route.page === 'guides' || route.page === 'guide') return renderPracticalGuides(route.language, config, route.guideId);
   if (route.page === 'support' && !config.supportUrl) return renderNotFound(route.language, t);
   if (route.page === 'home') return renderHome(route.language, config, t, searchParams);
@@ -413,7 +418,7 @@ function renderSoftware(language: Language, config: PublicConfig, t: Translate):
   const inventory: SoftwareItem[] = [
     { group: 'portal', name: t('software.portalName'), version: '0.1.0', license: 'AGPL-3.0-or-later', upstream: config.sourceCodeUrl, modifiedSource: config.publicPdfUrl ? new URL(`/utilibre-source/utilibre-integration.tar.gz?revision=${encodeURIComponent(config.sourceCodeUrl)}`, config.publicPdfUrl).href : undefined, modification: t('software.original'), purpose: t('software.purpose.portal') },
     { group: 'portal', name: 'Node.js / Alpine Linux', version: '24.14.0 / 3.23', license: 'MIT / component-specific', upstream: 'https://github.com/nodejs/node/tree/v24.14.0', modification: t('software.notModified'), purpose: t('software.purpose.node') },
-    { group: 'hosted', name: 'SearXNG', version: config.searxngDeployedVersion || '2026.10.4-d48c4b555', license: 'AGPL-3.0-or-later', upstream: 'https://github.com/searxng/searxng', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.searxng') },
+    { group: 'hosted', name: 'SearXNG', version: config.searxngDeployedVersion || '2026.10.7-6671d89be', license: 'AGPL-3.0-or-later', upstream: 'https://github.com/searxng/searxng', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.searxng') },
     { group: 'infrastructure', name: 'Valkey', version: '9.1.1-alpine', license: 'BSD-3-Clause', upstream: 'https://github.com/valkey-io/valkey/tree/9.1.1', modification: t('software.notModified'), purpose: t('software.purpose.valkey') },
     { group: 'hosted', name: 'Redlib', version: 'a4d36e9 + local redirect hardening', license: 'AGPL-3.0-only', upstream: 'https://github.com/redlib-org/redlib/tree/a4d36e954cf1bd64f209cd8868c5a29edc81b374', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.redlib') },
     { group: 'hosted', name: 'Anubis', version: '1.27.0', license: 'MIT', upstream: 'https://github.com/TecharoHQ/anubis/tree/v1.27.0', modification: t('software.imageUnmodifiedConfigured'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.anubis') },
@@ -628,6 +633,8 @@ export function pageMeta(route: Route, config: PublicConfig, t: Translate): { ti
     pdf: 'meta.pdf.description',
     qr: 'meta.qr.description',
     guides: 'meta.guides.description',
+    my: 'meta.my.description',
+    offline: 'meta.offline.description',
   };
   const descriptionKey = descriptionKeys[route.page as StaticPage];
   const description = descriptionKey ? t(descriptionKey) : title;

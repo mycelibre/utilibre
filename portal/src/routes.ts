@@ -2,7 +2,7 @@ import { catalog } from './catalog/catalog.ts';
 import type { Language } from './i18n/index.ts';
 import { practicalGuides, practicalGuidePath } from './pages/practical-guide-data.ts';
 
-export type StaticPage = 'home' | 'services' | 'tools' | 'about' | 'transparency' | 'privacy' | 'acceptable' | 'support' | 'status' | 'software' | 'labels' | 'pdf' | 'qr' | 'guides' | 'not-found';
+export type StaticPage = 'home' | 'services' | 'tools' | 'about' | 'transparency' | 'privacy' | 'acceptable' | 'support' | 'status' | 'software' | 'labels' | 'pdf' | 'qr' | 'guides' | 'my' | 'offline' | 'not-found';
 export interface Route { language: Language; page: StaticPage | 'tool' | 'guide'; toolId?: string; guideId?: string; }
 
 const staticPaths: Record<Exclude<StaticPage, 'not-found'>, Record<Language, string>> = {
@@ -20,6 +20,8 @@ const staticPaths: Record<Exclude<StaticPage, 'not-found'>, Record<Language, str
   pdf: { en: 'pdf-tools', es: 'herramientas-pdf' },
   qr: { en: 'qr-codes', es: 'codigos-qr' },
   guides: { en: 'guides', es: 'guias' },
+  my: { en: 'my-utilibre', es: 'mi-utilibre' },
+  offline: { en: 'offline-tools', es: 'herramientas-sin-conexion' },
 };
 
 export function parseRoute(pathname: string): Route | null {

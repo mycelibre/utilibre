@@ -8,6 +8,7 @@ const browser = await chromium.launch();
 const payload = Buffer.from('Utilibre synthetic file-transfer check.\nSin datos personales.\n');
 try {
   const sender = await browser.newContext({ locale: 'en-US' });
+  await sender.addInitScript(() => { window.syntheticPeerConnections = []; const Native = window.RTCPeerConnection; window.RTCPeerConnection = class extends Native { constructor(...args) { super(...args); window.syntheticPeerConnections.push(this); } }; });
   const receiver = await browser.newContext({ locale: 'es-GT', acceptDownloads: true });
   const pages = await Promise.all([sender.newPage(), receiver.newPage()]);
   const errors = [], external = new Set();
@@ -35,11 +36,15 @@ try {
   for await (const chunk of stream) chunks.push(chunk);
   assert.deepEqual(Buffer.concat(chunks), payload, 'Received bytes must match the synthetic file');
   assert.equal(download.suggestedFilename(), 'utilibre-synthetic.txt');
+  const modes = await pages[0].evaluate(async () => {
+    const modes=[]; for(const peer of window.syntheticPeerConnections) {const stats=await peer.getStats();for(const r of stats.values())if(r.type==='candidate-pair'&&r.state==='succeeded'&&r.nominated)modes.push(stats.get(r.localCandidateId)?.candidateType)}return modes;
+  });
+  assert(modes.length>0);assert(modes.every(m=>['host','srflx','prflx'].includes(m)),'Expected direct, not relay candidates');
   // Chromium denies this optional screen-awake request in a background tab.
   // It does not stop the verified transfer; do not hide any other JS error.
   assert.deepEqual(errors.filter(error => error !== 'Wake Lock permission request denied'), []);
   assert.deepEqual([...external], []);
-  console.log('PairDrop public HTTPS: discovery, approval and exact-byte WebRTC transfer passed.');
+  console.log('PairDrop public HTTPS: discovery, approval and exact-byte WebRTC transfer passed; selected direct mode confirmed through WebRTC stats.');
   console.log('Browsers share this test machine; restrictive/different NAT networks remain untested.');
 } catch (error) {
   // Avoid retaining room identifiers, browser state or visitor content in logs.

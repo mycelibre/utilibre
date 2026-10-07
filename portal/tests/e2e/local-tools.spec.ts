@@ -26,7 +26,7 @@ test('Redlib routing remains local glue until the visitor follows the result', a
   await assertNoProcessingNetwork(page, async () => {
     await page.getByLabel('Supported public URL').fill('https://youtube.com.evil.example/watch?v=test');
     await page.getByRole('button', { name: 'Check URL' }).click();
-    await expect(page.getByRole('status')).toContainText('not from a supported');
+    await expect(page.getByRole('status')).toContainText('unsupported');
   });
   await expect(page.locator('.router-result a')).toHaveCount(0);
 
@@ -35,6 +35,9 @@ test('Redlib routing remains local glue until the visitor follows the result', a
     await page.getByLabel('Supported public URL').press('Enter');
     await expect(page.getByRole('status')).toContainText('Destination recognized');
   });
-  await expect(page.locator('.router-result a')).toHaveAttribute('href', 'https://reddit.utility.test/r/privacy?sort=top');
-  await expect(page.locator('.router-result a')).toHaveAttribute('target', '_blank');
+  await expect(page.locator('.router-result a').first()).toHaveAttribute('href', 'https://reddit.utility.test/r/privacy/top?sort=top&redirect=https://evil.example');
+  await expect(page.locator('.router-result a').first()).toHaveAttribute('target', '_blank');
+  await expect(page.getByRole('link', { name: 'Open original on Reddit' })).toHaveAttribute('href', 'https://old.reddit.com/r/privacy?sort=top&redirect=https://evil.example');
+  await page.getByLabel('Supported public URL').fill('javascript:alert(1)');
+  await expect(page.locator('.router-result a')).toHaveCount(0);
 });

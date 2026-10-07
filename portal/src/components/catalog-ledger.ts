@@ -74,7 +74,8 @@ export function renderCatalogRow(
   }
   const note = choiceNote(entry, language);
   if (note) content.append(element('p', 'catalog-ledger-limitation', note));
-  const guide = practicalGuides.find((guide) => guide.tools[0]?.id === entry.id || (entry.id === 'omni-compress-image' && guide.id === 'image'));
+  const guide = practicalGuides.find((guide) => guide.id !== 'starting-projects' && (guide.tools.some(tool => tool.id === entry.id) || (entry.id === 'omni-compress-image' && guide.id === 'image')))
+    ?? practicalGuides.find((guide) => guide.tools.some(tool => tool.id === entry.id));
   if (pilotIds.has(entry.id) || entry.operationalStatus !== 'operational') content.append(element('p', 'catalog-ledger-access', pilotIds.has(entry.id) ? (language === 'es' ? 'Piloto: uso completo aún no verificado' : 'Pilot: complete workflow not yet verified') : t(`status.${entry.operationalStatus}`)));
   if (options.showSource && entry.upstreamSourceUrl) {
     const sourceText = `${t('home.catalog.source')}: ${entry.upstreamProject || name}`;

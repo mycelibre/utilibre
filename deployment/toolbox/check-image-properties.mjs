@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {chromium} from '../../portal/node_modules/playwright-core/index.mjs';
+const browser=await chromium.launch(), results=[];
+try {for(const kind of ['transparent PNG','JPEG orientation 6']){
+ const c=await browser.newContext(),p=await c.newPage(),requests=[];await c.addInitScript(()=>{delete window.showOpenFilePicker;delete window.showSaveFilePicker});p.on('request',r=>{if(/^https?:/.test(r.url())&&!r.url().includes('/cdn-cgi/')&&(r.method()!=='GET'||new URL(r.url()).host!=='paint.utilibre.org'))requests.push(new URL(r.url()).origin)});
+ await p.goto('https://paint.utilibre.org/');let bytes=Buffer.from(await p.evaluate(kind=>{const c=document.createElement('canvas');c.width=120;c.height=80;const x=c.getContext('2d');x.fillStyle='blue';x.fillRect(20,20,80,40);return c.toDataURL(kind==='transparent PNG'?'image/png':'image/jpeg').split(',')[1]},kind),'base64');
+ if(kind.startsWith('JPEG')){const exif=Buffer.from('45786966000049492a0008000000010012010300010000000600000000000000','hex');const marker=Buffer.from([255,225,0,0]);marker.writeUInt16BE(exif.length+2,2);bytes=Buffer.concat([bytes.subarray(0,2),marker,exif,bytes.subarray(2)])}
+ await p.getByText('File',{exact:true}).click();await p.getByText('Open',{exact:true}).click();const fc=p.waitForEvent('filechooser');await p.getByText('Open File ...',{exact:true}).click();await(await fc).setFiles({name:kind.startsWith('JPEG')?'sample.jpg':'sample.png',mimeType:kind.startsWith('JPEG')?'image/jpeg':'image/png',buffer:bytes});
+ await p.getByText('Tools',{exact:true}).click();await p.getByText('Settings',{exact:true}).click();await p.locator('#pop_data_transparency').check();await p.getByRole('button',{name:'Ok',exact:true}).click();
+ await p.getByText('File',{exact:true}).click();await p.getByText('Export ...',{exact:true}).click();const d=p.waitForEvent('download');await p.getByRole('button',{name:'Ok',exact:true}).click();const out=await readFile(await(await d).path());assert.equal(out.subarray(1,4).toString(),'PNG');
+ const props=await p.evaluate(async data=>{const i=new Image();i.src='data:image/png;base64,'+data;await i.decode();const c=document.createElement('canvas');c.width=i.width;c.height=i.height;const x=c.getContext('2d');x.drawImage(i,0,0);return{width:i.width,height:i.height,alpha:x.getImageData(0,0,1,1).data[3]}},out.toString('base64'));
+ assert.equal(props.width,kind.startsWith('JPEG')?80:120);assert.equal(props.height,kind.startsWith('JPEG')?120:80);if(!kind.startsWith('JPEG'))assert.equal(props.alpha,0);assert.deepEqual(requests,[]);results.push({kind,result:'PASS',...props,bytes:out.length,externalOrUploadRequests:0});await c.close();
+}console.log(JSON.stringify({at:new Date().toISOString(),environment:'miniPaint 4.14.3-p1; Chromium; synthetic pixels',results}));}finally{await browser.close()}

@@ -93,6 +93,15 @@ brand:
       "Back to Utilibre": https://utilibre.org/en/
       "Instance source": https://github.com/mycelibre/utilibre/tree/main/config/searxng
 
+# Native opt-in preference. Host-only substitution cannot validate Reddit paths.
+# No remove/high_priority/low_priority rules: result order stays upstream-owned.
+plugins:
+  searx.plugins.hostnames.SXNGPlugin:
+    active: false
+hostnames:
+  replace:
+    '^(www\.|old\.|new\.|np\.)?reddit\.com$': 'redlib.utilibre.org'
+
 search:
   safe_search: 1
   autocomplete: ""

@@ -2,12 +2,19 @@
 
 Status on 2026-10-06: [request 941](https://github.com/searxng/searx-instances/issues/941)
 is on the maintainer's two-week waitlist. The operator has moved search to
-DNS-only/direct TLS. The deployed application is `2026.10.4-d48c4b555`, pinned by
+DNS-only/direct TLS. The application was updated on 2026-10-07 to
+`2026.10.7-6671d89be`, pinned by
 digest through `SEARXNG_IMAGE`. English and Spanish browser searches pass through
 the real HTTPS Caddy route using its private address and normal certificate
 verification. Public IPv4 times out from this application VM and it has no IPv6
 route; that vantage cannot independently establish public uptime. The operator
 reports public searches working. No limiter or proxy trust was weakened.
+
+The 2026-10-07 post-update check found `/metrics` correctly returning 404 but
+`/stats` returning HTTP 200 with an empty-data page through the deployed private
+edge. The direct-edge template below denies `/stats`; the separate edge
+operator still needs to reconcile that deployed-policy discrepancy. See the
+[dated update evidence](updates.md#verified-searxng-update-2026-10-07).
 
 `utilibre-searx-update.timer` is enabled daily at 02:20 UTC plus up to ten minutes
 of jitter. Its first manual systemd execution succeeded. The updater stages an

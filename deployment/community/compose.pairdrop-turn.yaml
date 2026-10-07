@@ -1,0 +1,7 @@
+# Optional override, never included by default. Preserve WS_FALLBACK=false.
+# After capacity/DNS/firewall/TLS approval, render the files and install rtc.json
+# with owner root, group matching PairDrop's 1000 GID, mode 0640.
+services:
+  pairdrop:
+    volumes:
+      - /opt/utilibre/turn/rtc.json:/config/rtc.json:ro

@@ -370,7 +370,7 @@ test('private router never creates a user-controlled host redirect', async ({ pa
   await page.goto('/en/tools/open-privately');
   await page.getByLabel('Supported public URL').fill('https://youtube.com.evil.example/watch?v=test');
   await page.getByRole('button', { name: 'Check URL' }).click();
-  await expect(page.getByRole('status')).toContainText('not from a supported');
+  await expect(page.getByRole('status')).toContainText('unsupported');
   await expect(page.locator('.router-result a')).toHaveCount(0);
 });
 
@@ -399,9 +399,9 @@ test('configured Redlib appears across the portal and routes only to its fixed h
   await page.goto('/en/tools/open-privately');
   await page.getByLabel('Supported public URL').fill('https://old.reddit.com/r/privacy/comments/abc/a-title?sort=top&t=week&context=3&redirect=https://evil.example');
   await page.getByRole('button', { name: 'Check URL' }).click();
-  const destination = page.locator('.router-result a');
-  await expect(destination).toHaveAttribute('href', 'https://reddit.utility.test/redlib/r/privacy/comments/abc/a-title?sort=top&t=week&context=3');
-  await expect(destination).not.toHaveAttribute('href', /evil\.example/);
+  const destination = page.getByRole('link', { name: 'Continue to Redlib', exact: false });
+  await expect(destination).toHaveAttribute('href', 'https://reddit.utility.test/redlib/r/privacy/comments/abc/a-title?sort=top&t=week&context=3&redirect=https://evil.example');
+  expect(new URL((await destination.getAttribute('href'))!).host).toBe('reddit.utility.test');
 
   await page.goto('/es/privacidad');
   await expect(page.getByText('La interfaz de Redlib está solo en inglés.', { exact: false })).toBeVisible();
@@ -475,7 +475,7 @@ test('withdrawn Whisper disappears from bilingual discovery, software and status
 
 test('software inventory credits only retained Utilibre services and their data stores bilingually', async ({ page }) => {
   const deployedProjects = {
-    SearXNG: { facts: '2026.10.4-d48c4b555 · AGPL-3.0-or-later', source: 'https://github.com/searxng/searxng' },
+    SearXNG: { facts: '2026.10.7-6671d89be · AGPL-3.0-or-later', source: 'https://github.com/searxng/searxng' },
     Redlib: { facts: 'a4d36e9 + local redirect hardening · AGPL-3.0-only', source: 'https://github.com/redlib-org/redlib/tree/a4d36e954cf1bd64f209cd8868c5a29edc81b374' },
     Anubis: { facts: '1.27.0 · MIT', source: 'https://github.com/TecharoHQ/anubis/tree/v1.27.0' },
     FreshRSS: { facts: '1.29.1 · AGPL-3.0', source: 'https://github.com/FreshRSS/FreshRSS/tree/1.29.1' },
@@ -614,7 +614,7 @@ test('representative validation errors are translated into Spanish', async ({ pa
   await page.goto('/es/herramientas/abrir-con-privacidad');
   await page.getByLabel('URL pública compatible').fill('no es una URL');
   await page.getByRole('button', { name: 'Revisar URL' }).click();
-  await expect(page.getByRole('status')).toContainText('URL HTTPS pública válida');
+  await expect(page.getByRole('status')).toContainText('URL HTTP(S) válida');
 });
 
 test('keyboard focus, semantic labels, reduced motion, and optional links are accessible', async ({ page }) => {

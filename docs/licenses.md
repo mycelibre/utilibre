@@ -40,7 +40,7 @@ patch.
 
 | Component | Reviewed version | License | Official source | Local status |
 | --- | --- | --- | --- | --- |
-| SearXNG | `2026.9.29-4e2c1ea7f` | AGPL-3.0-or-later | <https://github.com/searxng/searxng/tree/4e2c1ea7f468c9d1b16206e9d4079999a2eb0627> | Official image with disclosed local logging hook |
+| SearXNG | `2026.10.7-6671d89be` | AGPL-3.0-or-later | <https://github.com/searxng/searxng/tree/6671d89bede8c9fc108b17bb98916170f5657650> | Official image with disclosed local logging hook |
 | Valkey | `9.1.1` | BSD-3-Clause | <https://github.com/valkey-io/valkey/tree/9.1.1> | Internal, unmodified, persistence disabled |
 | Anubis | `1.27.0` | MIT | <https://github.com/TecharoHQ/anubis/tree/d39e26cedcc96bea5e4915297c756e7eec74aaf7> | Unmodified gate in front of Redlib |
 | Redlib | commit `a4d36e954cf1bd64f209cd8868c5a29edc81b374` | AGPL-3.0-only | <https://github.com/redlib-org/redlib/tree/a4d36e954cf1bd64f209cd8868c5a29edc81b374> | Source-built with disclosed redirect hardening |

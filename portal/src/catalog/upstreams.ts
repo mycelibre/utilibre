@@ -51,7 +51,7 @@ export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider>
   kittygram: { ...forgeEvaluationProvider('Kittygram', 'https://codeberg.org/irelephant/kittygram', '5931c21c0990d4b216e97166dd78c03c9965567a', 'AGPL-3.0', 'LICENSE', '5931c21-p1 · public profile/post/video tested', 'source:5931c21c0990d4b216e97166dd78c03c9965567a+deployment/community/kittygram-source.patch'), reviewStatus: 'deployed' },
   rimgo: forgeEvaluationProvider('Rimgo', 'https://codeberg.org/rimgo/rimgo', 'd2be8e221522dfe7a06452e2002dcf6dad569d1a', 'AGPL-3.0', 'LICENSE', 'd2be8e2-p3 · shared cooldown · Imgur media rate-limited', 'source:d2be8e221522dfe7a06452e2002dcf6dad569d1a+deployment/community/rimgo-source.patch'),
   mumble: { ...toolboxProvider('Mumble', 'mumble-voip/mumble', 'v1.5.915', 'BSD-3-Clause', '1.5.915 · password-protected · TCP voice verified', 'mumblevoip/mumble-server:v1.5.915@sha256:018ad3515932e513d8fdc970df918373a2664c4da32b09a89a4aaee28eb7507a'), reviewStatus: 'deployed' },
-  'qr-offline': { ...toolboxProvider('QR Generator Offline', 'jmarc9901/qr-code-generator-pwa', '0fde7004a08aac6a218e5d5e03c8a3c760eec1fa', 'MIT', '0fde700-p2 · centered codes · local processing', 'source:0fde7004a08aac6a218e5d5e03c8a3c760eec1fa+deployment/community/qr-offline-source.patch'), reviewStatus: 'deployed', integration: 'source-build' },
+  'qr-offline': { ...toolboxProvider('QR Generator Offline', 'jmarc9901/qr-code-generator-pwa', '0fde7004a08aac6a218e5d5e03c8a3c760eec1fa', 'MIT', '0fde700-p3 · centered codes · offline lifecycle controls', 'source:0fde7004a08aac6a218e5d5e03c8a3c760eec1fa+deployment/community/qr-offline-source.patch'), reviewStatus: 'deployed', integration: 'source-build' },
   biblioreads: { ...toolboxProvider('BiblioReads', 'nesaku/BiblioReads', '9508abc64c6b35eef366e041fef47554f0ee888a', 'AGPL-3.0-or-later', '4.1.1-p1 · Node 24 · local library', 'source:9508abc64c6b35eef366e041fef47554f0ee888a+deployment/community/biblioreads-source.patch'), reviewStatus: 'deployed', integration: 'source-build' },
   translite: { ...forgeEvaluationProvider('TransLite', 'https://codeberg.org/gospodin/translite', '7b4b8e51359338219463f14c2a06211b6998a11e', 'Unlicense', 'LICENSE', '7b4b8e5-p1 · PHP 8.5 · four tested providers', 'source:7b4b8e51359338219463f14c2a06211b6998a11e+deployment/community/translite-source.patch'), reviewStatus: 'deployed' },
   binternet: { ...toolboxProvider('Binternet', 'Ahwxorg/Binternet', '9bb70ef26c8b79a315e77b79bfd346433d55cbb6', 'GPL-3.0', '9bb70ef-p1 · HTTPS and Tor access', 'source:9bb70ef26c8b79a315e77b79bfd346433d55cbb6+deployment/community/binternet-source.patch'), reviewStatus: 'deployed', integration: 'source-build' },
@@ -116,11 +116,11 @@ export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider>
   miniqr: toolboxProvider('Mini QR', 'lyqht/mini-qr', 'v0.33.0', 'GPL-3.0', '0.33.0', 'release:v0.33.0+deployment/toolbox/Dockerfile.miniqr'),
   searxng: {
     project: 'SearXNG', sourceUrl: 'https://github.com/searxng/searxng',
-    reviewedSourceUrl: 'https://github.com/searxng/searxng/tree/d48c4b555421e824342c51d68482dd0898e54d0f',
+    reviewedSourceUrl: 'https://github.com/searxng/searxng/tree/6671d89bede8c9fc108b17bb98916170f5657650',
     license: 'AGPL-3.0-or-later', licenseEvidenceUrls: ['https://github.com/searxng/searxng/blob/4e2c1ea7f468c9d1b16206e9d4079999a2eb0627/LICENSE'],
     selfHostingEvidenceUrl: 'https://docs.searxng.org/admin/installation-docker.html', maintenanceEvidenceUrl: 'https://github.com/searxng/searxng/commits/master/',
-    artifactReference: 'docker.io/searxng/searxng:2026.10.4-d48c4b555@sha256:76b0bf285aca014c7191fc4d9234c4bfb358624ac33d8883833d496c059ec072',
-    installedVersion: '2026.10.4-d48c4b555 + local log redaction hook', integration: 'container', reviewStatus: 'deployed', reviewDocument: 'docs/services.md',
+    artifactReference: 'docker.io/searxng/searxng:2026.10.7-6671d89be@sha256:cc026dbee25b864d7f9731957cd5ef36ba2e2d61abd2996d57f1b863483e7409',
+    installedVersion: '2026.10.7-6671d89be + local log redaction hook', integration: 'container', reviewStatus: 'deployed', reviewDocument: 'docs/services.md',
     role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-06',
   },
   redlib: {

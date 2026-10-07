@@ -1,0 +1,7 @@
+The process-en.drawio, process-es.drawio, workshop-en.excalidraw,
+workshop-es.excalidraw, survey-en.csv and survey-es.csv files were created
+for Utilibre using original diagrams and fictional sample data, 7 October 2026.
+These six files are dedicated to the public domain under CC0 1.0 Universal:
+https://creativecommons.org/publicdomain/zero/1.0/legalcode
+No visitor information or third-party artwork is included in these six files.
+Other files retain their existing provenance and applicable licensing.

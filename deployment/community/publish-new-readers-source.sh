@@ -1,7 +1,9 @@
 #!/bin/sh
 set -eu
 root=/home/ubuntu/freetools
-for project in rimgo kittygram qr-offline; do
+if test "$#" -eq 0; then set -- rimgo kittygram qr-offline; fi
+for project do
+  case "$project" in rimgo|kittygram|qr-offline) ;; *) exit 2 ;; esac
   source=/opt/utilibre/community-src/$project-utilibre-p1
   case "$project" in
     rimgo) revision=d2be8e221522dfe7a06452e2002dcf6dad569d1a ;;
@@ -14,6 +16,7 @@ for project in rimgo kittygram qr-offline; do
   cp "$root/deployment/community/compose.$project.yaml" "$root/deployment/community/additions-firewall.sh" "$root/deployment/toolbox/firewall.sh" "$source/deployment/"
   if test "$project" = qr-offline; then
     cp "$root/deployment/community/qr-offline-nginx.conf" "$source/deployment/"
+    cp "$root/deployment/community/qr-offline-controls.js" "$root/deployment/community/prepare-qr-offline.mjs" "$source/deployment/"
   else
     cp "$root/deployment/community/$project-gateway.conf" "$source/deployment/"
   fi

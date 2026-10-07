@@ -1,7 +1,11 @@
 name: utilibre-qr-offline
 services:
   qr-offline:
-    image: utilibre-qr-offline:0fde700-p2
+    image: utilibre-qr-offline:0fde700-p3
+    build:
+      context: /opt/utilibre/community-src/qr-offline-utilibre-p1
+      dockerfile: /home/ubuntu/freetools/deployment/community/Dockerfile.qr-offline
+      additional_contexts: {integration: /home/ubuntu/freetools/deployment/community}
     restart: unless-stopped
     read_only: true
     user: "101:101"

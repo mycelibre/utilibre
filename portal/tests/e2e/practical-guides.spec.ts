@@ -7,14 +7,16 @@ test('all practical guides preserve language, real launch paths and downloadable
     publicPdfUrl: 'https://pdf.example/', publicToolsUrl: 'https://tools.example/', publicPaintUrl: 'https://paint.example/',
     publicChartsUrl: 'https://charts.example/', publicScrubUrl: 'https://scrub.example/', publicDropUrl: 'https://drop.example/',
     publicMindmapUrl: 'https://mindmap.example/',
+    publicRedditUrl: 'https://redlib.example/',
+    publicDrawUrl: 'https://draw.example/', publicWhiteboardUrl: 'https://whiteboard.example/',
     publicPasteUrl: 'https://paste.example/', publicEncryptUrl: 'https://encrypt.example/', publicPollarisUrl: 'https://pollaris.example/', publicPollUrl: 'https://poll.example/',
-    enabledServices: ['markmap', 'bentopdf', 'omnitools', 'minipaint', 'rawgraphs', 'image-scrubber', 'pairdrop', 'privatebin', 'hatsh', 'pollaris', 'rallly'], listedServices: [],
+    enabledServices: ['redlib', 'drawio', 'excalidraw', 'markmap', 'bentopdf', 'omnitools', 'minipaint', 'rawgraphs', 'image-scrubber', 'pairdrop', 'privatebin', 'hatsh', 'pollaris', 'rallly'], listedServices: [],
   } }));
   for (const guide of practicalGuides) {
     await page.goto(practicalGuidePath(guide.id, 'en'));
     await expect(page.locator('main ol li').first()).toBeVisible();
-    await expect(page.locator('.guide-actions a')).toHaveCount(guide.tools.length);
-    for (const a of await page.locator('.guide-actions a').all()) { await expect(a).toHaveAttribute('rel', 'noopener noreferrer'); expect(await a.getAttribute('href')).toMatch(/^https:\/\/[^/]+\.example\//); }
+    await expect(page.locator('.guide-actions a')).toHaveCount(guide.tools.length + (guide.portalLinks?.length || 0));
+    for (const a of await page.locator('.guide-actions a[target=_blank]').all()) { await expect(a).toHaveAttribute('rel', 'noopener noreferrer'); expect(await a.getAttribute('href')).toMatch(/^(https:\/\/[^/]+\.example\/|\/en\/tools\/)/); }
     await page.getByRole('navigation', { name: 'Choose language' }).getByRole('link', { name: 'ES', exact: true }).click();
     await expect(page).toHaveURL(new RegExp(practicalGuidePath(guide.id, 'es') + '$'));
     await expect(page.locator('html')).toHaveAttribute('lang', 'es');

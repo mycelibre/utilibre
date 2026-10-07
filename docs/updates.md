@@ -47,6 +47,60 @@ operator attention. Public-IP checks from this VM are not independent uptime
 evidence; retain an external monitor. Automatic rollbacks cover this stateless
 search service, **not** schema-migrating databases or other applications.
 
+### Verified SearXNG update: 2026-10-07
+
+The official registry's latest image at 22:16 UTC was
+`docker.io/searxng/searxng:2026.10.7-6671d89be@sha256:cc026dbee25b864d7f9731957cd5ef36ba2e2d61abd2996d57f1b863483e7409`.
+Its source revision is `6671d89bede8c9fc108b17bb98916170f5657650`, its image
+creation time is 09:22:18 UTC, and its amd64 manifest digest is
+`sha256:2a8660b510454a7f9f052e614b69c18b102a4c5c751f87076cc67cf5e14c6c44`.
+The [official source comparison](https://github.com/searxng/searxng/compare/d48c4b555421e824342c51d68482dd0898e54d0f...6671d89bede8c9fc108b17bb98916170f5657650)
+contains one Wikidata empty-description fix and its regression tests; it adds
+no configuration migration. Source and AGPL-3.0-or-later image labels passed
+the updater's checks.
+
+`python3 scripts/searxng-maintain.py --apply` succeeded at 22:17 UTC, without
+sending notifications. It checked the existing service, staged the candidate
+with an isolated cache/secret, ran English and Spanish searches, verified the
+configuration backup, recreated only production SearXNG, and repeated searches
+through the real Caddy HTTPS route at its private address with certificate
+verification. Each search contained at least three result links. The `.env`
+pin and public deployment manifest were updated by the guarded workflow; the
+Compose fallback and source/license records were also synchronized.
+
+Additional checks passed: seven updater regression tests, engine/pagination
+and query-redaction regressions, Compose validation, healthy container with
+zero restarts, `/config` reporting the new version and 28 engines, and loaded
+settings retaining native branding, HTML-only output, public limiter, and the
+exact optional Reddit hostname mapping. The General preference is called
+“Hostnames plugin” and starts disabled. Opting in persists in that browser's
+preference cookie while a new browser remains opted out. Upstream uses a
+reversed checkbox: a checked DOM input means the plugin is disabled.
+
+Public IPv4 remains unreachable from this application VM, so these checks do
+not establish independent public uptime. `/metrics` returns 404. The deployed
+private edge currently serves `/stats` with HTTP 200 and an empty-data page,
+despite the repository's direct-edge template denying that path. This edge
+policy discrepancy predates the source change and remains for the separate
+edge operator; neither limiter policy nor edge configuration was changed.
+
+Rollback material is retained privately under
+`/var/lib/utilibre-searx-updater/run-dl6sorj1/`: `rollback-config.tar.gz` and
+`rollback.json`, both mode 0600. The old image remains locally available:
+
+```text
+Previous pin: docker.io/searxng/searxng:2026.10.4-d48c4b555@sha256:76b0bf285aca014c7191fc4d9234c4bfb358624ac33d8883833d496c059ec072
+Previous local image ID: sha256:76b0bf285aca014c7191fc4d9234c4bfb358624ac33d8883833d496c059ec072
+Previous amd64 manifest: sha256:b0497f6e93b5e98b1a15c66b333afed176266af34f479a46ed87514f4a441eda
+```
+
+If rollback is needed, restore only `SEARXNG_IMAGE` in the root `.env` to that
+previous pin, then run `docker compose up -d --no-deps --pull never searxng`
+and `node scripts/check-searxng-browser.mjs https://search.utilibre.org/ 10.10.1.3`.
+Synchronize the Compose fallback and deployed-version/source records after a
+verified rollback. Do not restore the complete `.env` archive over unrelated
+changes or prune the retained image. No database migration occurred.
+
 ## Before every update
 
 Markmap uses the pinned npm lock in `deployment/toolbox/markmap` (0.18.12-p1).

@@ -1,4 +1,5 @@
 import type { Language } from '../i18n/index.ts';
+import { nextFeatureGuides } from './next-feature-guides.ts';
 
 export interface GuideCopy {
   title: string; intro: string; prerequisites: string;
@@ -8,10 +9,12 @@ export interface PracticalGuide {
   id: string; paths: Record<Language, string>; tools: Array<{ id: string; path?: string; label: Record<Language, string> }>;
   samples: Array<{ file: string; localized?: boolean; label: Record<Language, string> }>;
   copy: Record<Language, GuideCopy>;
+  portalLinks?: Array<{ en: string; es: string; label: Record<Language, string> }>;
 }
 // Maintained instructions for deployed interfaces, not a separate service registry.
 // Access, privacy details and launch destinations come from the catalogue.
 export const practicalGuides: PracticalGuide[] = [
+  ...nextFeatureGuides,
   {
     id: 'mindmap', paths: { en: 'guides/mind-map', es: 'guias/mapa-mental' },
     tools: [{ id: 'markmap', label: { en: 'Create a mind map with Markmap', es: 'Crear un mapa mental con Markmap' } }],
@@ -101,13 +104,13 @@ export const practicalGuides: PracticalGuide[] = [
     copy: {
       en: {
         title: 'Prepare an image for a website or application',
-        intro: 'Make an image smaller, inspect it and download a usable file. Use miniPaint for dimensions and OmniTools for compression.',
+        intro: 'Make an image smaller, inspect it and download a usable file. Use miniPaint for dimensions and OmniTools for compression. Process one image at a time, with a manual download/import between applications—not automatic batches or ZIP output.',
         prerequisites: 'Read the destination’s actual rules first: dimensions, maximum file size and accepted formats. Our hypothetical practice requirement is 600 × 400 pixels and under 200 KB, not a passport or identity-photo standard. The sample is a generated illustration, not an application screenshot.',
         steps: [
           'Download the 1200 × 800 sample. In miniPaint choose File → Open → Open File and select it. Keep the original; work on a copy. A larger screen makes the editor easier to use.',
           'Decide whether to crop or resize. Cropping removes edges; resizing changes the pixel dimensions of the whole image. Our sample already has the required 3:2 ratio, so it does not need cropping. For a different ratio, crop a copy to the required shape without removing important information, then resize.',
           'Choose Image → Resize, not Canvas Size. Enter width 600 and leave the height and percentage fields blank so the other dimension follows the original ratio. Apply the change and check that the image is 600 × 400. Entering unrelated width and height values can distort a picture.',
-          'Use File → Export to save an image. PNG preserves sharp graphics and transparency; JPEG suits many photographs but cannot preserve transparent areas. Keep a separate editable project if you need layers later: an exported image is not a layered project.',
+          'Use File → Export to save an image. For transparent PNG output, first enable Tools → Settings → Transparent: the default background is opaque. JPEG suits many photographs but cannot preserve transparency. Choose its quality in the export dialog and use Show file size to inspect the estimate, then check the actual download. Keep a separate editable project for layers; an exported image is not that project.',
           'If the file exceeds the destination limit, open Compress the exported image, select your export, and download the compressed result. Compare the actual saved file size and appearance. Compression does not guarantee a specific reduction, and an already optimized file may not shrink.',
           'Reopen the final download and check its pixel dimensions, extension, size and legibility. Upload it to the intended destination only after this check. The website receiving your final submission has its own data policy.',
         ],
@@ -118,13 +121,13 @@ export const practicalGuides: PracticalGuide[] = [
       },
       es: {
         title: 'Prepará una imagen para una web o una solicitud',
-        intro: 'Reducí una imagen, revisala y descargá un archivo útil. Usá miniPaint para las dimensiones y OmniTools para comprimir.',
+        intro: 'Reducí una imagen, revisala y descargá un archivo útil. Usá miniPaint para las dimensiones y OmniTools para comprimir. Procesá una por vez, descargando e importando manualmente entre aplicaciones; no hay lotes ni ZIP automáticos.',
         prerequisites: 'Leé primero las reglas reales del destino: dimensiones, tamaño máximo y formatos admitidos. El requisito hipotético del ejercicio es 600 × 400 píxeles y menos de 200 KB; no es una norma para pasaportes o fotos de identidad. El ejemplo es una ilustración generada, no una captura de la aplicación.',
         steps: [
           'Descargá el ejemplo de 1200 × 800. En miniPaint elegí File → Open → Open File y seleccioná el archivo. Conservá el original y trabajá con una copia. Una pantalla grande facilita usar el editor.',
           'Decidí si necesitás recortar o redimensionar. Recortar quita bordes; redimensionar cambia los píxeles de toda la imagen. El ejemplo ya tiene proporción 3:2 y no necesita recorte. Si tu proporción es distinta, recortá una copia sin quitar información importante y después cambiá el tamaño.',
           'Elegí Image → Resize, no Canvas Size. Escribí 600 en el ancho y dejá vacíos la altura y los porcentajes para conservar la proporción original. Aplicá el cambio y comprobá 600 × 400. Escribir ancho y alto sin respetar su relación puede deformar la imagen.',
-          'Usá File → Export para guardar una imagen. PNG conserva gráficos nítidos y transparencia; JPEG sirve para muchas fotos, pero no conserva zonas transparentes. Guardá además un proyecto editable si necesitás las capas: la imagen exportada no es un proyecto por capas.',
+          'Usá File → Export para guardar una imagen. Para PNG transparente, activá primero Tools → Settings → Transparent: el fondo predeterminado es opaco. JPEG sirve para muchas fotos, pero no conserva transparencia. Elegí su calidad en el diálogo y usá Show file size para ver la estimación; revisá luego la descarga real. Guardá un proyecto editable aparte si necesitás capas: una imagen exportada no es ese proyecto.',
           'Si el archivo supera el límite, abrí Comprimir la imagen exportada, seleccioná tu archivo y descargá el resultado. Compará el tamaño real y la apariencia. Comprimir no garantiza una reducción concreta; un archivo ya optimizado puede no achicarse.',
           'Reabrí la descarga final y revisá dimensiones, extensión, tamaño y legibilidad. Subila al destino solamente después de revisarla. Ese sitio tiene su propia política para los datos que le enviás.',
         ],
@@ -271,11 +274,12 @@ export const practicalGuides: PracticalGuide[] = [
           'On the receiving device, inspect the sender and filename, then accept the transfer. Only accept files you were expecting. Keep the phone awake and both browser tabs open until completion.',
           'Save or download the received file when prompted. Find it in the browser’s download list or the device’s Files/Downloads location; that location varies by browser and operating system.',
           'Open the text file and confirm that it says it is a fictional Utilibre transfer example. For a real document, open the received copy before removing the source. PairDrop is a transfer tool, not a backup or long-term file-hosting service.',
+          'Optional device share menu: install PairDrop using its own browser install control on a browser/OS that supports receiving shares. Open it online first. A compatible system may offer PairDrop when sharing a small file; check the received filename before selecting a peer. If absent, use the normal file picker. Physical-device installation and OS sharing were not tested here.',
         ],
         success: 'The intended device receives a readable copy with the expected filename and contents. If that small test fails, do not assume a larger or important file will work.',
         troubleshooting: 'Guest Wi-Fi may isolate devices, and firewalls or VPN policies may block peer connections. Check whether your network permits this use; do not blindly disable a VPN, firewall or browser protections. Prevent the phone sleeping during transfer and confirm download permission. Different networks can work only when a direct WebRTC connection succeeds: this installation has no TURN relay. Pairing or a room cannot overcome every NAT/firewall restriction. If blocked, use a USB cable or another approved transfer method; do not keep retrying large files.',
         privacy: 'Utilibre runs signaling, and Cloudflare’s STUN service helps discover connection addresses; those services receive connection metadata. File data uses encrypted WebRTC between devices in the configured mode. No TURN relay and no WebSocket file fallback are enabled. A relay-enabled setup would carry encrypted WebRTC traffic; the separate WebSocket fallback has different server-readability properties and is disabled here. This is not a blanket promise that browser networking never touches a server.',
-        next: 'Use the image or OCR guide to prepare a file before sending. Download important work to a location you control; clearing browser data or losing a device can lose local work.',
+        next: 'Prepare your file with the image or OCR guide. The share receiver is not a private inbox: with its worker active, shared files are temporarily queued in browser IndexedDB and the queue is cleared when the page reads it. Interruptions can leave queued data. Shared text/links become URL parameters and may reach server logs; use ordinary paste for sensitive content. Without the worker a share POST can reach the server. No local-only guarantee is made for an OS share action. Download important work before resetting application data.',
       },
       es: {
         title: 'Pasá un archivo del teléfono a la computadora',
@@ -287,11 +291,12 @@ export const practicalGuides: PracticalGuide[] = [
           'En el receptor, revisá emisor y nombre de archivo y aceptá la transferencia. Aceptá solo lo que esperabas recibir. Mantené el teléfono despierto y las pestañas abiertas hasta terminar.',
           'Guardá o descargá el archivo cuando se solicite. Buscalo en la lista de descargas del navegador o en Archivos/Descargas del dispositivo; la ubicación cambia según navegador y sistema.',
           'Abrí el texto y comprobá que indique que es un ejemplo ficticio de transferencia de Utilibre. Para un documento real, abrí la copia recibida antes de quitar la original. PairDrop transfiere archivos: no es un respaldo ni alojamiento permanente.',
+          'Menú para compartir, opcional: instalá PairDrop desde el control del navegador si ese navegador y sistema permiten recibir archivos compartidos. Abrilo primero con conexión. El sistema puede ofrecer PairDrop al compartir un archivo pequeño; comprobá el nombre recibido antes de elegir un par. Si no aparece, usá el selector normal. Aquí no se probó instalación ni uso del menú en un dispositivo físico.',
         ],
         success: 'El dispositivo correcto recibe una copia legible con nombre y contenido esperados. Si la prueba pequeña falla, no asumás que un archivo grande o importante funcionará.',
         troubleshooting: 'El Wi-Fi de invitados puede aislar dispositivos; un firewall o una VPN pueden bloquear conexiones entre pares. Consultá si tu red permite este uso: no desactivés protecciones a ciegas. Evitá que el teléfono se duerma y revisá el permiso de descarga. Entre redes diferentes solo funciona si se establece una conexión WebRTC directa: no hay relay TURN. Emparejar o usar una sala no supera cualquier restricción. Si está bloqueado, usá un cable USB u otro método aprobado; no repitás transferencias grandes sin diagnóstico.',
         privacy: 'Utilibre opera la señalización y el servicio STUN de Cloudflare ayuda a descubrir direcciones; reciben metadatos de conexión. En esta configuración, el archivo viaja cifrado por WebRTC entre dispositivos. No hay relay TURN ni transferencia alternativa por WebSocket. Un relay habilitado transportaría tráfico WebRTC cifrado; la alternativa WebSocket tiene otras condiciones de lectura por el servidor y aquí está deshabilitada. Esto no significa que el navegador nunca contacte servidores.',
-        next: 'Prepará el archivo con la guía de imágenes u OCR antes de enviarlo. Guardá el trabajo importante donde lo controles: borrar datos del navegador o perder el dispositivo puede hacerte perder trabajo local.',
+        next: 'Prepará el archivo con las guías de imágenes u OCR. El receptor no es una bandeja privada: con su worker activo, los archivos pasan temporalmente a IndexedDB y la página vacía la cola al leerlos. Una interrupción puede dejar datos pendientes. Texto y enlaces compartidos pasan a parámetros de URL y pueden llegar a registros del servidor; para información sensible, usá pegar normalmente. Sin el worker, el POST puede llegar al servidor. No se promete recepción exclusivamente local desde el menú del sistema. Descargá tu trabajo antes de restablecer datos de la aplicación.',
       },
     },
   },

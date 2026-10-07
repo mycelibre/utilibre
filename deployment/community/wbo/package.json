@@ -1,0 +1,30 @@
+{
+  "name": "utilibre-wbo-dependencies",
+  "version": "2.9.0",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "@opentelemetry/api": "1.9.1",
+    "@opentelemetry/exporter-logs-otlp-http": "0.219.0",
+    "@opentelemetry/exporter-metrics-otlp-http": "0.219.0",
+    "@opentelemetry/exporter-trace-otlp-http": "0.219.0",
+    "@opentelemetry/instrumentation-runtime-node": "0.32.0",
+    "@opentelemetry/resources": "2.8.0",
+    "@opentelemetry/sdk-logs": "0.219.0",
+    "@opentelemetry/sdk-metrics": "2.8.0",
+    "@opentelemetry/sdk-node": "0.219.0",
+    "@opentelemetry/sdk-trace-base": "2.8.0",
+    "@opentelemetry/semantic-conventions": "1.40.0",
+    "handlebars": "4.7.10",
+    "jsonwebtoken": "9.0.2",
+    "serve-static": "2.2.0",
+    "socket.io": "4.8.4"
+  },
+  "overrides": {
+    "@opentelemetry/propagator-jaeger": "2.9.0",
+    "@grpc/grpc-js": "1.14.5",
+    "protobufjs": "7.6.5",
+    "engine.io": "6.6.10",
+    "socket.io-parser": "4.2.7"
+  }
+}

@@ -77,6 +77,7 @@ window.addEventListener('popstate', () => {
   void render(window.location.hash || undefined);
 });
 
+window.addEventListener('hashchange', () => { if (route.page === 'my') void render(); });
 document.addEventListener('click', (event) => {
   if (!(event.target instanceof Element)) return;
   const anchor = event.target.closest<HTMLAnchorElement>('a[href]');
@@ -94,6 +95,7 @@ document.addEventListener('click', (event) => {
     && destination.hash) {
     event.preventDefault();
     history.pushState({}, '', destination.href);
+    if (route.page === 'my') { void render(); return; }
     focusHashTarget(destination.hash);
     return;
   }
@@ -123,7 +125,7 @@ async function render(focusAfter?: string): Promise<void> {
   document.querySelector<HTMLElement>('.skip-link')!.textContent = t('a11y.skip');
   const shell = element('div', 'site-shell');
   shell.append(renderHeader(routeSnapshot, config, t, {
-    theme: activeTheme, search: window.location.search, interactive: true,
+    theme: activeTheme, search: window.location.search, hash: routeSnapshot.page === 'my' ? window.location.hash : '', interactive: true,
     onLanguage: setLanguagePreference,
     onTheme: (next) => {
       activeTheme = next;

@@ -14,7 +14,7 @@ export async function auditSeo(origin = 'https://utilibre.org', { allowUnadverti
   assert(!/^Disallow:\s*\/\s*$/m.test(robots), 'Public portal blocks all crawlers');
   const sitemap = (await readPublic(`${origin}/sitemap.xml`)).text;
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  assert(urls.length > 0 && urls.length <= 40, 'Unexpected sitemap size; review before crawling/submitting');
+  assert(urls.length > 0 && urls.length <= 64, 'Unexpected sitemap size; review before crawling/submitting');
   assert.equal(new Set(urls).size, urls.length, 'Duplicate sitemap entries');
   const titles = new Set();
   const descriptions = new Set();

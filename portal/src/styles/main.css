@@ -809,3 +809,16 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
   .task-guide a { color: inherit; text-decoration: underline; }
   .task-guide details { display: none; }
 }
+/* Catalogue preferences reuse the portal field/button system. */
+.toolkit-list { padding-inline-start: 1.6rem; }
+.toolkit-shared:empty { display: none; }
+.toolkit-workspace { padding-block-start: 1.5rem; border-bottom: 0; padding-block-end: 0; }
+.tool-page:has(.toolkit-workspace) { padding-block-end: 2rem; }
+.toolkit-list > li { padding: 1rem 0; border-bottom: 1px solid var(--rule); }
+.toolkit-name { font-weight: 700; overflow-wrap: anywhere; }
+.toolkit-list p { margin-block: 0.5rem; }
+.toolkit-add { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-top: 1rem; }
+.toolkit-add label { flex-basis: 100%; }
+.toolkit-add select, #toolkit-collection { max-width: 100%; min-height: 3rem; }
+.toolkit-add select { flex: 1 1 16rem; min-width: 0; }
+.tool-page details > .button, .tool-page .section > .button { margin: 0.5rem 0.5rem 0.5rem 0; }
