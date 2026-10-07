@@ -48,6 +48,52 @@ Maintenance evidence and repeatable checks are in
 The existing 30/60/90-day plan remains: review observed queries and feedback
 before expanding pages, rather than manufacturing pages for every task.
 
+#### Browser release production checkpoint — 7 October, 15:19 UTC
+
+- Application changes `84f7c1c` and the bounded health-check follow-up
+  `0931b2b` are published to GitHub. Production source disclosure points to
+  `0931b2b9026f574328a90c42b30b22b649a172d3`. Git transport initially returned
+  HTTP 500; the first commit was published through GitHub's Git-data API with
+  exact tree/commit hashes checked and a non-forced fast-forward. The follow-up
+  used an ordinary push. No repository history was replaced.
+- Public initial HTML and rendered EN desktop (1440px)/ES mobile (390px)
+  contain all ten additions and 50 catalog rows, with native-language launch
+  parameters, no observed horizontal overflow or application exceptions.
+  Each upstream appears once in the software inventory; Whisper stays hidden.
+  The interface review kept the existing visual system and checked task-first
+  copy, privacy badges and language-aware links; its disposition was SHIP.
+- All 20 portal sitemap routes pass the live SEO audit. The four application
+  roots return 200, one canonical and one Open Graph URL, correct root sitemaps,
+  source-index noindex headers and real missing-page 404s. Seven source/package
+  archive downloads return 200. Portal and all four new containers are healthy;
+  both portal status and the public Kuma page include the new applications.
+- One IndexNow request for the eight meaningfully changed EN/ES home, software,
+  privacy and transparency pages returned **202** after a dry run and the live
+  audit. This is a notification receipt, not indexing evidence. Do not resubmit
+  unchanged pages; application subdomains were not included under the portal key.
+- Validation: build, lint, typecheck, 74 unit tests, 60 desktop/mobile browser
+  tests, 21 configuration tests, four new application output checks and six
+  OmniTools output checks pass. Scope: small synthetic inputs on Chromium/Linux;
+  not a large-file, physical-phone, cross-browser or concurrency certification.
+  Browser assets are 199.62 kB JS (64.50 kB gzip); CSS is unchanged at 24.53 kB
+  (5.58 kB gzip). No visitor telemetry or new analytics script was added.
+- Production image ID:
+  `sha256:51fac00a36a6af8a017937db38a2c3e3cda262cd1a2187674b843dfd01ffd485`.
+  Rollback image is `public-utility-portal:pre-browser-tools-20261007`; private
+  environment snapshot is `/opt/utilibre/browser-tools-rollback-20261007/portal.env`.
+  Previous source archive is preserved at
+  `/opt/utilibre/source-update-cn3a8u/previous-utilibre-integration.tar.gz`.
+  Restore only the affected deployment/image and reviewed environment values;
+  do not overwrite unrelated settings or delete user data. These local rollback
+  artifacts are not offsite backups.
+
+Remaining external dependencies are unchanged: search-account access, observed
+indexing/search reports and authorized new community posts. Operator submission
+of the four tool sitemaps is prepared, not claimed complete. Rankings, traffic,
+AI citations, real task completions and field Core Web Vitals are unmeasured.
+The manual upstream check also found newer FreshRSS/RSSHub revisions; those
+separate upgrades were not bundled into this browser-tool release.
+
 Production is `https://utilibre.org`; repository is
 `https://github.com/mycelibre/utilibre`, working directory
 `/home/ubuntu/freetools`. The project independently hosts free software tools,
