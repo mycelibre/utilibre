@@ -14,7 +14,6 @@ dst.close();src.close()`, `${backup}/kuma.sqlite`]);
 const additions = [
   ['Redlib gateway', 'https://redlib.utilibre.org/'],
   ['JupyterLite', 'https://python.utilibre.org/'],
-  ['Whisper Web', 'https://transcribe.utilibre.org/'],
   ['Wakapi', 'https://wakapi.utilibre.org/'],
   ['Reactive Resume', 'https://cv.utilibre.org/'],
   ['Penpot', 'https://design.utilibre.org/'],

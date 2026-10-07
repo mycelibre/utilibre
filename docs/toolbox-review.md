@@ -1,5 +1,15 @@
 # Browser toolbox review — 2026-10-06
 
+## Whisper withdrawn from the catalog — October 7
+
+At the operator's explicit request, Whisper is hidden from the English and Spanish
+catalogs, software inventory and public status pages because transcription results
+remain unhelpful. The current advertised inventory is **38 services**. This is an
+exception to the earlier request to keep tools visible; do not relist it without
+approval. The installation, direct transcription URL, source and private monitor
+remain intact. This is a reversible visibility change, not an uninstall or a fix
+for transcription quality. Historical verification notes below are unchanged.
+
 ## Public-reader expansion checkpoint — October 6, after the edge update
 
 ### Whisper quality correction — October 6

@@ -72,6 +72,15 @@ describe('catalog discovery metadata', () => {
 });
 
 describe('config-gated catalog discovery', () => {
+  it('hides withdrawn Whisper even if its old address remains configured', () => {
+    const withdrawn = { ...hostedConfig, publicTranscribeUrl: 'https://transcribe.example.test/' };
+    expect(allEntries(withdrawn, 'en').map((entry) => entry.id)).not.toContain('whisper-web');
+    expect(featuredEntries(withdrawn).map((entry) => entry.id)).not.toContain('whisper-web');
+    for (const language of ['en', 'es'] as const) {
+      expect(searchEntries(withdrawn, language, 'whisper')).toEqual([]);
+      expect(entryLaunch(catalogEntry('whisper-web')!, language, withdrawn)).toBeNull();
+    }
+  });
   it('replaces Dumb with explicitly enabled LRCLIB and does not invent Spanish support', () => {
     expect(catalogEntry('dumb')).toBeUndefined();
     const entry = catalogEntry('lrclib')!;

@@ -293,6 +293,7 @@ function renderStatus(language: Language, config: PublicConfig, t: Translate): H
       const states = observedStatusStates(payload);
       list.replaceChildren();
       for (const entry of reviewedServices) {
+        if (!config.enabledServices.includes(entry.id) && !config.listedServices.includes(entry.id)) continue;
         const configured = serviceConfigured(config, entry);
         const observed = states.get(entry.id) ?? 'unknown';
         const state = configured ? moreSevereStatus(entry.operationalStatus, observed) : 'not-deployed';

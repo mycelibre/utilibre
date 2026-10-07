@@ -439,6 +439,29 @@ test('only retained Utilibre services appear when stale service IDs are still co
   await expect(page.getByRole('heading', { name: 'RSS reader', exact: true }).locator('..')).toContainText('Operational');
 });
 
+test('withdrawn Whisper disappears from bilingual discovery, software and status', async ({ page }) => {
+  await mockConfig(page, {
+    ...featuredConfig,
+    publicTranscribeUrl: 'https://transcribe.utility.test/',
+    listedServices: [],
+  });
+  await page.route('**/_portal/status', async (route) => route.fulfill({
+    json: { services: [{ id: 'searxng', status: 'operational' }, { id: 'whisper-web', status: 'operational' }] },
+  }));
+  for (const language of ['en', 'es'] as const) {
+    await page.goto(`/${language}/?view=all`);
+    await expect(page.locator('[data-catalog-id="searxng"]')).toBeVisible();
+    await expect(page.locator('[data-catalog-id="whisper-web"]')).toHaveCount(0);
+    await page.goto(`/${language}/software`);
+    await expect(page.getByRole('heading', { name: 'SearXNG', exact: true })).toBeVisible();
+    await expect(page.locator('main')).not.toContainText(/Whisper/i);
+    await page.goto(language === 'es' ? '/es/estado' : '/en/status');
+    await expect(page.locator('.status-item')).toHaveCount(featuredIds.length);
+    await expect(page.locator('main')).not.toContainText(/Whisper/i);
+    await expect(page.locator('main a[href*="transcribe."]')).toHaveCount(0);
+  }
+});
+
 test('software inventory credits only retained Utilibre services and their data stores bilingually', async ({ page }) => {
   const deployedProjects = {
     SearXNG: { facts: '2026.10.4-d48c4b555 · AGPL-3.0-or-later', source: 'https://github.com/searxng/searxng' },

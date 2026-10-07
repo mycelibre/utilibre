@@ -100,7 +100,6 @@ services:
         pairdrop=http://${PRIVATE_BIND_IP}:3124/,
         uptime-kuma=http://${PRIVATE_BIND_IP}:3125/api/status-page/utilibre,
         jupyterlite=http://${PRIVATE_BIND_IP}:3133/lab/index.html,
-        whisper-web=http://${PRIVATE_BIND_IP}:3137/,
         wakapi=http://${PRIVATE_BIND_IP}:3136/,
         reactive-resume=http://${PRIVATE_BIND_IP}:3130/,
         penpot=http://${PRIVATE_BIND_IP}:3131/,
