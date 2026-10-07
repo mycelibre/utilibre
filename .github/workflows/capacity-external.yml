@@ -1,6 +1,11 @@
 name: Bounded external capacity check
 on:
   workflow_dispatch:
+    inputs:
+      higher:
+        description: Run 50/100 visits per second only after reviewing baseline
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -15,4 +20,6 @@ jobs:
         with:
           persist-credentials: false
       - name: Bounded page and asset checks, no searches or user writes
+        env:
+          CAPACITY_HIGHER: ${{ inputs.higher }}
         run: node scripts/check-external-capacity.mjs
