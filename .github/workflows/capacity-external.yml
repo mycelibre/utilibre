@@ -1,0 +1,18 @@
+name: Bounded external capacity check
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: utilibre-manual-external-capacity
+  cancel-in-progress: false
+jobs:
+  public-frontdoors:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          persist-credentials: false
+      - name: Bounded page and asset checks, no searches or user writes
+        run: node scripts/check-external-capacity.mjs

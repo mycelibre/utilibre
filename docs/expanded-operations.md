@@ -3,6 +3,168 @@
 Work from `/home/ubuntu/freetools`. Caddy is on a separate VM at `10.10.1.3`;
 application gateways bind `10.10.1.43`. Preserve its existing Cloudflare-only trust.
 
+## Capacity baseline — October 7, 2026
+
+The first bounded tests found request quotas before CPU or RAM exhaustion. This
+is **not certification for 1,000 active users**. The application VM has 8 vCPUs
+and 15,664 MiB RAM. All generators ran on that same VM, including requests through
+public DNS/HTTPS; these are not independent external-network measurements.
+The [machine-readable results](../deployment/community/capacity-fixtures/results-2026-10-07.json)
+retain per-stage figures, tested paths, exclusions and private raw-report locations.
+
+| Test | Measured result |
+| --- | --- |
+| Public HTTPS, 20 front doors, 50 lightweight visits/second for 20 seconds | 1,852 requests, 92.46 requests/second, all successful; response p95 30.22 ms |
+| Public HTTPS, same mix, 100 visits/second for 20 seconds | 3,702 requests, 184.81 requests/second; 40 HTTP 429 responses, all from FMD (20% of its requests, 1.08% overall) |
+| Direct origin, 100 simultaneously launched static visits | 190 requests, all HTTP 200; visit p95 57.94 ms |
+| Application VM across paced tests | Highest sampled CPU 22.87%; at least 9,630 MiB RAM available |
+| Isolated LRCLIB handler, 30 distinct simultaneous cache misses | One accepted, 29 rate-limited; a local fake provider received just one request |
+| Same LRCLIB fixture, 1,000 cached requests at concurrency 50 | All successful, no additional provider requests; response p95 22.63 ms |
+
+Each lightweight visit fetched HTML and at most one same-origin JS/CSS asset
+under 1 MiB. This excludes full cold-start downloads, browser execution, logins,
+document editing, PDF exports, media traffic and real upstream search load. The
+paced runs reached at most seven overlapping visits, not 1,000 concurrent users.
+Their optional session-equivalent field assumes a visit every ten seconds; it
+must not be presented as a measured user count. No long-duration soak was run.
+
+FMD applies its 5 requests/second **per-IP** budget to both HTML/assets and API
+traffic. A single-IP generator exhausted that budget; this does not establish a
+global FMD capacity ceiling. Separate loopback-only Nginx fixtures reproduced
+the configured global quotas of TransLite, AnonymousOverflow, 4get and Binternet:
+30-request bursts produced respectively 9, 23, 23 and 26 HTTP 429 responses.
+These fixtures test gateway policy, not the real applications or providers.
+No quotas were raised, visitor IPs spoofed, or content providers load-tested.
+
+The direct-Caddy run skipped the portal after TLS validation failed and three
+routes after HTTP 403; it did not bypass those checks. All 20 routes passed the
+public-HTTPS preflight. Caddy VM CPU, memory and network saturation were not
+measured. Production configuration and user data were unchanged. Afterwards,
+83 containers were running, none reported unhealthy/OOM, FMD returned HTTP 200,
+and all 37 entries in the portal's liveness response were operational. Those
+checks do not establish complete functional health of every advertised service.
+Pollaris's worker restart count rose from 11 to 12 during preparation, before
+the first measured run; its command has a 3,600-second lifetime and automatic
+restart. Its last start was 02:37:46 UTC, before load began at 02:39:57 UTC.
+Temporary fixture containers and listeners were removed.
+
+Repeat only in a quiet maintenance window, reviewing each stage before escalating:
+
+```sh
+node --test scripts/capacity-check.test.mjs
+nice -n 10 node scripts/capacity-check.mjs origin
+nice -n 10 node scripts/capacity-check.mjs edge
+nice -n 10 node scripts/capacity-check.mjs public
+# Explicit escalation after reviewing the smaller public run:
+nice -n 10 node scripts/capacity-check.mjs public higher
+nice -n 10 node scripts/capacity-bursts.mjs
+```
+
+The paced runner has request deadlines, response/phase byte caps, RAM/CPU guards,
+and stops escalation on aggregate errors above 2%, p95 above one second, or
+missed arrivals. A per-service failure can exceed 2% while the aggregate remains
+below it, so always inspect `byTarget`. Reports are private under
+`/opt/utilibre/reports/`. These checks are manual, not scheduled.
+
+For the separate provider-free fixtures, first ensure loopback ports 3390–3394
+are unused. The temporary container uses host networking, with all listeners
+and its sole fixed backend restricted to loopback. Always tear it down:
+
+```sh
+(
+  set -e
+  trap 'docker compose -f deployment/community/capacity-fixtures/compose.yaml down' EXIT
+  docker compose -f deployment/community/capacity-fixtures/compose.yaml up -d
+  node scripts/capacity-fixtures.mjs
+)
+```
+
+That initial baseline preceded the targeted changes and follow-up below. Its
+figures remain historical, not measurements of the revised settings.
+
+### Targeted fixes and workflow follow-up
+
+Deployed October 7: LRCLIB `f37c070-p2` shares identical in-flight searches, admits
+up to four waiting distinct searches, bounds all attached waiters to 48, and
+expires queued work after two seconds. Disconnected requests are removed; an
+active provider fetch is cancelled only when nobody still needs it. One upstream
+request at a time, the 500 ms completion-to-next-start gap, 15-second provider
+timeout, cache bounds, provider cooldowns and browser privacy controls remain.
+Fourteen backend tests cover timing, bounded admission, duplicate sharing,
+cancellation, cooldown propagation and existing security behavior. Public desktop
+and mobile search/preview/copy checks passed after deployment.
+
+With the same local 200 ms fake provider, 30 identical cold searches now all
+succeed with one upstream call. Three distinct simultaneous searches also pass
+with enforced spacing. An intentionally excessive 30-distinct-search burst still
+returns 27 HTTP 429 responses: queueing does **not** remove the upstream capacity
+limit. All 1,000 cached fixture requests at concurrency 50 pass without extra
+provider calls. Fixture reports are under
+`/opt/utilibre/reports/capacity-fixtures-2026-10-07T03-08-02-834Z/`.
+
+FMD's complete cold-browser test passed at one and three shared-IP users, but the
+eight-user stage initially returned seven HTTP 429 responses, including essential
+JavaScript; several login forms failed to render. Gateway logs classified these
+as request-rate, not connection, rejections. Its strictly matched static asset
+location now has a separate 20 requests/second, burst-100 budget. API/root limits
+remain 5 requests/second, burst 60; the 12-connection limit, 15 MiB request cap,
+no-store headers, invitation requirements and real-IP trust are unchanged.
+After a validated graceful Nginx reload, all 72 requests in the eight-user stage
+succeeded and every login form rendered, with no external browser connections.
+This does not validate multiple independent client IPs or Android GPS/push flows.
+Before/after reports are under `fmd-browser-2026-10-07T03-02-42-795Z` and
+`fmd-browser-2026-10-07T03-05-03-682Z` in the private reports directory.
+
+Two newly created, uniquely marked synthetic CV users passed real public SSO/MFA,
+private-by-default creation, save/reopen and cross-user denial. Three rounds of
+two simultaneous server-side PDF exports returned PDF bodies (six total). First
+exports took about 2.1 seconds; later exports took 0.2–0.7 seconds. This verifies
+PDF responses, not every template's visual correctness or large-document limits.
+Both documents were purged through native owner APIs; the synthetic application
+profiles and identity accounts were then disabled, with sessions/tokens/MFA
+revoked. No owner or real-user data was changed. Details:
+`/opt/utilibre/reports/capacity-resume-20261007a/results.json`.
+PairDrop's exact-byte synthetic WebRTC transfer and JupyterLite's Python/pandas/
+matplotlib notebook execution also passed. They run on this test machine, not
+different NATs or representative low-end phones.
+
+The 30-minute follow-up (`scripts/capacity-soak.mjs`) runs ten lightweight visits
+per second across 19 public front doors, plus synthetic FMD and Pollaris create/
+round-trip/vote/export/delete workflows every five minutes. FMD is excluded from
+the background page mix so its one-IP allowance does not interfere with its
+actual workflow. Reports are written every minute; CPU/RAM/error/latency guards
+and a 4 GiB transfer ceiling stop the run when necessary. This remains a light
+same-VM stability check, not a 1,000-user test or multi-hour endurance certificate.
+Its final result is recorded after completion.
+
+The manual-only `capacity-external.yml` GitHub Actions workflow uses the existing
+pinned checkout action, read-only repository permissions, no secrets and a
+five-minute job deadline. Its fixed-target public-page test runs four 30-second
+stages at 2.5, 5, 10 and 25 lightweight visits/second, without user writes or
+provider searches. Aggregated counters are written to the job log. This supplies
+an independent network generator, but does not supply Caddy VM resource counters.
+
+```sh
+node --test deployment/community/lrclib-server.test.mjs scripts/fmd-capacity-config.test.mjs scripts/capacity-check.test.mjs
+node scripts/check-fmd-browser-load.mjs --expect-clean
+nice -n 10 node scripts/capacity-soak.mjs
+gh workflow run capacity-external.yml --repo mycelibre/utilibre
+```
+
+For CV workflows, choose a new lowercase alphanumeric run ID (maximum 12
+characters). Run `deployment/identity/capacity-users.py` inside Authentik's
+`ak shell` with `UTILIBRE_CAPACITY_CHECK_RUN` set; it refuses existing identities
+or credential files. Set the same variable when running `CHECK_APP=resume node
+deployment/identity/check-apps.mjs`, then `node scripts/check-capacity-resume.mjs`.
+Finally run `node scripts/retire-capacity-users.mjs` with that run ID. It refuses
+to retire application sessions while synthetic CV records remain. Credential and
+recovery files stay mode 0600 under the existing private directory; never commit
+or publish them. Do not repurpose operator accounts or the old retired QA users.
+
+No Caddy blocks, DNS, TLS, proxy-trust settings, provider limits or hardware were
+changed. Before any large-user promise, obtain Caddy CPU/RAM/network measurements
+and test representative heavier/concurrent workflows plus longer steady loads.
+
 ## Functional regression checks
 
 The October 6 audit/fixes are recorded in [the toolbox review](toolbox-review.md).
@@ -90,8 +252,10 @@ static frontend assets and a dependency-free Node 24 read-only adapter. The
 frontend's production dependency audit is clean; older build-only Tailwind/Vite
 tooling still has advisories and is not exposed as a development server.
 
-The adapter only calls LRCLIB's documented `/api/search`. It sends an identifying
-User-Agent, no visitor headers, serializes requests with a 500 ms gap, and honors
+The adapter only calls LRCLIB's documented `/api/search`. Its `f37c070-p2` build
+coalesces identical in-flight searches, permits four queued distinct searches
+with a two-second queue deadline, and caps attached waiters at 48. It sends an
+identifying User-Agent, no visitor headers, serializes requests with a 500 ms gap, and honors
 Retry-After (minimum 60 seconds; 403 pauses ten minutes). Responses are limited
 to 2 MiB, with an 8 MiB / 128-entry / ten-minute RAM cache. No account, publish
 API, arbitrary proxy target, persistent search history or search logging.
@@ -105,7 +269,7 @@ Build from the pinned checkout with the patch applied:
 ```sh
 docker build --build-context integration=/home/ubuntu/freetools/deployment/community \
   -f /home/ubuntu/freetools/deployment/community/Dockerfile.lrclib \
-  -t utilibre-lrclib:f37c070-p1 /opt/utilibre/community-src/lrclib-homepage
+  -t utilibre-lrclib:f37c070-p2 /opt/utilibre/community-src/lrclib-homepage
 docker compose -f deployment/community/compose.additions.yaml up -d --no-deps dumb
 docker exec utilibre-additions-dumb-gateway-1 nginx -t
 docker exec utilibre-additions-dumb-gateway-1 nginx -s reload
