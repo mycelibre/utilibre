@@ -109,6 +109,15 @@ const defaults: PublicConfig = {
 export const PUBLIC_CONFIG_TIMEOUT_MS = 5_000;
 
 export async function loadPublicConfig(): Promise<PublicConfig> {
+  // Production HTML includes only the same sanitized public fields as the
+  // config endpoint. Boot from those fields without another request (and
+  // without depending on crawlers fetching an intentionally blocked API).
+  if (typeof document !== 'undefined') {
+    const embedded = document.querySelector<HTMLScriptElement>('script#public-page-config[type="application/json"]');
+    if (embedded?.textContent) {
+      try { return normalizePublicConfig(JSON.parse(embedded.textContent)); } catch { /* Fall back to the public endpoint. */ }
+    }
+  }
   const controller = new AbortController();
   let timeout: ReturnType<typeof setTimeout> | undefined;
   try {
@@ -135,7 +144,12 @@ async function requestPublicConfig(signal: AbortSignal): Promise<PublicConfig> {
     signal,
   });
   if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) return defaults;
-  const value = await response.json() as Partial<PublicConfig>;
+  return normalizePublicConfig(await response.json());
+}
+
+function normalizePublicConfig(input: unknown): PublicConfig {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return defaults;
+  const value = input as Partial<PublicConfig>;
   return {
     ...defaults,
     ...Object.fromEntries(Object.entries(value).filter(([, item]) => typeof item === 'string')),

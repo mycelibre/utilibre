@@ -1,7 +1,6 @@
 User-agent: *
 Disallow: /api/
 Disallow: /_portal/
-Allow: /_portal/config$
 Disallow: /healthz
 # The production server adds the configured sitemap URL (or disallows all
 # crawling for private previews). Public noindex pages must remain crawlable

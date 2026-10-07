@@ -569,15 +569,16 @@ when donations are configured (14 otherwise). It does not enumerate searches,
 operational endpoints, tool logins, pastes, polls, budgets, résumés or other
 visitor documents. No dates are fabricated for `lastmod`. Search/filter URLs
 carry noindex and no-store; private tool authentication is unchanged. The
-public, sanitized config endpoint remains crawlable for JS rendering but has
-an X-Robots-Tag preventing indexing. Robots directives are not access control.
+sanitized public configuration is embedded as inert JSON, so initial rendering
+needs no extra config request. API routes remain blocked from crawling and
+carry noindex headers. Robots directives are not access control.
 
 Rendering uses pinned ISC-licensed LinkeDOM 0.18.13, bundled only into the server
 build outside the public directory. It executes no visitor scripts and makes
 no network requests. Bundled dependency licenses are published at
 `/legal/server-renderer-notices.txt`. HTML and gzip variants have a bounded,
 30-second memory cache only for query-free known pages. Queries are not cached
-or logged by the portal. CSP permits only the exact JSON-LD hash, without
+or logged by the portal. CSP permits only the exact JSON-LD/config hashes, without
 unsafe-inline/eval or external scripts. Fonts and share images remain local.
 Build dependencies brace-expansion and source-map-js were updated to resolve
 the two advisories found during the audit; npm audit then reported zero known
@@ -611,6 +612,14 @@ Search Console and Bing Webmaster Tools account verification remain operator
 tasks; DNS verification does not require installing visitor analytics. Submit
 the sitemap there once verified. Do not use Google's restricted Indexing API
 for these ordinary pages, buy links, or create thin keyword/AI doorway pages.
+
+Cloudflare retained the previous `robots.txt` under a four-hour edge TTL at the
+first live check. Purge only `https://utilibre.org/robots.txt`, or let it expire;
+do not purge the whole site. New robots/sitemap responses request no-store.
+While that confirmed cache is stale, the explicit IndexNow option
+`--allow-unadvertised-sitemap` skips only the missing sitemap-advertisement
+check and still validates every public page and privacy/security boundary.
+The ordinary SEO audit continues to flag the stale robots file until resolved.
 
 Research checked against primary documentation on October 7, 2026:
 [JavaScript and server rendering](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics),

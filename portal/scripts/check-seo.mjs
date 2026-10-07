@@ -4,11 +4,12 @@ import { parseHTML } from 'linkedom';
 
 // Bounded read-only audit of the portal's public canonical pages. No analytics,
 // cookies, login, recursive crawler, third-party assets, or private tool content.
-export async function auditSeo(origin = 'https://utilibre.org') {
+export async function auditSeo(origin = 'https://utilibre.org', { allowUnadvertisedSitemap = false } = {}) {
   const site = new URL(origin);
   assert(site.protocol === 'https:' && site.origin === origin, 'Use a bare public HTTPS origin');
   const robots = (await readPublic(`${origin}/robots.txt`)).text;
-  assert(robots.includes(`Sitemap: ${origin}/sitemap.xml`), 'Missing sitemap discovery');
+  const robotsSitemapAdvertised = robots.includes(`Sitemap: ${origin}/sitemap.xml`);
+  assert(robotsSitemapAdvertised || allowUnadvertisedSitemap, 'Missing sitemap discovery');
   assert(!/^Disallow:\s*\/\s*$/m.test(robots), 'Public portal blocks all crawlers');
   const sitemap = (await readPublic(`${origin}/sitemap.xml`)).text;
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
@@ -52,7 +53,7 @@ export async function auditSeo(origin = 'https://utilibre.org') {
   for (const [url, alternates] of pages) for (const alternate of Object.values(alternates)) assert.deepEqual(pages.get(alternate), alternates, `${url}: nonreciprocal language links`);
   assert.equal(titles.size, urls.length, 'Duplicate page titles');
   assert.equal(descriptions.size, urls.length, 'Duplicate page descriptions');
-  return { origin, pages: urls.length, urls, result: 'passed' };
+  return { origin, pages: urls.length, urls, robotsSitemapAdvertised, result: robotsSitemapAdvertised ? 'passed' : 'pages-passed-robots-cache-stale' };
 }
 
 export async function readPublic(url) {

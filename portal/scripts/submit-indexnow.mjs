@@ -7,7 +7,11 @@ import { auditSeo, readPublic } from './check-seo.mjs';
 const key = (await readFile(new URL('../public/762286d5852bc4de75b655217cccce8b.txt', import.meta.url), 'utf8')).trim();
 assert(/^[a-f0-9]{32}$/.test(key));
 const origin = 'https://utilibre.org';
-const audit = await auditSeo(origin);
+// A confirmed stale robots cache may delay discovery of an otherwise valid
+// sitemap. This explicit option skips ONLY its advertisement check, not page
+// status, canonical, noindex, CSP, origin or private-route checks.
+const audit = await auditSeo(origin, { allowUnadvertisedSitemap: process.argv.includes('--allow-unadvertised-sitemap') });
+if (!audit.robotsSitemapAdvertised) console.warn('Public pages passed; the cached robots.txt still needs a targeted purge or expiry.');
 const keyLocation = `${origin}/${key}.txt`;
 assert.equal((await readPublic(keyLocation)).text.trim(), key, 'Public ownership proof is not live');
 const payload = { host: new URL(origin).hostname, key, keyLocation, urlList: audit.urls };

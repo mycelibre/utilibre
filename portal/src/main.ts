@@ -104,6 +104,7 @@ function resolveInitialRoute(): Route {
   const parsed = parseRoute(window.location.pathname);
   if (parsed) return availableRoute(parsed, Boolean(config.supportUrl));
   const language = preferredLanguage(config.defaultLanguage);
+  if (window.location.pathname !== '/') return { language, page: 'not-found' };
   const destination = routePath('home', language);
   history.replaceState({}, '', destination);
   return { language, page: 'home' };

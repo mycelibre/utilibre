@@ -44,6 +44,9 @@ describe('public SEO without tracking or private-content indexing', () => {
       expect(document.querySelector('label[for="catalog-query"]')).not.toBeNull();
       expect(document.querySelector('form[method="get"]')?.getAttribute('action')).toBe(`/${language}/`);
       expect(document.querySelector('nav[aria-label]')).not.toBeNull();
+      const settings = JSON.parse(document.getElementById('public-page-config')!.textContent!);
+      expect(settings).toEqual(await (await fetch(`${base}/_portal/config`)).json());
+      expect(settings).not.toHaveProperty('STATUS_SERVICES');
       expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${origin}/${language}/`);
       expect(document.querySelector('link[hreflang="x-default"]')?.getAttribute('href')).toBe(`${origin}/en/`);
       expect(response.headers.get('content-encoding')).toBe('gzip');
@@ -78,7 +81,7 @@ describe('public SEO without tracking or private-content indexing', () => {
     expect(titles.size).toBe(16);
     const robots = await (await fetch(`${base}/robots.txt`)).text();
     expect(robots).toContain(`Sitemap: ${origin}/sitemap.xml`);
-    expect(robots).toContain('Allow: /_portal/config$');
+    expect(robots).toContain('Disallow: /_portal/');
     expect(robots).not.toContain('Disallow: /assets');
     expect(robots).not.toContain('Disallow: /en/tools');
   });
@@ -113,13 +116,13 @@ describe('public SEO without tracking or private-content indexing', () => {
     const response = await fetch(`${base}/en/?q=${encodeURIComponent('"><script>alert(1)</script>')}`);
     const html = await response.text();
     const { document } = parseHTML(html);
-    expect(document.querySelectorAll('script:not([src])')).toHaveLength(0);
+    expect(document.querySelectorAll('script:not([src]):not([type="application/json"])')).toHaveLength(0);
     expect(document.querySelector('input[name="q"]')?.getAttribute('value')).toBe('"><script>alert(1)</script>');
     expect((await (await fetch(`${base}/en/`)).text())).not.toContain('alert(1)');
   });
 
   it('preserves genuine 404s, excludes internal build files and redirects only known aliases', async () => {
-    for (const path of ['/en/not-real', '/es/no-existe']) {
+    for (const path of ['/en/not-real', '/es/no-existe', '/not-a-locale']) {
       const response = await fetch(`${base}${path}`);
       const { document } = parseHTML(await response.text());
       expect(response.status).toBe(404);

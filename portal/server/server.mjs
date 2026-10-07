@@ -192,7 +192,7 @@ function serveStatic(requestUrl, request, response) {
       }
     }
     if (document.robots.startsWith('noindex')) response.setHeader('X-Robots-Tag', document.robots.replaceAll(',', ', '));
-    if (document.hash) response.setHeader('Content-Security-Policy', response.getHeader('Content-Security-Policy').replace("script-src 'self'", `script-src 'self' 'sha256-${document.hash}'`));
+    if (document.hashes.length) response.setHeader('Content-Security-Policy', response.getHeader('Content-Security-Policy').replace("script-src 'self'", `script-src 'self' ${document.hashes.map((hash) => `'sha256-${hash}'`).join(' ')}`));
     const gzip = (request.headers['accept-encoding'] ?? '').split(',').some((part) => /^gzip(?:\s*;\s*q=(?:1(?:\.0*)?|0\.\d*[1-9]\d*))?$/i.test(part.trim()));
     const body = gzip ? document.gzip : document.html;
     response.writeHead(statusCode, {
@@ -227,8 +227,8 @@ function canonicalRouteRedirect(pathname) {
 function serveRobots(headOnly, response) {
   const text = PRIVATE_PREVIEW || !PUBLIC_ORIGIN
     ? 'User-agent: *\nDisallow: /\n'
-    : `User-agent: *\nDisallow: /api/\nDisallow: /_portal/\nAllow: /_portal/config$\nDisallow: /healthz\nDisallow: /page-metadata.json\nDisallow: /server-built/\nSitemap: ${PUBLIC_ORIGIN}/sitemap.xml\n`;
-  response.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache' });
+    : `User-agent: *\nDisallow: /api/\nDisallow: /_portal/\nDisallow: /healthz\nDisallow: /page-metadata.json\nDisallow: /server-built/\nSitemap: ${PUBLIC_ORIGIN}/sitemap.xml\n`;
+  response.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' });
   response.end(headOnly ? undefined : text);
 }
 
@@ -244,7 +244,7 @@ function serveSitemap(headOnly, response) {
     .map(([, meta]) => meta.alternates[meta.language]);
   const urls = [...new Set(paths)].sort().map((path) => `  <url><loc>${escapeHtml(PUBLIC_ORIGIN + path)}</loc></url>`).join('\n');
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
-  response.writeHead(200, { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache' });
+  response.writeHead(200, { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-store' });
   response.end(headOnly ? undefined : xml);
 }
 
@@ -288,6 +288,7 @@ function localizedIndexHtml(html, language, pathname, search = '') {
   const route = !knownPagePath(pathname) ? { language, page: 'not-found' } : (parseRoute(pathname) ?? { language, page: 'home' });
   const meta = pageSeo(route, config, search);
   const structured = meta.structuredData ? serializeStructuredData(meta.structuredData) : '';
+  const publicSettings = serializeStructuredData(config);
   const canonical = meta.canonical ? `<link rel="canonical" href="${escapeAttribute(meta.canonical)}" />` : '';
   const alternates = Object.entries(meta.alternates).map(([lang, href]) => `<link rel="alternate" hreflang="${lang}" href="${escapeAttribute(href)}" />`).join('\n    ');
   const extra = [
@@ -298,11 +299,12 @@ function localizedIndexHtml(html, language, pathname, search = '') {
     `<meta property="og:image:alt" content="${escapeAttribute(config.projectName)} logo" />`,
     '<meta name="twitter:card" content="summary" />',
     structured ? `<script id="public-structured-data" type="application/ld+json">${structured}</script>` : '',
+    `<script id="public-page-config" type="application/json">${publicSettings}</script>`,
   ].join('\n    ');
   const shell = renderPublicShell(route, config, search);
   return {
     robots: meta.robots,
-    hash: structured ? createHash('sha256').update(structured).digest('base64') : '',
+    hashes: [structured, publicSettings].filter(Boolean).map((text) => createHash('sha256').update(text).digest('base64')),
     html: html
       .replace(/<html lang="[^"]+">/, `<html lang="${language}">`)
       .replace(/<title>[^<]*<\/title>/, () => `<title>${escapeHtml(meta.title)}</title>`)
