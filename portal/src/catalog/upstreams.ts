@@ -38,7 +38,7 @@ export interface ReviewedFossProvider {
  * never enables a public route or opens registrations.
  */
 export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider> = {
-  lrclib: { ...toolboxProvider('LRCLIB', 'tranxuanthang/lrclib-homepage', 'f37c07042be1af5fdcc7932d090af32141089751', 'MIT', 'f37c070-p1 · cached read-only API · replaces Dumb', 'source:f37c07042be1af5fdcc7932d090af32141089751+deployment/community/lrclib-source.patch'), reviewStatus: 'deployed', integration: 'source-build' },
+  lrclib: { ...toolboxProvider('LRCLIB', 'tranxuanthang/lrclib-homepage', 'f37c07042be1af5fdcc7932d090af32141089751', 'MIT', 'f37c070-p2 · cached read-only API · replaces Dumb', 'source:f37c07042be1af5fdcc7932d090af32141089751+deployment/community/lrclib-source.patch'), reviewStatus: 'deployed', integration: 'source-build' },
   kittygram: { ...forgeEvaluationProvider('Kittygram', 'https://codeberg.org/irelephant/kittygram', '5931c21c0990d4b216e97166dd78c03c9965567a', 'AGPL-3.0', 'LICENSE', '5931c21-p1 · public profile/post/video tested', 'source:5931c21c0990d4b216e97166dd78c03c9965567a+deployment/community/kittygram-source.patch'), reviewStatus: 'deployed' },
   rimgo: forgeEvaluationProvider('Rimgo', 'https://codeberg.org/rimgo/rimgo', 'd2be8e221522dfe7a06452e2002dcf6dad569d1a', 'AGPL-3.0', 'LICENSE', 'd2be8e2-p3 · shared cooldown · Imgur media rate-limited', 'source:d2be8e221522dfe7a06452e2002dcf6dad569d1a+deployment/community/rimgo-source.patch'),
   mumble: { ...toolboxProvider('Mumble', 'mumble-voip/mumble', 'v1.5.915', 'BSD-3-Clause', '1.5.915 · password-protected · TCP voice verified', 'mumblevoip/mumble-server:v1.5.915@sha256:018ad3515932e513d8fdc970df918373a2664c4da32b09a89a4aaee28eb7507a'), reviewStatus: 'deployed' },

@@ -111,6 +111,12 @@ remain 5 requests/second, burst 60; the 12-connection limit, 15 MiB request cap,
 no-store headers, invitation requirements and real-IP trust are unchanged.
 After a validated graceful Nginx reload, all 72 requests in the eight-user stage
 succeeded and every login form rendered, with no external browser connections.
+The first higher-rate external follow-up exposed `/theme-init.js` outside the
+initial `/assets/` rule: FMD again hit its API quota. The static rule now explicitly
+includes that bootstrap script and the known icon/manifest files, while `/version`
+and every API path retain the original allowance. GET-only static routing,
+anonymous API denial and no-store headers were rechecked. The eight-browser test
+passed again after this final reload.
 This does not validate multiple independent client IPs or Android GPS/push flows.
 Before/after reports are under `fmd-browser-2026-10-07T03-02-42-795Z` and
 `fmd-browser-2026-10-07T03-05-03-682Z` in the private reports directory.
@@ -137,18 +143,49 @@ and a 4 GiB transfer ceiling stop the run when necessary. This remains a light
 same-VM stability check, not a 1,000-user test or multi-hour endurance certificate.
 Its final result is recorded after completion.
 
+Completed 03:34 UTC: **33,169 page/asset requests, zero errors and zero missed
+arrivals** across all 30 minutes. All six FMD and six Pollaris workflows passed,
+including synthetic-data cleanup. Per-minute response p95 ranged 40.71–46.53 ms;
+peak overlapping background visits was two. Peak sampled host CPU was 46.76%,
+with at least 8,781 MiB available RAM. Those resource figures include local test
+browsers, CV/Python checks and build/check activity, not application serving alone.
+There were 83 containers before and after; none reported unhealthy or OOM after
+the run. The final raw report is
+`/opt/utilibre/reports/capacity-soak-2026-10-07T03-03-55-674Z/results.json`.
+The [follow-up results](../deployment/community/capacity-fixtures/followup-2026-10-07.json)
+include failed intermediate runs as well as successful retests and limitations.
+
 The manual-only `capacity-external.yml` GitHub Actions workflow uses the existing
 pinned checkout action, read-only repository permissions, no secrets and a
 five-minute job deadline. Its fixed-target public-page test runs four 30-second
 stages at 2.5, 5, 10 and 25 lightweight visits/second, without user writes or
-provider searches. Aggregated counters are written to the job log. This supplies
-an independent network generator, but does not supply Caddy VM resource counters.
+provider searches. An explicit `higher=true` dispatch instead runs 50 and 100
+visits/second only after baseline review. Aggregated counters are written to the
+job log. This supplies an independent network generator, but does not supply
+Caddy VM resource counters.
+
+- [External baseline run](https://github.com/mycelibre/utilibre/actions/runs/37565686866):
+  all 20 preflights passed; 2,365 measured requests, zero errors. At its highest
+  stage, 46.08 requests/second and response p95 277.75 ms.
+- [First higher-rate run](https://github.com/mycelibre/utilibre/actions/runs/37566012806):
+  the 91.21 requests/second stage passed; the 181.09 requests/second stage had
+  90 FMD HTTP 429 responses and 15 missed arrivals at the runner's 40-visit cap.
+  It failed its guard and was not accepted as a clean capacity result.
+- [Final higher-rate run](https://github.com/mycelibre/utilibre/actions/runs/37566271910),
+  after the static-route correction and raising only the generator's in-flight
+  cap to 80: all 20 preflights passed; 2,777 requests at 91.26 requests/second
+  and 5,552 at 182.11 requests/second, all successful. The latter's response p95
+  was 217.88 ms, visit p95 430.07 ms, peak overlapping visits 38 and missed
+  arrivals zero. These remain 30-second page/selected-asset samples, not 1,000
+  active users or sustained authenticated/heavy-workload limits.
 
 ```sh
 node --test deployment/community/lrclib-server.test.mjs scripts/fmd-capacity-config.test.mjs scripts/capacity-check.test.mjs
 node scripts/check-fmd-browser-load.mjs --expect-clean
 nice -n 10 node scripts/capacity-soak.mjs
 gh workflow run capacity-external.yml --repo mycelibre/utilibre
+# Only after reviewing that baseline:
+gh workflow run capacity-external.yml --repo mycelibre/utilibre -f higher=true
 ```
 
 For CV workflows, choose a new lowercase alphanumeric run ID (maximum 12

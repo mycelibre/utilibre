@@ -1,0 +1,906 @@
+{
+  "date": "2026-10-07",
+  "status": "completed",
+  "interpretation": "Targeted fixes and bounded page/asset plus synthetic workflow tests. Not certification for 1000 active users. No Caddy changes or resource telemetry; no production provider load test, media-capacity test or multi-hour soak.",
+  "changes": {
+    "lyrics": {
+      "image": "utilibre-lrclib:f37c070-p2",
+      "maxQueuedDistinct": 4,
+      "maxTotalAttachedWaiters": 48,
+      "queueDeadlineMs": 2000,
+      "maxProviderConcurrency": 1,
+      "completionToNextStartGapMs": 500,
+      "providerTimeoutMs": 15000,
+      "cache": "8MiB / 128 entries / 10 minutes",
+      "identicalRequestsShareOneFetch": true,
+      "privacyControlsUnchanged": true,
+      "sourceSHA256": "2accbbdf8fc2ea51dd2adc9b1f14d3240ee238391091abf967d57218e476bd8e"
+    },
+    "fmd": {
+      "staticRatePerIP": "20r/s burst100",
+      "apiRatePerIP": "5r/s burst60 unchanged",
+      "connectionsPerIP": 12,
+      "requestBodyLimit": "15MiB unchanged",
+      "privacyAndTrustUnchanged": true,
+      "sourceSHA256": "17c5b792515766d78814fd9269e390cef2d8b229fc9bd10f7bcf2ceec6a03867"
+    }
+  },
+  "fmdBrowser": {
+    "before": {
+      "at": "2026-10-07T03:02:42.795Z",
+      "scope": "Full cold browser homepage loads from one source IP; no registration, GPS, API writes or external load generator.",
+      "phases": [
+        {
+          "users": 1,
+          "requests": 9,
+          "statuses": {
+            "200": 9
+          },
+          "rejectedPaths": [],
+          "external": [],
+          "pageErrors": [],
+          "visits": [
+            {
+              "ms": 1071,
+              "formInputs": 3
+            }
+          ]
+        },
+        {
+          "users": 3,
+          "requests": 27,
+          "statuses": {
+            "200": 27
+          },
+          "rejectedPaths": [],
+          "external": [],
+          "pageErrors": [],
+          "visits": [
+            {
+              "ms": 1072,
+              "formInputs": 3
+            },
+            {
+              "ms": 1091,
+              "formInputs": 3
+            },
+            {
+              "ms": 1104,
+              "formInputs": 3
+            }
+          ]
+        },
+        {
+          "users": 8,
+          "requests": 71,
+          "statuses": {
+            "200": 64,
+            "429": 7
+          },
+          "rejectedPaths": [
+            "/assets/Home-DeXtYn_2.js",
+            "/assets/button-BxvFCaI5.js",
+            "/version"
+          ],
+          "external": [],
+          "pageErrors": [],
+          "visits": [
+            {
+              "ms": 896,
+              "formInputs": 0
+            },
+            {
+              "ms": 1131,
+              "formInputs": 3
+            },
+            {
+              "ms": 1178,
+              "formInputs": 3
+            },
+            {
+              "failed": true
+            },
+            {
+              "failed": true
+            },
+            {
+              "failed": true
+            },
+            {
+              "failed": true
+            },
+            {
+              "failed": true
+            }
+          ]
+        }
+      ]
+    },
+    "after": {
+      "at": "2026-10-07T03:20:14.437Z",
+      "scope": "Full cold browser homepage loads from one source IP; no registration, GPS, API writes or external load generator.",
+      "phases": [
+        {
+          "users": 1,
+          "requests": 9,
+          "statuses": {
+            "200": 9
+          },
+          "rejectedPaths": [],
+          "external": [],
+          "pageErrors": [],
+          "visits": [
+            {
+              "ms": 1069,
+              "formInputs": 3
+            }
+          ]
+        },
+        {
+          "users": 3,
+          "requests": 27,
+          "statuses": {
+            "200": 27
+          },
+          "rejectedPaths": [],
+          "external": [],
+          "pageErrors": [],
+          "visits": [
+            {
+              "ms": 1045,
+              "formInputs": 3
+            },
+            {
+              "ms": 1051,
+              "formInputs": 3
+            },
+            {
+              "ms": 1063,
+              "formInputs": 3
+            }
+          ]
+        },
+        {
+          "users": 8,
+          "requests": 72,
+          "statuses": {
+            "200": 72
+          },
+          "rejectedPaths": [],
+          "external": [],
+          "pageErrors": [],
+          "visits": [
+            {
+              "ms": 1086,
+              "formInputs": 3
+            },
+            {
+              "ms": 1091,
+              "formInputs": 3
+            },
+            {
+              "ms": 1104,
+              "formInputs": 3
+            },
+            {
+              "ms": 1114,
+              "formInputs": 3
+            },
+            {
+              "ms": 1134,
+              "formInputs": 3
+            },
+            {
+              "ms": 1135,
+              "formInputs": 3
+            },
+            {
+              "ms": 1137,
+              "formInputs": 3
+            },
+            {
+              "ms": 1156,
+              "formInputs": 3
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "lyricsOfflineFixtures": [
+    {
+      "name": "LRCLIB: 30 simultaneous distinct cache misses",
+      "requests": 30,
+      "statuses": {
+        "200": 3,
+        "429": 27
+      },
+      "p95Ms": 2055.08,
+      "upstreamCalls": 3,
+      "peakUpstream": 1
+    },
+    {
+      "name": "LRCLIB: 30 identical simultaneous cache misses",
+      "requests": 30,
+      "statuses": {
+        "200": 30
+      },
+      "p95Ms": 208.74,
+      "additionalUpstreamCalls": 1,
+      "peakUpstream": 1
+    },
+    {
+      "name": "LRCLIB: 1000 cached requests, concurrency 50",
+      "requests": 1000,
+      "statuses": {
+        "200": 1000
+      },
+      "p95Ms": 42.99,
+      "elapsedMs": 285.7799159999995,
+      "additionalUpstreamCalls": 0
+    }
+  ],
+  "resumeWorkflow": {
+    "at": "2026-10-07T03:07:48.467Z",
+    "scope": "Two synthetic real-SSO users; create, save/reopen, isolation, PDF export and cleanup. A workflow check, not an active-user capacity limit.",
+    "results": [
+      {
+        "user": 0,
+        "created": true,
+        "savedAndReopened": true,
+        "privateByDefault": true,
+        "otherUserStatus": 404
+      },
+      {
+        "user": 1,
+        "created": true,
+        "savedAndReopened": true,
+        "privateByDefault": true,
+        "otherUserStatus": 404
+      },
+      {
+        "user": 0,
+        "round": 1,
+        "pdfBytes": 12091,
+        "ms": 2088
+      },
+      {
+        "user": 1,
+        "round": 1,
+        "pdfBytes": 12072,
+        "ms": 2092
+      },
+      {
+        "user": 0,
+        "round": 2,
+        "pdfBytes": 12091,
+        "ms": 399
+      },
+      {
+        "user": 1,
+        "round": 2,
+        "pdfBytes": 12072,
+        "ms": 197
+      },
+      {
+        "user": 0,
+        "round": 3,
+        "pdfBytes": 12091,
+        "ms": 415
+      },
+      {
+        "user": 1,
+        "round": 3,
+        "pdfBytes": 12072,
+        "ms": 661
+      }
+    ],
+    "cleanup": [
+      {
+        "user": 0,
+        "removed": true
+      },
+      {
+        "user": 1,
+        "removed": true
+      }
+    ],
+    "finishedAt": "2026-10-07T03:07:56.736Z",
+    "syntheticProfilesAndIdentitySessionsRetired": true
+  },
+  "otherChecks": {
+    "backendAndHarnessTestsPassed": 20,
+    "publicLyricsDesktopAndMobile": "passed",
+    "pairDropSyntheticExactByteTransfer": "passed, same-machine browsers; different NATs not covered",
+    "jupyterLite": "passed Python calculation, pandas CSV and matplotlib chart; browser-local synthetic notebook",
+    "fmdProtectionHTTP": {
+      "themeGET": 200,
+      "themePOST": 405,
+      "manifestGET": 200,
+      "metricsGET": 404,
+      "anonymousLocationGET": 400,
+      "noStorePreserved": true
+    }
+  },
+  "external": {
+    "baseline": {
+      "runURL": "https://github.com/mycelibre/utilibre/actions/runs/37565686866",
+      "at": "2026-10-07T03:12:51.747Z",
+      "finishedAt": "2026-10-07T03:15:20.119Z",
+      "preflight": [
+        {
+          "id": "portal",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "pdf",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "convert",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "tools",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "dev",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "hat",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "draw",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "qr",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "qrtools",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "python",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "budget",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "design",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "cv",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "poll",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "drop",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "fmd",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "paste",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "wakapi",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "rss",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "secret",
+          "status": 200,
+          "assetStatus": 200
+        }
+      ],
+      "stopped": null,
+      "phases": [
+        {
+          "visitsPerSecond": 2.5,
+          "requests": 140,
+          "errors": 0,
+          "statuses": {
+            "200": 140
+          },
+          "requestsPerSecond": 4.58,
+          "responseP95Ms": 781.83,
+          "visitP95Ms": 1483.5,
+          "peakInflightVisits": 4,
+          "droppedVisits": 0,
+          "bytes": 12088808,
+          "stopped": null,
+          "errorTargets": {}
+        },
+        {
+          "visitsPerSecond": 5,
+          "requests": 279,
+          "errors": 0,
+          "statuses": {
+            "200": 279
+          },
+          "requestsPerSecond": 9.24,
+          "responseP95Ms": 551.29,
+          "visitP95Ms": 736.03,
+          "peakInflightVisits": 4,
+          "droppedVisits": 0,
+          "bytes": 24031432,
+          "stopped": null,
+          "errorTargets": {}
+        },
+        {
+          "visitsPerSecond": 10,
+          "requests": 557,
+          "errors": 0,
+          "statuses": {
+            "200": 557
+          },
+          "requestsPerSecond": 18.19,
+          "responseP95Ms": 373,
+          "visitP95Ms": 562.69,
+          "peakInflightVisits": 5,
+          "droppedVisits": 0,
+          "bytes": 48324346,
+          "stopped": null,
+          "errorTargets": {}
+        },
+        {
+          "visitsPerSecond": 25,
+          "requests": 1389,
+          "errors": 0,
+          "statuses": {
+            "200": 1389
+          },
+          "requestsPerSecond": 46.08,
+          "responseP95Ms": 277.75,
+          "visitP95Ms": 425,
+          "peakInflightVisits": 11,
+          "droppedVisits": 0,
+          "bytes": 120324442,
+          "stopped": null,
+          "errorTargets": {}
+        }
+      ]
+    },
+    "initialHigherFailed": {
+      "runURL": "https://github.com/mycelibre/utilibre/actions/runs/37566012806",
+      "at": "2026-10-07T03:16:58.259Z",
+      "finishedAt": "2026-10-07T03:18:35.361Z",
+      "preflight": [
+        {
+          "id": "portal",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "pdf",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "convert",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "tools",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "dev",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "hat",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "draw",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "qr",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "qrtools",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "python",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "budget",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "design",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "cv",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "poll",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "drop",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "fmd",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "paste",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "wakapi",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "rss",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "secret",
+          "status": 200,
+          "assetStatus": 200
+        }
+      ],
+      "stopped": "generator-missed-arrivals-do-not-escalate",
+      "phases": [
+        {
+          "visitsPerSecond": 50,
+          "requests": 2775,
+          "errors": 0,
+          "statuses": {
+            "200": 2775
+          },
+          "requestsPerSecond": 91.21,
+          "responseP95Ms": 351.21,
+          "visitP95Ms": 558.43,
+          "peakInflightVisits": 40,
+          "droppedVisits": 0,
+          "bytes": 240732525,
+          "stopped": null,
+          "errorTargets": {}
+        },
+        {
+          "visitsPerSecond": 100,
+          "requests": 5523,
+          "errors": 90,
+          "statuses": {
+            "200": 5433,
+            "429": 90
+          },
+          "requestsPerSecond": 181.09,
+          "responseP95Ms": 215.39,
+          "visitP95Ms": 402.42,
+          "peakInflightVisits": 40,
+          "droppedVisits": 15,
+          "bytes": 478249327,
+          "stopped": "generator-missed-arrivals-do-not-escalate",
+          "errorTargets": {
+            "fmd": {
+              "requests": 298,
+              "errors": 90,
+              "statuses": {
+                "200": 208,
+                "429": 90
+              },
+              "p95Ms": 200.37
+            }
+          }
+        }
+      ]
+    },
+    "finalHigherPassed": {
+      "runURL": "https://github.com/mycelibre/utilibre/actions/runs/37566271910",
+      "at": "2026-10-07T03:20:24.476Z",
+      "finishedAt": "2026-10-07T03:21:45.203Z",
+      "preflight": [
+        {
+          "id": "portal",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "pdf",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "convert",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "tools",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "dev",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "hat",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "draw",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "qr",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "qrtools",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "python",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "budget",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "design",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "cv",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "poll",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "drop",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "fmd",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "paste",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "wakapi",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "rss",
+          "status": 200,
+          "assetStatus": 200
+        },
+        {
+          "id": "secret",
+          "status": 200,
+          "assetStatus": 200
+        }
+      ],
+      "stopped": null,
+      "phases": [
+        {
+          "visitsPerSecond": 50,
+          "requests": 2777,
+          "errors": 0,
+          "statuses": {
+            "200": 2777
+          },
+          "requestsPerSecond": 91.26,
+          "responseP95Ms": 335.94,
+          "visitP95Ms": 540.92,
+          "peakInflightVisits": 29,
+          "droppedVisits": 0,
+          "bytes": 240910366,
+          "stopped": null,
+          "errorTargets": {}
+        },
+        {
+          "visitsPerSecond": 100,
+          "requests": 5552,
+          "errors": 0,
+          "statuses": {
+            "200": 5552
+          },
+          "requestsPerSecond": 182.11,
+          "responseP95Ms": 217.88,
+          "visitP95Ms": 430.07,
+          "peakInflightVisits": 38,
+          "droppedVisits": 0,
+          "bytes": 481642891,
+          "stopped": null,
+          "errorTargets": {}
+        }
+      ]
+    }
+  },
+  "soak": {
+    "at": "2026-10-07T03:03:55.674Z",
+    "finishedAt": "2026-10-07T03:34:05.031Z",
+    "scope": "Same-VM 30-minute public HTML/selected-asset baseline, 10 visits/s. Synthetic FMD round trips and Pollaris creation/voting/CSV/deletion every 5 minutes. No external load generator, Caddy telemetry, real upstream search load or 1000-user certification.",
+    "minutes": 30,
+    "elapsedSeconds": 1809.357,
+    "requests": 33169,
+    "errors": 0,
+    "bytes": 3028982072,
+    "droppedVisits": 0,
+    "peakInflightVisits": 2,
+    "minimumAvailableMiB": 8781.41015625,
+    "peakSampledCPU": 46.75984752223634,
+    "minimumPhaseP95Ms": 40.71,
+    "maximumPhaseP95Ms": 46.53,
+    "workflows": [
+      {
+        "round": 1,
+        "script": "deployment/community/check-fmd.mjs",
+        "passed": true,
+        "elapsedSeconds": 0.4
+      },
+      {
+        "round": 1,
+        "script": "deployment/community/check-pollaris.mjs",
+        "passed": true,
+        "elapsedSeconds": 7.9
+      },
+      {
+        "round": 2,
+        "script": "deployment/community/check-fmd.mjs",
+        "passed": true,
+        "elapsedSeconds": 1
+      },
+      {
+        "round": 2,
+        "script": "deployment/community/check-pollaris.mjs",
+        "passed": true,
+        "elapsedSeconds": 7.7
+      },
+      {
+        "round": 3,
+        "script": "deployment/community/check-fmd.mjs",
+        "passed": true,
+        "elapsedSeconds": 0.4
+      },
+      {
+        "round": 3,
+        "script": "deployment/community/check-pollaris.mjs",
+        "passed": true,
+        "elapsedSeconds": 7.4
+      },
+      {
+        "round": 4,
+        "script": "deployment/community/check-fmd.mjs",
+        "passed": true,
+        "elapsedSeconds": 0.4
+      },
+      {
+        "round": 4,
+        "script": "deployment/community/check-pollaris.mjs",
+        "passed": true,
+        "elapsedSeconds": 8
+      },
+      {
+        "round": 5,
+        "script": "deployment/community/check-fmd.mjs",
+        "passed": true,
+        "elapsedSeconds": 0.4
+      },
+      {
+        "round": 5,
+        "script": "deployment/community/check-pollaris.mjs",
+        "passed": true,
+        "elapsedSeconds": 7.8
+      },
+      {
+        "round": 6,
+        "script": "deployment/community/check-fmd.mjs",
+        "passed": true,
+        "elapsedSeconds": 0.4
+      },
+      {
+        "round": 6,
+        "script": "deployment/community/check-pollaris.mjs",
+        "passed": true,
+        "elapsedSeconds": 7.7
+      }
+    ],
+    "stopped": null,
+    "beforeContainerCount": 83,
+    "afterContainerCount": 83,
+    "afterUnhealthy": []
+  },
+  "postSoak": {
+    "runningContainers": 83,
+    "unhealthyContainers": [],
+    "oomKilledContainers": [],
+    "temporaryFixtureContainersRemoved": true
+  },
+  "limitations": [
+    "Caddy VM resource counters unavailable.",
+    "No 1000-user concurrency claim; paced visits are not active users.",
+    "External higher stages lasted 30 seconds, selected HTML/assets only.",
+    "30-minute same-VM background workload is light; six FMD and six Pollaris workflows ran alongside it.",
+    "CV exports used two users and small synthetic documents; PDF signatures/content type verified, not every template or large-file limit.",
+    "CPU/RAM observations include local load generators, test browsers and build/check activity.",
+    "High-volume lyrics searches used a fake provider; distinct cold searches remain rate-limited.",
+    "No real user data was read, edited or deleted; only marked synthetic fixtures were created and removed."
+  ]
+}
