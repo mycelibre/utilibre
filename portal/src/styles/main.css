@@ -791,7 +791,7 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 .privacy-answers dd { margin: 0.25rem 0 0.8rem; }
 .guide-index { max-width: 75ch; padding-inline-start: 1.5rem; }
 .guide-index li { padding-block: 1rem; border-block-end: 1px solid var(--rule); }
-.guide-index a { font-size: 1.3rem; font-weight: 600; }
+.guide-index a { font-size: var(--type-title); font-weight: 600; }
 .task-guide .prose li { margin-block: 0.9rem; }
 .task-guide .guide-links { flex-wrap: wrap; }
 @media (max-width: 58rem) {
@@ -801,7 +801,7 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 }
 @media print {
   .site-header, .site-footer, .task-guide .guide-actions, .task-guide > nav { display: none !important; }
-  .task-guide { color: #111; background: white; margin: 0; padding: 0; }
+  .task-guide { --ink: #2c2c2a; --ink-soft: #536057; color: var(--ink); background: white; margin: 0; padding: 0; }
   .task-guide .prose { max-width: none; }
   .task-guide h2 { break-after: avoid; }
   .task-guide li { break-inside: avoid; }

@@ -184,6 +184,14 @@ publication defect is identified. Optional new-tool decisions remain reviewable
 only: Markmap/Super Productivity preferred; BeepBox and teleprompter deferred;
 stock Typings rejected for trackers until a cleaned, tested fork is approved.
 
+Style-hook follow-up: replaced the guide-index `1.3rem` one-off with the
+documented `--type-title` step and print `#111` with the documented light ink
+palette. Print descendants now retain readable ink/secondary ink even when
+the visitor selected dark mode. Four focused desktop/mobile guide tests and
+the production build pass. No detector exceptions or design-system changes
+were introduced. The previous guide release is retained as
+`public-utility-portal:pre-guide-style-fix-20261007` for a portal-only rollback.
+
 ## Creative-tool release — 7 October 2026
 
 Production checkpoint, 16:36 UTC: implementation `1b1bfd1` is on GitHub and
