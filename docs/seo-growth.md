@@ -107,7 +107,7 @@ Existing design retained; this is not a new visual identity.
 Representative guide simulation: 390×844 viewport, 1.6 Mbps / 150 ms artificial
 latency, local preview: CSV guide action available in 2,391 ms. This is a single
 laboratory navigation, not field LCP/INP, real-phone evidence or a capacity test.
-Client build approximately 265.5 kB JS / 87.4 kB gzip and 26.1 kB CSS / 5.9 kB
+Client build approximately 265.7 kB JS / 87.5 kB gzip and 26.1 kB CSS / 5.9 kB
 gzip, plus selected self-hosted fonts. Guides do not preload hosted applications,
 OCR models, codecs or sample images. Source/version/update ownership remains in
 the catalogue FOSS metadata, existing pinned manifests and `docs/updates.md`;
@@ -130,6 +130,59 @@ Audit production separately with `npm --prefix portal run test:seo`, verify
 guide downloads and real EN/ES navigation; notify IndexNow once for meaningful
 changed canonical pages only. Release evidence and exact rollback references
 are recorded below after deployment. No database migration is involved.
+
+### Production checkpoint — 7 October 2026, 18:24 UTC
+
+Implementation commit **`728586151f4eee70910c2294a4be6b1f920bd30f`** is pushed
+to GitHub and deployed using the established portal-only Compose process.
+The portal container is healthy. No upstream service/container or Caddy
+configuration was changed. The 21 configuration tests also pass.
+
+- All **34** public canonical pages pass the live SEO audit, including unique
+  metadata, initial HTML, canonical/hreflang, robots/sitemap and strict portal
+  CSP. The twelve practical guides and six unique practice files return 200;
+  an invented guide path returns 404. All five live view counts match the
+  table above. FMD remains pilot, status is outside productivity counts.
+- Production desktop home, EN→ES OCR-guide navigation, the actual Spanish
+  `/es/ocr-pdf.html` tool link, and mobile CSV-guide→RAWGraphs input pass without
+  observed portal exceptions or overflow. Desktop and mobile captures are
+  retained locally at `.impeccable/review/release/`. The guide-page navigation
+  was also exercised with simulated 1.6 Mbps / 150 ms latency; it used a warm
+  browser cache, so it is not a cold-load or application-throughput benchmark.
+- A single **24-page IndexNow** notification returned **202** after the live
+  audit. This is a notification receipt, not indexing, rankings or traffic.
+- Public source disclosure points to the immutable implementation commit.
+  The published integration archive contains 442 Git-indexed source files;
+  its public HTTPS download matches the local SHA-256
+  `3c531c09c09b3d70471dadf5844e4eb0378d1a974975590f7a982947bd841415`.
+  Source archive updates use `node scripts/publish-integration-source.mjs`.
+
+Production image:
+`sha256:3a583d091fe674da7f5a4b1678bbf48204ae20b5ab1b8874a39da31c095b9964`.
+Rollback image: `public-utility-portal:pre-catalog-guides-20261007`
+(`sha256:9ca4681725cabe2b93c963a47685c0b1bc74c4d19e2bc5d8016627c430011e9b`).
+Private environment snapshot:
+`/opt/utilibre/catalog-guides-rollback-20261007/portal.env` (directory 0700,
+file 0600). Previous integration archive:
+`/opt/utilibre/source-update-CbQaje/previous-utilibre-integration.tar.gz`.
+These are local rollback artifacts, not offsite backups or a tested data restore.
+
+If rollback is needed, from the repository use the retained image without
+rebuilding or recreating other services:
+
+```sh
+PORTAL_IMAGE=public-utility-portal:pre-catalog-guides-20261007 \
+SOURCE_CODE_URL=https://github.com/mycelibre/utilibre/tree/1b1bfd13cc56e58b9344efcc038caf08f62e66d1 \
+docker compose up -d --no-deps --no-build portal
+```
+
+Then persist only the reviewed image/source settings in `.env`, preserving
+unrelated later changes, and repeat the portal health/HTML checks. Do not
+blindly restore the entire environment or delete service data. Keep published
+source available; archive rollback is unnecessary unless a specific source
+publication defect is identified. Optional new-tool decisions remain reviewable
+only: Markmap/Super Productivity preferred; BeepBox and teleprompter deferred;
+stock Typings rejected for trackers until a cleaned, tested fork is approved.
 
 ## Creative-tool release — 7 October 2026
 
