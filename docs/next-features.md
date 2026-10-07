@@ -455,6 +455,13 @@ release gates. Portal-only rollback uses
 `public-utility-portal:pre-collab-discovery-20261007` and source reference `ff88935`;
 WBO itself must not be restarted or have its temporary boards erased for this UI fix.
 
+Released as `438ca50`: 84 unit tests and six desktop/mobile guide/discovery checks
+passed, alongside typecheck, lint, build and configuration validation. Live EN/ES
+homepage searches and server-rendered direct query URLs return the Collab record,
+correct localized launch and All tasks selection. Desktop/mobile captures were
+inspected without overflow. Portal only was recreated; WBO's original start time
+remained 23:02:23 UTC and its board storage was untouched.
+
 ## Primary references consulted
 
 - SearXNG Hostnames: https://docs.searxng.org/dev/plugins/hostnames.html
