@@ -68,6 +68,20 @@ function providerMetadata(providerId: FossProviderId): Pick<CatalogEntry, 'provi
 
 export const catalog: CatalogEntry[] = [
   {
+    id: 'wbo', ...providerMetadata('wbo'), kind: 'service', implementation: 'upstream-application',
+    category: 'service', discoveryGroup: 'design', configUrlKey: 'publicCollabUrl',
+    name: { en: 'Draw together · temporary pilot', es: 'Dibujar en grupo · piloto temporal' },
+    description: { en: 'Share a board with a small group without an account. For non-sensitive sketches only.', es: 'Compartí una pizarra con un grupo pequeño sin cuenta. Solo para bocetos sin datos sensibles.' },
+    launchLabel: { en: 'Start a shared board', es: 'Crear una pizarra compartida' },
+    help: { en: 'Create an unlisted board, share its address and draw together. Anyone with the link can read and edit. Download SVG before leaving: boards are lost on service restart and older objects are discarded above 256. Excalidraw remains the local-only alternative.', es: 'Creá una pizarra sin listar, compartí su dirección y dibujen juntos. Cualquiera con el enlace puede leer y editar. Descargá SVG antes de salir: las pizarras se pierden al reiniciar el servicio y se descartan objetos antiguos al superar 256. Excalidraw sigue siendo la alternativa local.' },
+    labels: ['server'], filesUploaded: false, upstreamServices: ['Cloudflare HTTPS proxy'],
+    dataFlow: { en: 'Drawing operations leave your device over HTTPS through Cloudflare to Utilibre and other people in the room. No end-to-end encryption: the server can read drawings. No third-party assets were observed in the tested flow.', es: 'Los trazos salen del dispositivo por HTTPS a través de Cloudflare hacia Utilibre y las otras personas de la sala. No hay cifrado de extremo a extremo: el servidor puede leer los dibujos. No se observaron recursos externos en el recorrido probado.' },
+    temporaryStorage: { en: 'Drawings are held in memory-backed storage on Utilibre. Recent room names and preferences may remain in browser storage.', es: 'Los dibujos quedan en almacenamiento de memoria de Utilibre. Los nombres recientes de salas y las preferencias pueden quedar en el navegador.' },
+    retention: { en: 'Closing a tab does not delete a board. Service stops/restarts erase boards; no guaranteed expiry, backup or recovery. At most 256 objects per board; older ones are discarded above the limit. Export SVG; clearing browser data does not delete the server copy.', es: 'Cerrar una pestaña no borra la pizarra. Detener o reiniciar el servicio borra las pizarras; no hay vencimiento, respaldo ni recuperación garantizados. Se conservan hasta 256 objetos; se descartan los más antiguos al superar el límite. Exportá SVG; borrar datos del navegador no borra la copia del servidor.' },
+    logging: { en: 'Application container and gateway access logs are disabled. Edge/provider operational metadata and retention are separate and not verified here. Browser history and recipients may retain room links.', es: 'Los registros del contenedor y de acceso del intermediario están desactivados. Los metadatos operativos del borde/proveedor y su conservación son independientes y no se verificaron aquí. El historial y los destinatarios pueden conservar enlaces.' },
+    modified: true, operationalStatus: 'operational',
+  },
+  {
     id: 'pollaris', ...providerMetadata('pollaris'), kind: 'service', implementation: 'upstream-application',
     category: 'service', discoveryGroup: 'planning', featuredOrder: 40, configUrlKey: 'publicPollarisUrl',
     name: { en: 'Account-free polls · Pollaris', es: 'Encuestas sin cuenta · Pollaris' },

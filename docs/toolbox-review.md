@@ -1,5 +1,15 @@
 # Browser toolbox review — 2026-10-06
 
+## WBO temporary collaboration pilot — 7 October 2026
+
+Separate upstream application WBO 2.9.0-p2, AGPL-3.0-or-later, exact source
+`f37875a6b427397e579e2a869caf073ae87ee264`; no replacement of local Excalidraw.
+Public HTTPS two-session drawing/reconnect/SVG-export checks passed. Server-readable
+temporary scenes: unsuitable for secrets; anyone with the room address can join.
+The catalogue keeps it in the pilot view, with complete EN/ES help and instructions.
+Build, dependency fixes, resource caps, source archive, firewall and rollback:
+[`next-features.md`](next-features.md#activation-follow-up--7-october-2026).
+
 ## Markmap implemented — 7 October 2026
 
 Only **Markmap** was installed from the five candidates below. The restricted

@@ -3,7 +3,8 @@
 Baseline: 2026-10-07; repository `1603ee1`. Preserve unrelated untracked
 exports/artifacts. No additional listings, registration changes, or analytics.
 Production portal publishing is already authorized; Caddy remains on the
-separate edge VM. Public TURN requires an explicit bandwidth/network allocation.
+separate edge VM. See the activation follow-up below for the later owner approval,
+Hetzner allowance research, public WBO verification and remaining TURN networking.
 
 | Capability | Baseline / upstream mechanism | Bounded implementation | Operations and verification |
 | --- | --- | --- | --- |
@@ -65,8 +66,8 @@ separate edge VM. Public TURN requires an explicit bandwidth/network allocation.
   a network cause. Coturn is a separately disabled, tested loopback option below.
 - Excalidraw remains the local editor. Its complete upstream collaborative app
   depends on Firebase scene/image persistence as well as a room service. Instead
-  of writing a replacement backend, WBO is a separate loopback-only guest-room
-  pilot. No new public collaboration hostname or catalogue-ready claim.
+  of writing a replacement backend, WBO started as a separate loopback-only guest-room
+  pilot. The later activation follow-up records its public HTTPS verification.
 
 New complete EN/ES guides also cover My Utilibre and Open with Utilibre. Existing
 image/transfer guides are updated rather than duplicated. Guide index, navigation,
@@ -200,11 +201,12 @@ node deployment/community/check-turn.mjs
 docker compose -f deployment/community/compose.turn.yaml --profile lab stop turn-lab
 ```
 
-Public activation requires all of these concrete owner inputs: dedicated real DNS
+Public activation originally required all of these concrete owner inputs: dedicated real DNS
 hostname; explicit IPv4 bind/public NAT addresses; approved allocation count and
 per-allocation/global B/s based on hosting bandwidth allowance; monthly usage/stop
-policy; working certificate renewal; firewall/NAT access. No hosting allowance was
-available, so no public defaults are guessed. Render only after setting
+policy; working certificate renewal; firewall/NAT access. The later Hetzner research
+supports a bounded first allocation; NAT IPv4 and certificate renewal remain missing.
+Render only after setting
 `UTILIBRE_TURN_BIND_IP`, `UTILIBRE_TURN_PUBLIC_IP`, `UTILIBRE_TURN_HOST`,
 `UTILIBRE_TURN_CAPACITY_APPROVED=yes`, `UTILIBRE_TURN_TOTAL_QUOTA`,
 `UTILIBRE_TURN_MAX_BPS`, `UTILIBRE_TURN_TOTAL_BPS`. Maximum configured allocations
@@ -235,7 +237,7 @@ stop the `turn` service, and close only its dedicated ingress rules. Do not dele
 credentials during a rollback. Public TLS/NAT and forced relay on different physical
 networks remain unverified.
 
-## Guest collaboration pilot — operator-only
+## Guest collaboration pilot — initial loopback setup
 
 Start with `docker compose -f deployment/community/compose.collaboration.yaml
 --profile pilot up -d --build`; source checkout must be exact WBO revision above at
@@ -274,12 +276,9 @@ arrival limiting after a real initial 429 failure was diagnosed. Backend 256 MiB
 0.5 CPU/64 PIDs; gateway 32 MiB/0.25 CPU/32 PIDs. Storage exhaustion/disk-failure
 recovery was not tested; this is a small synthetic pilot, not durable hosting.
 
-To allow a public pilot requires a chosen real hostname, approval of this explicit
-ephemeral/trimmed storage model and shared capacity, source/attribution publication,
-and an edge-only firewall rule. Only then set `UTILIBRE_COLLAB_BIND_IP=10.10.1.43`
-and use `deployment/community/Caddyfile.collaboration-pilot` on the separate VM
-with `UTILIBRE_COLLAB_HOST` set. Template is prepared, **not installed/validated on
-the edge**. Keep noindex and publish these limitations before catalogue launch.
+Public operation now uses the guarded LAN override described below, plus
+`deployment/community/Caddyfile.collaboration-pilot` on the separate VM.
+Keep noindex and disclose the temporary/server-readable storage before entry.
 Do not promise private rooms based on upstream homepage wording. Rollback is stop
 pilot/gateway and remove only its added edge route. Export first: stopping deletes
 the pilot's tmpfs scenes. It does not touch Excalidraw or other services.
@@ -290,8 +289,8 @@ Production permission already established for portal/existing service updates.
 QR p3 was deployed and its source archive published; Redlib recreated with native
 banner and no source patch; SearXNG updated by its guarded updater. Portal source
 release is `f8df3908e4b47bf0c33cf1c235478d198086ab33`, pushed to GitHub and built/
-deployed with portal-only Compose recreation on 2026-10-07. Public TURN/WBO remain
-disabled. No new public service requires a Caddy change for the portal/QR work.
+deployed with portal-only Compose recreation on 2026-10-07. At that initial release,
+public TURN/WBO were disabled. See the later activation follow-up for changes.
 
 Rollback image: `public-utility-portal:pre-toolkit-20261007`, preserved image ID
 `sha256:ba753fe500d10fec11baf39b33018fc8eb28622485e0078ffe4e6eafd99b8dd2`.
@@ -327,6 +326,100 @@ root font size was observed; this local heading fix does not change global
 navigation or claim to resolve that unrelated text-enlargement issue. Rollback
 image for this CSS follow-up: `public-utility-portal:pre-toolkit-spacing-20261007`;
 restore the portal source reference to `f8df3908e4b47bf0c33cf1c235478d198086ab33`.
+
+## Activation follow-up — 7 October 2026
+
+The owner authorized installation/activation subject to privacy and security, and
+identified a Hetzner auction server. Current official auction/traffic documentation
+states a standard dedicated 1 Gbit/s uplink has unlimited traffic. Optional 10 Gbit/s
+has 20 TB outgoing/month and overage charges. The actual Robot contract was not
+available; do not confuse the VM's virtual NIC speed with that contract. No purchase
+is required by the standard plan for this bounded option. Sources checked today:
+
+- https://docs.hetzner.com/robot/general/server-auction-faqs/
+- https://docs.hetzner.com/robot/general/traffic/
+- https://docs.hetzner.com/robot/dedicated-server/network/10g-uplink/
+- https://raw.githubusercontent.com/coturn/coturn/4.7.0/examples/etc/turnserver.conf
+
+TURN: `turn/auction.env` prepares 8 allocations, 250,000 B/s per allocation,
+1,000,000 B/s combined capacity. Coturn accounts input/output separately; the
+aggregate setting is about 8 Mbit/s in each direction, not a measured network-wire
+cap, a monthly budget or a guarantee of eight users. This conservative policy is
+small relative to the standard 1 Gbit/s uplink; it does not promise transfer speed.
+Credentials delivered to public browsers are reusable; the existing global limits
+and public-peer-only restrictions remain essential. WS file fallback stays disabled.
+No TURN listener or PairDrop RTC change has been activated.
+
+Remaining TURN dependency is concrete network/certificate access, not another
+generic bandwidth permission: point `turn.utilibre.org` **DNS-only** to the actual
+public NAT IPv4; forward 3478 UDP/TCP, 5349 TCP and 49160–49191 UDP to the same ports
+on 10.10.1.43, preserving relay ports. Do not publish a nonfunctional AAAA record.
+Supply that verified IPv4 as `UTILIBRE_TURN_PUBLIC_IP` and a certificate/key for the
+hostname with a renewal path. The current hostname resolves through Cloudflare;
+ordinary Cloudflare/Caddy HTTP proxies cannot provide this TURN path. No remote
+edge/Robot/DNS credentials were available. Do not guess NAT addresses from outbound
+HTTP. After provisioning, render with the auction env file, activate public-turn,
+perform forced cross-network relay/TLS/quota tests, then apply the PairDrop RTC
+override. Use Robot Traffic statistics and existing host monitoring for totals;
+no per-file/peer analytics. Investigate unexpected sustained saturation or an abuse
+notice; disabling this optional relay returns PairDrop to its existing direct mode.
+
+WBO: `https://collab.utilibre.org/` now serves the matching bilingual landing page
+through Cloudflare/Caddy. The upstream head hook adds one native-dialog warning
+before drawing, including for direct room links; no scene access, fetches, protocol
+or storage code added. Landing template avoids upstream durable/private-room claims.
+Native UI preserved. A file-scoped Impeccable color exception permits upstream
+black (`rgb(0, 0, 0)`) in this separate app, not a new portal palette color.
+
+Deployment uses `compose.collaboration.yaml` plus `compose.collaboration-lan.yaml`,
+profile `pilot`. Restart policy is unless-stopped; this explicitly means drawings
+are lost on container restart. Bindings: 10.10.1.43:3169 and operator loopback3169.
+`wbo/firewall.sh` restricts forwarded LAN access to edge 10.10.1.3, blocks application
+and gateway egress/host access, and allows only gateway→WBO. Fixed isolated subnets
+172.29.94.0/24 and 172.29.95.0/24 were checked for conflicts. Persistence uses the
+existing utilibre-tools-firewall systemd service's `wbo.conf` drop-in. Existing
+Excalidraw and PairDrop containers/configuration are unchanged.
+
+Observed checks at 23:01–23:04 UTC: two independent Chromium sessions drew and saw
+each other's rectangles, reconnected and exported SVG over both loopback and
+**public HTTPS**. EN/ES notices and landing pages, simulated 390px mobile layout,
+foreign-Origin 403, oversized-body 413, corresponding-source download and no
+third-party browser requests passed. These are not real-phone, capacity or uptime
+tests. A first immediate post-recreation test timed out waiting for the notice;
+after confirming HTTP readiness the unchanged workflow passed. Application egress to the
+host and internet was blocked; an untrusted bridge client could not reach LAN3169.
+Caddy block validates locally; the actual remote Caddy configuration/log policy
+was not inspected. Public response has CSP, no-referrer, no-store and noindex.
+
+Catalogue integration is explicitly a temporary pilot, not default/featured. Its
+launch route, privacy answers, My Utilibre selection and complete guide use existing
+templates. Guide URLs: `/en/guides/shared-whiteboard`, `/es/guias/pizarra-compartida`.
+Routes automatically enter the public sitemap; rooms never do. No search/instance
+submission is part of this follow-up. Source publication:
+`sh deployment/community/publish-wbo-source.sh` includes exact upstream, lockfile,
+integration and build recipe, without scenes or secrets. The public landing links
+to `/utilibre-source/wbo-utilibre.tar.gz` (archive backup retained on replacement).
+
+WBO rollback: first warn participants to download SVG; stop only this Compose
+project and remove its edge route/catalogue enablement. Stopping destroys tmpfs
+scenes and is not recoverable from a backup. Leave Excalidraw/PairDrop untouched.
+Retain the dedicated firewall guard while its listener exists. No current user
+boards should be deleted for a test or rollback without this warning.
+
+Release checks: typecheck, lint, build, FOSS policy and 84 unit tests passed;
+12 desktop/mobile guide/toolkit browser checks passed. Sitemap now contains 48
+canonical portal documents, including both collaboration guides, not board URLs.
+The existing Uptime Kuma now has a five-minute HTTPS monitor named
+`WBO · temporary pilot`, added with the scoped updater; existing history/settings
+were preserved and its private SQLite backup retained. This monitors reachability,
+not collaborative drawing. During an idle observation WBO used about 43 MiB and
+nginx 2.3 MiB; these are observations, not load/capacity estimates.
+
+Portal follow-up rollback image: `public-utility-portal:pre-wbo-20261007`; prior
+source reference `22edbe4aecb2fab2285b44375fcfaf5e4b344b85`. Restore only that portal
+image/source reference and remove WBO enablement if rolling back discovery; do not
+revert the complete environment or the unrelated SearXNG update. Source archives
+are published from reviewed indexed files before the portal-only release.
 
 ## Primary references consulted
 

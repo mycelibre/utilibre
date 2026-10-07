@@ -76,7 +76,7 @@ export function renderCatalogRow(
   if (note) content.append(element('p', 'catalog-ledger-limitation', note));
   const guide = practicalGuides.find((guide) => guide.id !== 'starting-projects' && (guide.tools.some(tool => tool.id === entry.id) || (entry.id === 'omni-compress-image' && guide.id === 'image')))
     ?? practicalGuides.find((guide) => guide.tools.some(tool => tool.id === entry.id));
-  if (pilotIds.has(entry.id) || entry.operationalStatus !== 'operational') content.append(element('p', 'catalog-ledger-access', pilotIds.has(entry.id) ? (language === 'es' ? 'Piloto: uso completo aún no verificado' : 'Pilot: complete workflow not yet verified') : t(`status.${entry.operationalStatus}`)));
+  if (pilotIds.has(entry.id) || entry.operationalStatus !== 'operational') content.append(element('p', 'catalog-ledger-access', entry.id === 'wbo' ? (language === 'es' ? 'Piloto temporal: exportá antes de salir' : 'Temporary pilot: export before leaving') : pilotIds.has(entry.id) ? (language === 'es' ? 'Piloto: uso completo aún no verificado' : 'Pilot: complete workflow not yet verified') : t(`status.${entry.operationalStatus}`)));
   if (options.showSource && entry.upstreamSourceUrl) {
     const sourceText = `${t('home.catalog.source')}: ${entry.upstreamProject || name}`;
     const attribution = element('p', 'catalog-ledger-attribution');

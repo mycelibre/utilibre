@@ -42,6 +42,23 @@ assets with SHA-256 verification and publish the component source/package and
 notices alongside the OmniTools source and integration archive. Source:
 <https://github.com/imgly/background-removal-js/tree/12f56cc4f2a90d624e165a715748d22efc7a1d93>.
 
+## Optional transfer relay and collaborative whiteboard (October 7)
+
+Coturn 4.7.0 (BSD-3-Clause; <https://github.com/coturn/coturn/tree/4.7.0>) is
+prepared as a separately disabled, bounded TURN option; no new portal dependency.
+Its official image digest and packaging recipe are in `deployment/community/turn`.
+
+WBO / Whitebophir 2.9.0, revision
+`f37875a6b427397e579e2a869caf073ae87ee264`, is AGPL-3.0-or-later
+(<https://github.com/lovasoa/whitebophir/tree/f37875a6b427397e579e2a869caf073ae87ee264>).
+The separate application retains upstream notices. Our deployment pins patched
+dependencies and uses its native head-template hook and landing-page template
+for bilingual privacy information, not a forked collaboration protocol.
+`deployment/community/publish-wbo-source.sh` publishes the exact source,
+dependency lockfile, integration and build recipe at the application's
+`/utilibre-source/wbo-utilibre.tar.gz`. Deployment limits and checks are recorded
+in `docs/next-features.md`. Excalidraw remains a separate, unchanged local editor.
+
 ## Project identity assets
 
 Copyright © 2026 Mycelibre contributors applies to this repository's original

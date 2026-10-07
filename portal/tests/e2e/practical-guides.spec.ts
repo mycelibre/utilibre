@@ -8,9 +8,9 @@ test('all practical guides preserve language, real launch paths and downloadable
     publicChartsUrl: 'https://charts.example/', publicScrubUrl: 'https://scrub.example/', publicDropUrl: 'https://drop.example/',
     publicMindmapUrl: 'https://mindmap.example/',
     publicRedditUrl: 'https://redlib.example/',
-    publicDrawUrl: 'https://draw.example/', publicWhiteboardUrl: 'https://whiteboard.example/',
+    publicDrawUrl: 'https://draw.example/', publicWhiteboardUrl: 'https://whiteboard.example/', publicCollabUrl: 'https://collab.example/',
     publicPasteUrl: 'https://paste.example/', publicEncryptUrl: 'https://encrypt.example/', publicPollarisUrl: 'https://pollaris.example/', publicPollUrl: 'https://poll.example/',
-    enabledServices: ['redlib', 'drawio', 'excalidraw', 'markmap', 'bentopdf', 'omnitools', 'minipaint', 'rawgraphs', 'image-scrubber', 'pairdrop', 'privatebin', 'hatsh', 'pollaris', 'rallly'], listedServices: [],
+    enabledServices: ['wbo', 'redlib', 'drawio', 'excalidraw', 'markmap', 'bentopdf', 'omnitools', 'minipaint', 'rawgraphs', 'image-scrubber', 'pairdrop', 'privatebin', 'hatsh', 'pollaris', 'rallly'], listedServices: [],
   } }));
   for (const guide of practicalGuides) {
     await page.goto(practicalGuidePath(guide.id, 'en'));

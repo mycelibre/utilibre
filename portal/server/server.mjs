@@ -434,6 +434,7 @@ function publicConfig() {
     publicAudioUrl: publicServiceUrl(process.env.PUBLIC_AUDIO_URL),
     publicPaintUrl: publicServiceUrl(process.env.PUBLIC_PAINT_URL),
     publicWhiteboardUrl: publicServiceUrl(process.env.PUBLIC_WHITEBOARD_URL),
+    publicCollabUrl: publicServiceUrl(process.env.PUBLIC_COLLAB_URL),
     publicSvgUrl: publicServiceUrl(process.env.PUBLIC_SVG_URL),
     publicCyberchefUrl: publicServiceUrl(process.env.PUBLIC_CYBERCHEF_URL),
     publicScrubUrl: publicServiceUrl(process.env.PUBLIC_SCRUB_URL),

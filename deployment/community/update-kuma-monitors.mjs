@@ -12,6 +12,7 @@ dst=sqlite3.connect(sys.argv[1]);src.backup(dst)
 assert dst.execute('PRAGMA integrity_check').fetchall()==[('ok',)]
 dst.close();src.close()`, `${backup}/kuma.sqlite`]);
 const additions = [
+  ['WBO · temporary pilot', 'https://collab.utilibre.org/'],
   ['Markmap', 'https://mindmap.utilibre.org/'],
   ['Excalidraw', 'https://whiteboard.utilibre.org/'],
   ['SVGEdit', 'https://svg.utilibre.org/'],

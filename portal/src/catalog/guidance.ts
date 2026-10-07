@@ -3,7 +3,7 @@ import type { Language } from '../i18n';
 
 // Presentation of catalogue facts, not another service registry.
 export const startHereIds = ['bentopdf', 'vert', 'omni-compress-image', 'pairdrop', 'qr-offline', 'pollaris', 'drawio', 'excalidraw'] as const;
-export const pilotIds = new Set(['fmd', 'whisper-web']);
+export const pilotIds = new Set(['fmd', 'whisper-web', 'wbo']);
 export type AccessMode = 'anonymous' | 'open-registration' | 'approved' | 'existing' | 'password';
 export function accessMode(entry: CatalogEntry): AccessMode {
   if (entry.id === 'mumble') return 'password';
@@ -25,6 +25,7 @@ export function accessText(entry: CatalogEntry, language: Language): string {
   return labels[accessMode(entry)][language];
 }
 const choices: Record<string, LocalizedText> = {
+  wbo: { en: 'Temporary, server-readable group sketches—not private storage. Export SVG regularly.', es: 'Bocetos grupales temporales que el servidor puede leer, no almacenamiento privado. Exportá SVG con frecuencia.' },
   bentopdf: { en: 'Check OCR names, accents and numbers against the original. A searchable PDF is not an editable Word layout.', es: 'Compará nombres, tildes y números del OCR con el original. Un PDF con texto seleccionable no es un documento Word editable.' },
   vert: { en: 'Remote video conversion is disabled. After choosing files, use the Convert tab if the page stays on Upload. Processing components can take time to download.', es: 'La conversión remota de video está deshabilitada. Si después de elegir archivos seguís en Upload, abrí Convert. Los componentes pueden tardar en descargarse.' },
   pairdrop: { en: 'Both devices must stay online. Restricted networks may not connect: no relay fallback is configured.', es: 'Ambos dispositivos deben seguir conectados. Las redes restrictivas pueden impedir la transferencia: no hay relay alternativo.' },
@@ -72,6 +73,7 @@ export function privacyAnswers(entry: CatalogEntry, language: Language): Array<[
 const checkedTasks = new Set(['bentopdf', 'vert', 'drawio', 'excalidraw', 'omni-compress-image', 'omni-image-editor', 'qr-offline', 'pollaris', 'pairdrop', 'rawgraphs', 'minipaint', 'image-scrubber', 'ntfy', 'yopass', 'privatebin']);
 export function verificationText(entry: CatalogEntry, language: Language): string {
   const es = language === 'es';
+  if (entry.id === 'wbo') return es ? 'Dibujo entre dos sesiones, reconexión y exportación SVG comprobados por HTTPS público en Chromium el 7 de octubre de 2026. Vista móvil simulada; no es una prueba en teléfono real ni de capacidad.' : 'Two-session drawing, reconnect and SVG export checked over public HTTPS in Chromium on 7 October 2026. Mobile viewport simulated; not a real-phone or capacity test.';
   if (entry.id === 'markmap') return es ? 'Se comprobaron importación/exportación, borradores y entradas maliciosas con datos ficticios en Chromium de escritorio, el 7 de octubre de 2026. Vista de teléfono simulada; no es una prueba en un teléfono real. La disponibilidad HTTPS pública se comprueba por separado.' : 'Import/export, drafts and hostile inputs were checked with fictional data in desktop Chromium on 7 October 2026. Phone viewport simulated, not a real-phone test. Public HTTPS availability is checked separately.';
   if (pilotIds.has(entry.id)) return es ? 'Piloto: no se ha verificado el flujo completo en un dispositivo real autorizado.' : 'Pilot: the complete workflow on an authorized real device has not been verified.';
   if (checkedTasks.has(entry.id)) return es

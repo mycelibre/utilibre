@@ -1,0 +1,16 @@
+/* Keep WBO's native typography and controls; only adapt the hosted notice. */
+header { height: auto; }
+main { height: auto; text-align: start; }
+main > div { min-width: 0; max-width: 48rem; box-sizing: border-box; }
+main li { margin-block: 0.75rem; }
+footer { height: auto; padding: 1rem; }
+footer a { opacity: 1; }
+.utilibre-es { display: none; }
+html:lang(es) .utilibre-en { display: none; }
+html:lang(es) .utilibre-es { display: block; }
+#utilibre-notice { max-width: min(42rem, 85vw); max-height: 85vh; overflow: auto; font: 1rem/1.5 sans-serif; }
+#utilibre-notice h2 { font: bold 1.25rem/1.4 sans-serif; }
+#utilibre-notice button { font: inherit; padding: 0.5rem 1rem; }
+#utilibre-notice a { color: inherit; }
+#utilibre-notice :focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { header, main { animation: none; transition: none; } }

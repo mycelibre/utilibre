@@ -16,6 +16,7 @@ import {
 import type { PublicConfig } from '../../src/config';
 
 const baseConfig: PublicConfig = {
+  publicCollabUrl: '',
   publicMindmapUrl: '',
   publicWhiteboardUrl: '', publicSvgUrl: '', publicCyberchefUrl: '', publicScrubUrl: '',
   publicZipUrl: '', publicChartsUrl: '', publicAudioUrl: '', publicPaintUrl: '',
@@ -51,8 +52,17 @@ const hostedConfig = config({
 });
 
 describe('catalog discovery metadata', () => {
+  it('makes the tested temporary whiteboard launchable without presenting it as a ready default', () => {
+    const setup = config({ enabledServices: ['wbo'], publicCollabUrl: 'https://collab.example/' });
+    const board = catalogEntry('wbo')!;
+    expect(entryLaunch(board, 'es', setup)?.href).toBe('https://collab.example/?lang=es');
+    expect(immediatelyUsable(board, setup)).toBe(false);
+    expect(discoverEntries(setup, 'en', { view: 'pilots' }).map(e => e.id)).toContain('wbo');
+    expect(discoverEntries(setup, 'en', { view: 'public' }).map(e => e.id)).not.toContain('wbo');
+  });
   it('keeps reviewed applications and one narrow integration', () => {
     expect(catalog.map((entry) => entry.id)).toEqual([
+      'wbo',
       'pollaris',
       'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd',
       'lrclib', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'kittygram', 'rimgo', 'mumble', 'biblioreads', 'gothub', 'binternet',

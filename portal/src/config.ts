@@ -24,6 +24,7 @@ export interface PublicConfig {
   publicAudioUrl: string;
   publicPaintUrl: string;
   publicWhiteboardUrl: string;
+  publicCollabUrl: string;
   publicSvgUrl: string;
   publicCyberchefUrl: string;
   publicScrubUrl: string;
@@ -87,6 +88,7 @@ const defaults: PublicConfig = {
   publicAudioUrl: '',
   publicPaintUrl: '',
   publicWhiteboardUrl: '',
+  publicCollabUrl: '',
   publicSvgUrl: '',
   publicCyberchefUrl: '',
   publicScrubUrl: '',

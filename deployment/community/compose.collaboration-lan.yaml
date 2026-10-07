@@ -1,0 +1,10 @@
+# Apply only after wbo/firewall.sh. The separate edge owns the public HTTPS route.
+services:
+  wbo:
+    restart: unless-stopped
+  gateway:
+    restart: unless-stopped
+    ports: !override
+      - "10.10.1.43:3169:8080"
+      # Retain operator-only browser checks; not a second public listener.
+      - "127.0.0.1:3169:8080"

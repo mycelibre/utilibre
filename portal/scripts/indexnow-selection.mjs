@@ -23,6 +23,7 @@ const publicPaths = new Set([
   '/en/guides/my-utilibre', '/es/guias/mi-utilibre',
   '/en/guides/open-with-utilibre', '/es/guias/abrir-con-utilibre',
   '/en/guides/starting-projects', '/es/guias/proyectos-de-practica',
+  '/en/guides/shared-whiteboard', '/es/guias/pizarra-compartida',
   '/en/guides/mind-map', '/es/guias/mapa-mental',
   '/en/guides/scanned-documents', '/es/guias/documentos-escaneados',
   '/en/guides/prepare-image', '/es/guias/preparar-imagen',

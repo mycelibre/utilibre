@@ -6,6 +6,7 @@ import { pathToFileURL } from 'node:url';
 const repository = new URL('../', import.meta.url);
 
 const services = [
+  { id: 'wbo', hostKey: 'PUBLIC_COLLAB_HOST', urlKey: 'PUBLIC_COLLAB_URL', portKey: 'WBO_PORT' },
   { id: 'excalidraw', hostKey: 'PUBLIC_WHITEBOARD_HOST', urlKey: 'PUBLIC_WHITEBOARD_URL', portKey: 'EXCALIDRAW_PORT' },
   { id: 'svgedit', hostKey: 'PUBLIC_SVG_HOST', urlKey: 'PUBLIC_SVG_URL', portKey: 'SVGEDIT_PORT' },
   { id: 'cyberchef', hostKey: 'PUBLIC_CYBERCHEF_HOST', urlKey: 'PUBLIC_CYBERCHEF_URL', portKey: 'CYBERCHEF_PORT' },

@@ -2,7 +2,7 @@ name: utilibre-collaboration-pilot
 services:
   wbo:
     profiles: [pilot]
-    image: utilibre-wbo:2.9.0-p1
+    image: utilibre-wbo:2.9.0-p2
     build:
       context: /opt/utilibre/src/whitebophir
       dockerfile: /home/ubuntu/freetools/deployment/community/wbo/Dockerfile
@@ -17,8 +17,8 @@ services:
     pids_limit: 64
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=8m,uid=1000,gid=1000
-      # Synthetic pilot only: upstream files persist across disconnection, not
-      # container stops/recreation. No public user documents live here.
+      # Temporary pilot: upstream files persist across disconnection, not
+      # container stops/recreation. Disclose this before any public access.
       - /opt/app/server-data:rw,nosuid,nodev,noexec,size=64m,uid=1000,gid=1000
     environment:
       WBO_MAX_ITEM_COUNT: "256"
@@ -29,13 +29,15 @@ services:
       WBO_MAX_DESTRUCTIVE_ACTIONS_PER_IP: "*:190/60s"
       WBO_IP_SOURCE: remoteAddress
       WBO_TRUST_PROXY_HOPS: "0"
+      WBO_HTML_HEAD_SNIPPET_PATH: /opt/app/utilibre-head.html
       OTEL_SDK_DISABLED: "true"
       OTEL_TRACES_EXPORTER: none
       OTEL_METRICS_EXPORTER: none
       OTEL_LOGS_EXPORTER: none
       LOG_LEVEL: warn
     logging: {driver: none}
-    networks: [isolated]
+    networks:
+      isolated: {ipv4_address: 172.29.95.10}
     healthcheck:
       test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 60s
@@ -54,11 +56,20 @@ services:
     mem_limit: 32m
     cpus: 0.25
     pids_limit: 32
-    volumes: ["./wbo/nginx.conf:/etc/nginx/nginx.conf:ro"]
+    volumes:
+      - ./wbo/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
     ports: ["${UTILIBRE_COLLAB_BIND_IP:-127.0.0.1}:3169:8080"]
-    networks: [front, isolated]
+    networks:
+      front: {ipv4_address: 172.29.94.10}
+      isolated: {ipv4_address: 172.29.95.20}
     depends_on: [wbo]
     logging: {driver: none}
 networks:
-  isolated: {internal: true}
-  front: {}
+  isolated:
+    internal: true
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.95.0/24}]}
+  front:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.94.0/24}]}

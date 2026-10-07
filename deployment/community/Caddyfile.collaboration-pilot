@@ -1,8 +1,8 @@
-# OPTIONAL; not installed on the Caddy VM. Requires an approved real hostname
-# and firewall-restricted LAN binding, see docs/next-features.md.
-# Do not add this block while the pilot is bound only to 127.0.0.1.
-{$UTILIBRE_COLLAB_HOST} {
-    encode zstd gzip
-    header X-Robots-Tag "noindex, nofollow"
-    reverse_proxy 10.10.1.43:3169
+# Install on the separate Caddy VM after the guarded LAN backend is started.
+collab.utilibre.org {
+	encode zstd gzip
+	log_skip
+	header X-Robots-Tag "noindex, nofollow"
+	header Cache-Control "no-store"
+	reverse_proxy 10.10.1.43:3169
 }

@@ -7,6 +7,8 @@ COPY --from=integration package.json package-lock.json ./
 RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
 COPY --chown=1000:1000 . .
 COPY --from=integration package.json package-lock.json ./
+COPY --from=integration index.html utilibre.css utilibre-notice.js ./client-data/
+COPY --from=integration head.html ./utilibre-head.html
 USER 1000:1000
 ENV NODE_ENV=production PORT=8080 OTEL_SDK_DISABLED=true LOG_LEVEL=warn
 EXPOSE 8080

@@ -1,4 +1,4 @@
-export type FossProviderId = 'markmap' | 'excalidraw' | 'svgedit' | 'cyberchef' | 'image-scrubber' | 'zip-manager' | 'rawgraphs' | 'audiomass' | 'minipaint' | 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'lrclib' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris' | 'binternet' | 'translite' | 'biblioreads' | 'qr-offline' | 'kittygram' | 'rimgo' | 'mumble';
+export type FossProviderId = 'wbo' | 'markmap' | 'excalidraw' | 'svgedit' | 'cyberchef' | 'image-scrubber' | 'zip-manager' | 'rawgraphs' | 'audiomass' | 'minipaint' | 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'lrclib' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris' | 'binternet' | 'translite' | 'biblioreads' | 'qr-offline' | 'kittygram' | 'rimgo' | 'mumble';
 
 export type ReviewedLicense =
   | 'AGPL-3.0'
@@ -38,6 +38,7 @@ export interface ReviewedFossProvider {
  * never enables a public route or opens registrations.
  */
 export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider> = {
+  wbo: { ...toolboxProvider('WBO', 'lovasoa/whitebophir', 'f37875a6b427397e579e2a869caf073ae87ee264', 'AGPL-3.0-or-later', '2.9.0-p2 · temporary collaboration pilot', 'source:f37875a6b427397e579e2a869caf073ae87ee264+deployment/community/wbo'), reviewedOn: '2026-10-07' },
   markmap: { ...browserProvider('Markmap', 'markmap/markmap', '205367a24603dc187f67da1658940c6cade20dce', 'MIT', 'LICENSE', '0.18.12-p1 · restricted editor; AGPL-3.0-or-later Utilibre integration'), artifactReference: 'source:205367a24603dc187f67da1658940c6cade20dce+deployment/toolbox/markmap', reviewStatus: 'deployed' },
   excalidraw: creativeProvider('Excalidraw', 'excalidraw/excalidraw', '53973c3a423fbd75a4ce68107786b4fcb90e4968', 'MIT', 'LICENSE', '53973c3-p1 · local-only'),
   svgedit: creativeProvider('SVGEdit', 'SVG-Edit/svgedit', 'c44f061d2f9a626d2771cc931298af5a45522d87', 'MIT', 'LICENSE-MIT.txt', '7.4.2-p1 · includes Apache-2.0, ISC, LGPL-3.0-or-later and X11 components'),

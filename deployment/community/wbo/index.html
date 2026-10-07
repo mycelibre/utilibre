@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="{{language}}">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WBO · Utilibre — Temporary shared boards / Pizarras temporales</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="index.css"><link rel="stylesheet" href="utilibre.css">
+  {{{htmlHeadSnippet}}}
+</head>
+<body>
+<header><h1>WBO · Utilibre</h1></header>
+<main>
+  <div class="utilibre-en" lang="en">
+    <h2>Temporary shared whiteboards</h2>
+    <p>Draw together without an account. This is a small, experimental service for non-sensitive sketches—not private document storage.</p>
+    <ul>
+      <li>Anyone who knows or guesses a board link can read and edit it. There is no end-to-end encryption; Utilibre's server processes the drawing, and Cloudflare handles HTTPS traffic when proxied.</li>
+      <li>Boards are held in server memory-backed storage and are lost when the service stops or restarts. Closing a tab does not delete a board. There is no guaranteed expiry or backup.</li>
+      <li>A board keeps at most 256 drawing objects; older objects are discarded above that limit. Export important work regularly using Download (SVG).</li>
+      <li>Recent board names and preferences can stay in this browser. Avoid sensitive names and clear this site's browser data on shared devices after exporting.</li>
+    </ul>
+    <a class="wbo-button" href="random">Create an unlisted board</a>
+    <h3>Use it with someone else</h3>
+    <ol><li>Create a board, then copy its complete address to your participant.</li><li>Both participants open that address and choose a drawing tool. Allow time for the connected state before drawing.</li><li>If disconnected, reopen the same address. If the service restarted, the old drawing cannot be recovered here.</li><li>Use Download to save SVG; open the downloaded file to check it. Export is not a promise of editable re-import.</li></ol>
+    <p><a href="https://utilibre.org/en/">Back to Utilibre</a> · <a href="?lang=es" lang="es">Español</a></p>
+  </div>
+  <div class="utilibre-es" lang="es">
+    <h2>Pizarras compartidas temporales</h2>
+    <p>Dibujá con otras personas sin crear una cuenta. Es un servicio pequeño y experimental para bocetos sin datos sensibles, no un almacén privado de documentos.</p>
+    <ul>
+      <li>Cualquiera que conozca o adivine el enlace puede leer y editar. No hay cifrado de extremo a extremo: el servidor de Utilibre procesa el dibujo y Cloudflare maneja HTTPS cuando se usa su proxy.</li>
+      <li>Las pizarras se guardan en almacenamiento de memoria del servidor y se pierden al detener o reiniciar el servicio. Cerrar la pestaña no las borra. No hay plazo de borrado garantizado ni respaldo.</li>
+      <li>Cada pizarra conserva hasta 256 objetos; al superar el límite se descartan los más antiguos. Exportá el trabajo importante con Descargar (SVG).</li>
+      <li>Los nombres de pizarras recientes y las preferencias pueden quedar en el navegador. Evitá nombres sensibles y borrá los datos del sitio en dispositivos compartidos después de exportar.</li>
+    </ul>
+    <a class="wbo-button" href="random">Crear una pizarra sin listar</a>
+    <h3>Usala con otra persona</h3>
+    <ol><li>Creá una pizarra y compartí su dirección completa.</li><li>Abran esa dirección y elijan una herramienta. Esperá a que se conecte antes de dibujar.</li><li>Si perdés conexión, reabrí la misma dirección. Si el servicio se reinició, aquí no se puede recuperar el dibujo anterior.</li><li>Usá Descargar para guardar SVG y abrí el archivo para comprobarlo. Exportar no garantiza volver a importarlo como proyecto editable.</li></ol>
+    <p><a href="https://utilibre.org/es/">Volver a Utilibre</a> · <a href="?lang=en" lang="en">English</a></p>
+  </div>
+</main>
+<footer><a href="https://github.com/lovasoa/whitebophir">Powered by WBO · AGPL-3.0-or-later</a> · <a href="/utilibre-source/wbo-utilibre.tar.gz">Complete source / Código completo</a></footer>
+</body></html>
