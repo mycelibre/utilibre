@@ -46,6 +46,31 @@ do not remove unrelated containers/volumes. Source archives remain public.
 
 ## Capacity baseline — October 7, 2026
 
+### Root storage expansion — October 7, 16:39 UTC
+
+After the creative-tool release, the operator-requested expansion used existing
+unallocated space on the 130 GiB `/dev/sda`; no provider upgrade or purchase was
+made. `growpart -N /dev/sda 1` verified the target first. `growpart /dev/sda 1`
+preserved the root start sector (262144) and both boot partitions; it also moved
+the backup GPT header to the already-expanded disk's end. `resize2fs /dev/sda1`
+grew the mounted ext4 filesystem online, with no reboot or application stop.
+
+`df -h /` changed from 99G total / about 7G available / 93% used to 128G total /
+36G available / 72% used. The filesystem has 34,045,947 4 KiB blocks. Final
+`sfdisk --verify /dev/sda` reports no errors; boot partitions retain their sizes
+and identifiers. Portal and browser-tool containers remain healthy, and public
+checks pass after expansion. This adds storage headroom, not CPU/RAM or proven
+concurrent-user capacity.
+
+The preceding partition layout is recorded at
+`/opt/utilibre/creative-tools-rollback-20261007/sda-before-grow.sfdisk`. This is
+metadata, not a data backup. **Do not restore the smaller partition over the
+expanded filesystem**: shrinking needs a separately planned offline operation.
+Existing on-host backups/offsite deferral remain unchanged. Online-growth
+behavior is documented in the [Ubuntu resize2fs manual](https://manpages.ubuntu.com/manpages/noble/man8/resize2fs.8.html).
+
+### Earlier load-test baseline (unchanged)
+
 The first bounded tests found request quotas before CPU or RAM exhaustion. This
 is **not certification for 1,000 active users**. The application VM has 8 vCPUs
 and 15,664 MiB RAM. All generators ran on that same VM, including requests through
