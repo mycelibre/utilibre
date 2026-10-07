@@ -34,6 +34,10 @@ const additions = [
   ['QR Tools', 'https://qrtools.utilibre.org/'],
   ['DeGoog', 'https://degoog.utilibre.org/'],
   ['LRCLIB lyrics', 'https://lyrics.utilibre.org/healthz'],
+  ['ZIP Manager', 'https://zip.utilibre.org/'],
+  ['RAWGraphs', 'https://charts.utilibre.org/'],
+  ['AudioMass', 'https://audio.utilibre.org/'],
+  ['miniPaint', 'https://paint.utilibre.org/'],
 ];
 const program = `
 const {io}=require('socket.io-client');

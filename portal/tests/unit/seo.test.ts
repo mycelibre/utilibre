@@ -14,9 +14,12 @@ describe('public SEO without tracking or private-content indexing', () => {
       env: {
         ...process.env, PORT: '43897', LISTEN_ADDRESS: '127.0.0.1', PRIVATE_PREVIEW: '0',
         PUBLIC_PORTAL_ORIGIN: origin, PROJECT_NAME: 'Utilibre', DEFAULT_LANGUAGE: 'en',
-        ENABLED_SERVICES: 'searxng,bentopdf,reactive-resume', LISTED_SERVICES: '',
+        ENABLED_SERVICES: 'searxng,bentopdf,reactive-resume,omnitools,zip-manager,rawgraphs,audiomass,minipaint', LISTED_SERVICES: '',
         PUBLIC_SEARCH_URL: 'https://search.public.example/', PUBLIC_PDF_URL: 'https://pdf.public.example/',
         PUBLIC_RESUME_URL: 'https://cv.public.example/', PUBLIC_TRANSCRIBE_URL: '',
+        PUBLIC_TOOLS_URL: 'https://tools.public.example/', PUBLIC_ZIP_URL: 'https://zip.public.example/',
+        PUBLIC_CHARTS_URL: 'https://charts.public.example/', PUBLIC_AUDIO_URL: 'https://audio.public.example/',
+        PUBLIC_PAINT_URL: 'https://paint.public.example/',
         SUPPORT_URL: 'https://liberapay.com/example/', STATUS_SERVICES: '',
       },
       stdio: 'ignore',
@@ -37,7 +40,10 @@ describe('public SEO without tracking or private-content indexing', () => {
       expect(response.status).toBe(200);
       expect(document.querySelectorAll('h1')).toHaveLength(1);
       expect(document.querySelectorAll('#main-content')).toHaveLength(1);
-      expect(document.querySelectorAll('[data-catalog-id]')).toHaveLength(3);
+      expect(document.querySelectorAll('[data-catalog-id]')).toHaveLength(14);
+      expect(document.querySelector('[data-catalog-id="zip-manager"] .catalog-ledger-launch')?.getAttribute('href')).toBe(`https://zip.public.example/?lang=${language}`);
+      expect(document.querySelector('[data-catalog-id="rawgraphs"] .catalog-ledger-launch')?.getAttribute('href')).toBe('https://charts.public.example/');
+      expect(document.querySelector('[data-catalog-id="omni-csv-json"] .catalog-ledger-launch')?.getAttribute('href')).toBe(`https://tools.public.example/csv/csv-to-json?lng=${language}`);
       expect(document.querySelector('[data-catalog-id="bentopdf"] .catalog-ledger-launch')?.getAttribute('href')).toBe(`https://pdf.public.example/${language === 'es' ? 'es/' : ''}`);
       expect(document.querySelector('[data-catalog-id="reactive-resume"] .catalog-ledger-access')?.textContent).toContain(language === 'es' ? 'Solo con invitación' : 'Invite-only');
       expect(html).not.toContain('data-catalog-id="whisper-web"');
@@ -136,7 +142,7 @@ describe('public SEO without tracking or private-content indexing', () => {
       expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${origin}/en/`);
       expect(document.getElementById('public-structured-data')).toBeNull();
       if (query === '?q=pdf') expect(document.querySelectorAll('[data-catalog-id]')).toHaveLength(1);
-      if (query === '?group=files') expect(document.querySelectorAll('[data-catalog-id]')).toHaveLength(2);
+      if (query === '?group=files') expect(document.querySelectorAll('[data-catalog-id]')).toHaveLength(3);
     }
     const response = await fetch(`${base}/en/?q=${encodeURIComponent('"><script>alert(1)</script>')}`);
     const html = await response.text();

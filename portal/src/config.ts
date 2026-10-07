@@ -19,6 +19,10 @@ export interface PublicConfig {
   publicDrawUrl: string;
   publicQrUrl: string;
   publicQrToolsUrl: string;
+  publicZipUrl: string;
+  publicChartsUrl: string;
+  publicAudioUrl: string;
+  publicPaintUrl: string;
   publicInstagramUrl: string;
   publicBridgeUrl: string;
   publicNotifyUrl: string;
@@ -73,6 +77,10 @@ const defaults: PublicConfig = {
   publicDrawUrl: '',
   publicQrUrl: '',
   publicQrToolsUrl: '',
+  publicZipUrl: '',
+  publicChartsUrl: '',
+  publicAudioUrl: '',
+  publicPaintUrl: '',
   publicInstagramUrl: '',
   publicBridgeUrl: '',
   publicNotifyUrl: '',

@@ -1,0 +1,9 @@
+{
+  "reviewed": "2026-10-07",
+  "apps": [
+    {"id":"zip-manager","host":"zip.utilibre.org","port":3160,"repository":"gildas-lormeau/zip-manager","branch":"main","revision":"3b77a599d823691cc3b7b81e0715b4655423e578","license":"MIT","licenseFile":"LICENSE.txt"},
+    {"id":"rawgraphs","host":"charts.utilibre.org","port":3161,"repository":"rawgraphs/rawgraphs-app","branch":"master","revision":"b7b2909111cc029ccf418dc3e7d079e0f4c50d6f","license":"Apache-2.0","licenseFile":"LICENSE"},
+    {"id":"audiomass","host":"audio.utilibre.org","port":3162,"repository":"pkalogiros/AudioMass","branch":"production","revision":"21f5ee1362a47be6f0dbe6e4969a15e43d21b044","license":"MIT","licenseFile":"LICENSE"},
+    {"id":"minipaint","host":"paint.utilibre.org","port":3163,"repository":"viliusle/miniPaint","branch":"master","revision":"a79733eb803fc97084ef0ee4faa96b031e69e1c0","license":"MIT","licenseFile":"MIT-LICENSE.txt"}
+  ]
+}

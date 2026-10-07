@@ -13,9 +13,12 @@ or paid tiers.
   Binternet, BiblioReads, Kittygram, SafeTwitch**.
 - Feeds: **FreshRSS, RSS-Bridge**.
 - Files and everyday work: **BentoPDF** (including OCR), **VERT, OmniTools,
-  IT Tools, hat.sh, draw.io, Mini QR, QR Tools, TransLite**.
+  IT Tools, hat.sh, draw.io, Mini QR, QR Tools, TransLite, ZIP Manager**.
+- Browser editors: **RAWGraphs, AudioMass, miniPaint**, plus direct links to
+  image, audio, CSV and text tasks in OmniTools.
 - Sharing and notifications: **PrivateBin, Yopass, PairDrop, ntfy**.
-- Browser-based learning and transcription: **JupyterLite, Whisper Web**.
+- Browser-based learning: **JupyterLite**. Whisper is withdrawn from the catalog
+  while transcription quality remains inadequate.
 - Approved-account pilots: **Reactive Resume, Penpot, Actual Budget, Wakapi, Rallly**,
   with shared Utilibre login, email verification and MFA. Public registration
   remains closed; request access at **admin@utilibre.org**.
@@ -23,7 +26,7 @@ or paid tiers.
 - Native-client voice: password-protected **Mumble** (public TCP voice tested;
   public UDP audio remains unverified).
 
-**38 services are enabled as of October 6, 2026.** Access and privacy vary by
+The [live catalog](https://utilibre.org/) is the current inventory. Access and privacy vary by
 tool; FreshRSS retains separate operator-provisioned accounts. Upstream sites
 can block readers. **Dumb, LibreMDB, BreezeWiki and Rimgo** still have upstream
 failures.

@@ -31,6 +31,9 @@ export interface CatalogEntry {
   quickLinks?: { path: string; label: LocalizedText }[];
   slug?: Record<Language, string>;
   configUrlKey?: string;
+  /** A direct task belongs to this existing application and shares its access gate. */
+  serviceId?: FossProviderId;
+  launchPath?: string;
   labels: PrivacyLabel[];
   dataFlow: LocalizedText;
   upstreamServices: string[];
@@ -155,6 +158,8 @@ export const catalog: CatalogEntry[] = [
     { en: 'Try Python', es: 'Probar Python' }, true,
     { en: 'Start with the included example notebook. Python runs in your browser, not on our server. Save important notebooks with File → Download: browser storage is not a backup and clearing site data can erase your work. Python and optional packages download from jsDelivr and Python package repositories. Desktop packages are not all supported; this is not JupyterHub.', es: 'Empezá con el cuaderno de ejemplo. Python se ejecuta en tu navegador, no en nuestro servidor. Guardá los cuadernos importantes con Archivo → Descargar: el almacenamiento del navegador no es una copia de respaldo y borrar los datos del sitio puede eliminar tu trabajo. Python y los paquetes opcionales se descargan de jsDelivr y repositorios de Python. No todos los paquetes de escritorio funcionan; esto no es JupyterHub.' }),
   ...communityTools(),
+  ...browserAdditions(),
+  ...everydayTasks(),
   browserTool('bentopdf', 'files', 1, 'publicPdfUrl',
     { en: 'PDF & OCR', es: 'PDF y OCR' },
     { en: 'Merge, split, compress or edit PDFs. Turn scans into searchable text.', es: 'Uní, dividí, comprimí y editá PDF. Extraé texto de páginas escaneadas con OCR.' },
@@ -458,7 +463,7 @@ function browserTool(
     temporaryStorage: browserMemory,
     retention: { en: 'Utilibre stores no input files for these tools. Downloads remain on your device; application caches, preferences or local drafts can remain in browser storage until you clear the site’s data. Read the tool-specific help before using a shared device.', es: 'Utilibre no almacena los archivos ingresados en estas herramientas. Las descargas quedan en tu dispositivo; las cachés, preferencias o borradores locales pueden permanecer en el navegador hasta que borres los datos del sitio. Leé la ayuda antes de usar un dispositivo compartido.' },
     logging: { en: 'Tool web-server access logs are disabled. Bounded error logs can contain request metadata. Cloudflare and the separate HTTPS edge see connections and asset requests, not browser-local file contents; their retention is separate.', es: 'El registro de accesos del servidor de herramientas está desactivado. Los registros limitados de errores pueden incluir metadatos. Cloudflare y el borde HTTPS reciben conexiones y solicitudes de recursos, no el contenido de archivos procesado localmente; su conservación es independiente.' },
-    modified: ['vert', 'drawio', 'whisper-web', 'qr-offline'].includes(providerId), operationalStatus: 'operational',
+    modified: ['vert', 'omnitools', 'drawio', 'whisper-web', 'qr-offline'].includes(providerId), operationalStatus: 'operational',
   };
 }
 
@@ -528,4 +533,61 @@ function communityTools(): CatalogEntry[] {
 
 assertFossCatalogPolicy(catalog);
 
-export const reviewedServices = catalog.filter((entry) => entry.kind === 'service');
+export const reviewedServices = catalog.filter((entry) => entry.kind === 'service' && !entry.serviceId);
+
+function browserAdditions(): CatalogEntry[] {
+  return [
+    browserTool('zip-manager', 'files', 2.1, 'publicZipUrl',
+      { en: 'Open & create ZIP files', es: 'Abrir y crear archivos ZIP' },
+      { en: 'Browse, extract or create ZIP archives with ZIP Manager, including password-protected ZIPs.', es: 'Explorá, extraé o creá archivos ZIP con ZIP Manager, incluidos ZIP protegidos con contraseña.' },
+      { en: 'Open ZIP Manager', es: 'Abrir ZIP Manager' }, false,
+      { en: 'Import a ZIP or add files, then extract or export your archive. Processing happens on your device. Save important downloads; browser storage is not a backup. Large archives depend on your device’s memory and browser. This is not a RAR or 7z converter.', es: 'Importá un ZIP o agregá archivos; después extraé o exportá el archivo comprimido. El procesamiento ocurre en tu dispositivo. Guardá las descargas importantes: el navegador no es una copia de respaldo. Los archivos grandes dependen de la memoria y del navegador. No convierte RAR ni 7z.' }),
+    browserTool('rawgraphs', 'text-data', 5.1, 'publicChartsUrl',
+      { en: 'Create charts from data', es: 'Crear gráficas con datos' },
+      { en: 'Turn CSV or pasted spreadsheet data into charts with RAWGraphs. No coding or account required.', es: 'Convertí datos CSV o copiados de una hoja de cálculo en gráficas con RAWGraphs, sin programar ni crear una cuenta.' },
+      { en: 'Create a chart', es: 'Crear una gráfica' }, false,
+      { en: 'Paste or open data, choose a chart, map the columns and export. The interface is in English and works best on a larger screen. Save a project to continue later. Analytics, remote data imports and executable custom-chart plugins are disabled.', es: 'Pegá o abrí los datos, elegí una gráfica, asigná las columnas y exportá el resultado. La interfaz está en inglés y funciona mejor en una pantalla grande. Guardá el proyecto para continuar después. La analítica, las importaciones remotas y los complementos de gráficas ejecutables están desactivados.' }),
+    browserTool('audiomass', 'media', 5.2, 'publicAudioUrl',
+      { en: 'Edit & mix audio', es: 'Editar y mezclar audio' },
+      { en: 'Edit recordings, apply effects and mix audio tracks in your browser with AudioMass.', es: 'Editá grabaciones, aplicá efectos y mezclá pistas de audio en tu navegador con AudioMass.' },
+      { en: 'Edit audio', es: 'Editar audio' }, false,
+      { en: 'Open a recording or allow microphone access when you choose to record. Edit the waveform, then export your result. The interface is in English. Long recordings can use substantial device memory. Download your work; this is not a transcription or cloud-storage service.', es: 'Abrí una grabación o permití el micrófono cuando elijás grabar. Editá la onda de audio y exportá el resultado. La interfaz está en inglés. Las grabaciones largas pueden consumir bastante memoria. Descargá el trabajo: no es un servicio de transcripción ni de almacenamiento en la nube.' }),
+    browserTool('minipaint', 'design', 5.3, 'publicPaintUrl',
+      { en: 'Paint & edit with layers', es: 'Dibujar y editar con capas' },
+      { en: 'Create and edit images with layers, drawing tools and filters using miniPaint.', es: 'Creá y editá imágenes con capas, herramientas de dibujo y filtros usando miniPaint.' },
+      { en: 'Open miniPaint', es: 'Abrir miniPaint' }, false,
+      { en: 'Open an image or start a canvas, edit it, then export. Save a project if you need to keep editable layers. Remote image search, URL imports and web fonts are disabled. Local quick saves can remain in this browser; clear site data on shared devices.', es: 'Abrí una imagen o empezá un lienzo, editalo y exportalo. Guardá un proyecto si necesitás conservar las capas editables. La búsqueda de imágenes, las importaciones por URL y las fuentes web están desactivadas. Los guardados rápidos pueden permanecer en el navegador; borrá los datos del sitio si compartís el dispositivo.' }),
+  ].map((entry) => ({ ...entry, modified: true, help: {
+    en: entry.help!.en + (entry.id === 'audiomass' ? ' Multitrack mixing is an upstream beta.' : entry.id === 'zip-manager' ? ' Avoid saving a default password on shared devices.' : ''),
+    es: entry.help!.es + (entry.id === 'audiomass' ? ' La mezcla multipista es una función beta del proyecto original.' : entry.id === 'zip-manager' ? ' Evitá guardar una contraseña predeterminada en dispositivos compartidos.' : ''),
+  } }));
+}
+
+function everydayTasks(): CatalogEntry[] {
+  const tasks: { id: string; path: string; group: DiscoveryGroup; order: number; name: LocalizedText; description: LocalizedText }[] = [
+    { id: 'omni-background', path: '/image-generic/remove-background', group: 'media', order: 3.1,
+      name: { en: 'Remove an image background', es: 'Quitar el fondo de una imagen' },
+      description: { en: 'Separate a subject from its background with OmniTools and download a transparent image. Review fine edges.', es: 'Separá el sujeto del fondo con OmniTools y descargá una imagen transparente. Revisá los bordes finos.' } },
+    { id: 'omni-image-editor', path: '/image-generic/editor', group: 'media', order: 3.2,
+      name: { en: 'Edit & annotate an image', es: 'Editar y anotar una imagen' },
+      description: { en: 'Crop a photo, add text or draw annotations with the OmniTools image editor.', es: 'Recortá una foto, agregá texto o dibujá anotaciones con el editor de imágenes de OmniTools.' } },
+    { id: 'omni-compress-image', path: '/image-generic/compress', group: 'media', order: 3.3,
+      name: { en: 'Compress an image', es: 'Comprimir una imagen' },
+      description: { en: 'Reduce an image’s file size with OmniTools. Compare the downloaded image with the original.', es: 'Reducí el tamaño de un archivo de imagen con OmniTools. Compará la descarga con el original.' } },
+    { id: 'omni-trim-audio', path: '/audio/trim', group: 'media', order: 3.4,
+      name: { en: 'Trim a recording', es: 'Recortar una grabación' },
+      description: { en: 'Keep a selected part of an audio recording with OmniTools and download the shorter clip.', es: 'Conservá una parte de una grabación de audio con OmniTools y descargá el clip recortado.' } },
+    { id: 'omni-csv-json', path: '/csv/csv-to-json', group: 'text-data', order: 3.5,
+      name: { en: 'Convert CSV to JSON', es: 'Convertir CSV a JSON' },
+      description: { en: 'Convert CSV rows into structured JSON with OmniTools. Check headers and values before using the result.', es: 'Convertí filas CSV en datos JSON con OmniTools. Revisá los encabezados y valores antes de usar el resultado.' } },
+    { id: 'omni-deduplicate', path: '/string/remove-duplicate-lines', group: 'text-data', order: 3.6,
+      name: { en: 'Remove duplicate lines', es: 'Quitar líneas duplicadas' },
+      description: { en: 'Clean repeated lines from pasted text or a list with OmniTools.', es: 'Quitá líneas repetidas de un texto o una lista con OmniTools.' } },
+  ];
+  return tasks.map((task) => ({
+    ...browserTool('omnitools', task.group, task.order, 'publicToolsUrl', task.name, task.description,
+      { en: 'Open tool', es: 'Abrir herramienta' }, ['omni-compress-image', 'omni-trim-audio'].includes(task.id),
+      { en: 'This opens the selected task directly in OmniTools. Add your input, check the result and download or copy it. Selected files are processed in your browser. Image compression and audio trimming download components from external CDNs; the background-removal model is hosted by Utilibre. Large files or models can need substantial memory. Some upstream instructions remain in English.', es: 'El enlace abre esta tarea directamente en OmniTools. Agregá los datos, revisá el resultado y descargalo o copialo. Los archivos seleccionados se procesan en tu navegador. La compresión de imágenes y el recorte de audio descargan componentes desde CDN externas; Utilibre aloja el modelo para quitar fondos. Los archivos o modelos grandes pueden necesitar bastante memoria. Algunas instrucciones del proyecto original siguen en inglés.' }),
+    id: task.id, serviceId: 'omnitools', launchPath: task.path,
+  }));
+}

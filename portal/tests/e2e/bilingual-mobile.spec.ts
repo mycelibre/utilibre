@@ -92,6 +92,8 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
   const config = { ...featuredConfig, supportUrl: 'https://liberapay.com/example-donation-fixture/',
     publicPdfUrl: 'https://pdf.utility.test/', publicConvertUrl: 'https://convert.utility.test/',
     publicToolsUrl: 'https://tools.utility.test/', publicDeveloperToolsUrl: 'https://dev.utility.test/',
+    publicZipUrl: 'https://zip.utility.test/', publicChartsUrl: 'https://charts.utility.test/',
+    publicAudioUrl: 'https://audio.utility.test/', publicPaintUrl: 'https://paint.utility.test/',
     publicEncryptUrl: 'https://hat.utility.test/', publicDrawUrl: 'https://draw.utility.test/', publicQrUrl: 'https://qr.utility.test/',
     publicBridgeUrl: 'https://bridge.utility.test/', publicNotifyUrl: 'https://notify.utility.test/',
     publicSecretUrl: 'https://secret.utility.test/', publicDropUrl: 'https://drop.utility.test/', publicStatusUrl: 'https://status.utility.test/',
@@ -114,7 +116,14 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
   for (const language of ['en', 'es'] as const) {
     await page.emulateMedia({ colorScheme: language === 'es' ? 'dark' : 'light' });
     await page.goto(`/${language}/`);
-    await expect(catalogRows(page)).toHaveCount(39);
+    await expect(catalogRows(page)).toHaveCount(49);
+    await expect(page.locator('[data-catalog-id="zip-manager"] .catalog-ledger-launch')).toHaveAttribute('href', `https://zip.utility.test/?lang=${language}`);
+    await expect(page.locator('[data-catalog-id="minipaint"] .catalog-ledger-launch')).toHaveAttribute('href', `https://paint.utility.test/?lang=${language}`);
+    await expect(page.locator('[data-catalog-id="rawgraphs"] .catalog-ledger-launch')).toHaveAttribute('href', 'https://charts.utility.test/');
+    await expect(page.locator('[data-catalog-id="omni-csv-json"] .catalog-ledger-launch')).toHaveAttribute('href', `https://tools.utility.test/csv/csv-to-json?lng=${language}`);
+    await page.locator('[data-catalog-id="omni-csv-json"] .catalog-help summary').click();
+    await expect(page.locator('[data-catalog-id="omni-csv-json"] a[href="https://tools.utility.test/utilibre-source/"]')).toBeVisible();
+    await page.locator('[data-catalog-id="omni-csv-json"] .catalog-help summary').click();
     await expect(page.locator('[data-catalog-id="lrclib"] .catalog-ledger-launch')).toHaveAttribute('href', 'https://lyrics.utility.test/');
     await expect(page.locator('.task-navigation a')).toHaveCount(9);
     await expect(page.locator('.task-scroll-cue')).toHaveText(language==='es'?'9 grupos · deslizá':'9 groups · scroll');

@@ -4,7 +4,7 @@ export const en = {
   'meta.qr.title': 'Create and scan QR codes without an account',
   'meta.qr.description': 'Choose a free QR tool for links or Wi-Fi. Download PNG, SVG or PDF, test your code, and understand what a static QR reveals before sharing it.',
   'meta.home.title': 'Free online tools: PDF, files, QR codes & more',
-  'meta.home.description': 'Use free, independently hosted open-source tools for PDFs, OCR, file conversion, QR codes and more. Clear privacy and account requirements. No behavioral tracking.',
+  'meta.home.description': 'Use free open-source tools for PDF and ZIP files, images, audio, charts and QR codes. Independently hosted, with clear privacy and account requirements.',
   'meta.tools.title': 'Hosted tool catalog',
   'meta.services.title': 'Hosted open-source services',
   'meta.about.title': 'About Utilibre',

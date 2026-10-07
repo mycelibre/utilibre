@@ -50,11 +50,10 @@ services:
       - *source
   omnitools:
     <<: *static
-    image: utilibre-omnitools:0.6.0-p1
+    image: utilibre-omnitools:0.6.0-p2
     build:
       context: .
-      dockerfile: Dockerfile.artifact
-      args: {ARTIFACT_IMAGE: "docker.io/iib0011/omni-tools:0.6.0@sha256:ceb5acc317daf387634f7f212cefe4722fd1243ad1cba74203f25254195b6c69"}
+      dockerfile: Dockerfile.omnitools
     ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3103:8080"]
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro

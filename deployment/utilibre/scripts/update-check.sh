@@ -31,6 +31,10 @@ printf '%-16s %-18s %-28s %s\n' SERVICE PINNED UPSTREAM URL
 release_row freshrss 1.29.1 FreshRSS/FreshRSS
 head_row rsshub 40aca954 DIYgod/RSSHub master
 release_row privatebin 2.0.6 PrivateBin/PrivateBin
+head_row zip-manager 3b77a599d823691cc3b7b81e0715b4655423e578 gildas-lormeau/zip-manager main
+head_row rawgraphs b7b2909111cc029ccf418dc3e7d079e0f4c50d6f rawgraphs/rawgraphs-app master
+head_row audiomass 21f5ee1362a47be6f0dbe6e4969a15e43d21b044 pkalogiros/AudioMass production
+head_row minipaint a79733eb803fc97084ef0ee4faa96b031e69e1c0 viliusle/miniPaint master
 
 echo
 echo "No images were pulled and no containers were changed. Resolve and review a new digest manually."

@@ -3,6 +3,42 @@
 Work from `/home/ubuntu/freetools`. Caddy is on a separate VM at `10.10.1.3`;
 application gateways bind `10.10.1.43`. Preserve its existing Cloudflare-only trust.
 
+## Browser tool operations
+
+The separate `deployment/toolbox/compose.browser.yaml` stack adds ZIP Manager
+on **3160**, RAWGraphs on **3161**, AudioMass on **3162**, and miniPaint on **3163**.
+The matching `zip`, `charts`, `audio`, and `paint` Caddy blocks are in
+`deployment/toolbox/Caddyfile.tools`. All four backends bind only `10.10.1.43`.
+Their static server accepts the exact Caddy peer `10.10.1.3`, app-VM diagnostics
+and loopback; forwarded headers cannot bypass this allowlist. No host firewall
+was changed. Keep these ports closed to the Internet. Portal/Kuma liveness
+checks use public HTTPS because other containers are deliberately denied at
+the private listeners.
+
+Each new serving container is non-root, read-only, capability-free, limited to
+128 MiB/0.5 CPU/64 processes, with 32 MiB tmpfs and rotating error logs. Input
+files and browser drafts do not live in server volumes. Preserve the source
+pins/configuration, not fictional user-data backups. Export browser work locally.
+
+```sh
+docker compose -f deployment/toolbox/compose.browser.yaml build
+docker compose -f deployment/toolbox/compose.browser.yaml up -d
+node deployment/toolbox/check-browser-tools.mjs
+node deployment/toolbox/publish-browser-sources.mjs
+sh deployment/utilibre/scripts/update-check.sh
+```
+
+Review upstream changes and dependency advisories weekly, update the manifest
+and lockfiles deliberately, and repeat real export/privacy checks before
+publishing. `update-check.sh` is read-only/manual; it is not an automatic
+upgrade guarantee. Existing guarded SearXNG automation is unchanged. New Kuma
+checks are five-minute homepage liveness, not scheduled workflow tests.
+
+For rollback, retain the preceding portal image and private environment snapshot
+and the OmniTools `0.6.0-p1` image. Recreate only the affected service with its
+previous image/configuration. New apps have no server-side documents to migrate;
+do not remove unrelated containers/volumes. Source archives remain public.
+
 ## Capacity baseline — October 7, 2026
 
 The first bounded tests found request quotas before CPU or RAM exhaustion. This

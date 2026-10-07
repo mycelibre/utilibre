@@ -6,6 +6,10 @@ import { pathToFileURL } from 'node:url';
 const repository = new URL('../', import.meta.url);
 
 const services = [
+  { id: 'zip-manager', hostKey: 'PUBLIC_ZIP_HOST', urlKey: 'PUBLIC_ZIP_URL', portKey: 'ZIP_MANAGER_PORT' },
+  { id: 'rawgraphs', hostKey: 'PUBLIC_CHARTS_HOST', urlKey: 'PUBLIC_CHARTS_URL', portKey: 'RAWGRAPHS_PORT' },
+  { id: 'audiomass', hostKey: 'PUBLIC_AUDIO_HOST', urlKey: 'PUBLIC_AUDIO_URL', portKey: 'AUDIOMASS_PORT' },
+  { id: 'minipaint', hostKey: 'PUBLIC_PAINT_HOST', urlKey: 'PUBLIC_PAINT_URL', portKey: 'MINIPAINT_PORT' },
   { id: 'degoog', hostKey: 'PUBLIC_DEGOOG_HOST', urlKey: 'PUBLIC_DEGOOG_URL', portKey: 'DEGOOG_GATEWAY_PORT' },
   { id: 'searxng', hostKey: 'PUBLIC_SEARCH_HOST', urlKey: 'PUBLIC_SEARCH_URL', portKey: 'SEARXNG_PORT' },
   { id: 'redlib', hostKey: 'PUBLIC_REDDIT_HOST', urlKey: 'PUBLIC_REDDIT_URL', portKey: 'REDLIB_PORT' },

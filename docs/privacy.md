@@ -12,6 +12,16 @@ The expanded toolbox and its per-tool disclosures are documented in
 Browser-based processing does not mean that page requests, model downloads
 or signaling connections are invisible to the hosting infrastructure.
 
+ZIP Manager, RAWGraphs, AudioMass and miniPaint process selected files locally.
+Their tested paths use same-origin assets; RAWGraphs analytics/remote imports
+and miniPaint web fonts/remote image imports are disabled. AudioMass requests
+microphone permission only when recording is selected. Browser preferences,
+cached code and local drafts can survive closing a tab; they are not cloud
+backups. Do not save default ZIP passwords on shared devices. Cloudflare's
+same-origin security processing remains part of the public delivery boundary.
+OmniTools background-removal models are mirrored locally; other OmniTools
+operations can still download processing components from disclosed CDNs.
+
 Approved-account pilots use Authentik at `auth.utilibre.org`. It stores email,
 name, password hashes, authenticator settings, sessions and authentication
 events (configured for 30 days; container logs rotate by size). Email recovery

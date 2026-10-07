@@ -33,7 +33,7 @@ export function serviceEnabled(config: PublicConfig, id: string): boolean {
 
 export function serviceConfigured(config: PublicConfig, entry: CatalogEntry): boolean {
   if (entry.kind !== 'service') return false;
-  if (!serviceEnabled(config, entry.id)) return false;
+  if (!serviceEnabled(config, entry.serviceId ?? entry.id)) return false;
   if (!entry.configUrlKey) return false;
   return Boolean(configValue(config, entry.configUrlKey));
 }
@@ -50,7 +50,7 @@ export function entryLaunch(entry: CatalogEntry, language: Language, config: Pub
   }
 
   const base = entry.configUrlKey ? configValue(config, entry.configUrlKey) : '';
-  return base ? { href: localizedServiceUrl(entry.id, base, language), external: /^https?:\/\//i.test(base) } : null;
+  return base ? { href: localizedServiceUrl(entry.serviceId ?? entry.id, base, language, entry.launchPath), external: /^https?:\/\//i.test(base) } : null;
 }
 
 export function entryLaunchable(entry: CatalogEntry, config: PublicConfig): boolean {
@@ -60,7 +60,7 @@ export function entryLaunchable(entry: CatalogEntry, config: PublicConfig): bool
 }
 
 export function visibleEntries(config: PublicConfig): CatalogEntry[] {
-  return catalog.filter((entry) => entryLaunchable(entry, config) || config.listedServices.includes(entry.id));
+  return catalog.filter((entry) => entryLaunchable(entry, config) || config.listedServices.includes(entry.serviceId ?? entry.id));
 }
 
 export function launchableEntries(config: PublicConfig): CatalogEntry[] {

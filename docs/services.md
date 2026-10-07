@@ -11,7 +11,9 @@ promise.
 
 ## Operated public services
 
-The October 6 expansion has 38 enabled applications; see the concise
+The live inventory includes the October 7 ZIP Manager, RAWGraphs, AudioMass
+and miniPaint additions and direct links to six tasks within OmniTools. Those
+shortcuts are not separate hosted applications. See the concise
 [current tool list](../README.md#tools) and machine-readable
 [delivery checklist](../deployment/community/delivery-checklist.json).
 Reactive Resume, Penpot, Actual Budget, Wakapi and Rallly use approved Utilibre

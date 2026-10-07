@@ -130,7 +130,7 @@ export function renderCatalogRow(
   details.append(element('p', '', localized(entry.dataFlow, language)));
   if (launch && entry.labels.includes('local') && !entry.labels.includes('server')) {
     const source = element('a', 'text-link', t('software.documents.sourceBundle'));
-    source.href = new URL('utilibre-source/', launch.href).href;
+    source.href = new URL('/utilibre-source/', launch.href).href;
     source.target = '_blank';
     source.rel = 'noopener noreferrer';
     details.append(source);

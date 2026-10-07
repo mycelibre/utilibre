@@ -6,6 +6,23 @@ stuffing, spam, oversized requests, storage exhaustion, upstream blocking,
 container compromise, and operator error. This document records controls and
 residual risks; it is not a claim of complete security.
 
+## October 7 browser tool boundary
+
+ZIP Manager, RAWGraphs, AudioMass and miniPaint serve static applications only
+on private ports 3160–3163. Their actual peer allowlist is enforced inside the
+static server, independently of forwarded headers. Other methods than GET/HEAD
+are rejected; unknown paths are real 404s. Read-only, non-root containers have
+fixed resource limits and no user-upload directory. Same-origin CSP denies
+remote scripts, assets, frames and form submissions; only AudioMass has
+same-origin microphone permission. RAWGraphs CSV parsing works without eval.
+Cloudflare security scripts can still be added by the separate public edge.
+
+The firewall helper includes the four ports for operator review, but it was
+**not applied** automatically. Build-only dependencies are not a production
+Node server; old build-tool audit findings still require maintenance review.
+Static delivery does not make a vulnerable browser dependency harmless. The
+specific updates, tests and residual findings are in the toolbox review.
+
 ## Boundary summary
 
 - Cloudflare and the separate Caddy edge are the only public ingress path.

@@ -4,6 +4,15 @@ This document distinguishes measurements from configured ceilings. Quiet
 container memory does not predict concurrent searches, Redlib media transfer,
 feed refresh bursts, database growth, RSSHub route cost, or paste abuse.
 
+The October 7 ZIP/chart/audio/paint additions each have a **configured** 128 MiB
+serving limit and 0.5 CPU ceiling. Their processing cost is mainly on visitors'
+devices; large images, audio and archives can exhaust browser memory. OmniTools
+background removal now serves its model/runtime assets locally (about 344 MB
+for all mirrored variants; the default model alone is about 88 MB). These
+downloads add bandwidth and cache/disk use. No new concurrent-user capacity
+claim follows from these limits; the measured baseline is in
+[expanded operations](expanded-operations.md#capacity-baseline--october-7-2026).
+
 The strategic reset removed several previously measured services. A fresh
 post-removal baseline and controlled active measurements are required before a
 broad announcement.

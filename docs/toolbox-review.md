@@ -1,5 +1,68 @@
 # Browser toolbox review — 2026-10-06
 
+## Browser tools added on October 7
+
+Four additional applications serve static assets only; selected files are
+processed on the visitor's device. All four public HTTPS roots are reachable.
+`check-browser-tools.mjs` exercises actual outputs, not just HTTP health:
+ZIP creation and exact-byte extraction; two CSV rows mapped to a downloadable
+RAWGraphs SVG; a one-second WAV selection exported from a three-second recording;
+and a 160×120 PNG opened and exported by miniPaint. Chromium/Linux is the test
+environment, not certification for every browser, mobile device or large file.
+
+| Application | Public address and private port | Source revision | License and limits |
+| --- | --- | --- | --- |
+| ZIP Manager | `zip.utilibre.org` / 3160 | `3b77a599d823691cc3b7b81e0715b4655423e578` | MIT; ZIP, not RAR/7z. Native Spanish; optional default passwords/preferences can persist in browser storage. |
+| RAWGraphs | `charts.utilibre.org` / 3161 | `b7b2909111cc029ccf418dc3e7d079e0f4c50d6f` | Apache-2.0; English, best on a larger screen. Local data and built-in charts only. |
+| AudioMass | `audio.utilibre.org` / 3162 | `21f5ee1362a47be6f0dbe6e4969a15e43d21b044` | MIT application; upstream dependency notices include BSD/LGPL. English; multitrack is upstream beta. |
+| miniPaint | `paint.utilibre.org` / 3163 | `a79733eb803fc97084ef0ee4faa96b031e69e1c0` | MIT; native Spanish. Local images/device fonts; download important work. |
+
+Google Analytics and consent scaffolding were removed from RAWGraphs, together
+with remote imports and executable custom-chart loading. Lodash/lodash-es are
+pinned to 4.18.1, d3-color to 3.1.0 and Babel runtime to 7.29.10 in the supplied
+lockfile. D3's native row parser replaces its eval-dependent object wrapper,
+fixing **“Cannot parse dataset!”** under the strict CSP without allowing eval.
+The old CRA build toolchain still has audit findings; it is not deployed as an
+application server. This is not a zero-vulnerability claim. miniPaint uses UUID
+v4 only; the audit advisory affecting v3/v5/v6 buffer arguments is not on that
+observed path. Reassess dependencies on each upstream upgrade.
+
+miniPaint remote image search/imports and web fonts are disabled. AudioMass
+uses local application assets and permits the microphone only on its own origin.
+No custom return-link injection was added. The four tested tasks made no
+third-party application requests and no task uploads. Cloudflare can inject
+same-origin security requests on public HTTPS; those are separate from the
+applications and are not described as “zero network traffic.”
+
+The six OmniTools catalog shortcuts are tasks within the existing application,
+not six new deployments: background removal, image editing, compression, audio
+trimming, CSV-to-JSON and duplicate-line removal. The parent service controls
+their visibility/access; the software inventory credits OmniTools only once.
+OmniTools p2 mirrors checksum-verified IMG.LY 1.7.0 model/runtime assets locally
+because the original external model request was blocked. Other OmniTools tasks
+can still fetch permitted processing components from CDNs. The MIT application
+includes an AGPL-3.0 background-removal component and MIT ISNET/ONNX assets;
+the public source index preserves these separate notices. A bilingual source
+and license link is visible in OmniTools itself, including its deep task pages;
+this is a source offer, not a custom return-navigation injection.
+
+Release checks: 72 portal unit tests, 60 desktop/mobile browser tests, 21
+configuration tests, lint, typecheck and production builds pass. All ten public
+synthetic workflows pass: four new application exports and six OmniTools tasks.
+Image compression reduced the fixture to 4,478 bytes; background removal
+produced both transparent and opaque pixels; audio trimming produced a
+176,478-byte WAV. Compression/trimming fetched permitted CDN components;
+background removal used local model assets. No task-content uploads were
+observed. These are bounded functional/privacy checks, not a capacity estimate
+or a guarantee about untested operations.
+
+Source/rebuild recipes, immutable revisions and private-port mappings are in
+`deployment/toolbox/browser-manifest.json`, `compose.browser.yaml` and the public
+`/utilibre-source/` archives. Security advisory evidence checked October 7:
+[Lodash](https://github.com/advisories/GHSA-r5fr-rjxr-66jc),
+[d3-color](https://github.com/advisories/GHSA-36jr-mh4h-2g58), and
+[IMG.LY license and asset-hosting instructions](https://github.com/imgly/background-removal-js/tree/12f56cc4f2a90d624e165a715748d22efc7a1d93/packages/web).
+
 ## Dumb recheck — October 7
 
 The operator is correct that other instances work. Low-volume searches and a

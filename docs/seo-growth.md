@@ -8,6 +8,46 @@ technical deployment details remain in [expanded operations](expanded-operations
 
 ## Scope and success
 
+### October 7 browser tool release
+
+The four new hosted applications are ZIP Manager, RAWGraphs, AudioMass and
+miniPaint. Six direct OmniTools task links improve discovery without adding
+six deployments or thin landing pages. The catalog remains server-rendered in
+English and Spanish; each task has a specific name, description, processing
+label, parent-service gate and direct localized launch link where supported.
+RAWGraphs/AudioMass remain English-only; some native Spanish labels in the
+other upstream applications are incomplete. No new traffic or ranking claim
+is implied by adding tools.
+
+| Visitor need | Destination and useful action | Evidence and measurement |
+| --- | --- | --- |
+| Open/create a ZIP | Bilingual catalog → `zip.utilibre.org`; extract or download archive | Exact-byte create/extract fixture; real usage unmeasured |
+| Chart CSV/spreadsheet data | Catalog → `charts.utilibre.org`; map columns and export SVG | Two-row CSV-to-bar-chart download fixture; larger-screen guidance |
+| Edit a recording | Catalog → `audio.utilibre.org`; select/edit and export audio | Three-second input to one-second WAV fixture; multitrack labeled beta |
+| Edit images with layers | Catalog → `paint.utilibre.org`; edit and export PNG/project | PNG input/output fixture; native language setting |
+| Backgrounds, compression, annotations, clips, CSV and duplicate lines | Specific searchable catalog entries → existing OmniTools routes | Six synthetic output checks; not six new keyword pages or claimed search volumes |
+
+Home descriptions now reflect images, audio, charts and ZIP files. Existing
+canonical/hreflang rules and filtered-page noindex remain unchanged. The portal
+sitemap still contains **20 meaningful canonical pages**; each new application
+has its own root-only sitemap, robots declaration, one canonical and matching
+Open Graph URL. Source downloads are crawlable with `X-Robots-Tag: noindex`;
+missing application paths return real 404s. Public tool homepages do not expose
+uploaded/result URLs because these four applications process files locally.
+
+No analytics dependency or completion beacon was added. Success remains a
+verified useful result; synthetic tests are not visitor conversions. Search
+Console/Bing access and outcome reports remain unavailable. The operator can
+add the four application sitemaps to an existing verified domain property;
+no separate guessed verification credential has been installed. Existing
+distribution drafts can demonstrate a ZIP round trip or chart export, but
+no new promotional posts or bulk directory submissions are authorized here.
+
+Maintenance evidence and repeatable checks are in
+[the toolbox review](toolbox-review.md#browser-tools-added-on-october-7).
+The existing 30/60/90-day plan remains: review observed queries and feedback
+before expanding pages, rather than manufacturing pages for every task.
+
 Production is `https://utilibre.org`; repository is
 `https://github.com/mycelibre/utilibre`, working directory
 `/home/ubuntu/freetools`. The project independently hosts free software tools,

@@ -14,6 +14,7 @@ import {
 import type { PublicConfig } from '../../src/config';
 
 const baseConfig: PublicConfig = {
+  publicZipUrl: '', publicChartsUrl: '', publicAudioUrl: '', publicPaintUrl: '',
   publicPortalOrigin: 'https://utility.example',
   publicLyricsUrl: '',
   publicMumbleUrl: '',
@@ -53,6 +54,8 @@ describe('catalog discovery metadata', () => {
       'lrclib', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'kittygram', 'rimgo', 'mumble', 'biblioreads', 'gothub', 'binternet',
       'translite', 'whisper-web', 'jupyterlite',
       'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma',
+      'zip-manager', 'rawgraphs', 'audiomass', 'minipaint',
+      'omni-background', 'omni-image-editor', 'omni-compress-image', 'omni-trim-audio', 'omni-csv-json', 'omni-deduplicate',
       'bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'qr-offline', 'ittools',
       'searxng', 'freshrss', 'redlib', 'privatebin', 'private-router',
     ]);
@@ -62,7 +65,7 @@ describe('catalog discovery metadata', () => {
     expect(catalog.filter((entry) => entry.featuredOrder !== undefined)
       .sort((left, right) => (left.featuredOrder ?? 0) - (right.featuredOrder ?? 0))
       .map((entry) => entry.id))
-      .toEqual(['bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite', 'biblioreads', 'fourget', 'anonymousoverflow', 'safetwitch', 'qr-offline', 'kittygram', 'rimgo', 'mumble', 'degoog', 'lrclib']);
+      .toEqual(['bentopdf', 'vert', 'zip-manager', 'omnitools', 'omni-background', 'omni-image-editor', 'omni-compress-image', 'omni-trim-audio', 'omni-csv-json', 'omni-deduplicate', 'hatsh', 'drawio', 'rawgraphs', 'audiomass', 'minipaint', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite', 'biblioreads', 'fourget', 'anonymousoverflow', 'safetwitch', 'qr-offline', 'kittygram', 'rimgo', 'mumble', 'degoog', 'lrclib']);
   });
 
   it('keeps unrequested retired applications out of the catalog', () => {
@@ -73,6 +76,22 @@ describe('catalog discovery metadata', () => {
 });
 
 describe('config-gated catalog discovery', () => {
+  it('opens searchable tasks directly in the configured parent application and language', () => {
+    const enabled = config({ enabledServices: ['omnitools'], publicToolsUrl: 'https://tools.example.test/' });
+    const task = catalogEntry('omni-background')!;
+    expect(entryLaunch(task, 'es', enabled)?.href).toBe('https://tools.example.test/image-generic/remove-background?lng=es');
+    expect(searchEntries(enabled, 'es', 'quitar fondo').map(entry => entry.id)).toContain('omni-background');
+    expect(searchEntries(enabled, 'en', 'trim recording').map(entry => entry.id)).toContain('omni-trim-audio');
+    expect(groupEntries(enabled, 'en', 'media').map(entry => entry.id)).toContain('omni-image-editor');
+    expect(entryLaunch(task, 'en', config({ publicToolsUrl: enabled.publicToolsUrl }))).toBeNull();
+    expect(entryLaunch(task, 'en', config({ enabledServices: ['omnitools'] }))).toBeNull();
+  });
+
+  it('uses Spanish in the new applications that support it', () => {
+    const enabled = config({ enabledServices: ['zip-manager', 'minipaint'], publicZipUrl: 'https://zip.example.test/', publicPaintUrl: 'https://paint.example.test/' });
+    expect(entryLaunch(catalogEntry('zip-manager')!, 'es', enabled)?.href).toBe('https://zip.example.test/?lang=es');
+    expect(entryLaunch(catalogEntry('minipaint')!, 'es', enabled)?.href).toBe('https://paint.example.test/?lang=es');
+  });
   it('hides withdrawn Whisper even if its old address remains configured', () => {
     const withdrawn = { ...hostedConfig, publicTranscribeUrl: 'https://transcribe.example.test/' };
     expect(allEntries(withdrawn, 'en').map((entry) => entry.id)).not.toContain('whisper-web');

@@ -35,3 +35,22 @@ qr.utilibre.org {
 	encode zstd gzip
 	reverse_proxy 10.10.1.43:3112
 }
+
+# October 7 additions: reserved backend destinations. Prepared before deployment;
+# a configured edge route alone does not mean the application is ready.
+zip.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3160
+}
+charts.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3161
+}
+audio.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3162
+}
+paint.utilibre.org {
+	encode zstd gzip
+	reverse_proxy 10.10.1.43:3163
+}

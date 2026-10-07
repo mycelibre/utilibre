@@ -1,4 +1,4 @@
-export type FossProviderId = 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'lrclib' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris' | 'binternet' | 'translite' | 'biblioreads' | 'qr-offline' | 'kittygram' | 'rimgo' | 'mumble';
+export type FossProviderId = 'zip-manager' | 'rawgraphs' | 'audiomass' | 'minipaint' | 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'lrclib' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris' | 'binternet' | 'translite' | 'biblioreads' | 'qr-offline' | 'kittygram' | 'rimgo' | 'mumble';
 
 export type ReviewedLicense =
   | 'AGPL-3.0'
@@ -38,6 +38,10 @@ export interface ReviewedFossProvider {
  * never enables a public route or opens registrations.
  */
 export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider> = {
+  'zip-manager': browserProvider('ZIP Manager', 'gildas-lormeau/zip-manager', '3b77a599d823691cc3b7b81e0715b4655423e578', 'MIT', 'LICENSE.txt', '3b77a59-p1'),
+  rawgraphs: browserProvider('RAWGraphs', 'rawgraphs/rawgraphs-app', 'b7b2909111cc029ccf418dc3e7d079e0f4c50d6f', 'Apache-2.0', 'LICENSE', '2.0.1-p1 · local data only'),
+  audiomass: browserProvider('AudioMass', 'pkalogiros/AudioMass', '21f5ee1362a47be6f0dbe6e4969a15e43d21b044', 'MIT', 'LICENSE', '21f5ee1-p1'),
+  minipaint: browserProvider('miniPaint', 'viliusle/miniPaint', 'a79733eb803fc97084ef0ee4faa96b031e69e1c0', 'MIT', 'MIT-LICENSE.txt', '4.14.3-p1 · local images and fonts'),
   lrclib: { ...toolboxProvider('LRCLIB', 'tranxuanthang/lrclib-homepage', 'f37c07042be1af5fdcc7932d090af32141089751', 'MIT', 'f37c070-p2 · cached read-only API · replaces Dumb', 'source:f37c07042be1af5fdcc7932d090af32141089751+deployment/community/lrclib-source.patch'), reviewStatus: 'deployed', integration: 'source-build' },
   kittygram: { ...forgeEvaluationProvider('Kittygram', 'https://codeberg.org/irelephant/kittygram', '5931c21c0990d4b216e97166dd78c03c9965567a', 'AGPL-3.0', 'LICENSE', '5931c21-p1 · public profile/post/video tested', 'source:5931c21c0990d4b216e97166dd78c03c9965567a+deployment/community/kittygram-source.patch'), reviewStatus: 'deployed' },
   rimgo: forgeEvaluationProvider('Rimgo', 'https://codeberg.org/rimgo/rimgo', 'd2be8e221522dfe7a06452e2002dcf6dad569d1a', 'AGPL-3.0', 'LICENSE', 'd2be8e2-p3 · shared cooldown · Imgur media rate-limited', 'source:d2be8e221522dfe7a06452e2002dcf6dad569d1a+deployment/community/rimgo-source.patch'),
@@ -101,7 +105,7 @@ export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider>
   bentopdf: toolboxProvider('BentoPDF', 'alam00000/bentopdf', 'f96cd4e5166f3d51393dfe9f3c440b5bb77802f1', 'AGPL-3.0', '2.8.8', 'ghcr.io/alam00000/bentopdf-simple:2.8.8@sha256:3d62b8f8eece5fe947026ac3925ff08fda245b3d6ba2c3916b94da91e0010c74'),
   vert: toolboxProvider('VERT', 'VERT-sh/VERT', 'c7b9f3921d6f8722c1dc1515799b461622777068', 'AGPL-3.0', 'c7b9f39 · local processing build', 'source:c7b9f3921d6f8722c1dc1515799b461622777068+deployment/toolbox/Dockerfile.vert'),
   hatsh: toolboxProvider('hat.sh', 'sh-dv/hat.sh', '540d3ccfd2a12b4ed96b78a776c764f899678b6c', 'MIT', '2.3.6', 'source:540d3ccfd2a12b4ed96b78a776c764f899678b6c+deployment/toolbox/Dockerfile.hatsh'),
-  omnitools: toolboxProvider('OmniTools', 'iib0011/omni-tools', '922b28ce154e8f22da4a721472889717a95f7562', 'MIT', '0.6.0', 'docker.io/iib0011/omni-tools:0.6.0@sha256:ceb5acc317daf387634f7f212cefe4722fd1243ad1cba74203f25254195b6c69'),
+  omnitools: toolboxProvider('OmniTools', 'iib0011/omni-tools', '922b28ce154e8f22da4a721472889717a95f7562', 'MIT', '0.6.0-p2 · local background-removal assets', 'docker.io/iib0011/omni-tools:0.6.0@sha256:ceb5acc317daf387634f7f212cefe4722fd1243ad1cba74203f25254195b6c69+deployment/toolbox/Dockerfile.omnitools'),
   ittools: toolboxProvider('IT Tools', 'CorentinTh/it-tools', '5732483fc24a6e6818839060bdf3cc7d9d324b9f', 'GPL-3.0', '2024.10.22', 'docker.io/corentinth/it-tools:2024.10.22-7ca5933@sha256:8b8128748339583ca951af03dfe02a9a4d7363f61a216226fc28030731a5a61f'),
   drawio: toolboxProvider('draw.io', 'jgraph/drawio', 'v32.0.2', 'Apache-2.0', '32.0.2-p3 · local files', 'release:v32.0.2+deployment/toolbox/Dockerfile.drawio'),
   miniqr: toolboxProvider('Mini QR', 'lyqht/mini-qr', 'v0.33.0', 'GPL-3.0', '0.33.0', 'release:v0.33.0+deployment/toolbox/Dockerfile.miniqr'),
@@ -157,6 +161,11 @@ export interface FossCatalogRecord {
 const reviewedLicenses = new Set<ReviewedLicense>([
   'AGPL-3.0', 'AGPL-3.0-only', 'AGPL-3.0-or-later', 'Zlib', 'MIT', 'GPL-3.0', 'GPL-3.0-or-later', 'Apache-2.0', 'Unlicense', 'BSD-3-Clause', 'MPL-2.0',
 ]);
+
+function browserProvider(project: string, repo: string, revision: string, license: ReviewedLicense, licenseFile: string, version: string): ReviewedFossProvider {
+  const provider = toolboxProvider(project, repo, revision, license, version, `source:${revision}+deployment/toolbox/prepare-browser-build.mjs`);
+  return { ...provider, reviewedOn: '2026-10-07', reviewStatus: 'deployed', licenseEvidenceUrls: [`${provider.sourceUrl}/blob/${revision}/${licenseFile}`] };
+}
 
 function toolboxProvider(project: string, repo: string, revision: string, license: ReviewedLicense, installedVersion: string, artifactReference: string): ReviewedFossProvider {
   const sourceUrl = `https://github.com/${repo}`;

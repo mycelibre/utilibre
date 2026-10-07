@@ -20,7 +20,22 @@ application, image, source-revision, license, and modification inventory in
 That manifest covers FreshRSS, internal RSSHub, PrivateBin, PostgreSQL, and
 Valkey. Those applications are not bundled into the portal browser assets.
 
-## Project-supplied identity assets
+## Browser tool additions on October 7
+
+ZIP Manager (MIT), RAWGraphs (Apache-2.0), AudioMass (MIT application) and
+miniPaint (MIT) retain their upstream notices. Exact revisions and license
+filenames are in `deployment/toolbox/browser-manifest.json`; public source
+archives include the integration recipes. AudioMass has separate BSD/LGPL
+dependency notices in its supplied `THIRD_PARTY_NOTICES.md`.
+
+OmniTools remains an MIT application, but its IMG.LY background-removal 1.7.0
+component is **AGPL-3.0**, not MIT. Its ISNET model and ONNX runtime are identified
+as MIT in upstream `ThirdPartyLicenses.json`. We mirror the versioned model
+assets with SHA-256 verification and publish the component source/package and
+notices alongside the OmniTools source and integration archive. Source:
+<https://github.com/imgly/background-removal-js/tree/12f56cc4f2a90d624e165a715748d22efc7a1d93>.
+
+## Project identity assets
 
 Copyright © 2026 Mycelibre contributors applies to this repository's original
 software and documentation.

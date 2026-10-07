@@ -1,0 +1,76 @@
+name: utilibre-browser-tools
+
+x-browser: &browser
+  restart: unless-stopped
+  read_only: true
+  user: "101:101"
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+  mem_limit: 128m
+  cpus: 0.5
+  pids_limit: 64
+  networks: [browser]
+  healthcheck:
+    test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+  logging:
+    driver: json-file
+    options: {max-size: 5m, max-file: "2"}
+
+services:
+  zip-manager:
+    <<: *browser
+    image: utilibre-zip-manager:3b77a59-p1
+    build:
+      context: /opt/utilibre/src/zip-manager
+      dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.browser
+      args: {APP: zip-manager}
+      additional_contexts: {integration: /home/ubuntu/freetools/deployment/toolbox}
+    ports: [{target: 8080, published: "3160", host_ip: "10.10.1.43"}]
+    volumes:
+      - ./nginx-browser.conf:/etc/nginx/nginx.conf:ro
+      - ./security-browser.conf:/etc/nginx/tool-security.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+  rawgraphs:
+    <<: *browser
+    image: utilibre-rawgraphs:b7b2909-p1
+    build:
+      context: /opt/utilibre/src/rawgraphs
+      dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.rawgraphs
+      additional_contexts: {integration: /home/ubuntu/freetools/deployment/toolbox}
+    ports: [{target: 8080, published: "3161", host_ip: "10.10.1.43"}]
+    volumes:
+      - ./nginx-browser.conf:/etc/nginx/nginx.conf:ro
+      - ./security-browser.conf:/etc/nginx/tool-security.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+  audiomass:
+    <<: *browser
+    image: utilibre-audiomass:21f5ee1-p1
+    build:
+      context: /opt/utilibre/src/audiomass
+      dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.audiomass
+      additional_contexts: {integration: /home/ubuntu/freetools/deployment/toolbox}
+    ports: [{target: 8080, published: "3162", host_ip: "10.10.1.43"}]
+    volumes:
+      - ./nginx-browser.conf:/etc/nginx/nginx.conf:ro
+      - ./security-audio.conf:/etc/nginx/tool-security.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+  minipaint:
+    <<: *browser
+    image: utilibre-minipaint:4.14.3-p1
+    build:
+      context: /opt/utilibre/src/minipaint
+      dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.browser
+      args: {APP: minipaint}
+      additional_contexts: {integration: /home/ubuntu/freetools/deployment/toolbox}
+    ports: [{target: 8080, published: "3163", host_ip: "10.10.1.43"}]
+    volumes:
+      - ./nginx-browser.conf:/etc/nginx/nginx.conf:ro
+      - ./security-browser.conf:/etc/nginx/tool-security.conf:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+
+networks:
+  browser: {}

@@ -71,6 +71,10 @@ services:
       PUBLIC_TRANSLATE_URL: ${PUBLIC_TRANSLATE_URL:-}
       PUBLIC_BOOKS_URL: ${PUBLIC_BOOKS_URL:-}
       PUBLIC_QRTOOLS_URL: ${PUBLIC_QRTOOLS_URL:-}
+      PUBLIC_ZIP_URL: ${PUBLIC_ZIP_URL:-}
+      PUBLIC_CHARTS_URL: ${PUBLIC_CHARTS_URL:-}
+      PUBLIC_AUDIO_URL: ${PUBLIC_AUDIO_URL:-}
+      PUBLIC_PAINT_URL: ${PUBLIC_PAINT_URL:-}
       PUBLIC_INSTAGRAM_URL: ${PUBLIC_INSTAGRAM_URL:-}
       PUBLIC_FOURGET_URL: ${PUBLIC_FOURGET_URL:-}
       PUBLIC_OVERFLOW_URL: ${PUBLIC_OVERFLOW_URL:-}
@@ -120,7 +124,11 @@ services:
         kittygram=http://${PRIVATE_BIND_IP}:3154/,
         qr-offline=http://${PRIVATE_BIND_IP}:3155/,
         degoog=http://${PRIVATE_BIND_IP}:3156/,
-        lrclib=http://${PRIVATE_BIND_IP}:3142/healthz
+        lrclib=http://${PRIVATE_BIND_IP}:3142/healthz,
+        zip-manager=https://zip.utilibre.org/,
+        rawgraphs=https://charts.utilibre.org/,
+        audiomass=https://audio.utilibre.org/,
+        minipaint=https://paint.utilibre.org/
     volumes:
       - /opt/utilibre/update-public:/run/utilibre-updates:ro
     tmpfs:
