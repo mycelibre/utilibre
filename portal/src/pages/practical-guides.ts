@@ -59,7 +59,8 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
   const list = element('ol'); for (const text of copy.steps) list.append(element('li', '', text)); steps.append(list); main.append(steps);
   main.append(section(es ? 'Comprobá el resultado' : 'Check the result', copy.success), section(es ? 'Si algo no funciona' : 'Troubleshooting', copy.troubleshooting));
   const privacy = section(es ? 'Tus datos en este recorrido' : 'Your data in this workflow', copy.privacy);
-  for (const tool of guide.tools) {
+  const distinctTools = guide.tools.filter((tool, index, tools) => tools.findIndex(other => other.id === tool.id) === index);
+  for (const tool of distinctTools) {
     const entry = catalogEntry(tool.id); if (!entry) continue;
     const details = element('details', 'inventory-entry'); details.append(element('summary', '', `${es ? 'Datos y límites' : 'Data and limitations'} · ${entry.upstreamProject}`));
     const dl = element('dl', 'privacy-answers'); for (const [question, answer] of privacyAnswers(entry, language)) append(dl, element('dt', '', question), element('dd', '', answer)); details.append(dl); privacy.append(details);
@@ -78,7 +79,7 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
     : `Utilibre maintains these instructions. Reviewed: ${reviewedOn}, using examples and test browsers. This does not establish compatibility with every device or an uptime history. Download important work: clearing browser data can remove drafts and preferences.`);
   const sources = element('p', 'guide-links');
   for (const reference of guide.references || []) { const a = link(reference.url, reference.label[language]); a.rel = 'noreferrer'; sources.append(a); }
-  for (const tool of guide.tools) { const entry = catalogEntry(tool.id); if (entry) sources.append(link(entry.upstreamSourceUrl, `${entry.upstreamProject} · ${es ? 'código fuente' : 'source'}`)); }
+  for (const tool of distinctTools) { const entry = catalogEntry(tool.id); if (entry) sources.append(link(entry.upstreamSourceUrl, `${entry.upstreamProject} · ${es ? 'código fuente' : 'source'}`)); }
   if (config.contactUrl) sources.append(link(config.contactUrl, es ? 'Reportar un error o proponer una corrección' : 'Report a problem or suggest a correction'));
   responsibility.append(sources, element('p', '', es ? 'Podés imprimir esta guía desde el navegador.' : 'You can print this guide from your browser.')); main.append(responsibility);
   return main;

@@ -4,6 +4,31 @@ This is the active implementation record, not a launch announcement. Privacy and
 zero visitor tracking are release gates. Existing documents, routes, access rules
 and account retention remain unchanged unless a change is explicitly recorded.
 
+## Production release — 8 October 2026
+
+Implementation commit `1ba100e` was pushed to the existing GitHub repository and
+the portal deployed using its normal Compose project. The backend pack, eleven
+bilingual guides, editable examples, source downloads and catalogue entries are
+live. A final guide-only follow-up removes repeated privacy/source entries for
+two tasks from the same application. No Search/Redlib restart or listing submission.
+
+Observed after deployment: all 70 public canonical pages passed the live SEO
+check (HTML, unique metadata, reciprocal languages, sitemap, CSP and no cookies).
+Real EN/ES public/account/pilot views showed the intended new tools and preserved
+Collab in Use now. Both missing-page probes returned 404; guide journeys had no
+outside browser requests or page errors. Desktop/narrow screenshots were inspected.
+All eight new/updated source archives returned 200 with nonempty files. Local
+typecheck/lint/build, 84 unit tests, six desktop/mobile guide tests and seven
+IndexNow-selection tests passed; no IndexNow submission was sent.
+
+Rollback image: `public-utility-portal:pre-service-pack-20261008`.
+Private environment backup: `/opt/utilibre/pack-secrets/portal-pre-service-pack.env`.
+Restore those together and recreate **only** portal; preserve all application
+state. Five unused intermediate PDF/Omni/Python images and the loopback test proxy
+were removed, not user data or rollback images; build recipes recreate them.
+Disk recovered to about 12 GiB free. This release is not a claim that the blocked
+services, provider controls or external media paths below are complete.
+
 ## Baseline and boundaries
 
 - Portal release `dc8a0e8` moves Collab/WBO from Pilots to Use now, preserving its
@@ -45,8 +70,8 @@ and account retention remain unchanged unless a change is explicitly recorded.
 
 ### Current checkpoint — 8 October, 02:55 UTC
 
-This section supersedes the historical checkpoints below. Backends are deployed;
-the portal/source release is the final gate. Tests used synthetic data on Linux
+This section supersedes the older checkpoints below; the release status above
+supersedes its earlier pending items. Tests used synthetic data on Linux
 Chromium, normal public TLS except explicitly isolated restore/lab tests. No real
 phone, Windows/Opera transcription or independent external meeting test is implied.
 
