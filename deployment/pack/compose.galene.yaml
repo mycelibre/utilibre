@@ -1,0 +1,26 @@
+name: utilibre-pack-galene
+services:
+  galene:
+    image: utilibre-galene:1.2.1-p1
+    # One dedicated interface avoids thousands of candidate pairs from the host's
+    # many application bridges. Public UDP/NAT remains a separate activation gate.
+    user: '4003:4003'
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    cpus: 0.75
+    pids_limit: 64
+    logging: {driver: none}
+    environment: {GOMAXPROCS: '2'}
+    command: ['-http', '0.0.0.0:8080', '-insecure', '-data', '/data', '-groups', '/groups', '-recordings', '/disabled-recordings', '-udp-range', '47800', '-turn', '']
+    ports: ['10.10.1.43:3178:8080']
+    networks: {meet: {ipv4_address: 172.29.99.10}}
+    volumes:
+      - /opt/utilibre/pack-data/galene/data:/data
+      - /opt/utilibre/pack-data/galene/groups:/groups:ro
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=8m,mode=1777']
+networks:
+  meet:
+    ipam: {config: [{subnet: 172.29.99.0/24}]}

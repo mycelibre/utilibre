@@ -1,0 +1,12 @@
+# Overlay the existing /opt/utilibre/compose.yaml; do not replace data or accounts.
+services:
+  freshrss:
+    environment:
+      FRESHRSS_ENV: silent
+      COPY_LOG_TO_SYSLOG: 'Off'
+      COPY_SYSLOG_TO_STDERR: 'Off'
+    command: [/bin/sh, /privacy/freshrss-start.sh]
+    volumes:
+      - /home/ubuntu/freetools/deployment/pack/freshrss-start.sh:/privacy/freshrss-start.sh:ro
+      - /home/ubuntu/freetools/deployment/pack/freshrss-privacy.conf:/etc/apache2/utilibre-privacy.conf:ro
+    logging: {driver: none}

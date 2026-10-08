@@ -1,0 +1,11 @@
+# Fictional practice; not financial, medical or engineering advice.
+# Scale a recipe from four portions to six.
+let flour = 250 g
+let portions = 6 / 4
+flour * portions -> g
+# Energy: a hypothetical 60 watt device used for three hours.
+60 W * 3 h -> kWh
+# Distance conversion.
+5 km -> m
+# This deliberately fails: a length and a time are incompatible.
+1 m + 1 s

@@ -1,5 +1,6 @@
 import type { Language } from '../i18n/index.ts';
 import { nextFeatureGuides } from './next-feature-guides.ts';
+import { servicePackGuides } from './service-pack-guides.ts';
 
 export interface GuideCopy {
   title: string; intro: string; prerequisites: string;
@@ -10,11 +11,15 @@ export interface PracticalGuide {
   samples: Array<{ file: string; localized?: boolean; label: Record<Language, string> }>;
   copy: Record<Language, GuideCopy>;
   portalLinks?: Array<{ en: string; es: string; label: Record<Language, string> }>;
+  sampleNote?: Record<Language, string>;
+  references?: Array<{ url: string; label: Record<Language, string> }>;
+  reviewedOn?: string;
 }
 // Maintained instructions for deployed interfaces, not a separate service registry.
 // Access, privacy details and launch destinations come from the catalogue.
 export const practicalGuides: PracticalGuide[] = [
   ...nextFeatureGuides,
+  ...servicePackGuides,
   {
     id: 'mindmap', paths: { en: 'guides/mind-map', es: 'guias/mapa-mental' },
     tools: [{ id: 'markmap', label: { en: 'Create a mind map with Markmap', es: 'Crear un mapa mental con Markmap' } }],

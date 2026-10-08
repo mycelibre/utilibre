@@ -1,0 +1,9 @@
+FICTIONAL PRACTICE PLAN — original Utilibre example, CC0-1.0.
+Copy one task at a time into Add more. This is text, not a JSON backup.
+
+Read a chapter about rivers t25m
+Write three questions t10m
+Review the answers t15m
+
+Choose your own dates in the application. No real person or appointment is represented.
+After editing, create your own native JSON export in Settings > Sync & Backup > Import/Export.

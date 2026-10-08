@@ -1,0 +1,15 @@
+[Unit]
+Description=Utilibre encrypted local pack backup
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/ubuntu/freetools
+ExecStart=/root/.nvm/versions/node/v24.14.0/bin/node deployment/pack/backup.mjs
+UMask=0077
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=10min
+StandardOutput=null
+StandardError=null

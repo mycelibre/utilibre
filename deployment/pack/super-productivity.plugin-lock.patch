@@ -1,0 +1,28 @@
+diff --git a/packages/plugin-dev/trello-issue-provider/package-lock.json b/packages/plugin-dev/trello-issue-provider/package-lock.json
+index f403c6c..8aafb6a 100644
+--- a/packages/plugin-dev/trello-issue-provider/package-lock.json
++++ b/packages/plugin-dev/trello-issue-provider/package-lock.json
+@@ -948,7 +948,6 @@
+       "dev": true,
+       "hasInstallScript": true,
+       "license": "MIT",
+-      "peer": true,
+       "bin": {
+         "esbuild": "bin/esbuild"
+       },
+@@ -1361,7 +1360,6 @@
+       "integrity": "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "engines": {
+         "node": ">=12"
+       },
+@@ -1527,7 +1525,6 @@
+       "integrity": "sha512-cFKLV/PRgAUlIRm5WjMjJ86jrftzpqcgH+Us+DS8mI3CDNiH30Whrz8uHL3+MOLPAgqbMBAqWdAHAphOAM+z/Q==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "lightningcss": "^1.33.0",
+         "picomatch": "^4.0.5",

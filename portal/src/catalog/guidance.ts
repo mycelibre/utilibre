@@ -3,7 +3,7 @@ import type { Language } from '../i18n';
 
 // Presentation of catalogue facts, not another service registry.
 export const startHereIds = ['bentopdf', 'vert', 'omni-compress-image', 'pairdrop', 'qr-offline', 'pollaris', 'drawio', 'excalidraw'] as const;
-export const pilotIds = new Set(['fmd', 'whisper-web']);
+export const pilotIds = new Set(['fmd', 'whisper-web', 'galene']);
 export type AccessMode = 'anonymous' | 'open-registration' | 'approved' | 'existing' | 'password';
 export function accessMode(entry: CatalogEntry): AccessMode {
   if (entry.id === 'mumble') return 'password';
@@ -12,6 +12,9 @@ export function accessMode(entry: CatalogEntry): AccessMode {
 }
 export function accessText(entry: CatalogEntry, language: Language): string {
   const es = language === 'es';
+  if (entry.id === 'cryptpad') return es ? 'Podés probar sin cuenta; creá una cuenta propia para conservar y poseer el trabajo.' : 'Try as a guest; create your own account to keep and own continuing work.';
+  if (entry.id === 'liberaforms') return es ? 'Crear: cuenta invitada y clave de cifrado. Responder: sin cuenta, con enlace.' : 'Create: invited account and encryption key. Respond: no account, with a form link.';
+  if (entry.id === 'galene') return es ? 'Piloto con moderación e invitación; conexión entre redes externas pendiente.' : 'Moderator-led invited pilot; external-network connection still pending.';
   if (entry.id === 'rallly') return es ? 'Crear: cuenta aprobada. Votar: sin cuenta, con enlace.' : 'Create: approved account. Vote: no account, with a poll link.';
   if (entry.id === 'mumble') return es ? 'Necesitás un cliente de Mumble y la contraseña compartida.' : 'Requires a Mumble client and the shared password.';
   if (entry.id === 'fmd') return es ? 'Piloto por invitación; requiere la aplicación Android. Prueba en dispositivo pendiente.' : 'Invited pilot; Android app required. Real-device testing pending.';
@@ -46,6 +49,8 @@ const choices: Record<string, LocalizedText> = {
 export function choiceNote(entry: CatalogEntry, language: Language): string | undefined { return choices[entry.id]?.[language]; }
 export function encryptionText(entry: CatalogEntry, language: Language): string {
   const es = language === 'es';
+  if (entry.id === 'cryptpad') return es ? 'El navegador cifra documentos antes de subirlos. Los enlaces compartidos pueden incluir claves: guardalos en privado. Esto no oculta todos los metadatos ni protege frente a código alterado por un servidor comprometido.' : 'Your browser encrypts documents before upload. Shared links may contain keys: keep them private. This does not conceal all metadata or protect against altered code delivered by a compromised server.';
+  if (entry.id === 'liberaforms') return es ? 'Sí, para respuestas: el despliegue exige cifrado en el navegador con las claves del creador. Las preguntas y metadatos no tienen esa protección. La clave privada y sus respaldos requieren cuidado; una contraseña de cuenta no sustituye la clave.' : 'Yes, for answers: this deployment requires browser encryption to the creator’s keys. Questions and metadata do not have that protection. Safeguard private keys and backups; an account password is not a replacement key.';
   if (entry.id === 'hatsh') return es ? 'El navegador cifra y descifra archivos localmente, sin subirlos. Conservá la contraseña o clave por separado; Utilibre no puede recuperarla. Solo compartí el archivo cifrado.' : 'Your browser encrypts and decrypts files locally without uploading them. Keep the password or key separately; Utilibre cannot recover it. Share only the encrypted output.';
   if (['privatebin', 'yopass'].includes(entry.providerId)) return es
     ? `Sí: el navegador cifra el contenido antes de subirlo y Utilibre guarda contenido cifrado. Quien tenga el enlace completo puede leerlo.${entry.providerId === 'privatebin' ? ' También necesitará la contraseña si la configuraste.' : ''} El destinatario puede conservar una copia. Dependés de que la aplicación entregue código confiable; esto no protege frente a un servidor comprometido que altere ese código.`
@@ -73,6 +78,9 @@ export function privacyAnswers(entry: CatalogEntry, language: Language): Array<[
 const checkedTasks = new Set(['bentopdf', 'vert', 'drawio', 'excalidraw', 'omni-compress-image', 'omni-image-editor', 'qr-offline', 'pollaris', 'pairdrop', 'rawgraphs', 'minipaint', 'image-scrubber', 'ntfy', 'yopass', 'privatebin']);
 export function verificationText(entry: CatalogEntry, language: Language): string {
   const es = language === 'es';
+  if (['mapshaper', 'numbat', 'super-productivity'].includes(entry.id)) return es ? 'Importación/exportación o cálculos y persistencia, según la aplicación, comprobados en Chromium de escritorio el 8 de octubre de 2026. Datos ficticios; no demuestra compatibilidad con todos los dispositivos.' : 'Import/export or calculations and persistence, as applicable, checked in desktop Chromium on 8 October 2026 with fictional data. Not proof of compatibility with every device.';
+  if (entry.id === 'cryptpad') return es ? 'Dos sesiones editaron Markdown y una hoja de cálculo; se comprobaron Undo sincronizado, importación/exportación de documentos, Kanban, calendario y vistas Markdown el 8 de octubre de 2026. La verificación de la suite completa sigue en curso.' : 'Two sessions edited Markdown and a spreadsheet; synchronized Undo, document import/export, Kanban, calendar and Markdown previews were checked on 8 October 2026. Whole-suite verification is still in progress.';
+  if (entry.id === 'liberaforms') return es ? 'Se comprobaron respuesta cifrada, descifrado del creador, exportación JSON, aislamiento de otra cuenta y restauración de la base de datos el 8 de octubre de 2026. La auditoría de todas las funciones sigue en curso.' : 'Encrypted response, creator decryption, JSON export, second-account isolation and database restore were checked on 8 October 2026. Review of all features is still in progress.';
   if (entry.id === 'wbo') return es ? 'Dibujo entre dos sesiones, reconexión y exportación SVG comprobados por HTTPS público en Chromium el 7 de octubre de 2026. Vista móvil simulada; no es una prueba en teléfono real ni de capacidad.' : 'Two-session drawing, reconnect and SVG export checked over public HTTPS in Chromium on 7 October 2026. Mobile viewport simulated; not a real-phone or capacity test.';
   if (entry.id === 'markmap') return es ? 'Se comprobaron importación/exportación, borradores y entradas maliciosas con datos ficticios en Chromium de escritorio, el 7 de octubre de 2026. Vista de teléfono simulada; no es una prueba en un teléfono real. La disponibilidad HTTPS pública se comprueba por separado.' : 'Import/export, drafts and hostile inputs were checked with fictional data in desktop Chromium on 7 October 2026. Phone viewport simulated, not a real-phone test. Public HTTPS availability is checked separately.';
   if (pilotIds.has(entry.id)) return es ? 'Piloto: no se ha verificado el flujo completo en un dispositivo real autorizado.' : 'Pilot: the complete workflow on an authorized real device has not been verified.';

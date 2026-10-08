@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Feed endpoints validated 2026-10-08. Original selection, CC0-1.0; articles retain their publishers' rights. -->
+<opml version="2.0">
+  <head><title>Utilibre · Cultura libre y fotografía / Open culture and photography</title></head>
+  <body><outline text="Cultura libre y fotografía / Open culture and photography">
+    <outline type="rss" text="Creative Commons (English)" title="Creative Commons" xmlUrl="https://creativecommons.org/feed/" htmlUrl="https://creativecommons.org/" language="en" />
+    <outline type="rss" text="Flickr Blog (English)" title="Flickr Blog" xmlUrl="https://blog.flickr.net/en/feed/" htmlUrl="https://blog.flickr.net/en/" language="en" />
+  </outline></body>
+</opml>

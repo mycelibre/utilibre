@@ -1,0 +1,54 @@
+# Separate Caddy VM; add only after each private backend's release checks pass.
+# No access logging, query/referrer logging or third-party analytics.
+maps.utilibre.org {
+    header +Cache-Control "no-transform"
+    encode zstd gzip
+    log_skip
+    reverse_proxy 10.10.1.43:3170
+}
+calc.utilibre.org {
+    header +Cache-Control "no-transform"
+    encode zstd gzip
+    log_skip
+    reverse_proxy 10.10.1.43:3171
+}
+
+# Publish only after local-data and privacy gates in docs/service-pack.md pass.
+plan.utilibre.org {
+    header +Cache-Control "no-transform"
+    encode zstd gzip
+    log_skip
+    reverse_proxy 10.10.1.43:3172
+}
+
+# CryptPad generates its own application-specific sandbox/CSP headers.
+# Do not apply a generic frame-src 'none' or frame-ancestors 'none' override.
+pad.utilibre.org, sandbox-pad.utilibre.org {
+    encode zstd gzip
+    log_skip
+    header Referrer-Policy "no-referrer"
+    header X-Robots-Tag "noindex, nofollow"
+    header Strict-Transport-Security "max-age=31536000"
+    header +Cache-Control "no-transform"
+    reverse_proxy 10.10.1.43:3173
+}
+
+# Native Flask-WTF HTTPS CSRF validation needs same-origin Referer.
+forms.utilibre.org {
+    encode zstd gzip
+    log_skip
+    header +Cache-Control "no-transform"
+    header Referrer-Policy "same-origin"
+    header X-Robots-Tag "noindex, nofollow"
+    reverse_proxy 10.10.1.43:3176
+}
+
+# HTTPS signaling only; this does not open media UDP or activate a TURN relay.
+meet.utilibre.org {
+    encode zstd gzip
+    log_skip
+    header +Cache-Control "no-transform"
+    header Referrer-Policy "no-referrer"
+    header X-Robots-Tag "noindex, nofollow"
+    reverse_proxy 10.10.1.43:3178
+}

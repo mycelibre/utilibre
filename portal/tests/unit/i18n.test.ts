@@ -82,6 +82,8 @@ describe('bilingual content', () => {
       .map((entry) => [entry.id, entry.accountAccess]));
 
     expect(accountAccess).toEqual({
+      liberaforms: 'invite-required',
+      galene: 'invite-required',
       freshrss: 'closed-registration',
       'reactive-resume': 'invite-required',
       penpot: 'invite-required',

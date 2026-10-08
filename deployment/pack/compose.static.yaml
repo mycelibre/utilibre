@@ -1,0 +1,39 @@
+name: utilibre-pack-static
+services:
+  static:
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    entrypoint: [nginx, -g, 'daemon off;']
+    restart: unless-stopped
+    user: '101:101'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 64
+    logging: {driver: none}
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=16m,mode=1777']
+    ports:
+      - '10.10.1.43:3170:8080'
+      - '10.10.1.43:3171:8081'
+      - '10.10.1.43:3172:8082'
+      - '127.0.0.1:3172:8082'
+    volumes:
+      - ./nginx-static.conf:/etc/nginx/nginx.conf:ro
+      - ./static-security.conf:/etc/nginx/static-security.conf:ro
+      - /opt/utilibre/pack-static/mapshaper-0.7.80-p1:/srv/maps:ro
+      - /opt/utilibre/pack-static/numbat-1.24.0-p1:/srv/calc:ro
+      - /opt/utilibre/pack-static/plan-19.1.0-p1:/srv/plan:ro
+      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
+    networks: [static]
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+networks:
+  static:
+    # Internal-only bridges do not publish ports in this Docker environment.
+    # Egress is denied separately by firewall.sh; only the edge reaches ports.
+    ipam:
+      config: [{subnet: 172.29.96.0/24}]

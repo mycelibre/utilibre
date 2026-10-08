@@ -1,0 +1,12 @@
+FROM golang:1.26-alpine@sha256:8ac98ca534ac3f51e1f420a1dd2c15e74c75cfa0f23f3ad27eb5d7236c349a0c AS builder
+WORKDIR /src
+COPY . .
+ENV GOMAXPROCS=2 CGO_ENABLED=0
+RUN go build -p 2 -trimpath -ldflags='-s -w' -o /out/galene . && go test -p 2 ./group ./token ./ice
+FROM alpine:3.24@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
+WORKDIR /app
+COPY --from=builder /out/galene /app/galene
+COPY static /app/static
+COPY LICENCE /app/LICENCE
+USER 4003:4003
+ENTRYPOINT ["/app/galene"]

@@ -4,6 +4,8 @@ import { chromium } from '../../portal/node_modules/playwright-core/index.mjs';
 const browser = await chromium.launch();
 try {
   const page = await browser.newPage();
+  const outside=new Set(),writes=[];
+  page.context().on('request',r=>{if(/^https?:/.test(r.url())&&new URL(r.url()).origin!=='https://python.utilibre.org')outside.add(new URL(r.url()).origin);if(!['GET','HEAD'].includes(r.method()))writes.push(r.method())});
   await page.goto('https://python.utilibre.org/es/lab/index.html?path=Empeza-aqui.ipynb');
   await page.locator('.jp-CodeCell').first().waitFor({timeout:45000});
   await page.locator('.jp-CodeCell .cm-content').first().click();
@@ -13,6 +15,8 @@ try {
   await page.keyboard.press('Control+Enter');
   await page.locator('.jp-OutputArea img').waitFor({timeout:120000});
   assert.ok(await page.locator('.jp-OutputArea img').first().evaluate(img=>img.naturalWidth>0));
+  assert.deepEqual([...outside],[]);assert.deepEqual(writes,[]);
   console.log('JupyterLite public HTTPS: Python/Pyodide calculation, pandas CSV and matplotlib chart passed.');
   console.log('Only synthetic notebook data used; this closes and discards the test browser storage.');
+  console.log('No external runtime requests or content uploads in this notebook journey.');
 } finally { await browser.close(); }

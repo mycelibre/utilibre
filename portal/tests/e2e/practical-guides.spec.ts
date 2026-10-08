@@ -7,10 +7,13 @@ test('all practical guides preserve language, real launch paths and downloadable
     publicPdfUrl: 'https://pdf.example/', publicToolsUrl: 'https://tools.example/', publicPaintUrl: 'https://paint.example/',
     publicChartsUrl: 'https://charts.example/', publicScrubUrl: 'https://scrub.example/', publicDropUrl: 'https://drop.example/',
     publicMindmapUrl: 'https://mindmap.example/',
+    publicMapsUrl: 'https://maps.example/', publicCalcUrl: 'https://calc.example/',
+    publicPlanUrl: 'https://plan.example/', publicRssUrl: 'https://rss.example/',
+    publicPadUrl: 'https://pad.example/', publicFormsUrl: 'https://forms.example/', publicMeetUrl: 'https://meet.example/',
     publicRedditUrl: 'https://redlib.example/',
     publicDrawUrl: 'https://draw.example/', publicWhiteboardUrl: 'https://whiteboard.example/', publicCollabUrl: 'https://collab.example/',
     publicPasteUrl: 'https://paste.example/', publicEncryptUrl: 'https://encrypt.example/', publicPollarisUrl: 'https://pollaris.example/', publicPollUrl: 'https://poll.example/',
-    enabledServices: ['wbo', 'redlib', 'drawio', 'excalidraw', 'markmap', 'bentopdf', 'omnitools', 'minipaint', 'rawgraphs', 'image-scrubber', 'pairdrop', 'privatebin', 'hatsh', 'pollaris', 'rallly'], listedServices: [],
+    enabledServices: ['cryptpad', 'liberaforms', 'galene', 'super-productivity', 'freshrss', 'mapshaper', 'numbat', 'wbo', 'redlib', 'drawio', 'excalidraw', 'markmap', 'bentopdf', 'omnitools', 'minipaint', 'rawgraphs', 'image-scrubber', 'pairdrop', 'privatebin', 'hatsh', 'pollaris', 'rallly'], listedServices: [],
   } }));
   for (const guide of practicalGuides) {
     await page.goto(practicalGuidePath(guide.id, 'en'));

@@ -1,10 +1,7 @@
 name: utilibre-services
 
 x-logging: &default-logging
-  driver: json-file
-  options:
-    max-size: "10m"
-    max-file: "3"
+  driver: none
 
 x-security: &default-security
   security_opt:
@@ -94,11 +91,16 @@ services:
     environment:
       TZ: ${TZ:-America/Guatemala}
       CRON_MIN: "13,43"
-      FRESHRSS_ENV: production
+      FRESHRSS_ENV: silent
+      COPY_LOG_TO_SYSLOG: 'Off'
+      COPY_SYSLOG_TO_STDERR: 'Off'
       TRUSTED_PROXY: ${EDGE_PROXY_IP:?Set EDGE_PROXY_IP}
+    command: [/bin/sh, /privacy/freshrss-start.sh]
     volumes:
       - ./data/freshrss/data:/var/www/FreshRSS/data
       - ./data/freshrss/extensions:/var/www/FreshRSS/extensions
+      - ../pack/freshrss-start.sh:/privacy/freshrss-start.sh:ro
+      - ../pack/freshrss-privacy.conf:/etc/apache2/utilibre-privacy.conf:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -112,7 +114,7 @@ services:
     mem_limit: 1g
     cpus: 1.0
     pids_limit: 256
-    logging: *default-logging
+    logging: {driver: none}
 
   # RSSHub is private support infrastructure for FreshRSS. It has no host port
   # or public edge route. Its dedicated second network provides upstream egress

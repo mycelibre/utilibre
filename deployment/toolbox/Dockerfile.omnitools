@@ -4,6 +4,8 @@ WORKDIR /app
 COPY --from=upstream /usr/share/nginx/html /app
 COPY prepare-omnitools-assets.mjs /integration/prepare-omnitools-assets.mjs
 RUN node /integration/prepare-omnitools-assets.mjs
+COPY prepare-omnitools-local.mjs omnitools-runtime-lock.json /integration/
+RUN node /integration/prepare-omnitools-local.mjs
 FROM nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
 COPY --from=assets /app /usr/share/nginx/html
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

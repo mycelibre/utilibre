@@ -18,6 +18,8 @@ import type { PublicConfig } from '../../src/config';
 const baseConfig: PublicConfig = {
   publicCollabUrl: '',
   publicMindmapUrl: '',
+  publicMapsUrl: '', publicCalcUrl: '', publicPlanUrl: '',
+  publicPadUrl: '', publicFormsUrl: '', publicMeetUrl: '',
   publicWhiteboardUrl: '', publicSvgUrl: '', publicCyberchefUrl: '', publicScrubUrl: '',
   publicZipUrl: '', publicChartsUrl: '', publicAudioUrl: '', publicPaintUrl: '',
   publicPortalOrigin: 'https://utility.example',
@@ -65,13 +67,13 @@ describe('catalog discovery metadata', () => {
   });
   it('keeps reviewed applications and one narrow integration', () => {
     expect(catalog.map((entry) => entry.id)).toEqual([
-      'wbo',
+      'cryptpad', 'liberaforms', 'galene', 'wbo',
       'pollaris',
       'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd',
       'lrclib', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'kittygram', 'rimgo', 'mumble', 'biblioreads', 'gothub', 'binternet',
       'translite', 'whisper-web', 'jupyterlite',
       'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma',
-      'markmap', 'excalidraw', 'svgedit', 'cyberchef', 'image-scrubber',
+      'super-productivity', 'mapshaper', 'numbat', 'markmap', 'excalidraw', 'svgedit', 'cyberchef', 'image-scrubber',
       'zip-manager', 'rawgraphs', 'audiomass', 'minipaint',
       'omni-background', 'omni-image-editor', 'omni-compress-image', 'omni-trim-audio', 'omni-csv-json', 'omni-deduplicate',
       'bentopdf', 'vert', 'omnitools', 'hatsh', 'drawio', 'miniqr', 'qr-offline', 'ittools',
@@ -83,7 +85,7 @@ describe('catalog discovery metadata', () => {
     expect(catalog.filter((entry) => entry.featuredOrder !== undefined)
       .sort((left, right) => (left.featuredOrder ?? 0) - (right.featuredOrder ?? 0))
       .map((entry) => entry.id))
-      .toEqual(['bentopdf', 'vert', 'zip-manager', 'omnitools', 'omni-background', 'omni-image-editor', 'omni-compress-image', 'omni-trim-audio', 'omni-csv-json', 'omni-deduplicate', 'hatsh', 'drawio', 'rawgraphs', 'audiomass', 'minipaint', 'excalidraw', 'svgedit', 'cyberchef', 'image-scrubber', 'markmap', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite', 'biblioreads', 'fourget', 'anonymousoverflow', 'safetwitch', 'qr-offline', 'kittygram', 'rimgo', 'mumble', 'degoog', 'lrclib']);
+      .toEqual(['bentopdf', 'vert', 'zip-manager', 'omnitools', 'omni-background', 'omni-image-editor', 'omni-compress-image', 'omni-trim-audio', 'omni-csv-json', 'omni-deduplicate', 'hatsh', 'drawio', 'rawgraphs', 'audiomass', 'minipaint', 'excalidraw', 'svgedit', 'cyberchef', 'image-scrubber', 'markmap', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'mapshaper', 'priviblur', 'numbat', 'mezzo', 'super-productivity', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite', 'biblioreads', 'fourget', 'anonymousoverflow', 'safetwitch', 'qr-offline', 'kittygram', 'rimgo', 'mumble', 'degoog', 'lrclib']);
   });
 
   it('keeps unrequested retired applications out of the catalog', () => {

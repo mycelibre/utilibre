@@ -1,0 +1,12 @@
+Fictional reading workshop practice — original CC0 example
+
+This is a question list to copy into the form builder, not an import file.
+Do not ask participants for names, identification documents or passwords.
+
+1. Which fictional topic should we read about? (short text)
+2. What activity would you suggest? (long text)
+3. Optional contact address — leave blank for this exercise. (optional text)
+
+Synthetic test answer: Rivers / Three questions / [blank]
+Use the public response link in a separate signed-out browser profile.
+Keep creator settings, encryption keys and exported answers private.

@@ -68,7 +68,7 @@ describe('public SEO without tracking or private-content indexing', () => {
     expect(response.status).toBe(200);
     const sitemap = await response.text();
     const urls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]!);
-    expect(urls).toHaveLength(48);
+    expect(urls).toHaveLength(70);
     expect(urls).toContain('https://public.example/en/guides/shared-whiteboard');
     expect(urls).toContain('https://public.example/es/guias/pizarra-compartida');
     expect(urls).toContain('https://public.example/en/my-utilibre');

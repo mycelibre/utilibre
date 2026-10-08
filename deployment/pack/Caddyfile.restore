@@ -1,0 +1,13 @@
+{
+    admin off
+    auto_https disable_redirects
+    skip_install_trust
+    log {
+        output discard
+    }
+}
+https://pad.utilibre.org:8444, https://sandbox-pad.utilibre.org:8444 {
+    bind 127.0.0.1
+    tls internal
+    reverse_proxy 127.0.0.1:3179
+}

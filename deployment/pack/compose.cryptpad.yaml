@@ -1,0 +1,38 @@
+name: utilibre-pack-cryptpad
+services:
+  cryptpad:
+    image: node:24-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+    working_dir: /cryptpad
+    command: [node, server.js]
+    user: '4001:4001'
+    init: true
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 1536m
+    cpus: 1.0
+    pids_limit: 192
+    logging: {driver: none}
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777']
+    environment: {NODE_ENV: production, NODE_OPTIONS: '--max-old-space-size=192', PACK_DIAGNOSTIC: '${PACK_DIAGNOSTIC:-0}'}
+    volumes:
+      - /opt/utilibre/src/cryptpad:/cryptpad:ro
+      - ./cryptpad/config.js:/cryptpad/config/config.js:ro
+      - ./cryptpad/infra.js:/cryptpad/config/infra.js:ro
+      - /opt/utilibre/pack-data/cryptpad/blob:/cryptpad/blob
+      - /opt/utilibre/pack-data/cryptpad/block:/cryptpad/block
+      - /opt/utilibre/pack-data/cryptpad/data:/cryptpad/data
+      - /opt/utilibre/pack-data/cryptpad/datastore:/cryptpad/datastore
+    ports:
+      - '10.10.1.43:3173:3000'
+      - '127.0.0.1:3173:3000'
+    networks: [pad]
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+networks:
+  pad:
+    ipam: {config: [{subnet: 172.29.97.0/24}]}

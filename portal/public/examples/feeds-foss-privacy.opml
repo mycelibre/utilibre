@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Feed endpoints validated 2026-10-08. Original selection, CC0-1.0; articles retain their publishers' rights. -->
+<opml version="2.0">
+  <head><title>Utilibre · Software libre y privacidad / FOSS and privacy</title></head>
+  <body><outline text="Software libre y privacidad / FOSS and privacy">
+    <outline type="rss" text="EFF Deeplinks (English)" title="EFF Deeplinks" xmlUrl="https://www.eff.org/rss/updates.xml" htmlUrl="https://www.eff.org/deeplinks" language="en" />
+    <outline type="rss" text="Mozilla Blog (English)" title="Mozilla Blog" xmlUrl="https://blog.mozilla.org/en/feed/" htmlUrl="https://blog.mozilla.org/en/" language="en" />
+  </outline></body>
+</opml>

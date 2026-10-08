@@ -1,0 +1,11 @@
+# Práctica ficticia; no es asesoramiento financiero, médico ni de ingeniería.
+# Pasá una receta de cuatro porciones a seis.
+let harina = 250 g
+let porciones = 6 / 4
+harina * porciones -> g
+# Energía: un aparato hipotético de 60 vatios durante tres horas.
+60 W * 3 h -> kWh
+# Conversión de distancia.
+5 km -> m
+# Esto falla a propósito: una longitud y un tiempo son incompatibles.
+1 m + 1 s

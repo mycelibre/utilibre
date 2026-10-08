@@ -1,6 +1,12 @@
 {
   "jupyter-config-data": {
     "appName": "JupyterLite · Utilibre",
-    "collaborative": false
+    "collaborative": false,
+    "litePluginSettings": {
+      "@jupyterlite/pyodide-kernel-extension:kernel": {
+        "pyodideUrl": "https://python.utilibre.org/pyodide/pyodide.mjs",
+        "disablePyPIFallback": true
+      }
+    }
   }
 }

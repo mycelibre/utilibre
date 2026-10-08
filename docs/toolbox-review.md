@@ -981,11 +981,13 @@ not asserted to be a fixed number of days.
 Browser caches, preferences, saved drafts and downloaded output may remain
 on the visitor's device. These are not anonymous browsing services.
 
-- BentoPDF/OmniTools may fetch processing code and language data from
-  jsDelivr/unpkg; BentoPDF also uses githack OCR fonts. These providers see
-  download requests and network metadata, not selected input documents.
-  Remote-URL import/certificate proxy access is blocked. OCR output must be
-  reviewed; large jobs depend on client RAM and browser support.
+- Updated 8 October: BentoPDF 2.8.8-p3 and OmniTools 0.6.0-p5 now serve the
+  reviewed processing code, fonts, editor, codecs and EN/ES OCR assets locally.
+  Public PDF merge/OCR and six featured OmniTools task checks observed zero
+  external requests or content uploads. Remote imports and certificate-proxy
+  access remain blocked; optional PDF signature validation is disabled. OCR
+  requires review. Exact versions, hashes, scope and limits are in
+  [service-pack.md](service-pack.md); this does not certify every optional tool.
 - VERT has external requests, telemetry, embedded payments and remote video
   conversion disabled. Its exact FFmpeg core is bundled locally. The
   integration build patches English/Spanish processing and privacy copy to

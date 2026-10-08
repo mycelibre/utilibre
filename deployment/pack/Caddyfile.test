@@ -1,0 +1,30 @@
+{
+    admin off
+    auto_https disable_redirects
+    skip_install_trust
+    log {
+        output discard
+    }
+}
+https://plan.utilibre.org:8443 {
+    bind 127.0.0.1
+    tls internal
+    reverse_proxy 10.10.1.43:3172
+}
+https://forms.utilibre.org:8443 {
+    bind 127.0.0.1
+    tls internal
+    reverse_proxy 10.10.1.43:3176
+}
+https://meet.utilibre.org:8443 {
+    bind 127.0.0.1
+    tls internal
+    header Referrer-Policy no-referrer
+    header X-Robots-Tag "noindex, nofollow"
+    reverse_proxy 10.10.1.43:3178
+}
+https://pad.utilibre.org:8443, https://sandbox-pad.utilibre.org:8443 {
+    bind 127.0.0.1
+    tls internal
+    reverse_proxy 10.10.1.43:3173
+}

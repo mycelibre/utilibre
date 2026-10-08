@@ -1,0 +1,19 @@
+# Upstream complete WSGI app, with reviewed dependencies and no log listener.
+# Build context: /opt/utilibre/src/liberaforms; pack supplied as named context.
+FROM python:3.13-slim@sha256:3dd7cc108ec1493442514f5c2a871af6af0ec31d768ff6e378a93340c3b3db5f AS builder
+RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev libz-dev && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY --from=pack liberaforms.requirements.txt requirements.txt
+RUN python -m venv /app/venv && /app/venv/bin/pip install --no-cache-dir -r requirements.txt
+FROM python:3.13-slim@sha256:3dd7cc108ec1493442514f5c2a871af6af0ec31d768ff6e378a93340c3b3db5f
+RUN apt-get update && apt-get install -y --no-install-recommends libcairo2 libmagic1 libpq5 media-types && rm -rf /var/lib/apt/lists/*
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PATH=/app/venv/bin:$PATH FLASK_APP=wsgi.py
+WORKDIR /app
+COPY --from=builder /app/venv /app/venv
+COPY . .
+COPY --from=pack liberaforms-logging.py /app/liberaforms/config/logging.py
+COPY --from=pack liberaforms-privacy.py /app/utilibre-privacy.py
+RUN python /app/utilibre-privacy.py
+RUN mkdir -p /app/uploads /app/logs /app/flask_session && chown -R 4002:4002 /app/uploads /app/logs /app/flask_session
+USER 4002:4002
+CMD ["gunicorn", "--bind=0.0.0.0:5000", "--workers=1", "--threads=2", "--timeout=30", "--access-logfile=/dev/null", "--error-logfile=/dev/null", "wsgi:app"]

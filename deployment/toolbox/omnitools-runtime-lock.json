@@ -1,0 +1,65 @@
+[
+  {
+    "id": "ffmpeg",
+    "package": "@ffmpeg/core",
+    "version": "0.12.9",
+    "license": "GPL-2.0-or-later",
+    "url": "https://registry.npmjs.org/@ffmpeg/core/-/core-0.12.9.tgz",
+    "integrity": "sha512-nvkst/Y9OZtTkKhK53zUrIwmu5Ot+4NvXFOcl/CLQxrJwv22s4+tEMRaB24aa3UlTJoFi0H9+6vzqcBHoDGkZA==",
+    "path": "dist"
+  },
+  {
+    "id": "monaco",
+    "package": "monaco-editor",
+    "version": "0.52.2",
+    "license": "MIT",
+    "url": "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.52.2.tgz",
+    "integrity": "sha512-GEQWEZmfkOGLdd3XK8ryrfWz3AIP8YymVXiPHEdewrUq7mh0qrKrfHLNCXcbB6sTnMLnOZ3ztSiKcciFUkIJwQ==",
+    "path": "min"
+  },
+  {
+    "id": "image-compression",
+    "package": "browser-image-compression",
+    "version": "2.0.2",
+    "license": "MIT",
+    "url": "https://registry.npmjs.org/browser-image-compression/-/browser-image-compression-2.0.2.tgz",
+    "integrity": "sha512-pBLlQyUf6yB8SmmngrcOw3EoS4RpQ1BcylI3T9Yqn7+4nrQTXJD4sJDe5ODnJdrvNMaio5OicFo75rDyJD2Ucw==",
+    "path": "dist"
+  },
+  {
+    "id": "tesseract",
+    "package": "tesseract.js",
+    "version": "6.0.1",
+    "license": "Apache-2.0",
+    "url": "https://registry.npmjs.org/tesseract.js/-/tesseract.js-6.0.1.tgz",
+    "integrity": "sha512-/sPvMvrCtgxnNRCjbTYbr7BRu0yfWDsMZQ2a/T5aN/L1t8wUQN6tTWv6p6FwzpoEBA0jrN2UD2SX4QQFRdoDbA==",
+    "path": "dist"
+  },
+  {
+    "id": "tesseract-core",
+    "package": "tesseract.js-core",
+    "version": "6.0.0",
+    "license": "Apache-2.0",
+    "url": "https://registry.npmjs.org/tesseract.js-core/-/tesseract.js-core-6.0.0.tgz",
+    "integrity": "sha512-1Qncm/9oKM7xgrQXZXNB+NRh19qiXGhxlrR8EwFbK5SaUbPZnS5OMtP/ghtqfd23hsr1ZvZbZjeuAGcMxd/ooA==",
+    "path": "."
+  },
+  {
+    "id": "lang-eng",
+    "package": "@tesseract.js-data/eng",
+    "version": "1.0.0",
+    "license": "MIT",
+    "url": "https://registry.npmjs.org/@tesseract.js-data/eng/-/eng-1.0.0.tgz",
+    "integrity": "sha512-mbTumm6KQPUHyzTPQaF3ObXYnx0SqqfV2nabqFVQBwD6Kl7PhGSLSzOlfFTWy0P3BjghaSKA2W9GB19Jk+ZcTg==",
+    "path": "."
+  },
+  {
+    "id": "lang-spa",
+    "package": "@tesseract.js-data/spa",
+    "version": "1.0.0",
+    "license": "MIT",
+    "url": "https://registry.npmjs.org/@tesseract.js-data/spa/-/spa-1.0.0.tgz",
+    "integrity": "sha512-9Ln+QKq/TNu4Hy4aOp5b4nXo9U0C6IqJMzNDpAJZe/fNtz6jXG9G/hQgR/Irxj+RGf0M7Xy1MNx1yl4wQUIfeg==",
+    "path": "."
+  }
+]

@@ -150,6 +150,7 @@ try {
   await ocrCheck('en');
   await ocrCheck('es');
   assert.deepEqual(unexpectedWrites, [], 'Unexpected application write/upload requests');
+  assert.deepEqual([...externalOrigins], [], 'PDF/OCR runtime assets must be served by Utilibre');
 } catch (failure) { error = String(failure); process.exitCode = 1; }
 finally {
   await Promise.allSettled(pendingHeaders);
@@ -162,6 +163,6 @@ finally {
     externalAssetOrigins: [...externalOrigins].sort(),
     workerResponses: [...assets.values()].filter((asset) => /worker/i.test(asset.url)),
     stalePolicyAssets: [...assets.values()].filter((asset) => /,/.test(asset.coep || '')),
-    limitations: 'Synthetic Chromium desktop tests only; not all tools, document types, devices, field performance or real-user completion counts. Upstream CDN assets are existing dependencies, not document uploads.',
+    limitations: 'Synthetic Chromium desktop tests only; not all tools, document types, devices, field performance or real-user completion counts. EN/ES OCR assets are locally hosted; recognition still needs human review.',
   }, null, 2));
 }

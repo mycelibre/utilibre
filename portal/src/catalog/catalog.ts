@@ -67,6 +67,7 @@ function providerMetadata(providerId: FossProviderId): Pick<CatalogEntry, 'provi
 }
 
 export const catalog: CatalogEntry[] = [
+  ...packServices(),
   {
     id: 'wbo', ...providerMetadata('wbo'), kind: 'service', implementation: 'upstream-application',
     category: 'service', discoveryGroup: 'design', configUrlKey: 'publicCollabUrl',
@@ -169,16 +170,16 @@ export const catalog: CatalogEntry[] = [
   browserTool('jupyterlite', 'text-data', 18, 'publicPythonUrl',
     { en: 'Python notebooks', es: 'Cuadernos de Python' },
     { en: 'Try Python, explore a CSV and draw charts in your browser with JupyterLite.', es: 'Probá Python, explorá un CSV y hacé gráficas en tu navegador con JupyterLite.' },
-    { en: 'Try Python', es: 'Probar Python' }, true,
-    { en: 'Start with the included example notebook. Python runs in your browser, not on our server. Save important notebooks with File → Download: browser storage is not a backup and clearing site data can erase your work. Python and optional packages download from jsDelivr and Python package repositories. Desktop packages are not all supported; this is not JupyterHub.', es: 'Empezá con el cuaderno de ejemplo. Python se ejecuta en tu navegador, no en nuestro servidor. Guardá los cuadernos importantes con Archivo → Descargar: el almacenamiento del navegador no es una copia de respaldo y borrar los datos del sitio puede eliminar tu trabajo. Python y los paquetes opcionales se descargan de jsDelivr y repositorios de Python. No todos los paquetes de escritorio funcionan; esto no es JupyterHub.' }),
+    { en: 'Try Python', es: 'Probar Python' }, false,
+    { en: 'Start with the included example notebook. Python runs in your browser, not on our server. Save important notebooks with File → Download: browser storage is not a backup and clearing site data can erase your work. Python and supported packages download from Utilibre, with no external package fallback. Desktop packages are not all supported; this is not JupyterHub.', es: 'Empezá con el cuaderno de ejemplo. Python se ejecuta en tu navegador, no en nuestro servidor. Guardá los cuadernos importantes con Archivo → Descargar: el almacenamiento del navegador no es una copia de respaldo y borrar los datos del sitio puede eliminar tu trabajo. Python y los paquetes disponibles se descargan de Utilibre, sin recurrir a repositorios externos. No todos los paquetes de escritorio funcionan; esto no es JupyterHub.' }),
   ...communityTools(),
   ...browserAdditions(),
   ...everydayTasks(),
   browserTool('bentopdf', 'files', 1, 'publicPdfUrl',
     { en: 'PDF & OCR', es: 'PDF y OCR' },
     { en: 'Merge, split, compress or edit PDFs. Turn scans into searchable text.', es: 'Uní, dividí, comprimí y editá PDF. Extraé texto de páginas escaneadas con OCR.' },
-    { en: 'Edit a PDF', es: 'Editar un PDF' }, true,
-    { en: 'Choose a tool, select your files, then download the result. OCR works best with clear printed text; review its output, especially handwriting. Processing libraries, OCR language data and fonts may download from jsDelivr or githack. Online certificate validation and remote-URL imports are not provided.', es: 'Elegí una herramienta, seleccioná tus archivos y descargá el resultado. El OCR funciona mejor con texto impreso nítido; revisá el resultado, especialmente la escritura a mano. Las bibliotecas, idiomas de OCR y fuentes pueden descargarse de jsDelivr o githack. No ofrecemos validación de certificados en línea ni importación de URL remotas.' },
+    { en: 'Edit a PDF', es: 'Editar un PDF' }, false,
+    { en: 'Choose a tool, select your files, then download the result. English and Spanish OCR components and fonts are hosted by Utilibre. Review names, accents and numbers; handwriting may not work well. Signature validation is disabled because of an unresolved upstream dependency issue. Remote-URL imports are not provided.', es: 'Elegí una herramienta, seleccioná tus archivos y descargá el resultado. Utilibre aloja los componentes y fuentes de OCR en español e inglés. Revisá nombres, tildes y números; la escritura a mano puede fallar. La validación de firmas está desactivada por un problema pendiente en una dependencia. No ofrecemos importación de URL remotas.' },
     [{ path: 'ocr-pdf.html', label: { en: 'Recognize text (OCR)', es: 'Reconocer texto (OCR)' } }]),
   browserTool('vert', 'media', 2, 'publicConvertUrl',
     { en: 'Convert files', es: 'Convertir archivos' },
@@ -188,8 +189,8 @@ export const catalog: CatalogEntry[] = [
   browserTool('omnitools', 'text-data', 3, 'publicToolsUrl',
     { en: 'Everyday tools', es: 'Herramientas cotidianas' },
     { en: 'Resize images, trim media and work with text, lists and data using OmniTools.', es: 'Redimensioná imágenes, recortá contenido multimedia y trabajá con texto, listas y datos con OmniTools.' },
-    { en: 'Choose a tool', es: 'Elegir herramienta' }, true,
-    { en: 'Search for a task, add your input and save the result. Files are processed in the browser. Some tools download processing components from jsDelivr or unpkg; these providers receive download requests, not your selected files.', es: 'Buscá una tarea, agregá los datos y guardá el resultado. Los archivos se procesan en el navegador. Algunas herramientas descargan componentes de jsDelivr o unpkg; estos proveedores reciben solicitudes de descarga, no los archivos seleccionados.' }),
+    { en: 'Choose a tool', es: 'Elegir herramienta' }, false,
+    { en: 'Search for a task, add your input and save the result. Files are processed in the browser. Utilibre hosts the image, audio, editor and OCR components; large models and codecs download only when needed. The image editor uses its bundled English controls.', es: 'Buscá una tarea, agregá los datos y guardá el resultado. Los archivos se procesan en el navegador. Utilibre aloja los componentes de imagen, audio, edición y OCR; los modelos y códecs grandes se descargan cuando se necesitan. El editor de imágenes usa sus controles incluidos en inglés.' }),
   browserTool('hatsh', 'privacy', 4, 'publicEncryptUrl',
     { en: 'Encrypt or decrypt files', es: 'Cifrar o descifrar archivos' },
     { en: 'Protect files with a password or key using hat.sh. Keep the password safe: Utilibre cannot recover it.', es: 'Protegé archivos con una contraseña o clave usando hat.sh. Guardá la contraseña: Utilibre no puede recuperarla.' },
@@ -475,7 +476,7 @@ function browserTool(
     dataFlow: externalAssets
       ? { en: 'Your browser processes the files. It also downloads processing components from external CDNs; those services receive your network address and download request. Selected files are not uploaded for processing.', es: 'Tu navegador procesa los archivos. También descarga componentes de CDN externas, que reciben tu dirección de red y la solicitud de descarga. Los archivos seleccionados no se suben para procesarlos.' }
       : { en: 'Utilibre serves the application. Files, passwords and entered content are processed in your browser, not uploaded to an application server.', es: 'Utilibre sirve la aplicación. Los archivos, contraseñas y datos ingresados se procesan en tu navegador, sin subirlos a un servidor de aplicaciones.' },
-    upstreamServices: providerId === 'jupyterlite' ? ['jsDelivr Python runtime', 'Python package repositories'] : providerId === 'bentopdf' ? ['jsDelivr / unpkg processing assets', 'githack OCR fonts'] : externalAssets ? ['jsDelivr / unpkg processing assets'] : [],
+    upstreamServices: providerId === 'jupyterlite' && externalAssets ? ['jsDelivr Python runtime', 'Python package repositories'] : externalAssets ? ['jsDelivr / unpkg processing assets'] : [],
     temporaryStorage: browserMemory,
     retention: { en: 'Utilibre stores no input files for these tools. Downloads remain on your device; application caches, preferences or local drafts can remain in browser storage until you clear the site’s data. Read the tool-specific help before using a shared device.', es: 'Utilibre no almacena los archivos ingresados en estas herramientas. Las descargas quedan en tu dispositivo; las cachés, preferencias o borradores locales pueden permanecer en el navegador hasta que borres los datos del sitio. Leé la ayuda antes de usar un dispositivo compartido.' },
     logging: { en: 'Tool web-server access logs are disabled. Bounded error logs can contain request metadata. Cloudflare and the separate HTTPS edge see connections and asset requests, not browser-local file contents; their retention is separate.', es: 'El registro de accesos del servidor de herramientas está desactivado. Los registros limitados de errores pueden incluir metadatos. Cloudflare y el borde HTTPS reciben conexiones y solicitudes de recursos, no el contenido de archivos procesado localmente; su conservación es independiente.' },
@@ -551,8 +552,83 @@ assertFossCatalogPolicy(catalog);
 
 export const reviewedServices = catalog.filter((entry) => entry.kind === 'service' && !entry.serviceId);
 
+function packServices(): CatalogEntry[] {
+  const logging = { en: 'Application and container request logs are disabled. No usage analytics are configured. Connection handling by the HTTPS edge and hosting providers is separate; their retention has not been independently verified.', es: 'Los registros de solicitudes de la aplicación y del contenedor están desactivados. No se configura analítica de uso. El borde HTTPS y los proveedores manejan conexiones por separado; su conservación no se verificó de forma independiente.' };
+  return [
+    {
+      id: 'cryptpad', ...providerMetadata('cryptpad'), kind: 'service', implementation: 'upstream-application', category: 'service', discoveryGroup: 'documents', configUrlKey: 'publicPadUrl',
+      name: { en: 'Write and plan together · CryptPad', es: 'Escribir y planificar en grupo · CryptPad' },
+      description: { en: 'Encrypted collaborative documents, spreadsheets, forms, Markdown, presentations, Kanban and calendars in one suite.', es: 'Documentos, hojas de cálculo, formularios, Markdown, presentaciones, Kanban y calendarios colaborativos cifrados en una suite.' },
+      launchLabel: { en: 'Open the collaborative suite', es: 'Abrir la suite colaborativa' },
+      help: { en: 'Start here for collaborative work and encrypted forms. Guests can try documents; create your own account before creating work you need to own and keep. Save recovery details and export copies. Large office editors are best used on a computer. Standalone draw.io and Excalidraw remain the simpler diagram/sketch defaults.', es: 'Empezá acá para colaborar y crear formularios cifrados. Podés probar documentos sin cuenta; creá tu propia cuenta antes de iniciar trabajo que necesités poseer y conservar. Guardá la recuperación y exportá copias. Los editores de oficina grandes funcionan mejor en computadora. draw.io y Excalidraw siguen siendo las opciones sencillas para diagramas y bocetos.' },
+      quickLinks: [{ path: 'pad/', label: { en: 'Rich Text', es: 'Texto enriquecido' } }, { path: 'sheet/', label: { en: 'Spreadsheet', es: 'Hoja de cálculo' } }, { path: 'form/', label: { en: 'Form', es: 'Formulario' } }, { path: 'code/', label: { en: 'Code / Markdown', es: 'Código / Markdown' } }, { path: 'kanban/', label: { en: 'Kanban', es: 'Kanban' } }, { path: 'calendar/', label: { en: 'Calendar', es: 'Calendario' } }, { path: 'doc/', label: { en: 'Office document', es: 'Documento de oficina' } }, { path: 'presentation/', label: { en: 'Office presentation', es: 'Presentación de oficina' } }, { path: 'slide/', label: { en: 'Markdown Slides', es: 'Diapositivas Markdown' } }],
+      labels: ['server'], filesUploaded: true, upstreamServices: ['Utilibre main and sandbox origins', 'Cloudflare HTTPS proxy'],
+      dataFlow: { en: 'Your browser encrypts document content before sending it to Utilibre storage and collaborators. Accounts, storage usage and connection metadata are still functional server data. A shared editing or reading link can contain the key. Self-hosted office components run in a separate sandbox origin, not an external office server.', es: 'El navegador cifra el contenido antes de enviarlo al almacenamiento de Utilibre y a colaboradores. Las cuentas, uso de almacenamiento y metadatos de conexión siguen siendo datos funcionales del servidor. El enlace de lectura o edición puede contener la clave. Los componentes de oficina alojados por Utilibre usan un origen aislado, no un servidor de oficina externo.' },
+      temporaryStorage: { en: 'Encrypted documents and account data are stored on Utilibre; browser storage retains login/key material. Account allowance: 25 MiB, individual uploads up to 5 MiB.', es: 'Los documentos cifrados y datos de cuenta se guardan en Utilibre; el navegador conserva datos de acceso y claves. Cuota por cuenta: 25 MiB; archivos individuales de hasta 5 MiB.' },
+      retention: { en: 'Keep important documents in your own account and export them. Unpinned inactive documents are eligible for cleanup after 90 days; archives are retained 15 days and inactive accounts 365 days under native cleanup. Closing a tab is not deletion. Local encrypted backups can retain earlier data; no immediate backup erasure or off-host recovery is promised.', es: 'Conservá los documentos importantes en tu cuenta y exportalos. La limpieza nativa contempla documentos sin fijar e inactivos por 90 días, archivos históricos por 15 días y cuentas inactivas por 365 días. Cerrar una pestaña no borra contenido. Los respaldos locales cifrados pueden conservar datos anteriores; no se promete borrado inmediato del respaldo ni recuperación fuera del servidor.' },
+      logging, modified: true, operationalStatus: 'operational',
+    },
+    {
+      id: 'liberaforms', ...providerMetadata('liberaforms'), kind: 'service', implementation: 'upstream-application', category: 'service', discoveryGroup: 'planning', configUrlKey: 'publicFormsUrl', accountAccess: 'invite-required',
+      name: { en: 'Collect private answers · LiberaForms', es: 'Recibir respuestas privadas · LiberaForms' },
+      description: { en: 'Dedicated forms with browser-encrypted answers. Creators need an invitation; respondents can use the form link without an account.', es: 'Formularios dedicados con respuestas cifradas en el navegador. Crear requiere invitación; responder con el enlace no requiere cuenta.' },
+      launchLabel: { en: 'Sign in to manage forms', es: 'Entrar para gestionar formularios' },
+      help: { en: 'Approved creators must set up and back up their personal encryption key before collecting answers. Lost keys cannot be replaced by an account-password reset. File uploads are disabled. For a new collaborative form without an invitation, start with CryptPad.', es: 'Quien crea un formulario debe configurar y respaldar su clave personal antes de recibir respuestas. Restablecer la contraseña de la cuenta no recupera una clave perdida. No se permiten adjuntos. Para comenzar sin invitación, usá un formulario colaborativo de CryptPad.' },
+      labels: ['server'], filesUploaded: false, upstreamServices: ['Utilibre SMTP relay for account messages', 'Cloudflare HTTPS proxy'],
+      dataFlow: { en: 'Form definitions and account metadata are readable by Utilibre. Required answer encryption happens in the respondent’s browser; the server stores encrypted answers and encrypted form-key backups. Authorized creators decrypt with their own keys. Operators can read answers to the Utilibre feedback form because they are its authorized recipients.', es: 'Utilibre puede leer las preguntas y metadatos de cuentas. El cifrado obligatorio de respuestas ocurre en el navegador del participante; el servidor guarda respuestas y respaldos de claves de formulario cifrados. Los creadores autorizados descifran con sus propias claves. Los operadores pueden leer las respuestas del formulario de comentarios de Utilibre porque son sus destinatarios autorizados.' },
+      temporaryStorage: { en: 'Encrypted answers, form definitions, permissions and account data are stored in Utilibre’s database. Personal private keys stay in browser/session storage unless you deliberately download a backup.', es: 'La base de datos de Utilibre guarda respuestas cifradas, formularios, permisos y cuentas. Las claves privadas personales quedan en el navegador o la sesión, salvo que descargués un respaldo.' },
+      retention: { en: 'Creators can close forms and delete answers/forms using native controls. Check the displayed expiry date. Closing is not deletion. Local encrypted backups may retain deleted data; immediate backup deletion and off-host recovery are not established. Exported decrypted answers are private files, not encrypted by default.', es: 'Los creadores pueden cerrar formularios y borrar formularios o respuestas con controles nativos. Revisá la fecha de vencimiento mostrada. Cerrar no equivale a borrar. Los respaldos locales cifrados pueden conservar datos borrados; no hay borrado inmediato del respaldo ni recuperación fuera del servidor verificados. Las respuestas exportadas ya descifradas no quedan cifradas por defecto.' },
+      logging, modified: true, operationalStatus: 'operational',
+    },
+    {
+      id: 'galene', ...providerMetadata('galene'), kind: 'service', implementation: 'upstream-application', category: 'service', discoveryGroup: 'sharing', configUrlKey: 'publicMeetUrl', accountAccess: 'invite-required',
+      name: { en: 'Small meetings · Galene pilot', es: 'Reuniones pequeñas · piloto Galene' },
+      description: { en: 'Moderator-led audio/video rooms. External-network media and relay access are not yet ready for public use.', es: 'Salas de audio y video con moderación. Los medios entre redes externas y el relay aún no están listos para uso público.' },
+      launchLabel: { en: 'View meeting pilot', es: 'Ver piloto de reuniones' },
+      help: { en: 'The controlled test used two Chromium sessions with synthetic camera/microphone input on the application host. A working sign-in page does not establish that a meeting will connect from your network. The room is limited to four clients and needs a moderator’s invitation.', es: 'La prueba controlada usó dos sesiones de Chromium con cámara y micrófono sintéticos en el servidor. Una página de acceso funcional no demuestra que la reunión conecte desde tu red. La sala admite cuatro clientes y requiere invitación del moderador.' },
+      labels: ['server'], filesUploaded: false, upstreamServices: ['Utilibre media server', 'Cloudflare HTTPS signaling proxy'],
+      dataFlow: { en: 'Audio and video use encrypted transport to Utilibre’s meeting server, which is inside the trust boundary. This is not end-to-end encryption. Camera/microphone use requires browser permission. Direct peer file transfer is a different flow; it is not part of the verified pilot.', es: 'El audio y video viajan cifrados hasta el servidor de reuniones de Utilibre, que forma parte de la relación de confianza. No hay cifrado de extremo a extremo. Cámara y micrófono requieren permiso del navegador. El envío directo de archivos entre participantes es otro flujo y no forma parte del piloto verificado.' },
+      temporaryStorage: { en: 'Native room permissions and invitation tokens remain on the server. Recording is disabled; chat replay is limited to one second. Participants can independently record or retain received information.', es: 'El servidor conserva permisos de salas y tokens de invitación nativos. La grabación está deshabilitada; la recuperación del historial de chat se limita a un segundo. Los participantes pueden grabar o conservar información por su cuenta.' },
+      retention: { en: 'Short-lived invitations use native expiration. The last moderator leaving locks the room and disconnects guests. This is not a guaranteed erasure of recipients’ copies. No public relay is active.', es: 'Las invitaciones temporales usan vencimiento nativo. Cuando sale el último moderador, la sala se bloquea y desconecta a invitados. Esto no borra copias que conserven los participantes. No hay relay público activo.' },
+      logging, modified: false, operationalStatus: 'degraded',
+    },
+  ];
+}
+
 function browserAdditions(): CatalogEntry[] {
   return [
+    {
+      ...browserTool('super-productivity', 'text-data', 26, 'publicPlanUrl',
+        { en: 'Plan tasks and focus locally', es: 'Planificar tareas y concentrarse' },
+        { en: 'Organize tasks, plan your day and run a focus timer in Super Productivity. No account is needed.', es: 'Organizá tareas, planificá el día y usá un temporizador de concentración en Super Productivity. No necesitás cuenta.' },
+        { en: 'Plan my day', es: 'Planificar mi día' }, false,
+        { en: 'Choose Productivity Suite, then Add more to create a task. Use Enter focus mode for a timer. Settings → Sync & Backup → Import/Export provides local JSON backups. Hosted synchronization, external calendars, issue trackers and plugins are not configured for this local-only deployment.', es: 'Elegí Productivity Suite y Add more para crear una tarea. Enter focus mode abre el temporizador. Settings → Sync & Backup → Import/Export permite respaldos JSON locales. Este despliegue local no configura sincronización alojada, calendarios externos, gestores de incidencias ni complementos.' }),
+      modified: true,
+      temporaryStorage: { en: 'Tasks, planning preferences and your own focus/time records stay in this application’s browser storage. They are not a Utilibre account or server archive.', es: 'Las tareas, preferencias y tus propios registros de concentración y tiempo quedan en el almacenamiento del navegador de esta aplicación. No son una cuenta ni un archivo en el servidor de Utilibre.' },
+      retention: { en: 'Local data stays until you delete it or the browser removes it. Clearing site data can erase tasks. Native JSON export/import was tested; keep private backups elsewhere. Background timers can be delayed when the device sleeps.', es: 'Los datos locales quedan hasta que los borrés o el navegador los elimine. Borrar los datos del sitio puede eliminar tareas. Se probó la exportación e importación JSON nativa; conservá respaldos privados en otro lugar. Los temporizadores pueden retrasarse si el dispositivo entra en reposo.' },
+      logging: { en: 'Application-server access/error logging is disabled. The tested task, timer, reload and backup workflows did not contact external origins. Edge/provider settings remain a separate operator check.', es: 'Los registros de acceso y errores del servidor de la aplicación están desactivados. Los recorridos probados de tareas, temporizador, recarga y respaldo no contactaron orígenes externos. Los ajustes del borde y proveedor requieren una comprobación separada del operador.' },
+    },
+    {
+      ...browserTool('mapshaper', 'text-data', 24, 'publicMapsUrl',
+        { en: 'Convert and simplify map data', es: 'Convertir y simplificar datos geográficos' },
+        { en: 'Import GeoJSON, zipped Shapefiles or CSV in Mapshaper. Simplify geometry and export a local file.', es: 'Importá GeoJSON, Shapefiles comprimidos o CSV en Mapshaper. Simplificá geometrías y exportá un archivo local.' },
+        { en: 'Edit map data', es: 'Editar datos geográficos' }, false,
+        { en: 'English interface. Import a local file, choose Import, then Simplify or Export. Keep the original and check the exported geometry and attributes. Remote basemaps and URL imports are unavailable. Larger datasets use your device’s memory; a desktop and small first file are recommended.', es: 'Interfaz en inglés. Elegí un archivo local, Import y después Simplify o Export. Conservá el original y revisá geometrías y atributos exportados. No hay mapas de fondo ni importación remota por URL. Los datos grandes usan la memoria de tu dispositivo; conviene una computadora y un archivo pequeño para empezar.' }),
+      modified: true,
+      unavailableReason: { en: 'Mapshaper is temporarily unavailable. Your local files are unchanged.', es: 'Mapshaper no está disponible temporalmente. Tus archivos locales no cambian.' },
+      logging: { en: 'Application-server access and error logging are disabled. No input dataset is uploaded. Separate edge/provider settings still require operator verification.', es: 'El servidor de la aplicación no registra accesos ni errores. El conjunto de datos no se sube. Aún falta la verificación del operador de los ajustes del borde y del proveedor.' },
+    },
+    {
+      ...browserTool('numbat', 'text-data', 25, 'publicCalcUrl',
+        { en: 'Calculate with units', es: 'Calcular con unidades' },
+        { en: 'Convert measurements and calculate with variables in Numbat. Incompatible units produce an error.', es: 'Convertí medidas y calculá con variables en Numbat. Las unidades incompatibles producen un error.' },
+        { en: 'Calculate locally', es: 'Calcular localmente' }, false,
+        { en: 'Type 60 W * 3 h -> kWh and press Enter. The result is 0.18 kWh. Use a period for decimals. Currency rates are unavailable. Normal calculations stay out of URLs; an explicit sharing link contains readable calculations. Shared input is not executed automatically. Copy important work before reloading.', es: 'Escribí 60 W * 3 h -> kWh y presioná Enter. El resultado es 0.18 kWh. Usá punto decimal. No hay tasas de cambio. Los cálculos normales no pasan a la URL; un enlace creado para compartir contiene los cálculos legibles. La entrada compartida no se ejecuta automáticamente. Copiá el trabajo importante antes de recargar.' }),
+      modified: true,
+      temporaryStorage: { en: 'Calculation state stays in the current tab; command-history persistence is disabled.', es: 'Los cálculos quedan en la pestaña actual; el historial persistente está desactivado.' },
+      retention: { en: 'Reloading clears the session. A sharing link contains readable calculations and may remain in browser history or the recipient’s copies. A fragment is not encryption.', es: 'Recargar borra la sesión. Un enlace compartido contiene cálculos legibles y puede quedar en el historial o en copias del destinatario. Un fragmento de URL no es cifrado.' },
+      logging: { en: 'Application-server access and error logging are disabled. Calculations are not uploaded. Separate edge/provider settings still require operator verification.', es: 'El servidor de la aplicación no registra accesos ni errores. Los cálculos no se suben. Aún falta la verificación del operador de los ajustes del borde y del proveedor.' },
+    },
     {
       ...browserTool('markmap', 'design', 5.8, 'publicMindmapUrl',
         { en: 'Turn an outline into a mind map', es: 'Convertir un esquema en un mapa mental' },
@@ -633,8 +709,8 @@ function everydayTasks(): CatalogEntry[] {
   ];
   return tasks.map((task) => ({
     ...browserTool('omnitools', task.group, task.order, 'publicToolsUrl', task.name, task.description,
-      { en: 'Open tool', es: 'Abrir herramienta' }, ['omni-compress-image', 'omni-trim-audio'].includes(task.id),
-      { en: 'This opens the selected task directly in OmniTools. Add your input, check the result and download or copy it. Selected files are processed in your browser. Image compression and audio trimming download components from external CDNs; the background-removal model is hosted by Utilibre. Large files or models can need substantial memory. Some upstream instructions remain in English.', es: 'El enlace abre esta tarea directamente en OmniTools. Agregá los datos, revisá el resultado y descargalo o copialo. Los archivos seleccionados se procesan en tu navegador. La compresión de imágenes y el recorte de audio descargan componentes desde CDN externas; Utilibre aloja el modelo para quitar fondos. Los archivos o modelos grandes pueden necesitar bastante memoria. Algunas instrucciones del proyecto original siguen en inglés.' }),
+      { en: 'Open tool', es: 'Abrir herramienta' }, false,
+      { en: 'This opens the selected task directly in OmniTools. Add your input, check the result and download or copy it. Files are processed in your browser; Utilibre hosts the required components and background-removal model. Large files or models can need substantial memory. Some upstream controls remain in English.', es: 'El enlace abre esta tarea directamente en OmniTools. Agregá los datos, revisá el resultado y descargalo o copialo. Los archivos se procesan en tu navegador; Utilibre aloja los componentes y el modelo para quitar fondos. Los archivos o modelos grandes pueden necesitar bastante memoria. Algunos controles del proyecto original siguen en inglés.' }),
     id: task.id, serviceId: 'omnitools', launchPath: task.path,
   }));
 }

@@ -29,6 +29,14 @@ if(disk.bavail*disk.bsize<10*1024**3)issues.push('Application disk has less than
 if(disk.files&&disk.ffree/disk.files<0.05)issues.push('Application disk has less than 5% free inodes');
 const memory=Object.fromEntries([...readFileSync('/proc/meminfo','utf8').matchAll(/^(\w+):\s+(\d+)/gm)].map(([,name,value])=>[name,Number(value)]));
 if(memory.MemAvailable/memory.MemTotal<0.05)issues.push('Available host memory is below 5%');
+// Service state only: no form/document counts, paths or user activity.
+for(const unit of ['utilibre-pack-backup.service','utilibre-pack-forms-maintenance.service']) {
+  if(!existsSync(`/etc/systemd/system/${unit}`))continue;
+  try {
+    const result=execFileSync('systemctl',['show',unit,'--property=Result','--value'],{encoding:'utf8',timeout:5000}).trim();
+    if(result&&result!=='success')issues.push(`Native maintenance failed: ${unit}`);
+  } catch {issues.push(`Cannot inspect native maintenance: ${unit}`)}
+}
 issues.sort();
 const fingerprint=JSON.stringify(issues),count=previous.fingerprint===fingerprint?(previous.count||0)+1:1;
 const test=process.argv.includes('--test');

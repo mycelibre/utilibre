@@ -7,9 +7,8 @@ x-runtime: &runtime
   mem_limit: 512m
   cpus: 1
   pids_limit: 128
-  logging:
-    driver: json-file
-    options: {max-size: 10m, max-file: "3"}
+  # Retain service health, not request histories from native applications.
+  logging: {driver: none}
 
 # Account creation is gated by the invitation-only Utilibre identity provider.
 # Wakapi has a provisioned owner and tested backup; public signups stay closed.
@@ -17,7 +16,7 @@ x-runtime: &runtime
 services:
   jupyterlite:
     <<: *runtime
-    image: utilibre-jupyterlite:0.8.5-p2
+    image: utilibre-jupyterlite:0.8.5-p5
     read_only: true
     user: "101:101"
     volumes:

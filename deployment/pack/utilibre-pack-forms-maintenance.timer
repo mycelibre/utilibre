@@ -1,0 +1,10 @@
+[Unit]
+Description=Apply the existing LiberaForms expiry dates and native 30-day post-expiry lifecycle
+
+[Timer]
+OnCalendar=*-*-* 07:15:00 UTC
+Persistent=true
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target

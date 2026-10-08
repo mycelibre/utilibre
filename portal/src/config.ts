@@ -29,6 +29,12 @@ export interface PublicConfig {
   publicCyberchefUrl: string;
   publicScrubUrl: string;
   publicMindmapUrl: string;
+  publicMapsUrl: string;
+  publicCalcUrl: string;
+  publicPlanUrl: string;
+  publicPadUrl: string;
+  publicFormsUrl: string;
+  publicMeetUrl: string;
   publicInstagramUrl: string;
   publicBridgeUrl: string;
   publicNotifyUrl: string;
@@ -93,6 +99,12 @@ const defaults: PublicConfig = {
   publicCyberchefUrl: '',
   publicScrubUrl: '',
   publicMindmapUrl: '',
+  publicMapsUrl: '',
+  publicCalcUrl: '',
+  publicPlanUrl: '',
+  publicPadUrl: '',
+  publicFormsUrl: '',
+  publicMeetUrl: '',
   publicInstagramUrl: '',
   publicBridgeUrl: '',
   publicNotifyUrl: '',

@@ -21,7 +21,7 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
   const copy = guide?.copy[language];
   append(header, link(routePath(guide ? 'guides' : 'home', language), es ? (guide ? 'Todas las guías' : 'Volver a las herramientas') : (guide ? 'All guides' : 'Back to tools')),
     element('h1', '', copy?.title || (es ? 'Guías para terminar una tarea' : 'Guides for getting a task done')),
-    element('p', 'hero-lead', copy?.intro || (es ? 'Practicá con archivos ficticios. Seguí pasos concretos, revisá el resultado y guardá tu trabajo.' : 'Practice with fictional files. Follow concrete steps, check the result and save your work.')));
+    element('p', 'hero-lead', copy?.intro || (es ? 'Seguí pasos concretos con ejemplos pequeños, revisá el resultado y guardá tu trabajo.' : 'Follow concrete steps with small examples, check the result and save your work.')));
   main.append(header);
   if (!guide || !copy) {
     const list = element('ol', 'guide-index');
@@ -49,7 +49,7 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
     main.append(a);
   }
   if (guide.samples.length) {
-    const samples = section(es ? 'Archivos de práctica' : 'Practice files', es ? 'Creados por Utilibre, con datos ficticios. No contienen documentos de visitantes.' : 'Created by Utilibre using fictional data. These are not visitor documents.');
+    const samples = section(es ? 'Archivos para este recorrido' : 'Files for this workflow', guide.sampleNote?.[language] || (es ? 'Creados por Utilibre, con datos ficticios. No contienen documentos de visitantes.' : 'Created by Utilibre using fictional data. These are not visitor documents.'));
     for (const sample of guide.samples) {
       const a = link(`/examples/${sample.file.replace('{lang}', language)}`, sample.label[language]); a.setAttribute('download', ''); samples.append(a);
     }
@@ -66,12 +66,18 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
   }
   main.append(privacy, section(es ? 'Después' : 'Next', copy.next));
   const related = element('nav', 'guide-links'); related.setAttribute('aria-label', es ? 'Otras guías' : 'Other guides');
-  for (const item of practicalGuides.filter((item) => item.id !== id)) related.append(link(practicalGuidePath(item.id, language), item.copy[language].title));
+  const toolIds = new Set(guide.tools.map(tool => tool.id));
+  for (const item of practicalGuides.filter(item => item.id !== id && item.tools.some(tool => toolIds.has(tool.id))).slice(0, 3)) {
+    related.append(link(practicalGuidePath(item.id, language), item.copy[language].title));
+  }
+  related.append(link(routePath('guides', language), es ? 'Todas las guías' : 'All guides'));
   main.append(related);
+  const reviewedOn = guide.reviewedOn || '2026-10-07';
   const responsibility = section(es ? 'Revisión y ayuda' : 'Review and help', es
-    ? 'Utilibre mantiene estas instrucciones. Revisadas el 7 de octubre de 2026 con archivos ficticios y navegadores de prueba. No demuestra compatibilidad con cualquier dispositivo ni un historial de disponibilidad. Descargá el trabajo importante: borrar datos del navegador puede eliminar borradores y preferencias.'
-    : 'Utilibre maintains these instructions. Reviewed on 7 October 2026 using fictional files and test browsers. This does not establish compatibility with every device or an uptime history. Download important work: clearing browser data can remove drafts and preferences.');
+    ? `Utilibre mantiene estas instrucciones. Revisión: ${reviewedOn}, con ejemplos y navegadores de prueba. No demuestra compatibilidad con cualquier dispositivo ni un historial de disponibilidad. Descargá el trabajo importante: borrar datos del navegador puede eliminar borradores y preferencias.`
+    : `Utilibre maintains these instructions. Reviewed: ${reviewedOn}, using examples and test browsers. This does not establish compatibility with every device or an uptime history. Download important work: clearing browser data can remove drafts and preferences.`);
   const sources = element('p', 'guide-links');
+  for (const reference of guide.references || []) { const a = link(reference.url, reference.label[language]); a.rel = 'noreferrer'; sources.append(a); }
   for (const tool of guide.tools) { const entry = catalogEntry(tool.id); if (entry) sources.append(link(entry.upstreamSourceUrl, `${entry.upstreamProject} · ${es ? 'código fuente' : 'source'}`)); }
   if (config.contactUrl) sources.append(link(config.contactUrl, es ? 'Reportar un error o proponer una corrección' : 'Report a problem or suggest a correction'));
   responsibility.append(sources, element('p', '', es ? 'Podés imprimir esta guía desde el navegador.' : 'You can print this guide from your browser.')); main.append(responsibility);

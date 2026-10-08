@@ -11,6 +11,7 @@ for (const path of paths) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   const page = await context.newPage(); page.setDefaultTimeout(90000);
   const writes = [], externalResponses = new Set();
+  context.on('request', r => { if (/^https?:/.test(r.url()) && new URL(r.url()).origin !== 'https://tools.utilibre.org') externalResponses.add(new URL(r.url()).hostname); });
   context.on('request', r => { if (!['GET', 'HEAD'].includes(r.method()) && !r.url().includes('/cdn-cgi/challenge-platform/')) writes.push(r.method() + ' ' + r.url()); });
   context.on('response', r => { if (/^https?:/.test(r.url()) && new URL(r.url()).origin !== 'https://tools.utilibre.org') externalResponses.add(new URL(r.url()).hostname); });
   try {
@@ -69,7 +70,7 @@ for (const path of paths) {
       result = { ...result, bytes: bytes.length };
     }
     assert.deepEqual(writes, []);
-    for (const host of externalResponses) assert(['cdn.jsdelivr.net', 'unpkg.com', 'rawcdn.githack.com', 'raw.githack.com'].includes(host), `Unexpected external response: ${host}`);
+    assert.deepEqual([...externalResponses], [], 'Processing runtimes must be local, including blocked requests');
     console.log(JSON.stringify({ path, status: 'PASS', ...result, externalAssetHosts: [...externalResponses], applicationWrites: 0 }));
   } catch (error) { failures++; console.error(JSON.stringify({ path, status: 'FAIL', error: error.message, writes, externalAssetHosts: [...externalResponses] })); }
   await context.close();

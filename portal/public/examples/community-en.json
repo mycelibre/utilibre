@@ -1,0 +1,42 @@
+{
+  "list": [
+    11,
+    12,
+    13
+  ],
+  "data": {
+    "11": {
+      "id": 11,
+      "title": "To do",
+      "item": [
+        1,
+        2,
+        3
+      ]
+    },
+    "12": {
+      "id": 12,
+      "title": "In progress",
+      "item": []
+    },
+    "13": {
+      "id": 13,
+      "title": "Done",
+      "item": []
+    }
+  },
+  "items": {
+    "1": {
+      "id": 1,
+      "title": "Choose a chapter"
+    },
+    "2": {
+      "id": 2,
+      "title": "Prepare three questions"
+    },
+    "3": {
+      "id": 3,
+      "title": "Share a summary"
+    }
+  }
+}

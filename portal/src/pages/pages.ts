@@ -302,6 +302,10 @@ function renderSupport(language: Language, config: PublicConfig, t: Translate): 
     ? 'Reportá una herramienta rota indicando la tarea, navegador y mensaje de error, sin adjuntar documentos privados, contraseñas ni enlaces de administración. Proponé una corrección o traducción de una guía, o compartí su enlace con alguien a quien le sirva.'
     : 'Report a broken tool with the task, browser and error message, without attaching private documents, passwords or management links. Suggest a correction or translation for a guide, or share its link with someone who needs it.');
   if (config.contactUrl) contributions.append(externalLink(config.contactUrl, es ? 'Reportar o proponer una mejora' : 'Report or suggest an improvement'));
+  if (config.publicFormsUrl && config.enabledServices.includes('liberaforms')) {
+    contributions.append(externalLink(new URL('feedback', config.publicFormsUrl).href, es ? 'Enviar comentarios privados al equipo' : 'Send private feedback to the team'));
+    contributions.append(element('p', '', es ? 'Solo preguntamos la herramienta, tu tarea, dónde te trabaste y un contacto opcional. El equipo autorizado puede leer tu respuesta. No incluyás contraseñas ni archivos privados.' : 'Only the tool, your task, where you got stuck and optional contact details are requested. Authorized operators can read your response. Do not include passwords or private files.'));
+  }
   const guides = element('a', 'text-link', es ? 'Elegir una guía para compartir' : 'Choose a guide to share'); guides.href = routePath('guides', language); contributions.append(guides); main.append(contributions);
   return main;
 }
@@ -438,7 +442,9 @@ function renderSoftware(language: Language, config: PublicConfig, t: Translate):
       group: 'hosted', name: entry.upstreamProject, version: entry.installedVersion,
       license: entry.license, upstream: entry.upstreamSourceUrl,
       modification: t(entry.modified ? 'software.modified' : 'software.imageUnmodifiedConfigured'),
-      modifiedSource: entry.labels.includes('local') && !entry.labels.includes('server') && baseUrl
+      modifiedSource: ['cryptpad', 'liberaforms', 'galene'].includes(entry.id) && config.publicPdfUrl
+        ? new URL(`/utilibre-source/${entry.id}-utilibre.tar.gz`, config.publicPdfUrl).href
+        : entry.labels.includes('local') && !entry.labels.includes('server') && baseUrl
         ? new URL('/utilibre-source/', baseUrl).href : config.sourceCodeUrl,
       purpose: localized(entry.description, language),
     });

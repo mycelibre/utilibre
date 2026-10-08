@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Feed endpoints validated 2026-10-08. Original selection, CC0-1.0; articles retain their publishers' rights. -->
+<opml version="2.0">
+  <head><title>Utilibre · Ciencia y aprendizaje / Science and learning</title></head>
+  <body><outline text="Ciencia y aprendizaje / Science and learning">
+    <outline type="rss" text="SINC Noticias (Español)" title="SINC Noticias" xmlUrl="https://www.agenciasinc.es/feed/Noticias" htmlUrl="https://www.agenciasinc.es/" language="es" />
+    <outline type="rss" text="NASA (English)" title="NASA" xmlUrl="https://www.nasa.gov/feed/" htmlUrl="https://www.nasa.gov/" language="en" />
+  </outline></body>
+</opml>

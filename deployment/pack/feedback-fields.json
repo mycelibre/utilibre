@@ -1,0 +1,6 @@
+[
+  {"type":"text","name":"text-tool","label":"¿Qué herramienta usaste? / Which tool did you use?","className":"form-control","required":true,"subtype":"text","maxlength":100},
+  {"type":"textarea","name":"textarea-task","label":"¿Qué querías hacer? / What were you trying to do?","className":"form-control","required":true,"maxlength":1500},
+  {"type":"textarea","name":"textarea-problem","label":"¿Dónde te trabaste? / Where did you get stuck?","className":"form-control","required":true,"maxlength":2000},
+  {"type":"text","name":"text-contact","label":"Contacto opcional / Optional contact","className":"form-control","required":false,"subtype":"text","maxlength":200}
+]

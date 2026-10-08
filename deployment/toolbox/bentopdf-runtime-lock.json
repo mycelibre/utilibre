@@ -1,0 +1,27 @@
+[
+  {
+    "url": "https://registry.npmjs.org/coherentpdf/-/coherentpdf-2.5.5.tgz",
+    "bytes": 4385871,
+    "sha256": "5ab11947165b4e19111931f30593528f73253c09732f5f3deb4608fd524574de"
+  },
+  {
+    "url": "https://registry.npmjs.org/@tesseract.js-data/eng/-/eng-1.0.0.tgz",
+    "bytes": 13839644,
+    "sha256": "c9bddf2e2f0a214ac7918f3f4a3caf45e09ce8674fe26662ae7787ac8927f7bb"
+  },
+  {
+    "url": "https://registry.npmjs.org/@tesseract.js-data/spa/-/spa-1.0.0.tgz",
+    "bytes": 10436372,
+    "sha256": "b6814aa0f4f672c6772b9a5323b85c19887d030ffcf571e5c41a8b066fbb9d16"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/notofonts/noto-fonts/ffebf8c1ee449e544955a7e813c54f9b73848eac/hinted/ttf/NotoSans/NotoSans-Regular.ttf",
+    "bytes": 569208,
+    "sha256": "b85c38ecea8a7cfb39c24e395a4007474fa5a4fc864f6ee33309eb4948d232d5"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/notofonts/noto-fonts/ffebf8c1ee449e544955a7e813c54f9b73848eac/LICENSE",
+    "bytes": 4377,
+    "sha256": "0dab92d0544f7b233403f14b84a663bdbfa746982eda629e7f4f9ffe1b036feb"
+  }
+]

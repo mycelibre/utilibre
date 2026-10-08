@@ -25,15 +25,15 @@ x-source: &source /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
 services:
   bentopdf:
     <<: *static
-    image: utilibre-bentopdf:2.8.8-p1
+    image: utilibre-bentopdf:2.8.8-p3
     build:
-      context: .
-      dockerfile: Dockerfile.artifact
-      args: {ARTIFACT_IMAGE: "ghcr.io/alam00000/bentopdf-simple:2.8.8@sha256:3d62b8f8eece5fe947026ac3925ff08fda245b3d6ba2c3916b94da91e0010c74"}
+      context: /opt/utilibre/pack-static/bentopdf-2.8.8-p3
+      dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.bentopdf
     ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3101:8080"]
+    logging: {driver: none}
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./security-assets.conf:/etc/nginx/tool-security.conf:ro
+      - ./security-offline.conf:/etc/nginx/tool-security.conf:ro
       - *source
   vert:
     <<: *static
@@ -50,14 +50,15 @@ services:
       - *source
   omnitools:
     <<: *static
-    image: utilibre-omnitools:0.6.0-p2
+    image: utilibre-omnitools:0.6.0-p5
     build:
       context: .
       dockerfile: Dockerfile.omnitools
     ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3103:8080"]
+    logging: {driver: none}
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./security-assets.conf:/etc/nginx/tool-security.conf:ro
+      - ./security-offline.conf:/etc/nginx/tool-security.conf:ro
       - *source
   ittools:
     <<: *static

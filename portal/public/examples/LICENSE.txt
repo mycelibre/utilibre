@@ -5,3 +5,11 @@ These six files are dedicated to the public domain under CC0 1.0 Universal:
 https://creativecommons.org/publicdomain/zero/1.0/legalcode
 No visitor information or third-party artwork is included in these six files.
 Other files retain their existing provenance and applicable licensing.
+
+The budget-*.xlsx, document-*.docx, document-*.md, community-*.json,
+community-*.ics, slides-*.md, cryptpad-outline-*.md, week-plan-*.txt,
+calculations-*.nbt, form-questions-*.txt and map-fictional.* practice files were created for
+Utilibre on 8 October 2026 and are also dedicated under CC0 1.0 Universal.
+Their places, people, events, budgets and measurements are fictional.
+Feed packs contain links and source names, not a licence to republish
+the publishers' articles; those retain their respective rights.

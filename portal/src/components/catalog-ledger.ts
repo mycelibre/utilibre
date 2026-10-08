@@ -148,6 +148,11 @@ export function renderCatalogRow(
     source.rel = 'noopener noreferrer';
     details.append(source);
   }
+  if (['cryptpad', 'liberaforms', 'galene'].includes(entry.id) && config.publicPdfUrl) {
+    const source = element('a', 'text-link', t('software.documents.sourceBundle'));
+    source.href = new URL(`/utilibre-source/${entry.id}-utilibre.tar.gz`, config.publicPdfUrl).href;
+    source.target = '_blank'; source.rel = 'noopener noreferrer'; details.append(source);
+  }
   append(article, coordinate, content, processing, action, details);
   item.append(article);
   return item;

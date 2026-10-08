@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Validated 2026-10-08. Journalism, not an official government bulletin. Selection CC0-1.0; publisher rights remain. -->
+<opml version="2.0">
+  <head><title>Utilibre · Noticias de Guatemala / Guatemala news</title></head>
+  <body><outline text="Noticias de Guatemala / Guatemala news">
+    <outline type="rss" text="Prensa Libre (Español)" title="Prensa Libre" xmlUrl="https://www.prensalibre.com/feed/" htmlUrl="https://www.prensalibre.com/" language="es" />
+  </outline></body>
+</opml>
