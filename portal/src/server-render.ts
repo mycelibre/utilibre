@@ -3,6 +3,8 @@ import { element } from './utilities/dom';
 import { parseHTML } from 'linkedom';
 import { renderHeader, renderFooter } from './components/shell';
 import { renderStaticPage } from './pages/pages';
+import { renderPracticalGuides } from './pages/practical-guides';
+import { renderMyUtilibre } from './pages/my-utilibre';
 import { translate } from './i18n';
 import type { PublicConfig } from './config';
 import type { Route } from './routes';
@@ -26,6 +28,10 @@ export function renderPublicShell(route: Route, config: PublicConfig, search = '
       const entry = route.toolId ? catalogEntry(route.toolId) : undefined;
       main.append(element('h1', '', entry ? localized(entry.name, route.language) : t('status.title')));
       main.append(element('p', '', t('common.needsJavaScript')));
+    } else if (route.page === 'guide' || route.page === 'guides') {
+      main = renderPracticalGuides(route.language, config, route.guideId);
+    } else if (route.page === 'my') {
+      main = renderMyUtilibre(route.language, config);
     } else main = renderStaticPage(route, config, t, new URLSearchParams(search));
     shell.append(renderHeader(route, config, t, { search }), main, renderFooter(route, config, t));
     return shell.outerHTML;

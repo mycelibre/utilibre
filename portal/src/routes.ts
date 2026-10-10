@@ -1,6 +1,6 @@
 import { catalog } from './catalog/catalog.ts';
 import type { Language } from './i18n/index.ts';
-import { practicalGuides, practicalGuidePath } from './pages/practical-guide-data.ts';
+import { practicalGuides, practicalGuidePath } from './pages/guide-index.ts';
 import { scenarioCollections, collectionPath } from './pages/scenario-collection-data.ts';
 
 export type StaticPage = 'home' | 'services' | 'tools' | 'about' | 'transparency' | 'privacy' | 'security' | 'your-data' | 'acceptable' | 'support' | 'status' | 'software' | 'labels' | 'pdf' | 'qr' | 'guides' | 'my' | 'offline' | 'not-found';

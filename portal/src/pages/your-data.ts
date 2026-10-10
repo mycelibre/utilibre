@@ -1,5 +1,5 @@
 import { catalogEntry } from '../catalog/catalog';
-import { practicalGuides, practicalGuidePath } from './practical-guide-data';
+import { practicalGuides, practicalGuidePath } from './guide-index';
 import type { Language } from '../i18n';
 import { routePath } from '../routes';
 import { element, type Translate } from '../utilities/dom';

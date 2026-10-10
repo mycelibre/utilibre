@@ -58,14 +58,24 @@ export async function runIndexNow(args, {
       headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
     });
     try {
-      assert([200, 202].includes(response.status), `IndexNow rejected the notification: HTTP ${response.status}`);
+      if (![200, 202].includes(response.status)) {
+        // Keep the diagnostic code, never an arbitrary remote message/body.
+        const data = await response.json().catch(() => null);
+        const code = typeof data?.errorCode === 'string' && /^[A-Za-z0-9_-]{1,80}$/.test(data.errorCode) ? ` (${data.errorCode})` : '';
+        const advice = response.status === 403 ? ' Ownership verification failed; check the exact public proof URL and edge challenges before retrying.'
+          : response.status === 429 ? ' Rate limited; do not retry automatically.' : '';
+        throw new Error(`IndexNow rejected the notification: HTTP ${response.status}${code}.${advice}`);
+      }
       result.status = response.status;
       result.submitted = urlList.length;
-    } finally { await response.body?.cancel(); }
+      result.verificationPending = response.status === 202;
+    } finally { if (!response.bodyUsed) await response.body?.cancel(); }
   }
   log(JSON.stringify({
     ...result,
-    note: selection.submit ? 'Notification accepted; indexing is not guaranteed.' : 'No IndexNow notification sent. Add --submit only for this reviewed meaningful change.',
+    note: selection.submit ? result.verificationPending
+      ? 'Notification received; ownership verification is pending. Indexing is not guaranteed.'
+      : 'Notification accepted; indexing is not guaranteed.' : 'No IndexNow notification sent. Add --submit only for this reviewed meaningful change.',
   }, null, 2));
   return result;
 }

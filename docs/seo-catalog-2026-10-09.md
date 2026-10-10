@@ -1,5 +1,101 @@
 # Catalog SEO verification — 9 October 2026
 
+## Implemented follow-up — 10 October 2026
+
+The mobile-loading correction is **deployed** as
+`public-utility-portal:0.1.0-seo-20261010` (image
+`sha256:8b8f22bf691ac35a5eb43166ab2aa153ec6c5360beb1a755bb96776a127f9e55`).
+No service URLs, access controls, translations, local-toolkit format, crawler
+preferences or visitor tracking changed. The existing layout, fonts and CSS
+remain unchanged; optimization changes loading, not the visual design.
+
+### Implementation and verification
+
+- `guide-index.generated.json` contains navigation/SEO summaries derived from
+  the canonical guide content by `scripts/build-guide-index.mjs`, automatically
+  before development/build. A unit check prevents stale summaries and paths.
+- Guide walkthroughs and the My Utilibre editor load only on their respective
+  routes. The synchronous server renderer still supplies complete public HTML
+  and matching metadata, including guide bodies and the complete guide index.
+- `scripts/check-client-budget.mjs` runs in every build, with a 215,000-byte gzip
+  ceiling for initial entry/preload JavaScript. Same-method before/after sizes:
+  **323,924 → 194,604 bytes (39.9% smaller)**. This is a build regression guard,
+  not a CDN compression or real-user performance claim. Vite's SSR-only dynamic
+  import warnings are expected: server rendering intentionally keeps those
+  modules together; the client build correctly separates them.
+- Lint, typecheck, build, 113 isolated-release unit tests and 13 SEO/notification
+  script tests passed. All 80 desktop/mobile-emulated browser tests passed,
+  including every guide, examples, collections, search, localization and local
+  import/export. Two unrelated pending status tests/code were excluded from the
+  release. No dependency was added.
+- Live: all **168** canonical pages passed the SEO gate. EN desktop / ES 390px
+  homepage → collection → shared preview → explicit save and guide journeys
+  passed, with no page errors, horizontal overflow or outside-origin requests.
+  The initial homepage does not request guide/My Utilibre chunks; navigation
+  requests them when needed. The 1200×800 practice image decoded successfully.
+  Six layout captures are private in the release directory; the initial early
+  collection capture was replaced after waiting for the image to decode.
+- Runtime public configuration remained byte-identical (SHA-256
+  `6f2c6c7f2dc2cde22cabe3f2aafb170054cf658da8f998fc6b4c21e2764089c4`).
+
+Repeatable lab command: `cd portal && node scripts/check-mobile-loading.mjs --run`.
+This explicitly performs six clean-profile page loads, not ongoing monitoring.
+Chromium 151.0.7922.34, same 390×844 / 4× CPU / 150ms / 1.6Mbps conditions as
+the baseline below; October 10 at 14:55 UTC. No field INP or real-phone claim.
+
+| Page | Before median LCP | After LCP samples / median | After encoded response bytes | CLS |
+| --- | --- | --- | --- | --- |
+| Spanish homepage | 2772 ms | 2120 / 4108 / 2148; **2148 ms** | 317,247–317,324 | 0.00055 |
+| Spanish documents collection | 3080 ms | 4416 / 2400 / 2404; **2404 ms** | 387,562–387,593 | 0.02924 |
+
+Median improvement is approximately 22% on both sampled routes. The slower
+outlier on each route is retained, not discarded: this tiny shared-infrastructure
+sample does not establish a percentile, universal speed or field CWV pass.
+
+### IndexNow: repaired diagnostics, external validation still unresolved
+
+The script now reports a sanitized engine error code, distinguishes HTTP 202
+pending ownership verification from completed acceptance, and never retries
+automatically. A regression test ensures rejection does not disclose remote
+message bodies or trigger retries.
+
+The global endpoint returned **403 `UserForbiddedToAccessSite`**. The ownership
+file is public HTTPS 200/text/plain and matches the 32-character key after
+trimming its trailing newline. No account credential is involved in this proof.
+The API token could read Cloudflare rules but its attempted narrow rule write
+returned 403/code 10000; no rule was changed through that API call.
+
+The owner then added the proof-only Skip rule in Cloudflare. A read-back confirms
+it is enabled for host `utilibre.org` and the literal ownership-proof path,
+skipping Browser Integrity Check, Security Level and Super Bot Fight Mode, with
+**matching-request logging disabled**. The existing ntfy rule and its disabled
+logging are unchanged. The owner's saved expression uses a wildcard operator
+with no wildcard characters; it does not include the suggested GET/HEAD filter.
+The target remains one public static file, not an application/account endpoint.
+
+After this actual edge change, one retry for the ten selected changed pages
+still returned 403. One diagnostic request to the
+[documented Bing endpoint](https://www.indexnow.org/faq) returned the same code.
+No successful notification, indexing or root cause is claimed. No more retries,
+key rotation, broad security relaxation or crawler-policy changes were made.
+The remaining dependency is access to **Bing Webmaster Tools ownership/URL
+diagnostics**, or an engine-side verification resolution. Search Console access
+is also still needed to measure actual Google discovery. The normal sitemap
+remains available; IndexNow is not a prerequisite for ordinary crawling.
+
+### Release and rollback
+
+Isolated release source: `/opt/utilibre/portal-seo-TG8zAm/source`; pending status
+work and unrelated export scripts were not packaged. Production container is
+healthy. No new Caddy block or data migration is required.
+
+Rollback: restore `PORTAL_IMAGE=public-utility-portal:0.1.0-collections-20261010`
+in the private `.env`, then run `docker compose up -d --no-deps --no-build portal`.
+Restore matching source archive/index from `previous-utilibre-integration.tar.gz`
+and `previous-source-index.html` in that release directory if rolling back.
+User data and local collections are untouched. The proof-file Cloudflare rule
+is independent and can be disabled without modifying ntfy.
+
 ## Fresh research and live review — 10 October 2026
 
 **Assessment:** the technical and useful-content foundation is sound; actual

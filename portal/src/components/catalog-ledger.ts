@@ -6,7 +6,7 @@ import type { PublicConfig } from '../config';
 import type { Language } from '../i18n';
 import { append, element, type Translate } from '../utilities/dom';
 import { privacyLabels } from './privacy-labels';
-import { practicalGuides, practicalGuidePath } from '../pages/practical-guide-data';
+import { practicalGuides, practicalGuidePath } from '../pages/guide-index';
 import { routePath } from '../routes';
 import { pinToStartingCollection } from '../utilities/toolkits';
 
@@ -150,7 +150,7 @@ export function renderCatalogRow(
   if (guide) { const a = element('a', 'catalog-guide-link', `${language === 'es' ? 'Guía' : 'Guide'}: ${guide.copy[language].title}`); a.href = practicalGuidePath(guide.id, language); details.append(a); }
   const exampleGuides: Record<string, string> = { bentopdf: 'scan', minipaint: 'image', 'omni-compress-image': 'image', drawio: 'starting-projects', excalidraw: 'starting-projects', markmap: 'mindmap', rawgraphs: 'chart', pairdrop: 'transfer' };
   const exampleGuide = practicalGuides.find(item => item.id === exampleGuides[entry.id]);
-  if (launch && exampleGuide?.samples.length) {
+  if (launch && exampleGuide?.hasSamples) {
     const example = element('a', 'catalog-example-link', language === 'es' ? 'Probalo con un ejemplo' : 'Try an example');
     example.href = `${practicalGuidePath(exampleGuide.id, language)}#practice`;
     example.setAttribute('aria-label', `${example.textContent}: ${name}`);

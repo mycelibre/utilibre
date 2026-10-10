@@ -11,18 +11,22 @@ import type { Language, TranslationKey } from '../i18n';
 import { routePath, type Route, type StaticPage } from '../routes';
 import { append, disableActionButton, element, type Translate } from '../utilities/dom';
 import { renderTaskGuide } from './task-guides';
-import { renderPracticalGuides } from './practical-guides';
-import { practicalGuides } from './practical-guide-data';
+import { practicalGuides } from './guide-index';
 import { privacyAnswers } from '../catalog/guidance';
-import { renderMyUtilibre } from './my-utilibre';
 import { renderOfflineTools } from './offline-tools';
 import { renderScenarioCollection, renderCollectionLinks } from './scenario-collections';
 import { scenarioCollections } from './scenario-collection-data';
 
 export async function renderPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): Promise<HTMLElement> {
-  if (route.page === 'guides' || route.page === 'guide') return renderPracticalGuides(route.language, config, route.guideId, true);
+  if (route.page === 'guides' || route.page === 'guide') {
+    const { renderPracticalGuides } = await import('./practical-guides');
+    return renderPracticalGuides(route.language, config, route.guideId, true);
+  }
   if (route.page === 'collection') return renderScenarioCollection(route.collectionId || '', route.language, config, true);
-  if (route.page === 'my') return renderMyUtilibre(route.language, config, true);
+  if (route.page === 'my') {
+    const { renderMyUtilibre } = await import('./my-utilibre');
+    return renderMyUtilibre(route.language, config, true);
+  }
   if (route.page === 'tool' && route.toolId) return renderToolPage(route.toolId, route.language, config, t);
   if (route.page === 'status') return renderStatus(route.language, config, t);
   return renderStaticPage(route, config, t, searchParams);
@@ -33,8 +37,6 @@ export async function renderPage(route: Route, config: PublicConfig, t: Translat
 export function renderStaticPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): HTMLElement {
   if (route.page === 'collection') return renderScenarioCollection(route.collectionId || '', route.language, config);
   if (route.page === 'offline') return renderOfflineTools(route.language, config);
-  if (route.page === 'my') return renderMyUtilibre(route.language, config);
-  if (route.page === 'guides' || route.page === 'guide') return renderPracticalGuides(route.language, config, route.guideId);
   if (route.page === 'support' && !config.supportUrl) return renderNotFound(route.language, t);
   if (route.page === 'home') return renderHome(route.language, config, t, searchParams);
   if (route.page === 'services') return renderServices(route.language, config, t);

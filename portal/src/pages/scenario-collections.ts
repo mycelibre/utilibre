@@ -5,7 +5,7 @@ import type { PublicConfig } from '../config.ts';
 import type { Language } from '../i18n/index.ts';
 import { actionButton, append, element, setStatus, statusRegion } from '../utilities/dom.ts';
 import { shareFragment } from '../utilities/toolkits.ts';
-import { practicalGuidePath } from './practical-guide-data.ts';
+import { practicalGuidePath } from './guide-index.ts';
 import { collectionPath, scenarioCollections, type ScenarioCollection } from './scenario-collection-data.ts';
 
 export { collectionPath, scenarioCollections } from './scenario-collection-data.ts';

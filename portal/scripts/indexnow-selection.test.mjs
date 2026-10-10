@@ -90,10 +90,24 @@ test('explicit submission contains only changed/removed selections, never the en
   const requests = [];
   const result = await runIndexNow(['--url', pdf, '--removed', retired, '--submit'], dependencies(requests));
   assert.equal(result.submitted, 2);
+  assert.equal(result.verificationPending, true);
   const post = requests.find(({ options }) => options.method === 'POST');
   assert.equal(post.url, 'https://api.indexnow.org/indexnow');
   assert.deepEqual(JSON.parse(post.options.body).urlList, [pdf, retired]);
   assert.equal(JSON.parse(post.options.body).host, 'utilibre.org');
+});
+
+test('rejected notifications expose only a safe error code and never auto-retry', async () => {
+  let posts = 0;
+  const deps = dependencies([]);
+  deps.request = async () => { posts++; return new globalThis.Response(JSON.stringify({ errorCode: 'UserForbiddedToAccessSite', message: 'untrusted private details' }), { status: 403 }); };
+  await assert.rejects(runIndexNow(['--url', pdf, '--submit'], deps), error => {
+    assert.match(error.message, /HTTP 403 \(UserForbiddedToAccessSite\)/);
+    assert.match(error.message, /Ownership verification failed/);
+    assert(!error.message.includes('untrusted'));
+    return true;
+  });
+  assert.equal(posts, 1);
 });
 
 test('a removal redirected to the homepage stops the whole submission before any POST', async () => {
