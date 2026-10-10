@@ -1,5 +1,42 @@
 # Catalog SEO verification — 9 October 2026
 
+## Bilingual 404 follow-up — 10 October 2026
+
+The owner requested the established visual style and dry humour on the missing-
+page screen. The existing localized 404 renderer now includes a factual `404`
+guideword, one separate aside about collecting tools, and catalog/guide actions.
+The literal heading, explanation and metadata remain unchanged. The existing
+Newsreader/Atkinson typography, palette, dark mode, rules, button geometry and
+focus treatment are reused; only three small CSS rules were needed. The narrow
+owner-approved copy exception is recorded in `DESIGN.md` and `docs/copy-style.md`.
+No image, dependency, tracker or new public route was added.
+
+Examples: `/en/404` and `/es/404`. These deliberately remain unknown URLs and
+return **HTTP 404**, not a successful page or homepage redirect. GET and HEAD
+were verified publicly with `noindex, nofollow`, no canonical and the expected
+localized recovery links. Arbitrary missing portal paths use the same renderer;
+this does not replace independently hosted applications' error pages.
+
+Deployed image: `public-utility-portal:0.1.0-404-20261010`. Build, lint, typecheck
+and **114 isolated-release unit tests** pass. The worktree suite has 116 passes,
+including two unrelated pending status tests excluded from this release.
+The targeted Chromium desktop/mobile 404 tests pass against both the loopback
+staging container and production. Four extra visual checks cover EN/ES,
+1280/390/320px, light/dark themes and a JavaScript-disabled desktop: no horizontal
+overflow, a visible 3px focus outline and functional recovery links. Screenshots
+were inspected. This is browser/viewport emulation, not real-device testing.
+The development-server browser attempt hit the host file-watch limit; running
+the same tests against the compiled server passed without changing host limits.
+
+The production public configuration hash remains
+`6f2c6c7f2dc2cde22cabe3f2aafb170054cf658da8f998fc6b4c21e2764089c4`.
+Source, build logs, synthetic screenshots and verification records are retained
+at `/opt/utilibre/portal-404-20261010`. Pending server/status and Storage Box work
+were excluded. To roll back this UI only, restore
+`PORTAL_IMAGE=public-utility-portal:0.1.0-service-semantics-20261010` in the private
+environment file and run `docker compose up -d --no-deps --no-build portal`
+**from `/home/ubuntu/freetools`**. No data migration or Caddy change is required.
+
 ## Reconciliation of the supplied URL export — 10 October 2026
 
 The owner subsequently supplied the affected URLs. This supersedes the missing-

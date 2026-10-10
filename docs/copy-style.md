@@ -34,6 +34,12 @@ Keep these surfaces literal:
 
 ## Editing a page
 
+The owner requested a humorous 404 page on 10 October 2026. This narrow exception
+allows one separate aside about our enthusiasm for collecting tools, after the
+literal explanation. Its title, metadata, status code, recovery instructions and
+buttons remain factual. It does not permit jokes in other errors or imply lost
+documents, broken security, or a mistake by the visitor.
+
 Lead with what someone can do. Keep qualifications beside the claim they limit,
 including in short cards. Preserve exact menu names, steps, formats, commands,
 URLs, anchors, export scope, deletion consequences and upstream attribution.

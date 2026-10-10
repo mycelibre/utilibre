@@ -220,6 +220,14 @@ describe('public SEO without tracking or private-content indexing', () => {
       expect(response.headers.get('x-robots-tag')).toBe('noindex, nofollow');
       expect(document.querySelector('link[rel="canonical"]')).toBeNull();
       expect(document.getElementById('public-structured-data')).toBeNull();
+      const language = document.documentElement.lang;
+      const recovery = document.querySelector('.not-found-page');
+      expect(recovery?.querySelectorAll('h1')).toHaveLength(1);
+      expect(recovery?.querySelector('.not-found-code')?.textContent).toBe('404');
+      expect(recovery?.querySelector('.not-found-aside')?.textContent?.trim()).toBeTruthy();
+      expect(recovery?.querySelectorAll('.guide-actions a')).toHaveLength(2);
+      expect(recovery?.querySelector('.guide-actions a')?.getAttribute('href')).toBe(`/${language}/`);
+      expect(recovery?.querySelector('.guide-actions a:last-child')?.getAttribute('href')).toBe(language === 'es' ? '/es/guias' : '/en/guides');
     }
     for (const path of ['/page-metadata.json', '/%70age-metadata.json', '//page-metadata.json', '/server-built/render.mjs']) expect((await fetch(base + path)).status).toBe(404);
     for (const [path, destination] of [['/en', '/en/'], ['/en/privacy/', '/en/privacy'], ['/es/support', '/es/apoyar'], ['/index.html', '/']]) {

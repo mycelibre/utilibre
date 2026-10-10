@@ -327,6 +327,8 @@ export const es: Record<keyof typeof EnglishDictionary, string> = {
   'common.back': 'Volver',
   'common.notFound.title': 'Página no encontrada',
   'common.notFound.body': 'No encontramos una página en esta dirección. Revisá el enlace o volvé al catálogo para buscar una herramienta.',
+  'common.notFound.aside': 'Por una vez, un rincón de Utilibre sin herramientas.',
   'common.notFound.back': 'Volver al catálogo',
+  'common.notFound.guides': 'Ver las guías',
   'common.external': 'Enlace externo',
 };

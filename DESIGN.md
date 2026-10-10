@@ -186,6 +186,12 @@ English and neutral Spanish receive equal editorial review. Spanish uses `« »`
 
 **The Literal Interface Rule.** The closer text sits to an action, risk, or repeated state, the less personality it carries; personality belongs in page-level explanation, never in uncertainty.
 
+Owner-approved 404 exception (10 October 2026): one separate, dry aside about
+our tool collection may follow the literal explanation. The heading, metadata,
+recovery directions and action labels remain literal. Reuse the existing page
+header, factual 404 guideword, ruled layout and buttons; no new illustration,
+palette, motion or typography scale is needed.
+
 ## Layout
 
 The global shell is capped at 76rem with fluid page padding. The desktop masthead and homepage share a 17rem task rail; the ledger workspace occupies the remaining width. The finder pairs a flexible task statement with a 20–29.5rem search region. Catalog records use four comparable jobs: a 5rem coordinate, a flexible name/description column, a processing column, and an 8rem action edge.

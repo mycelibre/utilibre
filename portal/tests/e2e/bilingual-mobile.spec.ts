@@ -386,12 +386,21 @@ test('unknown and retired routes return a useful localized 404', async ({ page }
   await expect(page).toHaveTitle(/Page not found/);
   await expect(page.getByRole('heading', { level: 1, name: 'Page not found' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Return to the catalog' })).toHaveAttribute('href', '/en/');
+  await expect(page.locator('.not-found-code')).toHaveText('404');
+  await expect(page.locator('.not-found-aside')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Browse the guides' })).toHaveAttribute('href', '/en/guides');
 
   for (const removedPath of ['/en/tools/download-media', '/es/herramientas/descargar-contenido']) {
     await page.goto(removedPath);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(removedPath.startsWith('/es/') ? 'Página no encontrada' : 'Page not found');
     await expect(page.locator('[data-catalog-id="cobalt"]')).toHaveCount(0);
   }
+  await page.setViewportSize({ width: 320, height: 740 });
+  await expect(page.getByRole('link', { name: 'Ver las guías' })).toHaveAttribute('href', '/es/guias');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+  await page.getByRole('link', { name: 'Volver al catálogo' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/\/es\/$/);
 });
 
 test('Field Ledger homepage has no horizontal overflow at 375px', async ({ page }) => {

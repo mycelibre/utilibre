@@ -589,10 +589,17 @@ function renderLabelGuide(t: Translate): HTMLElement {
 }
 
 function renderNotFound(language: Language, t: Translate): HTMLElement {
-  const main = pageHeader(t('common.notFound.title'), t('common.notFound.body'));
+  const main = pageHeader(t('common.notFound.title'), t('common.notFound.body'), 'not-found-page');
+  const header = main.querySelector('.page-header');
+  header?.prepend(element('p', 'ledger-guideword not-found-code', '404'));
+  header?.append(element('p', 'not-found-aside', t('common.notFound.aside')));
+  const actions = element('div', 'guide-actions');
   const link = element('a', 'button', t('common.notFound.back'));
   link.href = routePath('home', language);
-  main.append(link);
+  const guides = element('a', 'button button-secondary', t('common.notFound.guides'));
+  guides.href = routePath('guides', language);
+  append(actions, link, guides);
+  main.append(actions);
   return main;
 }
 

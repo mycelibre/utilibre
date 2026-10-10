@@ -324,6 +324,8 @@ export const en = {
   'common.back': 'Back',
   'common.notFound.title': 'Page not found',
   'common.notFound.body': 'We could not find a page at this address. Check the link or return to the catalog to find a tool.',
+  'common.notFound.aside': 'For once, a corner of Utilibre without tools.',
   'common.notFound.back': 'Return to the catalog',
+  'common.notFound.guides': 'Browse the guides',
   'common.external': 'External link',
 } as const;

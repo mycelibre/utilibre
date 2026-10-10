@@ -552,6 +552,9 @@ p { max-width: 75ch; }
 
 .page-header h1 { margin-bottom: 0.75rem; overflow-wrap: anywhere; }
 .hero-lead { max-width: 64ch; margin: 0; color: var(--ink-soft); font-size: var(--type-intro); }
+.not-found-code { margin-block-end: 1rem; }
+.not-found-aside { max-width: 64ch; margin: 1.25rem 0 0; color: var(--ink-soft); }
+.not-found-page .guide-actions { margin-block-end: 2rem; }
 
 .tool-page .page-header { padding-block: clamp(2rem, 4vw, 3.4rem) clamp(1.4rem, 3vw, 2rem); }
 .tool-page .page-header h1 { font-size: var(--type-tool-display); }
