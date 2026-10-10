@@ -1,5 +1,71 @@
 # Catalog SEO verification — 9 October 2026
 
+## IndexNow notification confirmed — 10 October 2026, 16:14 UTC
+
+The owner-requested follow-up submission with the deployed replacement key
+returned **HTTP 200** from `https://api.indexnow.org/indexnow` at
+`2026-10-10T16:14:39.539Z`. The EN/ES documents collection URLs were accepted;
+ownership verification is no longer reported as pending for this notification.
+The public proof matched, both pages passed targeted canonical/indexability
+checks, and the live sitemap advertised them before the single POST.
+
+This supersedes the earlier 202/pending state. **IndexNow notification delivery
+is working.** It does not establish indexing, ranking, or future crawler access
+for every URL. No security setting, key, endpoint or deployment was changed
+during this confirmation; do not attribute success to an unperformed firewall
+repair. The private Bing API credential was not used in the IndexNow payload.
+
+Continue using the existing helper with an explicit selection of meaningfully
+changed public URLs at release time. It remains dry-run by default, performs no
+automatic retries, and is not a recurring full-sitemap submission job. No more
+confirmation submissions are needed merely to repeat this successful result.
+The API status meanings are defined in the
+[IndexNow protocol](https://www.indexnow.org/documentation).
+
+## Bing account evidence — 10 October 2026, 16:11–16:13 UTC
+
+The owner supplied a **Bing Webmaster Tools API credential**, distinct from the
+public IndexNow proof. It is retained only in the private provider-secret
+directory (directory mode 0700, file mode 0600), outside the repository and web
+roots. Requests use Microsoft's documented JSON/HTTPS API with redirects
+disabled. Neither credentials, full request URLs, unrelated account sites nor
+raw fetched-page/header data were printed or added to this record.
+
+Observed through Bing's API, rather than inferred from this VM's HTTP checks:
+
+- `GetUserSites`: `https://utilibre.org/` has **IsVerified = true**. This confirms
+  Webmaster Tools ownership, not IndexNow's separate key-validation state.
+- `GetFeeds`: the sitemap has **Status = Success**, **UrlCount = 168** and
+  **LastCrawled = 2026-10-10T15:58:21Z**. This supersedes the earlier failed
+  sitemap fetch. No sitemap resubmission was necessary.
+- `GetUrlInfo`: the root has discovery/crawl dates; `/en/` and both submitted
+  collection pages have no usable discovery/crawl dates in this response.
+  `HttpStatus = 0` is not HTTP success, and `IsPage = true` is not an indexed
+  flag. This endpoint's returned data does not establish that these pages are
+  indexed or that they are definitively absent from the index.
+- Two bounded `FetchUrl` diagnostic requests were accepted. The Spanish
+  documents collection completed and its returned HTML contained the expected
+  canonical URL; `GetFetchedUrls` reports fetched=true, expired=false. This
+  establishes a successful Bing diagnostic fetch of that page, not universal
+  crawler access or indexing.
+- The diagnostic fetch of the plain-text proof returned no usable details;
+  its list entry reports fetched=false, expired=true. Do not interpret this
+  as successful key validation or as proof of its cause. IndexNow's last actual
+  notification response remains **202, key validation pending**; no further
+  notification was sent during these API checks.
+
+No access controls, Cloudflare settings, crawler preferences, analytics or
+visitor instrumentation changed. No page content or private application data
+was submitted. The next indexing check belongs in Bing's IndexNow/URL Inspection
+reports or a future notification for a meaningful page change, not repeated
+unchanged submissions.
+
+References: [JSON API protocols](https://learn.microsoft.com/en-us/bingwebmaster/api-protocols),
+[GetUserSites](https://learn.microsoft.com/en-us/dotnet/api/microsoft.bing.webmaster.api.interfaces.iwebmasterapi.getusersites?view=bing-webmaster-dotnet),
+[GetFeeds](https://learn.microsoft.com/en-us/dotnet/api/microsoft.bing.webmaster.api.interfaces.iwebmasterapi.getfeeds?view=bing-webmaster-dotnet),
+[GetUrlInfo](https://learn.microsoft.com/en-us/dotnet/api/microsoft.bing.webmaster.api.interfaces.iwebmasterapi.geturlinfo?view=bing-webmaster-dotnet),
+and [FetchUrl](https://learn.microsoft.com/en-us/dotnet/api/microsoft.bing.webmaster.api.interfaces.iwebmasterapi.fetchurl?view=bing-webmaster-dotnet).
+
 ## Owner-supplied replacement key — 10 October 2026, 16:07 UTC
 
 At the owner's explicit request, the new UTF-8 proof is deployed at
