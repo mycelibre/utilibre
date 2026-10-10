@@ -1,5 +1,20 @@
 # Operator work queue — reconciled 10 October 2026
 
+## Storage Box isolation completed — 10 October, 21:28 UTC
+
+Owner-authorized API setup created one backup-only subaccount restricted to the
+existing encrypted application repository. Dedicated SSH key; SMB/WebDAV and
+access from outside Hetzner disabled for this account only. Four sibling-path
+denials, own-directory write/read/delete, existing 94-file restore/hash checks
+and an isolated Authentik restore passed before switching. The installed backup
+job then passed using the restricted account, with the existing retention policy.
+API/admin rollback credentials are masked from that job; no API credential is
+needed for scheduled backups. Exact evidence and data-preserving connection
+rollback are in [the Storage Box procedure](../deployment/storagebox/README.md).
+No per-app storage mounts, hard quotas, PrivateBin uploads or box-wide setting
+changes were introduced. Future app storage requires its own supported backend
+and isolated credentials, not reuse of this encrypted backup repository.
+
 ## Items 1 and 2 completed — 10 October, 21:02 UTC
 
 1. **Backup/monitoring publication and bounded status checks: complete.** GitHub

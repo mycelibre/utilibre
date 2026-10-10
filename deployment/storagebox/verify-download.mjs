@@ -9,6 +9,8 @@ import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 process.umask(0o077);
 if (process.getuid() !== 0) throw Error('Run with sudo');
+const candidate = process.argv[2] === '--candidate-subaccount';
+assert(process.argv.length <= 3 && (!process.argv[2] || candidate), 'Use verify-download.mjs [--candidate-subaccount]');
 const status = JSON.parse(await readFile('/opt/utilibre/storagebox/private/last-success.json', 'utf8'));
 assert.match(status.snapshot, /^[a-f0-9]{64}$/);
 assert.match(status.report, /^\/opt\/utilibre\/reports\/storagebox-native-[A-Za-z0-9]+$/);
@@ -26,7 +28,12 @@ const digest = async path => {
 };
 let stage = 'download';
 try {
-  run('sh', [wrapper, 'restore', status.snapshot, '--quiet', '--target', target, '--verify']);
+  const restoreArgs = ['restore', status.snapshot, '--quiet', '--target', target, '--verify'];
+  if (candidate) {
+    run('restic', ['--repo', 'sftp:utilibre-storagebox:.', '--password-file', '/opt/utilibre/storagebox/private/restic-password',
+      '--no-cache', '--retry-lock', '1m', '--limit-upload', '4096', '--limit-download', '4096', '-o', 'sftp.connections=2',
+      '-o', 'sftp.command=ssh -F /opt/utilibre/storagebox-admin/candidate-ssh_config utilibre-storagebox -s sftp', ...restoreArgs]);
+  } else run('sh', [wrapper, ...restoreArgs]);
   stage = 'checksum comparison';
   const paths = [...plan.snapshots.flatMap(snapshot => snapshot.files), ...plan.keyFiles];
   for (const path of paths) {
@@ -43,6 +50,7 @@ try {
     sources: plan.snapshots.length, identityDatabaseRestore: 'passed in networkless disposable PostgreSQL',
     otherApplications: 'archive bytes verified; no fresh functional restore of every application',
     liveDataChanged: false, temporaryDownloadedCopiesRemoved: true,
+    connection: candidate ? 'restricted subaccount candidate; active connection unchanged' : 'active backup connection',
   };
   await writeFile(join(target, 'result.json'), JSON.stringify(result, null, 2), { mode: 0o600 });
   console.log(JSON.stringify({ ...result, evidence: join(target, 'result.json') }, null, 2));

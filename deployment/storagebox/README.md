@@ -3,7 +3,8 @@
 ## Status — 10 October 2026
 
 **Production application snapshots copied and download/restore verified;
-daily scheduling enabled with owner-approved 7-daily/4-weekly retention.** After the
+daily scheduling enabled with owner-approved 7-daily/4-weekly retention;
+restricted backup subaccount active.** After the
 owner ran the interactive authorization procedure,
 key-only login with strict host verification succeeded on port 23. Remote `df -h`
 reported 20T total, 2.5T used and 18T available (rounded output, not a throughput
@@ -44,21 +45,118 @@ and a fresh isolated Authentik database restore passed. Evidence:
 
 The SMB address `//YOUR-STORAGEBOX-HOST/backup` names a share. It is not
 the SSH repository path. Restic will use the separate relative directory
-`utilibre-app-backups` under the SSH account's home, not initialize the share
-root and not synchronize with `--delete`.
+`utilibre-app-backups` under the main account's home. The restricted account's
+home is already that directory, so its repository URI is
+`sftp:utilibre-storagebox:.`. Do not append the directory again, initialize the
+share root, reinitialize the existing repository, or synchronize with `--delete`.
 
 Components: Debian `restic 0.18.0-1+b4` (Restic reports 0.18.0), native OpenSSH
 SFTP, and small setup/command wrappers. No filesystem mount, database service,
 public endpoint or application credential distribution is involved. Upstream
 Restic is BSD-2-Clause; this is the distro package, not a claim of latest upstream.
 
-## Finish SSH authorization
+## Restricted backup account — activated 10 October, 21:28 UTC
 
-1. Prefer a dedicated Storage Box subaccount confined to an application-backup
-   directory. Update `HostName` and `User` in the private SSH configuration if
-   one is created. The supplied main account works technically but its key can
-   access unrelated backups too; a subdirectory is **not** an access boundary.
-   Do not give this credential to hosted apps. Enable SSH access in Hetzner.
+The owner authorized API administration and supplied a root-private Hetzner
+project token. `restrict-backup-account.mjs` uses the official
+`https://api.hetzner.com/v1` Storage Box API, not the retired Robot endpoint.
+It resolves the existing box from the private connection, creates or verifies
+exactly one named backup subaccount, and installs a **separate SSH key** through
+the already-authorized main SFTP connection. Actual box IDs, usernames, keys,
+passwords and API responses are not committed or published.
+
+The backup account is confined to the existing `utilibre-app-backups` directory:
+SSH enabled, writable for native backup/retention, SMB and WebDAV disabled, and
+access from outside Hetzner disabled. That last setting is **not** an allowlist
+for this VM alone. Other subaccounts, box-wide settings, existing VM backups and
+live application storage are unchanged. Directory isolation is not a hard
+capacity quota; this account shares the box's available space. PrivateBin uploads
+remain disabled and no hosted application receives these backup credentials.
+
+Evidence from the actual box:
+
+- A fictional marker outside the permitted directory was readable by the main
+  account and denied through four relative/absolute paths from the subaccount.
+  Write/read/delete of a separate fictional file inside its own directory passed.
+  Only those test files/directories were removed. Evidence:
+  `/opt/utilibre/reports/storagebox-isolation-cTFO5e/result.json`.
+- Before switching, the subaccount downloaded the existing successful snapshot;
+  all 94 file hashes matched across 24 groups and the Authentik database restored
+  in a networkless disposable PostgreSQL instance. Other apps' archive bytes were
+  checked, not every restored application workflow. Evidence:
+  `/opt/utilibre/reports/storagebox-restore-0ZMZH3/result.json`.
+- Activation verified the same repository configuration, unchanged encryption
+  password and access to the previous successful snapshot. The installed systemd
+  job then uploaded snapshot `757bd524` at 21:28 UTC and passed metadata checking,
+  native retention/pruning and its final check. The policy expired superseded
+  same-day snapshot `4e54f792`; two application snapshots and the separate
+  fictional rehearsal remain. Expired snapshot references cannot be recovered;
+  their backed-up content remains in the retained replacement. Evidence:
+  `/opt/utilibre/reports/storagebox-native-GayZFb/result.json`.
+- A transient unit using the same inaccessible-path settings confirmed that
+  neither legacy key contents nor the API token are visible inside that sandbox.
+  The seven backup/retention tests and read-only monitor check also pass.
+
+### Repeatable API preparation and activation
+
+Keep the token at `/opt/utilibre/storagebox/private/hetzner-api-token`, root-owned
+0600. Never put it in a command argument, Git or chat. Management state and
+main-account rollback credentials live under `/opt/utilibre/storagebox-admin`
+(0700); the daily job masks that directory and the API token. The scheduled
+backup uses only its restricted SSH key and Restic password: **it does not need
+API access**. The owner can revoke the temporary API token after setup. The
+retained main key and API token remain accessible to host root outside the job;
+this is not protection against a complete VM/root compromise.
+
+```sh
+sudo node deployment/storagebox/restrict-backup-account.mjs --inspect
+sudo node deployment/storagebox/restrict-backup-account.mjs --prepare
+sudo node deployment/storagebox/check-subaccount-isolation.mjs
+sudo node deployment/storagebox/verify-download.mjs --candidate-subaccount
+```
+
+Preparation refuses ambiguous accounts, unexpected access settings, unrelated
+SSH keys and a changed repository. It does not retry an uncertain creation POST.
+A new hostname can take time to resolve; retry preparation after propagation,
+without weakening strict host verification. Its host key must match the
+previously trusted box key.
+
+Use the fresh result paths printed by the last two checks for activation:
+
+```sh
+sudo node deployment/storagebox/activate-subaccount.mjs --activate \
+  ISOLATION_RESULT_JSON RESTORE_RESULT_JSON
+sudo systemctl daemon-reload
+sudo systemctl start utilibre-storagebox-backup.service
+```
+
+The switch takes both existing job locks, requires successful checks less than
+one hour old against the latest successful snapshot, replaces only local client
+connection files, and verifies access before reporting success. A failed check
+restores those previous client files. It does not initialize or move a repository.
+The normal backup job still applies the already-approved retention policy.
+
+### Connection rollback
+
+While the root-private `previous-main` credentials remain available:
+
+```sh
+sudo node deployment/storagebox/activate-subaccount.mjs --rollback
+```
+
+This uses the same locks and verifies the previous main-account connection. It
+restores broader main-account access, so use only for a reviewed operational
+rollback. It does not undo snapshot expiry, delete the new account or change any
+remote data. Original credentials are retained for rollback; no live rollback
+was needed or rehearsed. Keep the off-VM Restic password recovery copy separately.
+
+## Initial SSH authorization on a new host
+
+1. Production now uses the restricted account above. For recovery, restore the
+   reviewed private client files and unchanged Restic password from secure
+   recovery material. A main account can access unrelated backups; a subdirectory
+   alone is **not** an access boundary. Do not give backup credentials to hosted
+   apps. Enable SSH access in Hetzner.
 2. On a new host, supply `UTILIBRE_STORAGEBOX_HOST` and
    `UTILIBRE_STORAGEBOX_USER` in the operator's environment. The checked-in SSH
    template contains placeholders, not the production account. Use the actual
@@ -74,6 +172,10 @@ Restic is BSD-2-Clause; this is the distro package, not a claim of latest upstre
    scanned `known_hosts.candidate` is **untrusted**, not automatically installed.
    Its scan targets the current private SSH configuration; a subaccount change must
    be checked independently with the live SSH prompt.
+   On a genuinely new host, the preparation script defaults the repository URI
+   to the main-account layout. When using an existing restricted account whose
+   home is the repository, restore its reviewed `repository` file containing
+   `sftp:utilibre-storagebox:.` before running Restic. Do not initialize again.
 3. In the VM terminal, run:
 
    ```sh
@@ -91,7 +193,10 @@ Restic is BSD-2-Clause; this is the distro package, not a claim of latest upstre
    decrypted without it. Keep SSH access recovery separate too. Do not paste
    either secret into chat, Git, a public source bundle, or a support ticket.
 
-## Initialize and rehearse before scheduling
+## First-time initialization only, and repeatable rehearsal
+
+**Production is already initialized. Do not run `init` on it.** The following
+initialization instructions apply only to a reviewed, genuinely new repository.
 
 After verified SSH access, inspect remote quota/free space with the native
 `df` command. Check whether `utilibre-app-backups` already exists before
@@ -175,8 +280,9 @@ sudo node deployment/storagebox/verify-download.mjs         # bounded full downl
 ```
 
 The enabled timer runs at **09:15 UTC plus up to five minutes**, after the native
-backup jobs. First scheduled activation: 11 October 2026 at 09:16:54 UTC; later
-runs retain the configured five-minute jitter. It is persistent across downtime.
+backup jobs. Following the subaccount unit reload, the next scheduled activation
+is 11 October 2026 at 09:18:26 UTC; later runs retain the configured five-minute
+jitter. It is persistent across downtime.
 The installed service passed a manual run with a configured 512 MiB memory
 ceiling, one CPU-equivalent quota, two-hour timeout, strict read-only filesystem
 except private reports/status/locks, and the existing 4 MiB/s transport caps.
@@ -277,6 +383,7 @@ free local production disk.
 
 References checked 10 October 2026:
 [Hetzner SSH/SFTP](https://docs.hetzner.com/storage/storage-box/access/access-ssh-rsync-borg/),
+[Hetzner Storage Box API](https://docs.hetzner.cloud/reference/hetzner),
 [non-destructive key installation](https://docs.hetzner.com/storage/storage-box/ssh-keys/add-ssh-keys/),
 [Restic 0.18 repository/password/SFTP instructions](https://restic.readthedocs.io/en/v0.18.0/030_preparing_a_new_repo.html),
 [native retention and pruning semantics](https://restic.readthedocs.io/en/v0.18.0/060_forget.html).

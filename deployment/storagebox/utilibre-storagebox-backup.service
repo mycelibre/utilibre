@@ -20,6 +20,9 @@ TimeoutStartSec=2h
 ProtectSystem=strict
 ProtectHome=read-only
 ReadWritePaths=/opt/utilibre/reports /opt/utilibre/storagebox/private /run/lock
+# The scheduled backup needs only the restricted account, never management or
+# legacy main-account credentials. Missing paths remain safe on a fresh host.
+InaccessiblePaths=-/opt/utilibre/storagebox-admin -/opt/utilibre/storagebox/private/hetzner-api-token
 PrivateTmp=true
 NoNewPrivileges=true
 ProtectKernelTunables=true

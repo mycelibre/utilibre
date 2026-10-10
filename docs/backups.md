@@ -50,9 +50,22 @@ Authentik database restore passed at 18:19:59 UTC; evidence:
 Copying reflects each native snapshot's recorded completion time, not every edit
 before upload. Exact 24-group scope, exclusions and checks are in the
 [Storage Box procedure](../deployment/storagebox/README.md), which also
-includes key setup, limits, recovery, coverage and retention gates. Prefer a
-restricted subaccount: a repository subfolder alone does not restrict the main
-account's key. Existing whole-VM backups remain separate and owner-confirmed.
+includes key setup, limits, recovery, coverage and retention gates. Existing
+whole-VM backups remain separate and owner-confirmed.
+
+At **21:28 UTC**, the backup client was switched to an API-created restricted
+subaccount with its own SSH key and the existing repository as its home. Four
+synthetic sibling-path attempts were denied, an allowed-directory write/read/delete
+passed, and the same 94-file download/hash and isolated Authentik restore passed
+before activation. Evidence: `storagebox-isolation-cTFO5e` and
+`storagebox-restore-0ZMZH3` under `/opt/utilibre/reports`.
+The actual hardened scheduled job then passed upload, metadata check and existing
+retention, snapshot `757bd524`; superseded same-day snapshot `4e54f792` expired,
+leaving two application snapshots. The main-account key is retained root-private
+for rollback but hidden from the daily job, as is the setup API token. The job
+needs no API token. This directory boundary is not a per-account space quota,
+immutable backup or whole-host-compromise protection. Box-wide settings and
+PrivateBin uploads remain unchanged. No live application storage was moved.
 
 Validation also repaired original-community scheduling that had been displaced
 by newer app backups, and family-chess's SQLite handle closure before manifest
