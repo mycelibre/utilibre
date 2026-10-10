@@ -87,8 +87,8 @@ item only from current evidence on the exact release revision.
 
 - [ ] A current source/config/secrets backup is stored in an encrypted failure
   domain.
-- [ ] FreshRSS database/files and PrivateBin data backup checksums pass.
-- [ ] All three additional-stack restore rehearsals pass.
+- [ ] FreshRSS database/files and configuration backup checksums pass; temporary PrivateBin content is excluded.
+- [ ] FreshRSS database/files restore rehearsals and PrivateBin empty-store configuration recovery pass.
 - [ ] Actual backup retention, operator access, account recovery, export,
   deletion, inactivity, incident, and service-retirement terms are documented
   before account requests open.

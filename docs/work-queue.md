@@ -1,5 +1,41 @@
 # Operator work queue — reconciled 10 October 2026
 
+## Temporary-content backup policy completed — 10 October, 21:59 UTC
+
+Owner confirmed that saved account work keeps recovery backups. New core
+snapshots exclude PrivateBin payloads; guest chess snapshots keep settings only.
+Existing live pastes/games, earlier backups, account data, upload limits and
+expiry settings are unchanged. The off-host selector rejects old content-bearing
+core/chess generations, preventing them from being copied again. All 24 groups
+validate with the new selection; no new off-host upload or historical deletion
+was forced during this change. The daily timer and its retention remain active.
+
+Ten archive/selector/retention tests, native empty-store PrivateBin configuration
+recovery and a fresh-schema chess multiplayer/cleanup fixture passed. Portal
+lint/typecheck/build, 118 unit tests and 22 configuration tests passed. Live
+EN/ES catalogue disclosures and guides passed keyboard/metadata/overflow checks
+in Chromium at 1280px and 390px (emulation, not a physical phone); screenshots
+were inspected. No external browser requests or script errors were observed.
+Private evidence: `/opt/utilibre/reports/temporary-backup-copy-k7JbRW/result.json`.
+
+Release commit `d744c50`, deployed image
+`public-utility-portal:0.1.0-temporary-backup-policy-20261010`; only the portal
+was recreated and is healthy. Private pre-release environment:
+`/opt/utilibre/temporary-backup-policy-mO4J77/previous.env`. Previous portal image:
+`public-utility-portal:0.1.0-wallabag-status-20261010`. To roll back a broken
+portal, select only that previous image and run
+`docker compose up -d --no-deps --no-build portal`; do not overwrite newer
+environment settings or revert backend exclusions. Its old privacy copy must
+be reconciled before treating the rollback as a finished release. Source
+publication retains its preceding archive under `/opt/utilibre/source-update-*`.
+No Caddy or upstream application image changes are needed.
+
+**Separate remaining boundary:** externally managed whole-VM snapshots may
+still include temporary files. Exclude them at that layer or separate temporary
+storage onto an excluded disk before claiming a universal no-backup policy.
+Existing mixed backups require their own exact-target retirement decision;
+they were not erased here. See [backup policy and evidence](backups.md).
+
 ## Storage Box isolation completed — 10 October, 21:28 UTC
 
 Owner-authorized API setup created one backup-only subaccount restricted to the
