@@ -1,5 +1,25 @@
 # Reader reliability: current results and one deployed correction
 
+## Bounded follow-up — 10 October, 23:15 UTC
+
+The original upstream HEADs remain unchanged for Dumb (`f5581074850bc31ed7df1ce96e8f428179bf0abb`),
+Rimgo (`d2be8e221522dfe7a06452e2002dcf6dad569d1a`) and BreezeWiki
+(`6d09507b6e7ecec0cbac4c2c4eb223c10ccc23a4`). One ordinary request per
+previously failing path still returned: Genius search **403/challenge** over
+IPv4 and IPv6; proxied Rimgo MP4 **429**, Retry-After 601; proxied BreezeWiki
+image **403**, Retry-After 600. No denial retry loop was run.
+
+IMDb's current published data-use conditions still restrict the described
+permission to its supplied datasets and personal use; no public-use permission
+for the selected internal GraphQL backend was established. LibreMDB remains
+private. These are specific unresolved upstream/access/permission conditions,
+not completed fixes. No browser-direct media, third-party relay, IP rotation,
+challenge bypass or new paid provider was introduced. Working LRCLIB at
+`lyrics.utilibre.org` is preserved.
+
+The earlier repairs and detailed evidence below remain valid; they must not be
+read as evidence that complete media retrieval now succeeds.
+
 Checked 9 October 2026. This supersedes the old description of LibreMDB as an
 unrepaired obsolete runtime. It does not turn successful article metadata into
 a playback or complete-media claim.

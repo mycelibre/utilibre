@@ -244,6 +244,38 @@ Turning logging back on reintroduces the disclosed privacy issue.
 
 ### Separate Caddy VM
 
+Cloudflare configuration was independently rechecked after the owner's
+10 October correction: all three enabled custom Skip rules have matching-request
+logging disabled, Utilibre Web Analytics is disabled (all 14 account records
+covered), and NEL is disabled. The newly added sitemap/IndexNow rule had enabled
+logging; the narrow API patch was denied with 403, so the owner changed only
+that toggle. Rules remain enabled and ntfy's skip behavior is preserved.
+The checker now treats enabled matching-request logging or analytics as a
+privacy finding/nonzero exit, separate from successful API access. Nine focused
+tests pass. Logpush remains owner-reported unused, not independently certified;
+provider-internal retention remains outside these settings.
+
+10 October follow-up: SSH access to this VM remains unavailable. The operator
+was given this native correction to **merge into the existing global block**:
+
+```caddy
+log default {
+    exclude http.log.access http.log.error
+}
+```
+
+For each Utilibre site that already configures an access `log`, replace that
+directive's writer with `output discard`. Additional named global loggers must
+be inspected independently; default exclusions do not cover them. Keep debug
+and HTTP tracing off. This is not proof that other installed modules, journal
+history or provider infrastructure retain no information. Validate the existing
+file before reload; do not replace the whole Caddyfile or its proxy settings.
+The synthetic syntax fixture is `scripts/tests/fixtures/caddy-privacy.Caddyfile`,
+checked with the locally available Caddy 2.11.7 parser. The initial strict test
+was corrected to allow Caddy's additional native per-site exclusion; both
+required exclusions and the discard writer are present.
+The running, filtered configuration below is still needed to close this item.
+
 On the Caddy edge, an operator with local access can inspect only the running
 logging configuration with the following read-only command, if its local admin
 API uses the normal loopback endpoint. It prints no raw routes, headers,

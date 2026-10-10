@@ -1,0 +1,13 @@
+# Synthetic parser fixture, not a replacement production Caddyfile.
+{
+	admin off
+	log default {
+		exclude http.log.access http.log.error
+	}
+}
+http://127.0.0.1:8181 {
+	log {
+		output discard
+	}
+	respond "Synthetic privacy configuration check"
+}

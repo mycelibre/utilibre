@@ -1,5 +1,30 @@
 # Catalog SEO verification — 9 October 2026
 
+## Search discovery follow-up — 10 October, 23:16 UTC
+
+The public robots file, sitemap and active IndexNow proof all return HTTP 200.
+The live sitemap contains **170 canonical URLs**; the public UTF-8 proof exactly
+matches `fd4a2291b63244d09920bfd28d40f718`. No spoofed crawler User-Agent was used
+to infer genuine crawler access.
+
+Authenticated Bing Webmaster API reads report the site verified and the
+sitemap **Success**, **168 URLs**, last crawled **10 October 15:58:21 UTC**.
+The difference from today's 170-entry live sitemap reflects the older fetched
+snapshot; it is not evidence of two indexing failures. `GetCrawlStats` returns
+no rows, recorded as unavailable rather than zero traffic or zero indexed URLs.
+Earlier IndexNow HTTP 200 receipts remain the notification evidence. No unchanged
+pages were resubmitted just to generate another receipt.
+
+No Google Search Console credential or authenticated connection is available
+here. Exact remaining owner check: in the verified Utilibre property, open
+**Sitemaps → https://utilibre.org/sitemap.xml**, inspect the most recent fetch,
+and use URL Inspection on a representative EN/ES canonical guide. Public HTTP
+success does not establish Google's stored sitemap state or indexing. Share
+only the status/date/error, not credentials or private account exports.
+
+Upstream listing progress is reconciled in
+[public-instance-submissions.md](public-instance-submissions.md).
+
 ## Bilingual 404 follow-up — 10 October 2026
 
 The owner requested the established visual style and dry humour on the missing-

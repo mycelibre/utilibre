@@ -1,5 +1,13 @@
 # SimpleLogin security maintenance, 9 October 2026
 
+Rechecked 10 October 2026: the latest release remains **v4.82.4**, and master
+remains `070155c702a2bc6b0fdff46594e9cc931f61aa37`. Its exact dependency file
+still selects Flask 1.1 / Werkzeug 1.0 / SQLAlchemy 1.3. No newly maintained
+compatible framework fix was available. The existing p7 private deployment and
+working public Addy alternative were preserved; no broad failed dependency
+migration was repeated or represented as a security fix. Public SimpleLogin
+activation remains specifically blocked on the legacy framework repair.
+
 Public activation remains blocked. The p7 recipe retains the p5 transport and p6 compatible-library repairs, then updates the separately pinned runtime cryptography, token, HTTP and CORS libraries. Native crypto/authentication regression checks pass. Flask, Jinja and Werkzeug remain legacy publication blockers; a reduced advisory inventory is not a security certification.
 
 The immutable upstream base is v4.82.4 (`995904d5bc08ff5f951ad794b9372cbeb04d5fb6`). The layered Dockerfile installs Gunicorn 26.2.0 and aiosmtpd 1.4.6 using the wheel hashes in `transport-requirements.txt`, then rebuilds native package metadata with the matching Gunicorn constraint. It additionally applies the exact wheel hashes in `compatible-leaves.txt`; these satisfy the existing application dependency constraints without editing them. The original upstream `uv.lock` describes the immutable base, not these explicit layers. The recipe pins its metadata build backend and runs `uv pip check`; no application/database model or migration was changed. The existing STARTTLS and logging corrections remain.

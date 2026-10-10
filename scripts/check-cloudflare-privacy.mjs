@@ -50,6 +50,20 @@ export function logpullAvailable(plan) {
   return null;
 }
 
+export function privacyFindings(rows) {
+  const findings = [];
+  const rules = rows.find(r => r.check === 'http_request_firewall_custom-entrypoint');
+  if (rules?.rules?.some(r => r.enabled && r.matchedRequestLogging === true))
+    findings.push('enabled-rule-retains-matching-requests');
+  const analytics = rows.find(r => r.check === 'web-analytics-config');
+  if (analytics && analytics.effectiveState !== 'disabled')
+    findings.push('web-analytics-not-confirmed-disabled');
+  const nel = rows.find(r => r.check === 'nel');
+  if (nel?.success && nel.value?.enabled !== false)
+    findings.push('network-error-reporting-not-confirmed-disabled');
+  return findings;
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const ownerNoLogpush = args.includes('--logpush-owner-not-used');
@@ -112,13 +126,15 @@ async function main() {
   }
   const report = {checkedAt:new Date().toISOString(),
     method:'GET-only configuration; no visitor logs, analytics reports or mutations', checks:rows,
+    privacyFindings:privacyFindings(rows),
     limits:['Settings are not a provider-wide zero-logging certification.',
       'Provider operational/security retention and separate Caddy runtime configuration remain unverified.']};
   const serialized = JSON.stringify(report, null, 2) + '\n';
   for (const secret of [token, zone, account, verified.result.id].filter(Boolean))
     assert(!serialized.includes(secret), 'Report contains a private identifier');
   if (paths[0]) await writeFile(paths[0], serialized, {flag:'wx', mode:0o600});
-  if (rows.some(r => !r.success)) process.exitCode = 2;
+  console.log(JSON.stringify({privacyFindings:report.privacyFindings}));
+  if (rows.some(r => !r.success) || report.privacyFindings.length) process.exitCode = 2;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href)

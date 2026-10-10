@@ -21,13 +21,15 @@ services:
     volumes: ["/opt/utilibre/turn-lab/turnserver.conf:/run/config/turnserver.conf:ro"]
   turn:
     <<: *turn
+    # Dedicated UID makes host-network egress filtering independent of Galene.
+    user: "4005:4005"
     profiles: [public-turn]
     restart: unless-stopped
     volumes:
       - /opt/utilibre/turn/turnserver.conf:/run/config/turnserver.conf:ro
       - /opt/utilibre/turn/certs:/certs:ro
     healthcheck:
-      test: [CMD, turnutils_stunclient, -p, "3478", "${UTILIBRE_TURN_BIND_IP:-127.0.0.1}"]
+      test: [CMD, turnutils_stunclient, -p, "3479", "${UTILIBRE_TURN_BIND_IP:-10.10.1.43}"]
       interval: 60s
       timeout: 5s
       retries: 3

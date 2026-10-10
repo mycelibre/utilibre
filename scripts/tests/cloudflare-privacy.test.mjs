@@ -1,11 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {summarizeSite, readAnalyticsPages, logpullAvailable} from '../check-cloudflare-privacy.mjs';
+import {summarizeSite, readAnalyticsPages, logpullAvailable, privacyFindings} from '../check-cloudflare-privacy.mjs';
 import {definition, withoutLogging} from '../disable-cloudflare-skip-logging.mjs';
 
 const site = (id, enabled = false, zone = 'utilibre.org') => ({site_tag:id,
   auto_install:true, ruleset:{zone_name:zone, enabled, lite:false}});
 const page = (result, total) => ({status:200, data:{success:true, result, result_info:{total_count:total}}});
+
+test('successful API access does not mean the privacy settings passed', () => {
+  assert.deepEqual(privacyFindings([{check:'http_request_firewall_custom-entrypoint',success:true,
+    rules:[{enabled:true,matchedRequestLogging:true}]}]), ['enabled-rule-retains-matching-requests']);
+  assert.deepEqual(privacyFindings([{check:'http_request_firewall_custom-entrypoint',success:true,
+    rules:[{enabled:true,matchedRequestLogging:false},{enabled:false,matchedRequestLogging:true}]}]), []);
+  assert.deepEqual(privacyFindings([{check:'web-analytics-config',success:true,effectiveState:'enabled'},
+    {check:'nel',success:true,value:{enabled:true}}]),
+  ['web-analytics-not-confirmed-disabled','network-error-reporting-not-confirmed-disabled']);
+});
 
 test('effective enablement is nested, separate from the retained auto-install mode', () => {
   assert.deepEqual(summarizeSite({...site('one'), enabled:true}), {enabled:false, autoInstall:true, lite:false});

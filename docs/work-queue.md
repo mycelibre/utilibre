@@ -1,5 +1,33 @@
 # Operator work queue — reconciled 10 October 2026
 
+## Requested items 2, 4, 5 and 6 — 10 October, 23:22 UTC
+
+This is the current disposition of those four items, not a claim that upstream
+or external-access dependencies have disappeared.
+
+| Requested item | Implemented / independently checked | Exact remaining dependency |
+| --- | --- | --- |
+| 2 — PairDrop TURN | Fixed the old Galene port collision and coturn implicit private-address exception. Prepared an independent capped relay, UID firewall, certificate copy/renewal hook, native RTC override and manual external test workflow. Local certificate/authentication/private-peer/quota tests pass; loopback forced relay and the live direct PairDrop file journey pass. | Router/NAT forwarding of 3479 TCP/UDP, 5350 TCP and 49700–49731 UDP to 10.10.1.43, then actual external UDP/TCP/TLS file tests. Public PairDrop is still direct-only; no relay-ready claim or catalogue change. |
+| 4 — Blocked services | Original upstream revisions rechecked; one bounded failing-media/search request per known path. Working LRCLIB and Addy preserved. SimpleLogin's latest release/master still contain the legacy framework. | Genius IPv4/IPv6 403, BreezeWiki image 403, Rimgo media 429; LibreMDB needs permission for its selected data backend; SimpleLogin needs a maintained compatible framework repair. None is closed as fixed. |
+| 5 — Search/listings | Sitemap/proof/robots HTTP 200; 170 live sitemap entries. Bing API says verified and successful older 168-URL fetch; no crawl-stat rows available. ntfy merged; BiblioReads accepted; DeGoog/BiblioReads present in LibRedirect generated data. Existing requests preserved. | Google Search Console authenticated status; Codeberg/Gitfield write access; PrivateBin directory refresh; upstream review of remaining submitted requests. No duplicate submission or unchanged IndexNow notification. |
+| 6 — Privacy cleanup | Owner disabled logging on the new sitemap skip rule; independently confirmed all three Skip rules, Web Analytics and NEL off. Corrected checker catches policy violations, with nine passing tests. Caddy native logging snippet validated locally and supplied. | Running separate-Caddy configuration still inaccessible. Both GitHub Actions secret listing and the exact temporary-secret deletion return 403; MUMBLE_TEST_SERVER_PASSWORD removal awaits operator confirmation. Live Mumble password is not changed. |
+
+Current relay configuration and rollback: [PairDrop relay](../deployment/community/turn/README.md).
+Listing URLs/results: [submissions](public-instance-submissions.md).
+Detailed blockers: [readers](frontend-reliability-2026-10-09.md) and
+[SimpleLogin](../deployment/simplelogin/security/README.md).
+Search evidence: [SEO follow-up](seo-catalog-2026-10-09.md).
+Caddy filtered read-only verification: [privacy](privacy.md#separate-caddy-vm).
+GitHub secret location: https://github.com/mycelibre/utilibre/settings/secrets/actions .
+
+No portal build, user-data migration, registration change, public listing message,
+new application dependency, third-party relay or Caddy remote deployment was
+performed. The public application configuration is unchanged. Both separate
+relay test containers were stopped after testing; only the disposable review
+container auto-removed itself, with no user-data deletion. Production activation
+remains explicit. Sanitized Cloudflare evidence is retained privately at
+`/opt/utilibre/reports/cloudflare-privacy-20261010-final.json`.
+
 ## Disk expansion and PrivateBin uploads — 10 October, 22:22 UTC
 
 Online root expansion completed using the existing 150 GiB virtual disk:

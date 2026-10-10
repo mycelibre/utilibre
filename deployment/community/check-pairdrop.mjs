@@ -1,15 +1,33 @@
 // Two isolated browsers, real public HTTPS/WebSocket signaling and WebRTC data.
-// Only a synthetic file is sent; no WebSocket file fallback or TURN is enabled.
+// Only a synthetic file is sent. Default checks direct mode; explicit relay
+// mode is for the activated option from an external authorized runner.
 import assert from 'node:assert/strict';
-import { chromium } from '../../portal/node_modules/playwright-core/index.mjs';
+import {createRequire} from 'node:module';
+const require = createRequire(process.env.PAIRDROP_PLAYWRIGHT_PACKAGE || new URL('../../portal/package.json', import.meta.url));
+const {chromium} = require('playwright-core');
 
 const origin = 'https://drop.utilibre.org';
-const browser = await chromium.launch();
+const relay = process.env.PAIRDROP_FORCE_RELAY || '';
+assert(['','udp','tcp','tls'].includes(relay), 'Unsupported relay transport');
+const browser = await chromium.launch(process.env.PAIRDROP_CHROME ? {executablePath:process.env.PAIRDROP_CHROME} : {});
 const payload = Buffer.from('Utilibre synthetic file-transfer check.\nSin datos personales.\n');
 try {
   const sender = await browser.newContext({ locale: 'en-US' });
-  await sender.addInitScript(() => { window.syntheticPeerConnections = []; const Native = window.RTCPeerConnection; window.RTCPeerConnection = class extends Native { constructor(...args) { super(...args); window.syntheticPeerConnections.push(this); } }; });
   const receiver = await browser.newContext({ locale: 'es-GT', acceptDownloads: true });
+  for (const context of [sender,receiver]) await context.addInitScript(relay => {
+    window.syntheticPeerConnections = [];
+    const Native = window.RTCPeerConnection;
+    window.RTCPeerConnection = class extends Native {
+      constructor(config, ...rest) {
+        if (relay) {
+          config = {...config, iceTransportPolicy:'relay', iceServers:config.iceServers.map(server => ({...server,
+            urls:[server.urls].flat().filter(url => relay === 'tls' ? url.startsWith('turns:') : url.startsWith('turn:') && url.endsWith(`transport=${relay}`)),
+          })).filter(server => server.urls.length)};
+        }
+        super(config, ...rest); window.syntheticPeerConnections.push(this);
+      }
+    };
+  }, relay);
   const pages = await Promise.all([sender.newPage(), receiver.newPage()]);
   const errors = [], external = new Set();
   for (const page of pages) {
@@ -39,13 +57,13 @@ try {
   const modes = await pages[0].evaluate(async () => {
     const modes=[]; for(const peer of window.syntheticPeerConnections) {const stats=await peer.getStats();for(const r of stats.values())if(r.type==='candidate-pair'&&r.state==='succeeded'&&r.nominated)modes.push(stats.get(r.localCandidateId)?.candidateType)}return modes;
   });
-  assert(modes.length>0);assert(modes.every(m=>['host','srflx','prflx'].includes(m)),'Expected direct, not relay candidates');
+  assert(modes.length>0);assert(modes.every(m=>relay ? m === 'relay' : ['host','srflx','prflx'].includes(m)),'Selected ICE mode did not match the requested test');
   // Chromium denies this optional screen-awake request in a background tab.
   // It does not stop the verified transfer; do not hide any other JS error.
   assert.deepEqual(errors.filter(error => error !== 'Wake Lock permission request denied'), []);
   assert.deepEqual([...external], []);
-  console.log('PairDrop public HTTPS: discovery, approval and exact-byte WebRTC transfer passed; selected direct mode confirmed through WebRTC stats.');
-  console.log('Browsers share this test machine; restrictive/different NAT networks remain untested.');
+  console.log(`PairDrop public HTTPS: discovery, approval and exact-byte WebRTC transfer passed; selected ${relay ? `relay (${relay})` : 'direct'} mode confirmed through WebRTC stats.`);
+  console.log('Browsers share this test machine; physical-device and different-client-network behavior are not established by this check.');
 } catch (error) {
   // Avoid retaining room identifiers, browser state or visitor content in logs.
   console.error('PairDrop synthetic workflow failed:', String(error.message).replace(/https?:\/\/\S+/g, '[URL]').slice(0,700));

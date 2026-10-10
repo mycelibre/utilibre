@@ -1,5 +1,14 @@
 # Minimal-glue feature delivery
 
+**10 October relay reconciliation:** the separate PairDrop option now uses
+3479 TCP/UDP, 5350 TCP TLS and 49700–49731 UDP, avoiding the active Galene relay.
+Private-peer protections, local TLS/auth/quota checks and an independent renewal
+hook are complete. Public NAT and external forced-relay verification remain
+pending; live PairDrop is still direct-only. The current authoritative recipe
+and rollback are [deployment/community/turn/README.md](../deployment/community/turn/README.md).
+Historical 3478/5349 PairDrop instructions below are superseded, not instructions
+to replace or broaden Galene's relay.
+
 Baseline: 2026-10-07; repository `1603ee1`. Preserve unrelated untracked
 exports/artifacts. No additional listings, registration changes, or analytics.
 Production portal publishing is already authorized; Caddy remains on the
