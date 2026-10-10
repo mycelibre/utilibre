@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { URL } from 'node:url';
 import { practicalGuides, practicalGuidePath } from '../src/pages/practical-guide-data.ts';
+import { scenarioCollections, collectionPath } from '../src/pages/scenario-collection-data.ts';
 
 export const PUBLIC_ORIGIN = 'https://utilibre.org';
 export const MAX_NOTIFICATION_URLS = 30;
@@ -26,6 +27,7 @@ export const publicSeoPaths = Object.freeze([
   '/en/my-utilibre', '/es/mi-utilibre',
   '/en/offline-tools', '/es/herramientas-sin-conexion',
   ...practicalGuides.flatMap((guide) => ['en', 'es'].map((language) => practicalGuidePath(guide.id, language))),
+  ...scenarioCollections.flatMap(collection => ['en', 'es'].map(language => collectionPath(collection.id, language))),
 ]);
 const publicPaths = new Set(publicSeoPaths);
 

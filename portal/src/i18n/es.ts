@@ -248,7 +248,7 @@ export const es: Record<keyof typeof EnglishDictionary, string> = {
   "acceptable.list": "No automatices extracciones masivas, no eludás límites técnicos, no usés el servicio como proxy abierto, no sondeés redes internas, no explotés cuentas ni datos de otras personas y no interrumpás este servicio ni los de terceros. La investigación de seguridad debe seguir nuestra política de seguridad. No usés estos servicios para crear o distribuir contenido ilegal o abusivo.",
   'acceptable.contact': 'Reportar abuso o un asunto legal',
   'support.title': 'Apoyá a Utilibre',
-  'support.body': 'Si querés apoyar a Utilibre, las donaciones ayudan a cubrir el alojamiento y el mantenimiento.',
+  'support.body': 'Utilibre es un proyecto voluntario: una pequeña forma de devolver algo. Agradecemos los aportes, que ayudan con el alojamiento y el mantenimiento, pero usar las herramientas nunca depende de donar.',
   'support.conditions': 'Las donaciones son totalmente opcionales. No habilitan funciones, aumentan límites, dan prioridad ni cambian el trato de nadie.',
   'support.link': 'Donar mediante Liberapay',
   'support.privacy': 'Se abrirá Liberapay, un servicio externo de donaciones. Liberapay y sus proveedores de pago gestionan la donación según sus propias condiciones de privacidad. Utilibre no carga scripts de pago.',

@@ -1,9 +1,10 @@
 import { catalog } from './catalog/catalog.ts';
 import type { Language } from './i18n/index.ts';
 import { practicalGuides, practicalGuidePath } from './pages/practical-guide-data.ts';
+import { scenarioCollections, collectionPath } from './pages/scenario-collection-data.ts';
 
 export type StaticPage = 'home' | 'services' | 'tools' | 'about' | 'transparency' | 'privacy' | 'security' | 'your-data' | 'acceptable' | 'support' | 'status' | 'software' | 'labels' | 'pdf' | 'qr' | 'guides' | 'my' | 'offline' | 'not-found';
-export interface Route { language: Language; page: StaticPage | 'tool' | 'guide'; toolId?: string; guideId?: string; }
+export interface Route { language: Language; page: StaticPage | 'tool' | 'guide' | 'collection'; toolId?: string; guideId?: string; collectionId?: string; }
 
 const staticPaths: Record<Exclude<StaticPage, 'not-found'>, Record<Language, string>> = {
   home: { en: '', es: '' },
@@ -31,6 +32,8 @@ export function parseRoute(pathname: string): Route | null {
   const language = parts.shift();
   if (language !== 'en' && language !== 'es') return null;
   const rest = parts.join('/');
+  const collection = scenarioCollections.find(item => item.paths[language] === rest);
+  if (collection) return { language, page: 'collection', collectionId: collection.id };
   const guide = practicalGuides.find((item) => item.paths[language] === rest);
   if (guide) return { language, page: 'guide', guideId: guide.id };
   for (const [page, paths] of Object.entries(staticPaths)) {
@@ -57,6 +60,7 @@ export function toolPath(id: string, language: Language): string {
 }
 
 export function translatedPath(route: Route, language: Language): string {
+  if (route.page === 'collection') return collectionPath(route.collectionId || '', language);
   if (route.page === 'guide') return practicalGuidePath(route.guideId || '', language);
   if (route.page === 'tool' && route.toolId) return toolPath(route.toolId, language);
   if (route.page === 'tool') return routePath('tools', language);

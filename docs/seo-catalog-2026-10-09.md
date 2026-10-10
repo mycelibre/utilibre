@@ -1,5 +1,66 @@
 # Catalog SEO verification — 9 October 2026
 
+## Fresh research and live review — 10 October 2026
+
+**Assessment:** the technical and useful-content foundation is sound; actual
+indexing, visibility, clicks and citations remain unmeasured without the search
+accounts. No percentage SEO gain or ranking score can be justified. The latest
+collection/guide release and its bounded native workflows are recorded in
+[the UX follow-up](ux-friction-2026-10-10.md#everyday-collections-and-easier-guide-entry--october-10).
+
+| Area | Observed now | Assessment / next action |
+| --- | --- | --- |
+| Discovery and HTML | All 168 canonical sitemap URLs passed the read-only audit: 200, nonempty server-rendered content, distinct titles/descriptions, one canonical, reciprocal EN/ES/x-default, matching WebPage JSON-LD, strict CSP/no cookies. Both guide indexes expose complete links before JavaScript. | Applied. A successful request from this host is not verified Googlebot/Bingbot access or indexing. |
+| URL boundaries | Collection trailing slash → 308 canonical; invented path → genuine 404/noindex; search/filter results → noindex,follow; status → noindex,nofollow. Public sitemap excludes those URLs and private app content. | Applied; preserve account protection and noindex boundaries. |
+| People-first content | Three distinct situations, 3–4 canonical tools each, bilingual fictional editable examples, checked native outputs, constraints and explicit saving. Existing about/source/privacy/help links and AI-assistance disclosure remain. | Stronger reason to visit than a list of app names. Do not add generic guides merely to increase URL count. Existing guide maintenance remains necessary. |
+| Crawler preferences | Live Cloudflare-managed robots permits generic crawling, explicitly blocks several training, AI-search and agent crawlers, including OAI-SearchBot and PerplexityBot. Googlebot and Bingbot are not explicitly disallowed in the observed file. | Preserve policy. It restricts AI discovery; no claim of full AI-search access. Effective Google Search generative-AI account controls are unknown. The web research tool also reported the site's robots exclusion, which is not proof of absence from ordinary search indexes. |
+| Audit reliability | Old regex treated any named-bot `Disallow: /` as a universal ban. | Corrected operator-only checker to examine wildcard root rules; four focused tests plus eight notification safety tests pass. It is not a complete bot/WAF-access validator. No robots or Cloudflare setting changed. |
+| IndexNow | After the 168-page gate, one selected notification for six new collection URLs plus EN/ES home/index pages returned HTTP 403. Public root proof file is 200, text/plain, 32 bytes and exactly matches the submitted key from this host. | **Unresolved engine-side key validation.** Official protocol defines 403 as invalid/unavailable proof. Check validation and any edge challenge for the exact proof URL; do not claim success or repeatedly submit. No cause established from the response alone. |
+| Mobile loading | Three clean-profile runs per URL under the conditions below. Home median LCP 2.772s; documents collection 3.080s. | Worth improving. Shared client bundle is ~1,009 KB minified/~326 KB gzip. Investigate deferring non-route guide/catalog data and avoiding unnecessary initial rerender, preserving SSR and text-fragment behavior. This review does not implement a speculative rewrite. |
+| Structured data | WebSite/WebPage matches visible content; no fabricated reviews/ratings. | Appropriate baseline, not a rich-result guarantee. Software-app rich-result requirements include a genuine rating/review; do not fabricate one to qualify. Breadcrumbs are optional, not the priority over functionality/loading. |
+| Freshness | Sitemap intentionally omits lastmod; substantive guide review dates are not refreshed merely by builds. | Valid. Accurate per-page significant-change dates could help later; false build timestamps would be worse. No priority/changefreq busywork. |
+| Measurement and distribution | No Search Console/Bing account data in this environment; no visitor tracking introduced. Three finished EN/ES outreach drafts prepared, nothing sent. | Obtain account exports/access or inspect them as owner. Use impressions/clicks by relevant pages/queries, not a visitor analytics install. Qualitative feedback and small genuine sharing next; no backlink quota or forecast. |
+
+### Bounded mobile laboratory observations
+
+Linux Chromium, Pixel 7 emulation at 390×844, fresh browser context per run,
+4× CPU slowdown, 150 ms configured latency, 1.6 Mbps download, three runs per
+URL, settling 3.5 seconds after load. Browser PerformanceObserver values, **not
+Lighthouse scores, real-user measurements, INP or a Core Web Vitals pass**.
+
+| URL | LCP milliseconds (three runs) | Observed CLS | Encoded response bytes (range) |
+| --- | --- | --- | --- |
+| `/es/` | 2820 / 2772 / 2748 | 0.00055 | 454,053–454,092 |
+| `/es/colecciones/documentos-y-tramites` | 3076 / 3080 / 3092 | 0.02924 | 524,402–524,417 |
+
+No horizontal overflow in these viewports; one or two long tasks observed per
+load. Shared infrastructure, browser emulation and CDN state limit generalization.
+Google's good targets remain LCP ≤2.5s, INP ≤200ms, CLS ≤0.1 at the 75th percentile
+separately by device type. This sample supplies neither that population nor INP.
+
+### Current primary-source log and decisions
+
+Retrieved October 10, 2026; no competitor claims or search-volume estimates.
+
+- [Google SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide): descriptive titles, useful content, links, crawl access and proportionate promotion. Existing architecture satisfies those basics; none guarantee indexing.
+- [Helpful, reliable content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content): intended audience, first-hand evidence and task completion. Fictional samples/native workflow checks supply concrete value; no invented popularity or experience.
+- [October documentation updates](https://developers.google.com/search/updates) and [AI-content guidance, updated October 1](https://developers.google.com/search/docs/fundamentals/using-gen-ai-content): fact-check visible copy and metadata; mass AI pages without added value risk scaled-content abuse. October 8's UGC-data program is not an integration needed for this static tool portal.
+- [Google generative-AI optimization](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide): no special llms.txt, compulsory chunking, AI-only writing style or special schema needed. Do not add these as ranking tricks. Search-account settings/reports still need owner access.
+- [Robots grouping rules](https://developers.google.com/crawling/docs/robots-txt/robots-txt-spec): named-agent groups are not blanket site rules; equal wildcard groups combine. Preserve deliberate exclusions rather than deleting them for a green checker.
+- [Sitemaps](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap) and [localized versions](https://developers.google.com/search/docs/specialty/international/localized-versions): canonical inventory, accurate significant-change lastmod when available, reciprocal language annotations. Current URLs and output checked, dates not invented.
+- [SoftwareApplication feature requirements](https://developers.google.com/search/docs/appearance/structured-data/software-app): richer eligibility is distinct from generic Schema.org validity; real review/rating evidence would be necessary.
+- [Web Vitals](https://web.dev/articles/vitals): current thresholds and field percentile; keep lab evidence separate.
+- [Bing Webmaster Guidelines](https://www.bing.com/webmasters/help/bing-webmaster-guidelines-30fba23a): canonical sitemap, crawlable internal links, accurate freshness and meaningful IndexNow updates. Search-indexed official text was available; the direct documentation shell did not expose its full body to the research tool.
+- [IndexNow protocol](https://www.indexnow.org/documentation): 403 means key verification failed; 202 would mean pending verification, not indexing. Today's notification failed and is recorded as such.
+
+Priority after this release: resolve notification proof validation; inspect real
+Search Console/Bing indexing and page/query reports; then reduce measured mobile
+loading cost. AI crawler policy is a separate owner preference, not permission to
+weaken privacy. No mass content expansion, tracker, new paid service or external
+promotion was added during this research review.
+
+## Earlier checkpoints (preserved)
+
 The additions3 release is deployed. The live portal now has 102 catalog
 records, including shortcuts, status and withdrawn entries; this is not a count
 of independent applications. Its 65 practical guides have English and Spanish

@@ -245,7 +245,7 @@ export const en = {
   "acceptable.list": "Do not automate bulk scraping, bypass technical limits, use the service as an open proxy, probe internal networks, exploit other people’s accounts or data, or disrupt this or upstream services. Security research must follow our security policy. Do not use these services to create or distribute illegal or abusive content.",
   'acceptable.contact': 'Report abuse or a legal concern',
   'support.title': 'Support Utilibre',
-  'support.body': 'If you would like to support Utilibre, donations help cover hosting and maintenance.',
+  'support.body': 'Utilibre is a voluntary project—a small way to give back. Donations are appreciated and help with hosting and maintenance, but using the tools never depends on donating.',
   'support.conditions': 'Donations are entirely optional. They do not unlock features, raise limits, create priority, or change how anyone is treated.',
   'support.link': 'Donate via Liberapay',
   'support.privacy': 'This opens Liberapay, an external donation service. Liberapay and its payment providers handle the donation under their own privacy terms. No payment script loads on Utilibre.',

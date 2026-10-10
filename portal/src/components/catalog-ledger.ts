@@ -148,6 +148,14 @@ export function renderCatalogRow(
     if (shortcuts.childElementCount) content.append(shortcuts);
   }
   if (guide) { const a = element('a', 'catalog-guide-link', `${language === 'es' ? 'Guía' : 'Guide'}: ${guide.copy[language].title}`); a.href = practicalGuidePath(guide.id, language); details.append(a); }
+  const exampleGuides: Record<string, string> = { bentopdf: 'scan', minipaint: 'image', 'omni-compress-image': 'image', drawio: 'starting-projects', excalidraw: 'starting-projects', markmap: 'mindmap', rawgraphs: 'chart', pairdrop: 'transfer' };
+  const exampleGuide = practicalGuides.find(item => item.id === exampleGuides[entry.id]);
+  if (launch && exampleGuide?.samples.length) {
+    const example = element('a', 'catalog-example-link', language === 'es' ? 'Probalo con un ejemplo' : 'Try an example');
+    example.href = `${practicalGuidePath(exampleGuide.id, language)}#practice`;
+    example.setAttribute('aria-label', `${example.textContent}: ${name}`);
+    content.append(example);
+  }
   if (entry.bestFor) details.append(element('p', 'catalog-ledger-best-for', `${t('home.catalog.bestFor')}: ${entry.bestFor[language]}`));
   if (entry.help) details.append(element('p', '', localized(entry.help, language)));
   if (entry.accountAccess === 'invite-required') {

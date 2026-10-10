@@ -16,8 +16,12 @@ import { practicalGuides } from './practical-guide-data';
 import { privacyAnswers } from '../catalog/guidance';
 import { renderMyUtilibre } from './my-utilibre';
 import { renderOfflineTools } from './offline-tools';
+import { renderScenarioCollection, renderCollectionLinks } from './scenario-collections';
+import { scenarioCollections } from './scenario-collection-data';
 
 export async function renderPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): Promise<HTMLElement> {
+  if (route.page === 'guides' || route.page === 'guide') return renderPracticalGuides(route.language, config, route.guideId, true);
+  if (route.page === 'collection') return renderScenarioCollection(route.collectionId || '', route.language, config, true);
   if (route.page === 'my') return renderMyUtilibre(route.language, config, true);
   if (route.page === 'tool' && route.toolId) return renderToolPage(route.toolId, route.language, config, t);
   if (route.page === 'status') return renderStatus(route.language, config, t);
@@ -27,6 +31,7 @@ export async function renderPage(route: Route, config: PublicConfig, t: Translat
 // Synchronous public content is shared by the browser and server renderer.
 // No health probes, visitor data, tool code, or third-party fetches run here.
 export function renderStaticPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): HTMLElement {
+  if (route.page === 'collection') return renderScenarioCollection(route.collectionId || '', route.language, config);
   if (route.page === 'offline') return renderOfflineTools(route.language, config);
   if (route.page === 'my') return renderMyUtilibre(route.language, config);
   if (route.page === 'guides' || route.page === 'guide') return renderPracticalGuides(route.language, config, route.guideId);
@@ -158,7 +163,9 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
     clear.href = catalogUrl(language, {});
     catalogSection.append(clear);
   }
-  append(workspace, finder, views, accessNote, catalogSection);
+  workspace.append(finder);
+  if (!state.query && !state.group && state.view === 'featured') workspace.append(renderCollectionLinks(language));
+  append(workspace, views, accessNote, catalogSection);
 
   append(layout, index, workspace);
   if (config.supportUrl) {
@@ -358,6 +365,28 @@ function renderSupport(language: Language, config: PublicConfig, t: Translate): 
   const upstreamLink = element('a', 'text-link', t('support.upstream.link'));
   upstreamLink.href = routePath('software', language);
   main.append(infoSection(t('support.upstream.title'), t('support.upstream.body'), upstreamLink));
+  const funding = element('details', 'section funding-details');
+  funding.append(element('summary', '', language === 'es' ? 'Sobre los costos de alojamiento' : 'About the hosting costs'), element('p', '', language === 'es'
+    ? 'El servidor y los servicios compartidos cuestan aproximadamente $300 al mes. Utilibre usa una máquina virtual y algunos servicios de apoyo, no todo el servidor. Los aportes ayudan a sostener esa infraestructura compartida.'
+    : 'The server and shared services cost about $300 a month. Utilibre uses one virtual machine and a few supporting services, not the whole server. Contributions help sustain that shared infrastructure.'));
+  funding.id = 'funding';
+  funding.append(element('p', '', language === 'es'
+    ? 'El costo es una estimación del operador para el conjunto, no una factura atribuida por completo a Utilibre. Su parte todavía no se calculó por separado. Liberapay muestra la información de los aportes; no usamos contadores ni metas de recaudación en este sitio.'
+    : 'The cost is the operator’s estimate for the whole setup, not an expense attributed entirely to Utilibre. Its share has not been calculated separately. Contribution information is available on Liberapay; this site has no fundraising counters or targets.'));
+  main.append(funding);
+  const maintenance = infoSection(language === 'es' ? 'Mejoras recientes' : 'Recent improvements', language === 'es' ? 'Octubre de 2026 · Cambios para que sea más fácil terminar una tarea.' : 'October 2026 · Changes that make it easier to finish a task.');
+  maintenance.id = 'maintenance';
+  const notes = element('ul');
+  for (const text of language === 'es' ? [
+    'La búsqueda prioriza el nombre de la tarea: PDF y OCR aparece antes que menciones de PDF en otros formatos de exportación.',
+    'Podés guardar herramientas desde el catálogo y buscar dentro del selector de Mi Utilibre.',
+    'Las guías explican cómo guardar el PDF desde el diálogo de impresión; los controles sin conexión del QR siguen el idioma elegido.',
+  ] : [
+    'Search prioritizes task names: PDF and OCR appears before incidental PDF export mentions.',
+    'You can save tools from the catalogue and search the My Utilibre picker.',
+    'Guides explain saving a PDF from the print dialog; QR offline controls follow the selected language.',
+  ]) notes.append(element('li', '', text));
+  maintenance.append(notes); main.append(maintenance);
   const contributions = infoSection(t('support.contribute.title'), t('support.contribute.body'));
   const contributionLinks = element('div', 'guide-links');
   contributions.append(contributionLinks);
@@ -671,6 +700,10 @@ function externalLink(href: string, text: string, className = 'text-link'): HTML
 }
 
 export function pageMeta(route: Route, config: PublicConfig, t: Translate): { title: string; description: string; robots: string } {
+  if (route.page === 'collection') {
+    const collection = scenarioCollections.find(item => item.id === route.collectionId);
+    return { title: collection?.title[route.language] || t('common.notFound.title'), description: collection?.description[route.language] || '', robots: collection ? 'index,follow' : 'noindex,nofollow' };
+  }
   if (route.page === 'guide') {
     const copy = practicalGuides.find((guide) => guide.id === route.guideId)?.copy[route.language];
     return { title: copy?.title || t('common.notFound.title'), description: copy?.intro || '', robots: copy ? 'index,follow' : 'noindex,nofollow' };

@@ -19,7 +19,12 @@ export function pageSeo(route: Route, config: PublicConfig, search = '', fallbac
     'x-default': new URL(translatedPath(route, config.defaultLanguage), origin).href,
   } : {};
   const title = `${meta.title} | ${config.projectName}`;
-  const image = origin ? `${origin}/brand/png/icon-512.png` : '';
+  const image = origin ? route.page === 'collection'
+    ? `${origin}/previews/collection-${route.collectionId}-${route.language}.png`
+    : `${origin}/brand/png/icon-512.png` : '';
+  const imageAlt = route.page === 'collection' ? `${meta.title} · ${route.language === 'es' ? 'ejemplo ficticio de práctica' : 'fictional practice example'}`
+    : route.language === 'es' ? `Logo de ${config.projectName}` : `${config.projectName} logo`;
+  const twitterCard = route.page === 'collection' ? 'summary_large_image' : 'summary';
   const structuredData = robots === 'index,follow' && canonical ? {
     '@context': 'https://schema.org',
     '@graph': [
@@ -27,7 +32,7 @@ export function pageSeo(route: Route, config: PublicConfig, search = '', fallbac
       { '@type': 'WebPage', '@id': canonical, url: canonical, name: title, description: meta.description, inLanguage: route.language, isPartOf: { '@id': `${origin}/#website` } },
     ],
   } : null;
-  return { ...meta, title, robots, canonical, alternates, image, structuredData };
+  return { ...meta, title, robots, canonical, alternates, image, imageAlt, twitterCard, structuredData };
 }
 
 // Safe even when an operator-provided name contains markup or script endings.

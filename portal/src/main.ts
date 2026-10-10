@@ -156,8 +156,8 @@ function updateMetadata(currentRoute: Route): void {
   setPropertyMeta('og:site_name', config.projectName);
   setPropertyMeta('og:url', meta.canonical);
   setPropertyMeta('og:image', meta.image);
-  setPropertyMeta('og:image:alt', currentRoute.language === 'es' ? `Logo de ${config.projectName}` : `${config.projectName} logo`);
-  setMeta('twitter:card', 'summary');
+  setPropertyMeta('og:image:alt', meta.imageAlt);
+  setMeta('twitter:card', meta.twitterCard);
   if (meta.canonical) setCanonical(meta.canonical);
   else document.querySelector('link[rel="canonical"]')?.remove();
   for (const existing of document.head.querySelectorAll('link[rel="alternate"][hreflang]')) existing.remove();

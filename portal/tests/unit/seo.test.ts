@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { parseHTML } from 'linkedom';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { practicalGuides, practicalGuidePath } from '../../src/pages/practical-guide-data';
+import { scenarioCollections, collectionPath } from '../../src/pages/scenario-collection-data';
 
 const base = 'http://127.0.0.1:43897';
 const origin = 'https://public.example';
@@ -69,9 +70,18 @@ describe('public SEO without tracking or private-content indexing', () => {
     expect(response.status).toBe(200);
     const sitemap = await response.text();
     const urls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]!);
-    expect(urls).toHaveLength(30 + practicalGuides.length * 2);
+    expect(urls).toHaveLength(30 + (practicalGuides.length + scenarioCollections.length) * 2);
     for (const guide of practicalGuides) for (const language of ['en', 'es'] as const) {
       expect(urls, guide.id).toContain(origin + practicalGuidePath(guide.id, language));
+    }
+    for (const collection of scenarioCollections) for (const language of ['en', 'es'] as const) {
+      expect(urls).toContain(origin + collectionPath(collection.id, language));
+      const page = await fetch(base + collectionPath(collection.id, language));
+      const { document } = parseHTML(await page.text());
+      expect(document.querySelector('meta[property="og:image"]')?.getAttribute('content')).toBe(`${origin}/previews/collection-${collection.id}-${language}.png`);
+      const image = await fetch(`${base}/previews/collection-${collection.id}-${language}.png`);
+      expect(image.status).toBe(200);
+      expect(image.headers.get('content-type')).toContain('image/png');
     }
     for (const language of ['en', 'es']) for (const route of ['security', 'your-data']) expect(urls).toContain(`${origin}/${language}/${route}`);
     expect(urls).toContain('https://public.example/en/guides/shared-whiteboard');

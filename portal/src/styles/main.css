@@ -94,6 +94,9 @@ body {
 
 ::selection { color: var(--paper); background: var(--rust); }
 
+/* Preserve native hidden states when a component defines display:grid/flex. */
+[hidden]:not([hidden='until-found']) { display: none !important; }
+
 a {
   color: inherit;
   text-decoration-thickness: 1px;
@@ -843,6 +846,52 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 .guide-index { max-width: 75ch; padding-inline-start: 1.5rem; }
 .guide-index li { padding-block: 1rem; border-block-end: 1px solid var(--rule); }
 .guide-index a { font-size: var(--type-title); font-weight: 600; }
+.collection-links-list, .guide-featured-list, .collection-tools-list { list-style: none; padding: 0; margin-block: 1rem; }
+.collection-links-list, .guide-featured-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 1rem 2rem; }
+.collection-links-list > li, .guide-featured-list > li { min-width: 0; border-block-end: 1px solid var(--rule); padding-block-end: 0.75rem; }
+.collection-links-list a, .guide-featured-list a { display: inline-block; font-weight: 700; padding-block: 0.35rem; }
+.collection-links-list p, .guide-featured-list p { margin-block: 0.25rem; font-size: var(--type-ui); }
+.ledger-workspace > .collection-links { padding-block: 0.85rem; margin: 0; max-width: none; }
+.ledger-workspace > .collection-links h2 { font-size: var(--type-title); margin-block: 0 0.4rem; }
+.ledger-workspace .collection-links-list { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-block: 0; gap: 0.5rem 1rem; }
+.ledger-workspace .collection-links-list p { display: none; }
+.ledger-workspace .collection-links-list > li { border: 0; padding: 0; }
+.guide-index-search { max-width: 48rem; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.65rem; margin-block: 1.4rem; }
+.guide-index-search label, .guide-index-search p { grid-column: 1 / -1; margin: 0; }
+.guide-index-search input { min-width: 0; }
+.guide-index-search [role='status'] { font-weight: 700; }
+.task-guide:has(.guide-featured) .page-header h1 { font-size: var(--type-headline); }
+.guide-featured.prose, .collection-links.prose { max-width: none; }
+.guide-result-example, .collection-preview { margin: 1rem 0; padding-block: 0.75rem; border-block: 1px solid var(--rule); }
+.guide-result-example img, .collection-preview img { width: min(100%, 24rem); height: auto; display: block; }
+.guide-result-example figcaption, .collection-preview figcaption { font-size: var(--type-small); color: var(--ink-soft); margin-block: 0.6rem; max-width: 65ch; }
+.guide-result-example p { margin-block: 0.5rem; }
+.guide-quick-start .guide-actions, .scenario-collection .guide-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-block: 1rem; }
+.guide-quick-start h3 { font-size: var(--type-title); margin-block: 1.5rem 0.6rem; }
+.guide-practice-files a { display: block; padding-block: 0.45rem; }
+.guide-step-overview { padding-inline-start: 1.5rem; }
+.guide-device-note { margin-block-start: 1rem; }
+.guide-device-note summary, .funding-details summary { cursor: pointer; padding-block: 0.65rem; min-height: 2.75rem; }
+.guide-save-collection, .catalog-example-link { display: inline-block; padding-block: 0.55rem; }
+.catalog-example-link { font-size: var(--type-ui); }
+.collection-tools-list > li { padding-block: 1.25rem; border-block-end: 1px solid var(--rule); }
+.collection-tools-list h3 { font-size: var(--type-title); margin-block: 0 0.5rem; }
+.collection-access { font-size: var(--type-ui); }
+.collection-tools-list .guide-links { align-items: center; }
+.collection-workshop-notes { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.5rem 1.25rem; }
+.collection-workshop-notes dt { font-weight: 700; }
+.collection-workshop-notes dd { margin: 0; }
+.collection-sample-data { width: min(100%, 28rem); border-collapse: collapse; }
+.collection-sample-data caption { text-align: start; margin-block-end: 0.5rem; }
+.collection-sample-data th, .collection-sample-data td { padding: 0.4rem 0.65rem; text-align: start; border-block-end: 1px solid var(--rule); }
+.collection-sample-data td { font-variant-numeric: tabular-nums; }
+.scenario-collection .button { white-space: normal; }
+@media (max-width: 39rem) {
+  .ledger-workspace .collection-links-list { grid-template-columns: 1fr; gap: 0; }
+  .guide-index-search { grid-template-columns: minmax(0, 1fr); }
+  .guide-index-search button { justify-self: start; }
+  .guide-featured-list { gap: 0.75rem; }
+}
 .task-guide .prose li { margin-block: 0.9rem; }
 .task-guide .guide-links { flex-wrap: wrap; }
 @media (max-width: 58rem) {

@@ -5,6 +5,7 @@ import { en } from './src/i18n/en.ts';
 import { es } from './src/i18n/es.ts';
 import { routePath, toolPath, translatedPath, type StaticPage } from './src/routes.ts';
 import { practicalGuides, practicalGuidePath } from './src/pages/practical-guide-data.ts';
+import { scenarioCollections, collectionPath } from './src/pages/scenario-collection-data.ts';
 
 const dictionaries = { en, es } as const;
 const staticPages: Array<Exclude<StaticPage, 'not-found'>> = ['home', 'services', 'tools', 'about', 'transparency', 'privacy', 'security', 'your-data', 'acceptable', 'support', 'status', 'software', 'labels', 'pdf', 'qr', 'guides', 'my', 'offline'];
@@ -38,6 +39,12 @@ export default defineConfig({
             description: dictionary[descriptionKeys[page]],
             robots: ['services', 'tools', 'status'].includes(page) ? 'noindex,nofollow' : 'index,follow',
             alternates: { en: translatedPath(route, 'en'), es: translatedPath(route, 'es') },
+          };
+        }
+        for (const collection of scenarioCollections) {
+          output[metadataPath(collectionPath(collection.id, language))] = {
+            language, title: collection.title[language], description: collection.description[language],
+            robots: 'index,follow', alternates: { en: collectionPath(collection.id, 'en'), es: collectionPath(collection.id, 'es') },
           };
         }
         for (const guide of practicalGuides) {

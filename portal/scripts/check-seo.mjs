@@ -3,6 +3,30 @@ import { pathToFileURL } from 'node:url';
 import { parseHTML } from 'linkedom';
 import { isPublicSeoPath, publicSeoPaths } from './indexnow-selection.mjs';
 
+// Only the wildcard group's root rule, not a claim about named bots, every URL
+// or WAF access. A named training/search-agent exclusion is not a site-wide ban.
+export function generalCrawlerRootBlocked(text) {
+  const groups = [];
+  let group = { agents: [], rules: [] };
+  for (const line of text.split(/\r?\n/)) {
+    const match = line.replace(/#.*$/, '').trim().match(/^([\w-]+)\s*:\s*(.*?)\s*$/);
+    if (!match) continue;
+    const directive = match[1].toLowerCase(), value = match[2];
+    if (directive === 'user-agent') {
+      if (group.rules.length) { groups.push(group); group = { agents: [], rules: [] }; }
+      group.agents.push(value.toLowerCase());
+    } else if (['allow', 'disallow'].includes(directive) && group.agents.length) {
+      group.rules.push({ directive, value });
+    }
+  }
+  groups.push(group);
+  const rootRules = groups.filter(item => item.agents.includes('*')).flatMap(item => item.rules)
+    .filter(rule => ['/', '/*', '/$', '/*$'].includes(rule.value));
+  const longest = Math.max(0, ...rootRules.map(rule => rule.value.replace(/[*$]/g, '').length));
+  const relevant = rootRules.filter(rule => rule.value.replace(/[*$]/g, '').length === longest);
+  return relevant.some(rule => rule.directive === 'disallow') && !relevant.some(rule => rule.directive === 'allow');
+}
+
 // Bounded read-only audit of the portal's public canonical pages. No analytics,
 // cookies, login, recursive crawler, third-party assets, or private tool content.
 export async function auditSeo(origin = 'https://utilibre.org', { allowUnadvertisedSitemap = false } = {}) {
@@ -11,7 +35,7 @@ export async function auditSeo(origin = 'https://utilibre.org', { allowUnadverti
   const robots = (await readPublic(`${origin}/robots.txt`)).text;
   const robotsSitemapAdvertised = robots.includes(`Sitemap: ${origin}/sitemap.xml`);
   assert(robotsSitemapAdvertised || allowUnadvertisedSitemap, 'Missing sitemap discovery');
-  assert(!/^Disallow:\s*\/\s*$/m.test(robots), 'Public portal blocks all crawlers');
+  assert(!generalCrawlerRootBlocked(robots), 'Wildcard crawler group blocks the root; inspect robots.txt');
   const sitemap = (await readPublic(`${origin}/sitemap.xml`)).text;
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
   assert(urls.length > 0 && urls.length <= publicSeoPaths.length, 'Unexpected sitemap size; review before crawling/submitting');

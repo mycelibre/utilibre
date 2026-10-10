@@ -50,7 +50,7 @@ export function renderHeader(currentRoute: Route, config: PublicConfig, t: Trans
     if (page === 'support' && !config.supportUrl) continue;
     const link = element('a', '', t(key));
     link.href = routePath(page, currentRoute.language);
-    if (currentRoute.page === page || (page === 'guides' && currentRoute.page === 'guide')) link.setAttribute('aria-current', 'page');
+    if (currentRoute.page === page || (page === 'guides' && ['guide', 'collection'].includes(currentRoute.page))) link.setAttribute('aria-current', 'page');
     nav.append(link);
   }
   const controls = element('div', 'header-controls');

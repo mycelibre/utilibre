@@ -320,8 +320,8 @@ function localizedIndexHtml(html, language, pathname, search = '') {
     `<meta property="og:site_name" content="${escapeAttribute(config.projectName)}" />`,
     `<meta property="og:url" content="${escapeAttribute(meta.canonical)}" />`,
     `<meta property="og:image" content="${escapeAttribute(meta.image)}" />`,
-    `<meta property="og:image:alt" content="${language === 'es' ? 'Logo de ' + escapeAttribute(config.projectName) : escapeAttribute(config.projectName) + ' logo'}" />`,
-    '<meta name="twitter:card" content="summary" />',
+    `<meta property="og:image:alt" content="${escapeAttribute(meta.imageAlt)}" />`,
+    `<meta name="twitter:card" content="${escapeAttribute(meta.twitterCard)}" />`,
     structured ? `<script id="public-structured-data" type="application/ld+json">${structured}</script>` : '',
     `<script id="public-page-config" type="application/json">${publicSettings}</script>`,
   ].join('\n    ');

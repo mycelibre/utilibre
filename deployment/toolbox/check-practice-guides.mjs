@@ -17,6 +17,7 @@ async function decodeImage(page, bytes, mime) {
   }, { base64: bytes.toString('base64'), mime });
 }
 async function run(id, fn) {
+  if (process.env.APP && process.env.APP !== id) return;
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   await context.addInitScript(() => { delete window.showOpenFilePicker; delete window.showSaveFilePicker; delete window.showDirectoryPicker; });
   const page = await context.newPage(); page.setDefaultTimeout(30000);
