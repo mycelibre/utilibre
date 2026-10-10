@@ -1,5 +1,86 @@
 # Catalog SEO verification — 9 October 2026
 
+## Owner-supplied replacement key — 10 October 2026, 16:07 UTC
+
+At the owner's explicit request, the new UTF-8 proof is deployed at
+`https://utilibre.org/fd4a2291b63244d09920bfd28d40f718.txt`. HTTPS GET returned
+200 without redirection, `text/plain; charset=utf-8`, with the supplied
+32-character key and a trailing newline. The previous proof remains available
+for compatibility/rollback. `portal/scripts/submit-indexnow.mjs` now reads the
+replacement file and derives the matching root `keyLocation`.
+
+One notification containing only the EN/ES documents collection pages returned
+**HTTP 202: received, ownership verification pending**. This is not completed
+ownership verification or evidence of crawling, indexing or rankings. No second
+notification was sent after that receipt. The prior 403 no longer occurred in
+this attempt, but the response does not establish why the previous key failed.
+No Cloudflare rule, crawler preference or Caddy configuration was changed. The
+earlier observed crawler block and API-permission limitation are not claimed
+resolved by this key replacement.
+
+All 15 focused SEO/notification tests passed, including use of the real new key
+file and refusal to submit when the public proof mismatches. The normal Docker
+build, FOSS gate, client payload budget and Compose validation passed. After
+deployment the container is healthy, the selected public pages passed targeted
+canonical/indexability checks, and the sitemap still advertises 168 URLs. The
+public configuration SHA-256 is unchanged:
+`6f2c6c7f2dc2cde22cabe3f2aafb170054cf658da8f998fc6b4c21e2764089c4`.
+
+Release: `public-utility-portal:0.1.0-indexnow-20261010`, image
+`sha256:cf3f997b6c4643a6f7d8039174de1e957307043142e62bdd1ecc46938d6cad23`.
+The isolated source snapshot is `/opt/utilibre/portal-indexnow-6oiCyqNT/source`;
+pending unrelated status changes and export scripts were excluded. Runtime
+changes are limited to adding the static proof file; frontend bundles and
+application configuration are unchanged.
+
+Rollback: restore `PORTAL_IMAGE=public-utility-portal:0.1.0-bing-20261010` in the
+private `.env`, then run `docker compose up -d --no-deps --no-build portal`.
+This removes the new proof from the served image and can interrupt its ownership
+verification. Revert the submission helper's key-file selection as well if
+deliberately returning to the previous proof. No user data or database migration
+is involved. The previous source archive/index are retained with the release.
+
+## IndexNow access investigation — 10 October 2026, 16:01 UTC
+
+The latest controlled notification at 15:59 UTC returned **403
+`UserForbiddedToAccessSite`**. Its two selected collection pages passed targeted
+live canonical/indexability checks. The public ownership proof matched and the
+168-URL sitemap returned 200 from this VM. These checks do not establish access
+from the engine's validation or crawler infrastructure.
+
+Owner-supplied Cloudflare events establish that **Block AI Search bots** blocked
+both Googlebot and Bingbot on `/sitemap.xml` earlier today. They do not establish
+which rule, if any, rejected the ownership-file fetch. Bot Fight Mode was already
+off; disabling it was not a change made during this investigation.
+
+The current IndexNow custom Skip rule covers only the proof file and skips
+Browser Integrity Check, Security Level and Super Bot Fight Mode. It does not
+skip the managed AI Search rule. Its matching-request logging remains disabled;
+the separate ntfy rule is unchanged.
+
+The retained token can read custom rules, but the bot-configuration read and a
+**dry-run** of a proof-only managed-rule exception both returned Cloudflare
+403/code 10000. No provider mutation or portal deployment was performed. The
+dry-run narrowed matching to the exact proof path, GET/HEAD and no query, and
+targeted only the AI Search managed rule identified in the supplied events.
+Because authorization failed, neither API acceptance of that exception nor its
+effectiveness has been verified. Do not report it as installed or validated.
+
+The next dependency is authorized Cloudflare configuration access: check the
+existing VM token's **Zone WAF Edit** and **Bot Management Edit** permissions and
+resource scope for `utilibre.org`, or have the owner apply the reviewed change
+in the dashboard. No global API key, audience analytics or new request logging
+is required. Do not repeatedly submit unchanged notifications while this access
+issue remains unresolved. A proof-only exception would not itself restore
+crawling of the public pages; search policy must be reviewed separately while
+preserving training preferences. No Bing `noarchive` directive was added.
+
+Primary references checked today: [IndexNow response codes](https://www.indexnow.org/documentation),
+[Cloudflare skip scope and logging](https://developers.cloudflare.com/waf/custom-rules/skip/options/),
+[managed-rule exceptions](https://developers.cloudflare.com/ruleset-engine/managed-rulesets/create-exception/),
+[API token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/),
+and [mixed-use crawler controls](https://blog.cloudflare.com/accountable-mixed-use-ai-crawlers/).
+
 ## Bing ownership tag — 10 October 2026
 
 At the owner's request, `portal/index.html` now retains the supplied
@@ -98,10 +179,12 @@ still returned 403. One diagnostic request to the
 [documented Bing endpoint](https://www.indexnow.org/faq) returned the same code.
 No successful notification, indexing or root cause is claimed. No more retries,
 key rotation, broad security relaxation or crawler-policy changes were made.
-The remaining dependency is access to **Bing Webmaster Tools ownership/URL
-diagnostics**, or an engine-side verification resolution. Search Console access
-is also still needed to measure actual Google discovery. The normal sitemap
-remains available; IndexNow is not a prerequisite for ordinary crawling.
+At that checkpoint, the remaining dependency was **Bing Webmaster Tools
+ownership/URL diagnostics**, or engine-side verification diagnostics. The later
+Cloudflare events and configuration-access blocker above supersede that
+assessment; an engine-side defect has not been established. Search Console
+access is still needed to measure actual Google discovery. IndexNow is not a
+prerequisite for ordinary crawling.
 
 ### Release and rollback
 
@@ -131,7 +214,7 @@ collection/guide release and its bounded native workflows are recorded in
 | People-first content | Three distinct situations, 3–4 canonical tools each, bilingual fictional editable examples, checked native outputs, constraints and explicit saving. Existing about/source/privacy/help links and AI-assistance disclosure remain. | Stronger reason to visit than a list of app names. Do not add generic guides merely to increase URL count. Existing guide maintenance remains necessary. |
 | Crawler preferences | Live Cloudflare-managed robots permits generic crawling, explicitly blocks several training, AI-search and agent crawlers, including OAI-SearchBot and PerplexityBot. Googlebot and Bingbot are not explicitly disallowed in the observed file. | Preserve policy. It restricts AI discovery; no claim of full AI-search access. Effective Google Search generative-AI account controls are unknown. The web research tool also reported the site's robots exclusion, which is not proof of absence from ordinary search indexes. |
 | Audit reliability | Old regex treated any named-bot `Disallow: /` as a universal ban. | Corrected operator-only checker to examine wildcard root rules; four focused tests plus eight notification safety tests pass. It is not a complete bot/WAF-access validator. No robots or Cloudflare setting changed. |
-| IndexNow | After the 168-page gate, one selected notification for six new collection URLs plus EN/ES home/index pages returned HTTP 403. Public root proof file is 200, text/plain, 32 bytes and exactly matches the submitted key from this host. | **Unresolved engine-side key validation.** Official protocol defines 403 as invalid/unavailable proof. Check validation and any edge challenge for the exact proof URL; do not claim success or repeatedly submit. No cause established from the response alone. |
+| IndexNow | After the 168-page gate, one selected notification for six new collection URLs plus EN/ES home/index pages returned HTTP 403. Public root proof file is 200, text/plain, 33 bytes (32-character key plus newline) and matches the submitted key after trimming. | **Unresolved ownership validation.** Official protocol defines 403 as invalid/unavailable proof. Later evidence confirms a Cloudflare sitemap block, not the precise proof-fetch failure; see the current investigation above. Do not claim success or repeatedly submit. |
 | Mobile loading | Three clean-profile runs per URL under the conditions below. Home median LCP 2.772s; documents collection 3.080s. | Worth improving. Shared client bundle is ~1,009 KB minified/~326 KB gzip. Investigate deferring non-route guide/catalog data and avoiding unnecessary initial rerender, preserving SSR and text-fragment behavior. This review does not implement a speculative rewrite. |
 | Structured data | WebSite/WebPage matches visible content; no fabricated reviews/ratings. | Appropriate baseline, not a rich-result guarantee. Software-app rich-result requirements include a genuine rating/review; do not fabricate one to qualify. Breadcrumbs are optional, not the priority over functionality/loading. |
 | Freshness | Sitemap intentionally omits lastmod; substantive guide review dates are not refreshed merely by builds. | Valid. Accurate per-page significant-change dates could help later; false build timestamps would be worse. No priority/changefreq busywork. |

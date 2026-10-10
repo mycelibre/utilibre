@@ -97,6 +97,31 @@ test('explicit submission contains only changed/removed selections, never the en
   assert.equal(JSON.parse(post.options.body).host, 'utilibre.org');
 });
 
+test('the deployed root proof and notification use the owner-supplied replacement key', async () => {
+  const replacementKey = 'fd4a2291b63244d09920bfd28d40f718';
+  const proofUrl = `${PUBLIC_ORIGIN}/${replacementKey}.txt`;
+  const requests = [];
+  const deps = dependencies(requests);
+  delete deps.readKey; // Exercise the real source file, without any live requests.
+  deps.read = async (url) => {
+    assert.equal(url, proofUrl);
+    return { text: `${replacementKey}\n` };
+  };
+  await runIndexNow(['--url', pdf, '--submit'], deps);
+  assert.equal(requests.length, 1);
+  const payload = JSON.parse(requests[0].options.body);
+  assert.equal(payload.key, replacementKey);
+  assert.equal(payload.keyLocation, proofUrl);
+});
+
+test('a mismatching public proof stops submission before notifying the engine', async () => {
+  const requests = [];
+  const deps = dependencies(requests);
+  deps.read = async () => ({ text: 'wrong-key' });
+  await assert.rejects(runIndexNow(['--url', pdf, '--submit'], deps), /proof is not live/);
+  assert.equal(requests.length, 0);
+});
+
 test('rejected notifications expose only a safe error code and never auto-retry', async () => {
   let posts = 0;
   const deps = dependencies([]);

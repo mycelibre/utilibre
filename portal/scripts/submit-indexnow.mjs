@@ -21,7 +21,7 @@ export async function runIndexNow(args, {
   audit = auditSeo,
   read = readPublic,
   request = fetch,
-  readKey = () => readFile(new URL('../public/762286d5852bc4de75b655217cccce8b.txt', import.meta.url), 'utf8'),
+  readKey = () => readFile(new URL('../public/fd4a2291b63244d09920bfd28d40f718.txt', import.meta.url), 'utf8'),
   log = console.log,
 } = {}) {
   const selection = parseSelection(args);
