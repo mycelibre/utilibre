@@ -14,6 +14,7 @@ no account requests. Approval remains manual and unrelated to donations.
 | Galene | Native moderator account; native expiring guest links | Request hosting access only to organize. Guests open the moderator's invitation directly. Four clients total, including the moderator. |
 | FMD | Native registration token and device account | Request registration access, configure the Android app with this server, and retain FMD recovery credentials. The server's registration token is reusable, not a single-use Authentik invitation. |
 | FreshRSS | Existing native accounts | Sign in; new account requests remain closed. |
+| Wallabag | Separately approved native username/password account; optional native MFA | Request access through its catalogue card. No OpenID auto-enrolment, public registration, shared account or API client access. |
 | Mumble | Native client and shared access password | A browser/Utilibre account is not a voice client or the room password. |
 
 For approved Utilibre accounts, the existing `deployment/identity/invite-user.py`
@@ -24,6 +25,13 @@ approved recipient. No invitations were sent during this review. The local
 `check-invitation.py` test captures mail and rolls back its synthetic account;
 it checks missing-token rejection, fixed identity, email verification, MFA,
 non-admin membership and single use.
+
+Wallabag is provisioned through its native `fos:user:create` command after
+approval, with a unique password entered privately and no administrator grant.
+Do not reuse the owner account or put passwords in shell arguments/history.
+The app's native configuration offers authenticator setup and account deletion;
+the operator can assist with lost access. The 10 October public check used only
+temporary native accounts, not a real invitation or owner credential.
 
 Use LiberaForms' own invitation controls and Galene's `/invite` controls rather
 than sharing owner passwords. Galene's room guide covers `/unlock`, short guest

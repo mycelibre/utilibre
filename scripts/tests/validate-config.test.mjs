@@ -6,6 +6,14 @@ import { validateEnvironmentValues } from '../validate-config.mjs';
 const bindIp = '10.23.0.2';
 const edgeIp = '10.23.0.1';
 
+test('validates separately deployed catalogue services without a second ID registry', () => {
+  const values = launchValues({ ENABLED_SERVICES: 'searxng,redlib,freshrss,privatebin,beaverhabits', PUBLIC_BEAVERHABITS_URL: 'https://habits.utilibre.org/' });
+  assert.doesNotThrow(() => validateLaunch(values));
+  assert.throws(() => validateLaunch({ ...values, PUBLIC_BEAVERHABITS_URL: '' }), /PUBLIC_BEAVERHABITS_URL/);
+  assert.throws(() => validateLaunch({ ...values, PUBLIC_BEAVERHABITS_URL: 'https://user:secret@habits.utilibre.org/' }), /credentials/);
+  assert.throws(() => validateLaunch({ ...values, ENABLED_SERVICES: values.ENABLED_SERVICES + ',not-an-approved-app' }), /unsupported or retired ID/);
+});
+
 function launchValues(overrides = {}) {
   return {
     PROJECT_NAME: 'Utilibre',

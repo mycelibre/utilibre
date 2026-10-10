@@ -55,6 +55,15 @@ const hostedConfig = config({
 });
 
 describe('catalog discovery metadata', () => {
+  it('lists Wallabag under accounts without promising anonymous use or SSO', () => {
+    const setup = config({ enabledServices: ['wallabag'], publicWallabagUrl: 'https://wallabag.utilibre.org/' });
+    const reader = catalogEntry('wallabag')!;
+    expect(entryLaunch(reader, 'es', setup)?.href).toBe('https://wallabag.utilibre.org/');
+    expect(immediatelyUsable(reader, setup)).toBe(false);
+    expect(discoverEntries(setup, 'en', { view: 'accounts' }).map(e => e.id)).toContain('wallabag');
+    expect(discoverEntries(setup, 'es', { view: 'public' }).map(e => e.id)).not.toContain('wallabag');
+    expect(entryLaunch(reader, 'en', config())).toBeNull();
+  });
   it('ranks task titles above incidental export formats in both languages', () => {
     const listed = config({ listedServices: catalog.map(e => e.serviceId ?? e.id) });
     for (const lang of ['en', 'es'] as const) {
@@ -82,7 +91,7 @@ describe('catalog discovery metadata', () => {
   });
   it('keeps reviewed applications and one narrow integration', () => {
     expect(catalog.map((entry) => entry.id)).toEqual([
-      'one-file-core', 'tiddlywiki', 'moocup', 'rustpad', 'autoredact', 'gravity', 'knit', 'newton', 'family-chess', 'projects', 'trip', 'donetick', 'beaverhabits', 'kokoro-web',
+      'one-file-core', 'tiddlywiki', 'moocup', 'rustpad', 'autoredact', 'gravity', 'knit', 'newton', 'family-chess', 'projects', 'trip', 'wallabag', 'donetick', 'beaverhabits', 'kokoro-web',
       'newsletters', 'addy',
       'spliit', 'wishlist', 'kitchenowl', 'opengist', 'linkding', 'vikunja', 'bytestash', 'openresume',
       'calino', 'radicale', 'chitchatter', 'gathio', 'link-cleaner', 'razzia', 'chhoto', 'unfurl', '13ft',

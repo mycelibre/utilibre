@@ -85,6 +85,7 @@ describe('bilingual content', () => {
       .map((entry) => [entry.id, entry.accountAccess]));
 
     expect(accountAccess).toEqual({
+      wallabag: 'invite-required',
       addy: 'closed-registration',
       projects: 'invite-required',
       trip: 'invite-required',

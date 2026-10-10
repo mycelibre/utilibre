@@ -1,4 +1,5 @@
 import { tripAdditions } from './trip-addition.ts';
+import { wallabagAdditions } from './wallabag-addition.ts';
 import { donetickAdditions } from './donetick-addition.ts';
 import { beaverhabitsAdditions } from './beaverhabits-addition.ts';
 import { projectsAdditions } from './projects-addition.ts';
@@ -100,6 +101,7 @@ const entries: CatalogEntry[] = [
   ...familyChessAdditions,
   ...projectsAdditions,
   ...tripAdditions,
+  ...wallabagAdditions,
   ...donetickAdditions,
   ...beaverhabitsAdditions,
   ...kokoroWebAdditions,

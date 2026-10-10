@@ -45,7 +45,22 @@ after testing. Candidate sources, reports, images and mounted example files were
 preserved. User containers/data were not deleted. No broad repository commit was
 created because the worktree includes substantial unrelated staged changes.
 
-### Wallabag: repaired backend deployed; public Caddy/TLS route still pending
+### Wallabag: public account workflow verified — 10 October 2026
+
+The former public Caddy/TLS blocker is resolved. A fresh public HTTPS Chromium
+check passed native password/MFA, actual page saving/reading, JSON/TXT/PDF/EPUB
+exports with reopened content, private-library isolation and native deletion.
+No outside browser response or broken runtime asset was observed. Disposable
+accounts and synthetic articles were removed. Desktop and mobile-width emulation
+were tested; physical phones and native/API clients were not. The same pinned
+2.7-dev/local-backport package passed a fresh dependency gate (two explicitly
+mitigated findings, zero unexpected runtime advisories, 16 abandoned packages).
+This does not relabel it a supported upstream release. Registration stays closed.
+The portal adds a separate approved-account entry and EN/ES save-article guides.
+Exact evidence and resource/rollback boundaries are in the
+[Wallabag record](../deployment/pack/wallabag/README.md).
+
+#### Earlier backend repair — historical evidence
 
 October 9 follow-up, through 19:34 UTC: the pinned newer upstream candidate now
 has a reproducible **two-file OTPHP 10.0.3 security backport**, taken from the

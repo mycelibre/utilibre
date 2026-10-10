@@ -1,6 +1,7 @@
 // Operator-configured probes only. Public checks are restricted to these exact
 // application URLs; never accept arbitrary Internet destinations or redirects.
 const publicRoots = new Map([
+  ['wallabag', 'https://wallabag.utilibre.org/login'],
   ['family-chess', 'https://chess.utilibre.org/'],
   ['donetick', 'https://chores.utilibre.org/'],
   ['beaverhabits', 'https://habits.utilibre.org/login'],
@@ -41,6 +42,20 @@ const publicRoots = new Map([
   ['numbat', 'https://calc.utilibre.org/'],
   ['super-productivity', 'https://plan.utilibre.org/'],
 ]);
+
+// Check the operator's targets in small groups so a status refresh does not
+// start every DNS lookup and TLS connection at once. Keep catalog order.
+export async function checkStatusTargets(targets, check) {
+  const results = new Array(targets.length);
+  let next = 0;
+  await Promise.all(Array.from({ length: Math.min(6, targets.length) }, async () => {
+    while (next < targets.length) {
+      const index = next++;
+      results[index] = await check(targets[index]);
+    }
+  }));
+  return results;
+}
 
 export function parseStatusServices(value, privateBindIp) {
   return value.split(',').map((entry) => entry.trim()).filter(Boolean).flatMap((entry) => {

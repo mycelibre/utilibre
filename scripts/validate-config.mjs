@@ -2,10 +2,12 @@ import { readFile, stat } from 'node:fs/promises';
 import { isIP } from 'node:net';
 import { networkInterfaces } from 'node:os';
 import { pathToFileURL } from 'node:url';
+import { catalog } from '../portal/src/catalog/catalog.ts';
 
 const repository = new URL('../', import.meta.url);
 
 const services = [
+  { id: 'wallabag', hostKey: 'PUBLIC_WALLABAG_HOST', urlKey: 'PUBLIC_WALLABAG_URL', portKey: 'WALLABAG_PORT' },
   { id: 'wbo', hostKey: 'PUBLIC_COLLAB_HOST', urlKey: 'PUBLIC_COLLAB_URL', portKey: 'WBO_PORT' },
   { id: 'excalidraw', hostKey: 'PUBLIC_WHITEBOARD_HOST', urlKey: 'PUBLIC_WHITEBOARD_URL', portKey: 'EXCALIDRAW_PORT' },
   { id: 'svgedit', hostKey: 'PUBLIC_SVG_HOST', urlKey: 'PUBLIC_SVG_URL', portKey: 'SVGEDIT_PORT' },
@@ -61,7 +63,12 @@ const services = [
   { id: 'safetwitch', hostKey: 'PUBLIC_TWITCH_HOST', urlKey: 'PUBLIC_TWITCH_URL', portKey: 'SAFETWITCH_PORT' },
   { id: 'lrclib', hostKey: 'PUBLIC_LYRICS_HOST', urlKey: 'PUBLIC_LYRICS_URL', portKey: 'LRCLIB_PORT' },
 ];
-const allowedServices = new Set([...services.map(({ id }) => id), 'mumble']);
+// Later applications use separate deployment projects and sometimes share a
+// static origin. Reuse the catalogue instead of maintaining another ID registry.
+const supplementalServices = catalog.filter(entry => entry.kind === 'service' && entry.configUrlKey && !entry.serviceId && entry.id !== 'mumble' && !services.some(service => service.id === entry.id));
+const supplementalUrlKey = entry => entry.configUrlKey === 'publicBeaverHabitsUrl'
+  ? 'PUBLIC_BEAVERHABITS_URL' : entry.configUrlKey.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase();
+const allowedServices = new Set([...services.map(({ id }) => id), ...supplementalServices.map(entry => entry.id), 'mumble']);
 const listableServices = new Set([...allowedServices, 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'libremdb', 'degoog', 'fourget', 'safetwitch', 'anonymousoverflow', 'gothub', 'binternet', 'rimgo', 'mumble']);
 
 // Stale settings should fail loudly instead of silently republishing a service
@@ -150,6 +157,15 @@ export function validateEnvironmentValues(values, { launch = false, assignedAddr
   const listed = csv(values.LISTED_SERVICES || '');
   for (const id of listed) {
     if (!listableServices.has(id)) errors.push(`LISTED_SERVICES contains unsupported or retired ID: ${id}`);
+  }
+  for (const entry of supplementalServices) {
+    const key = supplementalUrlKey(entry);
+    if (!enabled.includes(entry.id) && !(listed.includes(entry.id) && values[key])) continue;
+    validateLaunchUrl(key, values[key], errors);
+    try {
+      const url = new URL(values[key]);
+      if (url.username || url.password || url.hash) errors.push(`${key} must not contain credentials or a fragment.`);
+    } catch { /* The URL validation above supplies the error. */ }
   }
   if (!enabled.includes('searxng')) errors.push('ENABLED_SERVICES must include searxng.');
   if (enabled.includes('mumble') || values.PUBLIC_MUMBLE_URL) {

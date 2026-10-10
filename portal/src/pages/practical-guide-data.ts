@@ -1,4 +1,5 @@
 import { tripGuides } from './trip-guide.ts';
+import { wallabagGuides } from './wallabag-guide.ts';
 import { donetickAdditionGuides } from './donetick-addition-guide.ts';
 import { beaverhabitsAdditionGuides } from './beaverhabits-addition-guide.ts';
 import { projectsGuides } from './projects-guide.ts';
@@ -53,6 +54,7 @@ export const practicalGuides: PracticalGuide[] = [
   ...familyChessGuides,
   ...projectsGuides,
   ...tripGuides,
+  ...wallabagGuides,
   ...donetickAdditionGuides,
   ...beaverhabitsAdditionGuides,
   ...kokoroWebGuides,

@@ -1,8 +1,47 @@
 import { describe, expect, it } from 'vitest';
 import process from 'node:process';
-import { parseStatusServices, mumbleStatusFromKuma } from '../../server/status-targets.mjs';
+import { parseStatusServices, mumbleStatusFromKuma, checkStatusTargets } from '../../server/status-targets.mjs';
+
+describe('status probe concurrency', () => {
+  it('limits active service checks while preserving order and failure results', async () => {
+    const targets = Array.from({ length: 14 }, (_, id) => ({ id }));
+    const active = new Map();
+    const started = [];
+    let peak = 0;
+    const pending = checkStatusTargets(targets, ({ id }) => new Promise(resolve => {
+      started.push(id);
+      active.set(id, () => {
+        active.delete(id);
+        resolve({ id, status: id === 3 ? 'unavailable' : 'operational' });
+      });
+      peak = Math.max(peak, active.size);
+    }));
+    expect(started).toEqual([0, 1, 2, 3, 4, 5]);
+    // Complete in reverse order to exercise replenishment and result ordering.
+    while (active.size) {
+      const id = [...active.keys()].at(-1);
+      active.get(id)();
+      await Promise.resolve();
+    }
+    const results = await pending;
+    expect(peak).toBe(6);
+    expect(started).toEqual(targets.map(({ id }) => id));
+    expect(results.map(({ id }) => id)).toEqual(started);
+    expect(results[3]).toEqual({ id: 3, status: 'unavailable' });
+  });
+
+  it('returns an empty result when no service is configured', async () => {
+    expect(await checkStatusTargets([], () => { throw Error('unexpected probe'); })).toEqual([]);
+  });
+});
 
 describe('bounded status targets', () => {
+  it('restricts Wallabag probes to its public sign-in page', () => {
+    expect(parseStatusServices('wallabag=https://wallabag.utilibre.org/login', '10.10.1.43')).toMatchObject([{ id: 'wallabag', require2xx: true }]);
+    for (const suffix of ['/', '/view/1', '/login?url=http://internal/', '/login#fragment']) {
+      expect(parseStatusServices(`wallabag=https://wallabag.utilibre.org${suffix}`, '10.10.1.43')).toEqual([]);
+    }
+  });
   it('checks native entry pages without admitting arbitrary probe paths', () => {
     for (const [id, host] of [['family-chess', 'chess'], ['donetick', 'chores'], ['beaverhabits', 'habits'], ['projects', 'projects'], ['trip', 'trip'], ['addy', 'aliases']]) {
       const root = `https://${host}.utilibre.org/${['beaverhabits', 'addy'].includes(id) ? 'login' : ''}`;

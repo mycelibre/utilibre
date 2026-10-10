@@ -1,8 +1,40 @@
 # Wallabag repair and deployment — 9 October 2026
 
-Backend deployed on `10.10.1.43:3177`; public `https://wallabag.utilibre.org` still
-returns Cloudflare 525 pending the separate Caddy VM's route. Do not advertise a
-working public service until that route and real HTTPS login/assets pass.
+Backend deployed on `10.10.1.43:3177`; public `https://wallabag.utilibre.org`
+passes authenticated workflow and isolation checks on **10 October 2026**.
+This supersedes the former Cloudflare 525 observation. Native accounts remain
+operator-approved; public registration and API clients remain disabled.
+
+## Public verification — 10 October 2026
+
+`node deployment/pack/wallabag/check-public.mjs` passed through normal public
+DNS and HTTPS: password and native MFA/CSRF, owned-page saving and reload,
+JSON/TXT/PDF/EPUB exports reopened with text verified, account A/B and anonymous
+denial, native article deletion, secure HttpOnly cookies, disabled image/API/
+registration/sharing routes, and no-store/noindex/no-referrer headers. No outside
+browser HTTP response, runtime script error or failed local asset was observed.
+The existing local PDF.js viewer checks PDF output; no new PDF dependency was
+installed. Temporary native accounts and their articles were removed afterward.
+
+Linux Chromium desktop (1280px) and mobile-width emulation (390px) passed; this
+does not establish physical-phone/Windows/Opera or native-client compatibility.
+Private evidence: `/opt/utilibre/reports/wallabag-public-OjIINF/report.json` and
+synthetic article captures/exports beside it. No real user data was captured.
+The repeat dependency gate found zero unexpected runtime advisories, the same
+two hash-verified local OTPHP backports, 14 passing regression cases and 16
+abandoned packages. The package remains locally maintained **2.7-dev**, not a
+supported upstream stable release. No application upgrade was performed here.
+
+The portal integration uses the existing approved-account view, request mailbox,
+catalogue privacy/help disclosure and bilingual native-workflow guide:
+`/en/guides/save-articles` and `/es/guias/guardar-articulos`. Wallabag is not in
+the anonymous/default public-tools view. Its status probe checks only the public
+`/login` path; health is still separate from the dated user-task verification.
+FreshRSS-to-Wallabag is manual copy/paste, not cross-account synchronization.
+
+Storage Box now includes the encrypted suite's native snapshots; see
+`deployment/storagebox/README.md`. Local backup retention remains unchanged.
+Deleted content can remain in retained local/off-host backup generations.
 
 ## Exact package and security scope
 

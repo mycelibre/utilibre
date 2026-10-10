@@ -217,7 +217,7 @@ export const servicePackGuides: PracticalGuide[] = [
         success: 'The selected sources appear, their available entries load, and the starred article appears in the favourites view. Your exported OPML remains usable in another compatible reader.',
         troubleshooting: 'Import subscriptions before refreshing. A valid feed may temporarily be empty or unavailable; avoid repeated refreshes. Some publishers supply only summaries. These packs do not bypass paywalls. If you do not have a Utilibre account, import the same OPML into a reader you already use.',
         privacy: 'Utilibre fetches the feeds you select and stores subscriptions, reading state and favourites within your authenticated account. The server can read them; this is not end-to-end encryption. The checked browser subscription/list/article flow did not contact external origins. Images and embedded media are blocked. Opening an original article is a separate direct visit.',
-        next: "Keep the subscriptions that are useful and remove the rest through native subscription management. wallabag remains unavailable because its reviewed deployment has unresolved security dependencies; use FreshRSS favourites for saved reading.",
+        next: "Keep useful subscriptions and remove the rest through subscription management. FreshRSS favourites save reading items here. For a separate text-first article archive, Wallabag is available with an approved native account; manually copy selected article URLs into it. There is no automatic synchronization.",
       },
       es: {
         title: 'Importá fuentes RSS y guardá una lectura para después',
@@ -233,7 +233,7 @@ export const servicePackGuides: PracticalGuide[] = [
         success: 'Aparecen las fuentes elegidas, cargan sus entradas disponibles y el artículo marcado aparece en favoritos. Podés usar el OPML exportado en otro lector compatible.',
         troubleshooting: 'Primero importá y después actualizá. Una fuente válida puede estar temporalmente vacía o caída; evitá actualizar repetidamente. Algunas ofrecen solo resúmenes. Los paquetes no evitan muros de pago. Si no tenés cuenta en Utilibre, importá el OPML en un lector que ya usés.',
         privacy: 'Utilibre consulta las fuentes que elegís y guarda suscripciones, estado de lectura y favoritos dentro de tu cuenta autenticada. El servidor puede leerlos; no hay cifrado de extremo a extremo. El recorrido comprobado de suscripciones, lista y lectura no contactó orígenes externos desde el navegador. Se bloquean imágenes y medios remotos. Abrir el original es una visita directa aparte.',
-        next: "Conservá las fuentes útiles y quitá las demás desde la gestión de suscripciones. wallabag sigue sin estar disponible porque el despliegue revisado tiene dependencias de seguridad sin resolver; usá los favoritos de FreshRSS para guardar lecturas.",
+        next: "Conservá las fuentes útiles y quitá las demás desde la gestión de suscripciones. Los favoritos de FreshRSS guardan lecturas aquí. Para un archivo separado de artículos en texto, Wallabag está disponible con una cuenta nativa aprobada; copiá manualmente las direcciones que elijás. No hay sincronización automática.",
       },
     },
   },

@@ -6,7 +6,7 @@ import { renderPublicShell, parseRoute, pageSeo, serializeStructuredData } from 
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer, request as httpRequest } from 'node:http';
 import { request as httpsRequest } from 'node:https';
-import { parseStatusServices, mumbleStatusFromKuma } from './status-targets.mjs';
+import { parseStatusServices, mumbleStatusFromKuma, checkStatusTargets } from './status-targets.mjs';
 import { extname, join, normalize } from 'node:path';
 
 const PORT = positiveInt(process.env.PORT, 8080);
@@ -375,7 +375,7 @@ async function serveStatus(response) {
 }
 
 async function checkStatuses() {
-  const checks = await Promise.all(STATUS_SERVICES.map(async ({ id, url, require2xx }) => {
+  const checks = await checkStatusTargets(STATUS_SERVICES, async ({ id, url, require2xx }) => {
     if (id === 'mumble') {
       try {
         const [page, heartbeat] = await Promise.all([
@@ -394,7 +394,7 @@ async function checkStatuses() {
     } catch {
       return { id, status: 'unavailable' };
     }
-  }));
+  });
   return { checkedAt: new Date().toISOString(), services: checks };
 }
 
@@ -470,6 +470,7 @@ function publicConfig() {
     publicQuizUrl: publicServiceUrl(process.env.PUBLIC_QUIZ_URL),
     publicLinksUrl: publicServiceUrl(process.env.PUBLIC_LINKS_URL),
     publicTripUrl: publicServiceUrl(process.env.PUBLIC_TRIP_URL),
+    publicWallabagUrl: publicServiceUrl(process.env.PUBLIC_WALLABAG_URL),
     publicChessUrl: publicServiceUrl(process.env.PUBLIC_CHESS_URL),
     publicProjectsUrl: publicServiceUrl(process.env.PUBLIC_PROJECTS_URL),
     publicDonetickUrl: publicServiceUrl(process.env.PUBLIC_DONETICK_URL),
