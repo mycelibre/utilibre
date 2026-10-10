@@ -4,9 +4,10 @@ import {execFileSync} from 'node:child_process';
 import {readFile,writeFile,mkdir,mkdtemp,cp} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
+import {prepareBentoSeo} from './prepare-bentopdf-seo.mjs';
 const source='/opt/utilibre/src/bentopdf';
 assert.equal(execFileSync('git',['rev-parse','HEAD'],{cwd:source,encoding:'utf8'}).trim(),'f96cd4e5166f3d51393dfe9f3c440b5bb77802f1');
-const target='/opt/utilibre/pack-static/bentopdf-2.8.8-p3';
+const target='/opt/utilibre/pack-static/bentopdf-2.8.8-p4';
 await mkdir(target,{recursive:true});await cp(`${source}/dist`,target,{recursive:true});
 const temp=await mkdtemp('/opt/utilibre/bentopdf-assets-');
 const manifest=[];
@@ -47,5 +48,6 @@ for(const [from,to]of [[temp+'/gs',wasm+'/gs'],[temp+'/cpdf',wasm+'/cpdf']]){
 let html=await readFile(target+'/index.html','utf8');
 assert(html.includes('</body>'));html=html.replace('</body>','<footer style="padding:1rem;text-align:center"><a href="/utilibre-source/">Source and licenses · Código fuente y licencias</a> · <a href="https://utilibre.org/">Utilibre</a></footer></body>');
 await writeFile(target+'/index.html',html);
+console.log(await prepareBentoSeo(target));
 await writeFile(target+'/asset-manifest.json',JSON.stringify(manifest,null,2)+'\n');
 console.log(`Prepared native air-gap assets at ${target}; download manifest included; build-only archives retained at ${temp}.`);

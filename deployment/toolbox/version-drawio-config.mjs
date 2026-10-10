@@ -16,4 +16,6 @@ if (!bootstrap.includes('js/PreConfig.js') || !html.includes('js/bootstrap.js'))
 }
 writeFileSync(join(root, 'js', configName), config);
 writeFileSync(join(root, 'js', bootstrapName), bootstrap.replaceAll('js/PreConfig.js', `js/${configName}`));
-writeFileSync(join(root, 'index.html'), html.replaceAll('js/bootstrap.js', `js/${bootstrapName}`));
+if (!html.includes('<img src="images/spin.gif"/>')) throw new Error('Draw.io loading image changed; review alternative');
+writeFileSync(join(root, 'index.html'), html.replaceAll('js/bootstrap.js', `js/${bootstrapName}`)
+  .replace('<img src="images/spin.gif"/>', '<img src="images/spin.gif" alt="" aria-hidden="true"/>'));

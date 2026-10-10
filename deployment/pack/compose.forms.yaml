@@ -21,7 +21,7 @@ services:
       timeout: 3s
       retries: 5
   app:
-    image: utilibre-liberaforms:4.11.1-p5
+    image: utilibre-liberaforms:4.11.1-p6
     restart: unless-stopped
     depends_on: {db: {condition: service_healthy}}
     user: '4002:4002'

@@ -1,5 +1,111 @@
 # Catalog SEO verification — 9 October 2026
 
+## Reconciliation of the supplied URL export — 10 October 2026
+
+The owner subsequently supplied the affected URLs. This supersedes the missing-
+URL limitation below: most description/heading reports concerned application
+subdomains, source offers and language handoffs, not portal landing pages.
+
+The fixed target list and read-only checker are `portal/scripts/seo-service-targets.mjs`
+and `portal/scripts/check-service-seo.mjs`. **73 distinct URLs** cover every reported
+description, heading, duplicate and long-title URL, all four non-portal image
+URLs, and ten representative portal templates/filter states. This is not a
+recursive crawl of generated URLs or an account-content audit. The previous
+168-canonical-page portal check remains separate evidence.
+
+| Report | Verified result and treatment |
+| --- | --- |
+| 42 missing descriptions | **33 corrected on live URLs**: 20 shared source pages, five language handoffs, four OmniTools tasks, Gravity, Knit, One File Core and LiberaForms. Nine special-purpose URLs remain as detailed below. |
+| 3 duplicate descriptions | All three live BentoPDF URLs now contain exactly one tool-specific description. The packaging repair covers **2,016 of 2,776 generated HTML pages**, including localized variants. |
+| 2 long titles | Portal PDF title was shortened in the preceding release; QR Generator now has concise native EN/ES titles. Its unsupported “world's best” description was also replaced with tested capabilities. |
+| Missing image alternatives | No missing attributes in the 14 sampled initial-HTML image URLs after release. Fixed LiberaForms' redundant logo, draw.io's loading spinner and OmniTools' meaningful linked logo. Kept intentional empty alternatives instead of repeating decorative content to screen readers. |
+| 29 missing H1s | Added a visible heading to five language handoffs and corrected OmniTools' existing task title to a native H1 in its four reported rendered task views. Initial-HTML scanners still cannot see SPA-created headings; other native editor/account interfaces are not modified solely to erase a notice. |
+| Radicale multiple H1s | Eight native panels exist in the HTML, but only the sign-in panel is visible in the logged-out check. The page is already noindex. Did not break inactive panel headings to satisfy a raw count. |
+
+The nine remaining description URLs are `gram`, `tenor`, `trip`, `lyrics`,
+`chores` roots; `calendar` `/dav/.web/`; `collab` `/?lang=en`; `budget` root;
+and `meet` `/group/community/`, all under `utilibre.org`. The first seven already
+have **noindex**. Budget is an account sign-in shell and the meeting URL is a
+room entry, not an editorial landing page; neither returned noindex in this
+check, so do not claim otherwise. Their access controls remain unchanged.
+These nine notices are **not repaired metadata**, nor proof of an indexing
+failure. Describe these tools through their existing public portal pages;
+do not inject crawler-only copy or expose account/room content for SEO.
+
+Rendered Chromium inspection found native headings in Calendar, TRIP, MiniQR,
+Sketchforge, LRCLIB, Kokoro, Actual and FMD. Gravity's tour heading is hidden in
+the initial state. AudioMass, SVGEdit, miniPaint, ByteStash, Projects, Knit,
+Kitchen, Moocup, Chores and Gram still lack a visible H1 in the sampled state;
+Tasks redirects to authentication. No full accessibility pass is claimed for
+these upstream applications. The two portal header-logo variants, CV's named
+home-link/decorative illustrations and Moodist's hidden background legitimately
+use empty alternatives. The scanner may continue reporting these.
+
+### Release evidence and safety
+
+Released BentoPDF **2.8.8-p4**, OmniTools **0.6.0-p7**, draw.io **32.0.2-p4**,
+QR Generator **0fde700-p5** and LiberaForms **4.11.1-p6**. Shared source/language
+HTML and the three small static landing-page builds are updated. All changes
+are reproducible packaging/template edits; no application engine, account rule,
+database schema, document retention or tracking feature was changed. Existing
+noindex rules remain; language handoffs explicitly gain noindex,follow because
+they set a preference and redirect rather than provide standalone content.
+
+All 73 public URLs returned HTTP 200 after deployment. Two pinned packaging
+tests pass; lint passes. BentoPDF comparison found **2,464 byte-identical files**
+and **2,112 changed HTML/precompressed variants**, with no changed runtime
+assets. LiberaForms' application-file comparison changes only two templates.
+The app was recreated without restarting its database or touching responses.
+WBO was not restarted: an SEO-only release must not discard its in-memory rooms.
+
+Public Chromium checks passed: PDF merge with two readable pages; EN/ES OCR
+with searchable PDF output (manual proofreading still required); OmniTools
+image compression with a valid 800×600 output; QR generation and decoding,
+PNG/SVG/PDF export, synthetic scanner and offline reopening. These flows made
+no third-party requests or content uploads. Seven additional desktop/390px
+render checks verified native titles, heading/alt fixes and no page errors.
+OmniTools and Forms have no narrow-screen overflow; draw.io's native editor
+still reports desktop overflow, not repaired in this metadata release.
+Screenshots of the changed mobile interfaces were inspected. This is Linux
+Chromium with mobile viewport emulation, **not real-phone testing**.
+
+Raw reports are private under `/opt/utilibre/reports/seo-subdomains-*-20261010.json`;
+release checks, synthetic screenshots, source-offer checksums and backups are
+under `/opt/utilibre/seo-subdomains-UIYi176D`. Source archives retain original
+licenses and now include the matching recipes; versioned source links avoid
+stale downloads. No Caddy change or new service is required.
+
+The portal's version records were deployed as
+`public-utility-portal:0.1.0-service-semantics-20261010`. Its isolated release
+passed build, lint, typecheck, **114 unit tests**, **21 SEO/IndexNow tests** and
+the live **168-page** SEO gate. The first isolated unit run lacked its compiled
+artifacts; copying the exact Docker build output resolved that test-fixture
+setup failure without a code change. Four OmniTools rendered headings and all
+ten EN/ES language handoffs passed additional checks. These metadata edits do
+not require a new full-sitemap IndexNow notification.
+
+Only explicitly enumerated, reclaimable build-cache records created by this
+release were pruned: **367.8 MB + 596.1 MB** reported by Docker. No user files,
+data volumes, running images or rollback images were removed. That cache can
+be rebuilt from the pinned recipes. About **3.9 GiB** remained free afterwards;
+disk headroom is still limited and broader cleanup is a separate pending task.
+
+Rollback: select the previous images (BentoPDF p3, OmniTools p6, draw.io p3,
+QR p4, Forms p5) in their existing Compose files and recreate only the affected
+service with `up -d --no-deps --no-build`. Restore the preserved shared HTML,
+`static-before` files and `source-before` archives from the release directory
+when rolling back their associated packages. Preserve all app data volumes.
+For the portal records, the prior image is
+`public-utility-portal:0.1.0-semantics-20261010`.
+
+Guidance checked: [Google descriptions](https://developers.google.com/search/docs/appearance/snippet),
+[Google noindex](https://developers.google.com/search/docs/crawling-indexing/block-indexing),
+[W3C decorative images](https://www.w3.org/WAI/tutorials/images/decorative/).
+Impeccable's accessibility review informed the distinction between meaningful
+labels and decorative images. No design-system exceptions were added. Bing
+must crawl again before its report changes; these checks do not establish
+indexing, rankings, traffic or elimination of every upstream scanner notice.
+
 ## Owner's issue-count report — 10 October 2026
 
 The supplied scan lists 42 pages without descriptions, 122 with missing image

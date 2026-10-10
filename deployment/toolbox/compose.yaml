@@ -25,9 +25,9 @@ x-source: &source /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
 services:
   bentopdf:
     <<: *static
-    image: utilibre-bentopdf:2.8.8-p3
+    image: utilibre-bentopdf:2.8.8-p4
     build:
-      context: /opt/utilibre/pack-static/bentopdf-2.8.8-p3
+      context: /opt/utilibre/pack-static/bentopdf-2.8.8-p4
       dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.bentopdf
     ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3101:8080"]
     logging: {driver: none}
@@ -51,7 +51,7 @@ services:
   omnitools:
     <<: *static
     networks: [tools, rustpad]
-    image: utilibre-omnitools:0.6.0-p6
+    image: utilibre-omnitools:0.6.0-p7
     build:
       context: .
       dockerfile: Dockerfile.omnitools
@@ -87,7 +87,7 @@ services:
       - *source
   drawio:
     <<: *static
-    image: utilibre-drawio:32.0.2-p3
+    image: utilibre-drawio:32.0.2-p4
     build: {context: ., dockerfile: Dockerfile.drawio}
     ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3111:8080"]
     volumes:

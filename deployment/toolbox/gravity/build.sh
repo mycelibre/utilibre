@@ -12,6 +12,7 @@ fi
 # Promo-video ffmpeg hooks are unnecessary for the static app.
 npm ci --ignore-scripts --no-fund
 NODE_OPTIONS=--max-old-space-size=768 npm run build
+node "$integration_dir/../prepare-static-description.mjs" gravity dist/index.html
 # Only this build's unused third-party media is omitted; original source stays intact.
 rm -rf dist/audio
 rm -f dist/Moon-TomBrown.webp dist/earth_daymap.jpg

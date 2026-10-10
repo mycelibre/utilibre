@@ -16,6 +16,8 @@ file.rename(output/'one-file-core.html.download')
 (output/'index.html').write_bytes((recipe/'index.html').read_bytes())
 (output/'es').mkdir(exist_ok=True)
 (output/'es'/'index.html').write_bytes((recipe/'index.es.html').read_bytes())
+for kind, path in [('one-file-core', output/'index.html'), ('one-file-core-es', output/'es'/'index.html')]:
+    subprocess.run(['node',str(recipe.parent/'toolbox'/'prepare-static-description.mjs'),kind,str(path)],check=True)
 manifest={'upstream':pin,'version':'4.1.5-p1','files':{str(f.relative_to(output)):hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(output.rglob('*')) if f.is_file() and f.name!='build.json'}}
 (output/'build.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print(json.dumps(manifest))

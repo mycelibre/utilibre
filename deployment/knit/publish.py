@@ -20,7 +20,9 @@ for app,pin,paths in apps:
     assert not m.name.startswith('/') and '..' not in pathlib.PurePosixPath(m.name).parts and not m.issym()
     assert not any(x in pathlib.PurePosixPath(m.name).parts for x in ['licensed','fonts','api'])
     m.uid=m.gid=0;m.uname=m.gname='';m.mtime=0;out.addfile(m,upstream.extractfile(m) if m.isfile() else None)
-  for f in sorted((repo/'deployment'/app).rglob('*'))+[repo/'docs'/f'{app}-deployment-2026-10-09.md',repo/'LICENSE']:
+  files=sorted((repo/'deployment'/app).rglob('*'))+[repo/'docs'/f'{app}-deployment-2026-10-09.md',repo/'LICENSE']
+  if app=='knit':files.append(repo/'deployment'/'toolbox'/'prepare-static-description.mjs')
+  for f in files:
    assert not f.is_symlink()
    if not f.is_file():continue
    assert f.name not in ['.env','credentials.json']

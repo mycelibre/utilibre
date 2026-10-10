@@ -19,7 +19,7 @@ export default tseslint.config(
     rules: { 'no-console': ['error', { allow: ['warn', 'error'] }] }
   },
   {
-    files: ['scripts/check-seo.mjs', 'scripts/submit-indexnow.mjs'],
+    files: ['scripts/check-seo.mjs', 'scripts/check-service-seo.mjs', 'scripts/submit-indexnow.mjs'],
     languageOptions: { globals: { AbortSignal: 'readonly', Buffer: 'readonly', console: 'readonly', fetch: 'readonly', process: 'readonly', setTimeout: 'readonly', URL: 'readonly' } },
   },
   {

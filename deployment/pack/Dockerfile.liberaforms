@@ -14,6 +14,8 @@ COPY . .
 COPY --from=pack liberaforms-logging.py /app/liberaforms/config/logging.py
 COPY --from=pack liberaforms-privacy.py /app/utilibre-privacy.py
 RUN python /app/utilibre-privacy.py
+COPY --from=pack liberaforms-semantics.py /app/utilibre-semantics.py
+RUN python /app/utilibre-semantics.py
 RUN mkdir -p /app/uploads /app/logs /app/flask_session && chown -R 4002:4002 /app/uploads /app/logs /app/flask_session
 USER 4002:4002
 CMD ["gunicorn", "--bind=0.0.0.0:5000", "--workers=1", "--threads=2", "--timeout=30", "--access-logfile=/dev/null", "--error-logfile=/dev/null", "wsgi:app"]

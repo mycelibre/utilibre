@@ -15,6 +15,7 @@ subprocess.run(['npm','ci','--ignore-scripts','--no-fund'],cwd=work,check=True)
 subprocess.run(['./node_modules/.bin/tsc','--sourceMap','false','--declaration','false','--declarationMap','false'],cwd=work,check=True)
 for f in (work/'dist').glob('*.js'):shutil.copyfile(f,output/f.name)
 shutil.copyfile(work/'index.html',output/'index.html');shutil.copyfile(work/'LICENSE',output/'LICENSE.txt')
+subprocess.run(['node',str(recipe.parent/'toolbox'/'prepare-static-description.mjs'),'knit',str(output/'index.html')],check=True)
 (output/'LICENCE-NOTE.txt').write_text('The upstream repository LICENSE contains GNU GPL version 3. Its package.json says ISC. The precise intended grant/version scope is unconfirmed; both original notices are retained in the source offer.\n')
 manifest={'upstream':pin,'version':'1.0.0-42be1d8-p1','files':{str(f.relative_to(output)):hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(output.rglob('*')) if f.is_file() and f.name!='build.json'}}
 (output/'build.json').write_text(json.dumps(manifest,indent=2)+'\n');print(json.dumps(manifest))
