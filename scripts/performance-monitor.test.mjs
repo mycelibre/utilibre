@@ -3,7 +3,41 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { containerMetrics, evaluate, probeMetrics, retainHistory } from './performance-monitor.mjs';
+import { containerMetrics, evaluate, inventoryRows, probeMetrics, retainHistory } from './performance-monitor.mjs';
+
+test('inventory retries a deployment race with a fresh list, not partial output', () => {
+  let calls = 0;
+  const result = inventoryRows((_binary, args, options) => {
+    assert.deepEqual(options.stdio, ['ignore', 'pipe', 'pipe']);
+    calls++;
+    if (calls === 1) return 'aaaaaaaaaaaa\n';
+    if (calls === 2) throw Object.assign(Error('private process output'), {
+      status: 1, stderr: 'error: no such object: aaaaaaaaaaaa\n', stdout: '{"id":"partial"}\n',
+    });
+    if (calls === 3) return 'bbbbbbbbbbbb\n';
+    assert.equal(args.at(-1), 'bbbbbbbbbbbb');
+    return '{"id":"bbbbbbbbbbbb","name":"replacement"}\n';
+  });
+  assert.equal(calls, 4);
+  assert.deepEqual(result, [{id: 'bbbbbbbbbbbb', name: 'replacement'}]);
+});
+test('inventory errors are bounded and do not expose child-process output', () => {
+  for (const [stderr, expectedCalls] of [['permission denied: PRIVATE', 2], ['error: no such object: aaaaaaaaaaaa', 4]]) {
+    let calls = 0;
+    assert.throws(() => inventoryRows((_binary, args) => {
+      calls++;
+      if (args[0] === 'ps') return 'aaaaaaaaaaaa\n';
+      throw Object.assign(Error('PRIVATE'), {status: 1, stderr, stdout: 'PRIVATE'});
+    }), error => error.message === 'Cannot inspect running containers' && !JSON.stringify(error).includes('PRIVATE'));
+    assert.equal(calls, expectedCalls);
+  }
+});
+test('inventory rejects empty, malformed and incomplete results', () => {
+  assert.throws(() => inventoryRows(() => ''), /No running containers/);
+  for (const output of ['not json', '{"id":"one"}\n']) {
+    assert.throws(() => inventoryRows((_binary, args) => args[0] === 'ps' ? 'aaaaaaaaaaaa\nbbbbbbbbbbbb\n' : output), /Invalid container inventory/);
+  }
+});
 
 const baseline = { name: 'test', id: 'id', startedAt: 'start', usage: 1000000, quota: 2,
   periods: 100, throttled: 10, throttledUsec: 100000, memoryMiB: 100, workingMiB: 80,

@@ -114,6 +114,15 @@ by `utilibre-performance.timer`. Run `node scripts/performance-monitor.mjs repor
 for the latest readings and local pressure flags. The capacity report records
 retention, thresholds, workflow results and the targeted disk cleanup.
 
+On 10 October the portal release exposed a Docker `ps`/`inspect` race when a
+container disappeared between those calls. The collector now retries that exact
+condition once with a fresh list, rejects partial inventories and reports bounded
+errors without child-process output. Daemon/permission errors still fail the job.
+Nine focused tests and a fresh `utilibre-performance.service` run pass. Existing
+sampling, seven-calendar-day aggregate history and thresholds are unchanged.
+Portal status refreshes independently cap simultaneous target probes at six;
+their HTTP/TCP observations do not establish complete application functionality.
+
 This document distinguishes measurements from configured ceilings. Quiet
 container memory does not predict concurrent searches, Redlib media transfer,
 feed refresh bursts, database growth, RSSHub route cost, or paste abuse.

@@ -24,13 +24,34 @@ export function hostSnapshot() {
     diskFreeGiB: round(disk.bavail * disk.bsize / 1024 ** 3) };
 }
 
-export function containerInventory() {
-  const ids = execFileSync('docker', ['ps', '-q'], { encoding: 'utf8', timeout: 10000 }).trim().split('\n').filter(Boolean);
-  if (!ids.length) throw Error('No running containers found');
+export function inventoryRows(run = execFileSync) {
+  const options = { encoding: 'utf8', timeout: 10000, maxBuffer: 2 * 1024 ** 2, stdio: ['ignore', 'pipe', 'pipe'] };
   const format = '{"id":{{json .Id}},"name":{{json .Name}},"pid":{{.State.Pid}},"startedAt":{{json .State.StartedAt}},"restarts":{{.RestartCount}},"health":{{with index .State "Health"}}{{json .Status}}{{else}}null{{end}}}';
-  return execFileSync('docker', ['inspect', '--format', format, ...ids], { encoding: 'utf8', timeout: 10000, maxBuffer: 2 * 1024 ** 2 })
-    .trim().split('\n').map(line => {
-      const item = JSON.parse(line);
+  // A release can replace a container after ps but before inspect. Retry once
+  // with a fresh list, never use a partial inventory or log child-process output.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    let ids;
+    try { ids = run('docker', ['ps', '-q'], options).trim().split('\n').filter(Boolean); }
+    catch { throw Error('Cannot list running containers'); }
+    if (!ids.length) throw Error('No running containers found');
+    let output;
+    try { output = run('docker', ['inspect', '--format', format, ...ids], options); }
+    catch (error) {
+      const missingOnly = error.status === 1 && !error.signal
+        && String(error.stderr || '').trim().split('\n').every(line => /^error: no such object: [a-f0-9]{12,64}$/i.test(line));
+      if (attempt === 0 && missingOnly) continue;
+      throw Error('Cannot inspect running containers');
+    }
+    try {
+      const rows = output.trim().split('\n').map(line => JSON.parse(line));
+      if (rows.length !== ids.length) throw Error('Incomplete inventory');
+      return rows;
+    } catch { throw Error('Invalid container inventory'); }
+  }
+}
+
+export function containerInventory() {
+  return inventoryRows().map(item => {
       item.name = item.name.replace(/^\//, '');
       try { item.path = '/sys/fs/cgroup' + read(`/proc/${item.pid}/cgroup`).match(/^0::(.+)$/m)[1]; }
       catch { item.path = null; }

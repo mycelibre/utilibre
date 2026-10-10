@@ -1,4 +1,4 @@
-# Wallabag repair and deployment — 9 October 2026
+# Wallabag repair and deployment — 10 October 2026
 
 Backend deployed on `10.10.1.43:3177`; public `https://wallabag.utilibre.org`
 passes authenticated workflow and isolation checks on **10 October 2026**.
@@ -35,6 +35,40 @@ FreshRSS-to-Wallabag is manual copy/paste, not cross-account synchronization.
 Storage Box now includes the encrypted suite's native snapshots; see
 `deployment/storagebox/README.md`. Local backup retention remains unchanged.
 Deleted content can remain in retained local/off-host backup generations.
+
+## Portal release and rollback — 10 October 2026
+
+Production is deployed, not just prepared. Integration commit `198cc65` builds
+`public-utility-portal:0.1.0-wallabag-status-20261010`, image ID
+`sha256:1cd1a231965aedac1e6a0d4a74f7be382e22b32f76182b58268bf172ebca26dd`.
+The follow-up Compose configuration supplies the exact Wallabag status target;
+the ignored `.env` alone does not override Compose's explicit `STATUS_SERVICES`.
+Only the portal was recreated. Wallabag and the other application containers
+were not restarted or upgraded. There is no required Caddy change.
+
+`node scripts/check-wallabag-portal.mjs https://utilibre.org` passes through the
+public edge at 21:01 UTC: accounts/default views, existing request-mail link,
+EN/ES guides, 1280px/390px layouts, no-JavaScript Spanish content, metadata and
+sitemap, actual 404, and Wallabag operational among 93 status observations.
+The public endpoint is `/_portal/status`; legacy `/api/status` is edge-protected.
+No outside portal browser requests or runtime errors occurred. Private report:
+`/opt/utilibre/reports/wallabag-portal-2a6e7u/result.json`.
+
+Preview and build gates: 118 portal unit tests, 22 configuration-validator tests,
+lint/typecheck/build, FOSS/source checks and the existing client budget passed.
+Main JavaScript gzip is 196,738 bytes, below the existing 215,000-byte guard.
+These checks do not prove search indexing, real-user performance or phone support.
+
+Release settings/evidence are root-private under
+`/opt/utilibre/portal-wallabag-status-CiUrMI/`. `previous.env` and
+`previous-runtime.json` retain the preceding configuration/image. For a portal
+rollback, restore the changed portal settings from that private snapshot, select
+`public-utility-portal:0.1.0-404-20261010`, validate configuration and run
+`docker compose up -d --no-deps --no-build portal`. Never publish the snapshot or
+overwrite later unrelated environment changes. Prior matching integration source
+archive/index are preserved in `/opt/utilibre/source-update-P40hTv/`; restore
+those only with the corresponding portal rollback. This does not delete reading
+libraries, stop daily backups or require rolling Wallabag back to vulnerable code.
 
 ## Exact package and security scope
 
@@ -187,10 +221,10 @@ pack snapshot after fixture cleanup also includes the owner account and secrets.
 Subsequent generic pack checks verify encrypted SQLite integrity/account presence;
 that does not silently renew the dated functional-restore claim.
 
-## Starter copy for the account-service launch
+## Short native-workflow reference
 
-Publish only after the public route works, alongside the actual approved-account
-onboarding. This is finished tested copy, not a promise of public registration.
+Public portal guides are now deployed at the routes above, alongside the actual
+approved-account onboarding. This operator reference is not public registration.
 
 ### English: Save an article for later
 

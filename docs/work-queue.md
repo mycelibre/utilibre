@@ -1,4 +1,74 @@
-# Operator work queue — reconciled 9 October 2026
+# Operator work queue — reconciled 10 October 2026
+
+## Items 1 and 2 completed — 10 October, 21:02 UTC
+
+1. **Backup/monitoring publication and bounded status checks: complete.** GitHub
+   commits `d01bec5` and `198cc65` publish the reviewed native backup setup,
+   credential-free connection template, scoped retention and read-only alert
+   check, then the portal release. Seven backup/retention tests and all 24 live
+   group selectors pass; private connection/key files were preserved. The daily
+   off-host timer remains enabled. Portal probes now run at most six at once.
+   A deployment-time Docker inventory race was repaired with one bounded retry
+   and output-redacted failures; nine collector tests and a real service run pass.
+   This is operational monitoring, not visitor analytics.
+2. **Wallabag public workflow and catalogue launch: complete.** Normal public
+   HTTPS passed password/MFA login, article save/read/reload, JSON/TXT/PDF/EPUB
+   export, deletion, separate-account isolation and logged-out denial. Public
+   registration remains closed; the catalogue places it under approved accounts
+   with the existing request route. EN/ES guides are live at
+   `/en/guides/save-articles` and `/es/guias/guardar-articulos`. Text-only browser
+   reading, server-readable libraries, retained backups and the locally patched
+   2.7-dev package are explicitly qualified, not described as an upstream stable
+   release or end-to-end encryption.
+
+Production portal image `public-utility-portal:0.1.0-wallabag-status-20261010`
+is healthy. Final public checks passed at 21:01 UTC: both languages, desktop and
+390px mobile emulation, account-only placement, request links, no-JS guide,
+metadata/sitemap, genuine 404, and 93 bounded status observations including
+Wallabag. No outside browser requests or script errors appeared in this check.
+The separate native reader check is documented in
+[Wallabag deployment](../deployment/pack/wallabag/README.md). Portal unit tests
+118/118 and launch-validator tests 22/22 passed. No Caddy change, registration
+change or unrelated app restart was required. Exact release and rollback notes
+are in the same deployment document. Physical mobile devices were not tested.
+
+Next remain items **3 and 4** below: isolated clean-machine recovery and the
+owner's physical-device checks. Those are not implied complete by this release.
+
+## Storage and cleanup checkpoint — 10 October 2026
+
+This checkpoint supersedes older storage-deferred and blanket image-retention
+statements below. Encrypted off-host copies of 24 native backup groups now pass
+download/hash verification and an isolated Authentik database restore. Daily
+09:15–09:20 UTC scheduling is enabled with owner-approved **7 daily + 4 weekly**
+retention only for the new application repository/group. Existing whole-VM and
+local-backup retention remain unchanged; full-machine recovery is not proven.
+
+The two cleanup passes removed six reproducible dependency folders (about
+4.7 GiB) and 77 reviewed obsolete images (another 5.12 GiB). About **13.34 GiB**
+was available at the cleanup checkpoint, before the later portal build.
+Running/stopped containers, current and documented rollback
+images, user data and source archives were preserved. Exact scope and recovery
+qualifications: [resource usage](resource-usage.md); scheduling/restore evidence:
+[backups](backups.md).
+
+Queue retained for continuity; the completed checkpoint above supersedes items 1 and 2:
+
+1. Completed: backup/monitoring publication and bounded portal status release.
+2. Completed: Wallabag's public workflow, isolation checks and account catalogue.
+3. Rehearse clean-machine recovery when an isolated replacement environment is
+   available: code/images, private settings/keys, restored state and separate
+   Caddy configuration. Record actual coverage and time; do not infer success
+   from GitHub or a single database restore.
+4. Close the physical-device checks with the owner: FMD location delivery on the
+   authorized Android device and Whisper recording quality/noise in Windows
+   Opera. FMD's ring/map are owner-reported successes, not proven GPS delivery;
+   Whisper remains a direct-URL pilot with its catalogue entry hidden.
+
+Known upstream-media restrictions (Dumb, BreezeWiki/Rimgo), excluded candidates,
+external listing decisions and physical print/device checks remain separately
+qualified. No new services, registrations or directory submissions are part of
+this cleanup.
 
 ## Later repair checkpoint — 9 October, 19:34 UTC
 

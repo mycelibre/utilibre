@@ -39,7 +39,10 @@ try {
   assert.match(await page.locator('main').innerText(), /JSON/); await context.close();
   const sitemap = await (await fetch(origin + '/sitemap.xml')).text();
   assert(sitemap.includes('/en/guides/save-articles') && sitemap.includes('/es/guias/guardar-articulos'));
-  const status = await (await fetch(origin + '/api/status', {signal: AbortSignal.timeout(60000)})).json();
+  const statusResponse = await fetch(origin + '/_portal/status', {signal: AbortSignal.timeout(60000)});
+  assert.equal(statusResponse.status, 200);
+  const status = await statusResponse.json();
+  assert(Array.isArray(status.services), 'Public status response must contain services');
   assert.equal(status.services.find(s => s.id === 'wallabag')?.status, 'operational');
   assert.deepEqual(errors, []); assert.deepEqual([...outside], []);
   const report = {date: new Date().toISOString(), origin, passed: true, browser: 'Linux Chromium; EN 1280px, ES 390px emulation; no-JS guide',
