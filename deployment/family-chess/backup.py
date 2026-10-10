@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Consistent native SQLite snapshot; no automatic backup expiry."""
 import datetime,hashlib,json,os,pathlib,shutil,sqlite3
+from contextlib import closing
 os.umask(0o077)
 base=pathlib.Path('/opt/utilibre/family-chess')
 if shutil.disk_usage(base).free < 5*1024**3:raise SystemExit('Less than 5 GiB free; backup refused')
 out=base/'backups'/datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H-%M-%SZ');out.mkdir(parents=True,mode=0o700)
-with sqlite3.connect(f'file:{base}/data/chess.sqlite3?mode=ro',uri=True) as src,sqlite3.connect(out/'chess.sqlite3') as dst:
+# SQLite's connection context commits/rolls back but does not close the handle.
+# Close both before hashing so WAL checkpoint/removal cannot invalidate the manifest.
+with closing(sqlite3.connect(f'file:{base}/data/chess.sqlite3?mode=ro',uri=True)) as src,closing(sqlite3.connect(out/'chess.sqlite3')) as dst:
  src.backup(dst)
  assert dst.execute('PRAGMA integrity_check').fetchone()==('ok',)
  assert not dst.execute('PRAGMA foreign_key_check').fetchall()

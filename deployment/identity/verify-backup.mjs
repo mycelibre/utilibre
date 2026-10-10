@@ -3,7 +3,9 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { realpathSync, openSync, closeSync, writeFileSync } from 'node:fs';
 import { randomBytes } from 'node:crypto';
 const target = realpathSync(process.argv[2] || '');
-if (!/^\/opt\/utilibre\/identity-backups\/[0-9TZ-]+$/.test(target)) throw new Error('Provide an exact identity snapshot directory.');
+// Also accept a downloaded snapshot under the dedicated private restore fixture.
+// The native restore still uses only a disposable, networkless database.
+if (!/^\/opt\/utilibre\/(?:reports\/storagebox-restore-[A-Za-z0-9]+\/opt\/utilibre\/)?identity-backups\/[0-9TZ-]+$/.test(target)) throw new Error('Provide an exact identity snapshot or private Storage Box restore directory.');
 execFileSync('sha256sum', ['-c', 'SHA256SUMS'], { cwd: target, stdio: 'inherit' });
 for (const name of ['data.tar.gz', 'private-config.tar.gz']) execFileSync('tar', ['-tzf', `${target}/${name}`], { stdio: 'ignore' });
 const name = `utilibre-identity-restore-${randomBytes(6).toString('hex')}`;

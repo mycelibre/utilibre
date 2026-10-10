@@ -1,5 +1,65 @@
 # Backups, restore, and removal
 
+## Verified Storage Box application copy — October 10, 2026
+
+The owner supplied the existing Storage Box hostname/account and SSH port 23,
+then ran the interactive host-verification/key-installation procedure. Strict
+key-only SSH login now succeeds.
+Restic 0.18.0 (Debian package `0.18.0-1+b4`), a dedicated root-private SSH key,
+separate repository password and strict SFTP configuration are prepared.
+No existing remote backup was changed. The new repository is a separate
+application-backup directory, not the Storage Box root. No mount or live-data
+migration is enabled. The owner confirmed saving a recovery password
+copy outside the VM; that copy has not been independently inspected.
+
+Native local encryption, full-data check, byte-identical restore and rejection
+of a wrong password passed with fictional data at 16:51 UTC. Evidence is private
+at `/opt/utilibre/reports/storagebox-local-restore-k3t96a/result.json`. Latest
+October 10 core, identity, expanded and pack snapshot checksums also passed;
+this recheck is not a fresh functional restore of those applications.
+
+At 17:00 UTC, encrypted upload and byte-identical verified restore of a fictional
+file passed through the actual SFTP repository; wrong-password access failed.
+The initial repository also passed a complete `check --read-data`. Private evidence:
+`/opt/utilibre/reports/storagebox-remote-restore-5BB6pC/result.json`, snapshot
+`2a9f979a`. Remote `df -h` reported 18T available of 20T (rounded).
+
+The subsequent actual application copy, snapshot `288c028d` at 17:10 UTC,
+included 24 native backup groups (112,712,577 bytes in selected manifests/data)
+and the pack decryption key pair within Restic encryption. All 94 downloaded
+files matched local source hashes. The downloaded Authentik database restored
+into a networkless disposable PostgreSQL container and passed the existing owner
+record/archive checks. Evidence:
+`/opt/utilibre/reports/storagebox-restore-xjnYt2/result.json`. Temporary downloaded
+copies were removed; live and original backup data were untouched. A hardened
+systemd run passed at 17:13 UTC, snapshot `7fb3ee84`.
+
+The daily off-host timer (09:15–09:20 UTC) is now **enabled** with owner-approved
+**7 daily + 4 weekly** native Restic retention, scoped only to this repository's
+`utilibre-vm` / `native-app-snapshots` group. The 18:19 UTC hardened job passed,
+snapshot `4e54f792`, including expiry, bounded prune and metadata checks.
+Superseded snapshot `7fb3ee84` expired; two application snapshots and the separate
+fictional rehearsal remained. Native day/week buckets overlap and can retain an
+extra oldest snapshot; this is not an exact snapshot count or deletion deadline.
+First timer activation is 11 October at 09:16:54 UTC. Existing local and whole-VM
+backup retention is unchanged. Seven selector/retention tests pass, including
+native expiry and restore with fictional dated snapshots and an unrelated group.
+After production pruning, another 94-file download/hash comparison and isolated
+Authentik database restore passed at 18:19:59 UTC; evidence:
+`/opt/utilibre/reports/storagebox-restore-dLweZi/result.json`.
+Copying reflects each native snapshot's recorded completion time, not every edit
+before upload. Exact 24-group scope, exclusions and checks are in the
+[Storage Box procedure](../deployment/storagebox/README.md), which also
+includes key setup, limits, recovery, coverage and retention gates. Prefer a
+restricted subaccount: a repository subfolder alone does not restrict the main
+account's key. Existing whole-VM backups remain separate and owner-confirmed.
+
+Validation also repaired original-community scheduling that had been displaced
+by newer app backups, and family-chess's SQLite handle closure before manifest
+creation. Fresh generations validated successfully. Older inconsistent/partial
+generations were not deleted or relabelled. Other apps' downloaded archive bytes
+were checked, not every restored UI/workflow. This is not a whole-VM restore.
+
 ## Current recovery matrix — October 9, 2026
 
 The application snapshots inspected here are on this VM. On October 9, the

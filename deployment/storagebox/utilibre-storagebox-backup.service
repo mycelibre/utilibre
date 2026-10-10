@@ -1,0 +1,29 @@
+[Unit]
+Description=Encrypted off-host copy of verified native Utilibre snapshots
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/ubuntu/freetools
+Environment=PATH=/root/.nvm/versions/node/v24.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/bin/flock -n /run/lock/utilibre-storagebox-job.lock /root/.nvm/versions/node/v24.14.0/bin/node deployment/storagebox/backup-native.mjs --apply
+UMask=0077
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+CPUQuota=100%
+MemoryMax=512M
+TasksMax=64
+TimeoutStartSec=2h
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/opt/utilibre/reports /opt/utilibre/storagebox/private /run/lock
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+

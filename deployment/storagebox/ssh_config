@@ -1,0 +1,24 @@
+# Template only: prepare.mjs fills these from operator-supplied environment.
+# The resulting operator-owned configuration stays outside Git.
+# A restricted Storage Box subaccount can replace HostName/User here.
+Host utilibre-storagebox
+    HostName __STORAGEBOX_HOST__
+    User __STORAGEBOX_USER__
+    Port 23
+    IdentityFile /opt/utilibre/storagebox/private/id_ed25519
+    IdentitiesOnly yes
+    IdentityAgent none
+    BatchMode yes
+    PasswordAuthentication no
+    KbdInteractiveAuthentication no
+    StrictHostKeyChecking yes
+    UserKnownHostsFile /opt/utilibre/storagebox/private/known_hosts
+    GlobalKnownHostsFile /dev/null
+    UpdateHostKeys no
+    ForwardAgent no
+    ClearAllForwardings yes
+    ConnectTimeout 10
+    ConnectionAttempts 1
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
+    LogLevel ERROR

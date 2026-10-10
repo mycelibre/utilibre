@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily off-host copy after the native application backups
+
+[Timer]
+OnCalendar=*-*-* 09:15:00 UTC
+RandomizedDelaySec=300
+Persistent=true
+Unit=utilibre-storagebox-backup.service
+
+[Install]
+WantedBy=timers.target

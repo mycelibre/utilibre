@@ -1,5 +1,110 @@
 # Resource usage and operating limits
 
+## Reviewed image retirement — October 10, 2026
+
+The owner authorized trimming obsolete images while preserving running software
+and recovery options. `scripts/cleanup-reviewed-images.mjs` records a dry-run
+plan with exact image IDs, then rechecks references before applying it. This is
+a finite reviewed batch, **not an enabled periodic prune policy**.
+
+Removed **77** older images across twelve reviewed image families. Preserved
+current and documented previous releases, all images used by running **or stopped**
+containers, and image references found in deployment/build configuration. Other
+families, untagged upstream digests, build images, security-repair candidates and
+images with unclear recovery roles were outside this deletion batch. The root
+Compose default also retains its older portal tag; this is deliberately more
+conservative than simply keeping the newest two tags of every repository.
+
+Actual filesystem space recovered was **5.12 GiB**, from about **8.22 to 13.34 GiB**
+available. All 175 container IDs/image references/running states/start times were
+unchanged, including the 164 running containers. Every protected image remained.
+No containers, volumes, user files, source archives, configurations, backup
+generations or service routes were removed or restarted. The off-host backup
+timer remains active. This inventory check is not a new end-to-end app audit.
+
+The private exact-ID plan and completed result are at
+`/opt/utilibre/reports/image-cleanup-3d8aLT/{plan,result}.json`. Removed images
+are no longer available for instant local rollback; older versions require a
+rebuild from their historical recipes/inputs (upstream availability still matters).
+The retained current rollback pairs in the script supersede earlier historical
+notes claiming all older images are still installed. BreezeWiki's retained
+versions still have their documented media limitations; preservation does not
+establish a fully working frontend. WBO was not restarted or disturbed.
+
+Removal used explicit tags mapped to reviewed full IDs with native
+[`docker image rm --no-prune`](https://docs.docker.com/reference/cli/docker/image/rm/),
+without `--force`, broad image pruning, volume pruning or service recreation.
+Docker's shared layer estimates were not presented as actual disk savings.
+
+## Disk attribution and dependency cleanup — October 10, 18:19 UTC
+
+Before this pass the 128 GiB root filesystem had about **3.7 GiB available**
+(98% used), below the native backup jobs' 5 GiB floor. Read-only `du -x` and
+Docker disk reports identified these principal consumers:
+
+| Area | Observed use before cleanup | Interpretation |
+| --- | --- | --- |
+| Containerd image/layer storage | about 73 GiB | About 16 GiB compressed content plus 58 GiB unpacked snapshots, rounded. Includes active software, previous releases and build layers, not just saved user data. |
+| Three application source workspaces | about 19 GiB | `/opt/utilibre/src`, `community-src`, `expanded-src`; substantial generated dependencies, but also live bind-mounted CryptPad source and Whisper assets that must remain. |
+| Local static packs and source offers | about 2.8 GiB | `pack-static` and `toolbox-public`; includes required application assets and licensing/source distributions. |
+| Operator reports | about 1.7 GiB | Build/test/recovery evidence; not removed in this pass. |
+| Root tooling and caches | about 7.5 GiB | Includes coding/test tools and browser binaries; not application documents. |
+
+Docker separately reported 293 images, 110 active image records, 62.98 GB of
+image data and 22.51 GB reclaimable, plus 18.09 GB build cache with 4.379 GB
+reclaimable. **Do not add these numbers to the table:** shared image/cache layers
+overlap and Docker GB differs from `du` GiB. Some unused images are rollback
+versions; none was removed. Examples of large active images were Penpot's
+exporter (2.78 GiB), Uptime Kuma (2.32 GiB) and Authentik (1.79 GiB). These sizes
+are software bundles, not measurements of visitor data.
+
+The existing bounded BuildKit cleanup selected 14 candidates but Docker freed
+**0 bytes**. Its estimated 2.01 GiB was not reported as an actual saving.
+Instead, six exact generated `node_modules` directories were removed under
+`/opt/utilibre/src`: BentoPDF, ChartDB, drawDB, Chitchatter, Super Productivity,
+and Sketchforge. Each had an existing package manifest/lockfile, no tracked
+dependency contents, no container bind-mount overlap, and no process cwd/exe
+conflict in the preflight. Source, locks, built output, models, images, data,
+backups and running services were preserved. Dependencies can be reinstalled
+from the respective pinned lockfile before another build; the removed folders
+are not a restorable copy of their former installed contents.
+
+Root free space rose to **8.3 GiB**, approximately **4.7 GiB reclaimed**, with
+94% used. All 164 containers remained running; no unhealthy container or failed
+systemd unit was reported after cleanup. This is not a fresh app-workflow test.
+The Storage Box job then passed its free-space gate, uploaded all 24 backup
+groups, applied the approved remote retention and passed another download/
+isolated identity-restore test. See [backups](backups.md).
+
+GitHub is not a whole-VM backup: private configuration, secrets, encryption
+keys, databases and server files need their own recovery source. Rebuilding
+images also depends on upstream availability and the pinned build inputs.
+Retained images accelerate recovery/rollback; deleting old images requires a
+separate reviewed keep-set, not a broad `docker system prune -a`. No complete
+bare-VM rebuild or restoration of the separate Caddy VM was tested here.
+
+## Bounded disk cleanup — October 10, 2026
+
+Available root-filesystem space increased from about **5.0 GiB to 9.4 GiB**
+(96% to 93% used). Removed only regenerable caches: selected unshared, reclaimable
+BuildKit records via `scripts/reclaim-build-cache.mjs --apply` (Docker reported
+1.652 GB reclaimed), root npm's download cache (about 2.9 GiB) and downloaded apt
+package archives (about 168 MiB). Net filesystem measurements also include
+ongoing writes and the 24.8 MB Restic installation, so these figures are not an
+exact additive ledger. A pip-cache purge could not run because pip is absent;
+that cache was left alone.
+
+No container, image (including inactive rollback images), volume, installed
+package, application file, source tree, user document, backup generation or log
+retention policy was removed/changed. All 164 running containers remained up
+with no unhealthy status reported; no systemd unit was failed at the final check.
+This was not a complete end-to-end service retest. npm/build/package downloads
+may need fetching again for later builds. Cache cleanup is not a storage-growth
+solution, and 93% used still warrants caution.
+
+Native [encrypted Storage Box backup preparation](../deployment/storagebox/README.md)
+does not expand this filesystem. No application state has moved off-host.
+
 For the current 16-vCPU VM, measured portal CPU improvement and serving limits,
 see the [October 8 capacity report](capacity-2026-10-08.md). Older observations
 below are historical snapshots.

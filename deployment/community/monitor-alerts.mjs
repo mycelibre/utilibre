@@ -4,6 +4,8 @@
 import {readFileSync,writeFileSync,renameSync,mkdirSync,existsSync,statfsSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
 const directory='/var/lib/utilibre-monitor-alerts',file=`${directory}/state.json`;
+// Validate live observations without sending mail or acknowledging alert state.
+const checkOnly=process.argv.includes('--check-only');
 mkdirSync(directory,{recursive:true,mode:0o700});
 const previous=existsSync(file)?JSON.parse(readFileSync(file,'utf8')):{};
 const issues=[];
@@ -30,12 +32,20 @@ if(disk.files&&disk.ffree/disk.files<0.05)issues.push('Application disk has less
 const memory=Object.fromEntries([...readFileSync('/proc/meminfo','utf8').matchAll(/^(\w+):\s+(\d+)/gm)].map(([,name,value])=>[name,Number(value)]));
 if(memory.MemAvailable/memory.MemTotal<0.05)issues.push('Available host memory is below 5%');
 // Service state only: no form/document counts, paths or user activity.
-for(const unit of ['utilibre-pack-backup.service','utilibre-pack-forms-maintenance.service']) {
+for(const unit of ['utilibre-pack-backup.service','utilibre-pack-forms-maintenance.service','utilibre-storagebox-backup.service','utilibre-community-backup.service','utilibre-family-chess-backup.service']) {
   if(!existsSync(`/etc/systemd/system/${unit}`))continue;
   try {
     const result=execFileSync('systemctl',['show',unit,'--property=Result','--value'],{encoding:'utf8',timeout:5000}).trim();
     if(result&&result!=='success')issues.push(`Native maintenance failed: ${unit}`);
   } catch {issues.push(`Cannot inspect native maintenance: ${unit}`)}
+}
+if(existsSync('/etc/systemd/system/utilibre-storagebox-backup.service')) {
+  try {
+    const status=JSON.parse(readFileSync('/opt/utilibre/storagebox/private/last-success.json','utf8'));
+    const date=Date.parse(status.date);
+    if(status.status!=='uploaded-and-metadata-checked'||!Number.isFinite(date)||date>Date.now()+300000)issues.push('Off-host application backup confirmation is invalid');
+    else if(Date.now()-date>36*3600000)issues.push('Off-host application backup is older than 36 hours');
+  } catch {issues.push('Off-host application backup confirmation unavailable')}
 }
 issues.sort();
 const fingerprint=JSON.stringify(issues),count=previous.fingerprint===fingerprint?(previous.count||0)+1:1;
@@ -43,7 +53,7 @@ const test=process.argv.includes('--test');
 const due=issues.length&&count>=2&&(previous.alertedFingerprint!==fingerprint||Date.now()-(previous.sentAt||0)>12*3600000);
 const recovered=!issues.length&&Boolean(previous.alertedFingerprint);
 let alertedFingerprint=previous.alertedFingerprint||'',sentAt=previous.sentAt||0;
-if(test||due||recovered){
+if(!checkOnly&&(test||due||recovered)){
   const subject=test?'Utilibre monitoring test':issues.length?'Utilibre service attention needed':'Utilibre monitoring recovered';
   const body=test?'Verified monitoring mail test. The host checks public-service heartbeats and disk/memory every five minutes. This does not independently detect a complete VM outage.':issues.length?issues.join('\n'):'Previously reported monitor/resource issues have cleared.';
   const program=`import smtplib,ssl,json,sys,socket
@@ -61,6 +71,9 @@ with Relay('mx.mailgt.dev',26,timeout=15) as server:
   if(!test){alertedFingerprint=issues.length?fingerprint:'';sentAt=Date.now()}
   console.log('Monitoring notification accepted by the verified-TLS SMTP relay.');
 }
-writeFileSync(`${file}.tmp`,JSON.stringify({fingerprint,count,alertedFingerprint,sentAt,checkedAt:Date.now()})+'\n',{mode:0o600});
-renameSync(`${file}.tmp`,file);
+if(!checkOnly){
+  writeFileSync(`${file}.tmp`,JSON.stringify({fingerprint,count,alertedFingerprint,sentAt,checkedAt:Date.now()})+'\n',{mode:0o600});
+  renameSync(`${file}.tmp`,file);
+}
+if(checkOnly)console.log('Read-only check: no mail sent and no alert state changed.');
 console.log(issues.length?`${issues.length} issue(s); notifications require two consecutive observations.`:'All observed monitors and resource thresholds are healthy.');
