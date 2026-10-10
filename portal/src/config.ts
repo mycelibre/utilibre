@@ -1,4 +1,27 @@
 export interface PublicConfig {
+  publicTripUrl?: string;
+  publicChessUrl?: string;
+  publicProjectsUrl?: string;
+  publicDonetickUrl?: string;
+  publicBeaverHabitsUrl?: string;
+  publicNewslettersUrl?: string;
+  publicAliasesUrl?: string;
+  publicChatUrl?: string;
+  publicEventsUrl?: string;
+  publicQuizUrl?: string;
+  publicLinksUrl?: string;
+  publicExpandUrl?: string;
+  publicReaderUrl?: string;
+  publicCalendarUrl?: string;
+  publicExpensesUrl?: string;
+  publicWishlistUrl?: string;
+  publicKitchenUrl?: string;
+  publicSnippetsUrl?: string;
+  publicBookmarksUrl?: string;
+  publicTasksUrl?: string;
+  publicSnippetLibraryUrl?: string;
+  publicLocalResumeUrl?: string;
+
   publicPortalOrigin: string;
   projectName: string;
   projectTagline: string;
@@ -69,11 +92,34 @@ export interface PublicConfig {
 }
 
 const defaults: PublicConfig = {
+  publicTripUrl: '',
+  publicChessUrl: '',
+  publicProjectsUrl: '',
+  publicDonetickUrl: '',
+  publicBeaverHabitsUrl: '',
+  publicNewslettersUrl: '',
+  publicAliasesUrl: '',
+  publicChatUrl: '',
+  publicEventsUrl: '',
+  publicQuizUrl: '',
+  publicLinksUrl: '',
+  publicExpandUrl: '',
+  publicReaderUrl: '',
+  publicCalendarUrl: '',
+  publicExpensesUrl: '',
+  publicWishlistUrl: '',
+  publicKitchenUrl: '',
+  publicSnippetsUrl: '',
+  publicBookmarksUrl: '',
+  publicTasksUrl: '',
+  publicSnippetLibraryUrl: '',
+  publicLocalResumeUrl: '',
+
   publicPortalOrigin: '',
   projectName: 'Utilibre',
-  projectTagline: '',
-  projectTaglineEn: '',
-  projectTaglineEs: '',
+  projectTagline: 'Free and open-source tools.',
+  projectTaglineEn: 'Free and open-source tools.',
+  projectTaglineEs: 'Software libre y gratuito.',
   sourceCodeUrl: '',
   supportUrl: '',
   contactUrl: '',

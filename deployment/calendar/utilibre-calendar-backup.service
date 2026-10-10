@@ -1,0 +1,10 @@
+[Unit]
+Description=Consistent local Utilibre calendar and contacts backup
+[Service]
+Type=oneshot
+User=root
+UMask=0077
+WorkingDirectory=/home/ubuntu/freetools
+ExecStart=/usr/bin/flock -n /run/lock/utilibre-calendar-backup.lock /usr/bin/python3 deployment/calendar/backup.py
+Nice=10
+IOSchedulingClass=idle

@@ -1,0 +1,76 @@
+--- a/game/models.py
++++ b/game/models.py
+@@ -1,4 +1,4 @@
+-import random
++import secrets
+ import string
+ import json
+ import logging
+@@ -12,7 +12,7 @@
+ 
+ def generate_game_id():
+     """Generate a random 8-digit game ID."""
+-    return ''.join(random.choices(string.digits, k=8))
++    return ''.join(secrets.choice(string.digits) for _ in range(8))
+ 
+ class Game(models.Model):
+     """Model representing a chess game."""
+--- a/family_chess/urls.py
++++ b/family_chess/urls.py
+@@ -21,6 +21,7 @@
+ from django.conf.urls.static import static
+ 
+ urlpatterns = [
++    path("i18n/", include("django.conf.urls.i18n")),
+     path("admin/", admin.site.urls),
+     path("", include("game.urls")),
+ ]
+--- a/game/templates/game/base.html
++++ b/game/templates/game/base.html
+@@ -14,6 +14,7 @@
+     <script src="{% static 'js/howler.min.js' %}"></script>
+     <link rel="stylesheet" href="{% static 'css/tailwind.min.css' %}">
+     <style>
++        .chess-layout > * { min-width: 0; }
+         .board-container {
+             max-width: 600px;
+             margin: 0 auto;
+@@ -45,6 +46,19 @@
+         
+         <footer class="mt-12 text-center text-gray-600 text-sm">
+             <p>{% trans "Built for my family" %}</p>
++            {% if LANGUAGE_CODE == 'es' %}
++            <p>Utilibre aloja las partidas y puede leerlas. Cualquiera con el código puede mirar y ocupar un lugar libre. No usés el código como enlace privado. Las partidas se eliminan al cumplir siete días; los respaldos anteriores no vencen automáticamente.</p>
++            <p><a href="https://utilibre.org/es/">Más herramientas de Utilibre</a></p>
++            {% else %}
++            <p>Utilibre stores games and can read them. Anyone with the code can watch and take a vacant seat. Do not treat it as a private link. Games are deleted after seven days; earlier backups have no automatic expiry.</p>
++            <p><a href="https://utilibre.org/en/">More tools from Utilibre</a></p>
++            {% endif %}
++            <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
++              <input name="next" type="hidden" value="{{ request.path }}">
++              <button type="submit" name="language" value="en" lang="en">English</button> ·
++              <button type="submit" name="language" value="es" lang="es">Español</button> ·
++              <button type="submit" name="language" value="zh-hans" lang="zh">中文</button>
++            </form>
+         </footer>
+     </div>
+     
+--- a/game/templates/game/game_room.html
++++ b/game/templates/game/game_room.html
+@@ -145,7 +145,7 @@
+     </div>
+     {% endif %}
+     
+-    <div class="grid md:grid-cols-3 gap-6">
++    <div class="grid md:grid-cols-3 gap-6 chess-layout">
+         <div class="md:col-span-2">
+             <div id="boardContainer" class="bg-white rounded-lg shadow p-4 transition-colors duration-300">
+                 <div id="board" class="board-container"></div>
+@@ -395,6 +395,7 @@
+     
+     // Initialize board and game
+     let board = Chessboard('board', boardConfig);
++    window.addEventListener('resize', () => board.resize());
+     
+     // Initialize turn indicator
+     function initializeTurnIndicator() {

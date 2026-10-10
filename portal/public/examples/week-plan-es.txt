@@ -1,4 +1,4 @@
-PLAN DE PRÁCTICA FICTICIO — ejemplo original de Utilibre, CC0-1.0.
+PLAN DE PRÁCTICA FICTICIO: ejemplo original de Utilibre, CC0-1.0.
 Copiá una tarea por vez en Add more. Es texto, no un respaldo JSON.
 
 Leer un capítulo sobre ríos t25m

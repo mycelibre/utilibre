@@ -6,7 +6,8 @@ test "$(git -C "$source" rev-parse HEAD)" = 6d09507b6e7ecec0cbac4c2c4eb223c10ccc
 cp "$root/deployment/expanded/Dockerfile.breezewiki-source" "$source/Dockerfile.utilibre"
 mkdir -p "$source/deployment"
 cp "$root/deployment/expanded/wiki-gateway.conf" "$root/deployment/expanded/wiki-firewall.sh" "$source/deployment/"
-docker run --rm --network none --entrypoint raco utilibre-breezewiki:6d09507-p2 pkg show --all --long --full-checksum > "$source/UTILIBRE-RACKET-PACKAGES.txt"
+cp "$root/deployment/expanded/Dockerfile.breezewiki-tabs" "$root/deployment/expanded/build-breezewiki-tabs.sh" "$root/deployment/expanded/check-breezewiki-tabs.mjs" "$source/deployment/"
+docker run --rm --network none --entrypoint raco utilibre-breezewiki:6d09507-p3 pkg show --all --long --full-checksum > "$source/UTILIBRE-RACKET-PACKAGES.txt"
 git -C "$source" add -N .dockerignore utilibre-transport.py test_utilibre_transport.py test_proxy_response.py UTILIBRE-SOURCE.txt UTILIBRE-RACKET-PACKAGES.txt Dockerfile.utilibre deployment
 git -C "$source" diff HEAD --binary > "$root/deployment/expanded/breezewiki-source.patch"
 if test -f /opt/utilibre/toolbox-public/breezewiki-utilibre.tar.gz; then

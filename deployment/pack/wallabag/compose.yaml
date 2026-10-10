@@ -1,0 +1,86 @@
+name: utilibre-wallabag
+services:
+  app:
+    image: sha256:377062036d58e98a69df2de531499219703a7b0129d51077cbd56e4a42040c7a
+    restart: 'no'
+    read_only: true
+    user: '4007:4007'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging: {driver: none}
+    mem_limit: 384m
+    cpus: 0.75
+    pids_limit: 32
+    dns: [1.1.1.1, 9.9.9.9]
+    sysctls: {net.ipv6.conf.all.disable_ipv6: '1'}
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=16m,mode=1777', '/app/var:rw,nosuid,nodev,size=64m,uid=4007,gid=4007,mode=0700']
+    env_file: /opt/utilibre/pack-secrets/wallabag.env
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: '0'
+      DATABASE_URL: sqlite:////app/data/db/wallabag.sqlite
+      WALLABAG_BASE_URL: https://wallabag.utilibre.org
+      WALLABAG_REGISTRATION_ENABLED: '0'
+      WALLABAG_CAPTCHA_ENABLED: '0'
+      WALLABAG_CONFIRMATION_ENABLED: '0'
+      WALLABAG_SERVER_NAME: Utilibre
+      WALLABAG_FROM_EMAIL: no-reply@utilibre.org
+      WALLABAG_TWOFACTOR_SENDER: no-reply@utilibre.org
+      MAILER_DSN: smtp://10.10.1.20:26?auto_tls=false
+      SENTRY_DSN: ''
+      DEFAULT_LOCALE: en
+      WALLABAG_LOG_LEVEL: error
+      WALLABAG_TABLE_PREFIX: wallabag_
+      WALLABAG_USER_AGENT: 'Mozilla/5.0 (compatible; Utilibre reader)'
+      WALLABAG_ARTICLE_REPORTING_URL: ''
+      WALLABAG_OAUTH_ACCESS_TOKEN_LIFETIME: '3600'
+      WALLABAG_OAUTH_REFRESH_TOKEN_LIFETIME: '1209600'
+      WALLABAG_RABBITMQ_PREFETCH_COUNT: '10'
+      REDIS_URL: redis://127.0.0.1:6379
+      RABBITMQ_URL: amqp://guest:guest@127.0.0.1:5672
+      http_proxy: http://172.29.155.3:3128
+      https_proxy: http://172.29.155.3:3128
+      no_proxy: ''
+    volumes: ['/opt/utilibre/pack-data/wallabag:/app/data']
+    networks: {isolated: {ipv4_address: 172.29.155.2}, ingress: {ipv4_address: 172.29.154.2}}
+  proxy:
+    image: sha256:9bc66d80e90a72c29ba89d44447b58bd1faded54b4ecba35b4f7b2b23497c780
+    restart: 'no'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging: {driver: none}
+    mem_limit: 192m
+    cpus: 0.5
+    pids_limit: 32
+    dns: [1.1.1.1, 9.9.9.9]
+    sysctls: {net.ipv6.conf.all.disable_ipv6: '1'}
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=16m,mode=1777']
+    volumes: ['./squid.conf:/etc/squid/squid.conf:ro']
+    networks: {isolated: {ipv4_address: 172.29.155.3}, ingress: {ipv4_address: 172.29.154.3}}
+  web:
+    image: sha256:720a834f7b667a528d25af60cbcd0603e7d8ebede04d839cced2fecb87858f12
+    restart: 'no'
+    depends_on: [app, proxy]
+    read_only: true
+    user: '101:101'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging: {driver: none}
+    mem_limit: 64m
+    cpus: 0.25
+    pids_limit: 32
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=16m,mode=1777']
+    # The private rehearsal listener remains loopback-only. The edge override
+    # is added only after task/isolation/restore checks pass.
+    ports: ['127.0.0.1:33177:8080']
+    volumes: ['./nginx.conf:/etc/nginx/nginx.conf:ro']
+    networks: {isolated: {ipv4_address: 172.29.155.4}, ingress: {ipv4_address: 172.29.154.4}}
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/login]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+networks:
+  isolated: {internal: true, enable_ipv6: false, ipam: {config: [{subnet: 172.29.155.0/28}]}}
+  ingress: {ipam: {config: [{subnet: 172.29.154.0/28}]}}

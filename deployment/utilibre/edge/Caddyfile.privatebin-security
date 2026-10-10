@@ -1,0 +1,10 @@
+# Define this snippet once, then import utilibre_privatebin_security inside
+# the existing paste.utilibre.org HTTPS block. Do not create a duplicate site.
+# The deferred SET replaces duplicate upstream/edge values at response time.
+# HSTS is limited to this host: no includeSubDomains and no preload request.
+(utilibre_privatebin_security) {
+    header {
+        >Strict-Transport-Security "max-age=31536000"
+        >X-Content-Type-Options "nosniff"
+    }
+}

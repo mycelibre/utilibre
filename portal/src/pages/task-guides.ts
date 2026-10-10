@@ -26,9 +26,9 @@ export function renderTaskGuide(kind: 'pdf' | 'qr', language: Language, config: 
   const header = element('header', 'page-header');
   const title = kind === 'pdf'
     ? es ? 'Uní PDF o reconocé texto escaneado' : 'Merge PDFs or recognize scanned text'
-    : es ? 'Creá un QR que puedas usar y compartir' : 'Create a QR code you can use and share';
+    : es ? 'Creá un QR que podás usar y compartir' : 'Create a QR code you can use and share';
   const intro = kind === 'pdf'
-    ? es ? 'Gratis y sin cuenta, con BentoPDF. Elegí una tarea; los archivos se procesan en tu navegador.' : 'Free, with no account, using BentoPDF. Choose a task; files are processed in your browser.'
+    ? es ? 'Uní páginas o extraé texto de un escaneo con BentoPDF. No necesitás cuenta; los archivos se procesan en tu navegador.' : 'Combine pages or extract text from a scan with BentoPDF. No account is needed; files are processed in your browser.'
     : es ? 'Dos herramientas de software libre, gratis y sin cuenta. Creá un código para un enlace o Wi-Fi, descargalo y probalo antes de compartirlo.' : 'Two free, open-source tools with no account. Create a code for a link or Wi-Fi, download it and test it before sharing.';
   append(header, link(routePath('home', language), es ? 'Todas las herramientas' : 'All tools'), element('h1', '', title), element('p', 'hero-lead', intro));
   const actions = element('div', 'guide-actions');
@@ -64,14 +64,14 @@ export function renderTaskGuide(kind: 'pdf' | 'qr', language: Language, config: 
 function renderPdf(main: HTMLElement, language: Language) {
   const es = language === 'es';
   main.append(section(es ? 'Antes de elegir tus archivos' : 'Before choosing your files', es
-    ? 'Unir y reconocer texto se hace en tu dispositivo, sin subir los documentos a Utilibre. Eso no significa que la página no haga conexiones: algunas bibliotecas, idiomas de OCR y fuentes se descargan de jsDelivr o githack. Esos proveedores reciben las solicitudes de descarga. Para documentos muy sensibles, considerá una herramienta instalada y desconectada. Guardá una copia del original.'
-    : 'Merging and text recognition run on your device, without uploading documents to Utilibre. This does not mean the page makes no connections: some processing libraries, OCR language data and fonts download from jsDelivr or githack. Those providers receive download requests. For highly sensitive documents, consider an installed, offline tool. Keep a copy of your original.'));
+    ? 'Unir y reconocer texto se hace en tu dispositivo, sin subir los documentos a Utilibre. Esta instalación descarga los componentes, los datos de OCR en español e inglés y las fuentes desde Utilibre. Cloudflare intermedia esas descargas y recibe metadatos de conexión; el documento permanece en tu navegador. Para documentos muy sensibles, considerá una herramienta instalada y desconectada. Guardá una copia del original.'
+    : 'Merging and text recognition run on your device, without uploading documents to Utilibre. This installation downloads processing components, English and Spanish OCR data, and fonts from Utilibre. Cloudflare proxies those downloads and receives connection metadata; the document stays in your browser. For highly sensitive documents, consider an installed, offline tool. Keep a copy of your original.'));
   const merge = section(es ? 'Unir PDF en el orden correcto' : 'Merge PDFs in the right order', es
     ? 'Unir combina páginas; no reconoce texto ni reduce necesariamente el tamaño del archivo.'
     : 'Merging combines pages; it does not recognize text or necessarily reduce the file size.', es ? [
       'Abrí «Unir PDF» y seleccioná los archivos. Para practicar, usá los dos ejemplos de abajo: no contienen datos personales.',
       'Revisá el orden de los archivos antes de unirlos. Si necesitás cambiarlo, acomodalos en la herramienta.',
-      'Uní los archivos y guardá la descarga. Abrila y comprobá la cantidad y el orden de las páginas; no borres los originales antes de revisar.',
+      'Uní los archivos y guardá la descarga. Abrila y comprobá la cantidad y el orden de las páginas; no borrés los originales antes de revisar.',
     ] : [
       'Open Merge PDFs and select your files. To practice, use the two samples below: they contain no personal data.',
       'Check the file order before merging. Rearrange them in the tool if needed.',

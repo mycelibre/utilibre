@@ -1,0 +1,143 @@
+diff --git a/index.html b/index.html
+index ff28ee6..cbdd46a 100644
+--- a/index.html
++++ b/index.html
+@@ -3,15 +3,18 @@
+    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+ 
+ <!doctype html>
+-<html>
++<html lang="en">
+   <head>
+-    <title>Bookbinder</title>
++    <title>Bookbinder JS · Utilibre</title>
++    <meta name="robots" content="noindex, nofollow" />
++    <meta name="referrer" content="no-referrer" />
++    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; frame-src 'self' data: blob:; object-src 'self' data: blob:; base-uri 'self'; form-action 'self'" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-    <link rel="stylesheet" href="https://unpkg.com/balloon-css/balloon.min.css" />
++    <link rel="stylesheet" href="./balloon.min.css" />
+     <link rel="stylesheet" type="text/css" href="./styles.css" />
+     <link rel="stylesheet" href="./matcha.css" />
+     <script type="module" src="/src/main.js"></script>
+-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
++    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+     <meta charset="UTF-8" />
+   </head>
+ 
+@@ -19,6 +22,7 @@
+     <div class="wrapper">
+       <div class="section" id="intro">
+         <h1>Bookbinder JS</h1>
++        <p><a href="https://utilibre.org/" rel="noreferrer">More tools from Utilibre / Más herramientas de Utilibre</a> · <a href="https://tools.utilibre.org/utilibre-source/bookbinder-utilibre.tar.gz" rel="noreferrer">Source / Código</a></p>
+         A Javascript-based app for formatting PDFs for bookbinding-- a process called imposition.
+         For more information, feature requests, or to contribute, view the project's
+         <a href="https://github.com/momijizukamori/bookbinder-js">Github repository</a>.
+diff --git a/package-lock.json b/package-lock.json
+index 0d1a4cf..167eb54 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -1,15 +1,16 @@
+ {
+   "name": "bookbinder",
+-  "version": "1.6.1",
++  "version": "1.7.0",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "bookbinder",
+-      "version": "1.6.1",
++      "version": "1.7.0",
+       "license": "MPL",
+       "dependencies": {
+         "@cantoo/pdf-lib": "^1.21.0",
++        "balloon-css": "1.2.0",
+         "file-saver": "^2.0.5",
+         "jszip": "^3.7.1",
+         "vite-plugin-html-inject": "^1.1.2",
+@@ -1616,17 +1617,6 @@
+       "integrity": "sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==",
+       "dev": true
+     },
+-    "node_modules/@types/node": {
+-      "version": "22.15.29",
+-      "resolved": "https://registry.npmjs.org/@types/node/-/node-22.15.29.tgz",
+-      "integrity": "sha512-LNdjOkUDlU1RZb8e1kOIUpN1qQUlzGkEtbVNo53vbrwDg5om6oduhm4SiUaPW5ASTXhAiP0jInWG8Qx9fVlOeQ==",
+-      "dev": true,
+-      "optional": true,
+-      "peer": true,
+-      "dependencies": {
+-        "undici-types": "~6.21.0"
+-      }
+-    },
+     "node_modules/@ungap/structured-clone": {
+       "version": "1.3.0",
+       "resolved": "https://registry.npmjs.org/@ungap/structured-clone/-/structured-clone-1.3.0.tgz",
+@@ -1859,6 +1849,12 @@
+       "integrity": "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==",
+       "dev": true
+     },
++    "node_modules/balloon-css": {
++      "version": "1.2.0",
++      "resolved": "https://registry.npmjs.org/balloon-css/-/balloon-css-1.2.0.tgz",
++      "integrity": "sha512-urXwkHgwp6GsXVF+it01485Z2Cj4pnW02ICnM0TemOlkKmCNnDLmyy+ZZiRXBpwldUXO+aRNr7Hdia4CBvXJ5A==",
++      "license": "MIT"
++    },
+     "node_modules/base64-js": {
+       "version": "1.5.1",
+       "resolved": "https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz",
+@@ -4379,14 +4375,6 @@
+       "integrity": "sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==",
+       "dev": true
+     },
+-    "node_modules/undici-types": {
+-      "version": "6.21.0",
+-      "resolved": "https://registry.npmjs.org/undici-types/-/undici-types-6.21.0.tgz",
+-      "integrity": "sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==",
+-      "dev": true,
+-      "optional": true,
+-      "peer": true
+-    },
+     "node_modules/uri-js": {
+       "version": "4.4.1",
+       "resolved": "https://registry.npmjs.org/uri-js/-/uri-js-4.4.1.tgz",
+diff --git a/package.json b/package.json
+index 5e8a36f..9327806 100644
+--- a/package.json
++++ b/package.json
+@@ -29,6 +29,7 @@
+   },
+   "dependencies": {
+     "@cantoo/pdf-lib": "^1.21.0",
++    "balloon-css": "1.2.0",
+     "file-saver": "^2.0.5",
+     "jszip": "^3.7.1",
+     "vite-plugin-html-inject": "^1.1.2",
+diff --git a/src/book.js b/src/book.js
+index 55b86dc..9c77489 100644
+--- a/src/book.js
++++ b/src/book.js
+@@ -487,7 +487,9 @@ export class Book {
+   async displayPreview(previewPdf) {
+     console.log('Attempting to generate preview for ', previewPdf);
+     const previewFrame = document.getElementById('pdf');
+-    const pdfDataUri = await previewPdf.saveAsBase64({ dataUri: true });
++    if (previewFrame.dataset.objectUrl) URL.revokeObjectURL(previewFrame.dataset.objectUrl);
++    const pdfDataUri = URL.createObjectURL(new Blob([await previewPdf.save()], { type: 'application/pdf' }));
++    previewFrame.dataset.objectUrl = pdfDataUri;
+     const viewerPrefs = previewPdf.catalog.getOrCreateViewerPreferences();
+ 
+     viewerPrefs.setHideToolbar(false);
+diff --git a/src/utils/renderUtils.js b/src/utils/renderUtils.js
+index 31f9cc3..991e001 100644
+--- a/src/utils/renderUtils.js
++++ b/src/utils/renderUtils.js
+@@ -279,5 +279,7 @@ export function renderFormFromSettings(configuration) {
+ export function clearPreview() {
+   const previewFrame = document.getElementById('pdf');
+   previewFrame.style.display = 'none';
++  if (previewFrame.dataset.objectUrl) URL.revokeObjectURL(previewFrame.dataset.objectUrl);
++  delete previewFrame.dataset.objectUrl;
+   previewFrame.src = '';
+ }

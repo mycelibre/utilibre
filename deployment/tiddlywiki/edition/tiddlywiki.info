@@ -1,0 +1,12 @@
+{
+  "description": "Utilibre standalone single-file notebook, with native download saving",
+  "plugins": [],
+  "themes": [
+    "tiddlywiki/vanilla",
+    "tiddlywiki/snowwhite"
+  ],
+  "languages": [
+    "es-ES"
+  ],
+  "build": {}
+}

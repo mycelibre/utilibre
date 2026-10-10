@@ -192,7 +192,7 @@ index 0000000..2523163
 +done
 diff --git a/deployment/compose.kittygram.yaml b/deployment/compose.kittygram.yaml
 new file mode 100644
-index 0000000..9798977
+index 0000000..aafdb71
 --- /dev/null
 +++ b/deployment/compose.kittygram.yaml
 @@ -0,0 +1,63 @@
@@ -225,7 +225,7 @@ index 0000000..9798977
 +      RATELIMIT_REQUEST_LIMIT: "100"
 +      RATELIMIT_WINDOW_SIZE: "660"
 +      RESOLVER: 127.0.0.11
-+      ABOUT_MESSAGE: '<p>Hosted by <a href="https://utilibre.org">Utilibre</a>. Public Instagram content only; no Instagram login or cookies. Media is fetched by this server. Temporary caches are held in memory. Our edge and Cloudflare process requests and may retain operational/security metadata. <a href="https://utilibre.org/en/privacy">Privacy</a> · <a href="/utilibre-source/kittygram-utilibre.tar.gz">Deployed source</a></p>'
++      ABOUT_MESSAGE: '<p lang="en">Hosted by <a href="https://utilibre.org/en/">Utilibre</a>. Public Instagram content only; no Instagram login or cookies. Media is fetched by this server. Temporary caches are held in memory. Our edge and Cloudflare process requests and may retain operational/security metadata. <a href="https://utilibre.org/en/privacy">Privacy</a> · <a href="/utilibre-source/kittygram-utilibre.tar.gz">Deployed source</a></p><p lang="es">Alojado por <a href="https://utilibre.org/es/">Utilibre</a>. Solo contenido público de Instagram; sin iniciar sesión ni usar cookies de Instagram. Este servidor obtiene las imágenes y los videos. Las cachés temporales se mantienen en memoria. Nuestro servidor perimetral y Cloudflare procesan solicitudes y pueden conservar metadatos operativos y de seguridad. <a href="https://utilibre.org/es/privacidad">Privacidad</a> · <a href="/utilibre-source/kittygram-utilibre.tar.gz">Código desplegado</a></p>'
 +    tmpfs:
 +      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
 +      - /app/logs:rw,nosuid,nodev,noexec,size=4m,uid=65534,gid=65534
@@ -261,7 +261,7 @@ index 0000000..9798977
 +    ipam: {config: [{subnet: 172.29.91.0/24}]}
 diff --git a/deployment/firewall.sh b/deployment/firewall.sh
 new file mode 100644
-index 0000000..a6d54ca
+index 0000000..12a6e87
 --- /dev/null
 +++ b/deployment/firewall.sh
 @@ -0,0 +1,13 @@
@@ -272,7 +272,7 @@ index 0000000..a6d54ca
 +chain=UTILIBRE-TOOLS
 +iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
 +iptables -w -F "$chain"
-+for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3151 3152 3153 3154 3155 3156; do
++for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3151 3152 3153 3154 3155 3156 3160 3161 3162 3163 3164 3165 3166 3167 3168 3170 3171; do
 +  iptables -w -A "$chain" -s 10.10.1.3 -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j RETURN
 +  iptables -w -A "$chain" -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j DROP
 +done
@@ -294,10 +294,10 @@ index 0000000..5d2da49
 +}catch(error){if(error.code!=='EEXIST')throw error;console.log('Preserved existing Kittygram signing secret.');}
 diff --git a/deployment/kittygram-gateway.conf b/deployment/kittygram-gateway.conf
 new file mode 100644
-index 0000000..d746c75
+index 0000000..dc76223
 --- /dev/null
 +++ b/deployment/kittygram-gateway.conf
-@@ -0,0 +1,58 @@
+@@ -0,0 +1,67 @@
 +worker_processes 1;
 +pid /tmp/nginx.pid;
 +error_log /dev/null;
@@ -321,7 +321,16 @@ index 0000000..d746c75
 +  limit_req_status 429;
 +  limit_conn_status 429;
 +  server {
++    # Discover the verified, canonical Utilibre security contact.
++    location = /.well-known/security.txt { return 302 https://utilibre.org/.well-known/security.txt; }
++    location = /security.txt { return 302 https://utilibre.org/.well-known/security.txt; }
 +    listen 8080;
++    # Public mirror pages request exclusion from indexing; this is not access control.
++    add_header X-Robots-Tag "noindex, nofollow" always;
++    location = /robots.txt {
++      default_type text/plain;
++      return 200 "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /settings\nDisallow: /utilibre-source/\n";
++    }
 +    client_max_body_size 8k;
 +    limit_conn kitty_connections 24;
 +    if ($request_method !~ ^(GET|HEAD|POST)$) { return 405; }

@@ -1,0 +1,12 @@
+[Unit]
+Description=Run selected native SimpleLogin retention jobs
+After=docker.service
+[Service]
+Type=oneshot
+UMask=0077
+Nice=10
+ExecStart=/usr/bin/docker compose -f /home/ubuntu/freetools/deployment/simplelogin/compose.yaml exec -T jobs python cron.py --job delete_logs
+ExecStart=/usr/bin/docker compose -f /home/ubuntu/freetools/deployment/simplelogin/compose.yaml exec -T jobs python cron.py --job clear_alias_audit_log
+ExecStart=/usr/bin/docker compose -f /home/ubuntu/freetools/deployment/simplelogin/compose.yaml exec -T jobs python cron.py --job clear_user_audit_log
+ExecStart=/usr/bin/docker compose -f /home/ubuntu/freetools/deployment/simplelogin/compose.yaml exec -T jobs python cron.py --job cleanup_tokens
+TimeoutStartSec=180

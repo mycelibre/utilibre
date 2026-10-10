@@ -64,3 +64,15 @@ export function saveToolkit(storage: Pick<Storage, 'setItem'>, value: Toolkit): 
 export function resetToolkit(storage: Pick<Storage, 'removeItem'>): boolean {
   try { storage.removeItem(toolkitKey); return true; } catch { return false; }
 }
+
+/** Read fresh on every save, so another tab's selections are not overwritten. */
+export function pinToStartingCollection(storage: Pick<Storage, 'getItem' | 'setItem'>, lang: Language, id: string): { status: 'saved' | 'already' | 'full' | 'unavailable'; label?: string } {
+  if (!idPattern.test(id)) return { status: 'unavailable' };
+  const loaded = loadToolkit(storage, lang);
+  if (loaded.failed) return { status: 'unavailable' };
+  const current = loaded.value.collections.find(c => c.id === loaded.value.start)!;
+  if (current.tools.includes(id)) return { status: 'already', label: current.label };
+  if (current.tools.length >= 64 || loaded.value.collections.reduce((n, c) => n + c.tools.length, 0) >= 256) return { status: 'full' };
+  current.tools.push(id);
+  return saveToolkit(storage, loaded.value) ? { status: 'saved', label: current.label } : { status: 'unavailable' };
+}

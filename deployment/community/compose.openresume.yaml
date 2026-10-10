@@ -1,0 +1,24 @@
+name: utilibre-openresume
+services:
+  web:
+    image: utilibre-openresume:4f8255a-p1
+    restart: unless-stopped
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 0.5
+    mem_limit: 96m
+    pids_limit: 64
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    ports: ['10.10.1.43:3205:8080']
+    volumes: ['./openresume/nginx.conf:/etc/nginx/nginx.conf:ro']
+    logging:
+      driver: json-file
+      options: {max-size: 5m, max-file: '2'}
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, 'http://127.0.0.1:8080/resume-builder']
+      interval: 30s
+      timeout: 5s
+      retries: 3

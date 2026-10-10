@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict';
 import { createServer, request } from 'node:http';
 import { chromium } from '../../portal/node_modules/playwright-core/index.mjs';
-// Disposable loopback origin. Stage the retained p2 image separately after a
+// Disposable loopback origin. Stage the retained previous image separately after a
 // production upgrade; never downgrade production merely to run this check.
-// QR_PREVIOUS_PORT must serve p2. QR_NEXT_PORT must serve the p3 candidate.
+// Both ports must be loopback staging ports, never a production downgrade.
+const previousVersion = process.env.QR_PREVIOUS_VERSION || 'p3';
+const nextVersion = process.env.QR_NEXT_VERSION || 'p4';
 const previousPort = Number(process.env.QR_PREVIOUS_PORT);
 const nextPort = Number(process.env.QR_NEXT_PORT || 3181);
 for (const port of [previousPort, nextPort]) assert(Number.isInteger(port) && port > 1024 && port <= 65535, 'Set QR_PREVIOUS_PORT and QR_NEXT_PORT to the loopback staging ports');
@@ -14,14 +16,14 @@ const proxy = createServer((req,res) => {
   const up = request({host:'127.0.0.1',port:next?nextPort:previousPort,path:req.url,method:req.method,headers:req.headers}, r=>{res.writeHead(r.statusCode,r.headers);r.pipe(res)});
   up.on('error',()=>{res.writeHead(502);res.end()});req.pipe(up);
 });
-await new Promise(r=>proxy.listen(3190,'127.0.0.1',r));
-const browser=await chromium.launch(); const origin='http://127.0.0.1:3190';
+await new Promise(r=>proxy.listen(0,'127.0.0.1',r));
+const browser=await chromium.launch(); const origin=`http://127.0.0.1:${proxy.address().port}`;
 try {
   const context=await browser.newContext(), page=await context.newPage();
   await page.goto(origin+'/?lang=en',{waitUntil:'networkidle'}); await page.waitForFunction(async()=>!!(await navigator.serviceWorker.getRegistration())?.active);
-  assert((await page.evaluate(()=>caches.keys())).some(k=>k.includes('p2')));
+  assert((await page.evaluate(()=>caches.keys())).some(k=>k.includes(previousVersion)));
   next=true; await page.evaluate(async()=>{const r=await navigator.serviceWorker.ready;await r.update()});
-  await page.waitForFunction(async()=> (await caches.keys()).some(k=>k.includes('p3')));
+  await page.waitForFunction(async version=> (await caches.keys()).some(k=>k.includes(version)), nextVersion);
   await page.reload({waitUntil:'networkidle'}); await page.locator('#offline-controls').waitFor();
   await context.setOffline(true); await page.close(); const offline=await context.newPage();
   await offline.goto(origin+'/?lang=en'); await offline.locator('[data-type=text]').click();
@@ -36,5 +38,5 @@ try {
   interrupt=true; const fresh=await browser.newContext();const p=await fresh.newPage();await p.goto(origin+'/?lang=en');
   await p.waitForTimeout(2000); assert.equal(await p.evaluate(async()=>!!(await navigator.serviceWorker.getRegistration())?.active),false,'Incomplete install must not become active');
   interrupt=false; await p.reload({waitUntil:'networkidle'}); await p.waitForFunction(async()=>!!(await navigator.serviceWorker.getRegistration())?.active);await p.reload();await fresh.setOffline(true);await p.reload();await p.locator('#offline-controls').waitFor();await fresh.close();
-  console.log(JSON.stringify({at:new Date().toISOString(),result:'PASS',checks:['p2 to p3 update','disconnected fresh tab','text QR with PNG/SVG/PDF downloads','asset-only removal preserves storage','interrupted install does not activate','retry installs successfully'],environment:'Chromium loopback staging; not OS installation'}));
+  console.log(JSON.stringify({at:new Date().toISOString(),result:'PASS',checks:[`${previousVersion} to ${nextVersion} update`,'disconnected fresh tab','text QR with PNG/SVG/PDF downloads','asset-only removal preserves storage','interrupted install does not activate','retry installs successfully'],environment:'Chromium loopback staging; not OS installation'}));
 } finally {await browser.close();proxy.closeAllConnections();await new Promise(r=>proxy.close(r))}

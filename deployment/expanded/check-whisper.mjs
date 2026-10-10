@@ -48,7 +48,7 @@ try {
     await page.getByRole('button', { name: 'Transcribe Audio', exact: true }).waitFor();
     assert.equal(await page.getByRole('alert').count(), 0, 'A valid file clears the read error');
 
-    if (name === 'desktop') {
+    if (name === 'desktop' && !process.argv.includes('--microphone-only')) {
       // One denied model file reproduces a failed pipeline promise. Retrying
       // must actually refetch it, not immediately repeat the cached rejection.
       const model = '**/models/**/onnx/encoder_model_quantized.onnx';
@@ -90,6 +90,8 @@ try {
     await page.getByRole('button', { name: 'Record', exact: true }).click();
     await page.getByRole('button', { name: 'Start Recording', exact: true }).click();
     await page.getByRole('alert').filter({ hasText: 'Microphone unavailable' }).waitFor();
+    // Capture the settled native dialog, not HeadlessUI's 300 ms entrance fade.
+    await page.waitForTimeout(350);
     await page.screenshot({ path: `${output}/${name}.png` });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     assert.deepEqual(errors, []);

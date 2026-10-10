@@ -1,0 +1,8 @@
+[Unit]
+Description=Utilibre Chhoto URL SQLite snapshot
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /home/ubuntu/freetools/deployment/chhoto/backup.py
+UMask=0077
+Nice=10
+IOSchedulingClass=idle

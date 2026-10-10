@@ -1,5 +1,8 @@
 # Utilibre search and traffic foundation
 
+Current inventory and checks: [9 October catalog SEO review](seo-catalog-2026-10-09.md).
+The release counts and measurements below are dated historical checkpoints.
+
 ## Task-first catalogue and practical guides — 7 October 2026
 
 ### Baseline, scope and coverage

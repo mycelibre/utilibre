@@ -1,0 +1,11 @@
+[Unit]
+Description=Consistent scoped backups for Utilibre community applications
+After=docker.service
+Requires=docker.service
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /home/ubuntu/freetools/deployment/community/new-services-backup.py
+UMask=0077
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7

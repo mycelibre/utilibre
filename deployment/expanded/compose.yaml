@@ -33,28 +33,35 @@ services:
       timeout: 5s
       retries: 3
 
+  # Direct-URL repair pilot only; keep hidden from the public catalogue.
+  # Rollback: compose.whisper-withdrawn.yaml restores the previous 410 notice.
   whisper:
     <<: *runtime
-    image: utilibre-whisper:81869ed-p3
+    image: utilibre-whisper:81869ed-p7
+    entrypoint: [nginx, -g, 'daemon off;']
     read_only: true
     user: "101:101"
     volumes:
       - ../toolbox/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./security-whisper.conf:/etc/nginx/tool-security.conf:ro
       - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
-    tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777"]
+      - /opt/utilibre/expanded-src/whisper/public/models:/usr/share/nginx/html/models:ro
+      - /opt/utilibre/expanded-src/whisper/public/wasm:/usr/share/nginx/html/wasm:ro
+    tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=16m,mode=1777"]
     ports: ["10.10.1.43:3137:8080"]
     networks: [static]
     mem_limit: 192m
+    cpus: 0.5
+    pids_limit: 32
     healthcheck:
-      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/]
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/index.html]
       interval: 30s
       timeout: 5s
       retries: 3
 
   breezewiki:
     <<: *runtime
-    image: utilibre-breezewiki:6d09507-p2
+    image: utilibre-breezewiki:6d09507-p3
     read_only: true
     user: "1000:1000"
     environment:
@@ -158,9 +165,11 @@ services:
 
   resume:
     <<: *runtime
-    image: ghcr.io/reactive-resume/reactive-resume:v6.0.0@sha256:29f418bd46d23f1d7cd9a73ec7f6bc46681926cb1ff617ac388064f45ee790d0
+    # Same pinned upstream runtime; narrow visitor-statistics removal in Dockerfile.resume.
+    image: utilibre-resume:6.0.0-p1
     read_only: true
     user: "1000:1000"
+    command: ["node", "/usr/local/bin/utilibre-resume-start.mjs"]
     environment:
       NODE_ENV: production
       APP_URL: https://cv.utilibre.org
@@ -184,7 +193,9 @@ services:
       SMTP_PORT: ${SMTP_RELAY_PORT:-26}
       SMTP_FROM: ${SMTP_FROM:-}
       SMTP_SECURE: "false"
-    volumes: ["/opt/utilibre/expanded-data/resume:/app/data"]
+    volumes:
+      - /opt/utilibre/expanded-data/resume:/app/data
+      - ./resume-start.mjs:/usr/local/bin/utilibre-resume-start.mjs:ro
     tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777"]
     ports: ["10.10.1.43:3130:3000"]
     networks: [resume-front, resume-data]
@@ -216,6 +227,8 @@ services:
     <<: *runtime
     image: penpotapp/frontend:2.18.2@sha256:3619f48cbdd0c9197ad23bd3db1c9b4391d7c9c3137e22e806cd7f9c945c1c8e
     user: "1001:1001"
+    # Run after the upstream entrypoint has generated its environment config.
+    command: ["/bin/sh", "/usr/local/bin/utilibre-penpot-nginx-start.sh"]
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
       PENPOT_OIDC_NAME: Utilibre
@@ -226,6 +239,7 @@ services:
       - /opt/utilibre/expanded-data/penpot-assets:/opt/data/assets:ro
       - ../toolbox/language.html:/var/www/app/utilibre-language.html:ro
       - ../toolbox/language.js:/var/www/app/utilibre-language.js:ro
+      - ./penpot-nginx-start.sh:/usr/local/bin/utilibre-penpot-nginx-start.sh:ro
     ports: ["10.10.1.43:3131:8080"]
     networks: [penpot]
     depends_on: [penpot-backend, penpot-exporter, penpot-admin-console]

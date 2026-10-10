@@ -1,0 +1,17 @@
+[Unit]
+Description=Restricted TRIP with private listener and native egress boundary
+Requires=docker.service opt-utilibre-trip-data.mount
+After=docker.service network-online.target opt-utilibre-trip-data.mount
+Wants=network-online.target
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/freetools/deployment/trip
+ExecStartPre=/home/ubuntu/freetools/deployment/trip/start-boundary.sh
+ExecStart=/usr/bin/docker compose --env-file /opt/utilibre/trip/private/runtime.env up --no-recreate --abort-on-container-exit
+ExecStop=/usr/bin/docker compose --env-file /opt/utilibre/trip/private/runtime.env stop
+Restart=always
+RestartSec=10
+TimeoutStartSec=90
+TimeoutStopSec=45
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,29 @@
+{% extends 'email/base.html' %}
+{% load i18n %}
+
+{% block content %}
+{% get_current_language as language %}
+<tr><td align="center">
+  {% if language|slice:':2' == 'es' %}
+  <h1 lang="es">Confirmá tu cuenta de Utilibre</h1>
+  <p lang="es">Para completar la verificación de tu correo, usá el botón de abajo.</p>
+  <p class="btn btn-primary"><a id="confirm" href="{{ url }}" rel="noopener noreferrer" target="_blank" lang="es">Confirmar cuenta</a></p>
+  {% else %}
+  <h1 lang="en">Confirm your Utilibre account</h1>
+  <p lang="en">Use the button below to finish verifying your email address.</p>
+  <p class="btn btn-primary"><a id="confirm" href="{{ url }}" rel="noopener noreferrer" target="_blank" lang="en">Confirm account</a></p>
+  {% endif %}
+</td></tr>
+{% endblock %}
+
+{% block sub_content %}
+{% get_current_language as language %}
+<tr><td style="padding:20px;font-size:12px;word-break:break-all;overflow-wrap:break-word" align="center">
+  {% if language|slice:':2' == 'es' %}
+  <p lang="es">Si el botón no funciona, copiá y pegá este enlace en tu navegador:</p>
+  {% else %}
+  <p lang="en">If the button does not work, copy and paste this link into your browser:</p>
+  {% endif %}
+  <p>{{ url }}</p>
+</td></tr>
+{% endblock %}

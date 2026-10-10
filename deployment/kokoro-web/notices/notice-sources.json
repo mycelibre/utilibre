@@ -1,0 +1,26 @@
+{
+  "retrieved": "2026-10-09",
+  "remote": {
+    "onnxruntime-MIT.txt": "https://raw.githubusercontent.com/microsoft/onnxruntime/d981b153d3/LICENSE",
+    "onnxruntime-ThirdPartyNotices.txt": "https://raw.githubusercontent.com/microsoft/onnxruntime/d981b153d3/ThirdPartyNotices.txt"
+  },
+  "local": "Pinned source/package-lock.json and Emscripten3.1.64 bundled runtime source",
+  "sha256": {
+    "@sveltejs-kit-LICENSE": "ac6ecdc526c9e6aec1db76f0e8dfe344d792380e974686476e7c512152ae2636",
+    "espeak-ng-GPL-3.0-or-later.txt": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+    "lucide-svelte-LICENSE": "1e7290b35280a048667bbf0ebabac1c7fd52a75300e8b2946ac165715997f2bc",
+    "onnxruntime-MIT.txt": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c",
+    "emscripten-LICENSE.txt": "620a78084fc7ca97c0b5dea9abf891f3ffcadfdbf305276f099c9c4e12fc1d86",
+    "wavesurfer.js-LICENSE": "0fc992dc27cc34dde78bfeb024b4cadff6320f0dcbee2f1228efaeb533ca1364",
+    "emscripten-AUTHORS.txt": "56f7df65203d4858dac19cafe3a84a8c49abaff56b67d32d2d463d5fef6e440b",
+    "wavefile-LICENSE": "534f76b898d6ceef35f46dad2fded7dd32bede327d5f4dc177a3062490418095",
+    "svelte-LICENSE.md": "06257f4847b13a49a039efb17b944c141e71b12fd8d231b362d86919067d77a3",
+    "musl-COPYRIGHT.txt": "f9bc4423732350eb0b3f7ed7e91d530298476f8fec0c6c427a1c04ade22655af",
+    "onnxruntime-ThirdPartyNotices.txt": "87be25feb20ee6de1119e1b01caa2049a968cee06043deaae91311fc21a96b62",
+    "kokoro-web-MIT.txt": "707c7a5dc16d2b2d49e3ce92c6e47fa8e2fb12bfba684761f784845c71619d7f",
+    "compiler-rt-LICENSE.txt": "1a8f1058753f1ba890de984e48f0242a3a5c29a6a8f2ed9fd813f36985387e8d",
+    "notyf-LICENSE.md": "f244bc8bb700ed2ba75800fd468a8ef9d3a75c233b82203b5b79a12183a802d2",
+    "daisyui-LICENSE": "8709e3ac65c84637c422dc8082b893d9997fce093751c77b2f1983bf29dbf9ea",
+    "model-Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  }
+}

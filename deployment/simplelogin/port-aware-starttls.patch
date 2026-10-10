@@ -1,0 +1,21 @@
+--- a/app/email_utils.py
++++ b/app/email_utils.py
+@@ -6,6 +6,7 @@
+ import os
+ import quopri
+ import random
++import ssl
+ import time
+ import uuid
+ from copy import deepcopy
+@@ -1558,8 +1559,8 @@
+     LOG.d("get a smtp server")
+     server = random.choice(config.POSTFIX_SERVERS)
+     if config.POSTFIX_SUBMISSION_TLS:
+-        smtp = SMTP(server, 587)
+-        smtp.starttls()
++        smtp = SMTP(server, config.POSTFIX_PORT)
++        smtp.starttls(context=ssl.create_default_context())
+     else:
+         smtp = SMTP(server, config.POSTFIX_PORT)
+ 

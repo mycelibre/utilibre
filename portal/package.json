@@ -10,7 +10,7 @@
   "scripts": {
     "predev": "node scripts/copy-vendor.mjs",
     "dev": "vite --host 0.0.0.0",
-    "prebuild": "npm run test:foss-policy && node scripts/copy-vendor.mjs",
+    "prebuild": "node scripts/check-security-contact.mjs && npm run test:foss-policy && node scripts/copy-vendor.mjs",
     "build": "vite build && vite build --config vite.ssr.config.ts",
     "start": "node server/server.mjs",
     "preview": "vite preview --host 0.0.0.0",

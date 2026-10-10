@@ -1,0 +1,8 @@
+[Unit]
+Description=Run Family Chess native cleanup every minute
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=1min
+AccuracySec=10s
+[Install]
+WantedBy=timers.target

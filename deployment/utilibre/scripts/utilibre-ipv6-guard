@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+# Replace only this dedicated table, in one nftables transaction. Never flush
+# host, IPv4 or Docker rules. Stopping the systemd unit does not remove the guard.
+rules=/etc/utilibre/ipv6-guard.nft
+test -r "$rules"
+{
+  if /usr/sbin/nft list table ip6 utilibre_ipv6_guard >/dev/null 2>&1; then
+    printf '%s\n' 'delete table ip6 utilibre_ipv6_guard'
+  fi
+  cat "$rules"
+} | /usr/sbin/nft -f -

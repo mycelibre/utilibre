@@ -1,10 +1,8 @@
 # Transparency
 
-Utilibre is an independently operated catalog and hosting layer for
-independently maintained Free and Open Source Software applications. It makes
-those applications easier to find and explains their data paths. Utilibre does
-not create substitute end-user tools or inherit credit for upstream work by
-running Docker Compose.
+Utilibre hosts independently maintained free and open-source applications and
+helps people find a tool for the task at hand. Each listing explains where data
+goes and credits the people who built the application.
 
 Original Utilibre code is glue only: cataloging, bilingual navigation,
 configuration, disclosure, narrowly scoped gateways, testing, and security or
@@ -54,12 +52,14 @@ verification duties are documented in [`docs/privacy.md`](docs/privacy.md),
 
 Use is free. There are no advertisements, behavioral analytics, premium
 features, donor-only access, or donor priority. Donations are voluntary and
-help cover infrastructure. Free to use. Not free to run.
+help cover infrastructure.
 
 ## Corrections
 
-Licensing, security, privacy, and operational criticism is welcome. The
-[repository issue tracker](https://github.com/mycelibre/utilibre/issues) is the
-current public contact destination. Reports there are public, so do not include
-passwords, tokens, private keys, or other confidential material. A dedicated
-mailbox can replace or supplement it when one is ready.
+Corrections to our licensing, security, privacy and operational notes are
+welcome. The [repository issue tracker](https://github.com/mycelibre/utilibre/issues)
+accepts ordinary public bug reports. Report vulnerabilities privately through
+our [security contact](https://utilibre.org/en/security); it includes a monitored
+mailbox that does not require a GitHub account. The portal also provides an
+[abuse-reporting contact](https://utilibre.org/en/acceptable-use). Do not put
+passwords, tokens, private keys, or confidential records in public issues.

@@ -19,7 +19,7 @@ It must not perform the visitor’s underlying task. If no suitable upstream
 application passes review, leave the capability unavailable.
 
 Read [FOSS_POLICY.md](FOSS_POLICY.md) before proposing a service, and compare
-the proposal with the deliberately small current inventory in
+the proposal with the current inventory in
 [docs/services.md](docs/services.md).
 
 ## Proposing an upstream application
@@ -45,7 +45,7 @@ the fact that their task runs locally does not make them exempt.
 
 - Preserve semantic HTML, keyboard operation, visible focus, sufficient
   contrast, reduced-motion support, narrow layouts, and Spanish text expansion.
-- Keep English and neutral Spanish at parity. Follow
+- Keep English and Spanish with consistent voseo at parity. Follow
   [docs/copy-style.md](docs/copy-style.md) and
   [docs/adding-a-language.md](docs/adding-a-language.md).
 - State data handling, accounts, limitations, and errors literally. Credit the

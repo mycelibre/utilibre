@@ -1,0 +1,7 @@
+# Utilibre security contact; review contacts when renewing this file.
+Contact: mailto:admin@utilibre.org
+Contact: https://github.com/mycelibre/utilibre/security/advisories/new
+Expires: 2027-09-30T00:00:00Z
+Preferred-Languages: en, es
+Canonical: https://utilibre.org/.well-known/security.txt
+Policy: https://utilibre.org/en/security

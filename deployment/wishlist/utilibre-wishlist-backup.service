@@ -1,0 +1,10 @@
+[Unit]
+Description=Back up and restore-check Utilibre Wishlist
+After=docker.service
+[Service]
+Type=oneshot
+UMask=0077
+Nice=10
+CPUQuota=100%
+MemoryMax=256M
+ExecStart=/usr/bin/python3 /home/ubuntu/freetools/deployment/wishlist/backup.py

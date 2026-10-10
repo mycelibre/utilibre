@@ -1,0 +1,12 @@
+[Unit]
+Description=Bounded durable TRIP state filesystem
+Before=utilibre-trip.service
+ConditionPathExists=/opt/utilibre/trip/state.ext4
+[Mount]
+What=/opt/utilibre/trip/state.ext4
+Where=/opt/utilibre/trip/data
+Type=ext4
+Options=loop,nodev,nosuid,noexec
+TimeoutSec=30
+[Install]
+WantedBy=local-fs.target

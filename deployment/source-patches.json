@@ -1,0 +1,597 @@
+[
+  {
+    "patch": "deployment/community/anonymousoverflow-source.patch",
+    "source": "/opt/utilibre/community-src/anonymousoverflow-utilibre-p1",
+    "revision": "937cfeefd6dcbab92ef572671f16d4d3be6abad3",
+    "prerequisites": [],
+    "purpose": "Public-address-only fetches, bounded shared caching, same-origin media and regression checks.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/community/biblioreads-source.patch",
+    "source": "/opt/utilibre/community-src/biblioreads-utilibre-p1",
+    "revision": "9508abc64c6b35eef366e041fef47554f0ee888a",
+    "prerequisites": [],
+    "purpose": "Same-origin image proxy, local assets, dependency repairs and bounded retrieval.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/community/binternet-source.patch",
+    "source": "/opt/utilibre/community-src/binternet-utilibre-p1",
+    "revision": "9bb70ef26c8b79a315e77b79bfd346433d55cbb6",
+    "prerequisites": [],
+    "purpose": "Public-address-only provider requests, local source notice and Tor socket lifecycle wrapper.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/community/fourget-source.patch",
+    "source": "/opt/utilibre/community-src/4get-utilibre-p2",
+    "revision": "03ba5d7b5ed3dc91b3e7d8b6278d8f52818a99ae",
+    "prerequisites": [],
+    "purpose": "Validate every upstream redirect/address, bound decoded payloads and ImageMagick resources.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/community/gothub-source.patch",
+    "source": "/opt/utilibre/community-src/gothub-utilibre-p1",
+    "revision": "24bedc80bed5fc4f72a8f140c97cb38fc2e67ed2",
+    "prerequisites": [],
+    "purpose": "Constrain upstream fetches and media proxying; expose corresponding source.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/community/kittygram-source.patch",
+    "source": "/opt/utilibre/community-src/kittygram-utilibre-p1",
+    "revision": "5931c21c0990d4b216e97166dd78c03c9965567a",
+    "prerequisites": [],
+    "purpose": "Private runtime configuration, secure preference cookies and source notice.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/community/libremdb-private-source.patch",
+    "source": "/opt/utilibre/community-src/libremdb-fork",
+    "revision": "b233f4e24acfb4afbe55b7c13798832ca8068086",
+    "prerequisites": [],
+    "purpose": "Dependency repair, bounded same-origin content/media and disabled telemetry; service remains unavailable pending license review.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/community/lrclib-source.patch",
+    "source": "/opt/utilibre/community-src/lrclib-homepage",
+    "revision": "f37c07042be1af5fdcc7932d090af32141089751",
+    "prerequisites": [],
+    "purpose": "Dependencies and bounded provider/cache behavior. Native service is independent of this portal patch.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/community/priviblur-source-notice.patch",
+    "source": "/opt/utilibre/community-src/priviblur",
+    "revision": "251a8e67c64d792b3c8c141860ccaa227ce62e4d",
+    "prerequisites": [],
+    "purpose": "One corresponding-source footer link; dependency pins are separate.",
+    "removeWhen": "Remove only when upstream/configuration offers an equivalent prominent corresponding-source link."
+  },
+  {
+    "patch": "deployment/community/qr-offline-source.patch",
+    "source": "/opt/utilibre/community-src/qr-offline-utilibre-p1",
+    "revision": "0fde7004a08aac6a218e5d5e03c8a3c760eec1fa",
+    "prerequisites": [],
+    "purpose": "Local assets/exports, bounded static deployment and corresponding source.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/community/rimgo-source.patch",
+    "source": "/opt/utilibre/community-src/rimgo-utilibre-p1",
+    "revision": "d2be8e221522dfe7a06452e2002dcf6dad569d1a",
+    "prerequisites": [],
+    "purpose": "Dependencies, public-address restrictions and local source notice; upstream Imgur access remains blocked.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/community/safetwitch-backend-source.patch",
+    "source": "/opt/utilibre/community-src/safetwitch-backend-utilibre-p1",
+    "revision": "91dda1ceb50822cc9b5306f6c1a92f7e8aaf747b",
+    "prerequisites": [],
+    "purpose": "Bounded public-address transport, provider errors and focused tests.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/community/safetwitch-source.patch",
+    "source": "/opt/utilibre/community-src/safetwitch-utilibre-p1",
+    "revision": "ddee63ebbe8b7b74d8f6ed3869cd7958934746d7",
+    "prerequisites": [],
+    "purpose": "Local assets, dependency updates and corresponding-source notice.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/community/translite-source.patch",
+    "source": "/opt/utilibre/community-src/translite-utilibre-p1",
+    "revision": "7b4b8e51359338219463f14c2a06211b6998a11e",
+    "prerequisites": [],
+    "purpose": "POST-only text, short RAM sessions, constrained providers, disabled audio and source notice.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/expanded/breezewiki-source.patch",
+    "source": "/opt/utilibre/expanded-src/breezewiki-utilibre-p1",
+    "revision": "6d09507b6e7ecec0cbac4c2c4eb223c10ccc23a4",
+    "prerequisites": [],
+    "purpose": "Bounded public-address proxy, local assets and native tab initialization when JSONP is disabled; upstream image denial remains a separate limitation.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/expanded/wakapi-summary.patch",
+    "source": "/opt/utilibre/expanded-src/wakapi",
+    "revision": "347f1f45ae2863d9499236471317a76630c5308f",
+    "prerequisites": [],
+    "purpose": "OIDC-only missing-button guard, empty summary rendering and accurate free-service retention text.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/expanded/whisper-source.patch",
+    "source": "/opt/utilibre/expanded-src/whisper",
+    "revision": "81869ed62970ff4373509b6004a6c9a3f0c5b64d",
+    "prerequisites": [],
+    "purpose": "Local model/assets and bounded browser settings; withdrawn pilot remains hidden.",
+    "removeWhen": "Use an upstream release or native configuration providing the same behavior; rerun its security/privacy and workflow checks, then drop this patch and rebuild from the new pin. Preserve published source for old images."
+  },
+  {
+    "patch": "deployment/expanded/whisper-repair.patch",
+    "source": "/opt/utilibre/expanded-src/whisper",
+    "revision": "81869ed62970ff4373509b6004a6c9a3f0c5b64d",
+    "prerequisites": ["deployment/expanded/whisper-source.patch"],
+    "purpose": "Pinned build-tool security updates, Tailwind/ESLint compatibility, removal of unused remote-audio loading, and associated regression adaptation; direct-URL pilot only.",
+    "removeWhen": "Use a supported upstream release with equivalent local-only behavior and clean dependency/build/browser checks. Preserve the existing speech-quality limitations until tested on the affected device."
+  },
+  {
+    "patch": "deployment/pack/bentopdf.dependencies.patch",
+    "source": "/opt/utilibre/src/bentopdf",
+    "revision": "f96cd4e5166f3d51393dfe9f3c440b5bb77802f1",
+    "prerequisites": [],
+    "purpose": "Lockfile dependency fixes only.",
+    "removeWhen": "Remove once the pinned upstream lockfiles include the fixes and clean native installation, advisory review and relevant workflow checks pass."
+  },
+  {
+    "patch": "deployment/pack/super-productivity.dependencies.patch",
+    "source": "/opt/utilibre/src/super-productivity",
+    "revision": "42ded9f31a132bf92633b0c78ad4ebf1d87c0f71",
+    "prerequisites": [],
+    "purpose": "Dependency manifest and lockfile fixes only.",
+    "removeWhen": "Remove once the pinned upstream lockfiles include the fixes and clean native installation, advisory review and relevant workflow checks pass."
+  },
+  {
+    "patch": "deployment/pack/super-productivity.plugin-lock.patch",
+    "source": "/opt/utilibre/src/super-productivity",
+    "revision": "42ded9f31a132bf92633b0c78ad4ebf1d87c0f71",
+    "prerequisites": [
+      "deployment/pack/super-productivity.dependencies.patch"
+    ],
+    "purpose": "Three stale peer flags removed so the pinned native plugin build installs reproducibly.",
+    "removeWhen": "Remove once the pinned upstream lockfiles include the fixes and clean native installation, advisory review and relevant workflow checks pass."
+  },
+  {
+    "patch": "deployment/toolbox/omnitools-secure-random.patch",
+    "source": "/opt/utilibre/src/omnitools",
+    "revision": "922b28ce154e8f22da4a721472889717a95f7562",
+    "prerequisites": [],
+    "purpose": "Replace the password/token generator Math.random source with fail-closed WebCrypto and unbiased rejection sampling. The pinned artifact build applies the matching helper with an exact digest check.",
+    "removeWhen": "Use an upstream release whose generator uses a cryptographically secure random source without modulo bias or an insecure fallback; rerun generator and browser checks, then remove this source patch and the matching artifact preparation step. Preserve corresponding source for old images."
+  },
+  {
+    "patch": "deployment/toolbox/it-tools-secure-random.patch",
+    "source": "/opt/utilibre/src/it-tools",
+    "revision": "5732483fc24a6e6818839060bdf3cc7d9d324b9f",
+    "prerequisites": [],
+    "purpose": "Replace the password/token generator Math.random source with fail-closed WebCrypto and unbiased rejection sampling. The pinned artifact build applies the matching helper with an exact digest check.",
+    "removeWhen": "Use an upstream release whose generator uses a cryptographically secure random source without modulo bias or an insecure fallback; rerun generator and browser checks, then remove this source patch and the matching artifact preparation step. Preserve corresponding source for old images."
+  },
+  {
+    "patch": "deployment/community/fmd-privacy-source.patch",
+    "source": "/opt/utilibre/community-src/fmd-server-utilibre-p1",
+    "revision": "224b60c0756ff363bc19063082a8a1543559cf96",
+    "prerequisites": [],
+    "purpose": "Replace inaccurate embedded FMD privacy assurances with deployment-specific EN/ES voseo notes using native i18next and the supported static-web override; API/server and account controls stay upstream.",
+    "removeWhen": "Use upstream deployment-specific configurable privacy text and Spanish support providing equivalent truthful disclosures; remove this web patch, --web-dir mount and matching exact /privacy gateway rewrite, rerun native account/export/privacy checks, and retain corresponding source for old builds."
+  },
+  {
+    "patch": "deployment/evaluation/13ft/restricted-fixture.patch",
+    "source": "/opt/utilibre/evaluation-src/13ft",
+    "revision": "d03b120c41d2558d3ce2a45e049ccbea8785ff7a",
+    "prerequisites": [],
+    "purpose": "Restricted fictional-fixture evaluation only: fixed owned origin and paths, no redirects or providers, bounded streamed body, local fonts and native POST; background job/cache/fetch routes are unreachable. No public endpoint.",
+    "removeWhen": "Remove with the stopped evaluation, or replace with an upstream release/native controls providing equivalent source isolation, bounded work and a script-free reader. Never remove only the URL restriction while making this pilot public; re-review SSRF, providers, logging and privacy before any public deployment."
+  },
+  {
+    "patch": "deployment/expanded/resume-no-tracking-source.patch",
+    "source": "/opt/utilibre/expanded-src/resume-utilibre-p1",
+    "revision": "bc71f636c02a80ac6d731e17d2ee13501275295c",
+    "prerequisites": [],
+    "purpose": "Disable public visitor statistics before client identifier construction, one-hour view deduplication and aggregate/daily writes; remove browser download events and owner analytics widget. Native resume access, sharing and exports remain unchanged. Exact compiled-artifact digests gate the pinned image build.",
+    "removeWhen": "Replace with upstream native opt-out that prevents identifier/dedup processing, counter writes and browser events; verify fictional public/owner/PDF workflows and absence of new statistics before removing source and artifact patches. Do not delete historical user data; retain corresponding source for old builds."
+  },
+  {
+    "patch": "deployment/toolbox/drawdb-local-source.patch",
+    "source": "/opt/utilibre/src/drawdb",
+    "revision": "e4e696f2d2b1a17ac99ad1d062927582ff994a3c",
+    "prerequisites": [],
+    "purpose": "Local assets, no analytics/sharing, namespaced browser storage and dependency security corrections.",
+    "removeWhen": "Remove when upstream native configuration supplies these local assets and privacy controls; rerun the recorded native workflow checks and retain source for deployed builds."
+  },
+  {
+    "patch": "deployment/toolbox/bookbinder-local-source.patch",
+    "source": "/opt/utilibre/src/bookbinder-js",
+    "revision": "7df532dc29f6bbf4204d62796f4ff537594f5097",
+    "prerequisites": [],
+    "purpose": "Local assets, source/navigation links and blob previews for the browser PDF workflow.",
+    "removeWhen": "Remove when upstream native configuration supplies these local assets and privacy controls; rerun the recorded native workflow checks and retain source for deployed builds."
+  },
+  {
+    "patch": "deployment/toolbox/moodist-local-source.patch",
+    "source": "/opt/utilibre/src/moodist",
+    "revision": "11c0be2200116a3635880d600fd6953899cc51a3",
+    "prerequisites": [],
+    "purpose": "Local assets, scoped browser storage and privacy-compatible native static build; see the dated deployment record.",
+    "removeWhen": "Replace each patch part when an upstream release or supported configuration supplies its behavior and native workflow checks pass. Preserve source for deployed releases."
+  },
+  {
+    "patch": "deployment/toolbox/sketchforge-local-source.patch",
+    "source": "/opt/utilibre/src/sketchforge",
+    "revision": "e9cb8e8681f92e12f6044e046046cf1d363f6811",
+    "prerequisites": [],
+    "purpose": "Local assets, scoped browser storage and privacy-compatible native static build; see the dated deployment record.",
+    "removeWhen": "Replace each patch part when an upstream release or supported configuration supplies its behavior and native workflow checks pass. Preserve source for deployed releases."
+  },
+  {
+    "patch": "deployment/toolbox/chartdb-local-source.patch",
+    "source": "/opt/utilibre/src/chartdb",
+    "revision": "c24936a402bb3e24b4858f05282d69a04fcfe25b",
+    "prerequisites": [],
+    "purpose": "Local assets, scoped browser storage and privacy-compatible native static build; see the dated deployment record.",
+    "removeWhen": "Replace each patch part when an upstream release or supported configuration supplies its behavior and native workflow checks pass. Preserve source for deployed releases."
+  },
+  {
+    "patch": "deployment/calendar/calino-browser-ai.patch",
+    "source": "/opt/utilibre/calendar-src/calino",
+    "revision": "20a41e0d7b498e607cf8a5011bb8b14f506eaf79",
+    "prerequisites": [],
+    "purpose": "Remove browser AI registration and fix native ICS export of UTC events, with an upstream-format regression test.",
+    "removeWhen": "Replace when upstream supplies equivalent supported controls/fixes and the recorded native regressions pass; keep matching source available for deployed builds."
+  },
+  {
+    "patch": "deployment/community/bytestash/privacy.patch",
+    "source": "/opt/utilibre/community-src/bytestash",
+    "revision": "72adce8872414e4a11ea193d4374309f72b3990c",
+    "prerequisites": [],
+    "purpose": "Local Monaco/release notes and native OIDC fragment/state/cookie corrections; see scoped deployment record.",
+    "removeWhen": "Replace when upstream supplies equivalent supported controls/fixes and the recorded native regressions pass; keep matching source available for deployed builds."
+  },
+  {
+    "patch": "deployment/community/openresume/privacy-static.patch",
+    "source": "/opt/utilibre/community-src/openresume",
+    "revision": "4f8255a2c763479837f69f1dccf2a3338730cd79",
+    "prerequisites": [],
+    "purpose": "Static local resume builder without visitor analytics or third-party counter; PDF parser mitigation. Original replacement icons are a separate build input.",
+    "removeWhen": "Replace when upstream supplies equivalent supported controls/fixes and the recorded native regressions pass; keep matching source available for deployed builds."
+  },
+  {
+    "patch": "deployment/spliit/security-dependencies.patch",
+    "source": "/opt/utilibre/community-src/spliit-utilibre-1.29.0-p1",
+    "revision": "d3b1e1e6787ffe13c6dfe0b6a2fcfc403d81686a",
+    "prerequisites": [],
+    "purpose": "spliit: security dependencies; scope and evidence in its dated deployment record.",
+    "removeWhen": "Remove after an appropriate upstream release supplies the same controls/fix and the native regression passes; preserve deployed corresponding source."
+  },
+  {
+    "patch": "deployment/wishlist/security-dependencies.patch",
+    "source": "/opt/utilibre/community-src/wishlist-utilibre-0.67.1-p1",
+    "revision": "a5150c73620abb912a802afdcfb51e403230fff3",
+    "prerequisites": [],
+    "purpose": "wishlist: security dependencies; scope and evidence in its dated deployment record.",
+    "removeWhen": "Remove after an appropriate upstream release supplies the same controls/fix and the native regression passes; preserve deployed corresponding source."
+  },
+  {
+    "patch": "deployment/wishlist/local-icons.patch",
+    "source": "/opt/utilibre/community-src/wishlist-utilibre-0.67.1-p1",
+    "revision": "a5150c73620abb912a802afdcfb51e403230fff3",
+    "prerequisites": [
+      "deployment/wishlist/security-dependencies.patch"
+    ],
+    "purpose": "wishlist: local icons; scope and evidence in its dated deployment record.",
+    "removeWhen": "Remove after an appropriate upstream release supplies the same controls/fix and the native regression passes; preserve deployed corresponding source."
+  },
+  {
+    "patch": "deployment/wishlist/log-privacy.patch",
+    "source": "/opt/utilibre/community-src/wishlist-utilibre-0.67.1-p1",
+    "revision": "a5150c73620abb912a802afdcfb51e403230fff3",
+    "prerequisites": [
+      "deployment/wishlist/security-dependencies.patch",
+      "deployment/wishlist/local-icons.patch"
+    ],
+    "purpose": "wishlist: log privacy; scope and evidence in its dated deployment record.",
+    "removeWhen": "Remove after an appropriate upstream release supplies the same controls/fix and the native regression passes; preserve deployed corresponding source."
+  },
+  {
+    "patch": "deployment/wishlist/native-deletion.patch",
+    "source": "/opt/utilibre/community-src/wishlist-utilibre-0.67.1-p1",
+    "revision": "a5150c73620abb912a802afdcfb51e403230fff3",
+    "prerequisites": [
+      "deployment/wishlist/security-dependencies.patch",
+      "deployment/wishlist/local-icons.patch",
+      "deployment/wishlist/log-privacy.patch"
+    ],
+    "purpose": "wishlist: native deletion; scope and evidence in its dated deployment record.",
+    "removeWhen": "Remove after an appropriate upstream release supplies the same controls/fix and the native regression passes; preserve deployed corresponding source."
+  },
+  {
+    "patch": "deployment/chitchatter/source.patch",
+    "source": "/opt/utilibre/src/chitchatter",
+    "revision": "23b62a8d95be003e490e5a050335e1dea4b79cc7",
+    "prerequisites": [],
+    "purpose": "Reproducible privacy, local asset and security corrections; see dated deployment record.",
+    "removeWhen": "Remove when upstream native settings and security fixes provide the same verified behavior."
+  },
+  {
+    "patch": "deployment/link-cleaner/source.patch",
+    "source": "/opt/utilibre/src/url-parameter-cleaner",
+    "revision": "3b114cc94f728f0a6a3bed1e30fb63345abe5df4",
+    "prerequisites": [],
+    "purpose": "Reproducible privacy, local asset and security corrections; see dated deployment record.",
+    "removeWhen": "Remove when upstream native settings and security fixes provide the same verified behavior."
+  },
+  {
+    "patch": "deployment/calendar/gathio/privacy-security.patch",
+    "source": "/opt/utilibre/calendar-src/gathio",
+    "revision": "98a5e9b719120e2f3e72f712a78c97fba1eff8e7",
+    "prerequisites": [],
+    "purpose": "Reproducible privacy, local asset and security corrections; see dated deployment record.",
+    "removeWhen": "Remove when upstream native settings and security fixes provide the same verified behavior."
+  },
+  {
+    "patch": "deployment/chhoto/no-analytics-local-assets.patch",
+    "source": "/opt/utilibre/calendar-src/chhoto-url",
+    "revision": "e18a8a0111e94be03145e95c30dcd7f41891633d",
+    "prerequisites": [],
+    "purpose": "Disable click collection, local assets and accurate instance navigation.",
+    "removeWhen": "Native no-count and self-hosted asset options pass the recorded tests."
+  },
+  {
+    "patch": "deployment/razzia/security-dependencies.patch",
+    "source": "/opt/utilibre/calendar-src/razzia",
+    "revision": "277a33849827c0847ec85e99f2135888f72bd0c1",
+    "prerequisites": [],
+    "purpose": "Supported transitive dependency security corrections.",
+    "removeWhen": "Upstream release includes compatible fixes and room/export tests pass."
+  },
+  {
+    "patch": "deployment/unfurl/source.patch",
+    "source": "/opt/utilibre/src/unfurl-review",
+    "revision": "42aecfdc2407e82faf6d7acdc611f7d697fa2524",
+    "prerequisites": [],
+    "purpose": "Bound native fetch behavior, local assets and truthful instance notes; see dated deployment record.",
+    "removeWhen": "Upstream supports equivalent bounded native behavior; retain independently enforced egress controls."
+  },
+  {
+    "patch": "deployment/13ft/public-reader.patch",
+    "source": "/opt/utilibre/community-src/13ft-utilibre-0.5.0-public",
+    "revision": "d03b120c41d2558d3ce2a45e049ccbea8785ff7a",
+    "prerequisites": [],
+    "purpose": "Bound native fetch behavior, local assets and truthful instance notes; see dated deployment record.",
+    "removeWhen": "Upstream supports equivalent bounded native behavior; retain independently enforced egress controls."
+  },
+  {
+    "patch": "deployment/newsletters/operator-copy.patch",
+    "source": "/opt/utilibre/community-src/kill-the-newsletter-2.1.3",
+    "revision": "c2d7cf8f7d9927fd19a36ea9beaf0ced67afcefc",
+    "prerequisites": [],
+    "purpose": "Configured operator issue contact, EN/ES portal/privacy links and precise native analytics/log wording; no mail or storage behavior changes.",
+    "removeWhen": "Use upstream-supported operator links, localization and instance data notices when available; preserve the same privacy qualifications and test native feed create/delete before removing this patch."
+  },
+  {
+    "patch": "deployment/simplelogin/port-aware-starttls.patch",
+    "source": "/opt/utilibre/community-src/simplelogin-4.82.4",
+    "revision": "995904d5bc08ff5f951ad794b9372cbeb04d5fb6",
+    "prerequisites": [],
+    "purpose": "Use the configured existing relay port with certificate-verified STARTTLS.",
+    "removeWhen": "Replace with upstream equivalent support on a maintained compatible release after native authentication, CSV, SMTP and isolated restore checks. This patch alone does not approve public deployment."
+  },
+  {
+    "patch": "deployment/simplelogin/security/gunicorn-dependency.patch",
+    "source": "/opt/utilibre/community-src/simplelogin-4.82.4",
+    "revision": "995904d5bc08ff5f951ad794b9372cbeb04d5fb6",
+    "prerequisites": [],
+    "purpose": "Align native dependency metadata with the separately hash-pinned compatible Gunicorn transport update; legacy framework publication blockers remain.",
+    "removeWhen": "Replace with upstream equivalent support on a maintained compatible release after native authentication, CSV, SMTP and isolated restore checks. This patch alone does not approve public deployment."
+  },
+  {
+    "patch": "deployment/evaluation/projects/security-dependencies.patch",
+    "source": "/opt/utilibre/src/planka-projects",
+    "revision": "455aa274b44e63efa42840997ea4924b43eed533",
+    "prerequisites": [],
+    "unidiffZero": true,
+    "purpose": "Private Projects pilot only: compatible server dependencies and client React Router update; no public deployment implied.",
+    "removeWhen": "Replace with an upstream release carrying compatible fixes, rerun native collaboration, permissions and restore checks, then remove the exact package overrides. Retain source for the tested old image."
+  },
+  {
+    "patch": "deployment/one-file-core/standalone.patch",
+    "source": "/opt/utilibre/src/one-file-core",
+    "revision": "b988be00cc35fe1a7d7756543b326287f2e4ebf5",
+    "prerequisites": [],
+    "purpose": "Safe HTML serialization, disable demonstrated leaky encrypted export creation, local-file CSP and bilingual help.",
+    "removeWhen": "Use upstream equivalent support after repeating the dated native workflow and privacy checks; preserve original source notices."
+  },
+  {
+    "patch": "deployment/toolbox/moocup/local-source.patch",
+    "source": "/opt/utilibre/src/moocup",
+    "revision": "70623d81ba502a464fdd2b98c6c21b1c5ab973bc",
+    "prerequisites": [],
+    "purpose": "Remove analytics, package font locally, use a stable subpath and scoped browser storage with compatible dependency updates.",
+    "removeWhen": "Use upstream equivalent support after repeating the dated native workflow and privacy checks; preserve original source notices.",
+    "unidiffZero": true
+  },
+  {
+    "patch": "deployment/toolbox/autoredact/local-source.patch",
+    "source": "/opt/utilibre/src/autoredact",
+    "revision": "360fc18b976b9278b73d00e2c49e26c76de6557a",
+    "prerequisites": [],
+    "purpose": "Locally packaged native static autoredact with precise data notes; see dated deployment record for assets and omissions.",
+    "removeWhen": "Upstream supports the same verified local assets and privacy configuration; repeat the dated native workflows before removal.",
+    "unidiffZero": true
+  },
+  {
+    "patch": "deployment/toolbox/gravity/local-source.patch",
+    "source": "/opt/utilibre/src/gravity",
+    "revision": "28e912b8f6808a4bf892fa0f1ffacf857b0faa3a",
+    "prerequisites": [],
+    "purpose": "Locally packaged native static gravity with precise data notes; see dated deployment record for assets and omissions.",
+    "removeWhen": "Upstream supports the same verified local assets and privacy configuration; repeat the dated native workflows before removal.",
+    "unidiffZero": true
+  },
+  {
+    "patch": "deployment/knit/local-static.patch",
+    "source": "/opt/utilibre/src/knit",
+    "revision": "42be1d858273e2e1dad3c6b379a4219057b5176d",
+    "prerequisites": [],
+    "purpose": "Native static packaging, precise data notes and checked save/import corrections; see dated deployment record.",
+    "removeWhen": "Equivalent upstream behavior passes the recorded native workflow and untrusted-import checks; retain the FOSS-only package boundary."
+  },
+  {
+    "patch": "deployment/newton/local-static.patch",
+    "source": "/opt/utilibre/src/newton",
+    "revision": "226d6080ea40e1dcc67c628e355bc826a7848858",
+    "prerequisites": [],
+    "purpose": "Native static packaging, precise data notes and checked save/import corrections; see dated deployment record.",
+    "removeWhen": "Equivalent upstream behavior passes the recorded native workflow and untrusted-import checks; retain the FOSS-only package boundary."
+  },
+  {
+    "patch": "deployment/family-chess/source.patch",
+    "source": "/opt/utilibre/src/family-chess",
+    "revision": "f6e50932df60c531933dab4e07c6642cfee55e2d",
+    "prerequisites": [],
+    "purpose": "Native gettext Spanish/operator notes, secure native identifier generation and responsive board resizing; deployment settings and tests are separate readable recipes.",
+    "removeWhen": "Remove each hunk when an upstream release supplies its verified behavior; retain source for deployed images and repeat session, CSRF, native move and mobile checks."
+  },
+  {
+    "patch": "deployment/kokoro-web/local-source.patch",
+    "source": "/opt/utilibre/src/kokoro-web",
+    "revision": "2cb9d771a549870e7220783a53bdb2e99ed2f421",
+    "prerequisites": [],
+    "purpose": "Native browser-only local model/runtime packaging, dependency repairs and local storage/profile controls; no inference service.",
+    "removeWhen": "Use upstream native configuration/build support once equivalent local assets, traceable phonemizer, storage behavior and EN/ES WAV checks pass; preserve corresponding source for deployed assets.",
+    "unidiffZero": true
+  },
+  {
+    "patch": "deployment/kokoro-web/phonemizer-source.patch",
+    "source": "/opt/utilibre/src/kokoro-espeak-source",
+    "revision": "4870adfa25b1a32b4361592f1be8a40337c58d6c",
+    "prerequisites": [],
+    "purpose": "Build the pinned GPL eSpeak source with pinned Emscripten offline: disable unused Sonic fetch and correct musl declaration ordering.",
+    "removeWhen": "Drop these build compatibility fixes when a pinned upstream release builds and passes EN/ES phonemization with the same offline toolchain constraints.",
+    "unidiffZero": true
+  },
+  {
+    "patch": "deployment/projects/native-login.patch",
+    "source": "/opt/utilibre/src/planka-projects",
+    "revision": "455aa274b44e63efa42840997ea4924b43eed533",
+    "prerequisites": [
+      "deployment/evaluation/projects/security-dependencies.patch"
+    ],
+    "purpose": "Replace upstream-specific ProConnect label with EN/ES Utilibre sign-in wording through native React source; preserve the native OIDC handler.",
+    "removeWhen": "Drop this patch when upstream exposes supported identity-button branding; rebuild and repeat the approved/rejected native OIDC checks."
+  },
+  {
+    "patch": "deployment/donetick/backend.patch",
+    "source": "/opt/utilibre/community-src/donetick",
+    "revision": "e88d8bea62405ca02288f93dd70efab8c0f1ff2c",
+    "prerequisites": [],
+    "purpose": "Native OIDC state/error handling, asset-path authorization, extensionless upload handling, dependency maintenance and removal of unused telemetry.",
+    "removeWhen": "Use an upstream release or supported configuration with equivalent behavior, repeat native privacy/account/workflow checks, then remove the patch. Preserve corresponding source for previous images."
+  },
+  {
+    "patch": "deployment/donetick/frontend.patch",
+    "source": "/opt/utilibre/community-src/donetick-frontend",
+    "revision": "19c6a13dbfcfb7bc3110688554a45e29472a17b1",
+    "prerequisites": [],
+    "purpose": "Local native login/privacy links, removal of external integrations and stored rich-text sanitization with dependency maintenance.",
+    "removeWhen": "Use an upstream release or supported configuration with equivalent behavior, repeat native privacy/account/workflow checks, then remove the patch. Preserve corresponding source for previous images."
+  },
+  {
+    "patch": "deployment/beaverhabits/upstream.patch",
+    "source": "/opt/utilibre/community-src/beaverhabits",
+    "revision": "4b3bc6d64548feb3c0a431d70f307be1117a820c",
+    "prerequisites": [],
+    "purpose": "Enforce native administrator registration consistently, initialize the native habit store, suppress secret-bearing logs and remove unavailable external controls with compatible dependency updates.",
+    "removeWhen": "Use an upstream release or supported configuration with equivalent behavior, repeat native privacy/account/workflow checks, then remove the patch. Preserve corresponding source for previous images."
+  },
+  {
+    "patch": "deployment/trip/restricted.patch",
+    "source": "/opt/utilibre/src/trip",
+    "revision": "856b1edfe81a735fce4b544c2e16a6518cebf164",
+    "prerequisites": [],
+    "purpose": "Fixed map/search/routing providers, bounded outbound payloads, ownership checks and escaped native map rendering, with local operator/privacy notices.",
+    "removeWhen": "Remove after a supported upstream release provides equivalent boundaries/fixes and native account/export/recovery checks pass. Preserve source offers for previous deployed images."
+  },
+  {
+    "patch": "deployment/trip/dependencies.patch",
+    "source": "/opt/utilibre/src/trip",
+    "revision": "856b1edfe81a735fce4b544c2e16a6518cebf164",
+    "prerequisites": [],
+    "purpose": "Compatible locked Angular and Python image-processing security updates for the pinned native release.",
+    "removeWhen": "Remove after a supported upstream release provides equivalent boundaries/fixes and native account/export/recovery checks pass. Preserve source offers for previous deployed images."
+  },
+  {
+    "patch": "deployment/utilibre/privatebin-discovery/homepage-template.patch",
+    "source": "/opt/utilibre/src/privatebin-discovery",
+    "revision": "921ab83f268add709413a87206e4e1c2e3c2063d",
+    "prerequisites": [],
+    "purpose": "Native custom-template homepage-only descriptive metadata, visible EN/ES introduction and local brand icons. Paste/query/error paths remain noindex; server storage, expiry and encryption are unchanged.",
+    "removeWhen": "Replace when upstream native configuration provides equivalent homepage-only metadata/icons and scoped indexing, repeating the recorded privacy/browser checks. Preserve the original upstream template and existing user data."
+  },
+  {
+    "patch": "deployment/trip/rendering.patch",
+    "source": "/opt/utilibre/src/trip",
+    "revision": "856b1edfe81a735fce4b544c2e16a6518cebf164",
+    "prerequisites": [
+      "deployment/trip/restricted.patch",
+      "deployment/trip/dependencies.patch"
+    ],
+    "purpose": "Use supported Angular inlineCritical=false to load styles under strict CSP; treat native absent-share404 as an empty result while preserving other errors.",
+    "removeWhen": "Remove when upstream styles load under the same CSP and absent-share responses no longer raise an application error; repeat public desktop/mobile checks."
+  },
+  {
+    "patch": "deployment/chhoto/layout.patch",
+    "source": "/opt/utilibre/calendar-src/chhoto-url",
+    "revision": "e18a8a0111e94be03145e95c30dcd7f41891633d",
+    "prerequisites": [
+      "deployment/chhoto/no-analytics-local-assets.patch"
+    ],
+    "purpose": "Keep instance notes below the native form with bounded responsive spacing; version the changed stylesheet.",
+    "removeWhen": "Upstream branding/footer placement accommodates the bilingual instance notes without overlap."
+  },
+  {
+    "patch": "deployment/community/fmd-export-zero-source.patch",
+    "source": "/opt/utilibre/community-src/fmd-server-utilibre-p1",
+    "revision": "224b60c0756ff363bc19063082a8a1543559cf96",
+    "prerequisites": [],
+    "purpose": "Preserve legitimate zero-valued optional CSV fields in the native location export while absent fields remain blank.",
+    "removeWhen": "Upstream exports pass the zero, nonzero and absent optional-field browser regression without this patch."
+  },
+  {
+    "patch": "deployment/community/dumb/source.patch",
+    "source": "/opt/utilibre/community-src/dumb-utilibre-p1",
+    "revision": "f5581074850bc31ed7df1ce96e8f428179bf0abb",
+    "prerequisites": [],
+    "unidiffZero": true,
+    "purpose": "Bound native public-content cache allocation, reject uncached upstream errors, and apply small upstream rendering fixes with a local original placeholder. Private candidate only.",
+    "removeWhen": "Upstream equivalents pass the error/cache/rendering regressions; public activation still requires a verified Genius-capable outbound path."
+  },
+  {
+    "patch": "deployment/simplelogin/security/runtime-dependencies.patch",
+    "source": "/opt/utilibre/community-src/simplelogin-4.82.4",
+    "revision": "995904d5bc08ff5f951ad794b9372cbeb04d5fb6",
+    "prerequisites": [
+      "deployment/simplelogin/security/gunicorn-dependency.patch"
+    ],
+    "purpose": "Align nine native dependency constraints with the separately hash-pinned runtime crypto/HTTP/CORS updates; no application or model change. Legacy Flask/Jinja/Werkzeug blockers remain.",
+    "removeWhen": "Use a maintained upstream compatible dependency set once equivalent native signed-token, PGP, auth/CORS, CSV, SMTP and isolated restore checks pass; this patch does not approve public deployment."
+  }
+]

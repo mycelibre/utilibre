@@ -1,0 +1,13 @@
+kitchen.utilibre.org {
+    import utilibre_no_transform
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3202 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 30s
+        }
+        flush_interval -1
+    }
+}

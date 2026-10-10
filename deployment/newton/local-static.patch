@@ -1,0 +1,332 @@
+--- a/tournament.html
++++ b/tournament.html
+@@ -3,14 +3,12 @@
+ 
+ <head>
+     <meta charset="UTF-8">
++<meta name="robots" content="noindex,follow"><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; media-src 'none'; worker-src 'none'">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+-    <link rel="canonical" href="https://newtondarts.com/tournament.html">
+     <title>NewTon DC - Tournament Manager - Open Source Darts Tournament Software</title>
+     <meta name="description" content="Free, open-source darts tournament manager. Single and double elimination brackets for 4-32 players. Offline-first, self-hostable. No signup required.">
+     <meta name="keywords" content="darts, tournament, bracket, double elimination, single elimination, tournament manager, open source, self-hosted, offline, darts scoring">
+-    <link rel="icon" type="image/jpeg" href="images/logo.jpg">
+-    <link rel="preload" href="fonts/Insignia-Regular.otf" as="font" type="font/otf" crossorigin>
+-    <link rel="preload" href="fonts/Manrope-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
++    <link rel="icon" type="image/svg+xml" href="images/NewTon-logo.svg">
+     <link rel="stylesheet" href="css/styles.css">
+     <link rel="stylesheet" href="css/design-tokens.css">
+     <link rel="stylesheet" href="css/components.css">
+@@ -23,40 +21,8 @@
+     <link rel="stylesheet" href="css/dev-console.css">
+     <link rel="stylesheet" href="css/app-header.css">
+ 
+-    <!-- Docker Configuration (only executes when served via PHP) -->
+-    <script><?php
+-    if (function_exists('getenv')) {
+-        $demoMode = getenv('NEWTON_DEMO_MODE') === 'true' ? 'true' : 'false';
+-        $githubUrl = getenv('NEWTON_GITHUB_URL') ?: 'https://github.com/skrodahl/NewTon';
+-        // ?tm switches an analytics-only deployment into the full Tournament Manager,
+-        // which is how a shared instance is maintained. NEWTON_TM_PASSWORD gates it:
+-        //   unset  -> no gate, bare ?tm works (unchanged behaviour)
+-        //   set    -> ?tm=<password> required; anything else falls through
+-        // A wrong or missing password lands on the ordinary Analytics page rather than
+-        // an error, so the gate never advertises that there is something behind it.
+-        $tmSecret = getenv('NEWTON_TM_PASSWORD');
+-        $tmGranted = isset($_GET['tm']) &&
+-            (!$tmSecret || hash_equals((string)$tmSecret, (string)$_GET['tm']));
+-        $appMode = $tmGranted ? 'full' : (getenv('NEWTON_MODE') ?: 'full');
+-        $readonlyAnalytics = getenv('NEWTON_READONLY_ANALYTICS') === 'true' ? 'true' : 'false';
+-        // NEWTON_API_KEY (api/api-check.php) guards uploads, deletes and corrections. A page
+-        // opened with the correct ?tm password gets the key, so maintaining the instance
+-        // works as before. Only behind a password: an open ?tm never hands the key out.
+-        $apiKey = getenv('NEWTON_API_KEY');
+-        $pageApiKey = ($tmGranted && $tmSecret && $apiKey) ? trim($apiKey) : '';
+-        echo "\n        window.NEWTON_CONFIG = {\n";
+-        echo "            demoMode: $demoMode,\n";
+-        echo "            appMode: '$appMode',\n";
+-        // what the instance is, even when ?tm opens it in full mode (the player database
+-        // is the club's uploaded copy on an analytics-only instance)
+-        $instanceMode = getenv('NEWTON_MODE') === 'analytics' ? 'analytics' : 'full';
+-        echo "            instanceMode: '$instanceMode',\n";
+-        echo "            readonlyAnalytics: $readonlyAnalytics,\n";
+-        echo "            apiKey: " . json_encode($pageApiKey, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ",\n";
+-        echo "            githubUrl: '$githubUrl'\n";
+-        echo "        };\n    ";
+-    }
+-    ?></script>
++    <!-- Static browser edition: no PHP/API, server credentials or licensed client. -->
++    <script>window.NEWTON_CONFIG = { demoMode:false, appMode:"full", instanceMode:"full", readonlyAnalytics:false, apiKey:"", offlineOnly:true, githubUrl:"https://github.com/skrodahl/NewTon" };</script>
+ 
+     <script>
+         // Initialize help system when DOM is ready
+@@ -86,12 +52,14 @@
+             }
+         });
+     </script>
++<style>.utilibre-note{box-sizing:border-box;padding:10px 16px;font:13px/1.5 system-ui;background:#17222d;color:#eef4ff}.utilibre-note a{color:#b8dcff}.utilibre-note summary{cursor:pointer}.utilibre-note p{max-width:80ch} #cfg-server,#cfg-chalker,[data-target="cfg-server"],[data-target="cfg-chalker"],#paymentPanel{display:none!important}</style>
+ </head>
+ 
+-<body class="<?php echo $appMode === 'analytics' ? 'mode-analytics' : 'mode-full'; ?>">
++<body class="mode-full">
+ <script>
+ window.NEWTON_APP_MODE = document.body.classList.contains('mode-analytics') ? 'analytics' : 'full';
+ </script>
++    <aside class="utilibre-note"><a href="https://utilibre.org/en/">More tools from Utilibre</a> · <a href="https://utilibre.org/es/">Más herramientas</a> · <a href="LICENSE.txt">Licence / Licencia</a> · <a href="https://tools.utilibre.org/utilibre-source/newton-utilibre.tar.gz">Modified source / Código modificado</a><details><summary>Local tournament data / Datos locales del torneo</summary><p lang="en">Tournaments, players and match statistics are saved in this browser, not uploaded. Export JSON and keep an independent copy. Server backup, network handover and the companion Chalker are unavailable here. Analytics means local darts statistics, not visitor tracking. Controls are in English.</p><p lang="es">Los torneos, jugadores y estadísticas de partidas se guardan en este navegador; no se suben al servidor. Exportá JSON y conservá una copia independiente. Acá no están disponibles el respaldo en servidor, la transferencia por red ni la aplicación Chalker. Analytics muestra estadísticas locales de dardos, no rastreo de visitantes. Los controles están en inglés.</p></details></aside>
+     <div class="container">
+         <div class="header">
+             <div class="header-top">
+@@ -118,7 +86,6 @@
+                 <button class="nav-btn" data-page="tournament">Tournament Bracket</button>
+                 <button class="nav-btn" data-page="history">Analytics</button>
+                 <button class="nav-btn" data-page="config"><span class="nt-in-full">Global Settings</span><span class="nt-in-analytics">Custom Settings</span></button>
+-                <a class="nav-btn" href="chalker/index.html" target="_blank">Chalker</a>
+             </div>
+         </div>
+ 
+@@ -214,10 +181,7 @@
+ 
+                     <!-- Before the draw: payment and saved players -->
+                     <div class="rg-side" id="playerListSection">
+-                        <section class="st-panel rg-pay" id="paymentPanel">
+-                            <img src="images/payment.png" alt="Payment QR code" onerror="document.getElementById('paymentPanel').hidden = true">
+-                            <div><b>Pay here</b><span>Scan to pay the entry fee.</span></div>
+-                        </section>
++                        <section id="paymentPanel" hidden></section>
+                         <!-- The player database to pick from: filled by renderPlayerList() -->
+                         <section class="st-panel" aria-labelledby="savedPlayersTitle">
+                             <div class="st-panel-head">
+@@ -1096,9 +1060,7 @@
+         <script src="js/newton-history.js"></script>
+         <script src="js/seeding.js"></script>
+         <script src="js/qr-bridge.js"></script>
+-    <!-- Optional network client. Separately licensed (see licensed/LICENSE.md) and may be
+-         absent; the Tournament Manager works fully without it. -->
+-    <script src="licensed/js/network-tm.js?v=1"></script>
++
+ 
+         <footer>
+             <span id="footerContent"></span></br> Created by Håvard Skrödahl, NewTon DC Malmö
+@@ -1405,8 +1367,8 @@
+                     <div class="dlg__main">
+                         <span class="dlg__pill" id="importOldFormatPill" style="display: none;">Old format</span>
+                         <h2 class="dlg__title">Import tournament</h2>
+-                        <p class="dlg__desc">Your current tournament data is automatically saved and can be reloaded at any time — importing will not cause any data loss.</p>
+-                        <p class="dlg__desc" id="importOldFormatWarning" style="display: none;">This tournament is from an older version. It will import successfully, but undo history will not be available. All other features work normally.</p>
++                        <p class="dlg__desc">Export current work first. Check the file and any overwrite prompt before importing. / Exportá primero tu trabajo actual. Revisá el archivo y cualquier aviso de sobrescritura antes de importar.</p>
++                        <p class="dlg__desc" id="importOldFormatWarning" style="display: none;">This file uses an older format. Undo history may be unavailable; check the imported tournament. / Este archivo usa un formato anterior. El historial para deshacer puede no estar disponible; revisá el torneo importado.</p>
+                     </div>
+                 </div>
+                 <div class="dlg__foot">
+--- a/js/newton-db.js
++++ b/js/newton-db.js
+@@ -391,6 +391,7 @@
+      * @returns {Promise<void>}
+      */
+     async function importAll(dump) {
++        if (!NewtonIntegrity.safeImportIdentifiers(dump)) throw new Error('Unsafe or invalid imported identifier / Identificador importado no válido');
+         await initDB();
+ 
+         // Upsert tournament metadata records (keyPath is tournamentId — put works directly)
+--- a/js/results-config.js
++++ b/js/results-config.js
+@@ -485,6 +485,7 @@
+  * @returns {'qr'|'network'|'none'}
+  */
+ function getChalkerHandover() {
++    if (window.NEWTON_CONFIG?.offlineOnly) return "none";
+     const mode = config && config.chalker && config.chalker.handover;
+     return (mode === 'network' || mode === 'none') ? mode : 'qr';
+ }
+--- a/js/main.js
++++ b/js/main.js
+@@ -299,7 +299,7 @@
+ 
+     // Try logo file extensions in priority order, one at a time — parallel
+     // requests would let the last-to-load win instead of the first match
+-    const logoFiles = ['images/logo.png', 'images/logo.jpg', 'images/logo.jpeg', 'images/logo.svg'];
++    const logoFiles = ['images/NewTon-logo.svg'];
+ 
+     const tryLogo = (index) => {
+         if (index >= logoFiles.length) return; // No logo found - keep placeholder
+--- a/js/newton-history.js
++++ b/js/newton-history.js
+@@ -1504,6 +1504,7 @@
+      * already in IndexedDB. Runs silently on every Analytics load.
+      */
+     async function _autoImportFromDisk() {
++        if (window.NEWTON_CONFIG?.offlineOnly) return;
+         if (typeof NewtonDB === 'undefined') return;
+ 
+         let diskTournaments;
+@@ -2517,6 +2518,7 @@
+         try {
+             const text = await file.text();
+             t = JSON.parse(text);
++            if (!NewtonIntegrity.safeImportIdentifiers(t)) throw new Error('Unsafe or invalid imported identifier / Identificador importado no válido');
+         } catch (e) {
+             alert('Could not read file: ' + (e.message || e));
+             event.target.value = '';
+@@ -2696,6 +2698,7 @@
+      * @returns {Promise<object[]>} empty when there is no server
+      */
+     async function _fetchCorrections() {
++        if (window.NEWTON_CONFIG?.offlineOnly) { _correctionsAvailable = false; return []; }
+         try {
+             const res = await fetch('api/corrections.php', { cache: 'no-store' });
+             if (!res.ok) { _correctionsAvailable = false; return []; }
+--- a/js/tournament-management.js
++++ b/js/tournament-management.js
+@@ -496,6 +496,7 @@
+  * Called at tournament finalization when config.server.autoUpload is enabled.
+  */
+ async function autoUploadTournament() {
++    if (window.NEWTON_CONFIG?.offlineOnly) return;
+     const payload = buildTournamentPayload();
+     if (!payload) return;
+ 
+@@ -1007,6 +1008,7 @@
+ // SHARED TOURNAMENTS (SERVER FEATURE)
+ // Attempts to load tournaments from server - fails silently if not available
+ async function loadSharedTournaments() {
++    if (window.NEWTON_CONFIG?.offlineOnly) return null;
+     console.log('[Shared Tournaments] Attempting to load from server...');
+     try {
+         const response = await fetch('/api/list-tournaments.php', {
+@@ -1810,6 +1812,7 @@
+ }
+ 
+ function validateTournamentData(data) {
++    if (!NewtonIntegrity.safeImportIdentifiers(data)) return {valid:false,error:'Unsafe or invalid imported identifier / Identificador importado no válido'};
+     if (!data || typeof data !== 'object') {
+         return { valid: false, error: 'Data must be a valid tournament object' };
+     }
+--- a/js/newton-integrity.js
++++ b/js/newton-integrity.js
+@@ -3,6 +3,18 @@
+ // Used for QR code integrity checking today; reusable inside MQTT payloads later.
+ 
+ const NewtonIntegrity = {
++    // IDs enter native HTML event attributes: reject executable syntax before import.
++    safeImportIdentifiers(value, depth = 0) {
++        if (depth > 32) return false;
++        if (!value || typeof value !== 'object') return true;
++        return Object.entries(value).every(([key, item]) => {
++            if ((key === 'id' || key.endsWith('Id')) && item != null) {
++                if (typeof item === 'number') { if (!Number.isFinite(item)) return false; }
++                else if (typeof item !== 'string' || !/^[A-Za-z0-9_.:-]{1,128}$/.test(item)) return false;
++            }
++            return this.safeImportIdentifiers(item, depth + 1);
++        });
++    },
+     _table: null,
+ 
+     _makeTable() {
+--- a/js/clean-match-progression.js
++++ b/js/clean-match-progression.js
+@@ -113,7 +113,7 @@
+         if (diff.highOuts?.length) parts.push(diff.highOuts.map(v => `high out (${v})`).join(', '));
+         if (diff.shortLegs?.length) parts.push(`${diff.shortLegs.length}&times; short leg`);
+         if (diff.lollipops)   parts.push(`${diff.lollipops}&times; lollipop`);
+-        if (parts.length) rows.push(`<div class="completion-achievement-row"><strong>${player.name}:</strong> ${parts.join(', ')}</div>`);
++        if (parts.length) rows.push(`<div class="completion-achievement-row"><strong>${escapeHtml(player.name)}:</strong> ${parts.join(', ')}</div>`);
+     });
+ 
+     if (!rows.length) {
+--- a/css/match-controls.css
++++ b/css/match-controls.css
+@@ -251,3 +251,6 @@
+ .mc-switch input:checked + span::after { transform: translateX(18px); }
+ .mc-switch input:focus-visible + span { outline: 2px solid var(--nt-accent); outline-offset: 2px; }
+ @media (prefers-reduced-motion: reduce) { .mc-switch span, .mc-switch span::after { transition: none; } }
++
++/* Keep player names and native start controls on separate mobile rows. */
++@media(max-width:700px){.mc-qrow{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px}.mc-qrow>.mc-who{grid-column:2 / 4}.mc-lanes{grid-template-columns:minmax(0,1fr)}}
+--- a/css/bracket-view.css
++++ b/css/bracket-view.css
+@@ -306,3 +306,12 @@
+ .bv-gcard.bv-gsingle { width: 100%; max-width: 760px; justify-self: center; }
+ /* the cups: each cup's name over its final */
+ .bv-cup-name { font-size: 30px; }
++
++/* Keep native navigation reachable on narrow screens. */
++@media(max-width:700px){
++ .bv-header{grid-template-columns:minmax(0,1fr);gap:6px}
++ .bv-head-left,.bv-head-center,.bv-head-right,.bv-header>.bv-status-row{grid-column:1;grid-row:auto}
++ .bv-head-left{flex-wrap:wrap;gap:6px}.bv-title-block{border:0}.bv-title{max-width:320px;font-size:18px}
++ .bv-head-center{flex-wrap:wrap}.bv-head-right{justify-content:space-between}.bv-head-right .bv-clock{font-size:16px}
++ .bv-status-row{white-space:normal}
++}
+--- a/css/styles.css
++++ b/css/styles.css
+@@ -7,70 +7,6 @@
+ */
+ 
+ /* Fonts */
+-@font-face {
+-  font-family: 'Droid Serif';
+-  src: url('../fonts/DroidSerif-Regular.ttf') format('truetype');
+-  font-weight: 400;
+-  font-style: normal;
+-  font-display: swap;
+-}
+-
+-@font-face {
+-  font-family: 'Droid Serif';
+-  src: url('../fonts/DroidSerif-Bold.ttf') format('truetype');
+-  font-weight: 700;
+-  font-style: normal;
+-  font-display: swap;
+-}
+-
+-@font-face {
+-  font-family: 'Insignia';
+-  src: url('../fonts/Insignia-Regular.otf') format('opentype');
+-  font-weight: 400;
+-  font-style: normal;
+-  font-display: swap;
+-}
+-
+-@font-face {
+-  font-family: 'Inter';
+-  src: url('../fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+-  font-weight: 100 900;
+-  font-style: normal;
+-  font-display: swap;
+-}
+-
+-@font-face {
+-  font-family: 'Inter';
+-  src: url('../fonts/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+-  font-weight: 100 900;
+-  font-style: italic;
+-  font-display: swap;
+-}
+-
+-@font-face {
+-  font-family: 'Manrope';
+-  src: url('../fonts/Manrope-VariableFont_wght.ttf') format('truetype');
+-  font-weight: 100 900;
+-  font-style: normal;
+-  font-display: swap;
+-}
+-
+-@font-face {
+-  font-family: 'Cascadia Code';
+-  src: url('../fonts/CascadiaCode-VariableFont_wght.ttf') format('truetype');
+-  font-weight: 100 900;
+-  font-style: normal;
+-  font-display: swap;
+-}
+-
+-@font-face {
+-  font-family: 'Cascadia Code';
+-  src: url('../fonts/CascadiaCode-Italic-VariableFont_wght.ttf') format('truetype');
+-  font-weight: 100 900;
+-  font-style: italic;
+-  font-display: swap;
+-}
+-
+ /* CSS Variables */
+ :root {
+   --font-body: 'Manrope', sans-serif;

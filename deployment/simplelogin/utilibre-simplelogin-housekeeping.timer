@@ -1,0 +1,8 @@
+[Unit]
+Description=Run selected SimpleLogin housekeeping daily
+[Timer]
+OnCalendar=*-*-* 04:20:00 UTC
+RandomizedDelaySec=10min
+Persistent=true
+[Install]
+WantedBy=timers.target

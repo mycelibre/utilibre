@@ -1,0 +1,34 @@
+diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
+index aae2324..225030e 100644
+--- a/UTILIBRE-SOURCE.txt
++++ b/UTILIBRE-SOURCE.txt
+@@ -1,4 +1,4 @@
+-Whisper Web, Utilibre 81869ed-p5, 2026-10-09
++Whisper Web, Utilibre 81869ed-p6, 2026-10-09
+ Base: https://github.com/xenova/whisper-web/tree/81869ed62970ff4373509b6004a6c9a3f0c5b64d
+ Upstream MIT license retained. Utilibre changes: same-origin model/WASM loading,
+ small multilingual default and tiny fallback (quantized), no remote audio loading, bilingual pilot/error wording,
+@@ -9,6 +9,9 @@ channels. Native microphone selection is ephemeral, labels are obtained only
+ after permission, and a Web Audio meter helps identify missing input. Native
+ recording requests disable echo cancellation/noise suppression; no server audio
+ processing, microphone identifiers, or level reports are uploaded or stored.
++P6 explicitly requests native automatic gain control, which Chromium otherwise
++disables with echo cancellation. This restores browser microphone-level
++adjustment without a custom amplifier or changes to uploaded audio files.
+ Use recording explicitly hands the captured clip to the existing transcriber.
+ The spoken-language control is visible and reflects actual settings. English and
+ Spanish browser locales initialize that language; other locales initialize Auto.
+diff --git a/src/components/AudioRecorder.tsx b/src/components/AudioRecorder.tsx
+index 174b95c..dd2ba1d 100644
+--- a/src/components/AudioRecorder.tsx
++++ b/src/components/AudioRecorder.tsx
+@@ -119,6 +119,9 @@ export default function AudioRecorder(props: {
+                     // communication filters suppressing a short, quiet phrase.
+                     echoCancellation: false,
+                     noiseSuppression: false,
++                    // Chromium otherwise disables gain along with echo
++                    // cancellation. Keep native mic-level adjustment enabled.
++                    autoGainControl: true,
+                 },
+             });
+             // Permission can arrive after the dialog was dismissed. Never

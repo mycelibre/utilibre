@@ -1,0 +1,167 @@
+diff --git a/app/locales/es.json b/app/locales/es.json
+index 17bbe3e..e7e24cd 100644
+--- a/app/locales/es.json
++++ b/app/locales/es.json
+@@ -1,6 +1,6 @@
+ {
+-  "heading": "Introduce el enlace del sitio web",
+-  "label": "Enlace del sitio web del que quieres eliminar el paywall:",
++  "heading": "Leé una página web pública",
++  "label": "Dirección pública http:// o https://:",
+   "submit": "Enviar",
+   "toggle_dark_mode": "Alternar modo oscuro",
+   "status_heading": "Obteniendo artículo",
+@@ -20,8 +20,9 @@
+   "invalid_url": "URL inválida",
+   "medium_challenge_error": "Medium mostró un desafío anti-bot y Freedium / archive.org / archive.today no devolvieron nada. Es posible que el artículo sea demasiado nuevo para haber sido archivado todavía.",
+   "challenge_error": "El sitio mostró un desafío anti-bot (Cloudflare u otro) y no se encontró una instantánea utilizable en archive.org o archive.today. Este sitio está bloqueando activamente las solicitudes automatizadas.",
+-  "timeout_error": "El sitio web tardó demasiado en responder (tiempo de espera de 30 s). Intenta de nuevo más tarde.",
+-  "connection_error": "No se pudo conectar con el sitio web. Comprueba la URL e inténtalo de nuevo.",
++  "timeout_error": "La página superó el breve plazo de carga. Probá de nuevo más tarde.",
++  "connection_error": "No se pudo conectar al sitio. Revisá la URL y probá de nuevo.",
+   "request_error": "Error al obtener la página.",
+-  "unexpected_error": "Error inesperado al obtener la página."
++  "unexpected_error": "Error inesperado al obtener la página.",
++  "utilibre_note": "Solo páginas públicas. Sin cuentas, cookies, redirecciones, imágenes ni scripts. No ingresés enlaces privados ni contraseñas. El sitio de origen recibe una solicitud de nuestro servidor. Algunas páginas no funcionan."
+ }
+diff --git a/app/portable.py b/app/portable.py
+index 202ab5c..a3071f3 100644
+--- a/app/portable.py
++++ b/app/portable.py
+@@ -1,4 +1,5 @@
+ import json
++import ipaddress
+ import os
+ import flask
+ import re
+@@ -14,8 +15,9 @@ from bs4 import BeautifulSoup
+ app = flask.Flask(__name__)
+ 
+ _DEFAULT_STRINGS = {
+-    "heading": "Enter Website Link",
+-    "label": "Link of the website you want to remove paywall for:",
++    "heading": "Read a public web page",
++    "label": "Public http:// or https:// page address:",
++    "utilibre_note": "Only public pages. No accounts, cookies, redirects, images or scripts. Do not enter private links or passwords. The source website receives a request from our server. Pages may not work.",
+     "submit": "Submit",
+     "toggle_dark_mode": "Toggle Dark Mode",
+     "status_heading": "Fetching Article",
+@@ -43,7 +45,7 @@ _DEFAULT_STRINGS = {
+         "and no usable snapshot was found on archive.org or archive.today. "
+         "This site is actively blocking automated requests."
+     ),
+-    "timeout_error": "The website took too long to respond (30s timeout). Try again later.",
++    "timeout_error": "The page exceeded this reader’s short fetch deadline. Try again later.",
+     "connection_error": "Could not connect to the website. Check the URL and try again.",
+     "request_error": "Failed to fetch the page.",
+     "unexpected_error": "Unexpected error while fetching the page.",
+@@ -51,7 +53,9 @@ _DEFAULT_STRINGS = {
+ 
+ 
+ def get_locale():
+-    locale = os.environ.get("LOCALE", "en")
++    locale = request.args.get("lang", os.environ.get("LOCALE", "en"))
++    if locale not in {"en", "es"}:
++        locale = "en"
+     if not re.match(r"^[a-zA-Z0-9_-]+$", locale):
+         locale = "en"
+     return locale
+@@ -106,11 +110,10 @@ html = """
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <title>13ft Ladder</title>
+     <link rel="icon" href="/favicon.ico" type="image/png">
+-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" async>
+     <style>
+         * { box-sizing: border-box; }
+         body {
+-            font-family: 'Open Sans', sans-serif;
++            font-family: system-ui, sans-serif;
+             background-color: #FFF;
+             margin: 0;
+             padding: 0;
+@@ -162,6 +165,7 @@ html = """
+         }
+ 
+         .dark-mode-toggle {
++            display: none;
+             position: absolute;
+             top: 10px;
+             right: 10px;
+@@ -418,8 +422,10 @@ html = """
+     </div>
+ 
+     <div id="form-view">
+-        <form id="url-form">
++        <form id="url-form" action="/article?lang={{ lang }}" method="post">
+             <h1>{{ heading }}</h1>
++            <p><a href="https://utilibre.org/{{ lang }}/">Utilibre</a> · <a href="/?lang=en">English</a> · <a href="/?lang=es">Español</a></p>
++            <p>{{ utilibre_note }}</p>
+             <label for="link">{{ label }}</label>
+             <input type="text" id="link" name="link" required autofocus>
+             <input type="submit" value="{{ submit }}">
+@@ -840,7 +846,65 @@ def fetch_via_archive_ph(url, job_id=None):
+     return None, None
+ 
+ 
++# Utilibre: only this synchronous native route can fetch, through fixed Squid.
++# Network policy separately prevents app egress and restricts proxy destinations.
++app.config["MAX_CONTENT_LENGTH"] = 4096
++PUBLIC_PROXY = "http://172.29.118.20:3128"
++
++
++@app.before_request
++def restrict_public_routes():
++    if (request.path, request.method) not in {
++        ("/", "GET"), ("/favicon.ico", "GET"), ("/article", "POST")
++    }:
++        return "Not available", 404
++
++
++def public_article(url):
++    try:
++        parsed = urlparse(url)
++        host = (parsed.hostname or "").rstrip(".").lower()
++        if (parsed.scheme not in {"http", "https"} or not host or parsed.username is not None
++                or parsed.password is not None or parsed.fragment or "\\" in url
++                or re.search(r"[\x00-\x20\x7f]", url)
++                or parsed.port not in {None, 80 if parsed.scheme == "http" else 443}
++                or ":" in host or "." not in host
++                or host.endswith((".localhost", ".local", ".internal", ".home.arpa", ".invalid"))):
++            raise ValueError()
++        try:
++            address = ipaddress.ip_address(host)
++        except ValueError:
++            address = None
++        if address and (not address.is_global or address.is_multicast):
++            raise ValueError()
++    except ValueError:
++        raise UserFacingError("Public HTTP(S) URLs only; no credentials, fragments, local addresses or nonstandard ports. / Solo URL HTTP(S) públicas; sin credenciales, fragmentos, direcciones locales ni puertos no estándar.")
++    deadline = time.monotonic() + 8
++    with requests.Session() as session:
++        session.trust_env = False
++        session.proxies = {"http": PUBLIC_PROXY, "https": PUBLIC_PROXY}
++        with session.get(url, headers={"User-Agent": "Utilibre-13ft/0.5 (+https://utilibre.org/en/privacy)", "Accept": "text/html"},
++                         allow_redirects=False, stream=True, timeout=(3, 3)) as response:
++            if response.status_code != 200 or "text/html" not in response.headers.get("Content-Type", "").lower():
++                raise UserFacingError("The source must return an HTML page directly. Redirects, challenges and archive fallbacks are unavailable. / El origen debe devolver HTML directamente. No se siguen redirecciones ni se usan archivos alternativos.")
++            body = bytearray()
++            for chunk in response.iter_content(8192):
++                if time.monotonic() > deadline or len(body) + len(chunk) > 1024 * 1024:
++                    raise UserFacingError("Page exceeds the time or 1 MiB decoded-content limit. / La página supera el tiempo o el límite de 1 MiB de contenido descomprimido.")
++                body.extend(chunk)
++            encoding = response.encoding or "utf-8"
++    # Gunicorn sync-worker timeout also bounds slow trickles between chunks.
++    document = BeautifulSoup(body.decode(encoding, errors="replace"), "html.parser")
++    for node in document.find_all(["script", "iframe", "frame", "object", "embed", "form"]):
++        node.decompose()
++    for meta in document.find_all("meta", attrs={"http-equiv": re.compile("^refresh$", re.I)}):
++        meta.decompose()
++    return process_html_document(str(document), url)
++
++
+ def bypass_paywall(url, strings, job_id=None):
++    return public_article(url)
++    # Upstream fallback code is unreachable; kept for a small reversible diff.
+     set_step(job_id, 'connect')
+ 
+     if not url.startswith("http"):

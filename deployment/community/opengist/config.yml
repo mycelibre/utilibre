@@ -1,0 +1,27 @@
+# Native configuration for pinned Opengist 1.15.2. Secrets use its native secret file.
+external-url: https://snippets.utilibre.org
+opengist-home: /opengist
+db-uri: opengist.db
+sqlite.journal-mode: WAL
+index: bleve
+http.host: 0.0.0.0
+http.port: 6157
+http.git-enabled: true
+ssh.git-enabled: disabled
+metrics.enabled: false
+api.enabled: true
+log-level: warn
+log-output: stdout
+oidc.provider-name: Utilibre account
+oidc.client-key: utilibre-opengist
+oidc.discovery-url: https://auth.utilibre.org/application/o/opengist/.well-known/openid-configuration
+oidc.group-claim-name: groups
+oidc.admin-group: utilibre-opengist-admin
+custom.name: Utilibre · Snippets
+custom.static-links:
+  - name: More tools from Utilibre / Más herramientas de Utilibre
+    path: https://utilibre.org
+  - name: Privacy / Privacidad
+    path: https://utilibre.org/en/privacy
+  - name: Report abuse / Denunciá abusos
+    path: https://utilibre.org/en/abuse

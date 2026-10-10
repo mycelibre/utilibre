@@ -8,6 +8,7 @@ python.utilibre.org {
 	reverse_proxy 10.10.1.43:3133
 }
 
+# Historical host now serves only a 410 withdrawal notice from3137.
 transcribe.utilibre.org {
 	encode zstd gzip
 	header >Cross-Origin-Embedder-Policy credentialless

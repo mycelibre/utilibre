@@ -1,0 +1,78 @@
+# New native backends, 9 October 2026. Merge these HTTPS site blocks into the
+# separate Caddy edge. Existing utilibre_* snippets and CrowdSec are reused.
+# Load one block per hostname. Preserve unrelated routes and TURN challenges.
+# Public activation remains dependent on loading/reloading this edge config
+# and then checking public HTTPS, native login/gameplay and live connections.
+# All upstreams bind on10.10.1.43 and permit the existing edge10.10.1.3.
+# Static additions use tools:3103 and need no extra site blocks.
+
+chess.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3214 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+        flush_interval -1
+    }
+}
+
+chores.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3215 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}
+
+habits.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3216 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}
+
+projects.utilibre.org {
+    import utilibre_security_contact
+    import utilibre_no_transform
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3217 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}
+
+trip.utilibre.org {
+    import utilibre_security_contact
+    import utilibre_no_transform
+    crowdsec
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3224 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 25s
+        }
+    }
+}

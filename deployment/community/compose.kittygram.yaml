@@ -27,7 +27,7 @@ services:
       RATELIMIT_REQUEST_LIMIT: "100"
       RATELIMIT_WINDOW_SIZE: "660"
       RESOLVER: 127.0.0.11
-      ABOUT_MESSAGE: '<p>Hosted by <a href="https://utilibre.org">Utilibre</a>. Public Instagram content only; no Instagram login or cookies. Media is fetched by this server. Temporary caches are held in memory. Our edge and Cloudflare process requests and may retain operational/security metadata. <a href="https://utilibre.org/en/privacy">Privacy</a> · <a href="/utilibre-source/kittygram-utilibre.tar.gz">Deployed source</a></p>'
+      ABOUT_MESSAGE: '<p lang="en">Hosted by <a href="https://utilibre.org/en/">Utilibre</a>. Public Instagram content only; no Instagram login or cookies. Media is fetched by this server. Temporary caches are held in memory. Our edge and Cloudflare process requests and may retain operational/security metadata. <a href="https://utilibre.org/en/privacy">Privacy</a> · <a href="/utilibre-source/kittygram-utilibre.tar.gz">Deployed source</a></p><p lang="es">Alojado por <a href="https://utilibre.org/es/">Utilibre</a>. Solo contenido público de Instagram; sin iniciar sesión ni usar cookies de Instagram. Este servidor obtiene las imágenes y los videos. Las cachés temporales se mantienen en memoria. Nuestro servidor perimetral y Cloudflare procesan solicitudes y pueden conservar metadatos operativos y de seguridad. <a href="https://utilibre.org/es/privacidad">Privacidad</a> · <a href="/utilibre-source/kittygram-utilibre.tar.gz">Código desplegado</a></p>'
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
       - /app/logs:rw,nosuid,nodev,noexec,size=4m,uid=65534,gid=65534

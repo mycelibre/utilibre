@@ -1,0 +1,40 @@
+import type { PracticalGuide } from './practical-guide-data.ts';
+export const newsletterGuides: PracticalGuide[] = [{
+  id: 'newsletters', paths: { en: 'guides/newsletters-to-rss', es: 'guias/boletines-a-rss' }, tools: [{ id: 'newsletters', label: { en: 'Create a newsletter feed', es: 'Crear un canal de boletines' } }], samples: [], reviewedOn: '2026-10-09',
+  copy: {
+    en: {
+      title: 'Read newsletters in your RSS reader',
+      intro: 'Kill the Newsletter! turns incoming email into an Atom feed. Give a newsletter its generated email address, then read new messages alongside your other feeds.',
+      prerequisites: 'Use a browser with JavaScript and a feed reader that accepts Atom. Native controls are in English. This service stores readable mail on the server; choose newsletters you are comfortable storing here. It cannot send replies or forward messages to Gmail or another inbox.',
+      steps: [
+        'Open the tool, enter a descriptive Feed title and choose Create feed. For a practice feed, use Fictional museum bulletin. Keep the generated email address, Atom URL and settings page privately.',
+        'Use the generated email address when subscribing to a newsletter. Add the Atom URL to your feed reader using its subscribe/add-feed control. The exact label depends on your reader; this is not a Utilibre account.',
+        'A newsletter confirmation email becomes an entry in the feed. Open its confirmation link only when you intended to subscribe. If the publisher requires an email reply, this service cannot provide one.',
+        'For an independent copy, save the Atom XML from its URL before entries expire. It contains currently retained entries, not a complete mail archive. Download wanted attachments separately: their URLs in the XML still depend on this server. Keep the feed URL private because it also reveals the settings link.',
+        'You can inspect the saved XML in a text editor. Keep using the original Atom URL for new entries. Reader support for importing a saved Atom file varies; this release has no native XML import that restores server history or feed settings.',
+        'To delete a feed, open Kill the Newsletter! feed settings at the end of an entry, or use the settings page saved during creation. Under Delete feed, enter the exact title in Feed title confirmation and choose Delete feed. Unsubscribe from the original newsletter separately and remove the feed from your reader. Other copies and old backups are unaffected.',
+      ],
+      success: 'Fictional feed creation, local mail-to-Atom receipt, native deletion and an isolated SQLite/files restore passed. The operator also confirmed a controlled message delivered through the mail gateway and browser access from outside this VM. The copy update passed a separate create/delete check over Caddy HTTPS. A specific third-party reader import has not been tested.',
+      troubleshooting: 'Allow time for mail delivery and your reader’s refresh interval. Use the generated address exactly; a name you invent is not a receiver. Some publishers refuse these addresses. Incoming messages are limited to 512 KiB. Web writes are limited to 30 per minute with a burst of 30 per source IP; shared networks share that limit.',
+      privacy: 'Messages, senders, subjects and attachments are readable on the server. The feed link grants read and management access. Hourly cleanup removes entries older than 30 days; the feed size limit can remove them sooner. Feed settings have no automatic expiry. Daily same-VM backups have no automatic expiry and are not off-site. Receipt logs can contain sender and feed identifiers; container logs rotate across two 1 MiB files. This hostname uses Cloudflare DNS without its HTTP proxy. Remote images and links retained in the feed may contact outside services from your reader. Edge/provider log retention remains unverified.',
+      next: 'Save anything worth keeping before it expires. If you already use FreshRSS, you can add the Atom URL to your existing subscriptions; new FreshRSS registration remains closed.',
+    },
+    es: {
+      title: 'Leé boletines en tu lector RSS',
+      intro: 'Kill the Newsletter! convierte el correo entrante en un canal Atom. Dale al boletín la dirección generada y leé sus mensajes junto con tus otros canales.',
+      prerequisites: 'Usá un navegador con JavaScript y un lector compatible con Atom. Los controles nativos están en inglés. El servicio guarda correo legible en el servidor; elegí boletines que quieras conservar acá. No puede responder ni reenviar mensajes a Gmail u otro buzón.',
+      steps: [
+        'Abrí la herramienta, ingresá un Feed title descriptivo y elegí Create feed. Para practicar, usá Boletín del museo ficticio. Guardá en privado la dirección de correo generada, la URL Atom y la página de ajustes.',
+        'Usá esa dirección de correo al suscribirte a un boletín. Agregá la URL Atom a tu lector mediante su control para añadir canales o suscripciones. El nombre depende del lector; no es una cuenta de Utilibre.',
+        'El correo de confirmación del boletín aparece como una entrada del canal. Abrí su enlace de confirmación solo si querías suscribirte. Si el editor exige responder por correo, este servicio no puede hacerlo.',
+        'Para conservar una copia independiente, guardá el XML Atom desde su URL antes de que venzan las entradas. Contiene las entradas conservadas en ese momento, no un archivo completo del correo. Descargá los adjuntos que necesités por separado: sus URL en el XML siguen dependiendo del servidor. Conservá la URL del canal en privado porque también revela el enlace de ajustes.',
+        'Podés revisar el XML guardado en un editor de texto. Seguí usando la URL Atom original para recibir entradas nuevas. La importación de un archivo Atom guardado depende del lector; esta versión no tiene una importación XML nativa que restaure el historial o los ajustes del servidor.',
+        'Para borrar el canal, abrí Kill the Newsletter! feed settings al final de una entrada o la página de ajustes que guardaste al crearlo. En Delete feed, ingresá el título exacto en Feed title confirmation y elegí Delete feed. Cancelá por separado la suscripción al boletín original y quitá el canal del lector. Las otras copias y respaldos anteriores no se borran.',
+      ],
+      success: 'Pasaron las pruebas con un canal ficticio: creación, recepción local de correo en Atom, borrado nativo y restauración aislada de SQLite y archivos. El operador también confirmó un mensaje controlado entregado por el servidor de correo y acceso desde un navegador externo a esta máquina virtual. La actualización de texto pasó otra creación y borrado por HTTPS de Caddy. No se probó la importación en un lector externo concreto.',
+      troubleshooting: 'Dale tiempo a la entrega del correo y a la actualización del lector. Usá exactamente la dirección generada; un nombre inventado no sirve como receptor. Algunos editores rechazan estas direcciones. Los mensajes entrantes tienen un máximo de 512 KiB. Las escrituras web permiten 30 solicitudes por minuto y una ráfaga de 30 por IP; las redes compartidas comparten ese límite.',
+      privacy: 'El servidor puede leer mensajes, remitentes, asuntos y adjuntos. El enlace del canal permite leer y gestionar. La limpieza horaria quita entradas de más de 30 días; el límite de tamaño puede quitarlas antes. Los ajustes no vencen automáticamente. Los respaldos diarios en esta máquina virtual no vencen automáticamente ni se guardan fuera de ella. Los registros de recepción pueden incluir remitentes e identificadores; los registros del contenedor rotan en dos archivos de 1 MiB. Este nombre usa DNS de Cloudflare sin su intermediario HTTP. Las imágenes y enlaces conservados pueden contactar servicios externos desde tu lector. La conservación de registros del borde y proveedores sigue sin verificarse.',
+      next: 'Guardá lo que quieras conservar antes de que venza. Si ya usás FreshRSS, podés añadir la URL Atom a tus suscripciones; el registro de nuevas cuentas de FreshRSS sigue cerrado.',
+    },
+  },
+}];

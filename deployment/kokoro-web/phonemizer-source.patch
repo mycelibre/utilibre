@@ -1,0 +1,18 @@
+diff --git a/cmake/deps.cmake b/cmake/deps.cmake
+index b63ced2..a47507a 100644
+--- a/cmake/deps.cmake
++++ b/cmake/deps.cmake
+@@ -15,0 +16 @@ endif(MBROLA_BIN)
++if (NOT DEFINED USE_LIBSONIC OR USE_LIBSONIC)
+@@ -30,0 +32 @@ endif()
++endif()
+diff --git a/src/include/compat/wctype.h b/src/include/compat/wctype.h
+index e0d2c64..e29e42a 100644
+--- a/src/include/compat/wctype.h
++++ b/src/include/compat/wctype.h
+@@ -32,0 +33,5 @@
++#ifdef __EMSCRIPTEN__
++// Load musl wide-character declarations before the ucd macro aliases.
++#include <wchar.h>
++#endif
++

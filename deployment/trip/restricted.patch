@@ -1,0 +1,438 @@
+diff --git a/backend/trip/models/models.py b/backend/trip/models/models.py
+index c6336ce..e5ab0f0 100644
+--- a/backend/trip/models/models.py
++++ b/backend/trip/models/models.py
+@@ -158,7 +158,7 @@ class ProviderBoundaries(BaseModel):
+ 
+ 
+ class RoutingQuery(BaseModel):
+-    coordinates: list[LatLng]
++    coordinates: list[LatLng] = Field(min_length=2, max_length=32)
+     profile: str
+ 
+ 
+@@ -341,7 +341,7 @@ class User(UserBase, table=True):
+     totp_secret: str | None = None
+     google_apikey: str | None = None
+     apprise_webhook_url: str | None = None
+-    map_provider: MapProvider = Field(default=MapProvider.OPENSTREETMAP)
++    map_provider: MapProvider = Field(default=MapProvider.PHOTON)
+     is_admin: bool = False
+ 
+ 
+diff --git a/backend/trip/notify.py b/backend/trip/notify.py
+index cc2e3ff..47cf01e 100644
+--- a/backend/trip/notify.py
++++ b/backend/trip/notify.py
+@@ -21,15 +21,7 @@ def _seconds_until_next_tick(now: datetime) -> float:
+ 
+ 
+ def _send_notification(webhook_url: str, title: str, body: str) -> None:
+-    try:
+-        client = apprise.Apprise()
+-        if not client.add(webhook_url):
+-            logger.warning("Invalid apprise webhook URL, skipping notification")
+-            return
+-        if not client.notify(title=title, body=body):
+-            logger.warning("Apprise notification failed to send")
+-    except Exception:
+-        logger.exception("Error sending apprise notification")
++    return  # Utilibre: no external notification delivery in this instance.
+ 
+ 
+ def _due_items(session: Session, since: datetime, until: datetime):
+diff --git a/backend/trip/routers/places.py b/backend/trip/routers/places.py
+index 79ce380..8720919 100644
+--- a/backend/trip/routers/places.py
++++ b/backend/trip/routers/places.py
+@@ -7,7 +7,7 @@ from sqlmodel import select
+ 
+ from ..config import get_settings
+ from ..deps import SessionDep, get_current_username
+-from ..models.models import (Image, Place, PlaceCreate, PlaceRead, PlaceUpdate,
++from ..models.models import (Category, Image, Place, PlaceCreate, PlaceRead, PlaceUpdate,
+                              User)
+ from ..security import verify_exists_and_owns
+ from ..utils.link_titles import resolve_links
+@@ -33,6 +33,7 @@ def read_places(
+ async def create_place(
+     place: PlaceCreate, session: SessionDep, current_user: Annotated[str, Depends(get_current_username)]
+ ) -> PlaceRead:
++    verify_exists_and_owns(current_user, session.get(Category, place.category_id))
+     db_user = session.get(User, current_user)
+     links = await resolve_links(None, place.links, db_user.fetch_link_titles)
+ 
+@@ -97,6 +98,8 @@ async def update_place(
+     db_place = session.get(Place, place_id)
+     verify_exists_and_owns(current_user, db_place)
+ 
++    if place.category_id is not None:
++        verify_exists_and_owns(current_user, session.get(Category, place.category_id))
+     place_data = place.model_dump(exclude_unset=True)
+     if "links" in place_data:
+         db_user = session.get(User, current_user)
+diff --git a/backend/trip/routers/providers.py b/backend/trip/routers/providers.py
+index b2f2781..8668a25 100644
+--- a/backend/trip/routers/providers.py
++++ b/backend/trip/routers/providers.py
+@@ -2,7 +2,7 @@ import asyncio
+ import logging
+ from typing import Annotated
+ 
+-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
++from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
+ 
+ from ..config import get_settings
+ from ..deps import SessionDep, get_current_username
+@@ -36,15 +36,8 @@ def _raise_missing_apikey(db_user, raise_msg=""):
+ 
+ 
+ def _get_map_provider(session: SessionDep, current_user: str) -> BaseMapProvider:
+-    db_user = _get_user(session, current_user)
+-    provider_type = getattr(db_user, "map_provider", "osm").lower()
+-    if provider_type == "google":
+-        _raise_missing_apikey(db_user)
+-        return GoogleMapsProvider(api_key=db_user.google_apikey)
+-    if provider_type == "photon":
+-        return PhotonProvider()
+-
+-    return OpenStreetMapProvider()
++    _get_user(session, current_user)
++    return PhotonProvider()  # Utilibre: fixed reviewed provider, including imported accounts.
+ 
+ 
+ def _merge_kmz_result(
+@@ -131,7 +124,7 @@ async def bulk_to_places(
+ 
+ @router.get("/search")
+ async def text_search(
+-    q: str,
++    q: Annotated[str, Query(min_length=1, max_length=200)],
+     session: SessionDep,
+     current_user: Annotated[str, Depends(get_current_username)],
+ ) -> list[ProviderPlaceResult]:
+@@ -172,7 +165,7 @@ async def nearby_search(
+ 
+ @router.get("/geocode")
+ async def geocode_search(
+-    q: str,
++    q: Annotated[str, Query(min_length=1, max_length=200)],
+     session: SessionDep,
+     current_user: Annotated[str, Depends(get_current_username)],
+ ) -> ProviderBoundaries:
+diff --git a/backend/trip/routers/settings.py b/backend/trip/routers/settings.py
+index af975d0..be4722b 100644
+--- a/backend/trip/routers/settings.py
++++ b/backend/trip/routers/settings.py
+@@ -33,6 +33,12 @@ def put_user_settings(
+     db_user = session.get(User, current_user)
+ 
+     user_data = data.model_dump(exclude_unset=True)
++    # Restricted instance policy; the independent egress boundary also covers imports.
++    if (user_data.get("map_provider") not in (None, "photon")
++        or user_data.get("google_apikey") or user_data.get("apprise_webhook_url")
++        or user_data.get("fetch_link_titles")
++        or user_data.get("tile_layer") not in (None, "", get_settings().DEFAULT_TILE)):
++        raise HTTPException(status_code=403, detail="This instance uses fixed map providers; remote images, link previews and notifications are disabled")
+     if "do_not_display" in user_data:
+         user_data["do_not_display"] = (
+             ",".join(user_data["do_not_display"]) if user_data["do_not_display"] else ""
+diff --git a/backend/trip/utils/link_titles.py b/backend/trip/utils/link_titles.py
+index 7e8d537..c2be360 100644
+--- a/backend/trip/utils/link_titles.py
++++ b/backend/trip/utils/link_titles.py
+@@ -50,41 +50,7 @@ async def _is_safe_url(url: str) -> bool:
+ 
+ 
+ async def fetch_link_title(url: str) -> str | None:
+-    if not await _is_safe_url(url):
+-        return None
+-
+-    try:
+-        async with httpx.AsyncClient(
+-            follow_redirects=True, headers=_HEADERS, timeout=_TIMEOUT, max_redirects=5
+-        ) as client:
+-            async with client.stream("GET", url) as response:
+-                if response.status_code >= 400:
+-                    return None
+-                # Re-validate post-redirect: the initial host check doesn't cover
+-                # a redirect landing on a private/internal address.
+-                if not await _is_safe_url(str(response.url)):
+-                    return None
+-                content_type = response.headers.get("Content-Type", "")
+-                if "text/html" not in content_type:
+-                    return None
+-
+-                body = b""
+-                async for chunk in response.aiter_bytes():
+-                    body += chunk
+-                    if len(body) >= _MAX_BYTES:
+-                        break
+-    except Exception as exc:
+-        logger.info(f"[LINK TITLE] Fetch failed for {url}: {exc}")
+-        return None
+-
+-    match = _TITLE_RE.search(body.decode("utf-8", errors="ignore"))
+-    if not match:
+-        return None
+-
+-    title = _TAG_RE.sub("", match.group(1))
+-    title = html.unescape(title)
+-    title = _WHITESPACE_RE.sub(" ", title).strip()
+-    return title[:_MAX_TITLE_LENGTH] if title else None
++    return None  # Utilibre: remote title previews disabled, including imported settings.
+ 
+ 
+ async def resolve_links(
+diff --git a/backend/trip/utils/providers/base.py b/backend/trip/utils/providers/base.py
+index 210aada..90849d5 100644
+--- a/backend/trip/utils/providers/base.py
++++ b/backend/trip/utils/providers/base.py
+@@ -1,3 +1,5 @@
++import asyncio
++import json as json_module
+ from abc import ABC, abstractmethod
+ from typing import Any
+ 
+@@ -48,23 +50,23 @@ class BaseMapProvider(ABC):
+         follow_redirects: bool = False,
+     ) -> dict[str, Any] | str:
+         try:
+-            async with httpx.AsyncClient(timeout=self.TIMEOUT) as client:
+-                response = await client.request(
+-                    method, url, headers=headers, params=params, json=json, follow_redirects=follow_redirects
+-                )
+-                response.raise_for_status()
+-                return response.json() if method != "GET" or not follow_redirects else str(response.url)
+-
+-        except httpx.HTTPStatusError as exc:
+-            error_msg = "Request failed"
+-            try:
+-                error_msg = exc.response.json().get("error", {}).get("message", error_msg)
+-            except Exception:
+-                pass
+-            raise HTTPException(status_code=400, detail=error_msg)
+-
+-        except Exception as exc:
+-            raise HTTPException(status_code=400, detail=str(exc))
++            request_headers = {"User-Agent": "Utilibre-TRIP/1.50.1 (+https://utilibre.org/en/support)", "Accept": "application/json", "Referer": "https://trip.utilibre.org/"}
++            async with asyncio.timeout(self.TIMEOUT):
++                async with httpx.AsyncClient(timeout=self.TIMEOUT) as client:
++                    async with client.stream(method, url, headers=request_headers, params=params,
++                                             json=json, follow_redirects=False) as response:
++                        response.raise_for_status()
++                        if response.status_code >= 300:
++                            raise ValueError("Provider redirects are disabled")
++                        body = bytearray()
++                        async for chunk in response.aiter_bytes():
++                            body.extend(chunk)
++                            if len(body) > 2 * 1024 * 1024:
++                                raise ValueError("Provider response exceeds 2 MiB")
++                        return json_module.loads(body)
++        except Exception:
++            # Do not put submitted search text or coordinates in error logs/messages.
++            raise HTTPException(status_code=400, detail="Map provider unavailable or response limit reached")
+ 
+     def _decode_encoded_polyline(self, encoded: str) -> list[tuple[float, float]]:
+         # based on gist.github.com/signed0/2031157 and nejohnson2/d41a27dea7b267986cce
+diff --git a/backend/trip/utils/utils.py b/backend/trip/utils/utils.py
+index ba4ecb1..4a3a34b 100644
+--- a/backend/trip/utils/utils.py
++++ b/backend/trip/utils/utils.py
+@@ -97,37 +97,7 @@ async def httpx_get(link: str) -> dict:
+ 
+ 
+ async def download_file(link: str) -> tuple[str, int]:
+-    if not link[:4] == "http":
+-        raise HTTPException(status_code=400, detail="Bad Request")
+-
+-    headers = {
+-        "User-Agent": "Mozilla/5.0 (compatible; TRIP/1 PyJWKClient; +https://github.com/itskovacs/trip)",
+-        "Accept": "image/*",
+-        "Accept-Language": "en-US,en;q=0.5",
+-        "Referer": link,
+-    }
+-
+-    try:
+-        async with httpx.AsyncClient(follow_redirects=True, headers=headers, timeout=5) as client:
+-            response = await client.get(link)
+-            response.raise_for_status()
+-            content_type = response.headers.get("Content-Type", "")
+-            if not content_type.startswith("image/"):
+-                raise HTTPException(
+-                    status_code=400, detail="Bad Request: provided image URL is not an image"
+-                )
+-            infer_extension = content_type.split("/")[1]
+-            if not infer_extension:
+-                infer_extension = "jpg"
+-            file_size = len(response.content)
+-            path = assets_folder_path() / generate_filename(infer_extension)
+-            path.write_bytes(response.content)
+-            return str(path), file_size
+-    except HTTPException:
+-        raise
+-    except Exception as exc:
+-        logger.error(f"[IMAGE FETCH] Error: {exc}")
+-        return "", 0
++    raise HTTPException(status_code=403, detail="Remote image fetching is disabled; upload an image instead")
+ 
+ 
+ async def check_update():
+@@ -266,6 +236,7 @@ def save_attachment(trip_id: int, file: UploadFile) -> str:
+ 
+ 
+ def silence_http_logging():
++    logging.getLogger("httpx2").setLevel(logging.WARNING)
+     logging.getLogger("httpx").setLevel(logging.WARNING)
+     logging.getLogger("httpcore").setLevel(logging.WARNING)
+ 
+diff --git a/src/public/i18n/en.json b/src/public/i18n/en.json
+index 29e934a..f6016f4 100644
+--- a/src/public/i18n/en.json
++++ b/src/public/i18n/en.json
+@@ -691,7 +691,8 @@
+     "update_password_desc": "Update your password, manage 2FA",
+     "users": "Users",
+     "users_desc": "Registered accounts will appear here",
+-    "verify_totp": "Verify TOTP"
++    "verify_totp": "Verify TOTP",
++    "utilibre_provider_note": "Utilibre uses OpenStreetMap tiles, Photon search and FOSSGIS routes. Search text and route points leave Utilibre. Remote image downloads, link previews, Google API and notifications are disabled. Uploaded images can be opened by anyone with their image link. The Navigation button opens Google Maps in a new tab and sends the selected coordinates to Google."
+   },
+   "share": {
+     "base": "Base Share",
+diff --git a/src/src/app/components/dashboard/dashboard.component.html b/src/src/app/components/dashboard/dashboard.component.html
+index d13a057..e7e1551 100644
+--- a/src/src/app/components/dashboard/dashboard.component.html
++++ b/src/src/app/components/dashboard/dashboard.component.html
+@@ -601,6 +601,8 @@
+                     @if (accountIntegrationsExpanded()) {
+                     <div class="flex flex-col gap-3 p-4 pt-0 border-t border-primary-200 dark:border-primary-700"
+                       [formGroup]="settingsForm">
++<p class="text-sm px-4 py-3" lang="en">{{ t('settings.utilibre_provider_note') }}</p>
++<p class="text-sm px-4 py-3" lang="es">Utilibre usa mapas de OpenStreetMap, búsquedas de Photon y rutas de FOSSGIS. El texto de búsqueda y los puntos de ruta salen de Utilibre. Las descargas de imágenes remotas, las vistas previas de enlaces, la API de Google y las notificaciones están desactivadas. Cualquiera que tenga el enlace de una imagen subida puede abrirla. El botón de navegación abre Google Maps en otra pestaña y envía las coordenadas seleccionadas a Google.</p>
+                       <div
+                         class="mt-4 flex items-center justify-between py-3 px-4 rounded-lg bg-primary-50 dark:bg-black/50 border border-primary-100 dark:border-primary-700">
+                         <div class="flex items-center gap-3 min-w-0 flex-1">
+@@ -616,7 +618,7 @@
+                         <div class="w-full md:w-68">
+                           <p-select id="map_provider" [options]="providers" [filter]="false" optionValue="value"
+                             optionLabel="disp" formControlName="map_provider"
+-                            [placeholder]="t('settings.provider_placeholder')" [showClear]="true" appendTo="body"
++                            [placeholder]="t('settings.provider_placeholder')" [showClear]="false" appendTo="body"
+                             pSize="small" class="capitalize" fluid />
+                         </div>
+                       </div>
+@@ -642,7 +644,7 @@
+                           severity="danger" text size="small" />
+                         } @else {
+                         <div [formGroup]="settingsForm" class="w-40">
+-                          <input id="_google_apikey" type="password" formControlName="_google_apikey" pInputText fluid
++                          <input id="_google_apikey" type="password" readonly formControlName="_google_apikey" pInputText fluid
+                             pSize="small" placeholder="AIza..." />
+                         </div>
+                         }
+@@ -690,7 +692,7 @@
+                           [label]="t('common.actions.remove')" severity="danger" text size="small" />
+                         } @else {
+                         <div [formGroup]="settingsForm" class="w-40">
+-                          <input id="_apprise_webhook_url" type="text" formControlName="_apprise_webhook_url" pInputText
++                          <input id="_apprise_webhook_url" readonly type="text" formControlName="_apprise_webhook_url" pInputText
+                             fluid pSize="small" placeholder="discord://..." />
+                         </div>
+                         }
+@@ -762,7 +764,7 @@
+                           <label for="map_lng">{{ t('settings.default_lng') }}</label>
+                         </p-floatlabel>
+                         <p-floatlabel variant="in" class="md:col-span-2">
+-                          <input id="tile_layer" formControlName="tile_layer" pInputText fluid pSize="small" />
++                          <input id="tile_layer" readonly formControlName="tile_layer" pInputText fluid pSize="small" />
+                           <label for="tile_layer">{{ t('settings.tile_layer_url') }}</label>
+                         </p-floatlabel>
+                       </div>
+@@ -877,7 +879,7 @@
+                               t('settings.link_titles_desc') }}</p>
+                           </div>
+                         </div>
+-                        <p-toggleswitch [(ngModel)]="isFetchLinkTitlesMode" (onChange)="toggleFetchLinkTitles()"
++                        <p-toggleswitch [disabled]="true" [(ngModel)]="isFetchLinkTitlesMode" (onChange)="toggleFetchLinkTitles()"
+                           class="shrink-0 ml-4" />
+                       </div>
+                     </div>
+diff --git a/src/src/app/components/dashboard/dashboard.component.ts b/src/src/app/components/dashboard/dashboard.component.ts
+index 616576a..e99811f 100644
+--- a/src/src/app/components/dashboard/dashboard.component.ts
++++ b/src/src/app/components/dashboard/dashboard.component.ts
+@@ -187,8 +187,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
+   hoveredElement = signal<HTMLElement | null>(null);
+   private selectedMarkerElement: HTMLElement | null = null;
+   providers: { disp: string; value: string }[] = [
+-    { disp: 'OpenStreetMap API', value: 'osm' },
+-    { disp: 'Google API', value: 'google' },
+     { disp: 'Photon API', value: 'photon' },
+   ];
+   geocodeFilterInput = new FormControl('');
+diff --git a/src/src/app/shared/map.ts b/src/src/app/shared/map.ts
+index 5be5fea..2760ba2 100644
+--- a/src/src/app/shared/map.ts
++++ b/src/src/app/shared/map.ts
+@@ -4,6 +4,13 @@ import 'leaflet-contextmenu';
+ import { ProviderBoundaries, Place } from '../types/poi';
+ import { TripItem } from '../types/trip';
+ 
++function escapeHtml(value: unknown): string {
++  return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]!);
++}
++function markerColor(value: unknown): string {
++  return typeof value === 'string' && /^#[0-9a-f]{3,8}$/i.test(value) ? value : '#000000';
++}
++
+ export const DEFAULT_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+ export interface ContextMenuItem {
+   text: string;
+@@ -42,7 +49,7 @@ export function createMap(
+   const tiles = L.tileLayer(tilelayer, {
+     maxZoom: 18,
+     minZoom: 3,
+-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
++    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · <a href="https://www.openstreetmap.org/fixthemap">Fix the map</a> · <a href="mailto:admin@utilibre.org">admin@utilibre.org</a>',
+   }).addTo(map);
+ 
+   if (onTilesLoaded) tiles.once('load', onTilesLoaded);
+@@ -51,7 +58,7 @@ export function createMap(
+ }
+ 
+ export function placeHoverTooltip(place: Place): string {
+-  return `<div class="font-semibold mb-1 truncate" style="font-size:1.1em">${place.name}</div><div><span style="--color-bg-opacity:${place.category.color};" class="color-bg-opacity text-xs font-medium px-2.5 py-0.5 rounded">${place.category.name}</span></div>`.trim();
++  return `<div class="font-semibold mb-1 truncate" style="font-size:1.1em">${escapeHtml(place.name)}</div><div><span style="--color-bg-opacity:${markerColor(place.category.color)};" class="color-bg-opacity text-xs font-medium px-2.5 py-0.5 rounded">${escapeHtml(place.category.name)}</span></div>`.trim();
+ }
+ 
+ export function createClusterGroup(): L.MarkerClusterGroup {
+@@ -82,7 +89,7 @@ export function tripDayMarker(item: Partial<TripItem>): L.Marker {
+   const touchDevice = 'ontouchstart' in window;
+   if (!touchDevice) {
+     marker.bindTooltip(
+-      `<div class="flex flex-col gap-1 items-center"><div class="w-fit px-2.5 py-1 text-xs font-mono font-medium bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300 rounded">${item.time}</div><div class="font-semibold mb-1 text-base">${item.text}</div></div>`,
++      `<div class="flex flex-col gap-1 items-center"><div class="w-fit px-2.5 py-1 text-xs font-mono font-medium bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300 rounded">${escapeHtml(item.time)}</div><div class="font-semibold mb-1 text-base">${escapeHtml(item.text)}</div></div>`,
+       {
+         direction: 'right',
+         offset: [10, 0],
+@@ -98,7 +105,7 @@ export function placeToDotMarker(place: Place) {
+     icon: L.divIcon({
+       className: 'rounded-lg',
+       iconSize: [11, 11],
+-      html: `<div class="border-0 h-[11px] w-[11px] rounded" style="background:${place.category.color};"></div>`,
++      html: `<div class="border-0 h-[11px] w-[11px] rounded" style="background:${markerColor(place.category.color)};"></div>`,
+     }),
+   });
+ 
+@@ -142,8 +149,8 @@ export function placeToMarker(
+   if (grayscale) markerClasses += ' grayscale';
+ 
+   const iconHtml = `
+-    <div class="flex items-center justify-center relative rounded-full marker-anchor size-14 box-border" style="border: 2px solid ${place.category.color};">
+-      <div class="${markerClasses}" style="background-image: url('${markerImage}');"></div>
++    <div class="flex items-center justify-center relative rounded-full marker-anchor size-14 box-border" style="border: 2px solid ${markerColor(place.category.color)};">
++      <div class="${markerClasses}" style="background-image: url('${escapeHtml(markerImage)}');"></div>
+       ${gpxInBubble && place.gpx ? '<div class="absolute -top-1 -left-1 size-6 flex justify-center items-center bg-white dark:bg-primary-900 border-2 border-black rounded-full"><i class="pi pi-compass"></i></div>' : ''}
+     </div>
+   `;

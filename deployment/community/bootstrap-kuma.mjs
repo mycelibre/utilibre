@@ -3,6 +3,7 @@
 import { randomBytes } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
+import { initialStatusPageDescription, statusPageFooter } from './status-page-copy.mjs';
 const credentialsFile = new URL('../../secrets/uptime-kuma-admin.json', import.meta.url);
 mkdirSync(new URL('../../secrets/', import.meta.url), { recursive: true, mode: 0o700 });
 const credentials = existsSync(credentialsFile)
@@ -46,7 +47,7 @@ socket.on('connect',async()=>{try{
   }
   const page=await fetch('http://127.0.0.1:3001/api/status-page/utilibre');
   if(!page.ok) await call('addStatusPage','Utilibre','utilibre');
-  await call('saveStatusPage','utilibre',{slug:'utilibre',title:'Utilibre',description:'Public HTTPS checks every five minutes. This monitor runs on the application VM and cannot independently report a complete VM outage. / Comprobaciones HTTPS cada cinco minutos; este monitor no es independiente de la VM de aplicaciones.',theme:'auto',autoRefreshInterval:300,showTags:false,footerText:'[Volver a Utilibre](https://utilibre.org/es/) · [Back to Utilibre](https://utilibre.org/en/) — No uptime guarantee. Status history starts with this deployment.',customCSS:'',showPoweredBy:true,showOnlyLastHeartbeat:false,showCertificateExpiry:false,analyticsType:null,analyticsId:'',analyticsScriptUrl:'',domainNameList:[],rssTitle:'Utilibre status'},'', [{name:'Public services',monitorList}]);
+  await call('saveStatusPage','utilibre',{slug:'utilibre',title:'Utilibre',description:${JSON.stringify(initialStatusPageDescription)},theme:'auto',autoRefreshInterval:300,showTags:false,footerText:${JSON.stringify(statusPageFooter)},customCSS:'',showPoweredBy:true,showOnlyLastHeartbeat:false,showCertificateExpiry:false,analyticsType:null,analyticsId:'',analyticsScriptUrl:'',domainNameList:[],rssTitle:'Utilibre status'},'', [{name:'Public services',monitorList}]);
   const settings=await call('getSettings');
   await call('setSettings',{...(settings.data??{}),keepDataPeriodDays:30},credentials.password);
   console.log('Kuma initialized; public HTTPS monitors configured; admin credentials saved locally.');

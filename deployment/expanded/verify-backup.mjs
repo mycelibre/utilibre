@@ -2,6 +2,7 @@
 import { execFileSync } from 'node:child_process';
 import { openSync, closeSync, realpathSync, writeFileSync } from 'node:fs';
 const target = realpathSync(process.argv[2] || '');
+const resumeOnly = process.argv.includes('--resume-only');
 if (!/^\/opt\/utilibre\/expanded-backups\/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z$/.test(target)) throw Error('Pass an exact expanded-backups snapshot directory');
 execFileSync('sha256sum', ['--check', 'SHA256SUMS'], { cwd: target, stdio: 'inherit' });
 const name = `utilibre-restore-check-${process.pid}`;
@@ -17,7 +18,7 @@ try {
     await new Promise(resolve => setTimeout(resolve, 500));
   }
   if (!ready) throw Error('Restore container did not become ready');
-  for (const db of ['resume', 'penpot']) {
+  for (const db of resumeOnly ? ['resume'] : ['resume', 'penpot']) {
     docker('exec', name, 'createdb', '-U', 'postgres', db);
     const fd = openSync(`${target}/${db}.dump`, 'r');
     try { execFileSync('docker', ['exec', '-i', name, 'pg_restore', '-U', 'postgres', '-d', db, '--no-owner', '--no-acl', '--exit-on-error'], { stdio: [fd, 'pipe', 'pipe'] }); }
@@ -28,7 +29,7 @@ try {
   }
   // Extract only a known SQLite database into a private temporary directory.
   // TemporaryDirectory cleans up only this newly created rehearsal directory.
-  execFileSync('python3', ['-c', `import tarfile,tempfile,sqlite3,os,sys
+  if (!resumeOnly) execFileSync('python3', ['-c', `import tarfile,tempfile,sqlite3,os,sys
 with tempfile.TemporaryDirectory(prefix='utilibre-sqlite-restore-') as d:
  with tarfile.open(sys.argv[1]) as t:
   for name in ['wakapi/wakapi.db','actual/server-files/account.sqlite']:
@@ -43,7 +44,7 @@ with tempfile.TemporaryDirectory(prefix='utilibre-sqlite-restore-') as d:
     assert c.execute("SELECT is_admin FROM users WHERE id='utilibre-admin'").fetchone()==(1,)
    c.close()
    print(name+': restored SQLite integrity check passed')`, `${target}/files.tar.gz`], { stdio: 'inherit' });
-  writeFileSync(`${target}/RESTORE-VERIFIED.txt`, `${new Date().toISOString()}\nPostgreSQL restore and SQLite integrity checks passed. File archive extraction is not a full end-user workflow test.\n`, { mode: 0o600 });
+  writeFileSync(`${target}/RESTORE-VERIFIED.txt`, `${new Date().toISOString()}\n${resumeOnly ? 'Resume-only PostgreSQL restore passed.' : 'PostgreSQL restore and SQLite integrity checks passed.'} File archive extraction is not a full end-user workflow test.\n`, { mode: 0o600 });
   console.log('Restore check passed. Backup is still on this VM, not off-site.');
 } finally {
   if (created) docker('rm', '-f', name);

@@ -1,0 +1,23 @@
+import type { CatalogEntry, LocalizedText } from './catalog.ts';
+import { reviewedFossProviders } from './upstreams.ts';
+const text = (en: string, es: string): LocalizedText => ({ en, es });
+const provider = reviewedFossProviders.razzia;
+
+export const razziaAdditions: CatalogEntry[] = [{
+  id: 'razzia', providerId: 'razzia', kind: 'service', implementation: 'upstream-application', portalSurface: 'upstream-interface',
+  category: 'service', discoveryGroup: 'planning', configUrlKey: 'publicQuizUrl',
+  name: text('Play a live quiz · Razzia', 'Participar en un cuestionario en vivo · Razzia'),
+  description: text('Join a hosted quiz with its room PIN and a nickname.', 'Entrá a un cuestionario con el PIN de la sala y un apodo.'),
+  launchLabel: text('Join a quiz', 'Entrar a un cuestionario'),
+  quickLinks: [{ path: '/manager', label: text('Manager access', 'Acceso de gestión') }],
+  help: text('Participants need no account. Arrange hosting privately with the operator: the native manager credential grants access to a shared quiz and results library. Export quiz definitions as JSON from the Quizz tab.', 'No necesitás una cuenta para participar. Coordiná la organización en privado con el operador: la credencial nativa de gestión da acceso a una biblioteca compartida de cuestionarios y resultados. Exportá definiciones JSON desde Quizz.'),
+  limitation: text('Managers share stored quizzes/results, although live rooms have separate controls and scores. A restart loses active games. External media is blocked. The gateway allows 40 WebSocket connections per source IP; shared networks can reach that ceiling. The native UI has no Spanish translation.', 'Quienes administran comparten cuestionarios y resultados guardados, aunque las salas activas tienen controles y puntuaciones separados. Un reinicio pierde las partidas activas. Los medios externos están bloqueados. Se permiten 40 conexiones WebSocket por IP; las redes compartidas pueden llegar a ese límite. La interfaz nativa no tiene traducción al español.'),
+  labels: ['server'], filesUploaded: true,
+  dataFlow: text('Questions, answers, nicknames and scores travel over HTTPS/WebSocket through Cloudflare and Caddy to Utilibre. The server can read them. Native assets/fonts are local, and no visitor analytics provider is configured.', 'Preguntas, respuestas, apodos y puntuaciones viajan por HTTPS/WebSocket a través de Cloudflare y Caddy hacia Utilibre. El servidor puede leerlos. Los recursos y fuentes son locales y no hay un proveedor de estadísticas de visitantes configurado.'),
+  upstreamServices: ['Cloudflare HTTPS proxy', 'Hetzner hosting'],
+  temporaryStorage: text('Active rooms and manager sessions use server memory. Quiz definitions and completed results are stored as server files without automatic expiry. A browser client identifier, recent PIN and preferences can persist after tab closure to support reconnection.', 'Las salas activas y sesiones de gestión usan memoria del servidor. Las definiciones y resultados terminados se guardan como archivos sin vencimiento automático. Un identificador del navegador, el PIN reciente y las preferencias pueden persistir al cerrar para permitir la reconexión.'),
+  retention: text('Delete quiz definitions and results separately through native controls. Quiz JSON omits player results, credentials and media bytes; there is no native results export/import button. Daily same-VM backups have no automatic expiry and can retain deleted records. Downloaded files remain on recipients’ devices.', 'Borrá por separado definiciones y resultados desde sus controles nativos. El JSON del cuestionario omite resultados de jugadores, credenciales y archivos multimedia; no hay botón nativo para exportar o importar resultados. Los respaldos diarios de esta VM no vencen automáticamente y pueden conservar registros borrados. Las descargas quedan en los dispositivos de quienes las reciben.'),
+  logging: text('Native socket output containing participant identifiers is not retained. Gateway access logs are off; error/container output rotates by size, two 5 MiB files. Edge, system/security and provider retention is separate and not established by this application check.', 'No se conserva la salida nativa del servidor de conexiones que contiene identificadores de participantes. Los accesos del intermediario no se registran; su salida de errores y contenedor rota en dos archivos de 5 MiB. La conservación del borde, sistema, seguridad y proveedores es independiente y esta revisión no la establece.'),
+  license: provider.license, upstreamProject: provider.project, upstreamSourceUrl: provider.sourceUrl, installedVersion: provider.installedVersion,
+  modified: true, operationalStatus: 'operational',
+}];

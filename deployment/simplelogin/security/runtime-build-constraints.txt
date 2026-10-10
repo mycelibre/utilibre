@@ -1,0 +1,2 @@
+# Build backend for the exact PGPy 0.6.0 source archive.
+setuptools==84.0.0

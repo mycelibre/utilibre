@@ -1,0 +1,17 @@
+{
+  "upstreamRevision": "4870adfa25b1a32b4361592f1be8a40337c58d6c",
+  "emscripten": "3.1.64",
+  "built": "2026-10-09",
+  "files": [
+    {
+      "path": "espeak-ng.js",
+      "bytes": 67531,
+      "sha256": "921af9b42055fa0c66818a15599a0517e2faa52b4e92543ca39719abf9e0e47f"
+    },
+    {
+      "path": "espeak-ng.wasm",
+      "bytes": 18708987,
+      "sha256": "542f65a64a8eb7c7d267391b5fde276c13d9361b208cf52c54040c28c2fd81ca"
+    }
+  ]
+}

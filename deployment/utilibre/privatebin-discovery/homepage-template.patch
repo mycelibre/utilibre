@@ -1,0 +1,100 @@
+diff --git a/tpl/bootstrap5.php b/tpl/bootstrap5.php
+index e2ecb1e..ea60467 100644
+--- a/tpl/bootstrap5.php
++++ b/tpl/bootstrap5.php
+@@ -1,5 +1,18 @@
+ <?php declare(strict_types=1);
+ use PrivateBin\I18n;
++// Utilibre custom template: advertise only an empty, error-free GET homepage.
++// Paste IDs, keys, request values and submitted content never enter metadata.
++header('Vary: Accept-Language, Cookie', false);
++$UTILIBRE_HOME = ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET'
++    && ($_SERVER['REQUEST_URI'] ?? '') === '/'
++    && empty($_GET) && empty($ERROR) && empty($STATUS) && !$ISDELETED;
++$UTILIBRE_ES = I18n::getLanguage() === 'es';
++$UTILIBRE_TITLE = $UTILIBRE_ES
++    ? 'Compartir texto cifrado | PrivateBin en Utilibre'
++    : 'Encrypted text sharing | PrivateBin at Utilibre';
++$UTILIBRE_DESCRIPTION = $UTILIBRE_ES
++    ? 'Compartí texto y código con PrivateBin. Tu navegador cifra el contenido antes de subirlo. Elegí cuándo vence y compartí el enlace completo. No necesitás cuenta.'
++    : 'Share text and code with PrivateBin. Your browser encrypts the paste before upload. Choose an expiry and share the full link. No account required.';
+ ?><!DOCTYPE html>
+ <html lang="<?php echo I18n::getLanguage(); ?>"<?php echo I18n::isRtl() ? ' dir="rtl"' : ''; ?> class="h-100">
+ 	<head>
+@@ -7,9 +20,15 @@ use PrivateBin\I18n;
+ 		<meta http-equiv="Content-Security-Policy" content="<?php echo I18n::encode($CSPHEADER); ?>">
+ 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
+-		<meta name="robots" content="noindex" />
++		<meta name="robots" content="<?php echo $UTILIBRE_HOME ? 'index, follow' : 'noindex, nofollow, noarchive'; ?>" />
+ 		<meta name="google" content="notranslate">
+-		<title><?php echo I18n::_($NAME); ?></title>
++		<title><?php echo $UTILIBRE_HOME ? I18n::encode($UTILIBRE_TITLE) : I18n::_($NAME); ?></title>
++<?php if ($UTILIBRE_HOME) : ?>
++        <meta name="description" content="<?php echo I18n::encode($UTILIBRE_DESCRIPTION); ?>" />
++        <link rel="canonical" href="https://paste.utilibre.org/" />
++        <meta property="og:type" content="website" />
++        <meta property="og:url" content="https://paste.utilibre.org/" />
++<?php endif; ?>
+ 		<link type="text/css" rel="stylesheet" href="css/bootstrap5/bootstrap<?php echo I18n::isRtl() ? '.rtl' : ''; ?>-5.3.8.css" />
+ 		<link type="text/css" rel="stylesheet" href="css/bootstrap5/privatebin.css?<?php echo rawurlencode($VERSION); ?>" />
+ <?php
+@@ -53,15 +72,26 @@ endif;
+ 		<?php $this->_scriptTag('js/purify-3.4.12.js', 'defer'); ?>
+ 		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
+ 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
+-		<!-- icon -->
+-		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
+-		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
+-		<link rel="icon" type="image/png" href="img/favicon-16x16.png" sizes="16x16" />
+-		<link rel="manifest" href="manifest.json?<?php echo rawurlencode($VERSION); ?>" />
+-		<link rel="mask-icon" href="img/safari-pinned-tab.svg" color="#ffcc00" />
+-		<link rel="shortcut icon" href="img/favicon.ico">
+-		<meta name="msapplication-config" content="browserconfig.xml">
+-		<meta name="theme-color" content="#ffe57e" />
++        <!-- Utilibre icons; the native application remains PrivateBin. -->
++        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
++        <link rel="icon" type="image/png" sizes="48x48" href="/utilibre-brand/favicon-48.png" />
++        <link rel="icon" type="image/png" sizes="512x512" href="/utilibre-brand/icon-512.png" />
++        <link rel="apple-touch-icon" sizes="180x180" href="/utilibre-brand/apple-touch-icon-180.png" />
++        <link rel="manifest" href="/manifest.json" />
++        <meta name="theme-color" content="#ffe57e" />
++<?php if ($UTILIBRE_HOME) : ?>
++        <meta name="twitter:card" content="summary" />
++        <meta name="twitter:title" content="<?php echo I18n::encode($UTILIBRE_TITLE); ?>" />
++        <meta name="twitter:description" content="<?php echo I18n::encode($UTILIBRE_DESCRIPTION); ?>" />
++        <meta name="twitter:image" content="https://paste.utilibre.org/utilibre-brand/icon-512.png" />
++        <meta property="og:title" content="<?php echo I18n::encode($UTILIBRE_TITLE); ?>" />
++        <meta property="og:site_name" content="PrivateBin at Utilibre" />
++        <meta property="og:description" content="<?php echo I18n::encode($UTILIBRE_DESCRIPTION); ?>" />
++        <meta property="og:image" content="https://paste.utilibre.org/utilibre-brand/icon-512.png" />
++        <meta property="og:image:type" content="image/png" />
++        <meta property="og:image:width" content="512" />
++        <meta property="og:image:height" content="512" />
++<?php else : ?>
+ 		<!-- Twitter/social media cards -->
+ 		<meta name="twitter:card" content="summary" />
+ 		<meta name="twitter:title" content="<?php echo I18n::_('Encrypted note on %s', I18n::_($NAME)) ?>" />
+@@ -74,6 +104,7 @@ endif;
+ 		<meta property="og:image:type" content="image/png" />
+ 		<meta property="og:image:width" content="180" />
+ 		<meta property="og:image:height" content="180" />
++<?php endif; ?>
+ 	</head>
+ 	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>" class="d-flex flex-column h-100">
+ 		<div id="passwordmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
+@@ -357,7 +388,13 @@ endif;
+ 				</div>
+ 			</div>
+ 		</nav>
+-		<main>
++        <main>
++<?php if ($UTILIBRE_HOME) : ?>
++            <section class="container-fluid mb-3" aria-labelledby="utilibre-home-title">
++                <h1 id="utilibre-home-title" class="h4"><?php echo $UTILIBRE_ES ? 'Compartí texto cifrado con PrivateBin' : 'Share encrypted text with PrivateBin'; ?></h1>
++                <p><?php echo I18n::encode($UTILIBRE_DESCRIPTION); ?></p>
++            </section>
++<?php endif; ?>
+ 			<section class="container-fluid mt-2">
+ <?php
+ if (!empty($NOTICE)) :

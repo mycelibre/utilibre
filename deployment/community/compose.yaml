@@ -87,7 +87,7 @@ services:
       PRIVACYPOLICY_BUTTON_LINK: https://utilibre.org/en/privacy
       CUSTOM_BUTTON_ACTIVE: "true"
       CUSTOM_BUTTON_LINK: https://utilibre.org/
-      CUSTOM_BUTTON_TITLE: "Volver a Utilibre / Back to Utilibre"
+      CUSTOM_BUTTON_TITLE: "Más herramientas de Utilibre / More tools from Utilibre"
     volumes:
       - ./pairdrop-rtc.json:/config/rtc.json:ro
       - ../toolbox/language.html:/home/node/app/public/utilibre-language.html:ro
@@ -129,7 +129,7 @@ services:
   rallly:
     <<: *runtime
     profiles: [rallly]
-    image: lukevella/rallly:4.15.3@sha256:8cd979aefe8d06e1822bc67054eb2d31088cdb831aa3f7b5615b3768f35431d9
+    image: lukevella/rallly:4.15.4@sha256:8f29eccdc2fbb856001ea3c97d1c1d85556095274ad21a8de0c0125f29303938
     environment:
       DATABASE_URL: postgres://rallly:${RALLLY_DB_PASSWORD:-UNCONFIGURED}@rallly-db:5432/rallly
       SECRET_PASSWORD: ${RALLLY_SECRET_PASSWORD:-UNCONFIGURED}

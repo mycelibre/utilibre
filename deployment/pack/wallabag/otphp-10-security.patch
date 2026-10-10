@@ -1,0 +1,58 @@
+diff --git a/src/ParameterTrait.php b/src/ParameterTrait.php
+index 326109d..04f4810 100644
+--- a/src/ParameterTrait.php
++++ b/src/ParameterTrait.php
+@@ -96,7 +96,10 @@ trait ParameterTrait
+ 
+     public function getDigits(): int
+     {
+-        return $this->getParameter('digits');
++        $digits = $this->getParameter('digits');
++        Assertion::between($digits, 1, 10, 'Digits must be between 1 and 10.');
++
++        return $digits;
+     }
+ 
+     private function setDigits(int $digits): void
+@@ -137,7 +140,7 @@ trait ParameterTrait
+             $value = $callback($value);
+         }
+ 
+-        if (property_exists($this, $parameter)) {
++        if (\in_array($parameter, ['label', 'issuer'], true)) {
+             $this->$parameter = $value;
+         } else {
+             $this->parameters[$parameter] = $value;
+@@ -170,9 +173,10 @@ trait ParameterTrait
+                 return $value;
+             },
+             'digits' => function ($value): int {
+-                Assertion::greaterThan($value, 0, 'Digits must be at least 1.');
++                $value = (int) $value;
++                Assertion::between($value, 1, 10, 'Digits must be between 1 and 10.');
+ 
+-                return (int) $value;
++                return $value;
+             },
+             'issuer' => function ($value) {
+                 Assertion::false($this->hasColon($value), 'Issuer must not contain a colon.');
+diff --git a/src/Factory.php b/src/Factory.php
+index 70df639..7f490df 100644
+--- a/src/Factory.php
++++ b/src/Factory.php
+@@ -34,9 +34,12 @@ final class Factory implements FactoryInterface
+         Assertion::isArray($parsed_url, 'Not a valid OTP provisioning URI');
+         self::checkData($parsed_url);
+ 
+-        $otp = self::createOTP($parsed_url);
+-
+-        self::populateOTP($otp, $parsed_url);
++        try {
++            $otp = self::createOTP($parsed_url);
++            self::populateOTP($otp, $parsed_url);
++        } catch (Throwable $throwable) {
++            throw new InvalidArgumentException('Not a valid OTP provisioning URI', (int) $throwable->getCode(), $throwable);
++        }
+ 
+         return $otp;
+     }

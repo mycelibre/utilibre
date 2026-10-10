@@ -6,7 +6,7 @@ enabled_bridges[] = ArsTechnicaBridge
 timezone = "UTC"
 enable_debug_mode = false
 max_file_size = 5000000
-message = "Selected public feeds. Cached responses; no accounts. Some upstream sites may be unavailable. Contact: https://github.com/mycelibre/utilibre/issues"
+message = "Selected public feeds; cached responses; no accounts. Some upstream sites may be unavailable. / Fuentes públicas seleccionadas; respuestas en caché; sin cuentas. Algunas fuentes pueden fallar. <a href='https://utilibre.org/en/'>More tools from Utilibre</a> · <a href='https://utilibre.org/es/'>Más herramientas de Utilibre</a>"
 [http]
 timeout = 10
 retries = 0

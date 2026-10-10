@@ -2,7 +2,7 @@ name: utilibre-collaboration-pilot
 services:
   wbo:
     profiles: [pilot]
-    image: utilibre-wbo:2.9.0-p2
+    image: utilibre-wbo:2.9.0-p3
     build:
       context: /opt/utilibre/src/whitebophir
       dockerfile: /home/ubuntu/freetools/deployment/community/wbo/Dockerfile

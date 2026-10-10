@@ -89,8 +89,15 @@ tagged jump. It never flushes `DOCKER-USER`, `INPUT`, `OUTPUT`, or an unrelated
 chain. Re-applying an unchanged policy is a no-op; a changed policy is built
 and verified before its jump replaces the prior one.
 
-This policy is IPv4-only by design. Do not add an IPv6 listener until an
-equivalent, tested IPv6 policy exists.
+This service-port helper is IPv4-only by design. On 9 October a separate
+outbound-only IPv6 guard was installed before testing the owner-assigned VM
+address. It drops new IPv6 service connections and forwarding, while permitting
+established replies and essential ICMPv6. It protects against same-LAN and
+host-local peers as well as external traffic. No service listener is authorized
+by that change. The [IPv6 record](dumb-ipv6-readiness-2026-10-09.md) documents
+the tested local guard, working external route and installed Netplan persistence.
+Networkd requires the guard before installing the address. Docker's existing
+IPv4-only networks were not changed; no VM reboot was performed for this check.
 
 ## Safe installation and activation
 

@@ -1,6 +1,6 @@
 # Licensing and source inventory
 
-Review date: 2026-09-03
+Review date: 2026-10-08
 
 This is the operational license inventory for Utilibre after the access-gap
 strategic reset. It is based on the npm lockfile, immutable Compose image/build
@@ -21,7 +21,7 @@ that grant. Their inclusion does not grant rights to use the Utilibre name,
 logos, or marks outside this project. See
 [`THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md).
 
-The current local application changes are integration or hardening work:
+The original core application changes include integration or hardening work:
 
 - `config/searxng/sitecustomize.py` is a source-visible runtime logging hook
   that reduces accidental query disclosure; and
@@ -32,9 +32,28 @@ Because modified SearXNG and Redlib behavior is offered over a network, the
 public source offer must include the exact upstream revisions, local changes,
 and build/deployment material.
 
-The additional Compose project now uses unmodified upstream images. RSSHub is
-internal FreshRSS support and no longer includes the former public-origin
-patch.
+FreshRSS, PrivateBin and internal RSSHub use pinned upstream images. Other
+application projects include the small persistent patches recorded in
+[the source-patch inventory](source-patches.md); do not treat the whole deployment
+as unmodified. RSSHub remains internal FreshRSS support without its former
+public-origin patch.
+
+The current catalog ledger uses precise SPDX identifiers where the pinned
+project grant supports them. An explicit human description replaces deprecated
+bare GNU identifiers when the later-version scope is not established; that
+description is not an SPDX identifier. The evidence and remaining questions are
+in [the October license review](license-review.md). No unknown or proprietary
+license is admitted by this distinction.
+
+The 9 October follow-up checked current author repositories against installed
+pins. The catalog now links the installed SearXNG grant, immutable FreshRSS and
+Mini QR revisions, Donetick's separate frontend licence and the contradictory
+package metadata for four catalog applications. Addy is confirmed
+`AGPL-3.0-or-later`. Formal package declarations also support normalizing
+AutoRedact to `GPL-3.0-only`, and FreshRSS, La Suite Projects and internal RSSHub
+to `AGPL-3.0-only`. Deprecated SPDX identifiers remain valid; these changes use
+their current spelling without editing upstream grants or component notices.
+The review names the remaining generic or conflicting grants separately.
 
 ## Root Compose inventory
 
@@ -53,8 +72,8 @@ The authoritative digest and source list is
 
 | Component | Reviewed version | License | Official source | Role |
 | --- | --- | --- | --- | --- |
-| FreshRSS | `1.29.1` | upstream declares `AGPL-3.0` | <https://github.com/FreshRSS/FreshRSS/tree/1.29.1> | Operated persistent feed reader |
-| RSSHub | commit `40aca9548e99eefd519ff7abbb937560fc037c95` | upstream declares `AGPL-3.0` | <https://github.com/DIYgod/RSSHub/tree/40aca9548e99eefd519ff7abbb937560fc037c95> | Internal FreshRSS support; no public route |
+| FreshRSS | `1.29.1` | AGPL-3.0-only | <https://github.com/FreshRSS/FreshRSS/tree/1.29.1> | Operated persistent feed reader |
+| RSSHub | commit `40aca9548e99eefd519ff7abbb937560fc037c95` | AGPL-3.0-only | <https://github.com/DIYgod/RSSHub/tree/40aca9548e99eefd519ff7abbb937560fc037c95> | Internal FreshRSS support; no public route |
 | PrivateBin | `2.0.6` | Zlib | <https://github.com/PrivateBin/PrivateBin/tree/2.0.6> | Operated encrypted-paste service |
 | PostgreSQL | `17.11` | PostgreSQL License | <https://github.com/postgres/postgres/tree/REL_17_11> | Internal FreshRSS database |
 | Valkey | `9.1.1` | BSD-3-Clause | <https://github.com/valkey-io/valkey/tree/9.1.1> | Internal ephemeral RSSHub cache |

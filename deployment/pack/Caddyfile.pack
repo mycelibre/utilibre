@@ -1,5 +1,6 @@
 # Separate Caddy VM; add only after each private backend's release checks pass.
-# No access logging, query/referrer logging or third-party analytics.
+# This reference disables access logging here. Verify the running edge separately;
+# application logs, other security logs and provider retention remain separate.
 maps.utilibre.org {
     header +Cache-Control "no-transform"
     encode zstd gzip
@@ -41,6 +42,16 @@ forms.utilibre.org {
     header Referrer-Policy "same-origin"
     header X-Robots-Tag "noindex, nofollow"
     reverse_proxy 10.10.1.43:3176
+}
+
+# Private authenticated reading; keep application CSP and text-first controls.
+wallabag.utilibre.org {
+    encode zstd gzip
+    log_skip
+    header +Cache-Control "no-transform"
+    header Referrer-Policy "no-referrer"
+    header X-Robots-Tag "noindex, nofollow"
+    reverse_proxy 10.10.1.43:3177
 }
 
 # HTTPS signaling only; this does not open media UDP or activate a TURN relay.

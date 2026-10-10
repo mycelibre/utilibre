@@ -1,0 +1,44 @@
+# Isolated fictional-fixture evaluation only: no ports, no production networks.
+name: utilibre-13ft-evaluation
+x-limits: &limits
+  restart: "no"
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 32
+  logging:
+    driver: local
+    options: {max-size: 1m, max-file: "2"}
+services:
+  app:
+    <<: *limits
+    image: utilibre-13ft-evaluation:0.5.0-fixture1
+    mem_limit: 256m
+    cpus: 1.0
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=16m,mode=1777"]
+    networks:
+      isolated: {ipv4_address: 172.29.100.10}
+  fixture:
+    <<: *limits
+    image: utilibre-13ft-evaluation:0.5.0-fixture1
+    command: [python, /fixture.py]
+    mem_limit: 64m
+    cpus: 0.25
+    networks:
+      isolated: {ipv4_address: 172.29.100.20}
+  gateway:
+    <<: *limits
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    entrypoint: [nginx, -g, "daemon off;"]
+    mem_limit: 64m
+    cpus: 0.25
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=8m,mode=1777"]
+    volumes: [./nginx.conf:/etc/nginx/nginx.conf:ro]
+    networks:
+      isolated: {ipv4_address: 172.29.100.30}
+networks:
+  isolated:
+    internal: true
+    enable_ipv6: false
+    ipam:
+      config: [{subnet: 172.29.100.0/24}]

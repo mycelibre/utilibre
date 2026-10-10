@@ -1,0 +1,2292 @@
+diff --git a/astro.config.mjs b/astro.config.mjs
+index e81aad9..6f4c6b0 100644
+--- a/astro.config.mjs
++++ b/astro.config.mjs
+@@ -1,35 +1,10 @@
+-import { defineConfig, fontProviders } from 'astro/config';
++import { defineConfig } from 'astro/config';
+ 
+ import react from '@astrojs/react';
+ import AstroPWA from '@vite-pwa/astro';
+ 
+ export default defineConfig({
+-  fonts: [
+-    {
+-      cssVariable: '--font-inter',
+-      name: 'Inter',
+-      provider: fontProviders.google(),
+-      styles: ['normal'],
+-      subsets: ['latin'],
+-      weights: [400, 500],
+-    },
+-    {
+-      cssVariable: '--font-inter-tight',
+-      name: 'Inter Tight',
+-      provider: fontProviders.google(),
+-      styles: ['normal'],
+-      subsets: ['latin'],
+-      weights: [600, 700],
+-    },
+-    {
+-      cssVariable: '--font-fraunces',
+-      name: 'Fraunces',
+-      provider: fontProviders.google(),
+-      styles: ['normal'],
+-      subsets: ['latin'],
+-      weights: [400, 500, 600],
+-    },
+-  ],
++  base: '/apps/moodist/',
+   integrations: [
+     react(),
+     AstroPWA({
+@@ -40,22 +15,22 @@ export default defineConfig({
+         icons: [
+           ...[72, 128, 144, 152, 192, 256, 512].map(size => ({
+             sizes: `${size}x${size}`,
+-            src: `/assets/pwa/${size}.png`,
++            src: `/apps/moodist/assets/pwa/${size}.png`,
+             type: 'image/png',
+           })),
+         ],
+         name: 'Moodist',
+         orientation: 'any',
+-        scope: '/',
++        scope: '/apps/moodist/',
+         short_name: 'Moodist',
+-        start_url: '/',
++        start_url: '/apps/moodist/',
+         theme_color: '#09090b',
+       },
+       registerType: 'prompt',
+       workbox: {
+         globPatterns: ['**/*'],
+         maximumFileSizeToCacheInBytes: Number.MAX_SAFE_INTEGER,
+-        navigateFallback: '/',
++        navigateFallback: '/apps/moodist/',
+       },
+     }),
+   ],
+diff --git a/package.json b/package.json
+index 04c729e..d5d4565 100644
+--- a/package.json
++++ b/package.json
+@@ -37,7 +37,7 @@
+     "react": "19.2.7",
+     "react-dom": "19.2.7",
+     "react-hotkeys-hook": "3.2.1",
+-    "react-icons": "4.11.0",
++    "react-icons": "5.7.0",
+     "react-wrap-balancer": "1.1.0",
+     "react-youtube": "10.1.0",
+     "uuid": "14.0.0",
+diff --git a/pnpm-lock.yaml b/pnpm-lock.yaml
+index 9a740d4..a23a92e 100644
+--- a/pnpm-lock.yaml
++++ b/pnpm-lock.yaml
+@@ -4,6 +4,45 @@ settings:
+   autoInstallPeers: true
+   excludeLinksFromLockfile: false
+ 
++overrides:
++  baseline-browser-mapping@>=2.0.0 <2.11.0: '>=2.11.0'
++  brace-expansion@<1.1.17: '>=1.1.17'
++  brace-expansion@<1.1.18: '>=1.1.18'
++  brace-expansion@<1.1.19: '>=1.1.19'
++  brace-expansion@<1.1.20: '>=1.1.20'
++  brace-expansion@<1.1.21: '>=1.1.21'
++  brace-expansion@>=2.0.0 <2.1.5: '>=2.1.5'
++  brace-expansion@>=2.0.0 <2.1.6: '>=2.1.6'
++  brace-expansion@>=2.0.0 <2.1.7: '>=2.1.7'
++  brace-expansion@>=4.0.0 <5.0.10: '>=5.0.10'
++  brace-expansion@>=4.0.0 <5.0.11: '>=5.0.11'
++  brace-expansion@>=4.0.0 <5.0.12: '>=5.0.12'
++  browserslist@<=4.28.6: '>=4.28.7'
++  devalue@<=5.9.2: '>=5.9.3'
++  devalue@>=1.0.0 <=5.9.2: '>=5.9.3'
++  devalue@>=5.1.0 <=5.9.2: '>=5.9.3'
++  devalue@>=5.8.0 <=5.9.2: '>=5.9.3'
++  fast-uri@>=3.0.0 <3.1.5: '>=3.1.5'
++  fast-uri@>=3.0.0 <3.1.6: '>=3.1.6'
++  fast-uri@>=3.0.0 <3.1.7: '>=3.1.7'
++  fast-uri@>=3.0.0 <3.1.8: '>=3.1.8'
++  fast-uri@>=3.0.0 <=3.1.3: '>=3.1.4'
++  fast-uri@>=3.1.2 <3.1.6: '>=3.1.6'
++  fast-uri@>=3.1.3 <3.1.6: '>=3.1.6'
++  handlebars@>=4.0.0 <=4.7.9: '>=4.7.10'
++  js-yaml@>=4.0.0 <4.3.1: '>=4.3.1'
++  js-yaml@>=4.0.0 <4.3.2: '>=4.3.2'
++  lodash@<=4.17.23: '>=4.18.0'
++  lodash@>=4.0.0 <=4.17.22: '>=4.17.23'
++  lodash@>=4.0.0 <=4.17.23: '>=4.18.0'
++  postcss-selector-parser@<7.1.6: '>=7.1.6'
++  serialize-javascript@>=7.1.1 <7.1.2: '>=7.1.2'
++  sharp@<0.35.5: '>=0.35.5'
++  smol-toml@<=1.8.0: '>=1.9.0'
++  source-map-js@>=1.0.0 <1.2.2: '>=1.2.2'
++  tmp@<0.2.6: '>=0.2.6'
++  tmp@<=0.2.3: '>=0.2.4'
++
+ importers:
+ 
+   .:
+@@ -57,8 +96,8 @@ importers:
+         specifier: 3.2.1
+         version: 3.2.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+       react-icons:
+-        specifier: 4.11.0
+-        version: 4.11.0(react@19.2.7)
++        specifier: 5.7.0
++        version: 5.7.0(react@19.2.7)
+       react-wrap-balancer:
+         specifier: 1.1.0
+         version: 1.1.0(react@19.2.7)
+@@ -922,13 +961,13 @@ packages:
+     resolution: {integrity: sha512-9vAPxmp+Dx3wQBIUwc1v7Mdisw1kbbaGqXUM8QLTgWg7SoPGYtXBsMXvsFs/0Bn5yoFhcktzxNZGNaUt0VjgjA==}
+     engines: {node: '>=20.19.0'}
+     peerDependencies:
+-      postcss-selector-parser: ^7.1.1
++      postcss-selector-parser: '>=7.1.6'
+ 
+   '@csstools/selector-specificity@6.0.0':
+     resolution: {integrity: sha512-4sSgl78OtOXEX/2d++8A83zHNTgwCJMaR24FvsYL7Uf/VS8HZk9PTwR51elTbGqMuwH3szLvvOXEaVnqn0Z3zA==}
+     engines: {node: '>=20.19.0'}
+     peerDependencies:
+-      postcss-selector-parser: ^7.1.1
++      postcss-selector-parser: '>=7.1.6'
+ 
+   '@emnapi/core@1.11.1':
+     resolution: {integrity: sha512-RSvbQmHzdKzNsLYa/wHrbc3KN4sYLKAdPZxqiM2HATqv/SBk2/ENSHpvXGaLOMcsAyz0poEGqkmmKYG3OWiJEQ==}
+@@ -1121,160 +1160,160 @@ packages:
+     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
+     engines: {node: '>=18'}
+ 
+-  '@img/sharp-darwin-arm64@0.35.4':
+-    resolution: {integrity: sha512-Uhfl4V4lhP2nbUVF9+hyH1+luj86f1gUFeo8ALYxFoULoU+G87D43BfeMP8XHsk9boxAnCY/bf2EHwhA7MuGsA==}
++  '@img/sharp-darwin-arm64@0.35.5':
++    resolution: {integrity: sha512-QRUlFQ0WxvdWyqqG/WtI3iupfD5rBzmCHXSdPsY91sAtVtTo7Q4cb6zOccZ3gqEqkr0f1As1ehLqmEpDsRf+lg==}
+     engines: {node: '>=20.9.0'}
+     cpu: [arm64]
+     os: [darwin]
+ 
+-  '@img/sharp-darwin-x64@0.35.4':
+-    resolution: {integrity: sha512-hWniXY3bG5qKpkKrAwPe4y+VTPmf086YQAnkxWh7uA1YrlRouWGa0M0Mxj3ZjnXFkv7/TD1bTy9lGUK26vRvWw==}
++  '@img/sharp-darwin-x64@0.35.5':
++    resolution: {integrity: sha512-+BR255RhDlpygUpOc/Jdt1nT6DQ3XG/ERo5wbcdOf5Q320dKtPCKPLR1LJs9VGXRaMa8l1uUa0tkCNOXiAxZUw==}
+     engines: {node: '>=20.9.0'}
+     cpu: [x64]
+     os: [darwin]
+ 
+-  '@img/sharp-freebsd-wasm32@0.35.4':
+-    resolution: {integrity: sha512-lIsKw/BU+kjB4eZjxrYrZmwOJYi3Ajrv66iAlBmUPyKc3HpnloevB1g3wxGD9P/5BbQ1brBGl65VRRrCvQDEqA==}
++  '@img/sharp-freebsd-wasm32@0.35.5':
++    resolution: {integrity: sha512-Y/z91nEZ4uIBX5X3nfTovjU9lHNKFYbL2lpHCLVNmXQK03VIZvXBBt0KxbPGp2SdGSF+2mQU4e+hQaWOt86iAw==}
+     engines: {node: '>=20.9.0'}
+     os: [freebsd]
+ 
+-  '@img/sharp-libvips-darwin-arm64@1.3.3':
+-    resolution: {integrity: sha512-suTBPTDGrI9WodccaDdwZItTSaBYASlBk1NSfElSHrUfzu3szG6lvIF58+WiFvnfzuK8ZBFS5zE00PxqxnRiPg==}
++  '@img/sharp-libvips-darwin-arm64@1.3.4':
++    resolution: {integrity: sha512-5R89nBYiRdUlSWJxPhO+GVtaXzXSxKnRu/xqMn3KTA3L9EB9Oy/P+Nn2f2vlhPuUdy/Zusb2DarbyTpGCfEDuw==}
+     cpu: [arm64]
+     os: [darwin]
+ 
+-  '@img/sharp-libvips-darwin-x64@1.3.3':
+-    resolution: {integrity: sha512-FVJZ5mITMobmXIz/hPDTw0EintTW5H3WfrxwLqEqjiIihlu+hVRyGrFQ60xl0Lxn7Bt3zdpevPaQi0HEzqz9fw==}
++  '@img/sharp-libvips-darwin-x64@1.3.4':
++    resolution: {integrity: sha512-iR2OKH80yi0U+dUplyh3/xdpFvps6YkCwsXenIJxqxR1v9o+xtKTGbS9H7cps+2Vxjc8B1j96p75NmTGjIhtpQ==}
+     cpu: [x64]
+     os: [darwin]
+ 
+-  '@img/sharp-libvips-linux-arm64@1.3.3':
+-    resolution: {integrity: sha512-0DaL0A6Xu6sQSQFwe4iVCrKWU2cCTItnRsYsCdxAMm9NF6twAA9BKnoqy4hqz4+azQ0JHuA26qiUKsf1XJ/v5A==}
++  '@img/sharp-libvips-linux-arm64@1.3.4':
++    resolution: {integrity: sha512-Y3dgX/6lE2QhQb+Gxy0WZxfg9MEm/JBjamZpS2IklP7xIQoKN4hzAm7KcMVGtaVDt3neE9OKBC7vAfonA/Lr1A==}
+     cpu: [arm64]
+     os: [linux]
+     libc: [glibc]
+ 
+-  '@img/sharp-libvips-linux-arm@1.3.3':
+-    resolution: {integrity: sha512-3rbU4vqXXc3hY/OiXdl52xZvT0F1yEngWfvqudtPJg/KkyiaQw2DRsFrNzpmLvfavbwOq3qXn36GP8obHRULQA==}
++  '@img/sharp-libvips-linux-arm@1.3.4':
++    resolution: {integrity: sha512-LmRtTsOHuvM2+wlO2Db37dx5MiZhB0FvSunciw48YjdOkZz9KAiRbm8ujeMOA1INqmei5NapFxYEK1D1ZSidmw==}
+     cpu: [arm]
+     os: [linux]
+     libc: [glibc]
+ 
+-  '@img/sharp-libvips-linux-ppc64@1.3.3':
+-    resolution: {integrity: sha512-cdn1OvUBwsXhbC0zSzJnNzf5MZ/mTrobawDvNXBTxe8VtqKAm0sRuEY2Evzovb/w9JMk4TvRxqt1mekSuJz64w==}
++  '@img/sharp-libvips-linux-ppc64@1.3.4':
++    resolution: {integrity: sha512-Le6boB8Tai0Nis+gIxIpKx68UDVVIqdR8Tin5Yf1z2LJJQLDJvCDRqRu+jC2qCoD+eIomonmOwB4smBRxfVpYQ==}
+     cpu: [ppc64]
+     os: [linux]
+     libc: [glibc]
+ 
+-  '@img/sharp-libvips-linux-riscv64@1.3.3':
+-    resolution: {integrity: sha512-HjPVx7yKz+0lqdhDlTw1tt90wamBoxhiXpvl1XZpJLiHH4RCJ5yDTqH+VlYPv2fwFs89JFw4c1IexYOcQUi4IQ==}
++  '@img/sharp-libvips-linux-riscv64@1.3.4':
++    resolution: {integrity: sha512-aHkkIEHPRdQEegJN20MLmGtxYD9R2wQr3Cwpddnu5+YKMt6Uzax7S9h5gpZTo8wyrGuZSlfQ63OevL5mTyOC7Q==}
+     cpu: [riscv64]
+     os: [linux]
+     libc: [glibc]
+ 
+-  '@img/sharp-libvips-linux-s390x@1.3.3':
+-    resolution: {integrity: sha512-neWLh+3yCNThxnfy3c4BbVBeGgt9aftno+XbT56iK28RgeDs3UOFWviLWlUu0bArYVYJaFDK+RRohbicUNCm8Q==}
++  '@img/sharp-libvips-linux-s390x@1.3.4':
++    resolution: {integrity: sha512-ra/mB6MikESDUO7Yg+Mi95bFBb9GsObURuhnOv3OqknjGe9sZrG8tCe9q0xSIGrtLgvgw0gKnFWcK4blSgQOuQ==}
+     cpu: [s390x]
+     os: [linux]
+     libc: [glibc]
+ 
+-  '@img/sharp-libvips-linux-x64@1.3.3':
+-    resolution: {integrity: sha512-4vKmvAst9nrowcqquKFAyZJUDolUaIp8uRiN0mWFguJ1IplC9/pitXtlnnlU4aa/eJw3J7i67V+pwUL+wZGdsA==}
++  '@img/sharp-libvips-linux-x64@1.3.4':
++    resolution: {integrity: sha512-GJ//SSXbnwSDes02umB3nDJLFcQzw8a18V8fyhqr6tV515tOEMdImjjxj1AoafMRz56F3PHgftnj1QEKSU1zkw==}
+     cpu: [x64]
+     os: [linux]
+     libc: [glibc]
+ 
+-  '@img/sharp-libvips-linuxmusl-arm64@1.3.3':
+-    resolution: {integrity: sha512-Y9kQaLMuNoB0bPYOOdcZMaseNrFpPodIWWMrx+CZyydf2xn68j9WYc6sWWRrDwNkzCQjKYfc68L7jKjGlHMibw==}
++  '@img/sharp-libvips-linuxmusl-arm64@1.3.4':
++    resolution: {integrity: sha512-hvulFwtjUcagsis6BBxHwGFwWoNZjgYmULGVrZcyfNbjA8hKILbRxGg15/7w5HDyXHXUos/j6baAWqnCyQ2DWA==}
+     cpu: [arm64]
+     os: [linux]
+     libc: [musl]
+ 
+-  '@img/sharp-libvips-linuxmusl-x64@1.3.3':
+-    resolution: {integrity: sha512-fj8Mv0HHfD1Rr+4I68+3agJynxDWtBFgicTbSOb9Bke6pIwzGcJ+RX/yHjmiEGFMCavY/dxvem7MyNaJF+wDiw==}
++  '@img/sharp-libvips-linuxmusl-x64@1.3.4':
++    resolution: {integrity: sha512-6zXKeE/p39I1AmA3cJG35eyBGNqNddLnUXjhwBnsGjFPWqf5VKkDBEqaEkPDoTEtkxwi2vv8Tcr2mDyP4So7Fg==}
+     cpu: [x64]
+     os: [linux]
+     libc: [musl]
+ 
+-  '@img/sharp-linux-arm64@0.35.4':
+-    resolution: {integrity: sha512-De4jpEnAU8Hd5oT0j1G3uL4ZvTuipVMn7YC6vPaJhy6/7EwEae0SVAoBrUMYQbkLGDm85taVWwuPc1a44LTzCQ==}
++  '@img/sharp-linux-arm64@0.35.5':
++    resolution: {integrity: sha512-LYVx5JTsOM2CBzmxreh+nl64/3H6Xb09iSLknqH47z2T2DFFxDeFLP5y4dJwe6H7uGQlHPyEEtIqyo3DYsRwdQ==}
+     engines: {node: '>=20.9.0'}
+     cpu: [arm64]
+     os: [linux]
+     libc: [glibc]
+ 
+-  '@img/sharp-linux-arm@0.35.4':
+-    resolution: {integrity: sha512-7OAS8gI0EReKGVN2HssHlM6umJgxF5VI3xN0p9FA91p/YO+ou5hiNghLdZ5BEHztwaaK5+bLKRf8x/o2L2nk9A==}
++  '@img/sharp-linux-arm@0.35.5':
++    resolution: {integrity: sha512-LEaXK2WdXVK5ykcw0buWyPMsmLLL2vpHLD6yrNSW+JGEL3BZPA4tpKN6iaMc4AxTTAoaX/sU1rOL51lcIz48ZQ==}
+     engines: {node: '>=20.9.0'}
+     cpu: [arm]
+     os: [linux]
+     libc: [glibc]
+ 
+-  '@img/sharp-linux-ppc64@0.35.4':
+-    resolution: {integrity: sha512-2oYZJeIl4kCcMGk4ouZVjnkCtFrpQFlNEtJ6GbxzhHQchwH0NH/qEb9ykmOl29dqwMq+JhFdZn+1ak2FKhI9fQ==}
++  '@img/sharp-linux-ppc64@0.35.5':
++    resolution: {integrity: sha512-QVxAAq8evVRI9ia2vqgwrmWucn5Dfv+JdWzj75pD8omHLPSP7f8p20O8jxzjCcuCEQEOtYOZUmX1hkiZ0kdevA==}
+     engines: {node: '>=20.9.0'}
+     cpu: [ppc64]
+     os: [linux]
+     libc: [glibc]
+ 
+-  '@img/sharp-linux-riscv64@0.35.4':
+-    resolution: {integrity: sha512-cPbNChoRURAWdebDIHSenxRpgEdy7JkPydSnUxRm9VvKD7m0/xVaR/8Fzlu81pk5nHEvHH87UZUA7cTtwnbJSA==}
++  '@img/sharp-linux-riscv64@0.35.5':
++    resolution: {integrity: sha512-LtdreXguaavKODPIfzJ4kffx7UNt1omwtK0rch4EBbbSTXPnxWmYSayXdLJw0fJzQ97kHt1gL/yh4tvU+nCyRQ==}
+     engines: {node: '>=20.9.0'}
+     cpu: [riscv64]
+     os: [linux]
+     libc: [glibc]
+ 
+-  '@img/sharp-linux-s390x@0.35.4':
+-    resolution: {integrity: sha512-RY0JFY8Fd6RonCBtHz+DvadaPkXDSI1AUn6yWL9TipqkZ1vY8w8evqdgyDFnkm4/K1ve1TvZiaePP5oSd4+WVQ==}
++  '@img/sharp-linux-s390x@0.35.5':
++    resolution: {integrity: sha512-UZasTOFiYzotTsGOCu42BfUzP6Tu6Do/947iRm1RsLKvlllxwGcn4RN27LibGWceix4Y+Pmw3jsnTcCQIgWjqA==}
+     engines: {node: '>=20.9.0'}
+     cpu: [s390x]
+     os: [linux]
+     libc: [glibc]
+ 
+-  '@img/sharp-linux-x64@0.35.4':
+-    resolution: {integrity: sha512-9qvvEAuk8k89TfWUoX2htWjbAMX8p+NxCppjpcg5k6xMsjhBQPTsoIh36h9Qde4WRuGpJeYnOjdosDn/cnv+OA==}
++  '@img/sharp-linux-x64@0.35.5':
++    resolution: {integrity: sha512-SxFtLTeJInhAA9Q836kux2vZNeOBQEx658qvbboZScr0wIARym3IcGmW7KpVD5sbVg0Ojy+udFQdayYIZyoNog==}
+     engines: {node: '>=20.9.0'}
+     cpu: [x64]
+     os: [linux]
+     libc: [glibc]
+ 
+-  '@img/sharp-linuxmusl-arm64@0.35.4':
+-    resolution: {integrity: sha512-KB5jxpfWQTr0nc3xdHtWChdbifHrBGsd2SM62Eyxrl8afikm+f5qGBU75SJIZBT/S1MC8XyacdlXBMSWq6OURA==}
++  '@img/sharp-linuxmusl-arm64@0.35.5':
++    resolution: {integrity: sha512-9HbMclmI1zlNkFRs3z9/eBtDjfD0sGlrX1z6b1qwmiFY5ElDLh4BC0LPBdVp7z1DXFiKlIcznf+ZlsuZzLxQqg==}
+     engines: {node: '>=20.9.0'}
+     cpu: [arm64]
+     os: [linux]
+     libc: [musl]
+ 
+-  '@img/sharp-linuxmusl-x64@0.35.4':
+-    resolution: {integrity: sha512-f+eZJZIQNEEd26RPSW+76chwOf1XtA2Y/O+5ocVyLliHkeih3e+jhLVBdNTd2rS3IbNXK8+ug93Vf5ZXtF5Lxg==}
++  '@img/sharp-linuxmusl-x64@0.35.5':
++    resolution: {integrity: sha512-4KOphqB035HrVdqLZfCgMzzERrQkkzOwRhl4OAkRO1YCldbaFjySXMaK534Mo0V+LndnlJk+sbUyLeU0ULyD1A==}
+     engines: {node: '>=20.9.0'}
+     cpu: [x64]
+     os: [linux]
+     libc: [musl]
+ 
+-  '@img/sharp-wasm32@0.35.4':
+-    resolution: {integrity: sha512-zQnl4Kwp7Q6NHsENtU2T/00Zi+w3AQNwz3+UaTyVBy2FpXrzXzGjndpK61onhZjRtRpQXxCTeqw19bVyXOh7jA==}
++  '@img/sharp-wasm32@0.35.5':
++    resolution: {integrity: sha512-Ptsga1su4tQx+LLF1ECS9U6nz5kmrXKo6XVbtR48Ke3ZRxxgaWBu7IDtEe1quo8hiupwm6WFqxVlXaSf7IINGQ==}
+     engines: {node: '>=20.9.0'}
+ 
+-  '@img/sharp-webcontainers-wasm32@0.35.4':
+-    resolution: {integrity: sha512-ESfNkywmCfPNyaZjxooddJQiQ+l/nTpGEOGthxiLnIHXC/CmcBixnfwUleX9mCz9ovrUUvKMap/pm8RYbzfwaA==}
++  '@img/sharp-webcontainers-wasm32@0.35.5':
++    resolution: {integrity: sha512-hfhF/FmoQyTUkA0bIKFOtw536BQSeBMe6BF6QyWlrPxT754+TFLaZ7sKKTfvvM0yJgKgaYTwnFCIZ/GuDw5SUA==}
+     engines: {node: '>=20.9.0'}
+     cpu: [wasm32]
+ 
+-  '@img/sharp-win32-arm64@0.35.4':
+-    resolution: {integrity: sha512-iNdlBX9gLVvqe2I3uIJSIKTq6wckP/DYxZtcqxm09x5Gi24DnFBmPAWZmr60ZyYMG0xlzo6goG3670ar+RXvRw==}
++  '@img/sharp-win32-arm64@0.35.5':
++    resolution: {integrity: sha512-X4t7g+7ZA5DKblCBEXGjUqqemj4vczING/5viFwAL8h4N3qYeyjwdCvRLHi4EdOUI+2Z7UFlp1VM+p/AuEtm6Q==}
+     engines: {node: '>=20.9.0'}
+     cpu: [arm64]
+     os: [win32]
+ 
+-  '@img/sharp-win32-ia32@0.35.4':
+-    resolution: {integrity: sha512-kqRsbaa5CS6KHlpxnN7WhE6vAAugXyZButpRdvDWetlv6Qv4N9WTcrWzF7tXfB9T7MsoadqdI8hmwLq6UlLvtw==}
++  '@img/sharp-win32-ia32@0.35.5':
++    resolution: {integrity: sha512-5Zm82LoBc43nhwNybZlG7Y1KO//Zhsn306fQl29ZOuStHLGTo3BWL83q3cznX0poxSAMuYL1On/BHBxkBeKr6A==}
+     engines: {node: ^20.9.0}
+     cpu: [ia32]
+     os: [win32]
+ 
+-  '@img/sharp-win32-x64@0.35.4':
+-    resolution: {integrity: sha512-XtmnYhBcrORsJ4XJngyzr/EWP0hRZLAZRFaApdKuviyqF78+ylxh2y06ZmtULAMOnObJ3ucpN0AcwSWnMowTRg==}
++  '@img/sharp-win32-x64@0.35.5':
++    resolution: {integrity: sha512-x76eH0vEiHlcMQu8Y8IenntaACtddpT6W0wmXtWrnKcnKI7ME5DdgqhAD6SEWOEl1v2zDvkZDhFA9KnURwpfqg==}
+     engines: {node: '>=20.9.0'}
+     cpu: [x64]
+     os: [win32]
+@@ -2677,9 +2716,6 @@ packages:
+   bail@2.0.2:
+     resolution: {integrity: sha512-0xO6mYd7JB2YesxDKplafRpsiOzPt9V02ddPCLbY1xYGPOX24NTyN50qnUxgCPcSoYMhKpAuBTjQoRZCAkUDRw==}
+ 
+-  balanced-match@1.0.2:
+-    resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+-
+   balanced-match@4.0.4:
+     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
+     engines: {node: 18 || 20 || >=22}
+@@ -2687,11 +2723,6 @@ packages:
+   base64-js@1.5.1:
+     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
+ 
+-  baseline-browser-mapping@2.10.43:
+-    resolution: {integrity: sha512-AjYpR78kDWAY3Efj+cDTFH9t9SCoL7OoTp1BOb0mQV7S+6CiLwnWM3FyxhJtdPufDFKzmCSFoUncKjWgJEZTCQ==}
+-    engines: {node: '>=6.0.0'}
+-    hasBin: true
+-
+   baseline-browser-mapping@2.11.21:
+     resolution: {integrity: sha512-uh8vpY/1/YyFkunIDFH/12p7/7VdPKA1hejMVEbdkEaWnUz0Hesvx5EbiU6XxjyHZIOju+ZMbQJkRh+es3/spQ==}
+     engines: {node: '>=6.0.0'}
+@@ -2703,11 +2734,9 @@ packages:
+   boolbase@1.0.0:
+     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
+ 
+-  brace-expansion@1.1.16:
+-    resolution: {integrity: sha512-IDw48K2/2kRkg9LdJxurvq3lV3aBgq0REY89duEqFRthjlPdXHKMj7EnQOXVckxzgisinf3nHfrcE2FufFLXMw==}
+-
+-  brace-expansion@2.1.4:
+-    resolution: {integrity: sha512-hGfVzPxthbf3+2yjg/RBs60cB0FhqBS/zvdV/4wn4/BmN0bNMMHPc4V/BbFieqf1TKAGGAHnY4eSjajCl0f2Xg==}
++  brace-expansion@5.0.12:
++    resolution: {integrity: sha512-YovQ3rzhaLMIrDjNDMkNS01tea93qhEhG5xy8f6+R0l+dw3Ki+5sCoIoI942iuLZTHWogWktgwVDhU09iNEimQ==}
++    engines: {node: 20 || >=22}
+ 
+   brace-expansion@5.0.9:
+     resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
+@@ -2717,11 +2746,6 @@ packages:
+     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
+     engines: {node: '>=8'}
+ 
+-  browserslist@4.28.5:
+-    resolution: {integrity: sha512-Cu2E6QejHWzuDMTkuwgpABFgDfZrXLQq5V13YOACZx4mFAG4IwGTbTfHPMr4WtxlHoXSM8FIuRwYYCz5XiabaQ==}
+-    engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
+-    hasBin: true
+-
+   browserslist@4.28.9:
+     resolution: {integrity: sha512-EWazOblFYUvlGZcfGhPUPmYh3nikUxBVb+y9MJun5f3hBi812X+8MSQTujLBtgK3cf51fJWbWfOjyeO954d+Eg==}
+     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
+@@ -2875,9 +2899,6 @@ packages:
+   compare-func@2.0.0:
+     resolution: {integrity: sha512-zHig5N+tPWARooBnb0Zx1MFcdfpyJrfTJ3Y5L+IFvUm8rM74hHz66z0gw0x4tijh5CorKkKUCnW82R2vmpeCRA==}
+ 
+-  concat-map@0.0.1:
+-    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+-
+   concat-stream@2.0.0:
+     resolution: {integrity: sha512-MWufYdFw53ccGjCA+Ol7XJYpAlW6/prSMzuPOTRnJGcGzuhLn4Scrz7qf6o8bROZ514ltazcIFJZevcfbo0x7A==}
+     engines: {'0': node >= 6.0}
+@@ -3143,8 +3164,9 @@ packages:
+   detect-node-es@1.1.0:
+     resolution: {integrity: sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ==}
+ 
+-  devalue@5.9.2:
+-    resolution: {integrity: sha512-po4PAY5c53tw5XMocSnf8A/5OHhbbUftpr93aEN6BBoAdntUmK7vu7wOATqvt7cXO7m1Cl4gMVn6p7n6n4mj0w==}
++  devalue@6.0.2:
++    resolution: {integrity: sha512-6V1HzU4to74skg//ScZR2mp9bdz+rESC9jQzVIIG/ha0HYgymHcXIQQCjH0+ivRaSuY82fa9fZ7Ro6QZT4s4uw==}
++    engines: {node: '>=22.17'}
+ 
+   devlop@1.1.0:
+     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
+@@ -3187,9 +3209,6 @@ packages:
+     engines: {node: '>=0.10.0'}
+     hasBin: true
+ 
+-  electron-to-chromium@1.5.389:
+-    resolution: {integrity: sha512-cEto7aeOqBfU1D+c5py5pE+ooscKE75JifxLBdFUZsqAxRS6y7kebtxAZvICszSl05gPjYHDTjY+lXpyGvpJbg==}
+-
+   electron-to-chromium@1.5.422:
+     resolution: {integrity: sha512-UvA/32XqrLDdZSn7Jllo1AYNcWji/G0d5M0GTViE7KoGBiMunw3a34Sb2KO4ZZyrSEhqsxFoVhWWJshdyfKqJA==}
+ 
+@@ -3298,8 +3317,8 @@ packages:
+   fast-string-width@3.0.2:
+     resolution: {integrity: sha512-gX8LrtNEI5hq8DVUfRQMbr5lpaS4nMIWV+7XEbXk2b8kiQIizgnlr12B4dA3ZEx3308ze0O4Q1R+cHts8kyUJg==}
+ 
+-  fast-uri@3.1.3:
+-    resolution: {integrity: sha512-i70LwGWUduXqzicKXWshooq+sWL1K3WUU5rKZNG/0i3a1OSoX3HqhH5WbWwTmqWfor4urUakGPiRQcleRZTwOg==}
++  fast-uri@4.2.1:
++    resolution: {integrity: sha512-TmHQgewjHtMq1E5QKA0tOE0yeYGQs25KZC/ziJpubRtWI15W92e6vPFydWOeZBVROSHBYw/QhD9d5OefdD6LDg==}
+ 
+   fast-wrap-ansi@0.2.2:
+     resolution: {integrity: sha512-7F2Fl+TjRSenLqlU3UjSH0iyqopqoZIu7eZVpEirP2g1GtWa2G/ecEmBdgz31+Mxr+ELclgg6sokpSFIQiZ02Q==}
+@@ -3524,8 +3543,8 @@ packages:
+   h3@1.15.11:
+     resolution: {integrity: sha512-L3THSe2MPeBwgIZVSH5zLdBBU90TOxarvhK9d04IDY2AmVS8j2Jz2LIWtwsGOU3lu2I5jCN7FNvVfY2+XyF+mg==}
+ 
+-  handlebars@4.7.9:
+-    resolution: {integrity: sha512-4E71E0rpOaQuJR2A3xDZ+GM1HyWYv1clR58tC8emQNeQe3RH7MAzSbat+V0wG78LQBo6m6bzSG/L4pBuCsgnUQ==}
++  handlebars@4.7.10:
++    resolution: {integrity: sha512-P5VJMVM7qgBn6vjXMw8WG9uVI+ncf2pi72j4de4yz5ZULLj2RGqLYaKOYGsgyrViQ0tePOVlN1tDCCXXtFqXKg==}
+     engines: {node: '>=0.4.7'}
+     hasBin: true
+ 
+@@ -3838,10 +3857,6 @@ packages:
+   js-tokens@4.0.0:
+     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
+ 
+-  js-yaml@4.3.0:
+-    resolution: {integrity: sha512-1td788aAnnZ5qs7V2QIRl1owjtYpbKt749Y3xauqQgwIIGF/xXWz1wMTEBx5O3LK3lXLVuqXPdPxj2BoFHaW9Q==}
+-    hasBin: true
+-
+   js-yaml@4.3.2:
+     resolution: {integrity: sha512-SFNOvSJ+Dgf/9An904Yx+CgSlIPCkIpao4qo51lpee25TIRejdH3rhR4EZMGoNx3/TP3O+wzWuiTFl4sqbltzA==}
+     hasBin: true
+@@ -4008,9 +4023,6 @@ packages:
+   lodash.map@4.6.0:
+     resolution: {integrity: sha512-worNHGKLDetmcEYDvh2stPCrrQRkP20E4l0iIS7F8EvzMqBBi7ltvFN5m1HvTf1P7Jk1txKhvFcmYsCr8O2F1Q==}
+ 
+-  lodash@4.17.21:
+-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+-
+   lodash@4.18.1:
+     resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
+ 
+@@ -4192,10 +4204,6 @@ packages:
+   node-mock-http@1.0.5:
+     resolution: {integrity: sha512-KQyt/wLjG3TAc7DOUhpqWzgd4ERxR80JOlTK5VE5R1S12IaPVN5qkj4klBce9HPG1Njuup4Sb5bljaT34lIyjw==}
+ 
+-  node-releases@2.0.51:
+-    resolution: {integrity: sha512-wRNIrw4DmVLKQlbgOMdkMx27Wrpzes2hh5Jtbi2bjPd+4wJstWIqP5A+lscnqbm0xxmT5Bpg8Lec5ItEBwx6BQ==}
+-    engines: {node: '>=18'}
+-
+   node-releases@2.0.54:
+     resolution: {integrity: sha512-YHs7BmmcsdAI5Ozuf8JZo6PT0mv2GIWC9vMfvUC3dp65M8hn7Ux8CPL+2oBI7juNuj9d0ndhTcznq2ODBps9cQ==}
+     engines: {node: '>=18'}
+@@ -4261,10 +4269,6 @@ packages:
+     resolution: {integrity: sha512-5b6Y85tPxZZ7QytO+BQzysW31HJku27cRIlkbAXaNx+BdcVi+LlRFmVXzeF6a7JCwJpyw5c4b+YSVImQIrBpuQ==}
+     engines: {node: '>=10'}
+ 
+-  os-tmpdir@1.0.2:
+-    resolution: {integrity: sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g==}
+-    engines: {node: '>=0.10.0'}
+-
+   own-keys@1.0.2:
+     resolution: {integrity: sha512-19YVAg7T+WTrxggPukVq7DjTv6+PJ867TmhCvBsYwmbFCsZd344rq2Ld1p0wo8f8Qrrhgp82c6FJRqdXWtSEhg==}
+     engines: {node: '>= 0.4'}
+@@ -4402,8 +4406,8 @@ packages:
+     peerDependencies:
+       postcss: ^8.4
+ 
+-  postcss-selector-parser@7.1.4:
+-    resolution: {integrity: sha512-HeP7D2wyhkR+XaK6v4W8oRF62Dsz4flyuczALJp61GckGm42u1saSSJ/0auvcBqxs3jMRFEcPK34At/0JBKdOg==}
++  postcss-selector-parser@7.1.6:
++    resolution: {integrity: sha512-7qASPzhKF2l2KLboRZux8CCTRMdGiV08vWmyKzPz22qZ7ZjQBOeY7rNzNoCLSUiftJ7HUq0GERHmxw/t0dCdMw==}
+     engines: {node: '>=4'}
+ 
+   postcss-value-parser@4.2.0:
+@@ -4477,8 +4481,8 @@ packages:
+       react: '>=16.8.1'
+       react-dom: '>=16.8.1'
+ 
+-  react-icons@4.11.0:
+-    resolution: {integrity: sha512-V+4khzYcE5EBk/BvcuYRq6V/osf11ODUM2J8hg2FDSswRrGvqiYUYPRy4OdrWaQOBj4NcpJfmHZLNaD+VH0TyA==}
++  react-icons@5.7.0:
++    resolution: {integrity: sha512-LBLy340Rzqy6+/yVhZKT3B/QpP1BZaesGqasf09HPOBzRarcDIFH0WwXlXQfE7q7ipxK4MSiC5DIBWURCny6fw==}
+     peerDependencies:
+       react: '*'
+ 
+@@ -4703,8 +4707,8 @@ packages:
+     engines: {node: '>=10'}
+     hasBin: true
+ 
+-  serialize-javascript@7.1.1:
+-    resolution: {integrity: sha512-k3CMsaIvvdSwm8oLB4MXSl0wH2/cwlH7xGcnRd2DaeRmBkbzYmyT8j0tsX60DwD1eRwHTpNpH8ljKu9oUT1MeQ==}
++  serialize-javascript@7.1.2:
++    resolution: {integrity: sha512-GL2BWwVa6JydKO6l/ljVgjAZF4QJ3S7dWDWi53s5GZT8PJzD2fNxi67HANQGKAqPrwEpL5ba7gUBGi0Ls/sEoQ==}
+     engines: {node: '>=20.0.0'}
+ 
+   set-function-length@1.2.2:
+@@ -4719,8 +4723,8 @@ packages:
+     resolution: {integrity: sha512-RJRdvCo6IAnPdsvP/7m6bsQqNnn1FCBX5ZNtFL98MmFF/4xAIJTIg1YbHW5DC2W5SKZanrC6i4HsJqlajw/dZw==}
+     engines: {node: '>= 0.4'}
+ 
+-  sharp@0.35.4:
+-    resolution: {integrity: sha512-n++8XWcj+jCOr2IOl7h8LbKnGBDY4aPbmprMONBNFdn0ImXqpGVv5zliDs0V9HbmbCQLpbuo2ej9rAoOQTvMDA==}
++  sharp@0.35.5:
++    resolution: {integrity: sha512-Ywn4OnzGukp7CDMrp08RQ50YKmuwG47brZgIVPTvBaaAfQlRlygrRqSrxdCiL9M+LlzLBiJ68IR1QqvzHyjC7g==}
+     engines: {node: '>=20.9.0'}
+     peerDependencies:
+       '@types/node': '*'
+@@ -4781,12 +4785,12 @@ packages:
+     resolution: {integrity: sha512-RQsvleCbF8cVHEv+xuDGaA4pOizFqJ0GgjtMSRo6oP8pnN7WsigHgVGey6aILRBKv4W2YOMHLqbKdnB6hpB9fw==}
+     engines: {node: '>=20.0.0'}
+ 
+-  smol-toml@1.8.0:
+-    resolution: {integrity: sha512-kCZr2V3ch9i00x8zXRhjUNVcjG9ijES5dDudkXvUVCT5QlJNQWElSJdZqyPemffHoLNUYwOcou0Fy+ojN0uHSQ==}
++  smol-toml@1.9.0:
++    resolution: {integrity: sha512-hpd+HLON7HdZXqYchMM/+LaTTbdK0AU3NngIJ4KVyWbY9bfQqdL9cD+4yf6dUoU2Ap4VsU0JkQi6FxAI1B2mXQ==}
+     engines: {node: '>= 18'}
+ 
+-  source-map-js@1.2.1:
+-    resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
++  source-map-js@1.2.2:
++    resolution: {integrity: sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==}
+     engines: {node: '>=0.10.0'}
+ 
+   source-map-support@0.5.21:
+@@ -4972,9 +4976,9 @@ packages:
+     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
+     engines: {node: '>=12.0.0'}
+ 
+-  tmp@0.0.33:
+-    resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}
+-    engines: {node: '>=0.6.0'}
++  tmp@0.2.7:
++    resolution: {integrity: sha512-e0votIpp4Uo2AJYSzVHV6xCcawuiez3DzqDAbrTc3YxBkplN6e+dM13ZeIcZnDg/QpSuU2zfZ3rzwY8ukEnaXw==}
++    engines: {node: '>=14.14'}
+ 
+   to-regex-range@5.0.1:
+     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
+@@ -5173,17 +5177,11 @@ packages:
+     resolution: {integrity: sha512-aZwGpamFO61g3OlfT7OQCHqhGnW43ieH9WZeP7QxN/G/jS4jfqUkZxoryvJgVPEcrl5NL/ggHsSmLMHuH64Lhg==}
+     engines: {node: '>=4'}
+ 
+-  update-browserslist-db@1.2.3:
+-    resolution: {integrity: sha512-Js0m9cx+qOgDxo0eMiFGEueWztz+d4+M3rGlmKPT+T4IS/jP4ylw3Nwpu6cpTTP8R1MAC1kF4VbdLt3ARf209w==}
+-    hasBin: true
+-    peerDependencies:
+-      browserslist: '>= 4.21.0'
+-
+   update-browserslist-db@1.3.2:
+     resolution: {integrity: sha512-UQ+MSxlhRm1bzjhU+DcuXfjFO1FzNtqhK5+9Yvlp90ItDLk5vT932A0rFu619nf7RVS+Y/VeaUW1jaRDqZ8VJw==}
+     hasBin: true
+     peerDependencies:
+-      browserslist: '>= 4.21.0'
++      browserslist: '>=4.28.7'
+ 
+   use-callback-ref@1.3.3:
+     resolution: {integrity: sha512-jQL3lRnocaFtu3V00JToYz/4QkNWswxijDaCVNZRiRTO3HQDLsdu1ZtmIUvV4yPp+rvWm5j0y0TG/S61cuijTg==}
+@@ -5528,7 +5526,7 @@ snapshots:
+       picomatch: 4.0.7
+       retext-smartypants: 6.2.0
+       shiki: 4.4.3
+-      smol-toml: 1.8.0
++      smol-toml: 1.9.0
+       unified: 11.0.5
+ 
+   '@astrojs/markdown-satteri@0.4.0':
+@@ -5548,7 +5546,7 @@ snapshots:
+       '@types/react': 19.2.17
+       '@types/react-dom': 19.2.3(@types/react@19.2.17)
+       '@vitejs/plugin-react': 5.2.0(vite@8.2.2(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.6.1)(terser@5.51.2)(yaml@2.9.0))
+-      devalue: 5.9.2
++      devalue: 6.0.2
+       react: 19.2.7
+       react-dom: 19.2.7(react@19.2.7)
+       ultrahtml: 1.7.0
+@@ -6448,13 +6446,13 @@ snapshots:
+ 
+   '@conventional-changelog/template@1.2.1': {}
+ 
+-  '@csstools/selector-resolve-nested@4.0.0(postcss-selector-parser@7.1.4)':
++  '@csstools/selector-resolve-nested@4.0.0(postcss-selector-parser@7.1.6)':
+     dependencies:
+-      postcss-selector-parser: 7.1.4
++      postcss-selector-parser: 7.1.6
+ 
+-  '@csstools/selector-specificity@6.0.0(postcss-selector-parser@7.1.4)':
++  '@csstools/selector-specificity@6.0.0(postcss-selector-parser@7.1.6)':
+     dependencies:
+-      postcss-selector-parser: 7.1.4
++      postcss-selector-parser: 7.1.6
+ 
+   '@emnapi/core@1.11.1':
+     dependencies:
+@@ -6577,108 +6575,108 @@ snapshots:
+   '@img/colour@1.1.0':
+     optional: true
+ 
+-  '@img/sharp-darwin-arm64@0.35.4':
++  '@img/sharp-darwin-arm64@0.35.5':
+     optionalDependencies:
+-      '@img/sharp-libvips-darwin-arm64': 1.3.3
++      '@img/sharp-libvips-darwin-arm64': 1.3.4
+     optional: true
+ 
+-  '@img/sharp-darwin-x64@0.35.4':
++  '@img/sharp-darwin-x64@0.35.5':
+     optionalDependencies:
+-      '@img/sharp-libvips-darwin-x64': 1.3.3
++      '@img/sharp-libvips-darwin-x64': 1.3.4
+     optional: true
+ 
+-  '@img/sharp-freebsd-wasm32@0.35.4':
++  '@img/sharp-freebsd-wasm32@0.35.5':
+     dependencies:
+-      '@img/sharp-wasm32': 0.35.4
++      '@img/sharp-wasm32': 0.35.5
+     optional: true
+ 
+-  '@img/sharp-libvips-darwin-arm64@1.3.3':
++  '@img/sharp-libvips-darwin-arm64@1.3.4':
+     optional: true
+ 
+-  '@img/sharp-libvips-darwin-x64@1.3.3':
++  '@img/sharp-libvips-darwin-x64@1.3.4':
+     optional: true
+ 
+-  '@img/sharp-libvips-linux-arm64@1.3.3':
++  '@img/sharp-libvips-linux-arm64@1.3.4':
+     optional: true
+ 
+-  '@img/sharp-libvips-linux-arm@1.3.3':
++  '@img/sharp-libvips-linux-arm@1.3.4':
+     optional: true
+ 
+-  '@img/sharp-libvips-linux-ppc64@1.3.3':
++  '@img/sharp-libvips-linux-ppc64@1.3.4':
+     optional: true
+ 
+-  '@img/sharp-libvips-linux-riscv64@1.3.3':
++  '@img/sharp-libvips-linux-riscv64@1.3.4':
+     optional: true
+ 
+-  '@img/sharp-libvips-linux-s390x@1.3.3':
++  '@img/sharp-libvips-linux-s390x@1.3.4':
+     optional: true
+ 
+-  '@img/sharp-libvips-linux-x64@1.3.3':
++  '@img/sharp-libvips-linux-x64@1.3.4':
+     optional: true
+ 
+-  '@img/sharp-libvips-linuxmusl-arm64@1.3.3':
++  '@img/sharp-libvips-linuxmusl-arm64@1.3.4':
+     optional: true
+ 
+-  '@img/sharp-libvips-linuxmusl-x64@1.3.3':
++  '@img/sharp-libvips-linuxmusl-x64@1.3.4':
+     optional: true
+ 
+-  '@img/sharp-linux-arm64@0.35.4':
++  '@img/sharp-linux-arm64@0.35.5':
+     optionalDependencies:
+-      '@img/sharp-libvips-linux-arm64': 1.3.3
++      '@img/sharp-libvips-linux-arm64': 1.3.4
+     optional: true
+ 
+-  '@img/sharp-linux-arm@0.35.4':
++  '@img/sharp-linux-arm@0.35.5':
+     optionalDependencies:
+-      '@img/sharp-libvips-linux-arm': 1.3.3
++      '@img/sharp-libvips-linux-arm': 1.3.4
+     optional: true
+ 
+-  '@img/sharp-linux-ppc64@0.35.4':
++  '@img/sharp-linux-ppc64@0.35.5':
+     optionalDependencies:
+-      '@img/sharp-libvips-linux-ppc64': 1.3.3
++      '@img/sharp-libvips-linux-ppc64': 1.3.4
+     optional: true
+ 
+-  '@img/sharp-linux-riscv64@0.35.4':
++  '@img/sharp-linux-riscv64@0.35.5':
+     optionalDependencies:
+-      '@img/sharp-libvips-linux-riscv64': 1.3.3
++      '@img/sharp-libvips-linux-riscv64': 1.3.4
+     optional: true
+ 
+-  '@img/sharp-linux-s390x@0.35.4':
++  '@img/sharp-linux-s390x@0.35.5':
+     optionalDependencies:
+-      '@img/sharp-libvips-linux-s390x': 1.3.3
++      '@img/sharp-libvips-linux-s390x': 1.3.4
+     optional: true
+ 
+-  '@img/sharp-linux-x64@0.35.4':
++  '@img/sharp-linux-x64@0.35.5':
+     optionalDependencies:
+-      '@img/sharp-libvips-linux-x64': 1.3.3
++      '@img/sharp-libvips-linux-x64': 1.3.4
+     optional: true
+ 
+-  '@img/sharp-linuxmusl-arm64@0.35.4':
++  '@img/sharp-linuxmusl-arm64@0.35.5':
+     optionalDependencies:
+-      '@img/sharp-libvips-linuxmusl-arm64': 1.3.3
++      '@img/sharp-libvips-linuxmusl-arm64': 1.3.4
+     optional: true
+ 
+-  '@img/sharp-linuxmusl-x64@0.35.4':
++  '@img/sharp-linuxmusl-x64@0.35.5':
+     optionalDependencies:
+-      '@img/sharp-libvips-linuxmusl-x64': 1.3.3
++      '@img/sharp-libvips-linuxmusl-x64': 1.3.4
+     optional: true
+ 
+-  '@img/sharp-wasm32@0.35.4':
++  '@img/sharp-wasm32@0.35.5':
+     dependencies:
+       '@emnapi/runtime': 1.11.3
+     optional: true
+ 
+-  '@img/sharp-webcontainers-wasm32@0.35.4':
++  '@img/sharp-webcontainers-wasm32@0.35.5':
+     dependencies:
+-      '@img/sharp-wasm32': 0.35.4
++      '@img/sharp-wasm32': 0.35.5
+     optional: true
+ 
+-  '@img/sharp-win32-arm64@0.35.4':
++  '@img/sharp-win32-arm64@0.35.5':
+     optional: true
+ 
+-  '@img/sharp-win32-ia32@0.35.4':
++  '@img/sharp-win32-ia32@0.35.5':
+     optional: true
+ 
+-  '@img/sharp-win32-x64@0.35.4':
++  '@img/sharp-win32-x64@0.35.5':
+     optional: true
+ 
+   '@isaacs/cliui@9.0.0': {}
+@@ -7552,7 +7550,7 @@ snapshots:
+ 
+   '@rollup/plugin-terser@1.0.0(rollup@4.63.1)':
+     dependencies:
+-      serialize-javascript: 7.1.1
++      serialize-javascript: 7.1.2
+       smob: 1.6.2
+       terser: 5.51.2
+     optionalDependencies:
+@@ -7853,7 +7851,7 @@ snapshots:
+   ajv@8.20.0:
+     dependencies:
+       fast-deep-equal: 3.1.3
+-      fast-uri: 3.1.3
++      fast-uri: 4.2.1
+       json-schema-traverse: 1.0.0
+       require-from-string: 2.0.2
+ 
+@@ -7933,7 +7931,7 @@ snapshots:
+       clsx: 2.1.1
+       common-ancestor-path: 2.0.0
+       cookie: 2.0.1
+-      devalue: 5.9.2
++      devalue: 6.0.2
+       diff: 9.0.0
+       dset: 3.1.4
+       es-module-lexer: 2.3.2
+@@ -7959,7 +7957,7 @@ snapshots:
+       picomatch: 4.0.7
+       semver: 7.8.5
+       shiki: 4.4.3
+-      smol-toml: 1.8.0
++      smol-toml: 1.9.0
+       svgo: 4.1.0
+       tinyclip: 0.1.15
+       tinyexec: 1.3.1
+@@ -7973,7 +7971,7 @@ snapshots:
+       yargs-parser: 22.0.0
+       zod: 4.5.4
+     optionalDependencies:
+-      sharp: 0.35.4(@types/node@26.1.1)
++      sharp: 0.35.5(@types/node@26.1.1)
+     transitivePeerDependencies:
+       - '@azure/app-configuration'
+       - '@azure/cosmos'
+@@ -8016,7 +8014,7 @@ snapshots:
+ 
+   autoprefixer@10.5.0(postcss@8.5.28):
+     dependencies:
+-      browserslist: 4.28.5
++      browserslist: 4.28.9
+       caniuse-lite: 1.0.30001803
+       fraction.js: 5.3.4
+       picocolors: 1.1.1
+@@ -8055,14 +8053,10 @@ snapshots:
+ 
+   bail@2.0.2: {}
+ 
+-  balanced-match@1.0.2: {}
+-
+   balanced-match@4.0.4: {}
+ 
+   base64-js@1.5.1: {}
+ 
+-  baseline-browser-mapping@2.10.43: {}
+-
+   baseline-browser-mapping@2.11.21: {}
+ 
+   bl@4.1.0:
+@@ -8073,14 +8067,9 @@ snapshots:
+ 
+   boolbase@1.0.0: {}
+ 
+-  brace-expansion@1.1.16:
++  brace-expansion@5.0.12:
+     dependencies:
+-      balanced-match: 1.0.2
+-      concat-map: 0.0.1
+-
+-  brace-expansion@2.1.4:
+-    dependencies:
+-      balanced-match: 1.0.2
++      balanced-match: 4.0.4
+ 
+   brace-expansion@5.0.9:
+     dependencies:
+@@ -8090,14 +8079,6 @@ snapshots:
+     dependencies:
+       fill-range: 7.1.1
+ 
+-  browserslist@4.28.5:
+-    dependencies:
+-      baseline-browser-mapping: 2.10.43
+-      caniuse-lite: 1.0.30001803
+-      electron-to-chromium: 1.5.389
+-      node-releases: 2.0.51
+-      update-browserslist-db: 1.2.3(browserslist@4.28.5)
+-
+   browserslist@4.28.9:
+     dependencies:
+       baseline-browser-mapping: 2.11.21
+@@ -8246,7 +8227,7 @@ snapshots:
+       glob: 7.2.3
+       inquirer: 8.2.5
+       is-utf8: 0.2.1
+-      lodash: 4.17.21
++      lodash: 4.18.1
+       minimist: 1.2.7
+       strip-bom: 4.0.0
+       strip-json-comments: 3.1.1
+@@ -8263,8 +8244,6 @@ snapshots:
+       array-ify: 1.0.0
+       dot-prop: 5.3.0
+ 
+-  concat-map@0.0.1: {}
+-
+   concat-stream@2.0.0:
+     dependencies:
+       buffer-from: 1.1.2
+@@ -8345,7 +8324,7 @@ snapshots:
+     dependencies:
+       conventional-commits-filter: 2.0.7
+       dateformat: 3.0.3
+-      handlebars: 4.7.9
++      handlebars: 4.7.10
+       json-stringify-safe: 5.0.1
+       lodash: 4.18.1
+       meow: 8.1.2
+@@ -8422,7 +8401,7 @@ snapshots:
+     dependencies:
+       env-paths: 2.2.1
+       import-fresh: 3.3.1
+-      js-yaml: 4.3.0
++      js-yaml: 4.3.2
+       parse-json: 5.2.0
+     optionalDependencies:
+       typescript: 7.0.2
+@@ -8450,12 +8429,12 @@ snapshots:
+   css-tree@2.2.1:
+     dependencies:
+       mdn-data: 2.0.28
+-      source-map-js: 1.2.1
++      source-map-js: 1.2.2
+ 
+   css-tree@3.2.1:
+     dependencies:
+       mdn-data: 2.27.1
+-      source-map-js: 1.2.1
++      source-map-js: 1.2.2
+ 
+   css-what@7.0.0: {}
+ 
+@@ -8554,7 +8533,7 @@ snapshots:
+ 
+   detect-node-es@1.1.0: {}
+ 
+-  devalue@5.9.2: {}
++  devalue@6.0.2: {}
+ 
+   devlop@1.1.0:
+     dependencies:
+@@ -8601,8 +8580,6 @@ snapshots:
+     dependencies:
+       jake: 10.9.4
+ 
+-  electron-to-chromium@1.5.389: {}
+-
+   electron-to-chromium@1.5.422: {}
+ 
+   emoji-regex@10.6.0: {}
+@@ -8762,7 +8739,7 @@ snapshots:
+     dependencies:
+       chardet: 0.7.0
+       iconv-lite: 0.4.24
+-      tmp: 0.0.33
++      tmp: 0.2.7
+ 
+   fast-deep-equal@3.1.3: {}
+ 
+@@ -8774,7 +8751,7 @@ snapshots:
+     dependencies:
+       fast-string-truncated-width: 3.0.3
+ 
+-  fast-uri@3.1.3: {}
++  fast-uri@4.2.1: {}
+ 
+   fast-wrap-ansi@0.2.2:
+     dependencies:
+@@ -9028,7 +9005,7 @@ snapshots:
+       ufo: 1.6.4
+       uncrypto: 0.1.3
+ 
+-  handlebars@4.7.9:
++  handlebars@4.7.10:
+     dependencies:
+       minimist: 1.2.8
+       neo-async: 2.6.2
+@@ -9137,7 +9114,7 @@ snapshots:
+       cli-width: 3.0.0
+       external-editor: 3.1.0
+       figures: 3.2.0
+-      lodash: 4.17.21
++      lodash: 4.18.1
+       mute-stream: 0.0.8
+       ora: 5.4.1
+       run-async: 2.4.1
+@@ -9325,10 +9302,6 @@ snapshots:
+ 
+   js-tokens@4.0.0: {}
+ 
+-  js-yaml@4.3.0:
+-    dependencies:
+-      argparse: 2.0.1
+-
+   js-yaml@4.3.2:
+     dependencies:
+       argparse: 2.0.1
+@@ -9462,8 +9435,6 @@ snapshots:
+ 
+   lodash.map@4.6.0: {}
+ 
+-  lodash@4.17.21: {}
+-
+   lodash@4.18.1: {}
+ 
+   log-symbols@4.1.0:
+@@ -9507,7 +9478,7 @@ snapshots:
+     dependencies:
+       '@babel/parser': 7.29.8
+       '@babel/types': 7.29.8
+-      source-map-js: 1.2.1
++      source-map-js: 1.2.2
+ 
+   map-obj@1.0.1: {}
+ 
+@@ -9577,15 +9548,15 @@ snapshots:
+ 
+   minimatch@10.2.6:
+     dependencies:
+-      brace-expansion: 5.0.9
++      brace-expansion: 5.0.12
+ 
+   minimatch@3.1.5:
+     dependencies:
+-      brace-expansion: 1.1.16
++      brace-expansion: 5.0.9
+ 
+   minimatch@5.1.9:
+     dependencies:
+-      brace-expansion: 2.1.4
++      brace-expansion: 5.0.12
+ 
+   minimist-options@4.1.0:
+     dependencies:
+@@ -9637,8 +9608,6 @@ snapshots:
+ 
+   node-mock-http@1.0.5: {}
+ 
+-  node-releases@2.0.51: {}
+-
+   node-releases@2.0.54: {}
+ 
+   normalize-package-data@2.5.0:
+@@ -9718,8 +9687,6 @@ snapshots:
+       strip-ansi: 6.0.1
+       wcwidth: 1.0.1
+ 
+-  os-tmpdir@1.0.2: {}
+-
+   own-keys@1.0.2:
+     dependencies:
+       call-bound: 1.0.4
+@@ -9829,12 +9796,12 @@ snapshots:
+ 
+   postcss-nesting@14.0.0(postcss@8.5.28):
+     dependencies:
+-      '@csstools/selector-resolve-nested': 4.0.0(postcss-selector-parser@7.1.4)
+-      '@csstools/selector-specificity': 6.0.0(postcss-selector-parser@7.1.4)
++      '@csstools/selector-resolve-nested': 4.0.0(postcss-selector-parser@7.1.6)
++      '@csstools/selector-specificity': 6.0.0(postcss-selector-parser@7.1.6)
+       postcss: 8.5.28
+-      postcss-selector-parser: 7.1.4
++      postcss-selector-parser: 7.1.6
+ 
+-  postcss-selector-parser@7.1.4:
++  postcss-selector-parser@7.1.6:
+     dependencies:
+       cssesc: 3.0.0
+       util-deprecate: 1.0.2
+@@ -9845,7 +9812,7 @@ snapshots:
+     dependencies:
+       nanoid: 3.3.18
+       picocolors: 1.1.1
+-      source-map-js: 1.2.1
++      source-map-js: 1.2.2
+ 
+   pretty-bytes@5.6.0: {}
+ 
+@@ -9945,7 +9912,7 @@ snapshots:
+       react: 19.2.7
+       react-dom: 19.2.7(react@19.2.7)
+ 
+-  react-icons@4.11.0(react@19.2.7):
++  react-icons@5.7.0(react@19.2.7):
+     dependencies:
+       react: 19.2.7
+ 
+@@ -10244,7 +10211,7 @@ snapshots:
+ 
+   semver@7.8.5: {}
+ 
+-  serialize-javascript@7.1.1: {}
++  serialize-javascript@7.1.2: {}
+ 
+   set-function-length@1.2.2:
+     dependencies:
+@@ -10268,37 +10235,37 @@ snapshots:
+       es-errors: 1.3.0
+       es-object-atoms: 1.1.2
+ 
+-  sharp@0.35.4(@types/node@26.1.1):
++  sharp@0.35.5(@types/node@26.1.1):
+     dependencies:
+       '@img/colour': 1.1.0
+       detect-libc: 2.1.2
+       semver: 7.8.5
+     optionalDependencies:
+-      '@img/sharp-darwin-arm64': 0.35.4
+-      '@img/sharp-darwin-x64': 0.35.4
+-      '@img/sharp-freebsd-wasm32': 0.35.4
+-      '@img/sharp-libvips-darwin-arm64': 1.3.3
+-      '@img/sharp-libvips-darwin-x64': 1.3.3
+-      '@img/sharp-libvips-linux-arm': 1.3.3
+-      '@img/sharp-libvips-linux-arm64': 1.3.3
+-      '@img/sharp-libvips-linux-ppc64': 1.3.3
+-      '@img/sharp-libvips-linux-riscv64': 1.3.3
+-      '@img/sharp-libvips-linux-s390x': 1.3.3
+-      '@img/sharp-libvips-linux-x64': 1.3.3
+-      '@img/sharp-libvips-linuxmusl-arm64': 1.3.3
+-      '@img/sharp-libvips-linuxmusl-x64': 1.3.3
+-      '@img/sharp-linux-arm': 0.35.4
+-      '@img/sharp-linux-arm64': 0.35.4
+-      '@img/sharp-linux-ppc64': 0.35.4
+-      '@img/sharp-linux-riscv64': 0.35.4
+-      '@img/sharp-linux-s390x': 0.35.4
+-      '@img/sharp-linux-x64': 0.35.4
+-      '@img/sharp-linuxmusl-arm64': 0.35.4
+-      '@img/sharp-linuxmusl-x64': 0.35.4
+-      '@img/sharp-webcontainers-wasm32': 0.35.4
+-      '@img/sharp-win32-arm64': 0.35.4
+-      '@img/sharp-win32-ia32': 0.35.4
+-      '@img/sharp-win32-x64': 0.35.4
++      '@img/sharp-darwin-arm64': 0.35.5
++      '@img/sharp-darwin-x64': 0.35.5
++      '@img/sharp-freebsd-wasm32': 0.35.5
++      '@img/sharp-libvips-darwin-arm64': 1.3.4
++      '@img/sharp-libvips-darwin-x64': 1.3.4
++      '@img/sharp-libvips-linux-arm': 1.3.4
++      '@img/sharp-libvips-linux-arm64': 1.3.4
++      '@img/sharp-libvips-linux-ppc64': 1.3.4
++      '@img/sharp-libvips-linux-riscv64': 1.3.4
++      '@img/sharp-libvips-linux-s390x': 1.3.4
++      '@img/sharp-libvips-linux-x64': 1.3.4
++      '@img/sharp-libvips-linuxmusl-arm64': 1.3.4
++      '@img/sharp-libvips-linuxmusl-x64': 1.3.4
++      '@img/sharp-linux-arm': 0.35.5
++      '@img/sharp-linux-arm64': 0.35.5
++      '@img/sharp-linux-ppc64': 0.35.5
++      '@img/sharp-linux-riscv64': 0.35.5
++      '@img/sharp-linux-s390x': 0.35.5
++      '@img/sharp-linux-x64': 0.35.5
++      '@img/sharp-linuxmusl-arm64': 0.35.5
++      '@img/sharp-linuxmusl-x64': 0.35.5
++      '@img/sharp-webcontainers-wasm32': 0.35.5
++      '@img/sharp-win32-arm64': 0.35.5
++      '@img/sharp-win32-ia32': 0.35.5
++      '@img/sharp-win32-x64': 0.35.5
+       '@types/node': 26.1.1
+     optional: true
+ 
+@@ -10367,9 +10334,9 @@ snapshots:
+ 
+   smob@1.6.2: {}
+ 
+-  smol-toml@1.8.0: {}
++  smol-toml@1.9.0: {}
+ 
+-  source-map-js@1.2.1: {}
++  source-map-js@1.2.2: {}
+ 
+   source-map-support@0.5.21:
+     dependencies:
+@@ -10590,9 +10557,7 @@ snapshots:
+       fdir: 6.5.0(picomatch@4.0.7)
+       picomatch: 4.0.7
+ 
+-  tmp@0.0.33:
+-    dependencies:
+-      os-tmpdir: 1.0.2
++  tmp@0.2.7: {}
+ 
+   to-regex-range@5.0.1:
+     dependencies:
+@@ -10763,12 +10728,6 @@ snapshots:
+ 
+   upath@1.2.0: {}
+ 
+-  update-browserslist-db@1.2.3(browserslist@4.28.5):
+-    dependencies:
+-      browserslist: 4.28.5
+-      escalade: 3.2.0
+-      picocolors: 1.1.1
+-
+   update-browserslist-db@1.3.2(browserslist@4.28.9):
+     dependencies:
+       browserslist: 4.28.9
+diff --git a/pnpm-workspace.yaml b/pnpm-workspace.yaml
+index 25a63fc..ecec2bf 100644
+--- a/pnpm-workspace.yaml
++++ b/pnpm-workspace.yaml
+@@ -1,4 +1,44 @@
+-saveExact: true
+ allowBuilds:
+   esbuild: true
+   sharp: true
++
++overrides:
++  baseline-browser-mapping@>=2.0.0 <2.11.0: '>=2.11.0'
++  brace-expansion@<1.1.17: '>=1.1.17'
++  brace-expansion@<1.1.18: '>=1.1.18'
++  brace-expansion@<1.1.19: '>=1.1.19'
++  brace-expansion@<1.1.20: '>=1.1.20'
++  brace-expansion@<1.1.21: '>=1.1.21'
++  brace-expansion@>=2.0.0 <2.1.5: '>=2.1.5'
++  brace-expansion@>=2.0.0 <2.1.6: '>=2.1.6'
++  brace-expansion@>=2.0.0 <2.1.7: '>=2.1.7'
++  brace-expansion@>=4.0.0 <5.0.10: '>=5.0.10'
++  brace-expansion@>=4.0.0 <5.0.11: '>=5.0.11'
++  brace-expansion@>=4.0.0 <5.0.12: '>=5.0.12'
++  browserslist@<=4.28.6: '>=4.28.7'
++  devalue@<=5.9.2: '>=5.9.3'
++  devalue@>=1.0.0 <=5.9.2: '>=5.9.3'
++  devalue@>=5.1.0 <=5.9.2: '>=5.9.3'
++  devalue@>=5.8.0 <=5.9.2: '>=5.9.3'
++  fast-uri@>=3.0.0 <3.1.5: '>=3.1.5'
++  fast-uri@>=3.0.0 <3.1.6: '>=3.1.6'
++  fast-uri@>=3.0.0 <3.1.7: '>=3.1.7'
++  fast-uri@>=3.0.0 <3.1.8: '>=3.1.8'
++  fast-uri@>=3.0.0 <=3.1.3: '>=3.1.4'
++  fast-uri@>=3.1.2 <3.1.6: '>=3.1.6'
++  fast-uri@>=3.1.3 <3.1.6: '>=3.1.6'
++  handlebars@>=4.0.0 <=4.7.9: '>=4.7.10'
++  js-yaml@>=4.0.0 <4.3.1: '>=4.3.1'
++  js-yaml@>=4.0.0 <4.3.2: '>=4.3.2'
++  lodash@<=4.17.23: '>=4.18.0'
++  lodash@>=4.0.0 <=4.17.22: '>=4.17.23'
++  lodash@>=4.0.0 <=4.17.23: '>=4.18.0'
++  postcss-selector-parser@<7.1.6: '>=7.1.6'
++  serialize-javascript@>=7.1.1 <7.1.2: '>=7.1.2'
++  sharp@<0.35.5: '>=0.35.5'
++  smol-toml@<=1.8.0: '>=1.9.0'
++  source-map-js@>=1.0.0 <1.2.2: '>=1.2.2'
++  tmp@<0.2.6: '>=0.2.6'
++  tmp@<=0.2.3: '>=0.2.4'
++
++saveExact: true
+diff --git a/src/components/about.astro b/src/components/about.astro
+index 1a19956..3751e47 100644
+--- a/src/components/about.astro
++++ b/src/components/about.astro
+@@ -11,11 +11,11 @@ const paragraphs = [
+     title: 'Free by design',
+   },
+   {
+-    body: `Explore ${count} carefully selected sounds from nature, familiar places, color noise, and focused listening tools.`,
++    body: `Choose from ${count} sounds, from rain and birds to a fireplace and café. Recordings are hosted here with individual credits.`,
+     title: 'Carefully curated',
+   },
+   {
+-    body: 'Layer rain with a distant train, birds with a stream, or anything else you imagine. Every mix is yours to tune.',
++    body: 'Layer recordings and white, pink or brown noise, then adjust each level. Your preferences stay in this browser.',
+     title: 'Make it your own',
+   },
+   {
+diff --git a/src/components/app/app.tsx b/src/components/app/app.tsx
+index c0f1477..1173594 100644
+--- a/src/components/app/app.tsx
++++ b/src/components/app/app.tsx
+@@ -1,6 +1,6 @@
+ import { useMemo, useEffect } from 'react';
+ import { useShallow } from 'zustand/react/shallow';
+-import { BiSolidHeart } from 'react-icons/bi/index';
++import { BiSolidHeart } from 'react-icons/bi';
+ import { Howler } from 'howler';
+ 
+ import { useSoundStore } from '@/stores/sound';
+diff --git a/src/components/buttons/play/play.tsx b/src/components/buttons/play/play.tsx
+index 7dc30ff..7c76b5a 100644
+--- a/src/components/buttons/play/play.tsx
++++ b/src/components/buttons/play/play.tsx
+@@ -1,5 +1,5 @@
+ import { useCallback, useEffect } from 'react';
+-import { BiPause, BiPlay } from 'react-icons/bi/index';
++import { BiPause, BiPlay } from 'react-icons/bi';
+ import { useHotkeys } from 'react-hotkeys-hook';
+ 
+ import { useSoundStore } from '@/stores/sound';
+diff --git a/src/components/buttons/save/save.tsx b/src/components/buttons/save/save.tsx
+index fe403b8..7865502 100644
+--- a/src/components/buttons/save/save.tsx
++++ b/src/components/buttons/save/save.tsx
+@@ -1,4 +1,4 @@
+-import { BiSave } from 'react-icons/bi/index';
++import { BiSave } from 'react-icons/bi';
+ import { AnimatePresence, motion } from 'motion/react';
+ import type { Variants } from 'motion/react';
+ 
+diff --git a/src/components/buttons/unselect/unselect.tsx b/src/components/buttons/unselect/unselect.tsx
+index 1c45435..32f0a36 100644
+--- a/src/components/buttons/unselect/unselect.tsx
++++ b/src/components/buttons/unselect/unselect.tsx
+@@ -1,5 +1,5 @@
+ import { useCallback } from 'react';
+-import { BiUndo, BiTrash } from 'react-icons/bi/index';
++import { BiUndo, BiTrash } from 'react-icons/bi';
+ import { AnimatePresence, motion } from 'motion/react';
+ import type { Variants } from 'motion/react';
+ import { useHotkeys } from 'react-hotkeys-hook';
+diff --git a/src/components/categories/category-icons/category-icons.tsx b/src/components/categories/category-icons/category-icons.tsx
+index 2f63aa7..a6f150f 100644
+--- a/src/components/categories/category-icons/category-icons.tsx
++++ b/src/components/categories/category-icons/category-icons.tsx
+@@ -1,6 +1,6 @@
+ import { sounds } from '@/data/sounds';
+ import { useEffect, useMemo, useRef, useState } from 'react';
+-import { BiSearch } from 'react-icons/bi/index';
++import { BiSearch } from 'react-icons/bi';
+ 
+ import styles from './category-icons.module.css';
+ 
+diff --git a/src/components/checkbox/checkbox.tsx b/src/components/checkbox/checkbox.tsx
+index 6ee4419..0cde687 100644
+--- a/src/components/checkbox/checkbox.tsx
++++ b/src/components/checkbox/checkbox.tsx
+@@ -1,5 +1,5 @@
+ import { Checkbox as RadixCheckbox } from 'radix-ui';
+-import { FaCheck } from 'react-icons/fa6/index';
++import { FaCheck } from 'react-icons/fa6';
+ 
+ import styles from './checkbox.module.css';
+ 
+diff --git a/src/components/features/features.tsx b/src/components/features/features.tsx
+index 092829d..ea83adb 100644
+--- a/src/components/features/features.tsx
++++ b/src/components/features/features.tsx
+@@ -1,6 +1,6 @@
+-import { BiMoney, BiUserCircle, BiLogoGithub } from 'react-icons/bi/index';
+-import { BsSoundwave, BsStars } from 'react-icons/bs/index';
+-import { RxMixerHorizontal } from 'react-icons/rx/index';
++import { BiMoney, BiUserCircle, BiLogoGithub } from 'react-icons/bi';
++import { BsSoundwave, BsStars } from 'react-icons/bs';
++import { RxMixerHorizontal } from 'react-icons/rx';
+ 
+ import { Balancer } from 'react-wrap-balancer';
+ 
+@@ -27,7 +27,7 @@ export function Features() {
+     },
+     {
+       Icon: BsSoundwave,
+-      body: `Explore ${count} unique soundscapes, from rainforests to cityscapes.`,
++      body: `Explore ${count} locally generated noise sounds.`,
+       id: 'diverse-sounds',
+       label: 'Diverse Sounds',
+     },
+diff --git a/src/components/hero.astro b/src/components/hero.astro
+index f956be6..67e853f 100644
+--- a/src/components/hero.astro
++++ b/src/components/hero.astro
+@@ -1,5 +1,5 @@
+ ---
+-import { BsSoundwave } from 'react-icons/bs/index';
++import { BsSoundwave } from 'react-icons/bs';
+ 
+ import { Container } from './container';
+ 
+@@ -10,7 +10,7 @@ const count = soundCount();
+ 
+ <div class="hero">
+   <div aria-hidden="true" class="background">
+-    <img alt="" src="/images/hero-background.webp" />
++    <img alt="" src="/apps/moodist/images/hero-background.webp" />
+   </div>
+ 
+   <Container>
+@@ -21,7 +21,7 @@ const count = soundCount();
+           aria-hidden="true"
+           class="logo"
+           height={44}
+-          src="/logo.svg"
++          src="/apps/moodist/logo.svg"
+           width={44}
+         />
+       </div>
+@@ -29,7 +29,8 @@ const count = soundCount();
+       <h1 class="title">
+         Ambient Sounds<br />For Focus and Calm
+       </h1>
+-      <p class="desc">Free and open-source.</p>
++      <p class="desc"><span lang="en">Mix rain, birds, waves or a café with adjustable background noise.</span><br /><span lang="es">Mezclá lluvia, pájaros, olas o una cafetería con ruido de fondo ajustable.</span></p>
++      <p class="desc"><a href="https://utilibre.org/" rel="noreferrer">Utilibre</a> · <a href="https://tools.utilibre.org/utilibre-source/moodist-utilibre.tar.gz" rel="noreferrer">Source / Código</a> · <a href="/apps/moodist/sounds/RECORDING-CREDITS.txt">Sound credits / Créditos</a></p>
+ 
+       <p class="sounds">
+         <span aria-hidden="true" class="icon">
+@@ -145,6 +146,8 @@ const count = soundCount();
+       font-size: var(--font-sm);
+       line-height: 1.4;
+       color: var(--color-on-image-subtle);
++
++      & a { color: inherit; text-underline-offset: 0.2em; }
+     }
+ 
+     & .sounds {
+diff --git a/src/components/media-controls/media-session-track.tsx b/src/components/media-controls/media-session-track.tsx
+index c17bdf2..c443785 100644
+--- a/src/components/media-controls/media-session-track.tsx
++++ b/src/components/media-controls/media-session-track.tsx
+@@ -19,7 +19,7 @@ export function MediaSessionTrack() {
+   const play = useSoundStore(state => state.play);
+   const pause = useSoundStore(state => state.pause);
+   const masterAudioSoundRef = useRef<HTMLAudioElement>(null);
+-  const artworkURL = isDarkTheme ? '/logo-dark.png' : '/logo-light.png';
++  const artworkURL = isDarkTheme ? '/apps/moodist/logo-dark.png' : '/apps/moodist/logo-light.png';
+ 
+   useEffect(() => {
+     if (!isBrowser || !isPlaying) return;
+@@ -92,7 +92,7 @@ export function MediaSessionTrack() {
+       id="media-session-track"
+       loop
+       ref={masterAudioSoundRef}
+-      src="/sounds/silence.wav"
++      src="/apps/moodist/sounds/silence.wav"
+     />
+   );
+ }
+diff --git a/src/components/modal/modal.tsx b/src/components/modal/modal.tsx
+index 6fbfd0e..14b51fd 100644
+--- a/src/components/modal/modal.tsx
++++ b/src/components/modal/modal.tsx
+@@ -1,6 +1,6 @@
+ import { useEffect } from 'react';
+ import { AnimatePresence, motion } from 'motion/react';
+-import { IoClose } from 'react-icons/io5/index';
++import { IoClose } from 'react-icons/io5';
+ import FocusTrap from 'focus-trap-react';
+ 
+ import { Portal } from '@/components/portal';
+diff --git a/src/components/modals/binaural/binaural.tsx b/src/components/modals/binaural/binaural.tsx
+index e8149da..cb34ce1 100644
+--- a/src/components/modals/binaural/binaural.tsx
++++ b/src/components/modals/binaural/binaural.tsx
+@@ -105,7 +105,7 @@ export function BinauralModal({ onClose, show }: BinauralProps) {
+   };
+ 
+   const stopSound = useCallback(() => {
+-    if (!isPlaying) return;
++    if (!isPlaying || !audioContextRef.current || audioContextRef.current.state === 'closed') return;
+ 
+     leftOscillatorRef.current?.stop();
+     rightOscillatorRef.current?.stop();
+diff --git a/src/components/modals/isochronic/isochronic.tsx b/src/components/modals/isochronic/isochronic.tsx
+index 5d0ff05..9eeab4b 100644
+--- a/src/components/modals/isochronic/isochronic.tsx
++++ b/src/components/modals/isochronic/isochronic.tsx
+@@ -95,7 +95,7 @@ export function IsochronicModal({ onClose, show }: IsochronicProps) {
+   };
+ 
+   const stopSound = useCallback(() => {
+-    if (!isPlaying) return;
++    if (!isPlaying || !audioContextRef.current || audioContextRef.current.state === 'closed') return;
+ 
+     oscillatorRef.current?.stop();
+     modulatorRef.current?.stop();
+diff --git a/src/components/modals/presets/list/list.tsx b/src/components/modals/presets/list/list.tsx
+index ab5b1df..16bc6b3 100644
+--- a/src/components/modals/presets/list/list.tsx
++++ b/src/components/modals/presets/list/list.tsx
+@@ -1,4 +1,4 @@
+-import { FaPlay, FaRegTrashAlt } from 'react-icons/fa/index';
++import { FaPlay, FaRegTrashAlt } from 'react-icons/fa';
+ 
+ import styles from './list.module.css';
+ 
+diff --git a/src/components/modals/radio/radio.tsx b/src/components/modals/radio/radio.tsx
+index c138926..951f83c 100644
+--- a/src/components/modals/radio/radio.tsx
++++ b/src/components/modals/radio/radio.tsx
+@@ -6,7 +6,7 @@ import {
+   LuPause,
+   LuPlay,
+   LuRadio,
+-} from 'react-icons/lu/index';
++} from 'react-icons/lu';
+ 
+ import {
+   Modal,
+diff --git a/src/components/modals/share-link/share-link.tsx b/src/components/modals/share-link/share-link.tsx
+index 74345f6..4e99d32 100644
+--- a/src/components/modals/share-link/share-link.tsx
++++ b/src/components/modals/share-link/share-link.tsx
+@@ -1,5 +1,5 @@
+ import { useMemo, useEffect, useState } from 'react';
+-import { IoCopyOutline, IoCheckmark } from 'react-icons/io5/index';
++import { IoCopyOutline, IoCheckmark } from 'react-icons/io5';
+ 
+ import {
+   Modal,
+@@ -45,11 +45,11 @@ export function ShareLinkModal({ onClose, show }: ShareLinkModalProps) {
+ 
+   const url = useMemo(() => {
+     if (!isMounted)
+-      return `https://moodist.app/?share=${encodeURIComponent(string)}`;
++      return `https://tools.utilibre.org/apps/moodist/?share=${encodeURIComponent(string)}`;
+ 
+     return `${window.location.protocol}//${
+       window.location.host
+-    }/?share=${encodeURIComponent(string)}`;
++    }${import.meta.env.BASE_URL}?share=${encodeURIComponent(string)}`;
+   }, [string, isMounted]);
+ 
+   useEffect(() => setIsMounted(true), []);
+diff --git a/src/components/shuffle/shuffle.tsx b/src/components/shuffle/shuffle.tsx
+index 8e07524..c156a38 100644
+--- a/src/components/shuffle/shuffle.tsx
++++ b/src/components/shuffle/shuffle.tsx
+@@ -1,4 +1,4 @@
+-import { BiShuffle } from 'react-icons/bi/index';
++import { BiShuffle } from 'react-icons/bi';
+ 
+ import { Tooltip } from '@/components/tooltip';
+ import { useSoundStore } from '@/stores/sound';
+diff --git a/src/components/sound-search/sound-search.tsx b/src/components/sound-search/sound-search.tsx
+index 0fc5829..e101e4f 100644
+--- a/src/components/sound-search/sound-search.tsx
++++ b/src/components/sound-search/sound-search.tsx
+@@ -1,6 +1,6 @@
+ import { useCallback, useEffect, useState } from 'react';
+ import { Command } from 'cmdk';
+-import { BiCheck, BiSearch } from 'react-icons/bi/index';
++import { BiCheck, BiSearch } from 'react-icons/bi';
+ 
+ import { OPEN_SOUND_SEARCH } from '@/constants/events';
+ import { sounds as soundCatalog } from '@/data/sounds';
+diff --git a/src/components/sounds/sound/favorite/favorite.tsx b/src/components/sounds/sound/favorite/favorite.tsx
+index 326f21f..4100221 100644
+--- a/src/components/sounds/sound/favorite/favorite.tsx
++++ b/src/components/sounds/sound/favorite/favorite.tsx
+@@ -1,6 +1,6 @@
+ import { useRef } from 'react';
+ import { flushSync } from 'react-dom';
+-import { BiHeart, BiSolidHeart } from 'react-icons/bi/index';
++import { BiHeart, BiSolidHeart } from 'react-icons/bi';
+ import { AnimatePresence, motion } from 'motion/react';
+ 
+ import { useSoundStore } from '@/stores/sound';
+diff --git a/src/components/sounds/sound/sound.tsx b/src/components/sounds/sound/sound.tsx
+index 834e7d1..01c2b20 100644
+--- a/src/components/sounds/sound/sound.tsx
++++ b/src/components/sounds/sound/sound.tsx
+@@ -1,6 +1,6 @@
+ import { useCallback, useEffect, forwardRef, useMemo } from 'react';
+-import { ImSpinner9 } from 'react-icons/im/index';
+-import { TbWaveSine } from 'react-icons/tb/index';
++import { ImSpinner9 } from 'react-icons/im';
++import { TbWaveSine } from 'react-icons/tb';
+ 
+ import { Range } from './range';
+ import { Favorite } from './favorite';
+diff --git a/src/components/source.astro b/src/components/source.astro
+index d7c7246..84e8245 100644
+--- a/src/components/source.astro
++++ b/src/components/source.astro
+@@ -1,5 +1,5 @@
+ ---
+-import { FaGithub } from 'react-icons/fa/index';
++import { FaGithub } from 'react-icons/fa';
+ 
+ import { Binary } from './binary';
+ import { Container } from './container';
+diff --git a/src/components/starter-mixes/starter-mixes.tsx b/src/components/starter-mixes/starter-mixes.tsx
+index fefb134..997e84d 100644
+--- a/src/components/starter-mixes/starter-mixes.tsx
++++ b/src/components/starter-mixes/starter-mixes.tsx
+@@ -1,6 +1,6 @@
+ import { useCallback, useState } from 'react';
+-import { BiPlay } from 'react-icons/bi/index';
+-import { RiPlayListFill } from 'react-icons/ri/index';
++import { BiPlay } from 'react-icons/bi';
++import { RiPlayListFill } from 'react-icons/ri';
+ import { Popover } from 'radix-ui';
+ 
+ import { usePresetStore } from '@/stores/preset';
+@@ -16,18 +16,28 @@ const starterMixes: Array<{
+ }> = [
+   {
+     name: 'Deep focus',
+-    description: 'Brown noise · Light rain',
+-    sounds: { 'brown-noise': 0.5, 'light-rain': 0.35 },
++    description: 'Brown noise · Pink noise',
++    sounds: { 'brown-noise': 0.5, 'pink-noise': 0.35 },
+   },
+   {
+     name: 'Rainy café',
+-    description: 'Café · Rain on window',
+-    sounds: { cafe: 0.75, 'rain-on-window': 0.15 },
++    description: 'Rain · Coffee Shop',
++    sounds: { rain: 0.35, 'coffee-shop': 0.2 },
+   },
+   {
+-    name: 'Slow evening',
+-    description: 'Waves · Campfire',
+-    sounds: { waves: 0.5, campfire: 0.35 },
++    name: 'Forest stream',
++    description: 'Stream · Forest Birds',
++    sounds: { stream: 0.3, birds: 0.2 },
++  },
++  {
++    name: 'By the fire',
++    description: 'Fireplace · Rain',
++    sounds: { fireplace: 0.3, rain: 0.15 },
++  },
++  {
++    name: 'Seaside',
++    description: 'Ocean Waves · Wind',
++    sounds: { waves: 0.3, wind: 0.15 },
+   },
+ ];
+ 
+diff --git a/src/components/toolbar/menu/item/item.tsx b/src/components/toolbar/menu/item/item.tsx
+index 3568920..b23de3c 100644
+--- a/src/components/toolbar/menu/item/item.tsx
++++ b/src/components/toolbar/menu/item/item.tsx
+@@ -1,4 +1,4 @@
+-import { FiExternalLink } from 'react-icons/fi/index';
++import { FiExternalLink } from 'react-icons/fi';
+ import { DropdownMenu } from 'radix-ui';
+ 
+ import styles from './item.module.css';
+diff --git a/src/components/toolbar/menu/items/binaural.tsx b/src/components/toolbar/menu/items/binaural.tsx
+index cd75f3c..c75843f 100644
+--- a/src/components/toolbar/menu/items/binaural.tsx
++++ b/src/components/toolbar/menu/items/binaural.tsx
+@@ -1,4 +1,4 @@
+-import { FaHeadphonesAlt } from 'react-icons/fa/index';
++import { FaHeadphonesAlt } from 'react-icons/fa';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/breathing-exercise.tsx b/src/components/toolbar/menu/items/breathing-exercise.tsx
+index 5695afb..e5c7ccf 100644
+--- a/src/components/toolbar/menu/items/breathing-exercise.tsx
++++ b/src/components/toolbar/menu/items/breathing-exercise.tsx
+@@ -1,4 +1,4 @@
+-import { IoMdFlower } from 'react-icons/io/index';
++import { IoMdFlower } from 'react-icons/io';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/countdown.tsx b/src/components/toolbar/menu/items/countdown.tsx
+index cd3b1a6..761510d 100644
+--- a/src/components/toolbar/menu/items/countdown.tsx
++++ b/src/components/toolbar/menu/items/countdown.tsx
+@@ -1,4 +1,4 @@
+-import { MdOutlineTimer } from 'react-icons/md/index';
++import { MdOutlineTimer } from 'react-icons/md';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/donate.tsx b/src/components/toolbar/menu/items/donate.tsx
+index ee21235..a84f51e 100644
+--- a/src/components/toolbar/menu/items/donate.tsx
++++ b/src/components/toolbar/menu/items/donate.tsx
+@@ -1,4 +1,4 @@
+-import { SiBuymeacoffee } from 'react-icons/si/index';
++import { SiBuymeacoffee } from 'react-icons/si';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/flowmodoro.tsx b/src/components/toolbar/menu/items/flowmodoro.tsx
+index 006ba61..c7217af 100644
+--- a/src/components/toolbar/menu/items/flowmodoro.tsx
++++ b/src/components/toolbar/menu/items/flowmodoro.tsx
+@@ -1,4 +1,4 @@
+-import { TbClockUp } from 'react-icons/tb/index';
++import { TbClockUp } from 'react-icons/tb';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/isochronic.tsx b/src/components/toolbar/menu/items/isochronic.tsx
+index 71427ac..a99e00c 100644
+--- a/src/components/toolbar/menu/items/isochronic.tsx
++++ b/src/components/toolbar/menu/items/isochronic.tsx
+@@ -1,4 +1,4 @@
+-import { TbWaveSine } from 'react-icons/tb/index';
++import { TbWaveSine } from 'react-icons/tb';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/lofi.tsx b/src/components/toolbar/menu/items/lofi.tsx
+index ea9d9ab..3568bc6 100644
+--- a/src/components/toolbar/menu/items/lofi.tsx
++++ b/src/components/toolbar/menu/items/lofi.tsx
+@@ -1,4 +1,4 @@
+-import { IoIosMusicalNote } from 'react-icons/io/index';
++import { IoIosMusicalNote } from 'react-icons/io';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/notepad.tsx b/src/components/toolbar/menu/items/notepad.tsx
+index ef0ff39..f5bbc5d 100644
+--- a/src/components/toolbar/menu/items/notepad.tsx
++++ b/src/components/toolbar/menu/items/notepad.tsx
+@@ -1,4 +1,4 @@
+-import { MdNotes } from 'react-icons/md/index';
++import { MdNotes } from 'react-icons/md';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/pomodoro.tsx b/src/components/toolbar/menu/items/pomodoro.tsx
+index 43473b5..2e63753 100644
+--- a/src/components/toolbar/menu/items/pomodoro.tsx
++++ b/src/components/toolbar/menu/items/pomodoro.tsx
+@@ -1,4 +1,4 @@
+-import { MdOutlineAvTimer } from 'react-icons/md/index';
++import { MdOutlineAvTimer } from 'react-icons/md';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/presets.tsx b/src/components/toolbar/menu/items/presets.tsx
+index a78b17d..0c04b8d 100644
+--- a/src/components/toolbar/menu/items/presets.tsx
++++ b/src/components/toolbar/menu/items/presets.tsx
+@@ -1,4 +1,4 @@
+-import { RiPlayListFill } from 'react-icons/ri/index';
++import { RiPlayListFill } from 'react-icons/ri';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/radio.tsx b/src/components/toolbar/menu/items/radio.tsx
+index 42e709e..98fd87b 100644
+--- a/src/components/toolbar/menu/items/radio.tsx
++++ b/src/components/toolbar/menu/items/radio.tsx
+@@ -1,4 +1,4 @@
+-import { LuRadioTower } from 'react-icons/lu/index';
++import { LuRadioTower } from 'react-icons/lu';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/settings.tsx b/src/components/toolbar/menu/items/settings.tsx
+index 97d4990..d587205 100644
+--- a/src/components/toolbar/menu/items/settings.tsx
++++ b/src/components/toolbar/menu/items/settings.tsx
+@@ -1,4 +1,4 @@
+-import { IoSettingsSharp } from 'react-icons/io5/index';
++import { IoSettingsSharp } from 'react-icons/io5';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/share.tsx b/src/components/toolbar/menu/items/share.tsx
+index 7bda116..c3d36e6 100644
+--- a/src/components/toolbar/menu/items/share.tsx
++++ b/src/components/toolbar/menu/items/share.tsx
+@@ -1,4 +1,4 @@
+-import { IoShareSocialSharp } from 'react-icons/io5/index';
++import { IoShareSocialSharp } from 'react-icons/io5';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/shortcuts.tsx b/src/components/toolbar/menu/items/shortcuts.tsx
+index fc9f4e1..efa7347 100644
+--- a/src/components/toolbar/menu/items/shortcuts.tsx
++++ b/src/components/toolbar/menu/items/shortcuts.tsx
+@@ -1,4 +1,4 @@
+-import { MdKeyboardCommandKey } from 'react-icons/md/index';
++import { MdKeyboardCommandKey } from 'react-icons/md';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/shuffle.tsx b/src/components/toolbar/menu/items/shuffle.tsx
+index 722853d..89b6b08 100644
+--- a/src/components/toolbar/menu/items/shuffle.tsx
++++ b/src/components/toolbar/menu/items/shuffle.tsx
+@@ -1,4 +1,4 @@
+-import { BiShuffle } from 'react-icons/bi/index';
++import { BiShuffle } from 'react-icons/bi';
+ 
+ import { useSoundStore } from '@/stores/sound';
+ 
+diff --git a/src/components/toolbar/menu/items/sleep-timer.tsx b/src/components/toolbar/menu/items/sleep-timer.tsx
+index 0ecfa9b..a5f3414 100644
+--- a/src/components/toolbar/menu/items/sleep-timer.tsx
++++ b/src/components/toolbar/menu/items/sleep-timer.tsx
+@@ -1,4 +1,4 @@
+-import { IoMoonSharp } from 'react-icons/io5/index';
++import { IoMoonSharp } from 'react-icons/io5';
+ 
+ import { useSleepTimerStore } from '@/stores/sleep-timer';
+ import { Item } from '../item';
+diff --git a/src/components/toolbar/menu/items/source.tsx b/src/components/toolbar/menu/items/source.tsx
+index 668fcde..da47108 100644
+--- a/src/components/toolbar/menu/items/source.tsx
++++ b/src/components/toolbar/menu/items/source.tsx
+@@ -1,4 +1,4 @@
+-import { LuGithub } from 'react-icons/lu/index';
++import { LuGithub } from 'react-icons/lu';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/theme.tsx b/src/components/toolbar/menu/items/theme.tsx
+index cc945cf..b930a20 100644
+--- a/src/components/toolbar/menu/items/theme.tsx
++++ b/src/components/toolbar/menu/items/theme.tsx
+@@ -1,5 +1,5 @@
+ import { useEffect, useState } from 'react';
+-import { LuLaptop, LuMoon, LuSun } from 'react-icons/lu/index';
++import { LuLaptop, LuMoon, LuSun } from 'react-icons/lu';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/items/todo.tsx b/src/components/toolbar/menu/items/todo.tsx
+index f2dbc1e..74acda9 100644
+--- a/src/components/toolbar/menu/items/todo.tsx
++++ b/src/components/toolbar/menu/items/todo.tsx
+@@ -1,4 +1,4 @@
+-import { MdTaskAlt } from 'react-icons/md/index';
++import { MdTaskAlt } from 'react-icons/md';
+ 
+ import { Item } from '../item';
+ 
+diff --git a/src/components/toolbar/menu/menu.tsx b/src/components/toolbar/menu/menu.tsx
+index b9ae2e2..60ee496 100644
+--- a/src/components/toolbar/menu/menu.tsx
++++ b/src/components/toolbar/menu/menu.tsx
+@@ -1,5 +1,5 @@
+ import { useState, useMemo, useCallback, useEffect } from 'react';
+-import { IoMenu, IoClose } from 'react-icons/io5/index';
++import { IoMenu, IoClose } from 'react-icons/io5';
+ import { DropdownMenu } from 'radix-ui';
+ import { useHotkeys } from 'react-hotkeys-hook';
+ import { AnimatePresence, motion } from 'motion/react';
+@@ -22,8 +22,6 @@ import {
+   CountdownItem,
+   BinauralItem,
+   IsochronicItem,
+-  LofiItem,
+-  RadioItem,
+ } from './items';
+ import { Divider } from './divider';
+ import { ShareLinkModal } from '@/components/modals/share-link';
+@@ -34,8 +32,6 @@ import { SettingsModal } from '@/components/modals/settings';
+ import { BreathingExerciseModal } from '@/components/modals/breathing';
+ import { BinauralModal } from '@/components/modals/binaural';
+ import { IsochronicModal } from '@/components/modals/isochronic';
+-import { LofiModal } from '@/components/modals/lofi';
+-import { RadioModal } from '@/components/modals/radio';
+ import {
+   Pomodoro,
+   Flowmodoro,
+@@ -56,7 +52,6 @@ import { OPEN_PRESETS } from '@/constants/events';
+ 
+ export function Menu() {
+   const [isOpen, setIsOpen] = useState(false);
+-  const [radioPlaying, setRadioPlaying] = useState(false);
+ 
+   const noSelected = useSoundStore(state => state.noSelected());
+ 
+@@ -169,11 +164,6 @@ export function Menu() {
+                     <Divider />
+                     <BinauralItem open={() => open('binaural')} />
+                     <IsochronicItem open={() => open('isochronic')} />
+-                    <LofiItem open={() => open('lofi')} />
+-                    <RadioItem
+-                      active={radioPlaying}
+-                      open={() => open('radio')}
+-                    />
+ 
+                     <Divider />
+                     <SettingsItem open={() => open('settings')} />
+@@ -227,12 +217,6 @@ export function Menu() {
+         show={modals.isochronic}
+         onClose={() => close('isochronic')}
+       />
+-      <LofiModal show={modals.lofi} onClose={() => close('lofi')} />
+-      <RadioModal
+-        show={modals.radio}
+-        onClose={() => close('radio')}
+-        onPlayingChange={setRadioPlaying}
+-      />
+     </>
+   );
+ }
+diff --git a/src/components/toolbar/scroll-to-top/scroll-to-top.tsx b/src/components/toolbar/scroll-to-top/scroll-to-top.tsx
+index 0aec2ee..9d115e6 100644
+--- a/src/components/toolbar/scroll-to-top/scroll-to-top.tsx
++++ b/src/components/toolbar/scroll-to-top/scroll-to-top.tsx
+@@ -1,5 +1,5 @@
+ import { useState, useEffect } from 'react';
+-import { BiUpArrowAlt } from 'react-icons/bi/index';
++import { BiUpArrowAlt } from 'react-icons/bi';
+ import { motion } from 'motion/react';
+ 
+ import { mix, fade, slideY } from '@/lib/motion';
+diff --git a/src/components/toolbox/countdown/countdown.tsx b/src/components/toolbox/countdown/countdown.tsx
+index bcbdea3..5aabed8 100644
+--- a/src/components/toolbox/countdown/countdown.tsx
++++ b/src/components/toolbox/countdown/countdown.tsx
+@@ -30,7 +30,7 @@ export function Countdown({ onClose, show }: CountdownProps) {
+   const [isFormVisible, setIsFormVisible] = useState(true);
+   const alarmVolume = useSettingsStore(state => state.alarmVolume);
+ 
+-  const alarm = useSoundEffect('/sounds/alarm.mp3', alarmVolume);
++  const alarm = useSoundEffect('/apps/moodist/sounds/alarm.wav', alarmVolume);
+ 
+   useEffect(() => {
+     let timer: NodeJS.Timeout;
+diff --git a/src/components/toolbox/flowmodoro/flowmodoro.tsx b/src/components/toolbox/flowmodoro/flowmodoro.tsx
+index 00f2964..32d4bb1 100644
+--- a/src/components/toolbox/flowmodoro/flowmodoro.tsx
++++ b/src/components/toolbox/flowmodoro/flowmodoro.tsx
+@@ -1,6 +1,6 @@
+ import { useState, useEffect, useMemo } from 'react';
+-import { FaUndo, FaPlay, FaPause, FaCheck } from 'react-icons/fa/index';
+-import { IoMdSettings } from 'react-icons/io/index';
++import { FaUndo, FaPlay, FaPause, FaCheck } from 'react-icons/fa';
++import { IoMdSettings } from 'react-icons/io';
+ 
+ import { Modal } from '@/components/modal';
+ import { Button } from '../generics/button';
+@@ -35,7 +35,7 @@ export function Flowmodoro({ onClose, open, show }: FlowmodoroProps) {
+   const timer = selectedTab === 'break' ? breakSeconds : focusSeconds;
+   const alarmVolume = useSettingsStore(state => state.alarmVolume);
+ 
+-  const alarm = useSoundEffect('/sounds/alarm.mp3', alarmVolume);
++  const alarm = useSoundEffect('/apps/moodist/sounds/alarm.wav', alarmVolume);
+ 
+   const defaultBreakPercentage = useMemo(() => ({ break: 20 }), []);
+ 
+diff --git a/src/components/toolbox/notepad/notepad.tsx b/src/components/toolbox/notepad/notepad.tsx
+index 42dcd67..5118e6e 100644
+--- a/src/components/toolbox/notepad/notepad.tsx
++++ b/src/components/toolbox/notepad/notepad.tsx
+@@ -1,8 +1,8 @@
+ import { useRef, useEffect } from 'react';
+-import { BiTrash } from 'react-icons/bi/index';
+-import { LuCopy, LuDownload } from 'react-icons/lu/index';
+-import { FaCheck } from 'react-icons/fa6/index';
+-import { FaUndo } from 'react-icons/fa/index';
++import { BiTrash } from 'react-icons/bi';
++import { LuCopy, LuDownload } from 'react-icons/lu';
++import { FaCheck } from 'react-icons/fa6';
++import { FaUndo } from 'react-icons/fa';
+ 
+ import { Modal, ModalHeader, ModalTitle } from '@/components/modal';
+ import { Button } from './button';
+diff --git a/src/components/toolbox/pomodoro/pomodoro.tsx b/src/components/toolbox/pomodoro/pomodoro.tsx
+index e9ea8b1..0166dcf 100644
+--- a/src/components/toolbox/pomodoro/pomodoro.tsx
++++ b/src/components/toolbox/pomodoro/pomodoro.tsx
+@@ -1,6 +1,6 @@
+ import { useState, useEffect, useRef, useMemo } from 'react';
+-import { FaUndo, FaPlay, FaPause } from 'react-icons/fa/index';
+-import { IoMdSettings } from 'react-icons/io/index';
++import { FaUndo, FaPlay, FaPause } from 'react-icons/fa';
++import { IoMdSettings } from 'react-icons/io';
+ 
+ import { Modal, ModalHeader, ModalTitle } from '@/components/modal';
+ import { Button } from '../generics/button';
+@@ -34,7 +34,7 @@ export function Pomodoro({ onClose, open, show }: PomodoroProps) {
+   const interval = useRef<ReturnType<typeof setInterval> | null>(null);
+   const alarmVolume = useSettingsStore(state => state.alarmVolume);
+ 
+-  const alarm = useSoundEffect('/sounds/alarm.mp3', alarmVolume);
++  const alarm = useSoundEffect('/apps/moodist/sounds/alarm.wav', alarmVolume);
+ 
+   const defaultTimes = useMemo(
+     () => ({
+diff --git a/src/components/toolbox/todo/todos/todo/todo.tsx b/src/components/toolbox/todo/todos/todo/todo.tsx
+index bba2513..b5d9e41 100644
+--- a/src/components/toolbox/todo/todos/todo/todo.tsx
++++ b/src/components/toolbox/todo/todos/todo/todo.tsx
+@@ -1,4 +1,4 @@
+-import { FaRegTrashAlt } from 'react-icons/fa/index';
++import { FaRegTrashAlt } from 'react-icons/fa';
+ 
+ import { Checkbox } from '@/components/checkbox';
+ 
+diff --git a/src/data/sounds.ts b/src/data/sounds.ts
+index a4ed984..3333556 100644
+--- a/src/data/sounds.ts
++++ b/src/data/sounds.ts
+@@ -1,16 +1,4 @@
+-import { nature } from './sounds/nature';
+-import { rain } from './sounds/rain';
+-import { animals } from './sounds/animals';
+-import { urban } from './sounds/urban';
+-import { places } from './sounds/places';
+-import { transport } from './sounds/transport';
+-import { things } from './sounds/things';
+ import { noise } from './sounds/noise';
+-
++import { weather, outdoors, everyday } from './sounds/curated';
+ import type { Categories } from './types';
+-
+-export const sounds: {
+-  categories: Categories;
+-} = {
+-  categories: [nature, rain, animals, urban, places, transport, things, noise],
+-};
++export const sounds: {categories: Categories} = {categories: [weather, outdoors, everyday, noise]};
+diff --git a/src/data/sounds/animals.tsx b/src/data/sounds/animals.tsx
+index c248930..4ebf823 100644
+--- a/src/data/sounds/animals.tsx
++++ b/src/data/sounds/animals.tsx
+@@ -9,15 +9,15 @@ import {
+   GiChicken,
+   GiCow,
+   GiSheep,
+-} from 'react-icons/gi/index';
++} from 'react-icons/gi';
+ import {
+   FaDog,
+   FaFrog,
+   FaHorseHead,
+   FaCat,
+   FaCrow,
+-} from 'react-icons/fa/index';
+-import { PiBirdFill, PiDogBold } from 'react-icons/pi/index';
++} from 'react-icons/fa';
++import { PiBirdFill, PiDogBold } from 'react-icons/pi';
+ 
+ import type { Category } from '../types';
+ 
+diff --git a/src/data/sounds/binaural.tsx b/src/data/sounds/binaural.tsx
+index b30c33e..7002d83 100644
+--- a/src/data/sounds/binaural.tsx
++++ b/src/data/sounds/binaural.tsx
+@@ -1,5 +1,5 @@
+-import { TbWaveSine } from 'react-icons/tb/index';
+-import { BsSoundwave } from 'react-icons/bs/index';
++import { TbWaveSine } from 'react-icons/tb';
++import { BsSoundwave } from 'react-icons/bs';
+ 
+ import type { Category } from '../types';
+ 
+diff --git a/src/data/sounds/nature.tsx b/src/data/sounds/nature.tsx
+index e3d5b8d..cef471e 100644
+--- a/src/data/sounds/nature.tsx
++++ b/src/data/sounds/nature.tsx
+@@ -1,13 +1,13 @@
+-import { GiWaterfall, GiStonePile } from 'react-icons/gi/index';
+-import { BsFire, BsFillDropletFill } from 'react-icons/bs/index';
+-import { BiSolidTree, BiWater } from 'react-icons/bi/index';
++import { GiWaterfall, GiStonePile } from 'react-icons/gi';
++import { BsFire, BsFillDropletFill } from 'react-icons/bs';
++import { BiSolidTree, BiWater } from 'react-icons/bi';
+ import {
+   FaWater,
+   FaWind,
+   FaLeaf,
+   FaRegSnowflake,
+   FaTree,
+-} from 'react-icons/fa/index';
++} from 'react-icons/fa';
+ 
+ import type { Category } from '../types';
+ 
+diff --git a/src/data/sounds/noise.tsx b/src/data/sounds/noise.tsx
+index e0e7f39..3b07118 100644
+--- a/src/data/sounds/noise.tsx
++++ b/src/data/sounds/noise.tsx
+@@ -1,5 +1,5 @@
+-import { GiSoundWaves } from 'react-icons/gi/index';
+-import { BsSoundwave } from 'react-icons/bs/index';
++import { GiSoundWaves } from 'react-icons/gi';
++import { BsSoundwave } from 'react-icons/bs';
+ 
+ import type { Category } from '../types';
+ 
+diff --git a/src/data/sounds/places.tsx b/src/data/sounds/places.tsx
+index c63ed2b..9f67283 100644
+--- a/src/data/sounds/places.tsx
++++ b/src/data/sounds/places.tsx
+@@ -2,19 +2,19 @@ import {
+   BiSolidCoffeeAlt,
+   BiSolidPlaneAlt,
+   BiSolidDryer,
+-} from 'react-icons/bi/index';
+-import { FaChurch, FaSubway, FaShoppingBasket } from 'react-icons/fa/index';
+-import { TbScubaMask, TbBeerFilled } from 'react-icons/tb/index';
+-import { GiVillage, GiCarousel } from 'react-icons/gi/index';
++} from 'react-icons/bi';
++import { FaChurch, FaSubway, FaShoppingBasket } from 'react-icons/fa';
++import { TbScubaMask, TbBeerFilled } from 'react-icons/tb';
++import { GiVillage, GiCarousel } from 'react-icons/gi';
+ import {
+   MdTempleBuddhist,
+   MdConstruction,
+   MdLocationPin,
+-} from 'react-icons/md/index';
+-import { HiOfficeBuilding } from 'react-icons/hi/index';
+-import { AiFillExperiment } from 'react-icons/ai/index';
+-import { IoRestaurant } from 'react-icons/io5/index';
+-import { FaBookOpen } from 'react-icons/fa6/index';
++} from 'react-icons/md';
++import { HiOfficeBuilding } from 'react-icons/hi';
++import { AiFillExperiment } from 'react-icons/ai';
++import { IoRestaurant } from 'react-icons/io5';
++import { FaBookOpen } from 'react-icons/fa6';
+ 
+ import type { Category } from '../types';
+ 
+diff --git a/src/data/sounds/rain.tsx b/src/data/sounds/rain.tsx
+index 1276ef6..41bba23 100644
+--- a/src/data/sounds/rain.tsx
++++ b/src/data/sounds/rain.tsx
+@@ -2,11 +2,11 @@ import {
+   BsFillCloudRainFill,
+   BsFillCloudRainHeavyFill,
+   BsUmbrellaFill,
+-} from 'react-icons/bs/index';
+-import { GiWindow } from 'react-icons/gi/index';
+-import { FaLeaf, FaCarSide } from 'react-icons/fa/index';
+-import { PiTentFill } from 'react-icons/pi/index';
+-import { MdOutlineThunderstorm } from 'react-icons/md/index';
++} from 'react-icons/bs';
++import { GiWindow } from 'react-icons/gi';
++import { FaLeaf, FaCarSide } from 'react-icons/fa';
++import { PiTentFill } from 'react-icons/pi';
++import { MdOutlineThunderstorm } from 'react-icons/md';
+ 
+ import type { Category } from '../types';
+ 
+diff --git a/src/data/sounds/things.tsx b/src/data/sounds/things.tsx
+index 3b58b2f..45c70f9 100644
+--- a/src/data/sounds/things.tsx
++++ b/src/data/sounds/things.tsx
+@@ -2,15 +2,15 @@ import {
+   GiWindchimes,
+   GiFilmProjector,
+   GiWashingMachine,
+-} from 'react-icons/gi/index';
+-import { BsFillKeyboardFill } from 'react-icons/bs/index';
+-import { FaKeyboard, FaClock, FaFan } from 'react-icons/fa/index';
+-import { MdSmartToy, MdWaterDrop, MdRadio } from 'react-icons/md/index';
+-import { TbBowlFilled, TbWiper } from 'react-icons/tb/index';
+-import { RiFilePaper2Fill, RiBubbleChartFill } from 'react-icons/ri/index';
+-import { BiSolidDryer } from 'react-icons/bi/index';
+-import { IoIosRadio } from 'react-icons/io/index';
+-import { PiVinylRecord } from 'react-icons/pi/index';
++} from 'react-icons/gi';
++import { BsFillKeyboardFill } from 'react-icons/bs';
++import { FaKeyboard, FaClock, FaFan } from 'react-icons/fa';
++import { MdSmartToy, MdWaterDrop, MdRadio } from 'react-icons/md';
++import { TbBowlFilled, TbWiper } from 'react-icons/tb';
++import { RiFilePaper2Fill, RiBubbleChartFill } from 'react-icons/ri';
++import { BiSolidDryer } from 'react-icons/bi';
++import { IoIosRadio } from 'react-icons/io';
++import { PiVinylRecord } from 'react-icons/pi';
+ 
+ import type { Category } from '../types';
+ 
+diff --git a/src/data/sounds/transport.tsx b/src/data/sounds/transport.tsx
+index 62d2579..0039723 100644
+--- a/src/data/sounds/transport.tsx
++++ b/src/data/sounds/transport.tsx
+@@ -1,7 +1,7 @@
+-import { BiSolidTrain, BiSolidPlaneAlt } from 'react-icons/bi/index';
+-import { FaCarSide } from 'react-icons/fa/index';
+-import { GiSubmarine, GiSailboat } from 'react-icons/gi/index';
+-import { TbSailboat } from 'react-icons/tb/index';
++import { BiSolidTrain, BiSolidPlaneAlt } from 'react-icons/bi';
++import { FaCarSide } from 'react-icons/fa';
++import { GiSubmarine, GiSailboat } from 'react-icons/gi';
++import { TbSailboat } from 'react-icons/tb';
+ 
+ import type { Category } from '../types';
+ 
+diff --git a/src/data/sounds/urban.tsx b/src/data/sounds/urban.tsx
+index 142745e..accc130 100644
+--- a/src/data/sounds/urban.tsx
++++ b/src/data/sounds/urban.tsx
+@@ -1,8 +1,8 @@
+-import { BiSolidTraffic } from 'react-icons/bi/index';
+-import { FaCity, FaRoad } from 'react-icons/fa/index';
+-import { PiRoadHorizonFill, PiSirenBold } from 'react-icons/pi/index';
+-import { BsSoundwave, BsPeopleFill } from 'react-icons/bs/index';
+-import { RiSparkling2Fill } from 'react-icons/ri/index';
++import { BiSolidTraffic } from 'react-icons/bi';
++import { FaCity, FaRoad } from 'react-icons/fa';
++import { PiRoadHorizonFill, PiSirenBold } from 'react-icons/pi';
++import { BsSoundwave, BsPeopleFill } from 'react-icons/bs';
++import { RiSparkling2Fill } from 'react-icons/ri';
+ 
+ import type { Category } from '../types';
+ 
+diff --git a/src/layouts/layout.astro b/src/layouts/layout.astro
+index 0ef975d..a809787 100644
+--- a/src/layouts/layout.astro
++++ b/src/layouts/layout.astro
+@@ -1,6 +1,6 @@
+ ---
+ import { pwaInfo } from 'virtual:pwa-info'; // eslint-disable-line
+-import { Font } from 'astro:assets';
++
+ 
+ import { Reload } from '@/components/reload';
+ 
+@@ -23,6 +23,9 @@ const description =
+ <html lang="en">
+   <head>
+     <meta charset="UTF-8" />
++    <meta name="robots" content="noindex, nofollow" />
++    <meta name="referrer" content="no-referrer" />
++    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self' blob: data:; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+     <meta content="width=device-width" name="viewport" />
+     <meta content={Astro.generator} name="generator" />
+     <meta content="#18181b" name="theme-color" />
+@@ -46,10 +49,7 @@ const description =
+           ?.setAttribute('content', theme === 'dark' ? '#18181b' : '#fafafa');
+       })();
+     </script>
+-    <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+-    <Font cssVariable="--font-inter" preload={[{ weight: 400 }]} />
+-    <Font cssVariable="--font-inter-tight" />
+-    <Font cssVariable="--font-fraunces" preload />
++    <link href="/apps/moodist/favicon.svg" rel="icon" type="image/svg+xml" />
+ 
+     <title>{title}</title>
+     <meta content={title} name="title" />
+@@ -58,9 +58,9 @@ const description =
+     <meta content={title} property="og:title" />
+     <meta content={description} property="og:description" />
+     <meta content="Moodist" property="og:site_name" />
+-    <meta content="https://moodist.app" property="og:url" />
++    <meta content="https://tools.utilibre.org/apps/moodist/" property="og:url" />
+     <meta content="website" property="og:type" />
+-    <meta content="https://moodist.app/og.png" property="og:image" />
++    <meta content="https://tools.utilibre.org/apps/moodist/og.png" property="og:image" />
+ 
+     <meta content="summary_large_image" name="twitter:card" />
+ 
+diff --git a/src/styles/global.css b/src/styles/global.css
+index 328c94e..5dbbfd1 100644
+--- a/src/styles/global.css
++++ b/src/styles/global.css
+@@ -1,2 +1,4 @@
+ @import 'variables/index.css';
+ @import 'base/base.css';
++
++:root { --font-inter: Arial; --font-inter-tight: Arial; --font-fraunces: Georgia; }
+diff --git a/src/data/sounds/curated.tsx b/src/data/sounds/curated.tsx
+new file mode 100644
+index 0000000..67d9a83
+--- /dev/null
++++ b/src/data/sounds/curated.tsx
+@@ -0,0 +1,33 @@
++// Individually credited, checksum-pinned recordings; see sounds/RECORDING-CREDITS.txt.
++import { BsCloudRain, BsCloudLightningRain, BsFire, BsMoonStars } from 'react-icons/bs';
++import { FaWater, FaWind, FaTree, FaTrain, FaCoffee } from 'react-icons/fa';
++import { PiBirdFill } from 'react-icons/pi';
++import type { Category } from '../types';
++import { getAssetPath } from '@/helpers/path';
++
++const audio = (file: string) => getAssetPath(`/sounds/recordings/${file}.ogg`);
++export const weather: Category = {
++  id: 'rain', title: 'Weather', icon: <BsCloudRain />,
++  sounds: [
++    { id: 'rain', label: 'Rain', icon: <BsCloudRain />, src: audio('rain') },
++    { id: 'storm', label: 'Thunderstorm', icon: <BsCloudLightningRain />, src: audio('storm') },
++  ],
++};
++export const outdoors: Category = {
++  id: 'nature', title: 'Nature', icon: <FaTree />,
++  sounds: [
++    { id: 'birds', label: 'Forest Birds', icon: <PiBirdFill />, src: audio('birds') },
++    { id: 'stream', label: 'Stream', icon: <FaWater />, src: audio('stream') },
++    { id: 'waves', label: 'Ocean Waves', icon: <FaWater />, src: audio('waves') },
++    { id: 'wind', label: 'Wind', icon: <FaWind />, src: audio('wind') },
++    { id: 'summer-night', label: 'Summer Night', icon: <BsMoonStars />, src: audio('summer-night') },
++    { id: 'fireplace', label: 'Fireplace', icon: <BsFire />, src: audio('fireplace') },
++  ],
++};
++export const everyday: Category = {
++  id: 'places', title: 'Everyday sounds', icon: <FaCoffee />,
++  sounds: [
++    { id: 'coffee-shop', label: 'Coffee Shop', icon: <FaCoffee />, src: audio('coffee-shop') },
++    { id: 'train', label: 'Train', icon: <FaTrain />, src: audio('train') },
++  ],
++};

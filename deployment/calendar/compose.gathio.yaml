@@ -1,0 +1,89 @@
+name: utilibre-gathio
+x-bounded: &bounded
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  logging:
+    driver: json-file
+    options: {max-size: 5m, max-file: '2'}
+services:
+  postgres:
+    <<: *bounded
+    image: utilibre-gathio-documentdb:17.11-0.107.0
+    user: '999:999'
+    cpus: 1.0
+    mem_limit: 768m
+    tmpfs: ['/tmp:size=64m,mode=1777', '/var/run/postgresql:size=4m,uid=999,gid=999,mode=0700']
+    environment:
+      POSTGRES_USER: gathio
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/app-password
+    command: [postgres, -c, shared_buffers=128MB, -c, max_connections=50, -c, log_statement=none, -c, log_min_messages=warning, -c, cron.log_run=off, -c, cron.log_statement=off]
+    volumes:
+      - /opt/utilibre/calendar-data/gathio-postgres:/var/lib/postgresql/data
+      - /opt/utilibre/calendar-private/gathio-app-password:/run/secrets/app-password:ro
+    networks: [backend]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U gathio -d postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 6
+  ferretdb:
+    <<: *bounded
+    image: ghcr.io/ferretdb/ferretdb:2.7.0@sha256:5706414241eb84f0515512c37b46db0f1b1eac9e5ceb7e4c2523211c184b1985
+    cpus: 0.5
+    mem_limit: 256m
+    tmpfs: ['/state:size=4m,mode=1777']
+    env_file: /opt/utilibre/calendar-private/gathio-ferretdb.env
+    environment:
+      FERRETDB_TELEMETRY: disable
+      FERRETDB_STATE_DIR: /state
+      FERRETDB_LOG_LEVEL: warn
+    networks:
+      backend:
+        aliases: [mongo]
+    depends_on:
+      postgres: {condition: service_healthy}
+  gathio:
+    <<: *bounded
+    image: utilibre-gathio:1.6.7-p1
+    user: '1000:1000'
+    cpus: 1.0
+    mem_limit: 512m
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    env_file: /opt/utilibre/calendar-private/gathio.env
+    volumes:
+      - ./gathio/config.toml:/srv/gathio/config/config.toml:ro
+      - ./gathio/data-notes.md:/srv/gathio/static/data-notes.md:ro
+      - /opt/utilibre/calendar-data/gathio-images:/srv/gathio/public/events
+    networks: [backend]
+    depends_on:
+      ferretdb: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+  gateway:
+    <<: *bounded
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    cpus: 0.25
+    mem_limit: 64m
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    ports: ['10.10.1.43:3198:8080']
+    volumes: ['./gathio/nginx.conf:/etc/nginx/nginx.conf:ro']
+    networks: [backend, edge]
+    depends_on:
+      gathio: {condition: service_healthy}
+networks:
+  backend:
+    internal: true
+    ipam:
+      config: [{subnet: 172.29.116.0/24}]
+  edge:
+    ipam:
+      config: [{subnet: 172.29.117.0/24}]

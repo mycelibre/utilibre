@@ -1,0 +1,98 @@
+# Native pinned Vikunja 2.7.0 configuration. Secret values use *_FILE below.
+service:
+  publicurl: https://tasks.utilibre.org/
+  interface: ':3456'
+  rootpath: /app/vikunja/
+  enableregistration: false
+  enablelinksharing: true
+  enablepublicteams: false
+  enableemailreminders: false
+  enableuserdeletion: true
+  maxitemsperpage: 50
+  maxavatarsize: 512
+  motd: 'Utilibre · https://utilibre.org — External avatars and email reminders are unavailable. / Los avatares externos y los recordatorios por correo no están disponibles.'
+  timeZone: UTC
+  ipextractionmethod: direct
+auth:
+  local:
+    enabled: false
+  openid:
+    enabled: true
+    providers:
+      utilibre:
+        name: Utilibre
+        authurl: https://auth.utilibre.org/application/o/vikunja/
+        clientid: utilibre-vikunja
+        scope: openid email profile
+        emailfallback: false
+        usernamefallback: false
+database:
+  type: sqlite
+  path: /data/vikunja.db
+  maxopenconnections: 10
+  maxidleconnections: 5
+files:
+  basepath: /data/files
+  maxsize: 10MB
+sentry:
+  enabled: false
+  frontendenabled: false
+  dsn: ''
+  frontenddsn: ''
+metrics:
+  enabled: false
+  pprof: false
+mailer:
+  enabled: false
+backgrounds:
+  enabled: true
+  providers:
+    upload:
+      enabled: true
+    unsplash:
+      enabled: false
+avatar:
+  # Native provider URL override; no email hashes are sent to Gravatar.
+  # The local gateway always returns404 here. The unavailable choice is disclosed.
+  gravatarbaseurl: http://gateway:8080/disabled-avatar-provider
+defaultsettings:
+  avatar_provider: initials
+  discoverable_by_name: false
+  discoverable_by_email: false
+  email_reminders_enabled: false
+  overdue_tasks_reminders_enabled: false
+  timezone: UTC
+webhooks:
+  enabled: false
+migration:
+  todoist:
+    enable: false
+  trello:
+    enable: false
+  microsofttodo:
+    enable: false
+  vikunjafile:
+    maxsize: 20MB
+    maxfiles: 1000
+    maxuserstorage: 100MB
+log:
+  enabled: true
+  standard: stdout
+  level: WARNING
+  http: 'off'
+  database: 'off'
+  events: 'off'
+  mail: 'off'
+ratelimit:
+  enabled: true
+  kind: user
+  period: 60
+  limit: 600
+  store: memory
+  noauthlimit: 100
+  tokenrefreshlimit: 60
+  basicauthlimit: 60
+cors:
+  enable: false
+license:
+  key: ''

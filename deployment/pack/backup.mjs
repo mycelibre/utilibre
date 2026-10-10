@@ -4,6 +4,7 @@ import {execFileSync, spawn} from 'node:child_process';
 import {mkdir, access, writeFile, statfs} from 'node:fs/promises';
 import {pipeline} from 'node:stream/promises';
 import {once} from 'node:events';
+import {backupWallabag} from './wallabag/backup.mjs';
 process.umask(0o077);
 const root='/opt/utilibre/pack-backups', keyRoot='/opt/utilibre/pack-backup-key';
 await mkdir(root,{recursive:true,mode:0o700});
@@ -31,8 +32,18 @@ const pad='utilibre-pack-cryptpad-cryptpad-1';
 execFileSync('docker',['pause',pad],{stdio:'ignore'});
 try { await encrypt('cryptpad.tar.gz.cms','tar',['-czf','-','-C','/opt/utilibre/pack-data/cryptpad','blob','block','data','datastore']); }
 finally { execFileSync('docker',['unpause',pad],{stdio:'ignore'}); }
-await encrypt('private-config.tar.gz.cms','tar',['-czf','-','-C','/opt/utilibre','pack-secrets','pack-data/galene','-C','/home/ubuntu/freetools','deployment/pack']);
+// Keep the native relay identity/certificate renewal state with the meeting
+// configuration. Optional before TURN is installed; never regenerate over it.
+const relayPaths=await exists('/opt/utilibre/pack-data/galene-turn/settings.json')
+  ? ['pack-data/galene-turn'] : [];
+const acmePaths=await exists('/etc/letsencrypt/renewal/turn.utilibre.org.conf')
+  ? ['-C','/','etc/letsencrypt'] : [];
+await encrypt('private-config.tar.gz.cms','tar',['-czf','-','-C','/opt/utilibre','pack-secrets','pack-data/galene',...relayPaths,'-C','/home/ubuntu/freetools','deployment/pack','.env','secrets','config','compose.yaml',...acmePaths]);
 const names=['forms.dump.cms','forms-files.tar.gz.cms','cryptpad.tar.gz.cms','private-config.tar.gz.cms'];
+if(await exists('/opt/utilibre/pack-data/wallabag/db/wallabag.sqlite')) {
+  await backupWallabag(`${target}/wallabag.sqlite.cms`);
+  names.push('wallabag.sqlite.cms');
+}
 await writeFile(`${target}/SHA256SUMS`,execFileSync('sha256sum',names,{cwd:target}),{mode:0o600,flag:'wx'});
 await writeFile(`${target}/COMPLETE`,'Local encrypted snapshot; restore verification is separate.\n',{mode:0o600,flag:'wx'});
 console.log(target);

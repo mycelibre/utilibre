@@ -1,0 +1,3 @@
+# Pinned wheel hashes from official PyPI; dependencies stay in the pinned base image.
+gunicorn==26.2.0 --hash=sha256:bd249d0b3f7972f7432f0a6b6ff3b3ee2d129f70cd1ff6c09a9dd9e29a2b88e3
+aiosmtpd==1.4.6 --hash=sha256:72c99179ba5aa9ae0abbda6994668239b64a5ce054471955fe75f581d2592475

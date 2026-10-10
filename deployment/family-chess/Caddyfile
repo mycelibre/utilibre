@@ -1,0 +1,15 @@
+# Merge into the edge configuration after the native deployment checks pass.
+chess.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3214 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+        flush_interval -1
+    }
+}

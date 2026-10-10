@@ -1,0 +1,50 @@
+--- a/index.html
++++ b/index.html
+@@ -2,6 +2,7 @@
+ <html lang="en">
+ <head>
+ <meta charset="UTF-8">
++<meta name="robots" content="noindex,follow"><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; media-src 'none'; worker-src 'none'">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Knitting Pattern Viewer</title>
+ <style>
+@@ -133,9 +134,11 @@
+ div.row.highlight p.details {
+   display: block;
+ }
++#utilibre-note {position:fixed;bottom:0;left:0;right:0;z-index:5;box-sizing:border-box;background:#232323;padding:8px;font:12px/1.4 system-ui;color:#eee;max-height:45vh;overflow:auto} #utilibre-note a{color:#93e0e3} #utilibre-note summary{cursor:pointer} #utilibre-note p{max-width:75ch;margin:8px auto} #inputs{max-height:calc(100vh - 310px)} #patternContainer{height:calc(100vh - 310px)}
+ </style>
+ </head>
+ <body>
++<aside id="utilibre-note"><a href="https://utilibre.org/en/">More tools from Utilibre</a> · <a href="https://utilibre.org/es/">Más herramientas</a> · <a href="LICENSE.txt">Licence / Licencia</a><details><summary>Save your pattern / Guardá tu patrón</summary><p lang="en">Bookmark or copy this page’s full URL to keep the pattern settings and current row. The fragment after # stays in your browser; sharing it shares that state. Row timings are not saved. No pattern account or server backup. Controls are in English.</p><p lang="es">Guardá en favoritos o copiá la URL completa para conservar los ajustes y la fila actual. El fragmento después de # queda en tu navegador; compartirlo comparte ese estado. Los tiempos por fila no se guardan. No hay cuenta ni respaldo de patrones en el servidor. Los controles están en inglés.</p><a href="https://tools.utilibre.org/utilibre-source/knit-utilibre.tar.gz">Modified source / Código modificado</a></details></aside>
+ 
+ <script type=module src="knit.js"></script>
+ </body>
+--- a/src/knit.ts
++++ b/src/knit.ts
+@@ -94,14 +94,14 @@
+     this.configurationInputChanged();
+     this.stateChange.notify();
+     this.renderPattern();
+-    this.patternCanvasView.selectRow(this.pattern, this.currentRow);
++    this.selectRow(this.currentRow);
+   }
+ 
+   private setupUI(): void {
+     new ControlButton(
+         null, '📖', 'About this software',
+         () => {
+-          window.open('http://github.com/alefore/knit', '_blank');
++          window.open('https://github.com/alefore/knit', '_blank', 'noopener,noreferrer');
+         })
+         .appendHtml(this.buttonsForm)
+         .setVisibility(this.configuringStateChange, () => this.configuring);
+@@ -218,7 +218,7 @@
+         document.getElementById('patternContainer') as HTMLElement;
+     Array.from(container.children)
+         .forEach(child => child.classList.remove('highlight'));
+-    const rowData = this.pattern!.rows[this.currentRow];
++    const rowData = this.pattern?.rows[this.currentRow];
+     if (rowData) rowData.visit();
+     const selectedRow = container.children[this.currentRow] as HTMLElement;
+     if (selectedRow) {

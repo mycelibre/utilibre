@@ -1,0 +1,8 @@
+[Unit]
+Description=Daily Utilibre KitchenOwl backup
+[Timer]
+OnCalendar=*-*-* 06:05:00 UTC
+RandomizedDelaySec=600
+Persistent=true
+[Install]
+WantedBy=timers.target

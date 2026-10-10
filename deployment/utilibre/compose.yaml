@@ -177,6 +177,13 @@ services:
       PHP_TZ: ${TZ:-America/Guatemala}
     volumes:
       - ./config/privatebin/conf.php:/srv/cfg/conf.php:ro
+      - ./config/privatebin/bootstrap5-utilibre.php:/srv/tpl/bootstrap5-utilibre.php:ro
+      - ./config/privatebin/robots.txt:/var/www/robots.txt:ro
+      - ./config/privatebin/manifest.json:/var/www/manifest.json:ro
+      - ./config/privatebin/brand:/var/www/utilibre-brand:ro
+      - ./config/privatebin/brand/favicon.ico:/var/www/favicon.ico:ro
+      - ./config/privatebin/discovery-server.conf:/etc/nginx/server.d/utilibre-discovery.conf:ro
+      - ./config/privatebin/discovery-location.conf:/etc/nginx/location.d/utilibre-discovery.conf:ro
       - ./data/privatebin:/srv/data
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777

@@ -21,7 +21,16 @@ services:
     <<: *runtime
     image: utilibre-binternet-gateway:9bb70ef-p1
     user: "101:101"
+    entrypoint: ["/bin/sh", "/usr/local/bin/binternet-onion-start.sh"]
+    stop_signal: SIGQUIT
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "--max-time", "5", "--unix-socket", "/run/onion/http.sock", "http://localhost/"]
+      interval: 30s
+      timeout: 6s
+      retries: 3
+      start_period: 10s
     volumes:
+      - ./binternet-onion-start.sh:/usr/local/bin/binternet-onion-start.sh:ro
       - ./binternet-onion-gateway.conf:/etc/nginx/nginx.conf:ro
       - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
       - /opt/utilibre/community-data/binternet-onion-socket:/run/onion

@@ -1,0 +1,42 @@
+name: utilibre-13ft
+x-limits: &limits
+  restart: "no"
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 48
+  logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
+services:
+  app:
+    <<: *limits
+    image: utilibre-13ft:0.5.0-public1
+    cpus: 1
+    mem_limit: 256m
+    tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']
+    dns: [127.0.0.1]
+    sysctls: {net.ipv6.conf.all.disable_ipv6: '1'}
+    networks: {isolated: {ipv4_address: 172.29.118.10}}
+  proxy:
+    <<: *limits
+    image: utilibre-public-egress:7.7
+    cpus: 0.5
+    mem_limit: 192m
+    tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']
+    volumes: ['./squid.conf:/etc/squid/squid.conf:ro']
+    dns: [1.1.1.1, 9.9.9.9]
+    sysctls: {net.ipv6.conf.all.disable_ipv6: '1'}
+    networks: {isolated: {ipv4_address: 172.29.118.20}, egress: {ipv4_address: 172.29.119.20}}
+  gateway:
+    <<: *limits
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    cpus: 0.25
+    mem_limit: 64m
+    tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']
+    volumes: ['./nginx.conf:/etc/nginx/nginx.conf:ro']
+    ports: ['127.0.0.1:3207:8080', '10.10.1.43:3207:8080']
+    networks: {isolated: {ipv4_address: 172.29.118.30}, egress: {ipv4_address: 172.29.119.30}}
+networks:
+  isolated: {internal: true, enable_ipv6: false, ipam: {config: [{subnet: 172.29.118.0/24}]}}
+  egress: {enable_ipv6: false, ipam: {config: [{subnet: 172.29.119.0/24}]}}

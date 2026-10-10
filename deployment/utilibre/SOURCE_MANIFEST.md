@@ -15,3 +15,10 @@ Deployment glue consists of `compose.yaml`, the PostgreSQL initialization
 script, the PrivateBin configuration, and operator scripts/docs. The retained
 RSSHub image is upstream and no longer includes Utilibre's former public-origin
 patch.
+
+PrivateBin retains the exact upstream 2.0.6 image. Its native custom-template
+configuration now uses the reproducible homepage discovery adaptation under
+`privatebin-discovery/`, with generated template and local brand assets under
+`config/privatebin/`. The integration archive includes this source and the
+one-file upstream template patch; no encryption or storage implementation was
+modified. The original template remains available for rollback.

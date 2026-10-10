@@ -1,0 +1,14 @@
+[
+  {
+    "file": "jsQR-APACHE-2.0.txt",
+    "url": "https://raw.githubusercontent.com/cozmo/jsQR/master/LICENSE",
+    "sha256": "c6596eb7be8581c18be736c846fb9173b69eccf6ef94c5135893ec56bd92ba08",
+    "reviewedOn": "2026-10-09"
+  },
+  {
+    "file": "qrcode-generator-MIT.txt",
+    "url": "https://raw.githubusercontent.com/kazuhikoarase/qrcode-generator/master/LICENSE",
+    "sha256": "3a850fa5f08101db6f40676c2786e10bd2cd5fff7b12ffdf1e0c434d4e49d90c",
+    "reviewedOn": "2026-10-09"
+  }
+]

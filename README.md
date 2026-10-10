@@ -8,30 +8,21 @@ or paid tiers.
 
 ## Tools
 
-- Search: **SearXNG, 4get, DeGoog**.
-- Readers: **Redlib, Priviblur, Mezzo, AnonymousOverflow, GotHub,
-  Binternet, BiblioReads, Kittygram, SafeTwitch**.
-- Feeds: **FreshRSS, RSS-Bridge**.
-- Files and everyday work: **BentoPDF** (including OCR), **VERT, OmniTools,
-  IT Tools, hat.sh, draw.io, Mini QR, QR Tools, TransLite, ZIP Manager**.
-- Browser editors: **RAWGraphs, AudioMass, miniPaint, Excalidraw, SVGEdit, Markmap**.
-- Local data and photo privacy: **CyberChef, Image Scrubber**, plus direct links to
-  image, audio, CSV and text tasks in OmniTools.
-- Sharing and notifications: **PrivateBin, Yopass, PairDrop, ntfy**.
-- Browser-based learning: **JupyterLite**. Whisper is withdrawn from the catalog
-  while transcription quality remains inadequate.
-- Approved-account pilots: **Reactive Resume, Penpot, Actual Budget, Wakapi, Rallly**,
-  with shared Utilibre login, email verification and MFA. Public registration
-  remains closed; request access at **admin@utilibre.org**.
-- Additional tools: **Pollaris, FMD**. Service status: **Uptime Kuma**.
-- Native-client voice: password-protected **Mumble** (public TCP voice tested;
-  public UDP audio remains unverified).
+Find tools for files, images, audio, writing, calendars, shared expenses and
+other everyday jobs in the [live catalog](https://utilibre.org/). The
+[practical guides](https://utilibre.org/en/guides) include small practice files
+and explain how to save the result.
 
-The [live catalog](https://utilibre.org/) is the current inventory. Access and privacy vary by
-tool; FreshRSS retains separate operator-provisioned accounts. Upstream sites
-can block readers. **Dumb, LibreMDB, BreezeWiki and Rimgo** still have upstream
-failures.
-See the [deployment review](docs/toolbox-review.md) for current checks and limits.
+Some tools work in your browser. Others use Utilibre's servers or contact
+outside services. Check each card's labels, access requirements and limits
+before opening it. Account services use either approved Utilibre login or the
+application's own account system; the catalog explains which. Request access
+at **admin@utilibre.org**. Donations do not affect approval.
+
+Reader frontends depend on the sites they retrieve content from. See the
+[status page](https://utilibre.org/en/status) for current incidents and the
+[service expansion record](docs/service-candidates-2026-10-08.md) for installed
+apps, private mail staging and the reasons a proposed app was excluded.
 
 Optional donations: [Liberapay](https://liberapay.com/mycelibre/donate).
 
@@ -42,6 +33,7 @@ respective open-source communities.
 
 - [Services and access](docs/services.md)
 - [Privacy](docs/privacy.md) and [security](docs/security.md)
+- [Latest catalogue and guide improvements](docs/ux-friction-2026-10-10.md)
 - [Deployment](docs/deployment.md) and [architecture](docs/architecture.md)
 - [Expanded ports and operations](docs/expanded-operations.md), [delivery checklist](deployment/community/delivery-checklist.json), and [instance submissions](docs/public-instance-submissions.md)
 - [Project purpose](PRODUCT.md), [software policy](FOSS_POLICY.md), and [contributing](CONTRIBUTING.md)

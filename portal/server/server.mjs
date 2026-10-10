@@ -1,11 +1,12 @@
 import { createHash } from 'node:crypto';
 import { isIP } from 'node:net';
+import { setTimeout, clearTimeout } from 'node:timers';
 import { gzipSync } from 'node:zlib';
 import { renderPublicShell, parseRoute, pageSeo, serializeStructuredData } from '../server-built/render.mjs';
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer, request as httpRequest } from 'node:http';
 import { request as httpsRequest } from 'node:https';
-import { parseStatusServices } from './status-targets.mjs';
+import { parseStatusServices, mumbleStatusFromKuma } from './status-targets.mjs';
 import { extname, join, normalize } from 'node:path';
 
 const PORT = positiveInt(process.env.PORT, 8080);
@@ -22,6 +23,11 @@ const SUPPORT_URL = publicUrl(process.env.SUPPORT_URL);
 const SUPPORT_VISIBLE = Boolean(SUPPORT_URL);
 const PUBLIC_ORIGIN = publicOrigin(process.env.PUBLIC_PORTAL_ORIGIN);
 const HTML_CACHE = new Map();
+// The deployed dist directory is read-only and asset names are content-hashed.
+// Reuse small public assets instead of opening a stream for every visitor.
+const ASSET_CACHE = new Map();
+const ASSET_CACHE_MAX_BYTES = 8 * 1024 * 1024;
+let assetCacheBytes = 0;
 const INDEX_HTML = readFileSync(join(DIST, 'index.html'), 'utf8');
 const STATUS_SERVICES = parseStatusServices(process.env.STATUS_SERVICES || '', PRIVATE_BIND_IP).filter(({ id }) => ENABLED_SERVICES.has(id));
 let statusSnapshot = null;
@@ -105,7 +111,7 @@ server.requestTimeout = 20_000;
 server.keepAliveTimeout = 5_000;
 server.maxHeadersCount = MAX_REQUEST_HEADERS;
 server.maxRequestsPerSocket = 100;
-server.maxConnections = 512;
+server.maxConnections = 2048;
 server.listen(PORT, LISTEN_ADDRESS, () => {
   console.warn(`portal listening on ${LISTEN_ADDRESS}:${PORT}`);
 });
@@ -215,6 +221,20 @@ function serveStatic(requestUrl, request, response) {
     ...(extension === '.pdf' ? { 'X-Robots-Tag': 'noindex, nofollow' } : {}),
   });
   if (headOnly) return response.end();
+  if (immutable) {
+    let body = ASSET_CACHE.get(file);
+    if (!body && statSync(file).size <= 1024 * 1024) {
+      body = readFileSync(file);
+      while (assetCacheBytes + body.length > ASSET_CACHE_MAX_BYTES && ASSET_CACHE.size) {
+        const oldest = ASSET_CACHE.keys().next().value;
+        assetCacheBytes -= ASSET_CACHE.get(oldest).length;
+        ASSET_CACHE.delete(oldest);
+      }
+      ASSET_CACHE.set(file, body);
+      assetCacheBytes += body.length;
+    }
+    if (body) return response.end(body);
+  }
   createReadStream(file).pipe(response);
 }
 
@@ -300,7 +320,7 @@ function localizedIndexHtml(html, language, pathname, search = '') {
     `<meta property="og:site_name" content="${escapeAttribute(config.projectName)}" />`,
     `<meta property="og:url" content="${escapeAttribute(meta.canonical)}" />`,
     `<meta property="og:image" content="${escapeAttribute(meta.image)}" />`,
-    `<meta property="og:image:alt" content="${escapeAttribute(config.projectName)} logo" />`,
+    `<meta property="og:image:alt" content="${language === 'es' ? 'Logo de ' + escapeAttribute(config.projectName) : escapeAttribute(config.projectName) + ' logo'}" />`,
     '<meta name="twitter:card" content="summary" />',
     structured ? `<script id="public-structured-data" type="application/ld+json">${structured}</script>` : '',
     `<script id="public-page-config" type="application/json">${publicSettings}</script>`,
@@ -356,6 +376,17 @@ async function serveStatus(response) {
 
 async function checkStatuses() {
   const checks = await Promise.all(STATUS_SERVICES.map(async ({ id, url, require2xx }) => {
+    if (id === 'mumble') {
+      try {
+        const [page, heartbeat] = await Promise.all([
+          requestStatusJson(new URL('/api/status-page/utilibre', url)), requestStatusJson(url),
+        ]);
+        return { id, ...mumbleStatusFromKuma(page, heartbeat) };
+      } catch {
+        // Monitoring failure is not proof that the voice server is down.
+        return { id, status: 'unknown', check: 'tcp-listener' };
+      }
+    }
     try {
       const statusCode = await requestStatus(url);
       const accepted = statusCode >= 200 && statusCode < (require2xx ? 300 : 400);
@@ -365,6 +396,37 @@ async function checkStatuses() {
     }
   }));
   return { checkedAt: new Date().toISOString(), services: checks };
+}
+
+function requestStatusJson(url) {
+  return new Promise((resolve, reject) => {
+    const request = httpRequest(url, { method: 'GET' }, (response) => {
+      if (response.statusCode !== 200) {
+        response.resume(); finish(new Error('monitor_response')); return;
+      }
+      const chunks = []; let bytes = 0;
+      response.on('data', chunk => {
+        bytes += chunk.length;
+        if (bytes > 512 * 1024) { finish(new Error('monitor_size')); return; }
+        chunks.push(chunk);
+      });
+      response.once('error', finish);
+      response.once('end', () => {
+        try { finish(null, JSON.parse(Buffer.concat(chunks).toString('utf8'))); }
+        catch { finish(new Error('monitor_json')); }
+      });
+    });
+    let done = false;
+    const timer = setTimeout(() => finish(new Error('monitor_timeout')), 2500);
+    function finish(error, result) {
+      if (done) return;
+      done = true; clearTimeout(timer); request.destroy();
+      if (error) reject(error);
+      else resolve(result);
+    }
+    request.once('error', finish);
+    request.end();
+  });
 }
 
 function requestStatus(url) {
@@ -391,9 +453,9 @@ function publicConfig() {
   return {
     publicPortalOrigin: PRIVATE_PREVIEW ? '' : PUBLIC_ORIGIN,
     projectName: publicText(process.env.PROJECT_NAME, 'Utilibre', 80),
-    projectTagline: publicText(process.env.PROJECT_TAGLINE, '', 180),
-    projectTaglineEn: publicText(process.env.PROJECT_TAGLINE_EN, '', 180),
-    projectTaglineEs: publicText(process.env.PROJECT_TAGLINE_ES, '', 180),
+    projectTagline: publicText(process.env.PROJECT_TAGLINE, DEFAULT_LANGUAGE === 'es' ? 'Software libre y gratuito.' : 'Free and open-source tools.', 180),
+    projectTaglineEn: publicText(process.env.PROJECT_TAGLINE_EN, 'Free and open-source tools.', 180),
+    projectTaglineEs: publicText(process.env.PROJECT_TAGLINE_ES, 'Software libre y gratuito.', 180),
     sourceCodeUrl: publicUrl(process.env.SOURCE_CODE_URL),
     supportUrl: SUPPORT_URL,
     contactUrl: publicUrl(process.env.CONTACT_URL),
@@ -403,7 +465,30 @@ function publicConfig() {
     publicPasteUrl: publicServiceUrl(process.env.PUBLIC_PASTE_URL),
     publicPdfUrl: publicServiceUrl(process.env.PUBLIC_PDF_URL),
     publicConvertUrl: publicServiceUrl(process.env.PUBLIC_CONVERT_URL),
+    publicChatUrl: publicServiceUrl(process.env.PUBLIC_CHAT_URL),
+    publicEventsUrl: publicServiceUrl(process.env.PUBLIC_EVENTS_URL),
+    publicQuizUrl: publicServiceUrl(process.env.PUBLIC_QUIZ_URL),
+    publicLinksUrl: publicServiceUrl(process.env.PUBLIC_LINKS_URL),
+    publicTripUrl: publicServiceUrl(process.env.PUBLIC_TRIP_URL),
+    publicChessUrl: publicServiceUrl(process.env.PUBLIC_CHESS_URL),
+    publicProjectsUrl: publicServiceUrl(process.env.PUBLIC_PROJECTS_URL),
+    publicDonetickUrl: publicServiceUrl(process.env.PUBLIC_DONETICK_URL),
+    publicBeaverHabitsUrl: publicServiceUrl(process.env.PUBLIC_BEAVERHABITS_URL),
+    publicNewslettersUrl: publicServiceUrl(process.env.PUBLIC_NEWSLETTERS_URL),
+    publicAliasesUrl: publicServiceUrl(process.env.PUBLIC_ALIASES_URL),
+    publicExpandUrl: publicServiceUrl(process.env.PUBLIC_EXPAND_URL),
+    publicReaderUrl: publicServiceUrl(process.env.PUBLIC_READER_URL),
+    publicCalendarUrl: publicServiceUrl(process.env.PUBLIC_CALENDAR_URL),
     publicToolsUrl: publicServiceUrl(process.env.PUBLIC_TOOLS_URL),
+    publicExpensesUrl: publicServiceUrl(process.env.PUBLIC_EXPENSES_URL),
+    publicWishlistUrl: publicServiceUrl(process.env.PUBLIC_WISHLIST_URL),
+    publicKitchenUrl: publicServiceUrl(process.env.PUBLIC_KITCHEN_URL),
+    publicSnippetsUrl: publicServiceUrl(process.env.PUBLIC_SNIPPETS_URL),
+    publicBookmarksUrl: publicServiceUrl(process.env.PUBLIC_BOOKMARKS_URL),
+    publicTasksUrl: publicServiceUrl(process.env.PUBLIC_TASKS_URL),
+    publicSnippetLibraryUrl: publicServiceUrl(process.env.PUBLIC_SNIPPET_LIBRARY_URL),
+    publicLocalResumeUrl: publicServiceUrl(process.env.PUBLIC_LOCAL_RESUME_URL),
+
     publicDeveloperToolsUrl: publicServiceUrl(process.env.PUBLIC_DEVELOPER_TOOLS_URL),
     publicEncryptUrl: publicServiceUrl(process.env.PUBLIC_ENCRYPT_URL),
     publicDrawUrl: publicServiceUrl(process.env.PUBLIC_DRAW_URL),

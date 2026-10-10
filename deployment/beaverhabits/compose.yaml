@@ -1,0 +1,64 @@
+name: utilibre-beaverhabits
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  logging:
+    driver: json-file
+    options: {max-size: 1m, max-file: '2'}
+services:
+  app:
+    <<: *runtime
+    image: utilibre-beaverhabits:0.10.0-p7
+    user: '1000:1000'
+    env_file: /opt/utilibre/beaverhabits/private/app.env
+    environment:
+      ENV: production
+      APP_URL: https://habits.utilibre.org
+      DEBUG: 'false'
+      HABITS_STORAGE: DATABASE
+      DATABASE_URL: sqlite+aiosqlite:////app/.user/habits.db
+      NICEGUI_STORAGE_PATH: /app/.user/.nicegui
+      REQUIRE_ADMIN_FOR_REGISTRATION: 'true'
+      TRUSTED_LOCAL_EMAIL: ''
+      TRUSTED_EMAIL_HEADER: ''
+      JWT_LIFETIME_SECONDS: '86400'
+      UMAMI_ANALYTICS_ID: ''
+      UMAMI_SCRIPT_URL: ''
+      SENTRY_DSN: ''
+      HIGHLIGHT_KEY: ''
+      HIGHLIGHT_IO_PROJECT_ID: ''
+      GOOGLE_ONE_TAP_ENABLED: 'false'
+      ENABLE_PLAN: 'false'
+      ENABLE_DAILY_BACKUP: 'false'
+      SMTP_EMAIL_USERNAME: ''
+      SMTP_EMAIL_PASSWORD: ''
+      PYTHONDONTWRITEBYTECODE: '1'
+    mem_limit: 768m
+    cpus: 1.5
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777']
+    volumes: ['/opt/utilibre/beaverhabits/data:/app/.user']
+    networks:
+      app: {ipv4_address: 172.29.145.10}
+  gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    mem_limit: 96m
+    cpus: 0.5
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777']
+    ports: ['10.10.1.43:3216:8080', '127.0.0.1:3216:8080']
+    volumes: ['./nginx.conf:/etc/nginx/nginx.conf:ro', './proxy-native.conf:/etc/nginx/proxy-native.conf:ro']
+    depends_on: [app]
+    networks:
+      app: {ipv4_address: 172.29.145.20}
+      ingress: {ipv4_address: 172.29.146.10}
+networks:
+  app:
+    internal: true
+    ipam: {config: [{subnet: 172.29.145.0/24}]}
+  ingress:
+    ipam: {config: [{subnet: 172.29.146.0/24}]}

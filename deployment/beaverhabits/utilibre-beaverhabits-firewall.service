@@ -1,0 +1,10 @@
+[Unit]
+Description=Utilibre Beaver Habit Tracker scoped network boundaries
+After=docker.service network-online.target
+Requires=docker.service
+[Service]
+Type=oneshot
+ExecStart=/home/ubuntu/freetools/deployment/beaverhabits/firewall.sh
+RemainAfterExit=yes
+[Install]
+WantedBy=multi-user.target

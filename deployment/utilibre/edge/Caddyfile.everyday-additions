@@ -1,0 +1,64 @@
+# Reference for the additional 9 October batch. These four hosts already work.
+# Merge into existing site blocks; never load duplicate blocks for the same host.
+# The utilibre_* snippets and crowdsec module are already used on the edge.
+# No new DNS, MX, public SMTP port or hostname is needed for this batch.
+# Rustpad's WebSocket proxy and the static/downloadable apps are routed on the
+# application VM behind tools:3103. Caddy passes WebSocket upgrades natively.
+# New app paths become usable only after the deployment record marks them live.
+
+tools.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3103 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}
+
+plan.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3172 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}
+
+expenses.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3190 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}
+
+kitchen.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3202 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 30s
+        }
+        flush_interval -1
+    }
+}

@@ -1,0 +1,14 @@
+# The private gateway permits the existing edge 10.10.1.3 only.
+# Web DNS must point to this edge; keep the mail MX pointing at mx.mailgt.dev.
+aliases.utilibre.org {
+    import utilibre_no_transform
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3211 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}

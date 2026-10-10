@@ -1,0 +1,16 @@
+# Ready for operator installation after the completed private production checks.
+# Gateway 10.10.1.43:3224 accepts only the existing edge 10.10.1.3.
+# Keep the portal in maintenance until public HTTPS and headers are verified.
+trip.utilibre.org {
+    import utilibre_security_contact
+    import utilibre_no_transform
+    crowdsec
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3224 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 25s
+        }
+    }
+}

@@ -1,0 +1,9 @@
+SketchForge 1.0.9-p1: /utilibre-source/sketchforge-utilibre.tar.gz
+OCCT-WASM 3.6.1 wrapper/tooling, exact c4a96db7bb6ec7eed294dec42ba92fe4b6e0f580:
+/utilibre-source/occt-wasm-3.6.1-source.tar.gz
+OCCT LGPL-2.1-only kernel source, exact submodule6e1fe656bf028bf0004482c389661587b269fc65:
+/utilibre-source/occt-6e1fe656-source.tar.gz
+Preserve LICENSE_LGPL_21.txt and OCCT_LGPL_EXCEPTION.txt from that source.
+Manifold 3.5.0 (Apache-2.0): https://github.com/elalish/manifold/tree/v3.5.0
+OCCT remains a separately loaded replaceable WebAssembly asset at ./occt/occt-wasm.wasm.
+Use the included wrapper's build instructions when rebuilding the matching kernel.

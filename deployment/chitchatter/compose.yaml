@@ -1,0 +1,46 @@
+name: utilibre-chitchatter
+services:
+  tracker:
+    image: utilibre-chitchatter-tracker:11.2.3-p1
+    build: {context: ., dockerfile: Dockerfile.tracker}
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 192m
+    cpus: 0.5
+    pids_limit: 32
+    logging: {driver: none}
+    networks: [chat]
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8000/').then(r=>process.exit(r.status===404?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+  gateway:
+    image: nginxinc/nginx-unprivileged@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    entrypoint: [nginx, -g, 'daemon off;']
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 64m
+    cpus: 0.25
+    pids_limit: 32
+    logging: {driver: none}
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=8m']
+    ports: ['10.10.1.43:3200:8080']
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/chitchatter-public:/srv/app:ro
+    networks: [chat, ingress]
+    depends_on: [tracker]
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, 'http://127.0.0.1:8080/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+networks:
+  ingress: {}
+  chat:
+    internal: true

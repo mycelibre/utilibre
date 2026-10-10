@@ -1,0 +1,71 @@
+name: utilibre-wallabag-review
+services:
+  app:
+    image: utilibre-wallabag-review:20261009
+    restart: 'no'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging: {driver: none}
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 32
+    dns: [1.1.1.1, 9.9.9.9]
+    sysctls: {net.ipv6.conf.all.disable_ipv6: '1'}
+    # PHP's development server is deliberately loopback-only for this rehearsal.
+    # Never use this file as a production deployment.
+    command: ['-d', 'variables_order=EGPCS', '-d', 'display_errors=0', '-d', 'log_errors=0', '-d', 'memory_limit=192M', '-S', '0.0.0.0:8080', '-t', 'web']
+    tmpfs: ['/tmp:rw,nosuid,nodev,size=32m', '/app/var:rw,nosuid,nodev,size=96m,mode=1777']
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: '0'
+      APP_SECRET: synthetic-review-only-not-a-production-secret
+      DATABASE_URL: sqlite:////app/data/db/review-test.sqlite
+      WALLABAG_BASE_URL: http://127.0.0.1:33177
+      WALLABAG_REGISTRATION_ENABLED: '0'
+      WALLABAG_CAPTCHA_ENABLED: '0'
+      WALLABAG_CONFIRMATION_ENABLED: '0'
+      MAILER_DSN: null://null
+      SENTRY_DSN: ''
+      http_proxy: http://172.29.155.3:3128
+      https_proxy: http://172.29.155.3:3128
+      no_proxy: ''
+    volumes:
+      - /opt/utilibre/src/wallabag-repair-20261009:/app:ro
+      - /opt/utilibre/src/wallabag-repair-20261009/data/db:/app/data/db
+      - ./config.review.yml:/app/app/config/config_prod.yml:ro
+    networks: {isolated: {ipv4_address: 172.29.155.2}, ingress: {ipv4_address: 172.29.154.2}}
+  proxy:
+    image: sha256:9bc66d80e90a72c29ba89d44447b58bd1faded54b4ecba35b4f7b2b23497c780
+    restart: 'no'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging: {driver: none}
+    mem_limit: 192m
+    cpus: 0.5
+    pids_limit: 32
+    dns: [1.1.1.1, 9.9.9.9]
+    sysctls: {net.ipv6.conf.all.disable_ipv6: '1'}
+    tmpfs: ['/tmp:rw,nosuid,nodev,size=16m,mode=1777']
+    volumes: ['./squid.conf:/etc/squid/squid.conf:ro']
+    networks: {isolated: {ipv4_address: 172.29.155.3}, ingress: {ipv4_address: 172.29.154.3}}
+  gateway:
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    entrypoint: [nginx, -g, 'daemon off;']
+    restart: 'no'
+    read_only: true
+    user: '101:101'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging: {driver: none}
+    mem_limit: 64m
+    cpus: 0.25
+    pids_limit: 32
+    tmpfs: ['/tmp:rw,nosuid,nodev,size=16m']
+    ports: ['127.0.0.1:33177:8080']
+    volumes: ['./nginx.review.conf:/etc/nginx/nginx.conf:ro']
+    networks: {isolated: {ipv4_address: 172.29.155.4}, ingress: {ipv4_address: 172.29.154.4}}
+networks:
+  isolated: {internal: true, enable_ipv6: false, ipam: {config: [{subnet: 172.29.155.0/28}]}}
+  ingress: {ipam: {config: [{subnet: 172.29.154.0/28}]}}

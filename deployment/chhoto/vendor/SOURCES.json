@@ -1,0 +1,32 @@
+[
+  {
+    "file": "qrcode.min.js",
+    "url": "https://cdn.jsdelivr.net/gh/sintan1729/qrcodejs@0.1.0/qrcode.min.js",
+    "sha256": "98a438beb9a8749929cba729c3036bc2e27ec682d8680fd3b7b1c6d00e558f9c"
+  },
+  {
+    "file": "punycode.min.js",
+    "url": "https://cdn.jsdelivr.net/npm/punycode-okam@1.4.1/punycode.min.js",
+    "sha256": "3c5627da7d57865d105e21f40cd599c0ee4a5bc2e80e7161a269a8318986d8da"
+  },
+  {
+    "file": "pure-min.css",
+    "url": "https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css",
+    "sha256": "01757dff5e174cd963090a7bbb79f4d95222600202abca1c5e4735d6bbcc952c"
+  },
+  {
+    "file": "qrcode-LICENSE",
+    "url": "https://raw.githubusercontent.com/sintan1729/qrcodejs/0.1.0/LICENSE",
+    "sha256": "aaa1f349028a59432eb00222b8ddfe4d2ccebdce04cf8348dcb8d41b7068107b"
+  },
+  {
+    "file": "punycode-LICENSE",
+    "url": "https://cdn.jsdelivr.net/npm/punycode-okam@1.4.1/LICENSE-MIT.txt",
+    "sha256": "483acb265f182907d1caf6cff9c16c96f31325ed23792832cc5d8b12d5f88c8a"
+  },
+  {
+    "file": "pure-LICENSE",
+    "url": "https://cdn.jsdelivr.net/npm/purecss@3.0.0/LICENSE",
+    "sha256": "66fe80191874ef13229c0f0f87d28ac25f0942b32c002a1fe49d9cd331e6b3dc"
+  }
+]

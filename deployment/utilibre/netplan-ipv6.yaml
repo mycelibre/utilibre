@@ -1,0 +1,14 @@
+# Merge after the existing IPv4 configuration. Owner-confirmed VM allocation.
+# Install only after the IPv6 guard and networkd dependency are verified.
+network:
+  version: 2
+  ethernets:
+    eth0:
+      accept-ra: false
+      addresses:
+        - "2a01:4f8:2200:350b::43/128"
+      routes:
+        - to: "::/0"
+          via: "2a01:4f8:2200:350b::1"
+          on-link: true
+          metric: 200

@@ -1,0 +1,4 @@
+# Incoming Addy decision headers must never be accepted from a sender or relay.
+# Native Rspamd may add fresh decisions after Postfix's initial cleanup checks.
+# Keep this active even while the milter is disabled or unavailable.
+/^X-AnonAddy-(Dmarc-Allow|Authentication-Results|Spam|Should-Quarantine|Quarantine-Reason):/ IGNORE

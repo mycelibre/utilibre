@@ -1,0 +1,8 @@
+expand.utilibre.org {
+    import utilibre_no_transform
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3209 {
+        import utilibre_proxy_headers
+    }
+}

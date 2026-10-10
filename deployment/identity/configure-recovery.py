@@ -53,7 +53,8 @@ with transaction.atomic():
     email.token_expiry = "minutes=15"
     email.recovery_max_attempts = 3
     email.recovery_cache_timeout = "minutes=15"
-    email.subject = "Utilibre · password recovery"
+    email.subject = "Utilibre · Reset your password / Restablecé tu contraseña"
+    email.template = "email/utilibre-password-reset.html"
     email.save()
 
     mfa = AuthenticatorValidateStage.objects.get(name="utilibre-recovery-mfa")

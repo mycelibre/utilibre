@@ -2,7 +2,7 @@ import { catalog } from './catalog/catalog.ts';
 import type { Language } from './i18n/index.ts';
 import { practicalGuides, practicalGuidePath } from './pages/practical-guide-data.ts';
 
-export type StaticPage = 'home' | 'services' | 'tools' | 'about' | 'transparency' | 'privacy' | 'acceptable' | 'support' | 'status' | 'software' | 'labels' | 'pdf' | 'qr' | 'guides' | 'my' | 'offline' | 'not-found';
+export type StaticPage = 'home' | 'services' | 'tools' | 'about' | 'transparency' | 'privacy' | 'security' | 'your-data' | 'acceptable' | 'support' | 'status' | 'software' | 'labels' | 'pdf' | 'qr' | 'guides' | 'my' | 'offline' | 'not-found';
 export interface Route { language: Language; page: StaticPage | 'tool' | 'guide'; toolId?: string; guideId?: string; }
 
 const staticPaths: Record<Exclude<StaticPage, 'not-found'>, Record<Language, string>> = {
@@ -11,6 +11,8 @@ const staticPaths: Record<Exclude<StaticPage, 'not-found'>, Record<Language, str
   tools: { en: 'tools', es: 'herramientas' },
   about: { en: 'about', es: 'acerca' },
   transparency: { en: 'transparency', es: 'transparencia' },
+  security: { en: 'security', es: 'security' },
+  'your-data': { en: 'your-data', es: 'your-data' },
   privacy: { en: 'privacy', es: 'privacidad' },
   acceptable: { en: 'acceptable-use', es: 'uso-aceptable' },
   support: { en: 'support', es: 'apoyar' },

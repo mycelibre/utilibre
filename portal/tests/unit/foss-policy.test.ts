@@ -42,7 +42,7 @@ const retiredRoutes: ReadonlyArray<readonly [string, string]> = [
 describe('FOSS-only public capability policy', () => {
   it('accepts only the retained independently maintained hosted applications', () => {
     expect(() => assertFossCatalogPolicy(catalog)).not.toThrow();
-    expect(catalog).toHaveLength(65);
+    expect(catalog).toHaveLength(103);
     expect(catalog.find(entry => entry.id === 'translite')?.license).toBe('Unlicense');
     expect(catalog.every((entry) => entry.upstreamProject && entry.upstreamSourceUrl && entry.license && entry.installedVersion)).toBe(true);
     expect(catalog.filter((entry) => entry.kind === 'integration').map((entry) => entry.id)).toEqual(['private-router']);
@@ -50,7 +50,7 @@ describe('FOSS-only public capability policy', () => {
 
     const referencedProviders = new Set(catalog.map((entry) => entry.providerId));
     expect([...referencedProviders].sort()).toEqual(Object.keys(reviewedFossProviders).sort());
-    expect([...referencedProviders].sort()).toEqual(['actual', 'anonymousoverflow', 'audiomass', 'bentopdf', 'biblioreads', 'binternet', 'breezewiki', 'cryptpad', 'cyberchef', 'degoog', 'drawio', 'excalidraw', 'fmd', 'fourget', 'freshrss', 'galene', 'gothub', 'hatsh', 'image-scrubber', 'ittools', 'jupyterlite', 'kittygram', 'liberaforms', 'libremdb', 'lrclib', 'mapshaper', 'markmap', 'mezzo', 'minipaint', 'miniqr', 'mumble', 'ntfy', 'numbat', 'omnitools', 'pairdrop', 'penpot', 'pollaris', 'privatebin', 'priviblur', 'qr-offline', 'rallly', 'rawgraphs', 'reactive-resume', 'redlib', 'rimgo', 'rssbridge', 'safetwitch', 'searxng', 'super-productivity', 'svgedit', 'translite', 'uptime-kuma', 'vert', 'wakapi', 'wbo', 'whisper-web', 'yopass', 'zip-manager']);
+    expect([...referencedProviders].sort()).toEqual(['13ft', 'actual', 'addy', 'anonymousoverflow', 'audiomass', 'autoredact', 'beaverhabits', 'bentopdf', 'biblioreads', 'binternet', 'bookbinder', 'breezewiki', 'bytestash', 'calino', 'chartdb', 'chhoto', 'chitchatter', 'cryptpad', 'cyberchef', 'degoog', 'donetick', 'drawdb', 'drawio', 'excalidraw', 'family-chess', 'fmd', 'fourget', 'freshrss', 'galene', 'gathio', 'gothub', 'gravity', 'hatsh', 'image-scrubber', 'ittools', 'jupyterlite', 'kitchenowl', 'kittygram', 'knit', 'kokoro-web', 'liberaforms', 'libremdb', 'link-cleaner', 'linkding', 'lrclib', 'mapshaper', 'markmap', 'mezzo', 'minipaint', 'miniqr', 'moocup', 'moodist', 'mumble', 'newsletters', 'newton', 'ntfy', 'numbat', 'omnitools', 'one-file-core', 'opengist', 'openresume', 'pairdrop', 'penpot', 'pollaris', 'privatebin', 'priviblur', 'projects', 'qr-offline', 'radicale', 'rallly', 'rawgraphs', 'razzia', 'reactive-resume', 'redlib', 'rimgo', 'rssbridge', 'rustpad', 'safetwitch', 'searxng', 'sketchforge', 'spliit', 'super-productivity', 'svgedit', 'tiddlywiki', 'translite', 'trip', 'unfurl', 'uptime-kuma', 'vert', 'vikunja', 'wakapi', 'wbo', 'whisper-web', 'wishlist', 'yopass', 'zip-manager']);
 
     const repositoryRoot = new URL('../../../', import.meta.url);
     for (const provider of Object.values(reviewedFossProviders)) {

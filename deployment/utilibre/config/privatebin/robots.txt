@@ -1,0 +1,14 @@
+# Only the public service homepage and its static dependencies are crawlable.
+# This does not replace encryption, expiry or access controls.
+User-agent: *
+Disallow: /
+Allow: /$
+Allow: /css/
+Allow: /js/
+Allow: /img/
+Allow: /i18n/
+Allow: /utilibre-brand/
+Allow: /favicon.ico$
+Allow: /manifest.json$
+Disallow: /?
+Disallow: /index.php

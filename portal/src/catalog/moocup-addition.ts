@@ -1,0 +1,23 @@
+import type { CatalogEntry, LocalizedText } from './catalog.ts';
+import { reviewedFossProviders } from './upstreams.ts';
+const text = (en: string, es: string): LocalizedText => ({ en, es });
+const provider = reviewedFossProviders.moocup;
+
+export const moocupAdditions: CatalogEntry[] = [{
+  id: 'moocup', providerId: 'moocup', kind: 'service', implementation: 'upstream-application', portalSurface: 'upstream-interface',
+  category: 'service', discoveryGroup: 'design', configUrlKey: 'publicToolsUrl', launchPath: '/apps/moocup/',
+  name: text('Style a screenshot · Moocup', 'Preparar una captura · Moocup'),
+  description: text('Add a background, border and spacing to a screenshot, then save an image.', 'Agregá un fondo, un borde y espacio alrededor de una captura; después guardá una imagen.'),
+  launchLabel: text('Style a screenshot', 'Preparar una captura'),
+  bestFor: text('A screenshot for a presentation, project page or tutorial.', 'Una captura para una presentación, una página de proyecto o un tutorial.'),
+  help: text('Drop a fictional image first, adjust its appearance, then open Export. Choose a format and quality and use Export as PNG, JPEG or WebP. Reopen the downloaded image before sharing it.', 'Probá primero con una imagen ficticia, ajustá su aspecto y abrí Export. Elegí formato y calidad y usá Export as PNG, JPEG o WebP. Abrí la descarga y revisala antes de compartirla.'),
+  limitation: text('The interface is in English. Downloads are flattened images, not editable projects. Inputs of 2 MiB or more are resized to fit 2400 × 1800 pixels. Large exports use browser memory; inspect transformed images before sharing. Reset does not remove saved custom backgrounds.', 'La interfaz está en inglés. Las descargas son imágenes aplanadas, no proyectos editables. Los archivos de 2 MiB o más se reducen para entrar en 2400 × 1800 píxeles. Las exportaciones grandes usan memoria del navegador; revisá las imágenes transformadas antes de compartirlas. Reset no borra los fondos personalizados guardados.'),
+  labels: ['local'], filesUploaded: false,
+  dataFlow: text('Images and backgrounds are processed in your browser. This build removes upstream analytics and serves fonts and presets from Utilibre. No image upload endpoint is deployed. Source and donation links open external sites only when you follow them.', 'Las imágenes y los fondos se procesan en tu navegador. Esta versión quita las estadísticas del original y sirve fuentes y fondos desde Utilibre. No hay un servicio de subida de imágenes. Los enlaces al código y a donaciones abren sitios externos solo cuando los seguís.'),
+  upstreamServices: ['Cloudflare HTTPS proxy', 'Hetzner hosting'],
+  temporaryStorage: text('The current image, settings and custom backgrounds persist in this browser’s IndexedDB after you close the tab. Moocup uses its own database name on the shared tools.utilibre.org origin. Native sample selection can use a separate localStorage key.', 'La imagen actual, los ajustes y los fondos personalizados persisten en IndexedDB después de cerrar la pestaña. Moocup usa su propio nombre de base en el origen compartido tools.utilibre.org. La selección de ejemplos nativos puede usar una clave aparte de localStorage.'),
+  retention: text('Reset clears the current image and transformations, not all saved backgrounds. Clear the tools site’s browser data to remove all its stored work; this also affects other tools on that origin. Downloaded files remain until you delete them. There is no Utilibre server copy of your images to restore or delete.', 'Reset borra la imagen actual y sus transformaciones, no todos los fondos guardados. Para quitar todo el trabajo almacenado, borrá los datos del sitio tools en el navegador; esto también afecta otras herramientas de ese origen. Las descargas permanecen hasta que las borrés. Utilibre no tiene una copia de tus imágenes que pueda restaurar o eliminar.'),
+  logging: text('Image contents do not become application requests. Loading the app and its local assets still generates connection metadata through Cloudflare, Caddy and hosting infrastructure; those records have separate retention.', 'El contenido de las imágenes no se convierte en solicitudes de la aplicación. Cargarla y descargar sus recursos genera metadatos de conexión en Cloudflare, Caddy y la infraestructura de alojamiento; esos registros tienen conservación independiente.'),
+  license: provider.license, upstreamProject: provider.project, upstreamSourceUrl: provider.sourceUrl, installedVersion: provider.installedVersion,
+  modified: true, operationalStatus: 'operational',
+}];

@@ -35,6 +35,6 @@ try {
   }
   const image = Buffer.from(await page.evaluate(() => { const c = document.createElement('canvas'); c.width = 1200; c.height = 800; const x = c.getContext('2d'); x.fillStyle = '#eee7d7'; x.fillRect(0, 0, 1200, 800); x.fillStyle = '#d85a30'; x.fillRect(60, 180, 450, 450); x.fillStyle = '#345d68'; x.beginPath(); x.arc(850, 410, 190, 0, Math.PI * 2); x.fill(); x.fillStyle = '#111'; x.font = '34px Arial'; x.fillText('FICTIONAL EXAMPLE / EJEMPLO FICTICIO', 40, 80); x.fillText('Name / Nombre: Alex Example', 80, 260); x.fillText('Code / Código: SAMPLE-123', 80, 320); x.fillText('Synthetic graphic, not an ID document or real photograph.', 40, 740); return c.toDataURL('image/jpeg', 0.96).split(',')[1]; }), 'base64');
   await writeFile(new URL('fictional-image.jpg', out), fictionalExif(image));
-  await writeFile(new URL('transfer-example.txt', out), 'UTILIBRE — FICTIONAL PRACTICE FILE / ARCHIVO FICTICIO\nHello from the other device. / Hola desde el otro dispositivo.\nCheck that both lines are readable. / Revisá que ambas líneas sean legibles.\n');
+  await writeFile(new URL('transfer-example.txt', out), 'UTILIBRE: FICTIONAL PRACTICE FILE / ARCHIVO FICTICIO\nHello from the other device. / Hola desde el otro dispositivo.\nCheck that both lines are readable. / Revisá que ambas líneas sean legibles.\n');
   console.log('Authored two raster-only scans, two UTF-8 CSVs, a fictional graphic with synthetic EXIF, and a harmless transfer file.');
 } finally { await browser.close(); }

@@ -1,0 +1,54 @@
+name: utilibre-chhoto
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 96
+  cpus: 1
+  mem_limit: 256m
+  tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=16m,mode=1777"]
+  logging: {driver: none}
+services:
+  app:
+    <<: *runtime
+    image: utilibre-chhoto:7.8.3-p3
+    env_file:
+      - path: /opt/utilibre/chhoto-private/runtime.env
+        format: raw
+    environment:
+      CHHOTO_PUBLIC_MODE: Enable
+      CHHOTO_PUBLIC_MODE_EXPIRY_DELAY: '2592000'
+      CHHOTO_SITE_URL: https://links.utilibre.org
+      CHHOTO_SLUG_STYLE: UID
+      CHHOTO_SLUG_LENGTH: '16'
+      CHHOTO_DB_URL: /data/urls.sqlite
+      CHHOTO_REDIRECT_METHOD: TEMPORARY
+      CHHOTO_DISABLE_BACKUPS: 'True'
+      CHHOTO_HASH_ALGORITHM: Argon2
+      RUST_LOG: warn
+    volumes:
+      - /opt/utilibre/chhoto-data:/data
+    networks: [backend]
+  gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    cpus: 0.25
+    mem_limit: 64m
+    logging:
+      driver: json-file
+      options: {max-size: 5m, max-file: '2'}
+    ports: ['10.10.1.43:3208:8080']
+    volumes: ['./nginx.conf:/etc/nginx/nginx.conf:ro']
+    networks: [backend, ingress]
+    depends_on: [app]
+networks:
+  backend:
+    internal: true
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.120.0/24}]}
+  ingress:
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.121.0/24}]}

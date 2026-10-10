@@ -5,6 +5,9 @@ language means translating the complete public interface and routing model,
 not only homepage card names. Internal operator documentation may remain in
 English.
 
+The current Spanish interface always uses voseo (`podés`, `elegí`, `guardá`).
+Preserve that choice when editing existing pages, guides and instance branding.
+
 ## Current architecture
 
 - Dictionaries: `portal/src/i18n/en.ts` and `portal/src/i18n/es.ts`

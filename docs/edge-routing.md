@@ -1,9 +1,14 @@
 # Edge routing
 
-Cloudflare is the current outer proxy. A separate Caddy VM terminates
-operator-controlled TLS and forwards only approved hostnames to exact private
-application-VM listeners. The application VM must never be a public DNS
-destination.
+Cloudflare proxies the portal and wildcard HTTPS hosts. Explicit DNS-only web
+records for `search`, `binternet`, `newsletters` and `aliases` bypass that HTTP
+proxy; Cloudflare still supplies their authoritative DNS. This distinction was
+checked through read-only DNS configuration on 9 October 2026. Native TURN and
+Mumble also use direct DNS records. A separate Caddy VM terminates
+operator-controlled web TLS and forwards only approved hostnames to exact
+private application-VM listeners. The application VM must never be a public DNS
+destination. See [the provider review](privacy.md#provider-policy-and-endpoint-review-9-october-2026)
+for the separate unresolved HTTP/log-retention settings.
 
 ## Route inventory
 

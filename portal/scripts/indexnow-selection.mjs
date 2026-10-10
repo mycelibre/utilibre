@@ -1,15 +1,20 @@
 import assert from 'node:assert/strict';
 import { URL } from 'node:url';
+import { practicalGuides, practicalGuidePath } from '../src/pages/practical-guide-data.ts';
 
 export const PUBLIC_ORIGIN = 'https://utilibre.org';
 export const MAX_NOTIFICATION_URLS = 30;
 
-// Reviewed public documents only. Keep retired public paths here if they need a
-// removal notification; a private application path must never enter this list.
-const publicPaths = new Set([
+// Static policy/catalog pages are explicitly reviewed. Guide paths come from
+// the same maintained, public-only registry as rendering and the sitemap;
+// private application routes and user content never enter that registry.
+// Keep any retired public path explicitly listed for a removal notification.
+export const publicSeoPaths = Object.freeze([
   '/en/', '/es/',
   '/en/about', '/es/acerca',
   '/en/privacy', '/es/privacidad',
+  '/en/security', '/es/security',
+  '/en/your-data', '/es/your-data',
   '/en/transparency', '/es/transparencia',
   '/en/acceptable-use', '/es/uso-aceptable',
   '/en/support', '/es/apoyar',
@@ -20,29 +25,9 @@ const publicPaths = new Set([
   '/en/guides', '/es/guias',
   '/en/my-utilibre', '/es/mi-utilibre',
   '/en/offline-tools', '/es/herramientas-sin-conexion',
-  '/en/guides/my-utilibre', '/es/guias/mi-utilibre',
-  '/en/guides/open-with-utilibre', '/es/guias/abrir-con-utilibre',
-  '/en/guides/starting-projects', '/es/guias/proyectos-de-practica',
-  '/en/guides/shared-whiteboard', '/es/guias/pizarra-compartida',
-  '/en/guides/mind-map', '/es/guias/mapa-mental',
-  '/en/guides/map-data', '/es/guias/datos-geograficos',
-  '/en/guides/local-week', '/es/guias/semana-local',
-  '/en/guides/feed-packs', '/es/guias/paquetes-rss',
-  '/en/guides/private-document', '/es/guias/documento-privado',
-  '/en/guides/shared-budget', '/es/guias/presupuesto-compartido',
-  '/en/guides/community-plan', '/es/guias/plan-comunitario',
-  '/en/guides/private-form', '/es/guias/formulario-privado',
-  '/en/guides/shared-presentation', '/es/guias/presentacion-compartida',
-  '/en/guides/collaborative-outline', '/es/guias/esquema-colaborativo',
-  '/en/guides/small-meeting', '/es/guias/reunion-pequena',
-  '/en/guides/unit-calculations', '/es/guias/calculos-unidades',
-  '/en/guides/scanned-documents', '/es/guias/documentos-escaneados',
-  '/en/guides/prepare-image', '/es/guias/preparar-imagen',
-  '/en/guides/private-photo', '/es/guias/foto-privada',
-  '/en/guides/meeting-poll', '/es/guias/encuesta-reunion',
-  '/en/guides/csv-chart', '/es/guias/csv-grafica',
-  '/en/guides/file-transfer', '/es/guias/transferir-archivo',
+  ...practicalGuides.flatMap((guide) => ['en', 'es'].map((language) => practicalGuidePath(guide.id, language))),
 ]);
+const publicPaths = new Set(publicSeoPaths);
 
 export function isPublicSeoPath(path) {
   return typeof path === 'string' && publicPaths.has(path);

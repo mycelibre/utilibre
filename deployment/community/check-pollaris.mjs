@@ -3,9 +3,10 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'node:https';
 import { request as upstreamRequest } from 'node:http';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { chromium } from '../../portal/node_modules/playwright-core/index.mjs';
+import { removeSyntheticPoll } from './pollaris-fixture-cleanup.mjs';
 const origin = 'https://pollaris.utilibre.org';
 const local = process.argv.includes('--backend');
 let proxy;
@@ -33,6 +34,10 @@ const browser = await chromium.launch({ headless: true,
   args: local ? ['--host-resolver-rules=MAP pollaris.utilibre.org 127.0.0.1', '--no-proxy-server'] : [],
 });
 const title = `Utilibre synthetic ${Date.now()}`;
+const recoveryDirectory = await mkdtemp('/opt/utilibre/reports/pollaris-check-');
+const recovery = { title, startedAt: new Date().toISOString(), deleted: false };
+const saveRecovery = () => writeFile(`${recoveryDirectory}/fixture.json`, JSON.stringify(recovery) + '\n', { mode: 0o600 });
+await saveRecovery();
 const errors = [];
 async function context(locale = 'en-GB') {
   return browser.newContext({ locale, ignoreHTTPSErrors: local });
@@ -49,6 +54,7 @@ try {
   await page.locator('button[type=submit]').click();
   await page.waitForURL(/\/proposals/);
   adminBase = page.url().split('/proposals')[0];
+  recovery.adminBase = adminBase; await saveRecovery();
   const choices = page.locator('input[name^="poll_proposals[proposals]"]');
   await choices.nth(0).fill('Option A');
   await choices.nth(1).fill('Option B');
@@ -57,6 +63,7 @@ try {
   await page.locator('button[value=next]').click();
   await page.waitForURL(/\/complete/);
   publicUrl = await page.locator('#poll-public-link').inputValue();
+  recovery.publicUrl = publicUrl; await saveRecovery();
   assert.ok(publicUrl.startsWith(`${origin}/polls/`));
   const guest = await context();
   const voter = await guest.newPage();
@@ -89,17 +96,18 @@ try {
   assert.equal(errors.length, 0, errors.join('; '));
   console.log(`Pollaris ${local ? 'backend' : 'public HTTPS'}: creation, anonymous voting, CSV export, admin denial and Spanish handoff passed.`);
 } catch (error) {
-  console.error('Pollaris workflow failed:', error.message);
-  throw error;
+  console.error('Pollaris workflow failed:', error.message.replace(/https?:\/\/\S+/g, '[URL]'));
+  process.exitCode = 1;
 } finally {
   try { if (adminBase) {
-    await page.goto(`${adminBase}/admin`);
-    await page.locator('[data-modal-opener-selector-value$="/deletion"]').click();
-    await page.locator('[name="poll_deletion[submit]"]').click();
-    await page.waitForURL(`${origin}/`);
-    if (publicUrl) assert.equal((await page.goto(publicUrl)).status(), 404);
+    await removeSyntheticPoll(page, { title, adminBase, publicUrl });
+    recovery.deleted = true; await saveRecovery();
     console.log('Synthetic poll and responses deleted through the native application.');
-  } } finally {
+  } } catch (error) {
+    console.error('Synthetic cleanup failed:', error.message.replace(/https?:\/\/\S+/g, '[URL]'));
+    console.error(`Private recovery manifest: ${recoveryDirectory}/fixture.json`);
+    process.exitCode = 1;
+  } finally {
     await browser.close();
     if (proxy) { proxy.closeAllConnections(); await new Promise(resolve => proxy.close(resolve)); }
     if (certificateDirectory) await rm(certificateDirectory, { recursive: true });

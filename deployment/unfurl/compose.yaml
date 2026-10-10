@@ -1,0 +1,53 @@
+name: utilibre-unfurl
+x-limits: &limits
+  restart: 'no'
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 48
+  logging: {driver: none}
+services:
+  app:
+    <<: *limits
+    image: utilibre-unfurl:2026.10-p1
+    cpus: 1
+    mem_limit: 256m
+    tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']
+    environment:
+      UNFURL_HEADER_ONLY: 'true'
+      UNFURL_REMOTE_LOOKUPS: 'true'
+      HTTP_PROXY: http://172.29.122.20:3128
+      HTTPS_PROXY: http://172.29.122.20:3128
+      NO_PROXY: ''
+    dns: [127.0.0.1]
+    sysctls: {net.ipv6.conf.all.disable_ipv6: '1'}
+    networks: {isolated: {ipv4_address: 172.29.122.10}}
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; o=urllib.request.build_opener(urllib.request.ProxyHandler({})); assert o.open('http://127.0.0.1:5000/', timeout=5).status==200"]
+      interval: 30s
+      timeout: 6s
+      retries: 3
+  proxy:
+    <<: *limits
+    image: utilibre-public-egress:7.7
+    cpus: 0.5
+    mem_limit: 192m
+    tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']
+    volumes: ['./squid.conf:/etc/squid/squid.conf:ro']
+    dns: [1.1.1.1, 9.9.9.9]
+    sysctls: {net.ipv6.conf.all.disable_ipv6: '1'}
+    networks: {isolated: {ipv4_address: 172.29.122.20}, egress: {ipv4_address: 172.29.123.20}}
+  gateway:
+    <<: *limits
+    image: nginxinc/nginx-unprivileged@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    cpus: 0.25
+    mem_limit: 64m
+    tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=8m,mode=1777']
+    volumes: ['./nginx.conf:/etc/nginx/nginx.conf:ro']
+    ports: ['10.10.1.43:3209:8080']
+    networks: {isolated: {ipv4_address: 172.29.122.30}, egress: {ipv4_address: 172.29.123.30}}
+networks:
+  isolated: {internal: true, enable_ipv6: false, ipam: {config: [{subnet: 172.29.122.0/24}]}}
+  egress: {enable_ipv6: false, ipam: {config: [{subnet: 172.29.123.0/24}]}}

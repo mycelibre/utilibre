@@ -5,6 +5,7 @@ import {mkdir,mkdtemp,writeFile,lstat,copyFile,rename,readlink} from 'node:fs/pr
 import path from 'node:path';
 import assert from 'node:assert/strict';
 const applications={
+  'it-tools':['it-tools','5732483fc24a6e6818839060bdf3cc7d9d324b9f'],
   mapshaper:['mapshaper','9e39193444f70a48eeffda20d8d44f82567e6d54'],
   numbat:['numbat','79046422203060e296da41c8c762c506200d2c93'],
   'super-productivity':['super-productivity','42ded9f31a132bf92633b0c78ad4ebf1d87c0f71'],

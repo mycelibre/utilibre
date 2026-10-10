@@ -40,7 +40,7 @@ try{
     assert.equal(api.status,200);assert.ok(api.data.results.length>0);
     assert.ok(api.data.engineTimings.some(e=>e.id==='searx-hackernews-engine'&&e.status==='ok'));
     const denied=await page.evaluate(async()=>{
-      const paths=['/settings','/api/settings','/api/store/repos','/api/indexer/export'];
+      const paths=['/settings/general','/api/settings','/api/store/repos','/api/indexer/export'];
       return Promise.all(paths.map(async path=>[path,(await fetch(path)).status]));
     });
     assert.ok(denied.every(([,status])=>status===404),JSON.stringify(denied));

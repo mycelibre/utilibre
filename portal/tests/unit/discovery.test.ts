@@ -11,6 +11,7 @@ import {
   groupEntries,
   launchableEntries,
   normalizeCatalogSearch,
+  rankCatalogEntries,
   searchEntries,
 } from '../../src/catalog/discovery';
 import type { PublicConfig } from '../../src/config';
@@ -54,6 +55,20 @@ const hostedConfig = config({
 });
 
 describe('catalog discovery metadata', () => {
+  it('ranks task titles above incidental export formats in both languages', () => {
+    const listed = config({ listedServices: catalog.map(e => e.serviceId ?? e.id) });
+    for (const lang of ['en', 'es'] as const) {
+      const results = searchEntries(listed, lang, 'pdf');
+      expect(results[0]?.id).toBe('bentopdf');
+      expect(results.map(e => e.id)).toEqual(discoverEntries(listed, lang, { query: 'PDF', view: 'all' }).map(e => e.id));
+      expect(rankCatalogEntries(catalog, lang, catalogEntry('bentopdf')!.name[lang])[0]?.id).toBe('bentopdf');
+    }
+    expect(searchEntries(listed, 'es', 'quitar fondo')[0]?.id).toBe('omni-background');
+    expect(searchEntries(listed, 'es', 'CODIGO QR').map(e => e.id)).toContain('qr-offline');
+    expect(searchEntries(listed, 'es', 'pdf impossibleterm')).toEqual([]);
+    expect(searchEntries(listed, 'es', '   ')).toEqual([]);
+    expect(discoverEntries(listed, 'en', { query: 'pdf', view: 'public' })).toEqual([]);
+  });
   it('lists the tested temporary whiteboard in Use now, not pilots', () => {
     const setup = config({ enabledServices: ['wbo'], publicCollabUrl: 'https://collab.example/' });
     const board = catalogEntry('wbo')!;
@@ -67,6 +82,11 @@ describe('catalog discovery metadata', () => {
   });
   it('keeps reviewed applications and one narrow integration', () => {
     expect(catalog.map((entry) => entry.id)).toEqual([
+      'one-file-core', 'tiddlywiki', 'moocup', 'rustpad', 'autoredact', 'gravity', 'knit', 'newton', 'family-chess', 'projects', 'trip', 'donetick', 'beaverhabits', 'kokoro-web',
+      'newsletters', 'addy',
+      'spliit', 'wishlist', 'kitchenowl', 'opengist', 'linkding', 'vikunja', 'bytestash', 'openresume',
+      'calino', 'radicale', 'chitchatter', 'gathio', 'link-cleaner', 'razzia', 'chhoto', 'unfurl', '13ft',
+      'moodist', 'sketchforge', 'chartdb', 'drawdb', 'bookbinder',
       'cryptpad', 'liberaforms', 'galene', 'wbo',
       'pollaris',
       'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'priviblur', 'mezzo', 'fmd',
@@ -85,7 +105,7 @@ describe('catalog discovery metadata', () => {
     expect(catalog.filter((entry) => entry.featuredOrder !== undefined)
       .sort((left, right) => (left.featuredOrder ?? 0) - (right.featuredOrder ?? 0))
       .map((entry) => entry.id))
-      .toEqual(['bentopdf', 'vert', 'zip-manager', 'omnitools', 'omni-background', 'omni-image-editor', 'omni-compress-image', 'omni-trim-audio', 'omni-csv-json', 'omni-deduplicate', 'hatsh', 'drawio', 'rawgraphs', 'audiomass', 'minipaint', 'excalidraw', 'svgedit', 'cyberchef', 'image-scrubber', 'markmap', 'miniqr', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'mapshaper', 'priviblur', 'numbat', 'mezzo', 'super-productivity', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite', 'biblioreads', 'fourget', 'anonymousoverflow', 'safetwitch', 'qr-offline', 'kittygram', 'rimgo', 'mumble', 'degoog', 'lrclib']);
+      .toEqual(['bentopdf', 'vert', 'zip-manager', 'omnitools', 'omni-background', 'omni-image-editor', 'omni-compress-image', 'omni-trim-audio', 'omni-csv-json', 'omni-deduplicate', 'hatsh', 'drawio', 'rawgraphs', 'audiomass', 'minipaint', 'excalidraw', 'svgedit', 'cyberchef', 'image-scrubber', 'markmap', 'miniqr', 'drawdb', 'bookbinder', 'moodist', 'sketchforge', 'chartdb', 'ittools', 'searxng', 'redlib', 'privatebin', 'freshrss', 'rssbridge', 'ntfy', 'yopass', 'pairdrop', 'uptime-kuma', 'whisper-web', 'jupyterlite', 'reactive-resume', 'penpot', 'actual', 'rallly', 'breezewiki', 'wakapi', 'mapshaper', 'priviblur', 'numbat', 'mezzo', 'super-productivity', 'fmd', 'pollaris', 'binternet', 'gothub', 'translite', 'biblioreads', 'fourget', 'anonymousoverflow', 'safetwitch', 'qr-offline', 'kittygram', 'rimgo', 'mumble', 'degoog', 'lrclib']);
   });
 
   it('keeps unrequested retired applications out of the catalog', () => {
@@ -222,11 +242,41 @@ describe('localized catalog filtering', () => {
     expect(searchEntries(hostedConfig, 'en', '   ')).toEqual([]);
   });
 
+  it('keeps familiar search terms when task names become clearer', () => {
+    const setup = config({
+      enabledServices: ['reactive-resume', 'penpot', 'actual', 'jupyterlite', 'svgedit', 'ittools'],
+      publicResumeUrl: 'https://cv.example/', publicDesignUrl: 'https://design.example/',
+      publicBudgetUrl: 'https://budget.example/', publicPythonUrl: 'https://python.example/',
+      publicSvgUrl: 'https://svg.example/', publicDeveloperToolsUrl: 'https://dev.example/',
+    });
+    for (const [language, query, id] of [
+      ['en', 'CV', 'reactive-resume'], ['es', 'CV', 'reactive-resume'],
+      ['en', 'collaborative design', 'penpot'], ['es', 'diseño', 'penpot'],
+      ['en', 'personal budget', 'actual'], ['es', 'presupuesto personal', 'actual'],
+      ['en', 'notebooks', 'jupyterlite'], ['es', 'cuadernos', 'jupyterlite'],
+      ['en', 'vectors', 'svgedit'], ['es', 'vectores', 'svgedit'],
+      ['en', 'developer', 'ittools'], ['en', 'UUID', 'ittools'], ['es', 'desarrollo', 'ittools'],
+    ] as const) {
+      expect(searchEntries(setup, language, query).map(entry => entry.id), query).toContain(id);
+    }
+  });
+
   it('returns localized task and A–Z views', () => {
     expect(groupEntries(hostedConfig, 'en', 'reading').map((entry) => entry.id)).toEqual(expect.arrayContaining(['freshrss', 'redlib', 'private-router']));
     const all = allEntries(hostedConfig, 'es');
     const names = all.map((entry) => entry.name.es);
     expect(names).toEqual([...names].sort(new Intl.Collator('es', { sensitivity: 'base' }).compare));
+  });
+
+  it('finds punctuated task names and still requires every search term', () => {
+    const setup = config({ enabledServices: ['miniqr', 'omnitools'], publicQrUrl: 'https://qr.example/', publicToolsUrl: 'https://tools.example/' });
+    for (const query of ['QR-code', 'QR code', '“QR code”']) {
+      expect(searchEntries(setup, 'en', query).map(entry => entry.id)).toContain('miniqr');
+    }
+    expect(searchEntries(setup, 'es', 'CÓDIGO—QR').map(entry => entry.id)).toContain('miniqr');
+    expect(searchEntries(setup, 'en', 'CSV/JSON').map(entry => entry.id)).toContain('omni-csv-json');
+    expect(searchEntries(setup, 'en', 'QR nonexistent')).toEqual([]);
+    expect(searchEntries(setup, 'en', '— / …')).toEqual([]);
   });
 
   it('combines access, category and query without exposing account services by default', () => {
@@ -240,13 +290,14 @@ describe('localized catalog filtering', () => {
     expect(discoverEntries(hostedConfig, 'en', { view: 'accounts', query: 'rss' }).map(e => e.id)).toEqual(['freshrss']);
   });
   it('keeps pilots and passwords separate from anonymous readiness, without deleting sign-in routes', () => {
-    const setup = config({ enabledServices: ['fmd', 'rallly', 'mumble', 'uptime-kuma', 'pollaris'], publicFmdUrl: 'https://fmd.example/', publicPollUrl: 'https://poll.example/', publicMumbleUrl: 'mumble://voice.example/', publicStatusUrl: 'https://status.example/', publicPollarisUrl: 'https://meet.example/' });
-    for (const id of ['fmd', 'rallly', 'mumble', 'uptime-kuma']) expect(immediatelyUsable(catalogEntry(id)!, setup)).toBe(false);
-    expect(discoverEntries(setup, 'en', { view: 'pilots' }).map(e => e.id)).toContain('fmd');
-    expect(discoverEntries(setup, 'en', { view: 'accounts' }).map(e => e.id)).toEqual(expect.arrayContaining(['rallly', 'mumble']));
+    const setup = config({ enabledServices: ['fmd', 'galene', 'rallly', 'mumble', 'uptime-kuma', 'pollaris'], publicFmdUrl: 'https://fmd.example/', publicMeetUrl: 'https://meetings.example/', publicPollUrl: 'https://poll.example/', publicMumbleUrl: 'mumble://voice.example/', publicStatusUrl: 'https://status.example/', publicPollarisUrl: 'https://meet.example/' });
+    for (const id of ['fmd', 'galene', 'rallly', 'mumble', 'uptime-kuma']) expect(immediatelyUsable(catalogEntry(id)!, setup)).toBe(false);
+    for (const id of ['fmd', 'galene']) expect(discoverEntries(setup, 'en', { view: 'pilots' }).map(e => e.id)).not.toContain(id);
+    expect(discoverEntries(setup, 'en', { view: 'accounts' }).map(e => e.id)).toEqual(expect.arrayContaining(['fmd', 'galene', 'rallly', 'mumble']));
     expect(allEntries(setup, 'en').map(e => e.id)).not.toContain('uptime-kuma');
     expect(entryLaunch(catalogEntry('fmd')!, 'en', setup)).not.toBeNull();
+    expect(entryLaunch(catalogEntry('galene')!, 'en', setup)?.href).toBe('https://meetings.example/group/community/');
     expect(discoverEntries(setup, 'es', { view: 'public', query: 'reunion' }).map(e => e.id)).toEqual(['pollaris']);
-    expect(discoverEntries(setup, 'es', { query: 'reunion' }).map(e => e.id)).toEqual(['rallly', 'pollaris']);
+    expect(discoverEntries(setup, 'es', { query: 'reunion' }).map(e => e.id).sort()).toEqual(['galene', 'pollaris', 'rallly']);
   });
 });

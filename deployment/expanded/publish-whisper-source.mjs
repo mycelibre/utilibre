@@ -2,7 +2,7 @@
 // generated binaries, models and developer/runtime state. Preserve prior source.
 import { execFileSync } from 'node:child_process';
 import { copyFileSync, lstatSync, mkdtempSync, renameSync } from 'node:fs';
-const source = '/opt/utilibre/expanded-src/whisper';
+const source = '/opt/utilibre/expanded-src/whisper-p7';
 const revision = '81869ed62970ff4373509b6004a6c9a3f0c5b64d';
 if (execFileSync('git', ['rev-parse','HEAD'], {cwd:source,encoding:'utf8'}).trim() !== revision) throw Error('Review the upstream revision first');
 const files = execFileSync('git', ['ls-files','-z'], {cwd:source,encoding:'utf8'}).split('\0').filter(Boolean);

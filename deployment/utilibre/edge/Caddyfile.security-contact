@@ -1,0 +1,11 @@
+# Import this definition once, then `import utilibre_security_contact` inside
+# each existing Utilibre-operated HTTPS site block. Do not create duplicate
+# host blocks or apply this to unrelated domains. Public portal deployment must
+# serve the canonical target before enabling discovery on other hosts.
+(utilibre_security_contact) {
+    @utilibre_security_notice path /.well-known/security.txt /security.txt
+    redir @utilibre_security_notice https://utilibre.org/.well-known/security.txt 302
+}
+# For utilibre.org itself, retain native /.well-known/security.txt delivery;
+# optionally redirect legacy /security.txt to the canonical path only.
+# No private content route, authentication, WebSocket or cache setting changes.

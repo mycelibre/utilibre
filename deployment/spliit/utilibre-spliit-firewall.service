@@ -1,0 +1,12 @@
+[Unit]
+Description=Bounded network access for Utilibre Spliit
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh /home/ubuntu/freetools/deployment/spliit/firewall.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,45 @@
+name: utilibre-vikunja
+x-bounded: &bounded
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  logging:
+    driver: json-file
+    options: {max-size: 5m, max-file: '2'}
+services:
+  vikunja:
+    <<: *bounded
+    image: vikunja/vikunja:2.7.0@sha256:e2204a1c1c6a81e833c2b3a5442be182ca2335b54c2e7e37578cc3fe12a27cfc
+    user: '1000:1000'
+    cpus: 1.5
+    mem_limit: 768m
+    tmpfs: ['/tmp:size=64m,mode=1777']
+    environment:
+      VIKUNJA_DATABASE_PATH: /data/vikunja.db
+      VIKUNJA_SERVICE_SECRET_FILE: /run/secrets/session-secret
+      VIKUNJA_AUTH_OPENID_PROVIDERS_UTILIBRE_CLIENTSECRET_FILE: /run/secrets/oidc-secret
+    volumes:
+      - /opt/utilibre/community-data/vikunja:/data
+      - ./vikunja/config.yml:/app/vikunja/config.yml:ro
+      - /opt/utilibre/community-private/vikunja-session-secret:/run/secrets/session-secret:ro
+      - /opt/utilibre/community-private/vikunja-oidc-secret:/run/secrets/oidc-secret:ro
+    healthcheck:
+      test: [CMD, /app/vikunja/vikunja, healthcheck]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+  gateway:
+    <<: *bounded
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    cpus: 0.25
+    mem_limit: 64m
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    ports: ['10.10.1.43:3195:8080']
+    volumes: ['./vikunja/nginx.conf:/etc/nginx/nginx.conf:ro']
+    depends_on:
+      vikunja: {condition: service_healthy}

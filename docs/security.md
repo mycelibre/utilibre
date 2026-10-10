@@ -6,6 +6,41 @@ stuffing, spam, oversized requests, storage exhaustion, upstream blocking,
 container compromise, and operator error. This document records controls and
 residual risks; it is not a claim of complete security.
 
+## October 8 Rallly advisory and disclosure controls
+
+The running image was inspected as 4.15.3 before action. Upstream release
+4.15.4 identifies the critical unauthenticated preview-route RCE affecting
+4.8.0–4.15.3. The instance was upgraded to the then-current fixed release,
+not downgraded to an arbitrary historical minimum:
+`lukevella/rallly:4.15.4@sha256:8f29eccdc2fbb856001ea3c97d1c1d85556095274ad21a8de0c0125f29303938`.
+Running Next.js is 16.3.8. Upstream was rechecked on 8 October at 22:31 UTC.
+
+A private PostgreSQL custom dump, pre-change schema/config and rollback image
+reference were retained before the isolated service update. Schema comparison
+showed no migration change. Public login and a benign generated preview PNG
+passed after updating; the temporary route mitigation was then removed.
+No exploitation test was run against production and this is not a finding
+about past compromise. See the release and advisory:
+https://github.com/lukevella/rallly/releases/tag/v4.15.4 and
+https://github.com/advisories/GHSA-vcvr-r3jv-pc5j .
+Private evidence: `/opt/utilibre/reports/rallly-security-20261008/`.
+If rollback is necessary, restore the preview-route mitigation before starting
+the affected image; do not reopen an unmitigated affected release.
+
+Private GitHub reporting was enabled and verified. `admin@utilibre.org` is the
+existing non-GitHub contact; SMTP recipient routing passed without sending a
+message. The operator confirms inbox receipt and monitoring, and reports no
+explicit message or mail-backup expiry settings. Provider defaults and delegated
+access remain unverified; no fixed deletion period is promised.
+The root security.txt expires 30 September 2027; the build checks its structure
+and requires at least 31 days remaining. Renewal includes a contact review.
+The public policy includes hosted upstream vulnerabilities and bounded good-faith
+research. Abuse templates, handling limits and unresolved legal questions are
+in `abuse-handling.md`. Subdomain discovery requires an explicit response or
+redirect on each intended host; the root file alone does not provide discovery.
+All 55 intended HTTPS subdomain redirects are now verified; see
+[security-discovery.md](security-discovery.md) for transport and test boundaries.
+
 ## October 7 browser tool boundary
 
 ZIP Manager, RAWGraphs, AudioMass and miniPaint serve static applications only
@@ -25,7 +60,9 @@ specific updates, tests and residual findings are in the toolbox review.
 
 ## Boundary summary
 
-- Cloudflare and the separate Caddy edge are the only public ingress path.
+- HTTP services use the separate Caddy edge, most through Cloudflare HTTP proxying.
+  Search and Binternet use DNS-only routes; TURN and Mumble have distinct native
+  media/voice listeners and scoped firewall rules.
 - Application listeners bind to one exact private address and accept traffic
   only from the exact edge peer.
 - Databases, caches, RSSHub, Anubis metrics, and direct Redlib have no host or
@@ -35,8 +72,9 @@ specific updates, tests and residual findings are in the toolbox review.
   images permit it.
 - The portal exposes only static files and fixed config/status endpoints; it
   has no generic proxy, upload, webhook, DNS, or media API.
-- Persistent user data is limited to FreshRSS/PostgreSQL and PrivateBin
-  ciphertext, plus operational Anubis state and secrets.
+- Persistent state now also includes invited-account applications, CryptPad,
+  LiberaForms, polling and FMD. The current catalog, export guides and
+  `backups.md` define their separate data and recovery boundaries.
 
 ## Edge and proxy trust
 
@@ -197,8 +235,9 @@ updater or floating `latest` tag belongs in production.
 
 ## Residual risks
 
-Cloudflare and the edge process all public traffic; upstream engines and sites
-can log server requests; Redlib can break or be blocked; FreshRSS feed fetching
+Cloudflare processes proxied HTTP hostnames; DNS-only Search/Binternet and
+native voice/media listeners have separate paths as described above. The Caddy
+edge handles hosted HTTP services. Upstream engines and sites can log server requests; Redlib can break or be blocked; FreshRSS feed fetching
 has an SSRF and content-ingestion surface; anonymous encrypted pastes can be
 abused; container and dependency vulnerabilities remain possible; and an
 operator with host or backup access can access persistent server data. These

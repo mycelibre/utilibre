@@ -6,7 +6,7 @@ import type { PublicConfig } from '../config';
 import type { Language } from '../i18n';
 import { routePath } from '../routes';
 import { append, element } from '../utilities/dom';
-import { practicalGuides, practicalGuidePath } from './practical-guide-data';
+import { practicalGuides, practicalGuidePath } from './practical-guide-data.ts';
 import { shareFragment } from '../utilities/toolkits';
 
 const link = (href: string, label: string) => { const a = element('a', '', label); a.href = href; return a; };
@@ -37,7 +37,7 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
   const actions = element('div', 'guide-actions');
   for (const tool of guide.tools) {
     const entry = catalogEntry(tool.id); const launch = entry && entryLaunch(entry, language, config);
-    if (!launch) { actions.append(element('p', 'notice', `${tool.label[language]} — ${es ? 'no disponible por ahora' : 'currently unavailable'}`)); continue; }
+    if (!launch) { actions.append(element('p', 'notice', `${tool.label[language]}: ${es ? 'no disponible por ahora' : 'currently unavailable'}`)); continue; }
     const a = link(tool.path ? localizedServiceUrl(entry!.providerId, launch.href, language, tool.path) : launch.href,
       `${tool.label[language]} · ${es ? 'pestaña nueva' : 'new tab'}`);
     a.className = 'button'; a.target = '_blank'; a.rel = 'noopener noreferrer'; actions.append(a);
@@ -55,7 +55,7 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
     }
     main.append(samples);
   }
-  const steps = section(es ? 'Paso a paso' : 'Step by step', es ? 'Si un control aparece en inglés, conservamos su nombre para que lo podás encontrar. Usamos la traducción nativa cuando está disponible.' : 'English control names are retained where useful to find them. Native application localization is used when available.');
+  const steps = section(es ? 'Paso a paso' : 'Step by step', es ? 'Si un control aparece en inglés, conservamos su nombre para que lo podás encontrar. Usamos la traducción nativa cuando está disponible.' : 'If a control appears in English, we use its on-screen name so you can find it. Where the app offers a translation, we use that label.');
   const list = element('ol'); for (const text of copy.steps) list.append(element('li', '', text)); steps.append(list); main.append(steps);
   main.append(section(es ? 'Comprobá el resultado' : 'Check the result', copy.success), section(es ? 'Si algo no funciona' : 'Troubleshooting', copy.troubleshooting));
   const privacy = section(es ? 'Tus datos en este recorrido' : 'Your data in this workflow', copy.privacy);

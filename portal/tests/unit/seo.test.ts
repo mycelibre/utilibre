@@ -2,6 +2,7 @@ import { spawn, type ChildProcess } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { parseHTML } from 'linkedom';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { practicalGuides, practicalGuidePath } from '../../src/pages/practical-guide-data';
 
 const base = 'http://127.0.0.1:43897';
 const origin = 'https://public.example';
@@ -48,7 +49,7 @@ describe('public SEO without tracking or private-content indexing', () => {
       expect(document.querySelector('[data-catalog-id="reactive-resume"] .catalog-ledger-access')?.textContent).toContain(language === 'es' ? 'Cuenta aprobada' : 'Approved accounts');
       expect(html).not.toContain('data-catalog-id="whisper-web"');
       expect(document.querySelector('label[for="catalog-query"]')).not.toBeNull();
-      expect(document.querySelector('form[method="get"]')?.getAttribute('action')).toBe(`/${language}/`);
+      expect(document.querySelector('form[method="get"]')?.getAttribute('action')).toBe(`/${language}/#catalog`);
       expect(document.querySelector('nav[aria-label]')).not.toBeNull();
       const settings = JSON.parse(document.getElementById('public-page-config')!.textContent!);
       expect(settings).toEqual(await (await fetch(`${base}/_portal/config`)).json());
@@ -68,7 +69,11 @@ describe('public SEO without tracking or private-content indexing', () => {
     expect(response.status).toBe(200);
     const sitemap = await response.text();
     const urls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]!);
-    expect(urls).toHaveLength(70);
+    expect(urls).toHaveLength(30 + practicalGuides.length * 2);
+    for (const guide of practicalGuides) for (const language of ['en', 'es'] as const) {
+      expect(urls, guide.id).toContain(origin + practicalGuidePath(guide.id, language));
+    }
+    for (const language of ['en', 'es']) for (const route of ['security', 'your-data']) expect(urls).toContain(`${origin}/${language}/${route}`);
     expect(urls).toContain('https://public.example/en/guides/shared-whiteboard');
     expect(urls).toContain('https://public.example/es/guias/pizarra-compartida');
     expect(urls).toContain('https://public.example/en/my-utilibre');
@@ -76,6 +81,7 @@ describe('public SEO without tracking or private-content indexing', () => {
     expect(new Set(urls).size).toBe(urls.length);
     expect(sitemap).not.toContain('lastmod');
     const titles = new Set();
+    const descriptions = new Set();
     for (const url of urls) {
       expect(url.startsWith(`${origin}/`)).toBe(true);
       expect(url).not.toMatch(/\?|#|\/(tools|herramientas|services|servicios|status|estado|api|_portal)(\/|$)/);
@@ -86,14 +92,33 @@ describe('public SEO without tracking or private-content indexing', () => {
       expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(url);
       expect(document.querySelector('h1')?.textContent?.length).toBeGreaterThan(0);
       for (const language of ['en', 'es']) expect(document.querySelector(`link[hreflang="${language}"]`)?.getAttribute('href')).toMatch(new RegExp(`^https://public\\.example/${language}/`));
+      const description = document.querySelector('meta[name="description"]')?.getAttribute('content');
+      expect(description?.length, url).toBeGreaterThan(30);
+      descriptions.add(description);
+      const schema = JSON.parse(document.getElementById('public-structured-data')!.textContent!);
+      expect(schema['@graph'].find((item: Record<string, string>) => item['@type'] === 'WebPage')).toMatchObject({
+        '@id': url, url, name: document.title, description, inLanguage: new URL(url).pathname.split('/')[1],
+      });
       titles.add(document.title);
     }
     expect(titles.size).toBe(urls.length);
+    expect(descriptions.size).toBe(urls.length);
     const robots = await (await fetch(`${base}/robots.txt`)).text();
     expect(robots).toContain(`Sitemap: ${origin}/sitemap.xml`);
     expect(robots).toContain('Disallow: /_portal/');
     expect(robots).not.toContain('Disallow: /assets');
     expect(robots).not.toContain('Disallow: /en/tools');
+  });
+
+  it('links every maintained guide from the initial bilingual guide index', async () => {
+    for (const language of ['en', 'es'] as const) {
+      const path = language === 'es' ? '/es/guias' : '/en/guides';
+      const { document } = parseHTML(await (await fetch(base + path)).text());
+      const links = [...document.querySelectorAll('.guide-index a[href]')].map((link) => link.getAttribute('href'));
+      expect(links).toHaveLength(practicalGuides.length);
+      expect(new Set(links).size).toBe(links.length);
+      for (const guide of practicalGuides) expect(links, guide.id).toContain(practicalGuidePath(guide.id, language));
+    }
   });
 
   it('provides truthful structured data without relaxing CSP or inventing ratings', async () => {
@@ -122,7 +147,10 @@ describe('public SEO without tracking or private-content indexing', () => {
       expect(document.querySelector('#merge')).not.toBeNull();
       expect(document.querySelector('.guide-actions a')?.getAttribute('href')).toBe(`https://pdf.public.example/${language === 'es' ? 'es/' : ''}merge-pdf.html`);
       expect(document.querySelectorAll('[download]')).toHaveLength(2);
-      expect(document.querySelector('#main-content')?.textContent).toContain('jsDelivr');
+      const guideText = document.querySelector('#main-content')?.textContent;
+      expect(guideText).toContain('Cloudflare');
+      expect(guideText).toContain(language === 'en' ? 'from Utilibre' : 'desde Utilibre');
+      expect(guideText).not.toMatch(/jsDelivr|githack/);
       for (const letter of ['a', 'b']) {
         const example = await fetch(`${base}/examples/pdf-${language}-${letter}.pdf`);
         expect(example.status).toBe(200);

@@ -722,7 +722,7 @@ homepage, successful content retrieval, and public readiness are separate checks
 
 | Application | Listener | Verified / remaining work |
 | --- | --- | --- |
-| Rallly 4.15.3 | app LAN 3123; `poll.utilibre.org` | Live. Public OIDC + MFA, onboarding, poll creation, anonymous guest voting, CSV export and deletion pass. A second organizer's deletion attempt returned 403. Email-login bypass routes remain blocked. Stock licensing reminder is disclosed; no checks were modified. |
+| Rallly 4.15.4 | app LAN 3123; `poll.utilibre.org` | Live. Public OIDC + MFA, onboarding, poll creation, anonymous guest voting, CSV export and deletion pass. A second organizer's deletion attempt returned 403. Email-login bypass routes remain blocked. Stock licensing reminder is disclosed; no checks were modified. |
 | Priviblur 251a8e6-p1 | app LAN 3139; `tumblr.utilibre.org` | Live. Public blog/media and Spanish preferences pass after tuning media-specific limits. Patched dependencies, private-network egress blocks and RAM-only cache; full modified-source archive linked prominently. |
 | Mezzo 1.4.0 | app LAN 3140; `tenor.utilibre.org` | Live. Public GIF search and all 31 displayed images loaded without HTTP errors. Media-specific limits avoid throttling ordinary results. |
 | FMD Server 0.17.0 | app LAN 3141; `fmd.utilibre.org` | Live invitation-only pilot. Public synthetic API registration, opaque-location round-trip, account separation, unauthenticated denial and cleanup pass. Real Android GPS/push/cryptographic end-to-end testing still needs an operator device. No Spanish UI in this release. |
@@ -1311,3 +1311,12 @@ database; its administrator record matched. The temporary restore container
 was removed, and the production identity server, worker and database were
 healthy afterward. The owner has no enrolled MFA device yet and no application
 clients exist, as expected for this installation checkpoint.
+
+
+## Additions verified on 9 October 2026
+
+drawDB and Bookbinder JS are public through the existing tools host. Native fictional-data workflow checks passed. See [drawDB deployment](drawdb-deployment-2026-10-09.md) and [Bookbinder deployment](bookbinder-deployment-2026-10-09.md) for pinned source, privacy, export scope, recovery and test limits.
+
+Moodist, SketchForge and ChartDB are also deployed under the existing tools host. Native public workflow checks passed, with the limits recorded in [Moodist](moodist-deployment-2026-10-09.md), [SketchForge](sketchforge-deployment-2026-10-09.md) and [ChartDB](chartdb-deployment-2026-10-09.md). The five additions have bilingual native-workflow guides in `portal/src/pages/browser-addition-guides.ts`.
+
+Eight additional applications have passed their recorded native workflows: [Spliit](spliit-deployment-2026-10-09.md), [Wishlist](wishlist-deployment-2026-10-09.md), [KitchenOwl](kitchenowl-deployment-2026-10-09.md), [Opengist](opengist-deployment-2026-10-09.md), [linkding](linkding-deployment-2026-10-09.md), [Vikunja](vikunja-deployment-2026-10-09.md), [ByteStash](bytestash-deployment-2026-10-09.md) and [OpenResume](openresume-deployment-2026-10-09.md). Native account access, plaintext server records, sharing, exports and recovery limits are recorded separately. OpenResume remains browser-local and account-free.

@@ -1,0 +1,298 @@
+diff --git a/unfurl/app.py b/unfurl/app.py
+index 42d770b..f5ee3b7 100644
+--- a/unfurl/app.py
++++ b/unfurl/app.py
+@@ -15,7 +15,7 @@
+ # limitations under the License.
+ 
+ 
+-from flask import Flask, render_template, request, redirect, url_for
++from flask import Flask, render_template, request, redirect, url_for, abort
+ from flask_cors import CORS
+ from flask_restx import Api, Namespace, Resource
+ from urllib.parse import unquote
+@@ -25,7 +25,7 @@ unfurl_app_host = None
+ unfurl_app_port = None
+ unfurl_remote_lookups = None
+ app = Flask(__name__)
+-CORS(app)
++CORS(app, origins=[])
+ 
+ 
+ class UnfurlApp:
+@@ -88,10 +88,12 @@ class JsonVisJS(Resource):
+         if 'url' not in request.args:
+             return {}
+         unfurl_this = request.args['url']
++        if len(unfurl_this) > 4096:
++            abort(413)
+         return run(
+             unfurl_this,
+             return_type='json',
+-            remote_lookups=app.config['remote_lookups'],
++            remote_lookups=app.config.get('remote_lookups'),
+             extra_options={'widthConstraint': {'maximum': 1200}})
+ 
+ 
+diff --git a/unfurl/core.py b/unfurl/core.py
+index a43ce0c..f895df6 100644
+--- a/unfurl/core.py
++++ b/unfurl/core.py
+@@ -163,7 +163,7 @@ class Unfurl:
+         self.queue = queue.Queue()
+         self.api_keys = {}
+         self.known_domain_lists = None
+-        self.node_limit = 500
++        self.node_limit = 100 if os.getenv("UNFURL_HEADER_ONLY") == "true" else 500
+         # How many times one (data_type, value) may appear along a single line of
+         # ancestry before Unfurl stops expanding it. See find_repeated_ancestor().
+         self.max_repeated_ancestors = 2
+@@ -263,6 +263,11 @@ class Unfurl:
+         shared. Instances only read from it.
+         """
+ 
++        # Header-only instances do not need bundled domain-reputation enrichment.
++        if os.getenv("UNFURL_HEADER_ONLY") == "true":
++            self.known_domain_lists = {}
++            return
++
+         global _known_domain_lists
+ 
+         if _known_domain_lists is None:
+@@ -620,10 +625,15 @@ class Unfurl:
+                 log.exception(f'Failed to import {unfurl_parser}: {e}')
+                 continue
+ 
++            remote_lookups = self.remote_lookups
++            if os.getenv("UNFURL_HEADER_ONLY") == "true" and unfurl_parser != 'parse_shortlink':
++                self.remote_lookups = False
+             try:
+                 parser.run(self, node)
+             except Exception as e:
+                 log.exception(f'Exception in {unfurl_parser}: {e}')
++            finally:
++                self.remote_lookups = remote_lookups
+ 
+     def parse(self, queued_item):
+         item = queued_item
+diff --git a/unfurl/parsers/parse_shortlink.py b/unfurl/parsers/parse_shortlink.py
+index 5291dd6..9014156 100644
+--- a/unfurl/parsers/parse_shortlink.py
++++ b/unfurl/parsers/parse_shortlink.py
+@@ -13,6 +13,8 @@
+ # limitations under the License.
+ 
+ import logging
++import os
++from urllib.parse import urljoin, urlsplit
+ import requests
+ import json
+ 
+@@ -189,12 +191,16 @@ REDIRECT_STATUS_CODES = (301, 302, 303, 307, 308)
+ def _location_header_from(url):
+     """GET `url` without following redirects and return its Location header, or {}."""
+ 
+-    r = requests.get(url, allow_redirects=False, timeout=3)
+-
+-    if r.status_code in REDIRECT_STATUS_CODES:
+-        return r.headers['Location']
+-    else:
++    # Requests consumes redirect bodies even with stream=True for its .next
++    # preparation. HEAD has no response body; header-only mode never falls back.
++    request = requests.head if os.getenv("UNFURL_HEADER_ONLY") == "true" else requests.get
++    r = request(url, allow_redirects=False, timeout=3, stream=True)
++    try:
++        if r.status_code in REDIRECT_STATUS_CODES:
++            return r.headers.get('Location', {})
+         return {}
++    finally:
++        r.close()
+ 
+ 
+ def expand_url_via_redirect_header(base_url, shortcode):
+@@ -234,6 +240,31 @@ def run(unfurl, node):
+     if not unfurl.remote_lookups:
+         return
+ 
++    # Optional instance mode: use this parser's existing header reader and graph,
++    # without provider APIs or page-body scraping. The isolated egress proxy is
++    # responsible for blocking private destinations at connection time.
++    if os.getenv("UNFURL_HEADER_ONLY") == "true":
++        if node.data_type != 'url' or len(str(node.value)) > 4096:
++            return
++        url = urlsplit(node.value)
++        if url.scheme not in ('http', 'https') or url.username or url.password:
++            return
++        if url.port not in (None, 80, 443):
++            return
++        visited = unfurl.stash.setdefault('header_redirects', set())
++        if node.value in visited or len(visited) >= 10:
++            return
++        visited.add(node.value)
++        location = _location_header_from(node.value)
++        if location:
++            expanded = urljoin(node.value, location)
++            if urlsplit(expanded).scheme in ('http', 'https'):
++                unfurl.add_to_queue(
++                    data_type='url', key=None, value=expanded,
++                    label=f'Expanded URL: {expanded}', parent_id=node.node_id,
++                    incoming_edge_config=shortlink_edge)
++        return
++
+     preceding_domain = unfurl.find_preceding_domain(node)
+ 
+     # LinkedIn has another method of URL shortening that's different from how most others do it; I can
+diff --git a/unfurl/static/styles.css b/unfurl/static/styles.css
+index ac10b5a..8e32179 100644
+--- a/unfurl/static/styles.css
++++ b/unfurl/static/styles.css
+@@ -557,4 +557,8 @@ html.dark .unfurl-tooltip .tip-edge {
+ 
+ html.dark .unfurl-tooltip .tip-title {
+     color: #999999;
+-}
+\ No newline at end of file
++}
++/* Keep native controls usable on narrow screens. */
++#topinput { display:flex; flex-wrap:wrap; gap:8px; max-width:100%; }
++#text_to_unfurl { box-sizing:border-box; min-width:0; max-width:100%; flex:1 1 260px; }
++.unfurl-logo { box-sizing:border-box; max-width:100%; height:auto; }
+diff --git a/unfurl/templates/base.html b/unfurl/templates/base.html
+index f9a1ca6..fcf98a1 100644
+--- a/unfurl/templates/base.html
++++ b/unfurl/templates/base.html
+@@ -14,7 +14,10 @@
+ 
+ <html>
+ <head>
+-    <title>unfurl</title>
++    <title>Unfurl · Utilibre</title>
++    <meta name="viewport" content="width=device-width, initial-scale=1">
++    <meta name="referrer" content="no-referrer">
++    <meta name="robots" content="noindex,nofollow">
+ 
+     <!-- Apply the saved theme before first paint to avoid a flash of the wrong colors. -->
+     <script type="text/javascript">
+@@ -27,9 +30,10 @@
+         })();
+     </script>
+ 
+-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+-    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
++    <script type="text/javascript" src="/static/vendor/vis.min.js"></script>
++    <script type="text/javascript" src="/static/vendor/d3.min.js"></script>
++    <link href="/static/vendor/vis.min.css" rel="stylesheet" type="text/css" />
++    <script src="/static/vendor/purify.min.js"></script>
+     <link rel="stylesheet" type="text/css" href="/static/styles.css">
+ 
+     <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+@@ -52,6 +56,13 @@
+             </tr>
+         </table>
+     </header>
++    <p style="padding:1rem;max-width:70rem;margin:auto">
++      <a href="https://utilibre.org/en/">More tools from Utilibre</a> ·
++      <a href="https://utilibre.org/es/">Más herramientas de Utilibre</a> ·
++      <a href="https://tools.utilibre.org/utilibre-source/unfurl-utilibre.tar.gz">Instance source / Código de la instancia</a><br>
++      URLs are sent to this server and their destinations may be contacted to read HTTP redirects. A request can register a click or consume a one-time link. Do not submit passwords, private tokens or confidential links. Expanding a URL does not establish safety. No page scripts, previews, provider APIs or remote hash lookups run. HTTP(S) ports 80/443 only; at most 10 fetched URLs and 100 graph nodes. Some links cannot be expanded.<br>
++      <span lang="es">Las URL se envían a este servidor y sus destinos pueden recibir peticiones para leer redirecciones HTTP. Una petición puede registrar un clic o consumir un enlace de un solo uso. No enviés contraseñas, tokens privados ni enlaces confidenciales. Expandir una URL no demuestra que sea segura. No se ejecutan scripts de páginas, vistas previas, API de proveedores ni búsquedas remotas de hashes. Solo HTTP(S) en puertos 80/443; hasta 10 URL consultadas y 100 nodos. Algunos enlaces no se pueden expandir.</span>
++    </p>
+     <div class="main-body-wrapper">
+     <div class="main-body">
+         {% block content %}{% endblock %}
+diff --git a/unfurl/templates/graph.html b/unfurl/templates/graph.html
+index fc186dc..3be8a95 100644
+--- a/unfurl/templates/graph.html
++++ b/unfurl/templates/graph.html
+@@ -23,7 +23,7 @@
+ </p>
+ 
+ <form id="topinput">
+-  <input type="text" id="text_to_unfurl" size="120" autocomplete="on" required autofocus>
++  <input type="text" id="text_to_unfurl" size="120" autocomplete="off" maxlength="4096" aria-label="URL to inspect" required autofocus>
+   <input type="submit" value="Unfurl!" id="subButton">
+ </form>
+ 
+@@ -215,7 +215,10 @@
+         fetch(url).then(response => {
+         return response.json();
+       }).then(data => {
+-          console.log(data);
++          // Vis renders tooltip HTML; retain formatting without active content.
++          [...data.nodes, ...data.edges].forEach(item => {
++              if (item.title) item.title = DOMPurify.sanitize(item.title, {ALLOWED_TAGS:['br','b','i','strong','em','code'], ALLOWED_ATTR:[]});
++          });
+           // Work with your JSON data here..
+ 
+           var unfurl = {
+@@ -250,7 +253,7 @@
+             var selectedNodeId = this.getNodeAt(params.pointer.DOM);
+             if (selectedNodeId) {
+                 var selectedNode = data.nodes[selectedNodeId-1];
+-                console.log("Copied '" + selectedNode.label + "' to clipboard");
++
+                 copyToClipboard(selectedNode.label);
+               }
+           });
+diff --git a/unfurl/tests/http_mocks.py b/unfurl/tests/http_mocks.py
+index ded44db..90dc996 100644
+--- a/unfurl/tests/http_mocks.py
++++ b/unfurl/tests/http_mocks.py
+@@ -57,6 +57,9 @@ class FakeResponse:
+         self.content = content
+         self._json = json
+ 
++    def close(self):
++        self.closed = True
++
+     @property
+     def text(self):
+         return self.content.decode('utf-8', errors='replace')
+diff --git a/unfurl/tests/unit/test_utilibre.py b/unfurl/tests/unit/test_utilibre.py
+new file mode 100644
+index 0000000..9addaf1
+--- /dev/null
++++ b/unfurl/tests/unit/test_utilibre.py
+@@ -0,0 +1,41 @@
++import os
++import unittest
++import requests
++from unittest.mock import patch
++from unfurl.core import Unfurl
++from unfurl.tests.http_mocks import FakeResponse, patch_requests_get
++
++class HeadersOnly(unittest.TestCase):
++    def setUp(self):
++        head = patch('requests.head', side_effect=lambda *a, **kw: requests.get(*a, **kw))
++        head.start()
++        self.addCleanup(head.stop)
++
++    def run_url(self, value):
++        u = Unfurl(remote_lookups=True)
++        u.add_to_queue(data_type="url", key=None, value=value)
++        u.parse_queue()
++        return u
++
++    @patch.dict(os.environ, {"UNFURL_HEADER_ONLY":"true"})
++    def test_relative_redirect_and_no_body_or_hash_enrichment(self):
++        response = FakeResponse(302, {"Location":"/final"})
++        with patch_requests_get({"/start":response}) as calls:
++            u = self.run_url("https://example.invalid/start")
++        self.assertIn("https://example.invalid/final", calls)
++        self.assertTrue(response.closed)
++        self.assertLessEqual(len(calls), 10)
++        self.assertEqual(u.node_limit, 100)
++        with patch_requests_get({}) as calls:
++            self.run_url("5d41402abc4b2a76b9719d911017c592")
++        self.assertEqual(calls, [])
++
++    @patch.dict(os.environ, {"UNFURL_HEADER_ONLY":"true"})
++    def test_credentials_ports_and_cycle_bound(self):
++        for value in ("https://name:secret@example.invalid/", "http://example.invalid:8080/"):
++            with patch_requests_get({}) as calls:
++                self.run_url(value)
++            self.assertEqual(calls, [])
++        with patch_requests_get({"example.invalid":FakeResponse(302,{"Location":"https://example.invalid/start"})}) as calls:
++            self.run_url("https://example.invalid/start")
++        self.assertEqual(len(calls), 1)

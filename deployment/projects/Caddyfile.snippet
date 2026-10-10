@@ -1,0 +1,13 @@
+projects.utilibre.org {
+    import utilibre_security_contact
+    import utilibre_no_transform
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3217 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}

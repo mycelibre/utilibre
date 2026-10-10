@@ -1,0 +1,49 @@
+name: utilibre-donetick
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  logging:
+    driver: json-file
+    options: {max-size: 1m, max-file: '2'}
+services:
+  app:
+    <<: *runtime
+    image: utilibre-donetick:0.1.80-p3
+    user: '1000:1000'
+    env_file: /opt/utilibre/donetick/private/app.env
+    environment:
+      DT_ENV: selfhosted
+      DT_SQLITE_PATH: /data/donetick.db
+      TZ: UTC
+      GIN_MODE: release
+      GOMEMLIMIT: 450MiB
+      GOMAXPROCS: '2'
+    mem_limit: 640m
+    cpus: 1.5
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777']
+    volumes: ['./config.yaml:/config/selfhosted.yaml:ro', '/opt/utilibre/donetick/data:/data']
+    networks:
+      app: {ipv4_address: 172.29.143.10}
+  gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    mem_limit: 96m
+    cpus: 0.5
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777']
+    ports: ['10.10.1.43:3215:8080', '127.0.0.1:3215:8080']
+    volumes: ['./nginx.conf:/etc/nginx/nginx.conf:ro']
+    depends_on: [app]
+    networks:
+      app: {ipv4_address: 172.29.143.20}
+      ingress: {ipv4_address: 172.29.144.10}
+networks:
+  app:
+    internal: true
+    ipam: {config: [{subnet: 172.29.143.0/24}]}
+  ingress:
+    ipam: {config: [{subnet: 172.29.144.0/24}]}

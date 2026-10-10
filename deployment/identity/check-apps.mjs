@@ -68,7 +68,7 @@ try {
       assert.equal(new URL(page.url()).origin,origin,'SSO must return to the application');
       if(app==='resume') assert.match(new URL(page.url()).pathname,/dashboard/);
       if(app==='penpot') assert.match(new URL(page.url()).hash,/dashboard/);
-      if(app==='actual') assert.ok(body.includes(user.username)||body.includes(`Utilibre synthetic check ${user.username.slice(-1)}`),'Actual must show the correct signed-in identity');
+      if(app==='actual') assert.ok(body.includes(user.username)||body.includes(capacityRun ? `Utilibre capacity QA ${user.username.includes('-a-') ? 'a' : 'b'}` : `Utilibre synthetic check ${user.username.slice(-1)}`),'Actual must show the correct signed-in identity');
       if(app==='wakapi') { assert.match(new URL(page.url()).pathname,/summary/); assert.doesNotMatch(body,/5\s*€|€\s*5/); }
       console.log(user.username,app,privateMode?'private-route SSO passed':'public HTTPS SSO passed');
       if(app==='actual' && process.env.CHECK_CREATE==='1') {

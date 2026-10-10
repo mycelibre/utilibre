@@ -59,10 +59,10 @@ index 0000000..ab7cb81
 +ENTRYPOINT ["tor", "-f", "/etc/tor/torrc"]
 diff --git a/deployment/additions-firewall.sh b/deployment/additions-firewall.sh
 new file mode 100644
-index 0000000..f2562ed
+index 0000000..2523163
 --- /dev/null
 +++ b/deployment/additions-firewall.sh
-@@ -0,0 +1,31 @@
+@@ -0,0 +1,42 @@
 +#!/bin/sh
 +# Only these new application IPs; no unrelated host traffic is changed.
 +set -eu
@@ -70,13 +70,24 @@ index 0000000..f2562ed
 +iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
 +iptables -w -F "$chain"
 +iptables -w -A "$chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++iptables -w -A "$chain" -s 172.29.91.10 -d 172.29.91.30 -p tcp --dport 6379 -j RETURN
 +for network in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/4 240.0.0.0/4; do
 +  iptables -w -A "$chain" -d "$network" -j DROP
 +done
 +iptables -w -A "$chain" -p tcp -m multiport --dports 80,443 -j RETURN
 +iptables -w -A "$chain" -j DROP
-+for address in 172.29.74.10 172.29.75.10 172.29.76.10 172.29.77.10 172.29.78.10 172.29.79.10 172.29.80.10 172.29.81.10 172.29.82.10 172.29.85.10 172.29.86.10 172.29.89.10; do
++for address in 172.29.74.10 172.29.75.10 172.29.76.10 172.29.77.10 172.29.78.10 172.29.79.10 172.29.80.10 172.29.81.10 172.29.82.10 172.29.85.10 172.29.86.10 172.29.88.10 172.29.89.10 172.29.90.10 172.29.91.10; do
 +  iptables -w -C DOCKER-USER -s "$address" -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$chain"
++  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
++done
++# Static QR hosting and the local Mumble pilot need replies only, never new outbound connections.
++static_chain=UTILIBRE-STATIC-OUT
++iptables -w -S "$static_chain" >/dev/null 2>&1 || iptables -w -N "$static_chain"
++iptables -w -F "$static_chain"
++iptables -w -A "$static_chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++iptables -w -A "$static_chain" -j DROP
++for address in 172.29.92.10 172.29.93.10; do
++  iptables -w -C DOCKER-USER -s "$address" -j "$static_chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$static_chain"
 +  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
 +done
 +# Tor needs public relay TCP ports beyond 443, but no host/private-network access.
@@ -315,6 +326,32 @@ index 0000000..274fa9e
 +    location / { return 404; }
 +  }
 +}
+diff --git a/deployment/binternet-onion-start.sh b/deployment/binternet-onion-start.sh
+new file mode 100644
+index 0000000..a943188
+--- /dev/null
++++ b/deployment/binternet-onion-start.sh
+@@ -0,0 +1,20 @@
++#!/bin/sh
++set -eu
++
++# This single gateway owns the listener; Tor only connects to it. A host crash
++# can leave the socket inode behind on the shared bind mount.
++socket=/run/onion/http.sock
++if [ -S "$socket" ]; then
++  result=0
++  curl --silent --output /dev/null --max-time 2 --unix-socket "$socket" http://localhost/ || result=$?
++  if [ "$result" -ne 7 ]; then
++    echo 'Onion socket may have a live listener; refusing to remove it.' >&2
++    exit 1
++  fi
++  rm -- "$socket"
++elif [ -e "$socket" ] || [ -L "$socket" ]; then
++  echo 'Onion socket path is not a socket; refusing to remove it.' >&2
++  exit 1
++fi
++
++exec nginx -g 'daemon off;'
 diff --git a/deployment/binternet-torrc b/deployment/binternet-torrc
 new file mode 100644
 index 0000000..ddc6318
@@ -345,10 +382,10 @@ index 0000000..ddc6318
 +HiddenServiceEnableIntroDoSBurstPerSec 20
 diff --git a/deployment/compose.binternet-onion.yaml b/deployment/compose.binternet-onion.yaml
 new file mode 100644
-index 0000000..ec99582
+index 0000000..ae4fd84
 --- /dev/null
 +++ b/deployment/compose.binternet-onion.yaml
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,58 @@
 +name: utilibre-binternet-onion
 +x-runtime: &runtime
 +  restart: unless-stopped
@@ -372,7 +409,16 @@ index 0000000..ec99582
 +    <<: *runtime
 +    image: utilibre-binternet-gateway:9bb70ef-p1
 +    user: "101:101"
++    entrypoint: ["/bin/sh", "/usr/local/bin/binternet-onion-start.sh"]
++    stop_signal: SIGQUIT
++    healthcheck:
++      test: ["CMD", "curl", "--fail", "--silent", "--max-time", "5", "--unix-socket", "/run/onion/http.sock", "http://localhost/"]
++      interval: 30s
++      timeout: 6s
++      retries: 3
++      start_period: 10s
 +    volumes:
++      - ./binternet-onion-start.sh:/usr/local/bin/binternet-onion-start.sh:ro
 +      - ./binternet-onion-gateway.conf:/etc/nginx/nginx.conf:ro
 +      - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
 +      - /opt/utilibre/community-data/binternet-onion-socket:/run/onion
@@ -440,7 +486,7 @@ index 0000000..121e8ce
 +    ipam: {config: [{subnet: 172.29.85.0/24}]}
 diff --git a/deployment/firewall.sh b/deployment/firewall.sh
 new file mode 100644
-index 0000000..b6c1a16
+index 0000000..12a6e87
 --- /dev/null
 +++ b/deployment/firewall.sh
 @@ -0,0 +1,13 @@
@@ -451,7 +497,7 @@ index 0000000..b6c1a16
 +chain=UTILIBRE-TOOLS
 +iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
 +iptables -w -F "$chain"
-+for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3152; do
++for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3151 3152 3153 3154 3155 3156 3160 3161 3162 3163 3164 3165 3166 3167 3168 3170 3171; do
 +  iptables -w -A "$chain" -s 10.10.1.3 -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j RETURN
 +  iptables -w -A "$chain" -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j DROP
 +done

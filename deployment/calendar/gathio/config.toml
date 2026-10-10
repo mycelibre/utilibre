@@ -1,0 +1,28 @@
+[general]
+domain = "events.utilibre.org"
+port = "3000"
+email = "admin@utilibre.org"
+site_name = "Utilibre events"
+is_federated = false
+delete_after_days = 7
+email_logo_url = ""
+show_kofi = false
+show_public_event_list = false
+max_comment_length = 2000
+mail_service = "none"
+creator_email_addresses = []
+[database]
+mongodb_url = "${GATHIO_MONGODB_URL}"
+[[static_pages]]
+title = "More tools / Más herramientas"
+path = "https://utilibre.org/"
+[[static_pages]]
+title = "Data and limits / Datos y límites"
+path = "/data-notes"
+filename = "data-notes.md"
+[[static_pages]]
+title = "Private contact / Contacto privado"
+path = "https://utilibre.org/en/abuse"
+[[static_pages]]
+title = "Modified source / Código modificado"
+path = "https://tools.utilibre.org/utilibre-source/gathio-utilibre.tar.gz"

@@ -1,7 +1,7 @@
 name: utilibre-qr-offline
 services:
   qr-offline:
-    image: utilibre-qr-offline:0fde700-p3
+    image: utilibre-qr-offline:0fde700-p4
     build:
       context: /opt/utilibre/community-src/qr-offline-utilibre-p1
       dockerfile: /home/ubuntu/freetools/deployment/community/Dockerfile.qr-offline

@@ -1,5 +1,14 @@
 # Resource usage and operating limits
 
+For the current 16-vCPU VM, measured portal CPU improvement and serving limits,
+see the [October 8 capacity report](capacity-2026-10-08.md). Older observations
+below are historical snapshots.
+
+Per-service CPU/quota/throttling, memory and synthetic-probe history is collected
+by `utilibre-performance.timer`. Run `node scripts/performance-monitor.mjs report`
+for the latest readings and local pressure flags. The capacity report records
+retention, thresholds, workflow results and the targeted disk cleanup.
+
 This document distinguishes measurements from configured ceilings. Quiet
 container memory does not predict concurrent searches, Redlib media transfer,
 feed refresh bursts, database growth, RSSHub route cost, or paste abuse.

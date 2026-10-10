@@ -1,0 +1,9 @@
+/* Native custom.css hook: text-first archives, without empty blocked frames. */
+#article img,
+#article picture,
+#article iframe,
+#article video,
+#article audio,
+.card-preview {
+    display: none;
+}

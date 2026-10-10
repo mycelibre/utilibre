@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv bash
+set -eu
+# Resolve only the fixed native /etc/hosts mapping for this relay.
+# Preserve certificate-name verification and native STARTTLS; no SASL credentials.
+postconf -e 'smtp_host_lookup = native'
+postconf -e 'smtp_tls_secure_cert_match = nexthop'
+# Never accept sender-supplied Addy authentication or quarantine decisions.
+# A configured local milter may add its independently verified results afterward.
+postconf -e 'header_checks = regexp:/etc/postfix/utilibre-reply-header-checks'

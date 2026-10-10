@@ -47,6 +47,8 @@ x-authentik: &authentik
   volumes:
     - /opt/utilibre/identity-data/data:/data
     - ./configure.py:/integration/configure.py:ro
+    # Native email-template directory, shared by web and worker rendering.
+    - ./email-templates:/templates:ro
   networks: [database, identity]
   depends_on:
     postgresql: {condition: service_healthy}

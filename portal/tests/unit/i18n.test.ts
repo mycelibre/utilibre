@@ -37,10 +37,13 @@ describe('bilingual content', () => {
     const spanish = es['privacy.portal.body'];
     expect(english).toContain('Cloudflare');
     expect(english).toContain('network address and request headers');
-    expect(english).toContain('Search uses a direct HTTPS connection');
+    expect(english).toContain('search.utilibre.org, binternet.utilibre.org, newsletters.utilibre.org and aliases.utilibre.org connect directly to the HTTPS edge');
+    expect(english).toContain('Cloudflare provides their DNS, not their HTTP proxy');
     expect(english).not.toContain('should be checked before each release');
     expect(spanish).toContain('Cloudflare');
     expect(spanish).toContain('dirección de red');
+    expect(spanish).toContain('search.utilibre.org, binternet.utilibre.org, newsletters.utilibre.org y aliases.utilibre.org se conectan directamente al borde HTTPS');
+    expect(spanish).toContain('Cloudflare proporciona su DNS, no su proxy HTTP');
     expect(spanish).not.toContain('Se debe comprobar');
   });
 
@@ -82,6 +85,13 @@ describe('bilingual content', () => {
       .map((entry) => [entry.id, entry.accountAccess]));
 
     expect(accountAccess).toEqual({
+      addy: 'closed-registration',
+      projects: 'invite-required',
+      trip: 'invite-required',
+      donetick: 'invite-required',
+      beaverhabits: 'invite-required',
+      calino: 'invite-required', radicale: 'invite-required',
+      wishlist: 'invite-required', kitchenowl: 'invite-required', opengist: 'invite-required', linkding: 'invite-required', vikunja: 'invite-required', bytestash: 'invite-required',
       liberaforms: 'invite-required',
       galene: 'invite-required',
       freshrss: 'closed-registration',

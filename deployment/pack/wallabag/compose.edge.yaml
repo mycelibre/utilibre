@@ -1,0 +1,7 @@
+services:
+  web:
+    ports:
+      - target: 8080
+        published: '3177'
+        host_ip: 10.10.1.43
+        protocol: tcp

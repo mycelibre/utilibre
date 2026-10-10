@@ -1,0 +1,89 @@
+diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
+index 225030e..801e2dc 100644
+--- a/UTILIBRE-SOURCE.txt
++++ b/UTILIBRE-SOURCE.txt
+@@ -1,4 +1,4 @@
+-Whisper Web, Utilibre 81869ed-p6, 2026-10-09
++Whisper Web, Utilibre 81869ed-p7, 2026-10-09
+ Base: https://github.com/xenova/whisper-web/tree/81869ed62970ff4373509b6004a6c9a3f0c5b64d
+ Upstream MIT license retained. Utilibre changes: same-origin model/WASM loading,
+ small multilingual default and tiny fallback (quantized), no remote audio loading, bilingual pilot/error wording,
+@@ -7,11 +7,16 @@ microphone track release on stop/dismissal/late permission, and dependency fixes
+ P5 uses a cancellation-safe mono adapter instead of blindly adding stereo
+ channels. Native microphone selection is ephemeral, labels are obtained only
+ after permission, and a Web Audio meter helps identify missing input. Native
+-recording requests disable echo cancellation/noise suppression; no server audio
++recording requests disable echo cancellation; no server audio
+ processing, microphone identifiers, or level reports are uploaded or stored.
+ P6 explicitly requests native automatic gain control, which Chromium otherwise
+ disables with echo cancellation. This restores browser microphone-level
+ adjustment without a custom amplifier or changes to uploaded audio files.
++P7 offers supported native noise suppression with an optional bilingual checkbox.
++It starts off to preserve the working capture mode. Turn it off before the next
++recording if quiet speech is affected. This is not guaranteed hum removal.
++The choice is held only in the recording dialog;
++unsupported browsers keep recording without this optional filter.
+ Use recording explicitly hands the captured clip to the existing transcriber.
+ The spoken-language control is visible and reflects actual settings. English and
+ Spanish browser locales initialize that language; other locales initialize Auto.
+diff --git a/src/components/AudioRecorder.tsx b/src/components/AudioRecorder.tsx
+index dd2ba1d..4477814 100644
+--- a/src/components/AudioRecorder.tsx
++++ b/src/components/AudioRecorder.tsx
+@@ -31,6 +31,11 @@ export default function AudioRecorder(props: {
+     const [error, setError] = useState<string>();
+     const [microphones, setMicrophones] = useState<MediaDeviceInfo[]>([]);
+     const [deviceId, setDeviceId] = useState("");
++    const noiseSupported = Boolean(
++        navigator.mediaDevices?.getSupportedConstraints().noiseSuppression,
++    );
++    // Preserve the working capture mode; let each microphone opt into filtering.
++    const [reduceNoise, setReduceNoise] = useState(false);
+     const [inputName, setInputName] = useState("");
+     const [level, setLevel] = useState<number | null>(null);
+     const meterRef = useRef<AudioContext | null>(null);
+@@ -115,10 +120,10 @@ export default function AudioRecorder(props: {
+             const stream = await navigator.mediaDevices.getUserMedia({
+                 audio: {
+                     ...(deviceId ? { deviceId: { exact: deviceId } } : {}),
+-                    // This is an isolated voice recording, not a call. Avoid
+-                    // communication filters suppressing a short, quiet phrase.
++                    // Keep echo processing off; offer the native noise filter
++                    // separately so quiet voices can opt out before recording.
+                     echoCancellation: false,
+-                    noiseSuppression: false,
++                    noiseSuppression: reduceNoise,
+                     // Chromium otherwise disables gain along with echo
+                     // cancellation. Keep native mic-level adjustment enabled.
+                     autoGainControl: true,
+@@ -269,6 +274,30 @@ export default function AudioRecorder(props: {
+                     demás micrófonos aparecen después de permitir el acceso.
+                 </p>
+             )}
++            <div className='my-3 w-full text-left text-gray-900'>
++                <label className='flex min-h-11 items-center gap-2'>
++                    <input
++                        type='checkbox'
++                        checked={reduceNoise}
++                        disabled={
++                            recording || permissionPending || !noiseSupported
++                        }
++                        onChange={(event) =>
++                            setReduceNoise(event.target.checked)
++                        }
++                        aria-describedby='microphone-noise-help'
++                        className='h-4 w-4 shrink-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-600'
++                    />
++                    <span>
++                        Reduce background noise / Reducir ruido de fondo
++                    </span>
++                </label>
++                <p id='microphone-noise-help'>
++                    {noiseSupported
++                        ? "Optional browser filter. Turn off if your voice gets quiet or choppy. / Filtro opcional del navegador. Desactivalo si tu voz baja o se corta."
++                        : "This browser does not offer noise reduction. / Este navegador no ofrece reducción de ruido."}
++                </p>
++            </div>
+             <button
+                 type='button'
+                 disabled={permissionPending}

@@ -1,0 +1,9 @@
+[Unit]
+Description=Consistent private TRIP backup without pruning
+After=docker.service
+RequiresMountsFor=/opt/utilibre/trip/data
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /home/ubuntu/freetools/deployment/trip/backup.py
+Nice=10
+IOSchedulingClass=idle

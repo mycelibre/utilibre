@@ -14,6 +14,10 @@ __pycache__/
 *.py[cod]
 backups/
 runtime/
+# Local captures, third-party exports and the separate instance-list checkout.
+# These are not Utilibre application source and are not for public publication.
+artifacts/
+redlib-instances/
 data/anubis/
 config/searxng/limiter.toml
 secrets/*

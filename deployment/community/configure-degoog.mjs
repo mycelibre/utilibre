@@ -34,4 +34,4 @@ const settings={
 };
 const program=`import {updateInstanceSettings} from './src/server/utils/settings/server-settings.ts';await updateInstanceSettings(${JSON.stringify(settings)});console.log('Native settings updated; existing identity and credentials preserved.');process.exit(0);`;
 execFileSync('docker',['exec','-i','utilibre-evaluation-degoog-1','bun','run','-'],{input:program,stdio:['pipe','inherit','pipe'],timeout:30000});
-console.log('Pinned SearXNG engines prepared. Restart DeGoog with the read-only engine mount.');
+console.log('Base bridge prepared. Run configure-degoog-search.mjs for the current general-search engine and privacy settings, then recreate only DeGoog.');

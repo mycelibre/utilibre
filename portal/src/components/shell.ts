@@ -16,6 +16,7 @@ interface ShellOptions {
 export function renderHeader(currentRoute: Route, config: PublicConfig, t: Translate, options: ShellOptions = {}): HTMLElement {
   let activeTheme = options.theme ?? 'system';
   const header = element('header', 'site-header');
+  if (options.interactive) header.dataset.interactive = 'true';
   const inner = element('div', 'header-inner');
   const brand = element('a', 'brand');
   brand.href = routePath('home', currentRoute.language);
@@ -33,7 +34,8 @@ export function renderHeader(currentRoute: Route, config: PublicConfig, t: Trans
   whiteLogo.height = 82;
   whiteLogo.setAttribute('aria-hidden', 'true');
   brand.append(coralLogo, whiteLogo);
-  const purpose = element('p', 'header-purpose', t('nav.tagline'));
+  const tagline = currentRoute.language === 'es' ? config.projectTaglineEs : config.projectTaglineEn;
+  const purpose = element('p', 'header-purpose', tagline || config.projectTagline || t('nav.tagline'));
   const toggle = element('button', 'menu-toggle', t('nav.menu'));
   toggle.type = 'button';
   toggle.setAttribute('aria-expanded', 'false');
@@ -101,9 +103,9 @@ export function renderFooter(currentRoute: Route, config: PublicConfig, t: Trans
   const footer = element('footer', 'site-footer');
   const inner = element('div', 'footer-inner');
   const links = element('nav', 'footer-links');
-  links.setAttribute('aria-label', t('a11y.menu'));
+  links.setAttribute('aria-label', t('a11y.footer'));
   const items: Array<[Parameters<typeof routePath>[0], TranslationKey]> = [
-    ['about', 'footer.about'], ['transparency', 'nav.transparency'], ['privacy', 'nav.privacy'], ['acceptable', 'footer.acceptable'], ['support', 'footer.support'], ['status', 'nav.status'], ['software', 'footer.software'], ['labels', 'footer.labels'],
+    ['about', 'footer.about'], ['transparency', 'nav.transparency'], ['privacy', 'nav.privacy'], ['acceptable', 'footer.acceptable'], ['security', 'footer.security'], ['your-data', 'yourData.title'], ['support', 'footer.support'], ['status', 'nav.status'], ['software', 'footer.software'], ['labels', 'footer.labels'],
   ];
   for (const [page, key] of items) {
     if (page === 'support' && !config.supportUrl) continue;

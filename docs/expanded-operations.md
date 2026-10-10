@@ -507,7 +507,7 @@ docker compose -f deployment/community/compose.evaluation.yaml --profile libremd
 ```sh
 systemctl list-timers 'utilibre-*' --no-pager
 systemctl status utilibre-account-backup.service utilibre-monitor-alerts.service
-node deployment/community/monitor-alerts.mjs
+systemctl --failed --no-pager
 ```
 
 Daily guarded SearXNG updates run at 02:20 UTC with jitter, community snapshots
@@ -524,6 +524,10 @@ memory. Alerts repeat no more than every 12 hours for an unchanged condition;
 recovery sends one notification. Mail goes from `no-reply@utilibre.org` to
 `admin@utilibre.org` via the private relay with verified STARTTLS. It includes no
 visitor queries or backup contents. It cannot independently detect whole-VM loss.
+Do not run `monitor-alerts.mjs` as a read-only inspection: it can send mail,
+including with `--test`. The watcher checks Kuma, host headroom, the original
+pack backup and forms-maintenance units. It does not inspect every added backup
+unit; use the failed-unit check above when reviewing their scheduled results.
 
 No automatic deletion policy was chosen for new snapshots. The backup guards
 refuse new runs below 5 GiB free and notify the operator. Off-site storage still
@@ -565,11 +569,17 @@ upstream Retry-After is respected), strips upstream challenge documents, and
 sandboxes media responses. Six offline transport tests and a Racket response
 integration test guard this behavior. This does not remove Fandom's image block.
 
-DeGoog uses official 1.0.0 plus three pinned AGPL SearXNG engines. Run
+DeGoog uses official 1.0.0 plus four pinned AGPL SearXNG engines: Google CSE and
+Mwmbl for Web, Open Library for Books, and Hacker News for IT. Google CSE uses
+the checked Blackle partner identifier; it is not an official Utilibre agreement
+with Google. Run
 `init-degoog.mjs` only for private credential initialization; run
 `configure-degoog.mjs` to install/configure the curated engine set, then restart
 the DeGoog service. The script preserves existing identity/credentials and saves
 private pre-change settings. Its native privacy panel links the source archive.
+Settings, no-JavaScript search, saved preferences, Spanish results and public
+desktop/mobile rendering passed on 9 October. See `degoog-search-2026-10-09.md`
+for the bounded caches, provider disclosure and exact verification scope.
 
 ## Mumble
 
@@ -581,25 +591,36 @@ Use a [Mumble client](https://www.mumble.info/downloads/), not a web browser:
 - Certificate: self-signed. Compare its SHA-256 fingerprint before accepting it:
   `83:FA:6A:F8:C6:79:77:E0:FE:4E:DA:3B:1F:6C:83:D6:E5:B2:49:60:CA:96:9E:DD:87:FD:86:E1:4C:38:EB:01`
 
-Public TCP authentication and voice fallback are verified. A credential-free
+Public TCP authentication and voice fallback are verified. On 9 October,
+[run37933469692](https://github.com/mycelibre/utilibre/actions/runs/37933469692)
+also passed pinned TLS, native authentication and one encrypted UDP silence
+loopback from an independent GitHub runner, with no TCP fallback or channel
+audio. This verifies the tested UDP return path, not sustained voice capacity.
+See `mumble-udp-verification-2026-10-09.md` for the protected-secret workflow,
+test limits and evidence. The earlier credential-free
 [GitHub-runner check](https://github.com/mycelibre/utilibre/actions/runs/37525936562)
 also verified pinned TLS and rejection of invalid credentials. Its tagged UDP
 packets (nonce `5574696cc9adeaa7`) reached the application VM and the Mumble
 container at `172.29.92.10:64738` on October 6 at 20:22 UTC. Inbound UDP forwarding
-is therefore verified. This is not an authenticated UDP audio/return-path test.
+was verified by that earlier check; authenticated return-path evidence comes
+from the later run above.
 Public status pings stay disabled (`ALLOWPING=false`); missing unauthenticated
 ping replies are not a firewall failure. No Mumble firewall change was needed.
 The Kuma monitor remains an explicitly private TCP-listener check. The join
 password is separate from the private SuperUser administrator password.
 
-The manual `Mumble external connectivity` workflow sends no production secrets.
-It emits three small UDP probes and reports **sent**, not **delivered**. To repeat,
+The manual `Mumble external connectivity` workflow defaults to secret-free TCP
+and tagged UDP probes. Its optional `authenticated_udp` input uses the protected
+invitation-password secret only for native authentication; credentials never
+enter dispatch arguments or artifacts. The reviewed workflow is available on
+`codex/mumble-udp-20261009`; main was not changed. The default UDP step emits
+three small probes and reports **sent**, not **delivered**. To repeat that step,
 capture only those tagged packets on the application VM while dispatching it:
 
 ```sh
 timeout 60 tcpdump -i any -nn -XX 'udp dst port 64738 and udp[8:4] = 0 and udp[12:4] = 0x5574696c'
 # Run separately while the capture is active:
-gh workflow run mumble-external.yml
+gh workflow run mumble-external.yml --ref codex/mumble-udp-20261009
 ```
 
 Compare the full eight-byte nonce printed by the workflow with the capture;
@@ -608,8 +629,10 @@ audio verification. The workflow is manual-only, not recurring monitoring.
 
 En español: instalá un cliente de Mumble, conectate a `mumble.utilibre.org` en
 el puerto `64738` y pedí la contraseña a `admin@utilibre.org`. Compará la huella
-del certificado antes de aceptarlo. La voz por TCP está verificada; falta
-verificar UDP desde una conexión externa. No compartás la contraseña de SuperUser.
+del certificado antes de aceptarlo. La voz por TCP y una prueba de retorno de
+audio silencioso por UDP cifrado desde una conexión externa están verificadas;
+esa prueba no mide la capacidad de llamadas sostenidas. No compartás la
+contraseña de SuperUser.
 
 ## Privacy-preserving SEO (2026-10-07)
 

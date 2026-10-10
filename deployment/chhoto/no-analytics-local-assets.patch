@@ -1,0 +1,138 @@
+diff --git a/backend/src/database/events.rs b/backend/src/database/events.rs
+index 2b1ee10..7bd551b 100644
+--- a/backend/src/database/events.rs
++++ b/backend/src/database/events.rs
+@@ -144,7 +144,7 @@ pub(crate) fn getall(
+ pub(crate) async fn find_and_add_hit(
+     shortlink: &str,
+     db: &Connection,
+-    hits_tx: &mpsc::Sender<(String, bool)>,
++    _hits_tx: &mpsc::Sender<(String, bool)>,
+ ) -> Result<String, ()> {
+     let now = chrono::Utc::now().timestamp();
+     let Ok(mut statement) = db.prepare_cached(queries::FIND_LINK) else {
+@@ -159,10 +159,7 @@ pub(crate) async fn find_and_add_hit(
+         return Err(());
+     };
+ 
+-    debug!("Accessed link: {shortlink}.");
+-    if let Err(err) = hits_tx.send((shortlink.to_owned(), false)).await {
+-        error!("Failed to enqueue hit update after access: {err}");
+-    }
++    // Utilibre: resolving a link must not record visitor analytics.
+     Ok(long_url)
+ }
+ // Add hits
+diff --git a/backend/src/tests/access.rs b/backend/src/tests/access.rs
+index 643b9b0..2dbc779 100644
+--- a/backend/src/tests/access.rs
++++ b/backend/src/tests/access.rs
+@@ -60,7 +60,7 @@ async fn data_fetching_all() {
+     assert_eq!(reply[1].shortlink, "test3");
+     assert_eq!(reply[0].longlink, "https://example-test1.com");
+     assert_eq!(reply[1].longlink, "https://example-test3.com");
+-    assert_eq!(reply[0].hits, 1);
++    assert_eq!(reply[0].hits, 0);
+     assert_eq!(reply[1].hits, 0);
+     assert_ne!(reply[0].expiry_time, 0);
+     assert_ne!(reply[1].expiry_time, 0);
+diff --git a/backend/src/tests/insertion.rs b/backend/src/tests/insertion.rs
+index 0884e45..c0ae779 100644
+--- a/backend/src/tests/insertion.rs
++++ b/backend/src/tests/insertion.rs
+@@ -280,7 +280,7 @@ async fn link_editing() {
+     let (status, reply) = expand(&app, &api_key, "test2").await;
+     assert!(status.is_success());
+     assert_eq!(reply.longlink, "https://edited-test2.com");
+-    assert_eq!(reply.hits, 1);
++    assert_eq!(reply.hits, 0);
+     assert_eq!(reply.expiry_time, now + 1);
+ 
+     assert!(resp.status().is_redirection());
+diff --git a/frontend/index.html b/frontend/index.html
+index e3f675b..4806483 100644
+--- a/frontend/index.html
++++ b/frontend/index.html
+@@ -24,7 +24,7 @@
+     />
+     <meta
+       property="og:image"
+-      content="https://chhoto.link/static/assets/banner.png"
++      content="https://links.utilibre.org/assets/favicon-196.png"
+     />
+ 
+     <meta
+@@ -51,21 +51,18 @@
+       sizes="196x196"
+     />
+ 
+-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+     <script
+-      src="https://cdn.jsdelivr.net/gh/sintan1729/qrcodejs@0.1.0/qrcode.min.js"
++      src="static/vendor/qrcode.min.js"
+       async
+     ></script>
+     <script
+-      src="https://cdn.jsdelivr.net/npm/punycode-okam@1.4.1/punycode.min.js"
++      src="static/vendor/punycode.min.js"
+       async
+     ></script>
+     <script src="static/script.js" defer></script>
+     <link
+       rel="stylesheet"
+-      href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
++      href="static/vendor/pure-min.css"
+       integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls"
+       crossorigin="anonymous"
+     />
+@@ -209,7 +206,7 @@
+       </table>
+     </div>
+ 
+-    <div name="links-div">
++    <div name="links-div"><p lang="en">Links expire within 30 days. No click statistics. Keep the original URL.</p><p lang="es">Los enlaces vencen en un plazo máximo de 30 días. Sin estadísticas de clics. Conservá la URL original.</p><p lang="en"><a href="https://utilibre.org/en/">More tools from Utilibre</a> · <a href="https://utilibre.org/en/security">Security and contact</a></p><p lang="es"><a href="https://utilibre.org/es/">Más herramientas de Utilibre</a> · <a href="https://utilibre.org/es/security">Seguridad y contacto</a></p>
+       <button class="linkButton" id="admin-button" hidden>
+         <!-- https://svgicons.com/icon/109760/account -->
+         <svg
+diff --git a/frontend/static/styles.css b/frontend/static/styles.css
+index e6f50ba..c2369b8 100644
+--- a/frontend/static/styles.css
++++ b/frontend/static/styles.css
+@@ -1,18 +1,10 @@
+ /* SPDX-FileCopyrightText: 2023-2026 Sayantan Santra <sayantan.santra689@gmail.com> */
+ /* SPDX-License-Identifier: MIT */
+ 
+-@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+-@font-face {
+-  font-family: Montserrat, "Open Sans", Helvetica, Arial, sans-serif;
+-  font-optical-sizing: auto;
+-  font-weight: 400;
+-  font-style: normal;
+-  font-display: swap;
+-}
+ 
+ :root {
+   color-scheme: light dark;
+-  font-family: Montserrat;
++  font-family: system-ui, sans-serif;
+   /* Colors */
+   --text: light-dark(black, #e8e6e3);
+   --bg: light-dark(white, #181a1b);
+@@ -152,7 +144,7 @@ a {
+   text-align: left;
+   font-size: 1.5em;
+   font-style: normal;
+-  font-family: Montserrat;
++  font-family: system-ui, sans-serif;
+   padding: 0em;
+ }
+ .chhoto-table thead {
+@@ -510,3 +502,6 @@ summary,
+     left: 8em;
+   }
+ }
++
++/* Visitor counters are disabled in the backend. */
++[name="hitsColumn"], #info-table tr:has(#info-hits) { display: none; }

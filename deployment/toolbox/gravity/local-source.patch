@@ -1,0 +1,645 @@
+diff --git a/index.html b/index.html
+index 9f46ed1..149fdd4 100644
+--- a/index.html
++++ b/index.html
+@@ -7,6 +6,0 @@
+-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+-    <link
+-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Roboto+Mono:wght@400;500&display=swap"
+-      rel="stylesheet"
+-    />
+@@ -50,7 +44 @@
+-    <button id="music-toggle" class="music-toggle" type="button" aria-label="Toggle background music" aria-pressed="false" title="Background music" hidden>
+-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+-        <path d="M6 11.5V4.2l6-1.4v6.6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+-        <circle cx="4.3" cy="11.5" r="1.7" stroke="currentColor" stroke-width="1.3"/>
+-        <circle cx="10.3" cy="9.4" r="1.7" stroke="currentColor" stroke-width="1.3"/>
+-      </svg>
+-    </button>
++    <a href="https://utilibre.org/" rel="noreferrer" class="utilibre-home">More tools / Más herramientas</a>
+@@ -82,2 +70,2 @@
+-          <div><dt data-a="earth">Earth texture</dt><dd><a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener noreferrer">Solar System Scope</a> · CC BY 4.0</dd></div>
+-          <div><dt data-a="moon">Moon texture</dt><dd>Tom Brown</dd></div>
++          <div><dt data-a="earth">Earth texture</dt><dd>Procedural</dd></div>
++          <div><dt data-a="moon">Moon texture</dt><dd>Procedural</dd></div>
+diff --git a/package-lock.json b/package-lock.json
+index dd7d562..a9ae650 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -11,0 +12,2 @@
++        "@fontsource-variable/inter": "5.3.0",
++        "@fontsource-variable/roboto-mono": "5.3.0",
+@@ -45,32 +47,7 @@
+-    "node_modules/@emnapi/core": {
+-      "version": "1.10.0",
+-      "resolved": "https://registry.npmjs.org/@emnapi/core/-/core-1.10.0.tgz",
+-      "integrity": "sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==",
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "dependencies": {
+-        "@emnapi/wasi-threads": "1.2.1",
+-        "tslib": "^2.4.0"
+-      }
+-    },
+-    "node_modules/@emnapi/runtime": {
+-      "version": "1.10.0",
+-      "resolved": "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.10.0.tgz",
+-      "integrity": "sha512-ewvYlk86xUoGI0zQRNq/mC+16R1QeDlKQy21Ki3oSYXNgLb45GV1P6A0M+/s6nyCuNDqe5VpaY84BzXGwVbwFA==",
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "dependencies": {
+-        "tslib": "^2.4.0"
+-      }
+-    },
+-    "node_modules/@emnapi/wasi-threads": {
+-      "version": "1.2.1",
+-      "resolved": "https://registry.npmjs.org/@emnapi/wasi-threads/-/wasi-threads-1.2.1.tgz",
+-      "integrity": "sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==",
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "dependencies": {
+-        "tslib": "^2.4.0"
++    "node_modules/@fontsource-variable/inter": {
++      "version": "5.3.0",
++      "resolved": "https://registry.npmjs.org/@fontsource-variable/inter/-/inter-5.3.0.tgz",
++      "integrity": "sha512-OupL48va4JNofb97w6NYeF9S7W/kHNKM0Er8Dem5nqi4jeOLrVJDoE8tZEpnMJmtkvNbB1EIPPwHcdkF6b1oUA==",
++      "license": "OFL-1.1",
++      "funding": {
++        "url": "https://github.com/sponsors/ayuhito"
+@@ -79,10 +56,5 @@
+-    "node_modules/@napi-rs/wasm-runtime": {
+-      "version": "1.1.4",
+-      "resolved": "https://registry.npmjs.org/@napi-rs/wasm-runtime/-/wasm-runtime-1.1.4.tgz",
+-      "integrity": "sha512-3NQNNgA1YSlJb/kMH1ildASP9HW7/7kYnRI2szWJaofaS1hWmbGI4H+d3+22aGzXXN9IJ+n+GiFVcGipJP18ow==",
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "dependencies": {
+-        "@tybys/wasm-util": "^0.10.1"
+-      },
++    "node_modules/@fontsource-variable/roboto-mono": {
++      "version": "5.3.0",
++      "resolved": "https://registry.npmjs.org/@fontsource-variable/roboto-mono/-/roboto-mono-5.3.0.tgz",
++      "integrity": "sha512-h5r+KY/6qy8JEOj33JgcrFO81YAnvrc1EAwMpl/EPJLb2OIvOy0/jmB5M7qs7x/uXk5JUP5Ux4LrkeOK7faHkQ==",
++      "license": "OFL-1.1",
+@@ -90,6 +62 @@
+-        "type": "github",
+-        "url": "https://github.com/sponsors/Brooooooklyn"
+-      },
+-      "peerDependencies": {
+-        "@emnapi/core": "^1.7.1",
+-        "@emnapi/runtime": "^1.7.1"
++        "url": "https://github.com/sponsors/ayuhito"
+@@ -99,3 +66,3 @@
+-      "version": "0.133.0",
+-      "resolved": "https://registry.npmjs.org/@oxc-project/types/-/types-0.133.0.tgz",
+-      "integrity": "sha512-KzkdCd6Uxqnf6l3HOw1xfatAlUURA0g14cvBYFyJ5SaNOQbOUvBr9PKArcPcrNIeRsBdgcUzOGrhKveVpvOIGA==",
++      "version": "0.153.0",
++      "resolved": "https://registry.npmjs.org/@oxc-project/types/-/types-0.153.0.tgz",
++      "integrity": "sha512-jSNrRIyvPVLL5E1z/tS5zLAprosGz/FuI1PWwEOz59j3E4TTTzSpqKb/RDGqJhhW0QHYISGXxq582wGx6T11Tw==",
+@@ -105 +72 @@
+-        "url": "https://github.com/sponsors/Boshen"
++        "url": "https://github.com/sponsors/oxc-project"
+@@ -129,0 +97,17 @@
++    "node_modules/@rolldown/binding-android-arm-eabi": {
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-android-arm-eabi/-/binding-android-arm-eabi-1.2.13.tgz",
++      "integrity": "sha512-Vu/NICrgdRvUOeaJZIyB2FP63s6fO/4ud5l8dXmxDx9yDyn+mN0y+gsvsVviSli+T361Aqo0h46EuMoobrwawA==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "android"
++      ],
++      "engines": {
++        "node": "^20.19.0 || >=22.12.0"
++      }
++    },
+@@ -131,3 +115,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-android-arm64/-/binding-android-arm64-1.0.3.tgz",
+-      "integrity": "sha512-454rs7jHngixp/NMxd5srYD57OnzSlZ/eFTETjORQHLwJG1lRtmNOJcBerZlfu4GjKqeq8aCCIQrMdHyhI51Hw==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-android-arm64/-/binding-android-arm64-1.2.13.tgz",
++      "integrity": "sha512-6LEoIrGy5vvCd2boNnv2soPSUZj/PRvhp8R/t9KlX+mIZxThIE/ZqxrGXxmuNX0FuvQFvLdZr7S4HrYpYBVhEQ==",
+@@ -148,3 +132,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-darwin-arm64/-/binding-darwin-arm64-1.0.3.tgz",
+-      "integrity": "sha512-PcAhP+ynjURNyy8SKGl5DQP94aGuB/7JrXJb/t7P+hanXvQVMWzUvRRhBAcg/lNRadBhoUPqSoP4xw5tR/KBEA==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-darwin-arm64/-/binding-darwin-arm64-1.2.13.tgz",
++      "integrity": "sha512-CaJSRzlQ6Q+zkDMVA9OkVxBjVoPRCDEE3v0FSJ9kIQBgRjFApA3Si4ijhbNVUji7ZJt+PfO0e46qy4nPInHUPA==",
+@@ -165,3 +149,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-darwin-x64/-/binding-darwin-x64-1.0.3.tgz",
+-      "integrity": "sha512-9YpfeUvSE2RS7wysJ81uOZkXJz7f7Q55H2Gvp3VEw/EsahqDtrphrZ0EwDLK5vvKOzaCrBsjF8JmnMLcUt78Gg==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-darwin-x64/-/binding-darwin-x64-1.2.13.tgz",
++      "integrity": "sha512-e4r340I5hxSzJkD3YJBxgzq/rJ3wwxwdLLb2FPt1Zpyem20nrQPT11DDEEkazwxaHumH8wpglsp/Ozgj/wT6mw==",
+@@ -182,3 +166,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-freebsd-x64/-/binding-freebsd-x64-1.0.3.tgz",
+-      "integrity": "sha512-yB1IlAsSNHncV6SCTL27/MVGR5htvQsoGxIv5KMGXALp+Ll1wYsn+x98M9MW7qa+NdSbvrrY7ANI4wLJ0n1e6g==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-freebsd-x64/-/binding-freebsd-x64-1.2.13.tgz",
++      "integrity": "sha512-hoBWDZ4/K/mJKVMbsgUd1jfpA2DiOrJ54mpegObU9TBHBBrtX4FLIXJJQRDPZ/2Dn91GvPob+Z2hwKJzf4E5SQ==",
+@@ -199,3 +183,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-arm-gnueabihf/-/binding-linux-arm-gnueabihf-1.0.3.tgz",
+-      "integrity": "sha512-Yi30IVAAfLUCy2MseFjbB1jAMDl1VMCAas5StnYp8da9+CKvMd2H2cbEjWcw5NPaPqzvYkVIaF1nNUG+b7u/sw==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-arm-gnueabihf/-/binding-linux-arm-gnueabihf-1.2.13.tgz",
++      "integrity": "sha512-oF9fZu3vTWnTiVAkDFxU9PJLt1nh20K9RRpuHsR7ZnE2L7XookBbDBVLojCVSLGbvtSlxeUNnjAj6DbNsKyzbg==",
+@@ -216,3 +200,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-1.0.3.tgz",
+-      "integrity": "sha512-jsO7R8To+AdlYgUmN5sHSCZbfhtMBkO0WUx8iORQnPcMMdgr7qM2DQmMwgabs3GhNztdmoKkMKQFHD6DTMCIQw==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-1.2.13.tgz",
++      "integrity": "sha512-DTpb/+jMiqWMPgphn4ksW1zW+XLJ6dJJ9FMvnIk9I291LhCctMPhMYJrP5t9p6C9qa3KXadDdUEZHBaPh3kNxQ==",
+@@ -222,0 +207,3 @@
++      "libc": [
++        "glibc"
++      ],
+@@ -233,3 +220,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-arm64-musl/-/binding-linux-arm64-musl-1.0.3.tgz",
+-      "integrity": "sha512-VWkUHwWriDciit80wleYwKILoR/KMvxh/IdwS/paX+ZgpuRpCrKLUdadJbc0NpBEiyhpYawsJ73j9aCvOH+f7Q==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-arm64-musl/-/binding-linux-arm64-musl-1.2.13.tgz",
++      "integrity": "sha512-xU+Kvv9N2A3SY35zFh1FWWNjxbadE/BKeqnkXe7vScU4GZsw757BlVmDLITZEq8DPpk6m7uoDYkK7P+x/uU5Ow==",
+@@ -239,0 +227,3 @@
++      "libc": [
++        "musl"
++      ],
+@@ -250,3 +240,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-ppc64-gnu/-/binding-linux-ppc64-gnu-1.0.3.tgz",
+-      "integrity": "sha512-5f1laC0SlIR0yDbFCd8acUhvJIag6N3zC5P7oUPN6wX0aOma+uKJ0wBDH5aq7I1PVI2ttTlhJwzwRIBnLiSGEg==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-ppc64-gnu/-/binding-linux-ppc64-gnu-1.2.13.tgz",
++      "integrity": "sha512-XMk/hnhh25oQ756Lclb1Q11h4ll0xC0Esa5w4Vzp+mAE2S3AGJgeM0SonrIgY8fHhjarb6hcoTuwoFG0VVP2ig==",
+@@ -256,0 +247,3 @@
++      "libc": [
++        "glibc"
++      ],
+@@ -267,3 +260,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-s390x-gnu/-/binding-linux-s390x-gnu-1.0.3.tgz",
+-      "integrity": "sha512-Iq4ko0r4XsgbrF/LunNgHtAGLRRVE2kXonAXQ/MV0mC6jQpMOhW1SvtZja2EhC/kd05++bP78dsqBeIQyYJ6Yg==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-s390x-gnu/-/binding-linux-s390x-gnu-1.2.13.tgz",
++      "integrity": "sha512-U1BoTHYmlywE2n3HUWjzZ+8EQsKr+OwpxYuDWaubx42tUL8QSL7nOqRz/NVHanibbFP3M1Rxuprz/wNcbMKjqw==",
+@@ -273,0 +267,3 @@
++      "libc": [
++        "glibc"
++      ],
+@@ -284,3 +280,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-x64-gnu/-/binding-linux-x64-gnu-1.0.3.tgz",
+-      "integrity": "sha512-B8m6tD5+/N5FeNQFbKlLA/2yVq9ycQP1SeedyEYYKWBNR3ZQbkvIUcNnDNM03lO1l5F2roiiFJGgvoLLyZXtSg==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-x64-gnu/-/binding-linux-x64-gnu-1.2.13.tgz",
++      "integrity": "sha512-J4cm80Pc6wEwV5AZ42o62sIQgDk+Y7R2s646jIwuvO+4V46QB58N4vVuMPWCBaNgursXLpmUWJV//WQAkPvHBQ==",
+@@ -290,0 +287,3 @@
++      "libc": [
++        "glibc"
++      ],
+@@ -301,3 +300,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-x64-musl/-/binding-linux-x64-musl-1.0.3.tgz",
+-      "integrity": "sha512-pSdpdUJHkuCxun9LE7jvgUB9qsRgaiyNNCX7m/AvHTcq67AiT/Yhoxvw5zPfhrM8k/BfP8ce/hMOpthKDpEUow==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-x64-musl/-/binding-linux-x64-musl-1.2.13.tgz",
++      "integrity": "sha512-W0euZS40U4V6JkmEnVCIX9mcsL6cbXQ4X8c2w+MMOIjFg68TXUW+u3RT+2e1t1pv9mg/EP3pDtK3POXdQ7Rxyw==",
+@@ -307,0 +307,3 @@
++      "libc": [
++        "musl"
++      ],
+@@ -318,3 +320,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-openharmony-arm64/-/binding-openharmony-arm64-1.0.3.tgz",
+-      "integrity": "sha512-OXXS3RKJgX2uLwM+gYyuH5omcH8fL1LJs96pZGgtetVCahON57+d4SJHzTgZiOjxgGkSnpXpOsWuPDGAKAigEg==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-openharmony-arm64/-/binding-openharmony-arm64-1.2.13.tgz",
++      "integrity": "sha512-do/AF/4n9MRshia3a5aXoy8xM2c6mgfT6D7H/dY6my5z+hfCIR4ab7mk4IRj++nsEQpKy39kd0DQnDq+r692tw==",
+@@ -334,19 +335,0 @@
+-    "node_modules/@rolldown/binding-wasm32-wasi": {
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-wasm32-wasi/-/binding-wasm32-wasi-1.0.3.tgz",
+-      "integrity": "sha512-JTtb8BWFynicNSoPrehsCzBtOKjZ6jhMiPFEmOiuXg1Fl8dn2KHQob+GuPSGR0dryQa1PQJbzjF3dqO/whhjLg==",
+-      "cpu": [
+-        "wasm32"
+-      ],
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "dependencies": {
+-        "@emnapi/core": "1.10.0",
+-        "@emnapi/runtime": "1.10.0",
+-        "@napi-rs/wasm-runtime": "^1.1.4"
+-      },
+-      "engines": {
+-        "node": "^20.19.0 || >=22.12.0"
+-      }
+-    },
+@@ -354,3 +337,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-win32-arm64-msvc/-/binding-win32-arm64-msvc-1.0.3.tgz",
+-      "integrity": "sha512-gEdFFEN70A/jxb2svrWsN3aDL7OUtmvlOy+6fa2jxG8K0wQ1ZbdeLGnidov6Yu5/733dI5ySfzFlQ/cb0bSz1g==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-win32-arm64-msvc/-/binding-win32-arm64-msvc-1.2.13.tgz",
++      "integrity": "sha512-6FtUf2cJZobutJdxnGYX8z0vtbgqU0b2v8vfBhkXb9wp2MppMFtkunE+IaOntyi01rkIQoPW2GHABtfzsC0BRQ==",
+@@ -371,3 +354,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/@rolldown/binding-win32-x64-msvc/-/binding-win32-x64-msvc-1.0.3.tgz",
+-      "integrity": "sha512-eXB7CHuaQdqmJcc3koCNtNPmT/bj2gc999kUFgBxG8Ac0NdgXc4rkCHhqrgrhN3zddvvvrgzj1e90SuSfmyIXA==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/@rolldown/binding-win32-x64-msvc/-/binding-win32-x64-msvc-1.2.13.tgz",
++      "integrity": "sha512-UKhFaZTeTcbKrb3iU82m17jVcPEAoqDkCN5MBqgPyZSwp/cQmib21crTS0DdH7T1B7wZRWEI89YQAOJMet5yhg==",
+@@ -408,11 +390,0 @@
+-    "node_modules/@tybys/wasm-util": {
+-      "version": "0.10.2",
+-      "resolved": "https://registry.npmjs.org/@tybys/wasm-util/-/wasm-util-0.10.2.tgz",
+-      "integrity": "sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==",
+-      "dev": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "dependencies": {
+-        "tslib": "^2.4.0"
+-      }
+-    },
+@@ -420,3 +392,3 @@
+-      "version": "22.20.3",
+-      "resolved": "https://registry.npmjs.org/@types/node/-/node-22.20.3.tgz",
+-      "integrity": "sha512-DZmzkmwHzXrLPAXPyKNDzlIwMMUZCVacoD25ywdy5YTKGbOx/2ld+Q38Im2zJ0vBuZP5Prd3VZutKZyXwkOS8A==",
++      "version": "26.6.4",
++      "resolved": "https://registry.npmjs.org/@types/node/-/node-26.6.4.tgz",
++      "integrity": "sha512-ldVPDCzj7fsaGZrLB0NuHuTvJcsNasysBAqMolr/cgxrLd1xbqxIr3XJiPnHHJUCxj5sNF1vnRj9aWnrVh5Jcg==",
+@@ -427 +399 @@
+-        "undici-types": "~6.21.0"
++        "undici-types": "~8.9.0"
+@@ -553,3 +525,3 @@
+-      "version": "4.8.1",
+-      "resolved": "https://registry.npmjs.org/bare-fs/-/bare-fs-4.8.1.tgz",
+-      "integrity": "sha512-N1nnXdHZAOSstz0XiHikGS4HGMH4CnSwhqWdGQQMqqdvp4Jybm9sE3R1WVnpWVd4SFkc8ryPDBLViNLwiEqECg==",
++      "version": "4.8.3",
++      "resolved": "https://registry.npmjs.org/bare-fs/-/bare-fs-4.8.3.tgz",
++      "integrity": "sha512-KQi9ShyPS/nOCtKpma7At8wbq4ORSNUmD67hsZrPcaWJcEmL8PHyS2xVWT308y8/LvHFOUTytTTDsD8dInx6bA==",
+@@ -1083,3 +1055,3 @@
+-      "version": "10.7.2",
+-      "resolved": "https://registry.npmjs.org/ip-address/-/ip-address-10.7.2.tgz",
+-      "integrity": "sha512-7H/2gFSIitxc0hG3nOI1glS8QLo/EHBFFLk8vEUjXY/xu0AdL8jZ9U1IzO2PUm0d2D/ofQcAifb0g6OBkt8U7w==",
++      "version": "10.7.3",
++      "resolved": "https://registry.npmjs.org/ip-address/-/ip-address-10.7.3.tgz",
++      "integrity": "sha512-A1kdq/tSb5QjvKvAMgIoEvDBIgL7qaqVP/jkvSwYYRZ9iEzvPpopxp2wQfu3SuZRHtpHNxMn8Fs0bS+gf5Xmwg==",
+@@ -1103,3 +1075,3 @@
+-      "version": "1.32.0",
+-      "resolved": "https://registry.npmjs.org/lightningcss/-/lightningcss-1.32.0.tgz",
+-      "integrity": "sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ==",
++      "version": "1.33.0",
++      "resolved": "https://registry.npmjs.org/lightningcss/-/lightningcss-1.33.0.tgz",
++      "integrity": "sha512-WkUDrojuJs0xkgGf2udWxa3yGBRxPtxUkB79i6aCZLRgc7PM8fZe9TosfPDcvEpQZbuFASnHYmRLBLUbmLOIIA==",
+@@ -1119,11 +1091,11 @@
+-        "lightningcss-android-arm64": "1.32.0",
+-        "lightningcss-darwin-arm64": "1.32.0",
+-        "lightningcss-darwin-x64": "1.32.0",
+-        "lightningcss-freebsd-x64": "1.32.0",
+-        "lightningcss-linux-arm-gnueabihf": "1.32.0",
+-        "lightningcss-linux-arm64-gnu": "1.32.0",
+-        "lightningcss-linux-arm64-musl": "1.32.0",
+-        "lightningcss-linux-x64-gnu": "1.32.0",
+-        "lightningcss-linux-x64-musl": "1.32.0",
+-        "lightningcss-win32-arm64-msvc": "1.32.0",
+-        "lightningcss-win32-x64-msvc": "1.32.0"
++        "lightningcss-android-arm64": "1.33.0",
++        "lightningcss-darwin-arm64": "1.33.0",
++        "lightningcss-darwin-x64": "1.33.0",
++        "lightningcss-freebsd-x64": "1.33.0",
++        "lightningcss-linux-arm-gnueabihf": "1.33.0",
++        "lightningcss-linux-arm64-gnu": "1.33.0",
++        "lightningcss-linux-arm64-musl": "1.33.0",
++        "lightningcss-linux-x64-gnu": "1.33.0",
++        "lightningcss-linux-x64-musl": "1.33.0",
++        "lightningcss-win32-arm64-msvc": "1.33.0",
++        "lightningcss-win32-x64-msvc": "1.33.0"
+@@ -1133,3 +1105,3 @@
+-      "version": "1.32.0",
+-      "resolved": "https://registry.npmjs.org/lightningcss-android-arm64/-/lightningcss-android-arm64-1.32.0.tgz",
+-      "integrity": "sha512-YK7/ClTt4kAK0vo6w3X+Pnm0D2cf2vPHbhOXdoNti1Ga0al1P4TBZhwjATvjNwLEBCnKvjJc2jQgHXH0NEwlAg==",
++      "version": "1.33.0",
++      "resolved": "https://registry.npmjs.org/lightningcss-android-arm64/-/lightningcss-android-arm64-1.33.0.tgz",
++      "integrity": "sha512-gEpRTalKdosp4Bb8qWtc2iOgE5SeIHlpS1up9bFq2wAyYhl1UdTObYiHe98zEM9SQvSoqQZ1IQD0JNpg3Ml5pg==",
+@@ -1154,3 +1126,3 @@
+-      "version": "1.32.0",
+-      "resolved": "https://registry.npmjs.org/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.32.0.tgz",
+-      "integrity": "sha512-RzeG9Ju5bag2Bv1/lwlVJvBE3q6TtXskdZLLCyfg5pt+HLz9BqlICO7LZM7VHNTTn/5PRhHFBSjk5lc4cmscPQ==",
++      "version": "1.33.0",
++      "resolved": "https://registry.npmjs.org/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.33.0.tgz",
++      "integrity": "sha512-Sciaz8eenNTKn9b3t7+xr0ipTp9YxKQY4npwQ3mrRuL0BAVHBLyZxofhaKBAVtzmtRZ/zTyo0/to4B1uWG/Djg==",
+@@ -1175,3 +1147,3 @@
+-      "version": "1.32.0",
+-      "resolved": "https://registry.npmjs.org/lightningcss-darwin-x64/-/lightningcss-darwin-x64-1.32.0.tgz",
+-      "integrity": "sha512-U+QsBp2m/s2wqpUYT/6wnlagdZbtZdndSmut/NJqlCcMLTWp5muCrID+K5UJ6jqD2BFshejCYXniPDbNh73V8w==",
++      "version": "1.33.0",
++      "resolved": "https://registry.npmjs.org/lightningcss-darwin-x64/-/lightningcss-darwin-x64-1.33.0.tgz",
++      "integrity": "sha512-Z5UPAxzrjlWNNyGy6i65cJzzvgJ5D3T6wMvs+gWpY9d7qRhANrxqAp6LhxIgZhWEw18RfJTGcRxjuLIBr+m8XQ==",
+@@ -1196,3 +1168,3 @@
+-      "version": "1.32.0",
+-      "resolved": "https://registry.npmjs.org/lightningcss-freebsd-x64/-/lightningcss-freebsd-x64-1.32.0.tgz",
+-      "integrity": "sha512-JCTigedEksZk3tHTTthnMdVfGf61Fky8Ji2E4YjUTEQX14xiy/lTzXnu1vwiZe3bYe0q+SpsSH/CTeDXK6WHig==",
++      "version": "1.33.0",
++      "resolved": "https://registry.npmjs.org/lightningcss-freebsd-x64/-/lightningcss-freebsd-x64-1.33.0.tgz",
++      "integrity": "sha512-QQM/Ti/hQajJwCY+RiWuCZ9sdtI/XQk7nDK5vC8kkdwixezOlDgvDx7+RT+QjK6FcFT4MpsuoBnHIo/O3StRRg==",
+@@ -1217,3 +1189,3 @@
+-      "version": "1.32.0",
+-      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm-gnueabihf/-/lightningcss-linux-arm-gnueabihf-1.32.0.tgz",
+-      "integrity": "sha512-x6rnnpRa2GL0zQOkt6rts3YDPzduLpWvwAF6EMhXFVZXD4tPrBkEFqzGowzCsIWsPjqSK+tyNEODUBXeeVHSkw==",
++      "version": "1.33.0",
++      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm-gnueabihf/-/lightningcss-linux-arm-gnueabihf-1.33.0.tgz",
++      "integrity": "sha512-N7FVBe6iS24MlM6R/4RBTxGhQheZGs7tiQ9U32UtF75NzP5Q7xWPRqLBCKxlRQRk3rY1jCIPLzx7WzOhuUIRLQ==",
+@@ -1238,3 +1210,3 @@
+-      "version": "1.32.0",
+-      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.32.0.tgz",
+-      "integrity": "sha512-0nnMyoyOLRJXfbMOilaSRcLH3Jw5z9HDNGfT/gwCPgaDjnx0i8w7vBzFLFR1f6CMLKF8gVbebmkUN3fa/kQJpQ==",
++      "version": "1.33.0",
++      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.33.0.tgz",
++      "integrity": "sha512-j2v/itmy4HlNxlc6voKXYgBqNi0Ng2LShg4z7GufpEgs05P+2suBVyi9I6YHq5uoVFx9ETin3eCEhLVyXGQnKg==",
+@@ -1244,0 +1217,3 @@
++      "libc": [
++        "glibc"
++      ],
+@@ -1259,3 +1234,3 @@
+-      "version": "1.32.0",
+-      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.32.0.tgz",
+-      "integrity": "sha512-UpQkoenr4UJEzgVIYpI80lDFvRmPVg6oqboNHfoH4CQIfNA+HOrZ7Mo7KZP02dC6LjghPQJeBsvXhJod/wnIBg==",
++      "version": "1.33.0",
++      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.33.0.tgz",
++      "integrity": "sha512-yiO5ROMuYQgXbC60yjZU5CYSFZGKXL0HFATXt9mHJn1+zW55oCtMI9NfcVhYLMFDL7gV7oBPon/EmMMGg2OvtQ==",
+@@ -1265,0 +1241,3 @@
++      "libc": [
++        "musl"
++      ],
+@@ -1280,3 +1258,3 @@
+-      "version": "1.32.0",
+-      "resolved": "https://registry.npmjs.org/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.32.0.tgz",
+-      "integrity": "sha512-V7Qr52IhZmdKPVr+Vtw8o+WLsQJYCTd8loIfpDaMRWGUZfBOYEJeyJIkqGIDMZPwPx24pUMfwSxxI8phr/MbOA==",
++      "version": "1.33.0",
++      "resolved": "https://registry.npmjs.org/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.33.0.tgz",
++      "integrity": "sha512-ar+Ju7LmcN0Jo4FpL4hpFybwNG9/3A/Br5KW2n2jyODg3MEZXaDYADdemoNS+BDNfMgKvylJLj4S5tyRActuAg==",
+@@ -1286,0 +1265,3 @@
++      "libc": [
++        "glibc"
++      ],
+@@ -1301,3 +1282,3 @@
+-      "version": "1.32.0",
+-      "resolved": "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.32.0.tgz",
+-      "integrity": "sha512-bYcLp+Vb0awsiXg/80uCRezCYHNg1/l3mt0gzHnWV9XP1W5sKa5/TCdGWaR/zBM2PeF/HbsQv/j2URNOiVuxWg==",
++      "version": "1.33.0",
++      "resolved": "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.33.0.tgz",
++      "integrity": "sha512-RYiYbkokw0trfKqqzfF55lginwEPrD3OJDfTuJzFs1MK6iFnDenaz1fqLLtX4ITG3OktJQXOeTaw1awrBAlZPw==",
+@@ -1307,0 +1289,3 @@
++      "libc": [
++        "musl"
++      ],
+@@ -1322,3 +1306,3 @@
+-      "version": "1.32.0",
+-      "resolved": "https://registry.npmjs.org/lightningcss-win32-arm64-msvc/-/lightningcss-win32-arm64-msvc-1.32.0.tgz",
+-      "integrity": "sha512-8SbC8BR40pS6baCM8sbtYDSwEVQd4JlFTOlaD3gWGHfThTcABnNDBda6eTZeqbofalIJhFx0qKzgHJmcPTnGdw==",
++      "version": "1.33.0",
++      "resolved": "https://registry.npmjs.org/lightningcss-win32-arm64-msvc/-/lightningcss-win32-arm64-msvc-1.33.0.tgz",
++      "integrity": "sha512-1K+MPfLSFVpphzpdbfkhlWk6wBrTObBzS2T6db10PNOZgR9GoVsAWzwNyuhUYYbTp23j+4RrncfujZ4uAzXvwA==",
+@@ -1343,3 +1327,3 @@
+-      "version": "1.32.0",
+-      "resolved": "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.32.0.tgz",
+-      "integrity": "sha512-Amq9B/SoZYdDi1kFrojnoqPLxYhQ4Wo5XiL8EVJrVsB8ARoC1PWW6VGtT0WKCemjy8aC+louJnjS7U18x3b06Q==",
++      "version": "1.33.0",
++      "resolved": "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.33.0.tgz",
++      "integrity": "sha512-OlEICDx/Xl0FqSp4bry8zFnCvGpig3Gl4gCquvYwHuqJKEC1+n9NgDniFvqHGmMv1ZkqDJrDqKKSykTDX+ehuA==",
+@@ -1395,3 +1379,3 @@
+-      "version": "3.3.12",
+-      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.12.tgz",
+-      "integrity": "sha512-ZB9RH/39qpq5Vu6Y+NmUaFhQR6pp+M2Xt76XBnEwDaGcVAqhlvxrl3B2bKS5D3NH3QR76v3aSrKaF/Kiy7lEtQ==",
++      "version": "3.3.20",
++      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.20.tgz",
++      "integrity": "sha512-uKdg2G3GNCKQn9byYOpxbGqrT2fGO5KRt5J/8b3pok8rT6qxGWF6hxMyJiEYtAf+FVyYuD9hRaDqX5uPFYJ4ZQ==",
+@@ -1512,3 +1496,3 @@
+-      "version": "4.0.4",
+-      "resolved": "https://registry.npmjs.org/picomatch/-/picomatch-4.0.4.tgz",
+-      "integrity": "sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==",
++      "version": "4.0.7",
++      "resolved": "https://registry.npmjs.org/picomatch/-/picomatch-4.0.7.tgz",
++      "integrity": "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==",
+@@ -1525,3 +1509,3 @@
+-      "version": "8.5.15",
+-      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.15.tgz",
+-      "integrity": "sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==",
++      "version": "8.5.29",
++      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.29.tgz",
++      "integrity": "sha512-49cGhUbXj8Qenv0iTMxA1cFBzxXoctpC9Ujd77t1WcbJIr6nF/eI7g/8MgxrYldFRuAXvja7xQRwavoW7kgrxQ==",
+@@ -1545 +1529 @@
+-        "nanoid": "^3.3.12",
++        "nanoid": "^3.3.19",
+@@ -1547 +1531 @@
+-        "source-map-js": "^1.2.1"
++        "source-map-js": "^1.2.2"
+@@ -1670,3 +1654,3 @@
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/rolldown/-/rolldown-1.0.3.tgz",
+-      "integrity": "sha512-i00lAJ2ks1BYr7rjNjKC7BcqAS7nVfiT3QX1SI5aY+AFHblCmaUf9OE9dbdzDvW6dJxbi2ZCZiy9v3CcwOiX3g==",
++      "version": "1.2.13",
++      "resolved": "https://registry.npmjs.org/rolldown/-/rolldown-1.2.13.tgz",
++      "integrity": "sha512-/5apOkwWxtACcQtZ5WlrAsKS4JwXVThQPJZ3RqIruRY9UG9M8e0VlXN068xum/JRKA4aIUoJ13ghe/kGCvidiQ==",
+@@ -1676 +1660 @@
+-        "@oxc-project/types": "=0.133.0",
++        "@oxc-project/types": "=0.153.0",
+@@ -1686,15 +1670,15 @@
+-        "@rolldown/binding-android-arm64": "1.0.3",
+-        "@rolldown/binding-darwin-arm64": "1.0.3",
+-        "@rolldown/binding-darwin-x64": "1.0.3",
+-        "@rolldown/binding-freebsd-x64": "1.0.3",
+-        "@rolldown/binding-linux-arm-gnueabihf": "1.0.3",
+-        "@rolldown/binding-linux-arm64-gnu": "1.0.3",
+-        "@rolldown/binding-linux-arm64-musl": "1.0.3",
+-        "@rolldown/binding-linux-ppc64-gnu": "1.0.3",
+-        "@rolldown/binding-linux-s390x-gnu": "1.0.3",
+-        "@rolldown/binding-linux-x64-gnu": "1.0.3",
+-        "@rolldown/binding-linux-x64-musl": "1.0.3",
+-        "@rolldown/binding-openharmony-arm64": "1.0.3",
+-        "@rolldown/binding-wasm32-wasi": "1.0.3",
+-        "@rolldown/binding-win32-arm64-msvc": "1.0.3",
+-        "@rolldown/binding-win32-x64-msvc": "1.0.3"
++        "@rolldown/binding-android-arm-eabi": "1.2.13",
++        "@rolldown/binding-android-arm64": "1.2.13",
++        "@rolldown/binding-darwin-arm64": "1.2.13",
++        "@rolldown/binding-darwin-x64": "1.2.13",
++        "@rolldown/binding-freebsd-x64": "1.2.13",
++        "@rolldown/binding-linux-arm-gnueabihf": "1.2.13",
++        "@rolldown/binding-linux-arm64-gnu": "1.2.13",
++        "@rolldown/binding-linux-arm64-musl": "1.2.13",
++        "@rolldown/binding-linux-ppc64-gnu": "1.2.13",
++        "@rolldown/binding-linux-s390x-gnu": "1.2.13",
++        "@rolldown/binding-linux-x64-gnu": "1.2.13",
++        "@rolldown/binding-linux-x64-musl": "1.2.13",
++        "@rolldown/binding-openharmony-arm64": "1.2.13",
++        "@rolldown/binding-win32-arm64-msvc": "1.2.13",
++        "@rolldown/binding-win32-x64-msvc": "1.2.13"
+@@ -1800,3 +1784,3 @@
+-      "version": "1.2.1",
+-      "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz",
+-      "integrity": "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==",
++      "version": "1.2.2",
++      "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.2.tgz",
++      "integrity": "sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==",
+@@ -1875,3 +1859,3 @@
+-      "version": "3.2.1",
+-      "resolved": "https://registry.npmjs.org/tar-stream/-/tar-stream-3.2.1.tgz",
+-      "integrity": "sha512-nqsEO8zLZJvrOMdEwkA0QdCLFbetHMn95Zqu4fKwX+hkaTWJPZZOrxx/PwtxoK0MMGQmBQNRW3CPs8IFYQz4cQ==",
++      "version": "3.2.2",
++      "resolved": "https://registry.npmjs.org/tar-stream/-/tar-stream-3.2.2.tgz",
++      "integrity": "sha512-+8NeqHRjQWH9nYlwo2gamAMImZCVzI4UoEgDpWorBt9OEfppiZn+uSkskzQKPWIZyji/C8fpWO7u69G0DX0tbg==",
+@@ -1881,4 +1865,4 @@
+-        "b4a": "^1.6.4",
+-        "bare-fs": "^4.5.5",
+-        "fast-fifo": "^1.2.0",
+-        "streamx": "^2.15.0"
++        "b4a": "^1.9.0",
++        "bare-fs": "^4.8.2",
++        "fast-fifo": "^1.3.2",
++        "streamx": "^2.28.1"
+@@ -1938,3 +1922,3 @@
+-      "version": "2.12.2",
+-      "resolved": "https://registry.npmjs.org/typed-query-selector/-/typed-query-selector-2.12.2.tgz",
+-      "integrity": "sha512-EOPFbyIub4ngnEdqi2yOcNeDLaX/0jcE1JoAXQDDMIthap7FoN795lc/SHfIq2d416VufXpM8z/lD+WRm2gfOQ==",
++      "version": "2.12.3",
++      "resolved": "https://registry.npmjs.org/typed-query-selector/-/typed-query-selector-2.12.3.tgz",
++      "integrity": "sha512-/dtuMZyutHLlrxWhhC1uib00ELUr2dZ8C9B8YzZYsJmeE3V56OxRblrSM2UaF142pcMtak7ehZ6+poWGeehNIg==",
+@@ -1966,3 +1950,3 @@
+-      "version": "6.21.0",
+-      "resolved": "https://registry.npmjs.org/undici-types/-/undici-types-6.21.0.tgz",
+-      "integrity": "sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==",
++      "version": "8.9.0",
++      "resolved": "https://registry.npmjs.org/undici-types/-/undici-types-8.9.0.tgz",
++      "integrity": "sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==",
+@@ -1981,3 +1965,3 @@
+-      "version": "8.0.16",
+-      "resolved": "https://registry.npmjs.org/vite/-/vite-8.0.16.tgz",
+-      "integrity": "sha512-h9bXPmJichP5fLmVQo3PyaGSDE2n3aPuomeAlVRm0JLmt4rY6zmPKd59HYI4LNW8oTK7tlTsuC7l/m7awx9Jcw==",
++      "version": "8.3.4",
++      "resolved": "https://registry.npmjs.org/vite/-/vite-8.3.4.tgz",
++      "integrity": "sha512-IftLE8phJhdNRIGNEV4JCCvfNScoZQVfcXaN8TQropWGJtOHcu+iAB9pHcuGvmEb/kddw0LBe/jS8ztdC6xdiQ==",
+@@ -1987,4 +1971,4 @@
+-        "lightningcss": "^1.32.0",
+-        "picomatch": "^4.0.4",
+-        "postcss": "^8.5.15",
+-        "rolldown": "1.0.3",
++        "lightningcss": "^1.33.0",
++        "picomatch": "^4.0.7",
++        "postcss": "^8.5.29",
++        "rolldown": "~1.2.12",
+@@ -2007 +1991 @@
+-        "@vitejs/devtools": "^0.1.18",
++        "@vitejs/devtools": "^0.7.1",
+@@ -2091,3 +2075,3 @@
+-      "version": "8.21.3",
+-      "resolved": "https://registry.npmjs.org/ws/-/ws-8.21.3.tgz",
+-      "integrity": "sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==",
++      "version": "8.22.0",
++      "resolved": "https://registry.npmjs.org/ws/-/ws-8.22.0.tgz",
++      "integrity": "sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==",
+diff --git a/package.json b/package.json
+index 6fc26e4..8ab57c2 100644
+--- a/package.json
++++ b/package.json
+@@ -17,0 +18,2 @@
++    "@fontsource-variable/inter": "5.3.0",
++    "@fontsource-variable/roboto-mono": "5.3.0",
+diff --git a/src/main.ts b/src/main.ts
+index 008500c..22d5711 100644
+--- a/src/main.ts
++++ b/src/main.ts
+@@ -4 +3,0 @@ import { Tour } from './ui/tour';
+-import { initMusic } from './ui/music';
+@@ -39,4 +38 @@ function boot(): void {
+-  const idle: (cb: () => void) => void =
+-    (window as Window & { requestIdleCallback?: (cb: () => void) => void }).requestIdleCallback ??
+-    ((cb) => window.setTimeout(cb, 300));
+-  idle(() => initMusic());
++  // No bundled music is deployed: its separate licence grant is unverified.
+diff --git a/src/scene/textures.ts b/src/scene/textures.ts
+index 180d880..7c465fc 100644
+--- a/src/scene/textures.ts
++++ b/src/scene/textures.ts
+@@ -1,25 +1 @@
+-import { CanvasTexture, RepeatWrapping, ClampToEdgeWrapping, SRGBColorSpace, TextureLoader, type Texture } from 'three';
+-
+-// Real Earth daymap from Solar System Scope (CC BY 4.0), bundled in /public.
+-let earthRealCache: Texture | null = null;
+-function earthRealTexture(): Texture {
+-  if (earthRealCache) return earthRealCache;
+-  // Respect Vite's base path (e.g. /Gravity/ on GitHub Pages) — a root-absolute
+-  // '/earth_daymap.jpg' would 404 there and leave the Earth untextured/dark.
+-  const t = new TextureLoader().load(`${import.meta.env.BASE_URL}earth_daymap.jpg`);
+-  t.colorSpace = SRGBColorSpace;
+-  t.wrapS = RepeatWrapping;
+-  earthRealCache = t;
+-  return t;
+-}
+-
+-// Real lunar surface map (Moon-TomBrown.png, bundled in /public).
+-let moonRealCache: Texture | null = null;
+-function moonRealTexture(): Texture {
+-  if (moonRealCache) return moonRealCache;
+-  const t = new TextureLoader().load(`${import.meta.env.BASE_URL}Moon-TomBrown.webp`);
+-  t.colorSpace = SRGBColorSpace;
+-  t.wrapS = RepeatWrapping;
+-  moonRealCache = t;
+-  return t;
+-}
++import { CanvasTexture, RepeatWrapping, ClampToEdgeWrapping, SRGBColorSpace, type Texture } from 'three';
+@@ -221 +197 @@ export function surfaceTexture(id: string, colorHex: number): Texture {
+-    case 'earth': tex = earthRealTexture(); break;
++    case 'earth': tex = earthTex(seed); break;
+@@ -229 +205 @@ export function surfaceTexture(id: string, colorHex: number): Texture {
+-    case 'moon': tex = moonRealTexture(); break;
++    case 'moon': tex = rockyTex(seed, [82, 82, 82], [180, 180, 180], { craters: 5 }); break;
+diff --git a/src/style.css b/src/style.css
+index 9edfb9c..661e4ec 100644
+--- a/src/style.css
++++ b/src/style.css
+@@ -0,0 +1,2 @@
++@import '@fontsource-variable/inter';
++@import '@fontsource-variable/roboto-mono';
+@@ -16,2 +18,2 @@
+-  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+-  --mono: 'Roboto Mono', ui-monospace, 'SF Mono', Menlo, monospace;
++  --sans: 'Inter Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
++  --mono: 'Roboto Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+@@ -513,0 +516,2 @@ body.tour-active .tour-panel { display: flex; }
++
++.utilibre-home { position: fixed; top: 8px; left: 12px; z-index: 50; color: #cdd6e6; font: 11px sans-serif; }
+diff --git a/src/ui/tour.ts b/src/ui/tour.ts
+index b78ec72..606c3b1 100644
+--- a/src/ui/tour.ts
++++ b/src/ui/tour.ts
+@@ -894,3 +894,3 @@ const UI = {
+-  en: { tour: 'Guided Tour', explore: 'Explore ✕', back: '‹ Back', next: 'Next ›', finish: 'Finish ✓', speed: 'Time speed', step: 'Step', playCta: 'Play with music', issue: 'Something not right?' },
+-  pl: { tour: 'Przewodnik', explore: 'Eksploruj ✕', back: '‹ Wstecz', next: 'Dalej ›', finish: 'Zakończ ✓', speed: 'Prędkość czasu', step: 'Krok', playCta: 'Odtwórz z muzyką', issue: 'Coś nie tak?' },
+-  zh: { tour: '导览', explore: '自由探索 ✕', back: '‹ 上一步', next: '下一步 ›', finish: '完成 ✓', speed: '时间速度', step: '第', playCta: '播放音乐', issue: '哪里不对？' },
++  en: { tour: 'Guided Tour', explore: 'Explore ✕', back: '‹ Back', next: 'Next ›', finish: 'Finish ✓', speed: 'Time speed', step: 'Step', playCta: 'Start tour', issue: 'Something not right?' },
++  pl: { tour: 'Przewodnik', explore: 'Eksploruj ✕', back: '‹ Wstecz', next: 'Dalej ›', finish: 'Zakończ ✓', speed: 'Prędkość czasu', step: 'Krok', playCta: 'Rozpocznij pokaz', issue: 'Coś nie tak?' },
++  zh: { tour: '导览', explore: '自由探索 ✕', back: '‹ 上一步', next: '下一步 ›', finish: '完成 ✓', speed: '时间速度', step: '第', playCta: '开始导览', issue: '哪里不对？' },
+diff --git a/vite.config.ts b/vite.config.ts
+index 610e120..153aae4 100644
+--- a/vite.config.ts
++++ b/vite.config.ts
+@@ -7 +7 @@ export default defineConfig(({ command, isPreview }) => ({
+-  base: command === 'build' || isPreview ? '/Gravity/' : '/',
++  base: command === 'build' || isPreview ? '/apps/gravity/' : '/',

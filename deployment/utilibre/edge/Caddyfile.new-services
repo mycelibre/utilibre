@@ -1,0 +1,132 @@
+# Reference additions, 9 October 2026. Merge with existing matching site blocks;
+# load each hostname once. Preserve unrelated edge configuration.
+# Requires the existing utilibre_no_transform, utilibre_proxy_headers and
+# utilibre_security_contact snippets and the edge's installed CrowdSec module.
+# Do not replace the existing Caddyfile, site blocks, global options or TURN
+# certificate-challenge route with this fragment.
+#
+# Uncommented application routes have deployed, tested backends.
+# Newsletter and Addy web routes are installed; SimpleLogin remains private.
+# PLANKA is excluded by its licence; the separate Projects fork has its own record.
+# Do not expose a staged backend before its stated prerequisites pass.
+# DNS for each hostname must resolve to the existing edge. HTTPS mail routes
+# do not configure inbound SMTP, MX, aliases, signing or mail delivery.
+
+(utilibre_new_app) {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy {args[0]} {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}
+
+# Spliit
+expenses.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3190
+}
+
+# Opengist
+snippets.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3191
+}
+
+# Wishlist
+wishlist.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3193
+}
+
+# linkding
+bookmarks.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3194
+}
+
+# Vikunja Community
+tasks.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3195
+}
+
+# Calino at /, Radicale at /dav/ (one gateway handles both).
+calendar.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3197
+}
+
+# Gathio
+events.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3198
+}
+
+# Razzia
+quiz.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3199
+}
+
+# Chitchatter
+chat.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3200
+}
+
+# KitchenOwl
+kitchen.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3202
+}
+
+# ByteStash
+snippets-library.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3204
+}
+
+# OpenResume: native local PDF and privacy checks passed.
+resume-builder.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3205
+}
+# PLANKA — current licence must satisfy the FOSS requirement.
+# boards.utilibre.org {
+#     import utilibre_new_app http://10.10.1.43:3206
+# }
+# 13ft: mandatory outbound boundaries are deployed on the app VM.
+read.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3207
+}
+# Chhoto URL: native public workflow and zero-click checks passed.
+links.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3208
+}
+# Unfurl: bounded native expansion through mandatory outbound proxy.
+expand.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3209
+}
+# Kill the Newsletter!: owner-confirmed routed receipt; web and feed are live.
+newsletters.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3210
+}
+# addy.io: web access works; native alias/delivery checks remain separate.
+aliases.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3211
+}
+# SimpleLogin: keep private until its framework/security blocker is resolved.
+# simplelogin.utilibre.org {
+#     import utilibre_new_app http://10.10.1.43:3212
+# }
+
+# No new Caddy block for these static additions: the existing tools.utilibre.org
+# upstream serves /apps/drawdb/, /apps/bookbinder/, /apps/sketchforge/,
+# /apps/moodist/ and /apps/chartdb/. Application-side routing is deployed on
+# this VM, not by changing the tools.utilibre.org edge site.
+# URL Parameter Cleaner is live under /apps/link-cleaner/ on that host.
+# The next batch also uses tools:3103: /apps/rustpad/, /apps/one-file-core/,
+# /apps/tiddlywiki/ and /apps/moocup/. Their deployment records determine
+# readiness; no additional edge block is required. See Caddyfile.everyday-additions.
+# ZipCaptions is not deployed: its documented speech path is not verified local.
+#
+# Already-existing AudioMass, JupyterLite, RAWGraphs, RSS-Bridge, CyberChef,
+# Reactive Resume, FMD and other running tools retain their current site blocks.
+
+# AutoRedact, Knit, NewTon, Gravity and Kokoro Web also use the existing tools
+# host: /apps/autoredact/, /apps/knit/, /apps/newton/, /apps/gravity/ and
+# /apps/kokoro-web/. Their processing is in the browser. No new edge block.

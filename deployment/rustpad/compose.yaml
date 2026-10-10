@@ -1,0 +1,29 @@
+name: utilibre-rustpad
+services:
+  rustpad:
+    image: utilibre-rustpad:54e4a93-p1
+    restart: unless-stopped
+    init: true
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 1.0
+    mem_limit: 512m
+    pids_limit: 64
+    environment:
+      PORT: '3030'
+      EXPIRY_DAYS: '1'
+      RUST_LOG: error
+      # Deliberately no SQLITE_URI: native memory-only operation.
+    logging:
+      driver: json-file
+      options: {max-size: 1m, max-file: '2'}
+    networks:
+      rustpad:
+        ipv4_address: 172.29.141.10
+networks:
+  rustpad:
+    name: utilibre-rustpad_private
+    internal: true
+    ipam:
+      config: [{subnet: 172.29.141.0/24}]

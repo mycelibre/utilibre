@@ -1,0 +1,45 @@
+// Actual public native UI; only separately approved fictional rendering accounts.
+import assert from 'node:assert/strict';
+import {readFile,writeFile,access} from 'node:fs/promises';
+import {createHmac} from 'node:crypto';
+import {chromium} from '../../portal/node_modules/playwright/index.mjs';
+const out='/opt/utilibre/reports/trip-rendering-20261009',priv='/opt/utilibre/trip/private',base='https://trip.utilibre.org';
+const users=JSON.parse(await readFile(priv+'/render-users.json','utf8'));
+assert.deepEqual(users.map(u=>u.username),['trip-render-1009-a','trip-render-1009-b']);
+const onePixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aMXsAAAAASUVORK5CYII=','base64');
+function otp(key){const b=Buffer.alloc(8);b.writeBigUInt64BE(BigInt(Math.floor(Date.now()/30000)));const h=createHmac('sha1',Buffer.from(key,'hex')).update(b).digest();return String((h.readUInt32BE(h[19]&15)&0x7fffffff)%1000000).padStart(6,'0')}
+const pause=ms=>new Promise(r=>setTimeout(r,ms));
+const browser=await chromium.launch();const result={checkedAt:new Date().toISOString(),public:true,scenarios:[]};
+try{for(const [index,u]of users.entries()){
+ const name=index?'mobile':'desktop',width=index?390:1440,height=index?844:1000;
+ const ctx=await browser.newContext({locale:index?'es-GT':'en-US',viewport:{width,height},serviceWorkers:'block',isMobile:!!index,hasTouch:!!index});ctx.setDefaultTimeout(20000);
+ let previousRealView=false;try{await access(out+'/real-map.json');previousRealView=true}catch{}
+ let permitRealTiles=index===0&&!previousRealView;const realView=permitRealTiles;const tiles=[],consoleErrors=[],pageErrors=[],failedAssets=[],hosts=new Set();
+ await ctx.route('https://tile.openstreetmap.org/**',async route=>{if(permitRealTiles&&tiles.length<48){tiles.push({path:new URL(route.request().url()).pathname,referer:(await route.request().allHeaders()).referer});await route.continue()}else await route.fulfill({contentType:'image/png',body:onePixel})});
+ const page=await ctx.newPage();page.on('console',m=>{if(m.type()==='error'&&page.url().startsWith(base))consoleErrors.push(m.text())});page.on('pageerror',e=>pageErrors.push(e.message));page.on('request',r=>hosts.add(new URL(r.url()).hostname));page.on('response',r=>{if(r.status()>=400&&!r.url().includes('auth.utilibre.org'))failedAssets.push({path:new URL(r.url()).pathname,status:r.status()})});
+ const screenshot=async label=>{await page.screenshot({path:out+'/'+name+'-'+label+'.png',fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,label+' horizontal overflow');};
+ await page.goto(base+'/auth');await page.getByRole('button',{name:/Sign in/}).waitFor();
+ const styles=await page.locator('link[rel=stylesheet]').evaluateAll(nodes=>nodes.map(n=>({path:new URL(n.href).pathname,media:n.media})));assert(styles.length&&styles.every(s=>s.media!=='print'));await screenshot('login');
+ await page.getByRole('button',{name:/Sign in/}).click();await page.locator('input[name="uidField"]').fill(u.username);await page.getByRole('button',{name:/^(Log in|Iniciar sesión|Acceder)$/}).click();await page.locator('ak-stage-password input[name="password"]:visible').fill(u.password);await page.getByRole('button',{name:/^(Continue|Continuar)$/}).click();await page.locator('ak-stage-authenticator-validate input[name="code"]:visible').fill(otp(u.totpKey));await page.getByRole('button',{name:/^(Continue|Continuar)$/}).click();
+ await page.waitForURL(base+'/home');await page.waitForFunction(()=>Boolean(localStorage.getItem('TRIP_AT')));await page.locator('.leaflet-tile-loaded').first().waitFor();await page.waitForFunction(()=>[...document.querySelectorAll('.leaflet-tile')].every(t=>t.complete&&t.naturalWidth>0));await pause(400);await screenshot(realView?'map-real':'map-fixture');permitRealTiles=false;
+ const tileDimensions=await page.locator('.leaflet-tile-loaded').evaluateAll(nodes=>nodes.map(n=>({width:n.naturalWidth,height:n.naturalHeight})));if(realView){assert(tiles.length>0&&tiles.length<=48);assert(tiles.every(t=>t.referer===base+'/'));assert(tileDimensions.some(t=>t.width===256&&t.height===256));await writeFile(out+'/real-map.json',JSON.stringify({tiles,tileDimensions},null,2));}
+ assert(await page.getByRole('link',{name:'OpenStreetMap',exact:true}).count());assert(await page.getByRole('link',{name:'Fix the map',exact:true}).count());
+ const token=await page.evaluate(()=>localStorage.getItem('TRIP_AT'));const request=async(path,method='GET',data)=>{await pause(250);const r=await ctx.request.fetch(base+path,{method,headers:{Authorization:'Bearer '+token},data});assert(r.ok(),path+' '+r.status());return r.json()};
+ const settings=await request('/api/settings');assert.equal(settings.username,u.username);assert.equal(settings.is_admin,false);await writeFile(priv+'/render-session-'+index+'.json',JSON.stringify({token,user:settings}),{mode:0o600});
+ // Retry cleanup is restricted to this marked fixture account and exact test names.
+ for(const t of await request('/api/trips'))if(t.name==='Fictional rendering trip '+name)await request('/api/trips/'+t.id,'DELETE');
+ for(const p of await request('/api/places'))if(p.name==='Fictional Louvre stop '+name)await request('/api/places/'+p.id,'DELETE');
+ await page.locator('.pi-cog').first().locator('..').click();await page.getByRole('heading',{name:'Settings',exact:true}).waitFor();await screenshot('settings');await page.locator('p-button[icon="pi pi-times"]:visible').last().getByRole('button').click();
+ await page.locator('.pi-list').first().locator('..').locator('..').click();await page.waitForURL(base+'/trips');await page.locator('button').filter({has:page.locator('.pi-plus')}).first().click();await page.getByRole('dialog').waitFor();await page.locator('#name').fill('Fictional rendering trip '+name);await screenshot('create-trip');
+ const created=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/trips'&&r.request().method()==='POST');await page.getByRole('dialog').getByRole('button',{name:/Create$/}).click();const trip=await(await created).json();assert(trip.id);await page.getByRole('dialog').waitFor({state:'hidden'});
+ const category=(await request('/api/categories'))[0];const place=await request('/api/places','POST',{name:'Fictional Louvre stop '+name,place:'Public landmark used as fictional test',lat:48.8606,lng:2.3376,category_id:category.id});await request('/api/trips/'+trip.id,'PUT',{place_ids:[place.id]});await request('/api/trips/'+trip.id+'/days','POST',{label:'Fictional museum day',dt:'2030-01-01',notes:'Fictional rendering check only.'});
+ await page.getByRole('heading',{name:'Fictional rendering trip '+name,exact:true}).click();await page.waitForURL(base+'/trips/'+trip.id);await page.getByRole('heading',{level:1,name:'Fictional rendering trip '+name,exact:true}).waitFor();await page.locator('.leaflet-tile-loaded').first().waitFor();await page.locator('p-skeleton:visible').first().waitFor({state:'hidden'});await pause(500);await screenshot('trip');
+ // Native plan panel can be collapsed to use the map, then reopened.
+ const collapse=index?page.locator('p-button[icon="pi pi-window-minimize"]:visible').getByRole('button'):page.locator('button').filter({has:page.locator('.pi-chevron-left')}).last();
+ await collapse.click();await page.locator('button').filter({has:page.locator('.pi-chevron-right')}).last().waitFor({state:'visible'});await pause(350);await screenshot('trip-map');await page.locator('button').filter({has:page.locator('.pi-chevron-right')}).last().click();
+ // Confirm normal public reload retains native sign-in and restores the trip layout.
+ await page.reload();await page.getByRole('heading',{level:1,name:'Fictional rendering trip '+name,exact:true}).waitFor();await page.locator('p-skeleton:visible').first().waitFor({state:'hidden'});await pause(500);await screenshot('trip-reloaded');
+ await ctx.storageState({path:priv+'/render-browser-'+index+'.json'});await writeFile(priv+'/render-fixture-'+index+'.json',JSON.stringify({tripId:trip.id,placeId:place.id,username:u.username}),{mode:0o600});
+ assert.deepEqual([...hosts].filter(h=>!['trip.utilibre.org','auth.utilibre.org','tile.openstreetmap.org'].includes(h)),[]);assert(consoleErrors.every(e=>e.includes('404')),JSON.stringify(consoleErrors));assert.deepEqual(pageErrors,[]);assert(failedAssets.every(e=>e.status===404&&/^\/api\/trips\/\d+\/share$/.test(e.path)),JSON.stringify(failedAssets));
+ result.scenarios.push({name,width,height,normalMFAandOIDC:true,nativeTripCreation:true,settingsResponsive:true,tripPanelToggle:true,publicReloadRetainsSignIn:true,styles,realTileRequests:tiles,tileDimensions,consoleErrors,pageErrors,failedAssets,hosts:[...hosts]});await ctx.close();
+}}finally{await browser.close();await writeFile(out+'/layout-result.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({scenarios:result.scenarios.map(s=>({name:s.name,realTileRequests:s.realTileRequests.length,consoleErrors:s.consoleErrors.length,failedAssets:s.failedAssets.length}))}));}

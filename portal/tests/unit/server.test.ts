@@ -38,6 +38,23 @@ describe('portal server security boundaries', () => {
 
   afterAll(() => server?.kill('SIGTERM'));
 
+  it('serves identical hashed asset bytes on cold and warm requests, with bodyless HEAD', async () => {
+    const html = await (await fetch(`${base}/en/`)).text();
+    const asset = html.match(/src="(\/assets\/[^"?]+\.js)"/)?.[1];
+    expect(asset).toBeTruthy();
+    const expected = await readFile(`dist${asset}`);
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const response = await fetch(`${base}${asset}`);
+      expect(response.status).toBe(200);
+      expect(response.headers.get('cache-control')).toContain('immutable');
+      expect(Buffer.from(await response.arrayBuffer()).equals(expected)).toBe(true);
+    }
+    const head = await fetch(`${base}${asset}`, { method: 'HEAD' });
+    expect(head.status).toBe(200);
+    expect((await head.arrayBuffer()).byteLength).toBe(0);
+    expect((await fetch(`${base}/assets/absent-capacity-check.js`)).status).toBe(404);
+  });
+
   it('serves fixed health and document security headers', async () => {
     const response = await fetch(`${base}/healthz`);
     expect(await response.json()).toEqual({ status: 'ok' });
@@ -128,7 +145,7 @@ describe('portal server security boundaries', () => {
       expect(response.status, path).toBe(404);
       expect(response.headers.get('location'), path).toBeNull();
       expect(response.headers.get('x-robots-tag'), path).toBe('noindex, nofollow');
-      expect(await response.text(), path).toContain(`<title>${title} — unsafe utility</title>`);
+      expect(await response.text(), path).toContain(`<title>${title} | unsafe utility</title>`);
     }
   });
 

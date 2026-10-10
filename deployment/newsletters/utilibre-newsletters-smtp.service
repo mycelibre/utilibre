@@ -1,0 +1,19 @@
+[Unit]
+Description=Utilibre newsletters private SMTP with gateway-only ingress
+After=docker.service utilibre-newsletters-firewall.service
+Requires=docker.service utilibre-newsletters-firewall.service
+PartOf=docker.service
+StartLimitIntervalSec=120
+StartLimitBurst=5
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/freetools/deployment/newsletters
+ExecStartPre=/home/ubuntu/freetools/deployment/newsletters/start-smtp.sh
+ExecStart=/usr/bin/docker compose up --no-recreate --no-deps --abort-on-container-exit --no-attach smtp smtp
+ExecStop=/usr/bin/docker compose stop --timeout 15 smtp
+ExecStopPost=/home/ubuntu/freetools/deployment/newsletters/firewall.sh
+Restart=always
+RestartSec=10
+TimeoutStopSec=30
+[Install]
+WantedBy=multi-user.target

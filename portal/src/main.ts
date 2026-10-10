@@ -79,7 +79,7 @@ window.addEventListener('popstate', () => {
 
 window.addEventListener('hashchange', () => { if (route.page === 'my') void render(); });
 document.addEventListener('click', (event) => {
-  if (!(event.target instanceof Element)) return;
+  if (event.defaultPrevented || !(event.target instanceof Element)) return;
   const anchor = event.target.closest<HTMLAnchorElement>('a[href]');
   if (!anchor || anchor.target || anchor.download || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
   if (anchor.classList.contains('skip-link')) return;
@@ -156,7 +156,7 @@ function updateMetadata(currentRoute: Route): void {
   setPropertyMeta('og:site_name', config.projectName);
   setPropertyMeta('og:url', meta.canonical);
   setPropertyMeta('og:image', meta.image);
-  setPropertyMeta('og:image:alt', `${config.projectName} logo`);
+  setPropertyMeta('og:image:alt', currentRoute.language === 'es' ? `Logo de ${config.projectName}` : `${config.projectName} logo`);
   setMeta('twitter:card', 'summary');
   if (meta.canonical) setCanonical(meta.canonical);
   else document.querySelector('link[rel="canonical"]')?.remove();

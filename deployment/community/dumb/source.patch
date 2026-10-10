@@ -1,0 +1,195 @@
+diff --git a/data/lyrics.go b/data/lyrics.go
+index 3b67541..1aa8125 100644
+--- a/data/lyrics.go
++++ b/data/lyrics.go
+@@ -61,0 +62 @@ func (s *Song) parseLyrics(doc *goquery.Document) error {
++	doc.Find("[data-lyrics-container='true'] span[tabindex][style]:empty").Remove()
+diff --git a/data/proxy.go b/data/proxy.go
+index 6f8795f..497d540 100644
+--- a/data/proxy.go
++++ b/data/proxy.go
+@@ -13,0 +14,4 @@ func ExtractImageURL(image string) string {
++	if u.Host == "assets.genius.com" && u.Path == "/images/default_cover_image.png" {
++		return "/static/default_cover_image.svg"
++	}
++
+diff --git a/data/utilibre_render_test.go b/data/utilibre_render_test.go
+new file mode 100644
+index 0000000..747786a
+--- /dev/null
++++ b/data/utilibre_render_test.go
+@@ -0,0 +1,29 @@
++package data
++
++import (
++	"github.com/PuerkitoBio/goquery"
++	"strings"
++	"testing"
++)
++
++func TestUtilibreLocalPlaceholder(t *testing.T) {
++	if got := ExtractImageURL("https://assets.genius.com/images/default_cover_image.png"); got != "/static/default_cover_image.svg" {
++		t.Fatal(got)
++	}
++	if got := ExtractImageURL("https://images.genius.com/fictional.png"); got != "/images/fictional.png" {
++		t.Fatal(got)
++	}
++}
++func TestUtilibreRemoveEmptyStyledSpans(t *testing.T) {
++	doc, err := goquery.NewDocumentFromReader(strings.NewReader(`<div data-lyrics-container="true">Fictional line<span tabindex="0" style="position:absolute"></span><span>Kept text</span></div>`))
++	if err != nil {
++		t.Fatal(err)
++	}
++	var song Song
++	if err = song.parseLyrics(doc); err != nil {
++		t.Fatal(err)
++	}
++	if strings.Contains(song.Lyrics, "style=") || !strings.Contains(song.Lyrics, "Kept text") {
++		t.Fatal("Empty style removal changed useful text or left an empty tab stop")
++	}
++}
+diff --git a/handlers/cache.go b/handlers/cache.go
+index 9ceab9e..3103ff5 100644
+--- a/handlers/cache.go
++++ b/handlers/cache.go
+@@ -16 +16,11 @@ type cachable interface {
+-var c, _ = bigcache.New(context.Background(), bigcache.DefaultConfig(time.Hour*24))
++// Preserve native 24-hour public-content expiry, with bounded memory.
++var c, _ = bigcache.New(context.Background(), boundedCacheConfig())
++
++func boundedCacheConfig() bigcache.Config {
++	config := bigcache.DefaultConfig(time.Hour * 24)
++	config.Shards = 16
++	config.MaxEntriesInWindow = 1024
++	config.MaxEntrySize = 4096
++	config.HardMaxCacheSize = 32
++	return config
++}
+diff --git a/handlers/lyrics.go b/handlers/lyrics.go
+index 65906b3..941bb5e 100644
+--- a/handlers/lyrics.go
++++ b/handlers/lyrics.go
+@@ -45,0 +46,7 @@ func lyrics(l *utils.Logger) http.HandlerFunc {
++		if resp.StatusCode != http.StatusOK {
++			w.Header().Set("Cache-Control", "no-store")
++			w.WriteHeader(http.StatusBadGateway)
++			utils.RenderTemplate(w, views.ErrorPage(502, "Genius refused the request from this server."), l)
++			return
++		}
++
+@@ -57 +64,3 @@ func lyrics(l *utils.Logger) http.HandlerFunc {
+-			utils.RenderTemplate(w, views.ErrorPage(500, "cloudflare is detected"), l)
++			w.Header().Set("Cache-Control", "no-store")
++			w.WriteHeader(http.StatusBadGateway)
++			utils.RenderTemplate(w, views.ErrorPage(502, "Genius refused the request from this server."), l)
+@@ -62,2 +71,5 @@ func lyrics(l *utils.Logger) http.HandlerFunc {
+-		if err := s.Parse(doc); err != nil {
+-			l.Error(err.Error())
++		if err := s.Parse(doc); err != nil || s.Lyrics == "" {
++			w.Header().Set("Cache-Control", "no-store")
++			w.WriteHeader(http.StatusBadGateway)
++			utils.RenderTemplate(w, views.ErrorPage(502, "Lyrics could not be retrieved from Genius."), l)
++			return
+diff --git a/handlers/search.go b/handlers/search.go
+index 3648681..a194b7e 100644
+--- a/handlers/search.go
++++ b/handlers/search.go
+@@ -30,3 +30,4 @@ func search(l *utils.Logger) http.HandlerFunc {
+-		if strings.HasPrefix(res.Header.Get("content-type"), "text/html") {
+-			w.WriteHeader(http.StatusInternalServerError)
+-			utils.RenderTemplate(w, views.ErrorPage(500, "Cloudflare got in the way."), l)
++		if res.StatusCode != http.StatusOK || strings.HasPrefix(res.Header.Get("content-type"), "text/html") {
++			w.Header().Set("Cache-Control", "no-store")
++			w.WriteHeader(http.StatusBadGateway)
++			utils.RenderTemplate(w, views.ErrorPage(502, "Genius refused the request from this server."), l)
+diff --git a/handlers/utilibre_failure_test.go b/handlers/utilibre_failure_test.go
+new file mode 100644
+index 0000000..753dc20
+--- /dev/null
++++ b/handlers/utilibre_failure_test.go
+@@ -0,0 +1,78 @@
++package handlers
++
++import (
++	"github.com/gorilla/mux"
++	"github.com/rramiachraf/dumb/utils"
++	"io"
++	"net/http"
++	"net/http/httptest"
++	"strings"
++	"testing"
++	"time"
++)
++
++type utilibreDiscard struct{}
++
++func (utilibreDiscard) Write(p []byte) (int, error) { return len(p), nil }
++func (utilibreDiscard) Close() error                { return nil }
++
++type utilibreTransport func(*http.Request) (*http.Response, error)
++
++func (f utilibreTransport) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
++func TestUtilibreFailureNeverCached(t *testing.T) {
++	for _, status := range []int{http.StatusForbidden, http.StatusOK} {
++		t.Run(http.StatusText(status), func(t *testing.T) {
++			original := http.DefaultTransport
++			defer func() { http.DefaultTransport = original }()
++			calls := 0
++			http.DefaultTransport = utilibreTransport(func(r *http.Request) (*http.Response, error) {
++				calls++
++				code := status
++				body := "<html>Fictional refusal, no lyrics</html>"
++				if calls > 1 {
++					code = 200
++					body = `<div data-lyrics-container="true">Fictional test stanza</div>`
++				}
++				return &http.Response{StatusCode: code, Header: http.Header{"Content-Type": []string{"text/html"}}, Body: io.NopCloser(strings.NewReader(body)), Request: r}, nil
++			})
++			name := "utilibre-fictional-" + http.StatusText(status)
++			handler := lyrics(utils.NewLogger(utilibreDiscard{}))
++			request := func() *httptest.ResponseRecorder {
++				r := mux.SetURLVars(httptest.NewRequest("GET", "/fictional-lyrics", nil), map[string]string{"artist-song": name})
++				w := httptest.NewRecorder()
++				handler.ServeHTTP(w, r)
++				return w
++			}
++			first := request()
++			if first.Code != 502 || first.Header().Get("Cache-Control") != "no-store" {
++				t.Fatalf("refusal falsely succeeded: %d", first.Code)
++			}
++			second := request()
++			if second.Code != 200 || !strings.Contains(second.Body.String(), "Fictional test stanza") {
++				t.Fatal("Refusal was cached or fixture could not recover")
++			}
++			third := request()
++			if third.Code != 200 || calls != 2 {
++				t.Fatalf("Successful native caching was removed: %d calls", calls)
++			}
++		})
++	}
++}
++func TestUtilibreSearchRefusalStatus(t *testing.T) {
++	original := http.DefaultTransport
++	defer func() { http.DefaultTransport = original }()
++	http.DefaultTransport = utilibreTransport(func(r *http.Request) (*http.Response, error) {
++		return &http.Response{StatusCode: 403, Header: http.Header{"Content-Type": []string{"text/html"}}, Body: io.NopCloser(strings.NewReader("fictional refusal")), Request: r}, nil
++	})
++	w := httptest.NewRecorder()
++	search(utils.NewLogger(utilibreDiscard{})).ServeHTTP(w, httptest.NewRequest("GET", "/search?q=fictional", nil))
++	if w.Code != 502 || w.Header().Get("Cache-Control") != "no-store" {
++		t.Fatal("Search refusal must not be cacheable success")
++	}
++}
++func TestUtilibreBoundedNativeCache(t *testing.T) {
++	c := boundedCacheConfig()
++	if c.LifeWindow != 24*time.Hour || c.HardMaxCacheSize != 32 || c.Shards != 16 {
++		t.Fatal("Native expiry or cache bounds changed")
++	}
++}
+diff --git a/static/default_cover_image.svg b/static/default_cover_image.svg
+new file mode 100644
+index 0000000..494110a
+--- /dev/null
++++ b/static/default_cover_image.svg
+@@ -0,0 +1 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><!-- Original Utilibre placeholder; MIT, 2026. --><rect width="300" height="300" fill="#e8e8e8"/><circle cx="150" cy="150" r="72" fill="#bbb"/><circle cx="150" cy="150" r="18" fill="#e8e8e8"/></svg>

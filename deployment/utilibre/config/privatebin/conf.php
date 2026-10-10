@@ -1,7 +1,9 @@
 [main]
+; Native custom template: only the empty homepage is discoverable.
+template = "bootstrap5-utilibre"
 name = "PrivateBin at Utilibre"
 basepath = "https://paste.utilibre.org/"
-info = "<a href='https://utilibre.org/es/'>Volver a Utilibre</a> · <a href='https://utilibre.org/en/'>Back to Utilibre</a> · <a href='https://privatebin.info/'>PrivateBin</a>"
+info = "<a href='https://utilibre.org/es/'>Más herramientas de Utilibre</a> · <a href='https://utilibre.org/en/'>More tools from Utilibre</a> · <a href='https://privatebin.info/'>PrivateBin</a>"
 discussion = false
 opendiscussion = false
 password = true

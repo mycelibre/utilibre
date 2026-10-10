@@ -1,0 +1,10 @@
+# Add to the separately managed Caddy edge; preserve all existing site blocks.
+# Port 80 must reach that edge. Only public ACME challenge tokens are served.
+http://turn.utilibre.org {
+	handle /.well-known/acme-challenge/* {
+		reverse_proxy 10.10.1.43:3189
+	}
+	handle {
+		respond 404
+	}
+}

@@ -1,0 +1,24 @@
+[Unit]
+Description=Private ACME challenge endpoint for the Galene relay certificate
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/ubuntu/freetools/deployment/pack/turn/challenge-server.py
+DynamicUser=yes
+Restart=on-failure
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET
+MemoryMax=64M
+CPUQuota=10%
+TasksMax=16
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

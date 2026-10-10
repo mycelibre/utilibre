@@ -30,7 +30,7 @@ services:
       DEGOOG_SEARX_ENGINES_DIR: /opt/searx-engines
       LOG_LEVEL: error
       PYTHONDONTWRITEBYTECODE: "1"
-      DEGOOG_OUTGOING_ALLOWED_HOSTS: api.mwmbl.org,openlibrary.org,hn.algolia.com,archive.org,*.archive.org
+      DEGOOG_OUTGOING_ALLOWED_HOSTS: api.mwmbl.org,openlibrary.org,hn.algolia.com,archive.org,*.archive.org,www.google.com,cse.google.com,encrypted-tbn0.gstatic.com,encrypted-tbn1.gstatic.com,encrypted-tbn2.gstatic.com,encrypted-tbn3.gstatic.com
     logging: {driver: none}
     volumes:
       - /opt/utilibre/community-data/degoog:/app/data

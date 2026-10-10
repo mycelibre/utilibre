@@ -1,0 +1,10 @@
+[Unit]
+Description=Snapshot Utilibre Family Chess
+After=docker.service
+[Service]
+Type=oneshot
+UMask=0077
+Nice=10
+CPUQuota=100%
+MemoryMax=128M
+ExecStart=/usr/bin/python3 /home/ubuntu/freetools/deployment/family-chess/backup.py

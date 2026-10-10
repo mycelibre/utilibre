@@ -1,0 +1,40 @@
+name: utilibre-opengist
+x-bounded: &bounded
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  logging:
+    driver: json-file
+    options: {max-size: 5m, max-file: '2'}
+services:
+  opengist:
+    <<: *bounded
+    image: ghcr.io/thomiceli/opengist:1.15.2@sha256:7edc91273ee7d10a17406da8a08c803158baaff984c39b789c1313473d068f21
+    user: '1000:1000'
+    cpus: 1.0
+    mem_limit: 512m
+    tmpfs: ['/tmp:size=64m,mode=1777']
+    volumes:
+      - /opt/utilibre/community-data/opengist:/opengist
+      - ./opengist/config.yml:/config.yml:ro
+      - /opt/utilibre/community-private/opengist-secrets:/run/secrets/opengist_secrets:ro
+    healthcheck:
+      test: [CMD, curl, -fsS, http://127.0.0.1:6157/healthcheck]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+  gateway:
+    <<: *bounded
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    cpus: 0.25
+    mem_limit: 64m
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    ports: ['10.10.1.43:3191:8080']
+    volumes: ['./opengist/nginx.conf:/etc/nginx/nginx.conf:ro']
+    depends_on:
+      opengist: {condition: service_healthy}

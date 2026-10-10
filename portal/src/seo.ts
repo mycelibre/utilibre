@@ -18,7 +18,7 @@ export function pageSeo(route: Route, config: PublicConfig, search = '', fallbac
     es: new URL(translatedPath(route, 'es'), origin).href,
     'x-default': new URL(translatedPath(route, config.defaultLanguage), origin).href,
   } : {};
-  const title = `${meta.title} — ${config.projectName}`;
+  const title = `${meta.title} | ${config.projectName}`;
   const image = origin ? `${origin}/brand/png/icon-512.png` : '';
   const structuredData = robots === 'index,follow' && canonical ? {
     '@context': 'https://schema.org',

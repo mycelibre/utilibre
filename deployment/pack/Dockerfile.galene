@@ -8,5 +8,10 @@ WORKDIR /app
 COPY --from=builder /out/galene /app/galene
 COPY static /app/static
 COPY LICENCE /app/LICENCE
+# Native preference only: one video layer fits this four-person room's relay
+# budget. Fail on upstream drift; remove after default-auto relay tests pass.
+RUN test "$(grep -Fc '<option value="auto" selected>auto</option>' static/galene.html)" = 1 \
+ && test "$(grep -Fc '<option value="off">off</option>' static/galene.html)" = 1 \
+ && sed -i 's/<option value="auto" selected>auto<\/option>/<option value="auto">auto<\/option>/; s/<option value="off">off<\/option>/<option value="off" selected>off<\/option>/' static/galene.html
 USER 4003:4003
 ENTRYPOINT ["/app/galene"]

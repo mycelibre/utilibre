@@ -1,0 +1,25 @@
+name: utilibre-galene-turn
+services:
+  turn:
+    image: utilibre-coturn:4.7.0-p1
+    build: {context: ../community/turn}
+    user: '4004:4004'
+    entrypoint: [turnserver, -c, /run/config/turnserver.conf]
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+    cpus: 1
+    pids_limit: 64
+    network_mode: host
+    logging: {driver: none}
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=8m', '/var/lib/coturn:rw,nosuid,nodev,noexec,size=8m']
+    volumes:
+      - /opt/utilibre/pack-data/galene-turn/turnserver.conf:/run/config/turnserver.conf:ro
+      - /opt/utilibre/pack-data/galene-turn/certs:/certs:ro
+    healthcheck:
+      test: [CMD, turnutils_stunclient, -p, '3478', '10.10.1.43']
+      interval: 60s
+      timeout: 5s
+      retries: 3

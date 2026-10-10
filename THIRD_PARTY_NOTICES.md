@@ -36,7 +36,8 @@ archives include the integration recipes. AudioMass has separate BSD/LGPL
 dependency notices in its supplied `THIRD_PARTY_NOTICES.md`.
 
 OmniTools remains an MIT application, but its IMG.LY background-removal 1.7.0
-component is **AGPL-3.0**, not MIT. Its ISNET model and ONNX runtime are identified
+component uses **GNU AGPLv3 (version scope unconfirmed)**; it does not inherit
+OmniTools’ MIT licence. See `docs/license-review.md` for the exact scope review. Its ISNET model and ONNX runtime are identified
 as MIT in upstream `ThirdPartyLicenses.json`. We mirror the versioned model
 assets with SHA-256 verification and publish the component source/package and
 notices alongside the OmniTools source and integration archive. Source:
@@ -511,3 +512,38 @@ unmodified FreshRSS support and has no public route.
    See the License for the specific language governing permissions and
    limitations under the License.
 ```
+
+
+drawDB 1.8.2-p1: upstream e4e696f2d2b1a17ac99ad1d062927582ff994a3c, GNU AGPLv3 (version scope unconfirmed).
+Source, local patch and dependency notices: https://tools.utilibre.org/utilibre-source/drawdb-utilibre.tar.gz
+Bookbinder JS 1.7.0-p1: upstream 7df532dc29f6bbf4204d62796f4ff537594f5097, MPL-2.0.
+Source, local patch and dependency notices: https://tools.utilibre.org/utilibre-source/bookbinder-utilibre.tar.gz
+
+## Browser additions, 9 October 2026
+
+Moodist 3.1.1-p2 uses MIT-licensed code with three Utilibre-generated CC0-1.0 noise loops and ten recordings from Blanket at `775f2a767230a9681850d1b1e085be58656f1382`. Individual recordings are CC0-1.0, CC-BY-4.0, CC-BY-3.0 or dedicated to the public domain by their creators; they are not all MIT or CC0. The author, original source, Blanket editor and pinned checksum for each recording are in `deployment/toolbox/moodist-recordings.json` and the app's [sound credits](https://tools.utilibre.org/apps/moodist/sounds/RECORDING-CREDITS.txt). Files are redistributed unchanged from Blanket. The unmapped original Moodist recordings, radio and YouTube remain excluded. Source and build: https://tools.utilibre.org/utilibre-source/moodist-utilibre.tar.gz
+
+SketchForge 3D 1.0.9-p1 is AGPL-3.0-only. The included OCCT component has separate LGPL terms and notices; corresponding wrapper and Open CASCADE sources are offered alongside the application. Source: https://tools.utilibre.org/utilibre-source/sketchforge-utilibre.tar.gz
+
+ChartDB 1.20.1-p1 uses GNU AGPLv3; the upstream grant's version scope remains unconfirmed. Local assets, dependency corrections and removal of analytics/cloud/AI paths are in https://tools.utilibre.org/utilibre-source/chartdb-utilibre.tar.gz
+
+See each dated deployment report for pinned revisions, dependency notices and limits of the performed checks.
+
+## Account and household additions, 9 October 2026
+
+- Spliit 1.29.0-p1 and Wishlist 0.67.1-p2: MIT, with small security, local-asset and deletion corrections described in their deployment records.
+- KitchenOwl 0.7.10-p1: GNU AGPLv3 (version scope unconfirmed); pinned upstream plus layered dependency updates.
+- Opengist 1.15.2: GNU AGPLv3 (version scope unconfirmed), unmodified pinned upstream image.
+- linkding 1.47.0: MIT, unmodified pinned upstream image and supported settings hook.
+- Vikunja 2.7.0: AGPL-3.0-or-later, unmodified pinned upstream Community image.
+- ByteStash 1.5.14-p1: GNU GPLv3 (version scope unconfirmed), native authentication handoff and local-asset corrections.
+- OpenResume 4f8255a-p1: GNU AGPLv3 (version scope unconfirmed), local static build without visitor analytics. Original replacement icons avoid redistributing upstream commercially licensed icon paths.
+
+Corresponding source for modified builds is published as `<application>-utilibre.tar.gz` at https://tools.utilibre.org/utilibre-source/. Pinned upstream evidence and exact commits are in the software ledger and dated deployment records. Native installed dependency licences remain applicable.
+
+
+Chitchatter 23b62a8-p1: GPL-2.0-or-later; native bittorrent-tracker 11.2.3: MIT. Gathio 1.6.7-p1: GPL-3.0-or-later; FerretDB: Apache-2.0; DocumentDB: MIT; PostgreSQL: PostgreSQL License. URL Parameter Cleaner 1.1.0-p1: MIT. Radicale 3.8.3: GPL-3.0-or-later; Calino 0.39.1-p1: MIT. Pinned sources, notices and local changes: https://tools.utilibre.org/utilibre-source/.
+
+Razzia 3.1.0-p1 and Chhoto URL 7.8.3-p1: MIT. Local Chhoto assets include PureCSS 3.0.0 (BSD-3-Clause), qrcodejs fork 0.1.0 and punycode 1.4.1 (MIT). Pinned source and corresponding notices: https://tools.utilibre.org/utilibre-source/.
+
+Unfurl 2026.10-p1: Apache-2.0; local vis-network and d3: MIT/Apache-2.0 and ISC respectively; DOMPurify: Apache-2.0 OR MPL-2.0. 13ft 0.5.0-public1: MIT. Both native fetch deployments use Squid 7.7 (GPL-2.0-or-later), whose corresponding source is included in their source offers. Exact assets and upstream notices: https://tools.utilibre.org/utilibre-source/.

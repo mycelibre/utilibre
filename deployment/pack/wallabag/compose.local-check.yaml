@@ -1,0 +1,6 @@
+# Loopback rehearsal only, so native absolute asset URLs use the tested origin.
+# Never combine this override with compose.edge.yaml.
+services:
+  app:
+    environment:
+      WALLABAG_BASE_URL: http://127.0.0.1:33177

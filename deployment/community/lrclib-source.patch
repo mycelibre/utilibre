@@ -3405,15 +3405,16 @@ index a572cb2..ad1320e 100644
    ]
  })
 diff --git a/src/views/HomeView.vue b/src/views/HomeView.vue
-index a4ccbdd..83db68b 100644
+index a4ccbdd..b2b7fd4 100644
 --- a/src/views/HomeView.vue
 +++ b/src/views/HomeView.vue
-@@ -3,9 +3,12 @@
+@@ -3,9 +3,13 @@
      <main class="w-full max-w-screen-sm">
        <div class="flex flex-col justify-center items-center gap-6 w-full">
          <img src="@/assets/lrclib.png" width="512" height="512" class="w-28" alt="Logo">
-+        <h1 class="text-2xl font-semibold">LRCLIB · Utilibre instance</h1>
-+        <p class="text-center px-4">Find song lyrics without an account. Searches pass through Utilibre to LRCLIB; neither service promises confidential searches. Genius annotations are not included.</p>
++        <h1 class="text-2xl font-semibold">LRCLIB · Utilibre</h1>
++        <p lang="en" class="text-center px-4">Find song lyrics without an account. Searches pass through Utilibre to LRCLIB; neither service promises confidential searches. Genius annotations are not included.</p>
++        <p lang="es" class="text-center px-4">Buscá letras de canciones sin una cuenta. Las búsquedas pasan por Utilibre hasta LRCLIB; ninguno de los dos servicios promete búsquedas confidenciales. No se incluyen las anotaciones de Genius.</p>
          <form class="flex items-center rounded-full w-full h-auto overflow-hidden bg-white dark:bg-slate-900 transition" :class="{ 'ring ring-indigo-400 dark:ring-indigo-400': inputActive }" @submit.prevent="onSubmit">
 -          <input type="text" v-model="keyword" class="outline-none grow h-12 px-6 bg-transparent" placeholder="Search for lyrics..." @focus="inputActive = true" @blur="inputActive = false" autofocus>
 +          <input type="search" v-model="keyword" class="outline-none grow min-w-0 h-12 px-6 bg-transparent" aria-label="Song or artist" maxlength="200" required placeholder="Song or artist" @focus="inputActive = true" @blur="inputActive = false" autofocus>
@@ -3422,7 +3423,7 @@ index a4ccbdd..83db68b 100644
              class="rounded-full bg-indigo-700 hover:bg-indigo-800 active:bg-indigo-950 transition text-indigo-200 text-lg h-12 w-12 flex justify-center items-center m-1 dark:bg-indigo-300 dark:hover:bg-indigo-200 dark:active:bg-indigo-100 dark:text-indigo-900"
            >
              <Magnify />
-@@ -13,14 +16,13 @@
+@@ -13,14 +17,13 @@
          </form>
          <div class="text-sm uppercase flex flex-col md:flex-row gap-2 text-center items-center">
            <a class="link" href="https://github.com/tranxuanthang/lrcget" target="_blank">Download LRCGET</a>
@@ -3440,7 +3441,7 @@ index a4ccbdd..83db68b 100644
            </a>
          </div>
        </div>
-@@ -45,11 +47,11 @@ const inputActive = ref(false)
+@@ -45,11 +48,11 @@ const inputActive = ref(false)
  const keyword = ref('')
  
  const onSubmit = () => {

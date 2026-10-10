@@ -1,3 +1,6 @@
+import { licenseText } from '../catalog/upstreams';
+import { renderYourData } from './your-data';
+import { renderSecurity, policySection, abuseSection } from './policy-pages';
 import { catalog, catalogEntry, localized, reviewedServices, type CatalogEntry, type DiscoveryGroup, type OperationalStatus } from '../catalog/catalog';
 import { discoveryGroups, discoverEntries, entryGroup, entryLaunchable, serviceConfigured, normalizeGroup, catalogViews, type CatalogView, type CatalogDiscoveryState } from '../catalog/discovery';
 import { localizedSupportUrl } from '../catalog/locale-links';
@@ -32,7 +35,9 @@ export function renderStaticPage(route: Route, config: PublicConfig, t: Translat
   if (route.page === 'services') return renderServices(route.language, config, t);
   if (route.page === 'tools') return renderTools(route.language, config, t);
   if (route.page === 'transparency') return renderTransparency(route.language, config, t);
-  if (route.page === 'privacy') return renderPrivacy(config, t);
+  if (route.page === 'your-data') return renderYourData(route.language, t);
+  if (route.page === 'security') return renderSecurity(route.language, t);
+  if (route.page === 'privacy') return renderPrivacy(route.language, config, t);
   if (route.page === 'about') return prosePage(t('about.title'), '', [['about.title', 'about.body1'], ['about.upstream.title', 'about.body2'], ['transparency.why.title', 'transparency.why.body']], t, true);
   if (route.page === 'acceptable') return renderAcceptable(config, t);
   if (route.page === 'support') return renderSupport(route.language, config, t);
@@ -78,19 +83,18 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   const software = element('a', 'catalog-context-link', t('footer.software'));
   software.href = routePath('software', language);
   append(references, labels, software);
-  const guideIndex = element('a', 'catalog-context-link', language === 'es' ? 'Guías paso a paso' : 'Step-by-step guides'); guideIndex.href = routePath('guides', language); references.append(guideIndex);
+  const guideIndex = element('a', 'catalog-context-link', t('common.stepByStepGuides')); guideIndex.href = routePath('guides', language); references.append(guideIndex);
   const folio = element('p', 'ledger-folio', `UTILIBRE · ${String(discoveryGroups.length).padStart(2, '0')} ${t('home.catalog.taskGroups')}`);
   append(index, guideword, taskCue, taskNav, note, references, folio);
 
   const workspace = element('div', 'ledger-workspace');
   const finder = element('section', 'ledger-finder');
   const finderCopy = element('div', 'ledger-finder-copy');
-  const localizedTagline = language === 'es' ? config.projectTaglineEs : config.projectTaglineEn;
-  append(finderCopy, element('h1', '', t('home.title')), element('p', '', localizedTagline || config.projectTagline || t('home.lead')));
+  append(finderCopy, element('h1', '', t('home.title')), element('p', '', t('home.lead')));
   const form = element('form', 'catalog-search');
   form.setAttribute('role', 'search');
   form.setAttribute('method', 'get');
-  form.setAttribute('action', routePath('home', language));
+  form.setAttribute('action', `${routePath('home', language)}#catalog`);
   const label = element('label', '', t('home.catalog.searchLabel'));
   label.setAttribute('for', 'catalog-query');
   const searchControl = element('div', 'catalog-search-control');
@@ -104,14 +108,15 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   submit.type = 'submit';
   append(searchControl, input, submit);
   append(form, label, searchControl);
-  for (const [key, value] of [['view', state.view === 'featured' ? 'all' : state.view], ['group', state.group]]) {
-    if (!value) continue;
-    const hidden = element('input'); hidden.type = 'hidden'; hidden.name = key!; hidden.value = value; form.append(hidden);
-  }
+  // Every new search covers the full catalog. Category and access links can
+  // narrow the results afterwards, without silently restricting the next query.
+  const searchView = element('input');
+  searchView.type = 'hidden'; searchView.name = 'view'; searchView.value = 'all';
+  form.append(searchView);
   append(finder, finderCopy, form);
 
   const views = element('nav', 'catalog-views');
-  views.setAttribute('aria-label', language === 'es' ? 'Acceso a las herramientas' : 'Tool access');
+  views.setAttribute('aria-label', t('a11y.toolAccess'));
   for (const view of catalogViews) {
     const link = element('a', 'catalog-mode-link', t(`home.catalog.${view}`));
     link.href = catalogUrl(language, view === 'featured' ? {} : { ...state, view });
@@ -126,14 +131,14 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   catalogSection.setAttribute('aria-labelledby', 'catalog-title');
   const catalogHeader = element('header', 'catalog-ledger-header');
   const stateLabel = catalogStateLabel(state, t);
-  const stateCode = element('span', 'catalog-ledger-code', catalogStateCode(state));
+  const stateCode = element('span', 'catalog-ledger-code', catalogStateCode(state, language));
   stateCode.setAttribute('aria-hidden', 'true');
   const heading = element('div', 'catalog-ledger-heading');
   const title = element('h2', '', stateLabel);
   title.id = 'catalog-title';
   heading.append(title);
   const processing = element('span', 'catalog-ledger-column-label', t('home.catalog.processing'));
-  const launch = element('span', 'catalog-ledger-column-label catalog-ledger-column-action', language === 'es' ? 'Acción' : 'Action');
+  const launch = element('span', 'catalog-ledger-column-label catalog-ledger-column-action', t('home.catalog.action'));
   processing.setAttribute('aria-hidden', 'true');
   launch.setAttribute('aria-hidden', 'true');
   append(catalogHeader, stateCode, heading, processing, launch);
@@ -164,6 +169,22 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
     layout.append(support);
   }
   main.append(layout);
+  const difference = element('section', 'home-difference');
+  const differenceTitle = element('h2', '', t('home.difference.title'));
+  differenceTitle.id = 'home-difference-title';
+  difference.setAttribute('aria-labelledby', differenceTitle.id);
+  const points = element('ul', 'home-difference-points');
+  for (const key of ['labels', 'limits', 'local', 'independent'] as const) {
+    const item = element('li');
+    append(item, element('h3', '', t(`home.difference.${key}.title`)), element('p', '', t(`home.difference.${key}`)));
+    points.append(item);
+  }
+  append(difference, differenceTitle, element('p', '', t('home.collectionNote')), points);
+  const more = element('div', 'guide-links home-difference-links');
+  for (const [page, key] of [['labels', 'footer.labels'], ['transparency', 'nav.transparency']] as const) {
+    const link = element('a', 'text-link', t(key)); link.href = routePath(page, language); more.append(link);
+  }
+  difference.append(more); main.append(difference);
   return main;
 }
 
@@ -196,7 +217,7 @@ function renderTools(language: Language, config: PublicConfig, t: Translate): HT
   return main;
 }
 
-function renderPrivacy(config: PublicConfig, t: Translate): HTMLElement {
+function renderPrivacy(language: Language, config: PublicConfig, t: Translate): HTMLElement {
   const redlibSections: Array<[TranslationKey, TranslationKey]> = redlibConfigured(config)
     ? [
         ['privacy.redlib.challenge.title', 'privacy.redlib.challenge.body'],
@@ -205,15 +226,52 @@ function renderPrivacy(config: PublicConfig, t: Translate): HTMLElement {
       ]
     : [['privacy.redlib.title', 'privacy.redlib.disabled']];
 
-  return prosePage(t('privacy.title'), t('privacy.intro'), [
+  const main = prosePage(t('privacy.title'), t('privacy.intro'), [
     ['privacy.portal.title', 'privacy.portal.body'],
+    ['privacy.localData.title', 'privacy.localData.body'],
     ['privacy.local.title', 'privacy.local.body'],
     ['privacy.tools.title', 'privacy.tools.body'],
     ['privacy.search.title', 'privacy.search.body'],
     ...redlibSections,
+    ['privacy.translation.title', 'privacy.translation.body'],
+    ['privacy.notifications.title', 'privacy.notifications.body'],
+    ['privacy.sharing.title', 'privacy.sharing.body'],
     ['privacy.logs.title', 'privacy.logs.body'],
     ['privacy.storage.title', 'privacy.storage.body'],
   ], t);
+  const providers = policySection(t('privacy.providers.title'), t('privacy.providers.body'));
+  const sources = element('ul');
+  for (const [label, href] of [
+    ['Cloudflare DNS', 'https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/'],
+    ['Cloudflare HTTPS', 'https://developers.cloudflare.com/dns/proxy-status/'],
+    ['Cloudflare STUN / TURN', 'https://developers.cloudflare.com/realtime/turn/faq/'],
+    ['Quad9 DNS', 'https://quad9.net/privacy/policy/'],
+    ['OpenStreetMap', 'https://osmfoundation.org/wiki/Privacy_Policy'],
+    ['Photon', 'https://github.com/komoot/photon#demo-server'],
+    ['FOSSGIS', 'https://routing.openstreetmap.de/about.html'],
+    ['DeepL', 'https://www.deepl.com/en/privacy'],
+    ['DuckDuckGo / Microsoft', 'https://duckduckgo.com/duckduckgo-help-pages/results/translation'],
+    ['Google', 'https://policies.google.com/privacy'],
+    ['Yandex', 'https://yandex.com/legal/confidential/en/'],
+  ] as const) {
+    const item = element('li'); item.append(externalLink(href, label)); sources.append(item);
+  }
+  providers.append(sources); main.append(providers);
+  main.append(policySection(t('transparency.field.retention'), t('privacy.kinds')));
+  const table = element('table', 'retention-table');
+  const head = element('thead'); const headings = element('tr');
+  for (const text of [language === 'es' ? 'Servicio' : 'Service', t('transparency.field.retention')]) headings.append(element('th', '', text));
+  head.append(headings); table.append(head);
+  const body = element('tbody');
+  const stateful = ['freshrss', 'privatebin', 'yopass', 'ntfy', 'pairdrop', 'wbo', 'cryptpad', 'actual', 'wakapi', 'rallly', 'pollaris', 'liberaforms', 'fmd'];
+  for (const entry of catalog.filter(entry => stateful.includes(entry.id) && serviceConfigured(config, entry))) {
+    const row = element('tr'); const name = element('td');
+    const link = element('a', '', localized(entry.name, language)); link.href = `${routePath('transparency', language)}#privacy-${entry.id}`;
+    name.append(link); row.append(name, element('td', '', localized(entry.retention, language))); body.append(row);
+  }
+  table.append(body); const scroll = element('div', 'table-scroll'); scroll.append(table); main.append(scroll);
+  const leaving = element('a', 'text-link', t('yourData.title')); leaving.href = routePath('your-data', language); main.append(leaving);
+  return main;
 }
 
 async function renderToolPage(id: string, language: Language, config: PublicConfig, t: Translate): Promise<HTMLElement> {
@@ -224,8 +282,8 @@ async function renderToolPage(id: string, language: Language, config: PublicConf
   append(disclosure, privacyLabels(entry.labels, t), element('p', '', localized(entry.dataFlow, language)));
   if (entry.upstreamSourceUrl) {
     const sourceText = entry.upstreamProject
-      ? `${entry.upstreamProject} · ${t('home.catalog.source')}`
-      : t('home.catalog.source');
+      ? `${t('software.upstreamSource')}: ${entry.upstreamProject}`
+      : t('software.upstreamSource');
     disclosure.append(externalLink(entry.upstreamSourceUrl, sourceText));
   }
   main.append(disclosure);
@@ -244,7 +302,10 @@ function renderTransparency(language: Language, config: PublicConfig, t: Transla
   const infrastructure = infoSection(t('transparency.infrastructure.title'), t('transparency.infrastructure.body'));
   const diagram = element('pre', 'architecture-diagram', t('transparency.infrastructure.diagram'));
   infrastructure.append(diagram);
-  main.append(infrastructure);
+  main.append(infrastructure, policySection(t('hosting.title'), t('hosting.body')));
+  const reliability = policySection(t('frontends.title'), `${t('frontends.body')}\n\n${t('frontends.cache')}`);
+  const statusLink = element('a', 'text-link', t('nav.status')); statusLink.href = routePath('status', language); reliability.append(statusLink);
+  main.append(reliability);
   const inventory = element('section', 'section');
   inventory.append(element('h2', '', t('transparency.catalog.title')));
   for (const entry of catalog.filter((entry) => !entry.id.startsWith('omni-') && entry.id !== 'whisper-web')) {
@@ -260,10 +321,10 @@ function renderTransparency(language: Language, config: PublicConfig, t: Transla
       dataRow(t('transparency.field.temporary'), localized(entry.temporaryStorage, language)),
       dataRow(t('transparency.field.retention'), localized(entry.retention, language)),
       dataRow(t('transparency.field.logging'), localized(entry.logging, language)),
-      dataRow(t('transparency.field.upstream'), entry.upstreamServices.join(', ') || '—'),
+      dataRow(t('transparency.field.upstream'), entry.upstreamServices.join(', ') || t('transparency.noUpstream')),
       dataRow(t('transparency.field.project'), entry.upstreamProject || t('transparency.portalProject')),
-      dataRow(t('transparency.field.license'), entry.license),
-      dataRow(t('transparency.field.version'), entry.id === 'searxng' && config.searxngDeployedVersion ? `${config.searxngDeployedVersion} + local log redaction hook` : entry.installedVersion),
+      dataRow(t('transparency.field.license'), licenseText(entry.license, language)),
+      dataRow(t('transparency.field.version'), entry.id === 'searxng' && config.searxngDeployedVersion ? `${config.searxngDeployedVersion} + ${t('transparency.logRedaction')}` : entry.installedVersion),
       dataRow(t('transparency.field.modified'), entry.modified ? t('transparency.yes') : t('transparency.no')),
     );
     details.append(summary, list);
@@ -283,7 +344,7 @@ function renderAcceptable(config: PublicConfig, t: Translate): HTMLElement {
   const section = element('section', 'prose section');
   section.append(element('p', '', t('acceptable.list')));
   if (config.contactUrl) section.append(externalLink(config.contactUrl, t('acceptable.contact')));
-  main.append(section);
+  main.append(section, abuseSection(t), policySection(t('acceptable.expectations.title'), t('acceptable.expectations.body')));
   return main;
 }
 
@@ -297,16 +358,15 @@ function renderSupport(language: Language, config: PublicConfig, t: Translate): 
   const upstreamLink = element('a', 'text-link', t('support.upstream.link'));
   upstreamLink.href = routePath('software', language);
   main.append(infoSection(t('support.upstream.title'), t('support.upstream.body'), upstreamLink));
-  const es = language === 'es';
-  const contributions = infoSection(es ? 'También podés ayudar sin donar' : 'You can help without donating', es
-    ? 'Reportá una herramienta rota indicando la tarea, navegador y mensaje de error, sin adjuntar documentos privados, contraseñas ni enlaces de administración. Proponé una corrección o traducción de una guía, o compartí su enlace con alguien a quien le sirva.'
-    : 'Report a broken tool with the task, browser and error message, without attaching private documents, passwords or management links. Suggest a correction or translation for a guide, or share its link with someone who needs it.');
-  if (config.contactUrl) contributions.append(externalLink(config.contactUrl, es ? 'Reportar o proponer una mejora' : 'Report or suggest an improvement'));
+  const contributions = infoSection(t('support.contribute.title'), t('support.contribute.body'));
+  const contributionLinks = element('div', 'guide-links');
+  contributions.append(contributionLinks);
+  if (config.contactUrl) contributionLinks.append(externalLink(config.contactUrl, t('support.contribute.report')));
   if (config.publicFormsUrl && config.enabledServices.includes('liberaforms')) {
-    contributions.append(externalLink(new URL('feedback', config.publicFormsUrl).href, es ? 'Enviar comentarios privados al equipo' : 'Send private feedback to the team'));
-    contributions.append(element('p', '', es ? 'Solo preguntamos la herramienta, tu tarea, dónde te trabaste y un contacto opcional. El equipo autorizado puede leer tu respuesta. No incluyás contraseñas ni archivos privados.' : 'Only the tool, your task, where you got stuck and optional contact details are requested. Authorized operators can read your response. Do not include passwords or private files.'));
+    contributionLinks.append(externalLink(new URL('feedback', config.publicFormsUrl).href, t('support.contribute.feedback')));
+    contributions.append(element('p', '', t('support.contribute.privacy')));
   }
-  const guides = element('a', 'text-link', es ? 'Elegir una guía para compartir' : 'Choose a guide to share'); guides.href = routePath('guides', language); contributions.append(guides); main.append(contributions);
+  const guides = element('a', 'text-link', t('support.contribute.guide')); guides.href = routePath('guides', language); contributions.append(guides); main.append(contributions);
   return main;
 }
 
@@ -318,7 +378,9 @@ function renderStatus(language: Language, config: PublicConfig, t: Translate): H
   message.setAttribute('role', 'status');
   const refresh = element('button', 'button button-secondary', t('status.refresh'));
   refresh.type = 'button';
-  append(section, list, refresh, message);
+  const method = element('details', 'status-method');
+  append(method, element('summary', '', t('status.methodTitle')), element('p', '', t('status.method')));
+  append(section, message, refresh, list, method);
   main.append(section);
   const load = async (): Promise<void> => {
     const finishAction = disableActionButton(refresh);
@@ -426,9 +488,9 @@ function renderSoftware(language: Language, config: PublicConfig, t: Translate):
     { group: 'infrastructure', name: 'Valkey', version: '9.1.1-alpine', license: 'BSD-3-Clause', upstream: 'https://github.com/valkey-io/valkey/tree/9.1.1', modification: t('software.notModified'), purpose: t('software.purpose.valkey') },
     { group: 'hosted', name: 'Redlib', version: 'a4d36e9 + local redirect hardening', license: 'AGPL-3.0-only', upstream: 'https://github.com/redlib-org/redlib/tree/a4d36e954cf1bd64f209cd8868c5a29edc81b374', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.redlib') },
     { group: 'hosted', name: 'Anubis', version: '1.27.0', license: 'MIT', upstream: 'https://github.com/TecharoHQ/anubis/tree/v1.27.0', modification: t('software.imageUnmodifiedConfigured'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.anubis') },
-    { group: 'hosted', name: 'FreshRSS', version: '1.29.1', license: 'AGPL-3.0', upstream: 'https://github.com/FreshRSS/FreshRSS/tree/1.29.1', modification: t('software.notModified'), purpose: t('software.purpose.freshrss') },
-    { group: 'hosted', name: 'PrivateBin', version: '2.0.6', license: 'Zlib', upstream: 'https://github.com/PrivateBin/PrivateBin/tree/2.0.6', modification: t('software.notModified'), purpose: t('software.purpose.privatebin') },
-    { group: 'infrastructure', name: 'RSSHub', version: '40aca954', license: 'AGPL-3.0', upstream: 'https://github.com/DIYgod/RSSHub/tree/40aca9548e99eefd519ff7abbb937560fc037c95', modification: t('software.notModified'), purpose: t('software.purpose.rsshub') },
+    { group: 'hosted', name: 'FreshRSS', version: '1.29.1', license: 'AGPL-3.0-only', upstream: 'https://github.com/FreshRSS/FreshRSS/tree/1.29.1', modification: t('software.notModified'), purpose: t('software.purpose.freshrss') },
+    { group: 'hosted', name: 'PrivateBin', version: '2.0.6', license: 'Zlib', upstream: 'https://github.com/PrivateBin/PrivateBin/tree/2.0.6', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.privatebin') },
+    { group: 'infrastructure', name: 'RSSHub', version: '40aca954', license: 'AGPL-3.0-only', upstream: 'https://github.com/DIYgod/RSSHub/tree/40aca9548e99eefd519ff7abbb937560fc037c95', modification: t('software.notModified'), purpose: t('software.purpose.rsshub') },
     { group: 'infrastructure', name: 'PostgreSQL', version: '17.11-alpine', license: 'PostgreSQL License', upstream: 'https://github.com/postgres/postgres', modification: t('software.notModified'), purpose: t('software.purpose.postgresql') },
     { group: 'browser', name: 'Newsreader', version: '5.3.0 package', license: 'OFL-1.1', upstream: 'https://github.com/productiontype/Newsreader', modification: t('software.notModified'), purpose: t('software.purpose.fonts') },
     { group: 'browser', name: 'Atkinson Hyperlegible Next', version: '5.3.0 package', license: 'OFL-1.1', upstream: 'https://github.com/googlefonts/atkinson-hyperlegible-next', modification: t('software.notModified'), purpose: t('software.purpose.fonts') },
@@ -441,9 +503,9 @@ function renderSoftware(language: Language, config: PublicConfig, t: Translate):
     inventory.push({
       group: 'hosted', name: entry.upstreamProject, version: entry.installedVersion,
       license: entry.license, upstream: entry.upstreamSourceUrl,
-      modification: t(entry.modified ? 'software.modified' : 'software.imageUnmodifiedConfigured'),
-      modifiedSource: ['cryptpad', 'liberaforms', 'galene'].includes(entry.id) && config.publicPdfUrl
-        ? new URL(`/utilibre-source/${entry.id}-utilibre.tar.gz`, config.publicPdfUrl).href
+      modification: t(entry.modified ? 'software.modified' : 'software.configured'),
+      modifiedSource: ['addy', 'trip', 'donetick', 'beaverhabits', 'projects', 'kokoro-web', 'family-chess', 'knit', 'newton', 'autoredact', 'gravity', 'rustpad', 'moocup', 'one-file-core', 'tiddlywiki', 'newsletters', 'lrclib', 'translite', 'cryptpad', 'liberaforms', 'galene', 'ittools', 'fmd', 'reactive-resume', 'drawdb', 'bookbinder', 'moodist', 'sketchforge', 'chartdb', 'spliit', 'wishlist', 'kitchenowl', 'bytestash', 'openresume', 'calino', 'chitchatter', 'gathio', 'link-cleaner', 'razzia', 'chhoto', 'unfurl', '13ft'].includes(entry.id) && config.publicPdfUrl
+        ? new URL(`/utilibre-source/${entry.id === 'ittools' ? 'it-tools' : entry.id}-utilibre.tar.gz${['newsletters', 'chhoto', 'lrclib', 'translite'].includes(entry.id) ? '?revision=' + encodeURIComponent(entry.installedVersion) : ''}`, config.publicPdfUrl).href
         : entry.labels.includes('local') && !entry.labels.includes('server') && baseUrl
         ? new URL('/utilibre-source/', baseUrl).href : config.sourceCodeUrl,
       purpose: localized(entry.description, language),
@@ -469,7 +531,7 @@ function renderSoftware(language: Language, config: PublicConfig, t: Translate):
       append(
         item,
         element('h3', '', itemData.name),
-        element('p', '', `${itemData.version} · ${itemData.license}`),
+        element('p', '', `${itemData.version} · ${licenseText(itemData.license, language)}`),
         element('p', '', `${t('software.purposeLabel')}: ${itemData.purpose}`),
         element('p', 'software-modification', itemData.modification),
       );
@@ -572,10 +634,10 @@ function catalogStateLabel(state: CatalogDiscoveryState, t: Translate): string {
   return t(`home.catalog.${state.view || 'featured'}`);
 }
 
-function catalogStateCode(state: CatalogDiscoveryState): string {
+function catalogStateCode(state: CatalogDiscoveryState, language: Language): string {
   if (state.query?.trim()) return 'Q';
   if (state.group) return String(discoveryGroups.indexOf(state.group) + 1).padStart(2, '0');
-  if (state.view === 'all') return 'A–Z';
+  if (state.view === 'all') return language === 'es' ? 'TODO' : 'ALL';
   return '00';
 }
 
@@ -630,7 +692,7 @@ export function pageMeta(route: Route, config: PublicConfig, t: Translate): { ti
     tools: 'tools.intro',
     about: 'about.body1',
     transparency: 'transparency.why.body',
-    privacy: 'privacy.intro',
+    privacy: 'privacy.intro', security: 'meta.security.description', 'your-data': 'meta.your-data.description',
     acceptable: 'acceptable.intro',
     support: 'support.body',
     status: 'status.intro',

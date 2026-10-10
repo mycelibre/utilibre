@@ -1,0 +1,59 @@
+name: selfhosted
+is_done_tick_dot_com: false
+is_user_creation_disabled: true
+disable_password_auth: true
+single_circle_instance: false
+database: {type: sqlite, migration: true}
+jwt: {secret: '', session_time: 24h, max_refresh: 168h}
+server:
+  port: 2021
+  read_timeout: 15s
+  write_timeout: 15s
+  rate_period: 60s
+  rate_limit: 300
+  cors_allow_origins: ['https://chores.utilibre.org']
+  serve_frontend: true
+  serve_swagger: false
+  public_host: https://chores.utilibre.org
+logging: {level: error, encoding: json, development: false}
+scheduler_jobs: {due_job: 30m, overdue_job: 3h, pre_due_job: 3h}
+email: {host: '', port: 0, key: '', email: '', user: '', app_host: 'https://chores.utilibre.org', log_raw_url: false}
+telegram: {token: ''}
+pushover: {token: ''}
+fcm: {credentials_path: '', project_id: ''}
+oauth2:
+  name: Utilibre
+  client_id: utilibre-donetick
+  client_secret: ''
+  # The pinned native web client uses a confidential code exchange, without PKCE.
+  pkce: false
+  scopes: [openid, profile, email]
+  auth_url: https://auth.utilibre.org/application/o/authorize/
+  token_url: http://gateway:9001/application/o/token/
+  user_info_url: http://gateway:9001/application/o/userinfo/
+  redirect_url: https://chores.utilibre.org/auth/oauth2
+  admin_groups: []
+  manager_groups: []
+storage:
+  storage_type: local
+  base_path: /data/storage
+  max_file_size: 5242880
+  max_user_storage: 52428800
+  public_host: https://chores.utilibre.org/api/v1/assets/
+  public_read: false
+realtime:
+  enabled: true
+  websocket_enabled: true
+  sse_enabled: true
+  heartbeat_interval: 30s
+  connection_timeout: 90s
+  min_connection_interval: 5s
+  max_connections: 128
+  max_connections_per_user: 5
+  max_sse_tickets: 512
+  event_queue_size: 256
+  cleanup_interval: 2m
+  stale_threshold: 5m
+  enable_compression: false
+  enable_stats: false
+  allowed_origins: ['https://chores.utilibre.org']

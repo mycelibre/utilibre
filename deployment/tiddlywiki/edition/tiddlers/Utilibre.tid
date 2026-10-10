@@ -1,0 +1,26 @@
+title: Utilibre
+tags: 
+
+<$reveal type="nomatch" state="$:/language" text="$:/languages/es-ES">
+<div lang="en">
+
+!! Your notebook stays in this file
+Create a note with the + button. Confirm the note with the check mark, then choose ''save changes'' (the cloud/download button) to download the updated HTML file. Open that new file and check your notes before deleting an older copy. Closing the tab without downloading can lose changes; this edition has no account, server notebook or installed browser-storage plugin.
+
+Downloads are not encrypted by default. Keep private copies protected. Import only trusted notes and plugins: a wiki can contain executable code. External images, services and plugin-library requests are blocked by this edition's browser policy; no remote sync service is configured.
+
+[[More tools from Utilibre|https://utilibre.org/en/]] · [[Privacy notes|https://utilibre.org/en/privacy]] · [[Source and build|https://tools.utilibre.org/utilibre-source/tiddlywiki-utilibre.tar.gz]]
+</div>
+</$reveal>
+
+<$reveal type="match" state="$:/language" text="$:/languages/es-ES">
+<div lang="es">
+
+!! Tu cuaderno queda en este archivo
+Creá una nota con el botón +. Confirmala con la marca de verificación y elegí ''guardar cambios'' (el botón de nube y descarga) para descargar el HTML actualizado. Abrí ese archivo nuevo y comprobá tus notas antes de borrar una copia anterior. Cerrar la pestaña sin descargar puede perder los cambios; esta edición no tiene cuenta, cuaderno en el servidor ni complemento de almacenamiento del navegador instalado.
+
+Las descargas no están cifradas de forma predeterminada. Protegé tus copias privadas. Importá solo notas y complementos de confianza: una wiki puede contener código ejecutable. La política del navegador de esta edición bloquea imágenes, servicios y solicitudes a bibliotecas de complementos externos; no hay sincronización remota configurada.
+
+[[Más herramientas de Utilibre|https://utilibre.org/es/]] · [[Notas de privacidad|https://utilibre.org/es/privacy]] · [[Código y compilación|https://tools.utilibre.org/utilibre-source/tiddlywiki-utilibre.tar.gz]]
+</div>
+</$reveal>

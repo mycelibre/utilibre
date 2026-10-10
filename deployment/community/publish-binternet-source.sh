@@ -8,6 +8,7 @@ cp "$root/deployment/community/Dockerfile.binternet" "$source/Dockerfile.utilibr
 mkdir -p "$source/deployment"
 cp "$root/deployment/community/compose.binternet.yaml" "$root/deployment/community/binternet-fpm.conf" "$root/deployment/community/binternet-gateway.conf" "$root/deployment/community/additions-firewall.sh" "$root/deployment/toolbox/firewall.sh" "$source/deployment/"
 cp "$root/deployment/community/compose.binternet-onion.yaml" "$root/deployment/community/binternet-onion-fpm.conf" "$root/deployment/community/binternet-onion-gateway.conf" "$root/deployment/community/binternet-torrc" "$root/deployment/community/Dockerfile.tor" "$source/deployment/"
+cp "$root/deployment/community/binternet-onion-start.sh" "$source/deployment/"
 git -C "$source" add -N misc/utilibre-http.php tests/utilibre-http.php UTILIBRE-SOURCE.txt Dockerfile.utilibre deployment
 git -C "$source" diff --binary > "$root/deployment/community/binternet-source.patch"
 tar --exclude=.git --exclude=.github -czf /opt/utilibre/toolbox-public/binternet-utilibre.tar.gz -C "$source" .

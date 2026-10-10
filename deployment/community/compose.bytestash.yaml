@@ -1,0 +1,52 @@
+name: utilibre-bytestash
+x-bounded: &bounded
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  logging:
+    driver: json-file
+    options: {max-size: 5m, max-file: '2'}
+services:
+  bytestash:
+    <<: *bounded
+    image: utilibre-bytestash:1.5.14-p1
+    user: '1000:1000'
+    cpus: 1.0
+    mem_limit: 512m
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    env_file: /opt/utilibre/community-private/bytestash.env
+    environment:
+      DEBUG: 'false'
+      TOKEN_EXPIRY: 8h
+      ALLOW_NEW_ACCOUNTS: 'true'
+      DISABLE_ACCOUNTS: 'false'
+      DISABLE_INTERNAL_ACCOUNTS: 'true'
+      ALLOW_PASSWORD_CHANGES: 'false'
+      ADMIN_USERNAMES: akadmin
+      OIDC_ENABLED: 'true'
+      OIDC_DISPLAY_NAME: Utilibre
+      OIDC_ISSUER_URL: https://auth.utilibre.org/application/o/bytestash/
+      OIDC_CLIENT_ID: utilibre-bytestash
+      OIDC_SCOPES: openid email profile
+    volumes:
+      - /opt/utilibre/community-data/bytestash:/data/snippets
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:5000/api/auth/config').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+  gateway:
+    <<: *bounded
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    cpus: 0.25
+    mem_limit: 64m
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    ports: ['10.10.1.43:3204:8080']
+    volumes: ['./bytestash/nginx.conf:/etc/nginx/nginx.conf:ro']
+    depends_on:
+      bytestash: {condition: service_healthy}

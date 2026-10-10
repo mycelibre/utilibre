@@ -1,45 +1,316 @@
 {
-  "updated": "2026-10-07",
+  "updated": "2026-10-09",
   "rule": "Carry this checklist forward. Do not ask the operator to reconstruct prior requests. Installed, functional, publicly reachable and directory-listed are separate states.",
-  "lastVerifiedPublicServices": ["searxng", "redlib", "freshrss", "privatebin", "bentopdf", "vert", "hatsh", "omnitools", "ittools", "drawio", "miniqr", "rssbridge", "ntfy", "yopass", "pairdrop", "uptime-kuma", "jupyterlite", "reactive-resume", "penpot", "actual", "rallly", "wakapi", "priviblur", "mezzo", "fmd", "pollaris", "binternet", "gothub", "translite", "biblioreads", "fourget", "anonymousoverflow", "safetwitch", "qr-offline", "kittygram", "degoog", "mumble", "lrclib", "zip-manager", "rawgraphs", "audiomass", "minipaint", "excalidraw", "svgedit", "cyberchef", "image-scrubber"],
-  "accountPolicy": "Keep approved/invited access, email verification and MFA for persistent account services. No automatic open registration.",
-  "inProgress": [
-    {"id":"excalidraw","backend":"10.10.1.43:3164","public":"https://whiteboard.utilibre.org","status":"Public 53973c3-p1. PNG/SVG exports and native Spanish verified. Browser-local drawings, local fonts; no cloud collaboration/export, AI or analytics. Source, bilingual catalog, SEO and monitoring published."},
-    {"id":"svgedit","backend":"10.10.1.43:3165","public":"https://svg.utilibre.org","status":"Public 7.4.2-p1. SVG export/reopen and hostile local SVG sanitization verified. Spanish partially translated. Remote URL imports/config/extensions disabled; DOMPurify/fflate lock fixes pinned. Component notices, source, catalog and monitoring published."},
-    {"id":"cyberchef","backend":"10.10.1.43:3166","public":"https://cyberchef.utilibre.org","status":"Public checksum-verified 11.5.0-p1. Base64/SHA256 synthetic outputs pass. HTTP, DNS, maps and RSA Verify unavailable; strict CSP remains. Known dependency advisories remain: not for security-critical crypto decisions. Shared recipe URLs may contain input. English/larger-screen guidance, source and monitoring published."},
-    {"id":"image-scrubber","backend":"10.10.1.43:3167","public":"https://scrub.utilibre.org","status":"Public reviewed 390b166-p1. Fixed hostile filename/EXIF HTML injection, string callbacks, corrupt-image/metadata race, root service-worker paths and touch event references. Opaque Paint default; PNG export removes original metadata in test, original untouched. No anonymity guarantee; 25MiB/64MP input,2500px output, English. Source, catalog and monitoring published."},
-    {"id":"zip-manager","backend":"10.10.1.43:3160","public":"https://zip.utilibre.org","status":"Public 3b77a59-p1. ZIP creation/exact-byte extraction verified; native Spanish supported. Static local processing, strict same-origin CSP and edge-only private listener. No RAR/7z claim. Source and monitoring published."},
-    {"id":"rawgraphs","backend":"10.10.1.43:3161","public":"https://charts.utilibre.org","status":"Public 2.0.1-p1. Fixed CSV parser failure under strict CSP using native D3 parseRows; public two-row bar chart/SVG export passes. Root and language-query pages serve the same new bundle with no-cache; previously open tabs need reload. Analytics, remote imports and executable plugins disabled. Hardened runtime dependency lock; old build-tool advisories remain. English/larger-screen guidance. Source and monitoring published."},
-    {"id":"audiomass","backend":"10.10.1.43:3162","public":"https://audio.utilibre.org","status":"Public 21f5ee1-p1. Three-second WAV loaded and one-second selection exported. Local processing, same-origin microphone permission, no application uploads. English; upstream multitrack beta is not certified by the single-track fixture. Source and monitoring published."},
-    {"id":"minipaint","backend":"10.10.1.43:3163","public":"https://paint.utilibre.org","status":"Public 4.14.3-p1. PNG open/export dimensions verified. Native Spanish selected by portal, with incomplete upstream translations disclosed. Remote fonts/image imports disabled. Local browser drafts are not server backups. Source and monitoring published."},
-    {"id":"omnitools-task-links","backend":"10.10.1.43:3103","public":"https://tools.utilibre.org","status":"0.6.0-p2 adds checksum-verified local IMG.LY model/runtime hosting. Six direct tasks verified with synthetic outputs: transparent background, image edit, compression, one-second WAV, CSV JSON and line deduplication. No application writes; compression/audio use existing disclosed CDNs. Portal task aliases inherit the parent service gate and do not duplicate software inventory. No new custom tool implementation or back-link injection."},
-    {"id": "whisper-web", "backend": "10.10.1.43:3137", "public": "https://transcribe.utilibre.org", "status": "Hidden from public catalog and status pages at the operator's explicit request on October 7: transcription results are not useful. Remove from ENABLED_SERVICES and LISTED_SERVICES; leave PUBLIC_TRANSCRIBE_URL empty. Deployment 81869ed-p3, direct URL, source and private monitor retained. Do not relist without operator approval. Prior quality-correction notes remain in docs/toolbox-review.md; no Windows/Opera accuracy guarantee."},
-    {"id": "drawio", "backend": "10.10.1.43:3111", "public": "https://draw.utilibre.org", "status": "Live32.0.2-p3. Native Minimal layout on narrow screens; desktop/explicit choices retained. Content-versioned config/loader avoids stale Cloudflare JavaScript. Public Spanish mobile fits390px. Cloud/remote export disabled; no custom return-link code. Two configuration/privacy tests pass."},
-    {"id": "pairdrop", "backend": "10.10.1.43:3124", "public": "https://drop.utilibre.org", "status": "Reverified public HTTPS/WebSocket discovery, consent and exact-byte WebRTC synthetic file transfer in two isolated browsers on the test machine. Different/restrictive NATs untested; no TURN or WebSocket file fallback enabled. Reusable checker records a non-blocking headless wake-lock denial separately."},
-    {"id": "translite", "backend": "10.10.1.43:3152", "public": "https://translate.utilibre.org", "status": "Live pinned7b4b8e5-p1 / PHP8.5.11. Four engines translate EN/ES in both directions; desktop/mobile, engine-switching and privacy/input checks pass over public HTTPS. Catalog enabled. POST required, audio off, no shared translation cache, bounded HTTPS-only egress, no application/gateway logs. Cloudflare security injection disclosed. Public-directory submission not yet made."},
-    {"id": "binternet-tor", "status": "Deployed and documented; independent Tor-client homepage/search/image/pagination passed; private identity backup verified. Upstream listing branch pushed, but PR creation is blocked by token permissions."},
-    {"id": "biblioreads", "backend": "10.10.1.43:3151", "public": "https://biblioreads.utilibre.org", "status": "Live 9508abc-p1. Public desktop/mobile search, book, same-origin cover, local-library export/delete tests pass. Production dependency audit clean; build-only PWA dependencies retain advisories. Source published; catalog and monitoring enabled. Upstream instance issue creation denied by token on October 6."},
-    {"id": "anonymousoverflow", "backend": "10.10.1.43:3147", "public": "https://overflow.utilibre.org", "status": "Public HTTPS question/answer content verified; catalog and monitoring enabled. Instance-hub submission still pending."},
-    {"id": "fourget", "backend": "10.10.1.43:3145", "public": "https://4get.utilibre.org", "status": "Public HTTPS real search verified; backend search/images passed. Catalog and monitoring enabled. Distributed instance listing requires an existing operator to add this URL; no listing claim."},
-    {"id": "safetwitch", "backend": "10.10.1.43:3146", "public": "https://twitch.utilibre.org", "status": "Liveddee63e-p2. Fixed normal thumbnail burst admission: lazy previews/reserved dimensions and64 media connections perIP,96global; request-rate/outbound limits retained. Public actual video, image scrolling, following and Spanish-mobile checks pass without observed429. Same-origin browser privacy preserved; chat disabled. Corrected earlier source metadata to actualddee63ebbe8b7b74d8f6ed3869cd7958934746d7 checkout; full source published. Codeberg listing needs forge access."},
-    {"id": "qr-offline", "backend": "10.10.1.43:3155", "public": "https://qrtools.utilibre.org", "status": "Live 0fde700-p2, MIT. Fixed off-center QR image rendering and matched SVG geometry; versioned assets prevent stale CDN/service-worker code. Public desktop/mobile Spanish, equal-margin pixel checks, decoding, PNG/SVG/PDF, synthetic-camera and offline tests pass. No external browser requests or persistent QR history. Portal and monitoring enabled."},
-    {"id": "kittygram", "backend": "10.10.1.43:3154", "public": "https://gram.utilibre.org", "status": "Live 5931c21-p1. Public desktop/mobile profile, post, image and actual video tests pass. Native operator return link; upstream has no Spanish translation. Portal and monitoring enabled. Codeberg submission still requires forge access."},
-    {"id": "rimgo", "backend": "10.10.1.43:3153", "public": "https://rimgo.utilibre.org", "status": "Deployed d2be8e2-p3: concurrent same-host requests share the first429 cooldown; waiting requests honor cancellation; identifying headers stripped and HTTP/2 restored. Five offline transport tests pass. Public version verified; sampled video still429/no-store/Retry-After601. No third-party fallback or provider added. Retry/privacy improvements, not restored playback; not launched or submitted."},
-    {"id": "mumble", "backend": "10.10.1.43:64738 TCP/UDP", "public": "mumble.utilibre.org", "status": "PASSWORD PROTECTED, 20 users. Public TCP authentication and exact valid20ms Opus silence loopback passed. Independent GitHub run37525936562 verifies pinned TLS/invalid-password rejection; matching nonce5574696cc9adeaa7 reached both eth0 and Mumble container172.29.92.10:64738 at20:22UTC. Public inbound UDP forwarding is verified; authenticated UDP audio/return path remains untested. ALLOWPING=false is deliberate and unchanged. Native launch/operator links, no event logs/server recording, new outbound connections denied. Kuma checks only private TCP liveness; manual external workflow is not recurring monitoring."},
-    {"id": "gothub", "backend": "10.10.1.43:3148", "public": "https://gothub.utilibre.org", "status": "Live p2: fixed compressed stylesheet404 on read-only filesystem; public desktop/mobile stylesheet, repository and file checks pass. Modified source published; portal and status-page links enabled."},
-    {"id": "dumb", "status": "Operator requested another repair attempt October 7. Verified actual search/lyrics on dumb.bloat.cat, genius.fsky.io and dumb.artemislena.eu, all reporting the same f558107 revision as our retained image. Our isolated original container still returns search500 and a lyrics error page with misleading HTTP200; direct Genius search/article, Chromium and browser-compatible TLS requests receive403 cf-mitigated:challenge. No working code fix found; exact cause requires another operator-controlled outbound IP or working-operator configuration comparison. Do not claim Dumb fails everywhere. LRCLIB remains live and unchanged on lyrics.utilibre.org:3142. No third-party relay, visitor-direct requests, paid proxy or shared credentials introduced; temporary Dumb test container removed. See docs/toolbox-review.md for the recheck."},
-    {"id": "lrclib", "backend": "10.10.1.43:3142", "public": "https://lyrics.utilibre.org", "status": "Live f37c070-p2: identical in-flight searches share one result; four waiting distinct searches, two-second queue deadline, 48 attached waiters; cancellation cleanup. Fourteen backend tests and public desktop/mobile checks pass. Provider concurrency remains one with 500ms spacing and full cooldown compliance. Offline 30-identical burst passes with one provider call; 30 distinct still rejects 27 to protect upstream. Cache remains 8MiB/128 entries/ten minutes. No external browser requests in tested workflows; CSP/privacy unchanged. MIT frontend and adapter source published; replaces Dumb, not Genius annotations/URLs."},
-    {"id": "fmd", "backend": "10.10.1.43:3141", "public": "https://fmd.utilibre.org", "status": "Separated narrowly matched static assets (20r/s burst100 per IP) from unchanged API/root quota (5r/s burst60). Eight fresh shared-IP browsers now complete all72 page/asset requests and render their forms, versus seven429 responses before. Connection/body/privacy/trust limits unchanged; no Caddy edit. Synthetic invitation, opaque-data roundtrip and user-separation tests pass, with disposable accounts deleted. Android GPS/push and independent multi-IP behavior not certified."},
-    {"id": "libremdb", "backend": "127.0.0.1:3144 (explicit profile; stopped after tests)", "status": "Repaired private candidate b233f4e-p1 using darlopvil fork, Node24.21/Next16.4. Zero known dependency-audit vulnerabilities; exact media hosts/public DNS, bounded requests/cache, HTML sanitization, same-origin CSP. Four offline security tests and desktop/mobile search/movie/proxied-image checks passed with no third-party browser requests. Private container stopped after verification. Public data-use permission remains unresolved; no public route, launch or listing. Full trailer/all-content coverage not claimed."},
-    {"id": "breezewiki", "backend": "10.10.1.43:3134", "public": "https://wiki.utilibre.org", "status": "Privacy preserved per operator decision: strict proxy remains on; JSONP/direct-media loading off. Gateway now suppresses URL/IP-bearing error logs, strips identifying headers, and restricts form actions. Four privacy regression tests pass; live article works and Chromium confirms external logo blocked by CSP. Existing p2 cooldown/challenge sanitization retained. Fandom image CDN403 still prevents complete workflow; not fully functional and no privacy-weakening fallback."},
-    {"id": "degoog", "backend": "10.10.1.43:3156", "public": "https://degoog.utilibre.org", "status": "Live official pinned1.0.0 with native SearXNG bridge: Mwmbl, Open Library and Hacker News engines from pinned d48c4b555, AGPL-3.0-or-later. No unlicensed extension-store code. Public real search, desktop/Spanish-mobile, privacy and operator-route denial tests pass. Indexer/favicon persistence disabled; bounded RAM search cache; logs disabled; TLS-verified bounded native image proxy and private-IP firewall. Core/engine source archive linked in native privacy panel. Portal/monitoring enabled. Listing fork branch pushed; PR creation denied by token."},
-    {"id": "tent", "status": "Possible extra request in typo 'priviblurtent'. One narrow clarification sent; do not confuse with already-live Priviblur."},
-    {"id": "screego", "status": "Inventory completed: no container, image, system service or application files found. User asked to find it, not explicitly to install; no installation performed."},
-    {"id": "public-instance-submissions", "status": "PrivateBin published; existing Redlib/SearXNG requests remain. RSS-Bridge, ntfy, Priviblur, Binternet clearnet/onion, AnonymousOverflow and DeGoog fork branches prepared and pushed, but upstream PR creation is denied by the current token. BiblioReads issue creation also denied. Prepared comparison links and precise statuses are in docs/public-instance-submissions.md. Codeberg/Gitfield submissions need appropriate forge credentials. Do not claim prepared branches are submitted."}
+  "lastVerifiedPublicServices": [
+    "knit",
+    "newton",
+    "family-chess",
+    "donetick",
+    "beaverhabits",
+    "projects",
+    "trip",
+    "kokoro-web",
+    "rustpad",
+    "autoredact",
+    "gravity",
+    "one-file-core",
+    "tiddlywiki",
+    "moocup",
+    "newsletters",
+    "chitchatter",
+    "gathio",
+    "link-cleaner",
+    "razzia",
+    "chhoto",
+    "unfurl",
+    "13ft",
+    "calino",
+    "radicale",
+    "spliit",
+    "wishlist",
+    "kitchenowl",
+    "opengist",
+    "linkding",
+    "vikunja",
+    "bytestash",
+    "openresume",
+    "moodist",
+    "sketchforge",
+    "chartdb",
+    "drawdb",
+    "bookbinder",
+    "searxng",
+    "redlib",
+    "freshrss",
+    "privatebin",
+    "bentopdf",
+    "vert",
+    "omnitools",
+    "ittools",
+    "hatsh",
+    "drawio",
+    "miniqr",
+    "rssbridge",
+    "ntfy",
+    "yopass",
+    "pairdrop",
+    "uptime-kuma",
+    "jupyterlite",
+    "wakapi",
+    "reactive-resume",
+    "penpot",
+    "actual",
+    "rallly",
+    "priviblur",
+    "mezzo",
+    "fmd",
+    "pollaris",
+    "binternet",
+    "gothub",
+    "translite",
+    "biblioreads",
+    "fourget",
+    "anonymousoverflow",
+    "safetwitch",
+    "kittygram",
+    "qr-offline",
+    "degoog",
+    "lrclib",
+    "zip-manager",
+    "rawgraphs",
+    "audiomass",
+    "minipaint",
+    "excalidraw",
+    "svgedit",
+    "cyberchef",
+    "image-scrubber",
+    "markmap",
+    "wbo",
+    "mapshaper",
+    "numbat",
+    "super-productivity",
+    "cryptpad",
+    "liberaforms",
+    "galene",
+    "mumble"
   ],
-  "operations": {"accountBackups": "Daily04:40UTC timer enabled. First identity/PostgreSQL/assets and expanded PostgreSQL/SQLite restore checks passed. Interrupted-run recovery restores previously running account services. Low-disk and failure alerts use the private verified-TLS relay.", "monitorAlerts": "Kuma web monitors and Mumble's explicitly private TCP monitor plus host disk/inode/memory thresholds checked every five minutes. Two consecutive adverse observations trigger operator email; recovery is reported. Test accepted by SMTP relay with verified TLS. Not independent of the application VM and not a public UDP voice check.", "offsite": "Explicitly deferred by the operator on October6. Do not provision or purchase storage. Existing local backup schedules remain unchanged; no backups were deleted."},
-  "ongoingRequirements": ["Keep requested services visible; give launch links when verified, and specific reasons when not usable.", "English/Spanish copy with Guatemalan voseo; use native Spanish tool settings only when supported.", "Native configuration-only return links, not custom navigation patches.", "Liberapay donation destination is mycelibre; crypto is advice-only until a receiving address and choice are supplied.", "Publish corresponding modified source; concise GitHub updates.", "Daily guarded SearXNG updates, status monitoring and verified backups; backups are currently on-host, not off-site."],
-  "assessmentNotDeploymentAuthorization": ["Matrix", "Mastodon", "EteSync", "Syncplay", "addy.io"],
-  "conditionalAssessment": {"libredns": "Reviewed; dedicated resolver/network plan needed. Do not apply upstream whole-host automation to the shared tools VM."},
-  "edgeBoundary": "Caddy is a separate VM at10.10.1.3. SSH as ubuntu was denied. Application-VM access does not imply edge access. Supply exact Caddy blocks and do not weaken TLS or proxy trust."
+  "accountPolicy": "Use each installed application's documented native account model. Most approved persistent services use Utilibre OIDC/email verification/MFA; Beaver, calendar, FMD and LiberaForms have separate native credentials. No blanket OIDC or MFA promise applies to every app.",
+  "operations": {
+    "accountBackups": "Daily04:40UTC timer enabled. First identity/PostgreSQL/assets and expanded PostgreSQL/SQLite restore checks passed. Interrupted-run recovery restores previously running account services. Low-disk and failure alerts use the private verified-TLS relay.",
+    "monitorAlerts": "Kuma web monitors and Mumble's explicitly private TCP monitor plus host disk/inode/memory thresholds checked every five minutes. Two consecutive adverse observations trigger operator email; recovery is reported. Test accepted by SMTP relay with verified TLS. Not independent of the application VM and not a public UDP voice check.",
+    "offsite": "Explicitly deferred by the operator on October6. Do not provision or purchase storage. Existing local backup schedules remain unchanged; no backups were deleted.",
+    "scheduledBackupFollowup": "9 October13:23-13:24 UTC: Donetick scheduled backup passed after its earlier p3 fix; Spliit's unit runtime path was corrected and its scheduled backup/disconnected restore passed. No failed systemd units remained. All snapshots and retention policies are preserved."
+  },
+  "ongoingRequirements": [
+    "Keep requested services visible; give launch links when verified, and specific reasons when not usable.",
+    "English/Spanish copy with Guatemalan voseo; use native Spanish tool settings only when supported.",
+    "Native configuration-only return links, not custom navigation patches.",
+    "Liberapay donation destination is mycelibre; crypto is advice-only until a receiving address and choice are supplied.",
+    "Publish corresponding modified source; concise GitHub updates.",
+    "Daily guarded SearXNG updates, status monitoring and verified backups; backups are currently on-host, not off-site."
+  ],
+  "assessmentNotDeploymentAuthorization": [
+    "Matrix",
+    "Mastodon",
+    "EteSync",
+    "Syncplay"
+  ],
+  "conditionalAssessment": {
+    "libredns": "Reviewed; dedicated resolver/network plan needed. Do not apply upstream whole-host automation to the shared tools VM."
+  },
+  "edgeBoundary": "Caddy is a separate VM at10.10.1.3. SSH as ubuntu was denied. Application-VM access does not imply edge access. Supply exact Caddy blocks and do not weaken TLS or proxy trust.",
+  "historicalCheckpoint": {
+    "date": "2026-10-07",
+    "entries": [
+      {
+        "id": "excalidraw",
+        "backend": "10.10.1.43:3164",
+        "public": "https://whiteboard.utilibre.org",
+        "status": "Public 53973c3-p1. PNG/SVG exports and native Spanish verified. Browser-local drawings, local fonts; no cloud collaboration/export, AI or analytics. Source, bilingual catalog, SEO and monitoring published."
+      },
+      {
+        "id": "svgedit",
+        "backend": "10.10.1.43:3165",
+        "public": "https://svg.utilibre.org",
+        "status": "Public 7.4.2-p1. SVG export/reopen and hostile local SVG sanitization verified. Spanish partially translated. Remote URL imports/config/extensions disabled; DOMPurify/fflate lock fixes pinned. Component notices, source, catalog and monitoring published."
+      },
+      {
+        "id": "cyberchef",
+        "backend": "10.10.1.43:3166",
+        "public": "https://cyberchef.utilibre.org",
+        "status": "Public checksum-verified 11.5.0-p1. Base64/SHA256 synthetic outputs pass. HTTP, DNS, maps and RSA Verify unavailable; strict CSP remains. Known dependency advisories remain: not for security-critical crypto decisions. Shared recipe URLs may contain input. English/larger-screen guidance, source and monitoring published."
+      },
+      {
+        "id": "image-scrubber",
+        "backend": "10.10.1.43:3167",
+        "public": "https://scrub.utilibre.org",
+        "status": "Public reviewed 390b166-p1. Fixed hostile filename/EXIF HTML injection, string callbacks, corrupt-image/metadata race, root service-worker paths and touch event references. Opaque Paint default; PNG export removes original metadata in test, original untouched. No anonymity guarantee; 25MiB/64MP input,2500px output, English. Source, catalog and monitoring published."
+      },
+      {
+        "id": "zip-manager",
+        "backend": "10.10.1.43:3160",
+        "public": "https://zip.utilibre.org",
+        "status": "Public 3b77a59-p1. ZIP creation/exact-byte extraction verified; native Spanish supported. Static local processing, strict same-origin CSP and edge-only private listener. No RAR/7z claim. Source and monitoring published."
+      },
+      {
+        "id": "rawgraphs",
+        "backend": "10.10.1.43:3161",
+        "public": "https://charts.utilibre.org",
+        "status": "Public 2.0.1-p1. Fixed CSV parser failure under strict CSP using native D3 parseRows; public two-row bar chart/SVG export passes. Root and language-query pages serve the same new bundle with no-cache; previously open tabs need reload. Analytics, remote imports and executable plugins disabled. Hardened runtime dependency lock; old build-tool advisories remain. English/larger-screen guidance. Source and monitoring published."
+      },
+      {
+        "id": "audiomass",
+        "backend": "10.10.1.43:3162",
+        "public": "https://audio.utilibre.org",
+        "status": "Public 21f5ee1-p1. Three-second WAV loaded and one-second selection exported. Local processing, same-origin microphone permission, no application uploads. English; upstream multitrack beta is not certified by the single-track fixture. Source and monitoring published."
+      },
+      {
+        "id": "minipaint",
+        "backend": "10.10.1.43:3163",
+        "public": "https://paint.utilibre.org",
+        "status": "Public 4.14.3-p1. PNG open/export dimensions verified. Native Spanish selected by portal, with incomplete upstream translations disclosed. Remote fonts/image imports disabled. Local browser drafts are not server backups. Source and monitoring published."
+      },
+      {
+        "id": "omnitools-task-links",
+        "backend": "10.10.1.43:3103",
+        "public": "https://tools.utilibre.org",
+        "status": "0.6.0-p2 adds checksum-verified local IMG.LY model/runtime hosting. Six direct tasks verified with synthetic outputs: transparent background, image edit, compression, one-second WAV, CSV JSON and line deduplication. No application writes; compression/audio use existing disclosed CDNs. Portal task aliases inherit the parent service gate and do not duplicate software inventory. No new custom tool implementation or back-link injection."
+      },
+      {
+        "id": "whisper-web",
+        "backend": "10.10.1.43:3137",
+        "public": "https://transcribe.utilibre.org",
+        "status": "Hidden from public catalog and status pages at the operator's explicit request on October 7: transcription results are not useful. Remove from ENABLED_SERVICES and LISTED_SERVICES; leave PUBLIC_TRANSCRIBE_URL empty. Deployment 81869ed-p3, direct URL, source and private monitor retained. Do not relist without operator approval. Prior quality-correction notes remain in docs/toolbox-review.md; no Windows/Opera accuracy guarantee."
+      },
+      {
+        "id": "drawio",
+        "backend": "10.10.1.43:3111",
+        "public": "https://draw.utilibre.org",
+        "status": "Live32.0.2-p3. Native Minimal layout on narrow screens; desktop/explicit choices retained. Content-versioned config/loader avoids stale Cloudflare JavaScript. Public Spanish mobile fits390px. Cloud/remote export disabled; no custom return-link code. Two configuration/privacy tests pass."
+      },
+      {
+        "id": "pairdrop",
+        "backend": "10.10.1.43:3124",
+        "public": "https://drop.utilibre.org",
+        "status": "Reverified public HTTPS/WebSocket discovery, consent and exact-byte WebRTC synthetic file transfer in two isolated browsers on the test machine. Different/restrictive NATs untested; no TURN or WebSocket file fallback enabled. Reusable checker records a non-blocking headless wake-lock denial separately."
+      },
+      {
+        "id": "translite",
+        "backend": "10.10.1.43:3152",
+        "public": "https://translate.utilibre.org",
+        "status": "Live pinned7b4b8e5-p1 / PHP8.5.11. Four engines translate EN/ES in both directions; desktop/mobile, engine-switching and privacy/input checks pass over public HTTPS. Catalog enabled. POST required, audio off, no shared translation cache, bounded HTTPS-only egress, no application/gateway logs. Cloudflare security injection disclosed. Public-directory submission not yet made."
+      },
+      {
+        "id": "binternet-tor",
+        "status": "Deployed and documented; independent Tor-client homepage/search/image/pagination passed; private identity backup verified. Upstream listing branch pushed, but PR creation is blocked by token permissions."
+      },
+      {
+        "id": "biblioreads",
+        "backend": "10.10.1.43:3151",
+        "public": "https://biblioreads.utilibre.org",
+        "status": "Live 9508abc-p1. Public desktop/mobile search, book, same-origin cover, local-library export/delete tests pass. Production dependency audit clean; build-only PWA dependencies retain advisories. Source published; catalog and monitoring enabled. Upstream instance issue creation denied by token on October 6."
+      },
+      {
+        "id": "anonymousoverflow",
+        "backend": "10.10.1.43:3147",
+        "public": "https://overflow.utilibre.org",
+        "status": "Public HTTPS question/answer content verified; catalog and monitoring enabled. Instance-hub submission still pending."
+      },
+      {
+        "id": "fourget",
+        "backend": "10.10.1.43:3145",
+        "public": "https://4get.utilibre.org",
+        "status": "Public HTTPS real search verified; backend search/images passed. Catalog and monitoring enabled. Distributed instance listing requires an existing operator to add this URL; no listing claim."
+      },
+      {
+        "id": "safetwitch",
+        "backend": "10.10.1.43:3146",
+        "public": "https://twitch.utilibre.org",
+        "status": "Liveddee63e-p2. Fixed normal thumbnail burst admission: lazy previews/reserved dimensions and64 media connections perIP,96global; request-rate/outbound limits retained. Public actual video, image scrolling, following and Spanish-mobile checks pass without observed429. Same-origin browser privacy preserved; chat disabled. Corrected earlier source metadata to actualddee63ebbe8b7b74d8f6ed3869cd7958934746d7 checkout; full source published. Codeberg listing needs forge access."
+      },
+      {
+        "id": "qr-offline",
+        "backend": "10.10.1.43:3155",
+        "public": "https://qrtools.utilibre.org",
+        "status": "Live 0fde700-p2, MIT. Fixed off-center QR image rendering and matched SVG geometry; versioned assets prevent stale CDN/service-worker code. Public desktop/mobile Spanish, equal-margin pixel checks, decoding, PNG/SVG/PDF, synthetic-camera and offline tests pass. No external browser requests or persistent QR history. Portal and monitoring enabled."
+      },
+      {
+        "id": "kittygram",
+        "backend": "10.10.1.43:3154",
+        "public": "https://gram.utilibre.org",
+        "status": "Live 5931c21-p1. Public desktop/mobile profile, post, image and actual video tests pass. Native operator return link; upstream has no Spanish translation. Portal and monitoring enabled. Codeberg submission still requires forge access."
+      },
+      {
+        "id": "rimgo",
+        "backend": "10.10.1.43:3153",
+        "public": "https://rimgo.utilibre.org",
+        "status": "Deployed d2be8e2-p3: concurrent same-host requests share the first429 cooldown; waiting requests honor cancellation; identifying headers stripped and HTTP/2 restored. Five offline transport tests pass. Public version verified; sampled video still429/no-store/Retry-After601. No third-party fallback or provider added. Retry/privacy improvements, not restored playback; not launched or submitted."
+      },
+      {
+        "id": "mumble",
+        "backend": "10.10.1.43:64738 TCP/UDP",
+        "public": "mumble.utilibre.org",
+        "status": "PASSWORD PROTECTED, 20 users. Public TCP authentication and exact valid20ms Opus silence loopback passed. Independent GitHub run37525936562 verifies pinned TLS/invalid-password rejection; matching nonce5574696cc9adeaa7 reached both eth0 and Mumble container172.29.92.10:64738 at20:22UTC. Public inbound UDP forwarding is verified; authenticated UDP audio/return path remains untested. ALLOWPING=false is deliberate and unchanged. Native launch/operator links, no event logs/server recording, new outbound connections denied. Kuma checks only private TCP liveness; manual external workflow is not recurring monitoring."
+      },
+      {
+        "id": "gothub",
+        "backend": "10.10.1.43:3148",
+        "public": "https://gothub.utilibre.org",
+        "status": "Live p2: fixed compressed stylesheet404 on read-only filesystem; public desktop/mobile stylesheet, repository and file checks pass. Modified source published; portal and status-page links enabled."
+      },
+      {
+        "id": "dumb",
+        "status": "Operator requested another repair attempt October 7. Verified actual search/lyrics on dumb.bloat.cat, genius.fsky.io and dumb.artemislena.eu, all reporting the same f558107 revision as our retained image. Our isolated original container still returns search500 and a lyrics error page with misleading HTTP200; direct Genius search/article, Chromium and browser-compatible TLS requests receive403 cf-mitigated:challenge. No working code fix found; exact cause requires another operator-controlled outbound IP or working-operator configuration comparison. Do not claim Dumb fails everywhere. LRCLIB remains live and unchanged on lyrics.utilibre.org:3142. No third-party relay, visitor-direct requests, paid proxy or shared credentials introduced; temporary Dumb test container removed. See docs/toolbox-review.md for the recheck."
+      },
+      {
+        "id": "lrclib",
+        "backend": "10.10.1.43:3142",
+        "public": "https://lyrics.utilibre.org",
+        "status": "Live f37c070-p2: identical in-flight searches share one result; four waiting distinct searches, two-second queue deadline, 48 attached waiters; cancellation cleanup. Fourteen backend tests and public desktop/mobile checks pass. Provider concurrency remains one with 500ms spacing and full cooldown compliance. Offline 30-identical burst passes with one provider call; 30 distinct still rejects 27 to protect upstream. Cache remains 8MiB/128 entries/ten minutes. No external browser requests in tested workflows; CSP/privacy unchanged. MIT frontend and adapter source published; replaces Dumb, not Genius annotations/URLs."
+      },
+      {
+        "id": "fmd",
+        "backend": "10.10.1.43:3141",
+        "public": "https://fmd.utilibre.org",
+        "status": "Separated narrowly matched static assets (20r/s burst100 per IP) from unchanged API/root quota (5r/s burst60). Eight fresh shared-IP browsers now complete all72 page/asset requests and render their forms, versus seven429 responses before. Connection/body/privacy/trust limits unchanged; no Caddy edit. Synthetic invitation, opaque-data roundtrip and user-separation tests pass, with disposable accounts deleted. Android GPS/push and independent multi-IP behavior not certified."
+      },
+      {
+        "id": "libremdb",
+        "backend": "127.0.0.1:3144 (explicit profile; stopped after tests)",
+        "status": "Repaired private candidate b233f4e-p1 using darlopvil fork, Node24.21/Next16.4. Zero known dependency-audit vulnerabilities; exact media hosts/public DNS, bounded requests/cache, HTML sanitization, same-origin CSP. Four offline security tests and desktop/mobile search/movie/proxied-image checks passed with no third-party browser requests. Private container stopped after verification. Public data-use permission remains unresolved; no public route, launch or listing. Full trailer/all-content coverage not claimed."
+      },
+      {
+        "id": "breezewiki",
+        "backend": "10.10.1.43:3134",
+        "public": "https://wiki.utilibre.org",
+        "status": "Privacy preserved per operator decision: strict proxy remains on; JSONP/direct-media loading off. Gateway now suppresses URL/IP-bearing error logs, strips identifying headers, and restricts form actions. Four privacy regression tests pass; live article works and Chromium confirms external logo blocked by CSP. Existing p2 cooldown/challenge sanitization retained. Fandom image CDN403 still prevents complete workflow; not fully functional and no privacy-weakening fallback."
+      },
+      {
+        "id": "degoog",
+        "backend": "10.10.1.43:3156",
+        "public": "https://degoog.utilibre.org",
+        "status": "Live official pinned1.0.0 with native SearXNG bridge: Mwmbl, Open Library and Hacker News engines from pinned d48c4b555, AGPL-3.0-or-later. No unlicensed extension-store code. Public real search, desktop/Spanish-mobile, privacy and operator-route denial tests pass. Indexer/favicon persistence disabled; bounded RAM search cache; logs disabled; TLS-verified bounded native image proxy and private-IP firewall. Core/engine source archive linked in native privacy panel. Portal/monitoring enabled. Listing fork branch pushed; PR creation denied by token."
+      },
+      {
+        "id": "tent",
+        "status": "Possible extra request in typo 'priviblurtent'. One narrow clarification sent; do not confuse with already-live Priviblur."
+      },
+      {
+        "id": "screego",
+        "status": "Inventory completed: no container, image, system service or application files found. User asked to find it, not explicitly to install; no installation performed."
+      },
+      {
+        "id": "public-instance-submissions",
+        "status": "PrivateBin published; existing Redlib/SearXNG requests remain. RSS-Bridge, ntfy, Priviblur, Binternet clearnet/onion, AnonymousOverflow and DeGoog fork branches prepared and pushed, but upstream PR creation is denied by the current token. BiblioReads issue creation also denied. Prepared comparison links and precise statuses are in docs/public-instance-submissions.md. Codeberg/Gitfield submissions need appropriate forge credentials. Do not claim prepared branches are submitted."
+      }
+    ],
+    "note": "Historical observations only. Later repairs, launches and withdrawals are recorded in the canonical work queue and dated service records; these entries are not the current queue."
+  },
+  "canonicalRecords": {
+    "workQueue": "docs/work-queue.md",
+    "allRequestedCandidates": "docs/service-candidates-2026-10-08.md",
+    "nativeDataChecks": "docs/data-verification.md",
+    "copyCoverage": "docs/copy-coverage-2026-10-09.md"
+  },
+  "verificationScope": "91 enabled catalog entries have configured HTTP or TCP-listener observations. These observations are not full workflow/capacity checks; dated service records state those separately. Mumble external authenticated encrypted UDP loopback passed run37933469692 on 9 October; its recurring monitor still checks only private TCP liveness."
 }

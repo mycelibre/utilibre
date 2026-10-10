@@ -1,0 +1,22 @@
+[Unit]
+Description=Utilibre per-service CPU, memory and synthetic probe history
+After=docker.service network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/ubuntu/freetools
+Environment=PATH=/root/.nvm/versions/node/v24.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/bin/flock -n /run/utilibre-performance.lock /usr/bin/env node scripts/performance-monitor.mjs collect
+StateDirectory=utilibre-performance
+StateDirectoryMode=0700
+UMask=0077
+TimeoutStartSec=40s
+Nice=10
+CPUQuota=50%
+MemoryMax=192M
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/utilibre-performance /run
+PrivateTmp=true
+NoNewPrivileges=true

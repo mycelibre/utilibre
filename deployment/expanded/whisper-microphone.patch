@@ -1,0 +1,388 @@
+diff --git a/UTILIBRE-SOURCE.txt b/UTILIBRE-SOURCE.txt
+index d2a68d9..aae2324 100644
+--- a/UTILIBRE-SOURCE.txt
++++ b/UTILIBRE-SOURCE.txt
+@@ -1,9 +1,15 @@
+-Whisper Web, Utilibre 81869ed-p4, 2026-10-09
++Whisper Web, Utilibre 81869ed-p5, 2026-10-09
+ Base: https://github.com/xenova/whisper-web/tree/81869ed62970ff4373509b6004a6c9a3f0c5b64d
+ Upstream MIT license retained. Utilibre changes: same-origin model/WASM loading,
+ small multilingual default and tiny fallback (quantized), no remote audio loading, bilingual pilot/error wording,
+ audio decoding/context cleanup, 128 MiB file guard, failed-model retry recovery,
+ microphone track release on stop/dismissal/late permission, and dependency fixes.
++P5 uses a cancellation-safe mono adapter instead of blindly adding stereo
++channels. Native microphone selection is ephemeral, labels are obtained only
++after permission, and a Web Audio meter helps identify missing input. Native
++recording requests disable echo cancellation/noise suppression; no server audio
++processing, microphone identifiers, or level reports are uploaded or stored.
++Use recording explicitly hands the captured clip to the existing transcriber.
+ The spoken-language control is visible and reflects actual settings. English and
+ Spanish browser locales initialize that language; other locales initialize Auto.
+ Digital silence and punctuation-only results are not successful transcriptions.
+@@ -28,7 +34,7 @@ Node modules and development servers are not shipped in the serving image.
+ Full npm audit (runtime and build): zero known advisories on this date. ESLint9
+ is retained for React-plugin compatibility and is out of upstream support;
+ it is build-only. This audit is not a blanket security certification. Lint,
+-production build and all 13 audio/worker regressions pass. Flat ESLint/PostCSS
++production build and all 17 audio/worker regressions pass. Flat ESLint/PostCSS
+ configuration and typed-array annotations support the upgraded build tools.
+ 
+ Models/WASM/build output are not included in this source archive. Model license
+diff --git a/src/components/AudioManager.tsx b/src/components/AudioManager.tsx
+index 6bc8a60..62e0116 100644
+--- a/src/components/AudioManager.tsx
++++ b/src/components/AudioManager.tsx
+@@ -624,7 +624,7 @@ function RecordModal(props: {
+                 </>
+             }
+             onClose={onClose}
+-            submitText={"Load"}
++            submitText={"Use recording / Usar grabación"}
+             submitEnabled={audioBlob !== undefined}
+             onSubmit={onSubmit}
+         />
+diff --git a/src/components/AudioRecorder.tsx b/src/components/AudioRecorder.tsx
+index 78412c0..174b95c 100644
+--- a/src/components/AudioRecorder.tsx
++++ b/src/components/AudioRecorder.tsx
+@@ -29,6 +29,12 @@ export default function AudioRecorder(props: {
+     const [recordedUrl, setRecordedUrl] = useState<string>();
+     const [permissionPending, setPermissionPending] = useState(false);
+     const [error, setError] = useState<string>();
++    const [microphones, setMicrophones] = useState<MediaDeviceInfo[]>([]);
++    const [deviceId, setDeviceId] = useState("");
++    const [inputName, setInputName] = useState("");
++    const [level, setLevel] = useState<number | null>(null);
++    const meterRef = useRef<AudioContext | null>(null);
++    const meterTimer = useRef<ReturnType<typeof setInterval>>();
+ 
+     const streamRef = useRef<MediaStream | null>(null);
+     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+@@ -39,10 +45,39 @@ export default function AudioRecorder(props: {
+     const audioRef = useRef<HTMLAudioElement | null>(null);
+ 
+     const releaseMicrophone = () => {
++        clearInterval(meterTimer.current);
++        meterTimer.current = undefined;
++        const meter = meterRef.current;
++        meterRef.current = null;
++        if (meter) void meter.close().catch(() => {});
+         streamRef.current?.getTracks().forEach((track) => track.stop());
+         streamRef.current = null;
+     };
+ 
++    const startMeter = (stream: MediaStream) => {
++        // Native Web Audio metering only: no recording upload, device-ID storage,
++        // speech recognition, or speaker playback/feedback loop.
++        try {
++            const context = new AudioContext();
++            meterRef.current = context;
++            const analyser = context.createAnalyser();
++            analyser.fftSize = 512;
++            context.createMediaStreamSource(stream).connect(analyser);
++            const samples = new Float32Array(analyser.fftSize);
++            void context.resume().catch(() => {});
++            meterTimer.current = setInterval(() => {
++                if (context.state !== "running" || !activeRef.current) return;
++                analyser.getFloatTimeDomainData(samples);
++                let energy = 0;
++                for (const value of samples) energy += value * value;
++                setLevel(Math.sqrt(energy / samples.length));
++            }, 150);
++        } catch {
++            // A missing meter must not prevent native MediaRecorder capture.
++            setLevel(null);
++        }
++    };
++
+     useEffect(() => {
+         activeRef.current = true;
+         return () => {
+@@ -69,6 +104,8 @@ export default function AudioRecorder(props: {
+         pendingRef.current = true;
+         setPermissionPending(true);
+         setError(undefined);
++        setLevel(null);
++        setInputName("");
+         const request = ++requestRef.current;
+         // Reset recording (if any)
+         setRecordedBlob(null);
+@@ -76,7 +113,13 @@ export default function AudioRecorder(props: {
+ 
+         try {
+             const stream = await navigator.mediaDevices.getUserMedia({
+-                audio: true,
++                audio: {
++                    ...(deviceId ? { deviceId: { exact: deviceId } } : {}),
++                    // This is an isolated voice recording, not a call. Avoid
++                    // communication filters suppressing a short, quiet phrase.
++                    echoCancellation: false,
++                    noiseSuppression: false,
++                },
+             });
+             // Permission can arrive after the dialog was dismissed. Never
+             // leave that late stream running or start a hidden recorder.
+@@ -85,6 +128,17 @@ export default function AudioRecorder(props: {
+                 return;
+             }
+             streamRef.current = stream;
++            setInputName(stream.getAudioTracks()[0]?.label ?? "");
++            // Enumerate only after the user explicitly granted microphone use.
++            void navigator.mediaDevices
++                .enumerateDevices()
++                .then((devices) => {
++                    if (activeRef.current && request === requestRef.current)
++                        setMicrophones(
++                            devices.filter((d) => d.kind === "audioinput"),
++                        );
++                })
++                .catch(() => {});
+             const startTime = Date.now();
+             const chunks: Blob[] = [];
+ 
+@@ -102,6 +156,9 @@ export default function AudioRecorder(props: {
+             });
+             mediaRecorder.addEventListener("stop", async () => {
+                 if (activeRef.current && request === requestRef.current) {
++                    releaseMicrophone();
++                    setRecording(false);
++                    setDuration(0);
+                     const duration = Date.now() - startTime;
+ 
+                     // Received a stop event
+@@ -126,13 +183,23 @@ export default function AudioRecorder(props: {
+                     props.onRecordingComplete(blob);
+                 }
+             });
++            mediaRecorder.addEventListener("error", () => {
++                if (!activeRef.current || request !== requestRef.current)
++                    return;
++                releaseMicrophone();
++                setRecording(false);
++                setError(
++                    "Recording stopped unexpectedly. Choose another microphone or an audio file. / La grabación se detuvo de forma inesperada. Elegí otro micrófono o un archivo de audio.",
++                );
++            });
+             mediaRecorder.start();
++            startMeter(stream);
+             setRecording(true);
+         } catch {
+             releaseMicrophone();
+             if (activeRef.current)
+                 setError(
+-                    "Microphone unavailable. Allow microphone access or choose an audio file. / El micrófono no está disponible. Permití el acceso o elegí un archivo de audio.",
++                    "Microphone unavailable. Allow access, choose another microphone or System default, or use an audio file. / El micrófono no está disponible. Permití el acceso, elegí otro micrófono o el predeterminado del sistema, o usá un archivo de audio.",
+                 );
+         } finally {
+             pendingRef.current = false;
+@@ -174,13 +241,38 @@ export default function AudioRecorder(props: {
+ 
+     return (
+         <div className='flex flex-col justify-center items-center'>
++            <label htmlFor='microphone-input' className='mt-3 text-gray-900'>
++                Microphone / Micrófono
++            </label>
++            <select
++                id='microphone-input'
++                className='my-2 w-full min-w-0 border border-gray-300 rounded-lg p-2 text-base text-gray-900'
++                disabled={recording || permissionPending}
++                value={deviceId}
++                onChange={(event) => setDeviceId(event.target.value)}
++            >
++                <option value=''>
++                    System default / Predeterminado del sistema
++                </option>
++                {microphones.map((device, index) => (
++                    <option key={device.deviceId} value={device.deviceId}>
++                        {device.label || `Microphone / Micrófono ${index + 1}`}
++                    </option>
++                ))}
++            </select>
++            {!microphones.length && (
++                <p className='text-gray-900'>
++                    Other microphones appear after permission is granted. / Los
++                    demás micrófonos aparecen después de permitir el acceso.
++                </p>
++            )}
+             <button
+                 type='button'
+                 disabled={permissionPending}
+                 className={`m-2 inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 transition-all duration-200 ${
+                     recording
+-                        ? "bg-red-500 hover:bg-red-600"
+-                        : "bg-green-500 hover:bg-green-600"
++                        ? "bg-red-700 hover:bg-red-800"
++                        : "bg-green-700 hover:bg-green-800"
+                 }`}
+                 onClick={handleToggleRecording}
+             >
+@@ -190,6 +282,35 @@ export default function AudioRecorder(props: {
+                       ? "Waiting for microphone permission…"
+                       : "Start Recording"}
+             </button>
++            {recording && (
++                <div className='my-2 w-full text-gray-900'>
++                    {inputName && <p className='break-words'>{inputName}</p>}
++                    <label htmlFor='microphone-level'>
++                        Input level / Nivel de entrada
++                    </label>
++                    <meter
++                        id='microphone-level'
++                        min={0}
++                        max={1}
++                        value={Math.min(1, (level ?? 0) * 5)}
++                        className='block w-full h-4'
++                    />
++                    <p role='status'>
++                        {level === null
++                            ? "Meter unavailable; check playback after Stop. / Medidor no disponible; escuchá la grabación al detenerla."
++                            : level > 0.00001
++                              ? "Sound detected (not a speech check). / Se recibe sonido (no es una prueba de voz)."
++                              : "No input right now. Speak and watch the meter. / No hay entrada en este momento. Hablá y observá el medidor."}
++                    </p>
++                    {duration >= 2 && level !== null && level <= 0.00001 && (
++                        <p>
++                            Stop and select another microphone if the meter
++                            never moves. / Si el medidor nunca se mueve, detené
++                            la grabación y elegí otro micrófono.
++                        </p>
++                    )}
++                </div>
++            )}
+             {error && (
+                 <p role='alert' className='text-red-800'>
+                     {error}
+@@ -197,9 +318,15 @@ export default function AudioRecorder(props: {
+             )}
+ 
+             {recordedBlob && (
+-                <audio className='w-full' ref={audioRef} controls>
+-                    <source src={recordedUrl} type={recordedBlob.type} />
+-                </audio>
++                <>
++                    <audio className='w-full' ref={audioRef} controls>
++                        <source src={recordedUrl} type={recordedBlob.type} />
++                    </audio>
++                    <p className='mt-2 text-gray-900'>
++                        Listen, then choose Use recording below. / Escuchá el
++                        audio y elegí Usar grabación abajo.
++                    </p>
++                </>
+             )}
+         </div>
+     );
+diff --git a/src/hooks/useTranscriber.ts b/src/hooks/useTranscriber.ts
+index 58651e6..a1ffae5 100644
+--- a/src/hooks/useTranscriber.ts
++++ b/src/hooks/useTranscriber.ts
+@@ -1,6 +1,7 @@
+ import { useCallback, useMemo, useState } from "react";
+ import { useWorker } from "./useWorker";
+ import Constants from "../utils/Constants";
++import { monoForTranscription } from "../utils/LocalAudio";
+ 
+ interface ProgressItem {
+     file: string;
+@@ -122,7 +123,7 @@ export function useTranscriber(): Transcriber {
+                     );
+                 } else if (message.data?.code === "no_signal") {
+                     setError(
+-                        "No usable audio signal. Play the recording and check your microphone. / No se detectó una señal de audio utilizable. Escuchá la grabación y revisá el micrófono.",
++                        "The decoded recording is silent or almost silent. Play it back. If you cannot hear your voice, record again with the correct microphone and check the input meter. You can also choose a recording with From file. / La grabación decodificada está en silencio o casi en silencio. Escuchála. Si no oís tu voz, grabá de nuevo con el micrófono correcto y revisá el medidor. También podés elegir una grabación con From file.",
+                     );
+                 } else if (message.data?.code === "empty_transcript") {
+                     setError(
+@@ -172,21 +173,7 @@ export function useTranscriber(): Transcriber {
+                 setTranscript(undefined);
+                 setIsBusy(true);
+ 
+-                let audio;
+-                if (audioData.numberOfChannels === 2) {
+-                    const SCALING_FACTOR = Math.sqrt(2);
+-
+-                    const left = audioData.getChannelData(0);
+-                    const right = audioData.getChannelData(1);
+-
+-                    audio = new Float32Array(left.length);
+-                    for (let i = 0; i < audioData.length; ++i) {
+-                        audio[i] = (SCALING_FACTOR * (left[i] + right[i])) / 2;
+-                    }
+-                } else {
+-                    // If the audio is not stereo, we can just use the first channel:
+-                    audio = audioData.getChannelData(0);
+-                }
++                const audio = monoForTranscription(audioData);
+ 
+                 webWorker.postMessage({
+                     audio,
+diff --git a/src/utils/LocalAudio.ts b/src/utils/LocalAudio.ts
+index 923636d..77b33ac 100644
+--- a/src/utils/LocalAudio.ts
++++ b/src/utils/LocalAudio.ts
+@@ -4,6 +4,35 @@ export const MAX_AUDIO_BYTES = 128 * 1024 * 1024;
+ export const AUDIO_ERROR =
+     "This browser could not read the audio. Choose a supported audio file or try a shorter recording. / Este navegador no pudo leer el audio. Elegí un archivo de audio compatible o probá con una grabación más corta.";
+ 
++// Adapt decoded channels to the upstream model's mono input. Preserve a normal
++// mix, but do not turn audible opposite-phase channels into digital silence.
++export function monoForTranscription(buffer: AudioBuffer): Float32Array {
++    const channels = Array.from({ length: buffer.numberOfChannels }, (_, i) =>
++        buffer.getChannelData(i),
++    );
++    if (channels.length === 1) return channels[0];
++    const mixed = new Float32Array(buffer.length);
++    let strongest = 0;
++    let strongestEnergy = 0;
++    for (const [index, channel] of channels.entries()) {
++        let energy = 0;
++        for (let i = 0; i < mixed.length; i++) {
++            mixed[i] += channel[i] / channels.length;
++            energy += channel[i] * channel[i];
++        }
++        if (energy > strongestEnergy) {
++            strongest = index;
++            strongestEnergy = energy;
++        }
++    }
++    let mixedEnergy = 0;
++    for (const value of mixed) mixedEnergy += value * value;
++    // A 100x energy loss indicates severe cancellation, not a silent source.
++    return mixedEnergy < strongestEnergy * 0.01
++        ? channels[strongest].slice()
++        : mixed;
++}
++
+ export async function decodeLocalAudio(
+     blob: Blob,
+     sampleRate: number,
+diff --git a/tests/local-audio.test.mjs b/tests/local-audio.test.mjs
+index 3cd55b2..8b0e2cd 100644
+--- a/tests/local-audio.test.mjs
++++ b/tests/local-audio.test.mjs
+@@ -1,6 +1,25 @@
+ import assert from 'node:assert/strict';
+ import test from 'node:test';
+-import {decodeLocalAudio, MAX_AUDIO_BYTES} from '../src/utils/LocalAudio.ts';
++import {decodeLocalAudio, MAX_AUDIO_BYTES, monoForTranscription} from '../src/utils/LocalAudio.ts';
++
++const buffer=(...channels)=>({numberOfChannels:channels.length,length:channels[0].length,getChannelData:i=>new Float32Array(channels[i])});
++test('opposite-phase stereo is audible input, not digital silence',()=>{
++  assert.deepEqual([...monoForTranscription(buffer([0.2,-0.2],[-0.2,0.2]))],[Math.fround(0.2),Math.fround(-0.2)]);
++});
++test('near cancellation retains the stronger channel and leaves inputs intact',()=>{
++  const b=buffer([0.2,-0.2],[-0.199,0.199]);
++  assert.equal(monoForTranscription(b)[0],Math.fround(0.2));
++  assert.equal(b.getChannelData(1)[0],Math.fround(-0.199));
++});
++test('normal stereo is mixed without clipping or losing either channel',()=>{
++  assert.deepEqual([...monoForTranscription(buffer([1,0],[0,1]))],[0.5,0.5]);
++  assert.deepEqual([...monoForTranscription(buffer([1,-1],[1,-1]))],[1,-1]);
++});
++test('channels beyond the first two are retained; mono and silence stay valid',()=>{
++  assert(monoForTranscription(buffer([0,0],[0,0],[0.3,-0.3]))[0]>0);
++  assert.deepEqual([...monoForTranscription(buffer([0.5,-0.5]))],[0.5,-0.5]);
++  assert.deepEqual([...monoForTranscription(buffer([0,0],[0,0]))],[0,0]);
++});
+ 
+ test('empty and oversized files are rejected before opening an audio context', async () => {
+   globalThis.AudioContext = class { constructor() { throw Error('Context must not be created'); } };

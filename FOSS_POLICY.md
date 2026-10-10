@@ -1,5 +1,12 @@
 # Public capability policy
 
+Operator update, 2026-10-09: the instruction to install every eligible suggested
+application supersedes the historical access-gap-only and small-inventory
+restrictions below. It does not remove the FOSS, privacy, resource, account,
+verification or minimal-custom-code requirements. The current requested and
+deployed inventory is recorded in `docs/service-candidates-2026-10-08.md` and
+`docs/work-queue.md`; historical exclusions do not override those instructions.
+
 Effective 2026-09-03, Utilibre operates an end-user capability only when it is
 provided by an independently maintained, self-hostable Free and Open Source
 Software application **and** public operation removes a meaningful access
@@ -17,8 +24,8 @@ The safety, provenance and verification gates still apply. The historical
 access-gap-only exclusion below does not override this approved expansion.
 
 The October 6 request additionally admits RSS-Bridge, ntfy, Yopass, PairDrop
-and Uptime Kuma under the same verification gates. Rallly remains disabled
-pending account/email setup and an appropriate operating/licensing decision.
+and Uptime Kuma under the same verification gates. Rallly subsequently completed
+its deployment review and is running the reviewed security-fixed release.
 The historic retirement of ntfy and PairDrop is superseded by this request.
 
 The default admission question is:
@@ -128,10 +135,11 @@ A catalog record, private listener, old test result, or license notice is not
 evidence that a service is public. Runtime enablement, public routing, and
 current checks must agree.
 
-## Current application of the policy
+## Historical strategic reset
 
-The strategic review retains SearXNG, FreshRSS, Redlib, and PrivateBin as the
-small operated set. RSSHub is internal FreshRSS support, not a public route
+The earlier strategic review retained SearXNG, FreshRSS, Redlib, and PrivateBin as a
+small operated set; later explicit expansion instructions supersede that limit.
+RSSHub is internal FreshRSS support, not a public route
 catalog. Its intended operator-approved route set is policy rather than a
 technical allowlist in the current stock runtime, so that boundary remains an
 account-opening gate.

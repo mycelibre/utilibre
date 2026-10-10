@@ -1,0 +1,12 @@
+# Immediate, data-preserving rollback for the direct-URL Whisper pilot.
+# Apply alongside compose.yaml, specifying only the whisper service.
+services:
+  whisper:
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    volumes: !override
+      - ./nginx-whisper-withdrawn.conf:/etc/nginx/nginx.conf:ro
+    mem_limit: 32m
+    cpus: 0.1
+    pids_limit: 24
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/healthz]

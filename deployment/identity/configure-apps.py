@@ -108,7 +108,7 @@ with transaction.atomic():
         "expression": 'invite = request.context.get("invitation")\ndata = request.context.get("prompt_data", {})\nif not invite or not invite.fixed_data.get("username") or not invite.fixed_data.get("email"):\n    return False\nrequest.context["prompt_data"] = {key: data[key] for key in ["name", "password", "password_repeat"] if key in data}\nrequest.context["prompt_data"].update({key: invite.fixed_data[key] for key in ["username", "email"]})\nreturn True',
     })
     email, _ = EmailStage.objects.update_or_create(name="utilibre-invitation-verify-email", defaults={
-        "use_global_settings": True, "template": "email/account_confirmation.html",
+        "use_global_settings": True, "template": "email/utilibre-account-confirmation.html",
         "activate_user_on_success": True, "token_expiry": "minutes=30",
         "subject": "Utilibre · Verify your email / Verificá tu correo",
     })

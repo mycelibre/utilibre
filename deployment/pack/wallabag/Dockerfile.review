@@ -1,0 +1,15 @@
+# Private repair/test runtime. This does not publish an application listener.
+# PHP extension set follows the upstream Wallabag packaging, without telemetry
+# profilers, database daemons, Node, or its legacy PHP/Alpine runtime.
+FROM wallabag/wallabag@sha256:4a527e027e0d59e87c14225ef11e005af3d4890374202ad319ce5e63dfc66709 AS composer
+FROM alpine:3.24@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
+RUN apk add --no-cache ca-certificates git patch unzip \
+    php84 php84-bcmath php84-ctype php84-curl php84-dom php84-fileinfo \
+    php84-fpm php84-gd php84-gettext php84-iconv php84-intl php84-mbstring \
+    php84-opcache php84-openssl php84-pdo_sqlite php84-phar php84-session \
+    php84-simplexml php84-sockets php84-sodium php84-tidy php84-tokenizer \
+    php84-xml php84-xmlreader php84-xmlwriter php84-zip php84-zlib \
+    && ln -s /usr/bin/php84 /usr/bin/php
+COPY --from=composer /usr/local/bin/composer /usr/local/bin/composer
+WORKDIR /app
+ENTRYPOINT ["php"]

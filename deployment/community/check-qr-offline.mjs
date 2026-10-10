@@ -4,7 +4,7 @@ import {request} from 'node:http';
 import {mkdtemp,readFile,rm} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {chromium} from '../../portal/node_modules/playwright-core/index.mjs';
-const origin='https://qrtools.utilibre.org', local=process.argv.includes('--backend');
+const origin=process.env.QR_TEST_ORIGIN || 'https://qrtools.utilibre.org', local=process.argv.includes('--backend');
 const output=await mkdtemp('/tmp/utilibre-qr-offline-check-');
 let proxy,certificates;
 if(local){
@@ -27,6 +27,15 @@ try{
     page.on('console',m=>{if(m.type()==='error')console.log('Browser error',m.text())});
     assert.equal((await page.goto(`${origin}/?lang=${lang}`,{waitUntil:'networkidle'})).status(),200);
     assert.equal(await page.locator('html').getAttribute('lang'),lang);
+    await page.getByRole('heading', { name: lang === 'es' ? 'Archivos para uso sin conexión' : 'Offline assets', exact: true }).waitFor();
+    assert.equal(await page.locator('#offline-controls a').getAttribute('href'), `https://utilibre.org/${lang === 'es' ? 'es/herramientas-sin-conexion' : 'en/offline-tools'}`);
+    assert.match(await page.locator('#qrSize option[value="256"]').textContent(), lang === 'es' ? /Estándar/ : /Standard/);
+    assert.match(await page.locator('#qrErrorLevel option[value="M"]').textContent(), lang === 'es' ? /Equilibrada/ : /Balanced/);
+    // Language changes after async translation loading must update the adapter too.
+    await page.locator('#languageSelector').selectOption(lang === 'es' ? 'en' : 'es');
+    await page.getByRole('heading', { name: lang === 'es' ? 'Offline assets' : 'Archivos para uso sin conexión', exact: true }).waitFor();
+    await page.locator('#languageSelector').selectOption(lang);
+    await page.getByRole('heading', { name: lang === 'es' ? 'Archivos para uso sin conexión' : 'Offline assets', exact: true }).waitFor();
     await page.locator('[data-type="url"]').click();
     await page.locator('#qrForm input[name="url"]').fill('https://utilibre.org/es');
     await page.locator('#generateBtn').click();
@@ -93,7 +102,7 @@ try{
     assert.deepEqual([...external],[]);assert.deepEqual(failed,[]);
     await context.close();
   }
-  console.log(`QR Offline ${local?'protected backend':'public HTTPS'} generation, decoding, PNG/SVG/PDF, synthetic camera, Spanish/mobile, privacy and offline checks passed. Screenshots: ${output}`);
+  console.log(`QR Offline ${local?'protected backend':origin} generation, decoding, PNG/SVG/PDF, synthetic camera, Spanish/mobile, privacy and offline checks passed. Screenshots: ${output}`);
 }finally{
   await browser.close();if(proxy){proxy.closeAllConnections();await new Promise(resolve=>proxy.close(resolve))}
   if(certificates)await rm(certificates,{recursive:true});

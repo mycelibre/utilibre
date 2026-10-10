@@ -1,0 +1,21 @@
+import type { CatalogEntry, LocalizedText } from './catalog.ts';
+import { reviewedFossProviders } from './upstreams.ts';
+const text = (en: string, es: string): LocalizedText => ({ en, es });
+const provider = reviewedFossProviders.gravity;
+export const gravityAdditions: CatalogEntry[] = [{
+  id: 'gravity', providerId: 'gravity', kind: 'service', implementation: 'upstream-application', portalSurface: 'upstream-interface',
+  category: 'service', discoveryGroup: 'creative', configUrlKey: 'publicToolsUrl', launchPath: '/apps/gravity/',
+  name: text('Explore gravity and orbits · Gravity', 'Explorar gravedad y órbitas · Gravity'),
+  description: text('Follow an interactive solar-system tour, then explore its browser-based model.', 'Seguí un recorrido interactivo del sistema solar y explorá su modelo en el navegador.'),
+  launchLabel: text('Explore the solar system', 'Explorar el sistema solar'),
+  help: text('Use Next and Back in Guided Tour, or choose Explore. Replay guided tour returns to the beginning. Start tour advances automatically without music in this instance.', 'Usá Next y Back en Guided Tour, o elegí Explore. Replay guided tour vuelve al principio. Start tour avanza automáticamente, sin música en esta instancia.'),
+  limitation: text('Native languages are English, Polish and Chinese; Spanish is not available in the app. WebGL is required and rendering uses your device’s GPU/CPU. Scales and some orbital elements are approximate; this is an educational model, not a navigation or precision ephemeris tool. Recordings and photographic Earth/Moon textures are omitted.', 'La aplicación ofrece inglés, polaco y chino; no incluye español. Requiere WebGL y usa la GPU y CPU de tu dispositivo. Las escalas y algunos elementos orbitales son aproximados: es un modelo educativo, no una herramienta de navegación ni de efemérides precisas. Se omitieron las grabaciones y las texturas fotográficas de la Tierra y la Luna.'),
+  labels: ['local'], filesUploaded: false,
+  dataFlow: text('The simulation and procedural surfaces run in your browser. Code and fonts come from Utilibre. No account, file upload or remote simulation service is used. Reference and GitHub issue links contact outside sites only when followed.', 'La simulación y las superficies procedurales se generan en tu navegador. El código y las fuentes se descargan de Utilibre. No se usa cuenta, subida de archivos ni simulación remota. Los enlaces de referencia e incidencias de GitHub contactan sitios externos solo cuando los seguís.'),
+  upstreamServices: ['Cloudflare HTTPS proxy', 'Hetzner hosting'],
+  temporaryStorage: text('Simulation state lives in page memory. The selected language persists in the gravity-lang localStorage key; the current tour step is a URL fragment and can remain in browser history.', 'El estado de la simulación vive en la memoria de la página. El idioma persiste en la clave gravity-lang de localStorage; el paso del recorrido aparece en el fragmento de la URL y puede quedar en el historial.'),
+  retention: text('There is no server account, saved simulation or native project export. Reload to restart current state, remove the URL fragment/history separately, and clear saved language through the browser’s site data controls. The tools origin is shared with other apps; clearing all its data affects them too.', 'No hay cuenta, simulación guardada en el servidor ni exportación nativa de proyectos. Recargá para reiniciar el estado, quitá el fragmento y el historial por separado y borrá el idioma guardado desde los datos del sitio en el navegador. El origen tools se comparte con otras aplicaciones; borrar todos sus datos también las afecta.'),
+  logging: text('The app sends no simulation interaction analytics. Static file delivery still generates connection metadata through Cloudflare, Caddy and hosting infrastructure; those records have separate retention.', 'La aplicación no envía estadísticas de interacción con la simulación. La descarga de archivos genera metadatos de conexión en Cloudflare, Caddy y la infraestructura de alojamiento; esos registros tienen conservación independiente.'),
+  license: provider.license, upstreamProject: provider.project, upstreamSourceUrl: provider.sourceUrl, installedVersion: provider.installedVersion,
+  modified: true, operationalStatus: 'operational',
+}];

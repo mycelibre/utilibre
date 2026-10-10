@@ -1,0 +1,8 @@
+# Private browser rehearsal only; no user data or production account store.
+imports:
+    - { resource: /app/app/config/config.yml }
+monolog:
+    handlers:
+        main: { type: 'null' }
+parameters:
+    wallabag.display_thumbnails: 0

@@ -1,0 +1,95 @@
+--- a/the-one-file.html
++++ b/the-one-file.html
+@@ -1,6 +1,9 @@
+ <!DOCTYPE html> 
+  <html lang="en" style="--panel: #0b0e13; --panel-alt: #10141b; --sidebar-bg: #10141b; --btn-bg: #0b0e13; --accent: #4fd1c5; --danger: #f56565; --text-main: #e2e8f0; --text-soft: #94a3b8; --topbar-bg: rgba(9, 12, 20, 0.9); --topbar-border: #1f2533; --topbar-height: 103px; --sidebar-width: 350px; --mobile-footer-height: 40vh; --draw-toolbar-height: 0px; --btn-text: #e2e8f0; --tag-fill: #1e293b; --tag-text: #e2e8f0; --tag-border: #475569; --input-bg: #0b0e13; --input-text: #e2e8f0; --input-border: #1f2937; --input-font: Inter, system-ui, sans-serif; --input-font-size: 14px; --toolbar-bg: #0f172a; --toolbar-border: #1f2937; --toolbar-text: #94a3b8; --toolbar-btn-bg: #0b0e13; --toolbar-btn-text: #e2e8f0; --minimap-dots: #94a3b8; --canvas-hint-bg: #0f172a; --canvas-hint-color: #94a3b8; --node-fill: #1e293b; --node-stroke: #475569; --node-title: #e2e8f0; --node-sub: #94a3b8; --node-title-size: 41px; --node-sub-size: 27px; --node-font: monospace; --default-edge: #475569; --selection-handle: #f59e0b; --selection-handle-size: 8px; --group-indicator: #4fd1c5;"><head>
+     <meta charset="UTF-8">
++    <meta name="robots" content="noindex,nofollow">
++    <meta name="referrer" content="no-referrer">
++    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; media-src blob:; font-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+     <meta http-equiv="Pragma" content="no-cache">
+     <meta http-equiv="Expires" content="0">
+@@ -1959,6 +1962,11 @@
+           <button class="help-tab" data-tab="recording" style="padding: 8px 16px; border: 1px solid var(--edge-main); background: var(--panel); color: var(--text-main); border-radius: 6px; cursor: pointer; font-weight: 600;" data-lang="help.tabs.recording">Recording</button>
+         </div>
+         <div id="help-tab-general" class="help-tab-content" style="display: block;">
++          <section aria-label="Utilibre" style="border:1px solid var(--edge-main);padding:12px;margin-bottom:16px;line-height:1.5">
++            <p lang="en">This standalone Core edition works on your device. Browser autosaves, recovery history and local edit records may remain after closing the tab. This build disables creation of encrypted HTML because upstream saves can retain readable document data in the page. Downloaded HTML is readable; encrypt the completed file separately with hat.sh if needed. Existing encrypted documents can still be opened. Import only documents you trust. Save HTML downloads a new copy; it does not update this website or replace an earlier download.</p>
++            <p lang="es">Esta edición Core independiente funciona en tu dispositivo. Los borradores, el historial de recuperación y los registros locales de edición pueden quedar después de cerrar la pestaña. Esta compilación desactiva la creación de HTML cifrado porque el guardado original puede dejar datos legibles del documento en la página. El HTML descargado es legible; cifrá el archivo completo por separado con hat.sh si lo necesitás. Podés seguir abriendo documentos cifrados existentes. Importá solo documentos de confianza. Save HTML descarga otra copia; no actualiza este sitio ni reemplaza una descarga anterior.</p>
++            <p><a href="https://utilibre.org/en/" style="color:var(--accent)" lang="en">More tools from Utilibre</a> · <a href="https://utilibre.org/es/" style="color:var(--accent)" lang="es">Más herramientas de Utilibre</a> · <a href="https://tools.utilibre.org/utilibre-source/one-file-core-utilibre.tar.gz" style="color:var(--accent)">Source / Código</a></p>
++          </section>
+           <ul style="margin-left: 20px; margin-bottom: 12px; line-height: 1.8;">
+             <li><strong data-lang="help.general.addNodes">Add Nodes:</strong> <span data-lang="help.general.addNodesDesc">Click "+ Node" or "+ Rack" in the top menu</span></li>
+             <li><strong data-lang="help.general.connectNodes">Connect Nodes:</strong> <span data-lang="help.general.connectNodesDesc">Select a node, then use "Add Connection" in the panel</span></li>
+@@ -1971,7 +1979,7 @@
+           </ul>
+           <h4 style="color: var(--accent); margin-bottom: 8px;" data-lang="help.general.savingEncryption">Saving &amp; Encryption</h4>
+           <p style="margin-bottom: 8px;" data-lang="help.general.savingNote">Browsers cannot overwrite local files. Click Save File to download an updated HTML with all changes. Replace your old file to keep edits. An automatic backup is also saved to your browser's local storage and will prompt for recovery if you close without saving.</p>
+-          <p style="margin-bottom: 8px;"><strong data-lang="help.general.encryptionNote">Encryption of data:</strong> <span data-lang="help.general.encryptionDesc">Check "Encrypt" before saving to password protect your data. Beware! No recovery possible without password!!</span></p>
++          <p style="margin-bottom: 8px;"><strong data-lang="help.general.encryptionNote">Encryption of data:</strong> <span data-lang="help.general.encryptionDesc">Creating encrypted HTML is disabled in this build. Encrypt the downloaded file separately with hat.sh if needed.</span></p>
+           <p><strong data-lang="help.general.decryptionNote">Decryption of data:</strong> <span data-lang="help.general.decryptionDesc">Export via JSON in top settings menu after successful password validation to decrypt your data. You can then reimport back into the same file and save!</span></p>
+         </div>
+         <div id="help-tab-desktop" class="help-tab-content" style="display: none;">
+@@ -3249,7 +3257,7 @@
+         <div class="save-row">
+           <button id="save-file-btn" class="save-btn" type="button" data-lang="topbar.saveHtml">Save HTML</button>
+           <div style="display: flex;align-items: center;gap: 4px;font-size: 12px;color: var(--text-soft);user-select: none;">
+-            <label class="toggle-switch"><input type="checkbox" id="encrypt-toggle"><span class="toggle-slider"></span></label>
++            <label class="toggle-switch"><input type="checkbox" id="encrypt-toggle" disabled aria-label="File encryption unavailable / Cifrado de archivo no disponible"><span class="toggle-slider"></span></label>
+             <span data-lang="ui.buttons.encrypt" data-lang-attr="title">🔒</span>
+           </div>
+           <div class="dropdown" id="export-dropdown">
+@@ -4539,7 +4547,7 @@
+       "freeDraw": "Free Draw:", "freeDrawDesc": "Use draw toolbar for drawing lines, boxes/zones, and text",
+       "savingEncryption": "Saving & Encryption",
+       "savingNote": "Browsers cannot overwrite local files. Click Save File to download an updated HTML with all changes. Replace your old file to keep edits. An automatic backup is also saved to your browser's local storage and will prompt for recovery if you close without saving.",
+-      "encryptionNote": "Encryption of data:", "encryptionDesc": "Check \"Encrypt\" before saving to password protect your data. Beware! No recovery possible without password!!",
++      "encryptionNote": "Encryption of data:", "encryptionDesc": "Creating encrypted HTML is disabled in this build. Encrypt the downloaded file separately with hat.sh if needed.",
+       "decryptionNote": "Decryption of data:", "decryptionDesc": "Export via JSON in top settings menu after successful password validation to decrypt your data. You can then reimport back into the same file and save!"
+     },
+     "desktop": {
+@@ -16457,7 +16465,7 @@
+        if (mainSvg) mainSvg.innerHTML = "";
+        const nodeScript = clone.querySelector("#nodes-json");
+        if (nodeScript) {
+-        nodeScript.textContent = JSON.stringify(NODE_DATA, null, 2);
++        nodeScript.textContent = JSON.stringify(NODE_DATA, null, 2).replace(/</g, "\\u003c");
+        }
+        let stateScript = clone.querySelector("#topology-state");
+        if (!stateScript) {
+@@ -16467,14 +16475,14 @@
+         const body = clone.querySelector("body") || clone;
+         body.appendChild(stateScript);
+        }
+-       stateScript.textContent = JSON.stringify(captureTheQuickening(), null, 2);
++       stateScript.textContent = JSON.stringify(captureTheQuickening(), null, 2).replace(/</g, "\\u003c");
+        return "<!DOCTYPE html> \n " + clone.outerHTML;
+       }
+       async function becomeImmortal() {
+        if (RECORDING_STATE.isRecording) stopRecording();
+        if (RECORDING_STATE.isStepRecording) stopStepRecording();
+        saveRollbackVersion("Auto-save");
+-       const encryptEnabled = document.getElementById("encrypt-toggle").checked;
++       const encryptEnabled = false; // Utilibre: upstream encrypted saves can retain readable sidebar data.
+        let stateData = JSON.stringify(captureTheQuickening(), null, 2);
+        if (encryptEnabled) {
+         const password = await showPrompt(t("dialogs.enterEncryptPassword"));
+@@ -16532,7 +16540,7 @@
+         if (encryptEnabled) {
+          nodeScript.textContent = JSON.stringify({}, null, 2);
+         } else {
+-         nodeScript.textContent = JSON.stringify(NODE_DATA, null, 2);
++         nodeScript.textContent = JSON.stringify(NODE_DATA, null, 2).replace(/</g, "\\u003c");
+         }
+        }
+        let stateScript = clone.querySelector("#topology-state");
+@@ -16543,7 +16551,7 @@
+         const body = clone.querySelector("body") || clone;
+         body.appendChild(stateScript);
+        }
+-       stateScript.textContent = stateData;
++       stateScript.textContent = stateData.replace(/</g, "\\u003c");
+        const html = "<!DOCTYPE html> \n " + clone.outerHTML;
+        const blob = new Blob([html], {
+         type: "text/html"

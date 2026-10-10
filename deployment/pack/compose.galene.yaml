@@ -1,20 +1,28 @@
 name: utilibre-pack-galene
 services:
   galene:
-    image: utilibre-galene:1.2.1-p1
-    # One dedicated interface avoids thousands of candidate pairs from the host's
-    # many application bridges. Public UDP/NAT remains a separate activation gate.
+    image: utilibre-galene:1.2.1-p2
+    # One dedicated interface avoids candidates for unrelated application bridges.
+    # A bounded range also constrains STUN sockets; the single-port mux leaves
+    # server-reflexive discovery on random ports in this Galene/Pion release.
     user: '4003:4003'
     restart: unless-stopped
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     mem_limit: 256m
-    cpus: 0.75
+    # Native Go concurrency shares this ceiling across meetings; no worker pool.
+    # Allow bursts above one core while leaving the other services headroom.
+    cpus: 2
     pids_limit: 64
     logging: {driver: none}
     environment: {GOMAXPROCS: '2'}
-    command: ['-http', '0.0.0.0:8080', '-insecure', '-data', '/data', '-groups', '/groups', '-recordings', '/disabled-recordings', '-udp-range', '47800', '-turn', '']
+    # Native Galene gathers TURN candidates as well as supplying browser ICE.
+    # Avoid a stalled public-NAT TCP dial during PeerConnection.Close. The URL
+    # and certificate hostname remain unchanged; only this container resolves
+    # the owned relay locally. Browser DNS and external relay access are unchanged.
+    extra_hosts: ['turn.utilibre.org:10.10.1.43']
+    command: ['-http', '0.0.0.0:8080', '-insecure', '-data', '/data', '-groups', '/groups', '-recordings', '/disabled-recordings', '-udp-range', '47800-48311', '-turn', '']
     ports: ['10.10.1.43:3178:8080']
     networks: {meet: {ipv4_address: 172.29.99.10}}
     volumes:

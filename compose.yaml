@@ -17,6 +17,11 @@ services:
     build:
       context: ./portal
     image: ${PORTAL_IMAGE:-public-utility-portal:0.1.0}
+    # Preserve hostname/TLS for mail-tool readiness probes through the LAN edge.
+    # The VM cannot use the public-IP return path; browser URLs are unchanged.
+    extra_hosts:
+      - "newsletters.utilibre.org:${EDGE_PROXY_IP:-10.10.1.3}"
+      - "aliases.utilibre.org:${EDGE_PROXY_IP:-10.10.1.3}"
     init: true
     restart: unless-stopped
     read_only: true
@@ -45,7 +50,29 @@ services:
       PUBLIC_PASTE_URL: ${PUBLIC_PASTE_URL:-}
       PUBLIC_PDF_URL: ${PUBLIC_PDF_URL:-}
       PUBLIC_CONVERT_URL: ${PUBLIC_CONVERT_URL:-}
+      PUBLIC_CHAT_URL: ${PUBLIC_CHAT_URL:-}
+      PUBLIC_EVENTS_URL: ${PUBLIC_EVENTS_URL:-}
+      PUBLIC_QUIZ_URL: ${PUBLIC_QUIZ_URL:-}
+      PUBLIC_LINKS_URL: ${PUBLIC_LINKS_URL:-}
+      PUBLIC_TRIP_URL: ${PUBLIC_TRIP_URL:-}
+      PUBLIC_CHESS_URL: ${PUBLIC_CHESS_URL:-}
+      PUBLIC_PROJECTS_URL: ${PUBLIC_PROJECTS_URL:-}
+      PUBLIC_DONETICK_URL: ${PUBLIC_DONETICK_URL:-}
+      PUBLIC_BEAVERHABITS_URL: ${PUBLIC_BEAVERHABITS_URL:-}
+      PUBLIC_NEWSLETTERS_URL: ${PUBLIC_NEWSLETTERS_URL:-}
+      PUBLIC_ALIASES_URL: ${PUBLIC_ALIASES_URL:-}
+      PUBLIC_EXPAND_URL: ${PUBLIC_EXPAND_URL:-}
+      PUBLIC_READER_URL: ${PUBLIC_READER_URL:-}
+      PUBLIC_CALENDAR_URL: ${PUBLIC_CALENDAR_URL:-}
       PUBLIC_TOOLS_URL: ${PUBLIC_TOOLS_URL:-}
+      PUBLIC_EXPENSES_URL: ${PUBLIC_EXPENSES_URL:-}
+      PUBLIC_WISHLIST_URL: ${PUBLIC_WISHLIST_URL:-}
+      PUBLIC_KITCHEN_URL: ${PUBLIC_KITCHEN_URL:-}
+      PUBLIC_SNIPPETS_URL: ${PUBLIC_SNIPPETS_URL:-}
+      PUBLIC_BOOKMARKS_URL: ${PUBLIC_BOOKMARKS_URL:-}
+      PUBLIC_TASKS_URL: ${PUBLIC_TASKS_URL:-}
+      PUBLIC_SNIPPET_LIBRARY_URL: ${PUBLIC_SNIPPET_LIBRARY_URL:-}
+      PUBLIC_LOCAL_RESUME_URL: ${PUBLIC_LOCAL_RESUME_URL:-}
       PUBLIC_DEVELOPER_TOOLS_URL: ${PUBLIC_DEVELOPER_TOOLS_URL:-}
       PUBLIC_ENCRYPT_URL: ${PUBLIC_ENCRYPT_URL:-}
       PUBLIC_DRAW_URL: ${PUBLIC_DRAW_URL:-}
@@ -100,6 +127,34 @@ services:
       EDGE_PROXY_IP: ${PORTAL_EDGE_PROXY_IP:-${EDGE_PROXY_IP:-}}
       STATUS_CACHE_SECONDS: ${STATUS_CACHE_SECONDS:-15}
       STATUS_SERVICES: >-
+        knit=https://tools.utilibre.org/apps/knit/,newton=https://tools.utilibre.org/apps/newton/,
+        family-chess=https://chess.utilibre.org/,donetick=https://chores.utilibre.org/,beaverhabits=https://habits.utilibre.org/login,projects=https://projects.utilibre.org/,trip=https://trip.utilibre.org/,
+        kokoro-web=https://tools.utilibre.org/apps/kokoro-web/,rustpad=https://tools.utilibre.org/apps/rustpad/,autoredact=https://tools.utilibre.org/apps/autoredact/,gravity=https://tools.utilibre.org/apps/gravity/,
+        one-file-core=https://tools.utilibre.org/apps/one-file-core/,tiddlywiki=https://tools.utilibre.org/apps/tiddlywiki/,moocup=https://tools.utilibre.org/apps/moocup/,
+        newsletters=https://newsletters.utilibre.org/,addy=https://aliases.utilibre.org/login,
+        chitchatter=http://${PRIVATE_BIND_IP}:3200/healthz,
+        gathio=http://${PRIVATE_BIND_IP}:3198/,
+        link-cleaner=https://tools.utilibre.org/apps/link-cleaner/,
+        razzia=http://${PRIVATE_BIND_IP}:3199/,
+        chhoto=http://${PRIVATE_BIND_IP}:3208/healthz,
+        unfurl=http://${PRIVATE_BIND_IP}:3209/,
+        13ft=http://${PRIVATE_BIND_IP}:3207/,
+        calino=http://${PRIVATE_BIND_IP}:3197/healthz,
+        radicale=http://${PRIVATE_BIND_IP}:3197/dav/.web/,
+        spliit=http://${PRIVATE_BIND_IP}:3190/api/health/readiness,
+        wishlist=http://${PRIVATE_BIND_IP}:3193/login,
+        kitchenowl=http://${PRIVATE_BIND_IP}:3202/api/health/8M4F88S8ooi4sMbLBfkkV7ctWwgibW6V,
+        opengist=http://${PRIVATE_BIND_IP}:3191/healthcheck,
+        linkding=http://${PRIVATE_BIND_IP}:3194/health,
+        vikunja=http://${PRIVATE_BIND_IP}:3195/api/v1/info,
+        bytestash=http://${PRIVATE_BIND_IP}:3204/api/auth/config,
+        openresume=http://${PRIVATE_BIND_IP}:3205/resume-builder,
+        moodist=https://tools.utilibre.org/apps/moodist/,
+        sketchforge=https://tools.utilibre.org/apps/sketchforge/,
+        chartdb=https://tools.utilibre.org/apps/chartdb/,
+
+        drawdb=https://tools.utilibre.org/apps/drawdb/,
+        bookbinder=https://tools.utilibre.org/apps/bookbinder/,
         searxng=http://searxng:8080/healthz,
         redlib=http://redlib:8080/settings,
         freshrss=http://${PRIVATE_BIND_IP}:${FRESHRSS_PORT:-3106}/i/,
@@ -145,7 +200,15 @@ services:
         svgedit=https://svg.utilibre.org/,
         cyberchef=https://cyberchef.utilibre.org/,
         image-scrubber=https://scrub.utilibre.org/,
-        markmap=https://mindmap.utilibre.org/
+        markmap=https://mindmap.utilibre.org/,
+        wbo=https://collab.utilibre.org/,
+        mapshaper=https://maps.utilibre.org/,
+        numbat=https://calc.utilibre.org/,
+        super-productivity=https://plan.utilibre.org/,
+        cryptpad=http://${PRIVATE_BIND_IP}:3173/,
+        liberaforms=http://${PRIVATE_BIND_IP}:3176/,
+        galene=http://${PRIVATE_BIND_IP}:3178/,
+        mumble=http://${PRIVATE_BIND_IP}:3125/api/status-page/heartbeat/utilibre
     volumes:
       - /opt/utilibre/update-public:/run/utilibre-updates:ro
     tmpfs:
@@ -161,7 +224,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "${PORTAL_CPU_LIMIT:-0.50}"
+          cpus: "${PORTAL_CPU_LIMIT:-1.00}"
           memory: ${PORTAL_MEMORY_LIMIT:-256M}
           pids: 128
         reservations:

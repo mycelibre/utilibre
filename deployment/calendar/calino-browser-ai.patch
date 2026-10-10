@@ -1,0 +1,76 @@
+diff --git a/src/components/DeferredCalendarIntegrations.tsx b/src/components/DeferredCalendarIntegrations.tsx
+index 0a1325a..edfabc1 100644
+--- a/src/components/DeferredCalendarIntegrations.tsx
++++ b/src/components/DeferredCalendarIntegrations.tsx
+@@ -7,12 +7,10 @@ import { useNotifications } from '@/hooks/useNotifications'
+ import { useCalendarMirror } from '@/hooks/useCalendarMirror'
+ import { initContactPhotos } from '@/lib/contactPhotoSync'
+ import { pruneRawIcs } from '@/lib/rawIcsStore'
+-import { useWebMCP } from '@/features/webmcp/useWebMCP'
+ 
+ /** Calendar integrations that can safely initialize after the first paint. */
+ export default function DeferredCalendarIntegrations(): JSX.Element {
+   useCardDAV()
+-  useWebMCP()
+ 
+   useEffect(() => {
+     void initContactPhotos()
+diff --git a/src/features/settings/components/DataSettings.tsx b/src/features/settings/components/DataSettings.tsx
+index 47c2027..c0315b5 100644
+--- a/src/features/settings/components/DataSettings.tsx
++++ b/src/features/settings/components/DataSettings.tsx
+@@ -1,8 +1,6 @@
+ import type { JSX } from 'react'
+-import { Capacitor } from '@capacitor/core'
+ import { useTranslation } from 'react-i18next'
+ import { SettingsPageHeading } from './SettingsPageHeading'
+-import { WebMCPSettings } from './WebMCPSettings'
+ import { useState, useRef } from 'react'
+ import { useCalendarStore } from '@/store/calendarStore'
+ import { useSettingsStore } from '@/store/settingsStore'
+@@ -555,7 +553,6 @@ export function DataSettings({ searchControl }: { searchControl?: JSX.Element })
+         )}
+       </div>
+ 
+-      {!Capacitor.isNativePlatform() && <WebMCPSettings />}
+ 
+       <div className={`${styles.group} ${styles.dangerZone}`}>
+         <div className={`${styles.groupLabel} ${styles.dangerZoneLabel}`}>
+diff --git a/src/lib/__tests__/icsExport.test.ts b/src/lib/__tests__/icsExport.test.ts
+index 6dc88fa..ce0a921 100644
+--- a/src/lib/__tests__/icsExport.test.ts
++++ b/src/lib/__tests__/icsExport.test.ts
+@@ -33,6 +33,15 @@ const calendar: Calendar = {
+ }
+ 
+ describe('buildVCalendar', () => {
++  it('exports an explicit UTC timezone without a null VTIMEZONE component', () => {
++    const original = makeEvent({ timezone: 'UTC' })
++    const ics = buildVCalendar([original])
++    expect(ics).not.toContain('TZID=UTC')
++    const parsed = parseICALData(ics, 'cal-2')
++    expect(new Date(parsed[0]!.start).toISOString()).toBe(original.start)
++    expect(new Date(parsed[0]!.end).toISOString()).toBe(original.end)
++  })
++
+   it('emits exactly one top-level VCALENDAR with the Calino headers', () => {
+     const ics = buildVCalendar([makeEvent(), makeEvent({ id: 'evt-2', uid: 'evt-2' })])
+ 
+diff --git a/src/lib/icsExport.ts b/src/lib/icsExport.ts
+index 4059532..d940efe 100644
+--- a/src/lib/icsExport.ts
++++ b/src/lib/icsExport.ts
+@@ -43,6 +43,13 @@ export function buildVCalendar(events: CalendarEvent[]): string {
+   for (const event of events) {
+     if (event.timezone) ensureZoneRegistered(event.timezone)
+   }
++  // UTC has no VTIMEZONE component. A TZID=UTC parameter makes ical.js
++  // try to insert its null component; UTC values already serialize with Z.
++  for (const item of comp.getAllSubcomponents()) {
++    for (const property of item.getAllProperties()) {
++      if (property.getParameter('tzid') === 'UTC') property.removeParameter('tzid')
++    }
++  }
+   ICAL.helpers.updateTimezones(comp)
+ 
+   return foldICalLines(comp.toString())

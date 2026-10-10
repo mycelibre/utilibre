@@ -12,7 +12,7 @@ x-runtime: &runtime
 services:
   translite:
     <<: *runtime
-    image: utilibre-translite:7b4b8e5-p1
+    image: utilibre-translite:7b4b8e5-p3
     user: "65534:65534"
     environment:
       ENABLED_ENGINES: google,deepl,yandex,ddg

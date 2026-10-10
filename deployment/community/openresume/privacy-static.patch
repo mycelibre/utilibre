@@ -1,0 +1,69 @@
+diff --git a/next.config.js b/next.config.js
+index 74d32f4..b5360ca 100644
+--- a/next.config.js
++++ b/next.config.js
+@@ -5,7 +5,9 @@ const nextConfig = {
+   // building the app. Since pdfjs-dist is only used on client side, we disable
+   // the canvas package for webpack
+   // https://github.com/mozilla/pdf.js/issues/16214
+-  output: 'standalone',
++  output: 'export',
++  images: { unoptimized: true },
++  experimental: { cpus: 2 },
+   webpack: (config) => {
+     // Setting resolve.alias to false tells webpack to ignore a module
+     // https://webpack.js.org/configuration/resolve/#resolvealias
+diff --git a/src/app/components/TopNavBar.tsx b/src/app/components/TopNavBar.tsx
+index a3aa5c7..b05523f 100644
+--- a/src/app/components/TopNavBar.tsx
++++ b/src/app/components/TopNavBar.tsx
+@@ -43,15 +43,8 @@ export const TopNavBar = () => {
+               {text}
+             </Link>
+           ))}
+-          <div className="ml-1 mt-1">
+-            <iframe
+-              src="https://ghbtns.com/github-btn.html?user=xitanggg&repo=open-resume&type=star&count=true"
+-              width="100"
+-              height="20"
+-              className="overflow-hidden border-none"
+-              title="GitHub"
+-            />
+-          </div>
++          <a href="https://utilibre.org" className="rounded-md px-2 py-2 text-gray-600">Utilibre</a>
++          <a href="https://tools.utilibre.org/utilibre-source/openresume-utilibre.tar.gz" className="rounded-md px-2 py-2 text-gray-600">Source / Código</a>
+         </nav>
+       </div>
+     </header>
+diff --git a/src/app/layout.tsx b/src/app/layout.tsx
+index 8c2cdc0..6e5a964 100644
+--- a/src/app/layout.tsx
++++ b/src/app/layout.tsx
+@@ -1,6 +1,5 @@
+ import "globals.css";
+ import { TopNavBar } from "components/TopNavBar";
+-import { Analytics } from "@vercel/analytics/react";
+ 
+ export const metadata = {
+   title: "OpenResume - Free Open-source Resume Builder and Parser",
+@@ -18,7 +17,6 @@ export default function RootLayout({
+       <body>
+         <TopNavBar />
+         {children}
+-        <Analytics />
+       </body>
+     </html>
+   );
+diff --git a/src/app/lib/parse-resume-from-pdf/read-pdf.ts b/src/app/lib/parse-resume-from-pdf/read-pdf.ts
+index 12167f5..acccdf8 100644
+--- a/src/app/lib/parse-resume-from-pdf/read-pdf.ts
++++ b/src/app/lib/parse-resume-from-pdf/read-pdf.ts
+@@ -22,7 +22,7 @@ import type { TextItem, TextItems } from "lib/parse-resume-from-pdf/types";
+  * }
+  */
+ export const readPdf = async (fileUrl: string): Promise<TextItems> => {
+-  const pdfFile = await pdfjs.getDocument(fileUrl).promise;
++  const pdfFile = await pdfjs.getDocument({ url: fileUrl, isEvalSupported: false }).promise;
+   let textItems: TextItems = [];
+ 
+   for (let i = 1; i <= pdfFile.numPages; i++) {

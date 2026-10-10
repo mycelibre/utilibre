@@ -1,0 +1,206 @@
+# Utilibre recent additions: complete edge reference, 9 October 2026.
+# Merge only missing blocks, or replace the existing block for that hostname.
+# Do not load this alongside duplicate blocks from the older reference files.
+# Preserve the edge's global TLS, Cloudflare trust and unrelated site settings.
+# Requires the edge's existing utilibre_no_transform, utilibre_proxy_headers,
+# utilibre_security_contact snippets and installed CrowdSec module.
+# A local syntax check cannot validate that separate edge's plugins or secrets.
+# HTTPS blocks do not change MX, SMTP, media UDP or TURN configuration.
+#
+# Existing public routes for the recent installation batches:
+(utilibre_new_app) {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy {args[0]} {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}
+
+expenses.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3190
+}
+
+snippets.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3191
+}
+
+wishlist.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3193
+}
+
+bookmarks.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3194
+}
+
+tasks.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3195
+}
+
+calendar.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3197
+}
+
+events.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3198
+}
+
+quiz.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3199
+}
+
+chat.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3200
+}
+
+kitchen.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3202 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 30s
+        }
+        flush_interval -1
+    }
+}
+
+snippets-library.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3204
+}
+
+resume-builder.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3205
+}
+read.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3207
+}
+links.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3208
+}
+expand.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3209
+}
+newsletters.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3210
+}
+aliases.utilibre.org {
+    import utilibre_new_app http://10.10.1.43:3211
+}
+
+tools.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3103 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}
+
+plan.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3172 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}
+
+# Browser apps use tools:3103; they need no individual subdomain/site block:
+# /apps/drawdb/, /apps/bookbinder/, /apps/sketchforge/, /apps/moodist/,
+# /apps/chartdb/, /apps/link-cleaner/, /apps/rustpad/, /apps/one-file-core/,
+# /apps/tiddlywiki/, /apps/moocup/, /apps/autoredact/, /apps/knit/,
+# /apps/newton/, /apps/gravity/, /apps/kokoro-web/.
+# Super Productivity uses plan:3172. Existing AudioMass, JupyterLite, RAWGraphs
+# and RSS-Bridge keep their current audio/python/charts/bridge blocks.
+# SimpleLogin remains private; PLANKA and ZipCaptions are excluded.
+
+# Newly activated edge routes; consult each service record for public workflow checks.
+chess.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3214 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+        flush_interval -1
+    }
+}
+
+chores.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3215 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}
+
+habits.utilibre.org {
+    import utilibre_no_transform
+    import utilibre_security_contact
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3216 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}
+
+projects.utilibre.org {
+    import utilibre_security_contact
+    import utilibre_no_transform
+    crowdsec
+    encode zstd gzip
+    reverse_proxy http://10.10.1.43:3217 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 60s
+        }
+    }
+}
+
+trip.utilibre.org {
+    import utilibre_security_contact
+    import utilibre_no_transform
+    crowdsec
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3224 {
+        import utilibre_proxy_headers
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 25s
+        }
+    }
+}

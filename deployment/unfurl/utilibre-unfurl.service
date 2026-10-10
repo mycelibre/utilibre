@@ -1,0 +1,20 @@
+[Unit]
+Description=Utilibre bounded Unfurl instance
+Requires=docker.service
+After=docker.service network-online.target
+PartOf=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/freetools/deployment/unfurl
+ExecStartPre=/home/ubuntu/freetools/deployment/unfurl/start-boundary.sh
+ExecStart=/usr/bin/docker compose -f compose.yaml up --no-build --no-recreate --abort-on-container-exit --no-attach app --no-attach proxy --no-attach gateway
+ExecStop=/usr/bin/docker compose -f compose.yaml stop
+Restart=always
+RestartSec=5
+TimeoutStopSec=25
+StandardOutput=null
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+[Unit]
+Description=Utilibre outbound-only IPv6 firewall
+DefaultDependencies=no
+After=local-fs.target
+Before=network-pre.target systemd-networkd.service
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/utilibre-ipv6-guard
+ExecReload=/usr/local/sbin/utilibre-ipv6-guard
+RemainAfterExit=yes
+
+[Install]
+WantedBy=network-pre.target

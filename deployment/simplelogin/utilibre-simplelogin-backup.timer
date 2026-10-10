@@ -1,0 +1,8 @@
+[Unit]
+Description=Daily Utilibre simplelogin backup
+[Timer]
+OnCalendar=*-*-* 06:50:00 UTC
+RandomizedDelaySec=600
+Persistent=true
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=Utilibre Projects database and identity network boundary
+After=docker.service
+Requires=docker.service
+Before=utilibre-projects.service
+[Service]
+Type=oneshot
+ExecStart=/bin/sh /home/ubuntu/freetools/deployment/projects/firewall.sh
+RemainAfterExit=yes
+[Install]
+WantedBy=multi-user.target

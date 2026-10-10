@@ -1,0 +1,11 @@
+# Moocup 1.0.50-p1
+
+Original: https://github.com/jellydeck/moocup, MIT, pinned `70623d81ba502a464fdd2b98c6c21b1c5ab973bc` (tag `1.0.50`; native package version remains `1.0.0`).
+
+Run `build.sh /opt/utilibre/src/moocup` inside a memory/CPU bounded scope, for example `systemd-run --scope -p MemoryMax=2G -p CPUQuota=200% ./deployment/toolbox/moocup/build.sh`. It applies the exact small source changes and compatible dependency lock refresh reproducibly. The patch can be reverse-checked with `git apply --reverse --check --unidiff-zero local-source.patch`. Review removing it when upstream supports local fonts, analytics-free packaging, base path and scoped storage natively.
+
+`node deployment/toolbox/moocup/check.mjs` routes only the private static build through Playwright and the deployed tools CSP. It creates a fictional screenshot, tests native drag/drop, image persistence, PNG/JPEG/WebP exports, mobile export, Reset, unrelated localStorage preservation and absence of external requests. Its test radio selectors avoid toggling an already-selected format off. `node .../check.mjs https://tools.utilibre.org/apps/moocup/` tests the public equivalent. Reports contain only fictional fixture data under `/opt/utilibre/reports/moocup-20261009`.
+
+After checks, copy `build/` to a private stage and atomically move it to `/opt/utilibre/toolbox-public/apps/moocup/`. Existing tools `/apps/` routing serves it with local-only CSP, GET/HEAD only and no-cache HTML. No container, port, DNS or Caddy change is needed. Keep previous versions outside the public directory for rollback. Only remove this app directory to withdraw it; leave unrelated tools and saved browser data alone.
+
+Run `publish-source.mjs` before removing disposable `node_modules` to publish the exact original source, patch, lock changes, build/test recipes and font notice. Preserve the original upstream checkout and pin. Server source packages contain no runtime browser state. Runtime is static: browser image rendering, IndexedDB work/custom-background storage, no account or editable project export. Reset clears the current image/transforms, not every saved background. Clearing the tools origin's browser data also affects other apps sharing that origin. Downloads remain on the user's device.

@@ -1,0 +1,11 @@
+# Gravity static build 1.0.0-28e912b-p1
+
+Original https://github.com/qunabu/Gravity at `28e912b8f6808a4bf892fa0f1ffacf857b0faa3a`. Repository LICENSE is GPLv3 while package.json says ISC. Preserve the actual GPL text, record metadata conflict and unconfirmed only/or-later scope, and do not label it ISC based solely on package metadata.
+
+Native TypeScript/Three.js tour and simulator. Patch sets `/apps/gravity/`, packages Inter/Roboto Mono locally, adds a plain portal link and selects existing procedural Earth/Moon textures. Recorded music and Tom Brown lunar imagery have no separately verified grant and are omitted, along with unused photographic Earth texture. Music controls are removed; native timed tour remains. No replacement simulation or broad UI fork. Native languages are English, Polish and Chinese, not Spanish. The bilingual portal guide explains this.
+
+`build.sh` uses the frozen updated npm lock with install hooks disabled, avoiding unrelated promo-video FFmpeg downloads. Runtime output is approximately1.1MiB before license notices; no server process/account/database. Production dependency audit had zero reported advisories on9October2026. Browser WebGL rendering is the resource-intensive part. Keep scale/approximation limitations visible; this is a teaching model, not a precise ephemeris or navigation tool.
+
+`check.mjs` privately serves dist under the actual tools CSP, blocks external requests and verifies rendered triangles/visible screenshot, Next/Back, Explore/Replay, native language persistence and375px/desktop layout. It uses native ?promo=1 only to read renderer state. A1.8second wait allows native fades before the screenshot. The normal native frames were visually inspected. No microphone/audio generation or external issue submission is performed. Direct GitHub issue links send details only if deliberately opened and submitted by the visitor.
+
+LocalStorage gravity-lang survives tab closure; the tour position is in the URL fragment. There is no native user-file input, project export or saved account. Clear that key/site data to reset saved language; the tools origin is shared with other apps. Remove only this app's staged directory to withdraw it. Preserve exact original pin/patch/lock/source offer; remove the patch when upstream local-font/base-path/media selection settings meet the same requirements.

@@ -1,0 +1,8 @@
+[Unit]
+Description=Utilibre Beaver Habit Tracker native SQLite/file backup
+After=docker.service
+[Service]
+Type=oneshot
+ExecStart=/home/ubuntu/freetools/deployment/beaverhabits/backup.py
+Nice=10
+IOSchedulingClass=idle

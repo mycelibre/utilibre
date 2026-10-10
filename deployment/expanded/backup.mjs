@@ -6,7 +6,8 @@ const root = fileURLToPath(new URL('../../', import.meta.url));
 const dir = fileURLToPath(new URL('.', import.meta.url));
 const compose = ['compose', '--env-file', `${dir}.env`, '-f', `${dir}compose.yaml`];
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8' });
-const services = ['resume', 'penpot-frontend', 'penpot-backend', 'penpot-admin-console', 'penpot-exporter', 'actual', 'wakapi'];
+const resumeOnly = process.argv.includes('--resume-only');
+const services = resumeOnly ? ['resume'] : ['resume', 'penpot-frontend', 'penpot-backend', 'penpot-admin-console', 'penpot-exporter', 'actual', 'wakapi'];
 const running = docker(...compose, 'ps', '--status', 'running', '--services').trim().split('\n').filter(x => services.includes(x));
 const stamp = new Date().toISOString().replace(/[:.]/g, '-');
 const target = `/opt/utilibre/expanded-backups/${stamp}`;
@@ -19,15 +20,15 @@ function toFile(name, command, args) {
 }
 try {
   if (running.length) docker(...compose, 'stop', '-t', '30', ...running);
-  for (const name of ['resume', 'penpot']) {
+  for (const name of resumeOnly ? ['resume'] : ['resume', 'penpot']) {
     toFile(`${name}.dump`, 'docker', [...compose, 'exec', '-T', `${name}-db`, 'pg_dump', '-U', name, '-d', name, '-Fc']);
   }
-  toFile('files.tar.gz', 'tar', ['-C', '/opt/utilibre/expanded-data', '-czf', '-', 'actual', 'wakapi', 'resume', 'penpot-assets']);
+  toFile('files.tar.gz', 'tar', ['-C', '/opt/utilibre/expanded-data', '-czf', '-', ...(resumeOnly ? ['resume'] : ['actual', 'wakapi', 'resume', 'penpot-assets'])]);
   const privateFiles = ['deployment/expanded/.env'];
-  if (existsSync(`${dir}.env.wakapi-config.yml`)) privateFiles.push('deployment/expanded/.env.wakapi-config.yml');
-  if (existsSync(`${root}secrets/wakapi-admin.json`)) privateFiles.push('secrets/wakapi-admin.json');
+  if (!resumeOnly && existsSync(`${dir}.env.wakapi-config.yml`)) privateFiles.push('deployment/expanded/.env.wakapi-config.yml');
+  if (!resumeOnly && existsSync(`${root}secrets/wakapi-admin.json`)) privateFiles.push('secrets/wakapi-admin.json');
   toFile('private-config.tar.gz', 'tar', ['-C', root, '-czf', '-', ...privateFiles]);
-  const hashes = execFileSync('sha256sum', ['resume.dump', 'penpot.dump', 'files.tar.gz', 'private-config.tar.gz'], { cwd: target, encoding: 'utf8' });
+  const hashes = execFileSync('sha256sum', ['resume.dump', ...(!resumeOnly ? ['penpot.dump'] : []), 'files.tar.gz', 'private-config.tar.gz'], { cwd: target, encoding: 'utf8' });
   writeFileSync(`${target}/SHA256SUMS`, hashes, { flag: 'wx', mode: 0o600 });
   console.log(`Private snapshot: ${target}`);
 } finally {

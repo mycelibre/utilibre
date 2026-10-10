@@ -1,0 +1,13 @@
+[Unit]
+Description=Native Spliit snapshot and isolated PostgreSQL restore check
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+UMask=0077
+Nice=10
+CPUQuota=100%
+MemoryMax=256M
+# Existing verified host Node runtime; review this path when updating Node.
+ExecStart=/root/.nvm/versions/node/v24.14.0/bin/node /home/ubuntu/freetools/deployment/spliit/scheduled-backup.mjs

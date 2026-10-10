@@ -1,0 +1,13 @@
+[Unit]
+Description=Utilibre Projects native application
+After=docker.service utilibre-projects-firewall.service
+Requires=docker.service utilibre-projects-firewall.service
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/ubuntu/freetools
+ExecStart=/usr/bin/docker compose -f deployment/projects/compose.yaml up -d --wait
+ExecStop=/usr/bin/docker compose -f deployment/projects/compose.yaml stop
+TimeoutStartSec=180
+[Install]
+WantedBy=multi-user.target

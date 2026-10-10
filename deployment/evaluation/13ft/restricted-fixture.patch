@@ -1,0 +1,73 @@
+--- a/app/portable.py
++++ b/app/portable.py
+@@ -106,11 +106,10 @@
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <title>13ft Ladder</title>
+     <link rel="icon" href="/favicon.ico" type="image/png">
+-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" async>
+     <style>
+         * { box-sizing: border-box; }
+         body {
+-            font-family: 'Open Sans', sans-serif;
++            font-family: system-ui, sans-serif;
+             background-color: #FFF;
+             margin: 0;
+             padding: 0;
+@@ -418,7 +417,7 @@
+     </div>
+ 
+     <div id="form-view">
+-        <form id="url-form">
++        <form id="url-form" action="/article" method="post">
+             <h1>{{ heading }}</h1>
+             <label for="link">{{ label }}</label>
+             <input type="text" id="link" name="link" required autofocus>
+@@ -840,7 +839,48 @@
+     return None, None
+ 
+ 
++# Restricted Utilibre evaluation only. Never enable arbitrary URL fetching here.
++PILOT_ORIGIN = "http://172.29.100.20:8081"
++PILOT_PATHS = {"/article", "/redirect", "/large", "/compressed", "/drip", "/challenge"}
++PILOT_MAX_BYTES = 1024 * 1024
++app.config["MAX_CONTENT_LENGTH"] = 4096
++
++
++@app.before_request
++def restrict_pilot_routes():
++    if (request.path, request.method) not in {
++        ("/", "GET"), ("/favicon.ico", "GET"), ("/article", "POST")
++    }:
++        return "Restricted fixture-only evaluation", 404
++
++
++def pilot_article(url):
++    if url not in {PILOT_ORIGIN + path for path in PILOT_PATHS}:
++        raise UserFacingError("Only the owned fictional fixture is allowed.")
++    deadline = time.monotonic() + 8
++    with requests.Session() as session:
++        session.trust_env = False
++        with session.get(url, headers={"User-Agent": "Utilibre-13ft-offline-test"},
++                         allow_redirects=False, stream=True, timeout=(2, 2)) as response:
++            if response.status_code != 200:
++                raise UserFacingError("Fixture response rejected; redirects and fallbacks are off.")
++            body = bytearray()
++            for chunk in response.iter_content(8192):
++                if time.monotonic() > deadline:
++                    raise UserFacingError("Fixture deadline exceeded.")
++                body.extend(chunk)
++                if len(body) > PILOT_MAX_BYTES:
++                    raise UserFacingError("Fixture exceeds the 1 MiB decompressed body limit.")
++    # Gunicorn's sync-worker timeout also bounds slow trickles between chunks.
++    document = BeautifulSoup(body.decode("utf-8", errors="replace"), "html.parser")
++    for meta in document.find_all("meta", attrs={"http-equiv": re.compile("^refresh$", re.I)}):
++        meta.decompose()
++    return process_html_document(str(document), url)
++
++
+ def bypass_paywall(url, strings, job_id=None):
++    return pilot_article(url)
++    # Unreachable upstream fetch/fallback code retained to keep patch removal small.
+     set_step(job_id, 'connect')
+ 
+     if not url.startswith("http"):

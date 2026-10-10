@@ -1,0 +1,28 @@
+# Private evaluation only. No public route and no dependency on the live lyrics service.
+name: utilibre-dumb-probe
+services:
+  dumb:
+    image: utilibre-dumb:f558107-p1
+    restart: "no"
+    user: "65532:65532"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 64
+    logging: {driver: none}
+    tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=8m,mode=1777"]
+    environment:
+      PORT: "5555"
+      GOMEMLIMIT: 160MiB
+      # Native PROXY setting; optional private operator-controlled route only.
+      # Leave empty until its ownership and successful Genius access are verified.
+      # Supply credentials through a mode-0600 private environment file, not Git.
+      PROXY: ${DUMB_REVIEW_PROXY:-}
+    ports: ["127.0.0.1:3299:5555"]
+    networks: [review]
+networks:
+  review:
+    external: true
+    name: utilibre-additions_lyrics

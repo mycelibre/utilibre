@@ -87,10 +87,10 @@ index c0a2387..4066eb2 100644
      $config->maxLinkLength = $maxLinkLength;
 diff --git a/deployment/additions-firewall.sh b/deployment/additions-firewall.sh
 new file mode 100644
-index 0000000..f2562ed
+index 0000000..2523163
 --- /dev/null
 +++ b/deployment/additions-firewall.sh
-@@ -0,0 +1,31 @@
+@@ -0,0 +1,42 @@
 +#!/bin/sh
 +# Only these new application IPs; no unrelated host traffic is changed.
 +set -eu
@@ -98,13 +98,24 @@ index 0000000..f2562ed
 +iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
 +iptables -w -F "$chain"
 +iptables -w -A "$chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++iptables -w -A "$chain" -s 172.29.91.10 -d 172.29.91.30 -p tcp --dport 6379 -j RETURN
 +for network in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/4 240.0.0.0/4; do
 +  iptables -w -A "$chain" -d "$network" -j DROP
 +done
 +iptables -w -A "$chain" -p tcp -m multiport --dports 80,443 -j RETURN
 +iptables -w -A "$chain" -j DROP
-+for address in 172.29.74.10 172.29.75.10 172.29.76.10 172.29.77.10 172.29.78.10 172.29.79.10 172.29.80.10 172.29.81.10 172.29.82.10 172.29.85.10 172.29.86.10 172.29.89.10; do
++for address in 172.29.74.10 172.29.75.10 172.29.76.10 172.29.77.10 172.29.78.10 172.29.79.10 172.29.80.10 172.29.81.10 172.29.82.10 172.29.85.10 172.29.86.10 172.29.88.10 172.29.89.10 172.29.90.10 172.29.91.10; do
 +  iptables -w -C DOCKER-USER -s "$address" -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$chain"
++  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
++done
++# Static QR hosting and the local Mumble pilot need replies only, never new outbound connections.
++static_chain=UTILIBRE-STATIC-OUT
++iptables -w -S "$static_chain" >/dev/null 2>&1 || iptables -w -N "$static_chain"
++iptables -w -F "$static_chain"
++iptables -w -A "$static_chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++iptables -w -A "$static_chain" -j DROP
++for address in 172.29.92.10 172.29.93.10; do
++  iptables -w -C DOCKER-USER -s "$address" -j "$static_chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$static_chain"
 +  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
 +done
 +# Tor needs public relay TCP ports beyond 443, but no host/private-network access.
@@ -124,7 +135,7 @@ index 0000000..f2562ed
 +done
 diff --git a/deployment/compose.translite.yaml b/deployment/compose.translite.yaml
 new file mode 100644
-index 0000000..b90a735
+index 0000000..93ea460
 --- /dev/null
 +++ b/deployment/compose.translite.yaml
 @@ -0,0 +1,36 @@
@@ -142,7 +153,7 @@ index 0000000..b90a735
 +services:
 +  translite:
 +    <<: *runtime
-+    image: utilibre-translite:7b4b8e5-p1
++    image: utilibre-translite:7b4b8e5-p3
 +    user: "65534:65534"
 +    environment:
 +      ENABLED_ENGINES: google,deepl,yandex,ddg
@@ -166,7 +177,7 @@ index 0000000..b90a735
 +    ipam: {config: [{subnet: 172.29.89.0/24}]}
 diff --git a/deployment/firewall.sh b/deployment/firewall.sh
 new file mode 100644
-index 0000000..b6c1a16
+index 0000000..12a6e87
 --- /dev/null
 +++ b/deployment/firewall.sh
 @@ -0,0 +1,13 @@
@@ -177,7 +188,7 @@ index 0000000..b6c1a16
 +chain=UTILIBRE-TOOLS
 +iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
 +iptables -w -F "$chain"
-+for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3152; do
++for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3151 3152 3153 3154 3155 3156 3160 3161 3162 3163 3164 3165 3166 3167 3168 3170 3171; do
 +  iptables -w -A "$chain" -s 10.10.1.3 -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j RETURN
 +  iptables -w -A "$chain" -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j DROP
 +done
@@ -229,10 +240,10 @@ index 0000000..e7e93e8
 +php_admin_value[apc.shm_size] = 8M
 diff --git a/deployment/translite-gateway.conf b/deployment/translite-gateway.conf
 new file mode 100644
-index 0000000..011e04a
+index 0000000..780b649
 --- /dev/null
 +++ b/deployment/translite-gateway.conf
-@@ -0,0 +1,75 @@
+@@ -0,0 +1,78 @@
 +worker_processes 1;
 +pid /tmp/nginx.pid;
 +error_log /dev/null;
@@ -264,6 +275,9 @@ index 0000000..011e04a
 +    "https://translate.utilibre.org" 0;
 +  }
 +  server {
++    # Discover the verified, canonical Utilibre security contact.
++    location = /.well-known/security.txt { return 302 https://utilibre.org/.well-known/security.txt; }
++    location = /security.txt { return 302 https://utilibre.org/.well-known/security.txt; }
 +    listen 8080;
 +    root /app/public;
 +    client_max_body_size 24k;
@@ -309,14 +323,15 @@ index 0000000..011e04a
 +  }
 +}
 diff --git a/pages/elements/header.php b/pages/elements/header.php
-index 5de8848..0f19e53 100644
+index 5de8848..8d0eaab 100644
 --- a/pages/elements/header.php
 +++ b/pages/elements/header.php
-@@ -14,3 +14,4 @@
+@@ -14,3 +14,5 @@
          <header class="center">
              <h1><a href="/">TransLite</a></h1>
          </header>
-+        <p class="center" style="width:var(--page-width)">Text is sent through Utilibre to the provider you select. Multiple engines sends it to each selected provider. Do not submit passwords or confidential information. Up to 2,000 characters; audio is disabled.</p>
++        <p lang="en" class="center" style="width:var(--page-width)">Text is sent through Utilibre to the provider you select. Multiple engines sends it to each selected provider. DuckDuckGo uses Microsoft; DeepL’s free service may use text to improve its models. Yandex receives text in the request URL. Do not submit passwords, personal or confidential information. Up to 2,000 characters; audio is disabled.</p>
++        <p lang="es" class="center" style="width:var(--page-width)">El texto pasa por Utilibre hasta el proveedor que elijás. Multiple engines lo envía a cada proveedor seleccionado. DuckDuckGo usa Microsoft; el servicio gratuito de DeepL puede usar el texto para mejorar sus modelos. Yandex recibe el texto en la URL de la solicitud. No enviés contraseñas ni información personal o confidencial. Hasta 2000 caracteres; el audio está desactivado.</p>
 diff --git a/pages/page.php b/pages/page.php
 index 1951b39..5cd6386 100644
 --- a/pages/page.php

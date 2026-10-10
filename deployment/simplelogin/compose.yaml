@@ -1,0 +1,83 @@
+name: utilibre-simplelogin
+x-app: &app
+  image: utilibre-simplelogin:4.82.4-p7
+  user: '1000:1000'
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 96
+  cpus: 0.75
+  mem_limit: 384m
+  tmpfs: ['/tmp:rw,nosuid,nodev,size=64m,mode=1777']
+  env_file: [/opt/utilibre/simplelogin/private/app.env, ./relay.env]
+  extra_hosts: [mx.mailgt.dev:10.10.1.20]
+  environment: {PYTHONDONTWRITEBYTECODE: '1'}
+  volumes:
+    - /opt/utilibre/simplelogin/data:/sl
+    - /opt/utilibre/simplelogin/data/upload:/code/static/upload
+    - /opt/utilibre/simplelogin/private:/private:ro
+  logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
+services:
+  db:
+    image: postgres:17.11-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
+    env_file: [/opt/utilibre/simplelogin/private/db.env]
+    volumes: [/opt/utilibre/simplelogin/data/postgres:/var/lib/postgresql/data]
+    networks: {data: {ipv4_address: 172.29.135.20}}
+    restart: unless-stopped
+    shm_size: 64m
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 64
+    security_opt: [no-new-privileges:true]
+    healthcheck: {test: [CMD-SHELL, 'pg_isready -U simplelogin -d simplelogin'], interval: 10s, timeout: 3s, retries: 10}
+    logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
+  migrate:
+    <<: *app
+    command: [alembic, upgrade, head]
+    networks: {data: {ipv4_address: 172.29.135.30}}
+    depends_on: {db: {condition: service_healthy}}
+    restart: 'no'
+  initialize:
+    <<: *app
+    command: [python, init_app.py]
+    networks: {data: {ipv4_address: 172.29.135.31}}
+    depends_on: {migrate: {condition: service_completed_successfully}}
+    restart: 'no'
+  web:
+    <<: *app
+    command: [gunicorn, 'wsgi:app', -b, '0.0.0.0:7777', -w, '1', --timeout, '30', --log-level, warning]
+    networks: {data: {ipv4_address: 172.29.135.10}, ingress: {ipv4_address: 172.29.136.10}}
+    restart: unless-stopped
+    depends_on: {initialize: {condition: service_completed_successfully}}
+  smtp:
+    <<: *app
+    command: [python, email_handler.py]
+    networks: {data: {ipv4_address: 172.29.135.11}, ingress: {ipv4_address: 172.29.136.11}}
+    ports: ['127.0.0.1:2528:20381']
+    restart: unless-stopped
+    depends_on: {initialize: {condition: service_completed_successfully}}
+  jobs:
+    <<: *app
+    command: [python, job_runner.py]
+    networks: {data: {ipv4_address: 172.29.135.12}, ingress: {ipv4_address: 172.29.136.12}}
+    restart: unless-stopped
+    depends_on: {initialize: {condition: service_completed_successfully}}
+  gateway:
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 48
+    cpus: 0.25
+    mem_limit: 64m
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777']
+    entrypoint: [nginx, -g, 'daemon off;']
+    volumes: ['./nginx.conf:/etc/nginx/nginx.conf:ro']
+    ports: ['127.0.0.1:3212:8080']
+    networks: {data: {ipv4_address: 172.29.135.50}, ingress: {ipv4_address: 172.29.136.50}}
+    restart: unless-stopped
+    logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
+networks:
+  data: {internal: true, ipam: {config: [{subnet: 172.29.135.0/24}]}}
+  ingress: {ipam: {config: [{subnet: 172.29.136.0/24}]}}

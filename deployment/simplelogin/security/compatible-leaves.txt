@@ -1,0 +1,10 @@
+# Compatible transitive fixes only; no Flask/Jinja/Werkzeug/SQLAlchemy migration.
+# Exact upstream PyPI wheels, reviewed 2026-10-09; uv pip check must pass.
+flask-httpauth==4.8.1 --hash=sha256:0080393d70e12327781f7509115175ec5e47209816489a620d4fd39e20cea2e8
+mako==1.3.12 --hash=sha256:8f61569480282dbf557145ce441e4ba888be453c30989f879f0d652e39f53ea9
+webob==1.8.11 --hash=sha256:4addd1d38d6a7fbe0eda22d45f25a40d74c8b290f3a99c0ac3d4023cf21f2da2
+cbor2==5.9.0 --hash=sha256:27695cbd70c90b8de5c4a284642c2836449b14e2c2e07e3ffe0744cb7669a01b
+certifi==2026.7.22 --hash=sha256:62f22742b58a1a33014a2b6b706588a8d7e2a88ae7bd1a6ebe8c992928483775
+filelock==3.20.3 --hash=sha256:4b0dda527ee31078689fc205ec4f1c1bf7d56cf88b6dc9426c4f230e46c2dce1
+rsa==4.9.1 --hash=sha256:68635866661c6836b8d39430f97a996acbd61bfa49406748ea243539fe239762
+sqlparse==0.6.0 --hash=sha256:b861c0288ce2fa56209a9a6412d2e066ac664b3873b89c26c9d8415e8e32996f

@@ -46,25 +46,72 @@ export function featuredEntries(config: PublicConfig): CatalogEntry[] {
 export function allEntries(config: PublicConfig, language: Language): CatalogEntry[] { return sortByName(visibleEntries(config).filter(e => e.id !== 'uptime-kuma'), language); }
 export function groupEntries(config: PublicConfig, language: Language, group: DiscoveryGroup): CatalogEntry[] { return allEntries(config, language).filter(e => entryGroup(e) === normalizeGroup(group)); }
 const synonyms: Record<string, string> = {
+  'one-file-core': 'portable html diagram animated nodes connections diagrama portátil animación nodos conexiones',
+  tiddlywiki: 'wiki notebook notes single file html cuaderno notas archivo único',
+  addy: 'email alias aliases forwarding inbox mask address correo alias reenvío reenviar buzón dirección',
+  searxng: 'web search búsqueda buscador internet',
+  'reactive-resume': 'cv resume résumé curriculum currículum',
+  penpot: 'collaborative design diseño colaborativo prototipo',
+  actual: 'personal budget household presupuesto personal hogar',
+  jupyterlite: 'python notebooks notebook cuadernos cuaderno',
+  freshrss: 'rss feed reader lector fuentes',
+  moodist: 'focus noise ambient timer rain birds waves stream fire café concentración ruido ambiente temporizador lluvia pájaros olas arroyo fuego cafetería',
+  sketchforge: '3d model cad stl print diseño modelo imprimir',
+  chartdb: 'database diagram sql schema tables base datos esquema tablas',
+  drawdb: 'sql database schema tables relationships base datos esquema tablas relaciones',
+  bookbinder: 'pdf booklet zine signatures imposition print binding cuadernillo folleto fanzine imprimir encuadernar',
   wbo: 'collab whiteboard shared collaboration group pizarra compartida colaborar grupo dibujar',
   markmap: 'mind map outline markdown study notes mapa mental esquema estudiar apuntes ideas',
-  bentopdf: 'scan scanned text extract escaneo escaneado texto extraer juntar unir pdf ocr',
+  bentopdf: 'scan scanned text extract escaneo escaneado texto extraer juntar unir pdf ocr markdown imprimir print booklet folleto cuadernillo imposition imposición',
   vert: 'convert conversion convertir conversión formatos archivos',
   pairdrop: 'phone computer transfer send archivo teléfono celular computadora transferir enviar',
   pollaris: 'meeting date schedule encuesta reunión fecha horario votar poll',
   'omni-compress-image': 'photo image smaller size compress foto imagen comprimir reducir peso tamaño',
   'omni-background': 'remove background transparent quitar fondo transparente',
   'omni-image-editor': 'crop resize recortar redimensionar anotar image imagen foto',
-  'image-scrubber': 'redact cover hide exif metadata tapar ocultar metadatos foto privacidad',
+  'image-scrubber': 'redact cover hide exif metadata viewer inspect view visor ver revisar inspeccionar tapar ocultar metadatos foto privacidad',
   drawio: 'flowchart diagram diagrama flujo', excalidraw: 'sketch whiteboard boceto pizarra',
+  svgedit: 'vector vectors vectorial vectores svg',
+  ittools: 'developer development desarrollo json jwt uuid regex password passphrase token generator contraseña contraseñas clave claves frase palabras generar generador bip39 markdown html convert convertir',
+  privatebin: 'pastebin syntax code snippet source share resaltar sintaxis código fuente fragmento pegar compartir texto',
+  cyberchef: 'file type identify inspect hash verify checksum sha256 sha 256 archivo tipo identificar inspeccionar verificar comprobar suma huella',
   rawgraphs: 'csv chart graph gráfica grafica gráfico barras datos',
   'qr-offline': 'qr code código cámara crear leer', miniqr: 'qr code código cámara crear leer',
 };
 function matches(entry: CatalogEntry, query: string, language: Language): boolean {
   const haystack = normalizeCatalogSearch([entry.id, entry.upstreamProject, entry.name.en, entry.name.es, entry.description.en, entry.description.es, synonyms[entry.id] || ''].join(' '), language);
-  return normalizeCatalogSearch(query, language).split(/\s+/).filter(Boolean).every(term => haystack.includes(term));
+  const terms = normalizeCatalogSearch(query, language).split(/\s+/).filter(Boolean);
+  return terms.length > 0 && terms.every(term => haystack.includes(term));
 }
-export function searchEntries(config: PublicConfig, language: Language, query: string): CatalogEntry[] { return query.trim() ? allEntries(config, language).filter(e => matches(e, query, language)) : []; }
+// A task's name expresses intent more strongly than a format mentioned in its copy.
+// Keep all-term matching, accents/synonyms and access filtering independent of ranking.
+export function rankCatalogEntries(entries: readonly CatalogEntry[], language: Language, query: string): CatalogEntry[] {
+  const needle = normalizeCatalogSearch(query, language);
+  if (!needle) return query.trim() ? [] : sortByName([...entries], language);
+  const terms = needle.split(' ');
+  const fieldScore = (value: string): number => {
+    const field = normalizeCatalogSearch(value, language);
+    const words = field.split(' ');
+    if (field === needle) return 100;
+    if (` ${field} `.includes(` ${needle} `)) return 80;
+    if (terms.every(term => words.includes(term))) return 60;
+    if (terms.every(term => field.includes(term))) return 40;
+    return terms.filter(term => words.includes(term)).length / terms.length * 20;
+  };
+  const score = (entry: CatalogEntry): number => Math.max(
+    fieldScore(entry.name[language]) * 10,
+    fieldScore(entry.name[language === 'es' ? 'en' : 'es']) * 8,
+    fieldScore(entry.upstreamProject || entry.id) * 4,
+    fieldScore(synonyms[entry.id] || '') * 3,
+    fieldScore(entry.description[language]),
+  );
+  const collator = new Intl.Collator(language, { sensitivity: 'base' });
+  return entries.filter(entry => matches(entry, needle, language))
+    .map(entry => ({ entry, score: score(entry) }))
+    .sort((a, b) => b.score - a.score || collator.compare(a.entry.name[language], b.entry.name[language]))
+    .map(result => result.entry);
+}
+export function searchEntries(config: PublicConfig, language: Language, query: string): CatalogEntry[] { return query.trim() ? rankCatalogEntries(allEntries(config, language), language, query) : []; }
 export function discoverEntries(config: PublicConfig, language: Language, state: CatalogDiscoveryState = {}): CatalogEntry[] {
   const view = state.view || (state.query?.trim() ? 'all' : 'featured');
   let entries = allEntries(config, language);
@@ -73,9 +120,9 @@ export function discoverEntries(config: PublicConfig, language: Language, state:
   else if (view === 'accounts') entries = entries.filter(e => accessMode(e) !== 'anonymous' && !pilotIds.has(e.id));
   else if (view === 'pilots') entries = entries.filter(e => pilotIds.has(e.id) || e.operationalStatus !== 'operational' || !entryLaunchable(e, config));
   if (state.group) entries = entries.filter(e => entryGroup(e) === normalizeGroup(state.group));
-  if (state.query?.trim()) entries = entries.filter(e => matches(e, state.query!, language));
+  if (state.query?.trim()) entries = rankCatalogEntries(entries, language, state.query);
   return entries;
 }
-export function normalizeCatalogSearch(value: string, language: Language): string { return value.normalize('NFD').replace(/\p{M}+/gu, '').toLocaleLowerCase(language).trim(); }
+export function normalizeCatalogSearch(value: string, language: Language): string { return value.normalize('NFD').replace(/\p{M}+/gu, '').toLocaleLowerCase(language).replace(/[^\p{L}\p{N}]+/gu, ' ').trim(); }
 function sortByName(entries: CatalogEntry[], language: Language): CatalogEntry[] { return [...entries].sort((a, b) => new Intl.Collator(language, { sensitivity: 'base' }).compare(a.name[language], b.name[language])); }
 function configValue(config: PublicConfig, key: string): string { const v = config[key as keyof PublicConfig]; return typeof v === 'string' ? v : ''; }

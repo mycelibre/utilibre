@@ -1,6 +1,12 @@
 name: Mumble external connectivity
 on:
   workflow_dispatch:
+    inputs:
+      authenticated_udp:
+        description: 'Run the single encrypted UDP loopback using the repository secret'
+        required: false
+        default: false
+        type: boolean
 permissions:
   contents: read
 jobs:
@@ -13,3 +19,24 @@ jobs:
           persist-credentials: false
       - name: Verify pinned TCP and send tagged UDP probes
         run: node deployment/community/check-mumble-external.mjs
+      - name: Require the protected Mumble credential
+        if: inputs.authenticated_udp
+        env:
+          MUMBLE_TEST_SERVER_PASSWORD: ${{ secrets.MUMBLE_TEST_SERVER_PASSWORD }}
+        run: |
+          if [ -z "$MUMBLE_TEST_SERVER_PASSWORD" ]; then
+            echo 'Missing MUMBLE_TEST_SERVER_PASSWORD repository secret; authenticated UDP check was not run.'
+            exit 1
+          fi
+      - name: Prepare the pinned verification helper
+        if: inputs.authenticated_udp
+        run: |
+          python3 -m venv "$RUNNER_TEMP/mumble-udp-venv"
+          "$RUNNER_TEMP/mumble-udp-venv/bin/pip" install --no-cache-dir --no-deps --require-hashes -r deployment/community/mumble-udp-requirements.txt
+          python3 deployment/community/prepare-mumble-udp.py "$RUNNER_TEMP/mumble-udp-helper"
+      - name: Verify one authenticated encrypted UDP silence loopback
+        if: inputs.authenticated_udp
+        env:
+          MUMBLE_TEST_SERVER_PASSWORD: ${{ secrets.MUMBLE_TEST_SERVER_PASSWORD }}
+        run: |
+          "$RUNNER_TEMP/mumble-udp-venv/bin/python" deployment/community/check-mumble-udp.py --location external-runner --crypto-path "$RUNNER_TEMP/mumble-udp-helper/crypto.py"

@@ -1,0 +1,7 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
+const report='/opt/utilibre/reports/addy-20261009';process.umask(0o077);
+const q=JSON.parse(await readFile('/opt/utilibre/addy/private/qa.json','utf8'));
+async function req(path,method='GET',body,token){const r=await fetch('http://127.0.0.1:3211'+path,{method,headers:{Accept:'application/json','Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},...(body?{body:JSON.stringify(body)}:{})});const text=await r.text();if(!r.ok)throw Error('Native request failed '+r.status+' '+path+': '+text.slice(0,200));return text?JSON.parse(text):null;}
+const auth=await req('/api/auth/login','POST',{username:q.username,password:q.password,device_name:'Fictional isolated QA',expiration:'day'});assert(auth.api_key);await writeFile('/opt/utilibre/addy/private/qa-session.json',JSON.stringify({...q,token:auth.api_key}));
+const created=await req('/api/v1/aliases','POST',{domain:'aliases.utilibre.org',format:'random_characters',description:'Fictional museum newsletter'},auth.api_key);assert(created.data.id);const rows=await req('/api/v1/aliases','GET',null,auth.api_key);assert(rows.data.some(a=>a.id===created.data.id));await writeFile(report+'/native-api-result.json',JSON.stringify({checkedAt:new Date().toISOString(),nativeLogin:true,nativeAliasCreateRead:true,outboundMailTested:false},null,2));await writeFile('/opt/utilibre/addy/private/qa-alias.json',JSON.stringify(created.data));console.log('Addy native fictional login/alias create/read passed.');

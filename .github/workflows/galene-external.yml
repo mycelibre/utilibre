@@ -1,0 +1,41 @@
+name: Galene external media check
+on:
+  workflow_dispatch:
+    inputs:
+      group:
+        description: Disposable connectivity room, removed after the test
+        type: string
+        required: true
+      relay:
+        description: Force one relay transport or allow normal ICE selection
+        type: choice
+        options: [auto, udp, tcp, tls]
+        default: auto
+      clients:
+        description: Synthetic participants
+        type: choice
+        options: ['2', '4']
+        default: '2'
+permissions:
+  contents: read
+concurrency:
+  group: utilibre-galene-connectivity
+  cancel-in-progress: false
+jobs:
+  external-media:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          persist-credentials: false
+      - name: Install only the pinned browser driver
+        run: npm install --prefix "$RUNNER_TEMP/galene-check" --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+      - name: Verify actual audio and video through public HTTPS and ICE
+        env:
+          GALENE_PLAYWRIGHT_PACKAGE: ${{ runner.temp }}/galene-check/package.json
+          GALENE_CHROME: /usr/bin/google-chrome
+          GALENE_CHECK_GROUP: ${{ inputs.group }}
+          GALENE_FORCE_RELAY: ${{ inputs.relay }}
+          GALENE_CHECK_CLIENTS: ${{ inputs.clients }}
+        run: node deployment/pack/check-galene-external.mjs

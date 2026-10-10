@@ -1,0 +1,13 @@
+#!/usr/bin/with-contenv bash
+set -eu
+[ "${RSPAMD_ENABLE:-false}" = true ] || exit 0
+# Set failure handling first: a later configuration error must not fail open.
+postconf -e 'smtpd_milters = inet:127.0.0.1:11332'
+postconf -e 'non_smtpd_milters ='
+postconf -e 'milter_default_action = tempfail'
+postconf -e 'milter_connect_timeout = 5s'
+postconf -e 'milter_command_timeout = 15s'
+postconf -e 'milter_content_timeout = 15s'
+postconf -e 'milter_protocol = 6'
+# Do not sign locally. Existing PMG signing and verified DNS remain authoritative.
+sh /etc/utilibre-rspamd/install.sh

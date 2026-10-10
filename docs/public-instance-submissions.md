@@ -1,28 +1,27 @@
-# Public instance submissions — October 6, 2026
+# Public instance submissions, checked 9 October 2026
 
 PrivateBin is listed. [Redlib PR117](https://github.com/redlib-org/redlib-instances/pull/117)
 and [SearXNG request941](https://github.com/searxng/searx-instances/issues/941)
-are existing requests, not claims of acceptance. SearXNG has its two-week wait label.
+are existing requests, not claims of acceptance. On 6 October the SearXNG
+maintainer explicitly started its two-week health and update observation period.
+There is no unanswered request for operator action in that thread.
 
-The token can push operator forks but cannot create upstream pull requests.
-The Priviblur REST submission was retried on October 6 at 20:16 UTC and again
-returned403 (`Resource not accessible by personal access token`); no PR was
-created. Own-repository workflow writes work, which does not grant upstream
-repository access. Use the prepared comparisons in an authenticated browser or
-configure suitable forge authentication on the VM; do not put tokens in this file.
-These changes are prepared, **not submitted or accepted**:
+GitHub submissions completed on 8 October 2026 after the Galene load tests.
+The earlier fine-grained token returned 403; a temporary operator-provided
+classic token succeeded. Its local copy was removed after submission.
+Submission is not acceptance.
 
-| Service | Prepared upstream comparison |
-| --- | --- |
-| AnonymousOverflow | [Review and open PR](https://github.com/httpjamesm/AnonymousOverflow/compare/main...mycelibre:AnonymousOverflow:utilibre-public-instance-20261006?expand=1) |
-| DeGoog | [Review and open PR](https://github.com/degoog-org/degoog/compare/main...mycelibre:degoog:utilibre-public-instance-20261006?expand=1) |
-| Binternet, HTTPS and Tor | [Review and open PR](https://github.com/Ahwxorg/Binternet/compare/main...mycelibre:Binternet:utilibre-public-instance-20261006?expand=1) |
-| RSS-Bridge | [Review and open PR](https://github.com/RSS-Bridge/rss-bridge/compare/master...mycelibre:rss-bridge:utilibre-public-instance-20261006?expand=1) |
-| ntfy | [Review and open PR](https://github.com/binwiederhier/ntfy/compare/main...mycelibre:ntfy:utilibre-public-instance-20261006?expand=1) |
-| Priviblur | [Review and open PR](https://github.com/syeopite/priviblur/compare/master...mycelibre:priviblur:utilibre-public-instance-20261006?expand=1) |
+| Service | Submitted request | Result checked 9 October |
+| --- | --- | --- |
+| AnonymousOverflow | [Review request](https://github.com/httpjamesm/AnonymousOverflow/pull/203) | Open; no review comments |
+| degoog | [Accepted request](https://github.com/degoog-org/degoog/pull/347) | Merged, 9 October |
+| Binternet | [Review request](https://github.com/Ahwxorg/Binternet/pull/68) | Open; no review comments |
+| rss-bridge | [Accepted request](https://github.com/RSS-Bridge/rss-bridge/pull/5120) | Merged, 8 October |
+| ntfy | [Review request](https://github.com/binwiederhier/ntfy/pull/2016) | Open; no review comments |
+| priviblur | [Review request](https://github.com/syeopite/priviblur/pull/303) | Open; no review comments |
+| BiblioReads | [Review request](https://github.com/nesaku/BiblioReads/issues/48) | Open; no review comments |
 
-BiblioReads accepts instance issues; its actual issue-creation attempt was also
-denied by token permissions. Codeberg access is needed for SafeTwitch, GotHub,
+Codeberg access is needed for SafeTwitch, GotHub,
 Kittygram and TransLite; Gitfield access is needed for Mezzo. 4get uses distributed
 operator-maintained lists rather than a central acceptance workflow. FMD's
 alternative-implementations page is not a directory of public hosted instances.
@@ -32,7 +31,36 @@ No official instance directory was found in the reviewed frontend/server
 repositories. This deployment is a read-only client of the public LRCLIB API,
 not an independent LRCLIB database mirror; do not submit it as one.
 
-Do not submit broken deployments as healthy: Rimgo playback, LibreMDB and
-BreezeWiki's complete page workflow still have upstream failures. Mumble is
+Do not submit incomplete workflows as healthy: Rimgo playback and BreezeWiki
+images still encounter upstream refusals. BreezeWiki tabs are repaired. LibreMDB
+private search and images pass, but its selected IMDb endpoint excludes public
+use; no permission covering Utilibre has been verified. See
+`frontend-reliability-2026-10-09.md`. Mumble is
 password-protected with verified public TCP voice and inbound UDP routing;
-it is not an open server, and public UDP audio remains unverified.
+it is not an open server. A single authenticated encrypted UDP audio loopback
+also passed from an external runner on 9 October; see
+`mumble-udp-verification-2026-10-09.md`.
+
+## LibRedirect and Awesome Selfhosted
+
+LibRedirect consumes upstream instance lists; its generated data is not the
+submission target. The generated `data.json` was fetched on 9 October and still
+contains no Utilibre URL. The accepted degoog listing therefore does not yet
+establish inclusion in LibRedirect. Its scheduled refresh is controlled upstream;
+do not edit the generated file or send duplicate requests.
+Evidence: `/opt/utilibre/reports/queue-completion-20261009/submissions.json` and
+`libredirect.json`; source: https://github.com/libredirect/instances .
+
+Awesome Selfhosted has not received a Utilibre submission. It catalogs
+installable software, not a directory of our hosted instances. Assess the
+portal software separately against its first-release age and scope criteria.
+On 9 October the API still showed no published releases; the repository was created
+3 September 2026. A first release more than four months old is required, so
+repository age alone does not meet the eligibility checklist.
+Its current contribution rules prohibit machine/LLM-generated contributions;
+any submission there must be prepared and sent by the operator personally.
+See https://github.com/awesome-selfhosted/awesome-selfhosted-data/blob/master/CONTRIBUTING.md .
+
+For public upstream GitHub submissions, classic PAT scope `public_repo` was
+sufficient; no private repository, workflow, or admin scope was needed. This
+does not authenticate Codeberg or Gitfield. Never store tokens in this repository.

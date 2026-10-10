@@ -26,7 +26,9 @@ test('local selections, keyboard order, export/import, preview and scoped reset'
   await page.getByLabel('Collection name').fill('Workshop <img src=x onerror=alert(1)>'); await page.getByRole('button', { name: 'Rename', exact: true }).click();
   await expect(page.getByLabel('Collection name')).toBeFocused();
   await expect(page.locator('.toolkit-list img')).toHaveCount(0);
+  await page.getByText('Back up, import or reset collections', { exact: true }).click();
   const event = page.waitForEvent('download'); await page.getByRole('button', { name: 'Export all collections' }).click(); const file = await event;
+  await page.getByText('Share this collection', { exact: true }).click();
   const link = await page.getByLabel('Collection link', { exact: true }).inputValue();
   const other = await browser.newContext(); const recipient = await other.newPage(); await recipient.goto(link);
   await expect(recipient.getByRole('heading', { name: 'Shared collection preview' })).toBeVisible();
@@ -41,6 +43,7 @@ test('local selections, keyboard order, export/import, preview and scoped reset'
   await page.getByRole('button', { name: 'Import and replace collections' }).click();
   await expect(page.locator('.toolkit-list li').first()).toHaveAttribute('data-tool-id', 'rawgraphs');
   await page.reload(); await expect(page.locator('.toolkit-list li')).toHaveCount(2);
+  await page.getByText('Back up, import or reset collections', { exact: true }).click();
   const before = await page.evaluate(() => localStorage.getItem('portal.toolkits.v1'));
   await page.getByLabel('Import collections').setInputFiles({ name: 'bad.json', mimeType: 'application/json', buffer: Buffer.from('{"version":999}') });
   await page.getByRole('button', { name: 'Import and replace collections' }).click(); await expect(page.getByRole('status')).toContainText('Import rejected');
@@ -63,5 +66,21 @@ test('blocked storage and malformed share are explicit', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Colección compartida inválida' })).toBeVisible();
   await page.getByLabel('Elegí una herramienta para fijar').selectOption('drawio'); await page.getByRole('button', { name: 'Fijar herramienta', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('No se guardó');
+  await page.getByText('Respaldar, importar o restablecer colecciones', { exact: true }).click();
   await expect(page.getByRole('button', { name: 'Exportar todas las colecciones' })).toBeEnabled();
+});
+test('tool picker searches ordinary task words and handles no matches', async ({ page }) => {
+  await page.goto('/es/mi-utilibre');
+  await page.getByLabel('Buscá una herramienta').fill('pdf');
+  await expect(page.locator('#toolkit-add option').first()).toHaveAttribute('value', 'bentopdf');
+  await page.getByLabel('Buscá una herramienta').fill('quitar fondo');
+  await expect(page.locator('#toolkit-add option').first()).toHaveAttribute('value', 'omni-background');
+  await expect(page.getByText('1 herramienta para elegir.', { exact: true })).toBeVisible();
+  await page.getByLabel('Buscá una herramienta').fill('nothingmatchesxyz');
+  await expect(page.locator('#toolkit-add')).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Fijar herramienta', exact: true })).toBeDisabled();
+  await expect(page.getByText('Sin resultados. Probá otra palabra o borrá la búsqueda.')).toBeVisible();
+  await page.getByLabel('Buscá una herramienta').fill('PDF');
+  await page.getByRole('button', { name: 'Fijar herramienta', exact: true }).click();
+  await expect(page.locator('[data-tool-id="bentopdf"]')).toBeVisible();
 });

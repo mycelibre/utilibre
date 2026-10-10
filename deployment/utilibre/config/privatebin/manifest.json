@@ -1,0 +1,15 @@
+{
+  "name": "PrivateBin at Utilibre",
+  "short_name": "PrivateBin",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#ffe57e",
+  "icons": [
+    {
+      "src": "/utilibre-brand/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

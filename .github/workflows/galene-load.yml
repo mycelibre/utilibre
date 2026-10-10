@@ -1,0 +1,38 @@
+name: Galene simultaneous meeting load
+on:
+  workflow_dispatch:
+    inputs:
+      plan:
+        description: Reviewed JSON plan with near-future startAt and expiring synthetic rooms
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: utilibre-galene-load
+  cancel-in-progress: false
+jobs:
+  meetings:
+    strategy:
+      fail-fast: true
+      matrix:
+        worker: [0, 1, 2, 3, 4, 5, 6, 7]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          persist-credentials: false
+      - name: Prepare pinned driver and synthetic moving 720p video with continuous audio
+        run: |
+          npm install --prefix "$RUNNER_TEMP/galene-load" --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+          node deployment/pack/galene-load-media.mjs "$RUNNER_TEMP"
+      - name: Measure sustained media from every participant
+        env:
+          GALENE_PLAYWRIGHT_PACKAGE: ${{ runner.temp }}/galene-load/package.json
+          GALENE_CHROME: /usr/bin/google-chrome
+          GALENE_VIDEO_FILE: ${{ runner.temp }}/load-video.y4m
+          GALENE_AUDIO_FILE: ${{ runner.temp }}/load-audio.wav
+          GALENE_LOAD_WORKER: ${{ matrix.worker }}
+          GALENE_LOAD_PLAN: ${{ inputs.plan }}
+        run: node deployment/pack/check-galene-load.mjs

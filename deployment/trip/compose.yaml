@@ -1,0 +1,60 @@
+name: utilibre-trip
+x-limits: &limits
+  restart: 'no'
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 64
+  logging: {driver: json-file, options: {max-size: 2m, max-file: '2'}}
+services:
+  app:
+    <<: *limits
+    image: utilibre-trip:1.50.1-p2
+    user: '1000:1000'
+    cpus: 1
+    mem_limit: 512m
+    tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=32m,mode=1777']
+    volumes: ['/opt/utilibre/trip/data:/app/storage']
+    environment:
+      REGISTER_ENABLE: 'false'
+      OIDC_DISCOVERY_URL: https://auth.utilibre.org/application/o/trip/.well-known/openid-configuration
+      OIDC_CLIENT_ID: utilibre-trip
+      OIDC_CLIENT_SECRET: ${TRIP_OIDC_SECRET:?private native OIDC secret required}
+      OIDC_REDIRECT_URI: https://trip.utilibre.org/auth
+      ATTACHMENT_MAX_SIZE: '2097152'
+      BACKUP_IMPORT_MAX_ENTRY_SIZE: '8388608'
+      BACKUP_IMPORT_MAX_TOTAL_SIZE: '33554432'
+      KML_MAX_ENTRY_SIZE: '2097152'
+      PROVIDER_IMPORT_MAX_SIZE: '2097152'
+      ACCESS_TOKEN_EXPIRE_MINUTES: '10'
+      REFRESH_TOKEN_EXPIRE_MINUTES: '60'
+      HTTP_PROXY: http://172.29.152.20:3128
+      HTTPS_PROXY: http://172.29.152.20:3128
+      NO_PROXY: ''
+    dns: [127.0.0.1]
+    sysctls: {net.ipv6.conf.all.disable_ipv6: '1'}
+    networks: {isolated: {ipv4_address: 172.29.152.10}}
+  proxy:
+    <<: *limits
+    image: utilibre-public-egress:7.7
+    cpus: 0.25
+    mem_limit: 192m
+    tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']
+    volumes: ['./squid.conf:/etc/squid/squid.conf:ro']
+    dns: [1.1.1.1, 9.9.9.9]
+    sysctls: {net.ipv6.conf.all.disable_ipv6: '1'}
+    networks: {isolated: {ipv4_address: 172.29.152.20}, egress: {ipv4_address: 172.29.153.20}}
+  gateway:
+    <<: *limits
+    image: nginxinc/nginx-unprivileged@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    cpus: 0.25
+    mem_limit: 64m
+    tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']
+    volumes: ['./nginx.conf:/etc/nginx/nginx.conf:ro']
+    ports: ['127.0.0.1:3224:8080', '10.10.1.43:3224:8080']
+    networks: {isolated: {ipv4_address: 172.29.152.30}, egress: {ipv4_address: 172.29.153.30}}
+networks:
+  isolated: {internal: true, enable_ipv6: false, ipam: {config: [{subnet: 172.29.152.0/24}]}}
+  egress: {enable_ipv6: false, ipam: {config: [{subnet: 172.29.153.0/24}]}}

@@ -2,6 +2,10 @@
 
 Initial audit: 2026-08-28; current capacity last checked: 2026-09-03
 
+**Current inventory:** the [October 8 hardware and load assessment](capacity-2026-10-08.md)
+supersedes the CPU/RAM/storage figures below. The remainder of this file
+preserves the earlier deployment snapshot.
+
 This deliberately sanitized inventory records only facts needed to evaluate
 the retained deployment. It omits host names, addresses, provider, physical
 location, MAC/SSH details, and other identifying data. Private addresses

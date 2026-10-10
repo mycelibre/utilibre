@@ -1,0 +1,23 @@
+# Outbound-only IPv6 on the application VM. IPv4 and Docker's tables are separate.
+# Do not add public listeners here without a reviewed per-service rule.
+table ip6 utilibre_ipv6_guard {
+  chain input {
+    type filter hook input priority -10; policy drop;
+    iifname "lo" accept
+    ct state established,related accept
+    ct state invalid drop
+    # Path MTU discovery and error reporting must work for outbound connections.
+    icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem } accept
+    # RFC 4861 requires hop limit 255 for on-link neighbor/router discovery.
+    ip6 hoplimit 255 icmpv6 type { nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+    # Multicast listener discovery uses link-local sources and hop limit 1.
+    ip6 saddr { fe80::/10, ::/128 } ip6 hoplimit 1 icmpv6 type { 130, 131, 132, 143 } accept
+    icmpv6 type echo-request limit rate 10/second burst 20 packets accept
+    counter drop
+  }
+  chain forward {
+    type filter hook forward priority -10; policy drop;
+    # Existing application bridges are IPv4-only. No IPv6 forwarding is enabled.
+    counter drop
+  }
+}

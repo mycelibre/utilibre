@@ -1,0 +1,6 @@
+[Unit]
+Description=Bound addy.io native file logs
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/logrotate --state /opt/utilibre/addy/private/logrotate.status /home/ubuntu/freetools/deployment/addy/logrotate.conf
+NoNewPrivileges=true

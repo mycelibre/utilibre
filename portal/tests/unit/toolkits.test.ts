@@ -1,6 +1,23 @@
 import { describe, it, expect } from 'vitest';
-import { emptyToolkit, loadToolkit, moveTool, parseToolkit, parseShared, readSharedFragment, resetToolkit, saveToolkit, shareFragment, toolkitKey } from '../../src/utilities/toolkits';
+import { emptyToolkit, loadToolkit, moveTool, parseToolkit, parseShared, pinToStartingCollection, readSharedFragment, resetToolkit, saveToolkit, shareFragment, toolkitKey } from '../../src/utilities/toolkits';
 describe('bounded catalogue preferences', () => {
+  it('pins to the chosen starting collection without replacing other data', () => {
+    const data = new Map<string, string>([['document', 'private draft']]);
+    const storage = { getItem: (key: string) => data.get(key) ?? null, setItem: (key: string, value: string) => { data.set(key, value); } };
+    expect(pinToStartingCollection(storage, 'en', 'drawio').status).toBe('saved');
+    expect(pinToStartingCollection(storage, 'es', 'drawio').status).toBe('already');
+    const value = loadToolkit(storage, 'en').value;
+    value.collections.push({ id: 'work', label: 'Work', tools: [] }); value.start = 'work'; saveToolkit(storage, value);
+    expect(pinToStartingCollection(storage, 'en', 'bentopdf')).toEqual({ status: 'saved', label: 'Work' });
+    expect(loadToolkit(storage, 'en').value.collections.map(c => c.tools)).toEqual([['drawio'], ['bentopdf']]);
+    expect(data.get('document')).toBe('private draft');
+    value.collections[1]!.tools = Array.from({ length: 64 }, (_, i) => `tool-${i}`); saveToolkit(storage, value);
+    expect(pinToStartingCollection(storage, 'en', 'bentopdf').status).toBe('full');
+    data.set(toolkitKey, 'malformed');
+    expect(pinToStartingCollection(storage, 'en', 'bentopdf').status).toBe('unavailable');
+    expect(data.get(toolkitKey)).toBe('malformed');
+    expect(pinToStartingCollection({ getItem: () => null, setItem: () => { throw new Error('quota'); } }, 'en', 'bentopdf').status).toBe('unavailable');
+  });
   it('round trips exports and Unicode fragment sharing', () => {
     const value = emptyToolkit('es'); value.collections[0]!.label = 'Diseño y café'; value.collections[0]!.tools = ['drawio', 'rawgraphs'];
     expect(parseToolkit(JSON.stringify(value))).toEqual(value);

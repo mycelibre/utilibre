@@ -1,0 +1,1053 @@
+diff --git a/index.html b/index.html
+index baaa0eb..43c0d45 100644
+--- a/index.html
++++ b/index.html
+@@ -2,7 +2,8 @@
+ <html lang="en">
+   <head>
+     <meta charset="utf-8" />
+-    <link rel="icon" href="/favicon.ico" />
++    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'" />
++    <link rel="icon" href="./favicon.ico" />
+ 
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+     <meta name="theme-color" content="#000000" />
+@@ -11,10 +12,10 @@
+       content="Online database entity-relationship diagram editor, data modeler, and SQL generator. Design, visualize, and export scripts without an account and completely free of charge."
+     />
+ 
+-    <meta name="robots" content="index,follow,max-image-preview:large" />
++    <meta name="robots" content="noindex,nofollow" />
+ 
+     <meta property="og:type" content="website" />
+-    <meta property="og:url" content="https://drawdb.app/" />
++    <meta property="og:url" content="https://tools.utilibre.org/apps/drawdb/" />
+     <meta
+       property="og:title"
+       content="drawDB | Online database diagram editor and SQL generator"
+@@ -23,39 +24,24 @@
+       property="og:description"
+       content="Online database entity-relationship diagram editor, data modeler, and SQL generator. Design, visualize, and export scripts without an account and completely free of charge."
+     />
+-    <meta property="og:image" content="https://drawdb.app/hero_ss.png" />
++    <meta property="og:image" content="./hero_ss.png" />
+ 
+     <meta
+       name="twitter:image:src"
+-      content="https://drawdb.app/hero_ss.png"
++      content="./hero_ss.png"
+     />
+     <meta
+       name="twitter:tile:image"
+-      content="https://drawdb.app/hero_ss.png"
++      content="./hero_ss.png"
+     />
+     <meta name="twitter:card" content="summary_large_image" />
+ 
+-    <link rel="apple-touch-icon" href="/favicon.ico" />
+-    <link
+-      rel="stylesheet"
+-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+-      crossorigin="anonymous"
+-    />
+-
+-    <link
+-      rel="stylesheet"
+-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+-      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+-      crossorigin="anonymous"
+-      referrerpolicy="no-referrer"
+-    />
+-
++    <link rel="apple-touch-icon" href="./favicon.ico" />
+     <title>drawDB | Online database diagram editor and SQL generator</title>
+   </head>
+   <body theme-mode="light">
+     <noscript>You need to enable JavaScript to run this app.</noscript>
+     <div id="root"></div>
+-    <script src="/config.js"></script>
+     <script type="module" src="/src/main.jsx"></script>
+   </body>
+ </html>
+diff --git a/package-lock.json b/package-lock.json
+index 9cccea5..2d9f262 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -14,12 +14,13 @@
+         "@dnd-kit/sortable": "^10.0.0",
+         "@dnd-kit/utilities": "^3.2.2",
+         "@douyinfe/semi-ui": "^2.77.1",
++        "@fortawesome/fontawesome-free": "6.5.2",
+         "@lexical/react": "^0.12.5",
+         "@monaco-editor/react": "^4.7.0",
+-        "@vercel/analytics": "^1.2.2",
+-        "axios": "^1.18.0",
++        "bootstrap-icons": "1.11.1",
+         "dexie": "^3.2.4",
+         "dexie-react-hooks": "^1.1.7",
++        "dompurify": "3.4.16",
+         "file-saver": "^2.0.5",
+         "framer-motion": "^10.18.0",
+         "html-to-image": "1.11.11",
+@@ -31,6 +32,7 @@
+         "lexical": "^0.12.5",
+         "lodash": "^4.18.1",
+         "luxon": "^3.7.1",
++        "monaco-editor": "0.57.0",
+         "nanoid": "^5.1.16",
+         "node-sql-parser": "^5.4.0",
+         "oracle-sql-parser": "^0.1.0",
+@@ -39,7 +41,6 @@
+         "react-hotkeys-hook": "^4.4.1",
+         "react-i18next": "^14.1.1",
+         "react-router-dom": "^7.18.2",
+-        "react-tweet": "^3.3.1",
+         "usehooks-ts": "^3.1.0",
+         "uuid": "^14.0.1"
+       },
+@@ -423,6 +424,16 @@
+         "node": "^12.22.0 || ^14.17.0 || >=16.0.0"
+       }
+     },
++    "node_modules/@fortawesome/fontawesome-free": {
++      "version": "6.5.2",
++      "resolved": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.2.tgz",
++      "integrity": "sha512-hRILoInAx8GNT5IMkrtIt9blOdrqHOnPBH+k70aWUAqPZPgopb9G5EQJFpaBx/S8zp2fC+mPW349Bziuk1o28Q==",
++      "hasInstallScript": true,
++      "license": "(CC-BY-4.0 AND OFL-1.1 AND MIT)",
++      "engines": {
++        "node": ">=6"
++      }
++    },
+     "node_modules/@humanwhocodes/config-array": {
+       "version": "0.13.0",
+       "resolved": "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.13.0.tgz",
+@@ -1171,15 +1182,6 @@
+       "dev": true,
+       "license": "MIT"
+     },
+-    "node_modules/@swc/helpers": {
+-      "version": "0.5.17",
+-      "resolved": "https://registry.npmjs.org/@swc/helpers/-/helpers-0.5.17.tgz",
+-      "integrity": "sha512-5IKx/Y13RsYd+sauPb2x+U/xZikHjolzfuDgTAl/Tdf3Q8rslRvC19NKDLgAJQ6wsqADk10ntlv08nPFw/gO/A==",
+-      "license": "Apache-2.0",
+-      "dependencies": {
+-        "tslib": "^2.8.0"
+-      }
+-    },
+     "node_modules/@tailwindcss/node": {
+       "version": "4.1.12",
+       "resolved": "https://registry.npmjs.org/@tailwindcss/node/-/node-4.1.12.tgz",
+@@ -1645,44 +1647,6 @@
+       "integrity": "sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==",
+       "license": "ISC"
+     },
+-    "node_modules/@vercel/analytics": {
+-      "version": "1.5.0",
+-      "resolved": "https://registry.npmjs.org/@vercel/analytics/-/analytics-1.5.0.tgz",
+-      "integrity": "sha512-MYsBzfPki4gthY5HnYN7jgInhAZ7Ac1cYDoRWFomwGHWEX7odTEzbtg9kf/QSo7XEsEAqlQugA6gJ2WS2DEa3g==",
+-      "license": "MPL-2.0",
+-      "peerDependencies": {
+-        "@remix-run/react": "^2",
+-        "@sveltejs/kit": "^1 || ^2",
+-        "next": ">= 13",
+-        "react": "^18 || ^19 || ^19.0.0-rc",
+-        "svelte": ">= 4",
+-        "vue": "^3",
+-        "vue-router": "^4"
+-      },
+-      "peerDependenciesMeta": {
+-        "@remix-run/react": {
+-          "optional": true
+-        },
+-        "@sveltejs/kit": {
+-          "optional": true
+-        },
+-        "next": {
+-          "optional": true
+-        },
+-        "react": {
+-          "optional": true
+-        },
+-        "svelte": {
+-          "optional": true
+-        },
+-        "vue": {
+-          "optional": true
+-        },
+-        "vue-router": {
+-          "optional": true
+-        }
+-      }
+-    },
+     "node_modules/@vitejs/plugin-react": {
+       "version": "6.0.3",
+       "resolved": "https://registry.npmjs.org/@vitejs/plugin-react/-/plugin-react-6.0.3.tgz",
+@@ -1730,22 +1694,10 @@
+         "acorn": "^6.0.0 || ^7.0.0 || ^8.0.0"
+       }
+     },
+-    "node_modules/agent-base": {
+-      "version": "6.0.2",
+-      "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-6.0.2.tgz",
+-      "integrity": "sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==",
+-      "license": "MIT",
+-      "dependencies": {
+-        "debug": "4"
+-      },
+-      "engines": {
+-        "node": ">= 6.0.0"
+-      }
+-    },
+     "node_modules/ajv": {
+-      "version": "6.12.6",
+-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.12.6.tgz",
+-      "integrity": "sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==",
++      "version": "6.15.0",
++      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.15.0.tgz",
++      "integrity": "sha512-fgFx7Hfoq60ytK2c7DhnF8jIvzYgOMxfugjLOSMHjLIPgenqa7S7oaagATUq99mV6IYvN2tRmC0wnTYX6iPbMw==",
+       "dev": true,
+       "license": "MIT",
+       "dependencies": {
+@@ -1964,12 +1916,6 @@
+       "integrity": "sha512-8eLCg00W9pIRZSB781UUX/H6Oskmm8xloZfr09lz5bikRpBVDlJ3hRVuxxP1SxcwsEYfJ4IU8Q19Y8/893r3rQ==",
+       "license": "MIT"
+     },
+-    "node_modules/asynckit": {
+-      "version": "0.4.0",
+-      "resolved": "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz",
+-      "integrity": "sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==",
+-      "license": "MIT"
+-    },
+     "node_modules/available-typed-arrays": {
+       "version": "1.0.7",
+       "resolved": "https://registry.npmjs.org/available-typed-arrays/-/available-typed-arrays-1.0.7.tgz",
+@@ -1986,18 +1932,6 @@
+         "url": "https://github.com/sponsors/ljharb"
+       }
+     },
+-    "node_modules/axios": {
+-      "version": "1.18.0",
+-      "resolved": "https://registry.npmjs.org/axios/-/axios-1.18.0.tgz",
+-      "integrity": "sha512-E32NzpYKp++W7XRe52rHiXV2ehxmh3wbdgO7MHeFM+vqxLBYHzt0ElkiImtOBxtOmyp0yoC8C6uESVV84Y2/hw==",
+-      "license": "MIT",
+-      "dependencies": {
+-        "follow-redirects": "^1.16.0",
+-        "form-data": "^4.0.5",
+-        "https-proxy-agent": "^5.0.1",
+-        "proxy-from-env": "^2.1.0"
+-      }
+-    },
+     "node_modules/bail": {
+       "version": "2.0.2",
+       "resolved": "https://registry.npmjs.org/bail/-/bail-2.0.2.tgz",
+@@ -2040,10 +1974,26 @@
+         "node": ">=0.6"
+       }
+     },
++    "node_modules/bootstrap-icons": {
++      "version": "1.11.1",
++      "resolved": "https://registry.npmjs.org/bootstrap-icons/-/bootstrap-icons-1.11.1.tgz",
++      "integrity": "sha512-F0DDp7nKUX+x/QtpfRZ+XHFya60ng9nfdpdS59vDDfs4Uhuxp7zym/QavMsu/xx51txkoM9eVmpE7D08N35blw==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/twbs"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/bootstrap"
++        }
++      ],
++      "license": "MIT"
++    },
+     "node_modules/brace-expansion": {
+-      "version": "1.1.18",
+-      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.18.tgz",
+-      "integrity": "sha512-Edep/X9fGqVNmzKBVsDYIOtD+z1tuezV70LBjdCst9Tqu76lsnvRiZ6oTic1n+/BIwX6QDGAO94PN4N2SADvtw==",
++      "version": "1.1.21",
++      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.21.tgz",
++      "integrity": "sha512-9zeA+KLZNNzglF2TPKRQEDyx6Yby7daAkuy8MiPzpXPsYDWi/DRM8jmwUDxokQjYqBpv5DgPiwD4h4ZZSy1Ujw==",
+       "dev": true,
+       "license": "MIT",
+       "dependencies": {
+@@ -2074,6 +2024,7 @@
+       "version": "1.0.2",
+       "resolved": "https://registry.npmjs.org/call-bind-apply-helpers/-/call-bind-apply-helpers-1.0.2.tgz",
+       "integrity": "sha512-Sp1ablJ0ivDkSzjcaJdxEunN5/XvksFJ2sMBFfq6x0ryhQV/2b/KwFe21cMpmHtPOSij8K99/wSfoEuTObmuMQ==",
++      "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "es-errors": "^1.3.0",
+@@ -2252,18 +2203,6 @@
+       "dev": true,
+       "license": "MIT"
+     },
+-    "node_modules/combined-stream": {
+-      "version": "1.0.8",
+-      "resolved": "https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.8.tgz",
+-      "integrity": "sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==",
+-      "license": "MIT",
+-      "dependencies": {
+-        "delayed-stream": "~1.0.0"
+-      },
+-      "engines": {
+-        "node": ">= 0.8"
+-      }
+-    },
+     "node_modules/comma-separated-tokens": {
+       "version": "2.0.3",
+       "resolved": "https://registry.npmjs.org/comma-separated-tokens/-/comma-separated-tokens-2.0.3.tgz",
+@@ -2513,15 +2452,6 @@
+         "url": "https://github.com/sponsors/ljharb"
+       }
+     },
+-    "node_modules/delayed-stream": {
+-      "version": "1.0.0",
+-      "resolved": "https://registry.npmjs.org/delayed-stream/-/delayed-stream-1.0.0.tgz",
+-      "integrity": "sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==",
+-      "license": "MIT",
+-      "engines": {
+-        "node": ">=0.4.0"
+-      }
+-    },
+     "node_modules/dequal": {
+       "version": "2.0.3",
+       "resolved": "https://registry.npmjs.org/dequal/-/dequal-2.0.3.tgz",
+@@ -2588,11 +2518,10 @@
+       }
+     },
+     "node_modules/dompurify": {
+-      "version": "3.4.13",
+-      "resolved": "https://registry.npmjs.org/dompurify/-/dompurify-3.4.13.tgz",
+-      "integrity": "sha512-2vmYIoqjze2d+kakP8S/nS5shfsl587kzwEjcGlTdiksUVgFHnFCsLYDVj/JNqJVOQZGSYBTmuycv0PodwmnMQ==",
++      "version": "3.4.16",
++      "resolved": "https://registry.npmjs.org/dompurify/-/dompurify-3.4.16.tgz",
++      "integrity": "sha512-sqo+pNp3qRhCIpbgRi1y8Tgk27Bo2Ry7w0dC1NBeNTdZChWjz9Xb/KOoZbRP/R6pQZ80Qw8YhXw13hWWBbMRnQ==",
+       "license": "(MPL-2.0 OR Apache-2.0)",
+-      "optional": true,
+       "optionalDependencies": {
+         "@types/trusted-types": "^2.0.7"
+       }
+@@ -2601,6 +2530,7 @@
+       "version": "1.0.1",
+       "resolved": "https://registry.npmjs.org/dunder-proto/-/dunder-proto-1.0.1.tgz",
+       "integrity": "sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==",
++      "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "call-bind-apply-helpers": "^1.0.1",
+@@ -2698,6 +2628,7 @@
+       "version": "1.0.1",
+       "resolved": "https://registry.npmjs.org/es-define-property/-/es-define-property-1.0.1.tgz",
+       "integrity": "sha512-e3nRfgfUZ4rNGL232gUgX06QNyyez04KdjFrF+LTRoOXmrOgFKDg4BCdsjW8EnT69eqdYGmRpJwiPVYNrCaW3g==",
++      "dev": true,
+       "license": "MIT",
+       "engines": {
+         "node": ">= 0.4"
+@@ -2707,6 +2638,7 @@
+       "version": "1.3.0",
+       "resolved": "https://registry.npmjs.org/es-errors/-/es-errors-1.3.0.tgz",
+       "integrity": "sha512-Zf5H2Kxt2xjTvbJvP2ZWLEICxA6j+hAmMzIlypy4xcBg1vKVnx89Wy0GbS+kf5cwCVFFzdCFh2XSCFNULS6csw==",
++      "dev": true,
+       "license": "MIT",
+       "engines": {
+         "node": ">= 0.4"
+@@ -2744,6 +2676,7 @@
+       "version": "1.1.1",
+       "resolved": "https://registry.npmjs.org/es-object-atoms/-/es-object-atoms-1.1.1.tgz",
+       "integrity": "sha512-FGgH2h8zKNim9ljj7dankFPcICIK9Cp5bm+c2gQSYePhpaG5+esrLODihIorn+Pe6FGJzWhXQotPv73jTaldXA==",
++      "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "es-errors": "^1.3.0"
+@@ -2756,6 +2689,7 @@
+       "version": "2.1.0",
+       "resolved": "https://registry.npmjs.org/es-set-tostringtag/-/es-set-tostringtag-2.1.0.tgz",
+       "integrity": "sha512-j6vWzfrGVfyXxge+O0x5sh6cvxAog0a/4Rdd2K36zCMV5eJ+/+tOAngRO8cODMNWbVRdVlmGZQL2YS3yR8bIUA==",
++      "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "es-errors": "^1.3.0",
+@@ -3174,9 +3108,9 @@
+       "license": "MIT"
+     },
+     "node_modules/fast-copy": {
+-      "version": "3.0.2",
+-      "resolved": "https://registry.npmjs.org/fast-copy/-/fast-copy-3.0.2.tgz",
+-      "integrity": "sha512-dl0O9Vhju8IrcLndv2eU4ldt1ftXMqqfgN4H1cpmGV7P6jeB9FwpN9a2c8DPGE1Ys88rNUJVYDHq73CGAGOPfQ==",
++      "version": "3.1.0",
++      "resolved": "https://registry.npmjs.org/fast-copy/-/fast-copy-3.1.0.tgz",
++      "integrity": "sha512-IuCOCDFM1F/s4LtG7Bjr3yUUwPHybyhqN74xk2cMYoP51vVeErMy8+6HGFchi/+45lW8uzhs6lBeEqks2GWt6A==",
+       "license": "MIT"
+     },
+     "node_modules/fast-deep-equal": {
+@@ -3309,26 +3243,6 @@
+       "dev": true,
+       "license": "ISC"
+     },
+-    "node_modules/follow-redirects": {
+-      "version": "1.16.0",
+-      "resolved": "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.16.0.tgz",
+-      "integrity": "sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==",
+-      "funding": [
+-        {
+-          "type": "individual",
+-          "url": "https://github.com/sponsors/RubenVerborgh"
+-        }
+-      ],
+-      "license": "MIT",
+-      "engines": {
+-        "node": ">=4.0"
+-      },
+-      "peerDependenciesMeta": {
+-        "debug": {
+-          "optional": true
+-        }
+-      }
+-    },
+     "node_modules/for-each": {
+       "version": "0.3.5",
+       "resolved": "https://registry.npmjs.org/for-each/-/for-each-0.3.5.tgz",
+@@ -3345,22 +3259,6 @@
+         "url": "https://github.com/sponsors/ljharb"
+       }
+     },
+-    "node_modules/form-data": {
+-      "version": "4.0.6",
+-      "resolved": "https://registry.npmjs.org/form-data/-/form-data-4.0.6.tgz",
+-      "integrity": "sha512-vKatAh4SlVfgbv+YtmhiRjhEMJsYpsG1Y2rMQtR+SVSbytsSD1YGzDIcrAJmdFec88u/+VoGmxnl+80gL1tRCQ==",
+-      "license": "MIT",
+-      "dependencies": {
+-        "asynckit": "^0.4.0",
+-        "combined-stream": "^1.0.8",
+-        "es-set-tostringtag": "^2.1.0",
+-        "hasown": "^2.0.4",
+-        "mime-types": "^2.1.35"
+-      },
+-      "engines": {
+-        "node": ">= 6"
+-      }
+-    },
+     "node_modules/framer-motion": {
+       "version": "10.18.0",
+       "resolved": "https://registry.npmjs.org/framer-motion/-/framer-motion-10.18.0.tgz",
+@@ -3411,6 +3309,7 @@
+       "version": "1.1.2",
+       "resolved": "https://registry.npmjs.org/function-bind/-/function-bind-1.1.2.tgz",
+       "integrity": "sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==",
++      "dev": true,
+       "license": "MIT",
+       "funding": {
+         "url": "https://github.com/sponsors/ljharb"
+@@ -3451,6 +3350,7 @@
+       "version": "1.3.0",
+       "resolved": "https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.3.0.tgz",
+       "integrity": "sha512-9fSjSaos/fRIVIp+xSJlE6lfwhES7LNtKaCBIamHsjr2na1BiABJPo0mOjjz8GJDURarmCPGqaiVg5mfjb98CQ==",
++      "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "call-bind-apply-helpers": "^1.0.2",
+@@ -3475,6 +3375,7 @@
+       "version": "1.0.1",
+       "resolved": "https://registry.npmjs.org/get-proto/-/get-proto-1.0.1.tgz",
+       "integrity": "sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==",
++      "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "dunder-proto": "^1.0.1",
+@@ -3574,6 +3475,7 @@
+       "version": "1.2.0",
+       "resolved": "https://registry.npmjs.org/gopd/-/gopd-1.2.0.tgz",
+       "integrity": "sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==",
++      "dev": true,
+       "license": "MIT",
+       "engines": {
+         "node": ">= 0.4"
+@@ -3652,6 +3554,7 @@
+       "version": "1.1.0",
+       "resolved": "https://registry.npmjs.org/has-symbols/-/has-symbols-1.1.0.tgz",
+       "integrity": "sha512-1cDNdwJ2Jaohmb3sg4OmKaMBwuC48sYni5HUw2DvsC8LjGTLK9h+eb1X6RyuOHe4hT0ULCW68iomhjUoKUqlPQ==",
++      "dev": true,
+       "license": "MIT",
+       "engines": {
+         "node": ">= 0.4"
+@@ -3664,6 +3567,7 @@
+       "version": "1.0.2",
+       "resolved": "https://registry.npmjs.org/has-tostringtag/-/has-tostringtag-1.0.2.tgz",
+       "integrity": "sha512-NqADB8VjPFLM2V0VvHUewwwsw0ZWBaIdgo+ieHtK3hasLz4qeCRjYcqfB6AQrBggRKppKF8L52/VqdVsO47Dlw==",
++      "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "has-symbols": "^1.0.3"
+@@ -3679,6 +3583,7 @@
+       "version": "2.0.4",
+       "resolved": "https://registry.npmjs.org/hasown/-/hasown-2.0.4.tgz",
+       "integrity": "sha512-T2UbfbBEF32wiepXIsMlTW9+dDYC6wMh/t/vYA4tuOMKqWz/n3vr1NFSxQiyP+zk2mXsoMA/i/7qV6LKut1t1A==",
++      "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "function-bind": "^1.1.2"
+@@ -3784,19 +3689,6 @@
+         "node": ">=8.0.0"
+       }
+     },
+-    "node_modules/https-proxy-agent": {
+-      "version": "5.0.1",
+-      "resolved": "https://registry.npmjs.org/https-proxy-agent/-/https-proxy-agent-5.0.1.tgz",
+-      "integrity": "sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==",
+-      "license": "MIT",
+-      "dependencies": {
+-        "agent-base": "6",
+-        "debug": "4"
+-      },
+-      "engines": {
+-        "node": ">= 6"
+-      }
+-    },
+     "node_modules/i18next": {
+       "version": "23.16.8",
+       "resolved": "https://registry.npmjs.org/i18next/-/i18next-23.16.8.tgz",
+@@ -4957,10 +4849,23 @@
+         "url": "https://github.com/sponsors/wooorm"
+       }
+     },
++    "node_modules/marked": {
++      "version": "14.0.0",
++      "resolved": "https://registry.npmjs.org/marked/-/marked-14.0.0.tgz",
++      "integrity": "sha512-uIj4+faQ+MgHgwUW1l2PsPglZLOLOT1uErt06dAPtx2kjteLAkbsd/0FiYg/MGS+i7ZKLb7w2WClxHkzOOuryQ==",
++      "license": "MIT",
++      "bin": {
++        "marked": "bin/marked.js"
++      },
++      "engines": {
++        "node": ">= 18"
++      }
++    },
+     "node_modules/math-intrinsics": {
+       "version": "1.1.0",
+       "resolved": "https://registry.npmjs.org/math-intrinsics/-/math-intrinsics-1.1.0.tgz",
+       "integrity": "sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==",
++      "dev": true,
+       "license": "MIT",
+       "engines": {
+         "node": ">= 0.4"
+@@ -5988,27 +5893,6 @@
+       ],
+       "license": "MIT"
+     },
+-    "node_modules/mime-db": {
+-      "version": "1.52.0",
+-      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.52.0.tgz",
+-      "integrity": "sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==",
+-      "license": "MIT",
+-      "engines": {
+-        "node": ">= 0.6"
+-      }
+-    },
+-    "node_modules/mime-types": {
+-      "version": "2.1.35",
+-      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.35.tgz",
+-      "integrity": "sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==",
+-      "license": "MIT",
+-      "dependencies": {
+-        "mime-db": "1.52.0"
+-      },
+-      "engines": {
+-        "node": ">= 0.6"
+-      }
+-    },
+     "node_modules/minimatch": {
+       "version": "3.1.5",
+       "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.1.5.tgz",
+@@ -6046,11 +5930,14 @@
+       }
+     },
+     "node_modules/monaco-editor": {
+-      "version": "0.52.2",
+-      "resolved": "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.52.2.tgz",
+-      "integrity": "sha512-GEQWEZmfkOGLdd3XK8ryrfWz3AIP8YymVXiPHEdewrUq7mh0qrKrfHLNCXcbB6sTnMLnOZ3ztSiKcciFUkIJwQ==",
++      "version": "0.57.0",
++      "resolved": "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.57.0.tgz",
++      "integrity": "sha512-5BkI9KGoqrNvBGUe15/QlZq3OooZ8WLg1AxTpaqHRCP3HNpzPPZKE2EDz8M7c+VRmCeUw1Brp4cx/PWm3kI/5A==",
+       "license": "MIT",
+-      "peer": true
++      "dependencies": {
++        "dompurify": "3.4.15",
++        "marked": "14.0.0"
++      }
+     },
+     "node_modules/ms": {
+       "version": "2.1.3",
+@@ -6450,9 +6337,9 @@
+       }
+     },
+     "node_modules/postcss/node_modules/nanoid": {
+-      "version": "3.3.16",
+-      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.16.tgz",
+-      "integrity": "sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==",
++      "version": "3.3.20",
++      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.20.tgz",
++      "integrity": "sha512-uKdg2G3GNCKQn9byYOpxbGqrT2fGO5KRt5J/8b3pok8rT6qxGWF6hxMyJiEYtAf+FVyYuD9hRaDqX5uPFYJ4ZQ==",
+       "dev": true,
+       "funding": [
+         {
+@@ -6530,15 +6417,6 @@
+         "url": "https://github.com/sponsors/wooorm"
+       }
+     },
+-    "node_modules/proxy-from-env": {
+-      "version": "2.1.0",
+-      "resolved": "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-2.1.0.tgz",
+-      "integrity": "sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==",
+-      "license": "MIT",
+-      "engines": {
+-        "node": ">=10"
+-      }
+-    },
+     "node_modules/punycode": {
+       "version": "2.3.1",
+       "resolved": "https://registry.npmjs.org/punycode/-/punycode-2.3.1.tgz",
+@@ -6724,21 +6602,6 @@
+         "react-dom": ">=18"
+       }
+     },
+-    "node_modules/react-tweet": {
+-      "version": "3.3.1",
+-      "resolved": "https://registry.npmjs.org/react-tweet/-/react-tweet-3.3.1.tgz",
+-      "integrity": "sha512-0Gj1YgBTe1K85NBMoWBlUc17Rdc67gIJLlacrVgj+3jWIoXpFfxPdZ1U5OnWkkF9zxhphqs2pY1i//JBfP3Qog==",
+-      "license": "MIT",
+-      "dependencies": {
+-        "@swc/helpers": "^0.5.3",
+-        "clsx": "^2.0.0",
+-        "swr": "^2.2.4"
+-      },
+-      "peerDependencies": {
+-        "react": "^18.0.0 || ^19.0.0",
+-        "react-dom": "^18.0.0 || ^19.0.0"
+-      }
+-    },
+     "node_modules/react-window": {
+       "version": "1.8.11",
+       "resolved": "https://registry.npmjs.org/react-window/-/react-window-1.8.11.tgz",
+@@ -7381,9 +7244,9 @@
+       }
+     },
+     "node_modules/source-map-js": {
+-      "version": "1.2.1",
+-      "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz",
+-      "integrity": "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==",
++      "version": "1.2.2",
++      "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.2.tgz",
++      "integrity": "sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==",
+       "dev": true,
+       "license": "BSD-3-Clause",
+       "engines": {
+@@ -7631,19 +7494,6 @@
+         "node": ">=12.0.0"
+       }
+     },
+-    "node_modules/swr": {
+-      "version": "2.3.6",
+-      "resolved": "https://registry.npmjs.org/swr/-/swr-2.3.6.tgz",
+-      "integrity": "sha512-wfHRmHWk/isGNMwlLGlZX5Gzz/uTgo0o2IRuTMcf4CPuPFJZlq0rDaKUx+ozB5nBOReNV1kiOyzMfj+MBMikLw==",
+-      "license": "MIT",
+-      "dependencies": {
+-        "dequal": "^2.0.3",
+-        "use-sync-external-store": "^1.4.0"
+-      },
+-      "peerDependencies": {
+-        "react": "^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+-      }
+-    },
+     "node_modules/tailwindcss": {
+       "version": "4.1.12",
+       "resolved": "https://registry.npmjs.org/tailwindcss/-/tailwindcss-4.1.12.tgz",
+@@ -7985,15 +7835,6 @@
+         "punycode": "^2.1.0"
+       }
+     },
+-    "node_modules/use-sync-external-store": {
+-      "version": "1.5.0",
+-      "resolved": "https://registry.npmjs.org/use-sync-external-store/-/use-sync-external-store-1.5.0.tgz",
+-      "integrity": "sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==",
+-      "license": "MIT",
+-      "peerDependencies": {
+-        "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+-      }
+-    },
+     "node_modules/usehooks-ts": {
+       "version": "3.1.1",
+       "resolved": "https://registry.npmjs.org/usehooks-ts/-/usehooks-ts-3.1.1.tgz",
+diff --git a/package.json b/package.json
+index 8481047..b51d118 100644
+--- a/package.json
++++ b/package.json
+@@ -16,12 +16,13 @@
+     "@dnd-kit/sortable": "^10.0.0",
+     "@dnd-kit/utilities": "^3.2.2",
+     "@douyinfe/semi-ui": "^2.77.1",
++    "@fortawesome/fontawesome-free": "6.5.2",
+     "@lexical/react": "^0.12.5",
+     "@monaco-editor/react": "^4.7.0",
+-    "@vercel/analytics": "^1.2.2",
+-    "axios": "^1.18.0",
++    "bootstrap-icons": "1.11.1",
+     "dexie": "^3.2.4",
+     "dexie-react-hooks": "^1.1.7",
++    "dompurify": "3.4.16",
+     "file-saver": "^2.0.5",
+     "framer-motion": "^10.18.0",
+     "html-to-image": "1.11.11",
+@@ -33,6 +34,7 @@
+     "lexical": "^0.12.5",
+     "lodash": "^4.18.1",
+     "luxon": "^3.7.1",
++    "monaco-editor": "0.57.0",
+     "nanoid": "^5.1.16",
+     "node-sql-parser": "^5.4.0",
+     "oracle-sql-parser": "^0.1.0",
+@@ -41,7 +43,6 @@
+     "react-hotkeys-hook": "^4.4.1",
+     "react-i18next": "^14.1.1",
+     "react-router-dom": "^7.18.2",
+-    "react-tweet": "^3.3.1",
+     "usehooks-ts": "^3.1.0",
+     "uuid": "^14.0.1"
+   },
+@@ -59,5 +60,8 @@
+     "prettier": "3.2.5",
+     "tailwindcss": "^4.0.14",
+     "vite": "^8.1.0"
++  },
++  "overrides": {
++    "dompurify": "$dompurify"
+   }
+ }
+diff --git a/src/App.jsx b/src/App.jsx
+index 9ae9334..18040c1 100644
+--- a/src/App.jsx
++++ b/src/App.jsx
+@@ -1,9 +1,7 @@
+-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
++import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
+ import { useLayoutEffect } from "react";
+ import Editor from "./pages/Editor";
+-import BugReport from "./pages/BugReport";
+ import Templates from "./pages/Templates";
+-import LandingPage from "./pages/LandingPage";
+ import SettingsContextProvider from "./context/SettingsContext";
+ import NotFound from "./pages/NotFound";
+ import MigrationBanner, { isLegacyHost } from "./components/MigrationBanner";
+@@ -11,18 +9,17 @@ import MigrationBanner, { isLegacyHost } from "./components/MigrationBanner";
+ export default function App() {
+   const routes = (
+     <Routes>
+-      <Route path="/" element={<LandingPage />} />
++      <Route path="/" element={<Editor />} />
+       <Route path="/editor" element={<Editor />} />
+       <Route path="/editor/diagrams/:id" element={<Editor />} />
+       <Route path="/editor/templates/:id" element={<Editor />} />
+-      <Route path="/bug-report" element={<BugReport />} />
+       <Route path="/templates" element={<Templates />} />
+       <Route path="*" element={<NotFound />} />
+     </Routes>
+   );
+ 
+   return (
+-    <BrowserRouter>
++    <HashRouter>
+       <SettingsContextProvider>
+         <RestoreScroll />
+         {isLegacyHost() ? (
+@@ -34,7 +31,7 @@ export default function App() {
+           routes
+         )}
+       </SettingsContextProvider>
+-    </BrowserRouter>
++    </HashRouter>
+   );
+ }
+ 
+diff --git a/src/api/gists.js b/src/api/gists.js
+index 51e6064..e59361c 100644
+--- a/src/api/gists.js
++++ b/src/api/gists.js
+@@ -1,81 +1,7 @@
+-import axios from "axios";
+-import { gistBackendUrl as baseUrl } from "../config";
+-
++// Utilibre static deployment: no sharing backend, URL fetch or remote history.
+ export const SHARE_FILENAME = "share.json";
+ export const VERSION_FILENAME = "versionned.json";
+-
+-const description = "drawDB diagram";
+-
+-export async function create(filename, content) {
+-  const res = await axios.post(`${baseUrl}/gists`, {
+-    public: false,
+-    filename,
+-    description,
+-    content,
+-  });
+-
+-  return res.data.data.id;
+-}
+-
+-export async function patch(gistId, filename, content) {
+-  const { data } = await axios.patch(`${baseUrl}/gists/${gistId}`, {
+-    filename,
+-    content,
+-  });
+-
+-  return data.deleted;
+-}
+-
+-export async function del(gistId) {
+-  await axios.delete(`${baseUrl}/gists/${gistId}`);
+-}
+-
+-export async function get(gistId) {
+-  const res = await axios.get(`${baseUrl}/gists/${gistId}`);
+-
+-  return res.data;
+-}
+-
+-export async function getCommits(gistId, perPage = 20, page = 1) {
+-  const res = await axios.get(`${baseUrl}/gists/${gistId}/commits`, {
+-    params: {
+-      per_page: perPage,
+-      page,
+-    },
+-  });
+-
+-  return res.data;
+-}
+-
+-export async function getVersion(gistId, sha) {
+-  const res = await axios.get(`${baseUrl}/gists/${gistId}/${sha}`);
+-
+-  return res.data;
+-}
+-
+-export async function getCommitsWithFile(
+-  gistId,
+-  file,
+-  limit = 10,
+-  cursor = null,
+-) {
+-  const res = await axios.get(
+-    `${baseUrl}/gists/${gistId}/file-versions/${file}`,
+-    {
+-      params: {
+-        limit,
+-        cursor,
+-      },
+-    },
+-  );
+-
+-  return res.data;
+-}
+-
+-export async function compare(gistId, file, versionA, versionB) {
+-  const res = await axios.get(
+-    `${baseUrl}/gists/${gistId}/file/${file}/compare/${versionA}/${versionB}`,
+-  );
+-
+-  return res.data;
+-}
++const unavailable = async () => { throw new Error("Online sharing is unavailable; export a local file."); };
++export { unavailable as create, unavailable as patch, unavailable as del,
++  unavailable as get, unavailable as getCommits, unavailable as getVersion,
++  unavailable as getCommitsWithFile, unavailable as compare };
+diff --git a/src/components/EditorHeader/ControlPanel.jsx b/src/components/EditorHeader/ControlPanel.jsx
+index 4933c57..fc8799e 100644
+--- a/src/components/EditorHeader/ControlPanel.jsx
++++ b/src/components/EditorHeader/ControlPanel.jsx
+@@ -1162,7 +1162,7 @@ export default function ControlPanel({
+           {t("saved_as_copy")}{" "}
+           <Typography.Text
+             link={{
+-              href: `/editor/diagrams/${newId}${window.location.search}`,
++              href: `${import.meta.env.BASE_URL}#/editor/diagrams/${newId}${window.location.search}`,
+               target: "_blank",
+               rel: "noopener noreferrer",
+             }}
+@@ -1189,7 +1189,7 @@ export default function ControlPanel({
+         function: () => setModal(MODAL.NEW),
+       },
+       new_window: {
+-        function: () => window.open("/editor", "_blank"),
++        function: () => window.open(import.meta.env.BASE_URL + "#/editor", "_blank", "noopener,noreferrer"),
+       },
+       open: {
+         function: open,
+@@ -1975,7 +1975,7 @@ export default function ControlPanel({
+         function: () => window.open(socials.discord, "_blank"),
+       },
+       report_bug: {
+-        function: () => window.open("/bug-report", "_blank"),
++        function: () => window.open("https://github.com/mycelibre/utilibre/issues", "_blank", "noopener,noreferrer"),
+       },
+     },
+   };
+diff --git a/src/components/EditorHeader/Modal/Modal.jsx b/src/components/EditorHeader/Modal/Modal.jsx
+index 99157a6..1f5304f 100644
+--- a/src/components/EditorHeader/Modal/Modal.jsx
++++ b/src/components/EditorHeader/Modal/Modal.jsx
+@@ -271,7 +271,7 @@ export default function Modal({
+         setModal(MODAL.NONE);
+         return;
+       case MODAL.NEW:
+-        window.open("/editor/templates/" + selectedTemplateId, "_blank");
++        window.open(import.meta.env.BASE_URL + "#/editor/templates/" + selectedTemplateId, "_blank", "noopener,noreferrer");
+         setModal(MODAL.NONE);
+         return;
+       case MODAL.LANGUAGE:
+diff --git a/src/config/index.js b/src/config/index.js
+index 89bf45c..c69264c 100644
+--- a/src/config/index.js
++++ b/src/config/index.js
+@@ -1,18 +1,3 @@
+-const runtime =
+-  (typeof window !== "undefined" && window.__DRAWDB_CONFIG__) || {};
+-
+-const trimSlash = (url) => url.replace(/\/+$/, "");
+-
+-export const backendUrl = trimSlash(
+-  runtime.backendUrl ||
+-    import.meta.env.VITE_BACKEND_URL ||
+-    "http://localhost:5000",
+-);
+-
+-export const gistBackendUrl = trimSlash(
+-  runtime.gistBackendUrl ||
+-    runtime.backendUrl ||
+-    import.meta.env.VITE_GIST_BACKEND_URL ||
+-    import.meta.env.VITE_BACKEND_URL ||
+-    "http://localhost:5000",
+-);
++// Deliberately no runtime/environment backend: this installation is static.
++export const backendUrl = "";
++export const gistBackendUrl = "";
+diff --git a/src/context/SettingsContext.jsx b/src/context/SettingsContext.jsx
+index cbb0632..621da81 100644
+--- a/src/context/SettingsContext.jsx
++++ b/src/context/SettingsContext.jsx
+@@ -25,7 +25,7 @@ export default function SettingsContextProvider({ children }) {
+   const [searchParams] = useSearchParams();
+ 
+   const [settings, setSettings] = useState(() => {
+-    const savedSettings = localStorage.getItem("settings");
++    const savedSettings = localStorage.getItem("drawdb.settings");
+     let baseSettings = savedSettings
+       ? { ...defaultSettings, ...JSON.parse(savedSettings) }
+       : defaultSettings;
+@@ -43,7 +43,7 @@ export default function SettingsContextProvider({ children }) {
+   }, [settings.mode]);
+ 
+   useEffect(() => {
+-    localStorage.setItem("settings", JSON.stringify(settings));
++    localStorage.setItem("drawdb.settings", JSON.stringify(settings));
+   }, [settings]);
+ 
+   return (
+diff --git a/src/i18n/i18n.js b/src/i18n/i18n.js
+index e18e99e..ef8b629 100644
+--- a/src/i18n/i18n.js
++++ b/src/i18n/i18n.js
+@@ -113,6 +113,7 @@ i18n
+   .use(initReactI18next)
+   .init({
+     fallbackLng: "en",
++    detection: { lookupLocalStorage: "drawdb.language", caches: ["localStorage"] },
+     debug: false,
+     interpolation: {
+       escapeValue: false,
+diff --git a/src/main.jsx b/src/main.jsx
+index 1e8888d..afe5a89 100644
+--- a/src/main.jsx
++++ b/src/main.jsx
+@@ -1,7 +1,20 @@
+ import ReactDOM from "react-dom/client";
+ import { LocaleProvider } from "@douyinfe/semi-ui";
+-import { Analytics } from "@vercel/analytics/react";
+ import App from "./App.jsx";
++import { loader } from "@monaco-editor/react";
++import ExtensionsContext from "./context/ExtensionsContext.jsx";
++import "bootstrap-icons/font/bootstrap-icons.css";
++import "@fortawesome/fontawesome-free/css/all.min.css";
++
++import * as monaco from "monaco-editor";
++import EditorWorker from "monaco-editor/editor/editor.worker.js?worker";
++import JsonWorker from "monaco-editor/language/json/json.worker.js?worker";
++self.MonacoEnvironment = { getWorker: (_id, label) => label === "json" ? new JsonWorker() : new EditorWorker() };
++loader.config({ monaco });
++const localExtensions = {
++  "share-modal-content": <p>Online sharing is unavailable here. Export your diagram and share the file. / No hay enlaces compartidos acá. Exportá tu diagrama y compartí el archivo.</p>,
++  "header-actions-end": <span className="text-xs"><a href="https://utilibre.org/" rel="noreferrer">Utilibre</a> · <a href="https://tools.utilibre.org/utilibre-source/drawdb-utilibre.tar.gz" rel="noreferrer">Source / Código</a></span>,
++};
+ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
+ import "./index.css";
+ import "./i18n/i18n.js";
+@@ -9,7 +22,6 @@ import "./i18n/i18n.js";
+ const root = ReactDOM.createRoot(document.getElementById("root"));
+ root.render(
+   <LocaleProvider locale={en_US}>
+-    <App />
+-    <Analytics />
++    <ExtensionsContext.Provider value={localExtensions}><App /></ExtensionsContext.Provider>
+   </LocaleProvider>,
+ );
+diff --git a/src/pages/Templates.jsx b/src/pages/Templates.jsx
+index b542a8e..78f4b15 100644
+--- a/src/pages/Templates.jsx
++++ b/src/pages/Templates.jsx
+@@ -22,7 +22,7 @@ export default function Templates() {
+   };
+ 
+   const forkTemplate = (id) => {
+-    window.open("/editor/templates/" + id, "_blank");
++    window.open(import.meta.env.BASE_URL + "#/editor/templates/" + id, "_blank", "noopener,noreferrer");
+   };
+ 
+   useEffect(() => {
+diff --git a/src/utils/cache.js b/src/utils/cache.js
+index 0a97a15..92cea21 100644
+--- a/src/utils/cache.js
++++ b/src/utils/cache.js
+@@ -1,4 +1,4 @@
+-export const STORAGE_KEY = "versions_cache";
++export const STORAGE_KEY = "drawdb.versions_cache";
+ 
+ export function loadCache() {
+   try {
+diff --git a/src/utils/customTypes.js b/src/utils/customTypes.js
+index fa44374..b8503d3 100644
+--- a/src/utils/customTypes.js
++++ b/src/utils/customTypes.js
+@@ -3,7 +3,7 @@ import { DB } from "../data/constants";
+ import { customTypeEntrySchema } from "../data/schemas";
+ import { dbToTypes } from "../data/datatypes";
+ 
+-const STORAGE_KEY = "custom_types";
++const STORAGE_KEY = "drawdb.custom_types";
+ const validator = new Validator();
+ const validDatabases = new Set(Object.values(DB));
+ 
+diff --git a/vite.config.js b/vite.config.js
+index 5a33944..71f837a 100644
+--- a/vite.config.js
++++ b/vite.config.js
+@@ -1,7 +1,11 @@
+ import { defineConfig } from 'vite'
+ import react from '@vitejs/plugin-react'
++import { fileURLToPath } from 'node:url'
+ 
+ // https://vitejs.dev/config/
+ export default defineConfig({
++  base: "./",
++  // Monaco ships an inlined older DOMPurify; bundle the reviewed fixed module.
++  resolve: { alias: [{ find: /^\.\/dompurify\/dompurify\.js$/, replacement: fileURLToPath(new URL('./node_modules/dompurify/dist/purify.es.mjs', import.meta.url)) }] },
+   plugins: [react()],
+ })

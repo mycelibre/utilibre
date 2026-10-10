@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page, type Request } from '@playwright/test';
 import { catalog, localized } from '../../src/catalog/catalog';
 import { toolPath } from '../../src/routes';
 
@@ -31,6 +31,31 @@ function catalogRows(page: Page) {
 function languageNavigation(page: Page, name: 'Choose language' | 'Elegir idioma') {
   return page.getByRole('navigation', { name });
 }
+
+test('PDF relevance, direct tasks, disclosure and one-click local saving', async ({ page }) => {
+  await mockConfig(page, { ...baseConfig, publicPdfUrl: 'https://pdf.utility.test/', publicQrToolsUrl: 'https://qrtools.utility.test/', enabledServices: ['bentopdf', 'qr-offline'] });
+  for (const lang of ['es', 'en']) {
+    await page.goto(`/${lang}/?q=pdf&view=all`);
+    const first = catalogRows(page).first();
+    await expect(first).toHaveAttribute('data-catalog-id', 'bentopdf');
+    await expect(first.locator('.catalog-help')).not.toHaveAttribute('open');
+    const prefix = lang === 'es' ? '/es' : '';
+    for (const path of ['merge-pdf.html', 'compress-pdf.html', 'ocr-pdf.html']) await expect(first.locator(`a[href="https://pdf.utility.test${prefix}/${path}"]`)).toBeVisible();
+    await first.locator('.catalog-help summary').click();
+    await expect(first.locator('.catalog-guide-link')).toHaveAttribute('href', lang === 'es' ? '/es/guias/documentos-escaneados' : '/en/guides/scanned-documents');
+    const saves: string[] = [];
+    const listener = (request: Request) => saves.push(request.url());
+    page.on('request', listener);
+    await first.locator('.catalog-save').focus(); await page.keyboard.press('Enter');
+    await expect(first.locator('.catalog-save-status')).toBeVisible();
+    expect(new URL(page.url()).searchParams.get('q')).toBe('pdf');
+    expect(JSON.parse((await page.evaluate(() => localStorage.getItem('portal.toolkits.v1')))! ).collections[0].tools).toEqual(['bentopdf']);
+    expect(saves).toEqual([]); page.off('request', listener);
+    await first.locator('.catalog-save').click();
+    await expect(page.locator('[data-tool-id="bentopdf"]')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+  }
+});
 
 test('Spanish is complete, preserves tools when switched, and fits a mobile viewport', async ({ page }) => {
   await mockConfig(page, { ...baseConfig, publicRedditUrl: 'https://reddit.utility.test/', enabledServices: ['redlib'] });
@@ -82,6 +107,7 @@ test('public discovery separates existing-account access from anonymous tools', 
     await expect(link).toHaveAttribute('aria-label', /opens in a new tab/);
     if ((await link.getAttribute('href'))?.startsWith('https:')) await expect(link.locator('.catalog-ledger-external-cue')).toHaveText('↗');
   }
+  await page.locator('[data-catalog-id="searxng"] .catalog-help summary').click();
   await expect(page.locator('[data-catalog-id="searxng"]').getByRole('link', { name: 'Powered by: SearXNG' }))
     .toHaveAttribute('href', 'https://github.com/searxng/searxng');
 });
@@ -154,7 +180,7 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
       await row.locator('.catalog-help summary').click();
     }
     await page.evaluate(() => document.fonts.ready);
-    await expect(page.locator('[data-catalog-id="bentopdf"] .catalog-quick-link')).toHaveAttribute('href', `https://pdf.utility.test/${language === 'es' ? 'es/' : ''}ocr-pdf.html`);
+    await expect(page.locator('[data-catalog-id="bentopdf"] .catalog-quick-link[href$="ocr-pdf.html"]')).toHaveAttribute('href', `https://pdf.utility.test/${language === 'es' ? 'es/' : ''}ocr-pdf.html`);
     const first = await page.locator('.catalog-ledger-launch').first().boundingBox();
     expect(first).not.toBeNull();
     expect(first!.y + first!.height).toBeLessThan(page.viewportSize()!.height);
@@ -178,7 +204,7 @@ test('expanded toolbox is gated, bilingual, and launches within the first mobile
   await expect(page.locator('[data-catalog-id="yopass"]')).toHaveCount(0);
 });
 
-test('task selection preserves its category when searching without diacritics', async ({ page }) => {
+test('a new search clears previous category and access filters', async ({ page }) => {
   await mockConfig(page, featuredConfig);
   await page.goto('/es/');
   await expect(page.locator('.task-navigation a[aria-current="page"]')).toHaveCount(0);
@@ -190,13 +216,22 @@ test('task selection preserves its category when searching without diacritics', 
   await expect(currentTasks).toContainText('Búsqueda y lectura');
   await expect(page.locator('[data-catalog-id="freshrss"]')).toHaveCount(0);
 
-  await page.getByLabel('Buscar herramientas').fill('busqueda');
+  await page.getByRole('searchbox', { name: 'Buscar herramientas' }).fill('RSS');
   await page.getByRole('button', { name: 'Buscar', exact: true }).click();
-  expect(new URL(page.url()).searchParams.get('q')).toBe('busqueda');
-  expect(new URL(page.url()).searchParams.get('group')).toBe('reading');
-  await expect(page.locator('.task-navigation a[aria-current="page"]')).toHaveCount(1);
+  await expect(page).toHaveURL(/q=RSS&view=all#catalog$/);
+  expect(new URL(page.url()).searchParams.has('group')).toBe(false);
+  await expect(page.locator('.task-navigation a[aria-current="page"]')).toHaveCount(0);
   await expect(catalogRows(page)).toHaveCount(1);
-  await expect(page.locator('.catalog-ledger-row[data-catalog-id="searxng"]')).toContainText('Búsqueda web');
+  await expect(page.locator('[data-catalog-id="freshrss"]')).toBeVisible();
+
+  // Searching from an unrelated category must also find the same tool.
+  await page.getByRole('navigation', { name: 'Explorar por tarea' }).getByRole('link', { name: /Documentos y archivos/ }).click();
+  await expect(catalogRows(page)).toHaveCount(0);
+  await page.getByRole('searchbox', { name: 'Buscar herramientas' }).fill('busqueda');
+  await page.getByRole('searchbox', { name: 'Buscar herramientas' }).press('Enter');
+  await expect(page).toHaveURL(/q=busqueda&view=all#catalog$/);
+  await expect(catalogRows(page)).toHaveCount(1);
+  await expect(page.locator('.catalog-ledger-row[data-catalog-id="searxng"]')).toContainText('Buscar en la web');
 });
 
 test('language links preserve homepage query state', async ({ page }) => {
@@ -213,7 +248,7 @@ test('donation surfaces stay hidden without a configured support destination', a
   await mockConfig(page, { ...baseConfig, supportUrl: '' });
 
   await page.goto('/en/');
-  await expect(page.getByRole('link', { name: 'How support works' })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Ways to support Utilibre' })).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Support', exact: true })).toHaveCount(0);
   await expect(page.locator('.main-nav a[href="/en/support"], .footer-links a[href="/en/support"]')).toHaveCount(0);
   await expect(page.getByText('Donations help cover hosting and maintenance.')).toHaveCount(0);
@@ -241,7 +276,7 @@ test('configured support destination is explicit and opens separately', async ({
   await mockConfig(page, { ...baseConfig, supportUrl: 'https://support.utility.test/' });
 
   await page.goto('/en/');
-  await expect(page.getByRole('link', { name: 'How support works' })).toHaveAttribute('href', '/en/support');
+  await expect(page.getByRole('link', { name: 'Ways to support Utilibre' })).toHaveAttribute('href', '/en/support');
   await expect(page.locator('.donate-button[href="/en/support"]')).toHaveCount(1);
   await expect(page.locator('.footer-links a[href="/en/support"]')).toHaveCount(1);
 
@@ -390,10 +425,10 @@ test('configured Redlib appears across the portal and routes only to its fixed h
   await page.goto('/en/?view=all');
   const homeRow = page.locator('.catalog-ledger-row[data-catalog-id="redlib"]');
   await expect(homeRow).toContainText('SERVER');
-  await expect(homeRow.getByRole('link', { name: 'Read Reddit: Redlib for Reddit' })).toHaveAttribute('href', 'https://reddit.utility.test/redlib/');
+  await expect(homeRow.getByRole('link', { name: 'Read Reddit: Read Reddit · Redlib' })).toHaveAttribute('href', 'https://reddit.utility.test/redlib/');
 
   await page.goto('/en/status');
-  const statusItem = page.getByRole('heading', { name: 'Redlib for Reddit', exact: true }).locator('..');
+  const statusItem = page.getByRole('heading', { name: 'Read Reddit · Redlib', exact: true }).locator('..');
   await expect(statusItem).toContainText('Operational');
 
   await page.goto('/en/tools/open-privately');
@@ -409,10 +444,10 @@ test('configured Redlib appears across the portal and routes only to its fixed h
 
 test('only retained Utilibre services appear when stale service IDs are still configured', async ({ page }) => {
   const services = [
-    { key: 'publicSearchUrl', id: 'searxng', en: 'Web search', es: 'Búsqueda web', url: 'https://search.utility.test/' },
-    { key: 'publicRedditUrl', id: 'redlib', en: 'Redlib for Reddit', es: 'Redlib para Reddit', url: 'https://reddit.utility.test/' },
-    { key: 'publicRssUrl', id: 'freshrss', en: 'RSS reader', es: 'Lector RSS', url: 'https://rss.utility.test/' },
-    { key: 'publicPasteUrl', id: 'privatebin', en: 'Encrypted paste', es: 'Texto cifrado', url: 'https://paste.utility.test/' },
+    { key: 'publicSearchUrl', id: 'searxng', en: 'Search the web · SearXNG', es: 'Buscar en la web · SearXNG', url: 'https://search.utility.test/' },
+    { key: 'publicRedditUrl', id: 'redlib', en: 'Read Reddit · Redlib', es: 'Leer Reddit · Redlib', url: 'https://reddit.utility.test/' },
+    { key: 'publicRssUrl', id: 'freshrss', en: 'Read your feeds · FreshRSS', es: 'Leer tus fuentes RSS · FreshRSS', url: 'https://rss.utility.test/' },
+    { key: 'publicPasteUrl', id: 'privatebin', en: 'Share encrypted text · PrivateBin', es: 'Compartir texto cifrado · PrivateBin', url: 'https://paste.utility.test/' },
   ] as const;
   const serviceUrls = Object.fromEntries(services.map((service) => [service.key, service.url]));
   const removedIds = ['cobalt', 'ntfy', 'bentopdf', 'vert', 'omnitools', 'ittools', 'swagger-editor', 'healthchecks', 'pairdrop', 'rsshub', 'wakapi'];
@@ -446,8 +481,8 @@ test('only retained Utilibre services appear when stale service IDs are still co
   }
 
   await page.goto('/en/status');
-  await expect(page.getByRole('heading', { name: 'Web search', exact: true }).locator('..')).toContainText('Operational');
-  await expect(page.getByRole('heading', { name: 'RSS reader', exact: true }).locator('..')).toContainText('Operational');
+  await expect(page.getByRole('heading', { name: 'Search the web · SearXNG', exact: true }).locator('..')).toContainText('Operational');
+  await expect(page.getByRole('heading', { name: 'Read your feeds · FreshRSS', exact: true }).locator('..')).toContainText('Operational');
 });
 
 test('withdrawn Whisper disappears from bilingual discovery, software and status', async ({ page }) => {
@@ -478,9 +513,9 @@ test('software inventory credits only retained Utilibre services and their data 
     SearXNG: { facts: '2026.10.7-6671d89be · AGPL-3.0-or-later', source: 'https://github.com/searxng/searxng' },
     Redlib: { facts: 'a4d36e9 + local redirect hardening · AGPL-3.0-only', source: 'https://github.com/redlib-org/redlib/tree/a4d36e954cf1bd64f209cd8868c5a29edc81b374' },
     Anubis: { facts: '1.27.0 · MIT', source: 'https://github.com/TecharoHQ/anubis/tree/v1.27.0' },
-    FreshRSS: { facts: '1.29.1 · AGPL-3.0', source: 'https://github.com/FreshRSS/FreshRSS/tree/1.29.1' },
+    FreshRSS: { facts: '1.29.1 · AGPL-3.0-only', source: 'https://github.com/FreshRSS/FreshRSS/tree/1.29.1' },
     PrivateBin: { facts: '2.0.6 · Zlib', source: 'https://github.com/PrivateBin/PrivateBin/tree/2.0.6' },
-    RSSHub: { facts: '40aca954 · AGPL-3.0', source: 'https://github.com/DIYgod/RSSHub/tree/40aca9548e99eefd519ff7abbb937560fc037c95' },
+    RSSHub: { facts: '40aca954 · AGPL-3.0-only', source: 'https://github.com/DIYgod/RSSHub/tree/40aca9548e99eefd519ff7abbb937560fc037c95' },
     PostgreSQL: { facts: '17.11-alpine · PostgreSQL License', source: 'https://github.com/postgres/postgres' },
     Valkey: { facts: '9.1.1-alpine · BSD-3-Clause', source: 'https://github.com/valkey-io/valkey/tree/9.1.1' },
   } as const;
@@ -490,6 +525,7 @@ test('software inventory credits only retained Utilibre services and their data 
     for (const [project, expected] of Object.entries(deployedProjects)) {
       const item = page.getByRole('heading', { name: project, exact: true }).locator('..');
       await expect(item).toContainText(expected.facts);
+      if (project === 'FreshRSS' || project === 'RSSHub') await expect(item).not.toContainText(language === 'es' ? 'alcance de versiones sin confirmar' : 'version scope unconfirmed');
       const sourceLabel = language === 'es' ? `Código fuente del proyecto original: ${project}` : `Upstream source: ${project}`;
       const source = item.getByRole('link', { name: sourceLabel, exact: true });
       await expect(source).toHaveAttribute('href', expected.source);
@@ -519,9 +555,14 @@ test('status page does not invent degradation when observations are missing or m
   }));
 
   await page.goto('/en/status');
-  await expect(page.getByRole('heading', { name: 'Web search', exact: true }).locator('..')).toContainText('Not checked');
-  await expect(page.getByRole('heading', { name: 'Redlib for Reddit', exact: true }).locator('..')).toContainText('Not checked');
+  await expect(page.getByRole('heading', { name: 'Search the web · SearXNG', exact: true }).locator('..')).toContainText('Not checked');
+  await expect(page.getByRole('heading', { name: 'Read Reddit · Redlib', exact: true }).locator('..')).toContainText('Not checked');
   await expect(page.getByRole('status')).toHaveText('Last checked');
+  await expect(page.locator('.status-method')).not.toHaveAttribute('open');
+  await expect(page.locator('.page-header')).not.toContainText('TCP');
+  await page.getByText('What do these checks cover?', { exact: true }).click();
+  await expect(page.locator('.status-method')).toContainText('TCP-listener');
+  expect(await page.getByRole('status').evaluate(el => Boolean(el.compareDocumentPosition(document.querySelector('.status-list')!) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
 });
 
 test('software page links the published repository license and notices bilingually', async ({ page }) => {

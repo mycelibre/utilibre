@@ -1,0 +1,25 @@
+diff --git a/src/hooks.server.ts b/src/hooks.server.ts
+index 7b7a720..f0c7af6 100644
+--- a/src/hooks.server.ts
++++ b/src/hooks.server.ts
+@@ -67,7 +67,7 @@ export const handleError: HandleServerError = async ({ error: err, event, status
+         {
+             status,
+             method: event.request.method,
+-            uri: event.url.pathname + event.url.search + event.url.hash,
++            uri: event.url.pathname,
+             err
+         },
+         message
+diff --git a/src/lib/server/logger.ts b/src/lib/server/logger.ts
+index a6c137e..de2969d 100644
+--- a/src/lib/server/logger.ts
++++ b/src/lib/server/logger.ts
+@@ -13,6 +13,7 @@ const transport = dev
+ 
+ export const logger = pino({
+     level: env.LOG_LEVEL ?? "info",
++    redact: { paths: ["expectedNonce", "expectedState", "codeVerifier"], remove: true },
+     formatters: {
+         level(label) {
+             return { level: label.toUpperCase() };

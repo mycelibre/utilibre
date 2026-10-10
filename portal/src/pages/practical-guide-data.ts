@@ -1,6 +1,32 @@
+import { tripGuides } from './trip-guide.ts';
+import { donetickAdditionGuides } from './donetick-addition-guide.ts';
+import { beaverhabitsAdditionGuides } from './beaverhabits-addition-guide.ts';
+import { projectsGuides } from './projects-guide.ts';
+import { kokoroWebGuides } from './kokoro-web-guide.ts';
+import { familyChessGuides } from './family-chess-guide.ts';
+import { knitNewtonGuides } from './knit-newton-guides.ts';
+import { gravityGuides } from './gravity-guide.ts';
+import { autoredactGuides } from './autoredact-guide.ts';
+import { rustpadAdditionGuides } from './rustpad-addition-guide.ts';
+import { moocupGuides } from './moocup-guide.ts';
+import { standaloneGuides } from './standalone-guides.ts';
+import { newsletterGuides } from './newsletters-guide.ts';
+import { addyGuides } from './addy-guide.ts';
+import { unfurlGuides } from './unfurl-guide.ts';
+import { readerAdditionGuides } from './reader-addition-guide.ts';
+import { razziaGuides } from './razzia-guide.ts';
+import { chhotoGuides } from './chhoto-guide.ts';
+import { chitchatterGuides } from './chitchatter-guide.ts';
+import { linkCleanerGuides } from './link-cleaner-guide.ts';
+import { gathioGuides } from './gathio-guide.ts';
+import { calendarGuides } from './calendar-guide.ts';
 import type { Language } from '../i18n/index.ts';
 import { nextFeatureGuides } from './next-feature-guides.ts';
 import { servicePackGuides } from './service-pack-guides.ts';
+import { accountAdditionGuides } from './account-addition-guides.ts';
+import { householdAdditionGuides } from './household-addition-guides.ts';
+import { browserAdditionGuides } from './browser-addition-guides.ts';
+import { everydayGuides } from './everyday-guide-data.ts';
 
 export interface GuideCopy {
   title: string; intro: string; prerequisites: string;
@@ -18,6 +44,32 @@ export interface PracticalGuide {
 // Maintained instructions for deployed interfaces, not a separate service registry.
 // Access, privacy details and launch destinations come from the catalogue.
 export const practicalGuides: PracticalGuide[] = [
+  ...standaloneGuides,
+  ...moocupGuides,
+  ...rustpadAdditionGuides,
+  ...autoredactGuides,
+  ...gravityGuides,
+  ...knitNewtonGuides,
+  ...familyChessGuides,
+  ...projectsGuides,
+  ...tripGuides,
+  ...donetickAdditionGuides,
+  ...beaverhabitsAdditionGuides,
+  ...kokoroWebGuides,
+  ...newsletterGuides,
+  ...addyGuides,
+  ...browserAdditionGuides,
+  ...householdAdditionGuides,
+  ...accountAdditionGuides,
+  ...calendarGuides,
+  ...chitchatterGuides,
+  ...linkCleanerGuides,
+  ...gathioGuides,
+  ...razziaGuides,
+  ...chhotoGuides,
+  ...unfurlGuides,
+  ...readerAdditionGuides,
+  ...everydayGuides,
   ...nextFeatureGuides,
   ...servicePackGuides,
   {
@@ -80,7 +132,7 @@ export const practicalGuides: PracticalGuide[] = [
         ],
         success: 'You can copy a meaningful sentence, and the corrected text matches the original names, accents, dates and numbers. The saved PDF opens and its text can be searched. If sharing a one-time paste, let the intended recipient open it first: testing that link yourself consumes it.',
         troubleshooting: 'Rotate sideways pages before recognition. For unclear scans, obtain a clearer, evenly lit scan rather than enlarging blur. Try one page at a time if memory is limited. Check whether the language download finished. Handwriting and tables need extra review; OCR is not a guarantee of accuracy.',
-        privacy: 'The document is processed in the browser. Downloading OCR components can contact external asset providers; that is different from uploading the document. PrivateBin uploads browser-encrypted text to Utilibre. The complete sharing link carries the key; a password adds a separate requirement. A recipient can retain a copy even when a paste expires or is burned.',
+        privacy: 'The document is processed in the browser. This installation serves OCR components and language data from Utilibre. Cloudflare proxies those application downloads; the document stays in your browser. PrivateBin uploads browser-encrypted text to Utilibre. The complete sharing link carries the key; a password adds a separate requirement. A recipient can retain a copy even when a paste expires or is burned.',
         next: 'Use the file-transfer guide to send the checked PDF, or the PDF & OCR reference for merging pages.',
       },
       es: {
@@ -97,7 +149,7 @@ export const practicalGuides: PracticalGuide[] = [
         ],
         success: 'Podés copiar una frase útil y el texto corregido coincide con los nombres, tildes, fechas y números originales. El PDF guardado abre y permite buscar palabras. Si compartís un enlace de una sola lectura, dejá que lo abra primero el destinatario: probarlo vos lo consume.',
         troubleshooting: 'Girá las páginas de lado antes del OCR. Si están borrosas, buscá un escaneo más claro y bien iluminado: agrandar el desenfoque no recupera letras. Probá una página por vez si falta memoria y comprobá que termine la descarga del idioma. Revisá con más cuidado tablas y escritura a mano.',
-        privacy: 'El documento se procesa en el navegador. La descarga de componentes puede contactar proveedores externos; no es lo mismo que subirles el documento. PrivateBin sube texto cifrado en el navegador a Utilibre. El enlace completo contiene la clave; una contraseña agrega otro requisito. El destinatario puede conservar una copia aunque el texto venza o se elimine después de leerlo.',
+        privacy: 'El documento se procesa en el navegador. Esta instalación sirve los componentes y los datos de idioma del OCR desde Utilibre. Cloudflare intermedia esas descargas de la aplicación; el documento permanece en tu navegador. PrivateBin sube texto cifrado en el navegador a Utilibre. El enlace completo contiene la clave; una contraseña agrega otro requisito. El destinatario puede conservar una copia aunque el texto venza o se elimine después de leerlo.',
         next: 'Usá la guía de transferencia para enviar el PDF revisado, o la referencia de PDF y OCR para unir páginas.',
       },
     },
@@ -109,7 +161,7 @@ export const practicalGuides: PracticalGuide[] = [
     copy: {
       en: {
         title: 'Prepare an image for a website or application',
-        intro: 'Make an image smaller, inspect it and download a usable file. Use miniPaint for dimensions and OmniTools for compression. Process one image at a time, with a manual download/import between applications—not automatic batches or ZIP output.',
+        intro: "Make an image smaller, inspect it and download a usable file. Use miniPaint for dimensions and OmniTools for compression. Process one image at a time, with a manual download/import between applications. Automatic batches and ZIP output are not part of this workflow.",
         prerequisites: 'Read the destination’s actual rules first: dimensions, maximum file size and accepted formats. Our hypothetical practice requirement is 600 × 400 pixels and under 200 KB, not a passport or identity-photo standard. The sample is a generated illustration, not an application screenshot.',
         steps: [
           'Download the 1200 × 800 sample. In miniPaint choose File → Open → Open File and select it. Keep the original; work on a copy. A larger screen makes the editor easier to use.',
@@ -159,7 +211,7 @@ export const practicalGuides: PracticalGuide[] = [
           'Open the downloaded PNG in a separate viewer at full size. Check that neither fictional value remains legible and that the rest of the image is usable. Our output test checks opaque pixels and that the original EXIF Artist marker is absent; that is not a guarantee about every possible metadata format.',
           'Use Transfer the checked image to send only the reviewed PNG. Confirm the recipient and filename. If you need password-based file encryption for later delivery, hat.sh is optional: both people must be able to use its encryption/decryption flow, and the recipient needs the password through a separate channel.',
         ],
-        success: 'The reopened PNG is flat, the intended details are completely covered, and you selected that output—not the original—for transfer. Review the whole image once more before sharing.',
+        success: "The reopened PNG is flat, the intended details are completely covered, and you selected that output, not the original, for transfer. Review the whole image once more before sharing.",
         troubleshooting: 'If a detail shows through, return to the original and cover a larger area with fully opaque paint. A hidden name can still be inferred from other visible clues. Keep the original out of the sharing folder. A browser preview is not enough: inspect the downloaded file.',
         privacy: 'Image Scrubber processes the image on your device. The tested PNG export did not carry the sample’s EXIF metadata. Removing EXIF does not remove visible details, and a server delivering altered application code would remain a risk. PairDrop’s signaling and connection-discovery requests still reach servers; see its transfer guide for the deployed limits.',
         next: 'Follow the file-transfer guide with the sanitized image. Encryption is useful only when its recipient can decrypt it; it does not undo disclosure after opening.',

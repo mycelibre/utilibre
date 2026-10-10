@@ -1,0 +1,40 @@
+diff --git a/frontend/index.html b/frontend/index.html
+index 54c4de0..3174e02 100644
+--- a/frontend/index.html
++++ b/frontend/index.html
+@@ -70,7 +70,7 @@
+       rel="stylesheet"
+       type="text/css"
+       target="_blank"
+-      href="static/styles.css"
++      href="static/styles.css?v=utilibre-p3-layout2"
+     />
+   </head>
+ 
+diff --git a/frontend/static/styles.css b/frontend/static/styles.css
+index c2369b8..3907a26 100644
+--- a/frontend/static/styles.css
++++ b/frontend/static/styles.css
+@@ -505,3 +505,22 @@ summary,
+ 
+ /* Visitor counters are disabled in the backend. */
+ [name="hitsColumn"], #info-table tr:has(#info-hits) { display: none; }
++
++/* Keep the instance notes below the form, including at narrow widths. */
++.container {
++  max-width: 64rem;
++  margin: 2rem auto;
++  padding: 0 1rem;
++}
++div[name="links-div"] {
++  position: static;
++  max-width: 64rem;
++  margin: 2rem auto;
++  padding: 1rem 1rem 0;
++  border-top: 1px solid var(--border);
++  line-height: 1.5;
++}
++div[name="links-div"] p { margin: 0 0 0.75rem; }
++@media (max-width: 768px) {
++  .container { max-width: none; margin: 1rem auto; }
++}

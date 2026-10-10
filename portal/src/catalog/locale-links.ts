@@ -12,7 +12,9 @@ export function localizedSupportUrl(base: string, language: Language): string {
 /** Verified against deployed upstream versions, not guessed universal lang parameters. */
 export function localizedServiceUrl(id: string, base: string, language: Language, path?: string): string {
   const url = new URL(path ?? base, base);
-  if (id === 'jupyterlite') {
+  if (['one-file-core', 'tiddlywiki'].includes(id) && (!path || path === `/apps/${id}/`)) {
+    url.pathname = `/apps/${id}/${language === 'es' ? 'es/' : ''}`;
+  } else if (id === 'jupyterlite') {
     url.pathname = language === 'es' ? '/es/lab/index.html' : '/lab/index.html';
     url.search = new URLSearchParams({ path: language === 'es' ? 'Empeza-aqui.ipynb' : 'Start-here.ipynb' }).toString();
   } else if (id === 'priviblur' && !path) {

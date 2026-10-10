@@ -1,0 +1,10 @@
+[Unit]
+Description=Bounded network access for Utilibre Addy staging
+After=docker.service
+Requires=docker.service
+[Service]
+Type=oneshot
+ExecStart=/bin/sh /home/ubuntu/freetools/deployment/addy/firewall.sh
+RemainAfterExit=yes
+[Install]
+WantedBy=multi-user.target

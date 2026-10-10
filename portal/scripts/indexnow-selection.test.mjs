@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { PUBLIC_ORIGIN, isPublicSeoPath, parseSelection, validatePublicUrl, selectAuditedUrls, assertRemovedResponse } from './indexnow-selection.mjs';
+import { publicSeoPaths, PUBLIC_ORIGIN, isPublicSeoPath, parseSelection, validatePublicUrl, selectAuditedUrls, assertRemovedResponse } from './indexnow-selection.mjs';
 import { runIndexNow } from './submit-indexnow.mjs';
+import { practicalGuides, practicalGuidePath } from '../src/pages/practical-guide-data.ts';
 
 const home = `${PUBLIC_ORIGIN}/en/`;
 const pdf = `${PUBLIC_ORIGIN}/en/pdf-tools`;
@@ -22,6 +23,20 @@ test('only exact reviewed public document paths and the fixed origin are eligibl
     'https://utilibre.org/en/pdf-tools/', 'https://utilibre.org/es/pdf-tools',
     'https://utilibre.org/en/%70df-tools', 'https://utilibre.org/a/../en/',
   ]) assert.throws(() => validatePublicUrl(url), undefined, url);
+});
+
+test('the complete maintained guide registry and public policies are eligible without admitting application paths', () => {
+  assert.equal(new Set(publicSeoPaths).size, publicSeoPaths.length);
+  for (const guide of practicalGuides) for (const language of ['en', 'es']) {
+    const url = PUBLIC_ORIGIN + practicalGuidePath(guide.id, language);
+    assert.equal(validatePublicUrl(url), url, guide.id);
+  }
+  for (const language of ['en', 'es']) for (const page of ['security', 'your-data']) {
+    assert(isPublicSeoPath(`/${language}/${page}`));
+  }
+  for (const path of ['/en/guides/not-reviewed', '/es/guias/no-revisada', '/en/tools/open-privately', '/api/resumes', '/en/status']) {
+    assert(!isPublicSeoPath(path), path);
+  }
 });
 
 test('selection is explicit, bounded, deduplicated, and unambiguous', () => {

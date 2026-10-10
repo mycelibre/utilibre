@@ -2,6 +2,7 @@
 // Add only verified launches; the private candidate readers are not included.
 import { readFileSync, mkdirSync } from 'node:fs';
 import { execFileSync, spawnSync } from 'node:child_process';
+import { statusPageDescription } from './status-page-copy.mjs';
 const credentials = JSON.parse(readFileSync(new URL('../../secrets/uptime-kuma-admin.json', import.meta.url), 'utf8'));
 const backup = `/opt/utilibre/community-backups/kuma-before-monitor-update-${Date.now()}`;
 mkdirSync(backup, { mode: 0o700 });
@@ -81,7 +82,7 @@ socket.on('connect',async()=>{try{
   const voice=monitors.find(m=>m.type==='port'&&m.hostname==='10.10.1.43'&&Number(m.port)===64738);
   const voiceId=voice?.id??(await call('add',{name:'Mumble · private TCP listener',type:'port',hostname:'10.10.1.43',port:64738,interval:300,retryInterval:60,resendInterval:0,maxretries:2,timeout:20,active:true,upsideDown:false,accepted_statuscodes:[],notificationIDList:defaults,conditions:[]})).monitorID;
   if(!groups.some(g=>g.monitorList.some(m=>m.id===voiceId)))extra.monitorList.push({id:voiceId,sendUrl:false});
-  config.description='Checks every five minutes from the application VM. Web services use HTTPS; SearXNG uses /healthz through the private Caddy edge. Mumble checks only its private TCP listener, not public UDP audio. These are not full workflow tests or independent outage monitoring. / Comprobaciones cada cinco minutos desde la VM de aplicaciones. Las aplicaciones web usan HTTPS; SearXNG usa /healthz a través del Caddy privado. Mumble comprueba solo su puerto TCP privado, no el audio UDP público. No son pruebas de uso completas ni monitoreo independiente de caídas.';
+  config.description=${JSON.stringify(statusPageDescription)};
   }
   await call('saveStatusPage','utilibre',config,config.icon||'',groups);
   console.log('Status page updated: selected verified public services reconciled; existing history preserved.');

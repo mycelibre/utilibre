@@ -21,6 +21,10 @@ try{
  await q.locator('#unpresentbutton').waitFor();
  console.log('Invited guest connected.');
  await q.waitForFunction(()=>Object.values(serverConnection.down).some(s=>s.pc.iceConnectionState==='connected'),null,{timeout:20000});
+ await q.waitForFunction(()=>Object.values(serverConnection.up).some(s=>s.pc.remoteDescription?.sdp.includes(' typ srflx')),null,{timeout:15000});
+ const localPorts=await q.evaluate(()=>Object.values(serverConnection.up).flatMap(s=>(s.pc.remoteDescription?.sdp||'').split('\n').filter(line=>line.startsWith('a=candidate:')&&line.includes(' typ host')).map(line=>Number(line.split(' ')[5]))));
+ assert(localPorts.length>0&&localPorts.every(port=>port>=47800&&port<=48311));
+ console.log('Server address discovery passed; local ICE ports stay within the configured range.');
  const perms=await q.evaluate(()=>serverConnection.permissions);assert(!perms.includes('op'));assert(!perms.includes('token'));assert(!perms.includes('record'));
  await command(q,'Fictional meeting check');await p.getByText('Fictional meeting check',{exact:true}).waitFor();
  let media=[];

@@ -1,0 +1,59 @@
+name: utilibre-linkding
+x-bounded: &bounded
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  logging:
+    driver: json-file
+    options: {max-size: 5m, max-file: '2'}
+services:
+  linkding:
+    <<: *bounded
+    image: sissbruecker/linkding:1.47.0@sha256:e35cb50e0581178f245125ffaa909c565416c94c9f22ace305a7d234a4345522
+    user: '33:33'
+    cpus: 1.0
+    mem_limit: 512m
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    env_file: /opt/utilibre/community-private/linkding.env
+    environment:
+      PYTHONDONTWRITEBYTECODE: '1'
+      LD_SERVER_HOST: 0.0.0.0
+      LD_DISABLE_BACKGROUND_TASKS: 'True'
+      LD_ENABLE_SNAPSHOTS: 'False'
+      LD_DISABLE_ASSET_UPLOAD: 'True'
+      LD_ENABLE_REFRESH_FAVICONS: 'False'
+      LD_FAVICON_PROVIDER: ''
+      LD_DISABLE_REQUEST_LOGS: 'true'
+      LD_REQUEST_MAX_CONTENT_LENGTH: '10485760'
+      LD_REQUEST_TIMEOUT: '60'
+      LD_ENABLE_OIDC: 'True'
+      LD_DISABLE_LOGIN_FORM: 'True'
+      LD_ENABLE_AUTH_PROXY: 'False'
+      LD_SESSION_COOKIE_AGE: '86400'
+      LD_CSRF_TRUSTED_ORIGINS: https://bookmarks.utilibre.org
+      OIDC_OP_AUTHORIZATION_ENDPOINT: https://auth.utilibre.org/application/o/authorize/
+      OIDC_OP_TOKEN_ENDPOINT: https://auth.utilibre.org/application/o/token/
+      OIDC_OP_USER_ENDPOINT: https://auth.utilibre.org/application/o/userinfo/
+      OIDC_OP_JWKS_ENDPOINT: https://auth.utilibre.org/application/o/linkding/jwks/
+      OIDC_RP_CLIENT_ID: utilibre-linkding
+      OIDC_USERNAME_CLAIM: preferred_username
+      OIDC_RP_SCOPES: openid email profile
+      OIDC_VERIFY_SSL: 'True'
+      OIDC_USE_PKCE: 'True'
+    volumes:
+      - /opt/utilibre/community-data/linkding:/etc/linkding/data
+      - ./linkding/custom.py:/etc/linkding/bookmarks/settings/custom.py:ro
+  gateway:
+    <<: *bounded
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    cpus: 0.25
+    mem_limit: 64m
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    ports: ['10.10.1.43:3194:8080']
+    volumes: ['./linkding/nginx.conf:/etc/nginx/nginx.conf:ro']
+    depends_on:
+      linkding: {condition: service_healthy}

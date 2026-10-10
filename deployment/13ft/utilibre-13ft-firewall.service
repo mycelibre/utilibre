@@ -1,0 +1,11 @@
+[Unit]
+Description=Restrict 13ft to its private public-destination HTTP proxy
+After=docker.service
+Requires=docker.service
+Before=utilibre-source-audit.service
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/home/ubuntu/freetools/deployment/13ft/firewall.sh
+[Install]
+WantedBy=multi-user.target

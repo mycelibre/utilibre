@@ -12,7 +12,7 @@ try { await access(file); } catch { exists = false; }
 if (!exists) {
   // Native registration token: do not print, commit, or publish it.
   const token = randomBytes(32).toString('base64url');
-  await writeFile(file, `PortInsecure: "8080"\nPortSecure: ""\nMaxSavedLoc: 300\nMaxSavedPic: 5\nRegistrationToken: "${token}"\nRemoteIpHeader: "X-Real-IP"\nMetricsAddrPort: "127.0.0.1:9100"\n`, { mode: 0o600, flag: 'wx' });
+  await writeFile(file, `PortInsecure: "8080"\nPortSecure: ""\nMaxSavedLoc: 300\nMaxSavedPic: 5\nTileServerUrl: "https://tile.openstreetmap.org/{z}/{x}/{y}.png"\nRegistrationToken: "${token}"\nRemoteIpHeader: "X-Real-IP"\nMetricsAddrPort: "127.0.0.1:9100"\n`, { mode: 0o600, flag: 'wx' });
   await chown(file, 1000, 1000);
 }
 console.log('FMD private configuration ready; existing token preserved, registration invitation-only.');

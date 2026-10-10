@@ -1,0 +1,21 @@
+<?php
+require '/app/vendor/autoload.php';
+if (getenv('DATABASE_URL') !== 'sqlite:////app/data/db/wallabag.sqlite') throw new RuntimeException('Unexpected restored database');
+$fixture=json_decode(stream_get_contents(STDIN),true,8,JSON_THROW_ON_ERROR);
+if (!$fixture['syntheticOnly'] || !preg_match('/^qa-wallabag-[0-9]{10}-a$/D',$fixture['a'])) throw new RuntimeException('Not a synthetic account');
+$db=new PDO('sqlite:/app/data/db/wallabag.sqlite');
+if($db->query('PRAGMA integrity_check')->fetchColumn() !== 'ok')throw new RuntimeException('Restored database integrity failed');
+$kernel=new AppKernel('prod',false);
+$client=new Symfony\Component\HttpKernel\HttpKernelBrowser($kernel);
+$client->followRedirects();
+$page=$client->request('GET','http://localhost/login');
+$form=$page->filterXPath('//button[@name="send"]')->form();
+$page=$client->submit($form,['_username'=>$fixture['a'],'_password'=>$fixture['password']]);
+if($page->filterXPath('//*[@id="_auth_code"]')->count()!==1)throw new RuntimeException('Restored password/MFA flow failed');
+$form=$page->filterXPath('//button[@name="send"]')->form();
+$client->submit($form,['_auth_code'=>OTPHP\TOTP::create('JBSWY3DPEHPK3PXP')->now()]);
+$page=$client->request('GET','http://localhost/view/'.$fixture['entryId']);
+if($client->getResponse()->getStatusCode()!==200 || !str_contains($page->filterXPath('//*[@id="article"]')->text(),'Fictional local article'))throw new RuntimeException('Restored private article not readable');
+$client->request('GET','http://localhost/export/'.$fixture['entryId'].'.json');
+if($client->getResponse()->getStatusCode()!==200 || !str_contains($client->getResponse()->getContent(),'Fictional local article'))throw new RuntimeException('Restored JSON export failed');
+echo "Restored native password+MFA login, private article and JSON export passed in a networkless container.\n";

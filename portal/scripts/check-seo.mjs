@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
 import { parseHTML } from 'linkedom';
-import { isPublicSeoPath } from './indexnow-selection.mjs';
+import { isPublicSeoPath, publicSeoPaths } from './indexnow-selection.mjs';
 
 // Bounded read-only audit of the portal's public canonical pages. No analytics,
 // cookies, login, recursive crawler, third-party assets, or private tool content.
@@ -14,7 +14,7 @@ export async function auditSeo(origin = 'https://utilibre.org', { allowUnadverti
   assert(!/^Disallow:\s*\/\s*$/m.test(robots), 'Public portal blocks all crawlers');
   const sitemap = (await readPublic(`${origin}/sitemap.xml`)).text;
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  assert(urls.length > 0 && urls.length <= 96, 'Unexpected sitemap size; review before crawling/submitting');
+  assert(urls.length > 0 && urls.length <= publicSeoPaths.length, 'Unexpected sitemap size; review before crawling/submitting');
   assert.equal(new Set(urls).size, urls.length, 'Duplicate sitemap entries');
   const titles = new Set();
   const descriptions = new Set();
@@ -27,7 +27,10 @@ export async function auditSeo(origin = 'https://utilibre.org', { allowUnadverti
     const { document } = parseHTML(text);
     assert(!response.headers.get('x-robots-tag')?.includes('noindex'), `${url}: header prevents indexing`);
     assert.equal(document.querySelector('meta[name="robots"]')?.getAttribute('content'), 'index,follow', `${url}: robots metadata`);
+    assert.equal(document.querySelectorAll('link[rel="canonical"]').length, 1, `${url}: exactly one canonical`);
     assert.equal(document.querySelector('link[rel="canonical"]')?.getAttribute('href'), url, `${url}: canonical`);
+    const language = target.pathname.split('/')[1];
+    assert.equal(document.documentElement.lang, language, `${url}: document language`);
     assert.equal(document.querySelectorAll('h1').length, 1, `${url}: one initial-HTML H1`);
     assert(document.querySelector('#main-content')?.textContent.length > 100, `${url}: missing initial HTML content`);
     const description = document.querySelector('meta[name="description"]')?.getAttribute('content');
@@ -40,13 +43,31 @@ export async function auditSeo(origin = 'https://utilibre.org', { allowUnadverti
     assert(csp.includes("connect-src 'self'") && !/unsafe-inline|unsafe-eval/.test(csp), `${url}: weakened CSP`);
     const data = document.getElementById('public-structured-data');
     assert(data, `${url}: missing structured data`);
-    assert.equal(JSON.parse(data.textContent)['@context'], 'https://schema.org');
+    const schema = JSON.parse(data.textContent);
+    assert.equal(schema['@context'], 'https://schema.org');
+    const page = schema['@graph']?.find((entry) => entry['@type'] === 'WebPage');
+    assert(page, `${url}: missing WebPage`);
+    assert.equal(page.url, url, `${url}: structured page URL`);
+    assert.equal(page['@id'], url, `${url}: structured page identity`);
+    assert.equal(page.inLanguage, language, `${url}: structured language`);
+    assert.equal(page.name, document.title, `${url}: structured title`);
+    assert.equal(page.description, description, `${url}: structured description`);
+    assert.equal(document.querySelector('meta[property="og:url"]')?.getAttribute('content'), url, `${url}: social canonical`);
     for (const script of document.querySelectorAll('script[src]')) assert(new URL(script.getAttribute('src'), origin).origin === origin, `${url}: external script`);
     const alternates = {};
     for (const lang of ['en', 'es', 'x-default']) {
       const alternate = document.querySelector(`link[hreflang="${lang}"]`)?.getAttribute('href');
       assert(urls.includes(alternate), `${url}: invalid ${lang} alternate`);
       alternates[lang] = alternate;
+    }
+    assert.equal(alternates[language], url, `${url}: self language alternate`);
+    if (target.pathname === '/en/guides' || target.pathname === '/es/guias') {
+      const links = new Set([...document.querySelectorAll('#main-content a[href]')].map((link) => new URL(link.getAttribute('href'), url).href));
+      const guidePrefix = `/${language}/${language === 'es' ? 'guias' : 'guides'}/`;
+      for (const path of publicSeoPaths.filter((path) => path.startsWith(guidePrefix))) {
+        assert(urls.includes(origin + path), `${path}: guide absent from sitemap`);
+        assert(links.has(origin + path), `${path}: guide absent from initial index links`);
+      }
     }
     pages.set(url, alternates);
     await new Promise((resolve) => setTimeout(resolve, 150));

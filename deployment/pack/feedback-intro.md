@@ -1,6 +1,6 @@
 # Ayudanos a mejorar Utilibre / Help improve Utilibre
 
-Contanos qué intentabas hacer y dónde te trabaste. No pegues contraseñas, claves, enlaces privados ni documentos personales. El contacto es opcional; no necesitás cuenta para responder.
+Contanos qué intentabas hacer y dónde te trabaste. No pegués contraseñas, claves, enlaces privados ni documentos personales. El contacto es opcional; no necesitás cuenta para responder.
 
 Tell us what you were trying to do and where you got stuck. Do not paste passwords, keys, private sharing links or personal documents. Contact details are optional; responding does not require an account.
 

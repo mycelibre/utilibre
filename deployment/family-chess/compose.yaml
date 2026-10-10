@@ -1,0 +1,40 @@
+name: utilibre-family-chess
+x-limits: &limits
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 80
+  logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
+services:
+  app:
+    <<: *limits
+    image: utilibre-family-chess:f6e5093-p1
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    env_file: /opt/utilibre/family-chess/private/app.env
+    cpus: 1
+    mem_limit: 256m
+    tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=32m,mode=1777']
+    volumes: ['/opt/utilibre/family-chess/data:/data']
+    networks: {isolated: {ipv4_address: 172.29.142.10}}
+  gateway:
+    <<: *limits
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    cpus: 0.25
+    mem_limit: 64m
+    tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./proxy_params:/etc/nginx/proxy_params:ro
+      - /opt/utilibre/family-chess/static:/srv/static:ro
+    ports: ['127.0.0.1:3214:8080', '10.10.1.43:3214:8080']
+    networks: {isolated: {ipv4_address: 172.29.142.30}, ingress: {ipv4_address: 172.29.147.30}}
+networks:
+  ingress: {enable_ipv6: false, ipam: {config: [{subnet: 172.29.147.0/24}]}}
+  isolated: {internal: true, enable_ipv6: false, ipam: {config: [{subnet: 172.29.142.0/24}]}}

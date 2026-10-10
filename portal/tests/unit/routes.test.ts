@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { practicalGuides, practicalGuidePath } from '../../src/pages/practical-guide-data';
 import { availableRoute, parseRoute, toolPath, translatedPath } from '../../src/routes';
 
 describe('language-aware routes', () => {
@@ -12,6 +13,20 @@ describe('language-aware routes', () => {
     expect(route).not.toBeNull();
     expect(translatedPath(route!, 'es')).toBe('/es/herramientas/abrir-con-privacidad');
     expect(toolPath('private-router', 'en')).toBe('/en/tools/open-privately');
+  });
+
+  it('resolves every guide and keeps its identity across reciprocal language switches', () => {
+    const paths = new Set<string>();
+    for (const guide of practicalGuides) for (const language of ['en', 'es'] as const) {
+      const path = practicalGuidePath(guide.id, language);
+      expect(paths.has(path), path).toBe(false);
+      paths.add(path);
+      const route = parseRoute(path)!;
+      expect(route).toEqual({ language, page: 'guide', guideId: guide.id });
+      for (const alternate of ['en', 'es'] as const) {
+        expect(translatedPath(route, alternate)).toBe(practicalGuidePath(guide.id, alternate));
+      }
+    }
   });
 
   it('returns localized not-found routes for the removed Cobalt adapter', () => {

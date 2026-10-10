@@ -1,0 +1,78 @@
+diff --git a/source/application.mts b/source/application.mts
+index 5c03dc7..a9c9562 100644
+--- a/source/application.mts
++++ b/source/application.mts
+@@ -473,6 +473,17 @@ application.webServer?.push({
+         response,
+         head: html`<title>Kill the Newsletter!</title>`,
+         body: html`
++          <p lang="en">
++            Turn newsletter emails into a feed you can read in your RSS reader.
++            Messages are stored on this server. Keep the feed address private:
++            anyone with it can read messages and access the feed settings.
++          </p>
++          <p lang="es">
++            Recibí boletines por correo en tu lector RSS. Los mensajes se guardan
++            en este servidor. Conservá la dirección del canal en privado: quien
++            la tenga puede leer los mensajes y acceder a sus ajustes.
++            La interfaz de la aplicación está en inglés.
++          </p>
+           <div
+             key="feeds/post"
+             type="form"
+@@ -501,11 +512,15 @@ application.webServer?.push({
+           </div>
+           <p>
+             <small>
++              <a lang="en" href="https://utilibre.org/en/">More tools from Utilibre</a> |
++              <a lang="es" href="https://utilibre.org/es/">Más herramientas de Utilibre</a> |
++              <a lang="en" href="https://utilibre.org/en/privacy">Privacy notes</a> |
++              <a lang="es" href="https://utilibre.org/es/privacy">Notas de privacidad</a> |
+               <a href="https://leafac.com">By Leandro Facchinetti</a> |
+               <a href="https://github.com/leafac/kill-the-newsletter">Source</a
+               > |
+               <a
+-                href="mailto:kill-the-newsletter@leafac.com?${new URLSearchParams(
++                href="mailto:${application.userConfiguration.systemAdministratorEmail ?? "kill-the-newsletter@leafac.com"}?${new URLSearchParams(
+                   {
+                     subject: "Report issue",
+                     body: "Please describe the circumstances under which you reached the issue, including any information that may be relevant, for example, browser version, operating system version, and so forth:",
+@@ -573,8 +588,18 @@ application.webServer?.push({
+               create their own Kill the Newsletter! feeds. Kill the Newsletter!
+               has been designed this way because it plays better with newsletter
+               publishers, who may, for example, get statistics on the number of
+-              subscribers who use Kill the Newsletter!. Note that Kill the
+-              Newsletter! itself doesn’t track users in any way.
++              subscribers who use Kill the Newsletter!.
++            </p>
++            <p lang="en">
++              Utilibre does not add visitor analytics. Operational receipt logs
++              can include sender and feed identifiers. Feed readers may load
++              remote images or tracking links retained in messages.
++            </p>
++            <p lang="es">
++              Utilibre no añade analíticas de visitantes. Los registros
++              operativos de recepción pueden incluir el remitente y los
++              identificadores de los canales. Los lectores pueden cargar imágenes
++              externas o enlaces de rastreo conservados en los mensajes.
+             </p>
+           </div>
+           <div>
+@@ -594,7 +619,7 @@ application.webServer?.push({
+               your feed reader, then the issue must be with the newsletter
+               publisher and you should contact them. Otherwise, please
+               <a
+-                href="mailto:kill-the-newsletter@leafac.com?${new URLSearchParams(
++                href="mailto:${application.userConfiguration.systemAdministratorEmail ?? "kill-the-newsletter@leafac.com"}?${new URLSearchParams(
+                   {
+                     subject: "Feed isn’t updating",
+                     body: "Have you tried sending an email to the address that corresponds to your Kill the Newsletter! feed and waited a few minutes then checked your feed reader? If the email showed up, then the issue is somewhere else (for example, email forwarding filters) and you don’t need to report this issue to Kill the Newsletter! If the email didn’t show up, then please report the issue, preferably including the address to the inbox in question:",
+@@ -1340,7 +1365,7 @@ application.webServer?.push({
+             <p>
+               Please report this issue to
+               <a
+-                href="mailto:kill-the-newsletter@leafac.com?${new URLSearchParams(
++                href="mailto:${application.userConfiguration.systemAdministratorEmail ?? "kill-the-newsletter@leafac.com"}?${new URLSearchParams(
+                   {
+                     subject: "Report issue",
+                     body: "Please describe the circumstances under which you reached the issue, including any information that may be relevant, for example, browser version, operating system version, and so forth:",

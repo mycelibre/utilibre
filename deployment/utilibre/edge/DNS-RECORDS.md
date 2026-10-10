@@ -1,17 +1,26 @@
-# DNS records retained after the service prune
+# Public DNS and routing — 8 October 2026
 
-Public DNS is owned outside this repository and must point to the separate
-Caddy edge VM, never directly to the application VM.
+DNS is administered separately. Application VM addresses must not replace the
+public edge destination. This file supersedes the September service-prune list;
+its old removal instructions no longer describe the active deployment.
 
-| Type | Name | Value | Service |
-|---|---|---|---|
-| A | `search.utilibre.org` | `<CADDY_EDGE_IPV4>` | SearXNG |
-| A | `redlib.utilibre.org` | `<CADDY_EDGE_IPV4>` | Redlib |
-| A | `rss.utilibre.org` | `<CADDY_EDGE_IPV4>` | FreshRSS |
-| A | `paste.utilibre.org` | `<CADDY_EDGE_IPV4>` | PrivateBin |
+| Route | Observed role | Limits of verification |
+| --- | --- | --- |
+| Portal and most active HTTPS tools | Cloudflare HTTP proxy, then separate Caddy edge, then application VM | Public DNS and response headers checked; Cloudflare may terminate ordinary HTTPS content. This is not DNS-only use. |
+| search.utilibre.org, binternet.utilibre.org | DNS-only public address, HTTPS at the Caddy edge | Public IPv4 resolves to the edge. Hairpin access from this VM is not an external availability test. |
+| turn.utilibre.org | DNS-only; native authenticated TURN transport | ACME HTTP verification is routed separately through the edge. Do not HTTP-proxy TURN traffic. |
+| Mumble | Native voice transport | See service-pack/capacity notes for TCP and UDP verification scope. |
 
-Remove retired application records for `media`, `notify`, `pdf`, `convert`,
-`tools`, `dev`, `openapi`, `monitor`, `send`, `feeds`, `wakapi`, `youtube`,
-`imgur`, and `when`. Preserve the portal and unrelated records. After changing
-DNS and the real Caddyfile, verify each retained hostname's certificate,
-redirect, content, and health.
+Cloudflare DNS service and Cloudflare HTTP proxying are different provider
+roles. DNS-only records do not by themselves send application HTTP content
+through Cloudflare. Unknown edge/provider log retention must remain explicit.
+The owner confirms that both VMs share the same physical Hetzner server in
+Germany. Do not infer operator establishment or separate physical redundancy.
+
+Do not remove active tool records on the basis of an old prune checklist. Review
+public config and the current service manifests first. Certificate, response,
+source-offer and native-function checks are required after a route change.
+
+For security.txt discovery, import the reviewed Caddyfile.security-contact
+snippet on each intended non-root HTTPS host after the root target is deployed.
+The root file alone does not automatically cover subdomain discovery.

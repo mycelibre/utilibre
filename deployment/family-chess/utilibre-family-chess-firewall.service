@@ -1,0 +1,11 @@
+[Unit]
+Description=Restrict Utilibre Family Chess ingress and egress
+After=docker.service
+Requires=docker.service
+PartOf=docker.service
+[Service]
+Type=oneshot
+ExecStart=/home/ubuntu/freetools/deployment/family-chess/firewall.sh
+RemainAfterExit=yes
+[Install]
+WantedBy=multi-user.target

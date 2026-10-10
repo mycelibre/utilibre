@@ -1,0 +1,165 @@
+diff --git a/apps/web/src/features/resume/export/use-resume-export.ts b/apps/web/src/features/resume/export/use-resume-export.ts
+index 5212e4d..40f8a6d 100644
+--- a/apps/web/src/features/resume/export/use-resume-export.ts
++++ b/apps/web/src/features/resume/export/use-resume-export.ts
+@@ -12,7 +12,6 @@ import { downloadWithAnchor } from "@reactive-resume/utils/file";
+ import { createResumePdfBlob } from "./pdf-document";
+ import { resolvePublicResumePdfBlob } from "@/features/resume/public/public-pdf";
+ import { getReadableErrorMessage } from "@/libs/error-message";
+-import { client } from "@/libs/orpc/client";
+ import { createSectionTitleResolverForLocale } from "@/libs/resume/section-title-locale";
+ 
+ /**
+@@ -153,10 +152,7 @@ export function useResumeExport(resume: ExportableResume | undefined, exportOpti
+ 		try {
+ 			const blob = await makeBlob();
+ 			downloadWithAnchor(blob, `${getDefaultFileName(resume)}.pdf`);
+-			if (exportOptions.publicResumePdf) {
+-				// Statistics are best effort and must not delay or fail a completed browser download.
+-				void client.resume.statistics.recordDownload(exportOptions.publicResumePdf.publicResume).catch(() => undefined);
+-			}
++			// Utilibre: downloading a document must not send a visitor-statistics event.
+ 		} catch (error) {
+ 			toast.add({
+ 				type: "error",
+diff --git a/apps/web/src/features/resume/share/link-tab.tsx b/apps/web/src/features/resume/share/link-tab.tsx
+index 1a59e14..01497e7 100644
+--- a/apps/web/src/features/resume/share/link-tab.tsx
++++ b/apps/web/src/features/resume/share/link-tab.tsx
+@@ -1,5 +1,4 @@
+ import { t } from "@lingui/core/macro";
+-import { useLingui } from "@lingui/react";
+ import { Trans } from "@lingui/react/macro";
+ import { ORPCError } from "@orpc/client";
+ import { useMutation, useQuery } from "@tanstack/react-query";
+@@ -9,12 +8,10 @@ import { useDebounceValue } from "usehooks-ts";
+ import { Button, buttonVariants } from "@reactive-resume/ui/components/button";
+ import { Icon } from "@reactive-resume/ui/components/icon";
+ import { Popover, PopoverContent, PopoverTrigger } from "@reactive-resume/ui/components/popover";
+-import { Separator } from "@reactive-resume/ui/components/separator";
+ import { SwitchRow } from "@reactive-resume/ui/components/switch";
+ import { toast } from "@reactive-resume/ui/components/toast";
+ import { cn } from "@reactive-resume/utils/style";
+ import { CopyLinkButton } from "./copy-link-button";
+-import { formatTimeSince, summarizeViews } from "./format";
+ import { useCurrentResume, usePatchResume } from "@/features/resume/builder/draft";
+ import { ResumePasswordDialog } from "@/features/resume/builder/password-dialog";
+ import { useConfirm } from "@/hooks/use-confirm";
+@@ -29,7 +26,7 @@ const errorMessage = (error: unknown) =>
+ 
+ /**
+  * Link: the public switch, the address with its live check, copy, downloads for visitors, open, QR code and
+- * the password, then views and downloads. Private is the default; turning the link off keeps the address.
++ * the password. Utilibre disables visitor statistics. Private is the default; turning the link off keeps the address.
+  */
+ export function LinkTab() {
+ 	const resume = useCurrentResume();
+@@ -105,8 +102,6 @@ export function LinkTab() {
+ 				</div>
+ 			)}
+ 
+-			<Separator />
+-			<ViewsAndDownloads isPublic={isPublic} />
+ 		</div>
+ 	);
+ }
+@@ -347,79 +342,3 @@ function QrCodeButton({ url }: { url: string }) {
+ 		</Popover>
+ 	);
+ }
+-
+-/** Only the owner sees these; downloads count successful clicks, including repeats. */
+-function ViewsAndDownloads({ isPublic }: { isPublic: boolean }) {
+-	const resume = useCurrentResume();
+-	const { i18n } = useLingui();
+-	const { data: statistics } = useQuery(orpc.resume.statistics.getById.queryOptions({ input: { id: resume.id } }));
+-	const { data: daily } = useQuery({
+-		...orpc.resume.statistics.getDailyById.queryOptions({ input: { id: resume.id, days: 30 } }),
+-		enabled: isPublic,
+-	});
+-	const summary = summarizeViews(daily ?? []);
+-	const lastView = statistics?.lastViewedAt ? formatTimeSince(statistics.lastViewedAt, i18n.locale) : "—";
+-	const firstDay = daily?.[0]?.date;
+-
+-	return (
+-		<section aria-labelledby="share-stats-title" className="grid gap-3">
+-			<div className="flex items-baseline justify-between">
+-				<h3 id="share-stats-title" className="text-sm font-semibold">
+-					<Trans>Views and downloads</Trans>
+-				</h3>
+-				<span className="text-xs text-ink-3">
+-					<Trans>Only you see these</Trans>
+-				</span>
+-			</div>
+-
+-			{isPublic ? (
+-				<>
+-					<dl className="grid grid-cols-3 gap-2.5">
+-						<Stat value={summary.views} label={t`views · 30 days`} />
+-						<Stat value={summary.downloads} label={t`downloads`} />
+-						<Stat value={lastView} label={t`since last view`} />
+-					</dl>
+-					<div
+-						role="img"
+-						aria-label={t`Daily views over 30 days, peak ${summary.peak}`}
+-						className="flex h-14 items-end gap-[3px] pt-1"
+-					>
+-						{summary.bars.map((bar) => (
+-							<span
+-								key={bar.date}
+-								className="flex-1 rounded-t-[2px] bg-line-2"
+-								style={{ height: `${Math.max(6, Math.round(bar.height * 100))}%` }}
+-							/>
+-						))}
+-					</div>
+-					<div className="flex justify-between font-mono text-[11px] font-medium text-ink-3">
+-						<span>
+-							{firstDay
+-								? new Date(`${firstDay}T00:00:00`).toLocaleDateString(i18n.locale, { month: "short", day: "numeric" })
+-								: ""}
+-						</span>
+-						<span>
+-							<Trans>Today</Trans>
+-						</span>
+-					</div>
+-				</>
+-			) : (
+-				<p className="text-[13px] leading-[19px] text-ink-2">
+-					<Trans>Turn on the public link to count views and downloads. Counts are anonymous.</Trans>
+-				</p>
+-			)}
+-			<p className="text-xs text-ink-3">
+-				<Trans>Download totals can include repeat clicks.</Trans>
+-			</p>
+-		</section>
+-	);
+-}
+-
+-function Stat({ value, label }: { value: number | string; label: string }) {
+-	return (
+-		<div className="flex flex-col-reverse gap-0.5">
+-			<dt className="text-xs text-ink-3">{label}</dt>
+-			<dd className="font-display text-[26px] leading-[30px] font-medium">{value}</dd>
+-		</div>
+-	);
+-}
+diff --git a/packages/api/src/features/resume/access-policy.ts b/packages/api/src/features/resume/access-policy.ts
+index 9a6eb99..d3a91d6 100644
+--- a/packages/api/src/features/resume/access-policy.ts
++++ b/packages/api/src/features/resume/access-policy.ts
+@@ -74,12 +74,7 @@ export function redactResumeForViewer<T extends { name: string; data: ResumeData
+ 	return { ...resume, name: "Resume", data };
+ }
+ 
+-/**
+- * Owner self-views/downloads do not count toward the public statistics —
+- * the dashboard would otherwise inflate metrics every time the author
+- * previewed their own resume. Call sites that increment `views` /
+- * `downloads` should gate on this helper.
+- */
+-export function shouldCountForStatistics(resume: Resume, viewer: Viewer): boolean {
+-	return !isOwner(resume, viewer);
++/** Utilibre does not collect visitor analytics. Gate before deduplication and counter writes. */
++export function shouldCountForStatistics(_resume: Resume, _viewer: Viewer): boolean {
++	return false;
+ }

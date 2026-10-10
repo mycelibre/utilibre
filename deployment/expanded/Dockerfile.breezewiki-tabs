@@ -1,0 +1,5 @@
+# Small static-module update over the retained reviewed p2 image.
+# build-breezewiki-tabs.sh verifies the exact local parent image ID first.
+FROM utilibre-breezewiki:6d09507-p2
+COPY --chown=1000:1000 static/tabs.js /app/static/tabs.js
+COPY --chown=1000:1000 UTILIBRE-SOURCE.txt /app/UTILIBRE-SOURCE.txt

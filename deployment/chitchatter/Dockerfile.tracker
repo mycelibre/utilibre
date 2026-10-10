@@ -1,0 +1,9 @@
+FROM node@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1
+ENV NODE_ENV=production NODE_OPTIONS=--max-old-space-size=112
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev --ignore-scripts --no-fund && npm cache clean --force
+COPY tracker.mjs ./
+USER node
+EXPOSE 8000
+CMD ["node", "tracker.mjs"]

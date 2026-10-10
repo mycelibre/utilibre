@@ -1,0 +1,19 @@
+diff --git a/web/src/components/modals/SettingsModal.tsx b/web/src/components/modals/SettingsModal.tsx
+index 0b00c34..d448233 100644
+--- a/web/src/components/modals/SettingsModal.tsx
++++ b/web/src/components/modals/SettingsModal.tsx
+@@ -50,10 +50,10 @@ export const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
+       for (const locItem of locations) {
+         const loc = locItem.item;
+         const date = new Date(loc.time).toISOString();
+-        const accuracy = loc.accuracy || '';
+-        const altitude = loc.altitude || '';
+-        const speed = loc.speed || '';
+-        const bearing = loc.bearing || '';
++        const accuracy = loc.accuracy ?? '';
++        const altitude = loc.altitude ?? '';
++        const speed = loc.speed ?? '';
++        const bearing = loc.bearing ?? '';
+         locationsCSV += `${date},${loc.provider},${loc.bat},${loc.lat},${loc.lon},${accuracy},${altitude},${speed},${bearing}\n`;
+       }
+ 

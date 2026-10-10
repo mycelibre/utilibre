@@ -1,7 +1,6 @@
 // Adapter to QR Tools' existing PWA methods; no new service worker.
 document.addEventListener('DOMContentLoaded', () => {
-  const es = document.documentElement.lang === 'es';
-  const text = (en, spanish) => es ? spanish : en;
+  const text = (en, spanish) => document.documentElement.lang === 'es' ? spanish : en;
   const section = document.createElement('section'); section.className = 'container'; section.id = 'offline-controls';
   const heading = document.createElement('h2'); heading.textContent = text('Offline assets', 'Archivos para uso sin conexión');
   const explanation = document.createElement('p'); explanation.textContent = text('Test by disconnecting and reopening this app. Cached bytes or an installed icon do not prove offline readiness. Download QR results before removing assets.', 'Probá desconectando y reabriendo la aplicación. El tamaño guardado o un ícono instalado no prueban que esté lista. Descargá tus QR antes de quitar archivos.');
@@ -13,6 +12,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!confirm(text('Remove cached application files? History and preferences remain. A connection is needed to prepare again.', '¿Quitar archivos de la aplicación? El historial y las preferencias quedan. Necesitás conexión para prepararla otra vez.'))) return;
     const ok = await window.pwa.clearCache(); status.textContent = ok ? text('Cached assets removed. History and preferences were not cleared. Revisiting online can cache assets again.', 'Caché eliminada. No se borraron historial ni preferencias. Una visita con conexión puede guardar archivos otra vez.') : text('Removal failed. No deletion is confirmed.', 'Falló el borrado. No se confirmó la eliminación.');
   });
-  const back = document.createElement('a'); back.href = `https://utilibre.org/${es ? 'es/herramientas-sin-conexion' : 'en/offline-tools'}`; back.textContent = text('Offline guide · Utilibre', 'Guía sin conexión · Utilibre');
+  const back = document.createElement('a');
+  // Upstream loads its translation module asynchronously and updates html[lang].
+  // Observe only that supported language state, not the application's content.
+  const translate = () => {
+    heading.textContent = text('Offline assets', 'Archivos para uso sin conexión');
+    explanation.textContent = text('Test by disconnecting and reopening this app. Cached bytes or an installed icon do not prove offline readiness. Download QR results before removing assets.', 'Probá desconectando y reabriendo la aplicación. El tamaño guardado o un ícono instalado no prueban que esté lista. Descargá tus QR antes de quitar archivos.');
+    size.textContent = text('Show cached asset size', 'Ver tamaño de archivos guardados');
+    update.textContent = text('Check for an update', 'Buscar una actualización');
+    remove.textContent = text('Remove offline assets only', 'Quitar solo archivos sin conexión');
+    back.href = `https://utilibre.org/${text('en/offline-tools', 'es/herramientas-sin-conexion')}`;
+    back.textContent = text('Offline guide · Utilibre', 'Guía sin conexión · Utilibre');
+    status.textContent = '';
+  };
+  translate();
+  new MutationObserver(translate).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
   section.append(heading, explanation, size, update, remove, status, back); document.querySelector('footer')?.before(section);
 });

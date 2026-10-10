@@ -1,0 +1,10 @@
+[Unit]
+Description=Utilibre Donetick scoped network boundaries
+After=docker.service network-online.target
+Requires=docker.service
+[Service]
+Type=oneshot
+ExecStart=/home/ubuntu/freetools/deployment/donetick/firewall.sh
+RemainAfterExit=yes
+[Install]
+WantedBy=multi-user.target

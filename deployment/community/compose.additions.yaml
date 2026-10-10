@@ -16,7 +16,7 @@ services:
     # Compatibility service key; LRCLIB replaces the stateless Dumb image here.
     # This preserves the protected network address and existing Caddy target.
     <<: *runtime
-    image: utilibre-lrclib:f37c070-p2
+    image: utilibre-lrclib:f37c070-p3
     user: "65532:65532"
     environment: {PORT: "5555"}
     networks:
@@ -65,10 +65,11 @@ services:
     <<: *runtime
     image: registry.gitlab.com/fmd-foss/fmd-server:0.17.0-alpine@sha256:e4a7f5538aa3febe938159ee2db337ccdb50d340d7009784c5a851f152df48e0
     user: "1000:1000"
-    command: [--config, /etc/fmd-server/config.yml]
+    command: [--config, /etc/fmd-server/config.yml, --web-dir, /opt/utilibre-web]
     volumes:
       - /opt/utilibre/community-data/fmd-db:/var/lib/fmd-server/db
       - /opt/utilibre/community-data/fmd-private/config.yml:/etc/fmd-server/config.yml:ro
+      - /opt/utilibre/community-data/fmd-web-v0.17.0-p3:/opt/utilibre-web:ro
     networks:
       devices: {ipv4_address: 172.29.75.10}
     healthcheck:

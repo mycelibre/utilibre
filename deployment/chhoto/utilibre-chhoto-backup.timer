@@ -1,0 +1,8 @@
+[Unit]
+Description=Daily Utilibre Chhoto URL snapshot
+[Timer]
+OnCalendar=*-*-* 04:50:00 UTC
+RandomizedDelaySec=5m
+Persistent=true
+[Install]
+WantedBy=timers.target

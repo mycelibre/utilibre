@@ -1,0 +1,31 @@
+# Optional standalone static host and loopback verification endpoint.
+# Public /apps/drawdb/ reuses the established toolbox static gateway.
+name: utilibre-drawdb
+services:
+  drawdb:
+    image: utilibre-drawdb:1.8.2-p1
+    build:
+      context: /opt/utilibre/src/drawdb/dist
+      dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.drawdb
+      additional_contexts: {integration: /home/ubuntu/freetools/deployment/toolbox}
+    restart: unless-stopped
+    read_only: true
+    user: "101:101"
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=16m,mode=1777"]
+    ports: ["127.0.0.1:3192:8080"]
+    mem_limit: 64m
+    cpus: 0.25
+    pids_limit: 32
+    logging: {driver: local, options: {max-size: 1m, max-file: "2"}}
+    networks: [static]
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+networks:
+  static:
+    external: true
+    name: utilibre-toolbox_tools

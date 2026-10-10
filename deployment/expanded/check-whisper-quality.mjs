@@ -33,7 +33,7 @@ try{
  async function upload(bytes,name){const ready=page.waitForEvent('filechooser');await page.getByRole('button',{name:'From file',exact:true}).click();await(await ready).setFiles({name,mimeType:'audio/wav',buffer:bytes});await page.getByRole('button',{name:'Transcribe Audio',exact:true}).waitFor();}
  await upload(silence,'six-seconds-silence.wav');
  await page.getByRole('button',{name:'Transcribe Audio',exact:true}).click();
- await page.getByRole('alert').filter({hasText:'No usable audio signal'}).waitFor();
+ await page.getByRole('alert').filter({hasText:'silent or almost silent'}).waitFor();
  assert.equal(modelRequests,0,'Silence must not trigger model downloads');
  assert.equal(await page.getByRole('button',{name:'Export TXT',exact:true}).count(),0);
  console.log('Digital silence rejected without a model download.');

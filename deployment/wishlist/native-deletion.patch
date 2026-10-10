@@ -1,0 +1,61 @@
+diff --git a/src/lib/server/list.ts b/src/lib/server/list.ts
+index 9be8e7a..3abc4ce 100644
+--- a/src/lib/server/list.ts
++++ b/src/lib/server/list.ts
+@@ -50,7 +50,7 @@ export const deleteList = async (id: string) => {
+                                 userId: true,
+                                 lists: {
+                                     select: {
+-                                        id: true
++                                        listId: true
+                                     }
+                                 }
+                             }
+@@ -64,7 +64,7 @@ export const deleteList = async (id: string) => {
+         });
+         const orphanedItems = list.items
+             .map((li) => li.item)
+-            .filter((i) => i.lists.filter((l) => l.id !== list.id).length === 0)
++            .filter((i) => i.lists.filter((l) => l.listId !== list.id).length === 0)
+             .map((i) => i.id);
+         await tx.item.deleteMany({
+             where: {
+@@ -89,7 +89,7 @@ export const deleteLists = async (ownerId: string | undefined, groupId: string)
+                                 userId: true,
+                                 lists: {
+                                     select: {
+-                                        id: true
++                                        listId: true
+                                     }
+                                 }
+                             }
+@@ -113,7 +113,7 @@ export const deleteLists = async (ownerId: string | undefined, groupId: string)
+         const orphanedItems = lists
+             .flatMap((list) => list.items)
+             .map((li) => li.item)
+-            .filter((i) => i.lists.filter((l) => !listIds.has(l.id)).length === 0)
++            .filter((i) => i.lists.filter((l) => !listIds.has(l.listId)).length === 0)
+             .map((i) => i.id);
+         await tx.item.deleteMany({
+             where: {
+diff --git a/src/routes/api/groups/[groupId]/+server.ts b/src/routes/api/groups/[groupId]/+server.ts
+index 64c2be2..9b31344 100644
+--- a/src/routes/api/groups/[groupId]/+server.ts
++++ b/src/routes/api/groups/[groupId]/+server.ts
+@@ -27,14 +27,14 @@ export const DELETE: RequestHandler = async ({ params }) => {
+         }
+     });
+ 
++    await deleteLists(undefined, group.id);
++
+     const deletedGroup = await client.group.delete({
+         where: {
+             id: group.id
+         }
+     });
+ 
+-    await deleteLists(undefined, group.id);
+-
+     return new Response(JSON.stringify(deletedGroup));
+ };
+ 
