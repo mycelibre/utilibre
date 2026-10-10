@@ -34,6 +34,18 @@ describe('public SEO without tracking or private-content indexing', () => {
   });
   afterAll(() => server?.kill('SIGTERM'));
 
+  it('serves the owner-approved Bing proof in homepage heads without JavaScript', async () => {
+    for (const path of ['/', '/en/', '/es/']) {
+      const response = await fetch(base + path);
+      const { document } = parseHTML(await response.text());
+      expect(response.status).toBe(200);
+      expect(document.querySelectorAll('meta[name="msvalidate.01"]')).toHaveLength(1);
+      expect(document.head.querySelector('meta[name="msvalidate.01"]')?.getAttribute('content'))
+        .toBe('869B9D9B9808B7A9C5DB07667526B433');
+      expect(response.headers.get('set-cookie')).toBeNull();
+    }
+  });
+
   it('renders real bilingual content, privacy details and launch links before JavaScript', async () => {
     for (const language of ['en', 'es']) {
       const response = await fetch(`${base}/${language}/?view=all`);

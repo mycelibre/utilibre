@@ -1,5 +1,25 @@
 # Catalog SEO verification — 9 October 2026
 
+## Bing ownership tag — 10 October 2026
+
+At the owner's request, `portal/index.html` now retains the supplied
+`msvalidate.01` ownership meta tag in the initial HTML head. This static proof
+adds no script, cookie, visitor request or analytics integration. Live HTTPS
+checks of `/`, `/en/` and `/es/` returned 200 with exactly one correct head tag;
+the public configuration remains unchanged. Build, typecheck, targeted lint
+and all eight SEO unit tests passed, including a new proof-placement regression.
+
+Deployed `public-utility-portal:0.1.0-bing-20261010` from the isolated snapshot
+`/opt/utilibre/portal-bing-45GSKw/source`, excluding unrelated pending status work.
+The owner must still click **Verify** in their Bing Webmaster Tools account;
+neither account verification nor resolution of IndexNow's rejection is claimed.
+No new IndexNow notification was sent. Keep the tag after successful verification.
+
+Rollback: restore `PORTAL_IMAGE=public-utility-portal:0.1.0-seo-20261010` in the
+private `.env`, then `docker compose up -d --no-deps --no-build portal`. This also
+removes the verification tag and may revoke Bing verification. Matching prior
+source archive/index are preserved in the release directory. No Caddy change.
+
 ## Implemented follow-up — 10 October 2026
 
 The mobile-loading correction is **deployed** as
