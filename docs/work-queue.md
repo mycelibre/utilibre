@@ -21,7 +21,18 @@ or upstream application image was introduced.
 Portal EN/ES catalogue, privacy and guide copy are included in this release.
 Build/lint/typecheck, 118 unit tests, 22 launch checks, seven upload admission
 tests, two backup-policy tests and four focused catalogue browser checks passed.
-The backend is deployed; portal image and post-release checks are recorded below.
+Release `4bec1b8` is deployed as
+`public-utility-portal:0.1.0-privatebin-uploads-20261010`; portal and PrivateBin
+are healthy. Live EN/ES card/help/guide/action, keyboard disclosure, canonical,
+language and overflow checks passed at 22:23 UTC with no observed external
+requests or script errors. Desktop/mobile-emulation screenshots inspected;
+evidence: `/opt/utilibre/reports/privatebin-portal-release-8nwkX9/result.json`.
+Portal rollback: select `public-utility-portal:0.1.0-temporary-backup-policy-20261010`
+and recreate only the portal, preserving other environment values and backend
+data. The old portal wording would need reconciling with the live attachment
+setting. Private environment copy is alongside the backend rollback evidence.
+GitHub and the existing integration-source offer receive the committed source;
+no real paste content or test sharing/deletion keys are published.
 
 ## Temporary-content backup policy completed — 10 October, 21:59 UTC
 

@@ -90,7 +90,10 @@ file admission tests, two backup exclusion tests and four targeted desktop/mobil
 catalogue browser checks passed. The test dev server hit the host's inotify
 instance limit; using polling for that short-lived test process resolved it,
 without changing host sysctls or production runtime. Existing SSR split warnings
-remain non-fatal. Portal release evidence follows in the operator work queue.
+remain non-fatal. Release `4bec1b8` is deployed as
+`public-utility-portal:0.1.0-privatebin-uploads-20261010`. Live EN/ES catalogue/help
+and guide checks passed; evidence and portal rollback are in
+[the operator work queue](work-queue.md). Both services are healthy.
 
 ## Rollback without losing content
 
