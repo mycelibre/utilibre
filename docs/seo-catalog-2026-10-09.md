@@ -1,5 +1,76 @@
 # Catalog SEO verification — 9 October 2026
 
+## Owner's issue-count report — 10 October 2026
+
+The supplied scan lists 42 pages without descriptions, 122 with missing image
+alternatives, two long titles, 29 missing H1s, three duplicate descriptions and
+one duplicate H1. Its affected URLs, crawl date and subdomain scope were not
+provided. These counts are recorded as the owner's report, not independently
+reproduced defects or proof of a current indexing failure.
+
+A bounded live HTTPS check finished at **17:23:51 UTC**. All **168** canonical
+URLs in the current portal sitemap returned 200. Each had exactly one nonempty
+description and one H1; no `img` lacked an `alt` attribute. There were 336
+deliberately empty alternatives: the two header-logo variants on each page are
+redundant within the localized, accessibly named home link and are aria-hidden.
+Do not add repetitive logo announcements merely to satisfy a crawler warning.
+This check did not inspect other service subdomains, private content, old URLs,
+or the search engine's stored crawl. Request the affected URL export before
+claiming that those reported findings are resolved or false positives.
+
+Three editorial title improvements are prepared for `/en/pdf-tools`,
+`/es/guias/formulario-privado` and `/es/guias/presentacion-compartida`. The latter
+two also shorten the visible guide heading/index label while retaining every
+instruction, privacy qualification, sample and existing URL. There is no new
+hard character limit: [Google's title guidance](https://developers.google.com/search/docs/appearance/title-link)
+recommends concise descriptive titles and explains truncation by device width.
+
+The existing release checker now rejects duplicate descriptions (including
+case-varied names), misplaced/empty descriptions, missing/empty/repeated H1s,
+and missing image alternatives while accepting purposeful `alt=""`. Six
+synthetic regression cases cover these distinctions; the local all-route SEO
+test also checks description cardinality, heading cardinality and image
+attributes. This applies the Impeccable accessibility audit to the reported
+scope without redesigning the site or claiming a full accessibility audit.
+
+References checked October 10: [meta descriptions](https://developers.google.com/search/docs/appearance/snippet),
+[title links](https://developers.google.com/search/docs/appearance/title-link),
+and [W3C decorative image alternatives](https://www.w3.org/WAI/tutorials/images/decorative/).
+No analytics, crawler exclusion, public URL, application access or retention
+setting is changed by this correction.
+
+### Release and verification
+
+Deployed `public-utility-portal:0.1.0-semantics-20261010`, image ID
+`sha256:b1c0c004a60f798fdef0d7ea519245eef37ffb88b0821f437eab1966ec3d3bec`.
+Isolated source and rollback artifacts are under
+`/opt/utilibre/portal-semantics-hXDW6WeB`. Pending server/status-concurrency and
+Storage Box work were not included. The portal is healthy and the public
+configuration retains SHA-256
+`6f2c6c7f2dc2cde22cabe3f2aafb170054cf658da8f998fc6b4c21e2764089c4`.
+
+Build, lint, typecheck, FOSS policy, client payload budget, **114 isolated-release
+unit tests** and **21 SEO/IndexNow helper tests** passed. The current worktree
+suite has 116 passes, including two unrelated pending status tests not released.
+The expanded live **168-page** check passed after deployment, including
+canonical/reciprocal languages, unique titles/descriptions, initial HTML,
+structured data and rendering-resource access policy. Six public browser checks
+covered the three edited pages at 1280px and 390px with no overflow, missing alt,
+duplicate headings/descriptions or page errors. Screenshots and the browser
+report are retained in the private release directory. Coverage is Linux Chromium
+and mobile viewport emulation, not physical-phone testing or field Web Vitals.
+
+One IndexNow POST for only the three changed canonical URLs returned **200**.
+No unchanged full-sitemap notification or retry loop was used. This does not
+establish indexing or clear the owner's stored scan findings: affected-URL/crawl
+evidence remains required to reconcile those counts. No provider rule changed.
+
+Rollback: restore `PORTAL_IMAGE=public-utility-portal:0.1.0-indexnow-20261010` in
+the private `.env`, then `docker compose up -d --no-deps --no-build portal`.
+Restore `previous-utilibre-integration.tar.gz` and `previous-source-index.html`
+from the release directory to the source-offer paths when rolling back.
+No data migration or Caddy adjustment is involved.
+
 ## IndexNow notification confirmed — 10 October 2026, 16:14 UTC
 
 The owner-requested follow-up submission with the deployed replacement key

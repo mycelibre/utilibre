@@ -45,7 +45,7 @@ export const en = {
   'home.catalog.note.peerTransfer': 'Encrypted transfers between devices; connection metadata reaches signaling and STUN servers.',
   'meta.guides.title': 'Practical guides for free tools',
   'meta.guides.description': 'Follow practical guides for PDFs, images, shared expenses, calendars and more. Use fictional examples and check what each tool saves or shares.',
-  'meta.pdf.title': 'Merge PDF files and recognize scanned text without an account',
+  'meta.pdf.title': 'Merge PDFs and recognize scanned text',
   'meta.pdf.description': 'Use BentoPDF on Utilibre to merge PDFs or recognize scanned text. Browser processing, practice files, clear steps and OCR limitations explained.',
   'meta.qr.title': 'Create and scan QR codes without an account',
   'meta.qr.description': 'Choose a free QR tool for links or Wi-Fi. Download PNG, SVG or PDF, test your code, and understand what a static QR reveals before sharing it.',

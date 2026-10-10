@@ -112,7 +112,13 @@ describe('public SEO without tracking or private-content indexing', () => {
       const { document } = parseHTML(await page.text());
       expect(document.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe('index,follow');
       expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(url);
-      expect(document.querySelector('h1')?.textContent?.length).toBeGreaterThan(0);
+      expect(document.querySelectorAll('h1'), url).toHaveLength(1);
+      expect(document.querySelector('h1')?.textContent?.trim().length).toBeGreaterThan(0);
+      const metaDescriptions = [...document.querySelectorAll('meta')]
+        .filter(meta => meta.getAttribute('name')?.toLowerCase() === 'description');
+      expect(metaDescriptions, url).toHaveLength(1);
+      expect(document.head.contains(metaDescriptions[0]!), url).toBe(true);
+      for (const image of document.querySelectorAll('img')) expect(image.hasAttribute('alt'), url).toBe(true);
       for (const language of ['en', 'es']) expect(document.querySelector(`link[hreflang="${language}"]`)?.getAttribute('href')).toMatch(new RegExp(`^https://public\\.example/${language}/`));
       const description = document.querySelector('meta[name="description"]')?.getAttribute('content');
       expect(description?.length, url).toBeGreaterThan(30);

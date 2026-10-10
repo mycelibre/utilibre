@@ -3,6 +3,23 @@ import { pathToFileURL } from 'node:url';
 import { parseHTML } from 'linkedom';
 import { isPublicSeoPath, publicSeoPaths } from './indexnow-selection.mjs';
 
+// Empty alt is valid for decorative/redundant images; a missing attribute is
+// different. This structural check does not judge an image's editorial meaning.
+export function assertPageSemantics(document, url) {
+  const descriptions = [...document.querySelectorAll('meta')]
+    .filter(meta => meta.getAttribute('name')?.toLowerCase() === 'description');
+  assert.equal(descriptions.length, 1, `${url}: exactly one meta description`);
+  assert(document.head.contains(descriptions[0]), `${url}: description must be in the head`);
+  const description = descriptions[0].getAttribute('content');
+  assert(description?.trim(), `${url}: empty meta description`);
+  const headings = document.querySelectorAll('h1');
+  assert.equal(headings.length, 1, `${url}: one initial-HTML H1`);
+  assert(headings[0].textContent.trim(), `${url}: empty H1`);
+  const images = [...document.querySelectorAll('img')];
+  assert(images.every(image => image.hasAttribute('alt')), `${url}: image missing alt attribute`);
+  return { description, images: images.length };
+}
+
 // Only the wildcard group's root rule, not a claim about named bots, every URL
 // or WAF access. A named training/search-agent exclusion is not a site-wide ban.
 export function generalCrawlerRootBlocked(text) {
@@ -55,9 +72,8 @@ export async function auditSeo(origin = 'https://utilibre.org', { allowUnadverti
     assert.equal(document.querySelector('link[rel="canonical"]')?.getAttribute('href'), url, `${url}: canonical`);
     const language = target.pathname.split('/')[1];
     assert.equal(document.documentElement.lang, language, `${url}: document language`);
-    assert.equal(document.querySelectorAll('h1').length, 1, `${url}: one initial-HTML H1`);
+    const { description } = assertPageSemantics(document, url);
     assert(document.querySelector('#main-content')?.textContent.length > 100, `${url}: missing initial HTML content`);
-    const description = document.querySelector('meta[name="description"]')?.getAttribute('content');
     assert(document.title.length > 10 && description?.length > 30, `${url}: incomplete metadata`);
     titles.add(document.title);
     descriptions.add(description);
