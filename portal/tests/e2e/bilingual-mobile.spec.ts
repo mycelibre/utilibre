@@ -456,7 +456,7 @@ test('only retained Utilibre services appear when stale service IDs are still co
     { key: 'publicSearchUrl', id: 'searxng', en: 'Search the web · SearXNG', es: 'Buscar en la web · SearXNG', url: 'https://search.utility.test/' },
     { key: 'publicRedditUrl', id: 'redlib', en: 'Read Reddit · Redlib', es: 'Leer Reddit · Redlib', url: 'https://reddit.utility.test/' },
     { key: 'publicRssUrl', id: 'freshrss', en: 'Read your feeds · FreshRSS', es: 'Leer tus fuentes RSS · FreshRSS', url: 'https://rss.utility.test/' },
-    { key: 'publicPasteUrl', id: 'privatebin', en: 'Share encrypted text · PrivateBin', es: 'Compartir texto cifrado · PrivateBin', url: 'https://paste.utility.test/' },
+    { key: 'publicPasteUrl', id: 'privatebin', en: 'Share encrypted text and files · PrivateBin', es: 'Compartir texto y archivos cifrados · PrivateBin', url: 'https://paste.utility.test/' },
   ] as const;
   const serviceUrls = Object.fromEntries(services.map((service) => [service.key, service.url]));
   const removedIds = ['cobalt', 'ntfy', 'bentopdf', 'vert', 'omnitools', 'ittools', 'swagger-editor', 'healthchecks', 'pairdrop', 'rsshub', 'wakapi'];

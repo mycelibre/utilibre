@@ -18,6 +18,13 @@ The preparer checks both the revision and original template checksum, applies th
 patch and writes only the generated repository template. It does not update a
 live service, copy data or change expiry options.
 
+The 10 October attachment change adds one local admission hook through this
+template. `upload-limit.js` uses the existing file-picker/drop/paste events and
+native PrivateBin error/attachment controls to cap total selected raw bytes at
+25,000,000. It does not implement encryption or uploads. Server-side encrypted
+size limits, PHP/FPM/Nginx configuration and a small low-disk guard are mounted
+separately. See [limits, expiry and verification](../../../docs/privatebin-uploads-2026-10-10.md).
+
 The compose manifest mounts the custom template, branding, manifest, robots and
 small supported Nginx include files. Only exact `GET /` with no query, status or
 application error gets descriptive indexable HTML. `HEAD /` has matching response
@@ -38,8 +45,9 @@ isolated instance with fictional state, exercises native encryption/decryption
 and deletion, then removes that instance/network/state. It never mounts real
 paste data or runs the whole-stack backup. `check-public.mjs` is read-only and
 checks EN/ES homepage, safe invalid query/path metadata and exact icon bytes.
-The existing PrivateBin restore rehearsal now restores/mounts this custom config
-bundle too; its full backup/restore was not rerun for this metadata-only change.
+The PrivateBin restore rehearsal restores/mounts this custom configuration
+bundle into an empty store. New backups intentionally exclude paste content;
+this is configuration recovery, not a promise of recovering expired files.
 
 Remove the patch when native upstream settings provide equivalent scoped
 homepage metadata, branding and indexing. Repeat both checks before switching

@@ -392,13 +392,20 @@ content.
 
 The server and ingress can observe connection metadata, timing, ciphertext
 size, expiry, and paste/deletion requests. The configured service stores
-ciphertext on disk, limits a paste to approximately 2 MiB, disables file
-uploads and discussion, defaults to one-day expiry, and offers expiries of five minutes, ten minutes, one hour, one day or one week. The upstream forever
+ciphertext on the VM. Attachments are allowed up to 25 MB total (25,000,000
+raw bytes) in the browser; the server enforces a 35,000,000-byte ciphertext
+limit because it cannot inspect encrypted files. Discussion remains disabled.
+Expiry defaults to one day; choices are five minutes, ten minutes, one hour,
+one day or one week. The upstream forever
 choice is not configured here. Preserve the native deletion link shown after
-creation to delete a paste early. Request-triggered purge checks have a
-300-second interval and batch limit of ten; logical expiry is not proof of
-immediate physical erasure. Expired and deleted records can persist in the
-seven daily and four weekly core backup generations.
+creation to delete a paste early. Expired records cannot be retrieved through
+the app; a native cleanup command runs every minute while the service is
+available. Request-triggered cleanup remains enabled as well. Logical expiry
+is not proof of immediate physical erasure. New application backups exclude
+these pastes and attachments; earlier and externally managed whole-VM snapshots
+may still contain them. See [backup boundaries](backups.md). Creation pauses
+below 5 GiB of available VM filesystem space; retrieval/deletion remain enabled.
+This is an emergency headroom check, not a reserved allocation or per-user quota.
 
 Normal decryption requires the fragment key and any separately configured
 password. A compromised application delivery path could supply malicious code;
@@ -463,7 +470,7 @@ recorded in [backups.md](backups.md), not inferred from the existence of an expo
 | Service / reviewed version | Processing, retained content and providers | Active / backup retention; native controls | Evidence and October 8 result |
 | --- | --- | --- | --- |
 | hat.sh 2.3.6 | Local file encryption/decryption; no application upload or server copy. Application delivery uses the HTTPS ingress. | Downloaded files remain until their owner deletes them. Keep required passwords/keys; operator deletion by item ID does not exist. Browser storage is distinct from downloaded files. | Pinned static build, catalog local workflow; no upload endpoint introduced. |
-| PrivateBin 2.0.6 | Browser ciphertext plus expiry/deletion metadata in filesystem storage; normal HTTP does not include the fragment key. | Default 1 day; choices 5m/10m/1h/1d/1w, no forever choice. Creator deletion link, optional burn-after-reading. Request-triggered purge interval 300s, batch 10. From 10 October, new application backups exclude pastes; historical and separate whole-VM snapshots may retain them. | Mounted `deployment/utilibre/config/privatebin/conf.php`; fresh configuration-only archive and empty-store native create/decrypt check passed on 10 October. Earlier paste-restore evidence is historical, not the current recovery policy. Container logging disabled; edge retention unknown. |
+| PrivateBin 2.0.6 | Browser-encrypted text, files and filenames; expiry/deletion metadata on the VM; HTTP excludes the fragment key. | 25 MB total browser attachment limit; 35 MB server ciphertext limit. Default 1 day, maximum 1 week; creator deletion and optional burn-after-reading. Native expiry cleanup each minute while available. New application backups exclude content; historical/whole-VM snapshots may retain it. | Public 25 MB upload/download/hash/deletion and lifetime checks passed on 10 October. Isolated expired-record purge and configuration-only recovery passed. See `privatebin-uploads-2026-10-10.md`; not a physical-device or uptime test. Container logging disabled; separate edge retention remains unverified. |
 | Yopass 14.10.0 | Browser-encrypted short text; ciphertext in persistence-disabled Valkey RAM; connection metadata is separate. | Forced first retrieval or 1h; 10 KB encrypted payload; no file uploads. No durable secret backup. Native DELETE `/secret/{id}` deletes before retrieval without requiring the decryption fragment on this instance. | `deployment/community/compose.yaml`, pinned `pkg/server/secret.go`; public browser synthetic fixture create/status/delete/status = 200/200/204/404. Fixture removed; report `content-review-20261008/yopass-delete.json`. |
 | PairDrop 1.11.2 | Direct encrypted WebRTC files; Utilibre signaling and Cloudflare STUN discovery metadata. No TURN and `WS_FALLBACK=false`; optional upstream WebSocket file fallback would expose file contents to its server. | Signaling state temporary; pairing persists in browser storage; receiver downloads remain. No server file storage/backup in this mode. Reviewed Cloudflare STUN documentation supplies no deletion deadline; recursive-DNS policy does not apply. | Live selected env plus mounted `pairdrop-rtc.json`; earlier synthetic two-browser transfer passed. No relay was enabled to make copy true. |
 | ntfy 2.28.0 | Server-readable notifications/topics through HTTPS ingress; anyone knowing a topic can read/publish. No auth DB, login, reservations or protected topics. | RAM message expiry 1h, periodic cleanup may lag; subscribers can retain copies. No attachments, mail/phone delivery, Firebase, iOS upstream relay or browser Web Push configured. No durable message backup. | Mounted `ntfy.yml` and earlier unauthenticated two-subscriber/history test; warning logs rotate by size. |

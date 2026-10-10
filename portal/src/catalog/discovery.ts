@@ -73,7 +73,7 @@ const synonyms: Record<string, string> = {
   drawio: 'flowchart diagram diagrama flujo', excalidraw: 'sketch whiteboard boceto pizarra',
   svgedit: 'vector vectors vectorial vectores svg',
   ittools: 'developer development desarrollo json jwt uuid regex password passphrase token generator contraseña contraseñas clave claves frase palabras generar generador bip39 markdown html convert convertir',
-  privatebin: 'pastebin syntax code snippet source share resaltar sintaxis código fuente fragmento pegar compartir texto',
+  privatebin: 'pastebin syntax code snippet source share encrypted attachment file resaltar sintaxis código fuente fragmento pegar compartir texto archivo adjunto cifrado',
   cyberchef: 'file type identify inspect hash verify checksum sha256 sha 256 archivo tipo identificar inspeccionar verificar comprobar suma huella',
   rawgraphs: 'csv chart graph gráfica grafica gráfico barras datos',
   'qr-offline': 'qr code código cámara crear leer', miniqr: 'qr code código cámara crear leer',

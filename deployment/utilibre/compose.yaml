@@ -184,18 +184,22 @@ services:
       - ./config/privatebin/brand/favicon.ico:/var/www/favicon.ico:ro
       - ./config/privatebin/discovery-server.conf:/etc/nginx/server.d/utilibre-discovery.conf:ro
       - ./config/privatebin/discovery-location.conf:/etc/nginx/location.d/utilibre-discovery.conf:ro
+      - ./config/privatebin/upload-limit.js:/var/www/js/utilibre-upload-limit.js:ro
+      - ./config/privatebin/upload-guard.php:/srv/cfg/upload-guard.php:ro
+      - ./config/privatebin/uploads.ini:/etc/php85/conf.d/zz-utilibre-uploads.ini:ro
+      - ./config/privatebin/uploads-pool.conf:/etc/php85/php-fpm.d/zzz-utilibre-uploads.conf:ro
       - ./data/privatebin:/srv/data
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777
       - /run:rw,exec,nosuid,nodev,size=16m,mode=0755,uid=65534,gid=82
-      - /var/lib/nginx/tmp:rw,nosuid,nodev,noexec,size=32m,mode=0755,uid=65534,gid=82
+      - /var/lib/nginx/tmp:rw,nosuid,nodev,noexec,size=128m,mode=0755,uid=65534,gid=82
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/"]
       interval: 30s
       timeout: 5s
       retries: 5
     networks: [frontend]
-    mem_limit: 384m
+    mem_limit: 768m
     cpus: 0.5
     pids_limit: 128
     logging: *default-logging

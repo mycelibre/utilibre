@@ -1,5 +1,28 @@
 # Operator work queue — reconciled 10 October 2026
 
+## Disk expansion and PrivateBin uploads — 10 October, 22:22 UTC
+
+Online root expansion completed using the existing 150 GiB virtual disk:
+filesystem 128G → 148G, available 13G → 32G, usage 90% → 78%, no reboot or
+data deletion. RAM was 12 GiB used / 34 GiB total / 21 GiB available; reclaimable
+cache was not application usage. See [resource evidence](resource-usage.md).
+
+PrivateBin now accepts 25 MB total attachments through native browser encryption,
+with sufficient ciphertext/body headroom, a low-disk creation safeguard, bounded
+PHP resources and native minute-by-minute expired-record cleanup. Maximum expiry
+is one week; default remains one day. Saved account backups remain enabled;
+new temporary-content backups remain excluded. Public 25 MB create/download/hash/
+deletion, lifetime, EN/ES metadata and isolated server-size/purge/recovery checks
+passed. Details and data-preserving rollback: [upload release](privatebin-uploads-2026-10-10.md).
+The official directory's upload check still needs its own rescan. No duplicate
+listing request, new account, tracker, Storage Box application mount, Caddy change
+or upstream application image was introduced.
+
+Portal EN/ES catalogue, privacy and guide copy are included in this release.
+Build/lint/typecheck, 118 unit tests, 22 launch checks, seven upload admission
+tests, two backup-policy tests and four focused catalogue browser checks passed.
+The backend is deployed; portal image and post-release checks are recorded below.
+
 ## Temporary-content backup policy completed — 10 October, 21:59 UTC
 
 Owner confirmed that saved account work keeps recovery backups. New core

@@ -1,5 +1,3 @@
-diff --git a/tpl/bootstrap5.php b/tpl/bootstrap5.php
-index e2ecb1e..ea60467 100644
 --- a/tpl/bootstrap5.php
 +++ b/tpl/bootstrap5.php
 @@ -1,5 +1,18 @@
@@ -13,15 +11,15 @@ index e2ecb1e..ea60467 100644
 +    && empty($_GET) && empty($ERROR) && empty($STATUS) && !$ISDELETED;
 +$UTILIBRE_ES = I18n::getLanguage() === 'es';
 +$UTILIBRE_TITLE = $UTILIBRE_ES
-+    ? 'Compartir texto cifrado | PrivateBin en Utilibre'
-+    : 'Encrypted text sharing | PrivateBin at Utilibre';
++    ? 'Compartir texto y archivos cifrados | Utilibre'
++    : 'Encrypted text and file sharing | Utilibre';
 +$UTILIBRE_DESCRIPTION = $UTILIBRE_ES
-+    ? 'Compartí texto y código con PrivateBin. Tu navegador cifra el contenido antes de subirlo. Elegí cuándo vence y compartí el enlace completo. No necesitás cuenta.'
-+    : 'Share text and code with PrivateBin. Your browser encrypts the paste before upload. Choose an expiry and share the full link. No account required.';
++    ? 'Compartí texto y archivos de hasta 25 MB en total. Tu navegador cifra el contenido antes de subirlo. Elegí un vencimiento de hasta una semana. No necesitás cuenta.'
++    : 'Share text and files up to 25 MB in total. Your browser encrypts the content before upload. Choose an expiry of up to one week. No account required.';
  ?><!DOCTYPE html>
  <html lang="<?php echo I18n::getLanguage(); ?>"<?php echo I18n::isRtl() ? ' dir="rtl"' : ''; ?> class="h-100">
  	<head>
-@@ -7,9 +20,15 @@ use PrivateBin\I18n;
+@@ -7,9 +20,15 @@
  		<meta http-equiv="Content-Security-Policy" content="<?php echo I18n::encode($CSPHEADER); ?>">
  		<meta http-equiv="X-UA-Compatible" content="IE=edge">
  		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,7 +37,7 @@ index e2ecb1e..ea60467 100644
  		<link type="text/css" rel="stylesheet" href="css/bootstrap5/bootstrap<?php echo I18n::isRtl() ? '.rtl' : ''; ?>-5.3.8.css" />
  		<link type="text/css" rel="stylesheet" href="css/bootstrap5/privatebin.css?<?php echo rawurlencode($VERSION); ?>" />
  <?php
-@@ -53,15 +72,26 @@ endif;
+@@ -53,15 +72,27 @@
  		<?php $this->_scriptTag('js/purify-3.4.12.js', 'defer'); ?>
  		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
  		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
@@ -52,6 +50,7 @@ index e2ecb1e..ea60467 100644
 -		<link rel="shortcut icon" href="img/favicon.ico">
 -		<meta name="msapplication-config" content="browserconfig.xml">
 -		<meta name="theme-color" content="#ffe57e" />
++        <script src="js/utilibre-upload-limit.js?v=1" defer></script>
 +        <!-- Utilibre icons; the native application remains PrivateBin. -->
 +        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 +        <link rel="icon" type="image/png" sizes="48x48" href="/utilibre-brand/favicon-48.png" />
@@ -75,7 +74,7 @@ index e2ecb1e..ea60467 100644
  		<!-- Twitter/social media cards -->
  		<meta name="twitter:card" content="summary" />
  		<meta name="twitter:title" content="<?php echo I18n::_('Encrypted note on %s', I18n::_($NAME)) ?>" />
-@@ -74,6 +104,7 @@ endif;
+@@ -74,6 +105,7 @@
  		<meta property="og:image:type" content="image/png" />
  		<meta property="og:image:width" content="180" />
  		<meta property="og:image:height" content="180" />
@@ -83,7 +82,7 @@ index e2ecb1e..ea60467 100644
  	</head>
  	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>" class="d-flex flex-column h-100">
  		<div id="passwordmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
-@@ -357,7 +388,13 @@ endif;
+@@ -357,7 +389,14 @@
  				</div>
  			</div>
  		</nav>
@@ -91,8 +90,9 @@ index e2ecb1e..ea60467 100644
 +        <main>
 +<?php if ($UTILIBRE_HOME) : ?>
 +            <section class="container-fluid mb-3" aria-labelledby="utilibre-home-title">
-+                <h1 id="utilibre-home-title" class="h4"><?php echo $UTILIBRE_ES ? 'Compartí texto cifrado con PrivateBin' : 'Share encrypted text with PrivateBin'; ?></h1>
++                <h1 id="utilibre-home-title" class="h4"><?php echo $UTILIBRE_ES ? 'Compartí texto y archivos cifrados' : 'Share encrypted text and files'; ?></h1>
 +                <p><?php echo I18n::encode($UTILIBRE_DESCRIPTION); ?></p>
++                <p><?php echo $UTILIBRE_ES ? '25 MB = 25 000 000 bytes entre todos los archivos. Conservá los originales y el enlace completo; quien tenga el enlace puede acceder. Los archivos vencen junto con el texto. Los nuevos respaldos de aplicaciones no incluyen este contenido.' : '25 MB = 25,000,000 bytes across all files. Keep the originals and complete link; anyone with the link may gain access. Files expire with the paste. New application backups exclude this content.'; ?></p>
 +            </section>
 +<?php endif; ?>
  			<section class="container-fluid mt-2">

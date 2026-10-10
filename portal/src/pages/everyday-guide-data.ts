@@ -88,7 +88,7 @@ export const everydayGuides: PracticalGuide[] = [
     copy: {
       en: {
         title: 'Share a small code snippet', intro: "Share readable code in PrivateBin’s Source Code format, with browser encryption and an expiry you choose.",
-        prerequisites: 'Prepare a small fictional example such as const answer = 42;. Remove passwords, API keys, tokens, private paths and personal data before sharing. This is a text paste; file uploads and discussion are disabled.',
+        prerequisites: 'Prepare a small fictional example such as const answer = 42;. Remove passwords, API keys, tokens, private paths and personal data before sharing. This guide uses text; optional file attachments allow 25 MB total and expire with the paste. Comments are disabled.',
         steps: [
           'Open PrivateBin and choose Source Code in the format selector. Paste only the snippet the recipient needs. Check that copying it preserves indentation and characters.',
           'Choose an expiry: this instance offers 5 minutes, 10 minutes, 1 hour, 1 day or 1 week. Add a password if needed and send that password through a separate channel. Leave burn-after-reading off if you want to check the shared link yourself without consuming it.',
@@ -103,7 +103,7 @@ export const everydayGuides: PracticalGuide[] = [
       },
       es: {
         title: 'Compartí un fragmento breve de código', intro: "Compartí código legible con el formato Código fuente de PrivateBin, cifrado en el navegador y el vencimiento que elijás.",
-        prerequisites: 'Prepará un ejemplo ficticio breve, como const answer = 42;. Quitá contraseñas, claves de API, tokens, rutas privadas y datos personales antes de compartir. Es un texto: los adjuntos y los comentarios están desactivados.',
+        prerequisites: 'Prepará un ejemplo ficticio breve, como const answer = 42;. Quitá contraseñas, claves de API, tokens, rutas privadas y datos personales antes de compartir. Esta guía usa texto; los adjuntos opcionales admiten 25 MB en total y vencen junto con el texto. Los comentarios están desactivados.',
         steps: [
           'Abrí PrivateBin y elegí Código fuente en el selector de formato. Pegá solo el fragmento que necesita el destinatario. Revisá que al copiarlo se conserven la sangría y los caracteres.',
           'Elegí un vencimiento: esta instancia ofrece 5 minutos, 10 minutos, 1 hora, 1 día o 1 semana. Agregá una contraseña si hace falta y enviala por otro canal. Dejá desactivada la eliminación tras leer si querés revisar el enlace sin consumirlo.',

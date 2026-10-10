@@ -30,10 +30,11 @@ try {
  const selectedConfig=await readFile(`${restoredConfig}/conf.php`,'utf8');
  const templateMounts=selectedConfig.includes('template = "bootstrap5-utilibre"')
   ? [['bootstrap5-utilibre.php','/srv/tpl/bootstrap5-utilibre.php'],['robots.txt','/var/www/robots.txt'],['manifest.json','/var/www/manifest.json'],['brand','/var/www/utilibre-brand'],['brand/favicon.ico','/var/www/favicon.ico'],['discovery-server.conf','/etc/nginx/server.d/utilibre-discovery.conf'],['discovery-location.conf','/etc/nginx/location.d/utilibre-discovery.conf']].flatMap(([file,target])=>['-v',`${restoredConfig}/${file}:${target}:ro`]) : [];
+ if (selectedConfig.includes('fileupload = true')) templateMounts.push(...[['upload-limit.js','/var/www/js/utilibre-upload-limit.js'],['upload-guard.php','/srv/cfg/upload-guard.php'],['uploads.ini','/etc/php85/conf.d/zz-utilibre-uploads.ini'],['uploads-pool.conf','/etc/php85/php-fpm.d/zzz-utilibre-uploads.conf']].flatMap(([file,target])=>['-v',`${restoredConfig}/${file}:${target}:ro`]));
  const image=docker('inspect','utilibre-services-privatebin-1','--format','{{.Image}}').trim();
  docker('network','create','--internal',network);networkCreated=true;
- docker('run','-d','--name',name,'--network',network,'--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--cpus','0.5','--memory','256m','--pids-limit','96','--log-driver','none',
-  '--tmpfs','/run:rw,exec,nosuid,nodev,size=16m,mode=0755,uid=65534,gid=82','--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777','--tmpfs','/var/lib/nginx/tmp:rw,nosuid,nodev,noexec,size=32m,mode=0755,uid=65534,gid=82',
+ docker('run','-d','--name',name,'--network',network,'--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--cpus','0.5','--memory','768m','--pids-limit','96','--log-driver','none',
+  '--tmpfs','/run:rw,exec,nosuid,nodev,size=16m,mode=0755,uid=65534,gid=82','--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777','--tmpfs','/var/lib/nginx/tmp:rw,nosuid,nodev,noexec,size=128m,mode=0755,uid=65534,gid=82',
   '-v',`${temp}/privatebin:/srv/data`,'-v',`${temp}/config/config/privatebin/conf.php:/srv/cfg/conf.php:ro`,...templateMounts,image);created=true;
  // Docker deliberately omits published ports on an internal network. A bounded
  // loopback bridge gives this browser access without giving the clone egress.

@@ -1,5 +1,8 @@
 # PrivateBin homepage search description and icon
 
+**Later change:** [25 MB attachments and scheduled expiry cleanup](privatebin-uploads-2026-10-10.md)
+supersede this report's historical upload-disabled and backup descriptions.
+
 Implemented and publicly verified 9 October 2026. The empty
 [PrivateBin homepage](https://paste.utilibre.org/) now has a descriptive EN/ES
 title, description, canonical URL, social preview and an actual Utilibre favicon.

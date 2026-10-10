@@ -8,11 +8,11 @@ $UTILIBRE_HOME = ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET'
     && empty($_GET) && empty($ERROR) && empty($STATUS) && !$ISDELETED;
 $UTILIBRE_ES = I18n::getLanguage() === 'es';
 $UTILIBRE_TITLE = $UTILIBRE_ES
-    ? 'Compartir texto cifrado | PrivateBin en Utilibre'
-    : 'Encrypted text sharing | PrivateBin at Utilibre';
+    ? 'Compartir texto y archivos cifrados | Utilibre'
+    : 'Encrypted text and file sharing | Utilibre';
 $UTILIBRE_DESCRIPTION = $UTILIBRE_ES
-    ? 'Compartí texto y código con PrivateBin. Tu navegador cifra el contenido antes de subirlo. Elegí cuándo vence y compartí el enlace completo. No necesitás cuenta.'
-    : 'Share text and code with PrivateBin. Your browser encrypts the paste before upload. Choose an expiry and share the full link. No account required.';
+    ? 'Compartí texto y archivos de hasta 25 MB en total. Tu navegador cifra el contenido antes de subirlo. Elegí un vencimiento de hasta una semana. No necesitás cuenta.'
+    : 'Share text and files up to 25 MB in total. Your browser encrypts the content before upload. Choose an expiry of up to one week. No account required.';
 ?><!DOCTYPE html>
 <html lang="<?php echo I18n::getLanguage(); ?>"<?php echo I18n::isRtl() ? ' dir="rtl"' : ''; ?> class="h-100">
 	<head>
@@ -72,6 +72,7 @@ endif;
 		<?php $this->_scriptTag('js/purify-3.4.12.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
+        <script src="js/utilibre-upload-limit.js?v=1" defer></script>
         <!-- Utilibre icons; the native application remains PrivateBin. -->
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="48x48" href="/utilibre-brand/favicon-48.png" />
@@ -391,8 +392,9 @@ endif;
         <main>
 <?php if ($UTILIBRE_HOME) : ?>
             <section class="container-fluid mb-3" aria-labelledby="utilibre-home-title">
-                <h1 id="utilibre-home-title" class="h4"><?php echo $UTILIBRE_ES ? 'Compartí texto cifrado con PrivateBin' : 'Share encrypted text with PrivateBin'; ?></h1>
+                <h1 id="utilibre-home-title" class="h4"><?php echo $UTILIBRE_ES ? 'Compartí texto y archivos cifrados' : 'Share encrypted text and files'; ?></h1>
                 <p><?php echo I18n::encode($UTILIBRE_DESCRIPTION); ?></p>
+                <p><?php echo $UTILIBRE_ES ? '25 MB = 25 000 000 bytes entre todos los archivos. Conservá los originales y el enlace completo; quien tenga el enlace puede acceder. Los archivos vencen junto con el texto. Los nuevos respaldos de aplicaciones no incluyen este contenido.' : '25 MB = 25,000,000 bytes across all files. Keep the originals and complete link; anyone with the link may gain access. Files expire with the paste. New application backups exclude this content.'; ?></p>
             </section>
 <?php endif; ?>
 			<section class="container-fluid mt-2">

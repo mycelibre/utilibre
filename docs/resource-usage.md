@@ -1,5 +1,25 @@
 # Resource usage and operating limits
 
+## Root disk expanded — 10 October 2026
+
+The virtual disk already exposed 150 GiB, but root still occupied about 130 GiB.
+After `growpart -N /dev/sda 1` confirmed the layout, saved GPT metadata to
+`/opt/utilibre/reports/disk-growth-HkTX8V/sda-before.gpt`, grew partition 1 and
+expanded mounted ext4 using `resize2fs /dev/sda1`. Root start sector 262144,
+both boot partitions and identifiers were preserved. `sfdisk --verify` passed;
+the filesystem now has 39,288,827 4 KiB blocks. `df -h /` changed from 128G /
+13G available / 90% used to **148G / 32G available / 78% used**. No reboot,
+service stop, new purchase or deletion was required. A udev inotify warning
+occurred, but the kernel partition size and filesystem expansion completed.
+The GPT file is metadata, not a data backup; **never restore the smaller
+partition table over the expanded filesystem**. Shrinking needs an offline plan.
+
+At the same check, `free -h` reported **34 GiB RAM, 12 GiB used, 21 GiB
+available**, about 20 GiB buff/cache and zero of 4 GiB swap in use. Buff/cache
+and available overlap: do not add them or report cache as unreclaimable memory.
+This point-in-time measurement is not proof of peak-load capacity. Online
+growth follows the [resize2fs manual](https://manpages.ubuntu.com/manpages/noble/man8/resize2fs.8.html).
+
 ## Reviewed image retirement — October 10, 2026
 
 The owner authorized trimming obsolete images while preserving running software

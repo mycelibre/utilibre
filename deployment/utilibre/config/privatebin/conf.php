@@ -7,10 +7,12 @@ info = "<a href='https://utilibre.org/es/'>Más herramientas de Utilibre</a> · 
 discussion = false
 opendiscussion = false
 password = true
-fileupload = false
+fileupload = true
 burnafterreadingselected = false
 defaultformatter = "plaintext"
-sizelimit = 2097152
+; 25,000,000-byte raw attachments need room for native base64/compression/encryption.
+; The browser bounds raw files; the server can bound only ciphertext, not inspect it.
+sizelimit = 35000000
 languageselection = true
 
 [expire]

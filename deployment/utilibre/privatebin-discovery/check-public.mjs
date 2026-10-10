@@ -9,7 +9,7 @@ const base='https://paste.utilibre.org',report='/opt/utilibre/reports/privatebin
 const result={checkedAt:new Date().toISOString(),checks:[]};
 const browser=await chromium.launch();
 try{
- for(const [locale,title]of [['en-US','Encrypted text sharing'],['es-GT','Compartir texto cifrado']]){
+ for(const [locale,title]of [['en-US','Encrypted text and file sharing'],['es-GT','Compartir texto y archivos cifrados']]){
   const ctx=await browser.newContext({locale,viewport:{width:locale==='es-GT'?390:1280,height:900}}),page=await ctx.newPage(),hosts=new Set(),errors=[];
   page.on('request',r=>hosts.add(new URL(r.url()).hostname));page.on('pageerror',e=>errors.push(e.message));
   const r=await page.goto(base+'/');assert.equal(r.status(),200);assert(!r.headers()['x-robots-tag']);await page.locator('#message').waitFor({state:'visible'});assert((await page.title()).startsWith(title));assert.equal(await page.locator('meta[name=robots]').getAttribute('content'),'index, follow');assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'),base+'/');assert(await page.locator('link[rel=icon][sizes="512x512"]').count());assert.deepEqual([...hosts],[new URL(base).hostname]);assert.deepEqual(errors,[]);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);await page.screenshot({path:report+'/public-'+locale+'.png',fullPage:true});

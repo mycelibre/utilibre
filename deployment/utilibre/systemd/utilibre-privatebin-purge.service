@@ -1,0 +1,13 @@
+[Unit]
+Description=Remove expired PrivateBin records using native cleanup
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/utilibre/scripts/privatebin-purge.sh
+TimeoutStartSec=50s
+Nice=10
+# No content/identifiers in persistent command output; systemd retains exit status.
+StandardOutput=null
+StandardError=null

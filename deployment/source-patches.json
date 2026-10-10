@@ -543,7 +543,7 @@
     "source": "/opt/utilibre/src/privatebin-discovery",
     "revision": "921ab83f268add709413a87206e4e1c2e3c2063d",
     "prerequisites": [],
-    "purpose": "Native custom-template homepage-only descriptive metadata, visible EN/ES introduction and local brand icons. Paste/query/error paths remain noindex; server storage, expiry and encryption are unchanged.",
+    "purpose": "Native custom-template homepage-only metadata, EN/ES introduction, local brand icons and browser file-size admission hook. Paste/query/error paths remain noindex; native encryption/storage are unchanged. Upload/expiry limits use separate supported configuration.",
     "removeWhen": "Replace when upstream native configuration provides equivalent homepage-only metadata/icons and scoped indexing, repeating the recorded privacy/browser checks. Preserve the original upstream template and existing user data."
   },
   {
