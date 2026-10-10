@@ -77,6 +77,12 @@ export async function inspectSnapshot(spec, now = Date.now()) {
   if (latest.stat.size > 1024 * 1024) throw Error('Manifest unexpectedly large');
   const manifest = join(latest.path, spec.marker);
   const entries = parseManifest(spec.marker, await readFile(manifest, 'utf8'));
+  // Fail closed rather than republishing a pre-policy snapshot. Configuration
+  // and durable account backups remain selected; old snapshots are not erased.
+  if ((spec.id === 'core' && entries.some(([name]) => name === 'files/privatebin-data.tar.gz')) ||
+      (spec.id === 'family-chess' && entries.some(([name]) => !name.startsWith('private/')))) {
+    throw Error('Snapshot includes excluded temporary content; create a new configuration-only generation');
+  }
   const files = [manifest];
   let bytes = latest.stat.size;
   for (const [name, expected] of entries) {

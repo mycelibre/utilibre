@@ -1,6 +1,6 @@
 import type { PracticalGuide } from './practical-guide-data.ts';
 export const familyChessGuides: PracticalGuide[] = [{
-  id: 'family-chess', paths: { en: 'guides/chess-with-a-friend', es: 'guias/ajedrez-con-alguien' }, tools: [{ id: 'family-chess', label: { en: 'Open Family Chess', es: 'Abrir Family Chess' } }], samples: [], reviewedOn: '2026-10-09',
+  id: 'family-chess', paths: { en: 'guides/chess-with-a-friend', es: 'guias/ajedrez-con-alguien' }, tools: [{ id: 'family-chess', label: { en: 'Open Family Chess', es: 'Abrir Family Chess' } }], samples: [], reviewedOn: '2026-10-10',
   copy: {
     en: {
       title: 'Play a game of chess with someone you know',
@@ -15,8 +15,8 @@ export const familyChessGuides: PracticalGuide[] = [{
       ],
       success: 'Both players see the same board after a legal move. Spectators can follow it without taking an occupied seat.',
       troubleshooting: 'Wait if game creation is rate-limited. Inactive seats become free after twenty minutes; games are marked abandoned after both players have been absent for two hours. A reconnect does not guarantee that a freed seat is still available. Native live updates use SSE with polling fallback.',
-      privacy: 'Utilibre stores readable game and session state. Games are deleted seven days after creation by a minute-by-minute cleanup job; there is no immediate-delete control. You can ask the operator about a specific game identifier. Daily backups remain on this VM without automatic expiry and are not rewritten by active deletion. Other players may keep copies. Downloaded screenshots and notes stay on your device until you delete them.',
-      next: 'For another match, create a new game and share its new link. The tested recovery scope is an isolated SQLite copy of a fictional game, not a user-facing import or a full-server disaster recovery test.',
+      privacy: 'Utilibre stores readable game and session state. Games are deleted seven days after creation by a minute-by-minute cleanup job; there is no immediate-delete control. You can ask the operator about a specific game identifier. New application backups exclude games and sessions. Earlier backups and separate VM snapshots may still contain them. Other players may keep copies. Your screenshots and notes stay on your device until you delete them.',
+      next: 'For another match, create a new game and share its new link. Games are temporary and cannot be recovered for you after storage loss. Keep your own notes if you want a record.',
     },
     es: {
       title: 'Jugá una partida de ajedrez con alguien que conocés',
@@ -31,8 +31,8 @@ export const familyChessGuides: PracticalGuide[] = [{
       ],
       success: 'Ambos jugadores ven el mismo tablero después de una jugada legal. Los espectadores pueden seguirlo sin ocupar un lugar que ya tiene jugador.',
       troubleshooting: 'Esperá si alcanzaste el límite de creación de partidas. Los lugares inactivos se liberan a los veinte minutos; las partidas se marcan como abandonadas cuando ambos jugadores llevan dos horas ausentes. Reconectarte no garantiza que un lugar liberado siga disponible. Las actualizaciones usan SSE y consultas periódicas como alternativa.',
-      privacy: 'Utilibre guarda el estado legible de partidas y sesiones. Una tarea que se ejecuta cada minuto borra las partidas siete días después de crearse; no hay un control de borrado inmediato. Podés consultar al operador por un identificador concreto. Los respaldos diarios quedan en esta VM sin vencimiento automático y el borrado activo no los modifica. Otros jugadores pueden guardar copias. Las capturas y notas descargadas permanecen en tu dispositivo hasta que las borrés.',
-      next: 'Para volver a jugar, creá otra partida y compartí el nuevo enlace. La recuperación verificada usó una copia SQLite aislada de una partida ficticia; no fue una importación para usuarios ni una recuperación completa del servidor.',
+      privacy: 'Utilibre guarda el estado legible de partidas y sesiones. Una tarea que se ejecuta cada minuto borra las partidas siete días después de crearse; no hay un control de borrado inmediato. Podés consultar al operador por un identificador concreto. Los nuevos respaldos de aplicaciones excluyen partidas y sesiones. Los respaldos anteriores y las copias independientes de la VM todavía pueden contenerlas. Otros jugadores pueden guardar copias. Tus capturas y notas permanecen en tu dispositivo hasta que las borrés.',
+      next: 'Para volver a jugar, creá otra partida y compartí el nuevo enlace. Las partidas son temporales y no podemos recuperarlas si se pierde el almacenamiento. Conservá tus propias notas si querés un registro.',
     },
   },
 }];

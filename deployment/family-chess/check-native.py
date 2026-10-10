@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Disposable native Django-client workflow against an isolated copy, never production."""
+"""Disposable native Django-client workflow against a fresh schema, never production."""
 import json, os, tempfile, sqlite3
 from pathlib import Path
 from datetime import timedelta
@@ -13,13 +13,11 @@ from django.utils import timezone
 from django.core.management import call_command
 
 with tempfile.TemporaryDirectory(prefix='chess-native-', dir='/tmp') as d:
-    source = settings.DATABASES['default']['NAME']
     isolated = str(Path(d) / 'fixture.sqlite3')
-    with sqlite3.connect(f'file:{source}?mode=ro', uri=True) as src, sqlite3.connect(isolated) as dst:
-        src.backup(dst)
     connections.close_all()
     settings.DATABASES['default']['NAME'] = isolated
     connections['default'].settings_dict['NAME'] = isolated
+    call_command('migrate', interactive=False, verbosity=0)
     from game.models import Game
     before = Game.objects.count()
     clients = [Client(enforce_csrf_checks=True, HTTP_HOST='chess.utilibre.org', HTTP_X_FORWARDED_PROTO='https') for _ in range(3)]
@@ -65,4 +63,4 @@ with tempfile.TemporaryDirectory(prefix='chess-native-', dir='/tmp') as d:
     page = spanish.get('/').content.decode()
     assert 'Español' in page and 'Crear' in page
     connections.close_all()
-print(json.dumps({'passed':['CSRF rejection','two native seats','spectator denied move/seat','wrong-turn rejection','two legal moves','read-only spectator','SQLite backup and independent restored board','native seven-day cleanup on copy','Spanish gettext'], 'scope':'isolated copied database, fictional game only'}))
+print(json.dumps({'passed':['fresh schema recovery without saved games','CSRF rejection','two native seats','spectator denied move/seat','wrong-turn rejection','two legal moves','read-only spectator','synthetic SQLite export/reopen','native seven-day cleanup on fixture','Spanish gettext'], 'scope':'isolated empty database, fictional game only; no live data copied'}))

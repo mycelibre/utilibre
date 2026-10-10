@@ -52,8 +52,8 @@ projects.
 Before replacing an existing deployment, create and verify a backup of:
 
 - FreshRSS application data and PostgreSQL database;
-- PrivateBin ciphertext data;
-- Anubis data and signing key;
+- PrivateBin configuration, excluding temporary ciphertext (preserve the live mount);
+- Anubis signing key, excluding short-lived challenge state;
 - both private environment files and generated configuration; and
 - the exact source revision and image references.
 

@@ -18,7 +18,7 @@ Python chess dependencies retain their GPL-3.0-or-later notices.
    and `firewall.sh`. Runtime secrets and the database live under
    `/opt/utilibre/family-chess/`, outside this repository. Generate a fresh secret
    for a new installation; never replace the production secret during a rebuild.
-5. Run `check-native.py` only against disposable copied state, using its documented
+5. Run `check-native.py` only in an isolated container, using its documented
    environment. The production cleanup and backup commands have their own units.
    Never restore test data over a live database.
 6. Publish the exact source with `python3 deployment/family-chess/publish-source.py`
@@ -36,10 +36,18 @@ removes exactly the fictional game it created. It does not restore a database.
 
 ## Recovery
 
-Use the consistent SQLite snapshot and matching private settings in the existing
-root-restricted backup directory. Stop this service, preserve current files for
-rollback, install the selected snapshot with uid10001 ownership, then start the
-pinned image and check it before routing traffic. A recovery test uses a separate
-copy and fictional games. Daily snapshots have no automatic expiry; no off-host
-recovery is claimed. See `docs/family-chess-deployment-2026-10-09.md` for measured
-checks, lifecycle limits and the public-edge status.
+From 10 October 2026, snapshots retain `private/` configuration only. The guest
+deployment has no saved accounts; seven-day games and sessions are deliberately
+excluded, locally and from new Storage Box uploads. Existing live games and
+historical snapshots are not deleted. Historical local copies have no automatic
+expiry; separate VM snapshots remain outside this job's control.
+
+After an actual storage loss, restore the matching private settings, create an
+empty `/data` owned by UID/GID 10001, and run `python manage.py migrate --noinput`
+using the pinned image and those settings before starting the service. Do not
+restore old games/sessions, and never replace live state during a routine update.
+`check-native.py` creates a fresh schema and fictional multiplayer fixture, checks
+permissions, moves and cleanup, then removes its disposable directory. Its small
+SQLite reopen check uses only that fictional fixture, not production records.
+Configuration is included in encrypted Storage Box backups. See `docs/backups.md`
+for current scope; older recovery evidence remains dated historical evidence.

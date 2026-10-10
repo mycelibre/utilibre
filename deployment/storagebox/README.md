@@ -264,14 +264,20 @@ Unfinished generations and ad-hoc rollback directories are not selected. The
 `selection.json` stored within each encrypted snapshot identifies exact sources
 and their completion times. Upload time is **not** the time of the data snapshot.
 
-Coverage: core FreshRSS/PrivateBin/configuration; identity; expanded account
+Coverage: core FreshRSS and configuration (not PrivateBin content); identity; expanded account
 services; original community services; encrypted CryptPad/Forms/Galene/TURN/
 Wallabag suite plus key; calendar/Gathio/Razzia; Opengist/Linkding/Vikunja/Bytestash;
-TRIP/Spliit/Donetick/BeaverHabits/family chess/wishlist/KitchenOwl/newsletters/
+TRIP/Spliit/Donetick/BeaverHabits/family chess configuration/wishlist/KitchenOwl/newsletters/
 Addy/SimpleLogin/projects/Chhoto. This is not 24 independent applications and
 does not include browser-only documents, cache state or external Caddy VM files.
 Add a source and a matching native backup procedure when a new stateful app is
 introduced; there is no claim of automatic discovery of future applications.
+
+From 10 October 2026, the selector rejects core snapshots containing
+`files/privatebin-data.tar.gz` and chess snapshots containing anything outside
+`private/`. Generate new policy-compliant snapshots instead of falling back to
+old temporary content. Existing Restic/local/whole-VM copies are not rewritten
+by this prospective policy. Saved account work remains backed up by owner choice.
 
 ```sh
 sudo node deployment/storagebox/backup-native.mjs           # validate only

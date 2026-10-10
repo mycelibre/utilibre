@@ -3,7 +3,7 @@ set -eu
 
 usage() {
   echo "Usage: $0 BACKUP_DIR TARGET (--rehearsal|--live)" >&2
-  echo "Targets: freshrss privatebin freshrss-files" >&2
+  echo "Targets: freshrss freshrss-files (PrivateBin content is intentionally not restored)" >&2
   exit 2
 }
 
@@ -11,6 +11,10 @@ usage() {
 backup_dir=$1
 target=$2
 mode=$3
+if [ "$target" = privatebin ]; then
+  echo "PrivateBin content is temporary: restore configuration only, never resurrect expired pastes from historical backups." >&2
+  exit 2
+fi
 [ "$mode" = --rehearsal ] || [ "$mode" = --live ] || usage
 [ -d "$backup_dir" ] || { echo "Backup directory not found" >&2; exit 1; }
 
@@ -121,16 +125,11 @@ case "$target" in
       database_live_restore "$target"
     fi
     ;;
-  privatebin|freshrss-files)
-    archive_name=$target
-    [ "$target" = freshrss-files ] && archive_name=freshrss-data
-    [ "$target" = privatebin ] && archive_name=privatebin-data
-    archive="$backup_dir/files/$archive_name.tar.gz"
+  freshrss-files)
+    archive="$backup_dir/files/freshrss-data.tar.gz"
     [ -f "$archive" ] || { echo "Archive not found" >&2; exit 1; }
     if [ "$mode" = --rehearsal ]; then
       file_rehearsal "$archive"
-    elif [ "$target" = privatebin ]; then
-      file_live_restore privatebin privatebin "$archive"
     else
       file_live_restore freshrss freshrss "$archive"
     fi

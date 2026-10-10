@@ -52,3 +52,24 @@ test('pooled directories retain distinct application selections', () => {
   }
   assert.equal(new Set(sources.map(item => item.id)).size, sources.length);
 });
+
+test('temporary-content generations cannot be copied off-host again', async t => {
+  const root = await mkdtemp(join(tmpdir(), 'utilibre-ephemeral-backup-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const dir = join(root, 'snapshot');
+  await mkdir(join(dir, 'files'), { recursive: true });
+  await mkdir(join(dir, 'private'));
+  const spec = { root, pattern: /^snapshot$/, marker: 'SHA256.json' };
+  for (const [id, forbidden, allowed] of [
+    ['core', 'files/privatebin-data.tar.gz', 'files/configuration.tar.gz'],
+    ['family-chess', 'chess.sqlite3', 'private/app.env'],
+  ]) {
+    await writeFile(join(dir, forbidden), text);
+    await writeFile(join(dir, 'SHA256.json'), JSON.stringify({ [forbidden]: hash }));
+    await assert.rejects(inspectSnapshot({ ...spec, id }), /excluded temporary content/);
+    await writeFile(join(dir, allowed), text);
+    await writeFile(join(dir, 'SHA256.json'), JSON.stringify({ [allowed]: hash }));
+    const selected = await inspectSnapshot({ ...spec, id });
+    assert.deepEqual(selected.files, [join(dir, 'SHA256.json'), join(dir, allowed)]);
+  }
+});

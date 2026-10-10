@@ -1,5 +1,57 @@
 # Backups, restore, and removal
 
+## Current policy: temporary content versus saved work — 10 October 2026
+
+Owner confirmed: **keep recovery backups of saved account work; exclude
+short-lived sharing content from new application backups.** This supersedes the
+older PrivateBin/chess recovery records below, which remain historical evidence.
+
+| Data | New application backups |
+| --- | --- |
+| PrivateBin expiring ciphertext and metadata | Excluded; application/configuration recovery only |
+| Guest Family Chess games and sessions (seven-day game lifetime) | Excluded; private service settings only; no saved accounts were present |
+| Yopass secrets, ntfy message cache, WBO boards, transferred files, proxy caches | Already outside the configured native backup selections |
+| Saved account documents, form responses, polls, reading libraries, identity and other durable work | Retained under existing native backup/retention rules |
+| Deployment configuration and necessary stable secrets | Retained; never publish secrets or user content |
+
+No live content, earlier backup, or restore point is deleted by this change.
+The core job's `--no-prune` option allows verification without expiring older
+generations. Routine schedules/retention are unchanged. The off-host selector
+fails closed on pre-policy core/chess payloads rather than uploading them again.
+Temporary services can lose current content on storage failure before expiry;
+do not promise recovery. Preserve live mounts during ordinary upgrades.
+
+This is **not yet an exclusion from externally managed whole-VM snapshots**.
+That backup layer is outside the application jobs and has not been inspected.
+The VM-backup operator must separately configure exclusions or a separate
+non-backed-up disk before a blanket no-backup claim is justified. Existing
+local/off-host/whole-VM copies can retain records: core sets rotate normally,
+while older chess local generations have no automatic expiry. Retirement of
+historical copies needs a separate, exact-target decision; do not destroy
+mixed snapshots containing durable account work to remove temporary records.
+
+Verified at this policy change: 10 native selector/retention/archive tests pass;
+a new core snapshot contains configuration and FreshRSS but no PrivateBin data.
+`check-privatebin-restore.mjs` recovered configuration into an empty isolated
+native container, then created/decrypted fictional text and rejected a no-key
+reader. Evidence: `/opt/utilibre/reports/privatebin-restore-kFhnzv/result.json`.
+Chess's fresh configuration-only generation passed checksums; a networkless
+pinned container recreated the empty schema and passed native two-seat/move,
+CSRF, spectator, cleanup and Spanish checks using only fictional state.
+No actual existing game or paste was copied for these checks. These are
+application recovery checks, not a whole-host or physical-device rehearsal.
+All 24 live native backup groups pass the updated selector (90 manifest/data
+files, before the two pack keys and selection report). This is a validated
+selection for the next scheduled upload, not a claim that an existing off-host
+snapshot was rewritten. Saved account work remains included.
+
+Deployment: core `backup.sh`/`restore.sh` are copied into `/opt/utilibre/scripts/`;
+chess and Storage Box units execute the repository files directly. These changes
+do not restart applications. Rollback must preserve this privacy decision: keep
+the exclusions and guard when reverting unrelated code. To recover a service,
+restore its settings without resurrecting temporary user content. Re-enabling
+content backups needs a new operator decision, not an automatic code rollback.
+
 ## Verified Storage Box application copy — October 10, 2026
 
 The owner supplied the existing Storage Box hostname/account and SSH port 23,
@@ -73,7 +125,7 @@ creation. Fresh generations validated successfully. Older inconsistent/partial
 generations were not deleted or relabelled. Other apps' downloaded archive bytes
 were checked, not every restored UI/workflow. This is not a whole-VM restore.
 
-## Current recovery matrix — October 9, 2026
+## Historical recovery matrix — October 9, 2026
 
 The application snapshots inspected here are on this VM. On October 9, the
 owner identified an existing Storage Box and confirmed that the VM has already
@@ -140,7 +192,7 @@ networks and live PrivateBin fixtures were removed.
 
 ### Coverage, timing and retention
 
-- `utilibre-backup.timer`: core FreshRSS/PrivateBin/configuration, around 08:15
+- `utilibre-backup.timer`: core FreshRSS/configuration, around 08:15
   UTC with timer jitter. The native policy keeps seven daily **generations** and
   four Sunday weekly generations; manual backups also consume generation slots.
 - `utilibre-community-backup.timer`: community state, around 04:10 UTC.
@@ -186,11 +238,11 @@ node deployment/pack/check-restored-pad.mjs /opt/utilibre/pack-backups/EXACT-SNA
 /opt/utilibre/scripts/restore.sh /opt/utilibre/data/backups/daily-EXACT-SNAPSHOT freshrss --rehearsal
 ```
 
-`node deployment/utilibre/tests/check-privatebin-restore.mjs` creates one
-fictional paste and a new normal core backup, then starts a clone on an internal
-Docker network with a loopback-only bridge. It verifies decryption and removes
-its live fixture, bridge, network and container. Its normal backup remains under
-the existing retention policy; it never restores over live paste data.
+`node deployment/utilibre/tests/check-privatebin-restore.mjs` now creates a
+configuration-only core backup with `--no-prune`, verifies that no paste data is
+included, then starts an empty clone on an internal Docker network with a
+loopback-only bridge. It creates/decrypts a fictional paste only on that clone
+and removes the clone, fixture, bridge and network. No live paste is copied.
 
 ### Recovery order and acceptance
 
@@ -240,7 +292,7 @@ The retained deployment has two different backup classes:
 
 - source, configuration, and secrets needed to reproduce the portal,
   SearXNG, and Anubis/Redlib; and
-- persistent user data for FreshRSS/PostgreSQL and PrivateBin.
+- persistent user data for FreshRSS/PostgreSQL (not temporary PrivateBin pastes).
 
 SearXNG and RSSHub caches and both Valkey stores are re-creatable. Do not treat
 them as user-data backups.
@@ -252,10 +304,10 @@ them as user-data backups.
 | Git revision, Compose files, reviewed configuration, and manifests | Preserve exact deployed revision or archive | Deployment cannot be reproduced reliably |
 | Root `.env`, SearXNG secret, and generated limiter | Encrypted operator-controlled backup | Public configuration and limiter may need regeneration |
 | Anubis signing key | Encrypted backup with restrictive access | Existing challenge authorization cookies become invalid |
-| Anubis bbolt data | Optional operational backup | Challenge state resets; not user content |
+| Anubis bbolt data | Excluded temporary state | Challenge state resets |
 | FreshRSS files/extensions | Required | Configuration/extensions and file-held application state can be lost |
 | FreshRSS PostgreSQL database | Required logical dump | Accounts, subscriptions, and reading state can be lost |
-| PrivateBin data | Required while unexpired pastes are promised | Ciphertext and deletion/expiry metadata can be lost |
+| PrivateBin data | Excluded temporary sharing content | Pastes can be lost before expiry; users retain their originals |
 
 Backups contain sensitive account data, subscription URLs, ciphertext, and
 secrets. Encrypt them, restrict operator access, keep them outside live data
@@ -271,8 +323,8 @@ sh scripts/backup.sh /operator/controlled/backup-directory
 
 The script archives source and nonsecret configuration and intentionally
 excludes `.env`, secrets, generated/runtime files, node modules, and
-re-creatable SearXNG/Valkey state. Back up `.env`, `secrets/`, and
-`data/anubis/` separately in an encrypted store.
+re-creatable SearXNG/Valkey state. Back up `.env` and stable `secrets/` separately
+in an encrypted store; do not archive transient `data/anubis/` challenge state.
 
 Verify that the archive can be listed and that the exact deployed Git revision
 is independently recoverable.
@@ -288,7 +340,7 @@ From `deployment/utilibre/` with healthy PostgreSQL:
 The script:
 
 - takes a custom-format `pg_dump` of the FreshRSS database;
-- archives deployment configuration, FreshRSS files, and PrivateBin data;
+- archives deployment configuration and FreshRSS files, not PrivateBin data;
 - writes checksums before making the backup directory visible as complete;
 - refuses concurrent runs; and
 - retains the scripted daily/weekly generations.
@@ -309,7 +361,6 @@ and supports isolated rehearsals:
 cd deployment/utilibre
 ./scripts/restore.sh /absolute/path/to/backup freshrss --rehearsal
 ./scripts/restore.sh /absolute/path/to/backup freshrss-files --rehearsal
-./scripts/restore.sh /absolute/path/to/backup privatebin --rehearsal
 ```
 
 Database rehearsal creates a temporary database and removes it afterward.
@@ -326,7 +377,6 @@ confirmation:
 cd deployment/utilibre
 ./scripts/restore.sh /absolute/path/to/backup freshrss --live
 ./scripts/restore.sh /absolute/path/to/backup freshrss-files --live
-./scripts/restore.sh /absolute/path/to/backup privatebin --live
 ```
 
 Restore the FreshRSS database and files from the same backup generation. Stop
@@ -348,7 +398,9 @@ Explain that older backup generations expire on the published backup schedule
 rather than being rewritten immediately.
 
 For PrivateBin, normal expiry and a valid deletion action remove the live
-record. Operators cannot promise immediate deletion from older backups. Abuse
+record (background purge is request-triggered, not an immediate erasure promise).
+New application backups exclude that content. Earlier and whole-VM snapshots
+are not rewritten, so operators cannot promise erasure from those copies. Abuse
 reports must identify a paste without publishing sensitive full URLs in a
 public issue.
 
@@ -377,8 +429,8 @@ A restore is complete only after:
 - checksums and archive structure pass;
 - expected FreshRSS accounts/subscriptions and application files are present;
 - login and one controlled feed refresh work;
-- PrivateBin test ciphertext can be retrieved and decrypted with its browser
-  key, then deleted;
+- PrivateBin starts with recovered settings and an empty store; a new fictional
+  paste can be created/decrypted, without restoring historical user records;
 - internal RSSHub and both private data stores remain unexposed;
 - logs show no migration/permission loop; and
 - a new post-restore backup completes successfully.

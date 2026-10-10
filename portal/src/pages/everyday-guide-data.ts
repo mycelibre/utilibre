@@ -84,7 +84,7 @@ export const everydayGuides: PracticalGuide[] = [
   },
   {
     id: 'share-code', paths: { en: 'guides/share-code', es: 'guias/compartir-codigo' },
-    tools: [{ id: 'privatebin', label: { en: 'Share code with PrivateBin', es: 'Compartir código con PrivateBin' } }], samples: [], reviewedOn: '2026-10-08',
+    tools: [{ id: 'privatebin', label: { en: 'Share code with PrivateBin', es: 'Compartir código con PrivateBin' } }], samples: [], reviewedOn: '2026-10-10',
     copy: {
       en: {
         title: 'Share a small code snippet', intro: "Share readable code in PrivateBin’s Source Code format, with browser encryption and an expiry you choose.",
@@ -94,7 +94,7 @@ export const everydayGuides: PracticalGuide[] = [
           'Choose an expiry: this instance offers 5 minutes, 10 minutes, 1 hour, 1 day or 1 week. Add a password if needed and send that password through a separate channel. Leave burn-after-reading off if you want to check the shared link yourself without consuming it.',
           'Choose Create. Copy the complete sharing link, including the part after #, for the intended recipient. Keep the deletion link separate and private. A complete sharing link can grant access to the snippet.',
           'Open the sharing link in another browser context for a fictional test. Confirm the code renders and copies correctly. For a burn-after-reading paste, opening it yourself can consume its single read; do not use that mode for a repeated preview.',
-          'Use the deletion link to remove the paste when it is no longer needed, or let its chosen expiry apply. Deletion does not recall copies a recipient saved or rewrite existing server backups.',
+          'Use the deletion link to remove the paste when it is no longer needed, or let its chosen expiry apply. New application backups exclude pastes. Deletion does not recall recipient copies or erase earlier backups or separate VM snapshots.',
         ],
         success: 'A fictional source-code paste was created, decrypted in a separate browser and deleted through its native deletion mechanism. Its expiry was five minutes. The test did not contain credentials or real code from a visitor.',
         troubleshooting: 'A link missing its # fragment lacks the normal decryption key. A password-protected paste also needs that password. Syntax highlighting is presentation, not code validation; do not run unfamiliar code simply because it displays cleanly.',
@@ -109,7 +109,7 @@ export const everydayGuides: PracticalGuide[] = [
           'Elegí un vencimiento: esta instancia ofrece 5 minutos, 10 minutos, 1 hora, 1 día o 1 semana. Agregá una contraseña si hace falta y enviala por otro canal. Dejá desactivada la eliminación tras leer si querés revisar el enlace sin consumirlo.',
           'Elegí Crear. Copiá el enlace completo, incluida la parte después de #, para el destinatario. Guardá el enlace de eliminación por separado y en privado. El enlace completo puede dar acceso al fragmento.',
           'Para una prueba ficticia, abrí el enlace en otro contexto del navegador. Comprobá que el código se vea y se copie correctamente. Si activaste la eliminación tras leer, abrirlo vos puede consumir su única lectura; no usés ese modo para previsualizaciones repetidas.',
-          'Usá el enlace de eliminación cuando ya no necesités el texto o dejá que venza. Eliminarlo no retira las copias guardadas por un destinatario ni modifica las copias de seguridad existentes del servidor.',
+          'Usá el enlace de eliminación cuando ya no necesités el texto o dejá que venza. Los nuevos respaldos de aplicaciones excluyen los textos. Eliminarlos no retira las copias del destinatario ni borra respaldos anteriores o copias independientes de la VM.',
         ],
         success: 'Se creó un texto ficticio en formato de código, se descifró en otro navegador y se eliminó mediante su mecanismo nativo. Tenía un vencimiento de cinco minutos. La prueba no contenía credenciales ni código real de visitantes.',
         troubleshooting: 'Un enlace sin su fragmento # no incluye la clave normal de descifrado. Si protegiste el texto con contraseña, también se necesita esa contraseña. Resaltar la sintaxis solo cambia la presentación: no valida el código. No ejecutés código desconocido porque se vea ordenado.',

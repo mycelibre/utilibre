@@ -2,6 +2,14 @@
 set -eu
 umask 077
 
+# A manual policy verification must not expire existing generations.
+prune=true
+case "${1:-}" in
+  '') [ "$#" -eq 0 ] || exit 2 ;;
+  --no-prune) [ "$#" -eq 1 ] || exit 2; prune=false ;;
+  *) echo "Usage: $0 [--no-prune]" >&2; exit 2 ;;
+esac
+
 root_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 set -a
 # shellcheck disable=SC1091
@@ -46,7 +54,8 @@ docker compose exec -T postgres pg_dump -U postgres -Fc freshrss > "$incomplete_
 tar -C "$root_dir" -czf "$incomplete_dir/files/configuration.tar.gz" \
   compose.yaml .env .env.example README.md SOURCE_MANIFEST.md config scripts system systemd edge docs secrets
 tar -C "$root_dir/data" -czf "$incomplete_dir/files/freshrss-data.tar.gz" freshrss
-tar -C "$root_dir/data" -czf "$incomplete_dir/files/privatebin-data.tar.gz" privatebin
+# PrivateBin's expiring ciphertext is deliberately not a recovery asset.
+# Its configuration is included above; never archive its data directory.
 
 (cd "$incomplete_dir" && find postgres files -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
 echo "Backup completed: $(date -u --iso-8601=seconds)"
@@ -57,8 +66,10 @@ if [ "$(date -u +%u)" -eq 7 ]; then
   cp -al "$final_dir" "$backup_root/weekly-$timestamp"
 fi
 
-find "$backup_root" -maxdepth 1 -type d -name 'daily-*' -printf '%T@ %p\n' | sort -nr | awk 'NR>7 {print $2}' | while IFS= read -r old; do rm -rf -- "$old"; done
-find "$backup_root" -maxdepth 1 -type d -name 'weekly-*' -printf '%T@ %p\n' | sort -nr | awk 'NR>4 {print $2}' | while IFS= read -r old; do rm -rf -- "$old"; done
+if [ "$prune" = true ]; then
+  find "$backup_root" -maxdepth 1 -type d -name 'daily-*' -printf '%T@ %p\n' | sort -nr | awk 'NR>7 {print $2}' | while IFS= read -r old; do rm -rf -- "$old"; done
+  find "$backup_root" -maxdepth 1 -type d -name 'weekly-*' -printf '%T@ %p\n' | sort -nr | awk 'NR>4 {print $2}' | while IFS= read -r old; do rm -rf -- "$old"; done
+fi
 
 trap - EXIT HUP INT TERM
 printf '%s\n' "$final_dir" >&3
