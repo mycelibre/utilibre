@@ -21,7 +21,7 @@ services:
       translate: {ipv4_address: 172.29.89.10}
   gateway:
     <<: *runtime
-    image: utilibre-translite-gateway:security-20261011-nginx1305
+    image: utilibre-translite-gateway:security-20261011-nginx1305-tiff472
     user: "101:101"
     ports: ["10.10.1.43:3152:8080"]
     volumes:

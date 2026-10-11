@@ -12,7 +12,7 @@ x-runtime: &runtime
 
 x-authentik: &authentik
   <<: *runtime
-  image: utilibre-authentik:2026.8.3-python-security-20261011
+  image: utilibre-authentik:2026.8.3-vendor-security-20261011
   user: "1000:1000"
   shm_size: 512m
   tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777"]
@@ -58,7 +58,7 @@ x-authentik: &authentik
 services:
   postgresql:
     <<: *runtime
-    image: postgres:16-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
+    image: utilibre-postgres:16.15-alpine-vendor-security-20261011
     user: "70:70"
     environment:
       POSTGRES_DB: authentik

@@ -8,12 +8,16 @@ residual risks; it is not a claim of complete security.
 
 ## 11 October maintenance follow-up
 
-The scanner failure and missing runtime/OS coverage are repaired. Published
-Penpot/Yopass notices have exact-version/configuration dispositions, not blanket
-exceptions; full published history is now considered. The dependency queue is
-still open after substantial staged updates. The current counts, exact runtime
-changes, isolated account/restore tests, rollout incidents, primary sources and
-rollback boundaries are in [the latest maintenance record](updates.md#library-patch-continuation--11-october-2026).
+The earlier scanner execution failure and omitted runtime targets were repaired.
+A stricter coverage gate now exposes a separate unresolved gap: Penpot's native
+backend removes its OS package inventory, and Trivy discovers no packages in
+the static Chhoto/Rustpad images. Java/source-lock scans do not establish full
+binary/OS coverage, and the service reports incomplete until that is remedied.
+Published Penpot/Yopass notices have exact-version/configuration dispositions,
+not blanket exceptions; full published history is considered. The dependency
+queue remains open after substantial staged updates. Exact runtime changes,
+isolated account/restore tests, sources and rollback boundaries are in
+[the latest maintenance record](updates.md#parallel-security-release--11-october-2026).
 
 Additional hardening includes PrivateBin's tested sanitizer backport, current
 coturn, runtime/vendor updates, Authentik/Linkding's patched JWT libraries and a

@@ -1,0 +1,14 @@
+# Disposable loopback test only; do not use this registration policy in production.
+external-url: http://127.0.0.1:32796
+opengist-home: /opengist
+db-uri: opengist.db
+sqlite.journal-mode: WAL
+index: bleve
+http.host: 0.0.0.0
+http.port: 6157
+http.git-enabled: true
+ssh.git-enabled: disabled
+metrics.enabled: false
+api.enabled: true
+log-level: fatal
+log-output: stdout

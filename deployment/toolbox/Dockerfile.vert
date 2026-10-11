@@ -13,6 +13,10 @@ RUN bun -e 'const p="src/lib/sections/settings/vertdSettings.svelte.ts"; let s=a
 COPY --from=integration patch-vert-copy.mjs /tmp/patch-vert-copy.mjs
 RUN bun /tmp/patch-vert-copy.mjs && bun run build
 FROM nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
+# Reviewed Alpine vendor fixes; preserve the native unprivileged runtime.
+USER root
+RUN apk add --no-cache --upgrade tiff=4.7.2-r0 zlib=1.3.2-r1
+USER 101
 COPY --from=build /app/build /usr/share/nginx/html
 ADD --chmod=644 https://raw.githubusercontent.com/VERT-sh/VERT/c7b9f3921d6f8722c1dc1515799b461622777068/LICENSE /usr/share/nginx/html/LICENSE.txt
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

@@ -61,7 +61,7 @@ services:
     command: [node, build/application.mjs, /configuration.mjs, --type, backgroundJobWorker]
     depends_on: {initialize: {condition: service_completed_successfully}}
   gateway:
-    image: nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
+    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
     restart: unless-stopped
     user: '101:101'
     read_only: true

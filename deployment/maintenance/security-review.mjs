@@ -29,16 +29,20 @@ export function registryFallback(item){
 }
 export function summarize(data){
  const counts={UNKNOWN:0,LOW:0,MEDIUM:0,HIGH:0,CRITICAL:0};
- const findings=[];let packages=0;
+ const findings=[];let packages=0,osPackages=0;
  for(const result of data.Results||[]){
   packages+=(result.Packages||[]).length;
+  if(result.Class==='os-pkgs')osPackages+=(result.Packages||[]).length;
   for(const v of result.Vulnerabilities||[]){
    const severity=Object.hasOwn(counts,v.Severity)?v.Severity:'UNKNOWN';counts[severity]++;
    findings.push({id:v.VulnerabilityID,package:v.PkgName,installed:v.InstalledVersion,fixed:v.FixedVersion||null,severity,type:result.Type,target:result.Target,url:v.PrimaryURL||null});
   }
  }
- return {packages,counts,findings,eosl:data.Metadata?.OS?.EOSL===true};
+ const family=data.Metadata?.OS?.Family||null;
+ return {packages,counts,findings,eosl:data.Metadata?.OS?.EOSL===true,
+  os:{family,name:data.Metadata?.OS?.Name||null,packages:osPackages,inventory:osPackages?'present':family?'missing':'not-detected'}};
 }
+export function imageScanStatus(result){return result.packages>0&&result.os?.inventory!=='missing'?'checked':'incomplete';}
 export function imageInventory(rows){
  const map=new Map();
  for(const row of rows){
@@ -82,12 +86,13 @@ export async function run(){
    return summarize(JSON.parse(await readFile(output,'utf8')));
   }
   for(const item of inventory){
-   try{report.images.push({...item,status:'checked',method:'local-image',...await scan('image',item.id,['--image-src','docker'])});}
+   try{const result=await scan('image',item.id,['--image-src','docker']);report.images.push({...item,status:imageScanStatus(result),method:'local-image',...result});}
    catch{
     const fallback=registryFallback(item);
     try{
      if(!fallback)throw Error('No reviewed fallback');
-     report.images.push({...item,status:'checked',method:'registry-artifact-exact-digest',note:'Local OCI export is incomplete; scanned the same immutable official registry artifact, not container writable data.',...await scan('image',fallback,['--image-src','remote','--sbom-sources',''])});
+     const result=await scan('image',fallback,['--image-src','remote','--sbom-sources','']);
+     report.images.push({...item,status:imageScanStatus(result),method:'registry-artifact-exact-digest',note:'Local OCI export is incomplete; scanned the same immutable official registry artifact, not container writable data.',...result});
     }catch{report.images.push({...item,status:'failed',note:'Scanner failed; inspect privately or retry this immutable image. No clean result inferred.'});}
    }
    console.log(`Images ${report.images.length}/${inventory.length}: ${report.images.at(-1).status}`);

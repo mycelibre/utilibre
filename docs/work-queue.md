@@ -9,11 +9,35 @@ awaits an external successful rescan, not another upload-setting change.
 
 ## Active security/quality follow-through — 11 October
 
+Later parallel release: Penpot **2.18.3**, Kuma **2.5.6**, 67 shared gateway/static
+wrappers, all 11 PostgreSQL vendor layers, Authentik/Opengist/LiberaForms and
+private SimpleLogin have deployed patch receipts and bounded native checks.
+EN/ES software disclosures are live. The stricter scanner correctly leaves
+Penpot backend OS inventory incomplete; the exact DHI base requires registry
+credentials not present here. Legacy framework, old Grist sandbox/toolchain and
+other dependency findings remain open. See [current release and limits](updates.md#parallel-security-release--11-october-2026).
+Earlier checkpoint counts below are historical, not post-release totals.
+The independent availability workflow now has a confirmed successful **scheduled**
+run, `38174272872` (20:56:11 UTC); the earlier unobserved-cron blocker below is
+closed. Full upstream review at 21:17 checks 112 providers and 342 published
+GitHub advisories with no pending application-advisory dispositions. Ten
+non-GitHub providers retain manual-primary-source coverage, not automated
+advisory clearance. Dependency findings remain a separate open queue.
+Final 21:18:50 scan: 109 images/175 containers, 510 host packages, 20 source
+manifests; 61 critical/3,406 high raw occurrences, not exploitability counts.
+Penpot OS and Chhoto/Rustpad binary inventory are incomplete. The conservative
+queue also retains older not-rechecked artifacts; do not compare its combined
+total with complete-scan totals. All deployed patches are documented, not all
+dependency findings resolved. Root has approximately 14 GiB free after build
+cache cleanup; no image/data/backup deletion.
+
 Daily runtime image/OS/lockfile scanning, eight synthetic task workflows, weekly
 representative restore, operator digest and off-host availability/relay checks
 are implemented and have run. The four new host timers are enabled. Scanner
-failure/incomplete coverage was repaired; historical Penpot/Yopass advisory
-alerts have exact version-bound dispositions. [Schedules, evidence and rollback](updates.md#operational-maintenance-rollout--11-october-2026).
+execution failures and omitted targets were repaired; the later stricter gate
+correctly reports Penpot's missing OS inventory as incomplete. Historical
+Penpot/Yopass advisory alerts have exact version-bound dispositions.
+[Latest release, coverage limitation and rollback](updates.md#parallel-security-release--11-october-2026).
 
 First remediation batch: 41 shared gateways plus 18 static runtimes updated to
 nginx 1.30.5; application-file hashes preserved. Kuma's same-version official slim

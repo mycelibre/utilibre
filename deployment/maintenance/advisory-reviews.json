@@ -1,11 +1,11 @@
 {
   "penpot": {
-    "version": "2.18.2",
+    "version": "2.18.3",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-expanded-penpot-frontend-1": "sha256:3619f48cbdd0c9197ad23bd3db1c9b4391d7c9c3137e22e806cd7f9c945c1c8e",
-      "/utilibre-expanded-penpot-backend-1": "sha256:face9ec76086ec826dcfa6c2416c15c16f06e24695e54cf8c820cd1dddc48c7d",
-      "/utilibre-expanded-penpot-exporter-1": "sha256:4329b95d4b334b6ff95e80642fa634872a3111d6264f20e6262e43db4129ee58",
+      "/utilibre-expanded-penpot-frontend-1": "sha256:bb8abe27d53de84c95597f2c02c0e702b2779971fb0703e543f9ecf183e999f6",
+      "/utilibre-expanded-penpot-backend-1": "sha256:4746bdafbe62fd3423c6802e8ee106b453d00be47570e7e9c37ec4e735430301",
+      "/utilibre-expanded-penpot-exporter-1": "sha256:4b6fd678f60b95698cfecbc175844bdc95c5bdb80d81d936ea010c46ad987dc1",
       "/utilibre-expanded-penpot-admin-console-1": "sha256:e907c2fd6febb2cefa046978c718e3e4e68cf3444201c574bdf2421c07123bc1"
     },
     "advisories": [
@@ -19,7 +19,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Installed 2.18.2 is outside the upstream affected range <2.18.0. This is not a clearance of bundled dependencies.",
+        "reason": "Installed 2.18.3 is outside the upstream affected range <2.18.0. This is not a clearance of bundled dependencies.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-wxgm-8qjw-x445"
       },
       {
@@ -32,7 +32,7 @@
             "patched": "1.17.2"
           }
         ],
-        "reason": "Installed 2.18.2 is outside the upstream affected range <2.17.1. The patched field has an inconsistent 1.17.2 value; the affected range and subsequent installed release, not that field alone, support this review.",
+        "reason": "Installed 2.18.3 is outside the upstream affected range <2.17.1. The patched field has an inconsistent 1.17.2 value; the affected range and subsequent installed release, not that field alone, support this review.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-4f36-m4hj-cv86"
       },
       {
@@ -45,7 +45,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-ch2q-6x56-qg5r"
       },
       {
@@ -58,7 +58,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-852x-m8p9-558v"
       },
       {
@@ -71,7 +71,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-qvq5-c536-pmx8"
       },
       {
@@ -84,7 +84,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-4p97-v4wg-jxfx"
       },
       {
@@ -97,7 +97,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-j83r-hph3-xpxc"
       },
       {
@@ -110,7 +110,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-fwm4-hm9f-rmcp"
       },
       {
@@ -123,7 +123,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-cjm5-wh82-hwr2"
       },
       {
@@ -136,7 +136,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-mx4v-cmxq-644v"
       },
       {
@@ -149,7 +149,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-mj9f-5cwq-7p3q"
       },
       {
@@ -162,7 +162,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-8257-pm4f-cfhq"
       },
       {
@@ -175,7 +175,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-r8wx-23q6-w3gf"
       },
       {
@@ -188,7 +188,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-xg6f-5v5x-g4w2"
       },
       {
@@ -201,7 +201,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-5vrm-3c6w-gjfv"
       },
       {
@@ -214,7 +214,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-w8mf-4x22-24gg"
       },
       {
@@ -227,7 +227,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-x9xg-qphx-8grr"
       },
       {
@@ -240,7 +240,7 @@
             "patched": "2.18.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-wrcr-m7p8-m2c4"
       },
       {
@@ -253,7 +253,7 @@
             "patched": "2.15.3"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-vc72-6r45-q988"
       },
       {
@@ -266,7 +266,7 @@
             "patched": "2.14.5"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-4937-35vc-hqjj"
       },
       {
@@ -279,7 +279,7 @@
             "patched": "2.15.3"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-w5hh-gj5c-5wpc"
       },
       {
@@ -292,7 +292,7 @@
             "patched": "2.15.0"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-35g2-w7f6-8v9h"
       },
       {
@@ -305,7 +305,7 @@
             "patched": "2.13.2"
           }
         ],
-        "reason": "Reviewed installed 2.18.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.18.3 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-xp3f-g8rq-9px2"
       },
       {
@@ -319,12 +319,12 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Affected penpot-mcp REPL is not deployed. Reviewed standard frontend/backend/exporter/admin-console images, disable-mcp and disable-prepl-server configuration; no 4403 listener in any of their four network namespaces. This component finding is separate from bundled dependency findings.",
+        "reason": "Affected penpot-mcp REPL is not deployed. Rechecked final 2.18.3 frontend/backend/exporter and retained matching admin image; live frontend/backend flags include disable-mcp and disable-prepl-server. No port 4403 listener in any of their four network namespaces. This component disposition does not clear dependencies or the backend OS inventory gap.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-22qr-rp27-j9wm"
       }
     ],
     "files": {
-      "/home/ubuntu/freetools/deployment/expanded/compose.yaml": "c8896f750dda48a2026f25ebee6305eee08d1f6a9bc6a9215dd170e5a3827e0d"
+      "/home/ubuntu/freetools/deployment/expanded/compose.yaml": "d5918d521adae5dfd942cee1662502c68f524f6426aae3b4aa6afc651d02c764"
     }
   },
   "yopass": {
@@ -2090,7 +2090,7 @@
     "version": "0.8.5",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-expanded-jupyterlite-1": "sha256:364f80084669153b72fd1aacefe1de189a5eaa8f1d00f295d74aa090adc99877"
+      "/utilibre-expanded-jupyterlite-1": "sha256:e255a33dd3ae47833eada017dad2adb9dfa8fd6761962aacf31a59cda5202ed4"
     },
     "advisories": [
       {
@@ -2103,16 +2103,16 @@
             "patched": "0.4.1"
           }
         ],
-        "reason": "Reviewed installed 0.8.5 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served package.json identifies JupyterLite 0.8.5, outside the affected <0.4.1 range. Current exact image preserves browser assets while removing unused CLI launchers and updating TIFF/zlib; native Python/pandas/plot checks passed separately. This specific application advisory review does not clear every Python/browser package.",
         "source": "https://github.com/jupyterlite/jupyterlite/security/advisories/GHSA-gj55-2xf9-67rq"
       }
     ]
   },
   "uptime-kuma": {
-    "version": "2.5.5",
+    "version": "2.5.6",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-community-uptime-kuma-1": "sha256:4ddf4658edd048a10fe465c92ac80561c0745071596c49a7533fd0dcc5a7aff9"
+      "/utilibre-community-uptime-kuma-1": "sha256:3f54318380deeb275b2127133ec0fdd59de12ebe295c58bf3f99174b3f86f475"
     },
     "advisories": [
       {
@@ -2125,7 +2125,7 @@
             "patched": "2.5.4"
           }
         ],
-        "reason": "Reviewed installed 2.5.5 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.5.6 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-wf2j-5mc7-5c4w"
       },
       {
@@ -2143,7 +2143,7 @@
             "patched": "1.23.12"
           }
         ],
-        "reason": "Reviewed installed 2.5.5 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.5.6 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-23q2-5gf8-gjpp"
       },
       {
@@ -2166,7 +2166,7 @@
             "patched": "1.3.3"
           }
         ],
-        "reason": "Reviewed installed 2.5.5 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Actual Uptime Kuma 2.5.6 is outside the bounded Uptime Kuma ranges. Separate Dockge ranges in this advisory do not describe this deployed application. Exact runtime identities are bound; bundled dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-88j4-pcx8-q4q3"
       },
       {
@@ -2184,7 +2184,7 @@
             "patched": " 1.23.9"
           }
         ],
-        "reason": "Reviewed installed 2.5.5 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Actual Uptime Kuma 2.5.6 is outside the bounded Uptime Kuma ranges. Separate Dockge ranges in this advisory do not describe this deployed application. Exact runtime identities are bound; bundled dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-mj22-23ff-2hrr"
       },
       {
@@ -2202,7 +2202,7 @@
             "patched": "v1.23.3"
           }
         ],
-        "reason": "Reviewed installed 2.5.5 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.5.6 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-g9v2-wqcj-j99g"
       },
       {
@@ -2220,7 +2220,7 @@
             "patched": "1.22.1"
           }
         ],
-        "reason": "Reviewed installed 2.5.5 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.5.6 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-vr8x-74pm-6vj7"
       },
       {
@@ -2238,7 +2238,7 @@
             "patched": "1.22.1"
           }
         ],
-        "reason": "Reviewed installed 2.5.5 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.5.6 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-7grx-f945-mj96"
       },
       {
@@ -2251,7 +2251,7 @@
             "patched": "1.20.0"
           }
         ],
-        "reason": "Reviewed installed 2.5.5 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.5.6 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-wh8j-xr66-f296"
       },
       {
@@ -2264,7 +2264,7 @@
             "patched": "1.20.0"
           }
         ],
-        "reason": "Reviewed installed 2.5.5 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 2.5.6 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-553g-fcpf-m3wp"
       },
       {
@@ -2278,7 +2278,7 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): 2.2.1; reviewed installed 2.5.5 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Upstream explicitly lists patched 2.2.1 despite an unbounded affected field; actual native application is 2.5.6. In an isolated exact-image container, native notification rendering accepted an ordinary variable template and rejected render/include/layout of an existing synthetic file outside its root. No real file or outbound notification was used. This specific application advisory review does not clear separate LiquidJS package findings.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-v832-4r73-wx5j"
       },
       {
@@ -2292,7 +2292,7 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): 2.2.0; reviewed installed 2.5.5 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Published patched version(s): 2.2.0; reviewed installed 2.5.6 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-c7hf-c5p5-5g6h"
       },
       {
@@ -2306,7 +2306,7 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): 2.1.0; reviewed installed 2.5.5 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Published patched version(s): 2.1.0; reviewed installed 2.5.6 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-9fg7-wgm7-57fh"
       },
       {
@@ -2325,7 +2325,7 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): 1.23.17, 2.0.0; reviewed installed 2.5.5 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Published patched version(s): 1.23.17, 2.0.0; reviewed installed 2.5.6 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-vffh-c9pq-4crh"
       },
       {
@@ -2339,7 +2339,7 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): 2.0.0-beta.3; reviewed installed 2.5.5 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Published patched version(s): 2.0.0-beta.3; reviewed installed 2.5.6 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-5px6-fx2w-459r"
       },
       {
@@ -2358,7 +2358,7 @@
           }
         ],
         "disposition": "deployment-mitigated",
-        "reason": "Kuma administration is operator-only. Hash-bound public gateway permits GET/HEAD status/assets only and denies dashboard/setup/administrative WebSocket/API routes. This prevents public Add Monitor access, not SSRF by a compromised administrator. Internal monitoring remains intentional; no software fix or full egress isolation is claimed.",
+        "reason": "Kuma administration remains operator-only: native port is bound to loopback. Rechecked hash-bound public gateway: status GET 200, dashboard/setup/administrative Socket.IO routes 404, status POST 405; read-only native gateway mount matches the reviewed file. This blocks public Add Monitor access, not SSRF by a compromised administrator. Internal monitoring is intentional; no software fix or complete egress isolation is claimed.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-qjxc-h5jf-c7rj"
       },
       {
@@ -2377,7 +2377,7 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): 2.0.0-beta.2; reviewed installed 2.5.5 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Published patched version(s): 2.0.0-beta.2; reviewed installed 2.5.6 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-hx7h-9vf7-5xhg"
       },
       {
@@ -2396,7 +2396,7 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): 1.23.16, 2.0.0-beta.1; reviewed installed 2.5.5 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Published patched version(s): 1.23.16, 2.0.0-beta.1; reviewed installed 2.5.6 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-2qgm-m29m-cj2h"
       },
       {
@@ -2410,7 +2410,7 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): 1.23.7; reviewed installed 2.5.5 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Published patched version(s): 1.23.7; reviewed installed 2.5.6 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-hfxh-rjv7-2369"
       },
       {
@@ -2424,20 +2424,20 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): 1.23.7; reviewed installed 2.5.5 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Published patched version(s): 1.23.7; reviewed installed 2.5.6 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
         "source": "https://github.com/louislam/uptime-kuma/security/advisories/GHSA-v4v2-8h88-65qj"
       }
     ],
     "files": {
       "/home/ubuntu/freetools/deployment/community/gateway.conf": "4c0e655e0c85f8023d90f89a1225bd1845d7b62f5f121155ad6a6765903ef352",
-      "/home/ubuntu/freetools/deployment/community/compose.yaml": "7485a074b4452d89108f1882488dea9f3c46a4c0cc8e34d564361fe429afcb98"
+      "/home/ubuntu/freetools/deployment/community/compose.yaml": "47de87b34d45f6ee6b576114e57f7b070bedfc259f780eb1dd5b790c2839e55c"
     }
   },
   "bentopdf": {
     "version": "2.8.8",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-toolbox-bentopdf-1": "sha256:78064e26424c5c486f6f2b1e19311975c207ba18f12ef32333fdf911df573ec4"
+      "/utilibre-toolbox-bentopdf-1": "sha256:706bbab15311c2cd186e5bcc6b426e329905b95d45331cae87281073beae8de4"
     },
     "advisories": [
       {
@@ -2450,7 +2450,7 @@
             "patched": "v2.8.7"
           }
         ],
-        "reason": "Reviewed installed 2.8.8 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 2.8.8, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/alam00000/bentopdf/security/advisories/GHSA-wh78-rcw2-hhg9"
       },
       {
@@ -2463,7 +2463,7 @@
             "patched": ""
           }
         ],
-        "reason": "Reviewed installed 2.8.8 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 2.8.8, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/alam00000/bentopdf/security/advisories/GHSA-5xjf-rr5x-pcfj"
       },
       {
@@ -2476,7 +2476,7 @@
             "patched": null
           }
         ],
-        "reason": "Reviewed installed 2.8.8 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 2.8.8, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/alam00000/bentopdf/security/advisories/GHSA-cx8x-7rrr-r9x8"
       },
       {
@@ -2489,7 +2489,7 @@
             "patched": ">= 2.8.3"
           }
         ],
-        "reason": "Reviewed installed 2.8.8 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 2.8.8, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/alam00000/bentopdf/security/advisories/GHSA-6vh8-4frx-647f"
       }
     ]
@@ -2498,7 +2498,7 @@
     "version": "32.0.2",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-toolbox-drawio-1": "sha256:2662dbb2fe1a4608c91f42d71b25247cc404554b7dd6ffff90e57b873213cd31"
+      "/utilibre-toolbox-drawio-1": "sha256:f5e40d31ee05daede204918b47f4792ef688c169038c0dcc0432fd4a0a1cbd83"
     },
     "advisories": [
       {
@@ -2511,7 +2511,7 @@
             "patched": ">=31.4.6"
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-v2pv-rjf8-9w9v"
       },
       {
@@ -2524,7 +2524,7 @@
             "patched": ">=31.4.6"
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-ff67-v9r9-6877"
       },
       {
@@ -2537,7 +2537,7 @@
             "patched": ">=31.4.4"
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-w9xf-933m-9g4m"
       },
       {
@@ -2550,7 +2550,7 @@
             "patched": ">=31.4.3"
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-xj4f-x55f-699c"
       },
       {
@@ -2563,7 +2563,7 @@
             "patched": ">= 31.4.1"
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-r85c-2h2r-46rw"
       },
       {
@@ -2576,7 +2576,7 @@
             "patched": ">=31.3.1"
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-34m6-jq4j-m83m"
       },
       {
@@ -2589,7 +2589,7 @@
             "patched": "31.1.5"
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-vvpv-f297-2ghp"
       },
       {
@@ -2602,7 +2602,7 @@
             "patched": ">= 30.3.8"
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-ghcc-x248-vj2j"
       },
       {
@@ -2615,7 +2615,7 @@
             "patched": ">=31.1.3"
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-m3q9-cwfq-hcjc"
       },
       {
@@ -2628,7 +2628,7 @@
             "patched": ">= 30.3.8"
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-xc39-mcq4-fr4q"
       },
       {
@@ -2641,7 +2641,7 @@
             "patched": ""
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-3v4h-8r2c-m8c5"
       },
       {
@@ -2654,7 +2654,7 @@
             "patched": ""
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-3pq9-9hg4-ggfw"
       },
       {
@@ -2667,7 +2667,7 @@
             "patched": ""
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-mcj5-3pww-7g49"
       },
       {
@@ -2680,7 +2680,7 @@
             "patched": "30.2.5"
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-c76x-r78m-phwx"
       },
       {
@@ -2693,7 +2693,7 @@
             "patched": "29.7.12"
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-fqhg-287p-c6vf"
       },
       {
@@ -2706,7 +2706,7 @@
             "patched": "29.7.9"
           }
         ],
-        "reason": "Reviewed installed 32.0.2 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 32.0.2, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/jgraph/drawio/security/advisories/GHSA-8x7j-m8px-7p8x"
       }
     ]
@@ -2715,7 +2715,7 @@
     "version": "11.5.0",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-browser-tools-cyberchef-1": "sha256:bb183b8fef14dbde73e5c17cedbb90c6669c160a42291947f206ecf111d46d64"
+      "/utilibre-browser-tools-cyberchef-1": "sha256:76507fa068a45ad08ca6f352ebff492be4f2b18b99665a295e286f8e0eb57ac0"
     },
     "advisories": [
       {
@@ -2728,7 +2728,7 @@
             "patched": "11.5.0"
           }
         ],
-        "reason": "Reviewed installed 11.5.0 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 11.5.0, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/gchq/CyberChef/security/advisories/GHSA-444r-v5rp-3xwm"
       },
       {
@@ -2741,7 +2741,7 @@
             "patched": "11.4.0"
           }
         ],
-        "reason": "Reviewed installed 11.5.0 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 11.5.0, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/gchq/CyberChef/security/advisories/GHSA-gp3c-3939-33f7"
       },
       {
@@ -2754,7 +2754,7 @@
             "patched": "11.3.0"
           }
         ],
-        "reason": "Reviewed installed 11.5.0 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 11.5.0, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/gchq/CyberChef/security/advisories/GHSA-w74r-jxjh-gwr6"
       },
       {
@@ -2772,7 +2772,7 @@
             "patched": "11.2.0"
           }
         ],
-        "reason": "Reviewed installed 11.5.0 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 11.5.0, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/gchq/CyberChef/security/advisories/GHSA-fx6f-382r-j72c"
       },
       {
@@ -2790,7 +2790,7 @@
             "patched": "11.1.1"
           }
         ],
-        "reason": "Reviewed installed 11.5.0 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Native served application remains 11.5.0, outside this advisory's bounded application ranges. The TIFF/zlib wrapper receipt proves complete static application bytes unchanged between the previous reviewed image and the exact running image. This does not waive bundled dependency findings.",
         "source": "https://github.com/gchq/CyberChef/security/advisories/GHSA-hjwj-84x5-h7gr"
       }
     ]
@@ -4136,7 +4136,7 @@
     "version": "19.1.0-p1",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-pack-static-static-1": "sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3"
+      "/utilibre-pack-static-static-1": "sha256:b374bb83a3bf4dbc64b4ed35013dc4276afbb5c601acce931ac989794548c68b"
     },
     "advisories": [
       {
@@ -4149,7 +4149,7 @@
             "patched": "18.13.1"
           }
         ],
-        "reason": "Mounted 19.1.0-p1 follows the published patched 18.13.0/18.13.1 releases. Main browser bundle and native offline asset manifest are hash-bound, not only the shared nginx image. SuperSync is not deployed or enabled; local-data configuration is unchanged.",
+        "reason": "Mounted native bundle identifies 19.1.0, after upstream's explicit patched 18.13.1 despite its unbounded affected field. Existing main/offline-manifest hashes are unchanged; the version-bearing chunk and served static-only CSP/configuration are also bound. No SuperSync backend is deployed; remote synchronization is not enabled by this local-data configuration. Dependency findings remain separate.",
         "source": "https://github.com/super-productivity/super-productivity/security/advisories/GHSA-9v8x-68pf-p5x7"
       },
       {
@@ -4162,12 +4162,15 @@
             "patched": "18.13.0"
           }
         ],
-        "reason": "Mounted 19.1.0-p1 follows the published patched 18.13.0/18.13.1 releases. Main browser bundle and native offline asset manifest are hash-bound, not only the shared nginx image. SuperSync is not deployed or enabled; local-data configuration is unchanged.",
+        "reason": "Advisory describes the Electron desktop IPC shell bridge in 18.12.0. Deployed native bundle is browser-only 19.1.0 under static nginx, without an Electron/Node desktop bridge, and is later than explicit patched 18.13.0. Mounted bundle/manifest/version/config hashes are bound; this is not a blanket dependency clearance.",
         "source": "https://github.com/super-productivity/super-productivity/security/advisories/GHSA-256q-p9ff-jv8q"
       }
     ],
     "files": {
       "/opt/utilibre/pack-static/plan-19.1.0-p1/main-6APRMXHH.js": "4aff90ffd5882ae4381c79081dbda0440fa29f2abac458b88b780e6b0185efce",
+      "/opt/utilibre/pack-static/plan-19.1.0-p1/chunk-HKAXUJ4X.js": "06df20b194a4ce760bfbaf94b69d3f5a532bbee6ee423b5be02a62613df86b18",
+      "/home/ubuntu/freetools/deployment/pack/nginx-static.conf": "c6cfc404a2453642beff912eaf6123c7b10ba2e056663a3db5c843a116663776",
+      "/home/ubuntu/freetools/deployment/pack/static-security.conf": "a0e926446cc4edf986efd91b5d718a936ad95364397d2e12ca43af6a0e951c28",
       "/opt/utilibre/pack-static/plan-19.1.0-p1/ngsw.json": "a01cb0947a68131fa27ce37d09598e7d9c5305f27379c69ff4d01661a96d9923"
     }
   },
@@ -4175,7 +4178,7 @@
     "version": "53973c3-p1; converter 2.2.2",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-browser-tools-excalidraw-1": "sha256:8fa514b97e964ae8960de2f89983f42f840c1484a024879b9f96801c8d983089"
+      "/utilibre-browser-tools-excalidraw-1": "sha256:7ce9fdc343a0e731e48e15b63d0424cbc89c1e4238ce047ff7518edbcb95e393"
     },
     "advisories": [
       {
@@ -4193,7 +4196,7 @@
             "patched": "1.1.3"
           }
         ],
-        "reason": "Exact source yarn lock uses mermaid-to-excalidraw 2.2.2, the patched converter named in the advisory description. The unreleased source package still says 0.18.0; that label alone is not an exemption. Exact built static image bound.",
+        "reason": "Exact source yarn lock uses mermaid-to-excalidraw 2.2.2, the patched converter named in the advisory description. The unreleased source package still says 0.18.0; that label alone is not an exemption. Exact built static image bound. Rechecked exact source commit/lock and unchanged complete static asset hash in the final TIFF wrapper receipt; no claim that all Mermaid dependency findings are resolved.",
         "source": "https://github.com/excalidraw/excalidraw/security/advisories/GHSA-39h7-pwv7-rc3x"
       },
       {
@@ -4206,7 +4209,7 @@
             "patched": "0.17.6, 0.16.4"
           }
         ],
-        "reason": "Current source 53973c3 is later than the explicitly bounded affected 0.15/0.16/0.17 release intervals. Exact static image bound. Separate Mermaid dependency advisory reviewed individually.",
+        "reason": "Current source 53973c3 is later than the explicitly bounded affected 0.15/0.16/0.17 release intervals. Exact static image bound. Separate Mermaid dependency advisory reviewed individually. Rechecked exact source commit/lock and unchanged complete static asset hash in the final TIFF wrapper receipt; no claim that all Mermaid dependency findings are resolved.",
         "source": "https://github.com/excalidraw/excalidraw/security/advisories/GHSA-m64q-4jqh-f72f"
       },
       {
@@ -4219,7 +4222,7 @@
             "patched": "0.15.3"
           }
         ],
-        "reason": "Current source 53973c3 is later than the explicitly bounded affected 0.15/0.16/0.17 release intervals. Exact static image bound. Separate Mermaid dependency advisory reviewed individually.",
+        "reason": "Current source 53973c3 is later than the explicitly bounded affected 0.15/0.16/0.17 release intervals. Exact static image bound. Separate Mermaid dependency advisory reviewed individually. Rechecked exact source commit/lock and unchanged complete static asset hash in the final TIFF wrapper receipt; no claim that all Mermaid dependency findings are resolved.",
         "source": "https://github.com/excalidraw/excalidraw/security/advisories/GHSA-v7v8-gjv7-ffmr"
       }
     ]
@@ -4325,11 +4328,11 @@
     ]
   },
   "authentik": {
-    "version": "2026.8.3-python-security-20261011",
+    "version": "2026.8.3",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-identity-server-1": "sha256:fa48909ceaeaaa4dd5f3852e7b78208de3149962a88c80ef349b79c30b067d59",
-      "/utilibre-identity-worker-1": "sha256:fa48909ceaeaaa4dd5f3852e7b78208de3149962a88c80ef349b79c30b067d59"
+      "/utilibre-identity-server-1": "sha256:9fa746d0be08f6dd6c27e4622554ba50d115fbbf714d3ef6c8f0c02984519b4e",
+      "/utilibre-identity-worker-1": "sha256:9fa746d0be08f6dd6c27e4622554ba50d115fbbf714d3ef6c8f0c02984519b4e"
     },
     "advisories": [
       {
@@ -4352,7 +4355,7 @@
             "patched": "2026.2.7"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-cxwx-9x59-28qm"
       },
       {
@@ -4375,7 +4378,7 @@
             "patched": "2026.2.7"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-qgqp-xh8r-v73r"
       },
       {
@@ -4393,7 +4396,7 @@
             "patched": "2026.2.6"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-35v6-hv2g-6992"
       },
       {
@@ -4411,7 +4414,7 @@
             "patched": "2026.5.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-h8ff-c3h7-2gf8"
       },
       {
@@ -4429,7 +4432,7 @@
             "patched": "2026.2.6"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-rv9x-92g6-9cpf"
       },
       {
@@ -4447,7 +4450,7 @@
             "patched": "2026.5.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-3v9h-3hrm-29cx"
       },
       {
@@ -4470,7 +4473,7 @@
             "patched": "2026.5.1"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-xp7f-xjjx-gwm8"
       },
       {
@@ -4493,7 +4496,7 @@
             "patched": "2026.5.1"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-wr38-7xg8-fqxr"
       },
       {
@@ -4516,7 +4519,7 @@
             "patched": "2026.8.2"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-h6c5-mpvq-j4jc"
       },
       {
@@ -4539,7 +4542,7 @@
             "patched": "2026.5.1"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-c3m2-jqmq-pvp3"
       },
       {
@@ -4562,7 +4565,7 @@
             "patched": "2026.8.2"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-m9h4-7j9c-55x9"
       },
       {
@@ -4585,7 +4588,7 @@
             "patched": "2026.8.2"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-cqj8-fxxf-9pg7"
       },
       {
@@ -4603,7 +4606,7 @@
             "patched": "2026.2.6"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-hmrg-vpp4-gj88"
       },
       {
@@ -4621,7 +4624,7 @@
             "patched": "2025.12.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-pgff-5mx8-fqj3"
       },
       {
@@ -4634,7 +4637,7 @@
             "patched": "2026.2.3"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-995q-72cw-cfw3"
       },
       {
@@ -4652,7 +4655,7 @@
             "patched": "2025.12.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-9wj8-xv4r-qwrp"
       },
       {
@@ -4670,7 +4673,7 @@
             "patched": "2025.12.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-5wcc-hf24-rf5h"
       },
       {
@@ -4688,7 +4691,7 @@
             "patched": "2025.12.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-hhpc-rqgm-pxj4"
       },
       {
@@ -4701,7 +4704,7 @@
             "patched": ""
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-4v4x-x5pr-8gp2"
       },
       {
@@ -4719,7 +4722,7 @@
             "patched": "2025.12.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-3wf5-rj6w-7527"
       },
       {
@@ -4737,7 +4740,7 @@
             "patched": "2026.2.3"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-h6x7-hjjc-wjc9"
       },
       {
@@ -4760,7 +4763,7 @@
             "patched": "2025.12.4"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-jh35-c4cc-wjm4"
       },
       {
@@ -4783,7 +4786,7 @@
             "patched": "2025.12.4"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-qvxx-mfm6-626f"
       },
       {
@@ -4801,7 +4804,7 @@
             "patched": "2025.12.4"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-fj56-5763-j8pp"
       },
       {
@@ -4819,7 +4822,7 @@
             "patched": "2025.8.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-ch7q-53v8-73pc"
       },
       {
@@ -4837,7 +4840,7 @@
             "patched": "2025.8.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-xr73-jq5p-ch8r"
       },
       {
@@ -4855,7 +4858,7 @@
             "patched": "2025.4.4"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-9g4j-v8w5-7x42"
       },
       {
@@ -4873,7 +4876,7 @@
             "patched": "2025.4.3"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-wr3v-9p2c-chx7"
       },
       {
@@ -4891,7 +4894,7 @@
             "patched": "2024.12.4"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-p6p8-f853-9g2p"
       },
       {
@@ -4909,7 +4912,7 @@
             "patched": "2024.8.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-2xrw-5f2x-m56j"
       },
       {
@@ -4927,7 +4930,7 @@
             "patched": "2024.8.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-3q5w-6m3x-64gj"
       },
       {
@@ -4945,7 +4948,7 @@
             "patched": "2024.8.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-v6m7-8j37-8f4v"
       },
       {
@@ -4963,7 +4966,7 @@
             "patched": "2024.6.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-7jxf-mmg9-9hg7"
       },
       {
@@ -4981,7 +4984,7 @@
             "patched": "2024.8.3"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-8gfm-pr6x-pfh9"
       },
       {
@@ -4999,7 +5002,7 @@
             "patched": "2024.4.4"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-qxqc-27pr-wgc8"
       },
       {
@@ -5022,7 +5025,7 @@
             "patched": "2024.2.4"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-jq3m-37m7-gp45"
       },
       {
@@ -5045,7 +5048,7 @@
             "patched": "2024.2.4"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-c78c-2r9w-p7x4"
       },
       {
@@ -5063,7 +5066,7 @@
             "patched": "2023.8.7"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-mrx3-gxjx-hjqj"
       },
       {
@@ -5081,7 +5084,7 @@
             "patched": "2023.8.6"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-rjpr-7w8c-gv3j"
       },
       {
@@ -5099,7 +5102,7 @@
             "patched": "2023.8.5"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-fm34-v8xq-f2c3"
       },
       {
@@ -5117,7 +5120,7 @@
             "patched": "2023.10.2"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-rjvp-29xq-f62w"
       },
       {
@@ -5135,7 +5138,7 @@
             "patched": "2023.5.6"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-vmf9-6pcv-xr87"
       },
       {
@@ -5153,7 +5156,7 @@
             "patched": "2023.4.3"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-cmxp-jcw7-jjjv"
       },
       {
@@ -5176,7 +5179,7 @@
             "patched": "2022.12.3"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-3xf5-pqvf-rqq3"
       },
       {
@@ -5194,7 +5197,7 @@
             "patched": "2022.10.4"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-hv8r-6w7p-mpc5"
       },
       {
@@ -5212,7 +5215,7 @@
             "patched": "2022.10.4"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-9qwp-jf7p-vr7h"
       },
       {
@@ -5230,7 +5233,7 @@
             "patched": "2022.10.2"
           }
         ],
-        "reason": "Installed Authentik 2026.8.3 is outside all bounded older release ranges listed here. Exact server/worker images include separately tested PyJWT 2.14.0 and AnyIO 4.14.2. This application-advisory review does not waive other runtime dependencies.",
+        "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-mjfw-54m5-fvjf"
       }
     ]

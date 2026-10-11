@@ -1,0 +1,4 @@
+# Build context is the isolated native 2.18.3 builder output.
+# Preserve upstream launcher, Java runtime and filesystem contract.
+FROM penpotapp/backend:2.18.3@sha256:2df1b3440d2a82cc3571db211b4ffdfa2b89ccc910759e8d5e9387fb62971b5c
+COPY --chown=1001:1001 penpot.jar /opt/penpot/backend/penpot.jar

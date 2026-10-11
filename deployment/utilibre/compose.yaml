@@ -9,7 +9,7 @@ x-security: &default-security
 
 services:
   postgres:
-    image: docker.io/library/postgres:17.11-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
+    image: utilibre-postgres:17.11-alpine-vendor-security-20261011
     user: "70:70"
     restart: unless-stopped
     <<: *default-security

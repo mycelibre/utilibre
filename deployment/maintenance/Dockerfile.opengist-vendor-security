@@ -1,0 +1,8 @@
+# Preserve Opengist 1.15.2 and its embedded Go binary; vendor OS libraries only.
+FROM ghcr.io/thomiceli/opengist:1.15.2@sha256:7edc91273ee7d10a17406da8a08c803158baaff984c39b789c1313473d068f21
+USER root
+RUN apk add --no-cache \
+    libcrypto3=3.5.9-r0 libssl3=3.5.9-r0 \
+    libexpat=2.8.5-r0 pcre2=10.49-r0
+# Compose already runs this UID; keep the image safe if launched independently.
+USER 1000:1000

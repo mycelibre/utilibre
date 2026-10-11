@@ -1,4 +1,163 @@
 {
+  "parallelRelease": {
+    "date": "2026-10-11",
+    "status": "deployed-with-open-security-findings",
+    "postReleaseScan": {
+      "completedAt": "2026-10-11T21:18:50.213Z",
+      "status": "incomplete",
+      "images": 109,
+      "containers": 175,
+      "hostPackages": 510,
+      "sourceManifests": 20,
+      "rawCritical": 61,
+      "rawHigh": 3406,
+      "coverageGaps": ["Penpot backend OS inventory", "Chhoto static Rust binary inventory", "Rustpad static Rust binary inventory"],
+      "limit": "Package occurrences, not confirmed exploits; the incomplete conservative queue retains separate older not-rechecked artifacts."
+    },
+    "supersedes": "Older Penpot 2.18.2 and Kuma 2.5.5 entries below are retained as historical evidence, not current pins.",
+    "penpot": {
+      "version": "2.18.3",
+      "backend": "sha256:4746bdafbe62fd3423c6802e8ee106b453d00be47570e7e9c37ec4e735430301",
+      "frontend": "sha256:bb8abe27d53de84c95597f2c02c0e702b2779971fb0703e543f9ecf183e999f6",
+      "exporter": "sha256:4b6fd678f60b95698cfecbc175844bdc95c5bdb80d81d936ea010c46ad987dc1",
+      "evidence": "deployment/maintenance/penpot-2.18.3/README.md",
+      "osInventory": "incomplete; upstream removes package database, exact base requires unavailable DHI registry credentials"
+    },
+    "kuma": {
+      "version": "2.5.6",
+      "image": "sha256:3f54318380deeb275b2127133ec0fdd59de12ebe295c58bf3f99174b3f86f475",
+      "evidence": "deployment/maintenance/kuma-256-20261011.md"
+    },
+    "postgres": {
+      "containers": 11,
+      "v17_11": "sha256:831b85f33a27b6dc9ae1130630e27fb51685189bfcc9128108cc9d8c4484fb72",
+      "v16_15": "sha256:7c810ed08d738599ab2533df64bf59d17fe204c16c12e0325de7e822d77da1b0",
+      "evidence": "deployment/maintenance/postgres-vendor-20261011.md",
+      "restoreLimit": "Per-database logical restores passed; roles and ACL recovery not replayed. No production restore."
+    },
+    "authentik": {
+      "version": "2026.8.3",
+      "image": "sha256:9fa746d0be08f6dd6c27e4622554ba50d115fbbf714d3ef6c8f0c02984519b4e",
+      "changes": "PCRE2 vendor backport, urllib3 2.8.0; upstream held FIPS OpenSSL preserved",
+      "live": "Server and worker healthy; public Penpot handoff reaches native identity sign-in",
+      "evidence": "deployment/maintenance/remaining-runtime-vendors-20261011.md"
+    },
+    "opengist": {
+      "version": "1.15.2",
+      "image": "sha256:abd991c0904ccf14825d48ece22a203a9df41fbbc8b58236831a287d3f1ad448",
+      "evidence": "deployment/maintenance/remaining-runtime-vendors-20261011.md"
+    },
+    "finalVendorLayers": {
+      "status": "deployed-and-checked",
+      "mariadb": "sha256:75f0d969e0d714e8fcdd711297bb9df9b4b4c5b7d2f9f9aad58883918f335167",
+      "liberaforms": "sha256:5b403053cb749f6b843fb9d3bda92072165b8d83a95717b1c3452ef909c949fd",
+      "evidence": "deployment/maintenance/vendor-final-20261011.md"
+    },
+    "externalAvailability": {
+      "scheduledRun": 38174272872,
+      "createdAt": "2026-10-11T20:56:11Z",
+      "conclusion": "success",
+      "limit": "Observed scheduled execution, not future uptime guarantee"
+    },
+    "portal": {
+      "tag": "public-utility-portal:0.1.0-security-versions-20261011",
+      "changes": "EN/ES software version/source disclosures only",
+      "checks": "typecheck, lint, build, 120 tests and public EN/ES software pages passed",
+      "rollback": "Only PORTAL_IMAGE to public-utility-portal:0.1.0-security-20261011; recreate portal without dependencies"
+    },
+    "advisoryReview": {
+      "checkedAt": "2026-10-11T21:17:27Z",
+      "providers": 112,
+      "githubAdvisoriesExamined": 342,
+      "applicationAdvisoriesAwaitingReview": 0,
+      "nonGithubProvidersRequiringManualCoverage": 10,
+      "limit": "Published application-advisory disposition is separate from the open dependency queue and incomplete OS inventory."
+    }
+  },
+  "nginxTiffContinuation": {
+    "date": "2026-10-11T20:56:00.368Z",
+    "status": "deployed-and-checked",
+    "packages": {
+      "tiff": "4.7.2-r0",
+      "zlib": "1.3.2-r1"
+    },
+    "sharedGateways": {
+      "count": 41,
+      "image": "utilibre-nginx:1.30.5-alpine-tiff-security-20261011",
+      "imageId": "sha256:b374bb83a3bf4dbc64b4ed35013dc4276afbb5c601acce931ac989794548c68b",
+      "previousImage": "nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3",
+      "nativeConfigurationsAndEndpointComparisons": "passed",
+      "containers": [
+        "utilibre-community-gateway-1",
+        "utilibre-expanded-wiki-gateway-1",
+        "utilibre-community-rallly-gateway-1",
+        "utilibre-priviblur-gateway-1",
+        "utilibre-additions-mezzo-gateway-1",
+        "utilibre-additions-fmd-gateway-1",
+        "utilibre-additions-dumb-gateway-1",
+        "utilibre-reader-evaluation-gothub-gateway-1",
+        "utilibre-reader-evaluation-anonymousoverflow-gateway-1",
+        "utilibre-reader-evaluation-fourget-gateway-1",
+        "utilibre-biblioreads-gateway-1",
+        "utilibre-rimgo-gateway-1",
+        "utilibre-kittygram-gateway-1",
+        "utilibre-evaluation-degoog-gateway-1",
+        "utilibre-collaboration-pilot-gateway-1",
+        "utilibre-pack-forms-web-1",
+        "utilibre-pack-static-static-1",
+        "utilibre-spliit-gateway-1",
+        "utilibre-opengist-gateway-1",
+        "utilibre-linkding-gateway-1",
+        "utilibre-calendar-calino-1",
+        "utilibre-vikunja-gateway-1",
+        "utilibre-wishlist-gateway-1",
+        "utilibre-kitchenowl-gateway-1",
+        "utilibre-razzia-gateway-1",
+        "utilibre-bytestash-gateway-1",
+        "utilibre-simplelogin-gateway-1",
+        "utilibre-chitchatter-gateway-1",
+        "utilibre-gathio-gateway-1",
+        "utilibre-chhoto-gateway-1",
+        "utilibre-unfurl-gateway-1",
+        "utilibre-13ft-gateway-1",
+        "utilibre-addy-gateway-1",
+        "utilibre-newsletters-gateway-1",
+        "utilibre-family-chess-gateway-1",
+        "utilibre-projects-gateway-1",
+        "utilibre-donetick-gateway-1",
+        "utilibre-beaverhabits-gateway-1",
+        "utilibre-trip-gateway-1",
+        "utilibre-records-gateway-1",
+        "utilibre-creative-batch-static-1"
+      ]
+    },
+    "artifactWrappers": {
+      "count": 26,
+      "uniqueImages": 25,
+      "completeNativeApplicationHashesUnchanged": true,
+      "nativeConfigurationsAndEndpointComparisons": "passed",
+      "receipt": "deployment/maintenance/nginx-artifacts-20261011.json"
+    },
+    "notes": "Same nginx version and application bytes. Native supervisor paths preserved for coupled gateways. Dated shared-runtime scan has zero findings; this is not clearance of separate application dependencies."
+  },
+  "simpleloginOsContinuation": {
+    "date": "2026-10-11T20:52:39.354Z",
+    "status": "passed",
+    "image": "utilibre-simplelogin:4.82.4-p8-os-security-20261011",
+    "imageId": "sha256:b983013c78bc71418ed8dbc38ba3fa8c9507344d99276f4269659f0b5bdab858",
+    "containers": [
+      "/utilibre-simplelogin-web-1",
+      "/utilibre-simplelogin-smtp-1",
+      "/utilibre-simplelogin-jobs-1"
+    ],
+    "loginStatus": 200,
+    "smtpEhlo": 250,
+    "smtpNoop": 250,
+    "dependencyCheck": true,
+    "noExternalMailSent": true,
+    "privatePilot": true,
+    "notes": "OS-layer update only. Functional native restore checked separately; remaining application dependency findings remain open."
+  },
   "libraryContinuation": {
     "date": "2026-10-11",
     "scope": "Same-application dependency and unused CLI repairs; original backups and image references retained. Full vulnerability backlog remains open.",

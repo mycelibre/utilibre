@@ -42,7 +42,7 @@ services:
       mail: {ipv4_address: 172.29.84.11}
   gateway:
     <<: *runtime
-    image: utilibre-pollaris-gateway:security-20261011-nginx1305
+    image: utilibre-pollaris-gateway:security-20261011-nginx1305-tiff472
     user: "101:101"
     volumes:
       - ./pollaris-gateway.conf:/etc/nginx/nginx.conf:ro
@@ -61,7 +61,7 @@ services:
       retries: 3
   pollaris-db:
     <<: *runtime
-    image: postgres@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
+    image: utilibre-postgres:17.11-alpine-vendor-security-20261011
     user: "70:70"
     env_file: [/opt/utilibre/community-data/pollaris-private/database.env]
     volumes: ["/opt/utilibre/community-data/pollaris-db:/var/lib/postgresql/data"]

@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-11T21:05:20.051Z",
+  "status": "deployed-isolated-and-live-entry-checks-passed",
+  "application": "Uptime Kuma",
+  "version": "2.5.6",
+  "license": "MIT",
+  "upstream": "louislam/uptime-kuma:2.5.6-slim@sha256:c6f131fa8c42d9b2d15e24a9a8fd931364ebb2d7f4ff078964d57128cddaf161",
+  "candidate": "utilibre-kuma:2.5.6-security-20261011",
+  "candidateImageId": "sha256:3f54318380deeb275b2127133ec0fdd59de12ebe295c58bf3f99174b3f86f475",
+  "previousImageId": "sha256:4ddf4658edd048a10fe465c92ac80561c0745071596c49a7533fd0dcc5a7aff9",
+  "lockSha256": "2906415e239140b2b389676e2eafc55a373a3a2f0c3318ee238e922b99826806",
+  "runtime": {"node":"22.23.2", "nativeHealthcheckGo":"1.26.9", "debian":"12.15"},
+  "libraries": {"protobufjs":"7.6.6", "tar":"7.5.21", "@grpc/grpc-js":"1.14.5", "qs":"6.16.0"},
+  "checks": {
+    "nativeSqliteRestore":"passed",
+    "nativeOperatorLogin":"passed",
+    "nativeStatusPage":"passed",
+    "monitorDefinitions":{"http":59,"port":1},
+    "clonePollingDisabled":true,
+    "cloneNetwork":"none",
+    "protobufEncodeDecode":"passed",
+    "nativeGrpcConstruction":"passed",
+    "tarCreateExtract":"passed",
+    "qsRoundTripPrototypeInput":"passed",
+    "averageResponseBadge":"passed",
+    "unknownMonitorBadge":"N/A",
+    "invalidMonitorBadgeStatus":403,
+    "productionChanged":false
+  },
+  "release": {
+    "date":"2026-10-11T21:07:09.228Z",
+    "imageMatchesCandidate":true,
+    "nativeHealth":"healthy",
+    "publicUrl":"https://status.utilibre.org/status/utilibre",
+    "httpStatus":200,
+    "chromiumPageErrors":0,
+    "publicDashboardStatus":404,
+    "publicSetupStatus":404,
+    "publicAdministrativeSocketStatus":404,
+    "publicStatusPostStatus":405,
+    "nativeAdministration":"loopback-only",
+    "scope":"Unauthenticated Chromium desktop entry page; isolated native operator login was tested separately. No live credentials submitted."
+  },
+  "scan": {
+    "date":"2026-10-11T21:03:30.208219981Z",
+    "source":"Trivy complete target image using cached database",
+    "official":{"critical":15,"high":250},
+    "candidate":{"critical":4,"high":122},
+    "candidateComponents":{"debian":{"critical":4,"high":90},"node":{"critical":0,"high":28},"nativeHealthcheck":{"critical":0,"high":0},"cloudflared":{"critical":0,"high":4}},
+    "findingsSuppressed":false,
+    "securityClearance":false
+  }
+}

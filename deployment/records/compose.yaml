@@ -73,7 +73,7 @@ services:
       ingress: {ipv4_address: 172.29.159.13}
   db:
     <<: *runtime
-    image: postgres:16-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
+    image: utilibre-postgres:16.15-alpine-vendor-security-20261011
     user: '70:70'
     cpus: 0.5
     mem_limit: 256m
@@ -102,7 +102,7 @@ services:
       ingress: {ipv4_address: 172.29.159.20}
   gateway:
     <<: *runtime
-    image: nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
+    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.5

@@ -1,4 +1,4 @@
-/** Verify native .penpot export/import on a disposable, blank 2.18.2 stack only. */
+/** Verify native .penpot export/import on a disposable, blank reviewed stack. */
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
@@ -9,6 +9,8 @@ import { chromium } from '../../portal/node_modules/playwright-core/index.mjs';
 const directory = path.resolve(process.argv[2] || '');
 assert.match(directory, /^\/opt\/utilibre\/reports\/penpot-native-roundtrip-[a-z0-9_]+$/);
 const metadata = JSON.parse(await readFile(path.join(directory, 'metadata.json'), 'utf8'));
+const version = metadata.version || '2.18.2';
+assert(['2.18.2', '2.18.3'].includes(version));
 assert.equal(metadata.report, directory);
 assert.match(metadata.name, /^utilibre-penpot-roundtrip-[a-z0-9_]+$/);
 assert(Number.isInteger(metadata.port) && metadata.port > 1024);
@@ -127,7 +129,7 @@ for (const [id, account] of [[file.id, accounts[0]], [importedId, accounts[1]]])
   await json('get-file', { id }, account.cookie, 404);
 }
 await secret('result.json', {
-  version: '2.18.2', checkedAt: new Date().toISOString(), isolated: true,
+  version, checkedAt: new Date().toISOString(), isolated: true,
   nativeExportImport: true, independentAccount: true, preserved: ['page', 'rectangle', 'name', 'position', 'size', 'fill'],
   editableBrowserReopen: true, editSavedAfterReload: true, otherAccountDenied: true,
   nativeFileDeletion: true, archiveBytes: bytes.length, archiveSha256: createHash('sha256').update(bytes).digest('hex'),

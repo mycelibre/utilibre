@@ -45,7 +45,7 @@ services:
       instagram: {ipv4_address: 172.29.91.30}
   gateway:
     <<: *runtime
-    image: nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
+    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
     user: "101:101"
     mem_limit: 128m
     tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=128m,mode=1777"]

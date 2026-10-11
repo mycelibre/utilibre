@@ -1,7 +1,7 @@
 name: utilibre-pack-forms
 services:
   db:
-    image: postgres:17.11-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
+    image: utilibre-postgres:17.11-alpine-vendor-security-20261011
     user: '70:70'
     restart: unless-stopped
     cap_drop: [ALL]
@@ -21,7 +21,7 @@ services:
       timeout: 3s
       retries: 5
   app:
-    image: utilibre-liberaforms:4.11.1-p6
+    image: utilibre-liberaforms:4.11.1-pcre-security-20261011
     restart: unless-stopped
     depends_on: {db: {condition: service_healthy}}
     user: '4002:4002'
@@ -73,7 +73,7 @@ services:
       - ./liberaforms-logging.py:/app/liberaforms/config/logging.py:ro
     networks: {forms: {ipv4_address: 172.29.98.3}}
   web:
-    image: nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
+    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
     entrypoint: [nginx, -g, 'daemon off;']
     restart: unless-stopped
     depends_on: [app]

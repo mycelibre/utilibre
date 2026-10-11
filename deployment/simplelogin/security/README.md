@@ -3,7 +3,7 @@
 Rechecked 11 October 2026: the latest release remains **v4.82.4**, and master
 remains `070155c702a2bc6b0fdff46594e9cc931f61aa37`. Its exact dependency file
 still selects Flask 1.1 / Werkzeug 1.0 / SQLAlchemy 1.3. No newly maintained
-compatible framework fix was available. The existing p7 private deployment and
+compatible framework fix was available. The p8 vendor-patched private deployment and
 working public Addy alternative were preserved; no broad failed dependency
 migration was repeated or represented as a security fix. Public SimpleLogin
 activation remains specifically blocked on the legacy framework repair.
@@ -100,3 +100,74 @@ compatible maintained update and remains a public-deployment blocker.
 Evidence: `/opt/utilibre/reports/simplelogin-runtime-20261009/`, including
 `p7-audit.json`, `p7-audit-summary.json`, hash-pinned artifact metadata, the final
 native result and deployment/rollback receipt. No retention or provider change.
+
+## Ubuntu vendor backports, 11 October, p8 deployed privately
+
+`utilibre-simplelogin:4.82.4-p8-os-security-20261011` was built and tested from
+the retained p7 image, using the existing
+`deployment/maintenance/Dockerfile.debian-runtime`. This is a vendor-package
+layer, not an application or framework migration. Its verified image ID is
+`sha256:b983013c78bc71418ed8dbc38ba3fa8c9507344d99276f4269659f0b5bdab858`;
+the p7 base is
+`sha256:e9a4d98dfec85012d467db00f0f54d5d2c81b81692b2d59c0d745776bd7a9068`.
+The private deployment passed its native backup/restore gate and only the web,
+SMTP and jobs applications were recreated at 20:52 UTC. Live login returned
+200; SMTP EHLO/NOOP returned 250 and `uv pip check` passed. No external email
+was sent. `runtime-release-20261011.json` records the deployment separately
+from candidate tests. Public activation is still blocked by the legacy framework.
+
+Thirteen installed Ubuntu 22.04 packages changed; none were added or removed:
+
+| Package(s) | Previous | Patched vendor version |
+| --- | --- | --- |
+| linux-libc-dev | 5.15.0-194.204 | 5.15.0-198.208 |
+| libssl3, openssl | 3.0.2-0ubuntu1.29 | 3.0.2-0ubuntu1.30 |
+| libaudit-common, libaudit1 | 1:3.0.7-1build1 | 1:3.0.7-1ubuntu0.1 |
+| libc-bin | 2.35-0ubuntu3.14 | 2.35-0ubuntu3.15 |
+| libfreetype6 | 2.11.1+dfsg-1ubuntu0.3 | 2.11.1+dfsg-1ubuntu0.4 |
+| libgssapi-krb5-2, libk5crypto3, libkrb5-3, libkrb5support0 | 1.19.2-2ubuntu0.8 | 1.19.2-2ubuntu0.10 |
+| libpng16-16 | 1.6.37-3ubuntu0.6 | 1.6.37-3ubuntu0.7 |
+| libxpm4 | 1:3.5.12-1ubuntu0.22.04.3 | 1:3.5.12-1ubuntu0.22.04.4 |
+
+The application tree `/code`, including its Python dependencies, is byte-for-byte
+unchanged: SHA-256
+`0a9ce188a6f1552278da803088892a1b78f1e8a7ede643d1e3ffe8f92823d10f`.
+The separately bundled Python interpreter tree is also unchanged: SHA-256
+`be30810609e9f158224b4ae55b12a67d71b6bd91543e5a0ae6a634d1c9ea38f3`.
+Image user, command, entrypoint, environment, ports, volumes and native
+healthcheck configuration were compared without disclosing private values.
+`uv pip check` passed. Build limits were two CPUs and 4 GiB RAM; disk remained
+above the 8 GiB safety floor.
+
+The existing networkless native harness passed on 11 October: CSRF login/sudo,
+CSV import/export, token/PGP round trips and tamper rejection, OAuth CORS/invalid
+bearer denial, native HTTP startup, SMTP EHLO/NOOP, fictional database
+dump/restore, previous-image migration compatibility, and scoped deletion.
+It mounted no production data, submitted no SMTP DATA and sent no external mail.
+Its existing PGPy limitations and whole-OIDC/FIDO gaps still apply.
+
+The fresh image scan fell from 6 critical / 279 high raw package findings on
+p7 to 3 critical / 195 high on this candidate. Remaining OS high/critical
+matches have no fixed Ubuntu package listed in that scan. These are inventory
+counts, not demonstrated exploitability; `linux-libc-dev` contains userspace
+headers, not a running container kernel. Legacy Flask/Werkzeug and other
+Python/build-tool findings remain. No findings were suppressed by this layer.
+
+Rebuild and recheck from the repository root (a changed artifact ID or package
+set requires renewed review; the validation script deliberately refuses drift):
+
+```sh
+docker build --pull=false --resource memory=4g --resource cpu-quota=200000 --resource cpu-period=100000 --build-arg ARTIFACT_IMAGE=utilibre-simplelogin:4.82.4-p7 --build-arg RUNTIME_USER=1000:1000 -f deployment/maintenance/Dockerfile.debian-runtime -t utilibre-simplelogin:4.82.4-p8-os-security-20261011 deployment/maintenance
+node deployment/simplelogin/security/check-os-layer.mjs
+python3 deployment/simplelogin/security/check-isolated.py utilibre-simplelogin:4.82.4-p8-os-security-20261011 /opt/utilibre/reports/simplelogin-os-native-rerun
+```
+
+Private evidence is under `/opt/utilibre/reports/simplelogin-os-20261011/`:
+`layer.json`, `scan.json`, `native/result.json` and `live.json`. The pre-release
+backup `/opt/utilibre/simplelogin/backups/2026-10-11T20-51-30Z` passed isolated
+restore. For a repeat application rollout, use that native backup/restore gate
+and recreate only `web`, `smtp` and `jobs` with `--no-deps`; do not run
+registration initialization. Database/gateway vendor updates have their own
+separate release receipts. Application rollback pins the same three services to retained
+p7 and preserves all current data, private-only access and retention. No
+database downgrade or restore over newer state is required.

@@ -7,10 +7,12 @@ import {chromium} from '../../portal/node_modules/playwright-core/index.mjs';
 process.umask(0o077);
 const rows=[
  ['utilibre-community-rallly-1','utilibre-rallly:libraries-security-20261011-p3','bfdb030bc867d6bd94eaf7c55d59d289a63f62dc217b9494b975c57dfe2aa88c'],
- ['utilibre-community-uptime-kuma-1','utilibre-kuma:runtime-security-20261011-p5','4ddf4658edd048a10fe465c92ac80561c0745071596c49a7533fd0dcc5a7aff9'],
+ ['utilibre-community-uptime-kuma-1','utilibre-kuma:2.5.6-security-20261011','3f54318380deeb275b2127133ec0fdd59de12ebe295c58bf3f99174b3f86f475'],
  ['utilibre-expanded-resume-1','utilibre-resume:seroval-security-20261011-p3','85ea55446d742a559ba0625878dcbf3295723b889d7751a6d628f34cfae085c3'],
  ['utilibre-expanded-penpot-admin-console-1','utilibre-penpot-admin:seroval-security-20261011-p2','e907c2fd6febb2cefa046978c718e3e4e68cf3444201c574bdf2421c07123bc1'],
- ['utilibre-expanded-penpot-backend-1','utilibre-penpot-backend:libraries-security-20261011','face9ec76086ec826dcfa6c2416c15c16f06e24695e54cf8c820cd1dddc48c7d'],
+ ['utilibre-expanded-penpot-backend-1','utilibre-penpot-backend:2.18.3-libraries-security-20261011','4746bdafbe62fd3423c6802e8ee106b453d00be47570e7e9c37ec4e735430301'],
+ ['utilibre-expanded-penpot-frontend-1','penpotapp/frontend:2.18.3@sha256:bb8abe27d53de84c95597f2c02c0e702b2779971fb0703e543f9ecf183e999f6','bb8abe27d53de84c95597f2c02c0e702b2779971fb0703e543f9ecf183e999f6'],
+ ['utilibre-expanded-penpot-exporter-1','utilibre-penpot-exporter:2.18.3-vendor-security-20261011','4b6fd678f60b95698cfecbc175844bdc95c5bdb80d81d936ea010c46ad987dc1'],
 ];
 const docker=(...args)=>execFileSync('docker',args,{encoding:'utf8',stdio:['ignore','pipe','pipe'],timeout:30000});
 const images=[];

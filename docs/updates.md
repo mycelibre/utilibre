@@ -5,6 +5,98 @@ version/digest pins; Redlib is built from an exact source commit and pinned
 base images. SearXNG has the guarded, daily updater below; other services
 remain reviewed rollouts. Production never runs a floating `latest` tag.
 
+## Parallel security release — 11 October 2026
+
+Continued the security work with separate build/test, advisory-review and release
+review workstreams. These are deployed changes, not just candidate recipes:
+
+| Scope | Live change | Verification |
+| --- | --- | --- |
+| Penpot | 2.18.3, preserving the reviewed Java/admin-library patches; exporter vendor fixes | Two-account editing/export/import, removed-member and orphan-role denial, native SVG sanitization, actual PNG export; saved-work backup restored in isolation; public login/OIDC handoff |
+| Uptime Kuma | 2.5.6 with patched Node, healthcheck and compatible libraries | Isolated native SQLite restore/login/status, public badge authorization, loopback-only administration and public gateway denials |
+| Shared static delivery | TIFF 4.7.2-r0 and zlib 1.3.2-r1 across 41 gateways and 26 application wrappers | Native server configurations and before/after endpoint status; complete application-file hashes unchanged for all wrappers |
+| PostgreSQL | Same 17.11/16.15 engines, patched OpenSSL/libuuid across 11 databases | Engine-tree hashes unchanged; synthetic SQL/dump/reopen and each actual application database restored in an isolated fixture; all 11 live instances healthy |
+| Addy database | Same MariaDB 12.2.2 engine, Ubuntu OpenSSL security backport | Engine hashes unchanged; authenticated TLS, SQL/permission tests and two-instance dump/restore; native production backup restored separately |
+| Authentik | 2026.8.3 with PCRE2 vendor backport and app urllib3 2.8.0 | Native password/TOTP replay, RSA/ECDSA OAuth/JWKS denial checks; native backup/restore; live server/worker healthy and Penpot handoff reaches sign-in |
+| Opengist | 1.15.2 vendor-library layer | Native account, private/public gist, edit/history, ZIP, Git discovery and anonymous denial checks; native pre-release backup |
+| LiberaForms | 4.11.1 with CairoSVG 2.9.1 and PCRE2 security backport | Actual avatar/SVG/PNG/PDF output, two-account login, encrypted-form configuration and cross-account/anonymous denial; encrypted backup authentication and native restored login/answer check |
+| SimpleLogin | Private p8 Ubuntu vendor layer | Application/interpreter bytes unchanged; native login, CSRF, crypto/token, SMTP EHLO/NOOP and isolated restore; remains private because the legacy web framework is unresolved |
+| Portal | Current application-version/source disclosures in EN/ES | Typecheck/lint/build and 120 tests; current versions visible on both public software pages without browser errors |
+
+No account enrollment, new public service, analytics, retention change or Caddy
+change. Wallabag's complete public two-account/MFA/save/export/reopen/delete gate
+also passed after the gateway refresh. TRIP/13ft/Unfurl retain their native
+supervisors and passed their internal-network denial checks. Monitor checks are
+point-in-time evidence, not uptime history.
+
+### Coverage and remaining blockers
+
+The scanner now explicitly counts OS packages separately from language packages.
+Penpot's official backend deletes its OS package database; its 170 Java entries
+must not conceal **zero inventoried OS packages**. The exact upstream SBOM is
+also incomplete for OS coverage. This is an unresolved coverage alert, not a
+scanner crash or permission to suppress findings. A faithful rebuild preserving
+that inventory needs access to the pinned Docker Hardened Images base; the
+registry returns 401 and no credential is configured. See the
+[Penpot release evidence](../deployment/maintenance/penpot-2.18.3/README.md).
+
+Authentik's upstream-held `+ak-fips` OpenSSL was deliberately preserved; an
+ordinary Debian package is not a verified drop-in replacement. Grist's old
+runsc fork depends on private old-Go ABI and cannot safely be fixed by merely
+bumping its compiler. Its isolation was not weakened. Legacy SimpleLogin,
+disabled FerretDB MCP, vendor-unfixed OS libraries and remaining bundled/runtime
+dependencies still require separate work. No broad vulnerability waiver was
+introduced. The earlier 20:45 scan below predates this release and is not its
+final result; use the timestamped private `security.json` and queue for current
+coverage and findings.
+
+Post-release scan completed **21:18:50 UTC** in 92 seconds: 109 running images,
+175 containers, 510 host packages and 20 source manifests. Every running image
+still matched the scan's captured ID afterward. Observed raw findings are
+**61 critical / 3,406 high**; these are package occurrences, not proven exploits.
+Coverage remains **incomplete** for Penpot's missing OS inventory and two static
+Rust images (Chhoto and Rustpad) with no packages detected by Trivy. The source
+checks all completed, but a source lock is not proof of a compiled artifact's
+contents. No empty inventory is passed as clean.
+
+The conservative queue retains old observations during incomplete scans:
+52 critical / 3,382 high currently need review, plus 17 critical / 938 high
+marked **not rechecked** from older artifacts. These carried-forward records
+must not be presented as current-image totals or evidence of a regression.
+Exact expiring not-affected decisions remain separate. Queue generation now
+runs in systemd `ExecStopPost`, so an intentionally nonzero incomplete scan
+still updates the ledger; it does **not** clear the failure alert. The unit
+validates and is loaded. A further scanner run is not needed merely to re-count
+unchanged images.
+
+The additional exact Chhoto lock was added to scheduled source coverage after
+that fleet run. Its targeted 21:23:15 check inventoried 259 packages with zero
+reported findings; this does not close either Rust binary-inventory gap.
+[Exact scratch-image evidence and next-build constraints](../deployment/maintenance/rust-inventory-20261011.md).
+Rustpad was not restarted: its live pads are in memory and require a separate
+announced maintenance window with users able to save their work.
+
+### Evidence and rollback
+
+- [PostgreSQL exact IDs, restore boundaries and rollback](../deployment/maintenance/postgres-vendor-20261011.md).
+- [Kuma release](../deployment/maintenance/kuma-256-20261011.md), [shared-runtime release](../deployment/maintenance/nginx-tiff-20261011.md), [vendor-layer tests](../deployment/maintenance/remaining-runtime-vendors-20261011.md), [final MariaDB/Forms layers](../deployment/maintenance/vendor-final-20261011.md).
+- Machine-readable [release receipt](../deployment/maintenance/runtime-release-20261011.json); private reports retain exact pre-change image/configuration bindings without publishing credentials or saved work.
+- Penpot backup: `/opt/utilibre/expanded-backups/2026-10-11T21-02-33-440Z`; native restore passed. Its upstream migration removes orphan permission relations: prefer forward repair. A downgrade requiring an old database must be a separately coordinated recovery, never an automatic overwrite of newer documents.
+- Kuma backup: `/opt/utilibre/community-backups/2026-10-11T21-05-12-712Z`; native SQLite integrity passed. Review native schema compatibility before application downgrades.
+- Authentik backup: `/opt/utilibre/identity-backups/2026-10-11T21-08-24-419Z`; isolated native restore passed. Opengist backup: `/opt/utilibre/community-backups/opengist-20261011T210154Z`. Forms backup: `/opt/utilibre/pack-backups/2026-10-11T21-02-10-890Z`.
+- Dependency-only rollbacks select the exact previous service image and preserve current data/configuration. Use the recorded full Compose file list, including private bootstrap overrides, and `--no-deps --no-build --pull never`; check the exact restored image and health. Do not roll back a whole environment or database for a library-only change.
+- Portal image: `public-utility-portal:0.1.0-security-versions-20261011`. Roll back **only** `PORTAL_IMAGE` to `public-utility-portal:0.1.0-security-20261011`, then `docker compose up -d --no-deps --no-build --pull never portal`. No data migration.
+
+These are Chromium desktop, native API and isolated-container checks, not
+physical-device certification or comprehensive penetration testing. The
+independent GitHub availability job passed manually (run `38173920016`) and
+the API now shows an actual successful **schedule-triggered** run
+[`38174272872`](https://github.com/mycelibre/utilibre/actions/runs/38174272872),
+created at 20:56:11 UTC. This closes the missing observed-cron-run dependency;
+it is not a future uptime guarantee. The final temporary build-cache cleanup
+reclaimed 8.234 GB reported by Docker (some layers shared); root free space
+rose to about 14 GiB. Running/rollback images, backups and saved work remain.
+
 ## Library patch continuation — 11 October 2026
 
 Deployed a further dependency-only batch, preserving application versions,

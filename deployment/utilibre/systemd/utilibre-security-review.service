@@ -11,7 +11,9 @@ Environment=PATH=/root/.nvm/versions/node/v24.14.0/bin:/usr/local/sbin:/usr/loca
 Environment=TRIVY_DISABLE_TELEMETRY=true
 Environment=TRIVY_SKIP_VERSION_CHECK=true
 ExecStart=/usr/bin/flock -n /run/utilibre-security-review.lock /usr/bin/env node deployment/maintenance/security-review.mjs
-ExecStartPost=/usr/bin/env node deployment/maintenance/build-queue.mjs
+# Keep the conservative ledger current even when coverage is incomplete and
+# the scanner deliberately exits nonzero. The scanner failure remains visible.
+ExecStopPost=/usr/bin/env node deployment/maintenance/build-queue.mjs
 StateDirectory=utilibre-maintenance
 StateDirectoryMode=0700
 CacheDirectory=utilibre-security

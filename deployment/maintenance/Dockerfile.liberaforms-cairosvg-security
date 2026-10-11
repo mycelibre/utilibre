@@ -1,0 +1,8 @@
+# Preserve the existing complete app, privacy patches and dependency environment.
+FROM utilibre-liberaforms:4.11.1-p6
+USER root
+RUN test "$(python -c 'import importlib.metadata as m; print(m.version("CairoSVG"))')" = 2.9.0 \
+ && python -m pip install --no-cache-dir --no-deps \
+    'https://files.pythonhosted.org/packages/41/51/8041c2e70649e5b7f2a0aedbbbd0609ac099cfaa0cbde2014279c9c05756/cairosvg-2.9.1-py3-none-any.whl#sha256=f91c5628e834be024a0ed4544d76261cd84016a4c73bcdf26c386495825c05a1' \
+ && python -m pip check
+USER 4002:4002

@@ -1,0 +1,8 @@
+# Same MariaDB 12.2.2 engine and native entrypoint; signed Ubuntu vendor fix.
+FROM mariadb:12.2@sha256:6a4c4bbf0447c2247801309513fcc0dd17c3f35390368139ce419387fdd1144d
+RUN mariadbd --version | grep -F 'Ver 12.2.2-MariaDB-ubu2404 ' \
+ && apt-get -qq update \
+ && apt-get -qqy --no-install-recommends --only-upgrade install \
+      libssl3t64=3.0.13-0ubuntu3.16 openssl=3.0.13-0ubuntu3.16 \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*

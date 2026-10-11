@@ -110,7 +110,7 @@ services:
   uptime-kuma:
     <<: *runtime
     # Same app version; native SQLite/HTTP/TCP checks need no bundled Chromium/MariaDB.
-    image: utilibre-kuma:runtime-security-20261011-p5
+    image: utilibre-kuma:2.5.6-security-20261011
     user: "1000:1000"
     environment:
       UPTIME_KUMA_DB_TYPE: sqlite
@@ -128,7 +128,7 @@ services:
 
   gateway:
     <<: *runtime
-    image: nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
+    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     volumes:
@@ -184,7 +184,7 @@ services:
   rallly-gateway:
     <<: *runtime
     profiles: [rallly]
-    image: nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
+    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     volumes:
@@ -198,7 +198,7 @@ services:
   rallly-db:
     <<: *runtime
     profiles: [rallly]
-    image: postgres@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
+    image: utilibre-postgres:17.11-alpine-vendor-security-20261011
     user: "70:70"
     environment:
       POSTGRES_USER: rallly

@@ -1,0 +1,10 @@
+# Default: the exact shared runtime already deployed. The bounded checker may
+# also supply an exact artifact image ID derived from the release manifest.
+ARG BASE=nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
+FROM ${BASE}
+USER root
+RUN test "$(cat /etc/alpine-release)" = 3.24.2 \
+ && nginx -v 2>&1 | grep -Fx 'nginx version: nginx/1.30.5' \
+ && apk add --no-cache --upgrade tiff=4.7.2-r0 zlib=1.3.2-r1 \
+ && apk info --exists tiff=4.7.2-r0 zlib=1.3.2-r1
+USER 101

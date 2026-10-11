@@ -45,7 +45,7 @@ if(process.argv[2]==='stage'){
   if(extended&&/^sha256:[a-f0-9]{64}$/.test(artifactRef)){artifactRef='utilibre-'+extra[name][0]+':pre-security-20261011';await docker(['tag',row.oldImage,artifactRef]);}
   const shared=rows.find(r=>r.newRef===row.newRef);
   if(shared&&(shared.oldImage!==row.oldImage||shared.staticRoot!==row.staticRoot))throw Error('Conflicting shared artifact');
-  if(!shared)await docker(['build','--network','none','--build-arg','ARTIFACT_IMAGE='+artifactRef,'--build-arg','STATIC_ROOT='+row.staticRoot,'-f','deployment/toolbox/Dockerfile.artifact','-t',row.newRef,'deployment/toolbox'],300000);
+  if(!shared)await docker(['build','--network','default','--build-arg','ARTIFACT_IMAGE='+artifactRef,'--build-arg','STATIC_ROOT='+row.staticRoot,'-f','deployment/toolbox/Dockerfile.artifact','-t',row.newRef,'deployment/toolbox'],300000);
   const built=JSON.parse(await docker(['image','inspect',row.newRef]))[0];row.newImage=built.Id;
   const [before,after]=await Promise.all([checksum(row.oldRef,row.staticRoot),checksum(row.newRef,row.staticRoot)]);
   if(!/^[a-f0-9]{64}$/.test(before)||before!==after)throw Error('Browser asset bytes changed');row.assetSha256=before;
@@ -68,7 +68,7 @@ if(process.argv[2]==='stage'){
  const stage=JSON.parse(await readFile(dir+'/stage.json','utf8')),r=stage.rows.find(x=>x.name==='utilibre-creative-batch-glyphr-1');
  const live=JSON.parse(await docker(['inspect',r.name]))[0];if(live.Image!==r.oldImage)throw Error('Repair only the un-deployed candidate');
  r.staticRoot='/srv/app';
- await docker(['build','--network','none','--build-arg','ARTIFACT_IMAGE='+r.oldRef,'--build-arg','STATIC_ROOT=/srv/app','-f','deployment/toolbox/Dockerfile.artifact','-t',r.newRef,'deployment/toolbox'],300000);
+ await docker(['build','--network','default','--build-arg','ARTIFACT_IMAGE='+r.oldRef,'--build-arg','STATIC_ROOT=/srv/app','-f','deployment/toolbox/Dockerfile.artifact','-t',r.newRef,'deployment/toolbox'],300000);
  const before=await checksum(r.oldRef,r.staticRoot),after=await checksum(r.newRef,r.staticRoot);if(before!==after)throw Error('Glyphr app bytes changed');
  r.assetSha256=before;r.newImage=JSON.parse(await docker(['image','inspect',r.newRef]))[0].Id;
  await writeFile(dir+'/stage.json',JSON.stringify(stage,null,2)+'\n',{mode:0o600});

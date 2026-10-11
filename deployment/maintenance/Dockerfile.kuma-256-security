@@ -1,0 +1,19 @@
+FROM louislam/uptime-kuma:2.5.6-slim@sha256:c6f131fa8c42d9b2d15e24a9a8fd931364ebb2d7f4ff078964d57128cddaf161 AS upstream
+FROM node:24.21.0-alpine3.24@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS libraries
+WORKDIR /reviewed
+COPY kuma-256-libraries/package*.json ./
+RUN npm ci --ignore-scripts --omit=dev --no-audit --no-fund
+FROM golang:1.26.9-alpine@sha256:3082400e369fa24d5fc60bca20edab3f6d604e0c5a690ec66b295eff4dd87ade AS healthcheck
+COPY --from=upstream /app/extra/healthcheck.go /source/healthcheck.go
+RUN test "$(sha256sum /source/healthcheck.go | cut -d ' ' -f 1)" = d16fd78404ed92d7e8b61f535790f4f508d807d5d76c2d9fbb275e2cd86f3f9e
+RUN --mount=type=tmpfs,target=/root/.cache CGO_ENABLED=0 GOMAXPROCS=2 GOMEMLIMIT=2GiB go build -trimpath -o /healthcheck /source/healthcheck.go
+FROM node:22.23.2-bookworm-slim@sha256:48e4b67d85f87bd551df43704e24d252f56cc5f8e9718841aace50f19948f0f9 AS node
+FROM upstream
+USER root
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends upgrade \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
+COPY --from=libraries /reviewed /opt/utilibre-reviewed-libraries
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=healthcheck --chmod=0555 /healthcheck /app/extra/healthcheck
+RUN node -e 'const fs=require("fs"),assert=require("node:assert/strict"),deps="/opt/utilibre-reviewed-libraries/node_modules";assert.equal(require("/app/package.json").version,"2.5.6");assert.equal(process.version,"v22.23.2");assert.equal(require("/app/node_modules/proxy-addr/package.json").version,"2.0.8");for(const [p,old,name] of [["/app/node_modules/tar","6.2.1","tar"],["/app/node_modules/protobufjs","7.2.6","protobufjs"],["/app/node_modules/@grpc/grpc-js","1.8.22","@grpc/grpc-js"],["/app/node_modules/qs","6.14.2","qs"],["/usr/local/lib/node_modules/npm/node_modules/tar","7.5.11","tar"]]){assert.equal(require(p+"/package.json").version,old,p);fs.rmSync(p,{recursive:true});fs.cpSync(deps+"/"+name,p,{recursive:true});fs.symlinkSync(deps,p+"/node_modules");assert.equal(JSON.parse(fs.readFileSync(p+"/package.json")).version,JSON.parse(fs.readFileSync(deps+"/"+name+"/package.json")).version)}require("/app/node_modules/@louislam/sqlite3")' && npm --version
+USER 1000:1000

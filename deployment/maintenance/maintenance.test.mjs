@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {imageInventory,summarize,registryFallback,scannerManifestName} from './security-review.mjs';
+import {imageInventory,summarize,registryFallback,scannerManifestName,imageScanStatus} from './security-review.mjs';
 import {reportIssues,queueIssues,externalIssues,alertState} from './report-health.mjs';
 import {validateDecision,applyDecisions} from './triage.mjs';
 import {findingsQueue} from './build-queue.mjs';
@@ -22,6 +22,15 @@ test('runtime images deduplicate by immutable ID, exclude other projects and omi
 test('scanner summaries retain unfixed findings and distinguish package inventory from vulnerabilities',()=>{
  const result=summarize({Metadata:{OS:{EOSL:true}},Results:[{Type:'debian',Packages:[{},{}],Vulnerabilities:[{VulnerabilityID:'CVE-test',Severity:'HIGH',PkgName:'x',InstalledVersion:'1'}]}]});
  assert.equal(result.packages,2);assert.equal(result.counts.HIGH,1);assert.equal(result.findings[0].fixed,null);assert(result.eosl);
+});
+test('language packages cannot conceal a missing identified distribution inventory',()=>{
+ const partial=summarize({Metadata:{OS:{Family:'debian',Name:'13.7'}},Results:[{Class:'os-pkgs',Type:'debian'},{Class:'lang-pkgs',Type:'jar',Packages:[{}]}]});
+ assert.equal(partial.packages,1);assert.equal(partial.os.inventory,'missing');assert.equal(imageScanStatus(partial),'incomplete');
+ const complete=summarize({Metadata:{OS:{Family:'alpine'}},Results:[{Class:'os-pkgs',Packages:[{}]}]});
+ assert.equal(imageScanStatus(complete),'checked');
+ assert.equal(imageScanStatus(summarize({Results:[]})),'incomplete');
+ const standalone=summarize({Results:[{Class:'lang-pkgs',Type:'gobinary',Packages:[{}]}]});
+ assert.equal(standalone.os.inventory,'not-detected');assert.equal(imageScanStatus(standalone),'checked');
 });
 test('stale, future, missing and failed reports are not healthy',()=>{
  for(const report of [null,{status:'passed',date:'bad'},{status:'passed',date:'2026-10-01'},{status:'passed',date:'2026-10-12'},{status:'failed',date:new Date(now).toISOString()}])assert(reportIssues('Tasks',report,36,now).length);

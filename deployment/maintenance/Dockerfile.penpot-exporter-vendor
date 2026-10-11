@@ -1,0 +1,14 @@
+# Same native 2.18.3 application/browser; signed DHI vendor backports only.
+FROM penpotapp/exporter:2.18.3@sha256:418232d6ca3120b1c2bfde298a56a05a1f41f567cd8494deac3fe7fbc186cfbd
+USER root
+RUN apt-get -qq update \
+ && apt-get -qqy --no-install-recommends --only-upgrade install \
+      libexpat1=2.8.3-1~deb13u1+dhi5 \
+      libcups2t64=2.4.10-3+deb13u2+dhi5 \
+      libpng16-16t64=1.6.48-1+deb13u6+dhi0 \
+      libxi6=2:1.8.2-1+dhi1 \
+      xserver-common=2:21.1.16-1.3+deb13u4+dhi1 \
+      xvfb=2:21.1.16-1.3+deb13u4+dhi1 \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+USER penpot:penpot

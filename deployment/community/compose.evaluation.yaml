@@ -44,7 +44,7 @@ services:
     ulimits: {core: 0}
     memswap_limit: 64m
     <<: *runtime
-    image: nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
+    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
     user: "101:101"
     mem_limit: 64m
     logging: {driver: none}

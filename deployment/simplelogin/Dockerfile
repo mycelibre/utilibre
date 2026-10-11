@@ -45,4 +45,15 @@ RUN UV_NO_CACHE=1 /usr/bin/uv pip install --python /code/.venv/bin/python --no-d
  && python /tmp/utilibre-apply-runtime-pins.py \
  && UV_NO_CACHE=1 /usr/bin/uv pip install --python /code/.venv/bin/python --no-deps --build-constraint /tmp/utilibre-build-constraints.txt /code \
  && UV_NO_CACHE=1 /usr/bin/uv pip check --python /code/.venv/bin/python
+# Keep signed Ubuntu security backports when rebuilding the complete app image.
+# Production uses the reviewed p8 artifact; package versions are in its receipt.
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends --only-upgrade install \
+      linux-libc-dev=5.15.0-198.208 \
+      libssl3=3.0.2-0ubuntu1.30 openssl=3.0.2-0ubuntu1.30 \
+      libaudit-common=1:3.0.7-1ubuntu0.1 libaudit1=1:3.0.7-1ubuntu0.1 \
+      libc-bin=2.35-0ubuntu3.15 libfreetype6=2.11.1+dfsg-1ubuntu0.4 \
+      libgssapi-krb5-2=1.19.2-2ubuntu0.10 libk5crypto3=1.19.2-2ubuntu0.10 \
+      libkrb5-3=1.19.2-2ubuntu0.10 libkrb5support0=1.19.2-2ubuntu0.10 \
+      libpng16-16=1.6.37-3ubuntu0.7 libxpm4=1:3.5.12-1ubuntu0.22.04.4 \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 USER 1000:1000
