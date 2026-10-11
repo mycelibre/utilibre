@@ -23,6 +23,7 @@ export const sources = [
   source('spliit', '/opt/utilibre/spliit/backups', iso),
   ...['donetick', 'beaverhabits', 'family-chess', 'wishlist', 'kitchenowl', 'newsletters', 'addy', 'simplelogin'].map(id => source(id, `/opt/utilibre/${id}/backups`, iso, 'SHA256.json')),
   source('projects', '/opt/utilibre/projects/backups', compact, 'SHA256.json'),
+  source('records', '/opt/utilibre/records/backups', compact, 'SHA256.json'),
   source('chhoto', '/opt/utilibre/chhoto-backups', compact),
 ];
 

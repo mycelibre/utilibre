@@ -59,6 +59,19 @@ services:
       PUBLIC_TRIP_URL: ${PUBLIC_TRIP_URL:-}
       PUBLIC_SPEED_URL: ${PUBLIC_SPEED_URL:-}
       PUBLIC_LATEX_URL: ${PUBLIC_LATEX_URL:-}
+      PUBLIC_GRIST_URL: ${PUBLIC_GRIST_URL:-}
+      PUBLIC_CANDLR_URL: ${PUBLIC_CANDLR_URL:-}
+      PUBLIC_BOOKPLATE_URL: ${PUBLIC_BOOKPLATE_URL:-}
+      PUBLIC_FLOORPLAN_URL: ${PUBLIC_FLOORPLAN_URL:-}
+      PUBLIC_BLOCKBENCH_URL: ${PUBLIC_BLOCKBENCH_URL:-}
+      PUBLIC_GLYPHR_URL: ${PUBLIC_GLYPHR_URL:-}
+      PUBLIC_JSCAD_URL: ${PUBLIC_JSCAD_URL:-}
+      PUBLIC_FOSSFLOW_URL: ${PUBLIC_FOSSFLOW_URL:-}
+      PUBLIC_VVVEB_URL: ${PUBLIC_VVVEB_URL:-}
+      PUBLIC_GRID_URL: ${PUBLIC_GRID_URL:-}
+      PUBLIC_OPENREEL_URL: ${PUBLIC_OPENREEL_URL:-}
+      PUBLIC_GRAPHITE_URL: ${PUBLIC_GRAPHITE_URL:-}
+      PUBLIC_MICROSTUDIO_URL: ${PUBLIC_MICROSTUDIO_URL:-}
       PUBLIC_WALLABAG_URL: ${PUBLIC_WALLABAG_URL:-}
       PUBLIC_CHESS_URL: ${PUBLIC_CHESS_URL:-}
       PUBLIC_PROJECTS_URL: ${PUBLIC_PROJECTS_URL:-}
@@ -132,6 +145,9 @@ services:
       EDGE_PROXY_IP: ${PORTAL_EDGE_PROXY_IP:-${EDGE_PROXY_IP:-}}
       STATUS_CACHE_SECONDS: ${STATUS_CACHE_SECONDS:-15}
       STATUS_SERVICES: >-
+        grist=https://grist.utilibre.org/healthz,candlr=https://candlr.utilibre.org/login,bookplate=https://bookplate.utilibre.org/login,
+        openreel=https://openreel.utilibre.org/,openplan3d=https://floorplan.utilibre.org/,blockbench=https://blockbench.utilibre.org/,
+        glyphr=https://glyphr.utilibre.org/,jscad=https://jscad.utilibre.org/,grid=https://grid.utilibre.org/kiri/,fossflow=https://fossflow.utilibre.org/,vvveb=https://vvveb.utilibre.org/,
         librespeed=https://speed.utilibre.org/healthz,
         texlyre=https://latex.utilibre.org/,
         wallabag=https://wallabag.utilibre.org/login,

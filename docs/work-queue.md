@@ -1,5 +1,21 @@
 # Operator work queue — reconciled 11 October 2026
 
+## Creative and personal-record applications — 11 October
+
+Eleven additions are deployed with 22 EN/ES guides, fictional editable examples,
+source offers, catalogue/privacy records, status probes and scoped Kuma monitors:
+Grist, Candlr, Bookplate, OpenReel, OpenPlan3D, Blockbench, Glyphr Studio, JSCAD,
+Kiri:Moto/GridSpace, FossFLOW and VvvebJs. The first three require approved/existing
+accounts; the others process the documented workflow in the browser. Native
+account-data backup/isolated restore and an encrypted Storage Box generation pass.
+
+Graphite is withheld because the required branded assets forbid our modified
+build without permission; microStudio is withheld for legacy authentication and
+dependency issues. Their reserved gateways return 503, not working applications.
+No upstream message or listing submission was sent. Candlr email delivery, real
+mobile hardware, long-video and physical-printer tests remain unverified, not
+promised. See [release, exact pins, privacy patches, tests and rollback](creative-batch-2026-10-11.md).
+
 ## LibreSpeed and LaTeX/chat review — 11 October
 
 LibreSpeed Go 1.1.6-p1 is installed at `https://speed.utilibre.org/` (Spanish

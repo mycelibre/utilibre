@@ -6,6 +6,14 @@ https://creativecommons.org/publicdomain/zero/1.0/legalcode
 No visitor information or third-party artwork is included in these six files.
 Other files retain their existing provenance and applicable licensing.
 
+records-practice.csv, floorplan-practice.json, blockbench-practice.bbmodel,
+fossflow-practice.json, glyphr-practice.gs2, practice-cube.stl and the
+jscad/ practice folder were created for Utilibre on 11 October 2026 using
+fictional data and original simple geometry. Those example contributions
+are dedicated under CC0 1.0 Universal. Native format/software notices and
+any embedded upstream attribution remain intact; this is not a relicensing
+of the applications. No account exports or private records are included.
+
 The budget-*.xlsx, document-*.docx, document-*.md, community-*.json,
 community-*.ics, slides-*.md, cryptpad-outline-*.md, week-plan-*.txt,
 calculations-*.nbt, form-questions-*.txt and map-fictional.* practice files were created for

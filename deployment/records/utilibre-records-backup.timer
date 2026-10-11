@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily records-service recovery snapshot
+
+[Timer]
+OnCalendar=*-*-* 01:25:00 UTC
+RandomizedDelaySec=120
+Persistent=true
+Unit=utilibre-records-backup.service
+
+[Install]
+WantedBy=timers.target

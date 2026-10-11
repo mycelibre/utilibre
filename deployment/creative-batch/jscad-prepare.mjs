@@ -1,0 +1,11 @@
+import {execFileSync} from 'node:child_process';
+import {mkdirSync,cpSync,writeFileSync,readFileSync} from 'node:fs';
+const root='/opt/utilibre/evaluation-src/jscad-20261011';
+if(execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim()!=='f245ea3a5072024b789f276c6fb9ce6c3eb3fd0d')throw Error('Unexpected JSCAD source');
+const dest='/opt/utilibre/creative-batch/sites/jscad';mkdirSync(dest,{recursive:true});
+for(const name of ['css','data','dist','fonts','imgs','locales'])cpSync(root+'/packages/web/'+name,dest+'/'+name,{recursive:true});
+cpSync(root+'/packages/examples',dest+'/examples',{recursive:true});
+cpSync(root+'/LICENSE',dest+'/LICENSE');
+const html=readFileSync(root+'/packages/web/demo.html','utf8').replace("{name: 'jscad1'}","{name: 'jscad1', logging: false}");
+writeFileSync(dest+'/index.html',html);
+console.log('Published upstream prebuilt JSCAD web UI and local assets; no remote PHP/Perl proxy.');

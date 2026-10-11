@@ -166,7 +166,7 @@ export function renderCatalogRow(
   const privacy = element('dl', 'privacy-answers');
   for (const [question, answer] of privacyAnswers(entry, language)) append(privacy, element('dt', '', question), element('dd', '', answer));
   details.append(privacy);
-  if (launch && entry.labels.includes('local') && !entry.labels.includes('server')) {
+  if (launch && ((entry.labels.includes('local') && !entry.labels.includes('server')) || ['candlr','bookplate'].includes(entry.id))) {
     const source = element('a', 'text-link', t('software.documents.sourceBundle'));
     source.href = new URL('/utilibre-source/', launch.href).href;
     source.target = '_blank';

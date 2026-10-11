@@ -1,0 +1,60 @@
+{
+  "version": "",
+  "title": "Fictional diagram / Diagrama ficticio",
+  "colors": [
+    {
+      "id": "blue",
+      "value": "#0066cc"
+    },
+    {
+      "id": "green",
+      "value": "#00aa00"
+    },
+    {
+      "id": "red",
+      "value": "#cc0000"
+    },
+    {
+      "id": "orange",
+      "value": "#ff9900"
+    },
+    {
+      "id": "purple",
+      "value": "#9900cc"
+    },
+    {
+      "id": "black",
+      "value": "#000000"
+    },
+    {
+      "id": "gray",
+      "value": "#666666"
+    }
+  ],
+  "icons": [],
+  "items": [],
+  "views": [
+    {
+      "name": "Untitled view",
+      "items": [],
+      "connectors": [],
+      "rectangles": [
+        {
+          "id": "4b86a137-0557-4da2-8d25-2ac1577a0cb5",
+          "color": "blue",
+          "from": {
+            "x": 2,
+            "y": 3
+          },
+          "to": {
+            "x": 1,
+            "y": 0
+          }
+        }
+      ],
+      "textBoxes": [],
+      "id": "67f1e5d2-48a3-4fb3-9b92-882db763bef3",
+      "lastUpdated": "2026-10-11T09:08:19.554Z"
+    }
+  ]
+}

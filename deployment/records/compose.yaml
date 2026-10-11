@@ -1,0 +1,128 @@
+name: utilibre-records
+x-runtime: &runtime
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  ulimits: {core: 0}
+  logging: {driver: none}
+  pids_limit: 128
+  tmpfs: ['/tmp:rw,nosuid,nodev,size=128m,mode=1777']
+services:
+  grist:
+    <<: *runtime
+    image: gristlabs/grist-oss:1.7.21@sha256:73e4815fcc1b5dfff6cd47b37a3ec2bb80d3c70b27efba4c8714a57781d414d1
+    user: '1000:1000'
+    cpus: 2
+    mem_limit: 8g
+    memswap_limit: 8g
+    env_file: /opt/utilibre/records/private/grist.env
+    environment:
+      APP_STATIC_INCLUDE_CUSTOM_CSS: 'true'
+    volumes:
+      - /opt/utilibre/records/data/grist:/persist
+      - ../grist/custom.css:/grist/static/custom.css:ro
+    networks: {private: {ipv4_address: 172.29.158.10}}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8484/status').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+  grist-auth:
+    <<: *runtime
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.5@sha256:8498b0d0ef0a7b29686414000a08aee467f02d0299c9ed1e006a8f33fc017916
+    user: '65532:65532'
+    cpus: 0.5
+    mem_limit: 128m
+    memswap_limit: 128m
+    command: ['--config=/config/oauth2.cfg']
+    env_file: /opt/utilibre/records/private/grist-auth.env
+    volumes: ['./oauth2.cfg:/config/oauth2.cfg:ro']
+    extra_hosts: ['auth.utilibre.org:10.10.1.3']
+    networks:
+      private: {ipv4_address: 172.29.158.11}
+      ingress: {ipv4_address: 172.29.159.11}
+  candlr:
+    <<: *runtime
+    image: utilibre-candlr:2.0.0-p1
+    user: '1000:1000'
+    entrypoint: ['/bin/sh', '-c']
+    command: ['cd /app/backend && alembic upgrade head && exec supervisord -n -c /etc/supervisor/conf.d/candlr.conf']
+    cpus: 1
+    mem_limit: 512m
+    memswap_limit: 512m
+    env_file: /opt/utilibre/records/private/candlr.env
+    volumes: ['/opt/utilibre/records/data/candlr:/app/backend/data']
+    extra_hosts: ['auth.utilibre.org:10.10.1.3', 'mx.mailgt.dev:10.10.1.20']
+    networks:
+      private: {ipv4_address: 172.29.158.12}
+      ingress: {ipv4_address: 172.29.159.12}
+  bookplate:
+    <<: *runtime
+    image: utilibre-bookplate:1.1.0-p1
+    user: '1000:1000'
+    cpus: 1
+    mem_limit: 768m
+    memswap_limit: 768m
+    env_file: /opt/utilibre/records/private/bookplate.env
+    volumes: ['/opt/utilibre/records/data/bookplate:/data/uploads']
+    extra_hosts: ['mx.mailgt.dev:10.10.1.20']
+    depends_on: {db: {condition: service_healthy}, egress: {condition: service_started}}
+    networks:
+      private: {ipv4_address: 172.29.158.13}
+      ingress: {ipv4_address: 172.29.159.13}
+  db:
+    <<: *runtime
+    image: postgres:16-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
+    user: '70:70'
+    cpus: 0.5
+    mem_limit: 256m
+    memswap_limit: 256m
+    env_file: /opt/utilibre/records/private/database.env
+    command: ['postgres', '-c', 'log_statement=none', '-c', 'log_min_messages=panic', '-c', 'log_min_error_statement=panic', '-c', 'log_connections=off', '-c', 'log_disconnections=off']
+    volumes: ['/opt/utilibre/records/data/postgresql:/var/lib/postgresql/data']
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777', '/var/run/postgresql:rw,nosuid,nodev,noexec,size=16m,uid=70,gid=70']
+    networks: {private: {ipv4_address: 172.29.158.14}}
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U bookplate -d bookplate']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  egress:
+    <<: *runtime
+    image: utilibre-public-egress:7.7
+    cpus: 0.25
+    mem_limit: 128m
+    memswap_limit: 128m
+    volumes: ['./squid.conf:/etc/squid/squid.conf:ro']
+    dns: [1.1.1.1, 9.9.9.9]
+    sysctls: {net.ipv6.conf.all.disable_ipv6: '1'}
+    networks:
+      private: {ipv4_address: 172.29.158.20}
+      ingress: {ipv4_address: 172.29.159.20}
+  gateway:
+    <<: *runtime
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    user: '101:101'
+    entrypoint: [nginx, -g, 'daemon off;']
+    cpus: 0.5
+    mem_limit: 128m
+    memswap_limit: 128m
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./proxy.conf:/etc/nginx/records-proxy.conf:ro
+      - ./headers.conf:/etc/nginx/records-headers.conf:ro
+      - /opt/utilibre/records/public:/srv/source:ro
+    ports:
+      - '10.10.1.43:3227:8080'
+      - '127.0.0.1:3227:8080'
+      - '10.10.1.43:3228:8081'
+      - '127.0.0.1:3228:8081'
+      - '10.10.1.43:3229:8082'
+      - '127.0.0.1:3229:8082'
+    networks:
+      private: {ipv4_address: 172.29.158.30}
+      ingress: {ipv4_address: 172.29.159.30}
+networks:
+  private: {internal: true, enable_ipv6: false, ipam: {config: [{subnet: 172.29.158.0/24}]}}
+  ingress: {enable_ipv6: false, ipam: {config: [{subnet: 172.29.159.0/24}]}}

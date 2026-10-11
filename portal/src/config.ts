@@ -1,4 +1,17 @@
 export interface PublicConfig {
+  publicGristUrl?: string;
+  publicCandlrUrl?: string;
+  publicBookplateUrl?: string;
+  publicFloorplanUrl?: string;
+  publicBlockbenchUrl?: string;
+  publicGlyphrUrl?: string;
+  publicJscadUrl?: string;
+  publicFossflowUrl?: string;
+  publicVvvebUrl?: string;
+  publicGridUrl?: string;
+  publicOpenreelUrl?: string;
+  publicGraphiteUrl?: string;
+  publicMicrostudioUrl?: string;
   publicLatexUrl?: string;
   publicSpeedUrl?: string;
   publicWallabagUrl?: string;

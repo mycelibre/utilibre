@@ -1,0 +1,4 @@
+grist.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3227
+}

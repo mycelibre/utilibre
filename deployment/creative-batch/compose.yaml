@@ -1,0 +1,62 @@
+name: utilibre-creative-batch
+services:
+  static:
+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    entrypoint: [nginx, -g, 'daemon off;']
+    restart: unless-stopped
+    read_only: true
+    user: '101:101'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging: {driver: none}
+    cpus: 1
+    mem_limit: 128m
+    memswap_limit: 128m
+    pids_limit: 32
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777']
+    volumes:
+      - ./static-nginx.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/creative-batch/sites:/srv/sites:ro
+      - /opt/utilibre/creative-batch/public:/srv/source:ro
+    ports:
+      - '127.0.0.1:3230:3230'
+      - '10.10.1.43:3230:3230'
+      - '127.0.0.1:3231:3231'
+      - '10.10.1.43:3231:3231'
+      - '127.0.0.1:3232:3232'
+      - '10.10.1.43:3232:3232'
+      - '127.0.0.1:3234:3234'
+      - '10.10.1.43:3234:3234'
+      - '127.0.0.1:3235:3235'
+      - '10.10.1.43:3235:3235'
+      - '127.0.0.1:3236:3236'
+      - '10.10.1.43:3236:3236'
+      - '127.0.0.1:3237:3237'
+      - '10.10.1.43:3237:3237'
+      - '127.0.0.1:3238:3238'
+      - '10.10.1.43:3238:3238'
+      # Static 503 only: microStudio itself is withheld by the security gate.
+      - '127.0.0.1:3239:3239'
+      - '10.10.1.43:3239:3239'
+    networks: [static, ingress]
+  glyphr:
+    image: utilibre-glyphr:2.10.6-p1
+    restart: unless-stopped
+    read_only: true
+    user: '101:101'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging: {driver: none}
+    cpus: 0.5
+    mem_limit: 96m
+    memswap_limit: 96m
+    pids_limit: 32
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=16m,mode=1777']
+    volumes:
+      - ./glyphr-nginx.conf:/etc/nginx/nginx.conf:ro
+      - /opt/utilibre/creative-batch/public:/srv/source:ro
+    ports: ['127.0.0.1:3233:8080','10.10.1.43:3233:8080']
+    networks: [static, ingress]
+networks:
+  static: {internal: true, enable_ipv6: false, ipam: {config: [{subnet: 172.29.160.0/24}]}}
+  ingress: {enable_ipv6: false, ipam: {config: [{subnet: 172.29.161.0/24}]}}

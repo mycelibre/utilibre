@@ -1,0 +1,12 @@
+import {chromium} from '../../portal/node_modules/playwright/index.mjs';
+import {mkdir,writeFile} from 'node:fs/promises';
+const [name,url]=process.argv.slice(2);
+if(!/^[a-z0-9-]+$/.test(name||'')||!/^https?:\/\/(127\.0\.0\.1:\d+|[a-z0-9-]+\.utilibre\.org)(\/.*)?$/.test(url||''))throw Error('Supply a reviewed tool name and URL');
+const dir='/opt/utilibre/reports/creative-batch-20261011';await mkdir(dir,{recursive:true});
+const b=await chromium.launch({args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const p=await b.newPage({viewport:{width:1366,height:900}});
+const network=[],errors=[],failed=[];p.on('request',r=>{if(/^https?:/.test(r.url()))network.push({url:r.url(),method:r.method()});});p.on('pageerror',e=>errors.push(e.message));p.on('response',r=>{if(r.status()>=400)failed.push({url:r.url(),status:r.status()});});
+await p.goto(url,{waitUntil:'networkidle',timeout:60000});
+const report={name,body:(await p.locator('body').innerText()).slice(0,14000),controls:await p.locator('button:visible,input:visible,select:visible,a:visible').evaluateAll(ns=>ns.map(n=>({tag:n.tagName,text:n.innerText?.slice(0,90),title:n.getAttribute('title'),aria:n.getAttribute('aria-label'),id:n.id,type:n.getAttribute('type')}))),external:network.filter(r=>new URL(r.url).origin!==new URL(url).origin),errors};
+report.failed=failed;await writeFile(dir+'/'+name+'-inspection.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
+await p.screenshot({path:dir+'/'+name+'-desktop.png'});await b.close();

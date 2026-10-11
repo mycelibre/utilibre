@@ -55,6 +55,18 @@ const hostedConfig = config({
 });
 
 describe('catalog discovery metadata', () => {
+  it('keeps held creative builds unavailable even if an operator enables their URLs', () => {
+    const setup = config({ enabledServices: ['graphite', 'microstudio', 'vvveb', 'grist'], listedServices: ['graphite', 'microstudio'], publicGraphiteUrl: 'https://graphite.utilibre.org/', publicMicrostudioUrl: 'https://microstudio.utilibre.org/', publicVvvebUrl: 'https://vvveb.utilibre.org/', publicGristUrl: 'https://grist.utilibre.org/' });
+    for (const id of ['graphite', 'microstudio']) {
+      expect(entryLaunch(catalogEntry(id)!, 'en', setup)).toBeNull();
+      expect(immediatelyUsable(catalogEntry(id)!, setup)).toBe(false);
+    }
+    const publicIds = discoverEntries(setup, 'es', { view: 'public' }).map(e => e.id);
+    expect(publicIds).toContain('vvveb');
+    expect(publicIds).not.toContain('grist');
+    expect(publicIds).not.toContain('microstudio');
+    expect(publicIds).not.toContain('graphite');
+  });
   it('lists Wallabag under accounts without promising anonymous use or SSO', () => {
     const setup = config({ enabledServices: ['wallabag'], publicWallabagUrl: 'https://wallabag.utilibre.org/' });
     const reader = catalogEntry('wallabag')!;
@@ -91,6 +103,7 @@ describe('catalog discovery metadata', () => {
   });
   it('keeps reviewed applications and one narrow integration', () => {
     expect(catalog.map((entry) => entry.id)).toEqual([
+      'openplan3d', 'blockbench', 'glyphr', 'jscad', 'fossflow', 'vvveb', 'grid', 'openreel', 'graphite', 'grist', 'candlr', 'bookplate', 'microstudio',
       'texlyre', 'librespeed', 'one-file-core', 'tiddlywiki', 'moocup', 'rustpad', 'autoredact', 'gravity', 'knit', 'newton', 'family-chess', 'projects', 'trip', 'wallabag', 'donetick', 'beaverhabits', 'kokoro-web',
       'newsletters', 'addy',
       'spliit', 'wishlist', 'kitchenowl', 'opengist', 'linkding', 'vikunja', 'bytestash', 'openresume',

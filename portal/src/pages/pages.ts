@@ -537,7 +537,7 @@ function renderSoftware(language: Language, config: PublicConfig, t: Translate):
       modification: t(entry.modified ? 'software.modified' : 'software.configured'),
       modifiedSource: ['texlyre', 'librespeed', 'addy', 'trip', 'donetick', 'beaverhabits', 'projects', 'kokoro-web', 'family-chess', 'knit', 'newton', 'autoredact', 'gravity', 'rustpad', 'moocup', 'one-file-core', 'tiddlywiki', 'newsletters', 'lrclib', 'translite', 'cryptpad', 'liberaforms', 'galene', 'ittools', 'fmd', 'reactive-resume', 'drawdb', 'bookbinder', 'moodist', 'sketchforge', 'chartdb', 'spliit', 'wishlist', 'kitchenowl', 'bytestash', 'openresume', 'calino', 'chitchatter', 'gathio', 'link-cleaner', 'razzia', 'chhoto', 'unfurl', '13ft'].includes(entry.id) && config.publicPdfUrl
         ? new URL(`/utilibre-source/${entry.id === 'ittools' ? 'it-tools' : entry.id}-utilibre.tar.gz${['newsletters', 'chhoto', 'lrclib', 'translite'].includes(entry.id) ? '?revision=' + encodeURIComponent(entry.installedVersion) : ''}`, config.publicPdfUrl).href
-        : entry.labels.includes('local') && !entry.labels.includes('server') && baseUrl
+        : ((entry.labels.includes('local') && !entry.labels.includes('server')) || ['candlr','bookplate'].includes(entry.id)) && baseUrl
         ? new URL('/utilibre-source/', baseUrl).href : config.sourceCodeUrl,
       purpose: localized(entry.description, language),
     });

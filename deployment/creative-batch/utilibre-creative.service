@@ -1,0 +1,14 @@
+[Unit]
+Description=Utilibre read-only creative applications
+Requires=docker.service
+After=docker.service network-online.target
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/ubuntu/freetools
+ExecStartPre=/bin/sh deployment/creative-batch/firewall.sh
+ExecStart=/usr/bin/docker compose -f deployment/creative-batch/compose.yaml up -d
+ExecStop=/usr/bin/docker compose -f deployment/creative-batch/compose.yaml stop
+TimeoutStartSec=120
+[Install]
+WantedBy=multi-user.target

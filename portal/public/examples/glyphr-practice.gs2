@@ -1,0 +1,116 @@
+{
+  "settings": {
+    "project": {
+      "name": "Fictional Practice",
+      "latestVersion": "2.10.6",
+      "initialVersion": "2.10.6",
+      "id": "g2_T7JY2DX150",
+      "exportFormat": "otf",
+      "characterRanges": [
+        {
+          "name": "Basic Latin",
+          "begin": "0x20",
+          "end": "0x7F"
+        }
+      ]
+    },
+    "app": {
+      "stopPageNavigation": true,
+      "formatSaveFile": false,
+      "saveLivePreviews": true,
+      "autoSave": true,
+      "savePreferences": false,
+      "unlinkComponentInstances": true,
+      "directlyDragCurves": true,
+      "canvasDisplayModeFilled": true,
+      "showNonCharPoints": false,
+      "itemChooserPageSize": 256,
+      "previewText": false,
+      "exportLigatures": true,
+      "exportKerning": true,
+      "exportUneditedItems": true,
+      "moveShapesOnSVGDragDrop": false,
+      "autoSideBearingsOnSVGDragDrop": 50,
+      "autoRightBearingOnFirstShape": 50,
+      "exportComponentsAsComposites": true,
+      "importComponentsFromComposites": true,
+      "highlightPointsNearPoints": 2,
+      "highlightPointsNearHandles": 2,
+      "highlightPointsNearXZero": 2,
+      "highlightPointsNearYZero": 2,
+      "guides": {
+        "drawGuidesOnTop": false,
+        "systemShowGuides": true,
+        "systemShowLabels": false,
+        "systemTransparency": 70,
+        "systemGuides": [
+          "baseline",
+          "leftSide",
+          "rightSide"
+        ],
+        "customShowGuides": true,
+        "customShowLabels": false,
+        "customTransparency": 70,
+        "custom": [],
+        "gridShow": false,
+        "gridTransparency": 90,
+        "gridDivisions": 10,
+        "gridSnap": false
+      },
+      "contextCharacters": {
+        "showCharacters": false,
+        "characterTransparency": 20,
+        "showGuides": true,
+        "guidesTransparency": 70
+      },
+      "livePreviews": [
+        {
+          "text": "the five boxing wizards jump quickly"
+        }
+      ]
+    },
+    "font": {
+      "family": "Fictional Practice",
+      "style": "Regular",
+      "version": "1.0",
+      "description": "",
+      "panose": "0 0 0 0 0 0 0 0 0 0",
+      "upm": 2048,
+      "ascent": 1550,
+      "descent": -440,
+      "capHeight": 1480,
+      "xHeight": 1100,
+      "overshoot": 30,
+      "lineGap": 58,
+      "weight": 400,
+      "italicAngle": 0,
+      "designer": "",
+      "designerURL": "",
+      "manufacturer": "",
+      "manufacturerURL": "",
+      "license": "",
+      "licenseURL": "",
+      "copyright": "",
+      "trademark": "",
+      "variant": "normal",
+      "stretch": "normal",
+      "stemv": 0,
+      "stemh": 0,
+      "slope": 0,
+      "underlinePosition": -50,
+      "underlineThickness": 10,
+      "strikethroughPosition": 300,
+      "strikethroughThickness": 10,
+      "overlinePosition": 750,
+      "overlineThickness": 10
+    }
+  },
+  "glyphs": {
+    "glyph-0x41": {
+      "id": "glyph-0x41"
+    }
+  },
+  "ligatures": {},
+  "components": {},
+  "kerning": {}
+}

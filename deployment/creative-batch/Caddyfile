@@ -1,0 +1,53 @@
+# Application routes. Graphite and microStudio intentionally return 503;
+# see docs/creative-batch-2026-10-11.md for their release blockers.
+openreel.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3230
+}
+
+floorplan.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3231
+}
+
+blockbench.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3232
+}
+
+glyphr.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3233
+}
+
+graphite.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3234
+}
+
+jscad.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3235
+}
+
+# GridSpace: Kiri:Moto and Mesh:Tool share this origin.
+grid.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3236
+}
+
+fossflow.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3237
+}
+
+vvveb.utilibre.org {
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3238
+}
+
+microstudio.utilibre.org {
+    # Reserved backend currently serves an honest unavailable response only.
+    encode zstd gzip
+    reverse_proxy 10.10.1.43:3239
+}

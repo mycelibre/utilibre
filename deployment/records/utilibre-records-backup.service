@@ -1,0 +1,14 @@
+[Unit]
+Description=Consistent snapshots of Grist, Candlr and Bookplate saved account work
+Requires=utilibre-records.service
+After=utilibre-records.service
+
+[Service]
+Type=oneshot
+User=root
+UMask=0077
+ExecStart=/usr/bin/python3 /home/ubuntu/freetools/deployment/records/backup.py
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+TimeoutStartSec=15min

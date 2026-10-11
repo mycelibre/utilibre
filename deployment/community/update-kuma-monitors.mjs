@@ -13,6 +13,17 @@ dst=sqlite3.connect(sys.argv[1]);src.backup(dst)
 assert dst.execute('PRAGMA integrity_check').fetchall()==[('ok',)]
 dst.close();src.close()`, `${backup}/kuma.sqlite`]);
 const additions = [
+  ['Grist', 'https://grist.utilibre.org/healthz'],
+  ['Candlr', 'https://candlr.utilibre.org/login'],
+  ['Bookplate', 'https://bookplate.utilibre.org/login'],
+  ['OpenReel', 'https://openreel.utilibre.org/'],
+  ['OpenPlan3D', 'https://floorplan.utilibre.org/'],
+  ['Blockbench', 'https://blockbench.utilibre.org/'],
+  ['Glyphr Studio', 'https://glyphr.utilibre.org/'],
+  ['JSCAD', 'https://jscad.utilibre.org/'],
+  ['Kiri:Moto', 'https://grid.utilibre.org/kiri/'],
+  ['FossFLOW', 'https://fossflow.utilibre.org/'],
+  ['VvvebJs', 'https://vvveb.utilibre.org/'],
   ['Collab · WBO', 'https://collab.utilibre.org/'],
   ['Markmap', 'https://mindmap.utilibre.org/'],
   ['Excalidraw', 'https://whiteboard.utilibre.org/'],
@@ -48,8 +59,10 @@ const additions = [
 ];
 // A new-service release should not reconcile unrelated monitors/settings.
 const onlyName = process.argv.find(arg => arg.startsWith('--only='))?.slice(7);
+const creativeBatch=process.argv.includes('--creative-batch');
+const scoped=Boolean(onlyName||creativeBatch);
 if (onlyName && !additions.some(([name]) => name === onlyName)) throw Error('Unknown monitor selection');
-const selectedAdditions = onlyName ? additions.filter(([name]) => name === onlyName) : additions;
+const selectedAdditions = onlyName ? additions.filter(([name]) => name === onlyName) : creativeBatch ? additions.slice(0,11) : additions;
 const program = `
 const {io}=require('socket.io-client');
 const socket=io('http://127.0.0.1:3001',{transports:['websocket']});
@@ -62,7 +75,7 @@ socket.on('connect',async()=>{try{
   const current=await new Promise(resolve=>{socket.once('monitorList',resolve);socket.emit('getMonitorList')});
   const monitors=Object.values(current||{});
   const search=monitors.find(m=>m.url==='https://search.utilibre.org/'||m.url==='https://search.utilibre.org/healthz');
-  if(!${Boolean(onlyName)}){
+  if(!${scoped}){
     if(!search)throw Error('Expected SearXNG monitor missing');
     await call('editMonitor',{...search,name:'SearXNG health · HTTPS via private edge',url:'https://search.utilibre.org/healthz',ignoreTls:false,accepted_statuscodes:['200-299']});
   }
@@ -78,7 +91,7 @@ socket.on('connect',async()=>{try{
     const id=prior?.id??(await call('add',{name,url,type:'http',method:'GET',interval:300,retryInterval:60,resendInterval:0,maxretries:2,timeout:20,active:true,accepted_statuscodes:['200-299'],maxredirects:5,ignoreTls:false,upsideDown:false,notificationIDList:defaults,conditions:[]})).monitorID;
     if(!groups.some(g=>g.monitorList.some(m=>m.id===id)))extra.monitorList.push({id,sendUrl:false});
   }
-  if(!${Boolean(onlyName)}){
+  if(!${scoped}){
   const voice=monitors.find(m=>m.type==='port'&&m.hostname==='10.10.1.43'&&Number(m.port)===64738);
   const voiceId=voice?.id??(await call('add',{name:'Mumble · private TCP listener',type:'port',hostname:'10.10.1.43',port:64738,interval:300,retryInterval:60,resendInterval:0,maxretries:2,timeout:20,active:true,upsideDown:false,accepted_statuscodes:[],notificationIDList:defaults,conditions:[]})).monitorID;
   if(!groups.some(g=>g.monitorList.some(m=>m.id===voiceId)))extra.monitorList.push({id:voiceId,sendUrl:false});

@@ -1,0 +1,16 @@
+[Unit]
+Description=Utilibre Grist, Candlr and Bookplate
+Requires=docker.service
+After=docker.service network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/ubuntu/freetools
+ExecStartPre=/bin/sh /home/ubuntu/freetools/deployment/records/firewall.sh
+ExecStart=/usr/bin/docker compose -f deployment/records/compose.yaml up -d
+ExecStop=/usr/bin/docker compose -f deployment/records/compose.yaml stop
+TimeoutStartSec=180
+
+[Install]
+WantedBy=multi-user.target

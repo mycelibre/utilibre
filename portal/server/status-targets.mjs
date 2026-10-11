@@ -1,6 +1,17 @@
 // Operator-configured probes only. Public checks are restricted to these exact
 // application URLs; never accept arbitrary Internet destinations or redirects.
 const publicRoots = new Map([
+  ['grist', 'https://grist.utilibre.org/healthz'],
+  ['candlr', 'https://candlr.utilibre.org/login'],
+  ['bookplate', 'https://bookplate.utilibre.org/login'],
+  ['openreel', 'https://openreel.utilibre.org/'],
+  ['openplan3d', 'https://floorplan.utilibre.org/'],
+  ['blockbench', 'https://blockbench.utilibre.org/'],
+  ['glyphr', 'https://glyphr.utilibre.org/'],
+  ['jscad', 'https://jscad.utilibre.org/'],
+  ['grid', 'https://grid.utilibre.org/kiri/'],
+  ['fossflow', 'https://fossflow.utilibre.org/'],
+  ['vvveb', 'https://vvveb.utilibre.org/'],
   ['librespeed', 'https://speed.utilibre.org/healthz'],
   ['wallabag', 'https://wallabag.utilibre.org/login'],
   ['family-chess', 'https://chess.utilibre.org/'],

@@ -1,0 +1,14 @@
+import {execFileSync} from 'node:child_process';
+import {writeFileSync} from 'node:fs';
+const root='/opt/utilibre/evaluation-src/openplan3d-20261011';
+if(execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim()!=='d68cadf703578f2cd3a7c77f820e18d342580c32')throw Error('Unexpected source');
+const get=p=>execFileSync('git',['show','HEAD:'+p],{cwd:root,encoding:'utf8'}),put=(p,s)=>writeFileSync(root+'/'+p,s);
+put('svelte.config.js',"import adapter from '@sveltejs/adapter-static';\nexport default {kit:{adapter:adapter({fallback:'index.html'})}};\n");
+put('src/routes/+layout.ts','export const ssr = false;\nexport const prerender = false;\n');
+let layout=get('src/routes/+layout.svelte').replace(/  onMount\(\(\) => \{ if \(window.location.pathname[^\n]+\n/,'  // Utilibre: browser analytics are not included.\n');put('src/routes/+layout.svelte',layout);
+let settings=get('src/lib/components/toolbar/SettingsDialog.svelte');
+settings=settings.replace(/\{:else if activeTab === 'ai'\}[\s\S]*?(?=\n        \{\/if\})/,"{:else if activeTab === 'ai'}\n          <p>External AI services are disabled on Utilibre. / Los servicios externos de IA están desactivados.</p>");put('src/lib/components/toolbar/SettingsDialog.svelte',settings);
+let top=get('src/lib/components/toolbar/TopBar.svelte').replace(/\s*<button[^>]+onclick=\{onShareWithAssistant\}[^>]*>[\s\S]*?<\/button>/g,'');put('src/lib/components/toolbar/TopBar.svelte',top);
+let viewer=get('src/lib/components/viewer3d/ThreeViewer.svelte');viewer=viewer.replace('async function runAIRender() {',"async function runAIRender() {\n    aiRenderError = 'External AI services are disabled on Utilibre.'; return;");viewer=viewer.replace(/<button[^>]+onclick=\{\(\) => \{ cancelAIRender\(\); aiRenderOpen = !aiRenderOpen; \}\}>[\s\S]*?<\/button>/,'');put('src/lib/components/viewer3d/ThreeViewer.svelte',viewer);
+put('src/routes/editor/+page.svelte',get('src/routes/editor/+page.svelte').replace("const rawCode = url.searchParams.get('import');",'const rawCode: string | null = null; // No remote capture handoff.'));
+console.log('Native static SPA build; analytics, remote AI and server-assisted sharing disabled.');
