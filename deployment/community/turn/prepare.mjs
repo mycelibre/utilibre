@@ -28,8 +28,8 @@ const relayMin = lab ? 49740 : 49700;
 const relayMax = lab ? 49771 : 49731;
 const config = [
   `listening-ip=${bind}`, `relay-ip=${bind}`, `listening-port=${port}`,
-  // The public/private form implicitly allows the private relay address in
-  // coturn. Single-address mapping preserves the explicit private-peer denial.
+  // Use single-address mapping; the necessary self-relay allowance is explicit
+  // below and is port-restricted independently by the dedicated UID firewall.
   `external-ip=${publicIp}`, 'realm=utilibre.org', 'server-name=Utilibre PairDrop',
   'fingerprint', 'lt-cred-mech', `user=pairdrop:${credential}`, 'stale-nonce=600',
   `min-port=${relayMin}`, `max-port=${relayMax}`, 'relay-threads=1',
@@ -45,9 +45,13 @@ const config = [
     'denied-peer-ip=192.168.0.0-192.168.255.255', 'denied-peer-ip=224.0.0.0-255.255.255.255',
     'denied-peer-ip=192.0.0.0-192.0.0.255', 'denied-peer-ip=192.0.2.0-192.0.2.255',
     'denied-peer-ip=198.18.0.0-198.19.255.255', 'denied-peer-ip=198.51.100.0-198.51.100.255',
-    'denied-peer-ip=203.0.113.0-203.0.113.255', `denied-peer-ip=${publicIp}`, `denied-peer-ip=${bind}`,
-    // IPv4-only first option; also blocks IPv4-mapped IPv6 bypasses.
-    'denied-peer-ip=::-ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff',
+    'denied-peer-ip=203.0.113.0-203.0.113.255', `denied-peer-ip=${bind}`,
+    // Coturn maps its public peer address back to this private relay address.
+    // Its IP-only ACL cannot restrict ports. The independent UID firewall
+    // permits ONLY same-relay UDP ports, denying all other host/LAN services.
+    `allowed-peer-ip=${bind}`,
+    // Only an IPv4 relay address is configured. The independent UID firewall
+    // rejects all IPv6 egress; do not mix an IPv6 catch-all into IPv4 ACLs.
   ]),
 ].join('\n') + '\n';
 writeFileSync(`${dir}/turnserver.conf`, config, { mode: 0o600 });

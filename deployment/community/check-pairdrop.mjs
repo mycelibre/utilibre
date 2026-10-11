@@ -3,19 +3,35 @@
 // mode is for the activated option from an external authorized runner.
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
+import {connect as tcpConnect} from 'node:net';
+import {connect as tlsConnect} from 'node:tls';
 const require = createRequire(process.env.PAIRDROP_PLAYWRIGHT_PACKAGE || new URL('../../portal/package.json', import.meta.url));
 const {chromium} = require('playwright-core');
 
 const origin = 'https://drop.utilibre.org';
 const relay = process.env.PAIRDROP_FORCE_RELAY || '';
 assert(['','udp','tcp','tls'].includes(relay), 'Unsupported relay transport');
+// Public fixed endpoints only. Do not print addresses, credentials or packets.
+if (relay) {
+  for (const [port, secure] of [[3479, false], [5350, true]]) {
+    await new Promise((resolve, reject) => {
+      const socket = (secure ? tlsConnect : tcpConnect)({host:'turn.utilibre.org', port, ...(secure ? {servername:'turn.utilibre.org'} : {})});
+      socket.setTimeout(8000, () => socket.destroy(new Error(`TURN ${port} connection timed out`)));
+      socket.once('error', () => reject(new Error(`Public TURN ${port} ${secure ? 'TLS validation' : 'TCP connection'} failed`)));
+      socket.once(secure ? 'secureConnect' : 'connect', () => {socket.destroy();resolve();});
+    });
+  }
+  console.log('Public TURN TCP 3479 and validated TLS 5350 reachable.');
+}
 const browser = await chromium.launch(process.env.PAIRDROP_CHROME ? {executablePath:process.env.PAIRDROP_CHROME} : {});
 const payload = Buffer.from('Utilibre synthetic file-transfer check.\nSin datos personales.\n');
+let pages = [];
 try {
   const sender = await browser.newContext({ locale: 'en-US' });
   const receiver = await browser.newContext({ locale: 'es-GT', acceptDownloads: true });
   for (const context of [sender,receiver]) await context.addInitScript(relay => {
     window.syntheticPeerConnections = [];
+    window.syntheticIceSummary = {candidateTypes:[], errorCodes:[]};
     const Native = window.RTCPeerConnection;
     window.RTCPeerConnection = class extends Native {
       constructor(config, ...rest) {
@@ -25,10 +41,12 @@ try {
           })).filter(server => server.urls.length)};
         }
         super(config, ...rest); window.syntheticPeerConnections.push(this);
+        this.addEventListener('icecandidate', e => {if(e.candidate) window.syntheticIceSummary.candidateTypes.push(e.candidate.type)});
+        this.addEventListener('icecandidateerror', e => window.syntheticIceSummary.errorCodes.push(e.errorCode));
       }
     };
   }, relay);
-  const pages = await Promise.all([sender.newPage(), receiver.newPage()]);
+  pages = await Promise.all([sender.newPage(), receiver.newPage()]);
   const errors = [], external = new Set();
   for (const page of pages) {
     page.on('pageerror', error => errors.push(error.message));
@@ -67,6 +85,12 @@ try {
 } catch (error) {
   // Avoid retaining room identifiers, browser state or visitor content in logs.
   console.error('PairDrop synthetic workflow failed:', String(error.message).replace(/https?:\/\/\S+/g, '[URL]').slice(0,700));
+  for (const page of pages) console.error('Synthetic connection summary:', await page.evaluate(() => ({
+    peerCount:document.querySelectorAll('x-peer').length,
+    candidateTypes:window.syntheticIceSummary?.candidateTypes,
+    errorCodes:window.syntheticIceSummary?.errorCodes,
+    connectionStates:window.syntheticPeerConnections?.map(p=>p.connectionState),
+  })).catch(()=>({unavailable:true})));
   process.exitCode = 1;
 } finally {
   await browser.close();

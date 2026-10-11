@@ -5,8 +5,10 @@ Checked 10 October 2026. This supersedes the **old PairDrop** port recipe in
 
 Reuses PairDrop 1.11.2's native `RTC_CONFIG` and the existing pinned coturn
 4.7.0-p1 image. No file storage, new authentication service or WebSocket fallback.
-The separate option is prepared and locally tested, **not activated for visitors**.
-The live PairDrop application still uses its existing direct-only configuration.
+The operator confirmed persistent Proxmox forwards on 10 October. The separate
+relay now listens locally; public browser verification is in progress. A failed
+initial relay check was rolled back to direct-only PairDrop while fixing the
+same-relay peer policy. Do not call listener reachability a completed transfer.
 
 ## Boundaries and tests
 
@@ -20,10 +22,12 @@ The live PairDrop application still uses its existing direct-only configuration.
   This fixes the older inconsistent 8 × 250,000 / 1,000,000 reservation settings.
 - UID 4005 is reserved for this host-network service. 128 MiB, 0.5 CPU, 64 PIDs,
   read-only root, dropped capabilities and no container/coturn request logging.
-- Native private/special-use/self-address peer denials plus UID-scoped firewall;
-  only public UDP peers on ports 1024–65535 may receive new relay traffic. No
-  private LAN, Galene SFU, metadata endpoint, IPv6 or TCP peer relay. The single
-  `external-ip` form avoids coturn's implicit private-address allow exception.
+- Native private/special-use denials plus UID-scoped firewall: public UDP peers
+  on ports 1024–65535 and this relay's own UDP ports 49700–49731 only. Coturn
+  translates its own public peer address to the private relay IP; the explicit
+  allowance for that IP needs the independent port firewall. Unrelated host/LAN,
+  Galene, metadata endpoints, IPv6 and TCP peer relay remain blocked. Coturn's
+  native address mapping handles same-relay traffic; no additional NAT rules.
 - Static client credentials become readable by every visitor after activation.
   They are **not per-user authorization** and can be reused outside PairDrop.
   Quotas limit resource use, not fair access; an abusive client can exhaust them.
@@ -37,7 +41,9 @@ The live PairDrop application still uses its existing direct-only configuration.
 
 Actual checks: local TLS certificate/hostname/chain; anonymous allocation
 challenge; wrong-password rejection; eight simultaneous reservations; ninth
-refused with 486; private/metadata/Galene/self-public-IP permissions refused.
+refused with 486; private/metadata/Galene permissions refused. Two allocations
+on the production relay exchanged the exact synthetic payload in both directions;
+the same public address on an unrelated port was dropped by the UID firewall.
 An independent UID-filter test also denied traffic from a relay-range socket to
 an otherwise responsive private UDP listener. Repeated certificate-copy hooks
 were idempotent; Galene's original process stayed healthy and was not restarted.
@@ -65,7 +71,7 @@ After the actual NAT/firewall forwarding is confirmed, persist the independent
 firewall hook and certificate deploy hook through the existing mechanisms:
 
 ```sh
-install -m 0644 deployment/community/turn/firewall.conf /etc/systemd/system/utilibre-edge-firewall.service.d/zz-pairdrop-turn.conf
+install -m 0644 deployment/community/turn/firewall.conf /etc/systemd/system/utilibre-tools-firewall.service.d/zz-pairdrop-turn.conf
 install -m 0755 deployment/community/turn/certbot-deploy.sh /etc/letsencrypt/renewal-hooks/deploy/utilibre-pairdrop-turn
 systemctl daemon-reload
 docker compose -f deployment/community/compose.turn.yaml --profile public-turn up -d --no-build turn
