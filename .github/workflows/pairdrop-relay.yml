@@ -1,5 +1,7 @@
 name: PairDrop bounded relay check
 on:
+  schedule:
+    - cron: '47 8 * * 0'
   workflow_dispatch:
     inputs:
       transport:
@@ -30,6 +32,6 @@ jobs:
         env:
           PAIRDROP_PLAYWRIGHT_PACKAGE: ${{ runner.temp }}/pairdrop-check/package.json
           PAIRDROP_CHROME: /usr/bin/google-chrome
-          PAIRDROP_FORCE_RELAY: ${{ inputs.transport }}
-          PAIRDROP_RECEIVER_DIRECT: ${{ inputs.receiver_direct }}
+          PAIRDROP_FORCE_RELAY: ${{ inputs.transport || 'tls' }}
+          PAIRDROP_RECEIVER_DIRECT: ${{ inputs.receiver_direct || 'false' }}
         run: node deployment/community/check-pairdrop.mjs

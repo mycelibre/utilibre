@@ -1,0 +1,28 @@
+name: Utilibre independent availability
+run-name: ${{ inputs.alert_drill && 'Synthetic alert drill (not an outage)' || 'Public availability check' }}
+on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+  workflow_dispatch:
+    inputs:
+      alert_drill:
+        description: Deliberately fail a synthetic notification drill (no service changed)
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: utilibre-independent-availability
+  cancel-in-progress: false
+jobs:
+  public-entry-points:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          persist-credentials: false
+      - name: Check fixed public URLs from outside the Utilibre server
+        env:
+          UTILIBRE_ALERT_DRILL: ${{ inputs.alert_drill }}
+        run: node deployment/maintenance/check-external.mjs
