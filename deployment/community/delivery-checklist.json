@@ -192,7 +192,7 @@
         "id": "pairdrop",
         "backend": "10.10.1.43:3124",
         "public": "https://drop.utilibre.org",
-        "status": "Reverified public HTTPS/WebSocket discovery, consent and exact-byte WebRTC synthetic file transfer in two isolated browsers on the test machine. Different/restrictive NATs untested; no TURN or WebSocket file fallback enabled. Reusable checker records a non-blocking headless wake-lock denial separately."
+        "status": "11 October: separate bounded Utilibre STUN/TURN relay live. External Chromium exact-byte transfers passed over forced UDP, TCP and TLS; one relayed/direct pair also exercised public relay ports. Direct transfer passed locally. WS file fallback and container logging disabled. Real phones and separately restrictive client networks remain untested. See turn/README.md for quotas, firewall and rollback."
       },
       {
         "id": "translite",

@@ -42,7 +42,7 @@ export const en = {
   'meta.offline.title': 'Use selected tools offline',
   'meta.offline.description': 'Prepare QR Tools for offline use, test the download on your device and understand what stays in browser storage.',
   'nav.guides': 'Guides',
-  'home.catalog.note.peerTransfer': 'Encrypted transfers between devices; connection metadata reaches signaling and STUN servers.',
+  'home.catalog.note.peerTransfer': 'Encrypted transfers between devices, directly or through Utilibre’s relay; connection metadata reaches the servers.',
   'meta.guides.title': 'Practical guides for free tools',
   'meta.guides.description': 'Follow practical guides for PDFs, images, shared expenses, calendars and more. Use fictional examples and check what each tool saves or shares.',
   'meta.pdf.title': 'Merge PDFs and recognize scanned text',

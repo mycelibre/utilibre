@@ -1,14 +1,14 @@
 # Separate PairDrop relay option
 
-Checked 10 October 2026. This supersedes the **old PairDrop** port recipe in
+Activated and checked 11 October 2026. This supersedes the **old PairDrop** port recipe in
 `docs/next-features.md`. Galene owns 3478/5349 and 49160–49671; do not alter it.
 
 Reuses PairDrop 1.11.2's native `RTC_CONFIG` and the existing pinned coturn
 4.7.0-p1 image. No file storage, new authentication service or WebSocket fallback.
 The operator confirmed persistent Proxmox forwards on 10 October. The separate
-relay now listens locally; public browser verification is in progress. A failed
-initial relay check was rolled back to direct-only PairDrop while fixing the
-same-relay peer policy. Do not call listener reachability a completed transfer.
+relay is **live**, with exact-byte public browser transfers verified on 11 October
+over UDP, TCP and TLS. An initial failed relay check was rolled back while fixing
+same-relay peer permissions; the final paths passed before being advertised.
 
 ## Boundaries and tests
 
@@ -36,8 +36,9 @@ same-relay peer policy. Do not call listener reachability a completed transfer.
   handles connection addresses and encrypted packets, not a stored file archive.
   This is different from PairDrop's server-readable WebSocket fallback, which
   remains disabled. Peer connections can expose participant network addresses.
-- The candidate RTC file uses only Utilibre's STUN/TURN, with no third-party
-  fallback. The **currently live direct configuration is unchanged**.
+- The mounted RTC file uses only Utilibre's STUN/TURN, with no third-party STUN
+  fallback. Direct WebRTC remains preferred; PairDrop chooses the relay when
+  needed. PairDrop container logging is now also disabled.
 
 Actual checks: local TLS certificate/hostname/chain; anonymous allocation
 challenge; wrong-password rejection; eight simultaneous reservations; ninth
@@ -49,9 +50,21 @@ an otherwise responsive private UDP listener. Repeated certificate-copy hooks
 were idempotent; Galene's original process stayed healthy and was not restarted.
 The loopback lab transferred the exact synthetic payload with relay candidates
 and hit its quota. Two isolated Chromium profiles transferred an exact synthetic
-file through the live public PairDrop direct path. No third-party HTTP requests
-or unexpected JavaScript errors occurred. These are not phone, cross-network,
-public-NAT or bandwidth-throughput tests.
+file through the live public PairDrop direct path. The following external Linux
+Chrome checks then passed through public HTTPS/WebSocket signaling and selected
+WebRTC candidates, with no third-party HTTP requests or unexpected script errors:
+
+| Check | Public run |
+| --- | --- |
+| Both clients forced through UDP TURN | [38096981575](https://github.com/mycelibre/utilibre/actions/runs/38096981575) |
+| Both clients forced through TCP TURN | [38097061830](https://github.com/mycelibre/utilibre/actions/runs/38097061830) |
+| Both clients forced through TLS TURN; certificate validated | [38097118716](https://github.com/mycelibre/utilibre/actions/runs/38097118716) |
+| One relayed and one direct peer; public UDP relay ports exercised | [38097064883](https://github.com/mycelibre/utilibre/actions/runs/38097064883) |
+
+Two browser profiles share the external runner in each test: this is not a
+physical-phone or two independently restrictive-client-network test. Bandwidth
+ceilings are configured, not measured throughput or monthly traffic forecasts.
+An idle snapshot was about 5 MiB relay memory; that is not a capacity benchmark.
 
 ## Render, test and activate
 
@@ -77,8 +90,11 @@ install -m 0644 deployment/community/turn/docker-firewall.conf /etc/systemd/syst
 install -m 0755 deployment/community/turn/certbot-deploy.sh /etc/letsencrypt/renewal-hooks/deploy/utilibre-pairdrop-turn
 systemctl daemon-reload
 docker compose -f deployment/community/compose.turn.yaml --profile public-turn up -d --no-build turn
+# Before routing visitors only: this test deliberately occupies all allocations.
 python3 deployment/community/turn/check-security.py
-docker compose -f deployment/community/compose.yaml -f deployment/community/compose.pairdrop-turn.yaml up -d --no-deps --no-build pairdrop
+# Clear test-only allocation-establishment state before enabling visitors.
+docker compose -f deployment/community/compose.turn.yaml --profile public-turn restart turn
+docker compose -f deployment/community/compose.yaml -f deployment/community/compose.pairdrop-turn.yaml up -d --wait --wait-timeout 60 --no-deps --no-build pairdrop
 ```
 
 The Docker pre-start hook applies this host-only boundary before any container
@@ -88,13 +104,17 @@ also reapplies it after Docker starts. Do not restart Docker merely to test this
 ordering; inspect the effective units and test the idempotent script directly.
 
 Run the manual `PairDrop bounded relay check` GitHub workflow once per UDP/TCP/TLS
-transport. It uses the native public RTC configuration and two isolated clients;
+transport, waiting for each run before dispatching the next (GitHub keeps only
+one pending run per concurrency group). Also run UDP with `receiver_direct=true`
+to exercise the public relay port range. It uses native RTC and isolated clients;
 it needs no repository secret, uploads no artifact and checks exact downloaded
 bytes and selected relay candidates. Until external checks pass, do not describe
 cross-network transfers as verified. If they fail, immediately restore direct
 PairDrop as below. Update bilingual help only after the actual deployment passes.
 Test the independent certificate hook twice; unchanged material must not restart
 the relay. The existing certbot timer owns renewal; no second ACME account/job.
+Always include `compose.pairdrop-turn.yaml` when updating the live PairDrop
+application; using only the base file intentionally restores direct-only mode.
 
 ## Rollback
 
@@ -111,4 +131,5 @@ Galene, its secrets and certificate renewal. No user files or documents are
 deleted by this rollback. Do not publish the private RTC file as an audit artifact.
 
 Primary interfaces: [PairDrop hosting](https://github.com/schlagmichdoch/PairDrop/blob/v1.11.2/docs/host-your-own.md),
-[coturn release](https://github.com/coturn/coturn/releases/tag/4.7.0).
+[coturn release](https://github.com/coturn/coturn/releases/tag/4.7.0),
+[native public/private peer-address mapping](https://github.com/coturn/coturn/blob/4.7.0/src/client/ns_turn_msg.c).

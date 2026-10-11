@@ -64,4 +64,4 @@ if (!lab) {
   chownSync(`${dir}/rtc.json`, 0, 1000); chmodSync(`${dir}/rtc.json`, 0o640);
   writeFileSync(`${dir}/settings.json`, JSON.stringify({bind, publicIp, host, port, tlsPort:5350, relayMin, relayMax, quota, bps, total}) + '\n', {mode:0o600});
 }
-console.log(`Prepared ${lab ? 'loopback-only synthetic lab' : 'disabled public option'} configuration in ${dir}. No service started. Credentials not printed.`);
+console.log(`Prepared ${lab ? 'loopback-only synthetic lab' : 'public relay'} configuration in ${dir}. No service started or restarted. Credentials not printed.`);

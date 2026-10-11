@@ -45,7 +45,7 @@ export const es: Record<keyof typeof EnglishDictionary, string> = {
   'meta.offline.title': 'Usá herramientas seleccionadas sin conexión',
   'meta.offline.description': 'Prepará QR Tools para usar sin conexión, probá la descarga en tu dispositivo y conocé qué queda en el navegador.',
   'nav.guides': 'Guías',
-  'home.catalog.note.peerTransfer': 'Transferencias cifradas entre dispositivos; los servidores de señalización y STUN reciben metadatos de conexión.',
+  'home.catalog.note.peerTransfer': 'Transferencias cifradas entre dispositivos, directas o por retransmisión de Utilibre; los servidores reciben metadatos de conexión.',
   'meta.guides.title': 'Guías prácticas para herramientas gratuitas',
   'meta.guides.description': 'Seguí las guías de PDF, imágenes, gastos compartidos, calendarios y más. Practicá con ejemplos ficticios y revisá qué guarda o comparte cada herramienta.',
   'meta.pdf.title': 'Unir PDF y reconocer texto escaneado sin cuenta',

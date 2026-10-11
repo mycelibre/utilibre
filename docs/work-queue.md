@@ -1,8 +1,35 @@
-# Operator work queue — reconciled 10 October 2026
+# Operator work queue — reconciled 11 October 2026
 
-## Requested items 2, 4, 5 and 6 — 10 October, 23:22 UTC
+## PairDrop relay activated — 11 October
 
-This is the current disposition of those four items, not a claim that upstream
+The owner confirmed persistent Proxmox forwarding and the existing Hetzner IPv4
+allow rule. The separate coturn service now listens on TCP/UDP 3479 and TLS TCP
+5350, with UDP relay ports 49700–49731. PairDrop uses Utilibre-only STUN/TURN;
+its server-readable WebSocket file fallback remains disabled. Galene's running
+relay, ports and process were preserved. No new Caddy block is required.
+
+Fixed the firewall hook's nonexistent service name, persisted the UID boundary
+before Docker restart, and allowed only the port-bounded native self-relay path.
+An initial failed external check was rolled back during diagnosis; final exact-byte
+file tests passed externally over UDP, TCP and TLS, plus one relayed/direct pair
+exercising the public UDP relay ports. Local direct transfer, private-peer denial,
+TLS/authentication, eight-allocation/ninth-refused quota and independent UID
+firewall checks passed. Certificate copying is idempotent. PairDrop and relay
+container logging are disabled; separate edge/provider retention is not inferred.
+
+Versions, fixed limits, public test-run links, effective startup dependencies and
+data-preserving rollback: [relay deployment](../deployment/community/turn/README.md).
+Real phones and two independently restrictive client networks remain untested;
+configured bandwidth ceilings are not achieved throughput or a capacity promise.
+The bilingual catalogue/help/transfer guide release is being checked separately.
+
+The preceding checkpoint below is historical: item 2's forwarding and external
+relay-test dependency is now closed. Items 4, 5 and 6 retain their stated external
+dependencies; this activation did not broaden their scope.
+
+## Previous checkpoint: requested items 2, 4, 5 and 6 — 10 October, 23:22 UTC
+
+This was the disposition of those four items, not a claim that upstream
 or external-access dependencies have disappeared.
 
 | Requested item | Implemented / independently checked | Exact remaining dependency |
