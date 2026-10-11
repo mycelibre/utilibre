@@ -7,6 +7,10 @@ on:
         type: choice
         options: [udp, tcp, tls]
         default: tls
+      receiver_direct:
+        description: Use a direct receiver to exercise public relay UDP ports
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -27,4 +31,5 @@ jobs:
           PAIRDROP_PLAYWRIGHT_PACKAGE: ${{ runner.temp }}/pairdrop-check/package.json
           PAIRDROP_CHROME: /usr/bin/google-chrome
           PAIRDROP_FORCE_RELAY: ${{ inputs.transport }}
+          PAIRDROP_RECEIVER_DIRECT: ${{ inputs.receiver_direct }}
         run: node deployment/community/check-pairdrop.mjs

@@ -10,7 +10,9 @@ const {chromium} = require('playwright-core');
 
 const origin = 'https://drop.utilibre.org';
 const relay = process.env.PAIRDROP_FORCE_RELAY || '';
+const receiverDirect = process.env.PAIRDROP_RECEIVER_DIRECT === 'true';
 assert(['','udp','tcp','tls'].includes(relay), 'Unsupported relay transport');
+assert(!receiverDirect || relay, 'A direct receiver check needs a forced-relay sender');
 // Public fixed endpoints only. Do not print addresses, credentials or packets.
 if (relay) {
   for (const [port, secure] of [[3479, false], [5350, true]]) {
@@ -29,13 +31,15 @@ let pages = [];
 try {
   const sender = await browser.newContext({ locale: 'en-US' });
   const receiver = await browser.newContext({ locale: 'es-GT', acceptDownloads: true });
-  for (const context of [sender,receiver]) await context.addInitScript(relay => {
+  for (const [index, context] of [sender,receiver].entries()) await context.addInitScript(({relay,direct}) => {
     window.syntheticPeerConnections = [];
     window.syntheticIceSummary = {candidateTypes:[], errorCodes:[]};
     const Native = window.RTCPeerConnection;
     window.RTCPeerConnection = class extends Native {
       constructor(config, ...rest) {
-        if (relay) {
+        if (direct) {
+          config = {...config, iceServers:config.iceServers.map(server=>({...server,urls:[server.urls].flat().filter(url=>url.startsWith('stun:'))})).filter(server=>server.urls.length)};
+        } else if (relay) {
           config = {...config, iceTransportPolicy:'relay', iceServers:config.iceServers.map(server => ({...server,
             urls:[server.urls].flat().filter(url => relay === 'tls' ? url.startsWith('turns:') : url.startsWith('turn:') && url.endsWith(`transport=${relay}`)),
           })).filter(server => server.urls.length)};
@@ -45,7 +49,7 @@ try {
         this.addEventListener('icecandidateerror', e => window.syntheticIceSummary.errorCodes.push(e.errorCode));
       }
     };
-  }, relay);
+  }, {relay,direct:receiverDirect && index === 1});
   pages = await Promise.all([sender.newPage(), receiver.newPage()]);
   const errors = [], external = new Set();
   for (const page of pages) {
@@ -73,14 +77,16 @@ try {
   assert.deepEqual(Buffer.concat(chunks), payload, 'Received bytes must match the synthetic file');
   assert.equal(download.suggestedFilename(), 'utilibre-synthetic.txt');
   const modes = await pages[0].evaluate(async () => {
-    const modes=[]; for(const peer of window.syntheticPeerConnections) {const stats=await peer.getStats();for(const r of stats.values())if(r.type==='candidate-pair'&&r.state==='succeeded'&&r.nominated)modes.push(stats.get(r.localCandidateId)?.candidateType)}return modes;
+    const modes=[]; for(const peer of window.syntheticPeerConnections) {const stats=await peer.getStats();for(const r of stats.values())if(r.type==='candidate-pair'&&r.state==='succeeded'&&r.nominated)modes.push({local:stats.get(r.localCandidateId)?.candidateType,remote:stats.get(r.remoteCandidateId)?.candidateType})}return modes;
   });
-  assert(modes.length>0);assert(modes.every(m=>relay ? m === 'relay' : ['host','srflx','prflx'].includes(m)),'Selected ICE mode did not match the requested test');
+  assert(modes.length>0);assert(modes.every(m=>relay ? m.local === 'relay' : ['host','srflx','prflx'].includes(m.local)),'Selected ICE mode did not match the requested test');
+  if(receiverDirect) assert(modes.every(m=>['host','srflx','prflx'].includes(m.remote)),'Receiver unexpectedly used a relay');
   // Chromium denies this optional screen-awake request in a background tab.
   // It does not stop the verified transfer; do not hide any other JS error.
   assert.deepEqual(errors.filter(error => error !== 'Wake Lock permission request denied'), []);
   assert.deepEqual([...external], []);
   console.log(`PairDrop public HTTPS: discovery, approval and exact-byte WebRTC transfer passed; selected ${relay ? `relay (${relay})` : 'direct'} mode confirmed through WebRTC stats.`);
+  if(receiverDirect) console.log('Receiver used a direct candidate: public relay UDP range was exercised, not just same-server relay forwarding.');
   console.log('Browsers share this test machine; physical-device and different-client-network behavior are not established by this check.');
 } catch (error) {
   // Avoid retaining room identifiers, browser state or visitor content in logs.

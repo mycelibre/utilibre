@@ -72,12 +72,20 @@ firewall hook and certificate deploy hook through the existing mechanisms:
 
 ```sh
 install -m 0644 deployment/community/turn/firewall.conf /etc/systemd/system/utilibre-tools-firewall.service.d/zz-pairdrop-turn.conf
+install -d -m 0755 /etc/systemd/system/docker.service.d
+install -m 0644 deployment/community/turn/docker-firewall.conf /etc/systemd/system/docker.service.d/utilibre-pairdrop-turn.conf
 install -m 0755 deployment/community/turn/certbot-deploy.sh /etc/letsencrypt/renewal-hooks/deploy/utilibre-pairdrop-turn
 systemctl daemon-reload
 docker compose -f deployment/community/compose.turn.yaml --profile public-turn up -d --no-build turn
 python3 deployment/community/turn/check-security.py
 docker compose -f deployment/community/compose.yaml -f deployment/community/compose.pairdrop-turn.yaml up -d --no-deps --no-build pairdrop
 ```
+
+The Docker pre-start hook applies this host-only boundary before any container
+auto-restart. It fails closed: a missing runtime settings file or failed firewall
+command prevents Docker startup until repaired. The existing tools-firewall hook
+also reapplies it after Docker starts. Do not restart Docker merely to test this
+ordering; inspect the effective units and test the idempotent script directly.
 
 Run the manual `PairDrop bounded relay check` GitHub workflow once per UDP/TCP/TLS
 transport. It uses the native public RTC configuration and two isolated clients;
@@ -97,7 +105,8 @@ docker compose -f deployment/community/compose.turn.yaml --profile public-turn s
 
 Remove only the new router forwarding rules if no longer needed. Leave firewall
 denials in place for the dormant UID; they contain no traffic history. Disable
-only the new PairDrop renewal/firewall hooks if retiring this option. Preserve
+only the new PairDrop renewal/firewall hooks (including the Docker pre-start
+drop-in, followed by daemon-reload) if retiring this option. Preserve
 Galene, its secrets and certificate renewal. No user files or documents are
 deleted by this rollback. Do not publish the private RTC file as an audit artifact.
 
