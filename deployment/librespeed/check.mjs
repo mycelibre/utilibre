@@ -37,7 +37,7 @@ try {
     await page.locator('#startStopBtn').focus();
     await page.keyboard.press('Enter');
     await page.waitForFunction(()=>document.querySelector('#startStopBtn').className === 'running');
-    await page.waitForFunction(()=>/^(Test finished|Prueba terminada)/.test(document.querySelector('#state').textContent), null, {timeout:45000});
+    await page.waitForFunction(()=>/^(Test finished|Prueba terminada)/.test(document.querySelector('#state').textContent), null, {timeout:65000});
     const values = await page.locator('#dlText, #ulText, #pingText, #jitText').allTextContents();
     assert(values.every(value=>Number.isFinite(Number(value)) && Number(value)>=0), JSON.stringify(values));
     assert(Number(values[0])>0 && Number(values[1])>0, `Throughput must be positive: ${values}`);

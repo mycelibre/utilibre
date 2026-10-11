@@ -1,0 +1,44 @@
+import type { PracticalGuide } from './practical-guide-data.ts';
+export const texlyreGuides: PracticalGuide[] = [{
+  id: 'texlyre', paths: { en: 'guides/latex-document', es: 'guias/documento-latex' },
+  tools: [{ id: 'texlyre', label: { en: 'Write a document with TeXlyre', es: 'Escribir un documento con TeXlyre' } }],
+  samples: [{ file: 'latex-practice.tex', label: { en: 'Fictional LaTeX practice document (.tex)', es: 'Documento ficticio para practicar LaTeX (.tex)' } }],
+  reviewedOn: '2026-10-11',
+  references: [{ url: 'https://github.com/TeXlyre/texlyre/tree/v0.13.0', label: { en: 'TeXlyre 0.13.0 source and documentation', es: 'Código y documentación de TeXlyre 0.13.0' } }],
+  copy: {
+    en: {
+      title: 'Write a LaTeX document and keep an editable copy',
+      intro: 'Turn a small text file into a PDF with a title, Spanish accents and an equation. Compilation takes place on your device, using TeXlyre and locally hosted BusyTeX.',
+      prerequisites: 'Use a current desktop browser, preferably Chromium, with a keyboard and enough memory for browser compilation. The installed interface is in English. The first compilation downloads about 227 MiB of compiler and recommended-package assets, in addition to the editor. Avoid a limited data plan. No server account is required; do not use a shared browser profile for private work.',
+      steps: [
+        'Download the fictional .tex example below. Open TeXlyre and choose Try as Guest. Read its session conditions and confirm them only if they apply to you, then choose Start Guest Session. Guest work expires after 24 hours and logging out ends the session. For continuing work, use Sign up to create a full account stored in this browser; email is optional, not a recovery service.',
+        'Choose the + button named New Project, enter a name such as “LaTeX practice”, leave the type TeX and compiler LaTeX, then choose Create Project. Choose Upload Files and select the .tex example. Here “Upload” imports into your browser, not a server document store.',
+        'Select the imported file. Read the commands beginning with a backslash and change one sentence in the ordinary text. Keep the begin{document} and end{document} commands intact. The selected default engine is BusyTeX pdfTeX with the Recommended bundle; the Compilation Options menu exposes the native settings.',
+        'Choose Compile LaTeX (F9). Wait for the local compiler/package download on first use and then the PDF preview. Check “Práctica”, “español”, the accents and the equation 2 + 3 = 5. If compilation fails, open Log; correct the reported command or missing package and compile again.',
+        'Choose Export in the top toolbar to download the PDF. Open that downloaded file and check the page, not just the preview. The PDF is a finished result, not the editable source.',
+        'Choose Export Current Project in the file panel. Keep TeXlyre Format, documents and project files selected; compiler caches are not needed for this backup. Choose Export 1 Project and keep the ZIP privately. From Projects → Import Projects, select that ZIP, select the detected project, keep Create new projects, uncheck Import as collaborator, and choose Import 1 Project. Open the imported copy and confirm the source returned before relying on the backup.',
+      ],
+      success: 'The downloaded PDF contains the expected text and equation, and the project ZIP can restore the editable source as a separate copy.',
+      troubleshooting: 'The Offline label refers to disabled remote collaboration; local editing and compilation still work. Remote template galleries, bibliography lookups and cloud integration are unavailable here. If a package is missing, try a suitable locally hosted Basic, Recommended or Extra bundle in Compilation Options, or use a compatible desktop TeX installation. Not every desktop LaTeX project is supported. Do not clear browser data to troubleshoot before exporting your work.',
+      privacy: 'Your document and PDF remain in the browser. Utilibre and Cloudflare deliver application/compiler assets and see connection metadata; no outside compilation service receives the document. Accounts and projects use local IndexedDB. A full account is not a cloud backup or a promise that all source files are encrypted at rest. Exported ZIPs may contain private source files; protect them. Clearing site data can erase your work; no email or operator recovery is available.',
+      next: 'Keep the PDF for sharing and the project ZIP for editing. Use the existing hat.sh tool if you need to encrypt a backup, and store its password separately. Keep regular exports rather than relying on a browser profile.',
+    },
+    es: {
+      title: 'Escribí un documento LaTeX y guardá una copia editable',
+      intro: 'Convertí un archivo de texto pequeño en un PDF con título, tildes y una ecuación. La compilación ocurre en tu dispositivo, con TeXlyre y BusyTeX alojado por Utilibre.',
+      prerequisites: 'Usá un navegador de escritorio actual, preferiblemente Chromium, con teclado y memoria suficiente para compilar. La interfaz instalada está en inglés. La primera compilación descarga unos 227 MiB de compilador y paquetes recomendados, además del editor. Evitá un plan de datos limitado. No necesitás cuenta en el servidor; no usés un perfil de navegador compartido para trabajo privado.',
+      steps: [
+        'Descargá el ejemplo ficticio .tex de abajo. Abrí TeXlyre y elegí Try as Guest. Leé las condiciones y confirmalas solo si corresponden, luego elegí Start Guest Session. El trabajo de invitado vence tras 24 horas y cerrar sesión la termina. Para continuar trabajando, usá Sign up para crear una cuenta completa guardada en este navegador; el correo es opcional, no un medio de recuperación.',
+        'Elegí el botón + llamado New Project, escribí un nombre como «Práctica LaTeX», dejá el tipo TeX y compilador LaTeX, y elegí Create Project. Elegí Upload Files y seleccioná el ejemplo .tex. Aquí «Upload» importa al navegador, no a un almacén de documentos del servidor.',
+        'Seleccioná el archivo importado. Leé los comandos que comienzan con barra invertida y cambiá una oración del texto normal. Conservá los comandos begin{document} y end{document}. El motor predeterminado es BusyTeX pdfTeX con el paquete Recommended; Compilation Options muestra las opciones nativas.',
+        'Elegí Compile LaTeX (F9). Esperá la descarga local del compilador y los paquetes la primera vez, y luego la vista previa. Revisá «Práctica», «español», las tildes y la ecuación 2 + 3 = 5. Si falla, abrí Log; corregí el comando o paquete indicado y volvé a compilar.',
+        'Elegí Export en la barra superior para descargar el PDF. Abrí el archivo descargado y revisá la página, no solo la vista previa. El PDF es el resultado final, no la fuente editable.',
+        'Elegí Export Current Project en el panel de archivos. Conservá TeXlyre Format, los documentos y los archivos del proyecto; no necesitás incluir la caché del compilador. Elegí Export 1 Project y guardá el ZIP en privado. Desde Projects → Import Projects, seleccioná ese ZIP, seleccioná el proyecto detectado, conservá Create new projects, desmarcá Import as collaborator y elegí Import 1 Project. Abrí la copia importada y confirmá que volvió la fuente antes de confiar en el respaldo.',
+      ],
+      success: 'El PDF descargado contiene el texto y la ecuación esperados, y el ZIP permite recuperar la fuente editable como una copia independiente.',
+      troubleshooting: 'La etiqueta Offline indica que la colaboración remota está desactivada; editar y compilar localmente sigue funcionando. Aquí no están disponibles las galerías remotas, consultas bibliográficas ni integraciones en la nube. Si falta un paquete, probá el conjunto local Basic, Recommended o Extra apropiado en Compilation Options, o una instalación compatible de TeX en tu computadora. No todos los proyectos LaTeX de escritorio funcionan. No borrés los datos del navegador para solucionar problemas sin exportar antes.',
+      privacy: 'El documento y el PDF permanecen en el navegador. Utilibre y Cloudflare entregan recursos y ven metadatos de conexión; ningún compilador externo recibe el documento. Las cuentas y proyectos usan IndexedDB local. Una cuenta completa no es un respaldo en la nube ni garantiza que todos los archivos fuente estén cifrados al guardarse. Los ZIP exportados pueden contener datos privados; protegelos. Borrar los datos del sitio puede eliminar tu trabajo; no hay recuperación por correo ni por parte del operador.',
+      next: 'Conservá el PDF para compartir y el ZIP para editar. Usá hat.sh si necesitás cifrar un respaldo y guardá su contraseña por separado. Hacé exportaciones periódicas en lugar de depender del perfil del navegador.',
+    },
+  },
+}];

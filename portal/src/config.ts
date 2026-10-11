@@ -1,4 +1,5 @@
 export interface PublicConfig {
+  publicLatexUrl?: string;
   publicSpeedUrl?: string;
   publicWallabagUrl?: string;
   publicTripUrl?: string;
@@ -94,6 +95,7 @@ export interface PublicConfig {
 }
 
 const defaults: PublicConfig = {
+  publicLatexUrl: '',
   publicSpeedUrl: '',
   publicWallabagUrl: '',
   publicTripUrl: '',

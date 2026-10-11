@@ -471,6 +471,7 @@ function publicConfig() {
     publicLinksUrl: publicServiceUrl(process.env.PUBLIC_LINKS_URL),
     publicTripUrl: publicServiceUrl(process.env.PUBLIC_TRIP_URL),
     publicSpeedUrl: publicServiceUrl(process.env.PUBLIC_SPEED_URL),
+    publicLatexUrl: publicServiceUrl(process.env.PUBLIC_LATEX_URL),
     publicWallabagUrl: publicServiceUrl(process.env.PUBLIC_WALLABAG_URL),
     publicChessUrl: publicServiceUrl(process.env.PUBLIC_CHESS_URL),
     publicProjectsUrl: publicServiceUrl(process.env.PUBLIC_PROJECTS_URL),

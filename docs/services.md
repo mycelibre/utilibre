@@ -1,5 +1,10 @@
 # Services and upstream applications
 
+TeXlyre 0.13.0-p1 is served at `https://latex.utilibre.org/` (private port 3226).
+Local browser compilation and project/PDF export use the complete upstream app;
+no server compiler, cloud account or collaboration service is added.
+[Privacy, tested workflows, asset budget, guides and rollback](texlyre-2026-10-11.md).
+
 11 October addition: LibreSpeed Go 1.1.6-p1 is installed and checked on
 `10.10.1.43:3225`, with public destination `https://speed.utilibre.org/`.
 The DNS-only HTTPS edge and complete bilingual browser flows pass. These were

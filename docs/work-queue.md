@@ -10,7 +10,20 @@ reported inaccurate measurements; native measurements remain subject to shared
 server capacity and a six-request concurrency ceiling. No outside-line speed
 accuracy claim follows from the passing LAN/HTTPS-edge functional tests.
 
-TeXlyre 0.13.0 is the preferred LaTeX evaluation candidate, not installed yet;
+TeXlyre 0.13.0-p1 is now installed at `https://latex.utilibre.org/`, with native
+browser compilation, PDF download and editable ZIP export/import verified.
+The first Recommended compilation needs approximately 227 MiB of compiler and
+package assets plus the editor; the owner chose to retain browser compilation.
+No remote collaboration, server account, server document storage or cloud backup.
+[Deployment, bilingual guides and checks](texlyre-2026-10-11.md).
+
+LibreSpeed's native timing now uses a full 15-second window rather than the
+shortened adaptive run. Controlled 150 ms/300 Mbps emulation did not reproduce
+the owner's low throughput. Their final result was 69.45 Mbps down / 28.58 up,
+150 ms ping, 12.8 ms jitter after a temporary Caddy send-buffer increase. Revert
+that inconclusive experiment to `4096 16384 4194304`; owner confirmation remains
+outstanding. No claim that the external-path performance issue is fixed.
+
 Overleaf CE is not suitable for unrestricted untrusted users without additional
 compile isolation. Public IRC/XMPP deferred: no defined community/account need,
 and an extra gateway adds moderation/upstream-network responsibility. Umami was

@@ -1,3 +1,4 @@
+import { texlyreAdditions } from './texlyre-addition.ts';
 import { librespeedAdditions } from './librespeed-addition.ts';
 import { tripAdditions } from './trip-addition.ts';
 import { wallabagAdditions } from './wallabag-addition.ts';
@@ -93,6 +94,7 @@ function providerMetadata(providerId: FossProviderId): Pick<CatalogEntry, 'provi
 }
 
 const entries: CatalogEntry[] = [
+  ...texlyreAdditions,
   ...librespeedAdditions,
   ...standaloneAdditions,
   ...moocupAdditions,

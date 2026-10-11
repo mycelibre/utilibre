@@ -57,7 +57,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.omnitools
-    ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3103:8080", "${APP_BIND_IP:?Set APP_BIND_IP}:3225:8086", "127.0.0.1:3225:8086"]
+    ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3103:8080", "${APP_BIND_IP:?Set APP_BIND_IP}:3225:8086", "127.0.0.1:3225:8086", "${APP_BIND_IP:?Set APP_BIND_IP}:3226:8087", "127.0.0.1:3226:8087"]
     logging: {driver: none}
     volumes:
       - ./nginx.omnitools.conf:/etc/nginx/nginx.conf:ro
@@ -66,6 +66,7 @@ services:
       - ../kokoro-web/security.conf:/etc/nginx/security-kokoro-web.conf:ro
       - ../librespeed/nginx-server.conf:/etc/nginx/librespeed-server.conf:ro
       - ../librespeed/nginx-proxy.conf:/etc/nginx/librespeed-proxy.conf:ro
+      - ../texlyre/nginx-server.conf:/etc/nginx/texlyre-server.conf:ro
       - *source
   ittools:
     <<: *static

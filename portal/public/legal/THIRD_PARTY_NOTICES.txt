@@ -20,6 +20,18 @@ application, image, source-revision, license, and modification inventory in
 That manifest covers FreshRSS, internal RSSHub, PrivateBin, PostgreSQL, and
 Valkey. Those applications are not bundled into the portal browser assets.
 
+## TeXlyre (October 11)
+
+TeXlyre 0.13.0-p1, revision `0b5ebfd3dbcd2d3647dc777e8de9cbe0692b7950`,
+and its BusyTeX 1.4.0 wrapper are AGPL-3.0-or-later. The full native editor and
+browser compiler are retained. Utilibre configures local-only operation, pins
+security dependency updates, corrects instance privacy/source text and removes
+unsupported engine choices. Source, notices and build material are served at
+`https://latex.utilibre.org/utilibre-source/texlyre-utilibre.tar.gz`.
+Compiler, fonts, packages and other dependencies retain their individual
+licenses and upstream build/source references; see
+[`docs/texlyre-2026-10-11.md`](docs/texlyre-2026-10-11.md).
+
 ## LibreSpeed (October 11)
 
 LibreSpeed Go 1.1.6, revision `7bbfadeeed710500752496f952bbcfb66ab3bdb9`,

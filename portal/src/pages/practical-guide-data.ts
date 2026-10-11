@@ -1,3 +1,4 @@
+import { texlyreGuides } from './texlyre-guide.ts';
 import { librespeedGuides } from './librespeed-guide.ts';
 import { tripGuides } from './trip-guide.ts';
 import { wallabagGuides } from './wallabag-guide.ts';
@@ -46,6 +47,7 @@ export interface PracticalGuide {
 // Maintained instructions for deployed interfaces, not a separate service registry.
 // Access, privacy details and launch destinations come from the catalogue.
 export const practicalGuides: PracticalGuide[] = [
+  ...texlyreGuides,
   ...librespeedGuides,
   ...standaloneGuides,
   ...moocupGuides,
