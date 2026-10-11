@@ -267,8 +267,8 @@
       },
       {
         "container": "utilibre-services-privatebin-1",
-        "image": "utilibre-privatebin:2.0.6-security-20261011",
-        "id": "sha256:f7095267c9e56e7512e5a79b5b712e29a3ea3d19761b6b640dec72aecc34ded2"
+        "image": "utilibre-privatebin:2.0.6-security-20261011-p2",
+        "id": "sha256:82d9ff7456aa51c5865532b00e6ee1d1dc76e32bcb9a249419eb61ad72cd6f14"
       },
       {
         "container": "utilibre-records-bookplate-1",

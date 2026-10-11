@@ -166,7 +166,7 @@ services:
     logging: *default-logging
 
   privatebin:
-    image: utilibre-privatebin:2.0.6-security-20261011
+    image: utilibre-privatebin:2.0.6-security-20261011-p2
     user: "65534:82"
     restart: unless-stopped
     read_only: true

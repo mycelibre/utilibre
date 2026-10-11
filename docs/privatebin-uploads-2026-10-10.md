@@ -163,6 +163,22 @@ than forcing a rescan. No duplicate submission or maintainer message was sent.
 The next successful scan should update the field; timing and the green check
 are not under this server's control.
 
+**11 October, 19:58 UTC follow-up:** the sanitizer security backport introduced
+a separate discovery regression: its renamed JavaScript asset no longer matched
+the directory's required `js/privatebin.js?VERSION` pattern. Without a detected
+version the scanner rejects the page as an instance, even with the attachment
+marker present. The p2 security image/template now preserve the native filename,
+use a release query parameter for cache invalidation and retain the sanitizer
+and matching SRI. This corrects the server-side incompatibility; a successful
+directory rescan is still external and has not been observed.
+
+The exact directory detector passes on the public HTML. An isolated candidate
+and the public service passed real 25 MB browser encryption, decryption, download
+and SHA-256 equality, oversize refusal, one-week maximum and sanitizer checks.
+The public fictional paste was deleted; no real paste was inspected. No change
+to upload enablement, retention, storage, encryption or tracking policy.
+Evidence and scoped rollback: [security recipe](../deployment/utilibre/privatebin-security/README.md).
+
 References inspected 10 October 2026: pinned [configuration](https://github.com/PrivateBin/PrivateBin/blob/2.0.6/cfg/conf.sample.php),
 [ciphertext validation](https://github.com/PrivateBin/PrivateBin/blob/2.0.6/lib/Controller.php),
 [native cleanup](https://github.com/PrivateBin/PrivateBin/blob/2.0.6/bin/administration)

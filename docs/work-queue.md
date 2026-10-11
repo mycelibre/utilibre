@@ -1,5 +1,12 @@
 # Operator work queue — reconciled 11 October 2026
 
+PrivateBin directory follow-up, 19:58 UTC: repaired the security backport's
+script-filename regression that prevented native directory version detection.
+Public detector and actual encrypted 25 MB upload/download/hash pass; one-week
+maximum and sanitizer retained. The directory's stored upload cross still
+awaits an external successful rescan, not another upload-setting change.
+[Evidence and rollback](../deployment/utilibre/privatebin-security/README.md).
+
 ## Active security/quality follow-through — 11 October
 
 Daily runtime image/OS/lockfile scanning, eight synthetic task workflows, weekly

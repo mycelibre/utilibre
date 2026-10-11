@@ -6,6 +6,12 @@ backend or encryption modification. Native template selection loads
 with `homepage-template.patch`; original application labels, controls, scripts,
 SRI, CSP and footer remain.
 
+The current template requires the matching
+[2.0.6 security-backport image](../privatebin-security/README.md), whose patched
+native script has an updated SRI hash. The p2 query-string cache buster keeps
+the upstream filename for directory detection and Spanish translations. The
+template patch includes this change so regeneration cannot silently undo it.
+
 Source: https://github.com/PrivateBin/PrivateBin/tree/921ab83f268add709413a87206e4e1c2e3c2063d
 (tag 2.0.6). The template's Zlib licence and upstream attribution are retained.
 This altered template is marked as Utilibre's customization. Keep the upstream

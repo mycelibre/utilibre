@@ -3144,10 +3144,10 @@
     ]
   },
   "privatebin": {
-    "version": "2.0.6-security-20261011",
+    "version": "2.0.6-security-20261011-p2",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-services-privatebin-1": "sha256:f7095267c9e56e7512e5a79b5b712e29a3ea3d19761b6b640dec72aecc34ded2"
+      "/utilibre-services-privatebin-1": "sha256:82d9ff7456aa51c5865532b00e6ee1d1dc76e32bcb9a249419eb61ad72cd6f14"
     },
     "advisories": [
       {
@@ -3417,7 +3417,7 @@
       }
     ],
     "files": {
-      "/opt/utilibre/config/privatebin/bootstrap5-utilibre.php": "07be2bbdcb496078d49f63dacffb2128a26441cf3534ad49f5a8be6604b16479"
+      "/opt/utilibre/config/privatebin/bootstrap5-utilibre.php": "1bdc829323f68f7b414e84fb924d399628cf8bdfd88405ddc4068753864fc523"
     }
   },
   "coturn": {

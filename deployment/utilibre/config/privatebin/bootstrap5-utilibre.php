@@ -71,7 +71,7 @@ endif;
 ?>
 		<?php $this->_scriptTag('js/purify-3.4.12.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
-		<?php $this->_scriptTag('js/privatebin-utilibre-2.0.6-security-20261011.js', 'defer'); ?>
+        <script defer type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>&amp;utilibre=security-20261011-p2" integrity="<?php echo I18n::encode($SRI['js/privatebin.js']); ?>" crossorigin="anonymous"></script>
         <script src="js/utilibre-upload-limit.js?v=1" defer></script>
         <!-- Utilibre icons; the native application remains PrivateBin. -->
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />

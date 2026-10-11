@@ -40,7 +40,8 @@
 @@ -53,15 +72,27 @@
  		<?php $this->_scriptTag('js/purify-3.4.12.js', 'defer'); ?>
  		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
- 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
+-		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
++        <script defer type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>&amp;utilibre=security-20261011-p2" integrity="<?php echo I18n::encode($SRI['js/privatebin.js']); ?>" crossorigin="anonymous"></script>
 -		<!-- icon -->
 -		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 -		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />

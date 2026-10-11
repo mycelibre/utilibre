@@ -12,16 +12,13 @@ $old = "ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,\n        US
 // must prove the restriction, not just the presence of upstream's setting.
 $js = str_replace($old, "ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,\n        ALLOWED_ATTR: ['href'],\n        FORBID_ATTR: ['class', 'style', 'id'],\n        USE_PROFILES:", $js, $count);
 if ($count !== 1) throw new RuntimeException('Unexpected sanitizer');
-// A new filename avoids stale CDN/browser script bytes after this backport.
-$asset = 'js/privatebin-utilibre-2.0.6-security-20261011.js';
-$js = str_replace('script[src^="js/privatebin.js"]', 'script[src^="' . $asset . '"]', $js, $count);
-if ($count !== 1) throw new RuntimeException('Unexpected translation cache selector');
+// Preserve the upstream filename and translation selector. The template adds
+// a release query parameter to avoid stale bytes without breaking discovery.
 file_put_contents($path, $js);
-file_put_contents('/var/www/' . $asset, $js);
 $configPath = '/srv/lib/Configuration.php';
 $config = file_get_contents($configPath);
 $sri = 'sha512-' . base64_encode(hash('sha512', $js, true));
 $config = preg_replace("/'js\/privatebin\.js'\s*=>\s*'sha512-[^']+'/",
-    "'js/privatebin.js' => '$sri',\n            '$asset' => '$sri'", $config, 1, $count);
+    "'js/privatebin.js' => '$sri'", $config, 1, $count);
 if ($count !== 1) throw new RuntimeException('Unexpected script integrity table');
 file_put_contents($configPath, $config);

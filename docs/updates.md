@@ -5,6 +5,21 @@ version/digest pins; Redlib is built from an exact source commit and pinned
 base images. SearXNG has the guarded, daily updater below; other services
 remain reviewed rollouts. Production never runs a floating `latest` tag.
 
+## PrivateBin directory compatibility — 11 October, 19:58 UTC
+
+Deployed `utilibre-privatebin:2.0.6-security-20261011-p2` and its matching native
+template. The previous sanitizer backport renamed the main script; the public
+directory requires the native filename to detect the version before updating
+attachment support. Restored that filename with an explicit cache-busting query
+and retained the sanitizer/SRI fix. Exact directory detection, encrypted 25 MB
+upload/download/hash, oversize rejection and one-week expiry passed publicly;
+the synthetic paste was deleted. EN/ES Chromium desktop/mobile emulation, not
+physical devices. The upstream directory still needs its own successful rescan;
+no duplicate submission or maintainer contact. No Caddy changes needed.
+
+[Recipe, exact image, evidence and rollback](../deployment/utilibre/privatebin-security/README.md).
+The broader dependency security backlog is unchanged by this compatibility fix.
+
 ## Operational maintenance rollout — 11 October 2026
 
 Daily upstream review now has runtime vulnerability scanning, useful synthetic

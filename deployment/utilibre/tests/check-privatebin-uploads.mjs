@@ -9,8 +9,8 @@ import {chromium} from '../../../portal/node_modules/playwright-core/index.mjs';
 process.umask(0o077);
 assert(process.argv.length === 2 || (process.argv.length === 3 && process.argv[2] === '--public'));
 const live = process.argv.includes('--public');
-const image=process.env.PRIVATEBIN_CHECK_IMAGE||'utilibre-privatebin:2.0.6-security-20261011';
-assert.equal(image,'utilibre-privatebin:2.0.6-security-20261011');
+const image=process.env.PRIVATEBIN_CHECK_IMAGE||'utilibre-privatebin:2.0.6-security-20261011-p2';
+assert.equal(image,'utilibre-privatebin:2.0.6-security-20261011-p2');
 const base = live ? 'https://paste.utilibre.org' : 'http://127.0.0.1:3185';
 const recipe = fileURLToPath(new URL('../config/privatebin/', import.meta.url));
 const output = await mkdtemp('/opt/utilibre/reports/privatebin-uploads-');
@@ -46,6 +46,15 @@ try {
     assert((await fetch(base+'/')).ok);
     checks.push('missing/invalid volume marker fails GET health and POST admission; restored volume recovers');
   }
+  // Match the actual upstream directory detector, not a guessed upload signal.
+  const homepage=await fetch(base+'/',{signal:AbortSignal.timeout(15000)});
+  assert.equal(homepage.status,200,'Homepage must be reachable before directory detection');
+  const html=await homepage.text();
+  const lines=html.split('\n').slice(0,1023).join('\n');
+  assert.match(lines,/js\/(privatebin|zerobin).js\?(Alpha%20)?(\d+\.\d+\.*\d*)/);
+  assert(lines.includes(' id="attachment" '));
+  assert.match(lines,/css\/bootstrap(\d*)\//);
+  checks.push('upstream directory version/template/attachment detection matches live HTML');
   browser=await chromium.launch();
   const context=await browser.newContext({locale:'en-US',viewport:{width:1280,height:900},acceptDownloads:true});
   context.on('request',r=>{const u=new URL(r.url());if(u.protocol.startsWith('http')&&u.origin!==base)outside.add(u.origin)});
