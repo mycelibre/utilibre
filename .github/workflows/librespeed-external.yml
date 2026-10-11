@@ -1,0 +1,26 @@
+name: LibreSpeed bounded external check
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: utilibre-librespeed-external
+  cancel-in-progress: false
+jobs:
+  public-speed-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          persist-credentials: false
+      - name: Install only the pinned browser driver
+        run: npm install --prefix "$RUNNER_TEMP/librespeed-check" --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+      - name: One native synthetic test over public DNS and HTTPS
+        env:
+          SPEED_PLAYWRIGHT_PACKAGE: ${{ runner.temp }}/librespeed-check/package.json
+          SPEED_CHROME: /usr/bin/google-chrome
+          SPEED_PATH: public
+          SPEED_PROTOCOL: auto
+          SPEED_TEST_ORDER: P_D_U
+        run: node deployment/librespeed/probe-path.mjs
