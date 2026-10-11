@@ -96,6 +96,62 @@ Fixed-window EN/ES browser workflows passed again via the Caddy LAN override
 Those roughly 1 Gbps LAN readings are functional checks only. Evidence:
 `/opt/utilibre/reports/librespeed-20261011/fixed-window/summary.json`.
 
+### Transport correction — 11 October, 07:17 UTC
+
+The next investigation used Linux `tc netem` on **a disposable client's own
+network namespace**, delaying outgoing packets/ACKs 150 ms. No production
+interface, route, kernel sysctl or firewall was altered. Chromium requested the
+actual speed hostname through Caddy at 10.10.1.3 with normal TLS validation.
+Only synthetic transfers to our instance were exercised, sequentially. Unlike
+DevTools throttling, this delays the actual transport. It is a latency-only LAN
+experiment, not the owner's Internet path or a 300 Mbps bandwidth emulation.
+
+Native LibreSpeed, eight-second measurement plus its grace period, three pings:
+
+| Browser transport forced for this test | Download Mbps | Upload Mbps | Ping ms |
+| --- | ---: | ---: | ---: |
+| HTTPS HTTP/1.1 | 618.28 | 586.33 | 151.2–151.4 |
+| HTTPS HTTP/2 | 224.43 | 58.78 | 151.4–151.6 |
+| HTTPS HTTP/3 | 212.52 | Not tested | 152.0 |
+
+All observed backend responses were 200. HTTP/1.1 allows native parallel
+transfers to use separate TCP connections; multiplexed protocols do not turn
+each request into an independent transport connection. This demonstrates a
+material protocol-dependent throughput constraint on our delayed path. It does
+not establish that every low outside result has this sole cause or predict the
+owner's final throughput. The measurement algorithm and compensation factor
+remain unmodified.
+
+**Prepared, edge activation pending:** `deployment/librespeed/Caddyfile` now uses
+the supported hostname-specific [`tls` ALPN setting](https://caddyserver.com/docs/caddyfile/directives/tls#syntax)
+`http/1.1`, and sends `Alt-Svc: clear`. This avoids advertising HTTP/3 for normal
+new browser visits and clears older alternative-service advertisements. It does
+not turn off the shared QUIC listener: a deliberately forced HTTP/3 client can
+still connect. Existing browser connections can persist; use a fresh private
+window for the owner's acceptance test after reloading Caddy. TLS versions,
+ciphers, certificate validation, hostname and no-logging policy are unchanged.
+No global HTTP/2/3 setting or other application is changed.
+
+Caddy 2.11.7 adaptation/validation passed (edge last reported 2.11.1). A temporary
+loopback-only Caddy with internal test certificates verified that an HTTP/2-capable
+curl negotiates HTTP/1.1 for speed with `Alt-Svc: clear`, while the control host
+still negotiates HTTP/2 and advertises HTTP/3. Its forced HTTP/3 check confirmed
+the caveat above. Certificate verification was bypassed only for these synthetic
+loopback certificates, never for production-path tests. The lab config is
+`Caddyfile.protocol-check`; it must not replace the production Caddyfile.
+
+The owner must insert the two site settings in the existing speed block, validate
+and reload their separately managed Caddy VM. There is no remote Caddy admin/SSH
+access here. After reload, verify live negotiation/header, then one outside test.
+Rollback removes only the site's `tls { alpn http/1.1 }` and `header Alt-Svc clear`;
+no state or data restore. Do not change the worker to inflate results.
+
+Reproduction: `probe-path.mjs` uses native parameters, mode `SPEED_PROTOCOL=h1`,
+`h2` or `h3`, and optional `SPEED_TEST_ORDER=P_U` for upload. Run only against
+authorized infrastructure, one at a time. Without the isolated delayed namespace
+it tests ordinary LAN behavior. The disposable client and Caddy test containers
+are removed after checks; their namespace disappears with its `netem` queue.
+
 Before work, this VM had 21 GiB RAM available and 32 GiB root disk available.
 The hosting contract’s exact network allocation remains unverified; the previous
 Hetzner review is in `docs/next-features.md`. No purchase, public relay, upload

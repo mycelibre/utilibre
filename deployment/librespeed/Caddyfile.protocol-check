@@ -1,0 +1,22 @@
+# Disposable, loopback-only negotiation check; never a production configuration.
+{
+	admin off
+	auto_https disable_redirects
+	skip_install_trust
+	log {
+		output discard
+	}
+}
+https://speed.utilibre.org:18443 {
+	bind 127.0.0.1
+	tls internal {
+		alpn http/1.1
+	}
+	header Alt-Svc clear
+	respond "synthetic speed protocol check"
+}
+https://control.utilibre.org:18443 {
+	bind 127.0.0.1
+	tls internal
+	respond "synthetic unaffected-host check"
+}

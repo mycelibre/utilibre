@@ -24,6 +24,13 @@ the owner's low throughput. Their final result was 69.45 Mbps down / 28.58 up,
 that inconclusive experiment to `4096 16384 4194304`; owner confirmation remains
 outstanding. No claim that the external-path performance issue is fixed.
 
+**07:17 UTC follow-up:** actual packet-delay testing identified a reproducible
+transport constraint: at about 151 ms, HTTP/1.1 reached 618 Mbps down / 586 up,
+versus HTTP/2's 224 / 59. HTTP/3 download was 213. These are controlled LAN tests,
+not promised outside results. The speed-only Caddy ALPN/Alt-Svc fix is prepared
+and negotiation-tested; the owner must apply it on the separate Caddy VM. Keep
+this item open until live negotiation and their outside result are checked.
+
 Overleaf CE is not suitable for unrestricted untrusted users without additional
 compile isolation. Public IRC/XMPP deferred: no defined community/account need,
 and an extra gateway adds moderation/upstream-network responsibility. Umami was
