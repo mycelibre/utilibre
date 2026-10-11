@@ -73,6 +73,14 @@ content backups needs a new operator decision, not an automatic code rollback.
 
 ## Other temporary services — 11 October 2026
 
+**Later owner-requested allocation:** the same `scsi2` device/filesystem was
+expanded to 15 GiB. Native ext4 project quotas now cap PrivateBin at 10 GiB and
+the other three stores at **5 GiB combined**, with directory inheritance and
+quota-aware PrivateBin headroom. Filesystem overhead and its existing 1 GiB
+safety margin still apply; these are ceilings, not physical reservations.
+[Quota configuration, checks and recovery](../deployment/utilibre/docs/PRIVATEBIN-STORAGE.md#10--5-gib-allocation).
+The following 10 GiB measurements describe the preceding migration.
+
 The next pass checked running writable mounts and relevant native configuration,
 without reading user documents, messages or game contents. Three more stores
 now use the same 10 GiB backup-excluded disk:

@@ -1,3 +1,4 @@
-# VM144 scsi2, 10 GiB. Host backup exclusion is owner-confirmed (11 Oct 2026).
+# VM144 scsi2, 15 GiB. Host backup exclusion is owner-confirmed (11 Oct 2026).
+# Project 14401: PrivateBin 10 GiB; project 14402: other temporary stores 5 GiB total.
 # Restore: use the replacement disk's UUID; never format an existing data disk.
-UUID=6976f8a1-99ca-44f5-9ac8-53c7c0f30d35 /opt/utilibre/temporary ext4 defaults,nodev,nosuid,noexec,nofail,x-systemd.device-timeout=10s,x-systemd.before=docker.service 0 2
+UUID=6976f8a1-99ca-44f5-9ac8-53c7c0f30d35 /opt/utilibre/temporary ext4 defaults,nodev,nosuid,noexec,prjquota,nofail,x-systemd.device-timeout=10s,x-systemd.before=docker.service 0 2

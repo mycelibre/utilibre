@@ -1,5 +1,22 @@
 # Operator work queue — reconciled 11 October 2026
 
+## Temporary-disk expansion and allocation — 11 October
+
+Owner enlarged VM144 `scsi2` to 15 GiB and requested 10 GiB for PrivateBin plus
+5 GiB for other temporary services. The existing ext4 filesystem was expanded
+without reformatting, and native project quotas enforce those two ceilings.
+Chess, Anubis and SearXNG share the latter pool. Existing records, ownership,
+expiry, 25 MB upload limit, missing-disk protection and saved-work backups remain
+unchanged. `prjquota` is persisted in the host and recovery fstab definitions.
+Physical filesystem overhead and PrivateBin's 1 GiB margin still reduce usable
+upload space; no dedicated-block reservation or whole-VM reboot test is claimed.
+See [allocation and recovery](../deployment/utilibre/docs/PRIVATEBIN-STORAGE.md#10--5-gib-allocation).
+
+At 05:33 UTC, 20 focused tests and all four live checks passed: PrivateBin's
+25 MB upload/download/hash/deletion; chess multiplayer and spectator permissions;
+Anubis native challenge; and EN/ES SearXNG results over the private HTTPS edge.
+No portal rebuild, new app release, account-data change or Caddy change was needed.
+
 ## Requested queue items 1 and 6 — temporary-storage / documentation closeout
 
 **1 — Applied and verified:** Family Chess's expiring database, Anubis's challenge
