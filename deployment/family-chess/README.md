@@ -15,8 +15,9 @@ Python chess dependencies retain their GPL-3.0-or-later notices.
    `source.patch`, compiles `spanish.json` to native gettext catalogs and copies
    these recipes. The Dockerfile uses a pinned base and hash-pinned dependencies.
 4. Follow the existing private configuration and network setup in `compose.yaml`
-   and `firewall.sh`. Runtime secrets and the database live under
-   `/opt/utilibre/family-chess/`, outside this repository. Generate a fresh secret
+   and `firewall.sh`. Runtime secrets live under `/opt/utilibre/family-chess/`;
+   the database lives at `/opt/utilibre/temporary/family-chess/` on the
+   backup-excluded disk, outside this repository. Generate a fresh secret
    for a new installation; never replace the production secret during a rebuild.
 5. Run `check-native.py` only in an isolated container, using its documented
    environment. The production cleanup and backup commands have their own units.
@@ -43,7 +44,9 @@ historical snapshots are not deleted. Historical local copies have no automatic
 expiry; separate VM snapshots remain outside this job's control.
 
 After an actual storage loss, restore the matching private settings, create an
-empty `/data` owned by UID/GID 10001, and run `python manage.py migrate --noinput`
+empty `/opt/utilibre/temporary/family-chess` owned by UID/GID 10001 **only after
+verifying the excluded disk is mounted**. This is `/data` inside the container.
+Run `python manage.py migrate --noinput`
 using the pinned image and those settings before starting the service. Do not
 restore old games/sessions, and never replace live state during a routine update.
 `check-native.py` creates a fresh schema and fictional multiplayer fixture, checks
@@ -51,3 +54,11 @@ permissions, moves and cleanup, then removes its disposable directory. Its small
 SQLite reopen check uses only that fictional fixture, not production records.
 Configuration is included in encrypted Storage Box backups. See `docs/backups.md`
 for current scope; older recovery evidence remains dated historical evidence.
+
+The 11 October migration preserved live data byte-for-byte, including ownership
+and modes. Public two-player/spectator tests and native SQLite integrity passed
+before removal of the obsolete root-disk copy. `create_host_path: false` prevents
+silent system-disk fallback. The application retains its 256 MiB RAM ceiling
+without swap; native SQLite's 65,536-page limit at 4,096 bytes bounds the main
+database at 256 MiB, **not** WAL files or a reserved filesystem quota. Existing
+seven-day game expiry and minute-by-minute cleanup are unchanged.

@@ -1,15 +1,41 @@
 # Operator work queue — reconciled 11 October 2026
 
+## Requested queue items 1 and 6 — temporary-storage / documentation closeout
+
+**1 — Applied and verified:** Family Chess's expiring database, Anubis's challenge
+store and SearXNG's cache now share the excluded disk with PrivateBin. Consistent
+copies preserved bytes/ownership/modes; obsolete root-disk copies and the empty
+old cache volume were removed after functional checks. Eighteen selected
+temporary-data containers now have zero swap allowance; fifteen were updated
+without restart, preserving RAM-only data. Saved account work and all 24 native
+backup groups remain unchanged and validate. No retention or capacity increase.
+Exact scope, tests, recovery, core-limit rollout caveat and remaining mixed-store
+exception: [backup policy](backups.md#other-temporary-services--11-october-2026).
+
+**Remaining classification dependency:** Newsletter messages and ongoing feed
+settings share one database. Its existing mixed backups remain protected until
+a settings-only recovery path is reviewed or the owner explicitly elects to lose
+feed recovery. This is not silently marked as an all-services exclusion.
+
+**6 — Documentation reconciled for publication:** the existing Codeberg PRs,
+Google acceptance confirmation, Caddy runtime confirmation and owner-confirmed
+historical cleanup are recorded. No new submission or maintainer message was
+sent. Publish this change through the normal GitHub/source-offer release process;
+the commit history is the publication record. Unrelated sidecar/TRIP/export work
+is excluded from the release.
+
+The following dated checkpoints remain historical evidence, not new blockers.
+
 ## Privacy evidence and navigation closeout — 11 October, 00:47 UTC
 
 | Item | Current disposition |
 | --- | --- |
-| 1 — Caddy/privacy | Owner's Caddy 2.11.1 output proves access logging, trace and credential logging off, but its INFO file logger had no exclusions. The owner then reported applying the supplied `http.log.access` / `http.log.error` exclusions. This is owner-applied, not a post-change runtime verification. Historical log retention is unknown. Cloudflare's three Skip rules, Utilibre Web Analytics and NEL were independently rechecked off; Logpush remains owner-reported unused. |
+| 1 — Caddy/privacy | Owner supplied post-change runtime output confirming `http.log.access` / `http.log.error` exclusions. Earlier output has access logging, trace and credential logging off. The exclusions cover the default logger across sites, not an automatic Utilibre hostname filter. Cloudflare's three Skip rules, Utilibre Web Analytics and NEL were independently rechecked off; Logpush remains owner-reported unused. This does not certify provider-internal retention. |
 | 1 — Backup boundary | **PrivateBin migration completed, 11 October 01:35 UTC:** owner added a 10 GiB VM144 `scsi2` and confirmed exclusion from Proxmox backups. Guest disk identity/empty state verified before formatting; mounted by UUID at `/opt/utilibre/temporary`. Existing encrypted records copied and hash/ownership/mode verified while stopped; old root-disk copy removed after public 25 MB download/decryption check. Missing storage fails closed, headroom is now 1 GiB, container swap is disabled. Configuration-only recovery and expiry cleanup pass; saved-work backups/timers unchanged. Host exclusion is owner-confirmed, not independently queried. `backup=0` does not exclude ordinary VM/ZFS snapshots or erase old copies; other temporary services were not migrated. [Storage/recovery procedure](../deployment/utilibre/docs/PRIVATEBIN-STORAGE.md). |
-| 1 — Temporary GitHub secret | Both reading and deleting exactly `MUMBLE_TEST_SERVER_PASSWORD` still return 403 with the available credential. Owner deletion or narrowly sufficient repository access remains necessary. The actual Mumble server password is untouched. |
+| 1 — Temporary secret / historical retention cleanup | **Closed on owner confirmation, 11 October:** the owner says item 3 of the latest chat queue (temporary GitHub secret removal and older log/backup retention review) is already done. Earlier API 403s are historical, not a reason to keep asking for deletion. No independent post-deletion API proof or record-by-record erasure evidence was supplied; do not infer universal erasure or a change to saved-account backup policy. |
 | 4 — Enlarged-text navigation | **Deployed and production-verified.** The header now follows document text size through container queries. Long guide words can wrap. EN/ES navigation, keyboard menu, languages and no-JavaScript fallback pass without horizontal overflow at the tested sizes. No framework, dependency, app setting, font or palette changes. |
 | 5 — Blocked readers/SimpleLogin | No privacy-compatible upstream repair established. The existing bounded reader evidence remains: provider denials for Genius/Fandom/Imgur, and no verified public-use permission for LibreMDB's selected backend. SimpleLogin release/master were rechecked unchanged on 11 October; its legacy-framework gate remains. Working LRCLIB and Addy remain available. No challenge bypass or new provider. |
-| 6 — Search/listings | Google sitemap acceptance is owner-confirmed. Bing API still shows verified ownership and successful older 168-URL sitemap fetch. Five pending GitHub requests remain open. Four Codeberg native submission drafts and a gated Mezzo draft are prepared in the existing submission record; authentication remains missing. PrivateBin's upload marker matches its directory scanner, but the directory still shows the old setting; its check form cannot refresh existing rows. No duplicate submissions, unchanged IndexNow notifications or maintainer messages. |
+| 6 — Search/listings | Google sitemap acceptance is owner-confirmed. Bing API still shows verified ownership and successful older 168-URL sitemap fetch. Five pending GitHub requests remain open. **11 October Codeberg submissions completed:** GotHub PR222, Kittygram PR100 and TransLite PR31 are open after fresh native workflow checks. SafeTwitch's repository is archived; no submission there. Mezzo still needs separate Gitfield access. PrivateBin's upload marker matches its directory scanner, but the directory still shows the old setting; its check form cannot refresh existing rows. No duplicate submissions or unchanged IndexNow notifications. Exact request links and evidence are in the submission record. |
 
 Release: `public-utility-portal:0.1.0-navigation-reflow-20261011`, only `portal`
 recreated, healthy. Typecheck, lint, Docker production build, **118 unit tests**,

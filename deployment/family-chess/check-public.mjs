@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { chromium } from '../../portal/node_modules/playwright-core/index.mjs';
 
 const base = 'https://chess.utilibre.org';
-const reportDir = '/opt/utilibre/reports/family-chess-public-20261009';
+const reportDir = process.env.UTILIBRE_CHESS_REPORT_DIR || '/opt/utilibre/reports/family-chess-public-20261009';
 await mkdir(reportDir, { recursive: true, mode: 0o700 });
 const report = { checkedAt: new Date().toISOString(), publicEdge: true, checks: [], errors: [], externalHosts: [] };
 const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });

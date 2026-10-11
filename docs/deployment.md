@@ -62,6 +62,12 @@ Archive or erase it deliberately under the applicable retention decision.
 
 ## 3. Start the root project privately
 
+On a replacement host, prepare the separate backup-excluded temporary disk
+before starting SearXNG, Anubis or PrivateBin. Their native binds intentionally
+fail when the storage directories are missing; never create those directories
+on the root filesystem as a workaround. Follow [temporary storage preparation](backups.md#other-temporary-services--11-october-2026)
+and preserve the existing mounted data during routine updates.
+
 ```sh
 docker compose pull searxng valkey anubis
 docker compose build --pull portal redlib

@@ -1,7 +1,10 @@
 # PrivateBin temporary disk — VM144
 
-Applied 11 October 2026. Only PrivateBin's temporary ciphertext and native
-metadata use this disk. Saved account work and its backups are unchanged.
+Applied 11 October 2026. This disk holds temporary data, not saved account work.
+PrivateBin shares it with Family Chess's expiring games/sessions, Anubis's
+challenge store and SearXNG's cache. Their separate directories, recovery and
+verification are documented in [the backup policy](../../../docs/backups.md#other-temporary-services--11-october-2026).
+Saved account work and its backups are unchanged.
 
 - Device: VM144 `scsi2`, QEMU serial `drive-scsi2`, 10 GiB. The owner confirmed
   its Proxmox backup exclusion; host configuration was not independently read.
@@ -22,7 +25,7 @@ metadata use this disk. Saved account work and its backups are unchanged.
 
 ## Missing-disk behavior
 
-The unmounted parent is root-owned mode 000, with no `privatebin` child. Compose
+The unmounted parent is root-owned mode 000, with no application children. Compose
 uses a long bind with `create_host_path: false`; a missing source fails startup.
 Never manually create that child on the system disk. PHP additionally requires
 the disk's `.utilibre-temporary-volume` marker, returning 503 (including health
@@ -62,8 +65,8 @@ A code rollback must keep this mounted storage path, missing-source protection,
 marker guard, one-week ceiling and backup exclusions. Do not revert to the old
 `data/privatebin` bind or restore an old user-content snapshot. If the disk is
 unavailable, leave this service stopped while repairing storage. Other services
-continue independently. Do not detach the disk until PrivateBin is stopped and
-any separately authorized migration has been verified.
+continue independently. Do not detach the shared disk until **all four users**
+are stopped and any separately authorized migration has been verified.
 
 The mount definition is saved in the ordinary configuration archive; `/etc/fstab`
 itself must be installed explicitly on a replacement host. This is not a

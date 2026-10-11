@@ -1,5 +1,67 @@
 # Public instance submissions, checked 11 October 2026
 
+## Codeberg requests submitted — 11 October
+
+The owner authorized submission using the `mycelibre` Codeberg account. These
+three pull requests were created and independently read back as **open**, not
+accepted or already listed:
+
+| Service | Request | Files submitted |
+| --- | --- | --- |
+| GotHub | [PR222](https://codeberg.org/gothub/gothub/pulls/222) | Main project's `dev` README instance table |
+| Kittygram | [PR100](https://codeberg.org/irelephant/kittygram/pulls/100) | `README.md` and `instances.json`, retaining `gram.utilibre.org` |
+| TransLite | [PR31](https://codeberg.org/gospodin/translite/pulls/31) | `README.md` and `instances.json` |
+
+GotHub's directory README and generator establish that `gothub-instances` is
+generated from `gothub/gothub`'s `dev` README. The submission therefore corrects
+the earlier draft's target instead of editing generated JSON. The request
+discloses the checked source revision and the version endpoint's unknown-source
+field rather than inventing a runtime value. All requests disclose Hetzner/Germany,
+Cloudflare, the privacy page and the deployed-source offer. No uptime, universal
+device coverage, provider-log deletion or listing acceptance is asserted.
+
+Current README/rules, repository metadata, instance entries, full bounded PR
+history and public issue searches were checked before submission; no Utilibre
+duplicate was found. Public-browser checks passed immediately before submission:
+
+- `node deployment/community/check-gothub.mjs`: styled desktop/mobile-width
+  pages, repository and README reading, gzip/identity stylesheet responses.
+- `node deployment/community/check-new-readers.mjs --only=gram`: profile, post,
+  actual proxied media, desktop/mobile-width layouts; no third-party browser
+  requests or HTTP/JavaScript failures observed.
+- `node deployment/community/check-translite.mjs`: EN/ES translations, four
+  engines, native engine switching, POST/no-store, cookies and input/path
+  denials; no third-party browser requests observed.
+
+These are Chromium checks, not physical-phone certification or uptime history.
+Running image tags were verified as GotHub `24bedc8-p2`, Kittygram `5931c21-p1`
+and TransLite `7b4b8e5-p3`. Public source downloads returned gzip archive bytes;
+a Python-client source request received 403 while ordinary curl requests worked,
+so automated-client access is not claimed universal. Cloudflare's proxied
+wildcard and three non-country-filtering Skip rules were rechecked without
+changing DNS/WAF configuration.
+
+The API created public owner forks and one `add-utilibre-instance-20261011`
+branch per repository, changing only the stated listing files. PR head commits:
+GotHub `c040e7f5936c81a635f95250689f0367ebca4aad`, Kittygram
+`bcec7319020671d0ae4bd8a2fe43c39495859bc8`, TransLite
+`74fbe2e4279290edee9414b7131f1d893da587b1`. No application was deployed,
+restarted or reconfigured. The one-off API procedure is retained privately at
+`/opt/utilibre/reports/codeberg-submissions-20261011-37GhLq/submit.py`; the token
+is read from the existing root-only secret file, never included in source,
+commit content, remote URLs or output.
+
+**SafeTwitch remains unsubmitted:** Codeberg's repository API reports
+`SafeTwitch/safetwitch` as archived. No current replacement submission destination
+was established from its README. No fork/PR was created against that archived
+project, and no extra playback test was run for an ineligible submission target.
+The token lacks `read:issue`, but repository-scoped PR operations succeeded;
+broader issue permissions are not needed for these three completed submissions.
+**Mezzo remains separate:** it requires Gitfield access and current-rule review,
+not this Codeberg token. Existing GitHub requests were not changed or duplicated.
+
+## Earlier GitHub follow-up
+
 11 October read-only follow-up: Redlib #117, SearXNG #941,
 AnonymousOverflow #203, Binternet #68 and Priviblur #303 remain open. No new
 review comment/operator request appeared in the returned counts/update times.
@@ -27,8 +89,9 @@ Submission is not acceptance.
 | priviblur | [Review request](https://github.com/syeopite/priviblur/pull/303) | Open; no review comments |
 | BiblioReads | [Accepted request](https://github.com/nesaku/BiblioReads/issues/48) | Maintainer confirmed addition, 10 October, 04:52 UTC; URL verified in upstream instances.json |
 
-Authenticated Codeberg write access is needed for SafeTwitch, GotHub,
-Kittygram and TransLite; Gitfield access is needed for Mezzo. 4get uses distributed
+GotHub, Kittygram and TransLite are now submitted on Codeberg as recorded above;
+SafeTwitch's archived repository prevents the prepared submission. Gitfield
+access is still needed for Mezzo. 4get uses distributed
 operator-maintained lists rather than a central acceptance workflow. FMD's
 alternative-implementations page is not a directory of public hosted instances.
 
@@ -73,7 +136,7 @@ For public upstream GitHub submissions, classic PAT scope `public_repo` was
 sufficient; no private repository, workflow, or admin scope was needed. This
 does not authenticate Codeberg or Gitfield. Never store tokens in this repository.
 
-## Remaining directory actions, 10 October
+## Historical directory preparation, 10 October
 
 Codeberg public GET access works. Gitfield's repository raw routes redirect to
 sign-in in the 11 October recheck, so its current contribution rules also need
@@ -124,15 +187,14 @@ controls or claiming the green check is present. Sources, inspected 11 October:
 
 ## Prepared submissions — not sent
 
-These are reviewable native entries, not evidence of acceptance or fresh
-end-to-end operation. Codeberg/Gitfield authentication is still missing. Before
-sending, check for an existing request/list entry, replay one relevant native
-journey, and review the list's then-current rules. Do not submit a failing
-service. The four Codeberg formats were inspected on 11 October. The zone API
-reports no exact DNS records for these hosts and a proxied wildcard A record;
-Cloudflare use is therefore disclosed rather than inferred from server country.
+Only SafeTwitch and Mezzo remain drafts. GotHub, Kittygram and TransLite were
+submitted above after fresh checks; their earlier draft entries are superseded.
+Before sending either remaining draft, establish a writable official destination,
+check for an existing request/list entry, replay one relevant native journey,
+and review the then-current rules. Do not submit a failing service or route a
+request elsewhere merely to bypass an archived repository or missing access.
 
-**SafeTwitch:** issue/PR title `Add twitch.utilibre.org`; destination
+**SafeTwitch (blocked: repository archived):** issue/PR title `Add twitch.utilibre.org`; former destination
 https://codeberg.org/SafeTwitch/safetwitch/issues/new . Proposed README row:
 
 ```markdown
@@ -143,70 +205,6 @@ Body: “I operate Utilibre and would like to list our SafeTwitch instance at
 https://twitch.utilibre.org/. It is hosted on Hetzner in Germany, behind
 Cloudflare. Chat is disabled. Our privacy information and deployed-source
 offer are linked from the instance. Please add the row above.”
-
-**GotHub:** PR title `Add gothub.utilibre.org`; append to the existing array at
-https://codeberg.org/gothub/gothub-instances/src/branch/master/instances.json :
-
-```json
-{
-  "country": "Germany",
-  "link": "https://gothub.utilibre.org",
-  "tor": false,
-  "cloudflare": true,
-  "host": "Hetzner",
-  "branch": "dev",
-  "version": "24bedc80",
-  "fiberversion": "2.52.15",
-  "goversion": "go1.26.8"
-}
-```
-
-PR body: “I operate this Utilibre instance. The base is dev revision
-24bedc80bed5fc4f72a8f140c97cb38fc2e67ed2 with published Utilibre p2 patches.
-The runtime version endpoint reports Fiber 2.52.15 and Go 1.26.8 but does not
-identify the source revision; the entry uses the checked build source instead.
-Hosting is Hetzner/Germany with Cloudflare. Privacy:
-https://utilibre.org/en/privacy .” The local reviewed checkout's branch is
-`dev`; do not label it `master` merely because the directory uses that branch.
-
-**Kittygram:** PR title `Add gram.utilibre.org`; append at
-https://codeberg.org/irelephant/kittygram/src/branch/main/instances.json :
-
-```json
-{
-  "url": "https://gram.utilibre.org",
-  "tor": null,
-  "i2p": null,
-  "yggdrasil": null,
-  "country": "DE"
-}
-```
-
-PR body: “I operate Utilibre's Kittygram instance at https://gram.utilibre.org.
-It uses reviewed revision 5931c21c0990d4b216e97166dd78c03c9965567a with published
-Utilibre changes. It is hosted in Germany on Hetzner and uses Cloudflare; the
-current JSON schema has no Cloudflare field, so I am disclosing that here.
-Privacy: https://utilibre.org/en/privacy .” Preserve `gram`, not the retired
-Instagram hostname.
-
-**TransLite:** PR title `Add translate.utilibre.org`; append at
-https://codeberg.org/gospodin/translite/src/branch/master/instances.json :
-
-```json
-{
-  "url": "https://translate.utilibre.org",
-  "type": "http",
-  "provider": { "name": "Utilibre", "url": "https://utilibre.org" },
-  "location": "DE",
-  "features": { "official": false, "cloudflare": true }
-}
-```
-
-PR body: “I operate this Utilibre instance on Hetzner in Germany, behind
-Cloudflare. It uses source revision 7b4b8e51359338219463f14c2a06211b6998a11e
-with published Utilibre p3 changes. Submitted text is forwarded to the selected
-translation provider; our instance notice describes this, without promising
-provider anonymity or retention. Privacy: https://utilibre.org/en/privacy .”
 
 **Mezzo:** draft title `Add tenor.utilibre.org`, for the native issue form at
 https://gitfield.org/fsky/mezzo-instances/issues/new . Body: “I operate Utilibre

@@ -35,8 +35,8 @@ rollback: [PrivateBin storage](../deployment/utilibre/docs/PRIVATEBIN-STORAGE.md
 
 This excludes PrivateBin's current persistent data from Proxmox backups **when
 the owner-confirmed disk exclusion is honored**. It is not an exclusion from
-ordinary VM/ZFS snapshots, proof of historical/physical erasure, or a migration
-of every other temporary service. Do not treat `backup=0` as a snapshot exclusion.
+ordinary VM/ZFS snapshots or proof of historical/physical erasure. The subsequent
+bounded migration is recorded below. Do not treat `backup=0` as a snapshot exclusion.
 Container swap is disabled to keep new PrivateBin buffers off the root swapfile.
 The 150 GiB `scsi0` still holds saved account work and must not be excluded.
 Both previously returned cluster backup jobs were disabled; no job or unrelated
@@ -70,6 +70,114 @@ do not restart applications. Rollback must preserve this privacy decision: keep
 the exclusions and guard when reverting unrelated code. To recover a service,
 restore its settings without resurrecting temporary user content. Re-enabling
 content backups needs a new operator decision, not an automatic code rollback.
+
+## Other temporary services — 11 October 2026
+
+The next pass checked running writable mounts and relevant native configuration,
+without reading user documents, messages or game contents. Three more stores
+now use the same 10 GiB backup-excluded disk:
+
+| Native store | Host directory under `/opt/utilibre/temporary/` | Owner/mode | Preserved behavior |
+| --- | --- | --- | --- |
+| Family Chess `f6e5093-p1` | `family-chess` | 10001:10001 / 0755 | Guest games expire after seven days; native session cleanup; no saved accounts present |
+| Anubis 1.27.0 | `anubis` | 1000:1000 / 0700 | Logical 30-minute challenges; existing signing key/cookie settings unchanged |
+| SearXNG `2026.10.9-f4822b3fc` | `searxng-cache` | 977:977 / 0755 | Same pinned image and automatic-update policy; cache was empty |
+
+PrivateBin remains at `temporary/privatebin`, with its 25 MB upload limit,
+one-week maximum expiry and 1 GiB free-space admission safeguard. The disk is
+shared, **not** four independent quotas or reserved allocations. After migration
+it had about 3.1 MiB used and 9.7 GiB available. Chess's native main-database cap
+is 256 MiB (65,536 × 4,096-byte pages), excluding journal/WAL overhead. Anubis
+bbolt pages can retain expired bytes until native reuse/compaction; logical TTL
+is not physical erasure. No new automatic deletion policy was added.
+
+Each service was stopped for its own consistent copy. SHA-256 bytes, ownership
+and modes matched before startup. All three binds use `create_host_path: false`.
+Once the services passed their checks, the obsolete
+`/opt/utilibre/family-chess/data` and repository `data/anubis` copies were removed,
+along with the unused **empty** `public-utility_searxng-cache` Docker volume.
+The live copies remain on the excluded disk; this was not a purge of live records
+or historical backups. Neither Cloudflare/Caddy nor Proxmox settings changed.
+
+RAM-backed ntfy/Yopass, secret Valkey, WBO, PairDrop and Rustpad already had no
+durable payload mount. RSS-Bridge/RSSHub/search Valkey caches likewise use RAM.
+This pass set native `memswap_limit` equal to the unchanged RAM ceiling for
+18 selected app/cache/gateway containers (the three above; root Redlib/Valkey;
+community RSS-Bridge, ntfy, Yopass, secret-cache and PairDrop; WBO/gateway;
+Rustpad; core RSSHub/Valkey; chess gateway; DeGoog/gateway). Fifteen received
+live Docker resource updates with unchanged container IDs/start times, preserving
+their in-memory content. All 18 cgroups report `memory.swap.max=0`; sampled
+current swap was zero. PrivateBin was already protected. This is not a claim
+that every process in the VM is swap-free or that old swap bytes are erased.
+No RAM ceilings were increased: exhausting a service's RAM allowance can still
+cause a failure/restart and loss of its RAM-only data.
+
+Their Compose definitions also set core-file limits to zero. Existing running
+processes received the same limit without restart. For containers not recreated
+since that addition, Docker's stored creation specification still has its older
+ulimit until the next **Compose recreation**; a plain Docker restart is not proof
+of the new creation setting. No crash was induced and no global host limit changed.
+
+### Preserved mixed/durable storage
+
+- Saved account documents, responses, polls, libraries, identity, event/quiz
+  work and stable credentials remain on their existing backed-up storage.
+- DeGoog's roughly 79 MiB `/app/data` is not all search cache: it includes
+  operator settings and downloaded extensions/store assets. Inspection of the
+  pinned source found search caches in memory and its disk bus carrying settings/
+  cache-invalidation notifications. The whole directory was not blindly moved
+  or deleted. Its cache RAM now has no swap allowance.
+- **Newsletter exception remains explicit:** Kill the Newsletter combines
+  ongoing feed identifiers/settings and automatically expiring messages in one
+  SQLite database; attachments are adjacent. Its native backup still preserves
+  that mixed database/files. The existing 30-day message cleanup and ongoing-feed
+  recovery policy are unchanged. Moving the entire database would not separate
+  its backup contents. A reviewed settings-only recovery method, or an explicit
+  decision to forgo feed recovery, is needed before excluding that service's
+  content from backups. This pass does not claim all temporary content is now
+  excluded. Do not disable its backups or delete a mixed snapshot silently.
+
+### Checks and recovery
+
+- Native missing-source tests passed for all three new binds and PrivateBin:
+  Docker refused to start and created no fallback directory.
+- Public chess EN/ES Chromium test: two players, legal moves, live spectator,
+  rejected spectator mutation, no unexpected browser destinations; only its
+  fictional game was removed. SQLite `quick_check=ok`; minute cleanup succeeds.
+- Public native Anubis challenge and cookie flags/lifetimes passed after restart.
+- SearXNG returned at least three result links in each of EN/ES after migration,
+  over HTTPS through the private Caddy edge. An earlier overlapping migration
+  interrupted one test connection; the completed post-migration check passed.
+  This is not an independent external-network or uptime measurement.
+- Twelve storage/backup-policy/selector tests and seven updater tests passed;
+  all 24 actual saved-work backup groups still validate. No backup upload,
+  restore, pruning or new broad user-content snapshot was needed for this pass.
+
+Evidence: `/opt/utilibre/reports/temporary-storage-20261011-5nPF9H/`,
+`temporary-storage-20261011-noswap.json` and `family-chess-public-20261011/`.
+No real record IDs, tokens, documents or game histories are in committed evidence.
+
+For replacement storage, follow [the disk preparation procedure](../deployment/utilibre/docs/PRIVATEBIN-STORAGE.md),
+then, **after verifying the mount**, create only the required child directories
+with the table's ownership/modes. Restore stable configuration/keys, not expired
+content. Anubis and SearXNG initialize empty stores natively; chess requires its
+native `manage.py migrate --noinput` against the empty excluded directory.
+Never run that procedure over an occupied database. No production reboot or
+whole-host recovery was performed.
+
+Rollback must preserve these new paths, existing retention and backup exclusions.
+Leave an affected app stopped if its disk is absent. After storage repair,
+recreate only its container with the existing pinned image, then check health
+and its task. Keep its dependencies, unrelated apps and durable backups running.
+Restore the cleanup/updater timers if a maintenance stop interrupted them; both
+were active after this release. Never restore the old root-disk binds as an
+automatic rollback, or enable swap to hide a RAM-limit problem.
+
+Native configuration references checked 11 October:
+[Docker bind mounts](https://docs.docker.com/reference/compose-file/services/#volumes),
+[Docker memory/swap](https://docs.docker.com/engine/containers/resource_constraints/#--memory-swap-details).
+Source evidence: `compose.yaml`, the selected deployment Compose files,
+`deployment/family-chess/settings.py`, and the pinned DeGoog cache/disk-bus source.
 
 ## Verified Storage Box application copy — October 10, 2026
 
@@ -343,7 +451,7 @@ sh scripts/backup.sh /operator/controlled/backup-directory
 The script archives source and nonsecret configuration and intentionally
 excludes `.env`, secrets, generated/runtime files, node modules, and
 re-creatable SearXNG/Valkey state. Back up `.env` and stable `secrets/` separately
-in an encrypted store; do not archive transient `data/anubis/` challenge state.
+in an encrypted store; do not archive transient `temporary/anubis/` challenge state.
 
 Verify that the archive can be listed and that the exact deployed Git revision
 is independently recoverable.

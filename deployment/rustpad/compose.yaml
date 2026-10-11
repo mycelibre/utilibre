@@ -1,6 +1,7 @@
 name: utilibre-rustpad
 services:
   rustpad:
+    ulimits: {core: 0}
     image: utilibre-rustpad:54e4a93-p1
     restart: unless-stopped
     init: true
@@ -9,6 +10,7 @@ services:
     security_opt: [no-new-privileges:true]
     cpus: 1.0
     mem_limit: 512m
+    memswap_limit: 512m
     pids_limit: 64
     environment:
       PORT: '3030'

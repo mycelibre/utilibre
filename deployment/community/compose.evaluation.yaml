@@ -14,6 +14,8 @@ x-runtime: &runtime
     options: {max-size: 5m, max-file: "2"}
 services:
   degoog:
+    ulimits: {core: 0}
+    memswap_limit: 512m
     <<: *runtime
     image: ghcr.io/degoog-org/degoog:1.0.0@sha256:e1ce8ee724a4514d269b74088424e579322bdfcf718256c1c5dd2cbb5aaf510c
     user: "1000:1000"
@@ -39,6 +41,8 @@ services:
     networks:
       search: {ipv4_address: 172.29.77.10}
   degoog-gateway:
+    ulimits: {core: 0}
+    memswap_limit: 64m
     <<: *runtime
     image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
     user: "101:101"
