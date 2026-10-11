@@ -8,12 +8,13 @@ import { execFileSync } from 'node:child_process';
 test('core archive keeps configuration/account work but not temporary paste data', async t => {
   const root = await mkdtemp(join(tmpdir(), 'utilibre-backup-policy-'));
   t.after(() => rm(root, { recursive: true, force: true }));
-  for (const dir of ['bin', 'scripts', 'config/privatebin', 'system', 'systemd', 'edge', 'docs', 'secrets', 'data/privatebin', 'data/freshrss', 'data/backups']) {
+  for (const dir of ['bin', 'scripts', 'config/privatebin', 'system', 'systemd', 'edge', 'docs', 'secrets', 'data/privatebin', 'temporary/privatebin', 'data/freshrss', 'data/backups']) {
     await mkdir(join(root, dir), { recursive: true });
   }
   for (const file of ['compose.yaml', '.env', '.env.example', 'README.md', 'SOURCE_MANIFEST.md']) await writeFile(join(root, file), '');
   await writeFile(join(root, 'config/privatebin/conf.php'), 'FICTIONAL_CONFIGURATION');
   await writeFile(join(root, 'data/privatebin/paste'), 'TEMPORARY_CONTENT_MUST_NOT_COPY');
+  await writeFile(join(root, 'temporary/privatebin/paste'), 'TEMPORARY_CONTENT_MUST_NOT_COPY');
   await writeFile(join(root, 'data/freshrss/account'), 'FICTIONAL_DURABLE_ACCOUNT');
   await writeFile(join(root, 'bin/docker'), '#!/bin/sh\nprintf "FICTIONAL_DATABASE_DUMP\\n"\n', { mode: 0o700 });
   await copyFile(new URL('../scripts/backup.sh', import.meta.url), join(root, 'scripts/backup.sh'));
@@ -25,11 +26,12 @@ test('core archive keeps configuration/account work but not temporary paste data
   execFileSync('sha256sum', ['-c', 'SHA256SUMS'], { cwd: snapshot, stdio: 'ignore' });
   const config = execFileSync('tar', ['-tzf', join(snapshot, 'files/configuration.tar.gz')], { encoding: 'utf8' });
   assert(config.includes('config/privatebin/conf.php'));
-  assert(!config.split('\n').some(name => name.startsWith('data/')));
+  assert(!config.split('\n').some(name => /^(data|temporary)\//.test(name)));
   const account = execFileSync('tar', ['-xOzf', join(snapshot, 'files/freshrss-data.tar.gz'), 'freshrss/account'], { encoding: 'utf8' });
   assert.equal(account, 'FICTIONAL_DURABLE_ACCOUNT');
   assert.equal((await readdir(join(root, 'data/backups'))).filter(name => name.startsWith('daily-')).length, 10);
   assert.equal(await readFile(join(root, 'data/privatebin/paste'), 'utf8'), 'TEMPORARY_CONTENT_MUST_NOT_COPY');
+  assert.equal(await readFile(join(root, 'temporary/privatebin/paste'), 'utf8'), 'TEMPORARY_CONTENT_MUST_NOT_COPY');
 });
 
 test('legacy PrivateBin restore fails before reading or changing data', () => {

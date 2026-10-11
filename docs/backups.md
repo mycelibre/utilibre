@@ -21,27 +21,26 @@ fails closed on pre-policy core/chess payloads rather than uploading them again.
 Temporary services can lose current content on storage failure before expiry;
 do not promise recovery. Preserve live mounts during ordinary upgrades.
 
-This is **not yet an exclusion from externally managed whole-VM snapshots**.
-The owner's filtered Proxmox output on 11 October identifies VM **144**
-(`freetools`): `scsi0` is the 150 GiB `local-zfs:vm-144-disk-1`; `scsi1` is
-only the cloud-init CD-ROM. There is no separate temporary-data disk in that
-output. Both returned cluster backup jobs have `enabled: 0`; the first includes
-144 and many unrelated VMs, while the second selects only 138. Their written
-21:00 schedules are therefore not evidence of active scheduled backups. Manual
-backups, older copies, other automation and storage-level snapshots are not
-ruled out by this output. The VM's own core and Storage Box application-backup
-timers were independently checked active on 11 October.
+**PrivateBin's persistent storage boundary was completed on 11 October.** VM144
+(`freetools`) now has a 10 GiB `scsi2` disk, independently identified in the
+guest by serial `drive-scsi2` and an empty signature check before formatting.
+The owner confirmed its Proxmox backup exclusion; no independent host API read
+was available. It is mounted by UUID at `/opt/utilibre/temporary` and PrivateBin
+uses `temporary/privatebin`. Existing records were copied with the service
+stopped, verified byte-for-byte with ownership/modes, and the old root-disk
+directory removed after a successful public 25 MB encryption/download check.
+Missing storage fails closed rather than creating a fallback directory.
+Configuration-only recovery and native expiry cleanup passed. Details and
+rollback: [PrivateBin storage](../deployment/utilibre/docs/PRIVATEBIN-STORAGE.md).
 
-Do not enable the multi-VM job or exclude `scsi0` to resolve this item: the first
-changes other machines, and the second omits saved account work as well. If
-whole-VM backups resume, prepare a dedicated temporary-content virtual disk
-with native `backup=0`, then perform a separately checked, data-preserving
-application mount migration. An ext4 directory or partition inside `scsi0` is
-not a VM-disk exclusion; Proxmox's file-path exclusions are for containers.
-Check available `local-zfs` capacity first with the read-only command
-`pvesm status --storage local-zfs`. No disk was created, formatted, migrated or
-excluded here. The required remaining input is that storage-capacity result;
-disk identity and migration must be verified before any formatting command.
+This excludes PrivateBin's current persistent data from Proxmox backups **when
+the owner-confirmed disk exclusion is honored**. It is not an exclusion from
+ordinary VM/ZFS snapshots, proof of historical/physical erasure, or a migration
+of every other temporary service. Do not treat `backup=0` as a snapshot exclusion.
+Container swap is disabled to keep new PrivateBin buffers off the root swapfile.
+The 150 GiB `scsi0` still holds saved account work and must not be excluded.
+Both previously returned cluster backup jobs were disabled; no job or unrelated
+VM was changed. Native core and Storage Box backup timers remain active.
 Reference: [Proxmox backup source documentation](https://github.com/proxmox/pve-docs/blob/master/vzdump.adoc).
 
 Existing

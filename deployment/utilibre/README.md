@@ -36,6 +36,9 @@ docker compose up -d
 On a fresh deployment, run `scripts/init-secrets.sh` once and then
 `scripts/bootstrap-freshrss.sh` before the first full `docker compose up`. The
 bootstrap consumes the generated root-only credentials without printing them.
+PrivateBin requires its separately mounted temporary disk first; follow
+[`docs/PRIVATEBIN-STORAGE.md`](docs/PRIVATEBIN-STORAGE.md). Missing storage must
+leave PrivateBin unavailable, never writing to the backed-up system disk.
 It is safe to rerun for verification: existing FreshRSS configuration and
 account settings are preserved, while inconsistent state fails closed. See
 `docs/DEPLOYMENT.md` for the complete order and ownership prerequisites.

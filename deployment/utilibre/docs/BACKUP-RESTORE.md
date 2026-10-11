@@ -41,7 +41,12 @@ it. Run `scripts/healthcheck.sh` after every restore.
 
 PrivateBin recovery restores the pinned application and `config/privatebin`
 from the configuration archive into a deployment with an empty data directory
-owned by UID 65534/GID 82. Never replace a running data directory during a
+owned by UID 65534/GID 82 **on the mounted, backup-excluded disk** at
+`/opt/utilibre/temporary/privatebin`. Follow `docs/PRIVATEBIN-STORAGE.md` to
+recreate the mount and its non-secret volume marker first. The archived
+`system/privatebin-temporary.fstab` records the mount; a replacement disk needs
+its own UUID. Neither the disk nor user pastes are restored from the archive.
+Never replace a running data directory during a
 routine update. The former `privatebin` content-restore target now fails closed
 to avoid resurrecting expired records. Run
 `node deployment/utilibre/tests/check-privatebin-restore.mjs` from the repository

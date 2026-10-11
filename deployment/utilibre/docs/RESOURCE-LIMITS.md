@@ -17,6 +17,11 @@ memory, or upstream-request pressure.
 ```sh
 docker stats --no-stream
 du -xsh /opt/utilibre/data/postgres /opt/utilibre/data/freshrss \
-  /opt/utilibre/data/privatebin /opt/utilibre/data/backups
-df -h /opt/utilibre
+  /opt/utilibre/temporary/privatebin /opt/utilibre/data/backups
+df -h /opt/utilibre /opt/utilibre/temporary
 ```
+
+PrivateBin has a separate 10 GiB temporary disk, with uploads paused below
+1 GiB available. Its 768 MiB memory limit also sets the memory-plus-swap limit:
+container swap is disabled to keep new request buffers off the root swapfile.
+This is a global storage safeguard, not a per-user quota or concurrency claim.

@@ -2,7 +2,7 @@
 // exactly one 25 MB encrypted paste on our instance, deleted in finally.
 import assert from 'node:assert/strict';
 import {execFileSync, spawn} from 'node:child_process';
-import {mkdtemp, mkdir, chown, writeFile, readFile, rm} from 'node:fs/promises';
+import {mkdtemp, mkdir, chown, writeFile, readFile, rm, chmod} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {randomBytes, createHash} from 'node:crypto';
 import {chromium} from '../../../portal/node_modules/playwright-core/index.mjs';
@@ -21,6 +21,8 @@ const errors=[], outside=new Set(), checks=[];
 try {
   if (!live) {
     await mkdir(`${temp}/data`); await chown(`${temp}/data`,65534,82);
+    const marker = `${temp}/data/.utilibre-temporary-volume`;
+    await writeFile(marker, 'utilibre-privatebin-temporary-v1\n'); await chmod(marker,0o444);
     docker('network','create','--internal',network); networkCreated=true;
     const mounts = [['conf.php','/srv/cfg/conf.php'],['bootstrap5-utilibre.php','/srv/tpl/bootstrap5-utilibre.php'],['robots.txt','/var/www/robots.txt'],['manifest.json','/var/www/manifest.json'],['brand','/var/www/utilibre-brand'],['brand/favicon.ico','/var/www/favicon.ico'],['discovery-server.conf','/etc/nginx/server.d/utilibre-discovery.conf'],['discovery-location.conf','/etc/nginx/location.d/utilibre-discovery.conf'],['upload-limit.js','/var/www/js/utilibre-upload-limit.js'],['upload-guard.php','/srv/cfg/upload-guard.php'],['uploads.ini','/etc/php85/conf.d/zz-utilibre-uploads.ini'],['uploads-pool.conf','/etc/php85/php-fpm.d/zzz-utilibre-uploads.conf']].flatMap(([file,target])=>['-v',`${recipe}${file}:${target}:ro`]);
     docker('run','-d','--name',name,'--network',network,'--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--cpus','0.5','--memory','768m','--pids-limit','128','--log-driver','none','--tmpfs','/run:rw,exec,nosuid,nodev,size=16m,mode=0755,uid=65534,gid=82','--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777','--tmpfs','/var/lib/nginx/tmp:rw,nosuid,nodev,noexec,size=128m,mode=0755,uid=65534,gid=82','-v',`${temp}/data:/srv/data`,...mounts,'docker.io/privatebin/nginx-fpm-alpine:2.0.6@sha256:13290e2f04bfd98cf8fc7e8d216fb76b2b2d12373d4923b859cd41c2d984fde8'); created=true;
@@ -28,8 +30,19 @@ try {
     bridge=spawn('socat',['TCP4-LISTEN:3185,bind=127.0.0.1,reuseaddr,fork,max-children=16',`TCP4:${ip}:8080`],{detached:true,stdio:'ignore'});
     let ready=false;for(let n=0;n<30;n++){try{ready=(await fetch(base,{signal:AbortSignal.timeout(1000)})).ok}catch{}if(ready)break;await new Promise(r=>setTimeout(r,500))}assert(ready);
     docker('exec',name,'nginx','-t');
-    docker('exec',name,'php','-r',"require '/srv/cfg/upload-guard.php'; if(utilibreHasUploadHeadroom(false)||utilibreHasUploadHeadroom(5*1024**3-1)||!utilibreHasUploadHeadroom(5*1024**3))exit(1);");
+    docker('exec',name,'php','-r',"require '/srv/cfg/upload-guard.php'; if(utilibreHasUploadHeadroom(false)||utilibreHasUploadHeadroom(1024**3-1)||!utilibreHasUploadHeadroom(1024**3))exit(1);");
     checks.push('candidate native config validation and low-disk admission boundary');
+    for (const invalid of [null, 'wrong-volume\n']) {
+      if (invalid === null) await rm(marker); else { await writeFile(marker,invalid); await chmod(marker,0o444); }
+      for (const method of ['GET','POST']) {
+        const response=await fetch(base+'/',{method}); assert.equal(response.status,503);
+        assert.equal(response.headers.get('cache-control'),'no-store');
+        assert.equal((await response.json()).status,1);
+      }
+    }
+    await writeFile(marker,'utilibre-privatebin-temporary-v1\n'); await chmod(marker,0o444);
+    assert((await fetch(base+'/')).ok);
+    checks.push('missing/invalid volume marker fails GET health and POST admission; restored volume recovers');
   }
   browser=await chromium.launch();
   const context=await browser.newContext({locale:'en-US',viewport:{width:1280,height:900},acceptDownloads:true});

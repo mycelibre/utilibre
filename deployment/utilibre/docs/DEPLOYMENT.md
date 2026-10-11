@@ -23,7 +23,9 @@ fetch upstream sites without joining the host-published applications' network.
 2. Run `FRESHRSS_ADMIN_USERNAME=<name> scripts/init-secrets.sh <APP_BIND_IP>`.
 3. Set `EDGE_PROXY_IP` in the root-only `.env` to the exact Caddy peer address.
 4. Set the expected ownership: PostgreSQL data UID/GID 70, FreshRSS data UID/GID
-   33, and PrivateBin data UID 65534/GID 82.
+   33. PrivateBin additionally requires the separately mounted temporary disk
+   described in `docs/PRIVATEBIN-STORAGE.md`; its directory is UID 65534/GID 82.
+   Do not create `temporary/privatebin` on the system disk.
 5. Validate the Compose model, bootstrap FreshRSS, then start the complete stack:
 
 ```sh

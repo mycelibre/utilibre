@@ -2,7 +2,7 @@
 // No live paste is copied. The rehearsal cannot reach the Internet.
 import assert from 'node:assert/strict';
 import {execFileSync,spawn} from 'node:child_process';
-import {mkdtemp,readFile,writeFile,rm,mkdir,chown,access} from 'node:fs/promises';
+import {mkdtemp,readFile,writeFile,rm,mkdir,chown,access,chmod} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {randomBytes} from 'node:crypto';
 const {chromium}=createRequire(new URL('../../../portal/package.json',import.meta.url))('playwright-core');
@@ -21,9 +21,12 @@ try {
  await assert.rejects(access(`${snapshot}/files/privatebin-data.tar.gz`), {code:'ENOENT'});
  const members=execFileSync('tar',['-tzf',`${snapshot}/files/configuration.tar.gz`],{encoding:'utf8'}).split('\n');
  assert(members.includes('config/privatebin/conf.php'));
- assert(!members.some(name=>name.startsWith('data/')));
+ assert(!members.some(name=>/^(data|temporary)\//.test(name)));
  await mkdir(`${temp}/config`);
  await mkdir(`${temp}/privatebin`);await chown(`${temp}/privatebin`,65534,82);
+ // Disposable synthetic store only. A real restore requires an excluded disk.
+ await writeFile(`${temp}/privatebin/.utilibre-temporary-volume`,'utilibre-privatebin-temporary-v1\n');
+ await chmod(`${temp}/privatebin/.utilibre-temporary-volume`,0o444);
  execFileSync('tar',['-xzf',`${snapshot}/files/configuration.tar.gz`,'-C',`${temp}/config`,'config/privatebin'],{stdio:'ignore'});
  // Preserve the supported custom template and static assets with its config.
  const restoredConfig=`${temp}/config/config/privatebin`;
