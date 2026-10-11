@@ -1,4 +1,10 @@
-# Public instance submissions, checked 10 October 2026
+# Public instance submissions, checked 11 October 2026
+
+11 October read-only follow-up: Redlib #117, SearXNG #941,
+AnonymousOverflow #203, Binternet #68 and Priviblur #303 remain open. No new
+review comment/operator request appeared in the returned counts/update times.
+No duplicate submission or maintainer message was sent. Filtered evidence:
+`/opt/utilibre/reports/queue-closeout-20261011-8qA6VI/submissions.json`.
 
 PrivateBin is listed. [Redlib PR117](https://github.com/redlib-org/redlib-instances/pull/117)
 and [SearXNG request941](https://github.com/searxng/searx-instances/issues/941)
@@ -69,8 +75,10 @@ does not authenticate Codeberg or Gitfield. Never store tokens in this repositor
 
 ## Remaining directory actions, 10 October
 
-Public GET access to Codeberg and Gitfield works; authenticated write access is
-the missing capability, not an inaccessible website. No retained login/token
+Codeberg public GET access works. Gitfield's repository raw routes redirect to
+sign-in in the 11 October recheck, so its current contribution rules also need
+authenticated access; the earlier 10 October observations below are historical.
+No retained login/token
 for either host was found. The native contribution destinations were checked:
 
 - [SafeTwitch](https://codeberg.org/SafeTwitch/safetwitch): README requests an
@@ -99,3 +107,112 @@ uploads disabled, while Utilibre's public HTML exposes the native attachment
 marker and the 25 MB workflow has passed. This is an upstream refresh dependency,
 not a reason to resubmit or alter the directory's data. See
 [PrivateBin verification](privatebin-uploads-2026-10-10.md#directory-refresh-external).
+
+11 October refresh investigation: the public upload indicator still shows
+disabled. The actual Utilibre HTML contains the exact ` id="attachment" `
+marker used by the directory's current scanner. Its native `/check` handler
+returns the saved database row for an already-listed instance; it does **not**
+force a rescan. Its `/add` handler inserts rather than updating existing rows.
+Therefore neither repeated checking nor duplicate submission is a refresh fix.
+The project's README assigns full scans to a daily `CRON=FULL` run, but the
+operator's actual next run and successful fetch are not observable here. Keep
+the working upload setting; wait for that upstream scan rather than bypassing
+controls or claiming the green check is present. Sources, inspected 11 October:
+[scanner](https://github.com/PrivateBin/Directory/blob/master/src/models.rs),
+[routes](https://github.com/PrivateBin/Directory/blob/master/src/main.rs),
+[scan schedule](https://github.com/PrivateBin/Directory/blob/master/README.md).
+
+## Prepared submissions — not sent
+
+These are reviewable native entries, not evidence of acceptance or fresh
+end-to-end operation. Codeberg/Gitfield authentication is still missing. Before
+sending, check for an existing request/list entry, replay one relevant native
+journey, and review the list's then-current rules. Do not submit a failing
+service. The four Codeberg formats were inspected on 11 October. The zone API
+reports no exact DNS records for these hosts and a proxied wildcard A record;
+Cloudflare use is therefore disclosed rather than inferred from server country.
+
+**SafeTwitch:** issue/PR title `Add twitch.utilibre.org`; destination
+https://codeberg.org/SafeTwitch/safetwitch/issues/new . Proposed README row:
+
+```markdown
+| [twitch.utilibre.org](https://twitch.utilibre.org/) | 🇩🇪 | Utilibre / Hetzner; chat disabled; [privacy](https://utilibre.org/en/privacy) | ✅ |
+```
+
+Body: “I operate Utilibre and would like to list our SafeTwitch instance at
+https://twitch.utilibre.org/. It is hosted on Hetzner in Germany, behind
+Cloudflare. Chat is disabled. Our privacy information and deployed-source
+offer are linked from the instance. Please add the row above.”
+
+**GotHub:** PR title `Add gothub.utilibre.org`; append to the existing array at
+https://codeberg.org/gothub/gothub-instances/src/branch/master/instances.json :
+
+```json
+{
+  "country": "Germany",
+  "link": "https://gothub.utilibre.org",
+  "tor": false,
+  "cloudflare": true,
+  "host": "Hetzner",
+  "branch": "dev",
+  "version": "24bedc80",
+  "fiberversion": "2.52.15",
+  "goversion": "go1.26.8"
+}
+```
+
+PR body: “I operate this Utilibre instance. The base is dev revision
+24bedc80bed5fc4f72a8f140c97cb38fc2e67ed2 with published Utilibre p2 patches.
+The runtime version endpoint reports Fiber 2.52.15 and Go 1.26.8 but does not
+identify the source revision; the entry uses the checked build source instead.
+Hosting is Hetzner/Germany with Cloudflare. Privacy:
+https://utilibre.org/en/privacy .” The local reviewed checkout's branch is
+`dev`; do not label it `master` merely because the directory uses that branch.
+
+**Kittygram:** PR title `Add gram.utilibre.org`; append at
+https://codeberg.org/irelephant/kittygram/src/branch/main/instances.json :
+
+```json
+{
+  "url": "https://gram.utilibre.org",
+  "tor": null,
+  "i2p": null,
+  "yggdrasil": null,
+  "country": "DE"
+}
+```
+
+PR body: “I operate Utilibre's Kittygram instance at https://gram.utilibre.org.
+It uses reviewed revision 5931c21c0990d4b216e97166dd78c03c9965567a with published
+Utilibre changes. It is hosted in Germany on Hetzner and uses Cloudflare; the
+current JSON schema has no Cloudflare field, so I am disclosing that here.
+Privacy: https://utilibre.org/en/privacy .” Preserve `gram`, not the retired
+Instagram hostname.
+
+**TransLite:** PR title `Add translate.utilibre.org`; append at
+https://codeberg.org/gospodin/translite/src/branch/master/instances.json :
+
+```json
+{
+  "url": "https://translate.utilibre.org",
+  "type": "http",
+  "provider": { "name": "Utilibre", "url": "https://utilibre.org" },
+  "location": "DE",
+  "features": { "official": false, "cloudflare": true }
+}
+```
+
+PR body: “I operate this Utilibre instance on Hetzner in Germany, behind
+Cloudflare. It uses source revision 7b4b8e51359338219463f14c2a06211b6998a11e
+with published Utilibre p3 changes. Submitted text is forwarded to the selected
+translation provider; our instance notice describes this, without promising
+provider anonymity or retention. Privacy: https://utilibre.org/en/privacy .”
+
+**Mezzo:** draft title `Add tenor.utilibre.org`, for the native issue form at
+https://gitfield.org/fsky/mezzo-instances/issues/new . Body: “I operate Utilibre
+and would like to list https://tenor.utilibre.org, hosted on Hetzner in Germany
+behind Cloudflare. Privacy information: https://utilibre.org/en/privacy .”
+This draft is intentionally **not ready to submit** until authenticated access
+allows the current rules/template to be inspected and their maintenance/source
+conditions and a native search/media journey to be checked. Do not check an
+unverified compliance box or send the draft elsewhere to bypass sign-in.

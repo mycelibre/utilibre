@@ -1,5 +1,39 @@
 # Operator work queue — reconciled 11 October 2026
 
+## Privacy evidence and navigation closeout — 11 October, 00:47 UTC
+
+| Item | Current disposition |
+| --- | --- |
+| 1 — Caddy/privacy | Owner's Caddy 2.11.1 output proves access logging, trace and credential logging off, but its INFO file logger had no exclusions. The owner then reported applying the supplied `http.log.access` / `http.log.error` exclusions. This is owner-applied, not a post-change runtime verification. Historical log retention is unknown. Cloudflare's three Skip rules, Utilibre Web Analytics and NEL were independently rechecked off; Logpush remains owner-reported unused. |
+| 1 — Backup boundary | Owner's output identifies VM144, one 150 GiB data disk plus cloud-init, and two **disabled** cluster backup jobs. Native application-backup timers are active and already exclude temporary content. A manual whole-VM backup can still include it. Before resuming VM backups, obtain `pvesm status --storage local-zfs`, prepare a separate `backup=0` disk and migrate temporary mounts with exact-device checks. No disk, backup job or historical snapshot was changed. |
+| 1 — Temporary GitHub secret | Both reading and deleting exactly `MUMBLE_TEST_SERVER_PASSWORD` still return 403 with the available credential. Owner deletion or narrowly sufficient repository access remains necessary. The actual Mumble server password is untouched. |
+| 4 — Enlarged-text navigation | **Deployed and production-verified.** The header now follows document text size through container queries. Long guide words can wrap. EN/ES navigation, keyboard menu, languages and no-JavaScript fallback pass without horizontal overflow at the tested sizes. No framework, dependency, app setting, font or palette changes. |
+| 5 — Blocked readers/SimpleLogin | No privacy-compatible upstream repair established. The existing bounded reader evidence remains: provider denials for Genius/Fandom/Imgur, and no verified public-use permission for LibreMDB's selected backend. SimpleLogin release/master were rechecked unchanged on 11 October; its legacy-framework gate remains. Working LRCLIB and Addy remain available. No challenge bypass or new provider. |
+| 6 — Search/listings | Google sitemap acceptance is owner-confirmed. Bing API still shows verified ownership and successful older 168-URL sitemap fetch. Five pending GitHub requests remain open. Four Codeberg native submission drafts and a gated Mezzo draft are prepared in the existing submission record; authentication remains missing. PrivateBin's upload marker matches its directory scanner, but the directory still shows the old setting; its check form cannot refresh existing rows. No duplicate submissions, unchanged IndexNow notifications or maintainer messages. |
+
+Release: `public-utility-portal:0.1.0-navigation-reflow-20261011`, only `portal`
+recreated, healthy. Typecheck, lint, Docker production build, **118 unit tests**,
+**22 configuration tests** and **three Playwright tests** pass. The latter
+cover EN/ES at 1280/960/390/320px with root text at 200%, plus no-JavaScript
+keyboard/navigation behavior, on candidate and live production. Additional live
+EN/ES light/dark and ordinary/enlarged screenshots were inspected; canonical,
+language, real 404, no observed external HTTP requests and no script errors pass.
+This is Chromium desktop/mobile viewport emulation and text enlargement, not a
+physical-phone or every-browser claim. Private evidence and build/test logs:
+`/opt/utilibre/reports/queue-closeout-20261011-8qA6VI/`.
+
+The Impeccable adaptation guidance kept the existing design and menu semantics;
+no design-system exception was added. Unrelated sidecar/TRIP/export-script work
+was preserved. The disposable review container is separate from production.
+Rollback: set only `PORTAL_IMAGE` to
+`public-utility-portal:0.1.0-pairdrop-relay-20261011`, then run
+`docker compose up -d --no-deps --no-build portal`. The private pre-release
+environment is `/opt/utilibre/navigation-release-VJ77Cp/previous.env`; do not
+overwrite unrelated environment values or restore account databases for this
+CSS-only rollback. Source publication uses committed files from a clean worktree.
+Details: [privacy](privacy.md#separate-caddy-vm), [backups](backups.md),
+[submissions and prepared entries](public-instance-submissions.md#prepared-submissions--not-sent).
+
 ## PairDrop relay activated — 11 October
 
 The owner confirmed persistent Proxmox forwarding and the existing Hetzner IPv4

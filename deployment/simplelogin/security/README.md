@@ -1,6 +1,6 @@
 # SimpleLogin security maintenance, 9 October 2026
 
-Rechecked 10 October 2026: the latest release remains **v4.82.4**, and master
+Rechecked 11 October 2026: the latest release remains **v4.82.4**, and master
 remains `070155c702a2bc6b0fdff46594e9cc931f61aa37`. Its exact dependency file
 still selects Flask 1.1 / Werkzeug 1.0 / SQLAlchemy 1.3. No newly maintained
 compatible framework fix was available. The existing p7 private deployment and

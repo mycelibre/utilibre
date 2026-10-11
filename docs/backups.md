@@ -22,9 +22,29 @@ Temporary services can lose current content on storage failure before expiry;
 do not promise recovery. Preserve live mounts during ordinary upgrades.
 
 This is **not yet an exclusion from externally managed whole-VM snapshots**.
-That backup layer is outside the application jobs and has not been inspected.
-The VM-backup operator must separately configure exclusions or a separate
-non-backed-up disk before a blanket no-backup claim is justified. Existing
+The owner's filtered Proxmox output on 11 October identifies VM **144**
+(`freetools`): `scsi0` is the 150 GiB `local-zfs:vm-144-disk-1`; `scsi1` is
+only the cloud-init CD-ROM. There is no separate temporary-data disk in that
+output. Both returned cluster backup jobs have `enabled: 0`; the first includes
+144 and many unrelated VMs, while the second selects only 138. Their written
+21:00 schedules are therefore not evidence of active scheduled backups. Manual
+backups, older copies, other automation and storage-level snapshots are not
+ruled out by this output. The VM's own core and Storage Box application-backup
+timers were independently checked active on 11 October.
+
+Do not enable the multi-VM job or exclude `scsi0` to resolve this item: the first
+changes other machines, and the second omits saved account work as well. If
+whole-VM backups resume, prepare a dedicated temporary-content virtual disk
+with native `backup=0`, then perform a separately checked, data-preserving
+application mount migration. An ext4 directory or partition inside `scsi0` is
+not a VM-disk exclusion; Proxmox's file-path exclusions are for containers.
+Check available `local-zfs` capacity first with the read-only command
+`pvesm status --storage local-zfs`. No disk was created, formatted, migrated or
+excluded here. The required remaining input is that storage-capacity result;
+disk identity and migration must be verified before any formatting command.
+Reference: [Proxmox backup source documentation](https://github.com/proxmox/pve-docs/blob/master/vzdump.adoc).
+
+Existing
 local/off-host/whole-VM copies can retain records: core sets rotate normally,
 while older chess local generations have no automatic expiry. Retirement of
 historical copies needs a separate, exact-target decision; do not destroy

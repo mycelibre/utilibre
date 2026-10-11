@@ -239,6 +239,19 @@ Restore `previous-utilibre-integration.tar.gz` and `previous-source-index.html`
 from the release directory to the source-offer paths when rolling back.
 No data migration or Caddy adjustment is involved.
 
+## Sitemap acceptance follow-up — 11 October 2026
+
+The owner confirms that Google Search Console accepted the sitemap. This closes
+the missing acceptance-status item, but is owner-reported: the precise report
+date, discovered/indexed counts and property settings were not supplied or
+independently inspected. Do not equate acceptance with all pages being indexed.
+
+At 00:41 UTC, Bing's authenticated read-only API still reports Utilibre ownership
+verified and the sitemap `Success`, 168 URLs, last crawled
+10 October at 15:58:21 UTC. These are the same older fetch values, not a new
+170-URL crawl. No unchanged sitemap or IndexNow notification was resubmitted.
+Private filtered evidence: `/opt/utilibre/reports/queue-closeout-20261011-8qA6VI/bing.json`.
+
 ## IndexNow notification confirmed — 10 October 2026, 16:14 UTC
 
 The owner-requested follow-up submission with the deployed replacement key

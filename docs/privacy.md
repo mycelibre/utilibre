@@ -255,8 +255,15 @@ privacy finding/nonzero exit, separate from successful API access. Nine focused
 tests pass. Logpush remains owner-reported unused, not independently certified;
 provider-internal retention remains outside these settings.
 
-10 October follow-up: SSH access to this VM remains unavailable. The operator
-was given this native correction to **merge into the existing global block**:
+11 October owner-supplied running configuration (Caddy **2.11.1**): both HTTP
+servers omit access logging and have tracing/credential logging disabled. The
+only returned logger is `default`, at `info`, writing to a **file** with empty
+include/exclude lists. This establishes that ordinary access logging is off,
+not that request details cannot appear in HTTP errors. The file destination,
+historical contents/rotation and other installed modules were not inspected.
+SSH access remains unavailable. The outstanding native correction is to add
+the `exclude` line **inside the existing `log default` block**, preserving its
+writer, other settings and the rest of the global block:
 
 ```caddy
 log default {
@@ -274,7 +281,12 @@ The synthetic syntax fixture is `scripts/tests/fixtures/caddy-privacy.Caddyfile`
 checked with the locally available Caddy 2.11.7 parser. The initial strict test
 was corrected to allow Caddy's additional native per-site exclusion; both
 required exclusions and the discard writer are present.
-The running, filtered configuration below is still needed to close this item.
+The owner subsequently reported “Cddy is fixed” on 11 October after receiving
+the exact exclusion and validate/reload command. Record this as **owner-applied**,
+not independently verified: a post-change filtered runtime result showing both
+exclusions has not been supplied. Do not enable access logging or create a
+second `default` logger. No remote configuration or historical log deletion was
+performed here. The prior read-only output is the pre-change state.
 
 On the Caddy edge, an operator with local access can inspect only the running
 logging configuration with the following read-only command, if its local admin
@@ -307,8 +319,8 @@ print(json.dumps({"configuredWriters": writers,
 '
 ```
 
-This command has been checked against synthetic configuration; it has not run
-on the inaccessible edge. A null field means omitted configuration, not disabled
+This command was checked against synthetic configuration; the owner supplied
+an equivalent filtered live result described above. A null field means omitted configuration, not disabled
 logging or zero retention. Inspect that installed Caddy version's
 [writer behavior](https://caddyserver.com/docs/caddyfile/directives/log), and the
 systemd journal or container log driver if it writes to stdout/stderr. Size
