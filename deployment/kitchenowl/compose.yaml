@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-kitchenowl:0.7.10-p1
+    image: utilibre-kitchenowl:debian-security-20261011
     build: .
     user: '1000:1000'
     env_file: /opt/utilibre/kitchenowl/private/app.env

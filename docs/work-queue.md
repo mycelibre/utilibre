@@ -14,17 +14,24 @@ image removes unused Chromium/MariaDB after isolated native restore/login tests.
 RSS-Bridge's unchanged application now uses 60 updated Debian security packages;
 staged/live feed output and egress restrictions passed. Its scan changed from
 57 critical/216 high to 3 critical/74 high. The 32-bit-only OpenSSL issue has
-exact-image ELF64 evidence and expiring reviews. The complete 17:55 UTC scan
-covers 109 images/175 containers and 510 host packages; **207 critical/5,712 high
-package-target findings remain pending**, not proven exploits.
-Remaining work includes Gathio DocumentDB, RSSHub, coturn, other bundled application and
-database libraries, and vendor-tracked host packages; private severity does not
-by itself establish exposure or exploitability. No alert is waived merely to
-reduce the count.
+exact-image ELF64 evidence and expiring reviews. The 19:47 UTC checkpoint covers
+109 images/175 containers, 510 host packages and 13 source manifests;
+**67 critical/3,682 high package-target findings remain pending**, not proven exploits.
+The additional deployed batch covers both coturn relays, internal RSSHub, Gathio's
+DocumentDB runtime, PrivateBin's sanitizer, Bookplate, PairDrop, Wishlist, Kuma,
+six Debian runtimes, Authentik/Linkding Python libraries and Actual/Grist/Kuma's
+proxy-address library plus Grist's Handlebars/Piscina/shell-quote patches.
+[Exact scope, tests and rollback](updates.md#security-follow-up--11-october-1947-utc).
+Daily upstream coverage now includes Authentik and three other companions, 112
+providers total; published application-advisory reviews are separate from the
+still-open dependency queue. No alert is waived merely to reduce its count.
 
 **Still open:** the private vulnerability queue needs staged package/application
 remediation; a working scanner is not a clean security report. Prioritize shared
-remaining runtime bases and reachable app libraries. Do not bulk-update stateful
+remaining reachable app libraries: Grist/runsc, Penpot Netty/seroval, Resume
+seroval, Rallly XML parsing, Kuma, FerretDB, the private SimpleLogin pilot, and
+vendor-unfixed OS libraries. Host-level updates require their own rollout gate.
+Do not bulk-update stateful
 apps or remove alerts without evidence. Non-GitHub advisories, physical-device
 checks and rotating restores for other account services remain operator work.
 External notification inbox receipt and the next actual scheduled GitHub run

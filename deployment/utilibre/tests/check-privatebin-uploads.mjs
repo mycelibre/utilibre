@@ -9,6 +9,8 @@ import {chromium} from '../../../portal/node_modules/playwright-core/index.mjs';
 process.umask(0o077);
 assert(process.argv.length === 2 || (process.argv.length === 3 && process.argv[2] === '--public'));
 const live = process.argv.includes('--public');
+const image=process.env.PRIVATEBIN_CHECK_IMAGE||'utilibre-privatebin:2.0.6-security-20261011';
+assert.equal(image,'utilibre-privatebin:2.0.6-security-20261011');
 const base = live ? 'https://paste.utilibre.org' : 'http://127.0.0.1:3185';
 const recipe = fileURLToPath(new URL('../config/privatebin/', import.meta.url));
 const output = await mkdtemp('/opt/utilibre/reports/privatebin-uploads-');
@@ -25,7 +27,7 @@ try {
     await writeFile(marker, 'utilibre-privatebin-temporary-v1\n'); await chmod(marker,0o444);
     docker('network','create','--internal',network); networkCreated=true;
     const mounts = [['conf.php','/srv/cfg/conf.php'],['bootstrap5-utilibre.php','/srv/tpl/bootstrap5-utilibre.php'],['robots.txt','/var/www/robots.txt'],['manifest.json','/var/www/manifest.json'],['brand','/var/www/utilibre-brand'],['brand/favicon.ico','/var/www/favicon.ico'],['discovery-server.conf','/etc/nginx/server.d/utilibre-discovery.conf'],['discovery-location.conf','/etc/nginx/location.d/utilibre-discovery.conf'],['upload-limit.js','/var/www/js/utilibre-upload-limit.js'],['upload-guard.php','/srv/cfg/upload-guard.php'],['uploads.ini','/etc/php85/conf.d/zz-utilibre-uploads.ini'],['uploads-pool.conf','/etc/php85/php-fpm.d/zzz-utilibre-uploads.conf']].flatMap(([file,target])=>['-v',`${recipe}${file}:${target}:ro`]);
-    docker('run','-d','--name',name,'--network',network,'--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--cpus','0.5','--memory','768m','--pids-limit','128','--log-driver','none','--tmpfs','/run:rw,exec,nosuid,nodev,size=16m,mode=0755,uid=65534,gid=82','--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777','--tmpfs','/var/lib/nginx/tmp:rw,nosuid,nodev,noexec,size=128m,mode=0755,uid=65534,gid=82','-v',`${temp}/data:/srv/data`,...mounts,'docker.io/privatebin/nginx-fpm-alpine:2.0.6@sha256:13290e2f04bfd98cf8fc7e8d216fb76b2b2d12373d4923b859cd41c2d984fde8'); created=true;
+    docker('run','-d','--name',name,'--network',network,'--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--cpus','0.5','--memory','768m','--pids-limit','128','--log-driver','none','--tmpfs','/run:rw,exec,nosuid,nodev,size=16m,mode=0755,uid=65534,gid=82','--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777','--tmpfs','/var/lib/nginx/tmp:rw,nosuid,nodev,noexec,size=128m,mode=0755,uid=65534,gid=82','-v',`${temp}/data:/srv/data`,...mounts,image); created=true;
     const ip=JSON.parse(docker('inspect',name))[0].NetworkSettings.Networks[network].IPAddress;
     bridge=spawn('socat',['TCP4-LISTEN:3185,bind=127.0.0.1,reuseaddr,fork,max-children=16',`TCP4:${ip}:8080`],{detached:true,stdio:'ignore'});
     let ready=false;for(let n=0;n<30;n++){try{ready=(await fetch(base,{signal:AbortSignal.timeout(1000)})).ok}catch{}if(ready)break;await new Promise(r=>setTimeout(r,500))}assert(ready);
@@ -49,6 +51,26 @@ try {
   context.on('request',r=>{const u=new URL(r.url());if(u.protocol.startsWith('http')&&u.origin!==base)outside.add(u.origin)});
   page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
   assert.equal((await page.goto(base+'/')).status(),200);
+  await page.waitForFunction(()=>!!jQuery.PrivateBin?.PasteViewer);
+  const sanitized=await page.evaluate(()=>{
+    const viewer=jQuery.PrivateBin.PasteViewer;
+    viewer.setFormat('markdown');viewer.setText('<div class="modal d-block" id="fictional-popup" style="position:fixed">Fictional notice</div>');viewer.run();
+    return {classes:document.querySelector('#plaintext .modal')!==null,ids:document.querySelector('#plaintext #fictional-popup')!==null,styles:document.querySelector('#plaintext [style]')!==null,text:document.querySelector('#plaintext')?.textContent};
+  });
+  assert.match(sanitized.text,/Fictional notice/);assert.deepEqual({...sanitized,text:undefined},{classes:false,ids:false,styles:false,text:undefined});
+  checks.push('upstream Markdown sanitizer removes deceptive modal class, id and inline style');
+  await page.reload();await page.locator('#message').waitFor();
+  const spanish=await browser.newContext({locale:'es-GT',viewport:{width:390,height:844}});
+  spanish.on('request',r=>{const u=new URL(r.url());if(u.protocol.startsWith('http')&&u.origin!==base)outside.add(u.origin)});
+  const mobile=await spanish.newPage(),mobileErrors=[];
+  mobile.on('pageerror',e=>mobileErrors.push(e.stack||e.message));await mobile.goto(base+'/');
+  try{await mobile.locator('#message').waitFor();}catch(e){
+    await writeFile(`${output}/mobile-failure.json`,JSON.stringify({errors:mobileErrors,text:await mobile.locator('body').innerText()},null,2));
+    console.error(JSON.stringify({output,mobileErrors}));throw e;
+  }
+  assert.deepEqual(mobileErrors,[]);assert.match(await mobile.locator('body').innerText(),/25 MB/);
+  assert.equal(await mobile.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  await mobile.screenshot({path:`${output}/es-mobile.png`});
   // Inspect native AJAX in this disposable test page. Chromium may evict large
   // response bodies from its inspector cache; do not depend on that cache.
   await page.evaluate(()=>{
@@ -120,12 +142,6 @@ try {
   const unkeyed=await context.newPage();await unkeyed.goto(`${base}/?${receipt.id}`);
   assert.equal(await unkeyed.locator('#attachment a[download]').count(),0);
   await page.goto(base+'/');await page.screenshot({path:`${output}/en-desktop.png`});
-  const spanish=await browser.newContext({locale:'es-GT',viewport:{width:390,height:844}});
-  spanish.on('request',r=>{const u=new URL(r.url());if(u.protocol.startsWith('http')&&u.origin!==base)outside.add(u.origin)});
-  const mobile=await spanish.newPage();await mobile.goto(base+'/');await mobile.locator('#message').waitFor();
-  assert.match(await mobile.locator('body').innerText(),/25 MB/);
-  assert.equal(await mobile.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
-  await mobile.screenshot({path:`${output}/es-mobile.png`});
   assert.deepEqual(errors,[]);assert.deepEqual([...outside],[]);
   const result={date:new Date().toISOString(),base,passed:true,checks,ciphertextBytes:posted.ciphertextBytes,rawBytes:bytes.length,browser:'Linux Chromium desktop and 390px mobile emulation',limitations:['not a physical phone/Opera test','raw file limit is browser-side; server limits encrypted bytes','earlier and whole-VM backups are separate'],output};
   await writeFile(`${output}/result.json`,JSON.stringify(result,null,2));console.log(JSON.stringify(result));

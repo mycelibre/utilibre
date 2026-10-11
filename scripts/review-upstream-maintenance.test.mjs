@@ -16,6 +16,10 @@ test('advisory review excludes older and withdrawn notices, not unknown security
 test('an older advisory updated after the review remains visible',()=>{
  assert.equal(recentAdvisories([{ghsa_id:'changed',published_at:'2020-01-01',updated_at:'2026-10-12'}],'2026-10-11')[0].id,'changed');
 });
+test('all-history baseline retains old advisories until an explicit runtime-bound review',()=>{
+ const history=recentAdvisories([{ghsa_id:'old',published_at:'2020-01-01',updated_at:'2020-01-02'}],'1970-01-01');
+ assert.equal(partitionReviewed(history,null,[]).needsReview[0].id,'old');
+});
 test('reviewed advisory reopens on changed runtime, advisory revision or range',()=>{
  const advisory={id:'GHSA-test',updated:'2026-10-05',affected:[{range:'<2.18.0'}]};
  const review={version:'2.18.2',containers:{'/test':'exact-image'},advisories:[{...advisory,reason:'Reviewed fixed release'}]};
@@ -28,4 +32,17 @@ test('every deployed creative addition is included by canonical metadata; holds 
  const deployed=Object.entries(creativeProviders).filter(([,p])=>p.reviewStatus==='deployed');
  assert.equal(deployed.length,11);for(const [,p]of deployed){assert(repository(p.sourceUrl));assert.match(reviewedRef(p.reviewedSourceUrl),/^[a-f0-9]{40}$/);}
  assert.equal(creativeProviders.microstudio.reviewStatus,'staged');assert.equal(creativeProviders.graphite.reviewStatus,'staged');
+});
+test('host and mounted-code reviews require exact file bytes, not empty container evidence',()=>{
+ const a={id:'one',updated:'today',affected:[]};
+ const review={version:'2.102.0',containers:{},files:{'/usr/bin/gh':'sha256'},advisories:[a]};
+ assert.equal(partitionReviewed([a],{...review,files:{}},[]).needsReview.length,1);
+ assert.equal(partitionReviewed([a],review,[],{'/usr/bin/gh':'other'}).needsReview.length,1);
+ assert.equal(partitionReviewed([a],review,[],{'/usr/bin/gh':'sha256'}).reviewed.length,1);
+});
+test('a deployment mitigation is not misreported as a patched application',()=>{
+ const a={id:'one',updated:'today',affected:[]};
+ const review={containers:{'/test':'image'},advisories:[{...a,disposition:'deployment-mitigated'}]};
+ const result=partitionReviewed([a],review,[{Name:'/test',Image:'image',State:{Running:true}}]);
+ assert.equal(result.reviewed[0].disposition,'deployment-mitigated');
 });

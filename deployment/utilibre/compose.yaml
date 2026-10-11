@@ -125,7 +125,7 @@ services:
   rsshub:
     ulimits: {core: 0}
     memswap_limit: 1536m
-    image: ghcr.io/diygod/rsshub@sha256:0e0ee34e7288664ada039a816835ee28cc86767412d2c23f64e37a7320908f6c
+    image: ghcr.io/diygod/rsshub:2026-10-11@sha256:967194b8f73a1251b2a566f91b457bc872c1bbaf343827a455ade760b9693bf6
     init: true
     restart: unless-stopped
     read_only: true
@@ -166,7 +166,7 @@ services:
     logging: *default-logging
 
   privatebin:
-    image: docker.io/privatebin/nginx-fpm-alpine:2.0.6@sha256:13290e2f04bfd98cf8fc7e8d216fb76b2b2d12373d4923b859cd41c2d984fde8
+    image: utilibre-privatebin:2.0.6-security-20261011
     user: "65534:82"
     restart: unless-stopped
     read_only: true

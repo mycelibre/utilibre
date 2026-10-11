@@ -1,0 +1,38 @@
+{
+  "authentik": {
+    "project": "Authentik (shared account and SSO service)",
+    "sourceUrl": "https://github.com/goauthentik/authentik",
+    "reviewedSourceUrl": "https://github.com/goauthentik/authentik/tree/version/2026.8.3",
+    "installedVersion": "2026.8.3-python-security-20261011",
+    "reviewedOn": "2026-10-11",
+    "reviewStatus": "deployed",
+    "reviewDocument": "docs/security.md"
+  },
+  "coturn": {
+    "project": "coturn (PairDrop and Galene relays)",
+    "sourceUrl": "https://github.com/coturn/coturn",
+    "reviewedSourceUrl": "https://github.com/coturn/coturn/tree/4.18.0",
+    "installedVersion": "4.18.0-security-20261011",
+    "reviewedOn": "2026-10-11",
+    "reviewStatus": "deployed",
+    "reviewDocument": "deployment/community/turn/README.md"
+  },
+  "rsshub-internal": {
+    "project": "RSSHub (private FreshRSS companion)",
+    "sourceUrl": "https://github.com/DIYgod/RSSHub",
+    "reviewedSourceUrl": "https://github.com/DIYgod/RSSHub/tree/a7d400051d8dc73c0a0a60197920df9d3f80b75c",
+    "installedVersion": "2026.10.11-8411.a7d4000",
+    "reviewedOn": "2026-10-11",
+    "reviewStatus": "deployed",
+    "reviewDocument": "deployment/utilibre/docs/UPDATE-PROCEDURE.md"
+  },
+  "github-cli-host": {
+    "project": "GitHub CLI (host maintenance client)",
+    "sourceUrl": "https://github.com/cli/cli",
+    "reviewedSourceUrl": "https://github.com/cli/cli/tree/v2.102.0",
+    "installedVersion": "2.102.0",
+    "reviewedOn": "2026-10-11",
+    "reviewStatus": "deployed",
+    "reviewDocument": "docs/security.md"
+  }
+}

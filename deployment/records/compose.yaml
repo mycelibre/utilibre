@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   grist:
     <<: *runtime
-    image: gristlabs/grist-oss:1.7.21@sha256:73e4815fcc1b5dfff6cd47b37a3ec2bb80d3c70b27efba4c8714a57781d414d1
+    image: utilibre-grist:libraries-security-20261011
     user: '1000:1000'
     cpus: 2
     mem_limit: 8g
@@ -59,7 +59,7 @@ services:
       ingress: {ipv4_address: 172.29.159.12}
   bookplate:
     <<: *runtime
-    image: utilibre-bookplate:1.1.0-p1
+    image: utilibre-bookplate:1.1.0-security-20261011
     user: '1000:1000'
     cpus: 1
     mem_limit: 768m

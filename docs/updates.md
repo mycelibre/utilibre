@@ -15,9 +15,9 @@ reports measure software/infrastructure, never visitors or their activity.
 | Check | UTC schedule, plus host-timer jitter | Scope |
 | --- | --- | --- |
 | Existing guarded SearXNG updater | Daily 02:20 | Existing staged EN/ES search/privacy gate and rollback |
-| Upstream releases/advisories | Daily 03:20 | 108 catalogue providers: 98 GitHub advisory sources, ten explicitly requiring manual primary-source review |
+| Upstream releases/advisories | Daily 03:20 | 108 catalogue providers plus four reviewed companions: Authentik, coturn, internal RSSHub and host GitHub CLI; ten non-GitHub sources explicitly require manual primary-source review |
 | Useful browser tasks | Daily 03:50 | Eight sequential workflows: portal EN/ES/mobile, PDF merge/OCR, chart export, image export, ZIP round trip, QR/offline, direct PairDrop, Pollaris create/vote/export/delete |
-| Runtime/software scan | Daily 10:20 | Initial complete run: 109 unique running images / 175 containers, 510 installed host packages, ten source manifests |
+| Runtime/software scan | Daily 10:20 | Latest complete run: 109 unique running images / 175 containers, 510 installed host packages, 13 source manifests |
 | Native alerts | Every five minutes | Existing 59 Kuma monitors, 105 portal endpoint probes, resources, enabled native backup jobs, stale/failed reports, security queue, external workflow freshness |
 | External availability | GitHub cron :07/:22/:37/:52 | Eight fixed public HTTPS endpoints/content or exact same-origin identity redirect |
 | External forced TURN transfer | Sunday 08:47 | Existing two-browser exact-byte test, forced TLS relay, four-minute cap |
@@ -151,13 +151,13 @@ The RSS-Bridge recipe resolves signed Debian updates at build time; a future
 rebuild is a new candidate requiring its own scan, functional gate and image ID.
 No unattended package installation was added.
 
-The final complete scan at **17:55 UTC** covered **109/109 images, 175 containers,
+The first checkpoint scan at **17:55 UTC** covered **109/109 images, 175 containers,
 510 host packages and ten source manifests**. The deduplicated, reviewed queue
-still has **207 critical / 5,712 high package-target findings**. These are neither
+then had **207 critical / 5,712 high package-target findings**. These are neither
 207 confirmed exploits nor a clean result. The original 528/8,933 alert was a raw,
 partly incomplete scan: do not advertise a percentage risk reduction by comparing
-those different measures. Relevant unresolved work includes Gathio's DocumentDB
-runtime, RSSHub, coturn, other bundled libraries and vendor-tracked host findings.
+those different measures. That checkpoint prioritized Gathio's DocumentDB,
+RSSHub, coturn and other libraries; the follow-up below supersedes that work list.
 For example Debian currently has no stable fix for the client-side OpenSSH
 rekey issue; the scanner also attributes its source-package finding to server
 packages. No host SSH/Docker replacement or reboot was performed in this batch.
@@ -220,6 +220,105 @@ reported as broken. Stop only a specific running check if necessary; do not
 delete private diagnostic/recovery state blindly. Revert GitHub workflow changes
 independently. No application schema, access/retention/donation policy or visitor
 instrumentation changed.
+
+## Security follow-up — 11 October, 19:47 UTC
+
+The failed scanner and incomplete runtime/OS coverage alerts are resolved. The
+latest complete run checked **109 images / 175 containers, 510 host packages and
+13 source manifests**. Replacement npm/Python locks are scanned under their
+recognized filenames, with their original path and hash retained in the ledger.
+Raw counts are **86 critical / 3,786 high occurrences**; after package-target
+deduplication and narrowly evidenced reviews, **67 critical / 3,682 high remain
+pending**. Neither number is an exploit count. **The patch backlog is not closed.**
+
+Published application advisories now cover the whole available history, not just
+notices newer than a catalogue-review date. The 112-provider run completed with
+no outstanding published-advisory dispositions; ten non-GitHub sources still
+require manual primary-source review. This is separate from the dependency
+queue above. Authentik was missing from that upstream inventory and is now
+explicitly included alongside the three other operational companions.
+
+| Deployed follow-up | Evidence and boundary |
+| --- | --- |
+| PrivateBin 2.0.6 security backport | Upstream Markdown sanitizer fix plus tested attribute restriction, cache-busted script/SRI and Spanish-loader compatibility. Public 25 MB encrypted upload/download checksum, oversize rejection, one-week expiry and synthetic deletion passed. [Patch and rollback](../deployment/utilibre/privatebin-security/README.md). |
+| Bookplate 1.1.0, Next 16.3.6, Node 24.21 | Same application commit with an exact replacement lock. Isolated two-account private library/export/delete tests passed. Public login and anonymous API denials passed; previously retired test accounts were not reset. |
+| PairDrop 1.11.2 security p2 | Updated Alpine/Node and proxy-addr 2.0.8; one upstream tab-storage cleanup race guard. Direct transfer and [external forced TLS relay](https://github.com/mycelibre/utilibre/actions/runs/38165903759) passed, exact bytes. No server-readable WebSocket fallback enabled. |
+| Both coturn relays 4.18.0 | Pinned maintained runtime, vendor package updates, obsolete CLI/DTLS options removed. Existing credentials, listeners and budgets retained. Valid/invalid/expired credentials, private-address rejection and forced TLS transfer passed; quota exhaustion checked only in the isolated lab. |
+| Internal RSSHub 2026.10.11-8411.a7d4000 | Official immutable image, Node 24.21/vm2 3.12.2. Native feed and FreshRSS's internal path passed; still not public. Exact registry fallback repairs incomplete local OCI export without scanning a substitute version. |
+| Gathio DocumentDB 17.11 / 0.107.0 | Same PostgreSQL/extension versions; 84 vendor package updates. Native snapshot restore, event edit, image, ICS and deletion checks passed. FerretDB's separate Go dependencies remain open. |
+| Wishlist 0.67.1; Kuma 2.5.5 | Vendor updates, Wishlist's bundled Caddy 2.11.7, Kuma's lean runtime. Wishlist permissions and Kuma's isolated SQLite restore/login passed. This does not change the separate edge Caddy VM. |
+| Eight additional nginx runtimes; portal; JupyterLite | nginx 1.30.5 / Alpine 3.24.2, portal Node 24.21 without npm. Application files unchanged. Portal EN/ES desktop/mobile emulation, Python/pandas/chart output and AudioMass WAV export passed. Wallabag's native MFA/archive/export/delete workflow also passed. |
+| Actual, Rallly, Resume, Linkding, KitchenOwl, CryptPad | Same application bytes, six Debian vendor-runtime updates. Native saved-work backups taken; Resume/ CryptPad isolated account/export checks passed. All public entry routes passed. KitchenOwl's authenticated workflow was not repeated with retired credentials; native backup integrity and unchanged app/runtime checks are recorded instead. |
+| Actual, Grist and Kuma proxy-addr 2.0.8 | Hash-pinned upstream package, unchanged transitive dependencies. IPv4/mapped-IPv6 spoof regression and each native Express resolver passed. Isolated Actual opaque-file round trip, Grist sandboxed formula/account denial/native export, and Kuma restored login passed. Actual's production OIDC policy is unchanged. |
+| Grist 1.7.21 library patches | Handlebars 4.7.10, Piscina 4.9.4 and shell-quote 1.11.0, hash-pinned official packages with existing dependency compatibility checked. Template escaping, shell-token round trip and real worker computation passed. Repeated isolated Grist account separation, Python formula and native export/delete passed; a fresh saved-work backup preceded deployment. The old runsc sandbox was not disabled or replaced. |
+| Authentik 2026.8.3 and Linkding 1.47.0 | Hash-pinned PyJWT 2.14.0; Authentik also AnyIO 4.14.2. Restored identity clone passed synthetic password/TOTP replay rejection, RSA/ECDSA OAuth code exchange/JWKS and negative token tests. Linkding restored-copy bookmark/export/import/privacy checks passed. Full native identity backup was restored separately before closeout. No owner password, MFA or enrollment policy changed. |
+| Host GitHub CLI 2.102.0; ksmbd autoload prevention | Official CLI package and API check. Unused ksmbd is not loaded; module autoload is blacklisted. This is not a kernel patch, does not prevent a privileged explicit load, and does not change the CIFS Storage Box client. |
+
+Reproducible glue is restricted to pinned build recipes, replacement package
+locks, the PrivateBin sanitizer/SRI backport and PairDrop's small storage guard.
+No new public service, telemetry, access change or retention change. Same-version
+runtime hashes distinguish untouched app code from the explicitly listed library
+and JS changes. Exact images are in the expanded runtime release manifest.
+
+Private receipts live under `/var/lib/utilibre-maintenance/` in the dated
+`coturn`, `rsshub`, `gathio`, `bookplate`, `privatebin`, `extra-runtime`,
+`debian-runtimes`, `proxyaddr`, `auth-python`, `linkding-python` and `final-runtimes`
+directories suffixed `-20261011`. Public receipts contain no credentials, account
+contents or test sharing keys. Clone fixtures are removed; native recovery
+snapshots remain protected. Temporary sharing content is still excluded.
+
+Two rollout errors were corrected, not hidden: Rallly's first vendor-runtime
+recreate omitted its environment file; the helper now supplies the native file
+and rejects `UNCONFIGURED` values. Wallabag's coupled gateway/egress stack needed
+its native supervisor restart. Their public checks subsequently passed. A
+PrivateBin test also caught the translated loader's old script selector before
+the final Spanish/public acceptance pass. Repeated staging scripts must not
+overwrite original rollback receipts after a candidate is already deployed.
+
+Rollback only the changed image pin using its recorded previous reference;
+preserve current data and use the same native environment files and supervisor.
+For PrivateBin, restore its matching template with its image. For Authentik,
+roll server and worker together, leaving PostgreSQL untouched. The dependency
+patches do not migrate schemas. Do not restore a database merely to undo an
+image patch. Old vulnerable images are for emergency recovery, not a permanent
+public fix. Keep the full source offer and patch recipes with this release.
+
+Additional source evidence: [proxy-addr](https://github.com/jshttp/proxy-addr/security/advisories/GHSA-jqcg-44mw-7w3h),
+[PyJWT 2.14.0](https://pyjwt.readthedocs.io/en/2.14.0/changelog.html),
+[AnyIO TLS fix](https://github.com/advisories/GHSA-82r6-8w77-94w6),
+[Authentik 2026.8.3](https://github.com/goauthentik/authentik/releases/tag/version/2026.8.3),
+[Debian's zlib/minizip distinction](https://security-tracker.debian.org/tracker/CVE-2023-45853),
+[Go TLS advisory](https://pkg.go.dev/vuln/GO-2026-4337).
+The latter two reviews bind exact packages/binaries and expire after seven days;
+they are not universal CVE or Go-runtime exemptions.
+
+Remaining priorities: Grist's old runsc build (keep its
+sandbox), Penpot Netty/seroval, Resume seroval, Rallly XML parsing, Kuma's remaining
+libraries, FerretDB, the private SimpleLogin pilot and vendor-unfixed OS libraries.
+Host Docker/kernel updates need a separately staged host-maintenance operation;
+no daemon restart or reboot was attempted. Do not mix upstream major versions
+or replace bundled code without its native functional and recovery gates.
+Separate Caddy/Proxmox package coverage, non-GitHub advisories and an observed
+scheduled external check remain explicit coverage limits, not successful checks.
+
+The final scan completed in about 46 seconds; the preceding full scan peaked at
+547 MiB. All eight daily synthetic journeys passed at 19:38 UTC, including PDF
+OCR, chart/image/ZIP/QR exports, PairDrop transfer and a poll answered/deleted.
+These are Linux Chromium desktop and mobile-emulation checks, not real-phone tests.
+All 41 focused maintenance, advisory, storage and backup-policy tests passed,
+including a disposable native Restic retention/restore rehearsal.
+Root free space was about 10 GiB after removing a further 324 MB of disposable
+build cache and downloaded APT package cache; rollback images and user data were not pruned. Disk pressure still
+needs attention before larger builds. These are dated measurements, not capacity
+guarantees. External availability passed manual runs; no actual cron-triggered
+GitHub run had appeared at this checkpoint, so its freshness alert remains live.
+The repository is active, not a fork, on the correct default branch with Actions
+enabled; the published workflow has the intended quarter-hour schedule. A manual
+dispatch is not used to conceal missing scheduled executions.
+
+Grist library sources: [Handlebars](https://github.com/handlebars-lang/handlebars.js/releases),
+[Piscina 4.9.4](https://github.com/piscinajs/piscina/releases/tag/v4.9.4),
+[shell-quote fix](https://github.com/advisories/GHSA-pqg4-j6r4-53mv).
 
 ## Maintenance coverage from 11 October 2026
 

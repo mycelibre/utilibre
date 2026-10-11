@@ -34,10 +34,11 @@ const config = [
   'fingerprint', 'lt-cred-mech', `user=pairdrop:${credential}`, 'stale-nonce=600',
   `min-port=${relayMin}`, `max-port=${relayMax}`, 'relay-threads=1',
   `total-quota=${quota}`, `user-quota=${quota}`, `max-bps=${bps}`, `bps-capacity=${total}`,
-  'max-allocate-lifetime=600', 'no-cli', 'no-multicast-peers', 'no-tcp-relay',
+  // coturn 4.18: CLI and DTLS are opt-in; their old no-* switches were removed.
+  'max-allocate-lifetime=600', 'no-multicast-peers', 'no-tcp-relay',
   'no-stdout-log', 'log-file=/dev/null', 'no-software-attribute', 'pidfile=/tmp/turn.pid',
-  ...(lab ? ['no-tls', 'no-dtls', 'allow-loopback-peers', 'denied-peer-ip=0.0.0.0-255.255.255.255', 'allowed-peer-ip=127.0.0.1'] : [
-    'tls-listening-port=5350', 'cert=/certs/fullchain.pem', 'pkey=/certs/privkey.pem', 'no-tlsv1', 'no-tlsv1_1', 'no-dtls',
+  ...(lab ? ['no-tls', 'allow-loopback-peers', 'denied-peer-ip=0.0.0.0-255.255.255.255', 'allowed-peer-ip=127.0.0.1'] : [
+    'tls-listening-port=5350', 'cert=/certs/fullchain.pem', 'pkey=/certs/privkey.pem', 'no-tlsv1', 'no-tlsv1_1',
     // No public-to-private relay / metadata service access.
     'denied-peer-ip=0.0.0.0-0.255.255.255', 'denied-peer-ip=10.0.0.0-10.255.255.255',
     'denied-peer-ip=100.64.0.0-100.127.255.255', 'denied-peer-ip=127.0.0.0-127.255.255.255',

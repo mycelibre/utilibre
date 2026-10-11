@@ -4,13 +4,25 @@ Activated and checked 11 October 2026. This supersedes the **old PairDrop** port
 `docs/next-features.md`. Galene owns 3478/5349 and 49160–49671; do not alter it.
 
 Reuses PairDrop 1.11.2's native `RTC_CONFIG` and the existing pinned coturn
-4.7.0-p1 image. No file storage, new authentication service or WebSocket fallback.
+4.18.0-security-20261011 image. No file storage, new authentication service or WebSocket fallback.
 The operator confirmed persistent Proxmox forwards on 10 October. The separate
 relay is **live**, with exact-byte public browser transfers verified on 11 October
 over UDP, TCP and TLS. An initial failed relay check was rolled back while fixing
 same-relay peer permissions; the final paths passed before being advertised.
 
 ## Boundaries and tests
+
+Security refresh, 11 October: official coturn 4.18.0 plus Debian vendor updates,
+unchanged credentials, ports, quotas and peer ACLs. Only obsolete `no-cli` and
+`no-dtls` settings were removed (these interfaces are now opt-in and stay off).
+Both relays passed authentication, private-peer denial and exact-byte checks;
+quota exhaustion was exercised in the isolated lab, not by filling the public
+service. PairDrop 1.11.2's runtime also has Node 22.23.2, proxy-addr 2.0.8 and a
+small upstream tab-storage cleanup guard. The final external TLS browser transfer
+passed [run 38165903759](https://github.com/mycelibre/utilibre/actions/runs/38165903759).
+That is two independent Chrome profiles on one remote runner, not two phones.
+The finite migration helper is `deployment/maintenance/upgrade-coturn.mjs`;
+private pre-change configurations are in `/var/lib/utilibre-maintenance/coturn-20261011/`.
 
 - Listeners: `turn.utilibre.org:3479` TCP/UDP, TLS TCP 5350, relay UDP 49700–49731.
   Forward these unchanged to `10.10.1.43`. No HTTP Caddy block is needed. The

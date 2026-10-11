@@ -1,0 +1,11 @@
+# Preserve Wishlist 0.67.1 + reviewed privacy patches. Replace only its bundled
+# Caddy and refresh vendor OS packages. No database schema/source rebuild.
+FROM nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3 AS caddy
+USER root
+ADD --checksum=sha256:727b91701a392de6ebc5027509f548bf39979e5216340d0faed8fa5e69c84f8b https://github.com/caddyserver/caddy/releases/download/v2.11.7/caddy_2.11.7_linux_amd64.tar.gz /tmp/caddy.tar.gz
+RUN tar -xzf /tmp/caddy.tar.gz -C /tmp caddy && /tmp/caddy version
+FROM utilibre-wishlist:0.67.1-p2
+USER root
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends upgrade && apt-get clean && rm -rf /var/lib/apt/lists/*
+COPY --from=caddy /tmp/caddy /usr/bin/caddy
+USER 1000:1000

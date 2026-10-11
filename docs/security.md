@@ -6,6 +6,22 @@ stuffing, spam, oversized requests, storage exhaustion, upstream blocking,
 container compromise, and operator error. This document records controls and
 residual risks; it is not a claim of complete security.
 
+## 11 October maintenance follow-up
+
+The scanner failure and missing runtime/OS coverage are repaired. Published
+Penpot/Yopass notices have exact-version/configuration dispositions, not blanket
+exceptions; full published history is now considered. The dependency queue is
+still open after substantial staged updates. The current counts, exact runtime
+changes, isolated account/restore tests, rollout incidents, primary sources and
+rollback boundaries are in [the maintenance record](updates.md#security-follow-up--11-october-1947-utc).
+
+Additional hardening includes PrivateBin's tested sanitizer backport, current
+coturn, runtime/vendor updates, Authentik/Linkding's patched JWT libraries and a
+verified proxy-address spoof fix. Private decisions require exact artifact
+identity, evidence and expiry; changed code reopens the finding. The unused
+ksmbd autoload guard does not claim a patched kernel. No compromise assessment,
+zero-vulnerability certification or security guarantee follows from these tests.
+
 ## October 8 Rallly advisory and disclosure controls
 
 The running image was inspected as 4.15.3 before action. Upstream release

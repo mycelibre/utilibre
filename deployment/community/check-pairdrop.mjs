@@ -8,7 +8,8 @@ import {connect as tlsConnect} from 'node:tls';
 const require = createRequire(process.env.PAIRDROP_PLAYWRIGHT_PACKAGE || new URL('../../portal/package.json', import.meta.url));
 const {chromium} = require('playwright-core');
 
-const origin = 'https://drop.utilibre.org';
+const origin = process.env.PAIRDROP_CHECK_ORIGIN || 'https://drop.utilibre.org';
+assert(['https://drop.utilibre.org','http://127.0.0.1:33124'].includes(origin),'Use the public instance or the fixed synthetic staging listener');
 const relay = process.env.PAIRDROP_FORCE_RELAY || '';
 const receiverDirect = process.env.PAIRDROP_RECEIVER_DIRECT === 'true';
 assert(['','udp','tcp','tls'].includes(relay), 'Unsupported relay transport');
@@ -85,7 +86,7 @@ try {
   // It does not stop the verified transfer; do not hide any other JS error.
   assert.deepEqual(errors.filter(error => error !== 'Wake Lock permission request denied'), []);
   assert.deepEqual([...external], []);
-  console.log(`PairDrop public HTTPS: discovery, approval and exact-byte WebRTC transfer passed; selected ${relay ? `relay (${relay})` : 'direct'} mode confirmed through WebRTC stats.`);
+  console.log(`PairDrop ${origin.startsWith('https:')?'public HTTPS':'loopback staging'}: discovery, approval and exact-byte WebRTC transfer passed; selected ${relay ? `relay (${relay})` : 'direct'} mode confirmed through WebRTC stats.`);
   if(receiverDirect) console.log('Receiver used a direct candidate: public relay UDP range was exercised, not just same-server relay forwarding.');
   console.log('Browsers share this test machine; physical-device and different-client-network behavior are not established by this check.');
 } catch (error) {

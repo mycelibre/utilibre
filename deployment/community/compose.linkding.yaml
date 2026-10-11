@@ -11,7 +11,7 @@ x-bounded: &bounded
 services:
   linkding:
     <<: *bounded
-    image: sissbruecker/linkding:1.47.0@sha256:e35cb50e0581178f245125ffaa909c565416c94c9f22ace305a7d234a4345522
+    image: utilibre-linkding:1.47.0-python-security-20261011
     user: '33:33'
     cpus: 1.0
     mem_limit: 512m

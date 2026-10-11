@@ -1,0 +1,5 @@
+# Same supported Kuma 2.5.5 slim application; Debian security backports only.
+FROM louislam/uptime-kuma:2.5.5-slim@sha256:9c56a772a7df53f444a404c579e87a27bd0c201375d00d6745a75bf8138f4342
+USER root
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends upgrade && apt-get clean && rm -rf /var/lib/apt/lists/*
+USER 1000:1000

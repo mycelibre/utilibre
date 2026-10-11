@@ -19,7 +19,7 @@ services:
       application: {ipv4_address: 172.29.86.10}
   gateway:
     <<: *runtime
-    image: utilibre-binternet-gateway:9bb70ef-p1
+    image: utilibre-binternet-gateway:security-20261011-nginx1305
     user: "101:101"
     entrypoint: ["/bin/sh", "/usr/local/bin/binternet-onion-start.sh"]
     stop_signal: SIGQUIT

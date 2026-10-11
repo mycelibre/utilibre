@@ -1,0 +1,19 @@
+FROM ghcr.io/goauthentik/server:2026.8.3@sha256:ab9b4e8cc4ab3f8d1198d2db6aeea66bafea1963b3f2843589e0d163f97d9849 AS authentik
+USER root
+COPY auth-python-requirements.txt /tmp/utilibre-security-requirements.txt
+RUN python -c 'import jwt,importlib.metadata as m; assert jwt.__version__=="2.13.0"; assert m.version("anyio")=="4.14.1"' \
+ && pip --python /ak-root/.venv/bin/python install --no-deps --only-binary=:all: --no-cache-dir --disable-pip-version-check --require-hashes -r /tmp/utilibre-security-requirements.txt \
+ && python -c 'import jwt,importlib.metadata as m; assert jwt.__version__=="2.14.0"; assert m.version("anyio")=="4.14.2"' \
+ && rm /tmp/utilibre-security-requirements.txt
+USER 1000:1000
+
+# The base tag is the separately staged same-app Debian runtime update. Verify
+# it against /var/lib/utilibre-maintenance/debian-runtimes-20261011/stage.json.
+FROM utilibre-linkding:debian-security-20261011 AS linkding
+USER root
+COPY linkding-python-requirements.txt /tmp/utilibre-security-requirements.txt
+RUN python -c 'import jwt; assert jwt.__version__=="2.13.0"' \
+ && pip --python /etc/linkding/.venv/bin/python install --no-deps --only-binary=:all: --no-cache-dir --disable-pip-version-check --require-hashes -r /tmp/utilibre-security-requirements.txt \
+ && python -c 'import jwt; assert jwt.__version__=="2.14.0"' \
+ && rm /tmp/utilibre-security-requirements.txt
+USER 33:33

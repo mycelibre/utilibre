@@ -1,11 +1,18 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {imageInventory,summarize,registryFallback} from './security-review.mjs';
+import {imageInventory,summarize,registryFallback,scannerManifestName} from './security-review.mjs';
 import {reportIssues,queueIssues,externalIssues,alertState} from './report-health.mjs';
 import {validateDecision,applyDecisions} from './triage.mjs';
 import {findingsQueue} from './build-queue.mjs';
 import {probe,validResponse,targets} from './check-external.mjs';
 const now=Date.parse('2026-10-11T12:00:00Z');
+test('reviewed replacement npm locks keep the scanner-recognized filename',()=>{
+ assert.equal(scannerManifestName('deployment/bookplate/security-package-lock.json'),'package-lock.json');
+ assert.equal(scannerManifestName('portal/package-lock.json'),'package-lock.json');
+ assert.equal(scannerManifestName('example/yarn.lock'),'yarn.lock');
+ assert.equal(scannerManifestName('deployment/maintenance/auth-python-requirements.txt'),'requirements.txt');
+ assert.equal(scannerManifestName('deployment/maintenance/linkding-python-requirements.txt'),'requirements.txt');
+});
 test('runtime images deduplicate by immutable ID, exclude other projects and omit environment',()=>{
  const id='sha256:'+'a'.repeat(64);
  const rows=['/utilibre-a','/utilibre-b','/unrelated'].map(Name=>({Name,Image:id,Config:{Image:'test:v1',Env:['SECRET=no']}}));
@@ -76,6 +83,9 @@ test('registry fallback cannot silently scan another image or registry',()=>{
  assert.equal(registryFallback(item),'ghcr.io/goauthentik/server@'+id);
  assert.equal(registryFallback({...item,id:'sha256:'+'0'.repeat(64)}),null);
  assert.equal(registryFallback({...item,references:['evil.invalid/server:2026.8.3']}),null);
+ const rss='sha256:967194b8f73a1251b2a566f91b457bc872c1bbaf343827a455ade760b9693bf6';
+ assert.equal(registryFallback({id:rss,references:['ghcr.io/diygod/rsshub:2026-10-11@'+rss]}),'ghcr.io/diygod/rsshub@'+rss);
+ assert.equal(registryFallback({id:rss,references:['ghcr.io/diygod/rsshub:latest']}),null);
 });
 test('expired exceptions alert again; an incomplete queue never clears alerts',()=>{
  const scan={date:new Date(now).toISOString()};

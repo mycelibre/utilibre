@@ -4,6 +4,14 @@ import {execFileSync} from 'node:child_process';
 const source=process.argv[2]||'/opt/utilibre/evaluation-src/bookplate-20261011';
 if(execFileSync('git',['rev-parse','HEAD'],{cwd:source,encoding:'utf8'}).trim()!=='47e53a7aec56aa9e76d4cf425deb48102e4a2fd7')throw Error('Unexpected Bookplate source');
 const upstream=p=>execFileSync('git',['show','HEAD:'+p],{cwd:source,encoding:'utf8'});
+// Keep the selected application; patch Next's upstream image/RSC security fixes.
+// The checked-in override lock freezes the reviewed transitive resolution.
+const manifest=JSON.parse(upstream('package.json'));
+manifest.dependencies.next='16.3.6';
+manifest.devDependencies['eslint-config-next']='16.3.6';
+writeFileSync(source+'/package.json',JSON.stringify(manifest,null,2)+'\n');
+const lockPath=new URL('./security-package-lock.json',import.meta.url);
+writeFileSync(source+'/package-lock.json',readFileSync(lockPath));
 const reporter=upstream('components/ErrorReporter.tsx');
 if(!reporter.includes('fetch("/api/client-errors"'))throw Error('Reporter changed; review required');
 writeFileSync(source+'/components/ErrorReporter.tsx',`"use client";

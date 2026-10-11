@@ -8,6 +8,7 @@ import socket
 import ssl
 import struct
 import subprocess
+import sys
 
 COOKIE = 0x2112A442
 settings = json.loads(Path('/opt/utilibre/turn/settings.json').read_text())
@@ -97,14 +98,16 @@ try:
 finally:
     wrong.close()
 clients = []
+bounded = '--bounded-live' in sys.argv
 try:
-    for _ in range(settings['quota']):
+    for _ in range(2 if bounded else settings['quota']):
         client = Client()
         clients.append(client)
         assert struct.unpack('!H', client.allocate()[:2])[0] == 0x103, 'Reservation budget failed before the allocation quota'
-    extra = Client()
-    clients.append(extra)
-    assert error_code(extra.allocate()) == 486, 'Excess allocation must be refused'
+    if not bounded:
+        extra = Client()
+        clients.append(extra)
+        assert error_code(extra.allocate()) == 486, 'Excess allocation must be refused'
     for address in ['127.0.0.1', '10.10.1.20', '169.254.169.254', '172.29.99.10', '192.168.1.1']:
         peer = peer_attr(address, 48001)
         assert error_code(clients[0].send(8, peer)) == 403, 'Private or own-host peer was not rejected'
@@ -135,7 +138,7 @@ try:
             break
         time.sleep(0.05)
     assert self_drops() > before, 'Own-host non-relay port was not firewall-blocked'
-    print(json.dumps({'passed':True, 'checks':['valid TLS certificate', 'anonymous challenge', 'wrong credential refused', 'eight allocation reservations and ninth refused', 'private, metadata and Galene peers refused', 'bidirectional exact-byte relay-to-relay transfer', 'own-public-IP non-relay port firewall-blocked'], 'limits':{'allocations':settings['quota'],'perAllocationBytesPerSecond':settings['bps'],'reservationCapacity':settings['total']}, 'notTested':['external NAT', 'public browser forced-relay transfer', 'bandwidth throughput']}))
+    print(json.dumps({'passed':True, 'checks':['valid TLS certificate', 'anonymous challenge', 'wrong credential refused', 'two bounded live allocations' if bounded else 'eight allocation reservations and ninth refused', 'private, metadata and Galene peers refused', 'bidirectional exact-byte relay-to-relay transfer', 'own-public-IP non-relay port firewall-blocked'], 'limits':{'allocations':settings['quota'],'perAllocationBytesPerSecond':settings['bps'],'reservationCapacity':settings['total']}, 'notTested':['external NAT', 'public browser forced-relay transfer', 'bandwidth throughput']+(['live quota exhaustion (tested in disposable lab)'] if bounded else [])}))
 finally:
     for client in clients:
         client.close()

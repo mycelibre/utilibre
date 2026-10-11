@@ -12,6 +12,7 @@ for(const [id,revision] of items){
  execFileSync('tar',['-xf',stage+'/source.tar','-C',stage]);
  mkdirSync(stage+'/'+id+'/utilibre');
  copyFileSync(repo+'/deployment/'+id+'/prepare.mjs',stage+'/'+id+'/utilibre/prepare.mjs');
+ if(id==='bookplate')copyFileSync(repo+'/deployment/bookplate/security-package-lock.json',stage+'/'+id+'/utilibre/security-package-lock.json');
  if(id==='candlr')copyFileSync(repo+'/deployment/candlr/Dockerfile',stage+'/'+id+'/utilibre/Dockerfile');
  writeFileSync(stage+'/'+id+'/utilibre/BUILD.txt',`Upstream ${revision}. Utilibre privacy packaging, 11 October 2026.\nRun prepare.mjs against a Git checkout at this exact commit, then use ${id==='candlr'?'utilibre/Dockerfile':'Dockerfile'} to build. The original tree is included; prepare.mjs records all modifications. Production secrets and saved content are not build inputs.\n`);
  execFileSync('tar',['-czf',out+'/'+id+'-utilibre.tar.gz','-C',stage,id]);

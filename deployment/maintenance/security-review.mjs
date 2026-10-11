@@ -12,11 +12,20 @@ const directory='/var/lib/utilibre-maintenance', cache='/var/cache/utilibre-secu
 const binary='/opt/utilibre/maintenance/bin/trivy';
 const env={...process.env,TRIVY_DISABLE_TELEMETRY:'true',TRIVY_SKIP_VERSION_CHECK:'true',GOMAXPROCS:'2',GOMEMLIMIT:'1GiB'};
 const authentikDigest='sha256:ab9b4e8cc4ab3f8d1198d2db6aeea66bafea1963b3f2843589e0d163f97d9849';
+export function scannerManifestName(file){
+ const name=path.basename(file);
+ if(/^(auth|linkding)-python-requirements\.txt$/.test(name))return 'requirements.txt';
+ return name==='security-package-lock.json'?'package-lock.json':name;
+}
 export function registryFallback(item){
  // Docker's local OCI export of this exact image lacks its config blob. Do not
  // resolve a moving tag or infer another image is equivalent to the running one.
- return item.id===authentikDigest&&item.references.every(x=>x==='ghcr.io/goauthentik/server:2026.8.3'||x==='ghcr.io/goauthentik/server@'+authentikDigest||x==='ghcr.io/goauthentik/server:2026.8.3@'+authentikDigest)
-  &&item.references.length?'ghcr.io/goauthentik/server@'+authentikDigest:null;
+ const reviewed=[
+  {digest:authentikDigest,repository:'ghcr.io/goauthentik/server',tag:'2026.8.3'},
+  {digest:'sha256:967194b8f73a1251b2a566f91b457bc872c1bbaf343827a455ade760b9693bf6',repository:'ghcr.io/diygod/rsshub',tag:'2026-10-11'},
+ ];
+ const match=reviewed.find(r=>item.id===r.digest&&item.references.length&&item.references.every(x=>[r.repository+':'+r.tag,r.repository+'@'+r.digest,r.repository+':'+r.tag+'@'+r.digest].includes(x)));
+ return match?match.repository+'@'+match.digest:null;
 }
 export function summarize(data){
  const counts={UNKNOWN:0,LOW:0,MEDIUM:0,HIGH:0,CRITICAL:0};
@@ -92,13 +101,13 @@ export async function run(){
   if(!report.host.packages)throw Error('Host package inventory was empty');
   // Explicit code-only roots. Extra/missing source manifests are reported, not
   // interpreted as proof of what is bundled in a deployed static application.
-  const tracked=(await command('git',['ls-files','-z'])).split('\0').filter(x=>/(^|\/)(package-lock\.json|pnpm-lock\.yaml|yarn\.lock|composer\.lock|Cargo\.lock|go\.mod|go\.sum|poetry\.lock|uv\.lock)$/.test(x));
+  const tracked=(await command('git',['ls-files','-z'])).split('\0').filter(x=>/(^|\/)((?:security-)?package-lock\.json|(?:auth|linkding)-python-requirements\.txt|pnpm-lock\.yaml|yarn\.lock|composer\.lock|Cargo\.lock|go\.mod|go\.sum|poetry\.lock|uv\.lock)$/.test(x));
   const sources=[...tracked.map(p=>({path:path.join(root,p),name:p,scope:'tracked-build-input'})),{path:'/opt/utilibre/src/cryptpad/package-lock.json',name:'cryptpad/package-lock.json',scope:'mounted-runtime-code'}];
   for(const source of sources){
    try{
     const bytes=await readFile(source.path);if(bytes.length>10*1024**2)throw Error('Oversized manifest');
     const dest=path.join(scratch,'manifest-'+report.sources.length);await mkdir(dest);
-    await writeFile(path.join(dest,path.basename(source.path)),bytes);
+    await writeFile(path.join(dest,scannerManifestName(source.path)),bytes);
     report.sources.push({name:source.name,scope:source.scope,sha256:createHash('sha256').update(bytes).digest('hex'),status:'checked',...await scan('fs',dest,['--pkg-types','library'])});
    }catch{report.sources.push({name:source.name,scope:source.scope,status:'failed'});}
   }

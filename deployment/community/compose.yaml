@@ -86,7 +86,7 @@ services:
     memswap_limit: 256m
     <<: *runtime
     logging: {driver: none}
-    image: ghcr.io/schlagmichdoch/pairdrop:v1.11.2@sha256:c4b30977264a76e335740089e693a52a0d0d616330dec7f93c7b96beef7b4a02
+    image: utilibre-pairdrop:1.11.2-security-20261011-p2
     user: "1000:1000"
     environment:
       PORT: "3000"
@@ -110,7 +110,7 @@ services:
   uptime-kuma:
     <<: *runtime
     # Same app version; native SQLite/HTTP/TCP checks need no bundled Chromium/MariaDB.
-    image: louislam/uptime-kuma:2.5.5-slim@sha256:9c56a772a7df53f444a404c579e87a27bd0c201375d00d6745a75bf8138f4342
+    image: utilibre-kuma:proxyaddr-security-20261011
     user: "1000:1000"
     environment:
       UPTIME_KUMA_DB_TYPE: sqlite
@@ -142,7 +142,7 @@ services:
   rallly:
     <<: *runtime
     profiles: [rallly]
-    image: lukevella/rallly:4.15.4@sha256:8f29eccdc2fbb856001ea3c97d1c1d85556095274ad21a8de0c0125f29303938
+    image: utilibre-rallly:debian-security-20261011
     environment:
       DATABASE_URL: postgres://rallly:${RALLLY_DB_PASSWORD:-UNCONFIGURED}@rallly-db:5432/rallly
       SECRET_PASSWORD: ${RALLLY_SECRET_PASSWORD:-UNCONFIGURED}

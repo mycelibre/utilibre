@@ -1,0 +1,8 @@
+# Exact existing application; distribution-maintained security backports only.
+# The release receipt pins the resulting image and records package versions.
+ARG ARTIFACT_IMAGE
+FROM ${ARTIFACT_IMAGE}
+ARG RUNTIME_USER
+USER root
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends upgrade && apt-get clean && rm -rf /var/lib/apt/lists/*
+USER ${RUNTIME_USER}

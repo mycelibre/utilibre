@@ -12,7 +12,7 @@ x-runtime: &runtime
 
 x-authentik: &authentik
   <<: *runtime
-  image: ghcr.io/goauthentik/server:2026.8.3@sha256:ab9b4e8cc4ab3f8d1198d2db6aeea66bafea1963b3f2843589e0d163f97d9849
+  image: utilibre-authentik:2026.8.3-python-security-20261011
   user: "1000:1000"
   shm_size: 512m
   tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777"]

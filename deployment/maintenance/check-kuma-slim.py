@@ -7,7 +7,8 @@ import json, os, pathlib, sqlite3, subprocess, time
 
 root = pathlib.Path('/var/lib/utilibre-maintenance/kuma-slim-20261011')
 root.mkdir(mode=0o700, exist_ok=True)
-candidate = 'louislam/uptime-kuma:2.5.5-slim@sha256:9c56a772a7df53f444a404c579e87a27bd0c201375d00d6745a75bf8138f4342'
+candidate = os.environ.get('KUMA_CHECK_IMAGE', 'louislam/uptime-kuma:2.5.5-slim@sha256:9c56a772a7df53f444a404c579e87a27bd0c201375d00d6745a75bf8138f4342')
+assert candidate in ['louislam/uptime-kuma:2.5.5-slim@sha256:9c56a772a7df53f444a404c579e87a27bd0c201375d00d6745a75bf8138f4342','utilibre-kuma:2.5.5-security-20261011','utilibre-kuma:proxyaddr-security-20261011']
 name = 'utilibre-maintenance-kuma-slim-stage'
 source = sqlite3.connect('file:/opt/utilibre/community-data/kuma/kuma.db?mode=ro', uri=True)
 types = dict(source.execute('select type, count(*) from monitor group by type').fetchall())

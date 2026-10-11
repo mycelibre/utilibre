@@ -189,5 +189,174 @@
     "nginx": "1.22.1-9+deb12u10",
     "openssl": "3.0.22-1~deb12u1",
     "note": "Signed Debian 12 packages resolved at build time; output artifact is pinned in this release record. Future rebuilds must be staged, scanned and recorded again."
+  },
+  "followUp": {
+    "recordedAt": "2026-10-11T19:40:34.951Z",
+    "scope": "Subsequent security candidates, after the earlier static/gateway batch. No private configuration or account records.",
+    "recipes": [
+      "deployment/utilibre/privatebin-security/Dockerfile",
+      "deployment/bookplate/prepare.mjs",
+      "deployment/bookplate/security-package-lock.json",
+      "deployment/community/Dockerfile.pairdrop-security",
+      "deployment/community/pairdrop-storage-guard.cjs",
+      "deployment/community/turn/Dockerfile",
+      "deployment/calendar/gathio/Postgres.security.Dockerfile",
+      "deployment/wishlist/Dockerfile.security",
+      "deployment/community/Dockerfile.kuma-security",
+      "deployment/maintenance/Dockerfile.debian-runtime",
+      "deployment/maintenance/Dockerfile.portal-runtime",
+      "deployment/maintenance/Dockerfile.proxyaddr-security",
+      "deployment/maintenance/patch-proxyaddr.cjs",
+      "deployment/maintenance/Dockerfile.grist-libraries",
+      "deployment/maintenance/patch-grist-libraries.cjs",
+      "deployment/maintenance/Dockerfile.auth-python-security",
+      "deployment/maintenance/auth-python-requirements.txt",
+      "deployment/maintenance/linkding-python-requirements.txt",
+      "deployment/toolbox/Dockerfile.artifact"
+    ],
+    "images": [
+      {
+        "container": "utilibre-linkding-linkding-1",
+        "image": "utilibre-linkding:1.47.0-python-security-20261011",
+        "id": "sha256:e1940ec7e2f31c0c97bc082220e96b13d8a93ef673db6cab583e249a02356e36"
+      },
+      {
+        "container": "utilibre-identity-server-1",
+        "image": "utilibre-authentik:2026.8.3-python-security-20261011",
+        "id": "sha256:fa48909ceaeaaa4dd5f3852e7b78208de3149962a88c80ef349b79c30b067d59"
+      },
+      {
+        "container": "utilibre-identity-worker-1",
+        "image": "utilibre-authentik:2026.8.3-python-security-20261011",
+        "id": "sha256:fa48909ceaeaaa4dd5f3852e7b78208de3149962a88c80ef349b79c30b067d59"
+      },
+      {
+        "container": "utilibre-records-grist-1",
+        "image": "utilibre-grist:libraries-security-20261011",
+        "id": "sha256:2775bf60ef3a2058d99edb5656e9e4e150662283fce9c88e6d7cd1295583ac80"
+      },
+      {
+        "container": "utilibre-community-uptime-kuma-1",
+        "image": "utilibre-kuma:proxyaddr-security-20261011",
+        "id": "sha256:22cc94b7a9b4475058f6c540c25d03b6e62fe32dd4c18fefacafc371c98a8525"
+      },
+      {
+        "container": "utilibre-expanded-actual-1",
+        "image": "utilibre-actual:proxyaddr-security-20261011",
+        "id": "sha256:b664a7abda3fb06c807995b93013a6acedb59fbfe103e87ccf88da6919f737ca"
+      },
+      {
+        "container": "utilibre-pack-cryptpad-cryptpad-1",
+        "image": "utilibre-cryptpad-node:debian-security-20261011",
+        "id": "sha256:b76753f911bd19e4eb987671b11e15f5e07fcf9de4b05294581890cb3a3109d4"
+      },
+      {
+        "container": "utilibre-kitchenowl-app-1",
+        "image": "utilibre-kitchenowl:debian-security-20261011",
+        "id": "sha256:555083c3bd5aa7f9be4a71fc37e204ff5420f71dd3c5b59be1abc7d22198053a"
+      },
+      {
+        "container": "utilibre-expanded-resume-1",
+        "image": "utilibre-resume:debian-security-20261011",
+        "id": "sha256:32a10ddd016ce6d7e2ea4866f593ff1dc35370d437ce72367121445301c2663f"
+      },
+      {
+        "container": "utilibre-community-rallly-1",
+        "image": "utilibre-rallly:debian-security-20261011",
+        "id": "sha256:7490bf35524fcc26b772e217fa43c038a8e8e8180bdd80633044a0f6694cf1df"
+      },
+      {
+        "container": "utilibre-services-privatebin-1",
+        "image": "utilibre-privatebin:2.0.6-security-20261011",
+        "id": "sha256:f7095267c9e56e7512e5a79b5b712e29a3ea3d19761b6b640dec72aecc34ded2"
+      },
+      {
+        "container": "utilibre-records-bookplate-1",
+        "image": "utilibre-bookplate:1.1.0-security-20261011",
+        "id": "sha256:a233dbddf02640c8eec790c1a89d3c9c01b5748f05c0d5067624c897593ea6e5"
+      },
+      {
+        "container": "utilibre-community-pairdrop-1",
+        "image": "utilibre-pairdrop:1.11.2-security-20261011-p2",
+        "id": "sha256:eff40a7085ab7d5dce2f3c3a48b477e8f4c50afca7454e891b1f870025e20f92"
+      },
+      {
+        "container": "utilibre-expanded-jupyterlite-1",
+        "image": "utilibre-jupyterlite:0.8.5-p5-nginx1305",
+        "id": "sha256:364f80084669153b72fd1aacefe1de189a5eaa8f1d00f295d74aa090adc99877"
+      },
+      {
+        "container": "public-utility-portal-1",
+        "image": "public-utility-portal:0.1.0-security-20261011",
+        "id": "sha256:777fbd21314c0fb68f0e769dc1be59a94c056806e8aeb4f15083a8f5c8c30559"
+      },
+      {
+        "container": "utilibre-wishlist-app-1",
+        "image": "utilibre-wishlist:0.67.1-security-20261011",
+        "id": "sha256:32bb005aab9fd1dd0da71fa1a27141742c5474a52ed0d624b7a57eb03d96c67f"
+      },
+      {
+        "container": "utilibre-gathio-postgres-1",
+        "image": "utilibre-gathio-documentdb:17.11-0.107.0-security-20261011",
+        "id": "sha256:224b0bb325a3da89ed9befac41962a82d6f73cbb71f10927fbcbbd9713e979a8"
+      },
+      {
+        "container": "utilibre-expanded-whisper-1",
+        "image": "utilibre-whisper:security-20261011-nginx1305",
+        "id": "sha256:38b5511ae28b41e61ce6f76c8e600f3058ec9a72d6cffaf2a25d3ea32bc3c16e"
+      },
+      {
+        "container": "utilibre-pollaris-gateway-1",
+        "image": "utilibre-pollaris-gateway:security-20261011-nginx1305",
+        "id": "sha256:461314db09babd9e8580c56ae89c50ba7a9c1ff57cea566ecc32b8d0753d06e4"
+      },
+      {
+        "container": "utilibre-binternet-onion-gateway-1",
+        "image": "utilibre-binternet-gateway:security-20261011-nginx1305",
+        "id": "sha256:88fca19b2068873ede2327a9da3242d1bdd066f8245abdcaf8061352d0fa9c07"
+      },
+      {
+        "container": "utilibre-binternet-gateway-1",
+        "image": "utilibre-binternet-gateway:security-20261011-nginx1305",
+        "id": "sha256:88fca19b2068873ede2327a9da3242d1bdd066f8245abdcaf8061352d0fa9c07"
+      },
+      {
+        "container": "utilibre-reader-evaluation-safetwitch-1",
+        "image": "utilibre-safetwitch:security-20261011-nginx1305",
+        "id": "sha256:0164be5a1d292643066e83eb4651839328cda1818fb19957994c880c0d784647"
+      },
+      {
+        "container": "utilibre-wallabag-web-1",
+        "image": "utilibre-wallabag-web:security-20261011-nginx1305",
+        "id": "sha256:474721481e759a290d3ef996973bdef18c135221ccccfc4e590fe56c232ef0c1"
+      },
+      {
+        "container": "utilibre-translite-gateway-1",
+        "image": "utilibre-translite-gateway:security-20261011-nginx1305",
+        "id": "sha256:31c756e80f282f2cba9f60b90fa5d8e1a8d130b67c1f47e71e09a3a6612b4a08"
+      },
+      {
+        "container": "utilibre-openresume-web-1",
+        "image": "utilibre-openresume:security-20261011-nginx1305",
+        "id": "sha256:4ba5624176ef4479729a2298f3a88f34001f85f5782578876494511f622f9660"
+      },
+      {
+        "container": "utilibre-services-rsshub-1",
+        "image": "ghcr.io/diygod/rsshub:2026-10-11",
+        "id": "sha256:967194b8f73a1251b2a566f91b457bc872c1bbaf343827a455ade760b9693bf6"
+      },
+      {
+        "container": "utilibre-galene-turn-turn-1",
+        "image": "utilibre-coturn:4.18.0-security-20261011",
+        "id": "sha256:d3645951d146f938f8ce3ff3d85d3cf2022b693bffa35d7c23f88d40184b4460"
+      },
+      {
+        "container": "utilibre-turn-option-turn-1",
+        "image": "utilibre-coturn:4.18.0-security-20261011",
+        "id": "sha256:d3645951d146f938f8ce3ff3d85d3cf2022b693bffa35d7c23f88d40184b4460"
+      }
+    ],
+    "rollback": "Previous references and native snapshots are in private dated stage/release receipts; restore only a service pin. Portal previous image public-utility-portal:0.1.0-maintenance-20261011; JupyterLite previous utilibre-jupyterlite:0.8.5-p5. No database rollback required by these dependency/runtime patches.",
+    "verification": "See docs/updates.md security follow-up and private native test receipts. Application hashes unchanged only where explicitly recorded; listed library/backport changes are exceptions."
   }
 }

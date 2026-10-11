@@ -1,0 +1,3 @@
+# Runtime-only replacements; no application dependency resolution.
+PyJWT==2.14.0 --hash=sha256:ad0cef71c756a56e74863c2919cf0985f72decbcfcb550ee2f422e7c62b5eedc
+anyio==4.14.2 --hash=sha256:9f505dda5ac9f0c8309b5e8bd445a8c2bf7246f3ce950121e45ea15bc41d1494

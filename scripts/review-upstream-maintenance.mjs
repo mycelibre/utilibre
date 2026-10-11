@@ -4,17 +4,21 @@ import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {readFileSync,mkdirSync,writeFileSync,renameSync} from 'node:fs';
 import {pathToFileURL} from 'node:url';
+import {createHash} from 'node:crypto';
 import {reviewedFossProviders} from '../portal/src/catalog/upstreams.ts';
 const exec=promisify(execFile);
 const advisoryReviews=JSON.parse(readFileSync(new URL('../deployment/maintenance/advisory-reviews.json',import.meta.url),'utf8'));
-export function partitionReviewed(advisories,review,live){
+const operationalProviders=JSON.parse(readFileSync(new URL('../deployment/maintenance/operational-providers.json',import.meta.url),'utf8'));
+export function partitionReviewed(advisories,review,live,files={}){
  const needsReview=[],reviewed=[];
  // Exact runtime identities and advisory revision/range must all still match.
  // Missing access, stopped containers, a new image or edited advisory reopens it.
- const matches=review&&Object.entries(review.containers).every(([name,image])=>live.some(x=>x.Name===name&&x.Image===image&&x.State?.Running===true));
+ const matches=review&&(Object.keys(review.containers||{}).length+Object.keys(review.files||{}).length>0)
+  &&Object.entries(review.containers||{}).every(([name,image])=>live.some(x=>x.Name===name&&x.Image===image&&x.State?.Running===true))
+  &&Object.entries(review.files||{}).every(([name,hash])=>files[name]===hash);
  for(const advisory of advisories){
   const decision=matches&&review.advisories.find(x=>x.id===advisory.id&&x.updated===advisory.updated&&JSON.stringify(x.affected)===JSON.stringify(advisory.affected));
-  if(decision)reviewed.push({...advisory,disposition:'not-affected-at-reviewed-version',version:review.version,reviewedAt:review.reviewedAt,reason:decision.reason,evidence:decision.source});
+  if(decision)reviewed.push({...advisory,disposition:decision.disposition||'not-affected-at-reviewed-version',version:review.version,reviewedAt:review.reviewedAt,reason:decision.reason,evidence:decision.source});
   else needsReview.push(advisory);
  }
  return {needsReview,reviewed};
@@ -66,12 +70,17 @@ export async function inspectProvider(id,p){
      if(!Array.isArray(rows))throw Error('Invalid advisory response');all.push(...rows);
      if(rows.length<100){complete=true;break;}
     }
-    let live=[];const review=advisoryReviews[id];
+    let live=[],files={};const review=advisoryReviews[id];
     if(review)try{
-     const {stdout}=await exec('docker',['inspect',...Object.keys(review.containers).map(x=>x.slice(1))],{timeout:10000,maxBuffer:1024**2});
-     live=JSON.parse(stdout); // Never persist environment, labels, mounts or secrets.
+     const names=Object.keys(review.containers||{});
+     if(names.length){const {stdout}=await exec('docker',['inspect',...names.map(x=>x.slice(1))],{timeout:10000,maxBuffer:1024**2});live=JSON.parse(stdout);}
+     // Reviewed host executables or mounted code only; never persist their bytes.
+     for(const file of Object.keys(review.files||{}))files[file]=createHash('sha256').update(readFileSync(file)).digest('hex');
     }catch{/* No runtime evidence: retain every review alert. */}
-    result.advisories={coverage:complete?'repository-published':'partial-300-limit',examined:all.length,...partitionReviewed(recentAdvisories(all,p.reviewedOn),review,live),publishedHistory:recentAdvisories(all,'1970-01-01')};
+    // A catalogue content-review date is not an advisory disposition. Older
+    // notices require the same exact-version evidence as newly edited notices.
+    const history=recentAdvisories(all,'1970-01-01');
+    result.advisories={coverage:complete?'repository-published':'partial-300-limit',examined:all.length,...partitionReviewed(history,review,live,files),publishedHistory:history};
    }catch{result.advisories={coverage:'unavailable',needsReview:[]};}
   }else{
    const {stdout}=await exec('git',['ls-remote',r.clone,'HEAD'],{timeout:25000,maxBuffer:4096,env:{...process.env,GIT_TERMINAL_PROMPT:'0'}});
@@ -86,11 +95,12 @@ export async function inspectProvider(id,p){
 export async function run(args=process.argv.slice(2)){
  if(args.some(a=>!a.startsWith('--only=')))throw Error('Supported option: --only=provider-id');
  const only=args.find(a=>a.startsWith('--only='))?.slice(7);
- if(only&&!Object.hasOwn(reviewedFossProviders,only))throw Error('Unknown provider');
- const selected=Object.entries(reviewedFossProviders).filter(([id,p])=>p.reviewStatus==='deployed'&&(!only||id===only));
+ const providers={...reviewedFossProviders,...operationalProviders};
+ if(only&&!Object.hasOwn(providers,only))throw Error('Unknown provider');
+ const selected=Object.entries(providers).filter(([id,p])=>p.reviewStatus==='deployed'&&(!only||id===only));
  const results=new Array(selected.length);let next=0;
  await Promise.all(Array.from({length:3},async()=>{while(next<selected.length){const i=next++;results[i]=await inspectProvider(...selected[i]);}}));
- const report={date:new Date().toISOString(),scope:only||'deployed-catalogue',providers:results.length,results,
+ const report={date:new Date().toISOString(),scope:only||'deployed-catalogue-and-reviewed-companions',providers:results.length,results,
  note:'A changed default branch is a review candidate, not a safe upgrade or proof of an overdue release. No advisories returned is not a security clearance. Dependency vulnerabilities require the release-specific lockfile/image review. No application changed.'};
  const dir='/var/lib/utilibre-maintenance';mkdirSync(dir,{recursive:true,mode:0o700});
  const name=only?'provider-'+only:'latest';

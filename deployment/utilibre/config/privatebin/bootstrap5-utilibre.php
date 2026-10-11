@@ -71,7 +71,7 @@ endif;
 ?>
 		<?php $this->_scriptTag('js/purify-3.4.12.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
-		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/privatebin-utilibre-2.0.6-security-20261011.js', 'defer'); ?>
         <script src="js/utilibre-upload-limit.js?v=1" defer></script>
         <!-- Utilibre icons; the native application remains PrivateBin. -->
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />

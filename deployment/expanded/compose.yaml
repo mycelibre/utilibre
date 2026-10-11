@@ -16,7 +16,7 @@ x-runtime: &runtime
 services:
   jupyterlite:
     <<: *runtime
-    image: utilibre-jupyterlite:0.8.5-p5
+    image: utilibre-jupyterlite:0.8.5-p5-nginx1305
     read_only: true
     user: "101:101"
     volumes:
@@ -37,7 +37,7 @@ services:
   # Rollback: compose.whisper-withdrawn.yaml restores the previous 410 notice.
   whisper:
     <<: *runtime
-    image: utilibre-whisper:81869ed-p7
+    image: utilibre-whisper:security-20261011-nginx1305
     entrypoint: [nginx, -g, 'daemon off;']
     read_only: true
     user: "101:101"
@@ -137,7 +137,7 @@ services:
 
   actual:
     <<: *runtime
-    image: actualbudget/actual-server:26.10.0@sha256:24645e971da6bb1a1f953d6859e307a0b29be1e8b4130a35b3220c209b5b860c
+    image: utilibre-actual:proxyaddr-security-20261011
     read_only: true
     user: "1000:1000"
     environment:
@@ -166,7 +166,7 @@ services:
   resume:
     <<: *runtime
     # Same pinned upstream runtime; narrow visitor-statistics removal in Dockerfile.resume.
-    image: utilibre-resume:6.0.0-p1
+    image: utilibre-resume:debian-security-20261011
     read_only: true
     user: "1000:1000"
     command: ["node", "/usr/local/bin/utilibre-resume-start.mjs"]

@@ -1,0 +1,7 @@
+# Same Grist application and sandbox; only the three pinned modules are replaced.
+FROM utilibre-grist:proxyaddr-security-20261011
+USER root
+WORKDIR /grist
+COPY patch-grist-libraries.cjs /tmp/patch-grist-libraries.cjs
+RUN node /tmp/patch-grist-libraries.cjs && rm /tmp/patch-grist-libraries.cjs
+USER 1000:1000

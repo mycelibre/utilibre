@@ -1,0 +1,5 @@
+FROM privatebin/nginx-fpm-alpine:2.0.6@sha256:13290e2f04bfd98cf8fc7e8d216fb76b2b2d12373d4923b859cd41c2d984fde8
+USER root
+COPY prepare.php /tmp/utilibre-privatebin-security.php
+RUN php /tmp/utilibre-privatebin-security.php && php -l /srv/lib/Configuration.php && rm /tmp/utilibre-privatebin-security.php
+USER 65534:82

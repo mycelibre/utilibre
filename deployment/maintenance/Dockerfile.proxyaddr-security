@@ -1,0 +1,8 @@
+# One reviewed transitive patch; no dependency resolution, app build or migration.
+# Source: https://github.com/jshttp/proxy-addr/security/advisories/GHSA-jqcg-44mw-7w3h
+ARG ARTIFACT_IMAGE
+FROM ${ARTIFACT_IMAGE}
+USER root
+COPY patch-proxyaddr.cjs /tmp/patch-proxyaddr.cjs
+RUN node /tmp/patch-proxyaddr.cjs && rm /tmp/patch-proxyaddr.cjs
+USER 1000:1000
