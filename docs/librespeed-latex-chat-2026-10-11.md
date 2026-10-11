@@ -150,20 +150,39 @@ Their browser's actual connection protocol has not been captured. There is no
 remote Caddy admin/SSH access here.
 
 The owner tests on Ethernet with Firefox and Chromium and needs Tailscale to
-retain management access. Do not disconnect it. Whether an exit node or a
-specific advertised route carries the speed-test traffic remains unverified.
+retain management access. Do not disconnect it. They confirmed exit node `None`.
+Their Windows DNS lookup returned `49.12.84.228`; `Find-NetRoute` for that address
+returned `Ethernet`. The duplicated interface name is normal for that command's
+address/route objects; a separately pasted `-Unique` failed harmlessly and does
+not invalidate those results. These checks establish the normal Windows route,
+not every browser's proxy configuration or actual request protocol.
 [Tailscale's exit-node documentation](https://tailscale.com/docs/features/exit-nodes)
 (checked 11 October) distinguishes default private overlay traffic from public
 Internet traffic sent through an enabled exit node. Mere installation/enabling
-of Tailscale does not establish that it affects this test. Ask for the exit-node
-selection, then inspect the specific client route if necessary. Idle backend and
-gateway CPU were 0%; this is not a measurement of resource use during their run.
+of Tailscale does not establish that it affects this test. No exit-node or
+Tailscale-specific route is evidenced by the owner's checks.
+
+**07:38:58 UTC live follow-up:** one fresh Chromium session, with automatic
+protocol selection, exercised native `P_D_U` through the actual Caddy edge in a
+disposable client namespace with 150 ms packet/ACK delay. It negotiated HTTP/1.1,
+reported 799.56 Mbps down, 596.32 Mbps up, 151.50 ms ping and 0.10 ms jitter.
+All 61 observed backend responses were HTTP 200. The entire 27.29-second run
+used averages of 3.84% of one CPU for the backend and 18.92% for the shared
+gateway; neither cgroup recorded any CPU-quota throttling. Shared-gateway
+counters include concurrent ordinary service work; Caddy CPU was not accessible.
+This verifies the live correction and rules out a fixed 150 Mbps application
+ceiling under these conditions. It does not measure the external Internet route,
+its packet loss/congestion, or the owner's browser protocol. No new production
+tuning was applied. The disposable container and its network queue were removed.
+Further outside-path diagnosis requires client-side protocol/path evidence;
+do not treat Fast.com's different destination as an interchangeable capacity test.
 
 Rollback removes only the site's `tls { alpn http/1.1 }` and `header Alt-Svc clear`;
 no state or data restore. Do not change the worker to inflate results.
 
-Reproduction: `probe-path.mjs` uses native parameters, mode `SPEED_PROTOCOL=h1`,
-`h2` or `h3`, and optional `SPEED_TEST_ORDER=P_U` for upload. Run only against
+Reproduction: `probe-path.mjs` uses native parameters, mode `SPEED_PROTOCOL=auto`
+(default), `h1`, `h2` or `h3`, and optional `SPEED_TEST_ORDER=P_U` for upload or
+`P_D_U` for both directions. Run only against
 authorized infrastructure, one at a time. Without the isolated delayed namespace
 it tests ordinary LAN behavior. The disposable client and Caddy test containers
 are removed after checks; their namespace disappears with its `netem` queue.

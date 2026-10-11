@@ -32,8 +32,13 @@ an HTTP/2-capable curl negotiated HTTP/1.1 with `Alt-Svc: clear` on the actual
 edge at 07:27 UTC, with normal TLS validation. The owner's latest result is
 150.86 Mbps down / 41.94 up, 158.10 ms ping and 0.12 ms jitter. Remaining outside
 throughput is unresolved. They use Ethernet, Firefox and Chromium with Tailscale
-connected for management. Exit-node selection and the actual client route remain
-to be checked; do not disconnect Tailscale or assume it carries public traffic.
+connected for management. Exit node is `None`; Windows resolves `49.12.84.228`
+and selects `Ethernet` for that destination. A fresh automatic-protocol Chromium
+run at 07:38 UTC, through the real edge with 150 ms isolated client packet delay,
+reached 799.56 Mbps down / 596.32 up using HTTP/1.1. All 61 backend responses were
+200; backend/gateway CPU quotas did not throttle. This is controlled LAN evidence,
+not the owner's WAN path. No new production tuning; outside browser protocol and
+path congestion/loss remain unmeasured. Do not disconnect Tailscale.
 
 Overleaf CE is not suitable for unrestricted untrusted users without additional
 compile isolation. Public IRC/XMPP deferred: no defined community/account need,
