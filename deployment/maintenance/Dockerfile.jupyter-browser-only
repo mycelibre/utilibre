@@ -1,0 +1,8 @@
+# The Pyodide distribution also includes Node/OS command-line launchers.
+# This deployment serves only the browser application, never a native Python CLI.
+FROM utilibre-jupyterlite:0.8.5-p5-nginx1305
+USER root
+RUN apk add --no-cache --upgrade tiff=4.7.2-r0
+RUN echo 'ff250e09d613d6718b5fb5775ce78608ccf44cd45461d4116bbb5bd4e0e13e24  /usr/share/nginx/html/pyodide/python.exe' | sha256sum -c - \
+ && rm /usr/share/nginx/html/pyodide/python.exe /usr/share/nginx/html/pyodide/python.bat /usr/share/nginx/html/pyodide/python /usr/share/nginx/html/pyodide/python_cli_entry.mjs
+USER 101:101

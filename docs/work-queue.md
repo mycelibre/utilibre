@@ -35,9 +35,17 @@ still-open dependency queue. No alert is waived merely to reduce its count.
 
 **Still open:** the private vulnerability queue needs staged package/application
 remediation; a working scanner is not a clean security report. Prioritize shared
-remaining reachable app libraries: Grist/runsc, Penpot Netty/seroval, Resume
-seroval, Rallly XML parsing, Kuma, FerretDB, the private SimpleLogin pilot, and
-vendor-unfixed OS libraries. Host-level updates require their own rollout gate.
+remaining app libraries and establish reachability: Grist/runsc, precompiled
+SSR/browser bundles, the private SimpleLogin pilot, FerretDB's disabled MCP
+module, and vendor-unfixed OS libraries. The additional Rallly XML, installed
+Resume/Penpot Seroval, Penpot backend, Kuma and FerretDB runtime patches are
+deployed with bounded native tests; [latest evidence and limits](updates.md#library-patch-continuation--11-october-2026).
+Host-level updates require their own rollout gate.
+Latest checkpoint, 20:45:52 UTC: **51 critical / 3,525 high** remain pending
+across 109 running images/175 containers, 510 host packages and 19 source
+manifests. Rallly/Kuma/Resume/Penpot/FerretDB plus Wishlist/JupyterLite patches
+are deployed. Independent GitHub scheduling still has no observed scheduled
+run; a manual availability check does not establish automatic execution.
 Do not bulk-update stateful
 apps or remove alerts without evidence. Non-GitHub advisories, physical-device
 checks and rotating restores for other account services remain operator work.

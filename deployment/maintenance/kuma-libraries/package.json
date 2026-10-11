@@ -1,0 +1,6 @@
+{
+  "name": "utilibre-kuma-reviewed-libraries",
+  "private": true,
+  "version": "2026.10.11",
+  "dependencies": { "protobufjs": "7.6.6", "tar": "7.5.21", "@grpc/grpc-js": "1.14.5" }
+}

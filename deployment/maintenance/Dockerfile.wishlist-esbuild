@@ -1,0 +1,21 @@
+# Preserve Wishlist and all application/package interfaces; rebuild the exact
+# existing esbuild source with a supported Go toolchain. No runtime downloads.
+FROM golang:1.26.9-alpine@sha256:3082400e369fa24d5fc60bca20edab3f6d604e0c5a690ec66b295eff4dd87ade AS build
+ADD --checksum=sha256:dc90cb6f3b77bace240f293765cd625332eae63886b67d80b9fd806ef1f9d1af https://codeload.github.com/evanw/esbuild/tar.gz/refs/tags/v0.19.12 /tmp/esbuild.tar.gz
+RUN mkdir /src && tar -xzf /tmp/esbuild.tar.gz -C /src --strip-components=1
+WORKDIR /src
+ENV GOMAXPROCS=2 CGO_ENABLED=0
+RUN go mod download \
+ && go test -p 2 ./pkg/api ./internal/js_parser ./internal/css_parser \
+ && for pair in linux-amd64 linux-arm64 darwin-amd64 darwin-arm64; do \
+      GOOS=${pair%-*} GOARCH=${pair#*-} go build -p 2 -trimpath -ldflags='-s -w' -o /out/$pair ./cmd/esbuild; \
+    done \
+ && test "$(/out/linux-amd64 --version)" = 0.19.12
+FROM utilibre-wishlist:0.67.1-security-20261011
+USER root
+COPY --from=build /out/linux-amd64 /usr/src/app/node_modules/.pnpm/@esbuild+linux-x64@0.19.12/node_modules/@esbuild/linux-x64/bin/esbuild
+COPY --from=build /out/linux-amd64 /usr/src/app/node_modules/.pnpm/esbuild@0.19.12/node_modules/esbuild/bin/esbuild
+COPY --from=build /out/linux-arm64 /usr/src/app/node_modules/.pnpm/@esbuild+linux-arm64@0.19.12/node_modules/@esbuild/linux-arm64/bin/esbuild
+COPY --from=build /out/darwin-amd64 /usr/src/app/node_modules/.pnpm/@esbuild+darwin-x64@0.19.12/node_modules/@esbuild/darwin-x64/bin/esbuild
+COPY --from=build /out/darwin-arm64 /usr/src/app/node_modules/.pnpm/@esbuild+darwin-arm64@0.19.12/node_modules/@esbuild/darwin-arm64/bin/esbuild
+USER 1000:1000

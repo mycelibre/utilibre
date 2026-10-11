@@ -13,11 +13,14 @@ Penpot/Yopass notices have exact-version/configuration dispositions, not blanket
 exceptions; full published history is now considered. The dependency queue is
 still open after substantial staged updates. The current counts, exact runtime
 changes, isolated account/restore tests, rollout incidents, primary sources and
-rollback boundaries are in [the maintenance record](updates.md#security-follow-up--11-october-1947-utc).
+rollback boundaries are in [the latest maintenance record](updates.md#library-patch-continuation--11-october-2026).
 
 Additional hardening includes PrivateBin's tested sanitizer backport, current
 coturn, runtime/vendor updates, Authentik/Linkding's patched JWT libraries and a
-verified proxy-address spoof fix. Private decisions require exact artifact
+verified proxy-address spoof fix. The subsequent Rallly, Kuma, Resume, Penpot
+and FerretDB dependency builds have isolated native workflow checks. They do
+not clear unreviewed compiled bundles, vendor-unfixed libraries or Grist's old
+forked sandbox. Private decisions require exact artifact
 identity, evidence and expiry; changed code reopens the finding. The unused
 ksmbd autoload guard does not claim a patched kernel. No compromise assessment,
 zero-vulnerability certification or security guarantee follows from these tests.

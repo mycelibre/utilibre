@@ -110,7 +110,7 @@ services:
   uptime-kuma:
     <<: *runtime
     # Same app version; native SQLite/HTTP/TCP checks need no bundled Chromium/MariaDB.
-    image: utilibre-kuma:proxyaddr-security-20261011
+    image: utilibre-kuma:runtime-security-20261011-p5
     user: "1000:1000"
     environment:
       UPTIME_KUMA_DB_TYPE: sqlite
@@ -142,7 +142,7 @@ services:
   rallly:
     <<: *runtime
     profiles: [rallly]
-    image: utilibre-rallly:debian-security-20261011
+    image: utilibre-rallly:libraries-security-20261011-p3
     environment:
       DATABASE_URL: postgres://rallly:${RALLLY_DB_PASSWORD:-UNCONFIGURED}@rallly-db:5432/rallly
       SECRET_PASSWORD: ${RALLLY_SECRET_PASSWORD:-UNCONFIGURED}

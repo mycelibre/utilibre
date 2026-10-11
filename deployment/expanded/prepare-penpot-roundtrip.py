@@ -7,6 +7,8 @@ startup, loopback relay, checker and exact disposable cleanup commands.
 """
 import json,os,secrets,socket,tempfile,pathlib,shutil
 repo=pathlib.Path(__file__).resolve().parents[2]
+backend_image=os.environ.get('UTILIBRE_PENPOT_BACKEND_IMAGE','penpotapp/backend:2.18.2@sha256:5f362bda5b8df6684a5710c4c273f7c8aadb759ba6ebcd0cde18a348ad9b9828')
+assert backend_image in ['penpotapp/backend:2.18.2@sha256:5f362bda5b8df6684a5710c4c273f7c8aadb759ba6ebcd0cde18a348ad9b9828','utilibre-penpot-backend:libraries-security-20261011']
 if shutil.disk_usage('/').free < 5 * 1024**3:
     raise SystemExit('Leave the 5 GiB recovery floor intact before starting this disposable check')
 report=pathlib.Path(tempfile.mkdtemp(prefix='penpot-native-roundtrip-',dir='/opt/utilibre/reports'))
@@ -22,6 +24,7 @@ services={
 'penpot-valkey':dict(base,image='valkey/valkey:9.1.1-alpine@sha256:de31910896150d5e754a07d57d227cfdde4e258ddd0d1aa4607f2d2f95843715',command=['valkey-server','--save','','--appendonly','no','--maxmemory','64mb','--maxmemory-policy','allkeys-lru'],tmpfs=['/data:rw,nosuid,nodev,noexec,size=80m'],mem_limit='128m'),
 'penpot-backend':dict(base,image='penpotapp/backend:2.18.2@sha256:5f362bda5b8df6684a5710c4c273f7c8aadb759ba6ebcd0cde18a348ad9b9828',user='1001:1001',environment={'PENPOT_PUBLIC_URI':f'http://127.0.0.1:{port}','PENPOT_FLAGS':flags,'PENPOT_SECRET_KEY':secret,'PENPOT_DATABASE_URI':'postgresql://penpot-db/penpot','PENPOT_DATABASE_USERNAME':'penpot','PENPOT_DATABASE_PASSWORD':password,'PENPOT_REDIS_URI':'redis://penpot-valkey/0','PENPOT_OBJECTS_STORAGE_BACKEND':'fs','PENPOT_OBJECTS_STORAGE_FS_DIRECTORY':'/opt/data/assets','PENPOT_TELEMETRY_ENABLED':'false','JAVA_TOOL_OPTIONS':'-Xms256m -Xmx768m -XX:ActiveProcessorCount=2'},volumes=[f'{assets}:/opt/data/assets'],tmpfs=['/tmp:rw,nosuid,nodev,exec,size=128m,mode=1777'],mem_limit='1200m',cpus=2,depends_on={'penpot-db':{'condition':'service_healthy'}}),
 'penpot-frontend':dict(base,image='penpotapp/frontend:2.18.2@sha256:3619f48cbdd0c9197ad23bd3db1c9b4391d7c9c3137e22e806cd7f9c945c1c8e',user='1001:1001',command=['/bin/sh','/usr/local/bin/utilibre-penpot-nginx-start.sh'],environment={'PENPOT_PUBLIC_URI':f'http://127.0.0.1:{port}','PENPOT_FLAGS':flags,'PENPOT_EXPORTER_URI':'http://penpot-backend:6061'},volumes=[f'{assets}:/opt/data/assets:ro',f'{repo}/deployment/expanded/penpot-nginx-start.sh:/usr/local/bin/utilibre-penpot-nginx-start.sh:ro'],ports=[f'127.0.0.1:{port}:8080'],mem_limit='256m',depends_on=['penpot-backend'])}
+services['penpot-backend']['image']=backend_image
 config={'name':name,'services':services,'networks':{'isolated':{'internal':True}}}
 (report/'compose.json').write_text(json.dumps(config,indent=2));os.chmod(report/'compose.json',0o600)
 (report/'metadata.json').write_text(json.dumps({'name':name,'port':port,'ram':str(ram),'report':str(report)},indent=2))

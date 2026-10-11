@@ -1,0 +1,5 @@
+# Context: the bounded builder's output directory. Preserve upstream's scratch
+# image, identity, healthcheck, listeners and state contract; replace only binary.
+FROM ghcr.io/ferretdb/ferretdb:2.7.0@sha256:5706414241eb84f0515512c37b46db0f1b1eac9e5ceb7e4c2523211c184b1985
+COPY --chmod=0555 ferretdb /ferretdb
+LABEL org.opencontainers.image.version="2.7.0-utilibre-security-20261011"

@@ -1,4 +1,67 @@
 {
+  "libraryContinuation": {
+    "date": "2026-10-11",
+    "scope": "Same-application dependency and unused CLI repairs; original backups and image references retained. Full vulnerability backlog remains open.",
+    "services": [
+      {
+        "name": "utilibre-community-rallly-1",
+        "ref": "utilibre-rallly:libraries-security-20261011-p3",
+        "image": "sha256:bfdb030bc867d6bd94eaf7c55d59d289a63f62dc217b9494b975c57dfe2aa88c",
+        "running": true,
+        "health": "healthy"
+      },
+      {
+        "name": "utilibre-community-uptime-kuma-1",
+        "ref": "utilibre-kuma:runtime-security-20261011-p5",
+        "image": "sha256:4ddf4658edd048a10fe465c92ac80561c0745071596c49a7533fd0dcc5a7aff9",
+        "running": true,
+        "health": "healthy"
+      },
+      {
+        "name": "utilibre-expanded-resume-1",
+        "ref": "utilibre-resume:seroval-security-20261011-p3",
+        "image": "sha256:85ea55446d742a559ba0625878dcbf3295723b889d7751a6d628f34cfae085c3",
+        "running": true,
+        "health": "healthy"
+      },
+      {
+        "name": "utilibre-expanded-penpot-backend-1",
+        "ref": "utilibre-penpot-backend:libraries-security-20261011",
+        "image": "sha256:face9ec76086ec826dcfa6c2416c15c16f06e24695e54cf8c820cd1dddc48c7d",
+        "running": true,
+        "health": null
+      },
+      {
+        "name": "utilibre-expanded-penpot-admin-console-1",
+        "ref": "utilibre-penpot-admin:seroval-security-20261011-p2",
+        "image": "sha256:e907c2fd6febb2cefa046978c718e3e4e68cf3444201c574bdf2421c07123bc1",
+        "running": true,
+        "health": null
+      },
+      {
+        "name": "utilibre-gathio-ferretdb-1",
+        "ref": "utilibre-ferretdb:libraries-security-20261011",
+        "image": "sha256:465bd70f7d7ee9304b68214887133fa07c0a41bd38c8195fc326ff3f471b6221",
+        "running": true,
+        "health": "healthy"
+      },
+      {
+        "name": "utilibre-expanded-jupyterlite-1",
+        "ref": "utilibre-jupyterlite:0.8.5-browser-security-20261011-p2",
+        "image": "sha256:e255a33dd3ae47833eada017dad2adb9dfa8fd6761962aacf31a59cda5202ed4",
+        "running": true,
+        "health": "healthy"
+      },
+      {
+        "name": "utilibre-wishlist-app-1",
+        "ref": "utilibre-wishlist:0.67.1-esbuild-security-20261011",
+        "image": "sha256:ef6dd27db307610f6031bf1b582f906096f77161d6f1fdc363b3e6903dbee867",
+        "running": true,
+        "health": "healthy"
+      }
+    ],
+    "evidence": "deployment/maintenance/library-patches-20261011.md; deployment/maintenance/browser-binaries-20261011.md"
+  },
   "date": "2026-10-11",
   "scope": "Runtime security refresh, not new application functionality. Original images retained for scoped rollback.",
   "gateway": {

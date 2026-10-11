@@ -1,0 +1,6 @@
+{
+  "name": "utilibre-reviewed-seroval",
+  "version": "2026.10.11",
+  "private": true,
+  "dependencies": {"seroval": "1.6.8"}
+}

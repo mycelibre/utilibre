@@ -32,13 +32,15 @@ services:
       retries: 6
   ferretdb:
     <<: *bounded
-    image: ghcr.io/ferretdb/ferretdb:2.7.0@sha256:5706414241eb84f0515512c37b46db0f1b1eac9e5ceb7e4c2523211c184b1985
+    image: utilibre-ferretdb:libraries-security-20261011
     cpus: 0.5
     mem_limit: 256m
     tmpfs: ['/state:size=4m,mode=1777']
     env_file: /opt/utilibre/calendar-private/gathio-ferretdb.env
     environment:
       FERRETDB_TELEMETRY: disable
+      FERRETDB_LISTEN_MCP_ADDR: ''
+      FERRETDB_OTEL_TRACES_URL: ''
       FERRETDB_STATE_DIR: /state
       FERRETDB_LOG_LEVEL: warn
     networks:

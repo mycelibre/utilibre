@@ -4,9 +4,9 @@
     "reviewedAt": "2026-10-11",
     "containers": {
       "/utilibre-expanded-penpot-frontend-1": "sha256:3619f48cbdd0c9197ad23bd3db1c9b4391d7c9c3137e22e806cd7f9c945c1c8e",
-      "/utilibre-expanded-penpot-backend-1": "sha256:5f362bda5b8df6684a5710c4c273f7c8aadb759ba6ebcd0cde18a348ad9b9828",
+      "/utilibre-expanded-penpot-backend-1": "sha256:face9ec76086ec826dcfa6c2416c15c16f06e24695e54cf8c820cd1dddc48c7d",
       "/utilibre-expanded-penpot-exporter-1": "sha256:4329b95d4b334b6ff95e80642fa634872a3111d6264f20e6262e43db4129ee58",
-      "/utilibre-expanded-penpot-admin-console-1": "sha256:5935b5adbf33eb7abaabfab657fe8f5d465cac08e62e340f932ddb35ce0f311f"
+      "/utilibre-expanded-penpot-admin-console-1": "sha256:e907c2fd6febb2cefa046978c718e3e4e68cf3444201c574bdf2421c07123bc1"
     },
     "advisories": [
       {
@@ -588,7 +588,7 @@
     "version": "0.67.1",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-wishlist-app-1": "sha256:32bb005aab9fd1dd0da71fa1a27141742c5474a52ed0d624b7a57eb03d96c67f"
+      "/utilibre-wishlist-app-1": "sha256:ef6dd27db307610f6031bf1b582f906096f77161d6f1fdc363b3e6903dbee867"
     },
     "advisories": [
       {
@@ -1664,7 +1664,7 @@
     "version": "6.0.0",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-expanded-resume-1": "sha256:32a10ddd016ce6d7e2ea4866f593ff1dc35370d437ce72367121445301c2663f"
+      "/utilibre-expanded-resume-1": "sha256:85ea55446d742a559ba0625878dcbf3295723b889d7751a6d628f34cfae085c3"
     },
     "advisories": [
       {
@@ -1877,7 +1877,7 @@
     "version": "4.15.4",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-community-rallly-1": "sha256:7490bf35524fcc26b772e217fa43c038a8e8e8180bdd80633044a0f6694cf1df"
+      "/utilibre-community-rallly-1": "sha256:bfdb030bc867d6bd94eaf7c55d59d289a63f62dc217b9494b975c57dfe2aa88c"
     },
     "advisories": [
       {
@@ -2112,7 +2112,7 @@
     "version": "2.5.5",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-community-uptime-kuma-1": "sha256:22cc94b7a9b4475058f6c540c25d03b6e62fe32dd4c18fefacafc371c98a8525"
+      "/utilibre-community-uptime-kuma-1": "sha256:4ddf4658edd048a10fe465c92ac80561c0745071596c49a7533fd0dcc5a7aff9"
     },
     "advisories": [
       {

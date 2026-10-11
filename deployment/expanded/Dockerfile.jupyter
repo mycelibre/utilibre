@@ -10,6 +10,13 @@ WORKDIR /work/es
 RUN jupyter lite build --contents ../contents --output-dir /site/es --piplite-wheels /wheels/comm-0.2.3-py3-none-any.whl
 ADD --checksum=sha256:fd25b21567f83f83b0b8bb1780a5458c6d4dd10bb07a22004424194022037f00 https://github.com/pyodide/pyodide/releases/download/314.0.6/pyodide-314.0.6.tar.bz2 /tmp/utilibre-pyodide.tar.bz2
 RUN python -c "import tarfile; a=tarfile.open('/tmp/utilibre-pyodide.tar.bz2'); assert all(m.name=='pyodide' or m.name.startswith('pyodide/') for m in a.getmembers()); a.extractall('/site', filter='data')" && rm /tmp/utilibre-pyodide.tar.bz2
+# Only browser Python is offered. Do not distribute unused native/Node CLI
+# launchers, notably the Windows Go executable bundled by upstream Pyodide.
+RUN echo 'ff250e09d613d6718b5fb5775ce78608ccf44cd45461d4116bbb5bd4e0e13e24  /site/pyodide/python.exe' | sha256sum -c - \
+ && rm /site/pyodide/python.exe /site/pyodide/python.bat /site/pyodide/python /site/pyodide/python_cli_entry.mjs
 FROM nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
+USER root
+RUN apk add --no-cache --upgrade tiff=4.7.2-r0
 COPY --from=build /site /usr/share/nginx/html
+USER 101:101
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

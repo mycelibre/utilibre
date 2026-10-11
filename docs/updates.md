@@ -5,6 +5,78 @@ version/digest pins; Redlib is built from an exact source commit and pinned
 base images. SearXNG has the guarded, daily updater below; other services
 remain reviewed rollouts. Production never runs a floating `latest` tag.
 
+## Library patch continuation — 11 October 2026
+
+Deployed a further dependency-only batch, preserving application versions,
+private data, invitation rules, privacy controls and the existing sandboxes:
+
+| Service | Changed runtime/dependencies | Meaningful verification |
+| --- | --- | --- |
+| Rallly 4.15.4 | fast-xml-parser 5.11.2; npm's tar 7.5.21 | Isolated native migrations, fictional poll invitation, XML parse/build/validation; unchanged application-tree hash for the subsequent npm-only patch |
+| Uptime Kuma 2.5.5 | Node 22.23.2, native Go healthcheck rebuilt with 1.26.9; protobufjs 7.6.6, tar 7.5.21, grpc-js 1.14.5 | Network-isolated native SQLite restore/login/status; protobuf round trip, native gRPC construction, archive extraction and native runtime health |
+| Reactive Resume 6.0.0 | Installed Seroval 1.6.8; npm's tar 7.5.21 | Two fictional accounts: ZIP export, JSON import, edit/reload, cross-account denial and deletion; subsequent npm-only patch preserves the entire app tree |
+| Penpot 2.18.2 | Backend Netty 4.2.17.Final, Jackson 2.22.3, lz4-java 1.11.4; installed admin-console Seroval 1.6.8 | Dependency-only native backend build; two isolated accounts, editable export/import/reload, denied cross-account access and deletion; public login and Authentik handoff |
+| Gathio / FerretDB 2.7.0 | Native FerretDB rebuilt with Go 1.26.9 and compatible database/network libraries | Isolated native database restore plus fictional event create/edit/ICS import/export; live synthetic create/read/ICS/deletion |
+
+These are **bounded patch/test results, not a clean bill of health**. In
+particular, replacing an installed Seroval module does not rebuild a separate
+precompiled SSR/browser bundle. Native application versions and privacy patches
+remain unchanged; complete bundle reachability review remains separate. The
+full FerretDB upstream test suite did not pass its original environment/compiler
+assumptions; six focused native packages and the actual isolated Gathio workflow
+did pass. Its old MCP SDK cannot be replaced with the current major API without
+application changes. The MCP listener remains explicitly disabled and those
+findings remain open; telemetry and trace export stay disabled.
+
+The first packaging attempt used package-directory symlinks. The running app
+resolved the new library, but image-layer analysis still retained old package
+files. Final recipes replace directories directly, and the next scan confirms
+the targeted old packages are absent without suppressing their advisories.
+The first public smoke harness used a historical wrong status hostname and
+checked Penpot before native dynamic initialization completed. Corrected it to
+the configured `status.utilibre.org` and actual visible login/OIDC controls;
+no access rule was relaxed to pass a test.
+
+Full deployed-image scan completed **20:45:52 UTC**: all **109 images / 175
+containers**, **510 host packages** and **19 source manifests** checked. Raw
+results: **64 critical / 3,551 high occurrences**. After package-target
+deduplication and exact, expiring reviews, **51 critical / 3,525 high remain
+pending**, versus 67 / 3,682 at the earlier 19:47 checkpoint. These are not
+confirmed exploits. The four newly revalidated zlib dispositions are limited
+to the exact Debian binary packages that do not contain the affected minizip
+code; raw findings remain available. The targeted old XML/Seroval/protobuf/tar
+and rebuilt esbuild packages no longer have those high/critical matches.
+
+The eight final services are running; Chromium public entry checks and Penpot's
+actual OIDC handoff passed at 20:42:56. Public Python calculation/pandas/plot
+also passed; retired CLI paths return real 404 responses. A read-only alert
+check found all catalogue endpoints recovered. Independent GitHub availability
+monitoring is enabled but had no recorded schedule-triggered runs; its manual
+run was stale. A fresh manual dispatch verifies availability only, not cron
+reliability. Do not clear that limitation on the strength of a manual run.
+
+Saved-work backups were retained and the expanded native backup was restored
+and verified in isolation. Temporary sharing content was not backed up. Unused
+Docker build cache older than one hour was reclaimed (14.5 GB reported), leaving
+about 18 GiB free on the root disk at 20:37 UTC. No application images, volumes,
+user documents or backups were pruned. Host available memory was about 20 GiB of
+34 GiB; this is an observation, not a concurrency guarantee.
+
+[Exact pins, reproducible builds, evidence, remaining boundaries and scoped rollback](../deployment/maintenance/library-patches-20261011.md).
+The follow-through also rebuilt Wishlist's **unchanged esbuild 0.19.12** with
+Go 1.26.9 and removed four unused native/Node CLI launchers from browser-only
+JupyterLite. Browser Python/WASM remains installed; its TIFF vendor update is
+included. Native Wishlist setup/list/item/persistence/access checks and the
+Spanish Python/pandas/matplotlib notebook passed against isolated candidates.
+The final candidates scan at 1 critical/68 high (Wishlist; pending exact zlib
+review) and 0 critical/0 high (JupyterLite); these are whole-image scanner
+observations, not safety certifications. Wishlist's native pre-release SQLite
+backup passed integrity/foreign-key restore checks. [Builds and scope](../deployment/maintenance/browser-binaries-20261011.md).
+Native Chrome/Chromium desktop and disposable network tests do not establish
+physical-mobile coverage or every production account workflow. No portal/UI
+release, Caddy change, registration change or additional public service is part
+of this batch.
+
 ## PrivateBin directory compatibility — 11 October, 19:58 UTC
 
 Deployed `utilibre-privatebin:2.0.6-security-20261011-p2` and its matching native
