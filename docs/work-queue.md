@@ -27,9 +27,13 @@ outstanding. No claim that the external-path performance issue is fixed.
 **07:17 UTC follow-up:** actual packet-delay testing identified a reproducible
 transport constraint: at about 151 ms, HTTP/1.1 reached 618 Mbps down / 586 up,
 versus HTTP/2's 224 / 59. HTTP/3 download was 213. These are controlled LAN tests,
-not promised outside results. The speed-only Caddy ALPN/Alt-Svc fix is prepared
-and negotiation-tested; the owner must apply it on the separate Caddy VM. Keep
-this item open until live negotiation and their outside result are checked.
+not promised outside results. The speed-only Caddy ALPN/Alt-Svc fix is now active:
+an HTTP/2-capable curl negotiated HTTP/1.1 with `Alt-Svc: clear` on the actual
+edge at 07:27 UTC, with normal TLS validation. The owner's latest result is
+150.86 Mbps down / 41.94 up, 158.10 ms ping and 0.12 ms jitter. Remaining outside
+throughput is unresolved. They use Ethernet, Firefox and Chromium with Tailscale
+connected for management. Exit-node selection and the actual client route remain
+to be checked; do not disconnect Tailscale or assume it carries public traffic.
 
 Overleaf CE is not suitable for unrestricted untrusted users without additional
 compile isolation. Public IRC/XMPP deferred: no defined community/account need,

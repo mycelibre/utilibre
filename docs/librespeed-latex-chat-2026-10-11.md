@@ -122,7 +122,7 @@ not establish that every low outside result has this sole cause or predict the
 owner's final throughput. The measurement algorithm and compensation factor
 remain unmodified.
 
-**Prepared, edge activation pending:** `deployment/librespeed/Caddyfile` now uses
+**Active on the edge, verified 11 October at 07:27 UTC:** `deployment/librespeed/Caddyfile` uses
 the supported hostname-specific [`tls` ALPN setting](https://caddyserver.com/docs/caddyfile/directives/tls#syntax)
 `http/1.1`, and sends `Alt-Svc: clear`. This avoids advertising HTTP/3 for normal
 new browser visits and clears older alternative-service advertisements. It does
@@ -140,9 +140,25 @@ the caveat above. Certificate verification was bypassed only for these synthetic
 loopback certificates, never for production-path tests. The lab config is
 `Caddyfile.protocol-check`; it must not replace the production Caddyfile.
 
-The owner must insert the two site settings in the existing speed block, validate
-and reload their separately managed Caddy VM. There is no remote Caddy admin/SSH
-access here. After reload, verify live negotiation/header, then one outside test.
+An HTTP/2-capable curl reached the actual Caddy edge using the speed hostname,
+normal TLS verification and a LAN address override. It negotiated HTTP/1.1 and
+received HTTP 200 with `Alt-Svc: clear`. The owner subsequently reported
+150.86 Mbps down, 41.94 Mbps up, 158.10 ms ping and 0.12 ms jitter. That is an
+improvement over the previous reported run, not proof that the remaining
+outside-path issue is resolved or that this change alone caused the difference.
+Their browser's actual connection protocol has not been captured. There is no
+remote Caddy admin/SSH access here.
+
+The owner tests on Ethernet with Firefox and Chromium and needs Tailscale to
+retain management access. Do not disconnect it. Whether an exit node or a
+specific advertised route carries the speed-test traffic remains unverified.
+[Tailscale's exit-node documentation](https://tailscale.com/docs/features/exit-nodes)
+(checked 11 October) distinguishes default private overlay traffic from public
+Internet traffic sent through an enabled exit node. Mere installation/enabling
+of Tailscale does not establish that it affects this test. Ask for the exit-node
+selection, then inspect the specific client route if necessary. Idle backend and
+gateway CPU were 0%; this is not a measurement of resource use during their run.
+
 Rollback removes only the site's `tls { alpn http/1.1 }` and `header Alt-Svc clear`;
 no state or data restore. Do not change the worker to inflate results.
 
