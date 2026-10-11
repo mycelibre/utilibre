@@ -21,7 +21,28 @@ Versions, fixed limits, public test-run links, effective startup dependencies an
 data-preserving rollback: [relay deployment](../deployment/community/turn/README.md).
 Real phones and two independently restrictive client networks remain untested;
 configured bandwidth ceilings are not achieved throughput or a capacity promise.
-The bilingual catalogue/help/transfer guide release is being checked separately.
+The bilingual catalogue/help/transfer guide release is live, commit `4ca145c`,
+image `public-utility-portal:0.1.0-pairdrop-relay-20261011`. Build, lint, typecheck,
+118 unit tests and 22 configuration-validator tests passed. Live Chromium checks
+passed for EN at 1280px and ES at 390px: card/help keyboard disclosure, correct
+PairDrop actions, language/canonical, guide text, sample download (195 bytes),
+normal-width overflow and no observed external HTTP requests/script errors.
+Candidate and live screenshots were inspected. Physical-phone compatibility is
+not implied. Evidence: `/opt/utilibre/reports/pairdrop-release-Hof7AS/live.json`.
+
+Separate existing interface limitation: doubling only the root text size at
+1280px overflows the unchanged desktop navigation; the guide text and 390px
+mobile layout fit. No CSS or design-system changes were made for this relay
+release. The text-resize observation is retained rather than claimed as a pass.
+
+Portal rollback: select the retained image
+`public-utility-portal:0.1.0-privatebin-uploads-20261010` in `PORTAL_IMAGE` and
+recreate only `portal` with `docker compose up -d --no-deps --no-build portal`.
+Preserve all other current environment values. Its old direct-only PairDrop copy
+would need reconciliation if the relay stays enabled. Private pre-release
+environment: `/opt/utilibre/pairdrop-portal-release-wxsRNP/previous.env`.
+Relay rollback is independent and documented in the deployment README; no
+user documents or transferred files need restoration.
 
 The preceding checkpoint below is historical: item 2's forwarding and external
 relay-test dependency is now closed. Items 4, 5 and 6 retain their stated external
