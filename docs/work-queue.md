@@ -37,8 +37,21 @@ and selects `Ethernet` for that destination. A fresh automatic-protocol Chromium
 run at 07:38 UTC, through the real edge with 150 ms isolated client packet delay,
 reached 799.56 Mbps down / 596.32 up using HTTP/1.1. All 61 backend responses were
 200; backend/gateway CPU quotas did not throttle. This is controlled LAN evidence,
-not the owner's WAN path. No new production tuning; outside browser protocol and
-path congestion/loss remain unmeasured. Do not disconnect Tailscale.
+not the owner's WAN path. The owner subsequently reported HTTP/1.1 in their
+browser. No new production tuning; path congestion/loss remain unmeasured.
+Do not disconnect Tailscale.
+
+**07:51 UTC independent Internet check: complete.** The owner authorized one
+manual GitHub-hosted test from Azure `eastus2`. Public DNS/HTTPS reached the real
+public edge, without a LAN override or artificial delay: **859.14 Mbps down,
+318.52 Mbps up, 93.40 ms ping, 0.10 ms jitter**. HTTP/1.1; all 52 observed test
+responses 200; no outside application requests, page errors or browser storage.
+[Run evidence](https://github.com/mycelibre/utilibre/actions/runs/38122737099).
+The reusable workflow is manual-only, time-bounded and stores only synthetic
+results in its job log. No visitor instrumentation or production changes. The
+owner's lower throughput is not explained by a universal 150 Mbps server cap;
+its exact path/endpoint bottleneck is still unproven. No concurrency/ISP-capacity
+promise follows from one external run.
 
 Overleaf CE is not suitable for unrestricted untrusted users without additional
 compile isolation. Public IRC/XMPP deferred: no defined community/account need,

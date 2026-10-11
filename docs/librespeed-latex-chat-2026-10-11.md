@@ -146,8 +146,8 @@ received HTTP 200 with `Alt-Svc: clear`. The owner subsequently reported
 150.86 Mbps down, 41.94 Mbps up, 158.10 ms ping and 0.12 ms jitter. That is an
 improvement over the previous reported run, not proof that the remaining
 outside-path issue is resolved or that this change alone caused the difference.
-Their browser's actual connection protocol has not been captured. There is no
-remote Caddy admin/SSH access here.
+The owner later reported `1.1` from the browser's Protocol column; no full browser
+trace was requested or captured. There is no remote Caddy admin/SSH access here.
 
 The owner tests on Ethernet with Firefox and Chromium and needs Tailscale to
 retain management access. Do not disconnect it. They confirmed exit node `None`.
@@ -182,10 +182,66 @@ no state or data restore. Do not change the worker to inflate results.
 
 Reproduction: `probe-path.mjs` uses native parameters, mode `SPEED_PROTOCOL=auto`
 (default), `h1`, `h2` or `h3`, and optional `SPEED_TEST_ORDER=P_U` for upload or
-`P_D_U` for both directions. Run only against
+`P_D_U` for both directions. `SPEED_PATH=edge` (default) uses the LAN address
+override; `SPEED_PATH=public` uses public DNS without an override. Targets remain
+fixed to our speed instance; arbitrary URLs are not accepted. Run only against
 authorized infrastructure, one at a time. Without the isolated delayed namespace
 it tests ordinary LAN behavior. The disposable client and Caddy test containers
 are removed after checks; their namespace disappears with its `netem` queue.
+
+### Independent Internet test — 11 October, 07:51 UTC
+
+At the owner's explicit request, added and ran the manual-only
+`.github/workflows/librespeed-external.yml`. It reuses `probe-path.mjs` and the
+existing external-check convention: SHA-pinned checkout, read-only repository
+permission, no checkout credentials persisted, exact Playwright Core 1.62.1,
+and the hosted runner's installed Chrome. No visitor telemetry, secrets, test
+accounts, arbitrary targets, scheduled runs or production configuration changes.
+
+[Successful run 38122737099](https://github.com/mycelibre/utilibre/actions/runs/38122737099)
+tested commit `54a80b5df881df910866420f6b0a9d5d8e993a0b`. Runner setup explicitly
+reported cloud `Azure`, region `eastus2`, Ubuntu image `20261004.327.1`.
+Chrome was `154.0.8037.97`. Normal public DNS and validated HTTPS reached
+`49.12.84.228:443`, negotiated HTTP/1.1, with no artificial network delay or
+browser throttling. Native `P_D_U`, three ping samples, fixed eight-second
+measurement per direction and unchanged native stream/compensation settings:
+
+| Measurement | Result from external runner |
+| --- | ---: |
+| Download: Utilibre to runner | 859.14 Mbps |
+| Upload: runner to Utilibre | 318.52 Mbps |
+| Native HTTP ping | 93.40 ms |
+| Native jitter | 0.10 ms |
+
+All 52 observed backend responses were HTTP 200. Zero application requests to
+other origins, zero page errors, zero cookies and zero local/session storage
+entries. Only generated test bytes were transferred. The whole GitHub job took
+49 seconds; the measurement timestamp was `2026-10-11T07:51:26.967Z`.
+
+This establishes actual Internet throughput from one independent data-center
+route, not just LAN capacity, and excludes a universal 150 Mbps service ceiling
+at that time. It does not establish the hosting contract's uplink allocation,
+simultaneous-user capacity, home-ISP speed, or the exact cause of the owner's
+lower result. Route congestion/loss and endpoint differences remain unmeasured.
+The user's HTTP/1.1 report is consistent with the corrected protocol.
+
+Safety bounds: manual dispatch only, no workflow inputs or retry loop, one job
+at a time, three-minute job timeout, 20-second navigation timeout, 45-second
+completion timeout and browser cleanup. The service's existing six-transfer
+concurrency ceiling and per-request payload bounds remain unchanged. This is
+time-bounded, not a cumulative byte quota; even a short test can transfer hundreds
+of MB or several GB. Do not use frequent scheduled speed tests as monitoring.
+The script reports aggregate synthetic results only, not request bodies/headers
+or visitor data. Its assertions verify positive native results, successful test
+responses and the no-storage/no-third-party-request checks. YAML parsing, scope
+checks, JavaScript syntax and rejection of an unsupported route passed locally;
+the full new public-path test passed in the hosted runner.
+
+Re-run only when needed: `gh workflow run librespeed-external.yml --ref main`.
+Rollback: disable/delete this manual workflow or revert its integration commit;
+no production service or data migration needs reversal. Sources:
+[GitHub manual workflows](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow),
+[hosted runner infrastructure](https://docs.github.com/en/actions/concepts/runners/github-hosted-runners#cloud-hosts-used-by-github-hosted-runners).
 
 Before work, this VM had 21 GiB RAM available and 32 GiB root disk available.
 The hosting contract’s exact network allocation remains unverified; the previous
