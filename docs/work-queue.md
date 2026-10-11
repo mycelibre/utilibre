@@ -1,5 +1,49 @@
 # Operator work queue — reconciled 11 October 2026
 
+## Maintenance-only closeout — 11 October
+
+Owner request: finish the latest queue's **1, 4–6**; no further installations.
+Earlier identically numbered historical queues below are not this scope.
+
+| Item | Completed work | Boundary |
+| --- | --- | --- |
+| 1 — Root-disk cleanup | Removed eight reviewed disposable build-dependency directories, npm download cache and old unused Docker build cache. Root went from 93%/11 GiB free to 88%/18 GiB free; stayed at 88% after release builds. | No images, rollback copies, live assets, source, account data, backups or temporary-disk content removed. Dependencies can be rebuilt from retained pins. |
+| 4 — Maintenance | Daily bounded upstream release/published-advisory review covers 108 catalogue providers, including all eleven ready additions; existing alerts cover stale/failed reviews and new high/critical advisories. FreshRSS updated to 1.30.1 after staged restore, login and article export/import checks. | No automatic bulk upgrades or security certification. Non-GitHub advisory and dependency/image checks remain part of manual release review. SearXNG's existing guarded updater is unchanged. |
+| 5 — Usability | Visible example/guide links on supported cards, eight concrete launch labels, explicit Grist/Candlr/Bookplate/FreshRSS login guidance, and direct guide return/practice/steps navigation in EN/ES. | Existing access rules unchanged. Native SearXNG/Redlib return links verified; no injected cross-app overlay or upstream fork. Chromium desktop/mobile emulation is not physical-device certification. |
+| 6 — Visibility | Checked five pending GitHub and three Codeberg requests; Kittygram has an approving review but remains unmerged. All 196 canonical pages passed public SEO checks; IndexNow accepted 26 changed/new URLs with HTTP 200. | PrivateBin directory's upload marker still needs the upstream rescan; no duplicate submission. Bing still shows the older successful 168-URL fetch. Google sitemap acceptance is owner-confirmed, indexing/performance not measured here. |
+
+Release: `public-utility-portal:0.1.0-maintenance-20261011`, image config
+`sha256:f0643df2848af0c0a91e52f50bc841304f99b33c5296aab0de70cc5052fa065c`.
+Portal is healthy. Only portal and the explicitly reviewed FreshRSS security
+update were redeployed; no new application, account enrollment or edge change.
+The runtime maintenance timer is an operator check, not a new visitor service.
+
+Checks: production build, typecheck/lint, 120 existing unit tests, four new
+maintenance tests, SearXNG pagination/redaction checks; two public EN/ES journey
+runs covering account disclosures with keyboard, nine example/guide links,
+actual practice download, preserved anchors/new-tab tools, direct return and
+200% text reflow. Tested at 1366px desktop and 390px mobile emulation; screenshots
+inspected. No external browser requests or page errors in those journeys.
+The Impeccable polish guidance kept existing typography, palette and controls;
+no design-system exception or unrelated sidecar edit was made.
+
+Evidence: `/opt/utilibre/reports/maintenance-20261011/`; maintenance report
+`/var/lib/utilibre-maintenance/latest.json`. FreshRSS staged restore and native
+export/import evidence, exact image pin and rollback are in [updates](updates.md).
+Existing five-minute monitor read-only check reports all 59 observed monitors
+and resource thresholds healthy. This is a fresh check, not uptime history.
+
+Portal rollback: set **only** `PORTAL_IMAGE` in the root `.env` back to
+`public-utility-portal:0.1.0-creative-20261011`, then from this repository run
+`docker compose up -d --no-deps --pull never portal`. The old image and private
+environment copy are retained in `/opt/utilibre/releases/maintenance-20261011/`
+and Docker (`public-utility-portal:rollback-maintenance-20261011`). Do not restore
+the whole environment over unrelated changes. No portal data migration occurred.
+
+Unselected work remains separate: recovery-generation housekeeping and real-
+device compatibility checks. Graphite/microStudio stay withheld and expansion
+is paused; neither becomes an install task without a new owner request.
+
 ## Creative and personal-record applications — 11 October
 
 Eleven additions are deployed with 22 EN/ES guides, fictional editable examples,

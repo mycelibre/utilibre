@@ -1,5 +1,28 @@
 # Catalog SEO verification — 9 October 2026
 
+## Maintenance release — 11 October
+
+The live sitemap now contains **196 canonical pages**, including the 22 creative-
+batch guides. The complete bounded public audit passed metadata, canonical,
+language, initial-HTML heading/image semantics, sitemap and robots checks.
+IndexNow accepted one notification for those 22 new guides plus the EN/ES
+catalogue and guide indexes: **26 URLs, HTTP 200**, ownership verification not
+pending. No private application URLs, query strings, visitor data or unchanged
+full-site resubmission were sent. This is notification evidence, not indexing,
+rankings, traffic or AI citation evidence.
+
+Bing's authenticated API still reports verified ownership and the sitemap as
+**Success**, with the older **168-URL** snapshot fetched **10 October 15:58:21 UTC**.
+This is not a claim that today's 196 pages have been crawled or indexed. Google
+sitemap acceptance is already owner-confirmed; do not repeat the older access
+request below. No authenticated Search Console performance data is available.
+
+Catalogue practice/guide links are now visible without opening the privacy
+disclosure. Guides offer direct catalogue return, practice and step anchors.
+Links retain their existing canonical EN/ES routes. No visitor analytics,
+referral collection, new landing-page duplication or geographic redirects.
+Verification and release/rollback receipt: [work queue](work-queue.md).
+
 ## Search discovery follow-up — 10 October, 23:16 UTC
 
 The public robots file, sitemap and active IndexNow proof all return HTTP 200.

@@ -46,3 +46,10 @@ const micro=account('bookplate','publicMicrostudioUrl',t('Create a game · micro
 const mp=creativeProviders.microstudio;
 entries.push({...micro,id:'microstudio',providerId:'microstudio',discoveryGroup:'creative',upstreamProject:mp.project,upstreamSourceUrl:mp.sourceUrl,license:mp.license,installedVersion:mp.installedVersion,operationalStatus:'not-deployed',accountAccess:undefined,unavailableReason:micro.help,limitation:micro.help,filesUploaded:false,launchLabel:t('microStudio unavailable','microStudio no disponible'),dataFlow:micro.retention,temporaryStorage:micro.retention,logging:t('No microStudio application or account service is running here.','Aquí no funciona ninguna aplicación ni servicio de cuentas de microStudio.')});
 export const creativeAdditions=entries;
+const actionLabels: Partial<Record<Id, LocalizedText>> = {
+ openplan3d:t('Sketch a floor plan','Bocetar un plano'), blockbench:t('Create a 3D model','Crear un modelo 3D'),
+ glyphr:t('Design a font','Diseñar una tipografía'), jscad:t('Model with code','Modelar con código'),
+ fossflow:t('Draw a diagram','Dibujar un diagrama'), vvveb:t('Edit a page','Editar una página'),
+ grid:t('Prepare a 3D print','Preparar una impresión 3D'), openreel:t('Edit a video','Editar un video'),
+};
+for (const entry of entries) if (actionLabels[entry.id as Id]) entry.launchLabel=actionLabels[entry.id as Id];

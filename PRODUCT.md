@@ -39,6 +39,11 @@ encouraged to support it.
 
 ## Service admission rule
 
+Operator update, 2026-10-11: expansion is closed. Prioritize the existing
+collection's reliability, privacy, usability and maintenance. Earlier proposed
+additions do not authorize further installations or activating held services.
+Any new service needs a new explicit owner request.
+
 Operator update, 2026-10-05: useful no-account browser tools are also admitted
 when they complement the collection, even if the upstream offers free hosting.
 The requested PDF/OCR, conversion, encryption, diagram, QR and developer tools

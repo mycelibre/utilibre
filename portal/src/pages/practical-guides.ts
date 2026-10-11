@@ -21,6 +21,12 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
   const main = element('main', 'page-shell task-guide tool-page'); main.id = 'main-content'; main.tabIndex = -1;
   const header = element('header', 'page-header');
   const copy = guide?.copy[language];
+  if (guide) {
+    const back = element('nav', 'guide-links');
+    back.setAttribute('aria-label', es ? 'Volver' : 'Return');
+    back.append(link(routePath('home', language), es ? 'Volver a las herramientas' : 'Back to tools'));
+    header.append(back);
+  }
   append(header, link(routePath(guide ? 'guides' : 'home', language), es ? (guide ? 'Todas las guías' : 'Volver a las herramientas') : (guide ? 'All guides' : 'Back to tools')),
     element('h1', '', copy?.title || (es ? 'Guías para terminar una tarea' : 'Guides for getting a task done')),
     element('p', 'hero-lead', copy?.intro || (es ? 'Seguí pasos concretos con ejemplos pequeños, revisá el resultado y guardá tu trabajo.' : 'Follow concrete steps with small examples, check the result and save your work.')));
@@ -70,6 +76,11 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
     return main;
   }
   const start = guideStarts[guide.id]?.[language];
+  const jump = element('nav', 'guide-links');
+  jump.setAttribute('aria-label', es ? 'En esta guía' : 'In this guide');
+  if (guide.samples.length) jump.append(link('#practice', es ? 'Archivo de práctica' : 'Practice file'));
+  jump.append(link('#steps', es ? 'Ir a los pasos' : 'Go to the steps'));
+  header.append(jump);
   const startBox = start ? section(es ? 'Empezá con el ejemplo' : 'Start with the example', start.result) : null;
   if (startBox && start) {
     startBox.classList.add('guide-quick-start'); startBox.id = 'practice';

@@ -1,0 +1,23 @@
+[Unit]
+Description=Read-only Utilibre upstream release and published-advisory review
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/ubuntu/freetools
+Environment=PATH=/root/.nvm/versions/node/v24.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=GIT_TERMINAL_PROMPT=0
+ExecStart=/usr/bin/flock -n /run/utilibre-maintenance-review.lock /usr/bin/env node scripts/review-upstream-maintenance.mjs
+StateDirectory=utilibre-maintenance
+StateDirectoryMode=0700
+UMask=0077
+TimeoutStartSec=25min
+MemoryMax=256M
+CPUQuota=25%
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/utilibre-maintenance /run
+PrivateTmp=true
+NoNewPrivileges=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX

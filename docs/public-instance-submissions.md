@@ -1,5 +1,21 @@
 # Public instance submissions, checked 11 October 2026
 
+## Maintenance follow-up at 10:33 UTC
+
+The five pending GitHub requests below and all three Codeberg requests remain
+open. Kittygram PR100 now has an approving review from `koru` (07:25 UTC) and
+a comment accepting the server-side changes; it is **not merged/listed yet**.
+The public PR page was readable even though the token lacks issue-comment scope.
+No response is requested. No maintainer message, duplicate submission or PR
+mutation was made. Filtered API receipt:
+`/opt/utilibre/reports/maintenance-20261011/visibility.json`.
+
+PrivateBin's directory still marks file upload disabled. Its public instance
+has uploads enabled; the previously established scanner-refresh dependency
+below remains. Do not label the requested green check complete or resubmit the
+same instance. Its country/uptime fields are the directory's observations, not
+verified facts about the origin host or our own uptime measurement.
+
 ## Codeberg requests submitted — 11 October
 
 The owner authorized submission using the `mycelibre` Codeberg account. These

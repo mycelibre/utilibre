@@ -1,5 +1,10 @@
 # Services and upstream applications
 
+11 October maintenance: FreshRSS is now **1.30.1** with closed registration and
+the existing text-first/privacy configuration. Its narrowly scoped native
+internal-host allowance preserves RSSHub only. [Security update, tested restore
+and rollback](updates.md#freshrss-security-update).
+
 TeXlyre 0.13.0-p1 is served at `https://latex.utilibre.org/` (private port 3226).
 Local browser compilation and project/PDF export use the complete upstream app;
 no server compiler, cloud account or collaboration service is added.
@@ -61,7 +66,7 @@ The original services retain these boundaries:
 | SearXNG | Metasearch. Utilibre sends queries to selected external engines and returns their results. Additional independently operated instances support SearXNG's decentralized model. | No application account |
 | FreshRSS | Persistent RSS/Atom reader. The server stores subscriptions, reading state, preferences, and account data. | Operator-provisioned accounts; a request workflow is planned but not yet open |
 | Redlib | Alternative Reddit frontend behind Anubis. It retrieves pages and proxies media through Utilibre; Reddit may change or block its upstream technique at any time. | No Redlib account; a browser challenge normally requires JavaScript |
-| PrivateBin | Encrypted-paste service. Encryption and decryption happen in the browser; the server stores ciphertext and metadata without the URL-fragment key. File uploads are disabled. | No account |
+| PrivateBin | Encrypted-paste service. Encryption/decryption happen in the browser; the server stores ciphertext without the URL-fragment key. Attachments up to 25 MB; maximum expiry one week, on backup-excluded temporary storage. | No account |
 
 Exact versions, source revisions, image digests, licenses, and local
 modifications are recorded in

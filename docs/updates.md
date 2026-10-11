@@ -5,6 +5,104 @@ version/digest pins; Redlib is built from an exact source commit and pinned
 base images. SearXNG has the guarded, daily updater below; other services
 remain manual. Production never runs a floating `latest` tag.
 
+## Maintenance coverage from 11 October 2026
+
+Expansion is paused by the owner. `scripts/review-upstream-maintenance.mjs`
+reads the existing catalogue, including all eleven ready creative additions,
+instead of keeping a separate twelve-application list. The initial run checked
+108 providers without lookup failures. This is catalogue coverage, not a count
+of running or publicly usable services. Held builds remain held.
+
+`utilibre-maintenance-review.timer` is enabled for 03:20 UTC daily plus up to
+15 minutes' jitter. The read-only systemd run passed in production. It uses
+Node 24, the existing authenticated GitHub CLI and Git, at most three concurrent
+lookups, 25-second request deadlines, 256 MiB RAM and 25% of one CPU. It does
+not install packages, pull images, execute upstream code or query visitor data.
+The private report is `/var/lib/utilibre-maintenance/latest.json`; SearXNG's
+installed reference is read from its guarded updater's deployment manifest.
+
+```sh
+node --test scripts/review-upstream-maintenance.test.mjs
+systemctl start utilibre-maintenance-review.service
+node scripts/review-upstream-maintenance.mjs --only=freshrss
+node deployment/community/monitor-alerts.mjs --check-only
+```
+
+The existing five-minute monitor/SMTP workflow now flags reports older than
+36 hours, missing upstream/advisory lookups, failed maintenance units and new
+high/critical published advisories requiring review. It also covers the saved-
+records backup unit. Alerts still require two observations and use the existing
+12-hour repeat interval. A manual `--check-only` sends no mail and changes no
+alert state. No new analytics or notification service was installed.
+
+Review the report weekly and security alerts promptly. A changed default branch
+is not a release recommendation. GitHub coverage is published repository
+advisories, paginated up to 300 with partial results labelled; GitLab/Forgejo
+advisories need primary-source review. This is not an SBOM/dependency scan or
+proof that a project is secure. Keep lockfile/image security review in each
+release gate. [GitHub advisory API](https://docs.github.com/en/rest/security-advisories/repository-advisories).
+
+The new tools reuse `docs/creative-batch-2026-10-11.md` and their canonical
+`reviewDocument`/exact-source fields. Rebuild only the changed application;
+repeat its native synthetic import/edit/export check, browser-network review,
+and source-offer check. For Grist, Candlr and Bookplate also repeat account
+isolation and native restore tests in `deployment/records/`. HTTP readiness
+alone does not approve a release. Preserve prior images and database-compatible
+recovery snapshots before each change. No moving-tag automatic upgrade was added.
+
+Pause this reviewer with `systemctl disable --now utilibre-maintenance-review.timer`;
+it does not alter any application. The canonical check is also available through
+`deployment/utilibre/scripts/update-check.sh` and `/opt/utilibre/scripts/update-check.sh`.
+
+### FreshRSS security update
+
+FreshRSS was updated from 1.29.1 to **1.30.1**, source
+`4a810f1624b9d0b97b4400614cf9aacc8ada40e3`, official image index
+`sha256:48b63b9bc3d042a1301c32971b01af8841c7f059b452589c5bf77f475ba44c61`.
+The published [high-severity feed-fetch advisory](https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-fv9v-wcrw-mhg6)
+affects the former version; [1.30.1](https://github.com/FreshRSS/FreshRSS/releases/tag/1.30.1)
+also includes authentication/import hardening. Uptime Kuma's newly published
+GHSA-wf2j-5mc7-5c4w is fixed in 2.5.4; installed 2.5.5 was retained. This review
+does not dismiss Kuma's documented authenticated-monitor/network trust boundary.
+
+The FreshRSS candidate passed an isolated native PostgreSQL/files restore,
+login and fictional-article check before rollout. Native JSON/ZIP article export,
+two independent account imports and reopening passed with 1.30.1. The fixture
+was removed through native controls; no real account content was edited.
+Evidence: `/opt/utilibre/reports/freshrss-browser-restore-m_085ovb/` and
+`/opt/utilibre/reports/freshrss-articles-odriazkn/` (private recovery data).
+
+Production retains closed registration (`max_registrations=1`), silent logging,
+text-first CSP, no-referrer, and the existing refresh interval. The supported
+`INTERNAL_HOST_ALLOWLIST=rsshub:1200` keeps the private integration without
+allowing other internal destinations. Native resolver tests rejected loopback,
+LAN, metadata IPv4, IPv6 loopback and NAT64 metadata addresses, and the wrong
+RSSHub port. A native EFF Atom fetch succeeded. Login over verified private-edge
+HTTPS loaded without external browser assets; this is not an independent public
+network test. Authenticated export/import checks used isolated synthetic accounts.
+
+For rollback, retain the former 1.29.1 image with digest
+`ab6b363102ccdbc39f6a62db926f567c61a5289bf25ba460f1c34423d8cc1a4d`
+and the pre-update native snapshot above. Do not downgrade a migrated database
+blindly or overwrite newer account work. Preserve current data first, then use
+the reviewed native restore workflow if schema compatibility requires it. Restore
+only the FreshRSS pin and recreate only FreshRSS with its privacy overlay; never
+replace the entire live Compose file. The old version has known security issues,
+so prefer disabling access during repair over leaving a vulnerable rollback public.
+
+### Reviewed disk cleanup
+
+Root use fell from 93% (11 GiB available) to 88% (18 GiB available) after removing
+eight explicitly reviewed build-dependency directories, npm's downloadable cache,
+and 616 MB of unused Docker build cache older than 24 hours. Filesystem figures
+are rounded observations, not sums of `du` values (dependencies share hardlinks).
+`scripts/clean-reviewed-build-caches.mjs` defaults to dry-run and refuses symlink,
+tracked-file and container-mount overlaps. No user data, source checkout, live
+static output, image, rollback image, backup or temporary-data disk was removed.
+Deleted caches must be regenerated from retained pinned manifests; they cannot
+be instantly restored. The retained Graphite Sass dependency is still needed by
+Vvveb's build and was deliberately left alone.
+
 ## Guarded SearXNG automation
 
 `scripts/searxng-maintain.py` checks the official registry, resolves an immutable
@@ -191,8 +289,8 @@ Then test the changed service through the real edge:
 - Anubis/Redlib: challenge, cookies, page/media/Range, and redirect hardening;
 - FreshRSS: login, API if supported, feed refresh, internal curated feed, and
   registration remaining closed;
-- PrivateBin: create, read, delete, expiry choices, size rejection, and no file
-  upload; or
+- PrivateBin: create, read, delete, expiry choices (maximum one week), the
+  25 MB attachment limit, oversize rejection and low-space safeguard; or
 - RSSHub: only approved internal routes, timeouts/cache, and no public port.
 
 Inspect container restarts, CPU/RAM/PIDs, network I/O, database/directory size,

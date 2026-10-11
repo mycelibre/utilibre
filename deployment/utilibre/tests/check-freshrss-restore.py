@@ -35,6 +35,12 @@ def cli(container,*args):return docker('exec','-u','www-data',container,'php',*a
 try:
  assert shutil.disk_usage(stage).free>5*1024**3,'Retained backups must keep their disk floor'
  image=docker('inspect',LIVE,'--format','{{.Image}}').decode().strip()
+ candidate=os.environ.get('FRESHRSS_TEST_IMAGE')
+ if candidate:
+  import re
+  assert re.fullmatch(r'docker.io/freshrss/freshrss:[\w.-]+@sha256:[0-9a-f]{64}',candidate),'Candidate must be an immutable official image'
+  docker('image','inspect',candidate)
+  image=candidate
  pgimage=docker('inspect',LIVE_DB,'--format','{{.Image}}').decode().strip()
  cli(LIVE,'/var/www/FreshRSS/cli/create-user.php','--user',username,'--password',fixture['password'],'--language','en','--no-default-feeds')
  created=True
@@ -93,7 +99,7 @@ file_put_contents($p,"<?php\\nreturn ".var_export($c,true).';');'''
     if response.status==200:break
   except Exception:time.sleep(.5)
  run('node',str(REPO/'deployment/utilibre/tests/check-freshrss-restored-browser.mjs'),str(fixture_file),str(report/'restored.png'),str(report/'browser.json'))
- evidence={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'passed':True,'snapshot':str(snapshot),'elapsedSeconds':round(time.monotonic()-started,1),'checks':['native disposable account and fictional article','PostgreSQL custom dump and matching files','checksum verification','separate database and application with no Internet route','native restored browser login and article','live fixture deleted through native CLI'],'limitations':['one fictional account and article','no remote feed fetch','same VM rehearsal, not whole-host recovery']}
+ evidence={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'passed':True,'testedImage':image,'snapshot':str(snapshot),'elapsedSeconds':round(time.monotonic()-started,1),'checks':['native disposable account and fictional article','PostgreSQL custom dump and matching files','checksum verification','separate database and application with no Internet route','native restored browser login and article','live fixture deleted through native CLI'],'limitations':['one fictional account and article','no remote feed fetch','same VM rehearsal, not whole-host recovery']}
  (report/'result.json').write_text(json.dumps(evidence,indent=2)+'\n')
  print('PASS: FreshRSS restored login and article; evidence '+str(report/'result.json'))
 finally:

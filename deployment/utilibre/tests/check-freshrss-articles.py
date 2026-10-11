@@ -10,7 +10,7 @@ import tempfile
 import time
 
 REPO = Path(__file__).resolve().parents[3]
-IMAGE = 'sha256:ab6b363102ccdbc39f6a62db926f567c61a5289bf25ba460f1c34423d8cc1a4d'
+IMAGE = 'docker.io/freshrss/freshrss:1.30.1@sha256:48b63b9bc3d042a1301c32971b01af8841c7f059b452589c5bf77f475ba44c61'
 PGIMAGE = 'sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73'
 os.umask(0o077)
 REPORT = Path(tempfile.mkdtemp(prefix='freshrss-articles-', dir='/opt/utilibre/reports'))

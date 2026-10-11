@@ -149,17 +149,23 @@ export function renderCatalogRow(
   }
   if (guide) { const a = element('a', 'catalog-guide-link', `${language === 'es' ? 'Guía' : 'Guide'}: ${guide.copy[language].title}`); a.href = practicalGuidePath(guide.id, language); details.append(a); }
   const exampleGuides: Record<string, string> = { bentopdf: 'scan', minipaint: 'image', 'omni-compress-image': 'image', drawio: 'starting-projects', excalidraw: 'starting-projects', markmap: 'mindmap', rawgraphs: 'chart', pairdrop: 'transfer' };
-  const exampleGuide = practicalGuides.find(item => item.id === exampleGuides[entry.id]);
+  const exampleGuide = practicalGuides.find(item => item.id === exampleGuides[entry.id]) ?? (guide?.hasSamples ? guide : undefined);
   if (launch && exampleGuide?.hasSamples) {
     const example = element('a', 'catalog-example-link', language === 'es' ? 'Probalo con un ejemplo' : 'Try an example');
     example.href = `${practicalGuidePath(exampleGuide.id, language)}#practice`;
     example.setAttribute('aria-label', `${example.textContent}: ${name}`);
     content.append(example);
+  } else if (launch && guide) {
+    const instructions = element('a', 'catalog-example-link', language === 'es' ? 'Ver la guía paso a paso' : 'Read the step-by-step guide');
+    instructions.href = practicalGuidePath(guide.id, language);
+    instructions.setAttribute('aria-label', `${instructions.textContent}: ${name}`);
+    content.append(instructions);
   }
   if (entry.bestFor) details.append(element('p', 'catalog-ledger-best-for', `${t('home.catalog.bestFor')}: ${entry.bestFor[language]}`));
   if (entry.help) details.append(element('p', '', localized(entry.help, language)));
+  if (entry.accountAccess) details.append(element('p', '', accountRecoveryText(entry, language)));
   if (entry.accountAccess === 'invite-required') {
-    details.append(element('p', '', accountRecoveryText(entry, language)), element('p', '', language === 'es'
+    details.append(element('p', '', language === 'es'
       ? 'La aprobación es manual. Si no tenés una aplicación de correo configurada, escribí a admin@utilibre.org e indicá la herramienta. No mandés contraseñas ni documentos privados.'
       : 'Approval is manual. If no email application is configured, write to admin@utilibre.org and name the tool. Never send passwords or private documents.'));
   }

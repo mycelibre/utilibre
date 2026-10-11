@@ -25,6 +25,8 @@ docker compose logs --tail=100 rsshub
 Do not publish RSSHub to diagnose it. Use its container health or test from
 FreshRSS on the backend network. A FreshRSS subscription may reference an
 approved RSSHub route as `http://rsshub:1200/<route>`.
+FreshRSS 1.30.1 uses its supported `INTERNAL_HOST_ALLOWLIST=rsshub:1200` setting
+for this exact integration. Do not use `*` or allow entire private subnets.
 
 ## Accounts and retention
 

@@ -32,7 +32,7 @@ export interface ReviewedFossProvider {
   installedVersion: string;
   integration: 'container' | 'source-build';
   reviewStatus: 'deployed' | 'staged';
-  reviewDocument: 'docs/creative-batch-2026-10-11.md' | 'docs/texlyre-2026-10-11.md' | 'docs/librespeed-latex-chat-2026-10-11.md' | 'docs/addy-deployment-2026-10-09.md' | 'docs/privatebin-discovery-2026-10-09.md' | 'docs/trip-review-2026-10-09.md' | 'docs/donetick-deployment-2026-10-09.md' | 'docs/beaverhabits-deployment-2026-10-09.md' | 'docs/projects-deployment-2026-10-09.md' | 'docs/kokoro-web-deployment-2026-10-09.md' | 'docs/family-chess-deployment-2026-10-09.md' | 'docs/gravity-deployment-2026-10-09.md' | 'docs/knit-deployment-2026-10-09.md' | 'docs/newton-deployment-2026-10-09.md' | 'docs/autoredact-deployment-2026-10-09.md' | 'docs/rustpad-deployment-2026-10-09.md' | 'docs/moocup-deployment-2026-10-09.md' | 'docs/services.md' | 'docs/toolbox-review.md' | 'docs/service-pack.md' | 'docs/newsletters-deployment-2026-10-09.md' | 'docs/one-file-core-deployment-2026-10-09.md' | 'docs/tiddlywiki-deployment-2026-10-09.md';
+  reviewDocument: 'docs/updates.md' | 'docs/creative-batch-2026-10-11.md' | 'docs/texlyre-2026-10-11.md' | 'docs/librespeed-latex-chat-2026-10-11.md' | 'docs/addy-deployment-2026-10-09.md' | 'docs/privatebin-discovery-2026-10-09.md' | 'docs/trip-review-2026-10-09.md' | 'docs/donetick-deployment-2026-10-09.md' | 'docs/beaverhabits-deployment-2026-10-09.md' | 'docs/projects-deployment-2026-10-09.md' | 'docs/kokoro-web-deployment-2026-10-09.md' | 'docs/family-chess-deployment-2026-10-09.md' | 'docs/gravity-deployment-2026-10-09.md' | 'docs/knit-deployment-2026-10-09.md' | 'docs/newton-deployment-2026-10-09.md' | 'docs/autoredact-deployment-2026-10-09.md' | 'docs/rustpad-deployment-2026-10-09.md' | 'docs/moocup-deployment-2026-10-09.md' | 'docs/services.md' | 'docs/toolbox-review.md' | 'docs/service-pack.md' | 'docs/newsletters-deployment-2026-10-09.md' | 'docs/one-file-core-deployment-2026-10-09.md' | 'docs/tiddlywiki-deployment-2026-10-09.md';
   role: 'public-application';
   maintainer: 'independent-upstream';
   selfHostable: true;
@@ -164,7 +164,7 @@ export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider>
   ntfy: toolboxProvider('ntfy', 'binwiederhier/ntfy', '10cb6506f836dbb00bb77e3b52669f6ace37f555', 'Apache-2.0', '2.28.0', 'binwiederhier/ntfy:v2.28.0@sha256:6ef4b819f722fccdc036af611c4774cfdc2de821ab74fdd48bbf4c9d6f8973da'),
   yopass: toolboxProvider('Yopass', 'jhaals/yopass', '34d8bbcc4aac14dbf326d46dc69d26895b7f5282', 'Apache-2.0', '14.10.0', 'jhaals/yopass:14.10.0@sha256:6c33d9c813f77bae70787e1bce76710840ff654f454998b01f8dacc0a7988fd3'),
   pairdrop: { ...toolboxProvider('PairDrop', 'schlagmichdoch/PairDrop', '4862ba3067be1a0f2e0d1e94861dc9200b5bfeea', 'GNU GPLv3 (version scope unconfirmed)', '1.11.2', 'ghcr.io/schlagmichdoch/pairdrop:v1.11.2@sha256:c4b30977264a76e335740089e693a52a0d0d616330dec7f93c7b96beef7b4a02'), licenseEvidenceUrls: ['https://github.com/schlagmichdoch/PairDrop/blob/4862ba3067be1a0f2e0d1e94861dc9200b5bfeea/LICENSE', 'https://github.com/schlagmichdoch/PairDrop/blob/4862ba3067be1a0f2e0d1e94861dc9200b5bfeea/package.json#L12'] },
-  'uptime-kuma': toolboxProvider('Uptime Kuma', 'louislam/uptime-kuma', 'c98982ac60eccb74cdab1d04c30e18057895ce87', 'MIT', '2.5.5', 'louislam/uptime-kuma:2.5.5@sha256:c74379ac4509ce2d2c2633f509e67003ee2e45b6e995c5e43fc101f45a0e1fbe'),
+  'uptime-kuma': {...toolboxProvider('Uptime Kuma', 'louislam/uptime-kuma', 'c98982ac60eccb74cdab1d04c30e18057895ce87', 'MIT', '2.5.5', 'louislam/uptime-kuma:2.5.5@sha256:c74379ac4509ce2d2c2633f509e67003ee2e45b6e995c5e43fc101f45a0e1fbe'), reviewedOn:'2026-10-11'},
   bentopdf: { ...toolboxProvider('BentoPDF', 'alam00000/bentopdf', 'f96cd4e5166f3d51393dfe9f3c440b5bb77802f1', 'AGPL-3.0-only', '2.8.8-p4 · local PDF/OCR runtimes', 'source:f96cd4e5166f3d51393dfe9f3c440b5bb77802f1+deployment/toolbox/Dockerfile.bentopdf'), integration: 'source-build', reviewedOn: '2026-10-08', reviewDocument: 'docs/service-pack.md', licenseEvidenceUrls: ['https://github.com/alam00000/bentopdf/blob/f96cd4e5166f3d51393dfe9f3c440b5bb77802f1/LICENSE', 'https://github.com/alam00000/bentopdf/blob/f96cd4e5166f3d51393dfe9f3c440b5bb77802f1/package.json'] },
   vert: toolboxProvider('VERT', 'VERT-sh/VERT', 'c7b9f3921d6f8722c1dc1515799b461622777068', 'GNU AGPLv3 (version scope unconfirmed)', 'c7b9f39 · local processing build', 'source:c7b9f3921d6f8722c1dc1515799b461622777068+deployment/toolbox/Dockerfile.vert'),
   hatsh: toolboxProvider('hat.sh', 'sh-dv/hat.sh', '540d3ccfd2a12b4ed96b78a776c764f899678b6c', 'MIT', '2.3.6', 'source:540d3ccfd2a12b4ed96b78a776c764f899678b6c+deployment/toolbox/Dockerfile.hatsh'),
@@ -191,12 +191,12 @@ export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider>
     role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-09-03',
   },
   freshrss: {
-    project: 'FreshRSS', sourceUrl: 'https://github.com/FreshRSS/FreshRSS', reviewedSourceUrl: 'https://github.com/FreshRSS/FreshRSS/tree/b2c50115baa36c217e939ee3ea8ecfae52f91abd',
-    license: 'AGPL-3.0-only', licenseEvidenceUrls: ['https://github.com/FreshRSS/FreshRSS/blob/b2c50115baa36c217e939ee3ea8ecfae52f91abd/LICENSE.txt', 'https://github.com/FreshRSS/FreshRSS/blob/b2c50115baa36c217e939ee3ea8ecfae52f91abd/composer.json#L6'],
-    selfHostingEvidenceUrl: 'https://github.com/FreshRSS/FreshRSS/blob/1.29.1/README.md#installation', maintenanceEvidenceUrl: 'https://github.com/FreshRSS/FreshRSS/commits/edge/',
-    artifactReference: 'docker.io/freshrss/freshrss:1.29.1@sha256:ab6b363102ccdbc39f6a62db926f567c61a5289bf25ba460f1c34423d8cc1a4d',
-    installedVersion: '1.29.1', integration: 'container', reviewStatus: 'deployed', reviewDocument: 'docs/services.md',
-    role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-09-03',
+    project: 'FreshRSS', sourceUrl: 'https://github.com/FreshRSS/FreshRSS', reviewedSourceUrl: 'https://github.com/FreshRSS/FreshRSS/tree/4a810f1624b9d0b97b4400614cf9aacc8ada40e3',
+    license: 'AGPL-3.0-only', licenseEvidenceUrls: ['https://github.com/FreshRSS/FreshRSS/blob/4a810f1624b9d0b97b4400614cf9aacc8ada40e3/LICENSE.txt', 'https://github.com/FreshRSS/FreshRSS/blob/4a810f1624b9d0b97b4400614cf9aacc8ada40e3/composer.json#L6'],
+    selfHostingEvidenceUrl: 'https://github.com/FreshRSS/FreshRSS/blob/1.30.1/README.md#installation', maintenanceEvidenceUrl: 'https://github.com/FreshRSS/FreshRSS/commits/edge/',
+    artifactReference: 'docker.io/freshrss/freshrss:1.30.1@sha256:48b63b9bc3d042a1301c32971b01af8841c7f059b452589c5bf77f475ba44c61',
+    installedVersion: '1.30.1', integration: 'container', reviewStatus: 'deployed', reviewDocument: 'docs/updates.md',
+    role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-11',
   },
   privatebin: {
     project: 'PrivateBin', sourceUrl: 'https://github.com/PrivateBin/PrivateBin', reviewedSourceUrl: 'https://github.com/PrivateBin/PrivateBin/tree/2.0.6',

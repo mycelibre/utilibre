@@ -32,7 +32,7 @@ if(disk.files&&disk.ffree/disk.files<0.05)issues.push('Application disk has less
 const memory=Object.fromEntries([...readFileSync('/proc/meminfo','utf8').matchAll(/^(\w+):\s+(\d+)/gm)].map(([,name,value])=>[name,Number(value)]));
 if(memory.MemAvailable/memory.MemTotal<0.05)issues.push('Available host memory is below 5%');
 // Service state only: no form/document counts, paths or user activity.
-for(const unit of ['utilibre-pack-backup.service','utilibre-pack-forms-maintenance.service','utilibre-storagebox-backup.service','utilibre-community-backup.service','utilibre-family-chess-backup.service']) {
+for(const unit of ['utilibre-pack-backup.service','utilibre-pack-forms-maintenance.service','utilibre-storagebox-backup.service','utilibre-community-backup.service','utilibre-family-chess-backup.service','utilibre-records-backup.service','utilibre-maintenance-review.service']) {
   if(!existsSync(`/etc/systemd/system/${unit}`))continue;
   try {
     const result=execFileSync('systemctl',['show',unit,'--property=Result','--value'],{encoding:'utf8',timeout:5000}).trim();
@@ -46,6 +46,17 @@ if(existsSync('/etc/systemd/system/utilibre-storagebox-backup.service')) {
     if(status.status!=='uploaded-and-metadata-checked'||!Number.isFinite(date)||date>Date.now()+300000)issues.push('Off-host application backup confirmation is invalid');
     else if(Date.now()-date>36*3600000)issues.push('Off-host application backup is older than 36 hours');
   } catch {issues.push('Off-host application backup confirmation unavailable')}
+}
+if(existsSync('/etc/systemd/system/utilibre-maintenance-review.service')) {
+  try {
+    const report=JSON.parse(readFileSync('/var/lib/utilibre-maintenance/latest.json','utf8'));
+    const date=Date.parse(report.date);
+    if(!Number.isFinite(date)||date>Date.now()+300000||Date.now()-date>36*3600000)issues.push('Upstream release/advisory review is stale or invalid');
+    if(!Array.isArray(report.results)||!report.results.length)throw Error('Empty maintenance report');
+    const failed=report.results.filter(item=>item.status!=='checked'||item.advisories?.coverage==='unavailable');
+    if(failed.length)issues.push(`Upstream review incomplete for ${failed.length} projects; inspect /var/lib/utilibre-maintenance/latest.json`);
+    for(const item of report.results)if(item.advisories?.needsReview?.some(a=>['critical','high'].includes(a.severity)))issues.push(`Published security advisory needs review: ${item.project}`);
+  }catch{issues.push('Upstream release/advisory report is unavailable')}
 }
 issues.sort();
 const fingerprint=JSON.stringify(issues),count=previous.fingerprint===fingerprint?(previous.count||0)+1:1;
@@ -75,5 +86,5 @@ if(!checkOnly){
   writeFileSync(`${file}.tmp`,JSON.stringify({fingerprint,count,alertedFingerprint,sentAt,checkedAt:Date.now()})+'\n',{mode:0o600});
   renameSync(`${file}.tmp`,file);
 }
-if(checkOnly)console.log('Read-only check: no mail sent and no alert state changed.');
+if(checkOnly){console.log('Read-only check: no mail sent and no alert state changed.');for(const issue of issues)console.log(issue);}
 console.log(issues.length?`${issues.length} issue(s); notifications require two consecutive observations.`:'All observed monitors and resource thresholds are healthy.');
