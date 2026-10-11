@@ -22,6 +22,7 @@ services:
     extra_hosts:
       - "newsletters.utilibre.org:${EDGE_PROXY_IP:-10.10.1.3}"
       - "aliases.utilibre.org:${EDGE_PROXY_IP:-10.10.1.3}"
+      - "speed.utilibre.org:${EDGE_PROXY_IP:-10.10.1.3}"
     init: true
     restart: unless-stopped
     read_only: true
@@ -55,6 +56,7 @@ services:
       PUBLIC_QUIZ_URL: ${PUBLIC_QUIZ_URL:-}
       PUBLIC_LINKS_URL: ${PUBLIC_LINKS_URL:-}
       PUBLIC_TRIP_URL: ${PUBLIC_TRIP_URL:-}
+      PUBLIC_SPEED_URL: ${PUBLIC_SPEED_URL:-}
       PUBLIC_WALLABAG_URL: ${PUBLIC_WALLABAG_URL:-}
       PUBLIC_CHESS_URL: ${PUBLIC_CHESS_URL:-}
       PUBLIC_PROJECTS_URL: ${PUBLIC_PROJECTS_URL:-}
@@ -128,6 +130,7 @@ services:
       EDGE_PROXY_IP: ${PORTAL_EDGE_PROXY_IP:-${EDGE_PROXY_IP:-}}
       STATUS_CACHE_SECONDS: ${STATUS_CACHE_SECONDS:-15}
       STATUS_SERVICES: >-
+        librespeed=https://speed.utilibre.org/healthz,
         wallabag=https://wallabag.utilibre.org/login,
         knit=https://tools.utilibre.org/apps/knit/,newton=https://tools.utilibre.org/apps/newton/,
         family-chess=https://chess.utilibre.org/,donetick=https://chores.utilibre.org/,beaverhabits=https://habits.utilibre.org/login,projects=https://projects.utilibre.org/,trip=https://trip.utilibre.org/,

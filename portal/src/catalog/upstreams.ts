@@ -1,4 +1,4 @@
-export type FossProviderId = 'wallabag' | 'addy' | 'trip' | 'donetick' | 'beaverhabits' | 'projects' | 'kokoro-web' | 'family-chess' | 'newton' | 'knit' | 'gravity' | 'autoredact' | 'rustpad' | 'moocup' | 'one-file-core' | 'tiddlywiki' | 'newsletters' | 'unfurl' | '13ft' | 'razzia' | 'chhoto' | 'chitchatter' | 'gathio' | 'link-cleaner' | 'calino' | 'radicale' | 'spliit' | 'wishlist' | 'kitchenowl' | 'opengist' | 'linkding' | 'vikunja' | 'bytestash' | 'openresume' | 'moodist' | 'sketchforge' | 'chartdb' | 'drawdb' | 'bookbinder' | 'cryptpad' | 'liberaforms' | 'galene' | 'super-productivity' | 'mapshaper' | 'numbat' | 'wbo' | 'markmap' | 'excalidraw' | 'svgedit' | 'cyberchef' | 'image-scrubber' | 'zip-manager' | 'rawgraphs' | 'audiomass' | 'minipaint' | 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'lrclib' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris' | 'binternet' | 'translite' | 'biblioreads' | 'qr-offline' | 'kittygram' | 'rimgo' | 'mumble';
+export type FossProviderId = 'librespeed' | 'wallabag' | 'addy' | 'trip' | 'donetick' | 'beaverhabits' | 'projects' | 'kokoro-web' | 'family-chess' | 'newton' | 'knit' | 'gravity' | 'autoredact' | 'rustpad' | 'moocup' | 'one-file-core' | 'tiddlywiki' | 'newsletters' | 'unfurl' | '13ft' | 'razzia' | 'chhoto' | 'chitchatter' | 'gathio' | 'link-cleaner' | 'calino' | 'radicale' | 'spliit' | 'wishlist' | 'kitchenowl' | 'opengist' | 'linkding' | 'vikunja' | 'bytestash' | 'openresume' | 'moodist' | 'sketchforge' | 'chartdb' | 'drawdb' | 'bookbinder' | 'cryptpad' | 'liberaforms' | 'galene' | 'super-productivity' | 'mapshaper' | 'numbat' | 'wbo' | 'markmap' | 'excalidraw' | 'svgedit' | 'cyberchef' | 'image-scrubber' | 'zip-manager' | 'rawgraphs' | 'audiomass' | 'minipaint' | 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'lrclib' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris' | 'binternet' | 'translite' | 'biblioreads' | 'qr-offline' | 'kittygram' | 'rimgo' | 'mumble';
 
 // Explicit human descriptions below are not SPDX identifiers. They retain the
 // verified GNU licence family without inventing an -only / -or-later grant.
@@ -12,6 +12,7 @@ export type ReviewedLicense =
   | 'GPL-3.0-only'
   | 'GPL-3.0-or-later'
   | 'GPL-2.0-or-later'
+  | 'LGPL-3.0-or-later'
   | 'Apache-2.0'
   | 'Unlicense'
   | 'BSD-3-Clause'
@@ -30,7 +31,7 @@ export interface ReviewedFossProvider {
   installedVersion: string;
   integration: 'container' | 'source-build';
   reviewStatus: 'deployed' | 'staged';
-  reviewDocument: 'docs/addy-deployment-2026-10-09.md' | 'docs/privatebin-discovery-2026-10-09.md' | 'docs/trip-review-2026-10-09.md' | 'docs/donetick-deployment-2026-10-09.md' | 'docs/beaverhabits-deployment-2026-10-09.md' | 'docs/projects-deployment-2026-10-09.md' | 'docs/kokoro-web-deployment-2026-10-09.md' | 'docs/family-chess-deployment-2026-10-09.md' | 'docs/gravity-deployment-2026-10-09.md' | 'docs/knit-deployment-2026-10-09.md' | 'docs/newton-deployment-2026-10-09.md' | 'docs/autoredact-deployment-2026-10-09.md' | 'docs/rustpad-deployment-2026-10-09.md' | 'docs/moocup-deployment-2026-10-09.md' | 'docs/services.md' | 'docs/toolbox-review.md' | 'docs/service-pack.md' | 'docs/newsletters-deployment-2026-10-09.md' | 'docs/one-file-core-deployment-2026-10-09.md' | 'docs/tiddlywiki-deployment-2026-10-09.md';
+  reviewDocument: 'docs/librespeed-latex-chat-2026-10-11.md' | 'docs/addy-deployment-2026-10-09.md' | 'docs/privatebin-discovery-2026-10-09.md' | 'docs/trip-review-2026-10-09.md' | 'docs/donetick-deployment-2026-10-09.md' | 'docs/beaverhabits-deployment-2026-10-09.md' | 'docs/projects-deployment-2026-10-09.md' | 'docs/kokoro-web-deployment-2026-10-09.md' | 'docs/family-chess-deployment-2026-10-09.md' | 'docs/gravity-deployment-2026-10-09.md' | 'docs/knit-deployment-2026-10-09.md' | 'docs/newton-deployment-2026-10-09.md' | 'docs/autoredact-deployment-2026-10-09.md' | 'docs/rustpad-deployment-2026-10-09.md' | 'docs/moocup-deployment-2026-10-09.md' | 'docs/services.md' | 'docs/toolbox-review.md' | 'docs/service-pack.md' | 'docs/newsletters-deployment-2026-10-09.md' | 'docs/one-file-core-deployment-2026-10-09.md' | 'docs/tiddlywiki-deployment-2026-10-09.md';
   role: 'public-application';
   maintainer: 'independent-upstream';
   selfHostable: true;
@@ -43,6 +44,7 @@ export interface ReviewedFossProvider {
  * never enables a public route or opens registrations.
  */
 export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider> = {
+  librespeed: { ...browserProvider('LibreSpeed', 'librespeed/speedtest-go', '7bbfadeeed710500752496f952bbcfb66ab3bdb9', 'LGPL-3.0-or-later', 'LICENSE', '1.1.6-p1'), reviewStatus: 'deployed', reviewedOn: '2026-10-11', reviewDocument: 'docs/librespeed-latex-chat-2026-10-11.md', artifactReference: 'source:7bbfadeeed710500752496f952bbcfb66ab3bdb9+deployment/librespeed', licenseEvidenceUrls: ['https://github.com/librespeed/speedtest-go/blob/v1.1.6/LICENSE', 'https://github.com/librespeed/speedtest-go/blob/v1.1.6/README.md#license'] },
   wallabag: { ...browserProvider('Wallabag', 'wallabag/wallabag', '496db5b457755bbf7d46f314716c8aad1b80fcfb', 'MIT', 'COPYING.md', '2.7-dev 496db5b-p1 · local security backport'), reviewedOn: '2026-10-10', reviewStatus: 'deployed', reviewDocument: 'docs/service-pack.md', artifactReference: 'source:496db5b457755bbf7d46f314716c8aad1b80fcfb+deployment/pack/wallabag/app-hardening.patch+deployment/pack/wallabag/otphp-10-security.patch' },
   addy: { ...browserProvider('addy.io', 'anonaddy/anonaddy', '150983e3331e80bb72b619984dc5e3f5390ddb93', 'AGPL-3.0-or-later', 'LICENSE.md', '1.7.3'), integration: 'container', reviewStatus: 'deployed', reviewedOn: '2026-10-09', reviewDocument: 'docs/addy-deployment-2026-10-09.md', artifactReference: 'source:150983e3331e80bb72b619984dc5e3f5390ddb93+deployment/addy/compose.yaml', licenseEvidenceUrls: ['https://github.com/anonaddy/anonaddy/blob/150983e3331e80bb72b619984dc5e3f5390ddb93/LICENSE.md', 'https://github.com/anonaddy/anonaddy/blob/150983e3331e80bb72b619984dc5e3f5390ddb93/composer.json#L8'], selfHostingEvidenceUrl: 'https://github.com/anonaddy/docker/tree/ec7934b4835518fe6a520dedf7ce97464cacd7cd' },
   trip: { ...browserProvider('TRIP', 'itskovacs/trip', '856b1edfe81a735fce4b544c2e16a6518cebf164', 'MIT', 'license.txt', '1.50.1-p2'), reviewStatus: 'deployed', reviewedOn: '2026-10-09', reviewDocument: 'docs/trip-review-2026-10-09.md', artifactReference: 'source:856b1edfe81a735fce4b544c2e16a6518cebf164+deployment/trip/restricted.patch' },
@@ -217,6 +219,7 @@ export interface FossCatalogRecord {
 }
 
 const reviewedLicenses = new Set<ReviewedLicense>([
+  'LGPL-3.0-or-later',
   'GNU AGPLv3 (version scope unconfirmed)', 'AGPL-3.0-only', 'AGPL-3.0-or-later', 'Zlib', 'MIT', 'GNU GPLv3 (version scope unconfirmed)', 'GPL-3.0-only', 'GPL-3.0-or-later', 'GPL-2.0-or-later', 'Apache-2.0', 'Unlicense', 'BSD-3-Clause', 'MPL-2.0',
 ]);
 

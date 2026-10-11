@@ -1,5 +1,25 @@
 # Operator work queue — reconciled 11 October 2026
 
+## LibreSpeed and LaTeX/chat review — 11 October
+
+LibreSpeed Go 1.1.6-p1 is installed at `https://speed.utilibre.org/` (Spanish
+`/es.html`, private port 3225), with bilingual catalogue/help/guides and a native
+health probe. No telemetry, IP/ISP lookup, results database or visitor identifiers.
+The initially restrictive speed/request throttles were removed after the owner
+reported inaccurate measurements; native measurements remain subject to shared
+server capacity and a six-request concurrency ceiling. No outside-line speed
+accuracy claim follows from the passing LAN/HTTPS-edge functional tests.
+
+TeXlyre 0.13.0 is the preferred LaTeX evaluation candidate, not installed yet;
+Overleaf CE is not suitable for unrestricted untrusted users without additional
+compile isolation. Public IRC/XMPP deferred: no defined community/account need,
+and an extra gateway adds moderation/upstream-network responsibility. Umami was
+not installed: visitor analytics, including self-hosted/cookieless analytics,
+conflict with the owner's explicit no-tracking policy.
+
+Exact decisions, sources, checks, limits and rollback:
+[LibreSpeed/LaTeX/chat record](librespeed-latex-chat-2026-10-11.md).
+
 ## Temporary-disk expansion and allocation — 11 October
 
 Owner enlarged VM144 `scsi2` to 15 GiB and requested 10 GiB for PrivateBin plus

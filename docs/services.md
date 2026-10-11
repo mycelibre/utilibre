@@ -1,5 +1,11 @@
 # Services and upstream applications
 
+11 October addition: LibreSpeed Go 1.1.6-p1 is installed and checked on
+`10.10.1.43:3225`, with public destination `https://speed.utilibre.org/`.
+The DNS-only HTTPS edge and complete bilingual browser flows pass. These were
+tested over LAN routing to the real edge, not calibrated external ISP benchmarks.
+[Installation, limits, bilingual guides, verification and LaTeX/chat decisions](librespeed-latex-chat-2026-10-11.md).
+
 Creative batch, 7 October 2026 (static applications; no accounts):
 
 | Application | Public address | Private edge target |

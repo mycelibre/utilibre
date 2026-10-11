@@ -1,0 +1,13 @@
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, cpSync, renameSync, mkdirSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+const source = process.argv[2];
+if (!source || execFileSync('git', ['rev-parse', 'HEAD'], {cwd: source, encoding: 'utf8'}).trim() !== '7bbfadeeed710500752496f952bbcfb66ab3bdb9') throw Error('Wrong source');
+const stage = mkdtempSync('/opt/utilibre/librespeed-source-');
+mkdirSync(`${stage}/librespeed`);
+execFileSync('tar', ['-cf', `${stage}/upstream.tar`, '--exclude=.git', '--exclude=speedtest', '--exclude=govulncheck.json', '.'], {cwd: source});
+execFileSync('tar', ['-xf', `${stage}/upstream.tar`, '-C', `${stage}/librespeed`]);
+cpSync(fileURLToPath(new URL('.', import.meta.url)), `${stage}/librespeed/utilibre-integration`, {recursive: true});
+execFileSync('tar', ['-czf', `${stage}/librespeed-utilibre.tar.gz`, 'librespeed'], {cwd: stage});
+renameSync(`${stage}/librespeed-utilibre.tar.gz`, '/opt/utilibre/toolbox-public/librespeed-utilibre.tar.gz');
+console.log('Published pinned LibreSpeed source and reproducible integration.');

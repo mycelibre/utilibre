@@ -1,3 +1,4 @@
+import { librespeedGuides } from './librespeed-guide.ts';
 import { tripGuides } from './trip-guide.ts';
 import { wallabagGuides } from './wallabag-guide.ts';
 import { donetickAdditionGuides } from './donetick-addition-guide.ts';
@@ -45,6 +46,7 @@ export interface PracticalGuide {
 // Maintained instructions for deployed interfaces, not a separate service registry.
 // Access, privacy details and launch destinations come from the catalogue.
 export const practicalGuides: PracticalGuide[] = [
+  ...librespeedGuides,
   ...standaloneGuides,
   ...moocupGuides,
   ...rustpadAdditionGuides,

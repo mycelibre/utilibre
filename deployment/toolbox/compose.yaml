@@ -50,18 +50,22 @@ services:
       - *source
   omnitools:
     <<: *static
-    networks: [tools, rustpad]
+    # Static apps plus streaming speed-test traffic; avoid a 0.5-core bottleneck.
+    cpus: 1.0
+    networks: [tools, rustpad, librespeed]
     image: utilibre-omnitools:0.6.0-p7
     build:
       context: .
       dockerfile: Dockerfile.omnitools
-    ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3103:8080"]
+    ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3103:8080", "${APP_BIND_IP:?Set APP_BIND_IP}:3225:8086", "127.0.0.1:3225:8086"]
     logging: {driver: none}
     volumes:
       - ./nginx.omnitools.conf:/etc/nginx/nginx.conf:ro
       - ./security-offline.conf:/etc/nginx/tool-security.conf:ro
       - ./autoredact/security.conf:/etc/nginx/security-autoredact.conf:ro
       - ../kokoro-web/security.conf:/etc/nginx/security-kokoro-web.conf:ro
+      - ../librespeed/nginx-server.conf:/etc/nginx/librespeed-server.conf:ro
+      - ../librespeed/nginx-proxy.conf:/etc/nginx/librespeed-proxy.conf:ro
       - *source
   ittools:
     <<: *static
@@ -113,3 +117,6 @@ networks:
   rustpad:
     external: true
     name: utilibre-rustpad_private
+  librespeed:
+    external: true
+    name: utilibre-librespeed_private

@@ -20,6 +20,18 @@ application, image, source-revision, license, and modification inventory in
 That manifest covers FreshRSS, internal RSSHub, PrivateBin, PostgreSQL, and
 Valkey. Those applications are not bundled into the portal browser assets.
 
+## LibreSpeed (October 11)
+
+LibreSpeed Go 1.1.6, revision `7bbfadeeed710500752496f952bbcfb66ab3bdb9`,
+is LGPL-3.0-or-later; see [upstream](https://github.com/librespeed/speedtest-go/tree/v1.1.6).
+The full upstream measurement worker and backend are preserved. The local p1
+build updates pinned Go dependencies and adapts the supplied example UI for
+English/Spanish, accessibility, local assets and native test settings. Complete
+source, upstream license and build recipes are served at
+`https://pdf.utilibre.org/utilibre-source/librespeed-utilibre.tar.gz`.
+Dependencies retain their own licenses. Review and deployment limits:
+[`docs/librespeed-latex-chat-2026-10-11.md`](docs/librespeed-latex-chat-2026-10-11.md).
+
 ## Browser tool additions on October 7
 
 Excalidraw (MIT), SVGEdit (MIT application), CyberChef (Apache-2.0) and Image

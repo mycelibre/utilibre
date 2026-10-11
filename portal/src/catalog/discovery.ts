@@ -46,6 +46,7 @@ export function featuredEntries(config: PublicConfig): CatalogEntry[] {
 export function allEntries(config: PublicConfig, language: Language): CatalogEntry[] { return sortByName(visibleEntries(config).filter(e => e.id !== 'uptime-kuma'), language); }
 export function groupEntries(config: PublicConfig, language: Language, group: DiscoveryGroup): CatalogEntry[] { return allEntries(config, language).filter(e => entryGroup(e) === normalizeGroup(group)); }
 const synonyms: Record<string, string> = {
+  librespeed: 'speed speedtest internet connection bandwidth download upload ping latency jitter velocidad conexión ancho banda descarga subida latencia wifi',
   'one-file-core': 'portable html diagram animated nodes connections diagrama portátil animación nodos conexiones',
   tiddlywiki: 'wiki notebook notes single file html cuaderno notas archivo único',
   addy: 'email alias aliases forwarding inbox mask address correo alias reenvío reenviar buzón dirección',

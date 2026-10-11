@@ -1,0 +1,25 @@
+name: utilibre-librespeed
+services:
+  backend:
+    image: utilibre-librespeed:1.1.6-p1
+    restart: unless-stopped
+    user: '10001:10001'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    ulimits: {core: 0}
+    pids_limit: 32
+    cpus: 1.0
+    mem_limit: 128m
+    memswap_limit: 128m
+    logging: {driver: none}
+    volumes:
+      - ./settings.toml:/app/settings.toml:ro
+    networks:
+      private: {ipv4_address: 172.29.156.10}
+networks:
+  private:
+    name: utilibre-librespeed_private
+    internal: true
+    enable_ipv6: false
+    ipam: {config: [{subnet: 172.29.156.0/28}]}

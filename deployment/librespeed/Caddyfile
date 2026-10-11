@@ -1,0 +1,14 @@
+# DNS-only. Deliberately no encode, cache, visitor headers or access logger.
+speed.utilibre.org {
+    reverse_proxy 10.10.1.43:3225 {
+        header_up -X-Forwarded-For
+        header_up -X-Real-IP
+        header_up -Forwarded
+        header_up -CF-Connecting-IP
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 30s
+        }
+        flush_interval -1
+    }
+}

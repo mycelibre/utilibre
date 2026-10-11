@@ -1,6 +1,7 @@
 // Operator-configured probes only. Public checks are restricted to these exact
 // application URLs; never accept arbitrary Internet destinations or redirects.
 const publicRoots = new Map([
+  ['librespeed', 'https://speed.utilibre.org/healthz'],
   ['wallabag', 'https://wallabag.utilibre.org/login'],
   ['family-chess', 'https://chess.utilibre.org/'],
   ['donetick', 'https://chores.utilibre.org/'],

@@ -91,7 +91,7 @@ describe('catalog discovery metadata', () => {
   });
   it('keeps reviewed applications and one narrow integration', () => {
     expect(catalog.map((entry) => entry.id)).toEqual([
-      'one-file-core', 'tiddlywiki', 'moocup', 'rustpad', 'autoredact', 'gravity', 'knit', 'newton', 'family-chess', 'projects', 'trip', 'wallabag', 'donetick', 'beaverhabits', 'kokoro-web',
+      'librespeed', 'one-file-core', 'tiddlywiki', 'moocup', 'rustpad', 'autoredact', 'gravity', 'knit', 'newton', 'family-chess', 'projects', 'trip', 'wallabag', 'donetick', 'beaverhabits', 'kokoro-web',
       'newsletters', 'addy',
       'spliit', 'wishlist', 'kitchenowl', 'opengist', 'linkding', 'vikunja', 'bytestash', 'openresume',
       'calino', 'radicale', 'chitchatter', 'gathio', 'link-cleaner', 'razzia', 'chhoto', 'unfurl', '13ft',
@@ -125,6 +125,18 @@ describe('catalog discovery metadata', () => {
 });
 
 describe('config-gated catalog discovery', () => {
+  it('gates LibreSpeed on configuration and preserves native language paths', () => {
+    const pending = config({ publicSpeedUrl: 'https://speed.utilibre.org/', listedServices: ['librespeed'] });
+    const entry = catalogEntry('librespeed')!;
+    expect(entryLaunch(entry, 'es', pending)).toBeNull();
+    expect(discoverEntries(pending, 'es', { view: 'public' })).not.toContain(entry);
+    expect(discoverEntries(pending, 'es', { view: 'pilots' })).toContain(entry);
+    expect(searchEntries(pending, 'es', 'velocidad')[0]?.id).toBe('librespeed');
+    const released = { ...pending, enabledServices: ['librespeed'] };
+    expect(entryLaunch(entry, 'es', released)?.href).toBe('https://speed.utilibre.org/es.html');
+    expect(entryLaunch(entry, 'en', released)?.href).toBe('https://speed.utilibre.org/');
+    expect(discoverEntries(released, 'es', { view: 'public' })).toContain(entry);
+  });
   it('keeps a configured but unreleased mind map in pending discovery, not public tasks', () => {
     const pending = config({ publicMindmapUrl: 'https://mindmap.example/', listedServices: ['markmap'] });
     const entry = catalogEntry('markmap')!;

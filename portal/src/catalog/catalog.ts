@@ -1,3 +1,4 @@
+import { librespeedAdditions } from './librespeed-addition.ts';
 import { tripAdditions } from './trip-addition.ts';
 import { wallabagAdditions } from './wallabag-addition.ts';
 import { donetickAdditions } from './donetick-addition.ts';
@@ -92,6 +93,7 @@ function providerMetadata(providerId: FossProviderId): Pick<CatalogEntry, 'provi
 }
 
 const entries: CatalogEntry[] = [
+  ...librespeedAdditions,
   ...standaloneAdditions,
   ...moocupAdditions,
   ...rustpadAdditions,

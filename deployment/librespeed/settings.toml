@@ -1,0 +1,14 @@
+bind_address="0.0.0.0"
+listen_port="8989"
+proxyprotocol_port="0"
+database_type="none"
+statistics_password=""
+redact_ip_addresses=true
+ipinfo_api_key=""
+geoip_database_file=""
+# Nonzero values prevent native startup IP-geolocation. These are unused
+# sentinels, not the server's location: getIP and distance are not exposed.
+server_lat=1
+server_lng=1
+enable_tls=false
+enable_http2=false
