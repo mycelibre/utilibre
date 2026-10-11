@@ -28,7 +28,7 @@ services:
   web:
     <<: *app
     # Copy-only revision; SMTP and jobs retain the same native processing build.
-    image: utilibre-newsletters:2.1.3-p2
+    image: utilibre-newsletters:2.1.3-p2-caddy-security-20261011-p2
     restart: unless-stopped
     networks:
       data: {ipv4_address: 172.29.132.10}
@@ -39,6 +39,7 @@ services:
     depends_on: {initialize: {condition: service_completed_successfully}}
   smtp:
     <<: *app
+    image: utilibre-newsletters:2.1.3-p1-caddy-security-20261011-p2
     restart: "no"
     networks:
       data: {ipv4_address: 172.29.132.20}
@@ -55,6 +56,7 @@ services:
     depends_on: {initialize: {condition: service_completed_successfully}}
   jobs:
     <<: *app
+    image: utilibre-newsletters:2.1.3-p1-caddy-security-20261011-p2
     restart: unless-stopped
     networks:
       data: {ipv4_address: 172.29.132.30}

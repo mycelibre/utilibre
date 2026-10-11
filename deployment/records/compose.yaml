@@ -73,7 +73,7 @@ services:
       ingress: {ipv4_address: 172.29.159.13}
   db:
     <<: *runtime
-    image: utilibre-postgres:16.15-alpine-vendor-security-20261011
+    image: utilibre-postgres:16.15-alpine-gosu-security-20261011-p2
     user: '70:70'
     cpus: 0.5
     mem_limit: 256m

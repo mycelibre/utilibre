@@ -1,8 +1,9 @@
 # Scratch Rust inventory review — 2026-10-11
 
-Read-only runtime investigation plus the source-lock coverage addition described
-below; no application build, deployment, restart, live-data access, scanner
-exception, or vulnerability suppression was performed. The fleet scan
+The initial read-only investigation and source-lock addition are recorded below;
+the subsequent auditable rebuilds are documented in
+[the build and native-test evidence](rust-auditable/README.md). No scanner
+exception or vulnerability suppression was introduced. The original fleet scan
 started at 21:17:18 UTC and completed at 21:18:50 UTC using Trivy 0.75.0 and its
 2026-10-11 13:06 UTC database.
 
@@ -98,5 +99,9 @@ application dependencies.
    destroys them.** Use the documented maintenance notice/copy instructions; do
    not restart it casually to close an inventory alert.
 
-No build was attempted in this task. Neither runtime inventory alert is marked resolved. The
-separate Penpot runtime inventory issue is outside this scratch-Rust finding.
+The initial investigation did not build or release either application. The later
+implementation now uses the pinned cargo-auditable helper, pinned native build
+packages, captured toolchain/native provenance and candidate-level actual binary
+inventory checks. See the linked receipts for measured coverage and release
+status; a candidate's scan is not evidence that the old live binary has changed.
+The separate Penpot runtime inventory issue is outside this scratch-Rust finding.

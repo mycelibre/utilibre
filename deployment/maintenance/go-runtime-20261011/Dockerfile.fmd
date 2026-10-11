@@ -1,0 +1,5 @@
+FROM registry.gitlab.com/fmd-foss/fmd-server:0.17.0-alpine@sha256:e4a7f5538aa3febe938159ee2db337ccdb50d340d7009784c5a851f152df48e0
+COPY --chown=0:0 --chmod=755 fmd-server /opt/fmd-server
+COPY --chown=0:0 --chmod=755 fmd-server-ctl /opt/fmd-server-ctl
+LABEL org.utilibre.security.compiler="go1.26.9" \
+      org.opencontainers.image.revision="224b60c0756ff363bc19063082a8a1543559cf96"

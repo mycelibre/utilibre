@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   kittygram:
     <<: *runtime
-    image: utilibre-kittygram:5931c21-p1
+    image: utilibre-kittygram:5931c21-vendor-security-20261011-p2
     user: "65534:65534"
     mem_limit: 384m
     env_file: /opt/utilibre/kittygram/runtime.env
@@ -37,7 +37,7 @@ services:
     depends_on: [cache]
   cache:
     <<: *runtime
-    image: valkey/valkey@sha256:de31910896150d5e754a07d57d227cfdde4e258ddd0d1aa4607f2d2f95843715
+    image: utilibre-valkey:9.1.1-vendor-security-20261011
     user: "999:999"
     mem_limit: 192m
     command: [valkey-server, --save, "", --appendonly, "no", --maxmemory, 128mb, --maxmemory-policy, allkeys-lru]

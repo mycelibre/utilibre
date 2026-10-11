@@ -7,7 +7,7 @@ parser.add_argument('--backup',type=Path,required=True)
 parser.add_argument('--image',default='utilibre-gathio-documentdb:17.11-0.107.0')
 parser.add_argument('--ferret-image',default='ghcr.io/ferretdb/ferretdb:2.7.0@sha256:5706414241eb84f0515512c37b46db0f1b1eac9e5ceb7e4c2523211c184b1985')
 args=parser.parse_args()
-assert args.image in ['utilibre-gathio-documentdb:17.11-0.107.0','utilibre-gathio-documentdb:17.11-0.107.0-security-20261011']
+assert args.image in ['utilibre-gathio-documentdb:17.11-0.107.0','utilibre-gathio-documentdb:17.11-0.107.0-security-20261011','utilibre-gathio-documentdb:17.11-0.107.0-gosu-security-20261011-p2']
 assert args.ferret_image in ['ghcr.io/ferretdb/ferretdb:2.7.0@sha256:5706414241eb84f0515512c37b46db0f1b1eac9e5ceb7e4c2523211c184b1985','utilibre-ferretdb:libraries-security-20261011']
 backup=args.backup.resolve();assert backup.parent==Path('/opt/utilibre/calendar-backups') and backup.name.startswith('gathio-')
 r=Path('/var/lib/utilibre-maintenance/gathio-20261011');r.mkdir(parents=True,mode=0o700,exist_ok=True)

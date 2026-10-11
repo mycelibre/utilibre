@@ -1,0 +1,9 @@
+# stage.py verifies the exact predecessor ID before building this local layer.
+# Keep the older dependency tree, but never roll back the zero-tracking repair.
+FROM utilibre-actual:proxyaddr-security-20261011
+USER root
+COPY actual-privacy.cjs /tmp/utilibre-actual-privacy.cjs
+RUN mkdir -p /opt/utilibre-reviewed-leaves \
+ && node /tmp/utilibre-actual-privacy.cjs \
+ && rm /tmp/utilibre-actual-privacy.cjs
+USER 1000:1000

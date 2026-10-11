@@ -4,6 +4,23 @@ import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {applyDecisions} from './triage.mjs';
 const directory='/var/lib/utilibre-maintenance';
+// An unrelated failed target must not resurrect findings from a replacement
+// which was actually scanned. Conversely, missing/unscanned instances retain
+// their previous observations; no resolution is inferred from disappearance.
+export function recheckedTarget(item,report){
+ if(item.scope==='runtime-image'){
+  const exact=(report.images||[]).find(x=>x.id===item.artifact);
+  if(exact)return exact.status==='checked';
+  return !!item.containers?.length&&item.containers.every(name=>
+   (report.images||[]).some(x=>x.status==='checked'&&x.containers?.includes(name)));
+ }
+ if(item.scope==='host-os')return report.host?.status==='checked';
+ return (report.sources||[]).some(x=>x.name===item.targetName&&x.status==='checked'&&(x.scope||'source-lock')===item.scope);
+}
+export function retainUnrechecked(queue,report,previous){
+ const seen=new Set(queue.items.map(x=>x.key));
+ return [...queue.items,...(previous.items||[]).filter(x=>!seen.has(x.key)&&!recheckedTarget(x,report)).map(x=>({...x,status:'not-rechecked'}))];
+}
 export function findingsQueue(report,previous={items:[]},now=new Date().toISOString()){
  const old=new Map((previous.items||[]).map(x=>[x.key,x]));const found=new Map();
  const continuity=new Map();
@@ -34,8 +51,7 @@ export async function run(){
  const queue=findingsQueue(report,previous);
  // Preserve unresolved observations across failed/partial scans.
  if(report.status!=='checked'){
-  const seen=new Set(queue.items.map(x=>x.key));
-  queue.items.push(...previous.items.filter(x=>!seen.has(x.key)).map(x=>({...x,status:'not-rechecked'})));
+  queue.items=retainUnrechecked(queue,report,previous);
  }
  let decisions=[];try{decisions=JSON.parse(await readFile(directory+'/security-decisions.json','utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
  queue.items=applyDecisions(queue.items,decisions);

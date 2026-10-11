@@ -18,8 +18,10 @@ printf '%s  %s\n' c09f971ecaed9a2efc80fdcea7a00ef6b53c7fadc8c57d1f61b53a6aa66b66
 tar -xzf "$build/tools/wasm-pack.tgz" -C "$build/tools" --strip-components=1
 cp "$recipe/Builder.Dockerfile" "$build/tools/Dockerfile"
 docker build -t utilibre-rustpad-builder:1.99.0 "$build/tools"
-docker run --rm --memory 4g --cpus 2 --pids-limit 256 --tmpfs /work/target:rw,exec,size=2300m -v "$build/source:/work" -v "$build/registry:/usr/local/cargo/registry" -v "$build/output:/out" utilibre-rustpad-builder:1.99.0 sh -c 'cargo test --locked --release --workspace -- --test-threads=2 && cargo build --locked --release -p rustpad-server && cp target/release/rustpad-server /out/ && wasm-pack build rustpad-wasm --release --no-opt'
+docker run --rm --memory 3g --memory-swap 3g --cpus 2 --pids-limit 256 --tmpfs /work/target:rw,exec,size=1600m -v "$build/source:/work" -v "$build/registry:/usr/local/cargo/registry" -v "$build/output:/out" utilibre-rustpad-builder:1.99.0 sh -c 'cargo auditable test --locked --release --workspace -- --test-threads=2 && cargo auditable build --locked --release -p rustpad-server && cp target/release/rustpad-server /out/ && wasm-pack build rustpad-wasm --release --no-opt'
 (cd "$build/source" && npm ci && npm run check && VITE_SHA=54e4a93-p1 npm run build)
 cp -r "$build/source/dist" "$build/output/"
 cp "$recipe/Dockerfile" "$build/output/"
-docker build -t utilibre-rustpad:54e4a93-p1 "$build/output"
+# A full source rebuild is a candidate, not permission to replace the deployed
+# tag or discard in-memory pads. Keep the old runtime/rollback reference stable.
+docker build -t utilibre-rustpad:54e4a93-auditable-full-20261011 "$build/output"

@@ -1,0 +1,36 @@
+# Runtime packaging only: upstream 2.18.3 app/JRE/ImageMagick, public Debian13.
+# DHI registry authentication is not required. Keep the real dpkg database.
+FROM penpotapp/backend:2.18.3@sha256:2df1b3440d2a82cc3571db211b4ffdfa2b89ccc910759e8d5e9387fb62971b5c AS upstream
+FROM debian:13.7-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8 LC_ALL=C.UTF-8 JAVA_HOME=/opt/jre TZ=Etc/UTC \
+    PATH=/opt/jre/bin:/opt/imagick/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+    LD_LIBRARY_PATH=/opt/imagick/lib/deps
+# Exact resolved Debian versions for upstream's native runtime package set.
+# Includes util-linux for upstream's prlimit safeguards; no DHI metadata copied.
+COPY runtime-packages.lock /tmp/runtime-packages.lock
+RUN apt-get -qq update \
+ && xargs apt-get -qqy --no-install-recommends install < /tmp/runtime-packages.lock \
+ && dpkg-query -W -f='${binary:Package}=${Version}\n' | sort > /tmp/runtime-actual.lock \
+ && sed 's/=0:/=/' /tmp/runtime-packages.lock | sort > /tmp/runtime-expected.lock \
+ && cmp /tmp/runtime-actual.lock /tmp/runtime-expected.lock \
+ && useradd -U -M -u 1001 -s /bin/false -d /opt/penpot penpot \
+ && mkdir -p /opt/data/assets /opt/penpot \
+ && chown -R penpot:penpot /opt/data /opt/penpot \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && test -s /var/lib/dpkg/status
+COPY --from=upstream /opt/jre /opt/jre
+COPY --from=upstream /opt/imagick /opt/imagick
+COPY --from=upstream --chown=1001:1001 /opt/penpot/backend /opt/penpot/backend
+# Existing dependency-repaired jar; do not recompile or change application code.
+COPY --chown=1001:1001 penpot.jar /opt/penpot/backend/penpot.jar
+RUN echo '7bea0840ef8cf9cef38127af3b22c69d62db3665ce2df94f3975c43656adafe8  /opt/penpot/backend/penpot.jar' | sha256sum -c -
+LABEL org.opencontainers.image.source="https://github.com/penpot/penpot" \
+      org.opencontainers.image.revision="ff7a66f51938b2293260ea27a64e2c4e0833b5e3" \
+      org.opencontainers.image.version="2.18.3" \
+      org.opencontainers.image.licenses="MPL-2.0" \
+      org.utilibre.runtime="Debian 13 package inventory retained; no DHI compliance claim"
+USER penpot:penpot
+WORKDIR /opt/penpot/backend
+CMD ["/bin/bash", "run.sh"]

@@ -1,7 +1,7 @@
 name: utilibre-pack-forms
 services:
   db:
-    image: utilibre-postgres:17.11-alpine-vendor-security-20261011
+    image: utilibre-postgres:17.11-alpine-gosu-security-20261011-p2
     user: '70:70'
     restart: unless-stopped
     cap_drop: [ALL]

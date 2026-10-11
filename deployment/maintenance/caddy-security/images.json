@@ -1,0 +1,23 @@
+[
+  {
+    "kind": "wishlist",
+    "base": "utilibre-wishlist:0.67.1-esbuild-security-20261011",
+    "baseId": "sha256:ef6dd27db307610f6031bf1b582f906096f77161d6f1fdc363b3e6903dbee867",
+    "candidate": "utilibre-wishlist:0.67.1-caddy-security-20261011",
+    "path": "/usr/bin/caddy"
+  },
+  {
+    "kind": "newsletters-mail-jobs",
+    "base": "utilibre-newsletters:2.1.3-p1",
+    "baseId": "sha256:3f204eddb09a1ab1bbd6ff7a49c713bc1402e9c74f2827059626b133239e4e7f",
+    "candidate": "utilibre-newsletters:2.1.3-p1-caddy-security-20261011",
+    "path": "/app/node_modules/.bin/caddy"
+  },
+  {
+    "kind": "newsletters-web",
+    "base": "utilibre-newsletters:2.1.3-p2",
+    "baseId": "sha256:d9543ae6d1d1b3869ae894c621cfc051f548d53b25bb03bd62d7b399190c5972",
+    "candidate": "utilibre-newsletters:2.1.3-p2-caddy-security-20261011",
+    "path": "/app/node_modules/.bin/caddy"
+  }
+]

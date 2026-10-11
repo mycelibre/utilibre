@@ -1,0 +1,32 @@
+[
+  {
+    "kind": "postgres", "version": "17.11",
+    "base": "utilibre-postgres:17.11-alpine-vendor-security-20261011",
+    "baseId": "sha256:831b85f33a27b6dc9ae1130630e27fb51685189bfcc9128108cc9d8c4484fb72",
+    "candidate": "utilibre-postgres:17.11-alpine-gosu-security-20261011"
+  },
+  {
+    "kind": "postgres", "version": "16.15",
+    "base": "utilibre-postgres:16.15-alpine-vendor-security-20261011",
+    "baseId": "sha256:7c810ed08d738599ab2533df64bf59d17fe204c16c12e0325de7e822d77da1b0",
+    "candidate": "utilibre-postgres:16.15-alpine-gosu-security-20261011"
+  },
+  {
+    "kind": "mariadb", "version": "12.2.2",
+    "base": "utilibre-mariadb:12.2.2-openssl-security-20261011",
+    "baseId": "sha256:75f0d969e0d714e8fcdd711297bb9df9b4b4c5b7d2f9f9aad58883918f335167",
+    "candidate": "utilibre-mariadb:12.2.2-gosu-security-20261011"
+  },
+  {
+    "kind": "addy", "version": "1.7.3",
+    "base": "utilibre-addy:1.7.3",
+    "baseId": "sha256:47b07db6fcbf1618fdc178b696788ae01571094c94ef7fd61e48382f9cf4925a",
+    "candidate": "utilibre-addy:1.7.3-gosu-security-20261011"
+  },
+  {
+    "kind": "documentdb", "version": "17.11",
+    "base": "utilibre-gathio-documentdb:17.11-0.107.0-security-20261011",
+    "baseId": "sha256:224b0bb325a3da89ed9befac41962a82d6f73cbb71f10927fbcbbd9713e979a8",
+    "candidate": "utilibre-gathio-documentdb:17.11-0.107.0-gosu-security-20261011"
+  }
+]

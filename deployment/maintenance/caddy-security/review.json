@@ -1,0 +1,52 @@
+{
+  "reviewed": "2026-10-11",
+  "scope": "Only the bundled Caddy binary in Wishlist and Kill the Newsletter; no external edge-Caddy VM, application code, schemas, privacy policy or running service configuration changed by this staging work.",
+  "caddy": "2.11.7",
+  "compiler": "Go 1.26.9",
+  "dependencyChange": "golang.org/x/net v0.59.0 to v0.60.0 only. Its required crypto/sys/term/text versions already match the original Caddy release. All other linked module versions and original checksums are verified unchanged.",
+  "source": {
+    "release": "https://github.com/caddyserver/caddy/releases/tag/v2.11.7",
+    "commit": "72dd0fb067f6d7826c7f79907670ba4a713bfe37",
+    "artifact": "https://github.com/caddyserver/caddy/releases/download/v2.11.7/caddy_2.11.7_buildable-artifact.tar.gz",
+    "artifactSha256": "b430516910839fbaf35c0a9e9df80d1e2e30aa792530293c39f4a97a1b2c9060",
+    "xNet": "https://proxy.golang.org/golang.org/x/net/@v/v0.60.0.zip",
+    "xNetZipSha256": "052e0453db47a96ae9567503e7c95ea925ab52682cb1cec31250541f7160107e",
+    "xNetModuleSum": "h1:79p50tfZlm0J9YfoDsSi639qSXNGVwEzOPLCxM2FsYU=",
+    "xNetSumSource": "https://sum.golang.org/lookup/golang.org/x/net@v0.60.0",
+    "license": "Caddy Apache-2.0 and x/net BSD-3-Clause notices retained in the helper layer.",
+    "patchMethod": "Replace the one pinned vendored module directory and its go.mod/go.sum/vendor manifest version. No source-function edits. Compile from the official buildable artifact with its standard modules, original build tags and CGO disabled."
+  },
+  "binarySha256": "4a391a31335cbb0656baddeb1f0f93f0cb4f6713030030208f269376f4db60e4",
+  "candidates": [
+    {"image":"utilibre-wishlist:0.67.1-caddy-security-20261011-p2","id":"sha256:79228dd2f65a70907285e4bfde9e05588c496dfec13836c17a780d5266c2581c"},
+    {"image":"utilibre-newsletters:2.1.3-p1-caddy-security-20261011-p2","id":"sha256:d1ff91dfb8f216dca96eb5425806c8fd99edbea4f6c3c0c4c064c1ffbd0d085e","roles":"SMTP and background worker"},
+    {"image":"utilibre-newsletters:2.1.3-p2-caddy-security-20261011-p2","id":"sha256:0252f8f07a1a7ed3993311bd0a2d55cc9dbf1e2c6215d39733e59ac851fcb9a0","roles":"Web application"}
+  ],
+  "verification": {
+    "date": "2026-10-11",
+    "status": "All native staging gates passed; production release separately controlled by root maintainer.",
+    "parity": "Image user/environment/entrypoint/command/workdir/ports/healthcheck, OS inventory, application byte hashes and Caddy standard module list unchanged. Exact Caddy version retained; vendored builds may omit dependency sums from the displayed build-info, so original checksums are independently matched against the official artifact go.sum.",
+    "protocols": "Each candidate ran in network-none isolation: proxy method/path/query/body fidelity, response headers, gzip, progressive SSE and three HTTP/2 streams with three bounded SETTINGS changes passed. No high-rate or public-service stress test.",
+    "wishlist": "Fresh tmpfs SQLite installation; native migration, seed and data patch; native account creation, list/item creation, reload persistence and anonymous denial passed in Chromium. Existing esbuild native transform still passed. No external browser requests.",
+    "newsletter": "Fresh tmpfs database; native initialization handshake, Caddy static serving and proxy, browser feed creation, synthetic loopback SMTP delivery, matching Atom text and native feed deletion passed. Web p2 and SMTP p1 candidate roles were tested separately against the same disposable database. The original role images also passed the identical baseline fixture.",
+    "limits": "Synthetic desktop Chromium/local HTTP-SMTP only. Production OIDC, public MX/TLS, guest devices and historical data were not touched or re-tested. Background-worker application bytes remain identical; no scheduled external delivery jobs were invoked.",
+    "scan": "The patched Caddy binary has zero CRITICAL/HIGH/MEDIUM/LOW findings. One raw UNKNOWN remains: GO-2026-5932 for x/crypto. Full image scan results still include unrelated application/OS findings: Wishlist 1 critical/64 high; each Newsletter image 0 critical/4 high. These are not waived or represented as resolved by this helper update."
+  },
+  "remainingOpenPgpAdvisory": {
+    "id": "GO-2026-5932",
+    "source": "https://vuln.go.dev/ID/GO-2026-5932.json",
+    "scope": "The Go advisory is specifically for golang.org/x/crypto/openpgp and its packet/armor/clearsign/errors/elgamal/s2k subpackages. It has no fixed version; replacing unrelated crypto functions is not a repair.",
+    "evidence": "The exact final compiler/source/build-tag go list -deps closure contains no openpgp package or subpackage. The complete closure, source/module pins and binary build-info are retained. This is source import-closure evidence, not a stripped-symbol absence inference.",
+    "linkedPackagesSha256": "5f68c0c011f2f5c1917458dada6c557b11f97486e8d825ea59817a55453448c2",
+    "handling": "Raw finding retained for exact-image scoped review by the maintainer. This change adds no vulnerability suppression. The evidence must be rechecked if modules, source or build tags change."
+  },
+  "commands": [
+    "node deployment/maintenance/caddy-security/build.mjs --net",
+    "node deployment/maintenance/caddy-security/check.mjs --net",
+    "node deployment/maintenance/check-wishlist-esbuild.mjs --caddy-net",
+    "node deployment/maintenance/caddy-security/check-newsletters.mjs --net",
+    "node deployment/maintenance/caddy-security/scan.mjs --net"
+  ],
+  "operations": "Build uses the existing pinned compiler, one CPU and a 2 GiB memory cap. Source/compiler caches are memory-backed; only binaries and review receipts remain. Candidate layers add no server or runtime requirement. Test containers, tmpfs databases and generated fixture certificates were removed. At handoff approximately 9.7 GiB host-root space remained, above the 8 GiB floor.",
+  "rollback": "Use each frozen base/baseId from images.json and existing Compose process; preserve all production mounts and configuration. No app/schema/user-data migration occurs in these layers. First compiler-only candidates remain available separately as reviewed fallbacks, but retain the x/net advisories."
+}

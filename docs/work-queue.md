@@ -1,20 +1,42 @@
 # Operator work queue — reconciled 11 October 2026
 
-PrivateBin directory follow-up, 19:58 UTC: repaired the security backport's
-script-filename regression that prevented native directory version detection.
-Public detector and actual encrypted 25 MB upload/download/hash pass; one-week
-maximum and sanitizer retained. The directory's stored upload cross still
-awaits an external successful rescan, not another upload-setting change.
+PrivateBin directory follow-up, 21:51 UTC: the official directory now shows
+**file upload ✔** for `https://paste.utilibre.org/`. The script-filename repair
+restored native version detection. Public encrypted 25 MB upload/download/hash
+checks pass; one-week maximum and sanitizer retained. This listing item is
+closed, not waiting for another configuration change.
 [Evidence and rollback](../deployment/utilibre/privatebin-security/README.md).
 
 ## Active security/quality follow-through — 11 October
 
-Later parallel release: Penpot **2.18.3**, Kuma **2.5.6**, 67 shared gateway/static
+Current continuation: PrivateBin PHP, six Valkey caches, ntfy/Kittygram/DeGoog
+vendor libraries, Linkding Python libraries, 11 PostgreSQL privilege-dropping
+helpers, Addy/MariaDB, Gathio/DocumentDB, Penpot runtime inventory and hardening,
+PairDrop HTTP/WebSocket libraries, Chhoto's auditable binary, FMD/Yopass Go
+runtimes, and compatible Kuma/Actual dependency repairs are deployed. Actual's
+tested emergency rollback preserves its new privacy fixes as well.
+Wishlist and Newsletters also run the tested same-version Caddy compiler/x/net
+repair, preserving their native applications and guarded SMTP ingress.
+Native fixtures and scoped restored-account-data checks passed. Rustpad's
+auditable candidate passed two-client tests but its live process currently has
+an in-memory document; do not destroy it just to clear the inventory warning.
+Final scan at 22:19:04 UTC covers 109 images / 175 containers, 510 host packages
+and 29 source manifests: 55 critical / 3,276 high raw occurrences, not proven
+exploits. Only Rustpad lacks live inventory; all source scans completed.
+After exact expiring review/deduplication, 40 critical / 3,257 high findings
+remain pending. The 112-provider application-advisory review is current with
+no pending published application advisory; it does not clear dependencies.
+Root has about 12 GiB free after reproducible build-cache cleanup.
+See [final evidence and rollback](updates.md#security-continuation--11-october-2026);
+older counts below are historical checkpoints, not current fleet totals.
+
+Earlier parallel release: Penpot **2.18.3**, Kuma **2.5.6**, 67 shared gateway/static
 wrappers, all 11 PostgreSQL vendor layers, Authentik/Opengist/LiberaForms and
 private SimpleLogin have deployed patch receipts and bounded native checks.
 EN/ES software disclosures are live. The stricter scanner correctly leaves
-Penpot backend OS inventory incomplete; the exact DHI base requires registry
-credentials not present here. Legacy framework, old Grist sandbox/toolchain and
+Penpot backend OS inventory incomplete at that checkpoint. The later tested
+public Debian runtime restores genuine OS inventory without pretending to be
+the inaccessible DHI base. Legacy framework, old Grist sandbox/toolchain and
 other dependency findings remain open. See [current release and limits](updates.md#parallel-security-release--11-october-2026).
 Earlier checkpoint counts below are historical, not post-release totals.
 The independent availability workflow now has a confirmed successful **scheduled**
@@ -57,7 +79,8 @@ Daily upstream coverage now includes Authentik and three other companions, 112
 providers total; published application-advisory reviews are separate from the
 still-open dependency queue. No alert is waived merely to reduce its count.
 
-**Still open:** the private vulnerability queue needs staged package/application
+**Still open:** Rustpad's tested auditable image must wait for safe handling of
+its live memory-only document. The private vulnerability queue needs staged package/application
 remediation; a working scanner is not a clean security report. Prioritize shared
 remaining app libraries and establish reachability: Grist/runsc, precompiled
 SSR/browser bundles, the private SimpleLogin pilot, FerretDB's disabled MCP

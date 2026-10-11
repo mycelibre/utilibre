@@ -101,7 +101,7 @@ in the private output directory. Backend Java: 170 detected packages and zero
 high/critical findings. Exporter Node: zero high/critical findings. These are
 scanner findings, not a proof of absence of vulnerabilities.
 
-**OS coverage remains incomplete:** upstream's backend Dockerfile removes all
+**Original deployed image OS coverage remains incomplete:** upstream's backend Dockerfile removes all
 of `/var/lib`, including the package database; the backend scan detects zero OS
 packages. No replacement package metadata has been invented. The official
 frontend/exporter images still produce OS findings (raw frontend 4 critical/102
@@ -128,6 +128,11 @@ should be presented as the running backend's complete inventory.
 Neither `/root/.docker/config.json` nor `/home/ubuntu/.docker/config.json` exists,
 and this session has no alternate `DOCKER_CONFIG`. No existing DHI credential
 helper configuration was available; no credentials were displayed or requested.
+The subsequent [public Debian runtime repair](RUNTIME.md) preserves the exact
+application/JRE/ImageMagick bytes while retaining genuine package inventory.
+That document separates staged verification from production release and retains
+the newly visible OS findings; the DHI access limitation is not a reason to
+pretend coverage is complete on the original image.
 The final exporter vendor scan still reports 3 critical/177 high raw OS findings
 and zero high/critical Node findings; the small vendor refresh is not described
 as resolving unrelated or duplicate upstream scanner findings.

@@ -1,0 +1,8 @@
+# Narrow unsupported-codec defense; not an OpenEXR/libxml package repair.
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+USER root
+RUN test "$(grep -c '</policymap>' /opt/imagick/etc/ImageMagick-7/policy.xml)" = 1 \
+ && ! grep -q 'pattern="EXR"' /opt/imagick/etc/ImageMagick-7/policy.xml \
+ && sed -i '/<\/policymap>/i\  <policy domain="coder" rights="none" pattern="EXR"/>' /opt/imagick/etc/ImageMagick-7/policy.xml
+USER penpot:penpot

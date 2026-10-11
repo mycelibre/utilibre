@@ -1,0 +1,26 @@
+// No production data. Validate replacement runtime inventory/native artifacts.
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {mkdir,readFile,writeFile,statfs} from 'node:fs/promises';
+const base='utilibre-penpot-backend:2.18.3-libraries-security-20261011';
+const image='utilibre-penpot-backend:2.18.3-debian-inventory-20261011';
+const directory='/var/lib/utilibre-maintenance/penpot-runtime-20261011';
+await mkdir(directory,{recursive:true,mode:0o700});
+const space=await statfs(directory);assert(space.bavail*space.bsize>8*1024**3);
+const docker=(args,input)=>execFileSync('docker',args,{input,encoding:'utf8',timeout:120000,maxBuffer:4*1024**2,stdio:['pipe','pipe','pipe']});
+const [before,after]=JSON.parse(docker(['image','inspect',base,image]));
+for(const key of ['Cmd','Entrypoint','WorkingDir','User','ExposedPorts','Volumes'])assert.deepEqual(after.Config[key],before.Config[key],key);
+const env=c=>Object.fromEntries(c.Env.map(v=>[v.slice(0,v.indexOf('=')),v.slice(v.indexOf('=')+1)]));assert.deepEqual(env(after.Config),env(before.Config));
+const bounded=['--rm','--network','none','--read-only','--cpus','1','--memory','256m','--pids-limit','96','--log-driver','none'];
+const hashes=[];
+for(const ref of [base,image])hashes.push(docker(['run',...bounded,'--user','root','--entrypoint','bash',ref,'-o','pipefail','-c','find /opt/jre /opt/imagick /opt/penpot/backend -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum']).trim().split(/\s/)[0]);
+assert.match(hashes[0],/^[a-f0-9]{64}$/);assert.equal(hashes[0],hashes[1],'App/JRE/ImageMagick changed');
+const packages=docker(['run',...bounded,'--entrypoint','dpkg-query',image,'-W','-f=${binary:Package}\t${Version}\n']);
+assert(packages.split('\n').filter(Boolean).length>100,'Real package inventory');
+for(const pkg of ['libc6:amd64','libssl3t64:amd64','fontforge','libfreetype6:amd64'])assert(packages.split('\n').some(x=>x.startsWith(pkg+'\t')),'Inventory missing '+pkg);
+await writeFile(directory+'/packages.tsv',packages,{mode:0o600});
+const native=await readFile(new URL('./check-runtime-native.py',import.meta.url),'utf8');
+const out=docker(['run','-i',...bounded,'--tmpfs','/tmp:rw,size=64m,mode=1777','--entrypoint','python3',image,'-'],native);
+const checks=JSON.parse(out.trim().split('\n').at(-1));
+const report={status:'passed',checkedAt:new Date().toISOString(),deployed:false,image,imageId:after.Id,baseImageId:before.Id,bytes:after.Size,artifactSha256:hashes[0],nativeConfigUnchanged:true,packages:packages.split('\n').filter(Boolean).length,...checks};
+await writeFile(directory+'/runtime.json',JSON.stringify(report,null,2)+'\n',{mode:0o600});console.log(JSON.stringify(report));

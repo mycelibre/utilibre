@@ -63,7 +63,7 @@ services:
     depends_on: [mezzo]
   fmd:
     <<: *runtime
-    image: registry.gitlab.com/fmd-foss/fmd-server:0.17.0-alpine@sha256:e4a7f5538aa3febe938159ee2db337ccdb50d340d7009784c5a851f152df48e0
+    image: utilibre-fmd:0.17.0-go-security-20261011
     user: "1000:1000"
     command: [--config, /etc/fmd-server/config.yml, --web-dir, /opt/utilibre-web]
     volumes:

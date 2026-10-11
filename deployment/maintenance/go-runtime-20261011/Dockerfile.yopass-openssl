@@ -1,0 +1,20 @@
+FROM debian:13.7-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f AS vendor
+WORKDIR /vendor
+# APT verifies the Debian-signed repository index and package digest. Keep the
+# complete actual libssl package payload and its own control/md5 metadata.
+# No shell/package manager or unrelated builder package enters the runtime.
+RUN apt-get update \
+ && apt-get download libssl3t64=3.5.7-1~deb13u3 \
+ && test "$(find . -maxdepth 1 -name '*.deb' | wc -l)" = 1 \
+ && dpkg-deb --extract ./libssl3t64_3.5.7-1~deb13u3_amd64.deb /overlay \
+ && dpkg-deb --control ./libssl3t64_3.5.7-1~deb13u3_amd64.deb /control \
+ && test "$(sed -n 's/^Package: //p' /control/control)" = libssl3t64 \
+ && test "$(sed -n 's/^Version: //p' /control/control)" = 3.5.7-1~deb13u3 \
+ && mkdir -p /overlay/var/lib/dpkg/status.d \
+ && cp /control/control /overlay/var/lib/dpkg/status.d/libssl3t64 \
+ && cp /control/md5sums /overlay/var/lib/dpkg/status.d/libssl3t64.md5sums \
+ && cd /overlay && md5sum --check var/lib/dpkg/status.d/libssl3t64.md5sums
+
+FROM utilibre-yopass:14.10.0-go-security-20261011@sha256:5f0522463f12d640cee398a7623126566a5625b92f8455e0dc790426b4428075
+COPY --from=vendor /overlay/ /
+LABEL org.utilibre.security.openssl="Debian libssl3t64=3.5.7-1~deb13u3"

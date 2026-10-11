@@ -1,0 +1,14 @@
+# Remove unused GNU awk; upstream's POSIX resolver expression uses installed mawk.
+FROM penpotapp/frontend:2.18.3@sha256:bb8abe27d53de84c95597f2c02c0e702b2779971fb0703e543f9ecf183e999f6
+USER root
+RUN dpkg --purge gawk \
+ && test ! -e /usr/bin/gawk \
+ && test -x /usr/bin/mawk \
+ && update-alternatives --install /usr/bin/awk awk /usr/bin/mawk 5 \
+ && test "$(readlink -f /usr/bin/awk)" = /usr/bin/mawk \
+ && test "$(dpkg-query -W -f='${db:Status-Status}' gawk 2>/dev/null || true)" != installed \
+ && if test -f /var/lib/dpkg/status.d/gawk; then \
+      test "$(sed -n 's/^Package: //p' /var/lib/dpkg/status.d/gawk)" = gawk; \
+      rm /var/lib/dpkg/status.d/gawk; \
+    fi
+USER penpot:penpot

@@ -5,8 +5,12 @@ import {execFileSync} from 'node:child_process';
 import {mkdirSync,readFileSync,writeFileSync,statfsSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 process.umask(0o077);
-const dir='/var/lib/utilibre-maintenance/postgres-vendor-20261011';mkdirSync(dir,{recursive:true,mode:0o700});
-const groups=[{version:'17.11',base:'sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73',ref:'utilibre-postgres:17.11-alpine-vendor-security-20261011',count:8},{version:'16.15',base:'sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea',ref:'utilibre-postgres:16.15-alpine-vendor-security-20261011',count:3}];
+const gosu=process.argv.includes('--gosu');
+const dir='/var/lib/utilibre-maintenance/'+(gosu?'postgres-gosu-20261011':'postgres-vendor-20261011');mkdirSync(dir,{recursive:true,mode:0o700});
+const groups=gosu?[
+ {version:'17.11',base:'sha256:831b85f33a27b6dc9ae1130630e27fb51685189bfcc9128108cc9d8c4484fb72',ref:'utilibre-postgres:17.11-alpine-gosu-security-20261011-p2',count:8},
+ {version:'16.15',base:'sha256:7c810ed08d738599ab2533df64bf59d17fe204c16c12e0325de7e822d77da1b0',ref:'utilibre-postgres:16.15-alpine-gosu-security-20261011-p2',count:3}
+]:[{version:'17.11',base:'sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73',ref:'utilibre-postgres:17.11-alpine-vendor-security-20261011',count:8},{version:'16.15',base:'sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea',ref:'utilibre-postgres:16.15-alpine-vendor-security-20261011',count:3}];
 function docker(args,input){try{return execFileSync('docker',args,{input,encoding:'utf8',timeout:180000,maxBuffer:128*1024**2,stdio:['pipe','pipe','pipe']});}catch(e){writeFileSync(dir+'/error.log',String(e.stderr||e.message),{mode:0o600});throw Error('Private PostgreSQL diagnostic: '+dir+'/error.log');}}
 const inspect=name=>JSON.parse(docker(['inspect',name]))[0];
 const hash=text=>createHash('sha256').update(text).digest('hex');
@@ -16,7 +20,7 @@ for(const g of groups){
  const space=statfsSync(dir);assert(space.bsize*space.bavail>=8*1024**3,'Preserve 8 GiB recovery floor');
  const before=inspect(g.base),after=inspect(g.ref);
  for(const key of ['User','Env','Cmd','Entrypoint','WorkingDir','ExposedPorts','Volumes','Healthcheck'])assert.deepEqual(before.Config[key],after.Config[key],'Preserve native '+key);
- const bytes=image=>docker(['run','--rm','--network','none','--read-only','--memory','128m','--cpus','.5','--log-driver','none','--entrypoint','sh',image,'-c','cd /usr/local && find . -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum']).trim().split(/\s+/)[0];
+ const bytes=image=>docker(['run','--rm','--network','none','--read-only','--memory','128m','--cpus','.5','--log-driver','none','--entrypoint','sh',image,'-c','cd /usr/local && find . -type f '+(gosu?'! -path ./bin/gosu ! -path "./share/gosu-security/*" ':'')+'-print0 | sort -z | xargs -0 sha256sum | sha256sum']).trim().split(/\s+/)[0];
  g.engineSha256=bytes(g.base);assert.match(g.engineSha256,/^[a-f0-9]{64}$/);assert.equal(bytes(g.ref),g.engineSha256,'Engine files changed');
  g.image=after.Id;const selected=live.filter(x=>x.Image===g.base&&x.Name.startsWith('/utilibre-')&&!x.Name.includes('roundtrip'));
  assert.equal(selected.length,g.count,'Review changed live DB scope');
@@ -49,5 +53,5 @@ for(const g of groups){
   report.groups.push({...g,syntheticWriteAndRestore:'passed'});
  }finally{try{docker(['rm','-f','-v',test]);}catch{}}
 }
-report.status='passed';report.completedAt=new Date().toISOString();report.limits='Per-database native logical restore with ownership/ACL omitted; native roles backed up separately, not replayed. Same /usr/local engine bytes, schema/data format and application access unchanged. No app account workflow implied by database readiness.';
+report.status='passed';report.completedAt=new Date().toISOString();report.limits='Per-database native logical restore with ownership/ACL omitted; native roles backed up separately, not replayed. Same engine bytes (only reviewed gosu helper excluded in --gosu mode), schema/data format and application access unchanged. No app account workflow implied by database readiness.';
 writeFileSync(dir+'/stage.json',JSON.stringify(report,null,2)+'\n',{mode:0o600});console.log(JSON.stringify({status:report.status,databases:report.backups.length,deployed:false}));

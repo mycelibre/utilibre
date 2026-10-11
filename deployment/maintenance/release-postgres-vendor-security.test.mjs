@@ -8,6 +8,30 @@ const healthy = image => ({
   State: {Running: true, Health: {Status: 'healthy'}},
 });
 
+test('reviewed privacy fallback is verified and used instead of old image', async () => {
+ const f=fixture();Object.assign(f.row,{rollbackRef:'fallback:reviewed',rollbackImage:'sha256:privacy'});
+ const inspect=f.ops.inspect;f.ops.inspect=async name=>name===f.row.rollbackRef?{Id:f.row.rollbackImage}:inspect(name);
+ f.ops.start=async()=>{throw Error('start');};
+ f.ops.rollback=async row=>{f.calls.rollback++;f.setLive(healthy(row.rollbackImage));};
+ await assert.rejects(releaseReviewedRow(f.row,f.row.oldImage,f.ops),/exact reviewed fallback image is running and healthy/);
+ assert.equal(f.row.rollback.status,'verified');assert.equal(f.calls.rollback,1);
+});
+
+test('changed fallback reference prevents any release mutation', async () => {
+ const f=fixture();Object.assign(f.row,{rollbackRef:'fallback:reviewed',rollbackImage:'sha256:privacy'});
+ f.ops.inspect=async()=>({Id:'sha256:changed'});
+ await assert.rejects(releaseReviewedRow(f.row,f.row.oldImage,f.ops),/Reviewed fallback tag changed/);
+ assert.equal(f.calls.start,0);assert.equal(f.calls.rollback,0);assert.equal(f.calls.save,0);
+});
+
+test('partial fallback configuration prevents any release mutation', async () => {
+ for(const key of ['rollbackRef','rollbackImage']){
+  const f=fixture();f.row[key]='fixture';
+  await assert.rejects(releaseReviewedRow(f.row,f.row.oldImage,f.ops),/Explicit rollback needs both/);
+  assert.equal(f.calls.start,0);assert.equal(f.calls.rollback,0);assert.equal(f.calls.save,0);
+ }
+});
+
 function fixture() {
   const row = {
     name: 'fixture-db', oldRef: 'old:reviewed',

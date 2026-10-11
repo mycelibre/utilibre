@@ -10,7 +10,7 @@ process.umask(0o077);
 assert(process.argv.length === 2 || (process.argv.length === 3 && process.argv[2] === '--public'));
 const live = process.argv.includes('--public');
 const image=process.env.PRIVATEBIN_CHECK_IMAGE||'utilibre-privatebin:2.0.6-security-20261011-p2';
-assert.equal(image,'utilibre-privatebin:2.0.6-security-20261011-p2');
+assert(['utilibre-privatebin:2.0.6-security-20261011-p2','utilibre-privatebin:2.0.6-php-security-20261011-p3'].includes(image));
 const base = live ? 'https://paste.utilibre.org' : 'http://127.0.0.1:3185';
 const recipe = fileURLToPath(new URL('../config/privatebin/', import.meta.url));
 const output = await mkdtemp('/opt/utilibre/reports/privatebin-uploads-');

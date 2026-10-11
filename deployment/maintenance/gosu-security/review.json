@@ -1,0 +1,53 @@
+{
+  "reviewedAt": "2026-10-11",
+  "state": "native-tested candidates; deployment belongs to release owner",
+  "scope": "Replace only /usr/local/bin/gosu and add license/build notices. Preserve database engines, application bytes, image user/entrypoint/environment/health configuration and all data mounts.",
+  "sources": [
+    "https://github.com/tianon/gosu/tree/1.19",
+    "https://raw.githubusercontent.com/tianon/gosu/1.19/Dockerfile",
+    "https://raw.githubusercontent.com/tianon/gosu/1.19/setup-user.go",
+    "https://go.dev/doc/devel/release#go1.26.9",
+    "https://raw.githubusercontent.com/moby/sys/user/v0.4.1/user/user.go",
+    "https://raw.githubusercontent.com/moby/sys/user/v0.4.1/user/user_utils.go",
+    "https://raw.githubusercontent.com/moby/sys/user/v0.4.1/user/user_test.go",
+    "https://sum.golang.org/lookup/github.com/moby/sys/user@v0.4.1",
+    "https://sum.golang.org/lookup/golang.org/x/sys@v0.44.0"
+  ],
+  "compiler": "Go 1.26.9, CGO disabled, linux/amd64, Go telemetry off; exact image digest in build.mjs",
+  "sourceCommit": "6456aaa0f3c854d199d0f037f068eb97515b7513",
+  "sourceArchiveSha256": "cd9719b775dbfedae53923c9b0dc792b66d42c51e0b36652ed6f747fbadc0164",
+  "originalBinarySha256": "52c8749d0142edd234e9d6bd5237dff2d81e71f43537e2f4f66f75dd4b243dd0",
+  "compilerOnlyBinarySha256": "d0a386b6fcd757540277ed91e213e7c51f2406bad2965535ce0bd2c6214339d4",
+  "dependencyPatchedBinarySha256": "8aab77d37a8468859988f0fc89ae4c3d4683322ec6d069d44f2b0d69c247d452",
+  "dependencyDecision": {
+    "compilerOnly": "Original gosu 1.19 Go source, go.mod and go.sum unchanged; original dependency suite passed. Keeps the two dependency advisories as a conservative tested fallback.",
+    "p2": "Same gosu 1.19 production Go source; moby/sys/user 0.4.1 and x/sys 0.44.0 with pinned Go module checksums. All five native candidate gates passed.",
+    "upstreamTestException": "moby/sys/user 0.4.1 TestParseGroupFileCapsReads uses NUL padding. Its below-cap fixture expects NULs to be ignored, but bytes.TrimSpace does not remove NULs; its near-cap fixtures create a single almost-10-MiB token, exceeding the existing 1-MiB line bound before the independent file cap. This single named test is excluded, not represented as passed. No production parser is patched.",
+    "replacementProof": "dependency-review/security_test.go checks the 10-MiB read limit with valid blank lines: below and exactly at the cap succeed, one byte beyond fails. It also checks device/directory rejection, oversized single-line rejection, valid named UID/GID/supplementary groups, and failure instead of partial identity when passwd/group reads overflow. The rest of the upstream dependency suite passed, followed by native identity parity and all database gates.",
+    "notAClaim": "Malformed local passwd/group data is not proven universally safe by these tests; the helper remains a root-startup privilege dropper, not a setuid/sudo replacement. No advisory suppression was added."
+  },
+  "nativeChecks": [
+    "Exact original engine/application/entrypoint file hashes and native image configuration preserved",
+    "Named and numeric UID/GID, supplementary groups and home-directory parity against each original image",
+    "Unknown user/group rejection, failed nonroot-to-root escalation, exit-code 37 propagation, PID 1 exec behavior and mode 0755",
+    "PostgreSQL 16.15 and 17.11: native fresh initialization, nonroot server, read/write and denied DELETE for read-only fixture role, transaction rollback, Unicode/numeric/JSON pg_dump and restore",
+    "MariaDB 12.2.2: sequential fresh source and target servers, authenticated fixture SQL, permission denial, transaction rollback, native logical dump and second-instance restore",
+    "Addy 1.7.3: unchanged application and native anonaddy wrapper invokes its Laravel CLI through gosu anonaddy:anonaddy",
+    "Gathio DocumentDB 17.11/0.107: native extension initialization in its required postgres database, standard SQL dump/restore and native BSON-column dump/drop/reimport byte equivalence"
+  ],
+  "limits": [
+    "Network-none generated fixtures only; no production data copied or changed",
+    "Addy mail delivery and application/browser workflows are not established by the CLI test",
+    "DocumentDB BSON/SQL checks are not a complete FerretDB/Gathio browser workflow",
+    "Go helper repair does not resolve DocumentDB's unrelated OS/component findings",
+    "Public service deployment and after-release health checks remain release-owner tasks"
+  ],
+  "resources": "Compiler and each native test are limited to at most 1 CPU and 2 GiB; compiler cache/source and test databases use bounded tmpfs. Scanner uses a 1-CPU/2-GiB systemd scope. All stages require at least 8 GiB free disk. No pruning or production volume mutations.",
+  "commands": [
+    "node deployment/maintenance/gosu-security/build.mjs --dependencies",
+    "node deployment/maintenance/gosu-security/check.mjs --dependencies",
+    "node deployment/maintenance/gosu-security/scan.mjs --dependencies"
+  ],
+  "receipts": "Private build/check/scan receipts under /var/lib/utilibre-maintenance/gosu-security-20261011/dependencies; compiler-only fallback receipts in its parent directory.",
+  "rollback": "Restore only the appropriate base image pin from images.json using that stack's existing release process. Keep data mounted and unchanged; no schema or data-format migration occurred. Addy must use its existing guarded SMTP restart process. No service is deployed by these scripts."
+}

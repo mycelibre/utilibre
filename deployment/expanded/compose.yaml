@@ -137,7 +137,7 @@ services:
 
   actual:
     <<: *runtime
-    image: utilibre-actual:proxyaddr-security-20261011
+    image: utilibre-actual:leaves-security-20261011
     read_only: true
     user: "1000:1000"
     environment:
@@ -205,7 +205,7 @@ services:
 
   resume-db:
     <<: *runtime
-    image: utilibre-postgres:17.11-alpine-vendor-security-20261011
+    image: utilibre-postgres:17.11-alpine-gosu-security-20261011-p2
     read_only: true
     user: "70:70"
     environment:
@@ -225,7 +225,7 @@ services:
 
   penpot-frontend:
     <<: *runtime
-    image: penpotapp/frontend:2.18.3@sha256:bb8abe27d53de84c95597f2c02c0e702b2779971fb0703e543f9ecf183e999f6
+    image: utilibre-penpot-frontend:2.18.3-minimal-runtime-20261011
     user: "1001:1001"
     # Run after the upstream entrypoint has generated its environment config.
     command: ["/bin/sh", "/usr/local/bin/utilibre-penpot-nginx-start.sh"]
@@ -247,7 +247,7 @@ services:
 
   penpot-backend:
     <<: *runtime
-    image: utilibre-penpot-backend:2.18.3-libraries-security-20261011
+    image: utilibre-penpot-backend:2.18.3-runtime-hardening-20261011
     user: "1001:1001"
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
@@ -303,7 +303,7 @@ services:
 
   penpot-exporter:
     <<: *runtime
-    image: utilibre-penpot-exporter:2.18.3-vendor-security-20261011
+    image: utilibre-penpot-exporter:2.18.3-runtime-hardening-20261011
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
       PENPOT_INTERNAL_URI: http://penpot-frontend:8080
@@ -318,7 +318,7 @@ services:
 
   penpot-db:
     <<: *runtime
-    image: utilibre-postgres:17.11-alpine-vendor-security-20261011
+    image: utilibre-postgres:17.11-alpine-gosu-security-20261011-p2
     read_only: true
     user: "70:70"
     environment:
@@ -338,7 +338,7 @@ services:
 
   penpot-valkey:
     <<: *runtime
-    image: valkey/valkey:9.1.1-alpine@sha256:de31910896150d5e754a07d57d227cfdde4e258ddd0d1aa4607f2d2f95843715
+    image: utilibre-valkey:9.1.1-vendor-security-20261011
     read_only: true
     user: "999:1000"
     command: [valkey-server, --save, "", --appendonly, "no", --maxmemory, 128mb, --maxmemory-policy, noeviction, --loglevel, warning]

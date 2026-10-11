@@ -3,9 +3,9 @@
     "version": "2.18.3",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-expanded-penpot-frontend-1": "sha256:bb8abe27d53de84c95597f2c02c0e702b2779971fb0703e543f9ecf183e999f6",
-      "/utilibre-expanded-penpot-backend-1": "sha256:4746bdafbe62fd3423c6802e8ee106b453d00be47570e7e9c37ec4e735430301",
-      "/utilibre-expanded-penpot-exporter-1": "sha256:4b6fd678f60b95698cfecbc175844bdc95c5bdb80d81d936ea010c46ad987dc1",
+      "/utilibre-expanded-penpot-frontend-1": "sha256:ca4f4adc5367a40e1597bea7d6032de0d08266b6d65cdf083ae4c695d54d23a7",
+      "/utilibre-expanded-penpot-backend-1": "sha256:8b822a4d33272059d4be9b6023246a449b7ae6c9a4faf931d7477f168c7623b8",
+      "/utilibre-expanded-penpot-exporter-1": "sha256:d403d2f058e0f6ab958b232dd717b2864c3c5980441f577e1ac497d5cf5cedd2",
       "/utilibre-expanded-penpot-admin-console-1": "sha256:e907c2fd6febb2cefa046978c718e3e4e68cf3444201c574bdf2421c07123bc1"
     },
     "advisories": [
@@ -319,20 +319,21 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Affected penpot-mcp REPL is not deployed. Rechecked final 2.18.3 frontend/backend/exporter and retained matching admin image; live frontend/backend flags include disable-mcp and disable-prepl-server. No port 4403 listener in any of their four network namespaces. This component disposition does not clear dependencies or the backend OS inventory gap.",
+        "reason": "Affected penpot-mcp REPL is not deployed. Rechecked final 2.18.3 frontend/backend/exporter runtime-hardening images and retained matching admin image; live frontend/backend flags include disable-mcp and disable-prepl-server. No port 4403 listener in any of their four network namespaces on 2026-10-11. Same application artifacts and native two-account/export gates are recorded in deployment/maintenance/penpot-2.18.3/RUNTIME.md. This component disposition does not clear separate dependency findings.",
         "source": "https://github.com/penpot/penpot/security/advisories/GHSA-22qr-rp27-j9wm"
       }
     ],
     "files": {
-      "/home/ubuntu/freetools/deployment/expanded/compose.yaml": "d5918d521adae5dfd942cee1662502c68f524f6426aae3b4aa6afc651d02c764"
+      "/home/ubuntu/freetools/deployment/expanded/compose.yaml": "6080a4c211ea3c523913efb80914d565489453bb038ab4f957ddcff0abdca68e"
     }
   },
   "yopass": {
     "version": "14.10.0",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-community-yopass-1": "sha256:6c33d9c813f77bae70787e1bce76710840ff654f454998b01f8dacc0a7988fd3"
+      "/utilibre-community-yopass-1": "sha256:6c193ee48e73d27af3360288fc577803add0743cfc33845e2430153da77b6390"
     },
+    "runtimeEvidence": "2026-10-11: unchanged 14.10.0 source revision 34d8bbcc4aac14dbf326d46dc69d26895b7f5282; exact linked module versions and browser assets unchanged. Go patch/compiler and genuine Debian OpenSSL payload only. Native encryption/retrieval/expiry gates and artifact checks are documented in deployment/maintenance/go-runtime-20261011/README.md. Current upstream advisory revisions/ranges re-fetched unchanged.",
     "advisories": [
       {
         "id": "GHSA-6r69-c6wg-7g8m",
@@ -527,8 +528,9 @@
     "version": "7.8.3",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-chhoto-app-1": "sha256:3efe81f9733cdac5b712c17b14e995f083adc0d7577cb7098425f936389051af"
+      "/utilibre-chhoto-app-1": "sha256:c86c860a692ba503eae2a48bc7c4ad221f7b9d00b7fb158fa8d04b69717a535a"
     },
+    "runtimeEvidence": "2026-10-11: same 7.8.3 source, dependency lock and privacy patches; auditable Rust metadata added to the native binary. All 18 non-binary files unchanged; 22 native tests and isolated authorization/expiry/restore gate passed, recorded in deployment/maintenance/rust-auditable/README.md. Exact candidate is running. Current upstream advisory revisions/ranges re-fetched unchanged.",
     "advisories": [
       {
         "id": "GHSA-gvcx-7p9v-2462",
@@ -588,8 +590,9 @@
     "version": "0.67.1",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-wishlist-app-1": "sha256:ef6dd27db307610f6031bf1b582f906096f77161d6f1fdc363b3e6903dbee867"
+      "/utilibre-wishlist-app-1": "sha256:79228dd2f65a70907285e4bfde9e05588c496dfec13836c17a780d5266c2581c"
     },
+    "runtimeEvidence": "2026-10-11: same reviewed 0.67.1 application source a5150c73620abb912a802afdcfb51e403230fff3; all /usr/src/app files and runtime configuration match the previously reviewed image. Only Caddy compiler/HTTP dependency repaired. Native synthetic account/list/item/reload and anonymous denial passed with zero outside browser requests; exact healthy image confirmed live. Evidence: /var/lib/utilibre-maintenance/caddy-security-20261011/net/checks.json and wishlist-stage.json. All six upstream advisory revisions/ranges re-fetched unchanged; no dependency waiver.",
     "advisories": [
       {
         "id": "GHSA-fmjc-5jvf-vm6f",
@@ -675,8 +678,9 @@
     "version": "1.47.0",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-linkding-linkding-1": "sha256:e1940ec7e2f31c0c97bc082220e96b13d8a93ef673db6cab583e249a02356e36"
+      "/utilibre-linkding-linkding-1": "sha256:01a2278795b665ddb451f43c024c90bc2ca6e63e6b2aded8754784a8c72cef6d"
     },
+    "runtimeEvidence": "2026-10-11: native version.txt and pyproject report 1.47.0; bookmarks application source and version-file tar hashes match the previously reviewed image. Only pinned Python dependencies changed via deployment/maintenance/linkding-final/Dockerfile; native stage/release receipts are /var/lib/utilibre-maintenance/linkding-python-20261011/stage-p2.json and release-p2.json. Current upstream advisory revision/range re-fetched unchanged.",
     "advisories": [
       {
         "id": "GHSA-3pf9-5cjv-2w7q",
@@ -1686,8 +1690,9 @@
     "version": "26.10.0",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-expanded-actual-1": "sha256:b664a7abda3fb06c807995b93013a6acedb59fbfe103e87ccf88da6919f737ca"
+      "/utilibre-expanded-actual-1": "sha256:6859a1cb16fef5f0abc06c4dd4828160dda1157b01c39b6a0751efd7fdfb7a61"
     },
+    "runtimeEvidence": "2026-10-11: native /app/package.json confirms 26.10.0. Pinned compatible dependency repairs plus four exact-hash privacy changes only (disable unsolicited news/version fetches, narrow connection CSP and update native precache revisions); no auth, schema or budget logic change. 247 application/asset files unchanged; native synthetic budget export/import/reload/sync and anonymous denial passed. Evidence: deployment/maintenance/npm-leaves/README.md and /opt/utilibre/reports/actual-leaves-inventory-j7tcagcm/result.json. All 14 upstream advisory revisions/ranges re-fetched unchanged; dependency findings remain separate.",
     "advisories": [
       {
         "id": "GHSA-m62c-5q34-f3cf",
@@ -2112,8 +2117,9 @@
     "version": "2.5.6",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-community-uptime-kuma-1": "sha256:3f54318380deeb275b2127133ec0fdd59de12ebe295c58bf3f99174b3f86f475"
+      "/utilibre-community-uptime-kuma-1": "sha256:8d78c4ea077c0be5e7407343a405caa613bffa4b0185df671cde75d1f522eb77"
     },
+    "runtimeEvidence": "2026-10-11: native /app/package.json confirms unchanged 2.5.6 after pinned compatible leaf dependency patches. Re-ran native notification render/include/layout denial with an existing synthetic file in an isolated final-image container. Rechecked live loopback-only admin port, readonly gateway mount, public status 200, denied admin routes 404 and POST 405. All 19 upstream advisory revisions/ranges re-fetched unchanged. Dependency findings remain separate.",
     "advisories": [
       {
         "id": "GHSA-wf2j-5mc7-5c4w",
@@ -2430,7 +2436,7 @@
     ],
     "files": {
       "/home/ubuntu/freetools/deployment/community/gateway.conf": "4c0e655e0c85f8023d90f89a1225bd1845d7b62f5f121155ad6a6765903ef352",
-      "/home/ubuntu/freetools/deployment/community/compose.yaml": "47de87b34d45f6ee6b576114e57f7b070bedfc259f780eb1dd5b790c2839e55c"
+      "/home/ubuntu/freetools/deployment/community/compose.yaml": "e3ec13a6dad239c76a3996ae68e6b4aa021f9bf78d84ee66f5878fc4e7c9f2d5"
     }
   },
   "bentopdf": {
@@ -3144,11 +3150,12 @@
     ]
   },
   "privatebin": {
-    "version": "2.0.6-security-20261011-p2",
+    "version": "2.0.6-php-security-20261011-p3",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-services-privatebin-1": "sha256:82d9ff7456aa51c5865532b00e6ee1d1dc76e32bcb9a249419eb61ad72cd6f14"
+      "/utilibre-services-privatebin-1": "sha256:4bd1fbaaae5c7e0e74285412a4cd7b02de6c456a8d4b5d8430791e05e70e8915"
     },
+    "runtimeEvidence": "2026-10-11: same 2.0.6 application/backport after signed Alpine/PHP vendor updates in deployment/maintenance/alpine-final/Dockerfile.privatebin. Exact /srv/lib application directory and privatebin.js hashes match reviewed p2; live privatebin.js also matches and retains FORBID_ATTR class/style/id. Bound mounted template hash unchanged. All 13 upstream advisory revisions/ranges re-fetched unchanged; no new advisory waiver.",
     "advisories": [
       {
         "id": "GHSA-rj84-h626-vr75",

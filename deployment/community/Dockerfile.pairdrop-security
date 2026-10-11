@@ -1,9 +1,9 @@
-# Same PairDrop 1.11.2, supported Alpine 3.21 updates and one pinned transitive
-# Express trust-proxy fix and a narrow upstream tab-cleanup race guard.
+# Same PairDrop 1.11.2 and tab guard, supported Alpine 3.21 updates,
+# Express 4.x native dependency graph and WebSocket security repairs.
 FROM ghcr.io/schlagmichdoch/pairdrop:v1.11.2@sha256:c4b30977264a76e335740089e693a52a0d0d616330dec7f93c7b96beef7b4a02
 USER root
+COPY pairdrop-security/package.json pairdrop-security/package-lock.json ./
 RUN apk upgrade --no-cache \
- && node -e 'const fs=require("fs"); const p="package-lock.json",l=JSON.parse(fs.readFileSync(p)); const v=l.packages["node_modules/proxy-addr"]; if(v.version!=="2.0.7")throw Error("Upstream lock changed"); Object.assign(v,{version:"2.0.8",resolved:"https://registry.npmjs.org/proxy-addr/-/proxy-addr-2.0.8.tgz",integrity:"sha512-5nnx0yGyVUcY6t9RnWcARWtwT9F1D8O9rt08htPvnd49W1IgZtmLkhu9WfMzQj1cFxjHIO6connUNVW5k7AVyQ=="}); fs.writeFileSync(p,JSON.stringify(l,null,2)+"\n")' \
  && npm ci --ignore-scripts --no-audit --no-fund \
  && npm cache clean --force
 COPY pairdrop-storage-guard.cjs /tmp/pairdrop-storage-guard.cjs

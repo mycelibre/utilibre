@@ -1,0 +1,43 @@
+{
+  "reviewed": "2026-10-11",
+  "application": "PairDrop 1.11.2",
+  "candidate": "utilibre-pairdrop:1.11.2-security-20261011-p4",
+  "imageId": "sha256:79198c175c7b064cc78c25912172cdea2b0e5fa066e95190efab1844c16b60a6",
+  "previous": "utilibre-pairdrop:1.11.2-security-20261011-p2",
+  "previousId": "sha256:eff40a7085ab7d5dce2f3c3a48b477e8f4c50afca7454e891b1f870025e20f92",
+  "scope": "Native compatible Express 4.x dependency refresh, ws security repair; original PairDrop application and prior storage guard unchanged. No new runtime service, telemetry, relay or source fork.",
+  "dependencyPins": {
+    "express": "4.22.3",
+    "ws": "8.21.0",
+    "proxy-addr": "2.0.8",
+    "body-parser": "1.20.8",
+    "path-to-regexp": "0.1.13",
+    "qs": "6.16.0"
+  },
+  "lockGeneration": "Starting with the reviewed p2 package files, npm install --package-lock-only --ignore-scripts --no-audit --no-fund --save-exact express@4.22.3 ws@8.21.0. Commit the resulting complete integrity-pinned native dependency graph; no forced transitive overrides. npm ci validates package/lock agreement at build time.",
+  "lockReview": "check-pairdrop-ws.mjs contains the exact 15 version/addition deltas, including native parser dependencies. Unchanged-version entries must retain integrity, resolution and functional dependency constraints; npm-regenerated descriptive metadata is permitted. Direct dependencies other than Express/ws are unchanged. npm ls --all --omit=dev passes.",
+  "sources": [
+    "https://github.com/expressjs/express/releases/tag/v4.22.3",
+    "https://github.com/expressjs/body-parser/releases/tag/1.20.6",
+    "https://github.com/expressjs/body-parser/releases/tag/1.20.8",
+    "https://github.com/websockets/ws/releases/tag/8.21.0",
+    "https://registry.npmjs.org/express/4.22.3",
+    "https://registry.npmjs.org/body-parser/1.20.8",
+    "https://registry.npmjs.org/qs/6.16.0",
+    "https://registry.npmjs.org/path-to-regexp/0.1.13"
+  ],
+  "verification": {
+    "imageConfiguration": "Unchanged user, environment, entrypoint, command, ports, workdir and healthcheck versus p2.",
+    "application": "server/public file hashes equal p2; equal upstream except previously reviewed tab storage guard.",
+    "os": "Actual apk inventory identical p2; Alpine packages are 3.21.8 despite retained image scanner OS metadata identifying 3.21.3.",
+    "nativeLibraries": "ws closes a three-byte, three-fragment fixture above a deliberately reduced two-fragment limit with error WS_ERR_TOO_MANY_BUFFERED_PARTS and close 1008. Express routing, exact trusted proxy address, malformed encoding, 404, URL-encoded nested form, parameter/body limits and prototype-property rejection pass. PairDrop itself does not enable body-parser endpoints.",
+    "applicationRouting": "Real PairDrop GET /config, HEAD /, native unknown-path redirect and static UI pass.",
+    "transfer": "Two isolated Chromium profiles discover, accept and download an exact-byte synthetic file. Selected direct WebRTC mode confirmed from stats; outside HTTP requests absent. No STUN or TURN configured in the fixture.",
+    "limits": "Same-machine desktop browser fixture only. Physical phones, different networks and production TURN are not retested by this patch.",
+    "command": "node deployment/maintenance/check-pairdrop-ws.mjs",
+    "scan": "2026-10-11 21:51 UTC: bounded offline Trivy full-image scan with current cached advisory database reported zero findings at every severity (previous p2: two high plus medium/low dependency findings). No suppressions added. Raw private receipts retained outside the repository. This is a scan result, not a guarantee of absence of vulnerabilities."
+  },
+  "deployment": "Candidate staged and verified by the maintenance agent. Production rollout is separately controlled by the root maintainer; do not infer deployment from this review.",
+  "rollback": "Restore previous exact image ID using existing Compose deployment, preserving all mounted configuration/relay secrets. No database or browser-data migration is involved.",
+  "privacy": "No application, logging, room, relay, rate-limit or retention configuration changed. Synthetic native tests run isolated; browser stage binds loopback only and uses no persistent user storage."
+}

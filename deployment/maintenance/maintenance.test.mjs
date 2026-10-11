@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {imageInventory,summarize,registryFallback,scannerManifestName,imageScanStatus} from './security-review.mjs';
 import {reportIssues,queueIssues,externalIssues,alertState} from './report-health.mjs';
 import {validateDecision,applyDecisions} from './triage.mjs';
-import {findingsQueue} from './build-queue.mjs';
+import {findingsQueue,retainUnrechecked,recheckedTarget} from './build-queue.mjs';
 import {probe,validResponse,targets} from './check-external.mjs';
 const now=Date.parse('2026-10-11T12:00:00Z');
 test('reviewed replacement npm locks keep the scanner-recognized filename',()=>{
@@ -60,6 +60,24 @@ test('queue deduplicates findings and preserves first seen/deadlines across repe
  const one=findingsQueue(report,undefined,new Date(now).toISOString());assert.equal(one.items.length,1);
  const two=findingsQueue(report,one,new Date(now+86400000).toISOString());assert.equal(two.items[0].firstSeen,one.items[0].firstSeen);assert.equal(two.items[0].reviewBy,one.items[0].reviewBy);
  assert.equal(Date.parse(one.items[0].reviewBy)-now,72*3600000);
+});
+test('partial scan retires an old finding only when every affected replacement was scanned',()=>{
+ const old={key:'old',scope:'runtime-image',artifact:'old-image',containers:['app-a','app-b']};
+ const report={status:'incomplete',images:[{id:'new-image',status:'checked',containers:['app-a','app-b']},{id:'unrelated',status:'failed',containers:['app-c']}]};
+ assert.equal(recheckedTarget(old,report),true);
+ assert.deepEqual(retainUnrechecked({items:[]},report,{items:[old]}),[]);
+ for(const images of [[],[{id:'new-image',status:'checked',containers:['app-a']}],[{id:'new-image',status:'incomplete',containers:['app-a','app-b']}],[{id:'old-image',status:'failed',containers:['app-a','app-b']}]]){
+  assert.equal(recheckedTarget(old,{images}),false);
+  assert.equal(retainUnrechecked({items:[]},{images},{items:[old]})[0].status,'not-rechecked');
+ }
+});
+test('host/source partial-scan reconciliation requires a checked matching scope and name',()=>{
+ const source={scope:'tracked-build-input',targetName:'app/package-lock.json'};
+ assert(recheckedTarget(source,{sources:[{name:source.targetName,scope:source.scope,status:'checked'}]}));
+ assert(!recheckedTarget(source,{sources:[{name:source.targetName,scope:'mounted-runtime-code',status:'checked'}]}));
+ assert(!recheckedTarget(source,{sources:[]}));
+ assert(recheckedTarget({scope:'host-os'},{host:{status:'checked'}}));
+ assert(!recheckedTarget({scope:'host-os'},{host:{status:'failed'}}));
 });
 test('review decisions require an exact key, evidence and bounded expiry',()=>{
  const good={key:'a'.repeat(64),status:'not-affected',reason:'Synthetic unit-test evidence only; never a live decision.',expiresAt:new Date(now+86400000).toISOString()};

@@ -1,0 +1,4 @@
+FROM jhaals/yopass:14.10.0@sha256:6c33d9c813f77bae70787e1bce76710840ff654f454998b01f8dacc0a7988fd3
+COPY --chown=0:0 --chmod=755 yopass yopass-server /
+LABEL org.utilibre.security.compiler="go1.27.2" \
+      org.opencontainers.image.revision="34d8bbcc4aac14dbf326d46dc69d26895b7f5282"

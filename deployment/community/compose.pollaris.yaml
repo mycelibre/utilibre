@@ -61,7 +61,7 @@ services:
       retries: 3
   pollaris-db:
     <<: *runtime
-    image: utilibre-postgres:17.11-alpine-vendor-security-20261011
+    image: utilibre-postgres:17.11-alpine-gosu-security-20261011-p2
     user: "70:70"
     env_file: [/opt/utilibre/community-data/pollaris-private/database.env]
     volumes: ["/opt/utilibre/community-data/pollaris-db:/var/lib/postgresql/data"]

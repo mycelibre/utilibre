@@ -19,7 +19,7 @@ x-app: &app
   logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
 services:
   db:
-    image: utilibre-postgres:17.11-alpine-vendor-security-20261011
+    image: utilibre-postgres:17.11-alpine-gosu-security-20261011-p2
     env_file: [/opt/utilibre/simplelogin/private/db.env]
     volumes: [/opt/utilibre/simplelogin/data/postgres:/var/lib/postgresql/data]
     networks: {data: {ipv4_address: 172.29.135.20}}

@@ -6,10 +6,11 @@ All monitor polling in the disposable copy is disabled and network is none.
 import json, os, pathlib, sqlite3, subprocess, time
 
 candidate = os.environ.get('KUMA_CHECK_IMAGE', 'louislam/uptime-kuma:2.5.5-slim@sha256:9c56a772a7df53f444a404c579e87a27bd0c201375d00d6745a75bf8138f4342')
-assert candidate in ['louislam/uptime-kuma:2.5.5-slim@sha256:9c56a772a7df53f444a404c579e87a27bd0c201375d00d6745a75bf8138f4342','utilibre-kuma:2.5.5-security-20261011','utilibre-kuma:proxyaddr-security-20261011','utilibre-kuma:libraries-security-20261011','utilibre-kuma:runtime-security-20261011','utilibre-kuma:runtime-security-20261011-p2','utilibre-kuma:runtime-security-20261011-p3','utilibre-kuma:runtime-security-20261011-p5','utilibre-kuma:2.5.6-security-20261011']
-new_release = candidate == 'utilibre-kuma:2.5.6-security-20261011'
+assert candidate in ['louislam/uptime-kuma:2.5.5-slim@sha256:9c56a772a7df53f444a404c579e87a27bd0c201375d00d6745a75bf8138f4342','utilibre-kuma:2.5.5-security-20261011','utilibre-kuma:proxyaddr-security-20261011','utilibre-kuma:libraries-security-20261011','utilibre-kuma:runtime-security-20261011','utilibre-kuma:runtime-security-20261011-p2','utilibre-kuma:runtime-security-20261011-p3','utilibre-kuma:runtime-security-20261011-p5','utilibre-kuma:2.5.6-security-20261011','utilibre-kuma:2.5.6-leaves-security-20261011']
+leaf_release = candidate == 'utilibre-kuma:2.5.6-leaves-security-20261011'
+new_release = candidate in ['utilibre-kuma:2.5.6-security-20261011','utilibre-kuma:2.5.6-leaves-security-20261011']
 expected_version = '2.5.6' if new_release else '2.5.5'
-root = pathlib.Path('/var/lib/utilibre-maintenance/' + ('kuma-256-20261011' if new_release else 'kuma-slim-20261011'))
+root = pathlib.Path('/var/lib/utilibre-maintenance/' + ('kuma-256-leaves-20261011' if leaf_release else 'kuma-256-20261011' if new_release else 'kuma-slim-20261011'))
 root.mkdir(mode=0o700, exist_ok=True)
 name = 'maintenance-kuma-256-stage' if new_release else 'utilibre-maintenance-kuma-slim-stage'
 source = sqlite3.connect('file:/opt/utilibre/community-data/kuma/kuma.db?mode=ro', uri=True)
@@ -55,7 +56,7 @@ try:
     if authenticated.returncode != 0:
         (root / 'login-error.log').write_text(authenticated.stderr)
         raise AssertionError('Restored operator login failed; private login-error.log')
-    record = {'date': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), 'status': 'passed', 'applicationVersion': version, 'monitorTypes': types, 'candidate': candidate, 'backup': str(backup), 'nativeStatusPage': json.loads(result.stdout), 'nativeLogin': 'passed', 'network': 'none', 'scope': ('Native 2.5.5 to 2.5.6 database upgrade/restore; no production monitors changed' if new_release else 'Same-version native database restore; no production monitors changed')}
+    record = {'date': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), 'status': 'passed', 'applicationVersion': version, 'monitorTypes': types, 'candidate': candidate, 'backup': str(backup), 'nativeStatusPage': json.loads(result.stdout), 'nativeLogin': 'passed', 'network': 'none', 'scope': ('Same-version native 2.5.6 leaf-patch database restore; no production monitors changed' if leaf_release else 'Native 2.5.5 to 2.5.6 database upgrade/restore; no production monitors changed' if new_release else 'Same-version native database restore; no production monitors changed')}
     (root / 'result.json').write_text(json.dumps(record, indent=2) + '\n')
     print(json.dumps({k: v for k, v in record.items() if k != 'backup'}))
 finally:

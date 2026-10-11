@@ -9,7 +9,7 @@ x-security: &default-security
 
 services:
   postgres:
-    image: utilibre-postgres:17.11-alpine-vendor-security-20261011
+    image: utilibre-postgres:17.11-alpine-gosu-security-20261011-p2
     user: "70:70"
     restart: unless-stopped
     <<: *default-security
@@ -59,7 +59,7 @@ services:
   valkey:
     ulimits: {core: 0}
     memswap_limit: 384m
-    image: docker.io/valkey/valkey:9.1.1-alpine@sha256:de31910896150d5e754a07d57d227cfdde4e258ddd0d1aa4607f2d2f95843715
+    image: utilibre-valkey:9.1.1-vendor-security-20261011
     user: "999:1000"
     restart: unless-stopped
     read_only: true
@@ -166,7 +166,7 @@ services:
     logging: *default-logging
 
   privatebin:
-    image: utilibre-privatebin:2.0.6-security-20261011-p2
+    image: utilibre-privatebin:2.0.6-php-security-20261011-p3
     user: "65534:82"
     restart: unless-stopped
     read_only: true

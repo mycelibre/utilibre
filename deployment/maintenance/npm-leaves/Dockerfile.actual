@@ -1,0 +1,13 @@
+FROM node:24.21.0-alpine3.24@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS libraries
+WORKDIR /reviewed
+COPY actual/package*.json ./
+RUN npm ci --ignore-scripts --omit=dev --no-audit --no-fund
+# stage.py verifies this local tag against its exact image ID before building.
+FROM utilibre-actual:proxyaddr-security-20261011
+USER root
+COPY --from=libraries /reviewed /opt/utilibre-reviewed-leaves
+COPY replace.cjs /tmp/utilibre-replace.cjs
+COPY actual-privacy.cjs /tmp/utilibre-actual-privacy.cjs
+RUN node /tmp/utilibre-replace.cjs actual && node /tmp/utilibre-actual-privacy.cjs \
+ && rm /tmp/utilibre-replace.cjs /tmp/utilibre-actual-privacy.cjs
+USER 1000:1000

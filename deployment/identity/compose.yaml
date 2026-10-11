@@ -58,7 +58,7 @@ x-authentik: &authentik
 services:
   postgresql:
     <<: *runtime
-    image: utilibre-postgres:16.15-alpine-vendor-security-20261011
+    image: utilibre-postgres:16.15-alpine-gosu-security-20261011-p2
     user: "70:70"
     environment:
       POSTGRES_DB: authentik

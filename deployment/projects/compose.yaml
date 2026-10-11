@@ -23,7 +23,7 @@ services:
       ingress: {ipv4_address: 172.29.149.20}
   db:
     <<: *runtime
-    image: utilibre-postgres:16.15-alpine-vendor-security-20261011
+    image: utilibre-postgres:16.15-alpine-gosu-security-20261011-p2
     user: '70:70'
     env_file: /opt/utilibre/projects/private/database.env
     volumes: ['/opt/utilibre/projects/database:/var/lib/postgresql/data']

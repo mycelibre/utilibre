@@ -5,12 +5,16 @@ import {randomBytes} from 'node:crypto';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {chromium} from '../../portal/node_modules/playwright/index.mjs';
 process.umask(0o077);
-const image='utilibre-wishlist:0.67.1-esbuild-security-20261011';
-const name='utilibre-wishlist-security-stage',base='http://127.0.0.1:32795';
+const netReview=process.argv[2]==='--caddy-net';
+const caddyReview=process.argv[2]==='--caddy'||netReview;
+assert(!process.argv[2]||caddyReview,'Only explicit Caddy review candidates are supported');
+const image=caddyReview?'utilibre-wishlist:0.67.1-caddy-security-20261011'+(netReview?'-p2':''):'utilibre-wishlist:0.67.1-esbuild-security-20261011';
+const name='maintenance-wishlist-security-stage',base='http://127.0.0.1:32795';
 const docker=(...args)=>execFileSync('docker',args,{encoding:'utf8',stdio:['ignore','pipe','pipe'],timeout:60000});
-let browser;
+let browser,created=false;
 try{
  docker('run','-d','--name',name,'--network','bridge','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--memory','512m','--cpus','1','--pids-limit','128','--log-driver','none','--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777','--tmpfs','/usr/src/app/data:rw,nosuid,nodev,noexec,size=64m,uid=1000,gid=1000','--tmpfs','/usr/src/app/uploads:rw,nosuid,nodev,noexec,size=16m,uid=1000,gid=1000','-p','127.0.0.1:32795:3280','-e','ORIGIN='+base,'-e','CHECKPOINT_DISABLE=1','-e','PRISMA_HIDE_UPDATE_MESSAGE=1','-e','LOG_LEVEL=warn','-e','XDG_CONFIG_HOME=/tmp/caddy-config','-e','XDG_DATA_HOME=/tmp/caddy-data',image);
+ created=true;
  let ready=false;
  for(let i=0;i<90;i++){
   try{const r=await fetch(base+'/login');if(r.status===200){ready=true;break;}}catch{}
@@ -46,10 +50,11 @@ try{
  const denied=await fetch(base+listPath,{redirect:'manual'});assert([302,303,307].includes(denied.status));
  assert.deepEqual([...outside],[]);assert.deepEqual(errors,[]);
  const report={checkedAt:new Date().toISOString(),image,imageId:docker('image','inspect',image,'--format','{{.Id}}').trim(),nativeBlankDatabaseStartup:true,esbuildVersion:'0.19.12',typescriptTransform:true,nativeAccountCreated:true,listCreated:true,itemCreated:true,reloadPersistence:true,anonymousListDenied:true,pageErrors:errors,externalBrowserOrigins:[...outside],limitation:'Disposable local account only; production OIDC, backups and email not re-tested.'};
- await mkdir('/var/lib/utilibre-maintenance/browser-binaries-20261011',{recursive:true,mode:0o700});
- await writeFile('/var/lib/utilibre-maintenance/browser-binaries-20261011/wishlist-stage.json',JSON.stringify(report,null,2)+'\n',{mode:0o600});
+ const directory=caddyReview?'/var/lib/utilibre-maintenance/caddy-security-20261011'+(netReview?'/net':''):'/var/lib/utilibre-maintenance/browser-binaries-20261011';
+ await mkdir(directory,{recursive:true,mode:0o700});
+ await writeFile(directory+'/wishlist-stage.json',JSON.stringify(report,null,2)+'\n',{mode:0o600});
  console.log('Wishlist exact esbuild API, migrations/seed/patch, native account/list/item/reload and anonymous denial passed. No external browser requests.');
 }finally{
  if(browser)await browser.close();
- try{docker('rm','-f',name);}catch{}
+ if(created)try{docker('rm','-f',name);}catch{}
 }

@@ -11,7 +11,7 @@ x-bounded: &bounded
 services:
   linkding:
     <<: *bounded
-    image: utilibre-linkding:1.47.0-python-security-20261011
+    image: utilibre-linkding:1.47.0-python-security-20261011-p2
     user: '33:33'
     cpus: 1.0
     mem_limit: 512m

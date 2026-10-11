@@ -5,6 +5,115 @@ version/digest pins; Redlib is built from an exact source commit and pinned
 base images. SearXNG has the guarded, daily updater below; other services
 remain reviewed rollouts. Production never runs a floating `latest` tag.
 
+## Security continuation — 11 October 2026
+
+The PrivateBin listing issue is closed: the official
+[directory](https://privatebin.info/directory/) now shows file upload **✔** for
+`paste.utilibre.org` (checked 21:51 UTC). The deployed PHP 8.5.11 layer preserves
+the sanitizer, 25 MB upload cap, one-week maximum expiry and backup-excluded
+temporary storage. Public HTTPS encrypted upload/download of a full synthetic
+25 MB file passed byte-for-byte; the fixture was deleted. This is a tested
+upload path, not a claim that every browser or file type was exercised.
+
+Additional runtime repairs are deployed, with application/access/retention
+settings preserved:
+
+| Component | Repair and observed gate |
+| --- | --- |
+| PrivateBin, ntfy, Kittygram, DeGoog | Exact signed Alpine library/PHP versions; unchanged application hashes. ntfy anonymous publish/read passed; DeGoog native EN/ES desktop/mobile search passed through its protected backend. The first public browser search passed but its later API request failed, so the entire public test is not recorded as passed. |
+| Six Valkey caches | Signed OpenSSL/util-linux fixes, same 9.1.1 engine. Native SET/GET/expiry/Lua passed. Yopass writer was stopped and its cache verified empty before replacing that volatile cache; no live secret was copied or backed up. |
+| Linkding | Django 6.0.9, PyJWT 2.15.1, urllib3 2.8.0, soupsieve 2.9. Isolated restored database passed native bookmark create/export/import, notes/tags and anonymous denial. Current native SQLite backups passed integrity checks. |
+| PostgreSQL/MariaDB/Addy/DocumentDB | gosu 1.19 rebuilt with patched Go and reviewed compatible identity-parser dependencies. Same database engines/application files; all eleven real PostgreSQL database dumps restored in isolation, plus MariaDB and complete restored Gathio synthetic workflows. Addy's guarded SMTP supervisor, IPv4/IPv6 ingress boundary, native Postfix and login passed after deployment; this is not a new mail-delivery test. |
+| Penpot 2.18.3 | Genuine 228-package Debian backend inventory, unused frontend gawk removed, unsupported EXR decoding denied. Native two-account editing, export/import, permission removal, raster output and thumbnail checks passed; public login reaches Authentik without unrelated requests. EXR denial does not patch libxml2/OpenEXR. |
+| PairDrop 1.11.2 | Express 4.22.3, ws 8.21.0, body-parser 1.20.8, qs 6.16.0 and path-to-regexp 0.1.13. Two Chromium clients transferred exact bytes directly; parser/routing/frame-bound checks passed. Current candidate scan reports zero findings. Existing TURN configuration remains; forced-relay transfer was not repeated in this leaf-library test. |
+| Chhoto 7.8.3 | Same-source auditable binary exposes 204 compiled Rust packages; 22 native tests and fictional SQLite create/redirect/denial/expiry/restore passed. No production temporary URL backup was added. |
+| FMD 0.17.0 / Yopass 14.10.0 | Same native sources and modules rebuilt with Go 1.26.9 / 1.27.2; Yopass also has the signed Debian OpenSSL repair. FMD's isolated two-account opaque-record/denial/delete/control checks and Yopass encrypt/decrypt, concurrent one-time retrieval, actual one-hour TTL, shortened fixture expiry and upload denial passed. No real device command was sent. Both final images have zero high/critical findings in their candidate scans. |
+| Kuma 2.5.6 | Compatible Axios/ws/SQL/template/parser/globbing leaf updates, with native restored login and status checks. Public status/API work and setup/dashboard/WebSocket administration stay denied. Remaining OS and major-version library findings remain open. |
+| Actual 26.10.0 | Compatible dependency repairs plus four exact-hash privacy edits: no automatic GitHub release/news fetches, same-origin/identity connection policy and native Workbox cache revisions. A fictional budget passed ZIP export/import, reload and server sync with zero unrelated browser requests/errors. Public OpenID handoff also passed. Existing tabs need the native update/reload cycle; saved budgets are not cleared. |
+| Wishlist / Newsletters | Bundled Caddy 2.11.7 rebuilt with Go 1.26.9 and x/net 0.60.0; application files and data formats unchanged. Native HTTP/2, streaming, Wishlist account/list/item and disposable newsletter/SMTP/Atom/deletion checks passed. This does not update the separate edge Caddy VM. |
+
+Evidence and exact pins: [Alpine recipes](../deployment/maintenance/alpine-final/),
+[gosu review](../deployment/maintenance/gosu-security/review.json),
+[Penpot native/ABI boundaries](../deployment/maintenance/penpot-2.18.3/RUNTIME.md),
+[PairDrop review](../deployment/community/pairdrop-security/review.json),
+[Rust build evidence](../deployment/maintenance/rust-auditable/README.md).
+[Go rebuilds](../deployment/maintenance/go-runtime-20261011/README.md) and
+[Kuma/Actual patch details](../deployment/maintenance/npm-leaves/README.md)
+record exact versions, privacy patches and remaining scope.
+[Bundled Caddy review](../deployment/maintenance/caddy-security/review.json)
+records pinned source/dependency evidence and the narrow OpenPGP advisory
+import-closure observation; unrelated whole-image findings are not waived.
+Private release receipts are under `/var/lib/utilibre-maintenance/` in
+`alpine-final-20261011`, `linkding-python-20261011`,
+`postgres-gosu-20261011` and `final-release-20261011`.
+Bundled Caddy's live receipt is `caddy-security-20261011/net/release.json`:
+Wishlist public/local login and Newsletters public/local page passed; all four
+roles match their reviewed image IDs. Native SMTP and IPv4/IPv6 gateway-only
+guards passed, web/gateway namespaces match, and the initializer stayed stopped.
+
+Final fleet scan **22:19:04 UTC**: 109 live images / 175 containers, 510 host
+packages, 29 source manifests, 110 seconds. Every captured live image still
+matched afterward. Raw findings: **55 critical / 3,276 high occurrences**,
+not exploitability counts. All source scans completed; Penpot OS and Chhoto Rust
+inventories are now present. Rustpad is the only incomplete runtime inventory.
+The queue therefore remains incomplete rather than falsely green. After
+deduplication and exact expiring review, **40 critical / 3,257 high findings**
+still need review; 15 critical / 1 high are recorded not affected. Raw data is
+unchanged. Seventeen seven-day decisions use actual package/binary evidence for
+nonexecutable container kernel headers, Debian's excluded minizip build and the
+Go 1.17 binary's absent Go-1.18 net/netip package. They do not waive host kernels,
+other sandbox vulnerabilities or entire dependency families.
+
+Upstream application review at **22:18:56 UTC** checked 112 providers with no
+unavailable provider or published application advisory awaiting disposition.
+That is separate from the open dependency queue above. The final read-only
+monitor found no tool availability failure across 59 status-page monitors and
+105 configured catalogue probes. It did report the incomplete scan/queue and
+the disk warning subsequently resolved by cache cleanup below. No notification
+state was changed and no mail was sent by that check.
+
+The same-source Rustpad candidate exposes 191 compiled Rust packages and passed
+23 native tests plus two-browser editing/frame rejection. It is **not deployed**:
+the live process reports a nonzero count of memory-only documents. No document
+identifier or content was inspected. A restart would erase work. Wait for an
+empty process under a guarded maintenance window, or arrange an announced
+save-before-restart window; never misreport its live inventory as repaired.
+
+The queue now retires an old-image finding during a partial scan only when
+every affected container has a successfully scanned replacement. Unscanned
+targets retain their findings. Exact-image decisions expire and raw findings
+remain intact. Forty-three focused maintenance/rollback/upstream-review tests passed; the
+incomplete-scan alert is deliberately not silenced by this repair.
+
+Native saved-account backups were taken at 21:46–21:59 UTC: expanded tools,
+Addy, Gathio, Linkding and community/FMD/Kuma. Restored native database/application
+gates are identified above; a SQLite integrity check alone is not represented
+as full account recovery. Temporary sharing data was not newly backed up.
+Only reproducible build caches and reviewed never-deployed compiler/preview
+images were removed to maintain the 8 GiB disk recovery floor. Retained old
+runtime images and all user data/backups remain available.
+Final bounded cleanup reclaimed another 2.076 GB of unused, reproducible build
+cache (older than ten minutes, 2 GB reserved); root free space returned to about
+12 GiB, above the monitor's 10 GiB warning threshold. No runtime or rollback
+image was pruned by that cleanup; cache files can be regenerated from recipes.
+
+Rollback for these same-version layers: restore only the reviewed rollback image
+recorded in the private release receipt, with unchanged volumes/environment,
+then verify native health. Addy's app must use
+`systemctl restart utilibre-addy-smtp.service`, not plain Compose, to retain its
+pre-listen firewall guard. No rollback requires restoring over newer user work.
+Newsletters likewise requires `systemctl restart utilibre-newsletters-smtp.service`
+for SMTP, and its gateway must be recreated when its shared web network
+namespace changes. Preserve all existing mounts and access restrictions.
+The release helper tests command/health/receipt failures and verifies the exact
+rollback image after rollback; a failed rollback remains explicitly unverified.
+Actual is the deliberate exception to using an untouched predecessor: its
+`utilibre-actual:privacy-rollback-20261011` fallback retains the four privacy fixes
+on the old dependency set, so emergency rollback cannot restore automatic
+GitHub requests or the broad connection policy. That fallback passed native
+budget/export/import/sync and unrelated-request checks; it retains older
+security findings and is not a substitute for the repaired live image.
+
 ## Parallel security release — 11 October 2026
 
 Continued the security work with separate build/test, advisory-review and release
@@ -31,7 +140,8 @@ point-in-time evidence, not uptime history.
 
 ### Coverage and remaining blockers
 
-The scanner now explicitly counts OS packages separately from language packages.
+Historical 21:18 checkpoint, superseded where noted above:
+the scanner explicitly counts OS packages separately from language packages.
 Penpot's official backend deletes its OS package database; its 170 Java entries
 must not conceal **zero inventoried OS packages**. The exact upstream SBOM is
 also incomplete for OS coverage. This is an unresolved coverage alert, not a
