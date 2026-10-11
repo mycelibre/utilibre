@@ -18,7 +18,8 @@ services:
     ulimits: {core: 0}
     memswap_limit: 256m
     <<: *runtime
-    image: rssbridge/rss-bridge:2025-08-05@sha256:569f01f3faecd0d34d702e01b34eb0a769f7bedb84caf6dff29821d18b46f971
+    # Same upstream app; staged Debian 12 security package refresh (see maintenance runbook).
+    image: utilibre-rssbridge:2025-08-05-security-20261011
     user: "33:33"
     entrypoint: [/bin/sh, -ec]
     command: ["mkdir -p /run/php; nginx -c /etc/nginx/utilibre.conf; exec php-fpm8.2 --fpm-config /etc/php/8.2/fpm/utilibre.conf --nodaemonize"]
@@ -108,7 +109,8 @@ services:
 
   uptime-kuma:
     <<: *runtime
-    image: louislam/uptime-kuma:2.5.5@sha256:c74379ac4509ce2d2c2633f509e67003ee2e45b6e995c5e43fc101f45a0e1fbe
+    # Same app version; native SQLite/HTTP/TCP checks need no bundled Chromium/MariaDB.
+    image: louislam/uptime-kuma:2.5.5-slim@sha256:9c56a772a7df53f444a404c579e87a27bd0c201375d00d6745a75bf8138f4342
     user: "1000:1000"
     environment:
       UPTIME_KUMA_DB_TYPE: sqlite
@@ -126,7 +128,7 @@ services:
 
   gateway:
     <<: *runtime
-    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    image: nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     volumes:
@@ -182,7 +184,7 @@ services:
   rallly-gateway:
     <<: *runtime
     profiles: [rallly]
-    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+    image: nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     volumes:

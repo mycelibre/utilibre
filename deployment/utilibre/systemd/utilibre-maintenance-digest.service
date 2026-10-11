@@ -1,0 +1,20 @@
+[Unit]
+Description=Weekly Utilibre operator review and triage reminder
+After=network-online.target
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/ubuntu/freetools
+Environment=PATH=/root/.nvm/versions/node/v24.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/bin/env node deployment/maintenance/weekly-digest.mjs
+StateDirectory=utilibre-maintenance
+StateDirectoryMode=0700
+UMask=0077
+TimeoutStartSec=45s
+MemoryMax=128M
+CPUQuota=25%
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/utilibre-maintenance
+PrivateTmp=true
+NoNewPrivileges=true

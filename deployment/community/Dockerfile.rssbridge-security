@@ -1,0 +1,9 @@
+# Preserve the exact upstream application; apply signed Debian 12 package fixes.
+# Manual build only. Record the output image ID/package inventory and scan/test
+# it before changing the Compose pin; no package updates at container startup.
+FROM rssbridge/rss-bridge:2025-08-05@sha256:569f01f3faecd0d34d702e01b34eb0a769f7bedb84caf6dff29821d18b46f971
+USER root
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends upgrade \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*

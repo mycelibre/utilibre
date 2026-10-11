@@ -4,7 +4,7 @@ ENV NEXT_TELEMETRY_DISABLED=1 NODE_OPTIONS=--openssl-legacy-provider
 COPY . .
 RUN npm ci --legacy-peer-deps --no-audit --no-fund
 RUN npm run build
-FROM nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+FROM nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
 COPY --from=build /app/out /usr/share/nginx/html
 COPY --from=build /app/LICENSE /usr/share/nginx/html/LICENSE.txt
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

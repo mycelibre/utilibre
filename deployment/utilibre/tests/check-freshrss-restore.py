@@ -7,7 +7,8 @@ os.umask(0o077)
 REPO=Path(__file__).resolve().parents[3]
 LIVE='utilibre-services-freshrss-1'
 LIVE_DB='utilibre-services-postgres-1'
-report=Path(tempfile.mkdtemp(prefix='freshrss-browser-restore-',dir='/opt/utilibre/reports'))
+report_base=os.environ.get('UTILIBRE_RESTORE_REPORT_ROOT','/opt/utilibre/reports')
+report=Path(tempfile.mkdtemp(prefix='freshrss-browser-restore-',dir=report_base))
 stage=Path(tempfile.mkdtemp(prefix='freshrss-restore-',dir='/opt/utilibre'))
 token=secrets.token_hex(6)
 name='utilibre-freshrss-restore-'+token
@@ -113,3 +114,7 @@ finally:
  assert stage.parent==Path('/opt/utilibre') and stage.name.startswith('freshrss-restore-')
  shutil.rmtree(stage)
  if (report/'result.json').exists():fixture_file.unlink()
+ # Scheduled exercises must not accumulate extra copies of saved account work.
+ # Normal native backup retention is untouched. Remove only this test's copy.
+ if os.environ.get('UTILIBRE_RESTORE_EPHEMERAL')=='1' and (report/'result.json').exists() and (report/'snapshot').is_dir():
+  shutil.rmtree(report/'snapshot')

@@ -1,0 +1,8 @@
+[Unit]
+Description=Daily Utilibre user-task checks
+[Timer]
+OnCalendar=*-*-* 03:50:00 UTC
+RandomizedDelaySec=5min
+Persistent=true
+[Install]
+WantedBy=timers.target

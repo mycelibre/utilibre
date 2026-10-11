@@ -1,0 +1,193 @@
+{
+  "date": "2026-10-11",
+  "scope": "Runtime security refresh, not new application functionality. Original images retained for scoped rollback.",
+  "gateway": {
+    "count": 41,
+    "image": "nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3",
+    "oldImage": "nginxinc/nginx-unprivileged@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8",
+    "nativeConfigurationAndEndpointComparison": "passed"
+  },
+  "staticArtifactRecipe": "deployment/toolbox/Dockerfile.artifact",
+  "staticAppHashMethod": "Sorted relative file names and SHA-256 of every file, then SHA-256 of that list; exact before/after match. No app bytes changed.",
+  "static": [
+    {
+      "service": "ittools",
+      "oldRef": "utilibre-ittools:2024.10.22-p2",
+      "oldImage": "sha256:0031c7ccdbc736676aa3a51243cfd33c92a938d168cc36f3caf3a150b6c2f7aa",
+      "newRef": "utilibre-ittools:2024.10.22-p2-nginx1305",
+      "newImage": "sha256:5173ba52e9533647fc2109df5303351b234c9d41ef2f648edb29ac3db87fdb61",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "509c7d87a4e49f4afd1109dab1374ab16b8385723cdc97d5f8090b8ac5ee605e"
+    },
+    {
+      "service": "hatsh",
+      "oldRef": "utilibre-hatsh:2.3.6-p1",
+      "oldImage": "sha256:0febd1be94c8dda4641ea029a164695f200124eaba828a1dd5976b42f9539cec",
+      "newRef": "utilibre-hatsh:2.3.6-p1-nginx1305",
+      "newImage": "sha256:f76c1e3389adfa15d13a373aba9ef9942b36c0e18adefe1b857c3066eb51ced7",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "f861e7ad55aebbbd53866ac6ff06109d071cbc96c5e9f75c8ec36d7fd8bc950e"
+    },
+    {
+      "service": "qr-offline",
+      "oldRef": "utilibre-qr-offline:0fde700-p5",
+      "oldImage": "sha256:21d2d163dcce598c02bfc0bd0276beddb3b3f2dd939b48f9d424930377e57445",
+      "newRef": "utilibre-qr-offline:0fde700-p5-nginx1305",
+      "newImage": "sha256:b3f91378362c24b3cf55e9604b7877aaaa24e3629328078aedd97ae56b9ea759",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "17fd0255115ae395129f9ff2294c3f9d3ae63b7d6c4bbd06914c78b8a3b71b29"
+    },
+    {
+      "service": "excalidraw",
+      "oldRef": "utilibre-excalidraw:53973c3-p1",
+      "oldImage": "sha256:31234fbaf9f7e4b1c1eba7fa266076b63672c312d666b64554bd8a8d340fd069",
+      "newRef": "utilibre-excalidraw:53973c3-p1-nginx1305",
+      "newImage": "sha256:8fa514b97e964ae8960de2f89983f42f840c1484a024879b9f96801c8d983089",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "9d269c80805fd1031b7794bce6c26a1e6e0cbd5099d7a4e6969f0874078a01e7"
+    },
+    {
+      "service": "glyphr",
+      "oldRef": "utilibre-glyphr:2.10.6-p1",
+      "oldImage": "sha256:5eea5d69470aa96906de73db33e23280d7fbc5e2c7606b5d3f7cf064ad5e0216",
+      "newRef": "utilibre-glyphr:2.10.6-p1-nginx1305",
+      "newImage": "sha256:73c7847892a0decddb166b64612aaec71a21ebcda6e9f69e45c2e20210927d23",
+      "staticRoot": "/srv/app",
+      "assetSha256": "33ce73cd579ac24db6f40007d67183f95aa8d503624dbffd0c2029cc64ec41f7"
+    },
+    {
+      "service": "cyberchef",
+      "oldRef": "utilibre-cyberchef:11.5.0-p1",
+      "oldImage": "sha256:654080dbec2858789b0486ba663ac9fae62bd39798e6221d33de01556c61d608",
+      "newRef": "utilibre-cyberchef:11.5.0-p1-nginx1305",
+      "newImage": "sha256:bb183b8fef14dbde73e5c17cedbb90c6669c160a42291947f206ecf111d46d64",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "4fc5a4a08dd6728133d30613e389a86e4952f54f279e1956776b6d4268b205cd"
+    },
+    {
+      "service": "zip-manager",
+      "oldRef": "utilibre-zip-manager:3b77a59-p1",
+      "oldImage": "sha256:6af93f6e5b22e5cccea8049060187045504549d443f6cc4462652bd12c3d9402",
+      "newRef": "utilibre-zip-manager:3b77a59-p1-nginx1305",
+      "newImage": "sha256:6db27cef4b03b66a5cbcc15fc6288e312a045cf4d0d1431d6a2848f5a96c6b0d",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "5ffaf0cc34cb1376ccd6c9ddc517d3c8215d6b8dc75b76d1c56cc16b635c6d06"
+    },
+    {
+      "service": "bentopdf",
+      "oldRef": "utilibre-bentopdf:2.8.8-p4",
+      "oldImage": "sha256:6b1c3ab96f7031b473f8d0058b998c24be7f21c453e11cb59bc576e60ce55632",
+      "newRef": "utilibre-bentopdf:2.8.8-p4-nginx1305",
+      "newImage": "sha256:78064e26424c5c486f6f2b1e19311975c207ba18f12ef32333fdf911df573ec4",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "e8b6e1b6e3f7a5c583cfb743c83855e5b9ddaa4f1f7983b3c68c20a0d9d2ab4d"
+    },
+    {
+      "service": "miniqr",
+      "oldRef": "utilibre-miniqr:0.33.0-p1",
+      "oldImage": "sha256:8d0a8f77e6f993877534fb0b255d1b183b2c57bf0e796f7deb1db54fdfc403f5",
+      "newRef": "utilibre-miniqr:0.33.0-p1-nginx1305",
+      "newImage": "sha256:b70089f8edb7bee95a2a4be1b821b8e57a2e773d5c5272493791f2a21c4f3d00",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "6d3249d6ef9de79d4f30d26d60493aa63cb59624a05db1805eef83d6deb44d7b"
+    },
+    {
+      "service": "minipaint",
+      "oldRef": "utilibre-minipaint:4.14.3-p1",
+      "oldImage": "sha256:a6c6c6841bf4d87ae95d4780336773e3896fb4479726e02c5e0d7b519f7dde75",
+      "newRef": "utilibre-minipaint:4.14.3-p1-nginx1305",
+      "newImage": "sha256:e665e0b9c91c30788c7388af9a7205d07acd1f40f99d51f3226f65651f31e11e",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "eff2503147957c6fbc0fb31911c18bd86ee7f64654aaf66ca2187b134bf28549"
+    },
+    {
+      "service": "svgedit",
+      "oldRef": "utilibre-svgedit:c44f061-p1",
+      "oldImage": "sha256:aa4a510fbbe500a66a3ea3ae304642eb85dc0d0a89e35d326a591a1c024cb529",
+      "newRef": "utilibre-svgedit:c44f061-p1-nginx1305",
+      "newImage": "sha256:19668efde76226aa87e661c8a74636b6020463cac74112e41499ac79ce3268e3",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "bca0c86ca50ef5405a951a11b6dbec9896f86fe558535e91dbe4b2a56cbb7d10"
+    },
+    {
+      "service": "markmap",
+      "oldRef": "utilibre-markmap:0.18.12-p1",
+      "oldImage": "sha256:acefdc8da9f55f7a58dca3c9cd96f36a9195d34a79118891933103c065d18ba7",
+      "newRef": "utilibre-markmap:0.18.12-p1-nginx1305",
+      "newImage": "sha256:8b39a690f460d5596438cdb2e9dbdf9df7fd8955205e1dca5062614a1e068c3f",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "67778e2f91b57d63990188f2f817564af6c9af7e17f7796bac412d441712a523"
+    },
+    {
+      "service": "vert",
+      "oldRef": "utilibre-vert:c7b9f39-p1",
+      "oldImage": "sha256:bc583f35524486d260717dab56827420592cd42d2ccbc672c74f079612ae009a",
+      "newRef": "utilibre-vert:c7b9f39-p1-nginx1305",
+      "newImage": "sha256:c5237043813a53e153da430d10bd100d34778dd6fffbf54de05e459c2b73692f",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "fe0f696e213dab1b9b3f04bdca5559ee8a5d0d81cb2d46b9e4e52f6302a252f1"
+    },
+    {
+      "service": "rawgraphs",
+      "oldRef": "utilibre-rawgraphs:b7b2909-p1",
+      "oldImage": "sha256:c9428d247993f059672fa89d2ffed41956fbbf5acc11760bc8f16a2b5de75c7f",
+      "newRef": "utilibre-rawgraphs:b7b2909-p1-nginx1305",
+      "newImage": "sha256:3afb9004933cb0920d4466a758086b0e75971b1ed0d64eefdd456591aea0e6f9",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "1a89b56431c2aacd271925ebab50270cdf1a37bb0cac4d2b0323cd002b242c8b"
+    },
+    {
+      "service": "omnitools",
+      "oldRef": "utilibre-omnitools:0.6.0-p7",
+      "oldImage": "sha256:cdac7396629704820b31a16560035f8916ab3347b7c7519674b4a61c01d5e9eb",
+      "newRef": "utilibre-omnitools:0.6.0-p7-nginx1305",
+      "newImage": "sha256:e8235fa84bb4b1c57f734c8976fb5eebba80540bf073e4f2760ed68f9e6f7f89",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "6a8f6275dedbad5f5d1a4f9c516ac8873bd9c1b93cf8f66ff377dfd77632915f"
+    },
+    {
+      "service": "image-scrubber",
+      "oldRef": "utilibre-image-scrubber:390b166-p1",
+      "oldImage": "sha256:d821e941d92e7bfc70b669bfddca6e68a53c0b60508b14b55e7e7d4198634b2d",
+      "newRef": "utilibre-image-scrubber:390b166-p1-nginx1305",
+      "newImage": "sha256:37d2a29754b23531380ec067278fd9b3a4e7d6f6e64ee19187ddaa7a24905a86",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "ee79e0ac6e278f6329ad67272cc6aa1595ba734aee1fe7d23d63b4d68c605863"
+    },
+    {
+      "service": "audiomass",
+      "oldRef": "utilibre-audiomass:21f5ee1-p1",
+      "oldImage": "sha256:f0b02642c60531adf2d14ec47a1fddea5400b83aeb3de94ca9637fa1a610f94f",
+      "newRef": "utilibre-audiomass:21f5ee1-p1-nginx1305",
+      "newImage": "sha256:90b852ce067956a40219b77153fadbcf4579367ba8941f9bb86a38d8e31f6774",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "5a3be6f0967ba34e134eeea891b1834f9d0c67964938c220ce5a216251c7c003"
+    },
+    {
+      "service": "drawio",
+      "oldRef": "utilibre-drawio:32.0.2-p4",
+      "oldImage": "sha256:fdf288fd53c8d399008960f4d41380f48eca0195da63cbd57f561217d8d57f0b",
+      "newRef": "utilibre-drawio:32.0.2-p4-nginx1305",
+      "newImage": "sha256:2662dbb2fe1a4608c91f42d71b25247cc404554b7dd6ffff90e57b873213cd31",
+      "staticRoot": "/usr/share/nginx/html",
+      "assetSha256": "1e0868a6d3ddce8bb060d569864238cd8b0ac025e827891af9b43f5bce479ecf"
+    }
+  ],
+  "kuma": {
+    "image": "louislam/uptime-kuma:2.5.5-slim@sha256:9c56a772a7df53f444a404c579e87a27bd0c201375d00d6745a75bf8138f4342",
+    "oldImage": "louislam/uptime-kuma:2.5.5@sha256:c74379ac4509ce2d2c2633f509e67003ee2e45b6e995c5e43fc101f45a0e1fbe",
+    "isolatedNativeRestoreAndLogin": "passed"
+  },
+  "rssbridge": {
+    "image": "utilibre-rssbridge:2025-08-05-security-20261011",
+    "imageId": "sha256:c114f29e0a5fa8e19eafa4311048f7805c2c47bfefef863fd447038078fdd70f",
+    "recipe": "deployment/community/Dockerfile.rssbridge-security",
+    "appSha256": "058f1a3962bec134076b6490da3bbd3261835457d97d649ab665fc8e0ddccf81",
+    "liveFeedAndBoundaries": "passed",
+    "upstreamApp": "2025-08-05",
+    "php": "8.2.34-1~deb12u1",
+    "nginx": "1.22.1-9+deb12u10",
+    "openssl": "3.0.22-1~deb12u1",
+    "note": "Signed Debian 12 packages resolved at build time; output artifact is pinned in this release record. Future rebuilds must be staged, scanned and recorded again."
+  }
+}

@@ -3,7 +3,223 @@
 Updates are deliberate, one service at a time. Production uses immutable
 version/digest pins; Redlib is built from an exact source commit and pinned
 base images. SearXNG has the guarded, daily updater below; other services
-remain manual. Production never runs a floating `latest` tag.
+remain reviewed rollouts. Production never runs a floating `latest` tag.
+
+## Operational maintenance rollout — 11 October 2026
+
+Daily upstream review now has runtime vulnerability scanning, useful synthetic
+tasks, off-host availability checks, a representative restore rehearsal and an
+operator digest. **These checks do not close the security patch backlog.** Private
+reports measure software/infrastructure, never visitors or their activity.
+
+| Check | UTC schedule, plus host-timer jitter | Scope |
+| --- | --- | --- |
+| Existing guarded SearXNG updater | Daily 02:20 | Existing staged EN/ES search/privacy gate and rollback |
+| Upstream releases/advisories | Daily 03:20 | 108 catalogue providers: 98 GitHub advisory sources, ten explicitly requiring manual primary-source review |
+| Useful browser tasks | Daily 03:50 | Eight sequential workflows: portal EN/ES/mobile, PDF merge/OCR, chart export, image export, ZIP round trip, QR/offline, direct PairDrop, Pollaris create/vote/export/delete |
+| Runtime/software scan | Daily 10:20 | Initial complete run: 109 unique running images / 175 containers, 510 installed host packages, ten source manifests |
+| Native alerts | Every five minutes | Existing 59 Kuma monitors, 105 portal endpoint probes, resources, enabled native backup jobs, stale/failed reports, security queue, external workflow freshness |
+| External availability | GitHub cron :07/:22/:37/:52 | Eight fixed public HTTPS endpoints/content or exact same-origin identity redirect |
+| External forced TURN transfer | Sunday 08:47 | Existing two-browser exact-byte test, forced TLS relay, four-minute cap |
+| Representative recovery | Sunday 12:25 | Native FreshRSS synthetic account/article restore plus encrypted Storage Box fictional-file round trip |
+| Operator digest | Monday 13:10 | Existing verified-STARTTLS relay to the fixed operator; no new notification service |
+
+The four new host timers are enabled. Successful manual execution is distinct
+from observing the next scheduled run. GitHub can delay/drop scheduled jobs and
+disable public-repository schedules after 60 days without activity. The host
+checks active workflow state and a completed non-drill run within 90 minutes.
+The operator must enable GitHub failed-workflow notifications; a deliberate
+failed drill is not proof of inbox receipt or a guaranteed independent pager.
+[GitHub schedule limits](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule).
+
+### Scanner, alerts and review queue
+
+`deployment/maintenance/install-scanner.sh` installs official Apache-2.0 **Trivy
+0.75.0**, archive SHA-256
+`c6e65abddb348e25f10549df887045629cf28cc72453cd1c63acb717316b3f3f`.
+Usage telemetry and version checks are disabled. Matching is local against
+downloaded OS/library and Java databases. No cloud scan upload or secret scanner.
+Container inspection is parsed in memory without persisting environment/mounts.
+Host scanning copies only OS identification and dpkg status; source scanning
+copies only listed lockfiles, never account documents or the live filesystem.
+[Source/license](https://github.com/aquasecurity/trivy/tree/v0.75.0),
+[telemetry controls](https://github.com/aquasecurity/trivy/blob/v0.75.0/docs/guide/advanced/telemetry.md).
+
+Authentik 2026.8.3's local OCI export lacks a config blob. The narrow fallback
+permits only its exact running digest from the official registry, with remote
+SBOM lookup disabled. It downloads that public artifact, not private layers,
+and never resolves a moving tag or replaces Authentik. New images require a
+fresh review. Failed export diagnostics may remain after recovery; the dated
+`security.json` is the current result. Initial Java DB/host-identification and
+Authentik failures were repaired; all 109 images then completed successfully.
+
+Private records in `/var/lib/utilibre-maintenance/`: `security.json` (raw results),
+`security-queue.json` (deduplicated artifact/package/version/advisory findings,
+first observation, owner and deadlines), `security-decisions.json` (exact,
+evidence-backed decisions expiring within 30 days), `latest.json`, `journeys.json`,
+`recovery.json` and `digest.json`. Incomplete scans cannot clear previous work.
+Critical/High/Medium review targets are 24 hours/72 hours/seven days, **not repair
+promises**. Rebuilt images reopen exact-artifact decisions without resetting the
+deadline for unchanged findings in the same service; source reviews also bind
+to the lockfile hash. A package finding does not establish reachable exploitation. Review
+vendored patches, disabled modules, source-package mapping and build-only code;
+do not globally suppress CVEs or hide findings lacking an available fix.
+
+```sh
+systemctl start utilibre-security-review.service
+node deployment/maintenance/triage.mjs list
+# One exact key/status/reason/expiresAt in a private file, never a public report:
+node deployment/maintenance/triage.mjs record /absolute/private/review.json
+node deployment/community/monitor-alerts.mjs --check-only
+node deployment/maintenance/weekly-digest.mjs --preview
+```
+
+Limitations: not every minified browser bundle, container writable layer, user
+volume, separate Caddy/Proxmox host, or exploit path is scanned. Source lockfiles
+are build-input evidence, not exact deployed-browser inventories; development
+dependencies may be omitted by scanner defaults. These limits stay in reports.
+Scanner resource caps: 75% of one CPU, 2 GiB RAM, sequential image analysis.
+Observed databases/cache ~2.9 GiB; complete cached run ~two minutes. Root free
+space ~11 GiB after caches and the runtime rollouts versus ~18 GiB before;
+old rollback images were retained. Final scan peak ~439 MiB; host available
+memory ~21 GiB of 34 GiB. These are dated observations. Scan refuses to begin below
+8 GiB; existing resource alert warns below 10 GiB. No capacity promise follows.
+
+The edited upstream Penpot GHSA-wxgm-8qjw-x445 / GHSA-4f36-m4hj-cv86 and Yopass
+GHSA-6r69-c6wg-7g8m records caused historical alerts. Installed Penpot **2.18.2**
+and Yopass **14.10.0** are outside their affected ranges. Checked-in
+`advisory-reviews.json` records exact image identities, advisory revision/range
+and primary evidence. Changed images/ranges/advisories or unavailable runtime
+evidence reopen the review. Penpot's inconsistent patched-version field is
+explicitly documented. Separate dependency findings remain open.
+
+### Verified tasks and operational repair
+
+First security repair batch: **41 gateways** now use official unprivileged
+nginx **1.30.5 / Alpine 3.24.2**, digest
+`15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3`.
+All native configuration checks and before/after endpoint statuses passed.
+The shared runtime scan fell from 3 critical/65 high to 0 critical/1 high
+(TIFF remains flagged; no blanket exception). Native private-network rejection
+tests passed again for TRIP, 13ft and Unfurl. TRIP initially returned 504 during
+a standalone gateway recreate; its existing supervisor couples namespace rules
+to the stack. The native service restart restored it and the scoped rollout now
+uses those three supervisors. Keep their boundary scripts, not generic restart
+instructions, in the release path.
+
+**18 static application runtimes** were also rebased using the existing
+`Dockerfile.artifact`; every application file was hashed before/after. The JS,
+workers, WASM, source notices and local assets remain byte-identical. Glyphr's
+native root is `/srv/app`, not the nginx default; an initial failed candidate
+rolled back, its artifact copy was corrected, and its actual app hash/endpoint
+then passed. New tags end in `-nginx1305`; original source Dockerfiles also have
+the new base pin. Native app releases and catalogue version claims are unchanged.
+Private stage/release/hash records: `/var/lib/utilibre-maintenance/nginx-20261011/`
+and `/var/lib/utilibre-maintenance/static-runtime-20261011/`. These bounded manual
+scripts are not new unattended auto-updaters.
+
+Uptime Kuma remains **2.5.5**, switched to the official **2.5.5-slim** image,
+digest `9c56a772a7df53f444a404c579e87a27bd0c201375d00d6745a75bf8138f4342`.
+Its 59 HTTP/one TCP monitor definitions use SQLite; none need the full image's
+Chromium or embedded MariaDB. The isolated native DB restore, status page and
+operator login passed before rollout. Only the disposable copy's monitors were
+paused, with networking disabled. Full-image findings were 202 critical/2,086
+high; candidate findings 16 critical/257 high. Those remaining findings still
+need review; this is not a vulnerability-free image. Native snapshot and results
+are under `/var/lib/utilibre-maintenance/kuma-slim-20261011/`.
+[Upstream supported slim image](https://github.com/louislam/uptime-kuma/wiki/Docker-Tags).
+The native operator API set/read back `checkUpdate=false` and `checkBeta=false`,
+preserving all other settings. This stops Kuma's separate upstream version
+request; Utilibre's daily review supplies maintenance discovery. Reapply with
+`node deployment/maintenance/configure-kuma-maintenance.mjs` after a fresh setup.
+
+RSS-Bridge retains upstream **2025-08-05** (still the latest published release),
+with **60 Debian 12 packages updated**, including PHP **8.2.34** and Debian's
+backported nginx **1.22.1-9+deb12u10**. This does not substitute version-number
+guessing for Debian's security backports. The complete `/app` file hash is
+unchanged; live and staged GitHub Trending Atom feeds had eight valid entries.
+Native nginx/FPM validation and private IPv4/metadata/IPv6 connection denials
+passed. Request-bearing nginx/PHP errors no longer enter container logs.
+Scan: 57 critical/216 high before, 3 critical/74 high after; unresolved vendor
+findings remain. Build recipe `deployment/community/Dockerfile.rssbridge-security`,
+private package inventory/test records `/var/lib/utilibre-maintenance/rssbridge-20261011/`.
+Only its memory cache was recreated; no account data. [Upstream releases](https://github.com/RSS-Bridge/rss-bridge/releases).
+
+Exact deployed artifacts, previous references and static-byte checksums are in
+[`runtime-release-20261011.json`](../deployment/maintenance/runtime-release-20261011.json).
+The RSS-Bridge recipe resolves signed Debian updates at build time; a future
+rebuild is a new candidate requiring its own scan, functional gate and image ID.
+No unattended package installation was added.
+
+The final complete scan at **17:55 UTC** covered **109/109 images, 175 containers,
+510 host packages and ten source manifests**. The deduplicated, reviewed queue
+still has **207 critical / 5,712 high package-target findings**. These are neither
+207 confirmed exploits nor a clean result. The original 528/8,933 alert was a raw,
+partly incomplete scan: do not advertise a percentage risk reduction by comparing
+those different measures. Relevant unresolved work includes Gathio's DocumentDB
+runtime, RSSHub, coturn, other bundled libraries and vendor-tracked host findings.
+For example Debian currently has no stable fix for the client-side OpenSSH
+rekey issue; the scanner also attributes its source-package finding to server
+packages. No host SSH/Docker replacement or reboot was performed in this batch.
+[Debian OpenSSH scope/status](https://security-tracker.debian.org/tracker/CVE-2026-60002).
+
+The exact-image OpenSSL CVE-2026-31789 review checked actual library ELF headers:
+58 findings were 64-bit libraries, outside the vendor's 32-bit-only issue. These
+private decisions expire after 14 days and do not cover other advisories or
+new images. Raw scan results remain unchanged. [Vendor conditions](https://openssl-library.org/news/secadv/20260407.txt).
+
+Application rollback: retain old images (none pruned), restore only the affected
+service's previous image pin from the private stage record, and use its existing
+scoped Compose release command. For TRIP/13ft/Unfurl, use the native systemd
+service restart to reapply namespace boundaries. Do not overwrite entire Compose
+files or account databases. Static assets have not changed. Kuma's same-version
+native snapshot is retained; preserve current state before any database restore.
+The old runtimes have known findings, so avoid leaving a vulnerable rollback
+public after an emergency recovery.
+
+All eight browser journeys passed after the runtime changes at 17:48 UTC on Linux Chromium, with 1366px desktop/390px
+mobile emulation, not physical phones. Direct PairDrop and external forced TLS
+TURN exact-byte transfers passed. FreshRSS native synthetic restore and the
+Storage Box round trip passed. Observed task runner ~633 MiB/~62 seconds;
+restore wrapper ~289 MiB/~15 seconds (disposable database containers have their
+own limits). Saved-account backup policy is unchanged. Extra successful rehearsal
+artifacts are cleaned; failed recovery evidence is retained for inspection.
+The QR test now waits for the upstream service worker's first-activation reload
+before clicking controls; the old test raced that native reload. No application
+workaround or weakened export/camera/offline assertion was introduced. AudioMass
+also exported a valid one-second WAV from a three-second synthetic input, with
+no external requests. Twenty-one maintenance/advisory tests and ten backup-policy/
+retention tests passed. No failed native units remain. One transient Knit probe
+recovered on the next probe; direct public HTTPS also returned 200.
+
+External evidence: [availability](https://github.com/mycelibre/utilibre/actions/runs/38157718068),
+[intentional alert drill](https://github.com/mycelibre/utilibre/actions/runs/38157812399),
+[recovered check](https://github.com/mycelibre/utilibre/actions/runs/38158232707),
+[TLS relay](https://github.com/mycelibre/utilibre/actions/runs/38157814232).
+Updated digest accepted by verified SMTP relay at 17:57 UTC; inbox reading is
+not established. The external workflows passed manual runs; their next actual
+scheduled GitHub run had not yet been observed at handoff preparation.
+
+The broader endpoint checks found Gathio's stale nginx backend resolution (502).
+Native Docker DNS re-resolution, `nginx -t` and graceful reload restored
+`https://events.utilibre.org/` to HTTP 200. Request-bearing error logging there
+is disabled; historical logs were not erased. This is a gateway repair, not a
+new end-to-end certification of event creation.
+
+```sh
+node --test deployment/maintenance/maintenance.test.mjs scripts/review-upstream-maintenance.test.mjs
+node --test deployment/storagebox/retention.test.mjs deployment/storagebox/backup-native.test.mjs deployment/utilibre/tests/backup-policy.test.mjs
+systemctl start utilibre-journeys.service
+systemctl start utilibre-recovery-check.service
+```
+
+Monitoring rollback: disable the four new timers with
+`systemctl disable --now utilibre-security-review.timer utilibre-journeys.timer utilibre-recovery-check.timer utilibre-maintenance-digest.timer`;
+revert their alert integration together so intentionally removed checks aren't
+reported as broken. Stop only a specific running check if necessary; do not
+delete private diagnostic/recovery state blindly. Revert GitHub workflow changes
+independently. No application schema, access/retention/donation policy or visitor
+instrumentation changed.
 
 ## Maintenance coverage from 11 October 2026
 

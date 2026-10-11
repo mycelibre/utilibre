@@ -4,6 +4,6 @@ RUN wget -q https://github.com/jgraph/drawio/releases/download/v32.0.2/draw.war 
 COPY drawio-PreConfig.js public/js/PreConfig.js
 COPY version-drawio-config.mjs /app/version-drawio-config.mjs
 RUN node /app/version-drawio-config.mjs /app/public
-FROM nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+FROM nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
 COPY --from=unpack /app/public /usr/share/nginx/html
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

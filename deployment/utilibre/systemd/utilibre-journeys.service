@@ -1,0 +1,25 @@
+[Unit]
+Description=Utilibre bounded synthetic task and mobile-emulation checks
+After=docker.service network-online.target
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/ubuntu/freetools
+Environment=PATH=/root/.nvm/versions/node/v24.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/bin/flock -n /run/utilibre-journeys.lock /usr/bin/env node deployment/maintenance/run-journeys.mjs
+StateDirectory=utilibre-maintenance
+StateDirectoryMode=0700
+UMask=0077
+TimeoutStartSec=25min
+MemoryMax=2G
+CPUQuota=100%
+Nice=10
+IOSchedulingClass=idle
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/utilibre-maintenance /opt/utilibre/reports /run
+PrivateTmp=true
+NoNewPrivileges=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+[Install]
+WantedBy=multi-user.target

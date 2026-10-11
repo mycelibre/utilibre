@@ -7,6 +7,6 @@ RUN node /integration/harden-creative-deps.mjs svgedit && npm ci --ignore-script
 COPY --from=integration prepare-creative-build.mjs /integration/prepare-creative-build.mjs
 RUN node /integration/prepare-creative-build.mjs svgedit && npm run build
 RUN node /integration/prepare-creative-build.mjs svgedit package
-FROM nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
+FROM nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
 COPY --from=build /app/site /usr/share/nginx/html
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

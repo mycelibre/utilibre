@@ -8,8 +8,9 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const remote = process.argv[2] === '--remote';
-if (process.argv.length > 3 || (process.argv[2] && !remote)) throw new Error('Use test-restic.mjs [--remote]');
-const reports = '/opt/utilibre/reports';
+const maintenance = process.argv[3] === '--maintenance';
+if (process.argv.length > 4 || (process.argv[2] && !remote) || (process.argv[3] && !maintenance)) throw new Error('Use test-restic.mjs [--remote [--maintenance]]');
+const reports = process.env.UTILIBRE_RESTORE_REPORT_ROOT || '/opt/utilibre/reports';
 mkdirSync(reports, { recursive: true, mode: 0o700 });
 const root = mkdtempSync(join(reports, `storagebox-${remote ? 'remote' : 'local'}-restore-`));
 const input = join(root, 'fictional-input');
@@ -47,3 +48,6 @@ const result = {
 writeFileSync(join(root, 'result.json'), `${JSON.stringify(result, null, 2)}\n`, { mode: 0o600 });
 console.log(JSON.stringify(result, null, 2));
 console.log(`Private evidence: ${root}/result.json`);
+// Forget only the exact fictional snapshot created by this successful exercise.
+// Never expire other snapshots or prune here; normal backup policy is unchanged.
+if (maintenance) run('forget', snapshot);

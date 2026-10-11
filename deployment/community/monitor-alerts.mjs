@@ -3,6 +3,8 @@
 // Host STARTTLS keeps certificate verification enabled, without patching Kuma.
 import {readFileSync,writeFileSync,renameSync,mkdirSync,existsSync,statfsSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
+import {sendOperatorMail} from '../maintenance/mail.mjs';
+import {reportIssues,queueIssues,externalIssues,alertState} from '../maintenance/report-health.mjs';
 const directory='/var/lib/utilibre-monitor-alerts',file=`${directory}/state.json`;
 // Validate live observations without sending mail or acknowledging alert state.
 const checkOnly=process.argv.includes('--check-only');
@@ -26,19 +28,56 @@ try{
   }
   console.log(`Read ${monitors.length} status-page monitors.`);
 }catch{issues.push('Kuma heartbeat API is unavailable or invalid')}
+// Reuse the portal's complete configured probe list, including static tools
+// that share a gateway. These are application probes, not visitor requests.
+try{
+ const response=await fetch('http://10.10.1.43:4173/api/status',{signal:AbortSignal.timeout(30000)});
+ if(!response.ok)throw Error('Portal probes unavailable');
+ const report=await response.json(),date=Date.parse(report.checkedAt);
+ if(!Array.isArray(report.services)||report.services.length<50||!Number.isFinite(date)||Date.now()-date>20*60000||date>Date.now()+300000)throw Error('Invalid portal probes');
+ for(const item of report.services){
+  if(!/^[a-z0-9-]+$/.test(item.id))throw Error('Invalid probe identity');
+  if(item.status!=='operational')issues.push(`Catalogue endpoint check failed: ${item.id}`);
+ }
+ console.log(`Read ${report.services.length} configured catalogue endpoint probes.`);
+}catch{issues.push('Catalogue endpoint monitoring unavailable or stale')}
 const disk=statfsSync('/opt/utilibre');
 if(disk.bavail*disk.bsize<10*1024**3)issues.push('Application disk has less than 10 GiB free');
 if(disk.files&&disk.ffree/disk.files<0.05)issues.push('Application disk has less than 5% free inodes');
 const memory=Object.fromEntries([...readFileSync('/proc/meminfo','utf8').matchAll(/^(\w+):\s+(\d+)/gm)].map(([,name,value])=>[name,Number(value)]));
 if(memory.MemAvailable/memory.MemTotal<0.05)issues.push('Available host memory is below 5%');
 // Service state only: no form/document counts, paths or user activity.
-for(const unit of ['utilibre-pack-backup.service','utilibre-pack-forms-maintenance.service','utilibre-storagebox-backup.service','utilibre-community-backup.service','utilibre-family-chess-backup.service','utilibre-records-backup.service','utilibre-maintenance-review.service']) {
+let backupUnits=[];
+try{
+ backupUnits=execFileSync('systemctl',['list-unit-files','--type=timer','--state=enabled','--no-legend','--no-pager'],{encoding:'utf8',timeout:5000}).split('\n').map(x=>x.split(/\s+/)[0]).filter(x=>/^utilibre-(?:[a-z0-9-]+-)?backup\.timer$/.test(x)).map(x=>x.replace(/\.timer$/,'.service'));
+}catch{issues.push('Cannot enumerate enabled backup timers');}
+for(const unit of new Set([...backupUnits,'utilibre-pack-forms-maintenance.service','utilibre-maintenance-review.service','utilibre-searx-update.service','utilibre-security-review.service','utilibre-journeys.service','utilibre-recovery-check.service','utilibre-maintenance-digest.service'])) {
   if(!existsSync(`/etc/systemd/system/${unit}`))continue;
   try {
     const result=execFileSync('systemctl',['show',unit,'--property=Result','--value'],{encoding:'utf8',timeout:5000}).trim();
     if(result&&result!=='success')issues.push(`Native maintenance failed: ${unit}`);
   } catch {issues.push(`Cannot inspect native maintenance: ${unit}`)}
 }
+for(const [file,name,hours,unit]of [
+ ['security.json','Vulnerability scan',36,'utilibre-security-review'],
+ ['journeys.json','Synthetic task checks',36,'utilibre-journeys'],
+ ['recovery.json','Restore rehearsal',8*24,'utilibre-recovery-check'],
+ ['digest.json','Weekly maintenance digest',8*24,'utilibre-maintenance-digest'],
+]){
+ if(!existsSync(`/etc/systemd/system/${unit}.service`))continue;
+ try{
+  const report=JSON.parse(readFileSync('/var/lib/utilibre-maintenance/'+file,'utf8'));
+  issues.push(...reportIssues(name,report,hours));
+  if(file==='security.json')issues.push(...queueIssues(JSON.parse(readFileSync('/var/lib/utilibre-maintenance/security-queue.json','utf8')),report));
+ }
+ catch{issues.push(`${name}: report unavailable`);}
+}
+// Two public repository API calls; no production secrets, documents or browsers.
+try{
+ const base='repos/mycelibre/utilibre/actions/workflows/utilibre-availability.yml';
+ const query=p=>JSON.parse(execFileSync('gh',['api',p],{encoding:'utf8',timeout:10000,maxBuffer:512*1024}));
+ issues.push(...externalIssues(query(base),query(base+'/runs?per_page=10')));
+}catch{issues.push('Cannot verify independent external monitoring schedule/results');}
 if(existsSync('/etc/systemd/system/utilibre-storagebox-backup.service')) {
   try {
     const status=JSON.parse(readFileSync('/opt/utilibre/storagebox/private/last-success.json','utf8'));
@@ -59,31 +98,20 @@ if(existsSync('/etc/systemd/system/utilibre-maintenance-review.service')) {
   }catch{issues.push('Upstream release/advisory report is unavailable')}
 }
 issues.sort();
-const fingerprint=JSON.stringify(issues),count=previous.fingerprint===fingerprint?(previous.count||0)+1:1;
+const observation=alertState(previous,issues);
+const {fingerprint,due,recovered}=observation;
 const test=process.argv.includes('--test');
-const due=issues.length&&count>=2&&(previous.alertedFingerprint!==fingerprint||Date.now()-(previous.sentAt||0)>12*3600000);
-const recovered=!issues.length&&Boolean(previous.alertedFingerprint);
 let alertedFingerprint=previous.alertedFingerprint||'',sentAt=previous.sentAt||0;
 if(!checkOnly&&(test||due||recovered)){
   const subject=test?'Utilibre monitoring test':issues.length?'Utilibre service attention needed':'Utilibre monitoring recovered';
   const body=test?'Verified monitoring mail test. The host checks public-service heartbeats and disk/memory every five minutes. This does not independently detect a complete VM outage.':issues.length?issues.join('\n'):'Previously reported monitor/resource issues have cleared.';
-  const program=`import smtplib,ssl,json,sys,socket
-from email.message import EmailMessage
-class Relay(smtplib.SMTP):
- def _get_socket(self,host,port,timeout):
-  return socket.create_connection(('10.10.1.20',port),timeout)
-data=json.load(sys.stdin)
-m=EmailMessage();m['From']='no-reply@utilibre.org';m['To']='admin@utilibre.org';m['Subject']=data['subject'];m.set_content(data['body'])
-with Relay('mx.mailgt.dev',26,timeout=15) as server:
- server.starttls(context=ssl.create_default_context());server.send_message(m)
-`;
-  try{execFileSync('python3',['-c',program],{input:JSON.stringify({subject,body}),stdio:['pipe','ignore','pipe'],timeout:25000})}
+  try{sendOperatorMail(subject,body)}
   catch{console.error('Monitoring email delivery failed; state not acknowledged.');process.exit(1)}
   if(!test){alertedFingerprint=issues.length?fingerprint:'';sentAt=Date.now()}
   console.log('Monitoring notification accepted by the verified-TLS SMTP relay.');
 }
 if(!checkOnly){
-  writeFileSync(`${file}.tmp`,JSON.stringify({fingerprint,count,alertedFingerprint,sentAt,checkedAt:Date.now()})+'\n',{mode:0o600});
+  writeFileSync(`${file}.tmp`,JSON.stringify({fingerprint,observed:observation.observed,alertedFingerprint,sentAt,checkedAt:Date.now()})+'\n',{mode:0o600});
   renameSync(`${file}.tmp`,file);
 }
 if(checkOnly){console.log('Read-only check: no mail sent and no alert state changed.');for(const issue of issues)console.log(issue);}

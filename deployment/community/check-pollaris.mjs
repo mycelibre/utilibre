@@ -84,10 +84,11 @@ try {
   assert.equal(csv.status, 200);
   assert.match(csv.text, /Utilibre synthetic guest/);
   const wrongAdmin = adminBase.replace(/\/[^/]+$/, '/invalid-token');
-  assert.equal((await voter.goto(`${wrongAdmin}/admin`)).status(), 404);
-  assert.equal((await voter.goto(`${origin}/admin`)).status(), 404);
-  assert.equal((await voter.goto(`${origin}/login`)).status(), 404);
-  assert.equal((await voter.goto(`${origin}/.env`)).status(), 404);
+  // Either native not-found or an explicit edge denial is a safe refusal.
+  // Public edge rules need not use the backend's exact 404 status.
+  for (const url of [`${wrongAdmin}/admin`,`${origin}/admin`,`${origin}/login`,`${origin}/.env`]) {
+    assert.ok([403,404].includes((await voter.goto(url)).status()), 'Restricted route must deny access');
+  }
   const spanish = await context('en-GB');
   const translated = await spanish.newPage();
   await translated.goto(`${origin}/utilibre-language.html?lang=es`);

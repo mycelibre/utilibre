@@ -1,0 +1,23 @@
+[Unit]
+Description=Weekly isolated account restore and encrypted off-host synthetic round trip
+After=docker.service network-online.target
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/ubuntu/freetools
+Environment=PATH=/root/.nvm/versions/node/v24.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/bin/flock -n /run/utilibre-recovery-check.lock /usr/bin/env node deployment/maintenance/check-recovery.mjs
+StateDirectory=utilibre-maintenance
+StateDirectoryMode=0700
+UMask=0077
+TimeoutStartSec=35min
+MemoryMax=1G
+CPUQuota=75%
+Nice=15
+IOSchedulingClass=idle
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/utilibre-maintenance /opt/utilibre /run
+PrivateTmp=true
+NoNewPrivileges=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK

@@ -6,6 +6,19 @@ import {readFileSync,mkdirSync,writeFileSync,renameSync} from 'node:fs';
 import {pathToFileURL} from 'node:url';
 import {reviewedFossProviders} from '../portal/src/catalog/upstreams.ts';
 const exec=promisify(execFile);
+const advisoryReviews=JSON.parse(readFileSync(new URL('../deployment/maintenance/advisory-reviews.json',import.meta.url),'utf8'));
+export function partitionReviewed(advisories,review,live){
+ const needsReview=[],reviewed=[];
+ // Exact runtime identities and advisory revision/range must all still match.
+ // Missing access, stopped containers, a new image or edited advisory reopens it.
+ const matches=review&&Object.entries(review.containers).every(([name,image])=>live.some(x=>x.Name===name&&x.Image===image&&x.State?.Running===true));
+ for(const advisory of advisories){
+  const decision=matches&&review.advisories.find(x=>x.id===advisory.id&&x.updated===advisory.updated&&JSON.stringify(x.affected)===JSON.stringify(advisory.affected));
+  if(decision)reviewed.push({...advisory,disposition:'not-affected-at-reviewed-version',version:review.version,reviewedAt:review.reviewedAt,reason:decision.reason,evidence:decision.source});
+  else needsReview.push(advisory);
+ }
+ return {needsReview,reviewed};
+}
 export function repository(source){
  const u=new URL(source);
  if(u.protocol!=='https:'||u.username||u.password||u.port||u.search||u.hash)throw Error('Invalid source origin');
@@ -18,8 +31,9 @@ export function reviewedRef(url){
 }
 export function recentAdvisories(rows,date){
  const since=Date.parse(date+'T00:00:00Z');
- return rows.filter(a=>a.published_at&&Date.parse(a.published_at)>since&&!a.withdrawn_at)
+ return rows.filter(a=>a.published_at&&(Date.parse(a.published_at)>since||Date.parse(a.updated_at)>since)&&!a.withdrawn_at)
  .map(a=>({id:a.ghsa_id,severity:a.severity,url:a.html_url,published:a.published_at,
+ updated:a.updated_at||a.published_at,
  affected:(a.vulnerabilities||[]).map(v=>({package:v.package?.name,range:v.vulnerable_version_range,patched:v.patched_versions}))}));
 }
 async function gh(path){
@@ -52,7 +66,12 @@ export async function inspectProvider(id,p){
      if(!Array.isArray(rows))throw Error('Invalid advisory response');all.push(...rows);
      if(rows.length<100){complete=true;break;}
     }
-    result.advisories={coverage:complete?'repository-published':'partial-300-limit',examined:all.length,needsReview:recentAdvisories(all,p.reviewedOn)};
+    let live=[];const review=advisoryReviews[id];
+    if(review)try{
+     const {stdout}=await exec('docker',['inspect',...Object.keys(review.containers).map(x=>x.slice(1))],{timeout:10000,maxBuffer:1024**2});
+     live=JSON.parse(stdout); // Never persist environment, labels, mounts or secrets.
+    }catch{/* No runtime evidence: retain every review alert. */}
+    result.advisories={coverage:complete?'repository-published':'partial-300-limit',examined:all.length,...partitionReviewed(recentAdvisories(all,p.reviewedOn),review,live),publishedHistory:recentAdvisories(all,'1970-01-01')};
    }catch{result.advisories={coverage:'unavailable',needsReview:[]};}
   }else{
    const {stdout}=await exec('git',['ls-remote',r.clone,'HEAD'],{timeout:25000,maxBuffer:4096,env:{...process.env,GIT_TERMINAL_PROMPT:'0'}});

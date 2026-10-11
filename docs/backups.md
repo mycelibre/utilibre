@@ -1,5 +1,20 @@
 # Backups, restore, and removal
 
+## Scheduled representative restore — 11 October 2026
+
+`utilibre-recovery-check.timer` runs Sunday 12:25 UTC plus up to ten minutes'
+jitter. It reuses the native FreshRSS synthetic account/article restore and
+encrypted Storage Box fictional-file round trip. Both passed before scheduling.
+Private results are `/var/lib/utilibre-maintenance/recovery.json`; failures and
+results older than eight days feed the existing operator alerts.
+
+This is not every account service or a full-VM disaster-recovery certification.
+Only the extra successful rehearsal snapshot and its own temporary remote
+fictional snapshot are removed. Existing production generations/retention remain
+unchanged. Successful local rehearsal evidence is retained for two weeks; failed
+evidence is retained for cleanup review. Never infer that a restored example
+proves all real documents/accounts recover. See [maintenance operations](updates.md#operational-maintenance-rollout--11-october-2026).
+
 ## Current policy: temporary content versus saved work — 10 October 2026
 
 Owner confirmed: **keep recovery backups of saved account work; exclude

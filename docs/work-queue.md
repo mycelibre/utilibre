@@ -1,5 +1,35 @@
 # Operator work queue — reconciled 11 October 2026
 
+## Active security/quality follow-through — 11 October
+
+Daily runtime image/OS/lockfile scanning, eight synthetic task workflows, weekly
+representative restore, operator digest and off-host availability/relay checks
+are implemented and have run. The four new host timers are enabled. Scanner
+failure/incomplete coverage was repaired; historical Penpot/Yopass advisory
+alerts have exact version-bound dispositions. [Schedules, evidence and rollback](updates.md#operational-maintenance-rollout--11-october-2026).
+
+First remediation batch: 41 shared gateways plus 18 static runtimes updated to
+nginx 1.30.5; application-file hashes preserved. Kuma's same-version official slim
+image removes unused Chromium/MariaDB after isolated native restore/login tests.
+RSS-Bridge's unchanged application now uses 60 updated Debian security packages;
+staged/live feed output and egress restrictions passed. Its scan changed from
+57 critical/216 high to 3 critical/74 high. The 32-bit-only OpenSSL issue has
+exact-image ELF64 evidence and expiring reviews. The complete 17:55 UTC scan
+covers 109 images/175 containers and 510 host packages; **207 critical/5,712 high
+package-target findings remain pending**, not proven exploits.
+Remaining work includes Gathio DocumentDB, RSSHub, coturn, other bundled application and
+database libraries, and vendor-tracked host packages; private severity does not
+by itself establish exposure or exploitability. No alert is waived merely to
+reduce the count.
+
+**Still open:** the private vulnerability queue needs staged package/application
+remediation; a working scanner is not a clean security report. Prioritize shared
+remaining runtime bases and reachable app libraries. Do not bulk-update stateful
+apps or remove alerts without evidence. Non-GitHub advisories, physical-device
+checks and rotating restores for other account services remain operator work.
+External notification inbox receipt and the next actual scheduled GitHub run
+are not inferred from manual runs. No further public apps were added.
+
 ## Maintenance-only closeout — 11 October
 
 Owner request: finish the latest queue's **1, 4–6**; no further installations.

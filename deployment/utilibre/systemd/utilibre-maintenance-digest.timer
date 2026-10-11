@@ -1,0 +1,8 @@
+[Unit]
+Description=Weekly Utilibre maintenance review reminder
+[Timer]
+OnCalendar=Mon *-*-* 13:10:00 UTC
+RandomizedDelaySec=5min
+Persistent=true
+[Install]
+WantedBy=timers.target

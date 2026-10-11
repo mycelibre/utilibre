@@ -25,7 +25,7 @@ x-source: &source /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
 services:
   bentopdf:
     <<: *static
-    image: utilibre-bentopdf:2.8.8-p4
+    image: utilibre-bentopdf:2.8.8-p4-nginx1305
     build:
       context: /opt/utilibre/pack-static/bentopdf-2.8.8-p4
       dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.bentopdf
@@ -37,7 +37,7 @@ services:
       - *source
   vert:
     <<: *static
-    image: utilibre-vert:c7b9f39-p1
+    image: utilibre-vert:c7b9f39-p1-nginx1305
     build:
       context: ${TOOLBOX_SOURCE_ROOT:-/opt/utilibre/src}/vert
       dockerfile: ${TOOLBOX_CONFIG_ROOT:-/home/ubuntu/freetools/deployment/toolbox}/Dockerfile.vert
@@ -53,7 +53,7 @@ services:
     # Static apps plus streaming speed-test traffic; avoid a 0.5-core bottleneck.
     cpus: 1.0
     networks: [tools, rustpad, librespeed]
-    image: utilibre-omnitools:0.6.0-p7
+    image: utilibre-omnitools:0.6.0-p7-nginx1305
     build:
       context: .
       dockerfile: Dockerfile.omnitools
@@ -70,7 +70,7 @@ services:
       - *source
   ittools:
     <<: *static
-    image: utilibre-ittools:2024.10.22-p2
+    image: utilibre-ittools:2024.10.22-p2-nginx1305
     build:
       context: .
       dockerfile: Dockerfile.ittools
@@ -81,7 +81,7 @@ services:
       - *source
   hatsh:
     <<: *static
-    image: utilibre-hatsh:2.3.6-p1
+    image: utilibre-hatsh:2.3.6-p1-nginx1305
     build:
       context: ${TOOLBOX_SOURCE_ROOT:-/opt/utilibre/src}/hatsh
       dockerfile: ${TOOLBOX_CONFIG_ROOT:-/home/ubuntu/freetools/deployment/toolbox}/Dockerfile.hatsh
@@ -92,7 +92,7 @@ services:
       - *source
   drawio:
     <<: *static
-    image: utilibre-drawio:32.0.2-p4
+    image: utilibre-drawio:32.0.2-p4-nginx1305
     build: {context: ., dockerfile: Dockerfile.drawio}
     ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3111:8080"]
     volumes:
@@ -101,7 +101,7 @@ services:
       - *source
   miniqr:
     <<: *static
-    image: utilibre-miniqr:0.33.0-p1
+    image: utilibre-miniqr:0.33.0-p1-nginx1305
     build:
       context: ${TOOLBOX_SOURCE_ROOT:-/opt/utilibre/src}/mini-qr
       dockerfile: ${TOOLBOX_CONFIG_ROOT:-/home/ubuntu/freetools/deployment/toolbox}/Dockerfile.miniqr

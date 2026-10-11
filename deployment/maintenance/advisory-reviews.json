@@ -1,0 +1,42 @@
+{
+  "penpot": {
+    "version": "2.18.2",
+    "reviewedAt": "2026-10-11",
+    "containers": {
+      "/utilibre-expanded-penpot-backend-1": "sha256:5f362bda5b8df6684a5710c4c273f7c8aadb759ba6ebcd0cde18a348ad9b9828",
+      "/utilibre-expanded-penpot-frontend-1": "sha256:3619f48cbdd0c9197ad23bd3db1c9b4391d7c9c3137e22e806cd7f9c945c1c8e",
+      "/utilibre-expanded-penpot-exporter-1": "sha256:4329b95d4b334b6ff95e80642fa634872a3111d6264f20e6262e43db4129ee58",
+      "/utilibre-expanded-penpot-admin-console-1": "sha256:5935b5adbf33eb7abaabfab657fe8f5d465cac08e62e340f932ddb35ce0f311f"
+    },
+    "advisories": [
+      {
+        "id": "GHSA-wxgm-8qjw-x445",
+        "updated": "2026-10-05T19:50:22Z",
+        "affected": [{"package": "penpot", "range": "<2.18.0", "patched": "2.18.0"}],
+        "reason": "Installed 2.18.2 is outside the upstream affected range <2.18.0. This is not a clearance of bundled dependencies.",
+        "source": "https://github.com/penpot/penpot/security/advisories/GHSA-wxgm-8qjw-x445"
+      },
+      {
+        "id": "GHSA-4f36-m4hj-cv86",
+        "updated": "2026-10-05T19:52:55Z",
+        "affected": [{"package": "penpot", "range": "<2.17.1", "patched": "1.17.2"}],
+        "reason": "Installed 2.18.2 is outside the upstream affected range <2.17.1. The patched field has an inconsistent 1.17.2 value; the affected range and subsequent installed release, not that field alone, support this review.",
+        "source": "https://github.com/penpot/penpot/security/advisories/GHSA-4f36-m4hj-cv86"
+      }
+    ]
+  },
+  "yopass": {
+    "version": "14.10.0",
+    "reviewedAt": "2026-10-11",
+    "containers": {
+      "/utilibre-community-yopass-1": "sha256:6c33d9c813f77bae70787e1bce76710840ff654f454998b01f8dacc0a7988fd3"
+    },
+    "advisories": [{
+      "id": "GHSA-6r69-c6wg-7g8m",
+      "updated": "2026-10-09T18:07:19Z",
+      "affected": [{"package": "github.com/jhaals/yopass", "range": "< 14.7.0", "patched": "14.7.0"}],
+      "reason": "Installed 14.10.0 is outside the upstream affected range <14.7.0. The later advisory edit triggered a review, not a newly vulnerable installation.",
+      "source": "https://github.com/jhaals/yopass/security/advisories/GHSA-6r69-c6wg-7g8m"
+    }]
+  }
+}

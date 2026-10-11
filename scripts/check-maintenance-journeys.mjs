@@ -1,9 +1,10 @@
 // Bounded checks of changed portal journeys; no visitor instrumentation.
 import assert from 'node:assert/strict';
-import {writeFile} from 'node:fs/promises';
+import {writeFile,mkdir} from 'node:fs/promises';
 import {chromium} from '../portal/node_modules/playwright/index.mjs';
 const origin=process.env.PORTAL_CHECK_ORIGIN||'https://utilibre.org';
-const out='/opt/utilibre/reports/maintenance-20261011';
+const out=process.env.UTILIBRE_JOURNEY_REPORT_DIR||'/opt/utilibre/reports/maintenance-20261011';
+await mkdir(out,{recursive:true,mode:0o700});
 const browser=await chromium.launch({args:['--no-sandbox']});
 const report={date:new Date().toISOString(),origin,environment:'Linux Chromium: 1366px desktop and 390px mobile emulation, including 200% text; not physical phones',checks:[],external:[],errors:[]};
 try{

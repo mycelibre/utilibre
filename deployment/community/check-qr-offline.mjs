@@ -26,6 +26,10 @@ try{
     page.on('pageerror',e=>{failed.push(['JS',e.message]);console.log('JS error',e.message)});
     page.on('console',m=>{if(m.type()==='error')console.log('Browser error',m.text())});
     assert.equal((await page.goto(`${origin}/?lang=${lang}`,{waitUntil:'networkidle'})).status(),200);
+    // Native first-time service-worker activation can reload the page. Complete
+    // preparation before editing/camera actions, not midway through a test.
+    await page.waitForFunction(()=>navigator.serviceWorker.controller&&performance.getEntriesByType('navigation')[0]?.type==='reload'&&document.readyState==='complete');
+    await page.waitForLoadState('networkidle');
     assert.equal(await page.locator('html').getAttribute('lang'),lang);
     await page.getByRole('heading', { name: lang === 'es' ? 'Archivos para uso sin conexión' : 'Offline assets', exact: true }).waitFor();
     assert.equal(await page.locator('#offline-controls a').getAttribute('href'), `https://utilibre.org/${lang === 'es' ? 'es/herramientas-sin-conexion' : 'en/offline-tools'}`);
