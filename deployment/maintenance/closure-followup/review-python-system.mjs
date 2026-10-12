@@ -1,6 +1,7 @@
 // Same-branch upstream security release; exact five findings and live payloads.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/closure-followup-20261012',build=dir+'/python-system/build',read=p=>JSON.parse(fs.readFileSync(p));
 const version='3.13.16-1~deb13u1+utilibre1',ids=['CVE-2026-15308','CVE-2026-19445','CVE-2026-19553','CVE-2026-7210','CVE-2026-82049'];
@@ -9,6 +10,10 @@ const sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 const q=read(root+'/security-queue.json'),scan=read(root+'/security.json');freshScan(q,scan);assert.equal(scan.status,'checked');
 const release=read(dir+'/python-system-release.json'),host=read(dir+'/python-system-host.json');assert.equal(release.status,'passed');assert.equal(host.status,'passed');assert(host.checks.native.passed&&host.checks.hostModules&&host.checks.http.passed);
 const rows=overlayRows(release),b=read(dir+'/python-system/python-system-penpot-backend/build.json'),n=read(dir+'/python-system/python-system-penpot-backend/native.json');assert(b.passed&&n.passed&&n.application.woff2Roundtrip&&n.upstreamCases===5658&&n.upstreamSkipped===104);
+for(const file of additionalOverlayReceipts)if(fs.existsSync(root+'/'+file))for(const next of overlayRows(read(root+'/'+file))){
+ const previous=rows.find(r=>r.name===next.name&&r.newImage===next.oldImage);
+ if(previous&&next.oldImage!==next.newImage)rows.push({...next,originalImage:previous.originalImage||previous.newImage});
+}
 assert.equal(sha(dir+'/sources/Python-3.13.16.tar.xz'),'f4b1bfb3c79b5bb11b8d228a12504163b4c0dab4d679828d8f5f26b6cb6ab35d');assert.equal(sha(build+'/security-tests.log'),b.upstreamSuiteSha256);
 assert(fs.readFileSync(build+'/runner.log','utf8').includes('NATIVE_PYTHON_SYSTEM_BUILD_AND_FOCUSED_TESTS_PASSED'));
 const sums=new Map(fs.readFileSync(build+'/SHA256SUMS','utf8').trim().split('\n').map(l=>[l.slice(66).split('/').at(-1),l.slice(0,64)]));
@@ -19,7 +24,7 @@ const resident=[];for(const pid of fs.readdirSync('/proc').filter(p=>/^\d+$/.tes
 for(const item of q.items.filter(i=>i.status==='needs-review'&&i.type==='debian'&&['host-os','runtime-image'].includes(i.scope)&&i.installed===version&&packages.includes(i.package)&&ids.includes(i.id))){
  const isHost=item.scope==='host-os';
  if(isHost){assert.equal(resident.length,0,'Old interpreter process remains');assert(Date.parse(host.completedAt)<=Date.parse(scan.date));}
- else{assert.equal(item.artifact,b.imageId);assert.equal(n.imageId,item.artifact);assert.deepEqual(item.containers,['utilibre-expanded-penpot-backend-1']);for(const name of item.containers){const row=rows.find(r=>r.name===name&&r.newImage===item.artifact);assert(row&&Date.parse(row.completedAt)<=Date.parse(scan.date));assert.equal(run('docker',['inspect',name,'--format','{{.Image}}']),item.artifact);}}
+ else{assert.equal(n.imageId,b.imageId);assert.deepEqual(item.containers,['utilibre-expanded-penpot-backend-1']);for(const name of item.containers){const row=rows.find(r=>r.name===name&&r.newImage===item.artifact);assert(row&&Date.parse(row.completedAt)<=Date.parse(scan.date));assert.equal(row.originalImage||item.artifact,b.imageId);assert.equal(run('docker',['inspect',name,'--format','{{.Image}}']),item.artifact);}}
  const key=item.artifact+'|'+item.package;
  if(!checked.has(key)){
   const leaf=item.package+'_'+version+'_amd64.deb',deb=build+'/'+leaf;assert.equal(sha(deb),sums.get(leaf));const temp=fs.mkdtempSync('/dev/shm/utilibre-python-proof-');

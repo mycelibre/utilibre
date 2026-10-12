@@ -7,4 +7,5 @@ export const additionalOverlayReceipts = [
   'python-bookworm-followup-20261012/release.json',
   'closure-followup-20261012/openssl-bookworm-release.json',
   'geospatial-followup-20261012/gdal-release.json',
+  'penpot-native-followup-20261012/penpot-release.json',
 ];

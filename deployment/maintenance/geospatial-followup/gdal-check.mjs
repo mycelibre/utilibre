@@ -20,6 +20,7 @@ const shell = (id, script) => docker(['run', '--rm', ...bounded, '--read-only', 
 const remove = name => { docker(['rm', '-f', '-v', name]); active.delete(name); };
 const probe = (id, mode) => docker(['run', '--rm', ...bounded, '--cap-drop', 'ALL', '--read-only', '--tmpfs', '/tmp:rw,size=64m', '--mount', `type=bind,src=${w}/gdal-fixtures,dst=/fixtures,readonly`, '--entrypoint', '/fixtures/gdal-probe', id, mode, '/fixtures']);
 try {
+  assert.equal(sha(readFileSync(w + '/gdal-source/hdf-prerequisites.json')), c.hdfPrerequisitesSha256);
   const old = JSON.parse(docker(['image', 'inspect', c.base]))[0], next = JSON.parse(docker(['image', 'inspect', c.image]))[0];
   assert.equal(next.Id, c.image); assert.equal(old.Id, c.base);
   for (const key of ['User', 'Env', 'Entrypoint', 'Cmd', 'WorkingDir', 'Healthcheck', 'Volumes', 'ExposedPorts', 'Labels']) assert.deepEqual(next.Config[key], old.Config[key], 'Runtime image configuration changed: ' + key);
@@ -50,12 +51,13 @@ try {
     report.cases.push({ mode, status: 0, stdout: output });
   }
   report.baselineSha256 = sha(readFileSync(w + '/gdal-baseline.json'));
+  report.hdfPrerequisitesSha256 = c.hdfPrerequisitesSha256;
   const name = 'maintenance-gdal-native-check'; active.add(name);
   docker(['run', '-d', '--name', name, ...bounded, '--tmpfs', '/var/lib/postgresql/data:rw,size=768m', '--tmpfs', '/tmp:rw,size=128m', '--mount', `type=bind,src=${w}/source-tree,dst=/work/source-tree,readonly`, '-e', 'POSTGRES_HOST_AUTH_METHOD=trust', c.image, 'postgres', '-c', 'shared_buffers=32MB', '-c', 'max_connections=10', '-c', 'log_statement=none', '-c', 'log_min_error_statement=panic']);
   const sql = query => docker(['exec', '-i', name, 'psql', '-h', '127.0.0.1', '-U', 'postgres', '-v', 'ON_ERROR_STOP=1', '-At'], query);
   let ready = false; for (let i = 0; i < 90; ++i) { try { if (sql('SELECT 1;').trim() === '1') { ready = true; break; } } catch {} await new Promise(r => setTimeout(r, 500)); } assert(ready);
   assert.match(sql('SHOW server_version;'), /^17\.11/);
-  assert.equal(sql("SELECT extversion FROM pg_extension WHERE extname='documentdb';").trim(), '0.107');
+  assert.equal(sql("SELECT extversion FROM pg_extension WHERE extname='documentdb';").trim(), '0.107-0');
   sql('CREATE EXTENSION IF NOT EXISTS postgis; CREATE EXTENSION IF NOT EXISTS postgis_raster;');
   report.nativeVersion = sql('SELECT postgis_full_version();').trim(); assert.match(report.nativeVersion, /GDAL="GDAL 3\.6\.2/);
   const regression = docker(['exec', '-e', 'PGUSER=postgres', '-e', 'PGHOST=127.0.0.1', '-w', '/work/source-tree', name, 'perl', '/work/source-tree/regress/run_test.pl', '--extension', '--dumprestore', '/work/source-tree/regress/core/flatgeobuf']);

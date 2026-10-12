@@ -84,7 +84,13 @@ For a later manual rollback, inspect the **latest** release chain first: do not
 revert subsequent Python/OpenSSL/etc. fixes by blindly restoring this release's
 old curl-only image. No database/data restore is part of an image rollback.
 
-## GDAL — native follow-up in progress
+## GDAL — built, tested and released
+
+The completed guarded release uses
+`utilibre-gathio-documentdb:gdal-security-20261012`, image
+`sha256:fd9252c7293a388f00349c1f5d53e1f692e316e0dd7901ad0b6e00bd4a954a26`.
+Exact live image, database versions, existing application HTTP 200 and unchanged
+Compose configuration passed. No schema, volume or retention changes.
 
 The vulnerable native sibling `libgdal32` is distinct from the data-only
 `gdal-data`/`gdal-plugins` component-attribution reviews. Exact Debian source
@@ -97,10 +103,22 @@ The three bounded upstream repairs are:
 - [HDF4 swath metadata](https://github.com/OSGeo/gdal/commit/9491e794f1757f08063ea2f7a274ad2994afa636), CVE-2026-8086.
 - [HDF4 grid metadata](https://github.com/OSGeo/gdal/commit/184f77dbcc74118c062c05e464c88161d3c37b9b), CVE-2026-8087.
 
-Both HDF4 native patches apply unchanged with zero fuzz. netCDF requires four
+Both HDF4 native patch contents are unchanged, with hunk offsets explicitly
+bound to their named functions. Zero fuzz alone was insufficient: the old source
+contains repeated loop text, and an initial candidate put one guard in another
+function. The existing malformed-file test caught it before deployment.
+`hdf-hunk-targets.mjs` and its four tests prevent that ambiguous placement.
+netCDF requires four
 context-only adaptations to 3.6.2 and two equivalent mutable-string bindings for
 its C++11 build; the whole upstream repair remains present. The changes and
 upstream checksums are explicit in `gdal-patch.mjs` and private provenance.
+
+Three exact upstream EHmetagroup prerequisites (`950cd2a0`, `4cfbcf82`,
+`f1911cfc`) also retain null-pointer guards needed by the older source.
+`gdal-hdf-prerequisites.mjs` verifies complete upstream hunks with zero fuzz.
+The earlier rejected source/build/test artifacts remain private. The resulting
+source offer contains the corrected complete Debian quilt series, not the
+rejected candidate.
 
 The native probe uses fictional GeoJSON/netCDF and GeoTIFF round trips, the two
 exact upstream malformed HDF4 fixtures, and synthetic oversized netCDF
@@ -112,9 +130,13 @@ an independently reproduced memory-safety failure. Baseline testing uses no
 network, a read-only image, tmpfs output, disabled core dumps and a 256 MiB cap;
 it does not query production or another operator's service.
 
-The native Debian build's five CTest programs passed. The rebuilt library must
-also pass the stronger application-specific candidate gates; a five-test
-packaging suite alone does not establish that the repaired paths work.
+The native Debian build's five CTest programs passed, followed by all four
+native cases (valid files, oversized netCDF, malformed HDF swath and grid).
+All **210** drivers, **5,935** exported functions and linked dependencies remain.
+PostGIS raster import/export, projection, DocumentDB typed data, read-only-role
+denial, FlatGeobuf regression and synthetic dump/restore passed. PostgreSQL stays
+17.11 and DocumentDB's actual native extension version stays **0.107-0**.
+These bounded checks are not an exhaustive GDAL format audit.
 
 Reproduction extends the same isolated Bookworm builder:
 
@@ -124,6 +146,7 @@ node deployment/maintenance/geospatial-followup/gdal-acquire.mjs
 docker exec maintenance-postgis-native-20261012 sh /recipe/gdal-prepare.sh
 node deployment/maintenance/geospatial-followup/gdal-patch.mjs
 node deployment/maintenance/geospatial-followup/gdal-dependency-config.mjs
+node deployment/maintenance/geospatial-followup/gdal-hdf-prerequisites.mjs
 docker exec maintenance-postgis-native-20261012 sh /recipe/gdal-compile.sh
 docker exec maintenance-postgis-native-20261012 cc -std=c11 -O2 -Wall -Wextra -Werror -I/usr/include/gdal /recipe/gdal-probe.c -lgdal -lnetcdf -lm -o /work/gdal-fixtures/gdal-probe
 ```
@@ -138,7 +161,7 @@ fixtures rather than silently replacing differing existing artifacts.
 
 `gdal-base.json` pins the reviewed live predecessor. After a new overlay lands,
 review its receipt and update this exact base before staging; never use a
-moving tag or replace an intervening repair. The remaining gates are:
+moving tag or replace an intervening repair. The candidate/release gates are:
 
 ```sh
 node deployment/maintenance/geospatial-followup/gdal-baseline.mjs

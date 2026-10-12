@@ -19,9 +19,9 @@ if(!bookworm&&fs.existsSync(dir+'/python-system-release.json')){
 }
 if(bookworm){
  const rss=read(dir+'/rssbridge-curl-release.json');assert.equal(rss.status,'passed');rows.push(...overlayRows(rss));
- for(const receipt of additionalOverlayReceipts)if(fs.existsSync(root+'/'+receipt)){
+}
+for(const receipt of additionalOverlayReceipts)if(fs.existsSync(root+'/'+receipt)){
   for(const next of overlayRows(read(root+'/'+receipt)))if(next.oldImage!==next.newImage&&rows.some(r=>r.name===next.name&&r.newImage===next.oldImage))rows.push(next);
- }
 }
 const host=!bookworm&&fs.existsSync(dir+'/curl-host.json')?read(dir+'/curl-host.json'):null;
 const sums=new Map(fs.readFileSync(build+'/SHA256SUMS','utf8').trim().split('\n').map(l=>[path.basename(l.slice(66)),l.slice(0,64)]));

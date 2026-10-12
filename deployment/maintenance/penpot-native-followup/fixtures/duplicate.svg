@@ -1,0 +1,3 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg [<!ENTITY utilibre_reused "<xi:include xmlns:xi='http://www.w3.org/2001/XInclude' href='included.svg'/><rect width='32' height='24' fill='blue'/>">]>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="24">&utilibre_reused;</svg>

@@ -5,8 +5,11 @@ import {createHash} from 'node:crypto';
 import {readFileSync,writeFileSync,mkdirSync,openSync,closeSync,statfsSync} from 'node:fs';
 import {chromium} from '../../../portal/node_modules/playwright-core/index.mjs';
 import {releaseReviewedRow} from '../release-postgres-vendor-security.mjs';
+import {inputs as nativeInputs,liveNative,directory as followupDirectory} from '../penpot-native-followup/release-inputs.mjs';
 process.umask(0o077);
-const directory='/var/lib/utilibre-maintenance/native-final',receipt=directory+'/penpot-release.json';
+const followup=process.argv[3]==='--rsvg-tiff';
+assert(process.argv.length<=4&&(!process.argv[3]||followup));
+const directory=followup?followupDirectory:'/var/lib/utilibre-maintenance/native-final',receipt=directory+'/penpot-release.json';
 const cwd='/home/ubuntu/freetools/deployment/expanded';
 const compose=['compose','--env-file',cwd+'/.env','--project-directory',cwd,'-p','utilibre-expanded','-f',cwd+'/compose.yaml'];
 const command=(name,args,options={})=>{try{return execFileSync(name,args,{encoding:'utf8',timeout:120000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe'],...options});}catch{throw Error('Bounded maintenance command failed; private output withheld.');}};
@@ -16,7 +19,7 @@ const config=()=>JSON.parse(docker(...compose,'config','--format','json')).servi
 const hash=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const normalized=value=>{const{image,...rest}=value;return hash(rest);};
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
-const candidates=JSON.parse(readFileSync(directory+'/penpot-libxml.json'));
+const candidates=followup?nativeInputs():JSON.parse(readFileSync(directory+'/penpot-libxml.json'));
 assert.equal(candidates.status,'passed');assert.equal(candidates.fullApplicationGate?.status,'passed');
 async function ready(attempts=90){
  for(let n=0;n<attempts;n++){
@@ -73,14 +76,16 @@ if(process.argv[2]==='prepare'){
  for(const component of ['backend','exporter']){
   const service='penpot-'+component,name='utilibre-expanded-'+service+'-1',live=inspect(name),candidate=candidates[component];
   assert(live.State.Running);assert.equal(live.Config.Image,c[service].image);assert.equal(inspect(candidate.image).Id,candidate.imageId);
+  if(followup){assert.equal(live.Image,candidates.originals[component].imageId);assert.equal(live.Config.Image,candidates.originals[component].image);}
   rows.push({name,service,oldRef:live.Config.Image,oldImage:live.Image,newRef:candidate.image,newImage:candidate.imageId,configHash:normalized(c[service])});
  }
  const untouched=['penpot-frontend','penpot-admin-console'].map(service=>{const x=inspect('utilibre-expanded-'+service+'-1');return{service,image:x.Image,containerId:x.Id,configHash:hash(c[service])};});
  await ready();const beforePublic=await publicGate();const backup=await snapshot();
- writeFileSync(receipt,JSON.stringify({date:new Date().toISOString(),status:'prepared',rows,untouched,backup,beforePublic},null,2)+'\n');
+ writeFileSync(receipt,JSON.stringify({date:new Date().toISOString(),status:'prepared',rows,untouched,backup,beforePublic,...(followup?{evidence:candidates.evidence}:{})},null,2)+'\n');
  console.log('Penpot-only consistency snapshot and isolated native restore passed; exact image release prepared.');
 }else if(process.argv[2]==='apply'){
  const report=JSON.parse(readFileSync(receipt));assert.equal(report.status,'prepared');assert(Date.now()-Date.parse(report.date)<3600000);
+ if(followup)assert.deepEqual(report.evidence,candidates.evidence);
  const save=()=>writeFileSync(receipt,JSON.stringify(report,null,2)+'\n');report.status='applying';save();
  try{
   for(const row of report.rows){
@@ -96,10 +101,13 @@ if(process.argv[2]==='prepare'){
    }});
   }
   for(const row of report.rows){
+   if(followup)liveNative(docker,row.name);
    assert.equal(docker('exec',row.name,'dpkg-query','-W','-f','${Version}','libxml2'),'2.12.7+dfsg+really2.9.14-2.1+deb13u3+utilibre1');
    docker('exec',row.name,'cmp','/usr/lib/x86_64-linux-gnu/libxml2.so.2','/opt/imagick/lib/deps/libxml2.so.2');
   }
-  report.public=await publicGate();report.status='passed';report.completedAt=new Date().toISOString();save();console.log('Penpot backend/exporter released; exact images, native readiness, public login/OIDC and origin checks passed.');
+  report.public=await publicGate();report.status='passed';report.completedAt=new Date().toISOString();
+  if(followup)report.groups=[{status:'passed',completedAt:report.completedAt,rows:report.rows}];
+  save();console.log('Penpot backend/exporter released; exact images, native readiness, public login/OIDC and origin checks passed.');
  }catch{
   report.status='failed';report.rollback='attempting';save();
   try{

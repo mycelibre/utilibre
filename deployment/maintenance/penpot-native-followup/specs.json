@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "version": "2.60.3+utilibre1",
+  "roles": [
+    {
+      "name": "backend",
+      "container": "utilibre-expanded-penpot-backend-1",
+      "base": "utilibre-penpot-backend:python-system-security-20261012",
+      "baseId": "sha256:7a20d10959d2ae227c844a4b5589fae51be05f340a6127c722356d92b15a9e34",
+      "candidate": "utilibre-penpot-backend:2.18.3-rsvg-security-20261012",
+      "common": false
+    },
+    {
+      "name": "exporter",
+      "container": "utilibre-expanded-penpot-exporter-1",
+      "base": "utilibre-curl-expanded-penpot-exporter:security-20261012",
+      "baseId": "sha256:913d35f37b54e7e53d16e883d946c52ed15efb1bf4b8433b53ae3dba22be845b",
+      "candidate": "utilibre-penpot-exporter:2.18.3-rsvg-security-20261012",
+      "common": true
+    }
+  ],
+  "frontend": {
+    "base": "utilibre-util-linux-expanded-penpot-frontend:security-20261012",
+    "baseId": "sha256:a78bf3c037a53febe5dbd92e8cc15bf4de6d53cb95ad7f608e0398d0d2584303",
+    "testTag": "utilibre-penpot-frontend:2.18.3-rsvg-unchanged-20261012"
+  }
+}

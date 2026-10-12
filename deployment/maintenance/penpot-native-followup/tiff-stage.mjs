@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {readFile,writeFile,mkdir,copyFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+const root='/var/lib/utilibre-maintenance/penpot-native-followup-20261012';
+const rsvg=JSON.parse(await readFile(root+'/native.json','utf8'));assert.equal(rsvg.status,'passed');
+const version='4.7.2-1~deb13u1+utilibre1',output=root+'/tiff/output';
+assert.equal((await readFile(output+'/build-passed','utf8')).trim(),'passed');
+assert.equal((await readFile(output+'/missing-symbols.txt','utf8')).trim(),'');
+const needed=text=>[...text.matchAll(/\(NEEDED\).*\[([^\]]+)\]/g)].map(m=>m[1]).sort();
+assert.deepEqual(needed(await readFile(output+'/old-dynamic.txt','utf8')),needed(await readFile(output+'/new-dynamic.txt','utf8')));
+assert.match(await readFile(output+'/source-signature.log','utf8'),/Good signature/);
+assert.match(await readFile(output+'/upstream-tests.log','utf8'),/# PASS:\s+109/);
+assert.match(await readFile(output+'/upstream-tests.log','utf8'),/# FAIL:\s+0/);
+const packagePath=output+'/libtiff6_'+version+'_amd64.deb';
+const packageHash=createHash('sha256').update(await readFile(packagePath)).digest('hex');
+const docker=(args)=>execFileSync('docker',args,{encoding:'utf8',timeout:180000,maxBuffer:8*1024**2});
+const rows=[];
+for(const r of rsvg.records){
+ assert.equal(JSON.parse(docker(['image','inspect',r.candidate]))[0].Id,r.imageId);
+ const before=JSON.parse(docker(['image','inspect',r.imageId]))[0];
+ const candidate=`utilibre-penpot-${r.name}:2.18.3-rsvg-tiff-security-20261012`,context=root+'/tiff/images/'+r.name;
+ await mkdir(context,{recursive:true});await copyFile(packagePath,context+'/libtiff6.deb');
+ const dockerfile=`FROM ${r.candidate}\nUSER root\nCOPY libtiff6.deb /tmp/libtiff6.deb\nRUN set -eu; dpkg -i /tmp/libtiff6.deb; cp -L /usr/lib/x86_64-linux-gnu/libtiff.so.6 /opt/imagick/lib/deps/libtiff.so.6; cmp /usr/lib/x86_64-linux-gnu/libtiff.so.6 /opt/imagick/lib/deps/libtiff.so.6; rm /tmp/libtiff6.deb\nUSER ${before.Config.User}\n`;
+ await writeFile(context+'/Dockerfile',dockerfile);await writeFile(context+'/build.log',docker(['build','--network=none','--pull=false','-t',candidate,context]));
+ const after=JSON.parse(docker(['image','inspect',candidate]))[0];
+ assert.equal(JSON.parse(docker(['image','inspect',r.candidate]))[0].Id,r.imageId);
+ assert.deepEqual(after.RootFS.Layers.slice(0,before.RootFS.Layers.length),before.RootFS.Layers);
+ for(const key of ['User','Cmd','Entrypoint','Env','WorkingDir','Volumes','ExposedPorts'])assert.deepEqual(after.Config[key],before.Config[key],key);
+ rows.push({name:r.name,base:r.candidate,baseId:r.imageId,candidate,imageId:after.Id,productionBase:r.base,productionBaseId:r.baseId});
+}
+await writeFile(root+'/tiff/stage.json',JSON.stringify({schema:1,status:'staged',createdAt:new Date().toISOString(),version,packageHash,rows},null,2)+'\n',{mode:0o600});
+console.log(JSON.stringify({status:'staged',rows}));

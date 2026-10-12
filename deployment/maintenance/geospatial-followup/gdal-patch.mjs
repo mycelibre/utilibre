@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import {anchorHdfHunks} from './hdf-hunk-targets.mjs';
 const s = JSON.parse(readFileSync(new URL('spec.json', import.meta.url))), w = s.work, tree = w + '/gdal-tree';
 const fixes = [
   { file: 'gdal-sw', id: 'CVE-2026-8086', commit: '9491e794f1757f08063ea2f7a274ad2994afa636', sha256: '808e143ed48d576d39783e2b25d15cb62d11c2aaf42eaee1908741c1da74d053', paths: ['frmts/hdf4/hdf-eos/SWapi.c'] },
@@ -19,6 +20,7 @@ for (const f of fixes) {
   writeFileSync(w + '/gdal-source/' + f.file + '-upstream.patch', original);
   let patch = original.toString().split(/(?=^diff --git )/m).slice(1).filter(x => f.paths.some(p => x.startsWith('diff --git a/' + p + ' '))).join('');
   assert.equal((patch.match(/^diff --git /gm) || []).length, f.paths.length);
+  if(f.file==='gdal-sw'||f.file==='gdal-gd')patch=anchorHdfHunks(patch,readFileSync(tree+'/'+f.paths[0],'utf8'));
   if (f.file === 'gdal-netcdf') {
     // Four context-only differences between 3.6.2 and the upstream fix. Keep
     // the installed branch's expressions unchanged. No hunk is discarded.
@@ -41,5 +43,5 @@ writeFileSync(tree + '/debian/patches/series', series);
 const prefix = `gdal (3.6.2+dfsg-1+utilibre1) bookworm; urgency=high\n\n  * Backport upstream netCDF attribute validation and HDF4-EOS bounds fixes\n    for CVE-2026-49014, CVE-2026-8086 and CVE-2026-8087.\n  * Preserve libgdal32 ABI and Debian build settings.\n\n -- Utilibre maintenance <admin@utilibre.org>  Mon, 12 Oct 2026 13:20:00 +0000\n\n`;
 writeFileSync(tree + '/debian/changelog', prefix + readFileSync(tree + '/debian/changelog', 'utf8'));
 execFileSync('docker', ['exec', '-w', '/work/gdal-tree', 'maintenance-postgis-native-20261012', 'dpkg-source', '--before-build', '.'], { encoding: 'utf8' });
-writeFileSync(w + '/gdal-source/applied-provenance.json', JSON.stringify({ date: new Date().toISOString(), fixes, adaptations: 'netCDF: four exact context-only adaptations plus two equivalent C++11 mutable-string bindings; no driver or security hunk omitted.' }, null, 2) + '\n');
+writeFileSync(w + '/gdal-source/applied-provenance.json', JSON.stringify({ date: new Date().toISOString(), fixes, adaptations: 'HDF hunk offsets are bound to the named function; security/context lines unchanged. netCDF: four exact context-only adaptations plus two equivalent C++11 mutable-string bindings; no driver or security hunk omitted.' }, null, 2) + '\n');
 console.log('Three native driver backports applied with zero fuzz; no drivers disabled.');
