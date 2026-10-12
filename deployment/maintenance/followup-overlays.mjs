@@ -9,4 +9,6 @@ export const additionalOverlayReceipts = [
   'geospatial-followup-20261012/gdal-release.json',
   'penpot-native-followup-20261012/penpot-release.json',
   'click-followup-20261012/release.json',
+  'sudo-followup-20261012/kuma-release.json',
+  'xlib-followup-20261012/release.json',
 ];

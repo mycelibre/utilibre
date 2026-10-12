@@ -4,6 +4,10 @@
   "packages": {
     "libexpat1": "closure-followup/release-host.mjs",
     "libpcap0.8t64": "host-extra-followup/release-pcap.mjs",
+    "libx11-6": "xlib-followup/release-host.mjs",
+    "libx11-data": "xlib-followup/release-host.mjs",
+    "libx11-xcb1": "xlib-followup/release-host.mjs",
+    "libxrender1": "xlib-followup/release-host.mjs",
     "libsodium26": "closure-followup/release-host.mjs",
     "ncurses-bin": "closure-followup/ncurses-host.mjs",
     "libnghttp3-9": "closure-followup/curl-host.mjs",
@@ -14,6 +18,7 @@
     "python3-cryptography": "host-cryptography-followup/release.mjs",
     "python3-setuptools-whl": "host-python-vendor-followup/release.mjs",
     "python3-urllib3": "closure-followup/urllib3-host.mjs",
+    "sudo": "sudo-followup/release-host.mjs",
     "vim": "closure-followup/release-host.mjs",
     "vim-common": "closure-followup/release-host.mjs",
     "vim-runtime": "closure-followup/release-host.mjs",

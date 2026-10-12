@@ -1,0 +1,7 @@
+[
+ {"key":"forms","suite":"trixie","container":"utilibre-pack-forms-app-1","base":"sha256:6897d51d739760f0ddf5293257bb147d984e9982c392a97161ab770cde43218d","candidate":"utilibre-liberaforms:xlib-security-20261012","packages":["libx11-6","libx11-data","libxrender1"]},
+ {"key":"breezewiki","suite":"trixie","container":"utilibre-expanded-breezewiki-1","base":"sha256:9f245c54eac0c52ba6ca873a0d27a53688c8c911aac6acba8e4fb778c0e29aa6","candidate":"utilibre-breezewiki:xlib-security-20261012","packages":["libx11-6","libx11-data","libxrender1"]},
+ {"key":"penpot-backend","suite":"trixie","container":"utilibre-expanded-penpot-backend-1","base":"sha256:9392fb6cc091823bbb80a6dd9e79bbcc59f87fad6b4f71f3d452a8f159e1f0b9","candidate":"utilibre-penpot-backend:xlib-security-20261012","packages":["libx11-6","libx11-data","libxrender1"],"privateCopies":true},
+ {"key":"penpot-exporter","suite":"dhi","container":"utilibre-expanded-penpot-exporter-1","base":"sha256:fe93a9ab72e125c36bed02c093e67b85cae0a0e4172750b009af620d23127393","candidate":"utilibre-penpot-exporter:xlib-security-20261012","packages":["libx11-6","libx11-data","libx11-xcb1","libxrender1","libxtst6"],"privateCopies":true},
+ {"key":"gathio","suite":"bookworm","container":"utilibre-gathio-postgres-1","base":"sha256:fd9252c7293a388f00349c1f5d53e1f692e316e0dd7901ad0b6e00bd4a954a26","candidate":"utilibre-gathio-documentdb:xlib-security-20261012","packages":["libx11-6","libx11-data"]}
+]

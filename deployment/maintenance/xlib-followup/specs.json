@@ -1,0 +1,18 @@
+{
+  "patches": [
+    {"repo":"libx11","cve":"CVE-2026-88806","commit":"6d4432b13c0b3b6a644c13de9c793a14db48d545","sha256":"dd9ecf20d2ca40c7ec3d8cdf3727c729f9fae3b6cc010e9436f152ae7cd6da31"},
+    {"repo":"libx11","cve":"CVE-2026-94283","commit":"f263bbca24d04c766775e7af2e203ca41b4ece2e","sha256":"6d2f5abaa4d7b5632fba31ed1534a8d97d8ff5b4ea13c26f260b0063ae1d14c0"},
+    {"repo":"libx11","cve":"CVE-2026-94284","commit":"924fc91f08ece9cddc93609b4dc945a9cc90ea12","sha256":"99bb188806502a78925ce80bbf1a7394ce0201a0bcaaebd5ad914b47e1e4c1d1"},
+    {"repo":"libx11","cve":"CVE-2026-94285","commit":"797eaf0bd69524144e0df7af516b680f4b7694e9","sha256":"c1f7ca2330825a3866cca77fd2e71eb0bf04086c53dcbbffbb608e6b6ecfec46"},
+    {"repo":"libxrender","cve":"CVE-2026-88807","commit":"0564bce5446550c1b1681f3d8a933c20ea1455f7","sha256":"565e816e88ca223cebc6f833cfcfa63d20aaa22c8293d878bdd059910c4a66fc"},
+    {"repo":"libxtst","cve":"CVE-2026-94286","commit":"b84737d8400db7f06293822838d0e1c374cf71c4","sha256":"351f3b043c4e0604fdb11c2d944e93c7b130301d9562ec2d27ad2e2a0fe8b27c"}
+  ],
+  "sources": [
+    {"suite":"trixie","package":"libx11","version":"2:1.8.12-1","dsc":"libx11_1.8.12-1.dsc","sha256":"745fb04a4b0f8942183f6ac84ebd9e2dae1416c37f90abeaacabb57dc11286f5"},
+    {"suite":"trixie","package":"libxrender","version":"1:0.9.12-1","dsc":"libxrender_0.9.12-1.dsc","sha256":"2980c127d296455f4e9bcaf5ba114284fa0735ce3ef5b613dbe99d854bc87ca3"},
+    {"suite":"bookworm","package":"libx11","version":"2:1.8.4-2+deb12u2","dsc":"libx11_1.8.4-2+deb12u2.dsc","sha256":"d7374ec568d895f9e5919ebdbd94301e2acb9e8b307a39ac8708082aa1757fa3"},
+    {"suite":"dhi","package":"libx11","version":"2:1.8.12-1+dhi0","dsc":"libx11_1.8.12-1+dhi0.dsc","sha256":"216b02490e6123e7d938adb820259466f17e7592f38f0f41d2e3427432440a97"},
+    {"suite":"dhi","package":"libxrender","version":"1:0.9.12-1+dhi0","dsc":"libxrender_0.9.12-1+dhi0.dsc","sha256":"3932a79ea6a1328731adba5525cb1e4083f5dbe47729fcafd71383f6d9bfb66f"},
+    {"suite":"dhi","package":"libxtst","version":"2:1.2.5-1+dhi0","dsc":"libxtst_1.2.5-1+dhi0.dsc","sha256":"c4357da418414c01704c443fbafe0970bd50d7c614eab42e1ab22cca585e8892"}
+  ]
+}
