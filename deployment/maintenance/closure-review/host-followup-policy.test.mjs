@@ -33,3 +33,8 @@ test('cryptography repair and component exclusion cannot substitute for each oth
   assert.throws(() => hostFollowupStatus(hostFollowupReviews[3],{...crypto,id:'CVE-2023-50782'}));
   assert.throws(() => hostFollowupStatus(hostFollowupReviews[2],{...crypto,installed:'43.0.0-3+deb13u1'}));
 });
+test('host Xserver review is restricted to the signed exact pair and three source fixes',()=>{
+ const file='xserver-followup-20261012/host-review.json',base={scope:'host-os',artifact:'host-dpkg',type:'debian',package:'xvfb',installed:'2:21.1.25-1',id:'CVE-2026-88812',containers:[]};
+ for(const packageName of ['xvfb','xserver-common'])for(const id of ['CVE-2026-88812','CVE-2026-93521','CVE-2026-93523'])assert.equal(hostFollowupStatus(file,{...base,package:packageName,id}),'mitigated');
+ for(const patch of [{id:'CVE-2023-5574'},{id:'CVE-2026-93516'},{installed:'2:21.1.16-1.3+deb13u4+dhi1'},{package:'xserver-xorg-core'},{scope:'runtime-image'},{artifact:'sha256:other'},{containers:['penpot']}])assert.throws(()=>hostFollowupStatus(file,{...base,...patch}));
+});

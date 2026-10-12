@@ -1,0 +1,17 @@
+Description: Fix vendor backport regression test's pre-existing Debug constraint
+ The 43.0.0 VerificationCertificate does not implement Debug. Inspect the
+ expected error through Option rather than requiring Debug on the Ok type.
+ Runtime verifier code is unchanged.
+Author: Utilibre maintainers
+Forwarded: no
+--- a/src/rust/cryptography-x509-verification/src/lib.rs
++++ b/src/rust/cryptography-x509-verification/src/lib.rs
+@@ -616,6 +616,7 @@
+         let err = builder
+             .build_chain_inner(&working, u8::MAX, &ca_exts, name_chain, &mut budget)
+-            .unwrap_err();
++            .err()
++            .unwrap();
+ 
+         assert!(matches!(
+             err,

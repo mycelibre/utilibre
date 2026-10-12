@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict';
+import {eligible as xserverEligible} from '../xserver-followup/host-policy.mjs';
 
 export const hostFollowupReviews = [
   'ssh-server-followup-20261012/review.json',
   'host-python-vendor-followup-20261012/review.json',
   'host-cryptography-followup-20261012/review-mitigated.json',
   'host-cryptography-followup-20261012/review-not-affected.json',
+  'xserver-followup-20261012/host-review.json',
 ];
 
 // Mixed status is allowed only for the explicitly tested server/client split,
@@ -13,6 +15,10 @@ export function hostFollowupStatus(file, item) {
   assert(hostFollowupReviews.includes(file));
   assert.equal(item.scope, 'host-os');
   assert.equal(item.type, 'debian');
+  if (file === 'xserver-followup-20261012/host-review.json') {
+    assert(xserverEligible({...item,status:'needs-review'}), 'Exact host Xserver release and three proved CVEs only');
+    return 'mitigated';
+  }
   if (file.startsWith('host-cryptography-')) {
     assert.equal(item.package, 'python3-cryptography');
     assert.equal(item.installed, '43.0.0-3+deb13u1+utilibre1');

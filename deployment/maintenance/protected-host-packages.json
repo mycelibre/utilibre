@@ -18,6 +18,8 @@
     "vim-common": "closure-followup/release-host.mjs",
     "vim-runtime": "closure-followup/release-host.mjs",
     "vim-tiny": "closure-followup/release-host.mjs",
+    "xvfb": "xserver-followup/release-host.mjs",
+    "xserver-common": "xserver-followup/release-host.mjs",
     "docker-ce": "host-final/release-docker.mjs",
     "docker-ce-cli": "host-final/release-docker.mjs",
     "docker-ce-rootless-extras": "host-final/release-docker.mjs",
