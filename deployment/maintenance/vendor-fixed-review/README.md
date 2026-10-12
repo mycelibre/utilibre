@@ -1,5 +1,14 @@
 # Exact fixed-package review — 11 October 2026
 
+12 October follow-up: the same signed AOM 3.14.1-1 payload also resolves
+[CVE-2023-39616](https://security-tracker.debian.org/tracker/CVE-2023-39616),
+whose upstream frame-buffer fixes shipped in 3.7.0. The reviewer now checks
+that exact advisory through the completed native-overlay ancestry and rehashes
+the live codec; no package was replaced just to change the scanner count. The
+native HEIF/AVIF/GDAL checks remain compatibility evidence, not an independent
+exploit reproduction for this additional advisory. The counts below describe
+the original checkpoint.
+
 This is a review of eight remaining scanner matches, not another deployment or
 a blanket exemption. The scanner uses each base distribution's advisory status;
 the selected packages were instead downloaded through isolated, authenticated

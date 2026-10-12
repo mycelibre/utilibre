@@ -26,7 +26,7 @@ const turnContainers=['utilibre-galene-turn-turn-1','utilibre-turn-option-turn-1
 const jwtFixedIds=['CVE-2026-101917','CVE-2026-101918','CVE-2026-102271','CVE-2026-102272','CVE-2026-102273','CVE-2026-102274','CVE-2026-102275','CVE-2026-48526'];
 const mariaServerIds=['CVE-2026-107815','CVE-2026-107818','CVE-2026-107823','CVE-2026-44168','CVE-2026-44171','CVE-2026-48163','CVE-2026-48165'];
 export const specs=[
- {kind:'aom',artifact:aomId,containers:['utilibre-gathio-postgres-1'],package:'libaom3',version:'3.14.1-1',ids:['CVE-2023-6879'],deb:'aom-final-20261011/libaom3_3.14.1-1_amd64.deb',debSha:'8f932e686c8a0e3e09ef211b924bac0a43d3d6fd774e0dfbeba9c301aa129fca'},
+ {kind:'aom',artifact:aomId,containers:['utilibre-gathio-postgres-1'],package:'libaom3',version:'3.14.1-1',ids:['CVE-2023-6879','CVE-2023-39616'],deb:'aom-final-20261011/libaom3_3.14.1-1_amd64.deb',debSha:'8f932e686c8a0e3e09ef211b924bac0a43d3d6fd774e0dfbeba9c301aa129fca'},
  {kind:'jwt',artifact:kumaId,containers:['utilibre-community-uptime-kuma-1'],package:'python3-jwt',version:'2.15.1-1',ids:['CVE-2026-102267',...jwtFixedIds],...jwtDeb},
  {kind:'jwt',artifact:'host-dpkg',containers:[],package:'python3-jwt',version:'2.15.1-1',ids:['CVE-2026-102266','CVE-2026-102267',...jwtFixedIds],...jwtDeb},
  {kind:'mariadb',artifact:turnId,containers:turnContainers,package:'libmariadb3',version:'1:11.8.9+ds-4',ids:['CVE-2026-44172','CVE-2026-49261'],deb:'mariadb-client-final-20261011/libmariadb3.deb',debSha:'bed52f526f58a2312a35c728463cc657834da57e942aba2fe38234eab7813e19'},
@@ -106,7 +106,7 @@ function packageManifest(spec,temp){
  return files.map(p=>({path:p,sha256:sha(fs.readFileSync(temp+p))}));
 }
 export function reasonFor(item,spec,proof){
- const basis=spec.kind==='aom'?'Debian marks aom 3.14.1-1 fixed (upstream fix 7ae7bef246e85c8f349513d668b4571c79a43c5c, since 3.7.1).':
+ const basis=spec.kind==='aom'?(item.id==='CVE-2023-39616'?'Debian marks aom 3.14.1-1 fixed; AV1 frame-buffer fixes 35254736, cbce0616, 54e4b8ff and df38eb16 are included since upstream 3.7.0_rc2. Native HEIF/AVIF and actual GDAL consumers passed; not a separate exploit reproduction.':'Debian marks aom 3.14.1-1 fixed (upstream fix 7ae7bef246e85c8f349513d668b4571c79a43c5c, since 3.7.1).'):
  spec.kind==='jwt'?'Debian primary tracker marks this advisory fixed by PyJWT 2.15.0 or earlier; installed 2.15.1 source matches the signed Debian package. Native algorithms, empty-JWK and loopback JWKS-redirect checks passed; not an exploit reproduction for every advisory.':
  mariaServerIds.includes(item.id)?'Advisory affects MariaDB server/CONNECT/Galera/SST/backup components, fixed by server 11.8.9 or earlier. Coturn has only exact signed 11.8.9 client/config payloads; server/Galera packages and binaries are absent.':
  item.id==='CVE-2026-49261'?'MariaDB fixes wsrep_notify_cmd in server 11.8.8; exact source 11.8.9+ds-4 is fixed. Coturn has client/config packages, no installed server/Galera package or daemon.':

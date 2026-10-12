@@ -1,5 +1,29 @@
 # Final bounded native vendor layers — 11 October 2026
 
+## 12 October: exact npm payload clarification
+
+The Penpot exporter already contains DHI npm **11.20.0-0** with pacote
+**21.5.1**, the fixed version for [CVE-2026-9496](https://security-tracker.debian.org/tracker/CVE-2026-9496).
+`review-npm.mjs` reauthenticates the historical DHI InRelease and complete
+package-index hash, then compares all **2,198** installed package files and
+symlinks with archive SHA-256
+`9982c5a73e2cf556153dd70b7812768cf3679d774c14b4c7f9ece26502247aa5`.
+The npm executable resolves to that verified package. Two inventory records
+(including an old `status.d` record) were reviewed individually; no package was
+changed or metadata deleted. The gate allows only this advisory, role,
+ecosystem and the two observed inventory versions. Nine negative scope cases
+pass. This is source/payload evidence, not a new exploit reproduction or an
+exemption for npm's other dependencies. Re-run after each exact image change:
+
+```sh
+node deployment/maintenance/vendor-leaves-final/review-npm.mjs
+node --test deployment/maintenance/vendor-leaves-final/npm-policy.test.mjs
+```
+
+The separate operator applier accepts `vendor-leaves-final-20261011/npm-review.json`
+only after a fresh complete scan and matching live-image proof. Raw findings
+remain available.
+
 This batch changes native packages only, preserving existing application bytes,
 accounts, privacy configuration, retention, ports and protocol boundaries.
 Recipes pin exact predecessor images and exact signed vendor package versions.
