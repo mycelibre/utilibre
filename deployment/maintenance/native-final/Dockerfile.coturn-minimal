@@ -1,0 +1,20 @@
+# Remove unused upstream DNS auto-detection helpers, not relay features.
+# Both deployed services invoke turnserver directly with explicit addresses.
+# Local base identity must be checked before build (recorded in README).
+ARG BASE=utilibre-coturn:4.18.0-security-20261011
+FROM ${BASE}
+USER root
+RUN set -eu; \
+    sha256sum /usr/bin/turnserver > /tmp/turnserver.sha256; \
+    apt-get -s purge bind9-dnsutils bind9-host bind9-libs liblmdb0 libxml2 \
+      | awk '/^(Remv|Purg) / { print $2 }' | sort > /tmp/purge.actual; \
+    printf '%s\n' bind9-dnsutils bind9-host bind9-libs liblmdb0 libxml2 > /tmp/purge.expected; \
+    cmp /tmp/purge.expected /tmp/purge.actual; \
+    DEBIAN_FRONTEND=noninteractive apt-get -y purge bind9-dnsutils bind9-host bind9-libs liblmdb0 libxml2; \
+    sha256sum -c /tmp/turnserver.sha256; \
+    if ldd /usr/bin/turnserver | grep 'not found'; then exit 1; fi; \
+    if find /usr/lib /lib -name '*liblmdb*' -o -name 'libxml2.so*' | grep .; then exit 1; fi; \
+    if command -v dig; then exit 1; fi; \
+    if command -v host; then exit 1; fi; \
+    rm /tmp/turnserver.sha256 /tmp/purge.actual /tmp/purge.expected
+USER 65534:65534

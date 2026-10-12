@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import cp from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+const base='utilibre-grist:1.7.21-deno297-security-20261011';
+assert.equal(cp.execFileSync('docker',['image','inspect','--format','{{.Id}}',base],{encoding:'utf8'}).trim(),'sha256:53f12a42dd73fe22093ac0c84ca787d30b3efc919550a6039caa3c6a2c8104b5');
+const free=()=>{const s=fs.statfsSync('/');return s.bavail*s.bsize;};assert(free()>8.4*1024**3);
+const dir=fs.mkdtempSync('/opt/utilibre/reports/grist-language-');fs.chmodSync(dir,0o700);
+const log=fs.openSync(dir+'/build.log','w');
+const child=cp.spawn('docker',['build','--pull=false','-f',fileURLToPath(new URL('./Dockerfile',import.meta.url)),'-t','utilibre-grist:1.7.21-language-security-20261011',fileURLToPath(new URL('.',import.meta.url))],{stdio:['ignore',log,log]});
+const timer=setInterval(()=>{if(free()<8*1024**3)child.kill('SIGTERM');},500);
+const code=await new Promise(resolve=>child.on('exit',resolve));clearInterval(timer);fs.closeSync(log);assert.equal(code,0,dir+'/build.log');
+const id=cp.execFileSync('docker',['image','inspect','--format','{{.Id}}','utilibre-grist:1.7.21-language-security-20261011'],{encoding:'utf8'}).trim();
+fs.writeFileSync(dir+'/build.json',JSON.stringify({date:new Date().toISOString(),image:'utilibre-grist:1.7.21-language-security-20261011',imageId:id,status:'built-not-verified',productionChanged:false},null,2)+'\n');console.log(dir);

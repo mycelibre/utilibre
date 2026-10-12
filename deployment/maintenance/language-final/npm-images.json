@@ -1,0 +1,171 @@
+[
+  {
+    "key": "newsletters-web",
+    "kind": "npm11",
+    "base": "utilibre-newsletters:2.1.3-p2-caddy-security-20261011-p2",
+    "baseId": "sha256:0252f8f07a1a7ed3993311bd0a2d55cc9dbf1e2c6215d39733e59ac851fcb9a0",
+    "candidate": "utilibre-newsletters:2.1.3-p2-caddy-security-20261011-p2-language-20261011",
+    "user": "1000:1000",
+    "containers": [
+      "utilibre-newsletters-web-1"
+    ],
+    "oldNpm": "11.20.0"
+  },
+  {
+    "key": "razzia",
+    "kind": "npm11",
+    "base": "utilibre-razzia:3.1.0-p1",
+    "baseId": "sha256:16503619bde8bc4d65f95544efb439d8819633446c265a18b9862bfd578b3a04",
+    "candidate": "utilibre-razzia:3.1.0-p1-language-20261011",
+    "user": "node",
+    "containers": [
+      "utilibre-razzia-socket-1"
+    ],
+    "oldNpm": "11.19.0"
+  },
+  {
+    "key": "spliit",
+    "kind": "npm11",
+    "base": "utilibre-spliit:1.29.0-p1",
+    "baseId": "sha256:26c3aba97155955b868c4f18b444e2f7e51c1e2db14263214d7f210b780104c4",
+    "candidate": "utilibre-spliit:1.29.0-p1-language-20261011",
+    "user": "root",
+    "containers": [
+      "utilibre-spliit-app-1"
+    ],
+    "oldNpm": "11.20.0"
+  },
+  {
+    "key": "chitchatter-tracker",
+    "kind": "npm11",
+    "base": "utilibre-chitchatter-tracker:11.2.3-p1",
+    "baseId": "sha256:57f0d4cd031728f49b28f7b3a89a4ab90aaf4c09d6c43eb63e341bd25554d5ae",
+    "candidate": "utilibre-chitchatter-tracker:11.2.3-p1-language-20261011",
+    "user": "node",
+    "containers": [
+      "utilibre-chitchatter-tracker-1"
+    ],
+    "oldNpm": "11.19.0"
+  },
+  {
+    "key": "wishlist",
+    "kind": "npm11",
+    "base": "utilibre-wishlist:0.67.1-caddy-security-20261011-p2",
+    "baseId": "sha256:79228dd2f65a70907285e4bfde9e05588c496dfec13836c17a780d5266c2581c",
+    "candidate": "utilibre-wishlist:0.67.1-caddy-security-20261011-p2-language-20261011",
+    "user": "1000:1000",
+    "containers": [
+      "utilibre-wishlist-app-1"
+    ],
+    "oldNpm": "11.19.0"
+  },
+  {
+    "key": "wbo",
+    "kind": "npm11",
+    "base": "utilibre-wbo:2.9.0-p3",
+    "baseId": "sha256:7f0c37501c983ea4c46cfa62c2e97158bfbf8821dd17284a0dac44ae925fd8e7",
+    "candidate": "utilibre-wbo:2.9.0-p3-language-20261011",
+    "user": "1000:1000",
+    "containers": [
+      "utilibre-collaboration-pilot-wbo-1"
+    ],
+    "oldNpm": "11.19.0"
+  },
+  {
+    "key": "resume",
+    "kind": "npm11",
+    "base": "utilibre-resume:seroval-security-20261011-p3",
+    "baseId": "sha256:85ea55446d742a559ba0625878dcbf3295723b889d7751a6d628f34cfae085c3",
+    "candidate": "utilibre-resume:seroval-security-20261011-p3-language-20261011",
+    "user": "1000:1000",
+    "containers": [
+      "utilibre-expanded-resume-1"
+    ],
+    "oldNpm": "11.19.0"
+  },
+  {
+    "key": "rsshub",
+    "kind": "npm11",
+    "base": "ghcr.io/diygod/rsshub:2026-10-11@sha256:967194b8f73a1251b2a566f91b457bc872c1bbaf343827a455ade760b9693bf6",
+    "baseId": "sha256:967194b8f73a1251b2a566f91b457bc872c1bbaf343827a455ade760b9693bf6",
+    "candidate": "utilibre-rsshub:2026-10-11-language-20261011",
+    "user": "root",
+    "containers": [
+      "utilibre-services-rsshub-1"
+    ],
+    "oldNpm": "11.19.0"
+  },
+  {
+    "key": "lrclib",
+    "kind": "npm11",
+    "base": "utilibre-lrclib:f37c070-p3",
+    "baseId": "sha256:9e9325bff8dc89079cba90da696eac8dae874622bf7bf5f0cefc842cf8724568",
+    "candidate": "utilibre-lrclib:f37c070-p3-language-20261011",
+    "user": "65532:65532",
+    "containers": [
+      "utilibre-additions-dumb-1"
+    ],
+    "oldNpm": "11.19.0"
+  },
+  {
+    "key": "bookplate",
+    "kind": "npm11",
+    "base": "utilibre-bookplate:1.1.0-security-20261011",
+    "baseId": "sha256:a233dbddf02640c8eec790c1a89d3c9c01b5748f05c0d5067624c897593ea6e5",
+    "candidate": "utilibre-bookplate:1.1.0-security-20261011-language-20261011",
+    "user": "node",
+    "containers": [
+      "utilibre-records-bookplate-1"
+    ],
+    "oldNpm": "11.19.0"
+  },
+  {
+    "key": "cryptpad-node",
+    "kind": "npm11",
+    "base": "utilibre-cryptpad-node:debian-security-20261011",
+    "baseId": "sha256:b76753f911bd19e4eb987671b11e15f5e07fcf9de4b05294581890cb3a3109d4",
+    "candidate": "utilibre-cryptpad-node:debian-security-20261011-language-20261011",
+    "user": "4001:4001",
+    "containers": [
+      "utilibre-pack-cryptpad-cryptpad-1"
+    ],
+    "oldNpm": "11.19.0"
+  },
+  {
+    "key": "biblioreads",
+    "kind": "npm11",
+    "base": "utilibre-biblioreads:9508abc-p1",
+    "baseId": "sha256:bd960c404a43f6b071655317cdeee2ac96c4b10d8013377d6041a308885aed70",
+    "candidate": "utilibre-biblioreads:9508abc-p1-language-20261011",
+    "user": "node",
+    "containers": [
+      "utilibre-biblioreads-biblioreads-1"
+    ],
+    "oldNpm": "11.19.0"
+  },
+  {
+    "key": "rallly",
+    "kind": "npm11",
+    "base": "utilibre-rallly:libraries-security-20261011-p3",
+    "baseId": "sha256:bfdb030bc867d6bd94eaf7c55d59d289a63f62dc217b9494b975c57dfe2aa88c",
+    "candidate": "utilibre-rallly:libraries-security-20261011-p3-language-20261011",
+    "user": "nextjs",
+    "containers": [
+      "utilibre-community-rallly-1"
+    ],
+    "oldNpm": "11.19.0"
+  },
+  {
+    "key": "newsletters-mail",
+    "kind": "npm11",
+    "base": "utilibre-newsletters:2.1.3-p1-caddy-security-20261011-p2",
+    "baseId": "sha256:d1ff91dfb8f216dca96eb5425806c8fd99edbea4f6c3c0c4c064c1ffbd0d085e",
+    "candidate": "utilibre-newsletters:2.1.3-p1-caddy-security-20261011-p2-language-20261011",
+    "user": "1000:1000",
+    "containers": [
+      "utilibre-newsletters-smtp-1",
+      "utilibre-newsletters-jobs-1"
+    ],
+    "oldNpm": "11.20.0"
+  }
+]

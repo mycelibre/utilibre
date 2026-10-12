@@ -1,0 +1,19 @@
+bots:
+  - name: synthetic-allow
+    path_regex: ^/allow$
+    action: ALLOW
+  - name: synthetic-deny
+    path_regex: ^/blocked$
+    action: DENY
+  - name: synthetic-challenge
+    path_regex: .*
+    action: CHALLENGE
+    challenge:
+      algorithm: fast
+      difficulty: 1
+dnsbl: false
+status_codes:
+  CHALLENGE: 200
+  DENY: 403
+honeypot:
+  enabled: false

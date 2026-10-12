@@ -1,0 +1,14 @@
+FROM utilibre-grist:libraries-security-20261011
+USER root
+# Official immutable Deno release, checked by build-grist.mjs before copying.
+COPY deno /grist/sandbox/pyodide/worker/node_modules/@deno/linux-x64-glibc/deno
+COPY deno-runtime.json /usr/local/share/utilibre-deno-runtime.json
+COPY grist-deno.sh /usr/local/bin/grist-deno
+RUN test "$(sha256sum /grist/sandbox/pyodide/worker/node_modules/@deno/linux-x64-glibc/deno | cut -d' ' -f1)" = ce6a052beb97c2b92de67077e3f3924ba7c9661ede0d8dc2f66a116a3c841f21 \
+ && chmod 0755 /grist/sandbox/pyodide/worker/node_modules/@deno/linux-x64-glibc/deno /usr/local/bin/grist-deno \
+ && test "$(sha256sum /usr/bin/runsc | cut -d' ' -f1)" = 2aca288a1bd6b38f904defed9cbbd326d824323fe0b91cb12d808cde22d597d6 \
+ && rm /usr/bin/runsc
+# Explicit supported sandbox, never the unsandboxed/skip/Node bypass variants.
+# Deployment must set the same values and mount the bounded disposable cache.
+ENV GRIST_SANDBOX_FLAVOR=pyodide GRIST_PYODIDE_SKIP_DENO=0 GRIST_SANDBOX=/usr/local/bin/grist-deno
+USER 1000:1000

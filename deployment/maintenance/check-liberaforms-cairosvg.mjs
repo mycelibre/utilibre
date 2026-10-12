@@ -5,7 +5,7 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 process.umask(0o077);
 const image=process.argv[2]||'utilibre-liberaforms:4.11.1-cairosvg-security-20261011';
-assert(['utilibre-liberaforms:4.11.1-cairosvg-security-20261011','utilibre-liberaforms:4.11.1-pcre-security-20261011'].includes(image),'Reviewed image only');
+assert(['utilibre-liberaforms:4.11.1-cairosvg-security-20261011','utilibre-liberaforms:4.11.1-pcre-security-20261011','utilibre-liberaforms:4.11.1-pcre-security-20261011-language-20261011'].includes(image),'Reviewed image only');
 const db='maintenance-forms-cairo-db',app='maintenance-forms-cairo-app';
 const docker=(...args)=>execFileSync('docker',args,{encoding:'utf8',stdio:['ignore','pipe','pipe'],timeout:90000});
 const bounded=['--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--memory','384m','--cpus','0.75','--pids-limit','96','--log-driver','none'];
@@ -36,7 +36,7 @@ try{
  const result=JSON.parse(output.trim().split('\n').at(-1));
  const report={checkedAt:new Date().toISOString(),image,imageId:docker('image','inspect',image,'--format','{{.Id}}').trim(),network:'none, shared loopback only',blankDatabase:true,...result};
  await mkdir('/var/lib/utilibre-maintenance/vendor-stage-20261011',{recursive:true,mode:0o700});
- await writeFile('/var/lib/utilibre-maintenance/vendor-stage-20261011/'+(image.includes('-pcre-')?'liberaforms-pcre':'liberaforms')+'.json',JSON.stringify(report,null,2)+'\n',{mode:0o600});
+ await writeFile('/var/lib/utilibre-maintenance/vendor-stage-20261011/'+(image.endsWith('-language-20261011')?'liberaforms-language':image.includes('-pcre-')?'liberaforms-pcre':'liberaforms')+'.json',JSON.stringify(report,null,2)+'\n',{mode:0o600});
  console.log(JSON.stringify(report));
 }catch(error){
  console.error(error.stderr?.toString()||String(error));process.exitCode=1;

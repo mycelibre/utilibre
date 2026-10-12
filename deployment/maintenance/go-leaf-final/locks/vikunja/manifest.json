@@ -1,0 +1,13 @@
+{
+  "application": "vikunja",
+  "files": [
+    {
+      "file": "go.mod",
+      "sha256": "cd72794a1e16cdca0e64cd33e462ded2981e7cf04733e033d2357ef2e5b3d1b6"
+    },
+    {
+      "file": "go.sum",
+      "sha256": "774ecec6cdde13a5859a2c6b122d9c50bef9217b37146c4ce482a95401fe32b9"
+    }
+  ]
+}

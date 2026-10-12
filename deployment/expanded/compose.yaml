@@ -61,7 +61,7 @@ services:
 
   breezewiki:
     <<: *runtime
-    image: utilibre-breezewiki:6d09507-p3
+    image: utilibre-breezewiki:pcre-vendor-security-20261011
     read_only: true
     user: "1000:1000"
     environment:
@@ -103,7 +103,7 @@ services:
 
   wakapi:
     <<: *runtime
-    image: utilibre-wakapi:2.18.1-p1
+    image: utilibre-wakapi:2.18.1-healthcheck-security-20261011
     read_only: true
     user: "65532:65532"
     environment:
@@ -166,7 +166,7 @@ services:
   resume:
     <<: *runtime
     # Same pinned upstream runtime; narrow visitor-statistics removal in Dockerfile.resume.
-    image: utilibre-resume:seroval-security-20261011-p3
+    image: utilibre-resume:seroval-security-20261011-p3-language-20261011
     read_only: true
     user: "1000:1000"
     command: ["node", "/usr/local/bin/utilibre-resume-start.mjs"]
@@ -247,7 +247,7 @@ services:
 
   penpot-backend:
     <<: *runtime
-    image: utilibre-penpot-backend:2.18.3-runtime-hardening-20261011
+    image: utilibre-penpot-backend:2.18.3-libxml-security-20261011
     user: "1001:1001"
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
@@ -289,7 +289,7 @@ services:
 
   penpot-admin-console:
     <<: *runtime
-    image: utilibre-penpot-admin:seroval-security-20261011-p2
+    image: utilibre-penpot-admin:openssl-vendor-security-20261011
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
       PENPOT_INTERNAL_URI: http://penpot-frontend:8080
@@ -303,7 +303,7 @@ services:
 
   penpot-exporter:
     <<: *runtime
-    image: utilibre-penpot-exporter:2.18.3-runtime-hardening-20261011
+    image: utilibre-penpot-exporter:2.18.3-libxml-security-20261011
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
       PENPOT_INTERNAL_URI: http://penpot-frontend:8080

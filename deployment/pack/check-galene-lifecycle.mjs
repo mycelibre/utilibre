@@ -9,7 +9,9 @@ const seconds = Number(process.env.GALENE_SOAK_SECONDS || 180);
 assert(Number.isInteger(seconds) && seconds >= 30 && seconds <= 600);
 const room = `lifecycle-${randomBytes(8).toString('hex')}`;
 const localLab=process.env.GALENE_LIFECYCLE_LAB==='1';
-const file = `${localLab?'/opt/utilibre/galene-lifecycle-lab':'/opt/utilibre/pack-data/galene'}/groups/${room}.json`;
+const labRoot=process.env.GALENE_LIFECYCLE_LAB_ROOT||'/opt/utilibre/galene-lifecycle-lab';
+assert(!process.env.GALENE_LIFECYCLE_LAB_ROOT||(localLab&&labRoot==='/var/lib/utilibre-maintenance/go-final-20261011/galene-stage'));
+const file = `${localLab?labRoot:'/opt/utilibre/pack-data/galene'}/groups/${room}.json`;
 const password = randomBytes(24).toString('base64url');
 const salt = randomBytes(16);
 const verifier = {type:'pbkdf2', hash:'sha-256', salt:salt.toString('hex'),

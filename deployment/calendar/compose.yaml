@@ -14,7 +14,7 @@ x-runtime: &runtime
 services:
   radicale:
     <<: *runtime
-    image: utilibre-radicale:3.8.3
+    image: utilibre-radicale:pcre-vendor-security-20261011
     build:
       context: .
       dockerfile: Dockerfile.radicale

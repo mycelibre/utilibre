@@ -1,0 +1,13 @@
+{
+  "application": "anubis",
+  "files": [
+    {
+      "file": "go.mod",
+      "sha256": "4d9fa0c62950be0f10afc77273024bac14c539bb15c5c915646901435a86040c"
+    },
+    {
+      "file": "go.sum",
+      "sha256": "b083f80bb65b0e9b0293421df3a04fbb259c6017d2f5885b3895b24d65d179f9"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+<?php
+declare(strict_types=1);
+if (getenv('UTILIBRE_SECURITY_DISPOSABLE') !== 'yes') exit(1);
+require '/var/www/FreshRSS/cli/_cli.php';
+cliInitUser('fictional');
+$xml='<?xml version="1.0"?><rss version="2.0"><channel><title>Fictional feed</title><link>https://example.invalid/</link><description>Fictional only</description><item><guid>urn:fictional:one</guid><title>Fictional café</title><link>https://example.invalid/one</link><description>Unicode XML fixture</description></item></channel></rss>';
+$feed=new SimplePie\SimplePie();
+$feed->set_raw_data($xml); $feed->enable_cache(false);
+if (!$feed->init() || $feed->get_item_quantity() !== 1 || $feed->get_item(0)?->get_title() !== 'Fictional café') throw new Exception('Native feed parser failed');
+$id=FreshRSS_Factory::createFeedDao()->addFeed(['url'=>'https://example.invalid/fictional.xml','kind'=>0,'category'=>1,'name'=>'Fictional feed','website'=>'https://example.invalid/','description'=>'Synthetic XML fixture','lastUpdate'=>time(),'error'=>0]);
+if (!$id) throw new Exception('Native feed storage failed');
+$entry=new FreshRSS_Entry($id,'urn:fictional:one','Fictional café','Fictional Author','<p>Fictional body.</p>','https://example.invalid/one',time(),false,true);
+$entry->_id((string)(int)(microtime(true)*1000000));
+if (!FreshRSS_Factory::createEntryDao()->addEntry($entry->toArray(),false)) throw new Exception('Native article storage failed');
+[$filename,$opml]=(new FreshRSS_Export_Service('fictional'))->generateOpml();
+$document=new DOMDocument();
+if (!$document->loadXML($opml,LIBXML_NONET)) throw new Exception('OPML invalid');
+$xpath=new DOMXPath($document);
+if ($xpath->query('//outline[@xmlUrl="https://example.invalid/fictional.xml"]')->length !== 1) throw new Exception('OPML missing feed');
+echo "FRESHRSS_NATIVE_PASSED\n";

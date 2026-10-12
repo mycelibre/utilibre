@@ -1,0 +1,20 @@
+ARG BASE
+FROM ${BASE}
+USER root
+COPY imagemagick-no-exr.tar.gz /tmp/imagemagick-no-exr.tar.gz
+RUN set -eu; \
+    cp /opt/imagick/etc/ImageMagick-7/policy.xml /tmp/policy.xml; \
+    tar -xzf /tmp/imagemagick-no-exr.tar.gz -C /; \
+    cp -L /opt/imagick/lib/libMagickCore-7.Q16HDRI.so.10 /opt/imagick/lib/deps/libMagickCore-7.Q16HDRI.so.10; \
+    cp -L /opt/imagick/lib/libMagickWand-7.Q16HDRI.so.10 /opt/imagick/lib/deps/libMagickWand-7.Q16HDRI.so.10; \
+    cp /tmp/policy.xml /opt/imagick/etc/ImageMagick-7/policy.xml; \
+    apt-get -s purge libopenexr-3-1-30 | awk '/^(Remv|Purg) / { print $2 }' > /tmp/purge.actual; \
+    test "$(cat /tmp/purge.actual)" = libopenexr-3-1-30; \
+    DEBIAN_FRONTEND=noninteractive apt-get -y purge libopenexr-3-1-30; \
+    find /opt/imagick/lib/deps -maxdepth 1 -type f \( -name 'libOpenEXR*.so*' -o -name 'libIlmThread*.so*' -o -name 'libIex*.so*' \) -delete; \
+    if ldd /opt/imagick/bin/magick | grep -E 'not found|libOpenEXR|libIlmThread|libIex'; then exit 1; fi; \
+    if find /opt /usr/lib /lib -name 'libOpenEXR*.so*' -o -name 'libIlmThread*.so*' -o -name 'libIex*.so*' | grep .; then exit 1; fi; \
+    /opt/imagick/bin/magick -version > /tmp/version; \
+    if grep -i openexr /tmp/version; then exit 1; fi; \
+    rm /tmp/imagemagick-no-exr.tar.gz /tmp/policy.xml /tmp/purge.actual /tmp/version
+USER penpot:penpot

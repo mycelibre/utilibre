@@ -1,7 +1,7 @@
 name: utilibre-chitchatter
 services:
   tracker:
-    image: utilibre-chitchatter-tracker:11.2.3-p1
+    image: utilibre-chitchatter-tracker:11.2.3-p1-language-20261011
     build: {context: ., dockerfile: Dockerfile.tracker}
     restart: unless-stopped
     read_only: true

@@ -1,0 +1,13 @@
+{
+  "application": "mezzo",
+  "files": [
+    {
+      "file": "go.mod",
+      "sha256": "267e3d05c6cd53eacdb8b6774e0e899b63cfead06d0f2e8930414fc56a68e4f9"
+    },
+    {
+      "file": "go.sum",
+      "sha256": "e52f75feb98478d5f970cd254f8e4409ce9c52982f4bee41d1795ba555dbf5a0"
+    }
+  ]
+}

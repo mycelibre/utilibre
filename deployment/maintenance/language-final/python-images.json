@@ -1,0 +1,236 @@
+[
+  {
+    "key": "unfurl",
+    "kind": "remove-pip",
+    "base": "utilibre-unfurl:2026.10-p1",
+    "baseId": "sha256:05c1ab87f284979a8032792adfa1dc09b61ddf01649aac2f45e61f163bc5dba0",
+    "candidate": "utilibre-unfurl:2026.10-p1-language-20261011",
+    "user": "65532:65532",
+    "containers": [
+      "utilibre-unfurl-app-1"
+    ],
+    "pipTrees": [
+      {
+        "path": "/usr/local/lib/python3.13/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      }
+    ]
+  },
+  {
+    "key": "candlr",
+    "kind": "remove-pip",
+    "base": "utilibre-candlr:2.0.0-p1",
+    "baseId": "sha256:1e273de16595b00cd71ebd7f5a529eca6e0319c0f4b60fd66b0e4f0c607e4398",
+    "candidate": "utilibre-candlr:2.0.0-p1-language-20261011",
+    "user": "root",
+    "containers": [
+      "utilibre-records-candlr-1"
+    ],
+    "pipTrees": [
+      {
+        "path": "/usr/local/lib/python3.12/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      }
+    ]
+  },
+  {
+    "key": "breezewiki",
+    "kind": "remove-pip",
+    "base": "utilibre-breezewiki:6d09507-p3",
+    "baseId": "sha256:3983b1a5276aaaa906657f3c2ae5c6e89b45eab79e6ad92a547849bd3ebb7755",
+    "candidate": "utilibre-breezewiki:6d09507-p3-language-20261011",
+    "user": "1000:1000",
+    "containers": [
+      "utilibre-expanded-breezewiki-1"
+    ],
+    "pipTrees": [
+      {
+        "path": "/usr/local/lib/python3.13/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      }
+    ]
+  },
+  {
+    "key": "kitchenowl",
+    "kind": "remove-pip",
+    "base": "utilibre-kitchenowl:debian-security-20261011",
+    "baseId": "sha256:555083c3bd5aa7f9be4a71fc37e204ff5420f71dd3c5b59be1abc7d22198053a",
+    "candidate": "utilibre-kitchenowl:debian-security-20261011-language-20261011",
+    "user": "1000:1000",
+    "containers": [
+      "utilibre-kitchenowl-app-1"
+    ],
+    "pipTrees": [
+      {
+        "path": "/usr/local/lib/python3.14/site-packages/pip",
+        "manifestSha256": "e7673bce58219ac86720dbadbf4927921d6c213f2363b7a930c1e01594eea302"
+      },
+      {
+        "path": "/opt/venv/lib/python3.14/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      }
+    ]
+  },
+  {
+    "key": "liberaforms",
+    "kind": "remove-pip",
+    "base": "utilibre-liberaforms:4.11.1-pcre-security-20261011",
+    "baseId": "sha256:5b403053cb749f6b843fb9d3bda92072165b8d83a95717b1c3452ef909c949fd",
+    "candidate": "utilibre-liberaforms:4.11.1-pcre-security-20261011-language-20261011",
+    "user": "4002:4002",
+    "containers": [
+      "utilibre-pack-forms-app-1"
+    ],
+    "pipTrees": [
+      {
+        "path": "/usr/local/lib/python3.13/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      },
+      {
+        "path": "/app/venv/lib/python3.13/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      }
+    ]
+  },
+  {
+    "key": "beaverhabits",
+    "kind": "remove-pip",
+    "base": "utilibre-beaverhabits:0.10.0-p7",
+    "baseId": "sha256:6d4e35cb304004dc61672101b3cfd48c3ed4864379c8a6596940b7236a078bbf",
+    "candidate": "utilibre-beaverhabits:0.10.0-p7-language-20261011",
+    "user": "1000:1000",
+    "containers": [
+      "utilibre-beaverhabits-app-1"
+    ],
+    "pipTrees": [
+      {
+        "path": "/usr/local/lib/python3.13/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      }
+    ]
+  },
+  {
+    "key": "public-egress",
+    "kind": "remove-pip",
+    "base": "utilibre-public-egress:7.7",
+    "baseId": "sha256:9bc66d80e90a72c29ba89d44447b58bd1faded54b4ecba35b4f7b2b23497c780",
+    "candidate": "utilibre-public-egress:7.7-language-20261011",
+    "user": "65534:65534",
+    "containers": [
+      "utilibre-records-egress-1",
+      "utilibre-wallabag-proxy-1",
+      "utilibre-trip-proxy-1",
+      "utilibre-unfurl-proxy-1",
+      "utilibre-13ft-proxy-1"
+    ],
+    "pipTrees": [
+      {
+        "path": "/usr/local/lib/python3.13/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      }
+    ]
+  },
+  {
+    "key": "authentik",
+    "kind": "remove-pip",
+    "base": "utilibre-authentik:2026.8.3-vendor-security-20261011",
+    "baseId": "sha256:9fa746d0be08f6dd6c27e4622554ba50d115fbbf714d3ef6c8f0c02984519b4e",
+    "candidate": "utilibre-authentik:2026.8.3-vendor-security-20261011-language-20261011",
+    "user": "1000:1000",
+    "containers": [
+      "utilibre-identity-server-1",
+      "utilibre-identity-worker-1"
+    ],
+    "pipTrees": [
+      {
+        "path": "/usr/local/lib/python3.14/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      }
+    ]
+  },
+  {
+    "key": "radicale",
+    "kind": "remove-pip",
+    "base": "utilibre-radicale:3.8.3",
+    "baseId": "sha256:a2e27016133bbfc3efb39f699171aac07c6b2596652d3e61f4087605b4d9f33b",
+    "candidate": "utilibre-radicale:3.8.3-language-20261011",
+    "user": "1000:1000",
+    "containers": [
+      "utilibre-calendar-radicale-1"
+    ],
+    "pipTrees": [
+      {
+        "path": "/usr/local/lib/python3.13/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      }
+    ]
+  },
+  {
+    "key": "trip",
+    "kind": "remove-pip",
+    "base": "utilibre-trip:1.50.1-p2",
+    "baseId": "sha256:a8be198a5750f2ccbc8e89fe8f0c8e5af40b30d227f7beeda3d761ae86b90ca4",
+    "candidate": "utilibre-trip:1.50.1-p2-language-20261011",
+    "user": "1000:1000",
+    "containers": [
+      "utilibre-trip-app-1"
+    ],
+    "pipTrees": [
+      {
+        "path": "/usr/local/lib/python3.12/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      }
+    ]
+  },
+  {
+    "key": "13ft",
+    "kind": "remove-pip",
+    "base": "utilibre-13ft:0.5.0-public1",
+    "baseId": "sha256:c8659dd697450c1924ff8d89503be8e79cff6ff8771cfb663aeab7e1e9f38355",
+    "candidate": "utilibre-13ft:0.5.0-public1-language-20261011",
+    "user": "65534:65534",
+    "containers": [
+      "utilibre-13ft-app-1"
+    ],
+    "pipTrees": [
+      {
+        "path": "/usr/local/lib/python3.13/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      }
+    ]
+  },
+  {
+    "key": "priviblur",
+    "kind": "remove-pip",
+    "base": "utilibre-priviblur:251a8e6-p1",
+    "baseId": "sha256:e18ddde07612b740db8038898952e61fa98512acc1e3ac9bc935bafc10e4d2d0",
+    "candidate": "utilibre-priviblur:251a8e6-p1-language-20261011",
+    "user": "1000:1000",
+    "containers": [
+      "utilibre-priviblur-priviblur-1"
+    ],
+    "pipTrees": [
+      {
+        "path": "/usr/local/lib/python3.13/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      }
+    ]
+  },
+  {
+    "key": "family-chess",
+    "kind": "remove-pip",
+    "base": "utilibre-family-chess:f6e5093-p1",
+    "baseId": "sha256:e33422b7e7538911b8ddbf4e4884c0856b2337fabd1d8f6489ccee36e28e84a6",
+    "candidate": "utilibre-family-chess:f6e5093-p1-language-20261011",
+    "user": "10001:10001",
+    "containers": [
+      "utilibre-family-chess-app-1"
+    ],
+    "pipTrees": [
+      {
+        "path": "/usr/local/lib/python3.13/site-packages/pip",
+        "manifestSha256": "3df0c9601bfa2e0dca23cc574a4f900a4d7fdad060ab203fab8354350ed93320"
+      }
+    ]
+  }
+]

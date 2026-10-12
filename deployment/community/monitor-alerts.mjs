@@ -72,11 +72,14 @@ for(const [file,name,hours,unit]of [
  }
  catch{issues.push(`${name}: report unavailable`);}
 }
-// Two public repository API calls; no production secrets, documents or browsers.
+// Read-only repository calls; fetch the scheduled completion separately so a
+// burst of manual diagnostics cannot push it outside the first results page.
 try{
  const base='repos/mycelibre/utilibre/actions/workflows/utilibre-availability.yml';
  const query=p=>JSON.parse(execFileSync('gh',['api',p],{encoding:'utf8',timeout:10000,maxBuffer:512*1024}));
- issues.push(...externalIssues(query(base),query(base+'/runs?per_page=10')));
+ const workflow=query(base),recent=query(base+'/runs?per_page=10');
+ const scheduled=query(base+'/runs?event=schedule&status=completed&per_page=1');
+ issues.push(...externalIssues(workflow,{workflow_runs:[...(recent.workflow_runs||[]),...(scheduled.workflow_runs||[])]}));
 }catch{issues.push('Cannot verify independent external monitoring schedule/results');}
 if(existsSync('/etc/systemd/system/utilibre-storagebox-backup.service')) {
   try {

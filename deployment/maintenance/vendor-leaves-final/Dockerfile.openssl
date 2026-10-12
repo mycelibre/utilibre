@@ -1,0 +1,10 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+ARG RUNTIME_USER
+USER root
+COPY packages/ /tmp/utilibre-vendor/
+RUN dpkg -i /tmp/utilibre-vendor/*.deb \
+ && test "$(dpkg-query -W -f='${Version}' libssl3t64)" = '3.0.13-0ubuntu3.16' \
+ && test -z "$(dpkg --audit)" \
+ && rm /tmp/utilibre-vendor/*.deb
+USER ${RUNTIME_USER}

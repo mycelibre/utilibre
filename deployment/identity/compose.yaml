@@ -12,7 +12,7 @@ x-runtime: &runtime
 
 x-authentik: &authentik
   <<: *runtime
-  image: utilibre-authentik:2026.8.3-vendor-security-20261011
+  image: utilibre-authentik:2026.8.3-xml-security-20261011
   user: "1000:1000"
   shm_size: 512m
   tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777"]

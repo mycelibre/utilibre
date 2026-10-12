@@ -1,5 +1,106 @@
 [
   {
+    "patch": "deployment/maintenance/go-leaf-final/patches/anubis-go-security-20261011.patch",
+    "source": "/var/lib/utilibre-maintenance/go-leaf-final-20261011/source/anubis",
+    "revision": "d39e26cedcc96bea5e4915297c756e7eec74aaf7",
+    "prerequisites": [],
+    "purpose": "Pinned compatible network/CEL/gRPC dependency locks with Go 1.26.9; preserves the existing Anubis release, challenge assets and production policy.",
+    "removeWhen": "A tested upstream release carries equivalent fixes and passes embedded asset parity and two-browser native proof-of-work gates."
+  },
+  {
+    "patch": "deployment/maintenance/go-leaf-final/patches/vikunja-go-security-20261011.patch",
+    "source": "/opt/utilibre/community-src/vikunja",
+    "revision": "a16be96aa454671fdf213b0fbe411dd38a098418",
+    "prerequisites": [],
+    "purpose": "Exact compatible x/net locks with Go 1.27.2 static native build; preserves all existing Vikunja frontend assets, task data and account permissions.",
+    "removeWhen": "A tested upstream release carries equivalent fixes and passes isolated two-account task/import/export/access checks."
+  },
+  {
+    "patch": "deployment/maintenance/go-leaf-final/patches/wakapi-go-security-20261011.patch",
+    "source": "/opt/utilibre/expanded-src/wakapi",
+    "revision": "347f1f45ae2863d9499236471317a76630c5308f",
+    "prerequisites": ["deployment/expanded/wakapi-summary.patch"],
+    "purpose": "Exact compatible network dependency locks for Wakapi and a separately rebuilt Go 1.27.2 health helper; keeps existing local privacy/interface fixes and access configuration.",
+    "removeWhen": "A tested upstream release incorporates equivalent fixes and passes native account/heartbeat/health plus existing privacy-template parity checks."
+  },
+  {
+    "patch": "deployment/maintenance/go-leaf-final/patches/oauth2-proxy-go-security-20261011.patch",
+    "source": "/var/lib/utilibre-maintenance/go-leaf-final-20261011/source/oauth2-proxy",
+    "revision": "bea3f04bf87b93f5354f392fe2216a88e6031350",
+    "prerequisites": [],
+    "purpose": "Exact compatible network dependency locks; pinned Go 1.26.9 compiler rebuild preserves OAuth2 Proxy 7.15.5 and native OIDC/PKCE/session behavior.",
+    "removeWhen": "A tested upstream release carries equivalent fixes and passes the native OIDC/CSRF/logout gate; preserve corresponding source for historical images."
+  },
+  {
+    "patch": "deployment/maintenance/go-leaf-final/patches/mezzo-go-security-20261011.patch",
+    "source": "/opt/utilibre/community-src/mezzo",
+    "revision": "9cb99bd6a8570bb104021a094b1e598c8dda49db",
+    "prerequisites": [],
+    "purpose": "Exact x/net 0.60.0 locks with pinned Go 1.26.9 compiler; preserves release 1.4.0, frontend assets and runtime configuration.",
+    "removeWhen": "A tested upstream release carries equivalent fixes and the native version/static/request-validation gates pass."
+  },
+  {
+    "patch": "deployment/maintenance/go-leaf-final/patches/opengist-go-security-20261011.patch",
+    "source": "/opt/utilibre/community-src/opengist",
+    "revision": "5afef9ac76d2d69ba11a888bb7a095b1d14e7c9d",
+    "prerequisites": [],
+    "purpose": "Compatible network/crypto/text dependency locks and pinned Go 1.26.9 build; retains all installed frontend bytes and private-gist native access controls.",
+    "removeWhen": "A tested upstream release carries equivalent fixes and passes two-account Git/API/export/access-isolation gates."
+  },
+  {
+    "patch": "deployment/maintenance/go-leaf-final/patches/ntfy-go-security-20261011.patch",
+    "source": "/opt/utilibre/community-src/ntfy",
+    "revision": "10cb6506f836dbb00bb77e3b52669f6ace37f555",
+    "prerequisites": [],
+    "purpose": "Exact compatible x/net locks with pinned Go 1.27.2 static native build; preserves ntfy 2.28.0, all embedded frontend assets and configured publishing/reading permissions.",
+    "removeWhen": "A tested upstream release provides equivalent fixes and passes native notification/access/privacy checks."
+  },
+  {
+    "patch": "deployment/maintenance/go-final/rimgo-dependencies.patch",
+    "source": "/opt/utilibre/community-src/rimgo-utilibre-p1",
+    "revision": "d2be8e221522dfe7a06452e2002dcf6dad569d1a",
+    "prerequisites": ["deployment/community/rimgo-source.patch"],
+    "unidiffZero": true,
+    "purpose": "Pinned Go 1.26.9 and compatible Fiber/network/text module security updates; preserves existing privacy and SSRF protections.",
+    "removeWhen": "A tested upstream release carries equivalent fixes and existing privacy protections; preserve matching source for old images."
+  },
+  {
+    "patch": "deployment/maintenance/go-final/galene-dependencies.patch",
+    "source": "/opt/utilibre/src/galene",
+    "revision": "6d9338e909fdecdd906150e4dda34e10d9869654",
+    "prerequisites": [],
+    "unidiffZero": true,
+    "purpose": "Exact compatible WebSocket/crypto/network module security updates, built with the separately pinned Go 1.26.9 recipe; room permissions and runtime limits unchanged.",
+    "removeWhen": "A tested upstream release carries equivalent fixes and passes the two-client media/lifecycle and privacy gates."
+  },
+  {
+    "patch": "deployment/maintenance/go-final/safetwitch-dependencies.patch",
+    "source": "/opt/utilibre/community-src/safetwitch-backend-utilibre-p1",
+    "revision": "91dda1ceb50822cc9b5306f6c1a92f7e8aaf747b",
+    "prerequisites": ["deployment/community/safetwitch-backend-source.patch"],
+    "unidiffZero": true,
+    "purpose": "Pinned Go 1.26.9 and x/net 0.60.0; preserves disabled chat, public-address transport and request limits.",
+    "removeWhen": "A tested upstream release includes equivalent fixes and retains the existing privacy/security configuration."
+  },
+  {
+    "patch": "deployment/maintenance/go-final/gothub-dependencies.patch",
+    "source": "/opt/utilibre/community-src/gothub-utilibre-p1",
+    "revision": "24bedc80bed5fc4f72a8f140c97cb38fc2e67ed2",
+    "prerequisites": ["deployment/community/gothub-source.patch"],
+    "unidiffZero": true,
+    "purpose": "Pinned Go 1.26.9 and x/net 0.60.0 without changing existing content, asset routes, public-address checks or request logging policy.",
+    "removeWhen": "A tested upstream release includes equivalent fixes and passes existing content/privacy gates."
+  },
+  {
+    "patch": "deployment/maintenance/go-final/anonymousoverflow-dependencies.patch",
+    "source": "/opt/utilibre/community-src/anonymousoverflow-utilibre-p1",
+    "revision": "937cfeefd6dcbab92ef572671f16d4d3be6abad3",
+    "prerequisites": ["deployment/community/anonymousoverflow-source.patch"],
+    "unidiffZero": true,
+    "purpose": "Pinned Go 1.26.9, x/net 0.60.0, Redis 9.5.5 and Mongo driver 1.17.7 compatible updates with the existing request-safety tests and source/license notices preserved.",
+    "removeWhen": "A tested upstream release carries equivalent fixes and preserves bounded caching, media validation and public-address-only fetching."
+  },
+  {
     "patch": "deployment/community/anonymousoverflow-source.patch",
     "source": "/opt/utilibre/community-src/anonymousoverflow-utilibre-p1",
     "revision": "937cfeefd6dcbab92ef572671f16d4d3be6abad3",

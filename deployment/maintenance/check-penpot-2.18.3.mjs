@@ -3,11 +3,24 @@ import assert from 'node:assert/strict';
 import {execFileSync,spawn} from 'node:child_process';
 import {readFile,writeFile,rm,statfs} from 'node:fs/promises';
 process.umask(0o077);
-const backend=process.argv[2]||'utilibre-penpot-backend:2.18.3-libraries-security-20261011';
-assert(['utilibre-penpot-backend:2.18.3-libraries-security-20261011','utilibre-penpot-backend:2.18.3-debian-inventory-20261011','utilibre-penpot-backend:2.18.3-runtime-hardening-20261011'].includes(backend));
-const hardened=backend.includes('-runtime-hardening-');
+const manifestArgument=process.argv.find(value=>value.startsWith('--manifest='));
+let nativeManifest=null;
+if(manifestArgument){
+ const path=manifestArgument.slice('--manifest='.length);
+ assert.match(path,/^\/var\/lib\/utilibre-maintenance\/native-final\/[a-z0-9-]+\.json$/);
+ nativeManifest=JSON.parse(await readFile(path,'utf8'));
+ assert.equal(nativeManifest.schema,1);assert.equal(nativeManifest.version,'2.18.3');assert.equal(nativeManifest.status,'passed');
+ for(const component of ['backend','frontend','exporter']){
+  assert.deepEqual(Object.keys(nativeManifest[component]).sort(),['image','imageId']);
+  assert.match(nativeManifest[component].image,new RegExp('^utilibre-penpot-'+component+':2\\.18\\.3-[a-z0-9-]+$'));
+  assert.match(nativeManifest[component].imageId,/^sha256:[a-f0-9]{64}$/);
+ }
+}
+const backend=nativeManifest?.backend.image||process.argv[2]||'utilibre-penpot-backend:2.18.3-libraries-security-20261011';
+assert(nativeManifest||['utilibre-penpot-backend:2.18.3-libraries-security-20261011','utilibre-penpot-backend:2.18.3-debian-inventory-20261011','utilibre-penpot-backend:2.18.3-runtime-hardening-20261011'].includes(backend));
+const hardened=Boolean(nativeManifest)||backend.includes('-runtime-hardening-');
 const runtime=hardened||backend.includes('-debian-inventory-');
-const layers=hardened?JSON.parse(await readFile('/var/lib/utilibre-maintenance/penpot-runtime-20261011/hardening.json','utf8')):null;
+const layers=nativeManifest||(hardened?JSON.parse(await readFile('/var/lib/utilibre-maintenance/penpot-runtime-20261011/hardening.json','utf8')):null);
 const reviewedBackendId=hardened?layers.backend.imageId:runtime?JSON.parse(await readFile('/var/lib/utilibre-maintenance/penpot-runtime-20261011/runtime.json','utf8')).imageId:'sha256:4746bdafbe62fd3423c6802e8ee106b453d00be47570e7e9c37ec4e735430301';
 const space=await statfs('/opt/utilibre');assert(space.bavail*space.bsize>8*1024**3);
 const metadata=JSON.parse(execFileSync('python3',['deployment/expanded/prepare-penpot-roundtrip.py'],{encoding:'utf8'}));

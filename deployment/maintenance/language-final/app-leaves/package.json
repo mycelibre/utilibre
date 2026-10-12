@@ -1,0 +1,9 @@
+{
+  "name": "utilibre-reviewed-app-leaves",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "adm-zip": "0.6.1",
+    "mysql2": "3.23.1"
+  }
+}

@@ -1,7 +1,7 @@
 name: utilibre-pack-cryptpad
 services:
   cryptpad:
-    image: utilibre-cryptpad-node:debian-security-20261011
+    image: utilibre-cryptpad-node:debian-security-20261011-language-20261011
     working_dir: /cryptpad
     command: [node, server.js]
     user: '4001:4001'

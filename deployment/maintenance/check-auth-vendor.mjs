@@ -5,7 +5,8 @@ import {execFileSync} from 'node:child_process';
 import {randomBytes} from 'node:crypto';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 process.umask(0o077);
-const image='utilibre-authentik:2026.8.3-vendor-security-20261011';
+const image=process.argv[2]||'utilibre-authentik:2026.8.3-vendor-security-20261011';
+assert(['utilibre-authentik:2026.8.3-vendor-security-20261011','utilibre-authentik:2026.8.3-vendor-security-20261011-language-20261011','utilibre-authentik:2026.8.3-xml-security-20261011'].includes(image),'Reviewed image only');
 const db='maintenance-auth-vendor-db',app='maintenance-auth-vendor-app';
 const dir='/var/lib/utilibre-maintenance/vendor-stage-20261011';
 const docker=(...args)=>execFileSync('docker',args,{encoding:'utf8',stdio:['ignore','pipe','pipe'],timeout:180000,maxBuffer:8*1024**2});
@@ -43,7 +44,7 @@ try{
   nativePasswordAndTotpReplay:true,rsaAndEcdsaOAuthCodeExchange:true,jwks:true,audienceSignatureCodeReplayRejection:true,
   urllib3:'2.8.0',retainedUpstreamFipsOpenSsl:true,
   limitation:'Native Django component/endpoints; not browser MFA, upstream-provider login or external OIDC relying-party traversal.'};
- await writeFile(dir+'/authentik.json',JSON.stringify(record,null,2)+'\n',{mode:0o600});
+ await writeFile(dir+(image.endsWith('-xml-security-20261011')?'/authentik-xml.json':image.endsWith('-language-20261011')?'/authentik-language.json':'/authentik.json'),JSON.stringify(record,null,2)+'\n',{mode:0o600});
  console.log(JSON.stringify(record));
 }catch(error){
  await writeFile(dir+'/authentik-stage-error.log',String(error.stderr||error),{mode:0o600});

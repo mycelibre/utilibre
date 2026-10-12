@@ -1,0 +1,9 @@
+207e3334ee6587aff38bde9f19561aec815fed816a8eef0d54980d6afa2c89ed  dhi-cve-2026-11979-xmlcatalog-shell-overflow.patch
+96efd7a10ab902aa45fb76003242adfda960b9537f117d81e7a6d4ee7f4c1d5c  dhi-cve-2026-86137-86141-xmlregexp.patch
+5f0744fc91279e9fda6e05da279718f41068efbc588d02384afa8c0f03734527  dhi-cve-2026-86138-dict-addqstring-overflow.patch
+05942850dcf897b92008bb48c0590e21785a04a7834d1b559459381460a84580  dhi-cve-2026-86140-valid-snprintfelements-overflow.patch
+17445c3adc24cd576c82c475f7d7c3fc9c0ed3b9a4e7b780d39160602720a834  dhi-cve-2026-86142-xpointer-eval-overflow.patch
+57a256b57b1fef96e1e3d815a1af3954692b67852b2a519da854af29274f8e25  dhi-cve-2026-86143-xmlio-writecallback-overflow.patch
+797e9a09277dc5a2db482b6c57e05c6a42f266c12f6c1b64b121c24350d584b3  dhi-cve-2026-86144-xinclude-parseflags.patch
+a4240b0a1ebd933382b00c7f17c0af5080669e1d89eff986dcb19b441afd73d1  dhi-cve-2026-74860-python-attributedecl-double-free.patch
+6d7dfb53c07ad745b01185ca62fc117f3443e954936a20b65aa121c6540eb670  dhi-cve-2026-76781-nextcatalog-null-deref.patch

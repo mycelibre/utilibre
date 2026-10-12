@@ -1,7 +1,7 @@
 name: utilibre-mumble
 services:
   mumble:
-    image: mumblevoip/mumble-server:v1.5.915@sha256:018ad3515932e513d8fdc970df918373a2664c4da32b09a89a4aaee28eb7507a
+    image: utilibre-mumble:openssl-vendor-security-20261011
     restart: unless-stopped
     read_only: true
     user: "10000:10000"

@@ -1,0 +1,13 @@
+{
+  "application": "oauth2-proxy",
+  "files": [
+    {
+      "file": "go.mod",
+      "sha256": "3613d61ab754ad14a47c33825074cb7352d9453be0ebacffd9cd5a363479f283"
+    },
+    {
+      "file": "go.sum",
+      "sha256": "470f364ce8bd08f68227ddbdf75f09dc0f365abcb8666b32744eaf6e933a13f8"
+    }
+  ]
+}

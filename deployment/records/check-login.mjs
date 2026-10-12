@@ -3,23 +3,41 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {createHmac,randomBytes} from 'node:crypto';
 import {chromium} from '../../portal/node_modules/playwright/index.mjs';
 process.umask(0o077);
+const gristOnly=process.argv.includes('--grist-only');
+const fixtureRun=process.argv.find(arg=>arg.startsWith('--run='))?.slice(6)||'records11';
+assert.match(fixtureRun,/^[a-z0-9]{1,20}$/,'Bounded existing QA fixture run required');
+const selectedAccount=process.argv.find(arg=>arg.startsWith('--account='))?.slice(10);
+if(selectedAccount!==undefined)assert.match(selectedAccount,/^[012]$/);
 const dir='/opt/utilibre/reports/records-20261011';
 await mkdir(dir,{recursive:true});
-const users=JSON.parse(await readFile('/opt/utilibre/identity-data/data/private/projects-check-users-records11.json','utf8'));
+const users=JSON.parse(await readFile('/opt/utilibre/identity-data/data/private/projects-check-users-'+fixtureRun+'.json','utf8'));
 const report={date:new Date().toISOString(),environment:'Headless Chromium; real public HTTPS; synthetic approved and denied identities',checks:[],externalHosts:[],errors:[]};
 function otp(key){const c=Buffer.alloc(8);c.writeBigUInt64BE(BigInt(Math.floor(Date.now()/30000)));const h=createHmac('sha1',Buffer.from(key,'hex')).update(c).digest();return String((h.readUInt32BE(h[19]&15)&0x7fffffff)%1000000).padStart(6,'0');}
 const browser=await chromium.launch({args:['--no-sandbox']});
 try {
  for(const [i,u] of users.entries()){
+  if(selectedAccount!==undefined&&i!==Number(selectedAccount))continue;
   const context=await browser.newContext({locale:i===1?'es-ES':'en-US',viewport:{width:i===1?390:1280,height:850}});
   const page=await context.newPage();
   page.on('pageerror',e=>report.errors.push(e.message));
   page.on('request',r=>{const host=new URL(r.url()).hostname;if(!['grist.utilibre.org','candlr.utilibre.org','bookplate.utilibre.org','auth.utilibre.org'].includes(host))report.externalHosts.push(host);});
   await page.goto('https://auth.utilibre.org/if/flow/default-authentication-flow/');
   await page.locator('input[name="uidField"]').fill(u.username);await page.getByRole('button',{name:/^(Log in|Iniciar sesión|Acceder)$/}).click();
-  await page.locator('ak-stage-password input[name="password"]:visible').fill(u.password);await page.getByRole('button',{name:/^(Continue|Continuar)$/}).click();
-  await page.locator('ak-stage-authenticator-validate input[name="code"]:visible').fill(otp(u.totpKey));await page.getByRole('button',{name:/^(Continue|Continuar)$/}).click();await page.waitForURL('**/if/user/**');
-  for(const app of ['grist','candlr']){
+  try{await page.locator('ak-stage-password input[name="password"]:visible').fill(u.password);}
+  catch(error){
+   const diagnostic={path:new URL(page.url()).pathname,inputs:await page.locator('input:visible').evaluateAll(nodes=>nodes.map(n=>({name:n.name,type:n.type}))),invalidCredentials:await page.getByText(/invalid credentials|incorrect password|invalid password/i).count(),limited:await page.getByText(/too many|rate limit|demasiad|throttl/i).count()};
+   await writeFile(dir+'/login-identification.json',JSON.stringify(diagnostic,null,2),{mode:0o600});throw error;
+  }
+  await page.getByRole('button',{name:/^(Continue|Continuar)$/}).click();
+  try{await page.locator('ak-stage-authenticator-validate input[name="code"]:visible').fill(otp(u.totpKey));}
+  catch(error){
+   // Diagnostic structure only: never capture passwords, challenge values,
+   // flow query strings, QR enrollment secrets or arbitrary page text.
+   const diagnostic={path:new URL(page.url()).pathname,inputs:await page.locator('input:visible').evaluateAll(nodes=>nodes.map(n=>({name:n.name,type:n.type}))),invalidCredentials:await page.getByText(/invalid credentials|incorrect password|invalid password/i).count(),userHome:new URL(page.url()).pathname.startsWith('/if/user/')};
+   await writeFile(dir+'/login-structure.json',JSON.stringify(diagnostic,null,2),{mode:0o600});throw error;
+  }
+  await page.getByRole('button',{name:/^(Continue|Continuar)$/}).click();await page.waitForURL('**/if/user/**');
+  for(const app of gristOnly?['grist']:['grist','candlr']){
    await page.goto(`https://${app}.utilibre.org/`,{waitUntil:'networkidle'});
    if(app==='candlr')await page.getByRole('link',{name:'Sign in with Utilibre'}).click();
    if(i===2){await page.getByText(/not have permission|Permission denied|not allowed|Access denied/i).first().waitFor({timeout:20000});report.checks.push(app+': unapproved identity denied');continue;}
@@ -37,7 +55,7 @@ try {
   await context.close();
  }
  const accounts=[];
- for(let i=0;i<2;i++){
+ for(let i=0;!gristOnly&&i<2;i++){
   const account={name:'Synthetic reader '+i,email:`utilibre-bookplate-check-${i}@utilibre.org`,password:randomBytes(36).toString('base64url')};
   const path=`/opt/utilibre/records/private/bookplate-check-${i}.json`;
   try{Object.assign(account,JSON.parse(await readFile(path,'utf8')));}catch{
@@ -55,7 +73,7 @@ try {
   await context.storageState({path:`/opt/utilibre/records/private/bookplate-state-${i}.json`});
   accounts.push(account.email);await context.close();
  }
- report.checks.push('Bookplate: two separate native accounts signed in via public HTTPS');
+ if(!gristOnly)report.checks.push('Bookplate: two separate native accounts signed in via public HTTPS');
  assert.deepEqual([...new Set(report.externalHosts)],[],'Unexpected browser egress');
 } finally {
  await browser.close();

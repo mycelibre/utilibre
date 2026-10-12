@@ -39,7 +39,7 @@ services:
   safetwitch-backend:
     <<: *runtime
     restart: unless-stopped
-    image: utilibre-safetwitch-backend:91dda1c-p1
+    image: utilibre-safetwitch-backend:91dda1c-go1269-security-20261011
     mem_limit: 512m
     environment: {PORT: "7000", URL: "https://twitch.utilibre.org", GIN_MODE: release, UTILIBRE_CHAT_ENABLED: "false", GOMEMLIMIT: 256MiB}
     networks:
@@ -64,7 +64,7 @@ services:
   anonymousoverflow:
     <<: *runtime
     restart: unless-stopped
-    image: utilibre-anonymousoverflow:937cfee-p1
+    image: utilibre-anonymousoverflow:937cfee-go1269-security-20261011
     env_file: /opt/utilibre/community-data/overflow-private/runtime.env
     environment: {APP_URL: "https://overflow.utilibre.org", SCRAPER: api, GIN_MODE: release, DISABLE_RATELIMIT: "true"}
     healthcheck: {disable: true}
@@ -85,7 +85,7 @@ services:
     depends_on: [anonymousoverflow]
   gothub:
     <<: *runtime
-    image: utilibre-gothub:24bedc8-p2
+    image: utilibre-gothub:24bedc8-go1269-security-20261011
     restart: unless-stopped
     environment:
       DOCKER: "true"

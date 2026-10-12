@@ -1,0 +1,12 @@
+const fs=require('node:fs'),assert=require('node:assert/strict'),cp=require('node:child_process');
+const prefix='/usr/local/lib/node_modules/npm';
+assert.equal(require(prefix+'/package.json').version,'11.21.0');
+for(const [name,version] of Object.entries({'brace-expansion':'5.0.11',undici:'6.28.1',tar:'7.5.22',pacote:'21.5.1',sigstore:'4.1.1'}))assert.equal(require(prefix+'/node_modules/'+name+'/package.json').version,version);
+const npm=(...args)=>cp.execFileSync('npm',args,{encoding:'utf8',timeout:20000,stdio:['ignore','pipe','pipe']}).trim();
+for(const setting of ['update-notifier','audit','fund'])assert.equal(npm('config','get',setting),'false');
+fs.mkdirSync('/tmp/fixture');process.chdir('/tmp/fixture');
+fs.writeFileSync('package.json',JSON.stringify({name:'utilibre-fictional-test',version:'1.0.0',scripts:{test:'node test.cjs'}}));
+fs.writeFileSync('test.cjs','require("node:fs").writeFileSync("result.txt","fictional native npm lifecycle passed")');
+npm('run','test');assert.equal(fs.readFileSync('result.txt','utf8'),'fictional native npm lifecycle passed');
+const output=JSON.parse(npm('pack','--json','--ignore-scripts'));assert.equal(output.length,1);assert(fs.statSync(output[0].filename).size>100);
+console.log(JSON.stringify({passed:true,npm:'11.21.0',nativeLifecycle:true,localTarPackage:true,unsolicitedRemoteChecksDisabled:true,network:'none',appOrUserData:false}));

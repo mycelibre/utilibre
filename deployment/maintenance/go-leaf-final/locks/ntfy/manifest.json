@@ -1,0 +1,13 @@
+{
+  "application": "ntfy",
+  "files": [
+    {
+      "file": "go.mod",
+      "sha256": "6c2d4062219f2bec36bae3ea8a9b67a5f76d997723261e7ced4db325696e5ba3"
+    },
+    {
+      "file": "go.sum",
+      "sha256": "0a9b7cdac85aa8971264f53ab989a624d5f3e954e23bdf6d56f09d9adc31a194"
+    }
+  ]
+}

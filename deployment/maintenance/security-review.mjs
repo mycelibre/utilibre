@@ -62,7 +62,7 @@ async function command(program,args,timeout=600000){
 async function atomic(file,data){await writeFile(file+'.tmp',JSON.stringify(data,null,2)+'\n',{mode:0o600});await rename(file+'.tmp',file);}
 export async function run(){
  await mkdir(directory,{recursive:true,mode:0o700});await mkdir(cache,{recursive:true,mode:0o700});
- const started=Date.now(),report={date:new Date().toISOString(),status:'running',scanner:'Trivy 0.75.0',images:[],sources:[],limitations:['No exploitation or reachability proof. Findings require review; patched vendored code may need evidence-backed exceptions.','Image scans do not inspect mounted user data or a container writable layer.','Source-lock checks cover the listed code manifests, not every minified browser bundle.','Separate Caddy/Proxmox hosts are outside this VM scan.']};
+ const started=Date.now(),report={date:new Date().toISOString(),status:'running',scanner:'Trivy 0.75.0',images:[],sources:[],limitations:['No exploitation or reachability proof. Findings require review; patched vendored code may need evidence-backed exceptions.','Image scans do not inspect mounted user data or a container writable layer.','Source-lock checks cover the listed code manifests, not every minified browser bundle.','Package inventory is not complete compiled-component coverage: Grist\'s official Deno binary has no recoverable Rust-crate inventory/release SBOM; its Pyodide Python/WASM components also retain upstream coverage limits. See deployment/maintenance/sandbox-final/README.md.','Separate Caddy/Proxmox hosts are outside this VM scan.']};
  const latest=directory+'/security.json';
  await atomic(directory+'/security-progress.json',report);
  let scratch;

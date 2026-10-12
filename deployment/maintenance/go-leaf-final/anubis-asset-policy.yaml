@@ -1,0 +1,16 @@
+bots:
+  - name: synthetic-preact
+    path_regex: ^/preact$
+    action: CHALLENGE
+    challenge:
+      algorithm: preact
+      difficulty: 1
+  - name: synthetic-fast
+    path_regex: .*
+    action: CHALLENGE
+    challenge:
+      algorithm: fast
+      difficulty: 1
+dnsbl: false
+honeypot:
+  enabled: false

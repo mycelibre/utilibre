@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   grist:
     <<: *runtime
-    image: utilibre-grist:libraries-security-20261011
+    image: utilibre-grist:1.7.21-npm1121-security-20261011
     user: '1000:1000'
     cpus: 2
     mem_limit: 8g
@@ -19,6 +19,12 @@ services:
     env_file: /opt/utilibre/records/private/grist.env
     environment:
       APP_STATIC_INCLUDE_CUSTOM_CSS: 'true'
+      GRIST_SANDBOX_FLAVOR: pyodide
+      GRIST_PYODIDE_SKIP_DENO: '0'
+      GRIST_SANDBOX: /usr/local/bin/grist-deno
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=128m,mode=1777
+      - /grist/sandbox/pyodide/_build/cache:rw,nosuid,nodev,size=128m,uid=1000,gid=1000
     volumes:
       - /opt/utilibre/records/data/grist:/persist
       - ../grist/custom.css:/grist/static/custom.css:ro
@@ -30,7 +36,7 @@ services:
       retries: 5
   grist-auth:
     <<: *runtime
-    image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.5@sha256:8498b0d0ef0a7b29686414000a08aee467f02d0299c9ed1e006a8f33fc017916
+    image: utilibre-oauth2-proxy:7.15.5-go-security-20261011
     user: '65532:65532'
     cpus: 0.5
     mem_limit: 128m
@@ -44,7 +50,7 @@ services:
       ingress: {ipv4_address: 172.29.159.11}
   candlr:
     <<: *runtime
-    image: utilibre-candlr:2.0.0-p1
+    image: utilibre-candlr:2.0.0-p1-language-20261011
     user: '1000:1000'
     entrypoint: ['/bin/sh', '-c']
     command: ['cd /app/backend && alembic upgrade head && exec supervisord -n -c /etc/supervisor/conf.d/candlr.conf']
@@ -59,7 +65,7 @@ services:
       ingress: {ipv4_address: 172.29.159.12}
   bookplate:
     <<: *runtime
-    image: utilibre-bookplate:1.1.0-security-20261011
+    image: utilibre-bookplate:1.1.0-security-20261011-language-20261011
     user: '1000:1000'
     cpus: 1
     mem_limit: 768m
@@ -90,7 +96,7 @@ services:
       retries: 10
   egress:
     <<: *runtime
-    image: utilibre-public-egress:7.7
+    image: utilibre-public-egress:pcre-vendor-security-20261011
     cpus: 0.25
     mem_limit: 128m
     memswap_limit: 128m

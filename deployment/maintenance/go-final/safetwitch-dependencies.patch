@@ -1,0 +1,22 @@
+diff --git a/Dockerfile.utilibre b/Dockerfile.utilibre
+index 8b9f94c..b71f307 100644
+--- a/Dockerfile.utilibre
++++ b/Dockerfile.utilibre
+@@ -1 +1,2 @@
+-FROM golang:1.26-alpine@sha256:8ac98ca534ac3f51e1f420a1dd2c15e74c75cfa0f23f3ad27eb5d7236c349a0c AS build
++FROM golang:1.26.9-alpine@sha256:3082400e369fa24d5fc60bca20edab3f6d604e0c5a690ec66b295eff4dd87ade AS build
++ENV GOTOOLCHAIN=local GOTELEMETRY=off GOFLAGS=-mod=readonly
+diff --git a/go.mod b/go.mod
+index 9131b29..3da8147 100644
+--- a/go.mod
++++ b/go.mod
+@@ -41 +41 @@ require (
+-	golang.org/x/net v0.59.0 // indirect
++	golang.org/x/net v0.60.0 // indirect
+diff --git a/go.sum b/go.sum
+index 4885f5a..4d06775 100644
+--- a/go.sum
++++ b/go.sum
+@@ -93,0 +94,2 @@ golang.org/x/net v0.59.0/go.mod h1:2DA/G1UfVbCpQPeWTmMPGY7Cs2PkBkwu743bVX5PIVg=
++golang.org/x/net v0.60.0 h1:79p50tfZlm0J9YfoDsSi639qSXNGVwEzOPLCxM2FsYU=
++golang.org/x/net v0.60.0/go.mod h1:2DA/G1UfVbCpQPeWTmMPGY7Cs2PkBkwu743bVX5PIVg=

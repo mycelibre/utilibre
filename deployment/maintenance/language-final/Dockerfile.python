@@ -1,0 +1,10 @@
+ARG BASE
+FROM ${BASE}
+USER root
+ARG APPLICATION
+COPY python-images.json remove-pip.py /tmp/utilibre-language/
+RUN python -B /tmp/utilibre-language/remove-pip.py "$APPLICATION" \
+ && rm /tmp/utilibre-language/python-images.json /tmp/utilibre-language/remove-pip.py \
+ && rmdir /tmp/utilibre-language
+ARG RUNTIME_USER
+USER ${RUNTIME_USER}

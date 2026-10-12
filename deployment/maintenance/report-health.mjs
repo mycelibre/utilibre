@@ -10,11 +10,11 @@ export function reportIssues(name,report,hours,now=Date.now()){
  return issues;
 }
 export function queueIssues(queue,scan,now=Date.now()){
- if(!queue||!Array.isArray(queue.items)||queue.scanDate!==(scan.completedAt||scan.date)||queue.status!=='current')return ['Security triage queue is missing, stale or incomplete'];
+ if(!queue||!Array.isArray(queue.items)||queue.scanDate!==(scan.completedAt||scan.date))return ['Security triage queue is missing, stale or incomplete'];
  const pending=queue.items.filter(x=>!(['mitigated','not-affected'].includes(x.status)&&Date.parse(x.decision?.expiresAt)>now));
  const critical=pending.filter(x=>x.severity==='CRITICAL').length,high=pending.filter(x=>x.severity==='HIGH').length;
  const overdue=pending.filter(x=>Date.parse(x.reviewBy)<now).length;
- const issues=[];
+ const issues=queue.status==='current'?[]:['Security triage queue is incomplete; unverified targets remain open'];
  if(critical||high)issues.push(`Security review queue: ${critical} critical / ${high} high package-target findings; review required, not proof of exploitability`);
  if(overdue)issues.push(`Security review queue: ${overdue} findings past their triage target`);
  return issues;
@@ -22,9 +22,15 @@ export function queueIssues(queue,scan,now=Date.now()){
 export function externalIssues(workflow,runs,now=Date.now()){
  if(workflow?.state!=='active')return ['Independent external monitoring workflow is disabled or unavailable'];
  // Explicit notification drills aren't availability evidence.
- const latest=runs?.workflow_runs?.find(r=>r.status==='completed'&&!/alert drill/i.test(r.display_title||''));
- if(!latest||!Number.isFinite(Date.parse(latest.updated_at))||now-Date.parse(latest.updated_at)>90*60000||Date.parse(latest.updated_at)>now+300000)return ['Independent external monitoring has no recent completed run (90 minutes)'];
- return latest.conclusion==='success'?[]:['Independent external monitoring failed; inspect GitHub Actions'];
+ const completed=runs?.workflow_runs?.filter(r=>r.status==='completed'&&!/alert drill/i.test(r.display_title||''))||[];
+ const fresh=r=>r&&Number.isFinite(Date.parse(r.updated_at))&&now-Date.parse(r.updated_at)<=90*60000&&Date.parse(r.updated_at)<=now+300000;
+ const issues=[],latest=completed[0],scheduled=completed.find(r=>r.event==='schedule');
+ if(!fresh(latest))issues.push('Independent external monitoring has no recent completed run (90 minutes)');
+ else if(latest.conclusion!=='success')issues.push('Independent external monitoring failed; inspect GitHub Actions');
+ // A manual diagnostic must not conceal a stalled autonomous schedule.
+ if(!fresh(scheduled))issues.push('Independent external monitoring has no recent scheduled completion (90 minutes)');
+ else if(scheduled.conclusion!=='success')issues.push('Independent scheduled monitoring failed; inspect GitHub Actions');
+ return issues;
 }
 export function alertState(previous,issues,now=Date.now()){
  // Count each stable issue independently: a flapping neighbor must not starve it.

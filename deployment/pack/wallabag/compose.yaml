@@ -44,7 +44,7 @@ services:
     volumes: ['/opt/utilibre/pack-data/wallabag:/app/data']
     networks: {isolated: {ipv4_address: 172.29.155.2}, ingress: {ipv4_address: 172.29.154.2}}
   proxy:
-    image: sha256:9bc66d80e90a72c29ba89d44447b58bd1faded54b4ecba35b4f7b2b23497c780
+    image: utilibre-public-egress:pcre-vendor-security-20261011
     restart: 'no'
     read_only: true
     cap_drop: [ALL]

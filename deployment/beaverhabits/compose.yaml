@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-beaverhabits:0.10.0-p7
+    image: utilibre-beaverhabits:pcre-vendor-security-20261011
     user: '1000:1000'
     env_file: /opt/utilibre/beaverhabits/private/app.env
     environment:

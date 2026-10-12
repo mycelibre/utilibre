@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   biblioreads:
     <<: *runtime
-    image: utilibre-biblioreads:9508abc-p1
+    image: utilibre-biblioreads:9508abc-p1-language-20261011
     user: "1000:1000"
     mem_limit: 768m
     tmpfs:

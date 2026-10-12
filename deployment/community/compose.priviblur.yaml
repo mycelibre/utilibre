@@ -14,7 +14,7 @@ x-runtime: &runtime
 services:
   priviblur:
     <<: *runtime
-    image: utilibre-priviblur:251a8e6-p1
+    image: utilibre-priviblur:pcre-vendor-security-20261011
     user: "1000:1000"
     environment:
       PRIVIBLUR_ACCESS_LOG: "false"

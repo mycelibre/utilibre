@@ -48,11 +48,20 @@ test('stable failures still alert when unrelated checks flap',()=>{
  assert.equal(alertState(acknowledged,['A'],now+13*3600000).due,true);
 });
 test('external monitor freshness and disabled schedules produce explicit alerts',()=>{
- const runs={workflow_runs:[{status:'completed',conclusion:'success',updated_at:new Date(now).toISOString()}]};
+ const runs={workflow_runs:[{event:'schedule',status:'completed',conclusion:'success',updated_at:new Date(now).toISOString()}]};
  assert.deepEqual(externalIssues({state:'active'},runs,now),[]);
  assert(externalIssues({state:'disabled_inactivity'},runs,now).length);
  assert(externalIssues({state:'active'},runs,now+2*3600000).length);
  assert(externalIssues({state:'active'},{workflow_runs:[{...runs.workflow_runs[0],conclusion:'failure'}]},now).length);
+});
+test('manual success cannot conceal an overdue or failed automatic schedule',()=>{
+ const manual={event:'workflow_dispatch',status:'completed',conclusion:'success',updated_at:new Date(now).toISOString()};
+ const scheduled={...manual,event:'schedule',updated_at:new Date(now-2*3600000).toISOString()};
+ assert.deepEqual(externalIssues({state:'active'},{workflow_runs:[manual,scheduled]},now),['Independent external monitoring has no recent scheduled completion (90 minutes)']);
+ const failed={...manual,event:'schedule',conclusion:'failure'};
+ assert.deepEqual(externalIssues({state:'active'},{workflow_runs:[manual,failed]},now),['Independent scheduled monitoring failed; inspect GitHub Actions']);
+ const drill={...manual,event:'schedule',display_title:'Synthetic alert drill (not an outage)'};
+ assert(externalIssues({state:'active'},{workflow_runs:[drill,scheduled]},now).some(x=>x.includes('scheduled completion')));
 });
 test('queue deduplicates findings and preserves first seen/deadlines across repeated scans',()=>{
  const f={id:'CVE-test',package:'x',installed:'1',severity:'HIGH',fixed:null};
@@ -120,6 +129,13 @@ test('expired exceptions alert again; an incomplete queue never clears alerts',(
  assert.deepEqual(queueIssues(queue,scan,now),[]);
  assert(queueIssues(queue,scan,now+120000).length);
  assert(queueIssues({...queue,status:'incomplete'},scan,now).length);
+});
+test('incomplete coverage does not conceal known pending vulnerabilities',()=>{
+ const date=new Date(now).toISOString(),scan={completedAt:date};
+ const queue={scanDate:date,status:'incomplete',items:[{status:'needs-review',severity:'HIGH',reviewBy:new Date(now+60000).toISOString()}]};
+ const issues=queueIssues(queue,scan,now);
+ assert(issues.some(x=>x.includes('incomplete')));
+ assert(issues.some(x=>x.includes('0 critical / 1 high')));
 });
 test('public checks require successful HTTP and expected content',()=>{
  assert.equal(validResponse({status:503},'BentoPDF',/BentoPDF/),false);

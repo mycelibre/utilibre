@@ -11,7 +11,9 @@ cp -a "$upstream" "$stage/upstream"
 for file in Dockerfile.priviblur priviblur-requirements.txt priviblur-source-notice.patch priviblur-SOURCE.txt; do
   cp "$root/$file" "$stage/$file"
 done
-docker exec utilibre-priviblur-priviblur-1 pip freeze > "$stage/build-requirements.txt"
+# Runtime images need not carry pip and its vendored build-time dependencies.
+# Read the actual installed distribution metadata, retaining exact versions.
+docker exec utilibre-priviblur-priviblur-1 python -c 'from importlib.metadata import distributions; print("\n".join(sorted({d.metadata["Name"]+"=="+d.version for d in distributions() if d.metadata["Name"].lower() != "pip"}, key=str.lower)))' > "$stage/build-requirements.txt"
 tar -C "$stage" -czf "$stage/priviblur-utilibre.tar.gz" upstream Dockerfile.priviblur priviblur-requirements.txt priviblur-source-notice.patch priviblur-SOURCE.txt build-requirements.txt
 install -m 644 "$stage/priviblur-utilibre.tar.gz" /opt/utilibre/toolbox-public/priviblur-utilibre.tar.gz
 sha256sum /opt/utilibre/toolbox-public/priviblur-utilibre.tar.gz

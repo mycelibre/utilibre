@@ -14,7 +14,7 @@ x-runtime: &runtime
 services:
   socket:
     <<: *runtime
-    image: utilibre-razzia:3.1.0-p1
+    image: utilibre-razzia:3.1.0-p1-language-20261011
     volumes: ["/opt/utilibre/razzia-data:/app/config"]
     networks: [quiz]
     # Native connection messages contain client identifiers; do not retain them.

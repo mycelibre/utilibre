@@ -1,0 +1,221 @@
+{
+  "verifiedAt": "2026-10-11T23:57:01.725Z",
+  "status": "passed",
+  "compiler": "Go 1.26.9",
+  "productionChanged": true,
+  "rows": [
+    {
+      "service": "rimgo",
+      "image": "utilibre-rimgo:d2be8e2-go1269-security-20261011",
+      "imageId": "sha256:5a1d957b2bc68e6e22b32148b1747612ec769f0bc12b310de6bb433b9e04a3e0",
+      "rollbackImage": "utilibre-rimgo:d2be8e2-p3",
+      "rollbackId": "sha256:00855ed0135e8a27b524759651b8da7727685fda86740fa75f0fdac23d7886c2",
+      "status": "passed",
+      "moduleChanges": [
+        {
+          "module": "github.com/gofiber/fiber/v2",
+          "from": "v2.52.12",
+          "to": "v2.52.15"
+        },
+        {
+          "module": "golang.org/x/net",
+          "from": "v0.53.0",
+          "to": "v0.60.0"
+        },
+        {
+          "module": "golang.org/x/sys",
+          "from": "v0.43.0",
+          "to": "v0.48.0"
+        },
+        {
+          "module": "golang.org/x/text",
+          "from": "v0.36.0",
+          "to": "v0.42.0"
+        }
+      ],
+      "onlyChangedRuntimeFile": "/app/rimgo",
+      "scannerFindings": [
+        {
+          "id": "CVE-2026-85091",
+          "package": "zlib",
+          "severity": "MEDIUM",
+          "installed": "1.3.2-r0",
+          "fixed": "1.3.2-r1"
+        }
+      ],
+      "contentCheck": "passed",
+      "sourceArchive": "rimgo-utilibre.tar.gz",
+      "sourceArchiveSha256": "32d2cdf6a841431514a9dfa92dc8bcc8bc90cbb4e5d4283f9892af090b09beaf"
+    },
+    {
+      "service": "galene",
+      "image": "utilibre-galene:1.2.1-go1269-security-20261011",
+      "imageId": "sha256:3439d6e0e6b47e8d394efbea73f8347fa00abcb591b3ae26b65774e0074d6b85",
+      "rollbackImage": "utilibre-galene:1.2.1-p2",
+      "rollbackId": "sha256:49a3e68c9737b1db702500b32eb8860e38a385d81144eda94bb90884fec20f8f",
+      "status": "passed",
+      "moduleChanges": [
+        {
+          "module": "github.com/gorilla/websocket",
+          "from": "v1.5.0",
+          "to": "v1.5.3"
+        },
+        {
+          "module": "golang.org/x/crypto",
+          "from": "v0.48.0",
+          "to": "v0.57.0"
+        },
+        {
+          "module": "golang.org/x/net",
+          "from": "v0.50.0",
+          "to": "v0.60.0"
+        },
+        {
+          "module": "golang.org/x/sys",
+          "from": "v0.41.0",
+          "to": "v0.48.0"
+        }
+      ],
+      "onlyChangedRuntimeFile": "/app/galene",
+      "scannerFindings": [
+        {
+          "id": "CVE-2026-85091",
+          "package": "zlib",
+          "severity": "MEDIUM",
+          "installed": "1.3.2-r0",
+          "fixed": "1.3.2-r1"
+        },
+        {
+          "id": "GO-2026-5932",
+          "package": "golang.org/x/crypto",
+          "severity": "UNKNOWN",
+          "installed": "v0.57.0",
+          "fixed": null
+        }
+      ],
+      "contentCheck": "Isolated two-client media, screen share, reconnect, permissions and 30-second soak; live native HTTP passed",
+      "sourceArchive": "galene-utilibre.tar.gz",
+      "sourceArchiveSha256": "930c089ee1282f0695f2c9aaa1b2e2022c6dc2f5b77bc872b59c832a755da49f"
+    },
+    {
+      "service": "safetwitch",
+      "image": "utilibre-safetwitch-backend:91dda1c-go1269-security-20261011",
+      "imageId": "sha256:12ba2abc1818e03ccc76c58e1dc2d5052b1bf3d222d7e5dac0cdbec99d422034",
+      "rollbackImage": "utilibre-safetwitch-backend:91dda1c-p1",
+      "rollbackId": "sha256:78758d79dde6ff4cc28eb19eec322cbc44fc61183787cb88ff56e4c2effd6bac",
+      "status": "passed",
+      "moduleChanges": [
+        {
+          "module": "golang.org/x/net",
+          "from": "v0.59.0",
+          "to": "v0.60.0"
+        }
+      ],
+      "onlyChangedRuntimeFile": "/safetwitch",
+      "scannerFindings": [
+        {
+          "id": "CVE-2026-85091",
+          "package": "zlib",
+          "severity": "MEDIUM",
+          "installed": "1.3.2-r0",
+          "fixed": "1.3.2-r1"
+        },
+        {
+          "id": "GO-2026-5932",
+          "package": "golang.org/x/crypto",
+          "severity": "UNKNOWN",
+          "installed": "v0.57.0",
+          "fixed": null
+        }
+      ],
+      "contentCheck": "passed",
+      "sourceArchive": "safetwitch-backend-utilibre.tar.gz",
+      "sourceArchiveSha256": "f84d8d5582869c6d9c233eb908dd965004b4a274bf58a7fffb39b0de74878c05"
+    },
+    {
+      "service": "gothub",
+      "image": "utilibre-gothub:24bedc8-go1269-security-20261011",
+      "imageId": "sha256:3626be2bb364842b0fb2d071fb56d4d74a90d0f9b4944de5244b0963279b8f2c",
+      "rollbackImage": "utilibre-gothub:24bedc8-p2",
+      "rollbackId": "sha256:7f66acd9d4ffc6714f6ff03ed1fce69d50103b4c85c787d3437acf6af3e13f42",
+      "status": "passed",
+      "moduleChanges": [
+        {
+          "module": "golang.org/x/net",
+          "from": "v0.59.0",
+          "to": "v0.60.0"
+        }
+      ],
+      "onlyChangedRuntimeFile": "/app/gothub",
+      "scannerFindings": [
+        {
+          "id": "CVE-2026-85091",
+          "package": "zlib",
+          "severity": "MEDIUM",
+          "installed": "1.3.2-r0",
+          "fixed": "1.3.2-r1"
+        }
+      ],
+      "contentCheck": "passed",
+      "sourceArchive": "gothub-utilibre.tar.gz",
+      "sourceArchiveSha256": "96f529e8d393e34bb2e6a93262cd96881516b2879b1f7be4b4b18b9b58685fe3"
+    },
+    {
+      "service": "anonymousoverflow",
+      "image": "utilibre-anonymousoverflow:937cfee-go1269-security-20261011",
+      "imageId": "sha256:c92a8ab99115d93b4e4c6d930a31d2f20d4a9b3f2e3bf3bb959a19acf3ee144b",
+      "rollbackImage": "utilibre-anonymousoverflow:937cfee-p1",
+      "rollbackId": "sha256:fd9a2cd27ce195c66ec8da9ebb6f1b45398c05d585d917fd3ad11f5feb2bbf43",
+      "status": "passed",
+      "moduleChanges": [
+        {
+          "module": "github.com/montanaflynn/stats",
+          "from": "v0.0.0-20171201202039-1bf9dbcd8cbe",
+          "to": "v0.7.1"
+        },
+        {
+          "module": "github.com/redis/go-redis/v9",
+          "from": "v9.5.3",
+          "to": "v9.5.5"
+        },
+        {
+          "module": "go.mongodb.org/mongo-driver",
+          "from": "v1.15.0",
+          "to": "v1.17.7"
+        },
+        {
+          "module": "golang.org/x/net",
+          "from": "v0.59.0",
+          "to": "v0.60.0"
+        }
+      ],
+      "onlyChangedRuntimeFile": "/app/anonymousoverflow",
+      "scannerFindings": [
+        {
+          "id": "CVE-2026-85091",
+          "package": "zlib",
+          "severity": "MEDIUM",
+          "installed": "1.3.2-r0",
+          "fixed": "1.3.2-r1"
+        },
+        {
+          "id": "GO-2026-5932",
+          "package": "golang.org/x/crypto",
+          "severity": "UNKNOWN",
+          "installed": "v0.57.0",
+          "fixed": null
+        }
+      ],
+      "contentCheck": "passed",
+      "sourceArchive": "anonymousoverflow-utilibre.tar.gz",
+      "sourceArchiveSha256": "08df6855e78e7cf6f763715694d3da0c3eff8c8a7e493985ed1e0e4540831fce"
+    }
+  ],
+  "sourceHttp": "passed",
+  "limitations": [
+    "No fresh real-device or external-network Galene test; existing relay configuration unchanged.",
+    "Four single known public source-item checks passed, not browser media-decoding coverage.",
+    "Existing Alpine zlib medium and unclassified x/crypto advisory remain visible; no vulnerability waiver.",
+    "No user data, access controls, quotas, logging policy or gateways changed; no Docker daemon or Rustpad restart."
+  ]
+}

@@ -1,0 +1,7 @@
+[
+ {"kind":"freshrss","suite":"trixie","base":"docker.io/freshrss/freshrss:1.30.1@sha256:48b63b9bc3d042a1301c32971b01af8841c7f059b452589c5bf77f475ba44c61","baseId":"sha256:48b63b9bc3d042a1301c32971b01af8841c7f059b452589c5bf77f475ba44c61","user":"root","candidate":"utilibre-freshrss:1.30.1-xml-security-20261011"},
+ {"kind":"kitchenowl","suite":"trixie","base":"utilibre-kitchenowl:debian-security-20261011-language-20261011","baseId":"sha256:da5b65c020fd6377d982aafaa956f0b3ab5bfca75a3d952edccfa53b5fea518f","user":"1000:1000","candidate":"utilibre-kitchenowl:xml-security-20261011"},
+ {"kind":"authentik","suite":"trixie","base":"utilibre-authentik:2026.8.3-vendor-security-20261011-language-20261011","baseId":"sha256:f4418756e0f7c81b0b09e579d71539977857c8bdf25ce67ee1a2c2f84c3ae8f6","user":"1000:1000","candidate":"utilibre-authentik:2026.8.3-xml-security-20261011"},
+ {"kind":"rssbridge","suite":"bookworm","base":"utilibre-rssbridge:2025-08-05-sqlite-security-20261011","baseId":"sha256:f96f0d1b24c93254f367dcc3dd96dd5f3b456668f9a65337eb1bb2e43eb08f46","user":"root","candidate":"utilibre-rssbridge:2025-08-05-xml-security-20261011"},
+ {"kind":"gathio","suite":"bookworm","base":"utilibre-gathio-documentdb:17.11-0.107.0-aom-security-20261011","baseId":"sha256:4e0932f601d929d237445f5699b9f7b456bf453b995ada1ed86d238708332d15","user":"root","dev":true,"candidate":"utilibre-gathio-documentdb:17.11-0.107.0-xml-security-20261011"}
+]

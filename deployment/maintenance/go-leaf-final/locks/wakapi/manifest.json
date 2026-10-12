@@ -1,0 +1,13 @@
+{
+  "application": "wakapi",
+  "files": [
+    {
+      "file": "go.mod",
+      "sha256": "b0d4c268ce3746b4f384c70a45d240e6e01700c80334f46edec7f850d89d7639"
+    },
+    {
+      "file": "go.sum",
+      "sha256": "aa3668a0a670ebf5704c188135dcd905636c4937ce09bc4894436145a9d7d4fd"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+[
+  {"kind":"kuma","base":"utilibre-kuma:2.5.6-leaves-security-20261011","baseId":"sha256:8d78c4ea077c0be5e7407343a405caa613bffa4b0185df671cde75d1f522eb77","candidate":"utilibre-kuma:2.5.6-sqlite-security-20261011","user":"1000:1000","cli":true},
+  {"kind":"rssbridge","base":"utilibre-rssbridge:2025-08-05-security-20261011","baseId":"sha256:c114f29e0a5fa8e19eafa4311048f7805c2c47bfefef863fd447038078fdd70f","candidate":"utilibre-rssbridge:2025-08-05-sqlite-security-20261011","user":"root","cli":false},
+  {"kind":"documentdb","base":"utilibre-gathio-documentdb:17.11-0.107.0-gosu-security-20261011-p2","baseId":"sha256:f6ce7041988cd446f0f17af8da87616a836b2983c017177ee1431866142eb5a6","candidate":"utilibre-gathio-documentdb:17.11-0.107.0-sqlite-security-20261011","user":"root","cli":false}
+]

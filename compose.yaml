@@ -343,7 +343,7 @@ services:
     ulimits: {core: 0}
     memswap_limit: ${ANUBIS_MEMORY_LIMIT:-128M}
     profiles: ["privacy-frontends"]
-    image: ghcr.io/techarohq/anubis:v1.27.0@sha256:8828275668b7bc675679f100970f9714f731388fbbf66ae94de8aca952e3fc4a
+    image: utilibre-anubis:1.27.0-go-security-20261011
     init: true
     restart: unless-stopped
     read_only: true
@@ -412,7 +412,7 @@ services:
       args:
         RUST_BUILDER_VERSION: "slim-bookworm@sha256:1469a27c125cb5a3aebfa4f4e4665d935b02fb72cc093b2c974b3d740e43f157"
         UBUNTU_RELEASE_VERSION: "noble@sha256:33ceb71981b602c1a7443a53469e4dba065f7503eab3078a2d7a57a2ab987517"
-    image: ${REDLIB_IMAGE:-public-utility-redlib:0.36.0-a4d36e9-p1}
+    image: ${REDLIB_IMAGE:-utilibre-redlib:openssl-vendor-security-20261011}
     # This tag exists only in the local image store. Build explicitly on first
     # install/update; routine `up` must not start another costly Rust build.
     pull_policy: never

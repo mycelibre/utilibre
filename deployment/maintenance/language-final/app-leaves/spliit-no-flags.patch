@@ -1,0 +1,13 @@
+diff --git a/src/components/currency-selector.tsx b/src/components/currency-selector.tsx
+--- a/src/components/currency-selector.tsx
++++ b/src/components/currency-selector.tsx
+@@ -187,9 +187,5 @@
+ function CurrencyLabel({ currency }: { currency: Currency }) {
+-  const flagUrl = `https://flagcdn.com/h24/${
+-    currency?.code.length ? currency.code.slice(0, 2).toLowerCase() : 'un'
+-  }.png`
+   return (
+     <div className="flex items-center gap-3">
+-      <img src={flagUrl} className="w-4" alt="" />
+       {currency.name}
+       {currency.code ? ` (${currency.code})` : ''}

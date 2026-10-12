@@ -5,6 +5,168 @@ version/digest pins; Redlib is built from an exact source commit and pinned
 base images. SearXNG has the guarded, daily updater below; other services
 remain reviewed rollouts. Production never runs a floating `latest` tag.
 
+## Maintenance release — 12 October 2026
+
+The tested native-package, installer and Go-runtime batch below is deployed.
+The final seven targets—OAuth2 Proxy, Mezzo, Anubis, OpenGist, ntfy, Vikunja and
+Wakapi—finished at **00:19:56 UTC**, retaining their application versions and
+access/retention rules. Embedded assets, native user tasks and exact live images
+passed; matching source archives passed public HTTPS checksum checks.
+[Seven-service results, source and rollback](../deployment/maintenance/go-leaf-final/README.md).
+No Rustpad, Docker/containerd or host reboot was performed.
+
+Final scan **00:22:04 UTC**: **109 images / 175 containers, 510 host packages,
+55 source manifests**; 119 seconds. Every captured image still matched the
+running deployment. All host/source scans completed; only Rustpad's live
+image inventory remains incomplete. Grist's Deno Rust-crate and Pyodide/WASM
+coverage limitations remain explicitly documented, not silently certified.
+Raw findings were **42 critical / 2,834 high occurrences**. After exact,
+expiring package/payload/component reviews, **5 critical / 1,686 high
+package-target records remain pending**. Neither count measures exploits.
+
+Of those 1,691 pending critical/high records, **1,632 have no fixed version in
+the scanner's current advisory data**. The other 59 include major API/framework
+changes, coupled cryptographic packages, bundled/build-only dependencies and
+records needing further payload/exposure review. They are not represented as
+patched. Host LMDB, OpenSSH-client and unused ksmbd findings remain visible;
+[host constraints and primary sources](../deployment/maintenance/host-final/README.md).
+The scanner service deliberately returns incomplete while Rustpad lacks
+inventory; its warning was not disabled or reset.
+
+This final reconciliation applied **606 additional exact seven-day reviews**,
+preserving the raw scan byte-for-byte and the previous private decision ledger.
+It includes 170 stale DHI inventory matches verified against authenticated
+packages and the actual live regular files/symlinks. Seventeen binary-package
+inventory groups could not support their narrower proof; they received no
+decision from that helper. Other unverified findings remain open.
+
+The **00:23:15 UTC** application-advisory review checked **112 providers**, with
+no unavailable lookup or reopened application advisory. Separate dependency
+findings above are not cleared by that result. **110 focused Node tests, nine
+embedded-asset parser tests and 83 source-patch apply/reverse checks passed**.
+Read-only availability checks found no failed tool endpoint across 59 status
+monitors and 105 catalogue probes; this is a point-in-time check, not uptime.
+
+Wakapi's OIDC client credential was separately rotated at **00:25:21 UTC**:
+the new secret was accepted and the previous secret rejected. Only Wakapi
+restarted, on the same image. Password-hashing settings, account data, provider
+policies and access rules were preserved. Image rollback must keep the rotated
+credential; never restore an old private configuration just to roll back code.
+
+Independent GitHub scheduling remains a separate operational dependency.
+The enabled 15-minute workflow had stopped producing scheduled runs despite
+successful manual checks. Commit `0496567` refreshes the offset to minutes
+11/26/41/56; this is a bounded retry, not proof of scheduler recovery. Only a
+genuine scheduled completion clears its warning. GitHub documents that scheduled
+events can be delayed or dropped: [schedule behavior](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule).
+
+Root storage has approximately **8.4 GiB free**, below the 10 GiB warning but
+above the enforced 8 GiB release floor. Further build batches must account for
+that reserve. No user data, backups or rollback images were deleted. The owner's
+in-memory Rustpad must be saved before its image/Docker update can proceed.
+The earlier entries below preserve individual release and rollback evidence;
+they are not newer fleet counts.
+
+## Native maintenance checkpoint — 11 October 2026
+
+This is a deployment checkpoint; the remaining finite Go/vendor-package batch
+is still being verified. Earlier entries below are historical.
+No new public application, registration, retention policy, analytics or edge
+Caddy change was introduced. Rustpad was **not restarted**: the owner identified
+their memory-only pad, but has not yet confirmed it is saved for maintenance.
+Docker/containerd updates and any host reboot are also held for that boundary.
+
+| Released repair | Verification and reproducible evidence |
+| --- | --- |
+| Grist 1.7.21 | Replaced obsolete 2022 runsc with Grist's supported Pyodide 0.28.1/Deno 2.9.7 sandbox, retained restrictions, disabled Deno update requests and applied compatible app libraries. Native escape-regression, private two-account formula/export/import/restore gates passed; public HTTPS create/calculate/export/delete and unapproved identity denial passed. Three release-only QA identities retired, sessions/tokens/test MFA revoked. [Sandbox and rollback](../deployment/maintenance/sandbox-final/README.md), [library overlay](../deployment/maintenance/language-final/grist/README.md). |
+| Penpot 2.18.3 | Actual ImageMagick 7.1.2-27 build without OpenEXR removes the unused vulnerable copies; genuine XML security packages replace both system and private XML copies. Native raster/font conversion, two-account editing, permission removal, export/import and isolated fresh backup restore passed. [Exact images, patches and tests](../deployment/maintenance/native-final/README.md). |
+| XML libraries | Five applications/six roles (FreshRSS, KitchenOwl, Authentik, RSS-Bridge and Gathio) plus the host use genuine locally built Debian security backports. Upstream XML corpus/API tests and real app consumers passed; host BIND/LLVM/native XML checks passed without Docker/SSH restarts. Existing nine DHI patches and distro patches preserved where applicable. [Packages, ABI boundaries and rollback](../deployment/maintenance/xml-final/README.md). |
+| SQLite / Gathio codec | Four-line upstream SQLite fix passed 87 DISTINCT tests and native backup/restore checks; Kuma, RSS-Bridge and Gathio use the rebuilt library. Gathio's required AOM codec is now signed Debian 3.14.1, tested through actual AVIF/HEIF/PostGIS consumers and complete restored event/ICS workflows. [SQLite](../deployment/maintenance/sqlite-final/README.md), [AOM](../deployment/maintenance/aom-final/README.md). |
+| Python/npm installer layers | Removed unused pip from 13 runtime images; updated compatible npm 11 installer dependencies in 14 images. All 27 images/34 containers passed exact-image/configuration/app-byte checks and native consumers; namespace-dependent gateways and SMTP guards were verified. [Release and limitations](../deployment/maintenance/language-final/README.md). |
+| Rallly, Spliit, Wishlist, RSSHub | MySQL2 3.23.1 and ADM-ZIP 0.6.1 repairs passed actual prepared queries, transactions, archive traversal checks and native workflows. Spliit's decorative external flag fetches were removed by a small hash-guarded patch; a privacy-preserving rollback was tested. [Evidence and source patch](../deployment/maintenance/language-final/app-leaves/README.md). |
+| Relays and host JWT | Both Coturn 4.18.0 relays retain their exact binary, authentication, quotas and firewall with patched MariaDB client libraries. Native direct/relay protocol, denial and bounded live checks passed. Host and Kuma PyJWT 2.15.1 passed native signed-token/OAuth assertions. [Relay scope](../deployment/maintenance/mariadb-client-final/README.md), [host scope](../deployment/maintenance/host-final/README.md). |
+
+All release receipts passed. Failed first checks on Grist/FreshRSS/Authentik
+restored and verified the exact previous images; the causes were test CSRF or
+historical-route assumptions, corrected before successful retries. No rollback
+restored old user data over newer writes. Saved-work backups remain protected;
+short-lived sharing content was not added to backups.
+
+Checkpoint fleet scan **23:22:19 UTC**: 109 images / 175 containers, 510 host packages,
+31 source manifests, 206 seconds; all captured live image IDs still matched.
+Raw findings: **42 critical / 2,979 high occurrences**, not demonstrated exploits.
+All source scans completed. Rustpad alone lacks live package inventory; the
+scan correctly remains incomplete. Grist's official Deno binary additionally
+has no recoverable Rust-crate inventory/release SBOM, and Pyodide has upstream
+WASM inventory limits; these are now stated in every scanner report.
+
+The exact local XML/SQLite backports have separately verified payload/source
+hashes and seven-day finding-specific reviews; the raw scan is unchanged.
+Binary-subpackage reviews check the actual installed files against the named
+affected component, never exempt the entire service/source package, and leave
+unverified inventories open. Their reproducible helpers are
+`review-native-backports.mjs` and `review-binary-scope.mjs` under maintenance.
+The timestamped private queue is authoritative for the remaining reviewed count.
+The unused host SMB-server module is blacklisted but its kernel remains
+vendor-unfixed; no claim of an absolute administrative load prohibition is made.
+
+Final application-advisory review **23:19:55 UTC**: 112/112 providers checked,
+zero unavailable lookups or reopened application advisories; 102 repository
+endpoints and ten manual-primary-source providers. This does not clear the
+separate dependency queue. The read-only availability check found no failing
+tool endpoint across 59 status monitors and 105 catalogue probes.
+
+Off-host manual availability run `38184002816` passed at **23:22:23 UTC**.
+The enabled 15-minute GitHub schedule has no newer observed automatic run than
+20:56 UTC, so its overdue warning remains. A manual success now explicitly
+cannot conceal a stalled automatic schedule. Incomplete scanner coverage also
+no longer conceals known pending package counts in alerts. No monitoring
+notification state was reset to manufacture a healthy result.
+
+Only re-downloadable caches were removed to restore the ten-GiB disk warning
+margin: unused Cypress test-runner files and pip/npm/pnpm download/index caches.
+No application assets, runtime images, rollback images, user data or backups
+were deleted. Future builds may need to download those caches again.
+
+Private receipts remain under `/var/lib/utilibre-maintenance/` in the linked
+recipe-specific directories. Rollback uses each exact previous image/package
+and unchanged data; do not bulk-redeploy old Compose files over unrelated work.
+Source recipes, exact package/source hashes and native tests accompany the
+release; corresponding source publication uses a clean committed worktree.
+
+At **23:41 UTC**, Projects, Kuma, Grist and Gathio also received verified npm
+11.21 installer-only layers. Every application file stayed unchanged; Kuma's
+unused optional tunnel binary was removed only after proving it unconfigured.
+Native fresh login, sandbox/formula/export/restore, public routes, private
+administration boundaries and fictional event/ICS/delete gates passed.
+[Scope and rollback](../deployment/maintenance/language-final/README.md#four-remaining-npm-10-installers--deployed-2341-utc).
+The earlier raw scan above predates these four layers and the remaining Go/
+vendor work; it is not a final post-batch count.
+
+At **23:54 UTC**, genuine signed PCRE/OpenSSL updates were deployed to 13
+images serving 17 roles, including FreshRSS, TRIP, the restricted outbound
+proxies, Radicale, Priviblur, BreezeWiki, Chess, Mumble, Redlib and Penpot's
+admin companion. Existing application bytes and access boundaries were retained.
+Native restored/fictional workflows and exact live-image gates passed; Mumble's
+aggregate connection check was empty before its restart. Penpot's already-fixed
+DHI frontend/exporter payloads were verified against signed packages without
+rewriting their stale scanner metadata. [Vendor evidence and rollback](../deployment/maintenance/vendor-leaves-final/README.md).
+
+At **23:57 UTC**, Rimgo, Galene, SafeTwitch's backend, GotHub and AnonymousOverflow
+were deployed with Go 1.26.9 and pinned compatible module repairs. Full-image
+comparison found only the intended executable changed. Native route checks,
+Galene's two-client media/reconnect fixture and four bounded public-content
+requests passed. Each candidate scan found zero high/critical occurrences;
+this is not a fleet-wide security clearance. Matching application source
+archives were published and their public HTTPS hashes verified.
+[Five-service release and limits](../deployment/maintenance/go-final/README.md).
+
+A further **1.018 GB of unused build cache** and approximately **690 MiB of
+re-downloadable test-browser/compiler/package caches** were removed after
+checking for active executables and container mounts. No live application,
+rollback image, source checkout, document or backup was removed. Disk figures
+remain point-in-time observations while the final bounded builds continue.
+
 ## Security continuation — 11 October 2026
 
 The PrivateBin listing issue is closed: the official

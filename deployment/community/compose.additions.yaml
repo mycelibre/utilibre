@@ -16,7 +16,7 @@ services:
     # Compatibility service key; LRCLIB replaces the stateless Dumb image here.
     # This preserves the protected network address and existing Caddy target.
     <<: *runtime
-    image: utilibre-lrclib:f37c070-p3
+    image: utilibre-lrclib:f37c070-p3-language-20261011
     user: "65532:65532"
     environment: {PORT: "5555"}
     networks:
@@ -38,7 +38,7 @@ services:
     depends_on: [dumb]
   mezzo:
     <<: *runtime
-    image: gitfield.org/fsky/mezzo:latest@sha256:f8643c2525c96b3c5708bb737f71759bfc4c01a745301a8a7dbcba609f9c6416
+    image: utilibre-mezzo:1.4.0-go-security-20261011
     user: "65532:65532"
     environment:
       MEZZO_PORT: "8006"

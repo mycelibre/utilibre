@@ -81,7 +81,7 @@ services:
     logging: *default-logging
 
   freshrss:
-    image: docker.io/freshrss/freshrss:1.30.1@sha256:48b63b9bc3d042a1301c32971b01af8841c7f059b452589c5bf77f475ba44c61
+    image: utilibre-freshrss:pcre-vendor-security-20261011
     init: true
     restart: unless-stopped
     <<: *default-security
@@ -125,7 +125,7 @@ services:
   rsshub:
     ulimits: {core: 0}
     memswap_limit: 1536m
-    image: ghcr.io/diygod/rsshub:2026-10-11@sha256:967194b8f73a1251b2a566f91b457bc872c1bbaf343827a455ade760b9693bf6
+    image: utilibre-rsshub:2026-10-11-zip-security-20261011
     init: true
     restart: unless-stopped
     read_only: true

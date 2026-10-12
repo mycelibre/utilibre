@@ -1,0 +1,15 @@
+ARG BASE
+FROM ${BASE}
+ARG EXPECTED_OLD_LIBXML_VERSION=2.12.7+dfsg+really2.9.14-2.1+deb13u3
+USER root
+COPY libxml2_2.12.7+dfsg+really2.9.14-2.1+deb13u3+utilibre1_amd64.deb /tmp/libxml2.deb
+RUN set -eu; \
+    test "$(dpkg-query -W -f='${Version}' libxml2)" = "${EXPECTED_OLD_LIBXML_VERSION}"; \
+    dpkg -i /tmp/libxml2.deb; \
+    test "$(dpkg-query -W -f='${Version}' libxml2)" = '2.12.7+dfsg+really2.9.14-2.1+deb13u3+utilibre1'; \
+    test -f /opt/imagick/lib/deps/libxml2.so.2; \
+    cp -L /usr/lib/x86_64-linux-gnu/libxml2.so.2 /opt/imagick/lib/deps/libxml2.so.2; \
+    cmp /usr/lib/x86_64-linux-gnu/libxml2.so.2 /opt/imagick/lib/deps/libxml2.so.2; \
+    if ldd /opt/imagick/bin/magick | grep 'not found'; then exit 1; fi; \
+    rm /tmp/libxml2.deb
+USER penpot:penpot

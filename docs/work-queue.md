@@ -1,4 +1,34 @@
-# Operator work queue — reconciled 11 October 2026
+# Operator work queue — reconciled 12 October 2026
+
+## Current boundary — 12 October, 00:25 UTC
+
+The tested native/vendor/installer batch and all twelve final Go repairs are
+deployed. Native workflows, exact-image gates and matching public source checks
+passed. [Final release and validation](updates.md#maintenance-release--12-october-2026).
+The previous checkpoints below are history, not pending redeployments.
+
+The remaining work is specific:
+
+1. **Owner's Rustpad:** wait for confirmation that its memory-only document is
+   saved before restarting it, Docker/containerd or the VM. The tested candidate
+   exists; the live inventory warning remains until that rollout is possible.
+2. **Dependency follow-through:** final scan covers 109 images, 175 containers,
+   510 host packages and 55 source manifests. Pending: 5 critical / 1,686 high
+   package-target records, not proven exploits. 1,632 have no scanner-reported
+   fixed version; 59 still need compatible major/dependency updates or specific
+   exposure/payload review. Keep vendor-unfixed and compiled Rust/WASM coverage
+   limitations visible. Application-advisory review itself is current: 112
+   providers, no reopened advisory or unavailable lookup.
+3. **Independent schedule:** one cron-offset refresh is pushed (`0496567`);
+   require a genuine GitHub `schedule` completion before clearing the overdue
+   warning. Manual success is not sufficient.
+4. **Build reserve:** root has about 8.4 GiB free; do not cross the 8 GiB floor
+   or remove rollback images/user data to manufacture a clean warning state.
+
+Wakapi's exposed OIDC client secret was rotated and verified rejected afterward;
+only its app restarted, on the same image. Keep the replacement credential on
+code rollback. Private incident recovery copies are not public source material.
+No Caddy change is required for this maintenance release.
 
 PrivateBin directory follow-up, 21:51 UTC: the official directory now shows
 **file upload ✔** for `https://paste.utilibre.org/`. The script-filename repair
@@ -8,6 +38,37 @@ closed, not waiting for another configuration change.
 [Evidence and rollback](../deployment/utilibre/privatebin-security/README.md).
 
 ## Active security/quality follow-through — 11 October
+
+Latest release, **23:22 UTC**: the native XML/SQLite/Penpot repairs, supported
+Grist Deno/Pyodide sandbox, host JWT/XML packages, both relay client libraries,
+27 installer-only images and four remaining app-library layers are deployed.
+Native task, access-isolation, backup/restore and image-identity gates passed.
+All release-only Grist QA accounts were retired. [Current release and exact
+boundaries](updates.md#native-maintenance-checkpoint--11-october-2026).
+
+At 23:41 UTC the four remaining npm 10 installer images (Projects, Kuma, Grist
+and Gathio) also passed native checks and were deployed. The 13-image / 17-role
+signed PCRE/OpenSSL batch followed at 23:54 UTC, and Rimgo, Galene, SafeTwitch,
+GotHub and AnonymousOverflow's five compatible Go rebuilds at 23:57 UTC.
+The final seven Go targets are still being built/verified; the 23:22 scan below
+is a checkpoint, not the final result for that later work.
+
+Current scan: 109 images / 175 containers, 510 host packages and 31 source
+manifests; raw **42 critical / 2,979 high occurrences**, not proven exploits.
+The private queue separately records exact patched-payload and binary-component
+reviews with seven-day expiry; no broad suppression or clean-security claim.
+Rustpad's owner has not yet confirmed their pad is saved: keep Rustpad, Docker
+restart and reboot work on hold. Remaining vendor/major-library findings and
+compiled Rust/WASM inventory gaps remain explicit. PrivateBin uploads/listing
+are already closed; do not reopen that work.
+
+The 112-provider application-advisory review passed with no reopened advisory.
+Tool endpoint checks pass. A fresh external manual check passed, but GitHub's
+automatic availability schedule is overdue despite being enabled; its separate
+warning remains. Re-downloadable test/build caches restored the disk warning
+margin without deleting images, user data or recovery copies.
+
+Earlier checkpoints below preserve the sequence, not current deployment status:
 
 Current continuation: PrivateBin PHP, six Valkey caches, ntfy/Kittygram/DeGoog
 vendor libraries, Linkding Python libraries, 11 PostgreSQL privilege-dropping
