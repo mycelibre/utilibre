@@ -8,6 +8,7 @@ import {validateDecision} from '../triage.mjs';
 import {exactDhiFinding} from './policy.mjs';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';
 import {authenticateArchive,payloadManifest,validatePayload} from './dhi-proof.mjs';
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 process.umask(0o077);
 const dir='/var/lib/utilibre-maintenance/vendor-leaves-final-20261011',out=dir+'/dhi-fixed',sha=b=>createHash('sha256').update(b).digest('hex');fs.mkdirSync(out,{recursive:true});
 const images=[['utilibre-expanded-penpot-frontend-1','sha256:ca4f4adc5367a40e1597bea7d6032de0d08266b6d65cdf083ae4c695d54d23a7'],['utilibre-expanded-penpot-exporter-1','sha256:a3102615b1349f141d787dd806bc3464a49d223a5336471b3e09b1bc74a6d8da']];
@@ -26,6 +27,11 @@ if(fs.existsSync(utilRelease)){
 const curlRelease='/var/lib/utilibre-maintenance/closure-followup-20261012/curl-release.json';
 if(fs.existsSync(curlRelease)){
  const report=JSON.parse(fs.readFileSync(curlRelease));assert.equal(report.status,'passed');
+ for(const image of images){const row=overlayRows(report).find(r=>r.name===image[0]&&r.oldImage===image[1]);if(row)image[1]=row.newImage;}
+}
+for(const receipt of additionalOverlayReceipts){
+ const file='/var/lib/utilibre-maintenance/'+receipt;if(!fs.existsSync(file))continue;
+ const report=JSON.parse(fs.readFileSync(file));assert.equal(report.status,'passed');
  for(const image of images){const row=overlayRows(report).find(r=>r.name===image[0]&&r.oldImage===image[1]);if(row)image[1]=row.newImage;}
 }
 const versions={'libpcre2-8-0':['pcre2','10.46-1~deb13u3+dhi0'],'libsqlite3-0':['sqlite3','3.46.1-7+deb13u2+dhi1'],...Object.fromEntries(['libssl3t64','openssl','openssl-provider-legacy'].map(p=>[p,['openssl','3.5.7-1~deb13u3+dhi0']])),...Object.fromEntries(['util-linux','libmount1','libblkid1','liblastlog2-2','libsmartcols1','libuuid1'].map(p=>[p,['util-linux','2.41.5-0+deb13u1+dhi3']]))};

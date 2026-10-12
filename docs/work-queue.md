@@ -1,6 +1,110 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Current checkpoint — 12 October, 12:55 UTC
+## Bounded remaining-package audit — 12 October, 15:00 UTC
+
+Read-only review of the private queue (initial 13:44 scan, reconciled against
+14:52) and authenticated cached package indexes; no installs, restarts, new
+regression fixtures or ledger changes. Queue totals are intentionally omitted:
+new image releases invalidate old exact-image reviews until revalidation.
+
+Next repair candidates, in bounded groups:
+
+- **X11 client libraries:** host, Forms, BreezeWiki and Penpot backend have
+  `libx11` 1.8.12 and `libXrender` 0.9.12; Gathio has X11 1.8.4; Penpot exporter
+  has the 1.8.12/0.9.12 DHI builds and Xtst 1.2.5. The upstream fixes for
+  [88806](https://security-tracker.debian.org/tracker/CVE-2026-88806),
+  [88807](https://security-tracker.debian.org/tracker/CVE-2026-88807) and
+  [94286](https://security-tracker.debian.org/tracker/CVE-2026-94286) are available,
+  but the referenced 1.8.14/0.9.13/1.2.6 releases were not in the official release
+  archive when checked. Use exact same-ABI upstream backports, not a claimed
+  released fixed binary. Include the related XIM fixes 94283–94285 and inspect
+  Penpot's private `/opt/imagick` copies as well as system libraries.
+- **Kuma Click:** signed `python3-click` 8.3.3-3 is a candidate for installed
+  8.1.3-2; Apprise's declared `click>=5.0` permits it, but native CLI compatibility
+  still requires testing. [CVE-2026-7246](https://security-tracker.debian.org/tracker/CVE-2026-7246)
+  is disputed upstream; removing shell-based editor execution is defense in
+  depth, not evidence of a confirmed public remote-code-execution path.
+- **Bookworm OpenLDAP:** Kuma, Rallly, RSS-Bridge and Gathio have
+  `libldap-2.5-0` 2.5.13+dfsg-5. The upstream 2.5-branch fixes for
+  [CVE-2023-2953](https://security-tracker.debian.org/tracker/CVE-2023-2953)
+  support a small native backport. Do not substitute the incompatible 2.6 ABI.
+- **sudo:** host 1.9.16p2 and Kuma 1.9.13p3 need the timestamp/TZ fix for
+  [CVE-2026-96512](https://security-tracker.debian.org/tracker/CVE-2026-96512).
+  Debian's fixed 1.9.17p2-9 binary needs libc 2.42, above this host's 2.41 and
+  Bookworm's 2.36. Reuse the upstream source fix with the native baseline;
+  upgrading libc is outside this repair.
+
+**ACL is not a simple library swap.** `libacl1` 2.3.1/2.3.2 spans the host and
+35 container roles, including two DHI images. Debian marks 2.4.0-1 fixed for
+[54369](https://security-tracker.debian.org/tracker/CVE-2026-54369) and
+[54370](https://security-tracker.debian.org/tracker/CVE-2026-54370), but the
+[upstream advisory](https://www.openwall.com/lists/oss-security/2026/06/29/1)
+explains that old pathname APIs cannot be repaired compatibly: callers must
+adopt the new safe APIs. The changes are not independently backportable and
+there is a known GNU tar symbol collision to resolve. The signed 2.4.0 binary
+also needs libc >=2.38, excluding a direct Bookworm install. Host PID 1,
+networkd, journald, logind and other service processes currently map libacl;
+activation needs coordinated resident-process handling. Build and verify an
+integrated ACL/caller/tar plan before changing anything or waiving findings.
+
+**Keep these separate:** GnuTLS 88647/88648 still lack an assessed upstream fix;
+NLTK 81726 and braces 93687 lack a verified fixed release. Perl Archive::Tar
+9538 has an upstream fix, but Debian explicitly awaits regression corrections;
+do not perform a broad Perl ABI upgrade. The old Bookworm mount-target race
+53613 is not covered by the prior absent-new-hook attribution. QEMU
+guest-agent/utils and kernel-header source-wide records need exact component
+attribution; they do not prove the separate Proxmox hypervisor/kernel is fixed.
+Host resident library mappings and bootloader work require coordination.
+Revalidate completed host/DHI repairs against the fresh scan before treating
+new exact-image rows as a need to repeat an already completed binary repair.
+
+## Current checkpoint — 12 October, 15:06 UTC
+
+The **14:52:35 UTC** complete scan covered 109 images, 175 containers,
+55 source manifests and host packages. Raw package/target records remain
+**40 critical / 2,735 high**. Fresh exact-payload and component reviews leave
+**0 critical / 231 high awaiting review**. These are not unique vulnerabilities,
+not a claim of zero exploitable vulnerabilities, and **not task completion**.
+
+Since the previous checkpoint, native Bookworm curl, Python/Expat, OpenSSL and
+PostGIS repairs are deployed. The host SSH, setuptools wheel, cryptography and
+Xvfb repairs are deployed too. All use exact-version native/application gates;
+no user data was removed. This round also deployed:
+
+- **Penpot 2.18.3** unchanged at application level, with librsvg 2.60.3 and
+  native TIFF 4.7.2 repairs. Both system and private ImageMagick TIFF copies are
+  updated. Five librsvg test groups, 109 TIFF cases, preserved ABI checks and
+  a disposable two-account edit/import/export/isolation/deletion journey passed.
+  Production sign-in/OIDC and PNG rendering checks passed. The pre-existing
+  HEIF plugin mismatch remains explicitly unverified.
+- **GDAL 3.6.2+dfsg-1+utilibre1** in Gathio's database image, preserving
+  PostgreSQL 17.11, PostGIS 3.6.0 and DocumentDB 0.107-0. Five upstream CTests,
+  native HDF/netCDF checks, all 210 drivers and 5,935 exports, native raster
+  round trips and a synthetic database restore passed. Rejected candidates
+  (ABI mismatch, prerequisite guards and wrong repeated-context hunk placement)
+  were never deployed; their failed evidence is retained.
+- **Xvfb** host signed vendor 21.1.25 release, with no Docker/SSH/service
+  restart. Penpot exporter's existing DHI payload was independently authenticated
+  and three exact vendor fixes verified; its apparent old version did not
+  justify replacing a repaired binary. No blanket Xserver exemption.
+
+Exact versions, sources and rollback: [Penpot native repair](../deployment/maintenance/penpot-native-followup/README.md),
+[GDAL/PostGIS](../deployment/maintenance/geospatial-followup/README.md),
+[Xserver](../deployment/maintenance/xserver-followup/README.md).
+Matching native source archives and the integration-source offer are published;
+the completed code is pushed through `fff8b17` (including `4ccaee4` and `9ce0722`).
+
+The active independent candidates are Click/Apprise compatibility, native X11
+libraries and Bookworm OpenLDAP. They are not deployed merely because builds
+exist. Vendor-unfixed dependencies, ACL/caller compatibility, resident host
+libraries/bootloader coordination, compiled and external-host coverage remain
+open. The last full upstream lookup had zero application advisories awaiting
+review, but LiberaForms' upstream lookup failed and requires a targeted retry.
+The external GitHub schedule remains overdue; do not count a manual run as
+restoring the schedule. Current root free space is about 23 GiB; the 8 GiB
+recovery floor and separate 15 GiB temporary-content disk are preserved.
+
+## Previous checkpoint — 12 October, 12:55 UTC
 
 The root filesystem now uses the already enlarged **200 GiB** virtual disk;
 free space rose from 8.8 to approximately **38 GiB** without reboot or deletion.
