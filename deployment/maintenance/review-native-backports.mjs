@@ -65,6 +65,13 @@ export function validateRelease(report,spec){
  return Date.parse(report.completedAt);
 }
 function evidence(spec){
+ if(spec.expatPredecessor){
+  const original=evidence(spec.expatPredecessor);
+  const r=read('closure-followup-20261012/expat-release.json');assert.equal(r.status,'passed');
+  const g=r.groups.find(g=>g.key===spec.kind);assert.equal(g?.status,'passed');assert.equal(g.oldImage,spec.expatPredecessor.artifact);assert.equal(g.newImage,spec.artifact);
+  const n=read('closure-followup-20261012/expat-apps.json');assert.equal(n.status,'passed');assert(n.rows.some(r=>r.key===spec.kind&&r.imageId===spec.artifact&&r.passed));
+  return {released:Date.parse(g.completedAt),receipts:[...original.receipts,'closure-followup-20261012/expat-release.json','closure-followup-20261012/expat-apps.json']};
+ }
  const receipts=[];
  const record=p=>{receipts.push(p);return read(p);};
  let released;
@@ -126,10 +133,15 @@ export function validateObserved(spec,item,observed){
 export function run(){
  process.umask(0o077);
  const queue=read('security-queue.json'),scan=read('security.json');freshScan(queue,scan);
- const decisions=[],skipped=[],proofs=[];
+ const decisions=[],skipped=[],proofs=[],currentSpecs=[...specs];
+ const followup=root+'closure-followup-20261012/expat-release.json';
+ if(fs.existsSync(followup)){
+  const r=read('closure-followup-20261012/expat-release.json');assert.equal(r.status,'passed');
+  for(const spec of specs){const g=r.groups.find(g=>g.key===spec.kind&&g.oldImage===spec.artifact);if(g)currentSpecs.push({...spec,artifact:g.newImage,expatPredecessor:spec});}
+ }
  const command=(p,args)=>execFileSync(p,args,{encoding:'utf8',timeout:10000,maxBuffer:1024*1024,stdio:['ignore','pipe','pipe']}).trim();
  for(const item of queue.items){
-  const spec=specs.find(s=>matches(item,s));if(!spec)continue;
+  const spec=currentSpecs.find(s=>matches(item,s));if(!spec)continue;
   try{
    const proof=evidence(spec);assert(Date.parse(scan.date)>=proof.released,'Scan began before release; re-scan first');
    const host=spec.kind==='host';assert.equal(host?scan.host.status:scan.images.find(x=>x.id===spec.artifact)?.status,'checked');

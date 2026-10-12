@@ -7,6 +7,25 @@ remain reviewed rollouts. Production never runs a floating `latest` tag.
 
 ## Maintenance release — 12 October 2026
 
+**03:15 UTC native-library follow-up:** host Vim/Expat repaired, optional LMDB
+dependency removed through a tested BIND client rebuild, and nine application
+images deployed with Expat 2.9.0. Python's bundled XML parser was separately
+rebuilt and tested where necessary; a system-library update alone was not enough.
+Native document restore/isolation, forms permissions, fictional feed export,
+image/font conversion and CPython XML suite results are recorded in the
+[release and recovery notes](../deployment/maintenance/closure-followup/README.md).
+No user data, policy or application source was removed or replaced.
+
+SearXNG's updater is repaired for Compose's zero-core-limit JSON export and has
+successfully deployed `2026.10.11-ad46ebd7d` with EN/ES search verification.
+The 03:09 scan covers all 109 images / 175 containers and 55 source manifests;
+the reviewed queue is **0 critical / 924 high pending**, not a zero-vulnerability
+claim. The older “no scanner fix” classification did not mean no upstream repair
+existed. Work continues on the remaining records and independent GitHub cron.
+
+The [matching native-source addendum](https://tools.utilibre.org/utilibre-source/security-native-followup-20261012-source.tar.gz)
+is additive; earlier application offers remain. No edge-proxy change is needed.
+
 **01:55 UTC follow-up:** completed another ten application groups / 13 roles:
 Wishlist, Spliit, Rallly, Kuma, Grist, RSSHub, restricted SimpleLogin, FerretDB,
 Anubis and Authentik. OpenSSH's narrow upstream client lifetime repair is also

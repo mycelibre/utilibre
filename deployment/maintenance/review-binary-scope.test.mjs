@@ -35,3 +35,14 @@ test('homed and Archive::Tar reviews preserve actual component packages',()=>{
  assert.equal(absentComponent({id:'CVE-2026-9538',package:'perl-modules-5.40'},files),null);
  assert.equal(absentComponent({id:'CVE-2026-9538',package:'perl-base'},[...files,'/usr/share/perl/Archive/Tar.pm']),null);
 });
+test('curl upstream distinguishes the tool from the library for two exact advisories',()=>{
+ const cli={id:'CVE-2026-12064',package:'libcurl4t64'};
+ assert.match(absentComponent(cli,['/.','/usr/lib/libcurl.so.4']),/CLI/);
+ assert.equal(absentComponent({...cli,package:'curl'},['/.','/usr/bin/curl']),null);
+ assert.equal(absentComponent(cli,['/.','/usr/bin/curl']),null);
+ assert.equal(absentComponent({...cli,id:'CVE-2026-8286'},['/.','/usr/lib/libcurl.so.4']),null);
+ const lib={id:'CVE-2026-6276',package:'curl'};
+ assert.match(absentComponent(lib,['/.','/usr/bin/curl']),/easy-handle/);
+ assert.equal(absentComponent({...lib,package:'libcurl4t64'},['/.','/usr/lib/libcurl.so.4']),null);
+ assert.equal(absentComponent(lib,['/.','/usr/lib/libcurl.so.4']),null);
+});

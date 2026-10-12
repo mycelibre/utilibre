@@ -1,0 +1,14 @@
+# Isolated source/package review only. Never add sid to the host APT sources.
+Types: deb deb-src
+URIs: https://deb.debian.org/debian
+Suites: sid trixie
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb deb-src
+URIs: https://security.debian.org/debian-security
+Suites: trixie-security
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg

@@ -19,13 +19,19 @@ const kumaId='sha256:3cfe02bf61173af98c85a6e861890a48c7264b0710cc2dd469bb6038a5b
 const turnId='sha256:abdba9b317da98ca9962d33ca4a552f5a8b784a86d996e0adf10575132bff625';
 const jwtDeb={deb:'host-final-20261011/python3-jwt_2.15.1-1_all.deb',debSha:'e2bdfe81e1c0c45866e37e1a2f2fd190fcec24f8c5fc083e994733b0f915b1af'};
 const turnContainers=['utilibre-galene-turn-turn-1','utilibre-turn-option-turn-1'];
+// Debian primary tracker checked 2026-10-12: fixed in PyJWT <=2.15.0;
+// scanner is using the older base-distribution package range. Payload must
+// still exactly match the signed 2.15.1 artifact and pass native checks.
+const jwtFixedIds=['CVE-2026-101917','CVE-2026-101918','CVE-2026-102271','CVE-2026-102272','CVE-2026-102273','CVE-2026-102274','CVE-2026-102275','CVE-2026-48526'];
+const mariaServerIds=['CVE-2026-107815','CVE-2026-107818','CVE-2026-107823','CVE-2026-44168','CVE-2026-44171','CVE-2026-48163','CVE-2026-48165'];
 export const specs=[
  {kind:'aom',artifact:aomId,containers:['utilibre-gathio-postgres-1'],package:'libaom3',version:'3.14.1-1',ids:['CVE-2023-6879'],deb:'aom-final-20261011/libaom3_3.14.1-1_amd64.deb',debSha:'8f932e686c8a0e3e09ef211b924bac0a43d3d6fd774e0dfbeba9c301aa129fca'},
- {kind:'jwt',artifact:kumaId,containers:['utilibre-community-uptime-kuma-1'],package:'python3-jwt',version:'2.15.1-1',ids:['CVE-2026-102267'],...jwtDeb},
- {kind:'jwt',artifact:'host-dpkg',containers:[],package:'python3-jwt',version:'2.15.1-1',ids:['CVE-2026-102266','CVE-2026-102267'],...jwtDeb},
+ {kind:'jwt',artifact:kumaId,containers:['utilibre-community-uptime-kuma-1'],package:'python3-jwt',version:'2.15.1-1',ids:['CVE-2026-102267',...jwtFixedIds],...jwtDeb},
+ {kind:'jwt',artifact:'host-dpkg',containers:[],package:'python3-jwt',version:'2.15.1-1',ids:['CVE-2026-102266','CVE-2026-102267',...jwtFixedIds],...jwtDeb},
  {kind:'mariadb',artifact:turnId,containers:turnContainers,package:'libmariadb3',version:'1:11.8.9+ds-4',ids:['CVE-2026-44172','CVE-2026-49261'],deb:'mariadb-client-final-20261011/libmariadb3.deb',debSha:'bed52f526f58a2312a35c728463cc657834da57e942aba2fe38234eab7813e19'},
  {kind:'mariadb',artifact:turnId,containers:turnContainers,package:'mariadb-common',version:'1:11.8.9+ds-4',ids:['CVE-2026-44172','CVE-2026-49261'],deb:'mariadb-client-final-20261011/mariadb-common.deb',debSha:'411a5b285887383d8fe8d2b77f81153876b513dabc10321fa22725bdfd24d1e0'},
 ];
+for(const spec of specs.filter(s=>s.kind==='mariadb'))spec.ids.push(...mariaServerIds);
 export function matches(item,spec){
  return item.status==='needs-review'&&item.type==='debian'&&item.scope===(spec.artifact==='host-dpkg'?'host-os':'runtime-image')&&
  item.artifact===spec.artifact&&item.package===spec.package&&item.installed===spec.version&&spec.ids.includes(item.id)&&
@@ -86,7 +92,8 @@ function packageManifest(spec,temp){
 }
 export function reasonFor(item,spec,proof){
  const basis=spec.kind==='aom'?'Debian marks aom 3.14.1-1 fixed (upstream fix 7ae7bef246e85c8f349513d668b4571c79a43c5c, since 3.7.1).':
- spec.kind==='jwt'?'Upstream PyJWT fixes this advisory in 2.14.0; installed 2.15.1 source matches signed Debian package. Native empty-JWK and loopback JWKS-redirect denial passed.':
+ spec.kind==='jwt'?'Debian primary tracker marks this advisory fixed by PyJWT 2.15.0 or earlier; installed 2.15.1 source matches the signed Debian package. Native algorithms, empty-JWK and loopback JWKS-redirect checks passed; not an exploit reproduction for every advisory.':
+ mariaServerIds.includes(item.id)?'Advisory affects MariaDB server/CONNECT/Galera/SST/backup components, fixed by server 11.8.9 or earlier. Coturn has only exact signed 11.8.9 client/config payloads; server/Galera packages and binaries are absent.':
  item.id==='CVE-2026-49261'?'MariaDB fixes wsrep_notify_cmd in server 11.8.8; exact source 11.8.9+ds-4 is fixed. Coturn has client/config packages, no installed server/Galera package or daemon.':
  'Connector/C Big5 escaping is fixed in 3.3.19/3.4.9. Debian marks source 11.8.9+ds-4 fixed; installed signed client library and plugins match byte-for-byte (common contains only configuration/docs).';
  return `${basis} Exact ${spec.artifact}, ${spec.package} ${spec.version}; package SHA256 ${spec.debSha}, live payload manifest SHA256 ${proof.manifestSha256}. https://security-tracker.debian.org/tracker/${item.id} . This is an individual fixed-package/component review against the base-distribution scanner match, not an exemption for other CVEs or versions. Raw findings retained. Native/release evidence: deployment/maintenance/vendor-fixed-review/README.md.`;

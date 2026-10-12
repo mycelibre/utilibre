@@ -86,6 +86,18 @@ class MaintenanceTests(unittest.TestCase):
         m.pending_age(NEW, {'image': NEW})
         self.assertFalse((self.state / 'outstanding.json').exists())
 
+    def test_zero_core_export_normalized_without_weakening_limits(self):
+        service = {'ulimits': {'core': {}, 'nofile': {'soft': 128, 'hard': 256}}}
+        m.normalize_stage_ulimits(service)
+        self.assertEqual(service['ulimits'], {'core': 0, 'nofile': {'soft': 128, 'hard': 256}})
+        for value in (0, 10, {'soft': 0, 'hard': 0}):
+            service = {'ulimits': {'core': value}}
+            m.normalize_stage_ulimits(service)
+            self.assertEqual(service['ulimits']['core'], value)
+        service = {}
+        m.normalize_stage_ulimits(service)
+        self.assertEqual(service, {})
+
 
 if __name__ == '__main__':
     unittest.main()

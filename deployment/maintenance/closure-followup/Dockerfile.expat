@@ -1,0 +1,12 @@
+ARG BASE
+FROM ${BASE}
+ARG RUNTIME_USER=root
+USER root
+COPY libexpat1.deb /tmp/utilibre-expat.deb
+COPY overlay/ /tmp/utilibre-expat-overlay/
+RUN dpkg --install /tmp/utilibre-expat.deb \
+ && test -z "$(dpkg --audit)" \
+ && if test -f /opt/imagick/lib/deps/libexpat.so.1; then cp --remove-destination /usr/lib/x86_64-linux-gnu/libexpat.so.1.13.0 /opt/imagick/lib/deps/libexpat.so.1; fi
+RUN find /tmp/utilibre-expat-overlay -type f | while IFS= read -r source; do target="${source#/tmp/utilibre-expat-overlay}"; test -f "$target" || exit 1; cp "$source" "$target" || exit 1; done
+RUN rm /tmp/utilibre-expat.deb && rm -r /tmp/utilibre-expat-overlay
+USER ${RUNTIME_USER}

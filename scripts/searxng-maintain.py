@@ -216,6 +216,14 @@ def check_local_policy():
         command([sys.executable, str(ROOT / 'scripts' / name)])
 
 
+def normalize_stage_ulimits(service):
+    # Compose 5.6's JSON export drops both zero-valued core limits, producing
+    # {"core": {}} which its own input validator rejects. Preserve the existing
+    # no-core-dump policy, not an unlimited or default core allowance.
+    if service.get('ulimits', {}).get('core') == {}:
+        service['ulimits']['core'] = 0
+
+
 def stage_candidate(config, candidate, run_dir):
     project = 'utilibre-searx-test-' + secrets.token_hex(6)
     search = copy.deepcopy(config['services']['searxng'])
@@ -225,6 +233,7 @@ def stage_candidate(config, candidate, run_dir):
             service.pop(key, None)
         service['restart'] = 'no'
         service['logging'] = {'driver': 'none'}
+        normalize_stage_ulimits(service)
     search['image'] = candidate['image']
     search['environment']['SEARXNG_SECRET'] = secrets.token_urlsafe(48)
     search['ports'] = [{'target': 8080, 'published': '0', 'host_ip': '127.0.0.1', 'protocol': 'tcp'}]

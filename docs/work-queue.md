@@ -1,6 +1,59 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Current boundary — 12 October, 01:55 UTC
+## Current boundary — 12 October, 03:15 UTC
+
+Deployed the [native-library follow-up](../deployment/maintenance/closure-followup/README.md):
+host Vim 9.2.0858, Expat 2.9.0 and BIND 9.20.29 rebuilt without its unused LMDB
+backend. The vulnerable host LMDB package is removed with DNS functionality
+preserved. Nine application images have Expat 2.9.0, including Penpot's private
+copy and five applications' separately bundled Python XML extensions.
+All nine exact-image releases passed readiness and applicable native gates;
+account work, settings, rollback images and the temporary disk were preserved.
+
+The fresh **03:09:59 UTC** scan completed: 109 images / 175 containers, 55 source
+manifests and host package coverage. Raw **39 critical / 2,778 high** occurrences;
+after exact live-payload and component reviews, **0 critical / 924 high** records
+remain pending. This is not zero vulnerabilities: fixed foreign/backported
+packages can still match the base-distribution scanner range. Every such review
+checks real bytes; the Linux-header decisions cover headers only, not the host
+kernel. Raw findings and seven-day review expiry are retained.
+
+**Do not equate a missing scanner fixed-version field with no upstream fix.**
+Primary-source investigation found and deployed repairs after the earlier
+checkpoint. Remaining high records still require compatible repairs or exact
+exposure/component review. In particular:
+
+- curl's five reports need separate CLI/library attribution and retained Debian
+  backport verification. Signed stable source already contains CVE-2026-6276's
+  backport. Four newer upstream patches were retrieved for compatibility review;
+  they do not apply unchanged to the stable tree. No untested curl was installed.
+- ACL and ncurses candidates are downloaded only. Ncurses' newer `tic` requires
+  a newer coupled tinfo library; the binary-only candidate was correctly not
+  deployed. No sid system upgrade or libc replacement is authorized by this work.
+- GnuTLS' two current primary reports remain vendor-unfixed/pending upstream
+  assessment. No custom TLS verification code or blanket exclusion was added.
+- Existing compiled Deno/WASM and separate Proxmox/edge coverage limits remain.
+
+SearXNG's daily job caught a Compose 5.6 JSON export/validation regression:
+`ulimits.core: 0` became an invalid empty object in the disposable candidate.
+The updater now restores exactly the zero-core limit, with an offline regression
+test. Its real retry **updated to 2026.10.11-ad46ebd7d**, passed the native
+English/Spanish search journey and public reachability; the failed unit is clear.
+
+The independent GitHub schedule is still unverified. The bounded workflow was
+registered under `independent-availability.yml` in `3dabf33`; at this checkpoint
+it has not produced a genuine scheduled run. Same-VM checks and manual dispatch
+must not clear that warning. No root cause has been established.
+
+All 59 status monitors / 105 catalogue endpoint checks and the eight public
+entry checks pass. Root retains about **14 GiB free**, above the 8 GiB reserve.
+The matching native source addendum is published at
+`https://tools.utilibre.org/utilibre-source/security-native-followup-20261012-source.tar.gz`
+(95,589,234 bytes; SHA-256 `2b727745e421d81400e74f6a76d099c83985934e4dcb0643875df0b73670fa8e`).
+No Caddy change is required. This is an ongoing maintenance checkpoint, not a
+declaration that the remaining dependency work is finished.
+
+## Previous boundary — 12 October, 01:55 UTC
 
 The root disk is expanded: **170 GiB device / about 168 GiB usable**, with
 approximately **24 GiB free** after the builds. The separate 15 GiB temporary

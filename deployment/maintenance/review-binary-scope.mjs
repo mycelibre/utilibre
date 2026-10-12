@@ -17,6 +17,10 @@ const ncursesSiblings=new Set(['libncursesw6','libncurses6','libncurses-dev','li
 const homedSiblings=new Set(['libsystemd0','libudev1','udev','systemd-timesyncd','systemd-resolved','libnss-myhostname','libnss-resolve','libpam-systemd','systemd-sysv']);
 export function absentComponent(item,files){
  if(!Array.isArray(files)||files.length<2||files.some(p=>!p.startsWith('/')))return null;
+ if(item.id==='CVE-2026-12064'&&/^libcurl(?:3|4)(?:t64)?(?:-gnutls|-openssl-dev|-gnutls-dev)?$/.test(item.package)&&!files.some(p=>/\/(?:s?bin)\/curl$/.test(p)))
+  return 'curl CLI --proto-default SSH option initialization; upstream explicitly excludes libcurl (https://curl.se/docs/CVE-2026-12064.html)';
+ if(item.id==='CVE-2026-6276'&&item.package==='curl'&&!files.some(p=>/\/libcurl[^/]*\.(?:so|a)/.test(p)))
+  return 'libcurl easy-handle custom-Host cookie reuse; upstream explicitly excludes the curl CLI (https://curl.se/docs/CVE-2026-6276.html)';
  if(mountIds.has(item.id)&&mountSiblings.has(item.package)&&!files.some(p=>/\/(?:mount|umount)$|\/libmount\.(?:so|a)/.test(p)))
   return 'mount(8) and libmount privileged mount-hook/path handling';
  if(item.id==='CVE-2026-78408'&&nsenterSiblings.has(item.package)&&!files.some(p=>/\/nsenter$/.test(p)))
