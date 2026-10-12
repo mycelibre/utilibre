@@ -114,6 +114,13 @@ or daemon restart was performed to activate the guard. Rollback removes only tho
 named installed files and reloads systemd; doing so deliberately removes this
 protection. Do not restore an old whole APT configuration or alter existing jobs.
 
+The guest-agent repair completed at 16:07 UTC with the operator's Proxmox
+postcheck. Its local version was immediately discovered by the protection
+refresh. An explicit recipe entry also retains review-only handling when a
+future vendor build replaces the local suffix: guest-agent activation must not
+race a backup or filesystem-freeze operation. This does not hold `qemu-utils`
+or claim that a new vendor version is vulnerable.
+
 ### Updating or retiring a repair
 
 1. Start from the **current running image/package**, not its original vendor tag.

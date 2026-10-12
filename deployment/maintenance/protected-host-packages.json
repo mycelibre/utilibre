@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "note": "Native signed-vendor upgrades without a +utilibre version suffix. All installed +utilibre packages are additionally discovered automatically. Entries require reviewed retirement, not expiry.",
+  "note": "Reviewed native upgrades and their release recipes, including signed-vendor packages without a +utilibre suffix. All installed +utilibre packages are additionally discovered automatically. Entries require reviewed retirement, not expiry.",
   "packages": {
     "libexpat1": "closure-followup/release-host.mjs",
     "libpcap0.8t64": "host-extra-followup/release-pcap.mjs",
@@ -18,6 +18,7 @@
     "python3-cryptography": "host-cryptography-followup/release.mjs",
     "python3-setuptools-whl": "host-python-vendor-followup/release.mjs",
     "python3-urllib3": "closure-followup/urllib3-host.mjs",
+    "qemu-guest-agent": "qga-native-followup/release-host.mjs",
     "sudo": "sudo-followup/release-host.mjs",
     "vim": "closure-followup/release-host.mjs",
     "vim-common": "closure-followup/release-host.mjs",

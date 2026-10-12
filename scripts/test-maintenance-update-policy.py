@@ -57,6 +57,14 @@ class PolicyTests(unittest.TestCase):
         for wrong in ['libpython3x13', 'libpython3.13-other', 'libc1', 'prefixlibc++1']:
             self.assertFalse(any(re.fullmatch(p, wrong) for p in patterns))
 
+    def test_guest_agent_stays_reviewed_after_vendor_version_replaces_local_suffix(self):
+        policy = json.loads(m.POLICY.read_text())
+        rows = m.protected_packages('qemu-guest-agent\t1:10.0.13+ds-0+deb13u2\tinstalled\n', policy)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]['recipe'], 'qga-native-followup/release-host.mjs')
+        self.assertEqual(rows[0]['reason'], 'reviewed-native-package')
+        self.assertNotIn('qemu-utils', policy['packages'])
+
     def test_actual_apt_parser_preserves_generated_regex(self):
         with tempfile.TemporaryDirectory() as directory:
             file = Path(directory) / 'configuration'
