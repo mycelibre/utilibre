@@ -17,7 +17,7 @@ services:
     ulimits: {core: 0}
     memswap_limit: 512m
     <<: *runtime
-    image: utilibre-degoog:1.0.0-vendor-security-20261011
+    image: utilibre-degoog:1.0.0-patch-leaves-20261012
     user: "1000:1000"
     entrypoint: [bun, run, src/server/index.ts]
     env_file: /opt/utilibre/community-data/degoog-private/runtime.env

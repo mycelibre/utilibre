@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {readFileSync,writeFileSync,statfsSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+const dir='/var/lib/utilibre-maintenance/next-leaves-final-20261012',image='utilibre-bookplate:1.1.0-next1638-security-20261012';
+const floor=()=>{const s=statfsSync('/');assert(s.bavail*s.bsize>=8*1024**3,'8 GiB reserve');};
+const run=(args,options={})=>{try{return execFileSync('docker',args,{encoding:'utf8',timeout:180000,maxBuffer:1024**2,stdio:['ignore','pipe','pipe'],...options});}catch(error){writeFileSync(dir+'/stage-error.log',String(error.stdout||'')+String(error.stderr||''),{mode:0o600});throw Error('Bookplate staging failed; private details suppressed');}};
+floor();const build=JSON.parse(readFileSync(dir+'/build.json'));
+assert(build.unitTestsAndBuild&&build.next==='16.3.8');
+assert.equal(run(['image','inspect','--format','{{.Id}}','utilibre-bookplate:1.1.0-security-20261011-language-20261011']).trim(),build.base,'Frozen parent image');
+assert.equal(createHash('sha256').update(readFileSync(dir+'/app.tar.gz')).digest('hex'),build.archiveSha256);
+run(['build','--network','none','-f','/home/ubuntu/freetools/deployment/maintenance/next-leaves-final/Dockerfile.bookplate','-t',image,dir]);
+const imageId=run(['image','inspect','--format','{{.Id}}',image]).trim();
+const configs=id=>JSON.parse(run(['image','inspect','--format','{{json .Config}}',id]));
+assert.deepEqual(configs(imageId),configs(build.base),'Inherited runtime configuration');
+floor();writeFileSync(dir+'/bookplate-image.json',JSON.stringify({date:new Date().toISOString(),passed:true,image,imageId,base:build.base,unchangedRuntime:true},null,2)+'\n',{mode:0o600});
+console.log(JSON.stringify({image,imageId,unchangedRuntime:true}));

@@ -1,10 +1,12 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Current boundary — 12 October, 00:25 UTC
+## Current boundary — 12 October, 00:44 UTC
 
-The tested native/vendor/installer batch and all twelve final Go repairs are
-deployed. Native workflows, exact-image gates and matching public source checks
-passed. [Final release and validation](updates.md#maintenance-release--12-october-2026).
+The tested native/vendor/installer batch, all twelve final Go repairs and five
+patch-level follow-ups are deployed. Bookplate, Candlr, DeGoog, Projects and the
+Penpot admin component passed their native and exact-image rollout checks.
+Matching source offers are published and their HTTPS hashes verified.
+[Final release and validation](updates.md#maintenance-release--12-october-2026).
 The previous checkpoints below are history, not pending redeployments.
 
 The remaining work is specific:
@@ -13,22 +15,28 @@ The remaining work is specific:
    saved before restarting it, Docker/containerd or the VM. The tested candidate
    exists; the live inventory warning remains until that rollout is possible.
 2. **Dependency follow-through:** final scan covers 109 images, 175 containers,
-   510 host packages and 55 source manifests. Pending: 5 critical / 1,686 high
-   package-target records, not proven exploits. 1,632 have no scanner-reported
-   fixed version; 59 still need compatible major/dependency updates or specific
+   510 host packages and 55 source manifests at 00:42 UTC. Pending: 5 critical /
+   1,675 high package-target records, not proven exploits. 1,632 have no
+   scanner-reported fixed version; 48 still need compatible dependency updates or specific
    exposure/payload review. Keep vendor-unfixed and compiled Rust/WASM coverage
    limitations visible. Application-advisory review itself is current: 112
    providers, no reopened advisory or unavailable lookup.
 3. **Independent schedule:** one cron-offset refresh is pushed (`0496567`);
    require a genuine GitHub `schedule` completion before clearing the overdue
    warning. Manual success is not sufficient.
-4. **Build reserve:** root has about 8.4 GiB free; do not cross the 8 GiB floor
+4. **Build reserve:** root has about 8.5 GiB free; do not cross the 8 GiB floor
    or remove rollback images/user data to manufacture a clean warning state.
 
 Wakapi's exposed OIDC client secret was rotated and verified rejected afterward;
 only its app restarted, on the same image. Keep the replacement credential on
 code rollback. Private incident recovery copies are not public source material.
 No Caddy change is required for this maintenance release.
+
+The follow-up removed eleven pending fixed-version high records through actual
+patches or exact reviewed applicability. The remaining boundaries are itemized
+in [the dependency classification](../deployment/maintenance/remaining-fixed-boundaries-20261012.md).
+That table preserves its original 59-record checkpoint; completed rows have
+subsequent release notes. This is not a claim that all security work is complete.
 
 PrivateBin directory follow-up, 21:51 UTC: the official directory now shows
 **file upload ✔** for `https://paste.utilibre.org/`. The script-filename repair

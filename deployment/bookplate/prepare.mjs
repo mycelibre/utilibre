@@ -7,8 +7,8 @@ const upstream=p=>execFileSync('git',['show','HEAD:'+p],{cwd:source,encoding:'ut
 // Keep the selected application; patch Next's upstream image/RSC security fixes.
 // The checked-in override lock freezes the reviewed transitive resolution.
 const manifest=JSON.parse(upstream('package.json'));
-manifest.dependencies.next='16.3.6';
-manifest.devDependencies['eslint-config-next']='16.3.6';
+manifest.dependencies.next='16.3.8';
+manifest.devDependencies['eslint-config-next']='16.3.8';
 writeFileSync(source+'/package.json',JSON.stringify(manifest,null,2)+'\n');
 const lockPath=new URL('./security-package-lock.json',import.meta.url);
 writeFileSync(source+'/package-lock.json',readFileSync(lockPath));

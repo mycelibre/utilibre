@@ -7,6 +7,7 @@ import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {reviewedFossProviders} from '../portal/src/catalog/upstreams.ts';
 const exec=promisify(execFile);
+export const runtimeEvidenceFormat='{"Name":{{json .Name}},"Image":{{json .Image}},"State":{"Running":{{json .State.Running}}}}';
 const advisoryReviews=JSON.parse(readFileSync(new URL('../deployment/maintenance/advisory-reviews.json',import.meta.url),'utf8'));
 const operationalProviders=JSON.parse(readFileSync(new URL('../deployment/maintenance/operational-providers.json',import.meta.url),'utf8'));
 export function partitionReviewed(advisories,review,live,files={}){
@@ -73,7 +74,7 @@ export async function inspectProvider(id,p){
     let live=[],files={};const review=advisoryReviews[id];
     if(review)try{
      const names=Object.keys(review.containers||{});
-     if(names.length){const {stdout}=await exec('docker',['inspect',...names.map(x=>x.slice(1))],{timeout:10000,maxBuffer:1024**2});live=JSON.parse(stdout);}
+     if(names.length){const {stdout}=await exec('docker',['inspect','--format',runtimeEvidenceFormat,...names.map(x=>x.slice(1))],{timeout:10000,maxBuffer:1024**2});live=stdout.trim().split('\n').map(line=>JSON.parse(line));}
      // Reviewed host executables or mounted code only; never persist their bytes.
      for(const file of Object.keys(review.files||{}))files[file]=createHash('sha256').update(readFileSync(file)).digest('hex');
     }catch{/* No runtime evidence: retain every review alert. */}

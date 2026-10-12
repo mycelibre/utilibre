@@ -12,6 +12,9 @@ const directory='/var/lib/utilibre-maintenance', cache='/var/cache/utilibre-secu
 const binary='/opt/utilibre/maintenance/bin/trivy';
 const env={...process.env,TRIVY_DISABLE_TELEMETRY:'true',TRIVY_SKIP_VERSION_CHECK:'true',GOMAXPROCS:'2',GOMEMLIMIT:'1GiB'};
 const authentikDigest='sha256:ab9b4e8cc4ab3f8d1198d2db6aeea66bafea1963b3f2843589e0d163f97d9849';
+// Ask Docker only for inventory fields; never load live credentials/mounts into
+// a large child-process buffer or an exception's captured stdout.
+export const inventoryFormat='{"Name":{{json .Name}},"Image":{{json .Image}},"Config":{"Image":{{json .Config.Image}}}}';
 export function scannerManifestName(file){
  const name=path.basename(file);
  if(/^(auth|linkding)-python-requirements\.txt$/.test(name))return 'requirements.txt';
@@ -57,7 +60,7 @@ export function imageInventory(rows){
 }
 async function command(program,args,timeout=600000){
  try{return (await exec(program,args,{cwd:root,env,timeout,maxBuffer:64*1024**2})).stdout;}
- catch(error){await writeFile(directory+'/security-last-error.log',String(error.stderr||error.message).slice(0,64000),{mode:0o600});throw error;}
+ catch(error){await writeFile(directory+'/security-last-error.log',String(error.stderr||error.message).slice(0,64000),{mode:0o600});throw Error('Bounded security-review command failed; private diagnostic retained.');}
 }
 async function atomic(file,data){await writeFile(file+'.tmp',JSON.stringify(data,null,2)+'\n',{mode:0o600});await rename(file+'.tmp',file);}
 export async function run(){
@@ -75,8 +78,8 @@ export async function run(){
   if(!Number.isFinite(Date.parse(metadata.UpdatedAt))||Date.now()-Date.parse(metadata.UpdatedAt)>48*3600000)throw Error('Vulnerability database is stale');
   const ids=(await command('docker',['ps','-q'])).trim().split(/\s+/).filter(Boolean);
   if(!ids.length)throw Error('No running containers');
-  // Parse inspection in memory; never persist Env, labels, credentials or user mounts.
-  const inventory=imageInventory(JSON.parse(await command('docker',['inspect',...ids])));
+  const rows=(await command('docker',['inspect','--format',inventoryFormat,...ids])).trim().split('\n').map(line=>JSON.parse(line));
+  const inventory=imageInventory(rows);
   report.expectedImages=inventory.length;report.containers=inventory.reduce((n,i)=>n+i.containers.length,0);
   scratch=await mkdtemp(directory+'/security-scratch-');
   const flags=['--disable-telemetry','--cache-dir',cache,'--scanners','vuln','--offline-scan','--skip-db-update','--skip-java-db-update','--parallel','1','--timeout','8m','--no-progress','--list-all-pkgs','--format','json'];

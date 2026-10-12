@@ -1,11 +1,15 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {imageInventory,summarize,registryFallback,scannerManifestName,imageScanStatus} from './security-review.mjs';
+import {imageInventory,summarize,registryFallback,scannerManifestName,imageScanStatus,inventoryFormat} from './security-review.mjs';
 import {reportIssues,queueIssues,externalIssues,alertState} from './report-health.mjs';
 import {validateDecision,applyDecisions} from './triage.mjs';
 import {findingsQueue,retainUnrechecked,recheckedTarget} from './build-queue.mjs';
 import {probe,validResponse,targets} from './check-external.mjs';
 const now=Date.parse('2026-10-11T12:00:00Z');
+test('Docker collection itself requests only three non-sensitive inventory fields',()=>{
+ assert.deepEqual([...inventoryFormat.matchAll(/\{\{json ([^}]+)\}\}/g)].map(m=>m[1]),['.Name','.Image','.Config.Image']);
+ assert(!/Env|Mounts|Labels|\.Config\}\}/.test(inventoryFormat));
+});
 test('reviewed replacement npm locks keep the scanner-recognized filename',()=>{
  assert.equal(scannerManifestName('deployment/bookplate/security-package-lock.json'),'package-lock.json');
  assert.equal(scannerManifestName('portal/package-lock.json'),'package-lock.json');

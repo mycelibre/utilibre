@@ -289,7 +289,7 @@ services:
 
   penpot-admin-console:
     <<: *runtime
-    image: utilibre-penpot-admin:openssl-vendor-security-20261011
+    image: utilibre-penpot-admin:patch-leaves-20261012
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
       PENPOT_INTERNAL_URI: http://penpot-frontend:8080

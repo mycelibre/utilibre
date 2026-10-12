@@ -15,17 +15,29 @@ passed; matching source archives passed public HTTPS checksum checks.
 [Seven-service results, source and rollback](../deployment/maintenance/go-leaf-final/README.md).
 No Rustpad, Docker/containerd or host reboot was performed.
 
-Final scan **00:22:04 UTC**: **109 images / 175 containers, 510 host packages,
-55 source manifests**; 119 seconds. Every captured image still matched the
+Five patch-level follow-ups finished at **00:39:58 UTC**: Bookplate's complete
+Next 16.3.8 production build, Candlr's Sharp 0.35.5/native assets, source-map-js
+1.2.2 in Candlr/DeGoog/Penpot admin, admin js-yaml 4.3.2, and removal of Projects'
+unused vulnerable Redis Heroku example. Other application files, access rules
+and saved data were preserved. Native account/isolation/export checks, parser
+and image regressions and live route/configuration gates passed. Bookplate's
+82 upstream unit tests also passed. [Patch leaves and rollback](../deployment/maintenance/patch-leaves-final/README.md),
+[Bookplate/Resume evidence](../deployment/maintenance/next-leaves-final/README.md),
+[Projects example-only removal](../deployment/maintenance/projects-redis-final/README.md).
+Matching Bookplate and additive dependency source offers passed public HTTPS
+SHA-256 checks; predecessor sources and images remain available for recovery.
+
+Final scan **00:42:20 UTC**: **109 images / 175 containers, 510 host packages,
+55 source manifests**; 73 seconds. Every captured image still matched the
 running deployment. All host/source scans completed; only Rustpad's live
 image inventory remains incomplete. Grist's Deno Rust-crate and Pyodide/WASM
 coverage limitations remain explicitly documented, not silently certified.
-Raw findings were **42 critical / 2,834 high occurrences**. After exact,
-expiring package/payload/component reviews, **5 critical / 1,686 high
+Raw findings were **42 critical / 2,826 high occurrences**. After exact,
+expiring package/payload/component reviews, **5 critical / 1,675 high
 package-target records remain pending**. Neither count measures exploits.
 
-Of those 1,691 pending critical/high records, **1,632 have no fixed version in
-the scanner's current advisory data**. The other 59 include major API/framework
+Of those 1,680 pending critical/high records, **1,632 have no fixed version in
+the scanner's current advisory data**. The other 48 include major API/framework
 changes, coupled cryptographic packages, bundled/build-only dependencies and
 records needing further payload/exposure review. They are not represented as
 patched. Host LMDB, OpenSSH-client and unused ksmbd findings remain visible;
@@ -33,16 +45,26 @@ patched. Host LMDB, OpenSSH-client and unused ksmbd findings remain visible;
 The scanner service deliberately returns incomplete while Rustpad lacks
 inventory; its warning was not disabled or reset.
 
-This final reconciliation applied **606 additional exact seven-day reviews**,
+The initial 00:22 reconciliation applied **606 exact seven-day reviews**,
 preserving the raw scan byte-for-byte and the previous private decision ledger.
 It includes 170 stale DHI inventory matches verified against authenticated
 packages and the actual live regular files/symlinks. Seventeen binary-package
 inventory groups could not support their narrower proof; they received no
 decision from that helper. Other unverified findings remain open.
 
-The **00:23:15 UTC** application-advisory review checked **112 providers**, with
+The final follow-up applied **67 further exact seven-day decisions**, including
+35 binary-component records on replacement images, 26 stale admin OpenSSL
+records proven against all 14 live vendor payload files, and six Resume Next
+records. Resume serves Hono; Next is an unused optional Better Auth peer, not
+its running server. Its exact entry, compiled imports and native process were
+checked. These are scoped applicability reviews, not invented package upgrades.
+All other decisions and raw scan bytes were retained. Docker inventory and
+advisory queries now request only the required non-sensitive fields, never
+container environments; command failures cannot print captured credentials.
+
+The **00:43:51 UTC** application-advisory review checked **112 providers**, with
 no unavailable lookup or reopened application advisory. Separate dependency
-findings above are not cleared by that result. **110 focused Node tests, nine
+findings above are not cleared by that result. **115 focused Node tests, nine
 embedded-asset parser tests and 83 source-patch apply/reverse checks passed**.
 Read-only availability checks found no failed tool endpoint across 59 status
 monitors and 105 catalogue probes; this is a point-in-time check, not uptime.
@@ -60,9 +82,10 @@ successful manual checks. Commit `0496567` refreshes the offset to minutes
 genuine scheduled completion clears its warning. GitHub documents that scheduled
 events can be delayed or dropped: [schedule behavior](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule).
 
-Root storage has approximately **8.4 GiB free**, below the 10 GiB warning but
+Root storage has approximately **8.5 GiB free**, below the 10 GiB warning but
 above the enforced 8 GiB release floor. Further build batches must account for
-that reserve. No user data, backups or rollback images were deleted. The owner's
+that reserve. A further 518 MB of unused reproducible build cache was removed;
+no user data, backups or rollback images were deleted. The owner's
 in-memory Rustpad must be saved before its image/Docker update can proceed.
 The earlier entries below preserve individual release and rollback evidence;
 they are not newer fleet counts.

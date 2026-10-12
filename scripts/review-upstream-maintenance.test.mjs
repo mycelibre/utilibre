@@ -1,7 +1,10 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {repository,reviewedRef,recentAdvisories,partitionReviewed} from './review-upstream-maintenance.mjs';
+import {repository,reviewedRef,recentAdvisories,partitionReviewed,runtimeEvidenceFormat} from './review-upstream-maintenance.mjs';
 import {creativeProviders} from '../portal/src/catalog/creative-providers.ts';
+test('runtime advisory evidence requests no environment, credentials or mount data',()=>{
+ assert.deepEqual([...runtimeEvidenceFormat.matchAll(/\{\{json ([^}]+)\}\}/g)].map(m=>m[1]),['.Name','.Image','.State.Running']);
+});
 test('review source URLs without accepting credentials or query injection',()=>{
  assert.equal(repository('https://github.com/gristlabs/grist-core').clone,'https://github.com/gristlabs/grist-core.git');
  for(const u of ['http://github.com/a/b','https://x:y@github.com/a/b','https://github.com/a/b?x=y','https://github.com/a/b/extra'])assert.throws(()=>repository(u));

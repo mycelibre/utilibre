@@ -6,9 +6,9 @@
       "/utilibre-expanded-penpot-frontend-1": "sha256:ca4f4adc5367a40e1597bea7d6032de0d08266b6d65cdf083ae4c695d54d23a7",
       "/utilibre-expanded-penpot-backend-1": "sha256:0e6eb47f25fde0310f7b318144bf78c2bc068fb4f3a4f0edcaaebcc604eeae95",
       "/utilibre-expanded-penpot-exporter-1": "sha256:a3102615b1349f141d787dd806bc3464a49d223a5336471b3e09b1bc74a6d8da",
-      "/utilibre-expanded-penpot-admin-console-1": "sha256:b19955812569217b6976e12997c25483f6d7f0d84cc7aa25983d30c476256ae4"
+      "/utilibre-expanded-penpot-admin-console-1": "sha256:fbc2d56e8e1d5f1e8711b54321f4235ef3e154b307df5d4de2816729eb77f382"
     },
-    "runtimeEvidence": "2026-10-11: application remains Penpot 2.18.3 at reviewed source ff7a66f51938b2293260ea27a64e2c4e0833b5e3. Native-only ImageMagick no-EXR and real libxml2 security rebuilds preserve all application/JRE/Chromium bytes and runtime configuration; exact-image, two-account permission/export/import/media and public OIDC gates passed. The later admin-only signed DHI OpenSSL coupled-package layer preserves every /nitrate application byte and native configuration; isolated native PostgreSQL migrations/HTTP parity and exact live rollout passed. Receipts: deployment/maintenance/native-final/README.md and vendor-leaves-final/README.md. These bindings cover previously reviewed application advisories only, never separate native/dependency findings.",
+    "runtimeEvidence": "2026-10-12: application remains Penpot 2.18.3 at reviewed source ff7a66f51938b2293260ea27a64e2c4e0833b5e3. Native ImageMagick no-EXR/libxml2 repairs passed two-account permission/export/import/media and OIDC gates. The admin-only signed DHI OpenSSL layer was followed by js-yaml 4.3.2/source-map-js 1.2.2; all other application files and runtime configuration are unchanged. Parser regression, native PostgreSQL migrations/login parity and exact live image/health/routes passed. Fourteen live OpenSSL payload files match authenticated vendor packages. Receipts: deployment/maintenance/native-final/README.md, vendor-leaves-final/README.md and patch-leaves-final/README.md. This rebinds previously reviewed application advisories only, never separate dependency findings.",
     "advisories": [
       {
         "id": "GHSA-wxgm-8qjw-x445",
@@ -325,7 +325,7 @@
       }
     ],
     "files": {
-      "/home/ubuntu/freetools/deployment/expanded/compose.yaml": "f258b98a80496b64893cdd7ff04ab505a64869193c4bd540288ae60af526a704"
+      "/home/ubuntu/freetools/deployment/expanded/compose.yaml": "8e8d19df5527ebc7d0a8e9bf4ff50ecac45e8d004a662c51cca4f22c81cf33d4"
     }
   },
   "yopass": {
