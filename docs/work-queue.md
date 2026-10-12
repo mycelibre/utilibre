@@ -1,5 +1,41 @@
 # Operator work queue — reconciled 12 October 2026
 
+## In-progress release checkpoint — 12 October, 15:57 UTC
+
+**Independent work continues; not a completed security clearance.** The native
+OpenLDAP 2.5.13 repair is now live in Kuma, Rallly, RSS-Bridge and Gathio. Its
+full suite recorded 76 passes, eight optional skips, one upstream-disabled case
+and two unchanged Debian-disabled cases. Four isolated application journeys and
+serial exact-image/library/live-health gates passed. Existing account rules,
+data, TLS backend and RSS-Bridge browser impersonation remain unchanged.
+
+Gathio's native Bookworm TIFF library is now 4.7.2, with the older ABI, all
+199 old exports and all ten direct dependencies retained. All 109 upstream
+tests, eight codec round trips, 210 GDAL drivers, native raster import/export,
+typed database data, access denial and a synthetic logical restore passed.
+The corresponding-source v2 corrects an advisory year in documentation only;
+the original archive and release proofs remain intact. Both source archives
+were fully downloaded and hash-verified. Completed changes are on GitHub at
+`0ffaee5`; the integration-source offer is republished.
+
+HDF5 and HEIF native repairs are being prepared against the current Gathio
+image, not deployed. The guest-agent candidate passed its isolated native/unit
+checks but remains uninstalled pending the owner's backup-free Proxmox window.
+The owner agreed to receive commands once ready; no reboot, guest-agent restart
+or bootloader write has been performed. A fresh fleet scan/review follows the
+remaining independent image releases, so earlier queue totals are not current.
+
+The source page retains its existing design, correct Utilibre favicon and two
+return links. Live Chromium desktop, 390px mobile and 200% text checks passed
+without horizontal overflow. This is browser emulation, not a real-phone test.
+No failed Utilibre systemd unit was observed. Root free space is approximately
+18 GiB with the 8 GiB reserve preserved. The genuine independent GitHub schedule
+is still overdue: last observed scheduled success 09:42 UTC, not a manual run.
+
+Recipes and exact boundaries: [LDAP](../deployment/maintenance/openldap-followup/README.md),
+[TIFF](../deployment/maintenance/tiff-bookworm-followup/README.md),
+[QEMU component attribution](../deployment/maintenance/qemu-component-followup/README.md).
+
 ## In-progress release checkpoint — 12 October, 15:35 UTC
 
 **Not complete.** Click 8.3.3 is live in Kuma; native sudo timezone repairs
