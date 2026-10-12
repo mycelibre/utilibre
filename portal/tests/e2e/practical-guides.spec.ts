@@ -53,7 +53,7 @@ test('all practical guides preserve language, real launch paths and downloadable
   await expect(page.locator('.hero-lead')).toHaveCSS('color', 'rgb(83, 96, 87)');
 });
 
-test('pilot and account views remain explicit, searchable and bookmarkable', async ({ page }) => {
+test('account and full catalog views remain explicit, searchable and bookmarkable', async ({ page }) => {
   await page.route('**/_portal/config', route => route.fulfill({ json: {
     projectName: 'Utilibre', defaultLanguage: 'en', publicFmdUrl: 'https://fmd.example/', publicPollUrl: 'https://poll.example/', publicAliasesUrl: 'https://aliases.example/',
     publicRssUrl: 'https://rss.example/', publicPollarisUrl: 'https://pollaris.example/', publicStatusUrl: 'https://status.example/', publicMeetUrl: 'https://meet.example/',
@@ -80,10 +80,11 @@ test('pilot and account views remain explicit, searchable and bookmarkable', asy
   await page.locator('[data-catalog-id="fmd"] .catalog-help summary').click();
   await expect(page.locator('[data-catalog-id="fmd"]')).toContainText('Real Android and push delivery were not tested');
   await expect(page.locator('[data-catalog-id="fmd"] .catalog-help')).toContainText('separate from Utilibre login');
-  await page.locator('.catalog-views').getByRole('link', { name: 'Pilots & unavailable', exact: true }).click();
-  for (const id of ['fmd', 'galene']) await expect(page.locator(`[data-catalog-id="${id}"]`)).toHaveCount(0);
+  await expect(page.locator('.catalog-views').getByRole('link', { name: 'Pilots & unavailable', exact: true })).toHaveCount(0);
+  await page.locator('.catalog-views').getByRole('link', { name: 'All tasks', exact: true }).click();
+  for (const id of ['fmd', 'galene']) await expect(page.locator(`[data-catalog-id="${id}"]`)).toBeVisible();
   await expect(page.locator('[data-catalog-id="breezewiki"]')).toBeVisible();
-  await page.reload(); await expect(page.locator('[data-catalog-id]')).toHaveCount(1);
+  await page.reload(); await expect(page.locator('[data-catalog-id]')).toHaveCount(7);
   await expect(page.locator('[data-catalog-id="uptime-kuma"]')).toHaveCount(0);
   await page.getByLabel('Search tools').fill('nothingmatches'); await page.getByRole('button', { name: 'Search', exact: true }).click();
   await expect(page.locator('.catalog-result-count')).toContainText('0');
@@ -114,6 +115,8 @@ test('Collab belongs to Use now and keeps its storage and privacy limits', async
     await page.goto(`/${language}/?view=public&q=Collab`);
     await expect(page.locator('[data-catalog-id="wbo"]')).toBeVisible();
     await page.goto(`/${language}/?view=pilots&q=Collab`);
-    await expect(page.locator('[data-catalog-id="wbo"]')).toHaveCount(0);
+    await expect(page.locator('[data-catalog-id="wbo"]')).toBeVisible();
+    await expect(page.locator('.catalog-mode-link[aria-current="page"]')).toHaveText(language === 'en' ? 'All tasks' : 'Todas las tareas');
+    await expect(page.locator('.catalog-views a')).toHaveCount(4);
   }
 });

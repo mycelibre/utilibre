@@ -3,13 +3,16 @@ const config = {
   projectName: 'Utilibre', defaultLanguage: 'en', supportUrl: '',
   publicPdfUrl: 'https://pdf.utility.test/', publicRssUrl: 'https://rss.utility.test/',
   publicPasteUrl: 'https://paste.utility.test/', publicQrToolsUrl: 'https://qr.utility.test/',
-  enabledServices: ['bentopdf', 'freshrss', 'privatebin', 'qr-offline'],
+  publicMumbleUrl: 'mumble://mumble.utilibre.org:64738/',
+  enabledServices: ['bentopdf', 'freshrss', 'privatebin', 'qr-offline', 'mumble'],
 };
 for (const language of ['en', 'es']) {
   test(`${language}: live search keeps focus, filters locally and preserves navigation`, async ({ page }) => {
     await page.route('**/_portal/config', route => route.fulfill({ json: config }));
     await page.goto(`/${language}/?group=reading&view=all`);
     await expect(page.locator('.theme-toggle')).toBeEnabled();
+    await expect(page.locator('.catalog-views a')).toHaveCount(4);
+    await expect(page.locator('.catalog-views a[href*="view=pilots"]')).toHaveCount(0);
     const field = page.locator('#catalog-query');
     const requests: string[] = [];
     page.on('request', request => requests.push(request.url()));
@@ -28,6 +31,11 @@ for (const language of ['en', 'es']) {
     await field.fill('');
     await expect(page.locator('[data-catalog-id="bentopdf"]')).toBeVisible();
     await expect(page.locator('[data-catalog-id="privatebin"]')).toBeVisible();
+    await expect(page.locator('[data-catalog-id="mumble"] .catalog-ledger-launch')).toHaveAttribute('href', config.publicMumbleUrl);
+    await field.fill('mumble');
+    await expect(page.locator('[data-catalog-id="mumble"]')).toBeVisible();
+    await expect(page.locator('.catalog-ledger-row')).toHaveCount(1);
+    await expect(page.locator('.catalog-views [aria-current]')).toHaveText(language === 'es' ? 'Todas las tareas' : 'All tasks');
     expect(await page.evaluate(() => history.length)).toBe(historyLength);
     expect(requests).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);

@@ -126,7 +126,8 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
 
   const views = element('nav', 'catalog-views');
   views.setAttribute('aria-label', t('a11y.toolAccess'));
-  for (const view of catalogViews) {
+  const visibleViews = catalogViews.filter(view => view !== 'pilots');
+  for (const view of visibleViews) {
     const link = element('a', 'catalog-mode-link', t(`home.catalog.${view}`));
     link.href = catalogUrl(language, view === 'featured' ? {} : { ...state, view });
     if (state.view === view) link.setAttribute('aria-current', 'page');
@@ -225,7 +226,7 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
         link.removeAttribute('aria-current');
       });
       views.querySelectorAll<HTMLAnchorElement>('a').forEach((link, index) => {
-        const view = catalogViews[index];
+        const view = visibleViews[index];
         link.href = catalogUrl(language, view === 'featured' ? {} : { ...next, view });
         if (view === 'all') link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
       });
@@ -686,7 +687,8 @@ function discoveryState(searchParams: URLSearchParams): CatalogDiscoveryState {
   const query = (searchParams.get('q') ?? '').trim().slice(0, 160);
   const group = normalizeGroup(searchParams.get('group'));
   const candidate = searchParams.get('view') as CatalogView;
-  const view = catalogViews.includes(candidate) ? candidate : query ? 'all' : 'featured';
+  // Keep old bookmarks useful after retiring the separate pilot section.
+  const view = candidate === 'pilots' ? 'all' : catalogViews.includes(candidate) ? candidate : query ? 'all' : 'featured';
   return { query: query || undefined, group, view };
 }
 
