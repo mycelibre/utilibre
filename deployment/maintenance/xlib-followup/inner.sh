@@ -30,7 +30,7 @@ for variant in $2; do
   quilt push -a --fuzz=0 > "/output/$variant-$package-patches.log" 2>&1
   dpkg-buildpackage -b -us -uc -nc > "/output/$variant-$package-build.log" 2>&1
   for patch in debian/patches/utilibre-*.patch; do
-   patch -p1 --fuzz=0 --batch --reverse --dry-run -i "$patch"
+   patch -p1 --fuzz=0 --batch --reverse --force --dry-run -i "$patch"
   done
  done
  mkdir -p "/output/$variant"

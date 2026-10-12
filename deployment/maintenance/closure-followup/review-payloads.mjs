@@ -6,6 +6,7 @@ import cp from 'node:child_process';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {validateDecision} from '../triage.mjs';
+import {overlayRows} from '../review-native-backports.mjs';
 const dir='/var/lib/utilibre-maintenance/closure-followup-20261012',root=path.dirname(dir);
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 process.umask(0o077);
@@ -14,15 +15,13 @@ const run=(p,args)=>cp.execFileSync(p,args,{encoding:'utf8',timeout:60000,maxBuf
 const queue=read(root+'/security-queue.json'),scan=read(root+'/security.json'),primary=read(dir+'/debian-primary.json');
 assert.equal(queue.scanDate,scan.completedAt);assert.equal(scan.status,'checked');assert(Date.now()-Date.parse(scan.completedAt)<86400000);assert(Date.now()-Date.parse(primary.date)<86400000);
 const release=read(dir+'/expat-release.json');assert.equal(release.status,'passed');assert.equal(read(dir+'/host-release.json').status,'passed');assert.equal(read(dir+'/host-live.json').status,'passed');
-// Follow only the two reviewed library overlays, never an arbitrary new image.
+// Follow only explicitly allowlisted, completed overlays; recheck live bytes.
 const descendants=[];
 for(const file of ['cache-release.json','apache-release.json','ncurses-release.json','util-linux-release.json','curl-release.json','gzip-release.json','sqlite-fts-release.json','urllib3-release.json','python-system-release.json',...additionalOverlayReceipts.map(p=>'../'+p)]){
  if(!fs.existsSync(dir+'/'+file))continue;
  const r=read(dir+'/'+file);assert.equal(r.status,'passed');
- for(const group of r.groups){assert.equal(group.status,'passed');
-  for(const row of group.rows||[group])if(row.oldImage!==row.newImage)
-   descendants.push({...row,receipt:file,completedAt:group.completedAt});
- }
+ for(const row of overlayRows(r))if(row.oldImage!==row.newImage)
+  descendants.push({...row,receipt:file});
 }
 function originalRelease(name,image){
  const seen=new Set;

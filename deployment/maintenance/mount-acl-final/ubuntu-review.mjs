@@ -11,6 +11,9 @@ assert(o.published);assert.equal(sha(fs.readFileSync(o.archive)),o.sha256);asser
 const decisions=[];
 for(const key of ['addy','redlib']){
  const dir=root+'/ubuntu-images/'+key;if(!fs.existsSync(dir+'/release.json'))continue;const release=read(dir+'/release.json');if(release.status!=='passed')continue;
+ const sourceFile=root+(key==='redlib'?'/ubuntu-source-offer-v2.json':'/ubuntu-source-offer.json'),releasedOffer=read(sourceFile);
+ assert.equal(release.proofs.source,sha(fs.readFileSync(sourceFile)));assert(releasedOffer.published);assert.equal(sha(fs.readFileSync(releasedOffer.archive)),releasedOffer.sha256);
+ if(key==='redlib'){assert.equal(releasedOffer.filename,'security-noble-mount-20261012-source-v2.tar.gz');assert.equal(releasedOffer.sha256,'de427630fb7d10627a133017f709eec13f8f930c5e28301aa812380cca683c70');}
  assert(Date.parse(release.completedAt)<=Date.parse(scan.date));
  const stage=read(dir+'/stage.json'),consumer=read(dir+'/consumer.json'),app=read(dir+'/application.json');
  for(const [label,path]of [['stage',dir+'/stage.json'],['application',dir+'/application.json'],['consumer',dir+'/consumer.json'],['native',root+'/ubuntu-native.json'],['upstreamException',root+'/ubuntu-upstream-exception.json']])assert.equal(release.proofs[label],sha(fs.readFileSync(path)));

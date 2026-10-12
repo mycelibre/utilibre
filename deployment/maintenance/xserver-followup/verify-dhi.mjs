@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import cp from 'node:child_process';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
+import {applyVendorSeries,strictReverse} from './source-proof.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance/xserver-followup-20261012',dir=root+'/dhi';
 const container='utilibre-expanded-penpot-exporter-1',version='2:21.1.16-1.3+deb13u4+dhi1';
@@ -20,9 +21,10 @@ for(const pkg of ['xvfb','xserver-common']){
 const sourceBlock=fs.readFileSync(dir+'/source-index.txt','utf8').split(/\n\n+/).find(b=>b.includes('\nVersion: '+version+'\n'));assert(sourceBlock);
 const archives=sourceBlock.match(/^Checksums-Sha256:\n((?: .+\n?)+)/m)[1].trim().split('\n').map(s=>s.trim().split(/ +/));
 for(const [digest,size,name] of archives){assert.equal(sha(dir+'/'+name),digest);assert.equal(fs.statSync(dir+'/'+name).size,Number(size));}
-const tree=dir+'/source';if(!fs.existsSync(tree))run('dpkg-source',['-x',dir+'/xorg-server_21.1.16-1.3+deb13u4+dhi1.dsc',tree]);
 const stage=JSON.parse(fs.readFileSync(root+'/stage.json'));
-for(const f of stage.fixes)cp.execFileSync('patch',['-p1','--batch','--reverse','--dry-run','-i',root+'/'+f.cve+'.patch'],{cwd:tree,stdio:'pipe'});
+const temp=fs.mkdtempSync('/tmp/utilibre-xserver-dhi-verify-');
+try{const tree=temp+'/source';run('dpkg-source',['-x',dir+'/xorg-server_21.1.16-1.3+deb13u4+dhi1.dsc',tree]);applyVendorSeries(tree);for(const f of stage.fixes){assert.equal(sha(root+'/'+f.cve+'.patch'),f.patchSha256);strictReverse(tree,root+'/'+f.cve+'.patch');}}
+finally{assert(temp.startsWith('/tmp/utilibre-xserver-dhi-verify-'));fs.rmSync(temp,{recursive:true});}
 function walk(path,prefix=''){return fs.readdirSync(path,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path+'/'+e.name,prefix+'/'+e.name):e.isFile()?[prefix+'/'+e.name]:[]);}
 const files=walk(extract).sort().map(path=>({path,sha256:sha(extract+path)}));
 // Verify every regular payload file, including docs declaring the backport.

@@ -2,8 +2,8 @@
 
 The root maintainer released all eight Bookworm mount overlays on 12 October
 2026, with exact-predecessor rollback and native/application checks. Ubuntu
-mount has passed isolated native/application gates and is ready for the root
-maintainer's guarded release. ACL 2.4.0 is a tested candidate only: it has
+mount is also live: Addy's database passed release at 18:34:27 UTC and Redlib
+at 18:38:31 UTC. ACL 2.4.0 is a tested candidate only: it has
 not replaced any live library or added utilities to production.
 
 Bookworm's `libmount1`/`mount` 2.38.1-5+deb12u3 uses the legacy mount
@@ -94,13 +94,14 @@ disconnected second-instance dump/restore pass. Redlib's native startup and
 settings page pass; only its unchanged startup OAuth request reaches Reddit,
 and no visitor search/media fetch is used as a load test.
 
-Root-maintainer sequence (one image at a time):
+Completed root-maintainer sequence (one image at a time):
 
 ```sh
 node deployment/maintenance/mount-acl-final/ubuntu-source-offer.mjs --publish
 node deployment/maintenance/mount-acl-final/ubuntu-release.mjs prepare addy
 node deployment/maintenance/mount-acl-final/ubuntu-release.mjs apply addy
-node deployment/maintenance/mount-acl-final/ubuntu-release.mjs prepare redlib
+node deployment/maintenance/mount-acl-final/ubuntu-source-offer-v2.mjs --publish
+node deployment/maintenance/mount-acl-final/ubuntu-release.mjs reprepare redlib
 node deployment/maintenance/mount-acl-final/ubuntu-release.mjs apply redlib
 ```
 
@@ -114,6 +115,20 @@ existing overlay ancestry registry before a fresh scan/review.
 The immutable source offer is
 `security-noble-mount-20261012-source.tar.gz`, SHA256
 `9661403044f1420f0a2f4fbf48b9cfc3351152713232cfad0f403ff16cea3c84`.
+Redlib's first guarded attempt stopped before changing its pin or recreating
+the service: the image was selected by both a Compose default and an explicit
+`REDLIB_IMAGE` assignment. The failed receipt is retained. The corrected
+helper verifies and changes exactly those two matching image references,
+rejects unexpected overrides, and reverses only that same pair on rollback.
+It records hashes, never other environment contents. Re-preparation confirmed
+the predecessor remained healthy and its resolved configuration was unchanged.
+
+The corrected integration is published in the additive immutable
+`security-noble-mount-20261012-source-v2.tar.gz`, SHA256
+`de427630fb7d10627a133017f709eec13f8f930c5e28301aa812380cca683c70`.
+The initial archive, native packages, original source and Addy release receipt
+remain unchanged. The completed Redlib receipt binds the second offer.
+
 After the fresh scan, `review.mjs` handles Bookworm, `ubuntu-review.mjs` handles
 Noble, and `acl-cli-review.mjs` separately proposes only absent CLI-component
 attribution. These programs write review proposals, never the live ledger.

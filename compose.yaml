@@ -412,7 +412,7 @@ services:
       args:
         RUST_BUILDER_VERSION: "slim-bookworm@sha256:1469a27c125cb5a3aebfa4f4e4665d935b02fb72cc093b2c974b3d740e43f157"
         UBUNTU_RELEASE_VERSION: "noble@sha256:33ceb71981b602c1a7443a53469e4dba065f7503eab3078a2d7a57a2ab987517"
-    image: ${REDLIB_IMAGE:-utilibre-redlib:openssl-vendor-security-20261011}
+    image: ${REDLIB_IMAGE:-utilibre-redlib:mount-noble-security-20261012}
     # This tag exists only in the local image store. Build explicitly on first
     # install/update; routine `up` must not start another costly Rust build.
     pull_policy: never

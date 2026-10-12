@@ -6,13 +6,18 @@ import {createHash} from 'node:crypto';
 import {freshScan} from '../review-native-backports.mjs';
 import {validateDecision} from '../triage.mjs';
 import {current,packages,pins,binary,fixes,nativeGate,eligible} from './host-policy.mjs';
+import {historicalRecipeMatches,strictReverse} from './source-proof.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/xserver-followup-20261012',here=new URL('.',import.meta.url).pathname;
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 const scan=read(root+'/security.json'),queue=read(root+'/security-queue.json');freshScan(queue,scan);assert.equal(scan.status,'checked');assert.equal(scan.host.status,'checked');
+if(cp.execFileSync('dpkg-query',['-W','-f=${Version}','xvfb'],{encoding:'utf8'})==='2:21.1.25-1+utilibre1'){
+ const{completed}=await import('../xvfb-single-screen-final/review-proof.mjs');const proof=completed('host',scan);
+ fs.writeFileSync(dir+'/host-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions:[],delegatedTo:'xvfb-single-screen-final-20261012/review.json',proof},null,2)+'\n');console.log('Exact new compiled host payload verified; decisions belong to the one-screen reviewer');process.exit(0);
+}
 const release=read(dir+'/host-release.json'),proof=read(dir+'/host-checks.json');assert.equal(release.status,'passed');assert(proof.passed);assert.equal(release.version,current);
 assert(Date.parse(release.completedAt)<=Date.parse(scan.date),'Scan must start after this release');assert.equal(sha(dir+'/host-checks.json'),release.checksSha256);
-for(const recipe of release.recipes)assert.equal(sha(here+recipe.file),recipe.sha256,'Reviewed recipe changed');
+for(const recipe of release.recipes)assert(historicalRecipeMatches(here+recipe.file,recipe.sha256),'Reviewed recipe changed beyond exact argument-only proof hardening');
 nativeGate(proof.baseline,'old');nativeGate(proof.candidate,'new');nativeGate(release.live,'new');assert.deepEqual(release.fixes,fixes);
 for(const p of packages){
  assert.equal(cp.execFileSync('dpkg-query',['-W','-f=${Version}',p],{encoding:'utf8'}),current);
@@ -22,6 +27,7 @@ assert.equal(sha('/usr/bin/Xvfb'),binary.new);assert.equal(release.newFiles.leng
 for(const row of release.newFiles){const s=fs.lstatSync(row.file);assert.equal(s.mode&0o7777,row.mode);if(row.link!==undefined){assert(s.isSymbolicLink());assert.equal(fs.readlinkSync(row.file),row.link);}else{assert(s.isFile());assert.equal(sha(row.file),row.sha256);}}
 for(const archive of release.sourceArchives)assert.equal(sha(dir+'/sources/'+archive.file),archive.sha256);
 for(const [id,fix]of Object.entries(fixes))assert.equal(sha(dir+'/'+id+'.patch'),fix.sha256);
+const temp=fs.mkdtempSync('/tmp/utilibre-xserver-host-proof-');try{cp.execFileSync('dpkg-source',['-x',dir+'/sources/xorg-server_21.1.25-1.dsc',temp+'/source'],{stdio:'pipe'});for(const id of Object.keys(fixes))strictReverse(temp+'/source',dir+'/'+id+'.patch');}finally{fs.rmSync(temp,{recursive:true});}
 const details={
  'CVE-2026-88812':'The isolated authenticated XKB malformed-font cleanup fixture crashes the old host executable; candidate and live executable reject it with BadValue and continue serving.',
  'CVE-2026-93523':'The isolated authenticated XInput2 fixture rejects invalid modifier 256 on candidate/live while preserving valid modifier 0 and native pixel rendering; the baseline accepts the invalid modifier.',

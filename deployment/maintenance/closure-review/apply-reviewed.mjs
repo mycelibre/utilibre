@@ -23,13 +23,19 @@ import {reviewFile as archiveTarReview,eligible as archiveTarEligible} from '../
 import {reviewFile as coturnBsonReview,eligible as coturnBsonEligible} from '../coturn-bson-final/review-policy.mjs';
 import {reviewFile as nltkReview,eligible as nltkEligible} from '../application-leaves-final/nltk-review-policy.mjs';
 import {reviewFile as bracesReview,eligible as bracesEligible} from '../application-leaves-final/braces-review-policy.mjs';
+import {reviewFile as mountFinalReview,eligible as mountFinalEligible} from '../mount-acl-final/review-policy.mjs';
+import {reviewFile as historicalHeaderReview,eligible as historicalHeaderEligible} from '../historical-header-final/policy.mjs';
+import {reviewFile as aclCliReview,eligible as aclCliEligible} from '../mount-acl-final/acl-cli-review-policy.mjs';
+import {reviewFile as ubuntuMountReview,eligible as ubuntuMountEligible} from '../mount-acl-final/ubuntu-review-policy.mjs';
+import {reviewFile as singleScreenReview,eligible as singleScreenEligible} from '../xvfb-single-screen-final/review-policy.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',read=p=>JSON.parse(fs.readFileSync(root+'/'+p));
 const queue=read('security-queue.json'),scan=read('security.json');assert.equal(queue.scanDate,scan.completedAt);assert.equal(scan.status,'checked');
 const current=new Map(queue.items.map(x=>[x.key,x])),ledger=new Map(read('security-decisions.json').map(x=>[x.key,x]));
 const opensslReview='openssl-bookworm-followup-20261012/review.json';
-const nativeMitigationReviews=[openldapReview,tiffReview,qgaReview,hdf5Review,gdalAvifReview,archiveTarReview,coturnBsonReview,nltkReview,bracesReview];
-const files=process.argv.slice(2);assert(files.length&&files.every(x=>[dhiBinaryReview,...nativeMitigationReviews,heifReview,qemuReview,xlibReview,sudoReview,npmReview,...hostFollowupReviews,gnupgReview,xserverDhiReview,penpotReview,opensslReview,"python-bookworm-followup-20261012/mitigation-review.json","python-bookworm-followup-20261012/not-affected-review.json","geospatial-followup-20261012/native-reviews.json","host-extra-followup-20261012/pcap-review.json",'component-review.json','binary-scope-review.json','specific-closure-review-20261012.json','vendor-fixed-review.json','native-backport-review.json','closure-followup-20261012/headers-review.json','closure-followup-20261012/payload-review.json','closure-followup-20261012/ncurses-review.json','closure-followup-20261012/rsync-review.json','closure-followup-20261012/util-linux-review.json','closure-followup-20261012/util-linux-component-review.json','closure-followup-20261012/xml-uri-review.json','closure-followup-20261012/curl-review.json','closure-followup-20261012/bookworm-curl-review.json','closure-followup-20261012/gzip-review.json','closure-followup-20261012/sqlite-fts-review.json','closure-followup-20261012/wget-review.json','vendor-leaves-final-20261011/dhi-fixed-review.json','next-leaves-final-20261012/resume-reviews.json','closure-followup-20261012/urllib3-review.json','closure-followup-20261012/python-system-review.json','component-followup-20261012/binary-reviews.json','component-followup-20261012/runtime-reviews.json'].includes(x)));
+const packageAttributionReviews=[historicalHeaderReview,aclCliReview];
+const nativeMitigationReviews=[openldapReview,tiffReview,qgaReview,hdf5Review,gdalAvifReview,archiveTarReview,coturnBsonReview,nltkReview,bracesReview,mountFinalReview,ubuntuMountReview,singleScreenReview];
+const files=process.argv.slice(2);assert(files.length&&files.every(x=>[...packageAttributionReviews,dhiBinaryReview,...nativeMitigationReviews,heifReview,qemuReview,xlibReview,sudoReview,npmReview,...hostFollowupReviews,gnupgReview,xserverDhiReview,penpotReview,opensslReview,"python-bookworm-followup-20261012/mitigation-review.json","python-bookworm-followup-20261012/not-affected-review.json","geospatial-followup-20261012/native-reviews.json","host-extra-followup-20261012/pcap-review.json",'component-review.json','binary-scope-review.json','specific-closure-review-20261012.json','vendor-fixed-review.json','native-backport-review.json','closure-followup-20261012/headers-review.json','closure-followup-20261012/payload-review.json','closure-followup-20261012/ncurses-review.json','closure-followup-20261012/rsync-review.json','closure-followup-20261012/util-linux-review.json','closure-followup-20261012/util-linux-component-review.json','closure-followup-20261012/xml-uri-review.json','closure-followup-20261012/curl-review.json','closure-followup-20261012/bookworm-curl-review.json','closure-followup-20261012/gzip-review.json','closure-followup-20261012/sqlite-fts-review.json','closure-followup-20261012/wget-review.json','vendor-leaves-final-20261011/dhi-fixed-review.json','next-leaves-final-20261012/resume-reviews.json','closure-followup-20261012/urllib3-review.json','closure-followup-20261012/python-system-review.json','component-followup-20261012/binary-reviews.json','component-followup-20261012/runtime-reviews.json'].includes(x)));
 let applied=0;
 for(const file of files){
  const stat=fs.statSync(root+'/'+file);assert(stat.mtimeMs>Date.parse(scan.completedAt)&&Date.now()-stat.mtimeMs<900000,'Regenerate review after the exact scan');
@@ -39,6 +45,11 @@ for(const file of files){
   if(file===coturnBsonReview)assert(coturnBsonEligible({...current.get(decision.key),status:'needs-review'}));
   if(file===nltkReview)assert(nltkEligible({...current.get(decision.key),status:'needs-review'}));
   if(file===bracesReview)assert(bracesEligible({...current.get(decision.key),status:'needs-review'}));
+  if(file===mountFinalReview)assert(mountFinalEligible({...current.get(decision.key),status:'needs-review'}));
+  if(file===historicalHeaderReview)assert(historicalHeaderEligible({...current.get(decision.key),status:'needs-review'}));
+  if(file===aclCliReview)assert(aclCliEligible({...current.get(decision.key),status:'needs-review'}));
+  if(file===ubuntuMountReview)assert(ubuntuMountEligible({...current.get(decision.key),status:'needs-review'}));
+  if(file===singleScreenReview)assert(singleScreenEligible({...current.get(decision.key),status:'needs-review'}));
   if(file===penpotReview)assert(penpotEligible({...current.get(decision.key),status:"needs-review"}));
   if(file===xlibReview)assert(xlibEligible({...current.get(decision.key),status:'needs-review'}));
   if(file===sudoReview)assert(sudoEligible({...current.get(decision.key),status:'needs-review'}));

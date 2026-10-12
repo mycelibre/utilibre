@@ -1,0 +1,4 @@
+export const reviewFile='xvfb-single-screen-final-20261012/review.json';
+export const ids=['CVE-2023-5574','CVE-2026-88812','CVE-2026-93521','CVE-2026-93523'];
+export const versions={host:'2:21.1.25-1+utilibre1',dhi:'2:21.1.16-1.3+deb13u4+dhi1+utilibre1'};
+export function eligible(i){if(i?.status!=='needs-review'||i.type!=='debian'||!ids.includes(i.id)||!['xvfb','xserver-common'].includes(i.package))return false;const common=i.package==='xserver-common';if(i.scope==='host-os')return i.artifact==='host-dpkg'&&Array.isArray(i.containers)&&i.containers.length===0&&i.installed===(common?'2:21.1.25-1':versions.host);return i.scope==='runtime-image'&&/^sha256:[a-f0-9]{64}$/.test(i.artifact||'')&&i.targetName===i.artifact&&Array.isArray(i.containers)&&i.containers.length===1&&i.containers[0]==='utilibre-expanded-penpot-exporter-1'&&i.installed===(common?'2:21.1.16-1.3+deb13u4+dhi1':versions.dhi);}

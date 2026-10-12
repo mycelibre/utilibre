@@ -8,8 +8,13 @@ remain reviewed rollouts. Production never runs a floating `latest` tag.
 ## Local repair protection
 
 The 12 October native follow-up is deployed, including the coordinated QEMU
-guest-agent activation, HDF5/HEIF/GDAL, Penpot's private codec alignment and
-Addy's signed Ubuntu Perl update. Exact versions, fresh scan results, tested
+guest-agent activation, HDF5/HEIF/GDAL, Penpot's private codec alignment,
+Addy's signed Ubuntu Perl update, Archive::Tar, the tracker dependency removal,
+both TURN relay libraries, KitchenOwl model paths, Kuma cryptography,
+CryptPad's bounded parser, ten Bookworm/Ubuntu mount-target repairs and
+the host/Penpot single-screen Xvfb restriction. Xvfb's restriction removes an
+attack prerequisite; it is not an upstream use-after-free correction.
+Exact versions, fresh scan results, tested
 journeys, remaining upstream/boot-chain work and rollback links are maintained
 in the [operator work queue](work-queue.md). New releases must preserve those
 repairs or demonstrate that a tested upstream replacement supersedes them.

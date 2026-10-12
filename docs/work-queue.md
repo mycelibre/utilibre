@@ -1,5 +1,95 @@
 # Operator work queue — reconciled 12 October 2026
 
+## Final native repair checkpoint — 12 October, 18:51 UTC
+
+This is the current checkpoint; earlier activation notes and counts below are
+historical. All prepared compatible releases in this batch are **deployed**.
+It is not a claim that all vulnerabilities or coverage gaps are resolved.
+
+In addition to the 18:04 releases below, all eight Bookworm mount overlays
+(Gathio, Kuma, RSS-Bridge, Rallly, wishlist, Actual, Resume and CryptPad) and both
+Ubuntu mount overlays (Addy database and Redlib) passed native and application
+checks and were deployed. The earlier cryptography, parser, archive and other
+repairs remain intact. The host and Penpot exporter now enforce one Xvfb
+protocol screen: this removes the documented multi-screen prerequisite for
+CVE-2023-5574, rather than claiming to fix the upstream use-after-free. Penpot's
+isolated two-account editing, import/export, access boundaries and actual PNG
+and PDF exports passed. Other Penpot containers were not recreated.
+
+Recipes, exact versions, limitations and guarded rollback:
+[native mount / ACL](../deployment/maintenance/mount-acl-final/README.md),
+[one-screen Xvfb](../deployment/maintenance/xvfb-single-screen-final/README.md).
+Complete corresponding-source downloads for both mount families and Xvfb were
+hash-verified over HTTPS. Their integration/review helpers are included in the
+normal committed-source publication. No account permissions, retention,
+donation privileges or public relay quotas changed.
+
+### Final measured state
+
+- The **18:43:29 UTC** scan completed in 149 seconds: **109 running images,
+  175 containers, 55 source manifests and host packages; zero failed targets**.
+  Trivy's database was dated 09:47:21 UTC. Raw output remains **40 critical /
+  2,732 high package/target records**; do not erase it or call it exploitability.
+- Exact current-payload reviews leave **0 critical / 77 high awaiting
+  resolution**, representing **six distinct high advisory IDs**, listed below.
+  Other records have individual documented mitigated/not-affected dispositions,
+  not blanket exemptions. Lower-severity findings are not claimed all repaired.
+- All **112 upstream checks** completed without unavailable providers or
+  unreviewed application advisories. Those application decisions do not clear
+  dependency findings. Repaired-image changes deliberately reopen exact-key
+  dependency attribution until the new payload is checked.
+- The final combined run passed **72 focused Node tests and 9 update-policy
+  tests**, with no failures or skips. These cover exact review scope, changed
+  payloads, partial receipts, native repair preservation, pin rollback and
+  source-proof direction. Earlier full native/application checks are recorded
+  in each release recipe; this count is not a new full-fleet browser test.
+- The final Apache recheck matched 424 installed files to signed 2.4.69 payloads.
+  Its 28 reopened records came from an incomplete primary-evidence cache, not
+  lost repairs. CryptPad's remaining braces match was a prerelease-version
+  comparison: exact source and native boundary checks prove that the released
+  3.0.3 input-length fix remains alongside our separate nesting restriction.
+- At 18:51: all 32 Utilibre timers active, no failed systemd units and no
+  unhealthy running Docker containers. Root: approximately **9.9 GiB free**
+  of 197 GiB usable, above the enforced 8 GiB build floor. The 200 GiB virtual
+  disk is fully allocated. RAM: **11 GiB used / 22 GiB available** of 34 GiB;
+  cache is not exhausted memory. Swap use is about 2.5 GiB, not a concurrency
+  benchmark or proof that no workload can run out of memory.
+
+Five completed stopped compilers and one verified idle PostGIS compiler were
+removed, reclaiming approximately **3.8 GiB** of reproducible writable layers.
+Their sources, outputs, images, rollback artifacts, volumes and user data remain.
+No broad prune or service-data deletion occurred; subsequent builds consumed
+some of the recovered space.
+
+### Remaining dependencies — no false clearance
+
+| Remaining high records | Why still open | Exact next dependency |
+| --- | --- | --- |
+| ACL CVE-2026-54369: 30 | Tested 2.4.0 APIs do not repair existing GNU tar/rsync callers of legacy pathname APIs. | Compatible upstream caller migration and native archive/copy regression checks; no cosmetic library swap. |
+| GnuTLS CVE-2026-88647 / 88648: 20 each | Current primary vendor trackers still mark the installed branches unfixed. | Maintained, compatible corrections and certificate/TLS regression checks. |
+| GRUB CVE-2025-61662: 5 | The vulnerable code is also embedded in the actual EFI image; cloud package hooks rewrite both boot paths. | Compatible signed vendor fix, or a separately approved/tested native boot-chain plan with Proxmox console, boot-order evidence and recoverable boot/EFI backups. No bootloader write was performed. |
+| Host libmount CVE-2026-76642 / 78410: 1 each | Disk packages are fixed, but three host processes still map the previous library. | Coordinated VM 144 restart with backup/snapshot and guest-agent operations paused; verify fresh mappings and a thawed guest afterward. |
+
+The earlier guest-agent window ended at 16:07. Do not infer an active restart
+window from it. A normal restart activates libmount; it does **not** repair
+GRUB, ACL or GnuTLS. See the [boot-chain assessment](../deployment/maintenance/grub-assessment/README.md).
+
+The independent GitHub workflow remains active but overdue: its last genuine
+scheduled success was **09:42:44 UTC** when checked at 18:39. A manual success
+is not recurrence evidence. Local scheduling remains active. Compiled Grist
+Deno Rust and Pyodide/WASM inventory limits, and the separate Caddy/Proxmox
+hosts, remain outside complete package coverage; zero failed scan targets does
+not remove those limits.
+
+For a subsequent release, run the scanner and regenerate the private queue
+first, then refresh `closure-followup/primary-review.mjs`, and only then run
+the exact-payload reviewers. That cache selects the current unresolved IDs;
+an earlier cache can omit findings reopened by a new image. Apply only fresh,
+exact-scan proposals through the existing strict applier. Do not copy old
+decisions to new hashes, falsify installed versions or refresh expiry dates
+without renewed evidence. Preserve native/prior-fix tests and source offers
+when updating, as documented in [the maintenance policy](updates.md).
+
 ## Additional repairs deployed — 12 October, 18:04 UTC
 
 This supersedes the activation notes below for the following components only.

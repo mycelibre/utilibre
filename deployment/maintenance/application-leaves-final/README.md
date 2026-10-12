@@ -159,3 +159,41 @@ The main source index is maintained by the root release, not this helper.
 | [Tracker](https://tools.utilibre.org/utilibre-source/security-tracker-ip-20261012-source.tar.gz) | 79,848 | `b89379371c520b5aa6967860f6ff750d4dd041bc73802446ce3f2d18526dd0ee` |
 | [NLTK](https://tools.utilibre.org/utilibre-source/security-nltk-model-paths-20261012-source.tar.gz) | 252,786 | `e875c165dd705b434207cc3eb7821b9e65df9f51f35f401e3d065a15fe7868c6` |
 | [Braces](https://tools.utilibre.org/utilibre-source/security-braces-depth-20261012-source.tar.gz) | 375,912 | `d0c01098df9a612d6cf2f8849531faeba7dd09f593274c058e3de4a9d3dcb571` |
+
+### Retained braces 3.0.3 correction (12 October, final scan)
+
+The final scan additionally matched CVE-2024-4068 against our
+`3.0.3-utilibre.1` suffix: native semver orders that prerelease spelling below
+`3.0.3`. No installed version or byte was changed to remove the finding.
+`braces-retained.mjs` proves the retained upstream fix separately from the newer
+depth mitigation and `braces-review.mjs` produces a narrowly keyed draft.
+
+Use the final released [PR #40](https://github.com/micromatch/braces/pull/40)
+correction, commit `415d660c3002d1ab7e63dbf490c9851da80596ff`: the 10,000-character
+limit and parser check/clamp. The earlier `9f5b4cf` proposal cited by Debian's
+tracker was reverted; it must not be claimed present or used as reverse proof.
+The [reviewed advisory](https://github.com/advisories/GHSA-grv7-fg5c-xmjg) identifies
+3.0.3 as fixed. Primary sources were rechecked on 12 October 2026.
+
+Removing only our previously reviewed depth additions reproduces the original
+parser/constants from pinned upstream `74b2db2938fad48a2ea54a9c8bf27a37a62c350d`
+byte-for-byte; the constants also match the final correction commit. Exact live
+module/lock hashes and completed image ancestry remain required. In a read-only,
+network-isolated 128 MiB container with a 64 MiB Node heap, six oversized-input
+boundary tests were rejected, while 10,000 characters, a smaller configured
+limit, ordinary expansion, micromatch and the newer depth guard behaved correctly.
+Existing 764 upstream tests and two-account application evidence are reused,
+not represented as rerun. This is not an unrestricted-input memory-load test.
+
+Private evidence is `braces/retained-4068.json`; immutable upstream patch/raw files
+are under `braces/retained-4068/` with digest pins in the proof script. Run:
+
+```sh
+node deployment/maintenance/application-leaves-final/braces-retained.mjs
+node deployment/maintenance/application-leaves-final/braces-review.mjs
+```
+
+The first command uses the existing image and mounted dependencies read-only;
+the second prepares decisions only. CVE-2026-93687 keeps its separate existing
+mitigation. No deployment, runtime change, version laundering or ledger write
+occurred during this attribution.

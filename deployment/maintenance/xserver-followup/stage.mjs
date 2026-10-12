@@ -28,7 +28,7 @@ for(const [cve,commit] of fixes){
  const response=await fetch(url);assert(response.ok);const patch=await response.text();
  assert(patch.startsWith('From '+commit+' '));assert(patch.includes(cve));
  const file=root+'/'+cve+'.patch';fs.writeFileSync(file,patch);
- run('patch',['-p1','--batch','--reverse','--dry-run','-i',file],{cwd:tree});
+ run('patch',['-p1','--force','--batch','--fuzz=0','--reverse','--dry-run','-i',file],{cwd:tree});
  records.push({cve,commit,url,patchSha256:sha(file),fixedSourceReversePatchCheck:true});
 }
 const extract=root+'/candidate';fs.mkdirSync(extract);

@@ -1,5 +1,29 @@
 # Persistent source adaptations, reviewed 9 October 2026
 
+## Security maintenance follow-up, 12 October
+
+The patch-file counts below are dated historical snapshots, not a current
+inventory of all native security repairs. The current release record is in
+[the operator queue](work-queue.md); its linked `deployment/maintenance/`
+recipes record exact package/source pins, preserved vendor fixes, regression
+checks, application checks, corresponding-source offers and rollback identities.
+Some repairs use unchanged upstream packages; others rebuild a compatible
+native package. Neither can safely be replaced by a generic moving image tag.
+
+`scripts/maintenance-update-policy.py` inventories actual running images and
+installed host packages. The existing unattended-upgrade guard protects native
+repairs, including locally suffixed packages and explicitly reviewed vendor
+packages. Generic update helpers remain review-only except the existing guarded
+SearXNG updater. Manual administrative commands can still overwrite a repair;
+this is not a universal package-manager lock.
+
+For the next version, reproduce each applicable regression on the candidate,
+check that earlier privacy and security adaptations remain, then run its native
+user journey. Retire a local patch only when upstream's replacement passes those
+checks. Keep dependencies' findings separate from application-advisory decisions.
+The exact-image review expires and reopens on relevant change; a successful
+scan or a newer version string alone cannot clear an unresolved caller issue.
+
 Prefer native configuration and the application's own account, invitation,
 encryption and export features. The portal presents these features; it does not
 implement another identity store or permission system.

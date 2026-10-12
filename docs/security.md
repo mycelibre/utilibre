@@ -6,6 +6,23 @@ stuffing, spam, oversized requests, storage exhaustion, upstream blocking,
 container compromise, and operator error. This document records controls and
 residual risks; it is not a claim of complete security.
 
+## Current maintenance status, 12 October 2026
+
+The running-image, host-package and listed source-manifest scans now complete;
+the earlier execution/inventory failures described below are historical.
+Application advisory decisions are bound to exact deployed artifacts, and
+dependency findings retain separate, expiring evidence. Native compatibility
+repairs and their workflow checks are recorded in the
+[current operator queue](work-queue.md). That record also identifies outstanding
+vendor fixes, caller limitations and host activation requirements; this is not
+a claim that all vulnerabilities are fixed.
+
+Compiled Deno/Rust and Pyodide/WASM dependency coverage remains limited as
+documented in the [Grist sandbox record](../deployment/maintenance/sandbox-final/README.md).
+An image/package inventory does not establish complete compiled-component
+coverage. Separate Proxmox and Caddy hosts are not included in this VM's scans.
+Future update and patch-retirement gates are in [source-patches.md](source-patches.md).
+
 ## 11 October maintenance follow-up
 
 The earlier scanner execution failure and omitted runtime targets were repaired.
@@ -193,10 +210,15 @@ alone is sufficient.
 
 PrivateBin's server stores encrypted content, so the operator normally cannot
 moderate plaintext. Anonymous creation can attract illegal or abusive data,
-link spam, storage exhaustion, and request floods. Controls include a roughly
-2 MiB application limit, short expiry choices, disabled uploads and
-discussion, application traffic limiting, edge body/rate limits, bounded
-storage monitoring, and a safe abuse/deletion procedure.
+link spam, storage exhaustion, and request floods. Attachments are enabled with
+a 25,000,000-byte browser admission limit and a 35,000,000-byte native encrypted
+payload limit, allowing for encoding overhead. Direct clients cannot bypass the
+server's ciphertext limit, but it cannot inspect encrypted raw file sizes.
+Expiry is at most one week (one day by default); discussion stays disabled.
+Native traffic limiting, request-body bounds, expiry cleanup, a dedicated
+10 GiB project quota, low-space admission and a safe abuse/deletion procedure
+provide separate controls. These are not per-user slots or a concurrency promise.
+See [attachment and expiry checks](privatebin-uploads-2026-10-10.md).
 
 Encryption does not authenticate a paste sender, prevent someone with the full
 URL from reading it, hide request metadata, or erase backup copies
@@ -226,11 +248,19 @@ offboarding/rotation procedure.
 
 ## Persistence and backups
 
-Backups contain sensitive account and ciphertext data. Encrypt them, restrict
-operator access, keep them outside the live data paths, test restores in an
-isolated location, and delete expired generations. A live account/paste
-deletion cannot erase an older backup immediately; publish the retention
-window before accepting broader user data.
+Saved account work keeps recovery backups, which may contain sensitive
+plaintext or encrypted documents. Encrypt those backups, restrict operator
+access, keep them outside the live data paths, test restores in isolation and
+expire generations under the documented policy.
+
+PrivateBin's expiring content is excluded from new application backups; its
+configuration is recoverable, not new paste contents. Its current data lives on
+the separate temporary-content disk, whose Proxmox backup exclusion is
+owner-confirmed. Other temporary services have their own explicit boundaries in
+[backups.md](backups.md). Older backups and externally managed snapshots were
+not silently deleted: expiry/unlinking does not prove erasure of historic copies
+or physical media. Account deletion likewise cannot instantly remove older
+account backups.
 
 Never solve a low-disk event with an unreviewed recursive delete or broad
 Docker prune. Stop the affected service, identify exact growth, preserve needed
@@ -241,8 +271,12 @@ state, and use the documented removal procedure.
 Pin images by immutable version and digest; pin Redlib source and build bases.
 Review upstream release notes, license, artifacts, dependencies, migration and
 rollback behavior before updating one application at a time. Re-run security,
-privacy, localization, resource, and public-path checks. No unattended image
-updater or floating `latest` tag belongs in production.
+privacy, localization, resource, and public-path checks. Generic unattended
+image replacement and floating `latest` tags are not permitted. SearXNG is the
+documented exception: its existing guarded updater resolves an immutable
+candidate, runs the required checks and retains rollback. Other updates remain
+reviewed; native package protections prevent unattended replacement of retained
+repairs, but cannot prevent an administrator bypassing those safeguards.
 
 ## Incident priorities
 

@@ -10,12 +10,17 @@ import {inventory,command} from '../component-followup/inventory.mjs';
 import {payloadManifest} from '../vendor-leaves-final/dhi-proof.mjs';
 import {freshScan} from '../review-native-backports.mjs';
 import {validateDecision} from '../triage.mjs';
+import {applyVendorSeries,strictReverse} from './source-proof.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/xserver-followup-20261012',dhi=dir+'/dhi';
 const read=p=>JSON.parse(fs.readFileSync(p));
 const scan=read(root+'/security.json'),queue=read(root+'/security-queue.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
 const image=command('docker',['inspect','--format','{{.Image}}',container]);assert.equal(command('docker',['inspect','--format','{{.State.Running}}',container]),'true');
 assert.equal(scan.images.find(i=>i.id===image)?.status,'checked');
+if(command('docker',['exec',container,'dpkg-query','-W','-f=${Version}','xvfb'])==='2:21.1.16-1.3+deb13u4+dhi1+utilibre1'){
+ const{completed}=await import('../xvfb-single-screen-final/review-proof.mjs');const proof=completed('dhi',scan);
+ fs.writeFileSync(dir+'/dhi-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions:[],delegatedTo:'xvfb-single-screen-final-20261012/review.json',proof},null,2)+'\n');console.log('Exact new compiled DHI payload verified; decisions belong to the one-screen reviewer');process.exit(0);
+}
 const indexes=readIndexes();const stanzas=text=>text.split(/\n\s*\n/);
 const pkgIndex=stanzas(indexes[0].text),srcIndex=stanzas(indexes[1].text);
 const native=read(dir+'/native-current-dhi.json');assert.equal(sha(fs.readFileSync(dir+'/native-current-dhi.json')),nativeHash);nativeGate(native);
@@ -24,9 +29,10 @@ for(const [file,digest]of Object.entries(sourcePins)){assert.equal(sha(fs.readFi
 const temp=fs.mkdtempSync('/tmp/utilibre-xserver-dhi-proof-'),payloads=[];
 try{
  const tree=temp+'/source';command('dpkg-source',['-x',dhi+'/xorg-server_21.1.16-1.3+deb13u4+dhi1.dsc',tree]);
+ applyVendorSeries(tree);
  for(const [cve,fix]of Object.entries(fixes)){
   assert.equal(sha(fs.readFileSync(dir+'/'+cve+'.patch')),fix.sha256);
-  cp.execFileSync('patch',['-p1','--batch','--fuzz=0','--reverse','--dry-run','-i',dir+'/'+cve+'.patch'],{cwd:tree,stdio:'pipe',timeout:15000});
+  strictReverse(tree,dir+'/'+cve+'.patch');
  }
  for(const [pkg,pin]of Object.entries(packages)){
   const file=dhi+'/'+pkg+'_'+version.replace(':','%3a')+'_'+pin.architecture+'.deb';assert.equal(sha(fs.readFileSync(file)),pin.sha256);

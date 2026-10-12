@@ -34,5 +34,13 @@ test('unfinished overlay receipts never qualify and row identities remain separa
  const g={status:'passed',oldImage:'old',newImage:'new',rows:[{name:'one'},{name:'two',oldImage:'own-old',newImage:'own-new'}],completedAt:'2026-10-12T03:00:00Z'};
  assert.deepEqual(overlayRows({status:'prepared',groups:[g]}),[]);
  assert.deepEqual(overlayRows({status:'passed',groups:[{...g,status:'failed'}]}),[]);
+ assert.deepEqual(overlayRows({status:'passed',groups:[{...g,rows:[{name:'one',status:'failed'},{name:'two',status:'prepared'}]}]}),[]);
  const rows=overlayRows({status:'passed',groups:[g]});assert.equal(rows[0].oldImage,'old');assert.equal(rows[1].newImage,'own-new');assert.equal(rows[1].name,'two');
+});
+test('native relay row receipts require completed per-role releases',()=>{
+ const row={name:'relay',status:'passed',oldImage:'old',newImage:'new',completedAt:'2026-10-12T17:52:45Z'};
+ assert.deepEqual(overlayRows({status:'prepared',rows:[row]}),[]);
+ assert.deepEqual(overlayRows({status:'passed',rows:[{...row,status:'failed'}]}),[]);
+ assert.deepEqual(overlayRows({status:'passed',rows:[{...row,oldImage:undefined}]}),[]);
+ assert.deepEqual(overlayRows({status:'passed',rows:[row]}),[{name:'relay',oldImage:'old',newImage:'new',completedAt:row.completedAt}]);
 });

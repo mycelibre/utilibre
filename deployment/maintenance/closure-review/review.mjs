@@ -35,7 +35,7 @@ exec('docker',['run','--rm','--user','0','--network','none','--read-only','--tmp
 for name in ['flask','werkzeug']:
  shutil.copytree('/code/.venv/lib/python3.12/site-packages/'+name,'/tmp/proof/'+name,ignore=shutil.ignore_patterns('__pycache__'))
 for p in reversed(json.load(open('/proof/patches.json'))):
- subprocess.run(['patch','--batch','--reverse','--fuzz=0','-p2','-d','/tmp/proof','-i','/proof/'+p['file']],check=True,capture_output=True)
+ subprocess.run(['patch','--batch','--reverse','--force','--fuzz=0','-p2','-d','/tmp/proof','-i','/proof/'+p['file']],check=True,capture_output=True)
 print('passed')`]);
 proofs.push({service:'simplelogin',image:simple.newImage,native:direct,patches});
 for(const item of q.items.filter(x=>x.status==='needs-review'&&x.artifact===simple.newImage&&((x.package==='Flask'&&x.id==='CVE-2023-30861')||(x.package==='Werkzeug'&&['CVE-2023-25577','CVE-2024-34069','CVE-2023-23934'].includes(x.id))))){

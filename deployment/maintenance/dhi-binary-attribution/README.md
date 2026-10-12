@@ -58,3 +58,13 @@ not an automatic inherited exclusion. A concurrent scan or deployment aborts
 the check; a mismatched payload is reported as skipped and never waived.
 The raw scanner findings and installed versions remain intact. No rollback is
 needed because no application or production configuration was changed.
+
+The exporter also has one explicitly supported successor: `415f223b…` after
+the completed native one-screen Xvfb release from `906460df…`. This does not
+inherit an image-wide exemption. Before reviewing its two stale Perl records,
+the adapter verifies exact role, predecessor/successor, references, completed
+release, source/native/application gates and live Xvfb/common-package bytes.
+It then repeats the full signed Perl-package inventory and unchanged residual
+fragment checks above. Both original records remain supported; unknown later
+images, changed package files and affected sibling modules still fail closed.
+Frontend scope and versions are unchanged.

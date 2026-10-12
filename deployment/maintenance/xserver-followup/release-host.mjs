@@ -42,7 +42,7 @@ try{
  const sourceIndex=fs.readFileSync(dir+'/source-index.txt','utf8').split(/\n\n+/).find(b=>/^Version: 2:21\.1\.25-1$/m.test(b));assert(sourceIndex);
  for(const archive of stage.sourceArchives){assert.equal(sha(dir+'/sources/'+archive.file),archive.sha256);assert(sourceIndex.includes(archive.sha256+' '+archive.bytes+' '+archive.file));}
  run('dpkg-source',['-x',dir+'/sources/xorg-server_21.1.25-1.dsc',temp+'/source']);
- for(const [id,fix]of Object.entries(fixes)){assert.equal(sha(dir+'/'+id+'.patch'),fix.sha256);assert(fs.readFileSync(dir+'/'+id+'.patch','utf8').startsWith('From '+fix.commit+' '));run('patch',['-p1','--batch','--reverse','--dry-run','-i',dir+'/'+id+'.patch'],{cwd:temp+'/source'});}
+ for(const [id,fix]of Object.entries(fixes)){assert.equal(sha(dir+'/'+id+'.patch'),fix.sha256);assert(fs.readFileSync(dir+'/'+id+'.patch','utf8').startsWith('From '+fix.commit+' '));run('patch',['-p1','--force','--batch','--fuzz=0','--reverse','--dry-run','-i',dir+'/'+id+'.patch'],{cwd:temp+'/source'});}
  const simulation=run('apt-get',['--simulate','install',...packages.map(p=>deb(p,'new'))]);simulationGate(simulation);
  const dependencies=run('ldd',[temp+'/new/usr/bin/Xvfb']);assert(!dependencies.includes('not found'));
  const dependencyBytes=Object.fromEntries([...new Set(dependencies.match(/\/[\w./+-]+(?=\s+\()/g))].map(p=>[p,sha(p)]));assert(Object.keys(dependencyBytes).length>10);
