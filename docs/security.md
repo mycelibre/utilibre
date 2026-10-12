@@ -101,7 +101,9 @@ specific updates, tests and residual findings are in the toolbox review.
 ## Boundary summary
 
 - HTTP services use the separate Caddy edge, most through Cloudflare HTTP proxying.
-  Search and Binternet use DNS-only routes; TURN and Mumble have distinct native
+  The 12 October 2026 DNS-configuration check confirms that Search, Binternet,
+  newsletters and aliases are also HTTP-proxied; earlier DNS-only web observations
+  are historical. TURN and Mumble retain DNS-only records, distinct native
   media/voice listeners and scoped firewall rules.
 - Application listeners bind to one exact private address and accept traffic
   only from the exact edge peer.
@@ -292,8 +294,10 @@ repairs, but cannot prevent an administrator bypassing those safeguards.
 
 ## Residual risks
 
-Cloudflare processes proxied HTTP hostnames; DNS-only Search/Binternet and
-native voice/media listeners have separate paths as described above. The Caddy
+Cloudflare processes proxied HTTP hostnames, including Search, Binternet,
+newsletters and aliases as verified on 12 October 2026. This includes ordinary
+HTTP content visible at its TLS termination, not just authoritative DNS queries.
+Native TURN/Mumble listeners have separate DNS-only paths as described above. The Caddy
 edge handles hosted HTTP services. Upstream engines and sites can log server requests; Redlib can break or be blocked; FreshRSS feed fetching
 has an SSRF and content-ingestion surface; anonymous encrypted pastes can be
 abused; container and dependency vulnerabilities remain possible; and an

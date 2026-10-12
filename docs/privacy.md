@@ -106,52 +106,66 @@ For account deletion or lost MFA, contact
 | PrivateBin | Ciphertext, expiry/deletion metadata, request size, and ordinary connection metadata | No content recipient is required beyond the public ingress path | Ciphertext and metadata until expiry or deletion |
 | Internal RSSHub | Route requests made from FreshRSS | Source sites used by the requested route | Re-creatable Valkey cache; no public account data store |
 
-The October 9 authenticated, read-only DNS configuration check confirmed
-proxied apex/wildcard records. `search`, `binternet`, `newsletters` and `aliases`
-have explicit DNS-only web records; `translate` and `trip` inherit the proxied
-wildcard. Cloudflare provides authoritative DNS for the DNS-only hosts, not their
-HTTP proxy. `turn` and `mumble` also have direct DNS records for their native
-TCP/UDP services. Binternet's onion service uses Tor without the public HTTPS
-edge. The earlier public response checks remain separate evidence of actual
-HTTP routing; a DNS record alone does not verify every edge setting.
+The 12 October 19:11:16 UTC authenticated, read-only DNS configuration check
+confirmed proxied apex/wildcard records. `search` now has explicit proxied A and
+AAAA records; `binternet`, `newsletters` and `aliases` have explicit proxied A
+records. This supersedes the 9 October DNS-only classification of those four
+web hosts: their configured HTTPS path includes Cloudflare, where ordinary HTTP
+content is visible at TLS termination. `translate` and `trip` have no explicit
+records and inherit the proxied wildcard. `turn` and `mumble` still have DNS-only
+A records for their native TCP/UDP services. A separate 19:13:10 UTC check
+confirmed `speed.utilibre.org` retains its DNS-only A record for direct HTTPS
+speed measurements. Binternet's onion service uses Tor
+without the public HTTPS edge. SMTP routing is separate and is not established
+by a web host's proxy flag. The earlier public response checks remain separate
+evidence of actual HTTP routing; a DNS record alone does not verify every edge
+setting.
 
 Proxied HTTPS traffic reaches Cloudflare, then the separate Caddy edge, then the
 application VM. Ordinary HTTP payloads can be read at TLS termination. Browser-
 encrypted payloads such as PrivateBin ciphertext remain encrypted at those
 terminators in the normal application flow; metadata is still visible. The
 operator confirmed on 8 October that the application and Caddy edge VMs share
-the same physical Hetzner server in Germany. Its log settings remain unverified;
+the same physical Hetzner server in Germany. The Caddy logging correction is
+owner-applied, without an independently checked post-change runtime result;
 server location alone does not establish the operator's legal jurisdiction. Each tool's disclosure
 identifies its actual path. Edge handling and retention depend
 on operator configuration outside these Compose projects. Network Error
 Logging headers (`NEL` and `Report-To`) were absent in the October 8 reachable-
 host audit. This checks the observed response headers, not every provider-side
-logging or telemetry setting. After the owner corrected access, the October 9
-configuration audit could read zone settings, cache/WAF entrypoints and the
-complete Web Analytics site list. NEL and Utilibre Web Analytics are disabled.
-The initial API correction was denied; after the owner's dashboard correction,
-the 18:06:47 UTC check verified matching-request logging off while the Skip rule
-remained enabled with its other fields/order unchanged. Provider internal
-operational/security retention remains unverified;
+logging or telemetry setting. The 12 October GET-only configuration audit could
+read zone settings, cache/WAF entrypoints and all 15 Web Analytics site records.
+NEL and Utilibre Web Analytics remain disabled. All three enabled custom Skip
+rules have matching-request logging disabled; a separate enabled Block rule has
+no explicit logging field, so this is not a claim that blocked requests or other
+security events are never logged. Provider internal operational/security
+retention remains unverified;
 do not publish a deletion duration. See the current evidence below and
 [Cloudflare proxy status](https://developers.cloudflare.com/dns/proxy-status/)
 for the DNS-only/HTTP-proxy distinction, not evidence of Utilibre's settings.
 
-## Provider policy and endpoint review, 9 October 2026
+## Provider policy and endpoint review, 9 October 2026 (Cloudflare configuration refreshed 12 October)
 
 This review reads selected configuration and public primary policies, not user
 content or provider logs. It changes disclosure only; services, useful caches,
-providers and backup retention stay unchanged. The compact DNS result is private
-at `/opt/utilibre/reports/provider-facts-20261009/cloudflare-dns.json` and contains
-only reviewed record names/types/proxy status, not API credentials.
+providers and backup retention stay unchanged by this review. The fresh compact
+DNS result is private at
+`/opt/utilibre/reports/cloudflare-dns-recheck-20261012T1912Z.json`; it contains
+only the ten reviewed hostnames, record types, proxy flags and completeness
+checks, without IP addresses, record contents, identifiers or API credentials.
+The supplemental speed-host check is
+`/opt/utilibre/reports/cloudflare-speed-dns-recheck-20261012.json` with the same
+limited output. No unrelated zones or mail-provider records were enumerated.
+The 9 October snapshot remains historical evidence at
+`/opt/utilibre/reports/provider-facts-20261009/cloudflare-dns.json`.
 
 | Installed product / endpoint | Verified fact and policy scope | Remaining limit |
 | --- | --- | --- |
-| Cloudflare HTTPS proxy / authoritative DNS | Proxied and DNS-only records are distinguished above and in the bilingual privacy page. The active zone has Free Website plan; settings and all 14 Web Analytics site records are readable. NEL and Utilibre Web Analytics are disabled. [Product documentation](https://developers.cloudflare.com/dns/proxy-status/) explains the traffic distinction. | The custom Skip rule remains enabled with matching-request logging disabled after the owner's dashboard correction, verified at 18:06:47 UTC. Logpull is unavailable on this plan. The owner reports Logpush is not used; this was not independently verified. Caddy runtime configuration and provider internal operational/security retention remain unverified. |
+| Cloudflare HTTPS proxy / authoritative DNS | Proxied and DNS-only records are distinguished above and in the bilingual privacy page. The 12 October 19:08:16 UTC audit verified the active Free Website zone, readable settings and all 15 Web Analytics site records. NEL and Utilibre Web Analytics are disabled. Three enabled Skip rules have matching-request logging disabled; the fourth enabled custom rule is Block with no explicit logging field. [Product documentation](https://developers.cloudflare.com/dns/proxy-status/) explains the traffic distinction. | Logpull is unavailable on this plan. Both zone/account Logpush job-list requests returned 403/code 10000; the owner reports Logpush is unused, which is not independently verified. The 11 October Caddy correction is owner-applied, without an independently checked post-change runtime result. Other security/operational logging and exact edge/provider retention remain unverified. |
 | Cloudflare public STUN | Galene uses `stun.cloudflare.com:3478` plus Utilibre's own authenticated UDP/TLS TURN. PairDrop switched to Utilibre-only STUN/TURN on 11 October; `WS_FALLBACK=false` remains. The [Realtime FAQ](https://developers.cloudflare.com/realtime/turn/faq/) confirms Galene's free STUN endpoint. | No verified Cloudflare STUN-metadata deletion deadline. Cloudflare TURN assurances are not proof of STUN retention or a policy for Utilibre-operated TURN. PairDrop's HTTPS signaling still crosses its Cloudflare proxy. |
 | Server-side recursive DNS | TRIP, 13ft and Unfurl configure 1.1.1.1 and 9.9.9.9 for approved outbound hostname resolution. The [Cloudflare resolver policy](https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/) specifies ordinary-log deletion within 25 hours, separate packet sampling, indefinitely retained aggregates and limited research sharing with APNIC. [Quad9](https://quad9.net/privacy/policy/) distinguishes aggregate query statistics from routine user-IP logging and security exceptions. | These are provider statements for recursive DNS, not audited deletion or promises about authoritative DNS, HTTPS, STUN, submitted URLs or content. |
 | TransLite 7b4b8e5-p3 (unchanged p2 parsers) | The p2 parser verification remains applicable: p3 changes the bilingual provider notice, not the parsers or selected endpoints. Reviewed parser hashes match the installed source: consumer Google `translate_a/single`, free DeepL `www2.deepl.com/jsonrpc`, Yandex `tr.json/translate`, and DuckDuckGo `translation.js`. [DuckDuckGo](https://duckduckgo.com/duckduckgo-help-pages/results/translation) identifies Microsoft downstream. [DeepL section 3](https://www.deepl.com/en/privacy) permits free-service model improvement and prohibits personal data; paid/API assurances do not describe this configured endpoint. Yandex receives the text as a URL query value even though the native call uses POST. | No single content/metadata deletion deadline is established for these endpoints. [Google](https://policies.google.com/privacy) and [Yandex](https://yandex.com/legal/confidential/en/) describe purpose-dependent retention. A provider URL log could include submitted Yandex text; logging there was not inspected. |
-| Addy 1.7.3 / local PMG | Mail and attachments are readable during local forwarding and by the destination mail provider. The HTTPS hostname uses Cloudflare DNS only; Hetzner hosts the application and Caddy VMs in Germany. Native local DKIM/SPF/DMARC verification is deployed with DNS lookups, stripped untrusted decision headers and no external content scanner. The owner confirmed one native forward to Gmail with SPF/DKIM/DMARC passing via PMG selector `pmg`, then receipt of the native Gmail reply in the original sender’s inbox. Separately retained Postfix Spamhaus DNSBL checks send client-IP and mail-domain metadata through the configured resolver, not message bodies; an open-resolver warning prevents a blanket working-filter claim. [Deployment and authentication evidence](addy-deployment-2026-10-09.md#deployed-reply-authentication-1432-utc) distinguishes the seven isolated cases from that delivery test. | The controlled exchange does not establish every sender/provider’s delivery. Application encryption-at-rest keys are operator-held; this is not zero-knowledge mail. Local verifier error logs, mail queue/failed-delivery records and same-VM backups have the separate retention described in the deployment record; gateway, resolver, Spamhaus and destination-provider retention is not established by these tests. |
+| Addy 1.7.3 / local PMG | Mail and attachments are readable during local forwarding and by the destination mail provider. The 12 October DNS check marks the HTTPS hostname as Cloudflare-proxied, superseding its former DNS-only classification; this exposes ordinary web requests at Cloudflare's TLS termination, not a claim that SMTP mail transits its HTTP proxy. Hetzner hosts the application and Caddy VMs in Germany. Native local DKIM/SPF/DMARC verification is deployed with DNS lookups, stripped untrusted decision headers and no external content scanner. The owner confirmed one native forward to Gmail with SPF/DKIM/DMARC passing via PMG selector `pmg`, then receipt of the native Gmail reply in the original sender’s inbox. Separately retained Postfix Spamhaus DNSBL checks send client-IP and mail-domain metadata through the configured resolver, not message bodies; an open-resolver warning prevents a blanket working-filter claim. [Deployment and authentication evidence](addy-deployment-2026-10-09.md#deployed-reply-authentication-1432-utc) distinguishes the seven isolated cases from that delivery test. | The controlled exchange does not establish every sender/provider’s delivery. Application encryption-at-rest keys are operator-held; this is not zero-knowledge mail. Local verifier error logs, mail queue/failed-delivery records and same-VM backups have the separate retention described in the deployment record; gateway, resolver, Spamhaus and destination-provider retention is not established by these tests. |
 | TRIP map/search/routing | Browser OSMF/Fastly tiles, server Photon search and FOSSGIS routes have distinct recipients, conditions and request limits. Primary policies and exact installed controls are recorded in [TRIP's review](trip-review-2026-10-09.md#provider-policy-fit). | No current endpoint-specific deletion deadline was established for OSMF tile logs, Photon API queries or FOSSGIS route logs. An OSMF analytics period is not a tile-log period. |
 | Private LibreMDB 4.5.0-p1 | The chosen native backend is IMDb's internal GraphQL endpoint, not a licensed dataset/API integration. Current [data-use conditions](https://help.imdb.com/article/imdb/general-information/can-i-use-imdb-data-in-my-software/G5JTRESSHJBBHTGX) and its response disclaimer do not establish permission for public operation. Technical/private checks are recorded in [the frontend review](frontend-reliability-2026-10-09.md#libremdb-functioning-private-build-distinct-provider-condition). | Permission covering Utilibre's public use is unverified. No permission request, provider replacement or public activation was performed. This is separate from the program's software licence. |
 
@@ -176,18 +190,20 @@ gateway are unchanged from p2. No translation text was sent for the p3 notice
 check; the earlier native translation-flow evidence remains distinct. No map
 query, message or user-data mutation was performed for this provider-copy review.
 
-## Current configuration evidence — 9 October
+## Current configuration evidence, 12 October
 
-The earlier 16:01 and 17:20 permission-denied reports are historical. After the
+The 9 October 16:01 and 17:20 permission-denied reports are historical. After the
 owner corrected access, the zone identity/settings, custom WAF entrypoint and
-Web Analytics configuration reads succeeded. The credential remains in a
+Web Analytics configuration reads succeeded. A fresh GET-only check completed
+at **2026-10-12 19:08:16 UTC**, after checking the VM clock against the current
+UTC clock. The credential remains in a
 root-only 0700 directory under `/opt/utilibre/provider-secrets`; files are 0600.
 Neither token, account/zone IDs nor private setup history belongs in Git.
 
 The corrected auditor reads every Web Analytics page (bounded to 20 pages),
 deduplicates site IDs internally and uses `ruleset.enabled`, not a nonexistent
 top-level enablement field. An incomplete list, missing record or unknown field
-is not treated as disabled. The latest read covers **14 of 14** site records.
+is not treated as disabled. The latest read covers **15 of 15** site records.
 It prints neither unrelated site names nor site/account/zone identifiers.
 
 | Configuration | Observed result | Scope |
@@ -196,13 +212,18 @@ It prints neither unrelated site names nor site/account/zone identifiers.
 | NEL | `enabled=false` | This optional reporting setting is disabled, not proof that the provider keeps no other logs. |
 | Browser/security/cache settings | Integrity check on, security medium, browser TTL 14,400 seconds, cache level aggressive | Read-only observations; unchanged. |
 | Custom cache-phase entrypoint | 404 / code 10003 | No entrypoint found in that phase; not a permissions denial or a complete audit of every cache mechanism. |
-| Custom WAF entrypoint | One enabled Skip rule; matching-request logging **disabled** | Verified at 18:06:47 UTC after the owner's dashboard correction. Security expression, action, skip targets, rule count and ordering match the private pre-change snapshot. The earlier API 403 did not prevent the later dashboard correction. |
+| Custom WAF entrypoint | Four enabled rules: three Skip rules with matching-request logging **disabled**, plus one Block rule with no explicit logging field | Configuration observed on 12 October; no rule was changed. The absent field on the Block rule is not evidence that its requests or other security events are unlogged. |
 | Logpull | Verified Free Website plan | [Unavailable on this plan](https://developers.cloudflare.com/logs/logpull/), not a missing read grant. This does not describe internal security/operational logs. |
-| Logpush | Owner says not subscribed/used | Owner-reported, not independently listed. [Listing jobs requires Logs Write](https://developers.cloudflare.com/logs/logpush/permissions/); do not expand privileges just to confirm a product the owner does not use. |
+| Logpush | Zone and account job-list requests both return 403 / code 10000 | The owner says it is unused; this remains owner-reported. [Listing jobs requires Logs Write](https://developers.cloudflare.com/logs/logpush/permissions/), so the requested read permissions do not independently verify an empty list. No write access is requested. |
 
-Private sanitized evidence is
+Fresh sanitized evidence is
+`/opt/utilibre/reports/cloudflare-config-recheck-20261012T1907Z.json`.
+The checker reports no privacy findings; its exit status is 2 solely because
+the two Logpush configuration requests were denied. Nine focused checker tests
+pass. No provider settings, useful caching, credentials, retention or services
+were changed. The older successful audit is
 `/opt/utilibre/reports/provider-facts-20261009/cloudflare-corrected-audit.json`.
-The earlier before/after dashboard observations are in that same directory,
+Earlier before/after dashboard observations are in that same historical directory,
 including `cloudflare-analytics-after-disable-2026-10-09T17-42-06-288Z.json`.
 Only configuration was read; no visitor logs or analytics reports were fetched.
 
@@ -218,7 +239,7 @@ verification. Do not reuse it if the operator later enables that product.
 The checker does not change provider settings. No assertion of provider-wide
 zero tracking or log deletion follows from a successful configuration read.
 
-### Completed Cloudflare correction
+### Completed Cloudflare correction, 9 October
 
 The owner turned **Log matching requests** off in **Security → Security rules →
 Custom rules**. The rule must remain enabled with its expression and skipped
@@ -242,7 +263,7 @@ logging toggle on that same rule after reviewing the private snapshot. Do not
 replace the entire ruleset or replay an old matching expression over newer work.
 Turning logging back on reintroduces the disclosed privacy issue.
 
-### Separate Caddy VM
+### Subsequent Cloudflare correction, 10 October
 
 Cloudflare configuration was independently rechecked after the owner's
 10 October correction: all three enabled custom Skip rules have matching-request
@@ -254,6 +275,11 @@ The checker now treats enabled matching-request logging or analytics as a
 privacy finding/nonzero exit, separate from successful API access. Nine focused
 tests pass. Logpush remains owner-reported unused, not independently certified;
 provider-internal retention remains outside these settings.
+
+The 12 October results above supersede this dated site-count observation and
+confirm that all three Skip rules still have matching-request logging disabled.
+
+### Separate Caddy VM
 
 11 October owner-supplied running configuration (Caddy **2.11.1**): both HTTP
 servers omit access logging and have tracing/credential logging disabled. The

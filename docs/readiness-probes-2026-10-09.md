@@ -61,3 +61,42 @@ security restriction was relaxed. Diagnostic evidence is private under
 is `bounded-fresh.json`, reproduced by `check-bounded-fresh.mjs`. Probing stopped
 after that check. The original
 snapshot remains under `upstream-facts-20261009/status.json`.
+
+## Addy follow-up, 12 October 2026
+
+The deployed portal now uses the bounded six-probe helper. Its 19:07:10 UTC
+snapshot reported 104 of 105 configured services operational, with only Addy
+unavailable. A bounded follow-up found its ordinary login page working through
+each intended path:
+
+| Path | Result |
+| --- | --- |
+| Public `https://aliases.utilibre.org/login`, host IPv6 | 200 in 102 ms |
+| Host HTTPS through the existing LAN Caddy edge | 200 in 25 ms |
+| Existing loopback web gateway, correct Host header | 200 in 8 ms |
+| Native Node HTTPS probe inside the live portal | 200 in 34 ms |
+
+The portal check used the configured `/etc/hosts` mapping to `10.10.1.3`, kept
+the original hostname and TLS verification, and retained its 2,500 ms socket
+timeout. DNS lookup, TCP connection and TLS completed. The public response was
+the native login page, not a challenge. Browser URLs and DNS were not changed.
+
+The Addy app started at 19:04:29 UTC; its gateway, database and Redis started
+around 19:04:11 UTC. All remained running with zero Docker restarts and no
+out-of-memory flag. MariaDB reported healthy, and the existing guarded SMTP
+systemd unit was active with a successful result. Startup proximity is context,
+not proof of the earlier failed probe's cause; that snapshot retains no specific
+exception. No continuing failure was reproduced.
+
+No service/configuration change or restart was made. No account records, private
+mail, SMTP DATA or real delivery test were involved. These checks establish web
+login readiness only, not a new end-to-end mail-delivery guarantee. The private
+evidence is `/opt/utilibre/reports/addy-readiness-20261012/`, including
+`public.json`, `route-summary.json` and selected `lifecycle.json` metadata.
+
+The root integration check at 19:20:01 UTC on 12 October subsequently received
+operational results for all 105 configured probes after the provider-copy
+release. Existing LAN-edge overrides remain for four probes; their result is
+not independent evidence of the Cloudflare/public path. Public Addy login was
+checked separately above. The portal's 30 public rendering checks cover the
+changed EN/ES privacy and guide/catalogue surfaces, not mail delivery.

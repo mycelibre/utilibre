@@ -1,14 +1,31 @@
 # SearXNG public-instance migration
 
-Status on 2026-10-06: [request 941](https://github.com/searxng/searx-instances/issues/941)
-is on the maintainer's two-week waitlist. The operator has moved search to
-DNS-only/direct TLS. The application was updated on 2026-10-07 to
+## Current routing gate, 12 October 2026
+
+The 19:11 UTC read-only Cloudflare DNS-configuration check found both the A and
+AAAA records for `search.utilibre.org` set to `proxied=true`. Public search
+HTTPS therefore passes through Cloudflare before the Caddy edge. The earlier
+DNS-only/direct-TLS observation is historical. **The listing's final-webserver
+control requirement is currently unmet**; working searches or a prior waitlist
+entry do not establish present eligibility. This check changed no DNS or edge
+configuration and sent no message to the maintainers.
+
+Sanitized configuration evidence:
+`/opt/utilibre/reports/cloudflare-dns-recheck-20261012T1912Z.json`.
+
+## Historical application and submission checks
+
+On 2026-10-06, [request 941](https://github.com/searxng/searx-instances/issues/941)
+was on the maintainer's two-week waitlist. The operator had moved search to
+DNS-only/direct TLS at that checkpoint. The application was updated on 2026-10-07 to
 `2026.10.7-6671d89be`, pinned by
 digest through `SEARXNG_IMAGE`. English and Spanish browser searches pass through
 the real HTTPS Caddy route using its private address and normal certificate
-verification. Public IPv4 times out from this application VM and it has no IPv6
-route; that vantage cannot independently establish public uptime. The operator
-reports public searches working. No limiter or proxy trust was weakened.
+verification. At that checkpoint public IPv4 timed out from this application VM
+and it had no IPv6 route; that vantage could not independently establish public
+uptime. IPv6 connectivity was subsequently established on 9 October, as recorded
+in [the routing evidence](dumb-ipv6-readiness-2026-10-09.md). The operator reported
+public searches working. No limiter or proxy trust was weakened by those checks.
 
 The 2026-10-07 post-update check found `/metrics` correctly returning 404 but
 `/stats` returning HTTP 200 with an empty-data page through the deployed private
@@ -32,7 +49,9 @@ permitted; its HTTP proxy is not. Admission also requires updates within one
 week, at least 90% monthly uptime, no tracking or manipulation of the instance's
 ranking, and ongoing maintenance. There is a two-week wait after approval.
 Confirm domain ownership and those commitments before submitting the issue;
-a successful upgrade alone does not satisfy them.
+a successful upgrade alone does not satisfy them. The checklist was re-read on
+12 October; its restriction on Cloudflare HTTP proxying remains explicit. The
+current DNS flags above do not meet it.
 
 The application keeps `server.public_instance`, the limiter, CSS link tokens,
 HTML-only output, POST search forms, image proxying, query-log redaction,
@@ -68,9 +87,12 @@ records first. Keep a working administrative session open.
 6. Test from outside using `curl --resolve search.utilibre.org:443:EDGE_PUBLIC_IP
    https://search.utilibre.org/` with normal certificate verification. Confirm
    the certificate, HTML, health, and browser searches before changing DNS.
-7. Set only the search hostname's A record to the verified edge address and
-   turn its proxy off (DNS-only). Publish AAAA only after end-to-end IPv6
-   testing; remove any stale search AAAA that points elsewhere. Leave all
+7. If the operator elects to complete this migration, set only the search
+   hostname's A record to the verified edge address and turn its proxy off
+   (DNS-only). The currently proxied AAAA must also be reconciled: retain a
+   DNS-only AAAA only after end-to-end public edge IPv6 testing, and remove any
+   stale search AAAA that points elsewhere. Working application-VM outbound IPv6
+   alone does not prove that public edge path. Leave all
    unrelated records unchanged. Verify authoritative and public DNS answers.
 
 ## Checks before submission

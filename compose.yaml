@@ -17,8 +17,9 @@ services:
     build:
       context: ./portal
     image: ${PORTAL_IMAGE:-public-utility-portal:0.1.0}
-    # Preserve hostname/TLS for mail-tool readiness probes through the LAN edge.
-    # The VM cannot use the public-IP return path; browser URLs are unchanged.
+    # These readiness probes use the LAN edge, preserving hostname/TLS after
+    # earlier public-IP return-path failures. They do not test Cloudflare's hop;
+    # browser URLs and public DNS are unchanged. Check public delivery separately.
     extra_hosts:
       - "newsletters.utilibre.org:${EDGE_PROXY_IP:-10.10.1.3}"
       - "aliases.utilibre.org:${EDGE_PROXY_IP:-10.10.1.3}"

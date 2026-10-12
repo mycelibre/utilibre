@@ -1,5 +1,41 @@
 # Operator work queue — reconciled 12 October 2026
 
+## Provider facts published, 12 October, 19:20 UTC
+
+The renewed Cloudflare reads work. GET-only configuration and DNS checks found
+that Search, Binternet, newsletters and Addy now use the HTTP proxy; earlier
+DNS-only claims were replaced in EN/ES privacy notes, catalogue disclosures,
+mail guides and operational documentation. SMTP delivery is a separate route.
+LibreSpeed, TURN and Mumble still have DNS-only records. The operator's DNS and
+provider settings were not changed to fit the copy.
+
+Web Analytics and Network Error Logging are disabled for Utilibre. All three
+active Skip rules disable matching-request logging; the separate Block rule has
+no explicit logging field. This does not establish the absence or retention of
+other Cloudflare logs. Logpush listing remains permission-denied, and the owner
+reports it unused. The Caddy correction is owner-applied; its post-change
+runtime and exact edge/provider/mailbox retention remain unverified. Search's
+current HTTP proxy also means its documented SearXNG directory requirement is
+unmet. No maintainer messages or new submissions were sent.
+
+The deployed portal is `public-utility-portal:0.1.0-provider-facts-20261012`;
+source revision `20261012-provider-facts`. Production build, lint, typecheck,
+120 unit tests, and 30 public EN/ES desktop/mobile/no-JavaScript checks pass.
+All 105 configured readiness probes pass at 19:20:01 UTC; those include internal
+and LAN-edge checks, not complete public workflows or capacity measurements.
+Addy's public login and direct edge/native probes also pass independently. No
+new mail was sent. The image scan preserves the previous 21-package inventory
+and its one medium finding, with no high/critical finding; this does not clear
+any other service or the separate security work below.
+
+Only the portal was recreated. The prior image/configuration and all data and
+backup retention remain unchanged. Public source verification and guarded
+rollback evidence are under
+`/opt/utilibre/reports/provider-publication-20261012/`. Current provider evidence
+and remaining limits are in [privacy.md](privacy.md); Addy's scoped web checks
+are in [the readiness record](readiness-probes-2026-10-09.md).
+
+
 ## Final native repair checkpoint — 12 October, 18:51 UTC
 
 This is the current checkpoint; earlier activation notes and counts below are

@@ -12,8 +12,10 @@ no server compiler, cloud account or collaboration service is added.
 
 11 October addition: LibreSpeed Go 1.1.6-p1 is installed and checked on
 `10.10.1.43:3225`, with public destination `https://speed.utilibre.org/`.
-The DNS-only HTTPS edge and complete bilingual browser flows pass. These were
-tested over LAN routing to the real edge, not calibrated external ISP benchmarks.
+The 12 October 19:13 UTC read-only DNS check confirms its A record remains
+DNS-only, with no AAAA or CNAME record. The complete bilingual browser flows
+passed on 11 October over LAN routing to the real HTTPS edge; these were not
+calibrated external ISP benchmarks.
 [Installation, limits, bilingual guides, verification and LaTeX/chat decisions](librespeed-latex-chat-2026-10-11.md).
 
 Creative batch, 7 October 2026 (static applications; no accounts):
@@ -38,6 +40,13 @@ See [`FOSS_POLICY.md`](../FOSS_POLICY.md).
 A service is public only when the catalog, runtime enablement, private
 listener, edge route, and current checks agree. This document is not an uptime
 promise.
+
+Public web routing was rechecked on 12 October 2026: Search, Binternet,
+newsletters and aliases currently use Cloudflare's HTTP proxy before the
+separate Caddy edge. They must not be described as DNS-only web services on
+the basis of the historical 9 October observations. Native TURN and Mumble
+retain separate DNS-only records. See [current edge routing](edge-routing.md)
+and [the SearXNG listing requirement](searxng-public-instance.md).
 
 ## Operated public services
 
