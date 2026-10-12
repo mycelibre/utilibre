@@ -13,4 +13,9 @@ export const additionalOverlayReceipts = [
   'xlib-followup-20261012/release.json',
   'openldap-followup-20261012/release.json',
   'tiff-bookworm-followup-20261012/release.json',
+  'hdf5-native-followup-20261012/release.json',
+  'heif-bookworm-followup-20261012/release.json',
+  'perl-ubuntu-followup-20261012/release.json',
+  'penpot-heif-alignment-20261012/penpot-release.json',
+  'gdal-avif-followup-20261012/release.json',
 ];

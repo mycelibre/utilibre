@@ -1,6 +1,9 @@
 # Native GDAL AVIF reader follow-up
 
-Prepared on 2026-10-12; root-maintainer release is separate from preparation.
+Deployed on 2026-10-12 after separate root-maintainer preparation and release.
+The published source archive was downloaded over HTTPS and its complete hash
+verified. Live native bytes, namespace-dependent services and Gathio health
+passed; the completed private release receipt records the exact image.
 Only `libgdal32` changes from `3.6.2+dfsg-1+utilibre1` to
 `3.6.2+dfsg-1+utilibre2` in the existing Gathio native database image.
 The predecessor is the completed HDF5 → HEIF image, not an older mutable tag.

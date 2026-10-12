@@ -5,10 +5,12 @@ import {createHash} from 'node:crypto';
 import {readFileSync,writeFileSync,mkdirSync,openSync,closeSync,statfsSync} from 'node:fs';
 import {chromium} from '../../../portal/node_modules/playwright-core/index.mjs';
 import {releaseReviewedRow} from '../release-postgres-vendor-security.mjs';
-import {inputs as nativeInputs,liveNative,directory as followupDirectory} from '../penpot-native-followup/release-inputs.mjs';
+import {followupInputModule} from './penpot-followup-policy.mjs';
+import {refreshStaticUpstreams} from '../xlib-followup/policy.mjs';
 process.umask(0o077);
-const followup=process.argv[3]==='--rsvg-tiff';
-assert(process.argv.length<=4&&(!process.argv[3]||followup));
+assert(process.argv.length<=4);
+const selected=followupInputModule(process.argv[3]),followup=selected!==null;
+const {inputs:nativeInputs,liveNative,directory:followupDirectory}=followup?await import(selected):{};
 const directory=followup?followupDirectory:'/var/lib/utilibre-maintenance/native-final',receipt=directory+'/penpot-release.json';
 const cwd='/home/ubuntu/freetools/deployment/expanded';
 const compose=['compose','--env-file',cwd+'/.env','--project-directory',cwd,'-p','utilibre-expanded','-f',cwd+'/compose.yaml'];
@@ -55,7 +57,7 @@ async function snapshot(){
   toFile(target+'/files.tar.gz','tar',['-C','/opt/utilibre/expanded-data','-czf','-','penpot-assets']);
   toFile(target+'/private-config.tar.gz','tar',['-C',cwd,'-czf','-','.env']);
   writeFileSync(target+'/SHA256SUMS',command('sha256sum',['penpot.dump','files.tar.gz','private-config.tar.gz'],{cwd:target}));
- }finally{docker(...compose,'start',...paused);}
+ }finally{docker(...compose,'start',...paused);refreshStaticUpstreams('expanded',docker);}
  await ready();
  command('sha256sum',['--check','SHA256SUMS'],{cwd:target});command('tar',['-tzf',target+'/files.tar.gz']);
  const database=inspect('utilibre-expanded-penpot-db-1'),name='maintenance-penpot-restore-'+process.pid;
@@ -95,9 +97,10 @@ if(process.argv[2]==='prepare'){
     const x=inspect(name);
     if(name===row.name&&x.State?.Running){try{await ready(1);x.State.Health={Status:'healthy'};}catch{x.State.Health={Status:'starting'};}}
     return x;
-   },start:()=>docker(...compose,'up','-d','--no-deps','--no-build','--pull','never',row.service),rollback:()=>{
+   },start:()=>{docker(...compose,'up','-d','--no-deps','--no-build','--pull','never',row.service);refreshStaticUpstreams('expanded',docker);},rollback:()=>{
     const path=directory+'/penpot-rollback-'+row.service+'.json';writeFileSync(path,JSON.stringify({services:{[row.service]:{image:row.oldRef}}}));
     docker(...compose,'-f',path,'up','-d','--no-deps','--no-build','--pull','never',row.service);
+    refreshStaticUpstreams('expanded',docker);
    }});
   }
   for(const row of report.rows){
@@ -114,6 +117,7 @@ if(process.argv[2]==='prepare'){
    for(const row of report.rows){assert.equal(inspect(row.oldRef).Id,row.oldImage);assert.equal(normalized(config()[row.service]),row.configHash);}
    const path=directory+'/penpot-rollback-pair.json';writeFileSync(path,JSON.stringify({services:Object.fromEntries(report.rows.map(row=>[row.service,{image:row.oldRef}]))}));
    docker(...compose,'-f',path,'up','-d','--no-deps','--no-build','--pull','never',...report.rows.map(row=>row.service));
+   refreshStaticUpstreams('expanded',docker);
    await ready();await publicGate();for(const row of report.rows)assert.equal(inspect(row.name).Image,row.oldImage);report.rollback='verified';
   }catch{report.rollback='unverified';}
   save();throw Error('Penpot release failed; exact-image rollback '+report.rollback+'. Reconcile source pins before continuing. No user data restored.');

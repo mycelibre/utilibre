@@ -247,7 +247,7 @@ services:
 
   penpot-backend:
     <<: *runtime
-    image: utilibre-penpot-backend:xlib-security-20261012
+    image: utilibre-penpot-backend:2.18.3-heif-aligned-20261012
     user: "1001:1001"
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
@@ -303,7 +303,7 @@ services:
 
   penpot-exporter:
     <<: *runtime
-    image: utilibre-penpot-exporter:xlib-security-20261012
+    image: utilibre-penpot-exporter:2.18.3-heif-aligned-20261012
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
       PENPOT_INTERNAL_URI: http://penpot-frontend:8080
