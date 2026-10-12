@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   grist:
     <<: *runtime
-    image: utilibre-util-linux-records-grist:security-20261012
+    image: utilibre-curl-records-grist:security-20261012
     user: '1000:1000'
     cpus: 2
     mem_limit: 8g

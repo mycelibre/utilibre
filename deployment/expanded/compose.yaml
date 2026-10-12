@@ -61,7 +61,7 @@ services:
 
   breezewiki:
     <<: *runtime
-    image: utilibre-util-linux-expanded-breezewiki:security-20261012
+    image: utilibre-curl-expanded-breezewiki:security-20261012
     read_only: true
     user: "1000:1000"
     environment:
@@ -247,7 +247,7 @@ services:
 
   penpot-backend:
     <<: *runtime
-    image: utilibre-util-linux-expanded-penpot-backend:security-20261012
+    image: utilibre-curl-expanded-penpot-backend:security-20261012
     user: "1001:1001"
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
@@ -303,7 +303,7 @@ services:
 
   penpot-exporter:
     <<: *runtime
-    image: utilibre-util-linux-expanded-penpot-exporter:security-20261012
+    image: utilibre-curl-expanded-penpot-exporter:security-20261012
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
       PENPOT_INTERNAL_URI: http://penpot-frontend:8080

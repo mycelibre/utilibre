@@ -1,0 +1,19 @@
+--- a/debian/rules
++++ b/debian/rules
+@@ -14,6 +14,7 @@
+ CONFIGURE_ARGS = -- --disable-dependency-tracking		\
+ 	--enable-symbol-hiding --enable-versioned-symbols	\
+ 	--enable-threaded-resolver --with-lber-lib=lber		\
++	--enable-ntlm --enable-smb	\
+ 	--with-gssapi=/usr --with-nghttp2	\
+ 	--with-ngtcp2 --with-nghttp3	\
+ 	--includedir=/usr/include/$(DEB_HOST_MULTIARCH)		\
+@@ -125,7 +126,7 @@
+ # -j parallel tests: https://daniel.haxx.se/blog/2023/06/08/parallel-curl-tests/
+ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+   NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+-  TESTS_GENERAL_PARAMETERS += -j$(shell echo $$(( $(NUMJOBS) * 4 )))
++  TESTS_GENERAL_PARAMETERS += -j$(NUMJOBS)
+ endif
+ 
+ # Test a specific curl flavour.

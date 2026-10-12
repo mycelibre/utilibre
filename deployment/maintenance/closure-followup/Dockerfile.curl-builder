@@ -1,0 +1,11 @@
+FROM debian@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f
+ENV DEBIAN_FRONTEND=noninteractive
+COPY curl_8.21.0-2.dsc curl_8.21.0.orig.tar.gz curl_8.21.0-2.debian.tar.xz /source/
+RUN printf '%s\n' 'deb http://deb.debian.org/debian trixie-backports main' > /etc/apt/sources.list.d/utilibre-build-backports.list \
+ && apt-get update -qq \
+ && apt-get install -y --no-install-recommends build-essential devscripts ca-certificates sqv \
+ && cd /source && dpkg-source -x --no-check curl_8.21.0-2.dsc \
+ && apt-get build-dep -y --no-install-recommends -t trixie-backports --arch-only /source/curl-8.21.0 \
+ && dpkg-query -W -f='${binary:Package}=${Version}\n' > /build-packages.lock
+# Source authenticity/checksums are verified by the host wrapper before COPY.
+# This is an isolated build environment, never a production application image.

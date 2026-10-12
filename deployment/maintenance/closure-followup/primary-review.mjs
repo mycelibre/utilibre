@@ -11,7 +11,7 @@ assert(response.ok);const body=await response.text(),all=JSON.parse(body);
 const queue=JSON.parse(fs.readFileSync('/var/lib/utilibre-maintenance/security-queue.json'));
 // The completed rsync release also needs primary evidence for its medium
 // findings; do not mistake omitted records for an upstream unresolved status.
-const ids=new Set(queue.items.filter(x=>(['CRITICAL','HIGH'].includes(x.severity)||x.package==='rsync')&&x.status==='needs-review').map(x=>x.id));
+const ids=new Set(queue.items.filter(x=>(['CRITICAL','HIGH'].includes(x.severity)||x.package==='rsync'||/^(?:lib)?curl/.test(x.package))&&x.status==='needs-review').map(x=>x.id));
 const sources={};
 for(const [pkg,records] of Object.entries(all)){
  const relevant=Object.fromEntries(Object.entries(records).filter(([id])=>ids.has(id)));

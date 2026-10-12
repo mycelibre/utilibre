@@ -81,7 +81,7 @@ services:
     logging: *default-logging
 
   freshrss:
-    image: utilibre-util-linux-services-freshrss:security-20261012
+    image: utilibre-curl-services-freshrss:security-20261012
     init: true
     restart: unless-stopped
     <<: *default-security
@@ -125,7 +125,7 @@ services:
   rsshub:
     ulimits: {core: 0}
     memswap_limit: 1536m
-    image: utilibre-util-linux-services-rsshub:security-20261012
+    image: utilibre-curl-services-rsshub:security-20261012
     init: true
     restart: unless-stopped
     read_only: true

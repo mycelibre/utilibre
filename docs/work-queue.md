@@ -1,6 +1,46 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Current boundary — 12 October, 05:39 UTC
+## Current boundary — 12 October, 06:30 UTC
+
+Native **curl 8.22.0-1~deb13u1+utilibre1** is deployed in **nine images /
+nine roles / six projects** and on the host. Both native upstream suites passed
+(1,837 OpenSSL / 1,833 GnuTLS cases, with unsupported cases reported separately).
+Old/new HTTP, redirects, compression, POST, TLS validation/rejection and error
+controls passed. Application files, configuration, existing ABI and unrelated
+libraries are unchanged. FreshRSS's actual PHP curl extension also passed TLS.
+The host retained libc and Docker/SSH PIDs. [Recipes and rollback](../deployment/maintenance/closure-followup/README.md).
+
+The **06:22:08 UTC** full scan covers 109 images, 175 containers, 55 source
+manifests and host packages. Runtime/host raw counts are **40 critical / 2,711
+high**; current exact-byte/source/component reviews leave **0 critical / 492
+high pending** across the queue. Raw findings remain available. Counts are not
+proof of exploitability or a security clearance. New package identities can
+increase raw matches even when native source is repaired. The curl reviewer
+now preserves Debian release-candidate ordering rather than rejecting RC fixed
+versions; a genuinely newer upstream fix still fails the gate.
+
+All 59 status monitors and 105 catalogue endpoint checks passed after rollout.
+The 112-provider upstream review has no unavailable providers or unresolved
+application-advisory dispositions. Ninety-one focused maintenance tests pass.
+The existing XML backport's return-NULL guard was independently checked in
+source and the actual native library bytes; this exempts only that exact issue.
+
+The additional immutable source offer is HTTPS-verified:
+`https://tools.utilibre.org/utilibre-source/security-curl-followup-20261012-source.tar.gz`
+(14,840,939 bytes; SHA-256
+`6d4d77e4516ad07590286faea9acd7e7ed60eef8f3d9ab4343f0a700e4139f87`).
+Previous source offers, user data and rollback images are preserved. Only the
+unused curl compiler image was removed, recovering about 1.2 GB; its reproducible
+build context is retained. Root has about 11 GiB free with an 8 GiB reserve.
+
+Next active repair: native Bookworm gzip 1.14 is building from authenticated
+Debian source; **not deployed yet**. Remaining dependency findings, vendor-unfixed
+GnuTLS, resident host mappings/kernel and compiled Deno/WASM coverage remain.
+GitHub's active independent workflow still has no genuine scheduled execution;
+its only current-workflow run is a manual success from 04:08. That monitoring
+gap is not cleared by local checks or another manual run.
+
+## Previous boundary — 12 October, 05:39 UTC
 
 The native stable **util-linux 2.41.5 + utilibre2** repair is deployed across
 **21 images / 27 roles / 17 projects**; all exact-image readiness gates passed

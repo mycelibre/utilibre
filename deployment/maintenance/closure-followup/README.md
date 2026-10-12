@@ -51,6 +51,75 @@ have zero restarts. No production database migration/restore was performed.
 
 ## Primary evidence and build scope
 
+### curl follow-up — deployed
+
+The deployed version is native **curl 8.22.0-1~deb13u1+utilibre1**, from the
+[signed stable 8.22.0 release](https://curl.se/docs/vuln-8.22.0.html), with
+matching Debian source packaging. Signature fingerprint:
+`27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2`. The signing key comes from the
+previously authenticated Debian source. Upstream archive and Debian packaging
+checksums are pinned in `build-curl.mjs`; no sid binary or new libc is installed.
+
+The old 8.21 Debian patch set failed to apply cleanly and was rejected. Matching
+8.22 packaging preserves both TLS-library symbol versions. Two native build
+options retain supported NTLM/SMB features that newer defaults disable.
+Upstream has removed RTMP and TLS-SRP; these are explicitly recorded rather
+than advertised as preserved. No app feature or configuration is changed.
+Native Trixie-backports nghttp3/ngtcp2 companions preserve HTTP/3 support;
+feature presence is not an end-to-end QUIC test.
+
+The first full test attempt exhausted the 256-process fixture limit and failed;
+it is not a release candidate. Its complete results are retained privately.
+The repeat uses two test workers, a 512-process ceiling, two CPUs, 3 GiB RAM,
+network isolation and a tmpfs build tree. No test contacts a real user service.
+Both suites have now passed: **1,837 OpenSSL cases / 1,833 GnuTLS cases**.
+Each considered 2,072 cases; skipped/unsupported cases are not passes.
+`curl-stage.mjs` then checks
+unchanged app/configuration/unrelated-library hashes, original exported symbols,
+and old/new synthetic GET, redirect, gzip, POST, TLS trust, wrong-host rejection
+and 404 behavior. FreshRSS additionally exercises its actual PHP curl extension.
+The first image gate caught Debian's removed `libcurl-gnutls.so.3` alias.
+The installer retains that exact link to `.so.4` only when it existed before;
+the original versioned ABI and compatibility path are tested, not shimmed.
+All nine images passed those gates. The **nine roles / six projects** completed
+their production readiness gates at **06:19 UTC**. The host's six replacements
+and two native companions are installed too: actual host libraries and the
+compatibility alias each passed all seven isolated transfer checks, while libc,
+Docker/SSH PIDs and unrelated packages remained unchanged. No new service,
+Caddy configuration, account change or user-data operation was required.
+The subsequent full vulnerability scan is separate from these functional gates.
+
+The 06:22:08 scan completed across 109 images / 175 containers, 55 manifests and
+host packages. Exact subsequent reviews leave 0 critical / 492 high pending;
+runtime/host raw counts are 40 critical / 2,711 high. This is not a clearance.
+All 59 monitors and 105 catalogue endpoint checks passed after release, along
+with 91 focused maintenance tests. Curl's review handles primary Debian `~rcN`
+fixed versions with native version ordering, preserving the RC suffix and
+rejecting unknown spellings or genuinely newer repairs.
+
+The HTTPS-verified immutable source archive is
+`security-curl-followup-20261012-source.tar.gz` (14,840,939 bytes), SHA-256
+`6d4d77e4516ad07590286faea9acd7e7ed60eef8f3d9ab4343f0a700e4139f87`.
+The completed, unused 1.2 GB compiler image was removed after checking that no
+container used it; the private build context, source/packages, test receipts
+and all application rollback images are retained. No user content was removed.
+
+Release commands, **only after those gates pass**:
+`cache-release.mjs prepare/apply --curl`; `curl-host.mjs prepare/apply` is
+separate and requires exact package simulation and signed local rollback.
+The image receipt includes old pins and the existing native supervisors.
+Host rollback restores its six original packages and removes only the two new
+companions, after checking that exact removal plan. No account data is changed.
+`publish-curl.mjs --publish` creates an additive immutable source offer after
+the completed live release. Check the private receipts before claiming success.
+
+One separate XML review is completed: `review-xml-uri.mjs` verifies that the
+existing 2.9.14 backport already contains the return-NULL guard described by
+[GNOME's CVE-2026-86139 fix](https://github.com/GNOME/libxml2/commit/8edbbdb09f24d26a2f900141fddc2b9d014f53b0).
+Exact package/source/library checksums and disassembly confirm the guard,
+including Penpot's private library copies. Six exact findings were reviewed;
+no giant-input test was performed and other XML issues are not exempted.
+
 ### Stable util-linux repairs
 
 Native Trixie package version: `2.41.5-0+deb13u1+utilibre2`. This is a rebuild of

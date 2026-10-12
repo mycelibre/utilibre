@@ -1,0 +1,10 @@
+ARG BASE
+FROM ${BASE}
+ARG RESTORE_USER=root
+USER root
+COPY packages/ /tmp/utilibre-curl-packages/
+COPY install-curl.sh /tmp/utilibre-install-curl.sh
+RUN sh /tmp/utilibre-install-curl.sh \
+ && rm -r /tmp/utilibre-curl-packages \
+ && rm /tmp/utilibre-install-curl.sh
+USER ${RESTORE_USER}
