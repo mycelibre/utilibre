@@ -6,8 +6,8 @@ import {createHash} from 'node:crypto';
 import {canonical} from '../go-final/release.mjs';
 import {replaceImagePins,namespaceDependents,releaseGroup,rollbackFiles,existingComposeArgs,checkExistingGroup,recreateExistingGroup,existingGroupStatus} from '../language-final/release.mjs';
 process.umask(0o077);
-const [mode,variant]=process.argv.slice(2);assert(['prepare','apply'].includes(mode));assert([undefined,'--ncurses','--rsync','--util-linux','--curl','--gzip'].includes(variant));assert(process.argv.length<=4);
-const kind=variant==='--ncurses'?'ncurses':variant==='--rsync'?'rsync':variant==='--util-linux'?'util-linux':variant==='--curl'?'curl':variant==='--gzip'?'gzip':'cache';
+const [mode,variant]=process.argv.slice(2);assert(['prepare','apply'].includes(mode));assert([undefined,'--ncurses','--rsync','--util-linux','--curl','--gzip','--sqlite-fts'].includes(variant));assert(process.argv.length<=4);
+const kind=variant==='--ncurses'?'ncurses':variant==='--rsync'?'rsync':variant==='--util-linux'?'util-linux':variant==='--curl'?'curl':variant==='--gzip'?'gzip':variant==='--sqlite-fts'?'sqlite-fts':'cache';
 const dir='/var/lib/utilibre-maintenance/closure-followup-20261012',file=dir+'/'+kind+'-release.json';
 const read=p=>JSON.parse(fs.readFileSync(p)),digest=v=>createHash('sha256').update(JSON.stringify(canonical(v))).digest('hex');
 const docker=(...args)=>{try{return cp.execFileSync('docker',args,{encoding:'utf8',timeout:180000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe'],env:{...process.env,APP_BIND_IP:'10.10.1.43'}}).trim();}catch{throw Error('Docker operation failed; sensitive configuration withheld');}};
@@ -26,6 +26,13 @@ if(mode==='prepare'){
    assert.equal(b.version,s.suite==='noble'?'1.12-1ubuntu3.2':'1.14-1~deb12u1+utilibre1');
    if(s.suite==='bookworm'){assert.equal(n.upstreamPassed,30);assert.equal(n.upstreamSkipped,0);}
    assert.match(b.applicationSha256,/^[a-f0-9]{64}/);assert.match(b.librariesSha256,/^[a-f0-9]{64}/);
+  }
+  if(kind==='sqlite-fts'){
+   assert.equal(b.version,'3.40.1-2+deb12u2+utilibre2');
+   assert(n.abiPreserved&&n.nativeSqliteBackupRestore&&n.nativeFtsCorruptionRejected&&n.existingDistinctRegressionsPassed);
+   assert.equal(n.exportedSymbols,1389);assert.equal(n.upstreamDistinctTests,87);assert.equal(n.upstreamFtsCompatibleTests,7);
+   assert.equal(n.applicationChecks.status,'passed');
+   for(const key of ['applicationSha256','etcSha256','unrelatedLibrariesSha256','librarySha256'])assert.match(b[key],/^[a-f0-9]{64}/);
   }
   if(kind==='curl'){
    assert.equal(b.version,'8.22.0-1~deb13u1+utilibre1');assert(n.abiPreserved);

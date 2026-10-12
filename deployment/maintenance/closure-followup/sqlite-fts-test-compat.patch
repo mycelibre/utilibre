@@ -1,0 +1,22 @@
+--- a/ext/fts5/test/fts5corruptA.test
++++ b/ext/fts5/test/fts5corruptA.test
+@@ -20,6 +20,9 @@
+ }
+ sqlite3_fts5_may_be_corrupt 1
+ 
++# Test-harness only: unhex() was added after SQLite 3.40. Use equivalent
++# Tcl binary conversion, without adding a function to production SQLite.
++db function unhex [list binary format H*]
+ do_execsql_test 1.0 {
+   CREATE VIRTUAL TABLE t USING fts5(x, detail='full');
+   INSERT INTO t(t, rank) VALUES('pgsz', 32);
+@@ -66,7 +69,8 @@
+ 
+ do_catchsql_test 1.5 {
+   SELECT rowid FROM t WHERE t MATCH 'a'
+-} {1 {fts5: corruption found reading blob 137438953481 from table "t"}}
++} {1 {database disk image is malformed}}
+ 
+ sqlite3_fts5_may_be_corrupt 0
++file copy -force test.db /output/fts-corrupt.db
+ finish_test

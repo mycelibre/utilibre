@@ -7,6 +7,16 @@ remain reviewed rollouts. Production never runs a floating `latest` tag.
 
 ## Maintenance release — 12 October 2026
 
+**07:12 UTC SQLite follow-up:** Uptime Kuma, RSS-Bridge and Gathio's database
+image now use a native SQLite package containing the upstream FTS corruption
+repair and the earlier DISTINCT fix. All 87 DISTINCT and seven compatible FTS
+tests passed, along with native application, synthetic restore, ABI and live
+readiness checks. No user data or configuration changed. The complete scan
+succeeded; exact review leaves 0 critical / 411 high pending, not a clean bill
+of security. Remaining queue and monitoring limitations are explicit in the
+[current checkpoint](work-queue.md) and
+[source/rollback notes](../deployment/maintenance/closure-followup/README.md).
+
 **03:15 UTC native-library follow-up:** host Vim/Expat repaired, optional LMDB
 dependency removed through a tested BIND client rebuild, and nine application
 images deployed with Expat 2.9.0. Python's bundled XML parser was separately

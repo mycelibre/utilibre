@@ -18,8 +18,8 @@ const db=read(dir+'/rsync/rsync-gathio-postgres/database.json');assert(db.passed
 const primary=read(dir+'/debian-primary.json');assert(Date.now()-Date.parse(primary.date)<86400000);
 const version='3.5.1+ds1-1~deb12u1+utilibre1',deb=dir+'/rsync-bookworm/rsync_'+version+'_amd64.deb',checksum='0af6a698f50dbc7ea7ca3fa436a5fd45e7c939b5de4bbf834c4a2a441a905258';
 assert.equal(sha(fs.readFileSync(deb)),checksum);
-if(fs.existsSync(dir+'/gzip-release.json')){
- const later=read(dir+'/gzip-release.json');assert.equal(later.status,'passed');
+for(const receipt of ['gzip-release.json','sqlite-fts-release.json'])if(fs.existsSync(dir+'/'+receipt)){
+ const later=read(dir+'/'+receipt);assert.equal(later.status,'passed');
  const next=later.groups.flatMap(g=>{assert.equal(g.status,'passed');return g.rows.map(r=>({...r,completedAt:g.completedAt}));}).find(r=>r.name===row.name&&r.oldImage===row.newImage);
  assert(next&&Date.parse(next.completedAt)<=Date.parse(scan.date));row=next;
 }

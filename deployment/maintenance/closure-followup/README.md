@@ -51,6 +51,69 @@ have zero restarts. No production database migration/restore was performed.
 
 ## Primary evidence and build scope
 
+### SQLite FTS follow-up — deployed
+
+The three Bookworm native SQLite consumers (Uptime Kuma, RSS-Bridge and Gathio's
+DocumentDB/PostgreSQL image) now use **3.40.1-2+deb12u2+utilibre2**. This retains
+the previous DISTINCT repair for CVE-2025-7458 and adds the upstream FTS5 leaf
+bound repair for [CVE-2026-11822](https://security-tracker.debian.org/tracker/CVE-2026-11822)
+and [CVE-2026-11824](https://security-tracker.debian.org/tracker/CVE-2026-11824).
+The unchanged patch comes from signed Debian `3.46.1-7+deb13u2` source and
+applies with zero fuzz. No newer libc, database format or schema migration.
+
+The exact source passes all 87 DISTINCT tests and seven FTS corruption tests.
+Two **test-only** adjustments adapt the newer regression to SQLite 3.40:
+provide equivalent `unhex` blob decoding and accept its older corruption error
+wording. A first test attempt used source unpatched by `dpkg-buildpackage`'s
+cleanup; another lacked the newer `unhex` function. Both failed logs are retained;
+neither is counted as a pass. Reproduction restores quilt patches before tests.
+The actual packaged dynamic library also rejects the synthetic malformed FTS
+database. This is not an ASan demonstration of the old memory overwrite.
+
+All 1,389 exported symbols, SONAME, compile options, application bytes,
+configuration and unrelated libraries are preserved. Native consumers pass:
+Kuma setup/login and Python SQLite backup/restore; RSS-Bridge PHP SQLite and
+homepage; DocumentDB typed data, restricted-role isolation and logical
+dump/restore. All restore data was fictional and isolated. All three exact
+production replacements passed the existing native readiness gates.
+
+Run `sqlite-fts-finalize.mjs` after build and isolated checks, then
+`cache-release.mjs prepare --sqlite-fts` and `apply --sqlite-fts`. Private
+`sqlite-fts-release.json` retains exact previous image pins and supervisors.
+Rollback restores only those pins through the existing release helper, recreates
+those services and verifies the old images; never restore/delete live data.
+The bounded reviewer checks current image/package/library bytes for exactly
+these three CVEs, not every finding on SQLite. Other reviewers recheck preserved
+payloads through the completed release chain; decisions are not blindly copied.
+
+The additive source offer is
+`security-sqlite-fts-followup-20261012-source.tar.gz`, 14,013,124 bytes, SHA-256
+`c52fb5c354960c8c474a10eb6646c84b16bc14521c1a71ec96aa105a7759bc49`.
+It contains complete native source and Debian packaging, notices, build inputs,
+test-only compatibility patch and verification recipes; no user data or private
+diagnostic logs. Existing source offers and rollback images remain intact.
+
+### Legacy mount-component attribution — not an upgrade
+
+The remaining Bookworm `2.38.1-5+deb12u3` source does **not** contain the
+owner/idmap hook implementations described by
+[CVE-2026-76642](https://github.com/util-linux/util-linux/security/advisories/GHSA-m25x-3hj9-m26f)
+and [CVE-2026-78410](https://github.com/util-linux/util-linux/security/advisories/GHSA-rh77-686x-2f2m).
+The existing source hashes, exact signed-package executable/library bytes and
+eight live images are checked. In 18 isolated native cases, both helper success
+and failure leave target permissions alone in legacy images; a repaired 2.41
+positive control applies the mode only after success. No real privileged mount,
+SUID exploitation, network access or production filesystem change was attempted.
+
+This is a reasoned absence-of-code review against Debian's still-open broad
+source-version records, **not** a claim of a newly fixed vendor version.
+`mount-component-policy.test.mjs` rejects the actual older target-path race
+**CVE-2026-53613**, newer/unknown versions and unrelated packages. That older
+race remains open. The 32 exact package/image findings are separately reviewed
+with seven-day expiry and preserved raw scanner records. Reproduce the bounded
+checks using `check-bookworm-mount-hooks.mjs`; proofs remain private under
+`bookworm-mount-hooks/proof.json` and `util-linux-component-review.json`.
+
 ### gzip follow-up — deployed
 
 At **06:40 UTC**, nine gzip-only image replacements across six projects passed

@@ -6,13 +6,14 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
 int main(int argc, char **argv) {
-    assert(argc == 2);
-    const int helper_exit = atoi(argv[1]);
-    assert(helper_exit == 0 || helper_exit == 1);
+    assert(argc == 2 || (argc == 3 && strcmp(argv[2], "legacy") == 0));
+    assert(strlen(argv[1]) == 1 && (argv[1][0] == '0' || argv[1][0] == '1'));
+    const int helper_exit = argv[1][0] - '0';
     char target[] = "/tmp/utilibre-mount-mode-XXXXXX";
     assert(mkdtemp(target));
     assert(chmod(target, 0755) == 0);
@@ -30,7 +31,9 @@ int main(int argc, char **argv) {
     assert(mnt_context_helper_executed(ctx));
     assert(mnt_context_get_helper_status(ctx) == helper_exit);
     printf("helper=%d result=%d mode=%o\n", helper_exit, result, st.st_mode & 0777);
-    const int passed = (st.st_mode & 0777) == (helper_exit ? 0755 : 0700);
+    /* Bookworm libmount predates owner/mode hooks. Both outcomes
+     * must leave the inode alone there; default remains the patched 2.41 test. */
+    const int passed = (st.st_mode & 0777) == (argc == 3 || helper_exit ? 0755 : 0700);
     mnt_free_context(ctx);
     assert(rmdir(target) == 0);
     return passed ? 0 : 10;

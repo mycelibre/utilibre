@@ -1,6 +1,43 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Current boundary — 12 October, 06:48 UTC
+## Current boundary — 12 October, 07:12 UTC
+
+The **SQLite FTS repair is deployed in three images / three roles / two projects**:
+Uptime Kuma, RSS-Bridge and Gathio's DocumentDB/PostgreSQL image. Native Bookworm
+`3.40.1-2+deb12u2+utilibre2` retains the earlier DISTINCT fix and adds the
+authenticated upstream corruption bound. All 87 DISTINCT and seven compatible
+FTS tests pass, plus actual packaged-library corruption rejection, preserved
+ABI/configuration/application checks, native consumers and synthetic restores.
+All three production readiness gates passed; no live schema/data migration.
+[Source, limitations and rollback](../deployment/maintenance/closure-followup/README.md).
+
+The **07:07:07 UTC** scan completed across 109 images, 175 containers, 55 source
+manifests and host packages. Raw runtime/host findings remain **40 critical /
+2,711 high**. Exact repaired-payload/component reviews leave **0 critical / 411
+high pending**. The reduction from 451 includes eight repaired SQLite FTS
+records and 32 legacy mount-hook records whose affected implementation is absent,
+verified against source, signed package bytes and 18 native isolated controls.
+The older Bookworm mount-target race remains open; no blanket mount exemption.
+
+All 59 status monitors and 105 catalogue endpoint probes passed following the
+rollout. The 112-provider upstream check has no unavailable providers or
+unresolved application-advisory disposition. Ninety-four focused maintenance
+tests pass (91 existing and three new component-policy tests). Matching source
+is public and HTTPS/checksum verified:
+`https://tools.utilibre.org/utilibre-source/security-sqlite-fts-followup-20261012-source.tar.gz`
+(14,013,124 bytes; SHA-256
+`c52fb5c354960c8c474a10eb6646c84b16bc14521c1a71ec96aa105a7759bc49`).
+Existing data, settings, source offers and rollback images are preserved. No
+Caddy changes. Original unsuccessful test attempts are retained and not counted
+as passes; newer FTS tests need the documented test-only compatibility changes.
+
+**Not finished:** other dependency findings (including vendor-unfixed GnuTLS),
+resident host-library/kernel work requiring coordination, compiled Deno/WASM
+coverage and external Caddy/Proxmox coverage. The independent GitHub workflow
+still has only its 04:08 manual success and no new genuine scheduled execution;
+that warning remains active. Do not report this checkpoint as queue completion.
+
+## Previous boundary — 12 October, 06:48 UTC
 
 The **gzip-only repair is deployed in nine images / nine roles / six projects**
 and passed readiness at 06:40. Eight Bookworm images use native

@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {freshScan} from '../review-native-backports.mjs';
 import {validateDecision} from '../triage.mjs';
+import {bookwormHookCase} from './mount-component-policy.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/closure-followup-20261012',source=dir+'/sources';
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
@@ -28,11 +29,15 @@ const versions={
 const sourcePins={
  'util-linux-2.38.1/sys-utils/nsenter.c':'b21729644a4e21f5a0e917ce0142b3c5709888f1a0e6eda7d0e6ce86a3b554c6',
  'util-linux-2.38.1/libmount/src/context_mount.c':'09ded04a551e96ae05faca35bf9d56c995ecd7a77efc76f7d785ba6d358862dc',
+ 'util-linux-2.38.1/libmount/src/context.c':'b4bd89b9bdb8e52e8bd9ca79c00139f703fb646256866cc19527bda09d09b4f0',
  'util-linux-2.41.5/libmount/src/hook_subdir.c':'5a832d08ed196100f1f53f4badb2b9c09fe79f371c9b1bcf5ee273d852c302bc',
 };
 for(const [path,hash] of Object.entries(sourcePins))assert.equal(sha(fs.readFileSync(source+'/'+path)),hash);
 assert(!fs.readFileSync(source+'/util-linux-2.38.1/sys-utils/nsenter.c','utf8').includes('join-cgroup'));
 assert(!fs.readFileSync(source+'/util-linux-2.38.1/libmount/src/context_mount.c','utf8').includes('open_tree'));
+const legacySource=source+'/util-linux-2.38.1/libmount/src';
+assert(!fs.existsSync(legacySource+'/hook_owner.c')&&!fs.existsSync(legacySource+'/hook_idmap.c'));
+assert(!/X-mount\.(?:owner|group|mode|idmap)|MNT_STAGE_MOUNT_POST|mnt_context_call_hooks/.test(fs.readdirSync(legacySource).filter(f=>/\.(?:c|h)$/.test(f)).map(f=>fs.readFileSync(legacySource+'/'+f,'utf8')).join('\n')));
 const stableSubdir=fs.readFileSync(source+'/util-linux-2.41.5/libmount/src/hook_subdir.c','utf8');
 assert(stableSubdir.includes('subdir mount refused for non-root user'));
 assert(!stableSubdir.includes('api->subdir'));
@@ -53,8 +58,14 @@ for(const item of queue.items){
  const spec=versions[item.installed];if(item.status!=='needs-review'||item.type!=='debian'||!spec||!spec.packages[item.package]||!['host-os','runtime-image'].includes(item.scope))continue;
  const subdir=item.id==='CVE-2026-78409'&&['mount','libmount1'].includes(item.package);
  const cgroup=item.id==='CVE-2026-78408'&&item.package==='util-linux'&&spec.branch==='2.38.1';
- if(!subdir&&!cgroup)continue;
+ const legacyHooks=bookwormHookCase(item);
+ if(!subdir&&!cgroup&&!legacyHooks)continue;
  try{
+  if(legacyHooks){
+   const p=read(dir+'/bookworm-mount-hooks/proof.json');assert(p.passed&&Date.now()-Date.parse(p.date)<86400000);
+   const native=p.rows.filter(r=>r.legacy&&r.artifact===item.artifact);assert.equal(native.length,2);assert.deepEqual(native.map(r=>r.helperExit).sort(),[0,1]);assert(native.every(r=>r.passed&&item.containers.every(name=>r.containers.includes(name))));
+   const control=p.rows.filter(r=>!r.legacy);assert.equal(control.length,2);assert(control.every(r=>r.passed));
+  }
   const key=item.artifact+'|'+item.package+'|'+item.installed;
   if(!observed.has(key)){
    const rows=[];
@@ -70,7 +81,8 @@ for(const item of queue.items){
    }
    observed.set(key,rows);
   }
-  const reason=subdir?
+  const reason=legacyHooks?
+   `The upstream advisory concerns owner/idmap post-hooks. Exact Debian 2.38.1 source has no hook_owner/hook_idmap, X-mount.owner/group/mode/idmap or post-hook dispatcher; its legacy additional-mount handling already requires helper status zero. Exact live mount/libmount executable/library bytes match authenticated Debian packages. Isolated native helper exit 0/1 leaves target mode unchanged in all eight legacy images; repaired 2.41 positive control applies mode only on helper success. https://github.com/util-linux/util-linux/security/advisories/${item.id==='CVE-2026-76642'?'GHSA-m25x-3hj9-m26f':'GHSA-rh77-686x-2f2m'} . Debian's broad source-version record remains open; this is explicit absent-code attribution, not a vendor release claim. CVE-2026-53613 remains affected. No real mount or privileged exploit was attempted. Native proof: closure-followup-20261012/bookworm-mount-hooks/proof.json.`:subdir?
    `Upstream GHSA-8f2p-47x3-43mv identifies the detached-subdirectory fast path introduced in 2.42. This exact Debian ${item.installed} source lacks api->subdir; 2.41's hook explicitly refuses restricted-user subdirectory mounts, and 2.38 uses the legacy implementation with no open_tree. Exact installed mount/libmount payloads match authenticated Debian artifacts. https://github.com/util-linux/util-linux/security/advisories/GHSA-8f2p-47x3-43mv . Other mount/path advisories remain open. No privileged exploit test or general kernel-safety claim.`:
    `Upstream GHSA-55fx-f4gg-cfhj limits the vulnerable --join-cgroup feature to >=2.40. Exact Debian ${item.installed} nsenter source and installed --help have no join-cgroup/cgroup_procs implementation; executable matches authenticated Debian package. https://github.com/util-linux/util-linux/security/advisories/GHSA-55fx-f4gg-cfhj . This does not clear newer nsenter or any other util-linux defect.`;
   decisions.push(validateDecision({key:item.key,status:'not-affected',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:reason+' Source and live payload hashes: closure-followup-20261012/util-linux-component-review.json; raw findings retained.'}));

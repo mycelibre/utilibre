@@ -1,0 +1,5 @@
+[
+  {"key":"sqlite-fts-kuma","kind":"kuma","base":"sha256:41651c4ef261878f87066915607d28c375c0263a6b7bdd06f5912cf9bc027dfd","baseRef":"utilibre-community-uptime-kuma:gzip-security-20261012","candidate":"utilibre-kuma:sqlite-fts-security-20261012","user":"1000:1000","cli":true,"containers":["utilibre-community-uptime-kuma-1"]},
+  {"key":"sqlite-fts-rssbridge","kind":"rssbridge","base":"sha256:26863d91e5b8492d455c6775b84434f4bac30e3e2a7ea9c202c2dc0e8a55b825","baseRef":"utilibre-community-rssbridge:gzip-security-20261012","candidate":"utilibre-rssbridge:sqlite-fts-security-20261012","user":"root","cli":false,"containers":["utilibre-community-rssbridge-1"]},
+  {"key":"sqlite-fts-documentdb","kind":"documentdb","base":"sha256:93f79248fe71d0f2fa6b6f968879d7a0df2b7c4cc8b63c611d56ac2540957e03","baseRef":"utilibre-gathio-postgres:gzip-security-20261012","candidate":"utilibre-gathio-documentdb:sqlite-fts-security-20261012","user":"root","cli":false,"containers":["utilibre-gathio-postgres-1"]}
+]
