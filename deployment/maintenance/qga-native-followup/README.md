@@ -1,10 +1,18 @@
 # Native guest-agent repair — 12 October 2026
 
-**Prepared and tested; not installed.** CVE-2026-12080 is a real issue in this
-VM's guest-agent SSH-key commands. It is not closed by the separate QEMU
-component-attribution reviews. Nothing here patches the Proxmox host, emulators,
-running kernel or other QEMU findings. No live guest-agent RPC or restart has
-been performed for this preparation.
+**Deployed and confirmed on 12 October 2026 at 16:07:11 UTC.** The parent
+maintainer installed the exact tested package during the owner-confirmed
+control-plane pause. The owner then reported successful Proxmox checks and a
+thawed filesystem state; the confirmation helper completed the receipt. The
+new process PID was 1725379, with the expected executable hash. Docker/SSH PIDs
+and unrelated configuration/packages were unchanged. There was **no VM reboot,
+real filesystem-freeze test or key write to an existing account**.
+
+CVE-2026-12080 is the real guest-agent SSH-key issue repaired here. It is not
+closed by the separate QEMU component-attribution reviews. Nothing here patches
+the Proxmox host, emulators, running kernel or other QEMU findings. The
+control-plane postcheck is owner-reported evidence, not direct Proxmox API
+access from this VM.
 
 ## Scope and provenance
 
@@ -67,14 +75,16 @@ fixture now uses an empty regular file. Neither attempt changed production.
 
 ## Preparation and maintenance-window activation
 
-Recheck without installing or restarting:
+The following documents the completed release procedure, not a request to repeat
+the installation. The helper rejects an existing release receipt and a changed
+baseline. Preparation before the authorized window used:
 
 ```sh
 node --test deployment/maintenance/qga-native-followup/policy.test.mjs
 node deployment/maintenance/qga-native-followup/release-host.mjs
 ```
 
-Actual activation remains blocked until the owner verifies **on Proxmox** that
+Activation is blocked unless the owner verifies **on Proxmox** that
 VM 144 has no running backup/freeze/other agent operation and keeps those tasks
 paused for the short window. Read-only control-plane checks include:
 
