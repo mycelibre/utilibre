@@ -2,7 +2,7 @@ name: Utilibre independent availability
 run-name: ${{ inputs.alert_drill && 'Synthetic alert drill (not an outage)' || 'Public availability check' }}
 on:
   schedule:
-    # Refreshed 2026-10-12 after missing scheduled events; retain the 15m cadence.
+    # Fresh workflow registration after the previous schedule stopped delivering.
     # Only a real event=schedule success clears the independent schedule alert.
     - cron: '11,26,41,56 * * * *'
   workflow_dispatch:

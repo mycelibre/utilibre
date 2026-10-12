@@ -29,7 +29,7 @@ const body=[
  ...candidates.slice(0,20).map(x=>`- ${x.project}: installed ${x.installed}; ${x.release?.url||x.source}`),
  '',
  'Private full reports: /var/lib/utilibre-maintenance/{latest,security,security-queue,journeys,recovery}.json',
- 'External checks: https://github.com/mycelibre/utilibre/actions/workflows/utilibre-availability.yml',
+ 'External checks: https://github.com/mycelibre/utilibre/actions/workflows/independent-availability.yml',
  'Confirm GitHub failed-workflow email notifications are enabled. Schedule delays/60-day inactivity disabling are platform limits, not a guaranteed pager.',
  'Monthly: rotate real-device EN/ES tasks and account restore coverage. Physical phones and every stateful service are not covered by the representative automated check.',
  'Runbook: docs/updates.md. No visitor analytics or private documents are used for these measurements.',
