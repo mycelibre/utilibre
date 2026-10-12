@@ -26,6 +26,10 @@ with tarfile.open(archive,'w:gz') as out, tarfile.open(upstream) as src:
         stream=src.extractfile(item) if item.isfile() else None
         item.name='upstream/'+item.name;out.addfile(item,stream)
     files=list((root/'deployment/rustpad').glob('*'))+[root/'docs/rustpad-deployment-2026-10-09.md']
+    # Include the binary-only auditable overlay recipe and its inventory checks,
+    # as well as the existing full source rebuild. Never package build reports.
+    audit_files=subprocess.check_output(['git','-C',str(root),'ls-files','deployment/maintenance/rust-auditable'],text=True).splitlines()
+    files += [root/path for path in audit_files]
     for path in sorted(files):
         assert path.is_file() and not path.is_symlink()
         assert path.suffix not in {'.env','.key','.pem'}
@@ -34,4 +38,4 @@ public=Path('/opt/utilibre/toolbox-public/rustpad-utilibre.tar.gz')
 if public.exists(): shutil.copy2(public,stage/'previous-rustpad-utilibre.tar.gz')
 shutil.copy2(archive,public.with_suffix('.tmp'));public.with_suffix('.tmp').replace(public);public.chmod(0o644)
 hash=hashlib.sha256(public.read_bytes()).hexdigest()
-print(json.dumps({'sha256':hash,'url':'https://tools.utilibre.org/utilibre-source/rustpad-utilibre.tar.gz?revision='+hash[:12],'revision':revision,'version':'54e4a93-p1'}))
+print(json.dumps({'sha256':hash,'url':'https://tools.utilibre.org/utilibre-source/rustpad-utilibre.tar.gz?revision='+hash[:12],'revision':revision,'version':'54e4a93-auditable-20261011'}))

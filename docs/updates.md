@@ -7,6 +7,27 @@ remain reviewed rollouts. Production never runs a floating `latest` tag.
 
 ## Maintenance release — 12 October 2026
 
+**01:03 UTC follow-up:** after the owner authorized the held restart, Rustpad's
+tested auditable image, Docker Engine/CLI/rootless 29.9.0, containerd 2.4.1-2,
+Buildx 0.38.0 and Compose 5.6.0 were deployed. All 175 previous running
+containers returned; the 11 stopped containers remained stopped. Two live
+Chromium clients passed Rustpad collaboration and same-origin checks. PairDrop
+relay and restored namespace/SMTP firewall gates passed. The Docker boot hook
+now uses system Python instead of depending on interactive NVM's Node path.
+No access/retention policy, saved account data or VM kernel was changed.
+
+The scanner completed successfully at **01:00:15 UTC** with 109 images,
+175 containers, 510 host packages and 55 source manifests; Rustpad's 191 compiled
+Rust packages are now inventoried. The previous incomplete-image failure is
+resolved. The dependency queue remains **5 critical / 1,675 high pending
+package-target records**, not verified exploits; 48 have reported fixed versions.
+Documented compiled Deno/WASM and separate-host coverage limits remain. All 59
+status monitors and 105 catalogue probes passed after startup. Low disk reserve
+and overdue independent GitHub scheduling remain separate warnings.
+[Exact package versions, restart corrections, evidence and recovery](../deployment/maintenance/host-final/README.md#docker-and-rustpad-release--12-october-2026).
+
+The earlier checkpoints below describe the preceding batches:
+
 The tested native-package, installer and Go-runtime batch below is deployed.
 The final seven targets—OAuth2 Proxy, Mezzo, Anubis, OpenGist, ntfy, Vikunja and
 Wakapi—finished at **00:19:56 UTC**, retaining their application versions and

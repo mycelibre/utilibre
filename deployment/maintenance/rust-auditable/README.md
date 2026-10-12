@@ -144,3 +144,17 @@ memory-only Rustpad document. No document IDs or content were inspected. Its
 production activation must wait for native expiry/zero active documents or a
 separate safe maintenance decision; this staged binary is not the running
 binary until the coordinating maintainer records an actual rollout.
+
+**Live release confirmed, 12 October 2026:** the owner identified that pad as
+theirs and authorized the held restart. The exact candidate above is now live
+at `https://tools.utilibre.org/apps/rustpad/`. No pad content or identifier was
+read. At 00:59:19 UTC, two independent Chromium sessions passed collaborative
+editing, raw text, language and copied subpath-link checks through public HTTPS;
+16 same-origin requests, no third-party request and no page error. The 01:00:15
+production scan recovered all 191 compiled Rust packages with no findings in
+that inventory. The separate bundled SQLite/compiled-component limitations
+above remain. [Coordinated Docker release, recovery and private receipts](../host-final/README.md#docker-and-rustpad-release--12-october-2026).
+
+The matching public `rustpad-utilibre.tar.gz` now includes this auditable overlay
+recipe, its license and checks, in addition to the upstream source, locks,
+patches and full-build recipe. Its downloaded HTTPS bytes were hash-verified.

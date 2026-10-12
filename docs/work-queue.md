@@ -1,6 +1,6 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Current boundary — 12 October, 00:44 UTC
+## Current boundary — 12 October, 01:03 UTC
 
 The tested native/vendor/installer batch, all twelve final Go repairs and five
 patch-level follow-ups are deployed. Bookplate, Candlr, DeGoog, Projects and the
@@ -9,28 +9,38 @@ Matching source offers are published and their HTTPS hashes verified.
 [Final release and validation](updates.md#maintenance-release--12-october-2026).
 The previous checkpoints below are history, not pending redeployments.
 
+The owner subsequently authorized the held Rustpad/Docker restart. Rustpad's
+auditable build and Docker 29.9.0/containerd 2.4.1 are deployed. All 175 running
+containers were restored, 11 stopped containers left stopped, and native
+collaboration/relay/firewall checks passed. The 01:00:15 scan completed normally;
+Rustpad now exposes 191 compiled Rust packages to the scanner. The incomplete
+image/failed-scanner warning is closed, not suppressed.
+[Release and recovery](../deployment/maintenance/host-final/README.md#docker-and-rustpad-release--12-october-2026).
+
 The remaining work is specific:
 
-1. **Owner's Rustpad:** wait for confirmation that its memory-only document is
-   saved before restarting it, Docker/containerd or the VM. The tested candidate
-   exists; the live inventory warning remains until that rollout is possible.
-2. **Dependency follow-through:** final scan covers 109 images, 175 containers,
-   510 host packages and 55 source manifests at 00:42 UTC. Pending: 5 critical /
+1. **Dependency follow-through:** final scan covers 109 images, 175 containers,
+   510 host packages and 55 source manifests at 01:00 UTC. Pending: 5 critical /
    1,675 high package-target records, not proven exploits. 1,632 have no
    scanner-reported fixed version; 48 still need compatible dependency updates or specific
    exposure/payload review. Keep vendor-unfixed and compiled Rust/WASM coverage
    limitations visible. Application-advisory review itself is current: 112
    providers, no reopened advisory or unavailable lookup.
-3. **Independent schedule:** one cron-offset refresh is pushed (`0496567`);
+2. **Independent schedule:** one cron-offset refresh is pushed (`0496567`);
    require a genuine GitHub `schedule` completion before clearing the overdue
    warning. Manual success is not sufficient.
-4. **Build reserve:** root has about 8.5 GiB free; do not cross the 8 GiB floor
+3. **Build reserve:** root has about 8.2 GiB free; do not cross the 8 GiB floor
    or remove rollback images/user data to manufacture a clean warning state.
 
 Wakapi's exposed OIDC client secret was rotated and verified rejected afterward;
 only its app restarted, on the same image. Keep the replacement credential on
 code rollback. Private incident recovery copies are not public source material.
 No Caddy change is required for this maintenance release.
+
+No VM/kernel reboot was performed. The restart exposed and fixed a PairDrop
+firewall boot dependency on interactive Node; the policy itself is unchanged.
+All endpoint probes passed again after startup. Older Rustpad-hold notes below
+are historical checkpoints, superseded by the release above.
 
 The follow-up removed eleven pending fixed-version high records through actual
 patches or exact reviewed applicability. The remaining boundaries are itemized

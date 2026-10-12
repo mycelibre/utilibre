@@ -11,7 +11,7 @@ iptables -w -A "$chain" -d 10.10.1.43 -p udp --dport 3479 -j RETURN
 # This exception does not permit LAN peers or access to Galene/host services.
 iptables -w -A "$chain" -d 10.10.1.43 -p udp --sport 49700:49731 --dport 49700:49731 -j RETURN
 # Deny metadata, internal networks, special-use addresses and the public host.
-public_ip=$(node -e 'const fs=require("fs"),net=require("net"); const v=JSON.parse(fs.readFileSync("/opt/utilibre/turn/settings.json")).publicIp; if(net.isIP(v)!==4)process.exit(1); console.log(v)')
+public_ip=$(/usr/bin/python3 -c 'import ipaddress,json; print(ipaddress.IPv4Address(json.load(open("/opt/utilibre/turn/settings.json"))["publicIp"]))')
 for range in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.0.0.0/24 192.0.2.0/24 192.168.0.0/16 198.18.0.0/15 198.51.100.0/24 203.0.113.0/24 224.0.0.0/3 "$public_ip"; do
   iptables -w -A "$chain" -d "$range" -j DROP
 done

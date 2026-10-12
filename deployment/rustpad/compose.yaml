@@ -2,7 +2,7 @@ name: utilibre-rustpad
 services:
   rustpad:
     ulimits: {core: 0}
-    image: utilibre-rustpad:54e4a93-p1
+    image: utilibre-rustpad:54e4a93-auditable-20261011
     restart: unless-stopped
     init: true
     read_only: true
