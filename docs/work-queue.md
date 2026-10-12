@@ -1,6 +1,53 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Current boundary — 12 October, 04:55 UTC
+## Current boundary — 12 October, 05:39 UTC
+
+The native stable **util-linux 2.41.5 + utilibre2** repair is deployed across
+**21 images / 27 roles / 17 projects**; all exact-image readiness gates passed
+at 05:33. The host's 14 existing sibling packages are updated too, without a
+glibc/distribution upgrade. Penpot's two private ImageMagick loader copies also
+required repair; its native thumbnail and font round-trip checks pass.
+[Recipes, evidence and rollback](../deployment/maintenance/closure-followup/README.md).
+
+The upstream suite reports 337 cases, including 160 skipped and 8 known-failure
+lines; those are not counted as successful execution. Six isolated old/new
+controls reproduce the original helper/descriptor defects and pass on repaired
+code. All candidate application/configuration and library ABI gates passed.
+The host system manager was re-executed and four ordinary system services
+refreshed, preserving Docker/SSH PIDs. Network/user-session managers and a PAM
+helper still hold old library mappings. Their library findings remain open;
+a coordinated remaining refresh/reboot is required, not an unannounced outage.
+
+The **05:36:20 UTC** scan fully covered 109 images / 175 production containers,
+55 source manifests and host packages: **40 critical / 2,697 high raw** findings;
+exact current-payload/component reviews leave **0 critical / 563 high pending**.
+Raw findings are retained. These are triage counts, not proof of exploitability
+or a vulnerability-free claim. All 59 status monitors and 105 catalogue endpoint
+checks passed after rollout; 86 focused maintenance tests passed. All 112
+upstream providers were checked without unresolved application-advisory reviews.
+
+The Spliit scheduled restore check caught a bootstrap-readiness race: PostgreSQL's
+temporary Unix socket was accepted before the final server started. The verifier
+now waits for loopback TCP, uses the repaired production PostgreSQL image, disables
+fixture logging and names it as a maintenance fixture. The previously failed
+snapshot and a fresh scheduled snapshot both restored into isolated temporary
+databases; no production restore or existing-user mutation was performed.
+
+New immutable source offer:
+`https://tools.utilibre.org/utilibre-source/security-util-linux-followup-20261012-source.tar.gz`
+(9,700,659 bytes; HTTPS SHA-256
+`153528327896a9c841956fe6eb5b65b062b611321eaac2dbe1510657bf1999db`).
+Earlier offers are unchanged. No Caddy change or new service.
+
+Still working: compatible curl/other dependency repairs, disputed cache-consumer
+exposure, vendor-unfixed GnuTLS, resident host mappings/kernel, and compiled
+Deno/WASM coverage. curl 8.22.0 source is downloaded and its signature verified
+against the key shipped in authenticated Debian source; **not built or deployed**.
+The active public GitHub workflow still has no genuine scheduled run since
+11 October 20:56; manual success does not close that independent-monitoring gap.
+Root retains about 11 GiB free and the 8 GiB reserve remains enforced.
+
+## Previous boundary — 12 October, 04:55 UTC
 
 The ncurses command-line repair is deployed across **28 images / 34 roles** and
 the VM host. The native overflow regression fails against both original Debian

@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   grist:
     <<: *runtime
-    image: utilibre-ncurses-records-grist:security-20261012
+    image: utilibre-util-linux-records-grist:security-20261012
     user: '1000:1000'
     cpus: 2
     mem_limit: 8g
@@ -50,7 +50,7 @@ services:
       ingress: {ipv4_address: 172.29.159.11}
   candlr:
     <<: *runtime
-    image: utilibre-ncurses-records-candlr:security-20261012
+    image: utilibre-util-linux-records-candlr:security-20261012
     user: '1000:1000'
     entrypoint: ['/bin/sh', '-c']
     command: ['cd /app/backend && alembic upgrade head && exec supervisord -n -c /etc/supervisor/conf.d/candlr.conf']
@@ -96,7 +96,7 @@ services:
       retries: 10
   egress:
     <<: *runtime
-    image: utilibre-ncurses-unfurl-proxy:security-20261012
+    image: utilibre-util-linux-13ft-proxy:security-20261012
     cpus: 0.25
     mem_limit: 128m
     memswap_limit: 128m

@@ -14,7 +14,7 @@ x-runtime: &runtime
 services:
   radicale:
     <<: *runtime
-    image: utilibre-ncurses-calendar-radicale:security-20261012
+    image: utilibre-util-linux-calendar-radicale:security-20261012
     build:
       context: .
       dockerfile: Dockerfile.radicale

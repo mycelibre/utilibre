@@ -39,6 +39,14 @@ if(fs.existsSync(dir+'/rsync-release.json')){
 const exporter=read(dir+'/expat-release.json').groups.find(g=>g.key==='penpot-exporter');assert.equal(exporter.status,'passed');
 for(const [image,name] of [['sha256:ca4f4adc5367a40e1597bea7d6032de0d08266b6d65cdf083ae4c695d54d23a7','utilibre-expanded-penpot-frontend-1'],[exporter.newImage,'utilibre-expanded-penpot-exporter-1']])
  specs.set(image,{version:'6.5+20250216-2+dhi4',checksum:'54821f5e17572f0badc7059efefb54fb54d9e8a28449274f478735314f22474d',suite:'trixie',containers:[name]});
+if(fs.existsSync(dir+'/util-linux-release.json')){
+ const report=read(dir+'/util-linux-release.json');assert.equal(report.status,'passed');
+ for(const row of overlayRows(report)){
+  const prior=specs.get(row.oldImage);if(!prior)continue;
+  assert(prior.containers.includes(row.name));assert(Date.parse(row.completedAt)<=Date.parse(scan.date));
+  specs.set(row.newImage,prior);
+ }
+}
 const manifests=new Map,proofs=[],decisions=[],skipped=[];
 for(const item of q.items){
  if(item.status!=='needs-review'||item.id!=='CVE-2025-69720'||item.package!=='ncurses-bin'||item.type!=='debian')continue;

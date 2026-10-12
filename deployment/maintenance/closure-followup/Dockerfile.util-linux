@@ -1,0 +1,10 @@
+ARG BASE
+FROM ${BASE}
+ARG RESTORE_USER=root
+USER root
+COPY packages/ /tmp/utilibre-util-linux-packages/
+COPY install-util-linux.sh /tmp/utilibre-install-util-linux.sh
+RUN sh /tmp/utilibre-install-util-linux.sh \
+ && rm -r /tmp/utilibre-util-linux-packages \
+ && rm /tmp/utilibre-install-util-linux.sh
+USER ${RESTORE_USER}

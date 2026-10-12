@@ -13,5 +13,6 @@ docker run --rm --name maintenance-util-linux-trixie-build --cpus 2 --memory 3g 
  --tmpfs /var/cache/apt:rw,nosuid,nodev,size=256m \
  --mount type=bind,src="$TASK/sources",dst=/source,readonly \
  --mount type=bind,src="$RECIPE/util-linux-inner.sh",dst=/build.sh,readonly \
+ --mount type=bind,src="$RECIPE",dst=/recipe,readonly \
  --mount type=bind,src="$TASK/util-linux-trixie",dst=/output \
  --entrypoint sh "$BASE" -ec 'sh /build.sh > /output/runner.log 2>&1'

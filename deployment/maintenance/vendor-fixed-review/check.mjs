@@ -117,7 +117,7 @@ export function run(){
  process.umask(0o077);const queue=read('security-queue.json'),scan=read('security.json');freshScan(queue,scan);
  const decisions=[],proofs=[],skipped=[],cache=new Map();
  const currentSpecs=[...specs];
- for(const receipt of ['closure-followup-20261012/bookworm-release.json','closure-followup-20261012/ncurses-release.json','closure-followup-20261012/rsync-release.json']){
+ for(const receipt of ['closure-followup-20261012/bookworm-release.json','closure-followup-20261012/ncurses-release.json','closure-followup-20261012/rsync-release.json','closure-followup-20261012/util-linux-release.json']){
   if(!fs.existsSync(root+receipt))continue;const rows=overlayRows(read(receipt));
   for(const s of [...currentSpecs]){if(!s.containers.length)continue;
    const matched=s.containers.map(name=>rows.find(r=>r.name===name&&r.oldImage===s.artifact));

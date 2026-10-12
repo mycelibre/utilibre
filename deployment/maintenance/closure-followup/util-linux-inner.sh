@@ -28,8 +28,20 @@ for commit in 43ec8a89f6c99130727084b3496a2ffd2b4200f0 4cccf4edc256507734e3484cf
  printf '\nupstream/utilibre-%s.patch\n' "$commit" >> debian/patches/series
  dpkg-source --before-build . >> /output/patch.log 2>&1
 done
-dch --local '+utilibre' 'Backport exact upstream stable-branch mount hook, pinned-path and nsenter descriptor repairs. Preserve the stable library ABI.'
-test "$(dpkg-parsechangelog -SVersion)" = '2.41.5-0+deb13u1+utilibre1'
+patch --dry-run --fuzz=0 -p1 < /recipe/util-linux-fileutils-include.patch >> /output/patch.log
+cp /recipe/util-linux-fileutils-include.patch debian/patches/upstream/utilibre-fileutils-include.patch
+printf '\nupstream/utilibre-fileutils-include.patch\n' >> debian/patches/series
+dpkg-source --before-build . >> /output/patch.log 2>&1
+# Debian ties these native packages to exact sibling revisions. Preserve the
+# extra libblkid fix already installed in the two DHI-based Penpot images when
+# rebuilding the coupled family; never regress it with a version-only upgrade.
+echo '1c245b3d05261a7688f295b5b9b0bdfc3eb44d11bccc5c63668f4fbeffe2c1b6  /source/util-linux-dhi-CVE-2026-53615.patch' | sha256sum -c -
+patch --dry-run --fuzz=0 -p1 < /source/util-linux-dhi-CVE-2026-53615.patch >> /output/patch.log
+cp /source/util-linux-dhi-CVE-2026-53615.patch debian/patches/upstream/utilibre-CVE-2026-53615.patch
+printf '\nupstream/utilibre-CVE-2026-53615.patch\n' >> debian/patches/series
+dpkg-source --before-build . >> /output/patch.log 2>&1
+dch --newversion '2.41.5-0+deb13u1+utilibre2' 'Backport upstream stable mount/path/nsenter repairs; retain DHI libblkid offset widening and stable library ABI.'
+test "$(dpkg-parsechangelog -SVersion)" = '2.41.5-0+deb13u1+utilibre2'
 dpkg-query -W -f='${binary:Package}=${Version}\n' | sort > /output/build-packages.lock
 dpkg-source -b . > /output/source-package.log 2>&1
 dpkg-buildpackage -B -us -uc > /output/build.log 2>&1
@@ -37,6 +49,6 @@ dpkg-buildpackage -B -us -uc > /output/build.log 2>&1
 # Run them for real as nobody in this disposable, unprivileged container.
 chown -R 65534:65534 /work/util-linux-2.41.5
 runuser -u nobody -- ./tests/run.sh --nonroot --parallel=2 --show-diff > /output/native-suite.log 2>&1
-cp /work/*_amd64.deb /work/util-linux_2.41.5.orig.tar.xz /work/util-linux_2.41.5-0+deb13u1+utilibre1.dsc /work/util-linux_2.41.5-0+deb13u1+utilibre1.debian.tar.xz /output/
+cp /work/*_amd64.deb /work/util-linux_2.41.5.orig.tar.xz /work/util-linux_2.41.5-0+deb13u1+utilibre2.dsc /work/util-linux_2.41.5-0+deb13u1+utilibre2.debian.tar.xz /output/
 sha256sum /output/*.deb /output/*.dsc /output/*.tar.* > /output/SHA256SUMS
 echo NATIVE_UTIL_LINUX_BUILD_PASSED

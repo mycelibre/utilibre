@@ -6,7 +6,7 @@ import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {validateDecision} from '../triage.mjs';
 import {exactDhiFinding} from './policy.mjs';
-import {freshScan} from '../review-native-backports.mjs';
+import {freshScan,overlayRows} from '../review-native-backports.mjs';
 import {authenticateArchive,payloadManifest,validatePayload} from './dhi-proof.mjs';
 process.umask(0o077);
 const dir='/var/lib/utilibre-maintenance/vendor-leaves-final-20261011',out=dir+'/dhi-fixed',sha=b=>createHash('sha256').update(b).digest('hex');fs.mkdirSync(out,{recursive:true});
@@ -17,6 +17,11 @@ const followup='/var/lib/utilibre-maintenance/closure-followup-20261012/expat-re
 if(fs.existsSync(followup)){
  const r=JSON.parse(fs.readFileSync(followup));assert.equal(r.status,'passed');
  const g=r.groups.find(g=>g.key==='penpot-exporter'&&g.oldImage===images[1][1]);assert(g&&g.status==='passed');images[1][1]=g.newImage;
+}
+const utilRelease='/var/lib/utilibre-maintenance/closure-followup-20261012/util-linux-release.json';
+if(fs.existsSync(utilRelease)){
+ const report=JSON.parse(fs.readFileSync(utilRelease));assert.equal(report.status,'passed');
+ for(const image of images){const row=overlayRows(report).find(r=>r.name===image[0]&&r.oldImage===image[1]);assert(row);image[1]=row.newImage;}
 }
 const versions={'libpcre2-8-0':['pcre2','10.46-1~deb13u3+dhi0'],'libsqlite3-0':['sqlite3','3.46.1-7+deb13u2+dhi1'],...Object.fromEntries(['libssl3t64','openssl','openssl-provider-legacy'].map(p=>[p,['openssl','3.5.7-1~deb13u3+dhi0']])),...Object.fromEntries(['util-linux','libmount1','libblkid1','liblastlog2-2','libsmartcols1','libuuid1'].map(p=>[p,['util-linux','2.41.5-0+deb13u1+dhi3']]))};
 const allowed=new Set('103111 86145 89157 89161 89156 89158 89160 89162 11822 11824 84782 42772 54872 54873 54875 72897 75804 75805 75806 77696 84784 35189 35191 14456 18798 63072 63076 14457 54874 63073 63074 63075 75803 53612 53613 53614 13595 27456 53615'.split(' ').map(x=>'CVE-2026-'+x));allowed.add('CVE-2025-14104');

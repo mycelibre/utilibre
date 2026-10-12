@@ -1,0 +1,16 @@
+Description: Include the existing header defining RESOLVE_NO_SYMLINKS
+ The upstream v2.41 stable source-pinning backport uses this constant in
+ hook_idmap.c but does not include fileutils.h there. This is a compile-only
+ prerequisite; it changes no function, fallback or security policy.
+Author: Utilibre maintainers
+Forwarded: no
+--- a/libmount/src/hook_idmap.c
++++ b/libmount/src/hook_idmap.c
+@@ -27,6 +27,7 @@
+ #include "namespace.h"
+ 
+ #include "mountP.h"
++#include "fileutils.h"
+ 
+ #ifdef HAVE_LINUX_NSFS_H
+ # include <linux/nsfs.h>

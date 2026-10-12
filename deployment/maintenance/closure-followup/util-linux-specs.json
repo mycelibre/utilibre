@@ -1,0 +1,427 @@
+[
+  {
+    "key": "util-linux-records-candlr",
+    "base": "sha256:04373edc4864f1f63937825398ad99a4b0f45934ff8a4e4158cb29776e358d3e",
+    "baseRef": "utilibre-ncurses-records-candlr:security-20261012",
+    "containers": [
+      "utilibre-records-candlr-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-records-candlr:security-20261012"
+  },
+  {
+    "key": "util-linux-13ft-proxy",
+    "base": "sha256:0b66483f3cf4c3f23e6c1c54e03a74fc764e64bf5053ce01c890f5c7a57098c4",
+    "baseRef": "utilibre-ncurses-unfurl-proxy:security-20261012",
+    "containers": [
+      "utilibre-13ft-proxy-1",
+      "utilibre-records-egress-1",
+      "utilibre-trip-proxy-1",
+      "utilibre-unfurl-proxy-1",
+      "utilibre-wallabag-proxy-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-13ft-proxy:security-20261012"
+  },
+  {
+    "key": "util-linux-kitchenowl-app",
+    "base": "sha256:10e21ae4885bf85e01ca9df35a732f33b2049a0b6f5e07874cf0e2177338efdd",
+    "baseRef": "utilibre-ncurses-kitchenowl-app:security-20261012",
+    "containers": [
+      "utilibre-kitchenowl-app-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-kitchenowl-app:security-20261012"
+  },
+  {
+    "key": "util-linux-pack-forms-app",
+    "base": "sha256:1d2268a1cc1b5390e2510cd5c4b93c726ea24b6ce3e81eb3495be7706e1a3f26",
+    "baseRef": "utilibre-ncurses-pack-forms-app:security-20261012",
+    "containers": [
+      "utilibre-pack-forms-app-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-pack-forms-app:security-20261012"
+  },
+  {
+    "key": "util-linux-expanded-penpot-exporter",
+    "base": "sha256:2eebbfbd341693f5cb0d0ba0f4093d684513c48d51acb03250601c49497ab001",
+    "baseRef": "utilibre-penpot-exporter:2.18.3-expat-closure-20261012",
+    "containers": [
+      "utilibre-expanded-penpot-exporter-1"
+    ],
+    "packages": [
+      "bsdextrautils",
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-expanded-penpot-exporter:security-20261012"
+  },
+  {
+    "key": "util-linux-family-chess-app",
+    "base": "sha256:355e3315aa2d6116acddc0fcfb0ec42354a6dee3c925a723fddd008038cc1baf",
+    "baseRef": "utilibre-ncurses-family-chess-app:security-20261012",
+    "containers": [
+      "utilibre-family-chess-app-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-family-chess-app:security-20261012"
+  },
+  {
+    "key": "util-linux-records-grist",
+    "base": "sha256:360fc707a1e1e4833443704be15d6a47317e5d4df6a095cdb2d8fa4b80171fb5",
+    "baseRef": "utilibre-ncurses-records-grist:security-20261012",
+    "containers": [
+      "utilibre-records-grist-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-records-grist:security-20261012"
+  },
+  {
+    "key": "util-linux-identity-server",
+    "base": "sha256:3d0be018b2ec0e490cb43ba51290e1cc6d29cac4f65d2ceb86f44056b278c463",
+    "baseRef": "utilibre-ncurses-identity-worker:security-20261012",
+    "containers": [
+      "utilibre-identity-server-1",
+      "utilibre-identity-worker-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-identity-server:security-20261012"
+  },
+  {
+    "key": "util-linux-beaverhabits-app",
+    "base": "sha256:3e5076f499fb70ac7a6c69fefbac92ba83e8cc36188cc1d4f2f4e3f190c8830e",
+    "baseRef": "utilibre-ncurses-beaverhabits-app:security-20261012",
+    "containers": [
+      "utilibre-beaverhabits-app-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-beaverhabits-app:security-20261012"
+  },
+  {
+    "key": "util-linux-galene-turn-turn",
+    "base": "sha256:6de72571c4cbdd7469e33bd4aaee8ca2dc43d4538a1d5cb670f663f2daa1a626",
+    "baseRef": "utilibre-ncurses-galene-turn-turn:security-20261012",
+    "containers": [
+      "utilibre-galene-turn-turn-1",
+      "utilibre-turn-option-turn-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-galene-turn-turn:security-20261012"
+  },
+  {
+    "key": "util-linux-expanded-penpot-backend",
+    "base": "sha256:742d4bc2047ef141df4733da4a45052185c2ef389b5e1b9839e163058762f8df",
+    "baseRef": "utilibre-ncurses-expanded-penpot-backend:security-20261012",
+    "containers": [
+      "utilibre-expanded-penpot-backend-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-expanded-penpot-backend:security-20261012"
+  },
+  {
+    "key": "util-linux-linkding-linkding",
+    "base": "sha256:7e9f1d6833ffc814826eee9ffbdf478ebebee72247e550cdfb559b164a01ec77",
+    "baseRef": "utilibre-ncurses-linkding-linkding:security-20261012",
+    "containers": [
+      "utilibre-linkding-linkding-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-linkding-linkding:security-20261012"
+  },
+  {
+    "key": "util-linux-trip-app",
+    "base": "sha256:8826dc3bc8acd4f8e3f01277099e966c495db8d49344657f523dd52ad6d0e4e7",
+    "baseRef": "utilibre-ncurses-trip-app:security-20261012",
+    "containers": [
+      "utilibre-trip-app-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-trip-app:security-20261012"
+  },
+  {
+    "key": "util-linux-services-freshrss",
+    "base": "sha256:8e3d0776717460e68e6560391bf46977679a82ca6ec163c12a408386d77e84e4",
+    "baseRef": "utilibre-ncurses-services-freshrss:security-20261012",
+    "containers": [
+      "utilibre-services-freshrss-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-services-freshrss:security-20261012"
+  },
+  {
+    "key": "util-linux-calendar-radicale",
+    "base": "sha256:a37f2f4978cc01c149995368abaedec3ea5f0b92b6237cf0fabff2568ead4690",
+    "baseRef": "utilibre-ncurses-calendar-radicale:security-20261012",
+    "containers": [
+      "utilibre-calendar-radicale-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-calendar-radicale:security-20261012"
+  },
+  {
+    "key": "util-linux-priviblur-priviblur",
+    "base": "sha256:b7e4a5abcf3fd622fc397359c25bc25daaecbe12d7639e72de7cf0b963a417c7",
+    "baseRef": "utilibre-ncurses-priviblur-priviblur:security-20261012",
+    "containers": [
+      "utilibre-priviblur-priviblur-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-priviblur-priviblur:security-20261012"
+  },
+  {
+    "key": "util-linux-expanded-breezewiki",
+    "base": "sha256:c4ccb631be7f976e1bee8510d930a2f7d69ccff873b41cfc6a6e8451e923f0aa",
+    "baseRef": "utilibre-ncurses-expanded-breezewiki:security-20261012",
+    "containers": [
+      "utilibre-expanded-breezewiki-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-expanded-breezewiki:security-20261012"
+  },
+  {
+    "key": "util-linux-services-rsshub",
+    "base": "sha256:c8055cafd33d9ac4d15a2d58a9577357e4cddf6ef10df0a12e1a8d16e0cb63b6",
+    "baseRef": "utilibre-ncurses-services-rsshub:security-20261012",
+    "containers": [
+      "utilibre-services-rsshub-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-services-rsshub:security-20261012"
+  },
+  {
+    "key": "util-linux-expanded-penpot-frontend",
+    "base": "sha256:ca4f4adc5367a40e1597bea7d6032de0d08266b6d65cdf083ae4c695d54d23a7",
+    "baseRef": "utilibre-penpot-frontend:2.18.3-minimal-runtime-20261011",
+    "containers": [
+      "utilibre-expanded-penpot-frontend-1"
+    ],
+    "packages": [
+      "bsdextrautils",
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-expanded-penpot-frontend:security-20261012"
+  },
+  {
+    "key": "util-linux-unfurl-app",
+    "base": "sha256:d89427a6d0b8315b046a99aba31e106d3260e77f1d06110c7ed161f72d5e0a77",
+    "baseRef": "utilibre-ncurses-unfurl-app:security-20261012",
+    "containers": [
+      "utilibre-unfurl-app-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-unfurl-app:security-20261012"
+  },
+  {
+    "key": "util-linux-13ft-app",
+    "base": "sha256:ea6f83ff73261274040383a96837c28ead7dcc46ff279fdd2769bdd4e73870f3",
+    "baseRef": "utilibre-ncurses-13ft-app:security-20261012",
+    "containers": [
+      "utilibre-13ft-app-1"
+    ],
+    "packages": [
+      "bsdutils",
+      "libblkid1",
+      "liblastlog2-2",
+      "libmount1",
+      "libsmartcols1",
+      "libuuid1",
+      "login",
+      "mount",
+      "util-linux"
+    ],
+    "candidate": "utilibre-util-linux-13ft-app:security-20261012"
+  }
+]

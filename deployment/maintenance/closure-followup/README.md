@@ -51,16 +51,82 @@ have zero restarts. No production database migration/restore was performed.
 
 ## Primary evidence and build scope
 
-### In progress: stable util-linux repairs
+### Stable util-linux repairs
 
-`build-util-linux.sh` and `util-linux-inner.sh` prepare native Trixie packages,
-not a host distribution upgrade. Five checksum-pinned upstream v2.41 stable
-commits add descriptor close-on-exec, safe source-path pinning, and failed-helper
-post-hook handling to the authenticated Debian 2.41.5 source. Debian already
-contains the other two relevant path-handling changes. A build alone does not
-authorize deployment: native tests, symbol/import compatibility, matching source
-offer, application gates and exact rollback preparation are still required.
-No util-linux candidate is deployed at this checkpoint.
+Native Trixie package version: `2.41.5-0+deb13u1+utilibre2`. This is a rebuild of
+the installed stable family, not a distribution/glibc upgrade. Five unchanged,
+checksum-pinned upstream v2.41 stable commits repair descriptor close-on-exec,
+restricted source-path pinning, and failed-helper post-hooks. Debian already
+includes the other two relevant path-handling changes. A compile-only
+`fileutils.h` include is required by the cherry-pick; DHI's `CVE-2026-53615`
+libblkid offset-widening patch is retained so Penpot does not regress.
+
+Deployed at **05:33 UTC**: all 21 images / 27 roles / 17 projects passed their
+exact-image health gates. The subsequent 59 status and 105 catalogue endpoint
+checks passed. Penpot's synthetic PNG/JPEG/WebP thumbnails and native font
+TTF/OTF/WOFF/WOFF2 round trips pass as its non-root user with networking disabled.
+
+The genuine non-root upstream suite reports **337 tests**, including **160
+skipped** and **8 known-failure lines**. Those are not 337 independently passed
+operations. Six isolated old/new controls reproduce the original failed-helper
+mode change and inherited descriptor, verify both repairs, and preserve the
+successful-helper behavior. The cgroup descriptor fixture simulates only entry
+into its existing namespace and redirects the test write to a temporary file;
+it never changes a host cgroup or performs a privileged mount. Restricted-source
+pinning is source-reviewed, not a claimed adversarial kernel race test.
+
+All 21 candidates preserve application files, configuration, SUID/SGID surface,
+unrelated libraries and the existing five-library ABI. Penpot backend additionally
+requires repairing **two private ImageMagick loader copies**, with separate ABI
+checks. Its initially failing native regression caught those copies; the final
+candidate passes. No test shim or fixture helper is shipped inside an image.
+
+Recipes: `build-util-linux.sh`, `build-util-linux-fixtures.sh`,
+`util-linux-stage.mjs`, `util-linux-regression.mjs`, and
+`cache-release.mjs prepare/apply --util-linux`. Exact 21-image / 27-role pins,
+same-namespace companions, 17 project health gates and rollback are retained in
+private `util-linux-release.json`. Check its completed state before making a
+deployment claim. Source is published additively using
+`publish-libraries.mjs --util-linux --publish`, never replacing an earlier offer.
+
+`util-linux-host.mjs prepare/apply` updates only the 14 already-installed sibling
+packages, preserving six library ABIs, configuration, libc, and Docker/SSH PIDs.
+Signed original packages are retained under private `rollback/util-linux/`.
+Two early APT attempts rejected an epoch-bearing local archive path before
+installation; rollback verification passed. Allowing APT's normal **local-file
+acquisition** after an exact-family simulation fixed this; no additional package
+or distribution was selected. The host installation now passes native read-only
+checks. Old resident host mappings still require refresh/reboot; disk payload
+verification alone does **not** clear those library findings.
+The system manager was re-executed and journald, timesyncd, udevd and logind
+refreshed successfully, without restarting Docker or SSH. Three remaining
+network/user-session/PAM processes are explicitly recorded in private
+`util-linux-host-refresh.json`; they were not interrupted to clear a report.
+
+Rollback: use the private receipt's exact previous image scalars and the existing
+project supervisor (especially shared-namespace/firewall stacks), then repeat the
+old-image readiness gate. For host packages, use the receipt's signed local
+`prior` archives with APT `--allow-downgrades --no-install-recommends` and preserve
+conffiles. No user data restore or deletion is part of either rollback.
+
+`review-util-linux.mjs` requires the completed release, exact live package bytes,
+native controls and explicit patch/primary-vendor evidence. Host library reviews
+fail closed while older mapped libraries remain. Component exclusions are
+separate from fixes: the >=2.42 subdirectory path and >=2.40 cgroup feature must
+not be attributed to older branches that lack them. Raw findings remain intact.
+
+Published source: `security-util-linux-followup-20261012-source.tar.gz`,
+9,700,659 bytes, HTTPS-verified SHA-256
+`153528327896a9c841956fe6eb5b65b062b611321eaac2dbe1510657bf1999db`.
+The 05:36:20 scan covers 109 images, 175 containers, 55 source manifests and
+host packages. Raw 40 critical / 2,697 high; exact individual reviews leave
+0 critical / 563 high pending. This is not a security clearance.
+
+Related maintenance repair: Spliit's scheduled backup verifier raced the image's
+temporary bootstrap PostgreSQL socket. It now uses loopback TCP readiness and the
+same repaired image as production, with network isolation, no fixture logging,
+and a maintenance-only name. Both its failed snapshot and a fresh scheduled
+snapshot passed isolated native restore. No production database was restored.
 
 Primary references checked 12 October:
 [stable branch changes](https://github.com/util-linux/util-linux/compare/v2.41.5...v2.41.6),

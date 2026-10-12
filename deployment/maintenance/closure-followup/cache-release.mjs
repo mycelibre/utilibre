@@ -6,8 +6,8 @@ import {createHash} from 'node:crypto';
 import {canonical} from '../go-final/release.mjs';
 import {replaceImagePins,namespaceDependents,releaseGroup,rollbackFiles,existingComposeArgs,checkExistingGroup,recreateExistingGroup,existingGroupStatus} from '../language-final/release.mjs';
 process.umask(0o077);
-const [mode,variant]=process.argv.slice(2);assert(['prepare','apply'].includes(mode));assert([undefined,'--ncurses','--rsync'].includes(variant));assert(process.argv.length<=4);
-const kind=variant==='--ncurses'?'ncurses':variant==='--rsync'?'rsync':'cache';
+const [mode,variant]=process.argv.slice(2);assert(['prepare','apply'].includes(mode));assert([undefined,'--ncurses','--rsync','--util-linux'].includes(variant));assert(process.argv.length<=4);
+const kind=variant==='--ncurses'?'ncurses':variant==='--rsync'?'rsync':variant==='--util-linux'?'util-linux':'cache';
 const dir='/var/lib/utilibre-maintenance/closure-followup-20261012',file=dir+'/'+kind+'-release.json';
 const read=p=>JSON.parse(fs.readFileSync(p)),digest=v=>createHash('sha256').update(JSON.stringify(canonical(v))).digest('hex');
 const docker=(...args)=>{try{return cp.execFileSync('docker',args,{encoding:'utf8',timeout:180000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe'],env:{...process.env,APP_BIND_IP:'10.10.1.43'}}).trim();}catch{throw Error('Docker operation failed; sensitive configuration withheld');}};
@@ -21,6 +21,13 @@ if(mode==='prepare'){
   const b=read(dir+'/'+kind+'/'+s.key+'/build.json'),n=read(dir+'/'+kind+'/'+s.key+'/native.json');
   assert(b.passed&&b.configurationUnchanged&&n.passed);assert.equal(n.imageId,b.imageId);assert.equal(inspect(s.candidate).Id,b.imageId);assert(Date.now()-Date.parse(n.date)<86400000);
   if(kind==='ncurses'){assert(n.nativeTerminalRoundTrip&&n.longSgrInput&&n.sharedLibrariesUnchanged);assert.match(b.applicationSha256,/^[a-f0-9]{64}/);assert.match(b.librariesSha256,/^[a-f0-9]{64}/);}
+  if(kind==='util-linux'){
+   assert(n.nativeMountFailureAndSuccess&&n.simulatedCgroupDescriptorClosed&&n.nativeFstabAndLock&&n.abiPreserved);
+   assert.equal(n.reported,337);assert.equal(b.version,'2.41.5-0+deb13u1+utilibre2');
+   for(const key of ['applicationSha256','etcSha256','unrelatedLibrariesSha256'])assert.match(b[key],/^[a-f0-9]{64}/);
+   assert([5,7].includes(b.abi.length));assert(b.abi.every(a=>a.preservedSymbols>0));
+   if(b.abi.length===7)assert.deepEqual(b.abi.slice(5).map(a=>a.path),['/opt/imagick/lib/deps/libmount.so.1','/opt/imagick/lib/deps/libblkid.so.1']);
+  }
   if(kind==='rsync'){
    assert(n.nativeLocalIncrementalAndSafeLinks&&n.nativeLoopbackDaemonReadOnly);assert.equal(n.upstreamPassed,306);
    const db=read(dir+'/rsync/'+s.key+'/database.json');assert(db.passed&&db.nativeDumpRestore&&db.documentdbTypedDataAndRoleIsolation);assert.equal(db.imageId,b.imageId);

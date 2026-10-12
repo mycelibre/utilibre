@@ -11,13 +11,17 @@ const file='/home/ubuntu/freetools/deployment/maintenance/advisory-reviews.json'
 const original=fs.readFileSync(file,'utf8'),reviews=JSON.parse(original);
 const sha=t=>createHash('sha256').update(t).digest('hex');
 const read=p=>JSON.parse(fs.readFileSync(p));
-const r=read(dir+'/ncurses-release.json');assert.equal(r.status,'passed');
+const kind=process.argv[2]==='--util-linux'?'util-linux':'ncurses';assert(process.argv.length<=3);assert([undefined,'--util-linux'].includes(process.argv[2]));
+const r=read(dir+'/'+kind+'-release.json');assert.equal(r.status,'passed');
 const rows=overlayRows(r);
 for(const row of rows){
  assert.equal(cp.execFileSync('docker',['inspect',row.name,'--format','{{.Image}}'],{encoding:'utf8'}).trim(),row.newImage);
- const spec=JSON.parse(fs.readFileSync(new URL('./ncurses-specs.json',import.meta.url))).find(s=>s.base===row.oldImage&&s.containers.includes(row.name));assert(spec);
- const b=read(dir+'/ncurses/'+spec.key+'/build.json'),n=read(dir+'/ncurses/'+spec.key+'/native.json');
- assert(b.passed&&b.configurationUnchanged&&n.passed&&n.sharedLibrariesUnchanged);assert.equal(b.imageId,row.newImage);assert.equal(n.imageId,row.newImage);
+ if(row.key==='namespace-companion'){assert.equal(row.oldImage,row.newImage);continue;}
+ const spec=JSON.parse(fs.readFileSync(new URL('./'+kind+'-specs.json',import.meta.url))).find(s=>s.base===row.oldImage&&s.containers.includes(row.name));assert(spec);
+ const b=read(dir+'/'+kind+'/'+spec.key+'/build.json'),n=read(dir+'/'+kind+'/'+spec.key+'/native.json');
+ assert(b.passed&&b.configurationUnchanged&&n.passed);assert.equal(b.imageId,row.newImage);assert.equal(n.imageId,row.newImage);
+ if(kind==='ncurses')assert(n.sharedLibrariesUnchanged);
+ else{assert(n.abiPreserved&&n.nativeMountFailureAndSuccess&&n.simulatedCgroupDescriptorClosed);assert.match(b.etcSha256,/^[a-f0-9]{64}/);assert.match(b.unrelatedLibrariesSha256,/^[a-f0-9]{64}/);}
 }
 for(const review of Object.values(reviews)){
  let changed=false;
@@ -26,18 +30,18 @@ for(const review of Object.values(reviews)){
  }
  for(const [name,hash]of Object.entries(review.files||{})){
   const bytes=fs.readFileSync(name);if(sha(bytes)===hash)continue;
-  assert(['/home/ubuntu/freetools/deployment/community/compose.yaml','/home/ubuntu/freetools/deployment/expanded/compose.yaml'].includes(name),'Unreviewed source file change');
+  assert(r.groups.flatMap(g=>[...(g.files||[]),...(g.mirrorFiles||[])]).includes(name),'Unreviewed source file change');
   // Reconstruct the previously reviewed file by reversing exact image scalars
   // from completed releases only. Never accept arbitrary file drift.
   const current=bytes.toString('utf8');let text=current,matched=false;
-  for(const receipt of ['ncurses-release.json','bookworm-release.json']){
+  for(const receipt of [...(kind==='util-linux'?['util-linux-release.json','rsync-release.json']:[]),'ncurses-release.json','bookworm-release.json']){
    const release=read(dir+'/'+receipt);assert.equal(release.status,'passed');
    const pairs=release.groups.flatMap(g=>{assert.equal(g.status,'passed');return (g.rows||[g]).map(r=>({from:r.newRef,to:r.oldRef}));});
    text=replaceImagePins(text,pairs).text;if(sha(text)===hash){matched=true;break;}
   }
   assert(matched,'Reviewed configuration changed beyond passed image pins');review.files[name]=sha(current);changed=true;
  }
- if(changed)review.runtimeEvidence='2026-10-12 terminal-CLI follow-up: only native ncurses-bin changed; exact image configuration, complete app-file and shared-library hashes match the previously reviewed image. Native terminal round-trip, old/new overflow regression and live health passed. Application version and advisory IDs/revisions/ranges are unchanged; this does not clear dependency findings. See closure-followup/README.md. '+(review.runtimeEvidence||'');
+ if(changed)review.runtimeEvidence=(kind==='util-linux'?'2026-10-12 stable util-linux follow-up: exact installed native utility family and Penpot private libmount/libblkid repaired, existing ABI preserved. Application files outside these two library paths, image/runtime configuration and unrelated libraries are unchanged. Native old/new controls and live health passed.':'2026-10-12 terminal-CLI follow-up: only native ncurses-bin changed; exact image configuration, complete app-file and shared-library hashes match the previously reviewed image. Native terminal round-trip, old/new overflow regression and live health passed.')+' Application version and advisory IDs/revisions/ranges are unchanged; this does not clear dependency findings. See closure-followup/README.md. '+(review.runtimeEvidence||'');
 }
 const next=JSON.stringify(reviews,null,2)+'\n',before=original.split('\n'),after=next.split('\n');assert.equal(before.length,after.length,'Unexpected schema edit');
 const changes=[];for(let i=0;i<before.length;i++)if(before[i]!==after[i])changes.push('@@\n-'+before[i]+'\n+'+after[i]);

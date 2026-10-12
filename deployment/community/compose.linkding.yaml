@@ -11,7 +11,7 @@ x-bounded: &bounded
 services:
   linkding:
     <<: *bounded
-    image: utilibre-ncurses-linkding-linkding:security-20261012
+    image: utilibre-util-linux-linkding-linkding:security-20261012
     user: '33:33'
     cpus: 1.0
     mem_limit: 512m
