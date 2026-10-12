@@ -10,7 +10,7 @@ import tempfile
 import time
 ROOT=Path(__file__).resolve().parents[3]
 parser=argparse.ArgumentParser(); parser.add_argument('--image',default='utilibre-actual:leaves-security-20261011'); args=parser.parse_args()
-assert args.image in ['utilibre-actual:proxyaddr-security-20261011','utilibre-actual:leaves-security-20261011','utilibre-actual:privacy-rollback-20261011']
+assert args.image in ['utilibre-actual:proxyaddr-security-20261011','utilibre-actual:leaves-security-20261011','utilibre-actual:privacy-rollback-20261011','utilibre-cache-expanded-actual:4.3.0-20261012']
 report=Path(tempfile.mkdtemp(prefix='actual-leaves-native-',dir='/opt/utilibre/reports'))
 cid=None; forwarder=None
 try:

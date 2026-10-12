@@ -1,0 +1,4 @@
+[
+  {"kind":"rssbridge","suite":"bookworm","base":"utilibre-rssbridge:2025-08-05-xml-security-20261011","baseId":"sha256:89dd1b4e0ffa64583a1429825f5e797d1cacf4ea79d2090da3a73edbc49907cd","user":"root","candidate":"utilibre-rssbridge:xml-followup-20261012"},
+  {"kind":"gathio","suite":"bookworm","base":"utilibre-gathio-documentdb:17.11-0.107.0-xml-security-20261011","baseId":"sha256:95ee3337a58fff0a0430840754b91c547f57bfa806e71b8721d5815bf6985a3b","user":"root","dev":true,"candidate":"utilibre-gathio-documentdb:xml-followup-20261012"}
+]

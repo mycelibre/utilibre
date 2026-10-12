@@ -1,0 +1,536 @@
+[
+  {
+    "key": "cache-gathio-gathio",
+    "container": "utilibre-gathio-gathio-1",
+    "containers": [
+      "utilibre-gathio-gathio-1"
+    ],
+    "base": "sha256:09884afb7396b2b7153d29e39de667a2cb653f3daf2837e83534d408aa479361",
+    "candidate": "utilibre-cache-gathio-gathio:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-razzia-socket",
+    "container": "utilibre-razzia-socket-1",
+    "containers": [
+      "utilibre-razzia-socket-1"
+    ],
+    "base": "sha256:0d3a83ceea115b242b2da14634cda9425a5b3041cec5d0a2a1232a74d7ff3d7a",
+    "candidate": "utilibre-cache-razzia-socket:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-additions-dumb",
+    "container": "utilibre-additions-dumb-1",
+    "containers": [
+      "utilibre-additions-dumb-1"
+    ],
+    "base": "sha256:14fced983b8f4f5d13bd317b71ff326e4c3ed698f3d2ffd485485122cedd539d",
+    "candidate": "utilibre-cache-additions-dumb:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-records-bookplate",
+    "container": "utilibre-records-bookplate-1",
+    "containers": [
+      "utilibre-records-bookplate-1"
+    ],
+    "base": "sha256:327ff5d3060ff7b0596f7b1ed7b31c95a357999e749d4bf503ba7fd1ce3c6a53",
+    "candidate": "utilibre-cache-records-bookplate:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-expanded-resume",
+    "container": "utilibre-expanded-resume-1",
+    "containers": [
+      "utilibre-expanded-resume-1"
+    ],
+    "base": "sha256:3a626fe8c04698c9cd85ae57ef562f0cfee2f10fb062bd3a72e440141e123a69",
+    "candidate": "utilibre-cache-expanded-resume:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-community-uptime-kuma",
+    "container": "utilibre-community-uptime-kuma-1",
+    "containers": [
+      "utilibre-community-uptime-kuma-1"
+    ],
+    "base": "sha256:3cfe02bf61173af98c85a6e861890a48c7264b0710cc2dd469bb6038a5b1e7d2",
+    "candidate": "utilibre-cache-community-uptime-kuma:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "/app/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      },
+      {
+        "path": "/app/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-collaboration-pilot-wbo",
+    "container": "utilibre-collaboration-pilot-wbo-1",
+    "containers": [
+      "utilibre-collaboration-pilot-wbo-1"
+    ],
+    "base": "sha256:41ed92c5a5aff4b5cdf6ffdb3215fec645bcc6d782e748e23dab2b2db589ff9a",
+    "candidate": "utilibre-cache-collaboration-pilot-wbo:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-community-rallly",
+    "container": "utilibre-community-rallly-1",
+    "containers": [
+      "utilibre-community-rallly-1"
+    ],
+    "base": "sha256:6194febf9a9ae49bff20402f43f434ca1fe32cff820404784559eede2b46a2a0",
+    "candidate": "utilibre-cache-community-rallly:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-expanded-actual",
+    "container": "utilibre-expanded-actual-1",
+    "containers": [
+      "utilibre-expanded-actual-1"
+    ],
+    "base": "sha256:6859a1cb16fef5f0abc06c4dd4828160dda1157b01c39b6a0751efd7fdfb7a61",
+    "candidate": "utilibre-cache-expanded-actual:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "/app/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      },
+      {
+        "path": "/app/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-newsletters-smtp",
+    "container": "utilibre-newsletters-smtp-1",
+    "containers": [
+      "utilibre-newsletters-smtp-1",
+      "utilibre-newsletters-jobs-1"
+    ],
+    "base": "sha256:6bfc86232b4a04c9d7940ce32af71dbd1b350474a26cc87e967757ff624bc2b7",
+    "candidate": "utilibre-cache-newsletters-smtp:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-newsletters-web",
+    "container": "utilibre-newsletters-web-1",
+    "containers": [
+      "utilibre-newsletters-web-1"
+    ],
+    "base": "sha256:9617e6ed09b88201a9c3b61a3997b4bbac7277144981e643dd314135e15ee3d3",
+    "candidate": "utilibre-cache-newsletters-web:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-projects-app",
+    "container": "utilibre-projects-app-1",
+    "containers": [
+      "utilibre-projects-app-1"
+    ],
+    "base": "sha256:97d35fe45c0657eab3151d1850a42f33aee2f46f9a48524d8f6977f39c901b18",
+    "candidate": "utilibre-cache-projects-app:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-pack-cryptpad-cryptpad",
+    "container": "utilibre-pack-cryptpad-cryptpad-1",
+    "containers": [
+      "utilibre-pack-cryptpad-cryptpad-1"
+    ],
+    "base": "sha256:9d9a432c98b80591c9f91f85e7beb38a27323742dea793776a40cc122c0bd0d2",
+    "candidate": "utilibre-cache-pack-cryptpad-cryptpad:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-wishlist-app",
+    "container": "utilibre-wishlist-app-1",
+    "containers": [
+      "utilibre-wishlist-app-1"
+    ],
+    "base": "sha256:a5fc080ac511dcc3b6301c58474b26e3d1d50c10d2d0d3ba2f6444121d329b60",
+    "candidate": "utilibre-cache-wishlist-app:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/usr/src/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      },
+      {
+        "path": "/usr/src/app/node_modules/.pnpm/http-cache-semantics@4.3.0/node_modules/http-cache-semantics",
+        "version": "4.3.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-spliit-app",
+    "container": "utilibre-spliit-app-1",
+    "containers": [
+      "utilibre-spliit-app-1"
+    ],
+    "base": "sha256:b4ec9251fda14253224a0a0e6546f1b44535613a9b5dc1c997b83736b2b7480a",
+    "candidate": "utilibre-cache-spliit-app:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/usr/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-records-grist",
+    "container": "utilibre-records-grist-1",
+    "containers": [
+      "utilibre-records-grist-1"
+    ],
+    "base": "sha256:c079d86031536e62ecd066a321f7f62da67d76e16fcb6b59393adc21fd1d0a7e",
+    "candidate": "utilibre-cache-records-grist:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/opt",
+      "/grist",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-services-rsshub",
+    "container": "utilibre-services-rsshub-1",
+    "containers": [
+      "utilibre-services-rsshub-1"
+    ],
+    "base": "sha256:df2f883b12c30ab40b729c74019588e799f5bf6e62484b7f8e1992dc43aec1ca",
+    "candidate": "utilibre-cache-services-rsshub:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "/app/node_modules/.pnpm/http-cache-semantics@4.2.0/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      },
+      {
+        "path": "/app/node_modules/.pnpm/http-cache-semantics@4.2.0/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-biblioreads-biblioreads",
+    "container": "utilibre-biblioreads-biblioreads-1",
+    "containers": [
+      "utilibre-biblioreads-biblioreads-1"
+    ],
+    "base": "sha256:eb30d04a83acf6ff01cf97f151d97bf1160102f30e69d10991e7b9b174d4bc37",
+    "candidate": "utilibre-cache-biblioreads-biblioreads:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  },
+  {
+    "key": "cache-chitchatter-tracker",
+    "container": "utilibre-chitchatter-tracker-1",
+    "containers": [
+      "utilibre-chitchatter-tracker-1"
+    ],
+    "base": "sha256:f80c5daacf530ed491a5e15f670ba537d2e3534289e71cd23e2bd4a007c7516d",
+    "candidate": "utilibre-cache-chitchatter-tracker:4.3.0-20261012",
+    "roots": [
+      "/usr/local/lib/node_modules",
+      "/app",
+      "/opt",
+      "/srv"
+    ],
+    "paths": {
+      "http-cache-semantics": [
+        "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics"
+      ]
+    },
+    "installed": [
+      {
+        "path": "/usr/local/lib/node_modules/npm/node_modules/http-cache-semantics",
+        "version": "4.2.0",
+        "name": "http-cache-semantics"
+      }
+    ]
+  }
+]

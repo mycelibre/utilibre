@@ -51,6 +51,64 @@ have zero restarts. No production database migration/restore was performed.
 
 ## Primary evidence and build scope
 
+### Cache, HTTP server and Bookworm XML follow-up
+
+Deployed on 12 October, 03:32–04:10 UTC:
+
+- `http-cache-semantics 4.3.0` in 19 images/20 roles, with one unchanged
+  network-namespace companion restarted through its existing supervisor.
+  Registry integrity, full application-file manifests and image configuration
+  are checked; only the exact dependency paths change. Existing 4.3.0 copies
+  are retained. Every image passes fresh/stale/private/no-store/auth/Vary/ETag
+  contracts and native npm cache/lifecycle/pack tests without external access.
+  Kuma additionally passes fresh setup/authenticated Socket.IO, RSSHub its
+  native health route, and Actual its Chromium account/budget/ZIP export/import,
+  reload and server-sync download journey. These are synthetic checks, not
+  another exhaustive test of every unchanged application.
+- Actual's npm built-in configuration now disables update-notifier, audit and
+  fund. No other runtime configuration changes, and no analytics added.
+- FreshRSS uses authenticated Debian Apache `2.4.69-1`, PCRE2 `10.48-3.1`
+  and coexisting `libxml2-16 2.15.4+dfsg-1`. PHP's old libxml2 ABI and the
+  Expat repair are preserved. Complete FreshRSS/Apache/PHP configuration-file
+  parity, ELF/regex/XML, fictional account/feed/article/OPML and actual Apache
+  login-page checks passed. Existing no-request-log startup is exercised.
+- RSS-Bridge and the Gathio DocumentDB/PostgreSQL image now use native Bookworm
+  `libxml2 2.9.14+dfsg-1.3~deb12u6+utilibre2`, preserving its earlier entity fix
+  and adding the same nine checksum-pinned DHI/upstream backports as the Trixie
+  build. No foreign ABI is substituted. Upstream suites report 3,360 parsing
+  tests and 280,912 generated API checks without errors; separate native header,
+  symbol, PHP DOM/XPath/SimpleXML, PostgreSQL XML/PostGIS and DocumentDB
+  permission/dump/restore checks pass. Both exact live images are healthy.
+
+Important: **4.3.0 is not a demonstrated fix for CVE-2026-93748.** Its disputed
+`max-stale`/`Set-Cookie` behavior still reproduces in the recorded native test.
+The maintainer disputes that advisory; its disappearing scanner version match
+must not be interpreted as remediation. The runtime-consumer exposure review
+remains open. The separate Vary-wildcard fix (CVE-2026-93750) is verified.
+Sources checked 12 October:
+[upstream discussion](https://github.com/kornelski/http-cache-semantics/issues/56),
+[advisory correction request](https://github.com/github/advisory-database/issues/10139),
+[Apache security notes](https://httpd.apache.org/security/vulnerabilities_24.html),
+and the pinned XML patch manifest in `../native-final/libxml-dhi-patches.sha256`.
+
+Recipes and receipts: `cache-specs.json`, `cache-build.mjs`, `cache-check.mjs`,
+`cache-release.mjs`; `apache-stage.mjs`, `apache-check.mjs`, `release-expat.mjs
+prepare/apply --apache`; `../xml-final/build-bookworm.sh --security-followup`,
+`build.mjs`, `check.mjs`, `check-gathio.mjs` with `--security-followup`, followed
+by `release-expat.mjs prepare/apply --bookworm`. Never overwrite passed receipts
+or move candidate tags. Rollback restores only the receipt's old image pin;
+user volumes, firewall and configuration remain unchanged.
+
+The 64 focused release, payload-review, source-pin and advisory-identity tests
+pass. The 112-provider application-advisory check has no unresolved published
+application advisories at 04:06 UTC; this is separate from OS/dependency work.
+The manual GitHub external check `38202599557` passed. No genuine scheduled
+run from the replacement workflow has yet been observed; its alert stays open.
+
+The original native source addendum remains immutable. Updated recipes and
+the additional Bookworm source package are published separately; do not rerun
+the original publisher over its already-published archive.
+
 Checked 12 October 2026:
 
 - [Debian Expat tracker](https://security-tracker.debian.org/tracker/source-package/expat)

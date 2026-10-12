@@ -2,6 +2,13 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {absentComponent} from './review-binary-scope.mjs';
 const files=['/.','/usr/lib/libuuid.so.1'];
+test('Python SAX advisory never exempts the binding package or an included binding',()=>{
+ const item={id:'CVE-2026-74860',package:'libxml2'};
+ assert.match(absentComponent(item,['/.','/usr/lib/libxml2.so.2']),/Python SAX/);
+ assert.equal(absentComponent({...item,package:'python3-libxml2'},files),null);
+ for(const name of ['/usr/lib/python3/dist-packages/libxml2mod.so','/opt/libxml2.py'])assert.equal(absentComponent(item,[...files,name]),null);
+ assert.equal(absentComponent({...item,id:'CVE-2026-86138'},files),null);
+});
 test('mount-specific review covers an unrelated binary sibling, not the affected packages',()=>{
  const item={id:'CVE-2026-76642',package:'libuuid1'};
  assert.match(absentComponent(item,files),/mount/);
@@ -45,4 +52,8 @@ test('curl upstream distinguishes the tool from the library for two exact adviso
  assert.match(absentComponent(lib,['/.','/usr/bin/curl']),/easy-handle/);
  assert.equal(absentComponent({...lib,package:'libcurl4t64'},['/.','/usr/lib/libcurl.so.4']),null);
  assert.equal(absentComponent(lib,['/.','/usr/lib/libcurl.so.4']),null);
+ const proxy={id:'CVE-2026-8927',package:'curl'};
+ assert.match(absentComponent(proxy,['/.','/usr/bin/curl']),/environment-proxy/);
+ assert.equal(absentComponent({...proxy,package:'libcurl4t64'},['/.','/usr/lib/libcurl.so.4']),null);
+ assert.equal(absentComponent(proxy,['/.','/usr/lib/libcurl.so.4']),null);
 });

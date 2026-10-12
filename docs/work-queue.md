@@ -1,6 +1,51 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Current boundary — 12 October, 03:15 UTC
+## Current boundary — 12 October, 04:16 UTC
+
+The cache-library release is deployed across **19 images / 20 updated roles**,
+with one unchanged namespace companion. FreshRSS's Apache is updated to 2.4.69.
+RSS-Bridge and Gathio's database have the additional native Bookworm XML
+backports; both live roles are healthy after parsing, permission and synthetic
+restore gates. [Versions, tests and rollback](../deployment/maintenance/closure-followup/README.md).
+No user data, access rules, Caddy configuration or service URLs changed.
+
+The completed **03:39:30 UTC** scan (before the final two XML replacements)
+covered 109 images, 175 containers, 55 source manifests and the host. It reports
+40 critical / 2,763 high raw package-target occurrences; exact current-payload
+reviews left **0 critical / 848 high** pending in that scan. New image identities
+must be scanned/reviewed again. These are triage counts, not exploitability or
+an assertion that the fleet is vulnerability-free. Sixty-four focused review,
+rollback, source-pin and application-advisory tests passed.
+
+The 112-provider upstream check now has no unresolved published application
+advisory dispositions. This does **not** clear OS/library findings. The manual
+independent GitHub check
+[`38202599557`](https://github.com/mycelibre/utilibre/actions/runs/38202599557)
+passed, but the replacement workflow still has no observed `schedule` event.
+The autonomous-delivery alert remains valid.
+
+Work actively remaining:
+
+- Ncurses native Bookworm backport is building; a signed, compatible Trixie DHI
+  candidate is downloaded. Neither is deployed yet. Preserve the older library
+  ABI; do not use the incompatible sid tinfo candidate.
+- Cache CVE-2026-93748 remains a **manual exposure review**, despite 4.3.0 falling
+  outside the scanner's old range. The disputed behavior still reproduces;
+  inspect actual consumers before making an affected/not-affected decision.
+- curl/util-linux compatible repairs and native payload review, remaining
+  dependency findings, host kernel and compiled Deno/WASM boundaries continue.
+- ACL 2.4 adds new APIs and has a documented tar compatibility interaction.
+  A version-only replacement does not establish existing callers use the safer
+  APIs. Do not present downloaded packages as deployed remediation.
+- GnuTLS' vendor-unfixed issues and separate Proxmox/edge coverage remain.
+
+Additional source offer is published:
+`https://tools.utilibre.org/utilibre-source/security-cache-xml-followup-20261012-source.tar.gz`
+(2,498,964 bytes; SHA-256 `88c99df5f38d86f09a13a4836604a3e5cec75bbcd251e97c58cfcfef96e50099`).
+The prior source archive is unchanged. Root has about **12 GiB free**; builds
+retain the 8 GiB reserve. This is a checkpoint while work continues.
+
+## Previous boundary — 12 October, 03:15 UTC
 
 Deployed the [native-library follow-up](../deployment/maintenance/closure-followup/README.md):
 host Vim 9.2.0858, Expat 2.9.0 and BIND 9.20.29 rebuilt without its unused LMDB

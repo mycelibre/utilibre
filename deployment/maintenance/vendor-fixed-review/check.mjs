@@ -15,7 +15,8 @@ const sha=data=>createHash('sha256').update(data).digest('hex');
 const aomId='sha256:95ee3337a58fff0a0430840754b91c547f57bfa806e71b8721d5815bf6985a3b';
 const kumaPrevious='sha256:9d1c2c3e9cc58cdf6c130af004d54fd459ecee5ab834aca663dd1a886316419e';
 const kumaNpm='sha256:48efff64a859d5e40ce9d4d57d8d4416df8cf73a70f577b1c6cdfb6d0d0bd898';
-const kumaId='sha256:3cfe02bf61173af98c85a6e861890a48c7264b0710cc2dd469bb6038a5b1e7d2';
+const kumaClosure='sha256:3cfe02bf61173af98c85a6e861890a48c7264b0710cc2dd469bb6038a5b1e7d2';
+const kumaId='sha256:895a32c84a8c27b87332095cd1a98d44897fe51a65025a00852d8b4ea498fac1';
 const turnId='sha256:abdba9b317da98ca9962d33ca4a552f5a8b784a86d996e0adf10575132bff625';
 const jwtDeb={deb:'host-final-20261011/python3-jwt_2.15.1-1_all.deb',debSha:'e2bdfe81e1c0c45866e37e1a2f2fd190fcec24f8c5fc083e994733b0f915b1af'};
 const turnContainers=['utilibre-galene-turn-turn-1','utilibre-turn-option-turn-1'];
@@ -70,9 +71,15 @@ function receipts(spec,scan){
   const nn=readReceipt('npm10-final-20261011/native.json',proofs).rows.find(r=>r.key==='kuma-npm10'&&r.imageId===kumaNpm);
   assert(nn?.applicationBytesUnchanged&&nn?.nativeFreshSetupAndLogin);
   const closure=readReceipt('closure-release-20261012.json',proofs).groups.find(g=>g.key==='kuma');
-  assert.equal(closure?.status,'passed');assert.equal(closure.oldImage,kumaNpm);assert.equal(closure.newImage,spec.artifact);
+  assert.equal(closure?.status,'passed');assert.equal(closure.oldImage,kumaNpm);assert.equal(closure.newImage,kumaClosure);
   assert.deepEqual(closure.rows.map(r=>r.name).sort(),[...spec.containers].sort());latest=Date.parse(closure.completedAt);
-  const current=read('js-closure-20261012/kuma/native.json');assert.equal(current.imageId,spec.artifact);assert(current.passed&&current.nativeKumaSetupAndLogin);
+  const current=read('js-closure-20261012/kuma/native.json');assert.equal(current.imageId,kumaClosure);assert(current.passed&&current.nativeKumaSetupAndLogin);
+  const cache=readReceipt('closure-followup-20261012/cache-release.json',proofs);
+  const group=cache.groups.find(g=>g.project==='utilibre-community');assert.equal(group?.status,'passed');
+  const row=group.rows.find(r=>r.name===spec.containers[0]);assert.equal(row?.oldImage,kumaClosure);assert.equal(row.newImage,spec.artifact);
+  const app=read('closure-followup-20261012/cache/cache-community-uptime-kuma/application.json');
+  assert(app.passed&&app.nativeKumaSetupAndLogin);assert.equal(app.imageId,spec.artifact);
+  latest=Date.parse(group.completedAt);
   const n=readReceipt('sqlite-final-20261011/checks.json',proofs).rows.find(r=>r.kind==='kuma');
   assert.equal(n.pyjwtNativeAlgorithmsAndDenials,true);
  }

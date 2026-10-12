@@ -1,0 +1,16 @@
+#!/bin/sh
+# Native Bookworm CLI backport; never changes production or its shared libraries.
+set -eu
+TASK=/var/lib/utilibre-maintenance/closure-followup-20261012
+RECIPE=/home/ubuntu/freetools/deployment/maintenance/closure-followup
+BASE=node@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+test "$(df -B1 --output=avail / | tail -1)" -ge 8589934592
+mkdir -p "$TASK/ncurses-bookworm"
+docker run --rm --name maintenance-ncurses-bookworm-build --cpus 1 --memory 2g --memory-swap 2g --pids-limit 128 --log-driver none \
+ --tmpfs /work:rw,exec,nosuid,nodev,size=1600m \
+ --tmpfs /var/lib/apt/lists:rw,nosuid,nodev,size=128m \
+ --tmpfs /var/cache/apt:rw,nosuid,nodev,size=128m \
+ --mount type=bind,src="$TASK/sources",dst=/source,readonly \
+ --mount type=bind,src="$RECIPE/ncurses-inner.sh",dst=/build.sh,readonly \
+ --mount type=bind,src="$TASK/ncurses-bookworm",dst=/output \
+ --entrypoint sh "$BASE" -ec 'sh /build.sh > /output/runner.log 2>&1'

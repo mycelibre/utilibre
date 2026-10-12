@@ -3,13 +3,14 @@ import {execFileSync} from 'node:child_process';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 process.umask(0o077);
-const dir='/var/lib/utilibre-maintenance/xml-final-20261011',recipe=fileURLToPath(new URL('.',import.meta.url));
+const followup=process.argv.includes('--security-followup');
+const dir=followup?'/var/lib/utilibre-maintenance/closure-followup-20261012/bookworm-images':'/var/lib/utilibre-maintenance/xml-final-20261011',recipe=fileURLToPath(new URL('.',import.meta.url));
 const built=JSON.parse(readFileSync(dir+'/build.json')),results=[];
 const docker=(args,options={})=>execFileSync('docker',args,{encoding:'utf8',timeout:180000,maxBuffer:4*1024**2,stdio:['pipe','pipe','pipe'],...options});
-const selected=process.argv.slice(2);assert(selected.every(kind=>built.rows.some(row=>row.kind===kind)));
+const selected=process.argv.slice(2).filter(a=>a!=='--security-followup');assert(selected.every(kind=>built.rows.some(row=>row.kind===kind)));
 for(const row of built.rows.filter(row=>!selected.length||selected.includes(row.kind))){
  const name='maintenance-xml-'+row.kind;mkdirSync(dir+'/'+row.kind,{recursive:true});
- const artifacts=row.suite==='trixie'?'/var/lib/utilibre-maintenance/native-final/libxml2-output':dir+'/bookworm';
+ const artifacts=row.suite==='trixie'?'/var/lib/utilibre-maintenance/native-final/libxml2-output':followup?'/var/lib/utilibre-maintenance/closure-followup-20261012/bookworm-xml':dir+'/bookworm';
  try{
   assert.equal(docker(['image','inspect',row.candidate,'--format','{{.Id}}']).trim(),row.candidateId);
   docker(['run','-d','--name',name,'--network','none','--log-driver','none','--cpus','1','--memory','1g','--pids-limit','128','--read-only',

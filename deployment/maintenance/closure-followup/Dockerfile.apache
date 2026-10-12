@@ -1,0 +1,12 @@
+ARG BASE
+FROM ${BASE}
+USER root
+COPY packages/ /tmp/utilibre-apache-packages/
+RUN cp /etc/apache2/envvars /tmp/utilibre-apache-envvars \
+ && cp /etc/apache2/mods-available/autoindex.conf /tmp/utilibre-apache-autoindex.conf \
+ && dpkg --force-confold --install /tmp/utilibre-apache-packages/*.deb \
+ && test -z "$(dpkg --audit)" \
+ && cp /tmp/utilibre-apache-envvars /etc/apache2/envvars \
+ && cp /tmp/utilibre-apache-autoindex.conf /etc/apache2/mods-available/autoindex.conf \
+ && rm /tmp/utilibre-apache-envvars /tmp/utilibre-apache-autoindex.conf \
+ && rm -r /tmp/utilibre-apache-packages

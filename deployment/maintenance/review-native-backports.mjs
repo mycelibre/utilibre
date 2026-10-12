@@ -44,6 +44,22 @@ for(const spec of specs.filter(s=>s.kind==='freshrss')){
  spec.predecessor=spec.artifact;
  spec.artifact='sha256:a452bf8c4922fcd329dcaa13b83edfe25fe3b706c494e7ce37d6b2da43288d06';
 }
+const xmlVendorPatches={
+ 'CVE-2026-86138':['dhi-cve-2026-86138-dict-addqstring-overflow.patch','5f0744fc91279e9fda6e05da279718f41068efbc588d02384afa8c0f03734527'],
+ 'CVE-2026-86140':['dhi-cve-2026-86140-valid-snprintfelements-overflow.patch','05942850dcf897b92008bb48c0590e21785a04a7834d1b559459381460a84580'],
+ 'CVE-2026-86142':['dhi-cve-2026-86142-xpointer-eval-overflow.patch','17445c3adc24cd576c82c475f7d7c3fc9c0ed3b9a4e7b780d39160602720a834'],
+ 'CVE-2026-86143':['dhi-cve-2026-86143-xmlio-writecallback-overflow.patch','57a256b57b1fef96e1e3d815a1af3954692b67852b2a519da854af29274f8e25'],
+ 'CVE-2026-86144':['dhi-cve-2026-86144-xinclude-parseflags.patch','797e9a09277dc5a2db482b6c57e05c6a42f266c12f6c1b64b121c24350d584b3'],
+};
+// These exact five backports were already included in the Trixie build. The
+// separate Bookworm build did NOT include them and must not inherit this review.
+for(const spec of specs.filter(s=>s.id==='CVE-2026-6653'&&s.version===xmlVersion))
+ for(const id of Object.keys(xmlVendorPatches))specs.push({...spec,id});
+const overlayReceipts=['closure-release-20261012.json','closure-followup-20261012/expat-release.json','closure-followup-20261012/apache-release.json','closure-followup-20261012/cache-release.json'];
+export function overlayRows(report){
+ if(report.status!=='passed')return [];
+ return (report.groups||[]).filter(g=>g.status==='passed').flatMap(g=>(g.rows||[{name:g.name}]).map(r=>({name:r.name,oldImage:r.oldImage||g.oldImage,newImage:r.newImage||g.newImage,completedAt:g.completedAt||report.completedAt})));
+}
 
 export function matches(item,spec){
  return item.status==='needs-review'&&item.type==='debian'&&item.id===spec.id&&item.artifact===spec.artifact&&
@@ -65,6 +81,13 @@ export function validateRelease(report,spec){
  return Date.parse(report.completedAt);
 }
 function evidence(spec){
+ if(spec.overlayPredecessor){
+  const previous=evidence(spec.overlayPredecessor),rows=overlayRows(read(spec.overlayReceipt));
+  const matched=spec.containers.map(name=>rows.find(r=>r.name===name&&r.oldImage===spec.overlayPredecessor.artifact&&r.newImage===spec.artifact));
+  assert(matched.every(Boolean),'Complete exact-role overlay proof required');
+  const released=Math.max(...matched.map(r=>Date.parse(r.completedAt)));assert(Number.isFinite(released));
+  return {released,receipts:[...previous.receipts,spec.overlayReceipt]};
+ }
  if(spec.expatPredecessor){
   const original=evidence(spec.expatPredecessor);
   const r=read('closure-followup-20261012/expat-release.json');assert.equal(r.status,'passed');
@@ -103,7 +126,7 @@ function evidence(spec){
  else {
   released=validateRelease(record(xmlRoot+'release.json'),spec);
   const n=record(xmlRoot+spec.kind+'/native.json');assert.equal(n.imageId,spec.artifact);assert.equal(n.passed,true);
-  if(spec.id==='CVE-2026-6653'){assert.equal(n.version,spec.version);assert.equal(n.librarySha256,spec.sha);}
+  if(spec.id!=='CVE-2025-7458'){assert.equal(n.version,spec.version);assert.equal(n.librarySha256,spec.sha);}
   if(spec.kind==='gathio'){const n=record(xmlRoot+'gathio/database.json');assert.equal(n.imageId,spec.artifact);for(const key of ['passed','nativePostgresXml','nativeDumpRestore'])assert.equal(n[key],true);}
  }
  if(spec.id==='CVE-2025-7458'){
@@ -115,6 +138,13 @@ function evidence(spec){
   sameFile(sqliteRoot+'applied.patch','e1a48c50ad0129123a75d6a050561bd2a5c48c74c52aaa044eb3c7b15c229b87');
   if(spec.kind==='kuma')sameFile(sqliteRoot+'sqlite3_'+sqliteVersion+'_amd64.deb','857f3ae8ab9b3fbe5871f87622c03d87a1ff54c30cd559520633aedda942f054');
  }else{
+  if(xmlVendorPatches[spec.id]){
+   assert.equal(spec.version,xmlVersion);const [file,hash]=xmlVendorPatches[spec.id];
+   sameFile('native-final/libxml-dhi-patches/'+file,hash);
+   sameFile('native-final/libxml2-output/vendor-apply.log','6e154c145cdc2ed111868e98d7dde610a24aab3b3683fc5da007703de992226f');
+   sameFile('native-final/libxml2-output/build.log','ddaed7e1b2d0480374f2d0df94d8bcbd3e0e4bb72b8498f9478020f0f4b6414c');
+   assert(fs.readFileSync(root+'native-final/libxml2-output/vendor-apply.log','utf8').includes('applying '+file));
+  }
   sameFile('native-final/libxml2-CVE-2026-6653.patch','6c2b8a7b6fa470efcb1854e5c73bd7e1ae1663d8b111e27ce9232bbc1fe44f54');
   const book=spec.version===bookVersion;
   sameFile((book?xmlRoot+'bookworm/':'native-final/libxml2-output/')+'libxml2_'+spec.version+'_amd64.deb',book?'7e62da4517ca8becfe040fd5085b33529daa10f52d29fa401c1c921ee9ebc2b0':'b2ff4643de60160f0d80fbe617ce2aa6b92b9fa22d3f52cf02ab8cad7eb841e4');
@@ -134,10 +164,14 @@ export function run(){
  process.umask(0o077);
  const queue=read('security-queue.json'),scan=read('security.json');freshScan(queue,scan);
  const decisions=[],skipped=[],proofs=[],currentSpecs=[...specs];
- const followup=root+'closure-followup-20261012/expat-release.json';
- if(fs.existsSync(followup)){
-  const r=read('closure-followup-20261012/expat-release.json');assert.equal(r.status,'passed');
-  for(const spec of specs){const g=r.groups.find(g=>g.key===spec.kind&&g.oldImage===spec.artifact);if(g)currentSpecs.push({...spec,artifact:g.newImage,expatPredecessor:spec});}
+ for(const receipt of overlayReceipts){
+  if(!fs.existsSync(root+receipt))continue;const rows=overlayRows(read(receipt));
+  for(const spec of [...currentSpecs]){
+   if(!spec.containers.length)continue;
+   const matches=spec.containers.map(name=>rows.find(r=>r.name===name&&r.oldImage===spec.artifact));
+   if(matches.every(Boolean)&&new Set(matches.map(r=>r.newImage)).size===1&&matches[0].newImage!==spec.artifact)
+    currentSpecs.push({...spec,artifact:matches[0].newImage,overlayPredecessor:spec,overlayReceipt:receipt});
+  }
  }
  const command=(p,args)=>execFileSync(p,args,{encoding:'utf8',timeout:10000,maxBuffer:1024*1024,stdio:['ignore','pipe','pipe']}).trim();
  for(const item of queue.items){
@@ -155,7 +189,7 @@ export function run(){
     if(item.package==='libxml2-dev')observed.extraSha256=hash(library+'libxml2.a');
     validateObserved(spec,item,observed);
    }
-   const source=spec.id==='CVE-2025-7458'?'SQLite upstream b816ca9994e03a8bc829b49452b8158a731e81a9 (four-line DISTINCT fix)':'libxml2 upstream 463bbeeca1805b5c4828f50d0fefc4eebaf620df via official Ubuntu 2.9.14 backport';
+   const source=xmlVendorPatches[spec.id]?'DHI '+xmlVendorPatches[spec.id][0]+' from Docker catalog 4560b6ac143a58056b793efe2d6bcd5e92bf3682; exact patch and successful native build log verified':spec.id==='CVE-2025-7458'?'SQLite upstream b816ca9994e03a8bc829b49452b8158a731e81a9 (four-line DISTINCT fix)':'libxml2 upstream 463bbeeca1805b5c4828f50d0fefc4eebaf620df via official Ubuntu 2.9.14 backport';
    const reason=`Patched local Debian package, not a vendor version exemption: ${source}. Exact ${item.artifact}, ${item.package} ${spec.version}, native library SHA256 ${spec.sha}${spec.privateLibrary?' and matching Penpot private duplicate':''} verified live. Native regression/consumer and completed release receipts: ${proof.receipts.join(', ')}. Status mitigated represents an applied source backport because the review schema has no patched status. Only this CVE/finding is reviewed; other advisories and raw scanner findings remain visible. See deployment/maintenance/${spec.id==='CVE-2025-7458'?'sqlite-final':'xml-final'}/README.md.`;
    decisions.push(validateDecision({key:item.key,status:'mitigated',reason,expiresAt:new Date(Date.now()+7*86400000).toISOString()}));
    proofs.push({key:item.key,artifact:item.artifact,package:item.package,librarySha256:spec.sha,receipts:proof.receipts.map(path=>({path:root+path,sha256:sha(root+path)}))});

@@ -81,7 +81,7 @@ services:
     logging: *default-logging
 
   freshrss:
-    image: utilibre-freshrss:pcre-vendor-security-20261011
+    image: utilibre-freshrss:apache-2.4.69-20261012
     init: true
     restart: unless-stopped
     <<: *default-security
@@ -125,7 +125,7 @@ services:
   rsshub:
     ulimits: {core: 0}
     memswap_limit: 1536m
-    image: utilibre-rsshub:expat-closure-20261012
+    image: utilibre-cache-services-rsshub:4.3.0-20261012
     init: true
     restart: unless-stopped
     read_only: true

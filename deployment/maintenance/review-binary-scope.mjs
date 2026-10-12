@@ -21,6 +21,8 @@ export function absentComponent(item,files){
   return 'curl CLI --proto-default SSH option initialization; upstream explicitly excludes libcurl (https://curl.se/docs/CVE-2026-12064.html)';
  if(item.id==='CVE-2026-6276'&&item.package==='curl'&&!files.some(p=>/\/libcurl[^/]*\.(?:so|a)/.test(p)))
   return 'libcurl easy-handle custom-Host cookie reuse; upstream explicitly excludes the curl CLI (https://curl.se/docs/CVE-2026-6276.html)';
+ if(item.id==='CVE-2026-8927'&&item.package==='curl'&&!files.some(p=>/\/libcurl[^/]*\.(?:so|a)/.test(p)))
+  return 'libcurl reused-handle environment-proxy Digest authentication; upstream explicitly excludes the curl CLI (https://curl.se/docs/CVE-2026-8927.html)';
  if(mountIds.has(item.id)&&mountSiblings.has(item.package)&&!files.some(p=>/\/(?:mount|umount)$|\/libmount\.(?:so|a)/.test(p)))
   return 'mount(8) and libmount privileged mount-hook/path handling';
  if(item.id==='CVE-2026-78408'&&nsenterSiblings.has(item.package)&&!files.some(p=>/\/nsenter$/.test(p)))
@@ -33,6 +35,8 @@ export function absentComponent(item,files){
   return 'systemd-homed src/home/homed-home.c identity verification';
  if(item.id==='CVE-2026-9538'&&['perl-base','libperl5.36','libperl5.40'].includes(item.package)&&!files.some(p=>/\/Archive\/Tar(?:\.pm|\/)/.test(p)))
   return 'the separate Perl Archive::Tar module _read_tar function';
+ if(item.id==='CVE-2026-74860'&&['libxml2','libxml2-dev','libxml2-utils'].includes(item.package)&&!files.some(p=>/python|libxml2mod|libxml2\.py/i.test(p)))
+  return 'the separate libxml2 Python SAX binding libxml_xmlSAXAttributeDecl (not the C library or lxml); upstream fix f41e1865781f74d1cadfe2fbdfeefed946026f12 changes python/libxml.c';
  return null;
 }
 

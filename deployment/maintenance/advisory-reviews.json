@@ -4,11 +4,11 @@
     "reviewedAt": "2026-10-11",
     "containers": {
       "/utilibre-expanded-penpot-frontend-1": "sha256:ca4f4adc5367a40e1597bea7d6032de0d08266b6d65cdf083ae4c695d54d23a7",
-      "/utilibre-expanded-penpot-backend-1": "sha256:0e6eb47f25fde0310f7b318144bf78c2bc068fb4f3a4f0edcaaebcc604eeae95",
-      "/utilibre-expanded-penpot-exporter-1": "sha256:a3102615b1349f141d787dd806bc3464a49d223a5336471b3e09b1bc74a6d8da",
+      "/utilibre-expanded-penpot-backend-1": "sha256:27c565062fb8a8aabcfbc4ece5acdd9338f8bc0b28948dff274613490db61fda",
+      "/utilibre-expanded-penpot-exporter-1": "sha256:2eebbfbd341693f5cb0d0ba0f4093d684513c48d51acb03250601c49497ab001",
       "/utilibre-expanded-penpot-admin-console-1": "sha256:fbc2d56e8e1d5f1e8711b54321f4235ef3e154b307df5d4de2816729eb77f382"
     },
-    "runtimeEvidence": "2026-10-12: application remains Penpot 2.18.3 at reviewed source ff7a66f51938b2293260ea27a64e2c4e0833b5e3. Native ImageMagick no-EXR/libxml2 repairs passed two-account permission/export/import/media and OIDC gates. The admin-only signed DHI OpenSSL layer was followed by js-yaml 4.3.2/source-map-js 1.2.2; all other application files and runtime configuration are unchanged. Parser regression, native PostgreSQL migrations/login parity and exact live image/health/routes passed. Fourteen live OpenSSL payload files match authenticated vendor packages. Receipts: deployment/maintenance/native-final/README.md, vendor-leaves-final/README.md and patch-leaves-final/README.md. This rebinds previously reviewed application advisories only, never separate dependency findings.",
+    "runtimeEvidence": "2026-10-12 follow-up: application versions and advisory revisions/ranges remain unchanged. Exact passed Expat/Apache/cache release chains, application-file parity outside named dependencies, native gates and live identities verified. See closure-followup/README.md. This rebinds application advisory review only, not dependency clearance. Earlier evidence: 2026-10-12: application remains Penpot 2.18.3 at reviewed source ff7a66f51938b2293260ea27a64e2c4e0833b5e3. Native ImageMagick no-EXR/libxml2 repairs passed two-account permission/export/import/media and OIDC gates. The admin-only signed DHI OpenSSL layer was followed by js-yaml 4.3.2/source-map-js 1.2.2; all other application files and runtime configuration are unchanged. Parser regression, native PostgreSQL migrations/login parity and exact live image/health/routes passed. Fourteen live OpenSSL payload files match authenticated vendor packages. Receipts: deployment/maintenance/native-final/README.md, vendor-leaves-final/README.md and patch-leaves-final/README.md. This rebinds previously reviewed application advisories only, never separate dependency findings.",
     "advisories": [
       {
         "id": "GHSA-wxgm-8qjw-x445",
@@ -325,7 +325,7 @@
       }
     ],
     "files": {
-      "/home/ubuntu/freetools/deployment/expanded/compose.yaml": "8e8d19df5527ebc7d0a8e9bf4ff50ecac45e8d004a662c51cca4f22c81cf33d4"
+      "/home/ubuntu/freetools/deployment/expanded/compose.yaml": "c4190d60004d5e91b2bf20b018556147f35b398b16bd535e8065c5209763f36e"
     }
   },
   "yopass": {
@@ -368,9 +368,9 @@
     "version": "1.7.21",
     "reviewedAt": "2026-10-12",
     "containers": {
-      "/utilibre-records-grist-1": "sha256:0244b2e92c341f9d5e4ff3c13f4b7594329c7dcf3e1bcfc21c6b9663f78a42f4"
+      "/utilibre-records-grist-1": "sha256:5ebd7f89913b1db7a56c5ed6266239eaf637736bd1693608f96bdb0c12726385"
     },
-    "runtimeEvidence": "2026-10-12 closure overlay: exact images and native checks passed; application version and advisory ranges unchanged. See deployment/maintenance/closure-review/README.md for tested library changes and limitations. Earlier provenance: 2026-10-11: Grist 1.7.21 application is preserved; Pyodide 0.28.1 executes official Deno 2.9.7 instead of obsolete runsc. Native isolation, two-account formula/export/import and synthetic restore passed; earlier live HTTPS task/identity tests passed and release QA identities retired. Final npm 11.21 installer-only overlay preserves all application/sandbox bytes and repeats native isolation/formula/export/restore plus public identity redirect gates. Evidence: deployment/maintenance/sandbox-final/README.md and language-final/README.md. Application ranges are unchanged; this is not Rust/WASM inventory or blanket dependency clearance.",
+    "runtimeEvidence": "2026-10-12 follow-up: application versions and advisory revisions/ranges remain unchanged. Exact passed Expat/Apache/cache release chains, application-file parity outside named dependencies, native gates and live identities verified. See closure-followup/README.md. This rebinds application advisory review only, not dependency clearance. Earlier evidence: 2026-10-12 closure overlay: exact images and native checks passed; application version and advisory ranges unchanged. See deployment/maintenance/closure-review/README.md for tested library changes and limitations. Earlier provenance: 2026-10-11: Grist 1.7.21 application is preserved; Pyodide 0.28.1 executes official Deno 2.9.7 instead of obsolete runsc. Native isolation, two-account formula/export/import and synthetic restore passed; earlier live HTTPS task/identity tests passed and release QA identities retired. Final npm 11.21 installer-only overlay preserves all application/sandbox bytes and repeats native isolation/formula/export/restore plus public identity redirect gates. Evidence: deployment/maintenance/sandbox-final/README.md and language-final/README.md. Application ranges are unchanged; this is not Rust/WASM inventory or blanket dependency clearance.",
     "advisories": [
       {
         "id": "GHSA-9x4j-4rw5-3vmq",
@@ -592,9 +592,9 @@
     "version": "0.67.1",
     "reviewedAt": "2026-10-12",
     "containers": {
-      "/utilibre-wishlist-app-1": "sha256:a5fc080ac511dcc3b6301c58474b26e3d1d50c10d2d0d3ba2f6444121d329b60"
+      "/utilibre-wishlist-app-1": "sha256:5d724b369c022167473e4a2c7ed810eeedc97d8fe92891315ee8f05869be4b00"
     },
-    "runtimeEvidence": "2026-10-12 closure overlay: exact images and native checks passed; application version and advisory ranges unchanged. See deployment/maintenance/closure-review/README.md for tested library changes and limitations. Earlier provenance: 2026-10-11: same reviewed 0.67.1 application source a5150c73620abb912a802afdcfb51e403230fff3; subsequent changes are the npm installer and compatible MySQL2 3.23.1, not application/auth/schema code. Full-image comparison outside reviewed package paths passed. Fresh native account/list/item/reload and anonymous denial passed with zero outside browser requests; actual MySQL2 prepared-query/UTF-8/transaction gates also passed. Exact healthy live image and receipts: deployment/maintenance/language-final/app-leaves/README.md. All six upstream advisory revisions/ranges re-fetched unchanged; no dependency waiver.",
+    "runtimeEvidence": "2026-10-12 exact cache-library-only release: app files outside the dependency/npm configuration paths and image configuration retain their full hashes; isolated cache and npm gates and live native readiness passed. See closure-followup/README.md. Existing advisory revisions/ranges retained, no dependency exemption. Previous evidence: 2026-10-12 closure overlay: exact images and native checks passed; application version and advisory ranges unchanged. See deployment/maintenance/closure-review/README.md for tested library changes and limitations. Earlier provenance: 2026-10-11: same reviewed 0.67.1 application source a5150c73620abb912a802afdcfb51e403230fff3; subsequent changes are the npm installer and compatible MySQL2 3.23.1, not application/auth/schema code. Full-image comparison outside reviewed package paths passed. Fresh native account/list/item/reload and anonymous denial passed with zero outside browser requests; actual MySQL2 prepared-query/UTF-8/transaction gates also passed. Exact healthy live image and receipts: deployment/maintenance/language-final/app-leaves/README.md. All six upstream advisory revisions/ranges re-fetched unchanged; no dependency waiver.",
     "advisories": [
       {
         "id": "GHSA-fmjc-5jvf-vm6f",
@@ -1671,9 +1671,9 @@
     "version": "6.0.0",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-expanded-resume-1": "sha256:3a626fe8c04698c9cd85ae57ef562f0cfee2f10fb062bd3a72e440141e123a69"
+      "/utilibre-expanded-resume-1": "sha256:87a9bb499e62615cd7fb543ee71918d2838db3fbd0ccde7c68f4981fd59ca6e0"
     },
-    "runtimeEvidence": "2026-10-11: native /app/package.json confirms 6.0.0. Same tested application after npm-only installer repair; complete immutable-image comparison leaves all application/compiled assets unchanged. Earlier exact application tree parity and two-account JSON/ZIP import/export remain applicable; final installer native and live health checks passed. Evidence: deployment/maintenance/language-final/README.md. Current published advisory revision/range re-fetched unchanged; separate dependency findings remain visible.",
+    "runtimeEvidence": "2026-10-12 exact cache-library-only release: app files outside the dependency/npm configuration paths and image configuration retain their full hashes; isolated cache and npm gates and live native readiness passed. See closure-followup/README.md. Existing advisory revisions/ranges retained, no dependency exemption. Previous evidence: 2026-10-11: native /app/package.json confirms 6.0.0. Same tested application after npm-only installer repair; complete immutable-image comparison leaves all application/compiled assets unchanged. Earlier exact application tree parity and two-account JSON/ZIP import/export remain applicable; final installer native and live health checks passed. Evidence: deployment/maintenance/language-final/README.md. Current published advisory revision/range re-fetched unchanged; separate dependency findings remain visible.",
     "advisories": [
       {
         "id": "GHSA-qrh8-pgw8-r55h",
@@ -1694,9 +1694,9 @@
     "version": "26.10.0",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-expanded-actual-1": "sha256:6859a1cb16fef5f0abc06c4dd4828160dda1157b01c39b6a0751efd7fdfb7a61"
+      "/utilibre-expanded-actual-1": "sha256:bc35307be499c72237904831eb74584ddeac91f004b914841259a4f39f3f045b"
     },
-    "runtimeEvidence": "2026-10-11: native /app/package.json confirms 26.10.0. Pinned compatible dependency repairs plus four exact-hash privacy changes only (disable unsolicited news/version fetches, narrow connection CSP and update native precache revisions); no auth, schema or budget logic change. 247 application/asset files unchanged; native synthetic budget export/import/reload/sync and anonymous denial passed. Evidence: deployment/maintenance/npm-leaves/README.md and /opt/utilibre/reports/actual-leaves-inventory-j7tcagcm/result.json. All 14 upstream advisory revisions/ranges re-fetched unchanged; dependency findings remain separate.",
+    "runtimeEvidence": "2026-10-12 exact cache-library-only release: app files outside the dependency/npm configuration paths and image configuration retain their full hashes; isolated cache and npm gates and live native readiness passed. See closure-followup/README.md. Existing advisory revisions/ranges retained, no dependency exemption. Previous evidence: 2026-10-11: native /app/package.json confirms 26.10.0. Pinned compatible dependency repairs plus four exact-hash privacy changes only (disable unsolicited news/version fetches, narrow connection CSP and update native precache revisions); no auth, schema or budget logic change. 247 application/asset files unchanged; native synthetic budget export/import/reload/sync and anonymous denial passed. Evidence: deployment/maintenance/npm-leaves/README.md and /opt/utilibre/reports/actual-leaves-inventory-j7tcagcm/result.json. All 14 upstream advisory revisions/ranges re-fetched unchanged; dependency findings remain separate.",
     "advisories": [
       {
         "id": "GHSA-m62c-5q34-f3cf",
@@ -1886,9 +1886,9 @@
     "version": "4.15.4",
     "reviewedAt": "2026-10-12",
     "containers": {
-      "/utilibre-community-rallly-1": "sha256:6194febf9a9ae49bff20402f43f434ca1fe32cff820404784559eede2b46a2a0"
+      "/utilibre-community-rallly-1": "sha256:f762a4aa70c6a2017d5e8a4b9c12e6717dbd8fce02c910f0e0027b456e08afc1"
     },
-    "runtimeEvidence": "2026-10-12 closure overlay: exact images and native checks passed; application version and advisory ranges unchanged. See deployment/maintenance/closure-review/README.md for tested library changes and limitations. Earlier provenance: 2026-10-11: unchanged reviewed 4.15.4 application and image source revision 4b61a00b1abcbe480d6b3992b5d98b01754e90c6; package.json uses an upstream placeholder, not a release assertion. npm installer and compatible MySQL2 3.23.1 only; compiled application files unchanged. Native fresh migration, fictional invitation, XML parser and actual MySQL2 wire/query gates passed; exact live image healthy. Evidence: deployment/maintenance/language-final/app-leaves/README.md. All 14 current advisory revisions/ranges re-fetched unchanged; no dependency waiver.",
+    "runtimeEvidence": "2026-10-12 exact cache-library-only release: app files outside the dependency/npm configuration paths and image configuration retain their full hashes; isolated cache and npm gates and live native readiness passed. See closure-followup/README.md. Existing advisory revisions/ranges retained, no dependency exemption. Previous evidence: 2026-10-12 closure overlay: exact images and native checks passed; application version and advisory ranges unchanged. See deployment/maintenance/closure-review/README.md for tested library changes and limitations. Earlier provenance: 2026-10-11: unchanged reviewed 4.15.4 application and image source revision 4b61a00b1abcbe480d6b3992b5d98b01754e90c6; package.json uses an upstream placeholder, not a release assertion. npm installer and compatible MySQL2 3.23.1 only; compiled application files unchanged. Native fresh migration, fictional invitation, XML parser and actual MySQL2 wire/query gates passed; exact live image healthy. Evidence: deployment/maintenance/language-final/app-leaves/README.md. All 14 current advisory revisions/ranges re-fetched unchanged; no dependency waiver.",
     "advisories": [
       {
         "id": "GHSA-gmq4-f8j5-8w8q",
@@ -2123,9 +2123,9 @@
     "version": "2.5.6",
     "reviewedAt": "2026-10-12",
     "containers": {
-      "/utilibre-community-uptime-kuma-1": "sha256:3cfe02bf61173af98c85a6e861890a48c7264b0710cc2dd469bb6038a5b1e7d2"
+      "/utilibre-community-uptime-kuma-1": "sha256:895a32c84a8c27b87332095cd1a98d44897fe51a65025a00852d8b4ea498fac1"
     },
-    "runtimeEvidence": "2026-10-12 closure overlay: exact images and native checks passed; application version and advisory ranges unchanged. See deployment/maintenance/closure-review/README.md for tested library changes and limitations. Earlier provenance: 2026-10-11: application remains 2.5.6. SQLite/PyJWT native fixes remain; final npm 11.21 installer-only overlay preserves every application file and repeats native fresh setup/authenticated Socket.IO login. Removed unused cloudflared only after read-only proof of no configured token or running tunnel; no replacement download. Final exact-image/configuration parity, public status 200 and denied administration 404 passed. Receipts: sqlite-final-20261011 and npm10-final-20261011 under the private maintenance directory. Existing application advisory decisions only; dependencies remain separate.",
+    "runtimeEvidence": "2026-10-12 exact cache-library-only release: app files outside the dependency/npm configuration paths and image configuration retain their full hashes; isolated cache and npm gates and live native readiness passed. See closure-followup/README.md. Existing advisory revisions/ranges retained, no dependency exemption. Previous evidence: 2026-10-12 closure overlay: exact images and native checks passed; application version and advisory ranges unchanged. See deployment/maintenance/closure-review/README.md for tested library changes and limitations. Earlier provenance: 2026-10-11: application remains 2.5.6. SQLite/PyJWT native fixes remain; final npm 11.21 installer-only overlay preserves every application file and repeats native fresh setup/authenticated Socket.IO login. Removed unused cloudflared only after read-only proof of no configured token or running tunnel; no replacement download. Final exact-image/configuration parity, public status 200 and denied administration 404 passed. Receipts: sqlite-final-20261011 and npm10-final-20261011 under the private maintenance directory. Existing application advisory decisions only; dependencies remain separate.",
     "advisories": [
       {
         "id": "GHSA-wf2j-5mc7-5c4w",
@@ -2442,7 +2442,7 @@
     ],
     "files": {
       "/home/ubuntu/freetools/deployment/community/gateway.conf": "4c0e655e0c85f8023d90f89a1225bd1845d7b62f5f121155ad6a6765903ef352",
-      "/home/ubuntu/freetools/deployment/community/compose.yaml": "fc52250f0cfa2c0a63d4d2b44ce910d7b9fa171e19705a34d3a30652966c9b9d"
+      "/home/ubuntu/freetools/deployment/community/compose.yaml": "df89e874c628106f9a4ddd0687dcd345f5951524231f2b66218e45d4ba538aa4"
     }
   },
   "bentopdf": {
@@ -2833,9 +2833,9 @@
     "version": "1.30.1",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-services-freshrss-1": "sha256:a452bf8c4922fcd329dcaa13b83edfe25fe3b706c494e7ce37d6b2da43288d06"
+      "/utilibre-services-freshrss-1": "sha256:6cd6298cfe66d17d08a1a848192de49123aed476f052e2d615ad9fc328adb354"
     },
-    "runtimeEvidence": "2026-10-11: native FRESHRSS_VERSION remains 1.30.1. The real Debian XML package backport and subsequent signed PCRE2-only layer preserve the complete application bytes. Fresh empty-account/feed/article/OPML native gates and exact-image live health passed. Predecessor evidence: xml-final-20261011/{application-byte-parity,release}.json and freshrss/native.json; final layer: vendor-leaves-final-20261011/{pcre-stage,pcre-native,release}.json. All 24 reviewed upstream application advisory revisions/ranges retained; native/dependency findings remain separate.",
+    "runtimeEvidence": "2026-10-12 follow-up: application versions and advisory revisions/ranges remain unchanged. Exact passed Expat/Apache/cache release chains, application-file parity outside named dependencies, native gates and live identities verified. See closure-followup/README.md. This rebinds application advisory review only, not dependency clearance. Earlier evidence: 2026-10-11: native FRESHRSS_VERSION remains 1.30.1. The real Debian XML package backport and subsequent signed PCRE2-only layer preserve the complete application bytes. Fresh empty-account/feed/article/OPML native gates and exact-image live health passed. Predecessor evidence: xml-final-20261011/{application-byte-parity,release}.json and freshrss/native.json; final layer: vendor-leaves-final-20261011/{pcre-stage,pcre-native,release}.json. All 24 reviewed upstream application advisory revisions/ranges retained; native/dependency findings remain separate.",
     "advisories": [
       {
         "id": "GHSA-3fw6-j8m4-82vj",
@@ -4099,9 +4099,9 @@
     "version": "2026.9.0",
     "reviewedAt": "2026-10-11",
     "containers": {
-      "/utilibre-pack-cryptpad-cryptpad-1": "sha256:9d9a432c98b80591c9f91f85e7beb38a27323742dea793776a40cc122c0bd0d2"
+      "/utilibre-pack-cryptpad-cryptpad-1": "sha256:c8fa7925ad0c0cd45e4d5e05e4166b8bfb5348f5e2c6cb9762c57d20617e66fd"
     },
-    "runtimeEvidence": "2026-10-11: native /cryptpad/package.json confirms 2026.9.0. Runtime npm installer only changed; complete image byte comparison outside installer paths passed and separately bound mounted application source/lock/server hashes are unchanged. Native installer and exact live health gates passed. Evidence: deployment/maintenance/language-final/README.md. All three current advisory revisions/ranges re-fetched unchanged; no change to encryption, content lifecycle, permissions or dependency-review scope.",
+    "runtimeEvidence": "2026-10-12 exact cache-library-only release: app files outside the dependency/npm configuration paths and image configuration retain their full hashes; isolated cache and npm gates and live native readiness passed. See closure-followup/README.md. Existing advisory revisions/ranges retained, no dependency exemption. Previous evidence: 2026-10-11: native /cryptpad/package.json confirms 2026.9.0. Runtime npm installer only changed; complete image byte comparison outside installer paths passed and separately bound mounted application source/lock/server hashes are unchanged. Native installer and exact live health gates passed. Evidence: deployment/maintenance/language-final/README.md. All three current advisory revisions/ranges re-fetched unchanged; no change to encryption, content lifecycle, permissions or dependency-review scope.",
     "advisories": [
       {
         "id": "GHSA-g2g4-47gv-p72v",
@@ -4248,9 +4248,9 @@
     "version": "2026.10.11-8411.a7d4000",
     "reviewedAt": "2026-10-12",
     "containers": {
-      "/utilibre-services-rsshub-1": "sha256:b38220476bbc16f3f6958b3bc89cd2455092c467e895e6a184a82d4bf20cde02"
+      "/utilibre-services-rsshub-1": "sha256:e5ea4b3b10d497e8a66affa191b386345bf24e99a8890697df9aca94eb2af853"
     },
-    "runtimeEvidence": "2026-10-12 closure overlay: exact images and native checks passed; application version and advisory ranges unchanged. See deployment/maintenance/closure-review/README.md for tested library changes and limitations. Earlier provenance: 2026-10-11: same reviewed RSSHub source a7d400051d8dc73c0a0a60197920df9d3f80b75c, confirmed by inherited official revision label and full application-byte comparison. npm installer and ADM-ZIP 0.6.1 only changed; app package.json is a release-independent placeholder. Native ZIP/extraction/path containment and offline application health passed; exact live image verified. Evidence: deployment/maintenance/language-final/app-leaves/README.md. All seven current advisory revisions/ranges re-fetched unchanged; previous commit-ancestry findings still apply only to those application advisories, never all routes/dependencies.",
+    "runtimeEvidence": "2026-10-12 follow-up: application versions and advisory revisions/ranges remain unchanged. Exact passed Expat/Apache/cache release chains, application-file parity outside named dependencies, native gates and live identities verified. See closure-followup/README.md. This rebinds application advisory review only, not dependency clearance. Earlier evidence: 2026-10-12 closure overlay: exact images and native checks passed; application version and advisory ranges unchanged. See deployment/maintenance/closure-review/README.md for tested library changes and limitations. Earlier provenance: 2026-10-11: same reviewed RSSHub source a7d400051d8dc73c0a0a60197920df9d3f80b75c, confirmed by inherited official revision label and full application-byte comparison. npm installer and ADM-ZIP 0.6.1 only changed; app package.json is a release-independent placeholder. Native ZIP/extraction/path containment and offline application health passed; exact live image verified. Evidence: deployment/maintenance/language-final/app-leaves/README.md. All seven current advisory revisions/ranges re-fetched unchanged; previous commit-ancestry findings still apply only to those application advisories, never all routes/dependencies.",
     "advisories": [
       {
         "id": "GHSA-9mqc-fm24-h8cw",

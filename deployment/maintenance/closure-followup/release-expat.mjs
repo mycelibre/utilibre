@@ -4,29 +4,41 @@ import cp from 'node:child_process';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {canonical} from '../go-final/release.mjs';
-import {replaceImagePins,namespaceDependents,readinessSeconds,releaseGroup} from '../language-final/release.mjs';
+import {replaceImagePins,namespaceDependents,readinessSeconds,releaseGroup,existingComposeArgs} from '../language-final/release.mjs';
 process.umask(0o077);
-const dir='/var/lib/utilibre-maintenance/closure-followup-20261012',file=dir+'/expat-release.json';
+const apache=process.argv.includes('--apache');
+const bookworm=process.argv.includes('--bookworm');assert(!(apache&&bookworm));
+const dir='/var/lib/utilibre-maintenance/closure-followup-20261012',file=dir+(apache?'/apache-release.json':bookworm?'/bookworm-release.json':'/expat-release.json');
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=x=>createHash('sha256').update(JSON.stringify(canonical(x))).digest('hex');
 const docker=(...a)=>{try{return cp.execFileSync('docker',a,{encoding:'utf8',timeout:180000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe'],env:{...process.env,APP_BIND_IP:'10.10.1.43'}}).trim();}catch{throw Error('Bounded Docker operation failed; private configuration withheld');}};
 const inspect=n=>JSON.parse(docker('inspect',n))[0];
 const id=n=>docker('image','inspect',n,'--format','{{.Id}}');
-const compose=g=>['compose','--profile','*','--project-directory',g.cwd,'-p',g.project,...g.files.flatMap(f=>['-f',f])];
+const compose=g=>bookworm?existingComposeArgs(g):['compose','--profile','*','--project-directory',g.cwd,'-p',g.project,...g.files.flatMap(f=>['-f',f])];
 const config=g=>JSON.parse(docker(...compose(g),'config','--format','json')).services[g.service];
 const configHash=s=>{const {image,...rest}=s;return sha(rest);};
-const [mode,...selection]=process.argv.slice(2);assert(['prepare','apply'].includes(mode));
+const [mode,...selection]=process.argv.slice(2).filter(x=>!['--apache','--bookworm'].includes(x));assert(['prepare','apply'].includes(mode));
 const report=fs.existsSync(file)?read(file):{date:new Date().toISOString(),groups:[]},save=()=>fs.writeFileSync(file,JSON.stringify(report,null,2)+'\n');
 async function gate(g,which){
  const limit=readinessSeconds([inspect(g.name)]);
  for(let attempt=0;attempt<limit;attempt++){
   try{const x=inspect(g.name);assert.equal(x.Image,g[which+'Image']);assert(x.State.Running);assert(x.RestartCount<=(which==='old'?(g.oldRestarts||0):0));assert(Date.now()-Date.parse(x.State.StartedAt)>4000);if(x.State.Health)assert.equal(x.State.Health.Status,'healthy');
-   if(which==='new')assert.equal(docker('exec',g.name,'dpkg-query','-W','-f=${Version}','libexpat1'),'2.9.0-1');return;
+   if(which==='new')assert.equal(docker('exec',g.name,'dpkg-query','-W','-f=${Version}',apache?'apache2-bin':bookworm?'libxml2':'libexpat1'),apache?'2.4.69-1':bookworm?'2.9.14+dfsg-1.3~deb12u6+utilibre2':'2.9.0-1');
+   if(bookworm&&which==='new'){
+    if(g.key==='gathio')cp.execFileSync('node',['deployment/maintenance/check-gathio-live.mjs'],{timeout:60000,stdio:'pipe'});
+    else {assert.equal(cp.execFileSync('systemctl',['is-active','utilibre-tools-firewall.service'],{encoding:'utf8'}).trim(),'active');const r=await fetch('https://bridge.utilibre.org/',{signal:AbortSignal.timeout(12000)});await r.body?.cancel();assert.equal(r.status,200);}
+   }return;
   }catch{if(attempt===limit-1)throw Error('Exact-image/native health gate failed: '+g.key);await new Promise(r=>setTimeout(r,1000));}
  }
 }
 function repin(g,from,to){let n=0;for(const file of [...g.files,...g.mirrors]){const r=replaceImagePins(fs.readFileSync(file,'utf8'),[{from,to}]);if(r.replaced){fs.writeFileSync(file,r.text);n+=r.replaced;}}assert(n>=1,'Exact pin missing');}
 if(mode==='prepare'){
- const built=read(dir+'/expat-stage.json'),native=read(dir+'/expat-apps.json');assert.equal(built.status,'passed');assert.equal(native.status,'passed');
+ const bApache=apache?read(dir+'/apache-stage.json'):null,nApache=apache?read(dir+'/apache-native.json'):null;
+ if(apache){assert(bApache.passed&&bApache.configurationUnchanged&&nApache.passed&&nApache.actualApachePhpLoginPage&&nApache.nativeOpmlExport);assert.equal(bApache.imageId,nApache.imageId);}
+ const targets={rssbridge:'utilibre-community-rssbridge-1',gathio:'utilibre-gathio-postgres-1'};
+ const xmlBuilt=bookworm?read(dir+'/bookworm-images/build.json'):null;
+ const xmlNative=bookworm?read(dir+'/bookworm-images/native-summary.json'):null;
+ if(bookworm){const n=read(dir+'/bookworm-images/gathio/database.json');assert(n.passed&&n.nativeDumpRestore&&n.documentdbTypedDataAndRoleIsolation);assert.equal(n.imageId,xmlBuilt.rows.find(r=>r.kind==='gathio').candidateId);}
+ const built=bookworm?{status:'passed',rows:xmlBuilt.rows.map(r=>({...r,key:r.kind,name:targets[r.kind],base:r.baseId,imageId:r.candidateId}))}:apache?{status:'passed',rows:[{...bApache,key:'freshrss-apache'}]}:read(dir+'/expat-stage.json'),native=bookworm?{status:'passed',date:xmlNative[0].checkedAt,rows:xmlNative.map(r=>({...r,key:r.kind}))}:apache?{status:'passed',date:nApache.date,rows:[{...nApache,key:'freshrss-apache'}]}:read(dir+'/expat-apps.json');assert.equal(built.status,'passed');assert.equal(native.status,'passed');
  assert(Date.now()-Date.parse(native.date)<86400000);
  const all=JSON.parse(docker('inspect',...docker('ps','-q').split('\n')));
  assert.deepEqual(namespaceDependents(all,new Set(built.rows.map(r=>r.name))),[],'Unreviewed namespace dependency');
@@ -34,7 +46,7 @@ if(mode==='prepare'){
   if(selection.length&&!selection.includes(b.key))continue;
   assert(native.rows.some(n=>n.key===b.key&&n.imageId===b.imageId&&n.passed));assert(!report.groups.some(g=>g.key===b.key),'Receipt already exists');
   const x=inspect(b.name),l=x.Config.Labels;assert.equal(x.Image,b.base);assert.equal(id(b.candidate),b.imageId);assert.equal(sha(inspect(b.base).Config),sha(inspect(b.imageId).Config));
-  const g={key:b.key,name:b.name,service:l['com.docker.compose.service'],project:l['com.docker.compose.project'],cwd:l['com.docker.compose.project.working_dir'],files:l['com.docker.compose.project.config_files'].split(','),mirrors:b.key==='rsshub'?['/home/ubuntu/freetools/deployment/utilibre/compose.yaml']:[],oldImage:b.base,newImage:b.imageId,newRef:b.candidate,status:'prepared',preparedAt:new Date().toISOString()};
+  const g={key:b.key,name:b.name,service:l['com.docker.compose.service'],project:l['com.docker.compose.project'],cwd:l['com.docker.compose.project.working_dir'],files:l['com.docker.compose.project.config_files'].split(','),mirrors:['rsshub','freshrss','freshrss-apache'].includes(b.key)?['/home/ubuntu/freetools/deployment/utilibre/compose.yaml']:[],oldImage:b.base,newImage:b.imageId,newRef:b.candidate,status:'prepared',preparedAt:new Date().toISOString()};
   const c=config(g);g.oldRef=c.image;g.oldRestarts=x.RestartCount;g.configHash=configHash(c);assert.equal(id(g.oldRef),g.oldImage);await gate(g,'old');report.groups.push(g);save();console.log(g.key+': ready for exact image replacement');
  }
 }else{

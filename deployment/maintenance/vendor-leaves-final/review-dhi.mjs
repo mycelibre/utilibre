@@ -11,6 +11,13 @@ import {authenticateArchive,payloadManifest,validatePayload} from './dhi-proof.m
 process.umask(0o077);
 const dir='/var/lib/utilibre-maintenance/vendor-leaves-final-20261011',out=dir+'/dhi-fixed',sha=b=>createHash('sha256').update(b).digest('hex');fs.mkdirSync(out,{recursive:true});
 const images=[['utilibre-expanded-penpot-frontend-1','sha256:ca4f4adc5367a40e1597bea7d6032de0d08266b6d65cdf083ae4c695d54d23a7'],['utilibre-expanded-penpot-exporter-1','sha256:a3102615b1349f141d787dd806bc3464a49d223a5336471b3e09b1bc74a6d8da']];
+// Only the recorded Expat overlay may advance this exact exporter. All DHI
+// payload files/symlinks are still rechecked live below; no review is inherited.
+const followup='/var/lib/utilibre-maintenance/closure-followup-20261012/expat-release.json';
+if(fs.existsSync(followup)){
+ const r=JSON.parse(fs.readFileSync(followup));assert.equal(r.status,'passed');
+ const g=r.groups.find(g=>g.key==='penpot-exporter'&&g.oldImage===images[1][1]);assert(g&&g.status==='passed');images[1][1]=g.newImage;
+}
 const versions={'libpcre2-8-0':['pcre2','10.46-1~deb13u3+dhi0'],'libsqlite3-0':['sqlite3','3.46.1-7+deb13u2+dhi1'],...Object.fromEntries(['libssl3t64','openssl','openssl-provider-legacy'].map(p=>[p,['openssl','3.5.7-1~deb13u3+dhi0']])),...Object.fromEntries(['util-linux','libmount1','libblkid1','liblastlog2-2','libsmartcols1','libuuid1'].map(p=>[p,['util-linux','2.41.5-0+deb13u1+dhi3']]))};
 const allowed=new Set('103111 86145 89157 89161 89156 89158 89160 89162 11822 11824 84782 42772 54872 54873 54875 72897 75804 75805 75806 77696 84784 35189 35191 14456 18798 63072 63076 14457 54874 63073 63074 63075 75803 53612 53613 53614 13595 27456 53615'.split(' ').map(x=>'CVE-2026-'+x));allowed.add('CVE-2025-14104');
 const docker=(args)=>{try{return execFileSync('docker',args,{encoding:'utf8',timeout:180000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe']});}catch(e){fs.writeFileSync(out+'/error.log',String(e.stdout||'')+String(e.stderr||e));throw Error('DHI proof failed; private diagnostic retained');}};

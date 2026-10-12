@@ -3,9 +3,11 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import cp from 'node:child_process';
 import {createHash} from 'node:crypto';
+import {pathToFileURL} from 'node:url';
 import {specs,packages,output} from './specs.mjs';
 process.umask(0o077);
-const selected=process.argv.slice(2);assert(selected.length&&selected.every(k=>specs.some(s=>s.key===k)));
+export async function buildExactPackages(specs,packages,output,selected){
+assert(selected.length&&selected.every(k=>specs.some(s=>s.key===k)));
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const free=()=>{const f=fs.statfsSync('/');return f.bavail*f.bsize;};
 const manifest=`const fs=require('fs'),path=require('path'),crypto=require('crypto');const out={};function walk(d){for(const n of fs.readdirSync(d).sort()){const p=path.join(d,n),s=fs.lstatSync(p);if(s.isDirectory())walk(p);else if(s.isFile())out[p]={sha256:crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),mode:s.mode&511};else if(s.isSymbolicLink())out[p]={link:fs.readlinkSync(p)};}}JSON.parse(process.argv[2]).forEach(walk);console.log(JSON.stringify(out));`;
@@ -15,7 +17,10 @@ for(const key of selected){
  const run=(cmd,args,opts={})=>{try{return cp.execFileSync(cmd,args,{encoding:'utf8',timeout:240000,maxBuffer:64*1024**2,stdio:['pipe','pipe','pipe'],...opts});}catch(e){fs.writeFileSync(dir+'/error.log',String(e.stdout||'')+String(e.stderr||e));throw Error('Exact candidate failed: '+dir+'/error.log');}};
  const docker=(args,opts)=>run('docker',args,opts);
  const config=id=>JSON.parse(docker(['image','inspect',id]))[0];
- const node=(id,code,args=[])=>docker(['run','--rm','-i','--user','0','--network','none','--read-only','--cpus','2','--memory','2g','--memory-swap','2g','--pids-limit','128','--log-driver','none','--cap-drop','ALL','--security-opt','no-new-privileges','--entrypoint','node',id,'-',...args],{input:code});
+ // Some immutable application files are owned by the runtime UID with mode
+ // 0600. Read their hashes in this networkless, read-only, no-volume inspector;
+ // never grant this capability to production or a dependency test container.
+ const node=(id,code,args=[])=>docker(['run','--rm','-i','--user','0','--network','none','--read-only','--cpus','2','--memory','2g','--memory-swap','2g','--pids-limit','128','--log-driver','none','--cap-drop','ALL','--cap-add','DAC_OVERRIDE','--security-opt','no-new-privileges','--entrypoint','node',id,'-',...args],{input:code});
  try{
   assert(free()>8.3*1024**3,'Recovery floor');
   assert.equal(docker(['inspect','--format','{{.Image}}',s.container]).trim(),s.base,'Live base changed');
@@ -35,6 +40,11 @@ for(const key of selected){
    for(const target of paths)recipe+='COPY pkg'+i+'/ '+target+'/\n';
    receipts.push({name,...pin,paths,tarball:meta.dist.tarball,archiveSha256:hash(bytes),downloadBytes:bytes.length,license:meta.license});
   }
+  const npmPolicy='/usr/local/lib/node_modules/npm/npmrc';
+  if(s.disableNpmBackgroundChecks){
+   const existing=node(s.base,`const fs=require('fs');if(fs.existsSync(process.argv[2]))process.stdout.write(fs.readFileSync(process.argv[2],'utf8'));`,[npmPolicy]);
+   fs.writeFileSync(scratch+'/npmrc',existing+'\nupdate-notifier=false\naudit=false\nfund=false\n',{mode:0o644});fs.chmodSync(scratch+'/npmrc',0o644);recipe+='COPY npmrc '+npmPolicy+'\n';
+  }
   const adapter='/grist/_build/app/server/lib/ActiveDoc.js';
   if(key==='grist'){
    let text=node(s.base,`process.stdout.write(require('fs').readFileSync(process.argv[2],'utf8'))`,[adapter]);
@@ -46,7 +56,7 @@ for(const key of selected){
   const log=fs.openSync(dir+'/build.log','w'),child=cp.spawn('docker',['build','--network','none','--pull=false','--memory','512m','--cpu-period','100000','--cpu-quota','200000','-t',s.candidate,scratch],{env:{...process.env,DOCKER_BUILDKIT:'0'},stdio:['ignore',log,log]});
   const watcher=setInterval(()=>{if(free()<8*1024**3)child.kill('SIGTERM')},500);const code=await new Promise(r=>child.once('exit',r));clearInterval(watcher);fs.closeSync(log);assert.equal(code,0);
   const next=config(s.candidate);for(const k of ['Env','Entrypoint','Cmd','WorkingDir','Healthcheck','Volumes','ExposedPorts','Labels'])assert.deepEqual(next.Config[k],old.Config[k],k);assert.equal(next.Config.User,old.Config.User||'0');
-  const after=JSON.parse(node(next.Id,manifest,[JSON.stringify(s.roots)])),allowed=p=>targets.some(t=>p.startsWith(t+'/'))||(key==='grist'&&p===adapter),changed=[];
+  const after=JSON.parse(node(next.Id,manifest,[JSON.stringify(s.roots)])),allowed=p=>targets.some(t=>p.startsWith(t+'/'))||(key==='grist'&&p===adapter)||(s.disableNpmBackgroundChecks&&p===npmPolicy),changed=[];
   for(const p of new Set([...Object.keys(before),...Object.keys(after)]))if(JSON.stringify(before[p])!==JSON.stringify(after[p])){assert(allowed(p),'Unrelated file changed: '+p);changed.push(p)}assert(changed.length);
   const versions=JSON.parse(node(next.Id,`const fs=require('fs');console.log(JSON.stringify(Object.fromEntries(JSON.parse(process.argv[2]).map(p=>[p,JSON.parse(fs.readFileSync(p+'/package.json')).version]))))`,[JSON.stringify(targets)]));
   for(const [name,paths] of Object.entries(s.paths))for(const p of paths)assert.equal(versions[p],packages[name].version);
@@ -54,3 +64,5 @@ for(const key of selected){
   fs.writeFileSync(dir+'/build.json',JSON.stringify(result,null,2)+'\n');fs.writeFileSync(dir+'/changed-files.json',JSON.stringify(changed,null,2)+'\n');fs.writeFileSync(dir+'/Dockerfile',recipe);console.log(JSON.stringify({key,imageId:next.Id,passed:true}));
  }finally{fs.rmSync(scratch,{recursive:true,force:true})}
 }
+}
+if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)await buildExactPackages(specs,packages,output,process.argv.slice(2));

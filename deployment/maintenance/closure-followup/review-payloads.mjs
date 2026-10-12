@@ -13,7 +13,27 @@ const run=(p,args)=>cp.execFileSync(p,args,{encoding:'utf8',timeout:60000,maxBuf
 const queue=read(root+'/security-queue.json'),scan=read(root+'/security.json'),primary=read(dir+'/debian-primary.json');
 assert.equal(queue.scanDate,scan.completedAt);assert.equal(scan.status,'checked');assert(Date.now()-Date.parse(scan.completedAt)<86400000);assert(Date.now()-Date.parse(primary.date)<86400000);
 const release=read(dir+'/expat-release.json');assert.equal(release.status,'passed');assert.equal(read(dir+'/host-release.json').status,'passed');assert.equal(read(dir+'/host-live.json').status,'passed');
+// Follow only the two reviewed library overlays, never an arbitrary new image.
+const descendants=[];
+for(const file of ['cache-release.json','apache-release.json']){
+ const r=read(dir+'/'+file);assert.equal(r.status,'passed');
+ for(const group of r.groups){assert.equal(group.status,'passed');
+  for(const row of group.rows||[group])if(row.oldImage!==row.newImage)
+   descendants.push({...row,receipt:file,completedAt:group.completedAt});
+ }
+}
+function originalRelease(name,image){
+ const seen=new Set;
+ while(!seen.has(image)){
+  seen.add(image);
+  const original=release.groups.find(g=>g.name===name&&g.newImage===image&&g.status==='passed');if(original)return original;
+  const row=descendants.find(r=>r.name===name&&r.newImage===image);if(!row)return null;
+  assert(Date.parse(row.completedAt)<=Date.parse(scan.date));image=row.oldImage;
+ }
+ return null;
+}
 const specs=[
+ ['libxml2-16','2.15.4+dfsg-1','libxml2-16_2.15.4+dfsg-1_amd64.deb','36f043b5014adf26ff722f693361d1d677088d1eb384fe4522ad514b52053c88','libxml2'],
  ['libexpat1','2.9.0-1','libexpat1_2.9.0-1_amd64.deb','190d7f5e45f070c42a12f708fe417d6636cb45fae71175203168bb5c3695081b','expat'],
  ['vim','2:9.2.0858-1','vim_2%3a9.2.0858-1_amd64.deb','a146e1522011659f2a60420ec3958be9f7dc30e6aa396b0da37a5eb8fbc301c0','vim'],
  ['vim-tiny','2:9.2.0858-1','vim-tiny_2%3a9.2.0858-1_amd64.deb','df2d037d405f1376d1d8025d022dba81fbfed8695f68a131b788d16d3b68cf83','vim'],
@@ -25,7 +45,8 @@ const decisions=[],proofs=[],skipped=[],cache=new Map;
 for(const item of queue.items.filter(i=>i.status==='needs-review'&&['HIGH','CRITICAL'].includes(i.severity))){
  const spec=specs.find(s=>s[0]===item.package);if(!spec||item.type!=='debian')continue;
  const [pkg,version,file,hash,source]=spec,host=item.scope==='host-os';
- if(!host&&(pkg!=='libexpat1'||!release.groups.some(g=>g.newImage===item.artifact)))continue;
+ const apacheXml=pkg==='libxml2-16'&&item.containers.length===1&&item.containers[0]==='utilibre-services-freshrss-1'&&item.artifact==='sha256:6cd6298cfe66d17d08a1a848192de49123aed476f052e2d615ad9fc328adb354';
+ if(!host&&!apacheXml&&(pkg!=='libexpat1'||!item.containers.every(n=>originalRelease(n,item.artifact))))continue;
  try{
   const fixed=primary.sources[source]?.[item.id]?.releases?.sid;assert.equal(fixed?.status,'resolved');assert(fixed.fixed_version&&fixed.fixed_version!=='0');run('dpkg',['--compare-versions',version,'ge',fixed.fixed_version]);
   const key=item.artifact+'|'+pkg;
@@ -36,13 +57,13 @@ for(const item of queue.items.filter(i=>i.status==='needs-review'&&['HIGH','CRIT
     run('dpkg-deb',['-x',deb,temp]);
     // Debian's postinst may coalesce documentation under vim-common. Compare
     // all shipped code/runtime files, not mutable/shared changelog packaging.
-    const paths=files(temp).filter(p=>pkg==='libexpat1'?/^\/usr\/lib\/.*libexpat\.so\.[\d.]+$/.test(p):p.startsWith('/usr/')&&!p.startsWith('/usr/share/doc/')&&!(pkg==='vim-tiny'&&p.startsWith('/usr/share/vim/vim92/doc/')));
+    const paths=files(temp).filter(p=>pkg==='libxml2-16'?/^\/usr\/lib\/.*libxml2\.so\.[\d.]+$/.test(p):pkg==='libexpat1'?/^\/usr\/lib\/.*libexpat\.so\.[\d.]+$/.test(p):p.startsWith('/usr/')&&!p.startsWith('/usr/share/doc/')&&!(pkg==='vim-tiny'&&p.startsWith('/usr/share/vim/vim92/doc/')));
     // The full vim-runtime package legitimately replaces tiny's three minimal
     // help files; its separate signed payload check covers the installed help.
     assert(paths.length);manifest=paths.map(p=>({path:p,sha256:sha(fs.readFileSync(temp+p))}));
     for(const name of host?[null]:item.containers){
      const cmd=(p,a)=>host?run(p,a):run('docker',['exec',name,p,...a]);
-     if(!host){assert.equal(run('docker',['inspect','--format','{{.Image}}',name]),item.artifact);assert(release.groups.some(g=>g.name===name&&g.newImage===item.artifact&&g.status==='passed'));}
+     if(!host){assert.equal(run('docker',['inspect','--format','{{.Image}}',name]),item.artifact);assert(originalRelease(name,item.artifact));}
      assert.equal(cmd('dpkg-query',['-W','-f=${Version}',pkg]),version);
      for(const m of manifest)assert.equal(host?sha(fs.readFileSync(m.path)):cmd('sha256sum',[m.path]).split(/\s/)[0],m.sha256);
      if(name?.includes('penpot-'))assert.equal(cmd('sha256sum',['/opt/imagick/lib/deps/libexpat.so.1']).split(/\s/)[0],manifest[0].sha256);

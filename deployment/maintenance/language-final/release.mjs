@@ -74,6 +74,9 @@ async function recreate(g){
  try{docker(...compose(g),'up','-d','--force-recreate','--no-deps','--no-build','--pull','never',...directlyRecreatedServices(g));}
  finally{if(wallabag)execFileSync('systemctl',['start','utilibre-wallabag.service'],{timeout:180000,stdio:'ignore'});if(newsletters)execFileSync('systemctl',['start','utilibre-newsletters-smtp.service'],{timeout:180000,stdio:'ignore'});}
 }
+// Reuse established project supervisors/namespace gates for later exact-image
+// security releases; importing this module never runs the historical rollout.
+export {compose as existingComposeArgs,gate as checkExistingGroup,recreate as recreateExistingGroup,status as existingGroupStatus};
 export async function releaseGroup(g,ops){
  await ops.preflight();g.status='applying';await ops.save();
  try{await ops.recreate();await ops.gate('new');g.status='passed';await ops.save();}
