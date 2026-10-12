@@ -18,4 +18,9 @@ export const additionalOverlayReceipts = [
   'perl-ubuntu-followup-20261012/release.json',
   'penpot-heif-alignment-20261012/penpot-release.json',
   'gdal-avif-followup-20261012/release.json',
+  'archive-tar-final-20261012/release.json',
+  'application-leaves-final-20261012/tracker/release.json',
+  'coturn-bson-final-20261012/release.json',
+  'application-leaves-final-20261012/nltk/release.json',
+  'kuma-crypto-final-20261012/release.json',
 ];

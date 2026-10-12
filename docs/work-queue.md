@@ -1,5 +1,54 @@
 # Operator work queue — reconciled 12 October 2026
 
+## Additional repairs deployed — 12 October, 18:04 UTC
+
+This supersedes the activation notes below for the following components only.
+The remaining mount/ACL and Xvfb work is still being completed; a new whole-fleet
+scan is required before quoting updated pending totals.
+
+- **Archive::Tar 3.14:** the unmodified upstream module is active on the host
+  and in Gathio, RSSHub, Priviblur, BreezeWiki and FreshRSS. Each passed 1,709
+  upstream assertions and native archive round trips. Penpot's existing DHI
+  module already contains the exact allocation guard and passed its focused
+  test; it was not unnecessarily replaced. This limits the declared-size
+  allocation issue, not every possible resource-abuse path.
+- **Chitchatter tracker:** removed the unused vulnerable `ip` dependency while
+  retaining native WebSocket signaling. Two peer announcements/offer exchange,
+  invalid-origin rejection and parser checks passed. UDP remains disabled.
+- **Both coturn relays:** matching native MongoDB libraries retain their ABI
+  and vendor patches, with the maintained OCSP ownership fix. Native suites,
+  isolated authenticated relay/quota checks and bounded live TLS/authentication,
+  exact-byte relay and destination-denial checks passed. Public quotas and
+  credentials are unchanged; no external-device coverage is inferred.
+- **KitchenOwl:** NLTK model-path fixes passed all six old/new negative controls,
+  normal model/ingredient-parser checks and two-account recipe import/export.
+- **Uptime Kuma:** cryptography 50.0.2 uses its bundled OpenSSL 4.0.3; the system
+  TLS library is unchanged. All 164 runtime files match upstream payloads.
+  Existing crypto consumers, native setup/login and live status checks passed.
+- **CryptPad:** a bounded braces-parser nesting check passed 764 upstream tests,
+  19 hostile-input rejections, 30 ordinary comparisons and the existing
+  two-account document/team/import/export workflow. No document format or
+  registration setting changed.
+
+Recipes, exact sources, update-retirement conditions and guarded rollback:
+[Archive::Tar](../deployment/maintenance/archive-tar-final/README.md),
+[tracker / NLTK / braces](../deployment/maintenance/application-leaves-final/README.md),
+[coturn libraries](../deployment/maintenance/coturn-bson-final/README.md),
+[Kuma cryptography](../deployment/maintenance/kuma-crypto-final/README.md).
+All six source archives are published and their complete HTTPS downloads were
+hash-verified. Future unattended host updates protect 61 reviewed packages.
+
+Five exact, stopped compiler containers were removed after checking their
+completed release receipts and retained bind-mounted sources/outputs. This
+reclaimed approximately 2.5 GiB of reproducible writable build layers. Images,
+rollback artifacts, backup volumes and user data were retained. Root free space
+rose from about 9.1 GiB to 12 GiB; the 8 GiB build safety reserve remains enforced.
+No extra virtual disk capacity was available to grow the filesystem.
+
+GitHub's genuine scheduled external check is still overdue: at this checkpoint
+its latest scheduled success remained 09:42:44 UTC. The workflow is active;
+manual runs are not accepted as proof that recurring scheduling works.
+
 ## Native repair release and remaining boundaries — 12 October, 16:50 UTC
 
 **The prepared native-library releases are deployed. This is not a clean

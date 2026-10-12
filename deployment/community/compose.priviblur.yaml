@@ -14,7 +14,7 @@ x-runtime: &runtime
 services:
   priviblur:
     <<: *runtime
-    image: utilibre-curl-priviblur-priviblur:security-20261012
+    image: utilibre-priviblur:archive-tar-20261012
     user: "1000:1000"
     environment:
       PRIVIBLUR_ACCESS_LOG: "false"

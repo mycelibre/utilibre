@@ -19,18 +19,26 @@ import {reviewFile as qgaReview,eligible as qgaEligible} from '../qga-native-fol
 import {reviewFile as hdf5Review,eligible as hdf5Eligible} from '../hdf5-native-followup/review-policy.mjs';
 import {reviewFile as gdalAvifReview,eligible as gdalAvifEligible} from '../gdal-avif-followup/review-policy.mjs';
 import {reviewFile as heifReview,eligible as heifEligible,fixed as heifFixed} from '../heif-bookworm-followup/review-policy.mjs';
+import {reviewFile as archiveTarReview,eligible as archiveTarEligible} from '../archive-tar-final/review-policy.mjs';
+import {reviewFile as coturnBsonReview,eligible as coturnBsonEligible} from '../coturn-bson-final/review-policy.mjs';
+import {reviewFile as nltkReview,eligible as nltkEligible} from '../application-leaves-final/nltk-review-policy.mjs';
+import {reviewFile as bracesReview,eligible as bracesEligible} from '../application-leaves-final/braces-review-policy.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',read=p=>JSON.parse(fs.readFileSync(root+'/'+p));
 const queue=read('security-queue.json'),scan=read('security.json');assert.equal(queue.scanDate,scan.completedAt);assert.equal(scan.status,'checked');
 const current=new Map(queue.items.map(x=>[x.key,x])),ledger=new Map(read('security-decisions.json').map(x=>[x.key,x]));
 const opensslReview='openssl-bookworm-followup-20261012/review.json';
-const nativeMitigationReviews=[openldapReview,tiffReview,qgaReview,hdf5Review,gdalAvifReview];
+const nativeMitigationReviews=[openldapReview,tiffReview,qgaReview,hdf5Review,gdalAvifReview,archiveTarReview,coturnBsonReview,nltkReview,bracesReview];
 const files=process.argv.slice(2);assert(files.length&&files.every(x=>[dhiBinaryReview,...nativeMitigationReviews,heifReview,qemuReview,xlibReview,sudoReview,npmReview,...hostFollowupReviews,gnupgReview,xserverDhiReview,penpotReview,opensslReview,"python-bookworm-followup-20261012/mitigation-review.json","python-bookworm-followup-20261012/not-affected-review.json","geospatial-followup-20261012/native-reviews.json","host-extra-followup-20261012/pcap-review.json",'component-review.json','binary-scope-review.json','specific-closure-review-20261012.json','vendor-fixed-review.json','native-backport-review.json','closure-followup-20261012/headers-review.json','closure-followup-20261012/payload-review.json','closure-followup-20261012/ncurses-review.json','closure-followup-20261012/rsync-review.json','closure-followup-20261012/util-linux-review.json','closure-followup-20261012/util-linux-component-review.json','closure-followup-20261012/xml-uri-review.json','closure-followup-20261012/curl-review.json','closure-followup-20261012/bookworm-curl-review.json','closure-followup-20261012/gzip-review.json','closure-followup-20261012/sqlite-fts-review.json','closure-followup-20261012/wget-review.json','vendor-leaves-final-20261011/dhi-fixed-review.json','next-leaves-final-20261012/resume-reviews.json','closure-followup-20261012/urllib3-review.json','closure-followup-20261012/python-system-review.json','component-followup-20261012/binary-reviews.json','component-followup-20261012/runtime-reviews.json'].includes(x)));
 let applied=0;
 for(const file of files){
  const stat=fs.statSync(root+'/'+file);assert(stat.mtimeMs>Date.parse(scan.completedAt)&&Date.now()-stat.mtimeMs<900000,'Regenerate review after the exact scan');
  const value=read(file);if(!Array.isArray(value))assert.equal(value.scanDate,scan.completedAt);
  for(const decision of Array.isArray(value)?value:value.decisions){
+  if(file===archiveTarReview)assert(archiveTarEligible({...current.get(decision.key),status:'needs-review'}));
+  if(file===coturnBsonReview)assert(coturnBsonEligible({...current.get(decision.key),status:'needs-review'}));
+  if(file===nltkReview)assert(nltkEligible({...current.get(decision.key),status:'needs-review'}));
+  if(file===bracesReview)assert(bracesEligible({...current.get(decision.key),status:'needs-review'}));
   if(file===penpotReview)assert(penpotEligible({...current.get(decision.key),status:"needs-review"}));
   if(file===xlibReview)assert(xlibEligible({...current.get(decision.key),status:'needs-review'}));
   if(file===sudoReview)assert(sudoEligible({...current.get(decision.key),status:'needs-review'}));
@@ -44,7 +52,7 @@ for(const file of files){
   if(file===heifReview)assert(heifEligible({...current.get(decision.key),status:'needs-review'}));
   if(file===npmReview)assert(npmEligible({...current.get(decision.key),status:'needs-review'}));
   const item=current.get(decision.key);assert(item,'Finding no longer current');assert.equal(decision.status,file===dhiBinaryReview?'not-affected':file===tiffReview?tiffStatus(item):file===heifReview?(heifFixed.includes(item.id)?'mitigated':'not-affected'):hostFollowupReviews.includes(file)?hostFollowupStatus(file,item):file===gnupgReview?gnupgFollowupStatus(file,item):file===xserverDhiReview?xserverDhiStatus(file,item):[...nativeMitigationReviews,xlibReview,sudoReview,penpotReview,opensslReview,"python-bookworm-followup-20261012/mitigation-review.json","geospatial-followup-20261012/native-reviews.json",'native-backport-review.json','closure-followup-20261012/ncurses-review.json','closure-followup-20261012/rsync-review.json','closure-followup-20261012/util-linux-review.json','closure-followup-20261012/curl-review.json','closure-followup-20261012/bookworm-curl-review.json','closure-followup-20261012/gzip-review.json','closure-followup-20261012/sqlite-fts-review.json','closure-followup-20261012/wget-review.json','closure-followup-20261012/python-system-review.json'].includes(file)?'mitigated':'not-affected');
-  assert(['host-os','runtime-image'].includes(item.scope));
+  assert(file===bracesReview ? item.scope==='mounted-runtime-code' : ['host-os','runtime-image'].includes(item.scope));
   if(item.status!=='needs-review')continue;
   ledger.set(decision.key,validateDecision(decision));applied++;
  }

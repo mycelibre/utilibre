@@ -1,1 +1,1 @@
-{"name":"utilibre-chitchatter-tracker","private":true,"type":"module","license":"MIT","dependencies":{"bittorrent-tracker":"11.2.3"}}
+{"name":"utilibre-chitchatter-tracker","private":true,"type":"module","license":"MIT","dependencies":{"bittorrent-tracker":"file:vendor/bittorrent-tracker-11.2.3-utilibre.1.tgz"}}

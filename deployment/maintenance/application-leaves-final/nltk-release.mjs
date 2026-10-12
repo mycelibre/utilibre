@@ -1,0 +1,24 @@
+// Preparation does not change production. Parent maintainer owns serialized apply.
+import fs from 'node:fs';import assert from 'node:assert/strict';
+import {root,json,save,hash,docker,floor} from './common.mjs';
+import {replaceImagePins,releaseGroup,existingComposeArgs,checkExistingGroup,recreateExistingGroup} from '../language-final/release.mjs';
+const mode=process.argv[2];assert(['prepare','apply'].includes(mode));const d=root+'/nltk',file=d+'/release.json',b=json(d+'/build.json'),n=json(d+'/checks.json'),offer=json(d+'/source-offer.json');
+assert(b.passed&&b.configurationUnchanged&&n.passed&&n.nativeAccountIsolation&&n.recipeImportExport&&n.cleanedUp);assert.equal(n.imageId,b.imageId);assert.equal(n.results.length,2);assert(n.results[0].passed&&n.results[1].passed);assert(Object.values(n.results[0].sixApiNegativeControls).every(v=>v===false));assert(Object.values(n.results[1].sixApiNegativeControls).every(v=>v===true));assert(n.results[1].ingredientParserConsumer&&n.results[1].symlinkHardlinkFifoDenied);
+assert(offer.published);assert.equal(hash(fs.readFileSync('/opt/utilibre/toolbox-public/'+offer.filename)),offer.sha256);assert(Date.now()-Date.parse(n.date)<86400000);
+const inspect=id=>JSON.parse(docker(['inspect',id]))[0];assert.equal(inspect(b.candidate).Id,b.imageId);
+const config=g=>JSON.parse(docker([...existingComposeArgs(g),'config','--format','json'])).services;
+const withoutImage=c=>{const{image,...rest}=c;return hash(JSON.stringify(rest));};
+const proofs=Object.fromEntries(['build.json','checks.json','backport.json','upstream.json','source-offer.json'].map(p=>[d+'/'+p,hash(fs.readFileSync(d+'/'+p))]));
+async function http(){const r=await fetch('http://10.10.1.43:3202/',{redirect:'manual',signal:AbortSignal.timeout(5000)});await r.body?.cancel();return r.status;}
+async function gate(g,which){await checkExistingGroup(g,which);const c=config(g);assert.equal(withoutImage(c.app),g.rows[0].configHash);const gateway=inspect('utilibre-kitchenowl-gateway-1');assert.equal(gateway.Id,g.gateway.id);assert.equal(hash(JSON.stringify(c.gateway)),g.gateway.configHash);assert.equal(await http(),g.httpBefore);
+ const actual=json(d+'/'+(which==='new'?'after':'before')+'.json');for(const p of Object.keys(b.payloads))assert.equal(docker(['exec',b.container,'sha256sum',p]).split(/\s+/)[0],actual[p].sha256);
+ assert.equal(docker(['exec',b.container,'python','-B','-c','import nltk,ingredient_parser; print(nltk.__version__)']).trim(),'3.10.3');}
+if(mode==='prepare'){
+ if(fs.existsSync(file))assert.equal(json(file).status,'prepared');const x=inspect(b.container);assert.equal(x.Image,b.base);const l=x.Config.Labels,g={key:'kitchenowl-nltk',project:l['com.docker.compose.project'],cwd:l['com.docker.compose.project.working_dir'],files:l['com.docker.compose.project.config_files'].split(','),before:[],rows:[],status:'prepared',proofs};assert.equal(g.project,'utilibre-kitchenowl');assert.deepEqual(g.files,['/home/ubuntu/freetools/deployment/kitchenowl/compose.yaml']);const c=config(g);assert.equal(c.app.image,b.baseRef);
+ g.rows=[{key:'kitchenowl-nltk',name:b.container,service:'app',oldRef:b.baseRef,oldImage:b.base,newRef:b.candidate,newImage:b.imageId,configHash:withoutImage(c.app),verification:d+'/build.json'}];g.gateway={id:inspect('utilibre-kitchenowl-gateway-1').Id,configHash:hash(JSON.stringify(c.gateway))};g.httpBefore=await http();assert.equal(g.httpBefore,200);await gate(g,'old');g.preparedAt=new Date().toISOString();g.fileHashes=Object.fromEntries(g.files.map(p=>[p,hash(fs.readFileSync(p))]));save(file,{date:g.preparedAt,status:'prepared',groups:[g]});console.log('KitchenOwl NLTK candidate prepared; no live writes.');
+}else{
+ const report=json(file),g=report.groups[0];assert.equal(report.status,'prepared');assert.equal(g.status,'prepared');assert(Date.now()-Date.parse(g.preparedAt)<3600000);assert.deepEqual(g.proofs,proofs);for(const[p,h]of Object.entries(g.fileHashes))assert.equal(hash(fs.readFileSync(p)),h);floor();let rollback=false;
+ const validate=()=>{assert.equal(inspect(b.candidate).Id,b.imageId);assert.equal(inspect(b.baseRef).Id,b.base);assert.equal(withoutImage(config(g).app),g.rows[0].configHash);};
+ const repin=reverse=>{const p=g.files[0],r=replaceImagePins(fs.readFileSync(p,'utf8'),[{from:reverse?b.candidate:b.baseRef,to:reverse?b.baseRef:b.candidate}]);assert.equal(r.replaced,1);fs.writeFileSync(p,r.text)};
+ await releaseGroup(g,{preflight:async()=>{validate();await gate(g,'old')},save:()=>save(file,report),recreate:async()=>{validate();if(!rollback)repin(false);await recreateExistingGroup(g)},gate:async v=>{await gate(g,v);validate()},rollbackPins:()=>{validate();rollback=true;repin(true)}});report.status='passed';report.completedAt=g.completedAt=new Date().toISOString();save(file,report);console.log('KitchenOwl NLTK exact release passed; app/config/data preserved.');
+}

@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "note": "Reviewed native upgrades and their release recipes, including signed-vendor packages without a +utilibre suffix. All installed +utilibre packages are additionally discovered automatically. Entries require reviewed retirement, not expiry.",
   "packages": {
+    "utilibre-archive-tar": "archive-tar-final/host.mjs",
     "libexpat1": "closure-followup/release-host.mjs",
     "libpcap0.8t64": "host-extra-followup/release-pcap.mjs",
     "libx11-6": "xlib-followup/release-host.mjs",

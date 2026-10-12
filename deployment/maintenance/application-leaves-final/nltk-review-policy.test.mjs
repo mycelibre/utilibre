@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {eligible} from './nltk-review-policy.mjs';
+const row={status:'needs-review',type:'python-pkg',scope:'runtime-image',package:'nltk',installed:'3.10.3',id:'CVE-2026-81726',artifact:'sha256:'+'a'.repeat(64),containers:['utilibre-kitchenowl-app-1']};
+test('Only exact NLTK advisory/version/role qualifies; runtime proof remains mandatory',()=>{assert(eligible(row));for(const change of [{id:'CVE-2026-81725'},{installed:'3.10.2'},{scope:'tracked-build-input'},{package:'python'},{containers:['unrelated']},{containers:[...row.containers,'other']},{artifact:'latest'},{status:'not-affected'}])assert(!eligible({...row,...change}));});

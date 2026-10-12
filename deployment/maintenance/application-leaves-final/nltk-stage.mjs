@@ -1,0 +1,18 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';
+import {root,here,run,docker,json,save,hash,floor} from './common.mjs';
+const d=root+'/nltk',site='/opt/venv/lib/python3.14/site-packages',container='utilibre-kitchenowl-app-1';
+const base='sha256:29510e52232669df9c2a4f163a7d48daded36ee5c402b22596b5eb48af615d44',candidate='utilibre-kitchenowl:nltk-security-20261012';
+floor();assert.equal(docker(['inspect','--format','{{.Image}}',container]).trim(),base);const old=JSON.parse(docker(['image','inspect',base]))[0];
+const args=['run','--rm','-i','--network','none','--read-only','--user','0','--cpus','2','--memory','2g','--memory-swap','2g','--pids-limit','128','--cap-drop','ALL','--cap-add','DAC_OVERRIDE','--security-opt','no-new-privileges','--log-driver','none','--entrypoint','python'];
+const manifest=id=>JSON.parse(docker([...args,id,'-','["/opt/venv","/usr/src/kitchenowl"]'],{input:fs.readFileSync(here+'python-manifest.py','utf8')}));const before=manifest(base);
+fs.mkdirSync(d+'/original',{recursive:true});fs.mkdirSync(d+'/context',{recursive:true});
+for(const file of ['pathsec.py','data.py','tag/perceptron.py','classify/maxent.py','parse/transitionparser.py']){const p=d+'/original/'+file;fs.mkdirSync(new URL('.', 'file://'+p).pathname,{recursive:true});fs.writeFileSync(p,docker([...args,base,'-c','import pathlib,sys;sys.stdout.write(pathlib.Path(sys.argv[1]).read_text())',site+'/nltk/'+file]));}
+run('python3',[here+'nltk-backport.py',d]);const bp=json(d+'/backport.json');for(const f of Object.keys(bp.files))fs.chmodSync(d+'/context/nltk/'+f,before[site+'/nltk/'+f].mode);
+// Build only the five patched source modules; no pip/npm/network or model fetch.
+let recipe='FROM '+base+'\nUSER 0\n';for(const f of Object.keys(bp.files))recipe+='COPY nltk/'+f+' '+site+'/nltk/'+f+'\n';
+recipe+='RUN python -m py_compile '+Object.keys(bp.files).map(f=>site+'/nltk/'+f).join(' ')+'\nUSER '+JSON.stringify(old.Config.User||'0')+'\n';fs.writeFileSync(d+'/context/Dockerfile',recipe);
+const log=run('docker',['build','--network','none','--pull=false','--memory','2g','--cpu-period','100000','--cpu-quota','200000','-t',candidate,d+'/context'],{env:{...process.env,DOCKER_BUILDKIT:'0'},timeout:180000});fs.writeFileSync(d+'/build.log',log);floor();
+const next=JSON.parse(docker(['image','inspect',candidate]))[0];for(const k of ['Env','Entrypoint','Cmd','WorkingDir','Healthcheck','Volumes','ExposedPorts','Labels'])assert.deepEqual(next.Config[k],old.Config[k],k);assert.equal(next.Config.User,old.Config.User||'0');
+const after=manifest(next.Id),allowed=Object.keys(bp.files).flatMap(f=>[site+'/nltk/'+f,site+'/nltk/'+f.replace(/([^/]+)\.py$/,'__pycache__/$1.cpython-314.pyc')]);const changed=[];
+for(const p of new Set([...Object.keys(before),...Object.keys(after)]))if(JSON.stringify(before[p])!==JSON.stringify(after[p])){assert(allowed.includes(p),'Unrelated file '+p);changed.push(p)}
+save(d+'/before.json',before);save(d+'/after.json',after);save(d+'/build.json',{date:new Date().toISOString(),key:'kitchenowl-nltk',container,base,baseRef:docker(['inspect','--format','{{.Config.Image}}',container]).trim(),candidate,imageId:next.Id,passed:true,deployed:false,configurationUnchanged:true,unchangedOtherFiles:Object.keys(before).filter(p=>!allowed.includes(p)).length,changed,sourceProofSha256:hash(fs.readFileSync(d+'/backport.json')),manifestBefore:hash(JSON.stringify(before)),manifestAfter:hash(JSON.stringify(after)),payloads:Object.fromEntries(Object.keys(bp.files).map(f=>[site+'/nltk/'+f,bp.files[f].after]))});console.log(JSON.stringify({candidate,imageId:next.Id,changed,passed:true}));

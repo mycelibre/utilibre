@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {root,sha,read,run} from './common.mjs';
+process.umask(0o077);
+const name='security-kuma-crypto-20261012-source.tar.gz',archive=root+'/'+name,receipt=root+'/source-offer.json';for(const f of ['provenance','stage','payload','application'])assert.equal(read(root+'/'+f+'.json').status,'passed');
+const sources=read(root+'/acquisition.json').rows.filter(r=>r.filename.endsWith('.tar.gz')),recipes=fs.readdirSync(new URL('.',import.meta.url)).filter(f=>/\.(md|mjs|py)$/.test(f)).sort();assert.equal(sources.length,3);
+assert([undefined,'--publish'].includes(process.argv[2])&&process.argv.length<=3);
+if(process.argv[2]==='--publish'){
+ const p=read(receipt);assert.equal(p.filename,name);assert.equal(sha(fs.readFileSync(archive)),p.sha256);assert.deepEqual(new Set(run('tar',['-tzf',archive]).split('\n')),new Set(['kuma-crypto/','kuma-crypto/manifest.json','kuma-crypto/sources/','kuma-crypto/recipes/',...sources.map(r=>'kuma-crypto/sources/'+r.filename),...recipes.map(f=>'kuma-crypto/recipes/'+f)]));
+ for(const dir of ['/opt/utilibre/toolbox-public','/opt/utilibre/records/public']){if(fs.existsSync(dir+'/'+name)){assert.equal(sha(fs.readFileSync(dir+'/'+name)),p.sha256);continue;}const temp=fs.mkdtempSync(dir+'/.kuma-crypto-');fs.copyFileSync(archive,temp+'/'+name);fs.chmodSync(temp+'/'+name,0o644);fs.renameSync(temp+'/'+name,dir+'/'+name);fs.rmdirSync(temp);}p.published=true;p.publishedAt=new Date().toISOString();fs.writeFileSync(receipt,JSON.stringify(p,null,2)+'\n');console.log(JSON.stringify(p));
+}else{
+ assert(!fs.existsSync(archive));const temp=fs.mkdtempSync(root+'/offer-'),dir=temp+'/kuma-crypto';fs.mkdirSync(dir+'/sources',{recursive:true});fs.mkdirSync(dir+'/recipes');for(const s of sources){assert.equal(sha(fs.readFileSync(root+'/input/'+s.filename)),s.sha256);fs.copyFileSync(root+'/input/'+s.filename,dir+'/sources/'+s.filename);}for(const f of recipes)fs.copyFileSync(new URL(f,import.meta.url),dir+'/recipes/'+f);
+ fs.writeFileSync(dir+'/manifest.json',JSON.stringify({date:'2026-10-12',artifacts:read(root+'/acquisition.json').rows,packages:read(root+'/packages.json').records.map(({name,version,file,sha256,wheel,wheelSha256})=>({name,version,file,sha256,wheel,wheelSha256})),notice:'Unmodified upstream source distributions, exact upstream wheel hashes and complete local packaging/test/release recipes. Official wheel includes OpenSSL 4.0.3; system OpenSSL is unchanged. Cryptography publisher attestations verified; CFFI/pycparser do not provide these attestations.'},null,2)+'\n');run('tar',['--sort=name','--mtime=2026-10-12T00:00:00Z','--owner=0','--group=0','--numeric-owner','-czf',archive,'-C',temp,'kuma-crypto']);const p={date:new Date().toISOString(),filename:name,archive,sha256:sha(fs.readFileSync(archive)),bytes:fs.statSync(archive).size,published:false};fs.writeFileSync(receipt,JSON.stringify(p,null,2)+'\n');console.log(JSON.stringify(p));
+}

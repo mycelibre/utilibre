@@ -61,7 +61,7 @@ services:
 
   breezewiki:
     <<: *runtime
-    image: utilibre-breezewiki:xlib-security-20261012
+    image: utilibre-breezewiki:archive-tar-20261012
     read_only: true
     user: "1000:1000"
     environment:
