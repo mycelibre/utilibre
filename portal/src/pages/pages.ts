@@ -109,6 +109,8 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   input.id = 'catalog-query';
   input.name = 'q';
   input.type = 'search';
+  input.maxLength = 160;
+  input.setAttribute('aria-controls', 'catalog');
   input.value = state.query ?? '';
   input.placeholder = t('home.catalog.searchPlaceholder');
   const submit = element('button', '', t('home.catalog.searchButton'));
@@ -152,7 +154,7 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
   const resultCount = element('p', 'catalog-result-count', `${entries.length} ${entries.length === 1 ? t('home.catalog.oneResult') : t('home.catalog.results')}`);
   resultCount.setAttribute('role', 'status');
   resultCount.setAttribute('aria-live', 'polite');
-  const list = renderCatalogList(entries, language, config, t, {
+  let list = renderCatalogList(entries, language, config, t, {
     ariaLabel: stateLabel,
     emptyText: t('home.catalog.empty'),
     headingLevel: 3,
@@ -160,13 +162,14 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
     showSource: true,
   });
   append(catalogSection, catalogHeader, resultCount, list);
-  if (state.query || state.group || state.view !== 'featured') {
-    const clear = element('a', 'catalog-clear', t('home.catalog.clear'));
-    clear.href = catalogUrl(language, {});
-    catalogSection.append(clear);
-  }
+  const clear = element('a', 'catalog-clear', t('home.catalog.clear'));
+  clear.href = catalogUrl(language, {});
+  clear.hidden = !state.query && !state.group && state.view === 'featured';
+  catalogSection.append(clear);
   workspace.append(finder);
-  if (!state.query && !state.group && state.view === 'featured') workspace.append(renderCollectionLinks(language));
+  const collections = renderCollectionLinks(language);
+  collections.hidden = Boolean(state.query || state.group || state.view !== 'featured');
+  workspace.append(collections);
   append(workspace, views, accessNote, catalogSection);
 
   append(layout, index, workspace);
@@ -194,6 +197,52 @@ function renderHome(language: Language, config: PublicConfig, t: Translate, sear
     const link = element('a', 'text-link', t(key)); link.href = routePath(page, language); more.append(link);
   }
   difference.append(more); main.append(difference);
+
+  // Filter locally without replacing the focused field. Keep native GET/Enter
+  // submission available before hydration and when JavaScript is unavailable.
+  let frame = 0;
+  let urlTimer = 0;
+  const updateSearch = () => {
+    window.cancelAnimationFrame(frame);
+    window.clearTimeout(urlTimer);
+    frame = window.requestAnimationFrame(() => {
+      if (!main.isConnected) return;
+      const next: CatalogDiscoveryState = { query: input.value.trim().slice(0, 160) || undefined, view: 'all' };
+      const matches = discoverEntries(config, language, next);
+      const label = catalogStateLabel(next, t);
+      const replacement = renderCatalogList(matches, language, config, t, {
+        ariaLabel: label, emptyText: t('home.catalog.empty'), headingLevel: 3,
+        processingNote: 'summary', showSource: true,
+      });
+      list.replaceWith(replacement); list = replacement;
+      title.textContent = label;
+      stateCode.textContent = catalogStateCode(next, language);
+      resultCount.textContent = `${matches.length} ${matches.length === 1 ? t('home.catalog.oneResult') : t('home.catalog.results')}`;
+      accessNote.textContent = t('home.catalog.allNote');
+      clear.hidden = false; collections.hidden = true;
+      taskList.querySelectorAll<HTMLAnchorElement>('a').forEach((link, index) => {
+        link.href = catalogUrl(language, { ...next, group: discoveryGroups[index] });
+        link.removeAttribute('aria-current');
+      });
+      views.querySelectorAll<HTMLAnchorElement>('a').forEach((link, index) => {
+        const view = catalogViews[index];
+        link.href = catalogUrl(language, view === 'featured' ? {} : { ...next, view });
+        if (view === 'all') link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
+      });
+      const destination = new URL(catalogUrl(language, next), window.location.href);
+      destination.hash = window.location.hash;
+      document.querySelectorAll<HTMLAnchorElement>('.language-switch a').forEach(link => {
+        const translated = new URL(link.href); translated.search = destination.search; link.href = translated.href;
+      });
+      // Replace once typing settles; neither reload nor a history entry per key.
+      urlTimer = window.setTimeout(() => {
+        if (main.isConnected) window.history.replaceState(window.history.state, '', destination);
+      }, 300);
+    });
+  };
+  input.addEventListener('input', event => { if (!(event as InputEvent).isComposing) updateSearch(); });
+  input.addEventListener('compositionstart', () => { window.cancelAnimationFrame(frame); window.clearTimeout(urlTimer); });
+  input.addEventListener('compositionend', updateSearch);
   return main;
 }
 

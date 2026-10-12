@@ -1,0 +1,6 @@
+[
+  {"key":"actual","container":"utilibre-expanded-actual-1","base":"sha256:7fa00f56e0f11dc9792fa7549341eb6651a984c57e14858a58e6992d86ccf8c8","baseTag":"utilibre-actual:mount-security-20261012","candidate":"utilibre-actual:runtime-minimal-20261012","compose":"deployment/expanded/compose.yaml","service":"actual"},
+  {"key":"resume","container":"utilibre-expanded-resume-1","base":"sha256:817071edb4826d5e68440fae8c2813b5bcb449e5566b172bfd89a2c02ee4e0f8","baseTag":"utilibre-resume:mount-security-20261012","candidate":"utilibre-resume:runtime-minimal-20261012","compose":"deployment/expanded/compose.yaml","service":"resume"},
+  {"key":"wishlist","container":"utilibre-wishlist-app-1","base":"sha256:16fbf18119d9cd259de7884ff0e366a01c490ae1f414acf175a1d0146225b8c4","baseTag":"utilibre-wishlist:mount-security-20261012","candidate":"utilibre-wishlist:runtime-minimal-20261012","compose":"deployment/wishlist/compose.yaml","service":"app"},
+  {"key":"cryptpad","container":"utilibre-pack-cryptpad-cryptpad-1","base":"sha256:d3e2cd8c4e05b38d6b602c12328ca2892d11ea45ebc26730cec50ea551604c95","baseTag":"utilibre-cryptpad:mount-security-20261012","candidate":"utilibre-cryptpad:runtime-minimal-20261012","compose":"deployment/pack/compose.cryptpad.yaml","service":"cryptpad"}
+]

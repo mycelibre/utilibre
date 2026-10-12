@@ -1,0 +1,10 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {retainedDecision} from './revalidate.mjs';
+const now=Date.now(),expiry=new Date(now+86400000).toISOString();
+const old={id:'CVE-fixture',package:'unchanged-library',installed:'1.0',severity:'HIGH',scope:'runtime-image',artifact:'old',containers:['fixture'],key:'a'.repeat(64),status:'mitigated',decision:{expiresAt:expiry}};
+const item={...old,artifact:'new',key:'b'.repeat(64),status:'needs-review'};
+const proof={passed:true,filesystemParity:true,configurationUnchanged:true,liveConfigurationUnchanged:true,packageRemovalExact:['apt','libgnutls30:amd64'],imageId:'new',base:'old'};
+test('revalidation retains the original expiry and exact decision',()=>{const d=retainedDecision(item,old,proof,now);assert.equal(d.expiresAt,expiry);assert.equal(d.key,item.key);assert.equal(d.status,'mitigated');});
+test('changed image payload or live settings reject reuse',()=>{for(const key of ['filesystemParity','configurationUnchanged','liveConfigurationUnchanged'])assert.throws(()=>retainedDecision(item,old,{...proof,[key]:false},now));});
+test('expired, unresolved and unreviewed findings never receive a waiver',()=>{assert.equal(retainedDecision(item,{...old,status:'needs-review'},proof,now),null);assert.equal(retainedDecision(item,{...old,decision:{expiresAt:new Date(now-1).toISOString()}},proof,now),null);for(const id of ['CVE-2026-88647','CVE-2026-88648','CVE-2026-54369','CVE-2025-61662'])assert.equal(retainedDecision({...item,id},{...old,id},proof,now),null);});
+test('changed package version, service role or removal set rejects reuse',()=>{assert.throws(()=>retainedDecision({...item,installed:'2.0'},old,proof,now));assert.throws(()=>retainedDecision({...item,containers:['other']},old,proof,now));assert.throws(()=>retainedDecision(item,old,{...proof,packageRemovalExact:['apt']},now));});
