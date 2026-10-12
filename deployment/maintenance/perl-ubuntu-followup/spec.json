@@ -1,0 +1,10 @@
+{
+  "key": "addy-db",
+  "container": "utilibre-addy-db-1",
+  "base": "sha256:4a5ca3309d1d141e1f52846f48c29b854bef47e1e50c0c08c8c5574b28cb6385",
+  "baseRef": "utilibre-addy-db:gzip-security-20261012",
+  "candidate": "utilibre-addy-db:perl-security-20261012",
+  "oldVersion": "5.38.2-3.2ubuntu0.2",
+  "version": "5.38.2-3.2ubuntu0.6",
+  "packages": ["libperl5.38t64", "perl", "perl-base", "perl-modules-5.38"]
+}
