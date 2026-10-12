@@ -1,11 +1,12 @@
-// Exact CVE component review: only Linux CNA records naming compiled kernel .c
-// files, with installed UAPI-header inventories. Never exempts kernel packages.
+// Exact CVE component review: structured Linux CNA records, plus six individually
+// inspected and checksum-pinned historical CNA records naming compiled kernel
+// files. Installed UAPI inventories are checked; kernel packages are never exempt.
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import cp from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {validateDecision} from '../triage.mjs';
-import {kernelComponentPaths,headerOverlap} from './headers-policy.mjs';
+import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents} from './headers-policy.mjs';
 const root='/var/lib/utilibre-maintenance',dir=root+'/closure-followup-20261012';
 const commit='20d9248c60fe62803efade3177e8b82b586d154c';
 process.umask(0o077);fs.mkdirSync(dir+'/cna',{recursive:true});
@@ -24,8 +25,8 @@ await Promise.all(Array.from({length:4},async()=>{while(next<ids.length){
   if(fs.existsSync(file))body=fs.readFileSync(file,'utf8');else{
    const res=await fetch(url,{signal:AbortSignal.timeout(20000)});assert(res.ok);body=await res.text();assert(body.length<250000);fs.writeFileSync(file,body);
   }
-  const files=kernelComponentPaths(JSON.parse(body),id);
-  sources.set(id,{url,files,sha256:createHash('sha256').update(body).digest('hex')});
+  const record=JSON.parse(body),files=legacyComponents[id]?historicalKernelPaths(body,id):kernelComponentPaths(record,id);
+  sources.set(id,{url,files,provider:record.containers.cna.providerMetadata.shortName,sha256:createHash('sha256').update(body).digest('hex')});
  }catch{skipped.push({id,reason:'No complete Linux-CNA compiled-kernel-only file attribution; manual review remains.'});}
 }}));
 const execute=(name,args)=>cp.execFileSync(name,args,{encoding:'utf8',timeout:10000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe']}).trim();
@@ -46,7 +47,7 @@ for(const item of items){
  // Kernel-private include files can share a basename with a sanitized UAPI
  // file. Retain those ambiguous cases instead of assuming they are unrelated.
  if(headerOverlap(primary.files,inventories.get(k).files)){skipped.push({id:item.id,reason:'Header path overlap requires content review'});continue;}
- const reason=`Linux CNA names ${primary.files.length} kernel/internal component file(s); first: ${primary.files[0]}. Complete file list and response checksum retained in closure-followup-20261012/headers-review.json. No UAPI file is named or matches the exact linux-libc-dev ${item.installed} installed inventory ${inventories.get(k).digest}, containing only headers/documentation and no kernel image/module. ${primary.url} . This is only a component-absent review of this exact header package, never the running VM/Proxmox kernel, linux-image packages or container isolation. Raw scan remains unchanged.`;
+ const reason=`Primary ${primary.provider} CNA record identifies ${primary.files.length} compiled-kernel/internal component file(s); first: ${primary.files[0]}. Complete file list and response checksum retained in closure-followup-20261012/headers-review.json. Historical records require their exact reviewed SHA256. No UAPI file is named or matches the exact linux-libc-dev ${item.installed} installed inventory ${inventories.get(k).digest}, containing only headers/documentation and no kernel image/module. ${primary.url} . This is only a component-absent review of this exact header package, never the running VM/Proxmox kernel, linux-image packages or container isolation. Raw scan remains unchanged.`;
  if(reason.length>1200){skipped.push({id:item.id,reason:'Attribution too long for bounded review; manual review remains'});continue;}
  decisions.push(validateDecision({key:item.key,status:'not-affected',reason,expiresAt:new Date(Date.now()+7*86400000).toISOString()}));
 }

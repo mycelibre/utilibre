@@ -590,3 +590,20 @@ Builds/tests are bounded and outside the request path; isolated synthetic tests
 have no external network. The existing 8 GiB disk reserve is enforced before
 image build/release. Browser/device coverage and existing kernel/provider gaps
 are not expanded by these native-library checks.
+# Historical kernel-header attribution — 12 October 2026
+
+The headers reviewer now also accepts six individually inspected historical CNA
+records naming compiled kernel `.c` files. Their exact response checksums,
+original CNA providers and original path spelling are pinned in
+`headers-policy.mjs`; it does not infer absence from general keywords. A changed
+record, unknown advisory or ambiguous installed-header overlap stays open.
+Installed `linux-libc-dev` inventories must contain only UAPI headers and
+documentation, not executable kernel images or modules. This review says
+nothing about the actual VM or Proxmox kernel. It neither repairs nor waives
+kernel vulnerabilities. Raw records remain in the scanner report.
+
+The 12 October first preparation after the Xlib rollout correctly refused the
+outdated image identity in the earlier scan; no decision was applied. Re-run
+after a fresh completed scan. Three policy tests cover strict CNA paths,
+overlap rejection and altered/unknown historical records.
+

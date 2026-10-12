@@ -64,7 +64,9 @@ function receipts(spec,scan){
  }
  const proofs=[];let latest;
  if(spec.kind==='click'){
-  const r=readReceipt('click-followup-20261012/release.json',proofs);latest=validateRelease({...r,rows:overlayRows(r)},spec);
+  const r=readReceipt('click-followup-20261012/release.json',proofs),rows=overlayRows(r);
+  assert.equal(rows.length,1);assert.equal(rows[0].name,spec.containers[0]);assert.equal(rows[0].newImage,spec.artifact);
+  latest=Date.parse(rows[0].completedAt);assert(Number.isFinite(latest));
   const n=read('click-followup-20261012/native.json'),app=read('click-followup-20261012/application.json'),build=read('click-followup-20261012/build.json');
   assert.equal(build.imageId,spec.artifact);assert.equal(build.packageHash,spec.debSha);assert(build.passed&&build.configurationUnchanged&&build.unrelatedPackagesUnchanged);
   assert.equal(n.imageId,spec.artifact);assert(n.passed&&n.noDelivery&&n.checks.length===7&&n.click==='8.3.3'&&n.apprise==='1.10.0');

@@ -1,6 +1,31 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Bounded remaining-package audit — 12 October, 15:00 UTC
+## In-progress release checkpoint — 12 October, 15:35 UTC
+
+**Not complete.** Click 8.3.3 is live in Kuma; native sudo timezone repairs
+are live on the host and in Kuma. Native X11/Xrender/Xtst repairs are live in
+Forms, BreezeWiki, Penpot backend/exporter and Gathio; the four applicable host
+packages are updated without a daemon restart. Native/application gates passed.
+Penpot's frontend needed a graceful nginx reload to refresh the recreated
+backend address; the release helper now includes that supported step. Two
+parallel group-receipt writes were reconciled from the saved genuine Gathio
+completion record plus serial exact-image/configuration/native rechecks; future
+release commands hold an exclusive lock. Neither issue changed user data.
+
+The complete 112-provider upstream lookup passed with **zero unavailable
+lookups and zero application advisories awaiting review**. These are not the
+dependency scan results. A final dependency scan/review is still required after
+OpenLDAP and the remaining compatible native-library candidates are finished.
+The independent GitHub schedule remains overdue (last genuine scheduled
+success 09:42 UTC); no manual run is substituted. No failed Utilibre systemd
+service was observed at the last 15:22 check.
+
+Exact recipes, evidence boundaries and rollback:
+[sudo](../deployment/maintenance/sudo-followup/README.md),
+[X client libraries](../deployment/maintenance/xlib-followup/README.md),
+[Click](../deployment/maintenance/click-followup/README.md).
+
+## Earlier bounded remaining-package audit — 12 October, 15:00 UTC
 
 Read-only review of the private queue (initial 13:44 scan, reconciled against
 14:52) and authenticated cached package indexes; no installs, restarts, new
