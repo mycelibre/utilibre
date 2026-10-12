@@ -31,3 +31,24 @@ preserves its prior offer through the publisher's existing report directory.
 Detailed comparison results are in `verified-archives.json` in that private
 report directory. The two source-index entries use the new revision queries to
 avoid serving older cached metadata; central index publication is separate.
+# Source-page navigation follow-up — 12 October 2026
+
+The shared `/utilibre-source/` page did not declare a favicon or link to the
+catalogue. On the PDF origin the browser therefore inherited BentoPDF's root
+favicon. The source index now declares the same SVG/ICO assets as the portal,
+served from each application's own source directory to preserve its CSP and
+origin isolation. English and Spanish return links lead to the corresponding
+Utilibre catalogue. Application favicons, source archives and notices are unchanged.
+
+`scripts/publish-source-index.mjs` publishes only the shared index and its two
+icons, preserving previous files outside the public directory. Both existing
+source-publication scripts reuse it. This update was deployed without an
+application restart. Rollback: restore the previous index from
+`/opt/utilibre/source-index-update-IQQxuE/previous-index.html`; the additional
+unused icon files may remain. No app data is affected.
+
+Live Chromium checks on 12 October at 1280×850 and 390×844: HTTP 200, both return
+destinations correct, first link reachable by keyboard with visible focus, no
+horizontal overflow or console errors, 168 archive links retained, favicon
+responses byte-identical to portal assets, and no cross-origin page-load
+requests. Mobile was emulated, not tested on physical hardware.

@@ -2,6 +2,7 @@
 import { execFileSync } from 'node:child_process';
 import { copyFileSync, lstatSync, mkdirSync, mkdtempSync, renameSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { publishSourceIndex } from './publish-source-index.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const files = execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8' }).split('\0').filter(Boolean).filter((file) =>
   /^(config|deployment|docs|portal|scripts|\.github\/workflows)\//.test(file) || /^(?:[^/]+\.md|LICENSE|compose\.yaml|\.env\.example|\.gitignore)$/.test(file));
@@ -20,6 +21,5 @@ execFileSync('tar', ['-czf', `${stage}/utilibre-integration.tar.gz`, '--null', '
   cwd: root, input: files.join('\0') + '\0', stdio: ['pipe', 'inherit', 'inherit'],
 });
 renameSync(`${stage}/utilibre-integration.tar.gz`, destination);
-copyFileSync(`${root}/deployment/toolbox/source-index.html`, `${stage}/index.html`);
-renameSync(`${stage}/index.html`, '/opt/utilibre/toolbox-public/index.html');
+publishSourceIndex();
 console.log(`Published ${files.length} Git-indexed source files; previous archive preserved in ${stage}.`);

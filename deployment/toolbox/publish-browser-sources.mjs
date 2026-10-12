@@ -2,6 +2,7 @@
 import { execFileSync } from 'node:child_process';
 import { readFileSync, mkdirSync, mkdtempSync, copyFileSync, writeFileSync, existsSync, renameSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { publishSourceIndex } from '../../scripts/publish-source-index.mjs';
 const root = fileURLToPath(new URL('./', import.meta.url));
 const { apps } = JSON.parse(readFileSync(root + 'browser-manifest.json'));
 const stage = mkdtempSync('/opt/utilibre/browser-source-');
@@ -26,4 +27,4 @@ for (const app of apps) {
   console.log(`Published ${archive} (${app.revision})`);
 }
 copyFileSync('/opt/utilibre/src/audiomass/THIRD_PARTY_NOTICES.md', `${destination}/audiomass-THIRD_PARTY_NOTICES.txt`);
-copyFileSync(root + 'source-index.html', `${destination}/index.html`);
+publishSourceIndex(destination);
