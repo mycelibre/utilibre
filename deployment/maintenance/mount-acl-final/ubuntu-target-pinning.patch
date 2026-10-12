@@ -1,0 +1,176 @@
+Description: Complete restricted mount target pinning on Noble's vendor fix
+ Preserve the 2.39.3 public ABI and Ubuntu fixes; adapt upstream September
+ pre-canonicalization and legacy FD handling. Restricted mounts fail closed
+ without openat2/procfs; unrestricted root behavior remains unchanged.
+Origin: backport, https://github.com/util-linux/util-linux/commit/2c773f336134acf016e639abb6f12ba7341fe4b8
+Author: Utilibre maintainers <admin@utilibre.org>
+Last-Update: 2026-10-12
+
+--- a/include/fileutils.h
++++ b/include/fileutils.h
+@@ -62,6 +62,9 @@
+ }
+ 
+ extern int ul_open_no_symlinks(const char *path, int flags, mode_t mode);
++#define UL_FDPATH_BUFSIZ (sizeof("/proc/self/fd/") + sizeof(stringify_value(INT_MAX)))
++extern char *ul_fd_mkpath(char *buf, size_t bufsz, int fd);
++extern char *ul_fd_get_path(int fd);
+ 
+ extern int dup_fd_cloexec(int oldfd, int lowfd);
+ extern unsigned int get_fd_tabsize(void);
+--- a/lib/fileutils.c
++++ b/lib/fileutils.c
+@@ -24,6 +24,7 @@
+ #include "all-io.h"
+ #include "fileutils.h"
+ #include "pathnames.h"
++#include "strutils.h"
+ 
+ int mkstemp_cloexec(char *template)
+ {
+@@ -327,11 +328,32 @@
+ 		.mode = (__u64) mode,
+ 		.resolve = RESOLVE_NO_SYMLINKS,
+ 	};
+-	int fd = syscall(SYS_openat2, AT_FDCWD, path, &how, sizeof(how));
+-
+-	/* only fall back to O_NOFOLLOW if the syscall is unavailable */
+-	if (fd >= 0 || errno != ENOSYS)
+-		return fd;
++	return syscall(SYS_openat2, AT_FDCWD, path, &how, sizeof(how));
++#else
++	(void) path; (void) flags; (void) mode;
++	errno = ENOSYS;
++	return -1;
+ #endif
+-	return open(path, flags | O_NOFOLLOW, mode);
++}
++
++char *ul_fd_mkpath(char *buf, size_t bufsz, int fd)
++{
++	int len;
++	if (fd < 0) { errno = EBADF; return NULL; }
++	len = snprintf(buf, bufsz, _PATH_PROC_FDDIR "/%d", fd);
++	if (len < 0 || (size_t) len >= bufsz) { errno = ENAMETOOLONG; return NULL; }
++	return buf;
++}
++
++char *ul_fd_get_path(int fd)
++{
++	ssize_t len;
++	char buf[PATH_MAX], path[UL_FDPATH_BUFSIZ];
++	if (!ul_fd_mkpath(path, sizeof(path), fd)) return NULL;
++	len = readlink(path, buf, sizeof(buf));
++	if (len < 0) return NULL;
++	if ((size_t) len >= sizeof(buf)) { errno = ENAMETOOLONG; return NULL; }
++	buf[len] = '\0';
++	if (*buf != '/' || endswith(buf, " (deleted)")) { errno = ENOENT; return NULL; }
++	return strdup(buf);
+ }
+--- a/libmount/src/context_mount.c
++++ b/libmount/src/context_mount.c
+@@ -20,6 +20,7 @@
+ 
+ #include "mountP.h"
+ #include "strutils.h"
++#include "fileutils.h"
+ 
+ #if defined(HAVE_SMACK)
+ static int is_option(const char *name, const char *const *names)
+@@ -712,8 +713,19 @@
+ 	if (!ns_old)
+ 		return -MNT_ERR_NAMESPACE;
+ 
+-	/* canonicalize the path */
+-	if (rc == 0) {
++	/* Pin the original fstab path before canonicalization can follow links. */
++	if (mnt_context_target_fd_required(cxt)) {
++		int fd = mnt_context_get_target_fd(cxt);
++		char *path = fd < 0 ? NULL : ul_fd_get_path(fd);
++		if (!path)
++			rc = -errno;
++		else {
++			rc = mnt_fs_set_target(cxt->fs, path);
++			free(path);
++		}
++	}
++	/* Keep unrestricted root path semantics unchanged. */
++	if (rc == 0 && !mnt_context_target_fd_required(cxt)) {
+ 		struct libmnt_cache *cache = mnt_context_get_cache(cxt);
+ 
+ 		if (cache) {
+--- a/libmount/src/hook_mount_legacy.c
++++ b/libmount/src/hook_mount_legacy.c
+@@ -16,6 +16,7 @@
+  */
+ 
+ #include "mountP.h"
++#include "fileutils.h"
+ 
+ /* mount(2) flags for additional propagation changes etc. */
+ struct hook_data {
+@@ -207,6 +208,8 @@
+ 	unsigned long flags = 0;
+ 	struct libmnt_optlist *ol = NULL;
+ 	const char *src, *target, *type, *options = NULL;
++	char tgtfdpath[UL_FDPATH_BUFSIZ], srcfdpath[UL_FDPATH_BUFSIZ];
++	int fd_src = -1;
+ 
+ 	src = mnt_fs_get_srcpath(cxt->fs);
+ 	target = mnt_fs_get_target(cxt->fs);
+@@ -219,6 +222,15 @@
+ 		return -EINVAL;
+ 	if (!src)
+ 		src = "none";
++	if (mnt_context_target_fd_required(cxt)) {
++		int fd = mnt_context_get_target_fd(cxt);
++		struct stat st;
++		if (fd < 0)
++			return -errno;
++		if (!ul_fd_mkpath(tgtfdpath, sizeof(tgtfdpath), fd) || stat(tgtfdpath, &st))
++			return -errno;
++		target = tgtfdpath;
++	}
+ 
+ 	/* FS specific mount options/data */
+ 	if (cxt->flags & MNT_FL_MOUNTDATA)
+@@ -233,6 +245,20 @@
+ 	if (rc)
+ 		return rc;
+ 
++	if (mnt_context_target_fd_required(cxt)
++	    && (flags & (MS_BIND | MS_MOVE)) && !(flags & MS_REMOUNT)
++	    && mnt_fs_get_srcpath(cxt->fs)) {
++		struct stat st;
++		fd_src = ul_open_no_symlinks(src, O_PATH | O_CLOEXEC, 0);
++		if (fd_src < 0)
++			return -errno;
++		if (!ul_fd_mkpath(srcfdpath, sizeof(srcfdpath), fd_src) || stat(srcfdpath, &st)) {
++			rc = -errno;
++			goto done;
++		}
++		src = srcfdpath;
++	}
++
+ 	DBG(HOOK, ul_debugobj(hs, "  mount(2) "
+ 		"[source=%s, target=%s, type=%s, flags=0x%08lx, options=%s]",
+ 		src, target, type, flags,
+@@ -245,13 +271,16 @@
+ 		DBG(HOOK, ul_debugobj(hs, "  mount(2) failed [errno=%d %m]",
+ 					-cxt->syscall_status));
+ 		rc = -cxt->syscall_status;
+-		return rc;
++		goto done;
+ 	}
+ 
+ 	/* re-open to point to the mounted filesystem root */
+ 	rc = mnt_context_reopen_target_fd(cxt);
+ 
+ 	cxt->syscall_status = 0;
++done:
++	if (fd_src >= 0)
++		close(fd_src);
+ 	return rc;
+ }
+ 
+

@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {eligible,containers} from './ubuntu-review-policy.mjs';
+const sample={status:'needs-review',scope:'runtime-image',type:'ubuntu',id:'CVE-2026-53613',package:'mount',installed:'2.39.3-9ubuntu6.6+utilibre1',artifact:'sha256:'+'b'.repeat(64),containers:['public-utility-redlib-1']};
+test('Noble source-completed native version in exact roles only',()=>{for(const c of containers)for(const p of ['mount','libmount1'])assert(eligible({...sample,containers:[c],package:p}));});
+test('No attribution for vendor initial fix alone or library source family',()=>{for(const x of [{installed:'2.39.3-9ubuntu6.6'},{installed:'2.39.3-9ubuntu6.5'},{package:'util-linux'},{type:'debian'},{scope:'host-os'},{containers:['other']},{containers:[...containers]},{id:'CVE-2026-54369'},{artifact:'bad'}])assert(!eligible({...sample,...x}));});

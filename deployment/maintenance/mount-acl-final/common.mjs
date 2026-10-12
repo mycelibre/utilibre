@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import cp from 'node:child_process';
+import {createHash} from 'node:crypto';
+export const root='/var/lib/utilibre-maintenance/mount-acl-final-20261012';
+export const work='/var/lib/utilibre-maintenance/sudo-followup-20261012/bookworm/work/mount-acl-final';
+export const builder='maintenance-sudo-bookworm-build';
+export const version='2.38.1-5+deb12u3+utilibre1',oldVersion='2.38.1-5+deb12u3';
+export const sha=b=>createHash('sha256').update(b).digest('hex');
+export const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+export const run=(p,args,options={})=>cp.execFileSync(p,args,{encoding:'utf8',timeout:120000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe'],...options}).trim();
+export const docker=(...args)=>run('docker',args);
+export const inspect=ref=>JSON.parse(docker('inspect',ref))[0];
+export const limits=['--rm','--network','none','--cpus','1','--memory','256m','--pids-limit','64','--cap-drop','ALL','--security-opt','no-new-privileges','--ulimit','core=0','--log-driver','none'];

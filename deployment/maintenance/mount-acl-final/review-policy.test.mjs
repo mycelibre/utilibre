@@ -1,0 +1,4 @@
+import assert from 'node:assert/strict';import test from 'node:test';import {eligible,containers} from './review-policy.mjs';
+const example={status:'needs-review',type:'debian',scope:'runtime-image',id:'CVE-2026-53613',package:'libmount1',installed:'2.38.1-5+deb12u3+utilibre1',artifact:'sha256:'+'a'.repeat(64),containers:['utilibre-gathio-postgres-1']};
+test('Exact repaired native mount roles only',()=>{for(const container of containers)for(const pkg of ['mount','libmount1'])assert(eligible({...example,package:pkg,containers:[container]}));});
+test('No host, ACL, Ubuntu, source-wide, predecessor or unrelated role attribution',()=>{for(const delta of [{id:'CVE-2026-54369'},{package:'util-linux'},{installed:'2.38.1-5+deb12u3'},{scope:'host-os'},{containers:[]},{containers:['utilibre-gathio-postgres-1','other']},{containers:['other']},{artifact:'bad'}])assert(!eligible({...example,...delta}));});

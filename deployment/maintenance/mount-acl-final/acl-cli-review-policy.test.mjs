@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {eligible,expectedStatus,groups} from './acl-cli-review-policy.mjs';
+const sample={status:'needs-review',type:'debian',scope:'runtime-image',id:'CVE-2026-54370',package:'libacl1',installed:'2.3.2-2+b1',artifact:'sha256:'+'a'.repeat(64),containers:groups[0]};
+test('Only exact CLI CVE, package, versions and complete known role groups',()=>{for(const group of groups){const item={...sample,containers:[...group].reverse()};assert(eligible(item));assert.equal(expectedStatus(item),'not-affected');}assert(eligible({...sample,scope:'host-os',artifact:'host-dpkg',containers:[]}));});
+test('Legacy API and unknown/incomplete role groups stay open',()=>{for(const delta of [{id:'CVE-2026-54369'},{package:'acl'},{installed:'2.4.0-1'},{artifact:'bad'},{containers:['other']},{containers:['utilibre-identity-server-1']},{containers:[...groups[0],...groups[0]]},{scope:'host-os',artifact:'host-dpkg',containers:[]}]){if(delta.scope)delta.installed='2.3.1-3';assert(!eligible({...sample,...delta}));}assert.throws(()=>expectedStatus({...sample,id:'CVE-2026-54369'}));});
