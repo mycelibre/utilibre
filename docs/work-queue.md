@@ -40,13 +40,20 @@ Remaining boundaries:
 The source addendum is published and its public HTTPS SHA-256 matches. Existing
 application source offers are retained. No Caddy change is required.
 
-Final checks: all **112 upstream provider lookups** completed with no reopened
+01:55 checks: all **112 upstream provider lookups** completed with no reopened
 published application-advisory disposition; this is separate from dependency
 scanning. All **59 status monitors / 105 catalogue endpoint probes** and eight
 public entry points passed. All 175 production containers remain running.
 EN desktop/ES mobile-emulated guide and catalogue journeys passed without
 outside browser requests. The final read-only alert check reports only the
 dependency queue and the two independent-monitor freshness conditions above.
+
+**02:00 publication check:** release `07f5388` is pushed. The integration source
+was published from a clean detached copy of that commit; both public archive
+checksums match local artifacts. External GitHub run
+[`38194093893`](https://github.com/mycelibre/utilibre/actions/runs/38194093893)
+passed on that commit. It is **workflow_dispatch**, not `schedule`: it resolves
+the recent-manual-run freshness condition, not the autonomous scheduling gap.
 
 ## Previous boundary — 12 October, 01:03 UTC
 

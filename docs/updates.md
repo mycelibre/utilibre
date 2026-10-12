@@ -42,6 +42,12 @@ notices, source patches and recipes. Use with the unchanged application offers
 and integration archive. Source delivery and native tests do not clear the
 independent GitHub cron-delivery gap; that warning remains open.
 
+Release commit: `07f5388`. The integration archive was built from a clean
+detached worktree and its public HTTPS checksum matched. External run
+[`38194093893`](https://github.com/mycelibre/utilibre/actions/runs/38194093893)
+passed on that exact commit at 02:00 UTC. This was a manual dispatch, not evidence
+that GitHub's automatic schedule resumed.
+
 **01:03 UTC follow-up:** after the owner authorized the held restart, Rustpad's
 tested auditable image, Docker Engine/CLI/rootless 29.9.0, containerd 2.4.1-2,
 Buildx 0.38.0 and Compose 5.6.0 were deployed. All 175 previous running
