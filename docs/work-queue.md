@@ -14,18 +14,91 @@ no further installations or recovery-generation housekeeping was selected.
 | Portal copy, export/deletion links and backup facts | Final backup-copy correction reconciles the 25-group encrypted off-host job with EN/ES cards and guides, including the later records group. | Keep local versus remote retention and the limited restore scope distinct. A whole-VM restore is not claimed. Current release evidence follows below. |
 | Existing directory requests | GotHub's PR222 is merged and its upstream README contains Utilibre. PrivateBin's directory now shows uploads enabled and A+. | Seven requests remain open without a new operator action. GotHub's generated list has not caught up. See [current submission evidence](public-instance-submissions.md). |
 | Search discovery | Existing sitemap, metadata, icons and indexing directives are deployed. | Bing's older crawl and Google display are external refreshes. No repeat submission of unchanged URLs. SearXNG's current HTTP proxy conflicts with its directory eligibility; no provider change is inferred. |
+| Homepage live search | Deployed at 21:29 UTC on 12 October. The existing Search tools field filters the catalog locally while typing in EN/ES, preserving focus, language links and native GET submission. | Six desktop/mobile automated tests and eight preview plus eight public rendered checks pass. Typing sends no requests; no worker or new server process is needed for visitors. |
 | Other submissions | Existing submissions and requirements are recorded. | SafeTwitch repository is archived; Mezzo needs Gitfield access. Awesome-selfhosted release-age and human-contribution rules remain applicable. No duplicate or prohibited automated submission. |
 | Provider and licence facts | Verified DNS/HTTP roles and explicit licence grants are published; unresolved claims are qualified. | Exact edge/provider/mail retention, legal/operator details and contradictory or absent upstream version-scope grants need evidence outside this VM. No invented retention period or licence suffix. |
 | Backups and restores | The scheduled 25-group encrypted off-host copy passed on 12 October; native local restores and bounded remote/identity recovery are recorded. | Full-host/control-plane recovery, physical Android/printing and real-device compatibility checks require their respective access/equipment. Recovery-generation housekeeping was not selected. |
-| Monitoring and capacity | Local checks, alerts and measured capacity limits are documented. A genuine external scheduled run resumed. | GitHub's delayed schedule is not a 15-minute guarantee; neither reachability nor free RAM proves arbitrary concurrency. |
+| Monitoring and capacity | Local checks, alerts and measured capacity limits are documented. The last genuine external scheduled success was 19:24 UTC; its freshness warning returned at this checkpoint. | GitHub's delayed schedule is not a 15-minute guarantee; neither reachability nor free RAM proves arbitrary concurrency. |
 | Upstream frontend failures | Existing local repairs are complete or retained as private candidates; failures have bounded evidence. | Genius/selected media responses and LibreMDB public-use permission remain external dependencies. No rotating proxy or substitute provider was introduced. |
-| Native security repairs | Prepared releases are deployed; the current scan and exact review leave four high advisory IDs unresolved. | Two GnuTLS fixes were not verified available; ACL/GRUB work was stopped by automatic security review. The table below retains all 75 affected package records and GRUB recovery prerequisites. |
+| Native security repairs | Four additional runtime reductions are deployed. The 21:30 UTC scan and exact review leave four high advisory IDs unresolved across 67 package-target records, down from 75. | The remaining two GnuTLS fixes were not verified available; ACL/GRUB work was stopped by automatic security review. The current table below retains all 67 records. Earlier dated checkpoints retain historical counts. |
 
 No item is considered complete merely because it moved to a different document.
 Each boundary links to its existing evidence; the dated historical records below
 must not be copied back into the current queue without checking later results.
 
-## Current release checkpoint, 12 October, 20:36 UTC
+## Current release checkpoint, 12 October, 21:30 UTC
+
+Source commit `b63265a` is pushed. Actual, Reactive Resume, Wishlist and CryptPad
+now use the exact `runtime-minimal-20261012` images in their existing compose
+files. Their only installed GnuTLS dependency was APT, which these Node services
+do not use at runtime. Normal dependency-checked removal deletes both packages;
+all retained package versions, application files, image configuration and mounted
+settings are unchanged. Native health checks passed after each replacement.
+
+The existing isolated workflows pass for Actual budget sync and ZIP import,
+Reactive Resume account/export/import/deletion, CryptPad accounts and documents,
+and Wishlist account/list/item persistence and anonymous denial. Tests used
+fictional data. Read-only ELF checks found no new missing dependency and no
+remaining GnuTLS dependency in those four images. Original build-capable images
+remain available for rollback and future package updates. This removes vulnerable
+packages from four runtimes; it is not a TLS source patch.
+
+The portal's `public-utility-portal:0.1.0-live-search-20261012` build was deployed
+at **21:29:18 UTC**. Search tools now filters the full existing catalog as text
+changes. Focus, result announcements, category/view links, language switching,
+Enter submission and Back navigation remain usable. The URL is replaced after
+typing settles, without a new history entry for each character. Results use the
+existing ranking; no network request, analytics or server worker was added.
+Native GET search remains available without JavaScript.
+
+- Build, type checking, lint and **120 unit tests** pass. **Six Playwright
+  cases** cover EN/ES desktop/mobile, focus, empty results, keyboard submission,
+  history, composition input and rapid edits. **Eight preview and eight public
+  rendered checks** use the configured catalog at 1280, 390 and 320 pixels,
+  including DrawDB, Bookbinder, language switching and no-JavaScript search.
+  Screenshots were inspected. No horizontal overflow, browser errors or external
+  browser requests appeared in those runs. Typing generated zero requests.
+- The portal candidate scan inventories 21 packages with no critical/high
+  findings. The **196-page public SEO audit** and all **105 service readiness
+  probes** pass. The published source archive matches the local committed
+  archive through a standard browser request; Python's default request was
+  rejected by the edge with 403. No edge control was changed for this check.
+- The fleet scan completed at **21:30:29 UTC**, taking **64 seconds** for
+  **109 images, 175 containers, 57 source inventories and host packages**, with
+  no failed targets. Raw findings dropped from 40 critical/2,734 high to
+  **40 critical/2,726 high**. Revalidation retained 208 prior exact reviews
+  for unchanged payloads with their original expiry, adding no advisory waiver.
+  Current unresolved counts are **0 critical / 67 high**.
+- No failed systemd units or unhealthy running containers were found. The
+  read-only alert check sends no mail. An external manual check subsequently
+  passed at **21:32:43 UTC**:
+  [run 38311267804](https://github.com/mycelibre/utilibre/actions/runs/38311267804).
+  The last scheduled success was 19:24 UTC, outside its 90-minute threshold;
+  the manual result cannot clear that separate schedule warning. The unresolved
+  security queue also remains an alert. Rollback inputs are retained; backups,
+  retention, user data, provider settings and other services were not changed.
+
+| Unresolved high package-target records | Remaining dependency |
+| --- | --- |
+| ACL CVE-2026-54369: 30 | Automatic security review stopped further caller-repair work. No completed fix is claimed. |
+| GnuTLS CVE-2026-88647: 16 | The remaining applications/host still require GnuTLS. The 12 October vendor recheck found no maintained compatible fix. |
+| GnuTLS CVE-2026-88648: 16 | Same remaining deployed dependency and absent verified vendor correction; native certificate correctness remains a release requirement. |
+| GRUB CVE-2025-61662: 5 | Automatic security review stopped staging; the existing boot-chain recovery prerequisites also remain. |
+
+Automatic approval review rejected further ACL/GRUB repair work, citing possible
+cybersecurity risk. That rejection was not bypassed. These 67 records remain
+unresolved; this checkpoint does not claim that all 75 were fixed.
+
+Implementation and reproduction limits:
+[runtime minimization](../deployment/maintenance/runtime-gnutls-minimization/README.md).
+Private image/scan/rollback receipts:
+`/var/lib/utilibre-maintenance/runtime-gnutls-minimization-20261012/`.
+Portal release, screenshots and public checks:
+`/opt/utilibre/reports/live-search-publication-20261012/`.
+Vendor recheck:
+`/opt/utilibre/reports/gnutls-review-20261012/vendor-recheck-20261012-2046/`.
+
+## Earlier release checkpoint, 12 October, 20:36 UTC
 
 The wider queue reconciliation found and completed one more public-content
 release. Source commit `b3ee5a8` is pushed and deployed as
