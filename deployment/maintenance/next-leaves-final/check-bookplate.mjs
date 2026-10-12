@@ -21,7 +21,7 @@ try{
  const users=[0,1].map(i=>({name:'Fictional Security Reader '+i,email:`fictional-${i}@example.invalid`,password:randomBytes(24).toString('hex')}));
  for(const user of users){
   const c=await request.newContext({baseURL:base,extraHTTPHeaders:{Origin:base}});contexts.push(c);
-  const r=await c.post('/api/auth/sign-up/email',{data:user});assert.equal(r.status(),200,'Native stage registration');
+   const r=await c.post('/api/auth/sign-up/email',{data:user});assert.equal(r.status(),200,'Native stage registration');
  }
  const [a,b]=contexts,id='fictional-'+randomUUID(),book={id,title:'Fictional Security Field Notes',author:'Example Author',status:'reading',rating:0,colorIndex:0,pages:120,genre:'Fiction',addedAt:new Date().toISOString()};
  assert((await a.put('/api/books/'+id,{data:book})).ok());
@@ -40,4 +40,3 @@ try{
  writeFileSync(dir+'/bookplate-native.json',JSON.stringify({date:new Date().toISOString(),status:'passed',passed:true,image,imageId:docker(['image','inspect','--format','{{.Id}}',image]).trim(),checks,scope:'Isolated synthetic accounts and RAM-backed database; not public-edge or real-user migration evidence'},null,2)+'\n',{mode:0o600});
  console.log('Bookplate patched Next.js: '+checks.join('; '));
 }finally{await browser?.close();for(const c of contexts)await c.dispose();for(const args of created.reverse())docker(args);}
-
