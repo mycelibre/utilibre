@@ -1,0 +1,23 @@
+{
+  "work": "/var/lib/utilibre-maintenance/hdf5-native-followup-20261012",
+  "builder": "maintenance-postgis-native-20261012",
+  "builderImage": "sha256:041030501a5231fd2ce4ded70d79e1fee2d87a60f45f9a1725f180256e171651",
+  "builderWork": "/work/hdf5-native-followup",
+  "version": "1.10.8+repack1-1+utilibre1",
+  "base": "sha256:74e3254fe7b2a31b528b61e676356e3499c9df4483c9719465584f8a396bd585",
+  "baseRef": "utilibre-gathio-documentdb:tiff-security-20261012",
+  "candidate": "utilibre-gathio-documentdb:hdf5-security-20261012",
+  "container": "utilibre-gathio-postgres-1",
+  "commit": "46cedc2eb03ad7cd6e8404f5e6b526588436f946",
+  "upstreamPatchSha256": "631278fe0feea0ef9acd194634c4dc5f9a478ca195673d42cd716c1033cade23",
+  "adjustedPatchSha256": "ed1e9cb11ad2e3f25e89e2d318dfff3ecab8fe82a36774b4e05f3bd22553b87d",
+  "sourceSigner": "A0939BCC0AC3134E56B48C91EFE86C6C7FFECF83",
+  "sourceFiles": {
+    "hdf5_1.10.8+repack1-1.dsc": "3c9b7c438f174506fd2764b77437466fd528374aeab9db9c73c59ceee6ac990d",
+    "hdf5_1.10.8+repack1.orig.tar.gz": "7b38e58ff83b13fd8959a90b13bf896bc318ba096c940ab0847abf3ad41a0b31",
+    "hdf5_1.10.8+repack1-1.debian.tar.xz": "d11ad311c20f84199a04f44be87e03f91560c8f020576624edd07dd58eacbacb"
+  },
+  "packages": ["libhdf5-103-1", "libhdf5-hl-100"],
+  "libraries": ["libhdf5_serial.so.103.3.1", "libhdf5_serial_hl.so.100.1.5"],
+  "cve": "CVE-2018-11205"
+}
