@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {xserverDhiReview,xserverDhiStatus} from './xserver-dhi-policy.mjs';
+import {version,container,packages,fixes,nativeGate,binary} from '../xserver-followup/dhi-policy.mjs';
+const image='sha256:'+'a'.repeat(64),base={id:'CVE-2026-88812',package:'xvfb',installed:version,type:'debian',scope:'runtime-image',artifact:image,targetName:image,containers:[container]};
+test('both exact packages and only three reviewed CVEs',()=>{for(const pkg of Object.keys(packages))for(const id of Object.keys(fixes))assert.equal(xserverDhiStatus(xserverDhiReview,{...base,package:pkg,id}),'mitigated');});
+for(const [label,patch]of Object.entries({otherCVE:{id:'CVE-2023-5574'},sourceWide:{id:'CVE-2026-93515'},host:{scope:'host-os'},oldVersion:{installed:'2:21.1.16-1.3+deb13u4'},laterVersion:{installed:version+'2'},unrelatedPackage:{package:'xserver-xorg-core'},otherRole:{containers:['utilibre-expanded-penpot-backend-1']},mixedRoles:{containers:[container,'another']},invalidArtifact:{artifact:'host-dpkg'},targetMismatch:{targetName:'sha256:'+'b'.repeat(64)},wrongType:{type:'binary'}}))test('reject '+label,()=>assert.throws(()=>xserverDhiStatus(xserverDhiReview,{...base,...patch})));
+test('reject unapproved review file',()=>assert.throws(()=>xserverDhiStatus('other/review.json',base)));
+const native={passed:true,label:'candidate',productionChanged:false,binarySha256:binary,checks:[{name:'native-pixel-roundtrip',allPixelsMatch:true},{name:'CVE-2026-93523',invalidModifierRejected:true,validModifierAccepted:true},{name:'CVE-2026-88812',malformedFontRejected:true,serverSurvived:true,isolatedBaselineCrash:false},{name:'RandR-provider-query',providers:0,limitation:'not reproduced'}]};
+test('exact historical native proof accepted',()=>assert.equal(nativeGate(native),true));
+for(const [label,patch]of Object.entries({otherBinary:{binarySha256:'b'.repeat(64)},failed:{passed:false},mutation:{productionChanged:true},missingChecks:{checks:[]}}))test('reject native '+label,()=>assert.throws(()=>nativeGate({...native,...patch})));
+test('do not discard unreproduced RandR limitation',()=>assert.throws(()=>nativeGate({...native,checks:native.checks.map(c=>c.name==='RandR-provider-query'?{...c,limitation:''}:c)})));

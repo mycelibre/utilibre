@@ -95,6 +95,28 @@ three exact backports. Complete authenticated package payload and native checks
 passed. **This host release does not change Penpot.** Any image-based review must
 recheck its exact currently deployed image and files after unrelated overlays.
 
+`authenticate-dhi.mjs` now independently verifies the retained DHI InRelease
+signature with the pinned vendor key and retrieves only its two hash-addressed
+historical package/source indexes (8,520,227 compressed bytes). `review-dhi.mjs`
+is then network-free: it freshly extracts the matching complete source, checks
+all three zero-fuzz reverse patch applications and all **13** current package
+payloads/symlinks, and compares the exact executable to the retained passed native
+test receipt. It does not rerun protocol probes or mutate a running container.
+
+This revalidation passed against exporter image `sha256:fe93a9ab72e125c36bed02c093e67b85cae0a0e4172750b009af620d23127393`
+after the librsvg/TIFF overlay on 12 October. Six exact-key `mitigated` drafts
+(two packages × three CVEs) are in private `dhi-review.json`, with complete
+`dhi-review-evidence.json`. They are **not applied by this reviewer**. The shared
+applier's separate `xserver-dhi-policy.mjs` permits only this role, package pair,
+version and three CVEs; 19 focused tests cover malformed scope and native proof.
+Run again after every new image/scan before the operator applies the drafts:
+
+```sh
+node deployment/maintenance/xserver-followup/authenticate-dhi.mjs
+node deployment/maintenance/xserver-followup/review-dhi.mjs
+node --test deployment/maintenance/closure-review/xserver-dhi-policy.test.mjs
+```
+
 Do not close the entire source package. In particular,
 [CVE-2023-5574](https://security-tracker.debian.org/tracker/CVE-2023-5574) is still
 listed as affected in 21.1.25; its Zaphod multi-screen path and the other 935xx
