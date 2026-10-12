@@ -1,6 +1,32 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Current boundary — 12 October, 07:12 UTC
+## Current boundary — 12 October, 07:25 UTC
+
+Host **Wget 1.25.0-2+utilibre1 is deployed** with the two upstream security
+repairs and the mandatory follow-up correcting the HTML patch's own regression.
+The old CLI's fictional filename truncation was reproduced; candidate and live
+CLI preserve the name. Eight native HTTP/TLS/filename checks pass, with 128
+upstream tests passed / 19 skipped / zero failures. Configuration, features,
+linked libraries and Docker/SSH PIDs are unchanged; exactly one host package
+changed and its signed original is retained for rollback. No user data touched.
+[Exact sources, checks and rollback](../deployment/maintenance/closure-followup/README.md).
+
+The complete follow-up scan covers 109 images, 175 containers, 55 source
+manifests and the host. Exact review now leaves **0 critical / 409 high pending**,
+down from 451 before this turn's SQLite repair and mount-component review.
+Raw runtime/host counts remain 40 critical / 2,711 high. A reviewed finding is
+not removed from raw evidence; the queue is **not finished**.
+
+All 59 status monitors and 105 catalogue endpoint probes passed after the host
+change. The source offer is HTTPS/checksum verified at
+`https://tools.utilibre.org/utilibre-source/security-wget-followup-20261012-source.tar.gz`
+(5,352,750 bytes; SHA-256
+`d7c175c589db560a3ea9c2274eef8f6e1bb26ffcddeb4be13d325a4b991663d2`).
+The independent GitHub schedule remains overdue; vendor-unfixed dependencies,
+resident host mappings/kernel coordination and the documented compiled/external
+host coverage gaps remain open. Wget's separate GnuTLS findings are not waived.
+
+## Previous boundary — 12 October, 07:12 UTC
 
 The **SQLite FTS repair is deployed in three images / three roles / two projects**:
 Uptime Kuma, RSS-Bridge and Gathio's DocumentDB/PostgreSQL image. Native Bookworm

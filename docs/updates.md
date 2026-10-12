@@ -7,6 +7,14 @@ remain reviewed rollouts. Production never runs a floating `latest` tag.
 
 ## Maintenance release — 12 October 2026
 
+**07:25 UTC host Wget follow-up:** installed the two upstream security fixes
+plus the necessary upstream regression correction. The old filename defect
+was reproduced in isolation; the repaired installed CLI passes all eight
+native transfer/TLS/filename checks. Upstream suites report 128 passed and
+19 skipped, zero failures. No services, user files, configuration or dependent
+libraries changed. The complete scan and exact review leave 0 critical / 409
+high pending; remaining work is in the [queue](work-queue.md).
+
 **07:12 UTC SQLite follow-up:** Uptime Kuma, RSS-Bridge and Gathio's database
 image now use a native SQLite package containing the upstream FTS corruption
 repair and the earlier DISTINCT fix. All 87 DISTINCT and seven compatible FTS

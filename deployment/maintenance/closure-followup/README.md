@@ -51,6 +51,57 @@ have zero restarts. No production database migration/restore was performed.
 
 ## Primary evidence and build scope
 
+### Host Wget follow-up — deployed
+
+At **07:23 UTC**, the host's only Wget package was replaced with native
+**1.25.0-2+utilibre1**, based on authenticated Debian Trixie source. It includes
+unchanged upstream commits `c2640fe` (CVE-2026-58471), `dd692d9`
+(CVE-2026-58472), **and** `f76978a`, the required correction for a buffer-sizing
+regression introduced by the second commit. Installing just the advisory's
+first HTML patch would leave that regression. Primary references:
+[filename advisory](https://security-tracker.debian.org/tracker/CVE-2026-58471),
+[HTML advisory](https://security-tracker.debian.org/tracker/CVE-2026-58472),
+[upstream regression correction](https://gitlab.com/gnuwget/wget/-/commit/f76978a51ba9365e7ecaed96c1cfb73197a38ca2).
+
+The disconnected, one-CPU/2-GiB disposable build used the normal Debian test
+path as uid 65534. Its three reported suites total **128 passed / 19 skipped /
+0 failed** (80/8 main, 47/1 Python, 1/10 fuzz-fixture cases). Skipped cases are
+not passes and there was no extended fuzzing or ASan run. The upstream unit
+test includes the new HTML escaping cases. An initial source-extraction attempt
+missed the original detached signature file; the recipe was corrected and that
+failed log retained. No package was installed from the failed attempt.
+
+Eight separate native checks run in a disconnected peer's network namespace:
+HTTP, redirect, gzip, POST, trusted TLS, wrong-host rejection, 404 and
+Windows-1252-to-UTF-8 filename conversion. The original CLI truncates the
+fictional filename; both the candidate and actual installed CLI preserve all
+16 euro signs and `.txt`. This demonstrates the conversion regression, not a
+weaponized heap overwrite or giant HTML overflow.
+
+APT simulation allowed exactly one package change. Current feature flags,
+`/etc/wgetrc`, dependency-library hashes and Docker/SSH PIDs are unchanged.
+No service restarted, no user data changed, and no new library was installed.
+The package SHA-256 is
+`ce7dce2cad1411baed2837cb16d4373622e6377c4c103e34b92057854e11b94d`.
+Private `wget-host.json` records exact installed and rollback checksums. The
+retained signed original is `sources/wget_1.25.0-2_amd64.deb`; rollback installs
+only it with `dpkg --force-confold --install`, checks `dpkg --audit` and version,
+and repeats isolated native checks with `--old-control`. That control expects
+the original filename defect, not a repaired result. Normal release commands:
+`wget-host.mjs prepare`, then `wget-host.mjs apply`.
+
+The exact reviewer mitigates only these two CVEs after a completed fresh host
+scan. In particular, Wget's unchanged GnuTLS dependency is **not** declared free
+of its separate pending findings. Recipes, complete source and notices are
+offered additively; no historical source archive is replaced.
+
+Published source: `security-wget-followup-20261012-source.tar.gz`, 5,352,750 bytes,
+SHA-256 `d7c175c589db560a3ea9c2274eef8f6e1bb26ffcddeb4be13d325a4b991663d2`.
+Public HTTPS checksum verified. The 07:24:53 scan completes all 109 images, 175
+containers, 55 source manifests and host packages; exact review leaves zero
+critical / 409 high pending. Raw runtime/host counts remain 40 critical / 2,711
+high, retained independently of dispositions. This is not queue completion.
+
 ### SQLite FTS follow-up — deployed
 
 The three Bookworm native SQLite consumers (Uptime Kuma, RSS-Bridge and Gathio's
