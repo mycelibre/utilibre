@@ -1,3 +1,4 @@
+import { savedWorkBackupNotice } from './backup-notes.ts';
 import type { CatalogEntry, LocalizedText } from './catalog.ts';
 import { reviewedFossProviders, type FossProviderId } from './upstreams.ts';
 const text = (en: string, es: string): LocalizedText => ({ en, es });
@@ -23,6 +24,7 @@ export const socialAdditions: CatalogEntry[] = [
   },
   {
     ...base('gathio', 'publicEventsUrl'), filesUploaded: true,
+    upstreamServices: ['Cloudflare HTTPS proxy', 'Hetzner hosting', 'Hetzner Storage Box (encrypted backups)'],
     name: text('Share an event · Gathio', 'Compartir un evento · Gathio'),
     description: text('Create an event page with a calendar download. No account needed.', 'Creá una página para tu evento con una descarga de calendario. No necesitás cuenta.'),
     launchLabel: text('Create an event', 'Crear un evento'),
@@ -30,7 +32,7 @@ export const socialAdditions: CatalogEntry[] = [
     limitation: text('Anyone with an unlisted event URL can read it; anyone with its management link can edit or delete it. Email recovery, reminders and federation are disabled. ICS omits attendees, comments, image files and management links.', 'Cualquiera con la URL de un evento sin listar puede leerlo; el enlace de gestión permite editarlo o borrarlo. El correo de recuperación, los recordatorios y la federación están desactivados. ICS omite asistentes, comentarios, imágenes y enlaces de gestión.'),
     dataFlow: text('Event details, optional attendee/contact fields, comments and uploaded images pass through Cloudflare/Caddy to readable storage on Utilibre. No external federation or email delivery is enabled.', 'Los detalles, campos opcionales de asistentes y contacto, comentarios e imágenes pasan por Cloudflare/Caddy a almacenamiento legible en Utilibre. No hay federación externa ni envío de correo habilitados.'),
     temporaryStorage: text('The native daily cleanup deletes events seven days after their end. The application also stores database operation/error logs with identifiers and no configured expiry.', 'La limpieza diaria nativa elimina eventos siete días después de terminar. La aplicación también guarda registros de operaciones y errores con identificadores, sin vencimiento configurado.'),
-    retention: text('Delete through the event editor. Downloads and other people’s copies remain. Daily backups on this VM have no automatic expiry; earlier copies can retain deleted events and images.', 'Borrá el evento desde su editor. Las descargas y copias ajenas permanecen. Los respaldos diarios en esta máquina virtual no vencen automáticamente; las copias anteriores pueden conservar eventos e imágenes borrados.'),
+    retention: text('Delete through the event editor. Downloads and other people’s copies remain. ' + savedWorkBackupNotice.en + ' Earlier copies can retain deleted events and images.', 'Borrá el evento desde su editor. Las descargas y copias ajenas permanecen. ' + savedWorkBackupNotice.es + ' Las copias anteriores pueden conservar eventos e imágenes borrados.'),
     logging: text('Gateway access logs are off. Container and error output rotates by size, two 5 MiB files per container. Native database operation logs have separate, unbounded retention; edge/provider retention is unverified.', 'Los registros de acceso del intermediario están desactivados. La salida de contenedores y errores rota por tamaño, dos archivos de 5 MiB por contenedor. Los registros de operaciones de la base tienen conservación independiente sin vencimiento; la del borde y proveedores no está verificada.'),
   },
   {

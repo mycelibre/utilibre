@@ -1,3 +1,4 @@
+import { savedWorkBackupNotice } from '../catalog/backup-notes.ts';
 import type { PracticalGuide } from './practical-guide-data.ts';
 
 // Native flows checked against the deployed releases on 2026-10-09.
@@ -21,7 +22,7 @@ export const householdAdditionGuides: PracticalGuide[] = [
         ],
         success: 'A fictional three-person group and expense were created, opened in a separate browser context, exported as JSON/CSV and checked. An isolated database restore recovered that group and expense. Native expense deletion passed; the exact test group was then removed through guarded operator database administration.',
         troubleshooting: 'If totals differ, check the currency, payer and shares. Automatic currency rates and receipt AI are unavailable. An export does not become encrypted merely because the website uses HTTPS. Keep the group link and downloaded files out of public support requests.',
-        privacy: 'Spliit stores group, participant, expense and activity data on the server. Anyone with the link can read and edit it and retain an export. Browser shortcuts persist until removed. Local operational backups have no automatic expiry and stay on this VM until operator removal; live deletion does not remove old backups. These backups are not off-site.',
+        privacy: 'Spliit stores group, participant, expense and activity data on the server. Anyone with the link can read and edit it and retain an export. Browser shortcuts persist until removed. ' + savedWorkBackupNotice.en + ' Live deletion does not remove old backups.',
         next: 'Export after important changes and compare the final balances together before settling outside the application.',
       },
       es: {
@@ -38,7 +39,7 @@ export const householdAdditionGuides: PracticalGuide[] = [
         ],
         success: 'Se creó un grupo ficticio de tres personas con un gasto, se abrió desde otro navegador y se comprobaron sus exportaciones JSON/CSV. Una restauración aislada recuperó el grupo y el gasto. Se probó el borrado nativo del gasto; después se eliminó el grupo exacto de prueba mediante administración de base de datos con controles de identificación.',
         troubleshooting: 'Si los totales no coinciden, revisá la moneda, quién pagó y las partes. Las tasas automáticas y la IA para recibos no están disponibles. HTTPS no cifra automáticamente tus exportaciones. No incluyás enlaces del grupo ni archivos descargados en consultas públicas.',
-        privacy: 'Spliit guarda grupos, participantes, gastos y actividad en el servidor. Cualquiera con el enlace puede leerlos, editarlos y conservar una exportación. Los accesos del navegador persisten hasta que los borrés. Las copias operativas locales no tienen caducidad automática y permanecen en esta VM hasta que la persona operadora las elimine; borrar datos activos no borra las copias antiguas. No son copias externas.',
+        privacy: 'Spliit guarda grupos, participantes, gastos y actividad en el servidor. Cualquiera con el enlace puede leerlos, editarlos y conservar una exportación. Los accesos del navegador persisten hasta que los borrés. ' + savedWorkBackupNotice.es + ' Borrar datos activos no borra las copias antiguas.',
         next: 'Exportá después de cambios importantes y compará los saldos finales con el grupo antes de saldar cuentas fuera de la aplicación.',
       },
     },
@@ -62,7 +63,7 @@ export const householdAdditionGuides: PracticalGuide[] = [
         ],
         success: 'Public HTTPS sign-in, ordinary-user group/list/item creation, anonymous denial of the private list, isolated SQLite restore, native group deletion and operator deletion of the disposable app account passed. A separate isolated check passed image upload and a second member’s reserve, mark-purchased and unclaim actions. Direct item deletion removed its image; deleting the group removed its item records but left the image accessible. Image/database snapshot consistency was not tested.',
         troubleshooting: 'A new account without a group may first show the no-group page; use the user/group menu. Enter products manually when automatic lookup is unavailable. Invitation/reset links use native manager/operator controls; this instance does not send notification email.',
-        privacy: 'Profiles, lists, wishes, prices, notes, links, claims, memberships and sessions are stored on the server. Uploaded images are not access-protected by the containing list. The tested browser used only Wishlist and Utilibre identity hosts. Local backups include database, uploads and private configuration; they have no automatic expiry, stay on this VM and are not off-site. Deletion does not alter old backups or other people’s copies.',
+        privacy: 'Profiles, lists, wishes, prices, notes, links, claims, memberships and sessions are stored on the server. Uploaded images are not access-protected by the containing list. The tested browser used only Wishlist and Utilibre identity hosts. Backups include the database, uploads and private configuration. ' + savedWorkBackupNotice.en + ' Deletion does not alter old backups or other people’s copies.',
         next: 'Review membership and visibility whenever a group changes. Keep an independent written copy of wishes you need to preserve.',
       },
       es: {
@@ -79,7 +80,7 @@ export const householdAdditionGuides: PracticalGuide[] = [
         ],
         success: 'Se probaron el ingreso HTTPS, la creación de grupo/lista/artículo con un usuario común, la denegación anónima de la lista privada, una restauración SQLite aislada, el borrado nativo del grupo y el borrado de la cuenta desechable por la persona operadora. Otra prueba aislada pasó la carga de imágenes y las acciones de reservar, marcar como comprado y quitar la reserva con otro miembro. Borrar un artículo directamente eliminó su imagen; borrar el grupo quitó sus registros de artículos pero dejó la imagen accesible. No se probó la consistencia de una instantánea conjunta de imágenes y base de datos.',
         troubleshooting: 'Una cuenta sin grupo puede mostrar primero la página correspondiente; usá el menú de usuario/grupo. Ingresá los productos manualmente cuando no haya búsqueda automática. Las invitaciones y los enlaces de recuperación usan los controles nativos de administración; esta instancia no envía correos de notificación.',
-        privacy: 'Los perfiles, listas, deseos, precios, notas, enlaces, reservas, membresías y sesiones se guardan en el servidor. La lista no protege el acceso a las imágenes cargadas. El navegador probado solo contactó Wishlist y la identidad de Utilibre. Las copias locales incluyen base de datos, cargas y configuración privada; no caducan automáticamente, permanecen en esta VM y no son externas. El borrado no modifica copias antiguas ni copias de otras personas.',
+        privacy: 'Los perfiles, listas, deseos, precios, notas, enlaces, reservas, membresías y sesiones se guardan en el servidor. La lista no protege el acceso a las imágenes cargadas. El navegador probado solo contactó Wishlist y la identidad de Utilibre. Los respaldos incluyen base de datos, cargas y configuración privada. ' + savedWorkBackupNotice.es + ' El borrado no modifica copias antiguas ni copias de otras personas.',
         next: 'Revisá los miembros y la visibilidad cada vez que cambie un grupo. Conservá una copia escrita independiente de los deseos que necesités guardar.',
       },
     },
@@ -103,7 +104,7 @@ export const householdAdditionGuides: PracticalGuide[] = [
         ],
         success: 'Real HTTPS sign-in and a fictional native JSON item/recipe export → import into a second household passed. Anonymous export was denied. An isolated database/files restore passed; both fictional households and the disposable app account were deleted through native endpoints, and its token was rejected afterwards.',
         troubleshooting: 'Choose the correct target household before importing and check the supported selection. An exported photo filename is not an image backup. Automatic recipe fetching and AI are unavailable; use manual entry. Import is not a complete account or permission migration.',
-        privacy: 'Accounts, memberships, lists, recipes, plans, expenses and tokens are stored on the server, with uploaded images in local files. Household members share content; some household profile metadata is visible to other authenticated users by identifier. There is no end-to-end-encryption claim. Local backups have no automatic expiry, remain on this VM and are not off-site. Live deletion leaves old backups unchanged.',
+        privacy: 'Accounts, memberships, lists, recipes, plans, expenses and tokens are stored on the server, with uploaded images in local files. Household members share content; some household profile metadata is visible to other authenticated users by identifier. There is no end-to-end-encryption claim. ' + savedWorkBackupNotice.en + ' Live deletion leaves old backups unchanged.',
         next: 'Export regularly and check your independent copies. Protect JSON and image downloads, which remain on your device until you delete them.',
       },
       es: {
@@ -120,7 +121,7 @@ export const householdAdditionGuides: PracticalGuide[] = [
         ],
         success: 'Se probaron el ingreso HTTPS y la exportación JSON nativa de un artículo y una receta ficticios, seguida de su importación en otro hogar. Se denegó la exportación anónima. Se comprobó una restauración aislada de base de datos y archivos; se borraron ambos hogares y la cuenta desechable por funciones nativas, y su token dejó de ser aceptado.',
         troubleshooting: 'Elegí el hogar correcto antes de importar y revisá la selección compatible. El nombre exportado de una foto no es una copia de esa imagen. La extracción automática de recetas y la IA no están disponibles; usá el ingreso manual. Importar no migra toda la cuenta ni sus permisos.',
-        privacy: 'Las cuentas, membresías, listas, recetas, planes, gastos y tokens se guardan en el servidor; las imágenes cargadas se guardan en archivos locales. Los miembros comparten contenido; otros usuarios autenticados pueden ver ciertos metadatos del perfil mediante su identificador. No se promete cifrado de extremo a extremo. Las copias locales no caducan automáticamente, permanecen en esta VM y no son externas. El borrado activo no modifica copias antiguas.',
+        privacy: 'Las cuentas, membresías, listas, recetas, planes, gastos y tokens se guardan en el servidor; las imágenes cargadas se guardan en archivos locales. Los miembros comparten contenido; otros usuarios autenticados pueden ver ciertos metadatos del perfil mediante su identificador. No se promete cifrado de extremo a extremo. ' + savedWorkBackupNotice.es + ' El borrado activo no modifica copias antiguas.',
         next: 'Exportá con frecuencia y comprobá tus copias independientes. Protegé los JSON y las imágenes descargados: permanecen en tu dispositivo hasta que los eliminés.',
       },
     },

@@ -1,3 +1,4 @@
+import { savedWorkBackupNotice } from '../catalog/backup-notes.ts';
 import type { PracticalGuide } from './practical-guide-data.ts';
 
 export const calendarGuides: PracticalGuide[] = [{
@@ -21,7 +22,7 @@ export const calendarGuides: PracticalGuide[] = [{
       ],
       success: 'Fictional calendar and contact exports downloaded through Calino. A non-browser client created, exported and imported disposable Radicale collections through the public endpoint; anonymous and cross-account reads were rejected. An isolated snapshot passed native storage verification and preserved the resource bytes.',
       troubleshooting: 'Open Contacts and wait for synchronization if Export .vcf reports no contacts. Large records can exceed the configured 1 MiB per-resource or 10 MiB request limits. Browser tests and protocol checks do not establish compatibility with every phone, Thunderbird or DAVx5 version. Report the client and error privately without sending your password or calendar contents.',
-      privacy: 'Synchronized records travel through Cloudflare/Caddy and are readable by Radicale on Utilibre. This is not end-to-end encryption. Browser records and saved credentials can persist after tab closure; downloads remain until deleted. Other devices retain synchronized copies. Daily backups remain on the same VM without automatic expiry, so deleting active data does not immediately erase older snapshots. Separate edge/provider retention remains unverified.',
+      privacy: 'Synchronized records travel through Cloudflare/Caddy and are readable by Radicale on Utilibre. This is not end-to-end encryption. Browser records and saved credentials can persist after tab closure; downloads remain until deleted. Other devices retain synchronized copies. ' + savedWorkBackupNotice.en + ' Deleting active data does not immediately erase older copies. Separate edge/provider retention remains unverified.',
       next: 'Keep an independent collection export and test it in a separate destination. Revoking a password blocks later server access but cannot erase records already copied to devices.',
     },
     es: {
@@ -38,7 +39,7 @@ export const calendarGuides: PracticalGuide[] = [{
       ],
       success: 'Se descargaron exportaciones ficticias de calendario y contactos desde Calino. Un cliente sin navegador creó, exportó e importó colecciones descartables por el endpoint público; se rechazaron lecturas anónimas y desde otra cuenta. Un respaldo aislado pasó la verificación nativa y conservó los bytes de los archivos.',
       troubleshooting: 'Abrí Contacts y esperá la sincronización si Export .vcf indica que no hay contactos. Los registros grandes pueden superar 1 MiB por recurso o 10 MiB por solicitud. Las pruebas de navegador y protocolo no establecen compatibilidad con todos los teléfonos ni versiones de Thunderbird o DAVx5. Reportá el cliente y el error en privado, sin mandar la contraseña ni el contenido del calendario.',
-      privacy: 'Los registros sincronizados pasan por Cloudflare/Caddy y Radicale puede leerlos en Utilibre. No hay cifrado de extremo a extremo. Los datos y las credenciales guardadas pueden persistir en el navegador al cerrar la pestaña; las descargas quedan hasta que las eliminés. Otros dispositivos conservan sus copias. Los respaldos diarios quedan en la misma máquina virtual sin vencimiento automático: borrar datos activos no elimina de inmediato las copias anteriores. La conservación del borde y los proveedores sigue sin verificarse.',
+      privacy: 'Los registros sincronizados pasan por Cloudflare/Caddy y Radicale puede leerlos en Utilibre. No hay cifrado de extremo a extremo. Los datos y las credenciales guardadas pueden persistir en el navegador al cerrar la pestaña; las descargas quedan hasta que las eliminés. Otros dispositivos conservan sus copias. ' + savedWorkBackupNotice.es + ' Borrar datos activos no elimina de inmediato las copias anteriores. La conservación del borde y los proveedores sigue sin verificarse.',
       next: 'Conservá una exportación independiente y probala en otro destino. Revocar la contraseña impide nuevos accesos al servidor, pero no borra los registros copiados a dispositivos.',
     },
   },

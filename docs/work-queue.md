@@ -1,5 +1,30 @@
 # Operator work queue — reconciled 12 October 2026
 
+## Current queue disposition, 12 October 2026
+
+Use this section and the newest dated checkpoint as the current task list.
+Older checkpoints below preserve evidence; their words "pending", "still open"
+and "remaining" describe that checkpoint's date, not new instructions to redo
+completed work. The owner's later maintenance-only selection governs scope:
+no further installations or recovery-generation housekeeping was selected.
+
+| Workstream | Current disposition | Remaining action or boundary |
+| --- | --- | --- |
+| Eligible software, catalog, guides and source offers | Deployed; later native repairs recorded below. Expansion is paused. | Requirements-based exclusions and private/withheld candidates remain qualified. Do not reactivate Whisper or treat a historical candidate table as new install authorization. |
+| Portal copy, export/deletion links and backup facts | Final backup-copy correction reconciles the 25-group encrypted off-host job with EN/ES cards and guides, including the later records group. | Keep local versus remote retention and the limited restore scope distinct. A whole-VM restore is not claimed. Current release evidence follows below. |
+| Existing directory requests | GotHub's PR222 is merged and its upstream README contains Utilibre. PrivateBin's directory now shows uploads enabled and A+. | Seven requests remain open without a new operator action. GotHub's generated list has not caught up. See [current submission evidence](public-instance-submissions.md). |
+| Search discovery | Existing sitemap, metadata, icons and indexing directives are deployed. | Bing's older crawl and Google display are external refreshes. No repeat submission of unchanged URLs. SearXNG's current HTTP proxy conflicts with its directory eligibility; no provider change is inferred. |
+| Other submissions | Existing submissions and requirements are recorded. | SafeTwitch repository is archived; Mezzo needs Gitfield access. Awesome-selfhosted release-age and human-contribution rules remain applicable. No duplicate or prohibited automated submission. |
+| Provider and licence facts | Verified DNS/HTTP roles and explicit licence grants are published; unresolved claims are qualified. | Exact edge/provider/mail retention, legal/operator details and contradictory or absent upstream version-scope grants need evidence outside this VM. No invented retention period or licence suffix. |
+| Backups and restores | The scheduled 25-group encrypted off-host copy passed on 12 October; native local restores and bounded remote/identity recovery are recorded. | Full-host/control-plane recovery, physical Android/printing and real-device compatibility checks require their respective access/equipment. Recovery-generation housekeeping was not selected. |
+| Monitoring and capacity | Local checks, alerts and measured capacity limits are documented. A genuine external scheduled run resumed. | GitHub's delayed schedule is not a 15-minute guarantee; neither reachability nor free RAM proves arbitrary concurrency. |
+| Upstream frontend failures | Existing local repairs are complete or retained as private candidates; failures have bounded evidence. | Genius/selected media responses and LibreMDB public-use permission remain external dependencies. No rotating proxy or substitute provider was introduced. |
+| Native security repairs | Prepared releases are deployed; the current scan and exact review leave four high advisory IDs unresolved. | Two GnuTLS fixes were not verified available; ACL/GRUB work was stopped by automatic security review. The table below retains all 75 affected package records and GRUB recovery prerequisites. |
+
+No item is considered complete merely because it moved to a different document.
+Each boundary links to its existing evidence; the dated historical records below
+must not be copied back into the current queue without checking later results.
+
 ## Current checkpoint, 12 October, 20:11 UTC
 
 This supersedes the earlier counts and activation notes. Independent work in
@@ -1662,7 +1687,10 @@ Final public release check: all91 enabled entries have status observations, and 
 
 The `public-utility-portal:0.1.0-mail-provider-20261009` release adds the verified Addy service and bilingual native guide, precise translation/DNS/provider disclosures and pinned licence evidence. It also records Reactive Resume’s scoped account ZIP/import check. It serves92 enabled services and162 canonical pages. Build, typecheck, lint,99 unit tests, public EN/ES desktop/mobile notes, all162 SEO pages,92 readiness observations and no-JS/security checks pass. Addy’s native authentication-only configuration passed seven isolated cases and live loopback/SMTP-guard checks; the owner confirms both ends of the mail round trip. TransLitep3 bilingual provider notes are live. Public Addy, TransLite and integration source downloads match local hashes; Addy’s896 manifest files also match. Source revision: `20261009-mail-provider-final`. Evidence: `/opt/utilibre/reports/addy-forward-20261009/portal-release.json`, `completed-roundtrip.json` and `public-source-verification.json`. Existing images/configuration and backups are retained for recovery.
 
-## Remaining dependencies and work in progress
+## Historical dependencies recorded on 9 October
+
+The later current queue and release records supersede this snapshot, including
+the since-completed off-host backup setup and Codeberg submissions.
 
 - **Dumb repair:** the private f558107-p1 candidate fixes false-success/error caching, bounds the native cache to32MiB, and includes two upstream rendering corrections. Native offline regressions and loopback tests pass. The owner-supplied IPv6 address now has verified external connectivity; its Netplan configuration and tested VM-level firewall are installed persistently, with IPv4 unchanged. Genius search and lyrics still return403 anti-bot challenges over IPv6, as over the checked IPv4 path. A usable authorized Genius retrieval path or compatible upstream correction remains required before public activation. This does not prove an IP-only cause or universal failure. See `dumb-ipv6-readiness-2026-10-09.md`. The same upstream revision works on a checked public instance. Public LRCLIB remains available; the loopback-only native PROXY recipe is in `dumb-repair-2026-10-09.md`.
 - **Alias mail:** native forwarding and the received message’s SPF/DKIM/DMARC passed the authorized test. Reply authentication is deployed with isolated positive/negative tests and live guard checks. The owner’s reply was authenticated and returned through PMG to the monitored admin inbox; receipt is confirmed and the local queue is empty. No duplicate message was sent.

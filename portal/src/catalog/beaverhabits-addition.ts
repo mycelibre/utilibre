@@ -1,3 +1,4 @@
+import { savedWorkBackupNotice } from './backup-notes.ts';
 import type { CatalogEntry } from './catalog.ts';
 import { reviewedFossProviders } from './upstreams.ts';
 const provider = reviewedFossProviders.beaverhabits;
@@ -40,8 +41,8 @@ export const beaverhabitsAdditions: CatalogEntry[] = [{
     "es": "Los hábitos, ajustes e imágenes de notas se guardan en SQLite. El servidor también conserva estado de sesión nativo y el navegador guarda una cookie de sesión. Cerrar la pestaña no elimina la cuenta ni el trabajo guardado."
   },
   "retention": {
-    "en": "No automatic habit expiry is configured. Native account deletion removes its habit list, settings and note images; revoke any API token first. Session files, operational records, independent downloads and retained backups are separate. Daily private backups stay on this VM without automatic pruning.",
-    "es": "No se configura una caducidad automática de hábitos. El borrado nativo de la cuenta elimina su lista de hábitos, ajustes e imágenes de notas; revocá primero cualquier token de API. Los archivos de sesión, registros operativos, descargas independientes y respaldos conservados son aparte. Los respaldos privados diarios permanecen en esta VM sin purga automática."
+    "en": "No automatic habit expiry is configured. Native account deletion removes its habit list, settings and note images; revoke any API token first. Session files, operational records, independent downloads and retained backups are separate. " + savedWorkBackupNotice.en,
+    "es": "No se configura una caducidad automática de hábitos. El borrado nativo de la cuenta elimina su lista de hábitos, ajustes e imágenes de notas; revocá primero cualquier token de API. Los archivos de sesión, registros operativos, descargas independientes y respaldos conservados son aparte. " + savedWorkBackupNotice.es
   },
   "launchLabel": {
     "en": "Open tool",
@@ -53,7 +54,8 @@ export const beaverhabitsAdditions: CatalogEntry[] = [{
   "filesUploaded": true,
   "upstreamServices": [
     "Cloudflare HTTPS proxy",
-    "Hetzner hosting"
+    "Hetzner hosting",
+    "Hetzner Storage Box (encrypted backups)"
   ],
   "logging": {
     "en": "Local gateway access logging is disabled; application warning/error and system/security logs remain. Docker logs rotate at 1 MiB per file, two files per container. This is size rotation, not a time-based deletion guarantee. Public-edge and hosting retention are separate.",

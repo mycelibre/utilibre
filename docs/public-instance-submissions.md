@@ -1,6 +1,63 @@
-# Public instance submissions, checked 11 October 2026
+# Public instance submissions, checked 12 October 2026
 
-## Maintenance follow-up at 10:33 UTC
+## Read-only follow-up, 12 October at 20:20 UTC
+
+Two earlier waiting items have resolved:
+
+- [GotHub PR222](https://codeberg.org/gothub/gothub/pulls/222) merged on
+  11 October at **16:56:59 UTC**. The upstream `dev` README now lists
+  `gothub.utilibre.org`, Germany, Hetzner and Cloudflare. This closes the
+  submission/acceptance task. Its separately generated `gothub-instances` JSON
+  has not yet included the entry; do not treat that lag as a rejected request
+  or submit it again.
+- [PrivateBin's directory](https://privatebin.info/directory/) now shows
+  **file upload enabled** and **Observatory A+** for `paste.utilibre.org`.
+  The public instance still exposes both the native attachment marker and
+  `js/privatebin.js?2.0.6` version pattern. This closes the directory-refresh
+  item after the 11 October detector compatibility repair. No new paste,
+  directory submission or forced scan was needed. The directory's country
+  flag and uptime percentage are its observations, not evidence of Utilibre's
+  origin location or a measured availability commitment.
+
+The five GitHub requests remain open: Redlib #117, SearXNG #941,
+AnonymousOverflow #203, Binternet #68 and Priviblur #303. Their update times,
+comment counts and returned review-comment counts show no new requested
+changes since the preceding follow-up. Kittygram PR100 remains approved but
+unmerged; TransLite PR31 remains open without reviews. These seven requests
+are waiting for upstream decisions, not unfinished submissions.
+
+SearXNG has a separate eligibility issue: the 12 October provider check
+verified that `search.utilibre.org` now uses Cloudflare's HTTP proxy, while
+the instance directory requires DNS-only use. Its open request and the
+previous observation period do not establish current eligibility. No DNS,
+proxy setting or claim in the external request was changed during this check.
+The provider decision remains pending; see the current checkpoint in
+[the work queue](work-queue.md).
+
+LibRedirect's current generated JSON contains the Utilibre degoog and
+BiblioReads URLs. GotHub is not there yet. This verifies generated-list
+inclusion only, not receipt by every browser-extension installation.
+SafeTwitch's repository still reports `archived: true`; its draft is not
+eligible for submission there. Mezzo still requires access to its official
+Gitfield destination. Awesome Selfhosted's eligibility and human-contribution
+conditions below remain respected.
+
+Bing's authenticated read-only API still reports verified ownership and
+sitemap `Success`, **168 URLs**, last crawled **10 October at 15:58:21 UTC**.
+The live sitemap now serves **196 URLs**. Those API values are an older crawl,
+not evidence that all current pages have been indexed or that 28 pages failed.
+No unchanged sitemap, IndexNow notification, diagnostic fetch, maintainer
+message or new submission was sent. Ranking and indexing outcomes remain
+unestablished.
+
+Filtered receipts, without credentials or unrelated account records:
+`/var/lib/utilibre-maintenance/listings-followthrough-20261012/read-only-status.json`
+and `gothub-upstream.json` in the same directory. Public source checks used the
+[GotHub README](https://codeberg.org/gothub/gothub/src/branch/dev/README.md),
+[generated GotHub list](https://codeberg.org/gothub/gothub-instances/src/branch/master/instances.json)
+and [LibRedirect JSON](https://raw.githubusercontent.com/libredirect/instances/main/data.json).
+
+## Historical maintenance follow-up, 11 October at 10:33 UTC
 
 The five pending GitHub requests below and all three Codeberg requests remain
 open. Kittygram PR100 now has an approving review from `koru` (07:25 UTC) and

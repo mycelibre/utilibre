@@ -592,6 +592,15 @@ p { max-width: 75ch; }
   line-height: 1.5;
 }
 .your-data-index { margin-block-start: 1.5rem; }
+@media (max-width: 40rem) {
+  .your-data-index .retention-table { table-layout: fixed; }
+  .your-data-index .retention-table th,
+  .your-data-index .retention-table td { padding: 0.75rem 0.4rem; overflow-wrap: anywhere; }
+  .your-data-index .retention-table th:first-child,
+  .your-data-index .retention-table td:first-child { width: 34%; min-width: 0; }
+  .your-data-index .retention-table th:nth-child(2),
+  .your-data-index .retention-table td:nth-child(2) { width: 29%; }
+}
 
 .privacy-labels-expanded { display: grid; gap: 0; border-block-start: 2px solid var(--ink); }
 .privacy-label-explanation { padding-block: 1rem; display: grid; grid-template-columns: 7rem 1fr; gap: 1rem; border-block-end: 1px solid var(--rule); }

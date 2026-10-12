@@ -70,8 +70,9 @@ SSH enabled, writable for native backup/retention, SMB and WebDAV disabled, and
 access from outside Hetzner disabled. That last setting is **not** an allowlist
 for this VM alone. Other subaccounts, box-wide settings, existing VM backups and
 live application storage are unchanged. Directory isolation is not a hard
-capacity quota; this account shares the box's available space. PrivateBin uploads
-remain disabled and no hosted application receives these backup credentials.
+capacity quota; this account shares the box's available space. PrivateBin supports
+attachments, but new application backups exclude its temporary content. No hosted
+application receives these backup credentials.
 
 Evidence from the actual box:
 
@@ -255,7 +256,7 @@ explicit current coverage.
 
 ## Native copy job and schedule
 
-`backup-native.mjs` inspects the newest complete snapshot in each of **24 explicit
+`backup-native.mjs` inspects the newest complete snapshot in each of **25 explicit
 backup groups**, verifies every manifest digest, rejects paths outside snapshots,
 symlinks, missing files, corrupt/newly changing files, or snapshots older than
 36 hours. It never silently falls back from a corrupt newest completed snapshot.
@@ -268,7 +269,8 @@ Coverage: core FreshRSS and configuration (not PrivateBin content); identity; ex
 services; original community services; encrypted CryptPad/Forms/Galene/TURN/
 Wallabag suite plus key; calendar/Gathio/Razzia; Opengist/Linkding/Vikunja/Bytestash;
 TRIP/Spliit/Donetick/BeaverHabits/family chess configuration/wishlist/KitchenOwl/newsletters/
-Addy/SimpleLogin/projects/Chhoto. This is not 24 independent applications and
+Addy/SimpleLogin/projects/records/Chhoto. The records group covers Grist, Candlr
+and Bookplate. This is not 25 independent applications and
 does not include browser-only documents, cache state or external Caddy VM files.
 Add a source and a matching native backup procedure when a new stateful app is
 introduced; there is no claim of automatic discovery of future applications.
@@ -393,3 +395,11 @@ References checked 10 October 2026:
 [non-destructive key installation](https://docs.hetzner.com/storage/storage-box/ssh-keys/add-ssh-keys/),
 [Restic 0.18 repository/password/SFTP instructions](https://restic.readthedocs.io/en/v0.18.0/030_preparing_a_new_repo.html),
 [native retention and pruning semantics](https://restic.readthedocs.io/en/v0.18.0/060_forget.html).
+
+## Backup location verified, 12 October 2026
+
+A read-only GET of the existing Storage Box, matched against the active restricted
+SSH account, confirms Falkenstein, Germany (`fsn1`, Falkenstein DC Park 1).
+The filtered receipt is
+`/var/lib/utilibre-maintenance/listings-followthrough-20261012/storagebox-location.json`.
+This check establishes the backup location, not provider log retention.

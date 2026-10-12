@@ -1,3 +1,4 @@
+import { savedWorkBackupNotice } from './backup-notes.ts';
 import type { CatalogEntry } from './catalog.ts';
 import { reviewedFossProviders } from './upstreams.ts';
 const provider = reviewedFossProviders.donetick;
@@ -40,8 +41,8 @@ export const donetickAdditions: CatalogEntry[] = [{
     "es": "SQLite y los archivos locales conservan los datos de cuentas y tareas. El navegador conserva el token de sesión después de cerrar una pestaña. Los archivos estáticos tienen una caché de una hora; los adjuntos firmados usan una caché privada de diez minutos en el navegador."
   },
   "retention": {
-    "en": "No automatic chore expiry is configured. Native account deletion removes owned data subject to shared-circle rules, but circle metadata and other members’ records can remain. Independent copies and backups are separate. Daily private backups stay on this VM without automatic pruning; deleting live records does not erase those backups.",
-    "es": "No se configura una caducidad automática de tareas. El borrado nativo de la cuenta elimina datos propios según las reglas del círculo compartido, pero pueden quedar metadatos del círculo y registros de otras personas. Las copias independientes y los respaldos son aparte. Los respaldos privados diarios permanecen en esta VM sin purga automática; borrar registros activos no elimina esos respaldos."
+    "en": "No automatic chore expiry is configured. Native account deletion removes owned data subject to shared-circle rules, but circle metadata and other members’ records can remain. Independent copies and backups are separate. " + savedWorkBackupNotice.en + " Deleting live records does not erase those backups.",
+    "es": "No se configura una caducidad automática de tareas. El borrado nativo de la cuenta elimina datos propios según las reglas del círculo compartido, pero pueden quedar metadatos del círculo y registros de otras personas. Las copias independientes y los respaldos son aparte. " + savedWorkBackupNotice.es + " Borrar registros activos no elimina esos respaldos."
   },
   "launchLabel": {
     "en": "Open tool",
@@ -54,7 +55,8 @@ export const donetickAdditions: CatalogEntry[] = [{
   "upstreamServices": [
     "Utilibre identity service",
     "Cloudflare HTTPS proxy",
-    "Hetzner hosting"
+    "Hetzner hosting",
+    "Hetzner Storage Box (encrypted backups)"
   ],
   "logging": {
     "en": "Local gateway access logging is disabled; application warning/error and system/security logs remain. Docker logs rotate at 1 MiB per file, two files per container. This is size rotation, not a time-based deletion guarantee. Public-edge and hosting retention are separate.",

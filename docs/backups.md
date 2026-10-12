@@ -202,6 +202,35 @@ Native configuration references checked 11 October:
 Source evidence: `compose.yaml`, the selected deployment Compose files,
 `deployment/family-chess/settings.py`, and the pinned DeGoog cache/disk-bus source.
 
+## Current application-copy coverage, 12 October 2026
+
+The current selector contains **25 native backup groups**, including the records
+group added for Grist, Candlr and Bookplate on 11 October. The existing daily
+job completed at **09:19:22 UTC on 12 October** with all 25 groups, encrypted
+upload and remote metadata checks. The approved 7-daily/4-weekly Restic policy
+and existing local retention remain unchanged. This job result is not a new
+restore rehearsal or a fixed deletion deadline.
+
+The 24-group, 94-file download and Authentik restore described below are dated
+10 October evidence. They do not cover the later records group's off-host
+recovery. Grist/Candlr/Bookplate passed their separately documented isolated
+local restores and encrypted remote upload; a restored UI from a downloaded
+records-group backup and whole-VM recovery have not been rehearsed. See the
+[records release](creative-batch-2026-10-11.md) for that boundary.
+
+Saved server-side work in the selected groups has both local and encrypted
+off-host copies. Browser-only work is not uploaded by this backup job.
+PrivateBin content and Family Chess games are excluded from new native copies;
+configuration is still selected. Old local, remote or owner-managed whole-VM
+copies are not retrospectively erased by that exclusion.
+
+Public export/deletion notes now distinguish these copies and retain the
+service-specific deletion consequences. Removing an active record does not
+immediately remove earlier backup copies. Exact source selection, successful
+copy time and retention results are recorded privately in
+`/opt/utilibre/storagebox/private/last-success.json` and its referenced report.
+No backup operation or retention change was needed for this copy correction.
+
 ## Verified Storage Box application copy — October 10, 2026
 
 The owner supplied the existing Storage Box hostname/account and SSH port 23,

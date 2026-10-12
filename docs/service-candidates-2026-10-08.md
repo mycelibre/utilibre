@@ -1,8 +1,27 @@
-# Suggested services and capabilities — reconciled 9 October 2026 UTC
+# Suggested services and capabilities — installation record
 
-This is the current execution checklist for the complete suggested-service queue. On 9 October the operator explicitly authorized installing **every suggested application unless it breaks Utilibre's requirements**. Earlier review-only, choose-one and arbitrary later/pilot recommendations are superseded. Privacy, zero visitor tracking, FOSS licensing, bounded resources, minimal reproducible patches and no Whisper activation still apply. Existing applications are reused instead of installing a second copy of the same application.
+## Current scope, 12 October 2026
 
-The authorized work order was installations and precise independent checks, followed by catalog/SEO and then the full voice/copywriting pass. Those phases have been delivered; the work queue records subsequent repairs and narrow unresolved dependencies. New queue messages do not silently cancel unfinished installation work. Spanish remains voseo.
+Expansion is paused. On 11 October the operator selected maintenance items
+**1 and 4–6**, with no further installations. The [current work queue](work-queue.md)
+is authoritative for unfinished work; the dated installation records below do
+not authorize another installation round or activation of excluded applications.
+Graphite and microStudio remain withheld. Physical-device checks and
+recovery-generation housekeeping were not selected for that maintenance pass.
+
+## Installation scope and evidence, 9 October 2026
+
+On 9 October the operator authorized installing **every suggested application
+unless it breaks Utilibre's requirements**. That instruction replaced the
+earlier review-only, choose-one and arbitrary later/pilot recommendations.
+Existing applications were reused instead of installing duplicate copies.
+
+The work order was installations and independent checks, followed by catalog/SEO
+and the voice/copywriting pass. Those phases were delivered. The tables retain
+their dated versions and verification limits; later releases and repairs are
+recorded in the work queue and each linked deployment record. Privacy, zero
+visitor tracking, FOSS licensing, bounded resources and small reproducible
+adaptations remain requirements. Spanish remains voseo.
 
 ## Public and catalogued
 
