@@ -1,7 +1,9 @@
 # Penpot ImageMagick HEIF alignment — 12 October 2026
 
-Prepared in isolated candidates; root owns production release. Penpot stays
-2.18.3. No account rule, user document, plugin set or major application changes.
+Released by the root maintainer at 2026-10-12 16:34:59 UTC after the full
+two-account application gate, consistency snapshot/native restore, published
+source and public login/OIDC checks. Penpot stays 2.18.3. No account rule, user
+document, plugin set or major application changes.
 
 ImageMagick's private `libheif.so.1` was **1.19.8**, while the already-installed
 Debian system library and dav1d/de265 plugins were **1.23.4-1~deb13u1**. The

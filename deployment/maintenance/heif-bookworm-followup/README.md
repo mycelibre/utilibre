@@ -1,7 +1,9 @@
 # Native Bookworm HEIF repair — 12 October 2026
 
-Prepared, **not released by this agent**. Root maintains production release,
-the private decisions ledger, Compose pins and serial overlay ordering.
+Released by the root maintainer on 2026-10-12 after complete source publication,
+native/application checks and exact-image production health gates. Release
+image: `sha256:425207d99ef6ed8b442d8fafe7ed021d78a2e00b92de39fd4e7080fa7701adbb`.
+Root maintains the private decisions ledger, Compose pins and overlay ordering.
 
 ## Exact change
 

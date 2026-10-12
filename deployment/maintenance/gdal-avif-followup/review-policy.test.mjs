@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {eligible,version,fixed} from './review-policy.mjs';
+const exact={status:'needs-review',scope:'runtime-image',type:'debian',package:'libgdal32',installed:version,id:fixed[0],artifact:'sha256:'+'a'.repeat(64),containers:['utilibre-gathio-postgres-1']};
+test('only three retained GDAL fixes at exact successor version',()=>{for(const id of fixed)assert(eligible({...exact,id}));for(const change of [{id:'CVE-2026-0000'},{installed:'3.6.2+dfsg-1+utilibre1'},{package:'libgdal-dev'},{type:'source'},{status:'mitigated'},{artifact:'latest'},{scope:'host'}])assert(!eligible({...exact,...change}));});
+test('no cross-role or ambiguous-runtime waiver',()=>{for(const containers of [[],['other'],['utilibre-gathio-postgres-1','other']])assert(!eligible({...exact,containers}));assert(!eligible(null));});
