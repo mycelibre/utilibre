@@ -1,6 +1,6 @@
 name: utilibre-turn-option
 x-turn: &turn
-  image: utilibre-coturn:4.18.0-client-security-20261011
+  image: utilibre-ncurses-galene-turn-turn:security-20261012
   build: {context: ./turn}
   user: "65534:65534"
   entrypoint: [turnserver, -c, /run/config/turnserver.conf]

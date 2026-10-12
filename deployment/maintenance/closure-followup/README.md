@@ -51,6 +51,90 @@ have zero restarts. No production database migration/restore was performed.
 
 ## Primary evidence and build scope
 
+### In progress: stable util-linux repairs
+
+`build-util-linux.sh` and `util-linux-inner.sh` prepare native Trixie packages,
+not a host distribution upgrade. Five checksum-pinned upstream v2.41 stable
+commits add descriptor close-on-exec, safe source-path pinning, and failed-helper
+post-hook handling to the authenticated Debian 2.41.5 source. Debian already
+contains the other two relevant path-handling changes. A build alone does not
+authorize deployment: native tests, symbol/import compatibility, matching source
+offer, application gates and exact rollback preparation are still required.
+No util-linux candidate is deployed at this checkpoint.
+
+Primary references checked 12 October:
+[stable branch changes](https://github.com/util-linux/util-linux/compare/v2.41.5...v2.41.6),
+[failed-helper advisory](https://github.com/util-linux/util-linux/security/advisories/GHSA-m25x-3hj9-m26f),
+[descriptor advisory](https://github.com/util-linux/util-linux/security/advisories/GHSA-55fx-f4gg-cfhj).
+
+### Gathio's rsync utility
+
+Deployed 12 October, 04:45 UTC: Gathio's PostgreSQL/DocumentDB image now has
+`rsync 3.5.1+ds1-1~deb12u1+utilibre1`, built from authenticated Debian 3.5.1
+source against native Bookworm dependencies. Only the Debian changelog is
+changed; upstream code, application files, all shared-library bytes and resolved
+runtime configuration are preserved. No public rsync daemon is enabled.
+
+The upstream default suite reports **306 passed / 54 skipped**, including
+platform and separate TCP-mode skips; these are not claimed as passed. Isolated
+non-root checks additionally verify incremental copy, safe symlinks, bounded
+synthetic deletion, loopback daemon retrieval and read-only upload denial.
+Fresh PostgreSQL XML/PostGIS/DocumentDB role isolation and dump/restore pass.
+The live public Gathio check created, viewed, exported and deleted only its own
+fictional event. No existing event or production restore was touched.
+
+Recipes: `build-rsync.sh`, `rsync-stage.mjs`, `rsync-native.sh`,
+`../xml-final/check-gathio.mjs --rsync-followup`, then
+`cache-release.mjs prepare/apply --rsync`. Exact old/new pins and readiness are
+in the private `rsync-release.json`; rollback changes only that recorded image.
+Matching source and notices are published separately with
+`publish-libraries.mjs --rsync --publish`. `review-rsync.mjs` verifies installed
+code against the built package and current Debian fixed-version records before
+proposing expiring individual findings. The base distribution's older version
+range remains in raw scanner output.
+
+Sources checked 12 October:
+[rsync upstream](https://rsync.samba.org/),
+[Debian security tracker](https://security-tracker.debian.org/tracker/source-package/rsync).
+
+### Terminal utility repair
+
+Deployed on 12 October: `ncurses-bin 6.5+20250216-2+dhi4` (authenticated
+Trixie DHI package) and `6.4-4+utilibre1` (native Bookworm backport) across
+28 images / 34 roles in 22 existing projects. The host uses the same repaired
+Trixie CLI package. Application/configuration fingerprints and all shared-library
+fingerprints are unchanged; no tinfo/libc upgrade, daemon addition, access change
+or user-data operation. Every released role passes its exact-image/native health
+gate; the existing firewall supervisors are reused where needed.
+
+The identical synthetic long-CSI fixture makes both original Debian 12/13
+`infocmp -i` binaries abort with a detected buffer overflow. Both repaired
+binaries pass, as do terminal export/compile/reopen, capability and ELF-import
+checks. Containers have no external network and core dumps are disabled. The
+initial test omitted `tic -x`, losing extended capabilities during round-trip;
+that failed rehearsal is retained, not counted as a pass. Compilation itself
+completed, and the exact retained Bookworm package passed the corrected gates.
+The two existing Penpot DHI frontend/exporter images already contained the
+repaired CLI and were not replaced for this issue.
+
+Evidence: `ncurses-stage.mjs`, `ncurses-native.sh`, `ncurses-regression.mjs`,
+`ncurses-host.mjs`, and `cache-release.mjs prepare/apply --ncurses`. Private
+receipts are `ncurses-release.json`, `ncurses-host.json`, and
+`ncurses-regression.json`. `review-ncurses.mjs` checks live shipped bytes and
+symlinks against the exact package before proposing any expiring finding review.
+The 64 focused release/advisory/payload-review tests pass. Application advisory
+IDs and ranges are unchanged; rebinding only follows passed image/configuration
+parity. Fresh scanning is required after this release.
+
+Sources checked 12 October:
+[upstream fix](https://invisible-island.net/ncurses/NEWS.html#index-t20251213),
+[Debian component attribution](https://security-tracker.debian.org/tracker/CVE-2025-69720),
+and [pinned DHI packaging](https://github.com/docker-hardened-images/catalog/tree/a399ba8b3297ee5f29c05f9a1d2068743eaae797/package/deb/main/ncurses).
+An additive source offer is produced by `publish-ncurses.mjs --publish`;
+earlier archives remain immutable. Roll back only the old image pin in the
+release receipt, or the retained original host CLI package. Never restore or
+delete user volumes for a command-line dependency rollback.
+
 ### Cache, HTTP server and Bookworm XML follow-up
 
 Deployed on 12 October, 03:32–04:10 UTC:

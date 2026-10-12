@@ -11,6 +11,9 @@ const scan=JSON.parse(readFileSync(dir+'/security.json'));
 assert(['checked','incomplete'].includes(scan.status));
 assert(Date.now()-Date.parse(scan.completedAt)<86400000,'Fresh scan required');
 const docker=args=>{try{return execFileSync('docker',args,{timeout:30000,maxBuffer:64*1024**2,stdio:['ignore','pipe','pipe']});}catch{throw Error('Bounded native evidence check failed; no decision issued.');}};
+// A restore rehearsal can end between scanning and this read-only review.
+// Missing containers receive no decision; do not abort unrelated live proofs.
+const running=new Set(docker(['ps','--format','{{.Names}}']).toString().trim().split('\n'));
 const decisions=[];
 for(const item of queue.items){
  if(item.scope!=='runtime-image')continue;
@@ -18,6 +21,7 @@ for(const item of queue.items){
  const netip=item.id==='CVE-2024-24790'&&item.package==='stdlib'&&item.installed==='v1.17.6';
  if(!((item.id==='CVE-2023-45853'&&item.package==='zlib1g'&&item.installed==='1:1.2.13.dfsg-1')||(item.id==='CVE-2025-68121'&&item.package==='stdlib'&&item.installed==='v1.24.6')||headers||netip))continue;
  const image=scan.images.find(x=>x.id===item.artifact),name=item.containers[0];
+ if(!running.has(name))continue;
  if(!image||image.status!=='checked'||docker(['inspect','--format','{{.Image}}',name]).toString().trim()!==item.artifact)continue;
  let reason;
  if(item.id==='CVE-2023-45853'&&item.package==='zlib1g'&&item.installed==='1:1.2.13.dfsg-1'){

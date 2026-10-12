@@ -9,7 +9,9 @@ const url='https://security-tracker.debian.org/tracker/data/json';
 const response=await fetch(url,{signal:AbortSignal.timeout(120000)});
 assert(response.ok);const body=await response.text(),all=JSON.parse(body);
 const queue=JSON.parse(fs.readFileSync('/var/lib/utilibre-maintenance/security-queue.json'));
-const ids=new Set(queue.items.filter(x=>['CRITICAL','HIGH'].includes(x.severity)&&x.status==='needs-review').map(x=>x.id));
+// The completed rsync release also needs primary evidence for its medium
+// findings; do not mistake omitted records for an upstream unresolved status.
+const ids=new Set(queue.items.filter(x=>(['CRITICAL','HIGH'].includes(x.severity)||x.package==='rsync')&&x.status==='needs-review').map(x=>x.id));
 const sources={};
 for(const [pkg,records] of Object.entries(all)){
  const relevant=Object.fromEntries(Object.entries(records).filter(([id])=>ids.has(id)));

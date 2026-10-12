@@ -3,9 +3,12 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {readFileSync,writeFileSync} from 'node:fs';
 process.umask(0o077);
-assert(process.argv.slice(2).every(a=>a==='--security-followup'));
-const dir=process.argv.includes('--security-followup')?'/var/lib/utilibre-maintenance/closure-followup-20261012/bookworm-images':'/var/lib/utilibre-maintenance/xml-final-20261011';
-const row=JSON.parse(readFileSync(dir+'/build.json')).rows.find(row=>row.kind==='gathio');
+assert(process.argv.slice(2).length<=1&&process.argv.slice(2).every(a=>['--security-followup','--rsync-followup'].includes(a)));
+const rsync=process.argv.includes('--rsync-followup');
+const dir=rsync?'/var/lib/utilibre-maintenance/closure-followup-20261012/rsync/rsync-gathio-postgres':process.argv.includes('--security-followup')?'/var/lib/utilibre-maintenance/closure-followup-20261012/bookworm-images':'/var/lib/utilibre-maintenance/xml-final-20261011';
+const built=JSON.parse(readFileSync(dir+'/build.json'));
+const row=rsync?{...built,candidateId:built.imageId}:built.rows.find(row=>row.kind==='gathio');
+const output=rsync?dir:dir+'/gathio';
 const name='maintenance-xml-gathio-database';
 const docker=(args,input)=>execFileSync('docker',args,{input,encoding:'utf8',timeout:120000,maxBuffer:4*1024**2,stdio:['pipe','pipe','pipe']});
 try{
@@ -29,7 +32,7 @@ try{
  assert.equal(sql('SELECT payload::text FROM xml_fixture;'),expected);
  const ldd=docker(['exec',name,'sh','-ec',`for f in /usr/lib/x86_64-linux-gnu/libgdal.so.32 /usr/lib/x86_64-linux-gnu/libspatialite.so.7; do out=$(ldd -r "$f" 2>&1); if printf '%s' "$out" | grep -E 'not found|undefined symbol'; then exit 1; fi; done; echo XML_CONSUMERS_PASSED`]);
  assert.match(ldd,/XML_CONSUMERS_PASSED/);
- writeFileSync(dir+'/gathio/database.json',JSON.stringify({date:new Date().toISOString(),image:row.candidate,imageId:row.candidateId,passed:true,nativePostgresXml:true,postgisGml:true,gdal:true,documentdbTypedDataAndRoleIsolation:true,nativeDumpRestore:true,network:'none',limitation:'Small synthetic native fixture; no user data or production database mutations.'},null,2)+'\n');
+ writeFileSync(output+'/database.json',JSON.stringify({date:new Date().toISOString(),image:row.candidate,imageId:row.candidateId,passed:true,nativePostgresXml:true,postgisGml:true,gdal:true,documentdbTypedDataAndRoleIsolation:true,nativeDumpRestore:true,network:'none',limitation:'Small synthetic native fixture; no user data or production database mutations.'},null,2)+'\n');
  console.log('Gathio XML/PostGIS/DocumentDB native dump/restore passed.');
-}catch(error){writeFileSync(dir+'/gathio/database-error.log',String(error.stdout||'')+String(error.stderr||'')+String(error));throw Error('Isolated Gathio XML test failed; private diagnostic retained.');}
+}catch(error){writeFileSync(output+'/database-error.log',String(error.stdout||'')+String(error.stderr||'')+String(error));throw Error('Isolated Gathio XML test failed; private diagnostic retained.');}
 finally{try{docker(['rm','-f','-v',name]);}catch{}}

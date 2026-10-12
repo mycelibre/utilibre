@@ -55,7 +55,12 @@ const xmlVendorPatches={
 // separate Bookworm build did NOT include them and must not inherit this review.
 for(const spec of specs.filter(s=>s.id==='CVE-2026-6653'&&s.version===xmlVersion))
  for(const id of Object.keys(xmlVendorPatches))specs.push({...spec,id});
-const overlayReceipts=['closure-release-20261012.json','closure-followup-20261012/expat-release.json','closure-followup-20261012/apache-release.json','closure-followup-20261012/cache-release.json'];
+const bookFollowupVersion='2.9.14+dfsg-1.3~deb12u6+utilibre2';
+for(const [kind,image] of [['rssbridge','88742ff664d36a95b543fb20edcf045c46a21aca9b168c8ee8e53e92cfe24606'],['gathio','4a3cd7a2ba7b42a079d7a90a2d9a5069a071776eb579769ca5cd7ab81037fe4d']]){
+ const old=specs.find(s=>s.kind===kind&&s.id==='CVE-2026-6653');
+ for(const id of ['CVE-2026-6653',...Object.keys(xmlVendorPatches)])specs.push({...old,id,artifact:'sha256:'+image,version:bookFollowupVersion,sha:'7c0a6f31294f103824b764b421bfe250d7ee84bc7d843cb1a3ad02d0afa0ee61',bookFollowup:true,extraSha:'851cd101588eedf881aa5ddb43a70a731a80373c8459a19b697e4963c2f1fb1d'});
+}
+const overlayReceipts=['closure-release-20261012.json','closure-followup-20261012/expat-release.json','closure-followup-20261012/apache-release.json','closure-followup-20261012/cache-release.json','closure-followup-20261012/bookworm-release.json','closure-followup-20261012/ncurses-release.json','closure-followup-20261012/rsync-release.json'];
 export function overlayRows(report){
  if(report.status!=='passed')return [];
  return (report.groups||[]).filter(g=>g.status==='passed').flatMap(g=>(g.rows||[{name:g.name}]).map(r=>({name:r.name,oldImage:r.oldImage||g.oldImage,newImage:r.newImage||g.newImage,completedAt:g.completedAt||report.completedAt})));
@@ -87,6 +92,26 @@ function evidence(spec){
   assert(matched.every(Boolean),'Complete exact-role overlay proof required');
   const released=Math.max(...matched.map(r=>Date.parse(r.completedAt)));assert(Number.isFinite(released));
   return {released,receipts:[...previous.receipts,spec.overlayReceipt]};
+ }
+ if(spec.bookFollowup){
+  const dir='closure-followup-20261012/',r=read(dir+'bookworm-release.json');assert.equal(r.status,'passed');
+  const g=r.groups.find(g=>g.key===spec.kind);assert.equal(g?.status,'passed');assert.equal(g.newImage,spec.artifact);
+  assert.deepEqual(spec.containers,[g.name]);
+  const receipt=dir+'bookworm-images/'+spec.kind+'/native.json',n=read(receipt);
+  assert(n.passed);assert.equal(n.imageId,spec.artifact);assert.equal(n.version,spec.version);assert.equal(n.librarySha256,spec.sha);
+  const receipts=[dir+'bookworm-release.json',receipt];
+  if(spec.kind==='gathio'){
+   const db=dir+'bookworm-images/gathio/database.json',d=read(db);
+   for(const key of ['passed','nativePostgresXml','postgisGml','gdal','documentdbTypedDataAndRoleIsolation','nativeDumpRestore'])assert.equal(d[key],true);
+   assert.equal(d.imageId,spec.artifact);receipts.push(db);
+   sameFile(dir+'bookworm-xml/libxml2-dev_'+spec.version+'_amd64.deb','8c2aa7ac76e6d030c8da291038099bd9f03871cdb3549945f5f9c041f392dabf');
+  }
+  sameFile(dir+'bookworm-xml/libxml2_'+spec.version+'_amd64.deb','95dcaddf8e046c9bd17d887835055e955895c168d4d63cb84fca476f0e061d10');
+  sameFile('native-final/libxml2-CVE-2026-6653.patch','6c2b8a7b6fa470efcb1854e5c73bd7e1ae1663d8b111e27ce9232bbc1fe44f54');
+  sameFile(dir+'bookworm-xml/vendor-apply.log','0f06fe825a4ad39a88684813f223dc7ea769ea859e5192debdf54f392f4e721e');
+  sameFile(dir+'bookworm-xml/build.log','1bc8561e1669b2eecad3d5fc3f8ddea692427394c70c6227b44386b566ec9635');
+  if(xmlVendorPatches[spec.id]){const [file,hash]=xmlVendorPatches[spec.id];sameFile('native-final/libxml-dhi-patches/'+file,hash);assert(fs.readFileSync(root+dir+'bookworm-xml/vendor-apply.log','utf8').includes('applying '+file));}
+  assert(Number.isFinite(Date.parse(g.completedAt)));return {released:Date.parse(g.completedAt),receipts};
  }
  if(spec.expatPredecessor){
   const original=evidence(spec.expatPredecessor);
@@ -158,7 +183,7 @@ export function validateObserved(spec,item,observed){
  assert.equal(observed.version,spec.version);assert.equal(observed.librarySha256,spec.sha);
  if(spec.privateLibrary)assert.equal(observed.privateLibrarySha256,spec.sha,'Penpot private duplicate must also be patched');
  if(item.package==='sqlite3')assert.equal(observed.extraSha256,'78fbb4b1bc1fdcb0e3f321ffbcc3628ebff0a961d3c56d4d623f8daef59886c8');
- if(item.package==='libxml2-dev')assert.equal(observed.extraSha256,'fd934510ea5a3e55896e56053bbe77bec2fbf881783eae3ca653d510669f37da');
+ if(item.package==='libxml2-dev')assert.equal(observed.extraSha256,spec.extraSha||'fd934510ea5a3e55896e56053bbe77bec2fbf881783eae3ca653d510669f37da');
 }
 export function run(){
  process.umask(0o077);

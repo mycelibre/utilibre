@@ -1,0 +1,9 @@
+[
+  {
+    "key": "rsync-gathio-postgres",
+    "base": "sha256:da9807f5df538ebcf908dd7ce7cd7e72884e1f1014c5dc39063a6c0486bb662b",
+    "baseRef": "utilibre-ncurses-gathio-postgres:security-20261012",
+    "candidate": "utilibre-gathio-documentdb:rsync-3.5.1-security-20261012",
+    "containers": ["utilibre-gathio-postgres-1"]
+  }
+]

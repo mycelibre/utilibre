@@ -15,7 +15,8 @@ assert.equal(queue.scanDate,scan.completedAt);assert.equal(scan.status,'checked'
 const release=read(dir+'/expat-release.json');assert.equal(release.status,'passed');assert.equal(read(dir+'/host-release.json').status,'passed');assert.equal(read(dir+'/host-live.json').status,'passed');
 // Follow only the two reviewed library overlays, never an arbitrary new image.
 const descendants=[];
-for(const file of ['cache-release.json','apache-release.json']){
+for(const file of ['cache-release.json','apache-release.json','ncurses-release.json']){
+ if(!fs.existsSync(dir+'/'+file))continue;
  const r=read(dir+'/'+file);assert.equal(r.status,'passed');
  for(const group of r.groups){assert.equal(group.status,'passed');
   for(const row of group.rows||[group])if(row.oldImage!==row.newImage)
@@ -45,7 +46,7 @@ const decisions=[],proofs=[],skipped=[],cache=new Map;
 for(const item of queue.items.filter(i=>i.status==='needs-review'&&['HIGH','CRITICAL'].includes(i.severity))){
  const spec=specs.find(s=>s[0]===item.package);if(!spec||item.type!=='debian')continue;
  const [pkg,version,file,hash,source]=spec,host=item.scope==='host-os';
- const apacheXml=pkg==='libxml2-16'&&item.containers.length===1&&item.containers[0]==='utilibre-services-freshrss-1'&&item.artifact==='sha256:6cd6298cfe66d17d08a1a848192de49123aed476f052e2d615ad9fc328adb354';
+ const apacheXml=pkg==='libxml2-16'&&item.containers.length===1&&item.containers[0]==='utilibre-services-freshrss-1'&&originalRelease(item.containers[0],item.artifact);
  if(!host&&!apacheXml&&(pkg!=='libexpat1'||!item.containers.every(n=>originalRelease(n,item.artifact))))continue;
  try{
   const fixed=primary.sources[source]?.[item.id]?.releases?.sid;assert.equal(fixed?.status,'resolved');assert(fixed.fixed_version&&fixed.fixed_version!=='0');run('dpkg',['--compare-versions',version,'ge',fixed.fixed_version]);

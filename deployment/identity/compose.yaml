@@ -12,7 +12,7 @@ x-runtime: &runtime
 
 x-authentik: &authentik
   <<: *runtime
-  image: utilibre-authentik:2026.8.3-fips-closure-20261012
+  image: utilibre-ncurses-identity-worker:security-20261012
   user: "1000:1000"
   shm_size: 512m
   tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777"]

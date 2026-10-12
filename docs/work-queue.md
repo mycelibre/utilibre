@@ -1,6 +1,46 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Current boundary — 12 October, 04:16 UTC
+## Current boundary — 12 October, 04:55 UTC
+
+The ncurses command-line repair is deployed across **28 images / 34 roles** and
+the VM host. The native overflow regression fails against both original Debian
+versions and passes against both repaired versions. Application configuration,
+shared libraries and user data are unchanged. Gathio's database image now has
+native Bookworm **rsync 3.5.1**; upstream tests report 306 passed / 54 skipped.
+Incremental copies, safe links, read-only loopback transfer, database permissions
+and synthetic restore passed. Its live fictional event was created, viewed,
+exported and deleted successfully. [Recipes and rollback](../deployment/maintenance/closure-followup/README.md).
+
+The **04:53:01 UTC** scan covers 109 production images / 175 containers, host
+packages and 55 source manifests. Raw: **40 critical / 2,763 high** occurrences;
+exact payload/component reviews leave **0 critical / 784 high** pending.
+These are triage counts, not exploitability or a vulnerability-free claim.
+Eighty-six focused maintenance/release/review tests pass. The intermediate scan
+also caught a short-lived backup rehearsal; the reviewer now tolerates its
+departure without clearing its findings. Future rehearsals use the repaired
+production PostgreSQL image and a maintenance-fixture name. A new isolated
+Resume restore passed with 29 tables; this is not a complete user-journey restore.
+
+The two additive source offers are public and their HTTPS SHA-256 values match:
+
+- `security-ncurses-followup-20261012-source.tar.gz`: 3,689,823 bytes;
+  `b783882c34bf7215f577c76a2b4e7063216c5c47c0db5729bbc50870e4110b5c`.
+- `security-rsync-followup-20261012-source.tar.gz`: 1,288,756 bytes;
+  `ef8ea369191a13225a0069bf1ff651e0dbfac018ccfeb2304e8f991e173de9d5`.
+
+Both are under `https://tools.utilibre.org/utilibre-source/`. Earlier offers
+remain immutable. Source-index links and integration-source publication are
+included in this checkpoint. No new service or Caddy change.
+
+Remaining work: native stable-ABI util-linux repairs are being built/tested,
+not deployed; compatible curl and other dependency repairs, the disputed cache
+advisory's consumer exposure review, vendor-unfixed GnuTLS, host kernel and
+compiled Deno/WASM coverage remain. The independent GitHub workflow is active
+but still has no genuine scheduled completion at 04:51; a manual pass does not
+clear that alert. Root retains about 12 GiB free with an 8 GiB build reserve.
+This is a checkpoint while maintenance continues, not completion of that queue.
+
+## Previous boundary — 12 October, 04:16 UTC
 
 The cache-library release is deployed across **19 images / 20 updated roles**,
 with one unchanged namespace companion. FreshRSS's Apache is updated to 2.4.69.

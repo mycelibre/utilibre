@@ -9,7 +9,7 @@ x-limits: &limits
 services:
   app:
     <<: *limits
-    image: utilibre-13ft:pcre-vendor-security-20261011
+    image: utilibre-ncurses-13ft-app:security-20261012
     cpus: 1
     mem_limit: 256m
     tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']
@@ -18,7 +18,7 @@ services:
     networks: {isolated: {ipv4_address: 172.29.118.10}}
   proxy:
     <<: *limits
-    image: utilibre-public-egress:pcre-vendor-security-20261011
+    image: utilibre-ncurses-unfurl-proxy:security-20261012
     cpus: 0.5
     mem_limit: 192m
     tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']

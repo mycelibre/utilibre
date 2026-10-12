@@ -23,8 +23,12 @@ test('every released role must pass and match the exact image, not merely start'
  const s=specs.find(x=>x.kind==='authentik');const r={status:'passed',completedAt:new Date().toISOString(),rows:s.containers.map(name=>({name,status:'passed',newImage:s.artifact}))};assert.doesNotThrow(()=>validateRelease(r,s));
  assert.throws(()=>validateRelease({...r,status:'prepared'},s));assert.throws(()=>validateRelease({...r,rows:r.rows.slice(1)},s));assert.throws(()=>validateRelease({...r,rows:r.rows.map(row=>({...row,newImage:'wrong'}))},s));assert.throws(()=>validateRelease({...r,rows:r.rows.map(row=>({...row,status:'failed'}))},s));
 });
-test('five additional native patches apply only to their genuine Trixie payload',()=>{
- const rows=specs.filter(s=>s.id==='CVE-2026-86138');assert(rows.length>0);assert(rows.every(s=>s.version.includes('deb13u3+utilibre1')));assert(!rows.some(s=>['gathio','rssbridge'].includes(s.kind)));
+test('additional native patches require genuine Trixie or rebuilt Bookworm v2 payload',()=>{
+ const rows=specs.filter(s=>s.id==='CVE-2026-86138');assert(rows.length>0);
+ assert(rows.every(s=>s.version.includes('deb13u3+utilibre1')||(s.bookFollowup&&s.version.endsWith('deb12u6+utilibre2'))));
+ assert(!rows.some(s=>s.version.endsWith('deb12u6+utilibre1')));
+ const s=rows.find(s=>s.kind==='gathio');assert(s);
+ assert.throws(()=>validateObserved(s,{...item(s),package:'libxml2-dev'},{version:s.version,librarySha256:s.sha,extraSha256:'fd934510ea5a3e55896e56053bbe77bec2fbf881783eae3ca653d510669f37da'}));
 });
 test('unfinished overlay receipts never qualify and row identities remain separate',()=>{
  const g={status:'passed',oldImage:'old',newImage:'new',rows:[{name:'one'},{name:'two',oldImage:'own-old',newImage:'own-new'}],completedAt:'2026-10-12T03:00:00Z'};

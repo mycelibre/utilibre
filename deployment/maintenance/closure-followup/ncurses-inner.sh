@@ -32,10 +32,10 @@ dpkg-deb -x /output/ncurses-bin_6.4-4+utilibre1_amd64.deb /work/candidate
 ldd -r /work/candidate/usr/bin/infocmp > /output/imports.log
 ! grep -E 'not found|undefined symbol' /output/imports.log
 /work/candidate/usr/bin/infocmp -i xterm > /output/native-xterm.txt
-/work/candidate/usr/bin/infocmp -I xterm > /work/fictional.ti
+/work/candidate/usr/bin/infocmp -x -I xterm > /work/fictional.ti
 mkdir /work/terminfo
-/work/candidate/usr/bin/tic -o /work/terminfo /work/fictional.ti
-TERMINFO=/work/terminfo /work/candidate/usr/bin/infocmp -I xterm > /work/reopened.ti
+/work/candidate/usr/bin/tic -x -o /work/terminfo /work/fictional.ti
+TERMINFO=/work/terminfo /work/candidate/usr/bin/infocmp -x -I xterm > /work/reopened.ti
 # Reconstructed capability data excludes only the comment naming its file.
 sed '/^#/d' /work/fictional.ti > /work/expected
 sed '/^#/d' /work/reopened.ti > /work/actual

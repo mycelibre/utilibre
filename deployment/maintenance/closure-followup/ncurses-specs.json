@@ -1,0 +1,288 @@
+[
+  {
+    "key": "ncurses-linkding-linkding",
+    "base": "sha256:01a2278795b665ddb451f43c024c90bc2ca6e63e6b2aded8754784a8c72cef6d",
+    "baseRef": "utilibre-linkding:1.47.0-python-security-20261011-p2",
+    "containers": [
+      "utilibre-linkding-linkding-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-linkding-linkding:security-20261012"
+  },
+  {
+    "key": "ncurses-beaverhabits-app",
+    "base": "sha256:06d893885f8de9a9ab0667b196d5b1b9792ed64f4d630d0ab00e499a378ec619",
+    "baseRef": "utilibre-beaverhabits:pcre-vendor-security-20261011",
+    "containers": [
+      "utilibre-beaverhabits-app-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-beaverhabits-app:security-20261012"
+  },
+  {
+    "key": "ncurses-addy-db",
+    "base": "sha256:0b223a2f1ee48d47948f61ce1455a9d80a34509168ba108bbfc444fa93f2fb49",
+    "baseRef": "utilibre-mariadb:12.2.2-gosu-security-20261011-p2",
+    "containers": [
+      "utilibre-addy-db-1"
+    ],
+    "suite": "bookworm",
+    "candidate": "utilibre-ncurses-addy-db:security-20261012"
+  },
+  {
+    "key": "ncurses-priviblur-priviblur",
+    "base": "sha256:207273fe255b3936d2ad723779e98fe11198dc352705a3a5594b6052ac003777",
+    "baseRef": "utilibre-priviblur:expat-closure-20261012",
+    "containers": [
+      "utilibre-priviblur-priviblur-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-priviblur-priviblur:security-20261012"
+  },
+  {
+    "key": "ncurses-expanded-penpot-backend",
+    "base": "sha256:27c565062fb8a8aabcfbc4ece5acdd9338f8bc0b28948dff274613490db61fda",
+    "baseRef": "utilibre-penpot-backend:2.18.3-expat-closure-20261012",
+    "containers": [
+      "utilibre-expanded-penpot-backend-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-expanded-penpot-backend:security-20261012"
+  },
+  {
+    "key": "ncurses-family-chess-app",
+    "base": "sha256:334e23b6f2c966ddf56440a92342edcba8803b535d4373dbc92afb2bc3b59e1f",
+    "baseRef": "utilibre-family-chess:pcre-vendor-security-20261011",
+    "containers": [
+      "utilibre-family-chess-app-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-family-chess-app:security-20261012"
+  },
+  {
+    "key": "ncurses-calendar-radicale",
+    "base": "sha256:5a5cf58990b6e550ce84487a387c910ba9c4bff354fd3639ad5f90eed4b7b160",
+    "baseRef": "utilibre-radicale:pcre-vendor-security-20261011",
+    "containers": [
+      "utilibre-calendar-radicale-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-calendar-radicale:security-20261012"
+  },
+  {
+    "key": "ncurses-wishlist-app",
+    "base": "sha256:5d724b369c022167473e4a2c7ed810eeedc97d8fe92891315ee8f05869be4b00",
+    "baseRef": "utilibre-cache-wishlist-app:4.3.0-20261012",
+    "containers": [
+      "utilibre-wishlist-app-1"
+    ],
+    "suite": "bookworm",
+    "candidate": "utilibre-ncurses-wishlist-app:security-20261012"
+  },
+  {
+    "key": "ncurses-records-grist",
+    "base": "sha256:5ebd7f89913b1db7a56c5ed6266239eaf637736bd1693608f96bdb0c12726385",
+    "baseRef": "utilibre-cache-records-grist:4.3.0-20261012",
+    "containers": [
+      "utilibre-records-grist-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-records-grist:security-20261012"
+  },
+  {
+    "key": "ncurses-expanded-breezewiki",
+    "base": "sha256:65bc5be71f3d6c7a271fcc3f6af4887b0b6a627f0219a9c6a534bd2771befbe6",
+    "baseRef": "utilibre-breezewiki:expat-closure-20261012",
+    "containers": [
+      "utilibre-expanded-breezewiki-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-expanded-breezewiki:security-20261012"
+  },
+  {
+    "key": "ncurses-services-freshrss",
+    "base": "sha256:6cd6298cfe66d17d08a1a848192de49123aed476f052e2d615ad9fc328adb354",
+    "baseRef": "utilibre-freshrss:apache-2.4.69-20261012",
+    "containers": [
+      "utilibre-services-freshrss-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-services-freshrss:security-20261012"
+  },
+  {
+    "key": "ncurses-unfurl-app",
+    "base": "sha256:715f16122a70a0e93a3283bb13f4411f222992f1c8b18763e1a2d73a1ad6771b",
+    "baseRef": "utilibre-unfurl:pcre-vendor-security-20261011",
+    "containers": [
+      "utilibre-unfurl-app-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-unfurl-app:security-20261012"
+  },
+  {
+    "key": "ncurses-trip-app",
+    "base": "sha256:7a4201ae0e1d8bee34f2702d6227976cc95dfe73a4fa7ff6fb43120fd0678e77",
+    "baseRef": "utilibre-trip:pcre-vendor-security-20261011",
+    "containers": [
+      "utilibre-trip-app-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-trip-app:security-20261012"
+  },
+  {
+    "key": "ncurses-kitchenowl-app",
+    "base": "sha256:7b3d6f49308743cc6fc344a750162f058d12ec1cec08794deaec99f5425077f7",
+    "baseRef": "utilibre-kitchenowl:expat-closure-20261012",
+    "containers": [
+      "utilibre-kitchenowl-app-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-kitchenowl-app:security-20261012"
+  },
+  {
+    "key": "ncurses-pack-forms-app",
+    "base": "sha256:85a03436d4d60ecd5540cfc8f5d36cc1046c2bf3d30b42ab880e7ccaf580042a",
+    "baseRef": "utilibre-liberaforms:4.11.1-expat-closure-20261012",
+    "containers": [
+      "utilibre-pack-forms-app-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-pack-forms-app:security-20261012"
+  },
+  {
+    "key": "ncurses-expanded-resume",
+    "base": "sha256:87a9bb499e62615cd7fb543ee71918d2838db3fbd0ccde7c68f4981fd59ca6e0",
+    "baseRef": "utilibre-cache-expanded-resume:4.3.0-20261012",
+    "containers": [
+      "utilibre-expanded-resume-1"
+    ],
+    "suite": "bookworm",
+    "candidate": "utilibre-ncurses-expanded-resume:security-20261012"
+  },
+  {
+    "key": "ncurses-community-uptime-kuma",
+    "base": "sha256:895a32c84a8c27b87332095cd1a98d44897fe51a65025a00852d8b4ea498fac1",
+    "baseRef": "utilibre-cache-community-uptime-kuma:4.3.0-20261012",
+    "containers": [
+      "utilibre-community-uptime-kuma-1"
+    ],
+    "suite": "bookworm",
+    "candidate": "utilibre-ncurses-community-uptime-kuma:security-20261012"
+  },
+  {
+    "key": "ncurses-community-rssbridge",
+    "base": "sha256:88742ff664d36a95b543fb20edcf045c46a21aca9b168c8ee8e53e92cfe24606",
+    "baseRef": "utilibre-rssbridge:xml-followup-20261012",
+    "containers": [
+      "utilibre-community-rssbridge-1"
+    ],
+    "suite": "bookworm",
+    "candidate": "utilibre-ncurses-community-rssbridge:security-20261012"
+  },
+  {
+    "key": "ncurses-gathio-postgres",
+    "base": "sha256:4a3cd7a2ba7b42a079d7a90a2d9a5069a071776eb579769ca5cd7ab81037fe4d",
+    "baseRef": "utilibre-gathio-documentdb:xml-followup-20261012",
+    "containers": [
+      "utilibre-gathio-postgres-1"
+    ],
+    "suite": "bookworm",
+    "candidate": "utilibre-ncurses-gathio-postgres:security-20261012"
+  },
+  {
+    "key": "ncurses-identity-worker",
+    "base": "sha256:a6014f0cf01fe5167d4645a34c0919638478626e5b8cb152fdbe48d78965e706",
+    "baseRef": "utilibre-authentik:2026.8.3-fips-closure-20261012",
+    "containers": [
+      "utilibre-identity-worker-1",
+      "utilibre-identity-server-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-identity-worker:security-20261012"
+  },
+  {
+    "key": "ncurses-galene-turn-turn",
+    "base": "sha256:abdba9b317da98ca9962d33ca4a552f5a8b784a86d996e0adf10575132bff625",
+    "baseRef": "utilibre-coturn:4.18.0-client-security-20261011",
+    "containers": [
+      "utilibre-galene-turn-turn-1",
+      "utilibre-turn-option-turn-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-galene-turn-turn:security-20261012"
+  },
+  {
+    "key": "ncurses-13ft-app",
+    "base": "sha256:b73b895f85d849da0ee5a54854e90bf60606ed504c4cee8061f5b025738d1837",
+    "baseRef": "utilibre-13ft:pcre-vendor-security-20261011",
+    "containers": [
+      "utilibre-13ft-app-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-13ft-app:security-20261012"
+  },
+  {
+    "key": "ncurses-expanded-actual",
+    "base": "sha256:bc35307be499c72237904831eb74584ddeac91f004b914841259a4f39f3f045b",
+    "baseRef": "utilibre-cache-expanded-actual:4.3.0-20261012",
+    "containers": [
+      "utilibre-expanded-actual-1"
+    ],
+    "suite": "bookworm",
+    "candidate": "utilibre-ncurses-expanded-actual:security-20261012"
+  },
+  {
+    "key": "ncurses-pack-cryptpad-cryptpad",
+    "base": "sha256:c8fa7925ad0c0cd45e4d5e05e4166b8bfb5348f5e2c6cb9762c57d20617e66fd",
+    "baseRef": "utilibre-cache-pack-cryptpad-cryptpad:4.3.0-20261012",
+    "containers": [
+      "utilibre-pack-cryptpad-cryptpad-1"
+    ],
+    "suite": "bookworm",
+    "candidate": "utilibre-ncurses-pack-cryptpad-cryptpad:security-20261012"
+  },
+  {
+    "key": "ncurses-unfurl-proxy",
+    "base": "sha256:d8880d7e146a4cda7808cf066479ac14c4574f8a1dee8661600b2c7ab115b0a3",
+    "baseRef": "utilibre-public-egress:pcre-vendor-security-20261011",
+    "containers": [
+      "utilibre-unfurl-proxy-1",
+      "utilibre-records-egress-1",
+      "utilibre-wallabag-proxy-1",
+      "utilibre-trip-proxy-1",
+      "utilibre-13ft-proxy-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-unfurl-proxy:security-20261012"
+  },
+  {
+    "key": "ncurses-services-rsshub",
+    "base": "sha256:e5ea4b3b10d497e8a66affa191b386345bf24e99a8890697df9aca94eb2af853",
+    "baseRef": "utilibre-cache-services-rsshub:4.3.0-20261012",
+    "containers": [
+      "utilibre-services-rsshub-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-services-rsshub:security-20261012"
+  },
+  {
+    "key": "ncurses-records-candlr",
+    "base": "sha256:ec5fa5004138195a7ec7036eca6587096fa3ddf9a45e0ee5939d6dfd78949361",
+    "baseRef": "utilibre-candlr:2.0.0-patch-leaves-20261012",
+    "containers": [
+      "utilibre-records-candlr-1"
+    ],
+    "suite": "trixie",
+    "candidate": "utilibre-ncurses-records-candlr:security-20261012"
+  },
+  {
+    "key": "ncurses-community-rallly",
+    "base": "sha256:f762a4aa70c6a2017d5e8a4b9c12e6717dbd8fce02c910f0e0027b456e08afc1",
+    "baseRef": "utilibre-cache-community-rallly:4.3.0-20261012",
+    "containers": [
+      "utilibre-community-rallly-1"
+    ],
+    "suite": "bookworm",
+    "candidate": "utilibre-ncurses-community-rallly:security-20261012"
+  }
+]

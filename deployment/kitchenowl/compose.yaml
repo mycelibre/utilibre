@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-kitchenowl:expat-closure-20261012
+    image: utilibre-ncurses-kitchenowl-app:security-20261012
     build: .
     user: '1000:1000'
     env_file: /opt/utilibre/kitchenowl/private/app.env

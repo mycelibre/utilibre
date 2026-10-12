@@ -4,6 +4,7 @@ import {createHash} from 'node:crypto';
 
 // Frozen from the authenticated APT transaction, not inferred from version text.
 export const archivePins={
+ 'ncurses-bin':'54821f5e17572f0badc7059efefb54fb54d9e8a28449274f478735314f22474d',
  'libblkid1':'2687b4aba95bc3870c537fd73601dacc340ce13f6cac5d7c4fdcb4522e4674f7',
  'liblastlog2-2':'99c4461f1448b6d4c75c0563b172c94b4d8b8f3dedc1d1062bc1225dbea861cc',
  'libmount1':'e0e438149253a4f1b3d1d0642f2c7feb322ccc66883f8edc83f400150af0a762',

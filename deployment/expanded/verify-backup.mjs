@@ -5,12 +5,15 @@ const target = realpathSync(process.argv[2] || '');
 const resumeOnly = process.argv.includes('--resume-only');
 if (!/^\/opt\/utilibre\/expanded-backups\/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z$/.test(target)) throw Error('Pass an exact expanded-backups snapshot directory');
 execFileSync('sha256sum', ['--check', 'SHA256SUMS'], { cwd: target, stdio: 'inherit' });
-const name = `utilibre-restore-check-${process.pid}`;
-const image = 'postgres@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73';
+// Same reviewed PostgreSQL 17.11 engine/helper as the deployed databases.
+// Maintenance fixtures are not production roles; the live image remains covered
+// by the normal scan. Do not reuse the older vulnerable restore-helper image.
+const name = `maintenance-expanded-restore-check-${process.pid}`;
+const image = 'sha256:34bce7234d7454085fd6131efd1471061e0e36e47e83baa4cd56ec9fbf1d63c3';
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8' });
 let created = false;
 try {
-  docker('run', '-d', '--name', name, '--network', 'none', '--memory', '512m', '--cpus', '1', '--pids-limit', '128', '--security-opt', 'no-new-privileges:true', '--tmpfs', '/var/lib/postgresql/data:rw,nosuid,nodev,size=256m', '-e', 'POSTGRES_HOST_AUTH_METHOD=trust', image);
+  docker('run', '-d', '--name', name, '--network', 'none', '--memory', '512m', '--cpus', '1', '--pids-limit', '128', '--log-driver', 'none', '--security-opt', 'no-new-privileges:true', '--tmpfs', '/var/lib/postgresql/data:rw,nosuid,nodev,size=256m', '-e', 'POSTGRES_HOST_AUTH_METHOD=trust', image);
   created = true;
   let ready = false;
   for (let i = 0; i < 40; i++) {

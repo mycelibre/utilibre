@@ -7,7 +7,7 @@ import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {fileURLToPath,pathToFileURL} from 'node:url';
-import {freshScan,validateRelease} from '../review-native-backports.mjs';
+import {freshScan,validateRelease,overlayRows} from '../review-native-backports.mjs';
 import {validateDecision} from '../triage.mjs';
 const root='/var/lib/utilibre-maintenance/';
 const here=path.dirname(fileURLToPath(import.meta.url));
@@ -53,6 +53,14 @@ function command(p,args,input){
 const text=(p,args)=>command(p,args).toString().trim();
 const readReceipt=(p,list)=>{const r=read(p);assert.equal(r.status,'passed','Unsuccessful release/native receipt');list.push({path:root+p,sha256:sha(fs.readFileSync(root+p))});return r;};
 function receipts(spec,scan){
+ if(spec.overlayPredecessor){
+  const proofs=receipts(spec.overlayPredecessor,scan),r=readReceipt(spec.overlayReceipt,proofs);
+  const rows=overlayRows(r),matched=spec.containers.map(name=>rows.find(r=>r.name===name&&r.oldImage===spec.overlayPredecessor.artifact&&r.newImage===spec.artifact));
+  assert(matched.every(Boolean));assert(matched.every(r=>Date.parse(r.completedAt)<=Date.parse(scan.date)));
+  // This only establishes deployment lineage; run() still compares every
+  // installed package file against its authenticated fixed artifact afresh.
+  return proofs;
+ }
  const proofs=[];let latest;
  if(spec.kind==='aom'){
   const native=readReceipt('aom-final-20261011/checks.json',proofs);
@@ -108,7 +116,16 @@ export function reasonFor(item,spec,proof){
 export function run(){
  process.umask(0o077);const queue=read('security-queue.json'),scan=read('security.json');freshScan(queue,scan);
  const decisions=[],proofs=[],skipped=[],cache=new Map();
- for(const item of queue.items){const spec=specs.find(s=>matches(item,s));if(!spec)continue;
+ const currentSpecs=[...specs];
+ for(const receipt of ['closure-followup-20261012/bookworm-release.json','closure-followup-20261012/ncurses-release.json','closure-followup-20261012/rsync-release.json']){
+  if(!fs.existsSync(root+receipt))continue;const rows=overlayRows(read(receipt));
+  for(const s of [...currentSpecs]){if(!s.containers.length)continue;
+   const matched=s.containers.map(name=>rows.find(r=>r.name===name&&r.oldImage===s.artifact));
+   if(matched.every(Boolean)&&new Set(matched.map(r=>r.newImage)).size===1&&matched[0].newImage!==s.artifact)
+    currentSpecs.push({...s,artifact:matched[0].newImage,overlayPredecessor:s,overlayReceipt:receipt});
+  }
+ }
+ for(const item of queue.items){const spec=currentSpecs.find(s=>matches(item,s));if(!spec)continue;
   try{
    const key=spec.artifact+spec.package;let proof=cache.get(key);
    if(!proof){

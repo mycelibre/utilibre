@@ -61,7 +61,7 @@ services:
 
   breezewiki:
     <<: *runtime
-    image: utilibre-breezewiki:expat-closure-20261012
+    image: utilibre-ncurses-expanded-breezewiki:security-20261012
     read_only: true
     user: "1000:1000"
     environment:
@@ -137,7 +137,7 @@ services:
 
   actual:
     <<: *runtime
-    image: utilibre-cache-expanded-actual:4.3.0-20261012
+    image: utilibre-ncurses-expanded-actual:security-20261012
     read_only: true
     user: "1000:1000"
     environment:
@@ -166,7 +166,7 @@ services:
   resume:
     <<: *runtime
     # Same pinned upstream runtime; narrow visitor-statistics removal in Dockerfile.resume.
-    image: utilibre-cache-expanded-resume:4.3.0-20261012
+    image: utilibre-ncurses-expanded-resume:security-20261012
     read_only: true
     user: "1000:1000"
     command: ["node", "/usr/local/bin/utilibre-resume-start.mjs"]
@@ -247,7 +247,7 @@ services:
 
   penpot-backend:
     <<: *runtime
-    image: utilibre-penpot-backend:2.18.3-expat-closure-20261012
+    image: utilibre-ncurses-expanded-penpot-backend:security-20261012
     user: "1001:1001"
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org

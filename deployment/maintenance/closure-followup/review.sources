@@ -1,7 +1,7 @@
 # Isolated source/package review only. Never add sid to the host APT sources.
 Types: deb deb-src
 URIs: https://deb.debian.org/debian
-Suites: sid trixie
+Suites: sid trixie bookworm
 Components: main
 Architectures: amd64
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg

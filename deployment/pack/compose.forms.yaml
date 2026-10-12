@@ -21,7 +21,7 @@ services:
       timeout: 3s
       retries: 5
   app:
-    image: utilibre-liberaforms:4.11.1-expat-closure-20261012
+    image: utilibre-ncurses-pack-forms-app:security-20261012
     restart: unless-stopped
     depends_on: {db: {condition: service_healthy}}
     user: '4002:4002'
