@@ -1,0 +1,81 @@
+{
+  "repository": "https://github.com/lkloliver/poc",
+  "commit": "4420fd7dca9944f17db2e01c46183a7f73b70949",
+  "files": [
+    {
+      "path": "CVE-2026-88647/ca.pem",
+      "sha256": "6a0c49e79bacd7f535a70a4d48291b556c06e53f289fcc202461424093c2ce00",
+      "bytes": 1009
+    },
+    {
+      "path": "CVE-2026-88647/ca_bad.pem",
+      "sha256": "ef17a4b4614c2c24786500591c43859d8bc9a4c3e4383f3cda0432392db96aef",
+      "bytes": 1078
+    },
+    {
+      "path": "CVE-2026-88647/ca_bad.key",
+      "sha256": "58fd33c031cc0fe6e86b96a913e25c85c670cc130af6ef2c109b3d14f4637c57",
+      "bytes": 1704
+    },
+    {
+      "path": "CVE-2026-88647/ca_good.pem",
+      "sha256": "8088c1d987187180503d96d3f16c3e3bf708c1b90942a2bea17ea7f247d4b52d",
+      "bytes": 1078
+    },
+    {
+      "path": "CVE-2026-88647/ca_good.key",
+      "sha256": "1496dbc866a3d7c0f9534da65036de7591e75ae418a6923b6aae92ad5eeeae7b",
+      "bytes": 1704
+    },
+    {
+      "path": "CVE-2026-88647/ca_nomatch.pem",
+      "sha256": "019a12346c8c99d6c12fd37d416be2f1ac7c144b5a47dd70934edc93daa780f1",
+      "bytes": 1013
+    },
+    {
+      "path": "CVE-2026-88647/ca_nomatch.key",
+      "sha256": "f99597284c9f79d3c06082fdc409fe08d60a6f04d9d8d0b4279beac52281a3f4",
+      "bytes": 1704
+    },
+    {
+      "path": "CVE-2026-88648/perm_dn_ee.pem",
+      "sha256": "7de102d5d4d3fd9fb522c3037470c3511ab475210f7b500ebc3da886d1bd1bc0",
+      "bytes": 1025
+    },
+    {
+      "path": "CVE-2026-88648/perm_dn_root.pem",
+      "sha256": "dcad08ad7701bc964f1e5e9eaf1256075d18ca851fff9379493033a44bd64ad7",
+      "bytes": 1074
+    },
+    {
+      "path": "CVE-2026-88648/perm_dn_sub.pem",
+      "sha256": "71bc60754a214da9a0725cdb4e86debb5c3b78beb27ffc09ba5f85c85aaa6ea6",
+      "bytes": 1046
+    },
+    {
+      "path": "CVE-2026-88648/evidence-defect23/d2s_root.pem",
+      "sha256": "d60d2bc65582716eeacdc77a0e03e66b48bddc7739d2aa0ac9bc4473695fb3c0",
+      "bytes": 1078
+    },
+    {
+      "path": "CVE-2026-88648/evidence-defect23/d2s_ee.pem",
+      "sha256": "380def428d67c0c3b4c1b713f18400e62531e93e88c1231acf32e3bfd294b103",
+      "bytes": 1038
+    },
+    {
+      "path": "CVE-2026-88648/evidence-defect23/d3_root.pem",
+      "sha256": "c5a98d8652f92ec132726ba1c18b9ef6ae954a7f8f517277c9ef65784bbe7468",
+      "bytes": 1066
+    },
+    {
+      "path": "CVE-2026-88648/evidence-defect23/d3_sub.pem",
+      "sha256": "2e4017ac12ca7cf176268dccb925d010ce82e421ee4d32c1e245e2be9c08087b",
+      "bytes": 1017
+    },
+    {
+      "path": "CVE-2026-88648/evidence-defect23/d3_ee.pem",
+      "sha256": "8801552a1f35f7408a3df0df02f7505962d34584335e4f58a6e15924cf07cc1f",
+      "bytes": 1005
+    }
+  ]
+}

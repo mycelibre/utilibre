@@ -14,13 +14,24 @@ Application advisory decisions are bound to exact deployed artifacts, and
 dependency findings retain separate, expiring evidence. Native compatibility
 repairs and their workflow checks are recorded in the
 [current operator queue](work-queue.md). That record also identifies outstanding
-vendor fixes, caller limitations and host activation requirements; this is not
+vendor fixes, caller limitations and boot-chain requirements; this is not
 a claim that all vulnerabilities are fixed.
 
-Compiled Deno/Rust and Pyodide/WASM dependency coverage remains limited as
-documented in the [Grist sandbox record](../deployment/maintenance/sandbox-final/README.md).
-An image/package inventory does not establish complete compiled-component
-coverage. Separate Proxmox and Caddy hosts are not included in this VM's scans.
+The 20:10 UTC scan and current exact reviews leave 75 high package-target
+records across ACL, two GnuTLS advisories and GRUB. The earlier host libmount
+activation dependency is closed after verified fresh mappings. GnuTLS native
+controls reproduce the defects in three installed variants; no compatible
+maintained fix was identified. ACL/GRUB continuations were stopped by automatic
+security review and remain incomplete. None is hidden by a waiver.
+
+Grist now supplements image scans with its exact Deno release-source lock and
+metadata from shipped Pyodide wheels. Runtime/configuration fingerprints reopen
+source findings after changes, and failed scans cannot inherit an old decision.
+Two DNSSEC source matches have a tested, expiring permission-boundary mitigation,
+not a library patch. Complete linked Rust and native Python/WASM inventories
+remain unavailable. See the [inventory record](../deployment/maintenance/sandbox-inventory/README.md)
+and [GnuTLS assessment](../deployment/maintenance/gnutls-assessment/README.md).
+Separate Proxmox and Caddy hosts are not included in this VM's scans.
 Future update and patch-retirement gates are in [source-patches.md](source-patches.md).
 
 ## 11 October maintenance follow-up

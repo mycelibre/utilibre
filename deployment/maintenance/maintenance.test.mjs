@@ -110,6 +110,25 @@ test('review decisions require an exact key, evidence and bounded expiry',()=>{
  assert.equal(applyDecisions([{key:good.key,status:'needs-review'}],[good],now)[0].status,'needs-review');
  assert.equal(applyDecisions([{key:good.key,status:'needs-review'}],[good],now+2*86400000)[0].status,'needs-review');
 });
+test('failed target rescans retain not-rechecked despite a matching unexpired decision',()=>{
+ const source={name:'synthetic/Cargo.lock',scope:'upstream-release-source-lock',sha256:'a'.repeat(64),status:'checked',findings:[{id:'CVE-test',package:'x',installed:'1',severity:'HIGH'}]};
+ const previous=findingsQueue({status:'checked',sources:[source]},undefined,new Date(now).toISOString());
+ const failed={status:'incomplete',sources:[{name:source.name,scope:source.scope,status:'failed'}]};
+ for(const status of ['mitigated','not-affected','confirmed']){
+  const decision=validateDecision({key:previous.items[0].key,status,reason:'Synthetic prior review; current runtime cannot be verified.',expiresAt:new Date(now+86400000).toISOString()},now);
+  const reviewed={items:applyDecisions(previous.items,[decision],now)};
+  assert.equal(reviewed.items[0].status,status);
+  const retained=retainUnrechecked(findingsQueue(failed,reviewed,new Date(now+1000).toISOString()),failed,reviewed);
+  const result=applyDecisions(retained,[decision],now+1000);
+  assert.deepEqual(result,retained);
+  assert.equal(result[0].status,'not-rechecked');
+  assert.equal(queueCounts(result).HIGH.notRechecked,1);
+  assert.equal(queueCounts(result).HIGH.mitigated,0);
+  // A later successful exact-target scan may apply the still-current review.
+  const current=findingsQueue({status:'checked',sources:[source]},{items:result},new Date(now+2000).toISOString());
+  assert.equal(applyDecisions(current.items,[decision],now+2000)[0].status,status);
+ }
+});
 test('queue counts distinguish raw occurrences, unique advisories and review states',()=>{
  const result=queueCounts([
   {id:'CVE-A',severity:'CRITICAL',status:'mitigated'},

@@ -1,0 +1,12 @@
+{
+  "name": "deno",
+  "version": "2.9.7",
+  "commit": "0c071246a412575e07423263404a5d13e7ed6aa2",
+  "source": "https://raw.githubusercontent.com/denoland/deno/0c071246a412575e07423263404a5d13e7ed6aa2/Cargo.lock",
+  "lockSha256": "4b501f05a28bf12c453593f0b558407890575b5f34b9dcbb2dc8e172d58a0c95",
+  "binarySha256": "ce6a052beb97c2b92de67077e3f3924ba7c9661ede0d8dc2f66a116a3c841f21",
+  "archiveSha256": "c6527f24f4b16031d3ae4fa9f658d5f11534c8d84ce7dc8502420280919c3490",
+  "release": "https://github.com/denoland/deno/releases/tag/v2.9.7",
+  "licenseSha256": "f62497fffecc0852960c8d3e6934b9db86d16396e9b604072e923892cae3a588",
+  "scope": "Pinned release source manifest; no assertion all optional/build/platform crates are compiled or reachable."
+}

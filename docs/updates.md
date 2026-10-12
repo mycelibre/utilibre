@@ -19,6 +19,15 @@ journeys, remaining upstream/boot-chain work and rollback links are maintained
 in the [operator work queue](work-queue.md). New releases must preserve those
 repairs or demonstrate that a tested upstream replacement supersedes them.
 
+At 20:10 UTC the scheduled scanner also completed the new runtime-bound Deno
+source and shipped-wheel inventories. Its exact reviews, 321 passing maintenance
+tests and remaining 75 high package-target records are recorded in the current
+queue. Host libmount activation is verified after the 19:04 restart. GnuTLS
+native tests confirm two unresolved defects; they do not grant a waiver.
+Failed inventories retain `not-rechecked` status despite an older decision.
+The external schedule resumed at 19:24:50 after a long gap; no 15-minute
+execution guarantee is inferred.
+
 ### Reading security counts
 
 Never report “zero vulnerabilities” from a zero **awaiting-review** count.
@@ -750,7 +759,7 @@ reports measure software/infrastructure, never visitors or their activity.
 | Useful browser tasks | Daily 03:50 | Eight sequential workflows: portal EN/ES/mobile, PDF merge/OCR, chart export, image export, ZIP round trip, QR/offline, direct PairDrop, Pollaris create/vote/export/delete |
 | Runtime/software scan | Daily 10:20 | Latest complete run: 109 unique running images / 175 containers, 510 installed host packages, 13 source manifests |
 | Native alerts | Every five minutes | Existing 59 Kuma monitors, 105 portal endpoint probes, resources, enabled native backup jobs, stale/failed reports, security queue, external workflow freshness |
-| External availability | GitHub cron :07/:22/:37/:52 | Eight fixed public HTTPS endpoints/content or exact same-origin identity redirect |
+| External availability | GitHub cron :11/:26/:41/:56 | Eight fixed public HTTPS endpoints/content or exact same-origin identity redirect |
 | External forced TURN transfer | Sunday 08:47 | Existing two-browser exact-byte test, forced TLS relay, four-minute cap |
 | Representative recovery | Sunday 12:25 | Native FreshRSS synthetic account/article restore plus encrypted Storage Box fictional-file round trip |
 | Operator digest | Monday 13:10 | Existing verified-STARTTLS relay to the fixed operator; no new notification service |

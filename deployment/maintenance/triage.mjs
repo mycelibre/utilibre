@@ -12,6 +12,9 @@ export function validateDecision(value,now=Date.now()){
 export function applyDecisions(items,decisions,now=Date.now()){
  const byKey=new Map(decisions.map(x=>[x.key,x]));
  return items.map(item=>{
+  // A retained observation is historical until its target is scanned again.
+  // Even an unexpired decision cannot establish today's runtime boundary.
+  if(item.status==='not-rechecked')return item;
   const decision=byKey.get(item.key);
   if(!decision||Date.parse(decision.expiresAt)<=now)return item;
   try{

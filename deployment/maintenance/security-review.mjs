@@ -7,6 +7,8 @@ import {mkdir,readFile,writeFile,rename,copyFile,mkdtemp,rm,statfs} from 'node:f
 import {createHash} from 'node:crypto';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import path from 'node:path';
+import {collectSandboxSources,denoLockPath} from './sandbox-inventory/collect.mjs';
+import {sourceScanStatus} from './sandbox-inventory/source-scan-status.mjs';
 const exec=promisify(execFile), root=fileURLToPath(new URL('../../',import.meta.url));
 const directory='/var/lib/utilibre-maintenance', cache='/var/cache/utilibre-security';
 const binary='/opt/utilibre/maintenance/bin/trivy';
@@ -65,7 +67,7 @@ async function command(program,args,timeout=600000){
 async function atomic(file,data){await writeFile(file+'.tmp',JSON.stringify(data,null,2)+'\n',{mode:0o600});await rename(file+'.tmp',file);}
 export async function run(){
  await mkdir(directory,{recursive:true,mode:0o700});await mkdir(cache,{recursive:true,mode:0o700});
- const started=Date.now(),report={date:new Date().toISOString(),status:'running',scanner:'Trivy 0.75.0',images:[],sources:[],limitations:['No exploitation or reachability proof. Findings require review; patched vendored code may need evidence-backed exceptions.','Image scans do not inspect mounted user data or a container writable layer.','Source-lock checks cover the listed code manifests, not every minified browser bundle.','Package inventory is not complete compiled-component coverage: Grist\'s official Deno binary has no recoverable Rust-crate inventory/release SBOM; its Pyodide Python/WASM components also retain upstream coverage limits. See deployment/maintenance/sandbox-final/README.md.','Separate Caddy/Proxmox hosts are outside this VM scan.']};
+ const started=Date.now(),report={date:new Date().toISOString(),status:'running',scanner:'Trivy 0.75.0',images:[],sources:[],limitations:['No exploitation or reachability proof. Findings require review; patched vendored code may need evidence-backed exceptions.','Image scans do not inspect mounted user data or a container writable layer.','Source-lock checks cover the listed code manifests, not every minified browser bundle.','Grist supplements image scans with a runtime-bound Deno release-source lock and shipped Pyodide wheel metadata. This is not a linked Rust-crate SBOM and does not inventory native Python/WASM components. See deployment/maintenance/sandbox-inventory/README.md.','Separate Caddy/Proxmox hosts are outside this VM scan.']};
  const latest=directory+'/security.json';
  await atomic(directory+'/security-progress.json',report);
  let scratch;
@@ -110,13 +112,16 @@ export async function run(){
   // Explicit code-only roots. Extra/missing source manifests are reported, not
   // interpreted as proof of what is bundled in a deployed static application.
   const tracked=(await command('git',['ls-files','-z'])).split('\0').filter(x=>/(^|\/)((?:security-)?package-lock\.json|(?:auth|linkding)-python-requirements\.txt|pnpm-lock\.yaml|yarn\.lock|composer\.lock|Cargo\.lock|go\.mod|go\.sum|poetry\.lock|uv\.lock)$/.test(x));
-  const sources=[...tracked.map(p=>({path:path.join(root,p),name:p,scope:'tracked-build-input'})),{path:'/opt/utilibre/src/cryptpad/package-lock.json',name:'cryptpad/package-lock.json',scope:'mounted-runtime-code'}];
+  const sources=[...tracked.filter(p=>p!==denoLockPath).map(p=>({path:path.join(root,p),name:p,scope:'tracked-build-input'})),{path:'/opt/utilibre/src/cryptpad/package-lock.json',name:'cryptpad/package-lock.json',scope:'mounted-runtime-code'},...await collectSandboxSources(command)];
   for(const source of sources){
+   if(source.status==='failed'){report.sources.push(source);continue;}
    try{
-    const bytes=await readFile(source.path);if(bytes.length>10*1024**2)throw Error('Oversized manifest');
+    const bytes=source.bytes||await readFile(source.path);if(bytes.length>10*1024**2)throw Error('Oversized manifest');
     const dest=path.join(scratch,'manifest-'+report.sources.length);await mkdir(dest);
-    await writeFile(path.join(dest,scannerManifestName(source.path)),bytes);
-    report.sources.push({name:source.name,scope:source.scope,sha256:createHash('sha256').update(bytes).digest('hex'),status:'checked',...await scan('fs',dest,['--pkg-types','library'])});
+    await writeFile(path.join(dest,source.filename||scannerManifestName(source.path)),bytes);
+    const evidence=Object.fromEntries(['provenance','binding','payloads','note'].filter(k=>source[k]).map(k=>[k,source[k]]));
+    const result=await scan('fs',dest,['--pkg-types','library']);
+    report.sources.push({name:source.name,scope:source.scope,...evidence,sha256:createHash('sha256').update(bytes).digest('hex'),...result,status:sourceScanStatus(source,result)});
    }catch{report.sources.push({name:source.name,scope:source.scope,status:'failed'});}
   }
   report.status=report.images.some(x=>x.status!=='checked')||report.sources.some(x=>x.status!=='checked')?'incomplete':'checked';

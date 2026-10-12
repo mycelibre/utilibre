@@ -107,6 +107,14 @@ must not disappear from maintenance reporting. Existing npm Deno loader files
 retain Grist's original wrapper version; the pinned binary runtime and its
 manifest provide the authoritative executed version.
 
+The 12 October follow-up adds the exact Deno release-source lock and metadata
+from 19 shipped Pyodide wheels to scheduled scanning. The lock is bound to the
+running image, binary, wrapper and sandbox configuration. Two high DNSSEC
+source findings have narrow permission-boundary reviews; lower-severity
+observations remain. This narrows the inventory gap without claiming a linked
+Rust SBOM or coverage of native Python/WASM components. See the
+[inventory and revalidation rules](../sandbox-inventory/README.md).
+
 Rollback: restore the predecessor image and `GRIST_SANDBOX_FLAVOR=gvisor`, remove
 the Deno command/bypass overrides and its extra cache mount, then recreate only
 Grist and confirm health plus the authenticated native formula journey. Do not

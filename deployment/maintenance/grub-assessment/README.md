@@ -5,6 +5,22 @@ CVE-2025-61662 only; no GRUB package install, EFI/NVRAM write, `grub-install`,
 `update-grub`, VM reboot or live boot test was performed. QEMU guest-agent's
 separate short restart window does not authorize a bootloader change.
 
+## Later host activation and interrupted staging
+
+At 19:04 UTC the VM restarted outside this assessment. The read-only follow-up
+confirmed the expected kernel, an active guest agent and current libmount
+mappings, with no old deleted-library mappings in host processes. That closes
+the separate library-activation dependency. It does not repair GRUB or establish
+a control-plane filesystem-thaw/boot-restore test.
+
+A later isolated candidate build acquired authenticated QEMU/OVMF tooling only
+inside a disposable compiler container. Automatic security review rejected the
+continuation because of possible cybersecurity risk. No completed native boot
+test or releasable candidate is recorded, and no production boot file changed.
+The unfinished prototypes and receipts are retained privately, not presented
+as tested release scripts. The idle compiler containers were stopped and kept.
+The deployment prerequisites below remain open.
+
 ## What is actually installed
 
 The native `grub-common`, `grub2-common`, `grub-pc-bin`,
@@ -64,8 +80,8 @@ indexes and unpacked privately. `patch --dry-run --fuzz=0` succeeds with **five
 line offsets in all three hunks**, not zero offsets. The matched contexts are
 the same init/fini handlers in `grub-core/gettext/gettext.c`. No patch was applied
 to the live source/package/bootloader. A bounded native-source backport build is
-plausible without changing the GRUB major version, libc or kernel, but it is not
-built or boot-tested here.
+plausible without changing the GRUB major version, libc or kernel, but no completed candidate build or boot test is
+recorded.
 
 Existing upstream gettext checks (`gettext_strings_test`, `grub_script_gettext`)
 can be used in isolated staging, along with the upstream check suite and a

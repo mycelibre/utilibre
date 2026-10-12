@@ -1,5 +1,78 @@
 # Operator work queue — reconciled 12 October 2026
 
+## Current checkpoint, 12 October, 20:11 UTC
+
+This supersedes the earlier counts and activation notes. Independent work in
+this maintenance follow-up is implemented; the four security dependencies in
+the table below are unresolved and are not marked complete.
+
+- The VM had restarted at 19:04. Read-only checks confirmed current libmount
+  mappings and an active guest agent, closing both host-library activation
+  records. No reboot or bootloader write was performed by this follow-up.
+- Scheduled scanning now includes Deno 2.9.7's pinned 1,128-package release
+  source lock and 19 shipped Grist/Pyodide wheels. The source lock is bound to
+  the running image, wrapper, executable and seven sandbox settings. Changed
+  code/configuration reopens review. Failed or zero-package rescans cannot
+  reuse old mitigation decisions. These inventories are not a compiled Rust
+  SBOM or coverage of native Python/WASM components.
+- The actual systemd scan completed at **20:10:00 UTC** in 65 seconds:
+  **109 images, 175 containers, 57 source inventories and host packages**;
+  no failed targets. Raw findings are **40 critical / 2,734 high package-target
+  records**. Exact current reviews leave **0 critical / 75 high unresolved**,
+  across the four IDs below. Raw records and lower-severity findings remain.
+- Two new high DNSSEC matches in Deno's release lock have narrow, seven-day
+  deployment mitigations. Native DNS/TCP/HTTP calls reject with `NotCapable`,
+  and Grist's native Pyodide echo and no-network/subprocess/FFI launch checks
+  pass in isolated copies of the running image. The installed dependencies
+  are not claimed patched. The wheels have no scanner findings.
+- **321 maintenance tests pass**, with no failures or skips. All 105 configured
+  readiness probes pass at 20:11:20 UTC, all 32 Utilibre timers are active,
+  and there are no failed systemd units or unhealthy running containers.
+  The read-only alert check reports only the unresolved security queue.
+  This is not a new full browser, capacity or disaster-recovery test.
+- GnuTLS's three installed variants passed the baseline reproduction gate:
+  **45 observations, including 24 TLS handshakes**. Baseline success confirms
+  the reported defects; it is not a repaired result. The independent controls
+  and future fixed-behavior gate are preserved for a compatible vendor fix.
+- The external GitHub check resumed with genuine scheduled success
+  [38297449725](https://github.com/mycelibre/utilibre/actions/runs/38297449725)
+  at **19:24:50 UTC**. All eight checks passed. The preceding scheduled success
+  was 09:42:44, so this clears the current freshness alert without establishing
+  reliable 15-minute execution. The schedule and 90-minute alert remain active.
+- Removed only two completed compiler containers' reproducible writable layers,
+  reclaiming about 1.7 GiB. Sources, outputs, images, rollback files and user
+  data remain. Root has **10.67 GiB free**. Two interrupted idle builders were
+  stopped and retained; backup schedules and retention are unchanged.
+
+| Unresolved high records | Evidence and remaining dependency |
+| --- | --- |
+| ACL CVE-2026-54369: 30 | Existing tar/rsync callers still need a compatible legacy-pathname API migration and native archive/copy regressions. Automatic security review interrupted the caller investigation; no repaired caller is claimed deployed. |
+| GnuTLS CVE-2026-88647: 20 | Malformed SRV identities still bypass the older hostname fix in all three tested variants. No maintained compatible correction was identified. |
+| GnuTLS CVE-2026-88648: 20 | Native name-constraint tests confirm both bypasses and an incorrect rejection. A compatible correction must preserve valid certificate handling. |
+| GRUB CVE-2025-61662: 5 | No completed native/EFI candidate test. Automatic security review interrupted staging; deployment also needs the documented boot-chain recovery prerequisites. |
+
+Automatic security review rejected the ACL and GRUB continuations because of
+possible cybersecurity risk. Their unfinished prototypes are retained privately
+under `/var/lib/utilibre-maintenance/interrupted-prototypes-20261012/`; no
+security disposition or production change is inferred from interrupted work.
+The rejection was not bypassed by another worker or tool.
+
+Implementation and evidence:
+[sandbox inventory](../deployment/maintenance/sandbox-inventory/README.md),
+[GnuTLS assessment](../deployment/maintenance/gnutls-assessment/README.md),
+[boot-chain assessment](../deployment/maintenance/grub-assessment/README.md).
+Private scan, native checks, test transcript and final observation are under
+`/var/lib/utilibre-maintenance/sandbox-inventory-20261012/`; GnuTLS evidence is
+under `/opt/utilibre/reports/gnutls-review-20261012/`.
+
+Provider corrections below are already deployed. Exact edge/provider/mailbox
+retention, upstream licence-scope conflicts, public LibreMDB permission, external
+listing decisions and tests requiring owner equipment/control-plane access
+remain explicitly bounded in their existing records. No unsupported claim,
+blanket exemption, new provider, new application or outside message was added.
+The existing 112-project upstream review has no failed lookup or unreviewed
+high/critical application advisory; that does not clear dependency findings.
+
 ## Provider facts published, 12 October, 19:20 UTC
 
 The renewed Cloudflare reads work. GET-only configuration and DNS checks found
@@ -38,8 +111,7 @@ are in [the readiness record](readiness-probes-2026-10-09.md).
 
 ## Final native repair checkpoint — 12 October, 18:51 UTC
 
-This is the current checkpoint; earlier activation notes and counts below are
-historical. All prepared compatible releases in this batch are **deployed**.
+This is the historical 18:51 checkpoint; the current result is above. All prepared compatible releases in this batch are **deployed**.
 It is not a claim that all vulnerabilities or coverage gaps are resolved.
 
 In addition to the 18:04 releases below, all eight Bookworm mount overlays
@@ -97,7 +169,7 @@ Their sources, outputs, images, rollback artifacts, volumes and user data remain
 No broad prune or service-data deletion occurred; subsequent builds consumed
 some of the recovered space.
 
-### Remaining dependencies — no false clearance
+### Dependencies recorded at 18:51
 
 | Remaining high records | Why still open | Exact next dependency |
 | --- | --- | --- |
@@ -110,8 +182,9 @@ The earlier guest-agent window ended at 16:07. Do not infer an active restart
 window from it. A normal restart activates libmount; it does **not** repair
 GRUB, ACL or GnuTLS. See the [boot-chain assessment](../deployment/maintenance/grub-assessment/README.md).
 
-The independent GitHub workflow remains active but overdue: its last genuine
-scheduled success was **09:42:44 UTC** when checked at 18:39. A manual success
+At 18:39 the independent GitHub workflow was active but overdue: its last
+genuine scheduled success was **09:42:44 UTC**. The later scheduled success is
+recorded in the current checkpoint above. A manual success
 is not recurrence evidence. Local scheduling remains active. Compiled Grist
 Deno Rust and Pyodide/WASM inventory limits, and the separate Caddy/Proxmox
 hosts, remain outside complete package coverage; zero failed scan targets does
