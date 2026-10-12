@@ -7,6 +7,41 @@ remain reviewed rollouts. Production never runs a floating `latest` tag.
 
 ## Maintenance release — 12 October 2026
 
+**01:55 UTC follow-up:** completed another ten application groups / 13 roles:
+Wishlist, Spliit, Rallly, Kuma, Grist, RSSHub, restricted SimpleLogin, FerretDB,
+Anubis and Authentik. OpenSSH's narrow upstream client lifetime repair is also
+installed using stable Debian sources, without changing existing SSH keys or
+configuration. Root was expanded online from 150 to 170 GiB; about 24 GiB is
+free after the builds. The 15 GiB temporary-content disk and existing data,
+access/retention policies, rollback images and credentials were preserved.
+
+Native application, import/export/isolation/restore checks are recorded per
+service, with their exact limitations, in the
+[closure release](../deployment/maintenance/closure-review/README.md). Authentik's
+crypto build passed 4,911 upstream tests plus fresh password/TOTP/OAuth/JWKS
+checks; its original FIPS provider/configuration and package holds are retained.
+All ten groups passed unchanged-configuration/exact-image/healthy-role gates.
+The maintenance suite passed 75/75, with additional vendor/advisory checks.
+Eight public TLS/HTTP entry-point checks passed. The EN desktop/ES mobile-emulated
+portal test passed keyboard controls, examples/downloads, guide anchors and text
+reflow, with no page errors or external requests; not physical phone coverage.
+
+The complete **01:49:19** scan covers 109 images, 175 containers, 510 host packages
+and 55 source manifests. Raw 42 critical / 2,777 high; reviewed queue **3 critical /
+1,627 high**, none with a reported fixed version. The earlier 48-record known-fix
+batch is addressed, using actual repairs or exact expiring payload/applicability
+proof. Vendor-unfixed findings and compiled/separate-host limitations remain;
+this is not a clean bill of security. Wallabag's existing OTPHP fix passed 14
+synthetic checks. The triage CLI circular-import failure is fixed and tested.
+
+The additive [matching source download](https://tools.utilibre.org/utilibre-source/security-closure-20261012-source.tar.gz)
+passed public HTTPS SHA-256 verification:
+`81ef411b304bb7dd845806a918a31ba622846b6d9449ef31e1cd21c03e311d23`.
+It includes full patched Anubis/FerretDB trees, exact dependency archives,
+notices, source patches and recipes. Use with the unchanged application offers
+and integration archive. Source delivery and native tests do not clear the
+independent GitHub cron-delivery gap; that warning remains open.
+
 **01:03 UTC follow-up:** after the owner authorized the held restart, Rustpad's
 tested auditable image, Docker Engine/CLI/rootless 29.9.0, containerd 2.4.1-2,
 Buildx 0.38.0 and Compose 5.6.0 were deployed. All 175 previous running

@@ -1,0 +1,8 @@
+--- a/app/server/lib/ActiveDoc.ts
++++ b/app/server/lib/ActiveDoc.ts
+@@ -189,1 +189,1 @@
+-import imageSize from "image-size";
++import { imageSizeFromFile } from "image-size/fromFile";
+@@ -2946,1 +2946,1 @@
+-          dimensions = await bluebird.fromCallback((cb: any) => imageSize(fileData.absPath, cb));
++          dimensions = await imageSizeFromFile(fileData.absPath);

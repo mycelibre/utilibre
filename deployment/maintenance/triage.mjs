@@ -37,4 +37,9 @@ export async function run(args=process.argv.slice(2)){
  const {run:buildQueue}=await import('./build-queue.mjs');await buildQueue();
  console.log('Exact finding review recorded; expires automatically. Raw scan remains unchanged.');
 }
-if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)await run();
+// Let this module finish evaluating before the CLI dynamically loads the queue
+// builder, which imports applyDecisions from here. A top-level await deadlocks
+// that import cycle after saving a decision but before rebuilding the queue.
+if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)run().catch(error=>{
+ console.error(error.message);process.exitCode=1;
+});

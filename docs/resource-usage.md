@@ -1,5 +1,23 @@
 # Resource usage and operating limits
 
+## Root disk expanded — 12 October 2026
+
+The operator had enlarged VM 144's `scsi0` device from 150 to 170 GiB. A dry run
+confirmed 20 GiB of contiguous free space after root; partition 1 and mounted ext4
+were grown online. Root reported **168 GiB total, 134 GiB used, 28 GiB available,
+84% used**, immediately after expansion. No service stop/reboot or deletion was
+needed. Root start/UUID and both boot partitions are unchanged; `sfdisk --verify`
+passed. The separate 15 GiB temporary-data disk was not resized or changed.
+After the maintenance builds/source packaging, about **24 GiB remained free**;
+the operating floor is still 8 GiB. Build artifacts and recovery images remain.
+
+Private before/after metadata and GPT backup:
+`/opt/utilibre/reports/root-growth-20261012-Dh8zLT/`. The filesystem has 44,531,707
+4 KiB blocks. The GPT backup is not a data backup: never restore the smaller
+partition table over this expanded filesystem. This closes the low-headroom
+blocker for the current bounded maintenance builds, not a promise of unlimited
+future storage or permission to remove recovery images.
+
 ## Root disk expanded — 10 October 2026
 
 The virtual disk already exposed 150 GiB, but root still occupied about 130 GiB.

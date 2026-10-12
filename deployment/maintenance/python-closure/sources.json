@@ -1,0 +1,24 @@
+[
+  {
+    "file": "setuptools-80.10.2-py3-none-any.whl",
+    "url": "https://files.pythonhosted.org/packages/94/b8/f1f62a5e3c0ad2ff1d189590bfa4c46b4f3b6e49cef6f26c6ee4e575394d/setuptools-80.10.2-py3-none-any.whl",
+    "sha256": "95b30ddfb717250edb492926c92b5221f7ef3fbcc2b07579bcd4a27da21d0173"
+  },
+  {
+    "file": "setuptools-84.0.0-py3-none-any.whl",
+    "url": "https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl",
+    "sha256": "51a52592b3b99e102b609654876bd65f19f999935166d1352678931132b0c670"
+  },
+  {
+    "file": "flask_1.1.2-2+deb11u1.debian.tar.xz",
+    "url": "https://archive.debian.org/debian-security/pool/updates/main/f/flask/flask_1.1.2-2+deb11u1.debian.tar.xz",
+    "sha256": "c171b52fb19eb00ea566b33954200c587edff620b838b1f7d5a4c59df17b25a0",
+    "signedDsc": "flask_1.1.2-2+deb11u1.dsc"
+  },
+  {
+    "file": "python-werkzeug_1.0.1+dfsg1-2+deb11u2.debian.tar.xz",
+    "url": "https://archive.debian.org/debian-security/pool/updates/main/p/python-werkzeug/python-werkzeug_1.0.1+dfsg1-2+deb11u2.debian.tar.xz",
+    "sha256": "1394414af39bde052c813f250dfd03da932dfbd4495820221c9dea59027b63de",
+    "signedDsc": "python-werkzeug_1.0.1+dfsg1-2+deb11u2.dsc"
+  }
+]

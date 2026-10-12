@@ -4,7 +4,8 @@ import http from 'node:http';
 import cp from 'node:child_process';
 import fs from 'node:fs/promises';
 import {chromium} from '../../../portal/node_modules/playwright/index.mjs';
-const image='utilibre-anubis:1.27.0-go-security-20261011';
+const closure=process.argv[2]==='--closure';assert(!process.argv[2]||closure);
+const image=closure?'utilibre-anubis:1.27.0-closure-20261012':'utilibre-anubis:1.27.0-go-security-20261011';
 const name='maintenance-anubis-native';
 const here=new URL('.',import.meta.url).pathname;
 const root='/var/lib/utilibre-maintenance/go-leaf-final-20261011/output';
@@ -37,6 +38,6 @@ try{
  const receipt={imageId:docker('image','inspect',image,'--format','{{.Id}}'),passed:true,
   nativeAllowAndDeny:true,twoIndependentBrowserPowChallenges:true,authenticatedReload:true,externalBrowserCalls:0,
   environment:'Headless Chromium, isolated synthetic loopback upstream; production policies unchanged'};
- await fs.writeFile(root+'/anubis-native.json',JSON.stringify(receipt,null,2)+'\n',{mode:0o600});
+ await fs.writeFile(closure?'/var/lib/utilibre-maintenance/go-closure-20261012/anubis/native.json':root+'/anubis-native.json',JSON.stringify({...receipt,date:new Date().toISOString()},null,2)+'\n',{mode:0o600});
  console.log(JSON.stringify(receipt));
 }finally{await browser?.close();await new Promise(r=>server.close(r));try{docker('rm','-f',name);}catch{}}

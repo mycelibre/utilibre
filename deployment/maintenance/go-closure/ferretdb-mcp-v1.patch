@@ -1,0 +1,67 @@
+--- a/internal/mcp/find.go
++++ b/internal/mcp/find.go
+@@ -31,13 +31,14 @@
+-func (s *server) find(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[findArgs]) (*mcp.CallToolResult, error) { //nolint:lll // for readability
++func (s *server) find(ctx context.Context, _ *mcp.CallToolRequest, args findArgs) (*mcp.CallToolResult, any, error) { //nolint:lll // for readability
+ 	if s.l.Enabled(ctx, slog.LevelDebug) {
+-		s.l.DebugContext(ctx, "find", slog.Any("params", params))
++		s.l.DebugContext(ctx, "find", slog.Any("params", args))
+ 	}
+ 
+ 	req := wirebson.MustDocument(
+-		"find", params.Arguments.Collection,
+-		"limit", params.Arguments.Limit,
+-		"$db", params.Arguments.Database,
++		"find", args.Collection,
++		"limit", args.Limit,
++		"$db", args.Database,
+ 	)
+ 
+-	return s.handle(ctx, req)
++	result, err := s.handle(ctx, req)
++	return result, nil, err
+ }
+--- a/internal/mcp/listcollections.go
++++ b/internal/mcp/listcollections.go
+@@ -29,12 +29,13 @@
+-func (s *server) listCollections(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[listCollectionsArgs]) (*mcp.CallToolResult, error) { //nolint:lll // for readability
++func (s *server) listCollections(ctx context.Context, _ *mcp.CallToolRequest, args listCollectionsArgs) (*mcp.CallToolResult, any, error) { //nolint:lll // for readability
+ 	if s.l.Enabled(ctx, slog.LevelDebug) {
+-		s.l.DebugContext(ctx, "listCollections", slog.Any("params", params))
++		s.l.DebugContext(ctx, "listCollections", slog.Any("params", args))
+ 	}
+ 
+ 	req := wirebson.MustDocument(
+ 		"listCollections", int64(1),
+-		"$db", params.Arguments.Database,
++		"$db", args.Database,
+ 	)
+ 
+-	return s.handle(ctx, req)
++	result, err := s.handle(ctx, req)
++	return result, nil, err
+ }
+--- a/internal/mcp/listdatabases.go
++++ b/internal/mcp/listdatabases.go
+@@ -24,12 +24,13 @@
+-func (s *server) listDatabases(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[any]) (*mcp.CallToolResult, error) { //nolint:lll // for readability
++func (s *server) listDatabases(ctx context.Context, _ *mcp.CallToolRequest, args struct{}) (*mcp.CallToolResult, any, error) { //nolint:lll // for readability
+ 	if s.l.Enabled(ctx, slog.LevelDebug) {
+-		s.l.DebugContext(ctx, "listDatabases", slog.Any("params", params))
++		s.l.DebugContext(ctx, "listDatabases", slog.Any("params", args))
+ 	}
+ 
+ 	req := wirebson.MustDocument(
+ 		"listDatabases", int32(1),
+ 		"$db", "admin",
+ 	)
+ 
+-	return s.handle(ctx, req)
++	result, err := s.handle(ctx, req)
++	return result, nil, err
+ }
+--- a/internal/mcp/server.go
++++ b/internal/mcp/server.go
+@@ -103,1 +103,1 @@
+-	res := &mcp.CallToolResultFor[any]{
++	res := &mcp.CallToolResult{

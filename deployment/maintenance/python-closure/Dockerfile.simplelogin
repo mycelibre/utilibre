@@ -1,0 +1,11 @@
+FROM utilibre-simplelogin:4.82.4-p8-os-security-20261011
+USER root
+COPY setuptools-80.10.2-py3-none-any.whl /tmp/python-closure/
+COPY *.patch patches.json /tmp/python-closure/
+COPY apply-simplelogin.py /tmp/python-closure/
+RUN UV_NO_CACHE=1 /usr/bin/uv --no-config pip install --python /code/.venv/bin/python --no-deps --no-index /tmp/python-closure/setuptools-80.10.2-py3-none-any.whl \
+ && UV_NO_CACHE=1 /usr/bin/uv --no-config pip uninstall --python /code/.venv/bin/python virtualenv pre-commit \
+ && UV_NO_CACHE=1 /usr/bin/uv --no-config pip check --python /code/.venv/bin/python \
+ && /code/.venv/bin/python /tmp/python-closure/apply-simplelogin.py \
+ && rm -rf /tmp/python-closure
+USER 1000:1000

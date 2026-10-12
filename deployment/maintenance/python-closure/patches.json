@@ -1,0 +1,32 @@
+[
+  {
+    "file": "CVE-2023-30861.patch",
+    "originalSha256": "ae2e0d2f9dc0a7cf285629ffd6bd0e00d5f5573ab8131859068720ce5b497d19",
+    "runtimeSha256": "eba16dde90bc7c179018921968fddea9147305b93c09326db120cf321379464e",
+    "archive": "flask_1.1.2-2+deb11u1.debian.tar.xz"
+  },
+  {
+    "file": "don-t-strip-leading-when-parsing-cookie.patch",
+    "originalSha256": "cd653ea3f5f404e6495a1ac0a3626165e4e93a18622a299bff0ffc32632d3cad",
+    "runtimeSha256": "6874fc7b40bf01d1331fe04e7b0f7628dc8c5e6ce710216a8f949f4e56fb4a49",
+    "archive": "python-werkzeug_1.0.1+dfsg1-2+deb11u2.debian.tar.xz"
+  },
+  {
+    "file": "limit-the-maximum-number-of-multipart-form-parts.patch",
+    "originalSha256": "80b186dc652705726fe086da424e08a7f0ba85cb0459d281557d9fc8e531650d",
+    "runtimeSha256": "d61908babe92a958ecfdbbc98ba2eabbcadd8072051e036c7c20076e11380ee5",
+    "archive": "python-werkzeug_1.0.1+dfsg1-2+deb11u2.debian.tar.xz"
+  },
+  {
+    "file": "CVE-2024-34069-1.patch",
+    "originalSha256": "3f828fffe6845c10132fe0545b85968ff5ce7ba128a0e3c6fab3c522c8d8b4ae",
+    "runtimeSha256": "af4939cdaa55d6b8e66aaf4939fa97bba0ac24482d3b915bc0b352f1703ee628",
+    "archive": "python-werkzeug_1.0.1+dfsg1-2+deb11u2.debian.tar.xz"
+  },
+  {
+    "file": "CVE-2024-34069-2.patch",
+    "originalSha256": "2096520726f030b19d6cb97dcb08ace235a4520cfb11bc3087f4dee8fc8c3760",
+    "runtimeSha256": "4aff12ad9a90dff43c769d1d23094e675c069df6c335e6fc5d3df06bd7ed2a1f",
+    "archive": "python-werkzeug_1.0.1+dfsg1-2+deb11u2.debian.tar.xz"
+  }
+]

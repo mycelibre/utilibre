@@ -6,6 +6,8 @@ sha256sum -c /reviewed/source.sha256
 mkdir -p /work/source
 tar -xzf /input/source.tar.gz -C /work/source --strip-components=1
 cd /work/source
+mkdir -p .git
+patch --batch --fuzz=0 -p1 -i /reviewed/mcp-v1.patch
 export GOPATH=/work/gopath GOCACHE=/work/gocache GOTOOLCHAIN=local
 export CGO_ENABLED=0 GOAMD64=v1 GOMAXPROCS=2 GOMEMLIMIT=2GiB
 export GOPROXY=https://proxy.golang.org
@@ -23,8 +25,8 @@ else
     google.golang.org/grpc@v1.83.2
   go mod tidy
 fi
-# FerretDB 2.7.0 uses the pre-1.0 MCP API. Do not fork that unused feature:
-# keep its separate findings open and require the native MCP listener disabled.
+# The four-handler SDK 1.4.1 signature adapter is reviewed and tested in
+# ../go-closure/. The production MCP listener remains disabled.
 go mod download
 go mod verify
 cp go.mod go.sum /output/

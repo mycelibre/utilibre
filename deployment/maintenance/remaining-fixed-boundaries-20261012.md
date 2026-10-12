@@ -1,5 +1,23 @@
 # Fixed-version findings: bounded classification, 12 October 2026
 
+## Current disposition, 01:55 UTC
+
+**All 48 fixed-version critical/high records remaining at the preceding checkpoint
+are addressed.** Ten image groups / 13 roles and the coupled host SSH packages
+are deployed; Wallabag's existing backport is reverified. The **01:49:19** complete
+rescan and exact expiring reviews show **zero pending critical/high records with
+a scanner-reported fixed version**. There are still **3 critical / 1,627 high**
+pending records without reported fixes. Those are not waived or proven exploits.
+
+[Exact changes, source provenance, native tests and recovery](closure-review/README.md).
+The table below is historical: major library compatibility was tested, the
+Grist/MCP adapters are committed, SimpleLogin's real framework backports passed,
+and Authentik retains its original FIPS module. This does not authorize opening
+SimpleLogin, claim complete compiled-code coverage, or patch the running kernel.
+The independent GitHub scheduling gap remains separate and unclosed.
+
+## Original classification checkpoint
+
 This is the **00:22:04 UTC scan checkpoint**, not a declaration that every
 finding below is still present after subsequent releases. The private queue
 had 1,691 unclosed critical/high records: 1,632 without a reported fixed

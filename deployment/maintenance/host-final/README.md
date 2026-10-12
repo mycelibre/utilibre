@@ -43,11 +43,14 @@ Current vendor references, checked 11 October:
 
 ## Separate host constraints
 
-Remaining host findings are **not** cleared by this release. In particular,
-Debian's installed OpenSSH client still has a
-[client-side key-reexchange finding](https://security-tracker.debian.org/tracker/CVE-2026-60002).
-The current sid binary requires glibc 2.42 and conflicts with the installed
-server packaging; a blind sid install would not be a safe client-only repair.
+Remaining host findings are **not** cleared by the JWT release. The OpenSSH
+[client-side key-reexchange finding](https://security-tracker.debian.org/tracker/CVE-2026-60002)
+was subsequently repaired at **01:34 UTC on 12 October** with the exact upstream
+lifetime backport over signed stable sources: `1:10.0p1-7+deb13u4+utilibre1`.
+Native tests, repeated rekeys and host-key rejection passed. Keys/configuration
+are unchanged. [Source, checks and rollback](../closure-review/README.md).
+The sid binary requires glibc 2.42 and conflicts with server packaging; it was
+not used, and no distribution upgrade occurred.
 The six Docker/containerd/plugin updates were initially held for Rustpad's
 memory-only work. The owner subsequently authorized their coordinated rollout;
 see the 12 October release below. No bulk distribution upgrade was performed.

@@ -1,6 +1,6 @@
 name: utilibre-simplelogin
 x-app: &app
-  image: utilibre-simplelogin:4.82.4-p8-os-security-20261011
+  image: utilibre-simplelogin:4.82.4-python-closure-20261012
   user: '1000:1000'
   read_only: true
   cap_drop: [ALL]

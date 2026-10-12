@@ -1,0 +1,7 @@
+FROM utilibre-grist:1.7.21-js-closure-20261012
+USER root
+COPY setuptools-84.0.0-py3-none-any.whl /tmp/python-closure/
+RUN python -m pip install --no-cache-dir --disable-pip-version-check --no-index --no-deps /tmp/python-closure/setuptools-84.0.0-py3-none-any.whl \
+ && python -m pip check \
+ && rm -rf /tmp/python-closure
+USER 1000:1000

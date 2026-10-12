@@ -32,7 +32,7 @@ services:
       retries: 6
   ferretdb:
     <<: *bounded
-    image: utilibre-ferretdb:libraries-security-20261011
+    image: utilibre-ferretdb:2.7.0-mcp-closure-20261012
     cpus: 0.5
     mem_limit: 256m
     tmpfs: ['/state:size=4m,mode=1777']

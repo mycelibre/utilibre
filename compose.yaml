@@ -343,7 +343,7 @@ services:
     ulimits: {core: 0}
     memswap_limit: ${ANUBIS_MEMORY_LIMIT:-128M}
     profiles: ["privacy-frontends"]
-    image: utilibre-anubis:1.27.0-go-security-20261011
+    image: utilibre-anubis:1.27.0-closure-20261012
     init: true
     restart: unless-stopped
     read_only: true

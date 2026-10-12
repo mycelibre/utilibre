@@ -1,6 +1,54 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Current boundary — 12 October, 01:03 UTC
+## Current boundary — 12 October, 01:55 UTC
+
+The root disk is expanded: **170 GiB device / about 168 GiB usable**, with
+approximately **24 GiB free** after the builds. The separate 15 GiB temporary
+disk, PrivateBin allocation and backup exclusion are unchanged. No reboot,
+user-data deletion or rollback-image removal was needed.
+
+Ten further application groups / **13 roles** are deployed and healthy:
+Wishlist, Spliit, Rallly, Kuma, Grist, RSSHub, restricted SimpleLogin, FerretDB,
+Anubis and both Authentik roles. The host OpenSSH client lifetime backport is
+installed with its two coupled packages; existing keys/configuration are
+unchanged. Wallabag's existing OTPHP backport was independently reverified.
+[Exact versions, native checks, limitations and recovery](../deployment/maintenance/closure-review/README.md).
+
+The complete **01:49:19 UTC** scan covers 109 images / 175 containers,
+510 host packages and 55 source manifests. Raw: 42 critical / 2,777 high
+package-target occurrences. After exact, expiring payload/component reviews:
+**3 critical / 1,627 high remain pending**, all without a scanner-reported
+fixed version. **Zero pending critical/high records have a reported fixed
+version.** This closes the earlier 48-record known-fix batch; it does not mean
+zero vulnerabilities or verified non-exploitability. Version-unchanged signed
+backports are verified against real payloads, not ignored by package name.
+
+Remaining boundaries:
+
+1. **Vendor-unfixed/exposure review:** the three host LMDB critical records
+   remain visible. Dependency high records, compiled Deno/WASM inventory limits
+   and separate Proxmox/edge coverage remain. The running kernel's unused ksmbd
+   defect is separately documented; reviewing `linux-libc-dev` headers does not
+   patch the kernel. Keep the mitigation and wait for a compatible kernel update.
+   SimpleLogin's legacy-framework restriction remains; no public activation.
+2. **Independent schedule:** GitHub still showed no genuine scheduled run newer
+   than `38174272872` (11 October, 20:56 UTC) at 01:46 UTC. Workflow is active;
+   cron refresh and one disable/re-enable did not establish autonomous delivery.
+   Do not clear this alert using a manual run or same-VM monitoring. No provider
+   root cause is established. Review GitHub's next real `schedule` completion.
+
+The source addendum is published and its public HTTPS SHA-256 matches. Existing
+application source offers are retained. No Caddy change is required.
+
+Final checks: all **112 upstream provider lookups** completed with no reopened
+published application-advisory disposition; this is separate from dependency
+scanning. All **59 status monitors / 105 catalogue endpoint probes** and eight
+public entry points passed. All 175 production containers remain running.
+EN desktop/ES mobile-emulated guide and catalogue journeys passed without
+outside browser requests. The final read-only alert check reports only the
+dependency queue and the two independent-monitor freshness conditions above.
+
+## Previous boundary — 12 October, 01:03 UTC
 
 The tested native/vendor/installer batch, all twelve final Go repairs and five
 patch-level follow-ups are deployed. Bookplate, Candlr, DeGoog, Projects and the

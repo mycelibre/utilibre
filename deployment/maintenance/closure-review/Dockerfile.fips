@@ -1,0 +1,11 @@
+FROM utilibre-authentik:2026.8.3-xml-security-20261011
+USER root
+COPY libssl-dev_3.5.7-1~deb13u3_amd64.deb libssl3t64_3.5.7-1~deb13u3_amd64.deb openssl_3.5.7-1~deb13u3_amd64.deb openssl-provider-legacy_3.5.7-1~deb13u3_amd64.deb /tmp/fips-closure/
+RUN dpkg --install /tmp/fips-closure/*.deb \
+ && apt-mark hold libssl-dev libssl3t64 openssl \
+ && test -z "$(dpkg --audit)" \
+ && openssl version | grep -F '3.5.7+ak-fips' \
+ && printf '%s\n' 'ba8c4822f07ec328fc2ec70990e3151bac93edba4fd62f28d68648edfe95d62b  /etc/ssl/fipsmodule.cnf' '33e030740edde236c2fed769079fdde978d336134b096b5d12d38977a7d165ae  /usr/lib/x86_64-linux-gnu/ossl-modules/fips.so' | sha256sum -c - \
+ && openssl fipsinstall -module /usr/lib/x86_64-linux-gnu/ossl-modules/fips.so -in /etc/ssl/fipsmodule.cnf -verify \
+ && rm -rf /tmp/fips-closure
+USER 1000:1000
