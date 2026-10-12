@@ -11,4 +11,6 @@ export const additionalOverlayReceipts = [
   'click-followup-20261012/release.json',
   'sudo-followup-20261012/kuma-release.json',
   'xlib-followup-20261012/release.json',
+  'openldap-followup-20261012/release.json',
+  'tiff-bookworm-followup-20261012/release.json',
 ];

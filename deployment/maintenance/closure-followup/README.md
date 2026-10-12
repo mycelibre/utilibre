@@ -607,3 +607,16 @@ outdated image identity in the earlier scan; no decision was applied. Re-run
 after a fresh completed scan. Three policy tests cover strict CNA paths,
 overlap rejection and altered/unknown historical records.
 
+Six individually inspected kernel-private/UAPI filename collisions now have
+separate content gates in `headers-overlap.mjs`. The pinned upstream patches
+for VDPA/PCI driver overrides, bridge device references, two BPF verifier
+changes and AX.25 device pointers modify kernel-private fields/functions.
+For each exact installed package, the reviewer reads the overlapping exported
+header, records its hash, requires the syscall-export marker and verifies the
+affected private identifiers are absent. It also checks the complete patch
+file list against the Linux CNA record. Unknown collisions, changed patches,
+missing markers or present private identifiers remain open. This is not a
+claim that an installed/running kernel is repaired. Two further tests cover
+content rejection and immutable-patch boundaries; actual inventory checks run
+only against the current scan and live package identity.
+

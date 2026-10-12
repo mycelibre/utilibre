@@ -1,0 +1,6 @@
+[
+  {"key":"kuma","container":"utilibre-community-uptime-kuma-1","baseRef":"utilibre-kuma:sudo-security-20261012","base":"sha256:86d969d88d86f79ad034f68e4e5c2ce84c1681d8eca83abf6411803ce81bd79b","candidate":"utilibre-kuma:openldap-security-20261012"},
+  {"key":"rallly","container":"utilibre-community-rallly-1","baseRef":"utilibre-community-rallly:openssl-dtls-security-20261012","base":"sha256:5eccadfdf88f9fbbc459cf8bfda77fe988819423c8cf8aa3d6c2b373331c5b13","candidate":"utilibre-community-rallly:openldap-security-20261012"},
+  {"key":"rssbridge","container":"utilibre-community-rssbridge-1","baseRef":"utilibre-rssbridge:openssl-dtls-security-20261012","base":"sha256:f21bf3eefc8ffebf20131f73c250807377fe85933f8511a612e7e4b01b372931","candidate":"utilibre-rssbridge:openldap-security-20261012"},
+  {"key":"gathio","container":"utilibre-gathio-postgres-1","baseRef":"utilibre-gathio-documentdb:xlib-security-20261012","base":"sha256:c36d9e56f372b43666e55a766936b7e69420bc377fa5027b7b92ff188f9cd2fa","candidate":"utilibre-gathio-documentdb:openldap-security-20261012"}
+]

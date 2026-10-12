@@ -1,0 +1,20 @@
+{
+  "work": "/var/lib/utilibre-maintenance/openldap-followup-20261012",
+  "builder": "maintenance-postgis-native-20261012",
+  "builderImage": "sha256:041030501a5231fd2ce4ded70d79e1fee2d87a60f45f9a1725f180256e171651",
+  "builderWork": "/work/openldap-followup",
+  "version": "2.5.13+dfsg-5+utilibre1",
+  "sourceBase": "https://deb.debian.org/debian/pool/main/o/openldap/",
+  "sourceSigner": "3D27E1D27A9D41377990E165229FCF12F5D66BB6",
+  "sourceFiles": {
+    "openldap_2.5.13+dfsg-5.dsc": "3192f78a46825039c6c9de6808ae98ab3d1c8846f43d2109ed654fd9c33fe472",
+    "openldap_2.5.13+dfsg.orig.tar.xz": "1d95c400a3eae6730246614ef16883de3dbd1b14b01a1ebe3a9aa1ccad2c13ec",
+    "openldap_2.5.13+dfsg-5.debian.tar.xz": "161e22c1c79e2f7c6013cfc2bbf0265d6bbb78d91a0fcfa9ca866837f2c31d88"
+  },
+  "patches": {
+    "752d320cf96e46f24c0900f1a8f6af0a3fc3c4ce": "405c967d4f1c84905fcde8055e9290003904817fa747314fc04b21df070c3f6b",
+    "6563fab9e2feccb0a684d0398e78571d09fb808b": "fb89e043a4ecb1b7e9017d005bddde2b76dae935d51b0fe05836587b8703a9ea"
+  },
+  "reviewedCve": "CVE-2023-2953",
+  "remainingCves": ["CVE-2015-3276", "CVE-2017-14159", "CVE-2017-17740", "CVE-2020-15719", "CVE-2026-22185"]
+}

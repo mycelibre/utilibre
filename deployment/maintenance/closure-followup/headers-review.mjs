@@ -7,6 +7,7 @@ import cp from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {validateDecision} from '../triage.mjs';
 import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents} from './headers-policy.mjs';
+import {overlapSpecs,verifyOverlap} from './headers-overlap.mjs';
 const root='/var/lib/utilibre-maintenance',dir=root+'/closure-followup-20261012';
 const commit='20d9248c60fe62803efade3177e8b82b586d154c';
 process.umask(0o077);fs.mkdirSync(dir+'/cna',{recursive:true});
@@ -30,7 +31,7 @@ await Promise.all(Array.from({length:4},async()=>{while(next<ids.length){
  }catch{skipped.push({id,reason:'No complete Linux-CNA compiled-kernel-only file attribution; manual review remains.'});}
 }}));
 const execute=(name,args)=>cp.execFileSync(name,args,{encoding:'utf8',timeout:10000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe']}).trim();
-const inventories=new Map,decisions=[];
+const inventories=new Map,decisions=[],overlapEvidence=[];
 for(const item of items){
  const primary=sources.get(item.id);if(!primary)continue;
  const k=item.artifact+'|'+item.installed;
@@ -46,10 +47,19 @@ for(const item of items){
  }
  // Kernel-private include files can share a basename with a sanitized UAPI
  // file. Retain those ambiguous cases instead of assuming they are unrelated.
- if(headerOverlap(primary.files,inventories.get(k).files)){skipped.push({id:item.id,reason:'Header path overlap requires content review'});continue;}
- const reason=`Primary ${primary.provider} CNA record identifies ${primary.files.length} compiled-kernel/internal component file(s); first: ${primary.files[0]}. Complete file list and response checksum retained in closure-followup-20261012/headers-review.json. Historical records require their exact reviewed SHA256. No UAPI file is named or matches the exact linux-libc-dev ${item.installed} installed inventory ${inventories.get(k).digest}, containing only headers/documentation and no kernel image/module. ${primary.url} . This is only a component-absent review of this exact header package, never the running VM/Proxmox kernel, linux-image packages or container isolation. Raw scan remains unchanged.`;
+ let overlap=false;
+ if(headerOverlap(primary.files,inventories.get(k).files)){
+  try{
+   const spec=overlapSpecs[item.id];assert(spec);const file=dir+'/cna/'+item.id+'-overlap.patch';
+   if(!fs.existsSync(file)){const r=await fetch('https://github.com/gregkh/linux/commit/'+spec.commit+'.patch',{signal:AbortSignal.timeout(20000)});assert(r.ok);const text=await r.text();assert(text.length<250000);fs.writeFileSync(file,text);}
+   const readHeader=p=>item.scope==='host-os'?fs.readFileSync(p,'utf8'):execute('docker',['exec',item.containers[0],'cat',p]);
+   const proof=verifyOverlap(item.id,primary.files,inventories.get(k).files,fs.readFileSync(file,'utf8'),readHeader);
+   overlapEvidence.push({key:item.key,commit:spec.commit,patchSha256:spec.sha256,headers:proof});overlap=true;
+  }catch{skipped.push({id:item.id,reason:'Header path overlap requires content review'});continue;}
+ }
+ const reason=`Primary ${primary.provider} CNA identifies ${primary.files.length} compiled-kernel/internal files; first: ${primary.files[0]}. Exact linux-libc-dev ${item.installed} inventory ${inventories.get(k).digest} contains headers/docs, no kernel binary/module. ${overlap?'Same-name exported UAPI headers were read: syscall-note present, affected private fields/functions absent; pinned upstream patch changes only internal files.':'No affected UAPI file is named or matches the inventory.'} Complete source/response hashes and any header-content proof are in closure-followup-20261012/headers-review.json. ${primary.url} . This exact-package attribution does NOT assess the running VM/Proxmox kernel, linux-image or container isolation. Raw scan unchanged.`;
  if(reason.length>1200){skipped.push({id:item.id,reason:'Attribution too long for bounded review; manual review remains'});continue;}
  decisions.push(validateDecision({key:item.key,status:'not-affected',reason,expiresAt:new Date(Date.now()+7*86400000).toISOString()}));
 }
-fs.writeFileSync(dir+'/headers-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,skipped,primary:[...sources.entries()],inventories:[...inventories.entries()]},null,2)+'\n');
+fs.writeFileSync(dir+'/headers-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,skipped,primary:[...sources.entries()],inventories:[...inventories.entries()],overlapEvidence},null,2)+'\n');
 console.log(JSON.stringify({prepared:decisions.length,primaryRecords:sources.size,unresolvedUnique:skipped.length,applied:false}));
