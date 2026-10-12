@@ -26,7 +26,26 @@ No item is considered complete merely because it moved to a different document.
 Each boundary links to its existing evidence; the dated historical records below
 must not be copied back into the current queue without checking later results.
 
-## Current release checkpoint, 12 October, 21:30 UTC
+## Catalog navigation update, 12 October, 21:45 UTC
+
+The owner's request to hide the separate “Pilots & unavailable” section is
+deployed in EN/ES as `public-utility-portal:0.1.0-catalog-views-20261012`, source
+commit `bc61f15`. Only the portal container was replaced. Old `view=pilots`
+bookmarks now render All tasks, retaining their query and category.
+
+Mumble remains listed in All tasks, Accounts & sign-in and search, with its
+`mumble://` launch link and password/client instructions. No catalog service
+record or running application was removed. Live search updates the four visible
+view links correctly after the navigation change.
+
+Build, type checking, targeted lint and ten existing desktop/mobile browser
+tests pass. Eight preview and eight public checks cover both languages at
+1280, 390 and 320 pixels, old bookmarks, Mumble discovery, live search and
+search without JavaScript. The candidate has no critical/high scanner finding;
+the public source archive matches the committed source. Release evidence and
+private rollback inputs: `/opt/utilibre/reports/catalog-view-publication-20261012/`.
+
+## Security and live-search checkpoint, 12 October, 21:30 UTC
 
 Source commit `b63265a` is pushed. Actual, Reactive Resume, Wishlist and CryptPad
 now use the exact `runtime-minimal-20261012` images in their existing compose
