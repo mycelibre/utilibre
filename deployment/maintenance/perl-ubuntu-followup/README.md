@@ -1,5 +1,10 @@
 # Native Ubuntu Perl security update — Addy database
 
+Deployed on **2026-10-12 at 16:32:21 UTC** after signed-input, native and
+application gates. Exact running payload, unchanged companion containers and
+existing HTTP route checks passed. The matching source archive's full public
+HTTPS download was hash-verified. This is not a new real-email delivery test.
+
 Scope: only four installed Perl packages in the existing Ubuntu Noble MariaDB
 12.2.2 image. No Perl fork, Debian/Ubuntu migration, database-engine update,
 application/configuration change, new dependency or production-data fixture.

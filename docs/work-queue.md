@@ -1,5 +1,105 @@
 # Operator work queue — reconciled 12 October 2026
 
+## Native repair release and remaining boundaries — 12 October, 16:50 UTC
+
+**The prepared native-library releases are deployed. This is not a clean
+security bill or completion of the remaining upstream/boot-chain work.** Earlier
+checkpoints below are historical, including their pending activation notes.
+
+The owner's Proxmox postcheck reported **thawed**. The guest-agent repair passed
+at 16:07 UTC; that maintenance window is closed and backup/management jobs may
+resume. No VM reboot or bootloader change was performed.
+
+| Deployed component | Exact version/change | Meaningful verification |
+| --- | --- | --- |
+| QEMU guest agent | `1:10.0.13+ds-0+deb13u1+utilibre1` | Native regression/RPC gates, running payload, Proxmox postcheck; no whole-VM reboot. |
+| Gathio HDF5 | `1.10.8+repack1-1+utilibre1`, two native packages | 150 upstream program/script completions, old-header chunk/HL files, preserved ABI, native raster/database access and synthetic restore. Optional upstream cases remain documented. |
+| Gathio HEIF | `1.15.1-1+deb12u1+utilibre1` | Two exact upstream fixes; old-header HEVC/AV1 pixel/alpha checks, all 211 exports and ten dependencies retained. |
+| Gathio GDAL | `3.6.2+dfsg-1+utilibre2` | Actual HEIC **and** AVIF decoding; all prior security patches preserved; five upstream tests, 5,935 exports/210 drivers, native database/role/dump/restore checks. |
+| Penpot 2.18.3 native codec | Private ImageMagick HEIF copy aligned to its existing Debian `1.23.4-1~deb13u1` library | Two-account edit/save/reload/export/import/isolation/deletion, normal image formats, production sign-in/OIDC and exact live payload. App version and account settings unchanged. |
+| Addy database Perl | Four Ubuntu packages `5.38.2-3.2ubuntu0.6` | Signed vendor provenance, 1,240 Archive::Tar assertions with two documented skips, unchanged MariaDB 12.2.2, native TLS/SQL/permissions and isolated synthetic restore. |
+
+Earlier completed LDAP, TIFF, sudo, X client, Python, curl, OpenSSL and other
+repairs are retained. The GDAL AVIF change is a functional repair, not a new CVE
+waiver. Penpot's old private codec/plugin mismatch is now resolved. A snapshot
+stop/start briefly exposed cached backend addressing; a native nginx reload
+restored readiness. The release helper now refreshes that address after
+snapshot startup, deployment and rollback, with allowlisted evidence adapters.
+
+### Final scan and operational checks
+
+The **16:42:50 UTC** scan completed for **109 running images / 175 containers,
+55 source manifests and host packages**, with zero failed image/source targets.
+Trivy database timestamp: 09:47:21 UTC. Raw results remain **40 critical and
+2,735 high package/target records** (13 and 556 distinct advisory IDs). These
+are not confirmed exploits. The final exact-payload reviews leave
+**0 critical / 136 high awaiting review**, covering **19 distinct remaining
+high advisory IDs**. The 40 critical raw matches are separately recorded as
+14 mitigated and 26 component-specific not-affected records. Raw evidence is
+retained. A missing `tiffcrop` component and five exact signed DHI binary
+inventories explain six of the last attribution decisions; no software version
+was falsified and affected sibling packages were not cleared.
+
+The 57 focused policy/release tests passed. Legacy mount-hook controls passed
+18 isolated checks against all eight current Bookworm images and a positive
+control; this does **not** clear the older mount-target race. Native repair
+fixtures used synthetic data; Penpot also checked its consistent snapshot in
+an isolated restore. No data was restored into production. Eight fixed public
+TLS/HTTP/content entry checks passed from this VM; these are not independent
+outage evidence or a full-browser journey for every application.
+
+At 16:41 UTC: all 32 Utilibre timers enabled/active, zero failed systemd units.
+No unhealthy running Docker container was observed. Root is 200 GiB virtual /
+approximately 197 GiB usable with **16 GiB free**, above the enforced 8 GiB
+reserve. Approximately **11–12 GiB of 34 GiB RAM is in use**, with 21–22 GiB
+available; filesystem cache is not equivalent to exhausted RAM. No data,
+rollback images or backup-excluded temporary content was deleted this round.
+
+The independent GitHub schedule remains overdue: the latest genuine scheduled
+success was **09:42:44 UTC**, almost seven hours old at the final check, despite
+an active workflow and quarter-hour schedule. No manual run is substituted.
+Local scheduling works; the unexplained external scheduling gap stays open.
+
+### Remaining work — do not hide or waive
+
+- **Native compatibility work:** ACL's new safe APIs require caller changes and
+  GNU tar compatibility; an old pathname API cannot be fixed by swapping one
+  shared library. Bookworm's older mount-target race, Kuma's OpenSSL-dependent
+  cryptography fix and the TURN MongoDB/BSON ABI transition need their own
+  integrated candidates and application tests. These are not deployed fixes.
+- **Vendor/upstream gaps:** GnuTLS 88647/88648, Debian Archive::Tar 9538,
+  NLTK 81726, braces 93687 and legacy Xserver 2023-5574 remain open after the
+  current primary-source checks. Braces' threat model is disputed upstream;
+  do not call that a verified remote exploit or silently dismiss it. The Ubuntu
+  Perl fix above does not establish that Debian's separate packages are fixed.
+- **Host activation/boot chain:** two libmount reviews remain open because
+  three host processes still map old library bytes. A coordinated VM restart
+  is needed to finish resident activation. GRUB **CVE-2025-61662** additionally
+  needs a tested native/signed boot-chain plan, Proxmox console/boot-order
+  confirmation, recoverable disk/ESP/EFI-state backup and a separate boot-test
+  window. The cloud GRUB package rewrites boot paths automatically; do not
+  install it under the completed guest-agent restart permission.
+- **Unproven attribution/coverage:** five historical kernel-header advisory
+  IDs and the tracked `ip` build input remain unresolved. Running kernel and
+  separate Proxmox/Caddy hosts are distinct scopes. Deno's compiled Rust
+  inventory and Pyodide/WASM coverage remain incomplete; a completed package
+  scan does not remove those limits.
+
+Recipes and rollback: [QGA](../deployment/maintenance/qga-native-followup/README.md),
+[HDF5](../deployment/maintenance/hdf5-native-followup/README.md),
+[HEIF](../deployment/maintenance/heif-bookworm-followup/README.md),
+[GDAL](../deployment/maintenance/gdal-avif-followup/README.md),
+[Penpot alignment](../deployment/maintenance/penpot-heif-alignment/README.md),
+[Ubuntu Perl](../deployment/maintenance/perl-ubuntu-followup/README.md),
+[DHI attribution](../deployment/maintenance/dhi-binary-attribution/README.md),
+[boot-chain prerequisites](../deployment/maintenance/grub-assessment/README.md).
+Each native source archive is published and its full HTTPS download hash was
+checked. Rollback uses the exact predecessor image and native health gates,
+not a database restore. Any later rollback must preserve intervening repairs.
+Future updates remain reviewed and pinned; protected host packages cannot be
+silently replaced by unattended upgrades. Source publication now uses committed
+files, excluding unrelated working-tree changes.
+
 ## In-progress release checkpoint — 12 October, 15:57 UTC
 
 **Independent work continues; not a completed security clearance.** The native

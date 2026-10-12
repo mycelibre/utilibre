@@ -7,6 +7,13 @@ remain reviewed rollouts. Production never runs a floating `latest` tag.
 
 ## Local repair protection
 
+The 12 October native follow-up is deployed, including the coordinated QEMU
+guest-agent activation, HDF5/HEIF/GDAL, Penpot's private codec alignment and
+Addy's signed Ubuntu Perl update. Exact versions, fresh scan results, tested
+journeys, remaining upstream/boot-chain work and rollback links are maintained
+in the [operator work queue](work-queue.md). New releases must preserve those
+repairs or demonstrate that a tested upstream replacement supersedes them.
+
 ### Reading security counts
 
 Never report “zero vulnerabilities” from a zero **awaiting-review** count.
