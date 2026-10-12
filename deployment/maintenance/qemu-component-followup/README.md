@@ -49,6 +49,17 @@ fresh scanner identity; they never modify the decision ledger. Raw findings
 remain retained. Private evidence is under
 `/var/lib/utilibre-maintenance/qemu-component-followup-20261012/`.
 
+The same four emulator exclusions can follow exactly one local guest-agent
+derivative, `1:10.0.13+ds-0+deb13u1+utilibre1`, only after its completed native
+release and independent control-plane postcheck. The policy pins that candidate
+package, executable and single patched source-file hashes. The reviewer compares
+the complete live payload, verifies all other files against the original signed
+archive, and compares complete source trees: only `qga/commands-posix-ssh.c`
+may differ. Original Meson/build graph hashes must remain exact. A merely
+prepared build, incomplete restart/postcheck, other version or unknown binary
+cannot inherit a review. `qemu-utils` must remain the original signed version.
+The SSH-key CVE mitigation stays in its separate single-CVE repair reviewer.
+
 ## Remaining guest-agent repair assessment
 
 The native guest agent is running, PID 851 at inspection, with no native reload
