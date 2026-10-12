@@ -15,6 +15,7 @@ export const advisorySources = {
   'CVE-2026-16445': 'https://bugzilla.redhat.com/show_bug.cgi?id=2459963',
   'CVE-2026-6893': 'https://github.com/dracut-ng/dracut/pull/2469',
   'CVE-2026-69249': 'https://github.com/pyca/cryptography/security/advisories/GHSA-jwv3-5hgf-82ww',
+  'CVE-2026-52490': 'https://security-tracker.debian.org/tracker/CVE-2026-52490',
 };
 
 const gdalIds = ['CVE-2026-49014', 'CVE-2026-8086', 'CVE-2026-8087'];
@@ -28,6 +29,13 @@ export function componentPolicy(item, records) {
   const files = records.filter(r => r.type !== 'directory');
   const noNative = files.every(r => r.type !== 'regular' || r.magic !== '7f454c46');
   const docs = path => /^\/usr\/share\/(?:doc|lintian)\//.test(path);
+  if (item.id === 'CVE-2026-52490' && item.package === 'libtiff6' &&
+    ['4.5.0-6+deb12u4', '4.7.0-3+deb13u3', '4.7.0-3+deb13u3+dhi3'].includes(item.installed) &&
+    files.some(r => /^\/usr\/lib\/x86_64-linux-gnu\/libtiff\.so\.6\.[01]\.0$/.test(r.path) && r.magic === '7f454c46') &&
+    files.every(r => docs(r.path) ||
+      (r.type === 'regular' && /^\/usr\/lib\/x86_64-linux-gnu\/libtiff\.so\.6\.[01]\.0$/.test(r.path)) ||
+      (r.type === 'symlink' && r.path === '/usr/lib/x86_64-linux-gnu/libtiff.so.6' && /^libtiff\.so\.6\.[01]\.0$/.test(r.target))))
+    return 'tiffcrop process_command_opts() in the separately built tools/tiffcrop.c executable, not the libtiff shared decoder library; other TIFF decoder findings remain separate';
   if (gdalIds.includes(item.id) && item.installed === '3.13.2+dfsg-1.pgdg12+1') {
     if (item.package === 'gdal-data' && noNative && files.length > 100 && files.every(r => docs(r.path) || r.path.startsWith('/usr/share/gdal/')))
       return 'GDAL netCDF/HDF4 C/C++ decoder, not its installed reference-data files; libgdal32 remains a separate unresolved finding';

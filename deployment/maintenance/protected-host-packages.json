@@ -3,6 +3,7 @@
   "note": "Native signed-vendor upgrades without a +utilibre version suffix. All installed +utilibre packages are additionally discovered automatically. Entries require reviewed retirement, not expiry.",
   "packages": {
     "libexpat1": "closure-followup/release-host.mjs",
+    "libpcap0.8t64": "host-extra-followup/release-pcap.mjs",
     "libsodium26": "closure-followup/release-host.mjs",
     "ncurses-bin": "closure-followup/ncurses-host.mjs",
     "libnghttp3-9": "closure-followup/curl-host.mjs",

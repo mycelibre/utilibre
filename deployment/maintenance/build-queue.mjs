@@ -4,6 +4,21 @@ import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {applyDecisions} from './triage.mjs';
 const directory='/var/lib/utilibre-maintenance';
+// Counts describe scanner occurrences, not unique vulnerabilities or exploits.
+// Keep unresolved/revalidation work separate from retained raw observations.
+export function queueCounts(items){
+ const counts={packageTargetRecords:items.length,uniqueAdvisoryIds:new Set(items.map(x=>x.id)).size};
+ for(const severity of ['CRITICAL','HIGH']){
+  const rows=items.filter(x=>x.severity===severity);
+  counts[severity]={raw:rows.length,uniqueAdvisoryIds:new Set(rows.map(x=>x.id)).size,
+   needsReview:rows.filter(x=>x.status==='needs-review').length,
+   confirmed:rows.filter(x=>x.status==='confirmed').length,
+   mitigated:rows.filter(x=>x.status==='mitigated').length,
+   notAffected:rows.filter(x=>x.status==='not-affected').length,
+   notRechecked:rows.filter(x=>x.status==='not-rechecked').length};
+ }
+ return counts;
+}
 // An unrelated failed target must not resurrect findings from a replacement
 // which was actually scanned. Conversely, missing/unscanned instances retain
 // their previous observations; no resolution is inferred from disappearance.
@@ -56,7 +71,8 @@ export async function run(){
  let decisions=[];try{decisions=JSON.parse(await readFile(directory+'/security-decisions.json','utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
  queue.items=applyDecisions(queue.items,decisions);
  await writeFile(directory+'/security-queue.json.tmp',JSON.stringify(queue,null,2)+'\n',{mode:0o600});await rename(directory+'/security-queue.json.tmp',directory+'/security-queue.json');
- console.log(`Private review queue: ${queue.items.length} package/target findings; ${queue.status}.`);
+ const counts=queueCounts(queue.items);
+ console.log(`Private review queue (${queue.status}): ${counts.packageTargetRecords} raw package/target records; ${counts.CRITICAL.raw} critical / ${counts.HIGH.raw} high raw. Awaiting review, including replacement-image revalidation: ${counts.CRITICAL.needsReview} critical / ${counts.HIGH.needsReview} high. These are not unique vulnerabilities or a security clearance.`);
  return queue;
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)await run();

@@ -5,6 +5,17 @@ import {componentPolicy, exactInventory, sha256} from './policy.mjs';
 const dir = path => ({type: 'directory', path});
 const file = (path, magic = '23232323') => ({type: 'regular', path, magic, sha256: 'a'.repeat(64)});
 const base = [dir('/.'), dir('/usr')];
+test('tiffcrop command parser is not attributed to the library; other TIFF bugs remain open', () => {
+  const item = {id: 'CVE-2026-52490', package: 'libtiff6', installed: '4.7.0-3+deb13u3'};
+  const records = [...base, file('/usr/lib/x86_64-linux-gnu/libtiff.so.6.1.0', '7f454c46'),
+    {type: 'symlink', path: '/usr/lib/x86_64-linux-gnu/libtiff.so.6', target: 'libtiff.so.6.1.0'}];
+  assert(componentPolicy(item, records));
+  assert.equal(componentPolicy({...item, id: 'CVE-2026-36849'}, records), null);
+  assert.equal(componentPolicy({...item, package: 'libtiff-tools'}, records), null);
+  assert.equal(componentPolicy({...item, installed: 'unreviewed'}, records), null);
+  assert.equal(componentPolicy(item, [...records, file('/usr/bin/tiffcrop', '7f454c46')]), null);
+  assert.equal(componentPolicy(item, [...records.slice(0, -1), {...records.at(-1), target: '/usr/bin/tiffcrop'}]), null);
+});
 test('GDAL plugins must contain only the reviewed data payload, never a decoder', () => {
   const item = {id: 'CVE-2026-8087', package: 'gdal-plugins', installed: '3.13.2+dfsg-1.pgdg12+1'};
   const records = [...base, file('/usr/lib/x86_64-linux-gnu/gdalplugins/drivers.ini')];

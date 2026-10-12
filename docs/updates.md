@@ -7,6 +7,38 @@ remain reviewed rollouts. Production never runs a floating `latest` tag.
 
 ## Local repair protection
 
+### Reading security counts
+
+Never report “zero vulnerabilities” from a zero **awaiting-review** count.
+Trivy's raw package/target records, unique advisory IDs, confirmed findings,
+applied mitigations, component-specific not-affected reviews and unresolved
+review work are different measurements. An advisory repeated across packages
+or running images produces multiple occurrences, not multiple distinct CVEs.
+
+Reviews are tied to an exact image/manifest, package version and advisory.
+Replacing an image invalidates its old review key even if an unrelated library
+was the only change. The affected records return to `needs-review` until the
+new payload and completed release chain are checked. Expired reviews can also
+reopen. The original observation/deadline is preserved; rebuilding is not a
+way to restart the clock. Raw scanner records are never erased by a review.
+
+Concrete snapshot: the **12 October 13:25:53 UTC** scan contained 40 critical
+and 2,735 high raw package/target records, representing 13 and 556 distinct
+advisory IDs respectively. After the then-current exact reviews, 14 critical
+and 797 high records awaited review. All 14 critical records matched previous
+reviews of the same CVE/package/version in predecessor images. So did 451 high
+records. The other 346 high records were not established to be new by that
+comparison. These are dated audit counts, not today's clearance or proof that
+every reopened mitigation remains effective.
+
+Operational reports must state their completed scan time and distinguish
+new observations, reopened review work and outstanding repairs. Known
+unfixed/untested paths must remain visible. Zero pending critical reviews does
+not establish zero critical scanner matches, zero exploitability, or complete
+coverage. The queue console now labels raw and pending counts separately.
+
+### Carrying repairs into updates
+
 A newer application image does **not** necessarily include our security or
 privacy repairs. Keep each repair as a reproducible source/package recipe, not
 an edit made only inside a running container. A replacement release must either

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {imageInventory,summarize,registryFallback,scannerManifestName,imageScanStatus,inventoryFormat} from './security-review.mjs';
 import {reportIssues,queueIssues,externalIssues,unattendedIssues,alertState} from './report-health.mjs';
 import {validateDecision,applyDecisions} from './triage.mjs';
-import {findingsQueue,retainUnrechecked,recheckedTarget} from './build-queue.mjs';
+import {findingsQueue,retainUnrechecked,recheckedTarget,queueCounts} from './build-queue.mjs';
 import {probe,validResponse,targets} from './check-external.mjs';
 const now=Date.parse('2026-10-11T12:00:00Z');
 test('Docker collection itself requests only three non-sensitive inventory fields',()=>{
@@ -109,6 +109,19 @@ test('review decisions require an exact key, evidence and bounded expiry',()=>{
  assert.equal(applyDecisions([{key:good.key,status:'needs-review'}],[validateDecision(good,now)],now)[0].status,'not-affected');
  assert.equal(applyDecisions([{key:good.key,status:'needs-review'}],[good],now)[0].status,'needs-review');
  assert.equal(applyDecisions([{key:good.key,status:'needs-review'}],[good],now+2*86400000)[0].status,'needs-review');
+});
+test('queue counts distinguish raw occurrences, unique advisories and review states',()=>{
+ const result=queueCounts([
+  {id:'CVE-A',severity:'CRITICAL',status:'mitigated'},
+  {id:'CVE-A',severity:'CRITICAL',status:'needs-review'},
+  {id:'CVE-B',severity:'CRITICAL',status:'not-affected'},
+  {id:'CVE-C',severity:'HIGH',status:'confirmed'},
+  {id:'CVE-D',severity:'HIGH',status:'not-rechecked'},
+ ]);
+ assert.equal(result.packageTargetRecords,5);assert.equal(result.uniqueAdvisoryIds,4);
+ assert.deepEqual(result.CRITICAL,{raw:3,uniqueAdvisoryIds:2,needsReview:1,confirmed:0,mitigated:1,notAffected:1,notRechecked:0});
+ assert.equal(result.HIGH.raw,2);assert.equal(result.HIGH.needsReview,0);
+ assert.equal(result.HIGH.confirmed,1);assert.equal(result.HIGH.notRechecked,1);
 });
 test('runtime rebuild changes the review key without resetting an unchanged finding deadline',()=>{
  const f={id:'CVE-test',package:'x',installed:'1',severity:'HIGH'};

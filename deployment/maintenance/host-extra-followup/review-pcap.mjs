@@ -1,0 +1,25 @@
+// Signed fixed host package plus fresh scan and exact live payload, not a CVE waiver.
+import fs from 'node:fs';
+import cp from 'node:child_process';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {freshScan} from '../review-native-backports.mjs';
+import {validateDecision} from '../triage.mjs';
+process.umask(0o077);
+const root='/var/lib/utilibre-maintenance',dir=root+'/host-extra-followup-20261012';
+const read=p=>JSON.parse(fs.readFileSync(p));
+const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:30000,maxBuffer:1024**2,stdio:['ignore','pipe','pipe']}).trim();
+const hash=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+const scan=read(root+'/security.json'),queue=read(root+'/security-queue.json');
+freshScan(queue,scan);assert.equal(scan.status,'checked');assert.equal(scan.host.status,'checked');
+const release=read(dir+'/pcap/release.json');assert.equal(release.status,'passed');
+assert(Date.parse(release.completedAt)<=Date.parse(scan.date),'Scan must include the completed host release');
+assert(release.noServiceRestart&&release.livePacketsCaptured===0&&release.preservedSymbols===96);
+for(const proof of [release.staged,release.live])assert(proof.passed&&proof.scratchBoundCases===8&&proof.offlineFilterAcceptedAndRejected&&proof.invalidSyntaxRejected&&proof.syntheticDumpReadRoundtrip&&proof.livePacketsCaptured===0);
+const version='1.10.7-1',sha='161a4b0dc1cc545ac2e33b84ef7b28d54f136897890a0f434ede7427dd5c25a9';
+assert.equal(hash(dir+'/pcap/libpcap0.8t64_'+version+'_amd64.deb'),sha);
+assert.equal(run('dpkg-query',['-W','-f=${Version}','libpcap0.8t64']),version);
+assert.equal(hash('/usr/lib/x86_64-linux-gnu/libpcap.so.1.10.7'),release.newLibrarySha256);
+const decisions=queue.items.filter(item=>item.status==='needs-review'&&item.scope==='host-os'&&item.type==='debian'&&item.package==='libpcap0.8t64'&&item.installed===version&&item.id==='CVE-2026-0799').map(item=>validateDecision({key:item.key,status:'not-affected',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:`Signed Debian libpcap 1.10.7-1 fixes CVE-2026-0799. Exact live library matches the staged and installed package SHA256 ${sha}; 96 native ABI exports preserved. Eight out-of-bounds BPF scratch tests and fictional offline filter/file round-trip checks passed without capturing traffic or restarting services. https://security-tracker.debian.org/tracker/CVE-2026-0799 . Private evidence: host-extra-followup-20261012/pcap/release.json. Only this fixed package finding; no claim that every host vulnerability is resolved.`}));
+fs.writeFileSync(dir+'/pcap-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,packageSha256:sha,librarySha256:release.newLibrarySha256},null,2)+'\n');
+console.log(JSON.stringify({prepared:decisions.length,applied:false}));

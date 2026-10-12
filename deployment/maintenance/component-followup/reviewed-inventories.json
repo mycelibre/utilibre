@@ -58,6 +58,24 @@
     ]
   },
   {
+    "package": "libtiff6",
+    "installed": "4.7.0-3+deb13u3",
+    "inventorySha256": "965f5fa3fdf911186653b6362911853d38841d6c5f1a91c6c54f4b87f4890a07",
+    "ids": ["CVE-2026-52490"]
+  },
+  {
+    "package": "libtiff6",
+    "installed": "4.7.0-3+deb13u3+dhi3",
+    "inventorySha256": "8b56006adb9d166579e5eed9c5e24322c02f26c80026f533e7fa142687a2ee18",
+    "ids": ["CVE-2026-52490"]
+  },
+  {
+    "package": "libtiff6",
+    "installed": "4.5.0-6+deb12u4",
+    "inventorySha256": "7c3d99994adc7bedffa827a37f30846296436900790587dc93d947b1823d8184",
+    "ids": ["CVE-2026-52490"]
+  },
+  {
     "package": "python3-cryptography",
     "installed": "38.0.4-3+deb12u1",
     "inventorySha256": "9cc60b676b3c716d8dfdb11b83d48efaa0333ee8138679906b5abd32d81f8236",
