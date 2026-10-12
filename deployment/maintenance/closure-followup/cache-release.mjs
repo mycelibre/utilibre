@@ -6,8 +6,8 @@ import {createHash} from 'node:crypto';
 import {canonical} from '../go-final/release.mjs';
 import {replaceImagePins,namespaceDependents,releaseGroup,rollbackFiles,existingComposeArgs,checkExistingGroup,recreateExistingGroup,existingGroupStatus} from '../language-final/release.mjs';
 process.umask(0o077);
-const [mode,variant]=process.argv.slice(2);assert(['prepare','apply'].includes(mode));assert([undefined,'--ncurses','--rsync','--util-linux','--curl','--gzip','--sqlite-fts'].includes(variant));assert(process.argv.length<=4);
-const kind=variant==='--ncurses'?'ncurses':variant==='--rsync'?'rsync':variant==='--util-linux'?'util-linux':variant==='--curl'?'curl':variant==='--gzip'?'gzip':variant==='--sqlite-fts'?'sqlite-fts':'cache';
+const [mode,variant]=process.argv.slice(2);assert(['prepare','apply'].includes(mode));assert([undefined,'--ncurses','--rsync','--util-linux','--curl','--gzip','--sqlite-fts','--urllib3','--python-system'].includes(variant));assert(process.argv.length<=4);
+const kind=variant==='--ncurses'?'ncurses':variant==='--rsync'?'rsync':variant==='--util-linux'?'util-linux':variant==='--curl'?'curl':variant==='--gzip'?'gzip':variant==='--sqlite-fts'?'sqlite-fts':variant==='--urllib3'?'urllib3':variant==='--python-system'?'python-system':'cache';
 const dir='/var/lib/utilibre-maintenance/closure-followup-20261012',file=dir+'/'+kind+'-release.json';
 const read=p=>JSON.parse(fs.readFileSync(p)),digest=v=>createHash('sha256').update(JSON.stringify(canonical(v))).digest('hex');
 const docker=(...args)=>{try{return cp.execFileSync('docker',args,{encoding:'utf8',timeout:180000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe'],env:{...process.env,APP_BIND_IP:'10.10.1.43'}}).trim();}catch{throw Error('Docker operation failed; sensitive configuration withheld');}};
@@ -20,6 +20,19 @@ if(mode==='prepare'){
  for(const s of specs){
   const b=read(dir+'/'+kind+'/'+s.key+'/build.json'),n=read(dir+'/'+kind+'/'+s.key+'/native.json');
   assert(b.passed&&b.configurationUnchanged&&n.passed);assert.equal(n.imageId,b.imageId);assert.equal(inspect(s.candidate).Id,b.imageId);assert(Date.now()-Date.parse(n.date)<86400000);
+  if(kind==='python-system'){
+   assert.equal(b.version,'3.13.16-1~deb13u1+utilibre1');assert.equal(n.version,'3.13.16');assert.equal(n.expat,'expat_2.9.0');assert.equal(n.soabi,'cpython-313-x86_64-linux-gnu');
+   assert(n.application.woff2Roundtrip&&n.application.fontforgeTtfOtf&&n.application.pngJpegWebpThumbnails&&n.venv&&n.sqliteUnicode&&n.tarRoundTrip);
+   assert.equal(n.upstreamCases,5658);assert.equal(n.upstreamSkipped,104);assert.equal(n.upstreamModules,42);
+   for(const key of ['application','configuration','otherLibraries'])assert.match(b.hashes[key],/^[a-f0-9]{64}\s/);
+  }
+  if(kind==='urllib3'){
+   assert.equal(n.urllib3,'2.8.0');assert.equal(n.requests,'2.32.3');assert.equal(n.checks.length,11);
+   assert(n.applicationUnchanged&&n.sharedLibrariesUnchanged);
+   for(const key of ['application','configuration','libraries','otherPython'])assert.match(b.hashes[key],/^[a-f0-9]{64}\s/);
+   const a=read(dir+'/urllib3/'+s.key+'/application.json');assert(a.passed&&a.fictionalDataOnly&&a.network==='none');assert.equal(a.imageId,b.imageId);assert(Date.now()-Date.parse(a.date)<86400000);
+   if(s.kind==='kuma')assert(a.nativeSetupLogin&&n.apprise);else assert(a.nativeTypedDataAndIsolation&&a.logicalRestore);
+  }
   if(kind==='ncurses'){assert(n.nativeTerminalRoundTrip&&n.longSgrInput&&n.sharedLibrariesUnchanged);assert.match(b.applicationSha256,/^[a-f0-9]{64}/);assert.match(b.librariesSha256,/^[a-f0-9]{64}/);}
   if(kind==='gzip'){
    assert(n.nativeStreamsAndIntegrity&&n.nativeGzexeAndZgrep&&n.originalsPreserved&&n.sharedLibrariesUnchanged);

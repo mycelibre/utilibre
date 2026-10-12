@@ -51,6 +51,68 @@ have zero restarts. No production database migration/restore was performed.
 
 ## Primary evidence and build scope
 
+### Native Python and urllib3 follow-up — deployed
+
+The host and Penpot backend now run native **CPython 3.13.16**, packaged as
+`3.13.16-1~deb13u1+utilibre1` using Debian packaging on Trixie. This remains the
+3.13 ABI, with system Expat 2.9.0; it is not a distribution or libc upgrade.
+Exactly five packages changed on each target. The upstream focused suites ran
+**5,658 cases, 104 skipped, no failures** across 42 reported modules (including
+two platform skips). This is not the full Debian Python test suite. Native host
+APT/D-Bus/crypto, file/venv/SQLite and HTTP checks passed. Penpot passed its actual
+image conversions and FontForge TTF/OTF/WOFF/WOFF2 journey as its runtime user.
+
+Three packaging-context changes preserve existing Debian behavior: refreshed
+Turtle documentation context; refreshed freeze-test context around upstream
+PGO/LTO lines; removed an obsolete, unused OpenSSL-3.1-header deletion from a
+Debian patch. The build-only legacy `imp` helper now carries its original error
+message rather than importing a removed private constant. No new security
+algorithm was written and no failed/fuzzed patch was forced into production.
+The two failed preparation/build attempts remain in private evidence; only the
+successful zero-fuzz package and completed tests were released.
+
+The host, Uptime Kuma and Gathio's DocumentDB image also use signed Debian
+**urllib3 2.8.0-2**. The two Bookworm images additionally use Requests
+`2.32.3+dfsg-5+deb13u1`, required for urllib3 2.x compatibility. Eleven isolated
+HTTP/TLS/proxy checks cover ordinary/redirect/gzip/POST/error responses, verified
+TLS, wrong identity/untrusted CA rejection, independent HTTPS-proxy trust and
+bounded chunk-header handling. Kuma's setup/authenticated native socket and
+notification parser pass; Gathio passes synthetic typed documents, restricted
+role denial, dump and restore. No real notifications or user-data restore ran.
+
+Application/configuration and unrelated native-library hashes are preserved;
+live image identities/readiness passed. The old host interpreter remained in
+two known helper processes after install, so only unattended-upgrades and the
+private TURN ACME challenge helper were restarted. Docker, SSH, relay and
+application data were untouched. Fresh payload checks bind 50 exact Python
+findings and nine urllib3 findings to these repairs; this is not a waiver for
+other Python branches or dependencies.
+
+Recipes: `build-python-system.sh`, `python-system-inner.sh`,
+`python-system-stage.mjs`, `python-system-host.mjs`; `urllib3-stage.mjs`,
+`urllib3-app-checks.mjs`, `urllib3-host.mjs`; shared
+`cache-release.mjs prepare/apply --python-system` or `--urllib3`.
+Do not repeat completed releases or overwrite receipts. For container rollback,
+restore only the exact previous image from the corresponding release receipt
+and recreate that role with unchanged volumes/configuration. Host rollback uses
+the hash-checked five original Python packages or the original urllib3 package
+retained in `sources/`, preserves configuration, checks `dpkg --audit` and native
+consumers, and refreshes only processes using the replaced interpreter. Rolling
+back reintroduces the old defects.
+
+Matching source is public and HTTPS/checksum verified:
+`security-python-followup-20261012-source.tar.gz`, 32,745,208 bytes,
+SHA-256 `69416420bc937fda2395252a09b6b090f60608dbae2c83eb2d982388f68716a6`.
+This additive archive includes the complete modified Python source package,
+Debian inputs, Expat/urllib3 sources and recipes; no logs, secrets or user data.
+Later recipe refinements remain in the integration source archive.
+
+Primary references, checked 12 October:
+[Python 3.13.16 changes](https://docs.python.org/3.13/whatsnew/changelog.html#python-3-13-16-final),
+[urllib3 2.8.0 release](https://github.com/urllib3/urllib3/releases/tag/2.8.0).
+The separate 200 GiB root-disk expansion and inotify cap adjustment are recorded
+in [resource usage](../../../docs/resource-usage.md); they are not package fixes.
+
 ### Host Wget follow-up — deployed
 
 At **07:23 UTC**, the host's only Wget package was replaced with native

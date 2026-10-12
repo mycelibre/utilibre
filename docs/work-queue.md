@@ -1,6 +1,45 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Current boundary — 12 October, 07:25 UTC
+## Current checkpoint — 12 October, 12:55 UTC
+
+The root filesystem now uses the already enlarged **200 GiB** virtual disk;
+free space rose from 8.8 to approximately **38 GiB** without reboot or deletion.
+The separate 15 GiB temporary-content disk was not changed.
+[Disk evidence](resource-usage.md).
+
+Native **Python 3.13.16 is deployed on the host and Penpot backend**; signed
+**urllib3 2.8.0 is deployed on the host, Kuma and Gathio**. Native consumers,
+synthetic restore/isolation and targeted upstream suites passed; the Python
+suite ran 5,658 cases with 104 skips, zero failures. Exact source, limitations,
+live receipts and rollback are in the
+[native follow-up](../deployment/maintenance/closure-followup/README.md).
+
+The 12:43:37 UTC complete scan covers 109 images, 175 containers, 55 source
+manifests and host packages. Subsequent exact payload/component review leaves
+**0 critical / 315 high pending**. This is a checkpoint, not queue completion or
+a claim of no exploitable vulnerabilities. Nineteen component-specific reviews
+distinguish absent/unrelated binaries and the unchanged runtime graph; they do
+not repair the actual GDAL/PostGIS or node-ip libraries.
+
+Routine host upgrades now preserve 49 reviewed packages through a mandatory
+pre-upgrade inventory hook. Generic image/rebuild update shortcuts fail closed;
+SearXNG retains its strengthened, tested updater. Forty-five focused safeguard
+tests pass. [Carry-forward, retirement and rollback policy](updates.md).
+
+The latest bounded check passed 59 status monitors and all 105 catalogue probes.
+Earlier transient JSCAD/OpenReel checks recovered on direct local/public checks;
+no application configuration was changed to conceal those observations.
+GitHub's genuine 09:42 scheduled check passed all eight entrypoint probes, but
+there is again no scheduled completion within 90 minutes. That warning remains
+active; a manual success must not substitute for a working schedule.
+
+Active independent repairs: Bookworm curl, Bookworm Python/Expat, and native
+PostGIS/GDAL. Vendor-unfixed GnuTLS, remaining dependency work, resident host
+mappings/kernel coordination, compiled-code coverage and external Caddy/Proxmox
+coverage remain unresolved. Do not treat the successful disk/update-policy work
+as closure of these separate tasks.
+
+## Previous boundary — 12 October, 07:25 UTC
 
 Host **Wget 1.25.0-2+utilibre1 is deployed** with the two upstream security
 repairs and the mandatory follow-up correcting the HTML patch's own regression.

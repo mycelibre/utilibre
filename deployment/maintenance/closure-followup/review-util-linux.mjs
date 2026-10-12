@@ -11,10 +11,10 @@ const release=read(dir+'/util-linux-release.json');assert.equal(release.status,'
 const host=read(dir+'/util-linux-host.json');assert.equal(host.status,'passed');assert(host.nativeReadOnlyChecks&&host.configurationLibcAndServicePidsUnchanged);
 const regressions=read(dir+'/util-linux-regression.json');assert(regressions.passed&&regressions.rows.length===6);assert(regressions.rows.filter(r=>r.kind==='repaired').every(r=>r.exitCode===0));
 const rows=overlayRows(release);const primary=read(dir+'/debian-primary.json');assert(Date.now()-Date.parse(primary.date)<86400000);
-// Only the completed curl overlay may advance IDs; all util-linux bytes are
+// Only completed, checked overlays may advance IDs; all util-linux bytes are
 // independently compared again below, including Penpot's private libraries.
-if(fs.existsSync(dir+'/curl-release.json')){
- const next=read(dir+'/curl-release.json');assert.equal(next.status,'passed');
+for(const file of ['curl-release.json','python-system-release.json'])if(fs.existsSync(dir+'/'+file)){
+ const next=read(dir+'/'+file);assert.equal(next.status,'passed');
  for(const row of overlayRows(next)){
   if(row.oldImage===row.newImage)continue;
   const prior=rows.find(p=>p.name===row.name&&p.newImage===row.oldImage);assert(prior);

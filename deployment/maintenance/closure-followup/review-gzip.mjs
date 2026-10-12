@@ -8,7 +8,7 @@ const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:30000,maxBuffer:8*
 const q=read(root+'/security-queue.json'),scan=read(root+'/security.json');freshScan(q,scan);assert.equal(scan.status,'checked');
 const release=read(dir+'/gzip-release.json');assert.equal(release.status,'passed');const rows=overlayRows(release);
 const descendants=[];
-if(fs.existsSync(dir+'/sqlite-fts-release.json')){const later=read(dir+'/sqlite-fts-release.json');assert.equal(later.status,'passed');descendants.push(...overlayRows(later));}
+for(const file of ['sqlite-fts-release.json','urllib3-release.json'])if(fs.existsSync(dir+'/'+file)){const later=read(dir+'/'+file);assert.equal(later.status,'passed');descendants.push(...overlayRows(later));}
 const primary=read(dir+'/debian-primary.json');assert(Date.now()-Date.parse(primary.date)<86400000);
 const specs=read(new URL('./gzip-specs.json',import.meta.url));
 const cache=new Map,decisions=[],proofs=[],skipped=[];
@@ -16,7 +16,7 @@ for(const item of q.items.filter(i=>i.status==='needs-review'&&i.scope==='runtim
  try{
   const spec=specs.find(s=>s.containers.includes(item.containers[0]));assert(spec);
   const b=read(dir+'/gzip/'+spec.key+'/build.json'),n=read(dir+'/gzip/'+spec.key+'/native.json');assert(b.passed&&b.configurationUnchanged&&n.passed&&n.nativeStreamsAndIntegrity&&n.nativeGzexeAndZgrep&&n.sharedLibrariesUnchanged);assert.equal(n.imageId,b.imageId);assert.equal(item.installed,b.version);
-  for(const name of item.containers){let row=rows.find(r=>r.name===name&&r.newImage===b.imageId);assert(row&&Date.parse(row.completedAt)<=Date.parse(scan.date));if(row.newImage!==item.artifact){const next=descendants.find(r=>r.name===name&&r.oldImage===row.newImage&&r.newImage===item.artifact);assert(next&&Date.parse(next.completedAt)<=Date.parse(scan.date));row=next;}assert.equal(row.newImage,item.artifact);assert.equal(run('docker',['inspect','--format','{{.Image}}',name]),item.artifact);}
+  for(const name of item.containers){let row=rows.find(r=>r.name===name&&r.newImage===b.imageId);assert(row&&Date.parse(row.completedAt)<=Date.parse(scan.date));for(const next of descendants){if(next.name===name&&next.oldImage===row.newImage){assert(Date.parse(next.completedAt)<=Date.parse(scan.date));row=next;}}assert.equal(row.newImage,item.artifact);assert.equal(run('docker',['inspect','--format','{{.Image}}',name]),item.artifact);}
   const file=dir+(spec.suite==='noble'?'/gzip-ubuntu/':'/gzip-bookworm/')+'gzip_'+b.version+'_amd64.deb';assert.equal(sha(fs.readFileSync(file)),b.packageSha256);
   if(spec.suite==='bookworm'){
    assert.equal(primary.sources.gzip?.[item.id]?.releases?.sid?.fixed_version,'1.14-1');assert.equal(n.upstreamPassed,30);assert.equal(n.upstreamSkipped,0);

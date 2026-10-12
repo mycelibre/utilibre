@@ -1,0 +1,10 @@
+[
+  {
+    "key": "python-system-penpot-backend",
+    "kind": "penpot-backend",
+    "base": "sha256:3bfc07fe9a4169783ccf92f081566408cb1fb891751667c7da2a6249f6b13779",
+    "baseRef": "utilibre-curl-expanded-penpot-backend:security-20261012",
+    "candidate": "utilibre-penpot-backend:python-system-security-20261012",
+    "containers": ["utilibre-expanded-penpot-backend-1"]
+  }
+]

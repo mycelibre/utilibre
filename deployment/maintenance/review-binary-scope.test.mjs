@@ -1,6 +1,14 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {absentComponent} from './review-binary-scope.mjs';
+
+test('CUPS scheduler attribution never exempts the server or an included scheduler',()=>{
+ const item={id:'CVE-2026-34980',package:'libcups2t64'};
+ assert(absentComponent(item,['/.','/usr/lib/x86_64-linux-gnu/libcups.so.2']));
+ assert.equal(absentComponent({...item,package:'cups-daemon'},['/.','/usr/sbin/cupsd']),null);
+ assert.equal(absentComponent(item,['/.','/usr/sbin/cupsd']),null);
+ assert.equal(absentComponent({...item,id:'CVE-2026-99999'},['/.','/usr/lib/libcups.so.2']),null);
+});
 const files=['/.','/usr/lib/libuuid.so.1'];
 test('Python SAX advisory never exempts the binding package or an included binding',()=>{
  const item={id:'CVE-2026-74860',package:'libxml2'};
@@ -36,7 +44,11 @@ test('unknown CVEs, missing evidence and malformed paths never qualify',()=>{
 });
 test('homed and Archive::Tar reviews preserve actual component packages',()=>{
  assert.match(absentComponent({id:'CVE-2026-16742',package:'libsystemd0'},files),/homed/);
- for(const packageName of ['systemd','systemd-homed','libsystemd-shared'])assert.equal(absentComponent({id:'CVE-2026-16742',package:packageName},files),null);
+ for(const packageName of ['systemd','libsystemd-shared','systemd-cryptsetup','libnss-systemd']){
+  assert.match(absentComponent({id:'CVE-2026-16742',package:packageName},files),/homed/);
+  assert.equal(absentComponent({id:'CVE-2026-16742',package:packageName},[...files,'/usr/lib/systemd/systemd-homed']),null);
+ }
+ assert.equal(absentComponent({id:'CVE-2026-16742',package:'systemd-homed'},files),null);
  assert.equal(absentComponent({id:'CVE-2026-16742',package:'libsystemd0'},[...files,'/usr/lib/systemd/systemd-homed']),null);
  assert.match(absentComponent({id:'CVE-2026-9538',package:'perl-base'},files),/Archive::Tar/);
  assert.equal(absentComponent({id:'CVE-2026-9538',package:'perl-modules-5.40'},files),null);

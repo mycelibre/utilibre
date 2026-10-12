@@ -32,6 +32,16 @@ export function externalIssues(workflow,runs,now=Date.now()){
  else if(scheduled.conclusion!=='success')issues.push('Independent scheduled monitoring failed; inspect GitHub Actions');
  return issues;
 }
+export function unattendedIssues(unit,upgradeStamp,now=Date.now()){
+ const issues=[];
+ if(unit?.LoadState!=='loaded')return ['Unattended OS update unit is unavailable'];
+ // A successful oneshot normally becomes inactive. Do not call that a failure.
+ if(unit.ActiveState==='failed'||!unit.Result||unit.Result!=='success')issues.push('Native maintenance failed: apt-daily-upgrade.service');
+ // This is APT's native stamp, written after unattended-upgrade returns success,
+ // not evidence that every package was eligible or actually needed an update.
+ if(!Number.isFinite(upgradeStamp)||upgradeStamp>now+300000||now-upgradeStamp>36*3600000)issues.push('Unattended OS update check has no recent success (36 hours)');
+ return issues;
+}
 export function alertState(previous,issues,now=Date.now()){
  // Count each stable issue independently: a flapping neighbor must not starve it.
  const observed={};for(const issue of issues)observed[issue]=(previous.observed?.[issue]||0)+1;

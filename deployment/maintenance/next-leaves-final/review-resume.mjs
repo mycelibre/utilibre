@@ -6,9 +6,12 @@ import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {validateDecision} from '../triage.mjs';
 const dir='/var/lib/utilibre-maintenance/next-leaves-final-20261012';
-const name='utilibre-expanded-resume-1',image='sha256:3a626fe8c04698c9cd85ae57ef562f0cfee2f10fb062bd3a72e440141e123a69';
+const name='utilibre-expanded-resume-1';
 const docker=args=>{try{return execFileSync('docker',args,{encoding:'utf8',maxBuffer:1024*1024,timeout:30000,stdio:['ignore','pipe','pipe']});}catch{throw Error('Resume evidence check failed; child details suppressed');}};
-assert.equal(docker(['inspect','--format','{{.Image}}',name]).trim(),image);
+// Bind to the current artifact only after repeating the complete app-payload
+// checks. A native gzip/ncurses overlay must not make an old ID the evidence.
+const image=docker(['inspect','--format','{{.Image}}',name]).trim();
+assert.match(image,/^sha256:[a-f0-9]{64}$/);
 assert.deepEqual(JSON.parse(docker(['inspect','--format','{{json .Config.Cmd}}',name])),['node','/usr/local/bin/utilibre-resume-start.mjs']);
 const entry=docker(['exec',name,'cat','/app/apps/server/dist/index.mjs']);
 assert.equal(createHash('sha256').update(entry).digest('hex'),'14a3398db0193e3fc05a4ba01be90ccc3a2a5185b00257ddc0acff678619bf66');
@@ -46,6 +49,7 @@ console.log(JSON.stringify({compiledModules:files.length,compiledSha256:hash.dig
  pidOneIsExpected:fs.readFileSync('/proc/1/cmdline').toString().split('\0').includes('/usr/local/bin/utilibre-resume-start.mjs')}));`;
 const evidence=JSON.parse(docker(['exec',name,'node','-e',code]));
 assert.equal(evidence.compiledModules,56);assert.deepEqual(evidence.nextImports,[]);
+assert.equal(evidence.compiledSha256,'6b8977822827a30ef580efe51e678e9839d34655f0ff65d00745f666f9c6f44a','Re-review any application code change');
 assert.deepEqual(evidence.consumers,['better-auth']);assert.equal(evidence.next,'16.3.6');
 assert.equal(evidence.betterAuth,'1.7.7');assert.equal(evidence.nextOptional,true);
 assert.equal(evidence.rootExport,'./dist/index.mjs');assert.equal(evidence.nextExport,'./dist/integrations/next-js.mjs');
@@ -59,6 +63,10 @@ const advisories={
  'CVE-2026-94486':['GHSA-39w2-rjm5-chcv','Next development-server MCP endpoint']
 };
 const queue=JSON.parse(readFileSync('/var/lib/utilibre-maintenance/security-queue.json'));
+const scan=JSON.parse(readFileSync('/var/lib/utilibre-maintenance/security.json'));
+assert.equal(scan.status,'checked');assert.equal(queue.scanDate,scan.completedAt);
+assert(Date.now()-Date.parse(scan.completedAt)<86400000);
+assert.equal(scan.images.find(x=>x.id===image)?.status,'checked');
 const items=queue.items.filter(i=>i.artifact===image&&i.package==='next'&&i.installed==='16.3.6'&&advisories[i.id]);
 assert.equal(items.length,6,'Expected exact six findings, otherwise re-review');
 const reviews=items.map(i=>validateDecision({key:i.key,status:'not-affected',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:

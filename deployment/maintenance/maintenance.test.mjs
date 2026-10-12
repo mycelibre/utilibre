@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {imageInventory,summarize,registryFallback,scannerManifestName,imageScanStatus,inventoryFormat} from './security-review.mjs';
-import {reportIssues,queueIssues,externalIssues,alertState} from './report-health.mjs';
+import {reportIssues,queueIssues,externalIssues,unattendedIssues,alertState} from './report-health.mjs';
 import {validateDecision,applyDecisions} from './triage.mjs';
 import {findingsQueue,retainUnrechecked,recheckedTarget} from './build-queue.mjs';
 import {probe,validResponse,targets} from './check-external.mjs';
@@ -39,6 +39,16 @@ test('language packages cannot conceal a missing identified distribution invento
 test('stale, future, missing and failed reports are not healthy',()=>{
  for(const report of [null,{status:'passed',date:'bad'},{status:'passed',date:'2026-10-01'},{status:'passed',date:'2026-10-12'},{status:'failed',date:new Date(now).toISOString()}])assert(reportIssues('Tasks',report,36,now).length);
  assert.deepEqual(reportIssues('Tasks',{status:'passed',date:new Date(now).toISOString(),results:[{id:'export',status:'passed'}]},36,now),[]);
+});
+test('successful inactive native OS-update oneshot is not a failed service',()=>{
+ assert.deepEqual(unattendedIssues({LoadState:'loaded',ActiveState:'inactive',Result:'success'},now-3600000,now),[]);
+});
+test('unattended guard failure alerts even when the preceding update stamp is fresh',()=>{
+ assert.deepEqual(unattendedIssues({LoadState:'loaded',ActiveState:'failed',Result:'exit-code'},now-3600000,now),['Native maintenance failed: apt-daily-upgrade.service']);
+ assert(unattendedIssues({LoadState:'not-found'},now,now).some(x=>x.includes('unavailable')));
+});
+test('unattended native freshness cannot be manufactured from an inactive success result',()=>{
+ for(const stamp of [NaN,now-37*3600000,now+600000])assert(unattendedIssues({LoadState:'loaded',ActiveState:'inactive',Result:'success'},stamp,now).some(x=>x.includes('36 hours')));
 });
 test('empty inventory cannot pass a vulnerability scan',()=>{
  assert(reportIssues('Vulnerability scan',{status:'checked',date:new Date(now).toISOString(),images:[],host:{packages:0}},36,now).length);

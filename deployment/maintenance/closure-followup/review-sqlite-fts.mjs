@@ -7,6 +7,7 @@ const read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(
 const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:30000,maxBuffer:8*1024**2,stdio:['ignore','pipe','pipe']}).trim();
 const queue=read(root+'/security-queue.json'),scan=read(root+'/security.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
 const release=read(dir+'/sqlite-fts-release.json');assert.equal(release.status,'passed');const rows=overlayRows(release);
+const descendants=fs.existsSync(dir+'/urllib3-release.json')?overlayRows(read(dir+'/urllib3-release.json')):[];
 const specs=read(new URL('./sqlite-fts-specs.json',import.meta.url)),version='3.40.1-2+deb12u2+utilibre2';
 const sums={'libsqlite3-0':'070eab3c6f2613c686a5b593a0fd7f99a6fdaa8d6bdf1467a3aa32b85bc2ad6e',sqlite3:'692f5f10d7953afb9d5ec3ff24d3a79ad31b87e2b49e36c041920215fee2bb5f'};
 const ids=['CVE-2025-7458','CVE-2026-11822','CVE-2026-11824'];
@@ -21,8 +22,8 @@ for(const item of queue.items.filter(i=>i.status==='needs-review'&&i.scope==='ru
  try{
   const spec=specs.find(s=>s.containers.includes(item.containers[0]));assert(spec);assert.deepEqual(item.containers,spec.containers);if(item.package==='sqlite3')assert(spec.cli);
   const b=read(dir+'/sqlite-fts/'+spec.key+'/build.json'),n=read(dir+'/sqlite-fts/'+spec.key+'/native.json');
-  assert(b.passed&&b.configurationUnchanged&&n.passed&&n.abiPreserved&&n.nativeSqliteBackupRestore&&n.nativeFtsCorruptionRejected&&n.existingDistinctRegressionsPassed);assert.equal(n.applicationChecks.status,'passed');assert.equal(n.imageId,item.artifact);assert.equal(b.imageId,item.artifact);assert.equal(b.librarySha256,'632c2ab03779d4941088f6320863b3d21829c3c0263f524b4a8a08ac1c8dea81');
-  for(const name of item.containers){const row=rows.find(r=>r.name===name&&r.oldImage===spec.base&&r.newImage===item.artifact);assert(row&&Date.parse(row.completedAt)<=Date.parse(scan.date));assert.equal(run('docker',['inspect',name,'--format','{{.Image}}']),item.artifact);assert.equal(run('docker',['exec',name,'dpkg-query','-W','-f=${Version}',item.package]),version);assert.equal(run('docker',['exec',name,'sha256sum','/usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6']).split(/\s+/)[0],b.librarySha256);}
+  assert(b.passed&&b.configurationUnchanged&&n.passed&&n.abiPreserved&&n.nativeSqliteBackupRestore&&n.nativeFtsCorruptionRejected&&n.existingDistinctRegressionsPassed);assert.equal(n.applicationChecks.status,'passed');assert.equal(n.imageId,b.imageId);assert.equal(b.librarySha256,'632c2ab03779d4941088f6320863b3d21829c3c0263f524b4a8a08ac1c8dea81');
+  for(const name of item.containers){let row=rows.find(r=>r.name===name&&r.oldImage===spec.base&&r.newImage===b.imageId);assert(row&&Date.parse(row.completedAt)<=Date.parse(scan.date));for(const next of descendants)if(next.name===name&&next.oldImage===row.newImage){assert(Date.parse(next.completedAt)<=Date.parse(scan.date));row=next;}assert.equal(row.newImage,item.artifact);assert.equal(run('docker',['inspect',name,'--format','{{.Image}}']),item.artifact);assert.equal(run('docker',['exec',name,'dpkg-query','-W','-f=${Version}',item.package]),version);assert.equal(run('docker',['exec',name,'sha256sum','/usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6']).split(/\s+/)[0],b.librarySha256);}
   const key=item.artifact+item.package;
   if(!cache.has(key)){
    const file=build+'/'+item.package+'_'+version+'_amd64.deb';assert.equal(sha(fs.readFileSync(file)),sums[item.package]);const temp=fs.mkdtempSync('/dev/shm/utilibre-sqlite-proof-'),manifest=[];

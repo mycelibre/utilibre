@@ -182,6 +182,37 @@ def running_image():
     return command(['docker', 'inspect', '--format', '{{.Config.Image}}', container_id()])
 
 
+def validate_upstream_runtime(pin, runtime, image, changes):
+    """Never replace a local repair merely because its tag looks upstream."""
+    if not PIN.fullmatch(pin) or runtime.get('reference') != pin:
+        raise RuntimeError('SearXNG runtime pin changed; manual security review required')
+    if not DIGEST.fullmatch(runtime.get('image', '')) or runtime['image'] != image.get('id'):
+        raise RuntimeError('SearXNG image identity does not match the running container')
+    digest = pin.split('@')[1]
+    allowed = {'searxng/searxng@' + digest, REPOSITORY + '@' + digest}
+    if not allowed.intersection(image.get('digests') or []):
+        raise RuntimeError('SearXNG image is not the pinned upstream artifact; preserve local repairs')
+    if image.get('source') != 'https://github.com/searxng/searxng':
+        raise RuntimeError('SearXNG source identity changed; manual review required')
+    # Startup refreshes the native CA bundle. Configuration/cache are mounts.
+    # Any other writable-layer change may be a repair: never discard it.
+    startup_changes = {'C /etc', 'C /etc/ssl', 'C /etc/ssl/certs',
+                       'C /etc/ssl/certs/ca-certificates.crt'}
+    if any(line not in startup_changes for line in changes.splitlines()):
+        raise RuntimeError('SearXNG has unexpected writable-layer changes; preserve and review them')
+
+
+def check_upstream_runtime(pin):
+    container = container_id()
+    runtime = json.loads(command(['docker', 'inspect', '--format',
+        '{"reference":{{json .Config.Image}},"image":{{json .Image}}}', container]))
+    image = json.loads(command(['docker', 'image', 'inspect', '--format',
+        '{"id":{{json .Id}},"digests":{{json .RepoDigests}},'
+        '"source":{{json (index .Config.Labels "org.opencontainers.image.source")}}}', runtime['image']]))
+    changes = command(['docker', 'diff', container])
+    validate_upstream_runtime(pin, runtime, image, changes)
+
+
 def pending_age(previous, candidate):
     """Track the oldest observed outstanding update, even if latest changes daily."""
     path = STATE / 'outstanding.json'
@@ -329,6 +360,8 @@ def recover_interrupted(config):
 
 
 def deploy_candidate(previous, candidate, directory, base):
+    # Repeat immediately before mutation: candidate staging can take minutes.
+    check_upstream_runtime(previous)
     journal = {'previousImage': previous, 'candidateImage': candidate['image'], 'runDirectory': str(directory)}
     atomic_json(STATE / 'pending.json', journal)
     try:
@@ -379,6 +412,7 @@ def main():
             previous = config['services']['searxng']['image']
             if running_image() != previous:
                 raise RuntimeError('Running image differs from the configured pin; reconcile before updating')
+            check_upstream_runtime(previous)
             architecture = command(['docker', 'info', '--format', '{{.Architecture}}'])
             architecture = {'x86_64': 'amd64', 'aarch64': 'arm64'}.get(architecture, architecture)
             candidate = latest_image(architecture)

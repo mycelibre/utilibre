@@ -27,6 +27,45 @@ class MaintenanceTests(unittest.TestCase):
             p = patch.object(m, name, value)
             p.start()
             self.addCleanup(p.stop)
+        runtime = patch.object(m, 'check_upstream_runtime')
+        runtime.start()
+        self.addCleanup(runtime.stop)
+
+    def test_unmodified_official_runtime_is_allowed(self):
+        image_id = 'sha256:' + 'c' * 64
+        m.validate_upstream_runtime(OLD, {'reference': OLD, 'image': image_id},
+            {'id': image_id, 'digests': ['searxng/searxng@sha256:' + 'a' * 64],
+             'source': 'https://github.com/searxng/searxng'},
+            'C /etc\nC /etc/ssl\nC /etc/ssl/certs\nC /etc/ssl/certs/ca-certificates.crt')
+
+    def test_tagged_local_repair_and_missing_identity_are_blocked(self):
+        image_id = 'sha256:' + 'c' * 64
+        runtime = {'reference': OLD, 'image': image_id}
+        image = {'id': image_id, 'digests': [], 'source': 'https://github.com/searxng/searxng'}
+        with self.assertRaisesRegex(RuntimeError, 'preserve local repairs'):
+            m.validate_upstream_runtime(OLD, runtime, image, '')
+        image['digests'] = ['unrelated/image@sha256:' + 'a' * 64]
+        with self.assertRaises(RuntimeError):
+            m.validate_upstream_runtime(OLD, runtime, image, '')
+        image['digests'] = ['searxng/searxng@sha256:' + 'a' * 64]
+        image['id'] = 'sha256:' + 'd' * 64
+        with self.assertRaisesRegex(RuntimeError, 'identity'):
+            m.validate_upstream_runtime(OLD, runtime, image, '')
+
+    def test_live_code_patch_is_not_discarded(self):
+        image_id = 'sha256:' + 'c' * 64
+        image = {'id': image_id, 'digests': ['searxng/searxng@sha256:' + 'a' * 64],
+                 'source': 'https://github.com/searxng/searxng'}
+        for change in ['C /usr/local/searxng/searx/webapp.py', 'A /repair', 'D /etc/ssl/certs/ca-certificates.crt']:
+            with self.assertRaisesRegex(RuntimeError, 'writable-layer'):
+                m.validate_upstream_runtime(OLD, {'reference': OLD, 'image': image_id}, image, change)
+
+    def test_runtime_change_during_staging_prevents_mutation(self):
+        with patch.object(m, 'check_upstream_runtime', side_effect=RuntimeError('local repair')), patch.object(m, 'apply_pin') as apply:
+            with self.assertRaisesRegex(RuntimeError, 'local repair'):
+                m.deploy_candidate(OLD, {'image': NEW}, self.run, 'https://search.utilibre.org/')
+            apply.assert_not_called()
+        self.assertFalse((self.state / 'pending.json').exists())
 
     def test_pin_validation_preserves_unrelated_settings(self):
         self.assertEqual(m.replace_image_setting('SECRET=keep\nOTHER=yes', NEW), 'SECRET=keep\nOTHER=yes\nSEARXNG_IMAGE=' + NEW + '\n')

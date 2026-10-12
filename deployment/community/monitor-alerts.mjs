@@ -1,10 +1,10 @@
 // Read Kuma's public heartbeat API locally; deliver notifications from the host.
 // Nodemailer's DNS resolver ignores Docker /etc/hosts for this private relay.
 // Host STARTTLS keeps certificate verification enabled, without patching Kuma.
-import {readFileSync,writeFileSync,renameSync,mkdirSync,existsSync,statfsSync} from 'node:fs';
+import {readFileSync,writeFileSync,renameSync,mkdirSync,existsSync,statfsSync,statSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {sendOperatorMail} from '../maintenance/mail.mjs';
-import {reportIssues,queueIssues,externalIssues,alertState} from '../maintenance/report-health.mjs';
+import {reportIssues,queueIssues,externalIssues,unattendedIssues,alertState} from '../maintenance/report-health.mjs';
 const directory='/var/lib/utilibre-monitor-alerts',file=`${directory}/state.json`;
 // Validate live observations without sending mail or acknowledging alert state.
 const checkOnly=process.argv.includes('--check-only');
@@ -57,6 +57,16 @@ for(const unit of new Set([...backupUnits,'utilibre-pack-forms-maintenance.servi
     const result=execFileSync('systemctl',['show',unit,'--property=Result','--value'],{encoding:'utf8',timeout:5000}).trim();
     if(result&&result!=='success')issues.push(`Native maintenance failed: ${unit}`);
   } catch {issues.push(`Cannot inspect native maintenance: ${unit}`)}
+}
+// Protecting local repairs must not silently stop unrelated native OS updates.
+// Watch only after this host's guard is activated; no package/log contents read.
+if(existsSync('/etc/systemd/system/apt-daily-upgrade.service.d/utilibre-protected-packages.conf')){
+ try{
+  const text=execFileSync('systemctl',['show','apt-daily-upgrade.service','--property=LoadState,ActiveState,Result'],{encoding:'utf8',timeout:5000});
+  const unit=Object.fromEntries(text.trim().split('\n').map(line=>{const i=line.indexOf('=');return [line.slice(0,i),line.slice(i+1)];}));
+  let stamp=NaN;try{stamp=statSync('/var/lib/apt/periodic/upgrade-stamp').mtimeMs;}catch{/* Missing is not successful. */}
+  issues.push(...unattendedIssues(unit,stamp));
+ }catch{issues.push('Cannot inspect protected unattended OS updates');}
 }
 for(const [file,name,hours,unit]of [
  ['security.json','Vulnerability scan',36,'utilibre-security-review'],

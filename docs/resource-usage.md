@@ -1,6 +1,30 @@
 # Resource usage and operating limits
 
-## Root disk expanded — 12 October 2026
+## Root disk expanded to 200 GiB — 12 October 2026
+
+At 12:49 UTC Proxmox already exposed a **200 GiB** main virtual disk, while
+partition 1 and ext4 still used the earlier 170 GiB allocation. After a dry run
+and native GPT-sector backup, `growpart /dev/sda 1` and `resize2fs /dev/sda1`
+completed online. Root reports **197 GiB usable, 152 GiB used, 38 GiB available,
+81% used**, versus 8.8 GiB available / 95% used before the expansion. These are
+point-in-time measurements, not reserved capacity.
+
+Root start sector, partition/disk UUIDs and both boot partitions are unchanged.
+The filesystem now has 52,396,027 4 KiB blocks. The separate **15 GiB** temporary
+disk at `/opt/utilibre/temporary` is untouched, including its existing allocation
+and backup policy. No reboot, service stop, purchase or deletion was needed.
+GPT metadata is retained privately at
+`/var/lib/utilibre-maintenance/disk-expand-20261012/`; it is not a data backup.
+Never restore the smaller partition table over the expanded filesystem or shrink
+this mounted filesystem as a rollback.
+
+The recurring udev warning was separately traced to the root user's 128 inotify
+descriptors, matching the host's 128-instance cap. The bounded host setting in
+`deployment/maintenance/host-final/99-utilibre-inotify.conf` raises that cap to
+512. It does not allocate those instances in advance, raise the existing
+watch/event limits, remove any watcher, or restart applications.
+
+## Earlier root expansion to 170 GiB — 12 October 2026
 
 The operator had enlarged VM 144's `scsi0` device from 150 to 170 GiB. A dry run
 confirmed 20 GiB of contiguous free space after root; partition 1 and mounted ext4

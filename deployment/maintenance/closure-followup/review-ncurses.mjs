@@ -39,7 +39,7 @@ if(fs.existsSync(dir+'/rsync-release.json')){
 const exporter=read(dir+'/expat-release.json').groups.find(g=>g.key==='penpot-exporter');assert.equal(exporter.status,'passed');
 for(const [image,name] of [['sha256:ca4f4adc5367a40e1597bea7d6032de0d08266b6d65cdf083ae4c695d54d23a7','utilibre-expanded-penpot-frontend-1'],[exporter.newImage,'utilibre-expanded-penpot-exporter-1']])
  specs.set(image,{version:'6.5+20250216-2+dhi4',checksum:'54821f5e17572f0badc7059efefb54fb54d9e8a28449274f478735314f22474d',suite:'trixie',containers:[name]});
-for(const receipt of ['util-linux-release.json','curl-release.json','gzip-release.json','sqlite-fts-release.json'])if(fs.existsSync(dir+'/'+receipt)){
+for(const receipt of ['util-linux-release.json','curl-release.json','gzip-release.json','sqlite-fts-release.json','urllib3-release.json','python-system-release.json'])if(fs.existsSync(dir+'/'+receipt)){
  const report=read(dir+'/'+receipt);assert.equal(report.status,'passed');
  for(const row of overlayRows(report)){
   const prior=specs.get(row.oldImage);if(!prior)continue;

@@ -8,6 +8,10 @@ const read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(
 const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:30000,maxBuffer:8*1024**2,stdio:['ignore','pipe','pipe']}).trim();
 const queue=read(root+'/security-queue.json'),scan=read(root+'/security.json'),primary=read(dir+'/debian-primary.json');freshScan(queue,scan);assert.equal(scan.status,'checked');assert(Date.now()-Date.parse(primary.date)<86400000);
 const release=read(dir+'/curl-release.json');assert.equal(release.status,'passed');const rows=overlayRows(release);
+if(fs.existsSync(dir+'/python-system-release.json')){
+ const next=read(dir+'/python-system-release.json');assert.equal(next.status,'passed');
+ for(const row of overlayRows(next)){if(row.oldImage===row.newImage)continue;assert(rows.some(r=>r.name===row.name&&r.newImage===row.oldImage));rows.push(row);}
+}
 const host=fs.existsSync(dir+'/curl-host.json')?read(dir+'/curl-host.json'):null;
 const sums=new Map(fs.readFileSync(dir+'/curl-trixie/SHA256SUMS','utf8').trim().split('\n').map(l=>[path.basename(l.slice(66)),l.slice(0,64)]));
 const debs=new Map(fs.readdirSync(dir+'/curl-trixie').filter(f=>f.endsWith('_amd64.deb')).map(f=>[run('dpkg-deb',['-f',dir+'/curl-trixie/'+f,'Package']),f]));

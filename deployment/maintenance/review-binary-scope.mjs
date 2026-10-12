@@ -12,9 +12,11 @@ const mountSiblings=new Set(['bsdutils','bsdextrautils','libblkid1','liblastlog2
 const nsenterSiblings=new Set([...mountSiblings,'libmount1','mount']);
 nsenterSiblings.delete('util-linux');
 const ncursesSiblings=new Set(['libncursesw6','libncurses6','libncurses-dev','libtinfo6','ncurses-base']);
-// Both upstream homed fixes change src/home/homed-home.c only. Keep the
-// homed/main/shared packages out of this conservative sibling allowlist.
-const homedSiblings=new Set(['libsystemd0','libudev1','udev','systemd-timesyncd','systemd-resolved','libnss-myhostname','libnss-resolve','libpam-systemd','systemd-sysv']);
+// Both fixes change src/home/homed-home.c. The v252/v257 src/home/meson.build
+// compiles it into systemd-homed, not libshared or the system manager. Debian
+// splits homed into its own package. Still check each installed file inventory;
+// never waive systemd-homed or a package actually containing that component.
+const homedSiblings=new Set(['libsystemd0','libudev1','udev','systemd-timesyncd','systemd-resolved','libnss-myhostname','libnss-resolve','libpam-systemd','systemd-sysv','systemd','libsystemd-shared','systemd-cryptsetup','libnss-systemd']);
 export function absentComponent(item,files){
  if(!Array.isArray(files)||files.length<2||files.some(p=>!p.startsWith('/')))return null;
  if(item.id==='CVE-2026-12064'&&/^libcurl(?:3|4)(?:t64)?(?:-gnutls|-openssl-dev|-gnutls-dev)?$/.test(item.package)&&!files.some(p=>/\/(?:s?bin)\/curl$/.test(p)))
@@ -35,6 +37,8 @@ export function absentComponent(item,files){
   return 'systemd-homed src/home/homed-home.c identity verification';
  if(item.id==='CVE-2026-9538'&&['perl-base','libperl5.36','libperl5.40'].includes(item.package)&&!files.some(p=>/\/Archive\/Tar(?:\.pm|\/)/.test(p)))
   return 'the separate Perl Archive::Tar module _read_tar function';
+ if(item.id==='CVE-2026-34980'&&['libcups2','libcups2t64'].includes(item.package)&&!files.some(p=>/\/(?:cupsd|cups-exec)(?:\.|$)|\/scheduler\//.test(p)))
+  return 'the cupsd scheduler job option/PPD control parsing, not the CUPS client library; upstream repair 8d0f51cac24cb5bf949c5b6a221e51a150d982e3 changes scheduler/job.c only';
  if(item.id==='CVE-2026-74860'&&['libxml2','libxml2-dev','libxml2-utils'].includes(item.package)&&!files.some(p=>/python|libxml2mod|libxml2\.py/i.test(p)))
   return 'the separate libxml2 Python SAX binding libxml_xmlSAXAttributeDecl (not the C library or lxml); upstream fix f41e1865781f74d1cadfe2fbdfeefed946026f12 changes python/libxml.c';
  return null;

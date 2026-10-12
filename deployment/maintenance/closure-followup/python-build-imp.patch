@@ -1,0 +1,11 @@
+--- a/debian/imp.py
++++ b/debian/imp.py
+@@ -17,5 +17,7 @@
+     create_dynamic = None
+ 
+-from importlib._bootstrap import _ERR_MSG, _exec, _load, _builtin_from_name
++from importlib._bootstrap import _exec, _load, _builtin_from_name
++# Build-time compatibility shim: 3.13.16 removed this private string constant.
++_ERR_MSG = 'No module named {!r}'
+ from importlib._bootstrap_external import SourcelessFileLoader
+ 

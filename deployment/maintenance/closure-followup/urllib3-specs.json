@@ -1,0 +1,4 @@
+[
+ {"key":"urllib3-community-uptime-kuma","kind":"kuma","base":"sha256:b1156f8e150bd1c89b9f1c02de9461c317a4003f582cb5e5e5dcc236ab703469","baseRef":"utilibre-kuma:sqlite-fts-security-20261012","containers":["utilibre-community-uptime-kuma-1"],"candidate":"utilibre-kuma:urllib3-security-20261012"},
+ {"key":"urllib3-gathio-postgres","kind":"documentdb","base":"sha256:034dc68486e8e4489a4760654665f9bfa1d3cd533356507d871a1bc0ab5c66be","baseRef":"utilibre-gathio-documentdb:sqlite-fts-security-20261012","containers":["utilibre-gathio-postgres-1"],"candidate":"utilibre-gathio-documentdb:urllib3-security-20261012"}
+]

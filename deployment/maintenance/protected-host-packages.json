@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "note": "Native signed-vendor upgrades without a +utilibre version suffix. All installed +utilibre packages are additionally discovered automatically. Entries require reviewed retirement, not expiry.",
+  "packages": {
+    "libexpat1": "closure-followup/release-host.mjs",
+    "libsodium26": "closure-followup/release-host.mjs",
+    "ncurses-bin": "closure-followup/ncurses-host.mjs",
+    "libnghttp3-9": "closure-followup/curl-host.mjs",
+    "libngtcp2-16": "closure-followup/curl-host.mjs",
+    "libngtcp2-crypto-gnutls8": "closure-followup/curl-host.mjs",
+    "libngtcp2-crypto-ossl0": "closure-followup/curl-host.mjs",
+    "python3-jwt": "host-final/release-jwt.mjs",
+    "python3-urllib3": "closure-followup/urllib3-host.mjs",
+    "vim": "closure-followup/release-host.mjs",
+    "vim-common": "closure-followup/release-host.mjs",
+    "vim-runtime": "closure-followup/release-host.mjs",
+    "vim-tiny": "closure-followup/release-host.mjs",
+    "docker-ce": "host-final/release-docker.mjs",
+    "docker-ce-cli": "host-final/release-docker.mjs",
+    "docker-ce-rootless-extras": "host-final/release-docker.mjs",
+    "containerd.io": "host-final/release-docker.mjs",
+    "docker-buildx-plugin": "host-final/release-docker.mjs",
+    "docker-compose-plugin": "host-final/release-docker.mjs"
+  }
+}

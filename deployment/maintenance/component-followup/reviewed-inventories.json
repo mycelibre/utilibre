@@ -1,0 +1,68 @@
+[
+  {
+    "package": "gdal-data",
+    "installed": "3.13.2+dfsg-1.pgdg12+1",
+    "inventorySha256": "cdb63a7c188a94939984ccf279d302d11147e6d06dad8f612becb9bcace11150",
+    "ids": [
+      "CVE-2026-49014",
+      "CVE-2026-8086",
+      "CVE-2026-8087"
+    ]
+  },
+  {
+    "package": "gdal-plugins",
+    "installed": "3.13.2+dfsg-1.pgdg12+1",
+    "inventorySha256": "06938c388077fbee26af015604e2e33b6bac4c1cb50cdd49df183629f7e06a52",
+    "ids": [
+      "CVE-2026-49014",
+      "CVE-2026-8086",
+      "CVE-2026-8087"
+    ]
+  },
+  {
+    "package": "mariadb-common",
+    "installed": "1:10.11.18-0+deb12u1",
+    "inventorySha256": "c7d6bafffc5b44f68d80cd2170d566a6180b5301d9833132718f37af80516b47",
+    "ids": [
+      "CVE-2026-107815",
+      "CVE-2026-107818",
+      "CVE-2026-107823"
+    ]
+  },
+  {
+    "package": "libmariadb3",
+    "installed": "1:10.11.18-0+deb12u1",
+    "inventorySha256": "5b584df2ff18b5dcfe6ebe96c9946f015fb2c50d12ca628a482dec54511d5b13",
+    "ids": [
+      "CVE-2026-107815",
+      "CVE-2026-107818",
+      "CVE-2026-107823"
+    ]
+  },
+  {
+    "package": "postgresql-17-postgis-3-scripts",
+    "installed": "3.6.0+dfsg-3.pgdg12+1",
+    "inventorySha256": "f144c46c9735b8b2e5d9fe2450dfdbdf825f8cf1cb6a9413da2036e981bf0770",
+    "ids": [
+      "CVE-2026-73515"
+    ]
+  },
+  {
+    "package": "dracut-install",
+    "installed": "106-6",
+    "inventorySha256": "642575fd99d348728f72908d9abfa39b141b5979ae0f02d70c1e3cb4064db21d",
+    "ids": [
+      "CVE-2026-15816",
+      "CVE-2026-16445",
+      "CVE-2026-6893"
+    ]
+  },
+  {
+    "package": "python3-cryptography",
+    "installed": "38.0.4-3+deb12u1",
+    "inventorySha256": "9cc60b676b3c716d8dfdb11b83d48efaa0333ee8138679906b5abd32d81f8236",
+    "ids": [
+      "CVE-2026-69249"
+    ]
+  }
+]

@@ -247,7 +247,7 @@ services:
 
   penpot-backend:
     <<: *runtime
-    image: utilibre-curl-expanded-penpot-backend:security-20261012
+    image: utilibre-penpot-backend:python-system-security-20261012
     user: "1001:1001"
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org

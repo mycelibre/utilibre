@@ -5,6 +5,113 @@ version/digest pins; Redlib is built from an exact source commit and pinned
 base images. SearXNG has the guarded, daily updater below; other services
 remain reviewed rollouts. Production never runs a floating `latest` tag.
 
+## Local repair protection
+
+A newer application image does **not** necessarily include our security or
+privacy repairs. Keep each repair as a reproducible source/package recipe, not
+an edit made only inside a running container. A replacement release must either
+carry the repair forward or prove that its upstream replacement fixes the same
+problem. Upstream release numbers and a successful homepage check are not proof.
+
+The generic `scripts/update.sh` rebuild path and
+`deployment/utilibre/scripts/update-apply.sh` image-swap path are now closed for
+reviewed services. They previously could replace layered repairs with an older
+base or an unreviewed vendor image. No `--force` escape hatch is provided.
+SearXNG alone delegates to its existing staged updater; that updater now verifies
+the running image ID, pinned official repository digest, source identity and
+unexpected writable-layer changes, including another check immediately before
+deployment. Mounted local policy still has its existing regression tests.
+Unknown/new images are **review-only**, even if their names do not say `utilibre`.
+
+Read the current protected runtime/package inventory without touching services:
+
+```sh
+python3 scripts/maintenance-update-policy.py
+```
+
+This derives running image IDs and Compose origins from Docker, not a second
+dated list of image tags. It prints no environment values or credentials. The
+existing release-specific manifests, recipes, regression checks and private
+receipts under `deployment/maintenance/` remain the evidence source. The
+inventory is not a claim that every repair is still effective.
+
+### Host unattended upgrades
+
+`maintenance-update-policy.py --write-unattended-blacklist` prepares a native
+Unattended Upgrades package blacklist. It discovers every installed package
+whose version contains `utilibre` at each run, and also protects reviewed native
+vendor packages listed in `deployment/maintenance/protected-host-packages.json`
+(for example Expat, urllib3, the native ncurses repair and Docker, whose versions
+need not have our suffix). It also retains the four exact QUIC/HTTP3 companion
+package names from the curl release and libsodium26 from the Vim release, not
+all general-purpose system libraries.
+Add any future native-package security override to that short file during its
+release. A missing recipe, invalid policy or failed package inventory aborts the
+refresh; it never replaces protection with an empty list.
+
+The provided `apt-daily-upgrade.service.d/utilibre-protected-packages.conf`
+drop-in refreshes this protection **before each scheduled upgrade**. A failed
+refresh prevents that upgrade job. Other packages retain their normal security
+updates; this is not a blanket freeze. Manual `apt`, `dpkg` and Docker commands
+remain administrative bypasses and must use the reviewed release procedure.
+This protects against routine updates, not against a privileged administrator
+deliberately bypassing the policy. A repair added between refreshes is protected
+on the next scheduled run; refresh immediately after every host repair too.
+Once the drop-in is installed, the existing five-minute maintenance monitor
+also checks this unit's failure result and APT's native successful-upgrade stamp
+(36-hour freshness). An inactive, successful oneshot is normal. These checks
+use no package logs or visitor information and do not claim every held package
+is current.
+
+Activation after ongoing host package work is finished (no daemon restart):
+
+```sh
+sudo python3 /home/ubuntu/freetools/scripts/maintenance-update-policy.py --write-unattended-blacklist
+sudo install -d -m 0755 /etc/systemd/system/apt-daily-upgrade.service.d
+sudo install -m 0644 deployment/utilibre/systemd/apt-daily-upgrade.service.d/utilibre-protected-packages.conf /etc/systemd/system/apt-daily-upgrade.service.d/utilibre-protected-packages.conf
+sudo systemctl daemon-reload
+systemctl show apt-daily-upgrade.service -p ExecStartPre
+apt-config dump | rg 'Package-Blacklist'
+```
+
+The drop-in and generated configuration were activated on this VM on
+12 October 2026 at 12:53 UTC. Native systemd configuration confirms the mandatory
+pre-upgrade hook; APT's parsed configuration contains all 49 installed protected
+packages. The 45 focused policy/SearXNG/maintenance tests pass. No package upgrade
+or daemon restart was performed to activate the guard. Rollback removes only those two
+named installed files and reloads systemd; doing so deliberately removes this
+protection. Do not restore an old whole APT configuration or alter existing jobs.
+
+### Updating or retiring a repair
+
+1. Start from the **current running image/package**, not its original vendor tag.
+   Inventory every carried repair, matching source archive, native component and
+   privacy patch from that service's release manifests/receipts. Keep the exact
+   previous artifact available for rollback.
+2. Pin the candidate and inspect primary upstream fix commits/advisories. For
+   each repair choose **carry forward** or **upstream fixed**. If uncertain, keep
+   the repair and hold deployment. A patch failing to apply is a review signal,
+   never permission to skip it or force it through changed context.
+3. Build privately with exact sources. Run the original vulnerability regression
+   against the actual candidate payload (including private/bundled library
+   copies), plus native app, privacy and compatible import/export/restore checks.
+   Re-run the scanner and review newly introduced findings. Scanners alone do
+   not prove a backport or a privacy patch survived.
+4. Record exact old/new artifact IDs, each carried/retired repair, upstream proof,
+   test results, unchanged configuration and rollback in the service's existing
+   release record. Use its finite prepare/apply release, never a bulk image swap.
+   A changed image invalidates previous image-bound applicability decisions;
+   renew them only after checking the new payload, not by copying verdicts.
+5. Retire local patch code only when the **unpatched candidate** passes the same
+   regression with the upstream fix present. Preserve historical source offers
+   and receipts. Remove a native-package blacklist entry only in that reviewed
+   retirement change; local-version packages stop being discovered once a
+   reviewed vendor version replaces them. Refresh host protection after release.
+
+Daily upstream/advisory discovery continues; it alerts rather than guessing how
+to port a patch. Prefer upstream-supported fixes to carrying a permanent fork.
+No blanket assertion that every app can safely auto-update is made.
+
 ## Maintenance release — 12 October 2026
 
 **07:25 UTC host Wget follow-up:** installed the two upstream security fixes
@@ -1118,19 +1225,15 @@ database major version through an ordinary single-container image swap.
 
 ## Root project
 
-The root helper accepts only retained root services:
+The compatibility helper delegates only SearXNG to its guarded updater:
 
 ```sh
-sh scripts/update.sh portal
 sh scripts/update.sh searxng
-sh scripts/update.sh valkey
-sh scripts/update.sh anubis
-sh scripts/update.sh redlib
 ```
 
-Update one service, wait for health, run bounded functional checks, inspect
-logs/resource use, and only then continue. Redlib rebuilds locally; preserve
-and republish the complete corresponding patched source and build material.
+Portal, Valkey, Anubis and Redlib require their staged exact-artifact release
+with carried security repairs; generic rebuilds are refused. Update one service,
+run its native checks and preserve corresponding source/build material.
 
 For SearXNG, re-review settings, engines, limiter trust, query-log redaction,
 output formats, and image proxy behavior. For Anubis/Redlib, re-test challenge,
@@ -1146,14 +1249,9 @@ From `deployment/utilibre/`, use the read-only check first:
 ```
 
 It reports upstream release information but does not pull or change anything.
-After manual review, the apply helper accepts a complete official image
-reference ending in `@sha256:<digest>` for supported single-service updates:
-
-```sh
-./scripts/update-apply.sh freshrss FULL_IMAGE_REFERENCE_WITH_SHA256
-./scripts/update-apply.sh privatebin FULL_IMAGE_REFERENCE_WITH_SHA256
-./scripts/update-apply.sh valkey FULL_IMAGE_REFERENCE_WITH_SHA256
-```
+The old `update-apply.sh` fails closed: an official immutable image can still
+discard the reviewed local repairs in FreshRSS, PrivateBin or Valkey. Use their
+release-specific staging and exact-image gates described above.
 
 RSSHub requires manual review of the internal FreshRSS integration. PostgreSQL
 requires a separate database-major migration plan. Do not bypass those guards
