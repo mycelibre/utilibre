@@ -1,0 +1,14 @@
+# Download-only metadata, never installed as host APT configuration.
+Types: deb deb-src
+URIs: https://deb.debian.org/debian
+Suites: trixie bookworm
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb deb-src
+URIs: https://security.debian.org/debian-security
+Suites: trixie-security bookworm-security
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg

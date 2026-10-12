@@ -110,7 +110,7 @@ services:
   uptime-kuma:
     <<: *runtime
     # Same app version; native SQLite/HTTP/TCP checks need no bundled Chromium/MariaDB.
-    image: utilibre-kuma:click-security-20261012
+    image: utilibre-kuma:sudo-security-20261012
     user: "1000:1000"
     environment:
       UPTIME_KUMA_DB_TYPE: sqlite

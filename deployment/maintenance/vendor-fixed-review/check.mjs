@@ -26,6 +26,7 @@ const turnContainers=['utilibre-galene-turn-turn-1','utilibre-turn-option-turn-1
 const jwtFixedIds=['CVE-2026-101917','CVE-2026-101918','CVE-2026-102271','CVE-2026-102272','CVE-2026-102273','CVE-2026-102274','CVE-2026-102275','CVE-2026-48526'];
 const mariaServerIds=['CVE-2026-107815','CVE-2026-107818','CVE-2026-107823','CVE-2026-44168','CVE-2026-44171','CVE-2026-48163','CVE-2026-48165'];
 export const specs=[
+ {kind:'click',artifact:'sha256:a30210737c27fd8a9e0e162e472377ad1692348eee9001e4ccaee4d245a731ca',containers:['utilibre-community-uptime-kuma-1'],package:'python3-click',version:'8.3.3-3',ids:['CVE-2026-7246'],deb:'click-followup-20261012/packages/python3-click_8.3.3-3_all.deb',debSha:'b8ce2b18bb602844e05c67d75cff576a91ca7727af2726175dba84536de04d12'},
  {kind:'aom',artifact:aomId,containers:['utilibre-gathio-postgres-1'],package:'libaom3',version:'3.14.1-1',ids:['CVE-2023-6879','CVE-2023-39616'],deb:'aom-final-20261011/libaom3_3.14.1-1_amd64.deb',debSha:'8f932e686c8a0e3e09ef211b924bac0a43d3d6fd774e0dfbeba9c301aa129fca'},
  {kind:'jwt',artifact:kumaId,containers:['utilibre-community-uptime-kuma-1'],package:'python3-jwt',version:'2.15.1-1',ids:['CVE-2026-102267',...jwtFixedIds],...jwtDeb},
  {kind:'jwt',artifact:'host-dpkg',containers:[],package:'python3-jwt',version:'2.15.1-1',ids:['CVE-2026-102266','CVE-2026-102267',...jwtFixedIds],...jwtDeb},
@@ -62,7 +63,14 @@ function receipts(spec,scan){
   return proofs;
  }
  const proofs=[];let latest;
- if(spec.kind==='aom'){
+ if(spec.kind==='click'){
+  const r=readReceipt('click-followup-20261012/release.json',proofs);latest=validateRelease({...r,rows:overlayRows(r)},spec);
+  const n=read('click-followup-20261012/native.json'),app=read('click-followup-20261012/application.json'),build=read('click-followup-20261012/build.json');
+  assert.equal(build.imageId,spec.artifact);assert.equal(build.packageHash,spec.debSha);assert(build.passed&&build.configurationUnchanged&&build.unrelatedPackagesUnchanged);
+  assert.equal(n.imageId,spec.artifact);assert(n.passed&&n.noDelivery&&n.checks.length===7&&n.click==='8.3.3'&&n.apprise==='1.10.0');
+  assert.equal(app.imageId,spec.artifact);assert(app.passed&&app.nativeSetupLogin&&app.fictionalDataOnly&&app.noNotificationSent&&app.network==='none');
+  for(const p of ['native','application','build'])proofs.push({path:root+'click-followup-20261012/'+p+'.json',sha256:sha(fs.readFileSync(root+'click-followup-20261012/'+p+'.json'))});
+ }else if(spec.kind==='aom'){
   const native=readReceipt('aom-final-20261011/checks.json',proofs);
   for(const k of ['actualConsumerRelocationsPassed','installedAvifHeifRoundTrips','postgisGdalNative','documentdbRolesAndDumpRestore'])assert.equal(native[k],true,k);
   assert.equal(native.newLibrarySha256,'67565cdfec66b07bfb2ee79276fe4c25d921ca84d93e4d797512efde5eec4e93');
@@ -100,13 +108,15 @@ function packageManifest(spec,temp){
  const deb=root+spec.deb;assert.equal(sha(fs.readFileSync(deb)),spec.debSha);
  assert.equal(text('dpkg-deb',['-f',deb,'Package']),spec.package);assert.equal(text('dpkg-deb',['-f',deb,'Version']),spec.version);
  command('dpkg-deb',['-x',deb,temp]);
- const files=filesIn(temp).filter(p=>spec.kind==='jwt'?p.startsWith('/usr/lib/python3/dist-packages/jwt/')&&p.endsWith('.py'):
+ const files=filesIn(temp).filter(p=>spec.kind==='click'?p.startsWith('/usr/lib/python3/dist-packages/click/'):
+ spec.kind==='jwt'?p.startsWith('/usr/lib/python3/dist-packages/jwt/')&&p.endsWith('.py'):
  spec.package==='mariadb-common'?['/etc/mysql/mariadb.cnf','/usr/share/doc/mariadb-common/copyright'].includes(p):
  p.startsWith('/usr/lib/')&&/\.so(?:\.|$)/.test(p)).sort();
  return files.map(p=>({path:p,sha256:sha(fs.readFileSync(temp+p))}));
 }
 export function reasonFor(item,spec,proof){
- const basis=spec.kind==='aom'?(item.id==='CVE-2023-39616'?'Debian marks aom 3.14.1-1 fixed; AV1 frame-buffer fixes 35254736, cbce0616, 54e4b8ff and df38eb16 are included since upstream 3.7.0_rc2. Native HEIF/AVIF and actual GDAL consumers passed; not a separate exploit reproduction.':'Debian marks aom 3.14.1-1 fixed (upstream fix 7ae7bef246e85c8f349513d668b4571c79a43c5c, since 3.7.1).'):
+ const basis=spec.kind==='click'?'Debian marks Click 8.3.3 fixed; exact upstream b96c2601 replaces shell-based editor execution. Pallets disputes this CVE: this is defense in depth, not confirmation of a public exploit. Seven native source/CLI/Unicode/editor checks, Apprise compatibility and isolated Kuma setup/login passed; all installed Click source files match the signed package.':
+ spec.kind==='aom'?(item.id==='CVE-2023-39616'?'Debian marks aom 3.14.1-1 fixed; AV1 frame-buffer fixes 35254736, cbce0616, 54e4b8ff and df38eb16 are included since upstream 3.7.0_rc2. Native HEIF/AVIF and actual GDAL consumers passed; not a separate exploit reproduction.':'Debian marks aom 3.14.1-1 fixed (upstream fix 7ae7bef246e85c8f349513d668b4571c79a43c5c, since 3.7.1).'):
  spec.kind==='jwt'?'Debian primary tracker marks this advisory fixed by PyJWT 2.15.0 or earlier; installed 2.15.1 source matches the signed Debian package. Native algorithms, empty-JWK and loopback JWKS-redirect checks passed; not an exploit reproduction for every advisory.':
  mariaServerIds.includes(item.id)?'Advisory affects MariaDB server/CONNECT/Galera/SST/backup components, fixed by server 11.8.9 or earlier. Coturn has only exact signed 11.8.9 client/config payloads; server/Galera packages and binaries are absent.':
  item.id==='CVE-2026-49261'?'MariaDB fixes wsrep_notify_cmd in server 11.8.8; exact source 11.8.9+ds-4 is fixed. Coturn has client/config packages, no installed server/Galera package or daemon.':
