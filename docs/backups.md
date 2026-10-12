@@ -204,6 +204,13 @@ Source evidence: `compose.yaml`, the selected deployment Compose files,
 
 ## Current application-copy coverage, 12 October 2026
 
+The existing off-host Storage Box is in **Falkenstein, Germany** (`fsn1`).
+A 12 October read-only API check matched the active restricted SSH account;
+the filtered receipt is in
+`/var/lib/utilibre-maintenance/listings-followthrough-20261012/storagebox-location.json`.
+This does not establish provider logging or its retention.
+
+
 The current selector contains **25 native backup groups**, including the records
 group added for Grist, Candlr and Bookplate on 11 October. The existing daily
 job completed at **09:19:22 UTC on 12 October** with all 25 groups, encrypted

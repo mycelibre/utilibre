@@ -25,7 +25,56 @@ No item is considered complete merely because it moved to a different document.
 Each boundary links to its existing evidence; the dated historical records below
 must not be copied back into the current queue without checking later results.
 
-## Current checkpoint, 12 October, 20:11 UTC
+## Current release checkpoint, 12 October, 20:36 UTC
+
+The wider queue reconciliation found and completed one more public-content
+release. Source commit `b3ee5a8` is pushed and deployed as
+`public-utility-portal:0.1.0-backup-notes-20261012`; only the portal container
+was recreated at **20:34:54 UTC**.
+
+- A shared EN/ES backup note replaces obsolete VM-only statements in service
+  cards and 20 existing guides. Public text distinguishes local retention from
+  the encrypted Storage Box's overlapping seven-daily/four-weekly retention,
+  temporary-content exclusions, native-backup age and bounded restore tests.
+  Spanish retains voseo. No storage, retention or service setting changed.
+- The existing Storage Box's authenticated read-only API response confirms
+  **Falkenstein, Germany**. Its private filtered receipt supports the location
+  in `/en/your-data` and `/es/your-data`; provider log retention remains unknown.
+- The export index now links existing Wallabag, Grist, Candlr and Bookplate
+  guides. Its table fits 320-pixel screens without sideways scrolling, with
+  literal Guide/Guía labels and no change to the shared retention-table layout
+  on other pages. The PrivateBin backup README no longer incorrectly says
+  attachments are disabled.
+- Build, type checking, lint and **120 unit tests** pass. **66 preview checks
+  and 66 public checks** cover the changed guide HTML, links, expanded FMD
+  card, desktop/mobile widths and navigation without JavaScript in EN/ES.
+  Screenshots were inspected; no unexpected browser requests, page errors or
+  horizontal overflow were found in the successful runs. The first public
+  attempt hit `ERR_NETWORK_CHANGED` during preview-container removal; its
+  transcript is retained, and the undisturbed rerun passed.
+- All **196 public SEO pages** pass the existing audit; no new indexing
+  submission was sent. The committed source archive's public download matches
+  its local hash. Existing deployment environment/image rollback material is
+  retained privately. All **105 readiness probes** pass at 20:35:07 UTC.
+- The final scanner run completed at **20:36:11 UTC** in 63 seconds, covering
+  **109 running images, 175 containers, 57 source inventories and host packages**
+  with no failed targets. The portal candidate has 21 inventoried packages,
+  no critical/high findings and one medium finding. The whole-deployment raw
+  counts remain 40 critical/2,734 high; exact reviews still leave **0 critical /
+  75 high unresolved**, across the four advisories below. There are no failed
+  systemd units or unhealthy containers. The read-only alert check reports
+  only that unresolved security queue and sends no mail.
+- GotHub's merged submission and PrivateBin's refreshed upload/A+ listing are
+  closed in the current submission record. The other external decisions,
+  missing facts and security restrictions in the disposition table remain
+  explicit. They are not marked finished or replaced with new expansion work.
+
+Private release evidence, checks, screenshots, source hash and rollback inputs:
+`/opt/utilibre/reports/backup-copy-publication-20261012/`.
+Backup location and listing receipts:
+`/var/lib/utilibre-maintenance/listings-followthrough-20261012/`.
+
+## Earlier security checkpoint, 12 October, 20:11 UTC
 
 This supersedes the earlier counts and activation notes. Independent work in
 this maintenance follow-up is implemented; the four security dependencies in
