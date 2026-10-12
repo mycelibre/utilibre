@@ -1,0 +1,11 @@
+[
+  {"package":"python-boto3","version":"1.40.72-1","file":"python-boto3_1.40.72-1.dsc","sha256":"180ec65b72f7939f08e256901322b2acdd3a1a32a9e45e3c39da0980eb32afca"},
+  {"package":"python-boto3","version":"1.40.72-1","file":"python-boto3_1.40.72.orig.tar.xz","sha256":"01552102e23e20f0bb7974fd2903f505992f5e5746821a6722c8b17f18972289"},
+  {"package":"python-boto3","version":"1.40.72-1","file":"python-boto3_1.40.72-1.debian.tar.xz","sha256":"385862ff8e24c4792ab53479905652e72042088a95d45cd693961ba3f5f3369e"},
+  {"package":"python-botocore","version":"1.40.72+repack-1","file":"python-botocore_1.40.72+repack-1.dsc","sha256":"5b2b6e178f0867a025d54e21a3d84f454524a1742f1c95fa5672c4f7ae987af8"},
+  {"package":"python-botocore","version":"1.40.72+repack-1","file":"python-botocore_1.40.72+repack.orig.tar.xz","sha256":"e4e2f4440217bfa2310fb44ad44bf9e3c2cb310341e78d02d1eda4b54e5b04c0"},
+  {"package":"python-botocore","version":"1.40.72+repack-1","file":"python-botocore_1.40.72+repack-1.debian.tar.xz","sha256":"5774d08e8843f68a07eb1bd3b6870aa028b5d42365b7410359d65e12225358f9"},
+  {"package":"python-s3transfer","version":"0.14.0-1","file":"python-s3transfer_0.14.0-1.dsc","sha256":"0774fd2568b0ef6c3668d958191f4cb2f448d7d4cd4d5a99bd16dfad8ef955e9"},
+  {"package":"python-s3transfer","version":"0.14.0-1","file":"python-s3transfer_0.14.0.orig.tar.gz","sha256":"6441111dbbedb02f3ccbce6b6faff90d509155e6cd52f34293c375e41903f951"},
+  {"package":"python-s3transfer","version":"0.14.0-1","file":"python-s3transfer_0.14.0-1.debian.tar.xz","sha256":"2e060e3ebfdca003486fab06b5baad12d0bc4dc802389b63ec5415cc97a9c630"}
+]

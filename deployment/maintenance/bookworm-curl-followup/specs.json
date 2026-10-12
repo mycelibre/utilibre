@@ -1,0 +1,6 @@
+[
+ {"key":"gathio","base":"sha256:041030501a5231fd2ce4ded70d79e1fee2d87a60f45f9a1725f180256e171651","baseRef":"utilibre-gathio-documentdb:urllib3-security-20261012","containers":["utilibre-gathio-postgres-1"],"packages":["libcurl4","libcurl3-gnutls"],"candidate":"utilibre-gathio-documentdb:curl-security-20261012"},
+ {"key":"kuma","base":"sha256:848f1359f1dc6f5c65eaaa06258ed1265e0f3715a0de716e671224235b3664c1","baseRef":"utilibre-kuma:urllib3-security-20261012","containers":["utilibre-community-uptime-kuma-1"],"packages":["curl","libcurl4"],"candidate":"utilibre-kuma:curl-security-20261012"},
+ {"key":"rssbridge","base":"sha256:7d0525986e21c8ebe0e6e3219b5b1cc1e8e078bbaf4139f6119604c170ed51b8","baseRef":"utilibre-rssbridge:sqlite-fts-security-20261012","containers":["utilibre-community-rssbridge-1"],"packages":["libcurl4"],"candidate":"utilibre-rssbridge:curl-security-20261012"},
+ {"key":"rallly","base":"sha256:7f51bf4217f221865027436bf3b7b4c92925e58ecafd88e58a7645c1ba3a9de1","baseRef":"utilibre-community-rallly:gzip-security-20261012","containers":["utilibre-community-rallly-1"],"packages":["curl","libcurl4"],"candidate":"utilibre-community-rallly:curl-security-20261012"}
+]

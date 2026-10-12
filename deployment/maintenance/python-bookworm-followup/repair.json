@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "scope": "Bookworm system CPython and Expat in existing Kuma and Gathio images",
+  "releaseStatusSource": "/var/lib/utilibre-maintenance/python-bookworm-followup-20261012/release.json",
+  "sources": [
+    {
+      "component": "CPython Debian source",
+      "version": "3.11.2-6+deb12u9",
+      "authentication": "Debian signed APT index and source checksums, downloaded using the isolated review.sources; the DSC signature is not independently verified",
+      "nativeVersion": "3.11.2-6+deb12u9+utilibre1",
+      "upstreamPatch": "https://github.com/python/cpython/commit/cbaecf9f16da611a646d507c1cbca265c588fc56",
+      "patchSha256": "362704a609a85ae95ebd08b58fb31f1c3e7d3d4604f7421f35c9d1885ced5082",
+      "reason": "CVE-2026-7210: both pyexpat and ElementTree must provide 128-bit salt to Expat >=2.8",
+      "patchExtent": "The four C/header edits are byte-identical to upstream additions/deletions. Debian context was refreshed without fuzz. All existing Debian patches remain."
+    },
+    {
+      "component": "Expat Debian source",
+      "version": "2.9.0-1",
+      "nativeVersion": "2.9.0-1~deb12u1+utilibre1",
+      "authentication": "Debian signed APT index and source checksums",
+      "architecture": "Rebuilt with Bookworm dependencies; not a sid binary, distro migration or glibc replacement",
+      "reason": "Supply the supported XML_SetHashSalt16Bytes interface and current native parser fixes"
+    }
+  ],
+  "build": {
+    "entryPoint": "build.sh",
+    "base": "node@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20",
+    "limits": {"cpu": 2, "memoryGiB": 4, "pids": 256, "freeDiskFloorGiB": 8},
+    "network": "APT preparation only; compiler network disconnected before source build and tests",
+    "identity": "Native package builds run as uid/gid 65534 in disposable storage",
+    "tests": "Explicit upstream Expat suite and 10 Python modules. Full Debian Python test suite is not claimed; nopgo/nolto/nocheck packaging options are used."
+  },
+  "staging": {
+    "entryPoint": "node stage.mjs kuma|gathio followed by node app-checks.mjs kuma|gathio",
+    "ancestry": "Exact current live image and ref must match specs.json; reconcile dependencies before staging",
+    "runtimePackages": ["python3.11", "python3.11-minimal", "libpython3.11-minimal", "libpython3.11-stdlib", "libexpat1"],
+    "preservation": "No other package version, app/config bytes, unrelated library or image configuration changes; retain every existing Expat export",
+    "nativeProof": "Disposable LD_PRELOAD probe proves both actual parser paths call XML_SetHashSalt16Bytes; it emits counters, never entropy, and is not installed in candidates",
+    "services": "Kuma synthetic setup/login and PyJWT/Apprise; Gathio native barman imports, DocumentDB/PostGIS typed data, permissions, projection, upstream malformed FlatGeobuf tests and logical restore",
+    "testIsolation": "No network outside loopback, no production volumes, no notifications; temporary synthetic state removed"
+  },
+  "sdkCompatibility": {
+    "finding": "The earlier urllib32.8 overlay left Gathio's boto3 1.26.27 / botocore1.29.27 unable to import DEFAULT_CIPHERS. Reproduced on the pre-Python live image and candidate. Barman --help alone missed this deferred provider import; no actual failed user backup is inferred.",
+    "repair": "Preserve Barman3.20.1 and upgrade exactly three signed Debian architecture-all packages: boto3/botocore1.40.72, s3transfer0.14.0. They support Python3.11 and urllib3<3; no native library or distro transition.",
+    "acquisition": "node acquire-sdk.mjs; SDK versions and authenticated archive checksums in sdk-packages.json",
+    "sources": ["https://github.com/boto/botocore/blob/1.40.72/setup.py", "https://github.com/boto/boto3/blob/1.40.72/setup.py", "https://github.com/boto/s3transfer/blob/0.14.0/setup.py"],
+    "tests": "sdk-native.py: loopback-only TLS S3 fixture, independent SigV4 HMAC verification, environment credentials, wrong-key403 and untrusted-certificate denial, native Barman upload/list/read/download, missing object and synthetic deletion. Twelve tiny requests; no cloud endpoint, actual credential or production backup used.",
+    "limits": "Not a multipart or real-cloud backup/restore test. All application bytes except the explicit SDK directories remain unchanged."
+  },
+  "otherFinding": {
+    "cve": "CVE-2026-11940",
+    "evidence": "The exact Debian tarfile payload lacks the extraction-filter implementation; filter='data' is rejected. Recorded per live image and source SHA by tar-component-proof.mjs, then rechecked in candidates.",
+    "notARepair": true,
+    "limitation": "This is not a claim that unrestricted tar extraction is safe and not an exemption for other tar vulnerabilities. Security ledger decisions remain with the release owner.",
+    "reference": "https://security-tracker.debian.org/tracker/CVE-2026-11940"
+  },
+  "release": {
+    "owner": "Parent-authorized exact native release only. release.mjs prepare|apply kuma|gathio reuses the standard releaseGroup and rollback gates; only the relevant current image scalar changes.",
+    "rollback": "Restore the exact previously recorded image ref/ID using the normal release procedure; no schema or persistent data migration is introduced",
+    "retirement": "Do not replace these images with vendor tags until the protected-update process verifies equivalent upstream fixes and repeats native checks",
+    "privateArtifacts": "/var/lib/utilibre-maintenance/python-bookworm-followup-20261012",
+    "review": "node review.mjs prepares separate expiring mitigation-review.json and not-affected-review.json from fresh scan evidence and byte-checked installed payloads. It never changes the security decision ledger."
+  }
+}

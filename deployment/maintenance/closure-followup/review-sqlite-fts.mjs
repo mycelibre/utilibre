@@ -1,6 +1,7 @@
 // Three explicit source repairs; never an exemption for the package as a whole.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/closure-followup-20261012',build=dir+'/sqlite-fts-bookworm';
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
@@ -8,6 +9,7 @@ const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:30000,maxBuffer:8*
 const queue=read(root+'/security-queue.json'),scan=read(root+'/security.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
 const release=read(dir+'/sqlite-fts-release.json');assert.equal(release.status,'passed');const rows=overlayRows(release);
 const descendants=fs.existsSync(dir+'/urllib3-release.json')?overlayRows(read(dir+'/urllib3-release.json')):[];
+for(const receipt of additionalOverlayReceipts)if(fs.existsSync(root+'/'+receipt))descendants.push(...overlayRows(read(root+'/'+receipt)));
 const specs=read(new URL('./sqlite-fts-specs.json',import.meta.url)),version='3.40.1-2+deb12u2+utilibre2';
 const sums={'libsqlite3-0':'070eab3c6f2613c686a5b593a0fd7f99a6fdaa8d6bdf1467a3aa32b85bc2ad6e',sqlite3:'692f5f10d7953afb9d5ec3ff24d3a79ad31b87e2b49e36c041920215fee2bb5f'};
 const ids=['CVE-2025-7458','CVE-2026-11822','CVE-2026-11824'];

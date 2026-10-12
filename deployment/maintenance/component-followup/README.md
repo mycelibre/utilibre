@@ -78,7 +78,9 @@ All inspected on 12 October 2026; the advisory numbers abbreviated above have th
 
 ## Remaining real repairs
 
-This review does not fix Bookworm GDAL or native PostGIS. A candidate must preserve
+This component-attribution review does not itself fix Bookworm GDAL or native PostGIS.
+The separate [native follow-up](../geospatial-followup/README.md) subsequently
+released the PostGIS repair; GDAL's build/check gates remain separate. A candidate must preserve
 the existing native ABI and pass actual NetCDF/HDF4/FlatGeobuf regressions plus
 Gathio's database restore and representative PostGIS use. Do not remove these
 dependencies from the DocumentDB image simply to reduce the scanner count.

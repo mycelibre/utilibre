@@ -1,0 +1,1 @@
+{"type":"FeatureCollection","name":"fictional_workshop","features":[{"type":"Feature","properties":{"label":"Fictional workshop","attendees":12},"geometry":{"type":"Point","coordinates":[-90.5,14.6]}}]}

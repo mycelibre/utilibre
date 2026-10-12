@@ -52,7 +52,7 @@ export function componentPolicy(item, records) {
   }
   if (item.id === 'CVE-2026-73515' && item.package === 'postgresql-17-postgis-3-scripts' && item.installed === '3.6.0+dfsg-3.pgdg12+1' && noNative &&
     files.length > 100 && files.every(r => docs(r.path) || /^\/usr\/share\/postgresql\/17\/(?:extension\/(?:postgis|address_standardizer)[^/]*\.(?:sql|control)|contrib\/postgis-3\.6\/[^/]+\.sql)$/.test(r.path)))
-    return 'PostGIS native FlatGeobuf property decoder, not SQL extension definitions; the installed postgresql-17-postgis-3 native library remains unresolved';
+    return 'PostGIS native FlatGeobuf property decoder, not SQL extension definitions; the installed postgresql-17-postgis-3 native library requires its separate exact-payload review';
   if (dracutIds.includes(item.id) && item.package === 'dracut-install' && item.installed === '106-6' &&
     files.some(r => r.path === '/usr/lib/dracut/dracut-install' && r.magic === '7f454c46') &&
     files.every(r => docs(r.path) || r.path === '/usr/lib/dracut/dracut-install'))

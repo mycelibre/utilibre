@@ -1,0 +1,7 @@
+[
+ {"key":"kuma","base":"sha256:09b83e26e45864276fd88f375c35e78184e575b58dd23a05f1d1d900210c239b","baseRef":"utilibre-kuma:python-expat-security-20261012","container":"utilibre-community-uptime-kuma-1","packages":["libssl3","openssl"],"candidate":"utilibre-kuma:openssl-dtls-security-20261012"},
+ {"key":"rallly","base":"sha256:1794217c81f1c05755d4e3a77dce047013440035819b15d97377455853f8cf7d","baseRef":"utilibre-community-rallly:curl-security-20261012","container":"utilibre-community-rallly-1","packages":["libssl3","openssl"],"candidate":"utilibre-community-rallly:openssl-dtls-security-20261012"},
+ {"key":"rssbridge","base":"sha256:cbbf2a7f0502c6e02c778b5776ee5af0cc85a7b873588ef2d03b9ae731f05c09","baseRef":"utilibre-rssbridge:curl-security-20261012","container":"utilibre-community-rssbridge-1","packages":["libssl3","openssl"],"candidate":"utilibre-rssbridge:openssl-dtls-security-20261012"},
+ {"key":"wishlist","base":"sha256:df46172b61f90681da057d498638d08e7c87ee746895a9e4f606124c8264e19b","baseRef":"utilibre-wishlist-app:gzip-security-20261012","container":"utilibre-wishlist-app-1","packages":["libssl3","openssl"],"candidate":"utilibre-wishlist-app:openssl-dtls-security-20261012"},
+ {"key":"gathio","base":"sha256:cc6bdd204e088f13ba39d977c17656b5b6844e012dce64b1dca1cf732fa6ae6d","baseRef":"utilibre-gathio-documentdb:python-expat-security-20261012","container":"utilibre-gathio-postgres-1","packages":["libssl3","openssl","libssl-dev"],"candidate":"utilibre-gathio-documentdb:openssl-dtls-security-20261012"}
+]

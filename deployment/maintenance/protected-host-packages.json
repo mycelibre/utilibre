@@ -11,6 +11,8 @@
     "libngtcp2-crypto-gnutls8": "closure-followup/curl-host.mjs",
     "libngtcp2-crypto-ossl0": "closure-followup/curl-host.mjs",
     "python3-jwt": "host-final/release-jwt.mjs",
+    "python3-cryptography": "host-cryptography-followup/release.mjs",
+    "python3-setuptools-whl": "host-python-vendor-followup/release.mjs",
     "python3-urllib3": "closure-followup/urllib3-host.mjs",
     "vim": "closure-followup/release-host.mjs",
     "vim-common": "closure-followup/release-host.mjs",

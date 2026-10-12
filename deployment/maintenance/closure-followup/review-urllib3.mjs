@@ -1,6 +1,7 @@
 // Signed vendor release, exact installed payload and completed native gates.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/closure-followup-20261012',read=p=>JSON.parse(fs.readFileSync(p));
 const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:30000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe']}).trim();
@@ -9,6 +10,12 @@ const q=read(root+'/security-queue.json'),scan=read(root+'/security.json');fresh
 const primary=read(dir+'/debian-primary.json');assert(Date.now()-Date.parse(primary.date)<86400000);
 const release=read(dir+'/urllib3-release.json'),host=read(dir+'/urllib3-host.json');assert.equal(release.status,'passed');assert.equal(host.status,'passed');
 const rows=overlayRows(release),specs=read(new URL('./urllib3-specs.json',import.meta.url));
+for(const receipt of additionalOverlayReceipts)if(fs.existsSync(root+'/'+receipt)){
+ for(const next of overlayRows(read(root+'/'+receipt))){
+  const prior=rows.find(r=>r.name===next.name&&r.newImage===next.oldImage);
+  if(prior&&next.newImage!==next.oldImage)rows.push({...next,originalImage:prior.originalImage||prior.newImage});
+ }
+}
 const deb=dir+'/sources/python3-urllib3_2.8.0-2_all.deb',hash='d48b157c65ac9b28a86cd2d6f5af3baa841208bae724bed3a33b0058727b0ff3';assert.equal(sha(deb),hash);
 const temp=fs.mkdtempSync('/dev/shm/utilibre-urllib3-proof-'),decisions=[],proofs=[];
 try{
@@ -22,7 +29,7 @@ try{
    const isHost=item.scope==='host-os';
    if(isHost){assert(host.native.passed&&host.native.checks.length===11&&host.native.urllib3==='2.8.0');assert(Date.parse(host.completedAt)<=Date.parse(scan.date));}
    for(const name of isHost?[null]:item.containers){
-    if(name){const row=rows.find(r=>r.name===name&&r.newImage===item.artifact);assert(row&&Date.parse(row.completedAt)<=Date.parse(scan.date));assert.equal(run('docker',['inspect',name,'--format','{{.Image}}']),item.artifact);const spec=specs.find(s=>s.containers.includes(name));assert(spec);const n=read(dir+'/urllib3/'+spec.key+'/native.json'),a=read(dir+'/urllib3/'+spec.key+'/application.json');assert(n.passed&&n.checks.length===11&&a.passed);assert.equal(n.imageId,item.artifact);assert.equal(a.imageId,item.artifact);}
+    if(name){const row=rows.find(r=>r.name===name&&r.newImage===item.artifact);assert(row&&Date.parse(row.completedAt)<=Date.parse(scan.date));assert.equal(run('docker',['inspect',name,'--format','{{.Image}}']),item.artifact);const spec=specs.find(s=>s.containers.includes(name));assert(spec);const n=read(dir+'/urllib3/'+spec.key+'/native.json'),a=read(dir+'/urllib3/'+spec.key+'/application.json');assert(n.passed&&n.checks.length===11&&a.passed);assert.equal(n.imageId,row.originalImage||item.artifact);assert.equal(a.imageId,row.originalImage||item.artifact);}
     const command=(p,a)=>name?run('docker',['exec',name,p,...a]):run(p,a);
     assert.equal(command('dpkg-query',['-W','-f=${Version}','python3-urllib3']),item.installed);
     for(const f of manifest)assert.equal(command('sha256sum',[f.path]).split(/\s/)[0],f.sha256);

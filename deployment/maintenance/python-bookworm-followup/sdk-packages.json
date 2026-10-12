@@ -1,0 +1,5 @@
+[
+ {"name":"python3-boto3","version":"1.40.72-1","file":"python3-boto3_1.40.72-1_all.deb","sha256":"6181025ef2888f201d91bbee55ac649ff8551fd231ef71195e9238c136dda8c9"},
+ {"name":"python3-botocore","version":"1.40.72+repack-1","file":"python3-botocore_1.40.72+repack-1_all.deb","sha256":"ff4ed021dbfecd2305fb6af5cfca6a9005065b8ca711fcc3ff137e6a44185c0e"},
+ {"name":"python3-s3transfer","version":"0.14.0-1","file":"python3-s3transfer_0.14.0-1_all.deb","sha256":"b7d362c04c3a83249a33dddd7d8c0e4ab76fd5a479e2ecce70b581424a335c94"}
+]

@@ -31,7 +31,8 @@ preserves its prior offer through the publisher's existing report directory.
 Detailed comparison results are in `verified-archives.json` in that private
 report directory. The two source-index entries use the new revision queries to
 avoid serving older cached metadata; central index publication is separate.
-# Source-page navigation follow-up — 12 October 2026
+
+## Source-page navigation follow-up — 12 October 2026
 
 The shared `/utilibre-source/` page did not declare a favicon or link to the
 catalogue. On the PDF origin the browser therefore inherited BentoPDF's root

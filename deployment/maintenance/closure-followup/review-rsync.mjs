@@ -3,7 +3,8 @@ import fs from 'node:fs';
 import cp from 'node:child_process';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {freshScan} from '../review-native-backports.mjs';
+import {freshScan,overlayRows} from '../review-native-backports.mjs';
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 import {validateDecision} from '../triage.mjs';
 process.umask(0o077);
 const dir='/var/lib/utilibre-maintenance/closure-followup-20261012',root='/var/lib/utilibre-maintenance/';
@@ -22,6 +23,10 @@ for(const receipt of ['gzip-release.json','sqlite-fts-release.json','urllib3-rel
  const later=read(dir+'/'+receipt);assert.equal(later.status,'passed');
  const next=later.groups.flatMap(g=>{assert.equal(g.status,'passed');return g.rows.map(r=>({...r,completedAt:g.completedAt}));}).find(r=>r.name===row.name&&r.oldImage===row.newImage);
  assert(next&&Date.parse(next.completedAt)<=Date.parse(scan.date));row=next;
+}
+for(const receipt of additionalOverlayReceipts)if(fs.existsSync(root+receipt)){
+ const next=overlayRows(read(root+receipt)).find(r=>r.name===row.name&&r.oldImage===row.newImage);
+ if(next){assert(Date.parse(next.completedAt)<=Date.parse(scan.date));row=next;}
 }
 assert.equal(run('docker',['inspect',row.name,'--format','{{.Image}}']),row.newImage);
 assert.equal(run('docker',['exec',row.name,'dpkg-query','-W','-f=${Version}','rsync']),version);

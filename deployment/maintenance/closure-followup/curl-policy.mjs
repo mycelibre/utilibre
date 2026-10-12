@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 export function curlFixedUpstream(debianVersion){
  // Keep the prerelease marker: dpkg orders a stable release after its RCs.
  // Do not silently strip arbitrary suffixes or accept an unknown tracker value.
- const match=/^(?:\d+:)?(\d+\.\d+\.\d+(?:~rc\d+)?)-[A-Za-z0-9.+~]+$/.exec(debianVersion||'');
+ // Preserve dated git snapshots as well: 8.12.0+git... is newer than 8.12.0,
+ // not equivalent to it. Debian records the 2025-0725 fix in such a snapshot.
+ const match=/^(?:\d+:)?(\d+\.\d+\.\d+(?:~rc\d+|\+git\d{8}\.[a-f0-9]{7,40}(?:\+ds\d*)?)?)-[A-Za-z0-9.+~]+$/.exec(debianVersion||'');
  assert(match,'Unsupported curl fixed-version spelling');
  return match[1];
 }

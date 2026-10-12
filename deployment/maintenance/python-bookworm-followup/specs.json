@@ -1,0 +1,4 @@
+[
+ {"key":"kuma","kind":"kuma","base":"sha256:43efe45f0782a90e5fc18392fc5f23e92c09b7da58335a6079993c6bc16da7ae","baseRef":"utilibre-kuma:curl-security-20261012","containers":["utilibre-community-uptime-kuma-1"],"candidate":"utilibre-kuma:python-expat-security-20261012"},
+ {"key":"gathio","kind":"documentdb","base":"sha256:c20d59a84f6e3921666e5aa4f26323673f79c1959911ea7c1577db182c4d3d6d","baseRef":"utilibre-gathio-documentdb:postgis-security-20261012","containers":["utilibre-gathio-postgres-1"],"candidate":"utilibre-gathio-documentdb:python-expat-security-20261012"}
+]

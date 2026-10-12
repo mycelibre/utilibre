@@ -6,8 +6,8 @@ import {createHash} from 'node:crypto';
 import {canonical} from '../go-final/release.mjs';
 import {replaceImagePins,namespaceDependents,releaseGroup,rollbackFiles,existingComposeArgs,checkExistingGroup,recreateExistingGroup,existingGroupStatus} from '../language-final/release.mjs';
 process.umask(0o077);
-const [mode,variant]=process.argv.slice(2);assert(['prepare','apply'].includes(mode));assert([undefined,'--ncurses','--rsync','--util-linux','--curl','--gzip','--sqlite-fts','--urllib3','--python-system'].includes(variant));assert(process.argv.length<=4);
-const kind=variant==='--ncurses'?'ncurses':variant==='--rsync'?'rsync':variant==='--util-linux'?'util-linux':variant==='--curl'?'curl':variant==='--gzip'?'gzip':variant==='--sqlite-fts'?'sqlite-fts':variant==='--urllib3'?'urllib3':variant==='--python-system'?'python-system':'cache';
+const [mode,variant]=process.argv.slice(2);assert(['prepare','apply'].includes(mode));assert([undefined,'--ncurses','--rsync','--util-linux','--curl','--gzip','--sqlite-fts','--urllib3','--python-system','--bookworm-curl'].includes(variant));assert(process.argv.length<=4);
+const kind=variant==='--ncurses'?'ncurses':variant==='--rsync'?'rsync':variant==='--util-linux'?'util-linux':variant==='--curl'?'curl':variant==='--gzip'?'gzip':variant==='--sqlite-fts'?'sqlite-fts':variant==='--urllib3'?'urllib3':variant==='--python-system'?'python-system':variant==='--bookworm-curl'?'bookworm-curl':'cache';
 const dir='/var/lib/utilibre-maintenance/closure-followup-20261012',file=dir+'/'+kind+'-release.json';
 const read=p=>JSON.parse(fs.readFileSync(p)),digest=v=>createHash('sha256').update(JSON.stringify(canonical(v))).digest('hex');
 const docker=(...args)=>{try{return cp.execFileSync('docker',args,{encoding:'utf8',timeout:180000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe'],env:{...process.env,APP_BIND_IP:'10.10.1.43'}}).trim();}catch{throw Error('Docker operation failed; sensitive configuration withheld');}};
@@ -16,10 +16,24 @@ const hash=s=>{const {image,...rest}=s;return digest(rest);};
 const save=r=>fs.writeFileSync(file,JSON.stringify(r,null,2)+'\n');
 if(mode==='prepare'){
  assert(!fs.existsSync(file),'Never overwrite a release receipt');
- const specs=JSON.parse(fs.readFileSync(new URL('./'+kind+'-specs.json',import.meta.url))),groups=new Map();
+ const specs=JSON.parse(fs.readFileSync(new URL(kind==='bookworm-curl'?'../bookworm-curl-followup/specs.json':'./'+kind+'-specs.json',import.meta.url))).filter(s=>kind!=='bookworm-curl'||['gathio','kuma','rallly'].includes(s.key)),groups=new Map();
+ // RSS-Bridge's LD_PRELOAD impersonating libcurl is a separate repair. An
+ // ordinary libcurl package is not an acceptable substitute for its runtime.
+ if(kind==='bookworm-curl')assert.deepEqual(specs.map(s=>s.key),['gathio','kuma','rallly']);
  for(const s of specs){
-  const b=read(dir+'/'+kind+'/'+s.key+'/build.json'),n=read(dir+'/'+kind+'/'+s.key+'/native.json');
+  const proofDir=kind==='bookworm-curl'?'/var/lib/utilibre-maintenance/bookworm-curl-followup-20261012/images/'+s.key:dir+'/'+kind+'/'+s.key;
+  const b=read(proofDir+'/build.json'),n=read(proofDir+'/native.json');
   assert(b.passed&&b.configurationUnchanged&&n.passed);assert.equal(n.imageId,b.imageId);assert.equal(inspect(s.candidate).Id,b.imageId);assert(Date.now()-Date.parse(n.date)<86400000);
+  if(kind==='bookworm-curl'){
+   assert.equal(b.version,'8.22.0-1~deb12u1+utilibre1');assert(n.abiPreserved&&n.sshDefaultProtocolWrongKeyRejectedBothTls);
+   assert(n.nativeTransfers.length>=2&&n.nativeTransfers.every(t=>t.passed&&t.checks===7&&[s.base,b.imageId].includes(t.image)));
+   assert.equal(n.upstreamSuites.length,2);assert(n.upstreamSuites.every(t=>t.passed===t.reported&&t.passed>1800));
+   assert(b.abi.length&&b.abi.every(a=>a.preservedSymbols>0));
+   for(const key of ['applicationSha256','etcSha256','unrelatedLibrariesSha256'])assert.match(b[key],/^[a-f0-9]{64}/);
+   const app=read(proofDir+'/application.json');assert(app.passed);assert.equal(app.imageId,b.imageId);assert(Date.now()-Date.parse(app.date)<86400000);
+   if(s.key==='rallly')assert(app.nativeMigrations&&app.fictionalInviteRendered&&app.network==='internal; no external browser origins');
+   else{assert(app.fictionalDataOnly&&app.network==='none');if(s.key==='kuma')assert(app.nativeSetupLogin&&app.noNotificationSent);else assert(app.nativeTypedDataAndIsolation&&app.logicalRestore);}
+  }
   if(kind==='python-system'){
    assert.equal(b.version,'3.13.16-1~deb13u1+utilibre1');assert.equal(n.version,'3.13.16');assert.equal(n.expat,'expat_2.9.0');assert.equal(n.soabi,'cpython-313-x86_64-linux-gnu');
    assert(n.application.woff2Roundtrip&&n.application.fontforgeTtfOtf&&n.application.pngJpegWebpThumbnails&&n.venv&&n.sqliteUnicode&&n.tarRoundTrip);
@@ -76,7 +90,7 @@ if(mode==='prepare'){
    const x=inspect(name);assert.equal(x.Image,s.base);const l=x.Config.Labels,project=l['com.docker.compose.project'];assert(project);
    let g=groups.get(project);if(!g){g={project,cwd:l['com.docker.compose.project.working_dir'],files:l['com.docker.compose.project.config_files'].split(','),rows:[],status:'prepared'};groups.set(project,g);}
    const service=l['com.docker.compose.service'],c=config(g)[service];assert.equal(inspect(c.image).Id,s.base);
-   g.rows.push({name,key:s.key,service,oldRef:c.image,oldImage:s.base,newRef:s.candidate,newImage:b.imageId,configHash:hash(c),verification:dir+'/'+kind+'/'+s.key+'/native.json'});
+   g.rows.push({name,key:s.key,service,oldRef:c.image,oldImage:s.base,newRef:s.candidate,newImage:b.imageId,configHash:hash(c),verification:proofDir+'/native.json'});
   }
  }
  const all=JSON.parse(docker('inspect',...docker('ps','-q').split('\n')));

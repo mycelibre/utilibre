@@ -1,0 +1,38 @@
+Description: Preserve the upstream extraction safety filter after path stripping
+Origin: upstream, https://github.com/jaraco/jaraco.context/commit/3b16eec9f80db260bd072acdb85d0bd2d530a563
+Bug: https://security-tracker.debian.org/tracker/CVE-2026-23949
+Forwarded: not-needed
+Last-Update: 2026-10-12
+--- a/setuptools/_vendor/jaraco/context.py
++++ b/setuptools/_vendor/jaraco/context.py
+@@ -71,12 +71,19 @@ def tarball(
+     try:
+         req = urllib.request.urlopen(url)
+         with tarfile.open(fileobj=req, mode='r|*') as tf:
+-            tf.extractall(path=target_dir, filter=strip_first_component)
++            tf.extractall(path=target_dir, filter=_default_filter)
+         yield target_dir
+     finally:
+         shutil.rmtree(target_dir)
+ 
+ 
++def _compose_tarfile_filters(*filters):
++    def compose_two(f1, f2):
++        return lambda member, path: f1(f2(member, path), path)
++
++    return functools.reduce(compose_two, filters, lambda member, path: member)
++
++
+ def strip_first_component(
+     member: tarfile.TarInfo,
+     path,
+@@ -86,6 +93,9 @@ def strip_first_component(
+     return member
+ 
+ 
++_default_filter = _compose_tarfile_filters(tarfile.data_filter, strip_first_component)
++
++
+ def _compose(*cmgrs):
+     """
+     Compose any number of dependent context managers into a single one.

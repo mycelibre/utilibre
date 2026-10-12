@@ -1,0 +1,25 @@
+// Narrow fresh-scan draft for the byte-verified native wheel, never a ledger write.
+import fs from 'node:fs';
+import cp from 'node:child_process';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {freshScan} from '../review-native-backports.mjs';
+import {validateDecision} from '../triage.mjs';
+process.umask(0o077);
+const root='/var/lib/utilibre-maintenance',dir=root+'/host-python-vendor-followup-20261012',here=new URL('.',import.meta.url).pathname;
+const read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:30000,maxBuffer:1024**2,stdio:['ignore','pipe','pipe']}).trim();
+const scan=read(root+'/security.json'),queue=read(root+'/security-queue.json');freshScan(queue,scan);assert.equal(scan.status,'checked');assert.equal(scan.host.status,'checked');
+const release=read(dir+'/release.json'),checks=read(dir+'/checks.json');assert.equal(release.status,'passed');assert(checks.passed);
+assert(Date.parse(release.completedAt)<=Date.parse(scan.date),'Fresh scan must include this native release');
+assert.equal(sha(dir+'/checks.json'),release.checksSha256);
+run('node',[here+'verify-source.mjs']);
+assert.equal(run('dpkg-query',['-W','-f=${Version}','python3-setuptools-whl']),'78.1.1-0.1+utilibre1');
+assert.equal(sha('/usr/share/python-wheels/setuptools-78.1.1-py3-none-any.whl'),release.newWheelSha256);
+assert.equal(sha(dir+'/build/python3-setuptools-whl_78.1.1-0.1+utilibre1_all.deb'),release.newPackageSha256);
+assert.equal(checks.old.baselineUnsafeCases,7);
+for(const proof of [checks.candidate,release.live])assert(proof.passed&&proof.recordHashesValid&&proof.rejectedOrConfinedCases===7&&proof.nativeVenvSetupBuildInstallImport);
+assert.deepEqual(checks.compare.changedFiles.slice().sort(),['setuptools-78.1.1.dist-info/RECORD','setuptools/_vendor/jaraco/context.py']);
+const decisions=queue.items.filter(i=>i.status==='needs-review'&&i.scope==='host-os'&&i.type==='debian'&&i.package==='python3-setuptools-whl'&&i.installed==='78.1.1-0.1+utilibre1'&&i.id==='CVE-2026-23949').map(i=>validateDecision({key:i.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:'Native stable setuptools wheel rebuilt with exact upstream jaraco.context 3b16eec9f80db260bd072acdb85d0bd2d530a563 extraction-filter fix. The vendored helper applies tarfile.data_filter after stripping the first path component, preserving rejection/confinement of traversal, unsafe links and special files. Seven controlled baseline unsafe cases reproduce; all seven candidate/live cases reject or confine, and native venv/package build/install/import passes. All 514 wheel entries remain; only context.py and its RECORD hashes differ. Exact live wheel and native package match retained proof. https://github.com/jaraco/jaraco.context/commit/3b16eec9f80db260bd072acdb85d0bd2d530a563 ; https://security-tracker.debian.org/tracker/CVE-2026-23949 . Evidence: host-python-vendor-followup-20261012/release.json. This only covers the host distribution wheel, not independent environments or other archive vulnerabilities.'}));
+fs.writeFileSync(dir+'/review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,packageSha256:release.newPackageSha256,wheelSha256:release.newWheelSha256,checksSha256:release.checksSha256},null,2)+'\n');
+console.log(JSON.stringify({prepared:decisions.length,applied:false}));

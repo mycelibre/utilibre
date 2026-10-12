@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+import assert from 'node:assert/strict';
+import { readFileSync, writeFileSync, statfsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+process.umask(0o077);
+const recipe = fileURLToPath(new URL('.', import.meta.url));
+const spec = JSON.parse(readFileSync(recipe + 'spec.json'));
+const run = (args) => execFileSync(args[0], args.slice(1), { encoding: 'utf8', timeout: 600000, maxBuffer: 32e6 });
+assert(process.argv.length === 2, 'No unreviewed image/base overrides');
+const space = statfsSync(spec.work); assert(space.bavail * space.bsize >= spec.freeDiskFloorBytes + 1024 ** 3);
+const buildLog = readFileSync(spec.work + '/build.log', 'utf8');
+assert(buildLog.endsWith('COMPILED\n'), 'Native build and tests must finish before staging');
+const deb = spec.work + '/out/postgresql-17-postgis-3_' + spec.candidateVersion + '_amd64.deb';
+assert.equal(run(['dpkg-deb', '-f', deb, 'Package']).trim(), spec.package);
+assert.equal(run(['dpkg-deb', '-f', deb, 'Version']).trim(), spec.candidateVersion);
+const candidate = 'utilibre-gathio-documentdb:postgis-security-20261012';
+assert.equal(run(['docker', 'image', 'inspect', '-f', '{{.Id}}', spec.baseRef]).trim(), spec.baseImage, 'Base reference moved');
+const output = run(['docker', 'build', '--network=none', '--pull=false', '--build-arg', 'BASE=' + spec.baseRef, '-f', recipe + 'Dockerfile', '-t', candidate, spec.work + '/out']);
+assert.equal(run(['docker', 'image', 'inspect', '-f', '{{.Id}}', spec.baseRef]).trim(), spec.baseImage, 'Base reference moved during build');
+writeFileSync(spec.work + '/stage-build.log', output);
+const image = run(['docker', 'image', 'inspect', '-f', '{{.Id}}', candidate]).trim();
+const sha = x => createHash('sha256').update(x).digest('hex');
+writeFileSync(spec.work + '/candidate.json', JSON.stringify({ date: new Date().toISOString(), base: spec.baseImage, candidate, image, package: spec.package, version: spec.candidateVersion, debSha256: sha(readFileSync(deb)), sourceReceiptSha256: sha(readFileSync(spec.work + '/source/authenticated.json')), patchReceiptSha256: sha(readFileSync(spec.work + '/source/applied-provenance.json')), deployed: false }, null, 2) + '\n');
+console.log('Candidate staged, not deployed:', image);

@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "targetContainer": "utilibre-gathio-postgres-1",
+  "baseImage": "sha256:fbd007600d824f10656e986ef29f46f8b1fab5220eddf09a6910f1a98423edfc",
+  "baseRef": "utilibre-gathio-documentdb:curl-security-20261012",
+  "builderImage": "sha256:041030501a5231fd2ce4ded70d79e1fee2d87a60f45f9a1725f180256e171651",
+  "package": "postgresql-17-postgis-3",
+  "originalVersion": "3.6.0+dfsg-3.pgdg12+1",
+  "candidateVersion": "3.6.0+dfsg-3.pgdg12+1+utilibre1",
+  "postgresqlVersion": "17.11-1.pgdg12+2",
+  "work": "/var/lib/utilibre-maintenance/geospatial-followup-20261012",
+  "sourceOrigin": "https://apt-archive.postgresql.org/pub/repos/apt/",
+  "sourceDistribution": "bookworm-pgdg-archive",
+  "sourcePackage": "postgis",
+  "patchUrl": "https://git.osgeo.org/gitea/postgis/postgis/commit/767fa40644253281f6d4e8b06811489b0a0f9b0d.patch",
+  "patchCommit": "53e273faeb440176eee83f76319b48afb0b86834",
+  "patchSha256": "dc31d8b92d00cfe3fdae75ea4f0bcc6e1e6132be655d0e4f391221be60792b3d",
+  "pgdgKeySha256": "ab3ea5fa18220d88318cd9e41d1e4e709c9003c71494f9022cbd76353ba7c5e1",
+  "cve": "CVE-2026-73515",
+  "prerequisites": [
+    ["3d64dfde01432a157f37ce3694c22d24f4d65776", "83c95486898a1466275a40b74cb10dceac639a9850e096b28ba618416566cdae"],
+    ["d3171abe3b30c898bd15e37b072fb34c3b6cc675", "b5d6e9998bde5bd4b68563e2703e820285dc42bf36d49c6307d0dbd9ae373d0e"],
+    ["87e77f3e5b78585cb764fe72893ba6a826e4fc1e", "9d54d02ec71f0f6ae7c242ac05bc2c99d86621563d63255a0f771adfb2686627"],
+    ["70d46a679e0570290e75ceb823d9382951b41252", "44e5c38b69a5e939bb80aa66b14d2e11387b8068eb42b7e21cbf82c3643e0bf1"],
+    ["86bf6bf1965bc03b53a391da5a17f1ff134f1fd2", "bfc54ad35b87f67beca3fe2550421648bb9a6395189c976c067994ca3adf4427"]
+  ],
+  "cpuLimit": 2,
+  "memoryLimit": "4g",
+  "freeDiskFloorBytes": 8589934592
+}

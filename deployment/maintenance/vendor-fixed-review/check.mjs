@@ -113,11 +113,12 @@ export function reasonFor(item,spec,proof){
  'Connector/C Big5 escaping is fixed in 3.3.19/3.4.9. Debian marks source 11.8.9+ds-4 fixed; installed signed client library and plugins match byte-for-byte (common contains only configuration/docs).';
  return `${basis} Exact ${spec.artifact}, ${spec.package} ${spec.version}; package SHA256 ${spec.debSha}, live payload manifest SHA256 ${proof.manifestSha256}. https://security-tracker.debian.org/tracker/${item.id} . This is an individual fixed-package/component review against the base-distribution scanner match, not an exemption for other CVEs or versions. Raw findings retained. Native/release evidence: deployment/maintenance/vendor-fixed-review/README.md.`;
 }
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 export function run(){
  process.umask(0o077);const queue=read('security-queue.json'),scan=read('security.json');freshScan(queue,scan);
  const decisions=[],proofs=[],skipped=[],cache=new Map();
  const currentSpecs=[...specs];
- for(const receipt of ['closure-followup-20261012/bookworm-release.json','closure-followup-20261012/ncurses-release.json','closure-followup-20261012/rsync-release.json','closure-followup-20261012/util-linux-release.json','closure-followup-20261012/curl-release.json','closure-followup-20261012/gzip-release.json','closure-followup-20261012/sqlite-fts-release.json','closure-followup-20261012/urllib3-release.json','closure-followup-20261012/python-system-release.json']){
+ for(const receipt of ['closure-followup-20261012/bookworm-release.json','closure-followup-20261012/ncurses-release.json','closure-followup-20261012/rsync-release.json','closure-followup-20261012/util-linux-release.json','closure-followup-20261012/curl-release.json','closure-followup-20261012/gzip-release.json','closure-followup-20261012/sqlite-fts-release.json','closure-followup-20261012/urllib3-release.json','closure-followup-20261012/python-system-release.json',...additionalOverlayReceipts]){
   if(!fs.existsSync(root+receipt))continue;const rows=overlayRows(read(receipt));
   for(const s of [...currentSpecs]){if(!s.containers.length)continue;
    const matched=s.containers.map(name=>rows.find(r=>r.name===name&&r.oldImage===s.artifact));

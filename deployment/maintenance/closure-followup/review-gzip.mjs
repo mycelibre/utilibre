@@ -1,6 +1,7 @@
 // Two specific upstream repairs, verified against exact live native payloads.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/closure-followup-20261012';
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
@@ -8,7 +9,7 @@ const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:30000,maxBuffer:8*
 const q=read(root+'/security-queue.json'),scan=read(root+'/security.json');freshScan(q,scan);assert.equal(scan.status,'checked');
 const release=read(dir+'/gzip-release.json');assert.equal(release.status,'passed');const rows=overlayRows(release);
 const descendants=[];
-for(const file of ['sqlite-fts-release.json','urllib3-release.json'])if(fs.existsSync(dir+'/'+file)){const later=read(dir+'/'+file);assert.equal(later.status,'passed');descendants.push(...overlayRows(later));}
+for(const file of ['sqlite-fts-release.json','urllib3-release.json',...additionalOverlayReceipts.map(p=>'../'+p)])if(fs.existsSync(dir+'/'+file)){const later=read(dir+'/'+file);assert.equal(later.status,'passed');descendants.push(...overlayRows(later));}
 const primary=read(dir+'/debian-primary.json');assert(Date.now()-Date.parse(primary.date)<86400000);
 const specs=read(new URL('./gzip-specs.json',import.meta.url));
 const cache=new Map,decisions=[],proofs=[],skipped=[];

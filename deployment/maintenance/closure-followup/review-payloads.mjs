@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {validateDecision} from '../triage.mjs';
 const dir='/var/lib/utilibre-maintenance/closure-followup-20261012',root=path.dirname(dir);
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 process.umask(0o077);
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
 const run=(p,args)=>cp.execFileSync(p,args,{encoding:'utf8',timeout:60000,maxBuffer:8*1024**2,stdio:['ignore','pipe','pipe']}).trim();
@@ -15,7 +16,7 @@ assert.equal(queue.scanDate,scan.completedAt);assert.equal(scan.status,'checked'
 const release=read(dir+'/expat-release.json');assert.equal(release.status,'passed');assert.equal(read(dir+'/host-release.json').status,'passed');assert.equal(read(dir+'/host-live.json').status,'passed');
 // Follow only the two reviewed library overlays, never an arbitrary new image.
 const descendants=[];
-for(const file of ['cache-release.json','apache-release.json','ncurses-release.json','util-linux-release.json','curl-release.json','gzip-release.json','sqlite-fts-release.json','urllib3-release.json','python-system-release.json']){
+for(const file of ['cache-release.json','apache-release.json','ncurses-release.json','util-linux-release.json','curl-release.json','gzip-release.json','sqlite-fts-release.json','urllib3-release.json','python-system-release.json',...additionalOverlayReceipts.map(p=>'../'+p)]){
  if(!fs.existsSync(dir+'/'+file))continue;
  const r=read(dir+'/'+file);assert.equal(r.status,'passed');
  for(const group of r.groups){assert.equal(group.status,'passed');

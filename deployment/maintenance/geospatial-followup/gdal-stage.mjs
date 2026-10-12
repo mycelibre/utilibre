@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+import assert from 'node:assert/strict';
+import { readFileSync, writeFileSync, statfsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+process.umask(0o077);
+const recipe = fileURLToPath(new URL('.', import.meta.url));
+const spec = JSON.parse(readFileSync(recipe + 'spec.json'));
+const base = JSON.parse(readFileSync(recipe + 'gdal-base.json'));
+const w = spec.work, candidate = 'utilibre-gathio-documentdb:gdal-security-20261012';
+const run = args => execFileSync(args[0], args.slice(1), { encoding: 'utf8', timeout: 600000, maxBuffer: 32e6, stdio: ['ignore', 'pipe', 'pipe'] });
+assert(process.argv.length === 2, 'No unreviewed source or base overrides');
+assert.match(base.image, /^sha256:[a-f0-9]{64}$/); assert.match(base.ref, /^utilibre-gathio-documentdb:[a-z0-9-]+$/);
+const space = statfsSync(w); assert(space.bavail * space.bsize >= spec.freeDiskFloorBytes + 1024 ** 3);
+assert(readFileSync(w + '/gdal-build.log', 'utf8').endsWith('GDAL_COMPILED\n'));
+const deb = w + '/gdal-out/libgdal32_3.6.2+dfsg-1+utilibre1_amd64.deb';
+assert.equal(run(['dpkg-deb', '-f', deb, 'Package']).trim(), 'libgdal32');
+assert.equal(run(['dpkg-deb', '-f', deb, 'Version']).trim(), '3.6.2+dfsg-1+utilibre1');
+assert.equal(run(['docker', 'image', 'inspect', '-f', '{{.Id}}', base.ref]).trim(), base.image);
+assert.equal(run(['docker', 'inspect', '-f', '{{.Image}}', spec.targetContainer]).trim(), base.image, 'Live base changed; preserve all intervening repairs');
+const output = run(['docker', 'build', '--network=none', '--pull=false', '--build-arg', 'BASE=' + base.ref, '-f', recipe + 'Gdal.Dockerfile', '-t', candidate, w + '/gdal-out']);
+assert.equal(run(['docker', 'image', 'inspect', '-f', '{{.Id}}', base.ref]).trim(), base.image);
+writeFileSync(w + '/gdal-stage-build.log', output);
+const image = run(['docker', 'image', 'inspect', '-f', '{{.Id}}', candidate]).trim();
+const sha = data => createHash('sha256').update(data).digest('hex');
+writeFileSync(w + '/gdal-candidate.json', JSON.stringify({ date: new Date().toISOString(), base: base.image, baseRef: base.ref, candidate, image, package: 'libgdal32', version: '3.6.2+dfsg-1+utilibre1', debSha256: sha(readFileSync(deb)), sourceReceiptSha256: sha(readFileSync(w + '/gdal-source/authenticated.json')), patchReceiptSha256: sha(readFileSync(w + '/gdal-source/applied-provenance.json')), dependencyReceiptSha256: sha(readFileSync(w + '/gdal-source/dependency-config.json')), deployed: false }, null, 2) + '\n');
+console.log('GDAL candidate staged, not deployed:', image);
