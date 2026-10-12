@@ -15,7 +15,7 @@ assert.equal(queue.scanDate,scan.completedAt);assert.equal(scan.status,'checked'
 const release=read(dir+'/expat-release.json');assert.equal(release.status,'passed');assert.equal(read(dir+'/host-release.json').status,'passed');assert.equal(read(dir+'/host-live.json').status,'passed');
 // Follow only the two reviewed library overlays, never an arbitrary new image.
 const descendants=[];
-for(const file of ['cache-release.json','apache-release.json','ncurses-release.json','util-linux-release.json','curl-release.json']){
+for(const file of ['cache-release.json','apache-release.json','ncurses-release.json','util-linux-release.json','curl-release.json','gzip-release.json']){
  if(!fs.existsSync(dir+'/'+file))continue;
  const r=read(dir+'/'+file);assert.equal(r.status,'passed');
  for(const group of r.groups){assert.equal(group.status,'passed');
@@ -34,6 +34,10 @@ function originalRelease(name,image){
  return null;
 }
 const specs=[
+ ['apache2','2.4.69-1','apache2_2.4.69-1_amd64.deb','5634fa84f75196b2dd59d6b6583c5af604c62aab5e60d9176ccc8823a2df96fb','apache2'],
+ ['apache2-bin','2.4.69-1','apache2-bin_2.4.69-1_amd64.deb','c12e6ddb209d5942b09001c1a04581092e4bf40fa51bf9d2605eb6ed5117b600','apache2'],
+ ['apache2-data','2.4.69-1','apache2-data_2.4.69-1_all.deb','d13853426e0142cf189f74560d75352c16d7237f7d63d033e723a39d5f7169ee','apache2'],
+ ['apache2-utils','2.4.69-1','apache2-utils_2.4.69-1_amd64.deb','7ebea0fd9538107344fc6de6b612b5a6f1c3705db15255b1c9886d4ab388daa9','apache2'],
  ['libxml2-16','2.15.4+dfsg-1','libxml2-16_2.15.4+dfsg-1_amd64.deb','36f043b5014adf26ff722f693361d1d677088d1eb384fe4522ad514b52053c88','libxml2'],
  ['libexpat1','2.9.0-1','libexpat1_2.9.0-1_amd64.deb','190d7f5e45f070c42a12f708fe417d6636cb45fae71175203168bb5c3695081b','expat'],
  ['vim','2:9.2.0858-1','vim_2%3a9.2.0858-1_amd64.deb','a146e1522011659f2a60420ec3958be9f7dc30e6aa396b0da37a5eb8fbc301c0','vim'],
@@ -46,7 +50,7 @@ const decisions=[],proofs=[],skipped=[],cache=new Map;
 for(const item of queue.items.filter(i=>i.status==='needs-review'&&['HIGH','CRITICAL'].includes(i.severity))){
  const spec=specs.find(s=>s[0]===item.package);if(!spec||item.type!=='debian')continue;
  const [pkg,version,file,hash,source]=spec,host=item.scope==='host-os';
- const apacheXml=pkg==='libxml2-16'&&item.containers.length===1&&item.containers[0]==='utilibre-services-freshrss-1'&&originalRelease(item.containers[0],item.artifact);
+ const apacheXml=(pkg==='libxml2-16'||source==='apache2')&&item.containers.length===1&&item.containers[0]==='utilibre-services-freshrss-1'&&originalRelease(item.containers[0],item.artifact);
  if(!host&&!apacheXml&&(pkg!=='libexpat1'||!item.containers.every(n=>originalRelease(n,item.artifact))))continue;
  try{
   const fixed=primary.sources[source]?.[item.id]?.releases?.sid;assert.equal(fixed?.status,'resolved');assert(fixed.fixed_version&&fixed.fixed_version!=='0');run('dpkg',['--compare-versions',version,'ge',fixed.fixed_version]);
@@ -58,7 +62,9 @@ for(const item of queue.items.filter(i=>i.status==='needs-review'&&['HIGH','CRIT
     run('dpkg-deb',['-x',deb,temp]);
     // Debian's postinst may coalesce documentation under vim-common. Compare
     // all shipped code/runtime files, not mutable/shared changelog packaging.
-    const paths=files(temp).filter(p=>pkg==='libxml2-16'?/^\/usr\/lib\/.*libxml2\.so\.[\d.]+$/.test(p):pkg==='libexpat1'?/^\/usr\/lib\/.*libexpat\.so\.[\d.]+$/.test(p):p.startsWith('/usr/')&&!p.startsWith('/usr/share/doc/')&&!(pkg==='vim-tiny'&&p.startsWith('/usr/share/vim/vim92/doc/')));
+    const paths=files(temp).filter(p=>pkg==='libxml2-16'?/^\/usr\/lib\/.*libxml2\.so\.[\d.]+$/.test(p):pkg==='libexpat1'?/^\/usr\/lib\/.*libexpat\.so\.[\d.]+$/.test(p):p.startsWith('/usr/')&&!p.startsWith('/usr/share/doc/')&&!(source==='apache2'&&(p.startsWith('/usr/share/lintian/')||p.startsWith('/usr/share/man/')))&&!(pkg==='vim-tiny'&&p.startsWith('/usr/share/vim/vim92/doc/')));
+    // FreshRSS's existing slim-image dpkg policy omits lintian overrides and
+    // manpages. They are documentation/packaging, not Apache runtime code.
     // The full vim-runtime package legitimately replaces tiny's three minimal
     // help files; its separate signed payload check covers the installed help.
     assert(paths.length);manifest=paths.map(p=>({path:p,sha256:sha(fs.readFileSync(temp+p))}));

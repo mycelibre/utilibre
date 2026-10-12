@@ -12,12 +12,17 @@ const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:30000,maxBuffer:10
 const q=read(root+'security-queue.json'),scan=read(root+'security.json');freshScan(q,scan);
 const release=read(dir+'/rsync-release.json');assert.equal(release.status,'passed');assert.equal(release.groups.length,1);
 const group=release.groups[0];assert.equal(group.status,'passed');assert.equal(group.rows.length,1);
-const row=group.rows[0];assert.equal(row.name,'utilibre-gathio-postgres-1');assert(Date.parse(group.completedAt)<=Date.parse(scan.date));
+let row=group.rows[0];assert.equal(row.name,'utilibre-gathio-postgres-1');assert(Date.parse(group.completedAt)<=Date.parse(scan.date));
 const native=read(dir+'/rsync/rsync-gathio-postgres/native.json');assert(native.passed&&native.nativeLocalIncrementalAndSafeLinks&&native.nativeLoopbackDaemonReadOnly);assert.equal(native.imageId,row.newImage);
 const db=read(dir+'/rsync/rsync-gathio-postgres/database.json');assert(db.passed&&db.nativeDumpRestore&&db.documentdbTypedDataAndRoleIsolation);assert.equal(db.imageId,row.newImage);
 const primary=read(dir+'/debian-primary.json');assert(Date.now()-Date.parse(primary.date)<86400000);
 const version='3.5.1+ds1-1~deb12u1+utilibre1',deb=dir+'/rsync-bookworm/rsync_'+version+'_amd64.deb',checksum='0af6a698f50dbc7ea7ca3fa436a5fd45e7c939b5de4bbf834c4a2a441a905258';
 assert.equal(sha(fs.readFileSync(deb)),checksum);
+if(fs.existsSync(dir+'/gzip-release.json')){
+ const later=read(dir+'/gzip-release.json');assert.equal(later.status,'passed');
+ const next=later.groups.flatMap(g=>{assert.equal(g.status,'passed');return g.rows.map(r=>({...r,completedAt:g.completedAt}));}).find(r=>r.name===row.name&&r.oldImage===row.newImage);
+ assert(next&&Date.parse(next.completedAt)<=Date.parse(scan.date));row=next;
+}
 assert.equal(run('docker',['inspect',row.name,'--format','{{.Image}}']),row.newImage);
 assert.equal(run('docker',['exec',row.name,'dpkg-query','-W','-f=${Version}','rsync']),version);
 const temp=fs.mkdtempSync('/dev/shm/utilibre-rsync-proof-'),manifest=[];

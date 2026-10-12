@@ -1,6 +1,42 @@
 # Operator work queue — reconciled 12 October 2026
 
-## Current boundary — 12 October, 06:30 UTC
+## Current boundary — 12 October, 06:50 UTC
+
+The **gzip-only repair is deployed in nine images / nine roles / six projects**
+and passed readiness at 06:40. Eight Bookworm images use native
+`1.14-1~deb12u1+utilibre1`; the Ubuntu mail database uses its signed vendor
+`1.12-1ubuntu3.2`. All 30 upstream Bookworm tests passed with zero skips. Each
+old/new image passed local compression, decompression, concatenation, streaming,
+integrity rejection, preserve-original, zgrep and gzexe checks. Application,
+configuration and shared-library bytes are unchanged; no data migration.
+[Recipes, source and rollback](../deployment/maintenance/closure-followup/README.md).
+
+The **06:44:14 UTC** full scan completed with 109 images, 175 containers,
+55 source manifests and host packages. Runtime/host raw: **40 critical / 2,711
+high**. Exact repaired-payload/component reviews now leave **0 critical / 451
+high pending**. FreshRSS's already-repaired Apache 2.4.69 runtime was verified
+against vendor package bytes; omitted slim-image manpages/lintian overrides are
+not executable code. Five XML decisions were failing a reason-length limit
+after several overlays: the reason now references the full keyed proof instead
+of enumerating every path. Every live byte and release still must match; no
+review gate or raw finding was removed.
+
+All 59 status monitors and 105 catalogue endpoint probes passed; the 112-provider
+upstream check has no unavailable provider or unresolved application-advisory
+disposition. The 91 focused tests pass. Source is HTTPS/checksum verified at
+`https://tools.utilibre.org/utilibre-source/security-gzip-followup-20261012-source.tar.gz`
+(960,873 bytes; SHA-256
+`20184b37fd9e65593f12b898e90c733a52811cdc6f6ecf554f2fbc77d83ee04e`).
+Existing images/data and earlier source offers remain intact. No Caddy change.
+
+Active next repair: SQLite FTS corruption backport from authenticated Debian
+source, retaining Bookworm ABI and the previous DISTINCT patch. The source
+patch applied without fuzz; compilation/testing is underway, **not deployed**.
+Other dependency findings, vendor-unfixed GnuTLS, resident host mappings/kernel,
+compiled Deno/WASM coverage and the missing genuine GitHub scheduled monitor
+remain open. This is a completed release checkpoint, not completion of that queue.
+
+## Previous boundary — 12 October, 06:30 UTC
 
 Native **curl 8.22.0-1~deb13u1+utilibre1** is deployed in **nine images /
 nine roles / six projects** and on the host. Both native upstream suites passed

@@ -51,6 +51,43 @@ have zero restarts. No production database migration/restore was performed.
 
 ## Primary evidence and build scope
 
+### gzip follow-up — deployed
+
+At **06:40 UTC**, nine gzip-only image replacements across six projects passed
+their normal native supervisors and exact-image readiness gates. Eight Bookworm
+images use **1.14-1~deb12u1+utilibre1**, rebuilt with their native libc from
+authenticated Debian 1.14 source/packaging. The Ubuntu 24.04 Addy database uses
+the signed vendor **1.12-1ubuntu3.2** package, not a Debian transplant. Both repair
+[CVE-2026-41991](https://security-tracker.debian.org/tracker/CVE-2026-41991) and
+[CVE-2026-41992](https://security-tracker.debian.org/tracker/CVE-2026-41992).
+
+All **30 upstream tests passed**, with zero skips, in the unprivileged Bookworm
+builder. Each candidate and its original image passed synthetic compression,
+decompression, concatenated members, streaming, integrity failure, preservation
+of originals, zgrep and gzexe execution. These are not an adversarial LZH proof
+or a new full browser journey for each unchanged app. The initial fixture used
+a non-executable temporary mount and correctly failed the gzexe execution gate;
+only the disposable fixture was changed to permit execution, retaining non-root,
+no-network, no-new-privileges, capability and resource restrictions.
+
+Exact image configuration, application files, `/etc` and shared-library hashes
+are unchanged. A fixed fixture hostname avoids comparing Docker-generated
+random hostnames as an application change. No user data, database schema,
+account policy, Caddy block or production mount policy changed. All 59 monitors
+and 105 catalogue endpoint probes passed after rollout.
+
+Recipes: `build-gzip.sh`, `gzip-stage.mjs`, `cache-release.mjs prepare/apply --gzip`.
+Private `gzip-release.json` retains previous image pins and the existing native
+supervisor/rollback for all six projects. Roll back only those exact image
+scalars and recreate with the same supervisor; no data restore is needed.
+The unused one-CPU/1-GiB compiler container removes itself; no retained new
+compiler image. Source/update checks stay independent from functional checks.
+
+Published source: `security-gzip-followup-20261012-source.tar.gz`, 960,873 bytes,
+HTTPS SHA-256 `20184b37fd9e65593f12b898e90c733a52811cdc6f6ecf554f2fbc77d83ee04e`.
+It includes original notices, complete native source, signed-source input pins,
+build inventory and recipes, not private logs or user data.
+
 ### curl follow-up — deployed
 
 The deployed version is native **curl 8.22.0-1~deb13u1+utilibre1**, from the

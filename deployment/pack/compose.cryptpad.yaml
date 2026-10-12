@@ -1,7 +1,7 @@
 name: utilibre-pack-cryptpad
 services:
   cryptpad:
-    image: utilibre-ncurses-pack-cryptpad-cryptpad:security-20261012
+    image: utilibre-pack-cryptpad-cryptpad:gzip-security-20261012
     working_dir: /cryptpad
     command: [node, server.js]
     user: '4001:4001'

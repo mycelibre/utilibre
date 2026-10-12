@@ -1,0 +1,92 @@
+[
+  {
+    "key": "gzip-pack-cryptpad-cryptpad",
+    "suite": "bookworm",
+    "base": "sha256:3dbc9e7744daadb1f688ddde5bce2ddf2f0efb10caaedd85c45244bdc1f613c6",
+    "baseRef": "utilibre-ncurses-pack-cryptpad-cryptpad:security-20261012",
+    "candidate": "utilibre-pack-cryptpad-cryptpad:gzip-security-20261012",
+    "containers": [
+      "utilibre-pack-cryptpad-cryptpad-1"
+    ]
+  },
+  {
+    "key": "gzip-addy-db",
+    "suite": "noble",
+    "base": "sha256:4c2023df5918b3c90a8a08de2a30630a773c16f6de504ffae5d383f7cde761df",
+    "baseRef": "utilibre-ncurses-addy-db:security-20261012",
+    "candidate": "utilibre-addy-db:gzip-security-20261012",
+    "containers": [
+      "utilibre-addy-db-1"
+    ]
+  },
+  {
+    "key": "gzip-wishlist-app",
+    "suite": "bookworm",
+    "base": "sha256:4ebc41d18e6157d3ad297682412f4bf9299dd5ce3e1daf66f4eb08d7ecdf4420",
+    "baseRef": "utilibre-ncurses-wishlist-app:security-20261012",
+    "candidate": "utilibre-wishlist-app:gzip-security-20261012",
+    "containers": [
+      "utilibre-wishlist-app-1"
+    ]
+  },
+  {
+    "key": "gzip-expanded-actual",
+    "suite": "bookworm",
+    "base": "sha256:898c9187d126ad3f13622b24b519f3d6bc15f47be161a30a5461dd1fd4dfc3ce",
+    "baseRef": "utilibre-ncurses-expanded-actual:security-20261012",
+    "candidate": "utilibre-expanded-actual:gzip-security-20261012",
+    "containers": [
+      "utilibre-expanded-actual-1"
+    ]
+  },
+  {
+    "key": "gzip-gathio-postgres",
+    "suite": "bookworm",
+    "base": "sha256:90cb56f6ef88b780faf438718a60f9da4576e6c7bfb1725ad62ceca6929a976b",
+    "baseRef": "utilibre-gathio-documentdb:rsync-3.5.1-security-20261012",
+    "candidate": "utilibre-gathio-postgres:gzip-security-20261012",
+    "containers": [
+      "utilibre-gathio-postgres-1"
+    ]
+  },
+  {
+    "key": "gzip-community-uptime-kuma",
+    "suite": "bookworm",
+    "base": "sha256:9f9ad3bd83db1523b2784979497d1ebdf8937c13f5e04af28c4e55a7e2c429dc",
+    "baseRef": "utilibre-ncurses-community-uptime-kuma:security-20261012",
+    "candidate": "utilibre-community-uptime-kuma:gzip-security-20261012",
+    "containers": [
+      "utilibre-community-uptime-kuma-1"
+    ]
+  },
+  {
+    "key": "gzip-expanded-resume",
+    "suite": "bookworm",
+    "base": "sha256:cd22c5dca1b3ecc33b6fa61caaaf8e99d83fe9dc3a79b102938ace15d8839e20",
+    "baseRef": "utilibre-ncurses-expanded-resume:security-20261012",
+    "candidate": "utilibre-expanded-resume:gzip-security-20261012",
+    "containers": [
+      "utilibre-expanded-resume-1"
+    ]
+  },
+  {
+    "key": "gzip-community-rallly",
+    "suite": "bookworm",
+    "base": "sha256:d3f249aeb0060ead6043abed2437a65be7a1935856fc696abe61fbb472966500",
+    "baseRef": "utilibre-ncurses-community-rallly:security-20261012",
+    "candidate": "utilibre-community-rallly:gzip-security-20261012",
+    "containers": [
+      "utilibre-community-rallly-1"
+    ]
+  },
+  {
+    "key": "gzip-community-rssbridge",
+    "suite": "bookworm",
+    "base": "sha256:d9a6f096c980cf0ff4c09df0cd33eaa477da4c5f2d4898cabbac41adfb4aebb3",
+    "baseRef": "utilibre-ncurses-community-rssbridge:security-20261012",
+    "candidate": "utilibre-community-rssbridge:gzip-security-20261012",
+    "containers": [
+      "utilibre-community-rssbridge-1"
+    ]
+  }
+]
