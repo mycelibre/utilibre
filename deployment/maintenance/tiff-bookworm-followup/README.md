@@ -91,3 +91,24 @@ not a database restore. Keep normal saved-account backups unchanged.
 - <https://gitlab.com/libtiff/libtiff/-/commit/eedba405d3695b52faae65994c5904f228eca0bf>
 - <https://deb.debian.org/debian/pool/main/t/tiff/tiff_4.7.2-1.dsc>
 - <https://api.opensuse.org/public/source/SUSE:SLE-15-SP5:Update/tiff/tiff-CVE-2026-12912.patch?expand=1>
+
+## Additive CVE-2026-52490 scope review
+
+The 16:42:50 UTC scan surfaced this separate source-package attribution. It
+affects the `tiffcrop` command-line subdivision path, not the installed libtiff
+library API. This exact library-only package does not install `tiffcrop`;
+package files, command lookup and files under `/usr`, `/opt`, `/bin` and `/sbin`
+were checked. The scoped verdict is **not affected**, not a new runtime repair.
+
+As corroboration, the signed 4.7.2 upstream file matches the published compiled
+source archive exactly. Both affected tool paths contain nonzero/division
+bounds and checked 64-bit subdivision counts. Debian identifies 4.7.2-1 as
+fixed by upstream `b04e935cb6242f22cc8b63c99a372cf3ea825e4e`. No exploit was run,
+and no library, configuration, original source offer or native/release receipt
+was changed. `tiffcrop-scope.mjs` produces additive evidence; the normal strict
+reviewer still requires current bytes, exact role/version, completed image
+ancestry and a fresh scan. Its expected status differs only for this exact CVE.
+
+- <https://security-tracker.debian.org/tracker/CVE-2026-52490>
+- <https://gitlab.com/libtiff/libtiff/-/work_items/846>
+- <https://gitlab.com/libtiff/libtiff/-/commit/b04e935cb6242f22cc8b63c99a372cf3ea825e4e>
