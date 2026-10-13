@@ -127,7 +127,7 @@ accounts. The FMD security discovery URL resolves to the live canonical portal
 file. The subsequent 9 October FMD p2 check passed native browser decryption,
 ZIP download/reopening and exact fictional CSV/image/metadata assertions, with
 zero-value preservation and native deletion/token rejection. See
-[fmd-export-verification-2026-10-09.md](fmd-export-verification-2026-10-09.md).
+[fmd-export-verification-2026-10-09.md](records/fmd-export-verification-2026-10-09.md).
 Physical Android recovery, push delivery and account ZIP import remain untested.
 
 ## Restricted 13ft evaluation and Resume tracking correction
@@ -144,7 +144,7 @@ Historical records are not deleted. Replace this adaptation when a native
 instance-wide opt-out passes the same regression checks. Native owner/public,
 PDF/JSON export and sharing checks passed in isolation and over public HTTPS.
 Deployment, synthetic-data evidence and recovery are recorded in
-[the correction record](reactive-resume-privacy-2026-10-08.md).
+[the correction record](records/reactive-resume-privacy-2026-10-08.md).
 
 ## PrivateBin homepage discovery, 9 October
 

@@ -308,9 +308,9 @@
   },
   "canonicalRecords": {
     "workQueue": "docs/work-queue.md",
-    "allRequestedCandidates": "docs/service-candidates-2026-10-08.md",
+    "allRequestedCandidates": "docs/records/service-candidates-2026-10-08.md",
     "nativeDataChecks": "docs/data-verification.md",
-    "copyCoverage": "docs/copy-coverage-2026-10-09.md"
+    "copyCoverage": "docs/records/copy-coverage-2026-10-09.md"
   },
   "verificationScope": "91 enabled catalog entries have configured HTTP or TCP-listener observations. These observations are not full workflow/capacity checks; dated service records state those separately. Mumble external authenticated encrypted UDP loopback passed run37933469692 on 9 October; its recurring monitor still checks only private TCP liveness."
 }

@@ -21,7 +21,7 @@ at **admin@utilibre.org**. Donations do not affect approval.
 
 Reader frontends depend on the sites they retrieve content from. See the
 [status page](https://utilibre.org/en/status) for current incidents and the
-[service expansion record](docs/service-candidates-2026-10-08.md) for installed
+[service expansion record](docs/records/service-candidates-2026-10-08.md) for installed
 apps, private mail staging and the reasons a proposed app was excluded.
 
 Optional donations: [Liberapay](https://liberapay.com/mycelibre/donate).
@@ -33,7 +33,7 @@ respective open-source communities.
 
 - [Services and access](docs/services.md)
 - [Privacy](docs/privacy.md) and [security](docs/security.md)
-- [Latest catalogue and guide improvements](docs/ux-friction-2026-10-10.md)
+- [Latest catalogue and guide improvements](docs/records/ux-friction-2026-10-10.md)
 - [Deployment](docs/deployment.md) and [architecture](docs/architecture.md)
 - [Expanded ports and operations](docs/expanded-operations.md), [delivery checklist](deployment/community/delivery-checklist.json), and [instance submissions](docs/public-instance-submissions.md)
 - [Project purpose](PRODUCT.md), [software policy](FOSS_POLICY.md), and [contributing](CONTRIBUTING.md)

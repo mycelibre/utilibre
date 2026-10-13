@@ -67,14 +67,24 @@ npm test
 npm run test:e2e
 ```
 
+The `portal-checks` GitHub workflow runs the policy, lint, typecheck, build and
+unit checks for portal changes, with a 15-minute limit. It reports the result
+alongside the normal host deployment process; it contains no release step.
+
 Service changes also require Compose validation, private functional checks,
 resource observation, edge/firewall review, bilingual catalog verification,
 and the public-path checks described in
 [docs/adding-a-service.md](docs/adding-a-service.md). A green unit suite is not
 a public-service security review.
 
-Never commit `.env`, secrets, private addresses, access tokens, generated
-runtime configuration, databases, uploads, logs, or backup archives.
+Never commit `.env`, secrets, access tokens, generated runtime configuration,
+databases, uploads, logs, or backup archives. Do not introduce hardcoded private
+network addresses in a new service or source file. Some existing deployment
+files contain RFC 1918 addresses that identify this installation's internal
+routes. Preserve their working configuration when editing those files, and use
+an existing bind or routing variable where it is supported. An exception for a
+new literal address needs a documented operational reason and a review of its
+exposure; an internal address is not a secret or an access control.
 
 ## AI assistance and rights
 

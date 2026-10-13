@@ -1,0 +1,15 @@
+# Bookbinder JS deployment — 2026-10-09
+
+Live https://tools.utilibre.org/apps/bookbinder/ . Upstream 1.7.0 / commit `7df532dc29f6bbf4204d62796f4ff537594f5097`, Utilibre p1, MPL-2.0 as specified by source headers. Corresponding source: https://tools.utilibre.org/utilibre-source/bookbinder-utilibre.tar.gz . Static files use the existing tools Nginx; no additional backend, persistent volume or public port.
+
+This supplements BentoPDF's basic booklet tool with native signature sizes, custom signatures, folio/quarto/octavo/sextodecimo layouts, margin/creep/trim/sewing marks, flyleaves and split front/back or duplex files. App controls remain English. Files are processed in the browser; `bookbinderSettings` retains preferences after closing the tab and URL query settings may be shared deliberately. Exported PDFs remain on the device. The shared tools origin also holds other tools' browser data; use the native Reset Settings for Bookbinder preferences instead of clearing all site data when possible. Native input PDFs are held in memory, not uploaded by the tested workflow.
+
+Patch scope: local Balloon CSS 1.2.0 with license; relative deployment assets via native BASE; noindex, no-referrer and restrictive CSP; a simple project/source link in the existing intro; preview uses local PDF blob URLs with revocation instead of data URLs. No external font, tracker, API or account backend was added. Production dependency audit zero known vulnerabilities; build-only development dependencies still have advisories, and no dev server is deployed.
+
+## Verification and limits
+
+61 native unit tests passed. `check-bookbinder.mjs` imports the existing fictional eight-page PDF, selects folio/booklet, zero flyleaves, duplex and aggregate output, and inspects the native downloadable ZIP. Its PDF has four sides, with native center-out ordering `5/4, 3/6, 7/2, 1/8` as measured by PDF text coordinates. Every input page occurs once; both pages on each side sum to nine. This ordering differs from BentoPDF's output. It is a digital imposition check, not a physical print/fold test or a universal printer-duplex promise. PDF previews depend on the browser's built-in PDF viewer; the exported ZIP/PDF is the independent result.
+
+Local and public tests use a clean fictional browser profile, block/record external HTTP requests, and assert no page errors or POSTs. Reports: `/opt/utilibre/reports/bookbinder-20261009`. Runtime browser work grows with PDF size; server serves static bytes only. No user data or existing service was restarted.
+
+Reproduce: check out the pin, apply `deployment/toolbox/bookbinder-local-source.patch`, run `build-bookbinder.sh`, then `node deployment/toolbox/check-bookbinder.mjs` against the local artifact. Publish matching source and atomically stage dist at `/opt/utilibre/toolbox-public/apps/bookbinder`. Remove the patch when equivalent upstream local assets, branding and compatible preview URLs are available and reverified. Rollback restores the previous static directory; no database migration exists. Preserve old source offers.

@@ -4,7 +4,7 @@ function reviewed(project: string, repo: string, revision: string, license: Revi
     license, licenseEvidenceUrls: [`https://github.com/${repo}/blob/${revision}/${licenseFile}`],
     selfHostingEvidenceUrl: `https://github.com/${repo}/tree/${revision}`, maintenanceEvidenceUrl: `https://github.com/${repo}/commits`,
     artifactReference: `source:${revision}+deployment/creative-batch`, installedVersion: version,
-    integration: 'source-build', reviewStatus: deployed ? 'deployed' : 'staged', reviewDocument: 'docs/creative-batch-2026-10-11.md',
+    integration: 'source-build', reviewStatus: deployed ? 'deployed' : 'staged', reviewDocument: 'docs/records/creative-batch-2026-10-11.md',
     role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-11' };
 }
 export const creativeProviders = {

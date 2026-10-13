@@ -16,8 +16,8 @@ with tempfile.TemporaryDirectory(prefix='trip-source-',dir='/opt/utilibre') as t
  subprocess.run(['tar','-xf',str(stage/'upstream.tar'),'-C',str(stage)],check=True)
  bundle=stage/'trip'/'utilibre';bundle.mkdir()
  shutil.copytree(recipe,bundle/'deployment'/'trip',ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
- shutil.copyfile(recipe.parents[1]/'docs/trip-review-2026-10-09.md',bundle/'trip-review.md')
- shutil.copyfile(recipe.parents[1]/'docs/trip-rendering-2026-10-09.md',bundle/'trip-rendering.md')
+ shutil.copyfile(recipe.parents[1]/'docs/records/trip-review-2026-10-09.md',bundle/'trip-review.md')
+ shutil.copyfile(recipe.parents[1]/'docs/records/trip-rendering-2026-10-09.md',bundle/'trip-rendering.md')
  (bundle/'source-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
  (bundle/'BUILD.txt').write_text('TRIP 1.50.1-p2, MIT. This archive contains exact upstream source, its licence, three separately removable source patches and complete deployment/build recipes. Apply restricted.patch, dependencies.patch and rendering.patch in that order in the trip source directory with git apply. For the guarded build scripts, clone the named upstream revision and run prepare.py before build.sh. The patched lock is reproduced by dependencies.patch. The supported Angular inlineCritical=false option preserves this instance CSP; the rendering patch also handles native absent-share metadata. The final image uses pinned upstream/Node images and hash-checked Pillow/pip wheels. See deployment/trip/README.md, trip-review.md and trip-rendering.md for limits, external providers, public rendering/update tests and recovery. No runtime secrets, account state, private test reports, unsent upstream-report draft or database backups are included.\n')
  output=stage/'trip-utilibre.tar.gz'

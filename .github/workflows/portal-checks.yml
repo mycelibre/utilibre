@@ -1,0 +1,49 @@
+name: Portal checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'portal/**'
+      - 'FOSS_POLICY.md'
+      - '.github/workflows/portal-checks.yml'
+  pull_request:
+    paths:
+      - 'portal/**'
+      - 'FOSS_POLICY.md'
+      - '.github/workflows/portal-checks.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portal-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  portal:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: portal
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: portal/package-lock.json
+      - name: Install locked portal dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Check source policy
+        run: npm run test:foss-policy
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Build and unit checks
+        run: npm test

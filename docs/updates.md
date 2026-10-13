@@ -1097,7 +1097,7 @@ advisories need primary-source review. This is not an SBOM/dependency scan or
 proof that a project is secure. Keep lockfile/image security review in each
 release gate. [GitHub advisory API](https://docs.github.com/en/rest/security-advisories/repository-advisories).
 
-The new tools reuse `docs/creative-batch-2026-10-11.md` and their canonical
+The new tools reuse `docs/records/creative-batch-2026-10-11.md` and their canonical
 `reviewDocument`/exact-source fields. Rebuild only the changed application;
 repeat its native synthetic import/edit/export check, browser-network review,
 and source-offer check. For Grist, Candlr and Bookplate also repeat account

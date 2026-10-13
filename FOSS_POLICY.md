@@ -4,7 +4,7 @@ Operator update, 2026-10-09: the instruction to install every eligible suggested
 application supersedes the historical access-gap-only and small-inventory
 restrictions below. It does not remove the FOSS, privacy, resource, account,
 verification or minimal-custom-code requirements. The current requested and
-deployed inventory is recorded in `docs/service-candidates-2026-10-08.md` and
+deployed inventory is recorded in `docs/records/service-candidates-2026-10-08.md` and
 `docs/work-queue.md`; historical exclusions do not override those instructions.
 
 Effective 2026-09-03, Utilibre operates an end-user capability only when it is

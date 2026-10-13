@@ -1,6 +1,6 @@
 # Projects isolated evaluation
 
-This is **La Suite Projects**, a maintained continuation of PLANKA 1. It is not the differently licensed PLANKA 2. The evaluation pins `suitenumerique/projects` revision `455aa274b44e63efa42840997ea4924b43eed533`, whose package version is 1.3.0. That main revision is not represented as a tagged release. See [the verification record](../../../docs/projects-pilot-2026-10-09.md).
+This is **La Suite Projects**, a maintained continuation of PLANKA 1. It is not the differently licensed PLANKA 2. The evaluation pins `suitenumerique/projects` revision `455aa274b44e63efa42840997ea4924b43eed533`, whose package version is 1.3.0. That main revision is not represented as a tagged release. See [the verification record](../../../docs/records/projects-pilot-2026-10-09.md).
 
 No host port, production hostname, mail delivery or real account is enabled. The compose network is internal. Application egress is further restricted to its own database; gateway egress is restricted to the application. All test records use fictional data.
 

@@ -29,7 +29,7 @@ template. `upload-limit.js` uses the existing file-picker/drop/paste events and
 native PrivateBin error/attachment controls to cap total selected raw bytes at
 25,000,000. It does not implement encryption or uploads. Server-side encrypted
 size limits, PHP/FPM/Nginx configuration and a small low-disk guard are mounted
-separately. See [limits, expiry and verification](../../../docs/privatebin-uploads-2026-10-10.md).
+separately. See [limits, expiry and verification](../../../docs/records/privatebin-uploads-2026-10-10.md).
 
 The compose manifest mounts the custom template, branding, manifest, robots and
 small supported Nginx include files. Only exact `GET /` with no query, status or

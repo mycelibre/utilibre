@@ -31,7 +31,7 @@ projects = {
         'version': '7.8.3-p3',
         'patch': 'deployment/chhoto/no-analytics-local-assets.patch',
         'additional_patches': ['deployment/chhoto/layout.patch'],
-        'files': ['deployment/chhoto', 'docs/chhoto-deployment-2026-10-09.md'],
+        'files': ['deployment/chhoto', 'docs/records/chhoto-deployment-2026-10-09.md'],
     },
 }
 if len(sys.argv) > 1:
@@ -56,7 +56,7 @@ for name, project in projects.items():
     paths = []
     for entry in project['files'] + ['deployment/community/publish-copy-sources.py',
                                     'deployment/community/check-native-copy.mjs',
-                                    'docs/native-wording-2026-10-09.md']:
+                                    'docs/records/native-wording-2026-10-09.md']:
         path = root / entry
         paths.extend([p for p in path.rglob('*') if p.is_file()] if path.is_dir() else [path])
     with tarfile.open(archive_path, 'w:gz') as output, tarfile.open(source_tar) as upstream:

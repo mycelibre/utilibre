@@ -15,7 +15,7 @@ with tempfile.TemporaryDirectory(prefix='beaver-source-',dir='/opt/utilibre') as
   for item in src.getmembers():
    assert item.isfile() or item.isdir(),item.name
    stream=src.extractfile(item)if item.isfile()else None;item.name='upstream/'+item.name;out.addfile(item,stream)
-  for p in sorted(list(recipe.iterdir())+[root/'docs/beaverhabits-deployment-2026-10-09.md']):
+  for p in sorted(list(recipe.iterdir())+[root/'docs/records/beaverhabits-deployment-2026-10-09.md']):
    assert p.is_file() and not p.is_symlink() and p.suffix not in ['.env','.key','.pem','.json']
    out.add(p,arcname=str(p.relative_to(root)),recursive=False)
  public=Path('/opt/utilibre/toolbox-public/beaverhabits-utilibre.tar.gz');shutil.copy2(archive,public.with_suffix('.tmp'));public.with_suffix('.tmp').replace(public);public.chmod(0o644)

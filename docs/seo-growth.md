@@ -1,9 +1,9 @@
 # Utilibre search and traffic foundation
 
-Current inventory and checks: [catalog SEO review and October 10 performance release](seo-catalog-2026-10-09.md).
+Current inventory and checks: [catalog SEO review and October 10 performance release](records/seo-catalog-2026-10-09.md).
 The live loading improvement, repeatable lab measurements, rollback and unresolved
 IndexNow ownership rejection are recorded at the top of that review.
-Latest entry-point work: [10 October everyday collections and guide discovery](ux-friction-2026-10-10.md#everyday-collections-and-easier-guide-entry--october-10),
+Latest entry-point work: [10 October everyday collections and guide discovery](records/ux-friction-2026-10-10.md#everyday-collections-and-easier-guide-entry--october-10),
 including six localized collection pages, share previews, voluntary outreach drafts
 and the remaining Search Console/real-phone checks. No visitor analytics added.
 The release counts and measurements below are dated historical checkpoints.

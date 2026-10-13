@@ -223,7 +223,7 @@ The 24-group, 94-file download and Authentik restore described below are dated
 recovery. Grist/Candlr/Bookplate passed their separately documented isolated
 local restores and encrypted remote upload; a restored UI from a downloaded
 records-group backup and whole-VM recovery have not been rehearsed. See the
-[records release](creative-batch-2026-10-11.md) for that boundary.
+[records release](records/creative-batch-2026-10-11.md) for that boundary.
 
 Saved server-side work in the selected groups has both local and encrypted
 off-host copies. Browser-only work is not uploaded by this backup job.

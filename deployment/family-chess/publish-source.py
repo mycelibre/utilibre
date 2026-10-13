@@ -32,7 +32,7 @@ with pending.open('wb') as raw, gzip.GzipFile(filename='', mode='wb', fileobj=ra
             item.uname = item.gname = ''
             output.addfile(item, content)
     paths = sorted(path for path in (root / 'deployment/family-chess').glob('*') if path.name != '__pycache__')
-    paths.append(root / 'docs/family-chess-deployment-2026-10-09.md')
+    paths.append(root / 'docs/records/family-chess-deployment-2026-10-09.md')
     for path in paths:
         assert path.is_file() and not path.is_symlink()
         assert path.suffix not in {'.env', '.key', '.pem'}

@@ -30,7 +30,7 @@ unsupported engine choices. Source, notices and build material are served at
 `https://latex.utilibre.org/utilibre-source/texlyre-utilibre.tar.gz`.
 Compiler, fonts, packages and other dependencies retain their individual
 licenses and upstream build/source references; see
-[`docs/texlyre-2026-10-11.md`](docs/texlyre-2026-10-11.md).
+[`docs/records/texlyre-2026-10-11.md`](docs/records/texlyre-2026-10-11.md).
 
 ## LibreSpeed (October 11)
 
@@ -42,7 +42,7 @@ English/Spanish, accessibility, local assets and native test settings. Complete
 source, upstream license and build recipes are served at
 `https://pdf.utilibre.org/utilibre-source/librespeed-utilibre.tar.gz`.
 Dependencies retain their own licenses. Review and deployment limits:
-[`docs/librespeed-latex-chat-2026-10-11.md`](docs/librespeed-latex-chat-2026-10-11.md).
+[`docs/records/librespeed-latex-chat-2026-10-11.md`](docs/records/librespeed-latex-chat-2026-10-11.md).
 
 ## Browser tool additions on October 7
 

@@ -168,7 +168,7 @@ Native [encrypted Storage Box backup preparation](../deployment/storagebox/READM
 does not expand this filesystem. No application state has moved off-host.
 
 For the current 16-vCPU VM, measured portal CPU improvement and serving limits,
-see the [October 8 capacity report](capacity-2026-10-08.md). Older observations
+see the [October 8 capacity report](records/capacity-2026-10-08.md). Older observations
 below are historical snapshots.
 
 Per-service CPU/quota/throttling, memory and synthetic-probe history is collected

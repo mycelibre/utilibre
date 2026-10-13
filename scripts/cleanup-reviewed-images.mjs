@@ -6,7 +6,7 @@ import { readFileSync, writeFileSync, mkdtempSync, statfsSync, existsSync } from
 import { resolve } from 'node:path';
 
 const root = '/home/ubuntu/freetools';
-// Latest and documented previous release. See docs/seo-catalog-2026-10-09.md,
+// Latest and documented previous release. See docs/records/seo-catalog-2026-10-09.md,
 // service-pack.md, native-wording-2026-10-09.md, wbo-ram-update-2026-10-09.md,
 // frontend-reliability-2026-10-09.md. Older historical rollback notes are superseded.
 const reviewed = {

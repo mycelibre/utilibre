@@ -2,7 +2,7 @@
 
 The operator's 9 October instruction is to install every eligible suggestion, not
 stop at a review or choose only one of distinct applications. The current complete
-installation checklist is [service-candidates-2026-10-08.md](service-candidates-2026-10-08.md).
+installation checklist is [service-candidates-2026-10-08.md](records/service-candidates-2026-10-08.md).
 This document preserves the capability distinctions and exact mail/link dependencies.
 The installation, catalog/SEO and full copy phases have been delivered; the work queue records subsequent repairs and exact unresolved dependencies.
 Spanish remains voseo; no Whisper activation or duplicate copy of an existing app.
@@ -37,9 +37,9 @@ PMG. No general outside-recipient testing is inferred from that permission.
 
 | Application | Completed work | Exact remaining boundary |
 | --- | --- | --- |
-| Kill the Newsletter!2.1.3-p2 web / p1 SMTP jobs | Public native feed creation, received Atom item, deletion and isolated SQLite/files restore. HTTP3210; SMTP2526 permits only PMG10.10.1.20. Owner confirmed outside browser access and routed test delivery. | It receives newsletters into feeds and does not forward a copy to Gmail. Mail-edge-wide TLS/limits are not inferred from this one test. [Record](newsletters-deployment-2026-10-09.md). |
-| addy.io1.7.3 | Native account/alias controls, CSV export, recipient rejection/deletion and MariaDB restore. HTTP3211; SMTP2527 restricted to PMG. Dedicated routing/SPF and certificate-verified outbound relay TLS checked. Owner reported a separate Gmail gateway test passed SPF/DMARC. | Native recipient is verified and the requested alias was created through the native API, with exact destination readback. Its temporary API credential was revoked. Native forwarding/reply/import and gateway DKIM signing remain separate; the owner performs delivery tests. [Record](addy-deployment-2026-10-09.md). |
-| SimpleLogin4.82.4-p7 | Private HTTP3212/SMTP2528; native auth/CSRF/sudo, permitted-domain CSV, SMTP check, fictional deletion/restore and old-image schema compatibility passed. | After the p7 runtime updates, the dependency review retains55 advisory rows /30 deduplicated groups across8 packages, not a count of proven exploits. Compatible maintenance/security work and authorized native mail/signing tests precede public launch. [Record](simplelogin-deployment-2026-10-09.md). |
+| Kill the Newsletter!2.1.3-p2 web / p1 SMTP jobs | Public native feed creation, received Atom item, deletion and isolated SQLite/files restore. HTTP3210; SMTP2526 permits only PMG10.10.1.20. Owner confirmed outside browser access and routed test delivery. | It receives newsletters into feeds and does not forward a copy to Gmail. Mail-edge-wide TLS/limits are not inferred from this one test. [Record](records/newsletters-deployment-2026-10-09.md). |
+| addy.io1.7.3 | Native account/alias controls, CSV export, recipient rejection/deletion and MariaDB restore. HTTP3211; SMTP2527 restricted to PMG. Dedicated routing/SPF and certificate-verified outbound relay TLS checked. Owner reported a separate Gmail gateway test passed SPF/DMARC. | Native recipient is verified and the requested alias was created through the native API, with exact destination readback. Its temporary API credential was revoked. Native forwarding/reply/import and gateway DKIM signing remain separate; the owner performs delivery tests. [Record](records/addy-deployment-2026-10-09.md). |
+| SimpleLogin4.82.4-p7 | Private HTTP3212/SMTP2528; native auth/CSRF/sudo, permitted-domain CSV, SMTP check, fictional deletion/restore and old-image schema compatibility passed. | After the p7 runtime updates, the dependency review retains55 advisory rows /30 deduplicated groups across8 packages, not a count of proven exploits. Compatible maintenance/security work and authorized native mail/signing tests precede public launch. [Record](records/simplelogin-deployment-2026-10-09.md). |
 
 Caddy/Cloudflare HTTP configuration cannot receive SMTP. The chosen mail edge must
 route only the intended domains/recipients and must not become an open relay.
@@ -53,9 +53,9 @@ from forwarding/reply aliases. No working general temporary mailbox is promised.
 
 | Capability | Current implementation and scope |
 | --- | --- |
-| Remove tracking parameters | URL Parameter Cleaner 1.1.0-p1 is live/catalogued at tools.utilibre.org/apps/link-cleaner/. Native local preview, conservative keep/removal rules, clipboard and profile/report export/import passed. It does not contact pasted destinations or prove their safety; unknown/access/signature parameters are not silently discarded. [Record](link-cleaner-deployment-2026-10-09.md). |
-| Create a persistent short link | Chhoto URL 7.8.3-p3 is live at links.utilibre.org through private 3208. Anonymous creation is limited to 2/minute with burst 4 and a maximum 30-day lifetime; native authenticated administration protects listing/editing/deletion. The redirect does not fetch the destination or write click counts. Public native UI/permissions, 22 tests, exact fixture deletion and isolated SQLite restore passed. Bilingual catalog/guide/search/status are live. [Record](chhoto-deployment-2026-10-09.md). |
-| Follow redirects / inspect a URL | Unfurl 2026.10-p1 is live/catalogued at expand.utilibre.org. Public fictional browser flow, 408 native/regression tests and enforced proxy/namespace/DNS/private-address controls passed. It follows headers only, at most 10 distinct URLs, with 2 simultaneous jobs and no persistent URL-history database. Destination requests may consume one-time links or register engagement. This server/external workflow is separate from the local Outlook decoder. [Record](unfurl-deployment-2026-10-09.md). |
+| Remove tracking parameters | URL Parameter Cleaner 1.1.0-p1 is live/catalogued at tools.utilibre.org/apps/link-cleaner/. Native local preview, conservative keep/removal rules, clipboard and profile/report export/import passed. It does not contact pasted destinations or prove their safety; unknown/access/signature parameters are not silently discarded. [Record](records/link-cleaner-deployment-2026-10-09.md). |
+| Create a persistent short link | Chhoto URL 7.8.3-p3 is live at links.utilibre.org through private 3208. Anonymous creation is limited to 2/minute with burst 4 and a maximum 30-day lifetime; native authenticated administration protects listing/editing/deletion. The redirect does not fetch the destination or write click counts. Public native UI/permissions, 22 tests, exact fixture deletion and isolated SQLite restore passed. Bilingual catalog/guide/search/status are live. [Record](records/chhoto-deployment-2026-10-09.md). |
+| Follow redirects / inspect a URL | Unfurl 2026.10-p1 is live/catalogued at expand.utilibre.org. Public fictional browser flow, 408 native/regression tests and enforced proxy/namespace/DNS/private-address controls passed. It follows headers only, at most 10 distinct URLs, with 2 simultaneous jobs and no persistent URL-history database. Destination requests may consume one-time links or register engagement. This server/external workflow is separate from the local Outlook decoder. [Record](records/unfurl-deployment-2026-10-09.md). |
 
 Chhoto stores complete destination mappings as readable data; short links are not
 confidential. Its native expiry does not erase same-VM backups. A person following
@@ -69,7 +69,7 @@ limited tasks. The separate 13ft reader is public/catalogued at read.utilibre.or
 with verified outbound and browser boundaries. It reads direct HTML 200 responses;
 redirects/login/JavaScript/archive fallbacks are unavailable. The 8 October
 fixture pilot is historical, not the current endpoint. See the
-[final deployment record](13ft-deployment-2026-10-09.md).
+[final deployment record](records/13ft-deployment-2026-10-09.md).
 
 ### Historical native-tool checks — 8 October 2026, 23:36 UTC
 

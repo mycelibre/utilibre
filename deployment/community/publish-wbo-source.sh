@@ -6,7 +6,7 @@ revision=f37875a6b427397e579e2a869caf073ae87ee264
 test "$(git -C "$source" rev-parse HEAD)" = "$revision"
 stage=$(mktemp -d /opt/utilibre/source-update-wbo-XXXXXX)
 git -C "$source" archive --format=tar --output="$stage/wbo.tar" "$revision"
-tar -rf "$stage/wbo.tar" -C "$root" deployment/community/wbo deployment/community/compose.collaboration.yaml deployment/community/compose.collaboration-lan.yaml deployment/community/Caddyfile.collaboration-pilot deployment/community/check-collaboration.mjs deployment/community/publish-wbo-source.sh docs/next-features.md docs/wbo-ram-update-2026-10-09.md
+tar -rf "$stage/wbo.tar" -C "$root" deployment/community/wbo deployment/community/compose.collaboration.yaml deployment/community/compose.collaboration-lan.yaml deployment/community/Caddyfile.collaboration-pilot deployment/community/check-collaboration.mjs deployment/community/publish-wbo-source.sh docs/next-features.md docs/records/wbo-ram-update-2026-10-09.md
 gzip "$stage/wbo.tar"
 archive=/opt/utilibre/toolbox-public/wbo-utilibre.tar.gz
 if test -f "$archive"; then cp "$archive" "$stage/previous-wbo.tar.gz"; fi

@@ -14,7 +14,7 @@ git -C "$stage/fmd-server" apply "$repo/deployment/community/fmd-export-zero-sou
 git -C "$stage/fmd-server" apply "$repo/deployment/community/fmd-map-policy-source.patch"
 mkdir "$stage/fmd-server/utilibre-deployment"
 cp "$repo/deployment/community/fmd-privacy-source.patch" "$repo/deployment/community/prepare-fmd-web.mjs" "$repo/deployment/community/publish-fmd-source.sh" "$repo/deployment/community/check-fmd-privacy.mjs" "$repo/deployment/community/compose.additions.yaml" "$repo/deployment/community/fmd-gateway.conf" "$stage/fmd-server/utilibre-deployment/"
-cp "$repo/deployment/community/fmd-export-zero-source.patch" "$repo/deployment/community/check-fmd-export.mjs" "$repo/docs/fmd-export-verification-2026-10-09.md" "$stage/fmd-server/utilibre-deployment/"
+cp "$repo/deployment/community/fmd-export-zero-source.patch" "$repo/deployment/community/check-fmd-export.mjs" "$repo/docs/records/fmd-export-verification-2026-10-09.md" "$stage/fmd-server/utilibre-deployment/"
 cp "$repo/deployment/community/fmd-map-policy-source.patch" "$stage/fmd-server/utilibre-deployment/"
 tar -czf "$stage/fmd-utilibre.tar.gz" -C "$stage" fmd-server
 chmod 644 "$stage/fmd-utilibre.tar.gz"

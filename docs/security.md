@@ -231,7 +231,7 @@ Expiry is at most one week (one day by default); discussion stays disabled.
 Native traffic limiting, request-body bounds, expiry cleanup, a dedicated
 10 GiB project quota, low-space admission and a safe abuse/deletion procedure
 provide separate controls. These are not per-user slots or a concurrency promise.
-See [attachment and expiry checks](privatebin-uploads-2026-10-10.md).
+See [attachment and expiry checks](records/privatebin-uploads-2026-10-10.md).
 
 Encryption does not authenticate a paste sender, prevent someone with the full
 URL from reading it, hide request metadata, or erase backup copies

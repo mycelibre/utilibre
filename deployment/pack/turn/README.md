@@ -140,7 +140,7 @@ the call bypassed the relay. The manual GitHub workflow exposes these options.
 `check-galene-load.mjs` and the separate `galene-load.yml` workflow exercise
 simultaneous four-person groups from independent runners. The October 8 tests
 passed eight rooms over UDP for two minutes and TLS for five minutes, plus four
-rooms with automatic ICE selection. Use the [capacity report](../../../docs/capacity-2026-10-08.md)
+rooms with automatic ICE selection. Use the [capacity report](../../../docs/records/capacity-2026-10-08.md)
 for delivered resolution, resource figures, startup reservations, and the two
 earlier unexplained signaling disconnects. Start with at most four provisioned
 meetings; a capacity pass is not a promise of arbitrary quality or call duration.

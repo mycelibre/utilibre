@@ -2,7 +2,7 @@
 """Prepare, but do not start, a blank RAM-backed Penpot native export check.
 
 No production mounts, outbound network, mail, identity-provider writes or image
-pulls. Run from this checkout. See docs/penpot-roundtrip-2026-10-09.md for the
+pulls. Run from this checkout. See docs/records/penpot-roundtrip-2026-10-09.md for the
 startup, loopback relay, checker and exact disposable cleanup commands.
 """
 import json,os,secrets,socket,tempfile,pathlib,shutil

@@ -24,7 +24,7 @@ the real HTTPS Caddy route using its private address and normal certificate
 verification. At that checkpoint public IPv4 timed out from this application VM
 and it had no IPv6 route; that vantage could not independently establish public
 uptime. IPv6 connectivity was subsequently established on 9 October, as recorded
-in [the routing evidence](dumb-ipv6-readiness-2026-10-09.md). The operator reported
+in [the routing evidence](records/dumb-ipv6-readiness-2026-10-09.md). The operator reported
 public searches working. No limiter or proxy trust was weakened by those checks.
 
 The 2026-10-07 post-update check found `/metrics` correctly returning 404 but

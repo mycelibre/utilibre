@@ -8,7 +8,7 @@ and rollback](updates.md#freshrss-security-update).
 TeXlyre 0.13.0-p1 is served at `https://latex.utilibre.org/` (private port 3226).
 Local browser compilation and project/PDF export use the complete upstream app;
 no server compiler, cloud account or collaboration service is added.
-[Privacy, tested workflows, asset budget, guides and rollback](texlyre-2026-10-11.md).
+[Privacy, tested workflows, asset budget, guides and rollback](records/texlyre-2026-10-11.md).
 
 11 October addition: LibreSpeed Go 1.1.6-p1 is installed and checked on
 `10.10.1.43:3225`, with public destination `https://speed.utilibre.org/`.
@@ -16,7 +16,7 @@ The 12 October 19:13 UTC read-only DNS check confirms its A record remains
 DNS-only, with no AAAA or CNAME record. The complete bilingual browser flows
 passed on 11 October over LAN routing to the real HTTPS edge; these were not
 calibrated external ISP benchmarks.
-[Installation, limits, bilingual guides, verification and LaTeX/chat decisions](librespeed-latex-chat-2026-10-11.md).
+[Installation, limits, bilingual guides, verification and LaTeX/chat decisions](records/librespeed-latex-chat-2026-10-11.md).
 
 Creative batch, 7 October 2026 (static applications; no accounts):
 

@@ -25,7 +25,7 @@ with tarfile.open(archive,'w:gz') as out, tarfile.open(upstream) as src:
         assert item.isfile() or item.isdir(), 'Unexpected source link/device'
         stream=src.extractfile(item) if item.isfile() else None
         item.name='upstream/'+item.name;out.addfile(item,stream)
-    files=list((root/'deployment/rustpad').glob('*'))+[root/'docs/rustpad-deployment-2026-10-09.md']
+    files=list((root/'deployment/rustpad').glob('*'))+[root/'docs/records/rustpad-deployment-2026-10-09.md']
     # Include the binary-only auditable overlay recipe and its inventory checks,
     # as well as the existing full source rebuild. Never package build reports.
     audit_files=subprocess.check_output(['git','-C',str(root),'ls-files','deployment/maintenance/rust-auditable'],text=True).splitlines()

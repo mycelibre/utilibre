@@ -14,7 +14,7 @@ for(const [path,name] of [[source,'texlyre'],[busy,'texlyre-busytex']]) {
 }
 cpSync(fileURLToPath(new URL('.',import.meta.url)),`${stage}/texlyre/utilibre-integration`,{recursive:true});
 cpSync(`${source}/public/core/busytex/versions.txt`,`${stage}/texlyre/utilibre-integration/compiler-versions.txt`);
-cpSync(fileURLToPath(new URL('../../docs/texlyre-2026-10-11.md',import.meta.url)),`${stage}/texlyre/utilibre-integration/REVIEW.md`);
+cpSync(fileURLToPath(new URL('../../docs/records/texlyre-2026-10-11.md',import.meta.url)),`${stage}/texlyre/utilibre-integration/REVIEW.md`);
 execFileSync('tar',['-czf',`${stage}/texlyre-utilibre.tar.gz`,'texlyre','texlyre-busytex'],{cwd:stage});
 renameSync(`${stage}/texlyre-utilibre.tar.gz`,'/opt/utilibre/toolbox-public/texlyre-utilibre.tar.gz');
 console.log('Published modified TeXlyre source, BusyTeX wrapper, dependency pins and integration.');

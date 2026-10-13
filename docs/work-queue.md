@@ -272,7 +272,7 @@ backup retention remain unchanged. Public source verification and guarded
 rollback evidence are under
 `/opt/utilibre/reports/provider-publication-20261012/`. Current provider evidence
 and remaining limits are in [privacy.md](privacy.md); Addy's scoped web checks
-are in [the readiness record](readiness-probes-2026-10-09.md).
+are in [the readiness record](records/readiness-probes-2026-10-09.md).
 
 
 ## Final native repair checkpoint — 12 October, 18:51 UTC
@@ -1333,7 +1333,7 @@ build without permission; microStudio is withheld for legacy authentication and
 dependency issues. Their reserved gateways return 503, not working applications.
 No upstream message or listing submission was sent. Candlr email delivery, real
 mobile hardware, long-video and physical-printer tests remain unverified, not
-promised. See [release, exact pins, privacy patches, tests and rollback](creative-batch-2026-10-11.md).
+promised. See [release, exact pins, privacy patches, tests and rollback](records/creative-batch-2026-10-11.md).
 
 ## LibreSpeed and LaTeX/chat review — 11 October
 
@@ -1350,7 +1350,7 @@ browser compilation, PDF download and editable ZIP export/import verified.
 The first Recommended compilation needs approximately 227 MiB of compiler and
 package assets plus the editor; the owner chose to retain browser compilation.
 No remote collaboration, server account, server document storage or cloud backup.
-[Deployment, bilingual guides and checks](texlyre-2026-10-11.md).
+[Deployment, bilingual guides and checks](records/texlyre-2026-10-11.md).
 
 LibreSpeed's native timing now uses a full 15-second window rather than the
 shortened adaptive run. Controlled 150 ms/300 Mbps emulation did not reproduce
@@ -1395,7 +1395,7 @@ not installed: visitor analytics, including self-hosted/cookieless analytics,
 conflict with the owner's explicit no-tracking policy.
 
 Exact decisions, sources, checks, limits and rollback:
-[LibreSpeed/LaTeX/chat record](librespeed-latex-chat-2026-10-11.md).
+[LibreSpeed/LaTeX/chat record](records/librespeed-latex-chat-2026-10-11.md).
 
 ## Temporary-disk expansion and allocation — 11 October
 
@@ -1536,9 +1536,9 @@ or external-access dependencies have disappeared.
 
 Current relay configuration and rollback: [PairDrop relay](../deployment/community/turn/README.md).
 Listing URLs/results: [submissions](public-instance-submissions.md).
-Detailed blockers: [readers](frontend-reliability-2026-10-09.md) and
+Detailed blockers: [readers](records/frontend-reliability-2026-10-09.md) and
 [SimpleLogin](../deployment/simplelogin/security/README.md).
-Search evidence: [SEO follow-up](seo-catalog-2026-10-09.md).
+Search evidence: [SEO follow-up](records/seo-catalog-2026-10-09.md).
 Caddy filtered read-only verification: [privacy](privacy.md#separate-caddy-vm).
 GitHub secret location: https://github.com/mycelibre/utilibre/settings/secrets/actions .
 
@@ -1563,7 +1563,7 @@ PHP resources and native minute-by-minute expired-record cleanup. Maximum expiry
 is one week; default remains one day. Saved account backups remain enabled;
 new temporary-content backups remain excluded. Public 25 MB create/download/hash/
 deletion, lifetime, EN/ES metadata and isolated server-size/purge/recovery checks
-passed. Details and data-preserving rollback: [upload release](privatebin-uploads-2026-10-10.md).
+passed. Details and data-preserving rollback: [upload release](records/privatebin-uploads-2026-10-10.md).
 The official directory's upload check still needs its own rescan. No duplicate
 listing request, new account, tracker, Storage Box application mount, Caddy change
 or upstream application image was introduced.

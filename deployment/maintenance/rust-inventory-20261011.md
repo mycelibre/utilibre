@@ -68,7 +68,7 @@ application dependencies.
 - Do not erase the separate native RustSec result: the October 9 whole-lock audit
   reports `rsa 0.9.10` / `RUSTSEC-2023-0071`. The earlier native dependency-graph
   review excludes optional MySQL/RSA from the SQLite-only server build. See
-  [the deployment evidence](../../docs/rustpad-deployment-2026-10-09.md). A new
+  [the deployment evidence](../../docs/records/rustpad-deployment-2026-10-09.md). A new
   build should regenerate that selected-feature graph rather than inherit an
   unconditional exception.
 

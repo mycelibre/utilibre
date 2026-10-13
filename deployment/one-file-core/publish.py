@@ -27,7 +27,7 @@ for app,pin in [('one-file-core','b988be00cc35fe1a7d7756543b326287f2e4ebf5'),('t
     if member.issym():assert not member.linkname.startswith('/') and '..' not in pathlib.PurePosixPath(member.linkname).parts
     member.uid=member.gid=0;member.uname=member.gname='';member.mtime=0
     target.addfile(member,upstream.extractfile(member) if member.isfile() else None)
-  files=sorted((repo/'deployment'/app).rglob('*'))+[repo/'docs'/f'{app}-deployment-2026-10-09.md',repo/'LICENSE']
+  files=sorted((repo/'deployment'/app).rglob('*'))+[repo/'docs'/'records'/f'{app}-deployment-2026-10-09.md',repo/'LICENSE']
   if app=='one-file-core':files.append(repo/'deployment'/'toolbox'/'prepare-static-description.mjs')
   for file in files:
    assert not file.is_symlink()

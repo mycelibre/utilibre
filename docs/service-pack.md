@@ -504,7 +504,7 @@ deployed default settings. The native client defaults Simulcast to off; room
 capacity remains four including the moderator. Certificate issuance and renewal
 were tested. No real-phone, screen-sharing or long-call claim follows.
 See [relay operations](../deployment/pack/turn/README.md).
-The later [simultaneous-meeting report](capacity-2026-10-08.md#simultaneous-four-person-meetings--october-8-late-evening)
+The later [simultaneous-meeting report](records/capacity-2026-10-08.md#simultaneous-four-person-meetings--october-8-late-evening)
 records eight four-person UDP meetings for two minutes and eight TLS meetings for
 five minutes, with the actual adapted video resolution and two earlier unresolved
 signaling disconnects. Current ceilings are Galene 2 CPUs/256 MiB and TURN

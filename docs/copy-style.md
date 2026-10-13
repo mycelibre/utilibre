@@ -101,7 +101,7 @@ Keep translation keys, placeholders, URLs and anchors stable. Runtime
 `PROJECT_TAGLINE_EN` and `PROJECT_TAGLINE_ES` need the same bilingual review;
 the default tagline follows the configured language.
 
-The dated [coverage inventory](copy-coverage-2026-10-09.md) records the complete
+The dated [coverage inventory](records/copy-coverage-2026-10-09.md) records the complete
 9 October pass, including sources retained after review and upstream limits.
 Do not treat unchanged wording as unreviewed or a homepage edit as a sitewide
 pass. Review every guide as well as shared templates.

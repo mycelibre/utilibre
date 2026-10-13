@@ -242,7 +242,7 @@ PrivateBin remains listed. At the 10 October follow-up its directory still shows
 uploads disabled, while Utilibre's public HTML exposes the native attachment
 marker and the 25 MB workflow has passed. This is an upstream refresh dependency,
 not a reason to resubmit or alter the directory's data. See
-[PrivateBin verification](privatebin-uploads-2026-10-10.md#directory-refresh-external).
+[PrivateBin verification](records/privatebin-uploads-2026-10-10.md#directory-refresh-external).
 
 11 October refresh investigation: the public upload indicator still shows
 disabled. The actual Utilibre HTML contains the exact ` id="attachment" `

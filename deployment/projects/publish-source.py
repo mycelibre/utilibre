@@ -8,7 +8,7 @@ ui=json.loads((report/'browser-ui.json').read_text());assert not ui['errors'] an
 assert 'Native helper soft-deleted two QA accounts' in (report/'app-retire.log').read_text()
 files=[p for p in (repo/'deployment/projects').rglob('*') if p.is_file() and '__pycache__' not in p.parts]
 files += [repo/'deployment/evaluation/projects'/n for n in ['Dockerfile','security-dependencies.patch','rebuild.sh','README.md']]
-files += [repo/'docs/projects-deployment-2026-10-09.md',repo/'docs/projects-pilot-2026-10-09.md',repo/'docs/license-review.md',repo/'LICENSE']
+files += [repo/'docs/records/projects-deployment-2026-10-09.md',repo/'docs/records/projects-pilot-2026-10-09.md',repo/'docs/license-review.md',repo/'LICENSE']
 manifest={'upstream':pin,'packageVersion':'1.3.0','localVersion':'1.3.0-455aa274-p2','releaseQualification':'Pinned main revision, not tagged 1.3.0 release','image':subprocess.check_output(['docker','image','inspect','utilibre-projects:455aa274-p2','--format','{{.Id}}'],text=True).strip(),'files':{str(p.relative_to(repo)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}}
 raw=subprocess.check_output(['git','-C',str(source),'archive','--format=tar','--prefix=upstream/',pin])
 with tempfile.TemporaryDirectory(prefix='projects-source-') as temporary:
