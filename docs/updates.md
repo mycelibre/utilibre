@@ -1086,8 +1086,12 @@ node deployment/community/monitor-alerts.mjs --check-only
 The existing five-minute monitor/SMTP workflow now flags reports older than
 36 hours, missing upstream/advisory lookups, failed maintenance units and new
 high/critical published advisories requiring review. It also covers the saved-
-records backup unit. Alerts still require two observations and use the existing
-12-hour repeat interval. A manual `--check-only` sends no mail and changes no
+records backup unit. Alerts require two observations and use a one-hour global
+mail cooldown with 12-hour unresolved-condition reminders; changing secondary
+findings no longer trigger a fresh email on every five-minute run. If routine
+findings become a confirmed service/resource failure, that escalation can alert
+after the cooldown. A manual
+`--check-only` sends no mail and changes no
 alert state. No new analytics or notification service was installed.
 
 Review the report weekly and security alerts promptly. A changed default branch

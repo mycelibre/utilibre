@@ -520,8 +520,11 @@ concurrently outside their systemd locks.
 
 The five-minute monitor watcher alerts after two consecutive failed/stale
 observations; it also watches 10 GiB disk headroom, 5% inode headroom and 5% available
-memory. Alerts repeat no more than every 12 hours for an unchanged condition;
-recovery sends one notification. Mail goes from `no-reply@utilibre.org` to
+memory. Changing secondary findings are included in the next message, not
+mailed separately. If routine findings become a confirmed service/resource
+failure, that escalation can alert after the one-hour mail cooldown. Unresolved
+alerts repeat after 12 hours. Recovery
+needs two clean checks and obeys the cooldown. Mail goes from `no-reply@utilibre.org` to
 `admin@utilibre.org` via the private relay with verified STARTTLS. It includes no
 visitor queries or backup contents. It cannot independently detect whole-VM loss.
 Do not run `monitor-alerts.mjs` as a read-only inspection: it can send mail,

@@ -42,10 +42,29 @@ export function unattendedIssues(unit,upgradeStamp,now=Date.now()){
  if(!Number.isFinite(upgradeStamp)||upgradeStamp>now+300000||now-upgradeStamp>36*3600000)issues.push('Unattended OS update check has no recent success (36 hours)');
  return issues;
 }
+const MAIL_COOLDOWN=60*60*1000;
+const ALERT_REPEAT=12*60*60*1000;
+export function urgentIssue(issue){
+ return /^(?:Availability check failed:|Stale monitoring:|Kuma heartbeat API|Catalogue endpoint (?:check failed:|monitoring)|Independent external monitoring failed|Independent scheduled monitoring failed|Application disk|Available host memory|Native maintenance failed:|Off-host application backup)/.test(issue);
+}
+function previouslyUrgent(previous){
+ if(typeof previous.alertedUrgent==='boolean')return previous.alertedUrgent;
+ try{return JSON.parse(previous.alertedFingerprint||'[]').some(urgentIssue)}catch{return false}
+}
 export function alertState(previous,issues,now=Date.now()){
  // Count each stable issue independently: a flapping neighbor must not starve it.
  const observed={};for(const issue of issues)observed[issue]=(previous.observed?.[issue]||0)+1;
  const confirmed=Object.keys(observed).filter(k=>observed[k]>=2).sort();
  const fingerprint=JSON.stringify(confirmed);
- return {observed,fingerprint,due:confirmed.length>0&&(previous.alertedFingerprint!==fingerprint||now-(previous.sentAt||0)>12*3600000),recovered:issues.length===0&&Boolean(previous.alertedFingerprint),confirmed};
+ const urgent=confirmed.some(urgentIssue);
+ const lastMailAt=previous.lastMailAt||previous.sentAt||0;
+ const cooledDown=!lastMailAt||now-lastMailAt>=MAIL_COOLDOWN;
+ const first=!previous.alertedFingerprint;
+ const repeat=now-(previous.sentAt||0)>=ALERT_REPEAT;
+ const escalation=urgent&&!previouslyUrgent(previous);
+ const healthyObserved=issues.length===0?(previous.healthyObserved||0)+1:0;
+ // A changing list is included in the next message, not mailed every five minutes.
+ return {observed,fingerprint,urgent,healthyObserved,
+  due:confirmed.length>0&&cooledDown&&(first||repeat||escalation),
+  recovered:healthyObserved>=2&&Boolean(previous.alertedFingerprint)&&cooledDown,confirmed};
 }

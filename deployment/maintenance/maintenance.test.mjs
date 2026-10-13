@@ -53,13 +53,32 @@ test('unattended native freshness cannot be manufactured from an inactive succes
 test('empty inventory cannot pass a vulnerability scan',()=>{
  assert(reportIssues('Vulnerability scan',{status:'checked',date:new Date(now).toISOString(),images:[],host:{packages:0}},36,now).length);
 });
-test('stable failures still alert when unrelated checks flap',()=>{
+test('changing findings do not mail repeatedly; ongoing problems repeat after 12 hours',()=>{
  const first=alertState({},['A','B'],now);assert.equal(first.due,false);
  const second=alertState(first,['A','C'],now+300000);assert.equal(second.due,true);assert.deepEqual(second.confirmed,['A']);
- const acknowledged={...second,alertedFingerprint:second.fingerprint,sentAt:now+300000};
- assert.equal(alertState(acknowledged,['A'],now+600000).due,false);
- assert.equal(alertState(acknowledged,[],now+600000).recovered,true);
- assert.equal(alertState(acknowledged,['A'],now+13*3600000).due,true);
+ const acknowledged={...second,alertedFingerprint:second.fingerprint,alertedUrgent:false,sentAt:now+300000,lastMailAt:now+300000};
+ const changed=alertState(acknowledged,['A','C'],now+600000);
+ assert.equal(changed.due,false);
+ assert.equal(alertState({...acknowledged,...changed},['A','C','D'],now+900000).due,false);
+ assert.equal(alertState(acknowledged,['A'],now+12*3600000+300000).due,true);
+});
+test('a new service failure escalates after cooldown, but changing failures do not flood mail',()=>{
+ const previous={observed:{'Published security advisory needs review: Penpot':2},alertedFingerprint:JSON.stringify(['Published security advisory needs review: Penpot']),sentAt:now,lastMailAt:now};
+ const issue='Availability check failed: PDF';
+ const first=alertState(previous,[issue],now+300000);assert.equal(first.due,false);
+ const second=alertState({...previous,...first},[issue],now+600000);assert.equal(second.due,false);
+ const escalated=alertState({...previous,...second},[issue],now+3600000);assert.equal(escalated.due,true);
+ const acknowledged={...escalated,alertedFingerprint:escalated.fingerprint,alertedUrgent:true,sentAt:now+3600000,lastMailAt:now+3600000};
+ assert.equal(alertState(acknowledged,[issue,'Availability check failed: QR'],now+3900000).due,false);
+});
+test('recovery needs two clean checks and obeys the same mail cooldown',()=>{
+ const initial={alertedFingerprint:JSON.stringify(['A']),sentAt:now,lastMailAt:now};
+ const first=alertState(initial,[],now+300000);assert.equal(first.recovered,false);
+ const second=alertState({...initial,...first},[],now+600000);assert.equal(second.recovered,false);
+ const later=alertState({...initial,...second},[],now+3600000);assert.equal(later.recovered,true);
+ const recovered={...later,alertedFingerprint:'',sentAt:now+3600000,lastMailAt:now+3600000};
+ assert.equal(alertState(recovered,[],now+3900000).recovered,false);
+ assert.equal(alertState({...recovered,observed:{A:1}},['A'],now+3900000).due,false);
 });
 test('external monitor freshness and disabled schedules produce explicit alerts',()=>{
  const runs={workflow_runs:[{event:'schedule',status:'completed',conclusion:'success',updated_at:new Date(now).toISOString()}]};

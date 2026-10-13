@@ -115,16 +115,17 @@ const observation=alertState(previous,issues);
 const {fingerprint,due,recovered}=observation;
 const test=process.argv.includes('--test');
 let alertedFingerprint=previous.alertedFingerprint||'',sentAt=previous.sentAt||0;
+let alertedUrgent=previous.alertedUrgent,lastMailAt=previous.lastMailAt||previous.sentAt||0;
 if(!checkOnly&&(test||due||recovered)){
   const subject=test?'Utilibre monitoring test':issues.length?'Utilibre service attention needed':'Utilibre monitoring recovered';
   const body=test?'Verified monitoring mail test. The host checks public-service heartbeats and disk/memory every five minutes. This does not independently detect a complete VM outage.':issues.length?issues.join('\n'):'Previously reported monitor/resource issues have cleared.';
   try{sendOperatorMail(subject,body)}
   catch{console.error('Monitoring email delivery failed; state not acknowledged.');process.exit(1)}
-  if(!test){alertedFingerprint=issues.length?fingerprint:'';sentAt=Date.now()}
+  if(!test){alertedFingerprint=issues.length?fingerprint:'';alertedUrgent=issues.length?observation.urgent:false;sentAt=Date.now();lastMailAt=sentAt}
   console.log('Monitoring notification accepted by the verified-TLS SMTP relay.');
 }
 if(!checkOnly){
-  writeFileSync(`${file}.tmp`,JSON.stringify({fingerprint,observed:observation.observed,alertedFingerprint,sentAt,checkedAt:Date.now()})+'\n',{mode:0o600});
+  writeFileSync(`${file}.tmp`,JSON.stringify({fingerprint,observed:observation.observed,healthyObserved:observation.healthyObserved,alertedFingerprint,alertedUrgent,sentAt,lastMailAt,checkedAt:Date.now()})+'\n',{mode:0o600});
   renameSync(`${file}.tmp`,file);
 }
 if(checkOnly){console.log('Read-only check: no mail sent and no alert state changed.');for(const issue of issues)console.log(issue);}
