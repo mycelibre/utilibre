@@ -2,7 +2,8 @@
 
 ## Current follow-up: PyJWT PEM guard, 16 October 2026
 
-**Prepared, not activated.** The two pending critical records are both
+**Activated with owner approval on 16 October 2026 at 06:06 UTC.** The two
+previously pending critical records are both
 CVE-2026-102268: `python3-jwt 2.15.1-1` on the host and the exact Uptime Kuma
 image `sha256:38451727e85fa87336c13298a9dfab813ac02a1a009888102533e4cd79ee12f4`.
 The upstream [PEM guard advisory](https://github.com/jpadilla/pyjwt/security/advisories/GHSA-ffc3-869f-jxw9)
@@ -51,16 +52,31 @@ decisions. Missing prerequisites produce `skipped` entries and a nonzero CLI
 exit; they never produce a decision. Other findings, scanner severities and
 raw evidence remain unchanged. No scheduled application of these decisions
 was added. The existing operator-only `triage.mjs record` accepts one reviewed
-decision at a time; activation requires separate approval and a fresh recheck.
+decision at a time; future activations require separate approval and a fresh recheck.
 
-Private evidence for this review is in
-`/opt/utilibre/reports/advisory-review-20261016.yy51kc/` (`pyjwt-final.json` and
-`app-advisories.json`). The isolated checkout is
-`/home/ubuntu/utilibre-security-review-20261016`. The combined reviewer suites
-pass **43/43**, including malformed native output, timeout/nonzero exits and
-disposable-container cleanup. No production package, service, review ledger or queue was
-changed, and no email was sent. To abandon this preparation, leave the active
-checkout/ledgers alone; no service rollback is required.
+Private evidence is in `/opt/utilibre/reports/advisory-review-20261016.yy51kc/`.
+The original `pyjwt-final.json`/`app-advisories.json` preparation was followed by
+fresh `activation-pyjwt-check.json`/`activation-app-check.json` proofs before
+activation. `activation.json` records the result; `monitor-after.txt` records
+the real monitor's no-mail check. Code commit: `0c74591`.
+
+The combined reviewer suites pass **43/43**, including malformed native output,
+timeout/nonzero exits and disposable-container cleanup. Another **30/30**
+existing maintenance/triage tests pass. The operator-only triage CLI applied
+exactly two seven-day decisions; all other decisions, raw scan bytes, original
+observation dates and review deadlines are unchanged. The live queue now has
+**0 critical / 56 high awaiting review**, not zero scanner findings. The
+42 raw critical matches remain available. No package upgrades, application
+restarts, direct email notifications or changes to scanning policy occurred.
+The monitor still reports the separate high-review backlog, low disk space
+and stale external-monitoring completions; these were not suppressed.
+
+The private directory contains pre-activation ledger/queue snapshots and the
+two exact decision files. For rollback, remove only those two decision keys
+from the **current** ledger after reviewing a fresh backup, then use the existing
+queue builder. Do not overwrite newer unrelated reviews with the whole old
+ledger. Raw scan inputs and services require no rollback. Application-alert
+rollback is covered by [the runtime review](../runtime-gnutls-minimization/README.md).
 
 ## Earlier checkpoints
 

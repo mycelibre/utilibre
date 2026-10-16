@@ -2,7 +2,7 @@
 
 ## Application advisory bindings: 16 October review
 
-**Prepared in an isolated checkout, not activated.** The daily review correctly
+**Activated with owner approval on 16 October 2026 at 06:06 UTC.** The daily review correctly
 reopened four application assessments after this runtime-only release changed
 their image IDs. Penpot's images did not change, but its whole-Compose hash
 changed because the same file contains the Actual/Resume image references.
@@ -49,16 +49,25 @@ Run the proof in the prepared checkout against the **still-unmodified** live
 review record. It compares the candidate to that prior record and writes only
 the named new report; it performs no upstream fetch, notification or activation.
 An unrecognized image, source change, incomplete receipt or changed advisory
-fails closed. It deliberately refuses to overwrite a report. Once approved,
-the only application-alert activation is the five scoped changes in
-`deployment/maintenance/advisory-reviews.json`; recheck current evidence first.
-No service restart is involved. Preserve its pre-change copy for rollback;
-restoring that record reopens alerts without reverting any application.
+fails closed. It deliberately refuses to overwrite a report. The application-alert
+activation applied only the five scoped changes in
+`deployment/maintenance/advisory-reviews.json` after a fresh evidence check.
+No service restart was involved. Its pre-change copy is retained privately;
+restoring only those five prior entries reopens alerts without reverting any
+application or overwriting newer unrelated review records.
 
-Evidence: `/opt/utilibre/reports/advisory-review-20261016.yy51kc/app-advisories.json`.
-Prepared outcome: 48 reviewed, 0 pending **within these five applications**.
-The active daily report remains unchanged until authorization. The two separate
-critical PyJWT matches are documented in [the fixed-package reviewer](../vendor-fixed-review/README.md).
+Evidence: `/opt/utilibre/reports/advisory-review-20261016.yy51kc/` contains the
+original `app-advisories.json`, fresh `activation-app-check.json`, five focused
+live upstream results (`activation-upstream.json`), and `activation.json`.
+Code commit: `0c74591`. Verified active outcome: **48 reviewed, 0 pending within
+these five applications**. The real monitor's `--check-only` run confirms none
+of these five application alerts remain; it sends no mail or acknowledgement.
+Only the five results in the daily report were refreshed. All unrelated results
+and the original full-fleet assessment timestamp were preserved; a scoped
+recheck does not pretend the entire fleet was assessed again. Existing service
+boundaries, raw findings and scanner policy are unchanged.
+The two separate critical PyJWT matches are documented in
+[the fixed-package reviewer](../vendor-fixed-review/README.md).
 Do not mistake either scoped result for a clean fleet-wide security assessment.
 
 ## Original runtime release
