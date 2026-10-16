@@ -1,5 +1,69 @@
 # Exact fixed-package review — 11 October 2026
 
+## Current follow-up: PyJWT PEM guard, 16 October 2026
+
+**Prepared, not activated.** The two pending critical records are both
+CVE-2026-102268: `python3-jwt 2.15.1-1` on the host and the exact Uptime Kuma
+image `sha256:38451727e85fa87336c13298a9dfab813ac02a1a009888102533e4cd79ee12f4`.
+The upstream [PEM guard advisory](https://github.com/jpadilla/pyjwt/security/advisories/GHSA-ffc3-869f-jxw9)
+fixes this in 2.14.0; [Debian explicitly marks 2.15.1-1 fixed](https://security-tracker.debian.org/tracker/CVE-2026-102268).
+Both primary sources were rechecked on 16 October. This is an exact fixed-package
+assessment of a base-distribution scanner match, not acceptance of an unpatched
+critical defect or a whole-fleet clearance.
+
+- All 12 installed PyJWT Python sources in each target match the retained
+  authenticated `python3-jwt_2.15.1-1_all.deb` (SHA-256
+  `e2bdfe81e1c0c45866e37e1a2f2fd190fcec24f8c5fc083e994733b0f915b1af`).
+- The existing native fixture now checks canonical, tab-indented, CR-only and
+  single-line RSA/EC public keys: eight HMAC-key rejections per target. The
+  cryptography loader first proves each variant is a valid public key.
+  Legitimate HS256, RS256 and ES256 round trips pass; empty-JWK and local JWKS
+  redirect-denial checks still pass. There are no external fixture requests.
+- A separate network-disabled baseline used the retained Debian 2.10.1 package
+  (SHA-256 `d6971f1c7b688e7edeff93483ccbab11083bdc19a754a7f5f37d2f7b4a97afe5`)
+  and the same `pem_hmac_checks` function. It fails with
+  `PEM variant escaped recognition`, not an unrelated build/version error.
+  No old package was installed on the host or in a running service.
+- Host tests now require the already-reviewed bubblewrap **0.12.0-1~deb13u1**
+  binary, SHA-256 `573236e5328ac2ebb08f59ae3a9805b4f8d12bdef14be8af4450d5463294985f`.
+  Its isolated namespace exposes only read-only runtime libraries, temporary
+  storage and synthetic loopback endpoints; CPU/address-space limits apply.
+  Image tests use the exact local image, no network, no production mounts,
+  a read-only filesystem, an unprivileged user, 128 MiB, 0.5 CPU and 32 PIDs.
+  Both have time/output limits. A failed or absent sandbox does not fall back
+  to execution on the host. Disposable containers are removed on failure too.
+
+Reproduce preparation (substitute an existing verified sandbox path and an
+absolute private output path; this does not download or install the sandbox):
+
+```sh
+node --test deployment/maintenance/vendor-fixed-review/check.test.mjs
+node deployment/maintenance/vendor-fixed-review/check.mjs \
+  --only-cve=CVE-2026-102268 \
+  --host-sandbox=/absolute/path/to/verified/bwrap \
+  --output=/absolute/private/output/pyjwt.json
+```
+
+The normal completed-scan freshness gate remains **24 hours**. The targeted
+option cannot select an unreviewed CVE. Reports include input/fixture hashes,
+package payloads, native runtime versions and seven-day **exact-key** candidate
+decisions. Missing prerequisites produce `skipped` entries and a nonzero CLI
+exit; they never produce a decision. Other findings, scanner severities and
+raw evidence remain unchanged. No scheduled application of these decisions
+was added. The existing operator-only `triage.mjs record` accepts one reviewed
+decision at a time; activation requires separate approval and a fresh recheck.
+
+Private evidence for this review is in
+`/opt/utilibre/reports/advisory-review-20261016.yy51kc/` (`pyjwt-final.json` and
+`app-advisories.json`). The isolated checkout is
+`/home/ubuntu/utilibre-security-review-20261016`. The combined reviewer suites
+pass **43/43**, including malformed native output, timeout/nonzero exits and
+disposable-container cleanup. No production package, service, review ledger or queue was
+changed, and no email was sent. To abandon this preparation, leave the active
+checkout/ledgers alone; no service rollback is required.
+
+## Earlier checkpoints
+
 12 October follow-up: the same signed AOM 3.14.1-1 payload also resolves
 [CVE-2023-39616](https://security-tracker.debian.org/tracker/CVE-2023-39616),
 whose upstream frame-buffer fixes shipped in 3.7.0. The reviewer now checks
@@ -66,7 +130,8 @@ actual installed HEIF/AVIF consumers were gated, as documented in
 quota and exact-byte transfer gates are in [its release](../mariadb-client-final/README.md).
 
 Run `node --test deployment/maintenance/vendor-fixed-review/check.test.mjs`, then
-`node deployment/maintenance/vendor-fixed-review/check.mjs`. Inspect every
+`node deployment/maintenance/vendor-fixed-review/check.mjs` with the verified
+`--host-sandbox` path above for host checks. Inspect every
 `skipped` item; never turn a failed proof into a review. This tooling neither
 installs packages nor changes service configuration.
 

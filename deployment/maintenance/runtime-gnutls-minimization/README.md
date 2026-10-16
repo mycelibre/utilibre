@@ -1,5 +1,68 @@
 # Four Node runtimes: remove unused APT and GnuTLS
 
+## Application advisory bindings: 16 October review
+
+**Prepared in an isolated checkout, not activated.** The daily review correctly
+reopened four application assessments after this runtime-only release changed
+their image IDs. Penpot's images did not change, but its whole-Compose hash
+changed because the same file contains the Actual/Resume image references.
+The original release had refreshed package-level reviews, not these separate
+application advisory bindings.
+
+Five bounded GitHub published-advisory requests on 16 October confirmed that
+all **48** reviewed IDs, update timestamps and affected ranges are unchanged:
+
+| Application | Version | Published advisories reviewed | Rebinding proof |
+| --- | --- | ---: | --- |
+| Actual Budget | 26.10.0 | 14 | Completed runtime-minimal image and unchanged application files |
+| Reactive Resume | 6.0.0 | 1 | Completed runtime-minimal image and unchanged application files |
+| Wishlist | 0.67.1 | 6 | Completed runtime-minimal image and unchanged application files |
+| CryptPad | 2026.9.0 | 3 | Same proof plus unchanged mounted package/lock/server hashes |
+| Penpot | 2.18.3 | 24 | Same four images; exact two-line unrelated Compose change |
+
+`review-advisories.mjs` reuses the existing `partitionReviewed` matcher. It
+checks release receipt hashes, old/new immutable image ancestry, complete
+retained filesystem manifests, original package-owned paths, unchanged retained
+packages and the native application receipts. Its short-lived inspection
+containers have no network or production mounts and never run app servers.
+It checks running image IDs and separately bound files read-only. For Penpot,
+frontend/backend still disable MCP and PREPL; all four namespaces lack TCP
+listeners on 4403/6063. This preserves the earlier **component-not-deployed**
+assessment for MCP, not a claim that every Penpot component was patched.
+
+The native application journeys were performed on **12 October**, not rerun
+on 16 October. Their exact receipt/image linkage was revalidated today. No
+new account, document, live exploit probe, upstream dependency exemption,
+deployment or public request was needed for this rebinding. Existing advisory
+reasons/ranges remain byte-for-byte unchanged; future image/file/advisory changes
+still reopen review. This helper is a review of this particular completed
+release, not an automatic carry-forward policy for arbitrary future images.
+
+```sh
+node --test deployment/maintenance/runtime-gnutls-minimization/review-advisories.test.mjs \
+  scripts/review-upstream-maintenance.test.mjs
+node deployment/maintenance/runtime-gnutls-minimization/review-advisories.mjs \
+  /absolute/private/new-report.json
+```
+
+Run the proof in the prepared checkout against the **still-unmodified** live
+review record. It compares the candidate to that prior record and writes only
+the named new report; it performs no upstream fetch, notification or activation.
+An unrecognized image, source change, incomplete receipt or changed advisory
+fails closed. It deliberately refuses to overwrite a report. Once approved,
+the only application-alert activation is the five scoped changes in
+`deployment/maintenance/advisory-reviews.json`; recheck current evidence first.
+No service restart is involved. Preserve its pre-change copy for rollback;
+restoring that record reopens alerts without reverting any application.
+
+Evidence: `/opt/utilibre/reports/advisory-review-20261016.yy51kc/app-advisories.json`.
+Prepared outcome: 48 reviewed, 0 pending **within these five applications**.
+The active daily report remains unchanged until authorization. The two separate
+critical PyJWT matches are documented in [the fixed-package reviewer](../vendor-fixed-review/README.md).
+Do not mistake either scoped result for a clean fleet-wide security assessment.
+
+## Original runtime release
+
 Verified and deployed on 12 October 2026. Actual, Reactive Resume, Wishlist and
 CryptPad used GnuTLS only through APT. Their runtime images now omit both
 packages. This removes eight package-target findings for CVE-2026-88647 and

@@ -9,6 +9,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {freshScan,validateRelease,overlayRows} from '../review-native-backports.mjs';
 import {validateDecision} from '../triage.mjs';
+import {runNativeJwt} from './isolated-jwt.mjs';
 const root='/var/lib/utilibre-maintenance/';
 const here=path.dirname(fileURLToPath(import.meta.url));
 const sha=data=>createHash('sha256').update(data).digest('hex');
@@ -23,7 +24,7 @@ const turnContainers=['utilibre-galene-turn-turn-1','utilibre-turn-option-turn-1
 // Debian primary tracker checked 2026-10-12: fixed in PyJWT <=2.15.0;
 // scanner is using the older base-distribution package range. Payload must
 // still exactly match the signed 2.15.1 artifact and pass native checks.
-const jwtFixedIds=['CVE-2026-101917','CVE-2026-101918','CVE-2026-102271','CVE-2026-102272','CVE-2026-102273','CVE-2026-102274','CVE-2026-102275','CVE-2026-48526'];
+const jwtFixedIds=['CVE-2026-102268','CVE-2026-101917','CVE-2026-101918','CVE-2026-102271','CVE-2026-102272','CVE-2026-102273','CVE-2026-102274','CVE-2026-102275','CVE-2026-48526'];
 const mariaServerIds=['CVE-2026-107815','CVE-2026-107818','CVE-2026-107823','CVE-2026-44168','CVE-2026-44171','CVE-2026-48163','CVE-2026-48165'];
 export const specs=[
  {kind:'click',artifact:'sha256:a30210737c27fd8a9e0e162e472377ad1692348eee9001e4ccaee4d245a731ca',containers:['utilibre-community-uptime-kuma-1'],package:'python3-click',version:'8.3.3-3',ids:['CVE-2026-7246'],deb:'click-followup-20261012/packages/python3-click_8.3.3-3_all.deb',debSha:'b8ce2b18bb602844e05c67d75cff576a91ca7727af2726175dba84536de04d12'},
@@ -119,14 +120,28 @@ function packageManifest(spec,temp){
 export function reasonFor(item,spec,proof){
  const basis=spec.kind==='click'?'Debian marks Click 8.3.3 fixed; exact upstream b96c2601 replaces shell-based editor execution. Pallets disputes this CVE: this is defense in depth, not confirmation of a public exploit. Seven native source/CLI/Unicode/editor checks, Apprise compatibility and isolated Kuma setup/login passed; all installed Click source files match the signed package.':
  spec.kind==='aom'?(item.id==='CVE-2023-39616'?'Debian marks aom 3.14.1-1 fixed; AV1 frame-buffer fixes 35254736, cbce0616, 54e4b8ff and df38eb16 are included since upstream 3.7.0_rc2. Native HEIF/AVIF and actual GDAL consumers passed; not a separate exploit reproduction.':'Debian marks aom 3.14.1-1 fixed (upstream fix 7ae7bef246e85c8f349513d668b4571c79a43c5c, since 3.7.1).'):
- spec.kind==='jwt'?'Debian primary tracker marks this advisory fixed by PyJWT 2.15.0 or earlier; installed 2.15.1 source matches the signed Debian package. Native algorithms, empty-JWK and loopback JWKS-redirect checks passed; not an exploit reproduction for every advisory.':
+ spec.kind==='jwt'?(item.id==='CVE-2026-102268'?'Upstream GHSA-ffc3-869f-jxw9 and Debian mark the PEM/HMAC confusion fixed in 2.14.0. All installed PyJWT 2.15.1 source files match the retained signed Debian package. Isolated native checks reject canonical and whitespace/CR/single-line RSA and EC public keys as HMAC secrets; legitimate HS256/RS256/ES256 round trips pass. No live authentication probe.':'Debian primary tracker marks this advisory fixed by PyJWT 2.15.0 or earlier; installed 2.15.1 source matches the signed Debian package. Native algorithms, empty-JWK and loopback JWKS-redirect checks passed; not an exploit reproduction for every advisory.'):
  mariaServerIds.includes(item.id)?'Advisory affects MariaDB server/CONNECT/Galera/SST/backup components, fixed by server 11.8.9 or earlier. Coturn has only exact signed 11.8.9 client/config payloads; server/Galera packages and binaries are absent.':
  item.id==='CVE-2026-49261'?'MariaDB fixes wsrep_notify_cmd in server 11.8.8; exact source 11.8.9+ds-4 is fixed. Coturn has client/config packages, no installed server/Galera package or daemon.':
  'Connector/C Big5 escaping is fixed in 3.3.19/3.4.9. Debian marks source 11.8.9+ds-4 fixed; installed signed client library and plugins match byte-for-byte (common contains only configuration/docs).';
  return `${basis} Exact ${spec.artifact}, ${spec.package} ${spec.version}; package SHA256 ${spec.debSha}, live payload manifest SHA256 ${proof.manifestSha256}. https://security-tracker.debian.org/tracker/${item.id} . This is an individual fixed-package/component review against the base-distribution scanner match, not an exemption for other CVEs or versions. Raw findings retained. Native/release evidence: deployment/maintenance/vendor-fixed-review/README.md.`;
 }
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
-export function run(){
+export function reviewOptions(args=[]){
+ const options={output:root+'vendor-fixed-review.json'},seen=new Set();
+ for(const arg of args){
+  const match=/^--(only-cve|output|host-sandbox)=(.+)$/.exec(arg);
+  assert(match,'Supported options: --only-cve=CVE-YYYY-NNNN --output=/absolute/path --host-sandbox=/absolute/bwrap');
+  const key={'only-cve':'onlyCve',output:'output','host-sandbox':'hostSandbox'}[match[1]];
+  assert(!seen.has(key),'Duplicate option');seen.add(key);
+  if(key==='onlyCve')assert(/^CVE-\d{4}-\d{4,}$/.test(match[2]),'Invalid CVE');
+  else assert(path.isAbsolute(match[2]),'Absolute output/sandbox path required');
+  options[key]=match[2];
+ }
+ if(options.onlyCve)assert(specs.some(s=>s.ids.includes(options.onlyCve)),'CVE has no reviewed proof adapter');
+ return options;
+}
+export function run(options=reviewOptions(process.argv.slice(2))){
  process.umask(0o077);const queue=read('security-queue.json'),scan=read('security.json');freshScan(queue,scan);
  const decisions=[],proofs=[],skipped=[],cache=new Map();
  const currentSpecs=[...specs];
@@ -138,7 +153,7 @@ export function run(){
     currentSpecs.push({...s,artifact:matched[0].newImage,overlayPredecessor:s,overlayReceipt:receipt});
   }
  }
- for(const item of queue.items){const spec=currentSpecs.find(s=>matches(item,s));if(!spec)continue;
+ for(const item of queue.items){if(options.onlyCve&&item.id!==options.onlyCve)continue;const spec=currentSpecs.find(s=>matches(item,s));if(!spec)continue;
   try{
    const key=spec.artifact+spec.package;let proof=cache.get(key);
    if(!proof){
@@ -147,7 +162,7 @@ export function run(){
     try{
      const manifest=packageManifest(spec,temp),observations=[];
      for(const name of host?[null]:spec.containers){
-      if(!host){const x=JSON.parse(text('docker',['inspect',name]))[0];assert.equal(x.Image,spec.artifact);assert.equal(x.State.Running,true);}
+      if(!host){const x=JSON.parse(text('docker',['inspect','--format','{"Image":{{json .Image}},"State":{"Running":{{json .State.Running}}}}',name]));assert.equal(x.Image,spec.artifact);assert.equal(x.State.Running,true);}
       const cmd=(p,args)=>host?text(p,args):text('docker',['exec',name,p,...args]);
       const observed={name,version:cmd('dpkg-query',['-W','-f=${Version}',spec.package]),debSha:spec.debSha,files:manifest.map(f=>({path:f.path,sha256:cmd('sha256sum',[f.path]).split(/\s+/)[0]}))};
       verifyPayload(spec,observed,manifest);
@@ -162,8 +177,10 @@ export function run(){
      let native;
      if(spec.kind==='jwt'){
       const fixture=fs.readFileSync(here+'/jwt-regressions.py','utf8');
-      native=JSON.parse(host?text('/usr/bin/python3',['-I','-c',fixture]):text('docker',['run','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--memory','128m','--cpus','0.5','--pids-limit','32','--entrypoint','/usr/bin/python3',spec.artifact,'-I','-c',fixture]));
+      native=runNativeJwt(spec.artifact,fixture,options.hostSandbox);
       assert.equal(native.passed,true);assert.equal(native.redirectTargetRequests,0);assert.equal(native.externalRequests,0);
+      assert.equal(native.pemHmacConfusionDenied,true);assert.equal(native.validAlgorithmRoundTrips,3);
+      assert.equal(native.pemVariantsRejected,8);
      }
      if(spec.package==='libmariadb3'){
       const library=temp+'/usr/lib/x86_64-linux-gnu/libmariadb.so.3';
@@ -177,8 +194,11 @@ export function run(){
    proofs.push({key:item.key,id:item.id,...proof});
   }catch(error){skipped.push({key:item.key,id:item.id,artifact:item.artifact,package:item.package,error:error.message.slice(0,180)});}
  }
- const report={date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,proofs,skipped};
- fs.writeFileSync(root+'vendor-fixed-review.json',JSON.stringify(report,null,2)+'\n',{mode:0o600});
- console.log(JSON.stringify({prepared:decisions.length,skipped:skipped.length,applied:false,report:root+'vendor-fixed-review.json'}));return report;
+ const report={date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,onlyCve:options.onlyCve||null,
+  inputs:{queueSha256:sha(fs.readFileSync(root+'security-queue.json')),scanSha256:sha(fs.readFileSync(root+'security.json')),
+   checkerSha256:sha(fs.readFileSync(fileURLToPath(import.meta.url))),fixtureSha256:sha(fs.readFileSync(here+'/jwt-regressions.py')),
+   adapterSha256:sha(fs.readFileSync(here+'/isolated-jwt.mjs')),node:process.version},decisions,proofs,skipped};
+ fs.writeFileSync(options.output,JSON.stringify(report,null,2)+'\n',{mode:0o600});
+ console.log(JSON.stringify({prepared:decisions.length,skipped:skipped.length,applied:false,report:options.output}));return report;
 }
-if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)run();
+if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){const report=run();if(report.skipped.length)process.exitCode=1;}
