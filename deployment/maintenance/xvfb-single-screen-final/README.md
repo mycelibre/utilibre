@@ -1,5 +1,27 @@
 # Native one-screen Xvfb restriction
 
+## Passive-grab source/payload review: 16 October 2026
+
+Four CVE-2026-93516 records were verified as already repaired in the installed
+host and Penpot exporter. `passive-review.mjs /private/new-output` uses retained
+authenticated native sources, the complete DHI quilt series, strict reverse
+patch checks and the existing release-to-live-payload proof. It adds no package
+or container update. Upstream commit
+`9442a53c137bb9eb61336c6fd39627912d50cc8d` is present in both builds.
+
+The bounded, network-isolated native fixture compiles the actual upstream
+cleanup functions. Direct-device and modifier-device grabs are removed across
+clients, unrelated grabs remain, and repeating cleanup is safe. This is a real
+function-level test, **not** a complete native X-server UAF reproduction.
+Existing native screen/pixel/export results remain separate historical evidence.
+Focused policy tests reject missing cleanup and cleanup occurring too late.
+
+The passing private report is `/opt/utilibre/reports/high-xvfb-20261016-r5`.
+Earlier harness failures are retained and are not claimed as vulnerability
+reproductions. Seven-day decisions cover only the four exact current records;
+raw scanner observations remain available. See the
+[current disposition](../../../docs/records/security-high-review-2026-10-16.md).
+
 Deployed by the parent maintainer on **12 October 2026**: host at
 **18:40:38 UTC**, Penpot exporter at **18:40:45 UTC**. Both exact release receipts
 passed, and a separate read-only check matched the actual live package payloads.

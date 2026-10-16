@@ -10,6 +10,17 @@ test('CUPS scheduler attribution never exempts the server or an included schedul
  assert.equal(absentComponent({...item,id:'CVE-2026-99999'},['/.','/usr/lib/libcups.so.2']),null);
 });
 const files=['/.','/usr/lib/libuuid.so.1'];
+test('October SSH findings distinguish client, authentication server and subsystem',()=>{
+ for(const id of ['CVE-2026-106553','CVE-2026-106555']){
+  for(const pkg of ['openssh-client','openssh-sftp-server']){
+   const item={id,package:pkg};assert.match(absentComponent(item,['/.','/usr/bin/ssh','/usr/lib/openssh/sftp-server']),/sshd server/);
+   for(const p of ['/usr/sbin/sshd','/usr/lib/openssh/sshd-auth','/usr/lib/openssh/sshd-session'])assert.equal(absentComponent(item,[...files,p]),null);
+  }
+  assert.equal(absentComponent({id,package:'openssh-server'},files),null);
+ }
+ const item={id:'CVE-2026-106583',package:'openssh-server'};assert.match(absentComponent(item,['/.','/usr/sbin/sshd']),/client command-line/);
+ assert.equal(absentComponent(item,['/.','/usr/bin/ssh']),null);assert.equal(absentComponent({...item,package:'openssh-client'},files),null);
+});
 test('Python SAX advisory never exempts the binding package or an included binding',()=>{
  const item={id:'CVE-2026-74860',package:'libxml2'};
  assert.match(absentComponent(item,['/.','/usr/lib/libxml2.so.2']),/Python SAX/);

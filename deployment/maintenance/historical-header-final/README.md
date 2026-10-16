@@ -1,5 +1,28 @@
 # Historical kernel attribution: userspace header packages only
 
+## Additional exact review: 16 October 2026
+
+`current-policy.mjs` pins five newer Linux CNA records and the current image
+identities. `current-review.mjs acquire OUTPUT` downloads only those five pinned
+JSON records; `prepare OUTPUT` performs offline, read-only header inspection and
+writes proposals. It reuses this directory's existing inventory collector and
+validation; it is not a new scanner. Seven locations were inspected, including
+all three SimpleLogin roles. Eight HIGH package-target records were attributed
+to unaffected userspace headers, with seven-day exact-key decisions.
+
+Private evidence: `/opt/utilibre/reports/high-headers-20261016/{evidence,review}.json`.
+Set `UTILIBRE_HEADER_EVIDENCE` to that directory when running
+`current-policy.test.mjs` to include the pinned-primary integration check.
+
+**The running VM kernel remains a separate unresolved issue.** It is
+`6.12.111+deb13-cloud-amd64`; the pinned Linux CNA identifies the 6.12 branch fix
+for CVE-2026-98260 in 6.12.112. The inspected Debian stable candidate was still
+6.12.111. A safe vendor-kernel update and coordinated reboot are required; no
+header decision is a kernel waiver. See the
+[current disposition](../../../docs/records/security-high-review-2026-10-16.md).
+
+## Earlier review: 12 October 2026
+
 Reviewed 2026-10-12. This is **not a kernel repair or an assessment of the running
 VM/Proxmox kernel**. It resolves five specifically reviewed records attached to
 `linux-libc-dev`, which supplies userspace kernel-interface headers. It never

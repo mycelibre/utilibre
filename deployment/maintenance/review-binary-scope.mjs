@@ -33,6 +33,10 @@ export function absentComponent(item,files){
   return 'infocmp progs/infocmp.c analyze_string';
  if(item.id==='CVE-2026-60002'&&['openssh-server','openssh-sftp-server'].includes(item.package)&&!files.some(p=>/\/(?:s?bin|libexec)\/ssh$/.test(p)))
   return 'the ssh client host-key re-exchange code (upstream says client-only)';
+ if(item.id==='CVE-2026-106583'&&['openssh-server','openssh-sftp-server'].includes(item.package)&&!files.some(p=>/\/(?:s?bin|libexec)\/ssh$/.test(p)))
+  return 'the ssh client command-line username validation in readconf.c, upstream 0c4c9a7b320bd7ff61c4a2dc345cb2e27e9663b2; not sshd or sftp-server';
+ if(['CVE-2026-106553','CVE-2026-106555'].includes(item.id)&&['openssh-client','openssh-sftp-server'].includes(item.package)&&!files.some(p=>/\/(?:sshd|sshd-auth|sshd-session)$/.test(p)))
+  return 'the sshd server GSSAPI authentication/credential state in auth2.c, monitor.c and gss-serv.c; upstream 670510d1e190b0f4e47066f24498c04ada1da0f0 and 6f9cd19af05aa828d7778cfb047faaed1679e8b7; not client-side GSSAPI or the SFTP subsystem';
  if(item.id==='CVE-2026-16742'&&homedSiblings.has(item.package)&&!files.some(p=>/\/(?:systemd-homed|systemd-homework|homectl)(?:\.|$)/.test(p)))
   return 'systemd-homed src/home/homed-home.c identity verification';
  if(item.id==='CVE-2026-9538'&&['perl-base','libperl5.36','libperl5.40'].includes(item.package)&&!files.some(p=>/\/Archive\/Tar(?:\.pm|\/)/.test(p)))

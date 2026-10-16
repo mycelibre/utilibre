@@ -1,5 +1,22 @@
 # Native mount and ACL repair — 12 October 2026
 
+## Current ACL boundary: 16 October 2026
+
+`acl-current-assessment.mjs /private/new-report.json` checks the exact queued
+library version/hash and selected isolation/caller-package fields in every
+running role, without traversing mounted user data. It inspected 30 records
+across 36 host/container locations, with no unverified locations. It closed
+**zero** CVE-2026-54369 records: capability restrictions and absence of a CLI
+are not proof that every library caller is safe.
+
+The new report binds the earlier actual tar/rsync legacy-call observation by
+hash and explicitly labels it historical, not rerun. Library replacement alone
+remains insufficient; a supported caller migration with positive ACL/content
+round trips and race-rejection tests is the missing repair. There is no new
+production ACL update. Private evidence is
+`/opt/utilibre/reports/high-acl-20261016.json`; see the
+[full current disposition](../../../docs/records/security-high-review-2026-10-16.md).
+
 The root maintainer released all eight Bookworm mount overlays on 12 October
 2026, with exact-predecessor rollback and native/application checks. Ubuntu
 mount is also live: Addy's database passed release at 18:34:27 UTC and Redlib

@@ -1,5 +1,85 @@
 # Native stable OpenSSH server follow-up
 
+## Current release: 16 October 2026
+
+The three coupled packages are now **`1:10.0p1-7+deb13u4+utilibre3`**,
+released at **09:18:03 UTC**, after the operator confirmed Proxmox console
+availability for the SSH window. The `utilibre2` account below is historical.
+
+The new release adds upstream
+[0c4c9a7b](https://github.com/openssh/openssh-portable/commit/0c4c9a7b320bd7ff61c4a2dc345cb2e27e9663b2)
+for CVE-2026-106583. CLI usernames containing dollar/backslash characters are
+rejected; explicit `User` configuration keeps its native behavior. Previous
+client/server repairs remain byte-identical in source. This is not an upgrade
+to every feature/fix in OpenSSH 10.6.
+
+Four harmless invalid CLI cases fail for the intended reason only on the new
+binary; four ordinary users and an explicit configuration literal pass on both.
+No substituted shell command is executed. All 742 upstream unit cases and the
+eleven existing native protocol checks pass, including real private-realm
+Kerberos, PAM, SSH/SFTP, forwarding and byte-equal rekeys. The release verifies
+five installed binary hashes, all three package versions, clean dpkg state,
+active SSH, unchanged configuration/keys and unchanged Docker PID. No kernel,
+bootloader or VM power-state change occurred.
+
+`GSSAPIAuthentication` and `GSSAPIKeyExchange` are configured off in the inspected
+host effective configuration. **CVE-2026-106553 and CVE-2026-106555 are not
+patched or waived for the server.** Debian's additional GSSAPI key-exchange code
+needs a compatible source repair and its own regression tests; a client or SFTP
+subpackage attribution decision does not cover the actual server.
+
+### Offline preparation and explicit release
+
+Use new private directories for each attempt; preserve failed receipts.
+The following stages are separate commands, not an automatic deployment job:
+
+```sh
+node deployment/maintenance/ssh-server-followup/username-prepare.mjs /private/new-input
+node deployment/maintenance/ssh-server-followup/username-run.mjs /private/new-input /private/new-output
+node deployment/maintenance/ssh-server-followup/username-check.mjs /private/new-output /private/new-checks
+node deployment/maintenance/ssh-server-followup/username-preflight.mjs /private/new-output /private/new-checks
+```
+
+Preparation pins the retained authenticated native source, patch and pre/post
+file hashes. The already-local compiler is pinned to
+`sha256:f45539e1b2380da919ac34c184cb1a19b0c7a1037f993fd30ae37a1a1f8b8604`.
+The build has no network, two CPUs, 3 GiB RAM, a 1.5 GiB temporary build filesystem
+and a 15-minute timeout. No host credentials or production volumes are mounted.
+Native protocol checks use isolated loopback and synthetic keys. Only their
+private namespace receives TUN/NET_ADMIN permissions; no ports are published.
+
+After reviewing the exact candidate and separately arranging the SSH window,
+`username-release.mjs --apply /private/new-checks` installs all three packages
+together. A client-only APT simulation would remove its coupled server/SFTP
+packages: never use that route. The release rejects any removal or additional
+package upgrade and verifies the maintained-package protection policy.
+
+Observed artifacts are `/opt/utilibre/reports/ssh-username-20261016-output`;
+checks, proposal, release and review receipts are under the adjacent
+`ssh-username-20261016-check`. The output includes complete modified Debian
+source, original source/signature, package hashes and the build dependency lock.
+No byte-for-byte build reproducibility is claimed.
+
+After a new host scan, `username-review.mjs OUTPUT CHECKS [NEW_REVIEW_JSON]` re-extracts the modified
+source, verifies retained client/server files, strictly reverse-checks the new
+patch, checks installed binary/package hashes and the native receipts, and
+prepares expiring exact-key decisions. It never writes the ledger. The old
+`review.mjs` deliberately rejects this newer version; do not force it to pass.
+Use a fresh private `NEW_REVIEW_JSON` filename for later revalidation; leave the
+original release and review receipts intact. Apply reviewed proposals through
+the existing `triage.mjs record` interface, not an automatic approval job.
+
+Rollback requires the retained three **utilibre2** packages named and hashed in
+the new `proposal.json`, installed together with `--force-confold` during another
+SSH window. Verify versions, `sshd -t`, active SSH/Docker and `dpkg --audit`;
+preserve host keys. This reverses the new CLI protection and requires a new host
+scan/review, not reuse of utilibre3 decisions.
+
+See the [56-record disposition](../../../docs/records/security-high-review-2026-10-16.md)
+for the remaining ACL/boot/kernel issues and exact scan freshness limitations.
+
+## Previous release: 12 October 2026
+
 Live release completed on **2026-10-12 at 13:56:41 UTC**. All three coupled
 host packages are installed at `1:10.0p1-7+deb13u4+utilibre2`; the eleven native
 gates passed, installed payloads match the tested candidate, SSH/Docker remain

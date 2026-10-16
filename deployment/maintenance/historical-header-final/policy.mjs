@@ -45,10 +45,10 @@ export function verifyPrimary(id,body,readDocument){
  const proof=s.documents.map(file=>{const d=documents[file],b=readDocument(file);assert.equal(sha(b),d.sha256,'Primary supporting document changed');for(const token of d.tokens)assert(b.toString().includes(token));return {file,url:d.url,sha256:d.sha256};});
  return {id,provider:s.provider,cnaSha256:s.sha256,originalReference:s.reference,component:s.component,documents:proof,absentPrivateTokens:s.tokens};
 }
-export function validateInventory(inv,installed){
+export function validateInventory(inv,installed,tokens=privateTokens){
  assert.equal(inv.package,'linux-libc-dev');assert.equal(inv.installed,installed);assert.equal(inv.status,'install ok installed');
  assert(inv.headers>100&&inv.records.length>100&&inv.bytes>10000&&inv.bytes<=64*1024**2);
- assert.deepEqual(inv.checkedPrivateTokens,privateTokens);assert.deepEqual(inv.presentPrivateTokens,[]);
+ assert.deepEqual(inv.checkedPrivateTokens,tokens);assert.deepEqual(inv.presentPrivateTokens,[]);
  assert(inv.records.every(r=>{
   const allowed=['/.','/usr','/usr/include','/usr/share','/usr/share/doc','/usr/lib','/usr/lib/linux','/usr/lib/linux/uapi'].includes(r.path)||/^\/usr\/(?:include|share\/doc|lib\/linux\/uapi)\//.test(r.path);
   return allowed&&!r.path.includes('/../')&&!/\.(?:c|ko|so|a)$|vmlinuz/.test(r.path)&&['directory','header','document','symlink','missing-document'].includes(r.type)&&

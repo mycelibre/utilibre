@@ -4,6 +4,7 @@ The fixture uses generated keys/accounts and loopback. No host SSH keys,
 configuration, private sessions, or production service are mounted.
 """
 import contextlib
+import argparse
 import hashlib
 import json
 import os
@@ -23,7 +24,9 @@ os.umask(0o077)
 assert Path('/.dockerenv').exists()
 ROOT = Path('/build')
 WORK = Path(tempfile.mkdtemp(prefix='native-', dir=ROOT))
-NEXT = '10.0p1-7+deb13u4+utilibre2'
+parser = argparse.ArgumentParser()
+parser.add_argument('--candidate-version', choices=['10.0p1-7+deb13u4+utilibre2', '10.0p1-7+deb13u4+utilibre3'], default='10.0p1-7+deb13u4+utilibre2')
+NEXT = parser.parse_args().candidate_version
 OLD = '10.0p1-7+deb13u4+utilibre1'
 RESULTS = []
 
