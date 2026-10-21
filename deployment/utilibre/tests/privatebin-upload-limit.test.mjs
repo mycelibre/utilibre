@@ -6,7 +6,7 @@ const source=readFileSync(new URL('../config/privatebin/upload-limit.js',import.
 function run(type,sizes,lang='en',id='file') {
   const listeners={}, input={value:'selected'}, calls=[];
   const app={AttachmentViewer:Object.fromEntries(['removeAttachmentData','hideAttachment','hideAttachmentPreview'].map(name=>[name,()=>calls.push(name)])),Alert:{showError:message=>calls.push(message)}};
-  runInNewContext(source,{document:{documentElement:{lang},addEventListener:(name,fn,capture)=>{assert.equal(capture,true);listeners[name]=fn;},getElementById:()=>input},window:{jQuery:{PrivateBin:app}}});
+  runInNewContext(source,{document:{documentElement:{lang},addEventListener:(name,fn,capture)=>{assert.equal(capture,true);listeners[name]=fn;},getElementById:()=>input},window:{PrivateBin:app}});
   const files=sizes.map(size=>({size})), event={type,target:{id,files},dataTransfer:{files},clipboardData:{files},preventDefault:()=>calls.push('prevent'),stopImmediatePropagation:()=>calls.push('stop')};
   listeners[type](event); return {calls,input};
 }

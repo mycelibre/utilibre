@@ -199,12 +199,12 @@ export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider>
     role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-11',
   },
   privatebin: {
-    project: 'PrivateBin', sourceUrl: 'https://github.com/PrivateBin/PrivateBin', reviewedSourceUrl: 'https://github.com/PrivateBin/PrivateBin/tree/2.0.6',
-    license: 'Zlib', licenseEvidenceUrls: ['https://github.com/PrivateBin/PrivateBin/blob/2.0.6/LICENSE.md'],
+    project: 'PrivateBin', sourceUrl: 'https://github.com/PrivateBin/PrivateBin', reviewedSourceUrl: 'https://github.com/PrivateBin/PrivateBin/tree/c6f1b7186b8ab37aaf57ef4a2bcb58886e24e9ae',
+    license: 'Zlib', licenseEvidenceUrls: ['https://github.com/PrivateBin/PrivateBin/blob/2.1.0/LICENSE.md'],
     selfHostingEvidenceUrl: 'https://github.com/PrivateBin/PrivateBin/wiki/Installation', maintenanceEvidenceUrl: 'https://github.com/PrivateBin/PrivateBin/commits/master/',
-    artifactReference: 'docker.io/privatebin/nginx-fpm-alpine:2.0.6@sha256:13290e2f04bfd98cf8fc7e8d216fb76b2b2d12373d4923b859cd41c2d984fde8',
-    installedVersion: '2.0.6', integration: 'container', reviewStatus: 'deployed', reviewDocument: 'docs/records/privatebin-discovery-2026-10-09.md',
-    role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-09',
+    artifactReference: 'utilibre-privatebin:2.1.0-security-20261021-p2@sha256:9816ec497b2c53e6f5f009db6f3a07a0d746afd224e99efbfc073370e7e01b17',
+    installedVersion: '2.1.0', integration: 'container', reviewStatus: 'deployed', reviewDocument: 'docs/updates.md',
+    role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-21',
   },
 };
 

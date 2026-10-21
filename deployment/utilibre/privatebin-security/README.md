@@ -1,4 +1,42 @@
-# PrivateBin 2.0.6 sanitizer security backport
+# PrivateBin reviewed upgrade and sanitizer protection
+
+## Current: 2.1.0, 21 October 2026
+
+Live build: `utilibre-privatebin:2.1.0-security-20261021-p2`, image
+`sha256:9816ec497b2c53e6f5f009db6f3a07a0d746afd224e99efbfc073370e7e01b17`.
+The Dockerfile pins the official 2.1.0 manifest, verifies two signed Alpine
+package downloads by SHA-256, and applies hash-gated JavaScript corrections:
+
+- Retain `FORBID_ATTR` for class/style/id in untrusted Markdown HTML. Upstream's
+  `ALLOWED_ATTR` remains overridden by its HTML profile; do not drop this guard
+  merely because the release says the advisory is fixed.
+- Backport [0250510](https://github.com/PrivateBin/PrivateBin/commit/0250510c15a052943e0f718df468ec08607dfb1d): native 2.1.0 crashes with discussions disabled.
+- Update libx11 to 1.8.14-r0 and libxpm to 3.5.20-r0. Other previously patched
+  PHP/OpenSSL/runtime versions are already present in the pinned official image.
+
+The native template and upload admission hook now use the 2.1.0 API without
+jQuery; updated SRI and asset query strings remain paired with the image.
+Limits, expiry, storage, logs and upstream encryption are unchanged.
+
+```sh
+docker build --platform linux/amd64 --network none -t utilibre-privatebin:2.1.0-security-20261021-p2 deployment/utilibre/privatebin-security
+node --test deployment/utilibre/tests/privatebin-upload-limit.test.mjs
+node deployment/utilibre/tests/check-privatebin-uploads.mjs
+node deployment/utilibre/tests/check-privatebin-upgrade.mjs
+node deployment/utilibre/privatebin-discovery/check.mjs
+```
+
+BuildKit may fetch the pinned base and checksum-pinned APK URLs; build RUN steps
+have no network. The recipe is amd64-specific. Run isolated browser checks
+sequentially: this host has limited free Docker bridge pools. The compatibility
+check requires the retained 2.0.6 image and committed `ed2291d` configuration.
+The `--public` attachment check is an explicit production write/delete test,
+not a default audit. No whole-stack backup is needed or permitted by these tests.
+
+See [release evidence and scoped rollback](../../../docs/records/privatebin-upgrade-2026-10-21.md).
+The older instructions below document superseded deployments, not update commands.
+
+## Historical 2.0.6 backport
 
 **Follow-up, 11 October 21:40 UTC:** the signed same-branch PHP/Alpine layer
 `utilibre-privatebin:2.0.6-php-security-20261011-p3` is live. PHP is 8.5.11;

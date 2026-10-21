@@ -12,7 +12,7 @@
         event.stopImmediatePropagation();
         const input = document.getElementById('file');
         if (input) input.value = '';
-        const app = window.jQuery.PrivateBin;
+        const app = window.PrivateBin;
         app.AttachmentViewer.removeAttachmentData();
         app.AttachmentViewer.hideAttachment();
         app.AttachmentViewer.hideAttachmentPreview();

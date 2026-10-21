@@ -7,6 +7,13 @@ remain reviewed rollouts. Production never runs a floating `latest` tag.
 
 ## Local repair protection
 
+PrivateBin was upgraded to **2.1.0 on 21 October**, retaining the reviewed
+Markdown sanitizer guard, 25 MB attachment limit, one-week maximum expiry,
+temporary-disk safeguard and no-content-backup policy. A small upstream
+optional-control fix and two signed Alpine library fixes are included.
+Isolated old-paste compatibility and public encrypted attachment checks passed.
+See [the exact release, evidence and rollback](records/privatebin-upgrade-2026-10-21.md).
+
 The 12 October native follow-up is deployed, including the coordinated QEMU
 guest-agent activation, HDF5/HEIF/GDAL, Penpot's private codec alignment,
 Addy's signed Ubuntu Perl update, Archive::Tar, the tracker dependency removal,

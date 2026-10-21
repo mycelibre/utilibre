@@ -9,8 +9,7 @@ import {chromium} from '../../../portal/node_modules/playwright-core/index.mjs';
 process.umask(0o077);
 assert(process.argv.length === 2 || (process.argv.length === 3 && process.argv[2] === '--public'));
 const live = process.argv.includes('--public');
-const image=process.env.PRIVATEBIN_CHECK_IMAGE||'utilibre-privatebin:2.0.6-security-20261011-p2';
-assert(['utilibre-privatebin:2.0.6-security-20261011-p2','utilibre-privatebin:2.0.6-php-security-20261011-p3'].includes(image));
+const image='utilibre-privatebin:2.1.0-security-20261021-p2';
 const base = live ? 'https://paste.utilibre.org' : 'http://127.0.0.1:3185';
 const recipe = fileURLToPath(new URL('../config/privatebin/', import.meta.url));
 const output = await mkdtemp('/opt/utilibre/reports/privatebin-uploads-');
@@ -60,9 +59,9 @@ try {
   context.on('request',r=>{const u=new URL(r.url());if(u.protocol.startsWith('http')&&u.origin!==base)outside.add(u.origin)});
   page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
   assert.equal((await page.goto(base+'/')).status(),200);
-  await page.waitForFunction(()=>!!jQuery.PrivateBin?.PasteViewer);
+  await page.waitForFunction(()=>!!window.PrivateBin?.PasteViewer);
   const sanitized=await page.evaluate(()=>{
-    const viewer=jQuery.PrivateBin.PasteViewer;
+    const viewer=window.PrivateBin.PasteViewer;
     viewer.setFormat('markdown');viewer.setText('<div class="modal d-block" id="fictional-popup" style="position:fixed">Fictional notice</div>');viewer.run();
     return {classes:document.querySelector('#plaintext .modal')!==null,ids:document.querySelector('#plaintext #fictional-popup')!==null,styles:document.querySelector('#plaintext [style]')!==null,text:document.querySelector('#plaintext')?.textContent};
   });
@@ -80,19 +79,20 @@ try {
   assert.deepEqual(mobileErrors,[]);assert.match(await mobile.locator('body').innerText(),/25 MB/);
   assert.equal(await mobile.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   await mobile.screenshot({path:`${output}/es-mobile.png`});
-  // Inspect native AJAX in this disposable test page. Chromium may evict large
-  // response bodies from its inspector cache; do not depend on that cache.
+  // Read the synthetic response at the Fetch boundary, before Chromium evicts
+  // large request/response bodies from its inspector cache. No app-code patch.
   await page.evaluate(()=>{
-    jQuery.ajaxPrefilter(options=>{
-      if(options.type.toUpperCase()!=='POST')return;
-      const payload=JSON.parse(options.data),{ct,...fields}=payload;
-      window.fixtureRequest={fields,ciphertextBytes:ct.length,filenameVisible:options.data.includes('fictional-25MB.bin')};
-    });
-    jQuery(document).ajaxComplete((_event,xhr,settings)=>{
-      if(settings.type.toUpperCase()!=='POST')return;
-      const {status,id,deletetoken,message}=xhr.responseJSON??{};
-      window.fixtureReceipt={status,id,deletetoken,message};
-    });
+    const nativeFetch=window.fetch;
+    window.fetch=async(...args)=>{
+      const options=args[1];
+      const response=await nativeFetch(...args);
+      if(options?.method?.toUpperCase()==='POST'){
+        const {ct,...fields}=JSON.parse(options.body);
+        window.fixtureRequest={fields,ciphertextBytes:ct.length,filenameVisible:options.body.includes('fictional-25MB.bin')};
+        window.fixtureReceipt=await response.clone().json();
+      }
+      return response;
+    };
   });
   await page.locator('#message').fill('Fictional attachment check. Random test bytes, no personal information.');
   // File picker rejects 25 MB + 1 before the upstream FileReader/encryption path.
@@ -103,7 +103,7 @@ try {
   checks.push('25 MB + 1 rejected locally, without upload');
   const bytes=randomBytes(25_000_000), expected=hash(bytes);
   await page.locator('#file').setInputFiles({name:'fictional-25MB.bin',mimeType:'application/octet-stream',buffer:bytes});
-  await page.waitForFunction(()=>jQuery.PrivateBin.AttachmentViewer.hasAttachmentData(),{},{timeout:60000});
+  await page.waitForFunction(()=>window.PrivateBin.AttachmentViewer.hasAttachmentData(),{},{timeout:60000});
   const expiration=await page.locator('#expiration select').count();
   if (expiration) await page.locator('#expiration select').selectOption('1week');
   else {await page.locator('#expiration button').click();await page.locator('#expiration a[data-expiration="1week"]').click();}

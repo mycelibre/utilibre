@@ -1,19 +1,19 @@
 # PrivateBin homepage discovery
 
-This is a supported custom template for the pinned PrivateBin 2.0.6 image, not a
+This is a supported custom template for the pinned PrivateBin 2.1.0 image, not a
 backend or encryption modification. Native template selection loads
 `bootstrap5-utilibre.php`. It is generated from upstream `tpl/bootstrap5.php`
 with `homepage-template.patch`; original application labels, controls, scripts,
 SRI, CSP and footer remain.
 
 The current template requires the matching
-[2.0.6 security-backport image](../privatebin-security/README.md), whose patched
+[2.1.0 reviewed security image](../privatebin-security/README.md), whose patched
 native script has an updated SRI hash. The p2 query-string cache buster keeps
 the upstream filename for directory detection and Spanish translations. The
 template patch includes this change so regeneration cannot silently undo it.
 
-Source: https://github.com/PrivateBin/PrivateBin/tree/921ab83f268add709413a87206e4e1c2e3c2063d
-(tag 2.0.6). The template's Zlib licence and upstream attribution are retained.
+Source: https://github.com/PrivateBin/PrivateBin/tree/c6f1b7186b8ab37aaf57ef4a2bcb58886e24e9ae
+(tag 2.1.0). The template's Zlib licence and upstream attribution are retained.
 This altered template is marked as Utilibre's customization. Keep the upstream
 `LICENSE.md` and this patch available with the deployment source. Brand assets
 are existing Utilibre assets from `portal/public/brand`, not remote resources.

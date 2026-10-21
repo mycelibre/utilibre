@@ -45,7 +45,6 @@ endif;
 ?>
 		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
 		<?php $this->_linkTag('js/zlib-1.3.2.js'); ?>
-		<?php $this->_scriptTag('js/jquery-3.7.1.js', 'defer'); ?>
 <?php
 if ($QRCODE) :
 ?>
@@ -69,10 +68,10 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.4.12.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/purify-3.4.17.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
-        <script defer type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>&amp;utilibre=security-20261011-p2" integrity="<?php echo I18n::encode($SRI['js/privatebin.js']); ?>" crossorigin="anonymous"></script>
-        <script src="js/utilibre-upload-limit.js?v=1" defer></script>
+        <script defer type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>&amp;utilibre=security-20261021-p2" integrity="<?php echo I18n::encode($SRI['js/privatebin.js']); ?>" crossorigin="anonymous"></script>
+        <script src="js/utilibre-upload-limit.js?v=2" defer></script>
         <!-- Utilibre icons; the native application remains PrivateBin. -->
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="48x48" href="/utilibre-brand/favicon-48.png" />
@@ -191,12 +190,12 @@ endif;
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div id="navbar" class="collapse navbar-collapse">
-					<ul class="navbar-nav me-auto gap-2 align-items-lg-center align-items-stretch">
+					<ul class="navbar-nav me-auto gap-2 align-items-lg-center align-items-stretch flex-wrap">
 						<li id="loadingindicator" class="navbar-text hidden me-auto">
 							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#clock" /></svg>
 							<?php echo I18n::_('Loading…'), PHP_EOL; ?>
 						</li>
-						<li class="nav-item d-flex flex-lg-row flex-column">
+						<li class="nav-item d-flex flex-lg-row flex-column hidden">
 							<button id="retrybutton" type="button" class="reloadlink hidden btn btn-primary d-flex justify-content-center align-items-center gap-1">
 								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg> <?php echo I18n::_('Retry'), PHP_EOL; ?>
 							</button>
@@ -509,7 +508,7 @@ endif;
 					<li role="presentation" class="nav-item me-1"><a class="nav-link active" role="tab" id="messageedit" href="#"><?php echo I18n::_('Editor'); ?></a></li>
 					<li role="presentation" class="nav-item me-1"><a class="nav-link" role="tab" id="messagepreview" href="#"><?php echo I18n::_('Preview'); ?></a></li>
 					<li role="presentation" class="nav-item ms-auto">
-						<button id="sendbutton" type="button" tabindex="2" class="hidden btn btn-primary d-flex justify-content-center align-items-center gap-1">
+						<button id="sendbutton" type="button" tabindex="2" class="hidden btn btn-primary d-flex justify-content-center align-items-center gap-1" title="<?php echo I18n::_('Hit %s+s to create the document, storing it on %s', I18n::getCopyHotkey(), I18n::_($NAME)); ?>" aria-keyshortcuts="Control+S Meta+S">
 							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#cloud-upload" /></svg> <?php echo I18n::_('Create'), PHP_EOL; ?>
 						</button>
 					</li>
