@@ -65,6 +65,22 @@ class PolicyTests(unittest.TestCase):
         self.assertEqual(rows[0]['reason'], 'reviewed-native-package')
         self.assertNotIn('qemu-utils', policy['packages'])
 
+    def test_coupled_ssh_packages_remain_protected_without_local_version_suffix(self):
+        policy = json.loads(m.POLICY.read_text())
+        names = ['openssh-client', 'openssh-server', 'openssh-sftp-server']
+        for version in ['1:10.3p1-1~bpo13+1', '1:10.3p1-1~bpo13+1+utilibre1']:
+            inventory = ''.join(f'{name}\t{version}\tinstalled\n' for name in names)
+            rows = m.protected_packages(inventory, policy)
+            self.assertEqual({row['package'] for row in rows}, set(names))
+            self.assertTrue(all(row['recipe'] == 'ssh-server-followup/username-release.mjs' for row in rows))
+            patterns = [json.loads(line.strip()[:-1]) for line in m.blacklist_text(rows).splitlines()
+                        if line.startswith('  ')]
+            for name in names:
+                self.assertTrue(any(re.fullmatch(pattern, name) for pattern in patterns))
+                self.assertTrue(any(re.fullmatch(pattern, name + ':amd64') for pattern in patterns))
+            self.assertFalse(any(re.fullmatch(pattern, 'openssh-client-extra') for pattern in patterns))
+        self.assertNotIn('openssh-tests', policy['packages'])
+
     def test_actual_apt_parser_preserves_generated_regex(self):
         with tempfile.TemporaryDirectory() as directory:
             file = Path(directory) / 'configuration'

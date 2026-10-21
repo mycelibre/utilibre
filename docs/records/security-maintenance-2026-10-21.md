@@ -100,21 +100,32 @@ severity change.
 
 The post-release scan completed at **07:05:31 UTC** with the same 109 image,
 57 source and host targets checked. It contains 69 critical / 3268 high raw
-occurrences. After exact-payload revalidation, **1 critical / 334 high** records
-remain awaiting review. The critical record is the uninstalled SSH client fix.
+occurrences. At that point, exact-payload revalidation left **1 critical / 334
+high** records awaiting review, including the then-uninstalled SSH client fix.
 These are dated results, not a claim that the remaining records are all
 exploitable or that all other vulnerabilities are fixed.
+
+After the SSH activation below, the host-only reassessment completed at
+**07:51:09 UTC** against the same advisory database. It inspected 508 host
+packages in a network-isolated namespace, without traversing application data.
+The image/source scan timestamp remains 07:05:31; a host-only refresh does not
+make the fleet newly scanned. Sixteen exact SSH finding decisions were reviewed
+and applied with seven-day expiry: **0 critical / 327 high** records now await
+review. Raw observations remain 69 critical / 3268 high, including source-version
+matches for verified native backports. This is not a claim of zero vulnerabilities.
 
 The combined maintenance/header/mount/backport/release unit command passed
 52 tests, and all 15 SearXNG updater tests passed. This does not substitute for
 each native application test.
 
-## Host SSH: prepared, not installed
+## Host SSH: installed and verified
 
-The current host uses Debian backports `1:10.3p1-1~bpo13+1`; that replacement
-had displaced the earlier local 10.0 repairs. The candidate is
-`1:10.3p1-1~bpo13+1+utilibre1`, built offline using the existing pinned compiler
-image and authenticated APT source inputs. No downgrade to 10.0 is proposed.
+The predecessor was Debian backports `1:10.3p1-1~bpo13+1`; that replacement
+had displaced the earlier local 10.0 repairs. All three coupled packages now
+use **`1:10.3p1-1~bpo13+1+utilibre1`**, installed at **07:50:19 UTC** after
+the operator confirmed Proxmox console access. The offline build used the
+existing pinned compiler image and authenticated APT source inputs. There was
+no downgrade to 10.0.
 
 It preserves Debian packaging and reapplies the four reviewed corrections:
 client rekey lifetime, DisableForwarding/tunnel handling, GSSAPI failure
@@ -130,14 +141,42 @@ possible 10.3 configurations.
 Read-only host preflight verified candidate configuration parsing, identical
 effective settings, exact three-package APT simulation and rollback binaries
 matching the installed Debian packages. The client/server/SFTP packages must
-be installed together. **Installation awaits an open Proxmox console for VM
-144 and the SSH maintenance window; no host SSH change or reboot has occurred.**
+be installed together. The first activation attempt stopped before installing
+anything because SSH's unattended-upgrade protection was absent. The explicit
+three-package policy was added and tested, then its native configuration was
+regenerated before installation. Protection no longer depends on these packages
+currently having a `+utilibre` suffix; direct administrative APT/dpkg commands
+still bypass unattended-upgrade policy.
+
+Activation verified all five binary hashes, clean dpkg state, identical SSH
+settings and keys, active SSH and unchanged Docker PID. A real loopback key
+exchange matched the existing host key. All **175 running container identities**
+and the VM boot ID were unchanged. No production account login was tested and
+no reboot was performed. Receipts, before/after continuity evidence and the
+rollback proposal are in `ssh-backports103-20261021/checks-window-Ch7hYk/`.
+
 Use `backports103-prepare.mjs`, `username-run.mjs`, then
 `username-check.mjs CANDIDATE CHECKS DEBIAN_ROLLBACK_DIRECTORY` and
 `username-preflight.mjs` with the same arguments. The new path is explicit;
 historical commands retain their old versions. `username-release.mjs --apply`
 is production-changing and must not be run from an audit. Preflight expires
 after one hour and must be repeated before a later window.
+
+`username-review.mjs` now supports this exact 10.3 release as well as the
+historical 10.0 release. It verifies the actual installed payloads and native
+checks, extracts the modified source and reverses all three exact patch files
+without fuzz. Every affected file must recover its authenticated 10.3 preimage.
+Two negative checks rejected a corrupted source archive and an unsupported
+release without writing decisions. Ten update-protection tests and eleven
+host-refresh/binary-attribution tests passed. Repeating review after the
+decisions were applied produced no additional proposals.
+
+Rollback uses the three authenticated Debian 10.3 packages retained under
+`ssh-backports103-20261021/rollback/`, named and hashed in the window's
+`proposal.json`. Install them together with `--force-confold` only in another
+console-backed SSH window; verify `sshd -t`, SSH service state and all versions.
+Keep host keys and the explicit package protection. Rollback removes these
+four local fixes and requires fresh security review.
 
 The separate Debian GSSAPI-extension findings are not claimed patched.
 GSSAPI authentication and key exchange are currently configured off. Kernel

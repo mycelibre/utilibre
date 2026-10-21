@@ -1,6 +1,50 @@
 # Native stable OpenSSH server follow-up
 
-## Current release: 16 October 2026
+## Current release: 21 October 2026
+
+The host now runs the three coupled packages at
+**`1:10.3p1-1~bpo13+1+utilibre1`**, installed at **07:50:19 UTC** with the
+operator's Proxmox console available. This restores all four reviewed local
+repairs on Debian's existing 10.3 backports branch, rather than downgrading to
+10.0. The earlier 16 October version below is historical.
+
+Use `backports103-prepare.mjs INPUT OUTPUT`, followed by `username-run.mjs`,
+then `username-check.mjs CANDIDATE CHECKS DEBIAN_ROLLBACK_DIRECTORY` and
+`username-preflight.mjs` with the same arguments. The optional rollback argument
+explicitly selects 10.3; old commands keep the historical 10.0 behavior.
+`username-release.mjs --apply CHECKS` remains a separately authorized activation,
+not an audit action. Refresh preflight in a new private checks directory if
+more than one hour has elapsed. Keep the original native test receipts.
+
+All eleven native protocol checks, the 10.3 username before/after check, exact
+installed binary checks and a loopback host-key exchange passed. Host keys,
+SSH configuration, Docker PID and all 175 running container identities were
+unchanged; there was no reboot. The earlier server regression's failing fixture
+is 10.0, while the passing candidate is 10.3. This is not an external account
+login test or a claim to fix the two remaining Debian GSSAPI-extension defects.
+
+Before activation, the guard correctly rejected missing unattended-upgrade
+protection. The three exact package names are now explicit entries in
+`protected-host-packages.json`, so removing a local version suffix does not
+silently remove their protection. The policy's ten tests pass; manual
+administrative package commands still bypass that protection.
+
+`username-review.mjs CANDIDATE CHECKS [NEW_REVIEW_JSON]` supports both reviewed
+generations. For 10.3 it verifies the original source archive, installed binaries,
+native receipts and all three pinned patches; reversing them must recover seven
+exact authenticated Debian source-file hashes. Corrupted-source and unsupported
+release negative checks passed. Source-only version matches remain in raw scans;
+sixteen individually reviewed host records carry bounded, expiring decisions.
+
+Artifacts/source and three rollback packages are retained under
+`/var/lib/utilibre-maintenance/ssh-backports103-20261021/`. The current window is
+`checks-window-Ch7hYk/`; its proposal pins every rollback artifact. Restoring those
+three packages together removes the local repairs and requires another SSH
+window and reassessment, not reuse of the mitigation decisions. See the
+[release record](../../../docs/records/security-maintenance-2026-10-21.md)
+for counts, remaining work and exact verification limits.
+
+## Previous release: 16 October 2026
 
 The three coupled packages are now **`1:10.0p1-7+deb13u4+utilibre3`**,
 released at **09:18:03 UTC**, after the operator confirmed Proxmox console

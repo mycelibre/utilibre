@@ -9,8 +9,10 @@ remain reviewed rollouts. Production never runs a floating `latest` tag.
 
 The **21 October** Python certificate/image/network-library repairs, Penpot
 admin-console backport and scoped nginx Expat/X11 replacements are deployed.
-The separate host SSH candidate is tested but awaits console-backed activation;
-other outstanding findings remain explicitly open. See the
+The coupled host SSH 10.3 backport was installed and verified at 07:50 UTC
+without a reboot or container replacement. Its unattended-upgrade protection
+now survives a vendor-version substitution; other outstanding findings remain
+explicitly open. See the
 [dated evidence, remaining limits and rollback](records/security-maintenance-2026-10-21.md).
 
 PrivateBin was upgraded to **2.1.0 on 21 October**, retaining the reviewed
