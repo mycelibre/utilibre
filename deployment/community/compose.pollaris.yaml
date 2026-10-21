@@ -42,7 +42,7 @@ services:
       mail: {ipv4_address: 172.29.84.11}
   gateway:
     <<: *runtime
-    image: utilibre-pollaris-gateway:security-20261011-nginx1305-tiff472
+    image: utilibre-pollaris-gateway:security-20261011-nginx1305-tiff472-libs20261021
     user: "101:101"
     volumes:
       - ./pollaris-gateway.conf:/etc/nginx/nginx.conf:ro

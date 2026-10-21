@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {bookwormHookCase,repairedBookwormComponentCase,repairedVersion,repairedPackages,repairedRoles,legacyAbsence,validateRepairedRelease} from './mount-component-policy.mjs';
+import {bookwormHookCase,repairedBookwormComponentCase,repairedVersion,repairedPackages,repairedRoles,legacyAbsence,validateRepairedRelease,validateOverlayChain} from './mount-component-policy.mjs';
 const item={type:'debian',scope:'runtime-image',installed:'2.38.1-5+deb12u3',package:'libmount1',id:'CVE-2026-76642'};
 test('only the exact legacy owner/idmap-hook findings qualify',()=>{
  for(const id of ['CVE-2026-76642','CVE-2026-78410'])for(const pkg of ['libmount1','mount'])assert(bookwormHookCase({...item,id,package:pkg}));
@@ -32,6 +32,12 @@ function fixture(){
  return {stage,hashes,release:{status:'passed',key:'kuma',completedAt,proofs:{...hashes},groups:[{status:'passed',completedAt,rows:[{name:stage.name,oldImage:stage.base,newImage:stage.image,oldRef:stage.baseRef,newRef:stage.candidate}]}]},native:{status:'passed',version:repairedVersion,librarySha256:'79a898619cf9e100a80a30c75cb61ab30ca925809ae2b16aea2f87e09be084e0',exports:312,exactExportsPreserved:true,sonameAndNeededPreserved:true,bookwormLibcCompatible:true,checks:Array.from({length:12},()=>({passed:true})),packages:structuredClone(packages)},consumer:{passed:true,imageId:stage.image,cases:Array.from({length:6},()=>({})),nativeSha256:hashes.native,network:'none',user:65534,kernelMounts:false},application:{passed:true,imageId:stage.image},source:{published:true,sha256:'4d25fc4768bcfd418ae87e3bc64cd3389e7137a79dda6535665f2a5abbaf7480'},upstreamException:{baselineAndCandidateSameFailure:true,candidateFailures:1}};
 }
 const scan={date:'2026-10-12T18:01:00.000Z'};
+test('later overlays require an unbroken same-role completed chain before this scan',()=>{
+ const a='sha256:'+'a'.repeat(64),b='sha256:'+'b'.repeat(64),c='sha256:'+'c'.repeat(64);
+ const rows=[{name:'role',oldImage:a,newImage:b,completedAt:'2026-10-12T17:00:00Z'},{name:'role',oldImage:b,newImage:c,completedAt:'2026-10-12T18:00:00Z'}];
+ assert(validateOverlayChain(a,c,'role',rows,scan.date));
+ for(const bad of [rows.slice(1),rows.slice(0,1),rows.map(r=>({...r,name:'other'})),rows.map(r=>({...r,completedAt:'2026-10-13T00:00:00Z'}))])assert.throws(()=>validateOverlayChain(a,c,'role',bad,scan.date));
+});
 test('completed repaired release requires exact source, packages, native/application proofs and ancestry',()=>{
  assert(validateRepairedRelease(repaired,scan,fixture()));
  const mutations=[p=>p.release.status='prepared',p=>p.release.key='rallly',p=>p.stage.status='prepared',p=>p.stage.version='2.38.1-5+deb12u3',p=>p.stage.image='sha256:'+'c'.repeat(64),p=>p.native.version='other',p=>p.native.checks[0].passed=false,p=>p.native.librarySha256='0'.repeat(64),p=>p.native.exactExportsPreserved=false,p=>p.native.packages[0].sha256='0'.repeat(64),p=>p.stage.packages[0].sha256='0'.repeat(64),p=>p.stage.packages.push({name:'unrelated'}),p=>p.stage.priorRuntimeBytesUnchanged=false,p=>p.application.passed=false,p=>p.consumer.passed=false,p=>p.consumer.imageId=p.stage.base,p=>p.consumer.network='host',p=>p.consumer.kernelMounts=true,p=>p.source.published=false,p=>p.source.sha256='0'.repeat(64),p=>p.upstreamException.baselineAndCandidateSameFailure=false,p=>p.release.proofs.source='0'.repeat(64),p=>p.release.groups[0].status='failed',p=>p.release.groups[0].rows[0].status='failed',p=>p.release.groups[0].rows[0].oldImage='wrong',p=>p.release.groups[0].rows[0].oldRef='wrong',p=>p.release.groups[0].rows[0].newRef='wrong',p=>p.release.groups[0].rows[0].name='wrong',p=>p.release.groups[0].completedAt='not-a-date'];

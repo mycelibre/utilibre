@@ -39,7 +39,7 @@ services:
       tumblr: {ipv4_address: 172.29.73.11}
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     volumes:

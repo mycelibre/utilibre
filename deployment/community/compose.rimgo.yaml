@@ -31,7 +31,7 @@ services:
       images: {ipv4_address: 172.29.90.10}
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     user: "101:101"
     mem_limit: 128m
     entrypoint: [nginx, -g, "daemon off;"]

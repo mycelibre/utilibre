@@ -1,7 +1,7 @@
 name: utilibre-pack-static
 services:
   static:
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     entrypoint: [nginx, -g, 'daemon off;']
     restart: unless-stopped
     user: '101:101'

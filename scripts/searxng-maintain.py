@@ -33,7 +33,12 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY = 'docker.io/searxng/searxng'
 DIGEST = re.compile(r'^sha256:[0-9a-f]{64}$')
-PIN = re.compile(r'^(?:docker\.io/)?searxng/searxng(?::[A-Za-z0-9_.-]+)?@sha256:[0-9a-f]{64}$')
+# One reviewed CA-only overlay, preserving the complete upstream application.
+# Remove this exception after a tested upstream build incorporates the repair.
+CA_REPAIR_PIN = 'utilibre-searxng:certifi-20261021'
+CA_REPAIR_ID = 'sha256:e45266099040bbbaa6e82d85a8d5fa63d25355df760e33b50e8a5520ace03652'
+CA_REPAIR_UPSTREAM = 'sha256:5ed0323b5f5f8701264ef65e239a2bd83cb57098f2b971fa30bf79c06eeae271'
+PIN = re.compile(r'^(?:(?:docker\.io/)?searxng/searxng(?::[A-Za-z0-9_.-]+)?@sha256:[0-9a-f]{64}|utilibre-searxng:certifi-20261021)$')
 STATE = Path('/var/lib/utilibre-searx-updater')
 PUBLIC = Path('/opt/utilibre/update-public')
 REGISTRY = 'https://registry-1.docker.io/v2/searxng/searxng/'
@@ -188,10 +193,14 @@ def validate_upstream_runtime(pin, runtime, image, changes):
         raise RuntimeError('SearXNG runtime pin changed; manual security review required')
     if not DIGEST.fullmatch(runtime.get('image', '')) or runtime['image'] != image.get('id'):
         raise RuntimeError('SearXNG image identity does not match the running container')
-    digest = pin.split('@')[1]
-    allowed = {'searxng/searxng@' + digest, REPOSITORY + '@' + digest}
-    if not allowed.intersection(image.get('digests') or []):
-        raise RuntimeError('SearXNG image is not the pinned upstream artifact; preserve local repairs')
+    if pin == CA_REPAIR_PIN:
+        if image['id'] != CA_REPAIR_ID:
+            raise RuntimeError('Reviewed SearXNG CA overlay identity changed; preserve local repairs')
+    else:
+        digest = pin.split('@')[1]
+        allowed = {'searxng/searxng@' + digest, REPOSITORY + '@' + digest}
+        if not allowed.intersection(image.get('digests') or []):
+            raise RuntimeError('SearXNG image is not the pinned upstream artifact; preserve local repairs')
     if image.get('source') != 'https://github.com/searxng/searxng':
         raise RuntimeError('SearXNG source identity changed; manual review required')
     # Startup refreshes the native CA bundle. Configuration/cache are mounts.
@@ -213,10 +222,23 @@ def check_upstream_runtime(pin):
     validate_upstream_runtime(pin, runtime, image, changes)
 
 
+def upstream_identity(pin):
+    return CA_REPAIR_UPSTREAM if pin == CA_REPAIR_PIN else pin.split('@')[1]
+
+
+def check_candidate_trust(image):
+    """Native, networkless gate: an upstream update must not undo the CA repair."""
+    code = "import ssl,certifi; names={v for c in ssl.create_default_context(cafile=certifi.where()).get_ca_certs() for r in c['subject'] for k,v in r if k=='commonName'}; assert 'emSign ECC Root CA - G3' not in names; assert 'ISRG Root X1' in names and 'DigiCert Global Root G2' in names"
+    command(['docker', 'run', '--rm', '--pull', 'never', '--network', 'none', '--read-only',
+             '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges', '--log-driver', 'none',
+             '--memory', '128m', '--cpus', '0.5', '--pids-limit', '32', '--entrypoint',
+             '/usr/local/searxng/.venv/bin/python', image, '-B', '-c', code], timeout=30)
+
+
 def pending_age(previous, candidate):
     """Track the oldest observed outstanding update, even if latest changes daily."""
     path = STATE / 'outstanding.json'
-    if previous.split('@')[1] == candidate['image'].split('@')[1]:
+    if upstream_identity(previous) == upstream_identity(candidate['image']):
         path.unlink(missing_ok=True)
         return {'outstandingDays': 0}
     data = json.loads(path.read_text()) if path.exists() else {'firstSeen': now()}
@@ -256,6 +278,7 @@ def normalize_stage_ulimits(service):
 
 
 def stage_candidate(config, candidate, run_dir):
+    check_candidate_trust(candidate['image'])
     project = 'utilibre-searx-test-' + secrets.token_hex(6)
     search = copy.deepcopy(config['services']['searxng'])
     cache = copy.deepcopy(config['services']['valkey'])
@@ -417,7 +440,7 @@ def main():
             architecture = {'x86_64': 'amd64', 'aarch64': 'arm64'}.get(architecture, architecture)
             candidate = latest_image(architecture)
             report.update(previousImage=previous, candidate=candidate)
-            available = previous.split('@')[1] != candidate['image'].split('@')[1]
+            available = upstream_identity(previous) != upstream_identity(candidate['image'])
             report['status'] = 'update-available' if available else 'up-to-date'
             report.update(pending_age(previous, candidate))
             if options.stage or options.apply:

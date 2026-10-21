@@ -50,7 +50,7 @@ services:
       ingress: {ipv4_address: 172.29.159.11}
   candlr:
     <<: *runtime
-    image: utilibre-util-linux-records-candlr:security-20261012
+    image: utilibre-candlr:pillow-certifi-20261021
     user: '1000:1000'
     entrypoint: ['/bin/sh', '-c']
     command: ['cd /app/backend && alembic upgrade head && exec supervisord -n -c /etc/supervisor/conf.d/candlr.conf']
@@ -108,7 +108,7 @@ services:
       ingress: {ipv4_address: 172.29.159.20}
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.5

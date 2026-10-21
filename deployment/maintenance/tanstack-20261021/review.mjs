@@ -1,0 +1,20 @@
+// Exact backport assessment, not an upstream version waiver. No service writes.
+import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';
+import {target,afterSha,sha} from './backport.mjs';
+import {validateDecision} from '../triage.mjs';
+process.umask(0o077);
+const dir='/var/lib/utilibre-maintenance/tanstack-20261021',read=p=>JSON.parse(fs.readFileSync(p));
+const build=read(dir+'/build.json'),native=read(dir+'/native.json'),release=read(dir+'/release.json');
+assert(build.passed&&native.passed&&native.baselineReproduced&&native.forgedResponsesRejected&&native.legitimateServerFunction&&native.nativeMigrationAndRouteParity);
+assert.equal(release.status,'passed');assert.equal(native.imageId,build.imageId);
+const name='utilibre-expanded-penpot-admin-console-1';
+const run=a=>cp.execFileSync('docker',a,{encoding:'utf8',timeout:15000,maxBuffer:8*1024**2,stdio:['ignore','pipe','pipe']}).trim();
+assert.equal(run(['inspect','--format','{{.Image}}',name]),build.imageId);
+assert.equal(run(['exec',name,'node','-e',`console.log(require('crypto').createHash('sha256').update(require('fs').readFileSync(${JSON.stringify(target)})).digest('hex'))`]),afterSha);
+const q=read('/var/lib/utilibre-maintenance/security-queue.json'),scan=read('/var/lib/utilibre-maintenance/security.json');assert.equal(scan.status,'checked');assert.equal(q.scanDate,scan.completedAt);
+const items=q.items.filter(x=>x.scope==='runtime-image'&&x.artifact===build.imageId&&x.id==='CVE-2026-102989');
+assert.deepEqual(items.map(x=>x.package).sort(),['@tanstack/react-start','@tanstack/start-server-core']);
+const reason=`Exact upstream d521abd71c69f1ff010bb3def4d417cb5fa058cb backport; live compiled bundle SHA256 ${afterSha}. Isolated GET and POST forged-response regressions reproduced on predecessor and rejected after repair; legitimate function and migration/route parity passed. Original package metadata retained. Evidence tanstack-20261021/native.json SHA256 ${sha(fs.readFileSync(dir+'/native.json'))}; accountable operator admin@utilibre.org; reassess on any image/bundle change.`;
+const decisions=items.map(x=>validateDecision({key:x.key,status:'mitigated',reason,expiresAt:new Date(Date.now()+7*86400000).toISOString()}));
+for(let i=0;i<decisions.length;i++)fs.writeFileSync(dir+'/decision-'+i+'.json',JSON.stringify(decisions[i],null,2)+'\n');
+console.log(JSON.stringify({prepared:decisions.length,applied:false,scanDate:q.scanDate,liveByteCheck:true}));

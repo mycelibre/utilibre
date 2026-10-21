@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents} from './headers-policy.mjs';
+import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents,gcovBuildPaths} from './headers-policy.mjs';
 const record=files=>({cveMetadata:{cveId:'CVE-2026-12345',state:'PUBLISHED'},containers:{cna:{providerMetadata:{shortName:'Linux'},affected:[{product:'Linux',vendor:'Linux',programFiles:files}]}}});
 test('only explicit Linux CNA private compiled paths qualify',()=>{
  assert.deepEqual(kernelComponentPaths(record(['fs/example.c','include/linux/private.h']),'CVE-2026-12345'),['fs/example.c','include/linux/private.h']);
@@ -18,4 +18,9 @@ test('historical CNA attribution fails closed on new records and changed content
  assert.equal(Object.keys(legacyComponents).length,6);
  for(const id of Object.keys(legacyComponents))assert.throws(()=>historicalKernelPaths(JSON.stringify(record(['fs/example.c'])),id));
  assert.throws(()=>historicalKernelPaths('{}','CVE-2021-3847'));
+});
+test('kernel build exception rejects invented or changed primary records',()=>{
+ assert.throws(()=>gcovBuildPaths('{}','CVE-2026-63825'));
+ assert.throws(()=>gcovBuildPaths('{}','CVE-2026-12345'));
+ assert.throws(()=>kernelComponentPaths(record(['Makefile']),'CVE-2026-12345'));
 });

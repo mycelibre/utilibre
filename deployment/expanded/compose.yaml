@@ -16,7 +16,7 @@ x-runtime: &runtime
 services:
   jupyterlite:
     <<: *runtime
-    image: utilibre-jupyterlite:0.8.5-browser-security-20261011-p2
+    image: utilibre-jupyterlite:0.8.5-browser-security-20261011-p2-libs20261021
     read_only: true
     user: "101:101"
     volumes:
@@ -37,7 +37,7 @@ services:
   # Rollback: compose.whisper-withdrawn.yaml restores the previous 410 notice.
   whisper:
     <<: *runtime
-    image: utilibre-whisper:security-20261011-nginx1305-tiff472
+    image: utilibre-whisper:security-20261011-nginx1305-tiff472-libs20261021
     entrypoint: [nginx, -g, 'daemon off;']
     read_only: true
     user: "101:101"
@@ -88,7 +88,7 @@ services:
 
   wiki-gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     read_only: true
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
@@ -289,7 +289,7 @@ services:
 
   penpot-admin-console:
     <<: *runtime
-    image: utilibre-penpot-admin:patch-leaves-20261012
+    image: utilibre-penpot-admin:tanstack-security-20261021
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
       PENPOT_INTERNAL_URI: http://penpot-frontend:8080

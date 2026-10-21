@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import cp from 'node:child_process';
 import {createHash} from 'node:crypto';
+import {overlayRows} from '../review-native-backports.mjs';
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 export const repairedVersion='2.38.1-5+deb12u3+utilibre1';
 export const repairedPackages={libmount1:'e99bea05583417a47f455a12f3bcc37f7a63ab9773ad735fd6620495e02bf834',mount:'71ccc4e3b4e1b7308c89b07fb6804ec0c323e9180c0fe76319dc67ad429481d6'};
 export const repairedRoles={actual:'utilibre-expanded-actual-1',gathio:'utilibre-gathio-postgres-1',rallly:'utilibre-community-rallly-1',kuma:'utilibre-community-uptime-kuma-1',wishlist:'utilibre-wishlist-app-1',resume:'utilibre-expanded-resume-1',rssbridge:'utilibre-community-rssbridge-1',cryptpad:'utilibre-pack-cryptpad-cryptpad-1'};
@@ -52,6 +54,15 @@ export function validateRepairedRelease(i,scan,p){
  return true;
 }
 let sourceProof;
+export function validateOverlayChain(initial,expected,name,rows,scanDate){
+ let image=initial;
+ for(const r of [...rows].sort((a,b)=>Date.parse(a.completedAt)-Date.parse(b.completedAt))){
+  if(r.name!==name||r.oldImage!==image||r.oldImage===r.newImage)continue;
+  assert(Number.isFinite(Date.parse(r.completedAt))&&Date.parse(r.completedAt)<=Date.parse(scanDate),'Overlay must precede scan');
+  assert(/^sha256:[a-f0-9]{64}$/.test(r.newImage));image=r.newImage;
+ }
+ assert.equal(image,expected,'Unproven repair-to-current-image ancestry');return true;
+}
 export function verifyRepairedSource(){
  if(sourceProof)return sourceProof;
  const offer=read(root+'/source-offer.json');assert(offer.published);assert.equal(offer.sha256,sourceSha);assert.equal(fileSha(offer.archive),sourceSha);
@@ -69,7 +80,14 @@ export function repairedBookwormEvidence(i,scan){
  const key=Object.entries(repairedRoles).find(([,n])=>n===i.containers[0])[0],dir=root+'/images/'+key;
  const paths={stage:dir+'/stage.json',release:dir+'/release.json',native:root+'/native.json',consumer:dir+'/consumer.json',application:dir+'/application.json',source:root+'/source-offer.json',upstreamException:root+'/upstream-exception.json'};
  const proof=Object.fromEntries(Object.entries(paths).map(([k,p])=>[k,read(p)]));proof.hashes=Object.fromEntries(Object.entries(paths).map(([k,p])=>[k,fileSha(p)]));
- validateRepairedRelease(i,scan,proof);const source=verifyRepairedSource();
+ validateRepairedRelease({...i,artifact:proof.stage.image},scan,proof);
+ const parent='/var/lib/utilibre-maintenance';
+ const rows=additionalOverlayReceipts.filter(p=>fs.existsSync(parent+'/'+p)).flatMap(p=>overlayRows(read(parent+'/'+p)));
+ validateOverlayChain(proof.stage.image,i.artifact,i.containers[0],rows,scan.date);
+ const run=args=>cp.execFileSync('docker',args,{encoding:'utf8',timeout:15000,stdio:['ignore','pipe','pipe']}).trim();
+ assert.equal(run(['inspect',i.containers[0],'--format','{{.Image}}']),i.artifact);
+ assert.equal(run(['exec',i.containers[0],'sha256sum',proof.native.libraryPath]).split(/\s+/)[0],proof.native.librarySha256);
+ const source=verifyRepairedSource();
  for(const[pkg,h]of Object.entries(repairedPackages))assert.equal(fileSha(root+'/output/'+pkg+'_'+repairedVersion+'_amd64.deb'),h);
  return {root,version:repairedVersion,artifact:i.artifact,container:i.containers[0],source,receiptHashes:proof.hashes,libraryPath:proof.native.libraryPath,librarySha256:proof.native.librarySha256};
 }

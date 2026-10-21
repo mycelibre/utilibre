@@ -4,14 +4,19 @@ import json
 from pathlib import Path
 import subprocess
 import tempfile
+import argparse
 
 assert Path('/.dockerenv').exists()
 work = Path(tempfile.mkdtemp(prefix='username-', dir='/tmp'))
 rows = []
-for label, directory, version in [('baseline', '/current', '2'), ('candidate', '/candidate', '3')]:
+parser = argparse.ArgumentParser()
+parser.add_argument('--backports103', action='store_true')
+backports = parser.parse_args().backports103
+versions = ('10.3p1-1~bpo13+1', '10.3p1-1~bpo13+1+utilibre1') if backports else ('10.0p1-7+deb13u4+utilibre2', '10.0p1-7+deb13u4+utilibre3')
+for label, directory, version in [('baseline', '/current', versions[0]), ('candidate', '/candidate', versions[1])]:
     tree = work / label
     tree.mkdir()
-    archive = Path(directory) / f'openssh-client_10.0p1-7+deb13u4+utilibre{version}_amd64.deb'
+    archive = Path(directory) / f'openssh-client_{version}_amd64.deb'
     subprocess.run(['dpkg-deb', '-x', str(archive), str(tree)], check=True, timeout=10)
     binary = tree / 'usr/bin/ssh'
     def query(args):

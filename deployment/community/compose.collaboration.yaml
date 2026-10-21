@@ -48,7 +48,7 @@ services:
   gateway:
     ulimits: {core: 0}
     profiles: [pilot]
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     entrypoint: [nginx, -g, "daemon off;"]
     restart: "no"
     user: "101:101"

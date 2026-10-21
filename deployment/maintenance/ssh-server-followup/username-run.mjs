@@ -4,7 +4,8 @@ const [input,out]=process.argv.slice(2);assert(process.argv.length===4&&path.isA
 const prepared=JSON.parse(fs.readFileSync(input+'/preparation.json'));assert.equal(prepared.status,'prepared-not-built');
 const space=fs.statfsSync('/opt/utilibre');assert(space.bavail*space.bsize>8*1024**3,'Preserve recovery disk floor');
 fs.mkdirSync(out,{mode:0o700});const cid=out+'/container.cid',image='sha256:f45539e1b2380da919ac34c184cb1a19b0c7a1037f993fd30ae37a1a1f8b8604';
-const script=new URL('./username-build.sh',import.meta.url).pathname;
+assert(['1:10.0p1-7+deb13u4+utilibre3','1:10.3p1-1~bpo13+1+utilibre1'].includes(prepared.candidate));
+const script=new URL(prepared.candidate==='1:10.3p1-1~bpo13+1+utilibre1'?'./backports103-build.sh':'./username-build.sh',import.meta.url).pathname;
 const args=['run','--rm','--cidfile',cid,'--pull=never','--network=none','--cap-drop=ALL','--security-opt=no-new-privileges','--cpus=2','--memory=3g','--memory-swap=3g','--pids-limit=256','--ulimit','core=0','--tmpfs','/build:rw,exec,nosuid,nodev,size=1536m,mode=700','--tmpfs','/tmp:rw,exec,nosuid,nodev,size=128m,mode=1777','--mount',`type=bind,src=${input},dst=/input,readonly`,'--mount',`type=bind,src=${out},dst=/output`,'--mount',`type=bind,src=${script},dst=/build-script.sh,readonly`,'--entrypoint','sh',image,'/build-script.sh'];
 try{
  const log=cp.execFileSync('docker',args,{encoding:'utf8',timeout:900000,maxBuffer:20*1024**2,stdio:['ignore','pipe','pipe']});fs.writeFileSync(out+'/build.log',log);assert(fs.existsSync(out+'/build-completed.json'));console.log('Offline native SSH candidate build passed; not installed.');

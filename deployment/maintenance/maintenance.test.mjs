@@ -1,11 +1,19 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {imageInventory,summarize,registryFallback,scannerManifestName,imageScanStatus,inventoryFormat} from './security-review.mjs';
+import {imageInventory,summarize,registryFallback,scannerManifestName,imageScanStatus,inventoryFormat,diskPreflight,failureSummary} from './security-review.mjs';
 import {reportIssues,queueIssues,externalIssues,unattendedIssues,alertState} from './report-health.mjs';
 import {validateDecision,applyDecisions} from './triage.mjs';
 import {findingsQueue,retainUnrechecked,recheckedTarget,queueCounts} from './build-queue.mjs';
 import {probe,validResponse,targets} from './check-external.mjs';
 const now=Date.parse('2026-10-11T12:00:00Z');
+test('security disk preflight retains its floor and identifies a non-start without clearance',()=>{
+ const low=diskPreflight({bavail:7*1024**2,bsize:1024});
+ assert.equal(low.passed,false);assert.match(failureSummary('disk-preflight',low),/7.00 GiB free; 8 GiB required/);
+ assert.match(failureSummary('disk-preflight',low),/Previous findings remain unverified/);
+ assert.equal(diskPreflight({bavail:8*1024**2,bsize:1024}).passed,true);
+ assert.throws(()=>diskPreflight({bavail:NaN,bsize:4096}));
+ assert.match(failureSummary('advisory-database'),/advisory-database; no security clearance/);
+});
 test('Docker collection itself requests only three non-sensitive inventory fields',()=>{
  assert.deepEqual([...inventoryFormat.matchAll(/\{\{json ([^}]+)\}\}/g)].map(m=>m[1]),['.Name','.Image','.Config.Image']);
  assert(!/Env|Mounts|Labels|\.Config\}\}/.test(inventoryFormat));

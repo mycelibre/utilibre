@@ -44,7 +44,7 @@ services:
     ulimits: {core: 0}
     memswap_limit: 64m
     <<: *runtime
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     user: "101:101"
     mem_limit: 64m
     logging: {driver: none}

@@ -1,20 +1,24 @@
 // Prepare exact coupled-package release/rollback evidence, never activate it.
 import fs from 'node:fs';import path from 'node:path';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
-process.umask(0o077);const [candidate,checks]=process.argv.slice(2);assert(process.argv.length===4&&path.isAbsolute(candidate)&&path.isAbsolute(checks));assert(!fs.existsSync(checks+'/proposal.json'));
+process.umask(0o077);const [candidate,checks,backportsBaseline]=process.argv.slice(2);assert([4,5].includes(process.argv.length)&&path.isAbsolute(candidate)&&path.isAbsolute(checks));assert(!backportsBaseline||path.isAbsolute(backportsBaseline));assert(!fs.existsSync(checks+'/proposal.json'));
 const sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p));
 const run=(cmd,args)=>cp.execFileSync(cmd,args,{encoding:'utf8',timeout:30000,maxBuffer:2*1024**2,stdio:['ignore','pipe','pipe']}).trim();
-const previous='/var/lib/utilibre-maintenance/ssh-server-followup-20261012',old='1:10.0p1-7+deb13u4+utilibre2',next='1:10.0p1-7+deb13u4+utilibre3';
+const previous=backportsBaseline||'/var/lib/utilibre-maintenance/ssh-server-followup-20261012',old=backportsBaseline?'1:10.3p1-1~bpo13+1':'1:10.0p1-7+deb13u4+utilibre2',next=backportsBaseline?'1:10.3p1-1~bpo13+1+utilibre1':'1:10.0p1-7+deb13u4+utilibre3';
 const names=['openssh-client','openssh-server','openssh-sftp-server'];
 const native=read(checks+'/native.json'),username=read(checks+'/username.json');assert(native.passed&&native.checks.length===11);assert.equal(native.packageVersion,next);assert(username.passed);
 assert(username.rows.find(r=>r.label==='candidate').rejected.every(Boolean));assert(username.rows.find(r=>r.label==='baseline').rejected.every(v=>!v));
-const oldProposal=read(previous+'/proposal.json');assert.equal(read(previous+'/release.json').status,'passed');
+const oldProposal=backportsBaseline?null:read(previous+'/proposal.json');if(!backportsBaseline)assert.equal(read(previous+'/release.json').status,'passed');
 const bins={ssh:'/usr/bin/ssh',sshd:'/usr/sbin/sshd','sshd-auth':'/usr/lib/openssh/sshd-auth','sshd-session':'/usr/lib/openssh/sshd-session','sftp-server':'/usr/lib/openssh/sftp-server'};
-for(const [name,p]of Object.entries(bins))assert.equal(sha(p),oldProposal.payloadSha256[name],'Current host payload changed');
-const files=names.map(n=>candidate+'/'+n+'_'+next.slice(2)+'_amd64.deb'),rollback=names.map(n=>previous+'/'+n+'_'+old.slice(2)+'_amd64.deb');
+if(oldProposal)for(const [name,p]of Object.entries(bins))assert.equal(sha(p),oldProposal.payloadSha256[name],'Current host payload changed');
+const files=names.map(n=>candidate+'/'+n+'_'+next.slice(2)+'_amd64.deb'),rollback=names.map(n=>previous+'/'+n+'_'+(backportsBaseline?'1%3a':'')+old.slice(2)+'_amd64.deb');
 const extract=fs.mkdtempSync(checks+'/preflight-');let effective;
 try{
+ if(backportsBaseline){
+  for(const f of rollback){assert.equal(run('dpkg-deb',['-f',f,'Version']),old);run('dpkg-deb',['-x',f,extract]);}
+  for(const p of Object.values(bins))assert.equal(sha(p),sha(extract+p),'Live binary differs from authenticated Debian rollback package');
+ }
  for(let i=0;i<names.length;i++){
-  assert.equal(run('dpkg-query',['-W','-f=${Version}',names[i]]),old);assert.equal(sha(rollback[i]),oldProposal.packages[rollback[i]]);
+  assert.equal(run('dpkg-query',['-W','-f=${Version}',names[i]]),old);if(oldProposal)assert.equal(sha(rollback[i]),oldProposal.packages[rollback[i]]);
   assert.equal(run('dpkg-deb',['-f',files[i],'Version']),next);run('dpkg-deb',['-x',files[i],extract]);
  }
  for(const [name,p]of Object.entries(bins)){assert.equal(sha(extract+p),native.payloadSha256[name]);assert(!run('ldd',[extract+p]).includes('not found'));}

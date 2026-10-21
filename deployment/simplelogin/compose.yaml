@@ -1,6 +1,6 @@
 name: utilibre-simplelogin
 x-app: &app
-  image: utilibre-simplelogin:4.82.4-python-closure-20261012
+  image: utilibre-simplelogin:certifi-20261021
   user: '1000:1000'
   read_only: true
   cap_drop: [ALL]
@@ -63,7 +63,7 @@ services:
     restart: unless-stopped
     depends_on: {initialize: {condition: service_completed_successfully}}
   gateway:
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     user: '101:101'
     read_only: true
     cap_drop: [ALL]

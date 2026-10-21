@@ -14,6 +14,16 @@ const directory='/var/lib/utilibre-maintenance', cache='/var/cache/utilibre-secu
 const binary='/opt/utilibre/maintenance/bin/trivy';
 const env={...process.env,TRIVY_DISABLE_TELEMETRY:'true',TRIVY_SKIP_VERSION_CHECK:'true',GOMAXPROCS:'2',GOMEMLIMIT:'1GiB'};
 const authentikDigest='sha256:ab9b4e8cc4ab3f8d1198d2db6aeea66bafea1963b3f2843589e0d163f97d9849';
+export function diskPreflight(space){
+ const availableBytes=Number(space.bavail)*Number(space.bsize),requiredBytes=8*1024**3;
+ if(!Number.isSafeInteger(availableBytes)||availableBytes<0)throw Error('Invalid filesystem capacity');
+ return {availableBytes,requiredBytes,passed:availableBytes>=requiredBytes};
+}
+export function failureSummary(stage,preflight){
+ // Never echo a command exception: it may contain operational credentials.
+ if(stage==='disk-preflight'&&preflight?.passed===false)return `Security scan did not start: ${(preflight.availableBytes/1024**3).toFixed(2)} GiB free; ${preflight.requiredBytes/1024**3} GiB required. Previous findings remain unverified; no security clearance.`;
+ return `Security scan failed during ${stage}; no security clearance. Consult this run's private diagnostic, if present.`;
+}
 // Ask Docker only for inventory fields; never load live credentials/mounts into
 // a large child-process buffer or an exception's captured stdout.
 export const inventoryFormat='{"Name":{{json .Name}},"Image":{{json .Image}},"Config":{"Image":{{json .Config.Image}}}}';
@@ -70,14 +80,19 @@ export async function run(){
  const started=Date.now(),report={date:new Date().toISOString(),status:'running',scanner:'Trivy 0.75.0',images:[],sources:[],limitations:['No exploitation or reachability proof. Findings require review; patched vendored code may need evidence-backed exceptions.','Image scans do not inspect mounted user data or a container writable layer.','Source-lock checks cover the listed code manifests, not every minified browser bundle.','Grist supplements image scans with a runtime-bound Deno release-source lock and shipped Pyodide wheel metadata. This is not a linked Rust-crate SBOM and does not inventory native Python/WASM components. See deployment/maintenance/sandbox-inventory/README.md.','Separate Caddy/Proxmox hosts are outside this VM scan.']};
  const latest=directory+'/security.json';
  await atomic(directory+'/security-progress.json',report);
- let scratch;
+ let scratch,stage='disk-preflight';
  try{
-  const space=await statfs(directory);if(space.bavail*space.bsize<8*1024**3)throw Error('Disk floor');
+  // Remove only the preceding command diagnostic, not historical scan evidence.
+  // A preflight failure must not point operators at an unrelated old exception.
+  await rm(directory+'/security-last-error.log',{force:true});
+  report.preflight=diskPreflight(await statfs(directory));if(!report.preflight.passed)throw Error('Disk floor');
+  stage='advisory-database';
   await command(binary,['image','--disable-telemetry','--cache-dir',cache,'--db-repository','ghcr.io/aquasecurity/trivy-db:2','--download-db-only','--no-progress'],300000);
   await command(binary,['image','--disable-telemetry','--cache-dir',cache,'--java-db-repository','ghcr.io/aquasecurity/trivy-java-db:1','--download-java-db-only','--no-progress'],300000);
   const metadata=JSON.parse(await readFile(cache+'/db/metadata.json','utf8'));
   report.database={updatedAt:metadata.UpdatedAt,downloadedAt:metadata.DownloadedAt};
   if(!Number.isFinite(Date.parse(metadata.UpdatedAt))||Date.now()-Date.parse(metadata.UpdatedAt)>48*3600000)throw Error('Vulnerability database is stale');
+  stage='runtime-inventory';
   const ids=(await command('docker',['ps','-q'])).trim().split(/\s+/).filter(Boolean);
   if(!ids.length)throw Error('No running containers');
   const rows=(await command('docker',['inspect','--format',inventoryFormat,...ids])).trim().split('\n').map(line=>JSON.parse(line));
@@ -90,6 +105,7 @@ export async function run(){
    await command(binary,[kind,...flags,...extra,'--output',output,target],510000);
    return summarize(JSON.parse(await readFile(output,'utf8')));
   }
+  stage='runtime-image-scan';
   for(const item of inventory){
    try{const result=await scan('image',item.id,['--image-src','docker']);report.images.push({...item,status:imageScanStatus(result),method:'local-image',...result});}
    catch{
@@ -104,6 +120,7 @@ export async function run(){
    await atomic(directory+'/security-progress.json',report);
   }
   // Minimal dpkg snapshot only: never traverse /home, /opt data or the live rootfs.
+  stage='host-package-scan';
   const osRoot=path.join(scratch,'host');
   await mkdir(osRoot+'/etc',{recursive:true});await mkdir(osRoot+'/var/lib/dpkg',{recursive:true});
   await copyFile('/etc/os-release',osRoot+'/etc/os-release');await copyFile('/etc/debian_version',osRoot+'/etc/debian_version');await copyFile('/var/lib/dpkg/status',osRoot+'/var/lib/dpkg/status');
@@ -111,6 +128,7 @@ export async function run(){
   if(!report.host.packages)throw Error('Host package inventory was empty');
   // Explicit code-only roots. Extra/missing source manifests are reported, not
   // interpreted as proof of what is bundled in a deployed static application.
+  stage='source-inventory';
   const tracked=(await command('git',['ls-files','-z'])).split('\0').filter(x=>/(^|\/)((?:security-)?package-lock\.json|(?:auth|linkding)-python-requirements\.txt|pnpm-lock\.yaml|yarn\.lock|composer\.lock|Cargo\.lock|go\.mod|go\.sum|poetry\.lock|uv\.lock)$/.test(x));
   const sources=[...tracked.filter(p=>p!==denoLockPath).map(p=>({path:path.join(root,p),name:p,scope:'tracked-build-input'})),{path:'/opt/utilibre/src/cryptpad/package-lock.json',name:'cryptpad/package-lock.json',scope:'mounted-runtime-code'},...await collectSandboxSources(command)];
   for(const source of sources){
@@ -125,7 +143,7 @@ export async function run(){
    }catch{report.sources.push({name:source.name,scope:source.scope,status:'failed'});}
   }
   report.status=report.images.some(x=>x.status!=='checked')||report.sources.some(x=>x.status!=='checked')?'incomplete':'checked';
- }catch{report.status='failed';report.error='Inventory/database/host scan failed; no security clearance. Rerun the job or consult the documented commands.';}
+ }catch{report.status='failed';report.failureStage=stage;report.error=failureSummary(stage,report.preflight);}
  finally{
   if(scratch)await rm(scratch,{recursive:true,force:true});
   report.completedAt=new Date().toISOString();report.elapsedSeconds=Math.round((Date.now()-started)/1000);

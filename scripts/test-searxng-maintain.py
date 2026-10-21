@@ -15,6 +15,31 @@ NEW = 'docker.io/searxng/searxng:2026.10.4-def@sha256:' + 'b' * 64
 
 
 class MaintenanceTests(unittest.TestCase):
+    def test_only_exact_reviewed_ca_overlay_can_transition_to_upstream(self):
+        runtime = {'reference': m.CA_REPAIR_PIN, 'image': m.CA_REPAIR_ID}
+        image = {'id': m.CA_REPAIR_ID, 'digests': [], 'source': 'https://github.com/searxng/searxng'}
+        m.validate_upstream_runtime(m.CA_REPAIR_PIN, runtime, image, '')
+        self.assertEqual(m.upstream_identity(m.CA_REPAIR_PIN), m.CA_REPAIR_UPSTREAM)
+        for changed in ['sha256:'+'a'*64, 'sha256:'+'b'*64]:
+            with self.assertRaisesRegex(RuntimeError, 'identity'):
+                m.validate_upstream_runtime(m.CA_REPAIR_PIN, {**runtime, 'image': changed}, {**image, 'id': changed}, '')
+
+    def test_candidate_ca_failure_prevents_staging(self):
+        with patch.object(m, 'check_candidate_trust', side_effect=RuntimeError('CA regression')), patch.object(m, 'command') as command:
+            with self.assertRaisesRegex(RuntimeError, 'CA regression'):
+                m.stage_candidate({}, {'image': NEW}, self.run)
+            command.assert_not_called()
+
+    def test_native_ca_guard_has_no_network_or_production_mounts(self):
+        with patch.object(m, 'command') as command:
+            m.check_candidate_trust(NEW)
+        args = command.call_args.args[0]
+        self.assertEqual(args[args.index('--network')+1], 'none')
+        self.assertIn('--read-only', args)
+        self.assertNotIn('--mount', args)
+        self.assertNotIn('-v', args)
+        self.assertIn('emSign ECC Root CA - G3', args[-1])
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)

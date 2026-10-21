@@ -30,7 +30,7 @@ services:
   gateway:
     ulimits: {core: 0}
     <<: *limits
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.25

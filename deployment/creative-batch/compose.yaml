@@ -1,7 +1,7 @@
 name: utilibre-creative-batch
 services:
   static:
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     entrypoint: [nginx, -g, 'daemon off;']
     restart: unless-stopped
     read_only: true
@@ -40,7 +40,7 @@ services:
       - '10.10.1.43:3239:3239'
     networks: [static, ingress]
   glyphr:
-    image: utilibre-glyphr:2.10.6-p1-nginx1305-tiff472
+    image: utilibre-glyphr:2.10.6-p1-nginx1305-tiff472-libs20261021
     restart: unless-stopped
     read_only: true
     user: '101:101'

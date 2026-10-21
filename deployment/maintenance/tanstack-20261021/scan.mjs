@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import cp from 'node:child_process';
+import {sha,base} from './backport.mjs';
+process.umask(0o077);
+const dir='/var/lib/utilibre-maintenance/tanstack-20261021',read=p=>JSON.parse(fs.readFileSync(p));
+const build=read(dir+'/build.json'),native=read(dir+'/native.json'),snapshot=read('/var/lib/utilibre-maintenance/security.json');
+assert(build.passed&&native.passed&&native.imageId===build.imageId);
+const db=read('/var/cache/utilibre-security/db/metadata.json');assert.equal(db.UpdatedAt,snapshot.database.updatedAt);
+const before=snapshot.images.find(x=>x.id===base);assert.equal(before?.status,'checked');
+cp.execFileSync('/opt/utilibre/maintenance/bin/trivy',['image','--disable-telemetry','--cache-dir','/var/cache/utilibre-security','--scanners','vuln','--offline-scan','--skip-db-update','--skip-java-db-update','--parallel','1','--timeout','5m','--no-progress','--list-all-pkgs','--image-src','docker','--format','json','--output',dir+'/scan.json',build.imageId],{timeout:330000,maxBuffer:1024**2,stdio:['ignore','ignore','pipe'],env:{...process.env,TRIVY_DISABLE_TELEMETRY:'true',TRIVY_SKIP_VERSION_CHECK:'true',GOMAXPROCS:'2',GOMEMLIMIT:'1GiB'}});
+const scan=read(dir+'/scan.json'),findings=scan.Results.flatMap(r=>r.Vulnerabilities||[]),known=new Set(before.findings.map(v=>v.id+'|'+v.package));
+const added=findings.filter(v=>['CRITICAL','HIGH'].includes(v.Severity)&&!known.has(v.VulnerabilityID+'|'+v.PkgName));assert.equal(added.length,0);
+fs.writeFileSync(dir+'/scan-gate.json',JSON.stringify({date:new Date().toISOString(),passed:true,imageId:build.imageId,base,newHighCritical:0,databaseUpdatedAt:db.UpdatedAt,scanSha256:sha(fs.readFileSync(dir+'/scan.json')),scope:'No new findings. Backported TanStack retains its original version and therefore requires exact byte/behavior review, not a version waiver.'},null,2)+'\n');
+console.log('Penpot candidate: offline scan complete; no new high/critical findings');

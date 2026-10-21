@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-util-linux-beaverhabits-app:security-20261012
+    image: utilibre-beaverhabits:aiohttp-certifi-20261021
     user: '1000:1000'
     env_file: /opt/utilibre/beaverhabits/private/app.env
     environment:
@@ -44,7 +44,7 @@ services:
       app: {ipv4_address: 172.29.145.10}
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     mem_limit: 96m

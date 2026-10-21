@@ -25,7 +25,7 @@ assert Path('/.dockerenv').exists()
 ROOT = Path('/build')
 WORK = Path(tempfile.mkdtemp(prefix='native-', dir=ROOT))
 parser = argparse.ArgumentParser()
-parser.add_argument('--candidate-version', choices=['10.0p1-7+deb13u4+utilibre2', '10.0p1-7+deb13u4+utilibre3'], default='10.0p1-7+deb13u4+utilibre2')
+parser.add_argument('--candidate-version', choices=['10.0p1-7+deb13u4+utilibre2', '10.0p1-7+deb13u4+utilibre3', '10.3p1-1~bpo13+1+utilibre1'], default='10.0p1-7+deb13u4+utilibre2')
 NEXT = parser.parse_args().candidate_version
 OLD = '10.0p1-7+deb13u4+utilibre1'
 RESULTS = []

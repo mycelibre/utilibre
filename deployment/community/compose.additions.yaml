@@ -28,7 +28,7 @@ services:
       retries: 3
   dumb-gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     ports: ["10.10.1.43:3142:8080"]
@@ -52,7 +52,7 @@ services:
       tenor: {ipv4_address: 172.29.74.10}
   mezzo-gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     ports: ["10.10.1.43:3140:8080"]
@@ -79,7 +79,7 @@ services:
       retries: 3
   fmd-gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     ports: ["10.10.1.43:3141:8080"]

@@ -9,7 +9,7 @@ x-limits: &limits
 services:
   app:
     <<: *limits
-    image: utilibre-util-linux-trip-app:security-20261012
+    image: utilibre-trip:pillow-certifi-20261021
     user: '1000:1000'
     cpus: 1
     mem_limit: 512m
@@ -46,7 +46,7 @@ services:
     networks: {isolated: {ipv4_address: 172.29.152.20}, egress: {ipv4_address: 172.29.153.20}}
   gateway:
     <<: *limits
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.25

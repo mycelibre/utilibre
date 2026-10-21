@@ -34,3 +34,14 @@ export function kernelComponentPaths(record,id){
 export function headerOverlap(paths,inventory){
  return paths.some(p=>p.endsWith('.h')&&inventory.some(f=>f.endsWith('/'+p.replace(/^.*?include\//,''))));
 }
+// One individually reviewed kernel-build advisory, not a general Makefile exception.
+export function gcovBuildPaths(body,id){
+ assert.equal(id,'CVE-2026-63825');
+ assert.equal(createHash('sha256').update(body).digest('hex'),'78b61b2f6f339988f1b63c51a5c8c16eae0036cff21efe2c574e961530e8133d');
+ const r=JSON.parse(body);assert.equal(r.cveMetadata.cveId,id);assert.equal(r.cveMetadata.state,'PUBLISHED');
+ const c=r.containers.cna;assert.equal(c.providerMetadata.shortName,'Linux');
+ assert(c.affected.length&&c.affected.every(a=>a.product==='Linux'&&a.vendor==='Linux'&&JSON.stringify(a.programFiles)==='["Makefile"]'));
+ const d=c.descriptions.find(x=>x.lang==='en').value;
+ for(const text of ['GCOV','CFLAGS_GCOV','-fprofile-update=prefer-atomic','inflate_fast()'])assert(d.includes(text));
+ return ['Makefile'];
+}

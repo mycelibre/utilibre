@@ -44,7 +44,7 @@ services:
     depends_on: {db: {condition: service_healthy}, redis: {condition: service_started}}
     logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
   gateway:
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     user: '101:101'
     read_only: true
     cap_drop: [ALL]

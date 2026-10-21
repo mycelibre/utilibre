@@ -27,6 +27,11 @@ export const directlyRecreatedServices=g=>g.rows.filter(r=>!(g.project==='utilib
 export function readinessSeconds(containers){
  return Math.min(180,Math.max(60,...containers.map(x=>Math.ceil(((x.Config.Healthcheck?.StartPeriod||0)+2*(x.Config.Healthcheck?.Interval||0)+(x.Config.Healthcheck?.Timeout||0))/1e9)+10)));
 }
+export function expectedRestarts(row,currentId,version){
+ // A stable predecessor may have historical restarts. A replacement or
+ // rollback container is new and must still start without crashing.
+ return version==='old'&&row.oldContainerId===currentId?row.oldRestartCount:0;
+}
 function compose(g){return ['compose','--profile','*','--project-directory',g.cwd,...(g.project==='utilibre-trip'?['--env-file','/opt/utilibre/trip/private/runtime.env']:g.project==='utilibre-community'?['--env-file',g.cwd+'/.env.rallly']:[]),'-p',g.project,...g.files.flatMap(f=>['-f',f])];}
 const config=g=>JSON.parse(docker(...compose(g),'config','--format','json')).services;
 const normalized=s=>{const {image,...rest}=s;return hash(JSON.stringify(rest));};
@@ -44,7 +49,7 @@ async function gate(g,version){
  const maximum=readinessSeconds(g.rows.map(r=>inspect(r.name)));
  for(let attempt=0;attempt<maximum;attempt++){
   try{
-   for(const r of g.rows){const x=inspect(r.name);assert.equal(x.Image,r[version+'Image']);assert(x.State.Running);assert.equal(x.RestartCount,0);assert(Date.now()-Date.parse(x.State.StartedAt)>=4000);if(x.State.Health)assert.equal(x.State.Health.Status,'healthy');if(r.namespaceParent)assert.equal(x.HostConfig.NetworkMode,'container:'+inspect(r.namespaceParent).Id,'Stale shared network namespace');}
+   for(const r of g.rows){const x=inspect(r.name);assert.equal(x.Image,r[version+'Image']);assert(x.State.Running);assert.equal(x.RestartCount,expectedRestarts(r,x.Id,version));assert(Date.now()-Date.parse(x.State.StartedAt)>=4000);if(x.State.Health)assert.equal(x.State.Health.Status,'healthy');if(r.namespaceParent)assert.equal(x.HostConfig.NetworkMode,'container:'+inspect(r.namespaceParent).Id,'Stale shared network namespace');}
    assert.deepEqual(await status(g),g.before);
    if(g.project==='utilibre-newsletters'){
     const smtp=inspect('utilibre-newsletters-smtp-1');

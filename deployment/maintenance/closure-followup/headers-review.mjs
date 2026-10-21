@@ -6,27 +6,31 @@ import assert from 'node:assert/strict';
 import cp from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {validateDecision} from '../triage.mjs';
-import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents} from './headers-policy.mjs';
+import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents,gcovBuildPaths} from './headers-policy.mjs';
 import {overlapSpecs,verifyOverlap} from './headers-overlap.mjs';
+import {privateTokens,validateInventory} from '../historical-header-final/policy.mjs';
 const root='/var/lib/utilibre-maintenance',dir=root+'/closure-followup-20261012';
-const commit='20d9248c60fe62803efade3177e8b82b586d154c';
-process.umask(0o077);fs.mkdirSync(dir+'/cna',{recursive:true});
+assert(process.argv.length<=3&&[undefined,'--current'].includes(process.argv[2]));
+const current=process.argv[2]==='--current';
+const commit=current?'2f073091b14641caef8f31f3ae9cfc4eef3c201e':'20d9248c60fe62803efade3177e8b82b586d154c';
+const cache=current?dir+'/cna-20261021':dir+'/cna';
+process.umask(0o077);fs.mkdirSync(cache,{recursive:true});
 const queue=JSON.parse(fs.readFileSync(root+'/security-queue.json'));
 const scan=JSON.parse(fs.readFileSync(root+'/security.json'));
 assert.equal(queue.scanDate,scan.completedAt);assert.equal(scan.status,'checked');
 assert(Date.now()-Date.parse(scan.completedAt)<86400000);
-const items=queue.items.filter(x=>x.status==='needs-review'&&x.severity==='HIGH'&&x.package==='linux-libc-dev');
+const items=queue.items.filter(x=>x.status==='needs-review'&&['HIGH','CRITICAL'].includes(x.severity)&&x.package==='linux-libc-dev');
 const ids=[...new Set(items.map(x=>x.id))],sources=new Map,skipped=[];
 let next=0;
 await Promise.all(Array.from({length:4},async()=>{while(next<ids.length){
  const id=ids[next++],[,year,num]=id.split('-');
  const url=`https://raw.githubusercontent.com/CVEProject/cvelistV5/${commit}/cves/${year}/${num.slice(0,-3)}xxx/${id}.json`;
  try{
-  const file=dir+'/cna/'+id+'.json';let body;
+  const file=cache+'/'+id+'.json';let body;
   if(fs.existsSync(file))body=fs.readFileSync(file,'utf8');else{
    const res=await fetch(url,{signal:AbortSignal.timeout(20000)});assert(res.ok);body=await res.text();assert(body.length<250000);fs.writeFileSync(file,body);
   }
-  const record=JSON.parse(body),files=legacyComponents[id]?historicalKernelPaths(body,id):kernelComponentPaths(record,id);
+  const record=JSON.parse(body),files=id==='CVE-2026-63825'?gcovBuildPaths(body,id):legacyComponents[id]?historicalKernelPaths(body,id):kernelComponentPaths(record,id);
   sources.set(id,{url,files,provider:record.containers.cna.providerMetadata.shortName,sha256:createHash('sha256').update(body).digest('hex')});
  }catch{skipped.push({id,reason:'No complete Linux-CNA compiled-kernel-only file attribution; manual review remains.'});}
 }}));
@@ -37,13 +41,16 @@ for(const item of items){
  const k=item.artifact+'|'+item.installed;
  if(!inventories.has(k)){
   const host=item.scope==='host-os';assert(host||item.scope==='runtime-image');
-  const name=item.containers[0];if(!host)assert.equal(execute('docker',['inspect','--format','{{.Image}}',name]),item.artifact);
-  const run=args=>host?execute('dpkg-query',args):execute('docker',['exec',name,'dpkg-query',...args]);
-  assert.equal(run(['-W','-f=${Version}','linux-libc-dev']),item.installed);
-  const files=run(['-L','linux-libc-dev']).split('\n');assert(files.length>100);
-  assert(files.every(p=>['/.','/usr','/usr/include','/usr/share','/usr/share/doc','/usr/lib','/usr/lib/linux','/usr/lib/linux/uapi'].includes(p)||p.startsWith('/usr/include/')||p.startsWith('/usr/share/doc/')||p.startsWith('/usr/lib/linux/uapi/')));
-  assert(!files.some(p=>/\.(?:c|ko|so|a)$|vmlinuz/.test(p)));
-  const digest=createHash('sha256').update(files.join('\n')).digest('hex');inventories.set(k,{files,digest});
+  const collector=fs.readFileSync(new URL('../historical-header-final/inventory.py',import.meta.url),'utf8'),payloads=[];
+  for(const name of host?[null]:item.containers){
+   if(name)assert.equal(execute('docker',['inspect','--format','{{.Image}}',name]),item.artifact);
+   const args=['-c',collector,JSON.stringify(privateTokens)];
+   const payload=JSON.parse(name?execute('docker',['exec',name,'python3',...args]):execute('python3',args));
+   validateInventory(payload,item.installed);payloads.push({name,...payload});
+  }
+  assert(payloads.length);const files=payloads[0].records.map(r=>r.path);
+  for(const p of payloads)assert.deepEqual(p.records.map(r=>r.path),files);
+  const digest=createHash('sha256').update(JSON.stringify(payloads)).digest('hex');inventories.set(k,{files,digest,payloads});
  }
  // Kernel-private include files can share a basename with a sanitized UAPI
  // file. Retain those ambiguous cases instead of assuming they are unrelated.

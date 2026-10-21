@@ -21,7 +21,7 @@ services:
       timeout: 3s
       retries: 5
   app:
-    image: utilibre-liberaforms:xlib-security-20261012
+    image: utilibre-liberaforms:aiohttp-certifi-20261021
     restart: unless-stopped
     depends_on: {db: {condition: service_healthy}}
     user: '4002:4002'
@@ -73,7 +73,7 @@ services:
       - ./liberaforms-logging.py:/app/liberaforms/config/logging.py:ro
     networks: {forms: {ipv4_address: 172.29.98.3}}
   web:
-    image: utilibre-nginx:1.30.5-alpine-tiff-security-20261011
+    image: utilibre-nginx:1.30.5-alpine-security-20261021
     entrypoint: [nginx, -g, 'daemon off;']
     restart: unless-stopped
     depends_on: [app]

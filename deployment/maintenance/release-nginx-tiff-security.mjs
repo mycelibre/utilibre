@@ -2,13 +2,15 @@
 import assert from 'node:assert/strict';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
-import {readFile,writeFile} from 'node:fs/promises';
+import {readFile,writeFile,statfs} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-const exec=promisify(execFile),dir='/var/lib/utilibre-maintenance/nginx-tiff-20261011';
+const refresh=process.argv.includes('--library-refresh');
+assert(process.argv.slice(4).every(a=>a==='--library-refresh'));
+const exec=promisify(execFile),dir='/var/lib/utilibre-maintenance/'+(refresh?'nginx-libraries-20261021':'nginx-tiff-20261011');
 const group=process.argv[3]||'gateways';assert(['gateways','artifacts'].includes(group));
 const receipt=dir+'/'+group+'-release.json';process.umask(0o077);
 const stage=JSON.parse(await readFile(dir+'/'+(group==='gateways'?'stage':'artifacts-stage')+'.json','utf8'));
-assert.equal(stage.status,'passed');assert.equal(stage.rows.length,group==='gateways'?41:26);
+assert.equal(stage.status,'passed');assert.equal(stage.rows.length,group==='gateways'?41:refresh?27:26);
 if(group==='artifacts')for(const r of stage.rows){assert(['/usr/share/nginx/html','/srv/app','/app','/srv/wallabag'].includes(r.assetRoot));assert.match(r.assetSha256,/^[a-f0-9]{64}$/);}
 assert(Date.now()-Date.parse(stage.completedAt||stage.date)<86400000,'Restage stale candidates');
 async function docker(args,timeout=120000){try{return (await exec('docker',args,{timeout,maxBuffer:16*1024**2,env:{...process.env,APP_BIND_IP:'10.10.1.43'}})).stdout;}catch(e){await writeFile(dir+'/release-error.log',String(e.stderr||e.message),{mode:0o600});throw Error('Private diagnostic: '+dir+'/release-error.log');}}
@@ -39,6 +41,7 @@ if(process.argv[2]==='prepare'){
  assert(Date.now()-Date.parse(report.date)<86400000);
  const save=()=>writeFile(receipt,JSON.stringify(report,null,2)+'\n',{mode:0o600});
  for(const r of report.rows){
+  const space=await statfs(dir);assert(space.bavail*space.bsize>=8*1024**3,'Preserve 8 GiB recovery floor');
   const service=await config(r);assert.equal(service.image,r.newRef,'Review and update exact source pin first');
   assert.equal(normalizedHash(service),r.configSha256,'Unrelated service configuration changed');
   assert.equal((await inspect(r.newRef)).Id,r.newImage,'Candidate tag drift');
