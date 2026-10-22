@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "inputs": {
+    "privatebin": {
+      "base": "sha256:9816ec497b2c53e6f5f009db6f3a07a0d746afd224e99efbfc073370e7e01b17",
+      "manager": "apk",
+      "version": "8.5.12-r0",
+      "packageHashes": {
+        "php85-8.5.12-r0.apk": "17ecdbb8901a6640da669f7e43179d4326025366b4f0c189d22a635c85191419",
+        "php85-common-8.5.12-r0.apk": "aeff64b2e1ba4bbe47d9d8e18f7e7d834dc38346ee9bbb66cfeb51501f07f5fa",
+        "php85-fpm-8.5.12-r0.apk": "6b3b19e94f543908bb1c704b270fc743bc3cf21654e9e37c4fba05d9cdabbdb0",
+        "php85-gd-8.5.12-r0.apk": "4e6c33eda7e4bbb8ac6b7512f11078937fae16ea33e44746f982c82298b4196c",
+        "php85-iconv-8.5.12-r0.apk": "761127cd48597bfb9beca77643a36930b5ec8bd3ac1112ed9d1ae323c3ed79c9",
+        "php85-mysqlnd-8.5.12-r0.apk": "ba9ea81821931ef1532dab61ca97b240713696797d87c2c8ceec305f55f1becf",
+        "php85-openssl-8.5.12-r0.apk": "a903e2315a3cfbeccc5e4b43b29e92055b8d847c84a97185e7e9f770e4c0ca6b",
+        "php85-pdo-8.5.12-r0.apk": "53b2a2aeef9147d6167ae236ba633b713b68c686780447ba19205b8206016f62",
+        "php85-pdo_mysql-8.5.12-r0.apk": "d952c22cce4d18b766a348031738c6b06cb0831a2503828daf3225d01b4ad90a",
+        "php85-pdo_pgsql-8.5.12-r0.apk": "43531dc6229706ce2d9d8aaec58abb82369e291bd2c4d97bf5243ae3fdf627b2",
+        "php85-simplexml-8.5.12-r0.apk": "08481cf952a87b83b0dcc185150c4271ab276a7f86a2ec29cf001d57224696b6"
+      }
+    },
+    "fourget": {
+      "base": "sha256:b1046c28a464248f83ee55225048a91fd211b1d03e9543038702e93c9908a19d",
+      "manager": "apk",
+      "version": "8.4.27-r0",
+      "packageHashes": {
+        "php84-8.4.27-r0.apk": "e4490d3f206a585bd53a7b6af0e73464e3e9466f27519bc01c42ed25cf9d686c",
+        "php84-apache2-8.4.27-r0.apk": "a3941bc947ff9a690bc5f31a7a50fb0a28dbccd09133bb28e1411f6e64eb1e09",
+        "php84-common-8.4.27-r0.apk": "eedc32e8fdd3c57995f8ceeb1aad60c30223150dfeff4c26ac2c6b59b5dc6e93",
+        "php84-curl-8.4.27-r0.apk": "e0455bd61b48cfe93d4cd660195890b24f8aa70795f5f7a1784cc4fc633f9014",
+        "php84-dom-8.4.27-r0.apk": "8adabb21e3d88037afd6445635db9b957e3b0feb50bb8ca13664ac6da3e53483",
+        "php84-fileinfo-8.4.27-r0.apk": "aafc58091bc1f1227a0046fd1552473f0c90e1cfb2bed2240364b519605211d3",
+        "php84-iconv-8.4.27-r0.apk": "e0ed657dd88dd4154566a58fd7f84a828ebc75881d6bfd2e7b71f1539159afa0",
+        "php84-mbstring-8.4.27-r0.apk": "f49b17b6f62bcdeb60482c9c6f04a4c121fb67865e0a8e111281da1cc33c5787",
+        "php84-openssl-8.4.27-r0.apk": "d8ea60627bd12a4b200172089ee0fe20eda54b700c8156644e8bf1ea0e7ef9ea",
+        "php84-sodium-8.4.27-r0.apk": "6a527b970dd24c1e9bbc5410fb81302bd4b1bebc61e417546cea7f728c0709b3"
+      }
+    }
+  }
+}

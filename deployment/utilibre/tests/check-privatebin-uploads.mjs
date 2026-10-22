@@ -9,25 +9,30 @@ import {chromium} from '../../../portal/node_modules/playwright-core/index.mjs';
 process.umask(0o077);
 assert(process.argv.length === 2 || (process.argv.length === 3 && process.argv[2] === '--public'));
 const live = process.argv.includes('--public');
-const image='utilibre-privatebin:2.1.0-security-20261021-p2';
+const image=process.env.PRIVATEBIN_TEST_IMAGE || 'utilibre-privatebin:php-security-20261022';
+assert(/^(utilibre-privatebin:[a-zA-Z0-9_.-]+|sha256:[a-f0-9]{64})$/.test(image),'Use a reviewed local PrivateBin image');
 const base = live ? 'https://paste.utilibre.org' : 'http://127.0.0.1:3185';
 const recipe = fileURLToPath(new URL('../config/privatebin/', import.meta.url));
 const output = await mkdtemp('/opt/utilibre/reports/privatebin-uploads-');
-const temp = await mkdtemp('/opt/utilibre/privatebin-upload-test-');
+const temp = await mkdtemp('/tmp/utilibre-privatebin-upload-test-');
 const name = `utilibre-privatebin-upload-test-${process.pid}`, network = `${name}-net`;
 const docker = (...args) => execFileSync('docker', args, {encoding:'utf8', stdio:['ignore','pipe','pipe'], maxBuffer:1024*1024});
-let bridge, browser, page, receipt, created=false, networkCreated=false;
+let bridge, browser, page, receipt, imageId, created=false, networkCreated=false;
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const errors=[], outside=new Set(), checks=[];
 try {
   if (!live) {
+    imageId=docker('image','inspect','--format','{{.Id}}',image).trim();
+    assert(/^sha256:[a-f0-9]{64}$/.test(imageId));
     await mkdir(`${temp}/data`); await chown(`${temp}/data`,65534,82);
     const marker = `${temp}/data/.utilibre-temporary-volume`;
     await writeFile(marker, 'utilibre-privatebin-temporary-v1\n'); await chmod(marker,0o444);
     docker('network','create','--internal',network); networkCreated=true;
     const mounts = [['conf.php','/srv/cfg/conf.php'],['bootstrap5-utilibre.php','/srv/tpl/bootstrap5-utilibre.php'],['robots.txt','/var/www/robots.txt'],['manifest.json','/var/www/manifest.json'],['brand','/var/www/utilibre-brand'],['brand/favicon.ico','/var/www/favicon.ico'],['discovery-server.conf','/etc/nginx/server.d/utilibre-discovery.conf'],['discovery-location.conf','/etc/nginx/location.d/utilibre-discovery.conf'],['upload-limit.js','/var/www/js/utilibre-upload-limit.js'],['upload-guard.php','/srv/cfg/upload-guard.php'],['uploads.ini','/etc/php85/conf.d/zz-utilibre-uploads.ini'],['uploads-pool.conf','/etc/php85/php-fpm.d/zzz-utilibre-uploads.conf']].flatMap(([file,target])=>['-v',`${recipe}${file}:${target}:ro`]);
     docker('run','-d','--name',name,'--network',network,'--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--cpus','0.5','--memory','768m','--pids-limit','128','--log-driver','none','--tmpfs','/run:rw,exec,nosuid,nodev,size=16m,mode=0755,uid=65534,gid=82','--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777','--tmpfs','/var/lib/nginx/tmp:rw,nosuid,nodev,noexec,size=128m,mode=0755,uid=65534,gid=82','-v',`${temp}/data:/srv/data`,...mounts,image); created=true;
-    const ip=JSON.parse(docker('inspect',name))[0].NetworkSettings.Networks[network].IPAddress;
+    const container=JSON.parse(docker('inspect',name))[0];
+    assert.equal(container.Image,imageId,'Candidate tag changed during test');
+    const ip=container.NetworkSettings.Networks[network].IPAddress;
     bridge=spawn('socat',['TCP4-LISTEN:3185,bind=127.0.0.1,reuseaddr,fork,max-children=16',`TCP4:${ip}:8080`],{detached:true,stdio:'ignore'});
     let ready=false;for(let n=0;n<30;n++){try{ready=(await fetch(base,{signal:AbortSignal.timeout(1000)})).ok}catch{}if(ready)break;await new Promise(r=>setTimeout(r,500))}assert(ready);
     docker('exec',name,'nginx','-t');
@@ -152,7 +157,7 @@ try {
   assert.equal(await unkeyed.locator('#attachment a[download]').count(),0);
   await page.goto(base+'/');await page.screenshot({path:`${output}/en-desktop.png`});
   assert.deepEqual(errors,[]);assert.deepEqual([...outside],[]);
-  const result={date:new Date().toISOString(),base,passed:true,checks,ciphertextBytes:posted.ciphertextBytes,rawBytes:bytes.length,browser:'Linux Chromium desktop and 390px mobile emulation',limitations:['not a physical phone/Opera test','raw file limit is browser-side; server limits encrypted bytes','earlier and whole-VM backups are separate'],output};
+  const result={date:new Date().toISOString(),base,...(imageId?{imageId}:{}),passed:true,checks,ciphertextBytes:posted.ciphertextBytes,rawBytes:bytes.length,browser:'Linux Chromium desktop and 390px mobile emulation',limitations:['not a physical phone/Opera test','raw file limit is browser-side; server limits encrypted bytes','earlier and whole-VM backups are separate'],output};
   await writeFile(`${output}/result.json`,JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 } finally {
   try { if(receipt?.id&&receipt?.deletetoken){

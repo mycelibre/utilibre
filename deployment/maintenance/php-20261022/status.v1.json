@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "date": "2026-10-22T18:41:39.314Z",
+  "scope": "PHP October 21 advisories; not whole-fleet security clearance",
+  "advisories": [
+    "CVE-2026-109618",
+    "CVE-2026-109619"
+  ],
+  "inventory": {
+    "applications": 9,
+    "containers": 11
+  },
+  "completed": {
+    "applications": 2,
+    "containers": 2
+  },
+  "pending": {
+    "applications": 7,
+    "containers": 9
+  },
+  "applicationDataChanged": false,
+  "advisorySnapshot": "2026-10-21T01:19:53.032404989Z",
+  "freshFleetAssessment": "incomplete; scheduled scan disk preflight failed",
+  "replayByteReproducibility": "not established",
+  "services": [
+    {
+      "service": "privatebin",
+      "containers": 1,
+      "baseImage": "sha256:9816ec497b2c53e6f5f009db6f3a07a0d746afd224e99efbfc073370e7e01b17",
+      "targetPhp": "8.5.12-r0",
+      "state": "deployed-and-verified",
+      "php": "8.5.12",
+      "imageId": "sha256:65239f579a0fb33c97cd9e71b989c0dd212c63a06bfc950a23715d5254958e52",
+      "deployedAt": "2026-10-22T18:30:08.114Z",
+      "publicStatus": 200,
+      "applicationChecks": [
+        "candidate native config validation and low-disk admission boundary",
+        "missing/invalid volume marker fails GET health and POST admission; restored volume recovers",
+        "upstream directory version/template/attachment detection matches live HTML",
+        "upstream Markdown sanitizer removes deceptive modal class, id and inline style",
+        "25 MB + 1 rejected locally, without upload",
+        "25,000,000 random-byte attachment encrypted, downloaded and SHA-256 matched",
+        "server remaining lifetime no greater than one week",
+        "server rejects ciphertext beyond 35,000,000 bytes",
+        "native scheduled-purge command removes expired fictional record"
+      ]
+    },
+    {
+      "service": "fourget",
+      "containers": 1,
+      "baseImage": "sha256:b1046c28a464248f83ee55225048a91fd211b1d03e9543038702e93c9908a19d",
+      "targetPhp": "8.4.27-r0",
+      "state": "deployed-and-verified",
+      "php": "8.4.27",
+      "imageId": "sha256:be130cfdebe671d16cc49b8662beca9b36cdc26a9bf691cb56cef5b4aadb6245",
+      "deployedAt": "2026-10-22T18:29:33.362Z",
+      "publicStatus": 200,
+      "applicationChecks": [
+        "Apache configuration",
+        "Native PHP search form HTTP 200",
+        "Imagick PNG create/reopen dimensions"
+      ]
+    },
+    {
+      "service": "freshrss",
+      "containers": 1,
+      "baseImage": "sha256:9b74a8a1411fd8ad582be1badb0602b81ceeb215547e87d32b58a965399fc323",
+      "targetPhp": "8.4.27-1~deb13u1",
+      "state": "blocked-disk; candidate and application verification pending"
+    },
+    {
+      "service": "rssbridge",
+      "containers": 1,
+      "baseImage": "sha256:3355783128dd59780c2f369fcb97eff7b92cbd41bc656f75997014c1fc76fd3d",
+      "targetPhp": "8.2.35-1~deb12u1",
+      "state": "blocked-disk; candidate and application verification pending"
+    },
+    {
+      "service": "wallabag",
+      "containers": 1,
+      "baseImage": "sha256:377062036d58e98a69df2de531499219703a7b0129d51077cbd56e4a42040c7a",
+      "targetPhp": "8.4.27-r0",
+      "state": "blocked-disk; candidate and application verification pending"
+    },
+    {
+      "service": "translite",
+      "containers": 1,
+      "baseImage": "sha256:30cd0dd055e0816e415e5c32766159a3e7ca41391963bc2d08efc03530c3b35a",
+      "targetPhp": "8.5.12-r0",
+      "state": "blocked-disk; candidate and application verification pending"
+    },
+    {
+      "service": "binternet",
+      "containers": 2,
+      "baseImage": "sha256:5cb3cb70b118ab460fb9aa1fae3f119c3a60298ce7446d3c9f88a0912d4c8ec2",
+      "targetPhp": "8.4.27-r0",
+      "state": "blocked-disk; candidate and application verification pending"
+    },
+    {
+      "service": "addy",
+      "containers": 1,
+      "baseImage": "sha256:96ec9ebf8f30c67452d3df5f4061bc48de6213c0631bc8f8159347e3df205f25",
+      "targetPhp": "8.4.27-r0",
+      "state": "blocked-disk; candidate and application verification pending"
+    },
+    {
+      "service": "pollaris",
+      "containers": 2,
+      "php": "8.5.11",
+      "targetPhp": "8.5.12",
+      "baseImage": "sha256:c0b42f11fe1db00c7beffc45e55c1dc1f7cf1d7919a89f821e3a8bdb4cd86c6d",
+      "state": "blocked-disk; compiled runtime replacement and native verification pending"
+    }
+  ]
+}
