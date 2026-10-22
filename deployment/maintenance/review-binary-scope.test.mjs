@@ -10,6 +10,16 @@ test('CUPS scheduler attribution never exempts the server or an included schedul
  assert.equal(absentComponent({...item,id:'CVE-2026-99999'},['/.','/usr/lib/libcups.so.2']),null);
 });
 const files=['/.','/usr/lib/libuuid.so.1'];
+test('MariaDB SQL-server and dump advisories do not exempt executable packages',()=>{
+ for(const id of ['CVE-2026-85746','CVE-2026-92262','CVE-2026-86047','CVE-2026-97380']){
+  for(const packageName of ['libmariadb3','mariadb-common']){
+   const item={id,package:packageName};assert.match(absentComponent(item,['/.','/usr/lib/libmariadb.so.3']),/MariaDB server/);
+   for(const binary of ['mariadbd','mysqld','mariadb-dump','mysqldump'])assert.equal(absentComponent(item,['/.','/usr/bin/'+binary]),null);
+  }
+  for(const packageName of ['mariadb-server','mariadb-client','mariadb-client-core'])assert.equal(absentComponent({id,package:packageName},files),null);
+ }
+ assert.equal(absentComponent({id:'CVE-2026-44172',package:'libmariadb3'},files),null,'Connector/C defects stay open');
+});
 test('October SSH findings distinguish client, authentication server and subsystem',()=>{
  for(const id of ['CVE-2026-106553','CVE-2026-106555']){
   for(const pkg of ['openssh-client','openssh-sftp-server']){

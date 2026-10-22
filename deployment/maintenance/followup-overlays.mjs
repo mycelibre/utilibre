@@ -59,4 +59,10 @@ export const additionalOverlayReceipts = [
   'tanstack-20261021/release.json',
   'nginx-libraries-20261021/gateways-release.json',
   'nginx-libraries-20261021/artifacts-release.json',
+  'php-20261022/release.json',
+  'security-20261022/nginx/gateways-release.json',
+  'security-20261022/nginx/artifacts-release.json',
+  'security-20261022/release.json',
+  'security-20261022/redirects/release.json',
+  'security-20261022/privatebin-nginx/release.json',
 ];

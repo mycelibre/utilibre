@@ -1,0 +1,16 @@
+ARG BASE=sha256:088c9c6d445bec0ca14f15b5ee92a03cea3142d55bec4535df9e750ab2f1f48c
+FROM ${BASE}
+ARG RUNTIME_USER=101
+USER root
+COPY nginx*.apk /tmp/utilibre-nginx/
+RUN test "$(cat /etc/alpine-release)" = 3.24.2 \
+ && nginx -v 2>&1 | grep -Fx 'nginx version: nginx/1.30.5' \
+ && mkdir /tmp/utilibre-nginx/html \
+ && for file in index.html 50x.html; do if test -f /usr/share/nginx/html/$file; then cp -p /usr/share/nginx/html/$file /tmp/utilibre-nginx/html/$file; fi; done \
+ && apk add --no-network /tmp/utilibre-nginx/*.apk \
+ && for file in index.html 50x.html; do if test -f /tmp/utilibre-nginx/html/$file; then cp -p /tmp/utilibre-nginx/html/$file /usr/share/nginx/html/$file; rm /tmp/utilibre-nginx/html/$file; else rm -f /usr/share/nginx/html/$file; fi; done \
+ && rmdir /tmp/utilibre-nginx/html \
+ && apk info --exists nginx=1.30.6-r1 nginx-module-geoip=1.30.6-r1 nginx-module-image-filter=1.30.6-r1 nginx-module-xslt=1.30.6-r1 nginx-module-njs=1.30.6.1.0.2-r1 \
+ && nginx -v 2>&1 | grep -Fx 'nginx version: nginx/1.30.6' \
+ && rm /tmp/utilibre-nginx/*.apk && rmdir /tmp/utilibre-nginx
+USER ${RUNTIME_USER}

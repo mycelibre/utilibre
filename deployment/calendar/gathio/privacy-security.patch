@@ -1,5 +1,5 @@
 diff --git a/package.json b/package.json
-index 2727fdc..0a95a4d 100644
+index 2727fdc..13e8080 100644
 --- a/package.json
 +++ b/package.json
 @@ -23,66 +23,69 @@
@@ -18,7 +18,7 @@ index 2727fdc..0a95a4d 100644
 +    "axios": "1.20.0",
 +    "cookie-parser": "^1.4.7",
 +    "cors": "^2.8.6",
-+    "dompurify": "^3.4.16",
++    "dompurify": "3.4.17",
 +    "express": "^4.22.3",
 +    "express-fileupload": "^1.5.2",
      "express-handlebars": "^6.0.7",
@@ -70,7 +70,7 @@ index 2727fdc..0a95a4d 100644
 +    "randomstring": "^1.3.2",
 +    "react-i18next": "^15.7.4",
 +    "select2": "4.1.0-rc.0",
-+    "toml": "^5.0.0",
++    "toml": "5.0.1",
 +    "ts-deepmerge": "^7.0.3",
 +    "typescript": "^5.9.3",
      "wait-on": "^7.2.0",
@@ -113,7 +113,7 @@ index 2727fdc..0a95a4d 100644
    }
  }
 diff --git a/pnpm-lock.yaml b/pnpm-lock.yaml
-index d227f9f..9ff88e7 100644
+index d227f9f..68a8de4 100644
 --- a/pnpm-lock.yaml
 +++ b/pnpm-lock.yaml
 @@ -4,6 +4,18 @@ settings:
@@ -165,8 +165,8 @@ index d227f9f..9ff88e7 100644
        dompurify:
 -        specifier: ^3.1.4
 -        version: 3.1.4
-+        specifier: ^3.4.16
-+        version: 3.4.16
++        specifier: 3.4.17
++        version: 3.4.17
        express:
 -        specifier: ^4.19.2
 -        version: 4.19.2
@@ -304,8 +304,8 @@ index d227f9f..9ff88e7 100644
        toml:
 -        specifier: ^3.0.0
 -        version: 3.0.0
-+        specifier: ^5.0.0
-+        version: 5.0.0
++        specifier: 5.0.1
++        version: 5.0.1
        ts-deepmerge:
 -        specifier: ^7.0.2
 -        version: 7.0.2
@@ -1804,8 +1804,8 @@ index d227f9f..9ff88e7 100644
  
 -  dompurify@3.1.4:
 -    resolution: {integrity: sha512-2gnshi6OshmuKil8rMZuQCGiUF3cUxHY3NGDzUAdUx/NPEe5DVnO8BDoAQouvgwnx0R/+a6jUn36Z0FSdq8vww==}
-+  dompurify@3.4.16:
-+    resolution: {integrity: sha512-sqo+pNp3qRhCIpbgRi1y8Tgk27Bo2Ry7w0dC1NBeNTdZChWjz9Xb/KOoZbRP/R6pQZ80Qw8YhXw13hWWBbMRnQ==}
++  dompurify@3.4.17:
++    resolution: {integrity: sha512-B/pSlYVHQ58kqISD/yDjuJ1yfzI34m1gF4lAod2bwSRhiN4K5Cl3H8Af7hqB2PmTL911tdEudnnXn5FnhRoz0w==}
  
    domutils@3.2.2:
      resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
@@ -3094,8 +3094,8 @@ index d227f9f..9ff88e7 100644
  
 -  toml@3.0.0:
 -    resolution: {integrity: sha512-y/mWCZinnvxjTKYhJ+pYxwD0mRLVvOtdS2Awbgxln6iEnt4rk0yBxeSBHkGJcPucRiG0e55mwWp+g/05rsrd6w==}
-+  toml@5.0.0:
-+    resolution: {integrity: sha512-bsqEd+g7fzlrw7LEynQ6W6aOK/lTOlepz5x1sJyIV9fTZVJS2Q76nuju6FK+gZhW5bUpvB7mCEqdR0u4WziMFw==}
++  toml@5.0.1:
++    resolution: {integrity: sha512-EqYNA/YvUNndrA2B3O2ojzLQoTQrBxeZ9UIjQwk8t10oe6n7dwclBwd9IdZQTOKwe6vWX+AXtl6IntXRbepdxQ==}
 +    engines: {node: '>=20'}
  
    touch@3.1.1:
@@ -5334,7 +5334,7 @@ index d227f9f..9ff88e7 100644
        domelementtype: 2.3.0
  
 -  dompurify@3.1.4: {}
-+  dompurify@3.4.16:
++  dompurify@3.4.17:
 +    optionalDependencies:
 +      '@types/trusted-types': 2.0.7
  
@@ -6918,7 +6918,7 @@ index d227f9f..9ff88e7 100644
        ieee754: 1.2.1
  
 -  toml@3.0.0: {}
-+  toml@5.0.0: {}
++  toml@5.0.1: {}
  
    touch@3.1.1: {}
  

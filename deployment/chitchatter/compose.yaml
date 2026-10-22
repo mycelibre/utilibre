@@ -18,7 +18,7 @@ services:
       timeout: 5s
       retries: 3
   gateway:
-    image: utilibre-nginx:1.30.5-alpine-security-20261021
+    image: utilibre-nginx:1.30.6-security-20261022
     entrypoint: [nginx, -g, 'daemon off;']
     restart: unless-stopped
     read_only: true

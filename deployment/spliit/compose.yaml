@@ -13,7 +13,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-cache-spliit-app:4.3.0-20261012
+    image: utilibre-spliit:1.29.0-next1641-security-20261022
     build: /opt/utilibre/community-src/spliit-utilibre-1.29.0-p1
     user: "1000:1000"
     env_file: /opt/utilibre/spliit/private/app.env
@@ -64,7 +64,7 @@ services:
       retries: 5
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.5-alpine-security-20261021
+    image: utilibre-nginx:1.30.6-security-20261022
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     mem_limit: 96m

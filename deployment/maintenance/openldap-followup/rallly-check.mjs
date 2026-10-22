@@ -6,9 +6,12 @@ import {randomBytes} from 'node:crypto';
 import fs from 'node:fs';
 import {chromium} from '../../../portal/node_modules/playwright-core/index.mjs';
 process.umask(0o077);
-const dir='/var/lib/utilibre-maintenance/openldap-followup-20261012/images/rallly';
+assert(process.argv.slice(2).length===0||JSON.stringify(process.argv.slice(2))==='["--oct22"]');
+const oct22=process.argv.includes('--oct22');
+const dir=oct22?'/var/lib/utilibre-maintenance/security-20261022/rallly':'/var/lib/utilibre-maintenance/openldap-followup-20261012/images/rallly';
+const resultFile=dir+(oct22?'/native.json':'/application.json');
 const proof=JSON.parse(fs.readFileSync(dir+'/build.json')),image=proof.imageId;
-assert(proof.passed);assert(!fs.existsSync(dir+'/application.json'));
+assert(proof.passed);assert(!fs.existsSync(resultFile));
 const tag=randomBytes(4).toString('hex'),network='utilibre-openldap-rallly-'+tag,db=network+'-db',app=network+'-app',base='http://127.0.0.1:3435';
 const docker=(...args)=>exec('docker',args,{encoding:'utf8',timeout:120000,maxBuffer:4e6,stdio:['ignore','pipe','pipe']}).trim();
 const sql=text=>exec('docker',['exec','-i',db,'psql','-X','-qAt','-v','ON_ERROR_STOP=1','-U','rallly','-d','rallly'],{input:text,encoding:'utf8',stdio:['pipe','pipe','pipe']}).trim();
@@ -54,7 +57,7 @@ try{
  await page.reload();await page.getByText('Fictional participant',{exact:true}).waitFor();
  const deleted=await sessions[0].c.request.post(base+'/api/trpc/polls.markAsDeleted',{data:{json:{pollId}}});assert.equal(deleted.status(),200);assert.equal(sql(`SELECT deleted FROM polls WHERE id='${pollId}'`),'t');
  assert.deepEqual([...outside],[]);assert.deepEqual(errors,[]);
- fs.writeFileSync(dir+'/application.json',JSON.stringify({date:new Date().toISOString(),imageId:image,passed:true,nativeMigrations:true,nativePasswordSetupAndLogin:true,twoIndependentAccounts:true,nativePollCreated:true,fictionalInviteRendered:true,guestVoteSaved:true,reloadPersistence:true,otherAccountAndGuestDeleteDenied:true,ownerDeleteAllowed:true,fictionalDataOnly:true,network:'internal; no external browser origins',limitations:['Approved synthetic account/space and reset-token rows were seeded in disposable PostgreSQL; native password creation/sign-in and app permissions then exercised. No email delivery or production OIDC check.']},null,2)+'\n');
+ fs.writeFileSync(resultFile,JSON.stringify({date:new Date().toISOString(),imageId:image,passed:true,nativeMigrations:true,nativePasswordSetupAndLogin:true,twoIndependentAccounts:true,nativePollCreated:true,fictionalInviteRendered:true,guestVoteSaved:true,reloadPersistence:true,otherAccountAndGuestDeleteDenied:true,ownerDeleteAllowed:true,fictionalDataOnly:true,network:'internal; no external browser origins',limitations:['Approved synthetic account/space and reset-token rows were seeded in disposable PostgreSQL; native password creation/sign-in and app permissions then exercised. No email delivery or production OIDC check.']},null,2)+'\n');
  console.log('Rallly: native two-account login, poll create, guest vote, reload, cross-account denial and owner deletion passed.');
 }catch(e){fs.writeFileSync(dir+'/application-error.txt',String(e.stderr||e.stack||e));if(lastPage)try{fs.writeFileSync(dir+'/application-page.txt',await lastPage.locator('body').innerText());}catch{}throw Error('Rallly candidate failed; private synthetic diagnostics retained.');}
 finally{if(browser)await browser.close();if(bridge?.pid)try{process.kill(-bridge.pid,'SIGTERM');}catch{}for(const name of [app,db])try{docker('rm','-f','-v',name);}catch{}try{docker('network','rm',network);}catch{}}

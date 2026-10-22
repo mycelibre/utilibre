@@ -1,5 +1,5 @@
 import {execFileSync} from 'node:child_process';
-import {writeFileSync} from 'node:fs';
+import {writeFileSync,readFileSync,copyFileSync} from 'node:fs';
 const source=process.argv[2]||'/opt/utilibre/evaluation-src/candlr-20261011';
 if(execFileSync('git',['rev-parse','HEAD'],{cwd:source,encoding:'utf8'}).trim()!=='c8ac0eb11703e92c6daa3ad7908f2f219265e1a3')throw Error('Unexpected Candlr source');
 const file='frontend/src/pages/about.astro';
@@ -17,4 +17,8 @@ writeFileSync(source+'/frontend/src/pages/settings.astro',settings);
 let events=original('frontend/src/pages/events.astro');
 events=events.replace('id="form-image-url"','disabled aria-label="Remote image URLs are unavailable; choose a local image file" id="form-image-url"').replace('id="form-image-url-btn"','disabled id="form-image-url-btn"');
 writeFileSync(source+'/frontend/src/pages/events.astro',events);
+const pkg=JSON.parse(readFileSync(source+'/frontend/package.json','utf8'));
+pkg.dependencies.dompurify='3.4.17';
+writeFileSync(source+'/frontend/package.json',JSON.stringify(pkg,null,2)+'\n');
+copyFileSync(new URL('./security-package-lock.json',import.meta.url),source+'/frontend/package-lock.json');
 console.log('Candlr automatic upstream version request disabled through the instance environment setting.');

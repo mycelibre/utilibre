@@ -10,7 +10,7 @@ import tempfile
 import time
 ROOT=Path(__file__).resolve().parents[3]
 parser=argparse.ArgumentParser(); parser.add_argument('--image',default='utilibre-actual:leaves-security-20261011'); args=parser.parse_args()
-assert args.image in ['utilibre-actual:proxyaddr-security-20261011','utilibre-actual:leaves-security-20261011','utilibre-actual:privacy-rollback-20261011','utilibre-cache-expanded-actual:4.3.0-20261012']
+assert args.image in ['utilibre-actual:proxyaddr-security-20261011','utilibre-actual:leaves-security-20261011','utilibre-actual:privacy-rollback-20261011','utilibre-cache-expanded-actual:4.3.0-20261012','utilibre-actual:redirects1161-security-20261022']
 report=Path(tempfile.mkdtemp(prefix='actual-leaves-native-',dir='/opt/utilibre/reports'))
 cid=None; forwarder=None
 try:
@@ -25,6 +25,11 @@ try:
  else: raise RuntimeError('Native server not ready')
  env={**os.environ,'ACTUAL_TEST_URL':base,'ACTUAL_TEST_REPORT':str(report),'ACTUAL_TEST_IMAGE':args.image}
  subprocess.run(['node',str(ROOT/'deployment/maintenance/npm-leaves/check-actual.mjs')],env=env,check=True)
+ if args.image=='utilibre-actual:redirects1161-security-20261022':
+  receipt=json.loads((report/'result.json').read_text())
+  receipt['imageId']=subprocess.check_output(['docker','image','inspect','--format','{{.Id}}',args.image],text=True).strip()
+  receipt['date']=receipt['testedAt']
+  Path('/var/lib/utilibre-maintenance/security-20261022/redirects/actual/native.json').write_text(json.dumps(receipt,indent=2))
  print(json.dumps({'report':str(report),'image':args.image,'productionChanged':False}))
 finally:
  if forwarder: forwarder.terminate(); forwarder.wait(timeout=10)

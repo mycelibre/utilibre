@@ -31,7 +31,11 @@ for(const key of selected){
   // which no longer ship old lib/ files. No retained node_modules can be discarded.
   for(const target of targets){assert(!Object.keys(before).some(p=>p.startsWith(target+'/node_modules/')),'Unexpected nested dependency');recipe+='RUN rm -r '+JSON.stringify(target)+'\n';}
   for(const [name,paths] of Object.entries(s.paths)){
-   const pin=packages[name],response=await fetch('https://registry.npmjs.org/'+encodeURIComponent(name)+'/'+pin.version);assert(response.ok);const meta=await response.json();assert.equal(meta.dist.integrity,pin.integrity);assert.equal(meta.name,name);assert.equal(meta.version,pin.version);assert.deepEqual(meta.dependencies||{},{});assert.equal(new URL(meta.dist.tarball).hostname,'registry.npmjs.org');
+   const pin=packages[name],response=await fetch('https://registry.npmjs.org/'+encodeURIComponent(name)+'/'+pin.version);assert(response.ok);const meta=await response.json();assert.equal(meta.dist.integrity,pin.integrity);assert.equal(meta.name,name);assert.equal(meta.version,pin.version);
+   // DOMPurify's only dependency is a TypeScript declaration package, not
+   // runtime code. This finite exception must not authorize new transitives.
+   const expectedDependencies=name==='dompurify'&&pin.version==='3.4.17'?{'@types/trusted-types':'^2.0.7'}:{};
+   assert.deepEqual(meta.dependencies||{},expectedDependencies);assert.equal(new URL(meta.dist.tarball).hostname,'registry.npmjs.org');
    const response2=await fetch(meta.dist.tarball);assert(response2.ok);const bytes=Buffer.from(await response2.arrayBuffer());assert(bytes.length<4*1024**2);assert.equal('sha512-'+createHash('sha512').update(bytes).digest('base64'),pin.integrity);
    const i=receipts.length,archive=scratch+'/'+i+'.tgz',dest=scratch+'/pkg'+i;fs.mkdirSync(dest,{mode:0o755});fs.writeFileSync(archive,bytes);
    const listing=run('tar',['-tzf',archive]).trim().split('\n');assert(listing.every(n=>n.startsWith('package/')&&!n.split('/').includes('..')));

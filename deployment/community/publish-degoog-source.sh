@@ -6,9 +6,12 @@ revision=4a9bcc74f0fceaa33efbab4777f063274cce23d6
 test "$(git -C "$source" rev-parse "$revision")" = "$revision"
 stage=$(mktemp -d /opt/utilibre/source-degoog-XXXXXX)
 git -C "$source" archive "$revision" | tar -x -C "$stage"
+git -C "$stage" apply --check "$root/deployment/community/degoog-security.patch"
+git -C "$stage" apply "$root/deployment/community/degoog-security.patch"
 mkdir -p "$stage/utilibre-deployment" "$stage/utilibre-searx-engines"
 cp "$root/deployment/community/configure-degoog.mjs" "$root/deployment/community/init-degoog.mjs" "$root/deployment/community/compose.evaluation.yaml" "$root/deployment/community/degoog-gateway.conf" "$root/deployment/community/check-degoog.mjs" "$stage/utilibre-deployment/"
 cp "$root/deployment/community/check-degoog-settings.mjs" "$root/deployment/community/configure-degoog-search.mjs" "$root/deployment/community/check-degoog-search.mjs" "$stage/utilibre-deployment/"
+cp "$root/deployment/community/degoog-security.patch" "$root/deployment/maintenance/security-20261022/build-degoog.mjs" "$root/deployment/maintenance/security-20261022/build-degoog.sh" "$stage/utilibre-deployment/"
 cp "$root/docs/records/degoog-settings-2026-10-09.md" "$root/docs/records/degoog-search-2026-10-09.md" "$stage/utilibre-deployment/"
 cp /opt/utilibre/community-src/degoog-searx-engines/*.traits.json /opt/utilibre/community-src/degoog-searx-engines/*.py /opt/utilibre/community-src/degoog-searx-engines/LICENSE /opt/utilibre/community-src/degoog-searx-engines/SOURCE.json "$stage/utilibre-searx-engines/"
 archive=/opt/utilibre/toolbox-public/degoog-utilibre.tar.gz

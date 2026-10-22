@@ -5,8 +5,10 @@ import { request } from 'node:http';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { chromium } from '../../portal/node_modules/playwright-core/index.mjs';
-const origin = 'https://biblioreads.utilibre.org';
+const candidate = process.argv.includes('--candidate-oct22');
+const origin = candidate ? 'http://127.0.0.1:3436' : 'https://biblioreads.utilibre.org';
 const local = process.argv.includes('--backend');
+assert(!(candidate && local));
 const output = await mkdtemp('/tmp/utilibre-biblioreads-check-');
 let proxy, certificates;
 if (local) {
@@ -70,7 +72,7 @@ try {
   assert.equal(external.size, 0, `Browser third parties: ${[...external].join(', ')}`);
   // Deliberate denial probes are expected; all real-workflow failures are reported.
   assert.deepEqual(failures.filter(([status,path]) => !([400,404].includes(status) && ['/api/search/books','/api/image','/api/deprecated/book-scraper'].includes(path))), []);
-  console.log(`BiblioReads ${local?'protected backend':'public HTTPS'}: search/book/covers, desktop/mobile, local library export/delete, native operator link and input denials passed. Screenshots: ${output}`);
+  console.log(`BiblioReads ${candidate?'isolated candidate; bounded real Goodreads retrieval':local?'protected backend':'public HTTPS'}: search/book/covers, desktop/mobile, local library export/delete, native operator link and input denials passed. Screenshots: ${output}`);
 } finally {
   await browser.close();
   if (proxy) { proxy.closeAllConnections(); await new Promise(resolve=>proxy.close(resolve)); }

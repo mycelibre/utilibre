@@ -6,12 +6,14 @@ import cp from 'node:child_process';
 import path from 'node:path';
 import {randomBytes} from 'node:crypto';
 process.umask(0o077);
-const root='/var/lib/utilibre-maintenance/go-closure-20261012/ferretdb';
-const image='utilibre-ferretdb:2.7.0-mcp-closure-20261012';
+assert(process.argv.slice(2).every(a=>a==='--gathio-oct22'));
+const gathioUpdate=process.argv.includes('--gathio-oct22');
+const root=gathioUpdate?'/var/lib/utilibre-maintenance/security-20261022/gathio':'/var/lib/utilibre-maintenance/go-closure-20261012/ferretdb';
 const stage=fs.mkdtempSync(root+'/native-'),prefix='maintenance-ferret-closure',pg=prefix+'-pg',ferret=prefix+'-db',app=prefix+'-app';
 const docker=(args,input)=>{try{return cp.execFileSync('docker',args,{input,encoding:'utf8',timeout:90000,stdio:['pipe','pipe','pipe']}).trim();}catch(e){fs.writeFileSync(stage+'/error.log',String(e.stderr||e.message));throw Error('Native FerretDB check failed; private error.log');}};
 const imageOf=n=>docker(['inspect','--format','{{.Image}}',n]);
-const pgImage=imageOf('utilibre-gathio-postgres-1'),appImage=imageOf('utilibre-gathio-gathio-1');
+const image=gathioUpdate?imageOf('utilibre-gathio-ferretdb-1'):'utilibre-ferretdb:2.7.0-mcp-closure-20261012';
+const pgImage=imageOf('utilibre-gathio-postgres-1'),appImage=gathioUpdate?'utilibre-gathio:1.6.7-dom-toml-security-20261022':imageOf('utilibre-gathio-gathio-1');
 const password=randomBytes(24).toString('hex');
 fs.chmodSync(stage,0o755);
 for(const [n,uid] of [['data',999],['images',1000]]){fs.mkdirSync(stage+'/'+n,{mode:0o700});fs.chownSync(stage+'/'+n,uid,uid);}
@@ -34,6 +36,6 @@ try{
  await start(stage+'/restored');
  const code=`import assert from 'node:assert/strict';const f=${JSON.stringify(fixture)};for(const id of [f.eventID,f.imported.eventID]){const r=await fetch('http://127.0.0.1:3000/'+id);assert.equal(r.status,200);assert((await r.text()).includes('Fictional revised deployment event'));}const r=await fetch('http://127.0.0.1:3000/events/'+f.eventID+'.jpg');assert.equal(r.status,200);assert((await r.arrayBuffer()).byteLength>20);console.log('Native restored events and image passed');`;
  assert.match(docker(['exec','-i',app,'node','--input-type=module'],code),/passed/);
- const result={date:new Date().toISOString(),imageId:docker(['image','inspect',image,'--format','{{.Id}}']),passed:true,nativeGathioCreateEdit:true,invalidEditTokenDenied:true,imageUpload:true,icsImportExport:true,stoppedDatabaseCopyRestore:true,reopenedOriginalAndImportedEvents:true,network:'none/shared fictional loopback only',productionChanged:false};
+ const result={date:new Date().toISOString(),imageId:docker(['image','inspect',gathioUpdate?appImage:image,'--format','{{.Id}}']),passed:true,nativeGathioCreateEdit:true,invalidEditTokenDenied:true,imageUpload:true,icsImportExport:true,stoppedDatabaseCopyRestore:true,reopenedOriginalAndImportedEvents:true,network:'none/shared fictional loopback only',productionChanged:false};
  fs.writeFileSync(root+'/native.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 }finally{stop();}

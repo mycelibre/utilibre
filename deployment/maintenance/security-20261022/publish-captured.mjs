@@ -1,0 +1,11 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
+const key=process.argv[2];assert(['spliit','grist','rallly'].includes(key));
+const root='/var/lib/utilibre-maintenance/security-20261022',dir=root+'/'+key,c=JSON.parse(fs.readFileSync(dir+'/source-capture.json')),release=JSON.parse(fs.readFileSync(root+'/release.json')).groups.find(g=>g.key===key);
+assert(c.passed&&release?.status==='passed'&&release.newImage===c.imageId);
+const destination='/opt/utilibre/toolbox-public/'+key+'-utilibre.tar.gz',stage=c.archive.slice(0,c.archive.lastIndexOf('/'));
+const hash=b=>createHash('sha256').update(b).digest('hex'),bytes=fs.readFileSync(c.archive);assert.equal(hash(bytes),c.archiveSha256);
+const rollback=fs.existsSync(destination)?stage+'/previous-public-source.tar.gz':null;
+if(rollback&&!fs.existsSync(rollback))fs.copyFileSync(destination,rollback);
+fs.copyFileSync(c.archive,destination+'.new');fs.chmodSync(destination+'.new',0o644);fs.renameSync(destination+'.new',destination);
+const url='https://tools.utilibre.org/utilibre-source/'+key+'-utilibre.tar.gz',r=await fetch(url,{redirect:'manual',signal:AbortSignal.timeout(30000)});assert.equal(r.status,200);const received=Buffer.from(await r.arrayBuffer());assert.equal(hash(received),c.archiveSha256);
+fs.writeFileSync(dir+'/source-publication.json',JSON.stringify({date:new Date().toISOString(),passed:true,imageId:c.imageId,url,sha256:c.archiveSha256,rollback},null,2),{mode:0o600});console.log(key+': public source archive verified against exact captured build source.');

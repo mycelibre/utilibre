@@ -1,23 +1,26 @@
 import assert from 'node:assert/strict';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import {getDocument} from '/opt/utilibre/evaluation-src/texlyre-20261011/node_modules/pdfjs-dist/legacy/build/pdf.mjs';
 import { chromium } from '../../portal/node_modules/playwright/index.mjs';
-const report='/opt/utilibre/reports/texlyre-20261011';
+assert(process.argv.slice(2).length===0||JSON.stringify(process.argv.slice(2))==='["--oct22"]');
+const oct22=process.argv.includes('--oct22');
+const report=oct22?'/var/lib/utilibre-maintenance/security-20261022/texlyre':'/opt/utilibre/reports/texlyre-20261011';
+const base=oct22?'http://127.0.0.1:3441':'https://latex.utilibre.org';
+const getDocument=oct22?null:(await import('/opt/utilibre/evaluation-src/texlyre-20261011/node_modules/pdfjs-dist/legacy/build/pdf.mjs')).getDocument;
 mkdirSync(report,{recursive:true});
-const browser=await chromium.launch({args:['--host-resolver-rules=MAP latex.utilibre.org 10.10.1.3']});
+const browser=await chromium.launch(oct22?{}:{args:['--host-resolver-rules=MAP latex.utilibre.org 10.10.1.3']});
 const context=await browser.newContext({viewport:{width:1440,height:1000},acceptDownloads:true});
 const outside=[],errors=[],requests=[];
 context.on('request',r=>{
   if(/^https?:/.test(r.url())) {
     requests.push({path:new URL(r.url()).pathname,method:r.method()});
-    if(new URL(r.url()).origin!=='https://latex.utilibre.org')outside.push(r.url());
+    if(new URL(r.url()).origin!==base)outside.push(r.url());
   }
 });
 const page=await context.newPage();
 page.on('pageerror',e=>errors.push(e.message));
 page.on('console',m=>{if(m.type()==='error')errors.push(m.text().slice(0,300))});
 try {
-  await page.goto('https://latex.utilibre.org');
+  await page.goto(base);
   await page.getByRole('button',{name:'Try as Guest',exact:true}).click();
   for(const e of await page.locator('input[type=checkbox]').all())await e.check();
   await page.getByRole('button',{name:'Start Guest Session',exact:true}).click();
@@ -33,8 +36,15 @@ try {
   const pdfDownload=page.waitForEvent('download');
   await page.getByTitle('Export',{exact:true}).click();
   const pdf=await pdfDownload; await pdf.saveAs(`${report}/practice.pdf`);
-  const pdfDocument=await getDocument({data:new Uint8Array(readFileSync(`${report}/practice.pdf`)),isEvalSupported:false}).promise;
-  const text=(await(await pdfDocument.getPage(1)).getTextContent()).items.map(item=>item.str).join(' ');
+  const pdfBytes=[...readFileSync(`${report}/practice.pdf`)];
+  const text=oct22?await page.evaluate(async bytes=>{
+    // Pinned PDF.js runs in the actual browser, avoiding a test-only native
+    // canvas dependency. PDF bytes arrive over Playwright, not an HTTP upload.
+    const pdf=await import('/test-only-pdfjs/build/pdf.mjs');
+    pdf.GlobalWorkerOptions.workerSrc='/test-only-pdfjs/build/pdf.worker.mjs';
+    const d=await pdf.getDocument({data:new Uint8Array(bytes),isEvalSupported:false}).promise;
+    return (await(await d.getPage(1)).getTextContent()).items.map(item=>item.str).join(' ');
+  },pdfBytes):await(async()=>{const d=await getDocument({data:new Uint8Array(pdfBytes),isEvalSupported:false}).promise;return(await(await d.getPage(1)).getTextContent()).items.map(item=>item.str).join(' ');})();
   assert(text.includes('Práctica de Utilibre') && text.includes('español') && text.includes('2 + 3 = 5'),text);
   console.log('PDF download and extracted accents/formula passed');
   await page.getByTitle('Export Current Project',{exact:true}).click();
@@ -75,11 +85,11 @@ try {
   console.log('No outside HTTP requests, content POSTs or browser errors observed');
   const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,deviceScaleFactor:1});
   const mobilePage=await mobile.newPage();
-  await mobilePage.goto('https://latex.utilibre.org/');
+  await mobilePage.goto(base+'/');
   await mobilePage.getByRole('button',{name:'Try as Guest',exact:true}).click();
   await mobilePage.getByRole('button',{name:'Start Guest Session',exact:true}).waitFor();
   await mobilePage.screenshot({path:`${report}/mobile-login.png`,fullPage:true});
   console.log('Mobile-emulated login overflow:',await mobilePage.evaluate(()=>document.documentElement.scrollWidth>innerWidth));
   await mobile.close();
-  writeFileSync(`${report}/inspection.json`,JSON.stringify({date:new Date().toISOString(),outside,errors,requests},null,2));
-} finally {await browser.close();}
+  writeFileSync(`${report}/inspection.json`,JSON.stringify({date:new Date().toISOString(),passed:true,outside,errors,requests,guestProject:true,compiledPdfAccentsFormula:true,projectExportImport:true,localAccountUpgrade:true,reloadPersistence:true,mobileEmulation:true,productionChanged:!oct22},null,2));
+} catch(e){writeFileSync(`${report}/browser-error.json`,JSON.stringify({message:e.message,outside,errors,requests},null,2));writeFileSync(`${report}/browser-body.txt`,await page.locator('body').innerText());await page.screenshot({path:`${report}/browser-error.png`});throw e;} finally {await browser.close();}

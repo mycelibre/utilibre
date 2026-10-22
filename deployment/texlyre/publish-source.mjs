@@ -1,5 +1,5 @@
 import {execFileSync} from 'node:child_process';
-import {mkdtempSync,mkdirSync,cpSync,renameSync} from 'node:fs';
+import {mkdtempSync,mkdirSync,cpSync,renameSync,existsSync,copyFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 const source=process.argv[2]||'/opt/utilibre/evaluation-src/texlyre-20261011';
 const busy=process.argv[3]||'/opt/utilibre/evaluation-src/texlyre-busytex-1.4.0';
@@ -16,5 +16,7 @@ cpSync(fileURLToPath(new URL('.',import.meta.url)),`${stage}/texlyre/utilibre-in
 cpSync(`${source}/public/core/busytex/versions.txt`,`${stage}/texlyre/utilibre-integration/compiler-versions.txt`);
 cpSync(fileURLToPath(new URL('../../docs/records/texlyre-2026-10-11.md',import.meta.url)),`${stage}/texlyre/utilibre-integration/REVIEW.md`);
 execFileSync('tar',['-czf',`${stage}/texlyre-utilibre.tar.gz`,'texlyre','texlyre-busytex'],{cwd:stage});
-renameSync(`${stage}/texlyre-utilibre.tar.gz`,'/opt/utilibre/toolbox-public/texlyre-utilibre.tar.gz');
+const destination='/opt/utilibre/toolbox-public/texlyre-utilibre.tar.gz';
+if(existsSync(destination))copyFileSync(destination,`${stage}/previous-source.tar.gz`);
+renameSync(`${stage}/texlyre-utilibre.tar.gz`,destination);
 console.log('Published modified TeXlyre source, BusyTeX wrapper, dependency pins and integration.');

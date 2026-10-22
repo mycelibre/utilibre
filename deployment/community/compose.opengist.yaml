@@ -28,7 +28,7 @@ services:
       retries: 3
   gateway:
     <<: *bounded
-    image: utilibre-nginx:1.30.5-alpine-security-20261021
+    image: utilibre-nginx:1.30.6-security-20261022
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.25

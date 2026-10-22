@@ -73,7 +73,7 @@ services:
       - ./liberaforms-logging.py:/app/liberaforms/config/logging.py:ro
     networks: {forms: {ipv4_address: 172.29.98.3}}
   web:
-    image: utilibre-nginx:1.30.5-alpine-security-20261021
+    image: utilibre-nginx:1.30.6-security-20261022
     entrypoint: [nginx, -g, 'daemon off;']
     restart: unless-stopped
     depends_on: [app]

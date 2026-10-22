@@ -106,10 +106,10 @@ index f84202b..cd85cfc 100644
                    href="/search"
 diff --git a/deployment/additions-firewall.sh b/deployment/additions-firewall.sh
 new file mode 100644
-index 0000000..599a597
+index 0000000..2523163
 --- /dev/null
 +++ b/deployment/additions-firewall.sh
-@@ -0,0 +1,31 @@
+@@ -0,0 +1,42 @@
 +#!/bin/sh
 +# Only these new application IPs; no unrelated host traffic is changed.
 +set -eu
@@ -117,13 +117,24 @@ index 0000000..599a597
 +iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
 +iptables -w -F "$chain"
 +iptables -w -A "$chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++iptables -w -A "$chain" -s 172.29.91.10 -d 172.29.91.30 -p tcp --dport 6379 -j RETURN
 +for network in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/4 240.0.0.0/4; do
 +  iptables -w -A "$chain" -d "$network" -j DROP
 +done
 +iptables -w -A "$chain" -p tcp -m multiport --dports 80,443 -j RETURN
 +iptables -w -A "$chain" -j DROP
-+for address in 172.29.74.10 172.29.75.10 172.29.76.10 172.29.77.10 172.29.78.10 172.29.79.10 172.29.80.10 172.29.81.10 172.29.82.10 172.29.85.10 172.29.86.10 172.29.88.10 172.29.89.10; do
++for address in 172.29.74.10 172.29.75.10 172.29.76.10 172.29.77.10 172.29.78.10 172.29.79.10 172.29.80.10 172.29.81.10 172.29.82.10 172.29.85.10 172.29.86.10 172.29.88.10 172.29.89.10 172.29.90.10 172.29.91.10; do
 +  iptables -w -C DOCKER-USER -s "$address" -j "$chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$chain"
++  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
++done
++# Static QR hosting and the local Mumble pilot need replies only, never new outbound connections.
++static_chain=UTILIBRE-STATIC-OUT
++iptables -w -S "$static_chain" >/dev/null 2>&1 || iptables -w -N "$static_chain"
++iptables -w -F "$static_chain"
++iptables -w -A "$static_chain" -m conntrack --ctstate ESTABLISHED,RELATED -j RETURN
++iptables -w -A "$static_chain" -j DROP
++for address in 172.29.92.10 172.29.93.10; do
++  iptables -w -C DOCKER-USER -s "$address" -j "$static_chain" 2>/dev/null || iptables -w -I DOCKER-USER 1 -s "$address" -j "$static_chain"
 +  iptables -w -C INPUT -s "$address" -m conntrack --ctstate NEW -j DROP 2>/dev/null || iptables -w -I INPUT 1 -s "$address" -m conntrack --ctstate NEW -j DROP
 +done
 +# Tor needs public relay TCP ports beyond 443, but no host/private-network access.
@@ -143,10 +154,10 @@ index 0000000..599a597
 +done
 diff --git a/deployment/biblioreads-gateway.conf b/deployment/biblioreads-gateway.conf
 new file mode 100644
-index 0000000..da859d2
+index 0000000..4664b6d
 --- /dev/null
 +++ b/deployment/biblioreads-gateway.conf
-@@ -0,0 +1,69 @@
+@@ -0,0 +1,78 @@
 +worker_processes 1;
 +pid /tmp/nginx.pid;
 +error_log /dev/null;
@@ -169,7 +180,16 @@ index 0000000..da859d2
 +  limit_req_status 429;
 +  limit_conn_status 429;
 +  server {
++    # Discover the verified, canonical Utilibre security contact.
++    location = /.well-known/security.txt { return 302 https://utilibre.org/.well-known/security.txt; }
++    location = /security.txt { return 302 https://utilibre.org/.well-known/security.txt; }
 +    listen 8080;
++    # Public mirror pages request exclusion from indexing; this is not access control.
++    add_header X-Robots-Tag "noindex, nofollow" always;
++    location = /robots.txt {
++      default_type text/plain;
++      return 200 "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /settings\nDisallow: /utilibre-source/\n";
++    }
 +    client_max_body_size 12k;
 +    client_body_buffer_size 12k;
 +    client_body_timeout 10s;
@@ -218,7 +238,7 @@ index 0000000..da859d2
 +}
 diff --git a/deployment/compose.biblioreads.yaml b/deployment/compose.biblioreads.yaml
 new file mode 100644
-index 0000000..59a4b85
+index 0000000..1089882
 --- /dev/null
 +++ b/deployment/compose.biblioreads.yaml
 @@ -0,0 +1,38 @@
@@ -235,7 +255,7 @@ index 0000000..59a4b85
 +services:
 +  biblioreads:
 +    <<: *runtime
-+    image: utilibre-biblioreads:9508abc-p1
++    image: utilibre-biblioreads:9508abc-next15528-security-20261022
 +    user: "1000:1000"
 +    mem_limit: 768m
 +    tmpfs:
@@ -245,7 +265,7 @@ index 0000000..59a4b85
 +      books: {ipv4_address: 172.29.88.10}
 +  gateway:
 +    <<: *runtime
-+    image: nginxinc/nginx-unprivileged:1.28-alpine@sha256:7377697a821c131a924a7105fafbe7414db4e9fcc77a6f08f776f33f141ec3f8
++    image: utilibre-nginx:1.30.6-security-20261022
 +    user: "101:101"
 +    mem_limit: 128m
 +    entrypoint: [nginx, -g, "daemon off;"]
@@ -262,7 +282,7 @@ index 0000000..59a4b85
 +    ipam: {config: [{subnet: 172.29.88.0/24}]}
 diff --git a/deployment/firewall.sh b/deployment/firewall.sh
 new file mode 100644
-index 0000000..eb8a0c7
+index 0000000..12a6e87
 --- /dev/null
 +++ b/deployment/firewall.sh
 @@ -0,0 +1,13 @@
@@ -273,7 +293,7 @@ index 0000000..eb8a0c7
 +chain=UTILIBRE-TOOLS
 +iptables -w -S "$chain" >/dev/null 2>&1 || iptables -w -N "$chain"
 +iptables -w -F "$chain"
-+for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3151 3152; do
++for port in 3101 3102 3103 3109 3110 3111 3112 3120 3121 3122 3123 3124 3125 3130 3131 3132 3133 3134 3136 3137 3138 3139 3140 3141 3142 3145 3146 3147 3148 3149 3150 3151 3152 3153 3154 3155 3156 3160 3161 3162 3163 3164 3165 3166 3167 3168 3170 3171; do
 +  iptables -w -A "$chain" -s 10.10.1.3 -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j RETURN
 +  iptables -w -A "$chain" -p tcp -m conntrack --ctorigdst 10.10.1.43 --ctorigdstport "$port" -j DROP
 +done
@@ -329,18 +349,20 @@ index 123ec93..db0af3a 100644
      ];
    },
 diff --git a/package-lock.json b/package-lock.json
-index bcd3cfa..92f7a05 100644
+index bcd3cfa..c1e3e5a 100644
 --- a/package-lock.json
 +++ b/package-lock.json
-@@ -9,7 +9,6 @@
+@@ -9,21 +9,23 @@
        "version": "4.1.1",
        "license": "AGPL-3.0-or-later",
        "dependencies": {
 -        "@ducanh2912/next-pwa": "^10.2.9",
          "cheerio": "^1.0.0",
-         "dompurify": "^3.2.3",
+-        "dompurify": "^3.2.3",
++        "dompurify": "3.4.17",
          "idb": "^8.0.1",
-@@ -17,13 +16,16 @@
+-        "next": "^15.1.9",
++        "next": "15.5.28",
          "next-runtime-env": "^1.7.4",
          "next-themes": "^0.4.4",
          "react": "^19.0.0",
@@ -1609,7 +1631,16 @@ index bcd3cfa..92f7a05 100644
        "license": "MIT",
        "dependencies": {
          "@jridgewell/resolve-uri": "^3.1.0",
-@@ -2463,9 +2569,9 @@
+@@ -2457,15 +2563,15 @@
+       }
+     },
+     "node_modules/@next/env": {
+-      "version": "15.5.26",
+-      "resolved": "https://registry.npmjs.org/@next/env/-/env-15.5.26.tgz",
+-      "integrity": "sha512-NJBz9q10LU9h3KjHLEbdgWIV+ow/x+MYzKBRfqhm9/QmML3tPMhYmXF/UIV9SDVCNtOqFNc5oX7kZqeiigMCEA==",
++      "version": "15.5.28",
++      "resolved": "https://registry.npmjs.org/@next/env/-/env-15.5.28.tgz",
++      "integrity": "sha512-xxW5EBI8fMPuVTPBW7LL980IRbuDXlbkUAwp9DDhtb4Lnich3nJ13uYpvrX4VE74hWPf6AvHHAMmGCidcHjbfg==",
        "license": "MIT"
      },
      "node_modules/@next/eslint-plugin-next": {
@@ -1622,6 +1653,110 @@ index bcd3cfa..92f7a05 100644
        "dev": true,
        "license": "MIT",
        "dependencies": {
+@@ -2503,9 +2609,9 @@
+       }
+     },
+     "node_modules/@next/swc-darwin-arm64": {
+-      "version": "15.5.26",
+-      "resolved": "https://registry.npmjs.org/@next/swc-darwin-arm64/-/swc-darwin-arm64-15.5.26.tgz",
+-      "integrity": "sha512-So8eoJxIcXw/TexNUvvh3uY72J9nDo5BpJsAwUKx+FK57CrWXg6RqVufV7U9OT3BO+siMzJ2FuAwBhaHoPlLGg==",
++      "version": "15.5.28",
++      "resolved": "https://registry.npmjs.org/@next/swc-darwin-arm64/-/swc-darwin-arm64-15.5.28.tgz",
++      "integrity": "sha512-dPoQYXcfSIqx5o+TOXVXO7kONK5qbtNRDeiTfII0bT3puGIT6VF5e0QwmxNZfEZ5Zety5f3m9P/p4xqwfiLlPg==",
+       "cpu": [
+         "arm64"
+       ],
+@@ -2519,9 +2625,9 @@
+       }
+     },
+     "node_modules/@next/swc-darwin-x64": {
+-      "version": "15.5.26",
+-      "resolved": "https://registry.npmjs.org/@next/swc-darwin-x64/-/swc-darwin-x64-15.5.26.tgz",
+-      "integrity": "sha512-jImzLUTClVWKhP91e5sgDumjxCLhaFSt7DuN5cnRYw99Dppxxhhq5jKRyDa2aTv3JE7dQmTSTsY3EFkSOp9Pog==",
++      "version": "15.5.28",
++      "resolved": "https://registry.npmjs.org/@next/swc-darwin-x64/-/swc-darwin-x64-15.5.28.tgz",
++      "integrity": "sha512-RgCJ7buBivTH+6sddqaVm+/v8kwMHlFkobvdt3DfETutws5HrxnToMIWSN9X3MZ3aAi7BbKrGZZWUDQLEycXqw==",
+       "cpu": [
+         "x64"
+       ],
+@@ -2535,9 +2641,9 @@
+       }
+     },
+     "node_modules/@next/swc-linux-arm64-gnu": {
+-      "version": "15.5.26",
+-      "resolved": "https://registry.npmjs.org/@next/swc-linux-arm64-gnu/-/swc-linux-arm64-gnu-15.5.26.tgz",
+-      "integrity": "sha512-CaWd+T/Lud2BmZbrsa1CzCnIOdU3YX9Nuk89virZaSB1O+C+8Yrrevgmnl68u4dvZIfOAzQ77S+Njrq7v1XwSA==",
++      "version": "15.5.28",
++      "resolved": "https://registry.npmjs.org/@next/swc-linux-arm64-gnu/-/swc-linux-arm64-gnu-15.5.28.tgz",
++      "integrity": "sha512-OHXQe13olE59aKe++zHavGcJPh5SLHXi6Anret3BBeq1+qhSuOJDNAli/EDDfxs6UTqA4Qddo4uyYry2slyjiQ==",
+       "cpu": [
+         "arm64"
+       ],
+@@ -2554,9 +2660,9 @@
+       }
+     },
+     "node_modules/@next/swc-linux-arm64-musl": {
+-      "version": "15.5.26",
+-      "resolved": "https://registry.npmjs.org/@next/swc-linux-arm64-musl/-/swc-linux-arm64-musl-15.5.26.tgz",
+-      "integrity": "sha512-97AyKI34yjpaudlkWHswAf7c1PjWQAC7lLyrw3R5K+bq834EOA+9IG68rIVy0VqrqGjtPSMjJmMmgeJ3wHR5og==",
++      "version": "15.5.28",
++      "resolved": "https://registry.npmjs.org/@next/swc-linux-arm64-musl/-/swc-linux-arm64-musl-15.5.28.tgz",
++      "integrity": "sha512-nTB7bB6vfn4ezCJNYP43ukt2o8L3+WxKF/sTcTxepdXsJh3SM9RhlU7wrZYbH7L4HO5M87dqDTwm8587vAkCiw==",
+       "cpu": [
+         "arm64"
+       ],
+@@ -2573,9 +2679,9 @@
+       }
+     },
+     "node_modules/@next/swc-linux-x64-gnu": {
+-      "version": "15.5.26",
+-      "resolved": "https://registry.npmjs.org/@next/swc-linux-x64-gnu/-/swc-linux-x64-gnu-15.5.26.tgz",
+-      "integrity": "sha512-eVtuOCew1sBPV7BEgxy7qxuVyqoU3tJIS/xDZwa1/NiQ4Q0LM2JMH7rny+/uVIN6hsQ3PTb0hTQWypA0L2QxtA==",
++      "version": "15.5.28",
++      "resolved": "https://registry.npmjs.org/@next/swc-linux-x64-gnu/-/swc-linux-x64-gnu-15.5.28.tgz",
++      "integrity": "sha512-WXCfVI32rW3xCusoUX1RpZKtyChWU2Zwe27JUDmM3KrXwcDNc9vV4zEq0GKFAURnuQ/Ouo/XqPvB0yh445XZCg==",
+       "cpu": [
+         "x64"
+       ],
+@@ -2592,9 +2698,9 @@
+       }
+     },
+     "node_modules/@next/swc-linux-x64-musl": {
+-      "version": "15.5.26",
+-      "resolved": "https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-15.5.26.tgz",
+-      "integrity": "sha512-EiUXADp+Z+OdQnSqbX10YgOSUrs0CXVODoTfySfsP2jdhngn9bq5RJd376FJzqMPe/XX25FMr1aXtYUVPA0qDw==",
++      "version": "15.5.28",
++      "resolved": "https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-15.5.28.tgz",
++      "integrity": "sha512-Miq+NDb/HWsXuxseYxMM6fuEOQXgTziarkKIRpVKCn8W69cEfhQaQr+90pO+u4q2CbJR2wzXmUuCFyZaJs/Nng==",
+       "cpu": [
+         "x64"
+       ],
+@@ -2611,9 +2717,9 @@
+       }
+     },
+     "node_modules/@next/swc-win32-arm64-msvc": {
+-      "version": "15.5.26",
+-      "resolved": "https://registry.npmjs.org/@next/swc-win32-arm64-msvc/-/swc-win32-arm64-msvc-15.5.26.tgz",
+-      "integrity": "sha512-HPl41fgkC4kdM5CCIoqNW6KlKEj1N+xS6bjNFFxDNKooUNUu09frgD948zo95TPw/C3XINZpkdkBGNU2RhjEnw==",
++      "version": "15.5.28",
++      "resolved": "https://registry.npmjs.org/@next/swc-win32-arm64-msvc/-/swc-win32-arm64-msvc-15.5.28.tgz",
++      "integrity": "sha512-5LR79lemgDlgxvG7MQJ+zHCkVcrUoQuO7CiIvq3I58vNW4goSOE2b+19Z6FujRWMouvni4gvudYFuFuNxolGWA==",
+       "cpu": [
+         "arm64"
+       ],
+@@ -2627,9 +2733,9 @@
+       }
+     },
+     "node_modules/@next/swc-win32-x64-msvc": {
+-      "version": "15.5.26",
+-      "resolved": "https://registry.npmjs.org/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-15.5.26.tgz",
+-      "integrity": "sha512-TgmJ5ginKr34RPsz01/swpYtFBxh51d66jM26aytpE6NIypU5KtBVI8C2hJjUNpWr7v6sWj8a6+og2MyntcnpA==",
++      "version": "15.5.28",
++      "resolved": "https://registry.npmjs.org/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-15.5.28.tgz",
++      "integrity": "sha512-GNipvXUYROSTf4PXEyH95FrWImIB5zdaK6uEOg0RP1/X2drnvoMwiBkJ0VWdzX7w3iiBm3y5g2TxkKDGVTOQcg==",
+       "cpu": [
+         "x64"
+       ],
 @@ -2646,6 +2752,7 @@
        "version": "2.1.5",
        "resolved": "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz",
@@ -2222,6 +2357,19 @@ index bcd3cfa..92f7a05 100644
        "engines": {
          "node": ">=8"
        }
+@@ -4820,9 +5007,9 @@
+       }
+     },
+     "node_modules/dompurify": {
+-      "version": "3.4.16",
+-      "resolved": "https://registry.npmjs.org/dompurify/-/dompurify-3.4.16.tgz",
+-      "integrity": "sha512-sqo+pNp3qRhCIpbgRi1y8Tgk27Bo2Ry7w0dC1NBeNTdZChWjz9Xb/KOoZbRP/R6pQZ80Qw8YhXw13hWWBbMRnQ==",
++      "version": "3.4.17",
++      "resolved": "https://registry.npmjs.org/dompurify/-/dompurify-3.4.17.tgz",
++      "integrity": "sha512-B/pSlYVHQ58kqISD/yDjuJ1yfzI34m1gF4lAod2bwSRhiN4K5Cl3H8Af7hqB2PmTL911tdEudnnXn5FnhRoz0w==",
+       "license": "(MPL-2.0 OR Apache-2.0)",
+       "optionalDependencies": {
+         "@types/trusted-types": "^2.0.7"
 @@ -4846,6 +5033,7 @@
        "version": "1.0.1",
        "resolved": "https://registry.npmjs.org/dunder-proto/-/dunder-proto-1.0.1.tgz",
@@ -3056,6 +3204,48 @@ index bcd3cfa..92f7a05 100644
        "license": "MIT"
      },
      "node_modules/mz": {
+@@ -7196,12 +7486,12 @@
+       "license": "MIT"
+     },
+     "node_modules/next": {
+-      "version": "15.5.26",
+-      "resolved": "https://registry.npmjs.org/next/-/next-15.5.26.tgz",
+-      "integrity": "sha512-EVCqhvq8Hs+nX9udH2VzE/iXAg9QodZBZnwVJTuAMl386GIYvlJtYhFytV9nSlDYxKw3kEyv8I2dCQs0+on0sQ==",
++      "version": "15.5.28",
++      "resolved": "https://registry.npmjs.org/next/-/next-15.5.28.tgz",
++      "integrity": "sha512-JjhLBBY1PNnuwPtcZ7t8yxVeJVYvD2Jyp633J+gRCNbzSt7N0E+xqCf6uQiff3+3qmUkwcF/ksfSsK1xsZ76Tw==",
+       "license": "MIT",
+       "dependencies": {
+-        "@next/env": "15.5.26",
++        "@next/env": "15.5.28",
+         "@swc/helpers": "0.5.15",
+         "caniuse-lite": "^1.0.30001579",
+         "postcss": "8.4.31",
+@@ -7214,15 +7504,15 @@
+         "node": "^18.18.0 || ^19.8.0 || >= 20.0.0"
+       },
+       "optionalDependencies": {
+-        "@next/swc-darwin-arm64": "15.5.26",
+-        "@next/swc-darwin-x64": "15.5.26",
+-        "@next/swc-linux-arm64-gnu": "15.5.26",
+-        "@next/swc-linux-arm64-musl": "15.5.26",
+-        "@next/swc-linux-x64-gnu": "15.5.26",
+-        "@next/swc-linux-x64-musl": "15.5.26",
+-        "@next/swc-win32-arm64-msvc": "15.5.26",
+-        "@next/swc-win32-x64-msvc": "15.5.26",
+-        "sharp": "^0.34.3 || ^0.35.4"
++        "@next/swc-darwin-arm64": "15.5.28",
++        "@next/swc-darwin-x64": "15.5.28",
++        "@next/swc-linux-arm64-gnu": "15.5.28",
++        "@next/swc-linux-arm64-musl": "15.5.28",
++        "@next/swc-linux-x64-gnu": "15.5.28",
++        "@next/swc-linux-x64-musl": "15.5.28",
++        "@next/swc-win32-arm64-msvc": "15.5.28",
++        "@next/swc-win32-x64-msvc": "15.5.28",
++        "sharp": "^0.34.3 || ^0.35.5"
+       },
+       "peerDependencies": {
+         "@opentelemetry/api": "^1.1.0",
 @@ -7266,34 +7556,6 @@
          "react-dom": "^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc"
        }
@@ -4153,18 +4343,20 @@ index bcd3cfa..92f7a05 100644
      },
      "node_modules/yocto-queue": {
 diff --git a/package.json b/package.json
-index 82a746d..78025b5 100644
+index 82a746d..58b8101 100644
 --- a/package.json
 +++ b/package.json
-@@ -12,7 +12,6 @@
+@@ -12,23 +12,30 @@
      "lint": "next lint"
    },
    "dependencies": {
 -    "@ducanh2912/next-pwa": "^10.2.9",
      "cheerio": "^1.0.0",
-     "dompurify": "^3.2.3",
+-    "dompurify": "^3.2.3",
++    "dompurify": "3.4.17",
      "idb": "^8.0.1",
-@@ -20,15 +19,23 @@
+-    "next": "^15.1.9",
++    "next": "15.5.28",
      "next-runtime-env": "^1.7.4",
      "next-themes": "^0.4.4",
      "react": "^19.0.0",

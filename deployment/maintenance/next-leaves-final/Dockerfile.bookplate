@@ -1,7 +1,9 @@
-FROM utilibre-bookplate:1.1.0-security-20261011-language-20261011
+ARG REPAIR_BASE=utilibre-bookplate:1.1.0-security-20261011-language-20261011
+FROM ${REPAIR_BASE}
+ARG REPAIR_USER=node
 # Frozen image retains all reviewed OS/npm/privacy settings. /app here is the
 # immutable build tree only; runtime uploads/database volumes are never mounted.
 USER root
 RUN rm -rf /app && mkdir /app && chown node:node /app
 ADD --chown=node:node app.tar.gz /app/
-USER node
+USER ${REPAIR_USER}

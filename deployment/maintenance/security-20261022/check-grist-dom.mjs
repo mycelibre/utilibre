@@ -1,0 +1,9 @@
+import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';
+const dir='/var/lib/utilibre-maintenance/security-20261022/grist',b=JSON.parse(fs.readFileSync(dir+'/build.json'));
+const program=`const assert=require('assert/strict'),{JSDOM}=require('/grist/node_modules/jsdom');const results=[];for(const root of ['/grist/node_modules/dompurify','/grist/node_modules/isomorphic-dompurify/node_modules/dompurify']){const w=new JSDOM('<!doctype html><body></body>').window,D=require(root)(w),e=w.document.createElement('div'),s=e.attachShadow({mode:'open'});s.append(w.document.createTextNode('$'),w.document.createElement('object'),w.document.createTextNode('{fictional}'));D.sanitize(e,{IN_PLACE:true,SAFE_FOR_TEMPLATES:true});s.normalize();assert.equal(D.sanitize('<b>Café</b><script>fictional()</script>'),'<b>Café</b>');results.push({path:root,version:D.version,templateRemoved:!s.textContent.includes('$'+'{fictional}'),normalMarkupPreserved:true});w.close();}console.log(JSON.stringify(results));`;
+const rows=[];
+for(const imageId of [b.base,b.imageId]){
+ const result=JSON.parse(cp.execFileSync('docker',['run','--rm','--network','none','--read-only','--log-driver','none','--cpus','1','--memory','256m','--pids-limit','64','--cap-drop','ALL','--security-opt','no-new-privileges','--entrypoint','node',imageId,'-e',program],{encoding:'utf8',timeout:30000,maxBuffer:1024**2,stdio:['ignore','pipe','pipe']}));rows.push({imageId,result});
+}
+assert(rows[0].result.some(r=>!r.templateRemoved));assert(rows[1].result.every(r=>r.version==='3.4.17'&&r.templateRemoved&&r.normalMarkupPreserved));
+fs.writeFileSync(dir+'/dom-regression.json',JSON.stringify({date:new Date().toISOString(),passed:true,rows,network:'none'},null,2),{mode:0o600});console.log('Grist: old sanitizer reproduces defect; both repaired copies reject it and preserve ordinary markup.');

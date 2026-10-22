@@ -5,8 +5,8 @@ import cp from 'node:child_process';
 import {randomBytes} from 'node:crypto';
 import {chromium} from '../../../../portal/node_modules/playwright/index.mjs';
 process.umask(0o077);
-const rollback=process.argv[2]==='--privacy-rollback',closure=process.argv[2]==='--closure';assert(!process.argv[2]||rollback||closure);
-const image=closure?'utilibre-spliit:1.29.0-js-closure-20261012':rollback?'utilibre-spliit:1.29.0-privacy-rollback-20261011':'utilibre-spliit:1.29.0-mysql-security-20261011';
+const oct22=process.argv[2]==='--oct22',rollback=process.argv[2]==='--privacy-rollback',closure=process.argv[2]==='--closure';assert(!process.argv[2]||rollback||closure||oct22);
+const image=oct22?'utilibre-spliit:1.29.0-next1641-security-20261022':closure?'utilibre-spliit:1.29.0-js-closure-20261012':rollback?'utilibre-spliit:1.29.0-privacy-rollback-20261011':'utilibre-spliit:1.29.0-mysql-security-20261011';
 const report=fs.mkdtempSync('/opt/utilibre/reports/app-leaves-spliit-native-');
 const network='maintenance-spliit-leaves-'+randomBytes(4).toString('hex'),db=network+'-db',app=network+'-app',origin='http://127.0.0.1:3434';
 const docker=(...args)=>cp.execFileSync('docker',args,{encoding:'utf8',timeout:90000,stdio:['ignore','pipe','pipe'],maxBuffer:2*1024**2});
@@ -36,6 +36,7 @@ try{
  await page.reload();await page.getByTestId('expense-card').filter({hasText:'Fictional notebooks'}).waitFor();
  await page.goto(`${origin}/groups/${id}/expenses/${data.expenses[0].id}/edit`);await page.getByRole('button',{name:'Delete',exact:true}).click();await page.getByRole('dialog').getByRole('button',{name:'Yes',exact:true}).click();await page.waitForURL(/\/groups\/[^/]+\/expenses$/);assert.equal(await page.getByTestId('expense-card').count(),0);
  assert.deepEqual([...outside],[]);
- fs.writeFileSync(report+'/result.json',JSON.stringify({status:'passed',date:new Date().toISOString(),image,imageId:docker('image','inspect',image,'--format','{{.Id}}').trim(),blankDatabase:true,nativeGroupAndExpenseCreated:true,jsonCsvExport:true,reloadPersistence:true,nativeExpenseDeletion:true,externalBrowserOrigins:[...outside],productionChanged:false,limitation:'Isolated Chromium desktop workflow; real mobile hardware not tested.'},null,2)+'\n');console.log(report);
+ fs.writeFileSync(report+'/result.json',JSON.stringify({status:'passed',date:new Date().toISOString(),image,imageId:docker('image','inspect',image,'--format','{{.Id}}').trim(),blankDatabase:true,nativeGroupAndExpenseCreated:true,jsonCsvExport:true,reloadPersistence:true,nativeExpenseDeletion:true,externalBrowserOrigins:[...outside],productionChanged:false,limitation:'Isolated Chromium desktop workflow; real mobile hardware not tested.'},null,2)+'\n');
+ if(oct22)fs.copyFileSync(report+'/result.json','/var/lib/utilibre-maintenance/security-20261022/spliit/native.json');console.log(report);
 }catch(e){fs.writeFileSync(report+'/error.log',String(e.stderr||e.stack));throw Error('Spliit stage failed; private report '+report);}
 finally{if(browser)await browser.close();if(bridge?.pid)try{process.kill(-bridge.pid,'SIGTERM');}catch{}for(const name of [app,db])try{docker('rm','-f',name);}catch{}try{docker('network','rm',network);}catch{}}

@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 const base='http://127.0.0.1:3000';
 const fixture=JSON.parse(fs.readFileSync('/tmp/gathio-fixture.json','utf8'));
-const body={eventName:'Fictional revised deployment event',eventLocation:'Fictional room',eventStart:'2026-10-20T14:00',eventEnd:'2026-10-20T15:00',timezone:'Etc/UTC',eventDescription:'Fictional restoration check only.',eventURL:'',imagePath:'',hostName:'Fictional host',creatorEmail:'',publicCheckbox:'',eventGroupCheckbox:'',interactionCheckbox:'on',joinCheckbox:'on',maxAttendeesCheckbox:'',maxAttendees:0,editToken:fixture.editToken};
+assert(fixture.eventStart&&fixture.eventEnd,'Use the fresh fictional event fixture');
+const body={eventName:'Fictional revised deployment event',eventLocation:'Fictional room',eventStart:fixture.eventStart,eventEnd:fixture.eventEnd,timezone:'Etc/UTC',eventDescription:'Fictional restoration check only.',eventURL:'',imagePath:'',hostName:'Fictional host',creatorEmail:'',publicCheckbox:'',eventGroupCheckbox:'',interactionCheckbox:'on',joinCheckbox:'on',maxAttendeesCheckbox:'',maxAttendees:0,editToken:fixture.editToken};
 let r=await fetch(base+'/event/'+fixture.eventID,{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({...body,editToken:'fictional-invalid'})});assert.equal(r.status,403);
 const form=new FormData();for(const [key,value] of Object.entries(body))form.set(key,String(value));
 // A local synthetic image fixture; no external image source is contacted.

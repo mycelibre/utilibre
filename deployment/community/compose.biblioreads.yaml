@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   biblioreads:
     <<: *runtime
-    image: utilibre-cache-biblioreads-biblioreads:4.3.0-20261012
+    image: utilibre-biblioreads:9508abc-next15528-security-20261022
     user: "1000:1000"
     mem_limit: 768m
     tmpfs:
@@ -21,7 +21,7 @@ services:
       books: {ipv4_address: 172.29.88.10}
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.5-alpine-security-20261021
+    image: utilibre-nginx:1.30.6-security-20261022
     user: "101:101"
     mem_limit: 128m
     entrypoint: [nginx, -g, "daemon off;"]

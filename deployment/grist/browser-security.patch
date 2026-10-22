@@ -1,0 +1,72 @@
+diff --git a/app/server/lib/ActiveDoc.ts b/app/server/lib/ActiveDoc.ts
+index 4363a33..4504a8d 100644
+--- a/app/server/lib/ActiveDoc.ts
++++ b/app/server/lib/ActiveDoc.ts
+@@ -186,7 +186,7 @@ import { Mutex } from "async-mutex";
+ import * as bluebird from "bluebird";
+ import { readFile } from "fs-extra";
+ import { IMessage, MsgType } from "grain-rpc";
+-import imageSize from "image-size";
++import { imageSizeFromFile } from "image-size/fromFile";
+ import { Cancelable } from "lodash";
+ import cloneDeep from "lodash/cloneDeep";
+ import flatten from "lodash/flatten";
+@@ -2943,7 +2943,7 @@ export class ActiveDoc extends EventEmitter {
+     // imageSize returns an object with a width, height and type property if the file is an image.
+     // The width and height properties are integers representing width and height in pixels.
+     try {
+-      dimensions = await bluebird.fromCallback((cb: any) => imageSize(fileData.absPath, cb));
++      dimensions = await imageSizeFromFile(fileData.absPath);
+     } catch (err) {
+       // Non-images will fail in some way, and that's OK.
+       dimensions.height = 0;
+diff --git a/package.json b/package.json
+index 894968a..cc41140 100644
+--- a/package.json
++++ b/package.json
+@@ -170,7 +170,7 @@
+     "csv": "6.3.8",
+     "currency-symbol-map": "5.1.0",
+     "diff-match-patch": "1.0.5",
+-    "dompurify": "3.4.13",
++    "dompurify": "3.4.17",
+     "double-ended-queue": "2.1.0-0",
+     "emoji-mart": "5.6.0",
+     "emoji-regex": "10.4.0",
+@@ -251,7 +251,8 @@
+     "ts-interface-checker": "1.0.2",
+     "@gristlabs/sqlite3": "6.0.1-grist.1",
+     "esbuild": "^0.25.0",
+-    "serialize-javascript": "^7.0.5"
++    "serialize-javascript": "^7.0.5",
++    "dompurify": "3.4.17"
+   },
+   "mocha": {
+     "require": [
+diff --git a/yarn.lock b/yarn.lock
+index 889c46d..864e5e1 100644
+--- a/yarn.lock
++++ b/yarn.lock
+@@ -4521,18 +4521,13 @@ domhandler@^5.0.2, domhandler@^5.0.3:
+   dependencies:
+     domelementtype "^2.3.0"
+ 
+-dompurify@3.4.13:
+-  version "3.4.13"
+-  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.4.13.tgz#fc28949d59f92d62e28a3a764bcbeee35897a1be"
+-  integrity sha512-2vmYIoqjze2d+kakP8S/nS5shfsl587kzwEjcGlTdiksUVgFHnFCsLYDVj/JNqJVOQZGSYBTmuycv0PodwmnMQ==
++dompurify@3.4.17, dompurify@^2.3.8:
++  version "3.4.17"
++  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.4.17.tgz#074bbb24eaa419535ac19ffe7f663104b0e1543d"
++  integrity sha512-B/pSlYVHQ58kqISD/yDjuJ1yfzI34m1gF4lAod2bwSRhiN4K5Cl3H8Af7hqB2PmTL911tdEudnnXn5FnhRoz0w==
+   optionalDependencies:
+     "@types/trusted-types" "^2.0.7"
+ 
+-dompurify@^2.3.8:
+-  version "2.5.9"
+-  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.5.9.tgz#80481ec22dfac67285cc274cb51a45c1e9fa9c42"
+-  integrity sha512-i6mvVmWN4xo9LrhCOZrDgSs9noW6nOahbrmzjRbPF36YPyj5Ue5lgok0MHDWkG7xzpWFO2OYttXdzM7rJxHvNA==
+-
+ domutils@^2.5.2, domutils@^2.8.0:
+   version "2.8.0"
+   resolved "https://registry.yarnpkg.com/domutils/-/domutils-2.8.0.tgz#4437def5db6e2d1f5d6ee859bd95ca7d02048135"

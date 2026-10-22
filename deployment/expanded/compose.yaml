@@ -16,7 +16,7 @@ x-runtime: &runtime
 services:
   jupyterlite:
     <<: *runtime
-    image: utilibre-jupyterlite:0.8.5-browser-security-20261011-p2-libs20261021
+    image: utilibre-jupyterlite:0.8.5-browser-security-20261011-p2-libs20261021-nginx1306
     read_only: true
     user: "101:101"
     volumes:
@@ -37,7 +37,7 @@ services:
   # Rollback: compose.whisper-withdrawn.yaml restores the previous 410 notice.
   whisper:
     <<: *runtime
-    image: utilibre-whisper:security-20261011-nginx1305-tiff472-libs20261021
+    image: utilibre-whisper:security-20261011-nginx1305-tiff472-libs20261021-nginx1306
     entrypoint: [nginx, -g, 'daemon off;']
     read_only: true
     user: "101:101"
@@ -88,7 +88,7 @@ services:
 
   wiki-gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.5-alpine-security-20261021
+    image: utilibre-nginx:1.30.6-security-20261022
     read_only: true
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
@@ -137,7 +137,7 @@ services:
 
   actual:
     <<: *runtime
-    image: utilibre-actual:runtime-minimal-20261012
+    image: utilibre-actual:redirects1161-security-20261022
     read_only: true
     user: "1000:1000"
     environment:

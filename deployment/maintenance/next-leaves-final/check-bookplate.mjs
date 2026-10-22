@@ -4,9 +4,10 @@ import {execFileSync} from 'node:child_process';
 import {randomBytes,randomUUID} from 'node:crypto';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {request,chromium} from '../../../portal/node_modules/playwright/index.mjs';
-const image='utilibre-bookplate:1.1.0-next1638-security-20261012';
+import {profile} from './profile.mjs';
+const {image,dir,next}=profile;
 const base='http://172.29.240.10:3000',net='maintenance-bookplate-next-native',db=net+'-db',app=net+'-app';
-const dir='/var/lib/utilibre-maintenance/next-leaves-final-20261012';mkdirSync(dir,{recursive:true,mode:0o700});
+mkdirSync(dir,{recursive:true,mode:0o700});
 const docker=args=>{try{return execFileSync('docker',args,{encoding:'utf8',timeout:60000,stdio:['ignore','pipe','pipe']});}catch{throw Error('Bookplate staging command failed; child details suppressed');}};
 const secret=randomBytes(32).toString('hex'),created=[],contexts=[],checks=[];let browser;
 try{
@@ -36,7 +37,7 @@ try{
  assert.deepEqual(external,[]);assert.deepEqual(errors,[]);
  assert((await a.delete('/api/books/'+id)).ok());assert(!(await (await a.get('/api/books')).json()).books.some(x=>x.id===id));
  checks.push('Chromium saved-library render/reload, native book deletion; no external browser requests or script errors');
- assert.equal(docker(['exec',app,'node','-p','require("next/package.json").version']).trim(),'16.3.8');
+ assert.equal(docker(['exec',app,'node','-p','require("next/package.json").version']).trim(),next);
  writeFileSync(dir+'/bookplate-native.json',JSON.stringify({date:new Date().toISOString(),status:'passed',passed:true,image,imageId:docker(['image','inspect','--format','{{.Id}}',image]).trim(),checks,scope:'Isolated synthetic accounts and RAM-backed database; not public-edge or real-user migration evidence'},null,2)+'\n',{mode:0o600});
  console.log('Bookplate patched Next.js: '+checks.join('; '));
 }finally{await browser?.close();for(const c of contexts)await c.dispose();for(const args of created.reverse())docker(args);}

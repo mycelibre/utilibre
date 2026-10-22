@@ -1,0 +1,715 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-22T22:29:45.890Z",
+  "status": "released-with-remaining-security-work",
+  "distinctContainers": 79,
+  "receipts": [
+    {
+      "file": "nginx/gateways-release.json",
+      "sha256": "18513cecefc6a5f9afcee48c072f7dc1d22d095a3c266deed090434dd861e135",
+      "releases": 41,
+      "status": "passed"
+    },
+    {
+      "file": "nginx/artifacts-release.json",
+      "sha256": "0e876c4763dc44de19e2b2850d6c0a91955583b2384b53fc32cf52a0e0440077",
+      "releases": 27,
+      "status": "passed"
+    },
+    {
+      "file": "release.json",
+      "sha256": "2d9a250d18e49d6b5d1038213d4d69df166e563ead2a6be6b95cb7d79f8a6c7f",
+      "releases": 9,
+      "status": "passed"
+    },
+    {
+      "file": "redirects/release.json",
+      "sha256": "4b78eeb0b54a6cdc63dc1f72a443179afe9f8a84734dadb385926c4ad3092d08",
+      "releases": 3,
+      "status": "passed"
+    },
+    {
+      "file": "privatebin-nginx/release.json",
+      "sha256": "8961998be3dac7f41931163484f5f4adec435b7d99e56121cd773957aae1cf9f",
+      "releases": 1,
+      "status": "passed"
+    }
+  ],
+  "containers": [
+    {
+      "container": "utilibre-13ft-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-additions-dumb-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-additions-fmd-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-additions-mezzo-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-addy-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-beaverhabits-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-biblioreads-biblioreads-1",
+      "image": "sha256:2079938c6e33835dbdaa310cbc4185a1ca3be249b34b2d1cdd85ea11c9c11552",
+      "reference": "utilibre-biblioreads:9508abc-next15528-security-20261022",
+      "receipt": "release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-biblioreads-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-binternet-gateway-1",
+      "image": "sha256:bc9b6070b25700fb5460da8a2e30b6e1544b90d43e46533c04afb84304a08eda",
+      "reference": "utilibre-binternet-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-binternet-onion-gateway-1",
+      "image": "sha256:bc9b6070b25700fb5460da8a2e30b6e1544b90d43e46533c04afb84304a08eda",
+      "reference": "utilibre-binternet-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-browser-tools-audiomass-1",
+      "image": "sha256:37bbcfe06a4452ab7b6eaae23c3b714900a96f5e77411b26e7c5125a206edd14",
+      "reference": "utilibre-audiomass:21f5ee1-p1-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-browser-tools-cyberchef-1",
+      "image": "sha256:ddef422376a84b8c96d1c227598e20bf8211fdf8e04b48c6d4da687ec433a053",
+      "reference": "utilibre-cyberchef:11.5.0-p1-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-browser-tools-excalidraw-1",
+      "image": "sha256:89484b4b8dec9e4033907330f5ee9397b46a525a475b07f1b1859176a1e81616",
+      "reference": "utilibre-excalidraw:53973c3-p1-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-browser-tools-image-scrubber-1",
+      "image": "sha256:cc61d679ac1f44a1607caabec7279a9452d3efabaa193319c053d3bf2caefb7a",
+      "reference": "utilibre-image-scrubber:390b166-p1-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-browser-tools-markmap-1",
+      "image": "sha256:563ffb14498bf7374934fd0de1f422483a3eb9ee64f57a6b959e9452161fb217",
+      "reference": "utilibre-markmap:0.18.12-dom3417-security-20261022",
+      "receipt": "release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-browser-tools-minipaint-1",
+      "image": "sha256:29876e2eabb06688f24d9f70f634b2a5674d910878671a7ba68e292f540614ca",
+      "reference": "utilibre-minipaint:4.14.3-p1-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-browser-tools-rawgraphs-1",
+      "image": "sha256:99780908967edaf2ac25a41e2a238dc37c78ed37da8d97a43bf5cb186dbe4f64",
+      "reference": "utilibre-rawgraphs:b7b2909-p1-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-browser-tools-svgedit-1",
+      "image": "sha256:ee48778075bb42ee53782b97dc5d6b9a99fdbdf62fedfa1bb5e6a9605b4a5cf9",
+      "reference": "utilibre-svgedit:c44f061-p1-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-browser-tools-zip-manager-1",
+      "image": "sha256:215c17492fa36bf5c2ca10c5a7f4d26b40c1c35a258be5de7e48a772d0ac7f1f",
+      "reference": "utilibre-zip-manager:3b77a59-p1-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-bytestash-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-calendar-calino-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-chhoto-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-chitchatter-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-collaboration-pilot-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-community-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-community-rallly-1",
+      "image": "sha256:6877aca8b8c9a336aa537ccd8239dda89de713ec75307efeaa73f5fc2610e5ba",
+      "reference": "utilibre-rallly:4.15.4-next1641-security-20261022",
+      "receipt": "release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-community-rallly-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-community-uptime-kuma-1",
+      "image": "sha256:40806c29e30b3064f1a1928c814362248444421d96b7dcffc2e3a5b265adddb6",
+      "reference": "utilibre-kuma:redirects1161-security-20261022",
+      "receipt": "redirects/release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-creative-batch-glyphr-1",
+      "image": "sha256:7b6b575b26e69b40d88062bfc904d3c427f733a36f47fb6155943d06e5aac157",
+      "reference": "utilibre-glyphr:2.10.6-p1-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-creative-batch-static-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-donetick-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-evaluation-degoog-1",
+      "image": "sha256:3e8932490132625391ad0d086f0071e9393ea525767a4b58cf1d56a7d39674f2",
+      "reference": "utilibre-degoog:1.0.0-dom3417-security-20261022",
+      "receipt": "release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-evaluation-degoog-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-expanded-actual-1",
+      "image": "sha256:e8895acc05fa825555f23a8c75411b6e93850dc03cf5d4a7c566cdd7af21058b",
+      "reference": "utilibre-actual:redirects1161-security-20261022",
+      "receipt": "redirects/release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-expanded-jupyterlite-1",
+      "image": "sha256:15e5c9706d5c6d2909d47c9ef51695d6c89473a81174853df836b9e10fee4caf",
+      "reference": "utilibre-jupyterlite:0.8.5-browser-security-20261011-p2-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-expanded-whisper-1",
+      "image": "sha256:b3af856cb0aa15c859f9303e208c8d4b88098d9e7c39c9b1ba909066170579bb",
+      "reference": "utilibre-whisper:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-expanded-wiki-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-family-chess-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-gathio-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-gathio-gathio-1",
+      "image": "sha256:779ab3661bf982c51768986e34fc53b6e257b0f1850e3d7d81aa0cec1095933b",
+      "reference": "utilibre-gathio:1.6.7-dom-toml-security-20261022",
+      "receipt": "release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-kitchenowl-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-kittygram-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-linkding-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-newsletters-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-opengist-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-openresume-web-1",
+      "image": "sha256:73f83ec3ef3263cb0017f10b402a73bf31eeccd93dcf53819e57558ddfd9fb1b",
+      "reference": "utilibre-openresume:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-pack-forms-web-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-pack-static-static-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-pollaris-gateway-1",
+      "image": "sha256:4220028a7376cffcb93ec917ab118a099571f9073c2148538af62be0836add28",
+      "reference": "utilibre-pollaris-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-priviblur-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-projects-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-qr-offline-qr-offline-1",
+      "image": "sha256:101dd03aba32f1183b6523fb5ab36bd34af133ab7d9b77159c18ea7a622c867a",
+      "reference": "utilibre-qr-offline:0fde700-p5-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-razzia-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-reader-evaluation-anonymousoverflow-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-reader-evaluation-fourget-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-reader-evaluation-gothub-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-reader-evaluation-safetwitch-1",
+      "image": "sha256:bda409e6d0c411b53286b93b11d4717f08a02c5f6c599528dbd9da57c6613e0d",
+      "reference": "utilibre-safetwitch:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-records-bookplate-1",
+      "image": "sha256:9a9605e026f706b72df01aab68194b6b36329bbee00582617ae31b5953ad8776",
+      "reference": "utilibre-bookplate:1.1.0-next1641-security-20261022",
+      "receipt": "release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-records-candlr-1",
+      "image": "sha256:85e527579a893a9d6fb0e0c0e028c0259bf9b0e8fe79e2779ab832d492be2efd",
+      "reference": "utilibre-candlr:2.0.0-dom3417-security-20261022",
+      "receipt": "release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-records-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-records-grist-1",
+      "image": "sha256:9ca3c2cd0d21dc69ec5fb4e6cc8934e7cb3249b26cbda79ee954a928f6e5ed81",
+      "reference": "utilibre-grist:1.7.21-redirects1161-security-20261022",
+      "receipt": "redirects/release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-rimgo-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-services-privatebin-1",
+      "image": "sha256:456958e36a02999f50a576c985f9de7c03265e8dd272e721c41bdff164bc6885",
+      "reference": "utilibre-privatebin:nginx1306-security-20261022",
+      "receipt": "privatebin-nginx/release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-simplelogin-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-spliit-app-1",
+      "image": "sha256:63d19ae9b559a2639ecbb08900f5f82f128d8c86d54b3a582acf5aca9899e646",
+      "reference": "utilibre-spliit:1.29.0-next1641-security-20261022",
+      "receipt": "release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-spliit-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-toolbox-bentopdf-1",
+      "image": "sha256:977889928e08d475f5c2fa9b79a19efbfc92596471fb47ed343be66828f7c9f9",
+      "reference": "utilibre-bentopdf:2.8.8-p4-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-toolbox-drawio-1",
+      "image": "sha256:a18692e0a90a27404b838e68103513e26319acd4911042153d4541151fca2c78",
+      "reference": "utilibre-drawio:32.0.2-p4-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-toolbox-hatsh-1",
+      "image": "sha256:603ff580e48189236b56851a45faec789987ddf787e550b4fe4466e94f59f625",
+      "reference": "utilibre-hatsh:2.3.6-p1-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-toolbox-ittools-1",
+      "image": "sha256:f8e4db9c435145561c0f7aad46c900b0bfde49b2e461f8f68a6079dd74897ab4",
+      "reference": "utilibre-ittools:2024.10.22-p2-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-toolbox-miniqr-1",
+      "image": "sha256:485f5d47e7f74a3e7b3db366bd044b12d71ab234f078381c3d734f4efe1dcac3",
+      "reference": "utilibre-miniqr:0.33.0-p1-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-toolbox-omnitools-1",
+      "image": "sha256:2132dbb46534875686e3fa2dcb63c9e6a3c8874df263f7b6be53f166afc19bce",
+      "reference": "utilibre-omnitools:0.6.0-p7-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-toolbox-vert-1",
+      "image": "sha256:b0412eedf7dbaf5ceab5eafbe97e214d16dde2af6fbbc77ffbe1cad8035b7f1b",
+      "reference": "utilibre-vert:c7b9f39-p1-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-translite-gateway-1",
+      "image": "sha256:14396f3fb0fb9c86e5e9e9a746a7a6632c9769c38dd02b84c5a6e1d9993ddb71",
+      "reference": "utilibre-translite-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-trip-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-unfurl-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-vikunja-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    },
+    {
+      "container": "utilibre-wallabag-web-1",
+      "image": "sha256:a61363229130913d619d00f9801241893561598b8e53306650e15edcb819f4b4",
+      "reference": "utilibre-wallabag-web:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+      "receipt": "nginx/artifacts-release.json",
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "container": "utilibre-wishlist-gateway-1",
+      "image": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+      "reference": "utilibre-nginx:1.30.6-security-20261022",
+      "receipt": "nginx/gateways-release.json",
+      "running": true,
+      "health": "no native healthcheck"
+    }
+  ],
+  "staticRelease": {
+    "application": "TeXlyre",
+    "status": "passed",
+    "archiveSha256": "2c7fdd942055897703b5431fc0cb0ea20ca631edbd6379dbaee8d807212e8c67",
+    "sourceSha256": "9bb123df3085b521c27da2ceb099403f3df3e4a7711b41f4dea4ae6f6c79ffe3",
+    "userDataChanged": false
+  },
+  "sourceCorrection": {
+    "application": "Grist",
+    "url": "https://tools.utilibre.org/utilibre-source/grist-utilibre.tar.gz",
+    "sha256": "adb231a105b5524812bd48a8ea4b7d98a24351791479c916a7a01dffd04ceddc",
+    "compiledAdapterSha256": "4f5df6228e5306960c202d9fc903579e0658cb6e5dce8e548eb0c2a7f911de37",
+    "nativePngVerified": true,
+    "applicationChanged": false
+  },
+  "assessment": {
+    "before": {
+      "date": "2026-10-22T20:31:47.044Z",
+      "raw": 23332,
+      "critical": 91,
+      "high": 3311,
+      "unresolvedCritical": 30,
+      "unresolvedHigh": 607
+    },
+    "after": {
+      "date": "2026-10-22T22:16:39.579Z",
+      "raw": 23109,
+      "critical": 76,
+      "high": 3209,
+      "unresolvedCritical": 0,
+      "unresolvedHigh": 254
+    },
+    "images": 109,
+    "containers": 175,
+    "sources": 58,
+    "host": "checked",
+    "limitations": [
+      "Counts are package/target records, not unique vulnerabilities or confirmed exploits.",
+      "Raw critical records remain visible; exact, expiring reviews identify repaired or inapplicable payloads.",
+      "Full before/after scans may use different refreshed advisory data. Individual candidate gates retained one database snapshot.",
+      "No fleet-wide security-clearance or real-device compatibility claim."
+    ]
+  }
+}

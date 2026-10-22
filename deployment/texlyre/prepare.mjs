@@ -39,7 +39,7 @@ for (const name of ['LaTeXCompileButton', 'LaTeXExportButton']) {
 }
 const pkg = JSON.parse(upstream('package.json'));
 Object.assign(pkg.overrides, {
-  dompurify: '3.4.16', vue: '3.5.43', 'prosemirror-view': '1.42.6',
+  dompurify: '3.4.17', vue: '3.5.43', 'prosemirror-view': '1.42.6',
   'source-map-js': '1.2.2', 'micromark-extension-math': {katex:'0.18.4'},
 });
 writeFileSync(join(source,'package.json'),JSON.stringify(pkg,null,2)+'\n');

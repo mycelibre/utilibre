@@ -19,6 +19,11 @@ const ncursesSiblings=new Set(['libncursesw6','libncurses6','libncurses-dev','li
 const homedSiblings=new Set(['libsystemd0','libudev1','udev','systemd-timesyncd','systemd-resolved','libnss-myhostname','libnss-resolve','libpam-systemd','systemd-sysv','systemd','libsystemd-shared','systemd-cryptsetup','libnss-systemd']);
 export function absentComponent(item,files){
  if(!Array.isArray(files)||files.length<2||files.some(p=>!p.startsWith('/')))return null;
+ // October MariaDB advisories concern SQL execution/serialization in the
+ // server and (86047 only) mariadb-dump, not Connector/C or common config.
+ // Keep the affected server/client-executable packages outside this rule.
+ if(['CVE-2026-85746','CVE-2026-92262','CVE-2026-86047','CVE-2026-97380'].includes(item.id)&&['libmariadb3','mariadb-common'].includes(item.package)&&!files.some(p=>/\/(?:mariadbd|mysqld|mariadb-dump|mysqldump)(?:\.|$)|\/sql\//.test(p)))
+  return 'MariaDB server ST_AsText / table-name encoding / GRANT PROXY / SHOW CREATE, and mariadb-dump SQL serialization; not Connector/C or the common configuration subpackage';
  if(item.id==='CVE-2026-12064'&&/^libcurl(?:3|4)(?:t64)?(?:-gnutls|-openssl-dev|-gnutls-dev)?$/.test(item.package)&&!files.some(p=>/\/(?:s?bin)\/curl$/.test(p)))
   return 'curl CLI --proto-default SSH option initialization; upstream explicitly excludes libcurl (https://curl.se/docs/CVE-2026-12064.html)';
  if(item.id==='CVE-2026-6276'&&item.package==='curl'&&!files.some(p=>/\/libcurl[^/]*\.(?:so|a)/.test(p)))

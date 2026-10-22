@@ -166,7 +166,7 @@ services:
     logging: *default-logging
 
   privatebin:
-    image: utilibre-privatebin:php-security-20261022
+    image: utilibre-privatebin:nginx1306-security-20261022
     user: "65534:82"
     restart: unless-stopped
     read_only: true

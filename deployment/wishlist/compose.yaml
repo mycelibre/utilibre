@@ -42,7 +42,7 @@ services:
       start_period: 60s
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.5-alpine-security-20261021
+    image: utilibre-nginx:1.30.6-security-20261022
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     mem_limit: 96m

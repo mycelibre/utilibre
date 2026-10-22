@@ -3,12 +3,14 @@ import fs from 'node:fs';
 import cp from 'node:child_process';
 import assert from 'node:assert/strict';
 process.umask(0o077);
-const dir='/var/lib/utilibre-maintenance/python-bookworm-followup-20261012',here=new URL('.',import.meta.url).pathname;
+const redirects=process.argv.includes('--redirects');
+const dir=redirects?'/var/lib/utilibre-maintenance/security-20261022/redirects':'/var/lib/utilibre-maintenance/python-bookworm-followup-20261012',here=new URL('.',import.meta.url).pathname;
 const run=(args,input)=>{try{return cp.execFileSync('docker',args,{input,encoding:'utf8',timeout:120000,maxBuffer:4*1024**2,stdio:['pipe','pipe','pipe']}).trim();}catch(e){fs.writeFileSync(dir+'/application-error.log',String(e.stderr||e));throw Error('Isolated application gate failed; private diagnostics retained');}};
 const limits=['--network','none','--cpus','1','--memory','1g','--pids-limit','128','--security-opt','no-new-privileges','--log-driver','none'];
 async function ready(fn){for(let n=0;n<90;n++){try{if(fn())return;}catch{}await new Promise(r=>setTimeout(r,500));}throw Error('Readiness timeout');}
-for(const s of JSON.parse(fs.readFileSync(here+'specs.json')).filter(s=>process.argv.length<3||process.argv.slice(2).includes(s.key))){
- const out=dir+'/images/'+s.key,build=JSON.parse(fs.readFileSync(out+'/build.json')),name='maintenance-python-'+s.key;
+const specs=redirects?(await import('../security-20261022/redirects.mjs')).specs.filter(s=>s.key==='kuma').map(s=>({...s,kind:'kuma'})):JSON.parse(fs.readFileSync(here+'specs.json'));
+for(const s of specs.filter(s=>process.argv.length<3||process.argv.slice(2).includes(s.key))){
+ const out=dir+(redirects?'/':'/images/')+s.key,build=JSON.parse(fs.readFileSync(out+'/build.json')),name='maintenance-python-'+s.key;
  assert.equal(run(['image','inspect','--format','{{.Id}}',s.candidate]),build.imageId);
  assert(!fs.existsSync(out+'/application.json'));let created=false;
  const result={date:new Date().toISOString(),imageId:build.imageId,passed:false,fictionalDataOnly:true,network:'none'};
