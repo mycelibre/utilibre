@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "date": "2026-10-22T18:41:39.314Z",
-  "scope": "PHP October 21 advisories; not whole-fleet security clearance",
+  "date": "2026-10-22T20:33:32.023Z",
+  "scope": "Completed PHP October 21 advisory repair; not whole-fleet security clearance",
   "advisories": [
     "CVE-2026-109618",
     "CVE-2026-109619"
@@ -11,16 +11,72 @@
     "containers": 11
   },
   "completed": {
-    "applications": 2,
-    "containers": 2
+    "applications": 9,
+    "containers": 11
   },
   "pending": {
-    "applications": 7,
-    "containers": 9
+    "applications": 0,
+    "containers": 0
   },
   "applicationDataChanged": false,
+  "disk": {
+    "virtualDiskGiB": 220,
+    "previousVirtualDiskGiB": 200,
+    "filesystemAvailableGiBObserved": 27,
+    "temporaryDiskChanged": false,
+    "filesystemGrownOnline": true
+  },
+  "tests": {
+    "unitReleaseMaintenanceAndUploadPassed": 58,
+    "applicationWorkflows": "passed with per-service limitations",
+    "noContainerRecreationDuringRepeatVerification": true
+  },
   "advisorySnapshot": "2026-10-21T01:19:53.032404989Z",
-  "freshFleetAssessment": "incomplete; scheduled scan disk preflight failed",
+  "freshFleetAssessment": {
+    "status": "checked",
+    "startedAt": "2026-10-22T20:21:21.951Z",
+    "completedAt": "2026-10-22T20:31:47.044Z",
+    "scanner": "Trivy 0.75.0",
+    "database": {
+      "updatedAt": "2026-10-22T19:14:47.059491382Z",
+      "downloadedAt": "2026-10-22T20:21:36.092184877Z"
+    },
+    "imagesChecked": 109,
+    "imagesExpected": 109,
+    "containers": 175,
+    "sourceInputsChecked": 57,
+    "hostStatus": "checked",
+    "securityClearance": false,
+    "queueCounts": {
+      "packageTargetRecords": 23332,
+      "uniqueAdvisoryIds": 5444,
+      "CRITICAL": {
+        "raw": 91,
+        "uniqueAdvisoryIds": 35,
+        "needsReview": 30,
+        "confirmed": 0,
+        "mitigated": 13,
+        "notAffected": 48,
+        "notRechecked": 0
+      },
+      "HIGH": {
+        "raw": 3311,
+        "uniqueAdvisoryIds": 901,
+        "needsReview": 607,
+        "confirmed": 0,
+        "mitigated": 872,
+        "notAffected": 1832,
+        "notRechecked": 0
+      }
+    },
+    "limitations": [
+      "No exploitation or reachability proof. Findings require review; patched vendored code may need evidence-backed exceptions.",
+      "Image scans do not inspect mounted user data or a container writable layer.",
+      "Source-lock checks cover the listed code manifests, not every minified browser bundle.",
+      "Grist supplements image scans with a runtime-bound Deno release-source lock and shipped Pyodide wheel metadata. This is not a linked Rust-crate SBOM and does not inventory native Python/WASM components. See deployment/maintenance/sandbox-inventory/README.md.",
+      "Separate Caddy/Proxmox hosts are outside this VM scan."
+    ]
+  },
   "replayByteReproducibility": "not established",
   "services": [
     {
@@ -43,7 +99,38 @@
         "server remaining lifetime no greater than one week",
         "server rejects ciphertext beyond 35,000,000 bytes",
         "native scheduled-purge command removes expired fictional record"
-      ]
+      ],
+      "applicationCheckedAt": "2026-10-22T18:39:24.039Z",
+      "limitations": [
+        "not a physical phone/Opera test",
+        "raw file limit is browser-side; server limits encrypted bytes",
+        "earlier and whole-VM backups are separate"
+      ],
+      "preserved": {
+        "applicationFiles": true,
+        "unrelatedPackages": true,
+        "imageConfiguration": "unchanged except explicitly listed PHP provenance metadata",
+        "configurationMetadataOnly": []
+      },
+      "replay": "existing exact candidate reverified without download, rebuild or activation",
+      "sameSnapshotComparison": {
+        "advisoryUpdatedAt": "2026-10-21T01:19:53.032404989Z",
+        "newHighCritical": [],
+        "remainingCritical": 0,
+        "remainingHigh": 0
+      },
+      "freshAssessment": {
+        "status": "checked",
+        "counts": {
+          "UNKNOWN": 2,
+          "LOW": 0,
+          "MEDIUM": 3,
+          "HIGH": 3,
+          "CRITICAL": 0
+        },
+        "phpAdvisoryMatches": 0,
+        "compiledPhpAutomaticallyInventoried": null
+      }
     },
     {
       "service": "fourget",
@@ -59,57 +146,380 @@
         "Apache configuration",
         "Native PHP search form HTTP 200",
         "Imagick PNG create/reopen dimensions"
-      ]
+      ],
+      "applicationCheckedAt": "2026-10-22T18:26:21.276Z",
+      "limitations": [
+        "No third-party search engines queried",
+        "Not an exploit test",
+        "Public route is checked separately during release"
+      ],
+      "preserved": {
+        "applicationFiles": true,
+        "unrelatedPackages": true,
+        "imageConfiguration": "unchanged except explicitly listed PHP provenance metadata",
+        "configurationMetadataOnly": []
+      },
+      "replay": "existing exact candidate reverified without download, rebuild or activation",
+      "sameSnapshotComparison": {
+        "advisoryUpdatedAt": "2026-10-21T01:19:53.032404989Z",
+        "newHighCritical": [],
+        "remainingCritical": 0,
+        "remainingHigh": 1
+      },
+      "freshAssessment": {
+        "status": "checked",
+        "counts": {
+          "UNKNOWN": 2,
+          "LOW": 0,
+          "MEDIUM": 2,
+          "HIGH": 1,
+          "CRITICAL": 0
+        },
+        "phpAdvisoryMatches": 0,
+        "compiledPhpAutomaticallyInventoried": null
+      }
     },
     {
       "service": "freshrss",
       "containers": 1,
       "baseImage": "sha256:9b74a8a1411fd8ad582be1badb0602b81ceeb215547e87d32b58a965399fc323",
       "targetPhp": "8.4.27-1~deb13u1",
-      "state": "blocked-disk; candidate and application verification pending"
+      "state": "deployed-and-verified",
+      "php": "8.4.27",
+      "imageId": "sha256:317c3363f7218d3f92dd6686d78573f87061354600e4ea86494aaecb63e28e4b",
+      "deployedAt": "2026-10-22T20:10:46.788Z",
+      "publicStatus": 302,
+      "applicationChecks": [
+        "Fictional feed persistence",
+        "Native OPML export",
+        "Actual Apache/PHP login response",
+        "Privacy startup and no retained Apache request logs"
+      ],
+      "applicationCheckedAt": "2026-10-22T20:02:19.682Z",
+      "limitations": "Synthetic native storage/export and HTTP login page; not production email, remote feed retrieval or a browser login session.",
+      "preserved": {
+        "applicationFiles": true,
+        "unrelatedPackages": true,
+        "imageConfiguration": "unchanged except explicitly listed PHP provenance metadata",
+        "configurationMetadataOnly": []
+      },
+      "replay": "existing exact candidate reverified without download, rebuild or activation",
+      "sameSnapshotComparison": {
+        "advisoryUpdatedAt": "2026-10-21T01:19:53.032404989Z",
+        "newHighCritical": [],
+        "remainingCritical": 2,
+        "remainingHigh": 65
+      },
+      "freshAssessment": {
+        "status": "checked",
+        "counts": {
+          "UNKNOWN": 8,
+          "LOW": 170,
+          "MEDIUM": 92,
+          "HIGH": 65,
+          "CRITICAL": 2
+        },
+        "phpAdvisoryMatches": 0,
+        "compiledPhpAutomaticallyInventoried": null
+      }
     },
     {
       "service": "rssbridge",
       "containers": 1,
       "baseImage": "sha256:3355783128dd59780c2f369fcb97eff7b92cbd41bc656f75997014c1fc76fd3d",
       "targetPhp": "8.2.35-1~deb12u1",
-      "state": "blocked-disk; candidate and application verification pending"
+      "state": "deployed-and-verified",
+      "php": "8.2.35",
+      "imageId": "sha256:e8af2a66921c8fc0945ccec68265e4a9e0c2c9c70bc497bd1168104db49c6e51",
+      "deployedAt": "2026-10-22T20:07:24.927Z",
+      "publicStatus": 200,
+      "applicationChecks": [
+        "Native HTTP/redirect/gzip/POST",
+        "TLS and HTTP/2",
+        "Unsupported protocol rejection",
+        "Preserved curl impersonation and PHP OpenSSL",
+        "Fictional GithubTrending-to-Atom feed"
+      ],
+      "applicationCheckedAt": "2026-10-22T20:05:11.905Z",
+      "limitations": [
+        "No real remote feed queried",
+        "No HTTP/3 transfer tested"
+      ],
+      "preserved": {
+        "applicationFiles": true,
+        "unrelatedPackages": true,
+        "imageConfiguration": "unchanged except explicitly listed PHP provenance metadata",
+        "configurationMetadataOnly": []
+      },
+      "replay": "existing exact candidate reverified without download, rebuild or activation",
+      "sameSnapshotComparison": {
+        "advisoryUpdatedAt": "2026-10-21T01:19:53.032404989Z",
+        "newHighCritical": [],
+        "remainingCritical": 3,
+        "remainingHigh": 87
+      },
+      "freshAssessment": {
+        "status": "checked",
+        "counts": {
+          "UNKNOWN": 3,
+          "LOW": 174,
+          "MEDIUM": 139,
+          "HIGH": 87,
+          "CRITICAL": 3
+        },
+        "phpAdvisoryMatches": 0,
+        "compiledPhpAutomaticallyInventoried": null
+      }
     },
     {
       "service": "wallabag",
       "containers": 1,
       "baseImage": "sha256:377062036d58e98a69df2de531499219703a7b0129d51077cbd56e4a42040c7a",
       "targetPhp": "8.4.27-r0",
-      "state": "blocked-disk; candidate and application verification pending"
+      "state": "deployed-and-verified",
+      "php": "8.4.27",
+      "imageId": "sha256:5a8cbaa7ec94e41b8271d549752ffe31dc252a45b1ff927aab5e3e960872cb85",
+      "deployedAt": "2026-10-22T20:07:34.785Z",
+      "publicStatus": 302,
+      "applicationChecks": [
+        "Two native accounts/login",
+        "Synthetic private article persistence/read",
+        "Native JSON export/reopen",
+        "Other-account and anonymous denial"
+      ],
+      "applicationCheckedAt": "2026-10-22T20:03:12.786Z",
+      "limitations": [
+        "BrowserKit test sessions, not physical browser",
+        "No external article retrieval",
+        "No schema upgrade or account recovery"
+      ],
+      "preserved": {
+        "applicationFiles": true,
+        "unrelatedPackages": true,
+        "imageConfiguration": "unchanged except explicitly listed PHP provenance metadata",
+        "configurationMetadataOnly": []
+      },
+      "replay": "existing exact candidate reverified without download, rebuild or activation",
+      "sameSnapshotComparison": {
+        "advisoryUpdatedAt": "2026-10-21T01:19:53.032404989Z",
+        "newHighCritical": [],
+        "remainingCritical": 0,
+        "remainingHigh": 2
+      },
+      "freshAssessment": {
+        "status": "checked",
+        "counts": {
+          "UNKNOWN": 4,
+          "LOW": 0,
+          "MEDIUM": 6,
+          "HIGH": 2,
+          "CRITICAL": 0
+        },
+        "phpAdvisoryMatches": 0,
+        "compiledPhpAutomaticallyInventoried": null
+      }
     },
     {
       "service": "translite",
       "containers": 1,
       "baseImage": "sha256:30cd0dd055e0816e415e5c32766159a3e7ca41391963bc2d08efc03530c3b35a",
       "targetPhp": "8.5.12-r0",
-      "state": "blocked-disk; candidate and application verification pending"
+      "state": "deployed-and-verified",
+      "php": "8.5.12",
+      "imageId": "sha256:f5fc15d4d1d96186f812c2dcb5a4390b0486910ea56d9475582a898d74ef60cb",
+      "deployedAt": "2026-10-22T20:07:40.285Z",
+      "publicStatus": 200,
+      "applicationChecks": [
+        "Native URL and address validation",
+        "Request-local translation memoization",
+        "No shared submitted-text cache",
+        "Language-list caching"
+      ],
+      "applicationCheckedAt": "2026-10-22T20:03:06.699Z",
+      "limitations": [
+        "No real translation provider queried"
+      ],
+      "preserved": {
+        "applicationFiles": true,
+        "unrelatedPackages": true,
+        "imageConfiguration": "unchanged except explicitly listed PHP provenance metadata",
+        "configurationMetadataOnly": []
+      },
+      "replay": "existing exact candidate reverified without download, rebuild or activation",
+      "sameSnapshotComparison": {
+        "advisoryUpdatedAt": "2026-10-21T01:19:53.032404989Z",
+        "newHighCritical": [],
+        "remainingCritical": 0,
+        "remainingHigh": 0
+      },
+      "freshAssessment": {
+        "status": "checked",
+        "counts": {
+          "UNKNOWN": 2,
+          "LOW": 0,
+          "MEDIUM": 1,
+          "HIGH": 0,
+          "CRITICAL": 0
+        },
+        "phpAdvisoryMatches": 0,
+        "compiledPhpAutomaticallyInventoried": null
+      }
     },
     {
       "service": "binternet",
       "containers": 2,
       "baseImage": "sha256:5cb3cb70b118ab460fb9aa1fae3f119c3a60298ce7446d3c9f88a0912d4c8ec2",
       "targetPhp": "8.4.27-r0",
-      "state": "blocked-disk; candidate and application verification pending"
+      "state": "deployed-and-verified",
+      "php": "8.4.27",
+      "imageId": "sha256:f4ae9d3c637cd39d242a2760471858202a290ad8c3c4d574f39ca5515499147f",
+      "deployedAt": "2026-10-22T20:07:51.406Z",
+      "publicStatus": 200,
+      "applicationChecks": [
+        "Native accepted image URL",
+        "Malformed/credential/private-address rejection"
+      ],
+      "applicationCheckedAt": "2026-10-22T20:23:13.868Z",
+      "limitations": [
+        "No Pinterest media query",
+        "Onion container health checked at release; end-to-end Tor retrieval not retested"
+      ],
+      "preserved": {
+        "applicationFiles": true,
+        "unrelatedPackages": true,
+        "imageConfiguration": "unchanged except explicitly listed PHP provenance metadata",
+        "configurationMetadataOnly": []
+      },
+      "replay": "existing exact candidate reverified without download, rebuild or activation",
+      "sameSnapshotComparison": {
+        "advisoryUpdatedAt": "2026-10-21T01:19:53.032404989Z",
+        "newHighCritical": [],
+        "remainingCritical": 0,
+        "remainingHigh": 0
+      },
+      "freshAssessment": {
+        "status": "checked",
+        "counts": {
+          "UNKNOWN": 2,
+          "LOW": 0,
+          "MEDIUM": 1,
+          "HIGH": 0,
+          "CRITICAL": 0
+        },
+        "phpAdvisoryMatches": 0,
+        "compiledPhpAutomaticallyInventoried": null
+      }
     },
     {
       "service": "addy",
       "containers": 1,
       "baseImage": "sha256:96ec9ebf8f30c67452d3df5f4061bc48de6213c0631bc8f8159347e3df205f25",
       "targetPhp": "8.4.27-r0",
-      "state": "blocked-disk; candidate and application verification pending"
+      "state": "deployed-and-verified",
+      "php": "8.4.27",
+      "imageId": "sha256:801f2a4a32a563ce73bacce8e939116a0202e3b9b062d9ece8896fbc20cafd1f",
+      "deployedAt": "2026-10-22T20:14:24.428Z",
+      "publicStatus": 302,
+      "applicationChecks": [
+        "Native address validation",
+        "Native reply banner removal",
+        "Laravel encryption round-trip",
+        "MIME message construction",
+        "Native login HTTP kernel/form"
+      ],
+      "applicationCheckedAt": "2026-10-22T20:05:09.200Z",
+      "limitations": [
+        "No mail sent",
+        "No account/alias database writes",
+        "SMTP supervisor boundary verified separately at release"
+      ],
+      "preserved": {
+        "applicationFiles": true,
+        "unrelatedPackages": true,
+        "imageConfiguration": "unchanged except explicitly listed PHP provenance metadata",
+        "configurationMetadataOnly": []
+      },
+      "replay": "existing exact candidate reverified without download, rebuild or activation",
+      "sameSnapshotComparison": {
+        "advisoryUpdatedAt": "2026-10-21T01:19:53.032404989Z",
+        "newHighCritical": [],
+        "remainingCritical": 0,
+        "remainingHigh": 1
+      },
+      "freshAssessment": {
+        "status": "checked",
+        "counts": {
+          "UNKNOWN": 2,
+          "LOW": 3,
+          "MEDIUM": 16,
+          "HIGH": 2,
+          "CRITICAL": 0
+        },
+        "phpAdvisoryMatches": 0,
+        "compiledPhpAutomaticallyInventoried": null
+      }
     },
     {
       "service": "pollaris",
       "containers": 2,
-      "php": "8.5.11",
-      "targetPhp": "8.5.12",
       "baseImage": "sha256:c0b42f11fe1db00c7beffc45e55c1dc1f7cf1d7919a89f821e3a8bdb4cd86c6d",
-      "state": "blocked-disk; compiled runtime replacement and native verification pending"
+      "targetPhp": "8.5.12",
+      "state": "deployed-and-verified",
+      "php": "8.5.12",
+      "imageId": "sha256:f685c1f68ce629fe7abfda16d52412cb6d48517caf174a06df2a5ec07e6b844e",
+      "deployedAt": "2026-10-22T20:18:16.008Z",
+      "publicStatus": 200,
+      "applicationChecks": [
+        "Native PostgreSQL schema in disposable tmpfs",
+        "Create poll through actual HTTP UI",
+        "Independent guest vote",
+        "CSV export",
+        "Invalid management-token denial",
+        "Native deletion and subsequent 404",
+        "Queue/scheduler worker startup"
+      ],
+      "applicationCheckedAt": "2026-10-22T20:26:53.881Z",
+      "limitations": [
+        "Linux Chromium only",
+        "Synthetic new database, not a production migration/restore",
+        "PHP built-in test HTTP server; native FPM syntax separately verified",
+        "No emails delivered"
+      ],
+      "preserved": {
+        "applicationFiles": true,
+        "unrelatedPackages": true,
+        "imageConfiguration": "unchanged except explicitly listed PHP provenance metadata",
+        "configurationMetadataOnly": [
+          "PHP_VERSION",
+          "PHP_URL",
+          "PHP_ASC_URL",
+          "PHP_SHA256"
+        ]
+      },
+      "replay": "existing exact candidate reverified without download, rebuild or activation",
+      "sameSnapshotComparison": {
+        "advisoryUpdatedAt": "2026-10-21T01:19:53.032404989Z",
+        "newHighCritical": [],
+        "remainingCritical": 0,
+        "remainingHigh": 0
+      },
+      "freshAssessment": {
+        "status": "checked",
+        "counts": {
+          "UNKNOWN": 5,
+          "LOW": 0,
+          "MEDIUM": 1,
+          "HIGH": 0,
+          "CRITICAL": 0
+        },
+        "phpAdvisoryMatches": 0,
+        "compiledPhpAutomaticallyInventoried": false
+      },
+      "compiledRuntimeEvidence": {
+        "donor": "php@sha256:e4ec029f5afe6c8f8c0b5e5d75e27efcc3eefa462af81d9021f2a7311960c3c1",
+        "sourceSha256": "08bc2eba2a588654ade1357174aa646b761556c862dda0678345ee29ed481209",
+        "verification": "Exact copied payload, native version/module checks and application workflow; not inferred from Trivy absence"
+      }
     }
   ]
 }

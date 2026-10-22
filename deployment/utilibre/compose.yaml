@@ -81,7 +81,7 @@ services:
     logging: *default-logging
 
   freshrss:
-    image: utilibre-freshrss:archive-tar-20261012
+    image: utilibre-freshrss:php-security-20261022
     init: true
     restart: unless-stopped
     <<: *default-security

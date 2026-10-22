@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 
 export const sha256=bytes=>createHash('sha256').update(bytes).digest('hex');
+export const scannerPackageVersion=p=>p.Version+(p.Release?'-'+p.Release:'');
 
 // Package names, bytes and versions are part of the input, never a request to
 // resolve another release. Native package signature verification is separate.

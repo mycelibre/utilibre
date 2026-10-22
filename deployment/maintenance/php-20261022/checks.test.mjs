@@ -1,10 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {verifyInputs,verifyPackageDelta,sha256} from './checks.mjs';
+import {verifyInputs,verifyPackageDelta,sha256,scannerPackageVersion} from './checks.mjs';
 const spec={base:'sha256:'+'a'.repeat(64),manager:'apk',origin:'php85',version:'8.5.12-r0'};
 const bytes=Buffer.from('synthetic package fixture, not a native package');
 const name='php85-8.5.12-r0.apk';
 const lock={...spec,packageHashes:{[name]:sha256(bytes)}};
+test('scanner normalization retains Debian and Alpine package release suffixes',()=>{
+ assert.equal(scannerPackageVersion({Version:'8.4.27',Release:'1~deb13u1'}),'8.4.27-1~deb13u1');
+ assert.equal(scannerPackageVersion({Version:'8.5.12-r0'}),'8.5.12-r0');
+ assert.notEqual(scannerPackageVersion({Version:'8.4.27',Release:'1~deb13u2'}),'8.4.27-1~deb13u1');
+});
 test('identical recorded payload verifies repeatedly',()=>{for(let i=0;i<2;i++)verifyInputs(spec,lock,{[name]:bytes});});
 test('unsupported image or version is rejected',()=>{
  assert.throws(()=>verifyInputs({...spec,base:'sha256:'+'b'.repeat(64)},lock,{[name]:bytes}));

@@ -15,7 +15,7 @@ x-runtime: &runtime
 
 x-application: &application
   <<: *runtime
-  image: utilibre-pollaris:1.2.3-p1
+  image: utilibre-pollaris:php-security-20261022
   user: "82:82"
   env_file: [/opt/utilibre/community-data/pollaris-private/application.env]
   extra_hosts: ["mx.mailgt.dev:10.10.1.20"]

@@ -12,7 +12,7 @@ x-runtime: &runtime
 services:
   binternet-onion:
     <<: *runtime
-    image: utilibre-binternet:9bb70ef-p1
+    image: utilibre-binternet:php-security-20261022
     user: "65534:65534"
     volumes: ["./binternet-onion-fpm.conf:/etc/php84/utilibre-fpm.conf:ro"]
     networks:

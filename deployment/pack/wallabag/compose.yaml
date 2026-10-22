@@ -1,7 +1,7 @@
 name: utilibre-wallabag
 services:
   app:
-    image: sha256:377062036d58e98a69df2de531499219703a7b0129d51077cbd56e4a42040c7a
+    image: utilibre-wallabag:php-security-20261022
     restart: 'no'
     read_only: true
     user: '4007:4007'

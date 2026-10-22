@@ -27,7 +27,7 @@ services:
     mem_limit: 64m
     logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
   app:
-    image: utilibre-addy:1.7.3-gosu-security-20261011-p2
+    image: utilibre-addy:php-security-20261022
     # Native s6/Postfix image generates configuration and drops privileges internally.
     # Writable image root/default Docker capabilities are required by that native entrypoint.
     security_opt: [no-new-privileges:true]

@@ -28,6 +28,7 @@ function appHash(s,id){
 const check=`$e=get_loaded_extensions();sort($e); $s="Fictional café, año 123";if(json_decode(json_encode([$s]),true)!==[$s])exit(2);if(preg_match('/café/u',$s)!==1)exit(3);if(!password_verify($s,password_hash($s,PASSWORD_DEFAULT)))exit(4);$r=["version"=>PHP_VERSION,"extensions"=>$e,"jsonRegexPassword"=>true];if(extension_loaded("openssl")){$iv=random_bytes(16);$key=random_bytes(32);$ct=openssl_encrypt($s,"aes-256-cbc",$key,OPENSSL_RAW_DATA,$iv);if(openssl_decrypt($ct,"aes-256-cbc",$key,OPENSSL_RAW_DATA,$iv)!==$s)exit(5);$r["crypto"]=true;}if(extension_loaded("dom")){$d=new DOMDocument();if(!$d->loadXML("<fictional>café</fictional>",LIBXML_NONET)||$d->documentElement->textContent!=="café")exit(6);$r["xml"]=true;}if(extension_loaded("curl"))$r["curl"]=curl_version()["version"];echo json_encode($r);`;
 for(const key of keys){
  const s=specs.find(x=>x.key===key),dir=output+'/'+key;fs.mkdirSync(dir,{recursive:true});diagnostic=dir+'/error.log';
+ assert(['apk','deb'].includes(s.manager),'Compiled PHP requires build-pollaris.mjs');
  const base=inspect(s.base),before=packages(s,s.base),chosen=Object.entries(before).filter(([,p])=>p.origin===s.origin).map(([n])=>n).sort();
  assert.equal(base.Id,s.base,'Unsupported build input');
  assert(chosen.length>3&&chosen.every(n=>/^[a-z0-9_.+:-]+$/.test(n)));assert(chosen.every(n=>before[n].version!==s.version),'Baseline already correct');

@@ -35,6 +35,152 @@
         "php84-openssl-8.4.27-r0.apk": "d8ea60627bd12a4b200172089ee0fe20eda54b700c8156644e8bf1ea0e7ef9ea",
         "php84-sodium-8.4.27-r0.apk": "6a527b970dd24c1e9bbc5410fb81302bd4b1bebc61e417546cea7f728c0709b3"
       }
+    },
+    "freshrss": {
+      "base": "sha256:9b74a8a1411fd8ad582be1badb0602b81ceeb215547e87d32b58a965399fc323",
+      "manager": "deb",
+      "version": "8.4.27-1~deb13u1",
+      "packageHashes": {
+        "libapache2-mod-php8.4_8.4.27-1~deb13u1_amd64.deb": "90172b818db24abc68796f4c02fcad012b4dcc232500d6b31921d733145cf00a",
+        "php8.4-cli_8.4.27-1~deb13u1_amd64.deb": "111191e9eec53db65198f9a38a15dcbd498935be88e2fa83336ba142fd5ae152",
+        "php8.4-common_8.4.27-1~deb13u1_amd64.deb": "9372e2b0028228180445829467773058dc6f13b64e066ca00d9f4107bbceef7a",
+        "php8.4-curl_8.4.27-1~deb13u1_amd64.deb": "dcc5e19d3b55a9fe11b1ac5c1b0744fba5fa8b2becf6265b1580d6faf5821777",
+        "php8.4-gmp_8.4.27-1~deb13u1_amd64.deb": "a5a588122035e63be99af7c7d83985cbef89266a77c1cec01fe9867f9f307184",
+        "php8.4-intl_8.4.27-1~deb13u1_amd64.deb": "ed28a9e0b3e26a4fbb82975cc1201d63211b8433f9fa250cb5d613e805b8c9b2",
+        "php8.4-mbstring_8.4.27-1~deb13u1_amd64.deb": "ebe36dbe6fece74c0adf3924a653d2b9da087c1af9380dfb5cd8309e7b405a4f",
+        "php8.4-mysql_8.4.27-1~deb13u1_amd64.deb": "e10483a87c0aee7528b0f6d110bac52b48918e387fa67493887fffed84f4e314",
+        "php8.4-opcache_8.4.27-1~deb13u1_amd64.deb": "c8fa3bd0c00371ed0e25d0e4a9a291b7dc77632e7c0d86d869d40f6f2ceb366c",
+        "php8.4-pgsql_8.4.27-1~deb13u1_amd64.deb": "93eb426586cc87ebc4b7da6c4c758d06a1613dbb79d6b0eca218dd13f11daf2b",
+        "php8.4-readline_8.4.27-1~deb13u1_amd64.deb": "b74deee989a77238a2b7910908519dde6af4c1b97828c9bd1f0fa7fde62c3b4f",
+        "php8.4-sqlite3_8.4.27-1~deb13u1_amd64.deb": "49cdcbd99e07588ff927afc94801045cb2793f7c7038586229ae1c4ee9d4d9fd",
+        "php8.4-xml_8.4.27-1~deb13u1_amd64.deb": "30881dae5aa248d173dcde04dfdc95fdb18ae0735fbcc76e2baef459df21eac6",
+        "php8.4-zip_8.4.27-1~deb13u1_amd64.deb": "f27b6900e5cdee5a606eb8680c504ba7c5d0aa6ef1c446eb60367749a4f8fc6b"
+      }
+    },
+    "rssbridge": {
+      "base": "sha256:3355783128dd59780c2f369fcb97eff7b92cbd41bc656f75997014c1fc76fd3d",
+      "manager": "deb",
+      "version": "8.2.35-1~deb12u1",
+      "packageHashes": {
+        "php8.2-cli_8.2.35-1~deb12u1_amd64.deb": "7ba6568ba8869fc057c162a14ebea9ace2c93b360f999c0be1bcc0e1ce0c9a21",
+        "php8.2-common_8.2.35-1~deb12u1_amd64.deb": "a9aabffbc04526b31a73569ea5a838087413839a4adc61784677b0ca0db0a45b",
+        "php8.2-curl_8.2.35-1~deb12u1_amd64.deb": "32782c961408a481234242681aff45a3bb680352905c3c459ec9efd19e9c8f2b",
+        "php8.2-fpm_8.2.35-1~deb12u1_amd64.deb": "c1d2945f50f401101455ae0038975e828570ae9b3d324fec9ea2d9fd4beba6d4",
+        "php8.2-intl_8.2.35-1~deb12u1_amd64.deb": "64e2ada578b1488080aaf55c9a88266546f37f64a1ecb1d9113664393c73b57a",
+        "php8.2-mbstring_8.2.35-1~deb12u1_amd64.deb": "1fdc33648d926159b209a85851d3b36be40d52a2d9aa6156613ce428d8909feb",
+        "php8.2-opcache_8.2.35-1~deb12u1_amd64.deb": "d2d5b72981c4b517fe3d62d9692f21fc6e0bb8c03ddfecb97e48e558d1cb0295",
+        "php8.2-readline_8.2.35-1~deb12u1_amd64.deb": "3963ba63f26c64582cc8d60c6367ad8948956c3b1437a95961e620921f91d2b0",
+        "php8.2-sqlite3_8.2.35-1~deb12u1_amd64.deb": "a50ec35eeb2b20ad468f0e1abb0161c71fe650843edde4e05f54cde049becaeb",
+        "php8.2-xml_8.2.35-1~deb12u1_amd64.deb": "f6af354d0ce35a1bf63b48bee04e13cf529c32b9fc8985ce269a0f8863bf6810",
+        "php8.2-zip_8.2.35-1~deb12u1_amd64.deb": "82f55b640cc5ce7d19e5ab2d3fe35374603a222b026f4340d447dfb955c57066"
+      }
+    },
+    "wallabag": {
+      "base": "sha256:377062036d58e98a69df2de531499219703a7b0129d51077cbd56e4a42040c7a",
+      "manager": "apk",
+      "version": "8.4.27-r0",
+      "packageHashes": {
+        "php84-8.4.27-r0.apk": "a8eadcd334a078aab4c987065ee0b44e4f166bc605a7442f8ceaa040f3516a9c",
+        "php84-bcmath-8.4.27-r0.apk": "a5707b3aad9513fa1ce9c6be7d6c8debb55a17a97c994c399f153adc32a73a19",
+        "php84-common-8.4.27-r0.apk": "70ff730c0116e4c65c50fe2e29d2db3beefba2f702906f25900d9475eeaf11ba",
+        "php84-ctype-8.4.27-r0.apk": "a1f67bd4e2a298190115ee4cf7a5099963c3814885151a658f8bd31f7fd0e192",
+        "php84-curl-8.4.27-r0.apk": "2044f4e03b85a66037f2e1901cb7f0d44184e6785e06aa2b0fb333d80e2cfe09",
+        "php84-dom-8.4.27-r0.apk": "4e6d18a356f0a331f30be0cb415529f623079cf99d2d4a637eff115d3fab4752",
+        "php84-fileinfo-8.4.27-r0.apk": "adaa66907804ce9ee246bb9e8e446b22a638c82650c2402f8eb4d3259c586857",
+        "php84-fpm-8.4.27-r0.apk": "378360ca9fac627e6270906c1d9753e7ecadcc69639752dbfa379f61b9181bbe",
+        "php84-gd-8.4.27-r0.apk": "58046db2e5b1b4d8eaf6721c09473268d62542d89eee1bb05be390e66b81da10",
+        "php84-gettext-8.4.27-r0.apk": "900655b339f5b49a30401d2ef3e8a2e37ca8f7c6b5faa1b3c9996485714b19ca",
+        "php84-iconv-8.4.27-r0.apk": "312b3b8bf21a562f7fd4a427da2d496e13f39389e24a49037afb3f071b47dc16",
+        "php84-intl-8.4.27-r0.apk": "897ce4bf57766526f44338415e41e9245132bf4560f82f675f5f43f71c4640f8",
+        "php84-mbstring-8.4.27-r0.apk": "968f87d5cff222863b46882088a8c8ed4d82d700816c86069e79ad5598a47c1c",
+        "php84-opcache-8.4.27-r0.apk": "daedffc8ffff46f941b217905de87e7938779bb8b50b8b3ee18510ee8b19eb85",
+        "php84-openssl-8.4.27-r0.apk": "9f5a16de7783538c4e06237f0afb2a17f1eb54392ab3fc11467648916d15da19",
+        "php84-pdo-8.4.27-r0.apk": "38ff28c05c19b08dd0cd779e98b56fcc726877e959047d1160a6e85862ba9b7e",
+        "php84-pdo_sqlite-8.4.27-r0.apk": "abeeabcd42a03657bdb5a5b46d7d463465f5d27ff861ceaecf6a841e2e42418c",
+        "php84-phar-8.4.27-r0.apk": "1010bc28cb1ec71e82e05994dc7a44d5fe8cd4967269653b4be1fe65e7034f17",
+        "php84-session-8.4.27-r0.apk": "e1d2c915b9b5009c5f0cf1519b6061ffdd745035f237bf3a267379fdeffe641f",
+        "php84-simplexml-8.4.27-r0.apk": "c981ba6e97a348f80c8f70dc2534e8487baee14b532b1d5268722745238886cf",
+        "php84-sockets-8.4.27-r0.apk": "362b8d2915f61caca89adb69a9b467a8026fc6d525641fb37754b30ed40385a8",
+        "php84-sodium-8.4.27-r0.apk": "182801b72590355836263c8f226a8be13fc913cc41140ecf994c4ac93df624c2",
+        "php84-tidy-8.4.27-r0.apk": "1a668c57611e40f1579f6421cf75947a01d841de850a241bfe4b6c16a09bb803",
+        "php84-tokenizer-8.4.27-r0.apk": "70362982ab8a875db9c98e6f87717fb55e459c4e604ac80265cfd94e2e24b9d7",
+        "php84-xml-8.4.27-r0.apk": "1cb03fab5131fc0493126fc3fbd3053817f7e67c6181dc6ca69a5c73e109c39c",
+        "php84-xmlreader-8.4.27-r0.apk": "f3d0e15372c4dee88bab10636efe71c425e438e547aef1531f4c3ba6b7f2fa2c",
+        "php84-xmlwriter-8.4.27-r0.apk": "a608176af154701c855f2c1ba9fad89cf52972a790512e0fdf3d00435136858b",
+        "php84-zip-8.4.27-r0.apk": "2bd1a01aad31501b8350d56f8e0098a7801304cba90fb612b5526ff9f82ba898"
+      }
+    },
+    "translite": {
+      "base": "sha256:30cd0dd055e0816e415e5c32766159a3e7ca41391963bc2d08efc03530c3b35a",
+      "manager": "apk",
+      "version": "8.5.12-r0",
+      "packageHashes": {
+        "php85-8.5.12-r0.apk": "17ecdbb8901a6640da669f7e43179d4326025366b4f0c189d22a635c85191419",
+        "php85-common-8.5.12-r0.apk": "aeff64b2e1ba4bbe47d9d8e18f7e7d834dc38346ee9bbb66cfeb51501f07f5fa",
+        "php85-curl-8.5.12-r0.apk": "8dbdeb01234155da49581e8b11c4ddac58410baf8c50da15862585ae4cbc61de",
+        "php85-dom-8.5.12-r0.apk": "9ab2b4353bbc9905f68234f0536e88720020a3f07e6bae719d43798615e0ed40",
+        "php85-fpm-8.5.12-r0.apk": "6b3b19e94f543908bb1c704b270fc743bc3cf21654e9e37c4fba05d9cdabbdb0",
+        "php85-mbstring-8.5.12-r0.apk": "b130d457f61f9e762308c6e9e46db04a349823f0cc1f130ea9d5abebe7ee4df5",
+        "php85-openssl-8.5.12-r0.apk": "a903e2315a3cfbeccc5e4b43b29e92055b8d847c84a97185e7e9f770e4c0ca6b",
+        "php85-session-8.5.12-r0.apk": "e6f94d21d73b3c96b17597cde7a10fd9adf2bd6bbf34e3f2348c2cae313f37e5"
+      }
+    },
+    "binternet": {
+      "base": "sha256:5cb3cb70b118ab460fb9aa1fae3f119c3a60298ce7446d3c9f88a0912d4c8ec2",
+      "manager": "apk",
+      "version": "8.4.27-r0",
+      "packageHashes": {
+        "php84-8.4.27-r0.apk": "e4490d3f206a585bd53a7b6af0e73464e3e9466f27519bc01c42ed25cf9d686c",
+        "php84-common-8.4.27-r0.apk": "eedc32e8fdd3c57995f8ceeb1aad60c30223150dfeff4c26ac2c6b59b5dc6e93",
+        "php84-curl-8.4.27-r0.apk": "e0455bd61b48cfe93d4cd660195890b24f8aa70795f5f7a1784cc4fc633f9014",
+        "php84-dom-8.4.27-r0.apk": "8adabb21e3d88037afd6445635db9b957e3b0feb50bb8ca13664ac6da3e53483",
+        "php84-fileinfo-8.4.27-r0.apk": "aafc58091bc1f1227a0046fd1552473f0c90e1cfb2bed2240364b519605211d3",
+        "php84-fpm-8.4.27-r0.apk": "e76649d823fbef1fc79ce8266cb4199f41b8a0b0cd7befd77e303beca6558cec",
+        "php84-openssl-8.4.27-r0.apk": "d8ea60627bd12a4b200172089ee0fe20eda54b700c8156644e8bf1ea0e7ef9ea"
+      }
+    },
+    "addy": {
+      "base": "sha256:96ec9ebf8f30c67452d3df5f4061bc48de6213c0631bc8f8159347e3df205f25",
+      "manager": "apk",
+      "version": "8.4.27-r0",
+      "packageHashes": {
+        "php84-8.4.27-r0.apk": "e4490d3f206a585bd53a7b6af0e73464e3e9466f27519bc01c42ed25cf9d686c",
+        "php84-common-8.4.27-r0.apk": "eedc32e8fdd3c57995f8ceeb1aad60c30223150dfeff4c26ac2c6b59b5dc6e93",
+        "php84-ctype-8.4.27-r0.apk": "490dce5a1c4e14d3d841caeaa6c32526fc51a168b59bca3e0079a5d412ae57c4",
+        "php84-curl-8.4.27-r0.apk": "e0455bd61b48cfe93d4cd660195890b24f8aa70795f5f7a1784cc4fc633f9014",
+        "php84-dom-8.4.27-r0.apk": "8adabb21e3d88037afd6445635db9b957e3b0feb50bb8ca13664ac6da3e53483",
+        "php84-fileinfo-8.4.27-r0.apk": "aafc58091bc1f1227a0046fd1552473f0c90e1cfb2bed2240364b519605211d3",
+        "php84-fpm-8.4.27-r0.apk": "e76649d823fbef1fc79ce8266cb4199f41b8a0b0cd7befd77e303beca6558cec",
+        "php84-gd-8.4.27-r0.apk": "c7605c824baeee412fbdeb31386e2d90a83891f22d531ed257c07e0bb2a9be2e",
+        "php84-gmp-8.4.27-r0.apk": "bd9939162dd3591b8a5f51845aedba4396ddbdda7fcfe0abc659d1fd55f7c6ff",
+        "php84-iconv-8.4.27-r0.apk": "e0ed657dd88dd4154566a58fd7f84a828ebc75881d6bfd2e7b71f1539159afa0",
+        "php84-intl-8.4.27-r0.apk": "35aeaf382a94e4ad1d50ea5b14bb16ad87d46c157dca470f9efba100483fbfff",
+        "php84-mbstring-8.4.27-r0.apk": "f49b17b6f62bcdeb60482c9c6f04a4c121fb67865e0a8e111281da1cc33c5787",
+        "php84-mysqlnd-8.4.27-r0.apk": "3934fc67eaddf1b4837433b6b835f6e61ec2886965fcf8c1089641e0a9a440b7",
+        "php84-opcache-8.4.27-r0.apk": "b268af7bbc981c300d1ba271f8bac0f8088a470a924c382fa71340f46ca7dc6b",
+        "php84-openssl-8.4.27-r0.apk": "d8ea60627bd12a4b200172089ee0fe20eda54b700c8156644e8bf1ea0e7ef9ea",
+        "php84-pdo-8.4.27-r0.apk": "423905be634ac5fa0de010292e5f05b8095375c509584639377c4a4979af2114",
+        "php84-pdo_mysql-8.4.27-r0.apk": "01373cfa600d3241ada4a70725a45c9d21fc8951a15a5ba8d4cf31bd3145cf17",
+        "php84-phar-8.4.27-r0.apk": "13d8f0b22fafc88bf0ec462e1c6f0e23cf6c3021a3fc4006f623dc0e541eaa7b",
+        "php84-session-8.4.27-r0.apk": "9b3d9555ce484eac82d4f9483b642e4fff47b0338f12d0bd884c14c38b86f61a",
+        "php84-simplexml-8.4.27-r0.apk": "cf4e9e691927bccb79ed32d206f8250884582984f97c3a479e4c406c2869440a",
+        "php84-sockets-8.4.27-r0.apk": "b42cf481f05e569d07720438b142f95a04746c76350eca0e6d9c7af383112043",
+        "php84-sodium-8.4.27-r0.apk": "6a527b970dd24c1e9bbc5410fb81302bd4b1bebc61e417546cea7f728c0709b3",
+        "php84-tokenizer-8.4.27-r0.apk": "6690e13449f61cd2429c8861bc96b2260cb25a1463b2fbd6bcb1a92aa000d820",
+        "php84-xml-8.4.27-r0.apk": "27a3113833787a126afa4ad60d1c9432f0ecddfe03ab1d8fefa561fae77e79db",
+        "php84-xmlreader-8.4.27-r0.apk": "cba09912a7fa20f32af8b00496f81300851cf5c7d4b3ea1b949f5cf65550513f",
+        "php84-xmlwriter-8.4.27-r0.apk": "2f1bd807e48beb260a78dc72a04334ccc5fba265c36c3f8733f5bd651c759207",
+        "php84-zip-8.4.27-r0.apk": "3690ec4aca8806332afeb3769dbb35a4b7ef6c51c888c78054b69b9e90ceffab"
+      }
+    }
+  },
+  "compiledInputs": {
+    "pollaris": {
+      "base": "sha256:c0b42f11fe1db00c7beffc45e55c1dc1f7cf1d7919a89f821e3a8bdb4cd86c6d",
+      "donor": "php@sha256:e4ec029f5afe6c8f8c0b5e5d75e27efcc3eefa462af81d9021f2a7311960c3c1",
+      "version": "8.5.12",
+      "sourceSha256": "08bc2eba2a588654ade1357174aa646b761556c862dda0678345ee29ed481209",
+      "payloadHash": "45fecafc8f89e2b7fff10f1e44338210e72bd3a599ee0378113f0f981af69566  -"
     }
   }
 }

@@ -1,152 +1,194 @@
 # PHP security runtime update — 22 October 2026
 
-This is a finite extension of the existing maintenance/release machinery, not
-a new updater. It addresses PHP **CVE-2026-109618** and **CVE-2026-109619** without
-replacing application releases or dropping existing local corrections.
+This finite extension of the existing maintenance/release machinery addresses
+**CVE-2026-109618** and **CVE-2026-109619**. It updates PHP over the exact maintained
+application images, preserving application versions and existing local fixes.
 
-## Current result and remaining exposure
+## Completed release
 
-Read-only inspection found nine distinct PHP application images in eleven
-running containers. No host PHP installation was found. Two images are fixed
-and deployed; **seven applications / nine containers remain unpatched for
-these disclosures**. A working homepage is not evidence that they are safe.
+All **nine PHP applications / eleven containers** now run the fixed same-branch
+PHP release. Native versions, exact image identities, unchanged deployment
+configuration and scoped health/public-response checks passed. No host PHP
+installation was found in the inspected inventory.
 
-| Application | Observed PHP before | Required same-branch PHP | State at this checkpoint |
-| --- | --- | --- | --- |
-| PrivateBin 2.1.0 | 8.5.11 | 8.5.12 | Deployed 18:30 UTC; isolated attachment/privacy workflow and public HTTP passed |
-| 4get | 8.4.21 | 8.4.27 | Deployed 18:29 UTC; Apache/PHP and Imagick checks and public HTTP passed |
-| FreshRSS | 8.4.26 | 8.4.27 | Exact maintained input recorded; build/application/release checks pending |
-| RSS-Bridge | 8.2.34 | 8.2.35 | Exact maintained input recorded; build/application/release checks pending |
-| Wallabag | 8.4.26 | 8.4.27 | Exact maintained input recorded; private-library and namespace isolation gates pending |
-| TransLite | 8.5.11 | 8.5.12 | Exact maintained input recorded; native URL/cache regression pending |
-| Binternet, ordinary and onion | 8.4.21 | 8.4.27 | One shared image, two deployment projects; both still pending |
-| Addy | 8.4.21 | 8.4.27 | Candidate and native mail-supervisor release integration pending; generic activation explicitly blocked |
-| Pollaris app and worker | 8.5.11 | 8.5.12 | Compiled PHP, not an APK package; separate runtime preparation and workflow tests pending |
+| Application | PHP before → after | Relevant isolated verification |
+| --- | --- | --- |
+| PrivateBin 2.1.0 | 8.5.11 → 8.5.12 | Browser-encrypted 25 MB attachment round-trip, upload limit, one-week expiry, purge and sanitizer |
+| 4get | 8.4.21 → 8.4.27 | Apache/PHP form response, configuration and Imagick PNG creation/reopen |
+| FreshRSS | 8.4.26 → 8.4.27 | Fictional feed persistence, native OPML export, actual Apache/PHP login page and privacy startup |
+| RSS-Bridge | 8.2.34 → 8.2.35 | Native HTTP/TLS/HTTP2, preserved curl impersonation and fictional Atom feed |
+| Wallabag | 8.4.26 → 8.4.27 | Two-account login, private article read/export, other-account and anonymous denial |
+| TransLite | 8.5.11 → 8.5.12 | 25 native URL/IP/cache checks; no shared submitted-text cache |
+| Binternet, ordinary and onion | 8.4.21 → 8.4.27 | 22 native URL/address checks; both deployment projects checked |
+| Addy | 8.4.21 → 8.4.27 | Native validation, encryption, MIME construction and login; live SMTP supervisor/listener/allowlist gates |
+| Pollaris app and worker | 8.5.11 → 8.5.12 | Two-browser poll creation/voting, CSV export, invalid management-token denial, deletion and worker startup |
 
-Root storage is the blocker for more builds: the 200 GiB main disk has only
-about 8 GiB available, the existing maintenance safety reserve. A limited
-cleanup removed approximately 280 MB of identified unused build caches and
-Trivy's disposable scan cache. Application data, backups, retained images and
-advisory databases were not removed. The separate 15 GiB temporary-content
-disk is not build scratch space.
+The Proxmox-expanded main disk was grown from **200 to 220 GiB**, preserving
+the first partition's start and existing ext4 filesystem. No formatting,
+reboot or user-data deletion occurred. The filesystem reports about 217 GiB
+usable, with approximately 27 GiB available at this checkpoint. Its original
+partition table is retained privately. The separate 15 GiB temporary-content
+disk was not changed or used for build scratch space.
 
-On Proxmox, the requested next step is `qm resize 144 scsi0 +20G`. Then inspect
-the guest disk and grow its existing first partition/filesystem using the
-normal disk-maintenance procedure. Do not format either disk. No expansion
-has been observed at this checkpoint; do not run more builds below the reserve.
+The full assessment restarted after this expansion and completed at 20:31 UTC:
+109/109 images (175 containers), 57 source/dependency inputs and the host's
+package inventory checked, with no failed scanner targets. It used advisory
+data updated on 22 October at 19:14 UTC. Its outcome is recorded separately in
+[status.v1.json](status.v1.json). The wider queue still contains 30 critical and
+607 high package/target records awaiting review, including replacement-image
+revalidation. These are not counts of confirmed exploits. Completion of this
+PHP release is **not** whole-fleet security clearance.
 
-## Inputs and preservation checks
+## Inputs and preservation
 
-`specs.mjs` records the eight package-managed maintained image IDs, exact PHP
-package versions and application/configuration roots. `inputs.v1.json` pins
-the authenticated package bytes used for the two completed updates. Pending
-services are not presented as verified integrations or release approvals.
+[specs.mjs](specs.mjs) pins the maintained input image IDs and exact target PHP
+versions. [inputs.v1.json](inputs.v1.json) pins authenticated package hashes for
+all eight package-managed images and the official compiled-runtime donor,
+source checksum and copied-payload checksum for Pollaris.
 
-The candidate layer installs only the installed modules belonging to PHP's
-native source-package family. It does not replace the application's source,
-Composer tree, independent extensions, unrelated OS packages, image startup
-configuration, mounted settings or persistent data. Native package signature
-verification remains enabled; installation runs without networking. The
-application/configuration file hash and complete package/image inventories
-must match the expected narrowly scoped delta. Existing native extension,
-JSON, regex, password, XML and encryption behavior is checked where present.
+Package-managed candidates change only installed modules belonging to PHP's
+native source-package family. Signed package verification remains enabled and
+installation runs offline. Application/configuration roots, Composer files,
+independent extensions, unrelated packages and image startup settings must
+remain unchanged. Native extension, JSON, regex, password, XML and encryption
+checks run where applicable.
 
-The exact original maintained image must still exist locally. This is not a
-claim that a fresh Git clone contains every original image or that builds
-produce identical image bytes. Artifact identities and package hashes, rather
-than moving tags or a fresh dependency resolution, control this replay.
+Pollaris uses the official amd64 artifact
+`php@sha256:e4ec029f5afe6c8f8c0b5e5d75e27efcc3eefa462af81d9021f2a7311960c3c1`.
+Only its explicit PHP payload is copied over the maintained application.
+Application files, FPM settings, custom intl/pdo_pgsql/zip modules and the
+complete Alpine package inventory remain unchanged. Configure options, module
+compatibility, FPM syntax and native behavior passed. The four PHP provenance
+environment values (version, source URL, signature URL, source checksum) are
+the sole image-configuration exception; no application setting changed.
+Trivy does not automatically inventory this compiled PHP payload: its fixed
+version is verified through vendor artifact/source identity and native PHP.
 
-Pollaris's existing image is
-`sha256:c0b42f11fe1db00c7beffc45e55c1dc1f7cf1d7919a89f821e3a8bdb4cd86c6d`.
-The official `php:8.5.12-fpm-alpine3.23` amd64 manifest resolved to
-`sha256:e4ec029f5afe6c8f8c0b5e5d75e27efcc3eefa462af81d9021f2a7311960c3c1`.
-That lookup is **not** a tested candidate. Preserve its maintained OS changes,
-FPM configuration and compiled intl/pdo_pgsql/zip modules, verify ABI/runtime
-compatibility and native poll/worker behavior before activating a replacement.
+These are exact-input replay checks, **not demonstrated byte-reproducible
+builds**. The maintained base images and retained packages must be available;
+a fresh Git clone does not contain those image layers. The source archive
+contains the scripts, configuration and input locks, not production secrets,
+private state or binary image backups.
 
-## Repeatable commands and separate activation
+## Repeatable checks and separate activation
 
-Run from the repository root. All of these checks are bounded; none sends
-email, modifies user records, submits indexing notifications or probes an
-external search provider.
+Run from the repository root. Synthetic checks have no external interface and
+do not send mail, touch user records or query real search/content providers.
+Builds use bounded authenticated downloads followed by offline preparation;
+existing-candidate replay neither downloads nor rebuilds.
 
 ```sh
-node --test deployment/maintenance/php-20261022/checks.test.mjs deployment/maintenance/language-final/release.test.mjs deployment/maintenance/go-final/release.test.mjs
-node --test deployment/utilibre/tests/privatebin-storage.test.mjs deployment/utilibre/tests/privatebin-upload-limit.test.mjs
-node deployment/maintenance/php-20261022/build.mjs privatebin fourget
+node --test deployment/maintenance/php-20261022/checks.test.mjs deployment/maintenance/language-final/release.test.mjs deployment/maintenance/go-final/release.test.mjs deployment/maintenance/maintenance.test.mjs deployment/utilibre/tests/privatebin-storage.test.mjs deployment/utilibre/tests/privatebin-upload-limit.test.mjs
+node deployment/maintenance/php-20261022/build.mjs privatebin fourget freshrss rssbridge wallabag translite binternet addy
+node deployment/maintenance/php-20261022/build-pollaris.mjs
 node deployment/maintenance/php-20261022/check-privatebin.mjs
 node deployment/maintenance/php-20261022/check-fourget.mjs
-node deployment/maintenance/php-20261022/scan.mjs privatebin fourget
+node deployment/maintenance/php-20261022/check-freshrss.mjs
+node deployment/maintenance/php-20261022/check-rssbridge.mjs
+node deployment/maintenance/php-20261022/check-native.mjs wallabag translite binternet addy
+node deployment/maintenance/php-20261022/check-pollaris.mjs
 ```
 
-Build re-execution verifies an existing exact candidate and retained package
-hashes without downloading, rebuilding or activating. Changed input, missing
-package/module, unexpected package change and path/hash errors fail closed.
-New candidate construction uses isolated temporary fixtures and authenticated
-vendor downloads, then an offline bounded build. It requires extra disk space.
+All nine existing candidates were reverified without another build. The
+combined unit/release/maintenance/PrivateBin suite passed **58 tests**.
+Application workflows are additional checks, not included in that count.
 
-On an initial release, the explicit sequence is `release.mjs prepare KEYS`
-then `release.mjs apply KEYS`; preparation records the current exact image,
-configuration digest, service scope and public HTTP baseline. Application and
-scan evidence must match the candidate and be less than 24 hours old. Apply
-uses the existing namespace-aware Compose/release/rollback functions, never
-pulls/builds another image, and changes only the selected image pin. PrivateBin's
-active `/opt/utilibre/compose.yaml` and its checked-in mirror change together.
+`scan.mjs KEYS` is a same-snapshot comparison against the preserved completed
+21 October baseline. It deliberately refuses a changed advisory database.
+The fresh fleet scan refreshes the shared database, so the archived comparison
+cannot simply be rerun afterward: restore the matching recorded database in a
+controlled assessment environment or establish and review a new matching
+baseline. Do not bypass the identity check. Raw earlier results remain private.
 
-These two groups have already been applied. Repeating their `apply` within the
-evidence window only verifies the current state; it does not restart them. Do
-not delete receipts to force a repeat or run pending applications without
-their application-specific gate. Addy additionally requires its existing
-`utilibre-addy-smtp.service` FIFO/firewall supervisor. Wallabag must retain its
-existing supervisor and namespace egress restrictions.
+Initial activation is explicitly `release.mjs prepare KEYS` followed by
+`release.mjs apply KEYS`. Preparation records exact predecessor/candidate
+identities, configuration hashes, deployment scope and HTTP baseline.
+Application/scan evidence must match and be under 24 hours old. Activation
+never pulls, builds or migrates data. All declared groups have passed.
+
+A repeated `apply` within the evidence window verifies the already-active
+images without restarting them. A failed release requires explicit
+`retry`, successful verification of the restored predecessor/configuration
+and preservation of its failed-attempt history. Do not delete receipts to
+force reactivation.
+
+The existing Addy SMTP supervisor and Wallabag isolation supervisor remain
+mandatory. Addy uses its native supervisor rather than a generic Compose
+restart; SMTP allowlist and IPv6 restrictions are checked. Wallabag's existing
+egress firewall is checked. PrivateBin and FreshRSS retain their active
+`/opt/utilibre/compose.yaml` and checked-in mirror.
+
+## Deployment observations
+
+- FreshRSS's canonical URL is **https://rss.utilibre.org/**. An initial
+  preparation used the incorrect historical `feeds` hostname. That unapplied
+  receipt was retained and replaced before deployment; no public-route
+  exception was used.
+- Addy's first activation failed a readiness check that ran before native s6
+  mail startup finished. The exact old image was restored and independently
+  verified. The gate now allows a bounded 60-second settling window while
+  requiring every original restriction; explicit retry then passed. The
+  failure and rollback remain in the private receipt.
+- Pollaris's initial synthetic browser checks exposed test-harness routing
+  and modal-navigation errors. The test now serves native static assets and
+  uses the application's actual deletion modal. No UI workaround or weakened
+  authorization was added.
 
 ## Evidence and limits
 
-Private evidence: `/var/lib/utilibre-maintenance/php-20261022/`. Each completed
-service has `build.json`, exact retained packages, `application.json`, raw
-`scan.json` and `scan-gate.json`. `release.json` records both live replacements.
-The public [status record](status.v1.json) contains only non-sensitive facts.
+Private evidence is under
+`/var/lib/utilibre-maintenance/php-20261022/`: per-application build/input
+receipts, application outcomes, raw scanner output and scan decisions;
+`release.json` records all scoped deployments and rollback history.
+The public status record contains only selected non-sensitive results.
+The completed refreshed scan and queue counts are retained privately as
+`fresh-fleet-security.json` and `fresh-fleet-queue-counts.json`, separately from
+the earlier same-snapshot candidate evidence. All nine updated images were
+checked in that refreshed scan; no matches for the two PHP advisories were
+reported. Pollaris's compiled-PHP inventory limitation still applies.
 
-- PrivateBin: 25,000,000 random bytes encrypted in the browser, downloaded and
-  SHA-256 matched; oversized input rejected; server ciphertext limit and
-  maximum one-week expiry enforced; synthetic expired paste purged; missing
-  temporary volume fails closed; Markdown sanitizer preserved; no external
-  browser requests. Linux Chromium, desktop and 390-pixel Spanish emulation,
-  **not** physical phone/Opera coverage. No real user's paste was inspected.
-- 4get: actual Apache/PHP search form, configuration parsing and PNG
-  creation/reopen through Imagick, with networking disabled. No third-party
-  engine query was made; this is not a new claim that every engine works.
-- Native package/configuration preservation passed for both images. The new
-  checksum/delta and existing release/rollback tests passed (19 tests), plus
-  eight existing PrivateBin upload/storage tests. Repeated build verification
-  made no extra candidate or production changes.
-- Trivy 0.75.0 compared candidates using the preserved 21 October advisory
-  snapshot (`2026-10-21T01:19:53.032404989Z`), without telemetry or database
-  refresh. No new high/critical findings were introduced. That snapshot shows
-  PrivateBin 0 critical/0 high and 4get 0 critical/1 pre-existing high. This is
-  **not current fleet clearance**: the snapshot predates these disclosures;
-  the PHP fix is established by vendor fixed versions and signed packages.
-- The scheduled 22 October full scan failed its disk preflight. Its failure
-  remains visible; this targeted release did not overwrite it or claim a
-  successful current whole-fleet assessment. No exploit was run.
+- PrivateBin was checked in Linux Chromium, including a 390-pixel Spanish
+  viewport; this is not physical phone or Opera coverage. No real paste was
+  inspected. The attachment's decrypted SHA-256 matched its fictional input.
+- RSS-Bridge used a loopback HTTP/TLS provider fixture, not real GitHub.
+  TransLite and Binternet did not query their upstream providers. Both
+  Binternet containers passed release checks; end-to-end Tor retrieval was
+  not retested.
+- Wallabag used two native BrowserKit sessions and synthetic tmpfs SQLite,
+  not a physical browser, external article fetch or migration/restore test.
+  FreshRSS's native persistence/export and Apache login page were checked;
+  remote feed fetching and authenticated browser interaction were not retested.
+- Addy sent no email and changed no real accounts/aliases. Its native app
+  checks and live SMTP restrictions are not a new end-to-end delivery test.
+- Pollaris used two Linux Chromium contexts and isolated PostgreSQL. The
+  native worker started; no emails were sent. Its test HTTP server was PHP's
+  built-in server, with FPM syntax and live gateway health verified separately.
+  No production database migration or restore was performed.
+- Trivy 0.75.0 compared every candidate against the same archived advisory
+  snapshot (`2026-10-21T01:19:53.032404989Z`). No new high/critical findings were
+  introduced in that comparison. Some pre-existing findings remain. This
+  snapshot predates the PHP disclosures, so absence of those CVEs is not
+  proof of repair: vendor fixed versions, signed packages or official payload
+  identity establish the PHP update. No exploit was run.
 
 ## Rollback
 
-The release adapter automatically restores exact previous image pins and
-rechecks the predecessor if activation fails. Both predecessors remain local:
+Exact predecessors, configuration digests, service scopes and previous pins
+remain in the private release receipt; predecessor images were retained.
+Automatic rollback restores and verifies those exact inputs on failure.
 
-- PrivateBin `utilibre-privatebin:2.1.0-security-20261021-p2`, ID
-  `sha256:9816ec497b2c53e6f5f009db6f3a07a0d746afd224e99efbfc073370e7e01b17`.
-- 4get `utilibre-4get:03ba5d7-p2`, ID
-  `sha256:b1046c28a464248f83ee55225048a91fd211b1d03e9543038702e93c9908a19d`.
+For an operator-approved emergency rollback, restore only the selected image
+scalar in its recorded Compose files and any active/checked-in mirror. Use
+the established scoped release path: Addy through its SMTP supervisor,
+Wallabag through its isolation-aware process, and both Pollaris app/worker
+together. Other recorded services use scoped `up -d --no-deps --no-build
+--pull never`, including any recorded namespace dependents. Verify image
+identity, native readiness, isolation and HTTP response afterward.
 
-For an operator-approved manual rollback, restore only that image scalar in
-the receipt's actual Compose files (and PrivateBin's checked-in mirror), use
-its recorded project/directory and `up -d --no-deps --no-build --pull never`
-for the single selected service, then verify image identity, native health
-and its public route. No database or user-data restoration is needed for
-these runtime-only updates. **Rollback reintroduces the PHP vulnerabilities**;
-it is an emergency functional recovery step, not a security solution.
+No application schema or persistent-data transformation was introduced, so
+this runtime rollback does not require database restoration. **Rolling back
+reintroduces the PHP vulnerabilities** and is only emergency functional
+recovery. Source publication preserves its previous archive/index separately.
 
 ## Primary sources checked on 22 October
 

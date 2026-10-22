@@ -11,5 +11,6 @@ export const specs=[
  {key:'translite',base:'sha256:30cd0dd055e0816e415e5c32766159a3e7ca41391963bc2d08efc03530c3b35a',containers:['utilibre-translite-translite-1'],manager:'apk',branch:'3.24',origin:'php85',version:'8.5.12-r0',php:'php',roots:['/app','/etc/php85']},
  {key:'binternet',base:'sha256:5cb3cb70b118ab460fb9aa1fae3f119c3a60298ce7446d3c9f88a0912d4c8ec2',containers:['utilibre-binternet-binternet-1','utilibre-binternet-onion-binternet-onion-1'],manager:'apk',branch:'3.23',origin:'php84',version:'8.4.27-r0',php:'php',roots:['/app','/etc/php84']},
  {key:'addy',base:'sha256:96ec9ebf8f30c67452d3df5f4061bc48de6213c0631bc8f8159347e3df205f25',containers:['utilibre-addy-app-1'],manager:'apk',branch:'3.23',origin:'php84',version:'8.4.27-r0',php:'php',roots:['/var/www','/etc/php84']},
+ {key:'pollaris',base:'sha256:c0b42f11fe1db00c7beffc45e55c1dc1f7cf1d7919a89f821e3a8bdb4cd86c6d',containers:['utilibre-pollaris-pollaris-1','utilibre-pollaris-worker-1'],manager:'official-php',donor:'php@sha256:e4ec029f5afe6c8f8c0b5e5d75e27efcc3eefa462af81d9021f2a7311960c3c1',version:'8.5.12',php:'php',roots:['/app','/usr/local/etc']},
 ];
 export const candidate=s=>'utilibre-'+s.key+':php-security-20261022';
