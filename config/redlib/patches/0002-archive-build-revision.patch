@@ -1,0 +1,71 @@
+diff --git a/build.rs b/build.rs
+--- a/build.rs
++++ b/build.rs
+@@ -7,8 +7,26 @@ use std::os::unix::process::ExitStatusExt;
+ #[cfg(target_os = "windows")]
+ use std::os::windows::process::ExitStatusExt;
+ 
++fn build_revision(explicit: Option<&str>, git: &str) -> Result<String, &'static str> {
++	if let Some(revision) = explicit {
++		if revision.len() != 40 || !revision.bytes().all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)) {
++			return Err("REDLIB_BUILD_REVISION must be the full lowercase source commit");
++		}
++		return Ok(revision.to_owned());
++	}
++	let revision = git.trim();
++	Ok(if revision.is_empty() { "dev" } else { revision }.to_owned())
++}
++
+ fn main() {
+ 	println!("cargo:rerun-if-changed=src/");
++	println!("cargo:rerun-if-env-changed=REDLIB_BUILD_REVISION");
++	let explicit = std::env::var("REDLIB_BUILD_REVISION").ok();
++	if let Some(revision) = explicit.as_deref() {
++		let revision = build_revision(Some(revision), "").expect("Invalid source revision");
++		println!("cargo:rustc-env=GIT_HASH={revision}");
++		return;
++	}
+ 	let output = String::from_utf8(
+ 		Command::new("git")
+ 			.args(["rev-parse", "HEAD"])
+@@ -25,6 +43,39 @@ fn main() {
+ 			.stdout,
+ 	)
+ 	.unwrap_or_default();
+-	let git_hash = if output == String::default() { "dev".into() } else { output };
++	let git_hash = build_revision(None, &output).expect("Git revision fallback");
+ 	println!("cargo:rustc-env=GIT_HASH={git_hash}");
+ }
++
++#[cfg(test)]
++mod tests {
++	use super::build_revision;
++	const SOURCE: &str = "a4d36e954cf1bd64f209cd8868c5a29edc81b374";
++
++	#[test]
++	fn archive_uses_verified_revision() {
++		assert_eq!(build_revision(Some(SOURCE), "").unwrap(), SOURCE);
++	}
++
++	#[test]
++	fn does_not_pick_up_parent_repository() {
++		assert_eq!(build_revision(Some(SOURCE), "unrelated-parent\n").unwrap(), SOURCE);
++	}
++
++	#[test]
++	fn rejects_invalid_explicit_revision() {
++		for invalid in ["", "dev", "main", "a4d36e9", "A4D36E954CF1BD64F209CD8868C5A29EDC81B374", "a4d36e954cf1bd64f209cd8868c5a29edc81b374\n", "g4d36e954cf1bd64f209cd8868c5a29edc81b374"] {
++			assert!(build_revision(Some(invalid), SOURCE).is_err());
++		}
++	}
++
++	#[test]
++	fn git_checkout_keeps_native_revision() {
++		assert_eq!(build_revision(None, &format!("{SOURCE}\n")).unwrap(), SOURCE);
++	}
++
++	#[test]
++	fn unknown_development_build_stays_unknown() {
++		assert_eq!(build_revision(None, "").unwrap(), "dev");
++	}
++}

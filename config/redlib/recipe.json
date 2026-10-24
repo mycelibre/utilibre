@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "id": "redlib-e48efd8-utilibre-1",
+  "purpose": "Restore native comment retrieval while retaining redirect, runtime and privacy protections",
+  "approval": "reviewed-for-explicit-redlib-release-2026-10-24",
+  "automaticDeployment": false,
+  "source": {
+    "origin": "https://github.com/polak14/redlib",
+    "revision": "e48efd85c4527b211f1219bdcbfda72ada6d4ec6",
+    "archive": "https://codeload.github.com/polak14/redlib/tar.gz/e48efd85c4527b211f1219bdcbfda72ada6d4ec6",
+    "sha256": "712d5d7684ace386df7f097c8cde9b1a6865f501945e8369c193bc07457a5193",
+    "license": "AGPL-3.0-only"
+  },
+  "runtime": {
+    "reference": "utilibre-redlib:mount-noble-security-20261012",
+    "imageId": "sha256:45ec43720c0efe7d8e5cac53d8a133b08aec073e3f25bb46bd23148a2e44b6d2",
+    "requiredPreservation": "Every inherited layer; only replace /usr/local/bin/redlib and provenance labels"
+  },
+  "patches": [
+    {
+      "path": "patches/0001-reject-scheme-relative-settings-redirects.patch",
+      "sha256": "6cc933d0aaa151e1c6a6afb1c5ff8848215f942cedecb82b85b79c8f193ac9ec"
+    },
+    {
+      "path": "patches/0002-archive-build-revision.patch",
+      "sha256": "55da0977ec801f7f3cfa4b29bfec27119ff092733de50e23b537f12c0e2c35f2"
+    },
+    {
+      "path": "patches/0003-graphql-privacy-and-bounds.patch",
+      "sha256": "679e3d63405be6b597b792a0c00b797e0629e13487aba3127524a87115670f49"
+    },
+    {
+      "path": "patches/0004-tokio-1.54.1-lock.patch",
+      "sha256": "34c3e4606d0fbfb6733f3a11adf902d477051742175096202f7473bbe6ff74fd"
+    },
+    {
+      "path": "patches/0005-matching-source-link.patch",
+      "sha256": "53dca042705476b13c29470b7040c25e057a3f43cf916e666eb1d97fb361b34c"
+    }
+  ],
+  "files": [
+    {
+      "path": "src/settings.rs",
+      "before": "b229ae7004e07c0724ff453f6831b4b9383949233bab2146735f5cd9271ba7ac",
+      "after": "c4f8aeba12d609496532e959e97f696650d6cc00099a66ad06f6c54efe3fc960"
+    },
+    {
+      "path": "build.rs",
+      "before": "0e0ed430a0625433345b80a31804655d5065446ddc93c17b88bdd9acfcea36e9",
+      "after": "f4174cde2be85dbd2e4ff0d882866f2acce2042e3761f66ee07759ce1e8322bb"
+    },
+    {
+      "path": "src/gql.rs",
+      "before": "fcadfdecfd8ad3da6c17b451894ed5f0671d4521aea6a2fa61e6491c1a696435",
+      "after": "98033fa50a2a93ace126d5a5556ba6ed2c554fca6abc47f0f89d4485b637e7a2"
+    },
+    {
+      "path": "src/shreddit.rs",
+      "before": "fe70a8e67cffb94975766609c77513986b3c58a55a272ee4946e94aa9f762102",
+      "after": "e499d91fe97a9f5f10e8108cb1660c7334c69f28c5d1a89dfcc1ec6f9d1847dc"
+    },
+    {
+      "path": "src/utils.rs",
+      "before": "f2398dcc7df898d0094263916f5d296187e5dcbc298c8be2330bf0d034f1e604",
+      "after": "0cbdc3ec75d209b841696bc5b2a3fa1c4f7b5bb68c80d6fa96b09f0a7d848a29"
+    },
+    {
+      "path": "src/main.rs",
+      "before": "3ecfb96c6ef27b1b71d9c97238464e9147b9c2f9f1ab652230e5d277efeeed53",
+      "after": "a02f987d8c9eccf71606a0286e0b93e5c0a955ad75a1330c9cc12787d2bd822a"
+    },
+    {
+      "path": "src/post.rs",
+      "before": "22e2cf5544bbcf7383d158bfc5007f9c0b5f1ce18b075d737df94bd467306870",
+      "after": "dd0f00402b7254bf8242bcbd58a66d90e52fd971abd44a82753321d0dcf87a80"
+    },
+    {
+      "path": "templates/comment.html",
+      "before": "e59f30e85b00c9ac42cc5d7dd4501ac3dfb275f7f7c4ef3667383c0cbc1534c2",
+      "after": "d263707355f4c81cfb89079d1daf73e716617204b04b1c34a9b980e67c23807f"
+    },
+    {
+      "path": "Cargo.lock",
+      "before": "b30d62d5a126f56be7ea4850f9d5dad2ec71aceb05aa9d599178144ac0f4628f",
+      "after": "609dabd8a0785aa842b732247a842beff68cbaf8d1c362b71b9599d78f07aaaf"
+    },
+    {
+      "path": "templates/base.html",
+      "before": "0ddbf6fc9e78123485a592270c4694d5f9753eac10df94ded7576afd5982484f",
+      "after": "e4771051dffa0d15b4b159b0b6452cd49a89c74e9ec811fc8fb5265541e4edf0"
+    }
+  ],
+  "checks": [
+    "source archive and patch checksums; exact permitted outputs",
+    "five build-script regressions and accurate archive revision",
+    "gql::tests, shreddit::tests, redirect_tests offline",
+    "same-snapshot locked dependency and runtime image scan",
+    "bounded native thread, pagination, sorting, focused comment and proxied media",
+    "browser requests remain on instance origin; settings redirects stay local"
+  ],
+  "network": {
+    "prepare": "none",
+    "downloads": [
+      "codeload.github.com",
+      "crates.io",
+      "static.crates.io",
+      "index.crates.io",
+      "Debian build repositories"
+    ],
+    "runtime": "Native anonymous Reddit OAuth, Reddit metadata, GraphQL and native media proxy; explicit instance/update helper uses upstream GitHub. No external fallback."
+  },
+  "deploymentScope": [
+    "redlib"
+  ],
+  "migration": "none; stateless application",
+  "rollback": "Restore exact predecessor image pin in Compose and protected .env, then recreate only redlib",
+  "upstreamStatus": "GraphQL is upstream fork functionality; local guards, provenance and cursor sorting remain local. Tokio fix is incorporated in 1.54.1.",
+  "candidate": {
+    "reference": "utilibre-redlib:graphql-e48efd8-20261024",
+    "imageId": "sha256:42dd36c9d8b0c781bf86df719cf05cda277b9af71a7c0560465e13fa8df14fdf",
+    "binarySha256": "50e964d86d5b2705efef0a3520fba18c1691762fc2431649e6654a3bbce3bf31",
+    "buildToolchainImageId": "sha256:ad9d1fe62a121d73e57210fa5fca3f35074aa42884c81e7c5968e174e5f43915"
+  }
+}

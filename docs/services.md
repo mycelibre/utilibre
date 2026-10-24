@@ -83,6 +83,16 @@ modifications are recorded in
 stack's
 [`SOURCE_MANIFEST.md`](../deployment/utilibre/SOURCE_MANIFEST.md).
 
+Redlib maintenance, 24 October 2026: the selected comments repair is the
+`polak14/redlib` fork at `e48efd85c4527b211f1219bdcbfda72ada6d4ec6`, with
+Utilibre's exact local patches and maintained runtime. Its Cargo version is
+0.36.0; this is not the official Redlib 0.40 release. The native GraphQL path,
+media privacy, continuation links, build provenance and dependency lock are
+covered by the [replay recipe](../config/redlib/README.md). See the
+[dated release evidence](records/redlib-threads-2026-10-20.md) for tested
+behavior, production state and remaining limits. SearXNG and Redlib's public
+URLs and submitted listings are unchanged.
+
 ## Internal support
 
 RSSHub is intended as an internal source for operator-approved FreshRSS feeds.

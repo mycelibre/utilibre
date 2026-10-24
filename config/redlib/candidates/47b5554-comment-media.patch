@@ -1,0 +1,32 @@
+diff --git a/src/thread.rs b/src/thread.rs
+--- a/src/thread.rs
++++ b/src/thread.rs
+@@ -609,6 +609,11 @@ fn clean_html(element: ElementRef<'_>) -> String {
+ 
+ fn safe_link_url(value: Option<&str>) -> String {
+ 	let value = value.unwrap_or_default().trim();
++	// Browsers normalize backslashes and remove ASCII tabs/newlines in URLs.
++	// Reject them before accepting a root-relative path or rewriting media.
++	if value.contains('\\') || value.chars().any(char::is_control) {
++		return String::new();
++	}
+ 	if value.starts_with('/') && !value.starts_with("//") {
+ 		return htmlescape::encode_minimal(&format_url(value));
+ 	}
+@@ -725,6 +730,16 @@ mod tests {
+ 		assert!(safe_media_url(Some("https://example.com/image.png")).is_empty());
+ 	}
+ 
++	#[test]
++	fn rejects_browser_normalized_external_media() {
++		for value in ["/\\example.invalid/pixel", "/\t/example.invalid/pixel", "/\n/example.invalid/pixel", "/\r/example.invalid/pixel"] {
++			assert!(safe_media_url(Some(value)).is_empty(), "accepted {value:?}");
++			assert!(safe_link_url(Some(value)).is_empty(), "accepted {value:?}");
++		}
++		assert_eq!(safe_media_url(Some("/img/example.png")), "/img/example.png");
++		assert_eq!(safe_media_url(Some("https://i.redd.it/example.png")), "/img/example.png");
++	}
++
+ 	#[test]
+ 	fn classifies_redirects_expiry_blocks_missing_and_rate_limits() {
+ 		assert_eq!(classify_status(200, None), None);

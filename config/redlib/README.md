@@ -1,62 +1,110 @@
 # Redlib deployment
 
-Redlib is built from the official source at commit
-`a4d36e954cf1bd64f209cd8868c5a29edc81b374` using upstream's
-`Dockerfile.ubuntu` as the basis for a small local build recipe. The Quay release
-image was not used because its published 0.36.0 code predates fixes in this
-reviewed commit. The source archive checksum, Rust builder image, and Ubuntu
-runtime image are pinned in `config/redlib/Dockerfile`.
+## Reviewed comments repair — 24 October 2026
 
-The local `p1` patch rejects scheme-relative and backslash-prefixed values in
-the settings redirect parameter. Without the patch, a URL such as
-`/settings/update?redirect=//example.invalid` could produce an external
-`Location` header. The build runs the patch's Rust regression test before
-producing the release binary. The resulting image tag is
-`public-utility-redlib:0.36.0-a4d36e9-p1` by default. This is a modified AGPL
-build, so the deployed project's published source must include this Dockerfile
-and patch.
+The deployed build uses the maintained [polak14/redlib fork](https://github.com/polak14/redlib/tree/e48efd85c4527b211f1219bdcbfda72ada6d4ec6),
+revision `e48efd85c4527b211f1219bdcbfda72ada6d4ec6`, AGPL-3.0-only.
+Its native GraphQL client retrieves comments using the existing anonymous
+Reddit OAuth identity. No personal account, other operator's proxy or visitor
+request to Reddit is introduced. This is a modified fork, not the official
+Redlib 0.40 release: its Cargo version is still 0.36.0.
 
-Build the image explicitly on first install or when changing its pinned source
-or patch:
+Release status and observed results are recorded in
+[the incident record](../../docs/records/redlib-threads-2026-10-20.md).
+Do not infer successful public operation from the `/settings` health check.
+
+### Exact repair sequence
+
+[recipe.json](recipe.json) pins the archive, ordered patches, input/output file
+hashes and maintained runtime. It does not grant unattended deployment.
+
+1. Retain the existing scheme-relative/backslash settings-redirect protection.
+2. Stamp the exact source revision when building an archive without `.git`.
+3. Bound GraphQL responses to 8 MiB and 20 seconds; reject denied, malformed or
+   incomplete responses without scraping fallback. Keep automatically loaded
+   comment media on native same-origin media-proxy paths; retain normal external
+   article links. Exclude comment content/request paths from error logging.
+   Preserve sort in comment pagination and compare update information with the
+   selected fork.
+4. Apply the package-manager-generated lock update to Tokio 1.54.1. No other
+   package version changes; Cargo also resolved six existing dependency edges
+   differently. Preserve the complete lock patch.
+5. Point the native Code link at the complete matching modified source archive.
+   The configured banner appears on the native information page, not on threads.
+
+The tested predecessor is
+`utilibre-redlib:mount-noble-security-20261012`,
+image `sha256:45ec43720c0efe7d8e5cac53d8a133b08aec073e3f25bb46bd23148a2e44b6d2`.
+All its native-library repair layers must remain. Rebuilding on bare Ubuntu
+would lose those repairs.
+
+### Preparation and verification
+
+Download the exact archive named in the recipe in a controlled download step.
+Then prepare a clean tree without network access:
 
 ```sh
-docker compose build redlib
-docker compose up -d redlib
+node config/redlib/prepare-source.mjs /path/to/candidate.tar.gz /path/to/new-review-directory
 ```
 
-`pull_policy: never` prevents a routine `docker compose up -d` from looking for
-the local-only image tag in a public registry or unexpectedly recompiling Rust.
+Repeating that command checks the complete prepared tree and makes no further
+changes. Wrong archive/patch hashes or unexpected prepared-tree changes fail.
+The script does not build, deploy, resolve dependencies or make live requests.
 
-The service is in the `privacy-frontends` Compose profile and is represented by
-the `redlib` ID in `ENABLED_SERVICES`. Those two switches must agree. The
-checked-in example enables both because Redlib was explicitly approved for this
-deployment. To disable a running instance, first run
-`docker compose stop redlib`; then remove `privacy-frontends` from
-`COMPOSE_PROFILES`, remove `redlib` from `ENABLED_SERVICES`, and clear
-`PUBLIC_REDDIT_URL`. A profile change alone does not stop an already-created
-container.
+Use the pinned Rust builder, recorded toolchain image and locked dependencies.
+The selected Rust compiler for this release is 1.98.0. The source Dockerfile
+runs native build-script, GraphQL, parser and redirect tests with networking
+disabled. It builds only the production `redlib` binary. A private diagnostic
+binary used in testing is not part of the published application.
 
-Redlib uses no database or persistent volume. Its root filesystem is read-only
-and `/tmp` is a small tmpfs. It runs as the non-root `redlib` user with all
-capabilities dropped and `no-new-privileges`. Robot indexing is disabled. RSS
-is disabled by deliberately omitting `REDLIB_ENABLE_RSS`; in this upstream
-revision, setting it to the string `off` would incorrectly enable the route.
-HLS, autoplay, and showing NSFW content are off by default; operators
-may additionally set `REDLIB_SFW_ONLY=on` to prohibit NSFW content instance-wide.
+Before a source build, compare `docker image inspect` of the runtime reference
+with the exact image ID in the recipe. Build to a new tag, with bounded CPU/RAM
+and sufficient disk. Never overwrite the predecessor tag. The Dockerfile's
+build-time Debian packages are not a claim of byte-reproducible builds.
 
-The application is published only as
-`${PRIVATE_BIND_IP}:${REDLIB_PORT:-3002}`. Its container health check requests
-`/settings`; it has no database, administration, debug, or metrics port.
+A locally compiled release binary can be packaged by copying only
+`/usr/local/bin/redlib` onto that verified runtime. Check layer ancestry,
+binary checksum, unchanged runtime settings and a same-snapshot security scan.
+Behavioral release gates include a thread with comments, pagination, sorting,
+focused replies, same-origin media and settings redirects. Live checks require
+a finite operator-approved request budget; they are not a default offline test.
 
-`RUST_LOG=warn` suppresses informational messages that can contain the emulated
-device identity or an OAuth token prefix, while retaining warnings and errors.
-Reviewed warning/error paths do not intentionally include visitor URLs or
-queries. Redlib also prints a startup line. Docker stores these operational
-messages with the project's bounded `json-file` rotation. Visitor
-preferences may be stored in optional first-party cookies. The container has no
-persistent server-side request history.
+Publish the matching source, dependency sources, notices, lockfile and build
+instructions before activation. Keep previous source offers available.
+Preserved native-runtime repair sources remain in the shared source directory.
 
-Important policy limitation: this approved deployment retains upstream
-Redlib's emulation of an official Reddit Android client and its OAuth identity.
-That may stop working if Reddit blocks it. No personal Reddit account or
-operator-supplied Reddit token is configured.
+### Scoped activation and rollback
+
+The production release is stateless. There is no database or data migration.
+Update only the exact Redlib image pin in `compose.yaml` and the protected
+local `.env` override, after recording both predecessors. Resolve Compose and
+verify every other Redlib setting is unchanged except the source link appended
+to the native banner, then use the existing project:
+
+```sh
+docker compose up -d --no-deps --no-build --pull never redlib
+```
+
+Check health and an actual comment page through both the backend and public
+Anubis route. On failure restore both exact predecessor pins and run the same
+scoped command and remove the added source link from the banner. Retain the
+previous image; do not prune it as part of release.
+Image rollback does not change browser preferences.
+
+### Operating boundaries
+
+Keep the existing 0.5 CPU, 256 MiB RAM/no additional swap, 128 PID limit,
+32 MiB tmpfs, non-root user, read-only root, dropped capabilities and
+`no-new-privileges`. Only Anubis publishes a host port; Redlib has none.
+Preserve `privacy-frontends`, the public URL and enabled-service entry.
+
+Indexing, RSS, HLS and autoplay remain disabled; NSFW content is off by default.
+RSS must be omitted entirely: the upstream treats even an `off` value as set.
+`RUST_LOG=warn` excludes informational anonymous-device/token-prefix messages.
+Error logging must not include comment content or visitor request paths.
+Preferences remain optional first-party browser cookies, not server history.
+
+Reddit can still restrict the anonymous upstream client. A successful bounded
+check is not an uptime guarantee. Do not switch automatically to HTML scraping,
+another instance or visitor-side Reddit requests when access fails.
+Earlier failed candidates and dated observations remain in the incident record.

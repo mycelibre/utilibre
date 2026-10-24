@@ -2813,9 +2813,9 @@
   },
   "redlib": {
     "version": "0.36.0",
-    "reviewedAt": "2026-10-11",
+    "reviewedAt": "2026-10-24",
     "containers": {
-      "/public-utility-redlib-1": "sha256:45ec43720c0efe7d8e5cac53d8a133b08aec073e3f25bb46bd23148a2e44b6d2"
+      "/public-utility-redlib-1": "sha256:42dd36c9d8b0c781bf86df719cf05cda277b9af71a7c0560465e13fa8df14fdf"
     },
     "advisories": [
       {
@@ -2832,7 +2832,7 @@
         "source": "https://github.com/redlib-org/redlib/security/advisories/GHSA-g8vq-v3mg-7mrg"
       }
     ],
-    "runtimeEvidence": "2026-10-12 completed Archive::Tar, coturn, Kuma crypto, native mount and CryptPad parser releases: exact predecessor chains, preserved application/configuration boundaries, native regression/application tests and live gates verified. CryptPad package metadata changes are limited to its tested braces dependency. Application versions and advisory dispositions are unchanged; dependency findings are reviewed separately. See archive-tar-final, coturn-bson-final, kuma-crypto-final, mount-acl-final and application-leaves-final recipes. "
+    "runtimeEvidence": "2026-10-24 Redlib GraphQL fork e48efd85c4527b211f1219bdcbfda72ada6d4ec6 retains Cargo 0.36.0 and all predecessor native runtime layers. Existing bounded application advisory disposition is unchanged; exact image updated after native comments/pagination/redirect and privacy tests. Tokio 1.54.1 lock scan: 337 packages, no reported matches; identical Ubuntu runtime findings remain 79 medium and 13 low with no high/critical. See config/redlib/recipe.json and docs/records/redlib-threads-2026-10-20.md. This does not accept or suppress other dependency findings."
   },
   "freshrss": {
     "version": "1.30.1",
