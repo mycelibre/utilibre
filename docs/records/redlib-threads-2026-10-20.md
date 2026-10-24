@@ -84,6 +84,16 @@ resolved that match. No other package versions changed; Cargo also rewired six
 existing dependency edges. The complete lock change is preserved as a patch.
 The after-scan reported no locked-package findings.
 
+The packaged source resolves offline to 346 Cargo package records, including
+the application. Trivy extracted 337: nine test-only records were absent despite
+requesting development-dependency coverage (`linux-raw-sys`, `lipsum`,
+`quick-error`, `rustix`, `rusty-forkfork`, `sealed_test`, `sealed_test_derive`,
+`tempfile`, `wait-timeout`). Cargo's resolved graph places all nine outside the
+application's normal/build dependency closure. They remain an explicit scanner
+coverage gap, not a finding-free assessment of the test environment. The native
+offline Cargo metadata check also verified that the published source package's
+vendored dependency paths resolve without a registry or remote download.
+
 Every prior runtime layer is retained; the only added filesystem entry replaces
 `/usr/local/bin/redlib`. The final image's 92 Ubuntu packages retained the exact
 same reported OS findings: 79 medium and 13 low, no high or critical. Those
