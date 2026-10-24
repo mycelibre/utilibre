@@ -9,10 +9,26 @@ import tarfile
 os.umask(0o077)
 HERE = Path(__file__).resolve().parent
 ROOT = Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/output')
-name = sys.argv[1]
+import argparse
+import re
+parser = argparse.ArgumentParser()
+parser.add_argument('name')
+parser.add_argument('--candidate')
+parser.add_argument('--output-dir')
+options = parser.parse_args()
+name = options.name
 spec = next(s for s in json.loads((HERE/'images.json').read_text()) if s['key']==name)
 key = 'wakapi' if name=='wakapi-healthcheck' else name
-stage = json.loads((ROOT/(key+'-image.json')).read_text())
+if options.candidate:
+    assert name in ['opengist', 'vikunja']
+    assert Path(options.candidate).is_absolute() and Path(options.output_dir).is_absolute()
+    stage = json.loads(Path(options.candidate).read_text())
+    assert stage['passed'] and stage['key'] == name
+    assert re.fullmatch(r'sha256:[a-f0-9]{64}', stage['base'])
+    spec = {**spec, 'baseId': stage['base'], 'compiler': '1.27.3'}
+    ROOT = Path(options.output_dir)
+else:
+    stage = json.loads((ROOT/(key+'-image.json')).read_text())
 
 def files(image):
     cid = subprocess.check_output(['docker','create','--entrypoint','/bin/true',image],text=True).strip()
@@ -48,7 +64,7 @@ assert changed==expected, changed
 scanfile = ROOT/(key+'-scan.json')
 subprocess.run(['systemd-run','--quiet','--scope','-p','CPUQuota=100%','-p','MemoryMax=2G',
  '/opt/utilibre/maintenance/bin/trivy','image','--disable-telemetry','--cache-dir','/var/cache/utilibre-security',
- '--cache-backend','memory','--scanners','vuln','--offline-scan','--skip-db-update','--skip-java-db-update',
+ '--cache-backend','memory','--scanners','vuln','--offline-scan','--skip-db-update','--skip-java-db-update','--skip-version-check',
  '--parallel','1','--timeout','3m','--no-progress','--list-all-pkgs','--format','json','--image-src','docker',
  '--output',str(scanfile),stage['imageId']],check=True,env={**os.environ,'GOMAXPROCS':'1','GOMEMLIMIT':'512MiB'},stdout=subprocess.DEVNULL)
 scan = json.loads(scanfile.read_text())

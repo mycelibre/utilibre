@@ -6,11 +6,13 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 process.umask(0o077);
 const here=new URL('.',import.meta.url).pathname;
-const root='/var/lib/utilibre-maintenance/go-leaf-final-20261011';
-const specs=JSON.parse(fs.readFileSync(here+'images.json'));
+const followup=process.argv.includes('--batch=security-20261024');
+const historical='/var/lib/utilibre-maintenance/go-leaf-final-20261011';
+const root=followup?'/var/lib/utilibre-maintenance/security-20261024':historical;
+const specs=JSON.parse(fs.readFileSync(new URL(followup?'../security-20261024/images.json':'./images.json',import.meta.url)));
 const sha=b=>createHash('sha256').update(b).digest('hex');
 const publish=process.argv.includes('--publish');
-const targets=process.argv.slice(2).filter(x=>x!=='--publish');
+const targets=process.argv.slice(2).filter(x=>!['--publish','--batch=security-20261024'].includes(x));
 const flags={
  'oauth2-proxy':'-X github.com/oauth2-proxy/oauth2-proxy/v7/pkg/version.VERSION=v7.15.5',
  mezzo:'-s -w -X main.version=1.4.0',
@@ -27,7 +29,7 @@ for(const key of targets){
  const prefix=root+'/output/'+name;
  const image=JSON.parse(fs.readFileSync(prefix+'-image.json'));
  for(const suffix of ['native','verify']){const gate=JSON.parse(fs.readFileSync(prefix+'-'+suffix+'.json'));assert(gate.passed&&gate.imageId===image.imageId);}
- const snapshot=JSON.parse(fs.readFileSync(prefix+'-source-files.json'));
+ const snapshot=JSON.parse(fs.readFileSync(historical+'/output/'+name+'-source-files.json'));
  const stage=fs.mkdtempSync(root+'/source-'+name+'-');
  for(const entry of snapshot.files){
   const dest=stage+'/'+entry.path;fs.mkdirSync(path.dirname(dest),{recursive:true});
@@ -36,7 +38,7 @@ for(const key of targets){
   fs.writeFileSync(dest,bytes,{mode:entry.executable?0o755:0o644});
  }
  for(const file of ['go.mod','go.sum'])fs.copyFileSync(here+'locks/'+name+'/'+file,stage+'/'+file);
- const copy=(from,to)=>{fs.mkdirSync(path.dirname(stage+'/'+to),{recursive:true});fs.cpSync(root+'/input/'+from,stage+'/'+to,{recursive:true});};
+ const copy=(from,to)=>{fs.mkdirSync(path.dirname(stage+'/'+to),{recursive:true});fs.cpSync(historical+'/input/'+from,stage+'/'+to,{recursive:true});};
  if(name==='opengist'){copy('opengist-embed/assets','public/assets');copy('opengist-embed/.vite','public/.vite');}
  if(name==='ntfy'){copy('ntfy-embed/site','server/site');copy('ntfy-embed/docs','server/docs');}
  if(name==='vikunja')copy('vikunja-embed/dist','frontend/dist');
@@ -50,7 +52,18 @@ for(const key of targets){
  const target=name==='wakapi'?'main.go':name==='anubis'?'./cmd/anubis':name==='mezzo'?'./cmd/mezzo':'.';
  const script=`#!/bin/sh\nset -eu\ntest "$(go version)" = 'go version go${s.compiler} linux/amd64'\nexport GOTOOLCHAIN=local GOTELEMETRY=off CGO_ENABLED=${cgo} GOOS=linux GOARCH=amd64 GOEXPERIMENT=${experiment}\ngo mod verify\nmkdir -p utilibre-output\ngo build -mod=readonly -p 1 -trimpath ${tags?'-tags='+tags+' ':''}-ldflags '${flags[name]}' -o utilibre-output/${name} ${target}\n`+(name==='wakapi'?"CGO_ENABLED=0 GO111MODULE=off GOEXPERIMENT= go build -trimpath -ldflags '-s -w' -o utilibre-output/healthcheck scripts/healthcheck.go\n":'');
  fs.writeFileSync(stage+'/UTILIBRE-REBUILD.sh',script,{mode:0o755});
+ if(followup){
+  const inputs=JSON.parse(fs.readFileSync(root+'/'+name+'/inputs.json'));
+  fs.writeFileSync(stage+'/UTILIBRE-TOOLCHAIN.json',JSON.stringify({imageId:inputs.compiler,goArchive:JSON.parse(fs.readFileSync(root+'/go-download.json')),note:'Local compiler image; not a public registry manifest. Compiler construction and dependencies are recorded separately. Byte-reproducible builds are not claimed.'},null,2)+'\n');
+ }
  fs.writeFileSync(stage+'/UTILIBRE-SECURITY.json',JSON.stringify({sourceCommit:s.commit,application:name,image:s.candidate,imageId:image.imageId,binarySha256:image.binarySha256,compilerImage:'golang:'+s.compiler+'-alpine@sha256:'+digest[s.compiler],runtimeBase:s.base,runtimeBaseImageId:s.baseId,replaceOnly:name==='wakapi'?['/app/wakapi','/app/healthcheck']:[s.binary],instructions:'Run UTILIBRE-REBUILD.sh in the pinned Go image with source mounted at its working directory. CGO builds require Alpine gcc, musl-dev and binutils. Required precompiled frontend assets are included; original frontend source and lockfiles are also included. Preserve upstream licenses. Build-time module downloads are checksum-verified by go.sum; no runtime dependency download.',runtime:'Overlay only the resulting native binary/binaries on the identified pre-existing runtime image, preserving configuration, users, entrypoint and native access controls. Matching image recipes and test sources: https://github.com/mycelibre/utilibre/tree/main/deployment/maintenance/go-leaf-final',securityLimit:'This is a bounded compiler/module repair, not a claim of zero remaining vulnerabilities.'},null,2)+'\n');
+ if(followup){
+  const p=stage+'/UTILIBRE-SECURITY.json',m=JSON.parse(fs.readFileSync(p));
+  m.compilerImage=JSON.parse(fs.readFileSync(root+'/'+name+'/inputs.json')).compiler;
+  m.instructions='Use Go 1.27.3 (archive and SHA-256 in UTILIBRE-TOOLCHAIN.json), with gcc/musl-dev/binutils for Vikunja, then run UTILIBRE-REBUILD.sh. Source and current locks preserve prior fixes; no runtime dependency download. Compiler image ID is local, not a registry digest.';
+  m.runtime=m.runtime.replace('go-leaf-final','security-20261024');
+  fs.writeFileSync(p,JSON.stringify(m,null,2)+'\n');
+ }
  const archive=root+'/output/'+name+'-utilibre.tar.gz';
  cp.execFileSync('tar',['-czf',archive,'-C',stage,'.']);
  cp.execFileSync('tar',['-tzf',archive],{stdio:['ignore','ignore','pipe']});

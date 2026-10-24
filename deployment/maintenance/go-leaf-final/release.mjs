@@ -7,8 +7,9 @@ import {pathToFileURL} from 'node:url';
 import {replaceImagePins,namespaceDependents,readinessSeconds,releaseGroup} from '../language-final/release.mjs';
 import {canonical} from '../go-final/release.mjs';
 process.umask(0o077);
-const root='/var/lib/utilibre-maintenance/go-leaf-final-20261011',receipt=root+'/release.json';
-const specs=JSON.parse(fs.readFileSync(new URL('./images.json',import.meta.url)));
+const followup=process.argv.includes('--batch=security-20261024');
+const root='/var/lib/utilibre-maintenance/'+(followup?'security-20261024':'go-leaf-final-20261011'),receipt=root+'/release.json';
+const specs=JSON.parse(fs.readFileSync(new URL(followup?'../security-20261024/images.json':'./images.json',import.meta.url)));
 const docker=(...args)=>{try{return cp.execFileSync('docker',args,{encoding:'utf8',timeout:180000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe'],env:{...process.env,APP_BIND_IP:'10.10.1.43'}}).trim();}catch{throw Error('Bounded Docker operation failed; private configuration output withheld.');}};
 const inspect=n=>JSON.parse(docker('inspect',n))[0];
 const compose=g=>['compose','--profile','*','--project-directory',g.cwd,...(g.project==='utilibre-community'?['--env-file',g.cwd+'/.env.rallly']:[]),'-p',g.project,...g.files.flatMap(f=>['-f',f])];
@@ -63,7 +64,7 @@ function repin(g,from,to){
  for(const edit of edits)fs.writeFileSync(edit.file,edit.text);
 }
 async function main(){
- const [mode,...keys]=process.argv.slice(2);assert(['prepare','apply'].includes(mode));assert(keys.length&&new Set(keys).size===keys.length);for(const key of keys)assert(specs.some(s=>s.key===key));
+ const [mode,...keys]=process.argv.slice(2).filter(a=>a!=='--batch=security-20261024');assert(['prepare','apply'].includes(mode));assert(keys.length&&new Set(keys).size===keys.length);for(const key of keys)assert(specs.some(s=>s.key===key));
  const report=fs.existsSync(receipt)?JSON.parse(fs.readFileSync(receipt)):{date:new Date().toISOString(),status:'preparing',groups:[]};
  const save=()=>fs.writeFileSync(receipt,JSON.stringify(report,null,2)+'\n');
  if(mode==='prepare'){

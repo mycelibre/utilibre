@@ -1,0 +1,26 @@
+[
+  {
+    "key": "opengist",
+    "container": "utilibre-opengist-opengist-1",
+    "base": "utilibre-opengist:1.15.2-go-security-20261011",
+    "baseId": "sha256:56983d2fd6e04dab73ac9700eee38dde8f48f825ac904253c062f1a6e76e1876",
+    "binary": "/app/opengist/opengist",
+    "source": "/opt/utilibre/community-src/opengist",
+    "commit": "5afef9ac76d2d69ba11a888bb7a095b1d14e7c9d",
+    "compiler": "1.27.3",
+    "candidate": "utilibre-opengist:echo-security-20261024",
+    "compilerImage": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b"
+  },
+  {
+    "key": "vikunja",
+    "container": "utilibre-vikunja-vikunja-1",
+    "base": "utilibre-vikunja:2.7.0-go-security-20261011",
+    "baseId": "sha256:93940c5912509273d2ce7eb5323eee3fd9473798c2c596085a497374c0dcb2d8",
+    "binary": "/app/vikunja/vikunja",
+    "source": "/opt/utilibre/community-src/vikunja",
+    "commit": "a16be96aa454671fdf213b0fbe411dd38a098418",
+    "compiler": "1.27.3",
+    "candidate": "utilibre-vikunja:echo-security-20261024",
+    "compilerImage": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b"
+  }
+]

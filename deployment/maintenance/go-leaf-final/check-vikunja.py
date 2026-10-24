@@ -4,6 +4,8 @@ Only isolated local auth/signup replace production OIDC in the temporary config.
 No network interface, mail, external identity provider, real volume or token.
 """
 import hashlib
+import argparse
+import re
 import io
 import json
 import os
@@ -129,9 +131,18 @@ def inside(phase):
 
 def main():
     os.umask(0o077)
-    baseline = '--baseline' in sys.argv
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--baseline', action='store_true')
+    parser.add_argument('--image-id')
+    parser.add_argument('--output')
+    options = parser.parse_args()
+    baseline = options.baseline
+    assert not (baseline and options.image_id)
+    if options.image_id:
+        assert re.fullmatch(r'sha256:[a-f0-9]{64}', options.image_id)
+        assert options.output and Path(options.output).is_absolute()
     stage = ({'imageId': next(s['baseId'] for s in json.loads((HERE / 'images.json').read_text()) if s['key'] == 'vikunja')}
-             if baseline else json.loads((ROOT / 'vikunja-image.json').read_text()))
+             if baseline else {'imageId': options.image_id} if options.image_id else json.loads((ROOT / 'vikunja-image.json').read_text()))
     name = 'maintenance-vikunja-native-' + str(os.getpid())
     directory = Path(tempfile.mkdtemp(prefix='utilibre-vikunja-native-', dir='/dev/shm'))
     run = lambda args: subprocess.check_output(args, text=True, stderr=subprocess.PIPE).strip()
@@ -191,7 +202,8 @@ def main():
                   'networkIsolated': True, 'onlySyntheticData': True, **checks,
                   'limitations': ['Local auth is enabled only in this isolated fixture; production OIDC is unchanged and not exercised here.',
                                   'Embedded frontend assets are separately byte-compared; no mobile/browser usability claim.']}
-        (ROOT / ('vikunja-baseline-native.json' if baseline else 'vikunja-native.json')).write_text(json.dumps(report, indent=2) + '\n')
+        destination = Path(options.output) if options.output else ROOT / ('vikunja-baseline-native.json' if baseline else 'vikunja-native.json')
+        destination.write_text(json.dumps(report, indent=2) + '\n')
         print(json.dumps(report))
     finally:
         subprocess.run(['docker', 'rm', '-f', '-v', name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

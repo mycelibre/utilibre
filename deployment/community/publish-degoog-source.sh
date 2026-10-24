@@ -12,6 +12,10 @@ mkdir -p "$stage/utilibre-deployment" "$stage/utilibre-searx-engines"
 cp "$root/deployment/community/configure-degoog.mjs" "$root/deployment/community/init-degoog.mjs" "$root/deployment/community/compose.evaluation.yaml" "$root/deployment/community/degoog-gateway.conf" "$root/deployment/community/check-degoog.mjs" "$stage/utilibre-deployment/"
 cp "$root/deployment/community/check-degoog-settings.mjs" "$root/deployment/community/configure-degoog-search.mjs" "$root/deployment/community/check-degoog-search.mjs" "$stage/utilibre-deployment/"
 cp "$root/deployment/community/degoog-security.patch" "$root/deployment/maintenance/security-20261022/build-degoog.mjs" "$root/deployment/maintenance/security-20261022/build-degoog.sh" "$stage/utilibre-deployment/"
+mkdir -p "$stage/utilibre-deployment/php-20261022"
+for file in specs.mjs inputs.v1.json checks.mjs build.mjs check-degoog.mjs; do
+ cp "$root/deployment/maintenance/php-20261022/$file" "$stage/utilibre-deployment/php-20261022/"
+done
 cp "$root/docs/records/degoog-settings-2026-10-09.md" "$root/docs/records/degoog-search-2026-10-09.md" "$stage/utilibre-deployment/"
 cp /opt/utilibre/community-src/degoog-searx-engines/*.traits.json /opt/utilibre/community-src/degoog-searx-engines/*.py /opt/utilibre/community-src/degoog-searx-engines/LICENSE /opt/utilibre/community-src/degoog-searx-engines/SOURCE.json "$stage/utilibre-searx-engines/"
 archive=/opt/utilibre/toolbox-public/degoog-utilibre.tar.gz

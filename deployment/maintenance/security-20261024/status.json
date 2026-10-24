@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-24T15:45:51.744Z",
+  "assessment": "same-advisory-database comparison; not an all-clear",
+  "database": {
+    "updatedAt": "2026-10-24T07:11:13.37117014Z",
+    "downloadedAt": "2026-10-24T10:20:26.615814365Z",
+    "refreshRequested": false
+  },
+  "coverage": {
+    "runtimeImages": 109,
+    "containers": 175,
+    "sourceInventories": 58,
+    "hostPackages": 508
+  },
+  "before": {
+    "criticalAwaitingReview": 37,
+    "highAwaitingReview": 443
+  },
+  "after": {
+    "criticalAwaitingReview": 0,
+    "highAwaitingReview": 382,
+    "criticalRawRecords": 62,
+    "highRawRecords": 3281,
+    "highUnresolvedAdvisoryIds": 92
+  },
+  "changes": [
+    {
+      "application": "opengist",
+      "imageId": "sha256:de284f1b3b0caaf6f84df2b414612e2bb0bd94fbd0a0701fab343169902948d4",
+      "sourceCommit": "5afef9ac76d2d69ba11a888bb7a095b1d14e7c9d",
+      "binarySha256": "d62579ae8996172c19a8943d889dfd93e60e48278b6b31b9c15f6dcec0bc52fd",
+      "status": "deployed-and-verified",
+      "nativeWorkflow": "passed",
+      "frontendAssets": "unchanged",
+      "productionDataMigrated": false
+    },
+    {
+      "application": "vikunja",
+      "imageId": "sha256:65e94a9388d6d7825df47b231fca5bbbb6658e422d286019e901691c9c3c5a01",
+      "sourceCommit": "a16be96aa454671fdf213b0fbe411dd38a098418",
+      "binarySha256": "ce90a82b86c5a72b5ee4e2a9b0678fc052cdd4a7e1aeb05056625ad43792fc52",
+      "status": "deployed-and-verified",
+      "nativeWorkflow": "passed",
+      "frontendAssets": "unchanged",
+      "productionDataMigrated": false
+    },
+    {
+      "application": "degoog",
+      "imageId": "sha256:e9e9f47550f7cc816ccf288784e6fab9d7d460609e2adcf5fb23d6adecc81ac0",
+      "php": "8.4.27-r0",
+      "status": "deployed-and-verified",
+      "applicationFiles": "unchanged",
+      "productionDataMigrated": false
+    }
+  ],
+  "hostPyJWT": {
+    "installed": "2.15.1-1",
+    "result": "already fixed; signed package bytes and isolated regression verified",
+    "decisionExpiresAt": "2026-10-31T15:23:29.563Z"
+  },
+  "verification": {
+    "maintenanceTestsPassed": 82,
+    "echoRegression": {
+      "oldVersions": [
+        "4.15.4",
+        "5.3.1"
+      ],
+      "fixedVersions": [
+        "4.16.1",
+        "5.4.1"
+      ],
+      "oldFailsIntendedAssertion": true,
+      "fixedPasses": true
+    },
+    "sourceReconstructionOnly": 89,
+    "repeatedBuildReusedExactOutputs": true,
+    "repeatedReleasePreservedContainerIdsAndStartTimes": true
+  },
+  "remainingHighScopes": {
+    "runtime-image": 324,
+    "tracked-build-input": 16,
+    "mounted-runtime-code": 1,
+    "upstream-release-source-lock": 2,
+    "host-os": 39
+  },
+  "limitations": [
+    "No exploitation or reachability proof. Findings require review; patched vendored code may need evidence-backed exceptions.",
+    "Image scans do not inspect mounted user data or a container writable layer.",
+    "Source-lock checks cover the listed code manifests, not every minified browser bundle.",
+    "Grist supplements image scans with a runtime-bound Deno release-source lock and shipped Pyodide wheel metadata. This is not a linked Rust-crate SBOM and does not inventory native Python/WASM components. See deployment/maintenance/sandbox-inventory/README.md.",
+    "Separate Caddy/Proxmox hosts are outside this VM scan."
+  ],
+  "privateEvidenceRoot": "/var/lib/utilibre-maintenance/security-20261024",
+  "evidenceSha256": {
+    "echo-regression/result.json": "58cc88cad72fa3774c47b539c1a28a908be3d5f3f790db118b5cc6a17b64f364",
+    "output/public-source.json": "0a0d77409b243bf632e461ef26161bd43a4704ae2e60aceaa8a6085d29238cfd",
+    "final-unit.log": "ae9ae91b4e96b093ab9638fd3af66f2eeca0edcefa9d1423a5c8bbad78902c13",
+    "release.json": "80c186ae70a30ffd97da69054944735980b576e8eae77fbc527b71d3e95948bc",
+    "idempotence.json": "64086ce3970be3595ef12dd03fc6944964bcd9028976a1a2b58002eef105f937",
+    "vikunja/source-replay-final.json": "75c25bef45da5cdce3072c044f84149f8e9b9c209a391fa13fe4c1c0c1ea8c8c",
+    "degoog-public-source.json": "8d2449f71d896bc15d6f358cf525e1f10359f0036eab5d4e3217edf81419779d"
+  }
+}

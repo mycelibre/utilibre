@@ -7,12 +7,14 @@ import {createHash} from 'node:crypto';
 import {specs,output} from './specs.mjs';
 import {scannerPackageVersion} from './checks.mjs';
 process.umask(0o077);
-const keys=process.argv.slice(2);assert(keys.length&&keys.every(k=>specs.some(s=>s.key===k)));
+const args=process.argv.slice(2),override=args.find(a=>a.startsWith('--baseline='));
+const keys=args.filter(a=>a!==override);assert(keys.length&&keys.every(k=>specs.some(s=>s.key===k)));
+if(override)assert(override.slice(11).startsWith('/'),'Explicit baseline must be an absolute retained report');
 const dbFile='/var/cache/utilibre-security/db/metadata.json',db=JSON.parse(fs.readFileSync(dbFile));
 // The 22 October scheduled scan failed its disk preflight and replaced the
 // summary with an incomplete result. Explicitly use the preserved, completed
 // 21 October assessment, not that failed summary or an invented empty baseline.
-const baseline='/var/lib/utilibre-maintenance/ssh-backports103-20261021/host-scan/security.before.json';
+const baseline=override?override.slice(11):'/var/lib/utilibre-maintenance/ssh-backports103-20261021/host-scan/security.before.json';
 const snapshot=JSON.parse(fs.readFileSync(baseline));assert.equal(snapshot.status,'checked');
 assert.equal(snapshot.database.updatedAt,db.UpdatedAt,'Baseline must use same database');
 for(const key of keys){
@@ -32,5 +34,7 @@ for(const key of keys){
  const added=findings.filter(v=>['CRITICAL','HIGH'].includes(v.Severity)&&!known.has(v.VulnerabilityID+'|'+v.PkgName));
  const report={date:new Date().toISOString(),imageId:b.imageId,base:b.base,advisoryUpdatedAt:db.UpdatedAt,rawSha256:createHash('sha256').update(fs.readFileSync(dir+'/scan.json')).digest('hex'),newHighCritical:added.map(v=>({id:v.VulnerabilityID,package:v.PkgName})),remainingCritical:findings.filter(v=>v.Severity==='CRITICAL').length,remainingHigh:findings.filter(v=>v.Severity==='HIGH').length,vendorFixedPhp:b.normalAfter.version,scope:'PHP package update; not complete application security clearance',limitations:'Archived advisory snapshot predates the two PHP disclosures. Fixed-version evidence comes from PHP and the signed vendor packages, not absence of those CVEs in this scan.',passed:added.length===0};
  report.phpInventory=b.manager==='official-php'?'Compiled runtime: verified vendor artifact/source checksum and native version, not automatically inventoried by Trivy':'Native PHP packages inventoried with full distro release';
+ report.baseline=baseline;
+ if(override)report.limitations='Explicit completed baseline and candidate use the same advisory snapshot. Native signed-package checks independently establish the PHP update; this is not a whole-application clearance.';
  fs.writeFileSync(dir+'/scan-gate.json',JSON.stringify(report,null,2)+'\n');assert(report.passed,'New high/critical findings need review');console.log(key+': fixed PHP verified; no new high/critical findings in same-snapshot comparison');
 }

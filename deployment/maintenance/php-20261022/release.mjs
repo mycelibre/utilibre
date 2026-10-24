@@ -17,6 +17,7 @@ const file=output+'/release.json',read=f=>JSON.parse(fs.readFileSync(f));
 const report=fs.existsSync(file)?read(file):{date:new Date().toISOString(),status:'partial',groups:[]};
 const save=()=>fs.writeFileSync(file,JSON.stringify(report,null,2)+'\n');
 const urls={privatebin:'https://paste.utilibre.org/',fourget:'https://4get.utilibre.org/',freshrss:'https://rss.utilibre.org/',rssbridge:'https://bridge.utilibre.org/',wallabag:'https://wallabag.utilibre.org/',translite:'https://translate.utilibre.org/',binternet:'https://binternet.utilibre.org/',addy:'https://aliases.utilibre.org/',pollaris:'https://pollaris.utilibre.org/'};
+urls.degoog='https://degoog.utilibre.org/';
 async function publicStatus(key){const r=await fetch(urls[key],{redirect:'manual',signal:AbortSignal.timeout(12000)});await r.body?.cancel();return r.status;}
 function boundaries(g){
  if(g.key==='wallabag'){

@@ -7,12 +7,14 @@ import time
 import requests
 
 ROOT=Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/output')
+if '--batch=security-20261024' in sys.argv:
+    ROOT=Path('/var/lib/utilibre-maintenance/security-20261024/output')
 allowed={'oauth2-proxy','mezzo','opengist','ntfy','vikunja','anubis','wakapi'}
 report=ROOT/'public-source.json'
 rows=json.loads(report.read_text()) if report.exists() else {}
 session=requests.Session()
 session.trust_env=False
-for name in sys.argv[1:]:
+for name in [a for a in sys.argv[1:] if a != '--batch=security-20261024']:
     assert name in allowed
     expected=json.loads((ROOT/(name+'-source-published.json')).read_text())
     assert expected['published'] is True

@@ -3,11 +3,11 @@
   "files": [
     {
       "file": "go.mod",
-      "sha256": "cd72794a1e16cdca0e64cd33e462ded2981e7cf04733e033d2357ef2e5b3d1b6"
+      "sha256": "64b5c9ada83613315231febb0bf94f570d2fbe2d80556705eb64c331fe8dd638"
     },
     {
       "file": "go.sum",
-      "sha256": "774ecec6cdde13a5859a2c6b122d9c50bef9217b37146c4ce482a95401fe32b9"
+      "sha256": "87cd0e52c96807c8d23d980488c83c4836192540db106c7ab9fdfd56afedd841"
     }
   ]
 }

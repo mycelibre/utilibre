@@ -12,7 +12,7 @@
     "source": "/opt/utilibre/community-src/vikunja",
     "revision": "a16be96aa454671fdf213b0fbe411dd38a098418",
     "prerequisites": [],
-    "purpose": "Exact compatible x/net locks with Go 1.27.2 static native build; preserves all existing Vikunja frontend assets, task data and account permissions.",
+    "purpose": "Current exact Echo 4.16.1/5.4.1, compress 1.18.7, chi 5.4.0 and existing network dependency locks. Rebuild with Go 1.27.3 using security-20261024; preserve frontend, task data and account permissions.",
     "removeWhen": "A tested upstream release carries equivalent fixes and passes isolated two-account task/import/export/access checks."
   },
   {
@@ -44,7 +44,7 @@
     "source": "/opt/utilibre/community-src/opengist",
     "revision": "5afef9ac76d2d69ba11a888bb7a095b1d14e7c9d",
     "prerequisites": [],
-    "purpose": "Compatible network/crypto/text dependency locks and pinned Go 1.26.9 build; retains all installed frontend bytes and private-gist native access controls.",
+    "purpose": "Current exact Echo 4.16.1, chi 5.4.0, compress 1.18.7 and existing network/crypto/text locks. Rebuild with Go 1.27.3 using security-20261024; preserve frontend bytes and private-gist access controls.",
     "removeWhen": "A tested upstream release carries equivalent fixes and passes two-account Git/API/export/access-isolation gates."
   },
   {

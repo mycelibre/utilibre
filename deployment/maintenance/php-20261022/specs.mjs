@@ -3,6 +3,7 @@
 export const output='/var/lib/utilibre-maintenance/php-20261022';
 export const advisories=['CVE-2026-109618','CVE-2026-109619'];
 export const specs=[
+ {key:'degoog',base:'sha256:3e8932490132625391ad0d086f0071e9393ea525767a4b58cf1d56a7d39674f2',containers:['utilibre-evaluation-degoog-1'],manager:'apk',branch:'3.22',origin:'php84',version:'8.4.27-r0',php:'php',roots:['/app','/etc/php84']},
  {key:'privatebin',base:'sha256:9816ec497b2c53e6f5f009db6f3a07a0d746afd224e99efbfc073370e7e01b17',containers:['utilibre-services-privatebin-1'],manager:'apk',branch:'3.24',origin:'php85',version:'8.5.12-r0',php:'php',roots:['/srv','/var/www','/etc/php85','/etc/nginx']},
  {key:'fourget',base:'sha256:b1046c28a464248f83ee55225048a91fd211b1d03e9543038702e93c9908a19d',containers:['utilibre-reader-evaluation-fourget-1'],manager:'apk',branch:'3.23',origin:'php84',version:'8.4.27-r0',php:'php',roots:['/var/www','/etc/php84','/etc/apache2']},
  {key:'freshrss',base:'sha256:9b74a8a1411fd8ad582be1badb0602b81ceeb215547e87d32b58a965399fc323',containers:['utilibre-services-freshrss-1'],manager:'deb',origin:'php8.4',version:'8.4.27-1~deb13u1',php:'php',roots:['/var/www/FreshRSS','/etc/php','/etc/apache2','/usr/local']},

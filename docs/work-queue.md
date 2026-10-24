@@ -1,5 +1,21 @@
 # Operator work queue — reconciled 12 October 2026
 
+## Critical dependency checkpoint, 24 October 2026
+
+DeGoog's PHP update and the Opengist/Vikunja Echo dependency repairs are deployed
+and verified. The host PyJWT critical match was already fixed; its signed-package
+and regression evidence was renewed. The complete same-database recheck leaves
+**0 critical and 382 high package/target records awaiting review**, compared with
+37 and 443 before this batch. The 382 high records cover 92 advisory IDs; they
+remain work, not accepted exceptions. Raw scanner records are retained.
+
+The [release record, repeatable inputs and rollback](../deployment/maintenance/security-20261024/README.md)
+include 82 passing maintenance tests, native two-account workflows, the old/fixed
+Echo regression, unchanged frontends and release idempotence. Coverage is 109
+images, 175 containers, 58 source inventories and the VM's host packages. Separate
+Caddy/Proxmox hosts and the documented extraction gaps are not newly assessed.
+This checkpoint supersedes earlier security counts, not unrelated queue items.
+
 ## Current queue disposition, 12 October 2026
 
 Use this section and the newest dated checkpoint as the current task list.

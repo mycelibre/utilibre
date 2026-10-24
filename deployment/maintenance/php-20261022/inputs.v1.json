@@ -172,6 +172,18 @@
         "php84-xmlwriter-8.4.27-r0.apk": "2f1bd807e48beb260a78dc72a04334ccc5fba265c36c3f8733f5bd651c759207",
         "php84-zip-8.4.27-r0.apk": "3690ec4aca8806332afeb3769dbb35a4b7ef6c51c888c78054b69b9e90ceffab"
       }
+    },
+    "degoog": {
+      "base": "sha256:3e8932490132625391ad0d086f0071e9393ea525767a4b58cf1d56a7d39674f2",
+      "manager": "apk",
+      "version": "8.4.27-r0",
+      "packageHashes": {
+        "php84-8.4.27-r0.apk": "fd8e31c0edc5da3c557cbbfc4629d1ff0d9c3fbf848104c19edf0781636595c2",
+        "php84-common-8.4.27-r0.apk": "f803ef0dfd5829fb4f60b2fa30b95bba5a4fd9a665f4d3f87448df838650006d",
+        "php84-mbstring-8.4.27-r0.apk": "728c42c6d489108c658265d3e85b33a783c6830d573d01de5f2276f2c6d210da",
+        "php84-openssl-8.4.27-r0.apk": "f0cbc7b56df6e34c779261c77c4749334197f18190e31df0394aa44a4364dddc",
+        "php84-sodium-8.4.27-r0.apk": "74912607fcc548fab0fed15763cb1617d254d30ff0314a554f03c1257cf6ec9f"
+      }
     }
   },
   "compiledInputs": {

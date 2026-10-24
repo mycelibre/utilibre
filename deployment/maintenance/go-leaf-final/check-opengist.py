@@ -4,6 +4,7 @@ No production mount, identity provider or credentials. The fixture network is
 internal-only; reports contain booleans/image identity, never session tokens.
 """
 import base64
+import argparse
 from datetime import date, timedelta
 import io
 import ipaddress
@@ -21,10 +22,19 @@ import zipfile
 import requests
 
 os.umask(0o077)
-assert sys.argv[1:] in [[], ['--old']], 'Only the exact old-image baseline is optional'
-BASELINE = sys.argv[1:] == ['--old']
+parser = argparse.ArgumentParser()
+parser.add_argument('--old', action='store_true')
+parser.add_argument('--image-id')
+parser.add_argument('--output')
+options = parser.parse_args()
+assert not (options.old and options.image_id)
+if options.image_id:
+    assert re.fullmatch(r'sha256:[a-f0-9]{64}', options.image_id)
+    assert options.output and Path(options.output).is_absolute()
+BASELINE = options.old
 IMAGE = ('sha256:abd991c0904ccf14825d48ece22a203a9df41fbbc8b58236831a287d3f1ad448'
          if BASELINE else 'utilibre-opengist:1.15.2-go-security-20261011')
+IMAGE = options.image_id or IMAGE
 NAME = 'maintenance-opengist-go-native'
 NETWORK = 'maintenance-opengist-go-native'
 SUBNET = '172.29.242.0/28'
@@ -32,6 +42,7 @@ BASE = 'http://172.29.242.2:6157'
 HERE = Path(__file__).resolve().parent
 OUT = Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/output/' +
            ('opengist-old-native.json' if BASELINE else 'opengist-native.json'))
+OUT = Path(options.output) if options.output else OUT
 
 
 def docker(*args):

@@ -7,6 +7,14 @@ remain reviewed rollouts. Production never runs a floating `latest` tag.
 
 ## Local repair protection
 
+The **24 October** DeGoog PHP and Opengist/Vikunja Echo repairs are deployed.
+Existing application versions, frontend assets, privacy configuration and user
+data are preserved. The same-database fleet recheck leaves **0 critical / 382
+high records awaiting review**, with raw findings and qualified decisions kept.
+Exact inputs, native workflows, source publication, repeated-release behavior and
+rollback are recorded in the [critical dependency follow-up](../deployment/maintenance/security-20261024/README.md).
+This is a dated assessment checkpoint, not a claim of zero vulnerabilities.
+
 The **21 October** Python certificate/image/network-library repairs, Penpot
 admin-console backport and scoped nginx Expat/X11 replacements are deployed.
 The coupled host SSH 10.3 backport was installed and verified at 07:50 UTC

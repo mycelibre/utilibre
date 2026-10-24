@@ -1,5 +1,11 @@
 # PHP security runtime update — 22 October 2026
 
+**24 October follow-up:** DeGoog also ships a PHP compatibility layer despite
+using Bun as its main server. It now uses signed Alpine 3.22 PHP 8.4.27-r0;
+the existing native builder, isolated bridge/startup check and scoped release
+procedure cover it. See [the follow-up evidence](../security-20261024/README.md).
+The nine-application totals below describe the original October 22 release.
+
 This finite extension of the existing maintenance/release machinery addresses
 **CVE-2026-109618** and **CVE-2026-109619**. It updates PHP over the exact maintained
 application images, preserving application versions and existing local fixes.

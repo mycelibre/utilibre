@@ -4,15 +4,23 @@ import importlib.util
 import json
 from pathlib import Path
 import sys
+import argparse
 
 here = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location('embed', here / 'extract-embed.py')
 embed = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(embed)
 root = Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011')
-name = sys.argv[1]
+parser = argparse.ArgumentParser()
+parser.add_argument('name')
+parser.add_argument('--binary')
+parser.add_argument('--output')
+options = parser.parse_args()
+name = options.name
 assert name in ['ntfy', 'vikunja', 'opengist', 'anubis']
-blob = (root / 'output' / name).read_bytes()
+if options.binary:
+    assert Path(options.binary).is_absolute() and options.output and Path(options.output).is_absolute()
+blob = (Path(options.binary) if options.binary else root / 'output' / name).read_bytes()
 selections = {
     'ntfy': [('ntfy-embed', ['site', 'docs'], None)],
     'vikunja': [('vikunja-embed', ['dist'], None)],
@@ -32,5 +40,5 @@ if name == 'anubis':
         assert hashlib.sha256(data).hexdigest() == row['sha256']
         assert blob.count(data) == 1, 'Candidate inline static asset differs'
 result = {'application': name, 'binarySha256': hashlib.sha256(blob).hexdigest(), 'embeddedAssetsUnchanged': counts, 'passed': True}
-(root / 'output' / (name + '-assets.json')).write_text(json.dumps(result, indent=2) + '\n')
+(Path(options.output) if options.output else root / 'output' / (name + '-assets.json')).write_text(json.dumps(result, indent=2) + '\n')
 print(json.dumps(result))

@@ -75,7 +75,8 @@ async function command(program,args,timeout=600000){
  catch(error){await writeFile(directory+'/security-last-error.log',String(error.stderr||error.message).slice(0,64000),{mode:0o600});throw Error('Bounded security-review command failed; private diagnostic retained.');}
 }
 async function atomic(file,data){await writeFile(file+'.tmp',JSON.stringify(data,null,2)+'\n',{mode:0o600});await rename(file+'.tmp',file);}
-export async function run(){
+export async function run({refreshDatabase=true}={}){
+ if(typeof refreshDatabase!=='boolean')throw Error('refreshDatabase must be boolean');
  await mkdir(directory,{recursive:true,mode:0o700});await mkdir(cache,{recursive:true,mode:0o700});
  const started=Date.now(),report={date:new Date().toISOString(),status:'running',scanner:'Trivy 0.75.0',images:[],sources:[],limitations:['No exploitation or reachability proof. Findings require review; patched vendored code may need evidence-backed exceptions.','Image scans do not inspect mounted user data or a container writable layer.','Source-lock checks cover the listed code manifests, not every minified browser bundle.','Grist supplements image scans with a runtime-bound Deno release-source lock and shipped Pyodide wheel metadata. This is not a linked Rust-crate SBOM and does not inventory native Python/WASM components. See deployment/maintenance/sandbox-inventory/README.md.','Separate Caddy/Proxmox hosts are outside this VM scan.']};
  const latest=directory+'/security.json';
@@ -87,10 +88,12 @@ export async function run(){
   await rm(directory+'/security-last-error.log',{force:true});
   report.preflight=diskPreflight(await statfs(directory));if(!report.preflight.passed)throw Error('Disk floor');
   stage='advisory-database';
-  await command(binary,['image','--disable-telemetry','--cache-dir',cache,'--db-repository','ghcr.io/aquasecurity/trivy-db:2','--download-db-only','--no-progress'],300000);
-  await command(binary,['image','--disable-telemetry','--cache-dir',cache,'--java-db-repository','ghcr.io/aquasecurity/trivy-java-db:1','--download-java-db-only','--no-progress'],300000);
+  if(refreshDatabase){
+   await command(binary,['image','--disable-telemetry','--cache-dir',cache,'--db-repository','ghcr.io/aquasecurity/trivy-db:2','--download-db-only','--no-progress'],300000);
+   await command(binary,['image','--disable-telemetry','--cache-dir',cache,'--java-db-repository','ghcr.io/aquasecurity/trivy-java-db:1','--download-java-db-only','--no-progress'],300000);
+  }
   const metadata=JSON.parse(await readFile(cache+'/db/metadata.json','utf8'));
-  report.database={updatedAt:metadata.UpdatedAt,downloadedAt:metadata.DownloadedAt};
+  report.database={updatedAt:metadata.UpdatedAt,downloadedAt:metadata.DownloadedAt,refreshRequested:refreshDatabase};
   if(!Number.isFinite(Date.parse(metadata.UpdatedAt))||Date.now()-Date.parse(metadata.UpdatedAt)>48*3600000)throw Error('Vulnerability database is stale');
   stage='runtime-inventory';
   const ids=(await command('docker',['ps','-q'])).trim().split(/\s+/).filter(Boolean);
