@@ -2,6 +2,9 @@
 
 Initial review: 2026-08-30; pagination/public-instance follow-up: 2026-09-02
 
+Latest targeted review: [26 October Google adapter comparison](#2026-10-26-google-adapter-comparison).
+Neither ordinary Google candidate passed; production configuration was unchanged.
+
 Historical review: source links below identify the version tested at those
 dates. The 2026-09-29 application upgrade retains the engine selection and
 weights; bounded English/Spanish public browser checks passed again. See
@@ -333,3 +336,70 @@ portal build passed. The public limiter, long upstream suspension windows,
 five-page limit, and Fynd's first-page-only override remain unchanged.
 A check on another day remains useful because upstream availability and
 blocking can change; no recurring task is installed by this change.
+
+## 2026-10-26 Google adapter comparison
+
+The owner requested a comparison with `search.jeremyh.xyz` and `www.isci.si`
+after Utilibre appeared in the public directory. The directory reported A+ TLS,
+A+ CSP, vanilla frontend files and working IPv6 for Utilibre at that check.
+Those observations do not establish Google availability or future uptime.
+
+The directory's Google check explicitly requests `!google time` and requires
+results attributed to `google`. Utilibre's maintained allowlist contains
+`google cse`, not `google`; the directory failure alone therefore cannot diagnose
+a current upstream block. Jeremy's public configuration exposes ordinary Google
+but disables it by default. isci.si advertises the PrivAU fork with Google enabled.
+Its advertised source revision uses a Samsung lightweight-page adapter, whereas
+the official version tested here uses Nokia user agents. Public inbound network
+addresses do not establish either operator's outbound routing.
+
+### Isolated result
+
+Both candidates used the exact running official SearXNG image
+`2026.10.25-54ca1d9cf`, image ID
+`sha256:23482d8ecf7ddf66029479468ea04c1bb11d2b65785a17a7e629e2ffd13296ca`.
+Only the fork candidate mounted a replacement `searx/engines/google.py`, read-only,
+from commit `8fbe41883f30c9bd5ae00cd0322b3ad57c72f847` of `vojkovic/searxng`.
+Its SHA-256 is
+`c0b046f1e3c6006a06c7ca23178b3d6191c73a076d74abfa4a553b6effdc68f4`;
+the official adapter SHA-256 is
+`1a1e5f83262c4f7c148f7ef2123398434d2d01bd360f9171ea0b0121c2801c6d`.
+No fork image or additional dependency was installed.
+
+| Candidate | Observed result | Decision |
+| --- | --- | --- |
+| Official ordinary Google adapter | Native engine message: **access denied**, zero result cards. | Do not enable. |
+| Pinned PrivAU/Samsung adapter | Native engine message: **access denied**, zero result cards. | Do not deploy. |
+
+The upstream refusal happened before either candidate could establish a usable
+first page. Later Spanish/pagination attempts returned no results while the
+engine was suspended; they are **not successful independent upstream tests**.
+The adapter change did not resolve access from this VM's tested connection.
+This does not prove every address in Hetzner's network is blocked, or that a new
+IP, proxy or provider would work. Google CSE was not reassessed in this comparison.
+
+Tests reused the existing updater's Compose isolation and health helpers, with
+temporary Valkey/cache, a random disposable secret, Google as the only engine,
+loopback-only browser access, native suspension windows and finite limits.
+Playwright Chromium made seven application search submissions in total. The
+first harness missed SearXNG's `#engines_msg .response-error` element; retained
+synthetic fork HTML corrected its interpretation offline. A single official
+confirmation with the corrected selector established its refusal and stopped.
+The exact number of outbound Google requests was not captured; native suspension
+can prevent later application submissions from contacting the provider.
+
+All temporary projects were removed. The production container ID/start time,
+image, Compose definition and search configuration were unchanged, and native
+production health remained healthy. No proxy, WARP, address rotation, new public
+route, notification or privacy-policy change was introduced. Sanitized decision
+and exact evidence hashes are in the private operator record
+`/var/lib/utilibre-maintenance/searx-google-20261026/summary.json`.
+
+Sources checked on 26 October:
+[instance directory](https://searx.space/),
+[Jeremy's public configuration](https://search.jeremyh.xyz/config),
+[isci.si's public configuration](https://www.isci.si/config),
+[Utilibre's public configuration](https://search.utilibre.org/config),
+[directory checker](https://github.com/searxng/searx-space/blob/master/searxstats/fetcher/timing.py),
+[official Google engine documentation](https://docs.searxng.org/dev/engines/online/google.html),
+[tested fork source](https://github.com/vojkovic/searxng/blob/8fbe41883f30c9bd5ae00cd0322b3ad57c72f847/searx/engines/google.py).
