@@ -571,3 +571,9 @@ Chitchatter 23b62a8-p1: GPL-2.0-or-later; native bittorrent-tracker 11.2.3: MIT.
 Razzia 3.1.0-p1 and Chhoto URL 7.8.3-p1: MIT. Local Chhoto assets include PureCSS 3.0.0 (BSD-3-Clause), qrcodejs fork 0.1.0 and punycode 1.4.1 (MIT). Pinned source and corresponding notices: https://tools.utilibre.org/utilibre-source/.
 
 Unfurl 2026.10-p1: Apache-2.0; local vis-network and d3: MIT/Apache-2.0 and ISC respectively; DOMPurify: Apache-2.0 OR MPL-2.0. 13ft 0.5.0-public1: MIT. Both native fetch deployments use Squid 7.7 (GPL-2.0-or-later), whose corresponding source is included in their source offers. Exact assets and upstream notices: https://tools.utilibre.org/utilibre-source/.
+
+Structables 0.4.5 — Private.coffee and contributors; GNU AGPLv3.
+Source: https://git.private.coffee/PrivateCoffee/structables
+Pinned revision: 4f10ce078543685db88d8ed57606aaa14fae84d9.
+Utilibre integration: deployment/structables; includes MIT-licensed nh3 HTML sanitization.
+Review and availability: docs/records/structables-2026-10-27.md.

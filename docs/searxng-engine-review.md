@@ -403,3 +403,26 @@ Sources checked on 26 October:
 [directory checker](https://github.com/searxng/searx-space/blob/master/searxstats/fetcher/timing.py),
 [official Google engine documentation](https://docs.searxng.org/dev/engines/online/google.html),
 [tested fork source](https://github.com/vojkovic/searxng/blob/8fbe41883f30c9bd5ae00cd0322b3ad57c72f847/searx/engines/google.py).
+
+## IPv6 comparison — 27 October 2026
+
+The VM reached Google robots.txt over IPv6. An isolated Docker IPv6 bridge
+could not establish its outbound connection and was removed; no host firewall,
+production network or daemon setting was changed. Two bounded host-side WML
+search requests over IPv6 returned HTTP 403 with 1707-byte responses: first
+standard curl, then curl_cffi 0.16.3 (matching the installed SearXNG client),
+with chrome99_android impersonation and the adapter's Nokia user-agent.
+The query was synthetic `Guatemala geography`. No CAPTCHA or redirect was
+followed. There were three robots HEAD attempts (one container timeout) and
+two search requests.
+
+This verifies refusal of the search endpoint, not a complete SearXNG adapter,
+Spanish or pagination workflow. Production remains unchanged. Private
+evidence: `/var/lib/utilibre-maintenance/searx-google-ipv6-20261027/result.json`.
+
+The directory's current data also reports ordinary-Google failures for Jeremy
+and isci.si. Its renderer hides zero-success `No result` cells; our fallback
+engine-mismatch error is visible instead. Google CSE contributed to Utilibre's
+normal search in this snapshot. No attribution was changed to game the checker.
+Sources: <https://searx.space/data/instances.json> and
+<https://github.com/searxng/searx-space/blob/1dfb5e8c6abd92b2f0b56877df89c2c47bba3996/searxstats/render.py#L474>.

@@ -1,0 +1,133 @@
+diff --git a/src/structables/routes/main.py b/src/structables/routes/main.py
+index 51faf38..51a7da7 100644
+--- a/src/structables/routes/main.py
++++ b/src/structables/routes/main.py
+@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
+ from urllib.parse import quote
+ from werkzeug.exceptions import InternalServerError
+ from markdown2 import Markdown
+-from traceback import print_exc
++
+ 
+ import pathlib
+ import logging
+@@ -92,7 +92,7 @@ def init_main_routes(app):
+ 
+         except Exception as e:
+             logger.error(f"Error rendering explore page: {str(e)}")
+-            print_exc()
++            # Request-bearing tracebacks are not logged.
+ 
+             # Fallback to a static version if API fails
+             return render_template(
+@@ -414,7 +414,7 @@ def init_main_routes(app):
+ 
+         except Exception as e:
+             logger.error(f"Error processing article: {str(e)}")
+-            print_exc()
++            # Request-bearing tracebacks are not logged.
+             raise InternalServerError()
+ 
+     @app.route("/search", methods=["POST", "GET"])
+diff --git a/src/structables/routes/proxy.py b/src/structables/routes/proxy.py
+index 8a02a5f..c9b2620 100644
+--- a/src/structables/routes/proxy.py
++++ b/src/structables/routes/proxy.py
+@@ -2,7 +2,8 @@ from flask import render_template, request, Response, abort
+ from werkzeug.exceptions import BadRequest
+ from werkzeug.http import dump_options_header
+ from urllib.error import HTTPError
+-from urllib.request import Request, urlopen
++from urllib.request import Request
++from ..safe_http import urlopen
+ from urllib.parse import quote
+ import logging
+ import os
+diff --git a/src/structables/templates/article.html b/src/structables/templates/article.html
+index 060e984..86985ca 100644
+--- a/src/structables/templates/article.html
++++ b/src/structables/templates/article.html
+@@ -71,7 +71,7 @@
+     </div>
+     {% endif %}
+ 
+-    <div class="step-text mb-3">{{ step.text|safe }}</div>
++    <div class="step-text mb-3">{{ step.text|clean_html }}</div>
+ 
+     {% if step.downloads %}
+     <div class="step-downloads mb-4">
+diff --git a/src/structables/templates/contest.html b/src/structables/templates/contest.html
+index bafb10f..ebff016 100644
+--- a/src/structables/templates/contest.html
++++ b/src/structables/templates/contest.html
+@@ -6,7 +6,7 @@
+         <img src="{{ img }}" alt="{{ title }}">
+         <p>{{ entry_count }} Entries, {{ prizes }} Prizes</p>
+         <br>
+-        {{ info|safe }}
++        {{ info|clean_html }}
+         <div class="ible-list">
+             {% for ible in entry_list %}
+             <div class="ible-list-item">
+diff --git a/src/structables/templates/iframe.html b/src/structables/templates/iframe.html
+index 0e0d52b..2d929f5 100644
+--- a/src/structables/templates/iframe.html
++++ b/src/structables/templates/iframe.html
+@@ -12,9 +12,9 @@
+     <h1>External Content Blocked</h1>
+     <p>This page contains content from an external website that was blocked for your safety.</p>
+     <p>The content is trying to load from:</p>
+-    <div class="url-display">{{ url | safe }}</div>
++    <div class="url-display">{{ url |clean_html }}</div>
+     <p>If you trust this source and want to proceed, you can:</p>
+-    <a href="{{ url | safe }}" target="_self" class="action-button">Load External Content</a>
++    <a href="{{ url |clean_html }}" target="_self" class="action-button">Load External Content</a>
+   </div>
+   <div class="footer">
+     <p>Structables blocks external content by default to protect your privacy and security.</p>
+diff --git a/src/structables/templates/privacypolicy.html b/src/structables/templates/privacypolicy.html
+index b1d2bcf..b1658c3 100644
+--- a/src/structables/templates/privacypolicy.html
++++ b/src/structables/templates/privacypolicy.html
+@@ -5,6 +5,6 @@
+         <br>
+         <h1 style="font-size:2em;line-height:0em;">Privacy Policy</h1>
+         <br>
+-        <p>{{ content|safe }}</p>
++        <p>{{ content|clean_html }}</p>
+     </center>
+ {% endblock %}
+\ No newline at end of file
+diff --git a/src/structables/utils/cache.py b/src/structables/utils/cache.py
+index 2f0be76..b150ac5 100644
+--- a/src/structables/utils/cache.py
++++ b/src/structables/utils/cache.py
+@@ -1,13 +1,15 @@
+ import json
+ from threading import Lock
+ from time import monotonic
+-from urllib.request import Request, urlopen
++from urllib.request import Request
++from ..safe_http import urlopen
+ 
+-_MAX_ENTRIES = 100
++_MAX_ENTRIES = 32
+ _lock = Lock()
+ 
+ 
+ def get_cached_json(app, url, headers=None, max_age=15 * 60, timeout=15):
++    max_age = min(max_age, 15 * 60)
+     cache = app.extensions.setdefault("upstream_json_cache", {})
+     cached = cache.get(url)
+     if cached is not None and monotonic() - cached[0] < max_age:
+diff --git a/src/structables/utils/helpers.py b/src/structables/utils/helpers.py
+index 2cd85da..20a5bbf 100644
+--- a/src/structables/utils/helpers.py
++++ b/src/structables/utils/helpers.py
+@@ -1,5 +1,5 @@
+ from urllib.parse import urlencode, urlparse, quote, urlsplit, urlunsplit, parse_qsl
+-from urllib.request import urlopen
++from ..safe_http import urlopen
+ from bs4 import BeautifulSoup
+ import re
+ import logging

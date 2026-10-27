@@ -17,6 +17,7 @@ import { standaloneGuides } from './standalone-guides.ts';
 import { newsletterGuides } from './newsletters-guide.ts';
 import { addyGuides } from './addy-guide.ts';
 import { unfurlGuides } from './unfurl-guide.ts';
+import { structablesGuides } from './structables-guide.ts';
 import { readerAdditionGuides } from './reader-addition-guide.ts';
 import { razziaGuides } from './razzia-guide.ts';
 import { chhotoGuides } from './chhoto-guide.ts';
@@ -77,6 +78,7 @@ export const practicalGuides: PracticalGuide[] = [
   ...chhotoGuides,
   ...unfurlGuides,
   ...readerAdditionGuides,
+  ...structablesGuides,
   ...everydayGuides,
   ...nextFeatureGuides,
   ...servicePackGuides,

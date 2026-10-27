@@ -28,6 +28,7 @@ export interface PublicConfig {
   publicLinksUrl?: string;
   publicExpandUrl?: string;
   publicReaderUrl?: string;
+  publicStructablesUrl?: string;
   publicCalendarUrl?: string;
   publicExpensesUrl?: string;
   publicWishlistUrl?: string;
@@ -124,6 +125,7 @@ const defaults: PublicConfig = {
   publicLinksUrl: '',
   publicExpandUrl: '',
   publicReaderUrl: '',
+  publicStructablesUrl: '',
   publicCalendarUrl: '',
   publicExpensesUrl: '',
   publicWishlistUrl: '',

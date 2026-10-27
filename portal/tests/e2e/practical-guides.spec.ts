@@ -1,12 +1,14 @@
 import { catalogEntry } from '../../src/catalog/catalog';
+import { creativeAdditions } from '../../src/catalog/creative-additions';
 import { expect, test } from '@playwright/test';
 import { practicalGuides, practicalGuidePath } from '../../src/pages/practical-guide-data';
 
 test('all practical guides preserve language, real launch paths and downloadable fixtures', async ({ page }) => {
   // The complete bilingual registry grows with guides; navigation assertions keep their default timeout.
-  test.setTimeout(60_000);
+  test.setTimeout(180_000);
   await page.route('**/_portal/config', route => route.fulfill({ json: {
     projectName: 'Utilibre', publicPortalOrigin: 'https://utilibre.org', defaultLanguage: 'en',
+    ...Object.fromEntries(creativeAdditions.filter(entry => entry.configUrlKey).map(entry => [entry.configUrlKey!, `https://${entry.id}.example/`])),
     publicPdfUrl: 'https://pdf.example/', publicToolsUrl: 'https://tools.example/', publicPaintUrl: 'https://paint.example/',
     publicChartsUrl: 'https://charts.example/', publicScrubUrl: 'https://scrub.example/', publicDropUrl: 'https://drop.example/',
     publicMindmapUrl: 'https://mindmap.example/', publicDeveloperToolsUrl: 'https://dev.example/', publicCyberchefUrl: 'https://chef.example/',
@@ -22,7 +24,7 @@ test('all practical guides preserve language, real launch paths and downloadable
     publicRedditUrl: 'https://redlib.example/', publicLatexUrl: 'https://latex.example/', publicSpeedUrl: 'https://speed.example/', publicWallabagUrl: 'https://wallabag.example/',
     publicDrawUrl: 'https://draw.example/', publicWhiteboardUrl: 'https://whiteboard.example/', publicCollabUrl: 'https://collab.example/',
     publicPasteUrl: 'https://paste.example/', publicEncryptUrl: 'https://encrypt.example/', publicPollarisUrl: 'https://pollaris.example/', publicPollUrl: 'https://poll.example/',
-    enabledServices: ['texlyre', 'librespeed', 'wallabag', 'trip', 'donetick', 'beaverhabits', 'projects', 'kokoro-web', 'family-chess', 'knit', 'newton', 'rustpad', 'autoredact', 'gravity', 'one-file-core', 'tiddlywiki', 'moocup', 'newsletters', 'addy', 'unfurl', '13ft', 'razzia', 'chhoto', 'calino', 'radicale', 'chitchatter', 'gathio', 'link-cleaner', 'drawdb', 'bookbinder', 'moodist', 'chartdb', 'sketchforge', 'spliit', 'wishlist', 'kitchenowl', 'opengist', 'linkding', 'vikunja', 'bytestash', 'openresume', 'ittools', 'cyberchef', 'cryptpad', 'liberaforms', 'galene', 'super-productivity', 'freshrss', 'mapshaper', 'numbat', 'wbo', 'redlib', 'drawio', 'excalidraw', 'markmap', 'bentopdf', 'omnitools', 'minipaint', 'rawgraphs', 'image-scrubber', 'pairdrop', 'privatebin', 'hatsh', 'pollaris', 'rallly'], listedServices: [],
+    enabledServices: [...creativeAdditions.map(entry => entry.serviceId || entry.id), 'texlyre', 'librespeed', 'wallabag', 'trip', 'donetick', 'beaverhabits', 'projects', 'kokoro-web', 'family-chess', 'knit', 'newton', 'rustpad', 'autoredact', 'gravity', 'one-file-core', 'tiddlywiki', 'moocup', 'newsletters', 'addy', 'unfurl', '13ft', 'razzia', 'chhoto', 'calino', 'radicale', 'chitchatter', 'gathio', 'link-cleaner', 'drawdb', 'bookbinder', 'moodist', 'chartdb', 'sketchforge', 'spliit', 'wishlist', 'kitchenowl', 'opengist', 'linkding', 'vikunja', 'bytestash', 'openresume', 'ittools', 'cyberchef', 'cryptpad', 'liberaforms', 'galene', 'super-productivity', 'freshrss', 'mapshaper', 'numbat', 'wbo', 'redlib', 'drawio', 'excalidraw', 'markmap', 'bentopdf', 'omnitools', 'minipaint', 'rawgraphs', 'image-scrubber', 'pairdrop', 'privatebin', 'hatsh', 'pollaris', 'rallly'], listedServices: [],
   } }));
   for (const guide of practicalGuides) {
     await page.goto(practicalGuidePath(guide.id, 'en'));

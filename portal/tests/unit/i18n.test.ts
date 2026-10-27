@@ -119,7 +119,7 @@ describe('bilingual content', () => {
     expect(redlib?.filesUploaded).toBe(false);
     expect(redlib?.dataFlow.en).toContain('Redlib → Reddit');
     expect(redlib?.retention.en).toContain('first-party cookie');
-    expect(redlib?.installedVersion).toContain('a4d36e9');
+    expect(redlib?.installedVersion).toContain('e48efd8');
   });
 
 });

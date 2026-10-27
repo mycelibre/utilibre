@@ -1,0 +1,6 @@
+# Set UTILIBRE_APP_IP in the Caddy service environment to the application VM.
+structables.utilibre.org {
+    encode zstd gzip
+    log_skip
+    reverse_proxy {$UTILIBRE_APP_IP}:3242
+}

@@ -494,6 +494,7 @@ function publicConfig() {
     publicAliasesUrl: publicServiceUrl(process.env.PUBLIC_ALIASES_URL),
     publicExpandUrl: publicServiceUrl(process.env.PUBLIC_EXPAND_URL),
     publicReaderUrl: publicServiceUrl(process.env.PUBLIC_READER_URL),
+    publicStructablesUrl: publicServiceUrl(process.env.PUBLIC_STRUCTABLES_URL),
     publicCalendarUrl: publicServiceUrl(process.env.PUBLIC_CALENDAR_URL),
     publicToolsUrl: publicServiceUrl(process.env.PUBLIC_TOOLS_URL),
     publicExpensesUrl: publicServiceUrl(process.env.PUBLIC_EXPENSES_URL),

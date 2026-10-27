@@ -694,5 +694,13 @@
     ],
     "purpose": "Align nine native dependency constraints with the separately hash-pinned runtime crypto/HTTP/CORS updates; no application or model change. Legacy Flask/Jinja/Werkzeug blockers remain.",
     "removeWhen": "Use a maintained upstream compatible dependency set once equivalent native signed-token, PGP, auth/CORS, CSV, SMTP and isolated restore checks pass; this patch does not approve public deployment."
+  },
+  {
+    "patch": "deployment/structables/upstream.patch",
+    "source": "/var/lib/utilibre-maintenance/structables-20261027/upstream",
+    "revision": "4f10ce078543685db88d8ed57606aaa14fae84d9",
+    "prerequisites": [],
+    "purpose": "Structables: bounded allowlisted HTTPS fetches, no redirects, sanitized upstream HTML, bounded native JSON cache. Companion safe_http.py and wsgi.py plus lockfile and tests are in deployment/structables.",
+    "removeWhen": "Reviewed upstream release provides equivalent transport/content controls and passes the offline policy and live reading checks."
   }
 ]

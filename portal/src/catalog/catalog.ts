@@ -18,6 +18,7 @@ import { standaloneAdditions } from './standalone-additions.ts';
 import { newsletterAdditions } from './newsletters-addition.ts';
 import { addyAdditions } from './addy-addition.ts';
 import { unfurlAdditions } from './unfurl-addition.ts';
+import { structablesAdditions } from './structables-addition.ts';
 import { readerAdditions } from './reader-addition.ts';
 import { razziaAdditions } from './razzia-addition.ts';
 import { chhotoAdditions } from './chhoto-addition.ts';
@@ -121,6 +122,7 @@ const entries: CatalogEntry[] = [
   ...chhotoAdditions,
   ...unfurlAdditions,
   ...readerAdditions,
+  ...structablesAdditions,
   ...newBrowserTools(),
   ...packServices(),
   {

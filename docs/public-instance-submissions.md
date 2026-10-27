@@ -287,3 +287,7 @@ This draft is intentionally **not ready to submit** until authenticated access
 allows the current rules/template to be inspected and their maintenance/source
 conditions and a native search/media journey to be checked. Do not check an
 unverified compliance box or send the draft elsewhere to bypass sign-in.
+
+## Priviblur recheck — 27 October 2026
+
+[PR #303](https://github.com/syeopite/priviblur/pull/303) is still open, with no reviews or comments. The requested row already has Germany, the modified-source link and Cloudflare disclosure. The public root redirects to `/explore/trending`; listing acceptance and current content retrieval are not implied by that response. No duplicate request or reminder was sent.
