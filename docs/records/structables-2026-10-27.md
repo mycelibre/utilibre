@@ -126,3 +126,20 @@ value, then recreate only `portal`. Keep unrelated environment values intact.
 No Structables container, Caddy route, search configuration, or public-instance
 submission is activated by this portal release. Exact release receipts stay
 in the private evidence directory.
+
+### Portal base-package gate
+
+The first portal candidate scan found two musl package occurrences of
+CVE-2026-107891 and one zlib occurrence of CVE-2026-85091. The same older
+package versions were present in the running portal; deployment stopped before
+recreating it. The pinned Node image still contains those versions.
+`portal/Dockerfile` now shares a base stage with exact native Alpine updates:
+`musl=1.2.6-r3`, `musl-utils=1.2.6-r3`, `zlib=1.3.2-r1`. Both build and runtime
+inherit them. This uses signed distribution packages, with no application
+source patch. The [Alpine 21 October release notice](https://www.alpinelinux.org/posts/Alpine-3.21.9-3.22.7-3.23.7-3.24.3-released.html)
+documents both corrections. A future base replacement must pass the same
+scan before these pins can be removed. No scanner finding was suppressed.
+
+The corrected portal image scan reports zero findings against the same
+advisory snapshot. Both localized catalogue and guide routes pass on that
+exact image, with disabled service launches and no narrow-screen overflow.
