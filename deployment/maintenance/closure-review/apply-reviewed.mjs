@@ -24,7 +24,7 @@ import {reviewFile as hdf5Review,eligible as hdf5Eligible} from '../hdf5-native-
 import {reviewFile as gdalAvifReview,eligible as gdalAvifEligible} from '../gdal-avif-followup/review-policy.mjs';
 import {reviewFile as heifReview,eligible as heifEligible,fixed as heifFixed} from '../heif-bookworm-followup/review-policy.mjs';
 import {reviewFile as archiveTarReview,eligible as archiveTarEligible} from '../archive-tar-final/review-policy.mjs';
-import {reviewFile as coturnBsonReview,eligible as coturnBsonEligible} from '../coturn-bson-final/review-policy.mjs';
+import {reviewFile as coturnBsonReview,eligible as coturnBsonEligible,reserveReviewFile,reserveEligible} from '../coturn-bson-final/review-policy.mjs';
 import {reviewFile as nltkReview,eligible as nltkEligible} from '../application-leaves-final/nltk-review-policy.mjs';
 import {reviewFile as bracesReview,eligible as bracesEligible} from '../application-leaves-final/braces-review-policy.mjs';
 import {reviewFile as mountFinalReview,eligible as mountFinalEligible} from '../mount-acl-final/review-policy.mjs';
@@ -48,7 +48,7 @@ const joseCaddyReview='security-20261028/jose-caddy/review.json';
 const joseLeafReview='security-20261028/jose-leaf/review.json';
 const headerSnapshot='d4e64685005cb49f8cf3123b04e49eac6617de00';
 const headerSnapshotReview='headers-review-'+headerSnapshot+'/headers-review.json';
-const nativeMitigationReviews=[...sourceReviews,cryptpadBodyReview,blkidReview,joseLeafReview,joseCaddyReview,drfReview,openldapReview,tiffReview,qgaReview,hdf5Review,gdalAvifReview,archiveTarReview,coturnBsonReview,nltkReview,bracesReview,mountFinalReview,ubuntuMountReview,singleScreenReview,sandboxDnsReview];
+const nativeMitigationReviews=[...sourceReviews,cryptpadBodyReview,blkidReview,joseLeafReview,joseCaddyReview,drfReview,openldapReview,tiffReview,qgaReview,hdf5Review,gdalAvifReview,archiveTarReview,coturnBsonReview,reserveReviewFile,nltkReview,bracesReview,mountFinalReview,ubuntuMountReview,singleScreenReview,sandboxDnsReview];
 const files=process.argv.slice(2);assert(files.length&&files.every(x=>[headerSnapshotReview,...curlOct28Reviews,...packageAttributionReviews,dhiBinaryReview,...nativeMitigationReviews,heifReview,qemuReview,xlibReview,sudoReview,npmReview,...hostFollowupReviews,gnupgReview,xserverDhiReview,penpotReview,opensslReview,"python-bookworm-followup-20261012/mitigation-review.json","python-bookworm-followup-20261012/not-affected-review.json","geospatial-followup-20261012/native-reviews.json","host-extra-followup-20261012/pcap-review.json",'component-review.json','binary-scope-review.json','specific-closure-review-20261012.json','vendor-fixed-review.json','native-backport-review.json','closure-followup-20261012/headers-review.json','closure-followup-20261012/payload-review.json','closure-followup-20261012/ncurses-review.json','closure-followup-20261012/rsync-review.json','closure-followup-20261012/util-linux-review.json','closure-followup-20261012/util-linux-component-review.json','closure-followup-20261012/xml-uri-review.json','closure-followup-20261012/curl-review.json','closure-followup-20261012/bookworm-curl-review.json','closure-followup-20261012/gzip-review.json','closure-followup-20261012/sqlite-fts-review.json','closure-followup-20261012/wget-review.json','vendor-leaves-final-20261011/dhi-fixed-review.json','next-leaves-final-20261012/resume-reviews.json','closure-followup-20261012/urllib3-review.json','closure-followup-20261012/python-system-review.json','component-followup-20261012/binary-reviews.json','component-followup-20261012/runtime-reviews.json'].includes(x)));
 let sandboxSourceHash;
 if(files.includes(sandboxDnsReview)){
@@ -69,6 +69,7 @@ for(const file of files){
   if(file===gosuReview)assert(gosuEligible({...current.get(decision.key),status:'needs-review'}));
   if(file===archiveTarReview)assert(archiveTarEligible({...current.get(decision.key),status:'needs-review'}));
   if(file===coturnBsonReview)assert(coturnBsonEligible({...current.get(decision.key),status:'needs-review'}));
+  if(file===reserveReviewFile)assert(reserveEligible({...current.get(decision.key),status:'needs-review'}));
   if(file===nltkReview)assert(nltkEligible({...current.get(decision.key),status:'needs-review'}));
   if(file===bracesReview)assert(bracesEligible({...current.get(decision.key),status:'needs-review'}));
   if(file===mountFinalReview)assert(mountFinalEligible({...current.get(decision.key),status:'needs-review'}));

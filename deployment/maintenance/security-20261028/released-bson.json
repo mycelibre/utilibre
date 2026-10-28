@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-28T19:12:51.723Z",
+  "status": "deployed-and-verified",
+  "scope": "One native BSON library; prior OCSP correction, Coturn executable, authentication, limits, privacy and configuration preserved",
+  "roles": [
+    {
+      "name": "utilibre-turn-option-turn-1",
+      "oldRef": "utilibre-coturn:bson-security-20261012",
+      "oldImage": "sha256:52c3a2f1487c0b24b4f96122443743e0fc71a9eb5d6eed6c84a9e6cc4691ac23",
+      "newRef": "utilibre-coturn:bson-reserve-security-20261028",
+      "newImage": "sha256:2bb43d3c19e011c9fcbc854435a5a54b8a41139943b6ed7eb9519b71ebcc7909"
+    },
+    {
+      "name": "utilibre-galene-turn-turn-1",
+      "oldRef": "utilibre-coturn:bson-security-20261012",
+      "oldImage": "sha256:52c3a2f1487c0b24b4f96122443743e0fc71a9eb5d6eed6c84a9e6cc4691ac23",
+      "newRef": "utilibre-coturn:bson-reserve-security-20261028",
+      "newImage": "sha256:2bb43d3c19e011c9fcbc854435a5a54b8a41139943b6ed7eb9519b71ebcc7909"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 name: utilibre-galene-turn
 services:
   turn:
-    image: utilibre-coturn:bson-security-20261012
+    image: utilibre-coturn:bson-reserve-security-20261028
     build: {context: ../community/turn}
     user: '4004:4004'
     entrypoint: [turnserver, -c, /run/config/turnserver.conf]

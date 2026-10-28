@@ -1014,3 +1014,47 @@ access is not claimed. Detailed private evidence is in `final-batch-check.json`,
 under the existing private maintenance directory. No host reboot, SSH reload,
 guest-agent restart, user-data migration or real email delivery occurred in this
 follow-through. Existing service access and privacy settings are retained.
+
+### TURN relays: BSON minimum-reservation follow-through
+
+The two existing TURN relay roles now use `released-bson.json`. One native
+library changes: upstream stable commit `b7f1f5742351741c068020196fd88f196551aad2`
+rejects BSON reservations smaller than the five-byte minimum (CVE-2026-106437).
+The prior authenticated Debian source, ten vendor patches and OCSP backport are
+retained. `libmongoc` remains byte-identical; the native Coturn binary, package
+metadata, TLS, authentication, credentials, quotas and network/privacy settings
+remain unchanged. This does not infer exploitability through a live TURN route
+from the mere presence of the linked library.
+
+Five boundary inputs reproduce invalid accepted lengths before the repair and
+are rejected afterward, without attempting an unsafe append. Ten ordinary
+BSON cases, the existing original-header MongoDB client and all 272 exports,
+SONAME and dependencies pass. The existing disposable relay fixture passes
+UDP/TCP/TLS allocations, anonymous/wrong-password rejection, private/metadata
+peer denial, four-slot/fifth-rejected quota and exact-byte bidirectional transfer.
+Whole-image comparison finds only the declared `libbson` binary changed.
+No external NAT, phone/browser coverage or throughput is inferred.
+
+Replay uses `bson-inputs.json` and `bson.mjs prepare/build/stage`, followed by
+`coturn-bson-final/application.mjs --reserve-oct28`,
+`scan-brotli.mjs --bson coturn`, and
+`go-final/verify.py --bson-oct28 coturn`. The existing Coturn source-offer and
+release commands accept `--reserve-oct28`; prepare records exact pins and
+configuration hashes, apply waits for two zero-allocation observations for each
+relay and changes them serially. Both live STUN postchecks passed. Repeating
+apply is a no-op. Rollback uses the exact predecessor recorded in `release.json`
+and the same idle checks; there is no data/schema migration.
+
+Compiler acquisition installed CMake 3.31.6 in a disposable existing Trixie
+builder. Its complete package inventory and immutable image are recorded;
+compilation and tests are disconnected and resource bounded. The complete
+source offer `security-coturn-bson-reserve-20261028-source.tar.gz` is 4,085,103
+bytes, SHA-256 `76341becd36c03222bab1a1c545a84ac015a8d3c58388c7f10bcf569ead9a427`.
+The public HTTPS download returns 200 with that length. No runtime information,
+credentials or user content is included. The exact live-byte reviewer covers
+only the new reservation fix and retention of the previous OCSP fix, with an
+expiring, artifact-specific decision; raw version findings remain retained.
+
+Primary references checked 28 October:
+[Debian attribution](https://security-tracker.debian.org/tracker/CVE-2026-106437)
+and [upstream stable fix](https://github.com/mongodb/mongo-c-driver/commit/b7f1f5742351741c068020196fd88f196551aad2).

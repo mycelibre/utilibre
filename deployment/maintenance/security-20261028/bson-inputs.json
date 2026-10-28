@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-106437",
+  "source": "https://github.com/mongodb/mongo-c-driver/commit/b7f1f5742351741c068020196fd88f196551aad2",
+  "sourceRevision": "b7f1f5742351741c068020196fd88f196551aad2",
+  "license": "Apache-2.0; retained Debian/upstream notices",
+  "patchSha256": "807b3c7932596dde7452491ae1fe4d1835963e47b136ef5a4dd5f165458c3100",
+  "compiler": "sha256:9da66c3f0c1d9306b11cf13c883c78889fcb54ff317c92a53848f327053d3156",
+  "sourceArchives": {
+    "mongo-c-driver_1.30.4-1+deb13u3+utilibre1.dsc": "aeb512b5a1cf8ad4aa1afdadfbe750fd7c38079d852d90531e4503dc75a478f5",
+    "mongo-c-driver_1.30.4-1+deb13u3+utilibre1.debian.tar.xz": "bd6e6bb9aca21d6df57bedcf18f53ba560125bce3f113a92c54a069dfdd11e18",
+    "mongo-c-driver_1.30.4.orig.tar.gz": "2883a6d61251b881530566d79cedc48de9694ff88f01bf2452306434d18cc74c"
+  },
+  "priorPatchSha256": "8db858ba069173e7de8e9b78fed1fb9334a895107f0b2b27d6ba3f8b185360f6",
+  "priorNativeSha256": "015e23cce3e9e7db1da5358708939cd7c622d0b97edb473b354408c03bf9d2d6",
+  "library": "/usr/lib/x86_64-linux-gnu/libbson-1.0.so.0.0.0",
+  "priorLibrarySha256": "712175f3ecc3a1a949ad76f835a1499de6646d10497353f3d066a15d5d746a94",
+  "unchangedMongocSha256": "821fb5af2acdd69e2ed283278b9fe484b48f46a071b8f8313ba57181d0eeffc6",
+  "rows": [
+    {
+      "key": "coturn",
+      "base": "sha256:52c3a2f1487c0b24b4f96122443743e0fc71a9eb5d6eed6c84a9e6cc4691ac23",
+      "oldRef": "utilibre-coturn:bson-security-20261012",
+      "candidate": "utilibre-coturn:bson-reserve-security-20261028",
+      "containers": [
+        "utilibre-turn-option-turn-1",
+        "utilibre-galene-turn-turn-1"
+      ]
+    }
+  ]
+}
