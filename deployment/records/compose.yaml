@@ -50,7 +50,7 @@ services:
       ingress: {ipv4_address: 172.29.159.11}
   candlr:
     <<: *runtime
-    image: utilibre-candlr:dnspython-security-20261028
+    image: utilibre-candlr:zod-security-20261028
     user: '1000:1000'
     entrypoint: ['/bin/sh', '-c']
     command: ['cd /app/backend && alembic upgrade head && exec supervisord -n -c /etc/supervisor/conf.d/candlr.conf']

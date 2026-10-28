@@ -1058,3 +1058,151 @@ expiring, artifact-specific decision; raw version findings remain retained.
 Primary references checked 28 October:
 [Debian attribution](https://security-tracker.debian.org/tracker/CVE-2026-106437)
 and [upstream stable fix](https://github.com/mongodb/mongo-c-driver/commit/b7f1f5742351741c068020196fd88f196551aad2).
+
+### Zod application follow-through (28 October, 19:55 UTC)
+
+`released-zod-followthrough.json` records the completed Wishlist, Candlr, Projects and
+Penpot admin releases. The declared 4.6.5 and Projects' 4.3.5 packages are replaced by the same pinned
+MIT-licensed 4.6.6 artifact already verified in RSSHub. The existing pnpm paths
+and links are retained. No registration, authentication, database, privacy,
+resource or routing settings change. Penpot admin remains private.
+
+All four have 15 normal parser checks and six bounded array/set/map regressions
+per old/new state. Old callbacks process all 20 synthetic elements; the fixed
+bounded schemas reject before processing elements. Unbounded collections are
+unchanged; this does not establish application-wide DoS protection.
+
+Wishlist's Chromium fixture creates an isolated account, list and item, reloads
+saved data and verifies anonymous denial, with no external browser origins or
+page errors. Candlr's two network-disconnected native states create two accounts,
+create/export/delete a fictional private record and reject anonymous/cross-account
+access. Penpot admin's two isolated native states migrate empty PostgreSQL and
+preserve login routing/schema counts. That admin check does **not** verify a real
+operator login or all admin mutations. Real visitor accounts and data are unused.
+
+Projects/Planka additionally moves its installed Zod 4.3.5 to 4.6.6. The existing
+native fixture is hash-pinned and reused with only exact image, disposable name
+and evidence-path substitutions. Both states pass fresh PostgreSQL migrations,
+login, project/board/list/card creation, card editing, anonymous denial and
+project deletion. Its Redis-adapter fixes remain present. This verifies local
+password login, not the production OIDC provider. The public route remains 200.
+
+The normal package replacement helper now supports explicit Node exec-form
+removal for the shell-free admin image. It does not add a shell or package
+manager. Whole-image verification records pnpm hardlinks that become independent
+files, compares their actual content and rejects link-layout changes outside the
+exact Zod package. Symbolic links are never treated as regular files. Missing,
+cyclic or non-regular hardlink targets fail closed.
+
+Replay extends the existing commands, without a new scheduler or framework:
+
+```sh
+node deployment/maintenance/security-20261028/body.mjs --zod wishlist candlr admin projects
+node deployment/maintenance/security-20261028/check-zod.mjs wishlist candlr admin projects
+node deployment/maintenance/check-wishlist-esbuild.mjs --zod-oct28
+node deployment/maintenance/patch-leaves-final/check-app.mjs candlr --zod-oct28
+node deployment/maintenance/patch-leaves-final/check-app.mjs admin --zod-oct28
+python3 deployment/maintenance/security-20261028/check-zod-projects.py
+node deployment/maintenance/security-20261028/scan-brotli.mjs --zod wishlist candlr admin projects
+python3 deployment/maintenance/go-final/verify.py --zod-oct28 wishlist candlr admin projects
+node deployment/maintenance/security-20261028/release-brotli.mjs --zod prepare wishlist candlr admin projects
+# Only during an authorized release:
+node deployment/maintenance/security-20261028/release-brotli.mjs --zod apply wishlist candlr admin projects
+```
+
+Preparation refuses changed baselines and preserves completed receipts. Candidate
+scans use one unchanged local advisory database and remove the targeted finding
+without adding high/critical records. Completed apply is a no-op: all four
+container IDs, image IDs, start times, restart counts and the exact release
+receipt are unchanged on repetition. Rollback pins the predecessor recorded in
+that receipt and uses the existing scoped Compose recreation/health gate; no
+schema migration is introduced by this package-only overlay.
+
+Wishlist's prior JOSE proof now accepts this exact Zod descendant only after
+whole-image proof confines changes to that package. It still compares the actual
+live Caddy hash with the separately validated compression/JOSE build; no
+exception is copied to an arbitrary descendant. DHI/native package reviews also
+re-read the exact new live image's payload. Raw scanner findings are retained.
+
+### Official QEMU candidate prepared; host activation pending
+
+`qemu-inputs.json` pins Debian backports
+`qemu-guest-agent` and `qemu-utils` **1:11.1.2+ds-3~bpo13+4**. The current guest
+agent is 11.0.2 and utilities 10.0.13. Native APT simulation changes exactly these
+two packages, with no new dependencies/removals. `qemu-native.mjs prepare`
+authenticates candidate hashes against the existing APT index, acquires only
+those archives, then uses the existing container-only RPC fixture. It has no
+host-installation mode. Acquisition can use Debian repositories; subsequent
+verification has no Docker network and no host devices or production credentials.
+
+The official candidate passes all 43 existing RPC capability comparisons,
+native-default parity, benign time/OS/thawed-state reads, fictional-user key
+add/read/remove and credential restoration. Native block checks create a 1 MiB
+fictional raw disk, convert it to qcow2, check and compare it, and read zero
+sectors through qemu-io. No real VM freeze, Proxmox channel, host disk or real
+account is touched. Guest-agent, Docker and SSH PIDs and installed package versions
+remain unchanged. Evidence: private `qemu-native/native.json`, `rpc.json`,
+`runtime-packages.txt` and `host-simulation.txt`.
+
+**Not deployed.** The native Debian package restarts the agent. Activation still
+requires fresh confirmation that VM 144 backup/snapshot/agent operations will
+remain paused and the Proxmox console is available, as in the existing
+`qga-native-followup/README.md` release policy. The exact installed 11.0.2 guest-agent and 10.0.13 utilities archives are now
+retained and verified against every installed payload file, symlink and native
+maintainer script. The older locally patched guest-agent archive is not used as
+an equivalent rollback. The native compatibility result alone is not complete
+current security clearance.
+
+`qemu-rollback.mjs prepare` reproduces archive retention and full installed
+payload/control-file comparisons without executing maintainer scripts. The
+previously authenticated utilities archive must already be retained. The exact
+guest-agent archive can be recovered from Debian HTTPS with its recorded hash;
+its complete payload and control scripts are compared with the installed
+package. This does not invent a retained historical signed-index verification.
+Repeating this check verifies the inputs without rewriting the original receipt.
+
+`qemu-release.mjs prepare` verifies those rollback archives, the tested candidate
+archives, an exact two-package APT simulation, unchanged current running agent,
+no active block utilities and the recovery-space floor. `apply` additionally
+requires a root-only `qemu-native/coordination.json` matching the existing
+five-minute `windowGate` policy. No coordination receipt is created without an
+actual owner confirmation. Installation uses only the locally pinned packages
+with `--no-download`, preserves unrelated package versions, Docker/SSH PIDs and
+configuration, and requires a separate Proxmox ping/thawed postcheck. A failed
+local gate can restore the exact old packages only while that coordinated window
+is still valid and no local freeze marker or block operation is present.
+
+### Current assessment boundary
+
+The 19:52 UTC assessment checked all 109 running images with the same advisory
+database. After exact-artifact review it leaves **0 critical / 131 high records
+awaiting review**. Raw findings remain available; this is not full security
+clearance. `status.json` carries the scope/package breakdown and the independent
+OAuthlib behavioral finding remains in `primary-findings.json`.
+
+`review-platform.mjs` records three narrowly scoped current-runtime conclusions:
+
+- Vite's [CVE-2026-112942 advisory](https://github.com/vitejs/launch-editor/security/advisories/GHSA-587h-7wmj-h5pm)
+  explicitly concerns Windows path/shell behavior. The exact Candlr and private
+  Penpot admin images and their actual Node runtimes are Linux. Other Vite
+  advisories and tracked build inputs receive no exclusion.
+- Black's [CVE-2026-114134 advisory](https://github.com/psf/black/security/advisories/GHSA-cg8m-r9f2-5wm2)
+  concerns its GitHub Action with `use_pyproject: true` in 26.9.0/26.10.0.
+  All three SimpleLogin roles have the Python 22.1.0 distribution, no bundled
+  action files, and native application commands. Offline formatting passes.
+  This says nothing about arbitrary external CI workflows.
+
+These checked conclusions expire after seven days and bind exact image, package,
+advisory and role identities. The reviewer produces private per-role evidence;
+apply its individually inspected decisions through the existing `triage.mjs
+record /absolute/decision.json` interface, sequentially. It never changes a
+running service or scanner rule. Three policy tests reject unsupported platforms,
+artifacts, versions, sibling advisories, source scopes and missing evidence.
+
+The remaining ACL records are deliberately open. [Debian's current notes](https://security-tracker.debian.org/tracker/CVE-2026-54369)
+require the new `acl_*_at` interface and warn of caller compatibility problems.
+The earlier native fixture observed tar/rsync using legacy APIs, so simply
+replacing libacl would not establish a repair. Older Zod consumers also need
+separate work: 4.1.11 lacks the newer map-bound API and 3.x cannot be treated as
+a compatible same-major 4.6.6 overlay. No unrelated fixture failure is counted
+as a successful vulnerability reproduction.

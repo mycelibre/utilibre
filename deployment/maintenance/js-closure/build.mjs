@@ -22,6 +22,7 @@ for(const key of selected){
  // 0600. Read their hashes in this networkless, read-only, no-volume inspector;
  // never grant this capability to production or a dependency test container.
  assert(!s.runtime||['node','bun'].includes(s.runtime),'Unsupported inspector runtime');
+ assert(s.runtimeRemoval===undefined||s.runtimeRemoval==='node','Unsupported removal runtime');
  const node=(id,code,args=[])=>docker(['run','--rm','-i','--user','0','--network','none','--read-only','--cpus','2','--memory','2g','--memory-swap','2g','--pids-limit','128','--log-driver','none','--cap-drop','ALL','--cap-add','DAC_OVERRIDE','--security-opt','no-new-privileges','--entrypoint',s.runtime||'node',id,...(s.runtime==='bun'?['run','-']:['-']),...args],{input:code});
  try{
   assert(free()>8.3*1024**3,'Recovery floor');
@@ -36,6 +37,10 @@ for(const key of selected){
    if(nested){
     assert(s.preserveNestedDependencies?.includes(target),'Unexpected nested dependency');
     recipe+='RUN mv '+target+'/node_modules /tmp/utilibre-preserved-modules && rm -r '+target+' && mkdir -p '+target+' && mv /tmp/utilibre-preserved-modules '+target+'/node_modules\n';
+   }else if(s.runtimeRemoval==='node'){
+    // Distroless Node consumers have no shell or rm. Reuse their runtime only
+    // to remove this already-validated exact dependency directory at build time.
+    recipe+='RUN '+JSON.stringify(['node','-e','require("node:fs").rmSync(process.argv[1],{recursive:true})',target])+'\n';
    }else recipe+='RUN rm -r '+JSON.stringify(target)+'\n';
   }
   for(const [name,paths] of Object.entries(s.paths)){

@@ -40,7 +40,7 @@ services:
       private: {ipv4_address: 172.29.148.30}
   app:
     <<: *runtime
-    image: utilibre-projects:node-security-20261028
+    image: utilibre-projects:zod-security-20261028
     user: '1000:1000'
     env_file: /opt/utilibre/projects/private/runtime.env
     extra_hosts: ['auth.utilibre.org:10.10.1.3']

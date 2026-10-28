@@ -37,6 +37,88 @@
       "mirrorFiles": [
         "/home/ubuntu/freetools/deployment/utilibre/compose.yaml"
       ]
+    },
+    {
+      "key": "wishlist",
+      "container": "utilibre-wishlist-app-1",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "base": "sha256:476d8dfdbdb595bfee9dacab5b9a7a4580b27742da54205faed3b4a18409932b",
+      "candidate": "utilibre-wishlist:zod-security-20261028",
+      "roots": [
+        "/usr/src/app",
+        "/usr/local/lib/node_modules"
+      ],
+      "before": {
+        "/usr/src/app/node_modules/.pnpm/zod@4.6.5/node_modules/zod": "4.6.5"
+      },
+      "paths": {
+        "zod": [
+          "/usr/src/app/node_modules/.pnpm/zod@4.6.5/node_modules/zod"
+        ]
+      }
+    },
+    {
+      "key": "candlr",
+      "container": "utilibre-records-candlr-1",
+      "containers": [
+        "utilibre-records-candlr-1"
+      ],
+      "base": "sha256:2ad46bd8212514a07689d3027fbb30d432ca5a8c53d2a16a790c6f99461c9fbf",
+      "candidate": "utilibre-candlr:zod-security-20261028",
+      "roots": [
+        "/app"
+      ],
+      "before": {
+        "/app/frontend/node_modules/zod": "4.6.5"
+      },
+      "paths": {
+        "zod": [
+          "/app/frontend/node_modules/zod"
+        ]
+      }
+    },
+    {
+      "key": "admin",
+      "container": "utilibre-expanded-penpot-admin-console-1",
+      "containers": [
+        "utilibre-expanded-penpot-admin-console-1"
+      ],
+      "base": "sha256:dd9e60cd964fc098ef195d88ff6f132e143bfeb603d801cae95e50a2938098fa",
+      "candidate": "utilibre-penpot-admin:zod-security-20261028",
+      "roots": [
+        "/nitrate"
+      ],
+      "before": {
+        "/nitrate/apps/admin-console/node_modules/.pnpm/zod@4.6.5/node_modules/zod": "4.6.5"
+      },
+      "paths": {
+        "zod": [
+          "/nitrate/apps/admin-console/node_modules/.pnpm/zod@4.6.5/node_modules/zod"
+        ]
+      },
+      "runtimeRemoval": "node"
+    },
+    {
+      "key": "projects",
+      "container": "utilibre-projects-app-1",
+      "containers": [
+        "utilibre-projects-app-1"
+      ],
+      "base": "sha256:c33c32d98f841c4df8ae6a6e12bc515b463d660b22e8e8d3ac1232a2a500619c",
+      "candidate": "utilibre-projects:zod-security-20261028",
+      "roots": [
+        "/app"
+      ],
+      "before": {
+        "/app/node_modules/zod": "4.3.5"
+      },
+      "paths": {
+        "zod": [
+          "/app/node_modules/zod"
+        ]
+      }
     }
   ]
 }

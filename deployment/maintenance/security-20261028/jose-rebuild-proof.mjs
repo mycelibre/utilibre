@@ -28,3 +28,25 @@ export function compressionRebuildHash({expected, artifact, build, inventory, ga
   assert.equal(source.compilerOutputSha256, binaries[0].binarySha256);
   return binaries[0].binarySha256;
 }
+
+export function zodPreservesBinary({expected, artifact, build, inventory, gate, binary}) {
+  assert.equal(build.base, expected.base);
+  assert.equal(build.imageId, artifact);
+  assert(build.passed && build.configurationUnchanged && build.unchangedOtherAppFiles > 0);
+  assert.equal(build.packages.length, 1);
+  assert.equal(build.packages[0].name, 'zod');
+  assert.equal(build.packages[0].version, '4.6.6');
+  assert.deepEqual(build.packages[0].paths, expected.paths.zod);
+  assert(inventory.passed && gate.passed && gate.targetedFindingRemoved);
+  assert.equal(inventory.imageId, artifact);
+  assert.equal(gate.imageId, artifact);
+  assert.equal(gate.base, expected.base);
+  assert.equal(gate.newHighCritical, 0);
+  assert.equal(inventory.changedPaths.length, build.changedFiles);
+  assert(inventory.changedPaths.length > 0);
+  for (const path of inventory.changedPaths) {
+    assert.notEqual(path, binary);
+    assert(expected.paths.zod.some(root => path.startsWith(root + '/')));
+  }
+  return true;
+}

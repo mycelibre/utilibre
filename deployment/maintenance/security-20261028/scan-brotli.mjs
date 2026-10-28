@@ -31,7 +31,7 @@ for(const key of keys){
   // Debian's Trivy Version excludes the package revision; ID retains it.
   const expected=bson||zod||filelock||oauth||markdown||symfony||nltk||msgpack||multer||postal||blkid||drf||dns||authlib||undici||body||go||curl||node?[]:alpine?Object.entries(s.packages).map(([pkg,p])=>[pkg,name==='before'?p.installed:inputs.packages[p.package].version]):[['libbrotli1',name==='before'?s.installed:s.version]];
   if(bson)for(const pkg of ['libbson-1.0-0t64','libmongoc-1.0-0t64'])assert(packages.some(p=>p.Name===pkg&&p.ID===pkg+'@1.30.4-1+deb13u3+utilibre1'),'Missing exact BSON package');
-  if(zod)assert(packages.some(p=>p.Name==='zod'&&p.Version===(name==='before'?'4.6.5':'4.6.6')),'Missing Zod inventory');
+  if(zod)for(const version of name==='before'?new Set(Object.values(s.before)):['4.6.6'])assert(packages.some(p=>p.Name==='zod'&&p.Version===version),'Missing exact Zod inventory');
   if(markdown)for(const version of new Set(Object.values(name==='before'?s.before:b.versions)))assert(packages.some(p=>p.Name==='markdown-it'&&p.Version===version),'Missing Markdown package inventory');
   if(symfony)for(const [pkg,version]of Object.entries(s.packages))assert(packages.some(p=>p.Name===pkg&&p.Version===version),'Missing Symfony package inventory');
   if(nltk)assert(packages.some(p=>p.Name.toLowerCase()==='nltk'&&p.Version===s.previous),'Missing NLTK inventory');

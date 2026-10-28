@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Prepare official Debian backports for native guest-agent and block tools; activation requires a current Proxmox maintenance window",
+  "version": "1:11.1.2+ds-3~bpo13+4",
+  "base": "debian@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f",
+  "packages": {
+    "qemu-guest-agent": {
+      "before": "1:11.0.2+ds-2~bpo13+1",
+      "file": "qemu-guest-agent_11.1.2+ds-3~bpo13+4_amd64.deb",
+      "sha256": "8ee0aec580043708758d3ecde079aa5a07036b1691d8f919fb9e055ac3e1a333"
+    },
+    "qemu-utils": {
+      "before": "1:10.0.13+ds-0+deb13u1",
+      "file": "qemu-utils_11.1.2+ds-3~bpo13+4_amd64.deb",
+      "sha256": "c930a4262a9913037c2b3dc00e768194a013264aea4d8832aafc14c126b529af"
+    }
+  },
+  "network": "Acquisition: deb.debian.org and the pinned Debian image's configured APT mirrors. Verification: none.",
+  "limits": {"cpus": 1, "memoryMiB": 512, "pids": 128, "recoveryFloorGiB": 8},
+  "productionEffects": "None. This preparation script has no host installation or service-control mode."
+}

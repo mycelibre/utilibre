@@ -1,7 +1,7 @@
 // Exact compiled RSA backport; no waiver for other JOSE uses or image descendants.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
-import {compressionRebuildHash} from './jose-rebuild-proof.mjs';
+import {compressionRebuildHash, zodPreservesBinary} from './jose-rebuild-proof.mjs';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';
 process.umask(0o077);
 const leaf=process.argv[2]==='--leaf';assert(!process.argv[2]||leaf);
@@ -29,15 +29,23 @@ for(const s of inputs.rows){
   const next=read(new URL('./codec-caddy-inputs.json',import.meta.url)).rows.find(row=>row.key===s.key),nextDir=root+'/security-20261028/codec-caddy';
   if(next&&fs.existsSync(nextDir+'/'+s.key+'/build.json')){
    const rebuilt=read(nextDir+'/'+s.key+'/build.json');
-   if(rebuilt.imageId===artifact){
+   let preservedZod=false;
+   if(rebuilt.imageId!==artifact && s.key==='caddy-wishlist'){
+    const z=read(new URL('./zod-inputs.json',import.meta.url)).rows.find(row=>row.key==='wishlist'),zd=root+'/security-20261028/zod/wishlist';
+    if(z&&z.base===rebuilt.imageId&&fs.existsSync(zd+'/build.json')){
+     const zb=read(zd+'/build.json');
+     if(zb.imageId===artifact)preservedZod=zodPreservesBinary({expected:z,artifact,build:zb,inventory:read(zd+'/inventory.json'),gate:read(zd+'/scan-gate.json'),binary:s.binary});
+    }
+   }
+   if(rebuilt.imageId===artifact||preservedZod){
     const source={patchSha256:sha(fs.readFileSync(nextDir+'/input/jose-v3.patch')),afterSha256:sha(fs.readFileSync(nextDir+'/input/jose-v3-jwk.go')),noticePatchSha256:sha(fs.readFileSync(nextDir+'/artifact/notices/jose-v3.patch')),compilerOutputSha256:sha(fs.readFileSync(nextDir+'/artifact/caddy'))};
-    hash=compressionRebuildHash({expected:next,artifact,build:rebuilt,inventory:read(nextDir+'/'+s.key+'/inventory.json'),gate:read(nextDir+'/'+s.key+'/scan-gate.json'),source,spec});
+    hash=compressionRebuildHash({expected:next,artifact:rebuilt.imageId,build:rebuilt,inventory:read(nextDir+'/'+s.key+'/inventory.json'),gate:read(nextDir+'/'+s.key+'/scan-gate.json'),source,spec});
     const currentRelease=read(nextDir+'/release.json');assert.equal(currentRelease.status,'passed');
-    for(const name of s.containers)assert(overlayRows(currentRelease).some(row=>row.name===name&&row.oldImage===next.base&&row.newImage===artifact&&Date.parse(row.completedAt)<=Date.parse(scan.date)));
+    for(const name of s.containers)assert(overlayRows(currentRelease).some(row=>row.name===name&&row.oldImage===next.base&&row.newImage===rebuilt.imageId&&Date.parse(row.completedAt)<=Date.parse(scan.date)));
     const native=read(nextDir+'/'+(s.key==='caddy-wishlist'?'wishlist-stage':'newsletters-stage')+'.json');
-    if(s.key==='caddy-wishlist')assert(native.imageId===artifact&&native.nativeAccountCreated&&native.anonymousListDenied);
-    else assert(native.status==='passed'&&[native.webImage,native.smtpImage].includes(artifact)&&native.isolatedSmtpAccepted);
-    proofProfile='codec-caddy';
+    if(s.key==='caddy-wishlist')assert(native.imageId===rebuilt.imageId&&native.nativeAccountCreated&&native.anonymousListDenied);
+    else assert(native.status==='passed'&&[native.webImage,native.smtpImage].includes(rebuilt.imageId)&&native.isolatedSmtpAccepted);
+    proofProfile=preservedZod?'zod/wishlist (unchanged Caddy); codec-caddy':'codec-caddy';
    }
   }
  }

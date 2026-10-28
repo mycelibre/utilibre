@@ -1,13 +1,13 @@
 {
-  "date": "2026-10-28T19:21:12.427880+00:00",
-  "scanCompletedAt": "2026-10-28T19:15:49.880Z",
+  "date": "2026-10-28T19:58:06.100391+00:00",
+  "scanCompletedAt": "2026-10-28T19:52:50.603Z",
   "scannerStatus": "checked",
   "runningImagesAssessed": 109,
-  "rawRecords": 23948,
+  "rawRecords": 23944,
   "rawCritical": 66,
-  "rawHigh": 3168,
+  "rawHigh": 3164,
   "awaitingReviewCritical": 0,
-  "awaitingReviewHigh": 138,
+  "awaitingReviewHigh": 131,
   "meaning": "Package/artifact records, not distinct exploitable vulnerabilities. Reviewed fixes/component attributions remain in raw scans. This is not full security clearance.",
   "completedThisCheckpoint": [
     "Caddy compiler and prior x/net preservation",
@@ -42,13 +42,15 @@
     "RSSHub Zod 4.6.6 with six bounded-work regressions, normal parsing and retained Markdown repair",
     "Penpot admin OpenSSL exact vendor-payload review, without a runtime change",
     "Both TURN relays with exact upstream BSON reservation minimum; five boundary/ten legitimate checks, full isolated relay and live STUN checks",
-    "No-op Coturn release preserves aggregate completion timestamp and exact completed receipt"
+    "No-op Coturn release preserves aggregate completion timestamp and exact completed receipt",
+    "Zod 4.6.6 in Wishlist, Candlr, private Penpot admin and Projects; per-application native workflows, unchanged full image scope, same-database scan gates and restart-free repeated activation verified",
+    "Three exact-runtime component assessments: two Linux-only Vite deployments and Black Python runtime distinct from the affected GitHub Action; seven-day expiry, no scanner-rule suppression"
   ],
   "unresolved": [
-    "138 high package/target records remain; package counts are not unique exploits and no full clearance is claimed.",
-    "Remaining application/native library work includes other Zod consumers, MSAL, LiteLLM, ACL legacy callers and RSS-Bridge NGINX; each needs its own supported repair and compatibility checks.",
+    "131 high package/target records remain; package counts are not unique exploits and no full clearance is claimed.",
+    "Remaining application/native library work includes older Zod consumers, MSAL, LiteLLM, embedded Guava, ACL legacy callers and RSS-Bridge NGINX; each needs its own supported repair and compatibility checks. Guava also has a separately shaded copy in the Penpot JAR; replacing the visible package alone would not establish full coverage.",
     "OAuthlib 4.0.0 device-code validation gap is still reproducible in the library fixture despite scanner fixed-version metadata; see primary-findings.json. This is not a claimed Authentik device-flow exploit.",
-    "Host GRUB/SSH/guest-agent and additional native-package findings require exact-source assessment; SSH or guest-agent restarts still require current maintenance coordination.",
+    "Host QEMU 11.1.2 Debian candidates and exact rollback packages are prepared and natively tested, not installed: requires fresh Proxmox thawed/backup/agent-operation pause confirmation. GRUB/SSH and additional native-package findings remain separately open.",
     "Historical tracked build inputs and current runtime findings remain distinct; old locks are not relabelled or deleted to clear scans.",
     "SimpleLogin public 502 predates this batch; native login gateway responds. Separate Caddy/Proxmox state and outside-Internet LibreSpeed reachability remain unverified.",
     "Two Wolfi certificate-bundle records need vendor trust-data review; absence of executable code is not sufficient because GO-2026-6809 concerns trust-store distrust as well as Go verification. No waiver applied."
@@ -117,19 +119,26 @@
     "bsonLegitimateChecksPerState": 10,
     "bsonIsolatedRelayPassed": true,
     "bsonLiveStunRolesPassed": 2,
-    "bsonRepeatApplyReceiptAndRuntimeUnchanged": true
+    "bsonRepeatApplyReceiptAndRuntimeUnchanged": true,
+    "zodAdditionalApplicationImages": 4,
+    "zodAdditionalNativeWorkflowsPassed": true,
+    "zodFollowthroughRepeatApplyUnchanged": true,
+    "followthroughNodePolicyTestsPassed": 22,
+    "hardlinkPolicyTestsPassed": 2,
+    "qemuIsolatedCapabilitiesPreserved": 43,
+    "qemuSyntheticKeyAndDiskChecksPassed": true,
+    "qemuProductionDeployed": false
   },
-  "deployment": "Recorded exact releases are live; running images and readiness verified. No further reboot performed.",
+  "deployment": "Recorded application releases are live; exact running images and readiness verified. QEMU host preparation is complete but no host activation/reboot/SSH reload/guest-agent restart occurred in this follow-through.",
   "capacity": "270 GiB root device, 266 GiB filesystem; 41 GiB free, 8 GiB recovery floor retained. 34 GiB RAM total, 19 GiB available; 1.1 GiB swap used. Separate 15 GiB temporary disk unchanged. No reboot, SSH reload or guest-agent restart in this follow-through.",
   "remainingHighByScope": {
     "host-os": 29,
-    "runtime-image": 72,
+    "runtime-image": 65,
     "tracked-build-input": 35,
     "upstream-release-source-lock": 2
   },
   "remainingHighByPackage": {
     "@azure/msal-node": 1,
-    "black": 1,
     "body-parser": 2,
     "ca-certificates-bundle": 2,
     "com.google.guava:guava": 1,
@@ -164,10 +173,10 @@
     "source-map-js": 1,
     "stdlib": 1,
     "undici": 13,
-    "vite": 4,
+    "vite": 2,
     "xserver-common": 2,
     "xvfb": 2,
-    "zod": 10
+    "zod": 6
   },
   "primaryFindingSupplement": {
     "path": "primary-findings.json",

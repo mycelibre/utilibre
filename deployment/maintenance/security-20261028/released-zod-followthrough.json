@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-28T19:49:48.764Z",
+  "status": "passed",
+  "rows": [
+    {
+      "key": "wishlist",
+      "imageId": "sha256:0b0d53a92e5d4cb8d890808851dfa3970a8f37a985583b9c0cb94e6a78bd3a9d",
+      "previousImage": "sha256:476d8dfdbdb595bfee9dacab5b9a7a4580b27742da54205faed3b4a18409932b",
+      "package": "zod",
+      "version": "4.6.6",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "changedContentPaths": 20,
+      "packageHardlinkLayoutChanges": 177,
+      "normalChecksPerState": 15,
+      "boundsRegressionsPerState": 6,
+      "completedAt": "2026-10-28T19:34:07.458Z",
+      "publicResponse": 307,
+      "scope": "Package overlay; unchanged configuration, prior files and independent native application checks",
+      "limitations": "Disposable local account only; production OIDC, backups and email not re-tested."
+    },
+    {
+      "key": "candlr",
+      "imageId": "sha256:135ef4fadeb646dd4965a3451c0e033e93a142e0c9c4f44cf8fa9c35567f6017",
+      "previousImage": "sha256:2ad46bd8212514a07689d3027fbb30d432ca5a8c53d2a16a790c6f99461c9fbf",
+      "package": "zod",
+      "version": "4.6.6",
+      "containers": [
+        "utilibre-records-candlr-1"
+      ],
+      "changedContentPaths": 20,
+      "packageHardlinkLayoutChanges": 0,
+      "normalChecksPerState": 15,
+      "boundsRegressionsPerState": 6,
+      "completedAt": "2026-10-28T19:34:18.078Z",
+      "publicResponse": 302,
+      "scope": "Package overlay; unchanged configuration, prior files and independent native application checks",
+      "limitations": "Two fictional local accounts; no real account data or live OIDC provider exercised."
+    },
+    {
+      "key": "admin",
+      "imageId": "sha256:b55be29fdd59cdb3b701a7b559ee66e0d9aee8168b91b4bb7dda066c6f267833",
+      "previousImage": "sha256:dd9e60cd964fc098ef195d88ff6f132e143bfeb603d801cae95e50a2938098fa",
+      "package": "zod",
+      "version": "4.6.6",
+      "containers": [
+        "utilibre-expanded-penpot-admin-console-1"
+      ],
+      "changedContentPaths": 20,
+      "packageHardlinkLayoutChanges": 177,
+      "normalChecksPerState": 15,
+      "boundsRegressionsPerState": 6,
+      "completedAt": "2026-10-28T19:34:33.634Z",
+      "publicResponse": null,
+      "scope": "Package overlay; unchanged configuration, prior files and independent native application checks",
+      "limitations": "Native empty-database migrations and login routing; operator login and administrative mutations not tested. Remains private."
+    },
+    {
+      "key": "projects",
+      "imageId": "sha256:9084d144780bcfdf0693540a4f6da6f22795357934c3c5f00f7c1da9eb44c1db",
+      "previousImage": "sha256:c33c32d98f841c4df8ae6a6e12bc515b463d660b22e8e8d3ac1232a2a500619c",
+      "package": "zod",
+      "version": "4.6.6",
+      "containers": [
+        "utilibre-projects-app-1"
+      ],
+      "changedContentPaths": 557,
+      "packageHardlinkLayoutChanges": 0,
+      "normalChecksPerState": 15,
+      "boundsRegressionsPerState": 6,
+      "completedAt": "2026-10-28T19:49:48.764Z",
+      "publicResponse": 200,
+      "scope": "Package overlay; unchanged configuration, prior files and independent native application checks",
+      "limitations": "Synthetic local login and project/board/card editing/deletion; no live OIDC provider or visitor data used."
+    }
+  ],
+  "fixtures": {
+    "deployment/maintenance/check-wishlist-esbuild.mjs": "63fe243ff580ba84a7ce8c42f9e97aa320ff7dfbde26175052eea319915eb419",
+    "deployment/maintenance/patch-leaves-final/check-app.mjs": "3a6709eb3a070ec7aca8bb315b1c2167dc1f71151bf40d325f82e4207ec7c30e",
+    "deployment/maintenance/security-20261028/zod-native.cjs": "1dd5d548d46f0253705023a685a2b6d4fabc92a988c1317aae0475b04bb910d6",
+    "deployment/maintenance/security-20261028/check-zod-projects.py": "e595b287d06bc6b17444296b5cdaf423ac5693a5e337c489ce8d744523c92489"
+  },
+  "repeatApplyVerified": true
+}

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {compressionRebuildHash} from './jose-rebuild-proof.mjs';
+import {compressionRebuildHash, zodPreservesBinary} from './jose-rebuild-proof.mjs';
 const fixture = () => ({
   expected: {base: 'sha256:old', binary: '/usr/bin/caddy'}, artifact: 'sha256:new',
   build: {base: 'sha256:old', imageId: 'sha256:new', passed: true,
@@ -13,6 +13,23 @@ const fixture = () => ({
   gate: {passed: true, primarySourceFixVerified: true, newHighCritical: 0, base: 'sha256:old', imageId: 'sha256:new'},
   source: {patchSha256: 'patch', afterSha256: 'fixed', noticePatchSha256: 'patch', compilerOutputSha256: 'a'.repeat(64)},
   spec: {patchSha256: 'patch', afterSha256: 'fixed'},
+});
+const overlay = () => ({expected:{base:'sha256:codec', paths:{zod:['/app/zod']}},
+  artifact:'sha256:zod', binary:'/usr/bin/caddy',
+  build:{base:'sha256:codec',imageId:'sha256:zod',passed:true,configurationUnchanged:true,
+    unchangedOtherAppFiles:20,changedFiles:1,packages:[{name:'zod',version:'4.6.6',paths:['/app/zod']}]},
+  inventory:{passed:true,imageId:'sha256:zod',changedPaths:['/app/zod/index.js']},
+  gate:{passed:true,targetedFindingRemoved:true,newHighCritical:0,base:'sha256:codec',imageId:'sha256:zod'}});
+test('exact Zod overlay can preserve the previously proven binary', () => {
+  assert(zodPreservesBinary(overlay()));
+});
+test('binary changes, unrelated edits and incomplete overlay proof fail closed', () => {
+  for (const change of [r=>r.inventory.changedPaths[0]='/usr/bin/caddy',
+    r=>r.inventory.changedPaths[0]='/app/zod-lookalike/index.js',
+    r=>r.inventory.imageId='wrong',r=>r.build.base='wrong',r=>r.build.packages[0].version='4.7.0',
+    r=>r.gate.passed=false,r=>r.gate.newHighCritical=1,r=>r.build.changedFiles=2]) {
+    const r=overlay();change(r);assert.throws(()=>zodPreservesBinary(r));
+  }
 });
 test('exact compression rebuild retains the compiled JOSE patch proof', () => {
   assert.equal(compressionRebuildHash(fixture()), 'a'.repeat(64));

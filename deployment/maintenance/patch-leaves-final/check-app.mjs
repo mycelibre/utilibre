@@ -4,10 +4,10 @@ import fs from 'node:fs';
 import cp from 'node:child_process';
 import {specs,output as originalOutput} from './specs.mjs';
 process.umask(0o077);
-const pcre=process.argv.includes('--pcre-oct28');
-const oct22=process.argv.includes('--oct22'),oct28=pcre||process.argv.includes('--undici-oct28'),output=oct28?'/var/lib/utilibre-maintenance/security-20261028/'+(pcre?'pcre':'undici'):oct22?'/var/lib/utilibre-maintenance/security-20261022':originalOutput;
+const zod=process.argv.includes('--zod-oct28'),pcre=process.argv.includes('--pcre-oct28');
+const oct22=process.argv.includes('--oct22'),oct28=zod||pcre||process.argv.includes('--undici-oct28'),output=oct28?'/var/lib/utilibre-maintenance/security-20261028/'+(zod?'zod':pcre?'pcre':'undici'):oct22?'/var/lib/utilibre-maintenance/security-20261022':originalOutput;
 const original=specs.find(x=>x.key===process.argv[2]);assert(original);
-if(oct22||oct28)assert(['candlr','degoog'].includes(original.key));
+if(oct22||oct28)assert((zod?['candlr','admin']:['candlr','degoog']).includes(original.key));
 const s=oct22||oct28?{...original,...JSON.parse(fs.readFileSync(output+'/'+original.key+'/build.json'))}:original;
 const dir=output+'/'+s.key,stage=JSON.parse(fs.readFileSync(dir+'/build.json'));
 const docker=(args,opt={})=>cp.execFileSync('docker',args,{encoding:'utf8',timeout:45000,maxBuffer:3*1024**2,stdio:['pipe','pipe','pipe'],...opt});
@@ -44,6 +44,6 @@ try{
  }
  const comparable=r=>{const {imageId,...rest}=r;return rest;};assert.deepEqual(comparable(rows[0]),comparable(rows[1]));
  const library=JSON.parse(fs.readFileSync(dir+(pcre?'/build.json':oct28?'/native.json':'/libraries.json')));assert(library.passed&&library.imageId===stage.imageId);
- fs.writeFileSync(dir+(oct28?'/app.json':'/native.json'),JSON.stringify({date:new Date().toISOString(),imageId:stage.imageId,passed:true,network:'none; disposable DB namespace where required',applicationParity:rows,libraryGate:true,productionChanged:false,limitations:['No live account data was read or changed.','DeGoog search providers were not queried; the search form, startup and error route were tested.','Candlr local synthetic accounts do not replace a live OIDC operator check.','Admin gate tests native empty-DB migrations and login routing, not operator privileges.']},null,2)+'\n');console.log(s.key+' native application and dependency gates passed');
+ fs.writeFileSync(dir+(zod?'/application.json':oct28?'/app.json':'/native.json'),JSON.stringify({date:new Date().toISOString(),imageId:stage.imageId,passed:true,nativeStartup:true,network:'none; disposable DB namespace where required',applicationParity:rows,libraryGate:true,productionChanged:false,limitations:['No live account data was read or changed.','DeGoog search providers were not queried; the search form, startup and error route were tested.','Candlr local synthetic accounts do not replace a live OIDC operator check.','Admin gate tests native empty-DB migrations and login routing, not operator privileges.']},null,2)+'\n');console.log(s.key+' native application and dependency gates passed');
 }catch(e){fs.writeFileSync(dir+'/native-error.log',String(e.stdout||'')+String(e.stderr||'')+String(e));throw Error('Native application gate failed; private report '+dir);}
 finally{for(const n of names)try{docker(['rm','-f',n]);}catch{}}
