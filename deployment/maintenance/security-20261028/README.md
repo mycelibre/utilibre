@@ -1412,3 +1412,60 @@ platform, bytes or missing native/application checks. The seven-day decision is
 runtime-platform attribution only. The bundled Mac executable is **not upgraded**
 and must be reviewed before Mac execution or redistribution. Raw scan records,
 other Go targets and future image identities remain separate.
+
+### Uptime Kuma MSAL origin validation
+
+`released-msal.json` records the deployed five-file backport for
+[CVE-2026-109461](https://github.com/AzureAD/microsoft-authentication-library-for-js/security/advisories/GHSA-xcx6-jx8p-x3h5).
+The fixed upstream 7.x major is outside the installed Azure Identity 4.13.1
+dependency range. `msal-inputs.json` therefore pins the exact MIT 5.6.0 source
+archive, upstream commit, patch and before/after hashes. Both installed CJS and
+ESM outputs carry the upstream TypeScript correction. Only their obsolete
+source-map references are removed; the old map files remain unreferenced.
+Dependency versions, runtime configuration and all 43,495 other files are
+unchanged. The raw version-based advisory remains visible.
+The pinned patch retains the vendor runtime's CRLF bytes and unified-diff blank
+context lines; whitespace-only patch warnings are intentional, not edits to
+normalize during replay. Its SHA-256 and all five output hashes are checked.
+
+Both formats reproduce the missing validation before the patch and reject the
+five tested payload/configuration cases afterward. Seven legitimate token,
+state and cache checks per format pass before/after. The real installed Azure
+SDK passes credential acquisition and cache reuse with a synthetic transport;
+the native Kuma MSSQL monitor passes four query/error/cleanup cases with a
+synthetic database. An isolated Kuma instance also passes setup/login without
+notifications. These tests do not establish behavior of a live Microsoft tenant
+or a production SQL server. No real credentials, user data or outside requests
+are used by the fixtures.
+
+The existing adapters now accept a finite MSAL profile:
+
+```sh
+node deployment/maintenance/security-20261028/symfony.mjs --msal kuma
+node deployment/maintenance/security-20261028/check-blkid-apps.mjs --msal kuma
+node deployment/maintenance/security-20261028/scan-brotli.mjs --msal kuma
+python3 deployment/maintenance/go-final/verify.py --msal-oct28 kuma
+node deployment/maintenance/security-20261028/release-brotli.mjs prepare --msal kuma
+node deployment/maintenance/security-20261028/release-brotli.mjs apply --msal kuma
+```
+
+Preparation requires the exact declared baseline and preserves existing evidence
+instead of overwriting it. It does not resolve dependencies or access the network.
+Prepare/apply retain their separate deployment gates. Repeated completed apply
+preserves the same container, start time, restart count and receipt. The 28
+targeted policy/release tests include wrong-revision, file-scope, incomplete
+regression, consumer, notification and rollback failures.
+
+The complete library source, license and patch are available at
+<https://tools.utilibre.org/utilibre-source/security-msal-20261028-source.tar.gz>.
+The standalone patch instructions in that offer do not require running production.
+After a fresh scan, `review-source.mjs msal` prepares a seven-day exact-image
+decision, requiring all five current file hashes and the completed release.
+Use the existing sequential `closure-review/apply-reviewed.mjs` interface.
+No scanner rule, severity threshold or unrelated package decision changes.
+
+Rollback restores the previous image scalar from `released-msal.json` in
+`deployment/community/compose.yaml` and recreates only `uptime-kuma` with the
+existing Compose project. There is no database migration in this dependency
+repair; keep the persistent data volume unchanged. No host reboot, SSH reload or
+guest-agent restart is involved.

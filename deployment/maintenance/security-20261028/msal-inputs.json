@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-109461",
+  "upstream": "https://github.com/AzureAD/microsoft-authentication-library-for-js/commit/f550958586475dbfeb1cd44be14a2d653728850e",
+  "upstreamPatchSha256": "e01f4f045c149c81410fbf7b23df3e4e049a7467fda0b61d0bdf812eabad94c0",
+  "upstreamSource": "https://registry.npmjs.org/@azure/msal-node/-/msal-node-5.6.0.tgz",
+  "upstreamIntegrity": "sha512-uFY9NxrWHw8PwZx7gAX6PDn+9vdfS05+levc/kwkx77IkjfaldnQbbcQzzDIZ5Hq5Zdr6/z92oAIoRWKp6MnOA==",
+  "license": "MIT",
+  "method": "Exact upstream TypeScript backport with equivalent finite ESM/CJS adaptation; source-map references on three affected runtime files removed to avoid stale mappings. Historical maps retained as unreferenced metadata. No dependency or version-label change.",
+  "patches": [
+    {
+      "file": "msal-origin.patch",
+      "sha256": "97aa11de47bbd119c699e00e20bf44c1a8c2ed2d328830dc5454b780cb569891"
+    }
+  ],
+  "rows": [
+    {
+      "key": "kuma",
+      "base": "sha256:d3d15ae216a7d9c97ef806a0291c4709e6c8f6b4ffbd75950fd66780b640101c",
+      "candidate": "utilibre-uptime-kuma:msal-origin-security-20261028",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "site": "/app/node_modules/@azure/msal-node",
+      "patches": [
+        "msal-origin.patch"
+      ],
+      "files": [
+        {
+          "path": "src/client/ConfidentialClientApplication.ts",
+          "beforeSha256": "73077dbed972d7aa61729a640f3f41acdef801e3b028a767a701c379ed0f15b9",
+          "afterSha256": "ab6a1f163363a3f27bc6ccee91bffc62949fcebbf8c3607e10b61021c657d27e"
+        },
+        {
+          "path": "src/error/NodeAuthError.ts",
+          "beforeSha256": "820cb7dede2256eb6a118f3832ae02891a7ec7ebd702978a342c6cb57033d1d8",
+          "afterSha256": "d6cd4798778d4d88617a3371a011716703eb1fe8c451a88753a7781423a60dde"
+        },
+        {
+          "path": "dist/client/ConfidentialClientApplication.mjs",
+          "beforeSha256": "2bbb6c5859fc1cbe1c867794b57ee651eed471f26e1c1fb0a9c980ac8cf1c7e1",
+          "afterSha256": "1aee507016147339288e3272cbd5031e9c3bda8cd384d61d5b0ab547f17d1bdf"
+        },
+        {
+          "path": "dist/error/NodeAuthError.mjs",
+          "beforeSha256": "54683bcbcf299e2195948e539221d5bc98b950bdc2471ef5df2ede0f98a73fa7",
+          "afterSha256": "00a449e1cb36e5c9235f92c7db9e2a6e033a54949f0d4c0e536949227d6c245e"
+        },
+        {
+          "path": "lib/msal-node.cjs",
+          "beforeSha256": "92c8295ac06acd7368e2d1950eeb8c431010982381048d4f11543514ffd42711",
+          "afterSha256": "264920366ecac6edeceb275b6717f3be336c1e8738de93d9a0faf99821b0d9e8"
+        }
+      ]
+    }
+  ]
+}

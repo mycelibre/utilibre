@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "key": "kuma",
+  "advisory": "CVE-2026-109461",
+  "previousImage": "sha256:d3d15ae216a7d9c97ef806a0291c4709e6c8f6b4ffbd75950fd66780b640101c",
+  "imageId": "sha256:2bccc8274aec6457d7fb09699f3428ea14ec463c3ca20a7d15ad2f41104cb2b4",
+  "previousRef": "utilibre-kuma:health-go-security-20261028",
+  "completedAt": "2026-10-28T21:42:03.720Z",
+  "changedPaths": [
+    "/app/node_modules/@azure/msal-node/dist/client/ConfidentialClientApplication.mjs",
+    "/app/node_modules/@azure/msal-node/dist/error/NodeAuthError.mjs",
+    "/app/node_modules/@azure/msal-node/lib/msal-node.cjs",
+    "/app/node_modules/@azure/msal-node/src/client/ConfidentialClientApplication.ts",
+    "/app/node_modules/@azure/msal-node/src/error/NodeAuthError.ts"
+  ],
+  "unchangedFiles": 43495,
+  "nativeFormats": [
+    "cjs",
+    "esm"
+  ],
+  "normalChecksPerFormatPerState": 7,
+  "repairedCasesPerFormat": 5,
+  "azureSdkSyntheticTransportPassed": true,
+  "mssqlSyntheticMonitorChecksPerState": 4,
+  "isolatedKumaSetupLoginPassed": true,
+  "notificationsSentByTests": false,
+  "newHighCritical": 0,
+  "databaseSha256": "2c8f4b04f224aded9ecd149b9b5304146736668220dfa403403358fb423a52fd",
+  "rawVersionFindingRetained": true,
+  "repeatApplyUnchanged": true,
+  "source": {
+    "filename": "security-msal-20261028-source.tar.gz",
+    "bytes": 473728,
+    "sha256": "69e68a0792c6119c196525bbd9f08165a85e0f10cc2ab76077638d0c8339f48e"
+  },
+  "sourceUrl": "https://tools.utilibre.org/utilibre-source/security-msal-20261028-source.tar.gz",
+  "limitations": "Synthetic provider and SQL transports; no live Microsoft tenant, production monitor, remote exploit or complete-build byte reproducibility claimed."
+}
