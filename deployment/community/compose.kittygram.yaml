@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   kittygram:
     <<: *runtime
-    image: utilibre-kittygram:5931c21-vendor-security-20261011-p2
+    image: utilibre-kittygram:libraries-security-20261028
     user: "65534:65534"
     mem_limit: 384m
     env_file: /opt/utilibre/kittygram/runtime.env
@@ -45,7 +45,7 @@ services:
       instagram: {ipv4_address: 172.29.91.30}
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-security-20261022
+    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028
     user: "101:101"
     mem_limit: 128m
     tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=128m,mode=1777"]

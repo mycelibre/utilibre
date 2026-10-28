@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-kitchenowl:aiohttp-certifi-20261021
+    image: utilibre-kitchenowl:brotli-security-20261028
     build: .
     user: '1000:1000'
     env_file: /opt/utilibre/kitchenowl/private/app.env
@@ -43,7 +43,7 @@ services:
       app: {ipv4_address: 172.29.131.10}
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-security-20261022
+    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     mem_limit: 96m

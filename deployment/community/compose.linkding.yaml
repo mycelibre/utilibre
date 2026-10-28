@@ -11,7 +11,7 @@ x-bounded: &bounded
 services:
   linkding:
     <<: *bounded
-    image: utilibre-linkding:certifi-20261021
+    image: utilibre-linkding:brotli-security-20261028
     user: '33:33'
     cpus: 1.0
     mem_limit: 512m
@@ -47,7 +47,7 @@ services:
       - ./linkding/custom.py:/etc/linkding/bookmarks/settings/custom.py:ro
   gateway:
     <<: *bounded
-    image: utilibre-nginx:1.30.6-security-20261022
+    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.25

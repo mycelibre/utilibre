@@ -3,6 +3,7 @@ import gzip
 import http.server
 import ssl
 import threading
+from pathlib import Path
 
 class Handler(http.server.BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
@@ -21,6 +22,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
             if self.path == "/gzip":
                 body = gzip.compress(body)
                 self.send_header("Content-Encoding", "gzip")
+            if self.path in ("/brotli", "/bad-brotli"):
+                body = Path("/fixture/" + ("body.br" if self.path == "/brotli" else "invalid.br")).read_bytes()
+                self.send_header("Content-Encoding", "br")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)

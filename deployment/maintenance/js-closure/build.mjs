@@ -20,7 +20,8 @@ for(const key of selected){
  // Some immutable application files are owned by the runtime UID with mode
  // 0600. Read their hashes in this networkless, read-only, no-volume inspector;
  // never grant this capability to production or a dependency test container.
- const node=(id,code,args=[])=>docker(['run','--rm','-i','--user','0','--network','none','--read-only','--cpus','2','--memory','2g','--memory-swap','2g','--pids-limit','128','--log-driver','none','--cap-drop','ALL','--cap-add','DAC_OVERRIDE','--security-opt','no-new-privileges','--entrypoint','node',id,'-',...args],{input:code});
+ assert(!s.runtime||['node','bun'].includes(s.runtime),'Unsupported inspector runtime');
+ const node=(id,code,args=[])=>docker(['run','--rm','-i','--user','0','--network','none','--read-only','--cpus','2','--memory','2g','--memory-swap','2g','--pids-limit','128','--log-driver','none','--cap-drop','ALL','--cap-add','DAC_OVERRIDE','--security-opt','no-new-privileges','--entrypoint',s.runtime||'node',id,...(s.runtime==='bun'?['run','-']:['-']),...args],{input:code});
  try{
   assert(free()>8.3*1024**3,'Recovery floor');
   assert.equal(docker(['inspect','--format','{{.Image}}',s.container]).trim(),s.base,'Live base changed');
@@ -31,10 +32,12 @@ for(const key of selected){
   // which no longer ship old lib/ files. No retained node_modules can be discarded.
   for(const target of targets){assert(!Object.keys(before).some(p=>p.startsWith(target+'/node_modules/')),'Unexpected nested dependency');recipe+='RUN rm -r '+JSON.stringify(target)+'\n';}
   for(const [name,paths] of Object.entries(s.paths)){
-   const pin=packages[name],response=await fetch('https://registry.npmjs.org/'+encodeURIComponent(name)+'/'+pin.version);assert(response.ok);const meta=await response.json();assert.equal(meta.dist.integrity,pin.integrity);assert.equal(meta.name,name);assert.equal(meta.version,pin.version);
+   const pin=packages[name],packageName=pin.name||name;
+   assert(/^(?:@[a-z0-9._-]+\/)?[a-z0-9._-]+$/.test(packageName),'Invalid package identity');
+   const response=await fetch('https://registry.npmjs.org/'+encodeURIComponent(packageName)+'/'+pin.version);assert(response.ok);const meta=await response.json();assert.equal(meta.dist.integrity,pin.integrity);assert.equal(meta.name,packageName);assert.equal(meta.version,pin.version);
    // DOMPurify's only dependency is a TypeScript declaration package, not
    // runtime code. This finite exception must not authorize new transitives.
-   const expectedDependencies=name==='dompurify'&&pin.version==='3.4.17'?{'@types/trusted-types':'^2.0.7'}:{};
+   const expectedDependencies=packageName==='dompurify'&&pin.version==='3.4.17'?{'@types/trusted-types':'^2.0.7'}:{};
    assert.deepEqual(meta.dependencies||{},expectedDependencies);assert.equal(new URL(meta.dist.tarball).hostname,'registry.npmjs.org');
    const response2=await fetch(meta.dist.tarball);assert(response2.ok);const bytes=Buffer.from(await response2.arrayBuffer());assert(bytes.length<4*1024**2);assert.equal('sha512-'+createHash('sha512').update(bytes).digest('base64'),pin.integrity);
    const i=receipts.length,archive=scratch+'/'+i+'.tgz',dest=scratch+'/pkg'+i;fs.mkdirSync(dest,{mode:0o755});fs.writeFileSync(archive,bytes);

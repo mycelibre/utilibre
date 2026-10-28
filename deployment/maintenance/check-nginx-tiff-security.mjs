@@ -8,18 +8,21 @@ import {createHash} from 'node:crypto';
 const exec=promisify(execFile),root='/home/ubuntu/freetools';
 import {nginxPackages,nginxPackageNames} from './security-20261022/nginx-packages.mjs';
 const versionRefresh=process.argv.includes('--nginx-1306');
-const refresh=versionRefresh||process.argv.includes('--library-refresh');
-assert(!(versionRefresh&&process.argv.includes('--library-refresh')));
-const old=versionRefresh?'sha256:088c9c6d445bec0ca14f15b5ee92a03cea3142d55bec4535df9e750ab2f1f48c':refresh?'sha256:b374bb83a3bf4dbc64b4ed35013dc4276afbb5c601acce931ac989794548c68b':'sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3';
-const candidate=versionRefresh?'utilibre-nginx:1.30.6-security-20261022':refresh?'utilibre-nginx:1.30.5-alpine-security-20261021':'utilibre-nginx:1.30.5-alpine-tiff-security-20261011';
-const directory='/var/lib/utilibre-maintenance/'+(versionRefresh?'security-20261022/nginx':refresh?'nginx-libraries-20261021':'nginx-tiff-20261011');
+const curlBrotli=process.argv.includes('--curl-brotli');
+const refresh=curlBrotli||versionRefresh||process.argv.includes('--library-refresh');
+assert([curlBrotli,versionRefresh,process.argv.includes('--library-refresh')].filter(Boolean).length<=1);
+const libraryInputs=curlBrotli?JSON.parse(await readFile(new URL('./security-20261028/nginx-inputs.json',import.meta.url),'utf8')):null;
+if(libraryInputs){assert.equal(libraryInputs.version,1);assert.equal(libraryInputs.rows.length,68);}
+const old=curlBrotli?libraryInputs.rows.find(r=>r.group==='gateways').oldImage:versionRefresh?'sha256:088c9c6d445bec0ca14f15b5ee92a03cea3142d55bec4535df9e750ab2f1f48c':refresh?'sha256:b374bb83a3bf4dbc64b4ed35013dc4276afbb5c601acce931ac989794548c68b':'sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3';
+const candidate=curlBrotli?'utilibre-nginx:1.30.6-curl823-brotli121-20261028':versionRefresh?'utilibre-nginx:1.30.6-security-20261022':refresh?'utilibre-nginx:1.30.5-alpine-security-20261021':'utilibre-nginx:1.30.5-alpine-tiff-security-20261011';
+const directory='/var/lib/utilibre-maintenance/'+(curlBrotli?'security-20261028/nginx':versionRefresh?'security-20261022/nginx':refresh?'nginx-libraries-20261021':'nginx-tiff-20261011');
 const artifactCount=refresh?27:26;
-const dockerfile='deployment/maintenance/Dockerfile.nginx-'+(versionRefresh?'1306':refresh?'expat-x11':'tiff')+'-security';
+const dockerfile='deployment/maintenance/Dockerfile.nginx-'+(curlBrotli?'curl-brotli':versionRefresh?'1306':refresh?'expat-x11':'tiff')+'-security';
 const artifactsOnly=process.argv[2]==='stage-artifacts';
 const artifacts=artifactsOnly||process.argv.includes('--artifacts');
 const verifyOnly=process.argv.includes('--verify-only');
 assert(['stage','stage-artifacts'].includes(process.argv[2]),'Only staging is implemented; no deployment');
-assert(process.argv.slice(3).every(x=>['--artifacts','--verify-only','--library-refresh','--nginx-1306'].includes(x)),'Unexpected option');
+assert(process.argv.slice(3).every(x=>['--artifacts','--verify-only','--library-refresh','--nginx-1306','--curl-brotli'].includes(x)),'Unexpected option');
 assert(!verifyOnly||artifactsOnly,'Verify-only is limited to prepared artifacts');
 process.umask(0o077);await mkdir(directory,{recursive:true,mode:0o700});
 async function docker(args,timeout=120000){
@@ -30,7 +33,7 @@ const sha=x=>createHash('sha256').update(x).digest('hex');
 const context=refresh?directory+'/build-context':'deployment/maintenance';
 if(refresh){
  await mkdir(context,{recursive:true,mode:0o700});
- for(const [name,hash]of versionRefresh?nginxPackages:[['libexpat-2.9.0-r0.apk','32b127f31e0a919110a18a7f0bb3780d8fb66ba4d8d61b2d301d633f0e319d0e'],['libx11-1.8.14-r0.apk','016efc189c6d566061ffe206ed0780e32686c1a8c832a3917d35d2c66d61a40f']]){
+ for(const [name,hash]of curlBrotli?libraryInputs.packages.map(p=>[p.file,p.sha256]):versionRefresh?nginxPackages:[['libexpat-2.9.0-r0.apk','32b127f31e0a919110a18a7f0bb3780d8fb66ba4d8d61b2d301d633f0e319d0e'],['libx11-1.8.14-r0.apk','016efc189c6d566061ffe206ed0780e32686c1a8c832a3917d35d2c66d61a40f']]){
   let data;try{data=await readFile(context+'/'+name);}catch(e){assert.equal(e.code,'ENOENT');const r=await fetch((versionRefresh?'https://nginx.org/packages/alpine/v3.24/main/x86_64/':'https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/')+name,{redirect:'error',signal:AbortSignal.timeout(30000)});assert(r.ok);data=Buffer.from(await r.arrayBuffer());}
   assert.equal(sha(data),hash);await writeFile(context+'/'+name,data,{mode:0o644});
  }
@@ -39,7 +42,7 @@ const ids=(await docker(['ps','-q'])).trim().split(/\s+/).filter(Boolean);
 const live=JSON.parse(await docker(['inspect',...ids]));
 const baseRows=live.filter(x=>x.Name.startsWith('/utilibre-')&&x.Image===old);
 if(!artifactsOnly)assert.equal(baseRows.length,41,'Review changed shared-runtime scope');
-const report={date:new Date().toISOString(),status:'running',deployed:false,packages:versionRefresh?Object.fromEntries(nginxPackages):refresh?{libexpat:'2.9.0-r0',libx11:'1.8.14-r0'}:{tiff:'4.7.2-r0',zlib:'1.3.2-r1'},rows:[],routes:[]};
+const report={date:new Date().toISOString(),status:'running',deployed:false,packages:curlBrotli?Object.fromEntries(libraryInputs.packages.map(p=>[p.file,p.sha256])):versionRefresh?Object.fromEntries(nginxPackages):refresh?{libexpat:'2.9.0-r0',libx11:'1.8.14-r0'}:{tiff:'4.7.2-r0',zlib:'1.3.2-r1'},rows:[],routes:[]};
 const reportFile=directory+(artifactsOnly?'/artifacts-stage.json':'/stage.json');
 const prepared=verifyOnly?JSON.parse(await readFile(reportFile,'utf8')):null;
 const save=()=>writeFile(reportFile,JSON.stringify(report,null,2)+'\n',{mode:0o600});
@@ -54,7 +57,8 @@ async function stageConfig(x,ref,assetRoot){
   assert.deepEqual(after.Config,before.Config,'Image runtime configuration changed');
   const inventory=async image=>new Map((await docker(['run','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--memory','96m','--cpus','.5','--log-driver','none','--entrypoint','apk',image,'list','--installed'])).trim().split('\n').map(l=>[l.split(' ')[0].replace(/-[0-9].*$/,''),l]));
   const a=await inventory(x.Image),b=await inventory(ref);assert.deepEqual([...a.keys()].sort(),[...b.keys()].sort(),'Package set changed');
-  for(const [name,line]of a)if(!(versionRefresh?nginxPackageNames:['libexpat','libx11']).includes(name))assert.equal(b.get(name),line,'Unrelated package changed: '+name);
+  if(curlBrotli)await docker(['run','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--memory','96m','--cpus','.5','--log-driver','none','--entrypoint','apk',ref,'info','--exists','curl=8.23.0-r0','libcurl=8.23.0-r0','brotli-libs=1.2.1-r0']);
+  for(const [name,line]of a)if(!(curlBrotli?['curl','libcurl','brotli-libs']:versionRefresh?nginxPackageNames:['libexpat','libx11']).includes(name))assert.equal(b.get(name),line,'Unrelated package changed: '+name);
  }
  const row={name:x.Name.slice(1),oldRef:x.Config.Image,oldImage:x.Image,newRef:ref,newImage:await imageId(ref),project:labels['com.docker.compose.project'],service:labels['com.docker.compose.service'],cwd:labels['com.docker.compose.project.working_dir'],files:labels['com.docker.compose.project.config_files'].split(','),nativeConfiguration:'pending'};
  assert(row.files.every(p=>p.startsWith(root+'/deployment/')));
@@ -72,18 +76,18 @@ if(!artifactsOnly){
  const space=await statfs(directory);assert(space.bavail*space.bsize>=8*1024**3,'Preserve 8 GiB recovery floor');
  await docker(['build','--network','none','--pull=false','-f',dockerfile,'-t',candidate,context],180000);
  report.sharedImage=await imageId(candidate);
- for(const x of baseRows)await stageConfig(x,candidate);
+ for(const x of baseRows){if(curlBrotli){const expected=libraryInputs.rows.find(r=>r.name===x.Name.slice(1)&&r.group==='gateways');assert(expected&&expected.oldImage===x.Image&&expected.oldRef===x.Config.Image,'Shared input drift');}await stageConfig(x,candidate);}
 }
 if(artifacts){
  const paths=refresh?['reviewed-refresh']:['static-runtime','extra-runtime'],seen=new Map();
  for(const group of paths){
   const prior=versionRefresh?JSON.parse(await readFile('/var/lib/utilibre-maintenance/nginx-libraries-20261021/artifacts-release.json','utf8')):null;
   if(prior)assert.equal(prior.status,'passed');
-  const history=versionRefresh?{rows:prior.rows.map(r=>({...r,staticRoot:r.assetRoot}))}:refresh?{rows:[...JSON.parse(await readFile(new URL('./nginx-artifacts-20261011.json',import.meta.url),'utf8')).rows.map(r=>({name:r.name,newImage:r.candidateImage,newRef:r.candidateRef,staticRoot:r.assetRoot})),{name:'utilibre-expanded-jupyterlite-1',newImage:'sha256:e255a33dd3ae47833eada017dad2adb9dfa8fd6761962aacf31a59cda5202ed4',newRef:'utilibre-jupyterlite:0.8.5-browser-security-20261011-p2',staticRoot:'/usr/share/nginx/html'}]}:JSON.parse(await readFile(`/var/lib/utilibre-maintenance/${group}-20261011/stage.json`,'utf8'));
+  const history=curlBrotli?{rows:libraryInputs.rows.filter(r=>r.group==='artifacts').map(r=>({name:r.name,newImage:r.oldImage,newRef:r.oldRef,staticRoot:r.assetRoot}))}:versionRefresh?{rows:prior.rows.map(r=>({...r,staticRoot:r.assetRoot}))}:refresh?{rows:[...JSON.parse(await readFile(new URL('./nginx-artifacts-20261011.json',import.meta.url),'utf8')).rows.map(r=>({name:r.name,newImage:r.candidateImage,newRef:r.candidateRef,staticRoot:r.assetRoot})),{name:'utilibre-expanded-jupyterlite-1',newImage:'sha256:e255a33dd3ae47833eada017dad2adb9dfa8fd6761962aacf31a59cda5202ed4',newRef:'utilibre-jupyterlite:0.8.5-browser-security-20261011-p2',staticRoot:'/usr/share/nginx/html'}]}:JSON.parse(await readFile(`/var/lib/utilibre-maintenance/${group}-20261011/stage.json`,'utf8'));
   assert.equal(history.rows.length,refresh?27:group==='static-runtime'?18:8,'Changed artifact scope');
   for(const previous of history.rows){
    const x=live.find(x=>x.Name==='/'+previous.name);assert(x,'Missing exact artifact');assert.equal(x.Image,previous.newImage,'Artifact changed since reviewed release');
-   const ref=previous.newRef+(versionRefresh?'-nginx1306':refresh?'-libs20261021':'-tiff472');
+   const ref=previous.newRef+(curlBrotli?'-cb20261028':versionRefresh?'-nginx1306':refresh?'-libs20261021':'-tiff472');
    if(!seen.has(ref)){
     const space=await statfs(directory);assert(space.bavail*space.bsize>8*1024**3,'Preserve 8 GiB recovery floor');
     assert.equal(await imageId(previous.newRef),x.Image,'Base tag drift');

@@ -1,0 +1,10 @@
+ARG BASE=sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7
+FROM ${BASE}
+ARG RUNTIME_USER=101
+USER root
+COPY *.apk /tmp/utilibre-libraries/
+RUN test "$(cat /etc/alpine-release)" = 3.24.2 \
+ && apk add --no-network /tmp/utilibre-libraries/*.apk \
+ && apk info --exists curl=8.23.0-r0 libcurl=8.23.0-r0 brotli-libs=1.2.1-r0 \
+ && rm /tmp/utilibre-libraries/*.apk && rmdir /tmp/utilibre-libraries
+USER ${RUNTIME_USER}

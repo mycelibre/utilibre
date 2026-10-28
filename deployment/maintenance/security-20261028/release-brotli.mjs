@@ -1,0 +1,67 @@
+// Finite package-only deployment through existing transactional release gates.
+import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
+import {canonical} from '../go-final/release.mjs';
+import {replaceImagePins,namespaceDependents,releaseGroup,existingComposeArgs,checkExistingGroup,recreateExistingGroup,existingGroupStatus} from '../language-final/release.mjs';
+process.umask(0o077);
+const root='/var/lib/utilibre-maintenance/security-20261028',alpine=process.argv.includes('--alpine'),undici=process.argv.includes('--undici'),profile=alpine?'alpine':undici?'undici':'brotli',specs=JSON.parse(fs.readFileSync(new URL('./'+profile+'-inputs.json',import.meta.url))).rows.flatMap(s=>s.releaseGroups?s.releaseGroups.map(g=>({...s,...g,evidenceKey:s.key})):[s]);
+const [mode,...keys]=process.argv.slice(2).filter(k=>!['--alpine','--undici'].includes(k));assert(['prepare','apply','retry'].includes(mode));assert(keys.length&&new Set(keys).size===keys.length&&keys.every(k=>specs.some(s=>s.key===k)));
+const read=f=>JSON.parse(fs.readFileSync(f)),digest=b=>createHash('sha256').update(b).digest('hex');
+const docker=(...a)=>{try{return cp.execFileSync('docker',a,{encoding:'utf8',timeout:180000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe']}).trim();}catch(e){fs.writeFileSync(root+'/brotli-command-error-'+Date.now()+'.log',String(e.stderr||e.message));throw Error('Bounded Docker operation failed; private diagnostics retained');}};
+const format='{"Id":{{json .Id}},"Name":{{json .Name}},"Image":{{json .Image}},"Config":{"Labels":{{json .Config.Labels}},"Healthcheck":{{json (index .Config "Healthcheck")}}},"State":{"Running":{{json .State.Running}},"StartedAt":{{json .State.StartedAt}},"Health":{{json (index .State "Health")}}},"RestartCount":{{json .RestartCount}},"HostConfig":{"NetworkMode":{{json .HostConfig.NetworkMode}}}}';
+const inspect=n=>JSON.parse(docker('inspect','--format',format,n)),image=n=>docker('image','inspect','--format','{{.Id}}',n);
+const config=g=>JSON.parse(docker(...existingComposeArgs(g),'config','--format','json')).services;
+const hash=s=>{const {image,...rest}=s;return digest(JSON.stringify(canonical(rest)));};
+const file=root+'/'+profile+'/release.json',report=fs.existsSync(file)?read(file):{date:new Date().toISOString(),status:'partial',groups:[]};
+const save=()=>{report.updatedAt=new Date().toISOString();report.status=report.groups.length===specs.length&&report.groups.every(g=>g.status==='passed')?'passed':'partial';fs.writeFileSync(file,JSON.stringify(report,null,2)+'\n');};
+// Existing configured public homes only: no search terms, accounts or user data.
+const urls={wishlist:'https://wishlist.utilibre.org/',biblioreads:'https://biblioreads.utilibre.org/',cryptpad:'https://pad.utilibre.org/',spliit:'https://expenses.utilibre.org/',projects:'https://projects.utilibre.org/',gathio:'https://events.utilibre.org/',candlr:'https://candlr.utilibre.org/',bookplate:'https://bookplate.utilibre.org/','grist-undici':'https://grist.utilibre.org/',wbo:'https://collab.utilibre.org/','newsletters-web':'https://newsletters.utilibre.org/',resume:'https://cv.utilibre.org/',actual:'https://budget.utilibre.org/',linkding:'https://bookmarks.utilibre.org/',simplelogin:'https://simplelogin.utilibre.org/',authentik:'https://auth.utilibre.org/',freshrss:'https://rss.utilibre.org/',kuma:'https://status.utilibre.org/',liberaforms:'https://forms.utilibre.org/',priviblur:'https://tumblr.utilibre.org/',rallly:'https://poll.utilibre.org/',grist:'https://grist.utilibre.org/',penpot:'https://design.utilibre.org/',breezewiki:'https://wiki.utilibre.org/',kitchenowl:'https://kitchen.utilibre.org/',rssbridge:'https://bridge.utilibre.org/','gathio-postgres':'https://events.utilibre.org/',privatebin:'https://paste.utilibre.org/',wallabag:'https://wallabag.utilibre.org/',pairdrop:'https://drop.utilibre.org/',addy:'https://aliases.utilibre.org/',fourget:'https://4get.utilibre.org/',kittygram:'https://gram.utilibre.org/',degoog:'https://degoog.utilibre.org/',binternet:'https://binternet.utilibre.org/',translite:'https://translate.utilibre.org/',pollaris:'https://pollaris.utilibre.org/'};
+async function publicStatus(key){if(!urls[key])return null;const r=await fetch(urls[key],{redirect:'manual',signal:AbortSignal.timeout(10000)});await r.body?.cancel();return r.status;}
+async function nativeSimpleLogin(){const r=await fetch('http://127.0.0.1:3212/auth/login',{redirect:'manual',signal:AbortSignal.timeout(5000)});await r.body?.cancel();assert.equal(r.status,200);}
+async function publicReady(g){
+ // A running S6/Laravel container is not yet HTTP-ready. Bounded readiness
+ // avoids declaring failure at four seconds and rolling back a healthy boot.
+ for(let attempt=0;attempt<13;attempt++){
+  try{assert.equal(await publicStatus(g.key),g.publicBefore);if(g.key==='simplelogin')await nativeSimpleLogin();return;}
+  catch{if(attempt===12)throw Error(g.key+': public readiness failed within one minute');await new Promise(r=>setTimeout(r,5000));}
+ }
+}
+function proof(key){const s=specs.find(s=>s.key===key),dir=root+'/'+profile+'/'+(s.evidenceKey||key),b=read(dir+'/build.json'),scan=read(dir+'/scan-gate.json');
+ assert(b.passed&&b.configurationUnchanged);
+ if(undici){
+  assert(b.unchangedOtherAppFiles>0&&b.changedFiles>0);const paths=Object.keys(s.before);
+  for(const f of ['native','encoding']){const n=read(dir+'/'+f+'.json');assert(n.passed&&n.imageId===b.imageId&&n.rows.length===paths.length*2);for(const path of paths){const old=n.rows.find(r=>r.imageId===s.base&&r.path===path),fixed=n.rows.find(r=>r.imageId===b.imageId&&r.path===path);assert(old&&fixed);if(f==='native')assert(old.normalPassed&&fixed.normalPassed&&!old.customTlsCallbackCalled&&fixed.customTlsCallbackCalled&&fixed.customTlsPinRejected);else assert(old.regressionReproduced&&old.exitCode!==0&&fixed.passed&&fixed.exitCode===0);}}
+  if(['candlr','degoog'].includes(key)){const a=read(dir+'/app.json');assert(a.passed&&a.imageId===b.imageId&&a.applicationParity.length===2);}
+ }else assert(b.unrelatedPackagesUnchanged&&(b.nativeRows.length===2||(alpine&&!s.packages['brotli-libs']))&&b.nativeRows.every(r=>r.passed));assert.equal(b.base,s.base);assert.equal(b.candidate,s.candidate);assert.equal(image(s.candidate),b.imageId);if(s.oldRef)assert.equal(image(s.oldRef),s.base);
+ assert(scan.passed&&scan.targetedFindingRemoved&&scan.newHighCritical===0);assert.equal(scan.imageId,b.imageId);assert.equal(scan.base,b.base);assert(Date.now()-Date.parse(scan.advisoryUpdatedAt)<48*3600000);assert(Date.now()-Date.parse(b.date)<86400000&&Date.now()-Date.parse(scan.date)<86400000);
+ if(alpine){const c=read(dir+'/consumer.json');assert(c.passed&&c.imageId===b.imageId&&c.rows.length===2&&c.rows.every(r=>r.passed));if(key==='privatebin')assert(c.privatebinUploads.passed&&c.privatebinUploads.imageId===b.imageId);}
+ if(key==='rssbridge'){const c=read(dir+'/consumer.json');assert(c.passed&&c.imageId===b.imageId&&c.rows.length===2&&c.rows.every(r=>r.fictionalFeed&&r.http2Negotiated));}
+ return {s,b,scan};}
+function pins(g,version){const pairs=g.rows.filter(r=>r.oldRef!==r.newRef).map(r=>({from:r[version==='new'?'oldRef':'newRef'],to:r[version+'Ref']}));const edits=g.files.map(f=>({f,...replaceImagePins(fs.readFileSync(f,'utf8'),pairs)}));assert(edits.reduce((n,e)=>n+e.replaced,0)>=1,'No exact image scalar');for(const e of edits)if(e.replaced)fs.writeFileSync(e.f,e.text);}
+if(mode==='prepare')for(const key of keys){
+ assert(!report.groups.some(g=>g.key===key),'Preserve existing receipt');const {s,b,scan}=proof(key),first=inspect(s.containers[0]),l=first.Config.Labels;
+ const g={key,project:l['com.docker.compose.project'],cwd:l['com.docker.compose.project.working_dir'],files:l['com.docker.compose.project.config_files'].split(','),rows:[],status:'prepared',preparedAt:new Date().toISOString(),evidence:root+'/'+profile+'/'+(s.evidenceKey||key),remainingHigh:scan.remainingHigh,remainingCritical:scan.remainingCritical};
+ const all=docker('inspect','--format',format,...docker('ps','-q').split('\n')).split('\n').map(JSON.parse),dependent=namespaceDependents(all,new Set(s.containers)),cfg=config(g);
+ for(const name of [...s.containers,...dependent.map(d=>d.container.Name.slice(1))]){
+  const x=all.find(x=>x.Name==='/'+name),labels=x.Config.Labels;assert.equal(labels['com.docker.compose.project'],g.project,'Unreviewed cross-project companion');const service=labels['com.docker.compose.service'],c=cfg[service],selected=s.containers.includes(name);assert.equal(image(c.image),x.Image);if(selected)assert.equal(x.Image,s.base);
+  const parent=all.find(p=>'container:'+p.Id===x.HostConfig.NetworkMode)?.Name.slice(1);assert(Date.now()-Date.parse(x.State.StartedAt)>300000);
+  g.rows.push({name,service,oldContainerId:x.Id,oldRestartCount:x.RestartCount,oldRef:c.image,oldImage:x.Image,newRef:selected?s.candidate:c.image,newImage:selected?b.imageId:x.Image,configHash:hash(c),...(parent?{namespaceParent:parent}:{})});
+ }
+ g.before=await existingGroupStatus(g);await checkExistingGroup(g,'old');g.publicBefore=await publicStatus(key);
+ if(key==='simplelogin'&&g.publicBefore===502){await nativeSimpleLogin();g.publicPreExistingFailure='Existing public 502, also documented in certifi-20261021 rollout. Native login gateway returns 200; library repair does not repair the separate edge route.';}
+ else assert(g.publicBefore===null||g.publicBefore>=200&&g.publicBefore<500,'Public baseline unavailable; investigate first');
+ report.groups.push(g);save();console.log(key+': candidate and baseline verified; prepared without live changes');
+}
+if(mode==='retry')for(const key of keys){
+ proof(key);const g=report.groups.find(g=>g.key===key);assert(g&&g.status==='failed');
+ await checkExistingGroup(g,'old');await publicReady(g);const c=config(g);
+ for(const r of g.rows){assert.equal(c[r.service].image,r.oldRef);assert.equal(hash(c[r.service]),r.configHash);}
+ g.attempts=[...(g.attempts||[]),{status:g.status,rollback:g.rollback,verifiedRollbackAt:new Date().toISOString(),reason:'Old image, unchanged configuration and public route reverified after startup; bounded HTTP readiness now required.'}];
+ g.status='prepared';g.preparedAt=new Date().toISOString();delete g.rollback;save();console.log(key+': rollback verified, retry prepared without changing production');
+}
+if(mode==='apply')for(const key of keys){
+ const {b}=proof(key),g=report.groups.find(g=>g.key===key);assert(g&&Date.now()-Date.parse(g.preparedAt)<86400000);for(const r of g.rows.filter(r=>r.oldImage!==r.newImage))assert.equal(r.newImage,b.imageId);
+ if(g.status==='passed'){await checkExistingGroup(g,'new');continue;}assert.equal(g.status,'prepared');assert(fs.statfsSync(root).bavail*fs.statfsSync(root).bsize>=8*1024**3);
+ const validate=version=>{const c=config(g);for(const r of g.rows){assert.equal(c[r.service].image,r[version+'Ref']);assert.equal(hash(c[r.service]),r.configHash);assert.equal(image(r.newRef),r.newImage);assert.equal(image(r.oldRef),r.oldImage);}};
+ let reverting=false;await releaseGroup(g,{preflight:async()=>{validate('old');await checkExistingGroup(g,'old');},save,recreate:async()=>{if(!reverting)pins(g,'new');validate(reverting?'old':'new');await recreateExistingGroup(g);},gate:async version=>{await checkExistingGroup(g,version);await publicReady(g);},rollbackPins:()=>{reverting=true;pins(g,'old');validate('old');}});
+ g.completedAt=new Date().toISOString();save();console.log(key+': deployed; exact artifact, health, namespace and route gates passed');
+}

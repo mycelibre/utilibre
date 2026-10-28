@@ -1,0 +1,475 @@
+{
+  "version": 1,
+  "rows": [
+    {
+      "key": "wishlist",
+      "container": "utilibre-wishlist-app-1",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "base": "sha256:073346a6ce6dfe436d041106c72809f43f8bb0dbbe02438e2f9e69d652da4f54",
+      "candidate": "utilibre-wishlist:undici-security-20261028",
+      "roots": [
+        "/usr",
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici7": [
+          "/usr/src/app/node_modules/.pnpm/undici@7.30.0/node_modules/undici"
+        ],
+        "undici8": [
+          "/usr/src/app/node_modules/.pnpm/undici@8.11.2/node_modules/undici"
+        ],
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici",
+          "/usr/local/lib/node_modules/pnpm/dist/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/usr/src/app/node_modules/.pnpm/undici@7.30.0/node_modules/undici": "7.30.0",
+        "/usr/src/app/node_modules/.pnpm/undici@8.11.2/node_modules/undici": "8.11.2",
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1",
+        "/usr/local/lib/node_modules/pnpm/dist/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "tracker",
+      "container": "utilibre-chitchatter-tracker-1",
+      "containers": [
+        "utilibre-chitchatter-tracker-1"
+      ],
+      "base": "sha256:1c8690b1e3d5ce18a19cab1f03218c63db11d21a977fcdbfce21c0ec1ab633f8",
+      "candidate": "utilibre-tracker:undici-security-20261028",
+      "roots": [
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "biblioreads",
+      "container": "utilibre-biblioreads-biblioreads-1",
+      "containers": [
+        "utilibre-biblioreads-biblioreads-1"
+      ],
+      "base": "sha256:2079938c6e33835dbdaa310cbc4185a1ca3be249b34b2d1cdd85ea11c9c11552",
+      "candidate": "utilibre-biblioreads:undici-security-20261028",
+      "roots": [
+        "/app",
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici7": [
+          "/app/node_modules/cheerio/node_modules/undici"
+        ],
+        "undici8": [
+          "/app/node_modules/undici"
+        ],
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/app/node_modules/cheerio/node_modules/undici": "7.30.0",
+        "/app/node_modules/undici": "8.11.2",
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "kuma",
+      "container": "utilibre-community-uptime-kuma-1",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "base": "sha256:a3d35d66aa801c933a608d8f62570d26f98fafe4981b7368bddbc91a634f9b21",
+      "candidate": "utilibre-kuma:undici-security-20261028",
+      "roots": [
+        "/app",
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/app/node_modules/cheerio/node_modules/undici",
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/app/node_modules/cheerio/node_modules/undici": "6.28.1",
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "rsshub",
+      "container": "utilibre-services-rsshub-1",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "base": "sha256:154ee9ba336105607b98230c4ff197d4b6a25a031751f93de424ac9ae57d890e",
+      "candidate": "utilibre-rsshub:undici-security-20261028",
+      "roots": [
+        "/app",
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici7": [
+          "/app/node_modules/.pnpm/undici@7.30.0/node_modules/undici"
+        ],
+        "undici8": [
+          "/app/node_modules/.pnpm/undici@8.11.2/node_modules/undici"
+        ],
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/app/node_modules/.pnpm/undici@7.30.0/node_modules/undici": "7.30.0",
+        "/app/node_modules/.pnpm/undici@8.11.2/node_modules/undici": "8.11.2",
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "cryptpad",
+      "container": "utilibre-pack-cryptpad-cryptpad-1",
+      "containers": [
+        "utilibre-pack-cryptpad-cryptpad-1"
+      ],
+      "base": "sha256:626c21b668518aacf80178c18b2ba1b9c1635bd08b89d2d7f768a69164ec51f3",
+      "candidate": "utilibre-cryptpad:undici-security-20261028",
+      "roots": [
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "spliit",
+      "container": "utilibre-spliit-app-1",
+      "containers": [
+        "utilibre-spliit-app-1"
+      ],
+      "base": "sha256:63d19ae9b559a2639ecbb08900f5f82f128d8c86d54b3a582acf5aca9899e646",
+      "candidate": "utilibre-spliit:undici-security-20261028",
+      "roots": [
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "rallly",
+      "container": "utilibre-community-rallly-1",
+      "containers": [
+        "utilibre-community-rallly-1"
+      ],
+      "base": "sha256:311c9f9aee5d8c5e9f49bcb8e608d90656f6323b8257fd4affa4dcf6784376e5",
+      "candidate": "utilibre-rallly:undici-security-20261028",
+      "roots": [
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "projects",
+      "container": "utilibre-projects-app-1",
+      "containers": [
+        "utilibre-projects-app-1"
+      ],
+      "base": "sha256:71aa9f732e1805201167eb61ddbbc9e170c071ab63d731ce91d29b3d17d2366b",
+      "candidate": "utilibre-projects:undici-security-20261028",
+      "roots": [
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "gathio",
+      "container": "utilibre-gathio-gathio-1",
+      "containers": [
+        "utilibre-gathio-gathio-1"
+      ],
+      "base": "sha256:779ab3661bf982c51768986e34fc53b6e257b0f1850e3d7d81aa0cec1095933b",
+      "candidate": "utilibre-gathio:undici-security-20261028",
+      "roots": [
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "candlr",
+      "container": "utilibre-records-candlr-1",
+      "containers": [
+        "utilibre-records-candlr-1"
+      ],
+      "base": "sha256:85e527579a893a9d6fb0e0c0e028c0259bf9b0e8fe79e2779ab832d492be2efd",
+      "candidate": "utilibre-candlr:undici-security-20261028",
+      "roots": [
+        "/app"
+      ],
+      "paths": {
+        "undici8": [
+          "/app/frontend/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/app/frontend/node_modules/undici": "8.10.2"
+      }
+    },
+    {
+      "key": "bookplate",
+      "container": "utilibre-records-bookplate-1",
+      "containers": [
+        "utilibre-records-bookplate-1"
+      ],
+      "base": "sha256:9a9605e026f706b72df01aab68194b6b36329bbee00582617ae31b5953ad8776",
+      "candidate": "utilibre-bookplate:undici-security-20261028",
+      "roots": [
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "grist-undici",
+      "container": "utilibre-records-grist-1",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "base": "sha256:a7bdffa6b95ea7e611352082a8e5bdf73448339b48ae0ae0115ece1771cd7755",
+      "candidate": "utilibre-grist-undici:undici-security-20261028",
+      "roots": [
+        "/grist",
+        "/opt",
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/opt/utilibre-grist-reviewed-leaves/node_modules/undici",
+          "/grist/node_modules/undici",
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/opt/utilibre-grist-reviewed-leaves/node_modules/undici": "6.28.1",
+        "/grist/node_modules/undici": "6.28.1",
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "razzia-socket",
+      "container": "utilibre-razzia-socket-1",
+      "containers": [
+        "utilibre-razzia-socket-1"
+      ],
+      "base": "sha256:ac2849491742db6ff3c12a07fb6a247b679ca77ce942c0f7409a8395208ea814",
+      "candidate": "utilibre-razzia-socket:undici-security-20261028",
+      "roots": [
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "wbo",
+      "container": "utilibre-collaboration-pilot-wbo-1",
+      "containers": [
+        "utilibre-collaboration-pilot-wbo-1"
+      ],
+      "base": "sha256:ae098afe573431a7222146fbf1fda877cacd4a4432c8f21182b497e0bd5a5984",
+      "candidate": "utilibre-wbo:undici-security-20261028",
+      "roots": [
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "newsletters-web",
+      "container": "utilibre-newsletters-web-1",
+      "containers": [
+        "utilibre-newsletters-web-1"
+      ],
+      "base": "sha256:bec8f707cf3fcf5903e1bf29e7633aac843866be2d0736fe5be6cb119ab41ec4",
+      "candidate": "utilibre-newsletters-web:undici-security-20261028",
+      "roots": [
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "resume",
+      "container": "utilibre-expanded-resume-1",
+      "containers": [
+        "utilibre-expanded-resume-1"
+      ],
+      "base": "sha256:c5d7ed3ba6398d4ad5900b03a44b4c4f5e6bcc375ae091f85cc6f67644644b86",
+      "candidate": "utilibre-resume:undici-security-20261028",
+      "roots": [
+        "/app",
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/app/node_modules/.pnpm/undici@6.29.0/node_modules/undici",
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ],
+        "undici7": [
+          "/app/node_modules/.pnpm/undici@7.30.0/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/app/node_modules/.pnpm/undici@6.29.0/node_modules/undici": "6.29.0",
+        "/app/node_modules/.pnpm/undici@7.30.0/node_modules/undici": "7.30.0",
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "newsletters-smtp",
+      "container": "utilibre-newsletters-smtp-1",
+      "containers": [
+        "utilibre-newsletters-smtp-1",
+        "utilibre-newsletters-jobs-1"
+      ],
+      "base": "sha256:e6bb99a5d672fcbc93eb74a3082f59c506438c823f21f22a1d3540686b0612a5",
+      "candidate": "utilibre-newsletters-smtp:undici-security-20261028",
+      "roots": [
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "actual",
+      "container": "utilibre-expanded-actual-1",
+      "containers": [
+        "utilibre-expanded-actual-1"
+      ],
+      "base": "sha256:e8895acc05fa825555f23a8c75411b6e93850dc03cf5d4a7c566cdd7af21058b",
+      "candidate": "utilibre-actual:undici-security-20261028",
+      "roots": [
+        "/opt",
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/opt/utilibre-reviewed-leaves/node_modules/undici",
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/opt/utilibre-reviewed-leaves/node_modules/undici": "6.28.1",
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    },
+    {
+      "key": "degoog",
+      "container": "utilibre-evaluation-degoog-1",
+      "containers": [
+        "utilibre-evaluation-degoog-1"
+      ],
+      "base": "sha256:0a1eb57198b3be57971082f696360d8456a74c0cfc9c3c0270c77904b7b352cf",
+      "candidate": "utilibre-degoog:undici-security-20261028",
+      "roots": [
+        "/app"
+      ],
+      "paths": {
+        "undici7": [
+          "/app/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/app/node_modules/undici": "7.30.0"
+      },
+      "runtime": "bun"
+    },
+    {
+      "key": "dumb",
+      "container": "utilibre-additions-dumb-1",
+      "containers": [
+        "utilibre-additions-dumb-1"
+      ],
+      "base": "sha256:ed18d3a9a0c756061e28c70318cbcdcd67791f98929f04581ace6150df1eb724",
+      "candidate": "utilibre-dumb:undici-security-20261028",
+      "roots": [
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "undici6": [
+          "/usr/local/lib/node_modules/npm/node_modules/undici"
+        ]
+      },
+      "before": {
+        "/usr/local/lib/node_modules/npm/node_modules/undici": "6.28.1"
+      }
+    }
+  ]
+}

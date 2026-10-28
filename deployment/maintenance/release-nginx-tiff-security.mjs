@@ -5,16 +5,27 @@ import {promisify} from 'node:util';
 import {readFile,writeFile,statfs} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 const versionRefresh=process.argv.includes('--nginx-1306');
-const refresh=versionRefresh||process.argv.includes('--library-refresh');
-assert(!(versionRefresh&&process.argv.includes('--library-refresh')));
-assert(process.argv.slice(4).every(a=>['--library-refresh','--nginx-1306'].includes(a)));
-const exec=promisify(execFile),dir='/var/lib/utilibre-maintenance/'+(versionRefresh?'security-20261022/nginx':refresh?'nginx-libraries-20261021':'nginx-tiff-20261011');
+const curlBrotli=process.argv.includes('--curl-brotli');
+const refresh=curlBrotli||versionRefresh||process.argv.includes('--library-refresh');
+assert([curlBrotli,versionRefresh,process.argv.includes('--library-refresh')].filter(Boolean).length<=1);
+assert(process.argv.slice(4).every(a=>['--library-refresh','--nginx-1306','--curl-brotli'].includes(a)));
+const exec=promisify(execFile),dir='/var/lib/utilibre-maintenance/'+(curlBrotli?'security-20261028/nginx':versionRefresh?'security-20261022/nginx':refresh?'nginx-libraries-20261021':'nginx-tiff-20261011');
 const group=process.argv[3]||'gateways';assert(['gateways','artifacts'].includes(group));
 const receipt=dir+'/'+group+'-release.json';process.umask(0o077);
 const stage=JSON.parse(await readFile(dir+'/'+(group==='gateways'?'stage':'artifacts-stage')+'.json','utf8'));
 assert.equal(stage.status,'passed');assert.equal(stage.rows.length,group==='gateways'?41:refresh?27:26);
 if(group==='artifacts')for(const r of stage.rows){assert(['/usr/share/nginx/html','/srv/app','/app','/srv/wallabag'].includes(r.assetRoot));assert.match(r.assetSha256,/^[a-f0-9]{64}$/);}
 assert(Date.now()-Date.parse(stage.completedAt||stage.date)<86400000,'Restage stale candidates');
+if(curlBrotli){
+ const native=JSON.parse(await readFile(dir+'/native.json','utf8'));
+ assert.equal(native.passed,true,'Native curl/Brotli proof required');
+ assert(Date.now()-Date.parse(native.date)<86400000,'Repeat stale native checks');
+ const shared=JSON.parse(await readFile(dir+'/stage.json','utf8'));
+ assert.equal(native.imageId,shared.sharedImage,'Native proof is for another candidate');
+ assert.equal(native.scans.at(-1).imageId,native.imageId);
+ assert.deepEqual(native.scans.at(-1).findings,[],'Unresolved shared-runtime findings');
+ assert(native.native.length===2&&native.native.every(r=>r.passed&&r.checks.length===9));
+}
 async function docker(args,timeout=120000){try{return (await exec('docker',args,{timeout,maxBuffer:16*1024**2,env:{...process.env,APP_BIND_IP:'10.10.1.43'}})).stdout;}catch(e){await writeFile(dir+'/release-error.log',String(e.stderr||e.message),{mode:0o600});throw Error('Private diagnostic: '+dir+'/release-error.log');}}
 const inspect=async name=>JSON.parse(await docker(['inspect',name]))[0];
 const compose=r=>['compose','--profile','*','--project-directory',r.cwd,...(r.project==='utilibre-trip'?['--env-file','/opt/utilibre/trip/private/runtime.env']:r.service==='rallly-gateway'?['--env-file',r.cwd+'/.env.rallly']:[]),'-p',r.project,...r.files.flatMap(f=>['-f',f])];

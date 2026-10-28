@@ -81,7 +81,7 @@ services:
     logging: *default-logging
 
   freshrss:
-    image: utilibre-freshrss:php-security-20261022
+    image: utilibre-freshrss:brotli-security-20261028
     init: true
     restart: unless-stopped
     <<: *default-security
@@ -125,7 +125,7 @@ services:
   rsshub:
     ulimits: {core: 0}
     memswap_limit: 1536m
-    image: utilibre-rsshub:archive-tar-20261012
+    image: utilibre-rsshub:brotli-security-20261028
     init: true
     restart: unless-stopped
     read_only: true
@@ -166,7 +166,7 @@ services:
     logging: *default-logging
 
   privatebin:
-    image: utilibre-privatebin:nginx1306-security-20261022
+    image: utilibre-privatebin:libraries-security-20261028
     user: "65534:82"
     restart: unless-stopped
     read_only: true

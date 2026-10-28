@@ -66,4 +66,8 @@ export const additionalOverlayReceipts = [
   'security-20261022/redirects/release.json',
   'security-20261022/privatebin-nginx/release.json',
   'security-20261024/release.json',
+  'security-20261028/nginx/gateways-release.json',
+  'security-20261028/nginx/artifacts-release.json',
+  'security-20261028/brotli/release.json',
+  'security-20261028/alpine/release.json',
 ];

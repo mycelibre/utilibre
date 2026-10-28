@@ -63,7 +63,7 @@ services:
     command: [node, build/application.mjs, /configuration.mjs, --type, backgroundJobWorker]
     depends_on: {initialize: {condition: service_completed_successfully}}
   gateway:
-    image: utilibre-nginx:1.30.6-security-20261022
+    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028
     restart: unless-stopped
     user: '101:101'
     read_only: true

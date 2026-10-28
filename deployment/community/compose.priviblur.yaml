@@ -14,7 +14,7 @@ x-runtime: &runtime
 services:
   priviblur:
     <<: *runtime
-    image: utilibre-priviblur:archive-tar-20261012
+    image: utilibre-priviblur:brotli-security-20261028
     user: "1000:1000"
     environment:
       PRIVIBLUR_ACCESS_LOG: "false"
@@ -39,7 +39,7 @@ services:
       tumblr: {ipv4_address: 172.29.73.11}
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-security-20261022
+    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     volumes:

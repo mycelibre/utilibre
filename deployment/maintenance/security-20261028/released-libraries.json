@@ -1,0 +1,1101 @@
+{
+  "scope": "Completed NGINX, Debian/Ubuntu Brotli and Alpine curl/Brotli overlays only. Other findings remain open.",
+  "reports": [
+    {
+      "profile": "nginx/gateways",
+      "status": "passed",
+      "date": "2026-10-28T08:08:13.695Z",
+      "rows": [
+        {
+          "name": "utilibre-newsletters-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:02.443Z"
+        },
+        {
+          "name": "utilibre-creative-batch-static-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:05.505Z"
+        },
+        {
+          "name": "utilibre-records-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:07.295Z"
+        },
+        {
+          "name": "utilibre-trip-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:15.610Z"
+        },
+        {
+          "name": "utilibre-beaverhabits-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:16.819Z"
+        },
+        {
+          "name": "utilibre-donetick-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:19.114Z"
+        },
+        {
+          "name": "utilibre-projects-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:20.409Z"
+        },
+        {
+          "name": "utilibre-family-chess-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:21.677Z"
+        },
+        {
+          "name": "utilibre-addy-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:23.089Z"
+        },
+        {
+          "name": "utilibre-13ft-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:27.485Z"
+        },
+        {
+          "name": "utilibre-unfurl-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:33.412Z"
+        },
+        {
+          "name": "utilibre-chhoto-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:34.519Z"
+        },
+        {
+          "name": "utilibre-gathio-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:36.776Z"
+        },
+        {
+          "name": "utilibre-chitchatter-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:37.900Z"
+        },
+        {
+          "name": "utilibre-simplelogin-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:40.169Z"
+        },
+        {
+          "name": "utilibre-bytestash-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:42.259Z"
+        },
+        {
+          "name": "utilibre-razzia-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:43.337Z"
+        },
+        {
+          "name": "utilibre-kitchenowl-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:45.452Z"
+        },
+        {
+          "name": "utilibre-wishlist-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:46.563Z"
+        },
+        {
+          "name": "utilibre-vikunja-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:47.597Z"
+        },
+        {
+          "name": "utilibre-calendar-calino-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:48.687Z"
+        },
+        {
+          "name": "utilibre-linkding-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:49.917Z"
+        },
+        {
+          "name": "utilibre-opengist-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:51.093Z"
+        },
+        {
+          "name": "utilibre-spliit-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:52.328Z"
+        },
+        {
+          "name": "utilibre-pack-static-static-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:53.690Z"
+        },
+        {
+          "name": "utilibre-pack-forms-web-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:54.802Z"
+        },
+        {
+          "name": "utilibre-collaboration-pilot-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:57.396Z"
+        },
+        {
+          "name": "utilibre-evaluation-degoog-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:07:59.714Z"
+        },
+        {
+          "name": "utilibre-kittygram-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:00.752Z"
+        },
+        {
+          "name": "utilibre-rimgo-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:01.732Z"
+        },
+        {
+          "name": "utilibre-biblioreads-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:02.710Z"
+        },
+        {
+          "name": "utilibre-reader-evaluation-fourget-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:03.757Z"
+        },
+        {
+          "name": "utilibre-reader-evaluation-anonymousoverflow-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:04.841Z"
+        },
+        {
+          "name": "utilibre-reader-evaluation-gothub-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:05.944Z"
+        },
+        {
+          "name": "utilibre-additions-dumb-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:07.009Z"
+        },
+        {
+          "name": "utilibre-additions-fmd-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:08.042Z"
+        },
+        {
+          "name": "utilibre-additions-mezzo-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:09.089Z"
+        },
+        {
+          "name": "utilibre-priviblur-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:10.104Z"
+        },
+        {
+          "name": "utilibre-community-rallly-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:11.241Z"
+        },
+        {
+          "name": "utilibre-expanded-wiki-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:12.413Z"
+        },
+        {
+          "name": "utilibre-community-gateway-1",
+          "oldImage": "sha256:fff793400ff20e1d06cad38928aef0158a7450301dab51290517a21177c525f7",
+          "newImage": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+          "oldRef": "utilibre-nginx:1.30.6-security-20261022",
+          "newRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:13.695Z"
+        }
+      ]
+    },
+    {
+      "profile": "nginx/artifacts",
+      "status": "passed",
+      "date": "2026-10-28T08:09:29.903Z",
+      "rows": [
+        {
+          "name": "utilibre-toolbox-ittools-1",
+          "oldImage": "sha256:f8e4db9c435145561c0f7aad46c900b0bfde49b2e461f8f68a6079dd74897ab4",
+          "newImage": "sha256:8b0207cb110f7313afcde1b9c171ce6bd54e206af87d4c018efdb49026f92782",
+          "oldRef": "utilibre-ittools:2024.10.22-p2-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-ittools:2024.10.22-p2-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:53.466Z"
+        },
+        {
+          "name": "utilibre-toolbox-hatsh-1",
+          "oldImage": "sha256:603ff580e48189236b56851a45faec789987ddf787e550b4fe4466e94f59f625",
+          "newImage": "sha256:59ba2e5d2ecdcad61d514698b4509067b7ddecfff20e9c9c58f0f3ae792706a2",
+          "oldRef": "utilibre-hatsh:2.3.6-p1-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-hatsh:2.3.6-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:54.610Z"
+        },
+        {
+          "name": "utilibre-qr-offline-qr-offline-1",
+          "oldImage": "sha256:101dd03aba32f1183b6523fb5ab36bd34af133ab7d9b77159c18ea7a622c867a",
+          "newImage": "sha256:d9620e47fd6e1ad7662a763ea8817be9880a873977d2fe3e80e89b6e6a2f00be",
+          "oldRef": "utilibre-qr-offline:0fde700-p5-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-qr-offline:0fde700-p5-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:55.612Z"
+        },
+        {
+          "name": "utilibre-browser-tools-excalidraw-1",
+          "oldImage": "sha256:89484b4b8dec9e4033907330f5ee9397b46a525a475b07f1b1859176a1e81616",
+          "newImage": "sha256:d1253daa2a76f525dbce40da86acb2f7524fbb13bb7aa0c82e81823c79341eb0",
+          "oldRef": "utilibre-excalidraw:53973c3-p1-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-excalidraw:53973c3-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:57.274Z"
+        },
+        {
+          "name": "utilibre-creative-batch-glyphr-1",
+          "oldImage": "sha256:7b6b575b26e69b40d88062bfc904d3c427f733a36f47fb6155943d06e5aac157",
+          "newImage": "sha256:51038830b036da823cb797c89649036a6d6f5166ec02ff0254af23db9c67fddd",
+          "oldRef": "utilibre-glyphr:2.10.6-p1-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-glyphr:2.10.6-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:58.526Z"
+        },
+        {
+          "name": "utilibre-browser-tools-cyberchef-1",
+          "oldImage": "sha256:ddef422376a84b8c96d1c227598e20bf8211fdf8e04b48c6d4da687ec433a053",
+          "newImage": "sha256:b2a920a8626c59d0bf4feb9984258815b6e6fb5f1ed800dfdbbbc24ffbd7e4e7",
+          "oldRef": "utilibre-cyberchef:11.5.0-p1-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-cyberchef:11.5.0-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:08:59.647Z"
+        },
+        {
+          "name": "utilibre-browser-tools-zip-manager-1",
+          "oldImage": "sha256:215c17492fa36bf5c2ca10c5a7f4d26b40c1c35a258be5de7e48a772d0ac7f1f",
+          "newImage": "sha256:6d6444ba2a77a04d742f14ebfda01019a8323e2890f1fd0aa86a772a53aa93d2",
+          "oldRef": "utilibre-zip-manager:3b77a59-p1-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-zip-manager:3b77a59-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:00.734Z"
+        },
+        {
+          "name": "utilibre-toolbox-bentopdf-1",
+          "oldImage": "sha256:977889928e08d475f5c2fa9b79a19efbfc92596471fb47ed343be66828f7c9f9",
+          "newImage": "sha256:683401c77a69f0f50bdacf0097cd1a03682cf2432d167781d7957b875480a40b",
+          "oldRef": "utilibre-bentopdf:2.8.8-p4-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-bentopdf:2.8.8-p4-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:01.771Z"
+        },
+        {
+          "name": "utilibre-toolbox-miniqr-1",
+          "oldImage": "sha256:485f5d47e7f74a3e7b3db366bd044b12d71ab234f078381c3d734f4efe1dcac3",
+          "newImage": "sha256:7af9bdb60e7e4f30b6522ebb1863a1848b6e818be3105e2aa32f4e34a0aa6928",
+          "oldRef": "utilibre-miniqr:0.33.0-p1-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-miniqr:0.33.0-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:02.844Z"
+        },
+        {
+          "name": "utilibre-browser-tools-minipaint-1",
+          "oldImage": "sha256:29876e2eabb06688f24d9f70f634b2a5674d910878671a7ba68e292f540614ca",
+          "newImage": "sha256:1fc6b4e48127331b4f62f26afa4f7b5951d34785b0db631150a5c79a6b1510f6",
+          "oldRef": "utilibre-minipaint:4.14.3-p1-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-minipaint:4.14.3-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:03.956Z"
+        },
+        {
+          "name": "utilibre-browser-tools-svgedit-1",
+          "oldImage": "sha256:ee48778075bb42ee53782b97dc5d6b9a99fdbdf62fedfa1bb5e6a9605b4a5cf9",
+          "newImage": "sha256:9e65678a29627da8266cb761e471f3ce83fd5fec4c2daaca4a0dccd5211bdbe9",
+          "oldRef": "utilibre-svgedit:c44f061-p1-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-svgedit:c44f061-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:05.123Z"
+        },
+        {
+          "name": "utilibre-browser-tools-markmap-1",
+          "oldImage": "sha256:563ffb14498bf7374934fd0de1f422483a3eb9ee64f57a6b959e9452161fb217",
+          "newImage": "sha256:93f02a58e0be2b0ecb102730ce34b8752cd5ffea6b10735dbea5e16e63f41718",
+          "oldRef": "utilibre-markmap:0.18.12-dom3417-security-20261022",
+          "newRef": "utilibre-markmap:0.18.12-dom3417-security-20261022-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:06.299Z"
+        },
+        {
+          "name": "utilibre-toolbox-vert-1",
+          "oldImage": "sha256:b0412eedf7dbaf5ceab5eafbe97e214d16dde2af6fbbc77ffbe1cad8035b7f1b",
+          "newImage": "sha256:6685d5437ef93b0ef61ab417712d16f1397d2f70c0c6732a81d6b1135e23bd5b",
+          "oldRef": "utilibre-vert:c7b9f39-p1-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-vert:c7b9f39-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:07.367Z"
+        },
+        {
+          "name": "utilibre-browser-tools-rawgraphs-1",
+          "oldImage": "sha256:99780908967edaf2ac25a41e2a238dc37c78ed37da8d97a43bf5cb186dbe4f64",
+          "newImage": "sha256:08844db6c11e39a1a01368a44011441a04a4e19e162915cf4466cccbe91c6aab",
+          "oldRef": "utilibre-rawgraphs:b7b2909-p1-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-rawgraphs:b7b2909-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:08.537Z"
+        },
+        {
+          "name": "utilibre-toolbox-omnitools-1",
+          "oldImage": "sha256:2132dbb46534875686e3fa2dcb63c9e6a3c8874df263f7b6be53f166afc19bce",
+          "newImage": "sha256:ac19c995f7bdf1b63371f281d608f5d47a51b55ea5f3aefb4a4f0facd1cbd10c",
+          "oldRef": "utilibre-omnitools:0.6.0-p7-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-omnitools:0.6.0-p7-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:10.403Z"
+        },
+        {
+          "name": "utilibre-browser-tools-image-scrubber-1",
+          "oldImage": "sha256:cc61d679ac1f44a1607caabec7279a9452d3efabaa193319c053d3bf2caefb7a",
+          "newImage": "sha256:83448d441d7ae08560da535636ed6695eb26cb3facf4246585cee97075483dfe",
+          "oldRef": "utilibre-image-scrubber:390b166-p1-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-image-scrubber:390b166-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:11.575Z"
+        },
+        {
+          "name": "utilibre-browser-tools-audiomass-1",
+          "oldImage": "sha256:37bbcfe06a4452ab7b6eaae23c3b714900a96f5e77411b26e7c5125a206edd14",
+          "newImage": "sha256:bf7ee91ad2f5fd8aecfcaca8ada7d5e15c3af79db7d88cdf5855850d1d98e298",
+          "oldRef": "utilibre-audiomass:21f5ee1-p1-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-audiomass:21f5ee1-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:12.699Z"
+        },
+        {
+          "name": "utilibre-toolbox-drawio-1",
+          "oldImage": "sha256:a18692e0a90a27404b838e68103513e26319acd4911042153d4541151fca2c78",
+          "newImage": "sha256:346851199ed9d13682d24f1c629f90a081549d30662c500f156aa97c05e79a77",
+          "oldRef": "utilibre-drawio:32.0.2-p4-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-drawio:32.0.2-p4-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:13.857Z"
+        },
+        {
+          "name": "utilibre-openresume-web-1",
+          "oldImage": "sha256:73f83ec3ef3263cb0017f10b402a73bf31eeccd93dcf53819e57558ddfd9fb1b",
+          "newImage": "sha256:b7a8c8b98b3b6ea5a88d59e27062ef3d6ee99ebbeec7b65b4643ebc23197687a",
+          "oldRef": "utilibre-openresume:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-openresume:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:14.860Z"
+        },
+        {
+          "name": "utilibre-translite-gateway-1",
+          "oldImage": "sha256:14396f3fb0fb9c86e5e9e9a746a7a6632c9769c38dd02b84c5a6e1d9993ddb71",
+          "newImage": "sha256:55c72a3517d299dfd8d8d87fee15b2c2d13ec4f833fb43d62137be8613bdac3c",
+          "oldRef": "utilibre-translite-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-translite-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:15.778Z"
+        },
+        {
+          "name": "utilibre-wallabag-web-1",
+          "oldImage": "sha256:a61363229130913d619d00f9801241893561598b8e53306650e15edcb819f4b4",
+          "newImage": "sha256:8c17249e612ce27a20c2b37fc6c3ac0be03023c3ee36c447dcb594468fa2b397",
+          "oldRef": "utilibre-wallabag-web:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-wallabag-web:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:22.995Z"
+        },
+        {
+          "name": "utilibre-reader-evaluation-safetwitch-1",
+          "oldImage": "sha256:bda409e6d0c411b53286b93b11d4717f08a02c5f6c599528dbd9da57c6613e0d",
+          "newImage": "sha256:8a156bf551166862c7b7e30eb6b9c4f4266784e376153697ec8636241bef6375",
+          "oldRef": "utilibre-safetwitch:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-safetwitch:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:24.062Z"
+        },
+        {
+          "name": "utilibre-binternet-gateway-1",
+          "oldImage": "sha256:bc9b6070b25700fb5460da8a2e30b6e1544b90d43e46533c04afb84304a08eda",
+          "newImage": "sha256:1c3a39a9d230cdf115a69d0d741710948329d40393f5f4492b7caea09127aa47",
+          "oldRef": "utilibre-binternet-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-binternet-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:25.123Z"
+        },
+        {
+          "name": "utilibre-binternet-onion-gateway-1",
+          "oldImage": "sha256:bc9b6070b25700fb5460da8a2e30b6e1544b90d43e46533c04afb84304a08eda",
+          "newImage": "sha256:1c3a39a9d230cdf115a69d0d741710948329d40393f5f4492b7caea09127aa47",
+          "oldRef": "utilibre-binternet-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-binternet-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:26.176Z"
+        },
+        {
+          "name": "utilibre-pollaris-gateway-1",
+          "oldImage": "sha256:4220028a7376cffcb93ec917ab118a099571f9073c2148538af62be0836add28",
+          "newImage": "sha256:2db01679b7c0ae67c5d7a5f6b108f6658444d611c5adc1fc8d72f6402013bfd6",
+          "oldRef": "utilibre-pollaris-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-pollaris-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:27.477Z"
+        },
+        {
+          "name": "utilibre-expanded-whisper-1",
+          "oldImage": "sha256:b3af856cb0aa15c859f9303e208c8d4b88098d9e7c39c9b1ba909066170579bb",
+          "newImage": "sha256:1e39fa261a09d93c5948881b53d7ae434485a4d6fec5b9ba98a1f5824d62d737",
+          "oldRef": "utilibre-whisper:security-20261011-nginx1305-tiff472-libs20261021-nginx1306",
+          "newRef": "utilibre-whisper:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:28.727Z"
+        },
+        {
+          "name": "utilibre-expanded-jupyterlite-1",
+          "oldImage": "sha256:15e5c9706d5c6d2909d47c9ef51695d6c89473a81174853df836b9e10fee4caf",
+          "newImage": "sha256:a05531055d2b267634d022e9c0e3711a202b95927e6f8f8164a26507ee255839",
+          "oldRef": "utilibre-jupyterlite:0.8.5-browser-security-20261011-p2-libs20261021-nginx1306",
+          "newRef": "utilibre-jupyterlite:0.8.5-browser-security-20261011-p2-libs20261021-nginx1306-cb20261028",
+          "status": "passed",
+          "checkedAt": "2026-10-28T08:09:29.902Z"
+        }
+      ]
+    },
+    {
+      "profile": "brotli",
+      "status": "passed",
+      "date": "2026-10-28T08:39:59.418Z",
+      "groups": [
+        {
+          "key": "linkding",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:35:03.080Z",
+          "rows": [
+            {
+              "name": "utilibre-linkding-linkding-1",
+              "oldImage": "sha256:042cf39835313bd6c7cc50657c7a25110158b3c21f0cb6a405caea5baf2da5fe",
+              "newImage": "sha256:b1345438e499f37782f991a62735f2c073de73c6870f69fee5c163c34ae90af6",
+              "oldRef": "utilibre-linkding:certifi-20261021",
+              "newRef": "utilibre-linkding:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "authentik",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:35:53.072Z",
+          "rows": [
+            {
+              "name": "utilibre-identity-server-1",
+              "oldImage": "sha256:2bf1347eb45cb07c7bba27c4e9f278d63175dadbbaefe32ba1efaec01204069a",
+              "newImage": "sha256:488cb7a185d5a80b8c2d05999e385610a73a019a5ed825264de2d29487eb61a8",
+              "oldRef": "utilibre-authentik:aiohttp-certifi-20261021",
+              "newRef": "utilibre-authentik:brotli-security-20261028"
+            },
+            {
+              "name": "utilibre-identity-worker-1",
+              "oldImage": "sha256:2bf1347eb45cb07c7bba27c4e9f278d63175dadbbaefe32ba1efaec01204069a",
+              "newImage": "sha256:488cb7a185d5a80b8c2d05999e385610a73a019a5ed825264de2d29487eb61a8",
+              "oldRef": "utilibre-authentik:aiohttp-certifi-20261021",
+              "newRef": "utilibre-authentik:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "freshrss",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:36:00.036Z",
+          "rows": [
+            {
+              "name": "utilibre-services-freshrss-1",
+              "oldImage": "sha256:317c3363f7218d3f92dd6686d78573f87061354600e4ea86494aaecb63e28e4b",
+              "newImage": "sha256:919f1905c8070627d08b87f3de3626832246e12e274e60d921967158bf7ad510",
+              "oldRef": "utilibre-freshrss:php-security-20261022",
+              "newRef": "utilibre-freshrss:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "kuma",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:36:11.074Z",
+          "rows": [
+            {
+              "name": "utilibre-community-uptime-kuma-1",
+              "oldImage": "sha256:40806c29e30b3064f1a1928c814362248444421d96b7dcffc2e3a5b265adddb6",
+              "newImage": "sha256:a3d35d66aa801c933a608d8f62570d26f98fafe4981b7368bddbc91a634f9b21",
+              "oldRef": "utilibre-kuma:redirects1161-security-20261022",
+              "newRef": "utilibre-kuma:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "liberaforms",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:36:17.645Z",
+          "rows": [
+            {
+              "name": "utilibre-pack-forms-app-1",
+              "oldImage": "sha256:4c7d51ca3ce32fd5a186d48f406aa8a6108551e247f4e8089d5cb0e3c40a2997",
+              "newImage": "sha256:843abb8ef1a11fdc204589280924ed05818e666bf44f3b0ba41f46e09c1c1dd9",
+              "oldRef": "utilibre-liberaforms:aiohttp-certifi-20261021",
+              "newRef": "utilibre-liberaforms:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "priviblur",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:36:24.532Z",
+          "rows": [
+            {
+              "name": "utilibre-priviblur-priviblur-1",
+              "oldImage": "sha256:51a31a240970014bb80618fbf9b752ef813e678d94adae05ba22271cea2fd0cb",
+              "newImage": "sha256:2c49778f8398fc43c4086556d8f27e8f10df66bfb746580921ef9982f1aa82ad",
+              "oldRef": "utilibre-priviblur:archive-tar-20261012",
+              "newRef": "utilibre-priviblur:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "rsshub",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:36:32.295Z",
+          "rows": [
+            {
+              "name": "utilibre-services-rsshub-1",
+              "oldImage": "sha256:53beda0ef925a9973c229bb3edd1c6fb677ba3d8e9500ef823317cc4d6b4a439",
+              "newImage": "sha256:154ee9ba336105607b98230c4ff197d4b6a25a031751f93de424ac9ae57d890e",
+              "oldRef": "utilibre-rsshub:archive-tar-20261012",
+              "newRef": "utilibre-rsshub:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "rallly",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:36:51.215Z",
+          "rows": [
+            {
+              "name": "utilibre-community-rallly-1",
+              "oldImage": "sha256:6877aca8b8c9a336aa537ccd8239dda89de713ec75307efeaa73f5fc2610e5ba",
+              "newImage": "sha256:311c9f9aee5d8c5e9f49bcb8e608d90656f6323b8257fd4affa4dcf6784376e5",
+              "oldRef": "utilibre-rallly:4.15.4-next1641-security-20261022",
+              "newRef": "utilibre-rallly:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "grist",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:37:23.747Z",
+          "rows": [
+            {
+              "name": "utilibre-records-grist-1",
+              "oldImage": "sha256:9ca3c2cd0d21dc69ec5fb4e6cc8934e7cb3249b26cbda79ee954a928f6e5ed81",
+              "newImage": "sha256:a7bdffa6b95ea7e611352082a8e5bdf73448339b48ae0ae0115ece1771cd7755",
+              "oldRef": "utilibre-grist:1.7.21-redirects1161-security-20261022",
+              "newRef": "utilibre-grist:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "penpot",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:37:29.977Z",
+          "rows": [
+            {
+              "name": "utilibre-expanded-penpot-backend-1",
+              "oldImage": "sha256:9ef1269e1a7e9bfc69a0d8e97059a503945ce54b34eed3d2e19fedfc746ebd8c",
+              "newImage": "sha256:4cea8f108abd18e9563fda41c665b51beefb32ce840a3109f555b286b0d594b6",
+              "oldRef": "utilibre-penpot-backend:2.18.3-heif-aligned-20261012",
+              "newRef": "utilibre-penpot:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "breezewiki",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:38:02.359Z",
+          "rows": [
+            {
+              "name": "utilibre-expanded-breezewiki-1",
+              "oldImage": "sha256:cd3871901e4d3f204cdfc38b2cb068b8f0902efe9caa153962531b5dc19a1690",
+              "newImage": "sha256:a9b777fec40470250c994f27c99f1bee7f66d26f057000b481c1a1c01d48d96d",
+              "oldRef": "utilibre-breezewiki:archive-tar-20261012",
+              "newRef": "utilibre-breezewiki:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "kitchenowl",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:39:14.213Z",
+          "rows": [
+            {
+              "name": "utilibre-kitchenowl-app-1",
+              "oldImage": "sha256:e804fa8206e6694120c10453fb41901dc2c8cc36852ad915e4e7692d7d841a51",
+              "newImage": "sha256:fb789d9e5df3c00705e90bb220951c4f39b11e83970cca12089aebfdb827abda",
+              "oldRef": "utilibre-kitchenowl:aiohttp-certifi-20261021",
+              "newRef": "utilibre-kitchenowl:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "rssbridge",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:39:47.484Z",
+          "rows": [
+            {
+              "name": "utilibre-community-rssbridge-1",
+              "oldImage": "sha256:e8af2a66921c8fc0945ccec68265e4a9e0c2c9c70bc497bd1168104db49c6e51",
+              "newImage": "sha256:596c7f09b8f9896065404b2c3cb207b5e45dc98524d0e2db76659dcb02f12f09",
+              "oldRef": "utilibre-rssbridge:php-security-20261022",
+              "newRef": "utilibre-rssbridge:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "gathio-postgres",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:39:59.418Z",
+          "rows": [
+            {
+              "name": "utilibre-gathio-postgres-1",
+              "oldImage": "sha256:e8f8f488d6895a90c87e3268cf256e3fc53e7a56de88eb9658cf2e5afc5ac891",
+              "newImage": "sha256:477ba233e8eadb3ab7773e6a90a557ed628085f28b40d25a092f015552635091",
+              "oldRef": "utilibre-gathio:mount-security-20261012",
+              "newRef": "utilibre-gathio-postgres:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": null
+        },
+        {
+          "key": "simplelogin",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:35:24.067Z",
+          "rows": [
+            {
+              "name": "utilibre-simplelogin-jobs-1",
+              "oldImage": "sha256:0d85ec60a5a582d55f204da217e2f25a4205a6241d7b76b3d0507ca96796b930",
+              "newImage": "sha256:2a1c6bb3108532dae41f958f796eb475aa1efc1e7fc972440d43ad783ddd3b02",
+              "oldRef": "utilibre-simplelogin:certifi-20261021",
+              "newRef": "utilibre-simplelogin:brotli-security-20261028"
+            },
+            {
+              "name": "utilibre-simplelogin-smtp-1",
+              "oldImage": "sha256:0d85ec60a5a582d55f204da217e2f25a4205a6241d7b76b3d0507ca96796b930",
+              "newImage": "sha256:2a1c6bb3108532dae41f958f796eb475aa1efc1e7fc972440d43ad783ddd3b02",
+              "oldRef": "utilibre-simplelogin:certifi-20261021",
+              "newRef": "utilibre-simplelogin:brotli-security-20261028"
+            },
+            {
+              "name": "utilibre-simplelogin-web-1",
+              "oldImage": "sha256:0d85ec60a5a582d55f204da217e2f25a4205a6241d7b76b3d0507ca96796b930",
+              "newImage": "sha256:2a1c6bb3108532dae41f958f796eb475aa1efc1e7fc972440d43ad783ddd3b02",
+              "oldRef": "utilibre-simplelogin:certifi-20261021",
+              "newRef": "utilibre-simplelogin:brotli-security-20261028"
+            }
+          ],
+          "preExistingLimitation": "Existing public 502, also documented in certifi-20261021 rollout. Native login gateway returns 200; library repair does not repair the separate edge route."
+        }
+      ]
+    },
+    {
+      "profile": "alpine",
+      "status": "passed",
+      "date": "2026-10-28T08:57:16.064Z",
+      "groups": [
+        {
+          "key": "privatebin",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:47:23.951Z",
+          "rows": [
+            {
+              "name": "utilibre-services-privatebin-1",
+              "oldImage": "sha256:456958e36a02999f50a576c985f9de7c03265e8dd272e721c41bdff164bc6885",
+              "newImage": "sha256:e3fbe8ac43db6ac84c2a566ca276fffa68aec0b0788fbc2f262271d9cc733d67",
+              "oldRef": "utilibre-privatebin:nginx1306-security-20261022",
+              "newRef": "utilibre-privatebin:libraries-security-20261028"
+            }
+          ],
+          "retryHistory": []
+        },
+        {
+          "key": "wallabag",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:47:34.142Z",
+          "rows": [
+            {
+              "name": "utilibre-wallabag-app-1",
+              "oldImage": "sha256:5a8cbaa7ec94e41b8271d549752ffe31dc252a45b1ff927aab5e3e960872cb85",
+              "newImage": "sha256:18ea9f91478880595f6bdd7126ab73f5fdc0a84c7df4b1bc3c1ff6b5662738dc",
+              "oldRef": "utilibre-wallabag:php-security-20261022",
+              "newRef": "utilibre-wallabag:libraries-security-20261028"
+            }
+          ],
+          "retryHistory": []
+        },
+        {
+          "key": "pairdrop",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:47:41.019Z",
+          "rows": [
+            {
+              "name": "utilibre-community-pairdrop-1",
+              "oldImage": "sha256:79198c175c7b064cc78c25912172cdea2b0e5fa066e95190efab1844c16b60a6",
+              "newImage": "sha256:c3d412e53040572d791e459f66c69f2bb1573a1fb413a02d51d039ffbde09caa",
+              "oldRef": "utilibre-pairdrop:1.11.2-security-20261011-p4",
+              "newRef": "utilibre-pairdrop:libraries-security-20261028"
+            }
+          ],
+          "retryHistory": []
+        },
+        {
+          "key": "binternet-tor",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:49:27.911Z",
+          "rows": [
+            {
+              "name": "utilibre-binternet-onion-tor-1",
+              "oldImage": "sha256:7928e0e2f98824d07484312a2f9ae40efb40820dca11a715b850f0c6783e50cf",
+              "newImage": "sha256:d75fd6ca40c7c6219497b0f7bb196c3a0a393a3d84e19182d4f15b86c2b095f1",
+              "oldRef": "utilibre-tor:0.4.9.13",
+              "newRef": "utilibre-binternet-tor:libraries-security-20261028"
+            }
+          ],
+          "retryHistory": []
+        },
+        {
+          "key": "addy",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:55:21.149Z",
+          "rows": [
+            {
+              "name": "utilibre-addy-app-1",
+              "oldImage": "sha256:801f2a4a32a563ce73bacce8e939116a0202e3b9b062d9ece8896fbc20cafd1f",
+              "newImage": "sha256:123a93c57fb4ef7d609e3bf44f9617662325c32d5ac61da1ee1f991fe182d689",
+              "oldRef": "utilibre-addy:php-security-20261022",
+              "newRef": "utilibre-addy:libraries-security-20261028"
+            }
+          ],
+          "retryHistory": [
+            {
+              "status": "failed",
+              "rollback": "unverified",
+              "verifiedRollbackAt": "2026-10-28T08:52:48.790Z",
+              "reason": "Old image, unchanged configuration and public route reverified after startup; bounded HTTP readiness now required."
+            }
+          ]
+        },
+        {
+          "key": "fourget",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:55:26.583Z",
+          "rows": [
+            {
+              "name": "utilibre-reader-evaluation-fourget-1",
+              "oldImage": "sha256:be130cfdebe671d16cc49b8662beca9b36cdc26a9bf691cb56cef5b4aadb6245",
+              "newImage": "sha256:a5a63072d1a70aa089ebce213b727bb06989a442a8b1d39b1438916ce3357d5a",
+              "oldRef": "utilibre-fourget:php-security-20261022",
+              "newRef": "utilibre-fourget:libraries-security-20261028"
+            }
+          ],
+          "retryHistory": []
+        },
+        {
+          "key": "opengist",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:55:32.917Z",
+          "rows": [
+            {
+              "name": "utilibre-opengist-opengist-1",
+              "oldImage": "sha256:de284f1b3b0caaf6f84df2b414612e2bb0bd94fbd0a0701fab343169902948d4",
+              "newImage": "sha256:c3d4f7b8444add357fa878e18923d4ea92dafad692ac04df33be4d26b03af0bd",
+              "oldRef": "utilibre-opengist:echo-security-20261024",
+              "newRef": "utilibre-opengist:libraries-security-20261028"
+            }
+          ],
+          "retryHistory": []
+        },
+        {
+          "key": "kittygram",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:55:49.198Z",
+          "rows": [
+            {
+              "name": "utilibre-kittygram-kittygram-1",
+              "oldImage": "sha256:e657225c6237d0fed96089cd36eae656d84805de45eee144674524e7ef097fe2",
+              "newImage": "sha256:bdb4537573628e6749f2eef75746885864c92160f81ebb2f6c96174776c97acf",
+              "oldRef": "utilibre-kittygram:5931c21-vendor-security-20261011-p2",
+              "newRef": "utilibre-kittygram:libraries-security-20261028"
+            }
+          ],
+          "retryHistory": []
+        },
+        {
+          "key": "degoog",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:55:55.907Z",
+          "rows": [
+            {
+              "name": "utilibre-evaluation-degoog-1",
+              "oldImage": "sha256:e9e9f47550f7cc816ccf288784e6fab9d7d460609e2adcf5fb23d6adecc81ac0",
+              "newImage": "sha256:0a1eb57198b3be57971082f696360d8456a74c0cfc9c3c0270c77904b7b352cf",
+              "oldRef": "utilibre-degoog:php-security-20261022",
+              "newRef": "utilibre-degoog:libraries-security-20261028"
+            }
+          ],
+          "retryHistory": []
+        },
+        {
+          "key": "binternet",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:56:01.386Z",
+          "rows": [
+            {
+              "name": "utilibre-binternet-binternet-1",
+              "oldImage": "sha256:f4ae9d3c637cd39d242a2760471858202a290ad8c3c4d574f39ca5515499147f",
+              "newImage": "sha256:698df130cf064c588cf75c5e7e30575722dcbb7667a496c56c42efea2fdfca8c",
+              "oldRef": "utilibre-binternet:php-security-20261022",
+              "newRef": "utilibre-binternet:libraries-security-20261028"
+            }
+          ],
+          "retryHistory": []
+        },
+        {
+          "key": "binternet-onion",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:56:06.699Z",
+          "rows": [
+            {
+              "name": "utilibre-binternet-onion-binternet-onion-1",
+              "oldImage": "sha256:f4ae9d3c637cd39d242a2760471858202a290ad8c3c4d574f39ca5515499147f",
+              "newImage": "sha256:698df130cf064c588cf75c5e7e30575722dcbb7667a496c56c42efea2fdfca8c",
+              "oldRef": "utilibre-binternet:php-security-20261022",
+              "newRef": "utilibre-binternet:libraries-security-20261028"
+            }
+          ],
+          "retryHistory": []
+        },
+        {
+          "key": "translite",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:56:13.209Z",
+          "rows": [
+            {
+              "name": "utilibre-translite-translite-1",
+              "oldImage": "sha256:f5fc15d4d1d96186f812c2dcb5a4390b0486910ea56d9475582a898d74ef60cb",
+              "newImage": "sha256:ea5cc181e42f45b791f856df7409da4015286b23f5548e911e8fd58d229f79cb",
+              "oldRef": "utilibre-translite:php-security-20261022",
+              "newRef": "utilibre-translite:libraries-security-20261028"
+            }
+          ],
+          "retryHistory": []
+        },
+        {
+          "key": "pollaris",
+          "status": "passed",
+          "completedAt": "2026-10-28T08:57:16.064Z",
+          "rows": [
+            {
+              "name": "utilibre-pollaris-pollaris-1",
+              "oldImage": "sha256:f685c1f68ce629fe7abfda16d52412cb6d48517caf174a06df2a5ec07e6b844e",
+              "newImage": "sha256:0c5f8ea1e71c9765380b1be37b71e6991b42b793c6da7b9824fac63e7a1d63ef",
+              "oldRef": "utilibre-pollaris:php-security-20261022",
+              "newRef": "utilibre-pollaris:libraries-security-20261028"
+            },
+            {
+              "name": "utilibre-pollaris-worker-1",
+              "oldImage": "sha256:f685c1f68ce629fe7abfda16d52412cb6d48517caf174a06df2a5ec07e6b844e",
+              "newImage": "sha256:0c5f8ea1e71c9765380b1be37b71e6991b42b793c6da7b9824fac63e7a1d63ef",
+              "oldRef": "utilibre-pollaris:php-security-20261022",
+              "newRef": "utilibre-pollaris:libraries-security-20261028"
+            }
+          ],
+          "retryHistory": []
+        }
+      ]
+    }
+  ],
+  "updatedContainerCount": 100
+}

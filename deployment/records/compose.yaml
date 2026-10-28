@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   grist:
     <<: *runtime
-    image: utilibre-grist:1.7.21-redirects1161-security-20261022
+    image: utilibre-grist:brotli-security-20261028
     user: '1000:1000'
     cpus: 2
     mem_limit: 8g
@@ -108,7 +108,7 @@ services:
       ingress: {ipv4_address: 172.29.159.20}
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-security-20261022
+    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.5

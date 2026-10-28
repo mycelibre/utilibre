@@ -16,7 +16,7 @@ services:
   fourget:
     <<: *runtime
     restart: unless-stopped
-    image: utilibre-fourget:php-security-20261022
+    image: utilibre-fourget:libraries-security-20261028
     user: "100:101"
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
@@ -26,7 +26,7 @@ services:
   fourget-gateway:
     <<: *runtime
     restart: unless-stopped
-    image: utilibre-nginx:1.30.6-security-20261022
+    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     ports: ["10.10.1.43:3145:8080"]
@@ -47,7 +47,7 @@ services:
   safetwitch:
     <<: *runtime
     restart: unless-stopped
-    image: utilibre-safetwitch:security-20261011-nginx1305-tiff472-libs20261021-nginx1306
+    image: utilibre-safetwitch:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     ports: ["10.10.1.43:3146:8080"]
@@ -73,7 +73,7 @@ services:
   anonymousoverflow-gateway:
     <<: *runtime
     restart: unless-stopped
-    image: utilibre-nginx:1.30.6-security-20261022
+    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     ports: ["10.10.1.43:3147:8080"]
@@ -103,7 +103,7 @@ services:
       gothub: {ipv4_address: 172.29.82.10}
   gothub-gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-security-20261022
+    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028
     restart: unless-stopped
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]

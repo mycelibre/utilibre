@@ -1,0 +1,343 @@
+{
+  "version": 1,
+  "advisories": [
+    "CVE-2026-111497",
+    "CVE-2026-92392"
+  ],
+  "packages": {
+    "3.24/brotli-libs-1.2.1-r0.apk": {
+      "name": "brotli-libs",
+      "version": "1.2.1-r0",
+      "file": "brotli-libs-1.2.1-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/brotli-libs-1.2.1-r0.apk",
+      "sha256": "62a7e37e43bbfc1f8525a00ad2125fd5897135dc93b849733884cb78ffd8e26c",
+      "branch": "3.24"
+    },
+    "3.24/libcurl-8.23.0-r0.apk": {
+      "name": "libcurl",
+      "version": "8.23.0-r0",
+      "file": "libcurl-8.23.0-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libcurl-8.23.0-r0.apk",
+      "sha256": "1f70ca404818805a6465b615bbfe84ef861488a963d7e630108ebd7fbaa51665",
+      "branch": "3.24"
+    },
+    "3.21/brotli-libs-1.1.1-r0.apk": {
+      "name": "brotli-libs",
+      "version": "1.1.1-r0",
+      "file": "brotli-libs-1.1.1-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/x86_64/brotli-libs-1.1.1-r0.apk",
+      "sha256": "b38110a0f60022d20f0e9c9263cc932547f3e8e82931291d937f1f370137a4a2",
+      "branch": "3.21"
+    },
+    "3.23/brotli-libs-1.2.1-r0.apk": {
+      "name": "brotli-libs",
+      "version": "1.2.1-r0",
+      "file": "brotli-libs-1.2.1-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/brotli-libs-1.2.1-r0.apk",
+      "sha256": "cf3dc08928958bb42fe71c07a179ca33adb9e2c341daa29d88777061956d84f5",
+      "branch": "3.23"
+    },
+    "3.23/curl-8.23.0-r0.apk": {
+      "name": "curl",
+      "version": "8.23.0-r0",
+      "file": "curl-8.23.0-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/curl-8.23.0-r0.apk",
+      "sha256": "3fa0d88bff24906e311fdc0ea6e8e6400c2181ecef17eb4f51ee191902afbf8d",
+      "branch": "3.23"
+    },
+    "3.23/libcurl-8.23.0-r0.apk": {
+      "name": "libcurl",
+      "version": "8.23.0-r0",
+      "file": "libcurl-8.23.0-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/libcurl-8.23.0-r0.apk",
+      "sha256": "d35e08ce3bafbcaf1a68512ac31483bd93e795ad5e8d8bfd76ada3106d81b569",
+      "branch": "3.23"
+    },
+    "3.24/curl-8.23.0-r0.apk": {
+      "name": "curl",
+      "version": "8.23.0-r0",
+      "file": "curl-8.23.0-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/curl-8.23.0-r0.apk",
+      "sha256": "531ae298451a4c1c44f563fc3b2eedc2c1d7e0a26a33bdfc0efe6faaff6a5942",
+      "branch": "3.24"
+    },
+    "3.22/curl-8.14.1-r4.apk": {
+      "name": "curl",
+      "version": "8.14.1-r4",
+      "file": "curl-8.14.1-r4.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/curl-8.14.1-r4.apk",
+      "sha256": "3e782736df7039c2b8da2ff9bb4c79a67aee9520561c63e746b1c22ebb0938fb",
+      "branch": "3.22"
+    },
+    "3.22/libcurl-8.14.1-r4.apk": {
+      "name": "libcurl",
+      "version": "8.14.1-r4",
+      "file": "libcurl-8.14.1-r4.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libcurl-8.14.1-r4.apk",
+      "sha256": "3887f3b2e66b513cb0f8211af6369a0ffaf87270c05ed1f18f7313eddc6b3660",
+      "branch": "3.22"
+    }
+  },
+  "rows": [
+    {
+      "base": "sha256:456958e36a02999f50a576c985f9de7c03265e8dd272e721c41bdff164bc6885",
+      "containers": [
+        "utilibre-services-privatebin-1"
+      ],
+      "oldRef": "utilibre-privatebin:nginx1306-security-20261022",
+      "key": "privatebin",
+      "release": "3.24.2",
+      "candidate": "utilibre-privatebin:libraries-security-20261028",
+      "packages": {
+        "brotli-libs": {
+          "installed": "1.2.0-r1",
+          "package": "3.24/brotli-libs-1.2.1-r0.apk"
+        }
+      }
+    },
+    {
+      "base": "sha256:5a8cbaa7ec94e41b8271d549752ffe31dc252a45b1ff927aab5e3e960872cb85",
+      "containers": [
+        "utilibre-wallabag-app-1"
+      ],
+      "oldRef": "utilibre-wallabag:php-security-20261022",
+      "key": "wallabag",
+      "release": "3.24.2",
+      "candidate": "utilibre-wallabag:libraries-security-20261028",
+      "packages": {
+        "brotli-libs": {
+          "installed": "1.2.0-r1",
+          "package": "3.24/brotli-libs-1.2.1-r0.apk"
+        },
+        "libcurl": {
+          "installed": "8.22.0-r0",
+          "package": "3.24/libcurl-8.23.0-r0.apk"
+        }
+      }
+    },
+    {
+      "base": "sha256:79198c175c7b064cc78c25912172cdea2b0e5fa066e95190efab1844c16b60a6",
+      "containers": [
+        "utilibre-community-pairdrop-1"
+      ],
+      "oldRef": "utilibre-pairdrop:1.11.2-security-20261011-p4",
+      "key": "pairdrop",
+      "release": "3.21.8",
+      "candidate": "utilibre-pairdrop:libraries-security-20261028",
+      "packages": {
+        "brotli-libs": {
+          "installed": "1.1.0-r2",
+          "package": "3.21/brotli-libs-1.1.1-r0.apk"
+        }
+      }
+    },
+    {
+      "base": "sha256:7928e0e2f98824d07484312a2f9ae40efb40820dca11a715b850f0c6783e50cf",
+      "containers": [
+        "utilibre-binternet-onion-tor-1"
+      ],
+      "oldRef": "utilibre-tor:0.4.9.13",
+      "key": "binternet-tor",
+      "release": "3.23.6",
+      "candidate": "utilibre-binternet-tor:libraries-security-20261028",
+      "packages": {
+        "brotli-libs": {
+          "installed": "1.2.0-r0",
+          "package": "3.23/brotli-libs-1.2.1-r0.apk"
+        },
+        "curl": {
+          "installed": "8.22.0-r0",
+          "package": "3.23/curl-8.23.0-r0.apk"
+        },
+        "libcurl": {
+          "installed": "8.22.0-r0",
+          "package": "3.23/libcurl-8.23.0-r0.apk"
+        }
+      }
+    },
+    {
+      "base": "sha256:801f2a4a32a563ce73bacce8e939116a0202e3b9b062d9ece8896fbc20cafd1f",
+      "containers": [
+        "utilibre-addy-app-1"
+      ],
+      "oldRef": "utilibre-addy:php-security-20261022",
+      "key": "addy",
+      "release": "3.23.5",
+      "candidate": "utilibre-addy:libraries-security-20261028",
+      "packages": {
+        "brotli-libs": {
+          "installed": "1.2.0-r0",
+          "package": "3.23/brotli-libs-1.2.1-r0.apk"
+        },
+        "curl": {
+          "installed": "8.22.0-r0",
+          "package": "3.23/curl-8.23.0-r0.apk"
+        },
+        "libcurl": {
+          "installed": "8.22.0-r0",
+          "package": "3.23/libcurl-8.23.0-r0.apk"
+        }
+      }
+    },
+    {
+      "base": "sha256:be130cfdebe671d16cc49b8662beca9b36cdc26a9bf691cb56cef5b4aadb6245",
+      "containers": [
+        "utilibre-reader-evaluation-fourget-1"
+      ],
+      "oldRef": "utilibre-fourget:php-security-20261022",
+      "key": "fourget",
+      "release": "3.23.6",
+      "candidate": "utilibre-fourget:libraries-security-20261028",
+      "packages": {
+        "brotli-libs": {
+          "installed": "1.2.0-r0",
+          "package": "3.23/brotli-libs-1.2.1-r0.apk"
+        },
+        "libcurl": {
+          "installed": "8.22.0-r0",
+          "package": "3.23/libcurl-8.23.0-r0.apk"
+        }
+      }
+    },
+    {
+      "base": "sha256:de284f1b3b0caaf6f84df2b414612e2bb0bd94fbd0a0701fab343169902948d4",
+      "containers": [
+        "utilibre-opengist-opengist-1"
+      ],
+      "oldRef": "utilibre-opengist:echo-security-20261024",
+      "key": "opengist",
+      "release": "3.24.1",
+      "candidate": "utilibre-opengist:libraries-security-20261028",
+      "packages": {
+        "brotli-libs": {
+          "installed": "1.2.0-r1",
+          "package": "3.24/brotli-libs-1.2.1-r0.apk"
+        },
+        "curl": {
+          "installed": "8.21.0-r0",
+          "package": "3.24/curl-8.23.0-r0.apk"
+        },
+        "libcurl": {
+          "installed": "8.21.0-r0",
+          "package": "3.24/libcurl-8.23.0-r0.apk"
+        }
+      }
+    },
+    {
+      "base": "sha256:e657225c6237d0fed96089cd36eae656d84805de45eee144674524e7ef097fe2",
+      "containers": [
+        "utilibre-kittygram-kittygram-1"
+      ],
+      "oldRef": "utilibre-kittygram:5931c21-vendor-security-20261011-p2",
+      "key": "kittygram",
+      "release": "3.23.5",
+      "candidate": "utilibre-kittygram:libraries-security-20261028",
+      "packages": {
+        "brotli-libs": {
+          "installed": "1.2.0-r0",
+          "package": "3.23/brotli-libs-1.2.1-r0.apk"
+        }
+      }
+    },
+    {
+      "base": "sha256:e9e9f47550f7cc816ccf288784e6fab9d7d460609e2adcf5fb23d6adecc81ac0",
+      "containers": [
+        "utilibre-evaluation-degoog-1"
+      ],
+      "oldRef": "utilibre-degoog:php-security-20261022",
+      "key": "degoog",
+      "release": "3.22.4",
+      "candidate": "utilibre-degoog:libraries-security-20261028",
+      "packages": {
+        "curl": {
+          "installed": "8.14.1-r3",
+          "package": "3.22/curl-8.14.1-r4.apk"
+        },
+        "libcurl": {
+          "installed": "8.14.1-r3",
+          "package": "3.22/libcurl-8.14.1-r4.apk"
+        }
+      }
+    },
+    {
+      "base": "sha256:f4ae9d3c637cd39d242a2760471858202a290ad8c3c4d574f39ca5515499147f",
+      "containers": [
+        "utilibre-binternet-onion-binternet-onion-1",
+        "utilibre-binternet-binternet-1"
+      ],
+      "oldRef": "utilibre-binternet:php-security-20261022",
+      "key": "binternet",
+      "release": "3.23.6",
+      "candidate": "utilibre-binternet:libraries-security-20261028",
+      "packages": {
+        "brotli-libs": {
+          "installed": "1.2.0-r0",
+          "package": "3.23/brotli-libs-1.2.1-r0.apk"
+        },
+        "libcurl": {
+          "installed": "8.22.0-r0",
+          "package": "3.23/libcurl-8.23.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "binternet",
+          "containers": [
+            "utilibre-binternet-binternet-1"
+          ]
+        },
+        {
+          "key": "binternet-onion",
+          "containers": [
+            "utilibre-binternet-onion-binternet-onion-1"
+          ]
+        }
+      ]
+    },
+    {
+      "base": "sha256:f5fc15d4d1d96186f812c2dcb5a4390b0486910ea56d9475582a898d74ef60cb",
+      "containers": [
+        "utilibre-translite-translite-1"
+      ],
+      "oldRef": "utilibre-translite:php-security-20261022",
+      "key": "translite",
+      "release": "3.24.2",
+      "candidate": "utilibre-translite:libraries-security-20261028",
+      "packages": {
+        "brotli-libs": {
+          "installed": "1.2.0-r1",
+          "package": "3.24/brotli-libs-1.2.1-r0.apk"
+        },
+        "libcurl": {
+          "installed": "8.22.0-r0",
+          "package": "3.24/libcurl-8.23.0-r0.apk"
+        }
+      }
+    },
+    {
+      "base": "sha256:f685c1f68ce629fe7abfda16d52412cb6d48517caf174a06df2a5ec07e6b844e",
+      "containers": [
+        "utilibre-pollaris-pollaris-1",
+        "utilibre-pollaris-worker-1"
+      ],
+      "oldRef": "utilibre-pollaris:php-security-20261022",
+      "key": "pollaris",
+      "release": "3.23.6",
+      "candidate": "utilibre-pollaris:libraries-security-20261028",
+      "packages": {
+        "brotli-libs": {
+          "installed": "1.2.0-r0",
+          "package": "3.23/brotli-libs-1.2.1-r0.apk"
+        },
+        "curl": {
+          "installed": "8.22.0-r0",
+          "package": "3.23/curl-8.23.0-r0.apk"
+        },
+        "libcurl": {
+          "installed": "8.22.0-r0",
+          "package": "3.23/libcurl-8.23.0-r0.apk"
+        }
+      }
+    }
+  ]
+}
