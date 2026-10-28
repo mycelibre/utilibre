@@ -766,3 +766,55 @@ Primary references checked 28 October:
 [Symfony YAML](https://github.com/symfony/symfony/security/advisories/GHSA-2v3c-qxhr-7vpv),
 [Markdown parser](https://github.com/markdown-it/markdown-it/security/advisories/GHSA-gfr2-rv44-r23c),
 [Go certificate advisory](https://pkg.go.dev/vuln/GO-2026-6809).
+
+## Rimgo and FerretDB compression follow-up
+
+`released-codec.json` records the two live images. Only the application binary
+changes in each; Go 1.26.10, every unrelated module, image configuration and
+FerretDB's existing MCP repair are preserved. Exact source/module checksums and
+locks are in `codec-inputs.json` and `locks/codec/`. The dependency is
+`github.com/klauspost/compress` v1.20.2 (BSD-3-Clause, with Apache-2.0 gzhttp
+notices retained in `codec-LICENSE.txt`).
+
+Both old versions (1.18.0 and 1.18.5) reproduced the signed dictionary-length
+overflow and bounded FSE parser panic in network-isolated fixtures. The update
+rejects all three dictionary boundary cases and returns errors for the two FSE
+frames without a panic. Seven ordinary gzip/Zstd/S2 checks pass per state. The
+dictionary test does not run the unsafe old encoder. The initial fixture build
+exhausted its 32 MiB temporary filesystem, not the VM disk; the compiler now uses
+the bounded 512 MiB work filesystem. Its failed diagnostic is retained privately.
+
+Rimgo's four local routes and native utility tests pass without querying Imgur.
+This does not establish live provider-media availability. FerretDB passes native
+MCP/util checks and Gathio event creation, editing, denied incorrect edit keys,
+image upload, ICS import/export, and stop/copy/restore/reopen against fictional
+data. No production database is restored or migrated. Full image inventories
+permit only the declared binary. Same-database scans remove CVE-2026-63209 and
+introduce no high/critical records. CVE-2026-116591 is newer than that database: its
+proof is the pinned upstream regression, not a claimed scanner detection. Other
+Go consumers remain separately assessed, not automatically cleared.
+
+Replay Rimgo with `go.mjs --codec rimgo prepare`, `download`, `build`, then
+`stage`; run `check-codec.mjs`, `go-final/check-native.mjs --codec-oct28`, and
+`codec.mjs proof rimgo`. FerretDB uses `go-closure/build.py ferretdb --oct28
+download --codec` and `build --codec`, then `codec.mjs stage ferretdb`,
+`go-closure/check-ferretdb.mjs --codec-oct28`, `check-codec.mjs --ferretdb`, and
+`codec.mjs proof ferretdb`. Each also requires `scan-brotli.mjs --codec KEY` and
+`go-final/verify.py --codec-oct28 KEY`. Scripts retain completed evidence and
+reject unexpected lock changes. The three module-policy and nine existing
+release-policy tests pass.
+
+The existing transactional `release-brotli.mjs prepare/apply --codec` gate
+activates only the recorded images after these checks. Repeated completed apply
+verifies the running image without a restart. Roll back using each receipt's
+old image pin and the same declared service group; no data/schema changes were
+made. Retain the prior images and private release receipts.
+
+The matching complete sources, prior patches, embedded assets, locks and notices
+are published as `security-codec-20261028-source.tar.gz` (97,715,385 bytes), SHA-256
+`7b39f9fa64597cc4b1a5ce48ea3b08425dfdae7fbb75e5d4c08deaa557cbbede`.
+`publish-codec.mjs` reconstructs the offer from checksum-pinned inputs.
+
+Primary references checked 28 October:
+[dictionary overflow](https://github.com/klauspost/compress/security/advisories/GHSA-259r-337f-4rfw),
+[FSE/Huffman panic](https://github.com/klauspost/compress/security/advisories/GHSA-fpmh-frq8-7rj8).

@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-28T18:08:43.745Z",
+  "status": "deployed-and-verified",
+  "scope": "Rimgo and FerretDB compress v1.20.2; existing compiler, unrelated dependencies and prior patches retained",
+  "roles": [
+    {
+      "name": "utilibre-rimgo-rimgo-1",
+      "oldRef": "utilibre-rimgo:go12610-security-20261028",
+      "oldImage": "sha256:3fc49b4d4bce7e556e35313929fad281b8977b3863d52ac9beb12eb3e9307fd2",
+      "newRef": "utilibre-rimgo:codec-security-20261028",
+      "newImage": "sha256:9a2960c59f72655ef84df1ef96e98248f77ac580fc23c8b6f961823ca66a23c7"
+    },
+    {
+      "name": "utilibre-gathio-ferretdb-1",
+      "oldRef": "utilibre-ferretdb:go-security-20261028",
+      "oldImage": "sha256:d1228b184623639642c7ae4a83ebb2aaff8b34c5bdf87c2757373c028b361585",
+      "newRef": "utilibre-ferretdb:codec-security-20261028",
+      "newImage": "sha256:b65c8ff64cae5aa838cebfaaf2728913c7dc88a13301f99dee7b69f89a2ed191"
+    }
+  ]
+}

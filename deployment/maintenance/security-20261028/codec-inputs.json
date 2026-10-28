@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-63209",
+  "additionalPrimaryAdvisory": "CVE-2026-116591",
+  "dependency": "github.com/klauspost/compress",
+  "version": "v1.20.2",
+  "source": "https://github.com/klauspost/compress",
+  "sourceRevision": "7f5d8528720c895a6106f201719f87eb030a565d",
+  "license": "BSD-3-Clause; gzhttp files Apache-2.0; complete upstream notices in codec-LICENSE.txt",
+  "moduleSum": "h1:v5tiZvm1KGLyg5d5oXdXe3lsSPrbEUiKoXGia//I7Qo=",
+  "goModSum": "h1:LUdAzn7YLVvxLpc7y3V1m40wESHTgc1422pwwBSKYuI=",
+  "releaseZipSha256": "f85b4729a966a3d0313310482a11b585f0be445a20b2ea0c967937fe14c17acc",
+  "primaryReferences": [
+    "https://github.com/klauspost/compress/security/advisories/GHSA-259r-337f-4rfw",
+    "https://github.com/klauspost/compress/security/advisories/GHSA-fpmh-frq8-7rj8"
+  ],
+  "rows": [
+    {
+      "key": "rimgo",
+      "base": "sha256:3fc49b4d4bce7e556e35313929fad281b8977b3863d52ac9beb12eb3e9307fd2",
+      "oldRef": "utilibre-rimgo:go12610-security-20261028",
+      "candidate": "utilibre-rimgo:codec-security-20261028",
+      "containers": [
+        "utilibre-rimgo-rimgo-1"
+      ],
+      "binary": "/app/rimgo",
+      "compilerVersion": "1.26.10",
+      "previousCompiler": "1.26.10",
+      "previous": "v1.18.5",
+      "locks": {
+        "go.mod": "50f8cc72d97edc3e190c040effd9cd8a51fb461c44636e4be3e847dfb9568da0",
+        "go.sum": "8dc9ebbcdbd90cb06a2bb94db9cab2f75bbd3729c2d2850d80b3b3fd27f37195"
+      }
+    },
+    {
+      "key": "ferretdb",
+      "base": "sha256:d1228b184623639642c7ae4a83ebb2aaff8b34c5bdf87c2757373c028b361585",
+      "oldRef": "utilibre-ferretdb:go-security-20261028",
+      "candidate": "utilibre-ferretdb:codec-security-20261028",
+      "containers": [
+        "utilibre-gathio-ferretdb-1"
+      ],
+      "binary": "/ferretdb",
+      "compilerVersion": "1.26.10",
+      "previousCompiler": "1.26.10",
+      "previous": "v1.18.0",
+      "locks": {
+        "go.mod": "d65ba2340f17574f880710f2427a12c8c55e92c755606cce0031fe03a07c0515",
+        "go.sum": "9c1e4aab20cf1dc8b3acfe24fce35e0caacca71e44b05d435532ba7b1db46d67"
+      }
+    }
+  ]
+}

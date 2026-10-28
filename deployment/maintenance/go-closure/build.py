@@ -8,9 +8,10 @@ PRIOR=pathlib.Path('/var/lib/utilibre-maintenance/go-closure-20261012')
 ROOT=PRIOR
 ROOT.mkdir(mode=0o700, parents=True, exist_ok=True)
 COMPILER='sha256:3082400e369fa24d5fc60bca20edab3f6d604e0c5a690ec66b295eff4dd87ade'
-parser=argparse.ArgumentParser();parser.add_argument('application',choices=['ferretdb','anubis']);parser.add_argument('--oct28',choices=['download','build']);args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('application',choices=['ferretdb','anubis']);parser.add_argument('--oct28',choices=['download','build']);parser.add_argument('--codec',action='store_true');args=parser.parse_args()
+assert not args.codec or args.application=='ferretdb' and args.oct28
 if args.oct28:
- ROOT=pathlib.Path('/var/lib/utilibre-maintenance/security-20261028/go-closure');ROOT.mkdir(mode=0o700,parents=True,exist_ok=True)
+ ROOT=pathlib.Path('/var/lib/utilibre-maintenance/security-20261028/'+('codec' if args.codec else 'go-closure'));ROOT.mkdir(mode=0o700,parents=True,exist_ok=True)
  COMPILER=subprocess.check_output(['docker','image','inspect','--format','{{.Id}}','utilibre-go-compiler:1.26.10-20261028'],text=True).strip()
  assert COMPILER=='sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f'
  previous=json.loads((PRIOR/args.application/'build.json').read_text())
@@ -18,6 +19,10 @@ if args.oct28:
  for f in ['go.mod','go.sum']:
   source=PRIOR/args.application/(args.application+'-'+f)
   assert hashlib.sha256(source.read_bytes()).hexdigest()==previous['artifacts'][source.name]
+  if args.codec:
+   inputs=json.loads((HERE.parent/'security-20261028/codec-inputs.json').read_text());spec=next(s for s in inputs['rows'] if s['key']=='ferretdb')
+   source=HERE.parent/'security-20261028/locks/codec/ferretdb'/f
+   assert hashlib.sha256(source.read_bytes()).hexdigest()==spec['locks'][f]
   shutil.copyfile(source,reviewed/f)
  assert not (ROOT/args.application/'build.json').exists(),'Preserve completed candidate'
 

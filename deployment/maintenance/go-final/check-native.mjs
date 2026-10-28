@@ -4,8 +4,8 @@ import cp from 'node:child_process';
 import crypto from 'node:crypto';
 import http from 'node:http';
 process.umask(0o077);
-const oct28=process.argv.includes('--oct28'),root=oct28?'/var/lib/utilibre-maintenance/security-20261028/go':'/var/lib/utilibre-maintenance/go-final-20261011';
-const specs=oct28?['rimgo','gothub','safetwitch','anonymousoverflow'].map(k=>{const s=JSON.parse(fs.readFileSync(root+'/'+k+'/build.json'));return{...s,baseId:s.base};}):JSON.parse(fs.readFileSync(root+'/build.json')).rows.filter(s=>s.key!=='galene');
+const codec=process.argv.includes('--codec-oct28'),oct28=codec||process.argv.includes('--oct28'),root=codec?'/var/lib/utilibre-maintenance/security-20261028/codec':oct28?'/var/lib/utilibre-maintenance/security-20261028/go':'/var/lib/utilibre-maintenance/go-final-20261011';
+const specs=oct28?(codec?['rimgo']:['rimgo','gothub','safetwitch','anonymousoverflow']).map(k=>{const s=JSON.parse(fs.readFileSync(root+'/'+k+'/build.json'));return{...s,baseId:s.base};}):JSON.parse(fs.readFileSync(root+'/build.json')).rows.filter(s=>s.key!=='galene');
 const docker=(...a)=>cp.execFileSync('docker',a,{encoding:'utf8',stdio:['ignore','pipe','pipe'],timeout:90000}).trim();
 const definitions={
  rimgo:{port:3000,paths:['/about','/privacy','/static/app.css','/favicon.ico'],env:{PORT:'3000'}},
@@ -30,5 +30,5 @@ try{
   }
   assert.deepEqual(variants[0],variants[1],s.key+' native response drift');rows.push({key:s.key,imageId:s.imageId,status:'passed',responses:variants[1],sourceTests:true});
  }
- fs.writeFileSync(root+'/native.json',JSON.stringify({date:new Date().toISOString(),status:'passed',rows,network:'internal; no upstream requests possible',productionChanged:false,limitations:'Static/native routes and existing parser/outbound tests; not a fresh broad upstream proxy-content audit.'},null,2)+'\n');console.log('Four native backend equivalence/privacy checks passed.');
+ fs.writeFileSync(root+'/native.json',JSON.stringify({date:new Date().toISOString(),status:'passed',rows,network:'internal; no upstream requests possible',productionChanged:false,limitations:'Static/native routes and existing parser/outbound tests; not a fresh broad upstream proxy-content audit.'},null,2)+'\n');console.log(rows.length+' native backend equivalence/privacy checks passed.');
 }finally{docker('network','rm',network);}

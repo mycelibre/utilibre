@@ -4,15 +4,18 @@ import fs from 'node:fs';
 import cp from 'node:child_process';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
+import {verifyCodecDelta} from './codec-policy.mjs';
 process.umask(0o077);
-const root='/var/lib/utilibre-maintenance/security-20261028/go',prior='/var/lib/utilibre-maintenance/go-final-20261011';
+const codec=process.argv.includes('--codec');
+const root='/var/lib/utilibre-maintenance/security-20261028/'+(codec?'codec':'go'),prior='/var/lib/utilibre-maintenance/go-final-20261011';
 const here=new URL('.',import.meta.url).pathname,recipe=new URL('../go-final/',import.meta.url).pathname;
 const specs=JSON.parse(fs.readFileSync(prior+'/prepare.json')).rows;
-const [key,phase]=process.argv.slice(2);assert(specs.some(s=>s.key===key)&&['prepare','download','build','stage'].includes(phase));
+const [key,phase]=process.argv.slice(2).filter(x=>x!=='--codec');assert(specs.some(s=>s.key===key)&&['prepare','download','build','stage'].includes(phase));assert(!codec||key==='rimgo');
 const s=specs.find(s=>s.key===key),dir=root+'/'+key;fs.mkdirSync(dir,{recursive:true});
 const sha=b=>createHash('sha256').update(b).digest('hex'),read=f=>JSON.parse(fs.readFileSync(f));
 const run=(program,args,options={})=>{try{return cp.execFileSync(program,args,{encoding:'utf8',timeout:120000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe'],...options});}catch(e){fs.writeFileSync(dir+'/'+phase+'-error.log',String(e.stdout||'')+String(e.stderr||e.message));throw Error(key+': '+phase+' failed; private evidence retained');}};
 const docker=(...a)=>run('docker',a).trim();
+const codecInput=codec?read(here+'codec-inputs.json'):null,codecSpec=codec?codecInput.rows.find(s=>s.key===key):null,lockPath=codec?here+'locks/codec/'+key:recipe+'locks/'+key;
 assert(fs.statfsSync(root).bavail*fs.statfsSync(root).bsize>8*1024**3);
 if(phase==='prepare'){
  assert(!fs.existsSync(dir+'/inputs.json'),'Preserve completed input record');
@@ -23,14 +26,14 @@ if(phase==='prepare'){
  for(const f of files)assert.equal(sha(fs.readFileSync(s.source+'/'+f.path)),f.sha256,'Unsupported source change: '+f.path);
  fs.mkdirSync(dir+'/source',{recursive:true});
  for(const f of files){const to=dir+'/source/'+f.path;fs.mkdirSync(new URL('.', 'file://'+to).pathname,{recursive:true});fs.copyFileSync(s.source+'/'+f.path,to);}
- const locks={};for(const f of ['go.mod','go.sum']){const bytes=fs.readFileSync(recipe+'locks/'+key+'/'+f);locks[f]=sha(bytes);fs.writeFileSync(dir+'/source/'+f,bytes);}
+ const locks={};for(const f of ['go.mod','go.sum']){const bytes=fs.readFileSync(lockPath+'/'+f);locks[f]=sha(bytes);if(codec)assert.equal(locks[f],codecSpec.locks[f]);fs.writeFileSync(dir+'/source/'+f,bytes);}
  const base=docker('inspect','--format','{{.Image}}',s.container),compiler=docker('image','inspect','--format','{{.Id}}','utilibre-go-compiler:1.26.10-20261028');
  const id=docker('create','--entrypoint','/bin/true',base);try{docker('cp',id+':'+s.binary,dir+'/'+key+'-original');}finally{docker('rm',id);}
  const info=docker('run','--rm','--network','none','--read-only','--cap-drop','ALL','--memory','128m','--cpus','1','--log-driver','none','-v',dir+':/input:ro',compiler,'go','version','-m','/input/'+key+'-original');
- assert(info.split('\n')[0].endsWith('go1.26.9'),'Wrong compiler baseline');
+ assert(info.split('\n')[0].endsWith(codec?'go1.26.10':'go1.26.9'),'Wrong compiler baseline');if(codec)assert.equal(base,codecSpec.base);
  fs.writeFileSync(dir+'/before-buildinfo.txt',info+'\n');
  if(key==='rimgo')fs.copyFileSync(prior+'/input/rimgo-app.css',dir+'/rimgo-app.css');
- fs.writeFileSync(dir+'/inputs.json',JSON.stringify({key,container:s.container,containers:[s.container],base,candidate:'utilibre-'+key+':go12610-security-20261028',compiler,compilerVersion:'1.26.10',compilerArchive:read(root+'/../go-compiler/input.json'),sourceCommit:s.commit,sourceFiles:files,locks,binary:s.binary,oldBinarySha256:sha(fs.readFileSync(dir+'/'+key+'-original')),recipeSha256:sha(fs.readFileSync(recipe+'build.sh'))},null,2)+'\n');
+ fs.writeFileSync(dir+'/inputs.json',JSON.stringify({key,container:s.container,containers:[s.container],base,candidate:codec?codecSpec.candidate:'utilibre-'+key+':go12610-security-20261028',compiler,compilerVersion:'1.26.10',compilerArchive:read(root+'/../go-compiler/input.json'),sourceCommit:s.commit,sourceFiles:files,locks,binary:s.binary,oldBinarySha256:sha(fs.readFileSync(dir+'/'+key+'-original')),recipeSha256:sha(fs.readFileSync(recipe+'build.sh'))},null,2)+'\n');
  console.log(key+': exact source, locks, embedded assets and old binary captured');process.exit(0);
 }
 const input=read(dir+'/inputs.json');
@@ -42,13 +45,15 @@ if(phase==='download'||phase==='build'){
  fs.mkdirSync(root+'/modules',{recursive:true});
  // Existing tests/build targets execute offline after finite Go proxy downloads.
  const args=['run','--rm','--name','maintenance-go28-'+key,'--network',phase==='download'?'bridge':'none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--log-driver','none','--cpus','2','--memory','3g','--memory-swap','3g','--pids-limit','256','--tmpfs','/work:rw,exec,size=2g,mode=1777','--tmpfs','/tmp:rw,size=16m','-e','EXPECTED_GO=1.26.10','-e','UTILIBRE_PHASE='+phase,'-e','UTILIBRE_MODULE_CACHE=/modules','-v',root+'/modules:/modules'+(phase==='build'?':ro':''),'-v',dir+'/source:/source/'+key+':ro','-v',dir+':/input:ro','-v',dir+':/output','-v',recipe+':/recipe:ro',input.compiler,'sh','-c','cp /recipe/build.sh /work/build.sh && exec sh /work/build.sh "$1"','build',key];
+ if(codec)args.splice(args.indexOf(input.compiler),0,'-v',lockPath+':/recipe/locks/'+key+':ro');
  const log=run('docker',args,{timeout:1200000,maxBuffer:8*1024**2});fs.writeFileSync(dir+'/'+phase+'.log',log);
  if(phase==='build'){
   const old=fs.readFileSync(dir+'/before-buildinfo.txt','utf8'),fresh=fs.readFileSync(dir+'/'+key+'-buildinfo.txt','utf8');
-  const modules=t=>t.split('\n').filter(l=>/^\s+(dep|=>)\s/.test(l)).sort();assert.deepEqual(modules(fresh),modules(old),'Unexpected dependency change');
+  const modules=t=>t.split('\n').filter(l=>/^\s+(dep|=>)\s/.test(l)).map(l=>l.trim()).sort();
+  if(codec)verifyCodecDelta(modules(old),modules(fresh),codecSpec.previous,codecInput.moduleSum);else assert.deepEqual(modules(fresh),modules(old),'Unexpected dependency change');
   assert(fresh.split('\n')[0].endsWith('go1.26.10'));
   const tests=fs.readFileSync(dir+'/'+key+'-tests.txt','utf8');assert(/^ok\s/m.test(tests)&&!/(^|\n)FAIL(?:\s|$)/.test(tests));
-  fs.writeFileSync(dir+'/compiled.json',JSON.stringify({...input,date:new Date().toISOString(),passed:true,network:'none',binarySha256:sha(fs.readFileSync(dir+'/'+key)),dependenciesUnchanged:true,upstreamTestsPassed:true},null,2)+'\n');
+  fs.writeFileSync(dir+'/compiled.json',JSON.stringify({...input,date:new Date().toISOString(),passed:true,network:'none',binarySha256:sha(fs.readFileSync(dir+'/'+key)),dependenciesUnchanged:!codec,...(codec?{dependencyUpdate:{dependency:codecInput.dependency,from:codecSpec.previous,to:codecInput.version},unrelatedDependenciesUnchanged:true}:{}),upstreamTestsPassed:true},null,2)+'\n');
  }
  console.log(key+': '+phase+' passed');
 }else{

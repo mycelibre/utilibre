@@ -2,6 +2,7 @@
 import hashlib,json,os,subprocess,tarfile,sys
 from pathlib import Path
 os.umask(0o077)
+CODEC='--codec-oct28' in sys.argv
 HEALTH='--health-oct28' in sys.argv
 MARKDOWN='--markdown-oct28' in sys.argv
 SYMFONY='--symfony-oct28' in sys.argv
@@ -17,10 +18,10 @@ SERVICES='--services-oct28' in sys.argv
 RUNTIME='--runtime-oct28' in sys.argv or SERVICES
 JOSE_CADDY='--jose-caddy-oct28' in sys.argv
 CADDY='--caddy-oct28' in sys.argv or JOSE_CADDY
-HELPERS=HEALTH or MARKDOWN or SYMFONY or NLTK or MSGPACK or BLKID or '--helpers-oct28' in sys.argv or CADDY or RUNTIME or AUTHLIB or DNS or DRF or JOSE
+HELPERS=CODEC or HEALTH or MARKDOWN or SYMFONY or NLTK or MSGPACK or BLKID or '--helpers-oct28' in sys.argv or CADDY or RUNTIME or AUTHLIB or DNS or DRF or JOSE
 OCT28='--oct28' in sys.argv or HELPERS
 ROOT=Path('/var/lib/utilibre-maintenance/security-20261028/go' if OCT28 else '/var/lib/utilibre-maintenance/go-final-20261011')
-if HELPERS: ROOT=Path('/var/lib/utilibre-maintenance/security-20261028/'+('health' if HEALTH else 'markdown' if MARKDOWN else 'symfony' if SYMFONY else 'nltk' if NLTK else 'msgpack' if MSGPACK else 'blkid' if BLKID else 'jose-caddy' if JOSE_CADDY else 'jose-leaf' if JOSE_LEAF else 'jose' if JOSE else 'drf' if DRF else 'dnspython' if DNS else 'authlib' if AUTHLIB else 'caddy' if CADDY else 'go-services' if SERVICES else 'go-runtime' if RUNTIME else 'go-helpers'))
+if HELPERS: ROOT=Path('/var/lib/utilibre-maintenance/security-20261028/'+('codec' if CODEC else 'health' if HEALTH else 'markdown' if MARKDOWN else 'symfony' if SYMFONY else 'nltk' if NLTK else 'msgpack' if MSGPACK else 'blkid' if BLKID else 'jose-caddy' if JOSE_CADDY else 'jose-leaf' if JOSE_LEAF else 'jose' if JOSE else 'drf' if DRF else 'dnspython' if DNS else 'authlib' if AUTHLIB else 'caddy' if CADDY else 'go-services' if SERVICES else 'go-runtime' if RUNTIME else 'go-helpers'))
 if hasattr(os,'sched_getaffinity'):os.sched_setaffinity(0,{min(os.sched_getaffinity(0))})
 def files(image):
  c=subprocess.check_output(['docker','create','--entrypoint','/bin/true',image],text=True).strip()
@@ -39,7 +40,7 @@ def files(image):
   return result
  finally:subprocess.run(['docker','rm',c],stdout=subprocess.DEVNULL,check=True)
 rows=[]
-specs=json.loads((ROOT/'build.json').read_text())['rows'] if not HELPERS else [dict(json.loads((ROOT/k/'build.json').read_text()),baseId=json.loads((ROOT/k/'build.json').read_text())['base']) for k in sys.argv[1:] if k not in ['--health-oct28','--markdown-oct28','--symfony-oct28','--weka-oct28','--msgpack-oct28','--blkid-oct28','--jose-leaf-oct28','--jose-caddy-oct28','--jose-oct28','--helpers-oct28','--caddy-oct28','--runtime-oct28','--services-oct28','--authlib-oct28','--dnspython-oct28','--drf-oct28']]
+specs=json.loads((ROOT/'build.json').read_text())['rows'] if not HELPERS else [dict(json.loads((ROOT/k/'build.json').read_text()),baseId=json.loads((ROOT/k/'build.json').read_text())['base']) for k in sys.argv[1:] if k not in ['--codec-oct28','--health-oct28','--markdown-oct28','--symfony-oct28','--weka-oct28','--msgpack-oct28','--blkid-oct28','--jose-leaf-oct28','--jose-caddy-oct28','--jose-oct28','--helpers-oct28','--caddy-oct28','--runtime-oct28','--services-oct28','--authlib-oct28','--dnspython-oct28','--drf-oct28']]
 for s in specs:
  before,after=files(s['baseId']),files(s['imageId']);changes=sorted(p for p in before.keys()|after.keys() if before.get(p)!=after.get(p));removed_bytecode=[]
  if MSGPACK or AUTHLIB or DNS:

@@ -98,4 +98,5 @@ export const additionalOverlayReceipts = [
  'security-20261028/markdown/release.json',
  'security-20261028/x11/release.json',
  'security-20261028/health/release.json',
+ 'security-20261028/codec/release.json',
 ];

@@ -1,13 +1,13 @@
 {
-  "date": "2026-10-28T17:56:47.361919+00:00",
-  "scanCompletedAt": "2026-10-28T17:49:53.658Z",
+  "date": "2026-10-28T18:14:08.291180+00:00",
+  "scanCompletedAt": "2026-10-28T18:10:22.728Z",
   "scannerStatus": "checked",
   "runningImagesAssessed": 109,
-  "rawRecords": 23948,
+  "rawRecords": 23946,
   "rawCritical": 66,
-  "rawHigh": 3174,
+  "rawHigh": 3172,
   "awaitingReviewCritical": 0,
-  "awaitingReviewHigh": 148,
+  "awaitingReviewHigh": 146,
   "meaning": "Package/artifact records, not distinct exploitable vulnerabilities. Reviewed fixes/component attributions remain in raw scans. This is not full security clearance.",
   "completedThisCheckpoint": [
     "Caddy compiler and prior x/net preservation",
@@ -33,15 +33,17 @@
     "RSSHub markdown-it 15.0.3 with pinned dependency tree, normal rendering, bounded parser-work regression and native startup",
     "Uptime Kuma health helper rebuilt with Go 1.26.10; native health behavior preserved and account setup/login verified",
     "Wallabag signed Alpine libX11 1.8.14-r0; native Xrm/key/geometry, ABI and private-account checks passed",
-    "Exact current-image revalidation of previous libblkid, JWT, Click, urllib3, OTPHP, Symfony and runtime component fixes"
+    "Exact current-image revalidation of previous libblkid, JWT, Click, urllib3, OTPHP, Symfony and runtime component fixes",
+    "Rimgo and FerretDB compress v1.20.2; dictionary overflow and FSE panic reproduced on both old versions, fixed checks and native workflows pass"
   ],
   "unresolved": [
-    "148 high-severity package/artifact records remain; raw and pending counts are separate. No full security clearance claimed.",
+    "146 high-severity package/artifact records remain; raw and pending counts are separate. No full security clearance claimed.",
     "Remaining application-library work includes Zod, OAuthlib, Go compression/text dependencies, MSAL and other exact dependencies; compatibility and behavioral checks are still required.",
     "Host GRUB/SSH/guest-agent and additional native-package findings require exact-source assessment; disruptive host changes need separate maintenance coordination.",
     "Historical tracked build inputs and runtime artifact findings remain distinct; old lockfiles are not silently relabelled.",
     "SimpleLogin public 502 predates this batch; native login gateway responds.",
-    "Separate Caddy/Proxmox hosts and outside-Internet LibreSpeed reachability are not established by this VM assessment."
+    "Separate Caddy/Proxmox hosts and outside-Internet LibreSpeed reachability are not established by this VM assessment.",
+    "Primary-source compression advisory CVE-2026-116591 is newer than this Trivy snapshot; remaining Go consumers need individual dependency inspection."
   ],
   "tests": {
     "releaseAndPolicyTestsPassed": 43,
@@ -90,13 +92,20 @@
     "markdownNormalChecksPerState": 20,
     "kumaHealthChecksPerState": 5,
     "x11NativeChecksPerState": 8,
-    "fullImageAndConfigurationScopeVerified": true
+    "fullImageAndConfigurationScopeVerified": true,
+    "codecModulePolicyTestsPassed": 3,
+    "codecReleasePolicyTestsPassed": 9,
+    "codecNormalChecksPerState": 7,
+    "codecBaselineVersions": 2,
+    "codecDictionaryRejectionCases": 3,
+    "codecFsePanicRegressionPassed": true,
+    "ferretdbGathioSyntheticRestorePassed": true
   },
   "deployment": "Recorded exact releases are live; running images and readiness verified. No further reboot performed.",
   "capacity": "270 GiB root device, 266 GiB filesystem; about 44 GiB free, 8 GiB reserve retained. Separate 15 GiB temporary disk unchanged. No reboot or SSH reload in this checkpoint.",
   "remainingHighByScope": {
     "host-os": 29,
-    "runtime-image": 82,
+    "runtime-image": 80,
     "tracked-build-input": 35,
     "upstream-release-source-lock": 2
   },
@@ -109,7 +118,7 @@
     "filelock": 1,
     "github.com/go-jose/go-jose/v3": 6,
     "github.com/go-jose/go-jose/v4": 4,
-    "github.com/klauspost/compress": 4,
+    "github.com/klauspost/compress": 2,
     "golang.org/x/text": 1,
     "grub-common": 1,
     "grub-efi-amd64-bin": 1,
