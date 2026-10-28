@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-28T17:44:31.043Z",
+  "status": "deployed-and-verified",
+  "scope": "Kuma healthcheck rebuilt with Go 1.26.10 from unchanged pinned source",
+  "roles": [
+    {
+      "name": "utilibre-community-uptime-kuma-1",
+      "oldRef": "utilibre-community-uptime-kuma:blkid-security-20261028",
+      "oldImage": "sha256:bbb8cfe1455c90eb329a109bf6293b562f2b5be66da4f8c7632710536ed1f676",
+      "newRef": "utilibre-kuma:health-go-security-20261028",
+      "newImage": "sha256:d3d15ae216a7d9c97ef806a0291c4709e6c8f6b4ffbd75950fd66780b640101c"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+// Finite compiler-only repair of Kuma's existing native health helper.
+import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
+process.umask(0o077);assert.equal(process.argv.length,2);
+const inputs=JSON.parse(fs.readFileSync(new URL('./health-inputs.json',import.meta.url))),s=inputs.rows[0],dir='/var/lib/utilibre-maintenance/security-20261028/health/kuma';
+const sha=b=>createHash('sha256').update(b).digest('hex');fs.mkdirSync(dir,{recursive:true});assert(!fs.existsSync(dir+'/build.json'));
+const run=(p,a,o={})=>{try{return cp.execFileSync(p,a,{encoding:'utf8',timeout:180000,maxBuffer:1024**2,stdio:['pipe','pipe','pipe'],...o}).trim();}catch(e){fs.writeFileSync(dir+'/error-'+Date.now()+'.log',String(e.stdout||'')+String(e.stderr||e.message));throw Error('Native helper preparation failed; private evidence retained');}};
+const docker=(...a)=>run('docker',a),config=id=>JSON.parse(docker('image','inspect','--format','{{json .Config}}',id));
+assert(fs.statfsSync('/').bavail*fs.statfsSync('/').bsize>8*1024**3);assert.equal(docker('inspect','--format','{{.Image}}',s.containers[0]),s.base);
+const source=cp.execFileSync('docker',['exec',s.containers[0],'cat','/app/extra/healthcheck.go']);assert.equal(sha(source),inputs.sourceSha256);fs.writeFileSync(dir+'/healthcheck.go',source,{mode:0o644});fs.chmodSync(dir+'/healthcheck.go',0o644);
+const limits=['--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--cpus','1','--memory','1g','--memory-swap','1g','--pids-limit','96','--log-driver','none'];
+docker('run','--rm',...limits,'--tmpfs','/tmp:rw,exec,size=512m','-e','CGO_ENABLED=0','-e','GOTOOLCHAIN=local','-e','GOPROXY=off','-e','GOTELEMETRY=off','-e','GOCACHE=/tmp/cache','-e','GOMAXPROCS=1','-v',dir+':/work',inputs.compiler,'go','build','-trimpath','-o','/work/healthcheck','/work/healthcheck.go');
+const cid=docker('create','--entrypoint','/bin/true',s.base);try{docker('cp',cid+':'+s.binary,dir+'/before-healthcheck');}finally{docker('rm',cid);}
+const info=docker('run','--rm',...limits,'-v',dir+':/work:ro',inputs.compiler,'go','version','-m','/work/before-healthcheck','/work/healthcheck');
+const pair=info.split(/\n(?=\/work\/)/);assert.equal(pair.length,2);assert(pair[0].split('\n')[0].endsWith('go1.26.9'));assert(pair[1].split('\n')[0].endsWith('go1.26.10'));assert(!info.includes('\tdep\t'));fs.writeFileSync(dir+'/buildinfo.txt',info+'\n');
+const context=dir+'/context';fs.mkdirSync(context,{recursive:true});fs.copyFileSync(dir+'/healthcheck',context+'/healthcheck');fs.chmodSync(context+'/healthcheck',0o555);fs.writeFileSync(context+'/Dockerfile','FROM '+s.base+'\nCOPY healthcheck '+s.binary+'\n');
+fs.writeFileSync(dir+'/build.log',run('docker',['build','--network','none','--pull=false','--memory','256m','--cpu-period','100000','--cpu-quota','100000','-t',s.candidate,context],{env:{...process.env,DOCKER_BUILDKIT:'0'}}));const imageId=docker('image','inspect','--format','{{.Id}}',s.candidate);assert.deepEqual(config(imageId),config(s.base));
+if(!fs.existsSync(dir+'/fixture-key.pem'))run('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-keyout',dir+'/fixture-key.pem','-out',dir+'/fixture-cert.pem','-days','1','-subj','/CN=synthetic.invalid']);
+for(const f of ['fixture-key.pem','fixture-cert.pem'])fs.chmodSync(dir+'/'+f,0o644);
+const rows=[];for(const image of [s.base,imageId]){const text=docker('run','--rm',...limits,'-v',new URL('./health-native.cjs',import.meta.url).pathname+':/test.cjs:ro','-v',dir+'/fixture-key.pem:/fixture-key.pem:ro','-v',dir+'/fixture-cert.pem:/fixture-cert.pem:ro','--entrypoint','node',image,'/test.cjs');const n=JSON.parse(text);assert(n.passed&&n.checks===5);rows.push({imageId:image,...n});}
+fs.writeFileSync(dir+'/build.json',JSON.stringify({...s,date:new Date().toISOString(),passed:true,imageId,configurationUnchanged:true,sourceSha256:inputs.sourceSha256,compiler:inputs.compiler,binaries:[{path:s.binary,binarySha256:sha(fs.readFileSync(dir+'/healthcheck')),unchangedModules:0}],changedFiles:[s.binary],native:{passed:true,imageId,rows,network:'none',compilerFixNotExploitReproduction:true}},null,2)+'\n');
+console.log('Kuma helper: exact source, compiler, unchanged configuration and five old/new native checks passed');

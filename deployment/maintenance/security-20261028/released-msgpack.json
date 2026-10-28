@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-28T17:14:23.957Z",
+  "status": "deployed-and-verified",
+  "scope": "MessagePack 1.2.4 in Authentik server and worker; unrelated dependencies and previous patches retained",
+  "roles": [
+    {
+      "name": "utilibre-identity-server-1",
+      "oldRef": "utilibre-authentik:drf-security-20261028",
+      "oldImage": "sha256:03006c04ffd5d8ad63e98c51c3f6f585f0bb36a9d6dcf58774ddf8d334446ad8",
+      "newRef": "utilibre-authentik:msgpack-security-20261028",
+      "newImage": "sha256:5bcf0c336da8186587f6fdf688201e3c3a2e6c9e53b9f9e1930c9bc99a796126"
+    },
+    {
+      "name": "utilibre-identity-worker-1",
+      "oldRef": "utilibre-authentik:drf-security-20261028",
+      "oldImage": "sha256:03006c04ffd5d8ad63e98c51c3f6f585f0bb36a9d6dcf58774ddf8d334446ad8",
+      "newRef": "utilibre-authentik:msgpack-security-20261028",
+      "newImage": "sha256:5bcf0c336da8186587f6fdf688201e3c3a2e6c9e53b9f9e1930c9bc99a796126"
+    }
+  ]
+}

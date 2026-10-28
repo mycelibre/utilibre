@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-111943",
+  "compiler": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+  "compilerVersion": "1.26.10",
+  "compilerArchiveSha256": "ccfe7ae822d2c2f41f4fe7c956199967a4dac22d0ee0d2b2bfdb440aab3b20c5",
+  "sourceSha256": "d16fd78404ed92d7e8b61f535790f4f508d807d5d76c2d9fbb275e2cd86f3f9e",
+  "rows": [
+    {
+      "key": "kuma",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "base": "sha256:bbb8cfe1455c90eb329a109bf6293b562f2b5be66da4f8c7632710536ed1f676",
+      "candidate": "utilibre-kuma:health-go-security-20261028",
+      "binary": "/app/extra/healthcheck",
+      "previousCompiler": "1.26.9",
+      "compilerVersion": "1.26.10"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "package": "markdown-it",
+  "advisory": "CVE-2026-111758",
+  "source": "https://github.com/markdown-it/markdown-it/security/advisories/GHSA-gfr2-rv44-r23c",
+  "rows": [
+    {
+      "key": "rsshub",
+      "container": "utilibre-services-rsshub-1",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "base": "sha256:fa4f60fbdf592198d3bb5548513aef795b8c890916627ae5d72ac070bd39be27",
+      "candidate": "utilibre-rsshub:markdown-security-20261028",
+      "dependencyBundle": "markdown15",
+      "roots": [
+        "/app",
+        "/usr/local/lib/node_modules"
+      ],
+      "before": {
+        "/app/node_modules/.pnpm/markdown-it@15.0.2/node_modules/markdown-it": "15.0.2"
+      }
+    }
+  ]
+}

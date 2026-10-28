@@ -1,7 +1,7 @@
 name: utilibre-wallabag
 services:
   app:
-    image: utilibre-wallabag:libraries-security-20261028
+    image: utilibre-wallabag:x11-security-20261028
     restart: 'no'
     read_only: true
     user: '4007:4007'

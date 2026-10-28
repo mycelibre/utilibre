@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "advisories": [
+    "CVE-2026-88806",
+    "CVE-2026-94283",
+    "CVE-2026-94284",
+    "CVE-2026-94285"
+  ],
+  "packages": {
+    "3.24/libx11-1.8.14-r0.apk": {
+      "name": "libx11",
+      "version": "1.8.14-r0",
+      "file": "libx11-1.8.14-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libx11-1.8.14-r0.apk",
+      "sha256": "016efc189c6d566061ffe206ed0780e32686c1a8c832a3917d35d2c66d61a40f",
+      "branch": "3.24"
+    }
+  },
+  "rows": [
+    {
+      "key": "wallabag",
+      "base": "sha256:fdc087c016277ef7af20fafac2750e09c7c2bbae5afbc3f00b7a5432505bd35c",
+      "oldRef": "utilibre-wallabag:symfony-security-20261028",
+      "candidate": "utilibre-wallabag:x11-security-20261028",
+      "containers": [
+        "utilibre-wallabag-app-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libx11": {
+          "installed": "1.8.13-r0",
+          "package": "3.24/libx11-1.8.14-r0.apk"
+        }
+      }
+    }
+  ]
+}

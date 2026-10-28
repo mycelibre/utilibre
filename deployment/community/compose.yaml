@@ -110,7 +110,7 @@ services:
   uptime-kuma:
     <<: *runtime
     # Same app version; native SQLite/HTTP/TCP checks need no bundled Chromium/MariaDB.
-    image: utilibre-community-uptime-kuma:blkid-security-20261028
+    image: utilibre-kuma:health-go-security-20261028
     user: "1000:1000"
     environment:
       UPTIME_KUMA_DB_TYPE: sqlite

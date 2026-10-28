@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-28T17:20:34.186Z",
+  "status": "deployed-and-verified",
+  "scope": "KitchenOwl NLTK Weka model-path backport; earlier native model-path fixes retained",
+  "roles": [
+    {
+      "name": "utilibre-kitchenowl-app-1",
+      "oldRef": "utilibre-curl-kitchenowl-app:security-20261028",
+      "oldImage": "sha256:8364258291458eecf01d45f768128a1b50d2ebed51e2c66056f988b066374edf",
+      "newRef": "utilibre-kitchenowl:weka-security-20261028",
+      "newImage": "sha256:3f5a1f64c1945e24fb9fed60e1174650da9b4f70fd50e61c135671337c4316fe"
+    }
+  ]
+}

@@ -5,10 +5,10 @@ import cp from 'node:child_process';
 import path from 'node:path';
 import {output} from './specs.mjs';
 process.umask(0o077);
-const keys=process.argv.slice(2);assert(keys.length&&keys.every(k=>['translite','binternet','wallabag','addy'].includes(k)));
+const x11=process.argv.includes('--x11-oct28'),symfony=process.argv.includes('--symfony-oct28');assert(!(x11&&symfony));const keys=process.argv.slice(2).filter(k=>!['--symfony-oct28','--x11-oct28'].includes(k));if(symfony||x11)assert.deepEqual(keys,['wallabag']);assert(keys.length&&keys.every(k=>['translite','binternet','wallabag','addy'].includes(k)));
 const common=['--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--memory','384m','--memory-swap','384m','--cpus','1','--pids-limit','64','--log-driver','none','--tmpfs','/tmp:rw,size=32m,mode=1777'];
 for(const key of keys){
- const dir=output+'/'+key,b=JSON.parse(fs.readFileSync(dir+'/build.json'));
+ const dir=(x11?'/var/lib/utilibre-maintenance/security-20261028/x11':symfony?'/var/lib/utilibre-maintenance/security-20261028/symfony':output)+'/'+key,b=JSON.parse(fs.readFileSync(dir+'/build.json'));
  assert(b.passed);assert.equal(cp.execFileSync('docker',['image','inspect','--format','{{.Id}}',b.candidate],{encoding:'utf8'}).trim(),b.imageId);
  let options=[],args=[],expected,checks,limitations;
  if(key==='translite'){

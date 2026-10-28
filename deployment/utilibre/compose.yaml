@@ -125,7 +125,7 @@ services:
   rsshub:
     ulimits: {core: 0}
     memswap_limit: 1536m
-    image: utilibre-rsshub:postal-security-20261028
+    image: utilibre-rsshub:markdown-security-20261028
     init: true
     restart: unless-stopped
     read_only: true

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-114613",
+  "version": "1.2.4",
+  "license": "Apache-2.0",
+  "source": "https://github.com/msgpack/msgpack-python",
+  "wheel": {
+    "file": "msgpack-1.2.4-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+    "url": "https://files.pythonhosted.org/packages/39/8f/bf975b5d2111e4954a0f8567fc6b60bab22c8766dd4fa509af1334c91a4f/msgpack-1.2.4-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+    "sha256": "5d65b791ce4283e02b6267742ad540899155e1b32887b9cbdda47f38f5a076b5"
+  },
+  "rows": [{
+    "key": "authentik",
+    "base": "sha256:03006c04ffd5d8ad63e98c51c3f6f585f0bb36a9d6dcf58774ddf8d334446ad8",
+    "oldRef": "utilibre-authentik:drf-security-20261028",
+    "candidate": "utilibre-authentik:msgpack-security-20261028",
+    "containers": ["utilibre-identity-server-1","utilibre-identity-worker-1"],
+    "python": "/ak-root/.venv/bin/python",
+    "site": "/ak-root/.venv/lib/python3.14/site-packages",
+    "previous": "1.2.1",
+    "method": "upstream-wheel"
+  }]
+}

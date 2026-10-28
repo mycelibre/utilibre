@@ -671,3 +671,98 @@ Primary follow-up references, checked 28 October 2026:
 [Multer lifecycle advisory](https://github.com/expressjs/multer/security/advisories/GHSA-q7qp-rjg7-q26m),
 [Alpine PCRE2 package](https://pkgs.alpinelinux.org/package/v3.22/main/x86_64/pcre2),
 [Next.js advisory](https://github.com/vercel/next.js/security/advisories/GHSA-p3m5-59mp-jv5r).
+
+## Authentication, parsing and consumer follow-up
+
+The following additional releases are live. Their receipts preserve exact old
+and new image identities; all package acquisition, preparation and tests are
+separate from the transactional activation command. None changes registration,
+account data, retention, telemetry or database schemas.
+
+| Receipt | Change | Observed verification |
+| --- | --- | --- |
+| `released-msgpack.json` | Authentik server/worker: MessagePack 1.2.4, exact CPython 3.14 wheel | Twelve ordinary checks per state, native and fallback APIs, rejected-value reference leak and incomplete-array preallocation regression. Synthetic password/TOTP/OAuth/JWKS sessions pass against a fresh database. |
+| `released-nltk.json` | KitchenOwl: upstream Weka model-path validation, with the import adapted to installed NLTK 3.10.3 | Eighteen path rejection cases and six legitimate cases. Existing six-API NLTK protections, real ingredient parsing, ARFF writing and account-isolated recipe import/export pass. Weka lookup is intercepted; a JVM invocation is not claimed. |
+| `released-symfony.json` | Pollaris and Wallabag: HTTP header bounds; Pollaris also gets YAML nesting bounds | Small old inputs reproduce PCRE budget exhaustion and missing depth rejection. Fixed code retains whitespace-separated headers, valid YAML and parser reuse. Pollaris two-session create/vote/export/delete and worker startup pass; Wallabag passes 26 native private-account checks per state. |
+| `released-markdown.json` | RSSHub: markdown-it 15.0.3 with a scoped, locked seven-package tree | Twenty ordinary CJS/ESM checks per state, fixed CLI, bounded unclosed-reference regression and native RSSHub startup. Every unrelated application file is preserved. No external feed connector is queried. |
+| `released-health.json` | Kuma: unchanged upstream health helper compiled with Go 1.26.10 | Five HTTP, fallback-port, redirect, local TLS and connection-failure checks per state; isolated Kuma account setup/login. Whole-image comparison permits only the helper binary. |
+| `released-x11.json` | Wallabag: signed Alpine 3.24 libX11 1.8.14-r0 | Eight native Xrm/keysym/geometry checks per state, identical exported symbols and native dependencies, plus the same 26 private-account checks per state. No malicious X-server wire test is claimed. |
+
+MessagePack preserves every unrelated dependency, including the prior certifi
+repair. NLTK and Symfony preserve package version metadata, so Trivy continues
+to report those upstream versions. `review-source.mjs` verifies the exact
+current file hashes, completed release chain and native proof before proposing
+only the corresponding expiring decisions. Its policy matches Trivy's actual
+`composer-vendor` records, including their `v` version prefix; a source lock
+record cannot inherit that runtime decision. Raw findings are retained.
+
+The Symfony header fix includes upstream's whitespace-separator compatibility
+follow-up. The YAML change uses the installed 7.4 method signature, not the
+older two-argument variant. Complete component source and tests are published
+as `security-symfony-20261028-source.tar.gz`, SHA-256
+`6c4cd238e69a1676987086bbf694cbcfdd438c5cf7fc72c922a0e3dcc70ea1fd`.
+NLTK's matching addendum is `security-nltk-weka-20261028-source.tar.gz`, SHA-256
+`a5e38200ea5382eb41bf9eed9279cb0762bde8fc15af9081fdd988bd9f7084f4`.
+Their HTTPS source-route bytes were checked. These addenda retain the earlier
+complete source offers and required upstream notices.
+
+### Replaying this follow-up
+
+- MessagePack uses `dnspython.mjs --msgpack authentik`,
+  `check-auth-python.mjs --msgpack-oct28`, and
+  `go-final/verify.py --msgpack-oct28 authentik`.
+- NLTK uses `dnspython.mjs --nltk kitchenowl`, the existing
+  `application-leaves-final/nltk-check.mjs --weka-oct28` adapter and
+  `go-final/verify.py --weka-oct28 kitchenowl`.
+- Symfony uses `symfony.mjs`, the Pollaris/Wallabag existing PHP fixtures with
+  `--symfony-oct28`, and `go-final/verify.py --symfony-oct28`.
+- Markdown uses `body-tree.mjs --markdown rsshub`, `check-markdown.mjs rsshub`,
+  `closure-review/check-kuma-rsshub.mjs --markdown` and
+  `go-final/verify.py --markdown-oct28 rsshub`. Acquire the exact committed
+  `locks/markdown15` tree with `npm ci --ignore-scripts --no-audit --no-fund`
+  in the pinned compiler image, with npm's update notifier disabled. The tree
+  and lock hashes must match `markdown-locks.json` before the offline build.
+  The package and all six runtime dependencies are nested inside its original
+  pnpm directory, preserving external symlinks and shared dependencies.
+- Kuma uses `health.mjs`, `closure-review/check-kuma-rsshub.mjs --health` and
+  `go-final/verify.py --health-oct28 kuma`. Its compiler/source checksums are in
+  `health-inputs.json`. It uses no dependency downloads. The helper retains
+  upstream's acceptance of self-signed loopback TLS and of completed HTTP 404
+  responses; this compiler repair does not improve those existing semantics.
+- Xlib uses `alpine.mjs --x11 wallabag`, `check-x11.mjs` and
+  `php-20261022/check-native.mjs --x11-oct28 wallabag`. Compile the small
+  `x11-native.c` fixture using the exact offline compiler and arguments in
+  `x11-fixture.json`; its recorded binary hash must match. The signed package
+  archive is pinned in `x11-inputs.json` and verified by the base image's APK
+  keyring without network access.
+
+Each profile also requires `scan-brotli.mjs --PROFILE KEY...`, using its recorded
+unchanged advisory database, before `release-brotli.mjs prepare --PROFILE` and
+a separately authorized `apply`. These commands are not a default audit.
+Full-image inventory checks run after the scan; scope-specific app gates must
+also pass. The known base must match, and repeated completed activation checks
+the exact running image without restarting it. Rollback restores only the
+recorded image pins and declared service group; it does not restore account
+data. Keep the prior images and private receipts.
+
+The initial Kuma candidate build hit Docker BuildKit's local-image-ID lookup
+limitation and failed before creating or deploying an image. The corrected
+recipe explicitly uses the existing classic offline builder and preserves file
+mode in its input. The failed diagnostic remains private. No application
+source or user data was sent to a registry.
+
+Current-image revalidation runs serially. The existing header reviewer can
+apply only the explicitly selected immutable CNA snapshot
+`d4e64685005cb49f8cf3123b04e49eac6617de00`, read offline, with per-record source
+and installed UAPI inventories. It does not clear kernel binaries or the
+Proxmox host. Earlier mount and OTPHP decisions were independently rechecked
+against current bytes; no decisions are copied merely because an image is a
+descendant of another.
+
+Primary references checked 28 October:
+[MessagePack](https://github.com/msgpack/msgpack-python/security/advisories/GHSA-j586-36cw-2gc2),
+[NLTK](https://github.com/nltk/nltk/security/advisories/GHSA-j456-xh4h-cpf2),
+[Symfony headers](https://github.com/symfony/symfony/security/advisories/GHSA-r925-mgvr-h9cc),
+[Symfony YAML](https://github.com/symfony/symfony/security/advisories/GHSA-2v3c-qxhr-7vpv),
+[Markdown parser](https://github.com/markdown-it/markdown-it/security/advisories/GHSA-gfr2-rv44-r23c),
+[Go certificate advisory](https://pkg.go.dev/vuln/GO-2026-6809).

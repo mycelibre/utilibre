@@ -15,7 +15,7 @@ x-runtime: &runtime
 
 x-application: &application
   <<: *runtime
-  image: utilibre-pollaris:libraries-security-20261028
+  image: utilibre-pollaris:symfony-security-20261028
   user: "82:82"
   env_file: [/opt/utilibre/community-data/pollaris-private/application.env]
   extra_hosts: ["mx.mailgt.dev:10.10.1.20"]

@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "advisories": [
+    "CVE-2026-108082",
+    "CVE-2026-109413"
+  ],
+  "license": "MIT",
+  "patches": [
+    {
+      "file": "symfony-header.patch",
+      "sha256": "303362f44e5bafc98298b1efe937d5076843584aa3d6f2491379c040c4821f24",
+      "upstreamCommit": "343a1772ce6ac03e48b228d2d7168d19750e3f36",
+      "includesCompatibilityFollowup": "9ffa802e5d7e9fb8ba95eeefd27e863e83b1baca"
+    },
+    {
+      "file": "symfony-yaml.patch",
+      "sha256": "8a63f07743652ad7d74671e88eba85a80c099467ddf52d14a2fbbb6f92ab567d",
+      "upstreamCommit": "76ebb5337a07da6ddf5ce6cdf0cc1e5f6ba6f9b2",
+      "source": "https://raw.githubusercontent.com/symfony/symfony/76ebb5337a07da6ddf5ce6cdf0cc1e5f6ba6f9b2/src/Symfony/Component/Yaml/Parser.php",
+      "sourceSha256": "c016a333670c387cb770fd57ac10a010a8104bd6deba8ec52e666b586c3408a9"
+    }
+  ],
+  "rows": [
+    {
+      "key": "pollaris",
+      "base": "sha256:0c5f8ea1e71c9765380b1be37b71e6991b42b793c6da7b9824fac63e7a1d63ef",
+      "oldRef": "utilibre-pollaris:libraries-security-20261028",
+      "candidate": "utilibre-pollaris:symfony-security-20261028",
+      "containers": [
+        "utilibre-pollaris-pollaris-1",
+        "utilibre-pollaris-worker-1"
+      ],
+      "files": [
+        {
+          "path": "http-foundation/HeaderUtils.php",
+          "beforeSha256": "9ec34bd37f6427dfde9c0849ac561fa9df8bc959caf09010b20caacca167ed39",
+          "afterSha256": "2b4051a26c6a71258d13ed0fd9a1760126ccf5b200865f2e8f9dcf433f9742dd"
+        },
+        {
+          "path": "yaml/Parser.php",
+          "beforeSha256": "d130d4c364690e375c9ce0eca086a59415af231a298c08a138d58810c1c328c5",
+          "afterSha256": "4a0123f5f4c987b608fd8e30dd8c87c0443b09aef348ec7397de2545ceee6f46"
+        }
+      ],
+      "site": "/app/vendor/symfony",
+      "packages": {
+        "symfony/http-foundation": "v7.4.14",
+        "symfony/yaml": "v7.4.14"
+      },
+      "patches": [
+        "symfony-header.patch",
+        "symfony-yaml.patch"
+      ]
+    },
+    {
+      "key": "wallabag",
+      "base": "sha256:18ea9f91478880595f6bdd7126ab73f5fdc0a84c7df4b1bc3c1ff6b5662738dc",
+      "oldRef": "utilibre-wallabag:libraries-security-20261028",
+      "candidate": "utilibre-wallabag:symfony-security-20261028",
+      "containers": [
+        "utilibre-wallabag-app-1"
+      ],
+      "files": [
+        {
+          "path": "http-foundation/HeaderUtils.php",
+          "beforeSha256": "a7d0b914847dabdbe9320e64e007cfac1d244136b4a53b84360941f3682dee22",
+          "afterSha256": "54c6bf9a5ec6282770fdaa0e26e14efa20bcf0a655faf2781160131801af84ea"
+        }
+      ],
+      "site": "/app/vendor/symfony",
+      "packages": {
+        "symfony/http-foundation": "v5.4.50"
+      },
+      "patches": [
+        "symfony-header.patch"
+      ]
+    }
+  ]
+}

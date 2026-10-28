@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import cp from 'node:child_process';
 import {output} from './specs.mjs';
 process.umask(0o077);
-const dir=output+'/pollaris',b=JSON.parse(fs.readFileSync(dir+'/build.json'));
+const dir=process.argv.includes('--symfony-oct28')?'/var/lib/utilibre-maintenance/security-20261028/symfony/pollaris':output+'/pollaris',b=JSON.parse(fs.readFileSync(dir+'/build.json'));
 const db='utilibre-php-pollaris-db-check',app='utilibre-php-pollaris-app-check';
 const database='sha256:34bce7234d7454085fd6131efd1471061e0e36e47e83baa4cd56ec9fbf1d63c3';
 const run=(exe,args,o={})=>{try{return cp.execFileSync(exe,args,{encoding:'utf8',timeout:120000,maxBuffer:2*1024**2,stdio:['ignore','pipe','pipe'],...o}).trim();}catch(e){fs.writeFileSync(dir+'/application-error.log',String(e.stdout||'')+String(e.stderr||''));throw Error('Pollaris isolated workflow failed; private diagnostic retained');}};

@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-28T17:48:12.526Z",
+  "status": "deployed-and-verified",
+  "scope": "Wallabag signed Alpine libX11 1.8.14; native ABI, parser, private-account and export checks",
+  "roles": [
+    {
+      "name": "utilibre-wallabag-app-1",
+      "oldRef": "utilibre-wallabag:symfony-security-20261028",
+      "oldImage": "sha256:fdc087c016277ef7af20fafac2750e09c7c2bbae5afbc3f00b7a5432505bd35c",
+      "newRef": "utilibre-wallabag:x11-security-20261028",
+      "newImage": "sha256:b6077d67aafa5331013da429f24fa7d655d47f27aade6399fcc1167a440d58b3"
+    }
+  ]
+}

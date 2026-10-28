@@ -1,0 +1,20 @@
+diff --git a/http-foundation/HeaderUtils.php b/http-foundation/HeaderUtils.php
+index 110896e1776d1..697b31823b2cd 100644
+--- a/http-foundation/HeaderUtils.php
++++ b/http-foundation/HeaderUtils.php
+@@ -58,9 +58,12 @@ public static function split(string $header, string $separators): array
+                         "(?:[^"\\\\]|\\\\.)*(?:"|\\\\|$)
+                     |
+                         # token
+-                        [^"'.$quotedSeparators.']+
+-                    )+
+-                (?<!\s)
++                        [^"\s'.$quotedSeparators.']++
++                    |
++                        # whitespace that is not a separator, only when more of the value follows it,
++                        # so that a value never ends on whitespace and none of it ever has to be given back
++                        [^\S'.$quotedSeparators.']++(?!['.$quotedSeparators.']|$)
++                    )++
+             |
+                 # separator
+                 \s*

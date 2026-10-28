@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-28T17:37:44.517Z",
+  "status": "deployed-and-verified",
+  "scope": "RSSHub markdown-it 15.0.3 and a scoped locked seven-package tree; no unrelated application changes",
+  "roles": [
+    {
+      "name": "utilibre-services-rsshub-1",
+      "oldRef": "utilibre-rsshub:postal-security-20261028",
+      "oldImage": "sha256:fa4f60fbdf592198d3bb5548513aef795b8c890916627ae5d72ac070bd39be27",
+      "newRef": "utilibre-rsshub:markdown-security-20261028",
+      "newImage": "sha256:142ad7c5a2512b1b8adf19426d0125350c89d860507483a194500beff3dc2c0c"
+    }
+  ]
+}

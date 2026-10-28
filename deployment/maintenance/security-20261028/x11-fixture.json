@@ -1,0 +1,18 @@
+{
+  "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+  "sourceSha256": "0a96f371d727e68d6a6cc5d93c979590cae6d299674f2a7551ec028a8a3c8c22",
+  "binarySha256": "d8ba57a220c1e93799ef91812d2635ddc183f44bca1384832f1cfe66a6f1b3f3",
+  "arguments": [
+    "gcc",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-O2",
+    "/recipe.c",
+    "-ldl",
+    "-o",
+    "/fixture/native"
+  ],
+  "network": "none",
+  "scope": "Eight native Xrm/geometry/keysym cases per baseline and candidate. No malicious display-server exploit reproduction."
+}

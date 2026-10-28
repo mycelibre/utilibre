@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-28T17:26:28.937Z",
+  "status": "deployed-and-verified",
+  "scope": "Exact Symfony header parsing and YAML depth backports in Pollaris/Wallabag; prior patches and configurations retained",
+  "roles": [
+    {
+      "name": "utilibre-pollaris-pollaris-1",
+      "oldRef": "utilibre-pollaris:libraries-security-20261028",
+      "oldImage": "sha256:0c5f8ea1e71c9765380b1be37b71e6991b42b793c6da7b9824fac63e7a1d63ef",
+      "newRef": "utilibre-pollaris:symfony-security-20261028",
+      "newImage": "sha256:6956d582ab37d779579af17c19b854b66d7b1576e1f3448112d978d60ed22bbe"
+    },
+    {
+      "name": "utilibre-pollaris-worker-1",
+      "oldRef": "utilibre-pollaris:libraries-security-20261028",
+      "oldImage": "sha256:0c5f8ea1e71c9765380b1be37b71e6991b42b793c6da7b9824fac63e7a1d63ef",
+      "newRef": "utilibre-pollaris:symfony-security-20261028",
+      "newImage": "sha256:6956d582ab37d779579af17c19b854b66d7b1576e1f3448112d978d60ed22bbe"
+    },
+    {
+      "name": "utilibre-wallabag-app-1",
+      "oldRef": "utilibre-wallabag:libraries-security-20261028",
+      "oldImage": "sha256:18ea9f91478880595f6bdd7126ab73f5fdc0a84c7df4b1bc3c1ff6b5662738dc",
+      "newRef": "utilibre-wallabag:symfony-security-20261028",
+      "newImage": "sha256:fdc087c016277ef7af20fafac2750e09c7c2bbae5afbc3f00b7a5432505bd35c"
+    }
+  ]
+}

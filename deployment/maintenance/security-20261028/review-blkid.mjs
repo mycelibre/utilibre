@@ -1,20 +1,22 @@
 // Expiring exact-byte mitigation for the repaired libblkid source-family records.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
-import {freshScan} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';import {eligible,librarySha256} from './blkid-policy.mjs';
+import {freshScan,overlayRows} from '../review-native-backports.mjs';import {additionalOverlayReceipts} from '../followup-overlays.mjs';import {validateDecision} from '../triage.mjs';import {eligible,librarySha256} from './blkid-policy.mjs';
 process.umask(0o077);const root='/var/lib/utilibre-maintenance',dir=root+'/security-20261028/blkid';
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
 const scan=read(root+'/security.json'),queue=read(root+'/security-queue.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
 const release=read(dir+'/release.json'),source=read(dir+'/source-offer-r2.json'),native=read(dir+'/native.json');assert.equal(release.status,'passed');assert(source.published);assert.equal(sha(fs.readFileSync(source.archive)),source.sha256);assert(native.nativePassed&&native.nativeCases===14);assert.equal(native.librarySha256,librarySha256);
 const inputs=read(new URL('./blkid-inputs.json',import.meta.url)),decisions=[],proofs=[];
+const overlays=additionalOverlayReceipts.flatMap(p=>fs.existsSync(root+'/'+p)?overlayRows(read(root+'/'+p)):[]).filter(r=>Number.isFinite(Date.parse(r.completedAt))&&Date.parse(r.completedAt)<=Date.parse(scan.date));
 const docker=(...a)=>cp.execFileSync('docker',a,{encoding:'utf8',timeout:30000,maxBuffer:1024*1024,stdio:['ignore','pipe','pipe']}).trim();
 for(const s of inputs.rows){
  const b=read(dir+'/'+s.key+'/build.json'),v=read(dir+'/'+s.key+'/inventory.json'),gate=read(dir+'/'+s.key+'/scan-gate.json'),g=release.groups.find(g=>g.key===s.key);
  assert(g?.status==='passed'&&Date.parse(g.completedAt)<=Date.parse(scan.date));assert(v.passed&&v.imageId===b.imageId&&gate.passed&&gate.primarySourceFixVerified&&gate.newHighCritical===0);assert.deepEqual(v.changedPaths,[s.library]);assert.equal(b.librarySha256,librarySha256);assert(b.native.rows.length===2&&b.native.rows.every(r=>r.passed&&r.checks===14));
- assert.equal(docker('inspect','--format','{{.Image}}',s.containers[0]),b.imageId);assert.equal(docker('exec',s.containers[0],'sha256sum',s.library).split(/\s/)[0],librarySha256);
- for(const i of queue.items.filter(i=>eligible(i)&&i.artifact===b.imageId&&i.containers[0]===s.containers[0])){
+ const descendants=new Set([b.imageId]);for(const r of overlays)if(s.containers.includes(r.name)&&descendants.has(r.oldImage))descendants.add(r.newImage);
+ const artifact=docker('inspect','--format','{{.Image}}',s.containers[0]);assert(descendants.has(artifact),'Exact completed release chain required');assert.equal(docker('exec',s.containers[0],'sha256sum',s.library).split(/\s/)[0],librarySha256);
+ for(const i of queue.items.filter(i=>eligible(i)&&i.artifact===artifact&&i.containers[0]===s.containers[0])){
   assert.equal(docker('exec',s.containers[0],'dpkg-query','-W','-f=${Version}',i.package),i.installed);
   decisions.push(validateDecision({key:i.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:'Exact Bookworm libblkid EBR bounds backport from upstream 05c2dbadf34cc74192287f377904afaaf4061623. CVE-2026-53615 affects libblkid/src/partitions/dos.c; Debian source-family attribution repeats the record across sibling util-linux binary packages. The actual dynamically loaded libblkid in this exact role/image matches repaired SHA256 '+librarySha256+'. Both 14-case baseline/fixed native checks pass: the baseline reproduces invalid partition acceptance, and the candidate rejects it while accepting valid partitions. Whole-image comparison proves only this library changed; its ABI/dependencies and previous mount repairs are preserved. Restricted upstream suite reports 225 cases with 213 skips and no failures, not 225 executed tests. Completed image/health/route gates and additional synthetic consumer checks are retained. Package version labels and raw findings are deliberately retained. Complete corresponding library source SHA256 '+source.sha256+'. No claim about other advisories or arbitrary static copies. https://security-tracker.debian.org/tracker/CVE-2026-53615'}));
  }
- proofs.push({key:s.key,imageId:b.imageId,librarySha256,inventorySha256:sha(fs.readFileSync(dir+'/'+s.key+'/inventory.json')),releaseCompletedAt:g.completedAt});
+ proofs.push({key:s.key,imageId:artifact,originalImage:b.imageId,librarySha256,inventorySha256:sha(fs.readFileSync(dir+'/'+s.key+'/inventory.json')),releaseCompletedAt:g.completedAt});
 }
 assert.equal(read(root+'/security.json').completedAt,scan.completedAt);fs.writeFileSync(dir+'/review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,proofs},null,2)+'\n');console.log(JSON.stringify({prepared:decisions.length,applied:false,advisory:'CVE-2026-53615'}));

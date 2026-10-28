@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "advisory": "GHSA-j456-xh4h-cpf2",
+  "license": "Apache-2.0",
+  "method": "upstream-backport",
+  "source": "https://github.com/nltk/nltk/commit/6a17606293fe9d3ea1006f99dd3fed2e2b25d519",
+  "contextAdaptation": "Only the import hunk differs: this installed release lacks the newer sibling pathsec imports. Three validation hunks are unchanged from upstream. Existing pathsec backports are retained.",
+  "patches": [
+    {
+      "file": "nltk-weka.patch",
+      "sha256": "4f0c65503f109f2841c7c672f504db1db39e1e8e8626066b71ca832c54d43c17",
+      "upstreamCommit": "6a17606293fe9d3ea1006f99dd3fed2e2b25d519"
+    }
+  ],
+  "rows": [
+    {
+      "key": "kitchenowl",
+      "base": "sha256:8364258291458eecf01d45f768128a1b50d2ebed51e2c66056f988b066374edf",
+      "oldRef": "utilibre-curl-kitchenowl-app:security-20261028",
+      "candidate": "utilibre-kitchenowl:weka-security-20261028",
+      "containers": [
+        "utilibre-kitchenowl-app-1"
+      ],
+      "python": "/opt/venv/bin/python",
+      "site": "/opt/venv/lib/python3.14/site-packages",
+      "previous": "3.10.3",
+      "files": [
+        {
+          "path": "nltk/classify/weka.py",
+          "beforeSha256": "ea9a405418b239cad05ff07391d9c2e947c80f205b1d968d71e75afb58b935b7",
+          "afterSha256": "9d69eafb16adcb7ee219bb76f8546d9acd9312877d578cb61657edeaac2b9d95"
+        }
+      ]
+    }
+  ]
+}

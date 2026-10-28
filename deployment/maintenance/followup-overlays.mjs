@@ -92,4 +92,10 @@ export const additionalOverlayReceipts = [
  'security-20261028/postal/release.json',
  'security-20261028/pcre/release.json',
  'security-20261028/multer/release.json',
+ 'security-20261028/msgpack/release.json',
+ 'security-20261028/nltk/release.json',
+ 'security-20261028/symfony/release.json',
+ 'security-20261028/markdown/release.json',
+ 'security-20261028/x11/release.json',
+ 'security-20261028/health/release.json',
 ];

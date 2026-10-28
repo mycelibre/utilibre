@@ -1,0 +1,14 @@
+{
+  "name": "utilibre-markdown-repair-input",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "markdown-it": "15.0.3",
+    "argparse": "3.0.3",
+    "entities": "8.1.0",
+    "linkify-it": "6.1.0",
+    "mdurl": "2.1.0",
+    "punycode.js": "2.3.1",
+    "uc.micro": "3.0.0"
+  }
+}
