@@ -4,8 +4,8 @@ import {readFileSync,writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 process.umask(0o077);
 const recipe=fileURLToPath(new URL('.',import.meta.url));
-const oct28=process.argv[2]==='--oct28',netReview=process.argv[2]==='--net'||oct28;assert(!process.argv[2]||netReview,'Use --net, --oct28 or no argument');
-const directory=oct28?'/var/lib/utilibre-maintenance/security-20261028/caddy':'/var/lib/utilibre-maintenance/caddy-security-20261011'+(netReview?'/net':'');
+const jose=process.argv[2]==='--jose',oct28=process.argv[2]==='--oct28'||jose,netReview=process.argv[2]==='--net'||oct28;assert(!process.argv[2]||netReview,'Use --net, --oct28 or no argument');
+const directory=jose?'/var/lib/utilibre-maintenance/security-20261028/jose-caddy':oct28?'/var/lib/utilibre-maintenance/security-20261028/caddy':'/var/lib/utilibre-maintenance/caddy-security-20261011'+(netReview?'/net':'');
 const report=JSON.parse(readFileSync(directory+'/build.json'));
 function docker(args){try{return execFileSync('docker',args,{encoding:'utf8',timeout:180000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe']});}catch{throw Error('Isolated Caddy candidate check failed; command output suppressed.');}}
 const bounded=['--network','none','--read-only','--cpus','.5','--memory','192m','--memory-swap','192m','--pids-limit','96','--cap-drop','ALL','--security-opt','no-new-privileges:true','--log-driver','none'];
@@ -17,10 +17,10 @@ for(const row of report.rows){
  for(const key of ['User','Env','Cmd','Entrypoint','WorkingDir','ExposedPorts','Healthcheck'])assert.deepEqual(inspect(row.candidate).Config[key],inspect(row.base).Config[key],'Image configuration changed');
  const info=ref=>run(ref,row.path+' build-info');
  const original=info(row.base),candidate=info(row.candidate);
- assert(candidate.startsWith(oct28?'go\tgo1.26.10\n':'go\tgo1.26.9\n'));assert(original.startsWith(oct28?'go\tgo1.26.9\n':'go\tgo1.26.8\n'));
+ assert(candidate.startsWith(oct28?'go\tgo1.26.10\n':'go\tgo1.26.9\n'));assert(original.startsWith(jose?'go\tgo1.26.10\n':oct28?'go\tgo1.26.9\n':'go\tgo1.26.8\n'));
  const deps=raw=>raw.split('\n').filter(line=>line.startsWith('dep\t')).map(line=>line.split('\t'));
  const versions=raw=>deps(raw).map(fields=>fields.slice(0,3).join('\t')).sort();
- const expected=versions(original).map(line=>netReview?line.replace('golang.org/x/net\tv0.59.0','golang.org/x/net\tv0.60.0'):line);
+ const expected=versions(original).map(line=>jose?line.replace('github.com/go-jose/go-jose/v4\tv4.1.5','github.com/go-jose/go-jose/v4\tv4.1.6'):netReview?line.replace('golang.org/x/net\tv0.59.0','golang.org/x/net\tv0.60.0'):line);
  assert.deepEqual(versions(candidate),expected,'Unreviewed compiled module versions changed');
  if(netReview)assert(versions(candidate).includes('dep\tgolang.org/x/net\tv0.60.0'));
  // A -mod=vendor binary may omit sums from build-info. Verify every original

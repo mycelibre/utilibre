@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "images": 2,
+  "roles": 2,
+  "rows": [
+    {
+      "name": "utilibre-records-grist-auth-1",
+      "oldRef": "utilibre-oauth2-proxy:go-security-20261028",
+      "oldImage": "sha256:962b3ce01eb19ce86ca888338e6fca70dd29d4a3a770e8fe7e1fd4395f313d8a",
+      "newRef": "utilibre-oauth2-proxy:jose-security-20261028",
+      "newImage": "sha256:f5e8e32f05978929a25b4f01921fa71174de5273b1f191d73ddfbfdc445232a3",
+      "key": "oauth2-proxy",
+      "completedAt": "2026-10-28T14:33:46.158Z",
+      "status": "passed"
+    },
+    {
+      "name": "utilibre-expanded-wakapi-1",
+      "oldRef": "utilibre-wakapi:go-security-20261028",
+      "oldImage": "sha256:e6189e96d0d950f11350324d270c90221205c342eaa96884b80826bbce7a6a39",
+      "newRef": "utilibre-wakapi:jose-security-20261028",
+      "newImage": "sha256:4eeff36fc2c71bda8851e095d7c1f31ee066265176946683a57f4107a3c9750a",
+      "key": "wakapi",
+      "completedAt": "2026-10-28T14:33:53.072Z",
+      "status": "passed"
+    }
+  ]
+}

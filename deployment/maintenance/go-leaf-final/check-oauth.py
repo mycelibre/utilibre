@@ -13,6 +13,7 @@ import subprocess
 import threading
 import time
 import sys
+import os
 from urllib.parse import parse_qs, urlencode, urlparse
 
 import jwt
@@ -21,10 +22,13 @@ import requests
 
 ROOT = Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/output')
 IMAGE = 'utilibre-oauth2-proxy:7.15.5-go-security-20261011'
-assert all(a=='--oct28' for a in sys.argv[1:])
+assert all(a in ['--oct28','--jose'] for a in sys.argv[1:])
 if '--oct28' in sys.argv:
     ROOT = Path('/var/lib/utilibre-maintenance/security-20261028/go-leaf/output')
     IMAGE = 'utilibre-oauth2-proxy:go-security-20261028'
+if '--jose' in sys.argv:
+    ROOT = Path('/var/lib/utilibre-maintenance/security-20261028/jose-leaf/oauth2-proxy/output')
+    IMAGE = 'utilibre-oauth2-proxy:jose-security-20261028'
 NAME = 'maintenance-oauth-native'
 BASE = 'http://127.0.0.1:33142'
 private = rsa.generate_private_key(public_exponent=65537, key_size=2048)
@@ -80,13 +84,21 @@ class Issuer(BaseHTTPRequestHandler):
         self.json({'access_token': 'synthetic-only', 'id_token': token,
                    'token_type': 'Bearer', 'expires_in': 300})
 
+def docker(*args):
+    return subprocess.check_output(['docker', *args], text=True, stderr=subprocess.PIPE, timeout=60).strip()
+holder = None
+original_namespace = os.open('/proc/self/ns/net', os.O_RDONLY)
+if '--jose' in sys.argv:
+    holder = NAME+'-network'
+    assert not docker('ps','-aq','--filter','name=^/'+holder+'$')
+    docker('run','-d','--rm','--name',holder,'--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--log-driver','none','--cpus','.1','--memory','32m','--pids-limit','16','--entrypoint','/bin/sleep','sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b','180')
+    pid=docker('inspect','--format','{{.State.Pid}}',holder)
+    with open('/proc/'+pid+'/ns/net') as namespace: os.setns(namespace.fileno(),os.CLONE_NEWNET)
 server = ThreadingHTTPServer(('127.0.0.1', 0), Issuer)
 issuer = 'http://127.0.0.1:'+str(server.server_port)
 threading.Thread(target=server.serve_forever, daemon=True).start()
-def docker(*args):
-    return subprocess.check_output(['docker', *args], text=True, stderr=subprocess.PIPE).strip()
 try:
-    docker('run', '-d', '--name', NAME, '--network', 'host', '--read-only',
+    docker('run', '-d', '--name', NAME, '--network', 'container:'+holder if holder else 'host', '--read-only',
            '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges', '--log-driver', 'none',
            '--memory', '128m', '--cpus', '.5', IMAGE, '--http-address=127.0.0.1:33142',
            '--provider=oidc', '--oidc-issuer-url='+issuer, '--client-id=synthetic-client',
@@ -121,7 +133,7 @@ try:
     report = {'passed': True, 'image': IMAGE, 'imageId': docker('image', 'inspect', IMAGE, '--format', '{{.Id}}'),
               'nativeDiscoveryAuthorizationCodePkceAndSignedIdToken': True,
               'authenticatedCookieAndIdentityHeader': True, 'invalidCsrfRejected': True,
-              'anonymousDeniedAndLogoutCleared': True, 'onlyLoopbackIssuer': True,
+              'anonymousDeniedAndLogoutCleared': True, 'onlyLoopbackIssuer': True, 'networkIsolated':bool(holder),
               'realProductionIdentityProvider': 'not exercised by this isolated test'}
     (ROOT/'oauth2-proxy-native.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report))
@@ -131,3 +143,7 @@ finally:
         docker('rm', '-f', NAME)
     except subprocess.CalledProcessError:
         pass
+
+    os.setns(original_namespace,os.CLONE_NEWNET)
+    os.close(original_namespace)
+    if holder:docker("rm","-f",holder)

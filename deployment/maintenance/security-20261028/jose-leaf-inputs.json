@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "advisory": "CVE-2026-116587",
+  "upstream": "https://github.com/go-jose/go-jose/security/advisories/GHSA-mgcc-cww5-fp2q",
+  "releaseZipSha256": "62506f3369fc124682356bbe8eb442f982422401dda99ace200694efc962da76",
+  "rows": [
+    {
+      "key": "oauth2-proxy",
+      "base": "sha256:962b3ce01eb19ce86ca888338e6fca70dd29d4a3a770e8fe7e1fd4395f313d8a",
+      "oldRef": "utilibre-oauth2-proxy:go-security-20261028",
+      "candidate": "utilibre-oauth2-proxy:jose-security-20261028",
+      "containers": [
+        "utilibre-records-grist-auth-1"
+      ],
+      "binary": "/usr/bin/oauth2-proxy",
+      "binaries": [
+        "/usr/bin/oauth2-proxy"
+      ],
+      "sourceRevision": "bea3f04bf87b93f5354f392fe2216a88e6031350",
+      "source": "/var/lib/utilibre-maintenance/go-leaf-final-20261011/source/oauth2-proxy",
+      "sourceManifestSha256": "cc30e7735c83c69598e03473a56f700617bb9b7d89c95931ac373b8c997c923e",
+      "previousCompiler": "1.26.10",
+      "compilerVersion": "1.26.10",
+      "cgo": false,
+      "previousJose": "v4.1.5",
+      "joseVersion": "v4.1.6",
+      "profile": "go-helpers",
+      "v3Backport": true
+    },
+    {
+      "key": "wakapi",
+      "base": "sha256:e6189e96d0d950f11350324d270c90221205c342eaa96884b80826bbce7a6a39",
+      "oldRef": "utilibre-wakapi:go-security-20261028",
+      "candidate": "utilibre-wakapi:jose-security-20261028",
+      "containers": [
+        "utilibre-expanded-wakapi-1"
+      ],
+      "binary": "/app/wakapi",
+      "binaries": [
+        "/app/wakapi"
+      ],
+      "sourceRevision": "347f1f45ae2863d9499236471317a76630c5308f",
+      "source": "/opt/utilibre/expanded-src/wakapi",
+      "sourceManifestSha256": "5e4d47352981d5f38f823532b8607c6485c567e74e14e011b3ffd442ac09f8fd",
+      "previousCompiler": "1.27.3",
+      "compilerVersion": "1.27.3",
+      "cgo": false,
+      "previousJose": "v4.1.5",
+      "joseVersion": "v4.1.6",
+      "profile": "go-helpers",
+      "v3Backport": true
+    }
+  ],
+  "toolchains": {
+    "1.26.10": {
+      "url": "https://go.dev/dl/go1.26.10.linux-amd64.tar.gz",
+      "sha256": "ccfe7ae822d2c2f41f4fe7c956199967a4dac22d0ee0d2b2bfdb440aab3b20c5",
+      "localCompilerImageId": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+      "registryManifest": false
+    },
+    "1.27.3": {
+      "url": "https://go.dev/dl/go1.27.3.linux-amd64.tar.gz",
+      "sha256": "65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40",
+      "localCompilerImageId": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+      "registryManifest": false
+    }
+  }
+}

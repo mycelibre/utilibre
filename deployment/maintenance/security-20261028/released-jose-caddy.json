@@ -1,0 +1,47 @@
+{
+  "status": "passed",
+  "images": 3,
+  "roles": 4,
+  "rows": [
+    {
+      "name": "utilibre-wishlist-app-1",
+      "oldRef": "utilibre-wishlist:caddy-go-security-20261028",
+      "oldImage": "sha256:4cdd2bd8826593ac6516e0cd3d380bf14f2b5238a928d096c84c7ca78d17246a",
+      "newRef": "utilibre-wishlist:caddy-jose-security-20261028",
+      "newImage": "sha256:2224a5e6008003519fc78e17c399b53bb2982709a648beb06a2a0868b8a37c6e",
+      "key": "caddy-wishlist",
+      "completedAt": "2026-10-28T14:24:16.697Z",
+      "status": "passed"
+    },
+    {
+      "name": "utilibre-newsletters-web-1",
+      "oldRef": "utilibre-newsletters-web:caddy-go-security-20261028",
+      "oldImage": "sha256:0b06677804dc4d700a9bf740d3ea1af2d0b08195fdb9b81a5e3fc8e7d61ef30b",
+      "newRef": "utilibre-newsletters-web:caddy-jose-security-20261028",
+      "newImage": "sha256:2fac767a01a93a5be5c7488e6cf55191d205ca9ccb7844f52741e8fb85334e09",
+      "key": "caddy-newsletters-web",
+      "completedAt": "2026-10-28T14:24:24.608Z",
+      "status": "passed"
+    },
+    {
+      "name": "utilibre-newsletters-smtp-1",
+      "oldRef": "utilibre-newsletters-mail-jobs:caddy-go-security-20261028",
+      "oldImage": "sha256:012a4baae0efd3e28e213228c8940d17847413e740f593af1403a88e132059c1",
+      "newRef": "utilibre-newsletters-mail-jobs:caddy-jose-security-20261028",
+      "newImage": "sha256:171ed55a3eda8a62feb61ea0418df9e529bf8797c5c31cfbcc90c5bd5734d7ff",
+      "key": "caddy-newsletters-mail-jobs",
+      "completedAt": "2026-10-28T14:24:32.489Z",
+      "status": "passed"
+    },
+    {
+      "name": "utilibre-newsletters-jobs-1",
+      "oldRef": "utilibre-newsletters-mail-jobs:caddy-go-security-20261028",
+      "oldImage": "sha256:012a4baae0efd3e28e213228c8940d17847413e740f593af1403a88e132059c1",
+      "newRef": "utilibre-newsletters-mail-jobs:caddy-jose-security-20261028",
+      "newImage": "sha256:171ed55a3eda8a62feb61ea0418df9e529bf8797c5c31cfbcc90c5bd5734d7ff",
+      "key": "caddy-newsletters-mail-jobs",
+      "completedAt": "2026-10-28T14:24:32.489Z",
+      "status": "passed"
+    }
+  ]
+}

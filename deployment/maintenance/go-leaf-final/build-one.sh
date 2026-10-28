@@ -48,7 +48,16 @@ fi
 cp go.mod "/output/$name-go.mod"
 cp go.sum "/output/$name-go.sum"
 if [ "$PHASE" = download ]; then exit 0; fi
-export GOFLAGS="${GOFLAGS:-} -mod=readonly"
+if [ "${UTILIBRE_JOSE_V3:-0}" = 1 ]; then
+ go mod vendor
+ echo '79f510a4b97fa2e34ec37932cab57e64dfdc9fa6c314654d1ccc2dd93898a532  vendor/github.com/go-jose/go-jose/v3/jwk.go' | sha256sum -c -
+ cp /jose-v3-jwk.go vendor/github.com/go-jose/go-jose/v3/jwk.go
+ echo '7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b  vendor/github.com/go-jose/go-jose/v3/jwk.go' | sha256sum -c -
+ cp vendor/modules.txt "/output/$name-vendor-modules.txt"
+ export GOFLAGS="${GOFLAGS:-} -mod=vendor"
+else
+ export GOFLAGS="${GOFLAGS:-} -mod=readonly"
+fi
 if [ "$name" = ntfy ]; then
  go test -p 1 ./util ./client > "/output/$name-tests.txt" 2>&1
  go test -p 1 ./server -run '^(TestServer_PublishAndPoll|TestServer_PublishAndSubscribe|TestServer_PublishNoCache|TestServer_Publish_Disallowed_Topic|TestServer_MetricsDisabled)$' >> "/output/$name-tests.txt" 2>&1

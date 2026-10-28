@@ -14,10 +14,13 @@ IMAGE = 'utilibre-wakapi:2.18.1-healthcheck-security-20261011'
 NAME = 'maintenance-wakapi-native'
 BASE = 'http://127.0.0.1:33144'
 OUT = Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/output/wakapi-native.json')
-assert all(a=='--oct28' for a in sys.argv[1:])
+assert all(a in ['--oct28','--jose'] for a in sys.argv[1:])
 if '--oct28' in sys.argv:
     IMAGE='utilibre-wakapi:go-security-20261028'
     OUT=Path('/var/lib/utilibre-maintenance/security-20261028/go-leaf/output/wakapi-native.json')
+if '--jose' in sys.argv:
+    IMAGE='utilibre-wakapi:jose-security-20261028'
+    OUT=Path('/var/lib/utilibre-maintenance/security-20261028/jose-leaf/wakapi/output/wakapi-native.json')
 def docker(*args):
     return subprocess.check_output(['docker',*args],text=True,stderr=subprocess.PIPE).strip()
 env = {'WAKAPI_DB_TYPE':'sqlite3','WAKAPI_DB_NAME':'/tmp/fictional.db',

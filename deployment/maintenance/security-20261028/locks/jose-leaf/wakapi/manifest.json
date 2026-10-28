@@ -1,0 +1,21 @@
+{
+  "key": "wakapi",
+  "dependency": "github.com/go-jose/go-jose/v4",
+  "from": "v4.1.5",
+  "to": "v4.1.6",
+  "files": [
+    {
+      "path": "go.mod",
+      "before": "b0d4c268ce3746b4f384c70a45d240e6e01700c80334f46edec7f850d89d7639",
+      "after": "5f7fdd2eb29e5e1ea51b27a78feafce19eea62f81ecd673d0fc6dc26fd32d59e"
+    },
+    {
+      "path": "go.sum",
+      "before": "aa3668a0a670ebf5704c188135dcd905636c4937ce09bc4894436145a9d7d4fd",
+      "after": "ed92122e92627a8df5d1a4b9299605ba1489a394e114001d50076af6caf3f76a"
+    }
+  ],
+  "zipSha256": "62506f3369fc124682356bbe8eb442f982422401dda99ace200694efc962da76",
+  "moduleSum": "h1:sNRkftxFJxwsILiQukqp5z83QBSmntVwmgRY7AqBDO4=",
+  "moduleModSum": "h1:x4oUasVrzR7071A4TnHLGSPpNOm2a21K9Kf04k1rs08="
+}

@@ -85,4 +85,6 @@ export const additionalOverlayReceipts = [
  'security-20261028/dnspython/release.json',
  'security-20261028/drf/release.json',
  'security-20261028/jose/release.json',
+ 'security-20261028/jose-caddy/release.json',
+ 'security-20261028/jose-leaf/release.json',
 ];

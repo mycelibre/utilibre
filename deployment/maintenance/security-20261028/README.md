@@ -371,7 +371,8 @@ The `jose` profile updates only `github.com/go-jose/go-jose/v4` to **4.1.6**
 in Yopass, Donetick, ntfy and Vikunja. Existing Go 1.27.3 compilers, CGO mode,
 application revisions, other modules, frontend assets and runtime settings stay
 unchanged. New checksum-pinned lockfiles preserve every previous dependency
-fix. `released-jose.json` records all four completed, healthy live releases. Older `go-jose/v3` copies in other applications remain a separate repair.
+fix. `released-jose.json` records all four completed, healthy live releases.
+The additional v3 consumers are covered by the separate release below.
 
 The offline upstream suites passed 302 checks on 4.1.4, 490 on 4.1.5 and 529
 on 4.1.6, including the added bounded modulus and legitimate RSA, ECDSA,
@@ -401,16 +402,12 @@ restart cache removal. Vikunja uses its established two-account, attachment,
 export and synthetic restore fixture. These are isolated API/native checks,
 not physical-device or external-provider tests.
 
-The separate `jose-v3-rsa.patch` is an exact-source adaptation of upstream's
-RSA bounds for 3.0.5. Its manifest is explicitly **native-library-tested, not deployed**. Both the
-baseline and repaired v3 library passed their complete native suites and
-bounded regression; application-level checks remain outstanding.
-It does not authorize a scanner exception, deployment, or changes to the v3
-header-parsing API. Application builds and consumer verification are still
-required before it can repair those remaining services. The first v3 fixture
-attempt used Go's newer `any` spelling despite the module's Go 1.12 language
-setting; the fixture was corrected to `interface{}`. That build failure is
-retained and is not counted as reproduction of a vulnerability.
+The separate `jose-v3-rsa.patch` adapts the exact upstream RSA bounds to
+3.0.5. Both baseline and repaired v3 libraries passed 262 native checks;
+the bounded oversized-modulus regression changes from accepted to rejected.
+The first fixture attempt used Go's newer `any` spelling despite the module's
+Go 1.12 language setting; it was corrected to `interface{}`. That build failure
+is retained and is not counted as reproduction of a vulnerability.
 
 The source bundle is `security-jose-20261028-source.tar.gz`, SHA-256
 `0a03e63dc7e988c3cc3547d12b0a80dab90ca698b81238d7ad03344da028b345`.
@@ -419,6 +416,84 @@ index and archive successfully; a Python request through the tools origin
 received an edge 403, which is not represented as a source-file failure.
 ntfy and Vikunja individual source offers were also updated, preserving their
 previous archives.
+
+## Completed JOSE v3 consumer repairs
+
+`released-jose-caddy.json` records three images and four application roles:
+Wishlist, newsletter web, SMTP and jobs. `released-jose-leaf.json` records
+OAuth2 Proxy and Wakapi. All six roles passed exact-artifact, native health and
+existing-route release gates. These repair embedded Caddy copies; they do not
+change the separate edge Caddy VM. Application versions, compilers, access
+settings and persistent data are unchanged.
+
+All five images receive JOSE v4 **4.1.6** and the exact v3 RSA bounds above.
+Caddy remains 2.11.7 with its prior x/net 0.60.0 fix; OAuth2 Proxy remains
+7.15.5, and Wakapi keeps its recorded source revision. Caddy and OAuth2 Proxy
+keep Go 1.26.10; Wakapi keeps Go 1.27.3. Complete image comparisons permit
+only the declared binaries and Caddy build notices. Wakapi's healthcheck and
+all 82 embedded assets/templates are unchanged.
+
+Application verification uses synthetic data only:
+
+- Caddy: HTTP/TLS proxying, gzip, SSE and HTTP/2; Wishlist account, list/item
+  persistence and anonymous denial; newsletter feed creation, isolated SMTP
+  ingestion into Atom and deletion. No external email was sent.
+- OAuth2 Proxy: discovery, authorization-code exchange, PKCE, signed ID token,
+  authenticated cookie/identity header, forged-state rejection and logout.
+  The fake provider and client run inside a network-disabled namespace.
+- Wakapi: a fresh SQLite database, native local-account login/logout,
+  authenticated synthetic heartbeat, anonymous denial and native healthcheck.
+  Real production OIDC and real users' activity were not exercised.
+
+Replay uses `caddy-security/build.mjs --jose`, its existing Caddy/Wishlist/
+newsletter checks and `security-20261028/caddy.mjs --jose`. OAuth2 Proxy and
+Wakapi use `jose.mjs --v3 download/build/stage/proof KEY...` with committed
+`locks/jose-leaf`. Acquisition is separate from network-disabled compilation;
+source snapshots and all non-target module versions are verified. The
+existing `check-oauth.py`, `check-wakapi-assets.py` and `check-wakapi.py` accept
+`--jose`. Run `scan-brotli.mjs --jose-caddy/--jose-leaf` and
+`go-final/verify.py --jose-caddy-oct28/--jose-leaf-oct28`, using the relevant
+profile, before separately authorized `release-brotli.mjs prepare/apply`.
+There is no schema migration or retention change; exact previous images and
+configuration snapshots remain available for the existing transactional rollback.
+
+Raw v3 findings remain because its version metadata is still 3.0.5. The
+`review-jose-caddy.mjs [--leaf]` review requires a fresh complete fleet scan,
+matching release chain, native regression/application evidence and actual
+running binary hashes. It can propose only the exact CVE, binary and image for
+a seven-day mitigation review. It grants no exception to other consumers or
+advisories. Additional v4 header-parsing hardening was not ported to the v3 API.
+
+Two rejected Caddy build attempts are retained privately: a compiler without
+Git and a raw local image ID that BuildKit interpreted as a registry name.
+The successful build checks the exact patch postimage before compilation and
+uses a local image tag only after verifying its immutable image ID. Neither
+failed candidate was deployed.
+
+The complete Caddy source offer is
+`security-jose-caddy-20261028-source-r2.tar.gz`, SHA-256
+`8f3c36bda74f0df1182451ac13df362f69bc4c4ab2d43ce31cbd687f7ab9eaab`.
+Revision 2 includes the native compile script omitted by the first packaging
+attempt; the first archive remains retained. The published archive's recipe
+and patch were compared with the checked-in inputs. Updated individual offers:
+
+- `oauth2-proxy-utilibre.tar.gz`: SHA-256
+  `18036e2370e1747d1c4df4666cd7a769ee7237afc5bdc2932364b86f4175bb47`.
+- `wakapi-utilibre.tar.gz`: SHA-256
+  `f03ed5a9cba827453168963f20e110f575dfe2f38c23428c0170fd3d84465371`.
+
+Both include the exact reviewed locks, v3 patch/postimage, upstream source and
+licenses, compiler identity and native rebuild instructions. The Wakapi offer
+explicitly preserves the existing healthcheck. Previous public archives are
+retained privately. Reproducible inputs and verified behavior are established;
+byte-for-byte reproducible builds are not claimed.
+The final source-route check verified the exact index and all three archive
+hashes through the existing Caddy address, with public hostname/SNI and normal
+TLS validation. A Python request through public DNS received an edge 403;
+this check does not establish outside-Internet access for every client.
+No CDN/WAF setting was changed. The distroless OAuth image intentionally has
+no `sha256sum`; the live-payload reviewer copies its binary out for a local
+hash check rather than installing tools in the container.
 
 ## Evidence durability and remaining assessment
 
@@ -434,8 +509,8 @@ The fleet checkpoint in `status.json` covers all 109 running image assessments
 plus host and tracked-source coverage. After the explicit reviews, no critical
 records await review; high-severity work remains. This is not an all-clear:
 raw scanner counts include previously repaired packages and component
-misattribution, while unresolved Go JOSE, Zod and host
-findings require separate work. The private `security-queue.json` is the current
+misattribution, while tracked historical inputs, Zod and host/native
+findings still require separate work. The private `security-queue.json` is the current
 source of counts, including replacement-image revalidation. No blanket exception
 is granted to descendants of repaired images or to all packages in a container.
 

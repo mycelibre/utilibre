@@ -10,3 +10,10 @@ export function verifyModuleDelta(before, after, previous, sum) {
   const expected = before.map(line => line.startsWith(prefix) ? prefix + 'v4.1.6\t' + sum : line).sort();
   assert.deepEqual([...after].sort(), expected, 'Unreviewed dependency drift');
 }
+// Vendored builds retain module versions but omit module sums in build-info.
+// The build separately verifies the module cache/locks before exact v3 patching.
+export function verifyVendorModuleDelta(before, after, previous, sum) {
+  assert(before.every(x=>x.startsWith('dep\t')) && after.every(x=>x.startsWith('dep\t')), 'Unexpected replacement');
+  const normalize=rows=>rows.map(x=>x.split('\t').slice(0,3).join('\t')+'\t'+sum);
+  verifyModuleDelta(normalize(before),normalize(after),previous,sum);
+}

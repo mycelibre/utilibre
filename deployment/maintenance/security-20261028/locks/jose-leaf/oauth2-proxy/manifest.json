@@ -1,0 +1,21 @@
+{
+  "key": "oauth2-proxy",
+  "dependency": "github.com/go-jose/go-jose/v4",
+  "from": "v4.1.5",
+  "to": "v4.1.6",
+  "files": [
+    {
+      "path": "go.mod",
+      "before": "3613d61ab754ad14a47c33825074cb7352d9453be0ebacffd9cd5a363479f283",
+      "after": "398e8e07d7a13f4b0dc326e4f2a161ee7013736da44e5890c6b16bac4820ac51"
+    },
+    {
+      "path": "go.sum",
+      "before": "470f364ce8bd08f68227ddbdf75f09dc0f365abcb8666b32744eaf6e933a13f8",
+      "after": "4131b2dbf5884d13379b575264d2e0d64ae8d9e7c91d55d0132f425ee2c400f6"
+    }
+  ],
+  "zipSha256": "62506f3369fc124682356bbe8eb442f982422401dda99ace200694efc962da76",
+  "moduleSum": "h1:sNRkftxFJxwsILiQukqp5z83QBSmntVwmgRY7AqBDO4=",
+  "moduleModSum": "h1:x4oUasVrzR7071A4TnHLGSPpNOm2a21K9Kf04k1rs08="
+}

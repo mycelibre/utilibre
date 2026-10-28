@@ -1,13 +1,13 @@
 {
-  "date": "2026-10-28T14:08:50.787451+00:00",
-  "scanCompletedAt": "2026-10-28T14:07:51.106Z",
+  "date": "2026-10-28T14:42:39.966843+00:00",
+  "scanCompletedAt": "2026-10-28T14:35:46.746Z",
   "scannerStatus": "checked",
   "runningImagesAssessed": 109,
-  "rawRecords": 23982,
+  "rawRecords": 23977,
   "rawCritical": 66,
-  "rawHigh": 3202,
+  "rawHigh": 3197,
   "awaitingReviewCritical": 0,
-  "awaitingReviewHigh": 361,
+  "awaitingReviewHigh": 353,
   "meaning": "Package/artifact records, not distinct exploitable vulnerabilities. Reviewed fixes/component attributions remain in raw scans. This is not full security clearance.",
   "completedThisCheckpoint": [
     "Caddy compiler and prior x/net preservation",
@@ -17,14 +17,16 @@
     "Five dnspython 2.9.0 images and SimpleLogin upstream backport",
     "Exact prior-patch revalidation and retained-source reconstruction",
     "Four upstream Django REST Framework backports in Authentik and Linkding; 18 legitimate checks per image plus native application tests",
-    "JOSE 4.1.6 in Yopass, Donetick, ntfy and Vikunja; prior source, compiler, configuration and privacy fixes retained"
+    "JOSE 4.1.6 in Yopass, Donetick, ntfy and Vikunja; prior source, compiler, configuration and privacy fixes retained",
+    "JOSE v4 4.1.6 and exact v3 RSA bounds in five images / six roles: embedded Caddy in Wishlist/newsletters, OAuth2 Proxy and Wakapi; native behavior and exact deployed binaries verified"
   ],
   "unresolved": [
-    "Go JOSE v3/v4 copies in Caddy, OAuth2 Proxy and Wakapi; v3 backport preparation does not repair running applications",
     "Zod error-amplification advisory needs per-application input analysis",
     "Remaining host/native and tracked build-input findings",
     "SimpleLogin public 502 predates this batch; native login gateway responds",
-    "LibreSpeed outside-Internet reachability not established from this VM"
+    "LibreSpeed outside-Internet reachability not established from this VM",
+    "Historical source-lock JOSE findings are not cleared by rebuilding runtime artifacts",
+    "Latest public-DNS Python fetch of the source index received edge 403; existing Caddy TLS path and exact source bytes verified"
   ],
   "tests": {
     "releaseAndPolicyTestsPassed": 43,
@@ -42,10 +44,15 @@
       "4.1.5": 490,
       "4.1.6": 529
     },
-    "joseModulePolicyTestsPassed": 5,
+    "joseModulePolicyTestsPassed": 7,
     "joseReleasePolicyTestsPassed": 32,
-    "joseNativeApplicationChecksPassed": 4
+    "joseNativeApplicationChecksPassed": 4,
+    "joseConsumerReleasePolicyTestsPassed": 31,
+    "joseV3LibraryTestsBefore": 262,
+    "joseV3LibraryTestsAfter": 262,
+    "joseV3ConsumerImagesVerified": 5,
+    "legacyMountChecksOnCurrentImagesPassed": 18
   },
   "deployment": "Recorded exact releases are live; running images and readiness verified. No further reboot performed.",
-  "capacity": "270 GiB root device, 266 GiB filesystem; about 49 GiB free after isolated builds and source publication. 8 GiB reserve retained; separate 15 GiB temporary disk unchanged."
+  "capacity": "270 GiB root device, 266 GiB filesystem; about 46 GiB free after isolated builds/source publication. 8 GiB reserve retained; separate 15 GiB temporary disk unchanged. About 18 GiB RAM available, not exhausted; no failed systemd unit."
 }

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "compiler": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+  "go": "1.26.10",
+  "sourceVersion": "2.11.7",
+  "sourceArchiveSha256": "b430516910839fbaf35c0a9e9df80d1e2e30aa792530293c39f4a97a1b2c9060",
+  "rows": [
+    {
+      "kind": "wishlist",
+      "key": "caddy-wishlist",
+      "base": "sha256:4cdd2bd8826593ac6516e0cd3d380bf14f2b5238a928d096c84c7ca78d17246a",
+      "baseId": "sha256:4cdd2bd8826593ac6516e0cd3d380bf14f2b5238a928d096c84c7ca78d17246a",
+      "candidate": "utilibre-wishlist:caddy-jose-security-20261028",
+      "path": "/usr/bin/caddy",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "oldRef": "utilibre-wishlist:caddy-go-security-20261028",
+      "previousCompiler": "1.26.10",
+      "compilerVersion": "1.26.10",
+      "binary": "/usr/bin/caddy"
+    },
+    {
+      "kind": "newsletters-web",
+      "key": "caddy-newsletters-web",
+      "base": "sha256:0b06677804dc4d700a9bf740d3ea1af2d0b08195fdb9b81a5e3fc8e7d61ef30b",
+      "baseId": "sha256:0b06677804dc4d700a9bf740d3ea1af2d0b08195fdb9b81a5e3fc8e7d61ef30b",
+      "candidate": "utilibre-newsletters-web:caddy-jose-security-20261028",
+      "path": "/app/node_modules/.bin/caddy",
+      "containers": [
+        "utilibre-newsletters-web-1"
+      ],
+      "oldRef": "utilibre-newsletters-web:caddy-go-security-20261028",
+      "previousCompiler": "1.26.10",
+      "compilerVersion": "1.26.10",
+      "binary": "/app/node_modules/.bin/caddy"
+    },
+    {
+      "kind": "newsletters-mail-jobs",
+      "key": "caddy-newsletters-mail-jobs",
+      "base": "sha256:012a4baae0efd3e28e213228c8940d17847413e740f593af1403a88e132059c1",
+      "baseId": "sha256:012a4baae0efd3e28e213228c8940d17847413e740f593af1403a88e132059c1",
+      "candidate": "utilibre-newsletters-mail-jobs:caddy-jose-security-20261028",
+      "path": "/app/node_modules/.bin/caddy",
+      "containers": [
+        "utilibre-newsletters-smtp-1",
+        "utilibre-newsletters-jobs-1"
+      ],
+      "oldRef": "utilibre-newsletters-mail-jobs:caddy-go-security-20261028",
+      "previousCompiler": "1.26.10",
+      "compilerVersion": "1.26.10",
+      "binary": "/app/node_modules/.bin/caddy"
+    }
+  ],
+  "advisory": "CVE-2026-116587",
+  "upstreamBackport": {
+    "version": 1,
+    "state": "native-library-tested-not-deployed",
+    "advisory": "CVE-2026-116587",
+    "upstreamCommit": "a0111f82742fa92bceec9ede40845e73319e6230",
+    "baseline": "github.com/go-jose/go-jose/v3@v3.0.5",
+    "archiveSha256": "4e7e6b60541ab03bd402e573fc2c1264297e661726c5f53529ca14ae58625a27",
+    "file": "jwk.go",
+    "beforeSha256": "79f510a4b97fa2e34ec37932cab57e64dfdc9fa6c314654d1ccc2dd93898a532",
+    "afterSha256": "7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b",
+    "patchSha256": "33ef78dec914e0329666bc9d8d3d4ac6dac8e716f5f4a07370c2f27caa725abf",
+    "scope": "Exact upstream RSA modulus and prime-product bounds. v3 API and header parsing retained; additional v4 header-hardening changes are not backported. This preparation is not deployed or a scanner exception.",
+    "nativeVerification": {
+      "rows": [
+        {
+          "patched": false,
+          "passedTests": 262,
+          "modulusBoundaryRejected": false,
+          "sourceSha256": "79f510a4b97fa2e34ec37932cab57e64dfdc9fa6c314654d1ccc2dd93898a532"
+        },
+        {
+          "patched": true,
+          "passedTests": 262,
+          "modulusBoundaryRejected": true,
+          "sourceSha256": "7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b"
+        }
+      ],
+      "fixtureSha256": "6dba78460243c1579eb4f41617550e338d9280b0b241234cf218fe836e525f33",
+      "applicationVerification": false,
+      "deployed": false
+    }
+  },
+  "joseVersion": "v4.1.6",
+  "joseArchiveSha256": "62506f3369fc124682356bbe8eb442f982422401dda99ace200694efc962da76"
+}

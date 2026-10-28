@@ -1,9 +1,9 @@
 // Existing Trivy interface, exact old/new images and one unchanged local DB.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 process.umask(0o077);
-const root='/var/lib/utilibre-maintenance/security-20261028',flags=['--jose','--drf','--dnspython','--authlib','--alpine','--node-apk','--undici','--body','--go','--go-helpers','--caddy','--go-runtime','--go-services','--node','--curl','--curl-bookworm'];
+const root='/var/lib/utilibre-maintenance/security-20261028',flags=['--jose-leaf','--jose-caddy','--jose','--drf','--dnspython','--authlib','--alpine','--node-apk','--undici','--body','--go','--go-helpers','--caddy','--go-runtime','--go-services','--node','--curl','--curl-bookworm'];
 assert(process.argv.filter(a=>flags.includes(a)).length<=1);
-const profile=process.argv.find(a=>flags.includes(a))?.slice(2)||'brotli',jose=profile==='jose',drf=profile==='drf',dns=profile==='dnspython',authlib=profile==='authlib',alpine=['alpine','node-apk'].includes(profile),undici=profile==='undici',body=profile==='body',go=['go','go-helpers','caddy','go-runtime','go-services','jose'].includes(profile),node=profile==='node',curl=profile.startsWith('curl'),inputs=JSON.parse(fs.readFileSync(new URL('./'+profile+'-inputs.json',import.meta.url)));
+const profile=process.argv.find(a=>flags.includes(a))?.slice(2)||'brotli',jose=['jose','jose-caddy','jose-leaf'].includes(profile),drf=profile==='drf',dns=profile==='dnspython',authlib=profile==='authlib',alpine=['alpine','node-apk'].includes(profile),undici=profile==='undici',body=profile==='body',go=['go','go-helpers','caddy','go-runtime','go-services','jose','jose-caddy','jose-leaf'].includes(profile),node=profile==='node',curl=profile.startsWith('curl'),inputs=JSON.parse(fs.readFileSync(new URL('./'+profile+'-inputs.json',import.meta.url)));
 const keys=process.argv.slice(2).filter(k=>!flags.includes(k));assert(keys.length&&new Set(keys).size===keys.length&&keys.every(k=>inputs.rows.some(s=>s.key===k)));
 const sha=b=>createHash('sha256').update(b).digest('hex');
 const db='/var/cache/utilibre-security/db/trivy.db',metadata=JSON.parse(fs.readFileSync('/var/cache/utilibre-security/db/metadata.json'));

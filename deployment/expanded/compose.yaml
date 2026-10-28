@@ -103,7 +103,7 @@ services:
 
   wakapi:
     <<: *runtime
-    image: utilibre-wakapi:go-security-20261028
+    image: utilibre-wakapi:jose-security-20261028
     read_only: true
     user: "65532:65532"
     environment:

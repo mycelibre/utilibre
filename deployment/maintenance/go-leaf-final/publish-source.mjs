@@ -6,16 +6,16 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 process.umask(0o077);
 const here=new URL('.',import.meta.url).pathname;
-const jose=process.argv.includes('--batch=security-20261028-jose');
+const joseLeaf=process.argv.includes('--batch=security-20261028-jose-leaf'),jose=process.argv.includes('--batch=security-20261028-jose')||joseLeaf;
 const followup=process.argv.includes('--batch=security-20261024'),oct28=process.argv.includes('--batch=security-20261028');assert([followup,oct28,jose].filter(Boolean).length<=1);
 const historical='/var/lib/utilibre-maintenance/go-leaf-final-20261011';
-const root=jose?'/var/lib/utilibre-maintenance/security-20261028/jose':oct28?'/var/lib/utilibre-maintenance/security-20261028/go-leaf':followup?'/var/lib/utilibre-maintenance/security-20261024':historical;
+const root=jose?'/var/lib/utilibre-maintenance/security-20261028/'+(joseLeaf?'jose-leaf':'jose'):oct28?'/var/lib/utilibre-maintenance/security-20261028/go-leaf':followup?'/var/lib/utilibre-maintenance/security-20261024':historical;
 const specs=JSON.parse(fs.readFileSync(new URL(followup?'../security-20261024/images.json':'./images.json',import.meta.url)));
-const current=(oct28||jose)?JSON.parse(fs.readFileSync(here+'../security-20261028/'+(jose?'jose':'go-helpers')+'-inputs.json')):null;
+const current=(oct28||jose)?JSON.parse(fs.readFileSync(here+'../security-20261028/'+(joseLeaf?'jose-leaf':jose?'jose':'go-helpers')+'-inputs.json')):null;
 if(oct28||jose)for(const s of specs){const c=current.rows.find(c=>c.key===(s.key==='wakapi-healthcheck'?'wakapi':s.key));if(c)Object.assign(s,{baseId:c.base,base:c.oldRef,candidate:c.candidate,compiler:c.compilerVersion});}
 const sha=b=>createHash('sha256').update(b).digest('hex');
 const publish=process.argv.includes('--publish');
-const targets=process.argv.slice(2).filter(x=>!['--batch=security-20261028-jose','--publish','--batch=security-20261024','--batch=security-20261028'].includes(x));
+const targets=process.argv.slice(2).filter(x=>!['--batch=security-20261028-jose-leaf','--batch=security-20261028-jose','--publish','--batch=security-20261024','--batch=security-20261028'].includes(x));
 const flags={
  'oauth2-proxy':'-X github.com/oauth2-proxy/oauth2-proxy/v7/pkg/version.VERSION=v7.15.5',
  mezzo:'-s -w -X main.version=1.4.0',
@@ -29,7 +29,7 @@ const digest={'1.26.9':'3082400e369fa24d5fc60bca20edab3f6d604e0c5a690ec66b295eff
 for(const key of targets){
  const s=specs.find(x=>x.key===key);assert(s,'Unknown source target');if(oct28)assert(['oauth2-proxy','mezzo','ntfy','wakapi-healthcheck'].includes(key));
  const name=key==='wakapi-healthcheck'?'wakapi':key;
- if(jose)assert(['ntfy','vikunja'].includes(name));
+ if(jose)assert((joseLeaf?['oauth2-proxy','wakapi']:['ntfy','vikunja']).includes(name));
  const prefix=root+(jose?'/'+name:'')+'/output/'+name;
  const image=JSON.parse(fs.readFileSync(prefix+'-image.json'));
  for(const suffix of ['native','verify']){const gate=JSON.parse(fs.readFileSync(jose?root+'/'+name+'/'+(suffix==='verify'?'inventory':'native')+'.json':oct28&&suffix==='verify'?'/var/lib/utilibre-maintenance/security-20261028/go-helpers/'+name+'/inventory.json':prefix+'-'+suffix+'.json'));assert(gate.passed&&gate.imageId===image.imageId);}
@@ -41,7 +41,7 @@ for(const key of targets){
   const bytes=fs.readFileSync(snapshot.source+'/'+entry.path);assert.equal(sha(bytes),entry.sha256,'Source changed '+entry.path);
   fs.writeFileSync(dest,bytes,{mode:entry.executable?0o755:0o644});
  }
- for(const file of ['go.mod','go.sum'])fs.copyFileSync((jose?here+'../security-20261028/locks/jose/':here+'locks/')+name+'/'+file,stage+'/'+file);
+ for(const file of ['go.mod','go.sum'])fs.copyFileSync((jose?here+'../security-20261028/locks/'+(joseLeaf?'jose-leaf':'jose')+'/':here+'locks/')+name+'/'+file,stage+'/'+file);
  const copy=(from,to)=>{fs.mkdirSync(path.dirname(stage+'/'+to),{recursive:true});fs.cpSync(historical+'/input/'+from,stage+'/'+to,{recursive:true});};
  if(name==='opengist'){copy('opengist-embed/assets','public/assets');copy('opengist-embed/.vite','public/.vite');}
  if(name==='ntfy'){copy('ntfy-embed/site','server/site');copy('ntfy-embed/docs','server/docs');}
@@ -55,7 +55,7 @@ for(const key of targets){
  const experiment=name==='wakapi'?'jsonv2':name==='mezzo'?'nodwarf5':'';
  const target=name==='wakapi'?'main.go':name==='anubis'?'./cmd/anubis':name==='mezzo'?'./cmd/mezzo':'.';
  const script=`#!/bin/sh\nset -eu\ntest "$(go version)" = 'go version go${s.compiler} linux/amd64'\nexport GOTOOLCHAIN=local GOTELEMETRY=off CGO_ENABLED=${cgo} GOOS=linux GOARCH=amd64 GOEXPERIMENT=${experiment}\ngo mod verify\nmkdir -p utilibre-output\ngo build -mod=readonly -p 1 -trimpath ${tags?'-tags='+tags+' ':''}-ldflags '${flags[name]}' -o utilibre-output/${name} ${target}\n`+(name==='wakapi'?"CGO_ENABLED=0 GO111MODULE=off GOEXPERIMENT= go build -trimpath -ldflags '-s -w' -o utilibre-output/healthcheck scripts/healthcheck.go\n":'');
- fs.writeFileSync(stage+'/UTILIBRE-REBUILD.sh',script,{mode:0o755});
+ let rebuildScript=script;if(joseLeaf){const patchSpec=JSON.parse(fs.readFileSync(here+'../security-20261028/jose-v3-inputs.json'));const post='/var/lib/utilibre-maintenance/security-20261028/jose/regression/v3-fixed/jwk.go';assert.equal(sha(fs.readFileSync(post)),patchSpec.afterSha256);fs.copyFileSync(post,stage+'/UTILIBRE-go-jose-v3-jwk.go');fs.copyFileSync(here+'../security-20261028/jose-v3-rsa.patch',stage+'/UTILIBRE-go-jose-v3.patch');rebuildScript=rebuildScript.replace('go mod verify\n','go mod verify\ngo mod vendor\necho \''+patchSpec.beforeSha256+'  vendor/github.com/go-jose/go-jose/v3/jwk.go\' | sha256sum -c -\ncp UTILIBRE-go-jose-v3-jwk.go vendor/github.com/go-jose/go-jose/v3/jwk.go\necho \''+patchSpec.afterSha256+'  vendor/github.com/go-jose/go-jose/v3/jwk.go\' | sha256sum -c -\n').replace('go build -mod=readonly','go build -mod=vendor');}fs.writeFileSync(stage+'/UTILIBRE-REBUILD.sh',rebuildScript,{mode:0o755});
  if(followup){
   const inputs=JSON.parse(fs.readFileSync(root+'/'+name+'/inputs.json'));
   fs.writeFileSync(stage+'/UTILIBRE-TOOLCHAIN.json',JSON.stringify({imageId:inputs.compiler,goArchive:JSON.parse(fs.readFileSync(root+'/go-download.json')),note:'Local compiler image; not a public registry manifest. Compiler construction and dependencies are recorded separately. Byte-reproducible builds are not claimed.'},null,2)+'\n');
@@ -68,7 +68,7 @@ for(const key of targets){
   m.runtime=m.runtime.replace('go-leaf-final','security-20261024');
   fs.writeFileSync(p,JSON.stringify(m,null,2)+'\n');
  }
- if(oct28||jose){const p=stage+'/UTILIBRE-SECURITY.json',m=JSON.parse(fs.readFileSync(p));m.compilerImage=current.toolchains[s.compiler].localCompilerImageId;m.instructions='Use the exact Go archive and checksum in UTILIBRE-TOOLCHAIN.json, with gcc/musl-dev/binutils for ntfy. Run UTILIBRE-REBUILD.sh against included application source, assets and reviewed module locks. Image ID is a local build, not a registry digest. Byte-reproducible builds are not claimed.';fs.writeFileSync(p,JSON.stringify(m,null,2)+'\n');fs.writeFileSync(stage+'/UTILIBRE-TOOLCHAIN.json',JSON.stringify(current.toolchains[s.compiler],null,2)+'\n');}
+ if(oct28||jose){const p=stage+'/UTILIBRE-SECURITY.json',m=JSON.parse(fs.readFileSync(p));m.compilerImage=current.toolchains[s.compiler].localCompilerImageId;m.instructions='Use the exact Go archive and checksum in UTILIBRE-TOOLCHAIN.json, with gcc/musl-dev/binutils for ntfy or Vikunja. Run UTILIBRE-REBUILD.sh against included application source, assets and reviewed module locks. Image ID is a local build, not a registry digest. Byte-reproducible builds are not claimed.';if(jose){const build=JSON.parse(fs.readFileSync(root+'/'+name+'/build.json'));assert.equal(build.imageId,image.imageId);m.binaries=build.binaries;m.replaceOnly=build.changedFiles;if(joseLeaf&&name==='wakapi'){rebuildScript=rebuildScript.replace("CGO_ENABLED=0 GO111MODULE=off GOEXPERIMENT= go build -trimpath -ldflags '-s -w' -o utilibre-output/healthcheck scripts/healthcheck.go\n",'');fs.writeFileSync(stage+'/UTILIBRE-REBUILD.sh',rebuildScript,{mode:0o755});m.runtime+=' This JOSE overlay preserves the existing /app/healthcheck byte-for-byte.';}}fs.writeFileSync(p,JSON.stringify(m,null,2)+'\n');fs.writeFileSync(stage+'/UTILIBRE-TOOLCHAIN.json',JSON.stringify(current.toolchains[s.compiler],null,2)+'\n');}
  const archive=root+(jose?'/'+name:'/output')+'/'+name+'-utilibre.tar.gz';
  cp.execFileSync('tar',['-czf',archive,'-C',stage,'.']);
  cp.execFileSync('tar',['-tzf',archive],{stdio:['ignore','ignore','pipe']});

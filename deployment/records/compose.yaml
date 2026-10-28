@@ -36,7 +36,7 @@ services:
       retries: 5
   grist-auth:
     <<: *runtime
-    image: utilibre-oauth2-proxy:go-security-20261028
+    image: utilibre-oauth2-proxy:jose-security-20261028
     user: '65532:65532'
     cpus: 0.5
     mem_limit: 128m
