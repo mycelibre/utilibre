@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync, mkdtempSync, statfsSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { retirableDangling } from './cleanup-selection.mjs';
 
 const root = '/home/ubuntu/freetools';
 // Latest and documented previous release. See docs/records/seo-catalog-2026-10-09.md,
@@ -28,14 +29,14 @@ const list = args => [...new Set(docker(args).trim().split('\n').filter(Boolean)
 const free = () => { const d = statfsSync('/opt/utilibre'); return d.bavail * d.bsize; };
 const imageRepo = tag => tag.slice(0, tag.lastIndexOf(':'));
 function inventory() {
-  const images = JSON.parse(docker(['image', 'inspect', ...list(['image', 'ls', '-aq', '--no-trunc'])]));
-  const containers = JSON.parse(docker(['inspect', ...list(['ps', '-aq', '--no-trunc'])]));
+  const images = docker(['image', 'inspect', '--format', '{"Id":{{json .Id}},"RepoTags":{{json .RepoTags}},"RepoDigests":{{json .RepoDigests}},"Created":{{json .Created}},"Size":{{json .Size}}}', ...list(['image', 'ls', '-aq', '--no-trunc'])]).trim().split('\n').map(JSON.parse);
+  const containers = docker(['inspect', '--format', '{"Id":{{json .Id}},"Image":{{json .Image}},"State":{"Running":{{json .State.Running}},"StartedAt":{{json .State.StartedAt}}},"Config":{"Labels":{"com.docker.compose.project.config_files":{{json (index .Config.Labels "com.docker.compose.project.config_files")}}}}}', ...list(['ps', '-aq', '--no-trunc'])]).trim().split('\n').map(JSON.parse);
   return { images, containers };
 }
 function protection({ images, containers }) {
   const protectedIds = new Set(containers.map(c => c.Image));
-  const files = new Set(execFileSync('git', ['ls-files', '-z', 'deployment', 'compose.yaml'],
-    { cwd: root, encoding: 'utf8' }).split('\0').filter(f => f && !/\.(md|json|patch)$/.test(f)).map(f => resolve(root, f)));
+  const files = new Set(execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '-z'],
+    { cwd: root, encoding: 'utf8', maxBuffer: 4 * 1024 ** 2 }).split('\0').filter(Boolean).map(f => resolve(root, f)));
   // Inspect only known deployment files; never print their content or environments.
   files.add(`${root}/.env`);
   for (const c of containers) {
@@ -43,7 +44,10 @@ function protection({ images, containers }) {
   }
   const texts = [...files].filter(existsSync).map(f => readFileSync(f, 'utf8'));
   for (const image of images) {
-    if ([...(image.RepoTags || []), ...(image.RepoDigests || [])].some(ref => texts.some(text => text.includes(ref)))) protectedIds.add(image.Id);
+    // Include documentation, manifests and patches: a recorded rollback or
+    // exact build input is protected even when its image has lost its tag.
+    const refs = [...(image.RepoTags || []), ...(image.RepoDigests || []), image.Id, image.Id.slice(7, 19)];
+    if (refs.some(ref => texts.some(text => text.includes(ref)))) protectedIds.add(image.Id);
   }
   for (const [repo, tags] of Object.entries(reviewed)) {
     for (const tag of tags) {
@@ -54,7 +58,8 @@ function protection({ images, containers }) {
   }
   return protectedIds;
 }
-function eligible(image, state, protectedIds) {
+function eligible(image, state, protectedIds, mode) {
+  if (mode === 'unreferenced-dangling') return retirableDangling(image, protectedIds);
   if (protectedIds.has(image.Id) || !image.RepoTags?.length) return false;
   return image.RepoTags.every(tag => {
     const repo = imageRepo(tag), pair = reviewed[repo];
@@ -68,12 +73,15 @@ process.umask(0o077);
 assert.equal(process.cwd(), root, 'Run from the project root');
 assert.equal(process.getuid(), 0, 'Run as root');
 const args = process.argv.slice(2);
+assert(!args.length || (args.length === 1 && args[0] === '--dangling') ||
+  (args.length === 2 && args[0] === '--apply'), 'Use --dangling (plan only), no arguments (reviewed tags), or --apply /absolute/plan.json');
 const state = inventory(), protectedIds = protection(state);
-if (!args.length) {
+if (!args.length || args[0] === '--dangling') {
+  const mode = args[0] === '--dangling' ? 'unreferenced-dangling' : 'reviewed-tags';
   const dir = mkdtempSync('/opt/utilibre/reports/image-cleanup-');
-  const candidates = state.images.filter(i => eligible(i, state, protectedIds))
+  const candidates = state.images.filter(i => eligible(i, state, protectedIds, mode))
     .map(({ Id, RepoTags, Created, Size }) => ({ id: Id, tags: RepoTags, created: Created, size: Size }));
-  const plan = { createdAt: new Date().toISOString(), freeBytesBefore: free(), reviewed,
+  const plan = { createdAt: new Date().toISOString(), freeBytesBefore: free(), reviewed, mode,
     containers: state.containers.map(c => ({ id: c.Id, image: c.Image, running: c.State.Running, startedAt: c.State.StartedAt })),
     protectedImages: [...protectedIds], candidates };
   writeFileSync(`${dir}/plan.json`, JSON.stringify(plan, null, 2), { flag: 'wx', mode: 0o600 });
@@ -84,9 +92,10 @@ if (!args.length) {
   const plan = JSON.parse(readFileSync(args[1], 'utf8'));
   assert(Date.now() - Date.parse(plan.createdAt) < 3600000, 'Plan is stale');
   assert.deepEqual(plan.reviewed, reviewed);
+  assert(['unreferenced-dangling', 'reviewed-tags'].includes(plan.mode));
   for (const c of plan.candidates) {
     const current = state.images.find(i => i.Id === c.id);
-    assert(current && eligible(current, state, protectedIds), 'Candidate is no longer safe to remove');
+    assert(current && eligible(current, state, protectedIds, plan.mode), 'Candidate is no longer safe to remove');
     assert.deepEqual(current.RepoTags, c.tags);
   }
   const result = { date: new Date().toISOString(), freeBytesBefore: free(), removed: [], failures: [] };
@@ -94,12 +103,18 @@ if (!args.length) {
   const record = () => writeFileSync(resultPath, JSON.stringify(result, null, 2), { mode: 0o600 });
   record();
   for (const c of plan.candidates) {
+    // This reviewed batch is for headroom, not maximum deletion. Keep the
+    // remaining disposable images once the maintenance reserve is restored.
+    if (plan.mode === 'unreferenced-dangling' && free() >= 30 * 1024 ** 3) break;
     try {
       // Container reference recheck immediately before each removal; Docker also refuses conflicts.
-      const used = new Set(JSON.parse(docker(['inspect', ...list(['ps', '-aq'])])).map(container => container.Image));
+      const used = new Set(docker(['inspect', '--format', '{{.Image}}', ...list(['ps', '-aq'])]).trim().split('\n'));
       assert(!used.has(c.id));
-      for (const tag of c.tags) assert.equal(JSON.parse(docker(['image', 'inspect', tag]))[0].Id, c.id);
-      docker(['image', 'rm', '--no-prune', ...c.tags]);
+      const current = JSON.parse(docker(['image', 'inspect', '--format', '{"Id":{{json .Id}},"RepoTags":{{json .RepoTags}},"RepoDigests":{{json .RepoDigests}}}', c.id]));
+      assert.deepEqual(current.RepoTags, c.tags);
+      if (plan.mode === 'unreferenced-dangling') assert(!current.RepoDigests?.length);
+      for (const tag of c.tags || []) assert.equal(docker(['image', 'inspect', '--format', '{{.Id}}', tag]).trim(), c.id);
+      docker(['image', 'rm', '--no-prune', ...(c.tags?.length ? c.tags : [c.id])]);
       result.removed.push(c);
     } catch { result.failures.push({ id: c.id, tags: c.tags }); record(); break; }
     record();

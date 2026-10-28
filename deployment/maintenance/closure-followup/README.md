@@ -620,3 +620,21 @@ claim that an installed/running kernel is repaired. Two further tests cover
 content rejection and immutable-patch boundaries; actual inventory checks run
 only against the current scan and live package identity.
 
+### Header evidence replay, 28 October 2026
+
+`headers-review.mjs --offline` reuses the original pinned local CNA snapshot;
+`--current --offline` reuses the separately pinned October 21 snapshot. Neither
+option refreshes records or requests missing overlap patches. Missing evidence
+remains unresolved. These are recorded-source assessments, not fresh advisory
+database updates.
+
+For a deliberately selected newer immutable CNA revision, use
+`headers-review.mjs --snapshot <40-character-commit>`. Downloads remain bounded
+to the relevant primary records. This does not approve any finding.
+
+Every run now retains its report under a unique protected `header-evidence-*`
+directory. New decision reasons refer to that immutable report. The previous
+latest report is retained before updating the existing operator compatibility
+path. The JSON summary prints the evidence location. Existing exact-key approval,
+fresh-scan checks, seven-day expiry and kernel exclusions are unchanged.
+

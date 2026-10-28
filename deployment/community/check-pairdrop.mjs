@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {connect as tcpConnect} from 'node:net';
 import {connect as tlsConnect} from 'node:tls';
+import {waitForIceModes} from './pairdrop-stats.mjs';
 const require = createRequire(process.env.PAIRDROP_PLAYWRIGHT_PACKAGE || new URL('../../portal/package.json', import.meta.url));
 const {chromium} = require('playwright-core');
 
@@ -77,9 +78,16 @@ try {
   for await (const chunk of stream) chunks.push(chunk);
   assert.deepEqual(Buffer.concat(chunks), payload, 'Received bytes must match the synthetic file');
   assert.equal(download.suggestedFilename(), 'utilibre-synthetic.txt');
-  const modes = await pages[0].evaluate(async () => {
-    const modes=[]; for(const peer of window.syntheticPeerConnections) {const stats=await peer.getStats();for(const r of stats.values())if(r.type==='candidate-pair'&&r.state==='succeeded'&&r.nominated)modes.push({local:stats.get(r.localCandidateId)?.candidateType,remote:stats.get(r.remoteCandidateId)?.candidateType})}return modes;
-  });
+  // The bytes can arrive before getStats publishes its selected pair. Poll
+  // observations only, never resend the file or accept an unselected pair.
+  const modes = await waitForIceModes(() => pages[0].evaluate(async () => {
+    const fields = ['id','type','state','nominated','selectedCandidatePairId','localCandidateId','remoteCandidateId','candidateType'];
+    const reports = [];
+    for (const peer of window.syntheticPeerConnections.filter(p => p.connectionState === 'connected')) {
+      reports.push([...await peer.getStats()].map(([, row]) => Object.fromEntries(fields.filter(k => row[k] !== undefined).map(k => [k, row[k]]))));
+    }
+    return reports;
+  }));
   assert(modes.length>0);assert(modes.every(m=>relay ? m.local === 'relay' : ['host','srflx','prflx'].includes(m.local)),'Selected ICE mode did not match the requested test');
   if(receiverDirect) assert(modes.every(m=>['host','srflx','prflx'].includes(m.remote)),'Receiver unexpectedly used a relay');
   // Chromium denies this optional screen-awake request in a background tab.

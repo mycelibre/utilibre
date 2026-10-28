@@ -9,12 +9,19 @@ import {validateDecision} from '../triage.mjs';
 import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents,gcovBuildPaths} from './headers-policy.mjs';
 import {overlapSpecs,verifyOverlap} from './headers-overlap.mjs';
 import {privateTokens,validateInventory} from '../historical-header-final/policy.mjs';
-const root='/var/lib/utilibre-maintenance',dir=root+'/closure-followup-20261012';
-assert(process.argv.length<=3&&[undefined,'--current'].includes(process.argv[2]));
-const current=process.argv[2]==='--current';
-const commit=current?'2f073091b14641caef8f31f3ae9cfc4eef3c201e':'20d9248c60fe62803efade3177e8b82b586d154c';
+const root='/var/lib/utilibre-maintenance';
+const provided=process.argv.slice(2),offline=provided.includes('--offline');
+assert(provided.filter(x=>x==='--offline').length<=1,'Duplicate --offline');
+const args=provided.filter(x=>x!=='--offline'),snapshot=args[0]==='--snapshot';
+assert(snapshot?args.length===2&&/^[a-f0-9]{40}$/.test(args[1]):args.length<=1&&[undefined,'--current'].includes(args[0]),'Use --snapshot <immutable CNA commit>, --current, or no arguments');
+const current=args[0]==='--current';
+const commit=snapshot?args[1]:current?'2f073091b14641caef8f31f3ae9cfc4eef3c201e':'20d9248c60fe62803efade3177e8b82b586d154c';
+// A new snapshot gets separate evidence: do not overwrite the files linked by
+// earlier expiring decisions. Selecting a snapshot never approves findings.
+const dir=root+(snapshot?'/headers-review-'+commit:'/closure-followup-20261012');
 const cache=current?dir+'/cna-20261021':dir+'/cna';
 process.umask(0o077);fs.mkdirSync(cache,{recursive:true});
+const reportDir=fs.mkdtempSync(root+'/header-evidence-'+commit+'-');
 const queue=JSON.parse(fs.readFileSync(root+'/security-queue.json'));
 const scan=JSON.parse(fs.readFileSync(root+'/security.json'));
 assert.equal(queue.scanDate,scan.completedAt);assert.equal(scan.status,'checked');
@@ -28,6 +35,7 @@ await Promise.all(Array.from({length:4},async()=>{while(next<ids.length){
  try{
   const file=cache+'/'+id+'.json';let body;
   if(fs.existsSync(file))body=fs.readFileSync(file,'utf8');else{
+   assert(!offline,'Primary record is not in the selected local snapshot');
    const res=await fetch(url,{signal:AbortSignal.timeout(20000)});assert(res.ok);body=await res.text();assert(body.length<250000);fs.writeFileSync(file,body);
   }
   const record=JSON.parse(body),files=id==='CVE-2026-63825'?gcovBuildPaths(body,id):legacyComponents[id]?historicalKernelPaths(body,id):kernelComponentPaths(record,id);
@@ -58,15 +66,20 @@ for(const item of items){
  if(headerOverlap(primary.files,inventories.get(k).files)){
   try{
    const spec=overlapSpecs[item.id];assert(spec);const file=dir+'/cna/'+item.id+'-overlap.patch';
-   if(!fs.existsSync(file)){const r=await fetch('https://github.com/gregkh/linux/commit/'+spec.commit+'.patch',{signal:AbortSignal.timeout(20000)});assert(r.ok);const text=await r.text();assert(text.length<250000);fs.writeFileSync(file,text);}
+   if(!fs.existsSync(file)){assert(!offline,'Overlap patch is not cached');const r=await fetch('https://github.com/gregkh/linux/commit/'+spec.commit+'.patch',{signal:AbortSignal.timeout(20000)});assert(r.ok);const text=await r.text();assert(text.length<250000);fs.writeFileSync(file,text);}
    const readHeader=p=>item.scope==='host-os'?fs.readFileSync(p,'utf8'):execute('docker',['exec',item.containers[0],'cat',p]);
    const proof=verifyOverlap(item.id,primary.files,inventories.get(k).files,fs.readFileSync(file,'utf8'),readHeader);
    overlapEvidence.push({key:item.key,commit:spec.commit,patchSha256:spec.sha256,headers:proof});overlap=true;
   }catch{skipped.push({id:item.id,reason:'Header path overlap requires content review'});continue;}
  }
- const reason=`Primary ${primary.provider} CNA identifies ${primary.files.length} compiled-kernel/internal files; first: ${primary.files[0]}. Exact linux-libc-dev ${item.installed} inventory ${inventories.get(k).digest} contains headers/docs, no kernel binary/module. ${overlap?'Same-name exported UAPI headers were read: syscall-note present, affected private fields/functions absent; pinned upstream patch changes only internal files.':'No affected UAPI file is named or matches the inventory.'} Complete source/response hashes and any header-content proof are in closure-followup-20261012/headers-review.json. ${primary.url} . This exact-package attribution does NOT assess the running VM/Proxmox kernel, linux-image or container isolation. Raw scan unchanged.`;
+ const reason=`Primary ${primary.provider} CNA identifies ${primary.files.length} compiled-kernel/internal files; first: ${primary.files[0]}. Exact linux-libc-dev ${item.installed} inventory ${inventories.get(k).digest} contains headers/docs, no kernel binary/module. ${overlap?'Same-name exported UAPI headers were read: syscall-note present, affected private fields/functions absent; pinned upstream patch changes only internal files.':'No affected UAPI file is named or matches the inventory.'} Complete source/response hashes and any header-content proof are in ${reportDir.slice(root.length+1)}/headers-review.json. ${primary.url} . This exact-package attribution does NOT assess the running VM/Proxmox kernel, linux-image or container isolation. Raw scan unchanged.`;
  if(reason.length>1200){skipped.push({id:item.id,reason:'Attribution too long for bounded review; manual review remains'});continue;}
  decisions.push(validateDecision({key:item.key,status:'not-affected',reason,expiresAt:new Date(Date.now()+7*86400000).toISOString()}));
 }
-fs.writeFileSync(dir+'/headers-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,skipped,primary:[...sources.entries()],inventories:[...inventories.entries()],overlapEvidence},null,2)+'\n');
-console.log(JSON.stringify({prepared:decisions.length,primaryRecords:sources.size,unresolvedUnique:skipped.length,applied:false}));
+fs.writeFileSync(reportDir+'/headers-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,cnaCommit:commit,offline,inputFindings:items.length,applied:false,decisions,skipped,primary:[...sources.entries()],inventories:[...inventories.entries()],overlapEvidence},null,2)+'\n');
+// Keep the existing operator application path usable, while decisions link to
+// immutable per-run evidence. Preserve its predecessor before replacing latest.
+const latest=dir+'/headers-review.json';
+if(fs.existsSync(latest))fs.copyFileSync(latest,reportDir+'/previous-headers-review.json',fs.constants.COPYFILE_EXCL);
+fs.copyFileSync(reportDir+'/headers-review.json',latest);
+console.log(JSON.stringify({prepared:decisions.length,primaryRecords:sources.size,unresolvedUnique:skipped.length,applied:false,report:reportDir+'/headers-review.json'}));
