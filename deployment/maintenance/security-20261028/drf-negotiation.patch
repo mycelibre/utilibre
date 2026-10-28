@@ -1,0 +1,184 @@
+diff --git a/rest_framework/negotiation.py b/rest_framework/negotiation.py
+--- a/rest_framework/negotiation.py
++++ b/rest_framework/negotiation.py
+@@ -7,7 +7,7 @@
+ from rest_framework import exceptions
+ from rest_framework.settings import api_settings
+ from rest_framework.utils.mediatypes import (
+-    _MediaType, media_type_matches, order_by_precedence
++    _MediaType, media_type_matches, order_parsed_by_precedence
+ )
+ 
+ 
+@@ -22,13 +22,21 @@ def select_renderer(self, request, renderers, format_suffix=None):
+ class DefaultContentNegotiation(BaseContentNegotiation):
+     settings = api_settings
+ 
++    max_accept_header_length = 8192
++    max_accept_tokens = 64
++    max_media_type_length = 256
++
+     def select_parser(self, request, parsers):
+         """
+         Given a list of parsers and a media type, return the appropriate
+         parser to handle the incoming request.
+         """
++        content_type = request.content_type
++        if content_type and len(content_type) > self.max_media_type_length:
++            # Refuse rather than parse. Returning None results in a 415.
++            return None
+         for parser in parsers:
+-            if media_type_matches(parser.media_type, request.content_type):
++            if media_type_matches(parser.media_type, content_type):
+                 return parser
+         return None
+ 
+@@ -44,20 +52,25 @@ def select_renderer(self, request, renderers, format_suffix=None):
+         if format:
+             renderers = self.filter_renderers(renderers, format)
+ 
+-        accepts = self.get_accept_list(request)
++        accepts = self._get_parsed_accept_list(request)
++
++        # Parse each renderer's (constant) media type once, not once per token.
++        renderer_media_types = [
++            (renderer, _MediaType(renderer.media_type)) for renderer in renderers
++        ]
+ 
+         # Check the acceptable media types against each renderer,
+         # attempting more specific media types first
+         # NB. The inner loop here isn't as bad as it first looks :)
+         #     Worst case is we're looping over len(accept_list) * len(self.renderers)
+-        for media_type_set in order_by_precedence(accepts):
+-            for renderer in renderers:
+-                for media_type in media_type_set:
+-                    if media_type_matches(renderer.media_type, media_type):
++        for media_type_set in order_parsed_by_precedence(accepts):
++            for renderer, renderer_media_type in renderer_media_types:
++                for media_type_wrapper in media_type_set:
++                    if renderer_media_type.match(media_type_wrapper):
++                        media_type = media_type_wrapper.orig
+                         # Return the most specific media type as accepted.
+-                        media_type_wrapper = _MediaType(media_type)
+                         if (
+-                            _MediaType(renderer.media_type).precedence >
++                            renderer_media_type.precedence >
+                             media_type_wrapper.precedence
+                         ):
+                             # Eg client requests '*/*'
+@@ -94,4 +107,34 @@ def get_accept_list(self, request):
+         type strings.
+         """
+         header = request.META.get('HTTP_ACCEPT', '*/*')
+-        return [token.strip() for token in header.split(',')]
++        if len(header) > self.max_accept_header_length:
++            # Truncate at a separator, so a truncated tail cannot be read as a
++            # valid media type. split() then only ever runs on a bounded prefix.
++            cut = header.rfind(',', 0, self.max_accept_header_length)
++            header = header[:cut + 1] if cut != -1 else ''
++        tokens = []
++        for token in header.split(','):
++            token = token.strip()
++            if not token or len(token) > self.max_media_type_length:
++                # Skip (don't break): an over-long leading token should not
++                # discard the usable media types that follow it.
++                continue
++            tokens.append(token)
++            if len(tokens) >= self.max_accept_tokens:
++                break
++        return tokens
++
++    def _get_parsed_accept_list(self, request):
++        """
++        Parse the Accept tokens into ``_MediaType`` objects exactly once per
++        request, reusing them for the forced 406 re-negotiation instead of
++        re-parsing (and without a process-global cache of client input).
++        """
++        parsed = getattr(request, '_parsed_accept_list', None)
++        if parsed is None:
++            parsed = [_MediaType(token) for token in self.get_accept_list(request)]
++            try:
++                request._parsed_accept_list = parsed
++            except Exception:
++                pass
++        return parsed
+diff --git a/rest_framework/request.py b/rest_framework/request.py
+--- a/rest_framework/request.py
++++ b/rest_framework/request.py
+@@ -21,11 +21,15 @@
+ from rest_framework import exceptions
+ from rest_framework.settings import api_settings
+ 
++MAX_MEDIA_TYPE_LENGTH = 256
++
+ 
+ def is_form_media_type(media_type):
+     """
+     Return True if the media type is a valid form media type.
+     """
++    if media_type is None or len(media_type) > MAX_MEDIA_TYPE_LENGTH:
++        return False
+     base_media_type, params = parse_header_parameters(media_type)
+     return (base_media_type == 'application/x-www-form-urlencoded' or
+             base_media_type == 'multipart/form-data')
+diff --git a/rest_framework/utils/mediatypes.py b/rest_framework/utils/mediatypes.py
+--- a/rest_framework/utils/mediatypes.py
++++ b/rest_framework/utils/mediatypes.py
+@@ -24,29 +24,49 @@ def media_type_matches(lhs, rhs):
+     return lhs.match(rhs)
+ 
+ 
+-def order_by_precedence(media_type_lst):
++def order_parsed_by_precedence(media_types):
+     """
+-    Returns a list of sets of media type strings, ordered by precedence.
+-    Precedence is determined by how specific a media type is:
++    Given an iterable of parsed ``_MediaType``, return a list of sets,
++    ordered by precedence. Precedence is determined by how specific a media type is:
+ 
+     3. 'type/subtype; param=val'
+     2. 'type/subtype'
+     1. 'type/*'
+     0. '*/*'
++
++    ``_MediaType`` is hashable by its original string, preserving the set-based dedup.
+     """
+     ret = [set(), set(), set(), set()]
+-    for media_type in media_type_lst:
+-        precedence = _MediaType(media_type).precedence
+-        ret[3 - precedence].add(media_type)
+-    return [media_types for media_types in ret if media_types]
++    for media_type in media_types:
++        ret[3 - media_type.precedence].add(media_type)
++    return [bucket for bucket in ret if bucket]
++
++
++def order_by_precedence(media_type_lst):
++    """
++    Same as `order_parsed_by_precedence`, but takes unparsed media type strings.
++    """
++    media_types_gen = (_MediaType(mt) for mt in media_type_lst)
++    return order_parsed_by_precedence(media_types_gen)
+ 
+ 
+ class _MediaType:
+     def __init__(self, media_type_str):
+         self.orig = '' if (media_type_str is None) else media_type_str
+-        self.full_type, self.params = parse_header_parameters(self.orig)
++        try:
++            self.full_type, self.params = parse_header_parameters(self.orig)
++        except ValueError:
++            # Django raises ValueError above MAX_HEADER_LENGTH; degrade to a
++            # media type that matches nothing rather than surfacing a 500.
++            self.full_type, self.params = '', {}
+         self.main_type, sep, self.sub_type = self.full_type.partition('/')
+ 
++    def __eq__(self, other):
++        return isinstance(other, _MediaType) and self.orig == other.orig
++
++    def __hash__(self):
++        return hash(self.orig)
++
+     def match(self, other):
+         """Return true if this MediaType satisfies the given MediaType."""
+         for key in self.params:

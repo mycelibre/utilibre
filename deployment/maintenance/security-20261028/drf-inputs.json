@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "advisories": [
+    "CVE-2026-114136",
+    "CVE-2026-114137",
+    "CVE-2026-114138"
+  ],
+  "license": "BSD-3-Clause",
+  "method": "upstream-backport",
+  "patches": [
+    {
+      "file": "drf-charset.patch",
+      "sha256": "91a4ea06f2555a7e954707b6c186be5320ba2d56042c5eaf711285f3d97e317d",
+      "upstreamCommit": "3c2634599b26a9f789b03045118dbc276117611a"
+    },
+    {
+      "file": "drf-negotiation.patch",
+      "sha256": "628f3cf97fb8ec42eed670825dac2ce6c3b94220ad965aeadb18f6ae72fff748",
+      "upstreamCommit": "148ab6523922d5a0c110f76615935e5220b63029"
+    },
+    {
+      "file": "drf-tokens.patch",
+      "sha256": "4c95f21d700bb0a9e682a4d91efbc9cb76fe8c48884b9599eb7c51eb01443aba",
+      "upstreamCommit": "af3fabfd517307fbc5d500fba1ab8f6e25f220b0"
+    },
+    {
+      "file": "drf-precedence.patch",
+      "sha256": "d9daf4e4d4a0ec295ac09e17283654e7d1091524a86f96ee167269bdfddeb741",
+      "upstreamCommit": "e140de794d11149a09c04a3ee7cc4815946148f8"
+    }
+  ],
+  "contextAdaptation": "Negotiation retains the 3.17 request.META lookup. Existing admin concrete-token deletion workaround is retained; model and queryset corrections are applied. Includes upstream precedence API compatibility fix; version and list-serializer behavior remain unchanged.",
+  "rows": [
+    {
+      "key": "authentik",
+      "base": "sha256:254de1f47955dbc5ab8dc8a56b937ae939e5824cce9091c675f0178533824d29",
+      "oldRef": "utilibre-authentik:dnspython-security-20261028",
+      "candidate": "utilibre-authentik:drf-security-20261028",
+      "containers": [
+        "utilibre-identity-server-1",
+        "utilibre-identity-worker-1"
+      ],
+      "python": "/ak-root/.venv/bin/python",
+      "site": "/ak-root/.venv/lib/python3.14/site-packages",
+      "previous": "3.17.1",
+      "files": [
+        {
+          "path": "rest_framework/parsers.py",
+          "beforeSha256": "f2175b3480218652d0efd27bc8a75014094d477f629a3660fb13f51bdd91d3ea",
+          "afterSha256": "e95900f828f5f4a70248a74277c7b18e4b018d57d0eb41b36b806afea6d7aa76"
+        },
+        {
+          "path": "rest_framework/negotiation.py",
+          "beforeSha256": "e2601a738b3383ab5fc0e37a542c9f356565c4c42b8374a78b14579288fde1cc",
+          "afterSha256": "e6bd5ebcc5f7aa4dc971975bae060643f49fe2f4ce95356d912d01bb82affe19"
+        },
+        {
+          "path": "rest_framework/request.py",
+          "beforeSha256": "b9f83207297b10cc5d0371e12a98b21fa0f559ae9bff24065d7996389a504f83",
+          "afterSha256": "99c7518f3e824e058bb14aad9e5e92045c11a967af28960a601a233dbbd5267a"
+        },
+        {
+          "path": "rest_framework/utils/mediatypes.py",
+          "beforeSha256": "0188864e703d491794658d7c031a1024d5b41324f4e8716d94ef5023bfad229b",
+          "afterSha256": "71149fdaa455a14cd388857be4c93eefe9b75ae6755a897d9e0c2013a000d352"
+        },
+        {
+          "path": "rest_framework/authtoken/models.py",
+          "beforeSha256": "2200886afc086d12eba6a5bb174d3ea41d1305cc5d56b5fc6301185c251929ea",
+          "afterSha256": "b2a1c588e69a0f526b219e73a90e62c8731fbad3c1ee6f04e1a4f033e59f8e84"
+        }
+      ]
+    },
+    {
+      "key": "linkding",
+      "base": "sha256:4f11add1731c15f6999926706ecab8d5285edef816ec960cdd3e96abe2ce502b",
+      "oldRef": "utilibre-curl-linkding-linkding:security-20261028",
+      "candidate": "utilibre-linkding:drf-security-20261028",
+      "containers": [
+        "utilibre-linkding-linkding-1"
+      ],
+      "python": "/etc/linkding/.venv/bin/python",
+      "site": "/etc/linkding/.venv/lib/python3.13/site-packages",
+      "previous": "3.17.2",
+      "files": [
+        {
+          "path": "rest_framework/parsers.py",
+          "beforeSha256": "f2175b3480218652d0efd27bc8a75014094d477f629a3660fb13f51bdd91d3ea",
+          "afterSha256": "e95900f828f5f4a70248a74277c7b18e4b018d57d0eb41b36b806afea6d7aa76"
+        },
+        {
+          "path": "rest_framework/negotiation.py",
+          "beforeSha256": "e2601a738b3383ab5fc0e37a542c9f356565c4c42b8374a78b14579288fde1cc",
+          "afterSha256": "e6bd5ebcc5f7aa4dc971975bae060643f49fe2f4ce95356d912d01bb82affe19"
+        },
+        {
+          "path": "rest_framework/request.py",
+          "beforeSha256": "4d8f0fb53989bfb3db68fb27f5e195c435a48547972f13e7cc3e5c0c5979272c",
+          "afterSha256": "4d3b8cf78f57a5308d8a11fcdeb902d8d162c5df5dc6be2a85fbbb950c6a7e16"
+        },
+        {
+          "path": "rest_framework/utils/mediatypes.py",
+          "beforeSha256": "0188864e703d491794658d7c031a1024d5b41324f4e8716d94ef5023bfad229b",
+          "afterSha256": "71149fdaa455a14cd388857be4c93eefe9b75ae6755a897d9e0c2013a000d352"
+        },
+        {
+          "path": "rest_framework/authtoken/models.py",
+          "beforeSha256": "2200886afc086d12eba6a5bb174d3ea41d1305cc5d56b5fc6301185c251929ea",
+          "afterSha256": "b2a1c588e69a0f526b219e73a90e62c8731fbad3c1ee6f04e1a4f033e59f8e84"
+        }
+      ]
+    }
+  ],
+  "licenseSource": {
+    "url": "https://raw.githubusercontent.com/encode/django-rest-framework/1af5b55758ac514c492ed3a5fc1a6fb244cdb257/LICENSE.md",
+    "sha256": "cc12b0b85368972177ebf422089419b9fe3eea5729fecb11105c640f6eeaccd4"
+  }
+}

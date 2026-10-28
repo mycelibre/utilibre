@@ -49,6 +49,12 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 r=client.post('/settings/import',{'import_file':SimpleUploadedFile('bookmarks.html',r.content,content_type='text/html')});assert r.status_code==302
 restored=Bookmark.objects.get(owner=b);assert restored.url==body['url'] and restored.notes==body['notes'] and restored.is_archived and restored.unread and not restored.shared
 assert set(restored.tag_names)==set(body['tag_names'])
+# A second authenticated account must not read the first account's private item.
+other_token=ApiToken.objects.create(user=b,name='Fictional isolation verification')
+isolated=Client(HTTP_HOST='bookmarks.utilibre.org',HTTP_X_FORWARDED_PROTO='https',HTTP_AUTHORIZATION='Token '+other_token.key)
+assert isolated.get('/api/bookmarks/'+str(bookmark.pk)+'/').status_code==404
+assert isolated.get('/api/bookmarks/'+str(restored.pk)+'/').status_code==200
+other_token.delete()
 # Keep fixtures for consistent backup/reopen; cleanup is a separate native operation.
 Path('/etc/linkding/data/fixture-state.json').write_text(json.dumps({'users':[a.username,b.username],'ids':[bookmark.pk,restored.pk],'token':token.key,'export':html}))
-print(json.dumps({'nativeApiCreate':True,'htmlExportImportRoundTrip':True,'notesTagsArchiveUnreadPreserved':True,'noExternalFaviconOrArchiveJobs':True,'anonymousDenied':client.logout() is None and Client().get('/api/bookmarks/').status_code in [401,403]}))
+print(json.dumps({'nativeApiCreate':True,'htmlExportImportRoundTrip':True,'notesTagsArchiveUnreadPreserved':True,'noExternalFaviconOrArchiveJobs':True,'accountIsolation':True,'anonymousDenied':client.logout() is None and Client().get('/api/bookmarks/').status_code in [401,403]}))

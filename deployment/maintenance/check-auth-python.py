@@ -19,6 +19,11 @@ from authentik.stages.authenticator_totp.models import TOTPDevice
 from authentik.stages.authenticator.oath import TOTP
 assert jwt.__version__ == '2.14.0'
 assert version('anyio') == '4.14.2'
+if os.environ.get('UTILIBRE_SECURITY_FRESH_FIXTURE') == 'yes':
+    # Fresh disposable DB, never restored account records or production secrets.
+    owner = User.objects.create(username='akadmin', email='admin@utilibre.org', is_active=True)
+    owner.set_unusable_password()
+    owner.save()
 assert User.objects.filter(username='akadmin', email='admin@utilibre.org', is_active=True).count() == 1
 uid='security-'+secrets.token_hex(8)
 user=User.objects.create(username=uid,email=uid+'@example.invalid',path='service-checks',is_active=True)
@@ -58,4 +63,4 @@ for algorithm in [PrivateKeyAlg.RSA,PrivateKeyAlg.ECDSA]:
     except jwt.InvalidSignatureError: pass
     app.delete();provider.delete();key.delete()
 user.delete()
-print('UTILIBRE_NATIVE_AUTH_PASSED: restored owner; synthetic password/TOTP replay protection; RSA/ECDSA OAuth code exchange, JWKS, audience/signature/code-replay rejection; no external network.')
+print('UTILIBRE_NATIVE_AUTH_PASSED: owner assertion; synthetic password/TOTP replay protection; RSA/ECDSA OAuth code exchange, JWKS, audience/signature/code-replay rejection; no external network.')

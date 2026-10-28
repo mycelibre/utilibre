@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-28T12:50:26.163931+00:00",
+  "status": "passed",
+  "rows": [
+    {
+      "name": "utilibre-identity-server-1",
+      "oldRef": "utilibre-authentik:dnspython-security-20261028",
+      "oldImage": "sha256:254de1f47955dbc5ab8dc8a56b937ae939e5824cce9091c675f0178533824d29",
+      "newRef": "utilibre-authentik:drf-security-20261028",
+      "newImage": "sha256:03006c04ffd5d8ad63e98c51c3f6f585f0bb36a9d6dcf58774ddf8d334446ad8",
+      "key": "authentik",
+      "status": "passed",
+      "completedAt": "2026-10-28T12:44:51.302Z"
+    },
+    {
+      "name": "utilibre-identity-worker-1",
+      "oldRef": "utilibre-authentik:dnspython-security-20261028",
+      "oldImage": "sha256:254de1f47955dbc5ab8dc8a56b937ae939e5824cce9091c675f0178533824d29",
+      "newRef": "utilibre-authentik:drf-security-20261028",
+      "newImage": "sha256:03006c04ffd5d8ad63e98c51c3f6f585f0bb36a9d6dcf58774ddf8d334446ad8",
+      "key": "authentik",
+      "status": "passed",
+      "completedAt": "2026-10-28T12:44:51.302Z"
+    },
+    {
+      "name": "utilibre-linkding-linkding-1",
+      "oldRef": "utilibre-curl-linkding-linkding:security-20261028",
+      "oldImage": "sha256:4f11add1731c15f6999926706ecab8d5285edef816ec960cdd3e96abe2ce502b",
+      "newRef": "utilibre-linkding:drf-security-20261028",
+      "newImage": "sha256:860bcb2ff4277a3361ad10e0f25db93d04e717a349dcc312c02cff698c732181",
+      "key": "linkding",
+      "status": "passed",
+      "completedAt": "2026-10-28T12:45:24.453Z"
+    }
+  ]
+}

@@ -312,6 +312,59 @@ All nine roles passed exact-image, native health and existing-route checks.
 SimpleLogin's already-present public 502 remains; its local login route passes.
 The library repair does not claim to repair the separately managed edge route.
 
+## Completed Django REST Framework backports
+
+`released-drf.json` records Authentik's server/worker and Linkding. Four ordered
+upstream patches change exactly five DRF source files per image. They correct
+non-text request codecs, repeated/unbounded content negotiation, and ineffective
+token revocation. The fourth patch preserves the public `order_by_precedence`
+return type. DRF remains 3.17.1/3.17.2 because the 3.18 series changes list
+serializer errors; the existing applications keep their established API.
+
+`drf-inputs.json` pins both baseline images, every patch and before/after file
+hash. The older `request.META` header lookup and the already-safe admin token
+deletion workaround are retained. `drf-LICENSE.md` preserves the upstream BSD
+notice. Replay rejects mismatched files or patch context; no fuzzy edits or
+dependency resolution occur. These are focused upstream backports, not a claim
+that every later DRF change has been applied.
+
+Both baselines reproduce all three defects with bounded synthetic inputs. Both
+fixed copies pass rejection checks and 18 legitimate/compatibility checks,
+including Unicode/multipart input, token-authenticated requests, independent
+tokens, and preserved serializer/precedence interfaces. The oversized-header
+check counts parsing work and enforces boundaries; it is not a live load test.
+The compression fixture expands to only 64 KiB. Full-image comparison permits
+only the five declared source files; configuration, unrelated code and the
+earlier trust-store/DNS repairs remain unchanged.
+
+The existing application checks now accept a finite `--drf-oct28` profile:
+fresh, disposable databases and fictional credentials, no production data or
+secrets, and no external network. Authentik passes native password/TOTP and
+RSA/ECDSA OAuth, JWKS, wrong-audience/signature and code-replay checks. Linkding
+passes bookmark creation, native HTML export/import, anonymous denial and
+cross-account read isolation. These are native Django client/component tests,
+not browser MFA or a live external identity-provider journey. Authentik's first
+fresh-database attempt used the wrong bootstrap command; its error is retained.
+The passing check uses upstream `python -m lifecycle.migrate` exclusively in the
+disposable database. No production schema change was introduced.
+
+Replay uses `dnspython.mjs --drf authentik linkding` (the existing small Python
+source-overlay builder), `scan-brotli.mjs --drf authentik linkding`, and
+`go-final/verify.py --drf-oct28 authentik linkding` (the shared full-image
+comparator). Run `check-auth-python.mjs --drf-oct28` and
+`check-linkding-python.mjs --drf-oct28` before
+`release-brotli.mjs prepare|apply --drf authentik linkding`. Activation remains a
+separate authorized step. Linkding's isolated post-release check uses the extra
+`--verify-released` flag and requires the exact completed release.
+
+The same-database scans introduce no high/critical findings. Because package
+versions are preserved, raw advisories remain visible. `review-drf.mjs` checks
+the exact deployed image, every patched live file, behavior, application tests
+and release evidence before proposing six scoped, expiring decisions. It does
+not waive the application or its other dependencies. Existing transactional
+rollback restores only the recorded image pins and declared service roles;
+neither upgrade nor rollback edits account records.
+
 ## Evidence durability and remaining assessment
 
 `restore-review-sources.py` reconstructs older mount, HEIF, TIFF and X-library reviewer source trees from
@@ -322,11 +375,11 @@ check exact source/patch and running-library bytes. The October curl profile in
 release chains and actual library/package hashes before proposing individual
 expiring decisions. Raw scanner findings remain intact.
 
-The 28 October 11:53 UTC fleet scan completed all 109 running image assessments
+The fleet checkpoint in `status.json` covers all 109 running image assessments
 plus host and tracked-source coverage. After the explicit reviews, no critical
 records await review; high-severity work remains. This is not an all-clear:
 raw scanner counts include previously repaired packages and component
-misattribution, while unresolved Go JOSE, Zod, Django REST Framework and host
+misattribution, while unresolved Go JOSE, Zod and host
 findings require separate work. The private `security-queue.json` is the current
 source of counts, including replacement-image revalidation. No blanket exception
 is granted to descendants of repaired images or to all packages in a container.
@@ -354,6 +407,10 @@ the current 220 GiB device has no unallocated space.
   and [1.9.1 release](https://github.com/authlib/authlib/releases/tag/v1.9.1).
 - [dnspython pointer-chain advisory](https://github.com/rthalley/dnspython/security/advisories/GHSA-45c3-73f7-pv4m)
   and [exact upstream fix](https://github.com/rthalley/dnspython/commit/b485e460c266540a1a09ca6d8d1d7b685b1d3023).
+- DRF [codec](https://github.com/encode/django-rest-framework/security/advisories/GHSA-3547-9m27-7rxg),
+  [negotiation](https://github.com/encode/django-rest-framework/security/advisories/GHSA-33wh-fxxf-88vv),
+  [token revocation](https://github.com/encode/django-rest-framework/security/advisories/GHSA-xw6w-gcfp-cf8m),
+  and [precedence compatibility fix](https://github.com/encode/django-rest-framework/commit/e140de794d11149a09c04a3ee7cc4815946148f8).
 
 Validation: 43 existing release, rollback, curl-policy and backport-scope tests
 pass. The recorded scanner is Trivy 0.75.0; the DNS/Authlib comparisons use
@@ -364,12 +421,15 @@ comparisons retain their own database identity; they are not relabelled with the
 newer snapshot. Current versus archived assessments remain separate.
 
 The final checkpoint is recorded in `status.json`: all 109 running image scans
-completed, with zero critical and 375 high records awaiting review. Raw results
+completed, with zero critical and 365 high records awaiting review. Raw results
 retain 66 critical and 3,206 high records, including exact repaired package and
 component-attribution decisions. These numbers are package/artifact occurrences,
 not a vulnerability count or a full security clearance. The running guest kernel
 is 6.12.113+deb13-cloud-amd64; its build configuration disables GCOV. The separate
-GCOV header-package review does not assess the Proxmox host.
+GCOV header-package review does not assess the Proxmox host. Four individually
+reviewed historical kernel findings are also excluded only from the newly
+installed 6.12.113-1 UAPI-header package after inspecting its complete payload;
+this is not a kernel exemption. Its four policy tests pass.
 
 The exact core Trivy advisory database and metadata are retained in the private
 `utilibre-advisory-db-20261028.tar.gz`, with checksums in `advisory-snapshot.json`.

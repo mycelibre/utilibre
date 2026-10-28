@@ -83,4 +83,5 @@ export const additionalOverlayReceipts = [
  'security-20261028/go-services/release.json',
  'security-20261028/authlib/release.json',
  'security-20261028/dnspython/release.json',
+ 'security-20261028/drf/release.json',
 ];

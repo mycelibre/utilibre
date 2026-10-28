@@ -5,6 +5,8 @@ import {eligible,components,verifyPrimary,validateInventory,sha,privateTokens} f
 const base={id:'CVE-2019-19814',package:'linux-libc-dev',installed:'6.12.111-1',status:'needs-review',type:'debian',scope:'host-os',artifact:'host-dpkg',targetName:'host-dpkg',containers:[]};
 test('only the reviewed package, IDs, roles and versions; never a kernel',()=>{
  for(const id of Object.keys(components))assert(eligible({...base,id}));
+ for(const id of Object.keys(components))assert(eligible({...base,id,installed:'6.12.113-1'}));
+ assert(!eligible({...base,installed:'6.12.114-1'}));
  for(const change of [{package:'linux-image-6.12.111'},{package:'linux-headers-6.12.111'},{id:'CVE-2026-12345'},{installed:'6.12.112-1'},{status:'mitigated'},{scope:'runtime-image'},{type:'ubuntu'},{containers:['unexpected']}])assert(!eligible({...base,...change}));
  const runtime={...base,scope:'runtime-image',artifact:'sha256:'+'a'.repeat(64),targetName:'sha256:'+'a'.repeat(64),containers:['utilibre-linkding-linkding-1']};assert(eligible(runtime));
  for(const change of [{containers:['unrelated-app']},{targetName:'mismatch'},{artifact:'mutable-tag'},{installed:'5.15.0-198.208'}])assert(!eligible({...runtime,...change}));
