@@ -3,6 +3,8 @@
 Checkpoint: 07:15 UTC. This is a maintenance record, not a clean-security or
 uptime claim. No application image, database, access policy or retention setting
 was changed. No VM reboot was performed at this checkpoint.
+The authorized reboot and its verification were subsequently completed; see the
+post-reboot result below.
 
 ## PairDrop
 
@@ -141,3 +143,28 @@ there is no application deployment for this change. It can be rolled back by
 restoring the prior checker file. All other code changes extend existing
 operator-only cleanup/review tools; they do not add automatic approvals or an LLM
 to the scheduled execution path.
+
+## Post-reboot result — 07:54 UTC
+
+The operator explicitly requested the reboot. Preflight found no active guest
+backup/build jobs, package-operation locks, unhealthy containers or failed units.
+A normal systemd reboot was used, allowing services to stop cleanly. The operator
+reported the VM had returned, and the following checks independently passed:
+
+- The boot ID changed and the running kernel is now
+  `6.12.113+deb13-cloud-amd64`, matching the intended installed kernel.
+- All 175 previously running containers returned, with the same image identities;
+  none was unhealthy. Previously stopped containers were not started for testing.
+- The root, EFI, TRIP data and temporary-data mounts returned with their original
+  sources. Root free space was approximately 27.1 GiB.
+- systemd reported running with no failed units; the QEMU guest agent was active.
+- All eight existing bounded workflow checks passed again after reboot, including
+  the direct PairDrop transfer and Pollaris cleanup. Browser/device limitations
+  remain those described above.
+
+Private before/after receipts are `maintenance-20261028/reboot-before.json` and
+`maintenance-20261028/reboot-after.json` under `/var/lib/utilibre-maintenance`.
+The kernel activation is complete. No application images or database schemas
+changed. The 07:15 security assessment and its remaining high-severity backlog
+are separate from these boot checks; this verification did not rerun or refresh
+the vulnerability scan.
