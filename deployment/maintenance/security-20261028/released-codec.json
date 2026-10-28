@@ -1,7 +1,7 @@
 {
-  "date": "2026-10-28T18:08:43.745Z",
+  "date": "2026-10-28T18:45:39.907Z",
   "status": "deployed-and-verified",
-  "scope": "Rimgo and FerretDB compress v1.20.2; existing compiler, unrelated dependencies and prior patches retained",
+  "scope": "Compression v1.20.2 with prior compiler, module, native configuration and privacy fixes retained; FSE baseline/fixed regression and isolated native workflows passed",
   "roles": [
     {
       "name": "utilibre-rimgo-rimgo-1",
@@ -16,6 +16,20 @@
       "oldImage": "sha256:d1228b184623639642c7ae4a83ebb2aaff8b34c5bdf87c2757373c028b361585",
       "newRef": "utilibre-ferretdb:codec-security-20261028",
       "newImage": "sha256:b65c8ff64cae5aa838cebfaaf2728913c7dc88a13301f99dee7b69f89a2ed191"
+    },
+    {
+      "name": "utilibre-reader-evaluation-gothub-1",
+      "oldRef": "utilibre-gothub:go12610-security-20261028",
+      "oldImage": "sha256:9ce71b3f1ced949051cdef686583b436e692cbb8714f7e020a03affcb3c38d17",
+      "newRef": "utilibre-gothub:codec-security-20261028",
+      "newImage": "sha256:d7fd6ebc1508da5f8917e7a8764dea4684253ddace1b9c3cf7fb2a323ca07f35"
+    },
+    {
+      "name": "utilibre-reader-evaluation-anonymousoverflow-1",
+      "oldRef": "utilibre-anonymousoverflow:go12610-security-20261028",
+      "oldImage": "sha256:d9b07ddf80913069e2407df385bda27f6bc8a3d8e530a92e40b73253550889c7",
+      "newRef": "utilibre-anonymousoverflow:codec-security-20261028",
+      "newImage": "sha256:cf4949a77db03e92fc309eaf70f1dc938049985349489477f71aa0016522307f"
     }
   ]
 }

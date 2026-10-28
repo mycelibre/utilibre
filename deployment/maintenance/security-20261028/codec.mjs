@@ -1,6 +1,6 @@
 // Finite adapter for the existing Rimgo/FerretDB builds and native tests.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';import {verifyCodecDelta} from './codec-policy.mjs';
-process.umask(0o077);const [phase,key]=process.argv.slice(2);assert(['stage','proof'].includes(phase)&&['rimgo','ferretdb'].includes(key));
+process.umask(0o077);const [phase,key]=process.argv.slice(2);assert(['stage','proof'].includes(phase)&&['rimgo','ferretdb','gothub','anonymousoverflow'].includes(key));const reader=['gothub','anonymousoverflow'].includes(key);
 const here=new URL('.',import.meta.url).pathname,root='/var/lib/utilibre-maintenance/security-20261028/codec',dir=root+'/'+key,read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
 const inputs=read(here+'codec-inputs.json'),s=inputs.rows.find(s=>s.key===key),compiler='sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f';
 const run=(p,a,opts={})=>cp.execFileSync(p,a,{encoding:'utf8',timeout:180000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe'],...opts}).trim(),docker=(...a)=>run('docker',a);
@@ -23,10 +23,10 @@ if(phase==='stage'){
  const staged={date:new Date().toISOString(),key,base:s.base,candidate:s.candidate,imageId,passed:true,compilerVersion:s.compilerVersion,configurationUnchanged:true,unrelatedDependenciesUnchanged:true,dependencyUpdate:{dependency:inputs.dependency,from:s.previous,to:inputs.version},binarySha256:sha(fs.readFileSync(dir+'/ferretdb')),upstreamTestsPassed:true};
  fs.writeFileSync(dir+'/stage.json',JSON.stringify(staged,null,2)+'\n');console.log(key+': exact single-dependency candidate staged');
 }else{
- const b=read(dir+(key==='rimgo'?'/build.json':'/stage.json')),native=key==='rimgo'?read(root+'/native.json').rows.find(r=>r.key===key):read(dir+'/native.json'),regression=read(root+(key==='ferretdb'?'/regression-ferretdb.json':'/regression.json'));
+ const b=read(dir+(key==='ferretdb'?'/stage.json':'/build.json')),native=key==='ferretdb'?read(dir+'/native.json'):read(root+(reader?'/native-gothub-anonymousoverflow.json':'/native.json')).rows.find(r=>r.key===key),regression=read(root+'/'+(s.regressionFile||(key==='ferretdb'?'regression-ferretdb.json':'regression.json')));
  assert(b.passed&&b.configurationUnchanged&&b.unrelatedDependenciesUnchanged&&regression.passed);assert.equal(b.base,s.base);assert.equal(b.imageId,docker('image','inspect','--format','{{.Id}}',s.candidate));assert(native.passed||native.status==='passed');assert.equal(native.imageId,b.imageId);assert.equal(regression.fixtureSha256,sha(fs.readFileSync(here+'codec-native.go')));
  if(key==='ferretdb')for(const k of ['nativeGathioCreateEdit','invalidEditTokenDenied','imageUpload','icsImportExport','stoppedDatabaseCopyRestore','reopenedOriginalAndImportedEvents'])assert.equal(native[k],true);
- else assert(native.responses.length===4&&native.responses.every(r=>r.status===200));
- const info=fs.readFileSync(dir+(key==='rimgo'?'/rimgo-buildinfo.txt':'/ferretdb-buildinfo.txt'),'utf8'),modules=info.split('\n').filter(l=>/^\s+dep\s/.test(l));assert(modules.length>10);
+ else assert(native.responses.length===(key==='gothub'?3:key==='anonymousoverflow'?1:4)&&native.responses.every(r=>r.status===200));
+ const info=fs.readFileSync(dir+'/'+key+'-buildinfo.txt','utf8'),modules=info.split('\n').filter(l=>/^\s+dep\s/.test(l));assert(modules.length>10);
  fs.writeFileSync(dir+'/build.json',JSON.stringify({...b,native:{...native,passed:true},regression,changedFiles:[s.binary],binaries:[{path:s.binary,binarySha256:b.binarySha256,unchangedModules:modules.length-1,updatedModules:1}]},null,2)+'\n');console.log(key+': native consumer and both library regressions passed');
 }

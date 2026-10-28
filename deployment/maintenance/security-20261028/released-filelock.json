@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-28T18:31:50.359Z",
+  "status": "deployed-and-verified",
+  "scope": "KitchenOwl filelock 4.2.1; native locking, planted-sidefile regression and account-isolated recipe workflows verified",
+  "roles": [
+    {
+      "name": "utilibre-kitchenowl-app-1",
+      "oldRef": "utilibre-kitchenowl:weka-security-20261028",
+      "oldImage": "sha256:3f5a1f64c1945e24fb9fed60e1174650da9b4f70fd50e61c135671337c4316fe",
+      "newRef": "utilibre-kitchenowl:filelock-security-20261028",
+      "newImage": "sha256:70c2057cc388c50691e9ba1d8e8e0c09651979c05c72a2ed31ea89261b255838"
+    }
+  ]
+}

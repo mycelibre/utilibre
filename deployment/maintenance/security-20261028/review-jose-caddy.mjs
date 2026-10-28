@@ -1,6 +1,7 @@
 // Exact compiled RSA backport; no waiver for other JOSE uses or image descendants.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
+import {compressionRebuildHash} from './jose-rebuild-proof.mjs';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';
 process.umask(0o077);
 const leaf=process.argv[2]==='--leaf';assert(!process.argv[2]||leaf);
@@ -23,10 +24,26 @@ for(const s of inputs.rows){
  // artifact. Every role still requires its own successful release and live hash.
  const artifacts=s.containers.map(name=>{let current=b.imageId;for(const r of descendants.filter(r=>r.name===name))if(r.oldImage===current&&r.oldImage!==r.newImage){assert(Date.parse(r.completedAt)<=Date.parse(scan.date));current=r.newImage;}return current;});
  assert.equal(new Set(artifacts).size,1,'Shared roles diverged');const artifact=artifacts[0];
- const hash=b.binaries.find(x=>x.path===s.binary).binarySha256;
+ let hash=b.binaries.find(x=>x.path===s.binary).binarySha256,proofProfile=profile;
+ if(!leaf){
+  const next=read(new URL('./codec-caddy-inputs.json',import.meta.url)).rows.find(row=>row.key===s.key),nextDir=root+'/security-20261028/codec-caddy';
+  if(next&&fs.existsSync(nextDir+'/'+s.key+'/build.json')){
+   const rebuilt=read(nextDir+'/'+s.key+'/build.json');
+   if(rebuilt.imageId===artifact){
+    const source={patchSha256:sha(fs.readFileSync(nextDir+'/input/jose-v3.patch')),afterSha256:sha(fs.readFileSync(nextDir+'/input/jose-v3-jwk.go')),noticePatchSha256:sha(fs.readFileSync(nextDir+'/artifact/notices/jose-v3.patch')),compilerOutputSha256:sha(fs.readFileSync(nextDir+'/artifact/caddy'))};
+    hash=compressionRebuildHash({expected:next,artifact,build:rebuilt,inventory:read(nextDir+'/'+s.key+'/inventory.json'),gate:read(nextDir+'/'+s.key+'/scan-gate.json'),source,spec});
+    const currentRelease=read(nextDir+'/release.json');assert.equal(currentRelease.status,'passed');
+    for(const name of s.containers)assert(overlayRows(currentRelease).some(row=>row.name===name&&row.oldImage===next.base&&row.newImage===artifact&&Date.parse(row.completedAt)<=Date.parse(scan.date)));
+    const native=read(nextDir+'/'+(s.key==='caddy-wishlist'?'wishlist-stage':'newsletters-stage')+'.json');
+    if(s.key==='caddy-wishlist')assert(native.imageId===artifact&&native.nativeAccountCreated&&native.anonymousListDenied);
+    else assert(native.status==='passed'&&[native.webImage,native.smtpImage].includes(artifact)&&native.isolatedSmtpAccepted);
+    proofProfile='codec-caddy';
+   }
+  }
+ }
  for(const name of s.containers){const r=roles.find(r=>r.name===name);assert(r&&r.newImage===b.imageId&&r.oldImage===s.base&&Date.parse(r.completedAt)<=Date.parse(scan.completedAt));assert.equal(docker('inspect','--format','{{.Image}}',name),artifact);assert.equal(liveHash(name,s.binary),hash);}
  for(const item of queue.items.filter(i=>i.status==='needs-review'&&i.scope==='runtime-image'&&i.id==='CVE-2026-116587'&&i.type==='gobinary'&&i.package==='github.com/go-jose/go-jose/v3'&&i.installed==='v3.0.5'&&i.artifact===artifact&&'/'+i.target.replace(/^\/+/, '')===s.binary)){
-  assert.deepEqual([...item.containers].sort(),[...s.containers].sort());decisions.push(validateDecision({key:item.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:`Exact upstream RSA modulus and prime-product bounds from a0111f82742fa92bceec9ede40845e73319e6230 backported to go-jose/v3 3.0.5 jwk.go. Patch SHA-256 ${spec.patchSha256}; pre/post source identity checked before offline ${leaf?s.key:"Caddy"} compilation. Full v3 native suites (262 checks each), bounded missing-limit baseline and fixed rejection, unchanged modules except reviewed v4.1.6, isolated ${leaf?s.key+" native account/authorization":"proxy/TLS/HTTP2 and application workflow"} checks passed. Whole-image changed-file scope, complete release and live binary SHA-256 ${hash} verified in every declared role. Version metadata remains 3.0.5, so raw scanner finding is retained. Only this advisory, binary and exact image; no exception for v3 in other consumers. Evidence: security-20261028/${profile}/${s.key}/.`}));
+  assert.deepEqual([...item.containers].sort(),[...s.containers].sort());decisions.push(validateDecision({key:item.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:`Exact upstream RSA modulus and prime-product bounds from a0111f82742fa92bceec9ede40845e73319e6230 backported to go-jose/v3 3.0.5 jwk.go. Patch SHA-256 ${spec.patchSha256}; pre/post source identity checked before offline ${leaf?s.key:"Caddy"} compilation. Full v3 native suites (262 checks each), bounded missing-limit baseline and fixed rejection, unchanged modules except reviewed v4.1.6, isolated ${leaf?s.key+" native account/authorization":"proxy/TLS/HTTP2 and application workflow"} checks passed. Whole-image changed-file scope, complete release and live binary SHA-256 ${hash} verified in every declared role. Version metadata remains 3.0.5, so raw scanner finding is retained. Only this advisory, binary and exact image; no exception for v3 in other consumers. Evidence: security-20261028/${profile}/${s.key}/ and security-20261028/${proofProfile}/${s.key}/.`}));
  }
 }
 fs.writeFileSync(dir+'/review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions},null,2)+'\n');console.log(JSON.stringify({prepared:decisions.length,applied:false}));

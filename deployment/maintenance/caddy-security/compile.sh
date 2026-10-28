@@ -46,6 +46,18 @@ if [ "${UTILIBRE_CADDY_JOSE:-0}" = 1 ]; then
   cp vendor/github.com/go-jose/go-jose/v3/LICENSE /out/notices/go-jose-v3-LICENSE
   cp vendor/github.com/go-jose/go-jose/v4/LICENSE /out/notices/go-jose-v4-LICENSE
 fi
+if [ "${UTILIBRE_CADDY_CODEC:-0}" = 1 ]; then
+  test "${UTILIBRE_CADDY_JOSE:-0}" = 1
+  echo 'f85b4729a966a3d0313310482a11b585f0be445a20b2ea0c967937fe14c17acc  /input/codec.zip' | sha256sum -c -
+  test "$(grep -c '^# github.com/klauspost/compress v1.20.1$' vendor/modules.txt)" = 1
+  unzip -q /input/codec.zip -d /work/codec-new
+  mv vendor/github.com/klauspost/compress /work/codec-original
+  cp -a /work/codec-new/github.com/klauspost/compress@v1.20.2 vendor/github.com/klauspost/compress
+  go mod edit -require=github.com/klauspost/compress@v1.20.2
+  sed -i 's@^# github.com/klauspost/compress v1.20.1$@# github.com/klauspost/compress v1.20.2@' vendor/modules.txt
+  printf '%s\n' 'github.com/klauspost/compress v1.20.2 h1:v5tiZvm1KGLyg5d5oXdXe3lsSPrbEUiKoXGia//I7Qo=' 'github.com/klauspost/compress v1.20.2/go.mod h1:LUdAzn7YLVvxLpc7y3V1m40wESHTgc1422pwwBSKYuI=' >> go.sum
+  cp vendor/github.com/klauspost/compress/LICENSE /out/notices/compress-LICENSE
+fi
 go list -mod=vendor -tags=nobadger,nomysql,nopgx -deps . > /out/notices/linked-packages.txt
 go build -mod=vendor -trimpath -buildvcs=false -tags=nobadger,nomysql,nopgx -ldflags='-s -w -buildid=' -o /out/caddy .
 chmod 0755 /out/caddy

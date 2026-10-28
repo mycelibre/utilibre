@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "compiler": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+  "go": "1.26.10",
+  "sourceVersion": "2.11.7",
+  "sourceArchiveSha256": "b430516910839fbaf35c0a9e9df80d1e2e30aa792530293c39f4a97a1b2c9060",
+  "dependency": "github.com/klauspost/compress",
+  "version": "v1.20.2",
+  "source": "https://github.com/klauspost/compress",
+  "sourceRevision": "7f5d8528720c895a6106f201719f87eb030a565d",
+  "license": "BSD-3-Clause; gzhttp files Apache-2.0; complete upstream notices in codec-LICENSE.txt",
+  "moduleSum": "h1:v5tiZvm1KGLyg5d5oXdXe3lsSPrbEUiKoXGia//I7Qo=",
+  "goModSum": "h1:LUdAzn7YLVvxLpc7y3V1m40wESHTgc1422pwwBSKYuI=",
+  "releaseZipSha256": "f85b4729a966a3d0313310482a11b585f0be445a20b2ea0c967937fe14c17acc",
+  "primaryReferences": [
+    "https://github.com/klauspost/compress/security/advisories/GHSA-259r-337f-4rfw",
+    "https://github.com/klauspost/compress/security/advisories/GHSA-fpmh-frq8-7rj8"
+  ],
+  "advisory": "CVE-2026-116591",
+  "rows": [
+    {
+      "kind": "wishlist",
+      "key": "caddy-wishlist",
+      "base": "sha256:f5d3c13a9171ff0c95f4f564e48e046417ec1b0a4f1b478bf942df85efd018b2",
+      "baseId": "sha256:f5d3c13a9171ff0c95f4f564e48e046417ec1b0a4f1b478bf942df85efd018b2",
+      "candidate": "utilibre-wishlist:caddy-codec-security-20261028",
+      "path": "/usr/bin/caddy",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "oldRef": "utilibre-wishlist-app:blkid-security-20261028",
+      "previousCompiler": "1.26.10",
+      "compilerVersion": "1.26.10",
+      "binary": "/usr/bin/caddy",
+      "previous": "v1.20.1",
+      "primaryOnly": true,
+      "regressionFile": "regression-1201.json"
+    },
+    {
+      "kind": "newsletters-web",
+      "key": "caddy-newsletters-web",
+      "base": "sha256:2eb96752465fb47f4e0d92828e37c3336637451e3b395baec3871fd4a8748463",
+      "baseId": "sha256:2eb96752465fb47f4e0d92828e37c3336637451e3b395baec3871fd4a8748463",
+      "candidate": "utilibre-newsletters-web:caddy-codec-security-20261028",
+      "path": "/app/node_modules/.bin/caddy",
+      "containers": [
+        "utilibre-newsletters-web-1"
+      ],
+      "oldRef": "utilibre-newsletters-web:postal-security-20261028",
+      "previousCompiler": "1.26.10",
+      "compilerVersion": "1.26.10",
+      "binary": "/app/node_modules/.bin/caddy",
+      "previous": "v1.20.1",
+      "primaryOnly": true,
+      "regressionFile": "regression-1201.json"
+    },
+    {
+      "kind": "newsletters-mail-jobs",
+      "key": "caddy-newsletters-mail-jobs",
+      "base": "sha256:bb52bc3941c480aae7626f68cfd380a653e06e06b0240500b982d0792c31a3f5",
+      "baseId": "sha256:bb52bc3941c480aae7626f68cfd380a653e06e06b0240500b982d0792c31a3f5",
+      "candidate": "utilibre-newsletters-mail-jobs:caddy-codec-security-20261028",
+      "path": "/app/node_modules/.bin/caddy",
+      "containers": [
+        "utilibre-newsletters-smtp-1",
+        "utilibre-newsletters-jobs-1"
+      ],
+      "oldRef": "utilibre-newsletters-mail:postal-security-20261028",
+      "previousCompiler": "1.26.10",
+      "compilerVersion": "1.26.10",
+      "binary": "/app/node_modules/.bin/caddy",
+      "previous": "v1.20.1",
+      "primaryOnly": true,
+      "regressionFile": "regression-1201.json"
+    }
+  ]
+}

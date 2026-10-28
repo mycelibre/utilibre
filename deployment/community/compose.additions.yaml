@@ -63,7 +63,7 @@ services:
     depends_on: [mezzo]
   fmd:
     <<: *runtime
-    image: utilibre-fmd:go-security-20261028
+    image: utilibre-fmd:text-security-20261028
     user: "1000:1000"
     command: [--config, /etc/fmd-server/config.yml, --web-dir, /opt/utilibre-web]
     volumes:

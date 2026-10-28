@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-28T18:29:20.577Z",
+  "status": "deployed-and-verified",
+  "scope": "FMD golang.org/x/text v0.41.0; unchanged compiler, unrelated dependencies, embedded UI and runtime configuration",
+  "roles": [
+    {
+      "name": "utilibre-additions-fmd-1",
+      "oldRef": "utilibre-fmd:go-security-20261028",
+      "oldImage": "sha256:5a4543151453cc21b8eeadd44aeb8881ef6a31c3f668d65578ad784a8ca0b934",
+      "newRef": "utilibre-fmd:text-security-20261028",
+      "newImage": "sha256:885ab84110775977e19de7fa1403d084edecca2581388eeddd33f40a88e18d41"
+    }
+  ]
+}

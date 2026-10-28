@@ -48,6 +48,44 @@
         "go.mod": "d65ba2340f17574f880710f2427a12c8c55e92c755606cce0031fe03a07c0515",
         "go.sum": "9c1e4aab20cf1dc8b3acfe24fce35e0caacca71e44b05d435532ba7b1db46d67"
       }
+    },
+    {
+      "key": "gothub",
+      "base": "sha256:9ce71b3f1ced949051cdef686583b436e692cbb8714f7e020a03affcb3c38d17",
+      "oldRef": "utilibre-gothub:go12610-security-20261028",
+      "candidate": "utilibre-gothub:codec-security-20261028",
+      "containers": [
+        "utilibre-reader-evaluation-gothub-1"
+      ],
+      "binary": "/app/gothub",
+      "compilerVersion": "1.26.10",
+      "previousCompiler": "1.26.10",
+      "previous": "v1.20.1",
+      "locks": {
+        "go.mod": "67a40d20ccc4ccdbb9ccf01c59c3c67c25b572a9f3c3284ce90c3075f5a083c9",
+        "go.sum": "2b81a1d30b8e0012caa307489eaa4968d40657ad317a71cf494f2d522f7a59a8"
+      },
+      "regressionFile": "regression-1201.json",
+      "primaryOnly": true
+    },
+    {
+      "key": "anonymousoverflow",
+      "base": "sha256:d9b07ddf80913069e2407df385bda27f6bc8a3d8e530a92e40b73253550889c7",
+      "oldRef": "utilibre-anonymousoverflow:go12610-security-20261028",
+      "candidate": "utilibre-anonymousoverflow:codec-security-20261028",
+      "containers": [
+        "utilibre-reader-evaluation-anonymousoverflow-1"
+      ],
+      "binary": "/app/anonymousoverflow",
+      "compilerVersion": "1.26.10",
+      "previousCompiler": "1.26.10",
+      "previous": "v1.20.1",
+      "locks": {
+        "go.mod": "3b0d5696847f15cf354c30c6bfe58fd0966e703a58e283226a4fccc56e18dd91",
+        "go.sum": "de4f41bb9f95762fdead4b7b220f8d52a9a4825521d1ec71b6b6f6152a6b0ab5"
+      },
+      "regressionFile": "regression-1201.json",
+      "primaryOnly": true
     }
   ]
 }

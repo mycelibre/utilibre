@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2023-54404",
+  "package": "zod",
+  "source": "https://github.com/colinhacks/zod/pull/6652",
+  "release": "https://github.com/colinhacks/zod/releases/tag/v4.6.6",
+  "npmSourceRevision": "284243fb0d6532665afdc9239188773bb624f73c",
+  "sourceNote": "Upstream release documents history rewrite; published 4.6.6 npm provenance revision has the same contents. No main-branch code or install scripts used.",
+  "license": "MIT",
+  "packages": {
+    "zod": {
+      "version": "4.6.6",
+      "integrity": "sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA=="
+    }
+  },
+  "rows": [
+    {
+      "key": "rsshub",
+      "container": "utilibre-services-rsshub-1",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "base": "sha256:142ad7c5a2512b1b8adf19426d0125350c89d860507483a194500beff3dc2c0c",
+      "candidate": "utilibre-rsshub:zod-security-20261028",
+      "roots": [
+        "/app",
+        "/usr/local/lib/node_modules"
+      ],
+      "before": {
+        "/app/node_modules/.pnpm/zod@4.6.5/node_modules/zod": "4.6.5"
+      },
+      "paths": {
+        "zod": [
+          "/app/node_modules/.pnpm/zod@4.6.5/node_modules/zod"
+        ]
+      },
+      "mirrorFiles": [
+        "/home/ubuntu/freetools/deployment/utilibre/compose.yaml"
+      ]
+    }
+  ]
+}

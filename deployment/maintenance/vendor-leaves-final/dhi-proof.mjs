@@ -18,6 +18,11 @@ export const archivePins={
  'util-linux':'03c32b248ceb6ba1705469b8060b16b8bb5f973e6de92b2f99d226d52dc955a2',
 };
 export const digest=b=>createHash('sha256').update(b).digest('hex');
+export function validatePackageStatus(text,packageName,version){
+ const fields=name=>text.split('\n').filter(l=>l.startsWith(name+': ')).map(l=>l.slice(name.length+2));
+ assert.deepEqual(fields('Package'),[packageName]);
+ assert.deepEqual(fields('Version'),[version]);
+}
 export function authenticateArchive(index,packageName,version,hash){
  assert.equal(hash,archivePins[packageName],'Unexpected signed archive');
  const stanzas=index.split(/\n\s*\n/).map(s=>Object.fromEntries(s.split('\n').filter(l=>/^[A-Za-z0-9-]+: /.test(l)).map(l=>[l.slice(0,l.indexOf(':')),l.slice(l.indexOf(':')+2)])));

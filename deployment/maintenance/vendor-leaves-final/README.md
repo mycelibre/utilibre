@@ -133,3 +133,15 @@ Authentik's held `+ak-fips` OpenSSL runtime is deliberately not replaced with a
 generic Debian package. Its coupled provider/library build needs a compatible
 vendor security update and native FIPS/provider review; package availability
 alone does not establish compatibility or absence of the reported defects.
+
+
+On 28 October the same exact-package reviewer was extended to the distroless
+Penpot admin console. Its actual OpenSSL 3.5.7-1~deb13u3+dhi0 payload was already
+fixed; stale aggregate dpkg metadata still named u2. The existing Node runtime
+reads package status, hashes every regular file and checks every symlink
+against the same authenticated SHA-pinned vendor archives. No shell, package
+manager, new package or metadata rewrite is installed. Twenty-six exact
+OpenSSL package/advisory records were reconciled (two high); raw scans remain
+unchanged. The finite admin image binding must match, and future overlay
+receipts still require fresh live-file verification. Node's separate embedded
+OpenSSL is outside this proof.

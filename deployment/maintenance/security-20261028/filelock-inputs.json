@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "rows": [
+    {
+      "key": "kitchenowl",
+      "base": "sha256:3f5a1f64c1945e24fb9fed60e1174650da9b4f70fd50e61c135671337c4316fe",
+      "oldRef": "utilibre-kitchenowl:weka-security-20261028",
+      "candidate": "utilibre-kitchenowl:filelock-security-20261028",
+      "containers": [
+        "utilibre-kitchenowl-app-1"
+      ],
+      "python": "/opt/venv/bin/python",
+      "site": "/opt/venv/lib/python3.14/site-packages",
+      "previous": "3.32.0",
+      "method": "upstream-wheel"
+    }
+  ],
+  "advisory": "CVE-2026-112940",
+  "version": "4.2.1",
+  "license": "MIT",
+  "source": "https://github.com/tox-dev/filelock",
+  "sourceFix": "5e3f2ec0c5fb17cb2635b60b2b68bc63ab81ca2d",
+  "wheel": {
+    "file": "filelock-4.2.1-py3-none-any.whl",
+    "url": "https://files.pythonhosted.org/packages/28/00/db89d339bc4ecdc8087fa7b8607ba22ffc27bf96286f340c9620bea428b3/filelock-4.2.1-py3-none-any.whl",
+    "sha256": "7be2662e9e826b9bba28afc0f843a123280d799a2ea44bb5d35ccec67905ae44"
+  },
+  "requiresPython": ">=3.11"
+}

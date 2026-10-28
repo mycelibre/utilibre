@@ -44,9 +44,12 @@ export function registryFallback(item){
 }
 export function summarize(data){
  const counts={UNKNOWN:0,LOW:0,MEDIUM:0,HIGH:0,CRITICAL:0};
- const findings=[];let packages=0,osPackages=0;
+ const findings=[],goModules=[];let packages=0,osPackages=0;
  for(const result of data.Results||[]){
   packages+=(result.Packages||[]).length;
+  // Keep embedded Go dependency identity even when today's DB has no advisory.
+  // This inventories code artifacts, never mounted documents or user activity.
+  if(result.Type==='gobinary')goModules.push({target:result.Target||null,packages:(result.Packages||[]).filter(p=>typeof p.Name==='string'&&typeof p.Version==='string').map(p=>({name:p.Name,version:p.Version})).sort((a,b)=>a.name.localeCompare(b.name)||a.version.localeCompare(b.version))});
   if(result.Class==='os-pkgs')osPackages+=(result.Packages||[]).length;
   for(const v of result.Vulnerabilities||[]){
    const severity=Object.hasOwn(counts,v.Severity)?v.Severity:'UNKNOWN';counts[severity]++;
@@ -54,7 +57,7 @@ export function summarize(data){
   }
  }
  const family=data.Metadata?.OS?.Family||null;
- return {packages,counts,findings,eosl:data.Metadata?.OS?.EOSL===true,
+ return {packages,counts,findings,goModules:goModules.sort((a,b)=>String(a.target).localeCompare(String(b.target))),eosl:data.Metadata?.OS?.EOSL===true,
   os:{family,name:data.Metadata?.OS?.Name||null,packages:osPackages,inventory:osPackages?'present':family?'missing':'not-detected'}};
 }
 export function imageScanStatus(result){return result.packages>0&&result.os?.inventory!=='missing'?'checked':'incomplete';}

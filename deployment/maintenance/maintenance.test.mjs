@@ -223,3 +223,10 @@ test('native identity redirect passes without following it or fetching other ori
 test('external probe refuses unexpected redirect and bounds response data',async()=>{
  for(const request of [async()=>new Response(null,{status:302,headers:{location:'https://evil.invalid/'}}),async()=>new Response('x'.repeat(1024**2+1),{status:200})])assert.equal((await probe(['identity','https://auth.utilibre.org/',/x/],request)).status,'failed');
 });
+
+test('Go artifact dependencies remain available when the advisory snapshot has no finding',()=>{
+ const result=summarize({Results:[{Type:'gobinary',Target:'bin/app',Packages:[{Name:'z',Version:'v2'},{Name:'a',Version:'v1'}]},{Type:'gomod',Target:'go.mod',Packages:[{Name:'source-only',Version:'v1'}]}]});
+ assert.deepEqual(result.goModules,[{target:'bin/app',packages:[{name:'a',version:'v1'},{name:'z',version:'v2'}]}]);
+ assert.equal(result.findings.length,0);assert.equal(result.packages,3);
+ assert.equal(summarize({Results:[{Type:'gobinary',Target:'broken',Packages:[{}]}]}).goModules[0].packages.length,0);
+});

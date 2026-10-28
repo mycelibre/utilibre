@@ -1,0 +1,40 @@
+{
+  "version": "v0.41.0",
+  "advisory": "CVE-2026-56851",
+  "rows": [
+    {
+      "key": "fmd",
+      "base": "sha256:5a4543151453cc21b8eeadd44aeb8881ef6a31c3f668d65578ad784a8ca0b934",
+      "oldRef": "utilibre-fmd:go-security-20261028",
+      "candidate": "utilibre-fmd:text-security-20261028",
+      "containers": [
+        "utilibre-additions-fmd-1"
+      ],
+      "previousCompiler": "1.26.10",
+      "compilerVersion": "1.26.10",
+      "binary": "/opt/fmd-server",
+      "binaries": [
+        "/opt/fmd-server",
+        "/opt/fmd-server-ctl"
+      ],
+      "sourceRevision": "224b60c0756ff363bc19063082a8a1543559cf96",
+      "sourceArchiveSha256": "750bd9e56d2ab77434a88b0167b2495c5399d5c5390946be736595c80cc6ff40",
+      "cgo": false,
+      "previous": "v0.40.0",
+      "locks": {
+        "go.mod": "115d98529337a560d2f12d8f9496b94a0daa4047c6f66fd8cdede6ae910d285d",
+        "go.sum": "d921a94baafeb41fd57b29bcc4c1f33e6fd1d226a94916d709ef6d96c263238c"
+      }
+    }
+  ],
+  "compilerImage": "golang:1.27.3-bookworm@sha256:e482b31b5d30c31f9e495f4b8cbdf41429b2d74955dfbcd9c0a904483d738390",
+  "fmdGorootImage": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+  "dependency": "golang.org/x/text",
+  "sourceRevision": "acdba6655fd45cdb5ab73c9d6a8981333bd65a39",
+  "source": "https://go.googlesource.com/text",
+  "license": "BSD-3-Clause",
+  "moduleSum": "h1:vz/seA0lnX87Othu2f/0L24RcgrXD9/YFTSuGjj3rH8=",
+  "goModSum": "h1:jvf1O8ajNzZqhSrQBPbutR/EB83Cc0CFrezNQIwbb5M=",
+  "releaseZipSha256": "e63f35daaae749d0ffff97a295ad8f4837a662938a46b7a87f18a88e85a5cbf9",
+  "baselineZipSha256": "07757384728d0f52dd85c1f3f163405e6396b2b0fb7eb7d6b610f2a711d69ee3"
+}

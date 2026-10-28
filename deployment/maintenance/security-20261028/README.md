@@ -818,3 +818,199 @@ are published as `security-codec-20261028-source.tar.gz` (97,715,385 bytes), SHA
 Primary references checked 28 October:
 [dictionary overflow](https://github.com/klauspost/compress/security/advisories/GHSA-259r-337f-4rfw),
 [FSE/Huffman panic](https://github.com/klauspost/compress/security/advisories/GHSA-fpmh-frq8-7rj8).
+
+## OAuthlib: verified improvements and a retained upstream discrepancy
+
+`released-oauth.json` records Authentik server and worker on the exact same
+application revision with OAuthlib 4.0.0. The pinned BSD-3-Clause wheel requires
+no new dependencies. Whole-image comparison permits only OAuthlib's own package,
+metadata and removal of its previous bytecode; all other dependencies, certifi,
+prior DRF/MessagePack fixes and runtime configuration remain unchanged.
+
+Eleven ordinary library checks pass before and after, including client and
+password grants, rejected permissions/credentials, RFC-derived OAuth1 signing,
+requests-oauthlib integration, PKCE correctness and token revocation. Both
+authenticated client-ID mismatch cases succeed incorrectly in 3.3.1 and are
+rejected in 4.0.0. The fixed API removes JSONP. The initial fixture expected
+HTTP 500 for the native `server_error`; the actual upstream response is HTTP
+400. That test expectation was corrected, with the failed diagnostic retained.
+
+**CVE-2026-49272 is not behaviorally fixed by this wheel**, despite upstream's
+fixed-version field and the scanner removing the record. The isolated device
+grant still accepts a bogus device code without calling the rejecting validator.
+`primary-findings.json` preserves this discrepancy separately from scanner
+counts. Direct source inspection finds only one OAuthlib consumer in this exact
+Authentik tree: its requests-oauthlib OAuth1 client. The actual consumer passes
+request-token, callback/session and signed access-token tests with an intercepted
+transport. Authentik uses its own OAuth2 provider; its synthetic password, TOTP,
+RSA/ECDSA token exchange, JWKS, audience/signature and replay checks pass using a
+fresh isolated database. This is not a live external-provider or browser-MFA
+claim, nor proof about future dynamic imports.
+
+Replay uses `dnspython.mjs --oauth authentik`, `check-oauth.mjs`,
+`check-auth-python.mjs --oauth-oct28`, `scan-brotli.mjs --oauth authentik`, and
+`go-final/verify.py --oauth-oct28 authentik`. The existing release gate requires
+the exact consumer inventory, native proof and retained discrepancy; it cannot
+use scanner disappearance as proof of a device-code fix. Rollback restores the
+recorded MessagePack-fixed predecessor for both roles and any namespace
+companions. No account schema, registration setting or data is changed.
+
+Primary references checked 28 October:
+[client identity binding](https://github.com/oauthlib/oauthlib/security/advisories/GHSA-7984-qgvg-3j9c),
+[device-code advisory](https://github.com/oauthlib/oauthlib/security/advisories/GHSA-3jp2-3mrg-2vxc),
+[4.0.0 release](https://github.com/oauthlib/oauthlib/releases/tag/v4.0.0).
+
+## FMD and KitchenOwl: text and file-locking repairs
+
+FMD's `released-text.json` changes only `golang.org/x/text` from 0.40.0 to
+0.41.0, using the original 0.17.0 source, Go 1.26.10, exact embedded assets and
+unchanged dependencies. The source/module sums and exact resulting locks are in
+`text-inputs.json` and `locks/text/fmd`. A short Unicode compatibility expansion
+crashes the old Nickname profile and succeeds after the repair; four ordinary
+transformations and 100 bounded streaming combinations pass. The initial
+fixture incorrectly treated that expanding character as a normal baseline
+case; it is now explicitly a caught-panic regression, with the failed logs
+retained. A missing extracted baseline module also failed closed before the
+fixture ran; both exact old/new zip identities are now checked.
+
+The real FMD server/control binaries pass protected registration, two synthetic
+accounts, opaque-record save/read, cross-account and anonymous denials, account
+deletion and native CLI checks. No phone, push, real location or application
+encryption protocol is tested. Both binaries are the only image file changes;
+the runtime web override remains unchanged.
+
+Replay uses `go-runtime.mjs --text download/build fmd`,
+`stage-go-runtime.mjs --text stage fmd`, `check-text.mjs`, the existing
+`go-runtime-20261011/check-fmd.mjs --text`, then
+`stage-go-runtime.mjs --text proof fmd`, `scan-brotli.mjs --text fmd`, and
+`go-final/verify.py --text-oct28 fmd`. The existing transactional release takes
+`prepare/apply --text fmd`. No schema/data migration occurs; the release receipt
+retains exact predecessor pins for rollback. The complete source offer is
+`security-text-20261028-source.tar.gz`, 64,482,635 bytes, SHA-256
+`f1ba4e5a12ab80299c1a8876f0625de79b36df120f7c4083e4d1404dd9f1e143`.
+Its public HTTPS route returns 200 with the matching length; the local served
+archive hash was verified.
+
+KitchenOwl uses the dependency-free MIT filelock 4.2.1 wheel, preserving prior
+NLTK path validation, all unrelated package files and runtime configuration.
+Ten ordinary checks cover native/soft reentrancy and contention, release/reuse,
+async locks, actual Hugging Face WeakFileLock and read/write locks. A planted
+non-empty WAL directory makes the old lock fail; the update takes the lock and
+preserves the sentinel. This is a Linux tmpfs test, not a Windows, distributed
+filesystem or malicious-ancestor guarantee. Its existing NLTK regression and
+ingredient-parser checks plus native private-account recipe import/export pass.
+
+The finite replay profile is `dnspython.mjs --filelock kitchenowl`,
+`application-leaves-final/nltk-check.mjs --filelock-oct28`,
+`scan-brotli.mjs --filelock kitchenowl`, and
+`go-final/verify.py --filelock-oct28 kitchenowl`, followed by the separately
+authorized `release-brotli.mjs prepare/apply --filelock kitchenowl`. The wheel
+checksum, version and Python prerequisite are pinned in `filelock-inputs.json`;
+no resolver or moving tag is used. Rollback restores the Weka-fixed image and
+unchanged service configuration; no user data or schema is modified.
+
+Primary references checked 28 October:
+[Go text advisory](https://pkg.go.dev/vuln/GO-2026-6629),
+[upstream text change](https://go.dev/cl/793360),
+[filelock advisory](https://github.com/tox-dev/filelock/security/advisories/GHSA-v4x8-3wr5-3wq8),
+[filelock fix](https://github.com/tox-dev/filelock/commit/5e3f2ec0c5fb17cb2635b60b2b68bc63ab81ca2d).
+
+The existing scanner summary now retains embedded Go module names/versions per
+binary, even when the current advisory database has no matching finding. This
+uses Trivy's existing package inventory and makes no additional network calls.
+A source go.mod is kept distinct from an embedded binary inventory; absent or
+unrecognized binaries still cannot be claimed covered. This supports checking
+new primary-source advisories without guessing from older vulnerability rows.
+
+### Compression inventory follow-through and Zod
+
+The retained Go binary inventory exposed five additional current artifacts with
+compress v1.20.1: Gothub, AnonymousOverflow and the embedded Caddy binaries in
+Wishlist and the newsletter web/mail/job roles. This was primary-source work:
+CVE-2026-116591 was absent from the retained Trivy database. The v1.20.1 native
+fixture reproduces the FSE panic; v1.20.2 rejects it, retaining seven normal
+codec checks and the already-fixed dictionary checks. No exploitability of a
+particular live decoding route is inferred from a linked module.
+
+The existing `go.mjs --codec` recipe now accepts the two exact reader baselines
+and checked-in locks. `go-final/check-native.mjs --codec-oct28 gothub
+anonymousoverflow` checks local/static routes on an internal network. Upstream
+source tests also run offline; no fresh Github or Stack Overflow content fetch
+is claimed. `codec.mjs proof`, `scan-brotli.mjs --codec`, whole-image comparison
+and the existing transactional release gate complete the sequence.
+
+The existing Caddy build/check/application scripts accept `--codec` against
+`codec-caddy-inputs.json`. They retain Caddy 2.11.7, Go 1.26.10, x/net 0.60.0,
+JOSE v4 4.1.6 and the exact JOSE v3 RSA-bounds backport. Only compression and its
+build notices change. Native proxy, gzip, SSE and HTTP/2 checks pass; disposable
+Wishlist account/list/item/privacy and newsletter feed/isolated-SMTP/Atom/delete
+checks pass without external browser requests. Use `caddy.mjs --codec`, then
+`scan-brotli.mjs --codec-caddy`, `go-final/verify.py --codec-caddy-oct28`, and
+separately authorized `release-brotli.mjs --codec-caddy prepare/apply` for the
+three declared keys. Rollback restores the exact prior image/configuration;
+these changes have no database migration. SMTP fixtures send only to the
+isolated synthetic receiver, not the operator or any real mailbox.
+
+Both source offers are additive and include complete application/module code,
+licenses, retained fixes and build instructions:
+
+- `security-codec-readers-20261028-source.tar.gz`: 40,987,049 bytes,
+  SHA-256 `9e7bf5476a48ef793d13ad97a14e0cd46132c3840343386d417fcf8c99de1268`.
+- `security-codec-caddy-20261028-source.tar.gz`: 53,290,388 bytes,
+  SHA-256 `a8491bdbc3409fea41c940b3a9581eb182e5ec51a683445b9d8afda7a6659450`.
+
+[Upstream compression advisory](https://github.com/klauspost/compress/security/advisories/GHSA-fpmh-frq8-7rj8)
+and [release](https://github.com/klauspost/compress/releases/tag/v1.20.2), checked
+28 October 2026. Version-only scanner output is not the evidence for this fix.
+
+RSSHub's Zod patch uses the unmodified MIT 4.6.6 npm package, with no additional
+dependencies or install scripts. Exact integrity, predecessor and paths are in
+`zod-inputs.json`; use `body.mjs --zod rsshub`, `check-zod.mjs rsshub`,
+`closure-review/check-kuma-rsshub.mjs --zod`, `scan-brotli.mjs --zod rsshub`,
+`go-final/verify.py --zod-oct28 rsshub`, then the separate `release-brotli.mjs
+--zod prepare/apply rsshub`. Fifteen ordinary CJS/ESM parsing cases and six
+array/set/map upper-bound checks run on old and fixed versions. Oversized
+synthetic inputs invoke twenty element transforms before the old rejection and
+zero with the fix. Unbounded containers and overwrite-before-bound semantics
+remain supported. Native RSSHub health passes offline; no live feed provider
+is claimed tested. The two direct built-app import sites use `zod`, not `zod/v3`.
+This does not justify a blanket 3-to-4 upgrade or a clearance for other apps.
+
+[Zod release and provenance note](https://github.com/colinhacks/zod/releases/tag/v4.6.6)
+and [bounds change](https://github.com/colinhacks/zod/pull/6652), checked
+28 October. The upstream history rewrite is documented; the pinned published
+npm provenance revision is `284243fb0d6532665afdc9239188773bb624f73c`.
+
+### Final verification of this follow-through
+
+At 18:55 UTC on 28 October, the retained-database scan completed for all 109
+running image identities, all 77 source inputs and 508 host packages. After
+revalidating exact-artifact backports and component evidence, the queue has
+**0 critical and 140 high records awaiting review**: 74 runtime-image, 35
+tracked-build-input, 2 upstream-source-lock and 29 host-package records. These
+are package/target occurrences, not distinct exploits. Raw findings remain
+available. The additional OAuthlib device-code defect in `primary-findings.json`
+is deliberately retained even though scanner version metadata no longer flags
+it. This is not a security-clearance claim.
+
+The final 62 focused checks pass. Repeating the completed release paths leaves
+all twelve affected/companion roles' container IDs, start times, restart counts
+and images unchanged. RSSHub's repository mirror now follows the deployed pin;
+`release-brotli.mjs --zod sync-mirrors rsshub` is an exact-predecessor repository
+repair, not a service restart, and repeated execution is a no-op. The same
+existing transactional release records these declared mirror files for rollback.
+
+The JOSE reviewer requires the compression rebuild's exact source/patch hashes,
+compiled artifact, full-image scope, module delta, native/application checks and
+successful release chain before accepting its new binary hash. Wrong images,
+source changes, failed gates and unrelated file changes fail closed. It does not
+copy an exception to arbitrary descendant images.
+
+The three new source archives return HTTP 200 with matching lengths using the
+public HTTPS curl check; their local served bytes match the recorded hashes.
+Python urllib's HEAD request received 403 from the edge, so universal crawler
+access is not claimed. Detailed private evidence is in `final-batch-check.json`,
+`idempotent-recheck.json`, `source-route-checks.json` and each profile's receipts
+under the existing private maintenance directory. No host reboot, SSH reload,
+guest-agent restart, user-data migration or real email delivery occurred in this
+follow-through. Existing service access and privacy settings are retained.

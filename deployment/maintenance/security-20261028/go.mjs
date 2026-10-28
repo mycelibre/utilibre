@@ -10,7 +10,7 @@ const codec=process.argv.includes('--codec');
 const root='/var/lib/utilibre-maintenance/security-20261028/'+(codec?'codec':'go'),prior='/var/lib/utilibre-maintenance/go-final-20261011';
 const here=new URL('.',import.meta.url).pathname,recipe=new URL('../go-final/',import.meta.url).pathname;
 const specs=JSON.parse(fs.readFileSync(prior+'/prepare.json')).rows;
-const [key,phase]=process.argv.slice(2).filter(x=>x!=='--codec');assert(specs.some(s=>s.key===key)&&['prepare','download','build','stage'].includes(phase));assert(!codec||key==='rimgo');
+const [key,phase]=process.argv.slice(2).filter(x=>x!=='--codec');assert(specs.some(s=>s.key===key)&&['prepare','download','build','stage'].includes(phase));assert(!codec||['rimgo','gothub','anonymousoverflow'].includes(key));
 const s=specs.find(s=>s.key===key),dir=root+'/'+key;fs.mkdirSync(dir,{recursive:true});
 const sha=b=>createHash('sha256').update(b).digest('hex'),read=f=>JSON.parse(fs.readFileSync(f));
 const run=(program,args,options={})=>{try{return cp.execFileSync(program,args,{encoding:'utf8',timeout:120000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe'],...options});}catch(e){fs.writeFileSync(dir+'/'+phase+'-error.log',String(e.stdout||'')+String(e.stderr||e.message));throw Error(key+': '+phase+' failed; private evidence retained');}};

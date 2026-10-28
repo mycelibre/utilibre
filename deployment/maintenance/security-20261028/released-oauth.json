@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-28T18:21:50.304Z",
+  "status": "deployed-and-verified",
+  "scope": "Authentik OAuthlib 4.0.0; verified identity-binding and JSONP corrections. Device-code advisory discrepancy remains recorded; no package-wide clearance.",
+  "roles": [
+    {
+      "name": "utilibre-identity-server-1",
+      "oldRef": "utilibre-authentik:msgpack-security-20261028",
+      "oldImage": "sha256:5bcf0c336da8186587f6fdf688201e3c3a2e6c9e53b9f9e1930c9bc99a796126",
+      "newRef": "utilibre-authentik:oauth-security-20261028",
+      "newImage": "sha256:7111a6a674550246a3a7dc8c6a6828911dadf9f80275c5f1191b6850947771ba"
+    },
+    {
+      "name": "utilibre-identity-worker-1",
+      "oldRef": "utilibre-authentik:msgpack-security-20261028",
+      "oldImage": "sha256:5bcf0c336da8186587f6fdf688201e3c3a2e6c9e53b9f9e1930c9bc99a796126",
+      "newRef": "utilibre-authentik:oauth-security-20261028",
+      "newImage": "sha256:7111a6a674550246a3a7dc8c6a6828911dadf9f80275c5f1191b6850947771ba"
+    }
+  ]
+}

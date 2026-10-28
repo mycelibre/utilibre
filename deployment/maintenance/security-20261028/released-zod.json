@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-28T18:53:23.454Z",
+  "status": "deployed-and-verified",
+  "scope": "RSSHub Zod 4.6.6; fifteen normal parsing checks and six upper-bound regressions per state plus native isolated health",
+  "roles": [
+    {
+      "name": "utilibre-services-rsshub-1",
+      "oldRef": "utilibre-rsshub:markdown-security-20261028",
+      "oldImage": "sha256:142ad7c5a2512b1b8adf19426d0125350c89d860507483a194500beff3dc2c0c",
+      "newRef": "utilibre-rsshub:zod-security-20261028",
+      "newImage": "sha256:2f88f37fa320b0acec874d38d27e3cbae64a9b795fcdd4e8dfcfb769866de67b"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-28T18:47:31.237Z",
+  "status": "deployed-and-verified",
+  "scope": "Compression v1.20.2 with prior compiler, module, native configuration and privacy fixes retained; FSE baseline/fixed regression and isolated native workflows passed",
+  "roles": [
+    {
+      "name": "utilibre-wishlist-app-1",
+      "oldRef": "utilibre-wishlist-app:blkid-security-20261028",
+      "oldImage": "sha256:f5d3c13a9171ff0c95f4f564e48e046417ec1b0a4f1b478bf942df85efd018b2",
+      "newRef": "utilibre-wishlist:caddy-codec-security-20261028",
+      "newImage": "sha256:476d8dfdbdb595bfee9dacab5b9a7a4580b27742da54205faed3b4a18409932b"
+    },
+    {
+      "name": "utilibre-newsletters-web-1",
+      "oldRef": "utilibre-newsletters-web:postal-security-20261028",
+      "oldImage": "sha256:2eb96752465fb47f4e0d92828e37c3336637451e3b395baec3871fd4a8748463",
+      "newRef": "utilibre-newsletters-web:caddy-codec-security-20261028",
+      "newImage": "sha256:83cc2d93bbb19ff7e822676f057dce5f09ff7a7ec8997ee67b595b622a09d5d9"
+    },
+    {
+      "name": "utilibre-newsletters-smtp-1",
+      "oldRef": "utilibre-newsletters-mail:postal-security-20261028",
+      "oldImage": "sha256:bb52bc3941c480aae7626f68cfd380a653e06e06b0240500b982d0792c31a3f5",
+      "newRef": "utilibre-newsletters-mail-jobs:caddy-codec-security-20261028",
+      "newImage": "sha256:21d9f36fc69f58ae5e3995ddc3c1791cf8651fc919f805ba5928a57ad83e54c4"
+    },
+    {
+      "name": "utilibre-newsletters-jobs-1",
+      "oldRef": "utilibre-newsletters-mail:postal-security-20261028",
+      "oldImage": "sha256:bb52bc3941c480aae7626f68cfd380a653e06e06b0240500b982d0792c31a3f5",
+      "newRef": "utilibre-newsletters-mail-jobs:caddy-codec-security-20261028",
+      "newImage": "sha256:21d9f36fc69f58ae5e3995ddc3c1791cf8651fc919f805ba5928a57ad83e54c4"
+    }
+  ]
+}

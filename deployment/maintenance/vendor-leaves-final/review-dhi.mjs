@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import {validateDecision} from '../triage.mjs';
 import {exactDhiFinding} from './policy.mjs';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';
-import {authenticateArchive,payloadManifest,validatePayload} from './dhi-proof.mjs';
+import {authenticateArchive,payloadManifest,validatePayload,validatePackageStatus} from './dhi-proof.mjs';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 process.umask(0o077);
 const dir='/var/lib/utilibre-maintenance/vendor-leaves-final-20261011',out=dir+'/dhi-fixed',sha=b=>createHash('sha256').update(b).digest('hex');fs.mkdirSync(out,{recursive:true});
@@ -29,6 +29,10 @@ if(fs.existsSync(curlRelease)){
  const report=JSON.parse(fs.readFileSync(curlRelease));assert.equal(report.status,'passed');
  for(const image of images){const row=overlayRows(report).find(r=>r.name===image[0]&&r.oldImage===image[1]);if(row)image[1]=row.newImage;}
 }
+// Distroless admin has the same authenticated fixed OpenSSL payload, alongside
+// stale aggregate dpkg metadata. Use its existing Node runtime for read-only
+// inspection; do not install a shell or package manager into production.
+images.push(['utilibre-expanded-penpot-admin-console-1','sha256:dd9e60cd964fc098ef195d88ff6f132e143bfeb603d801cae95e50a2938098fa']);
 for(const receipt of additionalOverlayReceipts){
  const file='/var/lib/utilibre-maintenance/'+receipt;if(!fs.existsSync(file))continue;
  const report=JSON.parse(fs.readFileSync(file));assert.equal(report.status,'passed');
@@ -67,19 +71,27 @@ for(const [name,image] of images){
   const relevant=queue.items.filter(x=>exactDhiFinding(x,name,image,p,allowed));
   if(!relevant.length)continue;
   try{
-   assert.equal(docker(['exec',name,'dpkg-query','-W','-f=${Version}',p]).trim(),version);
    const expected=manifests.get(p),files=expected.filter(f=>f.type==='file');
-   const hashes=docker(['exec',name,'sha256sum','--',...files.map(f=>f.path)]).trim().split('\n');
-   assert.equal(hashes.length,files.length);
-   const actual=new Map(hashes.map((line,i)=>{const hash=line.slice(0,64);assert.match(hash,/^[a-f0-9]{64}$/);assert.equal(line.slice(66),files[i].path);return[files[i].path,hash];}));
-   const observed=expected.map(f=>f.type==='file'?{...f,sha256:actual.get(f.path)}:{...f,target:docker(['exec',name,'readlink','--',f.path]).trim()});
+   let observed;
+   if(name==='utilibre-expanded-penpot-admin-console-1'){
+    assert(['libssl3t64','openssl-provider-legacy'].includes(p),'Only the two reviewed native packages');
+    const code="const fs=require('fs'),c=require('crypto');const [p,rows]=JSON.parse(process.argv[1]);const observed=rows.map(f=>{const s=fs.lstatSync(f.path);if(f.type==='file'){if(!s.isFile())throw Error('Regular file changed type');return {...f,sha256:c.createHash('sha256').update(fs.readFileSync(f.path)).digest('hex')};}if(!s.isSymbolicLink())throw Error('Link changed type');return {...f,target:fs.readlinkSync(f.path)};});console.log(JSON.stringify({status:fs.readFileSync('/var/lib/dpkg/status.d/'+p,'utf8'),observed}));";
+    const result=JSON.parse(docker(['exec',name,'node','-e',code,JSON.stringify([p,expected])]));
+    validatePackageStatus(result.status,p,version);observed=result.observed;
+   }else{
+    assert.equal(docker(['exec',name,'dpkg-query','-W','-f=${Version}',p]).trim(),version);
+    const hashes=docker(['exec',name,'sha256sum','--',...files.map(f=>f.path)]).trim().split('\n');
+    assert.equal(hashes.length,files.length);
+    const actual=new Map(hashes.map((line,i)=>{const hash=line.slice(0,64);assert.match(hash,/^[a-f0-9]{64}$/);assert.equal(line.slice(66),files[i].path);return[files[i].path,hash];}));
+    observed=expected.map(f=>f.type==='file'?{...f,sha256:actual.get(f.path)}:{...f,target:docker(['exec',name,'readlink','--',f.path]).trim()});
+   }
    const packageProof=validatePayload(expected,observed);
    assert.equal(JSON.parse(docker(['inspect',name]))[0].Image,image);
    for(const item of relevant){
     const evidence=tracker[source]?.[item.id]?.releases?.trixie;assert(evidence?.fixed_version&&evidence.status==='resolved','Primary Debian source does not establish fixed');
     execFileSync('dpkg',['--compare-versions',version.replace(/\+dhi\d+$/,''),'ge',evidence.fixed_version]);
     sourceEvidence.records[source+':'+item.id]=evidence;
-    const reason=`Already-fixed actual signed DHI package payload: ${p} ${version}; all live regular-file SHA256 hashes and package symlinks verified against freshly extracted, SHA-pinned vendor-signed APT archive, manifest SHA256 ${packageProof}, exact live image ${image}. This reads the actual live filesystem, including any mounted or writable overlays. Scanner also consumes an older residual /var/lib/dpkg/status.d fragment; raw inventory retained unchanged. Debian primary ${source} ${item.id} record marks Trixie fixed at ${evidence.fixed_version}: https://security-tracker.debian.org/tracker/${item.id}. Only this exact package/image/CVE is reviewed; no exemption for other findings. Read-only evidence: deployment/maintenance/vendor-leaves-final/review-dhi.mjs and private dhi-fixed-review.json.`;
+    const reason=`Already-fixed actual signed DHI package payload: ${p} ${version}; all live regular-file SHA256 hashes and package symlinks verified against freshly extracted, SHA-pinned vendor-signed APT archive, manifest SHA256 ${packageProof}, exact live image ${image}. This reads the actual live filesystem, including any mounted or writable overlays. Scanner also consumes older residual dpkg metadata; raw inventory retained unchanged. Debian primary ${source} ${item.id} record marks Trixie fixed at ${evidence.fixed_version}: https://security-tracker.debian.org/tracker/${item.id}. Only this exact package/image/CVE is reviewed; no exemption for other findings. Read-only evidence: deployment/maintenance/vendor-leaves-final/review-dhi.mjs and private dhi-fixed-review.json.`;
     decisions.push(validateDecision({key:item.key,status:'not-affected',reason,expiresAt:new Date(Date.now()+7*86400000).toISOString()}));proofs.push({key:item.key,image,name,package:p,actualVersion:version,scannerVersion:item.installed,payloadManifestSha256:packageProof,liveRegularFiles:files.length,liveSymlinks:expected.length-files.length,freshAuthenticatedArchive:true});
    }
   }catch(e){skipped.push({name,package:p,error:String(e.message).slice(0,150)});}

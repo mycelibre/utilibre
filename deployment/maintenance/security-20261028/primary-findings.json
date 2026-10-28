@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-28",
+  "scannerSupplement": true,
+  "items": [
+    {
+      "id": "CVE-2026-49272",
+      "severity": "HIGH",
+      "component": "oauthlib",
+      "version": "4.0.0",
+      "status": "upstream-library-defect-reproduced",
+      "deployedImage": "sha256:7111a6a674550246a3a7dc8c6a6828911dadf9f80275c5f1191b6850947771ba",
+      "advisory": "https://github.com/oauthlib/oauthlib/security/advisories/GHSA-3jp2-3mrg-2vxc",
+      "observation": "A fictional library DeviceCodeGrant accepts a bogus device_code without invoking the rejecting validator. Reproduces before and after 4.0.0; advisory fixed-version metadata does not establish a behavioral repair.",
+      "applicationExposure": "Direct Python import inventory in this exact Authentik source has one requests_oauthlib.OAuth1 consumer, exercised with intercepted transport. Authentik OAuth2 provider is separate; native password/TOTP/RSA/ECDSA authorization-code checks pass. No Authentik device-flow exploit is claimed.",
+      "consumerFile": "/authentik/sources/oauth/clients/oauth1.py",
+      "consumerSha256": "3f516367e497fa4e472630e3597da7ce7adcedad051b7d8045a04473ae1c7a5e",
+      "evidence": "/var/lib/utilibre-maintenance/security-20261028/oauth/authentik/consumer.json",
+      "owner": "admin@utilibre.org",
+      "reviewCondition": "Before any OAuthlib/device-grant consumer change or next library release; reproduce the library regression again. Do not claim clearance based on version metadata."
+    }
+  ]
+}

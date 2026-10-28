@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-49272",
+  "version": "4.0.0",
+  "license": "BSD-3-Clause",
+  "source": "https://github.com/oauthlib/oauthlib",
+  "wheel": {
+    "file": "oauthlib-4.0.0-py3-none-any.whl",
+    "url": "https://files.pythonhosted.org/packages/d9/f4/78229a1066068ca14fc60fb26cf7381cabe4382261392b90e5f9552722d4/oauthlib-4.0.0-py3-none-any.whl",
+    "sha256": "624c28c13a0a59cabf9747dfa52af63be3e512a7f2714df16e91b5b3a145e6cd"
+  },
+  "rows": [
+    {
+      "key": "authentik",
+      "base": "sha256:5bcf0c336da8186587f6fdf688201e3c3a2e6c9e53b9f9e1930c9bc99a796126",
+      "oldRef": "utilibre-authentik:msgpack-security-20261028",
+      "candidate": "utilibre-authentik:oauth-security-20261028",
+      "containers": [
+        "utilibre-identity-server-1",
+        "utilibre-identity-worker-1"
+      ],
+      "python": "/ak-root/.venv/bin/python",
+      "site": "/ak-root/.venv/lib/python3.14/site-packages",
+      "previous": "3.3.1",
+      "method": "upstream-wheel"
+    }
+  ],
+  "additionalPrimaryAdvisory": "GHSA-7984-qgvg-3j9c",
+  "remainingUpstreamGap": "CVE-2026-49272 still reproduces with oauthlib 4.0.0 despite upstream fixed-version metadata. Authentik uses requests_oauthlib.OAuth1, not this provider grant. No package-wide device-code fix is claimed.",
+  "requiresPython": ">=3.9"
+}
