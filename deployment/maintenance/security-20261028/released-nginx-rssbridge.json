@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-28T20:27:50.207Z",
+  "status": "passed",
+  "key": "rssbridge",
+  "version": "1.30.6",
+  "imageId": "sha256:4de7c8938f07ff901cc2530db60e23c121bc5057c6c5763ff5849e969f5051fd",
+  "previousImage": "sha256:b540fb1d954f85cd6bb1ee8e69c8b935db30ecbbc4e7ab8408687b27a47b3914",
+  "packageSha256": "8e505dccb99697371eb72fe1c58d29d82f7a3c4f0f8eb57d65df72d44edb676f",
+  "binarySha256": "35b5bc637a1a2df68a119d38d04ffd6b77ef06bef7c810242f5cca3da2d61239",
+  "changedPaths": [
+    "/usr/local/share/licenses/nginx-1.30.6/copyright",
+    "/usr/sbin/nginx"
+  ],
+  "nativeChecksPerState": 14,
+  "consumerHttp2AndFictionalAtomPassed": true,
+  "configSha256": {
+    "rssbridge.ini.php": "2de06f7bd279a7c05dcdf4fe005cce7651c7de1fe26e0bd1dcdd1e3842ef7999",
+    "rssbridge-nginx.conf": "334ed37693917814505045b9b49722663552829b25183acb625e917be382ba0e",
+    "rssbridge-fpm.conf": "28b34cb92560966589b74d2b5a3666c010157c0d9d56f98ad31b3d3f735d6116"
+  },
+  "newHighCritical": 0,
+  "databaseSha256": "2c8f4b04f224aded9ecd149b9b5304146736668220dfa403403358fb423a52fd",
+  "publicResponse": 200,
+  "repeatApplyVerified": true,
+  "limitations": "Native compatibility checks, not memory-corruption exploit reproduction. Debian package metadata and raw findings remain; exact deployed-byte review is required. No database migration, user-data change, cache purge or notification."
+}

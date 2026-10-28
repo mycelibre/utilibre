@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import cp from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {validateDecision} from '../triage.mjs';
-import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents,gcovBuildPaths} from './headers-policy.mjs';
+import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents,gcovBuildPaths,additionalKernelRecords,additionalKernelPaths} from './headers-policy.mjs';
 import {overlapSpecs,verifyOverlap} from './headers-overlap.mjs';
 import {privateTokens,validateInventory} from '../historical-header-final/policy.mjs';
 const root='/var/lib/utilibre-maintenance';
@@ -38,7 +38,7 @@ await Promise.all(Array.from({length:4},async()=>{while(next<ids.length){
    assert(!offline,'Primary record is not in the selected local snapshot');
    const res=await fetch(url,{signal:AbortSignal.timeout(20000)});assert(res.ok);body=await res.text();assert(body.length<250000);fs.writeFileSync(file,body);
   }
-  const record=JSON.parse(body),files=id==='CVE-2026-63825'?gcovBuildPaths(body,id):legacyComponents[id]?historicalKernelPaths(body,id):kernelComponentPaths(record,id);
+  const record=JSON.parse(body),files=id==='CVE-2026-63825'?gcovBuildPaths(body,id):additionalKernelRecords[id]?additionalKernelPaths(body,id):legacyComponents[id]?historicalKernelPaths(body,id):kernelComponentPaths(record,id);
   sources.set(id,{url,files,provider:record.containers.cna.providerMetadata.shortName,sha256:createHash('sha256').update(body).digest('hex')});
  }catch{skipped.push({id,reason:'No complete Linux-CNA compiled-kernel-only file attribution; manual review remains.'});}
 }}));

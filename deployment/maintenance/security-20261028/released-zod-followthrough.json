@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "date": "2026-10-28T19:49:48.764Z",
+  "date": "2026-10-28T20:11:14.759Z",
   "status": "passed",
   "rows": [
     {
@@ -74,13 +74,38 @@
       "publicResponse": 200,
       "scope": "Package overlay; unchanged configuration, prior files and independent native application checks",
       "limitations": "Synthetic local login and project/board/card editing/deletion; no live OIDC provider or visitor data used."
+    },
+    {
+      "key": "resume",
+      "imageId": "sha256:71e0b9c15b47d7de4c0629bc4b8d7379e5e342fc7a98393f96b74496946600fa",
+      "previousImage": "sha256:1f9542280c6dcb4683aeceecc0b08db1bc01080f89b5c92e4e6816a9974b80b0",
+      "package": "zod",
+      "version": "4.6.6",
+      "containers": [
+        "utilibre-expanded-resume-1"
+      ],
+      "changedContentPaths": 624,
+      "packageHardlinkLayoutChanges": 0,
+      "normalChecksPerState": 15,
+      "boundedCasesByBaseline": {
+        "4.1.11": 4,
+        "4.6.5": 6
+      },
+      "fixedBoundedCasesPerCopy": 6,
+      "completedAt": "2026-10-28T20:11:14.759Z",
+      "publicResponse": 200,
+      "scope": "Two exact same-major Zod copies; unchanged application/configuration, synthetic account export/import, access isolation and deletion",
+      "limitations": "Local test accounts and native JSON/account export; production OIDC and PDF rendering not re-tested."
     }
   ],
   "fixtures": {
     "deployment/maintenance/check-wishlist-esbuild.mjs": "63fe243ff580ba84a7ce8c42f9e97aa320ff7dfbde26175052eea319915eb419",
     "deployment/maintenance/patch-leaves-final/check-app.mjs": "3a6709eb3a070ec7aca8bb315b1c2167dc1f71151bf40d325f82e4207ec7c30e",
     "deployment/maintenance/security-20261028/zod-native.cjs": "1dd5d548d46f0253705023a685a2b6d4fabc92a988c1317aae0475b04bb910d6",
-    "deployment/maintenance/security-20261028/check-zod-projects.py": "e595b287d06bc6b17444296b5cdaf423ac5693a5e337c489ce8d744523c92489"
+    "deployment/maintenance/security-20261028/check-zod-projects.py": "e595b287d06bc6b17444296b5cdaf423ac5693a5e337c489ce8d744523c92489",
+    "deployment/expanded/check-resume-account-export.mjs": "f69cf61d4b3b567075c40bc3653158f665efd8b2f25617d9210ad1e8de32d9e0",
+    "deployment/maintenance/security-20261028/zod-legacy-native.cjs": "7f7964171b37031df17331b0138205c68ee7ffa7e701cc8bcfc3f8bfca21d2a0",
+    "deployment/maintenance/security-20261028/check-zod-resume.mjs": "7fcc5a0715cafc1798f6d1acc5cfe72884c2f66638a371376a1b5a8b327c7213"
   },
   "repeatApplyVerified": true
 }

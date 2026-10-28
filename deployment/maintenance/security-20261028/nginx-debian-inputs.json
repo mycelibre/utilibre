@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Replace RSS-Bridge's NGINX executable with the signed upstream Debian 12 stable binary, preserving PHP, application files and all configuration",
+  "version": "1.30.6",
+  "advisories": ["CVE-2026-15176", "CVE-2026-93479", "CVE-2026-97205"],
+  "package": {
+    "url": "https://nginx.org/packages/debian/pool/nginx/n/nginx/nginx_1.30.6-1~bookworm_amd64.deb",
+    "file": "nginx_1.30.6-1~bookworm_amd64.deb",
+    "sha256": "8e505dccb99697371eb72fe1c58d29d82f7a3c4f0f8eb57d65df72d44edb676f",
+    "binarySha256": "35b5bc637a1a2df68a119d38d04ffd6b77ef06bef7c810242f5cca3da2d61239",
+    "copyrightSha256": "4f72e2bccf0bcd839dd447ab6f359336f428caa1987a9afec2bc9ade5711658a",
+    "signingFingerprint": "8540A6F18833A80E9C1653A42FD21310B49F6B46",
+    "keySha256": "55385da31d198fa6a5012d40ae98ecb272a6c4e8fffffba94719ffd3e87de37a",
+    "inReleaseSha256": "c0ec00618c7e564bf83b2edc695118a425064f968dbd76e04631cc6f4317c66b",
+    "packagesSha256": "d6df7f1c76aa62d04bca970c2e938c04b18a6bceab8b4ac4f04614f87928a3e0"
+  },
+  "rows": [{
+    "key": "rssbridge",
+    "base": "sha256:b540fb1d954f85cd6bb1ee8e69c8b935db30ecbbc4e7ab8408687b27a47b3914",
+    "candidate": "utilibre-rssbridge:nginx1306-security-20261028",
+    "containers": ["utilibre-community-rssbridge-1"],
+    "previous": "1.22.1",
+    "binary": "/usr/sbin/nginx"
+  }],
+  "acquisition": "Pinned files from nginx.org only. Archived signature/index evidence is required; replay never refreshes it implicitly.",
+  "verification": "No network outside disposable loopback fixtures; exact image file comparison and same-database assessment. Debian package labels remain unchanged and require explicit binary-attribution review.",
+  "rollback": "Previous immutable image and unchanged Compose configuration; no database migration or persistent-data change."
+}

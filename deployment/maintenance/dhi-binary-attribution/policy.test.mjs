@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {rows,archives,eligible,prove,exporterBefore,exporterAfter,restrictedXvfb,exporterAncestry} from './policy.mjs';
+import {rows,archives,eligible,prove,exporterBefore,exporterAfter,exporterCurrent,restrictedXvfb,exporterAncestry} from './policy.mjs';
 const item=r=>({status:'needs-review',scope:'runtime-image',type:'debian',package:r.package,id:r.id,artifact:r.artifact,targetName:r.artifact,installed:r.stale,containers:[r.container]});
 const proof=r=>({image:r.artifact,container:r.container,package:r.package,actualVersion:archives[r.package].version,archiveSha256:archives[r.package].sha256,residual:{path:'/var/lib/dpkg/status.d/'+r.package,version:r.stale,source:r.source,sha256:'a'.repeat(64)},authenticatedIndex:true,payloadExact:true,fileCount:3,inventorySha256:'b'.repeat(64),componentAbsentFromPackage:true,component:r.source==='perl'?'Archive::Tar':'systemd-homed'});
 test('all five exact stale records need current signed-payload and residual proofs',()=>{assert.equal(rows.length,5);for(const r of rows){assert(eligible(item(r)));assert(prove(item(r),proof(r)));}});
@@ -23,4 +23,16 @@ test('only two exporter records can advance through the exact completed one-scre
 test('reject incomplete release ancestry, changed scope, missing preservation and stale scans',()=>{
  const mutations=[t=>t.stage.base='sha256:'+'f'.repeat(64),t=>t.stage.image='sha256:'+'f'.repeat(64),t=>t.stage.container='other',t=>t.stage.allOtherPackagesUnchanged=false,t=>t.stage.allOtherApplicationLibraryConfigBytesUnchanged=false,t=>t.stage.configurationUnchanged=false,t=>t.release.status='prepared',t=>t.release.groups[0].status='failed',t=>t.release.groups[0].rows[0].status='failed',t=>t.release.groups[0].rows[0].oldRef='wrong',t=>t.release.groups[0].rows[0].newRef='wrong',t=>t.release.groups[0].rows[0].name='other',t=>t.verified.image=exporterBefore,t=>t.verified.role='host',t=>t.verified.binarySha256='0'.repeat(64),t=>t.verified.completedAt='bad',t=>t.scan.date='2026-10-12T18:00:00Z'];
  for(const mutate of mutations){const t=transition();mutate(t);assert.throws(()=>exporterAncestry(t.stage,t.release,t.verified,t.scan));}
+});
+test('current exporter still needs exact signed Perl payload and completed live chain proof',()=>{
+ const t=transition();t.verified.image=exporterCurrent;
+ const ancestry=exporterAncestry(t.stage,t.release,t.verified,t.scan);
+ for(const r of rows.filter(r=>r.artifact===exporterBefore)){
+  const i={...item(r),artifact:exporterCurrent,targetName:exporterCurrent};
+  const p={...proof(r),image:exporterCurrent,ancestry};assert(eligible(i));assert(prove(i,p));
+  for(const change of [v=>v.payloadExact=false,v=>v.authenticatedIndex=false,
+   v=>v.ancestry.image=exporterAfter,v=>v.componentAbsentFromPackage=false]){
+   const v=structuredClone(p);change(v);assert.throws(()=>prove(i,v));
+  }
+ }
 });

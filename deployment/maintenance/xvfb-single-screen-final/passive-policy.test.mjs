@@ -1,4 +1,9 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {eligible,functionBlock} from './passive-policy.mjs';
+import test from 'node:test';import assert from 'node:assert/strict';import {eligible,functionBlock,exporterImages} from './passive-policy.mjs';
 const i={status:'needs-review',id:'CVE-2026-93516',package:'xvfb',type:'debian',scope:'host-os',artifact:'host-dpkg',targetName:'host-dpkg',installed:'2:21.1.25-1+utilibre1',containers:[]};
 test('exact CVE/version/host or exporter only',()=>{assert(eligible(i));assert(eligible({...i,package:'xserver-common',installed:'2:21.1.25-1'}));for(const delta of [{id:'CVE-2023-5574'},{installed:'2:21.1.16-1'},{package:'xwayland'},{containers:['other']},{scope:'unknown'}])assert(!eligible({...i,...delta}));});
+test('current exporter requires its reviewed artifact, native package and exact role',()=>{
+ const row={...i,scope:'runtime-image',artifact:exporterImages[1],targetName:exporterImages[1],installed:'2:21.1.16-1.3+deb13u4+dhi1+utilibre1',containers:['utilibre-expanded-penpot-exporter-1']};
+ assert(eligible(row));assert(eligible({...row,package:'xserver-common',installed:'2:21.1.16-1.3+deb13u4+dhi1'}));
+ for(const delta of [{artifact:'sha256:'+'f'.repeat(64),targetName:'sha256:'+'f'.repeat(64)},{containers:['utilibre-expanded-penpot-backend-1']},{installed:'2:21.1.16-1.3+deb13u4+dhi1'},{id:'CVE-2026-93517'}])assert(!eligible({...row,...delta}));
+});
 test('missing fix or incorrectly ordered cleanup rejected',()=>{assert.throws(()=>functionBlock('unpatched'));const s='preamble\nstatic Bool\nGrabReferencesDevice() { return grab->device == dev || grab->modifierDevice == dev; }\n/**\n * Remove a device from the device list\n*/\nint\nRemoveDevice() { CloseDevice(dev); RemovePassiveGrabsForDevice(dev);\n}\nint\nnext';assert.throws(()=>functionBlock(s));assert(functionBlock(s.replace('CloseDevice(dev); RemovePassiveGrabsForDevice(dev);','RemovePassiveGrabsForDevice(dev); CloseDevice(dev);')).includes('modifierDevice'));});

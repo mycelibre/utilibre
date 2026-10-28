@@ -1059,10 +1059,10 @@ Primary references checked 28 October:
 [Debian attribution](https://security-tracker.debian.org/tracker/CVE-2026-106437)
 and [upstream stable fix](https://github.com/mongodb/mongo-c-driver/commit/b7f1f5742351741c068020196fd88f196551aad2).
 
-### Zod application follow-through (28 October, 19:55 UTC)
+### Zod application follow-through (28 October)
 
-`released-zod-followthrough.json` records the completed Wishlist, Candlr, Projects and
-Penpot admin releases. The declared 4.6.5 and Projects' 4.3.5 packages are replaced by the same pinned
+`released-zod-followthrough.json` records the completed Wishlist, Candlr, Projects,
+Reactive Resume and private Penpot admin releases. The declared 4.6.5 and Projects' 4.3.5 packages are replaced by the same pinned
 MIT-licensed 4.6.6 artifact already verified in RSSHub. The existing pnpm paths
 and links are retained. No registration, authentication, database, privacy,
 resource or routing settings change. Penpot admin remains private.
@@ -1086,6 +1086,19 @@ and evidence-path substitutions. Both states pass fresh PostgreSQL migrations,
 login, project/board/list/card creation, card editing, anonymous denial and
 project deletion. Its Redis-adapter fixes remain present. This verifies local
 password login, not the production OIDC provider. The public route remains 200.
+
+Reactive Resume additionally replaces both installed Zod copies, 4.1.11 and
+4.6.5. The older copy has no map-bound API: its separate fixture tests the four
+actual array/set bounds, rather than calling an absent API and mistaking that
+failure for a regression. Both versions pass 15 normal checks; supported old
+bounds process 20 elements and 4.6.6 rejects before callbacks. Both exact
+application images pass the unchanged synthetic two-account browser fixture:
+account ZIP/JSON export, import into another account without migrating sharing,
+editing/reload, cross-account denial, deletion and invalidated tokens. No external
+browser origins occur. Production OIDC and PDF rendering are not re-tested.
+`check-zod-resume.mjs` and `zodResumeNativeProof` bind all copies, fixtures and
+application flags to the exact artifacts. Repeated activation preserves the
+container ID, start time, restart count and receipt bytes.
 
 The normal package replacement helper now supports explicit Node exec-form
 removal for the shell-free admin image. It does not add a shell or package
@@ -1174,13 +1187,13 @@ is still valid and no local freeze marker or block operation is present.
 
 ### Current assessment boundary
 
-The 19:52 UTC assessment checked all 109 running images with the same advisory
-database. After exact-artifact review it leaves **0 critical / 131 high records
+The 20:30 UTC assessment checked all 109 running images with the same advisory
+database. After exact-artifact review it leaves **0 critical / 103 high records
 awaiting review**. Raw findings remain available; this is not full security
 clearance. `status.json` carries the scope/package breakdown and the independent
 OAuthlib behavioral finding remains in `primary-findings.json`.
 
-`review-platform.mjs` records three narrowly scoped current-runtime conclusions:
+`review-platform.mjs` records five narrowly scoped current-runtime decisions:
 
 - Vite's [CVE-2026-112942 advisory](https://github.com/vitejs/launch-editor/security/advisories/GHSA-587h-7wmj-h5pm)
   explicitly concerns Windows path/shell behavior. The exact Candlr and private
@@ -1192,17 +1205,94 @@ OAuthlib behavioral finding remains in `primary-findings.json`.
   action files, and native application commands. Offline formatting passes.
   This says nothing about arbitrary external CI workflows.
 
+- KitchenOwl imports LiteLLM's SDK through its unchanged ingredient parser; it
+  does not run LiteLLM's proxy server. Two upstream advisories concern that
+  proxy's authentication/key handling and `/utils/transform_request` endpoint.
+  Current launch commands, image, unshadowed source hashes and all six relevant
+  LLM/telemetry flags are checked. A networkless native fixture verifies no proxy
+  routes, no loaded proxy server, no provider call during ordinary parsing, and
+  normal two-account recipe import/export/isolation. This does not repair the
+  installed proxy library or authorize enabling it. Primary references are
+  pinned in `platform-policy.mjs`.
+
 These checked conclusions expire after seven days and bind exact image, package,
-advisory and role identities. The reviewer produces private per-role evidence;
+advisory and role identities. The reviewer retains immutable per-run private role evidence;
 apply its individually inspected decisions through the existing `triage.mjs
 record /absolute/decision.json` interface, sequentially. It never changes a
-running service or scanner rule. Three policy tests reject unsupported platforms,
+running service or scanner rule. Four policy tests reject unsupported platforms,
 artifacts, versions, sibling advisories, source scopes and missing evidence.
 
 The remaining ACL records are deliberately open. [Debian's current notes](https://security-tracker.debian.org/tracker/CVE-2026-54369)
 require the new `acl_*_at` interface and warn of caller compatibility problems.
 The earlier native fixture observed tar/rsync using legacy APIs, so simply
 replacing libacl would not establish a repair. Older Zod consumers also need
-separate work: 4.1.11 lacks the newer map-bound API and 3.x cannot be treated as
-a compatible same-major 4.6.6 overlay. No unrelated fixture failure is counted
+separate work: the remaining 3.x packages cannot be treated as a compatible
+same-major 4.6.6 overlay. No unrelated fixture failure is counted
 as a successful vulnerability reproduction.
+
+
+### Existing native repairs and component evidence retained
+
+Eight kernel-header records now use exact offline CNA snapshot
+`d4e64685005cb49f8cf3123b04e49eac6617de00`, record hashes and reviewed upstream
+patch hashes. Installed UAPI bytes and private-kernel symbol absence are checked.
+These decisions do not waive running-kernel findings. Three additional CNA path
+exceptions are finite hash-bound records; they do not broaden the general path
+allowlist. Four new overlapping upstream patches are matched in full. Eight
+policy tests include rejection of altered primary records and private fields.
+
+The generic header applier correctly rejects Ubuntu targets under its Debian-only
+rule. Its rule was left intact; the individually reviewed Ubuntu decisions used
+the existing `triage.mjs record` interface, sequentially. No scanner rule changed.
+Four Xvfb records revalidate the existing cleanup-order repair using both native
+cleanup fixtures and exact completed release ancestry, including the current
+Penpot exporter. This is not a full wire-protocol exploit test. Two DHI Perl-core
+records match the current signed vendor payload and contain no Archive::Tar
+module; that module has a separate existing repair. Six DHI and three passive
+Xvfb policy tests pass. Reviews expire after seven days and apply only to their
+exact artifact/package/advisory/role identities.
+
+### RSS-Bridge NGINX 1.30.6 release
+
+`released-nginx-rssbridge.json` records the running replacement. The signed
+[upstream Debian package](https://nginx.org/en/linux_packages.html) is pinned in
+`nginx-debian-inputs.json`, including its archived signed index, signing-key
+identity, package and executable hashes. The [upstream advisory list](https://nginx.org/en/security_advisories.html)
+identifies 1.30.6 as fixed for the three reviewed records. This is a vendor binary
+update, not a new source patch or an exploit reproduction.
+
+Only `/usr/sbin/nginx` and the vendor license are changed. The complete exported
+image comparison preserves the existing PHP/application/configuration and prior
+curl, Brotli, SQLite, XML, OpenSSL, LDAP and mount fixes. Debian package labels
+remain unchanged; raw findings therefore remain visible and need exact live-byte
+review. `nginx-debian-policy.mjs` rejects unrelated advisories, package versions,
+roles, modified output scope and incomplete native evidence.
+
+Both images pass 14 native NGINX-to-PHP-FPM checks using the existing mounted
+configuration: normal page/HEAD, privacy headers, rejected methods, private paths,
+traversal rejection, security-contact redirect and rate limiting. The unchanged
+PHP consumer fixtures additionally pass HTTP/2, the Chrome impersonation profile,
+TLS/protocol rejection and a fictional GitHub-to-Atom feed. Test containers have
+no external network and no production content/credentials. The first fixture
+incorrectly expected 404 instead of the baseline's 400 for malformed traversal;
+that assertion was corrected, not counted as a repaired application defect.
+
+Replay `nginx-debian.mjs`, `check-nginx-rssbridge.mjs`,
+`scan-brotli.mjs --nginx-debian rssbridge`, and
+`go-final/verify.py --nginx-debian-oct28 rssbridge`. Acquisition is separate:
+retain the exact archived files under the private `nginx-debian/acquisition/`
+directory; do not replace them with moving repository metadata. Builds use the
+local immutable base and the existing legacy Docker builder with networking
+disabled. A first BuildKit attempt tried to resolve the bare image ID at Docker
+Hub; it failed before producing an image. The recipe now explicitly selects the
+local builder. Both failed precondition attempts and diagnostics are retained.
+
+`release-brotli.mjs prepare/apply --nginx-debian rssbridge` reuses the existing
+single-service transactional release. Only the RSS-Bridge image scalar changes.
+The native/public route gates passed after activation; repeated apply leaves the
+same running container and receipt unchanged. Rollback uses the old image in
+`released-nginx-rssbridge.json`, restores the recorded image scalar, and recreates
+only `rssbridge` through the existing Compose project. No database migration,
+user-data change, cache purge, notification, host restart or new route is involved.
+After a fresh fleet scan, `review-nginx-debian.mjs` prepares six expiring exact-byte
+decisions for individual review and sequential application through `triage.mjs`.

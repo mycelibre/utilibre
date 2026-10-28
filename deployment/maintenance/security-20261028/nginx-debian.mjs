@@ -1,0 +1,50 @@
+// Finite signed-vendor binary overlay; never install packages in a running app.
+import fs from 'node:fs';
+import cp from 'node:child_process';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {gunzipSync} from 'node:zlib';
+process.umask(0o077);
+const root='/var/lib/utilibre-maintenance/security-20261028/nginx-debian';
+const input=JSON.parse(fs.readFileSync(new URL('./nginx-debian-inputs.json',import.meta.url)));
+const s=input.rows[0],pin=input.package,dir=root+'/'+s.key,acq=root+'/acquisition';
+fs.mkdirSync(dir,{recursive:true});assert(!fs.existsSync(dir+'/build.json'),'Preserve completed evidence');
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const run=(p,a,o={})=>{try{return cp.execFileSync(p,a,{encoding:'utf8',timeout:180000,maxBuffer:8*1024**2,stdio:['pipe','pipe','pipe'],...o}).trim();}catch(e){fs.writeFileSync(dir+'/error-'+Date.now()+'.log',String(e.stdout||'')+String(e.stderr||e.message));throw Error('NGINX preparation failed; private evidence retained');}};
+const docker=(...a)=>run('docker',a);
+for(const [name,hash]of [['nginx_signing.key',pin.keySha256],['InRelease',pin.inReleaseSha256],['Packages.gz',pin.packagesSha256],[pin.file,pin.sha256]])assert.equal(sha(fs.readFileSync(acq+'/'+name)),hash);
+// sqv verifies the archived signed index, rather than trusting its parsed copy.
+const release=dir+'/authenticated-release-'+Date.now();
+assert.equal(run('sqv',['--keyring='+acq+'/nginx_signing.key','--cleartext','--output='+release,acq+'/InRelease']),pin.signingFingerprint);
+assert(fs.readFileSync(release,'utf8').split(/\s+/).join(' ').includes(pin.packagesSha256+' 50426 nginx/binary-amd64/Packages.gz'));
+const blocks=gunzipSync(fs.readFileSync(acq+'/Packages.gz')).toString().split('\n\n').filter(b=>b.startsWith('Package: nginx\n')&&b.includes('\nVersion: 1.30.6-1~bookworm\n'));
+assert.equal(blocks.length,1);assert(blocks[0].includes('SHA256: '+pin.sha256));
+for(const c of s.containers)assert.equal(docker('inspect','--format','{{.Image}}',c),s.base);
+const limits=['--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--memory','256m','--cpus','1','--pids-limit','64','--log-driver','none'];
+const native=(id,p,...a)=>docker('run',...limits,'--entrypoint',p,id,...a);
+const version=id=>run('docker',['run',...limits,'--entrypoint','sh',id,'-c','nginx -v 2>&1']);
+assert.equal(version(s.base),'nginx version: nginx/'+s.previous);
+assert.equal(native(s.base,'cat','/etc/debian_version'),'12.15');
+assert.equal(native(s.base,'sh','-ec','find /etc/nginx/modules-enabled -mindepth 1 -print'),'','No dynamic module ABI may be silently lost');
+const cfg=id=>JSON.parse(docker('image','inspect','--format','{{json .Config}}',id));
+assert.equal(cfg(s.base).User,'root');
+assert.equal(docker('inspect','--format','{{.Config.User}}',s.containers[0]),'33:33');
+const context=dir+'/context';fs.mkdirSync(context,{recursive:true});
+run('dpkg-deb',['--extract',acq+'/'+pin.file,context+'/vendor']);
+for(const [path,hash]of [['usr/sbin/nginx',pin.binarySha256],['usr/share/doc/nginx/copyright',pin.copyrightSha256]])assert.equal(sha(fs.readFileSync(context+'/vendor/'+path)),hash);
+fs.copyFileSync(context+'/vendor/usr/sbin/nginx',context+'/nginx');fs.chmodSync(context+'/nginx',0o755);
+fs.copyFileSync(context+'/vendor/usr/share/doc/nginx/copyright',context+'/copyright');fs.chmodSync(context+'/copyright',0o644);
+fs.rmSync(context+'/vendor',{recursive:true});
+const notice='/usr/local/share/licenses/nginx-1.30.6/copyright';
+const recipe=`FROM ${s.base}\nCOPY nginx /usr/sbin/nginx\nCOPY copyright ${notice}\n`;
+fs.writeFileSync(context+'/Dockerfile',recipe);
+assert(fs.statfsSync('/').bavail*fs.statfsSync('/').bsize>8*1024**3);
+run('docker',['build','--pull=false','--network','none','--memory','256m','--cpu-period','100000','--cpu-quota','100000','-t',s.candidate,context],{env:{...process.env,DOCKER_BUILDKIT:'0'}});
+const imageId=docker('image','inspect','--format','{{.Id}}',s.candidate);
+assert.deepEqual(cfg(imageId),cfg(s.base));assert.equal(version(imageId),'nginx version: nginx/'+input.version);
+assert.equal(native(imageId,'sha256sum',s.binary).split(' ')[0],pin.binarySha256);
+assert(!native(imageId,'sh','-c','ldd /usr/sbin/nginx').includes('not found'));
+fs.writeFileSync(dir+'/build.json',JSON.stringify({...s,date:new Date().toISOString(),passed:true,imageId,configurationUnchanged:true,
+ changedFiles:[s.binary,notice].sort(),binarySha256:pin.binarySha256,pin,version:input.version,
+ packageMetadataPreserved:true,deployed:false},null,2)+'\n');
+console.log('RSS-Bridge signed NGINX candidate built; native application and scan gates still required.');

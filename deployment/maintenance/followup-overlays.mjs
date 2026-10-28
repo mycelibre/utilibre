@@ -105,4 +105,5 @@ export const additionalOverlayReceipts = [
  'security-20261028/codec-caddy/release.json',
  'security-20261028/zod/release.json',
  'security-20261028/bson/release.json',
+ 'security-20261028/nginx-debian/release.json',
 ];

@@ -34,6 +34,22 @@ export function kernelComponentPaths(record,id){
 export function headerOverlap(paths,inventory){
  return paths.some(p=>p.endsWith('.h')&&inventory.some(f=>f.endsWith('/'+p.replace(/^.*?include\//,''))));
 }
+// These exact Linux CNA records also name boot code, a Kconfig or explanatory
+// documentation. Keep the general path allowlist strict; review only these
+// immutable records, with installed UAPI overlap checks still mandatory.
+export const additionalKernelRecords={
+ 'CVE-2025-71202':{sha256:'4dcea577e35a7412f222b410188a87ebf3a6399dde8f5dbc0474271377084442',files:['arch/x86/Kconfig','drivers/iommu/iommu-sva.c','include/linux/iommu.h','mm/pgtable-generic.c']},
+ 'CVE-2026-97906':{sha256:'3845a5eb7af1fc8f2962edab3698e1e36bb6d72dc31802cbae34b66ba072d57e',files:['init/main.c']},
+ 'CVE-2026-99056':{sha256:'b8324d3049396c66b4a415a83dd5a1c32ad9f12dccea1b57fd3e8b4861dd3cc4',files:['Documentation/networking/strparser.rst','include/net/strparser.h','net/strparser/strparser.c']},
+};
+export function additionalKernelPaths(body,id){
+ const spec=additionalKernelRecords[id];assert(spec,'Unreviewed kernel record');
+ assert.equal(createHash('sha256').update(body).digest('hex'),spec.sha256,'Changed primary record');
+ const r=JSON.parse(body);assert.equal(r.cveMetadata.cveId,id);assert.equal(r.cveMetadata.state,'PUBLISHED');
+ const c=r.containers.cna;assert.equal(c.providerMetadata.shortName,'Linux');
+ assert(c.affected.length&&c.affected.every(a=>a.product==='Linux'&&a.vendor==='Linux'&&JSON.stringify(a.programFiles)===JSON.stringify(spec.files)));
+ return [...spec.files];
+}
 // One individually reviewed kernel-build advisory, not a general Makefile exception.
 export function gcovBuildPaths(body,id){
  assert.equal(id,'CVE-2026-63825');

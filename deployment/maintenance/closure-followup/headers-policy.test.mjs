@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents,gcovBuildPaths} from './headers-policy.mjs';
+import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents,gcovBuildPaths,additionalKernelRecords,additionalKernelPaths} from './headers-policy.mjs';
 const record=files=>({cveMetadata:{cveId:'CVE-2026-12345',state:'PUBLISHED'},containers:{cna:{providerMetadata:{shortName:'Linux'},affected:[{product:'Linux',vendor:'Linux',programFiles:files}]}}});
 test('only explicit Linux CNA private compiled paths qualify',()=>{
  assert.deepEqual(kernelComponentPaths(record(['fs/example.c','include/linux/private.h']),'CVE-2026-12345'),['fs/example.c','include/linux/private.h']);
@@ -23,4 +23,10 @@ test('kernel build exception rejects invented or changed primary records',()=>{
  assert.throws(()=>gcovBuildPaths('{}','CVE-2026-63825'));
  assert.throws(()=>gcovBuildPaths('{}','CVE-2026-12345'));
  assert.throws(()=>kernelComponentPaths(record(['Makefile']),'CVE-2026-12345'));
+});
+test('three extra kernel records cannot authorize arbitrary boot/build/documentation attribution',()=>{
+ assert.equal(Object.keys(additionalKernelRecords).length,3);
+ for(const id of Object.keys(additionalKernelRecords))assert.throws(()=>additionalKernelPaths(JSON.stringify(record(additionalKernelRecords[id].files)),id));
+ assert.throws(()=>additionalKernelPaths('{}','CVE-2026-12345'));
+ for(const p of ['init/main.c','arch/x86/Kconfig','Documentation/networking/strparser.rst'])assert.throws(()=>kernelComponentPaths(record([p]),'CVE-2026-12345'));
 });

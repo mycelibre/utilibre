@@ -166,7 +166,7 @@ services:
   resume:
     <<: *runtime
     # Same pinned upstream runtime; narrow visitor-statistics removal in Dockerfile.resume.
-    image: utilibre-expanded-resume:blkid-security-20261028
+    image: utilibre-resume:zod-security-20261028
     read_only: true
     user: "1000:1000"
     command: ["node", "/usr/local/bin/utilibre-resume-start.mjs"]

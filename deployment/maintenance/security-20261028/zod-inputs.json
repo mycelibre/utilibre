@@ -119,6 +119,29 @@
           "/app/node_modules/zod"
         ]
       }
+    },
+    {
+      "key": "resume",
+      "container": "utilibre-expanded-resume-1",
+      "containers": [
+        "utilibre-expanded-resume-1"
+      ],
+      "base": "sha256:1f9542280c6dcb4683aeceecc0b08db1bc01080f89b5c92e4e6816a9974b80b0",
+      "candidate": "utilibre-resume:zod-security-20261028",
+      "roots": [
+        "/app",
+        "/usr/local/lib/node_modules"
+      ],
+      "before": {
+        "/app/node_modules/.pnpm/zod@4.1.11/node_modules/zod": "4.1.11",
+        "/app/node_modules/.pnpm/zod@4.6.5/node_modules/zod": "4.6.5"
+      },
+      "paths": {
+        "zod": [
+          "/app/node_modules/.pnpm/zod@4.1.11/node_modules/zod",
+          "/app/node_modules/.pnpm/zod@4.6.5/node_modules/zod"
+        ]
+      }
     }
   ]
 }
