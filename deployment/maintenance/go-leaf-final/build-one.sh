@@ -29,7 +29,9 @@ esac
 cp go.mod "/output/$name-go.mod.before"
 cp go.sum "/output/$name-go.sum.before"
 if [ "$PHASE" != legacy ]; then test -f "/scripts/locks/$name/go.mod"; fi
-if [ -f "/scripts/locks/$name/go.mod" ]; then
+if [ "${UTILIBRE_JOSE_LOCKS:-}" = /jose-locks ]; then
+ cp /jose-locks/go.mod /jose-locks/go.sum .
+elif [ -f "/scripts/locks/$name/go.mod" ]; then
  cp "/scripts/locks/$name/go.mod" go.mod
  cp "/scripts/locks/$name/go.sum" go.sum
 elif [ "$name" = anubis ]; then

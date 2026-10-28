@@ -365,6 +365,61 @@ not waive the application or its other dependencies. Existing transactional
 rollback restores only the recorded image pins and declared service roles;
 neither upgrade nor rollback edits account records.
 
+## JOSE v4 repair after disk expansion
+
+The `jose` profile updates only `github.com/go-jose/go-jose/v4` to **4.1.6**
+in Yopass, Donetick, ntfy and Vikunja. Existing Go 1.27.3 compilers, CGO mode,
+application revisions, other modules, frontend assets and runtime settings stay
+unchanged. New checksum-pinned lockfiles preserve every previous dependency
+fix. `released-jose.json` records all four completed, healthy live releases. Older `go-jose/v3` copies in other applications remain a separate repair.
+
+The offline upstream suites passed 302 checks on 4.1.4, 490 on 4.1.5 and 529
+on 4.1.6, including the added bounded modulus and legitimate RSA, ECDSA,
+Ed25519, HMAC and JWE round trips. Old versions accept the oversized public
+modulus; the patched version rejects it. This demonstrates the missing input
+bound without running a CPU-exhaustion attack. No live provider or user token
+was involved. The upstream 4096-bit RSA limit is retained; accepting larger keys
+would require a separate compatibility/security decision.
+
+Replay uses `jose.mjs locks` only to capture the reviewed fixed version once;
+committed lockfiles are immutable inputs for `download`, then `build` with
+network disabled. `stage` rejects unrelated module changes and preserves the
+image configuration. Run the existing Yopass/Donetick/ntfy/Vikunja native
+fixtures, the relevant embedded-asset check, `jose.mjs proof`,
+`scan-brotli.mjs --jose` and `go-final/verify.py --jose-oct28` before
+`release-brotli.mjs prepare --jose`. Separately authorized `apply --jose` uses
+the existing exact-image, readiness and transactional rollback gates. Raw
+scanner findings and old images are retained; rollback is not a database
+restore. There is no schema migration or access/retention change in this batch.
+
+Yopass's fixture checks encryption, retrieval, concurrent burn-after-reading,
+one-hour expiry, length limits and uploads remaining disabled. Donetick checks
+two fictional accounts, task creation/deletion and account isolation; its
+pre-existing denied/missing-item 500 responses are not claimed repaired.
+ntfy checks anonymous permissions, one-hour expiry, no-cache behavior and
+restart cache removal. Vikunja uses its established two-account, attachment,
+export and synthetic restore fixture. These are isolated API/native checks,
+not physical-device or external-provider tests.
+
+The separate `jose-v3-rsa.patch` is an exact-source adaptation of upstream's
+RSA bounds for 3.0.5. Its manifest is explicitly **native-library-tested, not deployed**. Both the
+baseline and repaired v3 library passed their complete native suites and
+bounded regression; application-level checks remain outstanding.
+It does not authorize a scanner exception, deployment, or changes to the v3
+header-parsing API. Application builds and consumer verification are still
+required before it can repair those remaining services. The first v3 fixture
+attempt used Go's newer `any` spelling despite the module's Go 1.12 language
+setting; the fixture was corrected to `interface{}`. That build failure is
+retained and is not counted as reproduction of a vulnerability.
+
+The source bundle is `security-jose-20261028-source.tar.gz`, SHA-256
+`0a03e63dc7e988c3cc3547d12b0a80dab90ca698b81238d7ad03344da028b345`.
+It is linked from the existing shared source index. The PDF origin serves both
+index and archive successfully; a Python request through the tools origin
+received an edge 403, which is not represented as a source-file failure.
+ntfy and Vikunja individual source offers were also updated, preserving their
+previous archives.
+
 ## Evidence durability and remaining assessment
 
 `restore-review-sources.py` reconstructs older mount, HEIF, TIFF and X-library reviewer source trees from
@@ -387,9 +442,12 @@ is granted to descendants of repaired images or to all packages in a container.
 Only completed compiler/module caches were compressed, archive-compared and
 removed in expanded form to preserve the 8 GiB free-space floor. Their archives,
 checksums and restore paths remain under the private batch directory. No runtime
-content, saved account work, backup or rollback image was removed. More disk
-capacity must be assigned in Proxmox before another guest filesystem expansion;
-the current 220 GiB device has no unallocated space.
+content, saved account work, backup or rollback image was removed. On 28 October the operator expanded the main Proxmox disk from 220 to 270 GiB.
+Online `growpart /dev/sda 1` and `resize2fs /dev/sda1` succeeded: the root
+filesystem is 266 GiB, with approximately 56 GiB free immediately afterward.
+The separate 15 GiB temporary-data disk, EFI partition and TRIP loop filesystem
+were unchanged. No reboot or failed systemd unit resulted. Private partition
+preflight and result receipts are in `disk-expansion/`.
 
 ## Sources checked 28 October 2026
 
@@ -436,3 +494,5 @@ The exact core Trivy advisory database and metadata are retained in the private
 Java's extraction database was not archived because the combined archive would
 cross the disk floor; raw Java results remain retained, but complete archived
 Java replay is not claimed. No database refresh is part of these replay checks.
+
+- [Go JOSE RSA parsing advisory](https://github.com/go-jose/go-jose/security/advisories/GHSA-mgcc-cww5-fp2q) and [upstream 4.1.6 fix](https://github.com/go-jose/go-jose/commit/a0111f82742fa92bceec9ede40845e73319e6230).

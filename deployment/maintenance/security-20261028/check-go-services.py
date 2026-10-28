@@ -1,8 +1,9 @@
 # Disposable native HTTP fixtures; no external route, user data, email or real accounts.
 import pathlib,subprocess,json,time,sys,secrets,tempfile,shutil,hashlib
 import requests,yaml
-baseline='--baseline' in sys.argv;key=sys.argv[1];assert key in ['donetick','librespeed']
-root=pathlib.Path('/var/lib/utilibre-maintenance/security-20261028/go-services');s=next(s for s in json.loads(pathlib.Path('deployment/maintenance/security-20261028/go-services-inputs.json').read_text())['rows'] if s['key']==key)
+jose='--jose' in sys.argv;baseline='--baseline' in sys.argv;key=sys.argv[1];assert key in ['donetick','librespeed']
+profile='jose' if jose else 'go-services'
+root=pathlib.Path('/var/lib/utilibre-maintenance/security-20261028')/profile;s=next(s for s in json.loads((pathlib.Path('deployment/maintenance/security-20261028')/(profile+'-inputs.json')).read_text())['rows'] if s['key']==key)
 image=s['base'] if baseline else s['candidate'];name='maintenance-native-'+key;created=False;network=False;temp=pathlib.Path(tempfile.mkdtemp(prefix=name+'-',dir='/dev/shm'));temp.chmod(0o755)
 def docker(*args):return subprocess.check_output(['docker',*args],text=True,stderr=subprocess.PIPE,timeout=90).strip()
 def req(method,path,**kw):return requests.request(method,base+path,timeout=15,**kw)

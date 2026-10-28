@@ -1,0 +1,21 @@
+{
+  "key": "donetick",
+  "dependency": "github.com/go-jose/go-jose/v4",
+  "from": "v4.1.4",
+  "to": "v4.1.6",
+  "files": [
+    {
+      "path": "go.mod",
+      "before": "43e58df548b442479c6e5ce2b1c3c1d14ab7a68b0be34156be8c9de93d275bf1",
+      "after": "f4194baf8295eac79934da23337fbaf032fd454f19604f9892499fbdf68db24a"
+    },
+    {
+      "path": "go.sum",
+      "before": "04054e5c59754bd378c1ba205233c938c50dfd3c0ac3dad3d1002426e0eec629",
+      "after": "a3c68be458b2c3db123410cd9d11344635665586e473e9b777b2ed0eff791416"
+    }
+  ],
+  "zipSha256": "62506f3369fc124682356bbe8eb442f982422401dda99ace200694efc962da76",
+  "moduleSum": "h1:sNRkftxFJxwsILiQukqp5z83QBSmntVwmgRY7AqBDO4=",
+  "moduleModSum": "h1:x4oUasVrzR7071A4TnHLGSPpNOm2a21K9Kf04k1rs08="
+}

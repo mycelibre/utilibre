@@ -1,0 +1,21 @@
+{
+  "key": "vikunja",
+  "dependency": "github.com/go-jose/go-jose/v4",
+  "from": "v4.1.4",
+  "to": "v4.1.6",
+  "files": [
+    {
+      "path": "go.mod",
+      "before": "64b5c9ada83613315231febb0bf94f570d2fbe2d80556705eb64c331fe8dd638",
+      "after": "efa14649653f2650fa196cc7c69a3f4b33ff62e950f78c3006638b2f6c93547a"
+    },
+    {
+      "path": "go.sum",
+      "before": "87cd0e52c96807c8d23d980488c83c4836192540db106c7ab9fdfd56afedd841",
+      "after": "e67e549a1e8e7caed172f958715f45219eab1e8ff074aab3f95123ec0d4bf5e1"
+    }
+  ],
+  "zipSha256": "62506f3369fc124682356bbe8eb442f982422401dda99ace200694efc962da76",
+  "moduleSum": "h1:sNRkftxFJxwsILiQukqp5z83QBSmntVwmgRY7AqBDO4=",
+  "moduleModSum": "h1:x4oUasVrzR7071A4TnHLGSPpNOm2a21K9Kf04k1rs08="
+}

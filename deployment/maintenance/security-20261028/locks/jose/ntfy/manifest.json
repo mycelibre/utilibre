@@ -1,0 +1,21 @@
+{
+  "key": "ntfy",
+  "dependency": "github.com/go-jose/go-jose/v4",
+  "from": "v4.1.4",
+  "to": "v4.1.6",
+  "files": [
+    {
+      "path": "go.mod",
+      "before": "6c2d4062219f2bec36bae3ea8a9b67a5f76d997723261e7ced4db325696e5ba3",
+      "after": "90fd83f855e27d4c6e7db102b46fd8643b641438d01b625e9f7ae35fcd80b4af"
+    },
+    {
+      "path": "go.sum",
+      "before": "0a9b7cdac85aa8971264f53ab989a624d5f3e954e23bdf6d56f09d9adc31a194",
+      "after": "e3e4d6e292aac94023e0e690caf311e25cc9c2c53aed32df89ea37e684b2c76c"
+    }
+  ],
+  "zipSha256": "62506f3369fc124682356bbe8eb442f982422401dda99ace200694efc962da76",
+  "moduleSum": "h1:sNRkftxFJxwsILiQukqp5z83QBSmntVwmgRY7AqBDO4=",
+  "moduleModSum": "h1:x4oUasVrzR7071A4TnHLGSPpNOm2a21K9Kf04k1rs08="
+}

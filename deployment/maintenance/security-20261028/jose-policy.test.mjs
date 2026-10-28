@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {verifyModuleDelta} from './jose-policy.mjs';
+const sum='h1:'+'a'.repeat(43)+'=',p='dep\tgithub.com/go-jose/go-jose/v4\t';
+const old=[p+'v4.1.5\t'+sum,'dep\tgolang.org/x/net\tv0.60.0\t'+sum];
+const fixed=[p+'v4.1.6\t'+sum,old[1]];
+test('accepts the exact patch release while preserving other repairs',()=>verifyModuleDelta(old,fixed,'v4.1.5',sum));
+test('unrelated CLI with no JOSE must remain unchanged',()=>{verifyModuleDelta([old[1]],[old[1]],'v4.1.5',sum);assert.throws(()=>verifyModuleDelta([old[1]],fixed,'v4.1.5',sum));});
+test('rejects wrong baseline and major-version substitution',()=>{assert.throws(()=>verifyModuleDelta(old,fixed,'v4.1.3',sum));assert.throws(()=>verifyModuleDelta(old,fixed,'v4.1.4',sum));assert.throws(()=>verifyModuleDelta(old,[fixed[0].replace('/v4','/v5'),old[1]],'v4.1.5',sum));});
+test('rejects dependency removal or unrelated upgrade',()=>{assert.throws(()=>verifyModuleDelta(old,[fixed[0]],'v4.1.5',sum));assert.throws(()=>verifyModuleDelta(old,[fixed[0],old[1].replace('v0.60.0','v0.61.0')],'v4.1.5',sum));});
+test('rejects duplicated inventory, altered or missing integrity',()=>{assert.throws(()=>verifyModuleDelta([...old,old[0]],fixed,'v4.1.5',sum));assert.throws(()=>verifyModuleDelta(old,fixed,'v4.1.5',''));assert.throws(()=>verifyModuleDelta(old,[fixed[0].replace(sum,'h1:'+'b'.repeat(43)+'='),old[1]],'v4.1.5',sum));});

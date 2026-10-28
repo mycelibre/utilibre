@@ -1,13 +1,13 @@
 {
-  "date": "2026-10-28T12:54:23.802406+00:00",
-  "scanCompletedAt": "2026-10-28T12:49:52.530Z",
+  "date": "2026-10-28T14:08:50.787451+00:00",
+  "scanCompletedAt": "2026-10-28T14:07:51.106Z",
   "scannerStatus": "checked",
   "runningImagesAssessed": 109,
-  "rawRecords": 23975,
+  "rawRecords": 23982,
   "rawCritical": 66,
-  "rawHigh": 3206,
+  "rawHigh": 3202,
   "awaitingReviewCritical": 0,
-  "awaitingReviewHigh": 365,
+  "awaitingReviewHigh": 361,
   "meaning": "Package/artifact records, not distinct exploitable vulnerabilities. Reviewed fixes/component attributions remain in raw scans. This is not full security clearance.",
   "completedThisCheckpoint": [
     "Caddy compiler and prior x/net preservation",
@@ -16,10 +16,11 @@
     "TRIP Authlib 1.9.1",
     "Five dnspython 2.9.0 images and SimpleLogin upstream backport",
     "Exact prior-patch revalidation and retained-source reconstruction",
-    "Four upstream Django REST Framework backports in Authentik and Linkding; 18 legitimate checks per image plus native application tests"
+    "Four upstream Django REST Framework backports in Authentik and Linkding; 18 legitimate checks per image plus native application tests",
+    "JOSE 4.1.6 in Yopass, Donetick, ntfy and Vikunja; prior source, compiler, configuration and privacy fixes retained"
   ],
   "unresolved": [
-    "Go JOSE RSA JWK parsing advisory in several applications",
+    "Go JOSE v3/v4 copies in Caddy, OAuth2 Proxy and Wakapi; v3 backport preparation does not repair running applications",
     "Zod error-amplification advisory needs per-application input analysis",
     "Remaining host/native and tracked build-input findings",
     "SimpleLogin public 502 predates this batch; native login gateway responds",
@@ -35,8 +36,16 @@
     "drfRoles": 3,
     "drfLegitimateChecksPerImage": 18,
     "drfIsolatedNativeApplicationChecksPassed": true,
-    "historicalHeaderTestsPassed": 4
+    "historicalHeaderTestsPassed": 4,
+    "joseUpstreamAndRegressionTests": {
+      "4.1.4": 302,
+      "4.1.5": 490,
+      "4.1.6": 529
+    },
+    "joseModulePolicyTestsPassed": 5,
+    "joseReleasePolicyTestsPassed": 32,
+    "joseNativeApplicationChecksPassed": 4
   },
   "deployment": "Recorded exact releases are live; running images and readiness verified. No further reboot performed.",
-  "capacity": "Root disk about 8.5 GiB free, with an 8 GiB maintenance floor. Existing 220 GiB guest device fully partitioned; further capacity must be assigned in Proxmox. Temporary disk is reserved and was not repurposed."
+  "capacity": "270 GiB root device, 266 GiB filesystem; about 49 GiB free after isolated builds and source publication. 8 GiB reserve retained; separate 15 GiB temporary disk unchanged."
 }

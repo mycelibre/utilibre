@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "advisory": "CVE-2026-116587",
+  "upstream": "https://github.com/go-jose/go-jose/security/advisories/GHSA-mgcc-cww5-fp2q",
+  "releaseZipSha256": "62506f3369fc124682356bbe8eb442f982422401dda99ace200694efc962da76",
+  "rows": [
+    {
+      "key": "yopass",
+      "base": "sha256:13caac0cc0733a118e35e5e3d92241d8186d68aa5d66431ef1aaa8a00bf511fc",
+      "oldRef": "utilibre-yopass:go-security-20261028",
+      "candidate": "utilibre-yopass:jose-security-20261028",
+      "containers": [
+        "utilibre-community-yopass-1"
+      ],
+      "binary": "/yopass-server",
+      "binaries": [
+        "/yopass",
+        "/yopass-server"
+      ],
+      "sourceRevision": "34d8bbcc4aac14dbf326d46dc69d26895b7f5282",
+      "previousCompiler": "1.27.3",
+      "compilerVersion": "1.27.3",
+      "cgo": true,
+      "previousJose": "v4.1.5",
+      "joseVersion": "v4.1.6",
+      "profile": "go-runtime",
+      "sourceArchiveSha256": "d748b36307f59353836320cf2d6c1f46c737efb9afc3c8e2ec5bec39c835602f",
+      "sourceArchive": "/var/lib/utilibre-maintenance/go-runtime-20261011/input/yopass-source.tar"
+    },
+    {
+      "key": "donetick",
+      "base": "sha256:7a372e8e0c298219f7f93b423785f0f7cba6d66817cedf19453192ed3574624b",
+      "oldRef": "utilibre-donetick:go-security-20261028",
+      "candidate": "utilibre-donetick:jose-security-20261028",
+      "containers": [
+        "utilibre-donetick-app-1"
+      ],
+      "binary": "/donetick",
+      "binaries": [
+        "/donetick"
+      ],
+      "sourceRevision": "e88d8bea62405ca02288f93dd70efab8c0f1ff2c",
+      "previousCompiler": "1.27.3",
+      "compilerVersion": "1.27.3",
+      "cgo": false,
+      "previousJose": "v4.1.4",
+      "joseVersion": "v4.1.6",
+      "profile": "go-services",
+      "sourceArchiveSha256": "4a561be81c742c2b95227472bf4d6be3343006cd40f59a422510ba09e981a3d5",
+      "sourceArchive": "/var/lib/utilibre-maintenance/security-20261028/go-services/donetick/source.tar.gz"
+    },
+    {
+      "key": "ntfy",
+      "base": "sha256:b8ec0af480f89be8bdaf5d5764f27d558e38460dba19252d74958aee4387c27e",
+      "oldRef": "utilibre-ntfy:go-security-20261028",
+      "candidate": "utilibre-ntfy:jose-security-20261028",
+      "containers": [
+        "utilibre-community-ntfy-1"
+      ],
+      "binary": "/usr/bin/ntfy",
+      "binaries": [
+        "/usr/bin/ntfy"
+      ],
+      "sourceRevision": "10cb6506f836dbb00bb77e3b52669f6ace37f555",
+      "previousCompiler": "1.27.3",
+      "compilerVersion": "1.27.3",
+      "cgo": true,
+      "previousJose": "v4.1.4",
+      "joseVersion": "v4.1.6",
+      "profile": "go-helpers",
+      "sourceManifestSha256": "b375fc72a2d4356b64b7d9173492e42c6ff2a0a33b043d7746c85c0facb14c04",
+      "source": "/opt/utilibre/community-src/ntfy"
+    },
+    {
+      "key": "vikunja",
+      "base": "sha256:65e94a9388d6d7825df47b231fca5bbbb6658e422d286019e901691c9c3c5a01",
+      "oldRef": "utilibre-vikunja:echo-security-20261024",
+      "candidate": "utilibre-vikunja:jose-security-20261028",
+      "containers": [
+        "utilibre-vikunja-vikunja-1"
+      ],
+      "binary": "/app/vikunja/vikunja",
+      "binaries": [
+        "/app/vikunja/vikunja"
+      ],
+      "sourceRevision": "a16be96aa454671fdf213b0fbe411dd38a098418",
+      "previousCompiler": "1.27.3",
+      "compilerVersion": "1.27.3",
+      "cgo": true,
+      "previousJose": "v4.1.4",
+      "joseVersion": "v4.1.6",
+      "profile": null,
+      "sourceManifestSha256": "2f7d6a45a7d8915136a9c3ade6de41ee36afaab33717b679bf670b887e6dabc2",
+      "source": "/opt/utilibre/community-src/vikunja"
+    }
+  ],
+  "toolchains": {
+    "1.26.10": {
+      "url": "https://go.dev/dl/go1.26.10.linux-amd64.tar.gz",
+      "sha256": "ccfe7ae822d2c2f41f4fe7c956199967a4dac22d0ee0d2b2bfdb440aab3b20c5",
+      "localCompilerImageId": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+      "registryManifest": false
+    },
+    "1.27.3": {
+      "url": "https://go.dev/dl/go1.27.3.linux-amd64.tar.gz",
+      "sha256": "65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40",
+      "localCompilerImageId": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+      "registryManifest": false
+    }
+  }
+}

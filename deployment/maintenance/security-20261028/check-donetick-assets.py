@@ -1,9 +1,10 @@
 """Recheck upstream Go-embedded frontend bytes without changing live services."""
-import hashlib,json,tarfile
+import hashlib,json,tarfile,sys
 from pathlib import Path
-root=Path('/var/lib/utilibre-maintenance/security-20261028/go-services/donetick')
+prior=Path('/var/lib/utilibre-maintenance/security-20261028/go-services/donetick')
+root=Path('/var/lib/utilibre-maintenance/security-20261028/jose/donetick') if '--jose' in sys.argv else prior
 spec=next(s for s in json.loads(Path('deployment/maintenance/security-20261028/go-services-inputs.json').read_text())['rows'] if s['key']=='donetick')
-archive=root/'source.tar.gz';assert hashlib.file_digest(archive.open('rb'),'sha256').hexdigest()==spec['sourceArchiveSha256']
+archive=prior/'source.tar.gz';assert hashlib.file_digest(archive.open('rb'),'sha256').hexdigest()==spec['sourceArchiveSha256']
 old=(root/'output/before-donetick').read_bytes();new=(root/'output/donetick').read_bytes();rows=[];excluded=[]
 with tarfile.open(archive,'r:gz') as files:
  for item in files:
@@ -13,5 +14,6 @@ with tarfile.open(archive,'r:gz') as files:
   rows.append(dict(path=item.name,sha256=hashlib.sha256(data).hexdigest(),bytes=len(data)))
 assert len(rows)==254
 result=dict(passed=True,unchangedEmbeddedAssets=rows,upstreamGoEmbedExclusions=excluded)
-retained=json.loads((root/'embedded-assets.json').read_text());assert result==retained
+retained=json.loads((prior/'embedded-assets.json').read_text());assert result==retained
+if '--jose' in sys.argv:(root/'assets.json').write_text(json.dumps(result,indent=2)+'\n')
 print('254 embedded frontend assets match the source and both executable versions.')

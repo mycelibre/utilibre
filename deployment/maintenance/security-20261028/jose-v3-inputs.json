@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "state": "native-library-tested-not-deployed",
+  "advisory": "CVE-2026-116587",
+  "upstreamCommit": "a0111f82742fa92bceec9ede40845e73319e6230",
+  "baseline": "github.com/go-jose/go-jose/v3@v3.0.5",
+  "archiveSha256": "4e7e6b60541ab03bd402e573fc2c1264297e661726c5f53529ca14ae58625a27",
+  "file": "jwk.go",
+  "beforeSha256": "79f510a4b97fa2e34ec37932cab57e64dfdc9fa6c314654d1ccc2dd93898a532",
+  "afterSha256": "7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b",
+  "patchSha256": "33ef78dec914e0329666bc9d8d3d4ac6dac8e716f5f4a07370c2f27caa725abf",
+  "scope": "Exact upstream RSA modulus and prime-product bounds. v3 API and header parsing retained; additional v4 header-hardening changes are not backported. This preparation is not deployed or a scanner exception.",
+  "nativeVerification": {
+    "rows": [
+      {
+        "patched": false,
+        "passedTests": 262,
+        "modulusBoundaryRejected": false,
+        "sourceSha256": "79f510a4b97fa2e34ec37932cab57e64dfdc9fa6c314654d1ccc2dd93898a532"
+      },
+      {
+        "patched": true,
+        "passedTests": 262,
+        "modulusBoundaryRejected": true,
+        "sourceSha256": "7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b"
+      }
+    ],
+    "fixtureSha256": "6dba78460243c1579eb4f41617550e338d9280b0b241234cf218fe836e525f33",
+    "applicationVerification": false,
+    "deployed": false
+  }
+}

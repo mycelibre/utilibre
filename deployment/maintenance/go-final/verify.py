@@ -2,16 +2,17 @@
 import hashlib,json,os,subprocess,tarfile,sys
 from pathlib import Path
 os.umask(0o077)
+JOSE='--jose-oct28' in sys.argv
 DRF='--drf-oct28' in sys.argv
 DNS='--dnspython-oct28' in sys.argv
 AUTHLIB='--authlib-oct28' in sys.argv
 SERVICES='--services-oct28' in sys.argv
 RUNTIME='--runtime-oct28' in sys.argv or SERVICES
 CADDY='--caddy-oct28' in sys.argv
-HELPERS='--helpers-oct28' in sys.argv or CADDY or RUNTIME or AUTHLIB or DNS or DRF
+HELPERS='--helpers-oct28' in sys.argv or CADDY or RUNTIME or AUTHLIB or DNS or DRF or JOSE
 OCT28='--oct28' in sys.argv or HELPERS
 ROOT=Path('/var/lib/utilibre-maintenance/security-20261028/go' if OCT28 else '/var/lib/utilibre-maintenance/go-final-20261011')
-if HELPERS: ROOT=Path('/var/lib/utilibre-maintenance/security-20261028/'+('drf' if DRF else 'dnspython' if DNS else 'authlib' if AUTHLIB else 'caddy' if CADDY else 'go-services' if SERVICES else 'go-runtime' if RUNTIME else 'go-helpers'))
+if HELPERS: ROOT=Path('/var/lib/utilibre-maintenance/security-20261028/'+('jose' if JOSE else 'drf' if DRF else 'dnspython' if DNS else 'authlib' if AUTHLIB else 'caddy' if CADDY else 'go-services' if SERVICES else 'go-runtime' if RUNTIME else 'go-helpers'))
 if hasattr(os,'sched_getaffinity'):os.sched_setaffinity(0,{min(os.sched_getaffinity(0))})
 def files(image):
  c=subprocess.check_output(['docker','create','--entrypoint','/bin/true',image],text=True).strip()
@@ -30,7 +31,7 @@ def files(image):
   return result
  finally:subprocess.run(['docker','rm',c],stdout=subprocess.DEVNULL,check=True)
 rows=[]
-specs=json.loads((ROOT/'build.json').read_text())['rows'] if not HELPERS else [dict(json.loads((ROOT/k/'build.json').read_text()),baseId=json.loads((ROOT/k/'build.json').read_text())['base']) for k in sys.argv[1:] if k not in ['--helpers-oct28','--caddy-oct28','--runtime-oct28','--services-oct28','--authlib-oct28','--dnspython-oct28','--drf-oct28']]
+specs=json.loads((ROOT/'build.json').read_text())['rows'] if not HELPERS else [dict(json.loads((ROOT/k/'build.json').read_text()),baseId=json.loads((ROOT/k/'build.json').read_text())['base']) for k in sys.argv[1:] if k not in ['--jose-oct28','--helpers-oct28','--caddy-oct28','--runtime-oct28','--services-oct28','--authlib-oct28','--dnspython-oct28','--drf-oct28']]
 for s in specs:
  before,after=files(s['baseId']),files(s['imageId']);changes=sorted(p for p in before.keys()|after.keys() if before.get(p)!=after.get(p));removed_bytecode=[]
  if AUTHLIB or DNS:

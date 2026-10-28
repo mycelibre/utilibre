@@ -1,0 +1,21 @@
+{
+  "key": "yopass",
+  "dependency": "github.com/go-jose/go-jose/v4",
+  "from": "v4.1.5",
+  "to": "v4.1.6",
+  "files": [
+    {
+      "path": "go.mod",
+      "before": "656990fa4a2431a590205a15a29e1494f03f87ec87c315bffda85862b9aa47a2",
+      "after": "62640a19fb5169251058a8099542eea884b281e26a1ab6ad183d70fa713fdf78"
+    },
+    {
+      "path": "go.sum",
+      "before": "75ec95dd6f542f94bdc21070427826e6c0d2f5edba93d673b421a771733c235e",
+      "after": "5c4cec0b9fa247d4b02318ed99033288286342eaba14576abefc103ece8b0a38"
+    }
+  ],
+  "zipSha256": "62506f3369fc124682356bbe8eb442f982422401dda99ace200694efc962da76",
+  "moduleSum": "h1:sNRkftxFJxwsILiQukqp5z83QBSmntVwmgRY7AqBDO4=",
+  "moduleModSum": "h1:x4oUasVrzR7071A4TnHLGSPpNOm2a21K9Kf04k1rs08="
+}

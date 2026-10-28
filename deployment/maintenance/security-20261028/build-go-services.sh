@@ -9,6 +9,9 @@ mkdir -p /work/src /work/tmp
 export TMPDIR=/work/tmp GOTMPDIR=/work/tmp GOCACHE=/work/cache GOPATH=/work/gopath GOMODCACHE=/modules GOTOOLCHAIN=local GOTELEMETRY=off GOMAXPROCS=2 CGO_ENABLED=0 GOFLAGS=-mod=readonly
 cd /work/src
 tar -xzf /input/source.tar.gz
+if [ "${UTILIBRE_JOSE_LOCKS:-}" = /jose-locks ]; then
+ cp /jose-locks/go.mod /jose-locks/go.sum .
+fi
 if [ "$PHASE" = download ]; then go mod download all; go mod verify; exit; fi
 go mod verify
 if [ "$key" = donetick ]; then

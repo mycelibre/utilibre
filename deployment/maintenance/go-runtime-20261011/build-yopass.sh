@@ -9,6 +9,9 @@ git clone --quiet --shared --no-checkout /source-git source
 cd source
 git checkout --quiet --detach 34d8bbcc4aac14dbf326d46dc69d26895b7f5282
 test "$(git archive HEAD | sha256sum | cut -d' ' -f1)" = d748b36307f59353836320cf2d6c1f46c737efb9afc3c8e2ec5bec39c835602f
+if [ "${UTILIBRE_JOSE_LOCKS:-}" = /jose-locks ]; then
+ cp /jose-locks/go.mod /jose-locks/go.sum .
+fi
 export GOTOOLCHAIN=local GOTELEMETRY=off GOFLAGS=-mod=readonly
 export GOMAXPROCS=2 GOMEMLIMIT=2GiB GOCACHE=/work/cache GOMODCACHE=${MODULE_CACHE:-/work/mod}
 export CGO_ENABLED=1 GOOS=linux GOARCH=amd64

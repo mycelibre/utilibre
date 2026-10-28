@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-28T14:05:19.270114+00:00",
+  "status": "passed",
+  "rows": [
+    {
+      "name": "utilibre-community-yopass-1",
+      "oldRef": "utilibre-yopass:go-security-20261028",
+      "oldImage": "sha256:13caac0cc0733a118e35e5e3d92241d8186d68aa5d66431ef1aaa8a00bf511fc",
+      "newRef": "utilibre-yopass:jose-security-20261028",
+      "newImage": "sha256:b651453a70b02a6018788f6d71ccb6eb7fb4911b640346ab539ba0eff1c93d1b",
+      "key": "yopass",
+      "status": "passed",
+      "completedAt": "2026-10-28T13:55:22.797Z"
+    },
+    {
+      "name": "utilibre-donetick-app-1",
+      "oldRef": "utilibre-donetick:go-security-20261028",
+      "oldImage": "sha256:7a372e8e0c298219f7f93b423785f0f7cba6d66817cedf19453192ed3574624b",
+      "newRef": "utilibre-donetick:jose-security-20261028",
+      "newImage": "sha256:7fe039c66cc0f519d5dab499f346cbf6cc244404934deef33100a99610be3b4d",
+      "key": "donetick",
+      "status": "passed",
+      "completedAt": "2026-10-28T13:57:35.735Z"
+    },
+    {
+      "name": "utilibre-community-ntfy-1",
+      "oldRef": "utilibre-ntfy:go-security-20261028",
+      "oldImage": "sha256:b8ec0af480f89be8bdaf5d5764f27d558e38460dba19252d74958aee4387c27e",
+      "newRef": "utilibre-ntfy:jose-security-20261028",
+      "newImage": "sha256:3e33364998ccf69605e83209ffd724f971e4da5c4f852aad054954dea6e3b9d7",
+      "key": "ntfy",
+      "status": "passed",
+      "completedAt": "2026-10-28T14:00:46.269Z"
+    },
+    {
+      "name": "utilibre-vikunja-vikunja-1",
+      "oldRef": "utilibre-vikunja:echo-security-20261024",
+      "oldImage": "sha256:65e94a9388d6d7825df47b231fca5bbbb6658e422d286019e901691c9c3c5a01",
+      "newRef": "utilibre-vikunja:jose-security-20261028",
+      "newImage": "sha256:4bec3b37654a63f0e6e1e3f8ed7c2251f197051767982ccd9c89091a63142bc3",
+      "key": "vikunja",
+      "status": "passed",
+      "completedAt": "2026-10-28T14:04:25.930Z"
+    }
+  ]
+}
