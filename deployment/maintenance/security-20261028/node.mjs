@@ -16,7 +16,7 @@ for(const key of keys){
  const before=JSON.parse(node(s.base,inspect));assert.equal(before.versions.node,s.beforeVersion);assert.equal(before.versions.modules,s.modules);assert.equal(before.execPath,s.binary);assert.equal(before.arch,'x64');assert.equal(Boolean(before.glibc),s.artifact.endsWith('glibc'));
  const roots=JSON.parse(node(s.base,'const fs=require("fs");console.log(JSON.stringify(["/app","/opt","/usr/local","/usr/bin","/home/node","/usr/src","/srv","/cryptpad","/grist"].filter(p=>fs.existsSync(p))))'));
  const original=JSON.parse(node(s.base,fileManifest,[JSON.stringify(roots)])),config=JSON.parse(run(['image','inspect','--format','{{json .Config}}',s.base]));
- fs.copyFileSync(binary,dir+'/node');fs.chmodSync(dir+'/node',0o755);fs.writeFileSync(dir+'/Dockerfile',`FROM ${s.base}\nCOPY node ${s.binary}\n`);
+ fs.linkSync(binary,dir+'/node');fs.chmodSync(dir+'/node',0o755);fs.writeFileSync(dir+'/Dockerfile',`FROM ${s.base}\nCOPY node ${s.binary}\n`);
  try{fs.writeFileSync(dir+'/build.log',run(['build','--network','none','--pull=false','--memory','256m','--cpu-period','100000','--cpu-quota','100000','-t',s.candidate,dir],{env:{...process.env,DOCKER_BUILDKIT:'0'}}));}catch(e){fs.writeFileSync(dir+'/error.log',String(e.stderr||e.message));throw e;}
  const imageId=run(['image','inspect','--format','{{.Id}}',s.candidate]);assert.deepEqual(JSON.parse(run(['image','inspect','--format','{{json .Config}}',imageId])),config);
  const after=JSON.parse(node(imageId,inspect));assert.equal(after.versions.node,a.version);assert.equal(after.versions.modules,s.modules);assert.deepEqual(after.versions,a.components);

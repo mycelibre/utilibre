@@ -166,11 +166,81 @@ Acquire those trees with the recorded official Node image and
 manifest before an offline build. Run `check-body.mjs`, the additional Actual
 or Grist app checks, and `scan-brotli.mjs --body` before separate release approval.
 
+## Completed Node runtime release
+
+`released-node.json` and `released-node-apk.json` record **24 application roles**:
+23 roles use exact official Node binaries, and PairDrop uses its existing
+Alpine branch's signed native package. Same-major releases are 22.23.4,
+24.22.1 and 26.12.1. Existing application files, package trees, native-module
+ABI and runtime configuration remain unchanged. Final RSSHub pins are mirrored
+in the repository's base Compose file.
+
+Before/after native tests reproduce and reject DNS NUL handling and incorrect
+TLS hostname handling, with 15 legitimate/rejection checks, real local TLS,
+compression and installed native modules. Grist additionally passes private
+account isolation, formulas, imports, exports, deletion and synthetic restore;
+Actual passes a new temporary database startup as its actual UID. Production
+checks verify the exact image, native supervisors, dependent namespaces and
+existing routes. No real email, search or notification is generated.
+
+Trivy does not inventory most standalone Node binaries. The gate therefore
+retains package findings and records official binary SHA-256/version and native
+regression evidence separately. A clean package scan is not proof of a fixed
+Node runtime. PairDrop's native APK inventory is checked explicitly.
+
+`node-artifacts.json` identifies the immutable official artifacts and complete
+runtime licence notices in `node-licenses/`. The same notices are available in
+`node-runtime-notices-20261028.tar.gz` on the existing source host. Replaying
+`node.mjs` requires those recorded artifacts; it does not resolve a moving tag.
+Run `check-node.mjs`, the applicable app check, `scan-brotli.mjs --node`, and
+the separately authorized `release-brotli.mjs prepare/apply --node` steps.
+PairDrop uses the corresponding `--node-apk` profile and signed APK inputs.
+
+Identical build-copy files were replaced with hard links only after verifying
+their hashes (2,886,549,840 bytes of duplicate copies). All artifact paths,
+rollback images, private evidence and user data were preserved.
+
+## Completed embedded HTTP client and six Go helpers
+
+RSS-Bridge now uses immutable curl-impersonate **v2.3.1** (curl 8.23.0,
+Brotli 1.2.1), plus native Debian curl 8.23. Its original chrome131 profile,
+PHP OpenSSL, allowed bridges and HTTP(S) restrictions remain intact. Both
+versions passed actual PHP HTTP/2 transfers and a fictional GitHub-to-Atom
+journey. No feature/protocol removal occurred in this update. Curl's new
+"Unsupported URL scheme" wording required a fixture adjustment; the rejected
+redirect remained blocked. HTTP/3 transfers and the vendor's complete suite
+were not exercised. The corresponding-source archive is
+`security-curl-impersonate-20261028-source.tar.gz`, SHA-256
+`4d21a67a684cac9d55d17285354f0e6f14e482862c33c3907f31a8de14d1462d`.
+
+`released-go-helpers.json` records Anubis, FerretDB, OAuth2 Proxy, Mezzo,
+ntfy and Wakapi rebuilt with same-branch Go 1.26.10/1.27.3. Locked dependencies,
+embedded frontend/privacy edits and complete image contents were checked.
+Only the declared executable(s) changed. Tests include two independent Anubis
+challenges; native event creation/editing, images, calendar export and restored
+database; synthetic OIDC login/logout and CSRF rejection; GIF frontend/error
+routes; ntfy publish/read, one-hour cache and no-cache behavior; and Wakapi's
+local account/session, authenticated heartbeat and healthcheck. These checks
+do not send real notifications or exercise a real phone or external GIF source.
+
+Offline build failures caused by missing cached test dependencies, timezone
+data and temporary-directory capacity were retained and corrected in the
+isolated build setup. Failed candidates were not deployed. The ntfy release
+probe uses the configured `notify.utilibre.org/v1/health` destination; an
+initial incorrect probe hostname was corrected before activation.
+
+The existing closure/leaf scripts have finite October 28 profiles;
+`go-helpers.mjs` adapts their receipts to the existing scan, full-filesystem
+comparison and transactional release gates. It rejects module drift and
+unsupported baselines. Four original application source offers were updated
+with prior copies retained. Complete Anubis/FerretDB sources are in
+`security-go-closure-20261028-source.tar.gz`, SHA-256
+`b4ad92e1e2868c0c9ad7162f090ad957efb739b74c718b19c86d4b24f1e802cb`.
+
 ## Remaining work in this batch
 
-The Node runtime rollout is in progress; candidate files and partial receipts
-are not proof of complete fleet deployment. Further Go helpers and RSS-Bridge's
-embedded curl still require their separate recipes and tests. The final fleet
+Other embedded Go executables still need assessment; the three embedded Caddy
+candidates are undergoing isolated checks. The final fleet
 assessment and remaining specific finding reviews are not complete. No blanket
 exception is granted to descendants of repaired images.
 
@@ -184,3 +254,4 @@ exception is granted to descendants of repaired images.
   [response-stream crash fix](https://github.com/nodejs/undici/security/advisories/GHSA-xjj6-f33q-929c).
 - [body-parser advisory](https://github.com/expressjs/body-parser/security/advisories/GHSA-27r3-jxmh-p828).
 - [Node October security release](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases).
+- [curl-impersonate v2.3.1 security release](https://github.com/lexiforest/curl-impersonate/releases/tag/v2.3.1).

@@ -13,7 +13,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-spliit:undici-security-20261028
+    image: utilibre-spliit:node-security-20261028
     build: /opt/utilibre/community-src/spliit-utilibre-1.29.0-p1
     user: "1000:1000"
     env_file: /opt/utilibre/spliit/private/app.env

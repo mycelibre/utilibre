@@ -6,13 +6,15 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 process.umask(0o077);
 const here=new URL('.',import.meta.url).pathname;
-const followup=process.argv.includes('--batch=security-20261024');
+const followup=process.argv.includes('--batch=security-20261024'),oct28=process.argv.includes('--batch=security-20261028');assert(!(followup&&oct28));
 const historical='/var/lib/utilibre-maintenance/go-leaf-final-20261011';
-const root=followup?'/var/lib/utilibre-maintenance/security-20261024':historical;
+const root=oct28?'/var/lib/utilibre-maintenance/security-20261028/go-leaf':followup?'/var/lib/utilibre-maintenance/security-20261024':historical;
 const specs=JSON.parse(fs.readFileSync(new URL(followup?'../security-20261024/images.json':'./images.json',import.meta.url)));
+const current=oct28?JSON.parse(fs.readFileSync(here+'../security-20261028/go-helpers-inputs.json')):null;
+if(oct28)for(const s of specs){const c=current.rows.find(c=>c.key===(s.key==='wakapi-healthcheck'?'wakapi':s.key));if(c)Object.assign(s,{baseId:c.base,base:c.oldRef,candidate:c.candidate,compiler:c.compilerVersion});}
 const sha=b=>createHash('sha256').update(b).digest('hex');
 const publish=process.argv.includes('--publish');
-const targets=process.argv.slice(2).filter(x=>!['--publish','--batch=security-20261024'].includes(x));
+const targets=process.argv.slice(2).filter(x=>!['--publish','--batch=security-20261024','--batch=security-20261028'].includes(x));
 const flags={
  'oauth2-proxy':'-X github.com/oauth2-proxy/oauth2-proxy/v7/pkg/version.VERSION=v7.15.5',
  mezzo:'-s -w -X main.version=1.4.0',
@@ -24,11 +26,11 @@ const flags={
 };
 const digest={'1.26.9':'3082400e369fa24d5fc60bca20edab3f6d604e0c5a690ec66b295eff4dd87ade','1.27.2':'f92b6ef800e499660581efdabdf25d9d817a9d124eaf900924f0504e7e27e12d'};
 for(const key of targets){
- const s=specs.find(x=>x.key===key);assert(s,'Unknown source target');
+ const s=specs.find(x=>x.key===key);assert(s,'Unknown source target');if(oct28)assert(['oauth2-proxy','mezzo','ntfy','wakapi-healthcheck'].includes(key));
  const name=key==='wakapi-healthcheck'?'wakapi':key;
  const prefix=root+'/output/'+name;
  const image=JSON.parse(fs.readFileSync(prefix+'-image.json'));
- for(const suffix of ['native','verify']){const gate=JSON.parse(fs.readFileSync(prefix+'-'+suffix+'.json'));assert(gate.passed&&gate.imageId===image.imageId);}
+ for(const suffix of ['native','verify']){const gate=JSON.parse(fs.readFileSync(oct28&&suffix==='verify'?'/var/lib/utilibre-maintenance/security-20261028/go-helpers/'+name+'/inventory.json':prefix+'-'+suffix+'.json'));assert(gate.passed&&gate.imageId===image.imageId);}
  const snapshot=JSON.parse(fs.readFileSync(historical+'/output/'+name+'-source-files.json'));
  const stage=fs.mkdtempSync(root+'/source-'+name+'-');
  for(const entry of snapshot.files){
@@ -64,6 +66,7 @@ for(const key of targets){
   m.runtime=m.runtime.replace('go-leaf-final','security-20261024');
   fs.writeFileSync(p,JSON.stringify(m,null,2)+'\n');
  }
+ if(oct28){const p=stage+'/UTILIBRE-SECURITY.json',m=JSON.parse(fs.readFileSync(p));m.compilerImage=current.toolchains[s.compiler].localCompilerImageId;m.instructions='Use the exact Go archive and checksum in UTILIBRE-TOOLCHAIN.json, with gcc/musl-dev/binutils for ntfy. Run UTILIBRE-REBUILD.sh against included application source, assets and unchanged module locks. Image ID is a local build, not a registry digest. Byte-reproducible builds are not claimed.';fs.writeFileSync(p,JSON.stringify(m,null,2)+'\n');fs.writeFileSync(stage+'/UTILIBRE-TOOLCHAIN.json',JSON.stringify(current.toolchains[s.compiler],null,2)+'\n');}
  const archive=root+'/output/'+name+'-utilibre.tar.gz';
  cp.execFileSync('tar',['-czf',archive,'-C',stage,'.']);
  cp.execFileSync('tar',['-tzf',archive],{stdio:['ignore','ignore','pipe']});

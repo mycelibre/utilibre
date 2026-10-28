@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-kitchenowl:brotli-security-20261028
+    image: utilibre-curl-kitchenowl-app:security-20261028
     build: .
     user: '1000:1000'
     env_file: /opt/utilibre/kitchenowl/private/app.env

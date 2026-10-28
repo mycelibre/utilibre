@@ -77,4 +77,5 @@ export const additionalOverlayReceipts = [
  'security-20261028/body/release.json',
  'security-20261028/node/release.json',
  'security-20261028/node-apk/release.json',
+ 'security-20261028/go-helpers/release.json',
 ];

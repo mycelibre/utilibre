@@ -43,6 +43,18 @@
       ],
       "candidate": "utilibre-rallly:curl823-security-20261028",
       "oldRef": "utilibre-rallly:undici-security-20261028"
+    },
+    {
+      "key": "rssbridge",
+      "base": "sha256:596c7f09b8f9896065404b2c3cb207b5e45dc98524d0e2db76659dcb02f12f09",
+      "baseRef": "utilibre-rssbridge:brotli-security-20261028",
+      "containers": [
+        "utilibre-community-rssbridge-1"
+      ],
+      "packages": [
+        "libcurl4"
+      ],
+      "candidate": "utilibre-rssbridge:curl823-impersonate231-security-20261028"
     }
   ]
 }

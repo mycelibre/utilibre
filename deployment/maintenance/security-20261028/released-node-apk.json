@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-28T10:32:17.565307+00:00",
+  "status": "passed",
+  "rows": [
+    {
+      "key": "pairdrop",
+      "name": "utilibre-community-pairdrop-1",
+      "oldRef": "utilibre-pairdrop:body-parser-security-20261028",
+      "oldImage": "sha256:6f6928be625aa622ae895fe97541f815141646a0051a630f3a755539cfa3294a",
+      "newRef": "utilibre-pairdrop:node-security-20261028",
+      "newImage": "sha256:c8a7850c7fac0cab04cc8391768cbf066a62f8b8583afafa20747010701b3587",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:13:24.016Z"
+    }
+  ]
+}

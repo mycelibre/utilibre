@@ -6,11 +6,13 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 process.umask(0o077);
 const here=path.dirname(new URL(import.meta.url).pathname);
-const root='/var/lib/utilibre-maintenance/go-leaf-final-20261011';
+const oct28=process.argv.includes('--oct28');assert(process.argv.slice(3).every(a=>a==='--oct28'));
+const root=oct28?'/var/lib/utilibre-maintenance/security-20261028/go-leaf':'/var/lib/utilibre-maintenance/go-leaf-final-20261011';
 const specs=JSON.parse(fs.readFileSync(here+'/images.json'));
 const key=process.argv[2];
 const s=specs.find(s=>s.key===key);assert(s,'Unknown fixed target');
 const name=key==='wakapi-healthcheck'?'wakapi':key;
+if(oct28){const current=JSON.parse(fs.readFileSync(here+'/../security-20261028/go-helpers-inputs.json')).rows.find(s=>s.key===name);assert(current);Object.assign(s,{baseId:current.base,candidate:current.candidate,compiler:current.compilerVersion,binary:current.binary});}
 const run=(cmd,args)=>cp.execFileSync(cmd,args,{encoding:'utf8',timeout:180000,stdio:['ignore','pipe','pipe']}).trim();
 const output=root+'/output/'+name;
 const size=fs.statSync(output).size;

@@ -1,0 +1,236 @@
+{
+  "date": "2026-10-28T10:32:17.564774+00:00",
+  "status": "passed",
+  "rows": [
+    {
+      "key": "wishlist",
+      "name": "utilibre-wishlist-app-1",
+      "oldRef": "utilibre-wishlist:undici-security-20261028",
+      "oldImage": "sha256:973a4dcbd3e43b6d787a2f1598c8e06b3a30f5712484f29b3cdc013b10855337",
+      "newRef": "utilibre-wishlist:node-security-20261028",
+      "newImage": "sha256:4e67eda729ae56385d88710c731d64bc6d63908826a7bf80252d0b4774e2eda1",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:10:36.688Z"
+    },
+    {
+      "key": "tracker",
+      "name": "utilibre-chitchatter-tracker-1",
+      "oldRef": "utilibre-tracker:undici-security-20261028",
+      "oldImage": "sha256:45ba99962d320fadd659c6bdc239f189db393302611d8b2987338cbd7a6e4860",
+      "newRef": "utilibre-tracker:node-security-20261028",
+      "newImage": "sha256:aeb11ecc94406ab966a0d87b977f5b7944ce5b19e20a129a3575150f3841bb8b",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:11:08.400Z"
+    },
+    {
+      "key": "biblioreads",
+      "name": "utilibre-biblioreads-biblioreads-1",
+      "oldRef": "utilibre-biblioreads:undici-security-20261028",
+      "oldImage": "sha256:7a6b919f8d09f7ce50f97f2239a8eb0d077ed55f83d289f32a214f27ef6aab0e",
+      "newRef": "utilibre-biblioreads:node-security-20261028",
+      "newImage": "sha256:9a957b71092959d80c876c3db9cf087203137528f1356d0f3f800f4165686047",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:11:14.073Z"
+    },
+    {
+      "key": "cryptpad",
+      "name": "utilibre-pack-cryptpad-cryptpad-1",
+      "oldRef": "utilibre-cryptpad:undici-security-20261028",
+      "oldImage": "sha256:5e61ebc435a8996e030e6a3b32edbaf1cf93914ee3c9564a62e7f7a03ee599b0",
+      "newRef": "utilibre-cryptpad:node-security-20261028",
+      "newImage": "sha256:a87be4499e3cb71e99fed31f61b99c3031e56e5c07b4482efb6fc1fe06c176f0",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:11:46.803Z"
+    },
+    {
+      "key": "spliit",
+      "name": "utilibre-spliit-app-1",
+      "oldRef": "utilibre-spliit:undici-security-20261028",
+      "oldImage": "sha256:12e281f5a1ee5018f9ab97fdefa3bb11ab06b7b90b1ccb6667f0dd110b5ab7d9",
+      "newRef": "utilibre-spliit:node-security-20261028",
+      "newImage": "sha256:6bfdc55a7aab54008033fcefcc78d4ba952d7cd660ee9777b57aa226bc5f3bc6",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:11:54.678Z"
+    },
+    {
+      "key": "bytestash",
+      "name": "utilibre-bytestash-bytestash-1",
+      "oldRef": "utilibre-bytestash:body-parser-security-20261028",
+      "oldImage": "sha256:6a05c230634db809adc871b843a4dd215ebc9c3152fd9665e615c4d4a52c628a",
+      "newRef": "utilibre-bytestash:node-security-20261028",
+      "newImage": "sha256:028604038d68593643da330203fae0caa047ff37a03e6822c4bca00352e146f2",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:12:02.229Z"
+    },
+    {
+      "key": "projects",
+      "name": "utilibre-projects-app-1",
+      "oldRef": "utilibre-projects:body-parser-security-20261028",
+      "oldImage": "sha256:0285005f99a36249fc4741ad54fd84ac15baeabd4cccd637b137409f1efa6ab6",
+      "newRef": "utilibre-projects:node-security-20261028",
+      "newImage": "sha256:c33c32d98f841c4df8ae6a6e12bc515b463d660b22e8e8d3ac1232a2a500619c",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:12:18.989Z"
+    },
+    {
+      "key": "gathio",
+      "name": "utilibre-gathio-gathio-1",
+      "oldRef": "utilibre-gathio:body-parser-security-20261028",
+      "oldImage": "sha256:d45032c2761c42c4266a6c03ee701e1b75d53fd1ac40a00da60bc609860ccf4e",
+      "newRef": "utilibre-gathio:node-security-20261028",
+      "newImage": "sha256:c2fa27d554e3af8ad4cd06f9daa512473cc4f5c63792ab7cf05b7606dadbcaa9",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:12:45.880Z"
+    },
+    {
+      "key": "candlr",
+      "name": "utilibre-records-candlr-1",
+      "oldRef": "utilibre-candlr:undici-security-20261028",
+      "oldImage": "sha256:e8c41300c522de79e79ea7e6fc79efbd8644f3a9170f42536b642876d16b8d7e",
+      "newRef": "utilibre-candlr:node-security-20261028",
+      "newImage": "sha256:bb6aeb80a016157bd5b94cad513ed8173a181504e0927aa58ae0fd4395f9a1c5",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:12:55.650Z"
+    },
+    {
+      "key": "bookplate",
+      "name": "utilibre-records-bookplate-1",
+      "oldRef": "utilibre-bookplate:undici-security-20261028",
+      "oldImage": "sha256:e5cb68eaf694a60a8149a705939572871746781731deade416061b8bed806ccb",
+      "newRef": "utilibre-bookplate:node-security-20261028",
+      "newImage": "sha256:fa879927df310f82ffd9b80503c74f01f852d9f6c2618062f3f70fb83e00ecd3",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:13:03.482Z"
+    },
+    {
+      "key": "razzia-socket",
+      "name": "utilibre-razzia-socket-1",
+      "oldRef": "utilibre-razzia-socket:undici-security-20261028",
+      "oldImage": "sha256:ad4a1fac32c07e24c84a8448f44f52ccb2922e85dfb34874f9c45f50f2c079d8",
+      "newRef": "utilibre-razzia-socket:node-security-20261028",
+      "newImage": "sha256:fe9e31213c879926c85b5250601ec1437ca20fc7b0229ebd809e63be97bc820b",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:15:58.175Z"
+    },
+    {
+      "key": "wbo",
+      "name": "utilibre-collaboration-pilot-wbo-1",
+      "oldRef": "utilibre-wbo:undici-security-20261028",
+      "oldImage": "sha256:2522bc6211d954954a217724257e6aca3a585d446d8287756aa489665ce6d67a",
+      "newRef": "utilibre-wbo:node-security-20261028",
+      "newImage": "sha256:c9d46b716edb213657469eb26a59a692a4cba2a796362835ac88d059b9024397",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:16:59.869Z"
+    },
+    {
+      "key": "newsletters-web",
+      "name": "utilibre-newsletters-web-1",
+      "oldRef": "utilibre-newsletters-web:undici-security-20261028",
+      "oldImage": "sha256:8505e272c617a6d36ec17ede537a8423f289da0bc7aec83514868b140d940980",
+      "newRef": "utilibre-newsletters-web:node-security-20261028",
+      "newImage": "sha256:355f3c7c6c1858348a946ef93b5450ee4dee90455a3f1a41b9d4cc0e7da162a8",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:17:07.604Z"
+    },
+    {
+      "key": "resume",
+      "name": "utilibre-expanded-resume-1",
+      "oldRef": "utilibre-resume:body-parser-security-20261028",
+      "oldImage": "sha256:2d20e8729a48ffa5533173a30a781d734aa85919b8f0355c47bda4a3648c6d75",
+      "newRef": "utilibre-resume:node-security-20261028",
+      "newImage": "sha256:6524bb237afe725bcba936980092116775a398fccbf97c0a7157abbe35f19dea",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:17:21.027Z"
+    },
+    {
+      "key": "newsletters-smtp",
+      "name": "utilibre-newsletters-smtp-1",
+      "oldRef": "utilibre-newsletters-smtp:undici-security-20261028",
+      "oldImage": "sha256:2c3983f726b13e83bc164cae77d1813acfb6ea8fc5bb3db519478155d4499bf7",
+      "newRef": "utilibre-newsletters-smtp:node-security-20261028",
+      "newImage": "sha256:bb5327e945f5fb43841310ff614964d0942deae6dbb922b86571e00b97e98a01",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:17:28.838Z"
+    },
+    {
+      "key": "newsletters-smtp",
+      "name": "utilibre-newsletters-jobs-1",
+      "oldRef": "utilibre-newsletters-smtp:undici-security-20261028",
+      "oldImage": "sha256:2c3983f726b13e83bc164cae77d1813acfb6ea8fc5bb3db519478155d4499bf7",
+      "newRef": "utilibre-newsletters-smtp:node-security-20261028",
+      "newImage": "sha256:bb5327e945f5fb43841310ff614964d0942deae6dbb922b86571e00b97e98a01",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:17:28.838Z"
+    },
+    {
+      "key": "dumb",
+      "name": "utilibre-additions-dumb-1",
+      "oldRef": "utilibre-dumb:undici-security-20261028",
+      "oldImage": "sha256:7298a63cc33117e4f78382483e968ee9b35b34ace5cdbe2ca3b6ac55e1e5454b",
+      "newRef": "utilibre-dumb:node-security-20261028",
+      "newImage": "sha256:5a45bbe4474a00e8e1a85fd50de4cfe3d4aa403c17f40f1d1b6df462c7767c46",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:18:10.867Z"
+    },
+    {
+      "key": "penpot-admin",
+      "name": "utilibre-expanded-penpot-admin-console-1",
+      "oldRef": "utilibre-penpot-admin:tanstack-security-20261021",
+      "oldImage": "sha256:d07dc2a23ddf713e1ef11821393cd0ee7f0d8b5ec1daa7861ea018f7a600edcd",
+      "newRef": "utilibre-penpot-admin:node-security-20261028",
+      "newImage": "sha256:dd9e60cd964fc098ef195d88ff6f132e143bfeb603d801cae95e50a2938098fa",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:18:26.592Z"
+    },
+    {
+      "key": "kuma",
+      "name": "utilibre-community-uptime-kuma-1",
+      "oldRef": "utilibre-kuma:body-parser-curl-security-20261028",
+      "oldImage": "sha256:8eafa7e24372e6d529381651443a7923a31a75ad1871173d934a00f0dbe93a36",
+      "newRef": "utilibre-kuma:node-security-20261028",
+      "newImage": "sha256:c6e064322a20d38fd6d8ae306222dcba02bef9644e9703d7b232967aec1603da",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:27:32.249Z"
+    },
+    {
+      "key": "rsshub",
+      "name": "utilibre-services-rsshub-1",
+      "oldRef": "utilibre-curl-services-rsshub:security-20261028",
+      "oldImage": "sha256:fd7c2c27ffbbee8d5a261fb8c9cac9625aac018f49def2e46a9e8fcc56ac522d",
+      "newRef": "utilibre-rsshub:node-security-20261028",
+      "newImage": "sha256:8f2792976159f7578784288308e1f2796048dd653c7e762b9690782ac6da7339",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:27:40.128Z"
+    },
+    {
+      "key": "rallly",
+      "name": "utilibre-community-rallly-1",
+      "oldRef": "utilibre-rallly:curl823-security-20261028",
+      "oldImage": "sha256:22f830a85f029ae0e99b469d63b8f389e480b1b8523da44e113ecdf8be56f83d",
+      "newRef": "utilibre-rallly:node-security-20261028",
+      "newImage": "sha256:b487bd7120ea6fc83f8d7dbc371da4c295e06b8c489872d7f06aa9db85a6cc5f",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:27:59.436Z"
+    },
+    {
+      "key": "grist",
+      "name": "utilibre-records-grist-1",
+      "oldRef": "utilibre-grist:body-parser-locked-security-20261028",
+      "oldImage": "sha256:994f769bab507ab6acf7eac1f0e7e95a22596942dfa40b77a0375c66eb66d029",
+      "newRef": "utilibre-grist:node-security-20261028",
+      "newImage": "sha256:b7b1da47485af948d9f086b124d1e1d3365e2704c1341908d654ecc6566b6922",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:28:32.470Z"
+    },
+    {
+      "key": "actual",
+      "name": "utilibre-expanded-actual-1",
+      "oldRef": "utilibre-actual:body-parser-locked2-security-20261028",
+      "oldImage": "sha256:d7624ef67e13ca69816fefc829b1e4fa14b3687c2c07f6d0f7837d899d0068d0",
+      "newRef": "utilibre-actual:node-security-20261028",
+      "newImage": "sha256:6ae2de02fdbc441bfd1d3b2d6c693e11d9359da99844659fc1b5d01998342b3e",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:29:05.336Z"
+    }
+  ]
+}

@@ -41,15 +41,15 @@ try{
  docker(['exec',server,'python3','-c','import socket,time\nfor i in range(40):\n try:\n  socket.create_connection(("127.0.0.1",18443),.1).close();break\n except OSError: time.sleep(.1)\nelse: raise RuntimeError("TLS fixture readiness")']);
  const requested=process.argv.slice(2).filter(k=>k!=='--oct28');
  const specs=oct28?JSON.parse(fs.readFileSync(here+'../security-20261028/curl-bookworm-inputs.json')).rows:JSON.parse(fs.readFileSync(here+'specs.json'));
- assert(!oct28||specs.every(s=>s.key!=='rssbridge'),'Embedded curl needs its separate gate');
+ assert(!oct28||requested.length,'Explicit targets required');
  for(const s of specs.filter(s=>!requested.length||requested.includes(s.key))){
   assert(fs.statfsSync('/').bavail*fs.statfsSync('/').bsize>8*1024**3,'8 GiB recovery floor');
   assert.equal(inspect(s.baseRef).Id,s.base);for(const name of s.containers)assert.equal(inspect(name).Image,s.base);
   const out=dir+'/images/'+s.key;fs.mkdirSync(out+'/packages',{recursive:true});assert(!fs.existsSync(out+'/build.json'),'Preserve completed proof');
   for(const p of s.packages){assert(packages.has(p));const a=packages.get(p);fs.copyFileSync(build+'/'+a.file,out+'/packages/'+a.file);}
   const before=inspect(s.base);
-  if(s.key==='rssbridge')assert.equal(JSON.parse(fs.readFileSync(dir+'/impersonate/payload.json')).release,'v2.2.3');
-  docker(['build','--pull=false','--network=none','--memory','512m','--cpu-period','100000','--cpu-quota','100000','--build-arg','BASE='+s.baseRef,'--build-arg','RESTORE_USER='+(before.Config.User||'root'),'-f',here+(s.key==='rssbridge'?'Dockerfile.rssbridge':'../xml-final/Dockerfile'),'-t',s.candidate,out]);
+  if(s.key==='rssbridge')assert.equal(JSON.parse(fs.readFileSync(dir+'/impersonate/payload.json')).release,oct28?'v2.3.1':'v2.2.3');
+  docker(['build','--pull=false','--network=none','--memory','512m','--cpu-period','100000','--cpu-quota','100000','--build-arg','BASE='+s.baseRef,'--build-arg','RESTORE_USER='+(before.Config.User||'root'),...(oct28&&s.key==='rssbridge'?['--build-arg','IMPERSONATE_VERSION=8.23.0-IMPERSONATE','--build-arg','IMPERSONATE_SHA=1d80e39a4691a7261a30c578b4b4497a604184826e9c9c1f96dab65196200bb0']:[]),'-f',here+(s.key==='rssbridge'?'Dockerfile.rssbridge':'../xml-final/Dockerfile'),'-t',s.candidate,out]);
   const after=inspect(s.candidate),norm=c=>({...c,User:['','root','0',undefined].includes(c.User)?'root':c.User});assert.deepEqual(norm(after.Config),norm(before.Config));
   const vendorExclusion=s.key==='rssbridge'?' -path /usr/local/lib/curl-impersonate -prune -o':'';
   const app='for d in /app /opt /usr/local /usr/src /usr/lib/python3 /usr/lib/postgresql /usr/share/postgresql; do if test -d "$d"; then find "$d"'+vendorExclusion+' -type f -exec sha256sum {} +; fi; done | sort | sha256sum';

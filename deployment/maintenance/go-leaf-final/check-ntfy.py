@@ -14,6 +14,9 @@ import requests
 
 HERE = Path(__file__).resolve().parent
 ROOT = Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/output')
+if '--oct28' in sys.argv:
+    assert '--baseline' not in sys.argv
+    ROOT = Path('/var/lib/utilibre-maintenance/security-20261028/go-leaf/output')
 CONFIG = HERE.parents[1] / 'community/ntfy.yml'
 BASE = 'http://127.0.0.1:8080'
 TOPIC = '/fictional-native-security-test'

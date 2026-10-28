@@ -11,6 +11,8 @@ RUN dpkg --install /tmp/utilibre-curl-packages/*.deb \
 # Upstream-supported preloading/SONAME mechanism, original chrome131 profile.
 # Only runtime shared library and every bundled licence; no obsolete static archives.
 COPY impersonate-runtime/ /usr/local/lib/curl-impersonate/
-RUN test "$(sha256sum /usr/local/lib/curl-impersonate/libcurl-impersonate.so.4.8.0 | cut -d' ' -f1)" = 3e30f8c2978706f169c90faf061d5ee7ef6ea6bdd4e296d8de6df4aa478cff19 \
- && test "$(php -r 'echo curl_version()["version"];')" = 8.22.0-IMPERSONATE
+ARG IMPERSONATE_SHA=3e30f8c2978706f169c90faf061d5ee7ef6ea6bdd4e296d8de6df4aa478cff19
+ARG IMPERSONATE_VERSION=8.22.0-IMPERSONATE
+RUN test "$(sha256sum /usr/local/lib/curl-impersonate/libcurl-impersonate.so.4.8.0 | cut -d' ' -f1)" = "$IMPERSONATE_SHA" \
+ && test "$(php -r 'echo curl_version()["version"];')" = "$IMPERSONATE_VERSION"
 USER ${RESTORE_USER}

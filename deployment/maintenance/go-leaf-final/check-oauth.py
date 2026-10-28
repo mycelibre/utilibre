@@ -12,6 +12,7 @@ import secrets
 import subprocess
 import threading
 import time
+import sys
 from urllib.parse import parse_qs, urlencode, urlparse
 
 import jwt
@@ -20,6 +21,10 @@ import requests
 
 ROOT = Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/output')
 IMAGE = 'utilibre-oauth2-proxy:7.15.5-go-security-20261011'
+assert all(a=='--oct28' for a in sys.argv[1:])
+if '--oct28' in sys.argv:
+    ROOT = Path('/var/lib/utilibre-maintenance/security-20261028/go-leaf/output')
+    IMAGE = 'utilibre-oauth2-proxy:go-security-20261028'
 NAME = 'maintenance-oauth-native'
 BASE = 'http://127.0.0.1:33142'
 private = rsa.generate_private_key(public_exponent=65537, key_size=2048)

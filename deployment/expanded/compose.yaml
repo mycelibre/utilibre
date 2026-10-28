@@ -103,7 +103,7 @@ services:
 
   wakapi:
     <<: *runtime
-    image: utilibre-wakapi:2.18.1-healthcheck-security-20261011
+    image: utilibre-wakapi:go-security-20261028
     read_only: true
     user: "65532:65532"
     environment:
@@ -137,7 +137,7 @@ services:
 
   actual:
     <<: *runtime
-    image: utilibre-actual:body-parser-locked2-security-20261028
+    image: utilibre-actual:node-security-20261028
     read_only: true
     user: "1000:1000"
     environment:

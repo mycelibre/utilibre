@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   biblioreads:
     <<: *runtime
-    image: utilibre-biblioreads:undici-security-20261028
+    image: utilibre-biblioreads:node-security-20261028
     user: "1000:1000"
     mem_limit: 768m
     tmpfs:

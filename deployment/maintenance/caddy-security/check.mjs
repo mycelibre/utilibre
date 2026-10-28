@@ -4,8 +4,8 @@ import {readFileSync,writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 process.umask(0o077);
 const recipe=fileURLToPath(new URL('.',import.meta.url));
-const netReview=process.argv[2]==='--net';assert(!process.argv[2]||netReview,'Use --net or no argument');
-const directory='/var/lib/utilibre-maintenance/caddy-security-20261011'+(netReview?'/net':'');
+const oct28=process.argv[2]==='--oct28',netReview=process.argv[2]==='--net'||oct28;assert(!process.argv[2]||netReview,'Use --net, --oct28 or no argument');
+const directory=oct28?'/var/lib/utilibre-maintenance/security-20261028/caddy':'/var/lib/utilibre-maintenance/caddy-security-20261011'+(netReview?'/net':'');
 const report=JSON.parse(readFileSync(directory+'/build.json'));
 function docker(args){try{return execFileSync('docker',args,{encoding:'utf8',timeout:180000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe']});}catch{throw Error('Isolated Caddy candidate check failed; command output suppressed.');}}
 const bounded=['--network','none','--read-only','--cpus','.5','--memory','192m','--memory-swap','192m','--pids-limit','96','--cap-drop','ALL','--security-opt','no-new-privileges:true','--log-driver','none'];
@@ -17,7 +17,7 @@ for(const row of report.rows){
  for(const key of ['User','Env','Cmd','Entrypoint','WorkingDir','ExposedPorts','Healthcheck'])assert.deepEqual(inspect(row.candidate).Config[key],inspect(row.base).Config[key],'Image configuration changed');
  const info=ref=>run(ref,row.path+' build-info');
  const original=info(row.base),candidate=info(row.candidate);
- assert(candidate.startsWith('go\tgo1.26.9\n'));assert(original.startsWith('go\tgo1.26.8\n'));
+ assert(candidate.startsWith(oct28?'go\tgo1.26.10\n':'go\tgo1.26.9\n'));assert(original.startsWith(oct28?'go\tgo1.26.9\n':'go\tgo1.26.8\n'));
  const deps=raw=>raw.split('\n').filter(line=>line.startsWith('dep\t')).map(line=>line.split('\t'));
  const versions=raw=>deps(raw).map(fields=>fields.slice(0,3).join('\t')).sort();
  const expected=versions(original).map(line=>netReview?line.replace('golang.org/x/net\tv0.59.0','golang.org/x/net\tv0.60.0'):line);
@@ -36,7 +36,7 @@ for(const row of report.rows){
  assert.equal(run(row.candidate,osCommand),run(row.base,osCommand),'OS packages changed');
  assert.equal(run(row.candidate,'stat -c %a '+row.path).trim(),'755');
  docker(['run','--rm',...bounded,'--tmpfs','/tmp:rw,size=32m,mode=1777','--mount','type=bind,src='+recipe+'native.cjs,dst=/native.cjs,readonly','-e','CADDY_BINARY='+row.path,'--entrypoint','node',row.candidate,'/native.cjs']);
- rows.push({...row,status:'passed',compiler:'go1.26.9',netReview,nativeProxy:true,gzip:true,sse:true,http2:true,configUnchanged:true,applicationUnchanged:true,dependencyChanges:netReview?['golang.org/x/net v0.59.0 to v0.60.0']:[],originalChecksumsMatchOfficialArtifact:true});
+ rows.push({...row,status:'passed',compiler:oct28?'go1.26.10':'go1.26.9',netReview,nativeProxy:true,gzip:true,sse:true,http2:true,configUnchanged:true,applicationUnchanged:true,dependencyChanges:netReview&&!oct28?['golang.org/x/net v0.59.0 to v0.60.0']:[],originalChecksumsMatchOfficialArtifact:true});
  console.log('Caddy parity/native gate passed: '+row.kind);
 }
 writeFileSync(directory+'/checks.json',JSON.stringify({date:new Date().toISOString(),status:'passed',deployed:false,rows,limitations:'Generic isolated native Caddy gate; separate disposable Wishlist and newsletter application checks required.'},null,2)+'\n',{mode:0o600});

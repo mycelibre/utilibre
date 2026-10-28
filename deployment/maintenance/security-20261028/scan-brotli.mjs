@@ -1,9 +1,9 @@
 // Existing Trivy interface, exact old/new images and one unchanged local DB.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 process.umask(0o077);
-const root='/var/lib/utilibre-maintenance/security-20261028',flags=['--alpine','--node-apk','--undici','--body','--go','--node','--curl','--curl-bookworm'];
+const root='/var/lib/utilibre-maintenance/security-20261028',flags=['--alpine','--node-apk','--undici','--body','--go','--go-helpers','--node','--curl','--curl-bookworm'];
 assert(process.argv.filter(a=>flags.includes(a)).length<=1);
-const profile=process.argv.find(a=>flags.includes(a))?.slice(2)||'brotli',alpine=['alpine','node-apk'].includes(profile),undici=profile==='undici',body=profile==='body',go=profile==='go',node=profile==='node',curl=profile.startsWith('curl'),inputs=JSON.parse(fs.readFileSync(new URL('./'+profile+'-inputs.json',import.meta.url)));
+const profile=process.argv.find(a=>flags.includes(a))?.slice(2)||'brotli',alpine=['alpine','node-apk'].includes(profile),undici=profile==='undici',body=profile==='body',go=['go','go-helpers'].includes(profile),node=profile==='node',curl=profile.startsWith('curl'),inputs=JSON.parse(fs.readFileSync(new URL('./'+profile+'-inputs.json',import.meta.url)));
 const keys=process.argv.slice(2).filter(k=>!flags.includes(k));assert(keys.length&&new Set(keys).size===keys.length&&keys.every(k=>inputs.rows.some(s=>s.key===k)));
 const sha=b=>createHash('sha256').update(b).digest('hex');
 const db='/var/cache/utilibre-security/db/trivy.db',metadata=JSON.parse(fs.readFileSync('/var/cache/utilibre-security/db/metadata.json'));
@@ -32,7 +32,7 @@ for(const key of keys){
   const expected=undici||body||go||curl||node?[]:alpine?Object.entries(s.packages).map(([pkg,p])=>[pkg,name==='before'?p.installed:inputs.packages[p.package].version]):[['libbrotli1',name==='before'?s.installed:s.version]];
   if(undici)for(const version of new Set(Object.values(name==='before'?s.before:b.versions)))assert(packages.some(p=>p.Name==='undici'&&p.Version===version),'Installed JS package missing from scan');
   if(body)for(const version of new Set(Object.entries(name==='before'?s.before:b.versions).filter(([p])=>p.endsWith('/body-parser')).map(([,v])=>v)))assert(packages.some(p=>p.Name==='body-parser'&&p.Version===version),'Missing body-parser inventory');
-  if(go)assert(packages.some(p=>p.Name==='stdlib'&&p.Version===(name==='before'?'v1.26.9':'v'+s.compilerVersion)),'Missing Go standard-library inventory');
+  if(go)assert(packages.some(p=>p.Name==='stdlib'&&p.Version===('v'+(name==='before'?(s.previousCompiler||'1.26.9'):s.compilerVersion))),'Missing Go standard-library inventory');
   if(curl)for(const pkg of s.packages)assert(packages.some(p=>p.Name===pkg&&(name==='before'||p.Version==='8.23.0')),'Missing curl inventory');
   for(const [pkg,version]of expected)assert(packages.some(p=>p.Name===pkg&&p.ID===pkg+'@'+version),'Target package missing');
   const findings=scan.Results.flatMap(r=>(r.Vulnerabilities||[]).map(v=>({id:v.VulnerabilityID,package:v.PkgName,installed:v.InstalledVersion,type:r.Type,path:v.PkgPath||'',severity:v.Severity})));

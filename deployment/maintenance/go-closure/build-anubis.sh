@@ -1,10 +1,16 @@
 #!/bin/sh
 set -eu
-test "$(go version)" = 'go version go1.26.9 linux/amd64'
+EXPECTED_GO=${EXPECTED_GO:-1.26.9}
+PHASE=${UTILIBRE_PHASE:-legacy}
+LOCKS=${UTILIBRE_LOCKS:-/reviewed/anubis}
+case "$EXPECTED_GO:$PHASE" in 1.26.9:legacy|1.26.10:download|1.26.10:build) ;; *) exit 2;; esac
+test "$(go version)" = "go version go${EXPECTED_GO} linux/amd64"
 export GOTOOLCHAIN=local GOTELEMETRY=off CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOMAXPROCS=2 GOMEMLIMIT=512MiB GOGC=50
 mkdir -p /build/tmp
 export GOPATH=/build/gopath GOCACHE=/build/gocache GOMODCACHE=/build/mod GOTMPDIR=/build/tmp TMPDIR=/build/tmp
 export GOPROXY=https://proxy.golang.org
+if [ "$PHASE" != legacy ]; then export GOMODCACHE=/modules; test -f ${LOCKS}/go.mod; fi
+if [ "$PHASE" = build ]; then export GOPROXY=off GOSUMDB=off; fi
 mkdir -p /build/source
 tar -C /source --exclude=.git --exclude=node_modules -cf - . | tar -C /build/source -xf -
 cd /build/source
@@ -13,15 +19,17 @@ cp -a /assets/web/static web/
 cp -a /assets/xess/static /assets/xess/xess.css /assets/xess/xess.min.css xess/
 cp -a /assets/challenge/preact/static lib/challenge/preact/
 cp -a /assets/challenge/proofofwork/static lib/challenge/proofofwork/
-if [ -f /reviewed/anubis/go.mod ]; then
- cp /reviewed/anubis/go.mod /reviewed/anubis/go.sum .
+if [ -f ${LOCKS}/go.mod ]; then
+ cp ${LOCKS}/go.mod ${LOCKS}/go.sum .
 else
  go get github.com/go-git/go-billy/v5@v5.9.0 github.com/go-git/go-git/v5@v5.19.2 github.com/moby/go-archive@v0.3.0
  go mod tidy
 fi
+if [ "$PHASE" = download ]; then go mod download all; fi
 go mod verify > /output/anubis-modules.txt
 cp go.mod /output/anubis-go.mod
 cp go.sum /output/anubis-go.sum
+if [ "$PHASE" = download ]; then exit 0; fi
 export GOFLAGS='-trimpath -mod=readonly'
 go test -p 1 ./lib/config ./lib/challenge/... ./web > /output/anubis-runtime-tests.txt 2>&1
 # Check developer/test callers, rather than removing their source findings just

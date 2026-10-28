@@ -14,7 +14,7 @@ check($client->request('http://localhost:18080/missing',$config)->getCode()===40
 $rejected=0;
 foreach(['https://127.0.0.1:18443/','smb://127.0.0.1/fictional','smbs://127.0.0.1/fictional','http://localhost:18080/redirect-smb'] as $url){
  try{$client->request($url,$config);}catch(HttpException $e){
-  check(str_contains($e->getMessage(),'SSL')||stripos($e->getMessage(),'protocol')!==false,'Expected TLS/protocol rejection');$rejected++;
+  check(str_contains($e->getMessage(),'SSL')||stripos($e->getMessage(),'protocol')!==false||str_contains($e->getMessage(),'Unsupported URL scheme'),'Expected TLS/protocol rejection for synthetic '.$url.': '.$e->getMessage());$rejected++;
  }
 }
 check($rejected===4,'Native unsupported protocols and wrong TLS name rejected');

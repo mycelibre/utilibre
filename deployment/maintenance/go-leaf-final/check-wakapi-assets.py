@@ -6,10 +6,16 @@ import json
 from pathlib import Path
 import subprocess
 import tarfile
+import sys
 
 HERE = Path(__file__).resolve().parent
 ROOT = Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/output')
 spec = next(x for x in json.loads((HERE/'images.json').read_text()) if x['key']=='wakapi-healthcheck')
+assert all(a=='--oct28' for a in sys.argv[1:])
+if '--oct28' in sys.argv:
+    ROOT = Path('/var/lib/utilibre-maintenance/security-20261028/go-leaf/output')
+    current = next(s for s in json.loads((HERE/'../security-20261028/go-helpers-inputs.json').read_text())['rows'] if s['key']=='wakapi')
+    spec = {**spec, 'baseId': current['base']}
 loader = importlib.util.spec_from_file_location('embed',HERE/'extract-embed.py')
 embed = importlib.util.module_from_spec(loader)
 loader.loader.exec_module(embed)

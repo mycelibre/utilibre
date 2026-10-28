@@ -28,7 +28,7 @@ services:
   web:
     <<: *app
     # Copy-only revision; SMTP and jobs retain the same native processing build.
-    image: utilibre-newsletters-web:undici-security-20261028
+    image: utilibre-newsletters-web:node-security-20261028
     restart: unless-stopped
     networks:
       data: {ipv4_address: 172.29.132.10}
@@ -39,7 +39,7 @@ services:
     depends_on: {initialize: {condition: service_completed_successfully}}
   smtp:
     <<: *app
-    image: utilibre-newsletters-smtp:undici-security-20261028
+    image: utilibre-newsletters-smtp:node-security-20261028
     restart: "no"
     networks:
       data: {ipv4_address: 172.29.132.20}
@@ -56,7 +56,7 @@ services:
     depends_on: {initialize: {condition: service_completed_successfully}}
   jobs:
     <<: *app
-    image: utilibre-newsletters-smtp:undici-security-20261028
+    image: utilibre-newsletters-smtp:node-security-20261028
     restart: unless-stopped
     networks:
       data: {ipv4_address: 172.29.132.30}

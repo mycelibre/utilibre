@@ -5,9 +5,13 @@ import pathlib
 import subprocess
 import threading
 import time
+import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 root = pathlib.Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011')
+assert all(a=='--oct28' for a in sys.argv[1:])
+if '--oct28' in sys.argv:
+    root = pathlib.Path('/var/lib/utilibre-maintenance/security-20261028/go-leaf')
 binary = root / 'output/wakapi-healthcheck'
 state = {'status': 200, 'delay': 0}
 

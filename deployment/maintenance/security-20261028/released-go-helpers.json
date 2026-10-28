@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-28T10:54:36.071440+00:00",
+  "status": "passed",
+  "rows": [
+    {
+      "key": "ferretdb",
+      "name": "utilibre-gathio-ferretdb-1",
+      "oldRef": "utilibre-ferretdb:2.7.0-mcp-closure-20261012",
+      "oldImage": "sha256:1cee08c8cecb03185756c59cfd82b52d4574541ed8f413c07432f2114c56e8d6",
+      "newRef": "utilibre-ferretdb:go-security-20261028",
+      "newImage": "sha256:d1228b184623639642c7ae4a83ebb2aaff8b34c5bdf87c2757373c028b361585",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:33:34.930Z"
+    },
+    {
+      "key": "anubis",
+      "name": "public-utility-anubis-1",
+      "oldRef": "utilibre-anubis:1.27.0-closure-20261012",
+      "oldImage": "sha256:616fdc63a72e1eba67f0c29259ed232cef0ebddd79d8368e9959fc54ef476d1c",
+      "newRef": "utilibre-anubis:go-security-20261028",
+      "newImage": "sha256:715149e1fdabf3e45a6194971a84c0ed438fef7c8d76132abc25e6f7c76fe9d9",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:33:41.439Z"
+    },
+    {
+      "key": "oauth2-proxy",
+      "name": "utilibre-records-grist-auth-1",
+      "oldRef": "utilibre-oauth2-proxy:7.15.5-go-security-20261011",
+      "oldImage": "sha256:e3a49c15b5215af580340fe90e624bd4f0f6f664cc0cbe93e52ddb1d20792721",
+      "newRef": "utilibre-oauth2-proxy:go-security-20261028",
+      "newImage": "sha256:962b3ce01eb19ce86ca888338e6fca70dd29d4a3a770e8fe7e1fd4395f313d8a",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:41:49.654Z"
+    },
+    {
+      "key": "mezzo",
+      "name": "utilibre-additions-mezzo-1",
+      "oldRef": "utilibre-mezzo:1.4.0-go-security-20261011",
+      "oldImage": "sha256:53a3e937eda322af4e6a49e0d0c85497e1540ac4fb04e28d43cefb8d04d4f19b",
+      "newRef": "utilibre-mezzo:go-security-20261028",
+      "newImage": "sha256:c33adec63f2b9bf11e06d4b1d3e2011dbafa4753acbc1f3db8b1c1774f2accd8",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:45:24.772Z"
+    },
+    {
+      "key": "ntfy",
+      "name": "utilibre-community-ntfy-1",
+      "oldRef": "utilibre-ntfy:2.28.0-go-security-20261011",
+      "oldImage": "sha256:768b8c5fc0cb67f167321c771a2be5e5c7ecb32c19784c5558d6e75f65af88db",
+      "newRef": "utilibre-ntfy:go-security-20261028",
+      "newImage": "sha256:b8ec0af480f89be8bdaf5d5764f27d558e38460dba19252d74958aee4387c27e",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:51:43.830Z"
+    },
+    {
+      "key": "wakapi",
+      "name": "utilibre-expanded-wakapi-1",
+      "oldRef": "utilibre-wakapi:2.18.1-healthcheck-security-20261011",
+      "oldImage": "sha256:de076a730673305c40e51c5930c4a05ce1187ba2b19df9cf207afa5129f804e7",
+      "newRef": "utilibre-wakapi:go-security-20261028",
+      "newImage": "sha256:e6189e96d0d950f11350324d270c90221205c342eaa96884b80826bbce7a6a39",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:52:10.749Z"
+    }
+  ]
+}

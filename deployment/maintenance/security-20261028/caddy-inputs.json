@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "compiler": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+  "go": "1.26.10",
+  "sourceVersion": "2.11.7",
+  "sourceArchiveSha256": "b430516910839fbaf35c0a9e9df80d1e2e30aa792530293c39f4a97a1b2c9060",
+  "rows": [
+    {
+      "kind": "wishlist",
+      "key": "caddy-wishlist",
+      "base": "utilibre-wishlist:node-security-20261028",
+      "baseId": "sha256:4e67eda729ae56385d88710c731d64bc6d63908826a7bf80252d0b4774e2eda1",
+      "candidate": "utilibre-wishlist:caddy-go-security-20261028",
+      "path": "/usr/bin/caddy",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ]
+    },
+    {
+      "kind": "newsletters-web",
+      "key": "caddy-newsletters-web",
+      "base": "utilibre-newsletters-web:node-security-20261028",
+      "baseId": "sha256:355f3c7c6c1858348a946ef93b5450ee4dee90455a3f1a41b9d4cc0e7da162a8",
+      "candidate": "utilibre-newsletters-web:caddy-go-security-20261028",
+      "path": "/app/node_modules/.bin/caddy",
+      "containers": [
+        "utilibre-newsletters-web-1"
+      ]
+    },
+    {
+      "kind": "newsletters-mail-jobs",
+      "key": "caddy-newsletters-mail-jobs",
+      "base": "utilibre-newsletters-smtp:node-security-20261028",
+      "baseId": "sha256:bb5327e945f5fb43841310ff614964d0942deae6dbb922b86571e00b97e98a01",
+      "candidate": "utilibre-newsletters-mail-jobs:caddy-go-security-20261028",
+      "path": "/app/node_modules/.bin/caddy",
+      "containers": [
+        "utilibre-newsletters-smtp-1",
+        "utilibre-newsletters-jobs-1"
+      ]
+    }
+  ]
+}

@@ -6,12 +6,18 @@ import re
 import secrets
 import subprocess
 import time
+import sys
+import os
 import requests
 
 IMAGE = 'utilibre-wakapi:2.18.1-healthcheck-security-20261011'
 NAME = 'maintenance-wakapi-native'
 BASE = 'http://127.0.0.1:33144'
 OUT = Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/output/wakapi-native.json')
+assert all(a=='--oct28' for a in sys.argv[1:])
+if '--oct28' in sys.argv:
+    IMAGE='utilibre-wakapi:go-security-20261028'
+    OUT=Path('/var/lib/utilibre-maintenance/security-20261028/go-leaf/output/wakapi-native.json')
 def docker(*args):
     return subprocess.check_output(['docker',*args],text=True,stderr=subprocess.PIPE).strip()
 env = {'WAKAPI_DB_TYPE':'sqlite3','WAKAPI_DB_NAME':'/tmp/fictional.db',
@@ -21,14 +27,18 @@ env = {'WAKAPI_DB_TYPE':'sqlite3','WAKAPI_DB_NAME':'/tmp/fictional.db',
        'WAKAPI_LEADERBOARD_ENABLED':'false','WAKAPI_MAIL_ENABLED':'false',
        'WAKAPI_SENTRY_DSN':'','WAKAPI_SENTRY_TRACING':'false',
        'WAKAPI_IMPORT_ENABLED':'false'}
+original_namespace=os.open('/proc/self/ns/net',os.O_RDONLY)
 try:
-    args=['run','-d','--name',NAME,'--read-only','--cap-drop','ALL',
+    args=['run','-d','--name',NAME,'--network','none','--read-only','--cap-drop','ALL',
           '--security-opt','no-new-privileges','--log-driver','none',
           '--memory','256m','--cpus','1','--tmpfs','/tmp:rw,size=96m,mode=1777',
-          '-p','127.0.0.1:33144:3000']
+          '--pids-limit','128']
     for k,v in env.items():
         args+=['-e',k+'='+v]
     docker(*args,IMAGE)
+    pid=docker('inspect','--format','{{.State.Pid}}',NAME)
+    with open('/proc/'+pid+'/ns/net') as namespace: os.setns(namespace.fileno(),os.CLONE_NEWNET)
+    BASE='http://127.0.0.1:3000'
     for _ in range(100):
         try:
             if requests.get(BASE+'/api/health',timeout=1).status_code==200:
@@ -72,6 +82,7 @@ try:
     OUT.write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report))
 finally:
+    os.setns(original_namespace,os.CLONE_NEWNET);os.close(original_namespace)
     try:
         docker('rm','-f',NAME)
     except subprocess.CalledProcessError:

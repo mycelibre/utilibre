@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-111943",
+  "scope": "Compiler-only rebuilds preserving existing module locks, application source, assets and deployed runtime configuration",
+  "rows": [
+    {
+      "key": "anubis",
+      "containers": [
+        "public-utility-anubis-1"
+      ],
+      "base": "sha256:616fdc63a72e1eba67f0c29259ed232cef0ebddd79d8368e9959fc54ef476d1c",
+      "oldRef": "utilibre-anubis:1.27.0-closure-20261012",
+      "candidate": "utilibre-anubis:go-security-20261028",
+      "binary": "/ko-app/anubis",
+      "compilerVersion": "1.26.10",
+      "previousCompiler": "1.26.9",
+      "sourceRevision": "d39e26cedcc96bea5e4915297c756e7eec74aaf7",
+      "source": "/var/lib/utilibre-maintenance/go-leaf-final-20261011/source/anubis"
+    },
+    {
+      "key": "ferretdb",
+      "containers": [
+        "utilibre-gathio-ferretdb-1"
+      ],
+      "base": "sha256:1cee08c8cecb03185756c59cfd82b52d4574541ed8f413c07432f2114c56e8d6",
+      "oldRef": "utilibre-ferretdb:2.7.0-mcp-closure-20261012",
+      "candidate": "utilibre-ferretdb:go-security-20261028",
+      "binary": "/ferretdb",
+      "compilerVersion": "1.26.10",
+      "previousCompiler": "1.26.9",
+      "sourceRevision": "0d5eb3343a50b800634cc08ace608bb6f3a3f74b",
+      "source": "/var/lib/utilibre-maintenance/ferretdb-libraries-20261011/source.tar.gz"
+    },
+    {
+      "key": "oauth2-proxy",
+      "containers": [
+        "utilibre-records-grist-auth-1"
+      ],
+      "base": "sha256:e3a49c15b5215af580340fe90e624bd4f0f6f664cc0cbe93e52ddb1d20792721",
+      "oldRef": "utilibre-oauth2-proxy:7.15.5-go-security-20261011",
+      "candidate": "utilibre-oauth2-proxy:go-security-20261028",
+      "binary": "/usr/bin/oauth2-proxy",
+      "compilerVersion": "1.26.10",
+      "previousCompiler": "1.26.9",
+      "sourceRevision": "bea3f04bf87b93f5354f392fe2216a88e6031350",
+      "source": "/var/lib/utilibre-maintenance/go-leaf-final-20261011/source/oauth2-proxy"
+    },
+    {
+      "key": "mezzo",
+      "containers": [
+        "utilibre-additions-mezzo-1"
+      ],
+      "base": "sha256:53a3e937eda322af4e6a49e0d0c85497e1540ac4fb04e28d43cefb8d04d4f19b",
+      "oldRef": "utilibre-mezzo:1.4.0-go-security-20261011",
+      "candidate": "utilibre-mezzo:go-security-20261028",
+      "binary": "/ko-app/mezzo",
+      "compilerVersion": "1.26.10",
+      "previousCompiler": "1.26.9",
+      "sourceRevision": "9cb99bd6a8570bb104021a094b1e598c8dda49db",
+      "source": "/opt/utilibre/community-src/mezzo"
+    },
+    {
+      "key": "ntfy",
+      "containers": [
+        "utilibre-community-ntfy-1"
+      ],
+      "base": "sha256:768b8c5fc0cb67f167321c771a2be5e5c7ecb32c19784c5558d6e75f65af88db",
+      "oldRef": "utilibre-ntfy:2.28.0-go-security-20261011",
+      "candidate": "utilibre-ntfy:go-security-20261028",
+      "binary": "/usr/bin/ntfy",
+      "compilerVersion": "1.27.3",
+      "previousCompiler": "1.27.2",
+      "sourceRevision": "10cb6506f836dbb00bb77e3b52669f6ace37f555",
+      "source": "/opt/utilibre/community-src/ntfy"
+    },
+    {
+      "key": "wakapi",
+      "containers": [
+        "utilibre-expanded-wakapi-1"
+      ],
+      "base": "sha256:de076a730673305c40e51c5930c4a05ce1187ba2b19df9cf207afa5129f804e7",
+      "oldRef": "utilibre-wakapi:2.18.1-healthcheck-security-20261011",
+      "candidate": "utilibre-wakapi:go-security-20261028",
+      "binary": "/app/wakapi",
+      "compilerVersion": "1.27.3",
+      "previousCompiler": "1.27.2",
+      "sourceRevision": "347f1f45ae2863d9499236471317a76630c5308f",
+      "source": "/opt/utilibre/expanded-src/wakapi"
+    }
+  ],
+  "toolchains": {
+    "1.26.10": {
+      "url": "https://go.dev/dl/go1.26.10.linux-amd64.tar.gz",
+      "sha256": "ccfe7ae822d2c2f41f4fe7c956199967a4dac22d0ee0d2b2bfdb440aab3b20c5",
+      "localCompilerImageId": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+      "registryManifest": false
+    },
+    "1.27.3": {
+      "url": "https://go.dev/dl/go1.27.3.linux-amd64.tar.gz",
+      "sha256": "65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40",
+      "localCompilerImageId": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+      "registryManifest": false
+    }
+  }
+}
