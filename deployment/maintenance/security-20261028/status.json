@@ -1,13 +1,13 @@
 {
-  "date": "2026-10-28T20:54:00.574396+00:00",
-  "scanCompletedAt": "2026-10-28T20:51:50.697Z",
+  "date": "2026-10-28T21:25:32.404239+00:00",
+  "scanCompletedAt": "2026-10-28T21:21:24.366Z",
   "scannerStatus": "checked",
   "runningImagesAssessed": 109,
   "rawRecords": 23940,
   "rawCritical": 66,
   "rawHigh": 3160,
   "awaitingReviewCritical": 0,
-  "awaitingReviewHigh": 98,
+  "awaitingReviewHigh": 97,
   "meaning": "Package/artifact records, not distinct exploitable vulnerabilities. Reviewed fixes/component attributions remain in raw scans. This is not full security clearance.",
   "completedThisCheckpoint": [
     "Caddy compiler and prior x/net preservation",
@@ -50,15 +50,17 @@
     "Eight exact kernel-header attributions, four existing Xvfb cleanup repairs and two DHI Perl core payload records revalidated against current artifacts; no runtime code change or scanner suppression",
     "KitchenOwl LiteLLM proxy-only advisories: exact uWSGI/Flask SDK-only configuration, absent proxy routes, disabled provider/telemetry, native ingredient parsing and account isolation verified; review expires in seven days",
     "Anubis and Mezzo: signed Wolfi trust package 20261020-r0; retired roots removed, ordinary trust and native applications verified, exact-image deployment and repeated no-op activation passed",
-    "Three CVE-2026-55453 CUPS client-library records reviewed against exact native package inventories: upstream affected printing-backend component is separate; no library repair or whole-service clearance claimed"
+    "Three CVE-2026-55453 CUPS client-library records reviewed against exact native package inventories: upstream affected printing-backend component is separate; no library repair or whole-service clearance claimed",
+    "Gathio database CFITSIO exact upstream bounds repair: normal FITS/GDAL, ABI, isolated database/restore, full-image scope and deployed-byte checks pass; repeat activation unchanged. Separate long-variable-string failure remains explicitly open."
   ],
   "unresolved": [
-    "98 high package/target records remain; package counts are not unique exploits and no full clearance is claimed.",
+    "97 high package/target records remain; package counts are not unique exploits and no full clearance is claimed.",
     "Remaining application/native-library work includes Zod 3.x consumers, MSAL, embedded/shaded Guava, ACL legacy callers and host packages; each needs its own supported repair and compatibility checks. Guava also has a separately shaded copy in the Penpot JAR; replacing the visible package alone would not establish full coverage. LiteLLM proxy advisories have a narrowly scoped SDK-only deployment review; vulnerable proxy code is not claimed repaired.",
     "OAuthlib 4.0.0 device-code validation gap is still reproducible in the library fixture despite scanner fixed-version metadata; see primary-findings.json. This is not a claimed Authentik device-flow exploit.",
     "Host QEMU 11.1.2 Debian candidates and exact rollback packages are prepared and natively tested, not installed: requires fresh Proxmox thawed/backup/agent-operation pause confirmation. GRUB/SSH and additional native-package findings remain separately open.",
     "Historical tracked build inputs and current runtime findings remain distinct; old locks are not relabelled or deleted to clear scans.",
-    "SimpleLogin public 502 predates this batch; native login gateway responds. Separate Caddy/Proxmox state and outside-Internet LibreSpeed reachability remain unverified."
+    "SimpleLogin public 502 predates this batch; native login gateway responds. Separate Caddy/Proxmox state and outside-Internet LibreSpeed reachability remain unverified.",
+    "Separate CFITSIO 16384-byte variable-string failure remains on both original and repaired library; severity/application exposure not established. The targeted oversized-buffer bound is repaired, not a complete library clearance."
   ],
   "tests": {
     "releaseAndPolicyTestsPassed": 43,
@@ -141,12 +143,19 @@
     "nginxFictionalAtomPassed": true,
     "nginxRepeatApplyUnchanged": true,
     "trustPolicyTestsPassed": 17,
-    "binaryAttributionTestsPassed": 11
+    "binaryAttributionTestsPassed": 11,
+    "cfitsioPolicyTestsPassed": 15,
+    "cfitsioNativeNormalChecksPerState": 8,
+    "cfitsioAbiExportsPreserved": 1808,
+    "cfitsioNativeDatabaseAndSyntheticRestore": true,
+    "cfitsioIndependentLibraryBytesIdentical": true,
+    "cfitsioWholeBuildReproducibilityClaimed": false,
+    "cfitsioRepeatApplyUnchanged": true
   },
   "deployment": "Recorded application releases are live; exact running images and readiness verified. QEMU host preparation is complete but no host activation/reboot/SSH reload/guest-agent restart occurred in this follow-through.",
   "capacity": "270 GiB root device, 266 GiB filesystem; 41 GiB free, 8 GiB recovery floor retained. 34 GiB RAM total, 19 GiB available; 1.1 GiB swap used. Separate 15 GiB temporary disk unchanged. No reboot, SSH reload or guest-agent restart in this follow-through.",
   "remainingHighByScope": {
-    "runtime-image": 35,
+    "runtime-image": 34,
     "tracked-build-input": 35,
     "upstream-release-source-lock": 2,
     "host-os": 26
@@ -166,7 +175,6 @@
     "hickory-proto": 1,
     "hickory-resolver": 1,
     "libacl1": 30,
-    "libcfitsio10": 1,
     "libpcap0.8t64": 1,
     "markdown-it": 2,
     "openssh-server": 2,
@@ -182,6 +190,7 @@
   "primaryFindingSupplement": {
     "path": "primary-findings.json",
     "highRecords": 1,
-    "includedInScannerPendingCount": false
+    "includedInScannerPendingCount": false,
+    "unclassifiedRecords": 1
   }
 }

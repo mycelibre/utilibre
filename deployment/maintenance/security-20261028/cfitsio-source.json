@@ -1,0 +1,19 @@
+{
+  "advisory": "CVE-2026-115504",
+  "upstream": "https://github.com/HEASARC/cfitsio/commit/579792e0f85bff0c6733ad5ebdf54c3b5c188686",
+  "upstreamPatchSha256": "25c56924d02480b27accfcdf6bea4c639837088027182e7bd34ead7a052268cb",
+  "patchSha256": "447f14f2992720cab3f9846b4eb709a99f4e09c42523a477f1fec2d1bfc72190",
+  "beforeSha256": "84a7c1a1b5096821613e693ed6b6d2232797bf15f65d0cc97f116d138f978fbe",
+  "afterSha256": "717306ce20c1878c5806fa8a8eeb4da40ee67c2a03b4b9f929e0a4f98b55aba0",
+  "version": "4.2.0-3",
+  "builder": "sha256:70c85e869d60d2203d9a691c3443038e71be0ddc9719bf2379f5f627b6b46dd8",
+  "sourceArchives": {
+    "cfitsio_4.2.0.orig.tar.gz": "eba53d1b3f6e345632bb09a7b752ec7ced3d63ec5153a848380f3880c5d61889",
+    "cfitsio_4.2.0-3.debian.tar.xz": "3d32f2a87040952c530dea598caf4a04ec1eeff21a3ae5c7a82be8282f1b72e1",
+    "deb.debian.org_debian_dists_bookworm_main_source_Sources.lz4": "f28da5b3961c4ab9f443460f449acf92d2e2b890e7b8f4cf128e3e8e6923e1b4",
+    "cfitsio_4.2.0-3.dsc": "38148d4f560081678e3313796ac8ea32d043e9b8857410119b304ce128af5d30",
+    "deb.debian.org_debian_dists_bookworm_InRelease": "77737fa4b34f2693e982cc9ee35736816c35a7778fc2d326cc1bbf5b301fe1aa"
+  },
+  "adaptation": "Exact upstream pre-read bound check. Bookworm lacks the later post-read guard, so its removal is inapplicable. No fuzzy edit; declared baseline/postcondition hashes and original vendor Debian patches retained.",
+  "license": "HEASARC permissive licence in License.txt; Debian packaging records retained"
+}

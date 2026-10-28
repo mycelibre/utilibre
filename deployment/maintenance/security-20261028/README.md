@@ -4,6 +4,59 @@ This batch extends the existing native-package, exact-JavaScript-package and
 transactional release scripts. It does not replace the maintenance system.
 No LLM is part of replay, tests or release checks.
 
+## Completed CFITSIO bounds repair
+
+`released-cfitsio.json` records the Gathio database image with only
+`libcfitsio.so.10.4.2.0` replaced. The exact
+[upstream pre-read bound](https://github.com/HEASARC/cfitsio/commit/579792e0f85bff0c6733ad5ebdf54c3b5c188686)
+is backported onto authenticated Debian 4.2.0-3 source. Debian's older source
+lacks the later post-read guard, so the upstream hunk removing it is inapplicable.
+The patch requires exact pre/post hashes and zero fuzz; all vendor patches remain.
+`cfitsio-source.json` pins the source archives, authenticated index and compiler.
+
+The native oversized-string case fails on the original and is rejected with
+READ_ERROR 108 after the repair. Eight legitimate cases per state cover normal
+variable strings, the valid fixed-width boundary, FITS pixels and the installed
+GDAL FITS driver. All 1,808 exported symbols, SONAME and dependencies are retained.
+The upstream test program finishes with status zero, including its expected
+numeric-overflow diagnostics. PostgreSQL/DocumentDB typed data, read-only account
+isolation and a fictional dump/drop/restore pass without network or user data.
+Whole-image comparison verifies 26,775 unchanged files and one changed library.
+Same-database scans introduce no high/critical findings. Live image/readiness and
+the public homepage pass; repeated activation leaves the container and receipt
+unchanged. This is not a full live-user Gathio workflow test.
+
+**Separate unresolved behavior:** a 16,384-byte variable-string round trip fails
+on both old and patched libraries. Its private evidence and public summary are
+retained in `primary-findings.json`; no exploitability or confidentiality impact
+is established. The bounds repair does not establish complete CFITSIO clearance.
+The Debian version label remains unchanged, so the raw scanner finding remains;
+`review-cfitsio.mjs` binds its seven-day review to exact live library bytes and
+does not waive the separate limitation.
+
+Replay uses `rebuild-cfitsio.mjs` in a fresh offline workspace, `cfitsio.mjs` for
+the candidate/native checks, the existing `check-blkid-apps.mjs --cfitsio gathio`
+adapter, `scan-brotli.mjs --cfitsio gathio-postgres` and
+`go-final/verify.py --cfitsio-oct28 gathio-postgres`. Completed receipts must be
+preserved, not overwritten. The first application receipt came from an equivalent
+private adapter; exact comparison verified that the checked-in wrapper changes
+only equivalent paths/spec placement, not test behavior. Its repeat attempt
+correctly refused to overwrite the successful receipt. Fifteen policy tests
+reject wrong inputs, unrelated changes, missing behavior and concealed failures.
+
+Two clean offline compilations produced identical **library bytes**. Compiler,
+fixture executable and complete image reproducibility are not inferred. The
+[complete library source offer](https://tools.utilibre.org/utilibre-source/security-cfitsio-20261028-source.tar.gz)
+includes original notices, vendor sources, patch, build/test instructions and
+compiler package inventory. It is 19,393,616 bytes; SHA-256 is
+`481f89c9f3d154fd08be141d57c3daf45e8ce488100b1536f793a7bc248f2537`.
+
+The existing transactional `release-brotli.mjs prepare/apply --cfitsio
+gathio-postgres` path enforces the finite scope. Rollback restores only the
+recorded former image pin and database container; no schema or data migration was
+performed. Previous image and private release/rollback evidence remain retained.
+Never use image rollback to overwrite or restore the persistent database.
+
 ## Completed trust-store update
 
 `released-trust.json` records Anubis and Mezzo updated to Wolfi's

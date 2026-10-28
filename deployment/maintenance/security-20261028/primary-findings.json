@@ -18,6 +18,17 @@
       "evidence": "/var/lib/utilibre-maintenance/security-20261028/oauth/authentik/consumer.json",
       "owner": "admin@utilibre.org",
       "reviewCondition": "Before any OAuthlib/device-grant consumer change or next library release; reproduce the library regression again. Do not claim clearance based on version metadata."
+    },
+    {
+      "id": "UTILIBRE-CFITSIO-VARIABLE-STRING-20261028",
+      "component": "CFITSIO 4.2.0-3",
+      "status": "unresolved",
+      "severity": "not-established",
+      "observed": "A synthetic 16384-byte variable-length string returns 5752 bytes and the fixture exits 139 in both the original and bounds-patched library. This is separate from the oversized-buffer pre-read check repaired for CVE-2026-115504.",
+      "applicationExposure": "Observed through the native FITS API in isolated containers. No production file, account or network input used; exploitability, confidentiality impact and application reachability are not established. Ordinary FITS/GDAL and DocumentDB checks pass.",
+      "evidence": "/var/lib/utilibre-maintenance/security-20261028/cfitsio/long-variable-limitation.json",
+      "owner": "admin@utilibre.org",
+      "reviewCondition": "Resolve or review against a maintained upstream correction before claiming full CFITSIO coverage or enabling any new FITS import path."
     }
   ]
 }

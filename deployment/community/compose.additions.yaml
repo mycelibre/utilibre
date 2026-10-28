@@ -38,7 +38,7 @@ services:
     depends_on: [dumb]
   mezzo:
     <<: *runtime
-    image: utilibre-mezzo:go-security-20261028
+    image: utilibre-mezzo:trust-security-20261028
     user: "65532:65532"
     environment:
       MEZZO_PORT: "8006"

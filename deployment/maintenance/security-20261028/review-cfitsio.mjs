@@ -1,0 +1,22 @@
+// Exact deployed backport review; leaves raw vendor-version finding visible.
+import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash}from'node:crypto';
+import {freshScan}from'../review-native-backports.mjs';import {validateDecision}from'../triage.mjs';import {proveCfitsio}from'./cfitsio-policy.mjs';
+process.umask(0o077);assert.equal(process.argv.length,2);
+const root='/var/lib/utilibre-maintenance',dir=root+'/security-20261028/cfitsio',here=new URL('.',import.meta.url).pathname;
+const read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
+const queue=read(root+'/security-queue.json'),scan=read(root+'/security.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
+const inputs=read(here+'cfitsio-inputs.json'),source=read(here+'cfitsio-source.json'),s=inputs.rows[0],b=read(dir+'/'+s.key+'/build.json');
+proveCfitsio(inputs,source,s,b,read(dir+'/'+s.key+'/inventory.json'),read(dir+'/'+s.key+'/application.json'),read(dir+'/replay-verified.json'),read(dir+'/long-variable-limitation.json'));
+assert.equal(sha(fs.readFileSync(here+'cfitsio-native.c')),inputs.sourceFixtureSha256);assert.equal(sha(fs.readFileSync(here+'cfitsio-bounds.patch')),source.patchSha256);
+const release=read(dir+'/release.json'),g=release.groups.find(g=>g.key===s.key),offer=read(dir+'/source-offer.json');
+assert(release.status==='passed'&&g.status==='passed'&&g.rows.length===1&&g.rows[0].newImage===b.imageId&&Date.parse(g.completedAt)<=Date.parse(scan.date));
+assert(offer.published);assert.equal(sha(fs.readFileSync(offer.archive)),offer.sha256);
+const docker=(...args)=>cp.execFileSync('docker',args,{encoding:'utf8',timeout:20000,maxBuffer:1024**2,stdio:['ignore','pipe','pipe']}).trim();
+assert.equal(docker('inspect','--format','{{.Image}}',s.containers[0]),b.imageId);
+assert.equal(docker('exec',s.containers[0],'sha256sum',inputs.library).split(/\s/)[0],inputs.librarySha256);
+assert.equal(docker('exec',s.containers[0],'dpkg-query','-W','-f=${Version}','libcfitsio10'),'4.2.0-3');
+const items=queue.items.filter(i=>i.status==='needs-review'&&i.scope==='runtime-image'&&i.artifact===b.imageId&&i.package==='libcfitsio10'&&i.installed==='4.2.0-3'&&i.id==='CVE-2026-115504');assert.equal(items.length,1);
+const decision=validateDecision({key:items[0].key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:'Exact upstream CFITSIO pre-read bounds backport from 579792e0f85bff0c6733ad5ebdf54c3b5c188686 on Debian 4.2.0-3. Only libcfitsio.so.10.4.2.0 changed; live SHA256 '+inputs.librarySha256+'. The original oversized-string case fails; candidate rejects it with READ_ERROR 108. Eight legitimate FITS/GDAL checks per state, all 1808 ABI exports, native PostgreSQL/DocumentDB data/isolation/restore, full-image scope, unchanged configuration and completed release are verified. Independent clean rebuild yields identical library bytes. Vendor version labels/raw finding remain. Separate 16384-byte variable-string failure occurs in both old/new versions and remains open in primary-findings.json: this is not complete CFITSIO clearance. Source offer SHA256 '+offer.sha256+'. Evidence: security-20261028/cfitsio/. https://github.com/HEASARC/cfitsio/commit/579792e0f85bff0c6733ad5ebdf54c3b5c188686'});
+assert.equal(read(root+'/security.json').completedAt,scan.completedAt);
+fs.writeFileSync(dir+'/review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,decision,applied:false,librarySha256:inputs.librarySha256,sourceSha256:offer.sha256},null,2)+'\n');
+fs.writeFileSync(dir+'/decision.json',JSON.stringify(decision,null,2)+'\n');console.log('One exact CFITSIO backport decision prepared; not applied');

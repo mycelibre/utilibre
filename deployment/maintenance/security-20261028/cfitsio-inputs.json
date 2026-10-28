@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-115504",
+  "version": "4.2.0-3+upstream-bounds-backport",
+  "library": "/usr/lib/x86_64-linux-gnu/libcfitsio.so.10.4.2.0",
+  "librarySha256": "ea7e9dfa63810eac44f19d00a7eee01066b8f95f59230d7997811a7fb1622b8f",
+  "fixtureSha256": "b466fd78098e1956544005153230fe53c76de3dfaa3c07e47fd739171659451e",
+  "sourceFixtureSha256": "6183fbffa35975a9e2eeb17e4512f56a08b94117f6fd30115f399ffddf81655d",
+  "rows": [
+    {
+      "key": "gathio-postgres",
+      "base": "sha256:e51ce1971ae839b6a69e73a9123973caef03f4b0f6ea5e1a3d74c5d887240776",
+      "candidate": "utilibre-gathio-documentdb:cfitsio-security-20261028",
+      "containers": [
+        "utilibre-gathio-postgres-1"
+      ]
+    }
+  ]
+}

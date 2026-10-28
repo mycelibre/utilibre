@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "key": "gathio-postgres",
+  "advisory": "CVE-2026-115504",
+  "previousImage": "sha256:e51ce1971ae839b6a69e73a9123973caef03f4b0f6ea5e1a3d74c5d887240776",
+  "imageId": "sha256:c6a4cb58ef6f1c9c2943ba4dc50ddca47314da6066f98692dfcfc256522443af",
+  "completedAt": "2026-10-28T21:19:42.248Z",
+  "changedPaths": [
+    "/usr/lib/x86_64-linux-gnu/libcfitsio.so.10.4.2.0"
+  ],
+  "librarySha256": "ea7e9dfa63810eac44f19d00a7eee01066b8f95f59230d7997811a7fb1622b8f",
+  "abiExportsPreserved": 1808,
+  "nativeNormalChecksPerState": 8,
+  "oversizedInputRejected": true,
+  "nativeDatabaseIsolationAndSyntheticRestore": true,
+  "independentLibraryRebuildBytesIdentical": true,
+  "wholeBuildByteReproducibilityClaimed": false,
+  "repeatApplyUnchanged": true,
+  "newHighCritical": 0,
+  "databaseSha256": "2c8f4b04f224aded9ecd149b9b5304146736668220dfa403403358fb423a52fd",
+  "rawVersionFindingRetained": true,
+  "source": {
+    "filename": "security-cfitsio-20261028-source.tar.gz",
+    "bytes": 19393616,
+    "sha256": "481f89c9f3d154fd08be141d57c3daf45e8ce488100b1536f793a7bc248f2537"
+  },
+  "sourceUrl": "https://tools.utilibre.org/utilibre-source/security-cfitsio-20261028-source.tar.gz",
+  "limitations": "Separate 16384-byte variable-string failure occurs before/after and remains open. No full library clearance, live Gathio user workflow, remote exploit or general build reproducibility is claimed."
+}

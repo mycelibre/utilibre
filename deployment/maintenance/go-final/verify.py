@@ -2,6 +2,7 @@
 import hashlib,json,os,subprocess,tarfile,sys
 from pathlib import Path
 os.umask(0o077)
+CFITSIO='--cfitsio-oct28' in sys.argv
 TRUST='--trust-oct28' in sys.argv
 NGINX='--nginx-debian-oct28' in sys.argv
 BSON='--bson-oct28' in sys.argv
@@ -26,10 +27,10 @@ SERVICES='--services-oct28' in sys.argv
 RUNTIME='--runtime-oct28' in sys.argv or SERVICES
 JOSE_CADDY='--jose-caddy-oct28' in sys.argv
 CADDY='--caddy-oct28' in sys.argv or JOSE_CADDY
-HELPERS=TRUST or NGINX or BSON or ZOD or CODEC_CADDY or FILELOCK or TEXT or OAUTH or CODEC or HEALTH or MARKDOWN or SYMFONY or NLTK or MSGPACK or BLKID or '--helpers-oct28' in sys.argv or CADDY or RUNTIME or AUTHLIB or DNS or DRF or JOSE
+HELPERS=CFITSIO or TRUST or NGINX or BSON or ZOD or CODEC_CADDY or FILELOCK or TEXT or OAUTH or CODEC or HEALTH or MARKDOWN or SYMFONY or NLTK or MSGPACK or BLKID or '--helpers-oct28' in sys.argv or CADDY or RUNTIME or AUTHLIB or DNS or DRF or JOSE
 OCT28='--oct28' in sys.argv or HELPERS
 ROOT=Path('/var/lib/utilibre-maintenance/security-20261028/go' if OCT28 else '/var/lib/utilibre-maintenance/go-final-20261011')
-if HELPERS: ROOT=Path('/var/lib/utilibre-maintenance/security-20261028/'+('trust' if TRUST else 'nginx-debian' if NGINX else 'bson' if BSON else 'zod' if ZOD else 'codec-caddy' if CODEC_CADDY else 'filelock' if FILELOCK else 'text' if TEXT else 'oauth' if OAUTH else 'codec' if CODEC else 'health' if HEALTH else 'markdown' if MARKDOWN else 'symfony' if SYMFONY else 'nltk' if NLTK else 'msgpack' if MSGPACK else 'blkid' if BLKID else 'jose-caddy' if JOSE_CADDY else 'jose-leaf' if JOSE_LEAF else 'jose' if JOSE else 'drf' if DRF else 'dnspython' if DNS else 'authlib' if AUTHLIB else 'caddy' if CADDY else 'go-services' if SERVICES else 'go-runtime' if RUNTIME else 'go-helpers'))
+if HELPERS: ROOT=Path('/var/lib/utilibre-maintenance/security-20261028/'+('cfitsio' if CFITSIO else 'trust' if TRUST else 'nginx-debian' if NGINX else 'bson' if BSON else 'zod' if ZOD else 'codec-caddy' if CODEC_CADDY else 'filelock' if FILELOCK else 'text' if TEXT else 'oauth' if OAUTH else 'codec' if CODEC else 'health' if HEALTH else 'markdown' if MARKDOWN else 'symfony' if SYMFONY else 'nltk' if NLTK else 'msgpack' if MSGPACK else 'blkid' if BLKID else 'jose-caddy' if JOSE_CADDY else 'jose-leaf' if JOSE_LEAF else 'jose' if JOSE else 'drf' if DRF else 'dnspython' if DNS else 'authlib' if AUTHLIB else 'caddy' if CADDY else 'go-services' if SERVICES else 'go-runtime' if RUNTIME else 'go-helpers'))
 if hasattr(os,'sched_getaffinity'):os.sched_setaffinity(0,{min(os.sched_getaffinity(0))})
 def files(image):
  c=subprocess.check_output(['docker','create','--entrypoint','/bin/true',image],text=True).strip()
@@ -48,7 +49,7 @@ def files(image):
   return result
  finally:subprocess.run(['docker','rm',c],stdout=subprocess.DEVNULL,check=True)
 rows=[]
-specs=json.loads((ROOT/'build.json').read_text())['rows'] if not HELPERS else [dict(json.loads((ROOT/k/'build.json').read_text()),baseId=json.loads((ROOT/k/'build.json').read_text())['base']) for k in sys.argv[1:] if k not in ['--trust-oct28','--nginx-debian-oct28','--bson-oct28','--zod-oct28','--codec-caddy-oct28','--filelock-oct28','--text-oct28','--oauth-oct28','--codec-oct28','--health-oct28','--markdown-oct28','--symfony-oct28','--weka-oct28','--msgpack-oct28','--blkid-oct28','--jose-leaf-oct28','--jose-caddy-oct28','--jose-oct28','--helpers-oct28','--caddy-oct28','--runtime-oct28','--services-oct28','--authlib-oct28','--dnspython-oct28','--drf-oct28']]
+specs=json.loads((ROOT/'build.json').read_text())['rows'] if not HELPERS else [dict(json.loads((ROOT/k/'build.json').read_text()),baseId=json.loads((ROOT/k/'build.json').read_text())['base']) for k in sys.argv[1:] if k not in ['--cfitsio-oct28','--trust-oct28','--nginx-debian-oct28','--bson-oct28','--zod-oct28','--codec-caddy-oct28','--filelock-oct28','--text-oct28','--oauth-oct28','--codec-oct28','--health-oct28','--markdown-oct28','--symfony-oct28','--weka-oct28','--msgpack-oct28','--blkid-oct28','--jose-leaf-oct28','--jose-caddy-oct28','--jose-oct28','--helpers-oct28','--caddy-oct28','--runtime-oct28','--services-oct28','--authlib-oct28','--dnspython-oct28','--drf-oct28']]
 for s in specs:
  before,after=files(s['baseId']),files(s['imageId']);hardlink_changes=[]
  if ZOD:
@@ -81,5 +82,5 @@ for s in specs:
   findings=[v for r in scan.get('Results',[]) for v in r.get('Vulnerabilities',[])];assert not [v for v in findings if v['PkgName']=='stdlib']
  if OCT28:findings=[v for r in scan.get('Results',[]) for v in r.get('Vulnerabilities',[])]
  if HELPERS:(ROOT/s['key']/'inventory.json').write_text(json.dumps({'passed':True,'imageId':s['imageId'],'changedPaths':changes,'packageHardlinkLayoutChanges':hardlink_changes,'removedPackageBytecode':removed_bytecode,'unchangedFiles':len(after)-len(changes)},indent=2)+'\n')
- rows.append({'key':s['key'],'imageId':s['imageId'],'status':'passed','changedPaths':changes,'unchangedFiles':len(after)-1,'go':None if TRUST or NGINX or BSON or ZOD or FILELOCK or OAUTH or MARKDOWN or SYMFONY or NLTK or MSGPACK or BLKID or AUTHLIB or DNS or DRF else s['compilerVersion'] if HELPERS else '1.26.10' if OCT28 else '1.26.9','counts':{n:sum(v['Severity']==n for v in findings) for n in ['CRITICAL','HIGH','MEDIUM','LOW']}})
+ rows.append({'key':s['key'],'imageId':s['imageId'],'status':'passed','changedPaths':changes,'unchangedFiles':len(after)-1,'go':None if CFITSIO or TRUST or NGINX or BSON or ZOD or FILELOCK or OAUTH or MARKDOWN or SYMFONY or NLTK or MSGPACK or BLKID or AUTHLIB or DNS or DRF else s['compilerVersion'] if HELPERS else '1.26.10' if OCT28 else '1.26.9','counts':{n:sum(v['Severity']==n for v in findings) for n in ['CRITICAL','HIGH','MEDIUM','LOW']}})
 (ROOT/('inventory-'+ '-'.join(s['key'] for s in specs)+'.json' if HELPERS else 'inventory.json')).write_text(json.dumps({'status':'passed','rows':rows},indent=2)+'\n');print(str(len(rows))+' declared-file inventories and exact-artifact scan gates passed.')
