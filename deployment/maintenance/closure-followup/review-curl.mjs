@@ -24,7 +24,7 @@ if(bookworm&&!oct28){
 for(const receipt of additionalOverlayReceipts)if(fs.existsSync(root+'/'+receipt)){
   for(const next of overlayRows(read(root+'/'+receipt)))if(next.oldImage!==next.newImage&&rows.some(r=>r.name===next.name&&r.newImage===next.oldImage))rows.push(next);
 }
-const host=!oct28&&!bookworm&&fs.existsSync(dir+'/curl-host.json')?read(dir+'/curl-host.json'):null;
+const hostDirectory=oct28?batch:dir;const host=!bookworm&&fs.existsSync(hostDirectory+'/curl-host.json')?read(hostDirectory+'/curl-host.json'):null;
 const sums=new Map(fs.readFileSync(build+'/SHA256SUMS','utf8').trim().split('\n').map(l=>[path.basename(l.slice(66)),l.slice(0,64)]));
 const debs=new Map(fs.readdirSync(build).filter(f=>f.endsWith('_amd64.deb')).map(f=>[run('dpkg-deb',['-f',build+'/'+f,'Package']),f]));
 const decisions=[],proofs=[],skipped=[],payloads=new Map();
@@ -33,7 +33,7 @@ function files(d,p=''){return fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>
 for(const item of queue.items.filter(i=>i.status==='needs-review'&&i.type==='debian'&&i.installed===version&&(bookworm?['curl','libcurl4','libcurl3-gnutls']:['curl','libcurl4t64','libcurl4-gnutls','libcurl3t64-gnutls']).includes(i.package))){
  try{
   const isHost=item.scope==='host-os';assert(isHost||item.scope==='runtime-image');
-  if(isHost){assert.equal(host?.status,'passed');const live=read(dir+'/curl-host-live.json');assert(live.passed&&live.rows.length===3&&live.rows.every(x=>x.passed&&x.checks===7));assert.equal(oldMappings.length,0);assert(Date.parse(host.completedAt)<=Date.parse(live.date)&&Date.parse(live.date)<=Date.parse(scan.date));}
+  if(isHost){assert.equal(host?.status,'passed');const live=read(hostDirectory+'/curl-host-live.json');assert(live.passed&&live.rows.length===3&&live.rows.every(x=>x.passed&&x.checks===7));assert.equal(oldMappings.length,0);assert(Date.parse(host.completedAt)<=Date.parse(live.date)&&Date.parse(live.date)<=Date.parse(scan.date));}
   else for(const name of item.containers){const row=rows.find(r=>r.name===name&&r.newImage===item.artifact);assert(row&&Date.parse(row.completedAt)<=Date.parse(scan.date));assert.equal(run('docker',['inspect','--format','{{.Image}}',name]),item.artifact);}
   const fixed=primary.sources.curl?.[item.id]?.releases?.sid;assert.equal(fixed?.status,'resolved');assert(fixed.fixed_version&&fixed.fixed_version!=='0');
   const upstream=curlFixedUpstream(fixed.fixed_version);run('dpkg',['--compare-versions',upstreamVersion,'ge',upstream]);
@@ -44,8 +44,8 @@ for(const item of queue.items.filter(i=>i.status==='needs-review'&&i.type==='deb
    const temp=fs.mkdtempSync('/dev/shm/utilibre-curl-proof-');try{run('dpkg-deb',['-x',deb,temp]);const paths=files(temp).filter(p=>p==='/usr/bin/curl'||/^\/usr\/lib\/.*libcurl.*\.so\.\d/.test(p));assert(paths.length);payloads.set(pkg,{debSha256:sha(deb),files:paths.map(p=>({path:p,sha256:sha(temp+p)}))});}finally{fs.rmSync(temp,{recursive:true});}
   }
   const payload=payloads.get(pkg);
-  if(bookworm||oct28){
-   assert(!isHost,'October image proof does not cover host packages');
+  if(isHost&&oct28){const b=read(batch+'/curl/curl-expanded-breezewiki/build.json'),n=read(batch+'/curl/curl-expanded-breezewiki/native.json');assert(b.passed&&n.passed&&n.abiPreserved&&n.upstreamSuites.length===2&&n.upstreamSuites.every(t=>t.passed===t.reported&&t.passed>1800));assert(host.libcAndServicePidsUnchanged&&host.nativeFileTransfer&&host.rows.length===4);for(const row of host.rows){assert.equal(sha(row.next),row.nextSha256);assert.equal(sha(row.prior),row.priorSha256);}assert.equal(host.candidate,b.imageId);}
+  if((bookworm||oct28)&&!isHost){
    const specs=oct28?read(new URL('../security-20261028/'+(bookworm?'curl-bookworm':'curl')+'-inputs.json',import.meta.url)).rows:read(new URL('../bookworm-curl-followup/specs.json',import.meta.url));
    for(const name of item.containers){
     const spec=specs.find(s=>s.containers.includes(name));assert(spec);

@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-28T16:34:10.333Z",
+  "status": "deployed-and-verified",
+  "scope": "pcre",
+  "roles": [
+    {
+      "name": "utilibre-evaluation-degoog-1",
+      "oldRef": "utilibre-degoog:expat-security-20261028",
+      "oldImage": "sha256:59109434bdff88a352d354b66078b92e0a75cc4913f76f9ee6ebbab3a68cb779",
+      "newRef": "utilibre-degoog:pcre-security-20261028",
+      "newImage": "sha256:67ac5a6af2e37fbe92ddc461d92aea9399b90a635b97a1b0b98875aa25646b6a"
+    }
+  ]
+}

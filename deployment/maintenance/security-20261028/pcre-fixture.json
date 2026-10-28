@@ -1,0 +1,18 @@
+{
+  "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+  "sourceSha256": "ef9d7edea25e2e50d79b9ef20def9ab037e703e9cbad4d027ee4b5b03cbf12ca",
+  "binarySha256": "5bed3390c3eeb2b0238bb571dd289489c48bfb412bee45b57f9c135f3d9b2bca",
+  "arguments": [
+    "gcc",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-O2",
+    "/recipe/pcre-native.c",
+    "-ldl",
+    "-o",
+    "/fixture/native"
+  ],
+  "network": "none",
+  "scope": "Native PCRE2 JIT, captures, UTF-8, ordinary rejection and invalid-pattern checks. Not reproduction of the four memory-corruption advisories."
+}

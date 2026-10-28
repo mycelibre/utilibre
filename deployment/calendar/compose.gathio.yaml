@@ -11,7 +11,7 @@ x-bounded: &bounded
 services:
   postgres:
     <<: *bounded
-    image: utilibre-gathio:curl823-security-20261028
+    image: utilibre-gathio-postgres:blkid-security-20261028
     user: '999:999'
     cpus: 1.0
     mem_limit: 768m
@@ -50,7 +50,7 @@ services:
       postgres: {condition: service_healthy}
   gathio:
     <<: *bounded
-    image: utilibre-gathio:node-security-20261028
+    image: utilibre-gathio:multer-security-20261028
     user: '1000:1000'
     cpus: 1.0
     mem_limit: 512m

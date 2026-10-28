@@ -1,0 +1,62 @@
+{
+  "status": "installed-and-verified",
+  "packages": [
+    {
+      "name": "curl",
+      "previous": "8.22.0-1~deb13u1+utilibre1",
+      "version": "8.23.0-1~deb13u1+utilibre1",
+      "sha256": "b46366261e8f635144260430ba57a4803fc08caf805d90e0cd3ce937dab31f55",
+      "rollbackSha256": "fae5b7cde8552f0dc4de7867ab39320423d2a3cd8237bcb49039357d6eaa82f1",
+      "completedAt": "2026-10-28T15:54:40.840Z"
+    },
+    {
+      "name": "libcurl3t64-gnutls",
+      "previous": "8.22.0-1~deb13u1+utilibre1",
+      "version": "8.23.0-1~deb13u1+utilibre1",
+      "sha256": "6073d3b6d71c79e98ee5817b0c908deb52f9267557bf382aafbcc599c2849014",
+      "rollbackSha256": "a172b719eb977926a41c178f99777e748d307353b024c0c29cba7434f45c3fc7",
+      "completedAt": "2026-10-28T15:54:40.840Z"
+    },
+    {
+      "name": "libcurl4-gnutls",
+      "previous": "8.22.0-1~deb13u1+utilibre1",
+      "version": "8.23.0-1~deb13u1+utilibre1",
+      "sha256": "1956d7d710ef6e82b072f12d581a460c445f0fbbf3e608a435a61cb454c16809",
+      "rollbackSha256": "40cc2e6b374e0b58c343890aaa33bebf793ab7504bad3007e507d1a769db5a33",
+      "completedAt": "2026-10-28T15:54:40.840Z"
+    },
+    {
+      "name": "libcurl4t64",
+      "previous": "8.22.0-1~deb13u1+utilibre1",
+      "version": "8.23.0-1~deb13u1+utilibre1",
+      "sha256": "1d24d55b7bf17cfd381dc68740e07ba6fec2d6f7fe8e226dc2ffbeeffd7a87c4",
+      "rollbackSha256": "69c661b18f8a5c6504b6fce3e6e03abdcecef9208a2b61b56a5f4a857bacc72a",
+      "completedAt": "2026-10-28T15:54:40.840Z"
+    },
+    {
+      "name": "bind9-host",
+      "version": "1:9.20.30-1~deb13u1+utilibre1",
+      "sha256": "6b7261fd452e031f46a2ce5187be5e9b7c2ce4797beccf6cbcba5c763cf174aa",
+      "rollbackSha256": "91385bf4465a28245ac45045726b04c1be86e4542db85d17ed8376c7250b5908",
+      "completedAt": "2026-10-28T16:25:15.216Z"
+    },
+    {
+      "name": "bind9-libs",
+      "version": "1:9.20.30-1~deb13u1+utilibre1",
+      "sha256": "ee3a438cac36d3d41de1f58e74c3d5b61cff2ed533db674f8fe8c6959c830926",
+      "rollbackSha256": "b2bfbc0ee0f8c8b2a4043e19c4bcd5a36ea5bb61509a4c65f3166cbb72f39139",
+      "completedAt": "2026-10-28T16:25:15.216Z"
+    }
+  ],
+  "scope": "Native client libraries only; no VM reboot, SSH reload or Docker restart",
+  "evidenceRoot": "/var/lib/utilibre-maintenance/security-20261028",
+  "rollback": "Exact previous .deb artifacts retained privately; recheck coupled package scope before any rollback. No database or user-data changes.",
+  "checks": {
+    "curlNativeTransfersPerLibrary": 7,
+    "curlLibraryPaths": 3,
+    "curlAbiPreserved": true,
+    "bindSyntheticUDP_A_AAAA_NXDOMAIN_TCP_A": true,
+    "bindNoLmdbPreserved": true,
+    "libcAndServicePidsUnchanged": true
+  }
+}

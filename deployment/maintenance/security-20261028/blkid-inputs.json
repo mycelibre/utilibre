@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "advisory": "CVE-2026-53615",
+  "rows": [
+    {
+      "key": "gathio-postgres",
+      "base": "sha256:095558a2e1a54a4c685ce3243ddb0322ca1eaa10a7b2e1de16397c725f11fc85",
+      "oldRef": "utilibre-gathio:curl823-security-20261028",
+      "candidate": "utilibre-gathio-postgres:blkid-security-20261028",
+      "containers": [
+        "utilibre-gathio-postgres-1"
+      ],
+      "suite": "bookworm",
+      "installed": "2.38.1-5+deb12u3",
+      "version": "2.38.1-5+deb12u3",
+      "library": "/usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0"
+    },
+    {
+      "key": "wishlist-app",
+      "base": "sha256:2224a5e6008003519fc78e17c399b53bb2982709a648beb06a2a0868b8a37c6e",
+      "oldRef": "utilibre-wishlist:caddy-jose-security-20261028",
+      "candidate": "utilibre-wishlist-app:blkid-security-20261028",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "suite": "bookworm",
+      "installed": "2.38.1-5+deb12u3",
+      "version": "2.38.1-5+deb12u3",
+      "library": "/usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0"
+    },
+    {
+      "key": "expanded-resume",
+      "base": "sha256:6524bb237afe725bcba936980092116775a398fccbf97c0a7157abbe35f19dea",
+      "oldRef": "utilibre-resume:node-security-20261028",
+      "candidate": "utilibre-expanded-resume:blkid-security-20261028",
+      "containers": [
+        "utilibre-expanded-resume-1"
+      ],
+      "suite": "bookworm",
+      "installed": "2.38.1-5+deb12u3",
+      "version": "2.38.1-5+deb12u3",
+      "library": "/usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0"
+    },
+    {
+      "key": "expanded-actual",
+      "base": "sha256:6ae2de02fdbc441bfd1d3b2d6c693e11d9359da99844659fc1b5d01998342b3e",
+      "oldRef": "utilibre-actual:node-security-20261028",
+      "candidate": "utilibre-expanded-actual:blkid-security-20261028",
+      "containers": [
+        "utilibre-expanded-actual-1"
+      ],
+      "suite": "bookworm",
+      "installed": "2.38.1-5+deb12u3",
+      "version": "2.38.1-5+deb12u3",
+      "library": "/usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0"
+    },
+    {
+      "key": "pack-cryptpad-cryptpad",
+      "base": "sha256:a87be4499e3cb71e99fed31f61b99c3031e56e5c07b4482efb6fc1fe06c176f0",
+      "oldRef": "utilibre-cryptpad:node-security-20261028",
+      "candidate": "utilibre-pack-cryptpad-cryptpad:blkid-security-20261028",
+      "containers": [
+        "utilibre-pack-cryptpad-cryptpad-1"
+      ],
+      "suite": "bookworm",
+      "installed": "2.38.1-5+deb12u3",
+      "version": "2.38.1-5+deb12u3",
+      "library": "/usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0"
+    },
+    {
+      "key": "community-rallly",
+      "base": "sha256:b487bd7120ea6fc83f8d7dbc371da4c295e06b8c489872d7f06aa9db85a6cc5f",
+      "oldRef": "utilibre-rallly:node-security-20261028",
+      "candidate": "utilibre-community-rallly:blkid-security-20261028",
+      "containers": [
+        "utilibre-community-rallly-1"
+      ],
+      "suite": "bookworm",
+      "installed": "2.38.1-5+deb12u3",
+      "version": "2.38.1-5+deb12u3",
+      "library": "/usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0"
+    },
+    {
+      "key": "community-uptime-kuma",
+      "base": "sha256:c6e064322a20d38fd6d8ae306222dcba02bef9644e9703d7b232967aec1603da",
+      "oldRef": "utilibre-kuma:node-security-20261028",
+      "candidate": "utilibre-community-uptime-kuma:blkid-security-20261028",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "suite": "bookworm",
+      "installed": "2.38.1-5+deb12u3",
+      "version": "2.38.1-5+deb12u3",
+      "library": "/usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0"
+    },
+    {
+      "key": "community-rssbridge",
+      "base": "sha256:fa6776cc7896613dd5ffabfd405f9d7bffc28c47ac461d9c11e568962028d264",
+      "oldRef": "utilibre-rssbridge:curl823-impersonate231-security-20261028",
+      "candidate": "utilibre-community-rssbridge:blkid-security-20261028",
+      "containers": [
+        "utilibre-community-rssbridge-1"
+      ],
+      "suite": "bookworm",
+      "installed": "2.38.1-5+deb12u3",
+      "version": "2.38.1-5+deb12u3",
+      "library": "/usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0"
+    }
+  ]
+}

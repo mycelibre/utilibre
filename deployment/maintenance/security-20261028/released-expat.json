@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-28T15:53:33.013Z",
+  "status": "passed",
+  "scope": "Signed same-branch Expat 2.9.0 packages; no unrelated package/configuration/app-file changes",
+  "rows": [
+    {
+      "key": "addy",
+      "status": "passed",
+      "completedAt": "2026-10-28T15:52:58.499Z",
+      "publicBefore": 302,
+      "roles": [
+        {
+          "service": "app",
+          "oldRef": "utilibre-addy:libraries-security-20261028",
+          "newRef": "utilibre-addy:expat-security-20261028",
+          "oldImage": "sha256:123a93c57fb4ef7d609e3bf44f9617662325c32d5ac61da1ee1f991fe182d689",
+          "newImage": "sha256:493408d36aedf0363054fec297da6167ea4295505d02ba509cd3776fee70c4f7"
+        }
+      ]
+    },
+    {
+      "key": "degoog",
+      "status": "passed",
+      "completedAt": "2026-10-28T15:53:05.357Z",
+      "publicBefore": 200,
+      "roles": [
+        {
+          "service": "degoog",
+          "oldRef": "utilibre-degoog:undici-security-20261028",
+          "newRef": "utilibre-degoog:expat-security-20261028",
+          "oldImage": "sha256:645338c15f3407fc6f0ea1e14a973508d13dc374d2bdfcb561b8efb939556453",
+          "newImage": "sha256:59109434bdff88a352d354b66078b92e0a75cc4913f76f9ee6ebbab3a68cb779"
+        }
+      ]
+    },
+    {
+      "key": "fourget",
+      "status": "passed",
+      "completedAt": "2026-10-28T15:53:10.900Z",
+      "publicBefore": 200,
+      "roles": [
+        {
+          "service": "fourget",
+          "oldRef": "utilibre-fourget:libraries-security-20261028",
+          "newRef": "utilibre-fourget:expat-security-20261028",
+          "oldImage": "sha256:a5a63072d1a70aa089ebce213b727bb06989a442a8b1d39b1438916ce3357d5a",
+          "newImage": "sha256:7a421c258b2f9fa6a6d0592466108ea4df393c526bd2b66dfb531aa30d5af5e1"
+        }
+      ]
+    },
+    {
+      "key": "kittygram",
+      "status": "passed",
+      "completedAt": "2026-10-28T15:53:26.348Z",
+      "publicBefore": 200,
+      "roles": [
+        {
+          "service": "kittygram",
+          "oldRef": "utilibre-kittygram:libraries-security-20261028",
+          "newRef": "utilibre-kittygram:expat-security-20261028",
+          "oldImage": "sha256:bdb4537573628e6749f2eef75746885864c92160f81ebb2f6c96174776c97acf",
+          "newImage": "sha256:2a3054a5813fa2e5c8cf7a3dfaacf7dd63a513464870deca3556c02885983e88"
+        }
+      ]
+    },
+    {
+      "key": "opengist",
+      "status": "passed",
+      "completedAt": "2026-10-28T15:53:33.013Z",
+      "publicBefore": 302,
+      "roles": [
+        {
+          "service": "opengist",
+          "oldRef": "utilibre-opengist:libraries-security-20261028",
+          "newRef": "utilibre-opengist:expat-security-20261028",
+          "oldImage": "sha256:c3d4f7b8444add357fa878e18923d4ea92dafad692ac04df33be4d26b03af0bd",
+          "newImage": "sha256:24fae7900b0be338fbd62d2db7f3c153b058b4c68955ac22b27cb5bcff4a756e"
+        }
+      ]
+    }
+  ]
+}

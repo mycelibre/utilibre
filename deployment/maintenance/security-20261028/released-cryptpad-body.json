@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-28T16:44:45.522Z",
+  "status": "deployed-and-verified",
+  "scope": "cryptpad-body",
+  "roles": [
+    {
+      "name": "utilibre-pack-cryptpad-cryptpad-1",
+      "oldImage": "sha256:2297218097ca2cd0d4088d0d88e11767a8cb4aab3fb6d987b76eed2f5cb2f4e8",
+      "newImage": "sha256:2297218097ca2cd0d4088d0d88e11767a8cb4aab3fb6d987b76eed2f5cb2f4e8",
+      "oldRef": "utilibre-pack-cryptpad-cryptpad:blkid-security-20261028",
+      "newRef": "utilibre-pack-cryptpad-cryptpad:blkid-security-20261028"
+    }
+  ]
+}

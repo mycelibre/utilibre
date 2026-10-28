@@ -5,14 +5,21 @@ import {createHash} from 'node:crypto';
 export const directory='/var/lib/utilibre-maintenance/penpot-native-followup-20261012';
 const read=p=>JSON.parse(readFileSync(p));
 const sha=p=>createHash('sha256').update(readFileSync(p)).digest('hex');
-export function inputs(){
+export function verifyApplicationTime(checkedAt, approvalAt=Date.now()){
+ const checked=Date.parse(checkedAt), approval=typeof approvalAt==='number'?approvalAt:Date.parse(approvalAt);
+ assert(Number.isFinite(checked)&&Number.isFinite(approval)&&approval<=Date.now(),'Invalid evidence/approval time');
+ assert(checked<=approval&&approval-checked<86400000,'Application evidence must precede approval by less than one day');
+}
+// New releases use now. Read-only revalidation supplies the completed release
+// time and still requires its original evidence hashes and current live bytes.
+export function inputs({approvalAt=Date.now()}={}){
  const manifest=read('/var/lib/utilibre-maintenance/native-final/penpot-rsvg-tiff-followup.json');
  const svg=read(directory+'/native.json'),tiff=read(directory+'/tiff/native.json');
  assert.equal(svg.status,'passed');assert.equal(tiff.status,'passed');
  const logged=read(directory+'/application-run.log');assert.equal(logged.status,'passed');
  assert.match(logged.report,/^\/opt\/utilibre\/reports\/penpot-native-roundtrip-[a-z0-9_]+$/);
  const config=read(logged.report+'/compose.json'),result=read(logged.report+'/result.json');
- assert(Date.now()-Date.parse(result.checkedAt)<86400000,'Application evidence must be fresh');
+ verifyApplicationTime(result.checkedAt,approvalAt);
  for(const key of ['isolated','nativeExportImport','independentAccount','editableBrowserReopen','editSavedAfterReload','otherAccountDenied','nativeFileDeletion'])assert.equal(result[key],true,key);
  assert.deepEqual(result.errors,[]);assert.deepEqual(result.outside,[]);
  for(const name of ['membership','exporter','backend-media'])assert.equal(read(logged.report+'/'+name+'.json').status,'passed',name);

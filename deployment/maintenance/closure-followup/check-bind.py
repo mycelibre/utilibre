@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 """Actual host(1), synthetic loopback DNS only, no remote resolver."""
 import hashlib, json, os, pathlib, socket, struct, subprocess, sys, threading
-ROOT=pathlib.Path('/var/lib/utilibre-maintenance/closure-followup-20261012')
+oct28='--oct28' in sys.argv[1:]
+ROOT=pathlib.Path('/var/lib/utilibre-maintenance/security-20261028/bind' if oct28 else '/var/lib/utilibre-maintenance/closure-followup-20261012')
+version='9.20.30' if oct28 else '9.20.29'
 os.umask(0o077)
-assert sys.argv[1:] in ([],['--installed'])
-installed=bool(sys.argv[1:]); prefix=pathlib.Path('/') if installed else ROOT/'bind-candidate'
+assert sys.argv[1:] in ([],['--installed'],['--oct28'],['--oct28','--installed'])
+installed='--installed' in sys.argv[1:]; prefix=pathlib.Path('/') if installed else ROOT/'bind-candidate'
 lib=prefix/'usr/lib/x86_64-linux-gnu';binary=prefix/'usr/bin/host'
 env={**os.environ,'LD_LIBRARY_PATH':str(lib)}
 def run(args):return subprocess.run(args,env=env,check=True,capture_output=True,text=True,timeout=15).stdout
-assert '9.20.29' in run([str(binary),'-V'])
+assert version in run([str(binary),'-V'])
 linked=run(['ldd','-r',str(binary)])
 assert 'liblmdb' not in linked and 'not found' not in linked and 'undefined symbol' not in linked
-files=list(lib.glob('lib*-9.20.29-1~deb13u1+utilibre1-Debian.so'));assert len(files)==5
+files=list(lib.glob('lib*-'+version+'-1~deb13u1+utilibre1-Debian.so'));assert len(files)==5
 for file in files:
     assert 'liblmdb' not in run(['readelf','-d',str(file)])
     assert 'mdb_env_open' not in run(['readelf','-Ws',str(file)])

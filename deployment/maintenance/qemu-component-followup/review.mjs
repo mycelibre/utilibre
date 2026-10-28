@@ -10,8 +10,9 @@ for(const [file,hash]of Object.entries(sources))assert.equal(sha(dir+'/source/'+
 // Exact signed Meson graph: system_ss/hw_arch own the vulnerable device/9pfs
 // sources, while qga and block tools have their own native source/dependency sets.
 const text=f=>fs.readFileSync(dir+'/source/'+f,'utf8');assert.match(text('hw/sd/meson.build'),/system_ss\.add\(when: 'CONFIG_SDHCI', if_true: files\('sdhci.c'\)\)/);assert.match(text('hw/9pfs/meson.build'),/system_ss.add_all\(when: 'CONFIG_FSDEV_9P', if_true: fs_ss\)/);assert.match(text('hw/i386/meson.build'),/i386_ss.add\(when: 'CONFIG_APIC', if_true: files\('vapic.c'\)\)/);assert.match(text('qga/meson.build'),/dependencies: \[qemuutil, libudev\]/);assert(!/system_ss|hw_arch/.test(text('qga/meson.build')));assert(!/system_ss|hw_arch|qga_ss/.test(text('storage-daemon/meson.build')));
-const evidence=[],decisions=[];
+const evidence=[],decisions=[],unassessed=[];
 for(const name of Object.keys(pins)){
+ const installed=command('dpkg-query',['-W','-f=${Version}',name]);if(installed!==version&&!(name==='qemu-guest-agent'&&installed===derivedVersion)){unassessed.push({package:name,installed,reason:'Installed revision is outside this exact-source reviewer; no decision applied'});continue;}
  const archive=acquisition.packages.find(p=>p.name===name);assert(archive);const file=dir+'/packages/'+archive.file;assert.equal(sha(file),pins[name]);const index=fs.readFileSync(dir+'/packages/'+name+'-index.txt','utf8');assert(index.includes('\nSHA256: '+pins[name]));assert(index.includes('\nVersion: '+version+'\n'));
  const temp=fs.mkdtempSync('/tmp/utilibre-qemu-component-');
  try{
@@ -28,4 +29,4 @@ for(const name of Object.keys(pins)){
  }finally{assert(path.dirname(temp)==='/tmp'&&path.basename(temp).startsWith('utilibre-qemu-component-'));fs.rmSync(temp,{recursive:true});}
 }
 assert(decisions.length<=9);assert.equal(read(root+'/security.json').completedAt,scan.completedAt);assert.equal(read(root+'/security-queue.json').scanDate,scan.completedAt);for(const p of evidence)assert.equal(command('dpkg-query',['-W','-f=${Version}',p.package]),p.installed);
-const date=new Date().toISOString();fs.writeFileSync(dir+'/evidence.json',JSON.stringify({date,scanDate:scan.completedAt,evidence},null,2)+'\n');fs.writeFileSync(dir+'/review.json',JSON.stringify({date,scanDate:scan.completedAt,applied:false,decisions,evidenceSha256:sha(dir+'/evidence.json')},null,2)+'\n');console.log(JSON.stringify({prepared:decisions.length,packageInventories:evidence.length,hostChanged:false,applied:false,realGuestAgentFindingRetained:true}));
+const date=new Date().toISOString();fs.writeFileSync(dir+'/evidence.json',JSON.stringify({date,scanDate:scan.completedAt,evidence,unassessed},null,2)+'\n');fs.writeFileSync(dir+'/review.json',JSON.stringify({date,scanDate:scan.completedAt,applied:false,decisions,evidenceSha256:sha(dir+'/evidence.json')},null,2)+'\n');console.log(JSON.stringify({prepared:decisions.length,packageInventories:evidence.length,hostChanged:false,applied:false,realGuestAgentFindingRetained:true,unassessed}));

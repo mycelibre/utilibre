@@ -1,0 +1,10 @@
+import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';
+process.umask(0o077);const consumer=process.argv[2]==='--consumer';assert.equal(process.argv.length,consumer?3:2);const resultFile=consumer?'consumer.json':'native.json',dir='/var/lib/utilibre-maintenance/security-20261028/multer/gathio',b=JSON.parse(fs.readFileSync(dir+'/build.json'));assert(b.passed&&!fs.existsSync(dir+'/'+resultFile));
+const rows=[];
+for(const imageId of [b.base,b.imageId])for(const mode of consumer?['consumer']:['normal','regression']){
+ const r=cp.spawnSync('docker',['run','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--cpus','1','--memory','256m','--pids-limit','64','--log-driver','none','--tmpfs','/tmp:rw,size=8m,mode=1777','-v',new URL('./multer-native.cjs',import.meta.url).pathname+':/test.cjs:ro','--entrypoint','node',imageId,'/test.cjs','/srv/gathio/node_modules/multer',mode],{encoding:'utf8',timeout:10000,maxBuffer:1024**2});
+ fs.writeFileSync(dir+'/native-'+rows.length+'.log',r.stdout+r.stderr+String(r.error||''));assert(!r.error&&!r.signal);
+ const reproduced=imageId===b.base&&mode==='regression';if(reproduced)assert(r.status!==0&&r.stderr.includes('Unhandled \'error\' event')&&r.stderr.includes('Unexpected end of form'));else{assert.equal(r.status,0);const n=JSON.parse(r.stdout);assert(n.passed&&(mode==='consumer'?n.consumerChecks===5:mode==='normal'?n.normalChecks===8:n.regressionSurvived));}
+ rows.push({imageId,mode,passed:r.status===0,regressionReproduced:reproduced});
+}
+fs.writeFileSync(dir+'/'+resultFile,JSON.stringify({date:new Date().toISOString(),passed:true,imageId:b.imageId,rows,...(consumer?{consumerChecksPerState:5}:{normalChecksPerState:8}),network:'none',limitations:'Actual multer API and memory/disk storage or exact Gathio upload configurations; not an external HTTP or live-user upload. Image decoding is not tested.'},null,2)+'\n');console.log(consumer?'Gathio exact native upload configurations pass five checks per state':'Multer: baseline crash reproduced; fixed lifecycle and eight normal upload checks pass');

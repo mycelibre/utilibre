@@ -1,0 +1,128 @@
+{
+  "date": "2026-10-28T15:50:33.164Z",
+  "scope": "CVE-2026-53615; one library only; prior application/configuration/persistence and security repairs preserved",
+  "source": "security-blkid-20261028-source-r2.tar.gz",
+  "sourceSha256": "13c1c6b33c6eda1a683867edc8a4b16adae0bddb7b82f852fe17f4fa220f4f38",
+  "rows": [
+    {
+      "key": "gathio-postgres",
+      "status": "passed",
+      "completedAt": "2026-10-28T15:47:55.766Z",
+      "publicStatus": 200,
+      "images": [
+        {
+          "service": "postgres",
+          "oldRef": "utilibre-gathio:curl823-security-20261028",
+          "newRef": "utilibre-gathio-postgres:blkid-security-20261028",
+          "oldImage": "sha256:095558a2e1a54a4c685ce3243ddb0322ca1eaa10a7b2e1de16397c725f11fc85",
+          "newImage": "sha256:e51ce1971ae839b6a69e73a9123973caef03f4b0f6ea5e1a3d74c5d887240776"
+        }
+      ]
+    },
+    {
+      "key": "wishlist-app",
+      "status": "passed",
+      "completedAt": "2026-10-28T15:48:09.041Z",
+      "publicStatus": 307,
+      "images": [
+        {
+          "service": "app",
+          "oldRef": "utilibre-wishlist:caddy-jose-security-20261028",
+          "newRef": "utilibre-wishlist-app:blkid-security-20261028",
+          "oldImage": "sha256:2224a5e6008003519fc78e17c399b53bb2982709a648beb06a2a0868b8a37c6e",
+          "newImage": "sha256:f5d3c13a9171ff0c95f4f564e48e046417ec1b0a4f1b478bf942df85efd018b2"
+        }
+      ]
+    },
+    {
+      "key": "expanded-resume",
+      "status": "passed",
+      "completedAt": "2026-10-28T15:48:22.631Z",
+      "publicStatus": 200,
+      "images": [
+        {
+          "service": "resume",
+          "oldRef": "utilibre-resume:node-security-20261028",
+          "newRef": "utilibre-expanded-resume:blkid-security-20261028",
+          "oldImage": "sha256:6524bb237afe725bcba936980092116775a398fccbf97c0a7157abbe35f19dea",
+          "newImage": "sha256:1f9542280c6dcb4683aeceecc0b08db1bc01080f89b5c92e4e6816a9974b80b0"
+        }
+      ]
+    },
+    {
+      "key": "expanded-actual",
+      "status": "passed",
+      "completedAt": "2026-10-28T15:48:55.261Z",
+      "publicStatus": 200,
+      "images": [
+        {
+          "service": "actual",
+          "oldRef": "utilibre-actual:node-security-20261028",
+          "newRef": "utilibre-expanded-actual:blkid-security-20261028",
+          "oldImage": "sha256:6ae2de02fdbc441bfd1d3b2d6c693e11d9359da99844659fc1b5d01998342b3e",
+          "newImage": "sha256:a36968cf01b37fb28d9af2c88eb0169413dbc114586ea4d5ab3cfeecd80db534"
+        }
+      ]
+    },
+    {
+      "key": "pack-cryptpad-cryptpad",
+      "status": "passed",
+      "completedAt": "2026-10-28T15:49:27.979Z",
+      "publicStatus": 200,
+      "images": [
+        {
+          "service": "cryptpad",
+          "oldRef": "utilibre-cryptpad:node-security-20261028",
+          "newRef": "utilibre-pack-cryptpad-cryptpad:blkid-security-20261028",
+          "oldImage": "sha256:a87be4499e3cb71e99fed31f61b99c3031e56e5c07b4482efb6fc1fe06c176f0",
+          "newImage": "sha256:2297218097ca2cd0d4088d0d88e11767a8cb4aab3fb6d987b76eed2f5cb2f4e8"
+        }
+      ]
+    },
+    {
+      "key": "community-rallly",
+      "status": "passed",
+      "completedAt": "2026-10-28T15:49:49.114Z",
+      "publicStatus": 200,
+      "images": [
+        {
+          "service": "rallly",
+          "oldRef": "utilibre-rallly:node-security-20261028",
+          "newRef": "utilibre-community-rallly:blkid-security-20261028",
+          "oldImage": "sha256:b487bd7120ea6fc83f8d7dbc371da4c295e06b8c489872d7f06aa9db85a6cc5f",
+          "newImage": "sha256:4eaf42c1a08d26413f48dadfa049ece0828069459821002863e8b1c28c5f4a1b"
+        }
+      ]
+    },
+    {
+      "key": "community-uptime-kuma",
+      "status": "passed",
+      "completedAt": "2026-10-28T15:50:00.542Z",
+      "publicStatus": 302,
+      "images": [
+        {
+          "service": "uptime-kuma",
+          "oldRef": "utilibre-kuma:node-security-20261028",
+          "newRef": "utilibre-community-uptime-kuma:blkid-security-20261028",
+          "oldImage": "sha256:c6e064322a20d38fd6d8ae306222dcba02bef9644e9703d7b232967aec1603da",
+          "newImage": "sha256:bbb8cfe1455c90eb329a109bf6293b562f2b5be66da4f8c7632710536ed1f676"
+        }
+      ]
+    },
+    {
+      "key": "community-rssbridge",
+      "status": "passed",
+      "completedAt": "2026-10-28T15:50:33.164Z",
+      "publicStatus": 200,
+      "images": [
+        {
+          "service": "rssbridge",
+          "oldRef": "utilibre-rssbridge:curl823-impersonate231-security-20261028",
+          "newRef": "utilibre-community-rssbridge:blkid-security-20261028",
+          "oldImage": "sha256:fa6776cc7896613dd5ffabfd405f9d7bffc28c47ac461d9c11e568962028d264",
+          "newImage": "sha256:b540fb1d954f85cd6bb1ee8e69c8b935db30ecbbc4e7ab8408687b27a47b3914"
+        }
+      ]
+    }
+  ]
+}

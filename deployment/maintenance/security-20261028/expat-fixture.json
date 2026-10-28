@@ -1,0 +1,12 @@
+{
+  "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+  "sourceSha256": "7fa50b8e7ee001a1dae9382c072a9f48ffb1ef3dfa20684835a202af9c1961dd",
+  "headers": {
+    "expat.h": "805f17ae5f597eeb9f058f60428a1a62268de242a096af17cbcc2e17af111bad",
+    "expat_external.h": "77a02ad7ddc33fef8ae5876f8946d7ddb8fd9172a3f63d4c01b0e62211d386b5"
+  },
+  "binarySha256": "328b0e69f123f777f79f372b5169b1e084693ed58968a7844966f9cab99c5689",
+  "noNetwork": true,
+  "archiveSha256": "6e8ce7b52ebbaa423c59becc7cf1e6875c42e49228c062ac8123c10e700cec27",
+  "source": "https://github.com/libexpat/libexpat/releases/tag/R_2_9_0"
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "advisories": ["CVE-2026-113872"],
+  "source": "https://github.com/expressjs/multer/security/advisories/GHSA-q7qp-rjg7-q26m",
+  "packages": {
+    "multer": {"name":"multer","version":"2.5.0","integrity":"sha512-BsqOzYGVq49JcW2IzoSAxeKYRevb+dGGPPWleOR8Lrlk4igwxu1/9pwSXlByhCb7MVZDrNJFC0IBP5/O5nLYRw==","dependencies":{"busboy":"^1.6.0","type-is":"^1.6.18","append-field":"^1.0.0"}}
+  },
+  "rows": [{
+    "key":"gathio", "container":"utilibre-gathio-gathio-1", "containers":["utilibre-gathio-gathio-1"],
+    "base":"sha256:c2fa27d554e3af8ad4cd06f9daa512473cc4f5c63792ab7cf05b7606dadbcaa9",
+    "candidate":"utilibre-gathio:multer-security-20261028",
+    "roots":["/srv/gathio","/usr/local/lib/node_modules"],
+    "paths":{"multer":["/srv/gathio/node_modules/.pnpm/multer@2.4.0/node_modules/multer"]},
+    "before":{"/srv/gathio/node_modules/.pnpm/multer@2.4.0/node_modules/multer":"2.4.0"}
+  }]
+}

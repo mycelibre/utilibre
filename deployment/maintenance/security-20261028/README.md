@@ -553,10 +553,8 @@ Each before/after pair checks that its database remains unchanged. Older batch
 comparisons retain their own database identity; they are not relabelled with the
 newer snapshot. Current versus archived assessments remain separate.
 
-The final checkpoint is recorded in `status.json`: all 109 running image scans
-completed, with zero critical and 365 high records awaiting review. Raw results
-retain 66 critical and 3,206 high records, including exact repaired package and
-component-attribution decisions. These numbers are package/artifact occurrences,
+The latest checkpoint is recorded in `status.json`; it supersedes earlier
+counts in this release history. These numbers are package/artifact occurrences,
 not a vulnerability count or a full security clearance. The running guest kernel
 is 6.12.113+deb13-cloud-amd64; its build configuration disables GCOV. The separate
 GCOV header-package review does not assess the Proxmox host. Four individually
@@ -571,3 +569,105 @@ cross the disk floor; raw Java results remain retained, but complete archived
 Java replay is not claimed. No database refresh is part of these replay checks.
 
 - [Go JOSE RSA parsing advisory](https://github.com/go-jose/go-jose/security/advisories/GHSA-mgcc-cww5-fp2q) and [upstream 4.1.6 fix](https://github.com/go-jose/go-jose/commit/a0111f82742fa92bceec9ede40845e73319e6230).
+
+## Follow-up repairs deployed 28 October
+
+The following receipts record additional code/package repairs, not just scanner
+exclusions. No account content or service retention settings changed.
+
+| Receipt | Exact change | Verification |
+| --- | --- | --- |
+| `released-blkid.json` | Eight Bookworm images retain their ABI and receive the upstream EBR bounds fix in libblkid | Fourteen regular-file cases per old/new library; baseline invalid-partition acceptance reproduced; candidate rejects it and accepts valid partitions. Restricted upstream suite: 225 reported, 213 skipped, zero failures. Additional Actual, Gathio database, Kuma and RSS-Bridge consumer checks. |
+| `released-expat.json` | Addy, DeGoog, 4get, Kittygram and OpenGist receive signed Expat 2.9.0 on their existing Alpine branch | Four normal native checks on the old library; five on the new library including overflow rejection. Vulnerable memory corruption was not triggered. |
+| `released-postal.json` | Newsletter SMTP/jobs, newsletter web and RSSHub receive postal-mime 4.0.8 | Seven legitimate MIME checks per state; deterministic character-work regression; synthetic isolated SMTP-to-Atom and deletion; RSSHub native startup. No external mail sent. |
+| `released-pcre.json` | DeGoog receives signed Alpine 3.22 PCRE2 10.46-r1 | Seven native compile/JIT/capture/UTF-8/error checks per state; actual Bun application startup, form, readiness, 404 and privacy-header checks. This is compatibility evidence, not memory-corruption reproduction. |
+| `released-cryptpad-body.json` | One exact body-parser source file backported from upstream f7075eae in CryptPad's mounted code | Old process crash reproduced; seven normal parser checks per state and three lifecycle checks; complete disposable account/document/team/upload/import/export exercise. |
+| `released-host.json` | Host curl 8.23.0 and BIND client libraries 9.20.30 | Three curl library paths each pass seven native HTTP/TLS checks; legacy ABI/alias retained. BIND UDP A/AAAA/NXDOMAIN and TCP A pass; optional LMDB stays disabled. SSH/Docker PIDs and libc unchanged. |
+| `released-multer.json` | Gathio receives Multer 2.5.0, keeping the existing runtime dependencies and pnpm links | Old asynchronous-filter crash reproduced; candidate survives; eight normal memory/disk upload checks per state. Five additional checks per state execute the installed event/group/ICS upload configuration. Image decoding and a live-user upload are not claimed. |
+
+The libblkid replacement has SHA-256
+`e7c8ba644880df7594fef438046a271b389bc8e02688c72d58692928e1be854e`.
+Whole-image comparison permits only the declared library. Debian source-family
+findings repeat this advisory against sibling util-linux packages; the explicit
+reviewer checks the loaded library in each exact image before issuing an
+expiring mitigation. It does not exempt arbitrary util-linux findings.
+
+CryptPad's patch preserves body-parser 2.3.0 metadata, all dependency locks and
+the already repaired runtime image. An image update alone cannot repair this
+mounted code. Reinstalling its dependencies must replay `cryptpad-body.patch`
+against the exact preimage and rerun both tests; blindly copying an old
+`node_modules` directory is not the maintenance path. The source offer contains
+the full original library, exact upstream/contextual patches and test recipes.
+Old bytes remain privately available for a code-only rollback.
+
+### Replaying these repairs
+
+- `blkid.mjs` and `build-blkid.sh` use the exact inputs and detached regular-file
+  fixtures in `blkid-inputs.json`. `check-blkid-apps.mjs` checks the consumers;
+  `check-actual.mjs --blkid` supplies the separate Actual fixture.
+- `alpine.mjs --expat KEY...` and `alpine.mjs --pcre KEY...` reuse the signed
+  native package mechanism. Fixture manifests pin the source/header/compiler
+  and executable hashes. The PCRE application gate is
+  `patch-leaves-final/check-app.mjs degoog --pcre-oct28`.
+- `postal.mjs KEY...` uses the existing exact npm package builder;
+  `check-postal.mjs KEY...` verifies the actual libraries. The newsletter and
+  RSSHub companion fixtures are recorded in their private application receipts.
+- `body.mjs --multer gathio`, `check-multer.mjs` and `check-multer.mjs --consumer`
+  prepare and test the exact Gathio dependency replacement. Its current filters
+  are synchronous; the update removes the latent async-filter crash without
+  changing permissions or limits. The first isolated build tried replacing a
+  pnpm symlink and correctly failed its file-scope gate. The corrected candidate
+  replaces the resolved package directory and preserves the link. No failed
+  candidate was activated. Complete base source plus overlay is published in
+  `security-gathio-multer-20261028-source.tar.gz`, SHA-256
+  `aa69966daeca31ec34f088bc0eb26b2d526aa0a35ffc260b9d3af41c81b2be89`.
+- `cryptpad-body.mjs` prepares a clean one-file source candidate and regression
+  evidence. `application-leaves-final/braces-application.mjs --body-oct28`
+  reuses the existing full application fixture. `braces-release.mjs prepare
+  --body-oct28` checks the code-only scope; a separately authorized `apply`
+  verifies the exact same candidate, preserving rollback bytes and data.
+- Host preparation and native checks reuse `closure-followup/curl-host.mjs`,
+  `curl-host-native.mjs`, `build-bind.sh`, `check-bind.py` and `release-bind.mjs`
+  with their finite `--oct28` profiles. Inspect their command modes before use;
+  release commands are not audit commands.
+
+Image candidates require `scan-brotli.mjs --PROFILE KEY...` against the same
+recorded database, then `release-brotli.mjs prepare --PROFILE KEY...` and a
+separately authorized `apply`. Completed receipts are not overwritten. Package
+acquisition can use the named upstream; native tests/builds use restricted
+disposable namespaces and no production data. Historical replay does not mean
+current security clearance. Previous images and package archives remain for
+scope-specific rollback; none of these changes performs a database migration.
+
+### Exact review and operational limits
+
+The gosu helper's Go advisory is reviewed separately from genuine Go repairs.
+Five immutable image copies / fourteen roles contain the same helper hash.
+Its complete native Go function table contains no affected `crypto/x509`
+package; the inspector detects that package in a real TLS-capable positive
+control and rejects a malformed ELF. The expiring decision applies only to
+that helper and CVE-2026-111943. It does not excuse Kuma's TLS health helper or
+other Go binaries. Original findings are retained.
+
+Existing SimpleLogin, X-library, Next.js and vendor-package decisions are
+revalidated against exact live artifacts and retained source evidence. Next.js
+is an unreferenced optional peer in Reactive Resume's Hono deployment; this
+specific conclusion is not a blanket exception for Next.js applications.
+Reviews and ledger application run sequentially: concurrent ledger writers are
+not supported. New image keys require new evidence; copied decisions are not
+accepted. `followup-overlays.mjs` records only completed release chains.
+
+CryptPad, libblkid and BIND source archives were checked through the existing
+Caddy address with public SNI and normal certificate verification. This proves
+that route and the exact bytes, not outside-Internet reachability. The separate
+Caddy/Proxmox machines are outside this VM's scan. No reboot or SSH reload was
+performed. Remaining bootloader/SSH/guest-agent changes require their own
+reviewed scope and appropriate maintenance coordination.
+
+Primary follow-up references, checked 28 October 2026:
+[libblkid bounds fix](https://github.com/util-linux/util-linux/commit/05c2dbadf34cc74192287f377904afaaf4061623),
+[postal-mime advisory](https://github.com/postalsys/postal-mime/security/advisories/GHSA-f2hq-32vh-53cc),
+[body-parser advisory](https://github.com/expressjs/body-parser/security/advisories/GHSA-27r3-jxmh-p828),
+[Multer lifecycle advisory](https://github.com/expressjs/multer/security/advisories/GHSA-q7qp-rjg7-q26m),
+[Alpine PCRE2 package](https://pkgs.alpinelinux.org/package/v3.22/main/x86_64/pcre2),
+[Next.js advisory](https://github.com/vercel/next.js/security/advisories/GHSA-p3m5-59mp-jv5r).

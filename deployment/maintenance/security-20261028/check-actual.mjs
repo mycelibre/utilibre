@@ -1,6 +1,6 @@
 // Native application startup, disposable synthetic database, no outbound network.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';
-process.umask(0o077);assert(process.argv.slice(2).every(a=>a==='--node'));const root='/var/lib/utilibre-maintenance/security-20261028/'+(process.argv.includes('--node')?'node':'body')+'/actual',b=JSON.parse(fs.readFileSync(root+'/build.json')),rows=[];
+process.umask(0o077);assert(process.argv.slice(2).every(a=>['--node','--blkid'].includes(a)));const root='/var/lib/utilibre-maintenance/security-20261028/'+(process.argv.includes('--blkid')?'blkid/expanded-actual':(process.argv.includes('--node')?'node':'body')+'/actual'),b=JSON.parse(fs.readFileSync(root+'/build.json')),rows=[];
 const docker=(...a)=>cp.execFileSync('docker',a,{encoding:'utf8',timeout:30000,stdio:['ignore','pipe','pipe']}).trim();
 for(const imageId of [b.base,b.imageId]){
  const name='maintenance-actual-native';try{

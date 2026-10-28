@@ -1,0 +1,31 @@
+{
+  "version": "1:9.20.30-1~deb13u1+utilibre1",
+  "previous": "1:9.20.29-1~deb13u1+utilibre1",
+  "compiler": "sha256:ee8fc26dea36ef52ead356bfbb89bdfcc2785f4b51efdd94d01476f44ea4ca79",
+  "builderBase": "sha256:4cd9da5932965ac14ee70f3bd11c80acee56147ab4b2b638552aeee756815a49",
+  "builderPackagesSha256": "ae61d445341623731744e78e0b31bf0646363869f273c3fb3a72a8d08ad1e214",
+  "archives": {
+    "bind9_9.20.30-1~deb13u1.debian.tar.xz": "32dbfae3ec72ac2f4d64a624bfb650e3d7bd1b4e35dba67ff9d3026d252ed34d",
+    "bind9_9.20.30.orig.tar.xz": "9e1443a40a72a30272cbc3196d020a6b2e26937111c83e59e101e82e1e3b4fef",
+    "bind9_9.20.30-1~deb13u1.dsc": "6a25251ddfc51bd8c23606615fb1e705d1c8cf5a641b8533c8035e7663c92f8e"
+  },
+  "advisories": [
+    "CVE-2026-19630",
+    "CVE-2026-94300",
+    "CVE-2026-96888",
+    "CVE-2026-97313"
+  ],
+  "configuration": "Preserve --without-lmdb; host client and libraries only",
+  "packages": [
+    {
+      "name": "bind9-host",
+      "file": "bind9-host_9.20.30-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "6b7261fd452e031f46a2ce5187be5e9b7c2ce4797beccf6cbcba5c763cf174aa"
+    },
+    {
+      "name": "bind9-libs",
+      "file": "bind9-libs_9.20.30-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "ee3a438cac36d3d41de1f58e74c3d5b61cff2ed533db674f8fe8c6959c830926"
+    }
+  ]
+}

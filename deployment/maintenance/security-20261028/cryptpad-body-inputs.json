@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "application": "CryptPad 2026.9.0",
+  "revision": "c4a257e46919ba2e4e710c26f7e5dc067686e2b5",
+  "runtimeImage": "sha256:2297218097ca2cd0d4088d0d88e11767a8cb4aab3fb6d987b76eed2f5cb2f4e8",
+  "advisory": "CVE-2026-111181",
+  "upstreamCommit": "f7075eae3a84c3473ab4bf0a777da28db208e916",
+  "upstreamPatchSha256": "babc877af92b86e533a40372b6d6311d485d0f6778ceba079b69e9fb2d736ec7",
+  "packageVersion": "2.3.0",
+  "archiveUrl": "https://registry.npmjs.org/body-parser/-/body-parser-2.3.0.tgz",
+  "archiveIntegrity": "sha512-2cGmJupaNgg+QUwVLAucDuWuoMZ6EX9iHDRswZ5lsNYEmwPaRknMPCLZz07yTzVq/83p4o/wzbDZbBrTvGGTIw==",
+  "archiveSha256": "031d7f6c5142e31be91d36a43f541f02a505943e3b871aa44ef5fb6939be258e",
+  "file": "node_modules/body-parser/lib/read.js",
+  "beforeSha256": "7c5d356030c78f124a0e1b4b848f4e3845f69def18e61f14b62bba0f359c71b1",
+  "afterSha256": "cc16781fe08229643d98d645c3bcaf12cd9dc23a8a51b56dd187b1b5c93ee299",
+  "patchSha256": "34f1e140159b86b34eb5112bec7a73d6e9606d48ee18d4fac1da15f1849cc3a7",
+  "lockSha256": "41f8e684a93b0c8f98edce67db519ec733357e89682bf1bd9ff10464403a3fa5",
+  "adaptation": "Only hunk context and moving the existing opts.encoding===null charset check to its equivalent verify condition; added upstream guard/cleanup lines unchanged. Dependencies and package metadata preserved."
+}

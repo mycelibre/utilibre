@@ -9,7 +9,7 @@ import {eligible} from './review-policy.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',read=p=>JSON.parse(fs.readFileSync(p));
 const queue=read(root+'/security-queue.json'),scan=read(root+'/security.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
-const release=read(directory+'/penpot-release.json');assert.equal(release.status,'passed');assert.deepEqual(release.evidence,inputs().evidence);
+const release=read(directory+'/penpot-release.json');assert.equal(release.status,'passed');assert(Date.parse(release.completedAt)<=Date.parse(scan.date));assert.deepEqual(release.evidence,inputs({approvalAt:release.completedAt}).evidence);
 const svg=read(directory+'/native.json'),tiff=read(directory+'/tiff/native.json');
 for(const s of svg.records){assert(s.allOldSymbolsRetained&&s.nativeDependenciesUnchanged&&s.cases.length===2);assert(s.cases.every(c=>c.oldDuplicateAllocations===2&&c.newDuplicateAllocations===1&&c.pngBytesEqual));}
 for(const t of tiff.records)assert(t.cases.length===2&&t.cases.every(c=>c.eightCodecOldHeaderRoundtrips&&c.newCompressionRatioGuardApi&&c.rsvgSecurityRegressionStillPassed));

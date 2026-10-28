@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "advisory": "GHSA-f2hq-32vh-53cc",
+  "package": "postal-mime",
+  "source": "https://github.com/postalsys/postal-mime/security/advisories/GHSA-f2hq-32vh-53cc",
+  "rows": [
+    {
+      "key": "newsletters-mail",
+      "container": "utilibre-newsletters-smtp-1",
+      "containers": [
+        "utilibre-newsletters-smtp-1",
+        "utilibre-newsletters-jobs-1"
+      ],
+      "base": "sha256:171ed55a3eda8a62feb61ea0418df9e529bf8797c5c31cfbcc90c5bd5734d7ff",
+      "candidate": "utilibre-newsletters-mail:postal-security-20261028",
+      "roots": [
+        "/app",
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "postal": [
+          "/app/node_modules/postal-mime"
+        ]
+      },
+      "before": {
+        "/app/node_modules/postal-mime": "4.0.2"
+      }
+    },
+    {
+      "key": "newsletters-web",
+      "container": "utilibre-newsletters-web-1",
+      "containers": [
+        "utilibre-newsletters-web-1"
+      ],
+      "base": "sha256:2fac767a01a93a5be5c7488e6cf55191d205ca9ccb7844f52741e8fb85334e09",
+      "candidate": "utilibre-newsletters-web:postal-security-20261028",
+      "roots": [
+        "/app",
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "postal": [
+          "/app/node_modules/postal-mime"
+        ]
+      },
+      "before": {
+        "/app/node_modules/postal-mime": "4.0.2"
+      }
+    },
+    {
+      "key": "rsshub",
+      "container": "utilibre-services-rsshub-1",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "base": "sha256:8f2792976159f7578784288308e1f2796048dd653c7e762b9690782ac6da7339",
+      "candidate": "utilibre-rsshub:postal-security-20261028",
+      "roots": [
+        "/app",
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "postal": [
+          "/app/node_modules/.pnpm/postal-mime@4.0.4/node_modules/postal-mime"
+        ]
+      },
+      "before": {
+        "/app/node_modules/.pnpm/postal-mime@4.0.4/node_modules/postal-mime": "4.0.4"
+      }
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "advisories": [
+    "CVE-2026-77214"
+  ],
+  "packages": {
+    "3.22/libexpat-2.9.0-r0.apk": {
+      "name": "libexpat",
+      "version": "2.9.0-r0",
+      "file": "libexpat-2.9.0-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libexpat-2.9.0-r0.apk",
+      "sha256": "4c9fb621d455d12475767e261821a4be7b4e91e2ba19c20a02e7fa99189b0d6d",
+      "branch": "3.22"
+    },
+    "3.23/libexpat-2.9.0-r0.apk": {
+      "name": "libexpat",
+      "version": "2.9.0-r0",
+      "file": "libexpat-2.9.0-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/libexpat-2.9.0-r0.apk",
+      "sha256": "42a1cb48e3ef0b5d1744f2b341120369d0c045038cdb6c9d5a6dd5ba7d421910",
+      "branch": "3.23"
+    },
+    "3.24/libexpat-2.9.0-r0.apk": {
+      "name": "libexpat",
+      "version": "2.9.0-r0",
+      "file": "libexpat-2.9.0-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libexpat-2.9.0-r0.apk",
+      "sha256": "32b127f31e0a919110a18a7f0bb3780d8fb66ba4d8d61b2d301d633f0e319d0e",
+      "branch": "3.24"
+    }
+  },
+  "rows": [
+    {
+      "key": "addy",
+      "base": "sha256:123a93c57fb4ef7d609e3bf44f9617662325c32d5ac61da1ee1f991fe182d689",
+      "oldRef": "utilibre-addy:libraries-security-20261028",
+      "candidate": "utilibre-addy:expat-security-20261028",
+      "containers": [
+        "utilibre-addy-app-1"
+      ],
+      "release": "3.23.5",
+      "packages": {
+        "libexpat": {
+          "installed": "2.8.5-r0",
+          "package": "3.23/libexpat-2.9.0-r0.apk"
+        }
+      }
+    },
+    {
+      "key": "degoog",
+      "base": "sha256:645338c15f3407fc6f0ea1e14a973508d13dc374d2bdfcb561b8efb939556453",
+      "oldRef": "utilibre-degoog:undici-security-20261028",
+      "candidate": "utilibre-degoog:expat-security-20261028",
+      "containers": [
+        "utilibre-evaluation-degoog-1"
+      ],
+      "release": "3.22.4",
+      "packages": {
+        "libexpat": {
+          "installed": "2.8.5-r0",
+          "package": "3.22/libexpat-2.9.0-r0.apk"
+        }
+      }
+    },
+    {
+      "key": "fourget",
+      "base": "sha256:a5a63072d1a70aa089ebce213b727bb06989a442a8b1d39b1438916ce3357d5a",
+      "oldRef": "utilibre-fourget:libraries-security-20261028",
+      "candidate": "utilibre-fourget:expat-security-20261028",
+      "containers": [
+        "utilibre-reader-evaluation-fourget-1"
+      ],
+      "release": "3.23.6",
+      "packages": {
+        "libexpat": {
+          "installed": "2.8.5-r0",
+          "package": "3.23/libexpat-2.9.0-r0.apk"
+        }
+      }
+    },
+    {
+      "key": "kittygram",
+      "base": "sha256:bdb4537573628e6749f2eef75746885864c92160f81ebb2f6c96174776c97acf",
+      "oldRef": "utilibre-kittygram:libraries-security-20261028",
+      "candidate": "utilibre-kittygram:expat-security-20261028",
+      "containers": [
+        "utilibre-kittygram-kittygram-1"
+      ],
+      "release": "3.23.5",
+      "packages": {
+        "libexpat": {
+          "installed": "2.8.5-r0",
+          "package": "3.23/libexpat-2.9.0-r0.apk"
+        }
+      }
+    },
+    {
+      "key": "opengist",
+      "base": "sha256:c3d4f7b8444add357fa878e18923d4ea92dafad692ac04df33be4d26b03af0bd",
+      "oldRef": "utilibre-opengist:libraries-security-20261028",
+      "candidate": "utilibre-opengist:expat-security-20261028",
+      "containers": [
+        "utilibre-opengist-opengist-1"
+      ],
+      "release": "3.24.1",
+      "packages": {
+        "libexpat": {
+          "installed": "2.8.5-r0",
+          "package": "3.24/libexpat-2.9.0-r0.apk"
+        }
+      }
+    }
+  ]
+}

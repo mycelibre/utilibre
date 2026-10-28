@@ -5,11 +5,14 @@ import path from 'node:path';
 import {specs,output} from '../js-closure/specs.mjs';
 process.umask(0o077);
 const followup=process.argv[2]==='cache-followup';
+const postal=process.argv[2]==='--postal';assert(!process.argv[2]||followup||postal);
+const postalRoot='/var/lib/utilibre-maintenance/security-20261028/postal';
 const cacheRoot='/var/lib/utilibre-maintenance/closure-followup-20261012/cache';
 const cacheSpecs=followup?JSON.parse(fs.readFileSync('/var/lib/utilibre-maintenance/closure-followup-20261012/cache-inventory.json')).specs:[];
 const docker=(...a)=>{try{return cp.execFileSync('docker',a,{encoding:'utf8',timeout:60000,stdio:['ignore','pipe','pipe']}).trim();}catch(e){throw Error('Isolated native operation failed: '+String(e.stderr||e.message).slice(0,1500));}};
-for(const key of ['kuma','rsshub']){
- const s=followup?cacheSpecs.find(s=>s.key===(key==='kuma'?'cache-community-uptime-kuma':'cache-services-rsshub')):specs.find(s=>s.key===key),name='maintenance-closure-'+key;
+for(const key of postal?['rsshub']:['kuma','rsshub']){
+ const s=postal?JSON.parse(fs.readFileSync(postalRoot+'/rsshub/build.json')):followup?cacheSpecs.find(s=>s.key===(key==='kuma'?'cache-community-uptime-kuma':'cache-services-rsshub')):specs.find(s=>s.key===key),name='maintenance-closure-'+key;
+ assert.equal(docker('ps','-aq','--filter','name=^/'+name+'$'),'','Preserve an existing test container');
  const common=['--network','none','--read-only','--memory','1g','--cpus','1','--pids-limit','128','--cap-drop','ALL','--security-opt','no-new-privileges','--log-driver','none','--tmpfs','/tmp:rw,size=64m,mode=1777'];
  try{
   const extra=key==='kuma'?['--user','1000:1000','--tmpfs','/app/data:rw,size=128m,uid=1000,gid=1000','-e','UPTIME_KUMA_DB_TYPE=sqlite','-v',path.resolve('deployment/maintenance/sqlite-final/kuma-native.cjs')+':/check.cjs:ro']:['-e','NODE_ENV=production','-e','CACHE_TYPE=memory','-e','NO_LOGFILES=true','-e','LOGGER_LEVEL=error','-e','DEBUG_INFO=false'];
@@ -18,6 +21,7 @@ for(const key of ['kuma','rsshub']){
   for(let i=0;i<80;i++){try{docker('exec',name,'node','-e',`fetch(${JSON.stringify(url)}).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))`);ready=true;break;}catch{}await new Promise(r=>setTimeout(r,500));}assert(ready);
   if(key==='kuma')assert.match(docker('exec',name,'node','/check.cjs'),/authenticated Socket/);
   const result={date:new Date().toISOString(),imageId:docker('image','inspect',s.candidate,'--format','{{.Id}}'),passed:true,nativeStartup:true,nativeKumaSetupAndLogin:key==='kuma',network:'none',productionChanged:false,limitation:key==='rsshub'?'Native health endpoint plus isolated FTP API contracts; no external feed connector fetched.':'Synthetic local account; email uses separate native MIME contract, not real delivery.'};
-  fs.writeFileSync(followup?cacheRoot+'/'+s.key+'/application.json':output+'/'+key+'/native.json',JSON.stringify(result,null,2)+'\n');console.log(key+': native gate passed');
+  if(postal)result.limitation='Native health endpoint and separate exact MIME parser contracts; no external feed connector fetched.';
+  fs.writeFileSync(postal?postalRoot+'/rsshub/application.json':followup?cacheRoot+'/'+s.key+'/application.json':output+'/'+key+'/native.json',JSON.stringify(result,null,2)+'\n');console.log(key+': native gate passed');
  }finally{try{docker('rm','-f',name);}catch{}}
 }

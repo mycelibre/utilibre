@@ -9,7 +9,7 @@ assert(Date.parse(host.completedAt)<=Date.parse(scan.date));assert(Date.parse(re
 for(const s of source.sources){
  for(const a of s.archives)assert.equal(sha(dir+'/sources/'+s.suite+'/'+s.package+'/'+a.file),a.sha256);
  const native=specs.sources.find(n=>n.suite===s.suite&&n.package===s.package);assert(native);assert.equal(s.version,native.version+'+utilibre1');
- for(const fix of s.fixes){assert(specs.patches.some(p=>p.cve===fix.cve&&p.sha256===fix.sha256&&p.commit===fix.commit));assert.equal(sha(dir+'/patches/'+fix.cve+'.patch'),fix.sha256);cp.execFileSync('patch',['-p1','--fuzz=0','--batch','--reverse','--force','--dry-run','-i',dir+'/patches/'+fix.cve+'.patch'],{cwd:fs.existsSync(dir+'/work/'+s.suite+'/'+s.package)?dir+'/work/'+s.suite+'/'+s.package:root+'/security-20261028/review-sources/xlib/'+s.suite+'/'+s.package,stdio:'pipe',timeout:30000});}
+ for(const fix of s.fixes){assert(specs.patches.some(p=>p.cve===fix.cve&&p.sha256===fix.sha256&&p.commit===fix.commit));assert.equal(sha(dir+'/patches/'+fix.cve+'.patch'),fix.sha256);cp.execFileSync('git',['apply','--reverse','--check',dir+'/patches/'+fix.cve+'.patch'],{cwd:fs.existsSync(dir+'/work/'+s.suite+'/'+s.package)?dir+'/work/'+s.suite+'/'+s.package:root+'/security-20261028/review-sources/xlib/'+s.suite+'/'+s.package,stdio:'pipe',timeout:30000});}
  const build=dir+'/build/'+(s.suite==='dhi'?'trixie':s.suite);assert.equal(sha(build+'/'+s.suite+'-'+s.package+'-build.log'),s.buildLogSha256);assert.equal(sha(build+'/'+s.suite+'-'+s.package+'-patches.log'),s.patchLogSha256);
 }
 const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:30000,maxBuffer:1024**2,stdio:['ignore','pipe','pipe']}).trim(),docker=(...a)=>run('docker',a);

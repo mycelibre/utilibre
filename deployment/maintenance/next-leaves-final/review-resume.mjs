@@ -55,6 +55,7 @@ assert.equal(evidence.betterAuth,'1.7.7');assert.equal(evidence.nextOptional,tru
 assert.equal(evidence.rootExport,'./dist/index.mjs');assert.equal(evidence.nextExport,'./dist/integrations/next-js.mjs');
 assert.equal(evidence.rootImportsNext,false);assert.equal(evidence.production,true);assert.equal(evidence.pidOneIsExpected,true);
 const advisories={
+ 'CVE-2026-94482':['GHSA-p3m5-59mp-jv5r','Next App Router Server Action request parsing'],
  'GHSA-2464-fhr4-w9xw':['GHSA-2464-fhr4-w9xw','Next Image Optimization SVG decoding on glibc'],
  'GHSA-673q-mjm6-r5xr':['GHSA-673q-mjm6-r5xr','Next App Router Cache Components typed-array deserialization'],
  'CVE-2026-94483':['GHSA-cjq9-62q9-8jv4','Next Image Optimization remote-host SSRF'],
@@ -70,7 +71,7 @@ assert.equal(scan.status,'checked');assert.equal(queue.scanDate,scan.completedAt
 assert(Date.now()-Date.parse(scan.completedAt)<86400000);
 assert.equal(scan.images.find(x=>x.id===image)?.status,'checked');
 const items=queue.items.filter(i=>i.artifact===image&&i.package==='next'&&i.installed==='16.3.6'&&advisories[i.id]);
-assert.equal(items.length,8,'Expected exact eight reviewed findings, otherwise re-review');
+assert.equal(items.length,Object.keys(advisories).length,'Expected exact reviewed advisory set, otherwise re-review');
 const reviews=items.map(i=>validateDecision({key:i.key,status:'not-affected',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:
  `${i.id} requires ${advisories[i.id][1]}. Exact Resume image ${image.slice(7,19)} is a production Hono server, not a Next server: its hash-bound index imports @hono/node-server and serves app.fetch; PID1 invokes that entry through the checked discovery wrapper. All 56 compiled server modules lack Next/BetterAuth Next integration imports. Next 16.3.6 is only Better Auth 1.7.7's optional peer; its next-js integration is a separate unreferenced export. No Next optimizer/router/cache/dev endpoint is served. https://github.com/vercel/next.js/security/advisories/${advisories[i.id][0]} . Package remains installed; this expires and does not cover another image, source-only finding, or another CVE.`}));
 mkdirSync(dir,{recursive:true,mode:0o700});

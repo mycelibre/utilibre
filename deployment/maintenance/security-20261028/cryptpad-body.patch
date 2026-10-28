@@ -1,0 +1,51 @@
+--- a/lib/read.js
++++ b/lib/read.js
+@@ -85,6 +85,15 @@
+   // read options
+   const verify = opts.verify
+ 
++  // assert charset is supported before creating the decompression stream, so an
++  // unsupported charset cannot leave a decoder piped with no error listener
++  if (verify && encoding !== null && !iconv.encodingExists(encoding)) {
++    return next(createError(415, 'unsupported charset "' + encoding.toUpperCase() + '"', {
++      charset: encoding.toLowerCase(),
++      type: 'charset.unsupported'
++    }))
++  }
++
+   try {
+     // get the content stream
+     stream = contentstream(req, debug, opts.inflate)
+@@ -99,14 +108,6 @@
+   opts.encoding = verify
+     ? null
+     : encoding
+-
+-  // assert charset is supported
+-  if (opts.encoding === null && encoding !== null && !iconv.encodingExists(encoding)) {
+-    return next(createError(415, 'unsupported charset "' + encoding.toUpperCase() + '"', {
+-      charset: encoding.toLowerCase(),
+-      type: 'charset.unsupported'
+-    }))
+-  }
+ 
+   // read body
+   debug('read body')
+@@ -136,6 +137,17 @@
+         next(createError(400, _error))
+       })
+       return
++    }
++
++    // detach and destroy the decompression stream to
++    // avoid decompression errors on the finished stream
++    if (stream !== req) {
++      req.unpipe(stream)
++      stream.on('error', () => {})
++      stream.destroy()
++
++      // consume any remaining bytes so the HTTP request can finish
++      req.resume()
+     }
+ 
+     // verify

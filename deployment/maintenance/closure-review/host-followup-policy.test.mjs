@@ -2,6 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {hostFollowupStatus, hostFollowupReviews} from './host-followup-policy.mjs';
 const ssh = {scope:'host-os',type:'debian',package:'openssh-server',installed:'1:10.0p1-7+deb13u4+utilibre2',id:'CVE-2026-59999'};
+test('10.3 revalidation cannot clear unpatched GSSAPI extensions or another release', () => {
+  const file='security-20261028/ssh-review.json';
+  const current={...ssh,installed:'1:10.3p1-1~bpo13+1+utilibre1'};
+  assert.equal(hostFollowupStatus(file,current),'mitigated');
+  assert.equal(hostFollowupStatus(file,{...current,package:'openssh-client'}),'not-affected');
+  assert.equal(hostFollowupStatus(file,{...current,package:'openssh-client',id:'CVE-2026-106583'}),'mitigated');
+  for (const override of [{id:'CVE-2026-106553'},{id:'CVE-2026-106555'},{installed:'1:10.3p1-1~bpo13+1'},{scope:'runtime-image'}])
+    assert.throws(()=>hostFollowupStatus(file,{...current,...override}));
+});
 test('SSH exact tested server/client split, including retained client fix', () => {
   for (const id of ['CVE-2026-59999','CVE-2026-60000','CVE-2026-60002']) {
     for (const pkg of ['openssh-server','openssh-client','openssh-sftp-server']) {

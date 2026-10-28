@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-28T17:00:17.098Z",
+  "status": "deployed-and-verified",
+  "scope": "Multer 2.5.0 in Gathio; exact existing dependency graph",
+  "roles": [
+    {
+      "name": "utilibre-gathio-gathio-1",
+      "oldRef": "utilibre-gathio:node-security-20261028",
+      "oldImage": "sha256:c2fa27d554e3af8ad4cd06f9daa512473cc4f5c63792ab7cf05b7606dadbcaa9",
+      "newRef": "utilibre-gathio:multer-security-20261028",
+      "newImage": "sha256:51471b115a25104f7daa1523e9c3eb09eb8dfb55b5e20553e194aa057c1e35d2"
+    }
+  ]
+}

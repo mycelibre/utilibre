@@ -7,6 +7,7 @@ export const hostFollowupReviews = [
   'host-cryptography-followup-20261012/review-mitigated.json',
   'host-cryptography-followup-20261012/review-not-affected.json',
   'xserver-followup-20261012/host-review.json',
+  'security-20261028/ssh-review.json',
 ];
 
 // Mixed status is allowed only for the explicitly tested server/client split,
@@ -15,6 +16,13 @@ export function hostFollowupStatus(file, item) {
   assert(hostFollowupReviews.includes(file));
   assert.equal(item.scope, 'host-os');
   assert.equal(item.type, 'debian');
+  if (file === 'security-20261028/ssh-review.json') {
+    assert.equal(item.installed, '1:10.3p1-1~bpo13+1+utilibre1');
+    assert(['openssh-client', 'openssh-server', 'openssh-sftp-server'].includes(item.package));
+    assert(['CVE-2026-106583', 'CVE-2026-59999', 'CVE-2026-60000'].includes(item.id));
+    const affected = item.id === 'CVE-2026-106583' ? 'openssh-client' : 'openssh-server';
+    return item.package === affected ? 'mitigated' : 'not-affected';
+  }
   if (file === 'xserver-followup-20261012/host-review.json') {
     assert(xserverEligible({...item,status:'needs-review'}), 'Exact host Xserver release and three proved CVEs only');
     return 'mitigated';

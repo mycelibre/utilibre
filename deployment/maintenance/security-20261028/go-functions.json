@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "compiler": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+  "sourceSha256": "75eda7fa86cdf973c552a6e15fdace34938076189aa8b8da5244c0c566420020",
+  "binarySha256": "54ada1fc55dd222f01328751f46ecd2777ad021848e9a5148495ee31e743778b",
+  "command": [
+    "go",
+    "build",
+    "-trimpath",
+    "-o",
+    "/out/inspect-recorded",
+    "/recipe/go-functions.go"
+  ],
+  "environment": {
+    "CGO_ENABLED": "0",
+    "GOTOOLCHAIN": "local",
+    "GOPROXY": "off",
+    "GOCACHE": "/tmp/gocache"
+  },
+  "network": "none",
+  "controlSha256": "f1950a6eb7ee50347f8f5876b9b3c4b672f7c705e5f434798e0f073cbc694152",
+  "advisory": "https://pkg.go.dev/vuln/GO-2026-6809",
+  "scope": "ELF amd64 Go function-table inspection only; no inspected executable is run"
+}

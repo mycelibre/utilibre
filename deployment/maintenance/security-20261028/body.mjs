@@ -1,8 +1,9 @@
 // Finite same-major body-parser fixes, retaining the reviewed dependency graph.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';
 import {buildExactPackages} from '../js-closure/build.mjs';
-const data=JSON.parse(fs.readFileSync(new URL('./body-inputs.json',import.meta.url))),keys=process.argv.slice(2);
-const root='/var/lib/utilibre-maintenance/security-20261028/body';
+assert(process.argv.filter(a=>a==='--multer').length<=1,'Duplicate profile');
+const profile=process.argv.includes('--multer')?'multer':'body',data=JSON.parse(fs.readFileSync(new URL('./'+profile+'-inputs.json',import.meta.url))),keys=process.argv.slice(2).filter(a=>a!=='--multer');
+const root='/var/lib/utilibre-maintenance/security-20261028/'+profile;
 assert(keys.length&&new Set(keys).size===keys.length&&keys.every(k=>data.rows.some(s=>s.key===k)));
 for(const key of keys){
  const s=data.rows.find(s=>s.key===key);assert(!fs.existsSync(root+'/'+key+'/build.json'));

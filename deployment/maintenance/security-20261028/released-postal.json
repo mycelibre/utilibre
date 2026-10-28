@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-28T16:13:38.152Z",
+  "status": "deployed-and-verified",
+  "scope": "postal-mime 4.0.8; exact dependency replacement only",
+  "advisory": "GHSA-f2hq-32vh-53cc",
+  "roles": [
+    {
+      "name": "utilibre-newsletters-smtp-1",
+      "oldRef": "utilibre-newsletters-mail-jobs:caddy-jose-security-20261028",
+      "oldImage": "sha256:171ed55a3eda8a62feb61ea0418df9e529bf8797c5c31cfbcc90c5bd5734d7ff",
+      "newRef": "utilibre-newsletters-mail:postal-security-20261028",
+      "newImage": "sha256:bb52bc3941c480aae7626f68cfd380a653e06e06b0240500b982d0792c31a3f5"
+    },
+    {
+      "name": "utilibre-newsletters-jobs-1",
+      "oldRef": "utilibre-newsletters-mail-jobs:caddy-jose-security-20261028",
+      "oldImage": "sha256:171ed55a3eda8a62feb61ea0418df9e529bf8797c5c31cfbcc90c5bd5734d7ff",
+      "newRef": "utilibre-newsletters-mail:postal-security-20261028",
+      "newImage": "sha256:bb52bc3941c480aae7626f68cfd380a653e06e06b0240500b982d0792c31a3f5"
+    },
+    {
+      "name": "utilibre-newsletters-web-1",
+      "oldRef": "utilibre-newsletters-web:caddy-jose-security-20261028",
+      "oldImage": "sha256:2fac767a01a93a5be5c7488e6cf55191d205ca9ccb7844f52741e8fb85334e09",
+      "newRef": "utilibre-newsletters-web:postal-security-20261028",
+      "newImage": "sha256:2eb96752465fb47f4e0d92828e37c3336637451e3b395baec3871fd4a8748463"
+    },
+    {
+      "name": "utilibre-services-rsshub-1",
+      "oldRef": "utilibre-rsshub:node-security-20261028",
+      "oldImage": "sha256:8f2792976159f7578784288308e1f2796048dd653c7e762b9690782ac6da7339",
+      "newRef": "utilibre-rsshub:postal-security-20261028",
+      "newImage": "sha256:fa4f60fbdf592198d3bb5548513aef795b8c890916627ae5d72ac070bd39be27"
+    }
+  ]
+}

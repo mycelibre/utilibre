@@ -87,4 +87,9 @@ export const additionalOverlayReceipts = [
  'security-20261028/jose/release.json',
  'security-20261028/jose-caddy/release.json',
  'security-20261028/jose-leaf/release.json',
+ 'security-20261028/blkid/release.json',
+ 'security-20261028/expat/release.json',
+ 'security-20261028/postal/release.json',
+ 'security-20261028/pcre/release.json',
+ 'security-20261028/multer/release.json',
 ];
