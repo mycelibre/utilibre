@@ -1,0 +1,96 @@
+{
+  "date": "2026-10-28T12:17:50.965266+00:00",
+  "status": "passed",
+  "rows": [
+    {
+      "name": "utilibre-trip-app-1",
+      "oldRef": "utilibre-trip:authlib-security-20261028",
+      "oldImage": "sha256:b062c67b98bb6a765a8a93ca8b35e0b17f56dc45b77f87e4229479f7759543fa",
+      "newRef": "utilibre-trip:dnspython-security-20261028",
+      "newImage": "sha256:1672cf8b8ced84de4144fa828c3c2e399d701c632e46b7c32cae6ab6f49ee307",
+      "key": "trip",
+      "status": "passed",
+      "completedAt": "2026-10-28T12:14:13.175Z"
+    },
+    {
+      "name": "utilibre-records-candlr-1",
+      "oldRef": "utilibre-candlr:node-security-20261028",
+      "oldImage": "sha256:bb6aeb80a016157bd5b94cad513ed8173a181504e0927aa58ae0fd4395f9a1c5",
+      "newRef": "utilibre-candlr:dnspython-security-20261028",
+      "newImage": "sha256:2ad46bd8212514a07689d3027fbb30d432ca5a8c53d2a16a790c6f99461c9fbf",
+      "key": "candlr",
+      "status": "passed",
+      "completedAt": "2026-10-28T12:14:21.774Z"
+    },
+    {
+      "name": "utilibre-beaverhabits-app-1",
+      "oldRef": "utilibre-beaverhabits:aiohttp-certifi-20261021",
+      "oldImage": "sha256:fabcbb34c98b89e6de79564512827215481ba956ea716538db5bccaeaf289352",
+      "newRef": "utilibre-beaverhabits:dnspython-security-20261028",
+      "newImage": "sha256:83c5a717a0bd56321abeccbfbdd01d4c0aeb23f5d7ac94d067bcc21f89f55100",
+      "key": "beaverhabits",
+      "status": "passed",
+      "completedAt": "2026-10-28T12:14:28.013Z"
+    },
+    {
+      "name": "utilibre-pack-forms-app-1",
+      "oldRef": "utilibre-liberaforms:brotli-security-20261028",
+      "oldImage": "sha256:843abb8ef1a11fdc204589280924ed05818e666bf44f3b0ba41f46e09c1c1dd9",
+      "newRef": "utilibre-liberaforms:dnspython-security-20261028",
+      "newImage": "sha256:2b220ae0f073e16214dd569afbce5668f6b7fc34fdda4ee8357159713b0c9d03",
+      "key": "liberaforms",
+      "status": "passed",
+      "completedAt": "2026-10-28T12:14:35.970Z"
+    },
+    {
+      "name": "utilibre-identity-server-1",
+      "oldRef": "utilibre-authentik:brotli-security-20261028",
+      "oldImage": "sha256:488cb7a185d5a80b8c2d05999e385610a73a019a5ed825264de2d29487eb61a8",
+      "newRef": "utilibre-authentik:dnspython-security-20261028",
+      "newImage": "sha256:254de1f47955dbc5ab8dc8a56b937ae939e5824cce9091c675f0178533824d29",
+      "key": "authentik",
+      "status": "passed",
+      "completedAt": "2026-10-28T12:15:05.202Z"
+    },
+    {
+      "name": "utilibre-identity-worker-1",
+      "oldRef": "utilibre-authentik:brotli-security-20261028",
+      "oldImage": "sha256:488cb7a185d5a80b8c2d05999e385610a73a019a5ed825264de2d29487eb61a8",
+      "newRef": "utilibre-authentik:dnspython-security-20261028",
+      "newImage": "sha256:254de1f47955dbc5ab8dc8a56b937ae939e5824cce9091c675f0178533824d29",
+      "key": "authentik",
+      "status": "passed",
+      "completedAt": "2026-10-28T12:15:05.202Z"
+    },
+    {
+      "name": "utilibre-simplelogin-web-1",
+      "oldRef": "utilibre-simplelogin:brotli-security-20261028",
+      "oldImage": "sha256:2a1c6bb3108532dae41f958f796eb475aa1efc1e7fc972440d43ad783ddd3b02",
+      "newRef": "utilibre-simplelogin:dnspython-security-20261028",
+      "newImage": "sha256:58f6bcc27ca7232de5b53e4f5c70144987fbaeaddf4969807daf9581be28a6c0",
+      "key": "simplelogin",
+      "status": "passed",
+      "completedAt": "2026-10-28T12:15:26.600Z"
+    },
+    {
+      "name": "utilibre-simplelogin-smtp-1",
+      "oldRef": "utilibre-simplelogin:brotli-security-20261028",
+      "oldImage": "sha256:2a1c6bb3108532dae41f958f796eb475aa1efc1e7fc972440d43ad783ddd3b02",
+      "newRef": "utilibre-simplelogin:dnspython-security-20261028",
+      "newImage": "sha256:58f6bcc27ca7232de5b53e4f5c70144987fbaeaddf4969807daf9581be28a6c0",
+      "key": "simplelogin",
+      "status": "passed",
+      "completedAt": "2026-10-28T12:15:26.600Z"
+    },
+    {
+      "name": "utilibre-simplelogin-jobs-1",
+      "oldRef": "utilibre-simplelogin:brotli-security-20261028",
+      "oldImage": "sha256:2a1c6bb3108532dae41f958f796eb475aa1efc1e7fc972440d43ad783ddd3b02",
+      "newRef": "utilibre-simplelogin:dnspython-security-20261028",
+      "newImage": "sha256:58f6bcc27ca7232de5b53e4f5c70144987fbaeaddf4969807daf9581be28a6c0",
+      "key": "simplelogin",
+      "status": "passed",
+      "completedAt": "2026-10-28T12:15:26.600Z"
+    }
+  ]
+}

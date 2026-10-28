@@ -37,7 +37,12 @@ export function headerOverlap(paths,inventory){
 // One individually reviewed kernel-build advisory, not a general Makefile exception.
 export function gcovBuildPaths(body,id){
  assert.equal(id,'CVE-2026-63825');
- assert.equal(createHash('sha256').update(body).digest('hex'),'78b61b2f6f339988f1b63c51a5c8c16eae0036cff21efe2c574e961530e8133d');
+ // Both inspected immutable CNA records still name only the kernel Makefile.
+ // The October 21 revision expands fixed-version/scenario metadata; it does
+ // not place GCOV instrumentation in the installed userspace header package.
+ assert(['78b61b2f6f339988f1b63c51a5c8c16eae0036cff21efe2c574e961530e8133d',
+  'bb4530be37fbc92b5edb6e15c42c5d52e1fb3b5e69bcba22f42ee6e03cebe6ab']
+  .includes(createHash('sha256').update(body).digest('hex')),'Changed primary record needs review');
  const r=JSON.parse(body);assert.equal(r.cveMetadata.cveId,id);assert.equal(r.cveMetadata.state,'PUBLISHED');
  const c=r.containers.cna;assert.equal(c.providerMetadata.shortName,'Linux');
  assert(c.affected.length&&c.affected.every(a=>a.product==='Linux'&&a.vendor==='Linux'&&JSON.stringify(a.programFiles)==='["Makefile"]'));

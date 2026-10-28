@@ -67,12 +67,13 @@ export function verifyRepairedSource(){
  if(sourceProof)return sourceProof;
  const offer=read(root+'/source-offer.json');assert(offer.published);assert.equal(offer.sha256,sourceSha);assert.equal(fileSha(offer.archive),sourceSha);
  const pins={'context.c':'390463047eb65c5500b2cc77d46d17c5c027a36051c842f840c5f6f5418a501e','context_mount.c':'b1e1c51705f3089cc82c7730add3c3bb391d93988b891de236a6e9f700412a46'};
- const source=work+'/source/libmount/src',files=Object.fromEntries(fs.readdirSync(source).filter(f=>/\.(?:c|h)$/.test(f)).map(f=>[f,fs.readFileSync(source+'/'+f,'utf8')]));
+ const reviewSource=fs.existsSync(work+'/source/libmount/src')?work+'/source':'/var/lib/utilibre-maintenance/security-20261028/review-sources/mount/source';
+ const source=reviewSource+'/libmount/src',files=Object.fromEntries(fs.readdirSync(source).filter(f=>/\.(?:c|h)$/.test(f)).map(f=>[f,fs.readFileSync(source+'/'+f,'utf8')]));
  for(const[p,h]of Object.entries(pins))assert.equal(sha(files[p]),h);
  legacyAbsence(files);
- const patch=work+'/source/debian/patches/utilibre-legacy-target-pinning.patch';assert.equal(fileSha(patch),'45d2b7ba1de8747b07b1d8c1926db572e4a2baf9a76c9a3d01551c86695baed5');
- cp.execFileSync('patch',['-p1','--fuzz=0','--batch','--reverse','--force','--dry-run','-i',patch],{cwd:work+'/source',stdio:'pipe',timeout:15000});
- const native=read(root+'/native.json');assert.equal(fileSha(work+'/output/build.log'),native.upstreamBuildLogSha256);
+ const patch=reviewSource+'/debian/patches/utilibre-legacy-target-pinning.patch';assert.equal(fileSha(patch),'45d2b7ba1de8747b07b1d8c1926db572e4a2baf9a76c9a3d01551c86695baed5');
+ cp.execFileSync('patch',['-p1','--fuzz=0','--batch','--reverse','--force','--dry-run','-i',patch],{cwd:reviewSource,stdio:'pipe',timeout:15000});
+ const native=read(root+'/native.json');assert.equal(fileSha(root+'/output/upstream-build.log'),native.upstreamBuildLogSha256);
  sourceProof={source,pins,sourceArchiveSha256:sourceSha,patchSha256:fileSha(patch),forcedReverseZeroFuzz:true,absentHooksAndSubdir:true,files:Object.fromEntries(Object.entries(files).map(([f,b])=>[f,sha(b)]))};return sourceProof;
 }
 export function repairedBookwormEvidence(i,scan){

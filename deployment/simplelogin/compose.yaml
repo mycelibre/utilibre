@@ -1,6 +1,6 @@
 name: utilibre-simplelogin
 x-app: &app
-  image: utilibre-simplelogin:brotli-security-20261028
+  image: utilibre-simplelogin:dnspython-security-20261028
   user: '1000:1000'
   read_only: true
   cap_drop: [ALL]

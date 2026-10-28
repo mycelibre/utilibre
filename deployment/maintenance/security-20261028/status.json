@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-28T12:25:35.825245+00:00",
+  "scanCompletedAt": "2026-10-28T12:18:19.475Z",
+  "scannerStatus": "checked",
+  "runningImagesAssessed": 109,
+  "rawRecords": 23975,
+  "rawCritical": 66,
+  "rawHigh": 3206,
+  "awaitingReviewCritical": 0,
+  "awaitingReviewHigh": 375,
+  "meaning": "Package/artifact records, not distinct exploitable vulnerabilities. Reviewed fixes/component attributions remain in raw scans. This is not full security clearance.",
+  "completedThisCheckpoint": [
+    "Caddy compiler and prior x/net preservation",
+    "Yopass/FMD native Go rebuilds",
+    "Donetick/LibreSpeed native Go rebuilds",
+    "TRIP Authlib 1.9.1",
+    "Five dnspython 2.9.0 images and SimpleLogin upstream backport",
+    "Exact prior-patch revalidation and retained-source reconstruction"
+  ],
+  "unresolved": [
+    "Go JOSE RSA JWK parsing advisory in several applications",
+    "Zod error-amplification advisory needs per-application input analysis",
+    "Django REST Framework advisories need compatibility checks",
+    "Remaining host/native and tracked build-input findings",
+    "SimpleLogin public 502 predates this batch; native login gateway responds",
+    "LibreSpeed outside-Internet reachability not established from this VM"
+  ],
+  "tests": {
+    "releaseAndPolicyTestsPassed": 43,
+    "dnspythonImages": 6,
+    "dnspythonRoles": 9,
+    "dnspythonNativeConsumerChecksPerImage": 10,
+    "dnspythonMalformedCasesPerImage": 3
+  },
+  "deployment": "Recorded exact releases are live; running images and readiness verified. No further reboot performed.",
+  "capacity": "Root disk about 8.5 GiB free, with an 8 GiB maintenance floor. Existing 220 GiB guest device fully partitioned; further capacity must be assigned in Proxmox. Temporary disk is reserved and was not repurposed."
+}

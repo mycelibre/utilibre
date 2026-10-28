@@ -9,7 +9,7 @@ export function verifyTiffcropScope(image){
  const archive=root+'/sources/tiff_4.7.2.orig.tar.bz2';assert.equal(sha(fs.readFileSync(archive)),'c5086d8f7c5ba51ca98241f24a8bd1cb66218c399077aeccbf6a236cf3152acc');
  const source=run('tar',['-xOf',archive,'libtiff-v4.7.2/tools/tiffcrop.c']);
  const built=run('tar',['-xOf',root+'/output/tiff-4.7.2-bookworm-source.tar.xz','source/tools/tiffcrop.c']);assert.equal(built,source);
- assert.equal(fs.readFileSync('/var/lib/utilibre-maintenance/sudo-followup-20261012/bookworm/work/tiff-followup/source/tools/tiffcrop.c','utf8').trim(),source);
+ assert.equal(fs.readFileSync((fs.existsSync('/var/lib/utilibre-maintenance/sudo-followup-20261012/bookworm/work/tiff-followup/source/tools/tiffcrop.c')?'/var/lib/utilibre-maintenance/sudo-followup-20261012/bookworm/work/tiff-followup/source/tools/tiffcrop.c':'/var/lib/utilibre-maintenance/security-20261028/review-sources/tiff/source/tools/tiffcrop.c'),'utf8').trim(),source);
  const normalized=source.replace(/\s+/g,'');
  assert.equal((normalized.match(/if\(page->cols>\(MAX_SECTIONS\/page->rows\)\)/g)||[]).length,2);
  assert.equal((normalized.match(/if\(\(page->cols==0\)\|\|\(page->rows==0\)\)/g)||[]).length,2);

@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "advisory": "CVE-2026-114605",
+  "sourceCommit": "b485e460c266540a1a09ca6d8d1d7b685b1d3023",
+  "patchSha256": "a7699e4b99691236f4d34cdc3c59dbde44a45459bcae63ac45b2d3f3e08fbcb5",
+  "license": "ISC",
+  "wheel": {
+    "file": "dnspython-2.9.0-py3-none-any.whl",
+    "url": "https://files.pythonhosted.org/packages/10/02/cdcc9b7c051786a103c3b09e1003a82fa0c66bcb91ffbdabcfbf7b4163b9/dnspython-2.9.0-py3-none-any.whl",
+    "sha256": "9a4aedb833c3c1b49214d04d44d3032ab7a9135f7c1d29a549b4ff78fd82fda9",
+    "version": "2.9.0"
+  },
+  "rows": [
+    {
+      "key": "candlr",
+      "base": "sha256:bb6aeb80a016157bd5b94cad513ed8173a181504e0927aa58ae0fd4395f9a1c5",
+      "oldRef": "utilibre-candlr:node-security-20261028",
+      "containers": [
+        "utilibre-records-candlr-1"
+      ],
+      "python": "python",
+      "site": "/usr/local/lib/python3.12/site-packages",
+      "previous": "2.8.0",
+      "candidate": "utilibre-candlr:dnspython-security-20261028",
+      "method": "upstream-wheel"
+    },
+    {
+      "key": "beaverhabits",
+      "base": "sha256:fabcbb34c98b89e6de79564512827215481ba956ea716538db5bccaeaf289352",
+      "oldRef": "utilibre-beaverhabits:aiohttp-certifi-20261021",
+      "containers": [
+        "utilibre-beaverhabits-app-1"
+      ],
+      "python": "/app/.venv/bin/python",
+      "site": "/app/.venv/lib/python3.13/site-packages",
+      "previous": "2.8.0",
+      "candidate": "utilibre-beaverhabits:dnspython-security-20261028",
+      "method": "upstream-wheel"
+    },
+    {
+      "key": "liberaforms",
+      "base": "sha256:843abb8ef1a11fdc204589280924ed05818e666bf44f3b0ba41f46e09c1c1dd9",
+      "oldRef": "utilibre-liberaforms:brotli-security-20261028",
+      "containers": [
+        "utilibre-pack-forms-app-1"
+      ],
+      "python": "/app/venv/bin/python",
+      "site": "/app/venv/lib/python3.13/site-packages",
+      "previous": "2.6.1",
+      "candidate": "utilibre-liberaforms:dnspython-security-20261028",
+      "method": "upstream-wheel"
+    },
+    {
+      "key": "authentik",
+      "base": "sha256:488cb7a185d5a80b8c2d05999e385610a73a019a5ed825264de2d29487eb61a8",
+      "oldRef": "utilibre-authentik:brotli-security-20261028",
+      "containers": [
+        "utilibre-identity-server-1",
+        "utilibre-identity-worker-1"
+      ],
+      "python": "/ak-root/.venv/bin/python",
+      "site": "/ak-root/.venv/lib/python3.14/site-packages",
+      "previous": "2.8.0",
+      "candidate": "utilibre-authentik:dnspython-security-20261028",
+      "method": "upstream-wheel"
+    },
+    {
+      "key": "simplelogin",
+      "base": "sha256:2a1c6bb3108532dae41f958f796eb475aa1efc1e7fc972440d43ad783ddd3b02",
+      "oldRef": "utilibre-simplelogin:brotli-security-20261028",
+      "containers": [
+        "utilibre-simplelogin-web-1",
+        "utilibre-simplelogin-smtp-1",
+        "utilibre-simplelogin-jobs-1"
+      ],
+      "python": "/code/.venv/bin/python",
+      "site": "/code/.venv/lib/python3.12/site-packages",
+      "previous": "2.7.0",
+      "candidate": "utilibre-simplelogin:dnspython-security-20261028",
+      "method": "upstream-backport",
+      "beforeSha256": "05fdf5ef440784b14b0e732c59e2728a4e22f6e7010db218e81c9d733f07fb6a",
+      "afterSha256": "2ede698e9a8dabc2dc2333d7df400d8792762b6d0a3a593616484e6d286a3d75"
+    },
+    {
+      "key": "trip",
+      "base": "sha256:b062c67b98bb6a765a8a93ca8b35e0b17f56dc45b77f87e4229479f7759543fa",
+      "oldRef": "utilibre-trip:authlib-security-20261028",
+      "containers": [
+        "utilibre-trip-app-1"
+      ],
+      "python": "python",
+      "site": "/usr/local/lib/python3.12/site-packages",
+      "previous": "2.8.0",
+      "candidate": "utilibre-trip:dnspython-security-20261028",
+      "method": "upstream-wheel"
+    }
+  ]
+}

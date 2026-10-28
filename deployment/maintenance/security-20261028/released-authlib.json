@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-28T11:49:20.255955+00:00",
+  "status": "passed",
+  "rows": [
+    {
+      "name": "utilibre-trip-app-1",
+      "oldRef": "utilibre-trip:pillow-certifi-20261021",
+      "oldImage": "sha256:c6ec074ace87cd3c29e25b5d76fdb59988b793cfa80bdea6e8300a30a5698049",
+      "newRef": "utilibre-trip:authlib-security-20261028",
+      "newImage": "sha256:b062c67b98bb6a765a8a93ca8b35e0b17f56dc45b77f87e4229479f7759543fa",
+      "key": "trip",
+      "status": "passed",
+      "completedAt": "2026-10-28T11:46:31.160Z"
+    }
+  ]
+}

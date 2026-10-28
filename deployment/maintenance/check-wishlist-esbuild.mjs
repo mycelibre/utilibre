@@ -5,17 +5,19 @@ import {randomBytes} from 'node:crypto';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {chromium} from '../../portal/node_modules/playwright/index.mjs';
 process.umask(0o077);
-const netReview=process.argv[2]==='--caddy-net';
+const oct28=process.argv[2]==='--oct28';
+const netReview=process.argv[2]==='--caddy-net'||oct28;
 const caddyReview=process.argv[2]==='--caddy'||netReview;
 const appLeaves=process.argv[2]==='--app-leaves';
 const closure=process.argv[2]==='--closure';
 assert(!process.argv[2]||caddyReview||appLeaves||closure,'Only explicit review candidates are supported');
-const image=closure?'utilibre-wishlist:0.67.1-js-closure-20261012':appLeaves?'utilibre-wishlist:0.67.1-mysql-security-20261011':caddyReview?'utilibre-wishlist:0.67.1-caddy-security-20261011'+(netReview?'-p2':''):'utilibre-wishlist:0.67.1-esbuild-security-20261011';
-const name='maintenance-wishlist-security-stage',base='http://127.0.0.1:32795';
+const image=oct28?'utilibre-wishlist:caddy-go-security-20261028':closure?'utilibre-wishlist:0.67.1-js-closure-20261012':appLeaves?'utilibre-wishlist:0.67.1-mysql-security-20261011':caddyReview?'utilibre-wishlist:0.67.1-caddy-security-20261011'+(netReview?'-p2':''):'utilibre-wishlist:0.67.1-esbuild-security-20261011';
+const name='maintenance-wishlist-security-stage',network=name+'-isolated';let base='http://127.0.0.1:32795',address,createdNetwork=false;
 const docker=(...args)=>execFileSync('docker',args,{encoding:'utf8',stdio:['ignore','pipe','pipe'],timeout:60000});
 let browser,created=false;
 try{
- docker('run','-d','--name',name,'--network','bridge','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--memory','512m','--cpus','1','--pids-limit','128','--log-driver','none','--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777','--tmpfs','/usr/src/app/data:rw,nosuid,nodev,noexec,size=64m,uid=1000,gid=1000','--tmpfs','/usr/src/app/uploads:rw,nosuid,nodev,noexec,size=16m,uid=1000,gid=1000','-p','127.0.0.1:32795:3280','-e','ORIGIN='+base,'-e','CHECKPOINT_DISABLE=1','-e','PRISMA_HIDE_UPDATE_MESSAGE=1','-e','LOG_LEVEL=warn','-e','XDG_CONFIG_HOME=/tmp/caddy-config','-e','XDG_DATA_HOME=/tmp/caddy-data',image);
+ if(oct28){docker('network','create','--internal',network);createdNetwork=true;const subnet=JSON.parse(docker('network','inspect',network))[0].IPAM.Config[0].Subnet;address=execFileSync('python3',['-c','import ipaddress,sys;print(ipaddress.ip_network(sys.argv[1])[10])',subnet],{encoding:'utf8'}).trim();base='http://'+address+':3280';}
+ docker('run','-d','--name',name,'--network',oct28?network:'bridge',...(oct28?['--ip',address]:[]),'--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--memory','512m','--cpus','1','--pids-limit','128','--log-driver','none','--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777','--tmpfs','/usr/src/app/data:rw,nosuid,nodev,noexec,size=64m,uid=1000,gid=1000','--tmpfs','/usr/src/app/uploads:rw,nosuid,nodev,noexec,size=16m,uid=1000,gid=1000',...(oct28?[]:['-p','127.0.0.1:32795:3280']),'-e','ORIGIN='+base,'-e','CHECKPOINT_DISABLE=1','-e','PRISMA_HIDE_UPDATE_MESSAGE=1','-e','LOG_LEVEL=warn','-e','XDG_CONFIG_HOME=/tmp/caddy-config','-e','XDG_DATA_HOME=/tmp/caddy-data',image);
  created=true;
  let ready=false;
  for(let i=0;i<90;i++){
@@ -52,11 +54,12 @@ try{
  const denied=await fetch(base+listPath,{redirect:'manual'});assert([302,303,307].includes(denied.status));
  assert.deepEqual([...outside],[]);assert.deepEqual(errors,[]);
  const report={checkedAt:new Date().toISOString(),image,imageId:docker('image','inspect',image,'--format','{{.Id}}').trim(),nativeBlankDatabaseStartup:true,esbuildVersion:'0.19.12',typescriptTransform:true,nativeAccountCreated:true,listCreated:true,itemCreated:true,reloadPersistence:true,anonymousListDenied:true,pageErrors:errors,externalBrowserOrigins:[...outside],limitation:'Disposable local account only; production OIDC, backups and email not re-tested.'};
- const directory=closure?'/var/lib/utilibre-maintenance/js-closure-20261012/wishlist':appLeaves?'/var/lib/utilibre-maintenance/app-leaves-20261011':caddyReview?'/var/lib/utilibre-maintenance/caddy-security-20261011'+(netReview?'/net':''):'/var/lib/utilibre-maintenance/browser-binaries-20261011';
+ const directory=oct28?'/var/lib/utilibre-maintenance/security-20261028/caddy':closure?'/var/lib/utilibre-maintenance/js-closure-20261012/wishlist':appLeaves?'/var/lib/utilibre-maintenance/app-leaves-20261011':caddyReview?'/var/lib/utilibre-maintenance/caddy-security-20261011'+(netReview?'/net':''):'/var/lib/utilibre-maintenance/browser-binaries-20261011';
  await mkdir(directory,{recursive:true,mode:0o700});
  await writeFile(directory+'/wishlist-stage.json',JSON.stringify(report,null,2)+'\n',{mode:0o600});
  console.log('Wishlist exact esbuild API, migrations/seed/patch, native account/list/item/reload and anonymous denial passed. No external browser requests.');
 }finally{
  if(browser)await browser.close();
  if(created)try{docker('rm','-f',name);}catch{}
+ if(createdNetwork)docker('network','rm',network);
 }

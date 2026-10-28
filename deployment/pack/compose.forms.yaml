@@ -21,7 +21,7 @@ services:
       timeout: 3s
       retries: 5
   app:
-    image: utilibre-liberaforms:brotli-security-20261028
+    image: utilibre-liberaforms:dnspython-security-20261028
     restart: unless-stopped
     depends_on: {db: {condition: service_healthy}}
     user: '4002:4002'

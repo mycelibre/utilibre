@@ -237,12 +237,106 @@ with prior copies retained. Complete Anubis/FerretDB sources are in
 `security-go-closure-20261028-source.tar.gz`, SHA-256
 `b4ad92e1e2868c0c9ad7162f090ad957efb739b74c718b19c86d4b24f1e802cb`.
 
-## Remaining work in this batch
+## Completed Caddy, Go service and Authlib repairs
 
-Other embedded Go executables still need assessment; the three embedded Caddy
-candidates are undergoing isolated checks. The final fleet
-assessment and remaining specific finding reviews are not complete. No blanket
-exception is granted to descendants of repaired images.
+`released-caddy.json` records three images/four roles: Wishlist and the
+newsletter web, SMTP and jobs roles. Caddy 2.11.7 retains the earlier x/net
+0.60.0 correction and now uses Go 1.26.10. Native HTTP/TLS proxy, compression,
+SSE and HTTP/2 checks pass. Two-account Wishlist isolation and a fictional
+newsletter SMTP-to-Atom/delete journey pass in isolated networks. No real email
+was sent. Complete corresponding source is retained in
+`security-caddy-20261028-source.tar.gz`.
+
+`released-go-runtime.json` records Yopass (Go 1.27.3, original CGO setting) and
+FMD (Go 1.26.10). Native encryption/decryption, burn-on-read, concurrent retrieval,
+expiry and oversized rejection pass for Yopass. Two synthetic FMD accounts pass
+opaque-record storage/retrieval, account isolation, token/control CLI and deletion
+checks. No real phone or command delivery is involved. Source/module locks and
+previous configuration are preserved. Source offer:
+`security-go-runtime-20261028-source.tar.gz`.
+
+`released-go-services.json` records Donetick (Go 1.27.3) and LibreSpeed
+(Go 1.26.10). Donetick passes two-account creation/read/delete and isolation;
+254 embedded frontend assets are byte-checked in both executables by
+`check-donetick-assets.py`. An upstream quirk returns 500 for some denied/missing
+lookups in both baseline and candidate; the other account receives no chore
+content. LibreSpeed passes a bounded 1 MiB download, 64 KiB upload and ping on an
+internal test network. Its existing Caddy address passes verified TLS with the
+public hostname, but direct public IPv4 times out from this VM. This is **not**
+an outside-Internet or connection-speed result. Source offer:
+`security-go-services-20261028-source.tar.gz`.
+
+`released-authlib.json` records TRIP's Authlib 1.9.1 repair. Empty-signature JWS
+and empty HMAC-key acceptance are reproduced in the old dependency and rejected
+after the repair. Valid signatures, wrong-key rejection and TRIP's actual OIDC
+client factory pass with a mocked HTTP provider; state mismatches are rejected.
+No real account or identity provider is exercised. The first 1.9.0 candidate was
+rejected because another high-severity Authlib advisory remained. Its evidence
+is retained; only 1.9.1 was deployed. The future wheel pin is captured in
+`deployment/trip/runtime-wheels.txt`.
+
+Each release preserves unrelated image files and configuration, retains its
+previous image, uses the existing transactional release/rollback gates and
+passes same-database scans. Run the corresponding finite profile through
+`scan-brotli.mjs`, `go-final/verify.py` and `release-brotli.mjs`; preparation and
+activation remain separate commands. Source-offer receipts record archive
+SHA-256 and provenance. Go compiler-only rebuilds preserve dependency versions;
+they do **not** fix subsequently disclosed Go JOSE module vulnerabilities.
+
+## Completed DNS parser repair
+
+`released-dnspython.json` records six application images/nine roles: TRIP,
+Candlr, BeaverHabits, LiberaForms, Authentik and SimpleLogin. Five use the pinned
+upstream dnspython 2.9.0 wheel. SimpleLogin requires the 2.7 series; its sole
+source change is the upstream 11-line pointer-chain guard, with context adapted
+to that release's older parser type annotation. `dnspython-pointer-chain.patch`
+and both source hashes are captured in `dnspython-inputs.json`. No fuzzy replay
+or dependency-constraint override is allowed.
+
+Each old dependency accepts the small 17-pointer reproduction; every repaired
+candidate rejects it, accepts the legitimate 16-pointer boundary, rejects three
+malformed inputs and passes ten UDP/TCP A/AAAA/MX/TXT plus email-validator
+consumer checks on isolated loopback. No external DNS or real email is used.
+The full filesystem comparison permits only the dependency's files (and removal
+of its own old bytecode for wheel installs); unrelated dependencies, application
+files, trust-store repair and image configuration remain unchanged. All six
+same-database comparisons add no high/critical findings. SimpleLogin keeps its
+original version metadata, so its remaining scanner record needs the explicit
+live-byte reviewer, `review-dnspython.mjs`; it is not silently suppressed.
+
+Replay uses `dnspython.mjs KEY...`, `scan-brotli.mjs --dnspython KEY...`, then
+`go-final/verify.py --dnspython-oct28 KEY...` (the existing shared image comparator,
+not a claim that these Python applications use Go). Prepare and separately
+authorize activation with `release-brotli.mjs prepare|apply --dnspython KEY...`.
+All nine roles passed exact-image, native health and existing-route checks.
+SimpleLogin's already-present public 502 remains; its local login route passes.
+The library repair does not claim to repair the separately managed edge route.
+
+## Evidence durability and remaining assessment
+
+`restore-review-sources.py` reconstructs older mount, HEIF, TIFF and X-library reviewer source trees from
+checksum-pinned retained source offers with networking disabled. It does not
+rebuild or deploy applications. The existing native-library reviewers still
+check exact source/patch and running-library bytes. The October curl profile in
+`closure-followup/review-curl.mjs` verifies complete native tests, completed
+release chains and actual library/package hashes before proposing individual
+expiring decisions. Raw scanner findings remain intact.
+
+The 28 October 11:53 UTC fleet scan completed all 109 running image assessments
+plus host and tracked-source coverage. After the explicit reviews, no critical
+records await review; high-severity work remains. This is not an all-clear:
+raw scanner counts include previously repaired packages and component
+misattribution, while unresolved Go JOSE, Zod, Django REST Framework and host
+findings require separate work. The private `security-queue.json` is the current
+source of counts, including replacement-image revalidation. No blanket exception
+is granted to descendants of repaired images or to all packages in a container.
+
+Only completed compiler/module caches were compressed, archive-compared and
+removed in expanded form to preserve the 8 GiB free-space floor. Their archives,
+checksums and restore paths remain under the private batch directory. No runtime
+content, saved account work, backup or rollback image was removed. More disk
+capacity must be assigned in Proxmox before another guest filesystem expansion;
+the current 220 GiB device has no unallocated space.
 
 ## Sources checked 28 October 2026
 
@@ -255,3 +349,30 @@ exception is granted to descendants of repaired images.
 - [body-parser advisory](https://github.com/expressjs/body-parser/security/advisories/GHSA-27r3-jxmh-p828).
 - [Node October security release](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases).
 - [curl-impersonate v2.3.1 security release](https://github.com/lexiforest/curl-impersonate/releases/tag/v2.3.1).
+
+- [Authlib signature advisory](https://github.com/authlib/authlib/security/advisories/GHSA-6v38-4h7w-rj9h)
+  and [1.9.1 release](https://github.com/authlib/authlib/releases/tag/v1.9.1).
+- [dnspython pointer-chain advisory](https://github.com/rthalley/dnspython/security/advisories/GHSA-45c3-73f7-pv4m)
+  and [exact upstream fix](https://github.com/rthalley/dnspython/commit/b485e460c266540a1a09ca6d8d1d7b685b1d3023).
+
+Validation: 43 existing release, rollback, curl-policy and backport-scope tests
+pass. The recorded scanner is Trivy 0.75.0; the DNS/Authlib comparisons use
+advisory data updated 28 October 2026 at 07:10:42 UTC, SHA-256
+`2c8f4b04f224aded9ecd149b9b5304146736668220dfa403403358fb423a52fd`.
+Each before/after pair checks that its database remains unchanged. Older batch
+comparisons retain their own database identity; they are not relabelled with the
+newer snapshot. Current versus archived assessments remain separate.
+
+The final checkpoint is recorded in `status.json`: all 109 running image scans
+completed, with zero critical and 375 high records awaiting review. Raw results
+retain 66 critical and 3,206 high records, including exact repaired package and
+component-attribution decisions. These numbers are package/artifact occurrences,
+not a vulnerability count or a full security clearance. The running guest kernel
+is 6.12.113+deb13-cloud-amd64; its build configuration disables GCOV. The separate
+GCOV header-package review does not assess the Proxmox host.
+
+The exact core Trivy advisory database and metadata are retained in the private
+`utilibre-advisory-db-20261028.tar.gz`, with checksums in `advisory-snapshot.json`.
+Java's extraction database was not archived because the combined archive would
+cross the disk floor; raw Java results remain retained, but complete archived
+Java replay is not claimed. No database refresh is part of these replay checks.

@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-28T11:49:20.254903+00:00",
+  "status": "passed",
+  "rows": [
+    {
+      "name": "utilibre-wishlist-app-1",
+      "oldRef": "utilibre-wishlist:node-security-20261028",
+      "oldImage": "sha256:4e67eda729ae56385d88710c731d64bc6d63908826a7bf80252d0b4774e2eda1",
+      "newRef": "utilibre-wishlist:caddy-go-security-20261028",
+      "newImage": "sha256:4cdd2bd8826593ac6516e0cd3d380bf14f2b5238a928d096c84c7ca78d17246a",
+      "key": "caddy-wishlist",
+      "status": "passed",
+      "completedAt": "2026-10-28T11:11:58.595Z"
+    },
+    {
+      "name": "utilibre-newsletters-web-1",
+      "oldRef": "utilibre-newsletters-web:node-security-20261028",
+      "oldImage": "sha256:355f3c7c6c1858348a946ef93b5450ee4dee90455a3f1a41b9d4cc0e7da162a8",
+      "newRef": "utilibre-newsletters-web:caddy-go-security-20261028",
+      "newImage": "sha256:0b06677804dc4d700a9bf740d3ea1af2d0b08195fdb9b81a5e3fc8e7d61ef30b",
+      "key": "caddy-newsletters-web",
+      "status": "passed",
+      "completedAt": "2026-10-28T11:12:07.180Z"
+    },
+    {
+      "name": "utilibre-newsletters-smtp-1",
+      "oldRef": "utilibre-newsletters-smtp:node-security-20261028",
+      "oldImage": "sha256:bb5327e945f5fb43841310ff614964d0942deae6dbb922b86571e00b97e98a01",
+      "newRef": "utilibre-newsletters-mail-jobs:caddy-go-security-20261028",
+      "newImage": "sha256:012a4baae0efd3e28e213228c8940d17847413e740f593af1403a88e132059c1",
+      "key": "caddy-newsletters-mail-jobs",
+      "status": "passed",
+      "completedAt": "2026-10-28T11:12:15.138Z"
+    },
+    {
+      "name": "utilibre-newsletters-jobs-1",
+      "oldRef": "utilibre-newsletters-smtp:node-security-20261028",
+      "oldImage": "sha256:bb5327e945f5fb43841310ff614964d0942deae6dbb922b86571e00b97e98a01",
+      "newRef": "utilibre-newsletters-mail-jobs:caddy-go-security-20261028",
+      "newImage": "sha256:012a4baae0efd3e28e213228c8940d17847413e740f593af1403a88e132059c1",
+      "key": "caddy-newsletters-mail-jobs",
+      "status": "passed",
+      "completedAt": "2026-10-28T11:12:15.138Z"
+    }
+  ],
+  "sourceOffer": {
+    "date": "2026-10-28T11:19:29.010Z",
+    "filename": "security-caddy-20261028-source.tar.gz",
+    "bytes": 13150851,
+    "sha256": "14e0610014505042174c3dd36870fa96d6b42cc663ef81239a6f6b6b8aa7f641",
+    "published": true,
+    "scope": "Pinned source and build instructions; no operator configuration, logs or user data"
+  }
+}

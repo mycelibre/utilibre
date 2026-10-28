@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "advisory": "CVE-2026-111943",
+  "rows": [
+    {
+      "key": "yopass",
+      "base": "sha256:6c193ee48e73d27af3360288fc577803add0743cfc33845e2430153da77b6390",
+      "oldRef": "utilibre-yopass:14.10.0-go-openssl-security-20261011",
+      "candidate": "utilibre-yopass:go-security-20261028",
+      "containers": [
+        "utilibre-community-yopass-1"
+      ],
+      "previousCompiler": "1.27.2",
+      "compilerVersion": "1.27.3",
+      "binary": "/yopass",
+      "binaries": [
+        "/yopass",
+        "/yopass-server"
+      ],
+      "sourceRevision": "34d8bbcc4aac14dbf326d46dc69d26895b7f5282",
+      "sourceArchiveSha256": "d748b36307f59353836320cf2d6c1f46c737efb9afc3c8e2ec5bec39c835602f",
+      "cgo": true
+    },
+    {
+      "key": "fmd",
+      "base": "sha256:a092682df501ab35bbbde42638c9374131debd7d297a15f1cf3d09495b522858",
+      "oldRef": "utilibre-fmd:0.17.0-go-security-20261011",
+      "candidate": "utilibre-fmd:go-security-20261028",
+      "containers": [
+        "utilibre-additions-fmd-1"
+      ],
+      "previousCompiler": "1.26.9",
+      "compilerVersion": "1.26.10",
+      "binary": "/opt/fmd-server",
+      "binaries": [
+        "/opt/fmd-server",
+        "/opt/fmd-server-ctl"
+      ],
+      "sourceRevision": "224b60c0756ff363bc19063082a8a1543559cf96",
+      "sourceArchiveSha256": "750bd9e56d2ab77434a88b0167b2495c5399d5c5390946be736595c80cc6ff40",
+      "cgo": false
+    }
+  ],
+  "compilerImage": "golang:1.27.3-bookworm@sha256:e482b31b5d30c31f9e495f4b8cbdf41429b2d74955dfbcd9c0a904483d738390",
+  "fmdGorootImage": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f"
+}

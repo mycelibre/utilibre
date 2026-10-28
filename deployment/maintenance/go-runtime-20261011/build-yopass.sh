@@ -1,16 +1,19 @@
 #!/bin/sh
 set -eu
-test "$(go version)" = 'go version go1.27.2 linux/amd64'
+test "$(go version)" = "go version go${EXPECTED_GO:-1.27.2} linux/amd64"
 echo 'd748b36307f59353836320cf2d6c1f46c737efb9afc3c8e2ec5bec39c835602f  /input/yopass-source.tar' | sha256sum -c -
+mkdir -p /work/tmp
+export TMPDIR=/work/tmp GOTMPDIR=/work/tmp
 cd /work
 git clone --quiet --shared --no-checkout /source-git source
 cd source
 git checkout --quiet --detach 34d8bbcc4aac14dbf326d46dc69d26895b7f5282
 test "$(git archive HEAD | sha256sum | cut -d' ' -f1)" = d748b36307f59353836320cf2d6c1f46c737efb9afc3c8e2ec5bec39c835602f
 export GOTOOLCHAIN=local GOTELEMETRY=off GOFLAGS=-mod=readonly
-export GOMAXPROCS=2 GOMEMLIMIT=2GiB GOCACHE=/work/cache GOMODCACHE=/work/mod
+export GOMAXPROCS=2 GOMEMLIMIT=2GiB GOCACHE=/work/cache GOMODCACHE=${MODULE_CACHE:-/work/mod}
 export CGO_ENABLED=1 GOOS=linux GOARCH=amd64
-go mod download
+if [ "${GO_PHASE:-}" = download ]; then go mod download all; go mod verify; exit; fi
+if [ "${GO_PHASE:-}" != build ]; then go mod download; fi
 go mod verify
 go build -buildvcs=true -o /output/yopass ./cmd/yopass
 go build -buildvcs=true -ldflags='-X main.version=14.10.0' -o /output/yopass-server ./cmd/yopass-server

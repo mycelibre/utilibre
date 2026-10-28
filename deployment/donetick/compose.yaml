@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-donetick:0.1.80-p3
+    image: utilibre-donetick:go-security-20261028
     user: '1000:1000'
     env_file: /opt/utilibre/donetick/private/app.env
     environment:

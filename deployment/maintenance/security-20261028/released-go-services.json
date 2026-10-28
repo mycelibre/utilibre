@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-28T11:49:20.255758+00:00",
+  "status": "passed",
+  "rows": [
+    {
+      "name": "utilibre-donetick-app-1",
+      "oldRef": "utilibre-donetick:0.1.80-p3",
+      "oldImage": "sha256:1d9860d039030b43c93c7191c67fbfdc16262e8aac47f99fcbddb8b7095e1942",
+      "newRef": "utilibre-donetick:go-security-20261028",
+      "newImage": "sha256:7a372e8e0c298219f7f93b423785f0f7cba6d66817cedf19453192ed3574624b",
+      "key": "donetick",
+      "status": "passed",
+      "completedAt": "2026-10-28T11:39:14.682Z"
+    },
+    {
+      "name": "utilibre-librespeed-backend-1",
+      "oldRef": "utilibre-librespeed:1.1.6-p1",
+      "oldImage": "sha256:863c8b54dcfd1222fbc48f7601eb5890a51dd4fb52eda780a31b5b9a3e4dbb0f",
+      "newRef": "utilibre-librespeed:go-security-20261028",
+      "newImage": "sha256:7dcb12e07bf0f3a47397fd00a51f0621764f8a2f1cb054292e341777a3262348",
+      "key": "librespeed",
+      "status": "passed",
+      "completedAt": "2026-10-28T11:41:24.018Z",
+      "routeCheck": "Existing Caddy private address with public Host/SNI and verified TLS. Direct public IPv4 times out from this VM; outside-Internet reachability not established here."
+    }
+  ],
+  "sourceOffer": {
+    "date": "2026-10-28T11:44:34.680Z",
+    "filename": "security-go-services-20261028-source.tar.gz",
+    "bytes": 15551029,
+    "sha256": "91c0821708ab1bf64fa33c75bea03adb50489492a115850d1534b61c14ad475a",
+    "published": true,
+    "scope": "Pinned source and build instructions; no operator configuration, logs or user data"
+  }
+}

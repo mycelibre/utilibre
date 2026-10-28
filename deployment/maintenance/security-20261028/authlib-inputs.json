@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-96760",
+  "primarySource": "https://github.com/authlib/authlib/releases/tag/v1.9.1",
+  "rows": [
+    {
+      "key": "trip",
+      "base": "sha256:c6ec074ace87cd3c29e25b5d76fdb59988b793cfa80bdea6e8300a30a5698049",
+      "oldRef": "utilibre-trip:pillow-certifi-20261021",
+      "candidate": "utilibre-trip:authlib-security-20261028",
+      "containers": [
+        "utilibre-trip-app-1"
+      ],
+      "site": "/usr/local/lib/python3.12/site-packages",
+      "wheel": {
+        "file": "authlib-1.9.1-py2.py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/39/44/a46089266de32a0d809023b6bf31b80a1f26a46954446a7ce695a565cbea/authlib-1.9.1-py2.py3-none-any.whl",
+        "sha256": "8b9be8b1e5174dcbf5520e984f1a22dc2edae5b6e40a61d4cedbf86b97e9e69b"
+      }
+    }
+  ],
+  "additionalAdvisories": [
+    "CVE-2026-114615",
+    "CVE-2026-114616"
+  ]
+}

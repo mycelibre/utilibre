@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-111943",
+  "rows": [
+    {
+      "key": "donetick",
+      "sourceRevision": "e88d8bea62405ca02288f93dd70efab8c0f1ff2c",
+      "sourceArchiveSha256": "4a561be81c742c2b95227472bf4d6be3343006cd40f59a422510ba09e981a3d5",
+      "binary": "/donetick",
+      "binaries": [
+        "/donetick"
+      ],
+      "compilerVersion": "1.27.3",
+      "previousCompiler": "1.27.2",
+      "candidate": "utilibre-donetick:go-security-20261028",
+      "containers": [
+        "utilibre-donetick-app-1"
+      ],
+      "base": "sha256:1d9860d039030b43c93c7191c67fbfdc16262e8aac47f99fcbddb8b7095e1942",
+      "oldRef": "utilibre-donetick:0.1.80-p3"
+    },
+    {
+      "key": "librespeed",
+      "sourceRevision": "7bbfadeeed710500752496f952bbcfb66ab3bdb9",
+      "sourceArchiveSha256": "006ceaf424b01bf0354b23f3346e718a271982b7c4f3cdcf3639ea40d32db782",
+      "binary": "/app/speedtest",
+      "binaries": [
+        "/app/speedtest"
+      ],
+      "compilerVersion": "1.26.10",
+      "previousCompiler": "1.26.9",
+      "candidate": "utilibre-librespeed:go-security-20261028",
+      "containers": [
+        "utilibre-librespeed-backend-1"
+      ],
+      "base": "sha256:863c8b54dcfd1222fbc48f7601eb5890a51dd4fb52eda780a31b5b9a3e4dbb0f",
+      "oldRef": "utilibre-librespeed:1.1.6-p1"
+    }
+  ]
+}
