@@ -11,11 +11,17 @@ import requests
 ROOT = Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/output')
 IMAGES = ['sha256:f8643c2525c96b3c5708bb737f71759bfc4c01a745301a8a7dbcba609f9c6416',
           'utilibre-mezzo:1.4.0-go-security-20261011']
-assert all(a in ['--oct28','--inside'] for a in sys.argv[1:])
+assert all(a in ['--oct28','--trust-oct28','--inside'] for a in sys.argv[1:])
+TRUST='--trust-oct28' in sys.argv
 OCT28='--oct28' in sys.argv
+assert not (TRUST and OCT28)
 if OCT28:
     ROOT=Path('/var/lib/utilibre-maintenance/security-20261028/go-leaf/output')
     spec=next(s for s in json.loads((Path(__file__).resolve().parent/'../security-20261028/go-helpers-inputs.json').read_text())['rows'] if s['key']=='mezzo')
+    IMAGES=[spec['base'],spec['candidate']]
+if TRUST:
+    ROOT=Path('/var/lib/utilibre-maintenance/security-20261028/trust/mezzo')
+    spec=next(s for s in json.loads((Path(__file__).resolve().parent/'../security-20261028/trust-inputs.json').read_text())['rows'] if s['key']=='mezzo')
     IMAGES=[spec['base'],spec['candidate']]
 def docker(*args):
     return subprocess.check_output(['docker', *args], text=True, stderr=subprocess.PIPE).strip()
@@ -62,5 +68,7 @@ assert results[0]['version'] == results[1]['version']
 report = {'passed': True, 'imageId': results[1]['imageId'], 'checks': results,
           'network': 'none; fixture enters the isolated loopback namespace',
           'limitation': 'Local frontend/error paths plus upstream scraper fixtures; no live Tenor query.'}
-(ROOT/'mezzo-native.json').write_text(json.dumps(report, indent=2)+'\n')
+output=ROOT/('application.json' if TRUST else 'mezzo-native.json')
+assert not TRUST or not output.exists(), 'Preserve completed assessment'
+output.write_text(json.dumps(report, indent=2)+'\n')
 print(json.dumps(report))

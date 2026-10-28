@@ -48,6 +48,8 @@ export function absentComponent(item,files){
   return 'the separate Perl Archive::Tar module _read_tar function';
  if(item.id==='CVE-2026-34980'&&['libcups2','libcups2t64'].includes(item.package)&&!files.some(p=>/\/(?:cupsd|cups-exec)(?:\.|$)|\/scheduler\//.test(p)))
   return 'the cupsd scheduler job option/PPD control parsing, not the CUPS client library; upstream repair 8d0f51cac24cb5bf949c5b6a221e51a150d982e3 changes scheduler/job.c only';
+ if(item.id==='CVE-2026-55453'&&['libcups2','libcups2t64'].includes(item.package)&&!files.some(p=>/\/(?:cupsd|cups-exec|foomatic-rip)(?:\.|$)|\/(?:backend|scheduler)\//.test(p)))
+  return 'the CUPS ipp backend status-line/PPD injection, not libcups IPP parsing. Upstream GHSA-7hqf-mfhx-7r3v and d41cf0616688721e9d435d54118c4c8a36ed596a change backend/ipp.c quote_string only; no client-library source is changed';
  if(item.id==='CVE-2026-74860'&&['libxml2','libxml2-dev','libxml2-utils'].includes(item.package)&&!files.some(p=>/python|libxml2mod|libxml2\.py/i.test(p)))
   return 'the separate libxml2 Python SAX binding libxml_xmlSAXAttributeDecl (not the C library or lxml); upstream fix f41e1865781f74d1cadfe2fbdfeefed946026f12 changes python/libxml.c';
  return null;
@@ -79,7 +81,9 @@ export function run(){
   const reason=`Component-specific advisory: ${component}. This exact installed ${item.package} ${item.installed} dpkg file inventory contains none of that component. Binary subpackage attribution only: the affected sibling package and any same-image findings remain open. https://security-tracker.debian.org/tracker/${item.id} . No claim that the entire source package, service or host is safe.`;
   rows.push(validateDecision({key:item.key,status:'not-affected',reason,expiresAt:new Date(Date.now()+7*86400000).toISOString()}));
  }
- fs.writeFileSync(base+'binary-scope-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions:rows,skipped},null,2)+'\n',{mode:0o600});
+ const report=JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions:rows,inventories:[...cache],skipped},null,2)+'\n';
+ fs.writeFileSync(base+'binary-scope-review-'+Date.now()+'.json',report,{mode:0o600,flag:'wx'});
+ fs.writeFileSync(base+'binary-scope-review.json',report,{mode:0o600});
  console.log(JSON.stringify({exactBinaryFindingsReviewed:rows.length,inventoryGroups:cache.size,unverifiedGroups:skipped.length,applied:false}));
  return rows;
 }

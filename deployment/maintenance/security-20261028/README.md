@@ -4,6 +4,51 @@ This batch extends the existing native-package, exact-JavaScript-package and
 transactional release scripts. It does not replace the maintenance system.
 No LLM is part of replay, tests or release checks.
 
+## Completed trust-store update
+
+`released-trust.json` records Anubis and Mezzo updated to Wolfi's
+`ca-certificates-bundle` **20261020-r0**, preserving their application binaries,
+configuration and earlier Go repairs. The signed repository index authenticates
+the exact package; Wolfi does not sign each APK separately. No untrusted-package
+override is used. Acquisition identities and source are in `trust-inputs.json`.
+
+The native installer runs in a disposable partial filesystem with no network,
+scripts or production mounts. Whole-image comparison permits only the bundle,
+its native package inventory/world and new vendor SBOM. The inherited historical
+SBOM is retained as metadata; the installed package inventory and actual trust
+bundle identify the new version. APK's header ordering, empty dependency fields
+and octal padding are compared semantically, with negative tests rejecting real
+package/file/checksum/permission changes. `/lib` remains the existing `usr/lib`
+symlink. Installer logs stay in private evidence, outside the image.
+
+Both old/new system-store tests verify an ordinary trusted root; the three
+retired emSign root subjects are absent after the update. These are local
+trust-store tests, not a claim to reproduce a remote certificate-chain exploit.
+Anubis additionally passes two independent browser challenges, allow/deny and
+authenticated reload on each image, with zero external browser requests. Mezzo
+passes native startup, unchanged assets and rejected unsupported proxy URLs on
+both images, without querying Tenor. Same-database scans remove the two targeted
+findings with no new high/critical records. Exact activation, readiness and a
+repeated no-op apply pass; no user data or access policy changed.
+
+Replay: `trust.mjs anubis mezzo`, `check-trust.mjs`, the existing
+`go-leaf-final/check-anubis.mjs --trust-oct28 [--before]` and
+`check-mezzo.py --trust-oct28`, then `scan-brotli.mjs --trust anubis mezzo` and
+`go-final/verify.py --trust-oct28 anubis mezzo`. The existing transactional
+release helper accepts `prepare/apply --trust anubis mezzo`. Rollback restores
+only the recorded prior image pins and their declared services; it does not
+delete or restore persistent data. Private receipts are in `trust/` under this
+batch's existing evidence directory. Completed build/scan receipts are never
+silently overwritten.
+
+The same checkpoint reviews three CVE-2026-55453 records as binary-package
+misattributions: [the upstream repair](https://github.com/OpenPrinting/cups/commit/d41cf0616688721e9d435d54118c4c8a36ed596a)
+changes `backend/ipp.c`; each exact installed `libcups2t64` file inventory lacks
+that backend. This does not waive affected printing backends, other libcups
+defects or an entire machine. The existing binary-component reviewer retains
+timestamped inventories, binds decisions to the fresh artifact keys and expires
+them after seven days. No package was removed and raw scan records remain.
+
 ## Completed library release
 
 `released-libraries.json` records **100 updated containers** (not 100 distinct

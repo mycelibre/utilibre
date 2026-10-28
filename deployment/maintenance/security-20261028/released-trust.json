@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "rows": [
+    {
+      "key": "anubis",
+      "version": "20261020-r0",
+      "previousImage": "sha256:715149e1fdabf3e45a6194971a84c0ed438fef7c8d76132abc25e6f7c76fe9d9",
+      "imageId": "sha256:cb692a409422b22c3882d6ce123d7d4e964ea140290e50c59aa658ea5143d3f5",
+      "completedAt": "2026-10-28T20:50:22.986Z",
+      "changedPaths": [
+        "/etc/apk/world",
+        "/etc/ssl/certs/ca-certificates.crt",
+        "/usr/lib/apk/db/installed",
+        "/var/lib/db/sbom/ca-certificates-bundle-20261020-r0.spdx.json"
+      ],
+      "ordinaryTrustPassed": true,
+      "retiredRootsRemaining": 0,
+      "targetFindingRemoved": true,
+      "newHighCritical": 0,
+      "databaseSha256": "2c8f4b04f224aded9ecd149b9b5304146736668220dfa403403358fb423a52fd",
+      "nativeApplicationPassed": true,
+      "repeatApplyUnchanged": true
+    },
+    {
+      "key": "mezzo",
+      "version": "20261020-r0",
+      "previousImage": "sha256:c33adec63f2b9bf11e06d4b1d3e2011dbafa4753acbc1f3db8b1c1774f2accd8",
+      "imageId": "sha256:463a075bc6a1b7735a1a3fe864ef5d5dfaf24f5dffaf2191878365b30a40da5f",
+      "completedAt": "2026-10-28T20:50:28.443Z",
+      "changedPaths": [
+        "/etc/apk/world",
+        "/etc/ssl/certs/ca-certificates.crt",
+        "/usr/lib/apk/db/installed",
+        "/var/lib/db/sbom/ca-certificates-bundle-20261020-r0.spdx.json"
+      ],
+      "ordinaryTrustPassed": true,
+      "retiredRootsRemaining": 0,
+      "targetFindingRemoved": true,
+      "newHighCritical": 0,
+      "databaseSha256": "2c8f4b04f224aded9ecd149b9b5304146736668220dfa403403358fb423a52fd",
+      "nativeApplicationPassed": true,
+      "repeatApplyUnchanged": true
+    }
+  ],
+  "limitations": "Native local trust and application checks; no external TLS-provider or Tenor availability claim. Historical SBOM for the prior vendor package remains as inherited metadata; current APK inventory and certificate payload identify the installed version."
+}

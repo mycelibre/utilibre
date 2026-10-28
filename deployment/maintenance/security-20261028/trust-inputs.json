@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-111943",
+  "version": "20261020-r0",
+  "previous": "20260413-r0",
+  "package": "ca-certificates-bundle",
+  "helper": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+  "compiler": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+  "vendorSourceRevision": "8061afafa65af5a9026707a8880e14120dd6f4a0",
+  "pins": {
+    "APKINDEX.tar.gz": "9b6bc51a433ea045bde941f0db386afe1eb7aab5995ce82a1283342c42ebcfde",
+    "ca-certificates-bundle-20261020-r0.apk": "f0bee352ca8f87c2c3ec1bdd459836f2afbb4874703e3a21888846ee08a96f71",
+    "wolfi-signing.rsa.pub": "f0031424cf46f7db780ce63a45f0fd6aa6f85f601e6bb3b7a91fe3d4d5b7d2cc"
+  },
+  "bundleSha256": "5961c0a3c65459931c023e0075c09733f09aea4ca439cb85bc4a08bb4f3f568b",
+  "source": "https://github.com/wolfi-dev/os/blob/8061afafa65af5a9026707a8880e14120dd6f4a0/ca-certificates.yaml",
+  "license": "MPL-2.0 AND MIT",
+  "removedSpki": [
+    "8d417db2dd8bf5e3084d1e3f196d583849d81bdd4c00c70b9d39369e96b8c782",
+    "b7408b4d2be0238ba37004dd34e276c6019bd2f24c9db7d4980f5f6c359a4bcc",
+    "eabc185c4e82d942b1a5978ba3c0181487d6b3b9974e5c49f72f6d0bd9637150"
+  ],
+  "rows": [
+    {
+      "key": "anubis",
+      "base": "sha256:715149e1fdabf3e45a6194971a84c0ed438fef7c8d76132abc25e6f7c76fe9d9",
+      "candidate": "utilibre-anubis:trust-security-20261028",
+      "containers": [
+        "public-utility-anubis-1"
+      ]
+    },
+    {
+      "key": "mezzo",
+      "base": "sha256:c33adec63f2b9bf11e06d4b1d3e2011dbafa4753acbc1f3db8b1c1774f2accd8",
+      "candidate": "utilibre-mezzo:trust-security-20261028",
+      "containers": [
+        "utilibre-additions-mezzo-1"
+      ]
+    }
+  ]
+}

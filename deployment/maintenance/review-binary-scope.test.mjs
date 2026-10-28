@@ -10,6 +10,13 @@ test('CUPS scheduler attribution never exempts the server or an included schedul
  assert.equal(absentComponent({...item,id:'CVE-2026-99999'},['/.','/usr/lib/libcups.so.2']),null);
 });
 const files=['/.','/usr/lib/libuuid.so.1'];
+test('IPP backend injection is not blanket CUPS client clearance',()=>{
+ const item={id:'CVE-2026-55453',package:'libcups2t64'};
+ assert.match(absentComponent(item,['/.','/usr/lib/libcups.so.2']),/backend status-line/);
+ for(const pkg of ['cups','cups-daemon','cups-core-drivers'])assert.equal(absentComponent({...item,package:pkg},files),null);
+ for(const p of ['/usr/lib/cups/backend/ipp','/opt/backend/ipp.c','/usr/sbin/cupsd','/usr/lib/cups/cups-exec','/usr/lib/cups/filter/foomatic-rip'])assert.equal(absentComponent(item,[...files,p]),null);
+ assert.equal(absentComponent({...item,id:'CVE-2026-55480'},files),null,'Other client-library advisories remain open');
+});
 test('MariaDB SQL-server and dump advisories do not exempt executable packages',()=>{
  for(const id of ['CVE-2026-85746','CVE-2026-92262','CVE-2026-86047','CVE-2026-97380']){
   for(const packageName of ['libmariadb3','mariadb-common']){
