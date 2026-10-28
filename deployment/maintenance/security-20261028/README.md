@@ -1394,3 +1394,21 @@ only `rssbridge` through the existing Compose project. No database migration,
 user-data change, cache purge, notification, host restart or new route is involved.
 After a fresh fleet scan, `review-nginx-debian.mjs` prepares six expiring exact-byte
 decisions for individual review and sequential application through `triage.mjs`.
+
+### Wishlist platform attribution
+
+The remaining Wishlist Go trust-store record targets its bundled **macOS ARM64**
+esbuild executable. The pinned Go build-info reader and Mach-O header identify
+that exact file; its SHA-256 is
+`d09bfc7dfbbc8817a9bda524d9612e154a355725435f105c1b8cdc9b0b3a6fc3`.
+The running container and Node process are Linux x64. The separate ELF x86-64
+executable passes the native TypeScript transform offline, and the retained
+exact-image application test covers account/list creation, reload and anonymous
+denial. No runtime file changed.
+
+`review-platform.mjs esbuild-darwin-wishlist` prepares this exact-image/target
+review; five policy tests include rejection of a different executable target,
+platform, bytes or missing native/application checks. The seven-day decision is
+runtime-platform attribution only. The bundled Mac executable is **not upgraded**
+and must be reviewed before Mac execution or redistribution. Raw scan records,
+other Go targets and future image identities remain separate.
