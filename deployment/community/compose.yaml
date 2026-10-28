@@ -44,7 +44,7 @@ services:
     ulimits: {core: 0}
     memswap_limit: 256m
     <<: *runtime
-    image: utilibre-ntfy:go-security-20261028
+    image: utilibre-ntfy:jose-security-20261028
     user: "1000:1000"
     command: [serve]
     volumes: ["./ntfy.yml:/etc/ntfy/server.yml:ro"]
@@ -60,7 +60,7 @@ services:
     ulimits: {core: 0}
     memswap_limit: 256m
     <<: *runtime
-    image: utilibre-yopass:go-security-20261028
+    image: utilibre-yopass:jose-security-20261028
     command: ["--database=redis", "--redis=redis://secret-cache:6379/0", "--disable-upload", "--force-onetime-secrets", "--force-expiration=1h", "--default-expiry=1h", "--max-length=10000", "--cors-allow-origin=https://secret.utilibre.org", "--privacy-notice-url=https://utilibre.org/en/privacy"]
     networks: [secrets]
     depends_on: [secret-cache]

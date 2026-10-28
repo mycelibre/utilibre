@@ -11,7 +11,7 @@ x-bounded: &bounded
 services:
   vikunja:
     <<: *bounded
-    image: utilibre-vikunja:echo-security-20261024
+    image: utilibre-vikunja:jose-security-20261028
     user: '1000:1000'
     cpus: 1.5
     mem_limit: 768m
