@@ -23,3 +23,13 @@ test('only documented upstream RTMP/TLS-SRP removal is allowed',()=>{
  assert.throws(()=>allowedCurlFeatureChanges(before,'Protocols: http https\nFeatures: HTTP2 SSL'));
  assert.throws(()=>allowedCurlFeatureChanges(before,'unexpected successful shell output'));
 });
+
+test('SMB removal is restricted to the reviewed 8.23 profile',()=>{
+ const old='Protocols: http https smb smbs\nFeatures: HTTP2 SSL NTLM';
+ const current='Protocols: http https\nFeatures: HTTP2 SSL NTLM';
+ assert.deepEqual(allowedCurlFeatureChanges(old,current,'8.23.0')[0].removed,['smb','smbs']);
+ assert.throws(()=>allowedCurlFeatureChanges(old,current));
+ assert.throws(()=>allowedCurlFeatureChanges(old,current,'8.24.0'));
+ assert.throws(()=>allowedCurlFeatureChanges(old,current.replace('https','ftp'),'8.23.0'));
+ assert.throws(()=>allowedCurlFeatureChanges(old,current.replace(' NTLM',''),'8.23.0'));
+});

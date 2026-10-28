@@ -7,10 +7,10 @@ import {createHash} from 'node:crypto';
 import {curlSuites} from '../closure-followup/curl-policy.mjs';
 import {featureChanges,libraryChanges,exportedSymbols} from './policy.mjs';
 process.umask(0o077);
-const dir='/var/lib/utilibre-maintenance/bookworm-curl-followup-20261012';
-const prior='/var/lib/utilibre-maintenance/closure-followup-20261012';
+const oct28=process.argv.includes('--oct28'),dir=oct28?'/var/lib/utilibre-maintenance/security-20261028/curl-bookworm':'/var/lib/utilibre-maintenance/bookworm-curl-followup-20261012';
+const prior=oct28?'/var/lib/utilibre-maintenance/security-20261028':'/var/lib/utilibre-maintenance/closure-followup-20261012';
 const here=new URL('.',import.meta.url).pathname,build=dir+'/build';
-const version='8.22.0-1~deb12u1+utilibre1';
+const release=oct28?'8.23.0':'8.22.0',version=release+'-1~deb12u1+utilibre1';
 const sha=b=>createHash('sha256').update(b).digest('hex');
 const run=(p,a,o={})=>cp.execFileSync(p,a,{encoding:'utf8',timeout:240000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe'],...o}).trim();
 const docker=a=>{try{return run('docker',a,{env:{...process.env,DOCKER_BUILDKIT:'0'}});}catch(e){fs.writeFileSync(dir+'/stage-error.log',String(e.stdout||'')+String(e.stderr||e));throw Error('Bookworm curl staging failed; private diagnostics retained.');}};
@@ -36,10 +36,13 @@ const limits=['--read-only','--cap-drop','ALL','--security-opt','no-new-privileg
 const imageRun=(image,command)=>docker(['run','--rm',...limits,'--hostname','utilibre-curl-fixture','--network','none','--user','0','--entrypoint','sh',image,'-ec',command]);
 const symbols=f=>exportedSymbols(run('readelf',['--dyn-syms','--wide',f]));
 const server='maintenance-bookworm-curl-fixture';
-docker(['run','-d','--name',server,...limits,'--network','none','--user','0','--mount','type=bind,src='+prior+'/curl-fixture,dst=/fixture,readonly','--mount','type=bind,src='+here+'../closure-followup/curl-fixture-server.py,dst=/server.py,readonly','--entrypoint','python3','utilibre-kuma:urllib3-security-20261012','/server.py']);
+docker(['run','-d','--name',server,...limits,'--network','none','--user','0','--mount','type=bind,src='+prior+'/curl-fixture,dst=/fixture,readonly','--mount','type=bind,src='+here+'../closure-followup/curl-fixture-server.py,dst=/server.py,readonly','--entrypoint','python3',oct28?'utilibre-curl-native-builder:trixie-20261028':'utilibre-kuma:urllib3-security-20261012','/server.py']);
 try{
  docker(['exec',server,'python3','-c','import socket,time\nfor i in range(40):\n try:\n  socket.create_connection(("127.0.0.1",18443),.1).close();break\n except OSError: time.sleep(.1)\nelse: raise RuntimeError("TLS fixture readiness")']);
- for(const s of JSON.parse(fs.readFileSync(here+'specs.json')).filter(s=>process.argv.length<3||process.argv.slice(2).includes(s.key))){
+ const requested=process.argv.slice(2).filter(k=>k!=='--oct28');
+ const specs=oct28?JSON.parse(fs.readFileSync(here+'../security-20261028/curl-bookworm-inputs.json')).rows:JSON.parse(fs.readFileSync(here+'specs.json'));
+ assert(!oct28||specs.every(s=>s.key!=='rssbridge'),'Embedded curl needs its separate gate');
+ for(const s of specs.filter(s=>!requested.length||requested.includes(s.key))){
   assert(fs.statfsSync('/').bavail*fs.statfsSync('/').bsize>8*1024**3,'8 GiB recovery floor');
   assert.equal(inspect(s.baseRef).Id,s.base);for(const name of s.containers)assert.equal(inspect(name).Image,s.base);
   const out=dir+'/images/'+s.key;fs.mkdirSync(out+'/packages',{recursive:true});assert(!fs.existsSync(out+'/build.json'),'Preserve completed proof');
@@ -74,11 +77,11 @@ try{
   for(const library of libPaths){
    const old=native.find(n=>n.image===s.base&&n.library===library).inventory;
    const current=native.find(n=>n.image===after.Id&&n.library===library).inventory;
-   libraryFeatures.push({library,...libraryChanges(old,current)});
+   libraryFeatures.push({library,...libraryChanges(old,current,release)});
   }
   let features=[],php=false;
   if(s.packages.includes('curl')){
-   features=featureChanges(imageRun(s.base,'curl --version'),imageRun(s.candidate,'curl --version'));
+   features=featureChanges(imageRun(s.base,'curl --version'),imageRun(s.candidate,'curl --version'),release);
    const cli=docker(['run','--rm',...limits,'--network','container:'+server,'--user','65534:65534','--mount','type=bind,src='+prior+'/curl-fixture/cert.pem,dst=/ca.pem,readonly','--entrypoint','curl',after.Id,'--silent','--show-error','--fail','--noproxy','*','--max-time','5','--cacert','/ca.pem','https://localhost:18443/']);assert.equal(cli,'fictional transfer');
   }
   if(s.key==='rssbridge'){
@@ -86,7 +89,7 @@ try{
   }
   const proof={date:new Date().toISOString(),...s,imageId:after.Id,version,passed:true,configurationUnchanged:true,applicationSha256,etcSha256,unrelatedLibrariesSha256,abi,features,libraryFeatures,packages:s.packages.map(name=>({name,...packages.get(name)})),...(s.key==='rssbridge'?{vendorReplacement:JSON.parse(fs.readFileSync(dir+'/impersonate/payload.json')),applicationHashExclusion:'/usr/local/lib/curl-impersonate; separately tested upstream runtime payload',additionalRequiredGate:'impersonate.json; not release-ready from system-library tests alone'}:{}),deployed:false};
   fs.writeFileSync(out+'/build.json',JSON.stringify(proof,null,2)+'\n');
-  fs.writeFileSync(out+'/native.json',JSON.stringify({date:new Date().toISOString(),imageId:after.Id,passed:true,nativeTransfers:native,abiPreserved:true,phpCurlTls:php,upstreamSuites:suites,sshDefaultProtocolWrongKeyRejectedBothTls:true,limitations:'Synthetic loopback HTTP/TLS; no production traffic. Bookworm native dependencies retained; no HTTP/3 added. Upstream removed RTMP, TLS-SRP and NTLM_WB. Application/source/config bytes unchanged; separate native application gates still required.'},null,2)+'\n');
+  fs.writeFileSync(out+'/native.json',JSON.stringify({date:new Date().toISOString(),imageId:after.Id,passed:true,nativeTransfers:native,abiPreserved:true,phpCurlTls:php,upstreamSuites:suites,sshDefaultProtocolWrongKeyRejectedBothTls:true,limitations:'Synthetic loopback HTTP/TLS; no production traffic. Bookworm native dependencies retained; no HTTP/3 added. Upstream removed RTMP, TLS-SRP and NTLM_WB; 8.23 also removes SMB/SMBS. Application/source/config bytes unchanged; separate native application gates still required.'},null,2)+'\n');
   console.log(s.key+': native transfers, ABI and unchanged application/configuration passed.');
  }
 }finally{docker(['rm','-f',server]);}

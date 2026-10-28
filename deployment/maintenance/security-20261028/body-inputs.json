@@ -1,0 +1,736 @@
+{
+  "version": 1,
+  "packages": {
+    "body1": {
+      "name": "body-parser",
+      "version": "1.20.9",
+      "integrity": "sha512-FISIQxV5u91Y9gvuFq3q/tA/qTqLJn3AhRcEvyozyhJTh5OBFFtv827AdHU7Rbyct4r+Ba1/99oFa1Y3yuFsdw==",
+      "dependencies": {
+        "qs": "~6.16.0",
+        "depd": "2.0.0",
+        "bytes": "~3.1.2",
+        "debug": "2.6.9",
+        "unpipe": "~1.0.0",
+        "destroy": "~1.2.0",
+        "type-is": "~1.6.18",
+        "raw-body": "~2.5.3",
+        "iconv-lite": "~0.4.24",
+        "http-errors": "~2.0.1",
+        "on-finished": "~2.4.1",
+        "content-type": "~1.0.5"
+      }
+    },
+    "body2": {
+      "name": "body-parser",
+      "version": "2.4.0",
+      "integrity": "sha512-Ifk1KcLrxaGt1occQagQNFNNOqRt1LFuehEnHHzB8Z6cRgIxRU1TBaiIsUiCdA+gy5PL7Y1IX31DNKkRmxtXjQ==",
+      "dependencies": {
+        "qs": "^6.16.1",
+        "bytes": "^3.1.2",
+        "debug": "^4.4.3",
+        "type-is": "^2.1.0",
+        "raw-body": "^3.0.2",
+        "iconv-lite": "^0.7.3",
+        "http-errors": "^2.0.1",
+        "on-finished": "^2.4.1",
+        "content-type": "^2.1.0"
+      }
+    },
+    "qs": {
+      "name": "qs",
+      "version": "6.16.1",
+      "integrity": "sha512-5Px6J7rfHBAGUhNQ3es4YzcOdBBw0SDcVtThJml4RdnKw4tKs2epA0kPZ+K8X+WiHktT93RHVcQ/3ym5aTCgtg==",
+      "dependencies": {
+        "side-channel": "^1.1.1",
+        "es-define-property": "^1.0.1"
+      }
+    },
+    "raw-body": {
+      "name": "raw-body",
+      "version": "2.5.3",
+      "integrity": "sha512-s4VSOf6yN0rvbRZGxs8Om5CWj6seneMwK3oDb4lWDH0UPhWcxwOWw5+qk24bxq87szX1ydrwylIOp2uG1ojUpA==",
+      "dependencies": {
+        "bytes": "~3.1.2",
+        "unpipe": "~1.0.0",
+        "iconv-lite": "~0.4.24",
+        "http-errors": "~2.0.1"
+      }
+    },
+    "http-errors": {
+      "name": "http-errors",
+      "version": "2.0.1",
+      "integrity": "sha512-4FbRdAX+bSdmo4AUFuS0WNiPz8NgFt+r8ThgNWmlrjQjt1Q7ZR9+zTlce2859x4KSXrwIsaeTqDoKQmtP8pLmQ==",
+      "dependencies": {
+        "depd": "~2.0.0",
+        "inherits": "~2.0.4",
+        "statuses": "~2.0.2",
+        "toidentifier": "~1.0.1",
+        "setprototypeof": "~1.2.0"
+      }
+    }
+  },
+  "rows": [
+    {
+      "key": "kuma",
+      "container": "utilibre-community-uptime-kuma-1",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "base": "sha256:8966804fad21396cbe95649aa855618a4b1ecd9f5b7ad16234ea27c17c9ccf72",
+      "candidate": "utilibre-kuma:body-parser-curl-security-20261028",
+      "paths": {
+        "body1": [
+          "/app/node_modules/body-parser"
+        ]
+      },
+      "before": {
+        "/app/node_modules/body-parser": "1.20.8"
+      },
+      "roots": [
+        "/app"
+      ],
+      "dependencyBaseline": {
+        "/app/node_modules/body-parser": {
+          "bytes": {
+            "path": "/app/node_modules/bytes",
+            "version": "3.1.2"
+          },
+          "content-type": {
+            "path": "/app/node_modules/content-type",
+            "version": "1.0.5"
+          },
+          "debug": {
+            "path": "/app/node_modules/body-parser/node_modules/debug",
+            "version": "2.6.9"
+          },
+          "depd": {
+            "path": "/app/node_modules/depd",
+            "version": "2.0.0"
+          },
+          "destroy": {
+            "path": "/app/node_modules/destroy",
+            "version": "1.2.0"
+          },
+          "http-errors": {
+            "path": "/app/node_modules/http-errors",
+            "version": "2.0.1"
+          },
+          "iconv-lite": {
+            "path": "/app/node_modules/body-parser/node_modules/iconv-lite",
+            "version": "0.4.24"
+          },
+          "on-finished": {
+            "path": "/app/node_modules/on-finished",
+            "version": "2.4.1"
+          },
+          "qs": {
+            "path": "/app/node_modules/body-parser/node_modules/qs",
+            "version": "6.16.0"
+          },
+          "raw-body": {
+            "path": "/app/node_modules/raw-body",
+            "version": "2.5.3"
+          },
+          "type-is": {
+            "path": "/app/node_modules/type-is",
+            "version": "1.6.18"
+          },
+          "unpipe": {
+            "path": "/app/node_modules/unpipe",
+            "version": "1.0.0"
+          }
+        }
+      },
+      "preserveNestedDependencies": [
+        "/app/node_modules/body-parser"
+      ],
+      "oldRef": "utilibre-kuma:curl823-security-20261028"
+    },
+    {
+      "key": "bytestash",
+      "container": "utilibre-bytestash-bytestash-1",
+      "containers": [
+        "utilibre-bytestash-bytestash-1"
+      ],
+      "base": "sha256:68e46ecbd33f988c4d39f110a0b7e32e2f6174111c775d09cf7d2ac2a4344ff6",
+      "candidate": "utilibre-bytestash:body-parser-security-20261028",
+      "paths": {
+        "body2": [
+          "/app/node_modules/@modelcontextprotocol/sdk/node_modules/body-parser"
+        ],
+        "qs": [
+          "/app/node_modules/qs"
+        ],
+        "body1": [
+          "/app/node_modules/body-parser"
+        ]
+      },
+      "before": {
+        "/app/node_modules/@modelcontextprotocol/sdk/node_modules/body-parser": "2.3.0",
+        "/app/node_modules/qs": "6.16.0",
+        "/app/node_modules/body-parser": "1.20.8"
+      },
+      "roots": [
+        "/app"
+      ],
+      "dependencyBaseline": {
+        "/app/node_modules/@modelcontextprotocol/sdk/node_modules/body-parser": {
+          "bytes": {
+            "path": "/app/node_modules/bytes",
+            "version": "3.1.2"
+          },
+          "content-type": {
+            "path": "/app/node_modules/@modelcontextprotocol/sdk/node_modules/body-parser/node_modules/content-type",
+            "version": "2.1.0"
+          },
+          "debug": {
+            "path": "/app/node_modules/@modelcontextprotocol/sdk/node_modules/debug",
+            "version": "4.4.3"
+          },
+          "http-errors": {
+            "path": "/app/node_modules/http-errors",
+            "version": "2.0.1"
+          },
+          "iconv-lite": {
+            "path": "/app/node_modules/@modelcontextprotocol/sdk/node_modules/iconv-lite",
+            "version": "0.7.3"
+          },
+          "on-finished": {
+            "path": "/app/node_modules/on-finished",
+            "version": "2.4.1"
+          },
+          "qs": {
+            "path": "/app/node_modules/qs",
+            "version": "6.16.0"
+          },
+          "raw-body": {
+            "path": "/app/node_modules/raw-body",
+            "version": "3.0.2"
+          },
+          "type-is": {
+            "path": "/app/node_modules/@modelcontextprotocol/sdk/node_modules/type-is",
+            "version": "2.1.0"
+          }
+        },
+        "/app/node_modules/body-parser": {
+          "bytes": {
+            "path": "/app/node_modules/bytes",
+            "version": "3.1.2"
+          },
+          "content-type": {
+            "path": "/app/node_modules/content-type",
+            "version": "1.0.5"
+          },
+          "debug": {
+            "path": "/app/node_modules/debug",
+            "version": "2.6.9"
+          },
+          "depd": {
+            "path": "/app/node_modules/depd",
+            "version": "2.0.0"
+          },
+          "destroy": {
+            "path": "/app/node_modules/destroy",
+            "version": "1.2.0"
+          },
+          "http-errors": {
+            "path": "/app/node_modules/http-errors",
+            "version": "2.0.1"
+          },
+          "iconv-lite": {
+            "path": "/app/node_modules/iconv-lite",
+            "version": "0.4.24"
+          },
+          "on-finished": {
+            "path": "/app/node_modules/on-finished",
+            "version": "2.4.1"
+          },
+          "qs": {
+            "path": "/app/node_modules/qs",
+            "version": "6.16.0"
+          },
+          "raw-body": {
+            "path": "/app/node_modules/body-parser/node_modules/raw-body",
+            "version": "2.5.3"
+          },
+          "type-is": {
+            "path": "/app/node_modules/type-is",
+            "version": "1.6.18"
+          },
+          "unpipe": {
+            "path": "/app/node_modules/unpipe",
+            "version": "1.0.0"
+          }
+        }
+      },
+      "preserveNestedDependencies": [
+        "/app/node_modules/@modelcontextprotocol/sdk/node_modules/body-parser",
+        "/app/node_modules/body-parser"
+      ]
+    },
+    {
+      "key": "projects",
+      "container": "utilibre-projects-app-1",
+      "containers": [
+        "utilibre-projects-app-1"
+      ],
+      "base": "sha256:572186094792021541d0d21a5ca5f6c7e46424e3ae58d6359d677e27bfda38b9",
+      "candidate": "utilibre-projects:body-parser-security-20261028",
+      "paths": {
+        "body1": [
+          "/app/node_modules/body-parser"
+        ]
+      },
+      "before": {
+        "/app/node_modules/body-parser": "1.20.8"
+      },
+      "roots": [
+        "/app"
+      ],
+      "dependencyBaseline": {
+        "/app/node_modules/body-parser": {
+          "bytes": {
+            "path": "/app/node_modules/bytes",
+            "version": "3.1.2"
+          },
+          "content-type": {
+            "path": "/app/node_modules/content-type",
+            "version": "1.0.5"
+          },
+          "debug": {
+            "path": "/app/node_modules/body-parser/node_modules/debug",
+            "version": "2.6.9"
+          },
+          "depd": {
+            "path": "/app/node_modules/depd",
+            "version": "2.0.0"
+          },
+          "destroy": {
+            "path": "/app/node_modules/destroy",
+            "version": "1.2.0"
+          },
+          "http-errors": {
+            "path": "/app/node_modules/body-parser/node_modules/http-errors",
+            "version": "2.0.1"
+          },
+          "iconv-lite": {
+            "path": "/app/node_modules/iconv-lite",
+            "version": "0.4.24"
+          },
+          "on-finished": {
+            "path": "/app/node_modules/on-finished",
+            "version": "2.4.1"
+          },
+          "qs": {
+            "path": "/app/node_modules/qs",
+            "version": "6.16.0"
+          },
+          "raw-body": {
+            "path": "/app/node_modules/raw-body",
+            "version": "2.5.3"
+          },
+          "type-is": {
+            "path": "/app/node_modules/type-is",
+            "version": "1.6.18"
+          },
+          "unpipe": {
+            "path": "/app/node_modules/unpipe",
+            "version": "1.0.0"
+          }
+        }
+      },
+      "preserveNestedDependencies": [
+        "/app/node_modules/body-parser"
+      ]
+    },
+    {
+      "key": "gathio",
+      "container": "utilibre-gathio-gathio-1",
+      "containers": [
+        "utilibre-gathio-gathio-1"
+      ],
+      "base": "sha256:de246196e2e7c136ca0e90664c46b6b891dff2834c55cf32ba1a268c08064067",
+      "candidate": "utilibre-gathio:body-parser-security-20261028",
+      "paths": {
+        "body1": [
+          "/srv/gathio/node_modules/.pnpm/body-parser@1.20.8/node_modules/body-parser"
+        ]
+      },
+      "before": {
+        "/srv/gathio/node_modules/.pnpm/body-parser@1.20.8/node_modules/body-parser": "1.20.8"
+      },
+      "roots": [
+        "/srv"
+      ],
+      "dependencyBaseline": {
+        "/srv/gathio/node_modules/.pnpm/body-parser@1.20.8/node_modules/body-parser": {
+          "bytes": {
+            "path": "/srv/gathio/node_modules/.pnpm/bytes@3.1.2/node_modules/bytes",
+            "version": "3.1.2"
+          },
+          "content-type": {
+            "path": "/srv/gathio/node_modules/.pnpm/content-type@1.0.5/node_modules/content-type",
+            "version": "1.0.5"
+          },
+          "debug": {
+            "path": "/srv/gathio/node_modules/.pnpm/debug@2.6.9/node_modules/debug",
+            "version": "2.6.9"
+          },
+          "depd": {
+            "path": "/srv/gathio/node_modules/.pnpm/depd@2.0.0/node_modules/depd",
+            "version": "2.0.0"
+          },
+          "destroy": {
+            "path": "/srv/gathio/node_modules/.pnpm/destroy@1.2.0/node_modules/destroy",
+            "version": "1.2.0"
+          },
+          "http-errors": {
+            "path": "/srv/gathio/node_modules/.pnpm/http-errors@2.0.1/node_modules/http-errors",
+            "version": "2.0.1"
+          },
+          "iconv-lite": {
+            "path": "/srv/gathio/node_modules/.pnpm/iconv-lite@0.4.24/node_modules/iconv-lite",
+            "version": "0.4.24"
+          },
+          "on-finished": {
+            "path": "/srv/gathio/node_modules/.pnpm/on-finished@2.4.1/node_modules/on-finished",
+            "version": "2.4.1"
+          },
+          "qs": {
+            "path": "/srv/gathio/node_modules/.pnpm/qs@6.16.0/node_modules/qs",
+            "version": "6.16.0"
+          },
+          "raw-body": {
+            "path": "/srv/gathio/node_modules/.pnpm/raw-body@2.5.3/node_modules/raw-body",
+            "version": "2.5.3"
+          },
+          "type-is": {
+            "path": "/srv/gathio/node_modules/.pnpm/type-is@1.6.18/node_modules/type-is",
+            "version": "1.6.18"
+          },
+          "unpipe": {
+            "path": "/srv/gathio/node_modules/.pnpm/unpipe@1.0.0/node_modules/unpipe",
+            "version": "1.0.0"
+          }
+        }
+      },
+      "preserveNestedDependencies": []
+    },
+    {
+      "key": "pairdrop",
+      "container": "utilibre-community-pairdrop-1",
+      "containers": [
+        "utilibre-community-pairdrop-1"
+      ],
+      "base": "sha256:c3d412e53040572d791e459f66c69f2bb1573a1fb413a02d51d039ffbde09caa",
+      "candidate": "utilibre-pairdrop:body-parser-security-20261028",
+      "paths": {
+        "body1": [
+          "/home/node/app/node_modules/body-parser"
+        ]
+      },
+      "before": {
+        "/home/node/app/node_modules/body-parser": "1.20.8"
+      },
+      "roots": [
+        "/home"
+      ],
+      "dependencyBaseline": {
+        "/home/node/app/node_modules/body-parser": {
+          "bytes": {
+            "path": "/home/node/app/node_modules/bytes",
+            "version": "3.1.2"
+          },
+          "content-type": {
+            "path": "/home/node/app/node_modules/content-type",
+            "version": "1.0.5"
+          },
+          "debug": {
+            "path": "/home/node/app/node_modules/debug",
+            "version": "2.6.9"
+          },
+          "depd": {
+            "path": "/home/node/app/node_modules/depd",
+            "version": "2.0.0"
+          },
+          "destroy": {
+            "path": "/home/node/app/node_modules/destroy",
+            "version": "1.2.0"
+          },
+          "http-errors": {
+            "path": "/home/node/app/node_modules/body-parser/node_modules/http-errors",
+            "version": "2.0.1"
+          },
+          "iconv-lite": {
+            "path": "/home/node/app/node_modules/iconv-lite",
+            "version": "0.4.24"
+          },
+          "on-finished": {
+            "path": "/home/node/app/node_modules/on-finished",
+            "version": "2.4.1"
+          },
+          "qs": {
+            "path": "/home/node/app/node_modules/qs",
+            "version": "6.16.0"
+          },
+          "raw-body": {
+            "path": "/home/node/app/node_modules/raw-body",
+            "version": "2.5.3"
+          },
+          "type-is": {
+            "path": "/home/node/app/node_modules/type-is",
+            "version": "1.6.18"
+          },
+          "unpipe": {
+            "path": "/home/node/app/node_modules/unpipe",
+            "version": "1.0.0"
+          }
+        }
+      },
+      "preserveNestedDependencies": [
+        "/home/node/app/node_modules/body-parser"
+      ]
+    },
+    {
+      "key": "grist-body",
+      "container": "utilibre-records-grist-1",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "base": "sha256:3c93de35feb013780086007ae35a398e73ac13cf33949b19ab5ce0a793d91c1a",
+      "candidate": "utilibre-grist:body-parser-locked-security-20261028",
+      "paths": {
+        "body1": [
+          "/grist/node_modules/body-parser"
+        ]
+      },
+      "before": {
+        "/grist/node_modules/body-parser": "1.20.3"
+      },
+      "roots": [
+        "/grist"
+      ],
+      "dependencyBaseline": {
+        "/grist/node_modules/body-parser": {
+          "bytes": {
+            "path": "/grist/node_modules/bytes",
+            "version": "3.1.2"
+          },
+          "content-type": {
+            "path": "/grist/node_modules/content-type",
+            "version": "1.0.5"
+          },
+          "debug": {
+            "path": "/grist/node_modules/body-parser/node_modules/debug",
+            "version": "2.6.9"
+          },
+          "depd": {
+            "path": "/grist/node_modules/depd",
+            "version": "2.0.0"
+          },
+          "destroy": {
+            "path": "/grist/node_modules/destroy",
+            "version": "1.2.0"
+          },
+          "http-errors": {
+            "path": "/grist/node_modules/http-errors",
+            "version": "2.0.0"
+          },
+          "iconv-lite": {
+            "path": "/grist/node_modules/iconv-lite",
+            "version": "0.4.24"
+          },
+          "on-finished": {
+            "path": "/grist/node_modules/on-finished",
+            "version": "2.4.1"
+          },
+          "qs": {
+            "path": "/grist/node_modules/qs",
+            "version": "6.13.0"
+          },
+          "raw-body": {
+            "path": "/grist/node_modules/raw-body",
+            "version": "2.5.2"
+          },
+          "type-is": {
+            "path": "/grist/node_modules/type-is",
+            "version": "1.6.18"
+          },
+          "unpipe": {
+            "path": "/grist/node_modules/unpipe",
+            "version": "1.0.0"
+          }
+        }
+      },
+      "dependencyBundle": "body1",
+      "oldRef": "utilibre-curl-records-grist:security-20261028"
+    },
+    {
+      "key": "resume",
+      "container": "utilibre-expanded-resume-1",
+      "containers": [
+        "utilibre-expanded-resume-1"
+      ],
+      "base": "sha256:251648c0cf5bfb574b6128d57072282c9542de5132c39108c164d1dc6375d503",
+      "candidate": "utilibre-resume:body-parser-security-20261028",
+      "paths": {
+        "body2": [
+          "/app/node_modules/.pnpm/body-parser@2.3.0_supports-color@7.2.0/node_modules/body-parser"
+        ],
+        "qs": [
+          "/app/node_modules/.pnpm/qs@6.16.0/node_modules/qs"
+        ]
+      },
+      "before": {
+        "/app/node_modules/.pnpm/body-parser@2.3.0_supports-color@7.2.0/node_modules/body-parser": "2.3.0",
+        "/app/node_modules/.pnpm/qs@6.16.0/node_modules/qs": "6.16.0"
+      },
+      "roots": [
+        "/app"
+      ],
+      "dependencyBaseline": {
+        "/app/node_modules/.pnpm/body-parser@2.3.0_supports-color@7.2.0/node_modules/body-parser": {
+          "bytes": {
+            "path": "/app/node_modules/.pnpm/bytes@3.1.2/node_modules/bytes",
+            "version": "3.1.2"
+          },
+          "content-type": {
+            "path": "/app/node_modules/.pnpm/content-type@2.1.0/node_modules/content-type",
+            "version": "2.1.0"
+          },
+          "debug": {
+            "path": "/app/node_modules/.pnpm/debug@4.4.3_supports-color@7.2.0/node_modules/debug",
+            "version": "4.4.3"
+          },
+          "http-errors": {
+            "path": "/app/node_modules/.pnpm/http-errors@2.0.1/node_modules/http-errors",
+            "version": "2.0.1"
+          },
+          "iconv-lite": {
+            "path": "/app/node_modules/.pnpm/iconv-lite@0.7.3/node_modules/iconv-lite",
+            "version": "0.7.3"
+          },
+          "on-finished": {
+            "path": "/app/node_modules/.pnpm/on-finished@2.4.1/node_modules/on-finished",
+            "version": "2.4.1"
+          },
+          "qs": {
+            "path": "/app/node_modules/.pnpm/qs@6.16.0/node_modules/qs",
+            "version": "6.16.0"
+          },
+          "raw-body": {
+            "path": "/app/node_modules/.pnpm/raw-body@3.0.2/node_modules/raw-body",
+            "version": "3.0.2"
+          },
+          "type-is": {
+            "path": "/app/node_modules/.pnpm/type-is@2.1.0/node_modules/type-is",
+            "version": "2.1.0"
+          }
+        }
+      },
+      "preserveNestedDependencies": []
+    },
+    {
+      "key": "actual",
+      "container": "utilibre-expanded-actual-1",
+      "containers": [
+        "utilibre-expanded-actual-1"
+      ],
+      "base": "sha256:a6f3dbc74d5fc10ff3be595eb00fa3c2509ff16e6d80b59709c4e12df624eb66",
+      "candidate": "utilibre-actual:body-parser-locked2-security-20261028",
+      "paths": {
+        "body2": [
+          "/app/node_modules/body-parser",
+          "/opt/utilibre-reviewed-leaves/node_modules/body-parser"
+        ]
+      },
+      "before": {
+        "/app/node_modules/body-parser": "2.3.0",
+        "/opt/utilibre-reviewed-leaves/node_modules/body-parser": "2.3.0"
+      },
+      "roots": [
+        "/app",
+        "/opt"
+      ],
+      "dependencyBaseline": {
+        "/app/node_modules/body-parser": {
+          "bytes": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/bytes",
+            "version": "3.1.2"
+          },
+          "content-type": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/content-type",
+            "version": "2.1.0"
+          },
+          "debug": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/debug",
+            "version": "4.4.3"
+          },
+          "http-errors": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/http-errors",
+            "version": "2.0.1"
+          },
+          "iconv-lite": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/iconv-lite",
+            "version": "0.7.3"
+          },
+          "on-finished": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/on-finished",
+            "version": "2.4.1"
+          },
+          "qs": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/qs",
+            "version": "6.16.0"
+          },
+          "raw-body": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/raw-body",
+            "version": "3.0.2"
+          },
+          "type-is": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/type-is",
+            "version": "2.1.0"
+          }
+        },
+        "/opt/utilibre-reviewed-leaves/node_modules/body-parser": {
+          "bytes": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/bytes",
+            "version": "3.1.2"
+          },
+          "content-type": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/content-type",
+            "version": "2.1.0"
+          },
+          "debug": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/debug",
+            "version": "4.4.3"
+          },
+          "http-errors": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/http-errors",
+            "version": "2.0.1"
+          },
+          "iconv-lite": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/iconv-lite",
+            "version": "0.7.3"
+          },
+          "on-finished": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/on-finished",
+            "version": "2.4.1"
+          },
+          "qs": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/qs",
+            "version": "6.16.0"
+          },
+          "raw-body": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/raw-body",
+            "version": "3.0.2"
+          },
+          "type-is": {
+            "path": "/opt/utilibre-reviewed-leaves/node_modules/type-is",
+            "version": "2.1.0"
+          }
+        }
+      },
+      "dependencyBundle": "body2"
+    }
+  ]
+}

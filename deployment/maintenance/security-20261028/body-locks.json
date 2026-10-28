@@ -1,0 +1,14 @@
+{
+  "body1": {
+    "version": "1.20.9",
+    "compiler": "sha256:9f0dde62d10e7ff7a310ecaebd66225f6b46c17e6cb778449a77b05d3541bea2",
+    "lockSha256": "26d29e1f8971d86990734046c1ad82f19e90d2335da4e3d5305141c474fc35f0",
+    "treeSha256": "268d9bf225c42db96fe5545adb25c0fa43dbb0850c534d512d5caae0aa01d3dd"
+  },
+  "body2": {
+    "version": "2.4.0",
+    "compiler": "sha256:9f0dde62d10e7ff7a310ecaebd66225f6b46c17e6cb778449a77b05d3541bea2",
+    "lockSha256": "6c4a6ffa08b17ed8c8ad614c3ea2031b940c9beb5a6e65bfb7f7c22a59a13175",
+    "treeSha256": "ae48e136e32897616114b8655dca54255e0cf6e51b1f5631360f438b36fa543f"
+  }
+}

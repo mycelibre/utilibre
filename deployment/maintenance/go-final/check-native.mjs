@@ -4,8 +4,8 @@ import cp from 'node:child_process';
 import crypto from 'node:crypto';
 import http from 'node:http';
 process.umask(0o077);
-const root='/var/lib/utilibre-maintenance/go-final-20261011';
-const specs=JSON.parse(fs.readFileSync(root+'/build.json')).rows.filter(s=>s.key!=='galene');
+const oct28=process.argv.includes('--oct28'),root=oct28?'/var/lib/utilibre-maintenance/security-20261028/go':'/var/lib/utilibre-maintenance/go-final-20261011';
+const specs=oct28?['rimgo','gothub','safetwitch','anonymousoverflow'].map(k=>{const s=JSON.parse(fs.readFileSync(root+'/'+k+'/build.json'));return{...s,baseId:s.base};}):JSON.parse(fs.readFileSync(root+'/build.json')).rows.filter(s=>s.key!=='galene');
 const docker=(...a)=>cp.execFileSync('docker',a,{encoding:'utf8',stdio:['ignore','pipe','pipe'],timeout:90000}).trim();
 const definitions={
  rimgo:{port:3000,paths:['/about','/privacy','/static/app.css','/favicon.ico'],env:{PORT:'3000'}},
@@ -23,7 +23,7 @@ try{
     docker('run','-d','--name',name,'--network',network,'--read-only','--memory','512m','--cpus','1','--pids-limit','128','--log-driver','none','--cap-drop','ALL','--security-opt','no-new-privileges','--tmpfs','/tmp:rw,size=32m,mode=1777',...Object.entries(d.env).flatMap(([k,v])=>['-e',k+'='+v]),image);
     const ip=docker('inspect',name,'--format','{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'),origin='http://'+ip+':'+d.port;
     let ready=false;for(let i=0;i<50;i++){try{const r=await fetch(origin+d.paths[0],{signal:AbortSignal.timeout(1000)});await r.body?.cancel();if(r.status<500){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,500));}assert(ready,s.key+' startup');
-    const responses=[];for(const path of d.paths){const r=await fetch(origin+path,{signal:AbortSignal.timeout(3000)});let b=Buffer.from(await r.arrayBuffer());assert(r.status>=200&&r.status<400,s.key+path);if(s.key==='gothub'&&['/','/about'].includes(path))b=Buffer.from(b.toString().replaceAll(/go1\.26\.[89]/g,'go1.26.REVIEWED'));responses.push({path,status:r.status,sha256:crypto.createHash('sha256').update(b).digest('hex'),length:b.length});}
+    const responses=[];for(const path of d.paths){const r=await fetch(origin+path,{signal:AbortSignal.timeout(3000)});let b=Buffer.from(await r.arrayBuffer());assert(r.status>=200&&r.status<400,s.key+path);if(s.key==='gothub'&&['/','/about'].includes(path))b=Buffer.from(b.toString().replaceAll(/go1\.26\.(?:8|9|10)/g,'go1.26.REVIEWED'));responses.push({path,status:r.status,sha256:crypto.createHash('sha256').update(b).digest('hex'),length:b.length});}
     if(s.key==='safetwitch'){const status=await new Promise((resolve,reject)=>{const q=http.get(origin,{headers:{Upgrade:'websocket'},timeout:3000},r=>{r.resume();resolve(r.statusCode)});q.on('timeout',()=>q.destroy(Error('timeout')));q.on('error',reject)});assert.equal(status,403);responses.push({path:'disabled-chat',status});}
     variants.push(responses);
    }finally{try{docker('rm','-f',name);}catch{}}

@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import cp from 'node:child_process';
 process.umask(0o077);
-const root='/var/lib/utilibre-maintenance/go-final-20261011',lab=root+'/galene-stage';
-const s=JSON.parse(fs.readFileSync(root+'/build.json')).rows.find(x=>x.key==='galene');
+const oct28=process.argv.includes('--oct28'),root=oct28?'/var/lib/utilibre-maintenance/security-20261028/go':'/var/lib/utilibre-maintenance/go-final-20261011',lab=root+'/galene-stage';
+const s=oct28?JSON.parse(fs.readFileSync(root+'/galene/build.json')):JSON.parse(fs.readFileSync(root+'/build.json')).rows.find(x=>x.key==='galene');
 const docker=(...a)=>cp.execFileSync('docker',a,{encoding:'utf8',stdio:['ignore','pipe','pipe'],timeout:90000}).trim();
 const name='maintenance-galene-go-native',network=name+'-net';let bridge;
 for(const d of [lab,lab+'/data',lab+'/groups']){fs.mkdirSync(d,{recursive:true,mode:0o755});fs.chownSync(d,4003,4003);}

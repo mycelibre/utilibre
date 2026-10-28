@@ -1,8 +1,12 @@
 #!/bin/sh
 set -eu
-test "$(go version)" = 'go version go1.26.9 linux/amd64'
+EXPECTED_GO=${EXPECTED_GO:-1.26.9}
+case "$EXPECTED_GO" in 1.26.9|1.26.10) ;; *) exit 2 ;; esac
+test "$(go version)" = "go version go$EXPECTED_GO linux/amd64"
+PHASE=${UTILIBRE_PHASE:-legacy}
+case "$PHASE" in legacy|download|build) ;; *) exit 2 ;; esac
 export GOTOOLCHAIN=local GOTELEMETRY=off GOFLAGS='-mod=readonly -trimpath'
-export GOMAXPROCS=1 GOMEMLIMIT=512MiB GOGC=25 GOCACHE=/work/cache GOMODCACHE=/work/mod
+export GOMAXPROCS=1 GOMEMLIMIT=512MiB GOGC=25 GOCACHE=/work/cache GOMODCACHE=${UTILIBRE_MODULE_CACHE:-/work/mod}
 mkdir -p /work/tmp
 export GOTMPDIR=/work/tmp
 export CGO_ENABLED=0 GOOS=linux GOARCH=amd64
@@ -20,8 +24,9 @@ for name do
   mkdir -p "/output/locks/$name"
   cp go.mod go.sum "/output/locks/$name/"
   sha256sum go.mod go.sum > "/output/$name-locks-final.txt"
-  go mod download
+  if [ "$PHASE" != build ]; then go mod download; else export GOPROXY=off GOSUMDB=off; fi
   go mod verify > "/output/$name-mod-verify.txt"
+  if [ "$PHASE" = download ]; then continue; fi
   case "$name" in
     galene) go test -p 1 ./group ./token ./ice > "/output/$name-tests.txt"; flags='-s -w';;
     rimgo) go test -p 1 ./... > "/output/$name-tests.txt"; flags='-s -w -X codeberg.org/rimgo/rimgo/pages.VersionInfo=d2be8e2-utilibre-p3';;

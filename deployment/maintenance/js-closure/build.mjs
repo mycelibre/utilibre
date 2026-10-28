@@ -6,11 +6,12 @@ import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {specs,packages,output} from './specs.mjs';
 process.umask(0o077);
+export const fileManifest=`const fs=require('fs'),path=require('path'),crypto=require('crypto');const out={};function walk(d){for(const n of fs.readdirSync(d).sort()){const p=path.join(d,n),s=fs.lstatSync(p);if(s.isDirectory())walk(p);else if(s.isFile())out[p]={sha256:crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),mode:s.mode&511};else if(s.isSymbolicLink())out[p]={link:fs.readlinkSync(p)};}}JSON.parse(process.argv[2]).forEach(walk);console.log(JSON.stringify(out));`;
 export async function buildExactPackages(specs,packages,output,selected){
 assert(selected.length&&selected.every(k=>specs.some(s=>s.key===k)));
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const free=()=>{const f=fs.statfsSync('/');return f.bavail*f.bsize;};
-const manifest=`const fs=require('fs'),path=require('path'),crypto=require('crypto');const out={};function walk(d){for(const n of fs.readdirSync(d).sort()){const p=path.join(d,n),s=fs.lstatSync(p);if(s.isDirectory())walk(p);else if(s.isFile())out[p]={sha256:crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),mode:s.mode&511};else if(s.isSymbolicLink())out[p]={link:fs.readlinkSync(p)};}}JSON.parse(process.argv[2]).forEach(walk);console.log(JSON.stringify(out));`;
+
 for(const key of selected){
  const s=specs.find(s=>s.key===key),dir=output+'/'+key;fs.mkdirSync(dir,{recursive:true});
  const scratch=fs.mkdtempSync('/dev/shm/utilibre-js-closure-');
@@ -25,19 +26,25 @@ for(const key of selected){
  try{
   assert(free()>8.3*1024**3,'Recovery floor');
   assert.equal(docker(['inspect','--format','{{.Image}}',s.container]).trim(),s.base,'Live base changed');
-  const before=JSON.parse(node(s.base,manifest,[JSON.stringify(s.roots)])),old=config(s.base),receipts=[];
+  const before=JSON.parse(node(s.base,fileManifest,[JSON.stringify(s.roots)])),old=config(s.base),receipts=[];
   const targets=Object.values(s.paths).flat();assert(targets.every(p=>/^\/[A-Za-z0-9_@+./-]+$/.test(p)&&!p.includes('/../')));
   let recipe='FROM '+s.base+'\nUSER 0\n';
   // Deleting only the exact dependency directories is required for major packages
   // which no longer ship old lib/ files. No retained node_modules can be discarded.
-  for(const target of targets){assert(!Object.keys(before).some(p=>p.startsWith(target+'/node_modules/')),'Unexpected nested dependency');recipe+='RUN rm -r '+JSON.stringify(target)+'\n';}
+  for(const target of targets){
+   const nested=Object.keys(before).some(p=>p.startsWith(target+'/node_modules/'));
+   if(nested){
+    assert(s.preserveNestedDependencies?.includes(target),'Unexpected nested dependency');
+    recipe+='RUN mv '+target+'/node_modules /tmp/utilibre-preserved-modules && rm -r '+target+' && mkdir -p '+target+' && mv /tmp/utilibre-preserved-modules '+target+'/node_modules\n';
+   }else recipe+='RUN rm -r '+JSON.stringify(target)+'\n';
+  }
   for(const [name,paths] of Object.entries(s.paths)){
    const pin=packages[name],packageName=pin.name||name;
    assert(/^(?:@[a-z0-9._-]+\/)?[a-z0-9._-]+$/.test(packageName),'Invalid package identity');
    const response=await fetch('https://registry.npmjs.org/'+encodeURIComponent(packageName)+'/'+pin.version);assert(response.ok);const meta=await response.json();assert.equal(meta.dist.integrity,pin.integrity);assert.equal(meta.name,packageName);assert.equal(meta.version,pin.version);
    // DOMPurify's only dependency is a TypeScript declaration package, not
    // runtime code. This finite exception must not authorize new transitives.
-   const expectedDependencies=packageName==='dompurify'&&pin.version==='3.4.17'?{'@types/trusted-types':'^2.0.7'}:{};
+   const expectedDependencies=pin.dependencies||(packageName==='dompurify'&&pin.version==='3.4.17'?{'@types/trusted-types':'^2.0.7'}:{});
    assert.deepEqual(meta.dependencies||{},expectedDependencies);assert.equal(new URL(meta.dist.tarball).hostname,'registry.npmjs.org');
    const response2=await fetch(meta.dist.tarball);assert(response2.ok);const bytes=Buffer.from(await response2.arrayBuffer());assert(bytes.length<4*1024**2);assert.equal('sha512-'+createHash('sha512').update(bytes).digest('base64'),pin.integrity);
    const i=receipts.length,archive=scratch+'/'+i+'.tgz',dest=scratch+'/pkg'+i;fs.mkdirSync(dest,{mode:0o755});fs.writeFileSync(archive,bytes);
@@ -63,7 +70,8 @@ for(const key of selected){
   const log=fs.openSync(dir+'/build.log','w'),child=cp.spawn('docker',['build','--network','none','--pull=false','--memory','512m','--cpu-period','100000','--cpu-quota','200000','-t',s.candidate,scratch],{env:{...process.env,DOCKER_BUILDKIT:'0'},stdio:['ignore',log,log]});
   const watcher=setInterval(()=>{if(free()<8*1024**3)child.kill('SIGTERM')},500);const code=await new Promise(r=>child.once('exit',r));clearInterval(watcher);fs.closeSync(log);assert.equal(code,0);
   const next=config(s.candidate);for(const k of ['Env','Entrypoint','Cmd','WorkingDir','Healthcheck','Volumes','ExposedPorts','Labels'])assert.deepEqual(next.Config[k],old.Config[k],k);assert.equal(next.Config.User,old.Config.User||'0');
-  const after=JSON.parse(node(next.Id,manifest,[JSON.stringify(s.roots)])),allowed=p=>targets.some(t=>p.startsWith(t+'/'))||(key==='grist'&&p===adapter)||(s.disableNpmBackgroundChecks&&p===npmPolicy),changed=[];
+  const after=JSON.parse(node(next.Id,fileManifest,[JSON.stringify(s.roots)])),allowed=p=>targets.some(t=>p.startsWith(t+'/'))||(key==='grist'&&p===adapter)||(s.disableNpmBackgroundChecks&&p===npmPolicy),changed=[];
+  for(const target of s.preserveNestedDependencies||[])for(const p of Object.keys(before).filter(p=>p.startsWith(target+'/node_modules/')))assert.deepEqual(after[p],before[p],'Preserved nested dependency changed');
   for(const p of new Set([...Object.keys(before),...Object.keys(after)]))if(JSON.stringify(before[p])!==JSON.stringify(after[p])){assert(allowed(p),'Unrelated file changed: '+p);changed.push(p)}assert(changed.length);
   const versions=JSON.parse(node(next.Id,`const fs=require('fs');console.log(JSON.stringify(Object.fromEntries(JSON.parse(process.argv[2]).map(p=>[p,JSON.parse(fs.readFileSync(p+'/package.json')).version]))))`,[JSON.stringify(targets)]));
   for(const [name,paths] of Object.entries(s.paths))for(const p of paths)assert.equal(versions[p],packages[name].version);

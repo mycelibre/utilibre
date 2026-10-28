@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "advisories": [
+    "CVE-2026-105482",
+    "CVE-2026-106069",
+    "CVE-2026-111497"
+  ],
+  "packages": {
+    "3.21/nodejs-22.23.4-r0.apk": {
+      "name": "nodejs",
+      "version": "22.23.4-r0",
+      "file": "nodejs-22.23.4-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/x86_64/nodejs-22.23.4-r0.apk",
+      "sha256": "23cfba400c8967ed070fd34f8d77ffc39888f86795f4275722a1a7234ddd3cf7",
+      "branch": "3.21"
+    }
+  },
+  "rows": [
+    {
+      "key": "pairdrop",
+      "base": "sha256:6f6928be625aa622ae895fe97541f815141646a0051a630f3a755539cfa3294a",
+      "oldRef": "utilibre-pairdrop:body-parser-security-20261028",
+      "containers": [
+        "utilibre-community-pairdrop-1"
+      ],
+      "release": "3.21.8",
+      "candidate": "utilibre-pairdrop:node-security-20261028",
+      "packages": {
+        "nodejs": {
+          "installed": "22.23.2-r0",
+          "package": "3.21/nodejs-22.23.4-r0.apk"
+        }
+      },
+      "binary": "/usr/bin/node",
+      "applicationRoots": [
+        "/home/node/app"
+      ]
+    }
+  ]
+}

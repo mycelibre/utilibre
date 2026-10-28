@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-28T10:10:23.178Z",
+  "status": "passed",
+  "rows": [
+    {
+      "key": "bytestash",
+      "name": "utilibre-bytestash-bytestash-1",
+      "oldRef": "utilibre-bytestash:1.5.14-p1",
+      "oldImage": "sha256:68e46ecbd33f988c4d39f110a0b7e32e2f6174111c775d09cf7d2ac2a4344ff6",
+      "newRef": "utilibre-bytestash:body-parser-security-20261028",
+      "newImage": "sha256:6a05c230634db809adc871b843a4dd215ebc9c3152fd9665e615c4d4a52c628a",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:50:39.713Z"
+    },
+    {
+      "key": "projects",
+      "name": "utilibre-projects-app-1",
+      "oldRef": "utilibre-projects:undici-security-20261028",
+      "oldImage": "sha256:572186094792021541d0d21a5ca5f6c7e46424e3ae58d6359d677e27bfda38b9",
+      "newRef": "utilibre-projects:body-parser-security-20261028",
+      "newImage": "sha256:0285005f99a36249fc4741ad54fd84ac15baeabd4cccd637b137409f1efa6ab6",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:50:56.558Z"
+    },
+    {
+      "key": "gathio",
+      "name": "utilibre-gathio-gathio-1",
+      "oldRef": "utilibre-gathio:undici-security-20261028",
+      "oldImage": "sha256:de246196e2e7c136ca0e90664c46b6b891dff2834c55cf32ba1a268c08064067",
+      "newRef": "utilibre-gathio:body-parser-security-20261028",
+      "newImage": "sha256:d45032c2761c42c4266a6c03ee701e1b75d53fd1ac40a00da60bc609860ccf4e",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:51:24.149Z"
+    },
+    {
+      "key": "pairdrop",
+      "name": "utilibre-community-pairdrop-1",
+      "oldRef": "utilibre-pairdrop:libraries-security-20261028",
+      "oldImage": "sha256:c3d412e53040572d791e459f66c69f2bb1573a1fb413a02d51d039ffbde09caa",
+      "newRef": "utilibre-pairdrop:body-parser-security-20261028",
+      "newImage": "sha256:6f6928be625aa622ae895fe97541f815141646a0051a630f3a755539cfa3294a",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:51:31.793Z"
+    },
+    {
+      "key": "resume",
+      "name": "utilibre-expanded-resume-1",
+      "oldRef": "utilibre-resume:undici-security-20261028",
+      "oldImage": "sha256:251648c0cf5bfb574b6128d57072282c9542de5132c39108c164d1dc6375d503",
+      "newRef": "utilibre-resume:body-parser-security-20261028",
+      "newImage": "sha256:2d20e8729a48ffa5533173a30a781d734aa85919b8f0355c47bda4a3648c6d75",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:51:45.052Z"
+    },
+    {
+      "key": "kuma",
+      "name": "utilibre-community-uptime-kuma-1",
+      "oldRef": "utilibre-kuma:curl823-security-20261028",
+      "oldImage": "sha256:8966804fad21396cbe95649aa855618a4b1ecd9f5b7ad16234ea27c17c9ccf72",
+      "newRef": "utilibre-kuma:body-parser-curl-security-20261028",
+      "newImage": "sha256:8eafa7e24372e6d529381651443a7923a31a75ad1871173d934a00f0dbe93a36",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:04:40.618Z"
+    },
+    {
+      "key": "actual",
+      "name": "utilibre-expanded-actual-1",
+      "oldRef": "utilibre-actual:undici-security-20261028",
+      "oldImage": "sha256:a6f3dbc74d5fc10ff3be595eb00fa3c2509ff16e6d80b59709c4e12df624eb66",
+      "newRef": "utilibre-actual:body-parser-locked2-security-20261028",
+      "newImage": "sha256:d7624ef67e13ca69816fefc829b1e4fa14b3687c2c07f6d0f7837d899d0068d0",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:07:39.207Z"
+    },
+    {
+      "key": "grist-body",
+      "name": "utilibre-records-grist-1",
+      "oldRef": "utilibre-curl-records-grist:security-20261028",
+      "oldImage": "sha256:3c93de35feb013780086007ae35a398e73ac13cf33949b19ab5ce0a793d91c1a",
+      "newRef": "utilibre-grist:body-parser-locked-security-20261028",
+      "newImage": "sha256:994f769bab507ab6acf7eac1f0e7e95a22596942dfa40b77a0375c66eb66d029",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:10:23.178Z"
+    }
+  ]
+}

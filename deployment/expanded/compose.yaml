@@ -61,7 +61,7 @@ services:
 
   breezewiki:
     <<: *runtime
-    image: utilibre-breezewiki:brotli-security-20261028
+    image: utilibre-curl-expanded-breezewiki:security-20261028
     read_only: true
     user: "1000:1000"
     environment:
@@ -137,7 +137,7 @@ services:
 
   actual:
     <<: *runtime
-    image: utilibre-actual:undici-security-20261028
+    image: utilibre-actual:body-parser-locked2-security-20261028
     read_only: true
     user: "1000:1000"
     environment:
@@ -166,7 +166,7 @@ services:
   resume:
     <<: *runtime
     # Same pinned upstream runtime; narrow visitor-statistics removal in Dockerfile.resume.
-    image: utilibre-resume:undici-security-20261028
+    image: utilibre-resume:node-security-20261028
     read_only: true
     user: "1000:1000"
     command: ["node", "/usr/local/bin/utilibre-resume-start.mjs"]
@@ -247,7 +247,7 @@ services:
 
   penpot-backend:
     <<: *runtime
-    image: utilibre-penpot:brotli-security-20261028
+    image: utilibre-curl-expanded-penpot-backend:security-20261028
     user: "1001:1001"
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
@@ -289,7 +289,7 @@ services:
 
   penpot-admin-console:
     <<: *runtime
-    image: utilibre-penpot-admin:tanstack-security-20261021
+    image: utilibre-penpot-admin:node-security-20261028
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
       PENPOT_INTERNAL_URI: http://penpot-frontend:8080
@@ -303,7 +303,7 @@ services:
 
   penpot-exporter:
     <<: *runtime
-    image: utilibre-penpot-exporter:2.18.3-single-screen-20261012
+    image: utilibre-curl-expanded-penpot-exporter:security-20261028
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
       PENPOT_INTERNAL_URI: http://penpot-frontend:8080

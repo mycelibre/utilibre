@@ -1,0 +1,292 @@
+{
+  "version": 1,
+  "rows": [
+    {
+      "key": "wishlist",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "base": "sha256:973a4dcbd3e43b6d787a2f1598c8e06b3a30f5712484f29b3cdc013b10855337",
+      "oldRef": "utilibre-wishlist:undici-security-20261028",
+      "candidate": "utilibre-wishlist:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "24.20.0",
+      "modules": "137",
+      "artifact": "24-glibc"
+    },
+    {
+      "key": "tracker",
+      "containers": [
+        "utilibre-chitchatter-tracker-1"
+      ],
+      "base": "sha256:45ba99962d320fadd659c6bdc239f189db393302611d8b2987338cbd7a6e4860",
+      "oldRef": "utilibre-tracker:undici-security-20261028",
+      "candidate": "utilibre-tracker:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "24.21.0",
+      "modules": "137",
+      "artifact": "24-musl"
+    },
+    {
+      "key": "biblioreads",
+      "containers": [
+        "utilibre-biblioreads-biblioreads-1"
+      ],
+      "base": "sha256:7a6b919f8d09f7ce50f97f2239a8eb0d077ed55f83d289f32a214f27ef6aab0e",
+      "oldRef": "utilibre-biblioreads:undici-security-20261028",
+      "candidate": "utilibre-biblioreads:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "24.21.0",
+      "modules": "137",
+      "artifact": "24-musl"
+    },
+    {
+      "key": "kuma",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "base": "sha256:8eafa7e24372e6d529381651443a7923a31a75ad1871173d934a00f0dbe93a36",
+      "oldRef": "utilibre-kuma:body-parser-curl-security-20261028",
+      "candidate": "utilibre-kuma:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "22.23.2",
+      "modules": "127",
+      "artifact": "22-glibc"
+    },
+    {
+      "key": "rsshub",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "base": "sha256:fd7c2c27ffbbee8d5a261fb8c9cac9625aac018f49def2e46a9e8fcc56ac522d",
+      "oldRef": "utilibre-curl-services-rsshub:security-20261028",
+      "candidate": "utilibre-rsshub:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "24.21.0",
+      "modules": "137",
+      "artifact": "24-glibc"
+    },
+    {
+      "key": "cryptpad",
+      "containers": [
+        "utilibre-pack-cryptpad-cryptpad-1"
+      ],
+      "base": "sha256:5e61ebc435a8996e030e6a3b32edbaf1cf93914ee3c9564a62e7f7a03ee599b0",
+      "oldRef": "utilibre-cryptpad:undici-security-20261028",
+      "candidate": "utilibre-cryptpad:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "24.21.0",
+      "modules": "137",
+      "artifact": "24-glibc"
+    },
+    {
+      "key": "spliit",
+      "containers": [
+        "utilibre-spliit-app-1"
+      ],
+      "base": "sha256:12e281f5a1ee5018f9ab97fdefa3bb11ab06b7b90b1ccb6667f0dd110b5ab7d9",
+      "oldRef": "utilibre-spliit:undici-security-20261028",
+      "candidate": "utilibre-spliit:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "26.11.1",
+      "modules": "147",
+      "artifact": "26-musl"
+    },
+    {
+      "key": "rallly",
+      "containers": [
+        "utilibre-community-rallly-1"
+      ],
+      "base": "sha256:22f830a85f029ae0e99b469d63b8f389e480b1b8523da44e113ecdf8be56f83d",
+      "oldRef": "utilibre-rallly:curl823-security-20261028",
+      "candidate": "utilibre-rallly:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "24.21.0",
+      "modules": "137",
+      "artifact": "24-glibc"
+    },
+    {
+      "key": "bytestash",
+      "containers": [
+        "utilibre-bytestash-bytestash-1"
+      ],
+      "base": "sha256:6a05c230634db809adc871b843a4dd215ebc9c3152fd9665e615c4d4a52c628a",
+      "oldRef": "utilibre-bytestash:body-parser-security-20261028",
+      "candidate": "utilibre-bytestash:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "22.23.3",
+      "modules": "127",
+      "artifact": "22-musl"
+    },
+    {
+      "key": "projects",
+      "containers": [
+        "utilibre-projects-app-1"
+      ],
+      "base": "sha256:0285005f99a36249fc4741ad54fd84ac15baeabd4cccd637b137409f1efa6ab6",
+      "oldRef": "utilibre-projects:body-parser-security-20261028",
+      "candidate": "utilibre-projects:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "22.23.3",
+      "modules": "127",
+      "artifact": "22-musl"
+    },
+    {
+      "key": "gathio",
+      "containers": [
+        "utilibre-gathio-gathio-1"
+      ],
+      "base": "sha256:d45032c2761c42c4266a6c03ee701e1b75d53fd1ac40a00da60bc609860ccf4e",
+      "oldRef": "utilibre-gathio:body-parser-security-20261028",
+      "candidate": "utilibre-gathio:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "22.23.3",
+      "modules": "127",
+      "artifact": "22-musl"
+    },
+    {
+      "key": "candlr",
+      "containers": [
+        "utilibre-records-candlr-1"
+      ],
+      "base": "sha256:e8c41300c522de79e79ea7e6fc79efbd8644f3a9170f42536b642876d16b8d7e",
+      "oldRef": "utilibre-candlr:undici-security-20261028",
+      "candidate": "utilibre-candlr:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "22.23.3",
+      "modules": "127",
+      "artifact": "22-glibc"
+    },
+    {
+      "key": "bookplate",
+      "containers": [
+        "utilibre-records-bookplate-1"
+      ],
+      "base": "sha256:e5cb68eaf694a60a8149a705939572871746781731deade416061b8bed806ccb",
+      "oldRef": "utilibre-bookplate:undici-security-20261028",
+      "candidate": "utilibre-bookplate:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "24.21.0",
+      "modules": "137",
+      "artifact": "24-musl"
+    },
+    {
+      "key": "grist",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "base": "sha256:994f769bab507ab6acf7eac1f0e7e95a22596942dfa40b77a0375c66eb66d029",
+      "oldRef": "utilibre-grist:body-parser-locked-security-20261028",
+      "candidate": "utilibre-grist:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "22.23.3",
+      "modules": "127",
+      "artifact": "22-glibc"
+    },
+    {
+      "key": "razzia-socket",
+      "containers": [
+        "utilibre-razzia-socket-1"
+      ],
+      "base": "sha256:ad4a1fac32c07e24c84a8448f44f52ccb2922e85dfb34874f9c45f50f2c079d8",
+      "oldRef": "utilibre-razzia-socket:undici-security-20261028",
+      "candidate": "utilibre-razzia-socket:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "24.21.0",
+      "modules": "137",
+      "artifact": "24-musl"
+    },
+    {
+      "key": "wbo",
+      "containers": [
+        "utilibre-collaboration-pilot-wbo-1"
+      ],
+      "base": "sha256:2522bc6211d954954a217724257e6aca3a585d446d8287756aa489665ce6d67a",
+      "oldRef": "utilibre-wbo:undici-security-20261028",
+      "candidate": "utilibre-wbo:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "24.21.0",
+      "modules": "137",
+      "artifact": "24-musl"
+    },
+    {
+      "key": "newsletters-web",
+      "containers": [
+        "utilibre-newsletters-web-1"
+      ],
+      "base": "sha256:8505e272c617a6d36ec17ede537a8423f289da0bc7aec83514868b140d940980",
+      "oldRef": "utilibre-newsletters-web:undici-security-20261028",
+      "candidate": "utilibre-newsletters-web:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "26.11.1",
+      "modules": "147",
+      "artifact": "26-musl"
+    },
+    {
+      "key": "resume",
+      "containers": [
+        "utilibre-expanded-resume-1"
+      ],
+      "base": "sha256:2d20e8729a48ffa5533173a30a781d734aa85919b8f0355c47bda4a3648c6d75",
+      "oldRef": "utilibre-resume:body-parser-security-20261028",
+      "candidate": "utilibre-resume:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "24.21.0",
+      "modules": "137",
+      "artifact": "24-glibc"
+    },
+    {
+      "key": "newsletters-smtp",
+      "containers": [
+        "utilibre-newsletters-smtp-1",
+        "utilibre-newsletters-jobs-1"
+      ],
+      "base": "sha256:2c3983f726b13e83bc164cae77d1813acfb6ea8fc5bb3db519478155d4499bf7",
+      "oldRef": "utilibre-newsletters-smtp:undici-security-20261028",
+      "candidate": "utilibre-newsletters-smtp:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "26.11.1",
+      "modules": "147",
+      "artifact": "26-musl"
+    },
+    {
+      "key": "actual",
+      "containers": [
+        "utilibre-expanded-actual-1"
+      ],
+      "base": "sha256:d7624ef67e13ca69816fefc829b1e4fa14b3687c2c07f6d0f7837d899d0068d0",
+      "oldRef": "utilibre-actual:body-parser-locked2-security-20261028",
+      "candidate": "utilibre-actual:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "24.21.0",
+      "modules": "137",
+      "artifact": "24-glibc"
+    },
+    {
+      "key": "dumb",
+      "containers": [
+        "utilibre-additions-dumb-1"
+      ],
+      "base": "sha256:7298a63cc33117e4f78382483e968ee9b35b34ace5cdbe2ca3b6ac55e1e5454b",
+      "oldRef": "utilibre-dumb:undici-security-20261028",
+      "candidate": "utilibre-dumb:node-security-20261028",
+      "binary": "/usr/local/bin/node",
+      "beforeVersion": "24.21.0",
+      "modules": "137",
+      "artifact": "24-musl"
+    },
+    {
+      "key": "penpot-admin",
+      "containers": [
+        "utilibre-expanded-penpot-admin-console-1"
+      ],
+      "base": "sha256:d07dc2a23ddf713e1ef11821393cd0ee7f0d8b5ec1daa7861ea018f7a600edcd",
+      "oldRef": "utilibre-penpot-admin:tanstack-security-20261021",
+      "candidate": "utilibre-penpot-admin:node-security-20261028",
+      "binary": "/usr/bin/node",
+      "beforeVersion": "24.20.0",
+      "modules": "137",
+      "artifact": "24-glibc"
+    }
+  ]
+}

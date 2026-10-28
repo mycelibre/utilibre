@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "advisory": "CVE-2026-92392",
+  "rows": [
+    {
+      "key": "gathio",
+      "base": "sha256:477ba233e8eadb3ab7773e6a90a557ed628085f28b40d25a092f015552635091",
+      "baseRef": "utilibre-gathio-postgres:brotli-security-20261028",
+      "containers": [
+        "utilibre-gathio-postgres-1"
+      ],
+      "packages": [
+        "libcurl4",
+        "libcurl3-gnutls"
+      ],
+      "candidate": "utilibre-gathio:curl823-security-20261028",
+      "oldRef": "utilibre-gathio-postgres:brotli-security-20261028"
+    },
+    {
+      "key": "kuma",
+      "base": "sha256:6b78723c50ec697d58249c2faa75adbfbbda367c9bd141f2582f7ac8892872e4",
+      "baseRef": "utilibre-kuma:undici-security-20261028",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "packages": [
+        "curl",
+        "libcurl4"
+      ],
+      "candidate": "utilibre-kuma:curl823-security-20261028",
+      "oldRef": "utilibre-kuma:undici-security-20261028"
+    },
+    {
+      "key": "rallly",
+      "base": "sha256:058d250626b44853d8ba3bfb19af8f0c12a030458f9f35575704d75f4f4e5416",
+      "baseRef": "utilibre-rallly:undici-security-20261028",
+      "containers": [
+        "utilibre-community-rallly-1"
+      ],
+      "packages": [
+        "curl",
+        "libcurl4"
+      ],
+      "candidate": "utilibre-rallly:curl823-security-20261028",
+      "oldRef": "utilibre-rallly:undici-security-20261028"
+    }
+  ]
+}

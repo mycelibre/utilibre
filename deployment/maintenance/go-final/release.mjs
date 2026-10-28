@@ -6,7 +6,7 @@ import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {replaceImagePins, namespaceDependents, releaseGroup} from '../language-final/release.mjs';
 process.umask(0o077);
-const dir='/var/lib/utilibre-maintenance/go-final-20261011',file=dir+'/release.json';
+const oct28=process.argv.includes('--oct28'),dir=oct28?'/var/lib/utilibre-maintenance/security-20261028/go':'/var/lib/utilibre-maintenance/go-final-20261011',file=dir+'/release.json';
 const docker=(...args)=>{try{return cp.execFileSync('docker',args,{encoding:'utf8',timeout:120000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe']}).trim();}catch{throw Error('Bounded Docker operation failed; private configuration output withheld.');}};
 const inspect=name=>JSON.parse(docker('inspect',name))[0];
 const compose=g=>['compose','--project-directory',g.cwd,'-p',g.project,...g.files.flatMap(f=>['-f',f])];
@@ -39,6 +39,7 @@ async function main(){
   for(const r of [build,inventory,native,galene])assert.equal(r.status,'passed');
   const groups=[];
   for(const s of build.rows){
+   if(oct28){const scan=JSON.parse(fs.readFileSync(dir+'/'+s.key+'/scan-gate.json'));assert(scan.passed&&scan.imageId===s.imageId&&scan.base===s.baseId&&scan.newHighCritical===0&&Date.now()-Date.parse(scan.advisoryUpdatedAt)<48*3600000);}
    const x=inspect(s.container),l=x.Config.Labels;assert.equal(x.Image,s.baseId);assert(x.State.Running);assert.equal(inspect(s.candidate).Id,s.imageId);
    assert(inventory.rows.some(r=>r.key===s.key&&r.imageId===s.imageId&&r.status==='passed'));
    if(s.key==='galene')assert.equal(galene.imageId,s.imageId);else assert(native.rows.some(r=>r.key===s.key&&r.imageId===s.imageId&&r.status==='passed'));
@@ -55,7 +56,7 @@ async function main(){
  for(const g of report.groups){
   const disk=fs.statfsSync('/');assert(disk.bavail*disk.bsize>=8*1024**3,'8 GiB global disk floor');
   if(g.status==='passed'){await health(g,'new');continue;}
-  const validate=()=>{assert.equal(inspect(g.oldRef).Id,g.oldImage);assert.equal(inspect(g.newRef).Id,g.newImage);assert.equal(configHash(config(g)),g.configHash);assert([g.oldRef,g.newRef].includes(config(g).image));};
+  const validate=()=>{if(oct28){const scan=JSON.parse(fs.readFileSync(dir+'/'+g.key+'/scan-gate.json'));assert(scan.passed&&scan.imageId===g.newImage&&Date.now()-Date.parse(scan.advisoryUpdatedAt)<48*3600000);}assert.equal(inspect(g.oldRef).Id,g.oldImage);assert.equal(inspect(g.newRef).Id,g.newImage);assert.equal(configHash(config(g)),g.configHash);assert([g.oldRef,g.newRef].includes(config(g).image));};
   validate();
   if(g.key==='galene'&&galeneConnections(g)!==0){g.status='deferred-active-connections';g.reason='Native established HTTP/WebSocket connection count is nonzero; no meeting or client identifiers inspected.';save();continue;}
   let rollback=false,touchedRuntime=false;

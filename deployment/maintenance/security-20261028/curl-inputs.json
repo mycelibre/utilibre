@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "rows": [
+    {
+      "key": "curl-expanded-breezewiki",
+      "base": "sha256:a9b777fec40470250c994f27c99f1bee7f66d26f057000b481c1a1c01d48d96d",
+      "baseRef": "utilibre-breezewiki:brotli-security-20261028",
+      "containers": [
+        "utilibre-expanded-breezewiki-1"
+      ],
+      "packages": [
+        "curl",
+        "libcurl3t64-gnutls",
+        "libcurl4-gnutls",
+        "libcurl4t64"
+      ],
+      "candidate": "utilibre-curl-expanded-breezewiki:security-20261028",
+      "oldRef": "utilibre-breezewiki:brotli-security-20261028"
+    },
+    {
+      "key": "curl-services-freshrss",
+      "base": "sha256:919f1905c8070627d08b87f3de3626832246e12e274e60d921967158bf7ad510",
+      "baseRef": "utilibre-freshrss:brotli-security-20261028",
+      "containers": [
+        "utilibre-services-freshrss-1"
+      ],
+      "packages": [
+        "libcurl4t64"
+      ],
+      "candidate": "utilibre-curl-services-freshrss:security-20261028",
+      "oldRef": "utilibre-freshrss:brotli-security-20261028"
+    },
+    {
+      "key": "curl-linkding-linkding",
+      "base": "sha256:b1345438e499f37782f991a62735f2c073de73c6870f69fee5c163c34ae90af6",
+      "baseRef": "utilibre-linkding:brotli-security-20261028",
+      "containers": [
+        "utilibre-linkding-linkding-1"
+      ],
+      "packages": [
+        "curl",
+        "libcurl4t64"
+      ],
+      "candidate": "utilibre-curl-linkding-linkding:security-20261028",
+      "oldRef": "utilibre-linkding:brotli-security-20261028"
+    },
+    {
+      "key": "curl-expanded-penpot-backend",
+      "base": "sha256:4cea8f108abd18e9563fda41c665b51beefb32ce840a3109f555b286b0d594b6",
+      "baseRef": "utilibre-penpot:brotli-security-20261028",
+      "containers": [
+        "utilibre-expanded-penpot-backend-1"
+      ],
+      "packages": [
+        "curl",
+        "libcurl4t64"
+      ],
+      "candidate": "utilibre-curl-expanded-penpot-backend:security-20261028",
+      "oldRef": "utilibre-penpot:brotli-security-20261028"
+    },
+    {
+      "key": "curl-expanded-penpot-exporter",
+      "base": "sha256:415f223b6b456bb5d39ad772b71ad379b21ef7bcb1c1607980f9a9dddf0264cf",
+      "baseRef": "utilibre-penpot-exporter:2.18.3-single-screen-20261012",
+      "containers": [
+        "utilibre-expanded-penpot-exporter-1"
+      ],
+      "packages": [
+        "curl",
+        "libcurl3t64-gnutls",
+        "libcurl4-gnutls",
+        "libcurl4t64"
+      ],
+      "candidate": "utilibre-curl-expanded-penpot-exporter:security-20261028",
+      "oldRef": "utilibre-penpot-exporter:2.18.3-single-screen-20261012"
+    },
+    {
+      "key": "curl-kitchenowl-app",
+      "base": "sha256:fb789d9e5df3c00705e90bb220951c4f39b11e83970cca12089aebfdb827abda",
+      "baseRef": "utilibre-kitchenowl:brotli-security-20261028",
+      "containers": [
+        "utilibre-kitchenowl-app-1"
+      ],
+      "packages": [
+        "curl",
+        "libcurl4t64"
+      ],
+      "candidate": "utilibre-curl-kitchenowl-app:security-20261028",
+      "oldRef": "utilibre-kitchenowl:brotli-security-20261028"
+    },
+    {
+      "key": "curl-services-rsshub",
+      "base": "sha256:b55da9861808ec2c62372c626fa02e585cd5e971482a505c0714ec11e56772e5",
+      "baseRef": "utilibre-rsshub:undici-security-20261028",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "packages": [
+        "curl",
+        "libcurl3t64-gnutls",
+        "libcurl4-gnutls",
+        "libcurl4t64"
+      ],
+      "candidate": "utilibre-curl-services-rsshub:security-20261028",
+      "oldRef": "utilibre-rsshub:undici-security-20261028"
+    },
+    {
+      "key": "curl-records-grist",
+      "base": "sha256:add2050ed38ea9e5a510e29786821c135ecb119bfb5323ee453d49189cfe5e6b",
+      "baseRef": "utilibre-grist-undici:undici-security-20261028",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "packages": [
+        "curl",
+        "libcurl4t64"
+      ],
+      "candidate": "utilibre-curl-records-grist:security-20261028",
+      "oldRef": "utilibre-grist-undici:undici-security-20261028"
+    },
+    {
+      "key": "curl-priviblur-priviblur",
+      "base": "sha256:2c49778f8398fc43c4086556d8f27e8f10df66bfb746580921ef9982f1aa82ad",
+      "baseRef": "utilibre-priviblur:brotli-security-20261028",
+      "containers": [
+        "utilibre-priviblur-priviblur-1"
+      ],
+      "packages": [
+        "libcurl3t64-gnutls",
+        "libcurl4-gnutls"
+      ],
+      "candidate": "utilibre-curl-priviblur-priviblur:security-20261028",
+      "oldRef": "utilibre-priviblur:brotli-security-20261028"
+    }
+  ]
+}

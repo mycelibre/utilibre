@@ -1,0 +1,96 @@
+{
+  "date": "2026-10-28T10:00:45.244Z",
+  "status": "passed",
+  "rows": [
+    {
+      "key": "curl-expanded-breezewiki",
+      "name": "utilibre-expanded-breezewiki-1",
+      "oldRef": "utilibre-breezewiki:brotli-security-20261028",
+      "oldImage": "sha256:a9b777fec40470250c994f27c99f1bee7f66d26f057000b481c1a1c01d48d96d",
+      "newRef": "utilibre-curl-expanded-breezewiki:security-20261028",
+      "newImage": "sha256:c6f82abb8dd0340b847801c27c046eb9edfb6fce786e909eb5555525fd8ca2b0",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:54:46.548Z"
+    },
+    {
+      "key": "curl-services-freshrss",
+      "name": "utilibre-services-freshrss-1",
+      "oldRef": "utilibre-freshrss:brotli-security-20261028",
+      "oldImage": "sha256:919f1905c8070627d08b87f3de3626832246e12e274e60d921967158bf7ad510",
+      "newRef": "utilibre-curl-services-freshrss:security-20261028",
+      "newImage": "sha256:531dea70909831ea789ca19ec634a567b8083ec5e26824aa7d2eb50d4768bbc2",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:54:54.089Z"
+    },
+    {
+      "key": "curl-linkding-linkding",
+      "name": "utilibre-linkding-linkding-1",
+      "oldRef": "utilibre-linkding:brotli-security-20261028",
+      "oldImage": "sha256:b1345438e499f37782f991a62735f2c073de73c6870f69fee5c163c34ae90af6",
+      "newRef": "utilibre-curl-linkding-linkding:security-20261028",
+      "newImage": "sha256:4f11add1731c15f6999926706ecab8d5285edef816ec960cdd3e96abe2ce502b",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:55:27.316Z"
+    },
+    {
+      "key": "curl-expanded-penpot-backend",
+      "name": "utilibre-expanded-penpot-backend-1",
+      "oldRef": "utilibre-penpot:brotli-security-20261028",
+      "oldImage": "sha256:4cea8f108abd18e9563fda41c665b51beefb32ce840a3109f555b286b0d594b6",
+      "newRef": "utilibre-curl-expanded-penpot-backend:security-20261028",
+      "newImage": "sha256:606943edef2f91408edc5a42ea0664781b19cfa78de59373c17acde71081de8d",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:55:33.484Z"
+    },
+    {
+      "key": "curl-expanded-penpot-exporter",
+      "name": "utilibre-expanded-penpot-exporter-1",
+      "oldRef": "utilibre-penpot-exporter:2.18.3-single-screen-20261012",
+      "oldImage": "sha256:415f223b6b456bb5d39ad772b71ad379b21ef7bcb1c1607980f9a9dddf0264cf",
+      "newRef": "utilibre-curl-expanded-penpot-exporter:security-20261028",
+      "newImage": "sha256:913dc9b1408f34c6ff723e6068d7cbefa0840f2fc3a52317199671bd925d0020",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:55:39.387Z"
+    },
+    {
+      "key": "curl-kitchenowl-app",
+      "name": "utilibre-kitchenowl-app-1",
+      "oldRef": "utilibre-kitchenowl:brotli-security-20261028",
+      "oldImage": "sha256:fb789d9e5df3c00705e90bb220951c4f39b11e83970cca12089aebfdb827abda",
+      "newRef": "utilibre-curl-kitchenowl-app:security-20261028",
+      "newImage": "sha256:8364258291458eecf01d45f768128a1b50d2ebed51e2c66056f988b066374edf",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:59:56.822Z"
+    },
+    {
+      "key": "curl-services-rsshub",
+      "name": "utilibre-services-rsshub-1",
+      "oldRef": "utilibre-rsshub:undici-security-20261028",
+      "oldImage": "sha256:b55da9861808ec2c62372c626fa02e585cd5e971482a505c0714ec11e56772e5",
+      "newRef": "utilibre-curl-services-rsshub:security-20261028",
+      "newImage": "sha256:fd7c2c27ffbbee8d5a261fb8c9cac9625aac018f49def2e46a9e8fcc56ac522d",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:00:04.797Z"
+    },
+    {
+      "key": "curl-records-grist",
+      "name": "utilibre-records-grist-1",
+      "oldRef": "utilibre-grist-undici:undici-security-20261028",
+      "oldImage": "sha256:add2050ed38ea9e5a510e29786821c135ecb119bfb5323ee453d49189cfe5e6b",
+      "newRef": "utilibre-curl-records-grist:security-20261028",
+      "newImage": "sha256:3c93de35feb013780086007ae35a398e73ac13cf33949b19ab5ce0a793d91c1a",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:00:37.672Z"
+    },
+    {
+      "key": "curl-priviblur-priviblur",
+      "name": "utilibre-priviblur-priviblur-1",
+      "oldRef": "utilibre-priviblur:brotli-security-20261028",
+      "oldImage": "sha256:2c49778f8398fc43c4086556d8f27e8f10df66bfb746580921ef9982f1aa82ad",
+      "newRef": "utilibre-curl-priviblur-priviblur:security-20261028",
+      "newImage": "sha256:1c369f559a204c861955cb2584483a221a8bf368c754335f21f31436915d5de4",
+      "status": "passed",
+      "completedAt": "2026-10-28T10:00:45.244Z"
+    }
+  ]
+}

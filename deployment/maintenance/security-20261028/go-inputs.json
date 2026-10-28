@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "advisory": "CVE-2026-111943",
+  "rows": [
+    {
+      "key": "galene",
+      "base": "sha256:3439d6e0e6b47e8d394efbea73f8347fa00abcb591b3ae26b65774e0074d6b85",
+      "candidate": "utilibre-galene:go12610-security-20261028",
+      "containers": [
+        "utilibre-pack-galene-galene-1"
+      ],
+      "binary": "/app/galene",
+      "compilerVersion": "1.26.10",
+      "oldRef": "utilibre-galene:1.2.1-go1269-security-20261011"
+    },
+    {
+      "key": "rimgo",
+      "base": "sha256:5a1d957b2bc68e6e22b32148b1747612ec769f0bc12b310de6bb433b9e04a3e0",
+      "candidate": "utilibre-rimgo:go12610-security-20261028",
+      "containers": [
+        "utilibre-rimgo-rimgo-1"
+      ],
+      "binary": "/app/rimgo",
+      "compilerVersion": "1.26.10",
+      "oldRef": "utilibre-rimgo:d2be8e2-go1269-security-20261011"
+    },
+    {
+      "key": "safetwitch",
+      "base": "sha256:12ba2abc1818e03ccc76c58e1dc2d5052b1bf3d222d7e5dac0cdbec99d422034",
+      "candidate": "utilibre-safetwitch:go12610-security-20261028",
+      "containers": [
+        "utilibre-reader-evaluation-safetwitch-backend-1"
+      ],
+      "binary": "/safetwitch",
+      "compilerVersion": "1.26.10",
+      "oldRef": "utilibre-safetwitch-backend:91dda1c-go1269-security-20261011"
+    },
+    {
+      "key": "gothub",
+      "base": "sha256:3626be2bb364842b0fb2d071fb56d4d74a90d0f9b4944de5244b0963279b8f2c",
+      "candidate": "utilibre-gothub:go12610-security-20261028",
+      "containers": [
+        "utilibre-reader-evaluation-gothub-1"
+      ],
+      "binary": "/app/gothub",
+      "compilerVersion": "1.26.10",
+      "oldRef": "utilibre-gothub:24bedc8-go1269-security-20261011"
+    },
+    {
+      "key": "anonymousoverflow",
+      "base": "sha256:c92a8ab99115d93b4e4c6d930a31d2f20d4a9b3f2e3bf3bb959a19acf3ee144b",
+      "candidate": "utilibre-anonymousoverflow:go12610-security-20261028",
+      "containers": [
+        "utilibre-reader-evaluation-anonymousoverflow-1"
+      ],
+      "binary": "/app/anonymousoverflow",
+      "compilerVersion": "1.26.10",
+      "oldRef": "utilibre-anonymousoverflow:937cfee-go1269-security-20261011"
+    }
+  ]
+}

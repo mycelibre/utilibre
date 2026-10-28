@@ -119,14 +119,60 @@ Candlr/DeGoog also use `patch-leaves-final/check-app.mjs KEY --undici-oct28`.
 separately authorized `apply --undici` activates it using the existing release
 mechanism. Private evidence is in the `undici/` subdirectory.
 
+## Additional completed releases
+
+- `released-go.json`: five same-source Go 1.26.10 application rebuilds (Galene,
+  Rimgo, SafeTwitch, Gothub and AnonymousOverflow). Complete exported images
+  differ only in the declared binary. Locked modules and embedded assets remain
+  unchanged. Native routes/privacy checks pass; Galene passes a two-client
+  synthetic media, screen-sharing and rejoin test. No active Galene connections
+  were present at activation. Corresponding source offers were updated.
+- `released-curl.json` and `released-curl-bookworm.json`: twelve native curl
+  8.23.0 overlays, retaining application/configuration bytes and exported ABI.
+  Both native OpenSSL/GnuTLS upstream suites pass. Curl 8.23 removes SMB/SMBS;
+  these applications' checked paths use HTTP(S), and this does not change the
+  host's Storage Box filesystem mount. Ordinary NTLM remains available.
+- `released-body.json`: eight body-parser repairs (Kuma, ByteStash, Planka,
+  Gathio, PairDrop, Grist, Reactive Resume and Actual). Every affected old copy
+  reproduces the upstream trailing-compressed-bytes crash; repaired copies
+  survive and pass seven legitimate/rejection checks. Dependency ranges are
+  checked against their actual resolved packages. Grist and Actual use complete,
+  lockfile-pinned upstream dependency trees scoped inside body-parser, keeping
+  the rest of each application's dependencies unchanged.
+
+Grist additionally passes formulas, private-account isolation, SQLite/CSV
+import, export, deletion and a synthetic restore. Actual passes isolated startup
+as UID 1000 with a new temporary database. Its first locked candidate failed
+production readiness because the copied directory permissions were too narrow;
+rollback to the old image was verified, permissions were corrected, the native
+UID checks were strengthened, and the replacement passed. Failed receipts remain
+private; no user data was restored or deleted.
+
+The Debian scanner does **not** attribute CVE-2026-92392 to the custom 8.22
+baseline. Therefore the curl gate records signed upstream source, exact native
+package identity and behavior as its fix evidence, and explicitly reports this
+scanner coverage gap. Existing distribution findings remain in the raw results;
+a changed installed-version string is not counted as a new advisory. The source
+archive is `security-curl-20261028-source.tar.gz` on the existing toolbox source
+host; SHA-256 `b5da407a584e5b510636a8b90cc67518d6014f039e2a9a5925054d677ea14551`.
+
+Replay extends the existing `go-final`, `closure-followup`,
+`bookworm-curl-followup`, `js-closure` and transactional release helpers with
+finite October 28 profiles. Go's original release helper retains its no-active-
+meeting gate. `body.mjs` handles compatible small replacements; `body-tree.mjs`
+handles the two scoped dependency trees using `locks/body1` and `locks/body2`.
+Acquire those trees with the recorded official Node image and
+`npm ci --ignore-scripts --no-audit --no-fund`, then verify their recorded file
+manifest before an offline build. Run `check-body.mjs`, the additional Actual
+or Grist app checks, and `scan-brotli.mjs --body` before separate release approval.
+
 ## Remaining work in this batch
 
-Other JavaScript dependencies and native Go/curl/Node updates are separate from
-the completed library releases above. Candidate files or passing package scans alone do not
-mean they are deployed. Node's embedded Brotli/Undici and RSS-Bridge's embedded
-curl must be assessed separately from OS packages. Other existing scanner
-findings remain open until their specific evidence is revalidated; there is no
-blanket exception for descendants of these images.
+The Node runtime rollout is in progress; candidate files and partial receipts
+are not proof of complete fleet deployment. Further Go helpers and RSS-Bridge's
+embedded curl still require their separate recipes and tests. The final fleet
+assessment and remaining specific finding reviews are not complete. No blanket
+exception is granted to descendants of repaired images.
 
 ## Sources checked 28 October 2026
 

@@ -6,8 +6,8 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {curlSuites,allowedCurlFeatureChanges} from './curl-policy.mjs';
 process.umask(0o077);
-const dir='/var/lib/utilibre-maintenance/closure-followup-20261012',here=new URL('.',import.meta.url).pathname;
-const build=dir+'/curl-trixie',version='8.22.0-1~deb13u1+utilibre1';
+const oct28=process.argv.includes('--oct28'),prior='/var/lib/utilibre-maintenance/closure-followup-20261012',dir=oct28?'/var/lib/utilibre-maintenance/security-20261028':prior,here=new URL('.',import.meta.url).pathname;
+const build=dir+'/curl-trixie',version=(oct28?'8.23.0':'8.22.0')+'-1~deb13u1+utilibre1';
 const sha=b=>createHash('sha256').update(b).digest('hex');
 const run=(p,a,o={})=>cp.execFileSync(p,a,{encoding:'utf8',timeout:240000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe'],...o}).trim();
 const docker=a=>{try{return run('docker',a,{env:{...process.env,DOCKER_BUILDKIT:'0'}});}catch(e){fs.writeFileSync(dir+'/curl-stage-error.log',String(e.stdout||'')+String(e.stderr||e));throw Error('Curl stage failed; private diagnostics retained');}};
@@ -27,22 +27,22 @@ const deps={
  'libngtcp2-crypto-gnutls8_1.22.1-1~bpo13+1_amd64.deb':'d26e503fe97c74b32c2906ab2be0979d48a87c18add1d9f116c2dbc4c3d27d85',
  'libngtcp2-crypto-ossl0_1.22.1-1~bpo13+1_amd64.deb':'403c292ec7672ff8c36fba1d8dbd35f0e17aec941092533c931513adfc0d0dc9',
 };
-for(const [f,hash] of Object.entries(deps)){assert.equal(sha(fs.readFileSync(dir+'/curl-runtime/'+f)),hash);packages.set(f.split('_')[0],{file:f,dir:dir+'/curl-runtime',sha256:hash});}
+for(const [f,hash] of Object.entries(oct28?{}:deps)){assert.equal(sha(fs.readFileSync(dir+'/curl-runtime/'+f)),hash);packages.set(f.split('_')[0],{file:f,dir:dir+'/curl-runtime',sha256:hash});}
 const limits=['--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--cpus','1','--memory','512m','--pids-limit','64','--ulimit','core=0','--log-driver','none','--tmpfs','/tmp:rw,size=32m,mode=1777','--tmpfs','/run:rw,size=8m'];
 const imageRun=(image,command)=>docker(['run','--rm',...limits,'--hostname','utilibre-curl-fixture','--network','none','--user','0','--entrypoint','sh',image,'-ec',command]);
 const symbols=f=>new Set(run('readelf',['--dyn-syms','--wide',f]).split('\n').map(l=>l.trim().split(/\s+/)).filter(v=>['GLOBAL','WEAK'].includes(v[4])&&v[5]==='DEFAULT'&&v[6]!=='UND').map(v=>v[3]+':'+v[7].replace('@@','@')));
 const server='maintenance-curl-http-fixture';
-docker(['run','-d','--name',server,...limits,'--network','none','--user','0','--mount','type=bind,src='+dir+'/curl-fixture,dst=/fixture,readonly','--mount','type=bind,src='+here+'curl-fixture-server.py,dst=/server.py,readonly','--entrypoint','python3','utilibre-curl-native-builder:trixie-20261012','/server.py']);
+docker(['run','-d','--name',server,...limits,'--network','none','--user','0','--mount','type=bind,src='+dir+'/curl-fixture,dst=/fixture,readonly','--mount','type=bind,src='+here+'curl-fixture-server.py,dst=/server.py,readonly','--entrypoint','python3','utilibre-curl-native-builder:trixie-'+(oct28?'20261028':'20261012'),'/server.py']);
 try{
  docker(['exec',server,'python3','-c','import socket,time\nfor i in range(40):\n try:\n  socket.create_connection(("127.0.0.1",18443),.1).close();break\n except OSError: time.sleep(.1)\nelse: raise RuntimeError("fixture TLS readiness")']);
- const specs=JSON.parse(fs.readFileSync(here+'curl-specs.json')).filter(s=>process.argv.length<3||process.argv.slice(2).includes(s.key));
+ const requested=process.argv.slice(2).filter(k=>k!=='--oct28');const specs=(oct28?JSON.parse(fs.readFileSync(here+'../security-20261028/curl-inputs.json')).rows:JSON.parse(fs.readFileSync(here+'curl-specs.json'))).filter(s=>!requested.length||requested.includes(s.key));
  for(const s of specs){
   assert(fs.statfsSync('/').bavail*fs.statfsSync('/').bsize>8*1024**3,'Recovery floor');
   assert.equal(inspect(s.baseRef).Id,s.base);for(const name of s.containers)assert.equal(inspect(name).Image,s.base);
   const out=dir+'/curl/'+s.key;fs.mkdirSync(out+'/packages',{recursive:true});assert(!fs.existsSync(out+'/build.json'),'Preserve completed proof');
-  const selected=new Set([...s.packages,'libnghttp3-9','libngtcp2-16']);
-  if(s.packages.includes('libcurl4t64'))selected.add('libngtcp2-crypto-ossl0');
-  if(s.packages.includes('libcurl3t64-gnutls')){selected.add('libcurl4-gnutls');selected.add('libngtcp2-crypto-gnutls8');}
+  const selected=new Set(oct28?s.packages:[...s.packages,'libnghttp3-9','libngtcp2-16']);
+  if(!oct28&&s.packages.includes('libcurl4t64'))selected.add('libngtcp2-crypto-ossl0');
+  if(!oct28&&s.packages.includes('libcurl3t64-gnutls')){selected.add('libcurl4-gnutls');selected.add('libngtcp2-crypto-gnutls8');}
   for(const p of selected){assert(packages.has(p),p);const a=packages.get(p);fs.copyFileSync(a.dir+'/'+a.file,out+'/packages/'+a.file);}
   fs.copyFileSync(here+'install-curl.sh',out+'/install-curl.sh');const before=inspect(s.base);
   docker(['build','--pull=false','--network=none','--memory','512m','--cpu-period','100000','--cpu-quota','100000','--build-arg','BASE='+s.baseRef,'--build-arg','RESTORE_USER='+(before.Config.User||'root'),'-f',here+'Dockerfile.curl','-t',s.candidate,out]);
@@ -69,7 +69,7 @@ try{
   const features=[];
   if(s.packages.includes('curl')){
    const old=imageRun(s.base,'curl --version'),current=imageRun(s.candidate,'curl --version');
-   features.push(...allowedCurlFeatureChanges(old,current));
+   features.push(...allowedCurlFeatureChanges(old,current,oct28?'8.23.0':'8.22.0'));
    const cli=docker(['run','--rm',...limits,'--network','container:'+server,'--user','65534:65534','--mount','type=bind,src='+dir+'/curl-fixture/cert.pem,dst=/ca.pem,readonly','--entrypoint','curl',after.Id,'--silent','--show-error','--fail','--noproxy','*','--max-time','5','--cacert','/ca.pem','https://localhost:18443/']);
    assert.equal(cli,'fictional transfer');
   }
@@ -80,7 +80,7 @@ try{
   }
   const proof={date:new Date().toISOString(),...s,imageId:after.Id,version,passed:true,configurationUnchanged:true,applicationSha256,etcSha256,unrelatedLibrariesSha256,abi,features,packages:[...selected].map(name=>({name,...packages.get(name)})),deployed:false};
   fs.writeFileSync(out+'/build.json',JSON.stringify(proof,null,2)+'\n');
-  fs.writeFileSync(out+'/native.json',JSON.stringify({date:new Date().toISOString(),imageId:after.Id,passed:true,nativeTransfers:native,abiPreserved:true,phpCurlTls:php,upstreamSuites:counts,limitations:'Synthetic loopback HTTP/TLS only; HTTP/3 feature presence is not a QUIC end-to-end test. Upstream removed RTMP and TLS-SRP; supported NTLM/SMB retained. No user traffic or production data.'},null,2)+'\n');
+  fs.writeFileSync(out+'/native.json',JSON.stringify({date:new Date().toISOString(),imageId:after.Id,passed:true,nativeTransfers:native,abiPreserved:true,phpCurlTls:php,upstreamSuites:counts,limitations:'Synthetic loopback HTTP/TLS only; HTTP/3 feature presence is not a QUIC end-to-end test. Upstream removed RTMP and TLS-SRP; 8.23 also removes SMB/SMBS. Ordinary NTLM retained. No user traffic or production data.'},null,2)+'\n');
   console.log(s.key+': native transfers, ABI and unchanged app/config passed');
  }
 }finally{docker(['rm','-f',server]);}

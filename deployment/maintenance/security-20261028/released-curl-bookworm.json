@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-28T09:55:30.477Z",
+  "status": "passed",
+  "rows": [
+    {
+      "key": "gathio",
+      "name": "utilibre-gathio-postgres-1",
+      "oldRef": "utilibre-gathio-postgres:brotli-security-20261028",
+      "oldImage": "sha256:477ba233e8eadb3ab7773e6a90a557ed628085f28b40d25a092f015552635091",
+      "newRef": "utilibre-gathio:curl823-security-20261028",
+      "newImage": "sha256:095558a2e1a54a4c685ce3243ddb0322ca1eaa10a7b2e1de16397c725f11fc85",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:54:59.505Z"
+    },
+    {
+      "key": "kuma",
+      "name": "utilibre-community-uptime-kuma-1",
+      "oldRef": "utilibre-kuma:undici-security-20261028",
+      "oldImage": "sha256:6b78723c50ec697d58249c2faa75adbfbbda367c9bd141f2582f7ac8892872e4",
+      "newRef": "utilibre-kuma:curl823-security-20261028",
+      "newImage": "sha256:8966804fad21396cbe95649aa855618a4b1ecd9f5b7ad16234ea27c17c9ccf72",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:55:11.613Z"
+    },
+    {
+      "key": "rallly",
+      "name": "utilibre-community-rallly-1",
+      "oldRef": "utilibre-rallly:undici-security-20261028",
+      "oldImage": "sha256:058d250626b44853d8ba3bfb19af8f0c12a030458f9f35575704d75f4f4e5416",
+      "newRef": "utilibre-rallly:curl823-security-20261028",
+      "newImage": "sha256:22f830a85f029ae0e99b469d63b8f389e480b1b8523da44e113ecdf8be56f83d",
+      "status": "passed",
+      "completedAt": "2026-10-28T09:55:30.477Z"
+    }
+  ]
+}

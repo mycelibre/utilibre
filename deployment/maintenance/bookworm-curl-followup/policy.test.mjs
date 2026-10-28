@@ -26,3 +26,12 @@ test('ABI gate excludes only the empty HIDDEN linker version marker',()=>{
  assert.deepEqual([...symbols],['OBJECT:CURL_GNUTLS_3','OBJECT:HIDDEN','FUNC:curl_easy_init@CURL_GNUTLS_3','FUNC:internal@HIDDEN']);
  assert.equal(exportedSymbols('1: 0000000000000000 0 OBJECT GLOBAL DEFAULT ABS HIDDEN').size,0);
 });
+
+test('8.23 native policy permits SMB retirement only, preserving ordinary capabilities',()=>{
+ const fresh=fixture('8.23.0',(1<<2)|(1<<4)|(1<<16),'http https');
+ assert.deepEqual(libraryChanges(before,fresh,'8.23.0').removedProtocols,['smb','rtmp']);
+ assert.throws(()=>libraryChanges(before,fresh));
+ assert.throws(()=>libraryChanges(before,fresh,'8.24.0'));
+ assert.throws(()=>libraryChanges(before,fixture('8.23.0',(1<<2)|(1<<4),'http https'),'8.23.0'));
+ assert.throws(()=>featureChanges(cliBefore,cliAfter.replace(' HTTP2',''),'8.23.0'));
+});

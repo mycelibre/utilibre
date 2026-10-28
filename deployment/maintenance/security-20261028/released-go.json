@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-28T09:48:19.432Z",
+  "status": "passed",
+  "rows": [
+    {
+      "key": "galene",
+      "oldRef": "utilibre-galene:1.2.1-go1269-security-20261011",
+      "oldImage": "sha256:3439d6e0e6b47e8d394efbea73f8347fa00abcb591b3ae26b65774e0074d6b85",
+      "newRef": "utilibre-galene:go12610-security-20261028",
+      "newImage": "sha256:73fd5c5af4ca3d6f255be3687820d3049d1557072fde56744fedb07910d1930b",
+      "status": "passed",
+      "verifiedAt": "2026-10-28T09:47:59.920Z"
+    },
+    {
+      "key": "rimgo",
+      "oldRef": "utilibre-rimgo:d2be8e2-go1269-security-20261011",
+      "oldImage": "sha256:5a1d957b2bc68e6e22b32148b1747612ec769f0bc12b310de6bb433b9e04a3e0",
+      "newRef": "utilibre-rimgo:go12610-security-20261028",
+      "newImage": "sha256:3fc49b4d4bce7e556e35313929fad281b8977b3863d52ac9beb12eb3e9307fd2",
+      "status": "passed",
+      "verifiedAt": "2026-10-28T09:48:04.948Z"
+    },
+    {
+      "key": "safetwitch",
+      "oldRef": "utilibre-safetwitch-backend:91dda1c-go1269-security-20261011",
+      "oldImage": "sha256:12ba2abc1818e03ccc76c58e1dc2d5052b1bf3d222d7e5dac0cdbec99d422034",
+      "newRef": "utilibre-safetwitch:go12610-security-20261028",
+      "newImage": "sha256:746cc090d7282a33b8f7bd8a78bda4002ce68a465e426308b538d090e2336a44",
+      "status": "passed",
+      "verifiedAt": "2026-10-28T09:48:09.876Z"
+    },
+    {
+      "key": "gothub",
+      "oldRef": "utilibre-gothub:24bedc8-go1269-security-20261011",
+      "oldImage": "sha256:3626be2bb364842b0fb2d071fb56d4d74a90d0f9b4944de5244b0963279b8f2c",
+      "newRef": "utilibre-gothub:go12610-security-20261028",
+      "newImage": "sha256:9ce71b3f1ced949051cdef686583b436e692cbb8714f7e020a03affcb3c38d17",
+      "status": "passed",
+      "verifiedAt": "2026-10-28T09:48:14.597Z"
+    },
+    {
+      "key": "anonymousoverflow",
+      "oldRef": "utilibre-anonymousoverflow:937cfee-go1269-security-20261011",
+      "oldImage": "sha256:c92a8ab99115d93b4e4c6d930a31d2f20d4a9b3f2e3bf3bb959a19acf3ee144b",
+      "newRef": "utilibre-anonymousoverflow:go12610-security-20261028",
+      "newImage": "sha256:d9b07ddf80913069e2407df385bda27f6bc8a3d8e530a92e40b73253550889c7",
+      "status": "passed",
+      "verifiedAt": "2026-10-28T09:48:19.431Z"
+    }
+  ]
+}

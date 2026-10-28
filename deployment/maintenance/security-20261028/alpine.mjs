@@ -1,12 +1,12 @@
 // Same-branch signed APK overlays; application/configuration bytes are immutable.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 process.umask(0o077);
-const input=JSON.parse(fs.readFileSync(new URL('./alpine-inputs.json',import.meta.url))),root='/var/lib/utilibre-maintenance/security-20261028';
-const keys=process.argv.slice(2);assert(keys.length&&new Set(keys).size===keys.length&&keys.every(k=>input.rows.some(s=>s.key===k)));
+const nodeApk=process.argv.includes('--node'),profile=nodeApk?'node-apk':'alpine',input=JSON.parse(fs.readFileSync(new URL('./'+profile+'-inputs.json',import.meta.url))),root='/var/lib/utilibre-maintenance/security-20261028';
+const keys=process.argv.slice(2).filter(k=>k!=='--node');assert(keys.length&&new Set(keys).size===keys.length&&keys.every(k=>input.rows.some(s=>s.key===k)));
 const sha=b=>createHash('sha256').update(b).digest('hex');
 const limits=['--network','none','--read-only','--user','0','--cap-drop','ALL','--cap-add','DAC_OVERRIDE','--security-opt','no-new-privileges','--cpus','1','--memory','512m','--memory-swap','512m','--pids-limit','64','--log-driver','none'];
 for(const key of keys){
- const s=input.rows.find(r=>r.key===key),dir=root+'/alpine/'+key;fs.mkdirSync(dir,{recursive:true});assert(!fs.existsSync(dir+'/build.json'),'Preserve completed proof');
+ const s=input.rows.find(r=>r.key===key),dir=root+'/'+profile+'/'+key;fs.mkdirSync(dir,{recursive:true});assert(!fs.existsSync(dir+'/build.json'),'Preserve completed proof');
  const run=(p,a,o={})=>{try{return cp.execFileSync(p,a,{encoding:'utf8',timeout:240000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe'],...o}).trim();}catch(e){fs.writeFileSync(dir+'/error-'+Date.now()+'.log',JSON.stringify({status:e.status,signal:e.signal})+'\n'+String(e.stdout||'')+String(e.stderr||e.message));throw Error(key+': candidate failed; private evidence retained');}};
  const docker=(...a)=>run('docker',a),native=(id,p,a=[])=>docker('run','--rm',...limits,'--hostname','utilibre-library-fixture','--entrypoint',p,id,...a);
  const config=id=>JSON.parse(docker('image','inspect','--format','{{json .Config}}',id));
@@ -14,7 +14,7 @@ for(const key of keys){
  assert(fs.statfsSync('/').bavail*fs.statfsSync('/').bsize>8*1024**3);for(const n of s.containers)assert.equal(docker('inspect','--format','{{.Image}}',n),s.base);assert.equal(native(s.base,'cat',['/etc/alpine-release']),s.release);
  const old=config(s.base),before=inv(s.base);assert(old.User===undefined||typeof old.User==='string'&&/^[A-Za-z0-9_:.-]*$/.test(old.User));
  const app='for d in /app /opt /srv /var/www /usr/local /usr/src /usr/share/nginx; do if test -d "$d"; then find "$d" -type f -exec sha256sum {} +; fi; done | sort | sha256sum';
- const other='find /usr/lib /lib /usr/bin /usr/sbin -path /lib/apk/db -prune -o -type f ! -name "libbrotli*.so*" ! -name "libcurl.so*" ! -path /usr/bin/curl ! -path /usr/bin/wcurl -exec sha256sum {} + | sort | sha256sum';
+ const other='find /usr/lib /lib /usr/bin /usr/sbin -path /lib/apk/db -prune -o -type f ! -name "libbrotli*.so*" ! -name "libcurl.so*" ! -path /usr/bin/curl ! -path /usr/bin/wcurl '+(nodeApk?'! -path /usr/bin/node ':'')+'-exec sha256sum {} + | sort | sha256sum';
  const etc='find /etc -type f ! -path /etc/apk/world -exec sha256sum {} + | sort | sha256sum';
  const fingerprints=[app,other,etc].map(c=>native(s.base,'sh',['-ec',c]));
  const context=dir+'/context';fs.mkdirSync(context,{recursive:true});const pins=[];

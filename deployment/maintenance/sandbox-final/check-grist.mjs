@@ -3,10 +3,11 @@ import fs from 'node:fs';
 import cp from 'node:child_process';
 import path from 'node:path';
 import {chromium} from '../../../portal/node_modules/playwright-core/index.mjs';
-const oct22=process.argv[3]==='--oct22',redirects=process.argv[4]==='--redirects';assert(process.argv.length<=5&&(!process.argv[3]||oct22)&&(!process.argv[4]||redirects));
+const oct28=['--oct28-body','--oct28-node'].includes(process.argv[3]),oct22=process.argv[3]==='--oct22',redirects=process.argv[4]==='--redirects';assert(process.argv.length<=5&&(!process.argv[3]||oct22||oct28)&&(!process.argv[4]||redirects));
+const oct28Root='/var/lib/utilibre-maintenance/security-20261028/'+(process.argv[3]==='--oct28-body'?'body/grist-body':'node/grist');
 const dir=fs.mkdtempSync('/var/lib/utilibre-maintenance/sandbox-final-20261011/native-');
 const image=process.argv[2]||'utilibre-grist:1.7.21-deno297-security-20261011';
-assert.match(image,/^utilibre-grist:1\.7\.21-[a-z0-9-]+$/);
+if(oct28){const b=JSON.parse(fs.readFileSync(oct28Root+'/build.json'));assert.equal(image,b.candidate);assert(b.passed);}else assert.match(image,/^utilibre-grist:1\.7\.21-[a-z0-9-]+$/);
 const name='maintenance-grist-pyodide-stage';
 const root=path.resolve('deployment/maintenance/sandbox-final');
 const run=(args,options={})=>cp.execFileSync('docker',args,{encoding:'utf8',timeout:150000,maxBuffer:2*1024**2,stdio:['ignore','pipe','pipe'],...options});
@@ -48,6 +49,6 @@ run(['stop','--time','15',name]);run(['rm',name]);created=false;
 fs.cpSync(path.join(dir,'data'),path.join(dir,'restore'),{recursive:true,preserveTimestamps:true});
 function own(d){fs.chownSync(d,1000,1000);if(fs.statSync(d).isDirectory())for(const f of fs.readdirSync(d))own(path.join(d,f))}own(path.join(dir,'restore'));
 start(path.join(dir,'restore'));await ready();results.push(JSON.parse(check('grist-api.cjs',['restore']).trim()));
-const receipt={passed:true,date:new Date().toISOString(),image,imageId:run(['image','inspect',image,'--format','{{.Id}}']).trim(),network:oct22?'internal; no external browser origins':'none',limits:'1 CPU / 2GiB / 128 PIDs, uid1000, no capabilities, no-new-privileges',data:'fictional only',checks:results,productionChanged:false};fs.writeFileSync(path.join(dir,'result.json'),JSON.stringify(receipt,null,2)+'\n',{mode:0o600});if(oct22)fs.writeFileSync('/var/lib/utilibre-maintenance/security-20261022/'+(redirects?'redirects/grist-redirects':'grist')+'/native.json',JSON.stringify(receipt,null,2),{mode:0o600});console.log(JSON.stringify({report:dir,...receipt}));
+const receipt={passed:true,date:new Date().toISOString(),image,imageId:run(['image','inspect',image,'--format','{{.Id}}']).trim(),network:oct22?'internal; no external browser origins':'none',limits:'1 CPU / 2GiB / 128 PIDs, uid1000, no capabilities, no-new-privileges',data:'fictional only',checks:results,productionChanged:false};fs.writeFileSync(path.join(dir,'result.json'),JSON.stringify(receipt,null,2)+'\n',{mode:0o600});if(oct28)fs.writeFileSync(oct28Root+'/app.json',JSON.stringify(receipt,null,2)+'\n',{mode:0o600});if(oct22)fs.writeFileSync('/var/lib/utilibre-maintenance/security-20261022/'+(redirects?'redirects/grist-redirects':'grist')+'/native.json',JSON.stringify(receipt,null,2),{mode:0o600});console.log(JSON.stringify({report:dir,...receipt}));
 }catch(error){fs.writeFileSync(path.join(dir,'error.log'),String(error.stderr||error.message),{mode:0o600});if(lastPage)try{fs.writeFileSync(dir+'/browser-body.txt',await lastPage.locator('body').innerText(),{mode:0o600});await lastPage.screenshot({path:dir+'/browser-error.png'});}catch{}console.error('Isolated Grist gate failed; inspect '+dir+'/error.log');process.exitCode=1}
 finally{if(browser)await browser.close();if(bridge?.pid)try{process.kill(-bridge.pid,'SIGTERM');}catch{}if(created)run(['rm','-f',name]);if(oct22)run(['network','rm',network]);}

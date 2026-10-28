@@ -15,12 +15,14 @@ export function curlSuites(log){
  assert(!/^TESTFAIL:/m.test(log),'Failed cases require diagnosis, not a summary-only pass');
  return rows;
 }
-export function allowedCurlFeatureChanges(before,after){
+export function allowedCurlFeatureChanges(before,after,release='8.22.0'){
+ assert(['8.22.0','8.23.0'].includes(release),'Unreviewed curl release');
  const result=[];
  for(const label of ['Protocols','Features']){
   const get=t=>{const line=t.split('\n').find(l=>l.startsWith(label+':'));assert(line,'Missing native feature inventory');return line.slice(label.length+1).trim().split(/\s+/);};
   const current=get(after),removed=get(before).filter(x=>!current.includes(x));
-  assert(removed.every(x=>['rtmp','TLS-SRP'].includes(x)),'Unexpected feature loss '+removed);
+  const retired=['rtmp','TLS-SRP',...(release==='8.23.0'&&label==='Protocols'?['smb','smbs']:[])];
+  assert(removed.every(x=>retired.includes(x)),'Unexpected feature loss '+removed);
   result.push({label,removed});
  }
  return result;

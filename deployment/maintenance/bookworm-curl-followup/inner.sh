@@ -1,5 +1,7 @@
 #!/bin/sh
 set -eu
+VERSION=${UTILIBRE_CURL_VERSION:-8.22.0}
+case "$VERSION" in 8.22.0|8.23.0) ;; *) exit 2 ;; esac
 RECIPE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 case "$1" in
  prepare)
@@ -8,14 +10,14 @@ case "$1" in
   apt-get install -y --no-install-recommends build-essential devscripts debhelper autoconf automake ca-certificates gnutls-bin groff-base libbrotli-dev libgnutls28-dev libidn2-dev libkrb5-dev libldap2-dev libnghttp2-dev libpsl-dev librtmp-dev libssh2-1-dev libssl-dev libtool libzstd-dev locales-all openssh-server python3-impacket python3 stunnel4 zlib1g-dev
   dpkg-query -W -f='${binary:Package}=${Version}\n' > /output/build-packages.lock
   cd /work
-  cp /inputs/curl-8.22.0.tar.xz curl_8.22.0.orig.tar.xz
-  tar -xf curl_8.22.0.orig.tar.xz
-  cd curl-8.22.0
-  tar -xf /inputs/curl_8.22.0-1.debian.tar.xz
+  cp /inputs/curl-${VERSION}.tar.xz curl_${VERSION}.orig.tar.xz
+  tar -xf curl_${VERSION}.orig.tar.xz
+  cd curl-${VERSION}
+  tar -xf /inputs/curl_${VERSION}-1.debian.tar.xz
   patch --fuzz=0 -p1 < /preserve-features.patch
-  node "$RECIPE/packaging.mjs" /work/curl-8.22.0
+  node "$RECIPE/packaging.mjs" /work/curl-${VERSION}
   export DEBFULLNAME='Utilibre maintainers' DEBEMAIL=admin@utilibre.org
-  dch --force-bad-version --newversion '8.22.0-1~deb12u1+utilibre1' --distribution bookworm 'Native Bookworm build of signed upstream security release, retaining native package names and ABI; no QUIC feature addition.'
+  dch --force-bad-version --newversion "${VERSION}-1~deb12u1+utilibre1" --distribution bookworm 'Native Bookworm build of signed upstream security release, retaining native package names and ABI; no QUIC feature addition.'
   dpkg-checkbuilddeps
   dpkg-source --before-build . > /output/patch.log 2>&1
   dpkg-source -b . > /output/source-package.log 2>&1
@@ -26,11 +28,11 @@ case "$1" in
   usermod --home /work --shell /bin/sh nobody
   ;;
  build)
-  cd /work/curl-8.22.0
+  cd /work/curl-${VERSION}
   cc -Wall -Wextra -Werror -O2 -I include "$RECIPE/native.c" -ldl -o /output/curl-native
   runuser -u nobody -- env DEB_BUILD_OPTIONS=parallel=2 DEBFULLNAME='Utilibre maintainers' DEBEMAIL=admin@utilibre.org dpkg-buildpackage -b -us -uc > /output/build.log 2>&1
   for tls in openssl gnutls; do
-   runuser -u nobody -- sh -c 'cd "/work/curl-8.22.0/debian/build-$1" && make test TFLAGS="-n -j1 1725 2036 2504"' sh "$tls" > "/output/security-regressions-$tls.log" 2>&1
+   runuser -u nobody -- sh -c 'cd "/work/curl-$2/debian/build-$1" && make test TFLAGS="-n -j1 1725 2036 2504"' sh "$tls" "$VERSION" > "/output/security-regressions-$tls.log" 2>&1
   done
   cp /work/*.dsc /work/*.tar.* /output/
   # Keep installable packages, not large detached debugging archives.

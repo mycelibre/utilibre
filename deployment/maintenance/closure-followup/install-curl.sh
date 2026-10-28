@@ -12,7 +12,12 @@ fi
 dpkg --force-confold --auto-deconfigure --install /tmp/utilibre-curl-packages/*.deb
 if test "$legacy_gnutls_alias" = yes; then
  test -f /usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.4
- ln -s libcurl-gnutls.so.4 /usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.3
+ if test -L /usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.3; then
+  test "$(readlink /usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.3)" = libcurl-gnutls.so.4
+ else
+  test ! -e /usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.3
+  ln -s libcurl-gnutls.so.4 /usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.3
+ fi
 fi
 test -z "$(dpkg --audit)"
 for file in /tmp/utilibre-curl-packages/*.deb; do
