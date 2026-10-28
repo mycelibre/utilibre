@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   grist:
     <<: *runtime
-    image: utilibre-grist:brotli-security-20261028
+    image: utilibre-grist-undici:undici-security-20261028
     user: '1000:1000'
     cpus: 2
     mem_limit: 8g
@@ -50,7 +50,7 @@ services:
       ingress: {ipv4_address: 172.29.159.11}
   candlr:
     <<: *runtime
-    image: utilibre-candlr:2.0.0-dom3417-security-20261022
+    image: utilibre-candlr:undici-security-20261028
     user: '1000:1000'
     entrypoint: ['/bin/sh', '-c']
     command: ['cd /app/backend && alembic upgrade head && exec supervisord -n -c /etc/supervisor/conf.d/candlr.conf']
@@ -65,7 +65,7 @@ services:
       ingress: {ipv4_address: 172.29.159.12}
   bookplate:
     <<: *runtime
-    image: utilibre-bookplate:1.1.0-next1641-security-20261022
+    image: utilibre-bookplate:undici-security-20261028
     user: '1000:1000'
     cpus: 1
     mem_limit: 768m

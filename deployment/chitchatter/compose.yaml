@@ -1,7 +1,7 @@
 name: utilibre-chitchatter
 services:
   tracker:
-    image: utilibre-chitchatter-tracker:ip-security-20261012
+    image: utilibre-tracker:undici-security-20261028
     build: {context: ., dockerfile: Dockerfile.tracker}
     restart: unless-stopped
     read_only: true

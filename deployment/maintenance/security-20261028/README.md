@@ -91,10 +91,38 @@ Rollback changes only the recorded image scalars and recreates their declared
 service group through its native supervisor. It does not restore or delete
 user data and is not a database rollback mechanism.
 
+## Completed standalone Undici release
+
+`released-undici.json` records 21 images and 22 application roles updated to
+same-major Undici 6.29.1, 7.30.1 or 8.12.2. Exact npm archives and their integrity
+hashes are pinned in `undici.mjs`; the existing package builder preserves every
+unrelated application file and image configuration. Old pnpm path labels are
+retained so relative symlinks continue to resolve.
+
+For every installed copy, isolated before/after tests reproduce the custom TLS
+callback omission and malformed content-encoding process crash. Fixed copies
+reject the malformed input, remain running, and pass seven legitimate HTTP/TLS
+checks. Tests cover Node and DeGoog's actual Bun runtime. The installed DeGoog
+and Candlr applications also pass isolated startup, privacy-header, error-route
+and synthetic account checks as applicable. These do not establish live search
+provider availability or real-device compatibility.
+
+Same-database Trivy comparisons remove the targeted Undici finding without new
+high/critical records. Each release passes exact-image, native health, existing
+route and namespace/supervisor gates. Newsletter SMTP retains its existing
+supervisor and network restrictions; no email is sent by these checks.
+
+Replay: `undici.mjs KEY...`, `check-undici.mjs KEY...`,
+`check-undici-encoding.mjs KEY...`, `scan-brotli.mjs --undici KEY...`;
+Candlr/DeGoog also use `patch-leaves-final/check-app.mjs KEY --undici-oct28`.
+`release-brotli.mjs prepare --undici KEY...` prepares the finite scope, and
+separately authorized `apply --undici` activates it using the existing release
+mechanism. Private evidence is in the `undici/` subdirectory.
+
 ## Remaining work in this batch
 
-JavaScript candidates and native Go/curl updates are separate from the completed
-library release above. Candidate files or passing package scans alone do not
+Other JavaScript dependencies and native Go/curl/Node updates are separate from
+the completed library releases above. Candidate files or passing package scans alone do not
 mean they are deployed. Node's embedded Brotli/Undici and RSS-Bridge's embedded
 curl must be assessed separately from OS packages. Other existing scanner
 findings remain open until their specific evidence is revalidated; there is no

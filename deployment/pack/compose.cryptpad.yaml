@@ -1,7 +1,7 @@
 name: utilibre-pack-cryptpad
 services:
   cryptpad:
-    image: utilibre-cryptpad:runtime-minimal-20261012
+    image: utilibre-cryptpad:undici-security-20261028
     working_dir: /cryptpad
     command: [node, server.js]
     user: '4001:4001'

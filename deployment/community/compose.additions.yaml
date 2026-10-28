@@ -16,7 +16,7 @@ services:
     # Compatibility service key; LRCLIB replaces the stateless Dumb image here.
     # This preserves the protected network address and existing Caddy target.
     <<: *runtime
-    image: utilibre-cache-additions-dumb:4.3.0-20261012
+    image: utilibre-dumb:undici-security-20261028
     user: "65532:65532"
     environment: {PORT: "5555"}
     networks:

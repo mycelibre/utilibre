@@ -70,4 +70,5 @@ export const additionalOverlayReceipts = [
   'security-20261028/nginx/artifacts-release.json',
   'security-20261028/brotli/release.json',
   'security-20261028/alpine/release.json',
+ 'security-20261028/undici/release.json',
 ];

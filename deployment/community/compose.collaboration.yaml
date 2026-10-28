@@ -3,7 +3,7 @@ services:
   wbo:
     ulimits: {core: 0}
     profiles: [pilot]
-    image: utilibre-cache-collaboration-pilot-wbo:4.3.0-20261012
+    image: utilibre-wbo:undici-security-20261028
     build:
       context: /opt/utilibre/src/whitebophir
       dockerfile: /home/ubuntu/freetools/deployment/community/wbo/Dockerfile
