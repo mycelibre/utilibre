@@ -68,3 +68,14 @@ export function alertState(previous,issues,now=Date.now()){
   due:confirmed.length>0&&cooledDown&&(first||repeat||escalation),
   recovered:healthyObserved>=2&&Boolean(previous.alertedFingerprint)&&cooledDown,confirmed};
 }
+
+// A manual --check/--stage report cannot conceal a missing scheduled --apply run.
+export function redlibUpdateIssues(report,now=Date.now()){
+ const issues=[],date=Date.parse(report?.completedAt);
+ if(!Number.isFinite(date)||date>now+300000||now-date>36*3600000)issues.push('Redlib updater: daily report is missing, stale or invalid');
+ if(report?.mode!=='--apply')issues.push('Redlib updater: scheduled application check is unverified');
+ if(report?.status==='review-required')issues.push('Redlib updater: new upstream revision needs compatibility and patch review');
+ else if(!['up-to-date','updated'].includes(report?.status))issues.push('Redlib updater: failed or requires recovery review');
+ if(report?.status==='up-to-date'&&report?.browsing?.passed!==true)issues.push('Redlib updater: useful browsing check is incomplete');
+ return issues;
+}

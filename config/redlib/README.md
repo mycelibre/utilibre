@@ -16,7 +16,9 @@ Do not infer successful public operation from the `/settings` health check.
 ### Exact repair sequence
 
 [recipe.json](recipe.json) pins the archive, ordered patches, input/output file
-hashes and maintained runtime. It does not grant unattended deployment.
+hashes and maintained runtime. Scheduled activation additionally requires the
+matching reviewed [update policy](update-policy.json); an upstream announcement
+or vulnerability finding does not authorize a replacement.
 
 1. Retain the existing scheme-relative/backslash settings-redirect protection.
 2. Stamp the exact source revision when building an archive without `.git`.
@@ -108,3 +110,123 @@ Reddit can still restrict the anonymous upstream client. A successful bounded
 check is not an uptime guarantee. Do not switch automatically to HTML scraping,
 another instance or visitor-side Reddit requests when access fails.
 Earlier failed candidates and dated observations remain in the incident record.
+
+## Daily guarded maintenance
+
+`utilibre-redlib-update.timer` runs at **03:40 UTC plus up to ten minutes of
+jitter**, and catches up after downtime. This is deterministic Node, Docker,
+Cargo and Trivy execution: it uses no LLM or paid API. The existing 03:20 upstream
+review remains the broader release/advisory inventory.
+
+The new job checks one public GitHub commit response and compares the running
+image, configured pin, recorded revision and patch hashes. When already current,
+it checks actual comments, listings, pagination, sorting and supported media
+with at most ten backend requests, without a rebuild or restart. These checks
+contact Reddit through Redlib; they do not repeat the public Anubis browser test.
+An upstream restriction remains a failure even when `/settings` is healthy.
+
+**An unfamiliar upstream revision requires review.** This workflow does not
+automatically rebase patches, resolve newer dependencies, build an unreviewed
+release or revert to an unpatched upstream image. A maintainer must first prepare
+the exact new artifact through the existing source-build procedure, preserve the
+current image as its predecessor, publish matching source, and update the reviewed
+recipe and policy. Once those inputs exist, the daily job can verify and activate
+that exact artifact unattended. It only handles the stateless Redlib service.
+
+### Operator entry points
+
+```sh
+node scripts/redlib-maintain.mjs --check
+node scripts/redlib-maintain.mjs --stage
+node scripts/redlib-maintain.mjs --apply
+```
+
+- `--check`: live/configuration inspection and one upstream lookup; no Reddit
+  browsing, staging or activation. Writes a private check report.
+- `--stage`: validates the approved local images and source bundle, replays the
+  patches, runs the 22 offline regression checks, scans the exact image and Cargo
+  lockfile, then exercises a private candidate. Requires the approved revision
+  to match upstream. Does not modify production.
+- `--apply`: the scheduled path. Checks browsing when current or awaiting review;
+  otherwise stages and promotes only the approved artifact. It also recovers an
+  interrupted transaction before attempting a new upstream lookup.
+
+`scripts/update.sh redlib` delegates to the same `--apply` path. There is no
+second updater. A single `flock` excludes overlapping manual and scheduled runs.
+Stages need 10 GiB free space, the exact local toolchain image, published source
+bundle and existing Trivy installation/database. Offline builds are limited to
+two CPUs, 4 GiB RAM, 256 processes and twenty minutes. The private browsing
+candidate uses 0.5 CPU, 256 MiB RAM, no published port and no production volume.
+An interrupted stage's recorded, uniquely labelled containers and scratch files
+are cleaned on the next stage/apply; other containers, images and backups are
+never pruned. The overall systemd job has a fifty-minute limit.
+
+The pinned Trivy 0.75.0 runs without network, ignores, registry pulls or database
+refresh. Both scans use one local database copy, whose update time must be at
+most 48 hours old. The existing separate security scanner refreshes that database.
+Missing tools, extraction changes, stale data or any difference from the reviewed
+finding set block promotion. The current baseline is **92 OS packages and 320
+Cargo package records; 79 medium and 13 low findings, zero high/critical** as
+assessed on 29 October. This is not a claim of no vulnerabilities or future
+clearance. A changed finding set needs a new assessment, not a suppression.
+
+### Activation, recovery and alerts
+
+Promotion changes only the private `.env` image pin and matching-source banner.
+It preserves other values, file ownership and permissions; concurrent file,
+image or service-configuration drift stops it. The existing scoped Compose
+release helper recreates Redlib only. Failed candidate health or browsing
+restores the recorded pins and predecessor image, then checks its native health.
+That health check does not promise Reddit access has recovered upstream.
+
+The private transaction journal is written before a pin changes. If a process
+is interrupted, a later `--apply` validates the journal and restores the recorded
+predecessor before new work. Manual drift prevents automatic recovery. **Do not
+delete a pending journal to bypass a failure.** Inspect the private report and
+reconcile the exact image/configuration first.
+
+Reports live under `/var/lib/utilibre-maintenance/redlib-update/` (0700):
+`last-run.json` is the scheduled result, while manual checks/stages have separate
+reports. Each stage retains tests, scans, database identity and workflow evidence;
+temporary build data and the copied database are removed. For an archived scan
+replay, separately retain the database snapshot with its recorded SHA; these
+reports alone do not reproduce advisory data or guarantee identical build bytes.
+Do not publish raw responses or private configuration evidence.
+
+The existing alert service checks failed units, failed browsing, overdue runs
+(36 hours) and review-required revisions. It retains the existing deduplication
+and cooldown; this updater sends no mail itself. A manual stage cannot hide a
+failed scheduled run. The fleet security scanner remains separate and continues
+assessing the currently deployed image.
+
+To stop automatic maintenance without changing the application:
+
+```sh
+systemctl disable --now utilibre-redlib-update.timer
+```
+
+Let any active transaction finish; inspect its report before terminating it.
+Disabling the timer does not roll back an image. Use the recorded predecessor
+and the scoped rollback procedure above when an application rollback is needed.
+
+### Verification evidence
+
+On 29 October 2026, the full isolated stage passed with the current approved
+image: 22 native regressions, complete 92/320 package extraction, unchanged
+reviewed findings, eight successful workflow requests and matching public source.
+Private evidence: `run-FBlRi5/stage.json` beneath the report directory.
+
+`node --test scripts/test-redlib-maintain.mjs` exercises approval/drift rejection,
+malformed or incomplete scans, actual missing-executable/timeout handling,
+idempotent pinning, transaction failures, journal scope and alert freshness.
+`node scripts/test-redlib-release.mjs` is an **explicit optional Docker test**:
+it uses a separate, network-disabled Compose project with harmless commands to
+test successful replacement and forced-failure rollback. It does not run in the
+daily job. The observed run `integration-EcdvR9/result.json` passed and confirmed
+the production containers were unchanged. Native browsing is tested separately;
+the harmless-command test is not an upstream reliability claim.
+
+The installed systemd service completed its first `--apply` at 07:37 UTC on
+29 October: `up-to-date`, eight successful browsing requests, no production
+restart. The daily timer is enabled. Manual `--check`/`--stage` reports do not
+replace this operational evidence.

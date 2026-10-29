@@ -52,7 +52,7 @@ export async function inspectProvider(id,p){
    p={...p,installedVersion:live.version,reviewedSourceUrl:'https://github.com/searxng/searxng/tree/'+live.revision};
   }catch{/* Retain the catalogue reference; it is not a runtime assertion. */}
  }
- const result={id,project:p.project,installed:p.installedVersion,source:p.reviewedSourceUrl,reviewedOn:p.reviewedOn,runbook:p.reviewDocument,mode:id==='searxng'?'existing-guarded-updater':'review-before-update'};
+ const result={id,project:p.project,installed:p.installedVersion,source:p.reviewedSourceUrl,reviewedOn:p.reviewedOn,runbook:p.reviewDocument,mode:id==='searxng'?'existing-guarded-updater':id==='redlib'?'guarded-reviewed-artifact-updater':'review-before-update'};
  try{
   const r=repository(p.sourceUrl),ref=reviewedRef(p.reviewedSourceUrl);
   if(r.host==='github.com'){

@@ -3,7 +3,7 @@
   "id": "redlib-29f1835-utilibre-1",
   "purpose": "Restore listings and posts through native upstream GraphQL while retaining redirect, runtime and privacy protections",
   "approval": "reviewed-for-explicit-redlib-release-2026-10-29",
-  "automaticDeployment": false,
+  "automaticDeployment": true,
   "source": {
     "origin": "https://github.com/polak14/redlib",
     "revision": "29f18352cf54be4ffe579f773552acd0c45cdd08",

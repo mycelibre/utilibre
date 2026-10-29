@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily guarded Redlib update and useful-task check
+
+[Timer]
+OnCalendar=*-*-* 03:40:00 UTC
+RandomizedDelaySec=10min
+Persistent=true
+Unit=utilibre-redlib-update.service
+
+[Install]
+WantedBy=timers.target

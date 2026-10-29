@@ -107,6 +107,8 @@ def runtime_inventory():
         row['updateMode'] = 'review-only'
         if project == 'public-utility' and row['service'] == 'searxng':
             row['updateMode'] = 'guarded-upstream-updater; live identity and patch checks required'
+        elif project == 'public-utility' and row['service'] == 'redlib':
+            row['updateMode'] = 'guarded-reviewed-artifact-updater; unknown revisions require review'
         rows.append(row)
     if not rows:
         raise RuntimeError('No Utilibre runtime artifacts discovered')

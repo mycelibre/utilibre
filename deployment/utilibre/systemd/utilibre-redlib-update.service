@@ -1,0 +1,24 @@
+[Unit]
+Description=Guarded Utilibre Redlib update and browsing check
+After=docker.service network-online.target
+Requires=docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/ubuntu/freetools
+Environment=PATH=/root/.nvm/versions/node/v24.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/bin/env node /home/ubuntu/freetools/scripts/redlib-maintain.mjs --apply
+TimeoutStartSec=50min
+TimeoutStopSec=30s
+StateDirectory=utilibre-maintenance/redlib-update
+StateDirectoryMode=0700
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/ubuntu/freetools/.env /home/ubuntu/freetools /var/lib/utilibre-maintenance/redlib-update
+MemoryMax=5G
+CPUQuota=200%

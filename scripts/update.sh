@@ -10,7 +10,11 @@ case "$service" in
     repo_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
     exec /usr/bin/python3 "$repo_dir/scripts/searxng-maintain.py" --apply
     ;;
-  portal|valkey|anubis|redlib)
+  redlib)
+    repo_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+    exec node "$repo_dir/scripts/redlib-maintain.mjs" --apply
+    ;;
+  portal|valkey|anubis)
     echo "Refusing generic update of $service: it can discard reviewed local security repairs." >&2
     echo "Use the service's staged, exact-image maintenance release; see docs/updates.md (Local repair protection)." >&2
     exit 1

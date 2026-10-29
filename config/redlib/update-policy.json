@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "approval": "reviewed",
+  "owner": "admin@utilibre.org",
+  "reviewedAt": "2026-10-29",
+  "recipeSha256": "393b4d36480918b588d894b25b7ab01ca55f4edf4611005acf0c667c454ce205",
+  "sourceOffer": {
+    "name": "redlib-29f1835-utilibre-1-source.tar.gz",
+    "sha256": "36a496ae4f62b7d673c4f52fb8b583b401f242f3bb3838462065332f9a29621a"
+  },
+  "testCounts": [
+    5,
+    12,
+    3,
+    1,
+    1
+  ],
+  "security": {
+    "scannerVersion": "0.75.0",
+    "scannerSha256": "93f9da8e4ba5e0c1c76d8234ed2494cf9afb0a96fd21953e424bb795f3299b8e",
+    "maxDatabaseAgeHours": 48,
+    "runtimePackages": 92,
+    "cargoPackages": 320,
+    "findingsSha256": "713995ed54bdc6ac02c38191f4f11b122bad5b8a2e7b5a1305b366842a5d7440",
+    "disposition": "Only the previously reviewed exact release baseline (79 medium, 13 low; no high/critical) is allowed. Any changed finding or missing package coverage stops activation. No suppression."
+  },
+  "scope": "Only this exact reviewed artifact may be promoted. New upstream revisions require an updated reviewed recipe, artifact, matching source and this approval. No LLM, automatic patch rebase or unattended dependency resolution."
+}

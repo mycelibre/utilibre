@@ -110,7 +110,7 @@ class PolicyTests(unittest.TestCase):
                 self.assertEqual(other.read_text(), 'preserve')
 
     def test_legacy_helpers_refuse_before_any_docker_or_backup_command(self):
-        for service in ['portal', 'redlib', 'anubis', 'valkey', 'unknown']:
+        for service in ['portal', 'anubis', 'valkey', 'unknown']:
             result = subprocess.run(['/bin/sh', str(ROOT / 'scripts/update.sh'), service],
                                     cwd='/tmp', env={'PATH': '/nonexistent'}, capture_output=True, text=True)
             self.assertNotEqual(result.returncode, 0)
@@ -121,6 +121,17 @@ class PolicyTests(unittest.TestCase):
                                     cwd='/tmp', env={'PATH': '/nonexistent'}, capture_output=True, text=True)
             self.assertEqual(result.returncode, 1)
             self.assertIn('no image, configuration or data was changed', result.stderr)
+
+    def test_redlib_wrapper_dispatches_only_to_guarded_updater(self):
+        with tempfile.TemporaryDirectory() as directory:
+            node = Path(directory) / 'node'
+            node.write_text('#!/bin/sh\nprintf "%s\\n" "$@"\n')
+            node.chmod(0o700)
+            result = subprocess.run(['/bin/sh', str(ROOT / 'scripts/update.sh'), 'redlib'],
+                                    cwd='/tmp', env={'PATH': directory + ':/usr/bin:/bin'},
+                                    capture_output=True, text=True, check=True)
+            self.assertEqual(result.stdout.splitlines(),
+                             [str(ROOT / 'scripts/redlib-maintain.mjs'), '--apply'])
 
     def test_inventory_never_grants_unknown_images_automatic_updates(self):
         row = {'name': '/utilibre-example-app-1', 'image': 'sha256:' + 'a' * 64,

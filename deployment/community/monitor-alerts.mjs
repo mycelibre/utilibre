@@ -4,7 +4,7 @@
 import {readFileSync,writeFileSync,renameSync,mkdirSync,existsSync,statfsSync,statSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {sendOperatorMail} from '../maintenance/mail.mjs';
-import {reportIssues,queueIssues,externalIssues,unattendedIssues,alertState} from '../maintenance/report-health.mjs';
+import {reportIssues,queueIssues,externalIssues,unattendedIssues,alertState,redlibUpdateIssues} from '../maintenance/report-health.mjs';
 const directory='/var/lib/utilibre-monitor-alerts',file=`${directory}/state.json`;
 // Validate live observations without sending mail or acknowledging alert state.
 const checkOnly=process.argv.includes('--check-only');
@@ -51,7 +51,7 @@ let backupUnits=[];
 try{
  backupUnits=execFileSync('systemctl',['list-unit-files','--type=timer','--state=enabled','--no-legend','--no-pager'],{encoding:'utf8',timeout:5000}).split('\n').map(x=>x.split(/\s+/)[0]).filter(x=>/^utilibre-(?:[a-z0-9-]+-)?backup\.timer$/.test(x)).map(x=>x.replace(/\.timer$/,'.service'));
 }catch{issues.push('Cannot enumerate enabled backup timers');}
-for(const unit of new Set([...backupUnits,'utilibre-pack-forms-maintenance.service','utilibre-maintenance-review.service','utilibre-searx-update.service','utilibre-security-review.service','utilibre-journeys.service','utilibre-recovery-check.service','utilibre-maintenance-digest.service'])) {
+for(const unit of new Set([...backupUnits,'utilibre-pack-forms-maintenance.service','utilibre-maintenance-review.service','utilibre-searx-update.service','utilibre-redlib-update.service','utilibre-security-review.service','utilibre-journeys.service','utilibre-recovery-check.service','utilibre-maintenance-digest.service'])) {
   if(!existsSync(`/etc/systemd/system/${unit}`))continue;
   try {
     const result=execFileSync('systemctl',['show',unit,'--property=Result','--value'],{encoding:'utf8',timeout:5000}).trim();
@@ -109,6 +109,10 @@ if(existsSync('/etc/systemd/system/utilibre-maintenance-review.service')) {
     if(failed.length)issues.push(`Upstream review incomplete for ${failed.length} projects; inspect /var/lib/utilibre-maintenance/latest.json`);
     for(const item of report.results)if(item.advisories?.needsReview?.some(a=>['critical','high'].includes(a.severity)))issues.push(`Published security advisory needs review: ${item.project}`);
   }catch{issues.push('Upstream release/advisory report is unavailable')}
+}
+if(existsSync('/etc/systemd/system/utilibre-redlib-update.service')) {
+ try{issues.push(...redlibUpdateIssues(JSON.parse(readFileSync('/var/lib/utilibre-maintenance/redlib-update/last-run.json','utf8'))));}
+ catch{issues.push('Redlib updater: daily report unavailable');}
 }
 issues.sort();
 const observation=alertState(previous,issues);
