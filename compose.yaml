@@ -414,7 +414,7 @@ services:
       args:
         RUST_BUILDER_VERSION: "slim-bookworm@sha256:1469a27c125cb5a3aebfa4f4e4665d935b02fb72cc093b2c974b3d740e43f157"
         UBUNTU_RELEASE_VERSION: "noble@sha256:33ceb71981b602c1a7443a53469e4dba065f7503eab3078a2d7a57a2ab987517"
-    image: ${REDLIB_IMAGE:-utilibre-redlib:graphql-e48efd8-20261024}
+    image: ${REDLIB_IMAGE:-utilibre-redlib:graphql-29f1835-20261029}
     # This tag exists only in the local image store. Build explicitly on first
     # install/update; routine `up` must not start another costly Rust build.
     pull_policy: never
@@ -428,7 +428,7 @@ services:
       TZ: ${TZ:-America/Guatemala}
       RUST_LOG: "warn"
       REDLIB_SFW_ONLY: ${REDLIB_SFW_ONLY:-off}
-      REDLIB_BANNER: '${REDLIB_BANNER:-<a href="https://utilibre.org/en/">Back to Utilibre</a> · <a href="https://utilibre.org/es/">Volver a Utilibre</a> · <a href="https://tools.utilibre.org/utilibre-source/redlib-e48efd8-utilibre-1-source-v2.tar.gz">Modified source / Código modificado</a>}'
+      REDLIB_BANNER: '${REDLIB_BANNER:-<a href="https://utilibre.org/en/">Back to Utilibre</a> · <a href="https://utilibre.org/es/">Volver a Utilibre</a> · <a href="https://tools.utilibre.org/utilibre-source/redlib-29f1835-utilibre-1-source.tar.gz">Modified source / Código modificado</a>}'
       REDLIB_ROBOTS_DISABLE_INDEXING: "on"
       REDLIB_DEFAULT_THEME: system
       REDLIB_DEFAULT_SHOW_NSFW: "off"

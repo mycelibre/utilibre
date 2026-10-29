@@ -1,5 +1,100 @@
 # Redlib thread retrieval — 20 October 2026
 
+## Listing and post retrieval restored — 29 October 2026
+
+**Deployed and publicly verified at 06:41 UTC:**
+`utilibre-redlib:graphql-29f1835-20261029`,
+image `sha256:cda5d1262d991178f235db4bb259f426cc00901a50ee7f85e87e45173df71e54`.
+The previous build's `/settings` returned 200 while `/r/rust/hot` and the
+original `1xapnji` thread returned 404 with JSON parse errors. The health
+probe alone did not establish working browsing.
+
+The [28 October upstream change](https://github.com/polak14/redlib/commit/29f18352cf54be4ffe579f773552acd0c45cdd08)
+moves listings and post metadata to the fork's native GraphQL implementation
+and removes its HTML scraper. The exact revision is
+`29f18352cf54be4ffe579f773552acd0c45cdd08`; Cargo still reports 0.36.0.
+This is the updated polak14 fork, not the official Redlib 0.40 release.
+
+The five ordered repairs were reconciled with that source: safe settings
+redirects, archive provenance, bounded requests/media/privacy and sorting,
+the exact Tokio 1.54.1 lock update, and the matching-source link. The current
+[recipe](../../config/redlib/recipe.json) captures all nine changed files.
+Already-incorporated upstream changes were not reapplied. Every predecessor
+runtime layer and image setting is retained; the sole added filesystem layer
+replaces the executable. Its SHA-256 is
+`424c89cab435fa5c621d0bd7e3fc23031660d35cd4d47fb0bec1a522ff4a4d4b`.
+
+### Verification
+
+- Offline exact preparation and repeated no-change replay passed. Unsupported
+  source archives and an unexpected prepared-tree edit were rejected.
+- The network-disabled Rust 1.98.0 build passed 22 selected tests: five build
+  provenance, twelve GraphQL, three feed, one redirect and one media-URL test.
+  Restoring only the upstream image-rendering statement reproduced the
+  external-media regression; recompiling the guarded source passed that test.
+  The before/after source mounts needed an explicit timestamp refresh to
+  prevent Cargo reusing the negative-control test binary. The release binary
+  had already been built from the verified guarded source.
+- The bounded native check loaded 200 original-thread comments, 137 different
+  continuation comments with `sort=new`, a focused reply, a 23-entry Rust
+  listing and seven comments in a second discussion. The initially selected
+  weekly-news thread correctly contained zero comments; the fixture now
+  chooses a listing entry advertising replies and still requires rendered
+  comments. No failed feature assertion was suppressed.
+- A separate native proxy request returned a 606-byte PNG. This is a small
+  fixture, not verification of every media format or Range request.
+- Chromium 151.0.7922.34 rendered the candidate at 1280 and 390 pixels with
+  no page errors or observed external-origin requests. Media requests were
+  capped at four. The narrow viewport is emulation, not phone hardware.
+- A clean headed Chromium session through unchanged public Anubis loaded
+  200 comments and the 137-comment next page, retained sorting and exposed
+  matching source. No external browser requests were observed. No challenge
+  bypass, forwarded-header spoof or borrowed cookies was used.
+- Only Redlib was recreated. Other running containers, Anubis, service URLs,
+  network, account-free access and isolation/resource limits were unchanged.
+  Health and a real comment page passed after activation. The production
+  homepage and a synthetic Rust search each returned 25 posts. No migration
+  or persistent user-data change was required.
+
+### Security and source availability
+
+Trivy 0.75.0 used the same preserved database before and after, updated
+28 October at 07:10 UTC, SHA-256
+`2c8f4b04f224aded9ecd149b9b5304146736668220dfa403403358fb423a52fd`.
+All 320 Cargo metadata records were extracted, including build/test dependency
+records; no locked dependency findings were reported. The 92 inherited Ubuntu
+packages retained identical findings: 79 medium and 13 low, no high or critical.
+Nothing was hidden or suppressed. This is scoped to Redlib, not clearance for
+other Utilibre applications or proof of absence of unknown vulnerabilities.
+
+[Complete corresponding source](https://tools.utilibre.org/utilibre-source/redlib-29f1835-utilibre-1-source.tar.gz)
+was published before activation: 54,775,281 bytes, SHA-256
+`36a496ae4f62b7d673c4f52fb8b583b401f242f3bb3838462065332f9a29621a`. It includes the exact upstream archive, modified source,
+319 dependency source directories and notices, lockfile, patches and build
+instructions. The public URL returned 200 with the expected length. Previous
+source offers and native runtime repair sources remain available.
+
+Private evidence: `/opt/utilibre/reports/redlib-update-20261029/`, including
+`baseline.json`, `build-and-tests.log`, `final-replay/prepared.json`,
+`replay-rejections.json`, `privacy-before.log`, `privacy-after-recompiled.log`,
+`candidate-workflows-final.json`, `browser.json`, `media.json`,
+`security-summary.json`, `scanner-coverage.json`, `source-offer.json`,
+`deployment.json` and `public-browser.json`. Compilation was offline, capped
+at two CPUs and 4 GiB. No load test or other-operator proxy was used. Reports,
+network evidence and captures remain private.
+
+### Rollback
+
+Restore `utilibre-redlib:graphql-e48efd8-20261024` in the root Compose default and
+protected `.env`, restore the banner's previous source URL
+`redlib-e48efd8-utilibre-1-source-v2.tar.gz`, then recreate **only** `redlib`
+with `docker compose up -d --no-deps --no-build --pull never redlib`.
+The retained predecessor is `sha256:42dd36c9d8b0c781bf86df719cf05cda277b9af71a7c0560465e13fa8df14fdf`.
+There is no database migration to reverse. Its listing/post retrieval was
+already broken when this release began. Reddit can change or restrict access
+again; these checks establish observed functionality, not future uptime.
+
+
 ## GraphQL repair release — 24 October 2026
 
 The later GraphQL candidate supersedes the failed HTML-scraping candidate

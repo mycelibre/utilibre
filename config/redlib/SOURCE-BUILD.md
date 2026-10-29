@@ -1,4 +1,4 @@
-# Matching source: Redlib e48efd8 / Utilibre 1
+# Matching source: Redlib 29f1835 / Utilibre 1
 
 This archive contains the modified application under `redlib/`, all locked
 Cargo dependencies with their notices under `vendor/`, and Utilibre's recipes
@@ -12,10 +12,11 @@ from the Dockerfile (C/C++ toolchain, cmake and libclang):
 
 ```sh
 cd redlib
-export REDLIB_BUILD_REVISION=e48efd85c4527b211f1219bdcbfda72ada6d4ec6
+export REDLIB_BUILD_REVISION=29f18352cf54be4ffe579f773552acd0c45cdd08
 cargo test --offline --locked --lib gql::tests
-cargo test --offline --locked --lib shreddit::tests
+cargo test --offline --locked --lib gql_feed::tests
 cargo test --offline --locked --lib redirect_tests
+cargo test --offline --locked --lib utils::tests::test_format_url
 cargo build --offline --locked --release --bin redlib
 ```
 

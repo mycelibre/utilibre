@@ -1,9 +1,9 @@
 # Offline packaging of a verified release binary. Check base image ID and binary
 # checksum against the release receipt before invoking this recipe.
-FROM utilibre-redlib:mount-noble-security-20261012
+FROM utilibre-redlib:graphql-e48efd8-20261024
 COPY redlib /usr/local/bin/redlib
 LABEL org.opencontainers.image.source="https://github.com/polak14/redlib" \
-      org.opencontainers.image.revision="e48efd85c4527b211f1219bdcbfda72ada6d4ec6" \
+      org.opencontainers.image.revision="29f18352cf54be4ffe579f773552acd0c45cdd08" \
       org.opencontainers.image.licenses="AGPL-3.0-only" \
       org.opencontainers.image.title="Redlib (Utilibre reviewed GraphQL build)" \
-      org.opencontainers.image.version="0.36.0-e48efd8-utilibre.1"
+      org.opencontainers.image.version="0.36.0-29f1835-utilibre.1"

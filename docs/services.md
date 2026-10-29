@@ -83,8 +83,8 @@ modifications are recorded in
 stack's
 [`SOURCE_MANIFEST.md`](../deployment/utilibre/SOURCE_MANIFEST.md).
 
-Redlib maintenance, 24 October 2026: the selected comments repair is the
-`polak14/redlib` fork at `e48efd85c4527b211f1219bdcbfda72ada6d4ec6`, with
+Redlib maintenance, 29 October 2026: the selected listing and comments repair is the
+`polak14/redlib` fork at `29f18352cf54be4ffe579f773552acd0c45cdd08`, with
 Utilibre's exact local patches and maintained runtime. Its Cargo version is
 0.36.0; this is not the official Redlib 0.40 release. The native GraphQL path,
 media privacy, continuation links, build provenance and dependency lock are

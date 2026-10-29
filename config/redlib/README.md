@@ -1,10 +1,10 @@
 # Redlib deployment
 
-## Reviewed comments repair — 24 October 2026
+## Reviewed listing and comments repair — 29 October 2026
 
-The deployed build uses the maintained [polak14/redlib fork](https://github.com/polak14/redlib/tree/e48efd85c4527b211f1219bdcbfda72ada6d4ec6),
-revision `e48efd85c4527b211f1219bdcbfda72ada6d4ec6`, AGPL-3.0-only.
-Its native GraphQL client retrieves comments using the existing anonymous
+The deployed build uses the maintained [polak14/redlib fork](https://github.com/polak14/redlib/tree/29f18352cf54be4ffe579f773552acd0c45cdd08),
+revision `29f18352cf54be4ffe579f773552acd0c45cdd08`, AGPL-3.0-only.
+Its native GraphQL client retrieves listings, posts and comments using the existing anonymous
 Reddit OAuth identity. No personal account, other operator's proxy or visitor
 request to Reddit is introduced. This is a modified fork, not the official
 Redlib 0.40 release: its Cargo version is still 0.36.0.
@@ -20,21 +20,21 @@ hashes and maintained runtime. It does not grant unattended deployment.
 
 1. Retain the existing scheme-relative/backslash settings-redirect protection.
 2. Stamp the exact source revision when building an archive without `.git`.
-3. Bound GraphQL responses to 8 MiB and 20 seconds; reject denied, malformed or
+3. Retain the upstream removal of the HTML scraper. Bound GraphQL responses to 8 MiB and 20 seconds; reject denied, malformed or
    incomplete responses without scraping fallback. Keep automatically loaded
-   comment media on native same-origin media-proxy paths; retain normal external
+   rich-text, flair and award media on native same-origin media-proxy paths; retain normal external
    article links. Exclude comment content/request paths from error logging.
    Preserve sort in comment pagination and compare update information with the
    selected fork.
 4. Apply the package-manager-generated lock update to Tokio 1.54.1. No other
-   package version changes; Cargo also resolved six existing dependency edges
+   package version changes; Cargo also resolved five existing dependency edges
    differently. Preserve the complete lock patch.
 5. Point the native Code link at the complete matching modified source archive.
    The configured banner appears on the native information page, not on threads.
 
 The tested predecessor is
-`utilibre-redlib:mount-noble-security-20261012`,
-image `sha256:45ec43720c0efe7d8e5cac53d8a133b08aec073e3f25bb46bd23148a2e44b6d2`.
+`utilibre-redlib:graphql-e48efd8-20261024`,
+image `sha256:42dd36c9d8b0c781bf86df719cf05cda277b9af71a7c0560465e13fa8df14fdf`.
 All its native-library repair layers must remain. Rebuilding on bare Ubuntu
 would lose those repairs.
 
@@ -53,7 +53,7 @@ The script does not build, deploy, resolve dependencies or make live requests.
 
 Use the pinned Rust builder, recorded toolchain image and locked dependencies.
 The selected Rust compiler for this release is 1.98.0. The source Dockerfile
-runs native build-script, GraphQL, parser and redirect tests with networking
+runs native build-script, GraphQL, feed, media-URL and redirect tests with networking
 disabled. It builds only the production `redlib` binary. A private diagnostic
 binary used in testing is not part of the published application.
 
@@ -78,8 +78,8 @@ Preserved native-runtime repair sources remain in the shared source directory.
 The production release is stateless. There is no database or data migration.
 Update only the exact Redlib image pin in `compose.yaml` and the protected
 local `.env` override, after recording both predecessors. Resolve Compose and
-verify every other Redlib setting is unchanged except the source link appended
-to the native banner, then use the existing project:
+verify every other Redlib setting is unchanged except the source link updated
+in the native banner, then use the existing project:
 
 ```sh
 docker compose up -d --no-deps --no-build --pull never redlib
@@ -87,7 +87,7 @@ docker compose up -d --no-deps --no-build --pull never redlib
 
 Check health and an actual comment page through both the backend and public
 Anubis route. On failure restore both exact predecessor pins and run the same
-scoped command and remove the added source link from the banner. Retain the
+scoped command and restore the previous matching-source link in the banner. Retain the
 previous image; do not prune it as part of release.
 Image rollback does not change browser preferences.
 

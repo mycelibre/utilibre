@@ -1,7 +1,8 @@
 // Explicit bounded smoke check, not a scheduled crawler. No real user data.
 // Usage: node check-instance.mjs http://PRIVATE_CANDIDATE:8080 REPORT.json
 import assert from 'node:assert/strict';
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
+const recipe = JSON.parse(readFileSync(new URL('./recipe.json', import.meta.url)));
 import { parseHTML } from '../../portal/node_modules/linkedom/esm/index.js';
 const origin = new URL(process.argv[2]);
 assert.equal(origin.pathname, '/');
@@ -31,7 +32,7 @@ try {
   const settings = await get('/settings');
   assert.equal(settings.response.status, 200);
   const info = await get('/info.json');
-  assert(info.body.includes('e48efd85c4527b211f1219bdcbfda72ada6d4ec6'));
+  assert(info.body.includes(recipe.source.revision));
   const redirect = await get('/settings/update?redirect=//example.invalid');
   const location = redirect.response.headers.get('location');
   assert(location && new URL(location, origin).origin === origin.origin);
@@ -54,8 +55,13 @@ try {
   report.results.originalThread = { firstPage: firstIds.length, nextPage: secondIds.length, newIds: uniqueNext.length, sortPreserved: true, focusedComment: true };
   const listing = await get('/r/rust/hot');
   assert.equal(listing.response.status, 200);
-  const other = [...listing.document.querySelectorAll('a[href]')].map(e => e.getAttribute('href')).find(h => /^\/r\/rust\/comments\/[a-z0-9]+\//.test(h));
-  assert(other, 'No listing entries');
+  // A valid empty discussion is not a broken comment renderer. Choose a fixture
+  // whose native listing advertises replies; still require actual rendered comments.
+  const other = [...listing.document.querySelectorAll('a.post_comments[href]')]
+    .find(e => Number.parseFloat(e.textContent.trim()) > 0 && /^\/r\/rust\/comments\/[a-z0-9]+\//.test(e.getAttribute('href')))
+    ?.getAttribute('href');
+  assert(other, 'No discussion with advertised comments in fixture listing');
+  report.results.listing = { status: listing.response.status, discussionLinks: listing.document.querySelectorAll('a.post_comments[href]').length };
   const otherPage = await get(other);
   report.results.secondThreadComments = comments(otherPage).length;
   const image = otherPage.document.querySelector('img[src^="/preview/"],img[src^="/img/"],img[src^="/thumb/"]')?.getAttribute('src');

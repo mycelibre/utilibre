@@ -195,12 +195,12 @@ export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider>
   },
   redlib: {
     project: 'Redlib', sourceUrl: 'https://github.com/polak14/redlib',
-    reviewedSourceUrl: 'https://github.com/polak14/redlib/tree/e48efd85c4527b211f1219bdcbfda72ada6d4ec6',
-    license: 'AGPL-3.0-only', licenseEvidenceUrls: ['https://github.com/polak14/redlib/blob/e48efd85c4527b211f1219bdcbfda72ada6d4ec6/LICENSE'],
-    selfHostingEvidenceUrl: 'https://github.com/polak14/redlib/tree/e48efd85c4527b211f1219bdcbfda72ada6d4ec6#deployment', maintenanceEvidenceUrl: 'https://github.com/polak14/redlib/commits/main/',
-    artifactReference: 'utilibre-redlib:graphql-e48efd8-20261024; config/redlib/recipe.json',
-    installedVersion: 'polak14 e48efd8 + Utilibre privacy, provenance and dependency fixes', integration: 'source-build', reviewStatus: 'deployed', reviewDocument: 'docs/services.md',
-    role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-24',
+    reviewedSourceUrl: 'https://github.com/polak14/redlib/tree/29f18352cf54be4ffe579f773552acd0c45cdd08',
+    license: 'AGPL-3.0-only', licenseEvidenceUrls: ['https://github.com/polak14/redlib/blob/29f18352cf54be4ffe579f773552acd0c45cdd08/LICENSE'],
+    selfHostingEvidenceUrl: 'https://github.com/polak14/redlib/tree/29f18352cf54be4ffe579f773552acd0c45cdd08#deployment', maintenanceEvidenceUrl: 'https://github.com/polak14/redlib/commits/main/',
+    artifactReference: 'utilibre-redlib:graphql-29f1835-20261029; config/redlib/recipe.json',
+    installedVersion: 'polak14 29f1835 + Utilibre privacy, provenance and dependency fixes', integration: 'source-build', reviewStatus: 'deployed', reviewDocument: 'docs/services.md',
+    role: 'public-application', maintainer: 'independent-upstream', selfHostable: true, reviewedOn: '2026-10-29',
   },
   freshrss: {
     project: 'FreshRSS', sourceUrl: 'https://github.com/FreshRSS/FreshRSS', reviewedSourceUrl: 'https://github.com/FreshRSS/FreshRSS/tree/4a810f1624b9d0b97b4400614cf9aacc8ada40e3',

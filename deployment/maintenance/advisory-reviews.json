@@ -2813,9 +2813,9 @@
   },
   "redlib": {
     "version": "0.36.0",
-    "reviewedAt": "2026-10-24",
+    "reviewedAt": "2026-10-29",
     "containers": {
-      "/public-utility-redlib-1": "sha256:42dd36c9d8b0c781bf86df719cf05cda277b9af71a7c0560465e13fa8df14fdf"
+      "/public-utility-redlib-1": "sha256:cda5d1262d991178f235db4bb259f426cc00901a50ee7f85e87e45173df71e54"
     },
     "advisories": [
       {
@@ -2832,7 +2832,7 @@
         "source": "https://github.com/redlib-org/redlib/security/advisories/GHSA-g8vq-v3mg-7mrg"
       }
     ],
-    "runtimeEvidence": "2026-10-24 Redlib GraphQL fork e48efd85c4527b211f1219bdcbfda72ada6d4ec6 retains Cargo 0.36.0 and all predecessor native runtime layers. Existing bounded application advisory disposition is unchanged; exact image updated after native comments/pagination/redirect and privacy tests. Tokio 1.54.1 lock scan: 337 packages, no reported matches; identical Ubuntu runtime findings remain 79 medium and 13 low with no high/critical. See config/redlib/recipe.json and docs/records/redlib-threads-2026-10-20.md. This does not accept or suppress other dependency findings."
+    "runtimeEvidence": "2026-10-29 Redlib fork 29f18352cf54be4ffe579f773552acd0c45cdd08 retains Cargo 0.36.0, the settings-redirect repair, Tokio 1.54.1 and every predecessor runtime layer. The existing application advisory range remains <0.35.1, outside this version. Native listings, original-thread comments, cursor sorting, focused replies and a proxied image passed; 22 offline regressions passed. Same-snapshot Trivy 0.75.0: all 320 Cargo metadata records extracted, no reported dependency matches; 92 unchanged Ubuntu packages retain 79 medium and 13 low matches, no high/critical. See config/redlib/recipe.json and docs/records/redlib-threads-2026-10-20.md. No other finding or scope is accepted or suppressed."
   },
   "freshrss": {
     "version": "1.30.1",
