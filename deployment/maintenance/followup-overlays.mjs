@@ -1,6 +1,7 @@
 // Explicit completed release locations, not a glob or a scanner exemption.
 // Reviewers still require an exact role/image chain and recheck live payloads.
 export const additionalOverlayReceipts = [
+
   'closure-followup-20261012/bookworm-curl-release.json',
   'geospatial-followup-20261012/release.json',
   'closure-followup-20261012/rssbridge-curl-release.json',
@@ -109,4 +110,8 @@ export const additionalOverlayReceipts = [
  'security-20261028/trust/release.json',
  'security-20261028/cfitsio/release.json',
  'security-20261028/msal/release.json',
+  'security-20261103/expat/release.json',
+  'security-20261103/expat-debian/release.json',
+  'security-20261103/pyasn1/release.json',
+  'security-20261103/redirects/release.json',
 ];

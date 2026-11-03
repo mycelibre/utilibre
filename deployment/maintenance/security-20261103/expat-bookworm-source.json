@@ -1,0 +1,29 @@
+{
+  "version": "2.10.0-1~deb12u1+utilibre1",
+  "compiler": "sha256:97d3ee295a602a85deeacaf4b988f40a5bcbd88e0eca18bd4c35ce9b9454e259",
+  "sources": {
+    "sourceIndexSha256": "71ff0ea268aab6df847510b2bd7a049f0250bbdb412d6dac53934a3447309ef9",
+    "sourcesXzSha256": "f981b4481e3ca83a1c0aa65c441c839ea3e40a8e00b3a582792f7dfd83d150a0",
+    "files": [
+      {
+        "file": "expat_2.10.0-1.dsc",
+        "sha256": "8c4623c101959b8709a3f0a10c06a40d413dc7a6f5ffad3bc9d0cd010d850956",
+        "size": 1977
+      },
+      {
+        "file": "expat_2.10.0.orig.tar.gz",
+        "sha256": "b3644a12f62d7762b62c444f69d169ba0234f13138d0240244bca64cbe35286f",
+        "size": 8498836
+      },
+      {
+        "file": "expat_2.10.0-1.debian.tar.xz",
+        "sha256": "9be65c3ff79ca0508590970422de0a55f117bb7134a0274dd1ed3261f85631dc",
+        "size": 14472
+      }
+    ]
+  },
+  "builderBase": "sha256:70c85e869d60d2203d9a691c3443038e71be0ddc9719bf2379f5f627b6b46dd8",
+  "scriptSha256": "20bbb2678ba1ee39f9a0f117e4c6bdb3a234fac394c50d2f865284fb05bc909c",
+  "network": "none during compilation/tests; authenticated Debian package download only during compiler preparation",
+  "wideFixtureSha256": "74eff06934d6998e208ce3b7b8ba92d86a400f20583e9a3ebe4cdcff144fcdd0"
+}

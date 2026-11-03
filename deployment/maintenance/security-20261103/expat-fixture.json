@@ -1,0 +1,11 @@
+{
+  "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+  "sourceSha256": "5a77c970f8eb3652cb1475ec2d38dced6e27655736cf7fe528e2c72f1ba810bd",
+  "binarySha256": "d638479954f53d56e0fa0493f9ece22a477836dc964105bf762ae8e95214ba46",
+  "headers": {
+    "expat.h": "805f17ae5f597eeb9f058f60428a1a62268de242a096af17cbcc2e17af111bad",
+    "expat_external.h": "77a02ad7ddc33fef8ae5876f8946d7ddb8fd9172a3f63d4c01b0e62211d386b5"
+  },
+  "apiCompatibility": "2.9.0 headers, 2.10.0 library, libexpat.so.1 ABI",
+  "regression": "Upstream PR1444 small empty nonfinal subparser; baseline may complete without crashing on this build. No multi-GiB CVE118370 fixture."
+}

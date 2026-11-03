@@ -1,0 +1,18 @@
+{
+  "compiler": "sha256:4cd9da5932965ac14ee70f3bd11c80acee56147ab4b2b638552aeee756815a49",
+  "sourceSha256": "5a77c970f8eb3652cb1475ec2d38dced6e27655736cf7fe528e2c72f1ba810bd",
+  "binarySha256": "6fffc694f5dfc6bc081cfa2d5ec327af78ef0623dc7fca1268589a8fc010b9b6",
+  "headers": {
+    "expat.h": "805f17ae5f597eeb9f058f60428a1a62268de242a096af17cbcc2e17af111bad",
+    "expat_external.h": "77a02ad7ddc33fef8ae5876f8946d7ddb8fd9172a3f63d4c01b0e62211d386b5"
+  },
+  "apiCompatibility": "2.9.0 headers, 2.10.0 library, libexpat.so.1 ABI",
+  "regression": "Upstream PR1444 small empty nonfinal subparser; baseline may complete without crashing on this build. No multi-GiB CVE118370 fixture.",
+  "wideBinarySha256": "9e022e6ec3d72cc696be47335849c764689af3b5e91802e7ab505831ad943b45",
+  "wideSourceSha256": "74eff06934d6998e208ce3b7b8ba92d86a400f20583e9a3ebe4cdcff144fcdd0",
+  "bookworm": {
+    "compiler": "sha256:97d3ee295a602a85deeacaf4b988f40a5bcbd88e0eca18bd4c35ce9b9454e259",
+    "binarySha256": "5ca06358ac7c8f25b367736e961aa4760d71362aa404e0012f85a7d4185a6e23",
+    "wideBinarySha256": "139adaa6ed65c2bfbf0f8e5f5b8f8dde059fffa28d8dc39e9bba7861cf18a2a6"
+  }
+}

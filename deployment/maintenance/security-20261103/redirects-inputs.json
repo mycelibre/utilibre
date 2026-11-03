@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-116689",
+  "version": "1.16.2",
+  "source": "https://github.com/follow-redirects/follow-redirects",
+  "sourceFix": "https://github.com/follow-redirects/follow-redirects/commit/b0a7751",
+  "license": "MIT",
+  "packages": {
+    "follow-redirects": {
+      "version": "1.16.2",
+      "integrity": "sha512-/kVP2U8z596Ia0gwFrwyIeo74ta5aVmSeU1FfAUMAmcEP5EP7zydmag3SLiN64NaRKef3lxsq7i/g7ltJQDGow=="
+    }
+  },
+  "rows": [
+    {
+      "key": "actual",
+      "base": "sha256:a36968cf01b37fb28d9af2c88eb0169413dbc114586ea4d5ab3cfeecd80db534",
+      "oldRef": "utilibre-expanded-actual:blkid-security-20261028",
+      "candidate": "utilibre-actual:redirects-security-20261103",
+      "containers": [
+        "utilibre-expanded-actual-1"
+      ],
+      "container": "utilibre-expanded-actual-1",
+      "roots": [
+        "/app",
+        "/opt/utilibre-reviewed-leaves"
+      ],
+      "paths": {
+        "follow-redirects": [
+          "/app/node_modules/follow-redirects",
+          "/opt/utilibre-reviewed-leaves/node_modules/follow-redirects"
+        ]
+      },
+      "before": {
+        "/app/node_modules/follow-redirects": "1.16.1",
+        "/opt/utilibre-reviewed-leaves/node_modules/follow-redirects": "1.16.1"
+      }
+    },
+    {
+      "key": "kuma",
+      "base": "sha256:f79827ede3083ea8ca955603ff7f949df8f0ac82140567ddd437368060f2a1bb",
+      "oldRef": "utilibre-uptime-kuma:msal-origin-security-20261028-expat210-20261103",
+      "candidate": "utilibre-kuma:redirects-security-20261103",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "container": "utilibre-community-uptime-kuma-1",
+      "roots": [
+        "/app",
+        "/opt/utilibre-reviewed-leaves"
+      ],
+      "paths": {
+        "follow-redirects": [
+          "/app/node_modules/follow-redirects",
+          "/opt/utilibre-reviewed-leaves/node_modules/follow-redirects"
+        ]
+      },
+      "before": {
+        "/app/node_modules/follow-redirects": "1.16.1",
+        "/opt/utilibre-reviewed-leaves/node_modules/follow-redirects": "1.16.1"
+      }
+    },
+    {
+      "key": "grist-redirects",
+      "base": "sha256:140f68b70b6e9e99e1f454953207534f96bde479fce2554460dff72a50b8d896",
+      "oldRef": "utilibre-grist:node-security-20261028-expat210-20261103",
+      "candidate": "utilibre-grist-redirects:redirects-security-20261103",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "container": "utilibre-records-grist-1",
+      "roots": [
+        "/grist",
+        "/opt/utilibre-grist-reviewed-leaves"
+      ],
+      "paths": {
+        "follow-redirects": [
+          "/grist/node_modules/follow-redirects",
+          "/opt/utilibre-grist-reviewed-leaves/node_modules/follow-redirects"
+        ]
+      },
+      "before": {
+        "/grist/node_modules/follow-redirects": "1.16.1",
+        "/opt/utilibre-grist-reviewed-leaves/node_modules/follow-redirects": "1.16.1"
+      }
+    },
+    {
+      "key": "gathio",
+      "base": "sha256:51471b115a25104f7daa1523e9c3eb09eb8dfb55b5e20553e194aa057c1e35d2",
+      "oldRef": "utilibre-gathio:multer-security-20261028",
+      "candidate": "utilibre-gathio:redirects-security-20261103",
+      "containers": [
+        "utilibre-gathio-gathio-1"
+      ],
+      "container": "utilibre-gathio-gathio-1",
+      "roots": [
+        "/srv/gathio"
+      ],
+      "paths": {
+        "follow-redirects": [
+          "/srv/gathio/node_modules/.pnpm/follow-redirects@1.16.1/node_modules/follow-redirects"
+        ]
+      },
+      "before": {
+        "/srv/gathio/node_modules/.pnpm/follow-redirects@1.16.1/node_modules/follow-redirects": "1.16.1"
+      }
+    }
+  ]
+}

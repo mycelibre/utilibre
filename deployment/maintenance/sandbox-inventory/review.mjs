@@ -17,7 +17,7 @@ const source=scan.sources.find(s=>s.name===denoSourceName);
 const sourceHash=await checkedSourceHash(source);
 assert.deepEqual(source.binding,proof.binding,'Runtime proof and scan must match');
 assert.deepEqual(source.binding,await runtimeBinding(async(program,args,timeout)=>execFileSync(program,args,{encoding:'utf8',timeout,stdio:['ignore','pipe','pipe']})),'Runtime changed after scan/proof');
-assert.deepEqual(proof.checks,[{name:'DNS',result:'NotCapable'},{name:'TCP',result:'NotCapable'},{name:'HTTP',result:'NotCapable'}]);
+assert.deepEqual(proof.checks.slice(0,3),[{name:'DNS',result:'NotCapable'},{name:'TCP',result:'NotCapable'},{name:'HTTP',result:'NotCapable'}]);
 const decisions=[],primary=[];
 for(const item of queue.items.filter(item=>eligible(item,sourceHash))){
  const response=await fetch(`https://api.github.com/advisories/${item.id}`,{signal:AbortSignal.timeout(20000)});assert(response.ok);

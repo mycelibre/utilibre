@@ -1,0 +1,1065 @@
+{
+  "version": 1,
+  "advisories": [
+    "CVE-2026-117610",
+    "CVE-2026-118370"
+  ],
+  "packages": {
+    "3.22/libexpat-2.10.0-r0.apk": {
+      "name": "libexpat",
+      "version": "2.10.0-r0",
+      "file": "libexpat-2.10.0-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libexpat-2.10.0-r0.apk",
+      "sha256": "8ff83a897b5393832edbd2a7500c37bab685a17d7821925d95460f01747dbac2",
+      "branch": "3.22"
+    },
+    "3.23/libexpat-2.10.0-r0.apk": {
+      "name": "libexpat",
+      "version": "2.10.0-r0",
+      "file": "libexpat-2.10.0-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/libexpat-2.10.0-r0.apk",
+      "sha256": "3a9ab8d1b66d1b76c6b41d24501ab61057efa3993f7b85cf3ff043b749e06e6e",
+      "branch": "3.23"
+    },
+    "3.24/libexpat-2.10.0-r0.apk": {
+      "name": "libexpat",
+      "version": "2.10.0-r0",
+      "file": "libexpat-2.10.0-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libexpat-2.10.0-r0.apk",
+      "sha256": "e7e7408ea787ed06d00159b0ff1f9b65a63cf634f36d9e0fa7512ce2c489a503",
+      "branch": "3.24"
+    }
+  },
+  "rows": [
+    {
+      "key": "browser-tools-rawgraphs",
+      "base": "sha256:08844db6c11e39a1a01368a44011441a04a4e19e162915cf4466cccbe91c6aab",
+      "oldRef": "utilibre-rawgraphs:b7b2909-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-rawgraphs:b7b2909-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-browser-tools-rawgraphs-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-rawgraphs",
+          "containers": [
+            "utilibre-browser-tools-rawgraphs-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "binternet-onion-gateway",
+      "base": "sha256:1c3a39a9d230cdf115a69d0d741710948329d40393f5f4492b7caea09127aa47",
+      "oldRef": "utilibre-binternet-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-binternet-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-binternet-onion-gateway-1",
+        "utilibre-binternet-gateway-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "binternet-onion-binternet-onion-gateway",
+          "containers": [
+            "utilibre-binternet-onion-gateway-1"
+          ]
+        },
+        {
+          "key": "binternet-binternet-onion-gateway",
+          "containers": [
+            "utilibre-binternet-gateway-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "expanded-whisper",
+      "base": "sha256:1e39fa261a09d93c5948881b53d7ae434485a4d6fec5b9ba98a1f5824d62d737",
+      "oldRef": "utilibre-whisper:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-whisper:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-expanded-whisper-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "expanded-expanded-whisper",
+          "containers": [
+            "utilibre-expanded-whisper-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "browser-tools-minipaint",
+      "base": "sha256:1fc6b4e48127331b4f62f26afa4f7b5951d34785b0db631150a5c79a6b1510f6",
+      "oldRef": "utilibre-minipaint:4.14.3-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-minipaint:4.14.3-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-browser-tools-minipaint-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-minipaint",
+          "containers": [
+            "utilibre-browser-tools-minipaint-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "opengist-opengist",
+      "base": "sha256:24fae7900b0be338fbd62d2db7f3c153b058b4c68955ac22b27cb5bcff4a756e",
+      "oldRef": "utilibre-opengist:expat-security-20261028",
+      "candidate": "utilibre-opengist:expat-security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-opengist-opengist-1"
+      ],
+      "release": "3.24.1",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "opengist-opengist-opengist",
+          "containers": [
+            "utilibre-opengist-opengist-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "kittygram-kittygram",
+      "base": "sha256:2a3054a5813fa2e5c8cf7a3dfaacf7dd63a513464870deca3556c02885983e88",
+      "oldRef": "utilibre-kittygram:expat-security-20261028",
+      "candidate": "utilibre-kittygram:expat-security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-kittygram-kittygram-1"
+      ],
+      "release": "3.23.5",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.23/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "kittygram-kittygram-kittygram",
+          "containers": [
+            "utilibre-kittygram-kittygram-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "pollaris-gateway",
+      "base": "sha256:2db01679b7c0ae67c5d7a5f6b108f6658444d611c5adc1fc8d72f6402013bfd6",
+      "oldRef": "utilibre-pollaris-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-pollaris-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-pollaris-gateway-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "pollaris-pollaris-gateway",
+          "containers": [
+            "utilibre-pollaris-gateway-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "newsletters-gateway",
+      "base": "sha256:330d20bb9f5f0b7a59448ec4540a79d090da6f1a5d4dbd64ad589733d1958430",
+      "oldRef": "utilibre-nginx:1.30.6-curl823-brotli121-20261028",
+      "candidate": "utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-newsletters-gateway-1",
+        "utilibre-community-gateway-1",
+        "utilibre-expanded-wiki-gateway-1",
+        "utilibre-community-rallly-gateway-1",
+        "utilibre-priviblur-gateway-1",
+        "utilibre-additions-mezzo-gateway-1",
+        "utilibre-additions-fmd-gateway-1",
+        "utilibre-additions-dumb-gateway-1",
+        "utilibre-reader-evaluation-gothub-gateway-1",
+        "utilibre-reader-evaluation-anonymousoverflow-gateway-1",
+        "utilibre-reader-evaluation-fourget-gateway-1",
+        "utilibre-biblioreads-gateway-1",
+        "utilibre-rimgo-gateway-1",
+        "utilibre-kittygram-gateway-1",
+        "utilibre-evaluation-degoog-gateway-1",
+        "utilibre-collaboration-pilot-gateway-1",
+        "utilibre-pack-forms-web-1",
+        "utilibre-pack-static-static-1",
+        "utilibre-spliit-gateway-1",
+        "utilibre-opengist-gateway-1",
+        "utilibre-linkding-gateway-1",
+        "utilibre-calendar-calino-1",
+        "utilibre-vikunja-gateway-1",
+        "utilibre-wishlist-gateway-1",
+        "utilibre-kitchenowl-gateway-1",
+        "utilibre-razzia-gateway-1",
+        "utilibre-bytestash-gateway-1",
+        "utilibre-simplelogin-gateway-1",
+        "utilibre-chitchatter-gateway-1",
+        "utilibre-gathio-gateway-1",
+        "utilibre-chhoto-gateway-1",
+        "utilibre-unfurl-gateway-1",
+        "utilibre-13ft-gateway-1",
+        "utilibre-addy-gateway-1",
+        "utilibre-family-chess-gateway-1",
+        "utilibre-projects-gateway-1",
+        "utilibre-donetick-gateway-1",
+        "utilibre-beaverhabits-gateway-1",
+        "utilibre-trip-gateway-1",
+        "utilibre-records-gateway-1",
+        "utilibre-creative-batch-static-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "newsletters-newsletters-gateway",
+          "containers": [
+            "utilibre-newsletters-gateway-1"
+          ]
+        },
+        {
+          "key": "community-newsletters-gateway",
+          "containers": [
+            "utilibre-community-gateway-1",
+            "utilibre-community-rallly-gateway-1"
+          ]
+        },
+        {
+          "key": "expanded-newsletters-gateway",
+          "containers": [
+            "utilibre-expanded-wiki-gateway-1"
+          ]
+        },
+        {
+          "key": "priviblur-newsletters-gateway",
+          "containers": [
+            "utilibre-priviblur-gateway-1"
+          ]
+        },
+        {
+          "key": "additions-newsletters-gateway",
+          "containers": [
+            "utilibre-additions-mezzo-gateway-1",
+            "utilibre-additions-fmd-gateway-1",
+            "utilibre-additions-dumb-gateway-1"
+          ]
+        },
+        {
+          "key": "reader-evaluation-newsletters-gateway",
+          "containers": [
+            "utilibre-reader-evaluation-gothub-gateway-1",
+            "utilibre-reader-evaluation-anonymousoverflow-gateway-1",
+            "utilibre-reader-evaluation-fourget-gateway-1"
+          ]
+        },
+        {
+          "key": "biblioreads-newsletters-gateway",
+          "containers": [
+            "utilibre-biblioreads-gateway-1"
+          ]
+        },
+        {
+          "key": "rimgo-newsletters-gateway",
+          "containers": [
+            "utilibre-rimgo-gateway-1"
+          ]
+        },
+        {
+          "key": "kittygram-newsletters-gateway",
+          "containers": [
+            "utilibre-kittygram-gateway-1"
+          ]
+        },
+        {
+          "key": "evaluation-newsletters-gateway",
+          "containers": [
+            "utilibre-evaluation-degoog-gateway-1"
+          ]
+        },
+        {
+          "key": "collaboration-pilot-newsletters-gateway",
+          "containers": [
+            "utilibre-collaboration-pilot-gateway-1"
+          ]
+        },
+        {
+          "key": "pack-forms-newsletters-gateway",
+          "containers": [
+            "utilibre-pack-forms-web-1"
+          ]
+        },
+        {
+          "key": "pack-static-newsletters-gateway",
+          "containers": [
+            "utilibre-pack-static-static-1"
+          ]
+        },
+        {
+          "key": "spliit-newsletters-gateway",
+          "containers": [
+            "utilibre-spliit-gateway-1"
+          ]
+        },
+        {
+          "key": "opengist-newsletters-gateway",
+          "containers": [
+            "utilibre-opengist-gateway-1"
+          ]
+        },
+        {
+          "key": "linkding-newsletters-gateway",
+          "containers": [
+            "utilibre-linkding-gateway-1"
+          ]
+        },
+        {
+          "key": "calendar-newsletters-gateway",
+          "containers": [
+            "utilibre-calendar-calino-1"
+          ]
+        },
+        {
+          "key": "vikunja-newsletters-gateway",
+          "containers": [
+            "utilibre-vikunja-gateway-1"
+          ]
+        },
+        {
+          "key": "wishlist-newsletters-gateway",
+          "containers": [
+            "utilibre-wishlist-gateway-1"
+          ]
+        },
+        {
+          "key": "kitchenowl-newsletters-gateway",
+          "containers": [
+            "utilibre-kitchenowl-gateway-1"
+          ]
+        },
+        {
+          "key": "razzia-newsletters-gateway",
+          "containers": [
+            "utilibre-razzia-gateway-1"
+          ]
+        },
+        {
+          "key": "bytestash-newsletters-gateway",
+          "containers": [
+            "utilibre-bytestash-gateway-1"
+          ]
+        },
+        {
+          "key": "simplelogin-newsletters-gateway",
+          "containers": [
+            "utilibre-simplelogin-gateway-1"
+          ]
+        },
+        {
+          "key": "chitchatter-newsletters-gateway",
+          "containers": [
+            "utilibre-chitchatter-gateway-1"
+          ]
+        },
+        {
+          "key": "gathio-newsletters-gateway",
+          "containers": [
+            "utilibre-gathio-gateway-1"
+          ]
+        },
+        {
+          "key": "chhoto-newsletters-gateway",
+          "containers": [
+            "utilibre-chhoto-gateway-1"
+          ]
+        },
+        {
+          "key": "unfurl-newsletters-gateway",
+          "containers": [
+            "utilibre-unfurl-gateway-1"
+          ]
+        },
+        {
+          "key": "13ft-newsletters-gateway",
+          "containers": [
+            "utilibre-13ft-gateway-1"
+          ]
+        },
+        {
+          "key": "addy-newsletters-gateway",
+          "containers": [
+            "utilibre-addy-gateway-1"
+          ]
+        },
+        {
+          "key": "family-chess-newsletters-gateway",
+          "containers": [
+            "utilibre-family-chess-gateway-1"
+          ]
+        },
+        {
+          "key": "projects-newsletters-gateway",
+          "containers": [
+            "utilibre-projects-gateway-1"
+          ]
+        },
+        {
+          "key": "donetick-newsletters-gateway",
+          "containers": [
+            "utilibre-donetick-gateway-1"
+          ]
+        },
+        {
+          "key": "beaverhabits-newsletters-gateway",
+          "containers": [
+            "utilibre-beaverhabits-gateway-1"
+          ]
+        },
+        {
+          "key": "trip-newsletters-gateway",
+          "containers": [
+            "utilibre-trip-gateway-1"
+          ]
+        },
+        {
+          "key": "records-newsletters-gateway",
+          "containers": [
+            "utilibre-records-gateway-1"
+          ]
+        },
+        {
+          "key": "creative-batch-newsletters-gateway",
+          "containers": [
+            "utilibre-creative-batch-static-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "toolbox-drawio",
+      "base": "sha256:346851199ed9d13682d24f1c629f90a081549d30662c500f156aa97c05e79a77",
+      "oldRef": "utilibre-drawio:32.0.2-p4-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-drawio:32.0.2-p4-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-toolbox-drawio-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-drawio",
+          "containers": [
+            "utilibre-toolbox-drawio-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "addy-app",
+      "base": "sha256:493408d36aedf0363054fec297da6167ea4295505d02ba509cd3776fee70c4f7",
+      "oldRef": "utilibre-addy:expat-security-20261028",
+      "candidate": "utilibre-addy:expat-security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-addy-app-1"
+      ],
+      "release": "3.23.5",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.23/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "addy-addy-app",
+          "containers": [
+            "utilibre-addy-app-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "creative-batch-glyphr",
+      "base": "sha256:51038830b036da823cb797c89649036a6d6f5166ec02ff0254af23db9c67fddd",
+      "oldRef": "utilibre-glyphr:2.10.6-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-glyphr:2.10.6-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-creative-batch-glyphr-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "creative-batch-creative-batch-glyphr",
+          "containers": [
+            "utilibre-creative-batch-glyphr-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "translite-gateway",
+      "base": "sha256:55c72a3517d299dfd8d8d87fee15b2c2d13ec4f833fb43d62137be8613bdac3c",
+      "oldRef": "utilibre-translite-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-translite-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-translite-gateway-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "translite-translite-gateway",
+          "containers": [
+            "utilibre-translite-gateway-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "toolbox-hatsh",
+      "base": "sha256:59ba2e5d2ecdcad61d514698b4509067b7ddecfff20e9c9c58f0f3ae792706a2",
+      "oldRef": "utilibre-hatsh:2.3.6-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-hatsh:2.3.6-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-toolbox-hatsh-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-hatsh",
+          "containers": [
+            "utilibre-toolbox-hatsh-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "toolbox-vert",
+      "base": "sha256:6685d5437ef93b0ef61ab417712d16f1397d2f70c0c6732a81d6b1135e23bd5b",
+      "oldRef": "utilibre-vert:c7b9f39-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-vert:c7b9f39-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-toolbox-vert-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-vert",
+          "containers": [
+            "utilibre-toolbox-vert-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "evaluation-degoog",
+      "base": "sha256:67ac5a6af2e37fbe92ddc461d92aea9399b90a635b97a1b0b98875aa25646b6a",
+      "oldRef": "utilibre-degoog:pcre-security-20261028",
+      "candidate": "utilibre-degoog:pcre-security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-evaluation-degoog-1"
+      ],
+      "release": "3.22.4",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.22/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "evaluation-evaluation-degoog",
+          "containers": [
+            "utilibre-evaluation-degoog-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "toolbox-bentopdf",
+      "base": "sha256:683401c77a69f0f50bdacf0097cd1a03682cf2432d167781d7957b875480a40b",
+      "oldRef": "utilibre-bentopdf:2.8.8-p4-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-bentopdf:2.8.8-p4-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-toolbox-bentopdf-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-bentopdf",
+          "containers": [
+            "utilibre-toolbox-bentopdf-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "browser-tools-zip-manager",
+      "base": "sha256:6d6444ba2a77a04d742f14ebfda01019a8323e2890f1fd0aa86a772a53aa93d2",
+      "oldRef": "utilibre-zip-manager:3b77a59-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-zip-manager:3b77a59-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-browser-tools-zip-manager-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-zip-manager",
+          "containers": [
+            "utilibre-browser-tools-zip-manager-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "reader-evaluation-fourget",
+      "base": "sha256:7a421c258b2f9fa6a6d0592466108ea4df393c526bd2b66dfb531aa30d5af5e1",
+      "oldRef": "utilibre-fourget:expat-security-20261028",
+      "candidate": "utilibre-fourget:expat-security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-reader-evaluation-fourget-1"
+      ],
+      "release": "3.23.6",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.23/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "reader-evaluation-reader-evaluation-fourget",
+          "containers": [
+            "utilibre-reader-evaluation-fourget-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "toolbox-miniqr",
+      "base": "sha256:7af9bdb60e7e4f30b6522ebb1863a1848b6e818be3105e2aa32f4e34a0aa6928",
+      "oldRef": "utilibre-miniqr:0.33.0-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-miniqr:0.33.0-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-toolbox-miniqr-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-miniqr",
+          "containers": [
+            "utilibre-toolbox-miniqr-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "browser-tools-image-scrubber",
+      "base": "sha256:83448d441d7ae08560da535636ed6695eb26cb3facf4246585cee97075483dfe",
+      "oldRef": "utilibre-image-scrubber:390b166-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-image-scrubber:390b166-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-browser-tools-image-scrubber-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-image-scrubber",
+          "containers": [
+            "utilibre-browser-tools-image-scrubber-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "reader-evaluation-safetwitch",
+      "base": "sha256:8a156bf551166862c7b7e30eb6b9c4f4266784e376153697ec8636241bef6375",
+      "oldRef": "utilibre-safetwitch:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-safetwitch:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-reader-evaluation-safetwitch-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "reader-evaluation-reader-evaluation-safetwitch",
+          "containers": [
+            "utilibre-reader-evaluation-safetwitch-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "toolbox-ittools",
+      "base": "sha256:8b0207cb110f7313afcde1b9c171ce6bd54e206af87d4c018efdb49026f92782",
+      "oldRef": "utilibre-ittools:2024.10.22-p2-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-ittools:2024.10.22-p2-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-toolbox-ittools-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-ittools",
+          "containers": [
+            "utilibre-toolbox-ittools-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "wallabag-web",
+      "base": "sha256:8c17249e612ce27a20c2b37fc6c3ac0be03023c3ee36c447dcb594468fa2b397",
+      "oldRef": "utilibre-wallabag-web:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-wallabag-web:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-wallabag-web-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "wallabag-wallabag-web",
+          "containers": [
+            "utilibre-wallabag-web-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "browser-tools-markmap",
+      "base": "sha256:93f02a58e0be2b0ecb102730ce34b8752cd5ffea6b10735dbea5e16e63f41718",
+      "oldRef": "utilibre-markmap:0.18.12-dom3417-security-20261022-cb20261028",
+      "candidate": "utilibre-markmap:0.18.12-dom3417-security-20261022-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-browser-tools-markmap-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-markmap",
+          "containers": [
+            "utilibre-browser-tools-markmap-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "browser-tools-svgedit",
+      "base": "sha256:9e65678a29627da8266cb761e471f3ce83fd5fec4c2daaca4a0dccd5211bdbe9",
+      "oldRef": "utilibre-svgedit:c44f061-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-svgedit:c44f061-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-browser-tools-svgedit-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-svgedit",
+          "containers": [
+            "utilibre-browser-tools-svgedit-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "expanded-jupyterlite",
+      "base": "sha256:a05531055d2b267634d022e9c0e3711a202b95927e6f8f8164a26507ee255839",
+      "oldRef": "utilibre-jupyterlite:0.8.5-browser-security-20261011-p2-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-jupyterlite:0.8.5-browser-security-20261011-p2-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-expanded-jupyterlite-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "expanded-expanded-jupyterlite",
+          "containers": [
+            "utilibre-expanded-jupyterlite-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "toolbox-omnitools",
+      "base": "sha256:ac19c995f7bdf1b63371f281d608f5d47a51b55ea5f3aefb4a4f0facd1cbd10c",
+      "oldRef": "utilibre-omnitools:0.6.0-p7-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-omnitools:0.6.0-p7-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-toolbox-omnitools-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-omnitools",
+          "containers": [
+            "utilibre-toolbox-omnitools-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "browser-tools-cyberchef",
+      "base": "sha256:b2a920a8626c59d0bf4feb9984258815b6e6fb5f1ed800dfdbbbc24ffbd7e4e7",
+      "oldRef": "utilibre-cyberchef:11.5.0-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-cyberchef:11.5.0-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-browser-tools-cyberchef-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-cyberchef",
+          "containers": [
+            "utilibre-browser-tools-cyberchef-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "openresume-web",
+      "base": "sha256:b7a8c8b98b3b6ea5a88d59e27062ef3d6ee99ebbeec7b65b4643ebc23197687a",
+      "oldRef": "utilibre-openresume:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-openresume:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-openresume-web-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "openresume-openresume-web",
+          "containers": [
+            "utilibre-openresume-web-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "browser-tools-audiomass",
+      "base": "sha256:bf7ee91ad2f5fd8aecfcaca8ada7d5e15c3af79db7d88cdf5855850d1d98e298",
+      "oldRef": "utilibre-audiomass:21f5ee1-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-audiomass:21f5ee1-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-browser-tools-audiomass-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-audiomass",
+          "containers": [
+            "utilibre-browser-tools-audiomass-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "browser-tools-excalidraw",
+      "base": "sha256:d1253daa2a76f525dbce40da86acb2f7524fbb13bb7aa0c82e81823c79341eb0",
+      "oldRef": "utilibre-excalidraw:53973c3-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-excalidraw:53973c3-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-browser-tools-excalidraw-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-excalidraw",
+          "containers": [
+            "utilibre-browser-tools-excalidraw-1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "qr-offline-qr-offline",
+      "base": "sha256:d9620e47fd6e1ad7662a763ea8817be9880a873977d2fe3e80e89b6e6a2f00be",
+      "oldRef": "utilibre-qr-offline:0fde700-p5-nginx1305-tiff472-libs20261021-nginx1306-cb20261028",
+      "candidate": "utilibre-qr-offline:0fde700-p5-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103",
+      "containers": [
+        "utilibre-qr-offline-qr-offline-1"
+      ],
+      "release": "3.24.2",
+      "packages": {
+        "libexpat": {
+          "installed": "2.9.0-r0",
+          "package": "3.24/libexpat-2.10.0-r0.apk"
+        }
+      },
+      "releaseGroups": [
+        {
+          "key": "qr-offline-qr-offline-qr-offline",
+          "containers": [
+            "utilibre-qr-offline-qr-offline-1"
+          ]
+        }
+      ]
+    }
+  ]
+}

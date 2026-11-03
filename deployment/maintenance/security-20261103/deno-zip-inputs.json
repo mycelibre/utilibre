@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "commit": "0c071246a412575e07423263404a5d13e7ed6aa2",
+  "sourceUrl": "https://codeload.github.com/denoland/deno/tar.gz/0c071246a412575e07423263404a5d13e7ed6aa2",
+  "archiveSha256": "fb58a70f221ea64e9b44ade6bc4656ab8427fc131f13700bcda2788a775816fb",
+  "files": {
+    "Cargo.lock": "4b501f05a28bf12c453593f0b558407890575b5f34b9dcbb2dc8e172d58a0c95",
+    "cli/util/archive.rs": "89eff8e6fa3951cf84999133c5a24d5a704433cae0992a89954989f8bdef0b68",
+    "cli/tools/upgrade.rs": "0e873fd66cfa5c4ff677f0b0fa2218228e11eb4a2b48401753059fb0d0b9a71a",
+    "cli/standalone/binary.rs": "4b88563e12c42aa897a9852e1b59d3c14c3bb9bdad6e8230e2c09cb5e9d68197",
+    "cli/tools/desktop.rs": "837cf316c764e6f00ab349ab04b11d0bdbaf35565047e3be7649353f7d374bed"
+  },
+  "advisories": {
+    "CVE-2026-115905": {
+      "id": "GHSA-m665-v7pm-7grj",
+      "url": "https://github.com/advisories/GHSA-m665-v7pm-7grj",
+      "sha256": "f81940f033e199859b603b943f5e2aca5e642222354b45c90063c4eae4d86caa"
+    },
+    "CVE-2026-115909": {
+      "id": "GHSA-q7v9-x93c-xqv3",
+      "url": "https://github.com/advisories/GHSA-q7v9-x93c-xqv3",
+      "sha256": "2a3b749d69d88fd8999275f015c69970c21f72927ec32c39b61d1b30194b5c24"
+    }
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "version": 1,
+  "package": "libexpat1",
+  "advisories": [
+    "CVE-2026-117610",
+    "CVE-2026-118370"
+  ],
+  "packages": {
+    "trixie": {
+      "file": "libexpat1_2.10.0-1_amd64.deb",
+      "version": "2.10.0-1",
+      "sha256": "9a333cf590099569f577c1a1d47ac1f439eab14c1faff09b7e81ce3802938003",
+      "url": "https://deb.debian.org/debian/pool/main/e/expat/libexpat1_2.10.0-1_amd64.deb",
+      "authenticatedIndexSha256": "7b09608d708955cc72e3704877eb8eb8870333f192c857cbf5ee1fea138f03b0",
+      "signedReleaseSha256": "62314d0a75145a111f6cb2a45ae23acb28ef07941b5ef2ad2aaea2023595fd1d",
+      "packagesSha256": "d7be20ffaf63cce88c782599856701748f5b047e736e5fcc203da45b10a36d54",
+      "preDepends": "libc6 (>= 2.38)"
+    },
+    "bookworm": {
+      "file": "libexpat1_2.10.0-1~deb12u1+utilibre1_amd64.deb",
+      "sha256": "92369fe7b918f7e9f3922c883118a66ea7f53f08331583117c21584636ce6c18",
+      "version": "2.10.0-1~deb12u1+utilibre1",
+      "authentication": "authenticated-source-rebuild",
+      "sourceManifestSha256": "ee7cc0ca1901b5d0df26289b00fd60aef4f56062505f9e69c7891077ad158696",
+      "buildReceiptSha256": "d5b50c6b7814f1241be66423b96d6920cc903ce765d4e61f9708bee1b26cce28"
+    }
+  },
+  "rows": [
+    {
+      "key": "debian-priviblur-priviblur",
+      "suite": "trixie",
+      "base": "sha256:1c369f559a204c861955cb2584483a221a8bf368c754335f21f31436915d5de4",
+      "oldRef": "utilibre-curl-priviblur-priviblur:security-20261028",
+      "candidate": "utilibre-curl-priviblur-priviblur:security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-priviblur-priviblur-1"
+      ],
+      "installed": "2.9.0-1",
+      "version": "2.10.0-1"
+    },
+    {
+      "key": "debian-pack-forms-app",
+      "suite": "trixie",
+      "base": "sha256:2b220ae0f073e16214dd569afbce5668f6b7fc34fdda4ee8357159713b0c9d03",
+      "oldRef": "utilibre-liberaforms:dnspython-security-20261028",
+      "candidate": "utilibre-liberaforms:dnspython-security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-pack-forms-app-1"
+      ],
+      "installed": "2.9.0-1",
+      "version": "2.10.0-1"
+    },
+    {
+      "key": "debian-services-rsshub",
+      "suite": "trixie",
+      "base": "sha256:2f88f37fa320b0acec874d38d27e3cbae64a9b795fcdd4e8dfcfb769866de67b",
+      "oldRef": "utilibre-rsshub:zod-security-20261028",
+      "candidate": "utilibre-rsshub:zod-security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "installed": "2.9.0-1",
+      "version": "2.10.0-1"
+    },
+    {
+      "key": "debian-services-freshrss",
+      "suite": "trixie",
+      "base": "sha256:531dea70909831ea789ca19ec634a567b8083ec5e26824aa7d2eb50d4768bbc2",
+      "oldRef": "utilibre-curl-services-freshrss:security-20261028",
+      "candidate": "utilibre-curl-services-freshrss:security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-services-freshrss-1"
+      ],
+      "installed": "2.9.0-1",
+      "version": "2.10.0-1"
+    },
+    {
+      "key": "debian-expanded-penpot-backend",
+      "suite": "trixie",
+      "base": "sha256:606943edef2f91408edc5a42ea0664781b19cfa78de59373c17acde71081de8d",
+      "oldRef": "utilibre-curl-expanded-penpot-backend:security-20261028",
+      "candidate": "utilibre-curl-expanded-penpot-backend:security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-expanded-penpot-backend-1"
+      ],
+      "installed": "2.9.0-1",
+      "version": "2.10.0-1",
+      "bundledLibrary": {
+        "path": "/opt/imagick/lib/deps/libexpat.so.1",
+        "beforeSha256": "34d65970d815f440fb26b29c357474394354beec3e1ce553d0c5f5147af84b58",
+        "source": "/usr/lib/x86_64-linux-gnu/libexpat.so.1",
+        "afterSha256": "e5ef21ec7c218c02f9b202f899e58d8dcac54f99749f3c2e3ddb910ee3382258"
+      }
+    },
+    {
+      "key": "debian-kitchenowl-app",
+      "suite": "trixie",
+      "base": "sha256:70c2057cc388c50691e9ba1d8e8e0c09651979c05c72a2ed31ea89261b255838",
+      "oldRef": "utilibre-kitchenowl:filelock-security-20261028",
+      "candidate": "utilibre-kitchenowl:filelock-security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-kitchenowl-app-1"
+      ],
+      "installed": "2.9.0-1",
+      "version": "2.10.0-1"
+    },
+    {
+      "key": "debian-expanded-penpot-exporter",
+      "suite": "trixie",
+      "base": "sha256:913dc9b1408f34c6ff723e6068d7cbefa0840f2fc3a52317199671bd925d0020",
+      "oldRef": "utilibre-curl-expanded-penpot-exporter:security-20261028",
+      "candidate": "utilibre-curl-expanded-penpot-exporter:security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-expanded-penpot-exporter-1"
+      ],
+      "installed": "2.9.0-1",
+      "version": "2.10.0-1",
+      "statusFragment": {
+        "path": "/var/lib/dpkg/status.d/libexpat1",
+        "beforeSha256": "2392f2eb9992698de5598186f10209a4a0955fde4685f0a4c81bcc074013e478",
+        "action": "Replace stale DHI record with dpkg-query -s for the actually installed signed package; retain original evidence"
+      }
+    },
+    {
+      "key": "debian-records-grist",
+      "suite": "trixie",
+      "base": "sha256:b7b1da47485af948d9f086b124d1e1d3365e2704c1341908d654ecc6566b6922",
+      "oldRef": "utilibre-grist:node-security-20261028",
+      "candidate": "utilibre-grist:node-security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "installed": "2.9.0-1",
+      "version": "2.10.0-1"
+    },
+    {
+      "key": "debian-expanded-breezewiki",
+      "suite": "trixie",
+      "base": "sha256:c6f82abb8dd0340b847801c27c046eb9edfb6fce786e909eb5555525fd8ca2b0",
+      "oldRef": "utilibre-curl-expanded-breezewiki:security-20261028",
+      "candidate": "utilibre-curl-expanded-breezewiki:security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-expanded-breezewiki-1"
+      ],
+      "installed": "2.9.0-1",
+      "version": "2.10.0-1"
+    },
+    {
+      "key": "debian-community-uptime-kuma",
+      "suite": "bookworm",
+      "base": "sha256:2bccc8274aec6457d7fb09699f3428ea14ec463c3ca20a7d15ad2f41104cb2b4",
+      "oldRef": "utilibre-uptime-kuma:msal-origin-security-20261028",
+      "candidate": "utilibre-uptime-kuma:msal-origin-security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "installed": "2.9.0-1~deb12u1+utilibre1",
+      "version": "2.10.0-1~deb12u1+utilibre1"
+    },
+    {
+      "key": "debian-gathio-postgres",
+      "suite": "bookworm",
+      "base": "sha256:c6a4cb58ef6f1c9c2943ba4dc50ddca47314da6066f98692dfcfc256522443af",
+      "oldRef": "utilibre-gathio-documentdb:cfitsio-security-20261028",
+      "candidate": "utilibre-gathio-documentdb:cfitsio-security-20261028-expat210-20261103",
+      "containers": [
+        "utilibre-gathio-postgres-1"
+      ],
+      "installed": "2.9.0-1~deb12u1+utilibre1",
+      "version": "2.10.0-1~deb12u1+utilibre1"
+    }
+  ],
+  "libraries": {
+    "libexpat.so.1": "e5ef21ec7c218c02f9b202f899e58d8dcac54f99749f3c2e3ddb910ee3382258",
+    "libexpatw.so.1": "85c044cc706e98b910126ce4d7b88e393c0e695e725087a188b6ed7e7184c06e"
+  },
+  "librariesBySuite": {
+    "trixie": {
+      "libexpat.so.1": "e5ef21ec7c218c02f9b202f899e58d8dcac54f99749f3c2e3ddb910ee3382258",
+      "libexpatw.so.1": "85c044cc706e98b910126ce4d7b88e393c0e695e725087a188b6ed7e7184c06e"
+    },
+    "bookworm": {
+      "libexpat.so.1": "72b965dc07741dd1b6cc16e93fa5afbd02a739792c35992fba423f16ad21e6ce",
+      "libexpatw.so.1": "8364fc83bf8655ab1695da07d32af845865570fc33715cbedd3acccf3edfeeb9"
+    }
+  }
+}

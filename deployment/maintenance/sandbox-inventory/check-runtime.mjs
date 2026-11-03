@@ -21,10 +21,12 @@ for(const [name,call] of [
  ['DNS',()=>Deno.resolveDns('fictional.example.invalid','A',{nameServer:{ipAddr:'127.0.0.1',port:9}})],
  ['TCP',()=>Deno.connect({hostname:'fictional.example.invalid',port:443})],
  ['HTTP',()=>fetch('https://fictional.example.invalid/')],
+ ['PROCESS',()=>new Deno.Command('/bin/true').output()],
+ ['FFI',()=>Deno.dlopen('/nonexistent-utilibre-fixture',{})],
 ]){try{await call();throw Error('Unexpected permission');}catch(error){if(error.name!=='NotCapable')throw error;checks.push({name,result:error.name});}}
 console.log(JSON.stringify({passed:true,checks}));`;
 const output=probe(['--rm','-i','--network','none','--read-only','--user','1000:1000','--cap-drop','ALL','--security-opt','no-new-privileges','--log-driver','none','--cpus','1','--memory','384m','--memory-swap','384m','--pids-limit','64','--tmpfs','/tmp:rw,nosuid,nodev,size=32m,mode=1777','--entrypoint','/usr/local/bin/grist-deno',image,'run','--no-prompt','--cached-only','-'],{input:program});
-const result=JSON.parse(output);assert.equal(result.passed,true);assert.equal(result.checks.length,3);
+const result=JSON.parse(output);assert.equal(result.passed,true);assert.equal(result.checks.length,5);
 const nativeProgram=`const assert=require('node:assert/strict');
 const {createConcreteSandbox}=require('app/server/lib/NSandbox');
 const sandbox=createConcreteSandbox('pyodide',{preferredPythonVersion:'3'});
@@ -33,8 +35,9 @@ const timeout=setTimeout(()=>process.exit(1),60000);
  assert.equal(await sandbox.pyCall('test_echo','fictional permissions check'),'fictional permissions check');
  assert.equal(sandbox.childProc.spawnfile,'/usr/local/bin/grist-deno');
  const args=sandbox.childProc.spawnargs;
+ assert.equal(args[1],'run');
  assert(!args.some(a=>/^--allow-(net|run|ffi)(=|$)/.test(a)||a==='--allow-all'||a==='-A'));
- console.log(JSON.stringify({passed:true,check:'Native Grist Python echo and no network/run/FFI grants'}));
+ console.log(JSON.stringify({passed:true,check:'Native Grist Python echo and no network/run/FFI grants',subcommand:'run'}));
 }finally{clearTimeout(timeout);await sandbox.shutdown();}})().catch(()=>process.exit(1));`;
 const nativeOutput=probe(['--rm','-i','--network','none','--read-only','--user','1000:1000','--cap-drop','ALL','--security-opt','no-new-privileges','--log-driver','none','--cpus','1','--memory','1g','--memory-swap','1g','--pids-limit','64',
  '--tmpfs','/tmp:rw,nosuid,nodev,size=128m,mode=1777','--tmpfs','/grist/sandbox/pyodide/_build/cache:rw,nosuid,nodev,size=128m,uid=1000,gid=1000',

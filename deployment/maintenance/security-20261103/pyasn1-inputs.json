@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "source": "https://github.com/pyasn1/pyasn1/releases/tag/v0.6.5",
+  "version": "0.6.5",
+  "license": "BSD-2-Clause",
+  "advisories": [
+    "CVE-2026-119194",
+    "CVE-2026-119195",
+    "CVE-2026-119196",
+    "CVE-2026-119197"
+  ],
+  "wheel": {
+    "file": "pyasn1-0.6.5-py3-none-any.whl",
+    "url": "https://files.pythonhosted.org/packages/19/1f/3eefd5c84c35cae44549ce1c7f7e58f7945b34f5a6bce07a135438522073/pyasn1-0.6.5-py3-none-any.whl",
+    "sha256": "4017b0fce125096b8573b39c989fdb1a4b19cf761e683398184550fea0e66587"
+  },
+  "sourceArchiveSha256": "6b11616a6bcf3a40e635f082bb232fa57b5e0dd7f517bd7ddd69ec3794508a47",
+  "testFiles": {
+    "__init__.py": "1040e52584b5ef6107dfd19489d37ff056e435c598f4e555f1edf4015e7ca67d",
+    "__main__.py": "93d149b60203a2582ffd063c3052698a63b54545a9879f157d43fb6b8fee1b1e",
+    "base.py": "30558286b37080f627855ac8452c8e3e82e99b8ac04c1189b89ddc0e99756fc5",
+    "codec/__init__.py": "1040e52584b5ef6107dfd19489d37ff056e435c598f4e555f1edf4015e7ca67d",
+    "codec/__main__.py": "0796473ef3c7eae580e827587ee326fae65e20c2bc08b4225115028ad74ff18d",
+    "codec/ber/__init__.py": "1040e52584b5ef6107dfd19489d37ff056e435c598f4e555f1edf4015e7ca67d",
+    "codec/ber/__main__.py": "8dc64d5ce729418fb3535df4e7846245dccf4d9fcbdacf79b7fd9eda87946d58",
+    "codec/ber/test_decoder.py": "8a56ffdb11cf4237aef5843c477a7299a7969d42efba456a7eb7a58e921dad3d",
+    "codec/ber/test_encoder.py": "ac166000d8a6c017eb1680cc9e72967685e84831034e26a88a66cf27d5f0e480",
+    "codec/cer/__init__.py": "1040e52584b5ef6107dfd19489d37ff056e435c598f4e555f1edf4015e7ca67d",
+    "codec/cer/__main__.py": "4c2dde71c0807a7243c5bdac1d9323e4d52c6393f2f73b93209844b6fc7422b7",
+    "codec/cer/test_decoder.py": "2cddccfa1b6ddb80f1b04701f3b23ea3d4896078d0e7289649e40608e2ef5cd9",
+    "codec/cer/test_encoder.py": "ea31e13185942be0f1f9c84eff34267458648e7654734d03909434882d187868",
+    "codec/der/__init__.py": "1040e52584b5ef6107dfd19489d37ff056e435c598f4e555f1edf4015e7ca67d",
+    "codec/der/__main__.py": "2a29152d1e71ec5ef8217c352163f4f9650773d28329330c42745ee9430b0b89",
+    "codec/der/test_decoder.py": "229a874863396f76cc66e52bbc949b399f87f6a8c68772b868b9d06baaf3ad9f",
+    "codec/der/test_encoder.py": "1625cc81b99878c3168cc6de39148ec129df4a522015fbea666eb9bb7b6160db",
+    "codec/native/__init__.py": "1040e52584b5ef6107dfd19489d37ff056e435c598f4e555f1edf4015e7ca67d",
+    "codec/native/__main__.py": "66971eb6dc80a3d1023d82df1a4f7a75f0f70a31d758229d81bc52172f35a2e8",
+    "codec/native/test_decoder.py": "5c5e5fcdabac43ca14330552081262e4c16574ce8c795efde0e7918a24b26c93",
+    "codec/native/test_encoder.py": "0932e8c4504f614d20681ab304052c7f4723beea33bd319b7b6e68cd62030d29",
+    "codec/test_decoder_schemaless.py": "9f6cf2910af05e57672bfbda220a88071b2dbdbb23f3c270668f46c1676cdd35",
+    "codec/test_streaming.py": "a78584436fe7f9f65073c5e29a5dfcd06e773d9993d76dede29cc74a20ea457d",
+    "test_debug.py": "5d73b1053ae6ede3861e860df72efd23d61260040b70c0170cb9b85672b98616",
+    "type/__init__.py": "1040e52584b5ef6107dfd19489d37ff056e435c598f4e555f1edf4015e7ca67d",
+    "type/__main__.py": "66ece23864b411932bff5ac1898935317ab9570a31c815193689b11d8522a37f",
+    "type/test_char.py": "b5f704558753f76334100b6d42f4b786d28a81848fc572eb20a03c41fbab1e6e",
+    "type/test_constraint.py": "0bab382e516e0270bec05b364dbf1fa33ad3d3abb39dbeca63e35dc35de22327",
+    "type/test_namedtype.py": "e9e5ec70cdb36e038abbbf146dbf481d5c26aca43d6e713bf12c2da085d757de",
+    "type/test_namedval.py": "5453c0b77cfcb2338b8b80f804f7a2859d660b3df35dfee95450018bf3e74d0a",
+    "type/test_opentype.py": "1508725b66e0ef19b8dad6b932ab4153b8d6c518af54a2ec1e70dae0a4521745",
+    "type/test_tag.py": "347e78f3ca2a9690235a28edb70419dfb57bc40d54bacc2f160e069acd06c55d",
+    "type/test_univ.py": "5abb7746e5db01a63f369e5b427978c7383ba55945d7b3b06e77b7e8bceaf882",
+    "type/test_useful.py": "61211993b025b5384e58c0f2df3361172cc94fbf9c280c41d40a301d9c36c101"
+  },
+  "rows": [
+    {
+      "key": "liberaforms",
+      "containers": [
+        "utilibre-pack-forms-app-1"
+      ],
+      "python": "/app/venv/bin/python",
+      "site": "/app/venv/lib/python3.13/site-packages",
+      "base": "sha256:1083df3e329425739a464916e3fa3126ca205357a04528f74aeacaa8a09a2227",
+      "oldRef": "utilibre-liberaforms:dnspython-security-20261028-expat210-20261103",
+      "candidate": "utilibre-liberaforms:pyasn1-security-20261103",
+      "previous": "0.6.4",
+      "method": "upstream-wheel"
+    },
+    {
+      "key": "authentik",
+      "containers": [
+        "utilibre-identity-server-1",
+        "utilibre-identity-worker-1"
+      ],
+      "python": "/ak-root/.venv/bin/python",
+      "site": "/ak-root/.venv/lib/python3.14/site-packages",
+      "base": "sha256:7111a6a674550246a3a7dc8c6a6828911dadf9f80275c5f1191b6850947771ba",
+      "oldRef": "utilibre-authentik:oauth-security-20261028",
+      "candidate": "utilibre-authentik:pyasn1-security-20261103",
+      "previous": "0.6.4",
+      "method": "upstream-wheel"
+    },
+    {
+      "key": "simplelogin",
+      "containers": [
+        "utilibre-simplelogin-web-1",
+        "utilibre-simplelogin-smtp-1",
+        "utilibre-simplelogin-jobs-1"
+      ],
+      "python": "/code/.venv/bin/python",
+      "site": "/code/.venv/lib/python3.12/site-packages",
+      "base": "sha256:58f6bcc27ca7232de5b53e4f5c70144987fbaeaddf4969807daf9581be28a6c0",
+      "oldRef": "utilibre-simplelogin:dnspython-security-20261028",
+      "candidate": "utilibre-simplelogin:pyasn1-security-20261103",
+      "previous": "0.6.4",
+      "method": "upstream-wheel"
+    }
+  ]
+}

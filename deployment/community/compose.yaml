@@ -110,7 +110,7 @@ services:
   uptime-kuma:
     <<: *runtime
     # Same app version; native SQLite/HTTP/TCP checks need no bundled Chromium/MariaDB.
-    image: utilibre-uptime-kuma:msal-origin-security-20261028
+    image: utilibre-kuma:redirects-security-20261103
     user: "1000:1000"
     environment:
       UPTIME_KUMA_DB_TYPE: sqlite
@@ -128,7 +128,7 @@ services:
 
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028
+    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     volumes:
@@ -184,7 +184,7 @@ services:
   rallly-gateway:
     <<: *runtime
     profiles: [rallly]
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028
+    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     volumes:

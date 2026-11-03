@@ -18,7 +18,7 @@ services:
       timeout: 5s
       retries: 3
   gateway:
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028
+    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
     entrypoint: [nginx, -g, 'daemon off;']
     restart: unless-stopped
     read_only: true
