@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-beaverhabits:dnspython-security-20261028
+    image: utilibre-beaverhabits-app:sqlite-rowid-20261103
     user: '1000:1000'
     env_file: /opt/utilibre/beaverhabits/private/app.env
     environment:

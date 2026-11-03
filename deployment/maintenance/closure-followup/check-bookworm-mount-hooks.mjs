@@ -7,7 +7,7 @@ const dir='/var/lib/utilibre-maintenance/closure-followup-20261012',here=new URL
 const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:45000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe']}).trim();
 const source=dir+'/sources/util-linux-2.38.1/libmount/src',sha=b=>createHash('sha256').update(b).digest('hex');
 const read=p=>JSON.parse(fs.readFileSync(p)),scan=read('/var/lib/utilibre-maintenance/security.json'),q=read('/var/lib/utilibre-maintenance/security-queue.json');freshScan(q,scan);assert.equal(scan.status,'checked');
-const items=q.items.filter(i=>bookwormHookCase(i)&&i.package==='libmount1'&&i.id==='CVE-2026-76642');assert.equal(items.length,8);
+const items=[...new Map(q.items.filter(i=>bookwormHookCase(i)&&i.package==='libmount1').map(i=>[i.artifact,i])).values()];assert.equal(items.length,8);
 // Validate completed release, actual repaired source and packages before any fixture runs.
 const repairedProofs=items.filter(i=>i.installed===repairedVersion).map(i=>repairedBookwormEvidence(i,scan));
 const pins={'context_mount.c':'09ded04a551e96ae05faca35bf9d56c995ecd7a77efc76f7d785ba6d358862dc','context.c':'b4bd89b9bdb8e52e8bd9ca79c00139f703fb646256866cc19527bda09d09b4f0'};

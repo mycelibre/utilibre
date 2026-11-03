@@ -3,9 +3,12 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+#ifndef UTILIBRE_SQLITE_VERSION
+#define UTILIBRE_SQLITE_VERSION "3.40.1"
+#endif
 int main(int argc, char **argv) {
   assert(argc==2);
-  assert(!strcmp(sqlite3_libversion(),"3.40.1"));
+  assert(!strcmp(sqlite3_libversion(),UTILIBRE_SQLITE_VERSION));
   sqlite3 *db=NULL;
   assert(sqlite3_open_v2(argv[1],&db,SQLITE_OPEN_READONLY,NULL)==SQLITE_OK);
   char *error=NULL;

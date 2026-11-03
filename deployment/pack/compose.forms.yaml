@@ -21,7 +21,7 @@ services:
       timeout: 3s
       retries: 5
   app:
-    image: utilibre-liberaforms:pyasn1-security-20261103
+    image: utilibre-pack-forms-app:sqlite-rowid-20261103
     restart: unless-stopped
     depends_on: {db: {condition: service_healthy}}
     user: '4002:4002'

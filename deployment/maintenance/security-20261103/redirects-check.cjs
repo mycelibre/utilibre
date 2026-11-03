@@ -1,7 +1,8 @@
 // Two loopback origins inside a networkless container; fictional headers only.
 const assert=require('node:assert/strict'),http=require('node:http'),vm=require('node:vm');
-const pkg=process.argv[2],fixed=process.argv[3]==='fixed',redirects=require(pkg);
-assert.equal(require(pkg+'/package.json').version,fixed?'1.16.2':'1.16.1');
+const pkg=process.argv[2],mode=process.argv[3],fixed=['fixed','backport'].includes(mode),redirects=require(pkg);
+assert(['baseline','fixed','backport'].includes(mode));
+assert.equal(require(pkg+'/package.json').version,mode==='fixed'?'1.16.2':'1.16.1');
 let target,source;
 const listen=server=>new Promise(r=>server.listen(0,'127.0.0.1',r));
 (async()=>{

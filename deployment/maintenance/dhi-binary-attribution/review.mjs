@@ -10,12 +10,14 @@ import {readIndexes} from '../xserver-followup/authenticate-dhi.mjs';
 import {inventory,command} from '../component-followup/inventory.mjs';
 import {payloadManifest} from '../vendor-leaves-final/dhi-proof.mjs';
 import {absentComponent} from '../review-binary-scope.mjs';
-import {freshScan} from '../review-native-backports.mjs';
+import {freshScan,overlayRows} from '../review-native-backports.mjs';
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';import {expatDescendant} from '../security-20261103/expat-policy.mjs';
 import {validateDecision} from '../triage.mjs';
 process.umask(0o077);assert.equal(process.argv.length,2);
 const base='/var/lib/utilibre-maintenance',root=base+'/dhi-binary-attribution-20261012';
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
 const scan=read(base+'/security.json'),queue=read(base+'/security-queue.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
+const chain=additionalOverlayReceipts.filter(f=>fs.existsSync(base+'/'+f)).flatMap(f=>overlayRows(read(base+'/'+f)));
 const acquisition=read(root+'/acquisition.json');assert.equal(acquisition.status,'passed');
 const index=readIndexes().find(x=>x.name==='main/binary-amd64/Packages');assert.equal(index.hash,acquisition.signedIndexSha256);
 const stanzas=index.text.split(/\n\s*\n/).map(s=>Object.fromEntries(s.split('\n').filter(l=>/^[\w-]+: /.test(l)).map(l=>[l.slice(0,l.indexOf(':')),l.slice(l.indexOf(':')+2)])));
@@ -44,6 +46,7 @@ for(const item of queue.items.filter(eligible)){
   assert.equal(field('Package'),item.package);assert.equal(field('Source'),row.source);assert.equal(field('Version'),item.installed);
   const p={image:item.artifact,container:name,package:item.package,actualVersion:inv.installed,archiveSha256:archives[item.package].sha256,signedIndexSha256:index.hash,authenticatedIndex:true,payloadExact:true,fileCount:actual.length,inventorySha256:sha(JSON.stringify(inv.records)),componentAbsentFromPackage:true,component:row.source==='perl'?'Archive::Tar':'systemd-homed',residual:{path:residualPath,version:field('Version'),source:field('Source'),sha256:sha(raw)},records:inv.records};
   if(row.predecessor)p.ancestry=successorProof;
+  if(row.chainFrom){assert.equal(expatDescendant(name,row.chainFrom,'2026-10-12T00:00:00Z',scan.completedAt,chain),item.artifact);p.completedChain={from:row.chainFrom,to:item.artifact,container:name};}
   prove(item,p);assert.equal(command('docker',['inspect','--format','{{.Image}}',name]),item.artifact);evidence.push(p);
   decisions.push(validateDecision({key:item.key,status:'not-affected',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:`Binary-subpackage attribution only: ${component}. Actual ${item.package} ${p.actualVersion} matches every regular file and symlink of the signed DHI archive ${p.archiveSha256}; that package contains none of the affected component. Scanner version ${item.installed} is independently verified in the retained ${residualPath} fragment, hash ${p.residual.sha256}; metadata was not edited or treated as the actual package version. Current image ${p.image}; package inventory ${p.inventorySha256}. Evidence: dhi-binary-attribution-20261012/evidence.json. The affected sibling package and other same-image findings remain separate; this is not a source-wide repair or whole-image safety claim. https://security-tracker.debian.org/tracker/${item.id}`}));
  }catch(error){skipped.push({key:item.key,package:item.package,artifact:item.artifact,error:String(error.message).slice(0,240)});}

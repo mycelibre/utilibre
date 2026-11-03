@@ -1,0 +1,3 @@
+import test from'node:test';import assert from'node:assert/strict';import {bridgeMetadata}from'./decode-cjs.mjs';
+const input=()=>({name:'decode-uri-component',version:'0.5.1',type:'module',exports:{types:'./index.d.ts',default:'./index.js'},files:['index.js','index.d.ts']});
+test('bridge preserves ESM entry and requires the reviewed package shape',()=>{const p=input(),after=bridgeMetadata(p);assert.equal(after.main,'./index.cjs');assert.equal(after.exports.import,p.exports.default);assert.equal(after.exports.require,'./index.cjs');assert(!p.main);for(const alter of [p=>p.version='0.5.0',p=>p.type='commonjs',p=>p.exports.default='./other.js',p=>p.main='./other.cjs',p=>p.dependencies={remote:'*'}]){const p=input();alter(p);assert.throws(()=>bridgeMetadata(p));}});

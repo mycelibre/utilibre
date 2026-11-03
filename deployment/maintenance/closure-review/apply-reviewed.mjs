@@ -2,6 +2,7 @@
 // Never copies decisions between image keys and never changes raw scan findings.
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
+import {sqliteReview,sqliteEligible} from '../security-20261103/sqlite-policy.mjs';
 import {validateDecision} from '../triage.mjs';
 import {run as rebuild} from '../build-queue.mjs';
 import {reviewFiles as sourceReviews,eligible as sourceEligible} from '../security-20261028/source-policy.mjs';
@@ -48,7 +49,7 @@ const joseCaddyReview='security-20261028/jose-caddy/review.json';
 const joseLeafReview='security-20261028/jose-leaf/review.json';
 const headerSnapshot='d4e64685005cb49f8cf3123b04e49eac6617de00';
 const headerSnapshotReview='headers-review-'+headerSnapshot+'/headers-review.json';
-const nativeMitigationReviews=[...sourceReviews,cryptpadBodyReview,blkidReview,joseLeafReview,joseCaddyReview,drfReview,openldapReview,tiffReview,qgaReview,hdf5Review,gdalAvifReview,archiveTarReview,coturnBsonReview,reserveReviewFile,nltkReview,bracesReview,mountFinalReview,ubuntuMountReview,singleScreenReview,sandboxDnsReview];
+const nativeMitigationReviews=[sqliteReview,...sourceReviews,cryptpadBodyReview,blkidReview,joseLeafReview,joseCaddyReview,drfReview,openldapReview,tiffReview,qgaReview,hdf5Review,gdalAvifReview,archiveTarReview,coturnBsonReview,reserveReviewFile,nltkReview,bracesReview,mountFinalReview,ubuntuMountReview,singleScreenReview,sandboxDnsReview];
 const files=process.argv.slice(2);assert(files.length&&files.every(x=>[headerSnapshotReview,...curlOct28Reviews,...packageAttributionReviews,dhiBinaryReview,...nativeMitigationReviews,heifReview,qemuReview,xlibReview,sudoReview,npmReview,...hostFollowupReviews,gnupgReview,xserverDhiReview,penpotReview,opensslReview,"python-bookworm-followup-20261012/mitigation-review.json","python-bookworm-followup-20261012/not-affected-review.json","geospatial-followup-20261012/native-reviews.json","host-extra-followup-20261012/pcap-review.json",'component-review.json','binary-scope-review.json','specific-closure-review-20261012.json','vendor-fixed-review.json','native-backport-review.json','closure-followup-20261012/headers-review.json','closure-followup-20261012/payload-review.json','closure-followup-20261012/ncurses-review.json','closure-followup-20261012/rsync-review.json','closure-followup-20261012/util-linux-review.json','closure-followup-20261012/util-linux-component-review.json','closure-followup-20261012/xml-uri-review.json','closure-followup-20261012/curl-review.json','closure-followup-20261012/bookworm-curl-review.json','closure-followup-20261012/gzip-review.json','closure-followup-20261012/sqlite-fts-review.json','closure-followup-20261012/wget-review.json','vendor-leaves-final-20261011/dhi-fixed-review.json','next-leaves-final-20261012/resume-reviews.json','closure-followup-20261012/urllib3-review.json','closure-followup-20261012/python-system-review.json','component-followup-20261012/binary-reviews.json','component-followup-20261012/runtime-reviews.json'].includes(x)));
 let sandboxSourceHash;
 if(files.includes(sandboxDnsReview)){
@@ -61,6 +62,7 @@ for(const file of files){
  const value=read(file);if(!Array.isArray(value))assert.equal(value.scanDate,scan.completedAt);
  if(file===headerSnapshotReview){assert.equal(value.cnaCommit,headerSnapshot);assert.equal(value.offline,true);assert(Array.isArray(value.primary)&&Array.isArray(value.inventories));}
  for(const decision of Array.isArray(value)?value:value.decisions){
+  if(file===sqliteReview)assert(sqliteEligible({...current.get(decision.key),status:'needs-review'}));
   if(sourceReviews.includes(file))assert(sourceEligible({...current.get(decision.key),status:'needs-review'},file.split('/')[1]));
   if(file===joseCaddyReview||file===joseLeafReview){const item=current.get(decision.key);assert(item&&item.scope==='runtime-image'&&item.type==='gobinary'&&item.id==='CVE-2026-116587'&&item.package==='github.com/go-jose/go-jose/v3'&&item.installed==='v3.0.5'&&(file===joseCaddyReview?item.target.endsWith('caddy'):['usr/bin/oauth2-proxy','app/wakapi'].includes(item.target)));}
   if(file===sandboxDnsReview)assert(sandboxDnsEligible({...current.get(decision.key),status:'needs-review'},sandboxSourceHash));

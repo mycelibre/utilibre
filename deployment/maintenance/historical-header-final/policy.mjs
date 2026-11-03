@@ -33,7 +33,7 @@ export function eligible(i){
  if(i?.status!=='needs-review'||i.package!=='linux-libc-dev'||!components[i.id]||!Array.isArray(i.containers))return false;
  // The reboot maintenance installed 6.12.113-1 UAPI headers. Each review still
  // inventories actual header bytes and checks absence of private kernel symbols.
- if(i.scope==='host-os')return i.artifact==='host-dpkg'&&i.targetName==='host-dpkg'&&i.type==='debian'&&['6.12.111-1','6.12.113-1'].includes(i.installed)&&i.containers.length===0;
+ if(i.scope==='host-os')return i.artifact==='host-dpkg'&&i.targetName==='host-dpkg'&&i.type==='debian'&&['6.12.111-1','6.12.113-1','6.12.115-2'].includes(i.installed)&&i.containers.length===0;
  return i.scope==='runtime-image'&&/^sha256:[a-f0-9]{64}$/.test(i.artifact)&&i.targetName===i.artifact&&i.containers.length>0&&i.containers.every(n=>roles[n]?.[0]===i.type&&roles[n]?.[1]===i.installed);
 }
 export function verifyPrimary(id,body,readDocument){

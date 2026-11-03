@@ -1,6 +1,6 @@
 // Read-only current-runtime applicability checks; no network, restart or update.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';
-import {freshScan} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';
+import {freshScan,overlayRows} from '../review-native-backports.mjs';import {additionalOverlayReceipts} from '../followup-overlays.mjs';import {expatDescendant} from '../security-20261103/expat-policy.mjs';import {validateDecision} from '../triage.mjs';
 import {cases,eligible,prove} from './platform-policy.mjs';
 import {createHash} from 'node:crypto';
 process.umask(0o077);
@@ -10,13 +10,15 @@ if(fs.existsSync(dir+'/review.json'))fs.copyFileSync(dir+'/review.json',evidence
 const read=p=>JSON.parse(fs.readFileSync(p));
 const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:30000,maxBuffer:1024**2,stdio:['ignore','pipe','pipe']}).trim();
 const scan=read(root+'/security.json'),queue=read(root+'/security-queue.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
+const chain=additionalOverlayReceipts.filter(p=>fs.existsSync(root+'/'+p)).flatMap(p=>overlayRows(read(root+'/'+p)));
+const reviewedCases=cases.map(s=>{const images=s.containers.map(name=>expatDescendant(name,s.image,'1970-01-01T00:00:00Z',scan.completedAt,chain));assert.equal(new Set(images).size,1,'Diverged platform-review roles');return {...s,image:images[0],originalImage:s.image};});
 const selected=process.argv.slice(2);assert(new Set(selected).size===selected.length&&selected.every(k=>cases.some(s=>s.key===k)));
 const decisions=[],proofs=[];
 let kitchenNative;
 for(const item of queue.items){
  if(item.status==='not-rechecked')continue;
  const reviewedItem={...item,status:'needs-review'};
- const s=eligible(reviewedItem);if(!s||(selected.length&&!selected.includes(s.key)))continue;assert.equal(scan.images.find(i=>i.id===s.image)?.status,'checked');const rows=[];
+ const s=eligible(reviewedItem,reviewedCases);if(!s||(selected.length&&!selected.includes(s.key)))continue;assert.equal(scan.images.find(i=>i.id===s.image)?.status,'checked');const rows=[];
  for(const name of s.containers){
   const c=JSON.parse(run('docker',['inspect',name]))[0],im=JSON.parse(run('docker',['image','inspect',c.Image]))[0];
   const shadowed=c.Mounts.some(m=>s.path===m.Destination||s.path.startsWith(m.Destination+'/'));
@@ -79,7 +81,7 @@ for(const item of queue.items){
   rows.push({container:name,image:c.Image,imageOs:im.Os,running:c.State.Running,shadowed,...observed});
   assert.equal(run('docker',['inspect','--format','{{.Image}}',name]),s.image);
  }
- prove(reviewedItem,rows);proofs.push({key:s.key,source:s.source,rows});
+ prove(reviewedItem,rows,reviewedCases);proofs.push({key:s.key,source:s.source,rows});
  const reason=s.package==='stdlib'?'This exact reported esbuild executable is Mach-O ARM64 for macOS, verified by binary header, SHA256 and pinned Go build-info reader (GOOS=darwin, GOARCH=arm64). The live container and Node runtime are Linux amd64/x64. Its separate ELF x86-64 esbuild executable is pinned and the native TypeScript transform passes offline; existing exact-image account/list/reload/isolation checks pass. This is deployment-platform attribution only: the bundled macOS executable is NOT upgraded or cleared for use on a Mac, redistribution or another runtime. No waiver for other stdlib targets or later images.':s.package==='litellm'?'These exact advisories concern LiteLLM proxy-server HTTP authentication/key-generation and transform_request credential loading. The current KitchenOwl image instead starts its hash-verified uWSGI/Flask application, imports the completion SDK only, and has no LLM model/provider configured. Exact runtime flags, launcher, entrypoint, parser and unshadowed source paths were checked. The isolated native application has no affected proxy routes or loaded proxy server; ingredient parsing makes no provider call, and two-account recipe import/export and isolation pass. The vulnerable library remains installed; this review does not repair its proxy code or authorize enabling that proxy, LLM integration or another consumer.':s.package==='vite'?'Upstream GHSA-587h-7wmj-h5pm explicitly limits CVE-2026-112942 to Windows path/shell handling. Exact current image and actual Node runtime are Linux; package metadata and mounts were inspected read-only. The synthetic Windows-like nonexistent path remains absent. This is platform attribution only: no exclusion for other Vite advisories, historical source locks or future images.':'Upstream GHSA-cg8m-r9f2-5wm2 limits CVE-2026-114134 to the Black GitHub Action with use_pyproject:true in 26.9.0/26.10.0. All three exact SimpleLogin roles instead contain Python Black 22.1.0 with no action files in its distribution or action manifests at the application roots; native role commands and installed metadata were checked. Isolated offline formatting still passes. This is runtime-component attribution, not clearance for arbitrary CI workflows or other Black advisories.';
  decisions.push(validateDecision({key:item.key,status:'not-affected',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:reason+' Evidence: '+evidenceDir.slice(root.length+1)+'/review.json; '+s.source}));
 }

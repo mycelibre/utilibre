@@ -6,6 +6,7 @@ import {createHash} from 'node:crypto';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 import {validateDecision} from '../triage.mjs';
+import {proveExpat} from '../security-20261103/expat-policy.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/python-bookworm-followup-20261012',here=new URL('.',import.meta.url).pathname;
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
@@ -14,8 +15,12 @@ const pyversion='3.11.2-6+deb12u9+utilibre1',expatversion='2.9.0-1~deb12u1+utili
 const pypackages=['python3.11','python3.11-minimal','libpython3.11-minimal','libpython3.11-stdlib'];
 const specs=read(here+'specs.json'),release=read(dir+'/release.json');assert.equal(release.status,'passed');
 const scan=read(root+'/security.json'),queue=read(root+'/security-queue.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
-const primary=read(root+'/closure-followup-20261012/debian-primary.json');assert(Date.now()-Date.parse(primary.date)<86400000);
-assert.equal(primary.sources.expat['CVE-2026-77214'].releases.sid.status,'resolved');assert.equal(primary.sources.expat['CVE-2026-77214'].releases.sid.fixed_version,'2.9.0-1');
+// This primary record is needed only when reviewing the old Expat advisory.
+// Python-only reviews validate their own source and every current payload below.
+if(queue.items.some(i=>i.status==='needs-review'&&i.package==='libexpat1'&&i.installed===expatversion&&i.id==='CVE-2026-77214')){
+ const primary=read(root+'/closure-followup-20261012/debian-primary.json');assert(Date.now()-Date.parse(primary.date)<86400000);
+ assert.equal(primary.sources.expat['CVE-2026-77214'].releases.sid.status,'resolved');assert.equal(primary.sources.expat['CVE-2026-77214'].releases.sid.fixed_version,'2.9.0-1');
+}
 run('node',[here+'verify-source.mjs']);
 assert.equal(sha(dir+'/sources/expat_2.9.0.orig.tar.gz'),'6e8ce7b52ebbaa423c59becc7cf1e6875c42e49228c062ac8123c10e700cec27');
 assert.match(fs.readFileSync(dir+'/build/expat-native-tests.log','utf8'),/100%: Checks: 5196, Failed: 0/);
@@ -61,6 +66,14 @@ for(const item of queue.items.filter(i=>i.status==='needs-review'&&i.scope==='ru
   if(spec.key==='gathio')assert(n.sdkNative?.passed&&n.sdkNative.nativeBarmanUploadListReadDownload&&a.postgisRegressionAndProjection);
   const payload=[];
   for(const pkg of [...pypackages,'libexpat1']){
+   if(pkg==='libexpat1'&&run('docker',['exec',name,'dpkg-query','-W','-f=${Version}',pkg])==='2.10.0-1~deb12u1+utilibre1'){
+    const input=read(new URL('../security-20261103/expat-debian-inputs.json',import.meta.url)),spec=input.rows.find(s=>s.suite==='bookworm'&&s.containers.includes(name));
+    assert(spec,'No unreviewed Expat descendant');
+    const evidence=root+'/security-20261103/expat-debian/'+spec.key,build=read(evidence+'/build.json'),consumer=read(evidence+'/consumer.json');
+    proveExpat(input,spec,build,consumer);
+    for(const lib of ['libexpat','libexpatw'])assert.equal(run('docker',['exec',name,'sha256sum','/usr/lib/x86_64-linux-gnu/'+lib+'.so.1']).split(/\s+/)[0],(input.librariesBySuite?.[spec.suite]||input.libraries)[lib+'.so.1']);
+    payload.push({pkg,version:spec.version,packageSha256:build.pin.sha256,checkedNarrowAndWide:true,evidence});continue;
+   }
    const m=manifest(pkg);assert.equal(run('docker',['exec',name,'dpkg-query','-W','-f=${Version}',pkg]),m.version);
    const actual=run('docker',['exec',name,'sha256sum',...m.files.map(f=>f.path)]).split('\n');assert.equal(actual.length,m.files.length);
    actual.forEach((line,index)=>assert.equal(line,m.files[index].sha256+'  '+m.files[index].path));
@@ -73,7 +86,7 @@ for(const item of queue.items.filter(i=>i.status==='needs-review'&&i.scope==='ru
  if(item.id==='CVE-2026-11940'){
   status='not-affected';reason='This exact Debian tarfile payload has no PEP706 extraction-filter implementation: extractall has no filter parameter; data_filter, tar_filter, LinkFallbackError and makelink_with_filter are absent. The controlled baseline rejects filter=data, and unchanged source SHA256 f697df24384495d0ebfcc90e9d684ab0cfb7127fd33f4adaf29fd44c92be9a91 and absent API are rechecked live. CVE-2026-11940 bypasses those absent filters. This is NOT a claim that default tar extraction is safe for untrusted archives and does not waive any other tar CVE. https://security-tracker.debian.org/tracker/CVE-2026-11940 ; https://github.com/python/cpython/commit/be13e86f6b9788a6f4d0419dffef72cbae5865c9 . Evidence: python-bookworm-followup-20261012/not-affected-review.json.';
  }else if(item.id==='CVE-2026-7210'){
-  status='mitigated';reason='Native Debian CPython 3.11 ABI retained with exact upstream cbaecf9f16da611a646d507c1cbca265c588fc56 C/header edits, plus Bookworm-native Expat 2.9.0. Source additions/deletions match upstream byte-for-byte; every previous Debian patch remains. The actual pyexpat AND ElementTree paths invoke XML_SetHashSalt16Bytes (isolated probe: baseline 0, repaired 2 calls), not the weaker legacy API. Ten targeted upstream Python modules and 5196 Expat checks passed; exact installed runtime/stdlib/library files match retained packages and native app journeys passed. https://github.com/python/cpython/commit/cbaecf9f16da611a646d507c1cbca265c588fc56 ; https://security-tracker.debian.org/tracker/CVE-2026-7210 . Evidence: python-bookworm-followup-20261012/mitigation-review.json. Only this exact finding is addressed.';
+  status='mitigated';reason='Native Debian CPython 3.11 ABI retained with exact upstream cbaecf9f16da611a646d507c1cbca265c588fc56 C/header edits. Source additions/deletions match upstream byte-for-byte; every previous Debian patch remains. The actual pyexpat AND ElementTree paths invoke XML_SetHashSalt16Bytes (isolated probe: baseline 0, repaired 2 calls). Ten targeted Python modules and the original Expat tests passed; Python bytes remain exact. Original Expat 2.9.0 or the separately verified Bookworm-native 2.10.0 overlay (5328 narrow checks, 3 wide checks, both live libraries hashed) is required. Native app journeys passed. https://github.com/python/cpython/commit/cbaecf9f16da611a646d507c1cbca265c588fc56 ; https://security-tracker.debian.org/tracker/CVE-2026-7210 . Evidence: python-bookworm-followup-20261012/mitigation-review.json. Only this exact finding is addressed.';
  }else{
   status='mitigated';reason='Native Bookworm rebuild of complete Expat 2.9.0 source, using Debian 2.9.0-1 packaging and existing distro ABI/dependencies; not a sid binary or glibc replacement. Debian primary tracker resolves CVE-2026-77214 in 2.9.0-1. All 5196 upstream checks passed; both narrow/wide native libraries preserve all 71 prior exported symbols, and complete installed library payload matches retained build packages. Native Python parser/consumer and application checks passed. https://security-tracker.debian.org/tracker/CVE-2026-77214 ; source SHA256 6e8ce7b52ebbaa423c59becc7cf1e6875c42e49228c062ac8123c10e700cec27. Evidence: python-bookworm-followup-20261012/mitigation-review.json. No unrelated findings waived.';
  }

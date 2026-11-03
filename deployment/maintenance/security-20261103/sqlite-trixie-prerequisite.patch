@@ -1,0 +1,90 @@
+From b8ab0b5de0243b7a4a849148d584b2e6199e10b3 Mon Sep 17 00:00:00 2001
+From: dan <Dan Kennedy>
+Date: Mon, 2 Sep 2024 18:41:59 +0000
+Subject: Fix a technically undefined signed integer overflow in fts5.
+
+FossilOrigin-Name: e6bec37ea1ca51e1d048941ce4c5211d8fc5c5e3556a1441f9c79b036843f9e3
+---
+ ext/fts5/fts5_index.c             |  2 +-
+ ext/fts5/test/fts5integrity2.test | 56 +++++++++++++++++++++++++++++++
+ 2 files changed, 57 insertions(+), 1 deletion(-)
+ create mode 100644 ext/fts5/test/fts5integrity2.test
+
+diff --git a/ext/fts5/fts5_index.c b/ext/fts5/fts5_index.c
+index 7eca9b1321..86d90deb69 100644
+--- a/ext/fts5/fts5_index.c
++++ b/ext/fts5/fts5_index.c
+@@ -1977,7 +1977,7 @@ static void fts5SegIterNext_None(
+ 
+   if( iOff<pIter->iEndofDoclist ){
+     /* Next entry is on the current page */
+-    i64 iDelta;
++    u64 iDelta;
+     iOff += sqlite3Fts5GetVarint(&pIter->pLeaf->p[iOff], (u64*)&iDelta);
+     pIter->iLeafOffset = iOff;
+     pIter->iRowid += iDelta;
+diff --git a/ext/fts5/test/fts5integrity2.test b/ext/fts5/test/fts5integrity2.test
+new file mode 100644
+index 0000000000..968be3bddf
+--- /dev/null
++++ b/ext/fts5/test/fts5integrity2.test
+@@ -0,0 +1,56 @@
++# 2024 September 3
++#
++# The author disclaims copyright to this source code.  In place of
++# a legal notice, here is a blessing:
++#
++#    May you do good and not evil.
++#    May you find forgiveness for yourself and forgive others.
++#    May you share freely, never taking more than you give.
++#
++#***********************************************************************
++#
++# This file contains tests focused on the integrity-check procedure.
++#
++
++source [file join [file dirname [info script]] fts5_common.tcl]
++set testprefix fts5integrity2
++
++# If SQLITE_ENABLE_FTS5 is not defined, omit this file.
++ifcapable !fts5 {
++  finish_test
++  return
++}
++
++do_execsql_test 2.0 {
++  CREATE VIRTUAL TABLE t2 USING fts5(a, detail='none');
++  BEGIN;
++    INSERT INTO t2(rowid, a) VALUES(-1, 'hello world');
++    INSERT INTO t2(rowid, a) VALUES(9223372036854775807, 'hello world');
++  COMMIT;
++}
++
++do_execsql_test 2.1 {
++  SELECT rowid FROM t2('hello AND world');
++} {-1 9223372036854775807}
++
++#-------------------------------------------------------------------------
++do_execsql_test 2.0 {
++  CREATE VIRTUAL TABLE t1 USING fts5(a, detail='none');
++  CREATE TABLE r1(r);
++  
++  WITH c(x) AS (VALUES(1) UNION SELECT x<<1 FROM c)
++    INSERT INTO r1(r) SELECT -1-x FROM c;
++
++  INSERT INTO t1(rowid, a) SELECT r, 'abc' FROM r1;
++}
++
++do_execsql_test 2.1 {
++  PRAGMA integrity_check;
++} {ok}
++
++do_execsql_test 2.2 {
++  SELECT rowid FROM t1('abc') ORDER BY +rowid;
++} [db eval {SELECT r FROM r1 ORDER BY r}]
++
++
++finish_test
+-- 
+2.30.2
+

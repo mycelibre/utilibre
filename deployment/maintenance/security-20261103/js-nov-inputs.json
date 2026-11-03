@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "advisories": [
+    "CVE-2026-116580",
+    "CVE-2026-116581",
+    "CVE-2026-116582",
+    "CVE-2026-116583",
+    "CVE-2026-116584",
+    "CVE-2026-118772",
+    "CVE-2026-116795",
+    "CVE-2026-118664"
+  ],
+  "packages": {
+    "seroval": {
+      "version": "1.6.11",
+      "integrity": "sha512-hpb6XnMCGN/A+79Uf8V7/iTGkyyyazNn5X0CoCAp7Uy9vT3RT8jZ9GLcnxGoVjg3P8AArbe4ZVHq6C8oT2a0kA==",
+      "dependencies": {},
+      "license": "MIT",
+      "source": {
+        "url": "https://github.com/lxsmnsyc/seroval.git",
+        "type": "git"
+      }
+    },
+    "joi": {
+      "version": "17.13.9",
+      "integrity": "sha512-llFCT2rVtfwgBCaIqxtjim+iHqrgss4ONiGSYiiGH9jnjWq90ppSRffqmqKvwpa8W+YfILyQV6XyGcegXX2T4g==",
+      "dependencies": {
+        "@hapi/hoek": "^9.3.0",
+        "@hapi/topo": "^5.1.0",
+        "@sideway/address": "^4.1.5",
+        "@sideway/formula": "^3.0.1",
+        "@sideway/pinpoint": "^2.0.0"
+      },
+      "license": "BSD-3-Clause",
+      "source": {
+        "url": "git://github.com/hapijs/joi.git",
+        "type": "git"
+      }
+    },
+    "re2js": {
+      "name": "re2js",
+      "version": "2.8.7",
+      "integrity": "sha512-bRSL/vn3KAmlGfGNoVpcsBXLaVvl6AbuvMMWbz0m3vBj60nj+p2/biozfBUOSBP+5XTduF6mr6IO/ZVjmqqkVQ==",
+      "license": "MIT",
+      "dependencies": {},
+      "engines": {
+        "node": ">=20.0.0"
+      },
+      "source": {
+        "url": "git+https://github.com/le0pard/re2js.git",
+        "type": "git"
+      },
+      "gitHead": "6ba840014b192668365271d7b1c4d2d24a4b5f83"
+    },
+    "decode-uri-component": {
+      "name": "decode-uri-component",
+      "version": "0.5.1",
+      "integrity": "sha512-vWHQkXgg2cE3BB4rR0c+PYw9BCQzLoNIRMI7AunIkZst74tw/vpPp7VLoYtsR/cy1f55g3XDWUslfeCZjiZJyA==",
+      "license": "MIT",
+      "dependencies": {},
+      "engines": {
+        "node": ">=14.16"
+      },
+      "source": {
+        "url": "git+https://github.com/SamVerschueren/decode-uri-component.git",
+        "type": "git"
+      },
+      "gitHead": "58ed85f5adc7cfaee5e49e4d52b067f172d0bcb6"
+    }
+  },
+  "rows": [
+    {
+      "key": "admin",
+      "container": "utilibre-expanded-penpot-admin-console-1",
+      "containers": [
+        "utilibre-expanded-penpot-admin-console-1"
+      ],
+      "base": "sha256:b55be29fdd59cdb3b701a7b559ee66e0d9aee8168b91b4bb7dda066c6f267833",
+      "oldRef": "utilibre-penpot-admin:zod-security-20261028",
+      "candidate": "utilibre-admin:js-nov-20261103",
+      "roots": [
+        "/nitrate",
+        "/opt"
+      ],
+      "paths": {
+        "seroval": [
+          "/nitrate/apps/admin-console/node_modules/.pnpm/seroval@1.5.6/node_modules/seroval",
+          "/nitrate/apps/admin-console/node_modules/.pnpm/seroval@1.6.7/node_modules/seroval",
+          "/opt/utilibre-reviewed-seroval"
+        ]
+      },
+      "before": {
+        "/nitrate/apps/admin-console/node_modules/.pnpm/seroval@1.5.6/node_modules/seroval": "1.6.8",
+        "/nitrate/apps/admin-console/node_modules/.pnpm/seroval@1.6.7/node_modules/seroval": "1.6.7",
+        "/opt/utilibre-reviewed-seroval": "1.6.8"
+      },
+      "runtimeRemoval": "node"
+    },
+    {
+      "key": "resume",
+      "container": "utilibre-expanded-resume-1",
+      "containers": [
+        "utilibre-expanded-resume-1"
+      ],
+      "base": "sha256:71e0b9c15b47d7de4c0629bc4b8d7379e5e342fc7a98393f96b74496946600fa",
+      "oldRef": "utilibre-resume:zod-security-20261028",
+      "candidate": "utilibre-resume:js-nov-20261103",
+      "roots": [
+        "/app",
+        "/opt"
+      ],
+      "paths": {
+        "seroval": [
+          "/app/node_modules/.pnpm/seroval@1.5.6/node_modules/seroval",
+          "/opt/utilibre-reviewed-seroval"
+        ]
+      },
+      "before": {
+        "/app/node_modules/.pnpm/seroval@1.5.6/node_modules/seroval": "1.6.8",
+        "/opt/utilibre-reviewed-seroval": "1.6.8"
+      },
+      "runtimeRemoval": "node"
+    },
+    {
+      "key": "gathio",
+      "container": "utilibre-gathio-gathio-1",
+      "containers": [
+        "utilibre-gathio-gathio-1"
+      ],
+      "base": "sha256:5e92cbd8c6a74ef342a592c7df5d0a4bd796ce2c7e7c5190e64dff7173ac9e6b",
+      "oldRef": "utilibre-gathio:redirects-security-20261103",
+      "candidate": "utilibre-gathio:js-nov-20261103",
+      "roots": [
+        "/srv/gathio"
+      ],
+      "paths": {
+        "joi": [
+          "/srv/gathio/node_modules/.pnpm/joi@17.13.8/node_modules/joi"
+        ]
+      },
+      "before": {
+        "/srv/gathio/node_modules/.pnpm/joi@17.13.8/node_modules/joi": "17.13.8"
+      },
+      "runtimeRemoval": "node"
+    },
+    {
+      "key": "rsshub",
+      "container": "utilibre-services-rsshub-1",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "base": "sha256:b2fb7e173f228f53d1f8160fdf092e67364a6037c558290d0c1875e0bf77032d",
+      "oldRef": "utilibre-services-rsshub:sqlite-rowid-20261103",
+      "candidate": "utilibre-rsshub:js-nov-20261103",
+      "roots": [
+        "/app",
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "re2js": [
+          "/app/node_modules/.pnpm/re2js@2.8.6/node_modules/re2js"
+        ],
+        "decode-uri-component": [
+          "/app/node_modules/.pnpm/decode-uri-component@0.5.0/node_modules/decode-uri-component"
+        ]
+      },
+      "before": {
+        "/app/node_modules/.pnpm/re2js@2.8.6/node_modules/re2js": "2.8.6",
+        "/app/node_modules/.pnpm/decode-uri-component@0.5.0/node_modules/decode-uri-component": "0.5.0"
+      },
+      "mirrorFiles": [
+        "/home/ubuntu/freetools/deployment/utilibre/compose.yaml"
+      ]
+    },
+    {
+      "key": "grist-decode",
+      "container": "utilibre-records-grist-1",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "base": "sha256:01ba83976470d165d099f23e35bd76440a61776c879a041ec203b5a64323b2e1",
+      "oldRef": "utilibre-records-grist:sqlite-rowid-20261103",
+      "candidate": "utilibre-grist:js-nov-20261103",
+      "roots": [
+        "/grist",
+        "/opt",
+        "/usr/local/lib/node_modules"
+      ],
+      "paths": {
+        "decode-uri-component": [
+          "/grist/node_modules/decode-uri-component"
+        ]
+      },
+      "before": {
+        "/grist/node_modules/decode-uri-component": "0.2.2"
+      },
+      "decodeUriCommonJs": true
+    }
+  ]
+}

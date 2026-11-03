@@ -5,6 +5,7 @@ import cp from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {specs,packages,output} from './specs.mjs';
+import {prepareDecodeBridge} from '../security-20261103/decode-cjs.mjs';
 process.umask(0o077);
 export const fileManifest=`const fs=require('fs'),path=require('path'),crypto=require('crypto');const out={};function walk(d){for(const n of fs.readdirSync(d).sort()){const p=path.join(d,n),s=fs.lstatSync(p);if(s.isDirectory())walk(p);else if(s.isFile())out[p]={sha256:crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),mode:s.mode&511};else if(s.isSymbolicLink())out[p]={link:fs.readlinkSync(p)};}}JSON.parse(process.argv[2]).forEach(walk);console.log(JSON.stringify(out));`;
 export async function buildExactPackages(specs,packages,output,selected){
@@ -56,8 +57,10 @@ for(const key of selected){
    const listing=run('tar',['-tzf',archive]).trim().split('\n');assert(listing.every(n=>n.startsWith('package/')&&!n.split('/').includes('..')));
    run('tar',['--no-same-owner','-xzf',archive,'--strip-components=1','-C',dest]);
    function normalize(d){fs.chmodSync(d,0o755);for(const n of fs.readdirSync(d)){const p=d+'/'+n,st=fs.lstatSync(p);if(st.isDirectory())normalize(p);else{assert(st.isFile(),'Unexpected package symlink');fs.chmodSync(p,st.mode&0o111?0o755:0o644)}}}normalize(dest);
+   let compatibility;
+   if(s.decodeUriCommonJs){assert.equal(key,'grist-decode');assert.equal(packageName,'decode-uri-component');assert.equal(pin.version,'0.5.1');assert.equal(node(s.base,'console.log(process.versions.node)').trim(),'22.23.4');compatibility=prepareDecodeBridge(dest);}
    for(const target of paths)recipe+='COPY pkg'+i+'/ '+target+'/\n';
-   receipts.push({name,...pin,paths,tarball:meta.dist.tarball,archiveSha256:hash(bytes),downloadBytes:bytes.length,license:meta.license});
+   receipts.push({name,...pin,paths,tarball:meta.dist.tarball,archiveSha256:hash(bytes),downloadBytes:bytes.length,license:meta.license,...(compatibility?{compatibility}:{})});
   }
   const npmPolicy='/usr/local/lib/node_modules/npm/npmrc';
   if(s.disableNpmBackgroundChecks){

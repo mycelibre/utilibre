@@ -1,5 +1,18 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
+// Broader severity coverage changes selection only, never the attribution rules.
+// A full review may read only an explicitly selected immutable local snapshot.
+export function headerReviewOptions(provided){
+ const offline=provided.includes('--offline'),allSeverities=provided.includes('--all-severities');
+ for(const flag of ['--offline','--all-severities'])assert(provided.filter(x=>x===flag).length<=1,'Duplicate header-review flag');
+ const args=provided.filter(x=>!['--offline','--all-severities'].includes(x)),snapshot=args[0]==='--snapshot';
+ assert(snapshot?args.length===2&&/^[a-f0-9]{40}$/.test(args[1]):args.length<=1&&[undefined,'--current'].includes(args[0]),'Unsupported header-review arguments');
+ assert(!allSeverities||(snapshot&&offline),'All-severity review requires an explicit local immutable snapshot');
+ return {offline,allSeverities,snapshot,current:args[0]==='--current',commit:snapshot?args[1]:args[0]==='--current'?'2f073091b14641caef8f31f3ae9cfc4eef3c201e':'20d9248c60fe62803efade3177e8b82b586d154c'};
+}
+export function headerFindingSelected(item,allSeverities=false){
+ return item.status==='needs-review'&&item.package==='linux-libc-dev'&&['debian','ubuntu'].includes(item.type)&&['host-os','runtime-image'].includes(item.scope)&&(allSeverities||['HIGH','CRITICAL'].includes(item.severity));
+}
 // Individually inspected historical CNA records lack Linux's newer structured
 // programFiles field. Accept only these unchanged primary records, never a
 // general description/keyword heuristic. Original provider/path spelling stays.

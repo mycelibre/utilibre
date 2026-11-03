@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "scanCompletedAt": "2026-11-03T23:33:04.806Z",
+  "recordedAt": "2026-11-03T23:35:49.270018+00:00",
+  "queueStatus": "current",
+  "coverage": {
+    "images": 109,
+    "containers": 175,
+    "sources": 83,
+    "hostPackages": 508
+  },
+  "rawRecords": 24437,
+  "rawBySeverity": {
+    "CRITICAL": 64,
+    "HIGH": 2909,
+    "LOW": 8486,
+    "MEDIUM": 12028,
+    "UNKNOWN": 950
+  },
+  "awaitingReviewBySeverity": {
+    "HIGH": 107,
+    "LOW": 5441,
+    "MEDIUM": 5159,
+    "UNKNOWN": 949
+  },
+  "overdueBySeverity": {
+    "HIGH": 105,
+    "MEDIUM": 4368,
+    "UNKNOWN": 432
+  },
+  "highByScope": {
+    "host-os": 31,
+    "runtime-image": 40,
+    "tracked-build-input": 36
+  },
+  "runtimeHighByPackage": {
+    "com.google.guava:guava": 1,
+    "libacl1": 29,
+    "libxi6": 4,
+    "linux-libc-dev": 2,
+    "python3-markdown": 1,
+    "python3-oauthlib": 1,
+    "stdlib": 2
+  },
+  "completedReleaseGroups": {
+    "sqlite": 29,
+    "js-nov": 5,
+    "cryptpad-redirects": 1
+  },
+  "limitations": [
+    "Awaiting-review counts are not raw scanner counts, unique vulnerabilities or exploitability determinations.",
+    "Exact bounded reviews expire automatically; raw evidence and original triage targets are retained.",
+    "Host package repair and reboot/guest-agent/SSH coordination were not performed in this follow-up.",
+    "Remaining build-input findings and runtime repairs are unfinished; they are not all blocked by host coordination."
+  ],
+  "evidenceRoot": "/var/lib/utilibre-maintenance/security-20261103"
+}

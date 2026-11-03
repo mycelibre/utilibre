@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-119373",
+  "upstreamCommit": "e1c9934f9f11a499029abb020ea715a08970da80",
+  "upstreamPatchSha256": "4e79bd367bf1411e66d15fe4bfca410d5ca9f29d462855e7c5c07987967bb42e",
+  "patchSha256": "e912e7c3a07d6d45c3f825a88d331f156c456381e8b1eda3fa015001cfd160b6",
+  "permittedPatchFiles": [
+    "ext/fts5/fts5_index.c",
+    "ext/fts5/test/fts5prefix2.test"
+  ],
+  "suites": {
+    "bookworm": {
+      "inputVersion": "3.40.1-2+deb12u2+utilibre2",
+      "version": "3.40.1-2+deb12u2+utilibre3",
+      "sourceVersion": "3.40.1",
+      "files": [
+        {
+          "file": "sqlite3_3.40.1-2+deb12u2+utilibre2.dsc",
+          "sha256": "2b6c230026c54227e362912205f3da66937c9c2d6193d7379bcee106c6dff54b"
+        },
+        {
+          "file": "sqlite3_3.40.1-2+deb12u2+utilibre2.debian.tar.xz",
+          "sha256": "bf596f714a936021f409222be14876832f52f70f162ecdb003285942383658a9"
+        },
+        {
+          "file": "sqlite3_3.40.1.orig.tar.xz",
+          "sha256": "aaa776260ab4dc976db34aa7891819484c8676b5b2783123ebc6301e2ca5d655"
+        },
+        {
+          "file": "sqlite3_3.40.1.orig-www.tar.xz",
+          "sha256": "a5e95a18d1b59729278860559ded78751b9163ffb5bb906c5cd24c015f71d5fd"
+        }
+      ],
+      "sdkBase": "sha256:97d3ee295a602a85deeacaf4b988f40a5bcbd88e0eca18bd4c35ce9b9454e259",
+      "sdkImage": "sha256:6a07f38a6ecf26ef67524730274c6ee2d641402c653ceff51dc13d0d976616e8",
+      "filePreconditions": {
+        "ext/fts5/fts5_index.c": "c75c70910c573d2f7ccf281f3f3479788e899e1e2133145e7522944933de8887",
+        "ext/fts5/test/fts5prefix2.test": "a42a84902a5ef58aaf81ced6e75cfb40b9380812c87501d18bf3727b8d62a1c4",
+        "debian/rules": "172b1f317341d5425eb9415048086f6a403f6cb268c582bfa228f4272917188d"
+      }
+    },
+    "trixie": {
+      "inputVersion": "3.46.1-7+deb13u2",
+      "version": "3.46.1-7+deb13u2+utilibre1",
+      "sourceVersion": "3.46.1",
+      "files": [
+        {
+          "file": "sqlite3_3.46.1-7+deb13u2.dsc",
+          "sha256": "46e1eec171e11108fc436e45309b635b601029726b6ffd3bf435bb474e511638"
+        },
+        {
+          "file": "sqlite3_3.46.1-7+deb13u2.debian.tar.xz",
+          "sha256": "59d33bc436258603702bb051d645743ab03612b82f79e7c7d638c65127c21261"
+        },
+        {
+          "file": "sqlite3_3.46.1.orig.tar.xz",
+          "sha256": "d0cdd2ece271b29e7ce18095745d892517ee26d0f270065b3a25c2e9eb11639c"
+        },
+        {
+          "file": "sqlite3_3.46.1.orig-www.tar.xz",
+          "sha256": "648df41a8e532882b1905df45919aae4bafaf74c455f66bc86f1f52f45c8b8f0"
+        }
+      ],
+      "sdkBase": "sha256:4cd9da5932965ac14ee70f3bd11c80acee56147ab4b2b638552aeee756815a49",
+      "sdkImage": "sha256:eb92e8373595e96f4dff736d82aa484704579dde4403a4445624f27094e70818",
+      "filePreconditions": {
+        "ext/fts5/fts5_index.c": "a8cb1edfb4772d6f6d2c5fa417c9802c905e56e420832e216337dad4579455e9",
+        "ext/fts5/test/fts5prefix2.test": "d4260474ddc5d374c5fc932c1251f695fcfac57c2ce2f43b3f2056e426ebab46",
+        "debian/rules": "6dcffe1e100a489ed0dd995fc08ebbf207c4c6f61366b5c875bc4feb05b27082"
+      }
+    }
+  },
+  "bookwormContextPatchSha256": "cbf14766a570ca62623b141cc3e7bee1bf82af73d15760cee74fa86268af3891",
+  "bookwormContextOnly": true,
+  "trixiePrerequisite": {
+    "file": "sqlite-trixie-prerequisite.patch",
+    "sha256": "7b007a9bca84eeb753ca1587393e16cc0095c8c2e1f75b082368020c5f1b065b",
+    "source": "Already authenticated Bookworm Debian source patch, unchanged",
+    "upstreamFossil": "e6bec37ea1ca51e1d048941ce4c5211d8fc5c5e3556a1441f9c79b036843f9e3",
+    "reason": "Independent signed overflow exposed by the new negative-rowid regression on Trixie; present already on Bookworm",
+    "permittedFiles": [
+      "ext/fts5/fts5_index.c",
+      "ext/fts5/test/fts5integrity2.test"
+    ]
+  }
+}

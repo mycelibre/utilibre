@@ -19,7 +19,7 @@ services:
     memswap_limit: 256m
     <<: *runtime
     # Same upstream app; staged Debian 12 security package refresh (see maintenance runbook).
-    image: utilibre-rssbridge:nginx1306-security-20261028
+    image: utilibre-community-rssbridge:sqlite-rowid-20261103
     user: "33:33"
     entrypoint: [/bin/sh, -ec]
     command: ["mkdir -p /run/php; nginx -c /etc/nginx/utilibre.conf; exec php-fpm8.2 --fpm-config /etc/php/8.2/fpm/utilibre.conf --nodaemonize"]
@@ -110,7 +110,7 @@ services:
   uptime-kuma:
     <<: *runtime
     # Same app version; native SQLite/HTTP/TCP checks need no bundled Chromium/MariaDB.
-    image: utilibre-kuma:redirects-security-20261103
+    image: utilibre-community-uptime-kuma:sqlite-rowid-20261103
     user: "1000:1000"
     environment:
       UPTIME_KUMA_DB_TYPE: sqlite

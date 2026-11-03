@@ -1,0 +1,22 @@
+--- a/index.js
++++ b/index.js
+@@ -311,7 +311,7 @@
+     }
+   }
+   // Ensure sensitive headers are always present
+-  if (!isArray(options.sensitiveHeaders)) {
++  if (!Array.isArray(options.sensitiveHeaders)) {
+     options.sensitiveHeaders = [];
+   }
+ 
+@@ -689,10 +689,6 @@
+   return dot > 0 && subdomain[dot] === "." && subdomain.endsWith(domain);
+ }
+ 
+-function isArray(value) {
+-  return value instanceof Array;
+-}
+-
+ function isString(value) {
+   return typeof value === "string" || value instanceof String;
+ }

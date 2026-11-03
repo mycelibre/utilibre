@@ -1,0 +1,21 @@
+// Exact mounted-source mitigation. No version relabelling or automatic upgrades.
+import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
+import {freshScan} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';import {eligible,proveChecks} from './cryptpad-redirects-policy.mjs';
+process.umask(0o077);
+const root='/var/lib/utilibre-maintenance',dir=root+'/security-20261103/cryptpad-redirects',read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
+const scan=read(root+'/security.json'),queue=read(root+'/security-queue.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
+const spec=read(new URL('./cryptpad-redirects-inputs.json',import.meta.url)),release=read(dir+'/release.json'),source=read(dir+'/source.json'),checks=read(dir+'/checks.json'),app=read(dir+'/application.json'),offer=read(dir+'/source-offer.json');
+assert.equal(release.status,'passed');assert(Date.parse(release.completedAt)<=Date.parse(scan.date));assert(source.passed&&source.packageMetadataUnchanged);assert.deepEqual(source.changedFiles,[spec.file]);
+proveChecks(checks);assert.equal(checks.sourceProofSha256,sha(fs.readFileSync(dir+'/source.json')));
+assert(app.passed&&app.completed&&app.disposableStateRemoved&&Object.values(app.checks).every(Boolean));assert.equal(app.runtimeImage,spec.runtimeImage);assert.equal(app.sourceProofSha256,sha(fs.readFileSync(dir+'/source.json')));
+assert(offer.published);assert.equal(sha(fs.readFileSync('/opt/utilibre/toolbox-public/'+offer.filename)),offer.sha256);
+for(const [path,hash] of Object.entries(release.groups[0].proofs))assert.equal(sha(fs.readFileSync(path)),hash);
+const docker=(...args)=>cp.execFileSync('docker',args,{encoding:'utf8',timeout:30000,maxBuffer:1024*1024,stdio:['ignore','pipe','pipe']}).trim();
+const container='utilibre-pack-cryptpad-cryptpad-1',live='/opt/utilibre/src/cryptpad';
+assert.equal(docker('inspect','--format','{{.Image}}',container),spec.runtimeImage);
+assert.equal(sha(fs.readFileSync(live+'/'+spec.file)),spec.afterSha256);assert.equal(sha(fs.readFileSync(live+'/package-lock.json')),spec.lockSha256);
+const mounts=JSON.parse(docker('inspect','--format','{{json .Mounts}}',container));const mount=mounts.find(m=>m.Source===live);assert(mount);
+assert.equal(docker('exec',container,'sha256sum',mount.Destination+'/'+spec.file).split(/\s/)[0],spec.afterSha256);
+assert.equal(sha(fs.readFileSync(new URL('./cryptpad-redirects.patch',import.meta.url))),spec.patchSha256);
+const decisions=queue.items.filter(eligible).map(i=>validateDecision({key:i.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:'Exact upstream follow-redirects 1.16.2 index.js backport on CryptPad follow-redirects 1.16.1. Host and running container bytes '+spec.afterSha256+' match the pinned MIT upstream artifact. Synthetic networkless tests reproduce two custom-header leaks from cross-realm arrays before the fix and none afterward; four array/object cases, same-origin headers and redirect limits pass. The complete disposable two-account/document/upload/team/export/import workflow passes without outside browser requests. Metadata and lock deliberately remain unchanged to preserve prior patches; raw version finding retained. Release, source and test receipts are bound to the current runtime and lock. Seven-day review applies only to this mounted source; dependency reinstalls must replay the patch. Evidence: security-20261103/cryptpad-redirects/review.json; source offer SHA256 '+offer.sha256+'. https://github.com/advisories/GHSA-mrwp-f3q8-3g9p'}));
+assert.equal(read(root+'/security.json').completedAt,scan.completedAt);fs.writeFileSync(dir+'/review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,afterSha256:spec.afterSha256,releaseCompletedAt:release.completedAt},null,2)+'\n');console.log(JSON.stringify({prepared:decisions.length,applied:false}));

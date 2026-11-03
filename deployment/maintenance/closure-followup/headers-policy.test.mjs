@@ -1,6 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents,gcovBuildPaths,additionalKernelRecords,additionalKernelPaths} from './headers-policy.mjs';
+import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents,gcovBuildPaths,additionalKernelRecords,additionalKernelPaths,headerReviewOptions,headerFindingSelected} from './headers-policy.mjs';
+test('full severity review requires a deliberate offline immutable snapshot',()=>{
+ const hash='d4e64685005cb49f8cf3123b04e49eac6617de00';
+ assert.equal(headerReviewOptions([]).allSeverities,false);
+ assert.equal(headerReviewOptions(['--all-severities','--offline','--snapshot',hash]).commit,hash);
+ for(const args of [['--all-severities'],['--all-severities','--current','--offline'],['--all-severities','--snapshot',hash],['--offline','--offline'],['--snapshot','master'],['--snapshot',hash,'--apply'],['--all-severities','--all-severities','--offline','--snapshot',hash]])assert.throws(()=>headerReviewOptions(args));
+});
+test('expanded coverage cannot select actual kernels, source targets or existing decisions',()=>{
+ const item={status:'needs-review',package:'linux-libc-dev',type:'debian',scope:'runtime-image',severity:'MEDIUM'};
+ assert(!headerFindingSelected(item));assert(headerFindingSelected(item,true));
+ assert(headerFindingSelected({...item,severity:'HIGH'}));
+ for(const delta of [{package:'linux-image-6.12.115'},{type:'alpine'},{scope:'upstream-release-source-lock'},{status:'mitigated'},{status:'confirmed'}])assert(!headerFindingSelected({...item,...delta},true));
+});
 const record=files=>({cveMetadata:{cveId:'CVE-2026-12345',state:'PUBLISHED'},containers:{cna:{providerMetadata:{shortName:'Linux'},affected:[{product:'Linux',vendor:'Linux',programFiles:files}]}}});
 test('only explicit Linux CNA private compiled paths qualify',()=>{
  assert.deepEqual(kernelComponentPaths(record(['fs/example.c','include/linux/private.h']),'CVE-2026-12345'),['fs/example.c','include/linux/private.h']);

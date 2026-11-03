@@ -1,6 +1,6 @@
 name: utilibre-turn-option
 x-turn: &turn
-  image: utilibre-coturn:bson-reserve-security-20261028
+  image: utilibre-galene-turn-turn:sqlite-rowid-20261103
   build: {context: ./turn}
   user: "65534:65534"
   entrypoint: [turnserver, -c, /run/config/turnserver.conf]

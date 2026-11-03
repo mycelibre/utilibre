@@ -6,16 +6,11 @@ import assert from 'node:assert/strict';
 import cp from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {validateDecision} from '../triage.mjs';
-import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents,gcovBuildPaths,additionalKernelRecords,additionalKernelPaths} from './headers-policy.mjs';
+import {kernelComponentPaths,headerOverlap,historicalKernelPaths,legacyComponents,gcovBuildPaths,additionalKernelRecords,additionalKernelPaths,headerReviewOptions,headerFindingSelected} from './headers-policy.mjs';
 import {overlapSpecs,verifyOverlap} from './headers-overlap.mjs';
 import {privateTokens,validateInventory} from '../historical-header-final/policy.mjs';
 const root='/var/lib/utilibre-maintenance';
-const provided=process.argv.slice(2),offline=provided.includes('--offline');
-assert(provided.filter(x=>x==='--offline').length<=1,'Duplicate --offline');
-const args=provided.filter(x=>x!=='--offline'),snapshot=args[0]==='--snapshot';
-assert(snapshot?args.length===2&&/^[a-f0-9]{40}$/.test(args[1]):args.length<=1&&[undefined,'--current'].includes(args[0]),'Use --snapshot <immutable CNA commit>, --current, or no arguments');
-const current=args[0]==='--current';
-const commit=snapshot?args[1]:current?'2f073091b14641caef8f31f3ae9cfc4eef3c201e':'20d9248c60fe62803efade3177e8b82b586d154c';
+const {offline,allSeverities,snapshot,current,commit}=headerReviewOptions(process.argv.slice(2));
 // A new snapshot gets separate evidence: do not overwrite the files linked by
 // earlier expiring decisions. Selecting a snapshot never approves findings.
 const dir=root+(snapshot?'/headers-review-'+commit:'/closure-followup-20261012');
@@ -26,7 +21,7 @@ const queue=JSON.parse(fs.readFileSync(root+'/security-queue.json'));
 const scan=JSON.parse(fs.readFileSync(root+'/security.json'));
 assert.equal(queue.scanDate,scan.completedAt);assert.equal(scan.status,'checked');
 assert(Date.now()-Date.parse(scan.completedAt)<86400000);
-const items=queue.items.filter(x=>x.status==='needs-review'&&['HIGH','CRITICAL'].includes(x.severity)&&x.package==='linux-libc-dev');
+const items=queue.items.filter(x=>headerFindingSelected(x,allSeverities));
 const ids=[...new Set(items.map(x=>x.id))],sources=new Map,skipped=[];
 let next=0;
 await Promise.all(Array.from({length:4},async()=>{while(next<ids.length){
@@ -76,7 +71,7 @@ for(const item of items){
  if(reason.length>1200){skipped.push({id:item.id,reason:'Attribution too long for bounded review; manual review remains'});continue;}
  decisions.push(validateDecision({key:item.key,status:'not-affected',reason,expiresAt:new Date(Date.now()+7*86400000).toISOString()}));
 }
-fs.writeFileSync(reportDir+'/headers-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,cnaCommit:commit,offline,inputFindings:items.length,applied:false,decisions,skipped,primary:[...sources.entries()],inventories:[...inventories.entries()],overlapEvidence},null,2)+'\n');
+fs.writeFileSync(reportDir+'/headers-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,cnaCommit:commit,offline,allSeverities,inputFindings:items.length,applied:false,decisions,skipped,primary:[...sources.entries()],inventories:[...inventories.entries()],overlapEvidence},null,2)+'\n');
 // Keep the existing operator application path usable, while decisions link to
 // immutable per-run evidence. Preserve its predecessor before replacing latest.
 const latest=dir+'/headers-review.json';

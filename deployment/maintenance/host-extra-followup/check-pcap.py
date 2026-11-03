@@ -69,6 +69,20 @@ try:
             assert lib.bpf_filter(instructions, data, len(packet), len(packet)) == 0
             checks += 1
 
+    # CVE-2026-6554: both self-jumps and longer backward cycles terminate.
+    # The caller must impose a process timeout for an unfixed library.
+    loops = [
+        [Insn(0x05, 0, 0, 0xFFFFFFFF), Insn(0x06, 0, 0, 65535)],
+        [Insn(0x00, 0, 0, 0), Insn(0x05, 0, 0, 0xFFFFFFFE), Insn(0x06, 0, 0, 65535)],
+    ]
+    for case in loops:
+        instructions = (Insn * len(case))(*case)
+        bounded_program = Program(len(case), instructions)
+        assert lib.pcap_offline_filter(C.byref(bounded_program), C.byref(header), data) == 0
+        assert lib.bpf_filter(instructions, data, len(packet), len(packet)) == 0
+    forward = (Insn * 3)(Insn(0x05, 0, 0, 1), Insn(0x06, 0, 0, 0), Insn(0x06, 0, 0, 65535))
+    assert lib.bpf_filter(forward, data, len(packet), len(packet)) == 65535
+
     with tempfile.TemporaryDirectory(prefix="utilibre-fictional-pcap-") as directory:
         file = str(Path(directory) / "fictional.pcap").encode()
         output = lib.pcap_dump_open(handle, file)
@@ -89,5 +103,6 @@ try:
 finally:
     lib.pcap_close(handle)
 print(json.dumps({"passed": True, "version": version, "scratchBoundCases": checks,
+                  "boundedLoopCases": len(loops) * 2, "forwardJumpAccepted": True,
                   "offlineFilterAcceptedAndRejected": True, "invalidSyntaxRejected": True,
                   "syntheticDumpReadRoundtrip": True, "livePacketsCaptured": 0}))

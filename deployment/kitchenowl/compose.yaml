@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-kitchenowl:filelock-security-20261028-expat210-20261103
+    image: utilibre-kitchenowl-app:sqlite-rowid-20261103
     build: .
     user: '1000:1000'
     env_file: /opt/utilibre/kitchenowl/private/app.env

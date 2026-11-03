@@ -11,9 +11,9 @@ export const cases=[
   ['GHSA-g5ff-637f-6q2m','GHSA-g5ff-637f-6q2m']
  ].map(([id,ghsa])=>({key:'litellm-kitchenowl',id,package:'litellm',type:'python-pkg',version:'1.93.2',image:'sha256:70c2057cc388c50691e9ba1d8e8e0c09651979c05c72a2ed31ea89261b255838',containers:['utilibre-kitchenowl-app-1'],path:'/opt/venv/lib/python3.14/site-packages/litellm-1.93.2.dist-info',source:'https://github.com/BerriAI/litellm/security/advisories/'+ghsa})),
 ];
-export function eligible(item){return cases.find(s=>item?.status==='needs-review'&&item.scope==='runtime-image'&&item.artifact===s.image&&item.id===s.id&&item.package===s.package&&item.type===s.type&&item.installed===s.version&&(!s.target||item.target===s.target)&&Array.isArray(item.containers)&&JSON.stringify([...item.containers].sort())===JSON.stringify([...s.containers].sort()));}
-export function prove(item,rows){
- const s=eligible(item);assert(s);assert.deepEqual(rows.map(r=>r.container).sort(),[...s.containers].sort());
+export function eligible(item,reviewedCases=cases){return reviewedCases.find(s=>item?.status==='needs-review'&&item.scope==='runtime-image'&&item.artifact===s.image&&item.id===s.id&&item.package===s.package&&item.type===s.type&&item.installed===s.version&&(!s.target||item.target===s.target)&&Array.isArray(item.containers)&&JSON.stringify([...item.containers].sort())===JSON.stringify([...s.containers].sort()));}
+export function prove(item,rows,reviewedCases=cases){
+ const s=eligible(item,reviewedCases);assert(s);assert.deepEqual(rows.map(r=>r.container).sort(),[...s.containers].sort());
  for(const r of rows){
   assert.equal(r.image,s.image);assert.equal(r.imageOs,'linux');assert.equal(r.running,true);assert.equal(r.path,s.path);assert.equal(r.version,s.version);
   assert(/^[a-f0-9]{64}$/.test(r.metadataSha256));assert.equal(r.shadowed,false);

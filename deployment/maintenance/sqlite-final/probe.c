@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef UTILIBRE_SQLITE_VERSION
+#define UTILIBRE_SQLITE_VERSION "3.40.1"
+#endif
 static int rows, columns;
 static char first[256];
 static int collect(void *unused, int n, char **values, char **names) {
@@ -23,7 +26,7 @@ int main(int argc,char **argv) {
     return 0;
   }
   assert(argc==6);
-  assert(!strcmp(sqlite3_libversion(),"3.40.1"));
+  assert(!strcmp(sqlite3_libversion(),UTILIBRE_SQLITE_VERSION));
   sqlite3 *db=NULL; assert(sqlite3_open(":memory:",&db)==SQLITE_OK);
   for(int n=1;n<=5;n++) {
     FILE *f=fopen(argv[n],"rb"); assert(f);

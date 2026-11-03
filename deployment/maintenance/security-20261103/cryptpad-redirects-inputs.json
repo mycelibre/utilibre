@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "category": "security",
+  "advisory": "CVE-2026-116689",
+  "source": "https://github.com/follow-redirects/follow-redirects/commit/b0a7751",
+  "revision": "c4a257e46919ba2e4e710c26f7e5dc067686e2b5",
+  "runtimeImage": "sha256:2297218097ca2cd0d4088d0d88e11767a8cb4aab3fb6d987b76eed2f5cb2f4e8",
+  "packageVersion": "1.16.1",
+  "file": "node_modules/follow-redirects/index.js",
+  "lockSha256": "41f8e684a93b0c8f98edce67db519ec733357e89682bf1bd9ff10464403a3fa5",
+  "beforeSha256": "656e169cc2e8043ec00b7d912f3ff523a01026a3fd38e04516b37fb39be94f14",
+  "afterSha256": "c93380e360cdc3e7f97771e542f99253b1527f0650bdef32180bcf012840e1ce",
+  "patchSha256": "1227c3001b910491fbca217b6948aef8718bd77cc196e8ff0dd4d615daea43f4",
+  "upstreamArchive": "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.16.2.tgz",
+  "archiveSha256": "97926c99452df68ec21aa3d518101b6d93a803652d6e1e7d70b273a8930224c8",
+  "fixtureSha256": "1907a9a4e0b56d9f12895880df289a261d78b801b722650db37657db51ead345"
+}

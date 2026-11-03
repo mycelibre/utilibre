@@ -23,8 +23,12 @@ assert.match(disassembly,/7af87:[\s\S]{0,200}xor\s+%r14d,%r14d/);
 const deb=root+'/native-final/libxml2-output/libxml2_'+version+'_amd64.deb';
 assert.equal(sha(fs.readFileSync(deb)),'b2ff4643de60160f0d80fbe617ce2aa6b92b9fa22d3f52cf02ab8cad7eb841e4');
 const url='https://github.com/GNOME/libxml2/commit/8edbbdb09f24d26a2f900141fddc2b9d014f53b0.patch';
-const response=await fetch(url,{signal:AbortSignal.timeout(20000)});assert(response.ok);const patch=await response.text();assert(patch.length<20000);assert.match(patch,/\+    if \(len == 0\)/);assert.match(patch,/\+        return\(NULL\);/);
-fs.writeFileSync(dir+'/xml-uri-primary.patch',patch);
+const primaryFile=dir+'/xml-uri-primary.patch';let patch;
+if(fs.existsSync(primaryFile))patch=fs.readFileSync(primaryFile,'utf8');
+else{const response=await fetch(url,{signal:AbortSignal.timeout(20000)});assert(response.ok);patch=await response.text();}
+assert(patch.length<20000);assert.equal(sha(patch),'d7ac6d515d52b34e44180f49c4089fe7c5889492daa111cfeb4cdcd101ce73e0');
+assert.match(patch,/\+    if \(len == 0\)/);assert.match(patch,/\+        return\(NULL\);/);
+if(!fs.existsSync(primaryFile))fs.writeFileSync(primaryFile,patch,{flag:'wx'});
 const decisions=[],proofs=[],skipped=[];
 for(const item of queue.items.filter(i=>i.id==='CVE-2026-86139'&&i.package==='libxml2'&&i.installed===version&&i.status==='needs-review')){
  try{
