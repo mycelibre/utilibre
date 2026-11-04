@@ -3,18 +3,22 @@ import assert from 'node:assert/strict';
 import {execFileSync,spawn} from 'node:child_process';
 import {readFile,writeFile,rm,statfs} from 'node:fs/promises';
 process.umask(0o077);
-const manifestArgument=process.argv.find(value=>value.startsWith('--manifest='));
+const guavaNov4=process.argv.includes('--guava-nov4');
+const guavaManifest=new URL('./security-20261103/guava-application-inputs.json',import.meta.url).pathname;
+const manifestArgument=guavaNov4?'--manifest='+guavaManifest:process.argv.find(value=>value.startsWith('--manifest='));
 let nativeManifest=null;
 if(manifestArgument){
  const path=manifestArgument.slice('--manifest='.length);
- assert.match(path,/^\/var\/lib\/utilibre-maintenance\/native-final\/[a-z0-9-]+\.json$/);
+ if(guavaNov4)assert.equal(path,guavaManifest);
+ else assert.match(path,/^\/var\/lib\/utilibre-maintenance\/native-final\/[a-z0-9-]+\.json$/);
  nativeManifest=JSON.parse(await readFile(path,'utf8'));
  assert.equal(nativeManifest.schema,1);assert.equal(nativeManifest.version,'2.18.3');assert.equal(nativeManifest.status,'passed');
  for(const component of ['backend','frontend','exporter']){
   assert.deepEqual(Object.keys(nativeManifest[component]).sort(),['image','imageId']);
-  assert.match(nativeManifest[component].image,new RegExp('^utilibre-penpot-'+component+':2\\.18\\.3-[a-z0-9-]+$'));
+  assert.match(nativeManifest[component].image,new RegExp(guavaNov4?'^utilibre-(?:expanded-)?penpot-'+component+':[a-z0-9.-]+$':'^utilibre-penpot-'+component+':2\\.18\\.3-[a-z0-9-]+$'));
   assert.match(nativeManifest[component].imageId,/^sha256:[a-f0-9]{64}$/);
  }
+ if(guavaNov4){const b=JSON.parse(await readFile('/var/lib/utilibre-maintenance/security-20261103/guava/penpot/build.json','utf8'));assert(b.passed&&b.singleLayerSingleFileVerified);assert.equal(nativeManifest.backend.image,b.candidate);assert.equal(nativeManifest.backend.imageId,b.imageId);}
 }
 const backend=nativeManifest?.backend.image||process.argv[2]||'utilibre-penpot-backend:2.18.3-libraries-security-20261011';
 assert(nativeManifest||['utilibre-penpot-backend:2.18.3-libraries-security-20261011','utilibre-penpot-backend:2.18.3-debian-inventory-20261011','utilibre-penpot-backend:2.18.3-runtime-hardening-20261011'].includes(backend));

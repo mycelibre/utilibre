@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-102554",
+  "version": "33.7.2-jre",
+  "licenses": {
+    "Guava": "Apache-2.0",
+    "JarJar": "Apache-2.0",
+    "ClosureCompilerRules": "Apache-2.0"
+  },
+  "compiler": "sha256:2ebab8c189509df632e9ec931805737c92de93aa6d6b9f998d7124c686782e1a",
+  "files": {
+    "guava-33.7.2-jre.jar": {
+      "file": "guava-33.7.2-jre.jar",
+      "url": "https://repo.maven.apache.org/maven2/com/google/guava/guava/33.7.2-jre/guava-33.7.2-jre.jar",
+      "sha256": "b530942257fb935f8b2cfaa5f8eb5bd59c555fd8e8d01b8ce98912e077ea606c",
+      "bytes": 3057659
+    },
+    "guava-33.7.2-jre-sources.jar": {
+      "file": "guava-33.7.2-jre-sources.jar",
+      "url": "https://repo.maven.apache.org/maven2/com/google/guava/guava/33.7.2-jre/guava-33.7.2-jre-sources.jar",
+      "sha256": "ab6a8934d352629e6d87087a79808b827b64ed18cff6c6b551be99cd8e03244c",
+      "bytes": 1899515
+    },
+    "jarjar-assembly-1.14.1.jar": {
+      "file": "jarjar-assembly-1.14.1.jar",
+      "url": "https://repo.maven.apache.org/maven2/com/eed3si9n/jarjar/jarjar-assembly/1.14.1/jarjar-assembly-1.14.1.jar",
+      "sha256": "270fe285e399e298fb08c5daf1486648203a5bd5e90eaba4a6466097be7dd50f",
+      "bytes": 812048
+    },
+    "jarjar-assembly-1.14.1.pom": {
+      "file": "jarjar-assembly-1.14.1.pom",
+      "url": "https://repo.maven.apache.org/maven2/com/eed3si9n/jarjar/jarjar-assembly/1.14.1/jarjar-assembly-1.14.1.pom",
+      "sha256": "6ff9ebf38da77dc13cb4070c8667eca84422f1734f814b84e059eac80cce30df",
+      "bytes": 1310
+    },
+    "closure-rules.jarjar": {
+      "file": "closure-rules.jarjar",
+      "url": "https://raw.githubusercontent.com/google/closure-compiler/v20250820/rules.jarjar",
+      "sha256": "643dbb4ce1977f227decd1ec2964aab7a192fc917de7c15f0ae93459671f0f65",
+      "bytes": 457
+    }
+  },
+  "rows": [
+    {
+      "key": "penpot",
+      "base": "sha256:8cb5a9b29da26ab747150b82d82dc80ec4735345e9a51833b380ec5a85bc31d3",
+      "oldRef": "utilibre-expanded-penpot-backend:libxi184-20261103",
+      "candidate": "utilibre-penpot-backend:2.18.3-guava-security-20261104",
+      "containers": [
+        "utilibre-expanded-penpot-backend-1"
+      ],
+      "jar": "/opt/penpot/backend/penpot.jar",
+      "beforeSha256": "7bea0840ef8cf9cef38127af3b22c69d62db3665ce2df94f3975c43656adafe8"
+    }
+  ]
+}

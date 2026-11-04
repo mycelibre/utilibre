@@ -10,10 +10,11 @@ The operator confirmed Proxmox ping and `thawed`; that maintenance window ended.
 A later authorized window deployed the tested SSH repair and rebooted VM 144
 to activate Expat. All 175 prior containers returned; host/native checks passed.
 Six canonical Go graphs now retain their already-tested dependency repairs.
-The complete 02:09 UTC scan and exact package/source reviews leave **0 critical /
-37 high package-target records pending**, with raw findings retained. JOSE v3
-rebuild paths now require the tested backport. Remaining high groups are ACL,
-GRUB, Penpot Guava and Python-Markdown.
+Penpot’s main and shaded Guava copies are repaired and deployed; native and
+two-account application checks passed. The complete 02:35 UTC scan and exact
+package/source reviews leave **0 critical / 36 high package-target records
+pending**, with raw findings retained. JOSE v3 rebuild paths require the tested
+backport. Remaining high groups are ACL, GRUB and Python-Markdown.
 This is not completion of all security work.
 
 [Release evidence, remaining categories and rollback](records/security-maintenance-2026-11-04.md).

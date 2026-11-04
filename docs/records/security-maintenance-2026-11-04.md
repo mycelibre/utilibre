@@ -239,3 +239,48 @@ expires in seven days. The [recipe notes](../../deployment/maintenance/security-
 record command boundaries, earlier rejected attempts and evidence limitations.
 Remaining high categories: 30 ACL, five GRUB, one Penpot Guava and one Python
 Markdown. Penpot's next candidate is under isolated testing, not yet deployed.
+
+
+## 02:35 UTC scan: both Penpot Guava copies repaired
+
+Penpot 2.18.3 now runs backend image
+`sha256:6c4a54d2961cf23a2ce1e0207a69f220bdecc1e6e761d49020a7ac48e856077c`.
+Guava 33.7.2-jre replaces both its main copy and Closure Compiler's shaded copy.
+The exact baseline runtime and configuration remain; only the backend JAR
+changes. Twenty before/after native cases reproduce the old bounded-heap
+allocation failure and verify the correction with legitimate serialization.
+Closure compilation, two-account editing/reload, export/import, permissions,
+PNG export, native thumbnail processing and deletion pass in isolation.
+The 24 maintenance policy tests pass. Exact installed JAR, production health,
+namespace and HTTPS route gates pass. All 175 production containers are running;
+no systemd units are failed. No user-data or retention change was made.
+
+The full **2026-11-04T02:35:47.898Z** scan is complete against the same retained Trivy
+advisory snapshot. After rechecking 176 prior Penpot decisions against exact
+current package/library payloads, **0 critical / 36 high package-target records
+remain pending**. No earlier decision was inherited merely from a version label.
+Raw observations remain 24,380, including 64
+critical and 2,878 high. Pending lower categories are
+5,137 medium, 5,437 low and
+949 unknown. These are review/repair counts, not a claim
+that every raw match represents an exploitable vulnerability or that security
+work is complete. Coverage remains 109 images / 175 containers, 83 source
+inventories and 508 host packages. Same-database normalized comparison finds
+no new findings at any severity and removes the one Guava record; image IDs
+are normalized only in the OS target label, with all advisory/package/version
+and application paths retained.
+
+Remaining high work:
+
+| Records | Exact unresolved dependency |
+| --- | --- |
+| 30 ACL, CVE-2026-54369 | Library 2.4.0 APIs alone do not repair existing tar/rsync callers. A compatible caller migration and archive/copy regression evidence remain necessary. Earlier automatic approval review rejected further caller-repair work; no bypass or fixed status is claimed. |
+| 5 GRUB, CVE-2025-61662 | A reviewed compatible fix for both native modules and the actual boot image, with the documented recoverable boot-chain prerequisites. Earlier automatic approval review rejected staging; this Expat reboot did not authorize bootloader writes. |
+| 1 Kuma Python-Markdown, CVE-2019-25781 | No verified compatible upstream correction in the checked releases. Apprise uses the package; removing its functional dependency solely to erase the finding is not a repair. |
+
+[Reproduction, source offer and rollback](../../deployment/maintenance/security-20261103/README.md#penpot-guava-including-closures-shaded-copy--4-november).
+Private evidence is under `security-20261103/guava/`: native/application/scan
+receipts, completed release, current summary, retained failed attempts, public
+source hash check and exact expiring review decisions. The previous backend
+image remains available. No additional reboot or SSH window is needed for
+this completed batch; future bootloader work requires separate safeguards.

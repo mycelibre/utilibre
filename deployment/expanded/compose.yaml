@@ -247,7 +247,7 @@ services:
 
   penpot-backend:
     <<: *runtime
-    image: utilibre-expanded-penpot-backend:libxi184-20261103
+    image: utilibre-penpot-backend:2.18.3-guava-security-20261104
     user: "1001:1001"
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org

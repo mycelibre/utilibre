@@ -49,7 +49,7 @@ node deployment/maintenance/security-20261028/release-brotli.mjs --batch-2026110
 node deployment/maintenance/security-20261028/release-brotli.mjs --batch-20261103 --PROFILE apply KEY
 ```
 
-`PROFILE` is one of `expat`, `expat-debian`, `pyasn1`, `redirects`, `sqlite`, `js-nov`, `libxi`, `oauth-debian`.
+`PROFILE` is one of `expat`, `expat-debian`, `pyasn1`, `redirects`, `sqlite`, `js-nov`, `libxi`, `oauth-debian`, `guava`.
 The Alpine input rows list their individual `releaseGroups` keys; these differ
 from shared image build keys. Toolbox Compose rendering needs the existing
 `APP_BIND_IP`, obtained from the deployed configuration, not a guessed address.
@@ -678,3 +678,80 @@ new protected evidence directory; do not delete a release receipt to force it.
 Anubis uses 2 CPUs/2 GiB; OpenGist uses 2 CPUs/4 GiB; native library checks use
 one CPU/2 GiB. Verification is networkless; no live data, keys or accounts enter
 those containers. Production limits and images are unchanged.
+
+
+## Penpot Guava, including Closure's shaded copy — 4 November
+
+Penpot stays on 2.18.3. The exact existing backend JAR contained Guava
+33.7.1-jre and Closure Compiler v20250820's shaded Guava 33.4.6. Both are now
+33.7.2-jre. Updating only the primary Maven dependency would leave the second
+copy vulnerable. This is a finite overlay on the exact previously repaired
+runtime, preserving all earlier OS/native-library layers and application
+configuration. Only `/opt/penpot/backend/penpot.jar` changes; 50,196 unrelated
+JAR entries are byte-preserved. No data or database migration is included.
+
+Inputs are pinned in `guava-inputs.json`: official Maven Guava binary/source,
+JarJar 1.14.1 and Closure's exact upstream relocation rules, all Apache-2.0.
+The existing Java compiler image is immutable. `guava-application-inputs.json`
+pins all three already-tested application images for the native suite; no
+hand-created private manifest or moving image tag is required. The small Python coordinator
+uses upstream JarJar rather than implementing a bytecode transformation.
+Controlled acquisition is separate: replay requires the exact cached inputs
+and baseline JAR. It never resolves a newer dependency version.
+
+```sh
+python3 deployment/maintenance/security-20261103/guava-build.py
+node deployment/maintenance/check-penpot-2.18.3.mjs --guava-nov4 > /var/lib/utilibre-maintenance/security-20261103/guava/penpot/application.log
+node deployment/maintenance/security-20261103/check-guava-application.mjs
+node --test deployment/maintenance/security-20261103/guava-policy.test.mjs
+node deployment/maintenance/security-20261028/scan-brotli.mjs --batch-20261103 --guava penpot
+node deployment/maintenance/security-20261028/release-brotli.mjs --batch-20261103 --guava prepare penpot
+# Deployment and publication require their established separate authorization:
+node deployment/maintenance/security-20261028/release-brotli.mjs --batch-20261103 --guava apply penpot
+node deployment/maintenance/security-20261103/publish-guava-source.mjs
+```
+
+Do not overwrite a completed assessment. The builder recognizes an exact
+completed candidate without rebuilding; incompatible source, inputs or builder
+hashes fail closed. Future upstream versions require a newly reviewed baseline
+and both dependency copies must be checked again. This does not claim full
+byte-for-byte image/build-tool reproducibility.
+
+Twenty bounded native cases cover five collection implementations in both
+namespaces before/after. Each includes five legitimate serialized round trips.
+All ten old cases exhaust the deliberately bounded 128 MiB Java heap; all ten
+fixed cases avoid that allocation failure. Original serialization remains
+functional. Closure compiles the same fictional JavaScript identically in both
+states. Network is disabled for these checks. Four policy tests cover missing
+shaded-copy evidence, invented baseline failure, incompatible recipes, extra
+file changes and absent application checks.
+
+The existing isolated Penpot suite passed with two fictional accounts:
+edit/reload, native export/import, account separation, member removal/leave,
+legacy orphan permissions, PNG export, backend thumbnail handling and deletion.
+All synthetic containers/state were cleaned. This is desktop Chromium evidence,
+not real-phone coverage. The same retained advisory DB removes the Guava finding
+without introducing high/critical findings. Prior image-specific reviews must
+be revalidated from live payloads after deployment, not copied blindly.
+
+Private evidence: `guava/penpot/{build,native,jar-inventory,application,scan-gate}.json`
+and `guava/release.json`. Earlier rejected attempts are retained: BuildKit tried
+to resolve a digest-only FROM as a registry name and failed; the corrected
+classic builder uses the local image with network disabled. An initial Closure
+CLI check used an unsupported flag; the final check uses its native `--js`
+input and passes. Neither failure was counted as a vulnerability regression.
+
+[Library source supplement](https://tools.utilibre.org/utilibre-source/security-penpot-guava-20261104-source.tar.gz):
+5,329,655 bytes, SHA256
+`7bf6b310cd617418f4447923070236e473bb8745bfc54ec8b139da3d55e34de6`.
+The existing complete Penpot source offers remain required. The supplement
+contains code/build inputs only, with no account data or configuration secrets.
+The public archive's size/hash was verified over HTTPS with the native Node
+client. A Python urllib request received 403; this does not establish universal
+crawler access.
+
+Rollback: restore the backend's prior image pin
+`utilibre-expanded-penpot-backend:libxi184-20261103` through the existing expanded
+Compose release procedure, preserving namespace-dependent companions. The
+previous image is retained; no backup deletion or retention change was made.
+An image rollback does not restore user data.

@@ -121,4 +121,5 @@ export const additionalOverlayReceipts = [
  'security-20261103/candlr-release.json',
  'security-20261103/bookplate-release.json',
   'security-20261103/js-nov/release.json',
+  'security-20261103/guava/release.json',
 ];

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "version": "2.18.3",
+  "status": "passed",
+  "backend": {
+    "image": "utilibre-penpot-backend:2.18.3-guava-security-20261104",
+    "imageId": "sha256:6c4a54d2961cf23a2ce1e0207a69f220bdecc1e6e761d49020a7ac48e856077c"
+  },
+  "frontend": {
+    "image": "utilibre-expanded-penpot-frontend:sqlite-rowid-20261103",
+    "imageId": "sha256:1de219422d2ffe879f990f0a780f41c5abd2433c10d3d71ed8a0404ef2ea679f"
+  },
+  "exporter": {
+    "image": "utilibre-expanded-penpot-exporter:libxi184-20261103",
+    "imageId": "sha256:a56172fb170d7e91574401b1703e77f8e1c32e1a86694348c0a93f806ab78a13"
+  }
+}
