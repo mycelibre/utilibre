@@ -152,16 +152,20 @@ The existing source link serves the new source; its former archive is retained.
 Rollback uses `markmap-release.json`'s previous image pin and the unchanged
 Compose service configuration. Browser-local drafts are not touched.
 
-**Host Expat remains incomplete:** `expat-host.mjs prepare` verified the exact
+**Host Expat completed after the 4 November reboot:** `expat-host.mjs prepare` verified the exact
 old package, rollback bytes, both library ABIs, narrow/wide native fixtures,
 Python's actual binding and a private D-Bus session using synthetic XML. `stage`
 installed authenticated 2.10.0-1 without restarting any service. Long-lived
-D-Bus/Python processes still map the old library. The `verify` command correctly
-rejects this state and creates no completed release receipt. Keep both host
-findings open until a new authorized consumer-refresh/reboot window completes.
+D-Bus/Python processes initially still mapped the old library, and `verify`
+correctly rejected completion. The operator subsequently authorized a new
+reboot window. Post-reboot verification passed: every observed host Expat
+mapping matches the candidate, D-Bus is active, and narrow/wide parsers,
+Python's binding and the private D-Bus consumer pass. The completed receipt
+and fresh scan support the two exact seven-day host review decisions.
 
-After that window, run `node deployment/maintenance/security-20261103/expat-host.mjs
-verify`, then a fresh existing host/fleet scan, then `review-expat-host.mjs`.
+For an equivalent separately authorized replay, run
+`node deployment/maintenance/security-20261103/expat-host.mjs verify`, then a
+fresh existing host/fleet scan, then `review-expat-host.mjs`.
 The reviewer requires exact new payloads, current resident mappings, the private
 bus test and a complete scan; it only prepares decisions for operator review.
 It does not restart processes or write the ledger. Native package rollback can
@@ -589,3 +593,38 @@ no release/Compose entry is added, and no production image changes. The running
 services retain their newer images and data. Reverting this source-only change
 must not roll those images back. Package sources/licences are retained in the
 native npm artifacts; exact upstream release references are in the manifest.
+
+
+## Canonical Go dependency inputs — 4 November
+
+Six canonical module graphs now match exact previously released and behavior-
+tested graphs: Rimgo/FerretDB use klauspost/compress v1.20.2; ntfy, Vikunja,
+OAuth2 Proxy and Wakapi use go-jose/v4 v4.1.6. Only the named module and its
+checksums change in each graph. `go-lock-inputs.json` binds original Git inputs,
+replacement hashes, immutable compiled images/binaries, compiler and earlier
+complete build/native/inventory/scan receipts. No package versions resolve here.
+
+```sh
+node deployment/maintenance/security-20261103/sync-go-locks.mjs prepare
+node deployment/maintenance/security-20261103/sync-go-locks.mjs verify
+```
+
+Preparation validates all six rows before writing and accepts only exact old or
+already-correct inputs. A second run changes zero files. Verification rechecks
+retained completed native-build evidence, extracts and hashes the exact binary,
+checks the cache with `go mod verify`, and resolves the one selected module with
+networking disabled. It also compares source findings against the same local
+Trivy database. All six passed; six targeted high source matches are removed.
+The first attempted `go list -m all` lacked unused transitive metadata and its
+failure is retained; the final check deliberately selects the changed module.
+This is fresh offline input/binary verification with archived full-build/native
+evidence, not a new complete compilation or a new security clearance.
+
+Private receipts: `security-20261103/go-locks/verification.json` and each named
+subdirectory. No service is restarted and `deploymentAllowed: false` is explicit.
+For full candidate builds, use the existing exact codec, JOSE and JOSE-leaf
+profiles referenced by the manifest; historical compiler-only profiles may
+correctly refuse changed dependency inventories. Do not retag their old images.
+The separate JOSE v3 backport requirements remain open; upgrading v4 does not
+repair or suppress v3 findings. No runtime artifact or live data is rolled back
+when reverting these source-only inputs.

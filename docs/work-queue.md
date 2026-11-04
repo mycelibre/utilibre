@@ -7,9 +7,12 @@ Markmap, Candlr and Bookplate repairs are deployed and verified. PairDrop's
 canonical rebuild lock now retains its existing parser fix without a rollout.
 Actual, Grist and Kuma dependency recipes also preserve their later repairs.
 The operator confirmed Proxmox ping and `thawed`; that maintenance window ended.
-The complete 01:46 UTC scan leaves **0 critical / 53 high package-target records
-pending**, with raw findings retained. Host Expat is installed but its resident
-consumers still need a new activation window; SSH also awaits a separate window.
+A later authorized window deployed the tested SSH repair and rebooted VM 144
+to activate Expat. All 175 prior containers returned; host/native checks passed.
+Six canonical Go graphs now retain their already-tested dependency repairs.
+The complete 02:09 UTC scan and exact package reviews leave **0 critical / 43
+high package-target records pending**, with raw findings retained. The remaining
+high groups are ACL, JOSE v3 build inputs, GRUB, Penpot Guava and Python-Markdown.
 This is not completion of all security work.
 
 [Release evidence, remaining categories and rollback](records/security-maintenance-2026-11-04.md).

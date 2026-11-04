@@ -186,3 +186,41 @@ including 12 tracked build-input findings. Raw observations: 24,391
 records, 64 critical and 2,885 high. Pending lower severities: 5,141
 medium, 5,437 low and 949 unknown. Coverage and advisory snapshot
 are unchanged. SSH, Expat and the other unresolved categories above remain open.
+
+## 02:09 UTC: SSH deployed and Expat activated
+
+The operator supplied separate SSH-console and reboot windows. OpenSSH client,
+server and SFTP packages now run `1:10.3p1-1~bpo13+1+utilibre2`; the release
+verified exact payloads, active SSH, unchanged host keys/effective configuration
+and unchanged Docker. The subsequent VM reboot activated the already-installed
+Expat 2.10.0-1. All observed host library mappings match the new payload. Native
+narrow/wide parsers, Python and private D-Bus consumer checks pass. All 175 prior
+containers returned; SSH, Docker, D-Bus and the guest agent are active, and no
+systemd units failed. This does not claim every application's user journey was
+retested after reboot. The maintenance pause can end.
+
+The **02:09:10 UTC** complete same-database scan and exact installed-source
+reviews leave **0 critical / 43 high pending**. Raw observations remain 24,381
+records, including 64 critical and 2,879 high. Pending lower severities: 5,137
+medium, 5,437 low and 949 unknown. Coverage remains 109 images / 175 containers,
+83 source inventories and 508 host packages. Changed SSH package identities
+required rechecking earlier repairs as well as the new GSSAPI fixes; three raw
+critical matches were reopened and then resolved by that verification, not by
+changing a scanner threshold. The 18 SSH and two Expat reviews expire in seven
+days and apply only to their exact package/advisory identities.
+
+The remaining high records are 30 ACL, six JOSE v3 build-input, five GRUB, one
+Penpot Guava and one Kuma Python-Markdown. Six canonical Go module graphs now
+match the exact already-built/tested codec and JOSE v4 repair inputs; those
+source-only checks account for the other six removed high records. Their
+separate replay work does not change production applications.
+
+[SSH source and build inputs](https://tools.utilibre.org/utilibre-source/openssh-gssapi-utilibre-20261104-source.tar.gz)
+are public and hash-verified: 2,244,843 bytes, SHA256
+`336ad19d6c645eb44b6976dfb7dd0fc6c7a06b70199af27d0fdfa113b5680b85`.
+Private evidence: `ssh-gssapi/checks/{proposal,release,review}.json`,
+`ssh-gssapi/source-offer.json`, `expat-host/{release,review}.json`, and
+`reboot-20261104/{before,after}.json`, under this release's evidence directory.
+Rollback retains the three preceding SSH packages and Expat package; coordinate
+the same console/consumer-refresh safeguards. No bootloader files, account data
+or retention policies were changed.

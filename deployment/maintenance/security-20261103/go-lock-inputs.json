@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "5735783d3c69c2ff1c125fba40020584fdc79976",
+  "purpose": "Copy exact previously built and behavior-tested replacement graphs into canonical rebuild inputs; no new build or deployment.",
+  "rows": [
+    {
+      "key": "rimgo",
+      "profile": "codec",
+      "canonical": "go-final/locks/rimgo",
+      "approved": "security-20261028/locks/codec/rimgo",
+      "dependency": "github.com/klauspost/compress",
+      "from": "v1.18.5",
+      "to": "v1.20.2",
+      "files": {
+        "go.mod": {
+          "before": "3608e1a5039b5408524281ac1d4e6574a41b63e31c550abcfa69827d7af4a495",
+          "after": "50f8cc72d97edc3e190c040effd9cd8a51fb461c44636e4be3e847dfb9568da0"
+        },
+        "go.sum": {
+          "before": "6b9106705f9dc519b8574f6a929d71cceff9724e6ab0fb6e1a31e77c11e0b3f3",
+          "after": "8dc9ebbcdbd90cb06a2bb94db9cab2f75bbd3729c2d2850d80b3b3fd27f37195"
+        }
+      },
+      "imageId": "sha256:9a2960c59f72655ef84df1ef96e98248f77ac580fc23c8b6f961823ca66a23c7",
+      "binaries": [
+        {
+          "path": "/app/rimgo",
+          "binarySha256": "2d853f572ac3cbb938e27f46949271e7d1a36e852934aeabc433028ee67ac92b",
+          "unchangedModules": 30,
+          "updatedModules": 1
+        }
+      ],
+      "buildReceiptSha256": "bcc85d7565b59d42f71b0934ea82851c53ca901e50602a592f71d7d2842f25a6",
+      "compiler": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+      "moduleCache": "/var/lib/utilibre-maintenance/security-20261028/codec/modules",
+      "deploymentAllowed": false
+    },
+    {
+      "key": "ferretdb",
+      "profile": "codec",
+      "canonical": "ferretdb-libraries",
+      "approved": "security-20261028/locks/codec/ferretdb",
+      "dependency": "github.com/klauspost/compress",
+      "from": "v1.18.0",
+      "to": "v1.20.2",
+      "files": {
+        "go.mod": {
+          "before": "228bdb9ea1c0735e77e742cd8700c46ce258fa53a866180d01b4c4ac2d3f49fd",
+          "after": "d65ba2340f17574f880710f2427a12c8c55e92c755606cce0031fe03a07c0515"
+        },
+        "go.sum": {
+          "before": "04568425a2038d3f7a7d776df8d8777d09358e27f8cba0a19176de3e81185f46",
+          "after": "9c1e4aab20cf1dc8b3acfe24fce35e0caacca71e44b05d435532ba7b1db46d67"
+        }
+      },
+      "imageId": "sha256:b65c8ff64cae5aa838cebfaaf2728913c7dc88a13301f99dee7b69f89a2ed191",
+      "binaries": [
+        {
+          "path": "/ferretdb",
+          "binarySha256": "414f8843d441b70d24847f02eb9d10b8842ad5a5ebd4446933902c699ddecf2f",
+          "unchangedModules": 59,
+          "updatedModules": 1
+        }
+      ],
+      "buildReceiptSha256": "6e60f783bff6c4dfd48e47e93bafe24de06fa38659256c76fbaa4d18273d7790",
+      "compiler": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+      "moduleCache": "/var/lib/utilibre-maintenance/security-20261028/codec/modules",
+      "deploymentAllowed": false
+    },
+    {
+      "key": "ntfy",
+      "profile": "jose",
+      "canonical": "go-leaf-final/locks/ntfy",
+      "approved": "security-20261028/locks/jose/ntfy",
+      "dependency": "github.com/go-jose/go-jose/v4",
+      "from": "v4.1.4",
+      "to": "v4.1.6",
+      "files": {
+        "go.mod": {
+          "before": "6c2d4062219f2bec36bae3ea8a9b67a5f76d997723261e7ced4db325696e5ba3",
+          "after": "90fd83f855e27d4c6e7db102b46fd8643b641438d01b625e9f7ae35fcd80b4af"
+        },
+        "go.sum": {
+          "before": "0a9b7cdac85aa8971264f53ab989a624d5f3e954e23bdf6d56f09d9adc31a194",
+          "after": "e3e4d6e292aac94023e0e690caf311e25cc9c2c53aed32df89ea37e684b2c76c"
+        }
+      },
+      "imageId": "sha256:3e33364998ccf69605e83209ffd724f971e4da5c4f852aad054954dea6e3b9d7",
+      "binaries": [
+        {
+          "path": "/usr/bin/ntfy",
+          "binarySha256": "ffda313a92ce14a740abe6857c0cd5c952aefba81e0ea6c54badaf5e2f9cd482",
+          "unchangedModules": 83,
+          "updatedModules": 1
+        }
+      ],
+      "buildReceiptSha256": "159ab0a01ff99e45fe700db31d3653ff9b1c93b7e5fc22912a4a558e53fde6bd",
+      "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+      "moduleCache": "/var/lib/utilibre-maintenance/security-20261028/jose/ntfy/cache",
+      "deploymentAllowed": false
+    },
+    {
+      "key": "vikunja",
+      "profile": "jose",
+      "canonical": "go-leaf-final/locks/vikunja",
+      "approved": "security-20261028/locks/jose/vikunja",
+      "dependency": "github.com/go-jose/go-jose/v4",
+      "from": "v4.1.4",
+      "to": "v4.1.6",
+      "files": {
+        "go.mod": {
+          "before": "64b5c9ada83613315231febb0bf94f570d2fbe2d80556705eb64c331fe8dd638",
+          "after": "efa14649653f2650fa196cc7c69a3f4b33ff62e950f78c3006638b2f6c93547a"
+        },
+        "go.sum": {
+          "before": "87cd0e52c96807c8d23d980488c83c4836192540db106c7ab9fdfd56afedd841",
+          "after": "e67e549a1e8e7caed172f958715f45219eab1e8ff074aab3f95123ec0d4bf5e1"
+        }
+      },
+      "imageId": "sha256:4bec3b37654a63f0e6e1e3f8ed7c2251f197051767982ccd9c89091a63142bc3",
+      "binaries": [
+        {
+          "path": "/app/vikunja/vikunja",
+          "binarySha256": "a17185f86c7ac34bac90eebde7d890939abd3c3c20a911dee1c409241aadc024",
+          "unchangedModules": 159,
+          "updatedModules": 1
+        }
+      ],
+      "buildReceiptSha256": "9a8ddabf9a597e9842c8720e36f60b432d6d51ae3c8096b3fd8f64c5293b7845",
+      "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+      "moduleCache": "/var/lib/utilibre-maintenance/security-20261028/jose/vikunja/cache",
+      "deploymentAllowed": false
+    },
+    {
+      "key": "oauth2-proxy",
+      "profile": "jose-leaf",
+      "canonical": "go-leaf-final/locks/oauth2-proxy",
+      "approved": "security-20261028/locks/jose-leaf/oauth2-proxy",
+      "dependency": "github.com/go-jose/go-jose/v4",
+      "from": "v4.1.5",
+      "to": "v4.1.6",
+      "files": {
+        "go.mod": {
+          "before": "3613d61ab754ad14a47c33825074cb7352d9453be0ebacffd9cd5a363479f283",
+          "after": "398e8e07d7a13f4b0dc326e4f2a161ee7013736da44e5890c6b16bac4820ac51"
+        },
+        "go.sum": {
+          "before": "470f364ce8bd08f68227ddbdf75f09dc0f365abcb8666b32744eaf6e933a13f8",
+          "after": "4131b2dbf5884d13379b575264d2e0d64ae8d9e7c91d55d0132f425ee2c400f6"
+        }
+      },
+      "imageId": "sha256:f5e8e32f05978929a25b4f01921fa71174de5273b1f191d73ddfbfdc445232a3",
+      "binaries": [
+        {
+          "path": "/usr/bin/oauth2-proxy",
+          "binarySha256": "b2c7edd89affbb46e57775e5e2a1c6d12ecaed824ed19f683fa8651071e8ec53",
+          "unchangedModules": 57,
+          "updatedModules": 1
+        }
+      ],
+      "buildReceiptSha256": "89bdb877d68c2bb82ff1f9b656a2a2dd38192ef08b7c1d453da8ac77d6dfb112",
+      "compiler": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+      "moduleCache": "/var/lib/utilibre-maintenance/security-20261028/jose-leaf/oauth2-proxy/cache",
+      "deploymentAllowed": false
+    },
+    {
+      "key": "wakapi",
+      "profile": "jose-leaf",
+      "canonical": "go-leaf-final/locks/wakapi",
+      "approved": "security-20261028/locks/jose-leaf/wakapi",
+      "dependency": "github.com/go-jose/go-jose/v4",
+      "from": "v4.1.5",
+      "to": "v4.1.6",
+      "files": {
+        "go.mod": {
+          "before": "b0d4c268ce3746b4f384c70a45d240e6e01700c80334f46edec7f850d89d7639",
+          "after": "5f7fdd2eb29e5e1ea51b27a78feafce19eea62f81ecd673d0fc6dc26fd32d59e"
+        },
+        "go.sum": {
+          "before": "aa3668a0a670ebf5704c188135dcd905636c4937ce09bc4894436145a9d7d4fd",
+          "after": "ed92122e92627a8df5d1a4b9299605ba1489a394e114001d50076af6caf3f76a"
+        }
+      },
+      "imageId": "sha256:4eeff36fc2c71bda8851e095d7c1f31ee066265176946683a57f4107a3c9750a",
+      "binaries": [
+        {
+          "path": "/app/wakapi",
+          "binarySha256": "325924c93b7acde12b2a7a9ef205e55576aa038743dd6bbacdb7fd5bce54bbb2",
+          "unchangedModules": 98,
+          "updatedModules": 1
+        }
+      ],
+      "buildReceiptSha256": "ac865c68504e0664814da0ea0a620bd78e59311562e8f89e4726222a64c98028",
+      "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+      "moduleCache": "/var/lib/utilibre-maintenance/security-20261028/jose-leaf/wakapi/cache",
+      "deploymentAllowed": false
+    }
+  ]
+}

@@ -1,11 +1,13 @@
 # Native stable OpenSSH server follow-up
 
-## Prepared GSSAPI repair: 4 November 2026
+## Deployed GSSAPI repair: 4 November 2026
 
-The running host remains at the 21 October version below. A tested candidate at
-`1:10.3p1-1~bpo13+1+utilibre2` addresses CVE-2026-106553 and CVE-2026-106555.
-**It is not installed.** The candidate needs a new SSH maintenance window with
-the Proxmox console available; the completed QEMU window does not authorize it.
+The host now runs `1:10.3p1-1~bpo13+1+utilibre2`, addressing CVE-2026-106553 and
+CVE-2026-106555. The operator separately confirmed the Proxmox console and
+maintenance window. A fresh preflight and the three-package release passed;
+SSH keys and effective configuration were unchanged. The later authorized VM
+reboot activated Expat; SSH, Docker, D-Bus and the guest agent recovered, with
+all 175 previously running containers present and no failed systemd units.
 
 `gssapi-inputs.json` pins the retained baseline source and the signed Debian
 10.6 GSSAPI source. `gssapi-source-check.mjs` verifies that archive's signature
@@ -57,6 +59,13 @@ source/payload-bound review decisions; no finding is closed before activation.
 `gssapi-source.mjs bundle` prepares the code-only offer; its `publish` mode
 requires the completed release. A package rollback is not a data restore and
 removes these two repairs; it requires the same SSH window safeguards.
+
+The post-reboot scan and source/payload review revalidated all six named SSH
+advisories against the three installed packages: 18 exact package/advisory
+records, including binary-sibling attribution. These are seven-day decisions,
+not scan exclusions; raw matches remain. [Complete source and build inputs](https://tools.utilibre.org/utilibre-source/openssh-gssapi-utilibre-20261104-source.tar.gz)
+are published (2,244,843 bytes; SHA256
+`336ad19d6c645eb44b6976dfb7dd0fc6c7a06b70199af27d0fdfa113b5680b85`).
 
 ## Deployed release: 21 October 2026
 
