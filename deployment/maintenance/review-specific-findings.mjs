@@ -16,8 +16,8 @@ const docker=args=>{try{return execFileSync('docker',args,{timeout:30000,maxBuff
 const running=new Set(docker(['ps','--format','{{.Names}}']).toString().trim().split('\n'));
 const decisions=[];
 for(const item of queue.items){
- if(item.scope!=='runtime-image')continue;
- const headers=item.package==='linux-libc-dev'&&['CVE-2026-43185','CVE-2024-50286','CVE-2025-37777','CVE-2026-63940'].includes(item.id);
+ if(item.scope!=='runtime-image'||item.status!=='needs-review')continue;
+ const headers=item.package==='linux-libc-dev'&&['CVE-2026-43185','CVE-2024-50286','CVE-2025-37777','CVE-2026-63940','CVE-2026-99231','CVE-2026-99233','CVE-2026-99235','CVE-2026-99239'].includes(item.id);
  const netip=item.id==='CVE-2024-24790'&&item.package==='stdlib'&&item.installed==='v1.17.6';
  if(!((item.id==='CVE-2023-45853'&&item.package==='zlib1g'&&item.installed==='1:1.2.13.dfsg-1')||(item.id==='CVE-2025-68121'&&item.package==='stdlib'&&item.installed==='v1.24.6')||headers||netip))continue;
  const image=scan.images.find(x=>x.id===item.artifact),name=item.containers[0];
@@ -30,11 +30,12 @@ for(const item of queue.items){
   reason='Debian explicitly excludes the bookworm zlib binary package: vulnerable contrib/minizip was not built in this version. Exact zlib1g file list contains libz, not minizip. https://security-tracker.debian.org/tracker/CVE-2023-45853 . Does not exempt libminizip, pyminizip, other CVEs or future versions.';
  }
  if(headers){
+  assert.equal(docker(['exec',name,'dpkg-query','-W','-f=${Version}','linux-libc-dev']).toString().trim(),item.installed);
   const files=docker(['exec',name,'dpkg-query','-L','linux-libc-dev']).toString().trim().split('\n');
   assert(files.some(p=>p.startsWith('/usr/include/linux/')&&p.endsWith('.h')));
   assert(files.every(p=>['/.','/usr','/usr/include','/usr/share','/usr/share/doc','/usr/lib','/usr/lib/linux','/usr/lib/linux/uapi'].includes(p)||p.startsWith('/usr/include/')||p.startsWith('/usr/share/doc/')||p.startsWith('/usr/lib/linux/uapi/')));
   if(files.includes('/usr/lib/linux/uapi'))assert.equal(docker(['exec',name,'find','/usr/lib/linux/uapi','-type','f','!','-name','*.h','-print']).toString().trim(),'');
-  reason=`${item.id} concerns executable kernel ksmbd/KVM code, not userspace headers. The exact running container's linux-libc-dev file list contains only /usr/include and /usr/lib/linux/uapi headers and documentation; no kernel image/module. https://security-tracker.debian.org/tracker/${item.id} . This decision covers only this container-header finding, never the VM/Proxmox running kernel or linux-image packages; host kernel review remains separate.`;
+  reason=`${item.id} concerns executable kernel ${({'CVE-2026-99231':'io_uring/waitid request ownership','CVE-2026-99233':'tracing synthetic-event reference counts','CVE-2026-99235':'tracing histogram lifetime','CVE-2026-99239':'Bluetooth L2CAP connection ownership'})[item.id]||'ksmbd/KVM'} code, not userspace headers. The exact running container's linux-libc-dev file list contains only /usr/include and /usr/lib/linux/uapi headers and documentation; no kernel image/module. File-list SHA256 ${createHash('sha256').update(JSON.stringify(files)).digest('hex')}. https://security-tracker.debian.org/tracker/${item.id} . This decision covers only this container-header finding, never the VM/Proxmox running kernel or linux-image packages; host kernel review remains separate.`;
  }
  if(netip){
   const paths=image.findings.filter(x=>x.id===item.id&&x.package===item.package&&x.installed===item.installed).map(x=>x.target);

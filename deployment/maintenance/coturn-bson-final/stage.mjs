@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import {root,version,oldVersion,names,sha,read,docker,limits,inspect,candidate,base,baseRef} from './common.mjs';
+import {root,version,oldVersion,names,sha,read,docker,limits,inspect,candidate,base,baseRef,mongocrypt} from './common.mjs';
 process.umask(0o077);
 assert(!fs.existsSync(root+'/stage.json'));assert.equal(inspect(baseRef).Id,base);
 const native=read(root+'/native.json');assert.equal(native.status,'passed');assert.equal(native.version,version);
@@ -14,6 +14,7 @@ const shell=(id,cmd)=>docker('run',...limits,'--user','0','--entrypoint','sh',id
 const inventory=id=>shell(id,"dpkg-query -W -f='${binary:Package} ${Version}\\n'").split('\n').filter(line=>!names.includes(line.split(' ')[0].split(':')[0]));
 assert.deepEqual(inventory(after.Id),inventory(base));for(const name of names){assert.equal(shell(base,"dpkg-query -W -f='${Version}' "+name),oldVersion);assert.equal(shell(after.Id,"dpkg-query -W -f='${Version}' "+name),version);}assert.equal(shell(after.Id,'dpkg --audit'),'');
 const commands={runtime:'find /usr /lib -type f ! -path "/usr/lib/x86_64-linux-gnu/libbson-1.0.so.*" ! -path "/usr/lib/x86_64-linux-gnu/libmongoc-1.0.so.*" ! -path "/usr/share/doc/libbson-1.0-0t64/*" ! -path "/usr/share/doc/libmongoc-1.0-0t64/*" -exec sha256sum {} + | sort | sha256sum',config:'find /etc -type f ! -path /etc/ld.so.cache ! -path /etc/hosts ! -path /etc/hostname ! -path /etc/resolv.conf -exec sha256sum {} + | sort | sha256sum',coturn:'sha256sum /usr/bin/turnserver'};
+if(mongocrypt)commands.runtime='find /usr /lib -type f ! -path "/usr/lib/x86_64-linux-gnu/libmongocrypt.so.*" ! -path "/usr/share/doc/libmongocrypt0/*" -exec sha256sum {} + | sort | sha256sum';
 const hashes={};for(const [key,cmd]of Object.entries(commands)){hashes[key]=shell(base,cmd);assert.equal(shell(after.Id,cmd),hashes[key],key+' changed');}
 for(const row of native.libraries)assert.equal(shell(after.Id,'sha256sum '+row.path).split(/\s/)[0],row.sha256);
 fs.writeFileSync(root+'/stage.json',JSON.stringify({schema:1,date:new Date().toISOString(),status:'passed',candidate,image:after.Id,baseRef,base,version,packages:native.packages,nativeSha256:sha(fs.readFileSync(root+'/native.json')),configurationUnchanged:true,unrelatedPackagesUnchanged:true,priorRuntimeBytesUnchanged:true,hashes,productionChanged:false},null,2)+'\n');

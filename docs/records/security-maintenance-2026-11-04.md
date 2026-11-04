@@ -1,7 +1,71 @@
 # Security maintenance — 4 November 2026
 
-Checkpoint at 00:28 UTC; this is not a claim that all findings are resolved.
+Latest checkpoint: 12:12 UTC. Earlier sections are chronological evidence, not
+the current unresolved queue. This is not a claim that all findings are resolved.
 No user documents, credentials or detailed scan inventories are published here.
+
+## 12:12 UTC — relay repair and refreshed assessment
+
+The PairDrop and Galene TURN relays now use
+`utilibre-coturn:mongocrypt-security-20261104`, exact image
+`sha256:22475b057d3546332125370fa15b1d19f213d932fda1278392457246ba2e3338`.
+The libmongocrypt package is `1.13.2-1+deb13u1+utilibre1`: two unchanged upstream
+commits repair duplicate masterKey acceptance and partial key-encryption-key
+parse state for CVE-2026-106433. Debian's earlier security patch is preserved.
+Only the library package changed; existing BSON/OCSP, SQLite and other runtime
+fixes, relay configuration, credentials, ports and limits remain intact.
+
+Verification: 330 native cases pass, with three documented platform/configuration
+skips. Two affected upstream regressions fail for their intended reasons before
+and pass after. All 980 exports and native library dependencies match the baseline.
+Isolated authenticated UDP/TCP/TLS transfers, exact bytes, wrong/anonymous
+credentials, private/metadata peer rejection and bounded allocation quotas pass.
+Each live relay had two zero-allocation checks before its serial restart and
+passed native STUN afterward. Both are running and healthy. No public throughput
+or real-phone coverage is inferred from those tests.
+
+The native test runner was replayed without network or production mounts; it
+refuses to overwrite existing evidence. Seventy-four targeted maintenance policy
+tests pass. The source supplement returned HTTP 200 and its complete SHA-256
+matched the release record. [Recipe, exact inputs, source offer and guarded
+rollback](../../deployment/maintenance/security-20261104/README.md).
+
+The advisory database was deliberately refreshed at 10:35 UTC, using its
+**4 November 07:16:25 UTC** revision. The initial queue then contained
+**3 critical / 158 high** pending records, including **93 expired earlier
+high/critical reviews**. Expired reviews were not automatically accepted:
+existing repair/component checks were rerun against current files and artifacts.
+The new image's reviews were likewise recreated only after its unchanged bytes
+and complete release ancestry passed. No severity, scan scope or rule was relaxed.
+
+The completed **12:02:46 UTC** scan covers 109 images, 175 containers, 83 source
+inventories and 508 host packages. Following exact reviews, it leaves
+**0 critical / 38 high package-target records pending**:
+
+| Remaining high records | Exact outstanding work |
+| --- | --- |
+| 30 ACL | Caller migrations remain blocked by the earlier automatic security review. A library-only update does not repair the callers. |
+| 5 GRUB | Bootloader repair remains blocked by that earlier review; no boot files or recovery configuration were changed. |
+| 2 HEIF | CVE-2026-84384 affects enabled zlib metadata decompression; CVE-2026-84447 affects present recursive overlays. A compatible repair and native/image regressions are still required. Neither is covered by the absent-component decisions. |
+| 1 Python-Markdown | CVE-2019-25781 remains in Kuma's Python dependency. The inspected current upstream version is not a verified repair. |
+
+Raw totals remain **24,403 records: 65 critical / 2,912 high** among them.
+These include exact reviewed fixes and absent-component matches; they are not
+confirmed exploitability counts. Pending lower-severity records are 5,119 medium,
+5,449 low and 947 unknown, and were not cleared wholesale.
+
+Additional evidence verifies the already-installed Expat 2.10.0 reset fix against
+two affected controls and four repaired narrow/wide libraries. Eleven Linux
+findings belong to exact headers-only packages, not runnable kernel code; the VM
+kernel was observed as `6.12.115+deb13.1-cloud-amd64`. Six newer HEIF APIs/codecs
+are absent from the installed code. These are verified repair/attribution
+decisions, not claims that new runtime patches were deployed for every record.
+
+Private evidence: `security-20261104/final-checkpoint.json`,
+`reviews-applied*.json`, `expat-reset.json` and `mongocrypt/` beneath
+`/var/lib/utilibre-maintenance/`. No new host restart, SSH reload, guest-agent
+window, notification or blanket cleanup was performed in this follow-up.
+The earlier maintenance windows remain closed.
 
 ## Completed release
 

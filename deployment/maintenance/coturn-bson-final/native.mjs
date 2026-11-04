@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {root,version,oldVersion,names,commit,sha,read,run,docker,limits,base} from './common.mjs';
-process.umask(0o077);
+process.umask(0o077);assert(!process.argv.includes('--mongocrypt-nov04'),'Use security-20261104/mongocrypt-native.mjs for this library');
 assert(!fs.existsSync(root+'/native.json'));
 const auth=read(root+'/authenticated.json');assert.equal(auth.status,'passed');assert.equal(auth.commit,commit);
 assert.equal(fs.readFileSync(root+'/output/tests-passed','utf8').trim(),'passed-with-baseline-failures');

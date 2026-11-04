@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-106433",
+  "license": "Apache-2.0",
+  "version": "1.13.2-1+deb13u1+utilibre1",
+  "oldVersion": "1.13.2-1+deb13u1",
+  "compilerBase": "sha256:4cd9da5932965ac14ee70f3bd11c80acee56147ab4b2b638552aeee756815a49",
+  "sourceArchives": [
+    {
+      "sha256": "b6592d7497b2df0cea835d82f58269326e3f736ffc51f0dc6eb65d1d39fe2965",
+      "bytes": 2223,
+      "file": "libmongocrypt_1.13.2-1+deb13u1.dsc"
+    },
+    {
+      "sha256": "3e11aaa9dc983e3d56ab181aa7bae081e35196c32c48fb123b524c3aa1d5de67",
+      "bytes": 1180651,
+      "file": "libmongocrypt_1.13.2.orig.tar.gz"
+    },
+    {
+      "sha256": "e34787487302fbafa1214b3aada9f11ea2b6e1abe184b3caf1a338d4264f88c7",
+      "bytes": 8632,
+      "file": "libmongocrypt_1.13.2-1+deb13u1.debian.tar.xz"
+    }
+  ],
+  "patches": [
+    {
+      "file": "556bcb70b6efecb7f568d824b03469df3a3bc91a.patch",
+      "commit": "556bcb70b6efecb7f568d824b03469df3a3bc91a",
+      "sha256": "8245c4e61160c855e219939eb7487a8c29db3168946b0f4bb15e02f9b13950ba",
+      "bytes": 3084
+    },
+    {
+      "file": "8bc580ea69eea13a932197221edf72830fbc38a1.patch",
+      "commit": "8bc580ea69eea13a932197221edf72830fbc38a1",
+      "sha256": "9f7df5000abe80ef9cebedf817a544b3f0ef69e6fcce31b817506732b51b8f17",
+      "bytes": 5603
+    }
+  ],
+  "sourceOrigin": "https://github.com/mongodb/libmongocrypt",
+  "base": "sha256:2d099787fc4af07d23c09c71ea2f57cc6b5248b24636cceba659820ceaf7a1e9",
+  "oldRef": "utilibre-galene-turn-turn:sqlite-rowid-20261103",
+  "candidate": "utilibre-coturn:mongocrypt-security-20261104",
+  "package": "libmongocrypt0",
+  "library": "/usr/lib/x86_64-linux-gnu/libmongocrypt.so.0.0.0",
+  "targets": [
+    "utilibre-turn-option-turn-1",
+    "utilibre-galene-turn-turn-1"
+  ],
+  "acquiredBuildPackages": [
+    {
+      "file": "cmake-data_3.31.6-2_all.deb",
+      "sha256": "d9060145be892f43cd1888024114ceab019c81479d4b0a3383fe14cebe2295cb"
+    },
+    {
+      "file": "cmake_3.31.6-2_amd64.deb",
+      "sha256": "dee2fc94973325240604ffbca677a3f16b462fb6520946bd81be1ecbac770a02"
+    },
+    {
+      "file": "git-man_1%3a2.47.3-0+deb13u1_all.deb",
+      "sha256": "b58306b60e1dff920e1e18bc7e1e499f2ef75184190ab3d98657b165969bf7c9"
+    },
+    {
+      "file": "git_1%3a2.47.3-0+deb13u1_amd64.deb",
+      "sha256": "3e35662fd5c46add561703e54031a1d8ad9df45811927689f0a51122b13be722"
+    },
+    {
+      "file": "libarchive13t64_3.7.4-4+deb13u1_amd64.deb",
+      "sha256": "12e06195a899e8db371803ed70111fc7302573d3ed84e967d3d48ef2d543ace8"
+    },
+    {
+      "file": "libbson-1.0-0t64_1.30.4-1+deb13u3_amd64.deb",
+      "sha256": "28f8d1affa5efb1a198cff521b792dac6b31e1b20fa1a973b001ae8242a61bc2"
+    },
+    {
+      "file": "libbson-dev_1.30.4-1+deb13u3_amd64.deb",
+      "sha256": "23b8b5dd6b3796a1bcfd59300666c013dce0201bb940b2ee2dcf8af0280663d2"
+    },
+    {
+      "file": "libcurl3t64-gnutls_8.14.1-2+deb13u7_amd64.deb",
+      "sha256": "9475c591b338b81859ee6d06bf2a9fbb01b52f184c235afa7f6e7f1652136e55"
+    },
+    {
+      "file": "libcurl4t64_8.14.1-2+deb13u7_amd64.deb",
+      "sha256": "4f89bd3e7a33bbd8f7422817a8a8e2233c9e194fda9c331e33bf98705f525bfc"
+    },
+    {
+      "file": "liberror-perl_0.17030-1_all.deb",
+      "sha256": "06110a972bdc52f6c6d6615dddbe97f836c61d0e36c685ef4107c2eaa81f871f"
+    },
+    {
+      "file": "libintelrdfpmath-dev_2.0u3-1_amd64.deb",
+      "sha256": "b0203b6f5dc948d9b9f0f58162222ce9d9a6e6122f1bbdbd17c9d990fc193fdb"
+    },
+    {
+      "file": "libjsoncpp26_1.9.6-3_amd64.deb",
+      "sha256": "fd0b75839fe7b1a08df49e4203b1fb042df4f7d982db8d91c1fd7bdbcd4b1460"
+    },
+    {
+      "file": "librhash1_1.4.5-1_amd64.deb",
+      "sha256": "9bf56d7d8ce3e7680a0dd8e3cfe8acdf50e0aa3b98b0a907cf744a4d1711af72"
+    },
+    {
+      "file": "libuv1t64_1.50.0-2_amd64.deb",
+      "sha256": "5fec8035002e0c745b64d1c5b3e1dc42790d1a77574315b976cf3e4aab9ddc0a"
+    }
+  ],
+  "buildPackageInventorySha256": "2fc851a8d83fecde8c7197ef49c442b274e76887edb085ef9392e2b724d51057"
+}

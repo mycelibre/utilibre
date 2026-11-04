@@ -11,10 +11,16 @@ A later authorized window deployed the tested SSH repair and rebooted VM 144
 to activate Expat. All 175 prior containers returned; host/native checks passed.
 Six canonical Go graphs now retain their already-tested dependency repairs.
 Penpot’s main and shaded Guava copies are repaired and deployed; native and
-two-account application checks passed. The complete 02:35 UTC scan and exact
-package/source reviews leave **0 critical / 36 high package-target records
-pending**, with raw findings retained. JOSE v3 rebuild paths require the tested
-backport. Remaining high groups are ACL, GRUB and Python-Markdown.
+two-account application checks passed. The 12:00 UTC relay update adds the tested
+libmongocrypt repair to PairDrop and Galene without changing configuration or
+limits. Native tests, idle-allocation release checks and live STUN passed.
+The complete 12:02 UTC scan, refreshed advisory data and exact package/source
+reviews leave **0 critical / 38 high package-target records pending**, with raw
+findings retained. JOSE v3 rebuild paths require the tested backport. Remaining
+high groups are 30 ACL, five GRUB, two HEIF and one Python-Markdown. ACL/GRUB
+continuation remains blocked by the earlier automatic security review; the HEIF
+and Markdown findings need compatible verified repairs. No new host restart,
+SSH/guest-agent maintenance window or notification was performed in this batch.
 This is not completion of all security work.
 
 [Release evidence, remaining categories and rollback](records/security-maintenance-2026-11-04.md).

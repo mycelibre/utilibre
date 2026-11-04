@@ -2,6 +2,7 @@
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
+import {proveHostExpat} from '../security-20261103/expat-host-proof.mjs';
 import {proveExpat} from '../security-20261103/expat-policy.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/closure-followup-20261012',build=dir+'/python-system/build',read=p=>JSON.parse(fs.readFileSync(p));
@@ -34,11 +35,14 @@ for(const item of q.items.filter(i=>i.status==='needs-review'&&i.type==='debian'
    const manifest=paths.map(path=>({path,sha256:sha(temp+path)}));
    for(const name of isHost?[null]:item.containers){const cmd=(p,a)=>name?run('docker',['exec',name,p,...a]):run(p,a);assert.equal(cmd('dpkg-query',['-W','-f=${Version}',item.package]),version);const expat=cmd('dpkg-query',['-W','-f=${Version}','libexpat1']);
     if(expat!=='2.9.0-1'){
-     assert.equal(name,'utilibre-expanded-penpot-backend-1');assert.equal(expat,'2.10.0-1');
+     assert.equal(expat,'2.10.0-1');
+     if(isHost){proveHostExpat(scan);}else{
+     assert.equal(name,'utilibre-expanded-penpot-backend-1');
      const input=read(new URL('../security-20261103/expat-debian-inputs.json',import.meta.url)),spec=input.rows.find(s=>s.containers.includes(name));
      const evidence=root+'/security-20261103/expat-debian/'+spec.key;
      proveExpat(input,spec,read(evidence+'/build.json'),read(evidence+'/consumer.json'));
      for(const lib of ['libexpat','libexpatw'])assert.equal(cmd('sha256sum',['/usr/lib/x86_64-linux-gnu/'+lib+'.so.1']).split(/\s+/)[0],(input.librariesBySuite?.[spec.suite]||input.libraries)[lib+'.so.1']);
+     }
     }const output=cmd('sha256sum',paths).split('\n');assert.equal(output.length,manifest.length);output.forEach((line,index)=>assert.equal(line,manifest[index].sha256+'  '+manifest[index].path));}
    checked.set(key,{packageSha256:sha(deb),files:manifest.length,manifestSha256:createHash('sha256').update(JSON.stringify(manifest)).digest('hex')});
   }finally{fs.rmSync(temp,{recursive:true});}
