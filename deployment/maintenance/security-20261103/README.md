@@ -246,6 +246,43 @@ The former archive is retained. Rollback restores
 through the existing records Compose release, with unchanged mounts/configuration.
 No database migration was introduced; an image rollback is not a data restore.
 
+## PairDrop canonical parser lock
+
+The running PairDrop parser was already repaired on 28 October. Its canonical
+`deployment/community/pairdrop-security/package-lock.json` still selected
+body-parser 1.20.8; it now selects upstream 1.20.9 with its exact npm integrity.
+Only that lock entry changed. Express's native compatible dependency range,
+all other package entries and the application manifest are unchanged.
+
+`deployment/community/pairdrop-security/lock-replay.json` records the old Git
+revision, both lock hashes, compiler, intermediate test image and source.
+The old p4 test retains its original lock through that Git reference.
+
+```sh
+# Controlled, explicit npm archive acquisition; no install scripts:
+node deployment/maintenance/security-20261103/pairdrop-lock.mjs download
+# Offline npm ci, isolated intermediate image and before/after parser test:
+node deployment/maintenance/security-20261103/pairdrop-lock.mjs prepare
+node deployment/maintenance/check-pairdrop-ws.mjs --lock-nov4
+```
+
+The old compressed-body fixture crashes for the expected unhandled zlib error;
+the fixed parser survives, and seven legitimate request cases pass per version.
+The existing native Express routing/proxy/limits and WebSocket fragmentation
+checks pass. Two isolated Chromium profiles discover, approve and receive the
+exact synthetic file, with direct WebRTC selected and no outside HTTP requests.
+No physical devices, cross-network relay or production transfer was exercised.
+The source comparison removes one high body-parser match against the same
+advisory DB. One medium **qs 6.16.0** finding remains open; no exclusion was added.
+
+This is a **rebuild-input repair, not a production rollout**. The disposable
+`utilibre-pairdrop:lock-replay-only-20261104` image starts from the historical p4
+base to isolate dependency behavior; it omits later runtime/OS overlays and
+must never be activated. The manifest explicitly denies deployment. Current
+running services, relay configuration and user transfers are unchanged. Future
+production preparation must replay the later existing repair chain and pass
+its release checks. Private receipts live in `security-20261103/pairdrop-lock/`.
+
 ## SQLite and JavaScript follow-up
 
 ```sh

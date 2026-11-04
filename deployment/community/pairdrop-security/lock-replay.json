@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "application": "PairDrop 1.11.2",
+  "purpose": "Capture the already-deployed body-parser fix in the canonical rebuild lock",
+  "baselineCommit": "e14d13c91ed822d5c73e851ba814ea5e8755a121",
+  "baselineLockSha256": "7407958b7f353666e2dae9e184b5fb5d58038d5dfb2b0836e13d93c04d7a500b",
+  "packageSha256": "7a135131b532ccfc7409004abdd20b59d52cbcea954ee0340246a7856ae86c85",
+  "lockSha256": "39a8b7980d690c26f078cc6f86532a055b62fedcea933ff0aeffc7bcfe8ba52b",
+  "package": "body-parser",
+  "version": "1.20.9",
+  "source": "https://github.com/expressjs/body-parser/releases/tag/1.20.9",
+  "advisory": "CVE-2026-111181",
+  "compiler": "sha256:9f0dde62d10e7ff7a310ecaebd66225f6b46c17e6cb778449a77b05d3541bea2",
+  "base": "sha256:79198c175c7b064cc78c25912172cdea2b0e5fa066e95190efab1844c16b60a6",
+  "candidate": "utilibre-pairdrop:lock-replay-only-20261104",
+  "deploymentAllowed": false,
+  "limitation": "Intermediate dependency replay only. The historical base omits later native/runtime overlays. Do not deploy this test image."
+}

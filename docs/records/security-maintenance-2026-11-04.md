@@ -127,3 +127,19 @@ and 949 unknown. Coverage remains 109 images / 175 containers, 83 source
 inventories and 508 host packages, against the same retained advisory snapshot.
 The high categories above now contain **25** build-input records; other
 categories remain unchanged. SSH and Expat still await separate activation.
+
+## PairDrop rebuild lock corrected without a rollout
+
+The canonical PairDrop lock now selects body-parser 1.20.9, matching the repair
+already present at runtime. Only that dependency entry changed. Clean offline
+installation, the old-crash/fixed-survival parser regression, seven legitimate
+requests per state, native routing and WebSocket limits pass. Two Chromium
+sessions completed an exact-byte direct transfer with no outside HTTP requests.
+This does not retest public relay service or physical phones.
+
+The focused same-database source comparison removes one high parser finding and
+retains the separate medium qs finding. The disposable replay image is explicitly
+ineligible for deployment because it uses a historical intermediate base. No live
+PairDrop container, relay setting or user transfer was changed. The last full
+fleet count above remains the 01:10 checkpoint until the next complete scan.
+[Commands and evidence](../../deployment/maintenance/security-20261103/README.md#pairdrop-canonical-parser-lock).

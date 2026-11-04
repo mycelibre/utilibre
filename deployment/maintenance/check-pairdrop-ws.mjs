@@ -3,11 +3,14 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {mkdirSync, writeFileSync, readFileSync, statfsSync} from 'node:fs';
 process.umask(0o077);
-const directory = '/var/lib/utilibre-maintenance/pairdrop-ws-20261011';
+const lockReplay = process.argv[2] === '--lock-nov4';
+assert.equal(process.argv.length, lockReplay ? 3 : 2);
+const replayInputs = JSON.parse(readFileSync('deployment/community/pairdrop-security/lock-replay.json', 'utf8'));
+const directory = lockReplay ? '/var/lib/utilibre-maintenance/security-20261103/pairdrop-lock' : '/var/lib/utilibre-maintenance/pairdrop-ws-20261011';
 mkdirSync(directory, {recursive: true, mode: 0o700});
 const space = statfsSync(directory);
 assert(space.bavail * space.bsize >= 8 * 1024 ** 3, 'Preserve 8 GiB recovery floor');
-const image = 'utilibre-pairdrop:1.11.2-security-20261011-p4';
+const image = lockReplay ? replayInputs.candidate : 'utilibre-pairdrop:1.11.2-security-20261011-p4';
 const previous = 'utilibre-pairdrop:1.11.2-security-20261011-p2';
 const previousId = 'sha256:eff40a7085ab7d5dce2f3c3a48b477e8f4c50afca7454e891b1f870025e20f92';
 const upstream = 'ghcr.io/schlagmichdoch/pairdrop:v1.11.2@sha256:c4b30977264a76e335740089e693a52a0d0d616330dec7f93c7b96beef7b4a02';
@@ -29,13 +32,14 @@ const os = ref => docker(['run', '--rm', ...bounded, '--entrypoint', 'sh', ref, 
 assert.equal(os(previous), os(image), 'Unreviewed operating-system dependency changes');
 const lock = ref => JSON.parse(docker(['run', '--rm', ...bounded, '--entrypoint', 'node', ref, '-e', 'console.log(JSON.stringify(require("./package-lock.json")))']));
 const originalLock = lock(upstream), previousLock = lock(previous), candidateLock = lock(image);
-const reviewedLock = JSON.parse(readFileSync('deployment/community/pairdrop-security/package-lock.json', 'utf8'));
+// Preserve the historical p4 proof after the canonical build lock advances.
+const reviewedLock = JSON.parse(lockReplay ? readFileSync('deployment/community/pairdrop-security/package-lock.json', 'utf8') : execFileSync('git', ['show', replayInputs.baselineCommit + ':deployment/community/pairdrop-security/package-lock.json'], {encoding:'utf8'}));
 assert.deepEqual(candidateLock, reviewedLock, 'Installed dependency graph differs from source-pinned lock');
 assert.equal(candidateLock.packages['node_modules/proxy-addr'].version, '2.0.8');
 assert.equal(candidateLock.packages['node_modules/ws'].version, '8.21.0');
 assert.equal(previousLock.packages['node_modules/ws'].version, '8.18.1');
 const dependencyDelta = {
-  'body-parser': ['1.20.3', '1.20.8'],
+  'body-parser': ['1.20.3', lockReplay ? '1.20.9' : '1.20.8'],
   'body-parser/node_modules/http-errors': [null, '2.0.1'],
   'body-parser/node_modules/statuses': [null, '2.0.2'],
   'call-bound': ['1.0.3', '1.0.4'], 'es-object-atoms': ['1.1.1', '1.1.2'],
@@ -85,7 +89,7 @@ const parserGate = `
 (async()=>{
  const assert=require('node:assert/strict'),express=require('express');
  assert.equal(require('express/package.json').version,'4.22.3');
- assert.equal(require('body-parser/package.json').version,'1.20.8');
+ assert.equal(require('body-parser/package.json').version,'${lockReplay ? '1.20.9' : '1.20.8'}');
  assert.equal(require('path-to-regexp/package.json').version,'0.1.13');
  const app=express();app.set('trust proxy',1);
  app.use(express.urlencoded({extended:true,limit:'1kb',parameterLimit:4}));
@@ -110,7 +114,7 @@ const parserGate = `
 docker(['run', '--rm', '-i', ...bounded, '--entrypoint', 'node', image], parserGate);
 let created = false;
 const report = {date: new Date().toISOString(), image, imageId: candidate.Id, previous, previousId, deployed: false,
-  applicationUnchangedFromP2: true, osInventoryUnchangedFromP2: true, dependencyDelta,
+  applicationUnchangedFromP2: true, osInventoryUnchangedFromP2: true, dependencyDelta, lockReplayOnly: lockReplay,
   upstreamTabGuard: true, threeByteFragmentBound: true, routingAndParserFixtures: true, rtc: 'No STUN or TURN for this same-machine direct fixture'};
 try {
   docker(['run', '-d', '--name', stage, '--read-only', '--user', '1000:1000', '--cap-drop', 'ALL',
@@ -143,4 +147,4 @@ try {
   report.limits = 'Two Chromium profiles on one test machine; no physical-phone, different-network or public TURN verification. No production changes.';
   writeFileSync(directory + '/check.json', JSON.stringify(report, null, 2) + '\n', {mode: 0o600});
 }
-console.log('PairDrop p4: pinned Express 4.x native graph and ws, preserved app/guard/OS, routing and transfer passed.');
+console.log('PairDrop: pinned Express 4.x native graph and ws, preserved app/guard/OS, routing and transfer passed. No production change.');
