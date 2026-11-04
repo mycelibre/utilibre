@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-04T01:28:21.245817+00:00",
+  "sourceImage": "sha256:fa879927df310f82ffd9b80503c74f01f852d9f6c2618062f3f70fb83e00ecd3",
+  "fontPayloads": "Copied byte-for-byte from the existing image; all ten Unicode subsets, weights, fallback metrics and two Latin preloads retained.",
+  "licenses": [
+    {
+      "font": "inter",
+      "license": "OFL-1.1",
+      "licenseSource": "https://raw.githubusercontent.com/google/fonts/b0928647ba26c8d55548aa19feb2f7aeba622d4a/ofl/inter/OFL.txt",
+      "licenseSha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57"
+    },
+    {
+      "font": "fraunces",
+      "license": "OFL-1.1",
+      "licenseSource": "https://raw.githubusercontent.com/google/fonts/581699fcc0df7715a0f944e28b1a18d38e4aad62/ofl/fraunces/OFL.txt",
+      "licenseSha256": "bdf4c22802eaf804f998195871c6b8938aac2ac14b2d78a8bd66a6f1eced833b"
+    }
+  ],
+  "files": {
+    "03bda585a99c6450-s.p.32sris142tqlb.woff2": "88e17be075f1be50ab67b057b99e3701b828f44ed28f9452df6c02645bb0cba9",
+    "1bffadaabf893a1e-s.3-6t-g6q0vh0a.woff2": "a28eb6d3ccb534ae0c94ca999371df024aab60b08c3c8a5720ee9e32fa0faaa2",
+    "1e219c03c996efbd-s.2qo5md4hn_gum.woff2": "250cc2966c658fb6d336731de9d82a8129025e9839c20c253bbc477852f6cf4f",
+    "2bbe8d2671613f1f-s.0k62hbripvv8p.woff2": "8db00ff46c67b22cda8bed865acf7077651cac8d2841d5b40980556b48961931",
+    "2c55a0e60120577a-s.0-dom-5bn10r2.woff2": "fccca918fea40089dacadc7045861314d1a6bc91f1f323cc1eeb22ebcdb321b5",
+    "5476f68d60460930-s.2uwcyprjm3xu3.woff2": "46dd4cdca58c26ae87cc6927657bf83b2e8abfc39ffd0ab176e301a8d28d22bf",
+    "83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2": "c940764593d0fe5d596be327ca7558855e018039fb78509aa21921fd3644c3e4",
+    "9c72aa0f40e4eef8-s.1y4-pdgsjb-pw.woff2": "aebf2ab4a4ce6810d73c1ac7be7cafb4e5ec4cee2d6db5fb3e09691747ec4bd6",
+    "ad66f9afd8947f86-s.3lvt2whj97whp.woff2": "a2e2c783ca6f9c20486e81e72a279203e86730bbf8f01ff6a5ee9dbd09e1c271",
+    "b35b0dbffda7f2c4-s.1d9rlgtqyj_-l.woff2": "f1451edd6434085c4f9f3a8b4a674182dd7d6acccf53bfced19fd167f0705a06",
+    "fraunces-OFL.txt": "bdf4c22802eaf804f998195871c6b8938aac2ac14b2d78a8bd66a6f1eced833b",
+    "inter-OFL.txt": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57"
+  },
+  "cssSha256": "c34851c3e605156ba3e627c18a6b953effe45f8dbf6e40fc976ab4260c3ace75",
+  "layoutPatchSha256": "465b7e049d24934fd755242badc2622cb0704ae37719799cd71ecbea6078cc41",
+  "layoutBeforeSha256": "981a0acb8058c721c66615f7212bfa31b2884c09c3047b8719a8d3a80f289c82",
+  "layoutAfterSha256": "8a8077bab4fa6107b70a4bd65cdaecd874bf5e1197f62eab28dc05f62864c823"
+}

@@ -9,7 +9,8 @@ import tarfile
 import time
 import sys
 
-assert sys.argv[1:] in ([], ['--oct22'], ['--biblioreads-oct22'], ['--candlr-oct22'], ['--markmap-oct22'], ['--degoog-oct22'], ['--spliit-oct22'], ['--rallly-oct22'], ['--grist-oct22'], ['--markmap-nov4'], ['--candlr-nov4'])
+assert sys.argv[1:] in ([], ['--oct22'], ['--biblioreads-oct22'], ['--candlr-oct22'], ['--markmap-oct22'], ['--degoog-oct22'], ['--spliit-oct22'], ['--rallly-oct22'], ['--grist-oct22'], ['--markmap-nov4'], ['--candlr-nov4'], ['--bookplate-nov4'])
+bookplate_nov4=sys.argv[1:]==['--bookplate-nov4']
 november = sys.argv[1:] in (['--markmap-nov4'], ['--candlr-nov4'])
 grist=sys.argv[1:]==['--grist-oct22']
 nextapp=next((key for key in ['spliit','rallly'] if sys.argv[1:]==['--'+key+'-oct22']),None)
@@ -22,6 +23,7 @@ expected_next='15.5.28' if bibliography else '16.4.1' if current else '16.3.8'
 directory=Path('/var/lib/utilibre-maintenance/security-20261022/'+client if client else '/var/lib/utilibre-maintenance/security-20261022/biblioreads' if bibliography else '/var/lib/utilibre-maintenance/security-20261022/bookplate' if current else '/var/lib/utilibre-maintenance/next-leaves-final-20261012')
 name=client or ('biblioreads' if bibliography else 'bookplate')
 if november: directory=Path('/var/lib/utilibre-maintenance/security-20261103/'+client)
+if bookplate_nov4: directory=Path('/var/lib/utilibre-maintenance/security-20261103/bookplate')
 if nextapp or degoog or grist:
     name=nextapp or ('grist' if grist else 'degoog');directory=Path('/var/lib/utilibre-maintenance/security-20261022/'+name)
 image=json.loads((directory/('build.json' if client or nextapp or degoog or grist else name+'-image.json')).read_text())
@@ -57,7 +59,15 @@ assert all(any(p.startswith(prefix) for prefix in allowed) for p in changed),'Un
 preserved=[] if client or degoog else ['/usr/app/prisma/','/usr/app/prisma.config.ts','/usr/app/scripts/','/usr/app/public/'] if nextapp=='spliit' else ['/app/prisma/','/app/prisma.config.ts','/app/docker-start.sh','/app/apps/web/public/'] if nextapp=='rallly' else ['/app/public/favicon','/app/utilibre-preload.cjs'] if bibliography else ['/app/public/','/app/drizzle/','/app/scripts/']
 if grist:preserved=['/grist/_build/','/grist/sandbox/','/usr/local/bin/grist-deno','/grist/static/custom.css']
 for prefix in preserved:
-    assert {p:h for p,h in before.items() if p.startswith(prefix)}=={p:h for p,h in after.items() if p.startswith(prefix)},prefix
+    existing={p:h for p,h in before.items() if p.startswith(prefix)}
+    resulting={p:h for p,h in after.items() if p.startswith(prefix) and not (bookplate_nov4 and p.startswith('/app/public/utilibre-fonts/'))}
+    assert existing==resulting,prefix
+if bookplate_nov4:
+    fonts=json.loads(Path('deployment/bookplate/fonts.json').read_text())
+    font_paths={p:h for p,h in after.items() if p.startswith('/app/public/utilibre-fonts/')}
+    assert font_paths=={'/app/public/utilibre-fonts/'+p:h for p,h in fonts['files'].items()}
+    for p,h in fonts['files'].items():
+        if p.endswith('.woff2'):assert before['/app/.next/static/media/'+p]==h
 if client or degoog or grist:
     version='3.4.17'
     if grist:

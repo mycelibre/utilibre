@@ -143,3 +143,25 @@ ineligible for deployment because it uses a historical intermediate base. No liv
 PairDrop container, relay setting or user transfer was changed. The last full
 fleet count above remains the 01:10 checkpoint until the next complete scan.
 [Commands and evidence](../../deployment/maintenance/security-20261103/README.md#pairdrop-canonical-parser-lock).
+
+
+## 01:35 UTC scan: Bookplate deployed
+
+Bookplate's pinned rebuild now uses markdown-it 14.3.3 and Vite 8.3.3. The complete
+offline build, 82 upstream tests, two-account isolation, save/reload, native ZIP
+export and deletion pass. Existing fonts and their layout metrics are bundled
+from the prior image, removing build-time Google Fonts fetching. The mobile-width
+Chromium view was inspected; no outside browser requests were observed. No real
+phone, parser complexity benchmark or byte-identical second build is claimed.
+Its production release and public source verification passed without a schema
+or account-policy change. [Exact recipes, scope, limits and rollback](../../deployment/maintenance/security-20261103/README.md#bookplate-rebuild-inputs-and-offline-fonts--4-november).
+
+The complete **01:35:06 UTC** fleet scan leaves **0 critical / 63 high pending**.
+This includes PairDrop's one corrected source finding and Bookplate's two.
+The remaining build-input category is **22**, with the other high categories
+unchanged. Raw observations: 24,405 records, 64 critical and 2,895 high. Pending
+lower severities: 5,145 medium, 5,437 low and 949 unknown. Coverage remains 109
+images / 175 containers, 83 source inventories and 508 host packages, using the
+same retained advisory database. These are pending review/repair counts, not a
+claim that the raw matches vanished or that the fleet is vulnerability-free.
+SSH and resident host Expat activation still need their separate windows.

@@ -444,3 +444,76 @@ Supplemental sources:
 and [CryptPad redirect backport](https://tools.utilibre.org/utilibre-source/security-cryptpad-redirects-20261103-source.tar.gz)
 (34,837 bytes; SHA256 `2f30e8a2a95b53f0a5609ed8e4bdf826cdcf18ee42297c7cf57baacd02039650`).
 These are supplements to the existing complete application offers.
+
+
+## Bookplate rebuild inputs and offline fonts — 4 November
+
+Bookplate 1.1.0 runs `utilibre-bookplate:1.1.0-inputs-security-20261104`
+(`sha256:f3d6bd27f6ed1b2e3650ddd24a6b49078343b51afb03d3256d9c32ed81bb8e92`).
+Next remains 16.4.1. Exactly two canonical lock entries change: markdown-it
+14.3.2 → 14.3.3 and the Vitest Vite dependency 8.3.2 → 8.3.3. The explicit
+Vite override reproduces that graph. `bookplate-inputs.json` pins the upstream
+commit, source archive, existing privacy patch, package/lock hashes, compiler,
+base image, permitted dependency changes and font manifest.
+
+The initial networkless build exposed an upstream build-time Google Fonts fetch.
+The small `deployment/bookplate/prepare-fonts.mjs` adapter now applies an exact
+layout patch and copies the same ten self-hosted WOFF2 files, CSS declarations,
+fallback metrics and preload hints from the previous image. The font payload
+is 300,624 bytes; both OFL licences and upstream provenance are retained. No
+visitor-facing font/design change is intended. Preparation twice is unchanged;
+an incompatible layout is rejected. Existing font or CSS drift is rejected.
+The old app already served fonts locally; this fixes build-time fetching.
+
+The existing builder reconstructs a fresh source tree, obtains only recorded
+npm archives in the explicit download stage, then builds/tests with networking
+disabled. No dependency versions are resolved during replay. Keep completed
+receipt directories; do not overwrite them to rerun a stage.
+
+```sh
+node deployment/maintenance/next-leaves-final/build.mjs --nov4 --resolve
+node deployment/maintenance/next-leaves-final/build.mjs --nov4
+node deployment/maintenance/next-leaves-final/stage.mjs --nov4
+node deployment/maintenance/next-leaves-final/check-bookplate.mjs --nov4
+node deployment/maintenance/security-20261103/check-markmap-dependencies.mjs --bookplate
+python3 deployment/maintenance/next-leaves-final/verify.py --bookplate-nov4
+node deployment/maintenance/next-leaves-final/prepare-source.mjs --nov4
+node deployment/maintenance/patch-leaves-final/release.mjs --bookplate-nov4 prepare bookplate
+# Separately authorized activation and matching source publication:
+node deployment/maintenance/patch-leaves-final/release.mjs --bookplate-nov4 apply bookplate
+node deployment/maintenance/next-leaves-final/publish-bookplate.mjs --nov4
+```
+
+82 upstream unit tests across 19 files and the complete production build pass.
+Isolated two-account creation, private book save/read, cross-account denial,
+anonymous denial, ZIP export, reload and deletion pass. Chromium at 390×844
+loads all expected local fonts with zero outside browser requests and no page
+errors. The captured viewport was inspected; this is not physical-phone testing.
+Five bounded Markdown compatibility cases pass. No parser timing/exploit
+reproduction or Vite exploit test is claimed. The first dependency fixture
+exceeded 1 GiB; its failure is retained and the bounded 2 GiB rerun passes.
+The compiler uses 4 GiB/2 CPUs; the production service remains at its existing
+768 MiB limit. No concurrency/capacity guarantee is inferred.
+
+The exact-image comparison preserves 2,982 files outside the application and
+all pre-existing public assets, migrations and administration helpers. It allows
+158 compiled/generated app changes and the explicitly declared font additions.
+All ten font files match the previous image byte for byte. The candidate image
+has zero high/critical scanner findings; ten medium and two unknown matches
+remain. Its source comparison removes two high matches using the same frozen
+advisory database. Build reproducibility means verified inputs and repeatable
+steps here; a second byte-identical Next build was not demonstrated.
+
+Private evidence: `security-20261103/bookplate/` (`build.json`,
+`bookplate-native.json`, `bookplate-dependencies.json`, `bookplate-verify.json`,
+`fonts-native.json`, image/source receipts) and `bookplate-release.json`.
+The release passed public route/health checks and retained denials for uploads,
+metrics, client-error reporting and public sharing. No storage migration or
+change to authentication/privacy configuration was introduced.
+
+[Complete Bookplate source](https://bookplate.utilibre.org/utilibre-source/bookplate-utilibre.tar.gz):
+2,629,682 bytes, SHA256 `048a8f9048c8a56d18696d37b7b0a37477e30089d565de2c01ed9e9158465ad5`.
+Public archive bytes match the prepared offer. Rollback uses the recorded former
+image `utilibre-bookplate:node-security-20261028` (ID `sha256:fa879927df310f82ffd9b80503c74f01f852d9f6c2618062f3f70fb83e00ecd3`)
+and unchanged service configuration; restore the retained previous source offer
+at the same time. Preserve the account database and uploaded data.

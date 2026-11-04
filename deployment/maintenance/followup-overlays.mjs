@@ -119,5 +119,6 @@ export const additionalOverlayReceipts = [
  'security-20261103/oauth-debian/release.json',
  'security-20261103/markmap-release.json',
  'security-20261103/candlr-release.json',
+ 'security-20261103/bookplate-release.json',
   'security-20261103/js-nov/release.json',
 ];

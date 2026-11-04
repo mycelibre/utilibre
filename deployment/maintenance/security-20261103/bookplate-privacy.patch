@@ -1,0 +1,55 @@
+diff --git a/components/ErrorReporter.tsx b/components/ErrorReporter.tsx
+index 0679948..bd5adc3 100644
+--- a/components/ErrorReporter.tsx
++++ b/components/ErrorReporter.tsx
+@@ -1,34 +1,6 @@
+ "use client";
+-
+-import { useEffect } from "react";
+-
+-// Sends uncaught browser errors to the server's log (/api/client-errors):
+-// at most five different ones per page load, nothing else about the page.
+-const sent = new Set<string>();
+-
++// Utilibre: error boundaries still work, but no browser diagnostics are sent.
+ export function reportError(kind: string, error: unknown, digest?: string) {
+-  const e = error instanceof Error ? error : new Error(String(error));
+-  const key = `${kind}:${e.message}`;
+-  if (sent.has(key) || sent.size >= 5) return;
+-  sent.add(key);
+-  void fetch("/api/client-errors", {
+-    method: "POST",
+-    headers: { "Content-Type": "application/json" },
+-    body: JSON.stringify({ kind, message: e.message, stack: e.stack, page: location.pathname, digest }),
+-    keepalive: true,
+-  }).catch(() => {});
+-}
+-
+-export default function ErrorReporter() {
+-  useEffect(() => {
+-    const onError = (event: ErrorEvent) => reportError("error", event.error ?? event.message);
+-    const onRejection = (event: PromiseRejectionEvent) => reportError("unhandledrejection", event.reason);
+-    window.addEventListener("error", onError);
+-    window.addEventListener("unhandledrejection", onRejection);
+-    return () => {
+-      window.removeEventListener("error", onError);
+-      window.removeEventListener("unhandledrejection", onRejection);
+-    };
+-  }, []);
+-  return null;
++  void kind; void error; void digest;
+ }
++export default function ErrorReporter() { return null; }
+diff --git a/components/SettingsPanel.tsx b/components/SettingsPanel.tsx
+index 21dc597..ca12d19 100644
+--- a/components/SettingsPanel.tsx
++++ b/components/SettingsPanel.tsx
+@@ -712,7 +712,7 @@ export default function SettingsPanel({
+ 
+       <section className="settings-section">
+         <h2 className="form-heading">Showcase</h2>
+-        <Showcase years={showcaseYears} />
++        <p>Public library sharing is unavailable on this instance. Your library stays behind your account.</p>
+       </section>
+ 
+       {newsletter !== null && (

@@ -2,13 +2,14 @@
 
 ## Current security checkpoint — 4 November 2026
 
-QEMU guest-agent/utility, Penpot libXi, host SQLite/libXi, Kuma/host OAuthlib and
-Markmap parser/client and Candlr build-input repairs are deployed and verified. The operator confirmed
-Proxmox ping and `thawed`; that maintenance window has ended. The complete
-01:10 UTC scan and exact revalidation leave **0 critical / 66 high package-target
-records pending**, with raw findings retained. Host Expat is installed but its
-resident consumers still need a new activation window. This is not completion
-of all security work.
+QEMU guest-agent/utility, Penpot libXi, host SQLite/libXi, Kuma/host OAuthlib,
+Markmap, Candlr and Bookplate repairs are deployed and verified. PairDrop's
+canonical rebuild lock now retains its existing parser fix without a rollout.
+The operator confirmed Proxmox ping and `thawed`; that maintenance window ended.
+The complete 01:35 UTC scan leaves **0 critical / 63 high package-target records
+pending**, with raw findings retained. Host Expat is installed but its resident
+consumers still need a new activation window; SSH also awaits a separate window.
+This is not completion of all security work.
 
 [Release evidence, remaining categories and rollback](records/security-maintenance-2026-11-04.md).
 Older counts and pending entries below are historical checkpoints; use this

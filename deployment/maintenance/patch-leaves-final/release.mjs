@@ -5,7 +5,7 @@ import cp from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {specs,output as originalOutput} from './specs.mjs';
-import {profile as bookplateProfile,current as oct22} from '../next-leaves-final/profile.mjs';
+import {profile as bookplateProfile,current as oct22,november as bookplateNov4} from '../next-leaves-final/profile.mjs';
 import {spec as gathioTarget} from '../security-20261022/gathio.mjs';
 import {specs as redirectTargets,output as redirectOutput} from '../security-20261022/redirects.mjs';
 import {spec as privatebinTarget,output as privatebinOutput} from '../security-20261022/privatebin-nginx.mjs';
@@ -14,13 +14,13 @@ const november=novemberFlags.length===1,novemberKey=novemberFlags[0]==='--candlr
 const novemberTarget=JSON.parse(fs.readFileSync(new URL('../security-20261103/'+novemberKey+'-inputs.json',import.meta.url)));
 const redirects=process.argv.includes('--redirects');
 const privatebinNginx=process.argv.includes('--privatebin-nginx');
-assert([november,oct22,redirects,privatebinNginx].filter(Boolean).length<=1,'Choose one finite release cohort');
-const output=november?'/var/lib/utilibre-maintenance/security-20261103':privatebinNginx?privatebinOutput:redirects?redirectOutput:oct22?'/var/lib/utilibre-maintenance/security-20261022':originalOutput;
+assert([november,oct22,redirects,privatebinNginx,bookplateNov4].filter(Boolean).length<=1,'Choose one finite release cohort');
+const output=november||bookplateNov4?'/var/lib/utilibre-maintenance/security-20261103':privatebinNginx?privatebinOutput:redirects?redirectOutput:oct22?'/var/lib/utilibre-maintenance/security-20261022':originalOutput;
 import {canonical} from '../go-final/release.mjs';
 import {plannedPins} from '../go-leaf-final/release.mjs';
 import {namespaceDependents,readinessSeconds,releaseGroup} from '../language-final/release.mjs';
 process.umask(0o077);
-const receipt=output+(november?'/'+novemberKey+'-release.json':'/release.json');
+const receipt=output+(bookplateNov4?'/bookplate-release.json':november?'/'+novemberKey+'-release.json':'/release.json');
 const bookplateTarget={key:'bookplate',container:'utilibre-records-bookplate-1',base:bookplateProfile.base,candidate:bookplateProfile.image};
 const biblioreadsTarget={key:'biblioreads',container:'utilibre-biblioreads-biblioreads-1',base:'sha256:528889b6b04905f3407d87848e5bd721a3420a9db267a1d879b2fa8305773947',candidate:'utilibre-biblioreads:9508abc-next15528-security-20261022'};
 const clientTargets=[
@@ -31,7 +31,7 @@ const clientTargets=[
  {key:'rallly',container:'utilibre-community-rallly-1',base:'sha256:8328589dc8b274ffc20834978d8ba27d819a21f6f0685a37aa568549ce982485',candidate:'utilibre-rallly:4.15.4-next1641-security-20261022'},
  {key:'grist',container:'utilibre-records-grist-1',base:'sha256:938a84a71e69b3a591dc05e3e2b27496ae96110a943680c83ab9298b4c990683',candidate:'utilibre-grist:1.7.21-dom3417-security-20261022'},
 ];
-const targets=november?[novemberTarget]:privatebinNginx?[privatebinTarget]:redirects?redirectTargets:oct22?[bookplateTarget,gathioTarget,biblioreadsTarget,...clientTargets]:[...specs,{key:'projects',container:'utilibre-projects-app-1',base:'sha256:6241eed79c9e9802ab7069dd34002a106771f1a169799b479709d7f3fd5acd8f',candidate:'utilibre-projects:455aa274-redis-example-security-20261012'},bookplateTarget];
+const targets=bookplateNov4?[bookplateTarget]:november?[novemberTarget]:privatebinNginx?[privatebinTarget]:redirects?redirectTargets:oct22?[bookplateTarget,gathioTarget,biblioreadsTarget,...clientTargets]:[...specs,{key:'projects',container:'utilibre-projects-app-1',base:'sha256:6241eed79c9e9802ab7069dd34002a106771f1a169799b479709d7f3fd5acd8f',candidate:'utilibre-projects:455aa274-redis-example-security-20261012'},bookplateTarget];
 const run=(exe,args)=>{try{return cp.execFileSync(exe,args,{encoding:'utf8',timeout:180000,maxBuffer:8*1024**2,stdio:['ignore','pipe','pipe'],env:{...process.env,APP_BIND_IP:'10.10.1.43'}}).trim();}catch{throw Error('Bounded release operation failed; command output withheld.');}};
 const docker=(...args)=>run('docker',args);
 // Whitelist only operational fields. In particular, never fetch Config.Env.
@@ -131,6 +131,7 @@ function candidateEvidence(s){
   const read=kind=>JSON.parse(fs.readFileSync(bookplateProfile.dir+'/bookplate-'+kind+'.json'));
   const b=read('image'),n=read('native'),v=read('verify');
   for(const r of [b,n,v]){fresh(r.date);assert.equal(r.passed,true);assert.equal(r.imageId,b.imageId);}
+  if(bookplateNov4){const d=read('dependencies'),source=read('source');fresh(d.date);assert(d.passed&&d.sourceHighCritical===0&&d.lockSha256===JSON.parse(fs.readFileSync(new URL('../security-20261103/bookplate-inputs.json',import.meta.url))).lockSha256);assert(source.passed&&source.imageId===b.imageId);assert.equal(v.counts.CRITICAL,0);assert.equal(v.counts.HIGH,0);}
   assert.equal(b.base,s.base);assert.equal(b.image,s.candidate);assert.equal(b.unchangedRuntime,true);assert.equal(v.base,s.base);assert.equal(v.onlyApplicationTreeChanged,true);assert.equal(v.publicMigrationsNativeAdminHelpersIdentical,true);assert.equal(v.next,bookplateProfile.next);assert.equal(v.nextFindings,0);assert.equal(v.productionChanged,false);return b.imageId;
  }
  if(s.key==='projects'){
@@ -176,7 +177,7 @@ export function planReleasePins(active,mirrors,from,to){
 const pinPlan=(g,from,to)=>planReleasePins(g.files.map(file=>({file,text:fs.readFileSync(file,'utf8')})),(g.mirrorFiles||[]).map(file=>({file,text:fs.readFileSync(file,'utf8')})),from,to);
 function repin(g,from,to){for(const e of pinPlan(g,from,to))fs.writeFileSync(e.file,e.text);}
 async function main(){
- const[mode,...keys]=process.argv.slice(2).filter(a=>!['--oct22','--redirects','--privatebin-nginx','--markmap-nov4','--candlr-nov4'].includes(a));assert(['prepare','apply','retry'].includes(mode));assert(keys.length&&new Set(keys).size===keys.length);for(const k of keys)assert(targets.some(s=>s.key===k));
+ const[mode,...keys]=process.argv.slice(2).filter(a=>!['--oct22','--redirects','--privatebin-nginx','--markmap-nov4','--candlr-nov4','--bookplate-nov4'].includes(a));assert(['prepare','apply','retry'].includes(mode));assert(keys.length&&new Set(keys).size===keys.length);for(const k of keys)assert(targets.some(s=>s.key===k));
  const report=fs.existsSync(receipt)?JSON.parse(fs.readFileSync(receipt)):{groups:[],status:'preparing'};
  const save=()=>fs.writeFileSync(receipt,JSON.stringify(report,null,2)+'\n');
  for(const key of keys){

@@ -1,0 +1,39 @@
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -1,22 +1,10 @@
+ import type { Metadata, Viewport } from "next";
+-import { Fraunces, Inter } from "next/font/google";
++import "./fonts.css";
+ import { connection } from "next/server";
+ import ErrorReporter from "@/components/ErrorReporter";
+ import AppBar from "@/components/AppBar";
+ import { getSession } from "@/lib/auth";
+ import "./globals.css";
+-
+-// Fraunces carries the display type, Inter everything else; globals.css
+-// points --font-display / --font-body at them.
+-const fraunces = Fraunces({
+-  variable: "--font-fraunces",
+-  subsets: ["latin"],
+-});
+-
+-const inter = Inter({
+-  variable: "--font-inter",
+-  subsets: ["latin"],
+-});
+ 
+ export const metadata: Metadata = {
+   title: "Bookplate",
+@@ -46,7 +34,11 @@
+   await connection();
+   const session = await getSession().catch(() => null);
+   return (
+-    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
++    <html lang="en" className="bookplate-fraunces bookplate-inter">
++      <head>
++        <link rel="preload" href="/utilibre-fonts/03bda585a99c6450-s.p.32sris142tqlb.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
++        <link rel="preload" href="/utilibre-fonts/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
++      </head>
+       <body>
+         <AppBar signedIn={Boolean(session)} />
+         {children}

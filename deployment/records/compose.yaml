@@ -65,7 +65,7 @@ services:
       ingress: {ipv4_address: 172.29.159.12}
   bookplate:
     <<: *runtime
-    image: utilibre-bookplate:node-security-20261028
+    image: utilibre-bookplate:1.1.0-inputs-security-20261104
     user: '1000:1000'
     cpus: 1
     mem_limit: 768m

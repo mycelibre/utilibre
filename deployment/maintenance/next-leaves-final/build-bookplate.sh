@@ -9,12 +9,23 @@ tar --exclude=.git --exclude=node_modules --exclude=.next --exclude='.env*' -cf 
 cd /work/app
 node -e 'const fs=require("fs"),p=JSON.parse(fs.readFileSync("package.json")),v=process.env.NEXT_VERSION;if(!["16.3.8","16.4.1"].includes(v))throw Error("Unsupported frozen release");p.dependencies.next=v;p.devDependencies["eslint-config-next"]=v;fs.writeFileSync("package.json",JSON.stringify(p,null,2)+"\n");'
 if [ "${RESOLVE_LOCK:-0}" = 1 ]; then
+  if [ "${MAINTENANCE_NOV4:-0}" = 1 ]; then
+    export npm_config_cache=/cache
+    cp /lock/package-lock.json package-lock.json
+    npm ci --ignore-scripts --no-audit --no-fund
+    exit 0
+  fi
   npm install --package-lock-only --ignore-scripts --no-audit --no-fund
   cp package-lock.json /output/package-lock.json
   exit 0
 fi
 cp /lock/package-lock.json package-lock.json
-npm ci --no-audit --no-fund
+if [ "${MAINTENANCE_NOV4:-0}" = 1 ]; then
+  export npm_config_cache=/cache
+  npm ci --offline --no-audit --no-fund
+else
+  npm ci --no-audit --no-fund
+fi
 npm run test
 npm run build
 cp -a .next/standalone/. /work/output/
