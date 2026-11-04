@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "key": "markmap",
+  "container": "utilibre-browser-tools-markmap-1",
+  "base": "sha256:d6f04ee44b823f404e26771610952a5d2fd7e34a35a26b236f6c9b2fae25f568",
+  "oldRef": "utilibre-markmap:0.18.12-dom3417-security-20261022-cb20261028-expat210-20261103",
+  "candidate": "utilibre-markmap:0.18.12-parser-security-20261104",
+  "compiler": "node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1",
+  "packages": {
+    "markdown-it": "14.3.3",
+    "undici": "6.29.1"
+  },
+  "sourceFiles": {
+    ".dockerignore": "93097ca3158d9b000e44b2dc2175621c9996b91e37299f0092532bae968e377a",
+    ".gitignore": "c3eb7978c37820e40bc138074ea91e5bb13501e8e42c3750b9a2c3bbb2ccfaf6",
+    "index.html": "6acdf44db5cfb501217a7824eaaeb5dba2f140fea82afe1cf016c926b1265817",
+    "main.js": "257687464b69702c5746d7a4c343c2578bd81af04b8ae03ee0be7d02a6ceec55",
+    "notices.mjs": "12ae214e8edbf79cd32a23af6fda251328f6e1ea50ff29bfcaefa2de9224168f",
+    "package-lock.json": "84d46d29ee085ed1e29d32c239b2e26a2c5d902661771d8318cf5a0259eefa13",
+    "package.json": "f7bea774b08625d4e2e63bf767b5ba35c77d40e3b01f1ba0294c1d252acd3bb4",
+    "prepare-brand.mjs": "e1ad5919cd8111e1d2579eb8e7286479ecfc1e819a46be1caf81ffce804657ae",
+    "style.css": "6cf4f78081dee62ab566f86918ef239c31e3c19e5358b388299b05a6dbe4ba04"
+  },
+  "advisories": [
+    "CVE-2026-111758",
+    "CVE-2026-109383",
+    "CVE-2026-109869",
+    "CVE-2026-87018"
+  ],
+  "sources": [
+    "https://github.com/markdown-it/markdown-it/releases/tag/14.3.3",
+    "https://github.com/nodejs/undici/releases/tag/v6.29.1"
+  ],
+  "scope": "Static Markmap bundle only, existing hardened NGINX runtime preserved; no account or user-data changes.",
+  "sourceCommit": "51fa3046973b355693de5caae979dac76b82e1d6",
+  "sourceTree": "deployment/toolbox/markmap",
+  "approvedPackageSha256": "ff9e5ec7a40e755539bbc8d2f3f0fc6874f2c575a3fd3ea08d82682d301c1e6f",
+  "approvedLockSha256": "66bffdd3b34266d2a2d706806f8d3133323b90f881744e372124e75f5ef3bce1",
+  "dependencyArchives": [
+    {
+      "state": "baseline",
+      "name": "markdown-it",
+      "version": "14.3.2",
+      "url": "https://registry.npmjs.org/markdown-it/-/markdown-it-14.3.2.tgz",
+      "integrity": "sha512-sHHjZ5fJKlgrG4qns2YwVcdNep35h5fERrfkD2YNsb9UFk0UIHarbiTaHKVMlPuWAoiilyK8Fv/jAm11slsY7Q==",
+      "file": "markdown-it-14.3.2.tgz",
+      "sha256": "2646dd49007c7c5594dd9e910ce6b1ab4083b39eba3e6254889c02ef455ea97a"
+    },
+    {
+      "state": "baseline",
+      "name": "undici",
+      "version": "6.29.0",
+      "url": "https://registry.npmjs.org/undici/-/undici-6.29.0.tgz",
+      "integrity": "sha512-R+RODBqp6i2pPflGdq+xIOUkl+RNfGgHwoinecKu/JCuf2uO06cOKoDbI2P7Dn6KcswdKwrczbU6IYJ6K8X+wg==",
+      "file": "undici-6.29.0.tgz",
+      "sha256": "b7d888586625c1508c0e17463bac86aecd22ed6053bc945372aed8cae14406fc"
+    },
+    {
+      "state": "candidate",
+      "name": "markdown-it",
+      "version": "14.3.3",
+      "url": "https://registry.npmjs.org/markdown-it/-/markdown-it-14.3.3.tgz",
+      "integrity": "sha512-L//tDAkjTjJCU6pBUSBTgs3Kg4InVaZuUZog/b6V12UKhcDQ7S78877ibbCanRExwPuYP1CZD7Gd2dxSy1GXRg==",
+      "file": "markdown-it-14.3.3.tgz",
+      "sha256": "7191a8dc99822f327f6772f19f9ae8992c7b51f557eb85b8a3f9d18e703e2f3f"
+    },
+    {
+      "state": "candidate",
+      "name": "undici",
+      "version": "6.29.1",
+      "url": "https://registry.npmjs.org/undici/-/undici-6.29.1.tgz",
+      "integrity": "sha512-EvRlUt/QqAEvXdQeRMYUfwOQsfzpDztykrG2owGEE/rBOBoYv9uF39ZzsNDh4lTFHhTr2XOZjKkYgueD12ZmGA==",
+      "file": "undici-6.29.1.tgz",
+      "sha256": "29c4b8e0b2d86cb8795571c1959012ce057a14ecfd34858335f47c31e770a04f"
+    }
+  ]
+}

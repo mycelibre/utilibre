@@ -1,5 +1,6 @@
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';
-const dir='/var/lib/utilibre-maintenance/security-20261022/markmap',root='/home/ubuntu/freetools',b=JSON.parse(fs.readFileSync(dir+'/build.json')),name='maintenance-markmap-oct22',base='http://127.0.0.1:3440';
+assert(process.argv.length===2||(process.argv.length===3&&process.argv[2]==='--nov4'));
+const dir='/var/lib/utilibre-maintenance/security-'+(process.argv[2]==='--nov4'?'20261103':'20261022')+'/markmap',root='/home/ubuntu/freetools',b=JSON.parse(fs.readFileSync(dir+'/build.json')),name='maintenance-markmap-check',base='http://127.0.0.1:3440';
 const run=(exe,args,opts={})=>cp.execFileSync(exe,args,{encoding:'utf8',timeout:180000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe'],...opts});
 assert.equal(run('docker',['ps','-aq','--filter','name=^/'+name+'$']).trim(),'');
 try{

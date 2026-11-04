@@ -89,6 +89,84 @@ the recorded original pin using that project's existing release procedure; keep
 its namespace companions together. This is a library-only update, not a database
 migration. An image rollback is not a data restore.
 
+## Later 4 November: Markmap and host Expat activation
+
+Markmap 0.18.12 is deployed as
+`utilibre-markmap:0.18.12-parser-security-20261104`, image
+`sha256:ad81ded167b15eafbaafcc69e54f6d80a078232a4b47d4bdc048db2c7892199e`.
+Only `markdown-it` 14.3.2 → 14.3.3 and `undici` 6.29.0 → 6.29.1 changed in the
+lockfile; DOMPurify 3.4.17 and all runtime security fixes remain. The active
+portal integration's manifest/lock now carry those versions. The old input
+is preserved by `markmap-inputs.json`'s Git revision and complete file inventory.
+Preparation reconstructs that exact Git tree in a disposable directory, not by
+reversing changes in the live checkout.
+
+The existing October builder, browser test, parity verifier and release helper
+accept a separate November profile. Downloads are an explicit `--resolve` stage;
+the build runs networkless using that integrity-checked cache. Replay uses the
+recorded lock, never a new dependency resolution. Completed receipts are retained.
+
+```sh
+node deployment/maintenance/security-20261022/build-dom-client.mjs markmap --nov4 --resolve
+node deployment/maintenance/security-20261022/build-dom-client.mjs markmap --nov4
+# Later replay in a fresh private workspace, using the recorded cache and lock:
+node deployment/maintenance/security-20261022/build-dom-client.mjs markmap --nov4 --replay
+node deployment/maintenance/security-20261022/build-dom-client.mjs markmap --nov4 --stage
+node deployment/maintenance/security-20261022/check-markmap.mjs --nov4
+node deployment/maintenance/security-20261103/check-markmap-dependencies.mjs
+python3 deployment/maintenance/next-leaves-final/verify.py --markmap-nov4
+node deployment/toolbox/publish-markmap-source.mjs --nov4
+node deployment/maintenance/patch-leaves-final/release.mjs --markmap-nov4 prepare markmap
+# Separately authorized activation, not an audit command:
+node deployment/maintenance/patch-leaves-final/release.mjs --markmap-nov4 apply markmap
+```
+
+The explicit `--resolve` stage retains `dependency-inputs.json` and the four exact
+baseline/candidate npm archives in private `markmap/dependencies/`. Their SRI,
+SHA256 and URL must match the manifest and original/candidate lockfile. The checker rejects
+different archives, creates short-lived synthetic TLS keys, reuses the native
+Undici regression, and scans both locks against the same local advisory DB.
+The old HTTP client ignores the custom TLS verifier; the replacement calls and
+honors it. Seven ordinary HTTP/TLS cases pass in both. Five small Markdown cases
+pass; no large-input timing or quadratic-complexity reproduction is claimed.
+Upstream identifies the parser repair in
+[14.3.3](https://github.com/markdown-it/markdown-it/releases/tag/14.3.3) and the
+HTTP fixes in [6.29.1](https://github.com/nodejs/undici/releases/tag/v6.29.1).
+
+EN/ES editing, Markdown/SVG export and reopening, hostile imports, storage
+failures, a 390px viewport and already-loaded offline editing passed. Observed
+external browser requests: zero. No real-phone or offline-reload claim is made.
+A fresh `--replay` reconstructed the pinned Git source and built with networking
+disabled. All eleven resulting static files were byte-identical to the deployed
+candidate. The tar archives differ because of timestamps; this does not establish
+byte-for-byte image or compiler reproducibility. Private `markmap/replay.json`
+retains the comparison. Replay neither resolves new versions nor changes production.
+
+Whole-image comparison permits four changed static-output files and preserves
+1,901 other runtime files. Current source and candidate image scans have zero
+high/critical findings; this does not clear the build compiler or other apps.
+
+[Complete Markmap source offer](https://mindmap.utilibre.org/utilibre-source/markmap-parser-20261104-source.tar.gz):
+972,825 bytes, SHA256 `59210251b2d08fb2e31d748820da7e7f61ad6241a2610590a79afab57d616c85`.
+The existing source link serves the new source; its former archive is retained.
+Rollback uses `markmap-release.json`'s previous image pin and the unchanged
+Compose service configuration. Browser-local drafts are not touched.
+
+**Host Expat remains incomplete:** `expat-host.mjs prepare` verified the exact
+old package, rollback bytes, both library ABIs, narrow/wide native fixtures,
+Python's actual binding and a private D-Bus session using synthetic XML. `stage`
+installed authenticated 2.10.0-1 without restarting any service. Long-lived
+D-Bus/Python processes still map the old library. The `verify` command correctly
+rejects this state and creates no completed release receipt. Keep both host
+findings open until a new authorized consumer-refresh/reboot window completes.
+
+After that window, run `node deployment/maintenance/security-20261103/expat-host.mjs
+verify`, then a fresh existing host/fleet scan, then `review-expat-host.mjs`.
+The reviewer requires exact new payloads, current resident mappings, the private
+bus test and a complete scan; it only prepares decisions for operator review.
+It does not restart processes or write the ledger. Native package rollback can
+also leave mixed process mappings, so it requires the same activation review.
+
 GitHub Actions scheduling remains best effort. A manually successful availability
 run is not evidence that periodic delivery recovered. Retain the independent
 schedule watchdog and report missed delivery separately from service outages.

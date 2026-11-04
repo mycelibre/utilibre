@@ -23,7 +23,7 @@ x-browser: &browser
 services:
   markmap:
     <<: *browser
-    image: utilibre-markmap:0.18.12-dom3417-security-20261022-cb20261028-expat210-20261103
+    image: utilibre-markmap:0.18.12-parser-security-20261104
     build:
       context: ./markmap
       dockerfile: ../Dockerfile.markmap

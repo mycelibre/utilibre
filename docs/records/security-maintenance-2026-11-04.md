@@ -54,3 +54,34 @@ no blanket suppression, severity reduction or scan exclusion was added.
 All counts describe this checkpoint. Later advisory data, changed artifacts or
 expired reviews can legitimately change them. Preserve the raw report, reviewed
 decisions and acquisition receipts to explain that change.
+
+## 00:38 UTC follow-up
+
+Markmap's parser/client repair is now live. `markdown-it` 14.3.3 and `undici`
+6.29.1 replace only those two entries in its dependency graph. The static bundle
+was rebuilt offline; the existing NGINX/runtime repairs were preserved. Native
+TLS verification fails as expected before the repair and succeeds afterward.
+The ordinary HTTP cases, five bounded Markdown cases, EN/ES editing, SVG/Markdown
+export, malicious imports and local-storage failure checks pass. Chromium desktop
+and a 390px viewport were tested, with zero external browser requests. This is
+not real-phone verification or a large-input parser benchmark.
+
+The completed **00:38:02 UTC** scan leaves **0 critical / 73 high** pending,
+including **32** historical/current build-input records. Raw totals are 24,430
+records (64 critical / 2,905 high). Pending lower severities: 5,157 medium,
+5,440 low and 949 unknown. The same advisory snapshot was retained for comparison.
+
+Host Expat 2.10.0-1 was installed without restarting services. Its parser, Python
+binding and private D-Bus tests pass. Existing D-Bus/Python processes still use
+the former mapping; the activation guard deliberately rejects completion.
+The two host Expat findings remain pending. A **new** maintenance window is
+required for consumer refresh or a controlled reboot; the earlier QEMU window
+does not cover this. No SSH reload or bootloader change was performed.
+
+The [recipe notes](../../deployment/maintenance/security-20261103/README.md)
+contain the complete source offer, exact artifact, activation steps and rollback.
+
+A fresh offline Markmap replay reconstructed the pinned Git tree and produced
+eleven static files with identical bytes. Archive timestamps differed. The
+private `markmap/replay.json` records this limited reproducibility check; no
+byte-for-byte container-image claim is made, and replay changed no running service.

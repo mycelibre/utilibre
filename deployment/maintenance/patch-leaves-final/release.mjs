@@ -9,15 +9,17 @@ import {profile as bookplateProfile,current as oct22} from '../next-leaves-final
 import {spec as gathioTarget} from '../security-20261022/gathio.mjs';
 import {specs as redirectTargets,output as redirectOutput} from '../security-20261022/redirects.mjs';
 import {spec as privatebinTarget,output as privatebinOutput} from '../security-20261022/privatebin-nginx.mjs';
+const november=process.argv.includes('--markmap-nov4');
+const novemberTarget=JSON.parse(fs.readFileSync(new URL('../security-20261103/markmap-inputs.json',import.meta.url)));
 const redirects=process.argv.includes('--redirects');
 const privatebinNginx=process.argv.includes('--privatebin-nginx');
-assert([oct22,redirects,privatebinNginx].filter(Boolean).length<=1,'Choose one finite release cohort');
-const output=privatebinNginx?privatebinOutput:redirects?redirectOutput:oct22?'/var/lib/utilibre-maintenance/security-20261022':originalOutput;
+assert([november,oct22,redirects,privatebinNginx].filter(Boolean).length<=1,'Choose one finite release cohort');
+const output=november?'/var/lib/utilibre-maintenance/security-20261103':privatebinNginx?privatebinOutput:redirects?redirectOutput:oct22?'/var/lib/utilibre-maintenance/security-20261022':originalOutput;
 import {canonical} from '../go-final/release.mjs';
 import {plannedPins} from '../go-leaf-final/release.mjs';
 import {namespaceDependents,readinessSeconds,releaseGroup} from '../language-final/release.mjs';
 process.umask(0o077);
-const receipt=output+'/release.json';
+const receipt=output+(november?'/markmap-release.json':'/release.json');
 const bookplateTarget={key:'bookplate',container:'utilibre-records-bookplate-1',base:bookplateProfile.base,candidate:bookplateProfile.image};
 const biblioreadsTarget={key:'biblioreads',container:'utilibre-biblioreads-biblioreads-1',base:'sha256:528889b6b04905f3407d87848e5bd721a3420a9db267a1d879b2fa8305773947',candidate:'utilibre-biblioreads:9508abc-next15528-security-20261022'};
 const clientTargets=[
@@ -28,7 +30,7 @@ const clientTargets=[
  {key:'rallly',container:'utilibre-community-rallly-1',base:'sha256:8328589dc8b274ffc20834978d8ba27d819a21f6f0685a37aa568549ce982485',candidate:'utilibre-rallly:4.15.4-next1641-security-20261022'},
  {key:'grist',container:'utilibre-records-grist-1',base:'sha256:938a84a71e69b3a591dc05e3e2b27496ae96110a943680c83ab9298b4c990683',candidate:'utilibre-grist:1.7.21-dom3417-security-20261022'},
 ];
-const targets=privatebinNginx?[privatebinTarget]:redirects?redirectTargets:oct22?[bookplateTarget,gathioTarget,biblioreadsTarget,...clientTargets]:[...specs,{key:'projects',container:'utilibre-projects-app-1',base:'sha256:6241eed79c9e9802ab7069dd34002a106771f1a169799b479709d7f3fd5acd8f',candidate:'utilibre-projects:455aa274-redis-example-security-20261012'},bookplateTarget];
+const targets=november?[novemberTarget]:privatebinNginx?[privatebinTarget]:redirects?redirectTargets:oct22?[bookplateTarget,gathioTarget,biblioreadsTarget,...clientTargets]:[...specs,{key:'projects',container:'utilibre-projects-app-1',base:'sha256:6241eed79c9e9802ab7069dd34002a106771f1a169799b479709d7f3fd5acd8f',candidate:'utilibre-projects:455aa274-redis-example-security-20261012'},bookplateTarget];
 const run=(exe,args)=>{try{return cp.execFileSync(exe,args,{encoding:'utf8',timeout:180000,maxBuffer:8*1024**2,stdio:['ignore','pipe','pipe'],env:{...process.env,APP_BIND_IP:'10.10.1.43'}}).trim();}catch{throw Error('Bounded release operation failed; command output withheld.');}};
 const docker=(...args)=>run('docker',args);
 // Whitelist only operational fields. In particular, never fetch Config.Env.
@@ -94,12 +96,13 @@ function candidateEvidence(s){
   else {for(const k of ['nativeMigrations','fictionalInviteRendered','nativePasswordSetupAndLogin','twoIndependentAccounts','nativePollCreated','guestVoteSaved','reloadPersistence','otherAccountAndGuestDeleteDenied','ownerDeleteAllowed'])assert.equal(n[k],true);assert.equal(n.network,'internal; no external browser origins');}
   return b.imageId;
  }
- if(oct22&&['candlr','markmap','degoog'].includes(s.key)){
+ if((oct22||november)&&['candlr','markmap','degoog'].includes(s.key)){
   const dir=output+'/'+s.key+'/',read=name=>JSON.parse(fs.readFileSync(dir+name+'.json'));
   const b=read('build'),n=read('native'),v=read(s.key+'-verify');
   for(const r of [b,n,v]){fresh(r.date);assert.equal(r.passed,true);assert.equal(r.imageId,b.imageId);}
   assert.equal(b.base,s.base);assert.equal(b.candidate,s.candidate);assert.equal(b.configurationUnchanged,true);
   assert.equal(v.base,s.base);assert.equal(v.onlyApplicationTreeChanged,true);assert.equal(v.dompurify,'3.4.17');assert.equal(v.dompurifyFindings,0);assert.equal(v.counts.CRITICAL,0);assert.equal(n.productionChanged,false);
+  if(november){const a=read('dependencies');fresh(a.date);assert(a.passed&&a.offlineBuild&&a.sourceScanHighCritical===0);assert.deepEqual(a.packages,s.packages);assert.equal(a.imageId,b.imageId);const published=read('source-offer');assert(published.published&&published.publicHashVerified&&published.imageId===b.imageId);}
   if(['candlr','degoog'].includes(s.key))evidence(s,b,n,read('libraries'));
   else {assert.equal(n.externalRequests,0);assert.equal(v.counts.HIGH,0);assert(n.checks.includes('SVG reopen')&&n.checks.includes('hostile imports'));}
   return b.imageId;
@@ -172,7 +175,7 @@ export function planReleasePins(active,mirrors,from,to){
 const pinPlan=(g,from,to)=>planReleasePins(g.files.map(file=>({file,text:fs.readFileSync(file,'utf8')})),(g.mirrorFiles||[]).map(file=>({file,text:fs.readFileSync(file,'utf8')})),from,to);
 function repin(g,from,to){for(const e of pinPlan(g,from,to))fs.writeFileSync(e.file,e.text);}
 async function main(){
- const[mode,...keys]=process.argv.slice(2).filter(a=>!['--oct22','--redirects','--privatebin-nginx'].includes(a));assert(['prepare','apply','retry'].includes(mode));assert(keys.length&&new Set(keys).size===keys.length);for(const k of keys)assert(targets.some(s=>s.key===k));
+ const[mode,...keys]=process.argv.slice(2).filter(a=>!['--oct22','--redirects','--privatebin-nginx','--markmap-nov4'].includes(a));assert(['prepare','apply','retry'].includes(mode));assert(keys.length&&new Set(keys).size===keys.length);for(const k of keys)assert(targets.some(s=>s.key===k));
  const report=fs.existsSync(receipt)?JSON.parse(fs.readFileSync(receipt)):{groups:[],status:'preparing'};
  const save=()=>fs.writeFileSync(receipt,JSON.stringify(report,null,2)+'\n');
  for(const key of keys){

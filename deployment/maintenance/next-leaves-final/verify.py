@@ -9,16 +9,19 @@ import tarfile
 import time
 import sys
 
-assert sys.argv[1:] in ([], ['--oct22'], ['--biblioreads-oct22'], ['--candlr-oct22'], ['--markmap-oct22'], ['--degoog-oct22'], ['--spliit-oct22'], ['--rallly-oct22'], ['--grist-oct22'])
+assert sys.argv[1:] in ([], ['--oct22'], ['--biblioreads-oct22'], ['--candlr-oct22'], ['--markmap-oct22'], ['--degoog-oct22'], ['--spliit-oct22'], ['--rallly-oct22'], ['--grist-oct22'], ['--markmap-nov4'])
+november = sys.argv[1:] == ['--markmap-nov4']
 grist=sys.argv[1:]==['--grist-oct22']
 nextapp=next((key for key in ['spliit','rallly'] if sys.argv[1:]==['--'+key+'-oct22']),None)
 degoog=sys.argv[1:]==['--degoog-oct22']
 client=next((key for key in ['candlr','markmap'] if sys.argv[1:]==['--'+key+'-oct22']),None)
+if november: client='markmap'
 bibliography=sys.argv[1:]==['--biblioreads-oct22']
 current=bool(sys.argv[1:])
 expected_next='15.5.28' if bibliography else '16.4.1' if current else '16.3.8'
 directory=Path('/var/lib/utilibre-maintenance/security-20261022/'+client if client else '/var/lib/utilibre-maintenance/security-20261022/biblioreads' if bibliography else '/var/lib/utilibre-maintenance/security-20261022/bookplate' if current else '/var/lib/utilibre-maintenance/next-leaves-final-20261012')
 name=client or ('biblioreads' if bibliography else 'bookplate')
+if november: directory=Path('/var/lib/utilibre-maintenance/security-20261103/markmap')
 if nextapp or degoog or grist:
     name=nextapp or ('grist' if grist else 'degoog');directory=Path('/var/lib/utilibre-maintenance/security-20261022/'+name)
 image=json.loads((directory/('build.json' if client or nextapp or degoog or grist else name+'-image.json')).read_text())
