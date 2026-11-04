@@ -1,4 +1,12 @@
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+export function verifyV3BuildInput(lock, fixed) {
+  const rows=lock.split('\n').filter(line=>line.trim().startsWith('github.com/go-jose/go-jose/v3 '));
+  assert.equal(rows.length,1,'Missing or ambiguous JOSE v3 input');
+  assert.match(rows[0].trim(),/^github\.com\/go-jose\/go-jose\/v3 v3\.0\.5(?: \/\/ indirect)?$/,'Unsupported JOSE v3 revision');
+  assert.equal(createHash('sha256').update(fixed).digest('hex'),'7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b','Unreviewed JOSE v3 repair bytes');
+  return true;
+}
 // This adapter approves one named module at known versions, never a major update.
 export function verifyModuleDelta(before, after, previous, sum) {
   assert(['v4.1.4', 'v4.1.5'].includes(previous), 'Unsupported baseline');

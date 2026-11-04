@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Require the already-reviewed exact JOSE v3 RSA backport in canonical rebuild paths. No deployment or version-label substitution.",
+  "advisory": "CVE-2026-116587",
+  "approval": "Existing reviewed patch only; incompatible inputs rejected",
+  "deploymentAllowed": false,
+  "builders": {
+    "go-closure/build.py": "9afa19cdc50bf1b20b4a13477db07a6b6f7603e5f643905e29d27d9ea614bdc3",
+    "go-closure/build-anubis.sh": "7aab03fd876c6484bebb90343ce59e15434862faf50e97a225274a736494d37c",
+    "go-leaf-final/build.mjs": "1f69c76d703124d00466d687f68cc4eeceba312d85f7f290f6809c07c6debb33",
+    "go-leaf-final/build-one.sh": "296d9acbbb46b6eb483813634311aa1ff318e516a346c082ac5ea158b3467085",
+    "security-20261028/jose-policy.mjs": "612a54a399dfe3d12ca6f4b816ac271e3d2d0846f9935c0579c9f3c75fa21321",
+    "security-20261028/jose-v3-rsa.patch": "33ef78dec914e0329666bc9d8d3d4ac6dac8e716f5f4a07370c2f27caa725abf",
+    "security-20261028/jose-v3-inputs.json": "80c95ea76e4e14658ae02a12f38f074f8a78a46153ebc096e8d940902d864a44"
+  },
+  "rows": [
+    {
+      "directory": "go-leaf-final/locks/anubis",
+      "files": {
+        "go.mod": "dc0c38923f0028a13a57ef58271e2ac4e193a7bb3fe2b27ebe69671cdecc5a52",
+        "go.sum": "b879c2dc081c1b8d68abe0487725c4d545f678935f05961e70c4eee89cc9fc12"
+      }
+    },
+    {
+      "directory": "go-leaf-final/locks/opengist",
+      "files": {
+        "go.mod": "6487998feb14f2c14e1789766765c29ba26809d705ff4cafc6535b3504596931",
+        "go.sum": "a4a406fe353299e01ee9e00588cca0120c453ff2659a56a48bcd22e57e0ecc74"
+      }
+    },
+    {
+      "directory": "go-leaf-final/locks/oauth2-proxy",
+      "files": {
+        "go.mod": "398e8e07d7a13f4b0dc326e4f2a161ee7013736da44e5890c6b16bac4820ac51",
+        "go.sum": "4131b2dbf5884d13379b575264d2e0d64ae8d9e7c91d55d0132f425ee2c400f6"
+      }
+    },
+    {
+      "directory": "go-leaf-final/locks/wakapi",
+      "files": {
+        "go.mod": "5f7fdd2eb29e5e1ea51b27a78feafce19eea62f81ecd673d0fc6dc26fd32d59e",
+        "go.sum": "ed92122e92627a8df5d1a4b9299605ba1489a394e114001d50076af6caf3f76a"
+      }
+    },
+    {
+      "directory": "security-20261028/locks/jose-leaf/oauth2-proxy",
+      "files": {
+        "go.mod": "398e8e07d7a13f4b0dc326e4f2a161ee7013736da44e5890c6b16bac4820ac51",
+        "go.sum": "4131b2dbf5884d13379b575264d2e0d64ae8d9e7c91d55d0132f425ee2c400f6"
+      }
+    },
+    {
+      "directory": "security-20261028/locks/jose-leaf/wakapi",
+      "files": {
+        "go.mod": "5f7fdd2eb29e5e1ea51b27a78feafce19eea62f81ecd673d0fc6dc26fd32d59e",
+        "go.sum": "ed92122e92627a8df5d1a4b9299605ba1489a394e114001d50076af6caf3f76a"
+      }
+    }
+  ],
+  "evidence": {
+    "go-v3/anubis/build.json": "dffcabbeee7db71acb750f45070ca0e2440ecaa1ca8e3412c2165a61e8bf6b24",
+    "go-v3-native/v3-regression.json": "a446bc232dae9834f616338e0fcda943ce32a78b2f315e6bee464872181116eb",
+    "go-v3-leaf/output/opengist": "b9f3b86bd5f4d7d969affa10025435471812e0a8440ec18465ee2dfea6c70743",
+    "go-v3-leaf/output/opengist-tests.txt": "a15ca00e96efc29b6865fb16dfad1b062dd9b98433efbde7bf628ae42e3eb744",
+    "go-v3-leaf/output/opengist-buildinfo.txt": "a73b6a5e47ea1309569e022779fbfaf9838704239bbe8dd3c45b5fdcc8882cec",
+    "go-v3-leaf/output/opengist-go.mod": "6487998feb14f2c14e1789766765c29ba26809d705ff4cafc6535b3504596931",
+    "go-v3-leaf/output/opengist-go.sum": "a4a406fe353299e01ee9e00588cca0120c453ff2659a56a48bcd22e57e0ecc74",
+    "go-v3-leaf/output/opengist-vendor-modules.txt": "54e5edfcf3f911f853b30b28fb6790fe8c3d84ee92a048ffa9721212836ca909",
+    "go-locks/verification.json": "81aa4cd19de87eca9e299df84f26900608cdc08d97428b04db46110c0413b864"
+  },
+  "fixedSourceSha256": "7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b"
+}

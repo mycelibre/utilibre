@@ -628,3 +628,53 @@ correctly refuse changed dependency inventories. Do not retag their old images.
 The separate JOSE v3 backport requirements remain open; upgrading v4 does not
 repair or suppress v3 findings. No runtime artifact or live data is rolled back
 when reverting these source-only inputs.
+
+
+## Mandatory JOSE v3 backport in rebuilds — 4 November
+
+The canonical Go builders now refuse a v3.0.5 graph without the exact reviewed
+RSA backport. `go-v3-replay-inputs.json` binds all six affected lockfiles,
+builder/patch hashes and the completed evidence. The implementation remains the
+existing upstream patch; the version label remains v3.0.5. Missing, duplicate or
+unsupported module identities and different patch bytes fail before compilation.
+Fourteen codec/JOSE policy tests pass, including those negative cases; twelve
+private input checks exercise correct and incorrect inputs for all four apps.
+
+OAuth2 Proxy, Wakapi and OpenGist use the existing verified vendor-file path.
+Anubis omits this developer dependency from its vendor tree. Its builder instead
+copies that one verified module into a disposable directory and uses Go's native
+local replacement; the shared cache and canonical graph stay untouched. The
+same finite path is available for graph-only modules in the leaf builder.
+Original and fixed file hashes are required. No Go module-cache overlay or fuzzy
+patch is used. Earlier missing-cache, omitted-vendor-file and read-only-copy
+failures are retained; none was accepted as a passing build.
+
+```sh
+# Explicit exact dependency acquisition, then networkless compilation:
+python3 deployment/maintenance/go-closure/build.py anubis --nov4 download
+python3 deployment/maintenance/go-closure/build.py anubis --nov4 build
+node deployment/maintenance/go-leaf-final/build.mjs --nov4-download opengist
+node deployment/maintenance/go-leaf-final/build.mjs --nov4-build opengist
+# Separate fresh native backport reproduction, retaining older evidence:
+python3 deployment/maintenance/security-20261028/check-jose-v3.py --nov4
+node deployment/maintenance/security-20261103/review-go-v3.mjs
+```
+
+Both native v3 suites pass 262 tests, reproducing the unsafe modulus boundary
+before and rejecting it afterward. Anubis application/challenge tests and its
+yeet/testcontainers, archive, Git-path and filesystem checks pass. OpenGist's
+configuration/render/i18n tests and compilation pass. These are isolated native
+rebuilds, not a new two-account browser test or a production rollout. Neither
+new Anubis nor OpenGist binary contains a v3 runtime dependency; developer/test
+coverage is still required. OAuth/Wakapi reuse the exact earlier full native
+build evidence and freshly checked immutable binaries from the lock repair.
+
+Six exact tracked-source findings have seven-day mitigation reviews. Raw
+findings remain; no scan exclusion, version-label substitution or new runtime
+claim is made. Renew the review if any pinned lock, builder, patch or evidence
+changes. These source-input reviews do not clear other advisories. Completed
+build directories are protected against overwrite. To replay again, prepare a
+new protected evidence directory; do not delete a release receipt to force it.
+Anubis uses 2 CPUs/2 GiB; OpenGist uses 2 CPUs/4 GiB; native library checks use
+one CPU/2 GiB. Verification is networkless; no live data, keys or accounts enter
+those containers. Production limits and images are unchanged.

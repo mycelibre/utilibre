@@ -31,6 +31,21 @@ cp go.mod /output/anubis-go.mod
 cp go.sum /output/anubis-go.sum
 if [ "$PHASE" = download ]; then exit 0; fi
 export GOFLAGS='-trimpath -mod=readonly'
+if grep -q 'github.com/go-jose/go-jose/v3 ' go.mod; then
+ test "${UTILIBRE_JOSE_V3:-0}" = 1 || { echo 'JOSE v3 repair input required; refusing an unpatched build' >&2; exit 2; }
+ # This graph includes developer dependencies that `go mod vendor` omits.
+ # Use a disposable exact local module replacement, leaving the shared cache
+ # and canonical lock untouched. No overlay can replace GOMODCACHE files.
+ test "$(go list -m -f '{{.Version}}' github.com/go-jose/go-jose/v3)" = v3.0.5
+ cp -R "$GOMODCACHE/github.com/go-jose/go-jose/v3@v3.0.5" /build/jose-v3
+ echo '79f510a4b97fa2e34ec37932cab57e64dfdc9fa6c314654d1ccc2dd93898a532  /build/jose-v3/jwk.go' | sha256sum -c -
+ chmod -R u+w /build/jose-v3
+ cat /jose-v3-jwk.go > /build/jose-v3/jwk.go
+ echo '7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b  /build/jose-v3/jwk.go' | sha256sum -c -
+ go mod edit -replace github.com/go-jose/go-jose/v3=/build/jose-v3
+ cp go.mod /output/anubis-build-go.mod
+ go test -count=1 -p 1 github.com/go-jose/go-jose/v3/... > /output/anubis-jose-v3-tests.txt 2>&1
+fi
 go test -p 1 ./lib/config ./lib/challenge/... ./web > /output/anubis-runtime-tests.txt 2>&1
 # Check developer/test callers, rather than removing their source findings just
 # because the corresponding packages are absent from the production binary.

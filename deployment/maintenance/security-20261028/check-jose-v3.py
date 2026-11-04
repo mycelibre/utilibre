@@ -1,10 +1,13 @@
 """Test the finite v3 RSA backport; this never builds/deploys an application."""
 import pathlib,json,subprocess,zipfile,hashlib,os,sys
 os.umask(0o077)
-root=pathlib.Path('/var/lib/utilibre-maintenance/security-20261028/jose');here=pathlib.Path(__file__).resolve().parent
-spec=json.loads((here/'jose-v3-inputs.json').read_text());archive=root/'input/v3.0.5.zip';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+prior=pathlib.Path('/var/lib/utilibre-maintenance/security-20261028/jose');nov4='--nov4' in sys.argv
+assert all(a in ['--nov4','--download'] for a in sys.argv[1:])
+root=pathlib.Path('/var/lib/utilibre-maintenance/security-20261103/go-v3-native') if nov4 else prior;root.mkdir(mode=0o700,parents=True,exist_ok=True);here=pathlib.Path(__file__).resolve().parent
+assert not nov4 or not (root/'v3-regression.json').exists(),'Preserve completed replay evidence'
+spec=json.loads((here/'jose-v3-inputs.json').read_text());archive=prior/'input/v3.0.5.zip';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 assert sha(archive)==spec['archiveSha256'];assert sha(here/'jose-v3-rsa.patch')==spec['patchSha256']
-(root/'v3-cache').mkdir(exist_ok=True)
+cache=prior/'v3-cache';cache.mkdir(exist_ok=True)
 fixture=(here/'jose-regression_test.go').read_text().replace('key any;pub any','key interface{};pub interface{}').replace('github.com/go-jose/go-jose/v4','github.com/go-jose/go-jose/v3').replace('jose.ParseSigned(serial,[]jose.SignatureAlgorithm{c.alg})','jose.ParseSigned(serial)').replace('jose.ParseSigned(strings.Join(parts,"."),[]jose.SignatureAlgorithm{c.alg})','jose.ParseSigned(strings.Join(parts,"."))').replace('jose.ParseEncrypted(wire,[]jose.KeyAlgorithm{jose.DIRECT},[]jose.ContentEncryption{jose.A256GCM})','jose.ParseEncrypted(wire)')
 rows=[]
 for fixed in [False,True]:
@@ -22,7 +25,7 @@ for fixed in [False,True]:
   assert sha(dest/'jwk.go')==spec['afterSha256']
  (dest/'utilibre_regression_test.go').write_text(fixture)
  download='--download' in sys.argv
- args=['docker','run','--rm','--network','bridge' if download else 'none','--read-only','--cpus','1','--memory','2g','--memory-swap','2g','--pids-limit','128','--cap-drop','ALL','--security-opt','no-new-privileges','--log-driver','none','--tmpfs','/work:rw,exec,size=1500m','-v',str(dest)+':/source:ro','-v',str(root/'v3-cache')+':/modules'+('' if download else ':ro'),'-e','GOTELEMETRY=off','-e','GOTOOLCHAIN=local','-e','GOCACHE=/work/cache','-e','GOPATH=/work/go','-e','GOMODCACHE=/modules','-e','TMPDIR=/work/tmp','-e','GOMAXPROCS=1','-e','UTILIBRE_FIXED='+('1' if fixed else '0')]
+ args=['docker','run','--rm','--network','bridge' if download else 'none','--read-only','--cpus','1','--memory','2g','--memory-swap','2g','--pids-limit','128','--cap-drop','ALL','--security-opt','no-new-privileges','--log-driver','none','--tmpfs','/work:rw,exec,size=1500m','-v',str(dest)+':/source:ro','-v',str(cache)+':/modules'+('' if download else ':ro'),'-e','GOTELEMETRY=off','-e','GOTOOLCHAIN=local','-e','GOCACHE=/work/cache','-e','GOPATH=/work/go','-e','GOMODCACHE=/modules','-e','TMPDIR=/work/tmp','-e','GOMAXPROCS=1','-e','UTILIBRE_FIXED='+('1' if fixed else '0')]
  if not download:args+=['-e','GOPROXY=off','-e','GOSUMDB=off']
  args+=['sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b','sh','-c','mkdir -p /work/src /work/tmp; cp -a /source/. /work/src; cd /work/src; '+('go mod download all; go mod verify' if download else 'go test -count=1 -p 1 -json ./...')]
  log=root/(name+('-download' if download else '')+'.log')

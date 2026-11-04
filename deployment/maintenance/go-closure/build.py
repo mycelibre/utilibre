@@ -8,10 +8,12 @@ PRIOR=pathlib.Path('/var/lib/utilibre-maintenance/go-closure-20261012')
 ROOT=PRIOR
 ROOT.mkdir(mode=0o700, parents=True, exist_ok=True)
 COMPILER='sha256:3082400e369fa24d5fc60bca20edab3f6d604e0c5a690ec66b295eff4dd87ade'
-parser=argparse.ArgumentParser();parser.add_argument('application',choices=['ferretdb','anubis']);parser.add_argument('--oct28',choices=['download','build']);parser.add_argument('--codec',action='store_true');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('application',choices=['ferretdb','anubis']);parser.add_argument('--oct28',choices=['download','build']);parser.add_argument('--codec',action='store_true');parser.add_argument('--nov4',choices=['download','build']);args=parser.parse_args()
+assert not args.nov4 or args.application=='anubis' and not args.oct28 and not args.codec
+if args.nov4: args.oct28=args.nov4
 assert not args.codec or args.application=='ferretdb' and args.oct28
 if args.oct28:
- ROOT=pathlib.Path('/var/lib/utilibre-maintenance/security-20261028/'+('codec' if args.codec else 'go-closure'));ROOT.mkdir(mode=0o700,parents=True,exist_ok=True)
+ ROOT=pathlib.Path('/var/lib/utilibre-maintenance/'+('security-20261103/go-v3' if args.nov4 else 'security-20261028/'+('codec' if args.codec else 'go-closure')));ROOT.mkdir(mode=0o700,parents=True,exist_ok=True)
  COMPILER=subprocess.check_output(['docker','image','inspect','--format','{{.Id}}','utilibre-go-compiler:1.26.10-20261028'],text=True).strip()
  assert COMPILER=='sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f'
  previous=json.loads((PRIOR/args.application/'build.json').read_text())
@@ -19,6 +21,9 @@ if args.oct28:
  for f in ['go.mod','go.sum']:
   source=PRIOR/args.application/(args.application+'-'+f)
   assert hashlib.sha256(source.read_bytes()).hexdigest()==previous['artifacts'][source.name]
+  if args.nov4:
+   canonical=HERE.parent/'go-leaf-final/locks/anubis'/f
+   assert canonical.read_bytes()==source.read_bytes(),'Canonical Anubis graph drift'
   if args.codec:
    inputs=json.loads((HERE.parent/'security-20261028/codec-inputs.json').read_text());spec=next(s for s in inputs['rows'] if s['key']=='ferretdb')
    source=HERE.parent/'security-20261028/locks/codec/ferretdb'/f
@@ -44,8 +49,11 @@ if args.application=='ferretdb':
  argv += ['-v','/var/lib/utilibre-maintenance/ferretdb-libraries-20261011:/input:ro','-v',str(HERE.parent/'ferretdb-libraries')+':/previous:ro']
 else:
  argv += ['-v','/var/lib/utilibre-maintenance/go-leaf-final-20261011/source/anubis:/source:ro','-v','/var/lib/utilibre-maintenance/go-leaf-final-20261011/input/anubis-assets:/assets:ro','-v',str(HERE.parent/'go-leaf-final/locks/anubis')+':/previous:ro']
+ fixed=pathlib.Path('/var/lib/utilibre-maintenance/security-20261028/jose/regression/v3-fixed/jwk.go')
+ assert hashlib.sha256(fixed.read_bytes()).hexdigest()=='7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b','Reviewed JOSE v3 repair input required'
+ argv += ['-e','UTILIBRE_JOSE_V3=1','-v',str(fixed)+':/jose-v3-jwk.go:ro']
 if args.oct28:
- modules=ROOT/'modules';modules.mkdir(exist_ok=True)
+ modules=pathlib.Path('/var/lib/utilibre-maintenance/security-20261028/go-closure/modules') if args.nov4 else ROOT/'modules';modules.mkdir(exist_ok=True)
  argv += ['--network','bridge' if args.oct28=='download' else 'none','-e','EXPECTED_GO=1.26.10','-e','UTILIBRE_PHASE='+args.oct28,'-v',str(modules)+':/modules'+('' if args.oct28=='download' else ':ro'),'-v',str(reviewed)+':/locks:ro','-e','UTILIBRE_LOCKS=/locks']
  if args.application=='anubis':
   source=pathlib.Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/source/anubis')

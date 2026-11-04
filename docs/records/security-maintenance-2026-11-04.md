@@ -224,3 +224,18 @@ Private evidence: `ssh-gssapi/checks/{proposal,release,review}.json`,
 Rollback retains the three preceding SSH packages and Expat package; coordinate
 the same console/consumer-refresh safeguards. No bootloader files, account data
 or retention policies were changed.
+
+
+## JOSE v3 rebuild checks completed
+
+All six tracked v3 inputs now require the exact previously reviewed RSA patch.
+Fresh native suites pass 262 tests before and after, reproducing the old modulus
+boundary and verifying rejection afterward. Anubis and OpenGist build and pass
+native checks offline; OAuth2 Proxy/Wakapi retain their previously tested exact
+builds and immutable-binary verification. The source-only review leaves **0
+critical / 37 high pending** against the 02:09 complete scan. No application
+image was deployed for this change, no raw finding was deleted, and the review
+expires in seven days. The [recipe notes](../../deployment/maintenance/security-20261103/README.md#mandatory-jose-v3-backport-in-rebuilds--4-november)
+record command boundaries, earlier rejected attempts and evidence limitations.
+Remaining high categories: 30 ACL, five GRUB, one Penpot Guava and one Python
+Markdown. Penpot's next candidate is under isolated testing, not yet deployed.

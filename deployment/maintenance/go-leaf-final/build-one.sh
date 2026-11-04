@@ -48,13 +48,32 @@ fi
 cp go.mod "/output/$name-go.mod"
 cp go.sum "/output/$name-go.sum"
 if [ "$PHASE" = download ]; then exit 0; fi
+if grep -q 'github.com/go-jose/go-jose/v3 ' go.mod; then
+ # Version metadata remains v3.0.5; the exact reviewed vendor repair is required.
+ test "${UTILIBRE_JOSE_V3:-0}" = 1 || { echo 'JOSE v3 repair input required; refusing an unpatched build' >&2; exit 2; }
+fi
 if [ "${UTILIBRE_JOSE_V3:-0}" = 1 ]; then
  go mod vendor
- echo '79f510a4b97fa2e34ec37932cab57e64dfdc9fa6c314654d1ccc2dd93898a532  vendor/github.com/go-jose/go-jose/v3/jwk.go' | sha256sum -c -
- cp /jose-v3-jwk.go vendor/github.com/go-jose/go-jose/v3/jwk.go
- echo '7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b  vendor/github.com/go-jose/go-jose/v3/jwk.go' | sha256sum -c -
- cp vendor/modules.txt "/output/$name-vendor-modules.txt"
- export GOFLAGS="${GOFLAGS:-} -mod=vendor"
+ if [ -f vendor/github.com/go-jose/go-jose/v3/jwk.go ]; then
+  echo '79f510a4b97fa2e34ec37932cab57e64dfdc9fa6c314654d1ccc2dd93898a532  vendor/github.com/go-jose/go-jose/v3/jwk.go' | sha256sum -c -
+  cp /jose-v3-jwk.go vendor/github.com/go-jose/go-jose/v3/jwk.go
+  echo '7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b  vendor/github.com/go-jose/go-jose/v3/jwk.go' | sha256sum -c -
+  cp vendor/modules.txt "/output/$name-vendor-modules.txt"
+  export GOFLAGS="${GOFLAGS:-} -mod=vendor"
+ else
+  # A graph-only developer dependency is not included in the vendor tree.
+  # Keep it tested and repaired through an exact disposable local replacement.
+  export GOFLAGS="${GOFLAGS:-} -mod=readonly"
+  test "$(go list -m -f '{{.Version}}' github.com/go-jose/go-jose/v3)" = v3.0.5
+  cp -R "$GOMODCACHE/github.com/go-jose/go-jose/v3@v3.0.5" /work/jose-v3
+  echo '79f510a4b97fa2e34ec37932cab57e64dfdc9fa6c314654d1ccc2dd93898a532  /work/jose-v3/jwk.go' | sha256sum -c -
+  chmod -R u+w /work/jose-v3
+  cat /jose-v3-jwk.go > /work/jose-v3/jwk.go
+  echo '7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b  /work/jose-v3/jwk.go' | sha256sum -c -
+  go mod edit -replace github.com/go-jose/go-jose/v3=/work/jose-v3
+  cp go.mod "/output/$name-build-go.mod"
+  go test -count=1 -p 1 github.com/go-jose/go-jose/v3/... > "/output/$name-jose-v3-tests.txt" 2>&1
+ fi
 else
  export GOFLAGS="${GOFLAGS:-} -mod=readonly"
 fi
