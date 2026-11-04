@@ -1,0 +1,96 @@
+diff --git a/frontend/src/pages/about.astro b/frontend/src/pages/about.astro
+index f7986d3..da8b1b1 100644
+--- a/frontend/src/pages/about.astro
++++ b/frontend/src/pages/about.astro
+@@ -28,7 +28,7 @@ function isNewer(latest: string, current: string): boolean {
+ 
+ // Only meaningful for a real release build - a "dev" build has no version to
+ // compare against, so skip the network round-trip entirely.
+-if (currentVersion !== "dev") {
++if (currentVersion !== "dev" && process.env.UTILIBRE_DISABLE_UPDATE_CHECK !== "true") {
+   try {
+     const res = await fetch("https://api.github.com/repos/ellite/candlr/releases/latest", {
+       headers: { Accept: "application/vnd.github+json", "User-Agent": "candlr-app" },
+diff --git a/frontend/src/pages/events.astro b/frontend/src/pages/events.astro
+index f543d91..e4be20f 100644
+--- a/frontend/src/pages/events.astro
++++ b/frontend/src/pages/events.astro
+@@ -208,8 +208,8 @@ const people = peopleResult.status === "fulfilled" ? peopleResult.value : [];
+               Upload
+               <input id="form-image-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden" />
+             </label>
+-            <input id="form-image-url" class="input min-w-0 flex-1" type="text" placeholder="...or paste an image URL" />
+-            <button type="button" id="form-image-url-btn" class="btn-secondary flex-shrink-0 text-sm">Use</button>
++            <input disabled aria-label="Remote image URLs are unavailable; choose a local image file" id="form-image-url" class="input min-w-0 flex-1" type="text" placeholder="...or paste an image URL" />
++            <button type="button" disabled id="form-image-url-btn" class="btn-secondary flex-shrink-0 text-sm">Use</button>
+           </div>
+           <div id="form-image-preview" class="hidden flex items-center gap-3 mt-3">
+             <img id="form-image-preview-img" class="w-12 h-12 rounded-full object-cover" alt="" />
+diff --git a/frontend/src/pages/settings.astro b/frontend/src/pages/settings.astro
+index 9f346d4..68a09f8 100644
+--- a/frontend/src/pages/settings.astro
++++ b/frontend/src/pages/settings.astro
+@@ -144,7 +144,7 @@ const notifyTime = notifyPreferencesResult.status === "fulfilled" ? notifyPrefer
+       <h2 class="text-sm font-medium mb-1">Notifications</h2>
+       <p class="text-sm text-zinc-600 dark:text-zinc-300 mb-5">
+         Set up a channel to get reminders on the day of a birthday or anniversary.
+-        Click a channel to configure it.
++        Email reminders are available here. External notification providers and address-book sync are disabled on this instance.
+       </p>
+ 
+       <div class="pb-5 border-b mb-5">
+@@ -178,7 +178,7 @@ const notifyTime = notifyPreferencesResult.status === "fulfilled" ? notifyPrefer
+           </div>
+         </details>
+ 
+-        <details class="group pb-5 border-b">
++        <details hidden inert class="group pb-5 border-b">
+           <summary class="flex items-center justify-between gap-2 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+             <span class="flex items-center gap-2 text-sm font-medium">
+               <input type="checkbox" id="ntfy-enabled" onclick="event.stopPropagation()" />
+@@ -211,7 +211,7 @@ const notifyTime = notifyPreferencesResult.status === "fulfilled" ? notifyPrefer
+           </div>
+         </details>
+ 
+-        <details class="group pb-5 border-b">
++        <details hidden inert class="group pb-5 border-b">
+           <summary class="flex items-center justify-between gap-2 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+             <span class="flex items-center gap-2 text-sm font-medium">
+               <input type="checkbox" id="discord-enabled" onclick="event.stopPropagation()" />
+@@ -234,7 +234,7 @@ const notifyTime = notifyPreferencesResult.status === "fulfilled" ? notifyPrefer
+           </div>
+         </details>
+ 
+-        <details class="group pb-5 border-b">
++        <details hidden inert class="group pb-5 border-b">
+           <summary class="flex items-center justify-between gap-2 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+             <span class="flex items-center gap-2 text-sm font-medium">
+               <input type="checkbox" id="telegram-enabled" onclick="event.stopPropagation()" />
+@@ -263,7 +263,7 @@ const notifyTime = notifyPreferencesResult.status === "fulfilled" ? notifyPrefer
+           </div>
+         </details>
+ 
+-        <details class="group pb-5 border-b">
++        <details hidden inert class="group pb-5 border-b">
+           <summary class="flex items-center justify-between gap-2 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+             <span class="flex items-center gap-2 text-sm font-medium">
+               <input type="checkbox" id="pushover-enabled" onclick="event.stopPropagation()" />
+@@ -292,7 +292,7 @@ const notifyTime = notifyPreferencesResult.status === "fulfilled" ? notifyPrefer
+           </div>
+         </details>
+ 
+-        <details class="group pb-5 border-b">
++        <details hidden inert class="group pb-5 border-b">
+           <summary class="flex items-center justify-between gap-2 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+             <span class="flex items-center gap-2 text-sm font-medium">
+               <input type="checkbox" id="gotify-enabled" onclick="event.stopPropagation()" />
+@@ -385,8 +385,7 @@ const notifyTime = notifyPreferencesResult.status === "fulfilled" ? notifyPrefer
+       </details>
+     </section>
+ 
+-    <section class="card p-6">
+-      <h2 class="text-sm font-medium mb-1">Address book sync</h2>
++    <section hidden inert class="card p-6"><h2 class="text-sm font-medium mb-1">Address book sync</h2>
+       <p class="text-sm text-zinc-600 dark:text-zinc-300 mb-4">
+         Keep your cards in step with a CardDAV address book such as Radicale, Baïkal or Nextcloud. Birthdays and
+         anniversaries are pulled in regularly. The address book is the master copy: names and dates are overwritten by

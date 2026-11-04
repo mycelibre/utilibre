@@ -100,3 +100,30 @@ The host still runs `utilibre1`; its two GSSAPI findings remain open. A new
 console maintenance window is needed. The [SSH recipe](../../deployment/maintenance/ssh-server-followup/README.md)
 contains exact inputs, tests, activation and rollback. This candidate does not
 change the last completed fleet count of 0 critical / 73 high pending.
+
+## 01:10 UTC scan: Candlr deployed and rebuild inputs repaired
+
+Candlr's new frontend uses the reviewed Sharp 0.35.5, source-map-js 1.2.2,
+Undici 8.12.2 and Vite 8.3.3 build graph. Its older native/backend repairs,
+account behavior and privacy configuration remain unchanged. The canonical
+lockfile now captures these fixes for future builds. Native before/after TLS,
+image, source-map, two-account isolation and save/export/delete checks pass.
+Chromium renders the saved record after reload, hides disabled integrations,
+and works at a simulated 390px width without external requests. No real-phone
+coverage is claimed. The existing release checks passed after activation.
+
+A clean offline replay passed. Of 60 compiled files, 59 were byte-identical;
+the server entrypoint changed only in Astro's per-build encryption key. Keep
+that randomness: this establishes repeatable preparation, not identical build
+bytes. The exact image, source offer, commands and rollback are in the
+[Candlr recipe](../../deployment/maintenance/security-20261103/README.md#candlr-build-inputs--4-november).
+
+The complete **01:10:26 UTC** fleet scan and exact-byte revalidation leave
+**0 critical / 66 high pending**. Seven high build-input findings were removed;
+45 reviews were revalidated specifically against the new Candlr image. The
+remaining ACL finding was kept open. Raw totals are 24,414 records, including
+64 critical and 2,898 high; pending lower severities are 5,149 medium, 5,439 low
+and 949 unknown. Coverage remains 109 images / 175 containers, 83 source
+inventories and 508 host packages, against the same retained advisory snapshot.
+The high categories above now contain **25** build-input records; other
+categories remain unchanged. SSH and Expat still await separate activation.

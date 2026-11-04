@@ -9,8 +9,9 @@ import {profile as bookplateProfile,current as oct22} from '../next-leaves-final
 import {spec as gathioTarget} from '../security-20261022/gathio.mjs';
 import {specs as redirectTargets,output as redirectOutput} from '../security-20261022/redirects.mjs';
 import {spec as privatebinTarget,output as privatebinOutput} from '../security-20261022/privatebin-nginx.mjs';
-const november=process.argv.includes('--markmap-nov4');
-const novemberTarget=JSON.parse(fs.readFileSync(new URL('../security-20261103/markmap-inputs.json',import.meta.url)));
+const novemberFlags=['--markmap-nov4','--candlr-nov4'].filter(f=>process.argv.includes(f));assert(novemberFlags.length<=1);
+const november=novemberFlags.length===1,novemberKey=novemberFlags[0]==='--candlr-nov4'?'candlr':'markmap';
+const novemberTarget=JSON.parse(fs.readFileSync(new URL('../security-20261103/'+novemberKey+'-inputs.json',import.meta.url)));
 const redirects=process.argv.includes('--redirects');
 const privatebinNginx=process.argv.includes('--privatebin-nginx');
 assert([november,oct22,redirects,privatebinNginx].filter(Boolean).length<=1,'Choose one finite release cohort');
@@ -19,7 +20,7 @@ import {canonical} from '../go-final/release.mjs';
 import {plannedPins} from '../go-leaf-final/release.mjs';
 import {namespaceDependents,readinessSeconds,releaseGroup} from '../language-final/release.mjs';
 process.umask(0o077);
-const receipt=output+(november?'/markmap-release.json':'/release.json');
+const receipt=output+(november?'/'+novemberKey+'-release.json':'/release.json');
 const bookplateTarget={key:'bookplate',container:'utilibre-records-bookplate-1',base:bookplateProfile.base,candidate:bookplateProfile.image};
 const biblioreadsTarget={key:'biblioreads',container:'utilibre-biblioreads-biblioreads-1',base:'sha256:528889b6b04905f3407d87848e5bd721a3420a9db267a1d879b2fa8305773947',candidate:'utilibre-biblioreads:9508abc-next15528-security-20261022'};
 const clientTargets=[
@@ -102,7 +103,7 @@ function candidateEvidence(s){
   for(const r of [b,n,v]){fresh(r.date);assert.equal(r.passed,true);assert.equal(r.imageId,b.imageId);}
   assert.equal(b.base,s.base);assert.equal(b.candidate,s.candidate);assert.equal(b.configurationUnchanged,true);
   assert.equal(v.base,s.base);assert.equal(v.onlyApplicationTreeChanged,true);assert.equal(v.dompurify,'3.4.17');assert.equal(v.dompurifyFindings,0);assert.equal(v.counts.CRITICAL,0);assert.equal(n.productionChanged,false);
-  if(november){const a=read('dependencies');fresh(a.date);assert(a.passed&&a.offlineBuild&&a.sourceScanHighCritical===0);assert.deepEqual(a.packages,s.packages);assert.equal(a.imageId,b.imageId);const published=read('source-offer');assert(published.published&&published.publicHashVerified&&published.imageId===b.imageId);}
+  if(november){const a=read('dependencies');fresh(a.date);assert(a.passed&&a.offlineBuild&&a.sourceScanHighCritical===0);assert.deepEqual(a.packages,s.packages);assert.equal(a.imageId,b.imageId);const published=read('source-offer');assert(published.published&&published.publicHashVerified&&published.imageId===b.imageId);if(s.key==='candlr'){const ui=read('browser');fresh(ui.date);assert(ui.passed&&ui.imageId===b.imageId&&ui.savedRecordRendered&&ui.reloadPersistence&&ui.nativeExport&&ui.nativeDelete&&ui.disabledProvidersHidden);assert.deepEqual(ui.externalBrowserOrigins,[]);assert.deepEqual(ui.pageErrors,[]);}}
   if(['candlr','degoog'].includes(s.key))evidence(s,b,n,read('libraries'));
   else {assert.equal(n.externalRequests,0);assert.equal(v.counts.HIGH,0);assert(n.checks.includes('SVG reopen')&&n.checks.includes('hostile imports'));}
   return b.imageId;
@@ -175,7 +176,7 @@ export function planReleasePins(active,mirrors,from,to){
 const pinPlan=(g,from,to)=>planReleasePins(g.files.map(file=>({file,text:fs.readFileSync(file,'utf8')})),(g.mirrorFiles||[]).map(file=>({file,text:fs.readFileSync(file,'utf8')})),from,to);
 function repin(g,from,to){for(const e of pinPlan(g,from,to))fs.writeFileSync(e.file,e.text);}
 async function main(){
- const[mode,...keys]=process.argv.slice(2).filter(a=>!['--oct22','--redirects','--privatebin-nginx','--markmap-nov4'].includes(a));assert(['prepare','apply','retry'].includes(mode));assert(keys.length&&new Set(keys).size===keys.length);for(const k of keys)assert(targets.some(s=>s.key===k));
+ const[mode,...keys]=process.argv.slice(2).filter(a=>!['--oct22','--redirects','--privatebin-nginx','--markmap-nov4','--candlr-nov4'].includes(a));assert(['prepare','apply','retry'].includes(mode));assert(keys.length&&new Set(keys).size===keys.length);for(const k of keys)assert(targets.some(s=>s.key===k));
  const report=fs.existsSync(receipt)?JSON.parse(fs.readFileSync(receipt)):{groups:[],status:'preparing'};
  const save=()=>fs.writeFileSync(receipt,JSON.stringify(report,null,2)+'\n');
  for(const key of keys){

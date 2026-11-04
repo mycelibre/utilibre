@@ -179,6 +179,73 @@ Sources checked 2026-11-03: [Expat 2.10.0](https://github.com/libexpat/libexpat/
 The [complete code-only library supplement](https://tools.utilibre.org/utilibre-source/security-libraries-20261103-source.tar.gz) includes upstream sources/licenses and these recipes (8,769,012 bytes; SHA256 `3b4a820a8b2cde5e1b86d34a921361aed739f66383d50cbe0b2b26645ef4a99a`). Existing complete application source offers remain in place.
 
 
+## Candlr build inputs — 4 November
+
+Candlr 2.0.0 now runs `utilibre-candlr:2.0.0-inputs-security-20261104`
+(`sha256:707780d5b92de62829142d2a7d9fc20e65be11a6f114e47e797b3f8a015f46c8`).
+Its canonical lock now pins Sharp 0.35.5, source-map-js 1.2.2, Undici 8.12.2
+and Vite 8.3.3, preserving DOMPurify 3.4.17. The first three runtime packages
+were already repaired; this closes their stale rebuild inputs as well as the
+Vite build input. The image overlays only the rebuilt frontend and its existing
+DOMPurify distribution. It preserves 18,981 other runtime files and all backend,
+native-library, account, storage and privacy settings. The unused runtime Vite
+8.3.0 copy remains; its one Windows-only advisory is separately reviewed against
+the actual Linux runtime, not described as patched.
+
+`candlr-inputs.json` binds the upstream revision, 68 source-file hashes, existing
+three-page privacy patch, compiler, approved lock and 47 allowed lock-entry
+changes. `candlr-privacy.patch` captures existing edits rather than adding new
+product behavior. The same October builder supports a separate `candlr --nov4`
+profile. Resolution uses only the explicit registry download stage; build and
+dependency checks run without external networking. No moving version is
+resolved during replay.
+
+```sh
+node deployment/maintenance/security-20261022/build-dom-client.mjs candlr --nov4 --resolve
+node deployment/maintenance/security-20261022/build-dom-client.mjs candlr --nov4
+node deployment/maintenance/security-20261022/build-dom-client.mjs candlr --nov4 --replay
+node deployment/maintenance/security-20261022/build-dom-client.mjs candlr --nov4 --stage
+node deployment/maintenance/security-20261103/check-markmap-dependencies.mjs --candlr
+node deployment/maintenance/patch-leaves-final/check-app.mjs candlr --nov4
+node deployment/maintenance/patch-leaves-final/check-libraries.mjs candlr --nov4
+node deployment/maintenance/security-20261103/check-candlr-browser.mjs
+python3 deployment/maintenance/next-leaves-final/verify.py --candlr-nov4
+node deployment/records/publish-sources.mjs candlr --candlr-nov4
+node deployment/maintenance/patch-leaves-final/release.mjs --candlr-nov4 prepare candlr
+# Separately authorized activation:
+node deployment/maintenance/patch-leaves-final/release.mjs --candlr-nov4 apply candlr
+```
+
+Do not rerun completed stages into their existing receipt directories. A clean
+offline `--replay` passed: 59 of 60 compiled files were byte-identical; the server
+entrypoint differed only in Astro's freshly generated manifest encryption key.
+That key is intentionally not made deterministic or printed in reports. This
+is repeatable preparation, not a byte-reproducible image claim.
+
+The native Undici verifier regression fails before the update and passes after;
+seven ordinary HTTP/TLS cases pass on both versions. Native Sharp image format,
+orientation, dimensions and transparency checks, source-map roundtrip/bounds,
+two-account isolation, save/retrieve/export/delete and real Chromium UI checks
+pass. The browser used a network-isolated synthetic instance and a 390px viewport;
+zero external requests were observed. This does not establish real-phone support
+or reproduce the Vite vulnerability. Four existing release-policy tests pass.
+
+Private evidence is in `security-20261103/candlr/`, with the successful release
+in `candlr-release.json`. The new source lock scan has zero high/critical matches
+against the retained advisory database, down from seven high. Full image findings
+remain visible and earlier runtime reviews require current bytes and receipt
+lineage, rather than inheriting approval from an old image name.
+
+[Complete Candlr source offer](https://candlr.utilibre.org/utilibre-source/candlr-inputs-20261104-source.tar.gz):
+2,778,508 bytes; SHA256 `333e5dd0cd46940f5fd17b6e51859943b2d8948d6b4cc077f60f2bdd20d376ec`.
+This includes the upstream application and current frontend recipe. Earlier
+native-library supplements and runtime base remain required by `BUILD.txt`.
+The former archive is retained. Rollback restores
+`utilibre-records-candlr:sqlite-rowid-20261103`
+(`sha256:44aa655bf93d46d3131d9da2a439c654ca6ef81c2bfb4b9d9a6d25673ff5421e`)
+through the existing records Compose release, with unchanged mounts/configuration.
+No database migration was introduced; an image rollback is not a data restore.
+
 ## SQLite and JavaScript follow-up
 
 ```sh

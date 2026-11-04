@@ -19,6 +19,7 @@ events=events.replace('id="form-image-url"','disabled aria-label="Remote image U
 writeFileSync(source+'/frontend/src/pages/events.astro',events);
 const pkg=JSON.parse(readFileSync(source+'/frontend/package.json','utf8'));
 pkg.dependencies.dompurify='3.4.17';
+pkg.overrides={...pkg.overrides,sharp:'0.35.5','source-map-js':'1.2.2',undici:'8.12.2',vite:'8.3.3'};
 writeFileSync(source+'/frontend/package.json',JSON.stringify(pkg,null,2)+'\n');
 copyFileSync(new URL('./security-package-lock.json',import.meta.url),source+'/frontend/package-lock.json');
 console.log('Candlr automatic upstream version request disabled through the instance environment setting.');

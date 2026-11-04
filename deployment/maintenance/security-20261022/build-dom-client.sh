@@ -12,8 +12,11 @@ tar -C /source --exclude=.git --exclude=node_modules --exclude=dist --exclude='.
 cd /work/app
 node -e 'const fs=require("fs"),p=JSON.parse(fs.readFileSync("package.json"));p.dependencies.dompurify="3.4.17";fs.writeFileSync("package.json",JSON.stringify(p,null,2)+"\n")'
 if [ "${MAINTENANCE_NOV4:-0}" = 1 ]; then
-  test "$APPLICATION" = markmap
-  node -e 'const fs=require("fs"),p=JSON.parse(fs.readFileSync("package.json"));p.overrides={...p.overrides,"markdown-it":"14.3.3",undici:"6.29.1"};fs.writeFileSync("package.json",JSON.stringify(p,null,2)+"\n")'
+  case "$APPLICATION" in
+   markmap) node -e 'const fs=require("fs"),p=JSON.parse(fs.readFileSync("package.json"));p.overrides={...p.overrides,"markdown-it":"14.3.3",undici:"6.29.1"};fs.writeFileSync("package.json",JSON.stringify(p,null,2)+"\n")' ;;
+   candlr) node -e 'const fs=require("fs"),p=JSON.parse(fs.readFileSync("package.json"));p.overrides={...p.overrides,sharp:"0.35.5","source-map-js":"1.2.2",undici:"8.12.2",vite:"8.3.3"};fs.writeFileSync("package.json",JSON.stringify(p,null,2)+"\n")' ;;
+   *) exit 2 ;;
+  esac
 fi
 if [ "$RESOLVE_LOCK" = 1 ]; then
   npm install --package-lock-only --ignore-scripts --no-audit --no-fund
@@ -34,3 +37,6 @@ esac
 npm run build
 tar -czf /output/dist.tar.gz dist
 tar -czf /output/dompurify.tar.gz node_modules/dompurify
+if [ "${MAINTENANCE_NOV4:-0}" = 1 ] && [ "$APPLICATION" = candlr ]; then
+ tar -czf /output/vite.tar.gz node_modules/vite
+fi

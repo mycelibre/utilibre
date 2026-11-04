@@ -3,9 +3,9 @@
 ## Current security checkpoint — 4 November 2026
 
 QEMU guest-agent/utility, Penpot libXi, host SQLite/libXi, Kuma/host OAuthlib and
-Markmap parser/client repairs are deployed and verified. The operator confirmed
+Markmap parser/client and Candlr build-input repairs are deployed and verified. The operator confirmed
 Proxmox ping and `thawed`; that maintenance window has ended. The complete
-00:38 UTC scan and exact revalidation leave **0 critical / 73 high package-target
+01:10 UTC scan and exact revalidation leave **0 critical / 66 high package-target
 records pending**, with raw findings retained. Host Expat is installed but its
 resident consumers still need a new activation window. This is not completion
 of all security work.
