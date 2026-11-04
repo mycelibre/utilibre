@@ -165,3 +165,24 @@ images / 175 containers, 83 source inventories and 508 host packages, using the
 same retained advisory database. These are pending review/repair counts, not a
 claim that the raw matches vanished or that the fleet is vulnerability-free.
 SSH and resident host Expat activation still need their separate windows.
+
+
+## 01:46 UTC scan: three dependency recipes repaired
+
+Actual Budget, Grist and Kuma canonical dependency recipes now retain the parser,
+redirect and HTTP-client repairs already made in their later runtime layers.
+The same-database source checks remove ten high findings. Their isolated native
+consumer tests pass; Actual additionally passes Chromium budget creation,
+ZIP export/import, sync and reload; Grist passes private document/formula,
+two-account isolation, import/export, deletion and synthetic stopped restore;
+Kuma passes fresh setup and authenticated Socket.IO login. All test state is
+synthetic and external network access is disabled. Existing production images
+were not replaced. Intermediate replay images are explicitly nondeployable.
+Historical-tag overwrite attempts are rejected, and repeated preparation reuses
+the checked candidate without a rebuild. [Commands and limits](../../deployment/maintenance/security-20261103/README.md#actual-grist-and-kuma-dependency-lock-replay--4-november).
+
+The complete **01:46:23 UTC** scan leaves **0 critical / 53 high pending**,
+including 12 tracked build-input findings. Raw observations: 24,391
+records, 64 critical and 2,885 high. Pending lower severities: 5,141
+medium, 5,437 low and 949 unknown. Coverage and advisory snapshot
+are unchanged. SSH, Expat and the other unresolved categories above remain open.

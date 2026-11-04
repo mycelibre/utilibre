@@ -5,8 +5,9 @@
 QEMU guest-agent/utility, Penpot libXi, host SQLite/libXi, Kuma/host OAuthlib,
 Markmap, Candlr and Bookplate repairs are deployed and verified. PairDrop's
 canonical rebuild lock now retains its existing parser fix without a rollout.
+Actual, Grist and Kuma dependency recipes also preserve their later repairs.
 The operator confirmed Proxmox ping and `thawed`; that maintenance window ended.
-The complete 01:35 UTC scan leaves **0 critical / 63 high package-target records
+The complete 01:46 UTC scan leaves **0 critical / 53 high package-target records
 pending**, with raw findings retained. Host Expat is installed but its resident
 consumers still need a new activation window; SSH also awaits a separate window.
 This is not completion of all security work.

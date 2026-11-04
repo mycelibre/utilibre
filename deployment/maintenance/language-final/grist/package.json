@@ -17,7 +17,10 @@
     "ip-address": "10.5.0",
     "picomatch": "4.0.4",
     "path-to-regexp": "0.1.13",
-    "undici": "6.28.1",
+    "undici": "6.29.1",
     "ws": "8.21.3"
+  },
+  "overrides": {
+    "follow-redirects": "1.16.2"
   }
 }

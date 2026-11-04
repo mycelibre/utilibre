@@ -35,6 +35,16 @@ for (const [target, oldVersion, name] of selected[mode]) {
   fs.rmSync(target, {recursive: true});
   fs.cpSync(deps + '/' + name, target, {recursive: true});
   if (!fs.existsSync(target + '/node_modules')) fs.symlinkSync(deps, target + '/node_modules');
+  else if (mode === 'actual' && name === 'body-parser') {
+    // 2.4.0 needs a nested qs because the application's root qs is pinned.
+    // Preserve that npm-selected child and resolve the other direct imports
+    // from the reviewed tree, rather than falling back to older app packages.
+    const own = JSON.parse(fs.readFileSync(target + '/package.json')).dependencies;
+    for (const dependency of Object.keys(own)) {
+      const child = target + '/node_modules/' + dependency;
+      if (!fs.existsSync(child)) fs.symlinkSync(deps + '/' + dependency, child);
+    }
+  }
   assert.equal(JSON.parse(fs.readFileSync(target + '/package.json')).version,
     JSON.parse(fs.readFileSync(deps + '/' + name + '/package.json')).version);
 }

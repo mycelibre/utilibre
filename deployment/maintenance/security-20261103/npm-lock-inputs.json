@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "baselineCommit": "fff3b85d9e8370bc0916945ec6fc8bfbba76d907",
+  "compiler": "node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1",
+  "rows": [
+    {
+      "key": "actual",
+      "directory": "deployment/maintenance/npm-leaves/actual",
+      "files": {
+        "package.json": {
+          "before": "8fbbc423be1d97b761639b28c29d0e937172c990938f5165cc8e7d8730d7c389",
+          "after": "dfc1956655572029fb092cbe5ca37a5f046d2522c798d4bf4bc63050bf29cc3f"
+        },
+        "package-lock.json": {
+          "before": "d85c258fe652a69f53af4da949fccd0b612804d76c0c3f05080abfe192727cc7",
+          "after": "cb1ee6e2b35714c25a96ec22306ffb67d28cb08051201baedd6088c44c17bdf1"
+        }
+      },
+      "allowedLockChanges": [
+        "",
+        "node_modules/body-parser",
+        "node_modules/body-parser/node_modules/qs",
+        "node_modules/follow-redirects",
+        "node_modules/undici"
+      ],
+      "base": "sha256:b664a7abda3fb06c807995b93013a6acedb59fbfe103e87ccf88da6919f737ca",
+      "candidate": "utilibre-actual:lock-replay-only-20261104",
+      "deploymentAllowed": false,
+      "versions": {
+        "node_modules/body-parser": "2.4.0",
+        "node_modules/body-parser/node_modules/qs": "6.17.1",
+        "node_modules/follow-redirects": "1.16.2",
+        "node_modules/undici": "6.29.1"
+      },
+      "priorHigh": 5
+    },
+    {
+      "key": "kuma",
+      "directory": "deployment/maintenance/npm-leaves/kuma",
+      "files": {
+        "package.json": {
+          "before": "3c10f5a63f4ff1b1538f9bd77b58092b6573903a8f8f6fa1bbf89d8c33a3b684",
+          "after": "2ef6a5d649fe40592acf87c93fd72054a57f809e66dd0d4dc1dfce8f79bbd9c5"
+        },
+        "package-lock.json": {
+          "before": "388ecd3add51468f5f7eb00d0b288bd92deef6ad617386b9a27e923cfff769af",
+          "after": "9bac91fbc36d082056e4ba2ac94a2549b21e0333ec7a46d436c8664819aa9ce4"
+        }
+      },
+      "allowedLockChanges": [
+        "node_modules/follow-redirects"
+      ],
+      "base": "sha256:3f54318380deeb275b2127133ec0fdd59de12ebe295c58bf3f99174b3f86f475",
+      "candidate": "utilibre-kuma:lock-replay-only-20261104",
+      "deploymentAllowed": false,
+      "versions": {
+        "node_modules/follow-redirects": "1.16.2"
+      },
+      "priorHigh": 1
+    },
+    {
+      "key": "grist",
+      "directory": "deployment/maintenance/language-final/grist",
+      "files": {
+        "package.json": {
+          "before": "0561eb55c24d656805ec9c42dfc746338c73987f4feb4078ea45611ede476dd0",
+          "after": "afb4841f4ffd2725395adff1cff8be4a3d626445ac5ce86da8d0da002a615a0a"
+        },
+        "package-lock.json": {
+          "before": "7446fe08ad21609ec6762efe660366049fe698dc878601e705e96cb9efbd6ae7",
+          "after": "66a5d988c7a8f3a7fb90ae3a1e05b71c31005ecb9594d3124ffe38e7f8fe33ef"
+        }
+      },
+      "allowedLockChanges": [
+        "",
+        "node_modules/follow-redirects",
+        "node_modules/undici"
+      ],
+      "base": "sha256:53f12a42dd73fe22093ac0c84ca787d30b3efc919550a6039caa3c6a2c8104b5",
+      "candidate": "utilibre-grist:lock-replay-only-20261104",
+      "deploymentAllowed": false,
+      "versions": {
+        "node_modules/follow-redirects": "1.16.2",
+        "node_modules/undici": "6.29.1"
+      },
+      "priorHigh": 4
+    }
+  ],
+  "sources": [
+    "https://github.com/follow-redirects/follow-redirects/releases/tag/v1.16.2",
+    "https://github.com/expressjs/body-parser/releases/tag/v2.4.0",
+    "https://github.com/nodejs/undici/releases/tag/v6.29.1"
+  ],
+  "adapters": {
+    "npm-leaves/replace.cjs": "9037d0929c1aa3f4a6b509b18071c493f530e4aa053259be515184bbf2b2aa4c",
+    "npm-leaves/actual-privacy.cjs": "6e1ab361376372c12dfa99650693b90667857c17af349ff7e2b707c5b1d1ddd5",
+    "npm-leaves/check-actual-leaves.cjs": "dad4fcf7b63ee6bbd8dba830d8bd76a8bf67f53b2b8165f0ce9a1f28db9c6fc7",
+    "npm-leaves/check-kuma.cjs": "d9f19bb35a1aa10cfb3341ee4db9f0571c2131fd116daa1d203bc92868f22023",
+    "language-final/grist/replace.cjs": "b35a032efcc3776e10b204ec1152b77282e55fdd30dc9477c96ab798f012ac83",
+    "language-final/grist/native.cjs": "80b7fe6fcdae5b1ad21d188a965fbd2753ce612f4073ea73533ae5735fa79e2c",
+    "security-20261103/redirects-check.cjs": "0f30f0e81e4bd2659f67ff69e860f04e825f695c67349b238cde089a573da3a3",
+    "security-20261028/undici-native.cjs": "fc872c566d80a5ea9d564b644eb36ab36a0397200a0e0db0920655efbc8cc3b3",
+    "security-20261028/body-native.cjs": "b779494b9f02ced4a96b1b5d7320754aba92ff974a50140e65d9698d47a26d06"
+  }
+}

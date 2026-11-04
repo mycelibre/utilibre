@@ -1,5 +1,10 @@
 # Bounded Kuma and Actual dependency overlays — 11 October 2026
 
+The canonical dependency inputs were repaired again on 4 November. Use the
+[bounded lock replay](../security-20261103/README.md#actual-grist-and-kuma-dependency-lock-replay--4-november).
+Historical image tags must not be rebuilt with the newer graph or replace later
+production repairs. The following record describes the October release.
+
 These are same-application-version runtime dependency repairs plus a narrow
 Actual privacy fix, not new features, frontend rewrites, schema changes or
 authentication changes. No analytics,

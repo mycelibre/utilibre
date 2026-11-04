@@ -1,7 +1,8 @@
 const assert=require('node:assert/strict'),http=require('node:http');
 const root='/app/node_modules/';
-for(const [name,version] of [['axios','1.20.0'],['body-parser','2.3.0'],['qs','6.16.0']])assert.equal(require(root+name+'/package.json').version,version);
-assert.equal(require('/usr/local/lib/node_modules/npm/node_modules/undici/package.json').version,'6.28.1');
+const replay=process.argv.includes('--lock-nov4');
+for(const [name,version] of [['axios','1.20.0'],['body-parser',replay?'2.4.0':'2.3.0'],['qs','6.16.0']])assert.equal(require(root+name+'/package.json').version,version);
+assert.equal(require('/usr/local/lib/node_modules/npm/node_modules/undici/package.json').version,replay?'6.29.1':'6.28.1');
 assert.equal(require(root+'brace-expansion/package.json').version,'2.1.7');
 (async()=>{
  const axios=(await import(root+'axios/index.js')).default;

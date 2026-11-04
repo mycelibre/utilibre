@@ -475,7 +475,6 @@ node deployment/maintenance/next-leaves-final/build.mjs --nov4 --resolve
 node deployment/maintenance/next-leaves-final/build.mjs --nov4
 node deployment/maintenance/next-leaves-final/stage.mjs --nov4
 node deployment/maintenance/next-leaves-final/check-bookplate.mjs --nov4
-node deployment/maintenance/security-20261103/check-markmap-dependencies.mjs --bookplate
 python3 deployment/maintenance/next-leaves-final/verify.py --bookplate-nov4
 node deployment/maintenance/next-leaves-final/prepare-source.mjs --nov4
 node deployment/maintenance/patch-leaves-final/release.mjs --bookplate-nov4 prepare bookplate
@@ -517,3 +516,76 @@ Public archive bytes match the prepared offer. Rollback uses the recorded former
 image `utilibre-bookplate:node-security-20261028` (ID `sha256:fa879927df310f82ffd9b80503c74f01f852d9f6c2618062f3f70fb83e00ecd3`)
 and unchanged service configuration; restore the retained previous source offer
 at the same time. Preserve the account database and uploaded data.
+
+
+## Actual, Grist and Kuma dependency-lock replay — 4 November
+
+Three historical dependency recipes now retain repairs already delivered in
+later production layers. Canonical inputs select follow-redirects 1.16.2 in all
+three; Actual and Grist also select Undici 6.29.1, and Actual uses body-parser
+2.4.0. That parser requires a newer qs; npm selected a nested 6.17.1 while the
+application's separately pinned root qs remains unchanged. No other dependency
+entries changed. Remaining lower-severity findings are retained, including the
+root qs observation; this is not clearance of every dependency.
+
+`npm-lock-inputs.json` pins each old/new package and lock hash, the complete
+allowed lock-entry delta, compiler, intermediate base, test-only image and
+reused adapters. The existing Actual replacement helper now preserves the
+parser's nested qs and links its other direct imports to the reviewed tree.
+The normal Express/form/JSON cases verify that real dependency resolution.
+No new package manager, scheduler or repair engine is introduced.
+
+```sh
+# Explicit bounded registry acquisition; no lifecycle scripts or audit upload:
+node deployment/maintenance/security-20261103/npm-lock-replay.mjs download actual
+node deployment/maintenance/security-20261103/npm-lock-replay.mjs download kuma
+node deployment/maintenance/security-20261103/npm-lock-replay.mjs download grist
+# Then, for each of actual, kuma, grist (network disabled):
+node deployment/maintenance/security-20261103/npm-lock-replay.mjs prepare actual
+node deployment/maintenance/security-20261103/npm-lock-replay.mjs check actual
+# Existing native application fixtures:
+python3 deployment/maintenance/npm-leaves/check-actual.py --image utilibre-actual:lock-replay-only-20261104
+node deployment/maintenance/closure-review/check-kuma-rsshub.mjs --lock-nov4
+node deployment/maintenance/sandbox-final/check-grist.mjs utilibre-grist:lock-replay-only-20261104
+```
+
+The canonical files are installed with `npm ci`; no fresh versions resolve during
+replay. Each graph installs successfully both during acquisition and offline.
+Repeated `prepare` validates the exact input hashes, candidate image and completed
+check and returns without rebuilding. That reuses archived evidence, not a fresh
+security assessment. Missing evidence or input drift fails closed. Historical
+builders now reject changed locks before they can overwrite old image tags;
+use this separate replay profile. They do not change any running service.
+
+The same local advisory snapshot shows high/critical source matches fall from
+5 → 0 for Actual, 4 → 0 for Grist and 1 → 0 for Kuma. Bounded native fixtures
+reproduce cross-realm credential forwarding and its correction in all three;
+Undici's custom TLS verification is ignored before and honored afterward;
+Actual's old parser crashes on the trailing-compressed-frame fixture while the
+fixed parser survives. Legitimate requests, ordinary redirects, redirect limits,
+malformed/oversize rejection and each application's earlier library contracts pass.
+
+Actual's isolated Chromium journey creates a fictional budget, exports/imports
+ZIP, syncs/downloads, reloads the balance, rejects unauthenticated access and
+makes zero outside requests. It exercises password mode, not production OIDC or
+bank integrations. Grist's native Deno/Python formula and isolation checks pass,
+including CSV, private documents, two-account access, SQLite export/import,
+deletion and a stopped synthetic database copy/restore. Kuma's fresh local
+setup and authenticated Socket.IO login pass, without production monitors or
+credentials. No real messages or email were sent. An early Grist check correctly
+refused to proceed before its preparation receipt existed; it passed after the
+preparation completed.
+
+Private receipts are in `security-20261103/npm-locks/{actual,kuma,grist}/`.
+The native runner logs point to the existing private fixture reports. Candidate
+containers are removed after testing. Dependency installation/tests use 1 GiB,
+one CPU and a 512 MiB temporary workspace; Grist's application fixture uses 2 GiB.
+The host retains the 8 GiB recovery floor. No load/concurrency estimate is made.
+
+**These three intermediate images are not deployable.** They intentionally
+start from historical bases to verify the original dependency-overlay contract
+and omit later unrelated runtime repairs. `deploymentAllowed: false` is explicit;
+no release/Compose entry is added, and no production image changes. The running
+services retain their newer images and data. Reverting this source-only change
+must not roll those images back. Package sources/licences are retained in the
+native npm artifacts; exact upstream release references are in the manifest.

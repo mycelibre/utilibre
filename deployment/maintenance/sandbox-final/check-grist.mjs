@@ -7,7 +7,8 @@ const oct28=['--oct28-body','--oct28-node'].includes(process.argv[3]),oct22=proc
 const oct28Root='/var/lib/utilibre-maintenance/security-20261028/'+(process.argv[3]==='--oct28-body'?'body/grist-body':'node/grist');
 const dir=fs.mkdtempSync('/var/lib/utilibre-maintenance/sandbox-final-20261011/native-');
 const image=process.argv[2]||'utilibre-grist:1.7.21-deno297-security-20261011';
-if(oct28){const b=JSON.parse(fs.readFileSync(oct28Root+'/build.json'));assert.equal(image,b.candidate);assert(b.passed);}else assert.match(image,/^utilibre-grist:1\.7\.21-[a-z0-9-]+$/);
+if(image==='utilibre-grist:lock-replay-only-20261104'){const b=JSON.parse(fs.readFileSync('/var/lib/utilibre-maintenance/security-20261103/npm-locks/grist/prepare.json'));assert(b.passed&&b.deploymentAllowed===false);assert.equal(cp.execFileSync('docker',['image','inspect','--format','{{.Id}}',image],{encoding:'utf8'}).trim(),b.imageId);}
+else if(oct28){const b=JSON.parse(fs.readFileSync(oct28Root+'/build.json'));assert.equal(image,b.candidate);assert(b.passed);}else assert.match(image,/^utilibre-grist:1\.7\.21-[a-z0-9-]+$/);
 const name='maintenance-grist-pyodide-stage';
 const root=path.resolve('deployment/maintenance/sandbox-final');
 const run=(args,options={})=>cp.execFileSync('docker',args,{encoding:'utf8',timeout:150000,maxBuffer:2*1024**2,stdio:['ignore','pipe','pipe'],...options});

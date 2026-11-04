@@ -1,5 +1,10 @@
 # Grist 1.7.21 native runtime leaves
 
+The canonical dependency inputs were repaired again on 4 November. Use the
+[bounded lock replay](../../security-20261103/README.md#actual-grist-and-kuma-dependency-lock-replay--4-november).
+Historical image tags must not be rebuilt with the newer graph or replace later
+production repairs. The following record describes the October release.
+
 This layer starts from the independently tested Deno 2.9.7/Pyodide sandbox
 image, exact ID guarded by `build.mjs`. It does not restore runsc, change
 sandbox permissions, or remove the wrapper that disables Deno update checks.
