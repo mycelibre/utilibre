@@ -22,7 +22,10 @@
     "python3-cryptography": "host-cryptography-followup/release.mjs",
     "python3-setuptools-whl": "host-python-vendor-followup/release.mjs",
     "python3-urllib3": "closure-followup/urllib3-host.mjs",
-    "qemu-guest-agent": "qga-native-followup/release-host.mjs",
+    "qemu-guest-agent": "security-20261028/qemu-release.mjs",
+    "qemu-utils": "security-20261028/qemu-release.mjs",
+    "libxi6": "security-20261103/host-libraries.mjs",
+    "libsqlite3-0": "security-20261103/host-libraries.mjs",
     "sudo": "sudo-followup/release-host.mjs",
     "vim": "closure-followup/release-host.mjs",
     "vim-common": "closure-followup/release-host.mjs",
@@ -35,6 +38,7 @@
     "docker-ce-rootless-extras": "host-final/release-docker.mjs",
     "containerd.io": "host-final/release-docker.mjs",
     "docker-buildx-plugin": "host-final/release-docker.mjs",
-    "docker-compose-plugin": "host-final/release-docker.mjs"
+    "docker-compose-plugin": "host-final/release-docker.mjs",
+    "python3-oauthlib": "security-20261103/oauth-host.mjs"
   }
 }

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "packages": [
+    {
+      "package": "libxi6",
+      "before": "2:1.8.2-1",
+      "file": "/var/lib/utilibre-maintenance/security-20261103/host-libraries/libxi6_1.8.2-1_amd64.deb",
+      "sha256": "093d0903f35bb7a9f6815180ee040e6951fecf9b66c128cd72f064710210606e",
+      "after": "2:1.8.4-1",
+      "candidateFile": "/var/lib/utilibre-maintenance/security-20261103/remaining/libxi6_1.8.4-1_amd64.deb",
+      "candidateSha256": "f62f837a7decfb7ad99f09e9ebac6ad3412e0b43e155a418b5de241f4cb10cc2",
+      "library": "/usr/lib/x86_64-linux-gnu/libXi.so.6",
+      "librarySha256": "377b4e10b50815e6b2cc1119114776aa8d6138a8479fd57219c82c22813244f5"
+    },
+    {
+      "package": "libsqlite3-0",
+      "before": "3.46.1-7+deb13u2",
+      "file": "/var/lib/utilibre-maintenance/security-20261103/host-libraries/libsqlite3-0_3.46.1-7+deb13u2_amd64.deb",
+      "sha256": "0a459adaffd901109f7811ab65f58e7a957b4907d05539cf3d1184efdcde0468",
+      "after": "3.46.1-7+deb13u2+utilibre1",
+      "candidateFile": "/var/lib/utilibre-maintenance/security-20261103/sqlite/trixie/output/libsqlite3-0_3.46.1-7+deb13u2+utilibre1_amd64.deb",
+      "candidateSha256": "e5a3630c20df23e6de94361c0e0b3e2b1bdcb8ce7f161fb2dc445dd53fc6704a",
+      "library": "/usr/lib/x86_64-linux-gnu/libsqlite3.so.0",
+      "librarySha256": "6b3700005d95d83d10137484815d0bb083ed58f89573e9b623bc6a260dc26439"
+    }
+  ],
+  "scope": "Two unloaded host libraries; no services restarted. Expat remains separate because dbus maps it."
+}

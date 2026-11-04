@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "package": "libxi6",
+  "advisories": [
+    "CVE-2026-109089",
+    "CVE-2026-109090"
+  ],
+  "fixtureRuntime": "sha256:4214c2cc778be6fe46688171acbf574593a5941be42c56398dbbfd3d89682c89",
+  "packages": {
+    "trixie": {
+      "file": "libxi6_1.8.4-1_amd64.deb",
+      "sha256": "f62f837a7decfb7ad99f09e9ebac6ad3412e0b43e155a418b5de241f4cb10cc2",
+      "version": "2:1.8.4-1",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxi/libxi6_1.8.4-1_amd64.deb",
+      "authenticatedIndexSha256": "ad97d6e54d20f79064158c3d347fd01fb566257e742e5386c2071095abfc7317",
+      "signedReleaseSha256": "62314d0a75145a111f6cb2a45ae23acb28ef07941b5ef2ad2aaea2023595fd1d",
+      "packagesSha256": "d7be20ffaf63cce88c782599856701748f5b047e736e5fcc203da45b10a36d54"
+    }
+  },
+  "rows": [
+    {
+      "key": "debian-expanded-penpot-backend",
+      "suite": "trixie",
+      "base": "sha256:439a094b4b0877c79bbf30f003c15e8f5f37e176ca0f7ab6f8de853b92df579d",
+      "oldRef": "utilibre-expanded-penpot-backend:sqlite-rowid-20261103",
+      "candidate": "utilibre-expanded-penpot-backend:libxi184-20261103",
+      "containers": [
+        "utilibre-expanded-penpot-backend-1"
+      ],
+      "installed": "2:1.8.2-1",
+      "version": "2:1.8.4-1"
+    },
+    {
+      "key": "debian-expanded-penpot-exporter",
+      "suite": "trixie",
+      "base": "sha256:4214c2cc778be6fe46688171acbf574593a5941be42c56398dbbfd3d89682c89",
+      "oldRef": "utilibre-expanded-penpot-exporter:sqlite-rowid-20261103",
+      "candidate": "utilibre-expanded-penpot-exporter:libxi184-20261103",
+      "containers": [
+        "utilibre-expanded-penpot-exporter-1"
+      ],
+      "installed": "2:1.8.2-1+dhi1",
+      "version": "2:1.8.4-1"
+    }
+  ],
+  "librarySha256": "377b4e10b50815e6b2cc1119114776aa8d6138a8479fd57219c82c22813244f5"
+}

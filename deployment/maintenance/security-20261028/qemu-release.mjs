@@ -68,7 +68,10 @@ if(!apply){
   const preserve=()=>{assert.deepEqual(packages(),before.otherPackages);assert.equal(others(),before.otherServicePids);assert.deepEqual(config(),before.config);assert.equal(run('dpkg',['--audit']),'');};
   try{
     noBlockUsers();windowGate(read(coordination),Number(service().MainPID));assert(!fs.existsSync('/run/qga.state.isfrozen'));
-    fs.writeFileSync(dir+'/install.log',run('apt-get',['--no-download','--no-install-recommends','-y','install',...candidates])+'\n');
+    // APT --no-download can reject local files outside its archive cache. The
+    // exact two-package dependency simulation above already passed; install
+    // only those authenticated local archives without any fetch mechanism.
+    fs.writeFileSync(dir+'/install.log',run('dpkg',['--force-confold','--install',...candidates])+'\n');
     for(const p of proofs){assert.equal(run('dpkg-query',['-W','-f=${Version}',p.name]),spec.version);assert.deepEqual(actual(p.name),p.payload);}
     const current=service();assert.equal(current.ActiveState,'active');assert.equal(current.SubState,'running');assert(current.MainPID!==start.MainPID);
     assert.equal(sha('/proc/'+current.MainPID+'/exe'),proofs.find(p=>p.name==='qemu-guest-agent').payload.find(p=>p.path==='/usr/sbin/qemu-ga').sha256);
@@ -79,7 +82,7 @@ if(!apply){
     report.status='failed';report.error=String(e.message).slice(0,1000);save();
     try{
       windowGate(read(coordination),Number(start.MainPID));assert(!fs.existsSync('/run/qga.state.isfrozen'));noBlockUsers();
-      fs.writeFileSync(dir+'/rollback.log',run('apt-get',['--no-download','--allow-downgrades','--no-install-recommends','-y','install',...rollback.rows.map(r=>r.file)])+'\n');
+      fs.writeFileSync(dir+'/rollback.log',run('dpkg',['--force-confold','--install',...rollback.rows.map(r=>r.file)])+'\n');
       for(const old of rollback.rows){assert.equal(run('dpkg-query',['-W','-f=${Version}',old.package]),old.version);assert.deepEqual(actual(old.package),old.payload);}
       preserve();assert.equal(service().ActiveState,'active');assert.equal(sha('/proc/'+service().MainPID+'/exe'),native.baselineSha256);report.rollback='Exact previous packages and active agent verified';
     }catch{report.rollback='Not verified; inspect Proxmox console before further agent operations';}

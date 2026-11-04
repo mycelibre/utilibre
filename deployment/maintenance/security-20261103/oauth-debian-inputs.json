@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-118669",
+  "source": "https://github.com/oauthlib/oauthlib/commit/c951a1d09f99f14e3240973fa83c4f4287d4753d",
+  "upstreamPatchSha256": "2d5df8a744e0bbe6efa61b1b886d031204ac83455abe338c56d56fddec084a16",
+  "license": "BSD-3-Clause",
+  "method": "Two-file backport of upstream client identity consistency guard, before grant/scope authorization; retains public API and existing Debian package version.",
+  "patches": [
+    {
+      "file": "oauth-client-binding.patch",
+      "sha256": "3bfe444e2514491955e750d89d916cc7ca7a19de2d71239ca2755ff2e0e1689f"
+    }
+  ],
+  "rows": [
+    {
+      "key": "kuma",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "python": "/usr/bin/python3",
+      "site": "/usr/lib/python3/dist-packages",
+      "base": "sha256:9599c577eb61d392599db1e6007e802422a436f805ed501adba67339bf9ac1ce",
+      "oldRef": "utilibre-community-uptime-kuma:sqlite-rowid-20261103",
+      "candidate": "utilibre-uptime-kuma:oauth-client-binding-20261104",
+      "previous": "3.2.2",
+      "method": "upstream-backport",
+      "files": [
+        {
+          "path": "oauthlib/oauth2/rfc6749/grant_types/client_credentials.py",
+          "beforeSha256": "5abd02a560d5987ac87ce04f4d8a7d4719c84937d8769e528d269102eefbbd46",
+          "afterSha256": "d393e0fa568567a196db0937a8c003f75996591fc3ff833d3310cc2fb7504d2d"
+        },
+        {
+          "path": "oauthlib/oauth2/rfc6749/grant_types/resource_owner_password_credentials.py",
+          "beforeSha256": "f45b036eb48d3729562a412f81d69f243ce53677134423a1219383a3e7f86483",
+          "afterSha256": "7e07e95b2335996567c68c358ebb59c3a16c83cf2c6efcdc7f2b7a701f534f85"
+        }
+      ]
+    }
+  ],
+  "host": {
+    "package": "python3-oauthlib",
+    "version": "3.2.2-3",
+    "files": [
+      {
+        "path": "oauthlib/oauth2/rfc6749/grant_types/client_credentials.py",
+        "beforeSha256": "5abd02a560d5987ac87ce04f4d8a7d4719c84937d8769e528d269102eefbbd46",
+        "afterSha256": "d393e0fa568567a196db0937a8c003f75996591fc3ff833d3310cc2fb7504d2d"
+      },
+      {
+        "path": "oauthlib/oauth2/rfc6749/grant_types/resource_owner_password_credentials.py",
+        "beforeSha256": "f45b036eb48d3729562a412f81d69f243ce53677134423a1219383a3e7f86483",
+        "afterSha256": "7e07e95b2335996567c68c358ebb59c3a16c83cf2c6efcdc7f2b7a701f534f85"
+      }
+    ]
+  },
+  "limitations": "Only client_credentials/password identity binding. Other OAuthlib advisories and API changes are not claimed fixed."
+}

@@ -1,0 +1,28 @@
+{
+  "version": "2:1.8.4-1",
+  "origin": "https://deb.debian.org/debian/pool/main/libx/libxi/",
+  "files": [
+    {
+      "file": "libxi_1.8.4-1.dsc",
+      "sha256": "82025749283a2231866439499d86655c82f8154ae26d8b20ce1c18fe034f596f",
+      "bytes": 2068
+    },
+    {
+      "file": "libxi_1.8.4.orig.tar.xz",
+      "sha256": "ddd6057b89a91903bc2f884d55c8467440906945e482c36547260dff28661afc",
+      "bytes": 422212
+    },
+    {
+      "file": "libxi_1.8.4-1.debian.tar.xz",
+      "sha256": "9720c170c270c313be1c4422cc2ac8a1eb5872dbf943603a7f012a64f2bf1bff",
+      "bytes": 23348
+    }
+  ],
+  "sourceIndexSha256": "52faa9bcd7cac272f68b76cd001e5e1045352be74338659a6458fe53fcc8d735",
+  "fixes": [
+    "https://security-tracker.debian.org/tracker/CVE-2026-109089",
+    "https://security-tracker.debian.org/tracker/CVE-2026-109090"
+  ],
+  "license": "X11/MIT, original notices retained",
+  "localSourceChanges": false
+}

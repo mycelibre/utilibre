@@ -1,0 +1,28 @@
+--- a/oauthlib/oauth2/rfc6749/grant_types/client_credentials.py
++++ b/oauthlib/oauth2/rfc6749/grant_types/client_credentials.py
+@@ -112,6 +112,11 @@
+                 raise NotImplementedError('Authenticate client must set the '
+                                           'request.client.client_id attribute '
+                                           'in authenticate_client.')
++        if not request.client_id:
++            request.client_id = request.client.client_id
++        elif request.client_id != request.client.client_id:
++            raise errors.ServerError('Discrepency found between client identifier')
++
+         # Ensure client is authorized use of this grant type
+         self.validate_grant_type(request)
+ 
+--- a/oauthlib/oauth2/rfc6749/grant_types/resource_owner_password_credentials.py
++++ b/oauthlib/oauth2/rfc6749/grant_types/resource_owner_password_credentials.py
+@@ -188,6 +188,11 @@
+                     'in authenticate_client.')
+         log.debug('Authorizing access to user %r.', request.user)
+ 
++        if not request.client_id:
++            request.client_id = request.client.client_id
++        elif request.client_id != request.client.client_id:
++            raise errors.ServerError('Discrepency found between client identifier')
++
+         # Ensure client is authorized use of this grant type
+         self.validate_grant_type(request)
+ 

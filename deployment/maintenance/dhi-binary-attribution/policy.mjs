@@ -11,7 +11,7 @@ export const exporterAfter='sha256:415f223b6b456bb5d39ad772b71ad379b21ef7bcb1c16
 export const exporterCurrent='sha256:913dc9b1408f34c6ff723e6068d7cbefa0840f2fc3a52317199671bd925d0020';
 export const novemberImages={
  'utilibre-expanded-penpot-frontend-1':'sha256:1de219422d2ffe879f990f0a780f41c5abd2433c10d3d71ed8a0404ef2ea679f',
- 'utilibre-expanded-penpot-exporter-1':'sha256:4214c2cc778be6fe46688171acbf574593a5941be42c56398dbbfd3d89682c89',
+ 'utilibre-expanded-penpot-exporter-1':'sha256:a56172fb170d7e91574401b1703e77f8e1c32e1a86694348c0a93f806ab78a13',
 };
 export const restrictedXvfb='620f43dd4999c7602e86730c208e2c78f0007170451669fb9220f1a0a32c4891';
 export const archives=Object.freeze({

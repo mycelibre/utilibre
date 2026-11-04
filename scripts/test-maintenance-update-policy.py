@@ -57,13 +57,16 @@ class PolicyTests(unittest.TestCase):
         for wrong in ['libpython3x13', 'libpython3.13-other', 'libc1', 'prefixlibc++1']:
             self.assertFalse(any(re.fullmatch(p, wrong) for p in patterns))
 
-    def test_guest_agent_stays_reviewed_after_vendor_version_replaces_local_suffix(self):
+    def test_qemu_packages_stay_reviewed_after_vendor_version_replaces_local_suffix(self):
         policy = json.loads(m.POLICY.read_text())
         rows = m.protected_packages('qemu-guest-agent\t1:10.0.13+ds-0+deb13u2\tinstalled\n', policy)
         self.assertEqual(len(rows), 1)
-        self.assertEqual(rows[0]['recipe'], 'qga-native-followup/release-host.mjs')
+        self.assertEqual(rows[0]['recipe'], 'security-20261028/qemu-release.mjs')
         self.assertEqual(rows[0]['reason'], 'reviewed-native-package')
-        self.assertNotIn('qemu-utils', policy['packages'])
+        rows = m.protected_packages('qemu-utils\t1:11.1.2+ds-3~bpo13+4\tinstalled\n', policy)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]['recipe'], 'security-20261028/qemu-release.mjs')
+        self.assertEqual(rows[0]['reason'], 'reviewed-native-package')
 
     def test_coupled_ssh_packages_remain_protected_without_local_version_suffix(self):
         policy = json.loads(m.POLICY.read_text())

@@ -115,5 +115,7 @@ export const additionalOverlayReceipts = [
   'security-20261103/pyasn1/release.json',
   'security-20261103/redirects/release.json',
   'security-20261103/sqlite/release.json',
+  'security-20261103/libxi/release.json',
+ 'security-20261103/oauth-debian/release.json',
   'security-20261103/js-nov/release.json',
 ];

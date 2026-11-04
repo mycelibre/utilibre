@@ -1,5 +1,18 @@
 # Operator work queue — reconciled 12 October 2026
 
+## Current security checkpoint — 4 November 2026
+
+QEMU guest-agent/utility, Penpot libXi, host SQLite/libXi and Kuma/host OAuthlib
+repairs are deployed and verified. The operator confirmed Proxmox ping and
+`thawed`; that maintenance window has ended. The complete 00:19 UTC scan and
+exact revalidation leave **0 critical / 77 high package-target records pending**,
+with raw findings retained. This is not completion of all security work.
+
+[Release evidence, remaining categories and rollback](records/security-maintenance-2026-11-04.md).
+Older counts and pending entries below are historical checkpoints; use this
+record and the private current queue for this release's status.
+
+
 ## Critical dependency checkpoint, 24 October 2026
 
 DeGoog's PHP update and the Opengist/Vikunja Echo dependency repairs are deployed

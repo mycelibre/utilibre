@@ -1,0 +1,46 @@
+{
+  "version": "1:11.1.2+ds-3~bpo13+4",
+  "signedReleaseSha256": "23b4c1cb2ecc782ac7b63ff959f473d12cb7969e16b3a753227403ae8612483d",
+  "sourceIndexSha256": "a375ba9d3da23310ce8ebc18446ccd213f1280bbcea84a5d5c85f524ed5519d5",
+  "files": [
+    {
+      "file": "qemu_11.1.2+ds-3~bpo13+4.dsc",
+      "sha256": "61f2cbf70394b28b43a6b616543bc0aa731ac7d89b3b29bb8a3bac096b4adf68",
+      "bytes": 9961
+    },
+    {
+      "file": "qemu_11.1.2+ds.orig.tar.xz",
+      "sha256": "4f41c3df35a86d2497f842a585b014fe5aef45ceec6450e61615f0164ca39761",
+      "bytes": 39228664
+    },
+    {
+      "file": "qemu_11.1.2+ds-3~bpo13+4.debian.tar.xz",
+      "sha256": "dfa900b2114510880204c315bd5f84ee99e8cf228d61bcaf649571c80ff771a8",
+      "bytes": 143364
+    }
+  ],
+  "sourceFiles": {
+    "meson.build": "3004c62b35a0e68c00a0a922c92052c6c50fccb0d95b477b9fffe7a521e0ac6b",
+    "qga/meson.build": "553b6c1f3f08112f50e945cfdd89b73e0826c2eb755e4080294b13d976665a0e",
+    "storage-daemon/meson.build": "6de019d028f1f97ccb31b50d8ffc648eb62a3e2b855c97ca5bd34b0ce92d8130",
+    "hw/sd/meson.build": "2a63186b1c321e152e383d291fa281abed458115459f5d432904cfe1fbf55792",
+    "hw/9pfs/meson.build": "e2731fa7602381867ab5532fa2de44c79fa919557e50671c8b1d8de7404d5316",
+    "debian/qemu-utils.install": "5496c0eb5210ca169cee0bf871ee2059ef6d25937bd02bdec9d2712dc1ca9429",
+    "debian/qemu-guest-agent.install": "ceff585135cfa397b8528486af8150a8de45e5ef7d02277ea3bd300a3b7cc0dc"
+  },
+  "advisories": [
+    "CVE-2022-3872",
+    "CVE-2023-1386"
+  ],
+  "elfFiles": {
+    "qemu-guest-agent": [
+      "/usr/sbin/qemu-ga"
+    ],
+    "qemu-utils": [
+      "/usr/bin/qemu-img",
+      "/usr/bin/qemu-io",
+      "/usr/bin/qemu-nbd",
+      "/usr/bin/qemu-storage-daemon"
+    ]
+  }
+}

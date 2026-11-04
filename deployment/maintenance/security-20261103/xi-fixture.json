@@ -1,0 +1,18 @@
+{
+  "compiler": "sha256:4cd9da5932965ac14ee70f3bd11c80acee56147ab4b2b638552aeee756815a49",
+  "sourceSha256": "f5c9fd45eb198d608c1e536ed494afcf90ef22b059fcab49e7e16d3ca5b9f975",
+  "binarySha256": "58f481dab3d6b9497a65f1adacc7a79728506911f166c4806e75ea5cf3998931",
+  "arguments": [
+    "gcc",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-O2",
+    "/recipe.c",
+    "-ldl",
+    "-o",
+    "/fixture/native"
+  ],
+  "network": "none",
+  "scope": "XInput 1/2 device discovery, allocation/free and protocol-version negotiation through isolated Xvfb. No malicious-server exploit reproduction."
+}

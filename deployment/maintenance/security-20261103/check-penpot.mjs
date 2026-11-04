@@ -3,8 +3,10 @@ import fs from 'node:fs';
 import cp from 'node:child_process';
 import assert from 'node:assert/strict';
 process.umask(0o077);
-const root='/var/lib/utilibre-maintenance/security-20261103/expat-debian';
-const inputs=JSON.parse(fs.readFileSync(new URL('./expat-debian-inputs.json',import.meta.url)));
+assert(process.argv.length===2||(process.argv.length===3&&process.argv[2]==='--libxi'));
+const profile=process.argv[2]==='--libxi'?'libxi':'expat-debian';
+const root='/var/lib/utilibre-maintenance/security-20261103/'+profile;
+const inputs=JSON.parse(fs.readFileSync(new URL('./'+profile+'-inputs.json',import.meta.url)));
 const limits=['run','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--cpus','1','--memory','768m','--memory-swap','768m','--pids-limit','96','--ulimit','core=0','--log-driver','none','--tmpfs','/tmp:rw,size=96m,mode=1777'];
 const run=args=>cp.execFileSync('docker',args,{encoding:'utf8',timeout:120000,maxBuffer:2*1024**2,stdio:['ignore','pipe','pipe']}).trim();
 for(const role of ['backend','exporter']){

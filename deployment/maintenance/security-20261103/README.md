@@ -49,7 +49,7 @@ node deployment/maintenance/security-20261028/release-brotli.mjs --batch-2026110
 node deployment/maintenance/security-20261028/release-brotli.mjs --batch-20261103 --PROFILE apply KEY
 ```
 
-`PROFILE` is one of `expat`, `expat-debian`, `pyasn1`, `redirects`, `sqlite`, `js-nov`.
+`PROFILE` is one of `expat`, `expat-debian`, `pyasn1`, `redirects`, `sqlite`, `js-nov`, `libxi`, `oauth-debian`.
 The Alpine input rows list their individual `releaseGroups` keys; these differ
 from shared image build keys. Toolbox Compose rendering needs the existing
 `APP_BIND_IP`, obtained from the deployed configuration, not a guessed address.
@@ -121,6 +121,80 @@ The two source builds pass ASan/UBSan, 87 DISTINCT tests each, 18/30 prefix test
 and six integrity tests each. Future clean replay runs all suites together;
 Bookworm's integrity suite was checked separately before finalizing this run.
 Byte-identical build output is not claimed.
+
+## 4 November continuation: deployed and verified
+
+The [release checkpoint](../../../docs/records/security-maintenance-2026-11-04.md)
+separates completed repairs from remaining findings. Preserve the private
+receipts referenced below; a successful historical replay is not a fresh scan.
+
+- **QEMU guest agent and utilities:** authenticated Debian Backports
+  `1:11.1.2+ds-3~bpo13+4`, using the existing `../security-20261028/qemu-release.mjs`
+  transaction. Dependency simulation precedes installation of the two exact local
+  archives with `dpkg`; there is no dependency download during activation.
+  The first APT local-file attempt failed without installing, and its evidence
+  remains. The later release passed; the operator confirmed Proxmox ping and
+  `thawed`. That maintenance window is now closed. Further agent operations need
+  a new window. `review-qemu.mjs` checks vendor-fixed versions against exact
+  installed payloads. `review-qemu-components.mjs` separately proves that four
+  SDHCI/9p records concern emulator components absent from these two packages,
+  using the authenticated matching source/build graph and complete payloads.
+  Neither review clears the separate Proxmox hypervisor.
+- **Penpot libXi:** `libxi-inputs.json` pins official Debian `2:1.8.4-1` and
+  the backend/exporter predecessor images. The existing `brotli.mjs --batch-20261103
+  --libxi KEY` adapter prepares candidates. `check-xi.mjs`, `check-penpot.mjs
+  --libxi`, same-database scans and ordinary release gates verify them. Fourteen
+  native XInput checks per old/new image and ABI/dependency checks pass. This is
+  not a malicious-X-server exploit reproduction. Source provenance and runtime
+  bytes, including Penpot's private library paths, are retained.
+- **Host libXi and SQLite:** `host-library-inputs.json` and `host-libraries.mjs
+  prepare/apply` restrict the transaction to those two packages, verify exact
+  rollback archives and reject resident consumers. SQLite's existing sanitizer,
+  DISTINCT and FTS repairs are preserved. Native queries, synthetic backup/restore
+  and corrupt-FTS rejection pass. No service was restarted. Expat is deliberately
+  separate because it has resident host consumers.
+- **OAuthlib:** `oauth-debian-inputs.json` and `oauth-client-binding.patch`
+  backport upstream commit `c951a1d09f99f14e3240973fa83c4f4287d4753d` onto the exact
+  two Debian 3.2.2 grant files. Both client-credentials and password-grant identity
+  escalation reproduce in the old fixture and are rejected after repair. Thirteen
+  checks retain legitimate clients, credentials, scopes and OAuth1 behavior.
+  `oauth-debian.mjs` prepares Kuma with two COPY layers and no resolver or RUN
+  command. `check-oauth-debian-app.mjs` reuses the existing native Kuma test;
+  authenticated Socket.IO, synthetic persistence and native crypto/Apprise checks
+  pass without sending notifications. `oauth-host.mjs prepare/apply` tests the
+  real cloud-init OAuth signing function offline and changes only the two source
+  files. It never runs cloud-init or restarts a service. A repeated host apply
+  verifies the already-correct bytes and makes no changes.
+
+Kuma's deployed image is
+`utilibre-uptime-kuma:oauth-client-binding-20261104`, immutable ID
+`sha256:80a9866dd3ffcd6716ff0b644b9b39ebe21a3a1aa6aaf1870fababf8969dec6b`.
+The complete native application/release evidence is under `oauth-debian/`;
+host evidence is `oauth-debian/host/`. Only the named OAuth advisory is covered.
+The Debian version label remains unchanged; scanner findings are retained and
+`review-oauth-debian.mjs` requires exact current bytes before proposing a bounded
+mitigation. This is intentionally not a fabricated upstream package version.
+
+The host update policy protects these packages from unattended replacement.
+A manual OAuthlib reinstall can overwrite the backport: re-run its pinned
+recipe and checks before release. Its archive/file-hash manifest is the replay
+entry point; the older Git-only `source-patches.json` format cannot represent an
+extracted Debian binary package. Do not invent a Git revision to register it.
+
+Supplementary code-only source offers, alongside the full application sources:
+
+- [libXi source](https://tools.utilibre.org/utilibre-source/libxi-184-20261103-source.tar.gz):
+  473,994 bytes, SHA256 `f3405c3c04713cfc53f89bf034b652bd497a2615aa2a04680dbff19ceda74b28`.
+- [OAuthlib source and backport](https://tools.utilibre.org/utilibre-source/oauth-client-binding-20261104-source.tar.gz):
+  131,971 bytes, SHA256 `f29a0ef0c52d14304c416d90948fc188da23eaad48aa8d064418c405cddf626a`.
+
+These changes introduce no database migration. Keep prior image pins and native
+archives. Host OAuth rollback restores the two original files from its protected
+receipt directory after verifying the currently installed postcondition; it does
+not restore a database. QEMU rollback restarts the guest agent and therefore
+requires another coordinated, thawed maintenance window. Host package rollback
+must recheck resident consumers and dependency compatibility; do not copy a
+shared library over a running process and call it restored.
 
 The Seroval tests do not evaluate injected code. Joi uses a small invalid-input
 case and checks the upstream whitespace guard; it is not a load benchmark.
