@@ -1,8 +1,51 @@
 # Security maintenance — 4 November 2026
 
-Latest checkpoint: 12:12 UTC. Earlier sections are chronological evidence, not
+Latest checkpoint: 13:09 UTC. Earlier sections are chronological evidence, not
 the current unresolved queue. This is not a claim that all findings are resolved.
 No user documents, credentials or detailed scan inventories are published here.
+
+## 13:09 UTC — HEIF repair deployed; exact reviews completed
+
+Gathio's database now uses libheif **1.23.7-0+utilibre1~deb12**, deployed at
+12:50 UTC. The upgrade preserves all five earlier HEIF fixes. Testing caught an
+upstream metadata round-trip regression; one small compatibility patch preserves
+older zlib-wrapped metadata while retaining the new decompression limits. The
+unmodified candidate's intended compression failure and repaired old/new file
+checks are retained. No database migration or user-content inspection occurred.
+
+Verification includes 38 passing upstream test programs and 12 explicit skips,
+old-header HEVC/AV1 pixels and alpha, GDAL HEIC/AVIF and all 210 drivers, native
+PostGIS/DocumentDB, synthetic dump/restore and account permissions. Internal tests
+excluded by the production visibility/codec configuration are not claimed.
+The candidate scan adds no high/critical records. Only the database container
+was recreated; native and application health checks passed. Complete source is
+published and its public download/hash verified.
+
+The **12:52:19 UTC** scan completed across 109 images / 175 containers, 83 source
+inventories and 508 host packages. With exact reviews complete, the queue is
+**0 critical / 36 high pending**, down from 38 high. The remaining high records
+are 30 ACL, five GRUB and one Python-Markdown. ACL/GRUB still face the earlier
+automatic security-review restriction; Python-Markdown has no verified compatible
+repair. Twelve medium HEIF records are also resolved. Remaining lower levels are
+5,107 medium, 5,449 low and 947 unknown; they were not cleared wholesale.
+
+Raw scanner observations remain 24,403, including 65 critical / 2,912 high.
+3,114 exact reviews were recorded, mostly revalidating earlier fixes or component
+attribution after the image change. They are not thousands of new vulnerabilities
+or new patches. The same advisory snapshot was used before and after. Reviewed
+records retain their seven-day expiry and exact image/package scope.
+
+The existing triage recorder now supports bounded batches of already-reviewed
+decisions, avoiding hundreds of redundant full-queue rewrites. All entries are
+validated before a single atomic ledger write. Stale/changed scans, duplicate or
+unknown entries, invalid expiry and concurrent writers are rejected. No scanner
+output can approve itself. Seventy focused policy/CLI/maintenance checks pass.
+The compiler is stopped; no host reboot, SSH/guest-agent activation, email or
+indexing submission occurred.
+
+[Exact artifacts, source, commands, limitations and rollback](../../deployment/maintenance/security-20261104/README.md#gathio-heif-upgrade--deployed-1250-utc).
+Private receipts are under `security-20261104/heif-upgrade/`; the final count is
+in `final-checkpoint.json`. Earlier sections below remain historical evidence.
 
 ## 12:12 UTC — relay repair and refreshed assessment
 

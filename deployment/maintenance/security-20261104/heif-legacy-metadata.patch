@@ -1,0 +1,20 @@
+--- a/libheif/compression_zlib.cc
++++ b/libheif/compression_zlib.cc
+@@ -223,6 +223,16 @@
+                                                 uint64_t max_output_size,
+                                                 MetadataDecompressionBudget* work_budget)
+ {
+-  return do_inflate(compressed_input, -15, limits, max_output_size, work_budget);
++  auto result = do_inflate(compressed_input, -15, limits, max_output_size, work_budget);
++  // libheif's existing XMP writer (including 1.15.1) writes a zlib wrapper
++  // labelled "deflate". Preserve those files, but never retry a limit failure.
++  // Both attempts share the same bounded decompression-work accounting.
++  if (!result && result.error().sub_error_code == heif_suberror_Decompression_invalid_data &&
++      compressed_input.size() >= 2 && (compressed_input[0] & 15) == 8 &&
++      (compressed_input[0] >> 4) <= 7 && (compressed_input[1] & 32) == 0 &&
++      ((unsigned(compressed_input[0]) << 8) + compressed_input[1]) % 31 == 0) {
++    return do_inflate(compressed_input, 15, limits, max_output_size, work_budget);
++  }
++  return result;
+ }
+ #endif

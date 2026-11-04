@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "retrievedAt": "2026-11-04",
+  "sourceFileSha256": "8f81e61fd8ec6d805e6383655e3f206f272c78f6c93566b4db70d5a6bfbfeced",
+  "advisories": [
+    {
+      "id": "CVE-2025-68431",
+      "ghsa": "GHSA-j87x-4gmq-cqfq",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-j87x-4gmq-cqfq",
+      "fixed": "1.21.0",
+      "advisorySha256": "b682183700aba27236108262700abc998551014c45033566e466ba662c102adf"
+    },
+    {
+      "id": "CVE-2026-120208",
+      "ghsa": "GHSA-x8r2-mggj-j6wr",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-x8r2-mggj-j6wr",
+      "fixed": "1.23.3",
+      "advisorySha256": "241d36b39cb130018a7e8dc9619ccc177b2693cd313f11f9e5953150b0aeabb9"
+    },
+    {
+      "id": "CVE-2026-32740",
+      "ghsa": "GHSA-frfr-f3vg-2g6j",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-frfr-f3vg-2g6j",
+      "fixed": "1.22.0",
+      "advisorySha256": "219060693a56ac284d51b8216c46fe50c4b3ee55c63996467d7063efcc0d3443"
+    },
+    {
+      "id": "CVE-2026-32741",
+      "ghsa": "GHSA-j3w5-7whq-p37q",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-j3w5-7whq-p37q",
+      "fixed": "1.22.0",
+      "advisorySha256": "92ca4137f9eeb56547fb3140b76f9b8906399d0754715609bd3e275ed089bf64"
+    },
+    {
+      "id": "CVE-2026-32882",
+      "ghsa": "GHSA-hg7q-rjr2-8x46",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-hg7q-rjr2-8x46",
+      "fixed": "v1.22.0",
+      "advisorySha256": "d072d12215794c55cdd976f7148b91b5e7c52059f6c7ddec8b3034fc3e07207a"
+    },
+    {
+      "id": "CVE-2026-41071",
+      "ghsa": "GHSA-xj92-xjff-h8w3",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-xj92-xjff-h8w3",
+      "fixed": "v1.22.0",
+      "advisorySha256": "8707a4716dbcfe0b8fb3e7ed64d2ebb849d0aba1c52a7ee8e3da833906c5b892"
+    },
+    {
+      "id": "CVE-2026-47178",
+      "ghsa": "GHSA-5x55-x5pf-9c6g",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-5x55-x5pf-9c6g",
+      "fixed": "1.22.0",
+      "advisorySha256": "16c93499e3610e01816c698ec081112c478a6d1d199058c36a7e317c038cedb8"
+    },
+    {
+      "id": "CVE-2026-50142",
+      "ghsa": "GHSA-jvmp-j3cw-84mh",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-jvmp-j3cw-84mh",
+      "fixed": ">= v1.23.0",
+      "advisorySha256": "b38073a8c341768f0424d72ca5729074c4b51474a04af8f25e629dd100d0e9e6"
+    },
+    {
+      "id": "CVE-2026-62289",
+      "ghsa": "GHSA-jc8f-p23p-5hjg",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-jc8f-p23p-5hjg",
+      "fixed": "v1.23.1",
+      "advisorySha256": "dd2c6add0d2962f0dbe84a250c246e0ac948e1d4de8cdf1d0d8aa0053722fcbb"
+    },
+    {
+      "id": "CVE-2026-62292",
+      "ghsa": "GHSA-73p7-m7gg-w2jv",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-73p7-m7gg-w2jv",
+      "fixed": "v1.23.3",
+      "advisorySha256": "5576d2551417cd8d50259d685a89b5938b066872a5d73a8eab072841a9d30160"
+    },
+    {
+      "id": "CVE-2026-84384",
+      "ghsa": "GHSA-24wx-9w62-c96w",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-24wx-9w62-c96w",
+      "fixed": "1.23.2",
+      "advisorySha256": "7e60406cb4bb890b12a3a66abef6c802ab97d7da1deeb66ec80b0aed35eccce4"
+    },
+    {
+      "id": "CVE-2026-84444",
+      "ghsa": "GHSA-j264-xvrp-5v7q",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-j264-xvrp-5v7q",
+      "fixed": "1.23.2",
+      "advisorySha256": "41a5d1fac7d66a2a8065d6db7258dbd50c5d9e632cfdd7102c13cea70420654f"
+    },
+    {
+      "id": "CVE-2026-84446",
+      "ghsa": "GHSA-xw34-mjcp-jqh8",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-xw34-mjcp-jqh8",
+      "fixed": "1.23.2",
+      "advisorySha256": "62cd036633c115aaba341f977bd7e1e15409b2530dc4a070a7b613e803db1aaf"
+    },
+    {
+      "id": "CVE-2026-84447",
+      "ghsa": "GHSA-x8xm-cm2c-cfc8",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-x8xm-cm2c-cfc8",
+      "fixed": "1.23.2",
+      "advisorySha256": "dd6dcc5b173841ee5de6ee31a017e663c6672f7549c087d2ef4dce48404615d7"
+    },
+    {
+      "id": "CVE-2026-84450",
+      "ghsa": "GHSA-gh5q-69gg-c964",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-gh5q-69gg-c964",
+      "fixed": "1.23.3",
+      "advisorySha256": "4558a829ca919a13e031b6790c27601727678bb644ff5c8a9a5fad7707038282"
+    },
+    {
+      "id": "CVE-2026-84451",
+      "ghsa": "GHSA-hh47-fhqr-cj2r",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-hh47-fhqr-cj2r",
+      "fixed": "1.23.3",
+      "advisorySha256": "d3a04b2e26668b4fbd84a7d851f48c7860f8dca3bfe84e6ed8a1176c9e754339"
+    },
+    {
+      "id": "CVE-2026-32738",
+      "ghsa": "GHSA-7f2h-cmpf-v9ww",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-7f2h-cmpf-v9ww",
+      "fixed": "v1.22.0",
+      "advisorySha256": "d519f87dde6d20ed49b984a4cffa8c0828e2d1a91be00283b1834c4c938d9e26"
+    },
+    {
+      "id": "CVE-2026-32739",
+      "ghsa": "GHSA-j9g7-q9hv-gq8c",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-j9g7-q9hv-gq8c",
+      "fixed": "v1.22.0",
+      "advisorySha256": "54702e0d81c54f4cdf4507010b0dc94d71253556536ad50d373ebe4ebe8fcb59"
+    },
+    {
+      "id": "CVE-2026-32814",
+      "ghsa": "GHSA-4m8r-34pg-rvwc",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-4m8r-34pg-rvwc",
+      "fixed": "v1.22.0",
+      "advisorySha256": "87b35e65dc1c4d7d76c1544eda01534ce84ae6897b0d20727c5d9d922e0589b2"
+    },
+    {
+      "id": "CVE-2026-41069",
+      "ghsa": "GHSA-p82x-fpmv-576r",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-p82x-fpmv-576r",
+      "fixed": "v1.22.0",
+      "advisorySha256": "9f997117df3ee6f1a225ecec9cf69ee4a8518570d4f636b4e0ec0d57f9e635ae"
+    },
+    {
+      "id": "CVE-2026-47247",
+      "ghsa": "GHSA-2vh6-whr3-cmq3",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-2vh6-whr3-cmq3",
+      "fixed": "v1.22.0",
+      "advisorySha256": "dd66ff128f990c356a0bfa713ad3017eab0088cf04de577e00b2e8358b6ea988"
+    },
+    {
+      "id": "CVE-2026-47254",
+      "ghsa": "GHSA-wqjg-4x9g-6cvg",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-wqjg-4x9g-6cvg",
+      "fixed": "v1.22.0",
+      "advisorySha256": "91bc92d74723413eb0c358a99852eeb5b80a4f9f7c9afeacf832358d8ba9d907"
+    },
+    {
+      "id": "CVE-2026-47709",
+      "ghsa": "GHSA-4h72-vqgp-9376",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-4h72-vqgp-9376",
+      "fixed": "v1.22.0",
+      "advisorySha256": "7aec2154b6fde7c223b4a610ef9ea848179263dda0198b815e245ba1ab740e40"
+    },
+    {
+      "id": "CVE-2026-47714",
+      "ghsa": "GHSA-h4wm-6wwf-qvhx",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-h4wm-6wwf-qvhx",
+      "fixed": "v1.22.0",
+      "advisorySha256": "b752acd6991c43a0c7e1f797690ca1ac7e78b30589a1fcdabf17869cd56ed48c"
+    },
+    {
+      "id": "CVE-2026-48029",
+      "ghsa": "GHSA-6x5f-qchq-cxqv",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-6x5f-qchq-cxqv",
+      "fixed": "v1.22.0",
+      "advisorySha256": "ea22e3a3af0ff7756825c53e2786baa30e62e4f15e86ce999892b5f22a7d206d"
+    },
+    {
+      "id": "CVE-2026-49271",
+      "ghsa": "GHSA-r7qj-cg5r-r6vf",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-r7qj-cg5r-r6vf",
+      "fixed": "1.22.1",
+      "advisorySha256": "f7b3567f2da0cb64dc927ac1f27093ca9444b38b65e38051d575b3ad4a318252"
+    },
+    {
+      "id": "CVE-2026-84448",
+      "ghsa": "GHSA-p58j-h3vm-3fp5",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-p58j-h3vm-3fp5",
+      "fixed": "1.23.2",
+      "advisorySha256": "5d8499ab15ef29ccd8bcb6f26cc6f10008cf417ed00d81a75b7042ff0ed85119"
+    },
+    {
+      "id": "CVE-2026-84449",
+      "ghsa": "GHSA-2c3g-p585-8rpq",
+      "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-2c3g-p585-8rpq",
+      "fixed": "1.19.6",
+      "advisorySha256": "7e8ba0c880457fb45a3bc969823cbf16894a0b56c725f7a9d82d0e078f96d2f1"
+    }
+  ]
+}

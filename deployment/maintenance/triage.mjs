@@ -1,5 +1,5 @@
 // Operator-only review records. No wildcard/indefinite suppression or auto-approval.
-import {readFile,writeFile,rename} from 'node:fs/promises';
+import {readFile,writeFile,rename,open,rm,stat} from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
 const directory='/var/lib/utilibre-maintenance';
 export function validateDecision(value,now=Date.now()){
@@ -8,6 +8,20 @@ export function validateDecision(value,now=Date.now()){
  const expiry=Date.parse(value.expiresAt);
  if(!Number.isFinite(expiry)||expiry<=now||expiry>now+30*86400000)throw Error('Review expiry must be in the next 30 days');
  return {key:value.key,status:value.status,reason:value.reason.trim(),expiresAt:new Date(expiry).toISOString(),reviewedAt:new Date(now).toISOString()};
+}
+// Operator-reviewed exact decisions only. Validate the entire set before any
+// write, so one invalid/stale entry cannot leave a partially accepted batch.
+export function validateBatch(value,queue,now=Date.now()){
+ if(value?.schemaVersion!==1||queue.status!=='current'||value.scanDate!==queue.scanDate||
+    !Number.isFinite(Date.parse(value.scanDate))||Date.parse(value.scanDate)>now||now-Date.parse(value.scanDate)>86400000)
+  throw Error('Batch requires the exact current, completed scan from the last 24 hours');
+ if(!Array.isArray(value.decisions)||!value.decisions.length||value.decisions.length>5000)throw Error('Batch needs 1–5000 reviewed decisions');
+ const known=new Map(queue.items.map(i=>[i.key,i])),seen=new Set();
+ return value.decisions.map(row=>{
+  const d=validateDecision(row,now),item=known.get(d.key);
+  if(!item||item.status==='not-rechecked'||seen.has(d.key))throw Error('Unknown, unverified or duplicate batch finding');
+  seen.add(d.key);return d;
+ });
 }
 export function applyDecisions(items,decisions,now=Date.now()){
  const byKey=new Map(decisions.map(x=>[x.key,x]));
@@ -30,15 +44,23 @@ export async function run(args=process.argv.slice(2)){
  if(args[0]==='list'&&args.length===1){
   console.log(JSON.stringify(queue.items.filter(x=>['CRITICAL','HIGH'].includes(x.severity)),null,2));return;
  }
- if(args[0]!=='record'||args.length!==2)throw Error('Use: node deployment/maintenance/triage.mjs list | record /absolute/review.json');
+ if(!['record','record-batch'].includes(args[0])||args.length!==2)throw Error('Use: node deployment/maintenance/triage.mjs list | record | record-batch /absolute/review.json');
  if(!args[1].startsWith('/'))throw Error('Use an absolute private review-file path');
- const decision=validateDecision(JSON.parse(await readFile(args[1],'utf8')));
- if(!queue.items.some(x=>x.key===decision.key))throw Error('Finding is not in the current queue');
+ let lock;try{lock=await open(directory+'/triage-write.lock','wx',0o600);}catch(error){if(error.code==='EEXIST')throw Error('Review writer locked; verify no writer is running before removing a stale triage-write.lock');throw error;}
+ try{
+ await lock.writeFile(JSON.stringify({pid:process.pid,date:new Date().toISOString()})+'\n');
+ if((await stat(args[1])).size>8*1024**2)throw Error('Review file exceeds 8 MiB');
+ const text=await readFile(args[1],'utf8');if(Buffer.byteLength(text)>8*1024**2)throw Error('Review file exceeds 8 MiB');
+ const value=JSON.parse(text),batch=args[0]==='record-batch';
+ const accepted=batch?validateBatch(value,queue):[validateDecision(value)];
+ if(accepted.some(d=>!queue.items.some(x=>x.key===d.key)))throw Error('Finding is not in the current queue');
+ if(batch){const scan=JSON.parse(await readFile(directory+'/security.json','utf8'));if(scan.status!=='checked'||scan.completedAt!==value.scanDate)throw Error('Scan changed; review batch again');}
  let decisions=[];try{decisions=JSON.parse(await readFile(directory+'/security-decisions.json','utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
- decisions=decisions.filter(x=>x.key!==decision.key);decisions.push(decision);
+ const keys=new Set(accepted.map(d=>d.key));decisions=decisions.filter(x=>!keys.has(x.key));decisions.push(...accepted);
  await writeFile(directory+'/security-decisions.json.tmp',JSON.stringify(decisions,null,2)+'\n',{mode:0o600});await rename(directory+'/security-decisions.json.tmp',directory+'/security-decisions.json');
  const {run:buildQueue}=await import('./build-queue.mjs');await buildQueue();
- console.log('Exact finding review recorded; expires automatically. Raw scan remains unchanged.');
+ console.log(batch?`${accepted.length} exact reviewed decisions recorded; expire automatically. Raw scan remains unchanged.`:'Exact finding review recorded; expires automatically. Raw scan remains unchanged.');
+ }finally{await lock.close();await rm(directory+'/triage-write.lock');}
 }
 // Let this module finish evaluating before the CLI dynamically loads the queue
 // builder, which imports applyDecisions from here. A top-level await deadlocks

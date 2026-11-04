@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "version": "1.23.7-0+utilibre1~deb12",
+  "oldVersion": "1.15.1-1+deb12u1+utilibre1",
+  "sourceOrigin": "https://github.com/strukturag/libheif",
+  "license": "LGPL-3.0-or-later",
+  "archive": {
+    "file": "libheif-1.23.7.tar.gz",
+    "sha256": "f7483e818503ea6224c8863e4a56ac02c7089021a98472c811c12aa19faf2475",
+    "bytes": 2439383
+  },
+  "compilerBase": "sha256:97d3ee295a602a85deeacaf4b988f40a5bcbd88e0eca18bd4c35ce9b9454e259",
+  "base": "sha256:0fac8a9ffe8461689b7ed6f320a6e89b4bb1240f85a1562189cc3eae2df02541",
+  "oldRef": "utilibre-gathio-postgres:sqlite-rowid-20261103",
+  "candidate": "utilibre-gathio-postgres:heif-1.23.7-20261104",
+  "package": "libheif1",
+  "library": "/usr/lib/x86_64-linux-gnu/libheif.so.1.23.7",
+  "target": "utilibre-gathio-postgres-1",
+  "patch": {
+    "file": "heif-legacy-metadata.patch",
+    "sha256": "9fc1bb2cc0dd1b05c9eaf827a2d7e231e98018e764d588f82b0ff9093e8c4499",
+    "beforeSha256": "2e25abd12f90e9acec7e093a5ea254d3b5f744324aae2c2d65c526787598053f",
+    "afterSha256": "3fa84e1a5f4ecffa76ec7474682874089cc9acc6524138fda9203ac8a700e948"
+  },
+  "packaging": {
+    "debian/control": "3ad7424f4678f8093c6e9cc30775f693f505e2913af0f6a99e58d44444de92b9",
+    "debian/copyright": "c98ad382697d5b6a6b3166b593d3ca4028361f5df0ccffdc2638b87aedb606ad"
+  },
+  "priorFixes": [
+    {
+      "commit": "a3ed1b1eb178c5d651d6ac619c8da3d71ac2be36",
+      "status": "ahead",
+      "sha256": "932d67d69b2b3223a72ba6b4deefc75aa49c37a5c955547826b811ec5d0963a9"
+    },
+    {
+      "commit": "730a9d80bea3434f75c79e721878cc67f3889969",
+      "status": "ahead",
+      "sha256": "d14d508ad1d220875dcbf9721f0756bad4f2c1fe6b1d7cf75b7cf68a13667929"
+    },
+    {
+      "commit": "e05e15b57a38ec411cb9acb38512a1c36ff62991",
+      "status": "ahead",
+      "sha256": "94beffa3137cb9578d00231b8f477c78207fcae1fe1fc400d87970b214e40891"
+    },
+    {
+      "commit": "b8c12a7b70f46c9516711a988483bed377b78d46",
+      "status": "ahead",
+      "sha256": "ee9936b7e25842c0977d385138a8a65fbdde2ee29eec742b9c7f05f4b8277dc7"
+    },
+    {
+      "commit": "22b6266bf03a9f016f84a9b57b80e1dd7c79d64a",
+      "status": "ahead",
+      "sha256": "c0cc37ceb0bd74a8a8c285af6757b979548f2cc98e035dfd2f2b0e730ff80abf"
+    }
+  ],
+  "buildPackageInventorySha256": "5215aba0d56491eca25c05217578f83407b900bb2eb84f1e03a98cfa64806c28",
+  "acquiredBuildPackages": [
+    {
+      "file": "cmake-data_3.25.1-1_all.deb",
+      "bytes": 2026484,
+      "sha256": "8371f9694da94fd551a3ea653e2e25d99747471ca0b48cc029bf5c792ea590a3"
+    },
+    {
+      "file": "cmake_3.25.1-1_amd64.deb",
+      "bytes": 8692248,
+      "sha256": "257a11063855f09e48696057fdb1ba2bcf1069502e0302576831dc2fb1571d7f"
+    },
+    {
+      "file": "libaom-dev_3.6.0-1+deb12u3_amd64.deb",
+      "bytes": 2092252,
+      "sha256": "03db70a94d5fe432069fe168d9a09d05af8885bf4d6cedfa60223871d50d96e5"
+    },
+    {
+      "file": "libaom3_3.6.0-1+deb12u3_amd64.deb",
+      "bytes": 1851316,
+      "sha256": "0d306f250a365d5309f0f616c5327ebe7cb80cc48332dd3a7fe18c036056f874"
+    },
+    {
+      "file": "libarchive13_3.6.2-1+deb12u5_amd64.deb",
+      "bytes": 345488,
+      "sha256": "45419b8c7646c1af12783ae31906ce2da4c465c1a948b01f8f44152d8269f403"
+    },
+    {
+      "file": "libdav1d-dev_1.0.0-2+deb12u1_amd64.deb",
+      "bytes": 25584,
+      "sha256": "704f138bb24423e5c9f5734ef54be52281e67bc0f0674559cf31ed46f200e5f9"
+    },
+    {
+      "file": "libdav1d6_1.0.0-2+deb12u1_amd64.deb",
+      "bytes": 513432,
+      "sha256": "197f08108242177aeae4c04aac11825c39b7d18598191ab769f910687ccb387f"
+    },
+    {
+      "file": "libde265-0_1.0.11-1+deb12u3_amd64.deb",
+      "bytes": 186436,
+      "sha256": "72c3edb400c3494974181e9ca75a11d859c715c9685c38fb251783c7c8841afe"
+    },
+    {
+      "file": "libde265-dev_1.0.11-1+deb12u3_amd64.deb",
+      "bytes": 14404,
+      "sha256": "2697054bcd6c8c4ef208ec0f0d3b03e2a536caeaa4379095c13c11f0ae27bf6a"
+    },
+    {
+      "file": "libheif-dev_1.15.1-1+deb12u1_amd64.deb",
+      "bytes": 33576,
+      "sha256": "0718605184afb1573b06861f5e517fa4ecb9d2c42bdf9dd1ea857b95476ee8c9"
+    },
+    {
+      "file": "libheif1_1.15.1-1+deb12u1_amd64.deb",
+      "bytes": 215348,
+      "sha256": "13a0a3a6e22ddf5eb891b7c7873ace79f13f2c96473576e5f7da2ae3228a2113"
+    },
+    {
+      "file": "libjsoncpp25_1.9.5-4_amd64.deb",
+      "bytes": 78572,
+      "sha256": "4ab06b9ce67470579be3112bf2b6b314012f93bfff619580b93a902d6b1221c5"
+    },
+    {
+      "file": "libnuma1_2.0.16-1_amd64.deb",
+      "bytes": 20964,
+      "sha256": "639e1ab6bd66ead40db8a22c332d7199679fa22db261cac34444eb8eb4c17dda"
+    },
+    {
+      "file": "librhash0_1.4.3-3_amd64.deb",
+      "bytes": 134112,
+      "sha256": "d9ba48a51fd4734aaaf3a75fd94b6352a02f9eaa88d3bec84cd0b5d3090f9d2a"
+    },
+    {
+      "file": "libuv1_1.44.2-1+deb12u1_amd64.deb",
+      "bytes": 135616,
+      "sha256": "204f0e13354b44e6d19317887a53dab6f26696e8d95838db970b81f2a393f7fd"
+    },
+    {
+      "file": "libx265-199_3.5-2+b1_amd64.deb",
+      "bytes": 1150056,
+      "sha256": "9cd87d1b0c56f34f51bcbe8bdb55ebb45dd08ce6c0c6ff2dc77378bac3f64cc0"
+    },
+    {
+      "file": "libx265-dev_3.5-2+b1_amd64.deb",
+      "bytes": 1171416,
+      "sha256": "f23c7797a85fac88b7e894898e7137d2b452e9a1226f2b5ad2ee55bef8056b7d"
+    }
+  ],
+  "packageSha256": "e3caf2b8868f6d8e190387c15c49a8dffd3628b915796f9f745f0d04c95154b1"
+}

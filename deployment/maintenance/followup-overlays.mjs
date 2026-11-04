@@ -123,4 +123,5 @@ export const additionalOverlayReceipts = [
   'security-20261103/js-nov/release.json',
   'security-20261103/guava/release.json',
   'security-20261104/mongocrypt/release.json',
+  'security-20261104/heif-upgrade/release.json',
 ];

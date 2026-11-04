@@ -14,13 +14,16 @@ Penpot’s main and shaded Guava copies are repaired and deployed; native and
 two-account application checks passed. The 12:00 UTC relay update adds the tested
 libmongocrypt repair to PairDrop and Galene without changing configuration or
 limits. Native tests, idle-allocation release checks and live STUN passed.
-The complete 12:02 UTC scan, refreshed advisory data and exact package/source
-reviews leave **0 critical / 38 high package-target records pending**, with raw
-findings retained. JOSE v3 rebuild paths require the tested backport. Remaining
-high groups are 30 ACL, five GRUB, two HEIF and one Python-Markdown. ACL/GRUB
-continuation remains blocked by the earlier automatic security review; the HEIF
-and Markdown findings need compatible verified repairs. No new host restart,
-SSH/guest-agent maintenance window or notification was performed in this batch.
+Gathio's 12:50 UTC HEIF 1.23.7 upgrade preserves prior fixes, native image/database
+workflows and old compressed metadata. The 12:52 UTC complete fleet scan and
+13:09 exact reviews leave **0 critical / 36 high package-target records pending**;
+two HEIF high and 12 medium records are resolved. Raw findings remain retained.
+The recorder now supports bounded, fully validated batches of reviewed decisions;
+70 focused maintenance/release tests pass. JOSE v3 rebuild paths still require the
+tested backport. Remaining high groups are 30 ACL, five GRUB and one
+Python-Markdown. ACL/GRUB continuation remains blocked by the earlier automatic
+security review; Markdown needs a compatible verified repair. No new host
+restart, SSH/guest-agent window or notification occurred in this batch.
 This is not completion of all security work.
 
 [Release evidence, remaining categories and rollback](records/security-maintenance-2026-11-04.md).

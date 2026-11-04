@@ -1,13 +1,14 @@
+import {proveNative} from '../security-20261104/heif-policy.mjs';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import {root,version,oldVersion,packageName,packageSha256,sha,read,docker,limits,inspect,candidate} from './common.mjs';
+import {root,version,oldVersion,packageName,packageSha256,sha,read,docker,limits,inspect,candidate,upgrade,spec} from './common.mjs';
 process.umask(0o077);
-export const baseRef='utilibre-gathio-documentdb:hdf5-security-20261012';
+export const baseRef=spec?.oldRef||'utilibre-gathio-documentdb:hdf5-security-20261012';
 // HDF5's completed immutable stage receipt supplies the exact reviewed parent.
-export const base=read('/var/lib/utilibre-maintenance/hdf5-native-followup-20261012/stage.json').image;
+export const base=spec?.base||read('/var/lib/utilibre-maintenance/hdf5-native-followup-20261012/stage.json').image;
 if(process.argv[1]===new URL(import.meta.url).pathname){
  assert(!fs.existsSync(root+'/stage.json'));assert.equal(inspect(baseRef).Id,base);
- const native=read(root+'/native.json');assert.equal(native.status,'passed');assert.equal(native.packageSha256,packageSha256);assert.equal(native.upstream.assertions,14);assert(native.hevcAv1RgbaOldHeaderRoundtrips);
+ const native=read(root+'/native.json');assert.equal(native.status,'passed');assert.equal(native.packageSha256,packageSha256);if(upgrade){proveNative(native,spec);}else{assert.equal(native.upstream.assertions,14);}assert(native.hevcAv1RgbaOldHeaderRoundtrips);
  assert(fs.statfsSync('/').bavail*fs.statfsSync('/').bsize>=8*1024**3);
  const context=root+'/overlay';fs.mkdirSync(context+'/packages',{recursive:true});
  const deb=fs.readFileSync(root+'/output/'+packageName);assert.equal(sha(deb),packageSha256);fs.writeFileSync(context+'/packages/'+packageName,deb);

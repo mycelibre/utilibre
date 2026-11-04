@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-import {root,sha,read,docker,limits,inspect} from './common.mjs';
+import {root,sha,read,docker,limits,inspect,upgrade} from './common.mjs';
 import {gdalProbeCases,verifyDriverInventory} from '../geospatial-followup/gdal-policy.mjs';
 process.umask(0o077);
 const stage=read(root+'/stage.json'),native=read(root+'/native.json');assert.equal(stage.status,'passed');assert.equal(inspect(stage.candidate).Id,stage.image);
@@ -16,8 +16,9 @@ const codec=(id,arg)=>docker('run',...limits,'--user','65534:65534','--mount','t
 assert.equal(codec(stage.image,'codecs'),codec(stage.base,'codecs'));assert.equal((codec(stage.image,'/tmp').match(/roundtrip passed/g)||[]).length,2);
 const heic=id=>docker('run',...limits,'--user','65534:65534','--mount','type=bind,src='+root+'/fixtures,dst=/checks,readonly','--entrypoint','/checks/gdal-heif',id,'/checks','heic');
 assert.match(heic(stage.base),/heic RGBA dimensions\/pixels passed/);assert.match(heic(stage.image),/heic RGBA dimensions\/pixels passed/);
+if(upgrade)for(const id of [stage.base,stage.image])assert.match(docker('run',...limits,'--user','65534:65534','--mount','type=bind,src='+root+'/fixtures,dst=/checks,readonly','--entrypoint','/checks/gdal-heif',id,'/checks','avif'),/avif RGBA dimensions\/pixels passed/);
 const name='maintenance-heif-gathio-native',bounded=['--network','none','--cpus','1','--memory','1g','--memory-swap','1g','--pids-limit','128','--security-opt','no-new-privileges','--log-driver','none','--ulimit','core=0'];
-let created=false;const report={schema:1,date:new Date().toISOString(),status:'running',image:stage.image,base:stage.base,drivers:drivers.length,cases,codecInventoryUnchanged:true,hevcAv1RgbaOldHeaderRoundtrips:true,gdalHeicRead:true,gdalAvifPreexistingGap:'GDAL 3.6.2 zero-byte ReadCbk; upstream one-line fix 154b1cbbfbbe0a0b19c5b64e99d2e9493db9a016 is separate from libheif repair',fictionalDataOnly:true,network:'none',productionChanged:false};
+let created=false;const report={schema:1,date:new Date().toISOString(),status:'running',image:stage.image,base:stage.base,drivers:drivers.length,cases,codecInventoryUnchanged:true,hevcAv1RgbaOldHeaderRoundtrips:true,gdalHeicRead:true,gdalAvifRead:upgrade,gdalAvifPreexistingGap:upgrade?null:'GDAL 3.6.2 zero-byte ReadCbk; upstream one-line fix 154b1cbbfbbe0a0b19c5b64e99d2e9493db9a016 is separate from libheif repair',fictionalDataOnly:true,network:'none',productionChanged:false};
 try{
  docker('run','-d','--name',name,...bounded,'--tmpfs','/var/lib/postgresql/data:rw,size=768m','--tmpfs','/tmp:rw,size=128m','--mount','type=bind,src='+geo+'/source-tree,dst=/work/source-tree,readonly','-e','POSTGRES_HOST_AUTH_METHOD=trust',stage.image,'postgres','-c','shared_buffers=32MB','-c','max_connections=10','-c','log_statement=none','-c','log_min_error_statement=panic');created=true;
  // The shared Docker wrapper accepts argument-only commands; query text is
