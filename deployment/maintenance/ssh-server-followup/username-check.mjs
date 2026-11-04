@@ -1,7 +1,8 @@
 // Native checks in disposable network namespaces, never the actual SSH service.
 import fs from 'node:fs';import path from 'node:path';import cp from 'node:child_process';import assert from 'node:assert/strict';
-process.umask(0o077);const [candidate,out,backportsBaseline]=process.argv.slice(2);assert([4,5].includes(process.argv.length)&&path.isAbsolute(candidate)&&path.isAbsolute(out));assert(!backportsBaseline||path.isAbsolute(backportsBaseline));assert(!fs.existsSync(out));fs.mkdirSync(out,{mode:0o700});
-const version=backportsBaseline?'10.3p1-1~bpo13+1+utilibre1':'10.0p1-7+deb13u4+utilibre3';
+const gssapi=process.argv.includes('--gssapi');process.argv=process.argv.filter(a=>a!=='--gssapi');
+process.umask(0o077);const [candidate,out,backportsBaseline]=process.argv.slice(2);assert([4,5].includes(process.argv.length)&&path.isAbsolute(candidate)&&path.isAbsolute(out));assert(!backportsBaseline||path.isAbsolute(backportsBaseline));assert(!gssapi||backportsBaseline);assert(!fs.existsSync(out));fs.mkdirSync(out,{mode:0o700});
+const version=gssapi?'10.3p1-1~bpo13+1+utilibre2':backportsBaseline?'10.3p1-1~bpo13+1+utilibre1':'10.0p1-7+deb13u4+utilibre3';
 const image='sha256:f45539e1b2380da919ac34c184cb1a19b0c7a1037f993fd30ae37a1a1f8b8604',here=new URL('.',import.meta.url).pathname;
 assert.equal(JSON.parse(fs.readFileSync(candidate+'/build-completed.json')).status,'built-not-deployed');
 const mount=(src,dst)=>['--mount',`type=bind,src=${src},dst=${dst},readonly`];
@@ -11,9 +12,29 @@ function isolated(label,args,timeout){
  finally{if(fs.existsSync(cid)){const own=fs.readFileSync(cid,'utf8').trim();assert(/^[a-f0-9]{64}$/.test(own));try{cp.execFileSync('docker',['rm','-f',own],{stdio:'pipe',timeout:15000});}catch(e){assert(String(e.stderr).includes('No such container'));}}}
 }
 const current='/var/lib/utilibre-maintenance/ssh-server-followup-20261012',old='/var/lib/utilibre-maintenance/ssh-closure-20261012';
+if(gssapi){
+ const {createHash}=await import('node:crypto'),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+ const spec=JSON.parse(fs.readFileSync(here+'gssapi-inputs.json'));
+ const previous='/var/lib/utilibre-maintenance/ssh-backports103-20261021/output';
+ for(const[f,h]of Object.entries(spec.baselineArchives))assert.equal(sha(previous+'/'+f),h);
+ const sources=fs.mkdtempSync(out+'/state-source-');
+ try{
+  for(const [state,base,v]of [['baseline',previous,spec.base],['candidate',candidate,spec.candidate]]){
+   cp.execFileSync('dpkg-source',['--no-check','-x',base+'/openssh_'+v.slice(2)+'.dsc',sources+'/'+state],{stdio:'pipe',timeout:30000});
+   for(const[f,h]of Object.entries(state==='baseline'?spec.before:spec.after))assert.equal(sha(sources+'/'+state+'/'+f),h);
+  }
+  const stateDir=out+'/gssapi-state';fs.mkdirSync(stateDir,{mode:0o700});
+  const log=isolated('gssapi-state',['--read-only','--tmpfs','/work:rw,exec,nosuid,nodev,size=256m',...mount(sources+'/baseline','/baseline'),...mount(sources+'/candidate','/candidate'),...mount(here,'/recipe'),'--mount',`type=bind,src=${stateDir},dst=/output`,'--entrypoint','sh',image,'/recipe/gssapi-state-check.sh'],300000);
+  fs.writeFileSync(stateDir+'/driver.log',log);
+  const before=JSON.parse(fs.readFileSync(stateDir+'/baseline.json')),after=JSON.parse(fs.readFileSync(stateDir+'/candidate.json'));
+  assert(before.passed&&after.passed&&!before.unauthorizedStoreBlocked&&after.unauthorizedStoreBlocked&&after.explicitCleanupTested);
+  for(const r of [before,after])assert(r.legitimateStore&&r.disabledDelegation&&r.failedAuthorizationClearsState);
+  fs.writeFileSync(out+'/gssapi.json',JSON.stringify({passed:true,before,after,manifestSha256:sha(here+'gssapi-inputs.json'),patchSha256:sha(here+'gssapi-106553-106555.patch'),sourceHooksVerified:true,cleanupProtocolRegressionReproduced:false,limitation:'State test uses synthetic mechanism callbacks with real GSS buffers. Attempt-reset hooks match authenticated Debian source; no whole-protocol stale-state exploit is claimed. Real Kerberos/PAM/delegation/rekey are checked separately.'},null,2)+'\n');
+ }finally{fs.rmSync(sources,{recursive:true});}
+}
 const packageMounts=(base,dest,version,sourceVersion=version)=>['openssh-client','openssh-server','openssh-sftp-server'].flatMap(p=>{const f=p+'_'+version+'_amd64.deb';return mount(base+'/'+p+'_'+sourceVersion+'_amd64.deb',dest+'/'+f)});
-const username=JSON.parse(isolated('username',['--read-only','--user','65534:65534',...packageMounts(candidate,'/candidate',version),...packageMounts(backportsBaseline||current,'/current',backportsBaseline?'10.3p1-1~bpo13+1':'10.0p1-7+deb13u4+utilibre2',backportsBaseline?'1%3a10.3p1-1~bpo13+1':'10.0p1-7+deb13u4+utilibre2'),...mount(here+'username-native.py','/check.py'),'--entrypoint','python3',image,'/check.py',...(backportsBaseline?['--backports103']:[])],60000));assert(username.passed);fs.writeFileSync(out+'/username.json',JSON.stringify(username,null,2)+'\n');
+const username=JSON.parse(isolated('username',['--read-only','--user','65534:65534',...packageMounts(candidate,'/candidate',version),...packageMounts(backportsBaseline||current,'/current',backportsBaseline?'10.3p1-1~bpo13+1':'10.0p1-7+deb13u4+utilibre2',backportsBaseline?'1%3a10.3p1-1~bpo13+1':'10.0p1-7+deb13u4+utilibre2'),...mount(here+'username-native.py','/check.py'),'--entrypoint','python3',image,'/check.py',...(backportsBaseline?['--backports103']:[]),...(gssapi?['--gssapi']:[])],60000));assert(username.passed);fs.writeFileSync(out+'/username.json',JSON.stringify(username,null,2)+'\n');
 const log=isolated('compatibility',['--cap-add=NET_ADMIN','--cap-add=SETUID','--cap-add=SETGID','--cap-add=SYS_CHROOT','--cap-add=CHOWN','--cap-add=DAC_OVERRIDE','--cap-add=FOWNER','--cap-add=KILL','--cap-add=AUDIT_WRITE','--device=/dev/net/tun','--tmpfs','/build:rw,exec,nosuid,nodev,size=128m,mode=700',...packageMounts(candidate,'/candidate',version),...packageMounts(old,'/previous','10.0p1-7+deb13u4+utilibre1'),...mount(here+'native.py','/native.py'),'--entrypoint','sh',image,'-ec','cp /candidate/*.deb /build/; python3 /native.py --candidate-version '+version+'; cat /build/native.json'],300000);
 fs.writeFileSync(out+'/compatibility.log',log+'\n');
-const marker=log.indexOf('\n{\n');assert(marker>=0);const native=JSON.parse(log.slice(marker+1));assert(native.passed&&native.checks.length===11);assert.equal(native.packageVersion,'1:'+version);fs.writeFileSync(out+'/native.json',JSON.stringify(native,null,2)+'\n');
+const marker=log.indexOf('\n{\n');assert(marker>=0);const native=JSON.parse(log.slice(marker+1));assert(native.passed&&native.checks.length===(gssapi?12:11));assert.equal(native.packageVersion,'1:'+version);fs.writeFileSync(out+'/native.json',JSON.stringify(native,null,2)+'\n');
 console.log(JSON.stringify({passed:true,usernameBeforeAfter:username.rows.map(r=>({label:r.label,rejected:r.rejected,valid:r.legitimateUsers})),compatibilityChecks:native.checks.length,network:'isolated loopback only',productionChanged:false}));

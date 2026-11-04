@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "state": "candidate-not-deployed",
+  "advisories": [
+    "CVE-2026-106553",
+    "CVE-2026-106555"
+  ],
+  "base": "1:10.3p1-1~bpo13+1+utilibre1",
+  "candidate": "1:10.3p1-1~bpo13+1+utilibre2",
+  "patchSha256": "620ef5cdd2f409c5ad53f01d4bbb51995514d9d5021efae5e829ed0d2c70a7f7",
+  "before": {
+    "gss-serv.c": "317db2fd5b6163afd3b8da0917ee928335bed9518c2e6575e412ee03692d442f",
+    "ssh-gss.h": "30cf6790f63cd83c724974ffbcdd205eea103e735636fadb9584758f5182b52a",
+    "auth2.c": "cc2ff7e9a078cb8078b204b30cdf724d8adfed645788fff24a91935ee959e021",
+    "monitor.c": "a76e60aa0a954d128d9472504a781514d266a722b09d463899275924f4310cc6"
+  },
+  "after": {
+    "gss-serv.c": "ebbdc37b16abc835fb28eb94b77d0a6c6320c3ae45e91c30e22d89aa2582448c",
+    "ssh-gss.h": "998851a3e54d24f39f0bafbe7f55152acd84e2fb511a3b89bf1288e33ab183bb",
+    "auth2.c": "95e1b225f532bd215f19b5938de8520a19187313df3295684c23432521af1353",
+    "monitor.c": "0951a8c0e70f9c94961954ccff57ee5997043a6bdca54e158b6562ffab017e33"
+  },
+  "upstream": {
+    "source": "https://deb.debian.org/debian/pool/main/o/openssh-gssapi/",
+    "version": "1:10.6p1-1",
+    "releaseSha256": "62314d0a75145a111f6cb2a45ae23acb28ef07941b5ef2ad2aaea2023595fd1d",
+    "sourceIndexSha256": "f981b4481e3ca83a1c0aa65c441c839ea3e40a8e00b3a582792f7dfd83d150a0",
+    "archives": [
+      {
+        "file": "openssh-gssapi_10.6p1-1.dsc",
+        "sha256": "c04b474dac25f9cb141b5f9ad96206376220b9df8e6680e7c8137772ca6c644f",
+        "size": 2971,
+        "url": "https://deb.debian.org/debian/pool/main/o/openssh-gssapi/openssh-gssapi_10.6p1-1.dsc"
+      },
+      {
+        "file": "openssh-gssapi_10.6p1.orig.tar.xz",
+        "sha256": "715c8724c17be381d59561f5e26eb487951714f3379a685cd3e8ff6e9d6afc43",
+        "size": 1653184,
+        "url": "https://deb.debian.org/debian/pool/main/o/openssh-gssapi/openssh-gssapi_10.6p1.orig.tar.xz"
+      },
+      {
+        "file": "openssh-gssapi_10.6p1-1.debian.tar.xz",
+        "sha256": "7462e96b9b1d4241371aa33afa911f21886d3a0ad04e30ca1d7681f9c2741623",
+        "size": 201772,
+        "url": "https://deb.debian.org/debian/pool/main/o/openssh-gssapi/openssh-gssapi_10.6p1-1.debian.tar.xz"
+      }
+    ],
+    "referenceFiles": {
+      "gss-serv.c": "7a3f8efc193c5fc0e32eca66f4e3c0307affeb4bc3812e3acde612a26be62a60",
+      "ssh-gss.h": "996ea6b7da5a8d546f5e8cde9bdaf68f621f5729e8810d31ac99b8a8c13a309c",
+      "auth2.c": "5bf10f10a217c6902f1cefbde9727dcda2809c36030f06c33867fc867ac4ed3a",
+      "monitor.c": "72bcc5c53a681ba2807bb143f5d55aba191b50753286e0c50c2c172b00e41ea5"
+    }
+  },
+  "baselineArchives": {
+    "openssh_10.3p1-1~bpo13+1+utilibre1.dsc": "9e27d39ddaa2f0f4f7bc6f969621ace74a256efc2d3fcbb60c78d16900be2b1f",
+    "openssh_10.3p1-1~bpo13+1+utilibre1.debian.tar.xz": "27cc64158ee5df9ea27a096549487f7ec88b1d8b2ce3c489e93055056b260a80",
+    "openssh_10.3p1.orig.tar.gz": "56682a36bb92dcf4b4f016fd8ec8e74059b79a8de25c15d670d731e7d18e45f4",
+    "openssh_10.3p1.orig.tar.gz.asc": "d9cb0783c637211b03dfcd9d1e41cf721e0080855b273c56b795fa37988b70c4"
+  },
+  "network": "Acquisition limited to pinned Debian archives; build and tests network-none",
+  "activation": "Separate SSH maintenance window required; three coupled packages together; no reboot"
+}

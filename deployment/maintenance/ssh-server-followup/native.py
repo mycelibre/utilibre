@@ -25,7 +25,7 @@ assert Path('/.dockerenv').exists()
 ROOT = Path('/build')
 WORK = Path(tempfile.mkdtemp(prefix='native-', dir=ROOT))
 parser = argparse.ArgumentParser()
-parser.add_argument('--candidate-version', choices=['10.0p1-7+deb13u4+utilibre2', '10.0p1-7+deb13u4+utilibre3', '10.3p1-1~bpo13+1+utilibre1'], default='10.0p1-7+deb13u4+utilibre2')
+parser.add_argument('--candidate-version', choices=['10.0p1-7+deb13u4+utilibre2', '10.0p1-7+deb13u4+utilibre3', '10.3p1-1~bpo13+1+utilibre1', '10.3p1-1~bpo13+1+utilibre2'], default='10.0p1-7+deb13u4+utilibre2')
 NEXT = parser.parse_args().candidate_version
 OLD = '10.0p1-7+deb13u4+utilibre1'
 RESULTS = []
@@ -324,6 +324,25 @@ def kerberos_success():
                     '-o', 'GSSAPITrustDNS=no', 'root@127.0.0.1', 'printf fictional-gssapi-ok']
             assert run(args, env=env).stdout == b'fictional-gssapi-ok'
         record('successful-gssapi-pam', server='candidate', privateRealm=True, realKerberosTicket=True)
+        if NEXT == '10.3p1-1~bpo13+1+utilibre2':
+            run(['kinit', '-f', '-k', '-t', realm / 'client.keytab', 'root@UTILIBRE.TEST'], env=env)
+            server_env = dict(env)
+            del server_env['KRB5CCNAME']
+            with daemon('candidate', pam=True, env=server_env,
+                        extra='GSSAPIStoreCredentialsOnRekey yes\n') as sshport:
+                data = secrets.token_bytes(256 * 1024)
+                args = ssh_args('candidate', sshport) + ['-vv', '-o', 'GSSAPIAuthentication=yes',
+                        '-o', 'GSSAPIKeyExchange=yes', '-o', 'GSSAPIDelegateCredentials=yes',
+                        '-o', 'GSSAPIServerIdentity=localhost', '-o', 'GSSAPITrustDNS=no',
+                        '-o', 'PreferredAuthentications=gssapi-keyex,gssapi-with-mic',
+                        'root@127.0.0.1', 'test -n "$KRB5CCNAME" && klist -s && cat']
+                result = run(args, data=data, env=env, timeout=45)
+                assert result.stdout == data
+                assert b'kex: algorithm: gss-' in result.stderr
+                assert result.stderr.count(b'SSH2_MSG_NEWKEYS received') >= 2
+            record('successful-gssapi-delegation-rekey', server='candidate', privateRealm=True,
+                   delegatedCredentials=True, serverInheritedClientCache=False,
+                   gssKeyExchange=True, rekeyObserved=True, echoBytes=len(data))
     finally:
         kdc.terminate()
         kdc.wait(timeout=10)

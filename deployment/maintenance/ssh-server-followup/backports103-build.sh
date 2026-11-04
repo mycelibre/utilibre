@@ -6,16 +6,22 @@ test ! -e /output/build-completed.json
 export DEB_BUILD_OPTIONS=parallel=2 EDITOR=true
 cp -a /input/. /build/
 cd /build/openssh-10.3p1
-test "$(dpkg-parsechangelog -SVersion)" = '1:10.3p1-1~bpo13+1+utilibre1'
+version="$(dpkg-parsechangelog -SVersion)"
+case "$version" in
+ '1:10.3p1-1~bpo13+1+utilibre1') patch_name=utilibre-reviewed-repairs.patch ;;
+ '1:10.3p1-1~bpo13+1+utilibre2') patch_name=utilibre-gssapi-state.patch ;;
+ *) exit 2 ;;
+esac
+archive_version="${version#1:}"
 dpkg-checkbuilddeps
-dpkg-source --commit . utilibre-reviewed-repairs.patch
+dpkg-source --commit . "$patch_name"
 dpkg-source --build .
 dpkg-buildpackage -us -uc -b
 cd /build
 for p in openssh-client openssh-server openssh-sftp-server; do
- cp "${p}_10.3p1-1~bpo13+1+utilibre1_amd64.deb" /output/
+ cp "${p}_${archive_version}_amd64.deb" /output/
 done
-cp openssh_10.3p1-1~bpo13+1+utilibre1.dsc openssh_10.3p1-1~bpo13+1+utilibre1.debian.tar.xz openssh_10.3p1.orig.tar.gz openssh_10.3p1.orig.tar.gz.asc /output/
+cp "openssh_${archive_version}.dsc" "openssh_${archive_version}.debian.tar.xz" openssh_10.3p1.orig.tar.gz openssh_10.3p1.orig.tar.gz.asc /output/
 dpkg-query -W -f='${binary:Package}\t${Version}\n' > /output/build-packages.lock
 cd /output
 sha256sum ./*.deb ./*.dsc ./*.tar.* > SHA256SUMS

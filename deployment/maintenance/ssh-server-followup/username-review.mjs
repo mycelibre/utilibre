@@ -7,12 +7,14 @@ const run=(cmd,args,options={})=>cp.execFileSync(cmd,args,{encoding:'utf8',timeo
 const root='/var/lib/utilibre-maintenance',previous=root+'/ssh-server-followup-20261012',scan=read(root+'/security.json'),queue=read(root+'/security-queue.json');freshScan(queue,scan);assert.equal(scan.status,'checked');assert.equal(scan.host.status,'checked');
 const release=read(checks+'/release.json'),proposal=read(checks+'/proposal.json'),native=read(checks+'/native.json'),username=read(checks+'/username.json');
 assert.equal(release.status,'passed');assert.equal(release.proposalSha256,sha(checks+'/proposal.json'));
-const backports=proposal.next==='1:10.3p1-1~bpo13+1+utilibre1';
+const gssapi=proposal.next==='1:10.3p1-1~bpo13+1+utilibre2';
+const backports=gssapi||proposal.next==='1:10.3p1-1~bpo13+1+utilibre1';
 assert(backports||proposal.next==='1:10.0p1-7+deb13u4+utilibre3','Unsupported reviewed release');
-if(backports)assert.equal(proposal.old,'1:10.3p1-1~bpo13+1');
+if(backports)assert.equal(proposal.old,gssapi?'1:10.3p1-1~bpo13+1+utilibre1':'1:10.3p1-1~bpo13+1');
+if(gssapi){assert(proposal.gssapiCvesFixed);assert.equal(sha(checks+'/gssapi.json'),proposal.gssapiChecksSha256);const state=read(checks+'/gssapi.json');assert(state.passed&&state.sourceHooksVerified&&state.after.unauthorizedStoreBlocked&&state.after.explicitCleanupTested&&!state.before.unauthorizedStoreBlocked);assert.equal(state.manifestSha256,sha(new URL('./gssapi-inputs.json',import.meta.url)));assert.equal(state.patchSha256,sha(new URL('./gssapi-106553-106555.patch',import.meta.url)));const r=native.checks.find(r=>r.name==='successful-gssapi-delegation-rekey');assert(r?.passed&&r.delegatedCredentials&&r.gssKeyExchange&&r.rekeyObserved&&!r.serverInheritedClientCache);}
 assert(Date.parse(scan.host.scannedAt||scan.date)>=Date.parse(release.completedAt),'Host scan must include this release');
 assert.equal(sha(checks+'/native.json'),proposal.checksSha256);assert.equal(sha(checks+'/username.json'),proposal.usernameChecksSha256);
-assert(native.passed&&native.checks.length===11&&username.passed);assert.equal(native.packageVersion,proposal.next);
+assert(native.passed&&native.checks.length===(gssapi?12:11)&&username.passed);assert.equal(native.packageVersion,proposal.next);
 const oldRow=username.rows.find(x=>x.label==='baseline'),newRow=username.rows.find(x=>x.label==='candidate');
 assert(oldRow.rejected.length===4&&oldRow.rejected.every(x=>x===false));assert(newRow.rejected.length===4&&newRow.rejected.every(x=>x===true));
 for(const r of [oldRow,newRow]){assert.equal(r.legitimateUsers,4);assert.equal(r.configurationLiteralPreserved,true);}
@@ -27,7 +29,14 @@ const temp=fs.mkdtempSync(checks+'/source-review-'),source=temp+'/openssh-source
 try{
  if(backports){
   assert.equal(sha(candidate+'/openssh_10.3p1.orig.tar.gz'),'56682a36bb92dcf4b4f016fd8ec8e74059b79a8de25c15d670d731e7d18e45f4');
-  run('dpkg-source',['-x',candidate+'/openssh_10.3p1-1~bpo13+1+utilibre1.dsc',source]);
+  run('dpkg-source',['-x',candidate+'/openssh_'+proposal.next.slice(2)+'.dsc',source]);
+  if(gssapi){
+   const spec=read(new URL('./gssapi-inputs.json',import.meta.url)),patch=new URL('./gssapi-106553-106555.patch',import.meta.url).pathname;
+   assert.equal(sha(patch),spec.patchSha256);
+   for(const[f,h]of Object.entries(spec.after)){assert.equal(sha(source+'/'+f),h);sourceHashes[f]=h;}
+   run('git',['apply','--reverse','--check',patch],{cwd:source});run('git',['apply','--reverse',patch],{cwd:source});
+   for(const[f,h]of Object.entries(spec.before))assert.equal(sha(source+'/'+f),h);
+  }
   // Reverse the exact approved patch sequence in this disposable tree. Require
   // all seven preimages to match authenticated Debian 10.3, not the old 10.0
   // file hashes or a version-string waiver. No fuzz or conflict resolution.
@@ -69,6 +78,10 @@ const reasons={
  'CVE-2026-60000':'Retained 5d04ca6af739b82fd30d84d2783ca802ebfa1192 failure-accounting repair: old native server accepts five attempts past MaxAuthTries=3, candidate disconnects at three; legitimate private-realm Kerberos authentication passes. Not the newer GSSAPI advisories.',
  'CVE-2026-106583':'Upstream 0c4c9a7b320bd7ff61c4a2dc345cb2e27e9663b2 readconf.c username fix. Four CLI dollar/backslash cases accepted by old native ssh are rejected by candidate; four legitimate users and explicit configuration literal still work. No shell command or production connection used.',
 };
+if(gssapi){
+ reasons['CVE-2026-106553']='Exact four-file backport from signed Debian openssh-gssapi 10.6p1-1. Native implementation exports credentials before authorization in the baseline and rejects that export afterward; authorized export and failed-authorization cleanup still pass. Real private-realm Kerberos/PAM, delegated credentials, GSS key exchange and byte-equal rekey pass.';
+ reasons['CVE-2026-106555']='Exact Debian 10.6 attempt-reset hooks and cleanup implementation backported to 10.3; zero-fuzz reversal recovers the retained previous source. Native partial-state cleanup and repeated cleanup pass; real Kerberos/PAM/delegation/rekey remain functional. No whole-protocol stale-state exploit reproduction is claimed.';
+}
 const decisions=[];
 for(const i of queue.items.filter(i=>i.status==='needs-review'&&i.scope==='host-os'&&i.type==='debian'&&i.installed===proposal.next&&files.has(i.package))){
  let status,reason;
@@ -83,4 +96,4 @@ for(const i of queue.items.filter(i=>i.status==='needs-review'&&i.scope==='host-
  decisions.push(validateDecision({key:i.key,status,expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:reason+limitation+' Exact source, installed payload, three-package release and native-test hashes verified. Evidence: '+evidence+'/{review,native,username,proposal,release}.json. https://security-tracker.debian.org/tracker/'+i.id}));
 }
 fs.writeFileSync(out,JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,hostScannedAt:scan.host.scannedAt||scan.date,sourceHashes,releaseSha256:sha(checks+'/release.json'),proposalSha256:sha(checks+'/proposal.json'),applied:false,decisions},null,2)+'\n',{flag:'wx'});
-console.log(JSON.stringify({prepared:decisions.length,applied:false,gssapiNewServerCvesFixed:false}));
+console.log(JSON.stringify({prepared:decisions.length,applied:false,gssapiNewServerCvesFixed:gssapi}));

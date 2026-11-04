@@ -11,8 +11,13 @@ work = Path(tempfile.mkdtemp(prefix='username-', dir='/tmp'))
 rows = []
 parser = argparse.ArgumentParser()
 parser.add_argument('--backports103', action='store_true')
-backports = parser.parse_args().backports103
+parser.add_argument('--gssapi', action='store_true')
+args = parser.parse_args()
+backports = args.backports103
 versions = ('10.3p1-1~bpo13+1', '10.3p1-1~bpo13+1+utilibre1') if backports else ('10.0p1-7+deb13u4+utilibre2', '10.0p1-7+deb13u4+utilibre3')
+if args.gssapi:
+    assert backports
+    versions = (versions[0], '10.3p1-1~bpo13+1+utilibre2')
 for label, directory, version in [('baseline', '/current', versions[0]), ('candidate', '/candidate', versions[1])]:
     tree = work / label
     tree.mkdir()

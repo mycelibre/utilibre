@@ -85,3 +85,18 @@ A fresh offline Markmap replay reconstructed the pinned Git tree and produced
 eleven static files with identical bytes. Archive timestamps differed. The
 private `markmap/replay.json` records this limited reproducibility check; no
 byte-for-byte container-image claim is made, and replay changed no running service.
+
+## SSH candidate prepared; separate activation remains
+
+A compatible backport of Debian's GSSAPI repairs is built at
+`1:10.3p1-1~bpo13+1+utilibre2`. It preserves the four earlier corrections.
+825 upstream unit cases, the targeted before/after credential-state regression,
+12 isolated native protocol checks and the live read-only preflight pass.
+A private Kerberos realm verifies successful delegation and GSS rekeying;
+no production credentials or accounts were used. The reset-hook check has a
+source/native-state proof, not a complete protocol exploit reproduction.
+
+The host still runs `utilibre1`; its two GSSAPI findings remain open. A new
+console maintenance window is needed. The [SSH recipe](../../deployment/maintenance/ssh-server-followup/README.md)
+contains exact inputs, tests, activation and rollback. This candidate does not
+change the last completed fleet count of 0 critical / 73 high pending.

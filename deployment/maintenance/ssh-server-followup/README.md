@@ -1,6 +1,64 @@
 # Native stable OpenSSH server follow-up
 
-## Current release: 21 October 2026
+## Prepared GSSAPI repair: 4 November 2026
+
+The running host remains at the 21 October version below. A tested candidate at
+`1:10.3p1-1~bpo13+1+utilibre2` addresses CVE-2026-106553 and CVE-2026-106555.
+**It is not installed.** The candidate needs a new SSH maintenance window with
+the Proxmox console available; the completed QEMU window does not authorize it.
+
+`gssapi-inputs.json` pins the retained baseline source and the signed Debian
+10.6 GSSAPI source. `gssapi-source-check.mjs` verifies that archive's signature
+chain and the native implementation. The four-file patch preserves Debian's
+GSSAPI rekey/credential-owner extension and all four earlier repairs. There is
+no fuzzy application or general source rewrite. Unexpected inputs fail before
+creating a candidate; an already-correct patch is recognized by exact reverse
+application and is never applied twice.
+
+The offline build passed **825 upstream unit cases**. Native state tests show
+unauthorized credential storage before the repair and rejection afterward,
+while authorized storage, disabled delegation and failed-authorization cleanup
+remain correct. Explicit partial-state cleanup and repeated cleanup pass.
+The fixture uses synthetic mechanism callbacks and real GSS buffer cleanup;
+there is no claim to reproduce a complete protocol exploit for the reset bug.
+The reset hooks separately match authenticated Debian source.
+
+**Twelve isolated protocol checks passed:** the existing SSH/SFTP, forwarding,
+host-key rejection, failure accounting, CLI parsing and private Kerberos/PAM
+checks remain intact. The additional private-realm test verifies delegated
+credentials, GSS key exchange and actual rekeying while transferring 256 KiB
+byte-for-byte. The server does not inherit the client's credential cache.
+No production SSH keys, users or configuration enter these test containers.
+
+Private evidence: `/var/lib/utilibre-maintenance/security-20261103/ssh-gssapi/`.
+The following commands separate acquisition (already retained), preparation,
+verification and activation. Use new private output directories for replays.
+
+```sh
+node deployment/maintenance/ssh-server-followup/gssapi-prepare.mjs BASELINE_SOURCE OUTPUT_INPUT
+node deployment/maintenance/ssh-server-followup/username-run.mjs OUTPUT_INPUT OUTPUT_PACKAGES
+node deployment/maintenance/ssh-server-followup/username-check.mjs --gssapi OUTPUT_PACKAGES CHECKS ORIGINAL_DEBIAN_ROLLBACK
+node deployment/maintenance/ssh-server-followup/gssapi-source-check.mjs DEBIAN_106_ARCHIVES SIGNED_INDEX_DIRECTORY OUTPUT_INPUT/openssh-10.3p1
+node deployment/maintenance/ssh-server-followup/username-preflight.mjs --gssapi OUTPUT_PACKAGES CHECKS CURRENT_UTILIBRE_ROLLBACK
+```
+
+`ORIGINAL_DEBIAN_ROLLBACK` is the original, unpatched 10.3 archive set used for the
+CLI failing-baseline test; `CURRENT_UTILIBRE_ROLLBACK` is the current `utilibre1`
+three-package set. They are deliberately different. The host preflight passed:
+exactly the three coupled packages change, effective SSH configuration matches,
+keys/configuration parse, all binaries link, and rollback bytes match the host.
+Preflight expires after one hour. Keep native evidence when refreshing it.
+
+Only after the new window is confirmed, use the existing
+`username-release.mjs --apply CHECKS`. It rechecks hashes and package scope,
+retains rollback and verifies the active daemon, configuration and keys. It
+never reboots the VM. Then scan and use `username-review.mjs` to prepare exact
+source/payload-bound review decisions; no finding is closed before activation.
+`gssapi-source.mjs bundle` prepares the code-only offer; its `publish` mode
+requires the completed release. A package rollback is not a data restore and
+removes these two repairs; it requires the same SSH window safeguards.
+
+## Deployed release: 21 October 2026
 
 The host now runs the three coupled packages at
 **`1:10.3p1-1~bpo13+1+utilibre1`**, installed at **07:50:19 UTC** with the
