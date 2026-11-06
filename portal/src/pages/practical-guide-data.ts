@@ -34,7 +34,7 @@ import { browserAdditionGuides } from './browser-addition-guides.ts';
 import { everydayGuides } from './everyday-guide-data.ts';
 
 export interface GuideCopy {
-  title: string; intro: string; prerequisites: string;
+  title: string; seoTitle?: string; intro: string; prerequisites: string;
   steps: string[]; success: string; troubleshooting: string; privacy: string; next: string;
 }
 export interface PracticalGuide {

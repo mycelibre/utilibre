@@ -1,3 +1,4 @@
+import { featuredGuideIds } from '../../src/pages/guide-discovery';
 import { expect, test } from '@playwright/test';
 import { catalog } from '../../src/catalog/catalog';
 import { scenarioCollections, collectionPath } from '../../src/pages/scenario-collection-data';
@@ -33,7 +34,7 @@ test('six localized collections can be saved deliberately without replacing exis
 
 test('guide search stays local and sample downloads preserve the guide', async ({ page }) => {
   await page.goto('/es/guias');
-  await expect(page.locator('.guide-featured-list li')).toHaveCount(6);
+  await expect(page.locator('.guide-featured-list li')).toHaveCount(featuredGuideIds.length);
   const requests: string[] = []; page.on('request', request => requests.push(request.url()));
   const input = page.getByLabel('Buscá una guía');
   await input.fill('escáner');

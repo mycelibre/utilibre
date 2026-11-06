@@ -52,6 +52,7 @@ const synonyms: Record<string, string> = {
   tiddlywiki: 'wiki notebook notes single file html cuaderno notas archivo único',
   addy: 'email alias aliases forwarding inbox mask address correo alias reenvío reenviar buzón dirección',
   searxng: 'web search búsqueda buscador internet',
+  'openresume': 'cv curriculum currículum vitae hoja de vida empleo trabajo resume résumé',
   'reactive-resume': 'cv resume résumé curriculum currículum',
   penpot: 'collaborative design diseño colaborativo prototipo',
   actual: 'personal budget household presupuesto personal hogar',

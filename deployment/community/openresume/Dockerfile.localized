@@ -1,0 +1,4 @@
+# Keep the exact previously repaired nginx/OS runtime. build-localized.py verifies its ID.
+ARG RUNTIME_IMAGE
+FROM ${RUNTIME_IMAGE}
+COPY out/ /usr/share/nginx/html/

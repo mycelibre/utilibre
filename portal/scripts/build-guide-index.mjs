@@ -6,6 +6,6 @@ import { practicalGuides } from '../src/pages/practical-guide-data.ts';
 // chunk and in server-rendered HTML, not every visitor's first download.
 const summaries = practicalGuides.map(({ id, paths, tools, samples, copy }) => ({
   id, paths, tools: tools.map(({ id }) => ({ id })), hasSamples: samples.length > 0,
-  copy: Object.fromEntries(Object.entries(copy).map(([language, { title, intro }]) => [language, { title, intro }])),
+  copy: Object.fromEntries(Object.entries(copy).map(([language, { title, seoTitle, intro }]) => [language, { title, seoTitle, intro }])),
 }));
 await writeFile(new URL('../src/pages/guide-index.generated.json', import.meta.url), `${JSON.stringify(summaries)}\n`);

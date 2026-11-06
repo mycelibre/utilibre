@@ -10,6 +10,7 @@ import { practicalGuides, practicalGuidePath } from './practical-guide-data.ts';
 import { shareFragment } from '../utilities/toolkits';
 import { discoverGuides, featuredGuideIds, guideStarts } from './guide-discovery';
 import { renderCollectionLinks } from './scenario-collections';
+import { renderResumeExamples } from './resume-example-view';
 
 const link = (href: string, label: string) => { const a = element('a', '', label); a.href = href; return a; };
 function section(title: string, text: string): HTMLElement {
@@ -79,6 +80,7 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
   const jump = element('nav', 'guide-links');
   jump.setAttribute('aria-label', es ? 'En esta guía' : 'In this guide');
   if (guide.samples.length) jump.append(link('#practice', es ? 'Archivo de práctica' : 'Practice file'));
+  if (guide.id === 'openresume') jump.append(link('#cv-examples', es ? 'Ver tres ejemplos' : 'See three examples'));
   jump.append(link('#steps', es ? 'Ir a los pasos' : 'Go to the steps'));
   header.append(jump);
   const startBox = start ? section(es ? 'Empezá con el ejemplo' : 'Start with the example', start.result) : null;
@@ -88,6 +90,11 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
     if (guide.id === 'image') {
       const image = element('img'); image.src = '/examples/fictional-image.jpg'; image.width = 1200; image.height = 800;
       image.alt = es ? 'Imagen de práctica con detalles ficticios, antes de cambiar sus dimensiones.' : 'Practice image with fictional details, before resizing.';
+      image.loading = 'lazy'; example.append(image);
+    }
+    if (guide.id === 'openresume') {
+      const image = element('img'); image.src = `/examples/cv/preview-${language}.png`; image.width = 654; image.height = 846;
+      image.alt = es ? 'Vista previa del currículum ficticio de María Ejemplo: estudios, proyecto escolar y habilidades. El texto y el PDF están disponibles más abajo.' : 'Preview of María Example’s fictional résumé: education, school project and skills. Text and PDF are available below.';
       image.loading = 'lazy'; example.append(image);
     }
     append(example, element('figcaption', '', es ? 'Resultado buscado con datos ficticios' : 'Target result using fictional data'), element('p', '', start.example));
@@ -101,7 +108,7 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
       `${tool.label[language]} · ${es ? 'pestaña nueva' : 'new tab'}`);
     a.className = 'button'; a.target = '_blank'; a.rel = 'noopener noreferrer'; actions.append(a);
   }
-  (startBox || main).append(actions);
+  (guide.id === 'openresume' ? header : startBox || main).append(actions);
   for (const destination of guide.portalLinks || []) { const a = link(destination[language], destination.label[language]); a.className = 'button'; actions.append(a); }
   if (guide.tools.length) {
     const a = link(routePath('my', language) + shareFragment({ id: 'guide', label: copy.title.slice(0, 80), tools: [...new Set(guide.tools.map(t => t.id))] }, language), es ? 'Guardar estas herramientas en Mi Utilibre' : 'Save these tools in My Utilibre');
@@ -128,6 +135,7 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
     startBox.append(device);
     main.append(section(es ? 'Antes de empezar' : 'Before you start', copy.prerequisites));
   }
+  if (guide.id === 'openresume') main.append(renderResumeExamples(language));
   const steps = section(es ? 'Paso a paso' : 'Step by step', es ? 'La herramienta se abre en otra pestaña para que conservés esta guía. Si un control aparece en inglés, mantenemos su nombre para que lo encontrés.' : 'The tool opens in another tab so you can keep this guide. If a control appears in English, we use its on-screen name so you can find it.');
   steps.id = 'steps';
   const list = element('ol'); for (const text of copy.steps) list.append(element('li', '', text)); steps.append(list); main.append(steps);
@@ -141,6 +149,9 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
   }
   main.append(privacy, section(es ? 'Después' : 'Next', copy.next));
   const related = element('nav', 'guide-links'); related.setAttribute('aria-label', es ? 'Otras guías' : 'Other guides');
+  if (guide.id === 'openresume') {
+    related.append(link(routePath('pdf', language), es ? 'Reducir o revisar un PDF' : 'Reduce or check a PDF'), link(practicalGuidePath('image', language), es ? 'Preparar una imagen para una solicitud' : 'Prepare an application image'));
+  }
   const toolIds = new Set(guide.tools.map(tool => tool.id));
   for (const item of practicalGuides.filter(item => item.id !== id && item.tools.some(tool => toolIds.has(tool.id))).slice(0, 3)) {
     related.append(link(practicalGuidePath(item.id, language), item.copy[language].title));

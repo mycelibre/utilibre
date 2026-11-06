@@ -809,3 +809,58 @@ verification, effective Google AI setting inspection, actual reports and new
 community-post approval remain external owner dependencies. Real indexing,
 rankings, traffic, AI citations, task completions and repeat use remain
 **unavailable**, not measured successes or zero activity.
+
+## Guatemala CV focus — 6 November 2026
+
+Improve the existing Spanish CV guide rather than introduce duplicate country
+landing pages. Primary outcome: the visitor prepares, downloads, reopens and
+checks a usable CV. The account-free local OpenResume builder is the default;
+Reactive Resume remains a separate account-based option. EN content stays at
+its existing guide URL, with reciprocal language links and self-canonicals.
+
+Demand basis: the operator reported 22,200 national monthly searches for
+“curriculum vitae”; the source, period and geographic settings have not been
+supplied, so this is not a verified volume or traffic forecast. Google's
+[Keyword Planner definitions](https://support.google.com/google-ads/answer/3022575?hl=en)
+explain rounding, close variants and location/network settings. Search inspection
+on 6 November found local free-PDF competitors at
+[MiTrabajoGT](https://mitrabajogt.com/crear-cv/) and
+[RRHH Guatemala](https://rrhh.com.gt/curriculum-vitae-sin-experiencia/).
+Those observations establish comparable offers, not rankings, volumes or an
+independent audit of their privacy claims.
+
+Initial query families: curriculum vitae / hoja de vida; crear curriculum gratis
+PDF; curriculum sin experiencia Guatemala; ejemplos para primer empleo.
+Use one substantial page until actual queries justify a distinct destination.
+The original examples, Spanish controls, reliable native export and specific
+privacy instructions provide the value. No keyword density, fake ATS guarantee,
+review markup or “most popular” claim is added.
+
+Prepared outreach draft (not sent; operator involvement disclosed):
+
+> Mantengo Utilibre, un proyecto voluntario de herramientas gratuitas. Preparé
+> una guía para crear y descargar un currículum en PDF sin abrir una cuenta.
+> Incluye tres ejemplos ficticios: primer empleo, atención al cliente y apoyo
+> administrativo. Si trabajás con estudiantes o personas que buscan empleo,
+> podés usarla en una actividad y contarme qué paso resultó confuso.
+> https://utilibre.org/es/guias/curriculum-local
+
+Use the printable guide and its locally hosted PDF/TXT examples as a small
+workshop packet. Participants should start with fictitious details and keep
+real CVs on their own devices. A teacher, employment adviser or community group
+can share the ordinary guide URL; do not add tracking parameters or collect CVs.
+No outreach, third-party contact, affiliation or placement is claimed.
+
+Measurement: the operator can use existing Search Console, filter country
+Guatemala and the canonical guide URL, then compare 28-day periods for queries,
+impressions, clicks and devices. Baseline data was unavailable in this task;
+missing data is not zero. Search Console does not measure PDF completion.
+Use voluntary task feedback and synthetic workflow tests for that outcome,
+without collecting names, documents, visitor events or download histories.
+Do not install analytics. Check the live URL in Search Console and retain the
+existing sitemap; a successful submission is not proof of indexing or ranking.
+
+Next review: after enough Search Console data accumulates, improve the visible
+instructions for demonstrated query needs. Before wider promotion, obtain a
+voluntary real-phone check of typing, download location and sharing with
+fictional information; desktop touch emulation is recorded separately.

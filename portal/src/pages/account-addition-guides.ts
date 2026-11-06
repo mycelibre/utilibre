@@ -1,3 +1,4 @@
+import { resumeGuide } from './resume-guide.ts';
 import { savedWorkBackupNotice } from '../catalog/backup-notes.ts';
 import type { PracticalGuide } from './practical-guide-data.ts';
 
@@ -66,20 +67,5 @@ export const accountAdditionGuides: PracticalGuide[] = [
       },
     },
   },
-  {
-    id: 'openresume', paths: { en: 'guides/local-resume', es: 'guias/curriculum-local' },
-    tools: [{ id: 'openresume', path: '/resume-builder', label: { en: 'Build a local resume', es: 'Crear un currículum local' } }, { id: 'openresume', path: '/resume-parser', label: { en: 'Inspect a resume PDF', es: 'Examinar un PDF de currículum' } }], samples: [], reviewedOn: '2026-10-09',
-    copy: {
-      en: {
-        title: 'Create and inspect a resume locally', intro: "Write a résumé in your browser, download its PDF and check the text the parser reads. No account is needed.", prerequisites: 'Use a current browser and fictional details for your first test. The native interface is English.',
-        steps: ['Open Builder and fill the profile and relevant sections. Review the preview and remove example details before using a real resume.', 'Choose Download Resume and reopen the PDF. Check names, accents, line breaks and links. The PDF is not encrypted automatically.', 'Open Parser and select your saved PDF to inspect the extracted text. PDF import reconstructs fields heuristically; it does not guarantee the original formatting or every field.', 'Reloading or closing the tab can preserve editable work in browser storage. Keep your independent PDF; this is not a lossless editable-project export.', 'On a shared device, clear this tool’s site data when finished. Delete downloaded PDFs separately when no longer needed. There is no server document account to delete.'],
-        success: 'A fictional resume was generated as PDF, retained across reload and read by the native parser over real public HTTPS. No file uploads or external HTTP hosts appeared.', troubleshooting: 'Complex layouts and scanned PDFs may not parse correctly. Review imported fields manually. This local builder does not provide cloud sharing or account synchronization.', privacy: 'Resume processing is local. Browser data can remain after the tab closes, and downloaded files remain until deleted. Analytics and the remote count iframe were removed; fonts/assets are local. Page requests still produce infrastructure connection metadata.', next: 'Keep the final PDF safely and send it only to intended recipients. Use Reactive Resume separately if you need its account-based workflow.',
-      },
-      es: {
-        title: 'Creá y revisá un currículum localmente', intro: "Escribí un currículum en tu navegador, descargá su PDF y revisá el texto que lee el analizador. No necesitás cuenta.", prerequisites: 'Usá un navegador actualizado y datos ficticios en la primera prueba. La interfaz nativa está en inglés.',
-        steps: ['Abrí Builder y completá el perfil y las secciones necesarias. Revisá la vista previa y quitá los ejemplos antes de usar un currículum real.', 'Elegí Download Resume y volvé a abrir el PDF. Revisá nombres, acentos, saltos de línea y enlaces. El PDF no se cifra automáticamente.', 'Abrí Parser y seleccioná tu PDF para revisar el texto extraído. La importación reconstruye campos mediante aproximaciones; no garantiza el formato original ni todos los campos.', 'Recargar o cerrar la pestaña puede conservar el trabajo editable en el navegador. Guardá una copia PDF propia; no es una exportación completa y sin pérdidas del proyecto editable.', "En un dispositivo compartido, borrá los datos de este sitio al terminar. Eliminá las descargas por separado cuando ya no las necesités. No hay una cuenta de documentos en el servidor para borrar."],
-        success: 'Se generó un PDF ficticio, se comprobó la persistencia al recargar y se leyó con el analizador nativo por HTTPS público. No hubo cargas de archivos ni solicitudes HTTP a otros dominios.', troubleshooting: 'Los diseños complejos y PDF escaneados pueden analizarse mal. Revisá los campos importados. Este editor local no ofrece sincronización de cuentas ni uso compartido en la nube.', privacy: 'El currículum se procesa localmente. Los datos del navegador pueden quedar al cerrar la pestaña y las descargas permanecen hasta que las borrés. Se quitaron las estadísticas y el contador externo; fuentes y recursos son locales. Las visitas generan metadatos de conexión en la infraestructura.', next: 'Guardá el PDF final en un lugar seguro y envialo solo a sus destinatarios. Usá Reactive Resume por separado si necesitás su recorrido con cuenta.',
-      },
-    },
-  },
+  resumeGuide,
 ];

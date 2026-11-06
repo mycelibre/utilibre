@@ -97,10 +97,10 @@ export const accountAdditions: CatalogEntry[] = [
   {
     ...service('openresume', 'publicLocalResumeUrl', 5), category: 'utility', discoveryGroup: 'documents', accountAccess: undefined,
     modified: true, labels: ['local'], filesUploaded: false,
-    name: text('Build a résumé locally · OpenResume', 'Crear un currículum local · OpenResume'),
+    name: text('Build a résumé locally · OpenResume', 'Crear un currículum vitae · OpenResume'),
     description: text('Write a résumé, download its PDF or extract fields from an existing PDF in your browser.', 'Escribí un currículum, descargá su PDF o extraé campos de otro PDF en tu navegador.'),
     launchLabel: text('Build a résumé', 'Crear un currículum'),
-    limitation: text('The interface is in English. PDF import reconstructs text heuristically; review every field and layout. A PDF is not a lossless editable-project backup.', 'La interfaz está en inglés. La importación PDF reconstruye el texto mediante reglas aproximadas; revisá cada campo y el diseño. El PDF no es un respaldo editable sin pérdidas.'),
+    limitation: text('The builder is in Spanish and English; the PDF inspector is in English. PDF import reconstructs text heuristically; review every field and layout. A PDF is not a lossless editable-project backup.', 'El editor está en español e inglés; el analizador PDF, en inglés. La importación PDF reconstruye el texto mediante reglas aproximadas; revisá cada campo y el diseño. El PDF no es un respaldo editable sin pérdidas.'),
     dataFlow: text('Résumé parsing and PDF generation run in the browser. The verified workflow sent no files to the server. Application assets arrive through Cloudflare/Caddy; clicked outside links open other websites.', 'El análisis del currículum y la generación PDF ocurren en el navegador. El recorrido verificado no envió archivos al servidor. La aplicación se descarga por Cloudflare/Caddy; los enlaces externos abren otros sitios.'),
     upstreamServices: ['Cloudflare HTTPS proxy', 'Hetzner hosting'],
     temporaryStorage: text('Editable form data remains in localStorage after closing a tab. No server résumé database or account is created by this application.', 'Los campos editables quedan en localStorage al cerrar la pestaña. Esta aplicación no crea una cuenta ni una base de currículums en el servidor.'),

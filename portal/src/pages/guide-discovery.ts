@@ -3,7 +3,7 @@ import type { Language } from '../i18n';
 import type { PracticalGuide } from './practical-guide-data';
 
 // Editorial entry points into existing guides, not a second tool registry.
-export const featuredGuideIds = ['scan', 'image', 'transfer', 'poll', 'chart', 'mindmap'] as const;
+export const featuredGuideIds = ['scan', 'image', 'transfer', 'poll', 'chart', 'mindmap', 'openresume'] as const;
 
 interface GuideStart {
   title: string;
@@ -14,6 +14,10 @@ interface GuideStart {
 }
 
 export const guideStarts: Record<string, Record<Language, GuideStart>> = {
+  openresume: {
+    es: { title: 'Crear un currículum en PDF', result: 'Una hoja de vida revisada, lista para descargar y enviar.', example: 'María Ejemplo es un perfil ficticio de primer empleo: estudios, un proyecto escolar y habilidades concretas. Podés ver los tres PDF terminados y copiar sus textos más abajo.', overview: ['Elegí un ejemplo y escribí tus propios datos.', 'Revisá las secciones, el orden y el tamaño de página.', 'Descargá el PDF, abrilo y comprobá el texto.'], device: 'En una pantalla pequeña, la vista previa y Descargar PDF están debajo del formulario. Mantené esta guía en otra pestaña y buscá la descarga en Archivos o Descargas. Conservá una copia propia: el navegador puede borrar sus datos.' },
+    en: { title: 'Create a PDF résumé', result: 'A reviewed résumé ready to download and send.', example: 'María Example is a fictional first-job profile: education, a school project and specific skills. Find three finished PDFs and copyable texts below.', overview: ['Choose an example and write your own details.', 'Review sections, ordering and paper size.', 'Download the PDF, reopen it and check its text.'], device: 'On a small screen, the preview and Download PDF are below the form. Keep this guide in another tab and find the download in Files or Downloads. Keep your own copy: browsers can clear their stored data.' },
+  },
   scan: {
     en: { title: 'Read text from a scan', result: 'A searchable PDF and text you have checked against the original.', example: 'María Example · 12 May 2030 · 24 books. Check the accent, date and number after recognition.', overview: ['Open the practice scan and choose its OCR language.', 'Recognize the text and correct mistakes in your copied text.', 'Download, reopen and check before sharing.'], device: 'Start with one page. OCR needs an initial component and language download; allow extra time on a slower connection. Try the sample before using a large document.' },
     es: { title: 'Leer texto de un escaneo', result: 'Un PDF con texto seleccionable y texto revisado contra el original.', example: 'María Example · 12 de mayo de 2030 · 24 libros. Revisá el acento, la fecha y la cantidad después del reconocimiento.', overview: ['Abrí el escaneo de práctica y elegí el idioma del OCR.', 'Reconocé el texto y corregí los errores de tu copia.', 'Descargá, reabrí y revisá antes de compartir.'], device: 'Empezá con una página. OCR descarga componentes e idiomas al principio; una conexión lenta necesita más tiempo. Probá el ejemplo antes de usar un documento grande.' },
@@ -41,6 +45,7 @@ export const guideStarts: Record<string, Record<Language, GuideStart>> = {
 };
 
 const searchWords: Record<string, string> = {
+  openresume: 'curriculum vitae currículum hoja de vida primer empleo trabajo sin experiencia Guatemala cv resume résumé',
   scan: 'pdf ocr escaner escáner escaneado documento tramite trámite texto scanned document searchable',
   image: 'foto imagen comprimir dimensiones reducir tamaño peso solicitud upload image resize compress',
   transfer: 'telefono teléfono celular computadora movil móvil archivo enviar compartir phone computer transfer share',

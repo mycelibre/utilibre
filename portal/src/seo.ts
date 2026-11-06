@@ -21,8 +21,10 @@ export function pageSeo(route: Route, config: PublicConfig, search = '', fallbac
   const title = `${meta.title} | ${config.projectName}`;
   const image = origin ? route.page === 'collection'
     ? `${origin}/previews/collection-${route.collectionId}-${route.language}.png`
+    : route.page === 'guide' && route.guideId === 'openresume' ? `${origin}/examples/cv/preview-${route.language}.png`
     : `${origin}/brand/png/icon-512.png` : '';
   const imageAlt = route.page === 'collection' ? `${meta.title} · ${route.language === 'es' ? 'ejemplo ficticio de práctica' : 'fictional practice example'}`
+    : route.page === 'guide' && route.guideId === 'openresume' ? (route.language === 'es' ? 'Currículum de práctica con información ficticia' : 'Practice résumé with fictional information')
     : route.language === 'es' ? `Logo de ${config.projectName}` : `${config.projectName} logo`;
   const twitterCard = route.page === 'collection' ? 'summary_large_image' : 'summary';
   const structuredData = robots === 'index,follow' && canonical ? {

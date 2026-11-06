@@ -1,0 +1,811 @@
+diff --git a/next.config.js b/next.config.js
+index b5360ca..fea1d0b 100644
+--- a/next.config.js
++++ b/next.config.js
+@@ -6,6 +6,7 @@ const nextConfig = {
+   // the canvas package for webpack
+   // https://github.com/mozilla/pdf.js/issues/16214
+   output: 'export',
++  basePath: process.env.NEXT_PUBLIC_UTILIBRE_LANGUAGE === 'es' ? '/es' : '',
+   images: { unoptimized: true },
+   experimental: { cpus: 2 },
+   webpack: (config) => {
+diff --git a/src/app/components/Resume/ResumeControlBar.tsx b/src/app/components/Resume/ResumeControlBar.tsx
+index ec81200..97827d6 100644
+--- a/src/app/components/Resume/ResumeControlBar.tsx
++++ b/src/app/components/Resume/ResumeControlBar.tsx
+@@ -1,4 +1,5 @@
+ "use client";
++import { text, spanish } from "lib/utilibre-locale";
+ import { useEffect } from "react";
+ import { useSetDefaultScale } from "components/Resume/hooks";
+ import {
+@@ -34,10 +35,11 @@ const ResumeControlBar = ({
+   }, [update, document]);
+ 
+   return (
+-    <div className="sticky bottom-0 left-0 right-0 flex h-[var(--resume-control-bar-height)] items-center justify-center px-[var(--resume-padding)] text-gray-600 lg:justify-between">
++    <div className="sticky bottom-0 left-0 right-0 flex min-h-[var(--resume-control-bar-height)] flex-wrap gap-2 items-center justify-center px-[var(--resume-padding)] text-gray-600 lg:justify-between">
+       <div className="flex items-center gap-2">
+         <MagnifyingGlassIcon className="h-5 w-5" aria-hidden="true" />
+         <input
++          aria-label={text("Preview zoom")}
+           type="range"
+           min={0.5}
+           max={1.5}
+@@ -56,17 +58,17 @@ const ResumeControlBar = ({
+             checked={scaleOnResize}
+             onChange={() => setScaleOnResize((prev) => !prev)}
+           />
+-          <span className="select-none">Autoscale</span>
++          <span className="select-none">{text("Autoscale")}</span>
+         </label>
+       </div>
+-      <a
++      {instance.error ? <p role="alert">{text("The PDF could not be generated. Check your entries, then reload. Your saved draft stays in this browser.")}</p> : instance.loading || !instance.url ? <p role="status">{text("Preparing PDF…")}</p> : <a
+         className="ml-1 flex items-center gap-1 rounded-md border border-gray-300 px-3 py-0.5 hover:bg-gray-100 lg:ml-8"
+         href={instance.url!}
+-        download={fileName}
++        download={fileName + ".pdf"}
+       >
+         <ArrowDownTrayIcon className="h-4 w-4" />
+-        <span className="whitespace-nowrap">Download Resume</span>
+-      </a>
++        <span className="whitespace-nowrap">{text("Download PDF")}</span>
++      </a>}
+     </div>
+   );
+ };
+diff --git a/src/app/components/ResumeForm/CustomForm.tsx b/src/app/components/ResumeForm/CustomForm.tsx
+index 4597dfd..09a4fba 100644
+--- a/src/app/components/ResumeForm/CustomForm.tsx
++++ b/src/app/components/ResumeForm/CustomForm.tsx
+@@ -36,7 +36,7 @@ export const CustomForm = () => {
+             onChange={handleCustomChange}
+             showBulletPoints={showBulletPoints}
+           />
+-          <div className="absolute left-[7.7rem] top-[0.07rem]">
++          <div className="flex justify-end mt-1">
+             <BulletListIconButton
+               showBulletPoints={showBulletPoints}
+               onClick={handleShowBulletPoints}
+diff --git a/src/app/components/ResumeForm/EducationsForm.tsx b/src/app/components/ResumeForm/EducationsForm.tsx
+index 9bad2b2..441b63b 100644
+--- a/src/app/components/ResumeForm/EducationsForm.tsx
++++ b/src/app/components/ResumeForm/EducationsForm.tsx
+@@ -51,33 +51,33 @@ export const EducationsForm = () => {
+           >
+             <Input
+               label="School"
+-              labelClassName="col-span-4"
++              labelClassName="col-span-full sm:col-span-4"
+               name="school"
+-              placeholder="Cornell University"
++              placeholder="Educational institution"
+               value={school}
+               onChange={handleEducationChange}
+             />
+             <Input
+               label="Date"
+-              labelClassName="col-span-2"
++              labelClassName="col-span-full sm:col-span-2"
+               name="date"
+-              placeholder="May 2018"
++              placeholder="Year completed or current studies"
+               value={date}
+               onChange={handleEducationChange}
+             />
+             <Input
+               label="Degree & Major"
+-              labelClassName="col-span-4"
++              labelClassName="col-span-full sm:col-span-4"
+               name="degree"
+-              placeholder="Bachelor of Science in Computer Engineering"
++              placeholder="Qualification or course"
+               value={degree}
+               onChange={handleEducationChange}
+             />
+             <Input
+               label="GPA"
+-              labelClassName="col-span-2"
++              labelClassName="col-span-full sm:col-span-2"
+               name="gpa"
+-              placeholder="3.81"
++              placeholder="Optional"
+               value={gpa}
+               onChange={handleEducationChange}
+             />
+@@ -86,12 +86,12 @@ export const EducationsForm = () => {
+                 label="Additional Information (Optional)"
+                 labelClassName="col-span-full"
+                 name="descriptions"
+-                placeholder="Free paragraph space to list out additional activities, courses, awards etc"
++                placeholder="Relevant courses, projects or activities"
+                 value={descriptions}
+                 onChange={handleEducationChange}
+                 showBulletPoints={showBulletPoints}
+               />
+-              <div className="absolute left-[15.6rem] top-[0.07rem]">
++              <div className="flex justify-end mt-1">
+                 <BulletListIconButton
+                   showBulletPoints={showBulletPoints}
+                   onClick={handleShowBulletPoints}
+diff --git a/src/app/components/ResumeForm/Form/FeaturedSkillInput.tsx b/src/app/components/ResumeForm/Form/FeaturedSkillInput.tsx
+index 42f031f..cd46c2d 100644
+--- a/src/app/components/ResumeForm/Form/FeaturedSkillInput.tsx
++++ b/src/app/components/ResumeForm/Form/FeaturedSkillInput.tsx
+@@ -1,3 +1,4 @@
++import { text, spanish } from "lib/utilibre-locale";
+ import React, { useState } from "react";
+ import { INPUT_CLASS_NAME } from "components/ResumeForm/Form/InputGroup";
+ 
+@@ -22,6 +23,7 @@ export const FeaturedSkillInput = ({
+         type="text"
+         value={skill}
+         placeholder={placeholder}
++        aria-label={placeholder}
+         onChange={(e) => setSkillRating(e.target.value, rating)}
+         className={INPUT_CLASS_NAME}
+       />
+@@ -52,6 +54,11 @@ const CircleRating = ({
+         <div
+           className={`cursor-pointer p-0.5`}
+           key={idx}
++          role="button"
++          aria-label={`${text("Level")} ${idx + 1}`}
++          aria-pressed={rating === idx}
++          tabIndex={0}
++          onKeyDown={(event) => { if (["Enter", " "].includes(event.key)) { event.preventDefault(); setRating(idx); } }}
+           onClick={() => setRating(idx)}
+           onMouseEnter={() => setHoverRating(idx)}
+           onMouseLeave={() => setHoverRating(null)}
+diff --git a/src/app/components/ResumeForm/Form/IconButton.tsx b/src/app/components/ResumeForm/Form/IconButton.tsx
+index 3bd58a4..e8ce8dc 100644
+--- a/src/app/components/ResumeForm/Form/IconButton.tsx
++++ b/src/app/components/ResumeForm/Form/IconButton.tsx
+@@ -1,3 +1,4 @@
++import { text, spanish } from "lib/utilibre-locale";
+ import { IconButton } from "components/Button";
+ import {
+   EyeIcon,
+@@ -22,9 +23,9 @@ export const ShowIconButton = ({
+   const Icon = show ? EyeIcon : EyeSlashIcon;
+ 
+   return (
+-    <IconButton onClick={onClick} tooltipText={tooltipText}>
++    <IconButton onClick={onClick} tooltipText={text(tooltipText)}>
+       <Icon className="h-6 w-6 text-gray-400" aria-hidden="true" />
+-      <span className="sr-only">{tooltipText}</span>
++      <span className="sr-only">{text(tooltipText)}</span>
+     </IconButton>
+   );
+ };
+@@ -46,11 +47,11 @@ export const MoveIconButton = ({
+   return (
+     <IconButton
+       onClick={() => onClick(type)}
+-      tooltipText={tooltipText}
++      tooltipText={text(tooltipText)}
+       size={size}
+     >
+       <Icon className={`${sizeClassName} text-gray-400`} aria-hidden="true" />
+-      <span className="sr-only">{tooltipText}</span>
++      <span className="sr-only">{text(tooltipText)}</span>
+     </IconButton>
+   );
+ };
+@@ -63,9 +64,9 @@ export const DeleteIconButton = ({
+   tooltipText: string;
+ }) => {
+   return (
+-    <IconButton onClick={onClick} tooltipText={tooltipText} size="small">
++    <IconButton onClick={onClick} tooltipText={text(tooltipText)} size="small">
+       <TrashIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
+-      <span className="sr-only">{tooltipText}</span>
++      <span className="sr-only">{text(tooltipText)}</span>
+     </IconButton>
+   );
+ };
+@@ -84,7 +85,7 @@ export const BulletListIconButton = ({
+   return (
+     <IconButton
+       onClick={() => onClick(!showBulletPoints)}
+-      tooltipText={tooltipText}
++      tooltipText={text(tooltipText)}
+       size="small"
+       className={showBulletPoints ? "!bg-sky-100" : ""}
+     >
+@@ -94,7 +95,7 @@ export const BulletListIconButton = ({
+         }`}
+         aria-hidden="true"
+       />
+-      <span className="sr-only">{tooltipText}</span>
++      <span className="sr-only">{text(tooltipText)}</span>
+     </IconButton>
+   );
+ };
+diff --git a/src/app/components/ResumeForm/Form/InputGroup.tsx b/src/app/components/ResumeForm/Form/InputGroup.tsx
+index 8f73b99..93c4942 100644
+--- a/src/app/components/ResumeForm/Form/InputGroup.tsx
++++ b/src/app/components/ResumeForm/Form/InputGroup.tsx
+@@ -1,3 +1,4 @@
++import { text, spanish } from "lib/utilibre-locale";
+ import { useState, useEffect } from "react";
+ import ContentEditable from "react-contenteditable";
+ import { useAutosizeTextareaHeight } from "lib/hooks/useAutosizeTextareaHeight";
+@@ -27,7 +28,7 @@ export const InputGroupWrapper = ({
+   children?: React.ReactNode;
+ }) => (
+   <label className={`text-base font-medium text-gray-700 ${className}`}>
+-    {label}
++    {text(label)}
+     {children}
+   </label>
+ );
+@@ -49,7 +50,7 @@ export const Input = <K extends string>({
+         type="text"
+         name={name}
+         value={value}
+-        placeholder={placeholder}
++        placeholder={text(placeholder)}
+         onChange={(e) => onChange(name, e.target.value)}
+         className={INPUT_CLASS_NAME}
+       />
+@@ -73,7 +74,7 @@ export const Textarea = <T extends string>({
+         ref={textareaRef}
+         name={name}
+         className={`${INPUT_CLASS_NAME} resize-none overflow-hidden`}
+-        placeholder={placeholder}
++        placeholder={text(placeholder)}
+         value={value}
+         onChange={(e) => onChange(name, e.target.value)}
+       />
+@@ -126,11 +127,14 @@ const BulletListTextareaGeneral = <T extends string>({
+     <InputGroupWrapper label={label} className={wrapperClassName}>
+       <ContentEditable
+         contentEditable={true}
++        role="textbox"
++        aria-label={text(label)}
++        aria-multiline="true"
+         className={`${INPUT_CLASS_NAME} cursor-text [&>div]:list-item ${
+           showBulletPoints ? "pl-7" : "[&>div]:list-['']"
+         }`}
+         // Note: placeholder currently doesn't work
+-        placeholder={placeholder}
++        placeholder={text(placeholder)}
+         onChange={(e) => {
+           if (e.type === "input") {
+             const { innerText } = e.currentTarget as HTMLDivElement;
+@@ -179,7 +183,7 @@ const getHTMLFromBulletListStrings = (bulletListStrings: string[]) => {
+     return "<div></div>";
+   }
+ 
+-  return bulletListStrings.map((text) => `<div>${text}</div>`).join("");
++  return bulletListStrings.map((value) => `<div>${value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")}</div>`).join("");
+ };
+ 
+ /**
+@@ -208,7 +212,7 @@ const BulletListTextareaFallback = <T extends string>({
+       labelClassName={labelClassName}
+       name={name}
+       value={textareaValue}
+-      placeholder={placeholder}
++      placeholder={text(placeholder)}
+       onChange={(name, value) => {
+         onChange(
+           name,
+diff --git a/src/app/components/ResumeForm/Form/index.tsx b/src/app/components/ResumeForm/Form/index.tsx
+index 49aacf3..ff32c9c 100644
+--- a/src/app/components/ResumeForm/Form/index.tsx
++++ b/src/app/components/ResumeForm/Form/index.tsx
+@@ -1,3 +1,4 @@
++import { text, spanish } from "lib/utilibre-locale";
+ import { ExpanderWithHeightTransition } from "components/ExpanderWithHeightTransition";
+ import {
+   DeleteIconButton,
+@@ -95,6 +96,7 @@ export const Form = ({
+           <input
+             type="text"
+             className="block w-full border-b border-transparent text-lg font-semibold tracking-wide text-gray-900 outline-none hover:border-gray-300 hover:shadow-sm focus:border-gray-300 focus:shadow-sm"
++            aria-label={text("Section heading")}
+             value={heading}
+             onChange={(e) => setHeading(e.target.value)}
+           />
+@@ -125,7 +127,7 @@ export const Form = ({
+               className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
+               aria-hidden="true"
+             />
+-            {addButtonText}
++            {text(addButtonText)}
+           </button>
+         </div>
+       )}
+diff --git a/src/app/components/ResumeForm/ProfileForm.tsx b/src/app/components/ResumeForm/ProfileForm.tsx
+index c7461d8..b4a3457 100644
+--- a/src/app/components/ResumeForm/ProfileForm.tsx
++++ b/src/app/components/ResumeForm/ProfileForm.tsx
+@@ -20,7 +20,7 @@ export const ProfileForm = () => {
+           label="Name"
+           labelClassName="col-span-full"
+           name="name"
+-          placeholder="Sal Khan"
++          placeholder="Your name"
+           value={name}
+           onChange={handleProfileChange}
+         />
+@@ -28,39 +28,39 @@ export const ProfileForm = () => {
+           label="Objective"
+           labelClassName="col-span-full"
+           name="summary"
+-          placeholder="Entrepreneur and educator obsessed with making education free for anyone"
++          placeholder="A short, accurate summary of your experience and the work you seek"
+           value={summary}
+           onChange={handleProfileChange}
+         />
+         <Input
+           label="Email"
+-          labelClassName="col-span-4"
++          labelClassName="col-span-full sm:col-span-4"
+           name="email"
+-          placeholder="hello@khanacademy.org"
++          placeholder="you@example.invalid"
+           value={email}
+           onChange={handleProfileChange}
+         />
+         <Input
+           label="Phone"
+-          labelClassName="col-span-2"
++          labelClassName="col-span-full sm:col-span-2"
+           name="phone"
+-          placeholder="(123)456-7890"
++          placeholder="Your contact number"
+           value={phone}
+           onChange={handleProfileChange}
+         />
+         <Input
+           label="Website"
+-          labelClassName="col-span-4"
++          labelClassName="col-span-full sm:col-span-4"
+           name="url"
+-          placeholder="linkedin.com/in/khanacademy"
++          placeholder="Optional professional profile"
+           value={url}
+           onChange={handleProfileChange}
+         />
+         <Input
+           label="Location"
+-          labelClassName="col-span-2"
++          labelClassName="col-span-full sm:col-span-2"
+           name="location"
+-          placeholder="NYC, NY"
++          placeholder="City or municipality"
+           value={location}
+           onChange={handleProfileChange}
+         />
+diff --git a/src/app/components/ResumeForm/ProjectsForm.tsx b/src/app/components/ResumeForm/ProjectsForm.tsx
+index b69672a..f29cf2f 100644
+--- a/src/app/components/ResumeForm/ProjectsForm.tsx
++++ b/src/app/components/ResumeForm/ProjectsForm.tsx
+@@ -40,18 +40,18 @@ export const ProjectsForm = () => {
+             <Input
+               name="project"
+               label="Project Name"
+-              placeholder="OpenResume"
++              placeholder="Project title"
+               value={project}
+               onChange={handleProjectChange}
+-              labelClassName="col-span-4"
++              labelClassName="col-span-full sm:col-span-4"
+             />
+             <Input
+               name="date"
+               label="Date"
+-              placeholder="Winter 2022"
++              placeholder="Month/year – month/year"
+               value={date}
+               onChange={handleProjectChange}
+-              labelClassName="col-span-2"
++              labelClassName="col-span-full sm:col-span-2"
+             />
+             <BulletListTextarea
+               name="descriptions"
+diff --git a/src/app/components/ResumeForm/SkillsForm.tsx b/src/app/components/ResumeForm/SkillsForm.tsx
+index b7739d1..5775109 100644
+--- a/src/app/components/ResumeForm/SkillsForm.tsx
++++ b/src/app/components/ResumeForm/SkillsForm.tsx
+@@ -1,3 +1,4 @@
++import { text, spanish } from "lib/utilibre-locale";
+ import { Form } from "components/ResumeForm/Form";
+ import {
+   BulletListTextarea,
+@@ -48,7 +49,7 @@ export const SkillsForm = () => {
+             onChange={handleSkillsChange}
+             showBulletPoints={showBulletPoints}
+           />
+-          <div className="absolute left-[4.5rem] top-[0.07rem]">
++          <div className="flex justify-end mt-1">
+             <BulletListIconButton
+               showBulletPoints={showBulletPoints}
+               onClick={handleShowBulletPoints}
+@@ -61,8 +62,7 @@ export const SkillsForm = () => {
+           className="col-span-full"
+         >
+           <p className="mt-2 text-sm font-normal text-gray-600">
+-            Featured skills is optional to highlight top skills, with more
+-            circles mean higher proficiency.
++            {text("Optional visual ratings; written skills are enough for a simple CV.")}
+           </p>
+         </InputGroupWrapper>
+ 
+@@ -75,7 +75,7 @@ export const SkillsForm = () => {
+             setSkillRating={(newSkill, newRating) => {
+               handleFeaturedSkillsChange(idx, newSkill, newRating);
+             }}
+-            placeholder={`Featured Skill ${idx + 1}`}
++            placeholder={`${text("Featured skill")} ${idx + 1}`}
+             circleColor={themeColor}
+           />
+         ))}
+diff --git a/src/app/components/ResumeForm/ThemeForm/InlineInput.tsx b/src/app/components/ResumeForm/ThemeForm/InlineInput.tsx
+index bccd863..9d965e7 100644
+--- a/src/app/components/ResumeForm/ThemeForm/InlineInput.tsx
++++ b/src/app/components/ResumeForm/ThemeForm/InlineInput.tsx
+@@ -1,3 +1,4 @@
++import { text, spanish } from "lib/utilibre-locale";
+ interface InputProps<K extends string, V extends string> {
+   label: string;
+   labelClassName?: string;
+@@ -21,7 +22,7 @@ export const InlineInput = <K extends string>({
+     <label
+       className={`flex gap-2 text-base font-medium text-gray-700 ${labelClassName}`}
+     >
+-      <span className="w-28">{label}</span>
++      <span className="w-28">{text(label)}</span>
+       <input
+         type="text"
+         name={name}
+diff --git a/src/app/components/ResumeForm/ThemeForm/Selection.tsx b/src/app/components/ResumeForm/ThemeForm/Selection.tsx
+index cc424e9..70a3ca0 100644
+--- a/src/app/components/ResumeForm/ThemeForm/Selection.tsx
++++ b/src/app/components/ResumeForm/ThemeForm/Selection.tsx
+@@ -1,3 +1,4 @@
++import { text, spanish } from "lib/utilibre-locale";
+ import type { GeneralSetting } from "lib/redux/settingsSlice";
+ import { PX_PER_PT } from "lib/constants";
+ import {
+@@ -36,6 +37,8 @@ const Selection = ({
+       onKeyDown={(e) => {
+         if (["Enter", " "].includes(e.key)) onClick();
+       }}
++      role="button"
++      aria-pressed={isSelected}
+       tabIndex={0}
+     >
+       {children}
+@@ -122,7 +125,7 @@ export const FontSizeSelections = ({
+             }}
+             onClick={() => handleSettingsChange("fontSize", fontSizePt)}
+           >
+-            {type}
++            {text(type)}
+           </Selection>
+         );
+       })}
+@@ -150,9 +153,9 @@ export const DocumentSizeSelections = ({
+             onClick={() => handleSettingsChange("documentSize", type)}
+           >
+             <div className="flex flex-col items-center">
+-              <div>{type}</div>
++              <div>{text(type)}</div>
+               <div className="text-xs">
+-                {type === "Letter" ? "(US, Canada)" : "(other countries)"}
++                {type === "Letter" ? "216 × 279 mm" : "210 × 297 mm"}
+               </div>
+             </div>
+           </Selection>
+diff --git a/src/app/components/ResumeForm/ThemeForm/index.tsx b/src/app/components/ResumeForm/ThemeForm/index.tsx
+index c1ef863..22a037b 100644
+--- a/src/app/components/ResumeForm/ThemeForm/index.tsx
++++ b/src/app/components/ResumeForm/ThemeForm/index.tsx
+@@ -1,3 +1,4 @@
++import { text, spanish } from "lib/utilibre-locale";
+ import { BaseForm } from "components/ResumeForm/Form";
+ import { InputGroupWrapper } from "components/ResumeForm/Form/InputGroup";
+ import { THEME_COLORS } from "components/ResumeForm/ThemeForm/constants";
+@@ -32,9 +33,9 @@ export const ThemeForm = () => {
+       <div className="flex flex-col gap-6">
+         <div className="flex items-center gap-2">
+           <Cog6ToothIcon className="h-6 w-6 text-gray-600" aria-hidden="true" />
+-          <h1 className="text-lg font-semibold tracking-wide text-gray-900 ">
+-            Resume Setting
+-          </h1>
++          <h2 className="text-lg font-semibold tracking-wide text-gray-900 ">
++            {text("Resume settings")}
++          </h2>
+         </div>
+         <div>
+           <InlineInput
+@@ -56,6 +57,8 @@ export const ThemeForm = () => {
+                   if (["Enter", " "].includes(e.key))
+                     handleSettingsChange("themeColor", color);
+                 }}
++                role="button"
++                aria-label={`${text("Theme Color")} ${color}`}
+                 tabIndex={0}
+               >
+                 {settings.themeColor === color ? "✓" : ""}
+diff --git a/src/app/components/ResumeForm/WorkExperiencesForm.tsx b/src/app/components/ResumeForm/WorkExperiencesForm.tsx
+index 2927696..86f8d29 100644
+--- a/src/app/components/ResumeForm/WorkExperiencesForm.tsx
++++ b/src/app/components/ResumeForm/WorkExperiencesForm.tsx
+@@ -48,23 +48,23 @@ export const WorkExperiencesForm = () => {
+               label="Company"
+               labelClassName="col-span-full"
+               name="company"
+-              placeholder="Khan Academy"
++              placeholder="Fictional organization"
+               value={company}
+               onChange={handleWorkExperienceChange}
+             />
+             <Input
+               label="Job Title"
+-              labelClassName="col-span-4"
++              labelClassName="col-span-full sm:col-span-4"
+               name="jobTitle"
+-              placeholder="Software Engineer"
++              placeholder="Role or responsibility"
+               value={jobTitle}
+               onChange={handleWorkExperienceChange}
+             />
+             <Input
+               label="Date"
+-              labelClassName="col-span-2"
++              labelClassName="col-span-full sm:col-span-2"
+               name="date"
+-              placeholder="Jun 2022 - Present"
++              placeholder="Month/year – month/year"
+               value={date}
+               onChange={handleWorkExperienceChange}
+             />
+diff --git a/src/app/components/ResumeForm/index.tsx b/src/app/components/ResumeForm/index.tsx
+index 2f0d8c7..6b74bbe 100644
+--- a/src/app/components/ResumeForm/index.tsx
++++ b/src/app/components/ResumeForm/index.tsx
+@@ -1,4 +1,5 @@
+ "use client";
++import { text, spanish } from "lib/utilibre-locale";
+ import { useState } from "react";
+ import {
+   useAppSelector,
+@@ -41,6 +42,7 @@ export const ResumeForm = () => {
+       onMouseLeave={() => setIsHover(false)}
+     >
+       <section className="flex max-w-2xl flex-col gap-8 p-[var(--resume-padding)]">
++        <p className="text-sm text-gray-700">{text("Keep only information relevant to the job. No account is needed. Download a copy before clearing browser data.")}</p>
+         <ProfileForm />
+         {formsOrder.map((form) => {
+           const Component = formTypeToComponent[form];
+diff --git a/src/app/components/TopNavBar.tsx b/src/app/components/TopNavBar.tsx
+index b05523f..10777fd 100644
+--- a/src/app/components/TopNavBar.tsx
++++ b/src/app/components/TopNavBar.tsx
+@@ -1,52 +1,14 @@
+ "use client";
+-import { usePathname } from "next/navigation";
+-import Link from "next/link";
+-import Image from "next/image";
+-import logoSrc from "public/logo.svg";
+-import { cx } from "lib/cx";
+-
+-export const TopNavBar = () => {
+-  const pathName = usePathname();
+-  const isHomePage = pathName === "/";
+-
+-  return (
+-    <header
+-      aria-label="Site Header"
+-      className={cx(
+-        "flex h-[var(--top-nav-bar-height)] items-center border-b-2 border-gray-100 px-3 lg:px-12",
+-        isHomePage && "bg-dot"
+-      )}
+-    >
+-      <div className="flex h-10 w-full items-center justify-between">
+-        <Link href="/">
+-          <span className="sr-only">OpenResume</span>
+-          <Image
+-            src={logoSrc}
+-            alt="OpenResume Logo"
+-            className="h-8 w-full"
+-            priority
+-          />
+-        </Link>
+-        <nav
+-          aria-label="Site Nav Bar"
+-          className="flex items-center gap-2 text-sm font-medium"
+-        >
+-          {[
+-            ["/resume-builder", "Builder"],
+-            ["/resume-parser", "Parser"],
+-          ].map(([href, text]) => (
+-            <Link
+-              key={text}
+-              className="rounded-md px-1.5 py-2 text-gray-500 hover:bg-gray-100 focus-visible:bg-gray-100 lg:px-4"
+-              href={href}
+-            >
+-              {text}
+-            </Link>
+-          ))}
+-          <a href="https://utilibre.org" className="rounded-md px-2 py-2 text-gray-600">Utilibre</a>
+-          <a href="https://tools.utilibre.org/utilibre-source/openresume-utilibre.tar.gz" className="rounded-md px-2 py-2 text-gray-600">Source / Código</a>
+-        </nav>
+-      </div>
+-    </header>
+-  );
+-};
++import { text, spanish } from "lib/utilibre-locale";
++export const TopNavBar = () => (
++  <header className="flex min-h-[var(--top-nav-bar-height)] flex-wrap items-center gap-3 border-b-2 border-gray-100 px-3 py-2 text-sm">
++    <a className="font-semibold text-gray-900" href={spanish ? "/es/resume-builder" : "/resume-builder"}>OpenResume</a>
++    <nav aria-label={spanish ? "Navegación" : "Navigation"} className="flex flex-wrap items-center gap-x-4 gap-y-2">
++      <a href={`https://utilibre.org/${spanish ? "es/guias/curriculum-local" : "en/guides/local-resume"}`}>{text("Guide and examples")}</a>
++      <a href={`https://utilibre.org/${spanish ? "es" : "en"}/`}>Utilibre · {text("Tools")}</a>
++      <a href="/resume-parser">{text("Text inspector (English)")}</a>
++      <a href="https://tools.utilibre.org/utilibre-source/openresume-utilibre.tar.gz">{text("Source")}</a>
++      <a href={spanish ? "/resume-builder" : "/es/resume-builder"} hrefLang={spanish ? "en" : "es"} lang={spanish ? "en" : "es"}>{spanish ? "English" : "Español"}</a>
++    </nav>
++  </header>
++);
+diff --git a/src/app/layout.tsx b/src/app/layout.tsx
+index 6e5a964..a7ff6de 100644
+--- a/src/app/layout.tsx
++++ b/src/app/layout.tsx
+@@ -1,8 +1,9 @@
++import { text, spanish } from "lib/utilibre-locale";
+ import "globals.css";
+ import { TopNavBar } from "components/TopNavBar";
+ 
+ export const metadata = {
+-  title: "OpenResume - Free Open-source Resume Builder and Parser",
++  title: spanish ? "Crear un currículum en PDF · Utilibre / OpenResume" : "OpenResume - Free Open-source Resume Builder and Parser",
+   description:
+     "OpenResume is a free, open-source, and powerful resume builder that allows anyone to create a modern professional resume in 3 simple steps. For those who have an existing resume, OpenResume also provides a resume parser to help test and confirm its ATS readability.",
+ };
+@@ -13,7 +14,7 @@ export default function RootLayout({
+   children: React.ReactNode;
+ }) {
+   return (
+-    <html lang="en">
++    <html lang={spanish ? "es" : "en"}>
+       <body>
+         <TopNavBar />
+         {children}
+diff --git a/src/app/lib/redux/settingsSlice.ts b/src/app/lib/redux/settingsSlice.ts
+index 7e8fa83..15c2b1d 100644
+--- a/src/app/lib/redux/settingsSlice.ts
++++ b/src/app/lib/redux/settingsSlice.ts
+@@ -1,3 +1,4 @@
++import { text, spanish } from "lib/utilibre-locale";
+ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+ import type { RootState } from "lib/redux/store";
+ 
+@@ -54,11 +55,11 @@ export const initialSettings: Settings = {
+     custom: false,
+   },
+   formToHeading: {
+-    workExperiences: "WORK EXPERIENCE",
+-    educations: "EDUCATION",
+-    projects: "PROJECT",
+-    skills: "SKILLS",
+-    custom: "CUSTOM SECTION",
++    workExperiences: text("WORK EXPERIENCE"),
++    educations: text("EDUCATION"),
++    projects: text("PROJECT"),
++    skills: text("SKILLS"),
++    custom: text("CUSTOM SECTION"),
+   },
+   formsOrder: ["workExperiences", "educations", "projects", "skills", "custom"],
+   showBulletPoints: {
+diff --git a/src/app/lib/utilibre-locale.ts b/src/app/lib/utilibre-locale.ts
+new file mode 100644
+index 0000000..da337f3
+--- /dev/null
++++ b/src/app/lib/utilibre-locale.ts
+@@ -0,0 +1,80 @@
++/* Utilibre UI translation only. User text and saved documents are never translated. */
++export const spanish = process.env.NEXT_PUBLIC_UTILIBRE_LANGUAGE === "es";
++const es: Record<string, string> = {
++  "Name": "Nombre",
++  "Objective": "Perfil profesional",
++  "Email": "Correo electrónico",
++  "Phone": "Teléfono",
++  "Website": "Enlace profesional (opcional)",
++  "Location": "Municipio y departamento",
++  "Company": "Empresa u organización",
++  "Job Title": "Puesto",
++  "Date": "Fechas",
++  "Description": "Actividades y logros",
++  "School": "Centro educativo",
++  "Degree & Major": "Título o carrera",
++  "GPA": "Promedio (opcional)",
++  "Additional Information (Optional)": "Información adicional (opcional)",
++  "Project Name": "Nombre del proyecto",
++  "Skills List": "Habilidades e idiomas",
++  "Featured Skills (Optional)": "Habilidades destacadas (opcional)",
++  "Custom Textbox": "Texto adicional",
++  "Add Job": "Agregar experiencia",
++  "Add School": "Agregar estudios",
++  "Add Project": "Agregar proyecto",
++  "Delete job": "Eliminar experiencia",
++  "Delete school": "Eliminar estudios",
++  "Delete project": "Eliminar proyecto",
++  "Hide section": "Ocultar sección",
++  "Show section": "Mostrar sección",
++  "Move up": "Subir",
++  "Move down": "Bajar",
++  "Hide bullet points": "Quitar viñetas",
++  "Show bullet points": "Mostrar viñetas",
++  "Resume settings": "Diseño del currículum",
++  "Theme Color": "Color",
++  "Font Family": "Tipografía",
++  "Font Size (pt)": "Tamaño de letra (pt)",
++  "Document Size": "Tamaño de página",
++  "Compact": "Compacto",
++  "Standard": "Estándar",
++  "Large": "Grande",
++  "Letter": "Carta",
++  "WORK EXPERIENCE": "EXPERIENCIA",
++  "EDUCATION": "EDUCACIÓN",
++  "PROJECT": "PROYECTOS",
++  "SKILLS": "HABILIDADES",
++  "CUSTOM SECTION": "INFORMACIÓN ADICIONAL",
++  "Preview zoom": "Ampliar vista previa",
++  "Section heading": "Título de la sección",
++  "Autoscale": "Ajustar vista",
++  "Download PDF": "Descargar PDF",
++  "Preparing PDF…": "Preparando PDF…",
++  "The PDF could not be generated. Check your entries, then reload. Your saved draft stays in this browser.": "No se pudo generar el PDF. Revisá los campos y recargá. El borrador guardado permanece en este navegador.",
++  "Keep only information relevant to the job. No account is needed. Download a copy before clearing browser data.": "Incluí solo información pertinente al puesto. No necesitás cuenta. Descargá una copia antes de borrar los datos del navegador.",
++  "Your name": "Tu nombre",
++  "A short, accurate summary of your experience and the work you seek": "Un resumen breve y fiel de tu experiencia y del trabajo que buscás",
++  "you@example.invalid": "tu-correo@example.invalid",
++  "Your contact number": "Tu número de contacto",
++  "Optional professional profile": "Perfil profesional opcional",
++  "City or municipality": "Municipio y departamento",
++  "Fictional organization": "Organización ficticia",
++  "Role or responsibility": "Puesto o responsabilidad",
++  "Month/year – month/year": "Mes/año – mes/año",
++  "Bullet points": "Una actividad por línea",
++  "Educational institution": "Centro educativo",
++  "Year completed or current studies": "Año de finalización o estudios en curso",
++  "Qualification or course": "Título o curso",
++  "Optional": "Opcional",
++  "Relevant courses, projects or activities": "Cursos, proyectos o actividades pertinentes",
++  "Project title": "Título del proyecto",
++  "Featured skill": "Habilidad destacada",
++  "Level": "Nivel",
++  "Optional visual ratings; written skills are enough for a simple CV.": "La valoración visual es opcional; describir tus habilidades basta para un currículum sencillo.",
++  "Create a résumé": "Crear un currículum",
++  "Guide and examples": "Guía y ejemplos",
++  "Source": "Código fuente",
++  "Tools": "Herramientas",
++  "Text inspector (English)": "Analizador de texto (inglés)"
++};
++export const text = (value: string): string => spanish ? (es[value] ?? value) : value;
+diff --git a/src/app/resume-builder/page.tsx b/src/app/resume-builder/page.tsx
+index f8dd0cb..996da26 100644
+--- a/src/app/resume-builder/page.tsx
++++ b/src/app/resume-builder/page.tsx
+@@ -1,4 +1,5 @@
+ "use client";
++import { text, spanish } from "lib/utilibre-locale";
+ import { Provider } from "react-redux";
+ import { store } from "lib/redux/store";
+ import { ResumeForm } from "components/ResumeForm";
+@@ -8,6 +9,7 @@ export default function Create() {
+   return (
+     <Provider store={store}>
+       <main className="relative h-full w-full overflow-hidden bg-gray-50">
++        <h1 className="sr-only">{text("Create a résumé")}</h1>
+         <div className="grid grid-cols-3 md:grid-cols-6">
+           <div className="col-span-3">
+             <ResumeForm />

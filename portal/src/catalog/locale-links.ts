@@ -12,7 +12,9 @@ export function localizedSupportUrl(base: string, language: Language): string {
 /** Verified against deployed upstream versions, not guessed universal lang parameters. */
 export function localizedServiceUrl(id: string, base: string, language: Language, path?: string): string {
   const url = new URL(path ?? base, base);
-  if (id === 'librespeed') {
+  if (id === 'openresume' && (!path || path === '/resume-builder')) {
+    url.pathname = language === 'es' ? '/es/resume-builder' : '/resume-builder';
+  } else if (id === 'librespeed') {
     url.pathname = language === 'es' ? '/es.html' : '/';
   } else if (['one-file-core', 'tiddlywiki'].includes(id) && (!path || path === `/apps/${id}/`)) {
     url.pathname = `/apps/${id}/${language === 'es' ? 'es/' : ''}`;

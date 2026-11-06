@@ -282,8 +282,8 @@ const october9TaskChecks: Partial<Record<string, LocalizedText>> = {
   },
   // docs/records/openresume-deployment-2026-10-09.md
   "openresume": {
-    en: "9 October 2026: A fictional résumé was created over public HTTPS, downloaded as PDF and reopened in the native parser; saved browser details survived reload. No outside browser requests occurred. PDF reconstruction is approximate, not a lossless project round trip.",
-    es: "9 de octubre de 2026: Se creó un currículum ficticio por HTTPS público, se descargó como PDF y se abrió en el analizador nativo; los datos guardados en el navegador sobrevivieron a la recarga. No hubo solicitudes externas desde el navegador. Reconstruir un PDF es aproximado, no una recuperación exacta del proyecto.",
+    en: "6 November 2026: The EN/ES builder exported six readable fictional PDFs. Browser drafts survived reload and language switching; desktop and touch-emulated download passed with no file uploads or third-party requests. Real-phone coverage is not established; English PDF import remains approximate.",
+    es: "6 de noviembre de 2026: El editor EN/ES exportó seis PDF ficticios legibles. El borrador sobrevivió a la recarga y al cambio de idioma; pasó la descarga en escritorio y con pantalla táctil simulada, sin subir archivos ni solicitudes externas. No se certifican teléfonos reales; importar PDF en inglés sigue siendo aproximado.",
   },
 };
 export function verificationText(entry: CatalogEntry, language: Language): string {
