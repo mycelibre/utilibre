@@ -43,7 +43,7 @@ the timer. This restores daily polling and does not change the running app.
 Application rollback requires the existing exact-pin/configuration/health gates;
 keep the previous image and never restore a whole older `.env` over newer changes.
 
-## What is and is not unattended
+## Initial assessment before PrivateBin implementation
 
 The completed 5 November 03:32 UTC upstream report lists 112 checked providers:
 110 in `review-before-update`, SearXNG using its guarded upstream updater, and
@@ -58,7 +58,7 @@ release. The new release includes SVG-preview, request-size and Markdown
 sanitization corrections; previous package scans do not clear those new issues.
 Source: [official 2.1.1 release](https://github.com/PrivateBin/PrivateBin/releases/tag/2.1.1).
 
-A reliable unattended PrivateBin path still needs to reuse its existing native
+The initial implementation gap was an unattended PrivateBin path reusing its existing native
 tests and release procedure while preparing the new image and matching template,
 preserving sanitizer behavior, 25 MB attachments, one-week maximum expiry,
 temporary-volume checks and all subsequent runtime repairs. Synthetic old-paste,
@@ -124,3 +124,38 @@ upgraded. The comparison excludes downgrades and ambiguous/prerelease strings,
 recognizes our documented local revision suffixes, and feeds the existing
 weekly digest. No new notification schedule was added. Redlib's independent
 read-only check returned `up-to-date`.
+
+## Portal release and final checks
+
+At **02:48:40 UTC**, the portal deployed image
+`sha256:d53e7d50db9a679656e301fc5d24a3acc907bcfa58682b17a3211f24632052a3`
+from clean source commit `e058f2d`, preserving runtime image
+`sha256:e14dc8727bc020940f1f733d4ee95399232290c31a92655e02357f632178b0b6`.
+Only built frontend/SSR and the tracked server files changed. Before preparation,
+the deployed server files exactly matched the committed baseline. Typecheck,
+lint, FOSS policy/build and **all 120 unit tests** passed. One pre-existing test
+expected the superseded Redlib revision; it now checks the approved recipe's
+revision instead of another hardcoded value. The isolated image's 21 extracted
+packages and zero scanner findings match its predecessor under the same database.
+
+The PrivateBin version in the software/transparency pages now reads the existing
+read-only deployment-record mount, as SearXNG already did. Native health, isolated
+EN/ES server-rendered pages and actual public EN/ES software pages with the live
+embedded version were verified. The first portal attempt rolled back after
+Python urllib received a public 403; normal curl requests returned 200. Retrying
+the exact artifact with the public-page/embedded-config gate passed. No CDN,
+origin access rule or privacy control was relaxed. This does not claim that every
+automated client is accepted by the edge.
+
+Portal rollback: compare the single `PORTAL_IMAGE` line against the private
+receipt in `/var/lib/utilibre-privatebin-updater/portal-release-wvneg3yg/deployment.json`;
+restore that line to the recorded previous image only, then recreate only portal
+with `docker compose -p public-utility up -d --no-deps --pull never portal` from
+the repository and verify native health. Preserve all other `.env` fields.
+PrivateBin's independent image/data are unaffected by this portal rollback.
+
+An isolated native PrivateBin discovery run also passed under the installed
+updater service's ProtectHome/NoNewPrivileges settings: approximately 4 seconds,
+337 MiB peak host-process memory, zero swap in that run. This is a test-run
+measurement, not a production concurrency estimate. PrivateBin and SearXNG timers
+are enabled/active; the final PrivateBin service run returned `up-to-date`.

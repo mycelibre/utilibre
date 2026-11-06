@@ -3221,9 +3221,9 @@
             "patched": "2.1.0"
           }
         ],
-        "disposition": "fixed-by-tested-backport",
-        "reason": "Release 2.1.0 is the declared upstream correction, but its HTML profile still needs the retained FORBID_ATTR class/style/id restriction to preserve our tested behavior. Native browser regression verifies deceptive attributes removed and ordinary text remains; matching template SRI is bound. No broader advisory exception.",
-        "source": "https://github.com/PrivateBin/PrivateBin/security/advisories/GHSA-w873-3ghv-hmh6"
+        "disposition": "fixed-by-tested-upstream-release",
+        "reason": "Native PrivateBin 2.1.1 replaces the former local 2.1.0 Markdown sanitizer backport. Native browser test removes modal class/id/style while retaining ordinary paste text; see also GHSA-c4gc-8mcm-hh65.",
+        "source": "docs/records/update-automation-2026-11-06.md"
       },
       {
         "id": "GHSA-hw9p-r7fq-8mvr",
