@@ -4,6 +4,8 @@ import {execFileSync} from 'node:child_process';
 import {mkdir,mkdtemp,writeFile,lstat,copyFile,rename,readlink} from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {readFile} from 'node:fs/promises';
 const applications={
   ...Object.fromEntries(['freshrss','radicale','calino','one-file-core','link-cleaner','drawio'].map(id=>[id,[id,'reviewed-below']])),
   'it-tools':['it-tools','5732483fc24a6e6818839060bdf3cc7d9d324b9f'],
@@ -34,7 +36,10 @@ if(name==='cryptpad')paths.push('customize/application_config.js','customize/cke
 const files=[];
 for(const p of new Set(paths)){
   assert(!p.startsWith('/')&&!p.split('/').includes('..'));
-  assert(!/(^|\/)(?:node_modules|secrets|backups|\.git|\.env)(\/|$)/.test(p),`Unsafe archive entry ${p}`);
+  // Calino commits a public VITE_SITE_URL default in .env. Permit only its
+  // reviewed exact upstream bytes, never a local runtime environment file.
+  const publicDefault=name==='calino'&&p==='.env'&&createHash('sha256').update(await readFile(root+'/'+p)).digest('hex')==='14a017506554fcc5d37b8950b19616c02b9e72b10858440128c3e5f4227489eb';
+  assert(publicDefault||!/(^|\/)(?:node_modules|secrets|backups|\.git|\.env)(\/|$)/.test(p),`Unsafe archive entry ${p}`);
   // Git submodules are represented by directories; their pinned revision and
   // normal upstream dependency installer remain in the source tree.
   const s=await lstat(`${root}/${p}`);if(s.isDirectory())continue;
