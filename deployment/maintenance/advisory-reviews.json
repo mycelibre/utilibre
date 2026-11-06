@@ -2835,13 +2835,97 @@
     "runtimeEvidence": "2026-10-29 Redlib fork 29f18352cf54be4ffe579f773552acd0c45cdd08 retains Cargo 0.36.0, the settings-redirect repair, Tokio 1.54.1 and every predecessor runtime layer. The existing application advisory range remains <0.35.1, outside this version. Native listings, original-thread comments, cursor sorting, focused replies and a proxied image passed; 22 offline regressions passed. Same-snapshot Trivy 0.75.0: all 320 Cargo metadata records extracted, no reported dependency matches; 92 unchanged Ubuntu packages retain 79 medium and 13 low matches, no high/critical. See config/redlib/recipe.json and docs/records/redlib-threads-2026-10-20.md. No other finding or scope is accepted or suppressed."
   },
   "freshrss": {
-    "version": "1.30.1",
-    "reviewedAt": "2026-10-11",
+    "version": "1.30.4",
+    "reviewedAt": "2026-11-06",
     "containers": {
-      "/utilibre-services-freshrss-1": "sha256:9b74a8a1411fd8ad582be1badb0602b81ceeb215547e87d32b58a965399fc323"
+      "/utilibre-services-freshrss-1": "sha256:46aa631691b25d7afddb1c9d6d39fa379529d12c50792875be7ddcad91dc2be8"
     },
-    "runtimeEvidence": "2026-10-12 completed Archive::Tar, coturn, Kuma crypto, native mount and CryptPad parser releases: exact predecessor chains, preserved application/configuration boundaries, native regression/application tests and live gates verified. CryptPad package metadata changes are limited to its tested braces dependency. Application versions and advisory dispositions are unchanged; dependency findings are reviewed separately. See archive-tar-final, coturn-bson-final, kuma-crypto-final, mount-acl-final and application-leaves-final recipes. 2026-10-12 curl follow-up: native stable curl and compatible QUIC companions repaired. Existing ABI, complete application files, configuration and unrelated libraries are unchanged. Both upstream TLS suites, old/new isolated native transfers and live health passed. Application version and advisory IDs/revisions/ranges are unchanged; this does not clear dependency findings. See closure-followup/README.md. 2026-10-12 stable util-linux follow-up: exact installed native utility family and Penpot private libmount/libblkid repaired, existing ABI preserved. Application files outside these two library paths, image/runtime configuration and unrelated libraries are unchanged. Native old/new controls and live health passed. Application version and advisory IDs/revisions/ranges are unchanged; this does not clear dependency findings. See closure-followup/README.md. 2026-10-12 terminal-CLI follow-up: only native ncurses-bin changed; exact image configuration, complete app-file and shared-library hashes match the previously reviewed image. Native terminal round-trip, old/new overflow regression and live health passed. Application version and advisory IDs/revisions/ranges are unchanged; this does not clear dependency findings. See closure-followup/README.md. 2026-10-12 follow-up: application versions and advisory revisions/ranges remain unchanged. Exact passed Expat/Apache/cache release chains, application-file parity outside named dependencies, native gates and live identities verified. See closure-followup/README.md. This rebinds application advisory review only, not dependency clearance. Earlier evidence: 2026-10-11: native FRESHRSS_VERSION remains 1.30.1. The real Debian XML package backport and subsequent signed PCRE2-only layer preserve the complete application bytes. Fresh empty-account/feed/article/OPML native gates and exact-image live health passed. Predecessor evidence: xml-final-20261011/{application-byte-parity,release}.json and freshrss/native.json; final layer: vendor-leaves-final-20261011/{pcre-stage,pcre-native,release}.json. All 24 reviewed upstream application advisory revisions/ranges retained; native/dependency findings remain separate.",
+    "runtimeEvidence": "docs/records/release-refresh-2026-11-06.md; private freshrss-security-source-parity.json and freshrss-checks/application.json",
     "advisories": [
+      {
+        "id": "GHSA-347f-rp68-x4jf",
+        "updated": "2026-10-21T15:06:15Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<1.30.1",
+            "patched": "1.30.1"
+          }
+        ],
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-347f-rp68-x4jf",
+        "disposition": "upstream-reports-fixed-at-deployed-version",
+        "reason": "Upstream lists a patched 1.30.0/1.30.1 release; deployed 1.30.4 retains the native correction. Release changelog and exact live auth/feed/URI source files checked, with native account/storage/export checks. This is upstream-fix evidence, not an independent reproduction of every advisory."
+      },
+      {
+        "id": "GHSA-xw7h-4v58-4p3p",
+        "updated": "2026-10-21T15:03:33Z",
+        "affected": [
+          {
+            "package": "freshrss/freshrss",
+            "range": ">= 1.24.2",
+            "patched": "1.30.1"
+          }
+        ],
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-xw7h-4v58-4p3p",
+        "disposition": "upstream-reports-fixed-at-deployed-version",
+        "reason": "The advisory has an open-ended affected range but explicitly lists 1.30.1 as patched. Deployed 1.30.4 httpUtil.php exactly matches the pinned source and includes RFC8215 local-use NAT64 64:ff9b:1::/48 in PRIVATE_SUBNETS. Targeted native reflection check retained. No live SSRF probe."
+      },
+      {
+        "id": "GHSA-pm58-g35h-w85q",
+        "updated": "2026-10-25T16:16:25Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<1.30.0",
+            "patched": "1.30.0"
+          }
+        ],
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-pm58-g35h-w85q",
+        "disposition": "upstream-reports-fixed-at-deployed-version",
+        "reason": "Upstream lists a patched 1.30.0/1.30.1 release; deployed 1.30.4 retains the native correction. Release changelog and exact live auth/feed/URI source files checked, with native account/storage/export checks. This is upstream-fix evidence, not an independent reproduction of every advisory."
+      },
+      {
+        "id": "GHSA-rv9c-qhwg-9j55",
+        "updated": "2026-10-25T13:27:00Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<1.30.0",
+            "patched": "1.30.0"
+          }
+        ],
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-rv9c-qhwg-9j55",
+        "disposition": "upstream-reports-fixed-at-deployed-version",
+        "reason": "Upstream lists a patched 1.30.0/1.30.1 release; deployed 1.30.4 retains the native correction. Release changelog and exact live auth/feed/URI source files checked, with native account/storage/export checks. This is upstream-fix evidence, not an independent reproduction of every advisory."
+      },
+      {
+        "id": "GHSA-3mcm-w43v-qvvq",
+        "updated": "2026-10-25T13:26:11Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<1.30.0",
+            "patched": "1.30.0"
+          }
+        ],
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-3mcm-w43v-qvvq",
+        "disposition": "upstream-reports-fixed-at-deployed-version",
+        "reason": "Upstream lists a patched 1.30.0/1.30.1 release; deployed 1.30.4 retains the native correction. Release changelog and exact live auth/feed/URI source files checked, with native account/storage/export checks. This is upstream-fix evidence, not an independent reproduction of every advisory."
+      },
+      {
+        "id": "GHSA-8pvw-w7w8-vjj7",
+        "updated": "2026-10-21T15:04:08Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "1.11.0-1.29.1",
+            "patched": "1.30.0"
+          }
+        ],
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-8pvw-w7w8-vjj7",
+        "disposition": "upstream-reports-fixed-at-deployed-version",
+        "reason": "Upstream lists a patched 1.30.0/1.30.1 release; deployed 1.30.4 retains the native correction. Release changelog and exact live auth/feed/URI source files checked, with native account/storage/export checks. This is upstream-fix evidence, not an independent reproduction of every advisory."
+      },
       {
         "id": "GHSA-3fw6-j8m4-82vj",
         "updated": "2026-09-26T16:09:02Z",
@@ -2852,242 +2936,92 @@
             "patched": "1.30.0"
           }
         ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
         "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-3fw6-j8m4-82vj"
       },
       {
-        "id": "GHSA-w743-fg6g-mhwh",
-        "updated": "2026-03-08T20:40:06Z",
+        "id": "GHSA-cgqh-mxr9-mx7h",
+        "updated": "2026-10-21T14:48:49Z",
+        "affected": [
+          {
+            "package": "freshrss.org/freshrss",
+            "range": "<= 1.29.1",
+            "patched": "1.30.0"
+          }
+        ],
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-cgqh-mxr9-mx7h",
+        "disposition": "upstream-reports-fixed-at-deployed-version",
+        "reason": "Upstream lists a patched 1.30.0/1.30.1 release; deployed 1.30.4 retains the native correction. Release changelog and exact live auth/feed/URI source files checked, with native account/storage/export checks. This is upstream-fix evidence, not an independent reproduction of every advisory."
+      },
+      {
+        "id": "GHSA-hx52-rwx7-wg87",
+        "updated": "2026-10-21T14:48:35Z",
+        "affected": [
+          {
+            "package": "freshrss.org/freshrss",
+            "range": "<= 1.29.1",
+            "patched": "1.30.0"
+          }
+        ],
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-hx52-rwx7-wg87",
+        "disposition": "upstream-reports-fixed-at-deployed-version",
+        "reason": "Upstream lists a patched 1.30.0/1.30.1 release; deployed 1.30.4 retains the native correction. Release changelog and exact live auth/feed/URI source files checked, with native account/storage/export checks. This is upstream-fix evidence, not an independent reproduction of every advisory."
+      },
+      {
+        "id": "GHSA-wmcc-46r3-6q5f",
+        "updated": "2026-10-21T15:04:24Z",
         "affected": [
           {
             "package": "",
-            "range": "<=1.27.1",
-            "patched": "1.28.0"
+            "range": "1.29.1",
+            "patched": "1.30.0"
           }
         ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-w743-fg6g-mhwh"
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-wmcc-46r3-6q5f",
+        "disposition": "upstream-reports-fixed-at-deployed-version",
+        "reason": "Upstream lists a patched 1.30.0/1.30.1 release; deployed 1.30.4 retains the native correction. Release changelog and exact live auth/feed/URI source files checked, with native account/storage/export checks. This is upstream-fix evidence, not an independent reproduction of every advisory."
       },
       {
-        "id": "GHSA-j9wc-gwc6-p786",
-        "updated": "2025-12-26T16:35:36Z",
+        "id": "GHSA-94h5-9h74-7c4q",
+        "updated": "2026-10-21T14:48:22Z",
         "affected": [
           {
-            "package": "",
-            "range": "<= v1.27.1",
-            "patched": "1.28.0"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-j9wc-gwc6-p786"
-      },
-      {
-        "id": "GHSA-w7f5-8vf9-f966",
-        "updated": "2025-12-18T15:59:55Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<=1.27.0",
-            "patched": "1.27.1"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-w7f5-8vf9-f966"
-      },
-      {
-        "id": "GHSA-w35p-p867-qr4f",
-        "updated": "2025-09-29T20:49:56Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<=1.26.3",
-            "patched": "1.27.0"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-w35p-p867-qr4f"
-      },
-      {
-        "id": "GHSA-rwhf-vjjx-gmm9",
-        "updated": "2025-09-29T17:01:08Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<=1.26.3",
-            "patched": "1.27.0"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-rwhf-vjjx-gmm9"
-      },
-      {
-        "id": "GHSA-jf4v-f8p2-8xvq",
-        "updated": "2025-09-27T14:51:59Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<=1.26.3",
-            "patched": "1.27.0"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-jf4v-f8p2-8xvq"
-      },
-      {
-        "id": "GHSA-42v4-65f8-5wgr",
-        "updated": "2025-09-27T14:51:29Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<=1.26.3",
-            "patched": "1.27.0"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-42v4-65f8-5wgr"
-      },
-      {
-        "id": "GHSA-j66v-hvqx-5vh3",
-        "updated": "2025-09-29T18:25:02Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<=1.26.3",
-            "patched": "1.27.0"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-j66v-hvqx-5vh3"
-      },
-      {
-        "id": "GHSA-jcww-48g9-wf57",
-        "updated": "2025-07-31T16:48:13Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<1.26.2",
-            "patched": "1.26.2, 1.26.3"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-jcww-48g9-wf57"
-      },
-      {
-        "id": "GHSA-wm5p-7pr7-c8rw",
-        "updated": "2025-09-27T14:50:22Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<=1.26.3",
-            "patched": "1.27.0"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-wm5p-7pr7-c8rw"
-      },
-      {
-        "id": "GHSA-8f79-3q3w-43c4",
-        "updated": "2025-06-03T22:08:33Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<=1.26.1",
-            "patched": "1.26.2"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-8f79-3q3w-43c4"
-      },
-      {
-        "id": "GHSA-w3m8-wcf4-h8vm",
-        "updated": "2026-09-26T16:55:56Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<=1.26.1",
-            "patched": "1.26.2 (partial fix), 1.30.0 (complete fix)"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-w3m8-wcf4-h8vm"
-      },
-      {
-        "id": "GHSA-wgrq-mcwc-8f8v",
-        "updated": "2025-06-03T22:08:01Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<=1.26.1",
-            "patched": "1.26.2"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-wgrq-mcwc-8f8v"
-      },
-      {
-        "id": "GHSA-jjm2-4hf7-9x65",
-        "updated": "2025-06-03T22:07:44Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<=1.26.1",
-            "patched": "1.26.2"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-jjm2-4hf7-9x65"
-      },
-      {
-        "id": "GHSA-vpmc-3fv2-jmgp",
-        "updated": "2025-06-03T22:07:30Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<=1.26.1",
-            "patched": "1.26.2"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-vpmc-3fv2-jmgp"
-      },
-      {
-        "id": "GHSA-f6r4-jrvc-cfmr",
-        "updated": "2025-06-03T22:06:56Z",
-        "affected": [
-          {
-            "package": "",
-            "range": "<=1.26.1",
-            "patched": "1.26.2"
-          }
-        ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-f6r4-jrvc-cfmr"
-      },
-      {
-        "id": "GHSA-fv9v-wcrw-mhg6",
-        "updated": "2026-09-26T17:17:28Z",
-        "affected": [
-          {
-            "package": "FreshRSS",
+            "package": "FreshRSS/FreshRSS",
             "range": "<=1.29.1",
             "patched": "1.30.0"
           }
         ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-fv9v-wcrw-mhg6"
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-94h5-9h74-7c4q",
+        "disposition": "upstream-reports-fixed-at-deployed-version",
+        "reason": "Upstream lists a patched 1.30.0/1.30.1 release; deployed 1.30.4 retains the native correction. Release changelog and exact live auth/feed/URI source files checked, with native account/storage/export checks. This is upstream-fix evidence, not an independent reproduction of every advisory."
       },
       {
-        "id": "GHSA-hvrj-5fwj-p7v6",
-        "updated": "2022-12-10T11:54:53Z",
+        "id": "GHSA-w7h3-x83g-x9gm",
+        "updated": "2026-10-21T14:43:00Z",
+        "affected": [
+          {
+            "package": "freshrss",
+            "range": "<=1.29.1",
+            "patched": "1.30.0"
+          }
+        ],
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-w7h3-x83g-x9gm",
+        "disposition": "upstream-reports-fixed-at-deployed-version",
+        "reason": "Upstream lists a patched 1.30.0/1.30.1 release; deployed 1.30.4 retains the native correction. Release changelog and exact live auth/feed/URI source files checked, with native account/storage/export checks. This is upstream-fix evidence, not an independent reproduction of every advisory."
+      },
+      {
+        "id": "GHSA-g5jg-qcfw-5jpw",
+        "updated": "2026-11-05T22:32:48Z",
         "affected": [
           {
             "package": "",
-            "range": ">= 1.18.0, <= 1.20.1",
-            "patched": "1.20.2"
+            "range": "<=1.29.2",
+            "patched": "1.30.0"
           }
         ],
-        "reason": "Reviewed installed 1.30.1 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
-        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-hvrj-5fwj-p7v6"
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-g5jg-qcfw-5jpw",
+        "disposition": "upstream-reports-fixed-at-deployed-version",
+        "reason": "Upstream lists a patched 1.30.0/1.30.1 release; deployed 1.30.4 retains the native correction. Release changelog and exact live auth/feed/URI source files checked, with native account/storage/export checks. This is upstream-fix evidence, not an independent reproduction of every advisory."
       },
       {
         "id": "GHSA-pcq9-mq6m-mvmp",
@@ -3100,8 +3034,34 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "GitHub compare verifies fix 476e57b is an ancestor (behind_by=0) of deployed FreshRSS 4a810f1624b9d0b97b4400614cf9aacc8ada40e3 / 1.30.1; the historical 1.27.2-dev interval is not deployed.",
+        "reason": "GitHub compare verifies fix 476e57b is an ancestor (behind_by=0) of deployed FreshRSS 4a810f1624b9d0b97b4400614cf9aacc8ada40e3 / 1.30.4; the historical 1.27.2-dev interval is not deployed.",
         "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-pcq9-mq6m-mvmp"
+      },
+      {
+        "id": "GHSA-w743-fg6g-mhwh",
+        "updated": "2026-03-08T20:40:06Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.27.1",
+            "patched": "1.28.0"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-w743-fg6g-mhwh"
+      },
+      {
+        "id": "GHSA-j9wc-gwc6-p786",
+        "updated": "2025-12-26T16:35:36Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<= v1.27.1",
+            "patched": "1.28.0"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-j9wc-gwc6-p786"
       },
       {
         "id": "GHSA-qw34-frg7-gf78",
@@ -3114,8 +3074,21 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): 1.28.0; reviewed installed 1.30.1 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Published patched version(s): 1.28.0; reviewed installed 1.30.4 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
         "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-qw34-frg7-gf78"
+      },
+      {
+        "id": "GHSA-w7f5-8vf9-f966",
+        "updated": "2025-12-18T15:59:55Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.27.0",
+            "patched": "1.27.1"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-w7f5-8vf9-f966"
       },
       {
         "id": "GHSA-6c8h-w3j5-j293",
@@ -3128,8 +3101,34 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): 1.27.1; reviewed installed 1.30.1 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Published patched version(s): 1.27.1; reviewed installed 1.30.4 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
         "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-6c8h-w3j5-j293"
+      },
+      {
+        "id": "GHSA-w35p-p867-qr4f",
+        "updated": "2025-09-29T20:49:56Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.26.3",
+            "patched": "1.27.0"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-w35p-p867-qr4f"
+      },
+      {
+        "id": "GHSA-rwhf-vjjx-gmm9",
+        "updated": "2025-09-29T17:01:08Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.26.3",
+            "patched": "1.27.0"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-rwhf-vjjx-gmm9"
       },
       {
         "id": "GHSA-h625-ghr3-jppq",
@@ -3142,8 +3141,151 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): 1.27.0; reviewed installed 1.30.1 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Published patched version(s): 1.27.0; reviewed installed 1.30.4 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
         "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-h625-ghr3-jppq"
+      },
+      {
+        "id": "GHSA-jf4v-f8p2-8xvq",
+        "updated": "2025-09-27T14:51:59Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.26.3",
+            "patched": "1.27.0"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-jf4v-f8p2-8xvq"
+      },
+      {
+        "id": "GHSA-42v4-65f8-5wgr",
+        "updated": "2025-09-27T14:51:29Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.26.3",
+            "patched": "1.27.0"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-42v4-65f8-5wgr"
+      },
+      {
+        "id": "GHSA-j66v-hvqx-5vh3",
+        "updated": "2025-09-29T18:25:02Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.26.3",
+            "patched": "1.27.0"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-j66v-hvqx-5vh3"
+      },
+      {
+        "id": "GHSA-jcww-48g9-wf57",
+        "updated": "2025-07-31T16:48:13Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<1.26.2",
+            "patched": "1.26.2, 1.26.3"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-jcww-48g9-wf57"
+      },
+      {
+        "id": "GHSA-wm5p-7pr7-c8rw",
+        "updated": "2025-09-27T14:50:22Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.26.3",
+            "patched": "1.27.0"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-wm5p-7pr7-c8rw"
+      },
+      {
+        "id": "GHSA-8f79-3q3w-43c4",
+        "updated": "2025-06-03T22:08:33Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.26.1",
+            "patched": "1.26.2"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-8f79-3q3w-43c4"
+      },
+      {
+        "id": "GHSA-w3m8-wcf4-h8vm",
+        "updated": "2026-09-26T16:55:56Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.26.1",
+            "patched": "1.26.2 (partial fix), 1.30.0 (complete fix)"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-w3m8-wcf4-h8vm"
+      },
+      {
+        "id": "GHSA-wgrq-mcwc-8f8v",
+        "updated": "2025-06-03T22:08:01Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.26.1",
+            "patched": "1.26.2"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-wgrq-mcwc-8f8v"
+      },
+      {
+        "id": "GHSA-jjm2-4hf7-9x65",
+        "updated": "2025-06-03T22:07:44Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.26.1",
+            "patched": "1.26.2"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-jjm2-4hf7-9x65"
+      },
+      {
+        "id": "GHSA-vpmc-3fv2-jmgp",
+        "updated": "2025-06-03T22:07:30Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.26.1",
+            "patched": "1.26.2"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-vpmc-3fv2-jmgp"
+      },
+      {
+        "id": "GHSA-f6r4-jrvc-cfmr",
+        "updated": "2025-06-03T22:06:56Z",
+        "affected": [
+          {
+            "package": "",
+            "range": "<=1.26.1",
+            "patched": "1.26.2"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-f6r4-jrvc-cfmr"
       },
       {
         "id": "GHSA-8vvv-jxg6-8578",
@@ -3156,8 +3298,34 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): >= 1.21.0; reviewed installed 1.30.1 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Published patched version(s): >= 1.21.0; reviewed installed 1.30.4 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
         "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-8vvv-jxg6-8578"
+      },
+      {
+        "id": "GHSA-fv9v-wcrw-mhg6",
+        "updated": "2026-09-26T17:17:28Z",
+        "affected": [
+          {
+            "package": "FreshRSS",
+            "range": "<=1.29.1",
+            "patched": "1.30.0"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-fv9v-wcrw-mhg6"
+      },
+      {
+        "id": "GHSA-hvrj-5fwj-p7v6",
+        "updated": "2022-12-10T11:54:53Z",
+        "affected": [
+          {
+            "package": "",
+            "range": ">= 1.18.0, <= 1.20.1",
+            "patched": "1.20.2"
+          }
+        ],
+        "reason": "Reviewed installed 1.30.4 is outside every bounded upstream application range in this advisory. Exact running image identities are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "source": "https://github.com/FreshRSS/FreshRSS/security/advisories/GHSA-hvrj-5fwj-p7v6"
       }
     ]
   },

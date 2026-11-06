@@ -523,7 +523,7 @@ test('software inventory credits only retained Utilibre services and their data 
     Redlib: { facts: 'polak14 29f1835 + Utilibre privacy, provenance and dependency fixes · AGPL-3.0-only', source: 'https://github.com/polak14/redlib/tree/29f18352cf54be4ffe579f773552acd0c45cdd08' },
     Anubis: { facts: '1.27.0 · MIT', source: 'https://github.com/TecharoHQ/anubis/tree/v1.27.0' },
     FreshRSS: { facts: '1.30.4 · AGPL-3.0-only', source: 'https://github.com/FreshRSS/FreshRSS/tree/08f97bd497ace733c151ea1c709d85cd5b65cc53' },
-    PrivateBin: { facts: '2.0.6 · Zlib', source: 'https://github.com/PrivateBin/PrivateBin/tree/2.0.6' },
+    PrivateBin: { facts: '2.1.1 · Zlib', source: 'https://github.com/PrivateBin/PrivateBin' },
     RSSHub: { facts: '40aca954 · AGPL-3.0-only', source: 'https://github.com/DIYgod/RSSHub/tree/40aca9548e99eefd519ff7abbb937560fc037c95' },
     PostgreSQL: { facts: '17.11-alpine · PostgreSQL License', source: 'https://github.com/postgres/postgres' },
     Valkey: { facts: '9.1.1-alpine · BSD-3-Clause', source: 'https://github.com/valkey-io/valkey/tree/9.1.1' },

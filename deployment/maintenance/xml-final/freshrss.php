@@ -25,4 +25,20 @@ $document=new DOMDocument();
 if (!$document->loadXML($opml,LIBXML_NONET)) throw new Exception('OPML invalid');
 $xpath=new DOMXPath($document);
 if ($xpath->query('//outline[@xmlUrl="https://example.invalid/fictional.xml"]')->length !== 1) throw new Exception('OPML missing feed');
+// New upstream sanitizer behavior: exercise rejection and legitimate content.
+if (version_compare(FRESHRSS_VERSION, '1.30.2', '>=')) {
+    foreach ([
+        ['<a href="data:text/html,<script>alert(1)</script>">click</a>', 'href="data:'],
+        ['<iframe src="data:text/html,<script>alert(1)</script>"></iframe>', 'src="data:'],
+        ['<a href="javascript:alert(1)">click</a>', 'href="javascript:'],
+        ['<img src="x" onerror="alert(1)">', 'onerror'],
+    ] as [$input, $forbidden]) {
+        if (str_contains(FreshRSS_SimplePieCustom::sanitizeHTML($input), $forbidden)) throw new Exception('Unsafe native sanitizer output');
+    }
+    if (FreshRSS_SimplePieCustom::sanitizeHTML('<p>Hello <b>world</b></p>') !== '<p>Hello <b>world</b></p>') throw new Exception('Legitimate markup lost');
+    $image = '<img src="data:image/png;base64,iVBORw0KGgo=">';
+    if (!str_contains(FreshRSS_SimplePieCustom::sanitizeHTML($image), 'src="data:image/png;')) throw new Exception('Local image lost');
+    $subnets = (new ReflectionClass(FreshRSS_http_Util::class))->getConstant('PRIVATE_SUBNETS');
+    if (!in_array('64:ff9b:1::/48', $subnets, true)) throw new Exception('NAT64 local-use guard missing');
+}
 echo "FRESHRSS_NATIVE_PASSED\n";

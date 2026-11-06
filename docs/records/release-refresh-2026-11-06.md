@@ -151,3 +151,33 @@ Build/download staging consumed disk space; no production backup or general
 Docker volume/image pruning was performed. Large build caches may be cleaned
 only after preserving the exact source, lockfiles, release receipts and rollback
 artifacts needed for the next replay.
+
+
+## Final portal and advisory reconciliation
+
+The clean committed portal build passed lint, typecheck, the FOSS/build gates
+and 120 unit tests. Its source/software pages now use the catalogue's FreshRSS
+and Redlib versions rather than obsolete duplicate strings. The exact portal
+image `sha256:0243688ca5bc6f67632f74b66e0a0e877aebb02cd00940605a12d3beee75aeca`
+was activated with unchanged runtime packages and zero added scanner findings;
+EN/ES public software pages show all eight updated applications. Prior image:
+`sha256:d53e7d50db9a679656e301fc5d24a3acc907bcfa58682b17a3211f24632052a3`.
+Rollback changes only the recorded PORTAL_IMAGE line and recreates portal;
+account applications and their data are independent.
+
+FreshRSS's 36 applicable historical advisory reviews were reconciled against the
+new exact image, upstream fixed-version declarations, changelog and live-source
+parity. Native sanitizer checks preserve legitimate markup/data images while
+rejecting data-URI navigation, scripts and event handlers; the NAT64 local-use
+range check also passes. **One low advisory remains open:**
+GHSA-5pmx-x7q6-hv7m describes both data and vbscript URI schemes. Upstream 1.30.4
+implements the data-URI fix but does not explicitly list vbscript in its scheme
+blocklist. This is documented defense in depth under upstream's CSP, not a claim
+of current exploitation. The broader report remains a review queue; scanner
+rules and severity thresholds were not changed to erase it.
+
+The source publisher encountered Calino's upstream-tracked `.env` and stopped.
+The exception now requires its exact public SHA256 and sole VITE_SITE_URL default;
+local runtime secrets remain forbidden. Source offers include only tracked
+upstream files and committed, allowlisted integration material. Public source
+indexes retain the existing design and return link.
