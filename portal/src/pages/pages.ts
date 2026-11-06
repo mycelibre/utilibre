@@ -383,7 +383,7 @@ function renderTransparency(language: Language, config: PublicConfig, t: Transla
       dataRow(t('transparency.field.upstream'), entry.upstreamServices.join(', ') || t('transparency.noUpstream')),
       dataRow(t('transparency.field.project'), entry.upstreamProject || t('transparency.portalProject')),
       dataRow(t('transparency.field.license'), licenseText(entry.license, language)),
-      dataRow(t('transparency.field.version'), entry.id === 'searxng' && config.searxngDeployedVersion ? `${config.searxngDeployedVersion} + ${t('transparency.logRedaction')}` : entry.installedVersion),
+      dataRow(t('transparency.field.version'), entry.id === 'searxng' && config.searxngDeployedVersion ? `${config.searxngDeployedVersion} + ${t('transparency.logRedaction')}` : entry.id === 'privatebin' && config.privatebinDeployedVersion ? config.privatebinDeployedVersion : entry.installedVersion),
       dataRow(t('transparency.field.modified'), entry.modified ? t('transparency.yes') : t('transparency.no')),
     );
     details.append(summary, list);
@@ -570,7 +570,7 @@ function renderSoftware(language: Language, config: PublicConfig, t: Translate):
     { group: 'hosted', name: 'Redlib', version: 'a4d36e9 + local redirect hardening', license: 'AGPL-3.0-only', upstream: 'https://github.com/redlib-org/redlib/tree/a4d36e954cf1bd64f209cd8868c5a29edc81b374', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.redlib') },
     { group: 'hosted', name: 'Anubis', version: '1.27.0', license: 'MIT', upstream: 'https://github.com/TecharoHQ/anubis/tree/v1.27.0', modification: t('software.imageUnmodifiedConfigured'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.anubis') },
     { group: 'hosted', name: 'FreshRSS', version: '1.29.1', license: 'AGPL-3.0-only', upstream: 'https://github.com/FreshRSS/FreshRSS/tree/1.29.1', modification: t('software.notModified'), purpose: t('software.purpose.freshrss') },
-    { group: 'hosted', name: 'PrivateBin', version: '2.0.6', license: 'Zlib', upstream: 'https://github.com/PrivateBin/PrivateBin/tree/2.0.6', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.privatebin') },
+    { group: 'hosted', name: 'PrivateBin', version: config.privatebinDeployedVersion || '2.1.1', license: 'Zlib', upstream: 'https://github.com/PrivateBin/PrivateBin', modification: t('software.modified'), modifiedSource: config.sourceCodeUrl, purpose: t('software.purpose.privatebin') },
     { group: 'infrastructure', name: 'RSSHub', version: '40aca954', license: 'AGPL-3.0-only', upstream: 'https://github.com/DIYgod/RSSHub/tree/40aca9548e99eefd519ff7abbb937560fc037c95', modification: t('software.notModified'), purpose: t('software.purpose.rsshub') },
     { group: 'infrastructure', name: 'PostgreSQL', version: '17.11-alpine', license: 'PostgreSQL License', upstream: 'https://github.com/postgres/postgres', modification: t('software.notModified'), purpose: t('software.purpose.postgresql') },
     { group: 'browser', name: 'Newsreader', version: '5.3.0 package', license: 'OFL-1.1', upstream: 'https://github.com/productiontype/Newsreader', modification: t('software.notModified'), purpose: t('software.purpose.fonts') },

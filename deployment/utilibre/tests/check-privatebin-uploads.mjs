@@ -12,7 +12,8 @@ const live = process.argv.includes('--public');
 const image=process.env.PRIVATEBIN_TEST_IMAGE || 'utilibre-privatebin:php-security-20261022';
 assert(/^(utilibre-privatebin:[a-zA-Z0-9_.-]+|sha256:[a-f0-9]{64})$/.test(image),'Use a reviewed local PrivateBin image');
 const base = live ? 'https://paste.utilibre.org' : 'http://127.0.0.1:3185';
-const recipe = fileURLToPath(new URL('../config/privatebin/', import.meta.url));
+const recipe = process.env.PRIVATEBIN_TEST_CONFIG ? process.env.PRIVATEBIN_TEST_CONFIG.replace(/\/$/,'')+'/' : fileURLToPath(new URL('../config/privatebin/', import.meta.url));
+assert(recipe.startsWith('/')&&!recipe.includes('..'),'Use an absolute reviewed test configuration');
 const output = await mkdtemp('/opt/utilibre/reports/privatebin-uploads-');
 const temp = await mkdtemp('/tmp/utilibre-privatebin-upload-test-');
 const name = `utilibre-privatebin-upload-test-${process.pid}`, network = `${name}-net`;
@@ -20,6 +21,20 @@ const docker = (...args) => execFileSync('docker', args, {encoding:'utf8', stdio
 let bridge, browser, page, receipt, imageId, created=false, networkCreated=false;
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const errors=[], outside=new Set(), checks=[];
+let cleaning;
+function cleanup(){return cleaning??=(async()=>{
+  try { if(receipt?.id&&receipt?.deletetoken){
+    const r=await fetch(`${base}/?pasteid=${receipt.id}&deletetoken=${receipt.deletetoken}`,{headers:{'X-Requested-With':'JSONHttpRequest'},signal:AbortSignal.timeout(8000)});
+    assert.equal((await r.json()).status,0,'Synthetic paste deletion failed; inspect private cleanup receipt');
+    await rm(`${output}/cleanup.json`,{force:true});
+  } } finally {
+  if(browser)await browser.close();
+  if(bridge?.pid){try{process.kill(-bridge.pid,'SIGTERM')}catch{}}
+  if(created)docker('rm','-f',name);if(networkCreated)docker('network','rm',network);
+  await rm(temp,{recursive:true});
+  }
+})();}
+process.once('SIGTERM',()=>{cleanup().finally(()=>process.exit(143));});
 try {
   if (!live) {
     imageId=docker('image','inspect','--format','{{.Id}}',image).trim();
@@ -36,6 +51,8 @@ try {
     bridge=spawn('socat',['TCP4-LISTEN:3185,bind=127.0.0.1,reuseaddr,fork,max-children=16',`TCP4:${ip}:8080`],{detached:true,stdio:'ignore'});
     let ready=false;for(let n=0;n<30;n++){try{ready=(await fetch(base,{signal:AbortSignal.timeout(1000)})).ok}catch{}if(ready)break;await new Promise(r=>setTimeout(r,500))}assert(ready);
     docker('exec',name,'nginx','-t');
+    docker('exec',name,'php','-r',"define('PATH','/srv/');require PATH.'vendor/autoload.php';$c=new PrivateBin\\Configuration;if($c->getKey('discussion'))exit(1);");
+    checks.push('native discussion configuration is disabled; encrypted comment replay surface unavailable');
     docker('exec',name,'php','-r',"require '/srv/cfg/upload-guard.php'; if(utilibreHasUploadHeadroom(false)||utilibreHasUploadHeadroom(1024**3-1)||!utilibreHasUploadHeadroom(1024**3))exit(1);");
     checks.push('candidate native config validation and low-disk admission boundary');
     for (const invalid of [null, 'wrong-volume\n']) {
@@ -61,6 +78,7 @@ try {
   checks.push('upstream directory version/template/attachment detection matches live HTML');
   browser=await chromium.launch();
   const context=await browser.newContext({locale:'en-US',viewport:{width:1280,height:900},acceptDownloads:true});
+  await context.route('**/*',route=>{const u=new URL(route.request().url());return u.protocol.startsWith('http')&&u.origin!==base?route.abort():route.continue()});
   context.on('request',r=>{const u=new URL(r.url());if(u.protocol.startsWith('http')&&u.origin!==base)outside.add(u.origin)});
   page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
   assert.equal((await page.goto(base+'/')).status(),200);
@@ -72,8 +90,25 @@ try {
   });
   assert.match(sanitized.text,/Fictional notice/);assert.deepEqual({...sanitized,text:undefined},{classes:false,ids:false,styles:false,text:undefined});
   checks.push('upstream Markdown sanitizer removes deceptive modal class, id and inline style');
+  if (!live) {
+    const svg=await page.evaluate(()=>{
+      const viewer=window.PrivateBin.AttachmentViewer;
+      const svg='<svg xmlns="http://www.w3.org/2000/svg"><script>window.fixtureExecuted=true</script><text x="1" y="20">ļscriptľwindow.fixtureExecuted=true;ļ/scriptľ Fictional SVG</text></svg>';
+      viewer.setAttachment('data:image/svg+xml;base64,'+btoa(String.fromCharCode(...new TextEncoder().encode(svg))),'fictional.svg');
+      viewer.showAttachment();
+      const preview=document.querySelector('#attachmentPreview img');
+      return {src:preview?.getAttribute('src'),executed:window.fixtureExecuted===true,
+        unsafeMime:viewer.isSafeMimeType('image/svg+xml')};
+    });
+    assert(svg.src?.startsWith('data:image/svg+xml;'),'SVG preview must use an opaque-origin data URL');
+    assert(!decodeURIComponent(svg.src).includes('<script'));
+    assert(decodeURIComponent(svg.src).includes('ļscriptľ'),'Unicode text must not turn into script delimiters');
+    assert.equal(svg.executed,false);assert.equal(svg.unsafeMime,false);
+    checks.push('SVG preview sanitizes script and uses opaque-origin data URL, not same-origin blob');
+  }
   await page.reload();await page.locator('#message').waitFor();
   const spanish=await browser.newContext({locale:'es-GT',viewport:{width:390,height:844}});
+  await spanish.route('**/*',route=>{const u=new URL(route.request().url());return u.protocol.startsWith('http')&&u.origin!==base?route.abort():route.continue()});
   spanish.on('request',r=>{const u=new URL(r.url());if(u.protocol.startsWith('http')&&u.origin!==base)outside.add(u.origin)});
   const mobile=await spanish.newPage(),mobileErrors=[];
   mobile.on('pageerror',e=>mobileErrors.push(e.stack||e.message));await mobile.goto(base+'/');
@@ -148,6 +183,10 @@ try {
     const rejected=await (await fetch(base+'/',{method:'POST',headers:{'Content-Type':'application/json','X-Requested-With':'JSONHttpRequest'},body:JSON.stringify({...posted.fields,ct:randomBytes(26_250_003).toString('base64')})})).json();
     assert.equal(rejected.status,1);assert.match(rejected.message,/limited/);
     checks.push('server rejects ciphertext beyond 35,000,000 bytes');
+    await new Promise(resolve=>setTimeout(resolve,11000));
+    const padded=await (await fetch(base+'/',{method:'POST',headers:{'Content-Type':'application/json','X-Requested-With':'JSONHttpRequest'},body:JSON.stringify({...posted.fields,ct:'YQ==',padding:'x'.repeat(35_000_001)})})).json();
+    assert.equal(padded.status,1);assert.match(padded.message,/limited/);
+    checks.push('full request limit includes non-ciphertext padding');
     docker('exec',name,'php','-r',"define('PATH','/srv/');require PATH.'vendor/autoload.php';$m=new PrivateBin\\Model(new PrivateBin\\Configuration);$p=['v'=>2,'ct'=>'fictional-expired-record','meta'=>['expire_date'=>time()-1]];if(!$m->getStore()->create('1111111111111111',$p))exit(1);");
     docker('exec',name,'php','/srv/bin/administration','--purge');
     docker('exec',name,'php','-r',"define('PATH','/srv/');require PATH.'vendor/autoload.php';$m=new PrivateBin\\Model(new PrivateBin\\Configuration);if($m->getStore()->exists('1111111111111111'))exit(1);");
@@ -159,15 +198,4 @@ try {
   assert.deepEqual(errors,[]);assert.deepEqual([...outside],[]);
   const result={date:new Date().toISOString(),base,...(imageId?{imageId}:{}),passed:true,checks,ciphertextBytes:posted.ciphertextBytes,rawBytes:bytes.length,browser:'Linux Chromium desktop and 390px mobile emulation',limitations:['not a physical phone/Opera test','raw file limit is browser-side; server limits encrypted bytes','earlier and whole-VM backups are separate'],output};
   await writeFile(`${output}/result.json`,JSON.stringify(result,null,2));console.log(JSON.stringify(result));
-} finally {
-  try { if(receipt?.id&&receipt?.deletetoken){
-    const r=await fetch(`${base}/?pasteid=${receipt.id}&deletetoken=${receipt.deletetoken}`,{headers:{'X-Requested-With':'JSONHttpRequest'}});
-    assert.equal((await r.json()).status,0,'Synthetic paste deletion failed; inspect private cleanup receipt');
-    await rm(`${output}/cleanup.json`,{force:true});
-  } } finally {
-  if(browser)await browser.close();
-  if(bridge?.pid){try{process.kill(-bridge.pid,'SIGTERM')}catch{}}
-  if(created)docker('rm','-f',name);if(networkCreated)docker('network','rm',network);
-  await rm(temp,{recursive:true});
-  }
-}
+} finally { await cleanup(); }

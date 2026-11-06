@@ -40,6 +40,7 @@ const baseConfig: PublicConfig = {
   publicGothubUrl: '',
   publicTranslateUrl: '',
   searxngDeployedVersion: '',
+  privatebinDeployedVersion: '',
 };
 
 function config(overrides: Partial<PublicConfig> = {}): PublicConfig {

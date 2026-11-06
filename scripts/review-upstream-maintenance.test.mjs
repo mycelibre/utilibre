@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {repository,reviewedRef,recentAdvisories,partitionReviewed,runtimeEvidenceFormat} from './review-upstream-maintenance.mjs';
+import {repository,reviewedRef,recentAdvisories,partitionReviewed,runtimeEvidenceFormat,releaseComparison} from './review-upstream-maintenance.mjs';
 import {creativeProviders} from '../portal/src/catalog/creative-providers.ts';
 test('runtime advisory evidence requests no environment, credentials or mount data',()=>{
  assert.deepEqual([...runtimeEvidenceFormat.matchAll(/\{\{json ([^}]+)\}\}/g)].map(m=>m[1]),['.Name','.Image','.State.Running']);
@@ -48,4 +48,15 @@ test('a deployment mitigation is not misreported as a patched application',()=>{
  const review={containers:{'/test':'image'},advisories:[{...a,disposition:'deployment-mitigated'}]};
  const result=partitionReviewed([a],review,[{Name:'/test',Image:'image',State:{Running:true}}]);
  assert.equal(result.reviewed[0].disposition,'deployment-mitigated');
+});
+
+test('release comparison rejects ambiguity and never recommends a downgrade',()=>{
+ assert.equal(releaseComparison('2.1.0','v2.1.1'),'newer-release');
+ assert.equal(releaseComparison('2.1.1','2.1.1'),'same-version');
+ assert.equal(releaseComparison('2.9.0','2.18.0'),'newer-release');
+ assert.equal(releaseComparison('1.1.0','v0.3.0'),'catalogue-ahead');
+ assert.equal(releaseComparison('2.8.8-p4 · local runtimes','v2.8.11'),'newer-release');
+ assert.equal(releaseComparison('2026.8.3-python-security-20261011','version/2026.8.5'),'newer-release');
+ assert.equal(releaseComparison('1.1.0-p1','v0.3.0'),'catalogue-ahead');
+ for(const value of ['main','1.0.0-rc1','abc123','1.0.0-custom'])assert.equal(releaseComparison(value,'1.0.1'),'unverified');
 });

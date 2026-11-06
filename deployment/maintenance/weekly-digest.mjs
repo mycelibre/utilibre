@@ -4,7 +4,7 @@ import {sendOperatorMail} from './mail.mjs';
 const directory='/var/lib/utilibre-maintenance';
 async function read(name){try{return JSON.parse(await readFile(directory+'/'+name,'utf8'));}catch{return null;}}
 const upstream=await read('latest.json'),security=await read('security-queue.json'),journeys=await read('journeys.json'),recovery=await read('recovery.json');
-const candidates=upstream?.results?.filter(x=>x.branchChanged||x.release)||[];
+const candidates=upstream?.results?.filter(x=>x.releaseComparison==='newer-release')||[];
 const manual=upstream?.results?.filter(x=>x.advisories?.coverage!=='repository-published')||[];
 const findings=security?.items||[];
 const pending=findings.filter(x=>!(['mitigated','not-affected'].includes(x.status)&&Date.parse(x.decision?.expiresAt)>Date.now()));
@@ -25,8 +25,9 @@ const body=[
  'Review non-GitHub advisories/security notes manually:',
  ...manual.map(x=>`- ${x.project}: ${x.source}`),
  '',
- 'Release references (first 20; complete report stays on the VM):',
- ...candidates.slice(0,20).map(x=>`- ${x.project}: installed ${x.installed}; ${x.release?.url||x.source}`),
+ `Newer stable releases compared with recorded versions: ${candidates.length}. Runtime verification is still required for review-only applications.`,
+ 'Release references (first 20; complete updateCandidates list stays in latest.json):',
+ ...candidates.slice(0,20).map(x=>`- ${x.project}: recorded ${x.installed} → ${x.release.tag}; ${x.mode}; ${x.release.url}`),
  '',
  'Private full reports: /var/lib/utilibre-maintenance/{latest,security,security-queue,journeys,recovery}.json',
  'External checks: https://github.com/mycelibre/utilibre/actions/workflows/independent-availability.yml',

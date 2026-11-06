@@ -5,26 +5,32 @@ import {mkdtemp,mkdir,chmod,readFile,writeFile,rm} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {createRequire} from 'node:module';
 const {chromium}=createRequire(new URL('../../../portal/package.json',import.meta.url))('playwright-core');
-const recipe=fileURLToPath(new URL('../config/privatebin/',import.meta.url));
+const recipe=process.env.PRIVATEBIN_TEST_CONFIG ? process.env.PRIVATEBIN_TEST_CONFIG.replace(/\/$/,'')+'/' : fileURLToPath(new URL('../config/privatebin/',import.meta.url));
+const image=process.env.PRIVATEBIN_TEST_IMAGE || 'utilibre-privatebin:2.1.0-security-20261021-p2';
+assert(recipe.startsWith('/')&&!recipe.includes('..'));
+assert(/^(sha256:[a-f0-9]{64}|utilibre-privatebin:[\w.-]+)$/.test(image));
 const report=await mkdtemp('/opt/utilibre/reports/privatebin-discovery-');
 const temp=await mkdtemp('/opt/utilibre/privatebin-discovery-check-'),name='utilibre-privatebin-discovery-check',network=name+'-net';
 const docker=(...args)=>execFileSync('docker',args,{encoding:'utf8',stdio:['ignore','pipe','pipe']});
 const base='http://127.0.0.1:43218';
 let bridge,browser,created=false,networkCreated=false;
 const result={checkedAt:new Date().toISOString(),checks:[]};
+let cleaning;
+function cleanup(){return cleaning??=(async()=>{if(browser)await browser.close();if(bridge?.pid){try{process.kill(-bridge.pid,'SIGTERM')}catch{}}if(created)docker('rm','-f',name);if(networkCreated)docker('network','rm',network);await rm(temp,{recursive:true,force:true});})();}
+process.once('SIGTERM',()=>{cleanup().finally(()=>process.exit(143));});
 try{
  await mkdir(temp+'/data');await chmod(temp,0o755);await chmod(temp+'/data',0o777);
  await writeFile(temp+'/data/.utilibre-temporary-volume','utilibre-privatebin-temporary-v1\n');await chmod(temp+'/data/.utilibre-temporary-volume',0o444);
  docker('network','create','--internal',network);networkCreated=true;
  const mounts=[['conf.php','/srv/cfg/conf.php'],['bootstrap5-utilibre.php','/srv/tpl/bootstrap5-utilibre.php'],['robots.txt','/var/www/robots.txt'],['manifest.json','/var/www/manifest.json'],['brand','/var/www/utilibre-brand'],['brand/favicon.ico','/var/www/favicon.ico'],['discovery-server.conf','/etc/nginx/server.d/utilibre-discovery.conf'],['discovery-location.conf','/etc/nginx/location.d/utilibre-discovery.conf'],['upload-limit.js','/var/www/js/utilibre-upload-limit.js'],['upload-guard.php','/srv/cfg/upload-guard.php'],['uploads.ini','/etc/php85/conf.d/zz-utilibre-uploads.ini'],['uploads-pool.conf','/etc/php85/php-fpm.d/zzz-utilibre-uploads.conf']].flatMap(([file,target])=>['-v',recipe+file+':'+target+':ro']);
- docker('run','-d','--name',name,'--network',network,'--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--cpus','0.5','--memory','768m','--memory-swap','768m','--pids-limit','96','--log-driver','none','--tmpfs','/run:rw,exec,nosuid,nodev,size=16m,mode=0755,uid=65534,gid=82','--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777','--tmpfs','/var/lib/nginx/tmp:rw,nosuid,nodev,noexec,size=128m,mode=0755,uid=65534,gid=82','-v',temp+'/data:/srv/data',...mounts,'utilibre-privatebin:2.1.0-security-20261021-p2');created=true;
+ docker('run','-d','--name',name,'--network',network,'--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--cpus','0.5','--memory','768m','--memory-swap','768m','--pids-limit','96','--log-driver','none','--tmpfs','/run:rw,exec,nosuid,nodev,size=16m,mode=0755,uid=65534,gid=82','--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777','--tmpfs','/var/lib/nginx/tmp:rw,nosuid,nodev,noexec,size=128m,mode=0755,uid=65534,gid=82','-v',temp+'/data:/srv/data',...mounts,image);created=true;
  const ip=JSON.parse(docker('inspect',name))[0].NetworkSettings.Networks[network].IPAddress;
  bridge=spawn('socat',['TCP4-LISTEN:43218,bind=127.0.0.1,reuseaddr,fork,max-children=16',`TCP4:${ip}:8080`],{detached:true,stdio:'ignore'});
  let ready=false;for(let n=0;n<25;n++){try{ready=(await fetch(base,{signal:AbortSignal.timeout(1000)})).ok}catch{}if(ready)break;await new Promise(r=>setTimeout(r,500))}assert(ready);
  docker('exec',name,'nginx','-t');docker('exec',name,'php','-l','/srv/tpl/bootstrap5-utilibre.php');
  browser=await chromium.launch();
  for(const lang of ['en','es']){
-  const ctx=await browser.newContext({locale:lang==='es'?'es-GT':'en-US',viewport:{width:lang==='es'?390:1280,height:900}});const page=await ctx.newPage();const errors=[],hosts=new Set();page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>hosts.add(new URL(r.url()).hostname));
+  const ctx=await browser.newContext({locale:lang==='es'?'es-GT':'en-US',viewport:{width:lang==='es'?390:1280,height:900}});await ctx.route('**/*',r=>new URL(r.request().url()).origin===base?r.continue():r.abort());const page=await ctx.newPage();const errors=[],hosts=new Set();page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>hosts.add(new URL(r.url()).hostname));
   const response=await page.goto(base+'/');assert.equal(response.status(),200);await page.locator('#message').waitFor({state:'visible'});
   assert.match(await page.title(),lang==='es'?/Compartir texto y archivos cifrados/:/Encrypted text and file sharing/);
   assert.equal(await page.locator('meta[name=robots]').getAttribute('content'),'index, follow');
@@ -50,4 +56,4 @@ try{
  for(const [path,type,minBytes]of[['/favicon.ico','image/x-icon',100],['/utilibre-brand/favicon-48.png','image/png',100],['/utilibre-brand/icon-512.png','image/png',100],['/robots.txt','text/plain',100]]){const r=await fetch(base+path);assert.equal(r.status,200);assert(r.headers.get('content-type').includes(type));assert((await r.arrayBuffer()).byteLength>minBytes);if(path!=='/robots.txt'){assert.equal(r.headers.get('x-robots-tag'),null);assert(!String(r.headers.get('vary')).includes('Cookie'))}}
  const robots=await(await fetch(base+'/robots.txt')).text();assert(robots.includes('Allow: /$')&&robots.includes('Disallow: /?'));
  result.checks.push('real favicon and PNG MIME/bytes, strict homepage robots, GET/HEAD consistency, icons indexable');result.passed=true;await writeFile(report+'/candidate-result.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));
-}finally{if(browser)await browser.close();if(bridge?.pid){try{process.kill(-bridge.pid,'SIGTERM')}catch{}}if(created)docker('rm','-f',name);if(networkCreated)docker('network','rm',network);await rm(temp,{recursive:true,force:true});}
+}finally{await cleanup();}

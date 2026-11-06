@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "family": "2.1",
+  "minimum": "2.1.1",
+  "runtimeImage": "sha256:e3fbe8ac43db6ac84c2a566ca276fffa68aec0b0788fbc2f262271d9cc733d67",
+  "bootstrapVersion": "2.1.0",
+  "maxDatabaseAgeHours": 48,
+  "minimumFreeGiB": 8,
+  "scannerVersion": "0.75.0",
+  "scannerSha256": "93f9da8e4ba5e0c1c76d8234ed2494cf9afb0a96fd21953e424bb795f3299b8e",
+  "templatePatchSha256": "fa89db755f4f09baab0cca4f8a38118e23d16cf0843362bb8beab55e4de0263a",
+  "sourceContracts": {
+    "composer.json": "3b4f7026604ab0af724f603a6a7b73552134a002d9ada718f58599a736002652",
+    "composer.lock": "23386871430c62879f39cb1ab63cfbb726e0835a5983c200f77afeea486a8eec",
+    "cfg/conf.sample.php": "a7bc94662f89b498b05782909d9313ef59c4b0bcde9dbb8a514d17e0751f92c8",
+    "index.php": "cec741d36c684e06ce297fce222eeca301fa5733252f6036f3bcf43f67a7d9c3"
+  },
+  "configHashes": {
+    "brand/apple-touch-icon-180.png": "764bd21caf56ef4ef58894727a47b44e4f4d4facde924f63471ea5b0d75988b9",
+    "brand/favicon-48.png": "3dd6762c28d57dfc33103548874b17aaa115a078ea285dccfc31bceac21365d8",
+    "brand/favicon.ico": "19e62c12c419cfc4f990a25f7586ed62bb8fc3ef4885caba99a00d4e704c7906",
+    "brand/icon-512.png": "8835dd814899a01a4e0b1b75b6297e170b6a42c9e33219029a65b199a282c65a",
+    "conf.php": "e7f352a2df76e32d8ea9a11a58ba3ce4074756f79bafb2f687466ca2c62fad7f",
+    "discovery-location.conf": "471d5767814180c1b1bf34191c28f4ede6459834a290c5ba1b49e64fefcf507d",
+    "discovery-server.conf": "03d4bb51fa2b546bc97f468197a492c22f492175504d7dfba14d81952f0f0280",
+    "manifest.json": "c80b2bc49cc3d0edb10452a0afb77ee9f099db3657d1ff49a5c6ed9ce569ce79",
+    "robots.txt": "103165c7d1b1912a624803ff0cc1f4dd09aef2753d702bd73ff8733bd5c47a9a",
+    "upload-guard.php": "b67abf4bb63f3aafb344f6956581a3b6b189f8d3a3caa953a0cef1bb1669a286",
+    "upload-limit.js": "fdb995ab57e51723556ab5396ebe4bcee942d352acd9e3daa1638ea8451b9fd8",
+    "uploads-pool.conf": "502a05f3558f3c0efbe455ebee97db99372305a596ef837c4fe0f213a38b0dd6",
+    "uploads.ini": "946ebc1b94b1d03dc969de98baa8102f2411960a9c7abc179c0e0271e01819b8"
+  },
+  "scope": "PrivateBin application-only stable 2.1.x; unchanged runtime, dependencies, config contract; exact template patch and isolated regressions required. No migrations, data copy, notification or other service activation.",
+  "applicationAdvisorySnapshotSha256": "2d991927eb54da335f7b3811dc77b9a138aa07ed5c1e7593281878a9cbb19d54"
+}

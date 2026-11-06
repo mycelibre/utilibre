@@ -103,6 +103,7 @@ export interface PublicConfig {
   publicDegoogUrl: string;
   publicMumbleUrl: string;
   searxngDeployedVersion: string;
+  privatebinDeployedVersion: string;
   listedServices: string[];
   enabledServices: string[];
   defaultLanguage: 'en' | 'es';
@@ -200,6 +201,7 @@ const defaults: PublicConfig = {
   publicDegoogUrl: '',
   publicMumbleUrl: '',
   searxngDeployedVersion: '',
+  privatebinDeployedVersion: '',
   listedServices: [],
   enabledServices: [],
   defaultLanguage: 'en',

@@ -2,8 +2,17 @@
 
 Updates are deliberate, one service at a time. Production uses immutable
 version/digest pins; Redlib is built from an exact source commit and pinned
-base images. SearXNG has the guarded, six-hourly updater below; other services
-remain reviewed rollouts. Production never runs a floating `latest` tag.
+base images. SearXNG and PrivateBin have guarded six-hourly updaters; Redlib
+uses its reviewed-artifact updater. Other services remain reviewed rollouts.
+Production never runs a floating `latest` tag.
+
+PrivateBin **2.1.1 is deployed (6 November)** with the reviewed runtime, 25 MB
+attachments, one-week maximum expiry and privacy settings preserved. Native
+old/new password, attachment, deletion, SVG and size-limit checks passed. Its
+new deterministic updater accepts compatible stable 2.1.x patches only after
+isolated checks; new advisories, dependencies or incompatible changes are held.
+[Operating policy and rollback](../deployment/utilibre/privatebin-updater/README.md);
+[release evidence and wider update coverage](records/update-automation-2026-11-06.md).
 
 ## Local repair protection
 

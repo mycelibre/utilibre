@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {imageInventory,summarize,registryFallback,scannerManifestName,imageScanStatus,inventoryFormat,diskPreflight,failureSummary} from './security-review.mjs';
-import {reportIssues,queueIssues,externalIssues,unattendedIssues,alertState} from './report-health.mjs';
+import {reportIssues,queueIssues,externalIssues,unattendedIssues,alertState,privatebinUpdateIssues} from './report-health.mjs';
 import {validateDecision,applyDecisions} from './triage.mjs';
 import {findingsQueue,retainUnrechecked,recheckedTarget,queueCounts} from './build-queue.mjs';
 import {probe,validResponse,targets} from './check-external.mjs';
@@ -229,4 +229,14 @@ test('Go artifact dependencies remain available when the advisory snapshot has n
  assert.deepEqual(result.goModules,[{target:'bin/app',packages:[{name:'a',version:'v1'},{name:'z',version:'v2'}]}]);
  assert.equal(result.findings.length,0);assert.equal(result.packages,3);
  assert.equal(summarize({Results:[{Type:'gobinary',Target:'broken',Packages:[{}]}]}).goModules[0].packages.length,0);
+});
+
+test('PrivateBin update monitoring catches missed runs and holds without daily mail churn',()=>{
+ const ok={mode:'--apply',status:'up-to-date',completedAt:new Date(now).toISOString()};
+ assert.deepEqual(privatebinUpdateIssues(ok,now),[]);
+ assert.equal(privatebinUpdateIssues({...ok,status:'review-required'},now).length,1);
+ assert.equal(privatebinUpdateIssues({...ok,mode:'--stage'},now).length,1);
+ assert(privatebinUpdateIssues(ok,now+15*3600000).some(x=>x.includes('stale')));
+ assert(privatebinUpdateIssues({...ok,completedAt:'invalid'},now).length);
+ assert(privatebinUpdateIssues({...ok,status:'failed'},now).length);
 });

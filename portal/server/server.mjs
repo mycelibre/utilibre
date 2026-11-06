@@ -556,6 +556,7 @@ function publicConfig() {
     // Native-client launch only; never accept credentials or arbitrary schemes.
     publicMumbleUrl: process.env.PUBLIC_MUMBLE_URL === 'mumble://mumble.utilibre.org:64738/' ? process.env.PUBLIC_MUMBLE_URL : '',
     searxngDeployedVersion: deployedSearchVersion(),
+    privatebinDeployedVersion: deployedPrivateBinVersion(),
     listedServices: csv(process.env.LISTED_SERVICES || ''),
     enabledServices: [...ENABLED_SERVICES],
     defaultLanguage: DEFAULT_LANGUAGE,
@@ -568,6 +569,15 @@ function deployedSearchVersion() {
     if (statSync(path).size > 4096) return '';
     const manifest = JSON.parse(readFileSync(path, 'utf8'));
     return /^\d{4}\.\d{1,2}\.\d{1,2}-[0-9a-f]+$/.test(manifest.version || '') ? manifest.version : '';
+  } catch { return ''; }
+}
+
+function deployedPrivateBinVersion() {
+  try {
+    const path = '/run/utilibre-updates/privatebin.json';
+    if (statSync(path).size > 4096) return '';
+    const manifest = JSON.parse(readFileSync(path, 'utf8'));
+    return /^\d+\.\d+\.\d+$/.test(manifest.version || '') && /^sha256:[a-f0-9]{64}$/.test(manifest.image || '') ? manifest.version : '';
   } catch { return ''; }
 }
 

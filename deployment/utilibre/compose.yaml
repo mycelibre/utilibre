@@ -166,7 +166,7 @@ services:
     logging: *default-logging
 
   privatebin:
-    image: utilibre-privatebin:libraries-security-20261028
+    image: sha256:95d4a7ef121809772bbae5021badc46f0188361677da1e4aa41bc56cddb63f9d
     user: "65534:82"
     restart: unless-stopped
     read_only: true
@@ -182,7 +182,6 @@ services:
       PHP_TZ: ${TZ:-America/Guatemala}
     volumes:
       - ./config/privatebin/conf.php:/srv/cfg/conf.php:ro
-      - ./config/privatebin/bootstrap5-utilibre.php:/srv/tpl/bootstrap5-utilibre.php:ro
       - ./config/privatebin/robots.txt:/var/www/robots.txt:ro
       - ./config/privatebin/manifest.json:/var/www/manifest.json:ro
       - ./config/privatebin/brand:/var/www/utilibre-brand:ro

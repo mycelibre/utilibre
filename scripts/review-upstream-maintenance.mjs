@@ -41,18 +41,27 @@ export function recentAdvisories(rows,date){
  updated:a.updated_at||a.published_at,
  affected:(a.vulnerabilities||[]).map(v=>({package:v.package?.name,range:v.vulnerable_version_range,patched:v.patched_versions}))}));
 }
+// Compare only explicit stable numeric versions. Branches, commits and custom
+// version strings require inspection; a different tag is not a newer release.
+export function releaseComparison(installed,tag){
+ const recorded=typeof installed==='string'?installed.match(/^v?(\d+\.\d+(?:\.\d+)?)(?:-p\d+|-python-security-\d{8})?(?:$| · | \+ )/):null;
+ const published=typeof tag==='string'?tag.match(/^(?:[vV]\.?|version\/)?(\d+\.\d+(?:\.\d+)?)$/):null;
+ const a=recorded?.[1].split('.').map(Number),b=published?.[1].split('.').map(Number);if(!a||!b)return 'unverified';
+ for(let i=0;i<3;i++){if((b[i]||0)>(a[i]||0))return 'newer-release';if((b[i]||0)<(a[i]||0))return 'catalogue-ahead';}
+ return 'same-version';
+}
 async function gh(path){
  const {stdout}=await exec('gh',['api','--hostname','github.com',path],{timeout:25000,maxBuffer:4*1024**2});return JSON.parse(stdout);
 }
 export async function inspectProvider(id,p){
- if(id==='searxng'){
+ if(id==='searxng'||id==='privatebin'){
   try{
-   const live=JSON.parse(readFileSync('/opt/utilibre/update-public/searxng.json','utf8'));
+   const live=JSON.parse(readFileSync('/opt/utilibre/update-public/'+id+'.json','utf8'));
    if(!/^[a-f0-9]{40}$/.test(live.revision)||typeof live.version!=='string')throw Error('Invalid deployment record');
-   p={...p,installedVersion:live.version,reviewedSourceUrl:'https://github.com/searxng/searxng/tree/'+live.revision};
+   p={...p,installedVersion:live.version,reviewedSourceUrl:(id==='searxng'?'https://github.com/searxng/searxng/tree/':'https://github.com/PrivateBin/PrivateBin/tree/')+live.revision};
   }catch{/* Retain the catalogue reference; it is not a runtime assertion. */}
  }
- const result={id,project:p.project,installed:p.installedVersion,source:p.reviewedSourceUrl,reviewedOn:p.reviewedOn,runbook:p.reviewDocument,mode:id==='searxng'?'existing-guarded-updater':id==='redlib'?'guarded-reviewed-artifact-updater':'review-before-update'};
+ const result={id,project:p.project,installed:p.installedVersion,source:p.reviewedSourceUrl,reviewedOn:p.reviewedOn,runbook:p.reviewDocument,mode:id==='searxng'?'existing-guarded-updater':id==='redlib'?'guarded-reviewed-artifact-updater':id==='privatebin'?'guarded-stable-patch-updater':'review-before-update'};
  try{
   const r=repository(p.sourceUrl),ref=reviewedRef(p.reviewedSourceUrl);
   if(r.host==='github.com'){
@@ -60,6 +69,7 @@ export async function inspectProvider(id,p){
    const releases=await gh(base+'/releases?per_page=10');
    const latest=releases.find(x=>!x.prerelease&&!x.draft);
    result.release=latest?{tag:latest.tag_name,url:latest.html_url,published:latest.published_at}:null;
+   result.releaseComparison=latest?releaseComparison(p.installedVersion,latest.tag_name):'no-stable-release';
    const commits=await gh(base+'/commits?per_page=1');
    result.defaultBranchHead=commits[0]?.sha||null;
    result.branchChanged=/^[a-f0-9]{40}$/i.test(ref)?ref!==result.defaultBranchHead:null;
@@ -101,7 +111,8 @@ export async function run(args=process.argv.slice(2)){
  const selected=Object.entries(providers).filter(([id,p])=>p.reviewStatus==='deployed'&&(!only||id===only));
  const results=new Array(selected.length);let next=0;
  await Promise.all(Array.from({length:3},async()=>{while(next<selected.length){const i=next++;results[i]=await inspectProvider(...selected[i]);}}));
- const report={date:new Date().toISOString(),scope:only||'deployed-catalogue-and-reviewed-companions',providers:results.length,results,
+ const updateCandidates=results.filter(r=>r.releaseComparison==='newer-release').map(r=>({id:r.id,project:r.project,recordedVersion:r.installed,release:r.release,mode:r.mode,evidence:'Comparison with recorded version; verify current runtime and retained repairs before approval.'}));
+ const report={date:new Date().toISOString(),scope:only||'deployed-catalogue-and-reviewed-companions',providers:results.length,updateCandidates,results,
  note:'A changed default branch is a review candidate, not a safe upgrade or proof of an overdue release. No advisories returned is not a security clearance. Dependency vulnerabilities require the release-specific lockfile/image review. No application changed.'};
  const dir='/var/lib/utilibre-maintenance';mkdirSync(dir,{recursive:true,mode:0o700});
  const name=only?'provider-'+only:'latest';

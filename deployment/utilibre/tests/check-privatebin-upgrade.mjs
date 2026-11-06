@@ -1,4 +1,4 @@
-// Synthetic 2.0.6 -> 2.1.0 compatibility check. Never mounts production data.
+// Synthetic previous -> candidate compatibility check (legacy defaults retained). Never mounts production data.
 import assert from 'node:assert/strict';
 import {execFileSync, spawn} from 'node:child_process';
 import {mkdtemp, mkdir, chown, chmod, writeFile, readFile, rm} from 'node:fs/promises';
@@ -7,8 +7,12 @@ import {createHash} from 'node:crypto';
 import {chromium} from '../../../portal/node_modules/playwright-core/index.mjs';
 process.umask(0o077);
 const root=fileURLToPath(new URL('../../../',import.meta.url));
-const previous='utilibre-privatebin:2.0.6-php-security-20261011-p3';
-const candidate='utilibre-privatebin:2.1.0-security-20261021-p2';
+const previous=process.env.PRIVATEBIN_PREVIOUS_IMAGE || 'utilibre-privatebin:2.0.6-php-security-20261011-p3';
+const candidate=process.env.PRIVATEBIN_TEST_IMAGE || 'utilibre-privatebin:2.1.0-security-20261021-p2';
+for(const image of [previous,candidate])assert(/^(sha256:[a-f0-9]{64}|utilibre-privatebin:[\w.-]+)$/.test(image));
+const candidateConfig=process.env.PRIVATEBIN_TEST_CONFIG || `${root}deployment/utilibre/config/privatebin`;
+assert(candidateConfig.startsWith('/')&&!candidateConfig.includes('..'));
+const password='Synthetic-only-árbol-🔐';
 const baseline='ed2291d';
 const report=await mkdtemp('/opt/utilibre/reports/privatebin-upgrade-');
 const temp=await mkdtemp('/tmp/utilibre-privatebin-compat-');
@@ -22,6 +26,9 @@ function stop(){
   if(bridge?.pid){try{process.kill(-bridge.pid,'SIGTERM')}catch{} bridge=undefined;}
   if(created){docker('rm','-f',name);created=false;}
 }
+let cleaning;
+function cleanup(){return cleaning??=(async()=>{if(browser)await browser.close();stop();if(networkCreated)docker('network','rm',network);await rm(temp,{recursive:true,force:true});})();}
+process.once('SIGTERM',()=>{cleanup().finally(()=>process.exit(143));});
 async function start(image,config){
   const mounts=[['conf.php','/srv/cfg/conf.php'],['bootstrap5-utilibre.php','/srv/tpl/bootstrap5-utilibre.php'],['robots.txt','/var/www/robots.txt'],['manifest.json','/var/www/manifest.json'],['brand','/var/www/utilibre-brand'],['brand/favicon.ico','/var/www/favicon.ico'],['discovery-server.conf','/etc/nginx/server.d/utilibre-discovery.conf'],['discovery-location.conf','/etc/nginx/location.d/utilibre-discovery.conf'],['upload-limit.js','/var/www/js/utilibre-upload-limit.js'],['upload-guard.php','/srv/cfg/upload-guard.php'],['uploads.ini','/etc/php85/conf.d/zz-utilibre-uploads.ini'],['uploads-pool.conf','/etc/php85/php-fpm.d/zzz-utilibre-uploads.conf']].flatMap(([s,d])=>['-v',`${config}/${s}:${d}:ro`]);
   docker('run','-d','--name',name,'--network',network,'--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--cpus','0.5','--memory','768m','--memory-swap','768m','--pids-limit','128','--log-driver','none','--tmpfs','/run:rw,exec,nosuid,nodev,size=16m,mode=0755,uid=65534,gid=82','--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=64m,mode=1777','--tmpfs','/var/lib/nginx/tmp:rw,nosuid,nodev,noexec,size=128m,mode=0755,uid=65534,gid=82','-v',`${temp}/data:/srv/data`,...mounts,image);created=true;
@@ -35,6 +42,7 @@ async function start(image,config){
 }
 async function page(){
   const context=await browser.newContext({locale:'en-US',acceptDownloads:true});
+  await context.route('**/*',r=>new URL(r.request().url()).origin===base?r.continue():r.abort());
   context.on('request',r=>{const u=new URL(r.url());if(u.protocol.startsWith('http')&&u.origin!==base)outside.add(u.origin);});
   context.on('page',p=>p.on('pageerror',e=>errors.push(e.message)));
   return context.newPage();
@@ -50,33 +58,56 @@ async function send(p,text,file,password,burn=false){
   return {link:p.url(),receipt};
 }
 try{
-  assert.equal(docker('image','inspect',previous,'--format','{{.Id}}').trim(),'sha256:4bd1fbaaae5c7e0e74285412a4cd7b02de6c456a8d4b5d8430791e05e70e8915');
+  if(!process.env.PRIVATEBIN_PREVIOUS_IMAGE)assert.equal(docker('image','inspect',previous,'--format','{{.Id}}').trim(),'sha256:4bd1fbaaae5c7e0e74285412a4cd7b02de6c456a8d4b5d8430791e05e70e8915');
   await mkdir(`${temp}/old`);await mkdir(`${temp}/data`);await chown(`${temp}/data`,65534,82);
   await writeFile(`${temp}/data/.utilibre-temporary-volume`,'utilibre-privatebin-temporary-v1\n');await chmod(`${temp}/data/.utilibre-temporary-volume`,0o444);
   // This committed configuration contains no credentials or user content.
+  let previousConfig=process.env.PRIVATEBIN_PREVIOUS_CONFIG;
+  if(!previousConfig){
   const archive=execFileSync('git',['archive',baseline,'deployment/utilibre/config/privatebin'],{cwd:root,maxBuffer:1024**2});
   execFileSync('tar',['-xf','-','-C',`${temp}/old`],{input:archive});
+  previousConfig=`${temp}/old/deployment/utilibre/config/privatebin`;}
+  assert(previousConfig.startsWith('/')&&!previousConfig.includes('..'));
   docker('network','create','--internal',network);networkCreated=true;
   browser=await chromium.launch();
-  await start(previous,`${temp}/old/deployment/utilibre/config/privatebin`);
+  await start(previous,previousConfig);
   const writer=await page(),file=Buffer.from('Fictional pre-upgrade attachment. Árbol, año, 123.\n');
-  const old=await send(writer,'Fictional protected paste created on 2.0.6.',file,'Synthetic-only-7!');
+  const old=await send(writer,'Fictional protected paste created before the upgrade.',file,password);
   await writer.context().close();stop();
-  await start(candidate,`${root}deployment/utilibre/config/privatebin`);
+  await start(candidate,candidateConfig);
   const reader=await page();await reader.goto(old.link);
-  await reader.locator('#passworddecrypt').fill('Synthetic-only-7!');
+  await reader.locator('#passworddecrypt').fill(password);
   await reader.locator('#passwordform button[type=submit]').click();
-  await reader.getByText('Fictional protected paste created on 2.0.6.',{exact:true}).waitFor();
+  await reader.getByText('Fictional protected paste created before the upgrade.',{exact:true}).waitFor();
   const attachment=reader.locator('#attachment a[download="fictional-upgrade.txt"]');
   const downloaded=reader.waitForEvent('download');await attachment.click();await(await downloaded).saveAs(`${temp}/result.txt`);
   assert.equal(sum(await readFile(`${temp}/result.txt`)),sum(file));
-  checks.push('2.0.6 password-protected paste and UTF-8 attachment decrypt after 2.1.0 upgrade; file SHA-256 matches');
+  checks.push('Previous image Unicode-password paste and UTF-8 attachment decrypt after upgrade; file SHA-256 matches');
   const stranger=await page();await stranger.goto(old.link.split('#')[0]);
-  assert(!(await stranger.locator('body').innerText()).includes('Fictional protected paste created on 2.0.6.'));
+  assert(!(await stranger.locator('body').innerText()).includes('Fictional protected paste created before the upgrade.'));
   const deleted=await fetch(`${base}/?pasteid=${old.receipt.id}&deletetoken=${old.receipt.deletetoken}`,{headers:{'X-Requested-With':'JSONHttpRequest'}});
   assert.equal((await deleted.json()).status,0);
   const absent=await fetch(`${base}/?${old.receipt.id}`,{headers:{'X-Requested-With':'JSONHttpRequest'}});assert.equal((await absent.json()).status,1);
   checks.push('unkeyed old paste does not reveal content; original deletion token removes the upgraded paste');
+  await new Promise(r=>setTimeout(r,11000));
+  const freshWriter=await page(),fresh=await send(freshWriter,'Fictional new Unicode-password paste.',null,password);
+  const freshReader=await page();await freshReader.goto(fresh.link);
+  await freshReader.locator('#passworddecrypt').fill(password);
+  await freshReader.locator('#passwordform button[type=submit]').click();
+  await freshReader.getByText('Fictional new Unicode-password paste.',{exact:true}).waitFor();
+  if(process.env.PRIVATEBIN_ROLLBACK_COMPAT_REQUIRED==='1'){
+    await freshReader.context().close();await freshWriter.context().close();stop();
+    await start(previous,previousConfig);
+    const rollbackReader=await page();await rollbackReader.goto(fresh.link);
+    await rollbackReader.locator('#passworddecrypt').fill(password);
+    await rollbackReader.locator('#passwordform button[type=submit]').click();
+    await rollbackReader.getByText('Fictional new Unicode-password paste.',{exact:true}).waitFor();
+    await rollbackReader.context().close();stop();await start(candidate,candidateConfig);
+    checks.push('previous version also decrypts candidate-written Unicode-password paste after image rollback');
+  }
+  const freshDelete=await fetch(`${base}/?pasteid=${fresh.receipt.id}&deletetoken=${fresh.receipt.deletetoken}`,{headers:{'X-Requested-With':'JSONHttpRequest'}});
+  assert.equal((await freshDelete.json()).status,0);
+  checks.push('new Unicode-password paste encrypts, decrypts and deletes with native upstream code');
   await new Promise(r=>setTimeout(r,11000));
   const burner=await page(),burn=await send(burner,'Fictional one-time check.',null,null,true);
   const first=await page();await first.goto(burn.link);
@@ -88,7 +119,4 @@ try{
   await writeFile(`${report}/result.json`,JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }catch(error){
   await writeFile(`${report}/failure.json`,JSON.stringify({error:error.message,checks,errors},null,2));throw error;
-}finally{
-  if(browser)await browser.close();stop();if(networkCreated)docker('network','rm',network);
-  assert(temp.startsWith('/tmp/utilibre-privatebin-compat-'));await rm(temp,{recursive:true});
-}
+}finally{await cleanup();}

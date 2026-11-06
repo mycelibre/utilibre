@@ -79,3 +79,12 @@ export function redlibUpdateIssues(report,now=Date.now()){
  if(report?.status==='up-to-date'&&report?.browsing?.passed!==true)issues.push('Redlib updater: useful browsing check is incomplete');
  return issues;
 }
+
+export function privatebinUpdateIssues(report,now=Date.now()){
+ const issues=[],date=Date.parse(report?.completedAt);
+ if(!Number.isFinite(date)||date>now+300000||now-date>14*3600000)issues.push('PrivateBin updater: report is missing, stale or invalid');
+ if(report?.mode!=='--apply')issues.push('PrivateBin updater: scheduled application check is unverified');
+ if(report?.status==='review-required')issues.push('PrivateBin updater: release requires compatibility or security review');
+ else if(!['up-to-date','updated'].includes(report?.status))issues.push('PrivateBin updater: failed or requires recovery review');
+ return issues;
+}

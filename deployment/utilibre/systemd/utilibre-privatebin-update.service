@@ -1,0 +1,20 @@
+[Unit]
+Description=Guarded PrivateBin patch release update with isolated tests and rollback
+After=docker.service network-online.target
+Requires=docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/ubuntu/freetools
+Environment=PATH=/root/.nvm/versions/node/v24.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/bin/python3 /home/ubuntu/freetools/scripts/privatebin-maintain.py --apply
+TimeoutStartSec=30min
+TimeoutStopSec=2min
+UMask=0077
+NoNewPrivileges=true
+ProtectHome=read-only
+ReadWritePaths=/home/ubuntu/freetools
+# Tests bind only their own synthetic files into Docker; PrivateTmp would give
+# the host Docker daemon a different /tmp view. No production-data test mount.
