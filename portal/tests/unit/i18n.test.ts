@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { catalog } from '../../src/catalog/catalog';
 import { en } from '../../src/i18n/en';
 import { es } from '../../src/i18n/es';
@@ -119,7 +120,9 @@ describe('bilingual content', () => {
     expect(redlib?.filesUploaded).toBe(false);
     expect(redlib?.dataFlow.en).toContain('Redlib → Reddit');
     expect(redlib?.retention.en).toContain('first-party cookie');
-    expect(redlib?.installedVersion).toContain('e48efd8');
+    const recipe = JSON.parse(readFileSync(new URL('../../../config/redlib/recipe.json', import.meta.url), 'utf8'));
+    expect(recipe.source.revision).toMatch(/^[a-f0-9]{40}$/);
+    expect(redlib?.installedVersion).toContain(recipe.source.revision.slice(0, 7));
   });
 
 });
