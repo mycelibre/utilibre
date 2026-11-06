@@ -14,7 +14,8 @@
     "composer.json": "3b4f7026604ab0af724f603a6a7b73552134a002d9ada718f58599a736002652",
     "composer.lock": "23386871430c62879f39cb1ab63cfbb726e0835a5983c200f77afeea486a8eec",
     "cfg/conf.sample.php": "a7bc94662f89b498b05782909d9313ef59c4b0bcde9dbb8a514d17e0751f92c8",
-    "index.php": "cec741d36c684e06ce297fce222eeca301fa5733252f6036f3bcf43f67a7d9c3"
+    "index.php": "cec741d36c684e06ce297fce222eeca301fa5733252f6036f3bcf43f67a7d9c3",
+    "LICENSE.md": "79de94595d0db318be011b595c59c7903ff95c983d8d82c4b03ba3ebc5c3c819"
   },
   "configHashes": {
     "brand/apple-touch-icon-180.png": "764bd21caf56ef4ef58894727a47b44e4f4d4facde924f63471ea5b0d75988b9",

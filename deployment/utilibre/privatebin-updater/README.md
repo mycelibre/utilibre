@@ -25,7 +25,7 @@ an LLM, submits an instance listing or sends indexing notifications.
   Record the archive hash. No prereleases, downgrades, redirects or unreviewed
   release family are accepted. The GitHub verification is not a separately
   performed offline GPG signature verification.
-- Require unchanged Composer manifests/lockfile, sample configuration contract
+- Require unchanged licence, Composer manifests/lockfile, sample configuration contract
   and entrypoint; exact native-template patch application; and exact hashes of
   our non-secret mounted configuration. An incompatible patch stops; no fuzzy
   replacement, conflict resolution or new dependency resolution is attempted.
