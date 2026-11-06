@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { chromium } from '../../portal/node_modules/playwright/index.mjs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 const base=process.argv[2]??'https://one-file.invalid/';
-const report='/opt/utilibre/reports/single-file-20261009';
+const report=process.env.UTILIBRE_TEST_REPORT_DIR||'/opt/utilibre/reports/single-file-20261009';
 await mkdir(report,{recursive:true,mode:0o700});
 const browser=await chromium.launch();const results=[];
 async function context(locale,width=1280){
@@ -26,7 +26,7 @@ try {
   await p.locator('#new-node-name').fill(name);await p.locator('#new-node-ip').fill('192.0.2.12');await p.locator('#add-node-save').click();
   assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   const d=p.waitForEvent('download');await p.locator('#save-file-btn').click();const saved=`${report}/core-${locale}-saved.html`;await(await d).saveAs(saved);
-  const text=await readFile(saved,'utf8');assert(!text.includes('</script><marker>'));assert(text.includes('\\u003c/script>'));assert(text.includes("connect-src 'none'"));
+  const text=await readFile(saved,'utf8');assert(!text.includes('</script><marker>'));assert.match(text,/\\u003c\/script(?:>|\\u003e)/);assert(text.includes("connect-src 'none'"));
   await p.screenshot({path:`${report}/core-${locale}-${width}.png`});
   // Native autosave is periodic; inspect only this synthetic document's draft.
   if(width===1280){await p.waitForFunction(()=>new Promise(resolve=>{const r=indexedDB.open('TheOneFileAutosave',1);r.onsuccess=()=>{const db=r.result;if(!db.objectStoreNames.contains('drafts')){db.close();resolve(false);return;}const q=db.transaction('drafts').objectStore('drafts').get('currentDraft');q.onsuccess=()=>{const ok=Object.values(q.result?.nodeData??{}).some(n=>n.ip==='192.0.2.12');db.close();resolve(ok);};};}),{},{timeout:40000});}

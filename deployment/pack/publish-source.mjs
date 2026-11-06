@@ -5,6 +5,7 @@ import {mkdir,mkdtemp,writeFile,lstat,copyFile,rename,readlink} from 'node:fs/pr
 import path from 'node:path';
 import assert from 'node:assert/strict';
 const applications={
+  ...Object.fromEntries(['freshrss','radicale','calino','one-file-core','link-cleaner','drawio'].map(id=>[id,[id,'reviewed-below']])),
   'it-tools':['it-tools','5732483fc24a6e6818839060bdf3cc7d9d324b9f'],
   mapshaper:['mapshaper','9e39193444f70a48eeffda20d8d44f82567e6d54'],
   numbat:['numbat','79046422203060e296da41c8c762c506200d2c93'],
@@ -16,7 +17,17 @@ const applications={
   omnitools:['omnitools','922b28ce154e8f22da4a721472889717a95f7562'],
 };
 const name=process.argv[2],spec=applications[name];assert(spec,'Select one reviewed pack application');
-const root=`/opt/utilibre/src/${spec[0]}`;
+const refresh={
+  mapshaper:'b44c0fa95effac3d91526c8b62dc0de0ab88b464',
+  freshrss:'08f97bd497ace733c151ea1c709d85cd5b65cc53',
+  radicale:'4d3887e0fe5f4d3cf815d65e2a4d8bf9b0ca5b75',
+  calino:'5923ea08e63a6e420ef372db84a97b4971346493',
+  'one-file-core':'7439c0f78b64aad87f1e71c62e593536e3faf3bb',
+  'link-cleaner':'e3bf8286e1d6dada00099eef2c392df2088e743a',
+  drawio:'c72c9a98b7a6ce392556ed04c05e0ff19f43f5c3',
+};
+const root=refresh[name]?`/var/lib/utilibre-maintenance/releases-20261106/${name}`:`/opt/utilibre/src/${spec[0]}`;
+if(refresh[name])spec[1]=refresh[name];
 assert.equal(execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),spec[1]);
 const paths=execFileSync('git',['ls-files','-z'],{cwd:root,encoding:'utf8'}).split('\0').filter(Boolean);
 if(name==='cryptpad')paths.push('customize/application_config.js','customize/ckeditor-config.js');
@@ -38,11 +49,15 @@ const stage=await mkdtemp('/opt/utilibre/pack-source-');
 await writeFile(`${stage}/upstream-files`,files.join('\0')+'\0');
 await mkdir('/opt/utilibre/toolbox-public',{recursive:true});
 // Include reviewed integration files only, never .env or private runtime state.
-const integration=execFileSync('git',['ls-files','-z','deployment/pack','deployment/toolbox','deployment/expanded','docs/service-pack.md'],{encoding:'utf8'}).split('\0').filter(Boolean);
+const prefixes=['deployment/pack/','deployment/toolbox/','deployment/expanded/','deployment/calendar/','deployment/link-cleaner/','deployment/one-file-core/','deployment/maintenance/release-refresh-20261106/','deployment/utilibre/','docs/records/release-refresh-2026-11-06.md','docs/service-pack.md'];
+const integration=execFileSync('git',['ls-tree','-r','--name-only','-z','HEAD'],{encoding:'utf8'}).split('\0').filter(p=>p&&prefixes.some(prefix=>p.startsWith(prefix)));
 assert(integration.includes('deployment/pack/publish-source.mjs'),'Stage the reviewed release before source publication');
 for(const p of integration)assert(!/(^|\/)(?:node_modules|secrets|backups|\.env)(\/|$)/.test(p)&&!(await lstat(p)).isSymbolicLink());
 await writeFile(`${stage}/integration-files`,integration.join('\0')+'\0');
-execFileSync('tar',['-czf',`${stage}/${name}-utilibre.tar.gz`,'-C',root,'--null','-T',`${stage}/upstream-files`,'-C',process.cwd(),'--null','-T',`${stage}/integration-files`],{stdio:'pipe'});
+await mkdir(`${stage}/integration`);
+execFileSync('git',['archive','--format=tar',`--output=${stage}/integration.tar`,'HEAD','--',...integration]);
+execFileSync('tar',['-xf',`${stage}/integration.tar`,'-C',`${stage}/integration`]);
+execFileSync('tar',['-czf',`${stage}/${name}-utilibre.tar.gz`,'-C',root,'--null','-T',`${stage}/upstream-files`,'-C',`${stage}/integration`,'--null','-T',`${stage}/integration-files`],{stdio:'pipe'});
 const destination=`/opt/utilibre/toolbox-public/${name}-utilibre.tar.gz`;
 try{await copyFile(destination,`${stage}/previous.tar.gz`)}catch(e){if(e.code!=='ENOENT')throw e}
 await rename(`${stage}/${name}-utilibre.tar.gz`,destination);

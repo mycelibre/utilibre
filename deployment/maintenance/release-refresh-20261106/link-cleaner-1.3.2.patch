@@ -1,0 +1,48 @@
+diff --git a/index.html b/index.html
+index 3240de4..4d72dcb 100644
+--- a/index.html
++++ b/index.html
+@@ -1,6 +1,9 @@
+ <!doctype html>
+ <html lang="en">
+ <head>
++  <meta name="referrer" content="no-referrer">
++  <meta name="robots" content="noindex, nofollow">
++  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; img-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="description" content="Remove known tracking parameters from URLs locally while preserving functional query data.">
+@@ -17,12 +20,14 @@
+         <h1>Clean the tracking. Keep the destination.</h1>
+         <p class="lede">Remove known marketing parameters without guessing that unfamiliar query data is disposable. Every removal is shown before you copy or export the result.</p>
+       </div>
+-      <div class="privacy-card"><strong>Your URLs stay here.</strong>No server, account, analytics, history, or network request is used.</div>
++      <div class="privacy-card"><strong>Your URLs stay here.</strong>Pasted URLs are processed in this browser without contacting their destinations. Application delivery creates connection metadata. No account, analytics or saved link history is added.</div>
+     </section>
+ 
++    <p>Review each result before sharing. This does not expand redirects or certify that a link is safe. Downloads remain on your device; even redacted reports retain hostnames and paths.</p>
++    <p lang="es">Revisá cada resultado antes de compartirlo. Los enlaces pegados se procesan en este navegador, sin contactar sus destinos. Descargar la aplicación genera metadatos de conexión. No se agrega cuenta, analítica ni historial guardado. Esta herramienta no sigue redirecciones ni certifica enlaces seguros. Las descargas quedan en tu dispositivo; los informes con valores ocultos conservan dominios y rutas.</p>
+     <form id="cleaner-form" class="panel">
+       <label for="url-input">URLs, one per line</label>
+-              <textarea id="url-input" required spellcheck="false" placeholder="https://news.local/article?id=42&utm_source=newsletter"></textarea>
++              <textarea id="url-input" required spellcheck="false" autocomplete="off" placeholder="https://news.local/article?id=42&utm_source=newsletter"></textarea>
+       <p class="field-note">Absolute HTTP and HTTPS URLs only. Unknown parameters are preserved.</p>
+       <div class="rule-grid">
+         <div>
+@@ -63,7 +68,7 @@
+       <div class="result-actions">
+         <button type="button" id="copy-results" disabled>Copy valid results</button>
+         <button type="button" id="export-results" class="secondary" disabled>Export audit JSON</button>
+-        <label><input id="redact-export" type="checkbox" checked> Redact credentials and parameter values</label>
++        <label><input id="redact-export" type="checkbox" checked> Redact credentials, parameter values and fragments</label>
+       </div>
+       <p id="summary" class="summary" aria-live="polite" hidden></p>
+       <div id="results" aria-live="polite"></div>
+@@ -75,6 +80,6 @@
+       <article><h2>Reviewable output</h2><p>The report names each removed parameter and the rule responsible. Custom keep rules provide an explicit escape hatch.</p></article>
+     </section>
+   </main>
+-  <footer>Open source under the MIT License · <a href="https://github.com/loganpendragonmultiverse/url-parameter-cleaner">Source and documentation</a></footer>
++  <footer><a href="https://utilibre.org/en/" rel="noreferrer">More tools from Utilibre</a> · <a href="https://utilibre.org/es/" rel="noreferrer">Más herramientas de Utilibre</a> · <a href="https://tools.utilibre.org/utilibre-source/link-cleaner-utilibre.tar.gz">Instance source / Código de esta instancia</a> · Open source under the MIT License · <a href="https://github.com/loganpendragonmultiverse/url-parameter-cleaner">Source and documentation</a></footer>
+ </body>
+ </html>

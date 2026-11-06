@@ -6,16 +6,18 @@ import { join } from 'node:path';
 const root = process.argv[2];
 if (!root) throw new Error('Supply the extracted draw.io web directory');
 const config = readFileSync(join(root, 'js/PreConfig.js'), 'utf8');
-const revision = createHash('sha256').update(config).digest('hex').slice(0, 16);
+const bootstrap = readFileSync(join(root, 'js/bootstrap.js'), 'utf8');
+// Upstream loader changes must also change its URL when our settings stay equal.
+const revision = createHash('sha256').update(config).update('\0').update(bootstrap).digest('hex').slice(0, 16);
 const configName = `PreConfig.utilibre-${revision}.js`;
 const bootstrapName = `bootstrap.utilibre-${revision}.js`;
-const bootstrap = readFileSync(join(root, 'js/bootstrap.js'), 'utf8');
 const html = readFileSync(join(root, 'index.html'), 'utf8');
 if (!bootstrap.includes('js/PreConfig.js') || !html.includes('js/bootstrap.js')) {
   throw new Error('Upstream loader changed; review before publishing');
 }
 writeFileSync(join(root, 'js', configName), config);
 writeFileSync(join(root, 'js', bootstrapName), bootstrap.replaceAll('js/PreConfig.js', `js/${configName}`));
-if (!html.includes('<img src="images/spin.gif"/>')) throw new Error('Draw.io loading image changed; review alternative');
+// 32.6.10 replaces the old unlabelled GIF with a locally embedded, labelled SVG.
+if (!html.includes('<img src="images/spin.gif"/>') && !html.includes('<svg class="geSplashLogo" viewBox="0 0 161.6 161.6" role="img" aria-label="draw.io">')) throw new Error('Draw.io loading image changed; review alternative');
 writeFileSync(join(root, 'index.html'), html.replaceAll('js/bootstrap.js', `js/${bootstrapName}`)
   .replace('<img src="images/spin.gif"/>', '<img src="images/spin.gif" alt="" aria-hidden="true"/>'));

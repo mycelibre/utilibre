@@ -1,0 +1,15 @@
+# Exact repaired Debian/PHP/Apache runtime: fa0df9fc48de5bde089e96d40b4adf6471cca4e75172ca7bc6a5e48b8a39e373.
+FROM utilibre-services-freshrss:sqlite-rowid-20261103
+USER root
+RUN rm -rf /var/www/FreshRSS/app /var/www/FreshRSS/cli /var/www/FreshRSS/lib /var/www/FreshRSS/p
+COPY --chown=root:www-data app /var/www/FreshRSS/app
+COPY --chown=root:www-data cli /var/www/FreshRSS/cli
+COPY --chown=root:www-data lib /var/www/FreshRSS/lib
+COPY --chown=root:www-data p /var/www/FreshRSS/p
+COPY --chown=root:www-data constants.php config.default.php config-user.default.php index.php index.html LICENSE.txt /var/www/FreshRSS/
+COPY --chown=root:www-data Docker/entrypoint.sh /var/www/FreshRSS/Docker/entrypoint.sh
+# Same native Docker setting as the previous image; no accounts/data are copied.
+RUN sed -i "s/'disable_update' => false/'disable_update' => true/" /var/www/FreshRSS/config.default.php \
+ && find /etc/php -type f -name php.ini -exec sed -i -E 's/^;?session.upload_progress.enabled.*/session.upload_progress.enabled = Off/' {} \;
+LABEL org.opencontainers.image.version="1.30.4-utilibre.1" \
+      org.opencontainers.image.revision="08f97bd497ace733c151ea1c709d85cd5b65cc53"

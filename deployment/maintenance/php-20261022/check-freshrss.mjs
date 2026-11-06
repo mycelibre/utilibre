@@ -3,7 +3,7 @@ import cp from 'node:child_process';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 process.umask(0o077);
-const dir='/var/lib/utilibre-maintenance/php-20261022/freshrss',stage=JSON.parse(fs.readFileSync(dir+'/build.json'));
+const dir=process.env.FRESHRSS_TEST_REPORT_DIR||'/var/lib/utilibre-maintenance/php-20261022/freshrss',stage=JSON.parse(fs.readFileSync(dir+'/build.json'));
 const name='utilibre-php-freshrss-check';let created=false;
 const docker=(...args)=>cp.execFileSync('docker',args,{encoding:'utf8',timeout:120000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe']}).trim();
 try{

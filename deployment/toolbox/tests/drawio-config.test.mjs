@@ -22,3 +22,22 @@ test('mobile layout does not enable cloud accounts, remote export or tracking',(
     assert.equal(context.urlParams.local,'1');
   }
 });
+
+test('loader fingerprint changes when upstream loader bytes change', async()=>{
+  const {mkdtempSync,mkdirSync,writeFileSync,rmSync}=await import('node:fs');
+  const {tmpdir}=await import('node:os');
+  const {execFileSync}=await import('node:child_process');
+  const {join}=await import('node:path');
+  const dir=mkdtempSync(join(tmpdir(),'drawio-config-'));
+  try {
+    mkdirSync(join(dir,'js'));
+    writeFileSync(join(dir,'js/PreConfig.js'),source);
+    const run=(extra)=>{
+      writeFileSync(join(dir,'js/bootstrap.js'),"load('js/PreConfig.js');"+extra);
+      writeFileSync(join(dir,'index.html'),'<script src="js/bootstrap.js"></script><svg class="geSplashLogo" viewBox="0 0 161.6 161.6" role="img" aria-label="draw.io"></svg>');
+      execFileSync(process.execPath,[new URL('../version-drawio-config.mjs',import.meta.url).pathname,dir]);
+      return readFileSync(join(dir,'index.html'),'utf8').match(/bootstrap\.utilibre-[a-f0-9]+\.js/)[0];
+    };
+    const old=run('');assert.equal(run(''),old);assert.notEqual(run('// upstream update'),old);
+  } finally {rmSync(dir,{recursive:true,force:true});}
+});

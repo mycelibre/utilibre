@@ -1,0 +1,17 @@
+**
+!app
+!app/**
+!cli
+!cli/**
+!lib
+!lib/**
+!p
+!p/**
+!constants.php
+!config.default.php
+!config-user.default.php
+!index.php
+!index.html
+!LICENSE.txt
+!Docker
+!Docker/entrypoint.sh

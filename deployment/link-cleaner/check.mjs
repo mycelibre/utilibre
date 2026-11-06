@@ -3,7 +3,7 @@ import path from 'node:path';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {chromium} from '../../portal/node_modules/playwright/index.mjs';
 const base=process.argv[2]||'https://cleaner.invalid/apps/link-cleaner/';
-const report='/opt/utilibre/reports/link-cleaner-20261009';await mkdir(report,{recursive:true,mode:0o700});
+const report=process.env.UTILIBRE_TEST_REPORT_DIR||'/opt/utilibre/reports/link-cleaner-20261009';await mkdir(report,{recursive:true,mode:0o700});
 const b=await chromium.launch();const c=await b.newContext({acceptDownloads:true,permissions:['clipboard-read','clipboard-write']});const requests=[],outside=[],errors=[];
 await c.addInitScript(()=>{localStorage.setItem('settings','fictional-other-tool');localStorage.setItem('history','fictional-other-history')});
 await c.route('**/*',async r=>{const u=new URL(r.request().url());requests.push(u.href);if(u.origin!==new URL(base).origin){outside.push(u.href);return r.abort()}if(u.hostname==='cleaner.invalid'){const rel=u.pathname.replace(/^\/apps\/link-cleaner\//,'');return r.fulfill({path:path.join('/opt/utilibre/src/url-parameter-cleaner/dist/site',rel||'index.html')})}return r.continue()});

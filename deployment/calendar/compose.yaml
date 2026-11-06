@@ -14,7 +14,7 @@ x-runtime: &runtime
 services:
   radicale:
     <<: *runtime
-    image: utilibre-calendar-radicale:sqlite-rowid-20261103
+    image: utilibre-radicale:3.9.0-20261106
     build:
       context: .
       dockerfile: Dockerfile.radicale
@@ -39,7 +39,7 @@ services:
     ports: ["10.10.1.43:3197:8080"]
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - /opt/utilibre/calendar-static:/srv/calino:ro
+      - /opt/utilibre/calendar-static-0.42.0:/srv/calino:ro
     networks: [calendar, ingress]
     depends_on: [radicale]
     healthcheck:

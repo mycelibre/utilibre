@@ -1,10 +1,10 @@
 import {chromium} from '../../portal/node_modules/playwright/index.mjs';
 import {readFile,writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
-const name=process.argv[2],dir='/opt/utilibre/reports/creative-batch-20261011',examples='/home/ubuntu/freetools/portal/public/examples/';
+const name=process.argv[2],dir=process.env.UTILIBRE_TEST_REPORT_DIR||'/opt/utilibre/reports/creative-batch-20261011',examples='/home/ubuntu/freetools/portal/public/examples/';
 if(!['glyphr','fossflow','floorplan','blockbench'].includes(name))throw Error('Unknown example');
 const browser=await chromium.launch({args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
-const page=await browser.newPage({viewport:{width:1440,height:1000}}),origin=`https://${name}.utilibre.org`,external=[],errors=[];
+const page=await browser.newPage({viewport:{width:1440,height:1000}}),origin=process.argv[3]||`https://${name}.utilibre.org`,external=[],errors=[];
 page.setDefaultTimeout(20000);
 // Exercise upstream's standard file-input fallback; native OS pickers are not
 // automatable in this headless environment. This affects the test context only.

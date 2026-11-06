@@ -13,6 +13,14 @@ $entry=new FreshRSS_Entry($id,'urn:fictional:one','Fictional café','Fictional A
 $entry->_id((string)(int)(microtime(true)*1000000));
 if (!FreshRSS_Factory::createEntryDao()->addEntry($entry->toArray(),false)) throw new Exception('Native article storage failed');
 [$filename,$opml]=(new FreshRSS_Export_Service('fictional'))->generateOpml();
+// FreshRSS 1.30.2+ streams exports to a temporary file to bound memory use.
+if (version_compare(FRESHRSS_VERSION, '1.30.2', '>=')) {
+    if (!is_file($opml)) throw new Exception('Native OPML temporary file missing');
+    $exportPath = $opml;
+    $opml = file_get_contents($exportPath);
+    unlink($exportPath);
+    if ($opml === false) throw new Exception('Native OPML temporary file unreadable');
+}
 $document=new DOMDocument();
 if (!$document->loadXML($opml,LIBXML_NONET)) throw new Exception('OPML invalid');
 $xpath=new DOMXPath($document);

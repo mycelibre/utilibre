@@ -40,7 +40,7 @@ services:
       - '10.10.1.43:3239:3239'
     networks: [static, ingress]
   glyphr:
-    image: utilibre-glyphr:2.10.6-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103
+    image: utilibre-glyphr:2.10.8-20261106
     restart: unless-stopped
     read_only: true
     user: '101:101'

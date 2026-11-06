@@ -81,7 +81,7 @@ services:
     logging: *default-logging
 
   freshrss:
-    image: utilibre-services-freshrss:sqlite-rowid-20261103
+    image: utilibre-freshrss:1.30.4-20261106
     init: true
     restart: unless-stopped
     <<: *default-security

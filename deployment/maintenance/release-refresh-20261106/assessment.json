@@ -1,0 +1,1152 @@
+{
+  "schemaVersion": 1,
+  "assessedOn": "2026-11-06",
+  "counts": {
+    "inventoried": 42,
+    "upgraded": 9,
+    "held": 33
+  },
+  "limits": [
+    "Source findings include build/mobile dependencies and are not deployed exploitable counts.",
+    "Zero extracted matches or missing dependency coverage is not release clearance.",
+    "Individual patch application is not whole-sequence verification.",
+    "Same-database comparisons preserve existing findings; they do not establish fleet-wide security."
+  ],
+  "scanner": {
+    "name": "Trivy",
+    "version": "0.75.0",
+    "binarySha256": "93f9da8e4ba5e0c1c76d8234ed2494cf9afb0a96fd21953e424bb795f3299b8e",
+    "databases": {
+      "db/trivy.db": "d3ca72545d327701b6e002a20baf673048f0baf3e9ab3d619557ade62f926790",
+      "java-db/trivy-java.db": "7124b5d89aa910c1c79b7cbdd35903ab940762f6ebb27729e558fb197f9ae1db"
+    }
+  },
+  "evidenceRoot": "/var/lib/utilibre-maintenance/releases-20261106",
+  "applications": [
+    {
+      "id": "actual",
+      "origin": "https://github.com/actualbudget/actual",
+      "tag": "v26.11.0",
+      "recordedVersion": "26.10.0 \u00b7 approved-account pilot",
+      "commit": "1766241e3f4b3c578e424c4fa15f1eb83c0da17d",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "cocoapods",
+          "yarn"
+        ],
+        "findings": {
+          "CRITICAL": 2,
+          "HIGH": 21,
+          "MEDIUM": 22,
+          "LOW": 4,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "Candidate source contains 2 critical / 21 high lockfile matches; review build/runtime exposure and account/database migration and budget import/export."
+    },
+    {
+      "id": "addy",
+      "origin": "https://github.com/anonaddy/anonaddy",
+      "tag": "v1.7.4",
+      "recordedVersion": "1.7.3",
+      "commit": "0315a78015ae8a0f0f5fbeccf1d53bae7b3d27cc",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "composer",
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 1,
+          "LOW": 0,
+          "UNKNOWN": 3
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "No critical/high extracted lock matches; mail-processing changes require patched PHP/vendor artifact comparison and an explicitly authorized controlled delivery/reply test."
+    },
+    {
+      "id": "authentik",
+      "origin": "https://github.com/goauthentik/authentik",
+      "tag": "version/2026.8.5",
+      "recordedVersion": "2026.8.3-python-security-20261011",
+      "commit": "4ec0d19b98da3c329781894cd550da95d3033954",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "cargo",
+          "gomod",
+          "pnpm",
+          "uv"
+        ],
+        "findings": {
+          "CRITICAL": 13,
+          "HIGH": 149,
+          "MEDIUM": 90,
+          "LOW": 21,
+          "UNKNOWN": 3
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "Candidate source contains 13 critical / 149 high lockfile matches; review build/runtime exposure and SSO/provider compatibility and isolated account/token tests."
+    },
+    {
+      "id": "bentopdf",
+      "origin": "https://github.com/alam00000/bentopdf",
+      "tag": "v2.8.11",
+      "recordedVersion": "2.8.8-p4 \u00b7 local PDF/OCR runtimes",
+      "commit": "f638f8e4db66cb69dec35ca061ad89034dd62445",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 6,
+          "MEDIUM": 5,
+          "LOW": 5,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/pack/bentopdf.dependencies.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "Candidate source contains 0 critical / 6 high lockfile matches; review build/runtime exposure and existing dependency/OCR/local-assets repairs and real PDF outputs."
+    },
+    {
+      "id": "bytestash",
+      "origin": "https://github.com/jordan-dalby/ByteStash",
+      "tag": "v1.6.1",
+      "recordedVersion": "1.5.14-p1",
+      "commit": "32b8e7bc1efcd242e4fa0873657c90d08d533383",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm",
+          "pip"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 11,
+          "LOW": 3,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/community/bytestash/privacy.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "Existing privacy patch does not apply. Rebase then verify two-account private snippet/import/export behavior."
+    },
+    {
+      "id": "calino",
+      "origin": "https://github.com/Ivan-Malinovski/calino",
+      "tag": "v0.42.0",
+      "recordedVersion": "0.39.1-p1",
+      "commit": "5923ea08e63a6e420ef372db84a97b4971346493",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "pnpm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/calendar/calino-browser-ai.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "deployed-and-task-tested",
+      "reason": "Exact tested candidate deployed; see operator report for scope and retained findings.",
+      "releaseEvidence": "calino-static-release.json",
+      "artifactSha256": "a9e10fcb92ab5f091660e62c6ec4d69ca44a8765c6c06319dc2de40b08593feb"
+    },
+    {
+      "id": "candlr",
+      "origin": "https://github.com/ellite/candlr",
+      "tag": "v2.4.0",
+      "recordedVersion": "2.0.0-p1",
+      "commit": "e6f7b2c80bb638ae868df218a249cf645bb29031",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm",
+          "pip"
+        ],
+        "findings": {
+          "CRITICAL": 6,
+          "HIGH": 29,
+          "MEDIUM": 21,
+          "LOW": 2,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "6 critical and 29 high lockfile matches; shared planner/storage workflow and existing patches need a compatible candidate."
+    },
+    {
+      "id": "chartdb",
+      "origin": "https://github.com/chartdb/chartdb",
+      "tag": "v1.21.0",
+      "recordedVersion": "1.20.1-p1",
+      "commit": "ee95448d154cfdcf65264c45745f440c0480ef84",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 1,
+          "MEDIUM": 15,
+          "LOW": 8,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/toolbox/chartdb-local-source.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "Candidate source contains 0 critical / 1 high lockfile matches; review build/runtime exposure and local repair compatibility and application-specific import/export/access tests."
+    },
+    {
+      "id": "chhoto",
+      "origin": "https://github.com/SinTan1729/chhoto-url",
+      "tag": "7.10.7",
+      "recordedVersion": "7.8.3-p3",
+      "commit": "8372892bfd6ebddf4076db03b965b80c804aa27e",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "cargo"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/chhoto/no-analytics-local-assets.patch",
+          "appliesAlone": false
+        },
+        {
+          "path": "deployment/chhoto/layout.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "Privacy and UI patches do not apply to new source. Rebase without restoring analytics; verify redirect/access/data behavior."
+    },
+    {
+      "id": "cryptpad",
+      "origin": "https://github.com/cryptpad/cryptpad",
+      "tag": "2026.10.0",
+      "recordedVersion": "2026.9.0 \u00b7 Office 9.3.2+3",
+      "commit": "b08114cc4afe99129bb41ce96f39c39324d29ebf",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 1,
+          "MEDIUM": 7,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "Candidate source contains 0 critical / 1 high lockfile matches; review build/runtime exposure and office/sandbox assets and two-client encrypted document compatibility."
+    },
+    {
+      "id": "degoog",
+      "origin": "https://github.com/degoog-org/degoog",
+      "tag": "1.1.1",
+      "recordedVersion": "1.0.0 \u00b7 four native SearXNG engines",
+      "commit": "d8b7f7c3ae5f3fc1efc2553d2c12ab272e42409a",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "bun"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "Upstream changes PHP deployment to a Bun server. Requires an explicit runtime/network migration and frontend search/privacy tests."
+    },
+    {
+      "id": "donetick",
+      "origin": "https://github.com/donetick/donetick",
+      "tag": "v0.1.86",
+      "recordedVersion": "0.1.80-p3 \u00b7 frontend1.2.55",
+      "commit": "ebfb340d7bd4e2e009d6f2f9ad073868acaf6412",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "gomod"
+        ],
+        "findings": {
+          "CRITICAL": 2,
+          "HIGH": 28,
+          "MEDIUM": 18,
+          "LOW": 2,
+          "UNKNOWN": 4
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/donetick/backend.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "Candidate source contains 2 critical / 28 high lockfile matches; review build/runtime exposure and local repair compatibility and application-specific import/export/access tests."
+    },
+    {
+      "id": "drawdb",
+      "origin": "https://github.com/drawdb-io/drawdb",
+      "tag": "v1.9.0",
+      "recordedVersion": "1.8.2-p1",
+      "commit": "a249c7fb730c2de9b5c2ce6e863f2ea7344ac372",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 1,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/toolbox/drawdb-local-source.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "Candidate source contains 0 critical / 1 high lockfile matches; review build/runtime exposure and local repair compatibility and application-specific import/export/access tests."
+    },
+    {
+      "id": "drawio",
+      "origin": "https://github.com/jgraph/drawio",
+      "tag": "v32.6.10",
+      "recordedVersion": "32.0.2-p4 \u00b7 local files",
+      "commit": "c72c9a98b7a6ce392556ed04c05e0ff19f43f5c3",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "deployed-and-task-tested",
+      "reason": "Exact tested candidate deployed; see operator report for scope and retained findings.",
+      "releaseEvidence": "drawio-release/result.json",
+      "artifactSha256": "sha256:b827f5fbd979df27f809cb20580a916d14893dbc8047cd37d2349024fd1e0363"
+    },
+    {
+      "id": "freshrss",
+      "origin": "https://github.com/FreshRSS/FreshRSS",
+      "tag": "1.30.4",
+      "recordedVersion": "1.30.1",
+      "commit": "08f97bd497ace733c151ea1c709d85cd5b65cc53",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "bundler"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 6,
+          "LOW": 1,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "deployed-and-task-tested",
+      "reason": "Exact tested candidate deployed; see operator report for scope and retained findings.",
+      "releaseEvidence": "freshrss-release/result.json",
+      "artifactSha256": "sha256:46aa631691b25d7afddb1c9d6d39fa379529d12c50792875be7ddcad91dc2be8"
+    },
+    {
+      "id": "github-cli-host",
+      "origin": "https://github.com/cli/cli",
+      "tag": "v2.103.3",
+      "recordedVersion": "2.102.0",
+      "commit": "63837fb778d6a39f02be0ce76ff89f2bc8d74bdc",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "gomod",
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 2,
+          "MEDIUM": 2,
+          "LOW": 0,
+          "UNKNOWN": 3
+        }
+      },
+      "patchCompatibility": [],
+      "status": "deployed-and-task-tested",
+      "reason": "Exact tested candidate deployed; see operator report for scope and retained findings.",
+      "artifactSha256": "e3bafef96328d1a67de3a968bdfe1cc2ffd58cf6aba8b5e201356897ed06bb3d",
+      "releaseEvidence": "gh-release.json"
+    },
+    {
+      "id": "glyphr",
+      "origin": "https://github.com/glyphr-studio/Glyphr-Studio-2",
+      "tag": "v2.10.8",
+      "recordedVersion": "2.10.6-p1",
+      "commit": "29b3dfb0fd58ecc8503a9af7d5ca2110373c2a44",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 1,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "deployed-and-task-tested",
+      "reason": "Exact tested candidate deployed; see operator report for scope and retained findings.",
+      "releaseEvidence": "glyphr-release/result.json",
+      "artifactSha256": "sha256:0d4d70dfdb3886012dc1d72f4a66be5e236fd9bb7cbe3289aefd662a4209c2d4"
+    },
+    {
+      "id": "grid",
+      "origin": "https://github.com/GridSpace/grid-apps",
+      "tag": "4.7.3",
+      "recordedVersion": "4.7.0-p1",
+      "commit": "ff7692241c48c3495da0bb8eb7455f906f3abb2d",
+      "sourceAssessment": {
+        "status": "no-supported-input-extracted",
+        "coverage": [],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "No supported locked dependency inventory extracted; native bundling/slicer and telemetry-removal checks still required."
+    },
+    {
+      "id": "grist",
+      "origin": "https://github.com/gristlabs/grist-core",
+      "tag": "v1.7.22",
+      "recordedVersion": "1.7.21",
+      "commit": "a10b7227365adfe2555be40ae87bb9741284c0ca",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "pip",
+          "yarn"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 24,
+          "MEDIUM": 43,
+          "LOW": 10,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "24 high lockfile matches; preserve existing image-size/privacy repairs and verify document/access workflow before replacing runtime."
+    },
+    {
+      "id": "jupyterlite",
+      "origin": "https://github.com/jupyterlite/jupyterlite",
+      "tag": "v0.8.7",
+      "recordedVersion": "0.8.5-p5 \u00b7 kernel 0.8.6 \u00b7 local Pyodide 314.0.6",
+      "commit": "73c1526485e136aa0180e769717ee0f109bb8c39",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "yarn"
+        ],
+        "findings": {
+          "CRITICAL": 3,
+          "HIGH": 65,
+          "MEDIUM": 47,
+          "LOW": 16,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "Candidate source contains 3 critical / 65 high lockfile matches; review build/runtime exposure and kernel/Pyodide compatibility, local assets and notebook save/reopen."
+    },
+    {
+      "id": "link-cleaner",
+      "origin": "https://github.com/loganpendragonmultiverse/url-parameter-cleaner",
+      "tag": "v1.3.2",
+      "recordedVersion": "1.1.0-p1",
+      "commit": "e3bf8286e1d6dada00099eef2c392df2088e743a",
+      "sourceAssessment": {
+        "status": "no-supported-input-extracted",
+        "coverage": [],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/link-cleaner/source.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "deployed-and-task-tested",
+      "reason": "Exact tested candidate deployed; see operator report for scope and retained findings.",
+      "releaseEvidence": "link-cleaner-static-release.json",
+      "artifactSha256": "9a54b0148edae115ae33c38f58ab2cda708a281efb6702c043ab368512a7130f"
+    },
+    {
+      "id": "mapshaper",
+      "origin": "https://github.com/mbloch/mapshaper",
+      "tag": "v0.7.101",
+      "recordedVersion": "0.7.80-p1 \u00b7 local geographic files; no basemaps",
+      "commit": "b44c0fa95effac3d91526c8b62dc0de0ab88b464",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "deployed-and-task-tested",
+      "reason": "Exact tested candidate deployed; see operator report for scope and retained findings.",
+      "releaseEvidence": "mapshaper-static-release.json",
+      "artifactSha256": "b793320bd5ebf2c6eb94a4d990638e3d8e4ea2673a00bbda30292b47b6565852"
+    },
+    {
+      "id": "mumble",
+      "origin": "https://github.com/mumble-voip/mumble",
+      "tag": "v1.5.939",
+      "recordedVersion": "1.5.915 \u00b7 password-protected \u00b7 TCP voice and UDP loopback verified",
+      "commit": "dfbac8d3d9c967003e74b4ffc5610f7d45e8f666",
+      "sourceAssessment": {
+        "status": "no-supported-input-extracted",
+        "coverage": [],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "No supported locked dependency inventory extracted; must rebuild against repaired TLS/runtime libraries and verify native protected voice sessions."
+    },
+    {
+      "id": "newton",
+      "origin": "https://github.com/skrodahl/NewTon",
+      "tag": "v5.5.0",
+      "recordedVersion": "5.4.0-p1",
+      "commit": "6c1833a4c50e87091dad9766f59b9c5f091904e8",
+      "sourceAssessment": {
+        "status": "no-supported-input-extracted",
+        "coverage": [],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/newton/local-static.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "No supported locked dependency inventory; tournament patch conflicts with new tournament/live-view UI. Rebase and test legitimate match/export flows."
+    },
+    {
+      "id": "ntfy",
+      "origin": "https://github.com/binwiederhier/ntfy",
+      "tag": "v2.37.2",
+      "recordedVersion": "2.28.0",
+      "commit": "05109571fd0931affb6f92b17bbfd62c4d2ea68a",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "gomod",
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 3
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/maintenance/go-leaf-final/patches/ntfy-go-security-20261011.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "Go dependency repair conflicts; native publish/read authorization, cache expiry and UnifiedPush compatibility still need verification."
+    },
+    {
+      "id": "omnitools",
+      "origin": "https://github.com/iib0011/omni-tools",
+      "tag": "v0.7.0",
+      "recordedVersion": "0.6.0-p7 \u00b7 local runtimes; secure password generator",
+      "commit": "5f8f4c7b92060f904b40fafb0649701921fe7746",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm",
+          "pnpm"
+        ],
+        "findings": {
+          "CRITICAL": 6,
+          "HIGH": 50,
+          "MEDIUM": 57,
+          "LOW": 13,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/toolbox/omnitools-secure-random.patch",
+          "appliesAlone": false
+        },
+        {
+          "path": "deployment/toolbox/omnitools-semantics.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "Candidate source contains 6 critical / 50 high lockfile matches; review build/runtime exposure and privacy, processing semantics and randomness fixes plus native tool outputs."
+    },
+    {
+      "id": "one-file-core",
+      "origin": "https://github.com/gelatinescreams/The-One-File",
+      "tag": "V4.2.0",
+      "recordedVersion": "4.1.5-p1",
+      "commit": "7439c0f78b64aad87f1e71c62e593536e3faf3bb",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "bun",
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/one-file-core/standalone.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "deployed-and-task-tested",
+      "reason": "Exact tested candidate deployed; see operator report for scope and retained findings.",
+      "releaseEvidence": "one-file-core-static-release.json",
+      "artifactSha256": "69d480418b4a1d47d4b86fd5fc0577caa6e696c724f7ac30b38bf67c3751e560"
+    },
+    {
+      "id": "opengist",
+      "origin": "https://github.com/thomiceli/opengist",
+      "tag": "v1.15.3",
+      "recordedVersion": "1.15.2",
+      "commit": "2acf3dae87f9c3d536e0a870787941bbd06d0b46",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "gomod"
+        ],
+        "findings": {
+          "CRITICAL": 1,
+          "HIGH": 4,
+          "MEDIUM": 4,
+          "LOW": 0,
+          "UNKNOWN": 3
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/maintenance/go-leaf-final/patches/opengist-go-security-20261011.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "Candidate source contains 1 critical / 4 high lockfile matches; review build/runtime exposure and local repair compatibility and application-specific import/export/access tests."
+    },
+    {
+      "id": "penpot",
+      "origin": "https://github.com/penpot/penpot",
+      "tag": "2.18.6",
+      "recordedVersion": "2.18.3 \u00b7 approved-account pilot",
+      "commit": "c7fee6a9e2b9d6fcde1b026b64eb79cde42c937d",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "cargo",
+          "npm",
+          "pnpm"
+        ],
+        "findings": {
+          "CRITICAL": 1,
+          "HIGH": 29,
+          "MEDIUM": 21,
+          "LOW": 6,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "Candidate source contains 1 critical / 29 high lockfile matches; review build/runtime exposure and coupled frontend/backend/exporter and retained JVM repairs."
+    },
+    {
+      "id": "radicale",
+      "origin": "https://github.com/Kozea/Radicale",
+      "tag": "v3.9.0",
+      "recordedVersion": "3.8.3",
+      "commit": "4d3887e0fe5f4d3cf815d65e2a4d8bf9b0ca5b75",
+      "sourceAssessment": {
+        "status": "no-supported-input-extracted",
+        "coverage": [],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "deployed-and-task-tested",
+      "reason": "Exact tested candidate deployed; see operator report for scope and retained findings.",
+      "releaseEvidence": "radicale-release/result.json",
+      "artifactSha256": "sha256:599726db2bc5f925d833fdfbbf93cf1b2e485bf304d44ca9b8129effececa476"
+    },
+    {
+      "id": "razzia",
+      "origin": "https://github.com/Ralex91/Razzia",
+      "tag": "4.0.2",
+      "recordedVersion": "3.1.0-p1",
+      "commit": "8345663f7f47a8d466964fcf5b642cc7a4ed90fb",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "pnpm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/razzia/security-dependencies.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "Major 3\u21924 update; dependency patch conflicts. Native guest/join/host/WebSocket compatibility not verified."
+    },
+    {
+      "id": "reactive-resume",
+      "origin": "https://github.com/reactive-resume/reactive-resume",
+      "tag": "v6.1.0",
+      "recordedVersion": "6.0.0-p1 \u00b7 visitor analytics disabled",
+      "commit": "8034bc43e8e101c83c99b79541ee249d3658a46e",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "bundler",
+          "cargo",
+          "pnpm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 1,
+          "MEDIUM": 8,
+          "LOW": 1,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "Candidate source contains 0 critical / 1 high lockfile matches; review build/runtime exposure and local repair compatibility and application-specific import/export/access tests."
+    },
+    {
+      "id": "spliit",
+      "origin": "https://github.com/spliit-app/spliit",
+      "tag": "1.30.0",
+      "recordedVersion": "1.29.0-p1",
+      "commit": "28d360d2372b51782d8be92de03d73e220b19dc6",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 2,
+          "HIGH": 9,
+          "MEDIUM": 6,
+          "LOW": 2,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/spliit/security-dependencies.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "Candidate source contains 2 critical / 9 high lockfile matches; review build/runtime exposure and local repair compatibility and application-specific import/export/access tests."
+    },
+    {
+      "id": "super-productivity",
+      "origin": "https://github.com/super-productivity/super-productivity",
+      "tag": "v19.3.1",
+      "recordedVersion": "19.1.0-p1 \u00b7 local-data web application",
+      "commit": "1014df989d55497d6ec18b038de09aa25b6cd2bb",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "bundler",
+          "cargo",
+          "cocoapods",
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 15,
+          "LOW": 5,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/pack/super-productivity.dependencies.patch",
+          "appliesAlone": false
+        },
+        {
+          "path": "deployment/pack/super-productivity.plugin-lock.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "Existing dependency/plugin repair sequence conflicts; local task persistence, backup/restore and privacy checks required."
+    },
+    {
+      "id": "texlyre",
+      "origin": "https://github.com/TeXlyre/texlyre",
+      "tag": "v0.14.1",
+      "recordedVersion": "0.13.0-p1",
+      "commit": "697759981a2a7291fdd3855ea6e09cc6ca5c7723",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm",
+          "pnpm",
+          "yarn"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 1,
+          "MEDIUM": 1,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "Candidate source contains 0 critical / 1 high lockfile matches; review build/runtime exposure and local repair compatibility and application-specific import/export/access tests."
+    },
+    {
+      "id": "unfurl",
+      "origin": "https://github.com/RyanDFIR/unfurl",
+      "tag": "v2026.11",
+      "recordedVersion": "2026.10-p1",
+      "commit": "31600b855bdbe695e8c429cf3ad6c26575a3c66c",
+      "sourceAssessment": {
+        "status": "no-supported-input-extracted",
+        "coverage": [],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/unfurl/source.patch",
+          "appliesAlone": true
+        }
+      ],
+      "status": "held",
+      "reason": "No supported locked dependency inventory; local source patch applies alone, but complete network-isolated SSRF/import/export test and runtime build were not completed."
+    },
+    {
+      "id": "uptime-kuma",
+      "origin": "https://github.com/louislam/uptime-kuma",
+      "tag": "2.5.9",
+      "recordedVersion": "2.5.6",
+      "commit": "df601c58d9205562f34cfe5ef35264b341019d19",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 2,
+          "HIGH": 35,
+          "MEDIUM": 40,
+          "LOW": 3,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "Candidate source contains 2 critical / 35 high lockfile matches; review build/runtime exposure and retained OAuth client-binding repair and monitoring data compatibility."
+    },
+    {
+      "id": "vikunja",
+      "origin": "https://github.com/go-vikunja/vikunja",
+      "tag": "v2.8.0",
+      "recordedVersion": "2.7.0",
+      "commit": "6e788bf87cebe50e2b8d034b213fcf94ae5449ee",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "gomod",
+          "pnpm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 1,
+          "UNKNOWN": 1
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/maintenance/go-leaf-final/patches/vikunja-go-security-20261011.patch",
+          "appliesAlone": false
+        }
+      ],
+      "status": "held",
+      "reason": "Go repair does not apply; native migration, task/export and two-account isolation checks not completed."
+    },
+    {
+      "id": "wakapi",
+      "origin": "https://github.com/muety/wakapi",
+      "tag": "2.18.2",
+      "recordedVersion": "2.18.1 \u00b7 local copy and empty-state fixes",
+      "commit": "1157f203c8b646466b4e72563764738b10f0cd0d",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "gomod",
+          "yarn"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 4,
+          "MEDIUM": 7,
+          "LOW": 0,
+          "UNKNOWN": 4
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/maintenance/go-leaf-final/patches/wakapi-go-security-20261011.patch",
+          "appliesAlone": true
+        },
+        {
+          "path": "deployment/expanded/wakapi-summary.patch",
+          "appliesAlone": true
+        }
+      ],
+      "status": "held",
+      "reason": "Candidate source contains 0 critical / 4 high lockfile matches; review build/runtime exposure and both recorded patches apply individually, but full sequence/runtime/account verification remains."
+    },
+    {
+      "id": "wbo",
+      "origin": "https://github.com/lovasoa/whitebophir",
+      "tag": "v2.18.32",
+      "recordedVersion": "2.9.0-p3 \u00b7 temporary shared whiteboard",
+      "commit": "57971cd56ecdb65c447f8535563c01d50a2c114c",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "npm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "New source adds OpenTelemetry packages and changes collaboration/history behavior. Verify telemetry remains off, two-client behavior and retention before approval."
+    },
+    {
+      "id": "wishlist",
+      "origin": "https://github.com/cmintey/wishlist",
+      "tag": "v0.69.0",
+      "recordedVersion": "0.67.1-p2",
+      "commit": "a76e1277e39d3e2d98cb715a9a07b663bab23dee",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "pnpm"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 30,
+          "MEDIUM": 32,
+          "LOW": 8,
+          "UNKNOWN": 0
+        }
+      },
+      "patchCompatibility": [
+        {
+          "path": "deployment/wishlist/security-dependencies.patch",
+          "appliesAlone": false
+        },
+        {
+          "path": "deployment/wishlist/local-icons.patch",
+          "appliesAlone": true
+        },
+        {
+          "path": "deployment/wishlist/log-privacy.patch",
+          "appliesAlone": false
+        },
+        {
+          "path": "deployment/wishlist/native-deletion.patch",
+          "appliesAlone": true
+        }
+      ],
+      "status": "held",
+      "reason": "Candidate source contains 0 critical / 30 high lockfile matches; review build/runtime exposure and local repair compatibility and application-specific import/export/access tests."
+    },
+    {
+      "id": "yopass",
+      "origin": "https://github.com/jhaals/yopass",
+      "tag": "16.0.1",
+      "recordedVersion": "14.10.0",
+      "commit": "53b8f53f1303528cd0bc60f9f149f196827e6a3f",
+      "sourceAssessment": {
+        "status": "assessed",
+        "coverage": [
+          "gomod",
+          "npm",
+          "yarn"
+        ],
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 12,
+          "MEDIUM": 4,
+          "LOW": 2,
+          "UNKNOWN": 2
+        }
+      },
+      "patchCompatibility": [],
+      "status": "held",
+      "reason": "Candidate source contains 0 critical / 12 high lockfile matches; review build/runtime exposure and two major versions, first-retrieval/expiry/encryption semantics."
+    }
+  ]
+}

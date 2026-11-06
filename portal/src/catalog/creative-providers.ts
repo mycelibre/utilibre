@@ -14,7 +14,7 @@ export const creativeProviders = {
   openreel: reviewed('OpenReel', 'Augani/openreel-video', 'c9340465e5d37e684cc25bdbe746c4ccd45e165c', 'MIT', 'LICENSE', '0.1.2-p1'),
   openplan3d: reviewed('OpenPlan3D', 'laanlabs/openPlan3D', 'd68cadf703578f2cd3a7c77f820e18d342580c32', 'MIT', 'LICENSE', '0.9.0-p1'),
   blockbench: reviewed('Blockbench', 'JannisX11/blockbench', '7c92e27d237e365110030d73e92c5d1605f0d311', 'GPL-3.0-or-later', 'LICENSE.MD', '5.2.2-p1'),
-  glyphr: reviewed('Glyphr Studio', 'glyphr-studio/Glyphr-Studio-2', 'e12bb922f74a2e410c5ac580eebcb485aff0ad51', 'GPL-3.0-or-later', 'LICENSE-gpl-3.0.txt', '2.10.6-p1'),
+  glyphr: reviewed('Glyphr Studio', 'glyphr-studio/Glyphr-Studio-2', '29b3dfb0fd58ecc8503a9af7d5ca2110373c2a44', 'GPL-3.0-or-later', 'LICENSE-gpl-3.0.txt', '2.10.8-p1'),
   graphite: reviewed('Graphite', 'GraphiteEditor/Graphite', '7477cd2fab315494e4c2613bc446c707733e6e7b', 'Apache-2.0', 'LICENSE-APACHE', '7477cd2-p1 · alpha', false),
   jscad: reviewed('JSCAD', 'jscad/OpenJSCAD.org', 'f245ea3a5072024b789f276c6fb9ce6c3eb3fd0d', 'MIT', 'LICENSE', 'Web 2.6.13'),
   grid: reviewed('GridSpace', 'GridSpace/grid-apps', 'd138275bbe9d4e4030d8cb8b2dcf66607da9295a', 'MIT', 'license.md', '4.7.0-p1'),

@@ -1,0 +1,9 @@
+# Preserve the exact repaired nginx/OS runtime; only replace the static app.
+# Verify this local tag is e692e6a442ec4896bd4baaadd0e1dc541f67d4f126dbc513f516f32a90d640d8 before building.
+FROM utilibre-glyphr:2.10.6-p1-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103
+USER root
+RUN rm -rf /srv/app
+COPY output /srv/app
+LABEL org.opencontainers.image.version="2.10.8-utilibre.1" \
+      org.opencontainers.image.revision="29b3dfb0fd58ecc8503a9af7d5ca2110373c2a44"
+USER 101:101

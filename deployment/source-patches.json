@@ -19,7 +19,9 @@
     "patch": "deployment/maintenance/go-leaf-final/patches/wakapi-go-security-20261011.patch",
     "source": "/opt/utilibre/expanded-src/wakapi",
     "revision": "347f1f45ae2863d9499236471317a76630c5308f",
-    "prerequisites": ["deployment/expanded/wakapi-summary.patch"],
+    "prerequisites": [
+      "deployment/expanded/wakapi-summary.patch"
+    ],
     "purpose": "Exact compatible network dependency locks for Wakapi and a separately rebuilt Go 1.27.2 health helper; keeps existing local privacy/interface fixes and access configuration.",
     "removeWhen": "A tested upstream release incorporates equivalent fixes and passes native account/heartbeat/health plus existing privacy-template parity checks."
   },
@@ -59,7 +61,9 @@
     "patch": "deployment/maintenance/go-final/rimgo-dependencies.patch",
     "source": "/opt/utilibre/community-src/rimgo-utilibre-p1",
     "revision": "d2be8e221522dfe7a06452e2002dcf6dad569d1a",
-    "prerequisites": ["deployment/community/rimgo-source.patch"],
+    "prerequisites": [
+      "deployment/community/rimgo-source.patch"
+    ],
     "unidiffZero": true,
     "purpose": "Pinned Go 1.26.9 and compatible Fiber/network/text module security updates; preserves existing privacy and SSRF protections.",
     "removeWhen": "A tested upstream release carries equivalent fixes and existing privacy protections; preserve matching source for old images."
@@ -77,7 +81,9 @@
     "patch": "deployment/maintenance/go-final/safetwitch-dependencies.patch",
     "source": "/opt/utilibre/community-src/safetwitch-backend-utilibre-p1",
     "revision": "91dda1ceb50822cc9b5306f6c1a92f7e8aaf747b",
-    "prerequisites": ["deployment/community/safetwitch-backend-source.patch"],
+    "prerequisites": [
+      "deployment/community/safetwitch-backend-source.patch"
+    ],
     "unidiffZero": true,
     "purpose": "Pinned Go 1.26.9 and x/net 0.60.0; preserves disabled chat, public-address transport and request limits.",
     "removeWhen": "A tested upstream release includes equivalent fixes and retains the existing privacy/security configuration."
@@ -86,7 +92,9 @@
     "patch": "deployment/maintenance/go-final/gothub-dependencies.patch",
     "source": "/opt/utilibre/community-src/gothub-utilibre-p1",
     "revision": "24bedc80bed5fc4f72a8f140c97cb38fc2e67ed2",
-    "prerequisites": ["deployment/community/gothub-source.patch"],
+    "prerequisites": [
+      "deployment/community/gothub-source.patch"
+    ],
     "unidiffZero": true,
     "purpose": "Pinned Go 1.26.9 and x/net 0.60.0 without changing existing content, asset routes, public-address checks or request logging policy.",
     "removeWhen": "A tested upstream release includes equivalent fixes and passes existing content/privacy gates."
@@ -95,7 +103,9 @@
     "patch": "deployment/maintenance/go-final/anonymousoverflow-dependencies.patch",
     "source": "/opt/utilibre/community-src/anonymousoverflow-utilibre-p1",
     "revision": "937cfeefd6dcbab92ef572671f16d4d3be6abad3",
-    "prerequisites": ["deployment/community/anonymousoverflow-source.patch"],
+    "prerequisites": [
+      "deployment/community/anonymousoverflow-source.patch"
+    ],
     "unidiffZero": true,
     "purpose": "Pinned Go 1.26.9, x/net 0.60.0, Redis 9.5.5 and Mongo driver 1.17.7 compatible updates with the existing request-safety tests and source/license notices preserved.",
     "removeWhen": "A tested upstream release carries equivalent fixes and preserves bounded caching, media validation and public-address-only fetching."
@@ -240,7 +250,9 @@
     "patch": "deployment/expanded/whisper-repair.patch",
     "source": "/opt/utilibre/expanded-src/whisper",
     "revision": "81869ed62970ff4373509b6004a6c9a3f0c5b64d",
-    "prerequisites": ["deployment/expanded/whisper-source.patch"],
+    "prerequisites": [
+      "deployment/expanded/whisper-source.patch"
+    ],
     "purpose": "Pinned build-tool security updates, Tailwind/ESLint compatibility, removal of unused remote-audio loading, and associated regression adaptation; direct-URL pilot only.",
     "removeWhen": "Use a supported upstream release with equivalent local-only behavior and clean dependency/build/browser checks. Preserve the existing speech-quality limitations until tested on the affected device."
   },
@@ -702,5 +714,29 @@
     "prerequisites": [],
     "purpose": "Structables: bounded allowlisted HTTPS fetches, no redirects, sanitized upstream HTML, bounded native JSON cache. Companion safe_http.py and wsgi.py plus lockfile and tests are in deployment/structables.",
     "removeWhen": "Reviewed upstream release provides equivalent transport/content controls and passes the offline policy and live reading checks."
+  },
+  {
+    "patch": "deployment/maintenance/release-refresh-20261106/calino-0.42.0.patch",
+    "source": "/var/lib/utilibre-maintenance/releases-20261106/calino",
+    "revision": "5923ea08e63a6e420ef372db84a97b4971346493",
+    "prerequisites": [],
+    "purpose": "Preserve browser-only CalDAV client, disabled AI integration and tested UTC export.",
+    "removeWhen": "Reviewed upstream release provides the same behavior and the native regression checks pass; retain old recipe for previous artifacts."
+  },
+  {
+    "patch": "deployment/maintenance/release-refresh-20261106/link-cleaner-1.3.2.patch",
+    "source": "/var/lib/utilibre-maintenance/releases-20261106/link-cleaner",
+    "revision": "e3bf8286e1d6dada00099eef2c392df2088e743a",
+    "prerequisites": [],
+    "purpose": "Preserve local modules, strict CSP and truthful fragment/export privacy; native upstream now supplies summary node and redaction.",
+    "removeWhen": "Reviewed upstream release provides the same behavior and the native regression checks pass; retain old recipe for previous artifacts."
+  },
+  {
+    "patch": "deployment/maintenance/release-refresh-20261106/one-file-core-4.2.0.patch",
+    "source": "/var/lib/utilibre-maintenance/releases-20261106/one-file-core",
+    "revision": "7439c0f78b64aad87f1e71c62e593536e3faf3bb",
+    "prerequisites": [],
+    "purpose": "Keep network disabled and unsupported encrypted-HTML creation disabled; retain upstream escaping and safe save/reopen.",
+    "removeWhen": "Reviewed upstream release provides the same behavior and the native regression checks pass; retain old recipe for previous artifacts."
   }
 ]

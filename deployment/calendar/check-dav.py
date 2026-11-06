@@ -3,13 +3,14 @@
 import base64
 import json
 import uuid
+import os
 import urllib.request
 import urllib.error
 from pathlib import Path
 
 report = Path('/opt/utilibre/reports/new-services-20261009')
-credentials = json.loads((report / 'calendar-fixtures.json').read_text())
-origin = 'https://calendar.utilibre.org/dav/'
+credentials = json.loads(Path(os.environ.get('CALENDAR_TEST_FIXTURES', str(report / 'calendar-fixtures.json'))).read_text())
+origin = os.environ.get('CALENDAR_TEST_URL', 'https://calendar.utilibre.org/dav/')
 username = 'utilibre-fixture-a'
 created = []
 

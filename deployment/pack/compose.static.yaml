@@ -21,7 +21,7 @@ services:
     volumes:
       - ./nginx-static.conf:/etc/nginx/nginx.conf:ro
       - ./static-security.conf:/etc/nginx/static-security.conf:ro
-      - /opt/utilibre/pack-static/mapshaper-0.7.80-p1:/srv/maps:ro
+      - /opt/utilibre/pack-static/mapshaper-0.7.101-p1:/srv/maps:ro
       - /opt/utilibre/pack-static/numbat-1.24.0-p1:/srv/calc:ro
       - /opt/utilibre/pack-static/plan-19.1.0-p1:/srv/plan:ro
       - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro

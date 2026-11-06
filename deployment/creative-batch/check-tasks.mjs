@@ -3,10 +3,14 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const name=process.argv[2], ports={vvveb:3238,jscad:3235,glyphr:3233,blockbench:3232,floorplan:3231,fossflow:3237,openreel:3230,grid:3236};
 if(!ports[name])throw Error('Unknown reviewed app');
-const out='/opt/utilibre/reports/creative-batch-20261011';await mkdir(out,{recursive:true});
+const out=process.env.UTILIBRE_TEST_REPORT_DIR||'/opt/utilibre/reports/creative-batch-20261011';await mkdir(out,{recursive:true});
 const browser=await chromium.launch({args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const page=await browser.newPage({viewport:{width:1440,height:1000},acceptDownloads:true});
 const base=process.argv[3]||`http://127.0.0.1:${ports[name]}`, requests=[],errors=[];
+await page.route('**/*',route=>{
+ const url=new URL(route.request().url());
+ return /^https?:$/.test(url.protocol)&&url.origin!==new URL(base).origin?route.abort():route.continue();
+});
 page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push({url:r.url(),method:r.method()});});
 page.on('pageerror',e=>errors.push(e.stack||e.message));page.on('dialog',d=>d.accept());
 const report={name,date:new Date().toISOString(),environment:'Linux headless Chromium, synthetic data',origin:base,checks:[]};
@@ -94,6 +98,7 @@ try{
  report.controls=await page.locator('button:visible,input:visible,select:visible,[role=button]:visible').evaluateAll(ns=>ns.map(n=>({tag:n.tagName,text:n.innerText?.slice(0,80),title:n.title,aria:n.getAttribute('aria-label'),id:n.id,type:n.type})));
 }catch(e){report.failure=e.message;process.exitCode=1;}
 report.external=requests.filter(r=>new URL(r.url).origin!==base);report.nonGet=requests.filter(r=>r.method!=='GET');report.errors=errors;
+if(report.external.length||errors.length){report.failure||='Unexpected external request or browser error';process.exitCode=1;}
 await writeFile(out+'/'+name+'-task.json',JSON.stringify(report,null,2));
 await page.screenshot({path:out+'/'+name+'-task.png'});await browser.close();
 console.log(JSON.stringify(report,null,2));

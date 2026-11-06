@@ -1,0 +1,7 @@
+# Exact repaired nginx/OS predecessor: 4924fd72d26336b8f3ebb4ace5f1e4d05752baf7df903d2c5b19c548fd0d4836.
+FROM utilibre-drawio:32.0.2-p4-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103
+USER root
+RUN rm -rf /usr/share/nginx/html
+COPY . /usr/share/nginx/html
+LABEL org.opencontainers.image.version="32.6.10-utilibre.1"
+USER 101:101

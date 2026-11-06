@@ -3,14 +3,15 @@ import {strict as assert} from 'node:assert';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 const require=createRequire(new URL('../../portal/package.json',import.meta.url));
 const {chromium}=require('@playwright/test');
-const {zipSync}=require('/opt/utilibre/src/mapshaper/node_modules/fflate');
-const engine=require('/opt/utilibre/src/mapshaper/mapshaper.js');
+const mapSource=process.env.MAPSHAPER_TEST_SOURCE||'/opt/utilibre/src/mapshaper';
+const {zipSync}=require(mapSource+'/node_modules/fflate');
+const engine=require(mapSource+'/mapshaper.js');
 const root='/home/ubuntu/freetools';
 const fixture=await readFile(`${root}/portal/public/examples/map-fictional.geojson`,'utf8');
 const shape=await new Promise((resolve,reject)=>engine.applyCommands('-i sample.geojson -o format=shapefile',{'sample.geojson':fixture},(e,r)=>e?reject(e):resolve(r)));
 const zip=zipSync(Object.fromEntries(Object.entries(shape).map(([k,v])=>[k,new Uint8Array(v)])));
 await writeFile(`${root}/portal/public/examples/map-fictional.zip`,zip);
-const captures=`${root}/.impeccable/captures/pack`;
+const captures=process.env.UTILIBRE_TEST_REPORT_DIR||`${root}/.impeccable/captures/pack`;
 await mkdir(captures,{recursive:true});
 const browser=await chromium.launch();
 const checks=[];
@@ -18,6 +19,10 @@ try {
  const maps=process.env.MAPSHAPER_TEST_URL||'http://10.10.1.43:3170';
  const context=await browser.newContext({acceptDownloads:true,viewport:{width:1280,height:900}});
  const page=await context.newPage(); page.setDefaultTimeout(12000); const outside=[],errors=[];
+ await page.route('**/*',route=>{
+  const url=new URL(route.request().url());
+  return /^https?:$/.test(url.protocol)&&url.origin!==new URL(maps).origin?route.abort():route.continue();
+ });
  page.on('request',r=>{if(!r.url().startsWith(maps+'/')&&!r.url().startsWith('blob:')&&!r.url().startsWith('data:'))outside.push(r.url())});
  page.on('pageerror',e=>errors.push(e.message));
  for (const file of ['map-fictional.geojson','map-fictional.zip','map-fictional.csv']) {

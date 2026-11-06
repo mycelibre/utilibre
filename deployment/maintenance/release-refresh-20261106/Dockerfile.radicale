@@ -1,0 +1,14 @@
+FROM python:3.13-slim@sha256:3dd7cc108ec1493442514f5c2a871af6af0ec31d768ff6e378a93340c3b3db5f AS wheel
+COPY radicale-3.9.0-py3-none-any.whl /tmp/
+RUN echo '7bf5f81e7d9e3f116be741c57448f42835eb1f5104a1620eb8489a9b962fe17e  /tmp/radicale-3.9.0-py3-none-any.whl' | sha256sum -c - \
+ && pip install --no-index --no-deps --no-compile --target /out /tmp/radicale-3.9.0-py3-none-any.whl
+# Preserve Python, SQLite, libc and every previously reviewed dependency.
+# Expected base: 22f35a8562adba07ab50324c56cf290f2f183012b708abcc0b412a8d9561821a.
+FROM utilibre-calendar-radicale:sqlite-rowid-20261103
+USER root
+RUN rm -rf /usr/local/lib/python3.13/site-packages/radicale /usr/local/lib/python3.13/site-packages/radicale-3.8.3.dist-info
+COPY --from=wheel /out/radicale /usr/local/lib/python3.13/site-packages/radicale
+COPY --from=wheel /out/radicale-3.9.0.dist-info /usr/local/lib/python3.13/site-packages/radicale-3.9.0.dist-info
+LABEL org.opencontainers.image.version="3.9.0-utilibre.1" \
+      org.opencontainers.image.revision="4d3887e0fe5f4d3cf815d65e2a4d8bf9b0ca5b75"
+USER 1000:1000

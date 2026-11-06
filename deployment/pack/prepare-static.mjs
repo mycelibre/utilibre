@@ -11,8 +11,13 @@ const roots = {
 };
 const cfg = roots[app];
 if (!cfg) throw Error('Expected mapshaper, numbat or plan');
+if (app === 'mapshaper' && process.env.MAPSHAPER_SOURCE_DIR) {
+  cfg.source = process.env.MAPSHAPER_SOURCE_DIR;
+  cfg.commit = 'b44c0fa95effac3d91526c8b62dc0de0ab88b464';
+  cfg.version = '0.7.101-p1';
+}
 if (execFileSync('git', ['rev-parse', 'HEAD'], {cwd:cfg.source,encoding:'utf8'}).trim() !== cfg.commit) throw Error('Source revision changed; review patches');
-const target = `/opt/utilibre/pack-static/${app}-${cfg.version}`;
+const target = process.env.UTILIBRE_STATIC_OUTPUT_DIR || `/opt/utilibre/pack-static/${app}-${cfg.version}`;
 await mkdir(target, {recursive:true});
 await cp(path.resolve(cfg.source, cfg.files), target, {recursive:true});
 async function replace(file, from, to) {

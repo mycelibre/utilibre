@@ -1,9 +1,12 @@
 import {execFileSync} from 'node:child_process';
 import {writeFileSync} from 'node:fs';
 const source=process.argv[2]||'/opt/utilibre/evaluation-src/glyphr-20261011';
-if(execFileSync('git',['rev-parse','HEAD'],{cwd:source,encoding:'utf8'}).trim()!=='e12bb922f74a2e410c5ac580eebcb485aff0ad51')throw Error('Unexpected Glyphr source');
+// Both reviewed releases use the same telemetry and application-launch code.
+const revisions=['e12bb922f74a2e410c5ac580eebcb485aff0ad51','29b3dfb0fd58ecc8503a9af7d5ca2110373c2a44'];
+if(!revisions.includes(execFileSync('git',['rev-parse','HEAD'],{cwd:source,encoding:'utf8'}).trim()))throw Error('Unexpected Glyphr source');
 const original=p=>execFileSync('git',['show','HEAD:'+p],{cwd:source,encoding:'utf8'});
 let app=original('src/app/app.js');
+if(!app.includes('telemetry: true, // Load google analytics')||!app.includes('function addTelemetry()'))throw Error('Glyphr telemetry preconditions changed');
 app=app.replace('telemetry: true, // Load google analytics','telemetry: false, // Utilibre: no visitor analytics');
 app=app.replace(/\n\t\tif \(this.settings.telemetry && !dev.mode\) \{\n\t\t\taddTelemetry\(\);\n\t\t\}/,'');
 app=app.replace(/\/\*\*\n \* Conditionally load Google Telemetry\n \*\/\nfunction addTelemetry\(\) \{[\s\S]*?\n\}\n/,'');

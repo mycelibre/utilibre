@@ -39,7 +39,7 @@ try:
  candidate=os.environ.get('FRESHRSS_TEST_IMAGE')
  if candidate:
   import re
-  assert re.fullmatch(r'docker.io/freshrss/freshrss:[\w.-]+@sha256:[0-9a-f]{64}',candidate),'Candidate must be an immutable official image'
+  assert re.fullmatch(r'(docker.io/freshrss/freshrss:[\w.-]+@)?sha256:[0-9a-f]{64}',candidate),'Candidate must be an exact local image ID or immutable official image'
   docker('image','inspect',candidate)
   image=candidate
  pgimage=docker('inspect',LIVE_DB,'--format','{{.Image}}').decode().strip()
@@ -72,9 +72,12 @@ echo $feed;
  pg=name+'-db'
  docker('run','-d','--name',pg,'--network',network,'--network-alias','postgres','--memory','384m','--cpus','0.5','--pids-limit','96','--log-driver','none','--tmpfs','/var/lib/postgresql/data:rw,size=256m','-e','POSTGRES_HOST_AUTH_METHOD=trust',pgimage)
  resources.append(('container',pg))
- for _ in range(30):
-  try:docker('exec',pg,'pg_isready','-U','postgres');break
+ for _ in range(60):
+  # initdb briefly starts a socket-only bootstrap server, then replaces it.
+  # Waiting for TCP avoids racing that temporary server's shutdown.
+  try:docker('exec',pg,'pg_isready','-h','127.0.0.1','-U','postgres');break
   except subprocess.CalledProcessError:time.sleep(.5)
+ else:raise RuntimeError('Restored PostgreSQL did not become ready')
  docker('exec',pg,'psql','-U','postgres','-c','CREATE ROLE freshrss LOGIN;')
  docker('exec',pg,'createdb','-U','postgres','-O','freshrss','freshrss')
  docker('exec','-i',pg,'pg_restore','-U','postgres','--role=freshrss','--no-owner','-d','freshrss',input=(snapshot/'freshrss.dump').read_bytes())
