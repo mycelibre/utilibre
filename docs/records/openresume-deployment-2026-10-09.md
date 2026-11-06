@@ -40,10 +40,14 @@ Spanish accents/ñ, legitimate content, browser persistence, language switching,
 and desktop/touch-emulated download. Network observations used synthetic clean
 contexts and saw only the candidate origin and GET/HEAD requests. Real phone
 hardware and Google-selected canonical/indexing remain unverified. The 120
-portal unit tests pass. The development-server e2e run passed 98/100; two existing
-no-JavaScript tests require the built SSR server rather than Vite's fallback and
-are rerun against the release candidate. Private evidence is kept outside the
-repository under `/var/lib/utilibre-maintenance/cv-20261106`.
+portal unit tests pass. The development-server e2e run passed 98/100; the two
+existing no-JavaScript tests subsequently passed against the built SSR server,
+where server-rendered navigation is available. The six focused SSR checks
+(those two plus the four EN/ES desktop/mobile CV checks) passed on both the
+release candidate and the public deployment. The CV test now reads the real
+public configuration in SSR mode instead of expecting Vite fixture hostnames.
+Private evidence is kept outside the repository under
+`/var/lib/utilibre-maintenance/cv-20261106`.
 
 The exact existing repaired nginx runtime is retained. The frozen native-image
 scan extracted 70 packages and retained the same one MEDIUM and two UNKNOWN
@@ -59,3 +63,47 @@ Browser-user-agent requests reached both public pages with 200. The earlier
 is blocked or admitted: Search Console's real live inspection remains the
 appropriate crawler check. The guide remains indexable and the editor retains
 its intentional noindex; no Cloudflare protection was weakened.
+
+### Released and verified on 6 November, 17:58–18:01 UTC
+
+The implementation commit is `7b29d6c`. Only the existing OpenResume `web`
+service and the portal were recreated through the established scoped release
+helper. Configuration excluding the image remained identical; no data migration,
+Caddy change or new service was involved. Exact-image health checks and public
+EN/ES checks passed. The full six-PDF workflow also passed on the public builder
+with Chromium 151, using fictional data in disposable browser contexts. It
+observed no requests outside that origin and no content uploads. This is a
+bounded observed workflow, not a claim about every possible user action.
+
+| Artifact | Released image | Previous image retained for rollback |
+| --- | --- | --- |
+| OpenResume | `utilibre-openresume:cv-es-20261106` / `sha256:613549f73cad74ffea98731f43681a2519db76fb8380068affb87fa06e863d80` | `utilibre-openresume:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103` / `sha256:5eee758b3f300245f9f6b13a3c11fda380f43112d5a82fbc5930177c20a4a900` |
+| Portal | `utilibre-portal:cv-20261106` / `sha256:3c9fe512024ac1f3dfba1f71db55c90f4719a58d370a9abbcb17008ab7c408f1` | `utilibre-portal:release-refresh-20261106` / `sha256:0243688ca5bc6f67632f74b66e0a0e877aebb02cd00940605a12d3beee75aeca` |
+
+The portal candidate's frozen scan extracted 18 Alpine and 3 Node packages with
+no reported findings. OpenResume retained the three runtime findings described
+above. The native scan does not establish coverage of all bundled JavaScript.
+
+Evidence files in the private directory: `browser/results.json`,
+`public-browser/results.json`, `markup-regression.json`, `clean-checks.log`,
+`portal-e2e.log`, `ssr-e2e.log`, `public-portal-e2e.log`, `public-discovery.json`,
+`source-parity.json`, `scans/{before,final,portal-final}.json`, and
+`{web,portal}-release.json`. Public discovery checks confirm one description per
+guide, canonical/hreflang signals, page-level indexing permission and both guide
+URLs in the sitemap. Search Console access and actual indexing are unavailable.
+
+The updated corresponding-source archive is published at the existing source
+offer. Its SHA-256 is
+`1b4fe010567c35fca8b7c617144c1ae8dff78f5cfc280cc5da21ed01ec2e3ca4`;
+its predecessor is retained in the private publication directory. The integration
+archive is republished from the final committed repository, excluding unrelated
+working-tree edits.
+
+For rollback, restore the preceding OpenResume image scalar in
+`deployment/community/compose.openresume.yaml` and the preceding `PORTAL_IMAGE`
+value in the protected root `.env`. Recreate only those two services with the
+same scoped `--no-deps --no-build --pull never` procedure and rerun their health
+and public checks. Restore the matching previous source archive/index if rolling
+back the source offer. Browser drafts and downloaded PDFs are not changed by
+this operation. Previous configuration copies are protected in the private
+release directory; do not commit them.
