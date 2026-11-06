@@ -2,7 +2,7 @@
 
 Updates are deliberate, one service at a time. Production uses immutable
 version/digest pins; Redlib is built from an exact source commit and pinned
-base images. SearXNG has the guarded, daily updater below; other services
+base images. SearXNG has the guarded, six-hourly updater below; other services
 remain reviewed rollouts. Production never runs a floating `latest` tag.
 
 ## Local repair protection
@@ -1213,8 +1213,10 @@ manifest is `/opt/utilibre/update-public/searxng.json`. Old images/backups are
 retained. A failed rollback retains its journal; the next apply attempts safe
 recovery and stops for review. Do not prune images needed for rollback.
 
-The systemd units in `deployment/utilibre/systemd/` run daily at 02:20 UTC with
-up to ten minutes' jitter. Enable only after a successful stage and notification
+The systemd units in `deployment/utilibre/systemd/` run at 02:20, 08:20, 14:20
+and 20:20 UTC, each with up to ten minutes' jitter. This six-hour schedule was
+activated on 6 November after a tested update; [release and automation limits](records/update-automation-2026-11-06.md).
+Enable only after a successful stage and notification
 test. Pause with `systemctl disable --now utilibre-searx-update.timer` (this does
 not interrupt an active run). Review `journalctl -u utilibre-searx-update` and
 the private `last-run.json`. The verified STARTTLS relay sends updates/failures
