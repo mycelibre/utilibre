@@ -520,9 +520,9 @@ test('withdrawn Whisper disappears from bilingual discovery, software and status
 test('software inventory credits only retained Utilibre services and their data stores bilingually', async ({ page }) => {
   const deployedProjects = {
     SearXNG: { facts: '2026.10.7-6671d89be · AGPL-3.0-or-later', source: 'https://github.com/searxng/searxng' },
-    Redlib: { facts: 'a4d36e9 + local redirect hardening · AGPL-3.0-only', source: 'https://github.com/redlib-org/redlib/tree/a4d36e954cf1bd64f209cd8868c5a29edc81b374' },
+    Redlib: { facts: 'polak14 29f1835 + Utilibre privacy, provenance and dependency fixes · AGPL-3.0-only', source: 'https://github.com/polak14/redlib/tree/29f18352cf54be4ffe579f773552acd0c45cdd08' },
     Anubis: { facts: '1.27.0 · MIT', source: 'https://github.com/TecharoHQ/anubis/tree/v1.27.0' },
-    FreshRSS: { facts: '1.29.1 · AGPL-3.0-only', source: 'https://github.com/FreshRSS/FreshRSS/tree/1.29.1' },
+    FreshRSS: { facts: '1.30.4 · AGPL-3.0-only', source: 'https://github.com/FreshRSS/FreshRSS/tree/08f97bd497ace733c151ea1c709d85cd5b65cc53' },
     PrivateBin: { facts: '2.0.6 · Zlib', source: 'https://github.com/PrivateBin/PrivateBin/tree/2.0.6' },
     RSSHub: { facts: '40aca954 · AGPL-3.0-only', source: 'https://github.com/DIYgod/RSSHub/tree/40aca9548e99eefd519ff7abbb937560fc037c95' },
     PostgreSQL: { facts: '17.11-alpine · PostgreSQL License', source: 'https://github.com/postgres/postgres' },
