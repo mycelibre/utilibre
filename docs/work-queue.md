@@ -1,3 +1,13 @@
+## Release refresh — 6 November 2026
+
+The 42 newer releases have been assessed: **9 upgraded and verified, 33 held**.
+The refreshed 112-provider maintenance report now lists 33 newer releases.
+See [the complete release disposition](records/release-refresh-2026-11-06.md)
+for each remaining prerequisite; older queue entries below are historical.
+The nine upgrades are Glyphr, FreshRSS, Radicale, Calino, Mapshaper, One File
+Core, Link Cleaner, draw.io and host GitHub CLI. Existing repaired runtimes and
+access/privacy settings were preserved. No blanket unattended upgrade was enabled.
+
 # Operator work queue — reconciled 12 October 2026
 
 ## Current security checkpoint — 4 November 2026

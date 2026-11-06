@@ -181,3 +181,10 @@ The exception now requires its exact public SHA256 and sole VITE_SITE_URL defaul
 local runtime secrets remain forbidden. Source offers include only tracked
 upstream files and committed, allowlisted integration material. Public source
 indexes retain the existing design and return link.
+
+The final read-only upstream refresh at 03:52 UTC checked 112 providers and now
+reports **33** newer releases. The focused bilingual software-inventory browser
+test passed (one Chromium test); no complete e2e-suite pass is claimed. Seven
+common source archives and Glyphr's source offer are reachable over public HTTPS.
+Only four disposable dependency/cache directories created by this batch were
+removed afterward; exact sources, lockfiles, outputs and rollback files remain.
