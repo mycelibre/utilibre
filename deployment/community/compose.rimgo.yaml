@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   rimgo:
     <<: *runtime
-    image: utilibre-rimgo-rimgo:musl-security-20261109
+    image: utilibre-rimgo:xnet-security-20261109-zlib
     user: "65534:65534"
     mem_limit: 384m
     environment:

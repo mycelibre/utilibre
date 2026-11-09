@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-09T18:51:29.958037+00:00",
+  "recordedAt": "2026-11-09T21:06:20.198841+00:00",
   "scanCompletedAt": "2026-11-09T18:08:32.000Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
@@ -10,7 +10,7 @@
   "pendingCritical": 0,
   "pendingHigh": 420,
   "rawFindingsRetained": true,
-  "assessmentNote": "Frozen 18:08 scan checkpoint with expiring exact artifact/advisory reviews. DeGoog and portal were subsequently replaced; their isolated scans passed, but whole-install revalidation remains pending. Not a security clearance.",
+  "assessmentNote": "18:08 scan/triage checkpoint only. Subsequent DeGoog, portal and 30 library image replacements passed scoped gates. Complete frozen-database revalidation is running; pending counts are not current clearance.",
   "musl": {
     "imagesReleased": 62,
     "groupsPassed": 112,
@@ -52,6 +52,15 @@
     "image": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
     "publicCheckedAt": "2026-11-09T18:42:26.598Z",
     "results": 56,
-    "googleCse": "rate-limited"
+    "googleCse": "rate-limited",
+    "currentImage": "sha256:17fc5c2c7a400971ee2c0da2d4d8dbbaf0d8ad8ce4639dc752f628671af45644"
+  },
+  "zlibAndXnet": {
+    "groupsPassed": 44,
+    "distinctImagesReleased": 30,
+    "selectedContainers": 47,
+    "wbo": "held-preserve-ram-boards",
+    "xnetOtherApplications": "remaining-reviewed-inventory-not-complete",
+    "releaseTests": 43
   }
 }

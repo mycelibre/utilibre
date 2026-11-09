@@ -30,7 +30,7 @@ services:
       retries: 3
   cache:
     <<: *runtime
-    image: utilibre-valkey:musl-security-20261109
+    image: utilibre-zlib-valkey:candidate-20261109
     user: "999:1000"
     command: [valkey-server, --save, "", --appendonly, "no", --maxmemory, 96mb, --maxmemory-policy, allkeys-lru, --loglevel, warning]
     tmpfs: ["/data:rw,nosuid,nodev,noexec,size=8m,uid=999,gid=1000"]

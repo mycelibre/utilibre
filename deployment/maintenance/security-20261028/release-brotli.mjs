@@ -1,10 +1,12 @@
+import {proveXnet} from '../security-20261109/xnet-policy.mjs';
+import {proveZlib} from '../security-20261109/zlib-policy.mjs';
 import {proveVendorDebian} from '../security-20261109/vendor-debian-policy.mjs';
 import {proveMusl} from '../security-20261109/musl-policy.mjs';
 import {proveGuava} from '../security-20261103/guava-policy.mjs';
 import {proveOauthDebian} from '../security-20261103/oauth-debian-policy.mjs';
 // Finite package-only deployment through existing transactional release gates.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
-import {canonical} from '../go-final/release.mjs';
+import {canonical,establishedOnPort} from '../go-final/release.mjs';
 import https from 'node:https';
 import {proveExpat} from '../security-20261103/expat-policy.mjs';
 import {proveJsNov} from '../security-20261103/js-nov-policy.mjs';
@@ -20,7 +22,7 @@ import {proveXi,xiComparison} from '../security-20261103/xi-policy.mjs';
 import {acquireReleaseLock} from '../security-20261103/release-lock.mjs';
 const batch=selectBatch(process.argv.slice(2));process.argv=[...process.argv.slice(0,2),...batch.args];
 process.umask(0o077);
-const root=batch.root,flags=['--vendor-debian','--musl','--guava','--oauth-debian','--libxi','--js-nov','--sqlite','--redirects','--pyasn1','--expat-debian','--msal','--cfitsio','--trust','--nginx-debian','--zod','--codec-caddy','--filelock','--text','--oauth','--codec','--x11','--health','--markdown','--symfony','--nltk','--msgpack','--multer','--pcre','--postal','--expat','--blkid','--jose-leaf','--jose-caddy','--jose','--drf','--dnspython','--authlib','--alpine','--node-apk','--undici','--body','--go-helpers','--caddy','--go-runtime','--go-services','--node','--curl','--curl-bookworm'];
+const root=batch.root,flags=['--xnet','--zlib','--vendor-debian','--musl','--guava','--oauth-debian','--libxi','--js-nov','--sqlite','--redirects','--pyasn1','--expat-debian','--msal','--cfitsio','--trust','--nginx-debian','--zod','--codec-caddy','--filelock','--text','--oauth','--codec','--x11','--health','--markdown','--symfony','--nltk','--msgpack','--multer','--pcre','--postal','--expat','--blkid','--jose-leaf','--jose-caddy','--jose','--drf','--dnspython','--authlib','--alpine','--node-apk','--undici','--body','--go-helpers','--caddy','--go-runtime','--go-services','--node','--curl','--curl-bookworm'];
 assert(process.argv.filter(a=>flags.includes(a)).length<=1);
 const profile=process.argv.find(a=>flags.includes(a))?.slice(2)||'brotli',guava=profile==='guava',oauthDebian=profile==='oauth-debian',msal=profile==='msal',cfitsio=profile==='cfitsio',trust=profile==='trust',nginx=profile==='nginx-debian',zod=profile==='zod',filelock=profile==='filelock',oauth=profile==='oauth',markdown=profile==='markdown',symfony=profile==='symfony',nltk=profile==='nltk',msgpack=profile==='msgpack',multer=profile==='multer',postal=profile==='postal',blkid=profile==='blkid',jose=['jose','jose-leaf'].includes(profile),drf=profile==='drf',dns=profile==='dnspython',authlib=profile==='authlib',alpine=['alpine','node-apk','expat','pcre','x11','musl'].includes(profile),undici=profile==='undici',body=profile==='body',go=['codec-caddy','text','codec','health','go-helpers','caddy','go-runtime','go-services','jose','jose-caddy','jose-leaf'].includes(profile),node=profile==='node',curl=profile.startsWith('curl');
 const specs=JSON.parse(fs.readFileSync(batch.input(profile))).rows.flatMap(s=>s.releaseGroups?s.releaseGroups.map(g=>({...s,...g,evidenceKey:s.key})):[s]);
@@ -44,7 +46,7 @@ Object.assign(urls,{'wishlist-app':urls.wishlist,'expanded-resume':urls.resume,'
 if(batch.enabled&&profile==='sqlite')Object.assign(urls,{'expanded-breezewiki':urls.breezewiki,'records-candlr':urls.candlr,'trip-app':urls.trip,'expanded-penpot-exporter':urls.penpot,'beaverhabits-app':urls.beaverhabits,'linkding-linkding':urls.linkding,'identity-worker':urls.authentik,'wallabag-proxy':urls.wallabag,'priviblur-priviblur':urls.priviblur,'expanded-penpot-frontend':urls.penpot,'pack-forms-app':urls.liberaforms,'kitchenowl-app':urls.kitchenowl,'expanded-penpot-backend':urls.penpot,'records-grist':urls.grist,'services-freshrss':urls.freshrss});
 if(batch.enabled&&profile==='libxi')for(const role of ['backend','exporter'])urls['debian-expanded-penpot-'+role]=urls.penpot;
 if(batch.enabled&&profile==='js-nov'){urls.admin='https://design.utilibre.org/admin-console/';urls['grist-decode']=urls.grist;}
-if(['musl','vendor-debian'].includes(profile))for(const s of specs)urls[s.key]=s.publicHome||null;
+if(['musl','vendor-debian','zlib','xnet'].includes(profile))for(const s of specs)urls[s.key]=s.publicHome||null;
 async function publicStatus(key){if(!urls[key])return null;
  // Public IPv4 timed out from this VM. Check the existing Caddy address
  // with the real hostname, SNI and certificate verification; never disable TLS.
@@ -60,9 +62,15 @@ async function publicReady(g){
   catch{if(attempt===12)throw Error(g.key+': public readiness failed within one minute');await new Promise(r=>setTimeout(r,5000));}
  }
 }
-function proof(key){const s=specs.find(s=>s.key===key),dir=evidence(s),b=read(dir+'/build.json'),scan=read(dir+'/scan-gate.json');
+function protectedActivityGate(g){
+ if(profile!=='zlib'||g.key!=='pack-galene-pack-galene-galene')return;
+ const name='utilibre-pack-galene-galene-1',pid=Number(docker('inspect','--format','{{.State.Pid}}',name));assert(Number.isInteger(pid)&&pid>0);
+ assert.equal(establishedOnPort(['tcp','tcp6'].map(p=>fs.readFileSync('/proc/'+pid+'/net/'+p,'utf8')),8080),0,'An active Galene connection prevents this restart');
+}
+function proof(key){const s=specs.find(s=>s.key===key),dir=evidence(s);if(profile==='xnet'){const r=proveXnet(s);assert.equal(image(s.candidate),s.imageId);return r;}const b=read(dir+'/build.json'),scan=read(dir+'/scan-gate.json');
  if(profile==='vendor-debian')proveVendorDebian(read(batch.input(profile)),s,b,read(dir+'/consumer.json'),scan,read(root+'/debian-acquisition/authenticated.json'),root);
  if(profile==='musl')proveMusl(read(batch.input('musl')),s,b,read(dir+'/consumer.json'),scan);
+ if(profile==='zlib')proveZlib(read(batch.input(profile)),s,b,{...read(dir+'/consumer.json'),path:dir+'/consumer.json'},{...scan,rawPath:dir+'/after-scan.json'},{...read(dir+'/scope.json'),path:dir+'/scope.json'});
 
  assert(b.passed&&b.configurationUnchanged);
  if(batch.enabled&&profile==='libxi'){proveXi(read(batch.input(profile)),s,b,read(dir+'/consumer.json'),read(dir+'/application.json'));assert(scan.primarySourceFixVerified&&scan.newHighCritical===0);}
@@ -131,7 +139,7 @@ if(mode==='prepare')for(const key of keys){
   const parent=all.find(p=>'container:'+p.Id===x.HostConfig.NetworkMode)?.Name.slice(1);assert(Date.now()-Date.parse(x.State.StartedAt)>300000);
   g.rows.push({name,service,oldContainerId:x.Id,oldRestartCount:x.RestartCount,oldRef:c.image,oldImage:x.Image,newRef:selected?s.candidate:c.image,newImage:selected?b.imageId:x.Image,configHash:hash(c),...(parent?{namespaceParent:parent}:{})});
  }
- validateMirrors(g,'old');g.before=await existingGroupStatus(g);await checkExistingGroup(g,'old');g.publicBefore=await publicStatus(key);
+ protectedActivityGate(g);validateMirrors(g,'old');g.before=await existingGroupStatus(g);await checkExistingGroup(g,'old');g.publicBefore=await publicStatus(key);
  if(key==='librespeed')g.routeCheck='Existing Caddy private address with public Host/SNI and verified TLS. Direct public IPv4 times out from this VM; outside-Internet reachability not established here.';
  if(key==='simplelogin'&&g.publicBefore===502){await nativeSimpleLogin();g.publicPreExistingFailure='Existing public 502, also documented in certifi-20261021 rollout. Native login gateway returns 200; library repair does not repair the separate edge route.';}
  else assert(g.publicBefore===null||g.publicBefore>=200&&g.publicBefore<500,'Public baseline unavailable; investigate first');
@@ -149,7 +157,7 @@ if(mode==='apply')for(const key of keys){
  const {b}=proof(key),g=report.groups.find(g=>g.key===key);assert(g&&Date.now()-Date.parse(g.preparedAt)<86400000);for(const r of g.rows.filter(r=>r.oldImage!==r.newImage))assert.equal(r.newImage,b.imageId);
  if(g.status==='passed'){await checkExistingGroup(g,'new');validateMirrors(g,'new');continue;}assert.equal(g.status,'prepared');assert(fs.statfsSync(root).bavail*fs.statfsSync(root).bsize>=8*1024**3);
  const validate=version=>{validateMirrors(g,version);const c=config(g);for(const r of g.rows){assert.equal(c[r.service].image,r[version+'Ref']);assert.equal(hash(c[r.service]),r.configHash);assert.equal(image(r.newRef),r.newImage);assert.equal(image(r.oldRef),r.oldImage);}};
- let reverting=false;await releaseGroup(g,{preflight:async()=>{validate('old');await checkExistingGroup(g,'old');},save,recreate:async()=>{if(!reverting)pins(g,'new');validate(reverting?'old':'new');await recreateExistingGroup(g);},gate:async version=>{await checkExistingGroup(g,version);await publicReady(g);},rollbackPins:()=>{reverting=true;pins(g,'old');validate('old');}});
+ let reverting=false;await releaseGroup(g,{preflight:async()=>{protectedActivityGate(g);validate('old');await checkExistingGroup(g,'old');},save,recreate:async()=>{if(!reverting){protectedActivityGate(g);pins(g,'new');}validate(reverting?'old':'new');await recreateExistingGroup(g);},gate:async version=>{await checkExistingGroup(g,version);await publicReady(g);},rollbackPins:()=>{reverting=true;pins(g,'old');validate('old');}});
  g.completedAt=new Date().toISOString();save();console.log(key+': deployed; exact artifact, health, namespace and route gates passed');
 }
 

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "rows": [
+    {
+      "key": "rimgo",
+      "approval": "approved",
+      "base": "sha256:d646a1b9cdc142e56e4cf5b3b431210eddd256395611f38f40b9a82548cf202b",
+      "candidate": "utilibre-rimgo:xnet-security-20261109-zlib",
+      "imageId": "sha256:6defcbecc4d92814afd170217e61fcad64ebd1c23c655ef7a946a9dacb16cb3c",
+      "containers": [
+        "utilibre-rimgo-rimgo-1"
+      ],
+      "publicHome": "https://rimgo.utilibre.org/",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "zlibKey": "rimgo-rimgo",
+      "checkSha256": "10aec6e390d2f08b87969137cea0585efd5286b94e5de0f244053ef4a898673d",
+      "evidenceSha256": {
+        "before-scan.json": "9af22d7dbb22d603f22968d36cbd93539160804639c9246edac157f046a09f43",
+        "after-scan.json": "5afe7615f1afa8efc63d73c79ed496a5989fce3750a29198a4fff6da6889870e",
+        "regression-before": "13e213288feabe2ef9de8ee9f5897ce21b04b5293a319f029e7911172a48d088",
+        "regression-after": "313f9b28e02a6fa2cece1e7c35f365b2adfaf47dd4bf7c334e08c02890f34dd6"
+      }
+    },
+    {
+      "key": "anonymousoverflow",
+      "approval": "approved",
+      "base": "sha256:eb455250ab1a76acf13c701f668850e43ef0ce29da2b0c0cd09f793f4310c482",
+      "candidate": "utilibre-anonymousoverflow:xnet-security-20261109-zlib",
+      "imageId": "sha256:4d9703ce6f848b16a791e0269869e800aaf3f708d454acfa06b9253600bf3e06",
+      "containers": [
+        "utilibre-reader-evaluation-anonymousoverflow-1"
+      ],
+      "publicHome": "https://overflow.utilibre.org/",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "zlibKey": "reader-evaluation-anonymousoverflow",
+      "checkSha256": "10aec6e390d2f08b87969137cea0585efd5286b94e5de0f244053ef4a898673d",
+      "evidenceSha256": {
+        "before-scan.json": "0033bb9898eceef13938c6b14057a99198e205875e106e8d05043d8768bacb67",
+        "after-scan.json": "8077c10ca5bb9bbe9395ea54ccece70c65a137669c9ea699e9d927cb4c9a5b93",
+        "regression-before": "13e213288feabe2ef9de8ee9f5897ce21b04b5293a319f029e7911172a48d088",
+        "regression-after": "313f9b28e02a6fa2cece1e7c35f365b2adfaf47dd4bf7c334e08c02890f34dd6"
+      },
+      "retainedAdvisoryReviewSha256": "406fd035b4ddc8731e786eeaabcb04db6aa0f8a8b0049f8d7df393798d14ecfb"
+    }
+  ]
+}

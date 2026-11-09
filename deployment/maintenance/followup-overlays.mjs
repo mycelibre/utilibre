@@ -134,4 +134,6 @@ export const additionalOverlayReceipts = [
   'security-20261109/abuse-reporting/release.json',
   'security-20261109/abuse-reporting/late/forms-release.json',
   'security-20261109/yopass/release.json',
+  'security-20261109/zlib/completed-release.json',
+  'security-20261109/xnet/release.json',
 ];

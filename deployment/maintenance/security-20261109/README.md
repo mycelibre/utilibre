@@ -186,3 +186,56 @@ scoped portal release with the DeGoog repair's accurate EN/ES metadata. Its base
 is the exact preceding `portal-pack` image; the same package/scan parity and
 public route gates apply. Read `docs/records/degoog-search-2026-11-09.md` for the
 separate native application release and actual bounded public-search result.
+
+## Same-branch zlib and combined x/net repairs
+
+`zlib-inputs.json` pins 31 Alpine predecessors, signed zlib 1.4-r0 APKs for
+Alpine 3.22/3.23/3.24, exact native fixtures, and explicit release holds.
+`zlib-prepare.mjs KEY` prepares without activation. `zlib-check.py --runtime KEY`
+and `zlib-native-checks.py KEY` reuse the existing isolated consumer checks.
+`zlib-scan.py KEY` uses the retained database and baseline, with networking
+unavailable to the scanner. It rejects incomplete APK inventory and new
+HIGH/CRITICAL records. Full filesystem scope excludes changes outside the zlib
+payload, its package record and exact package constraint; application bytes,
+libc and container configuration remain unchanged. No byte-reproducible build
+claim is made.
+
+Preparation and deployment approval are separate fields. `zlib-policy.mjs`
+requires exact approval, artifact, scope, fixture, consumer and scan evidence.
+Use the existing `security-20261028/release-brotli.mjs --batch-20261109 --zlib
+prepare GROUP` and `apply GROUP` commands. They retain the existing release
+lock, rollback, configuration and network-namespace checks. Galene additionally
+requires no established native signaling connections immediately before its
+restart. WBO remains held because its RAM-only boards would be lost. Do not
+clear that hold simply to finish a batch. `completed-release.json` records only
+completed groups for later exact-artifact reviews; the complete profile report
+continues to show omitted work.
+
+Native adapters change only private evidence paths and the Galene fixture's
+explicit lab allowlist/module path. Synthetic FMD configuration needs its
+existing fixture's ordinary umask, while private reports stay under a 0700
+parent. Tor's version banner includes the changed zlib version: both raw banners
+are retained and only those two pinned strings are normalized for comparison.
+Failed initial fixture runs are retained; they are not application regressions
+or passing security evidence.
+
+`xnet-inputs.json` captures exact existing Rimgo and AnonymousOverflow sources,
+Go 1.26.10, x/net v0.62.0, explicit compatible module locks and the existing
+build script. `xnet-build.mjs APP` and `xnet-check.py APP --with-zlib` preserve the
+prior compression and request-safety fixes. The combined candidate includes the
+zlib repair; never activate its earlier zlib-only or x/net-only intermediate.
+The isolated HTML regression reproduces quadratic allocation before the repair
+and preserves benign text afterward. Native application tests and routes pass.
+
+`xnet-release-inputs.json` and `xnet-policy.mjs` bind exact candidates, source
+publication, recorded scans, regression hashes and approval to the existing
+`--xnet` release profile. `publish-xnet.mjs` updates the established complete
+source archives atomically and retains their predecessors. AnonymousOverflow's
+existing module-wide OpenPGP warning remains in the raw scan at the newer module
+version. The exact native dependency graph contains no OpenPGP package; this is
+not a claim that the deprecated package was repaired. Source-only and other
+applications' x/net findings remain separate work in `xnet-coverage.json`.
+
+Rollback uses the previous image/pin and existing scoped release procedure.
+These overlays perform no database migration. A code rollback cannot recover
+transient cache contents lost during an ordinary service restart.

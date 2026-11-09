@@ -1,0 +1,519 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-09T18:42:54.319326+00:00",
+  "scanDate": "2026-11-09T18:08:32.000Z",
+  "counts": {
+    "runtime": 17,
+    "trackedInputs": 22
+  },
+  "deployed": false,
+  "rawFindingsRetained": true,
+  "rows": [
+    {
+      "key": "3fdc2d8b2016f21409fdea10d3931b96ee7c36a0f7134c68c24e5a326c9c03ee",
+      "scope": "runtime-image",
+      "target": "app/node_modules/.bin/caddy",
+      "artifact": "sha256:1ad7c1f9e3f7bdce5a7f538eccedfda0a88ad5139d0b8b3293ee7ee5f5ffc96f",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-newsletters-web-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "83b220764a9e5d1b967cb7e9bce017ae08a151bb306ddd6d072976d95716217f",
+      "scope": "runtime-image",
+      "target": "app/galene",
+      "artifact": "sha256:20c01f05c8540315c92fc08f7b4948d07968afc2c777af387b38ff17a3f6325b",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-pack-galene-galene-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "c91d497e392d9eddb5205c44d00b964cb9b86f1fcd1241c3e7594d239305565d",
+      "scope": "runtime-image",
+      "target": "ko-app/mezzo",
+      "artifact": "sha256:463a075bc6a1b7735a1a3fe864ef5d5dfaf24f5dffaf2191878365b30a40da5f",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-additions-mezzo-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "0077711254fcf57257e8f9991c1d8ab4bd0357dab9d9e9c78a2f1f8b9f942a93",
+      "scope": "runtime-image",
+      "target": "app/vikunja/vikunja",
+      "artifact": "sha256:4bec3b37654a63f0e6e1e3f8ed7c2251f197051767982ccd9c89091a63142bc3",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-vikunja-vikunja-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "2a42661c01fa3098baa0a1e951adfd4b676b5c5d80155513cb2cf55f0b038368",
+      "scope": "runtime-image",
+      "target": "app/wakapi",
+      "artifact": "sha256:4eeff36fc2c71bda8851e095d7c1f31ee066265176946683a57f4107a3c9750a",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-expanded-wakapi-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "56456109e834f292c15f63a45d7bd1efb32268c7d03175327dd2d9d471238009",
+      "scope": "runtime-image",
+      "target": "donetick",
+      "artifact": "sha256:7fe039c66cc0f519d5dab499f346cbf6cc244404934deef33100a99610be3b4d",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-donetick-app-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "3ba1e29b167b251065b12f5108a3c04b68a32414ee95a52d59bcf579fb224f4d",
+      "scope": "runtime-image",
+      "target": "safetwitch",
+      "artifact": "sha256:8ecdaeff15cf056c248560e0ef910423ea79e5f44ae0878541507300f25d72ad",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-reader-evaluation-safetwitch-backend-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "c80f2b2fa9fdec0b4666e665974d3c169bb5aa948813f4275448bfef3b3d14b1",
+      "scope": "runtime-image",
+      "target": "ferretdb",
+      "artifact": "sha256:b65c8ff64cae5aa838cebfaaf2728913c7dc88a13301f99dee7b69f89a2ed191",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-gathio-ferretdb-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "0a3207efa581150d24341f41f1e53acb602d5b50c567e6ece71c40ba3b8a24dd",
+      "scope": "runtime-image",
+      "target": "app/node_modules/.bin/caddy",
+      "artifact": "sha256:ca14645f022bdb919b2f0d03237ad4c549ed9529b778257ddcffd59ce219f002",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-newsletters-smtp-1",
+        "utilibre-newsletters-jobs-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "b97e7da4f6110e8dee447650e54572b00f380b647276d74fbd1b8c9dc475f919",
+      "scope": "runtime-image",
+      "target": "ko-app/anubis",
+      "artifact": "sha256:cb692a409422b22c3882d6ce123d7d4e964ea140290e50c59aa658ea5143d3f5",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "public-utility-anubis-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "3d0381a4593afa7d1eabee80e32ce0fc9e0a5f8c5df1d37420b7fa5c9f83dac2",
+      "scope": "runtime-image",
+      "target": "app/rimgo",
+      "artifact": "sha256:d646a1b9cdc142e56e4cf5b3b431210eddd256395611f38f40b9a82548cf202b",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-rimgo-rimgo-1"
+      ],
+      "status": "deployed-native-and-regression-verified",
+      "reason": "Combined x/net v0.62.0 and signed zlib overlay released through existing native route/configuration/rollback checks; no fresh live provider-content claim.",
+      "updatedArtifact": "sha256:6defcbecc4d92814afd170217e61fcad64ebd1c23c655ef7a946a9dacb16cb3c"
+    },
+    {
+      "key": "25d80a05ed22c3af2218890a060cff9e12093515e072be5d51fa883d4121c41d",
+      "scope": "runtime-image",
+      "target": "app/opengist/opengist",
+      "artifact": "sha256:e1ba50881ec396002a1702e877a99d349a8118991ceeb2dfc017846a79800751",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-opengist-opengist-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "1df2045adc9cf51ec3fe7a02635da062fa7365b1a83e5b95686a68188a8cc835",
+      "scope": "runtime-image",
+      "target": "app/anonymousoverflow",
+      "artifact": "sha256:eb455250ab1a76acf13c701f668850e43ef0ce29da2b0c0cd09f793f4310c482",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-reader-evaluation-anonymousoverflow-1"
+      ],
+      "status": "deployed-native-and-regression-verified",
+      "reason": "Combined x/net v0.62.0 and signed zlib overlay released through existing native route/configuration/rollback checks; no fresh live provider-content claim.",
+      "updatedArtifact": "sha256:4d9703ce6f848b16a791e0269869e800aaf3f708d454acfa06b9253600bf3e06"
+    },
+    {
+      "key": "bf2ac561398b1a083280b0f5ea3ebd8a0e2aa67bd2f03e59ea1279c8ee524f80",
+      "scope": "runtime-image",
+      "target": "usr/bin/caddy",
+      "artifact": "sha256:f10e569464c8c20962b8f3be8f0edd6ebd6bd1562bb5be164c85b9ea6ec648e0",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "208cf936b271f16b0f27d78198f85ab0026b0a0a611f647331eeff59bda2dea7",
+      "scope": "runtime-image",
+      "target": "usr/bin/ntfy",
+      "artifact": "sha256:f299862023e18c36a1148d543e107e745e8d05010769b54adbd5d486edfefc38",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-community-ntfy-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "40300f2669a404258b9fd7fd578c407eb01ba47447e2e68b13ac023068187f5c",
+      "scope": "runtime-image",
+      "target": "app/gothub",
+      "artifact": "sha256:f3521f05d81387399a42723ea3bc51426b0cd9eca65279078bad2fad3f8f80c5",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-reader-evaluation-gothub-1"
+      ],
+      "status": "blocked-source-lineage",
+      "reason": "Current executable hash c2ebc1556bd01def5ae9557b3db41f4bd3607743cd8b7c5d0abe8d7ded3b4af1 differs from proved Oct28 source build0ec7827f4082b9440fcca6dc8072dca6d53a75a4a17548877962f70373deeb2c. Unrelated dirty source patch was not used."
+    },
+    {
+      "key": "17a2bc1fae32d4e52e02e9b4182556b9009f529a5e857d3f6413d68310c7f207",
+      "scope": "runtime-image",
+      "target": "usr/bin/oauth2-proxy",
+      "artifact": "sha256:f5e8e32f05978929a25b4f01921fa71174de5273b1f191d73ddfbfdc445232a3",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [
+        "utilibre-records-grist-auth-1"
+      ],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "a682756aad0e1ee714427288fe62293988f828dd5afbb902a44a8f32b6871d49",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/ferretdb-libraries/go.mod@sha256:d65ba2340f17574f880710f2427a12c8c55e92c755606cce0031fe03a07c0515",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "994ca1f957823623dbeac5fe67fc84a18cfb9e4abb9497e9186b6a026a238044",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/go-final/locks/anonymousoverflow/go.mod@sha256:060427c81743f370877acd3db5f511b88d4fdf9ba51a123a1cbdbc46a9ae8d21",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "candidate-in-preparation",
+      "reason": "Replacement locks/binary prepared in xnet batch. Historical locks and live image remain unchanged pending combined vendor/native regression proof and separate release."
+    },
+    {
+      "key": "f9b4b07bb84bddd259addb757e494faddfc6dca380bd31db4333ff3259d94553",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/go-final/locks/galene/go.mod@sha256:fa7495e6f55b9358d2652d4fa0d68ff97dc1c551570c43bf09d541b8aefc85b4",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "c86a10d7efc41568b024850f3d21500eb5f6a7c0576932685a2bcc9463bf781f",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/go-final/locks/gothub/go.mod@sha256:f8e6adfe85e542fecdadba9b8b0cd53fd9eb196f3df7c01f15c1272ea6f265ec",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "blocked-source-lineage",
+      "reason": "Current executable hash c2ebc1556bd01def5ae9557b3db41f4bd3607743cd8b7c5d0abe8d7ded3b4af1 differs from proved Oct28 source build0ec7827f4082b9440fcca6dc8072dca6d53a75a4a17548877962f70373deeb2c. Unrelated dirty source patch was not used."
+    },
+    {
+      "key": "a4b657c6e6293e82998b8a379ea7c63cc6f800dafe315cc7e28e0989f57ab860",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/go-final/locks/rimgo/go.mod@sha256:50f8cc72d97edc3e190c040effd9cd8a51fb461c44636e4be3e847dfb9568da0",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "candidate-in-preparation",
+      "reason": "Replacement locks/binary prepared in xnet batch. Historical locks and live image remain unchanged pending combined vendor/native regression proof and separate release."
+    },
+    {
+      "key": "5093e387bf029940e1e56334c5289511269dfa0485447260e615c7ba0e35ce30",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/go-final/locks/safetwitch/go.mod@sha256:cf7fdd57a8b4050c12b219f2157953f3ffdc152663adbe73b57005db94c8a72d",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "879f815598aa615bc6079d353704bbcc3e6f16bcab580a70af6172c3015a7ce6",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/go-leaf-final/locks/anubis/go.mod@sha256:dc0c38923f0028a13a57ef58271e2ac4e193a7bb3fe2b27ebe69671cdecc5a52",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "42d8906bd5262c28dc04f1ff132d5b91d2e4c87000c380f698976eb351b47010",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/go-leaf-final/locks/mezzo/go.mod@sha256:267e3d05c6cd53eacdb8b6774e0e899b63cfead06d0f2e8930414fc56a68e4f9",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "d48afabd7c30181771df6b4fa64b9ed968e401d5a3ae83db35e3b38ac0935d0e",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/go-leaf-final/locks/ntfy/go.mod@sha256:90fd83f855e27d4c6e7db102b46fd8643b641438d01b625e9f7ae35fcd80b4af",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "5a996302022977892a06806aa1cc2595dddc96c6e1e432337cb9ed8a4a501cb9",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/go-leaf-final/locks/oauth2-proxy/go.mod@sha256:398e8e07d7a13f4b0dc326e4f2a161ee7013736da44e5890c6b16bac4820ac51",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "b3eda320e4c5d1a33e7bcdae99eb3fd182684b6fd90a95ccb41654515c01445c",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/go-leaf-final/locks/opengist/go.mod@sha256:6487998feb14f2c14e1789766765c29ba26809d705ff4cafc6535b3504596931",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "f14b5b37325a13eff096a5d30aebd083592944e4e2da0aaa551c2af0b54459f2",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/go-leaf-final/locks/vikunja/go.mod@sha256:efa14649653f2650fa196cc7c69a3f4b33ff62e950f78c3006638b2f6c93547a",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "23c6e2585e0bdbce42f82d94951d074b581fb773b9d98962a7ecf02a99e00cf6",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/go-leaf-final/locks/wakapi/go.mod@sha256:5f7fdd2eb29e5e1ea51b27a78feafce19eea62f81ecd673d0fc6dc26fd32d59e",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "e4e0558a714f567a40deba5f39e2e8e93317569d15c33da491f859e7cbe37194",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/security-20261028/locks/codec/anonymousoverflow/go.mod@sha256:3b0d5696847f15cf354c30c6bfe58fd0966e703a58e283226a4fccc56e18dd91",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "candidate-in-preparation",
+      "reason": "Replacement locks/binary prepared in xnet batch. Historical locks and live image remain unchanged pending combined vendor/native regression proof and separate release."
+    },
+    {
+      "key": "f6eb088281f026fb5a37e63ccd55f976cce0eaf2c2b15722333670d4f9128511",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/security-20261028/locks/codec/ferretdb/go.mod@sha256:d65ba2340f17574f880710f2427a12c8c55e92c755606cce0031fe03a07c0515",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "0e39dfbf268d9edc9bc68be89af285226dd48019b632a20aaffe86b584143bcf",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/security-20261028/locks/codec/gothub/go.mod@sha256:67a40d20ccc4ccdbb9ccf01c59c3c67c25b572a9f3c3284ce90c3075f5a083c9",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "blocked-source-lineage",
+      "reason": "Current executable hash c2ebc1556bd01def5ae9557b3db41f4bd3607743cd8b7c5d0abe8d7ded3b4af1 differs from proved Oct28 source build0ec7827f4082b9440fcca6dc8072dca6d53a75a4a17548877962f70373deeb2c. Unrelated dirty source patch was not used."
+    },
+    {
+      "key": "b2d15855ae2fc9690e218ef2a8bded16e11e8e6f93562e863f7fc612dcadc56d",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/security-20261028/locks/codec/rimgo/go.mod@sha256:50f8cc72d97edc3e190c040effd9cd8a51fb461c44636e4be3e847dfb9568da0",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "candidate-in-preparation",
+      "reason": "Replacement locks/binary prepared in xnet batch. Historical locks and live image remain unchanged pending combined vendor/native regression proof and separate release."
+    },
+    {
+      "key": "7994db1fd8eb8c30647947a2a09c0fbc6218255cadc29095380bf6520147fc34",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/security-20261028/locks/jose-leaf/oauth2-proxy/go.mod@sha256:398e8e07d7a13f4b0dc326e4f2a161ee7013736da44e5890c6b16bac4820ac51",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "f0fff2e08b8f8e9d3caf37f36288d16e00b7772fbf5d35b32c4713d0cb5f0e60",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/security-20261028/locks/jose-leaf/wakapi/go.mod@sha256:5f7fdd2eb29e5e1ea51b27a78feafce19eea62f81ecd673d0fc6dc26fd32d59e",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "61f90ecdf641191f82d771449ad7d126975709dba98f790e2778e67dae176617",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/security-20261028/locks/jose/donetick/go.mod@sha256:f4194baf8295eac79934da23337fbaf032fd454f19604f9892499fbdf68db24a",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "6ae8ec466e3076663f35b3e2da3f289306ce8f52aedda5d759d806f42b1ba008",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/security-20261028/locks/jose/ntfy/go.mod@sha256:90fd83f855e27d4c6e7db102b46fd8643b641438d01b625e9f7ae35fcd80b4af",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    },
+    {
+      "key": "b923a6c2285244fd0c52a1af8f4c8bc731a23206d063d1f4208ab83a6d3a013a",
+      "scope": "tracked-build-input",
+      "target": "go.mod",
+      "artifact": "deployment/maintenance/security-20261028/locks/jose/vikunja/go.mod@sha256:efa14649653f2650fa196cc7c69a3f4b33ff62e950f78c3006638b2f6c93547a",
+      "package": "golang.org/x/net",
+      "installed": "v0.60.0",
+      "fixed": "0.62.0",
+      "containers": [],
+      "status": "not-assessed",
+      "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
+    }
+  ],
+  "deploymentNote": "Only Rimgo and AnonymousOverflow native artifacts below are updated. Other runtime records and old source inputs remain open; see exact release receipts."
+}

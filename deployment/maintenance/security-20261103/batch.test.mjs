@@ -14,3 +14,12 @@ test('9 November batch permits only the reviewed musl profile',()=>{
  assert.throws(()=>selectBatch(['--batch-20261109','--musl','--batch-20261103']));
  assert.throws(()=>selectBatch(['--batch-20261109','--musl','--batch-20261109']));
 });
+test('library follow-ups select exactly one finite November profile',()=>{
+ for(const profile of ['zlib','xnet']){
+  const b=selectBatch(['--batch-20261109','--'+profile,'prepare','fixture']);
+  assert.equal(b.root,'/var/lib/utilibre-maintenance/security-20261109');
+  assert(b.input(profile).pathname.endsWith('/'+(profile==='xnet'?'xnet-release':profile)+'-inputs.json'));
+ }
+ assert.throws(()=>selectBatch(['--batch-20261109','--zlib','--xnet']));
+ assert.throws(()=>selectBatch(['--batch-20261109','--zlib','--arbitrary']));
+});

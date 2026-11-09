@@ -28,7 +28,7 @@ services:
   web:
     <<: *app
     # Copy-only revision; SMTP and jobs retain the same native processing build.
-    image: utilibre-newsletters-web:musl-security-20261109
+    image: utilibre-zlib-newsletters-web:candidate-20261109
     restart: unless-stopped
     networks:
       data: {ipv4_address: 172.29.132.10}
@@ -39,7 +39,7 @@ services:
     depends_on: {initialize: {condition: service_completed_successfully}}
   smtp:
     <<: *app
-    image: utilibre-newsletters-smtp:musl-security-20261109
+    image: utilibre-zlib-newsletters-smtp:candidate-20261109
     restart: "no"
     networks:
       data: {ipv4_address: 172.29.132.20}
@@ -56,7 +56,7 @@ services:
     depends_on: {initialize: {condition: service_completed_successfully}}
   jobs:
     <<: *app
-    image: utilibre-newsletters-smtp:musl-security-20261109
+    image: utilibre-zlib-newsletters-smtp:candidate-20261109
     restart: unless-stopped
     networks:
       data: {ipv4_address: 172.29.132.30}

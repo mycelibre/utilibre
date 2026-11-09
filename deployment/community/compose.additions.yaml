@@ -16,7 +16,7 @@ services:
     # Compatibility service key; LRCLIB replaces the stateless Dumb image here.
     # This preserves the protected network address and existing Caddy target.
     <<: *runtime
-    image: utilibre-additions-dumb:musl-security-20261109
+    image: utilibre-zlib-additions-dumb:candidate-20261109
     user: "65532:65532"
     environment: {PORT: "5555"}
     networks:
@@ -63,7 +63,7 @@ services:
     depends_on: [mezzo]
   fmd:
     <<: *runtime
-    image: utilibre-additions-fmd:musl-security-20261109
+    image: utilibre-zlib-additions-fmd:candidate-20261109
     user: "1000:1000"
     command: [--config, /etc/fmd-server/config.yml, --web-dir, /opt/utilibre-web]
     volumes:

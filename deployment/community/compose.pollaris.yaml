@@ -15,7 +15,7 @@ x-runtime: &runtime
 
 x-application: &application
   <<: *runtime
-  image: utilibre-abuse-pollaris:20261109
+  image: utilibre-zlib-pollaris-worker:candidate-20261109
   user: "82:82"
   env_file: [/opt/utilibre/community-data/pollaris-private/application.env]
   extra_hosts: ["mx.mailgt.dev:10.10.1.20"]
@@ -61,7 +61,7 @@ services:
       retries: 3
   pollaris-db:
     <<: *runtime
-    image: utilibre-simplelogin-db:musl-security-20261109
+    image: utilibre-zlib-simplelogin-db:candidate-20261109
     user: "70:70"
     env_file: [/opt/utilibre/community-data/pollaris-private/database.env]
     volumes: ["/opt/utilibre/community-data/pollaris-db:/var/lib/postgresql/data"]

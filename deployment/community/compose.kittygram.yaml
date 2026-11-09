@@ -37,7 +37,7 @@ services:
     depends_on: [cache]
   cache:
     <<: *runtime
-    image: utilibre-valkey:musl-security-20261109
+    image: utilibre-zlib-valkey:candidate-20261109
     user: "999:999"
     mem_limit: 192m
     command: [valkey-server, --save, "", --appendonly, "no", --maxmemory, 128mb, --maxmemory-policy, allkeys-lru]

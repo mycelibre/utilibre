@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "approval": "candidate-only; not authorized for activation",
+  "advisory": "CVE-2026-78661",
+  "primary": "https://pkg.go.dev/vuln/GO-2026-6860",
+  "primarySha256": "443304c129b9540dc46d28392b973a136db90644019dc20c3e25941833d49df3",
+  "dependency": "golang.org/x/net",
+  "previousVersion": "v0.60.0",
+  "version": "v0.62.0",
+  "origin": "https://go.googlesource.com/net",
+  "sourceRevision": "3de643db506517b3e652a13cc0b56034cea6b8e6",
+  "license": "BSD-3-Clause",
+  "moduleZipSha256": "50e869800f4921e910eb6550369f937c7187d130a7f7f78a26ef9b589a7071a6",
+  "compiler": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+  "compilerVersion": "1.26.10",
+  "existingBuildRecipe": "deployment/maintenance/go-final/build.sh",
+  "buildRecipeSha256": "67c0942ce81243efde642bb5ab09b8f553580bbdfb5c55ffe0e29e0e6b136299",
+  "execution": {
+    "preparationNetwork": [
+      "proxy.golang.org",
+      "sum.golang.org"
+    ],
+    "verificationNetwork": "none; isolated internal native fixture only",
+    "minimumFreeBytes": 8589934592,
+    "parallelBuilds": 1,
+    "productionEffects": false
+  },
+  "rows": [
+    {
+      "key": "rimgo",
+      "sourceRevision": "d2be8e221522dfe7a06452e2002dcf6dad569d1a",
+      "base": "sha256:d646a1b9cdc142e56e4cf5b3b431210eddd256395611f38f40b9a82548cf202b",
+      "binary": "/app/rimgo",
+      "candidate": "utilibre-rimgo:xnet-security-20261109",
+      "oldBinarySha256": "2d853f572ac3cbb938e27f46949271e7d1a36e852934aeabc433028ee67ac92b",
+      "sourceProofSha256": "02f9c11385370d57901dbc6400d0e351d9e8848c0577094a53a5f5f271e7b005",
+      "locks": {
+        "go.mod": "0c3a59e6b1f2050aeb615b18e7ee2f0a9860a47adfe6fd795d7229ccbd63395c",
+        "go.sum": "c54eed396b3121cc0273786dcdd9059700070531768e23d11b031c2bb754fad8"
+      }
+    },
+    {
+      "key": "anonymousoverflow",
+      "sourceRevision": "937cfeefd6dcbab92ef572671f16d4d3be6abad3",
+      "base": "sha256:eb455250ab1a76acf13c701f668850e43ef0ce29da2b0c0cd09f793f4310c482",
+      "binary": "/app/anonymousoverflow",
+      "candidate": "utilibre-anonymousoverflow:xnet-security-20261109",
+      "oldBinarySha256": "32b4e70596181f3959b904d1d93069ab8e61e79a5ebf20503621fcd850726dbb",
+      "sourceProofSha256": "d221f8485571ec24146ebfd44891cc70790eb1e102856c71caef1146c9320888",
+      "locks": {
+        "go.mod": "a47b1bfffc5d8936003f6227454445c42efed48e121464c638cb39b8efdaafd5",
+        "go.sum": "1763cc80a17f1267b5c1f80d234946b4b9e8f6e05db98f548d8cdc851a6ab61b"
+      }
+    }
+  ]
+}

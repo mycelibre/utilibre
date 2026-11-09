@@ -12,7 +12,7 @@ x-runtime: &runtime
 services:
   binternet-onion:
     <<: *runtime
-    image: utilibre-binternet-onion-binternet-onion:musl-security-20261109
+    image: utilibre-zlib-binternet-onion-binternet-onion:candidate-20261109
     user: "65534:65534"
     volumes: ["./binternet-onion-fpm.conf:/etc/php84/utilibre-fpm.conf:ro"]
     networks:
@@ -39,7 +39,7 @@ services:
     depends_on: [binternet-onion]
   tor:
     <<: *runtime
-    image: utilibre-binternet-onion-tor:musl-security-20261109
+    image: utilibre-zlib-binternet-onion-tor:candidate-20261109
     user: "101:101"
     mem_limit: 256m
     volumes:

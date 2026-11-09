@@ -205,7 +205,7 @@ services:
 
   resume-db:
     <<: *runtime
-    image: utilibre-simplelogin-db:musl-security-20261109
+    image: utilibre-zlib-simplelogin-db:candidate-20261109
     read_only: true
     user: "70:70"
     environment:
@@ -318,7 +318,7 @@ services:
 
   penpot-db:
     <<: *runtime
-    image: utilibre-simplelogin-db:musl-security-20261109
+    image: utilibre-zlib-simplelogin-db:candidate-20261109
     read_only: true
     user: "70:70"
     environment:
@@ -338,7 +338,7 @@ services:
 
   penpot-valkey:
     <<: *runtime
-    image: utilibre-valkey:musl-security-20261109
+    image: utilibre-zlib-valkey:candidate-20261109
     read_only: true
     user: "999:1000"
     command: [valkey-server, --save, "", --appendonly, "no", --maxmemory, 128mb, --maxmemory-policy, noeviction, --loglevel, warning]

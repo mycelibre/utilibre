@@ -1,0 +1,1017 @@
+{
+  "schemaVersion": 1,
+  "advisories": [
+    "CVE-2026-85091"
+  ],
+  "scanDate": "2026-11-09T18:08:32.000Z",
+  "baselineScanSha256": "b5a7d156fbe3249a7e7c2d48fe4cc8522ba1b90cfeebf9bb4eb543c036660e62",
+  "minimumFreeBytes": 8589934592,
+  "packages": {
+    "3.24": {
+      "branch": "3.24",
+      "repository": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main",
+      "file": "zlib-1.4-r0.apk",
+      "sha256": "7b05bc778b8b25cd880835b40114182bd4d1581717504d0129c810c0a14291cb",
+      "signatureVerifiedAgainstBase": "sha256:00ef35da2790de82bf81797072c003270a190f788bfd0d1e39c3ea1c03391b53",
+      "name": "zlib",
+      "version": "1.4-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/zlib-1.4-r0.apk",
+      "pkginfoSha256": "2eb5885520ad91e7ad574c6a77472ba3cd33a145235c2bc17156d8d7c19ba1da"
+    },
+    "3.23": {
+      "branch": "3.23",
+      "repository": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main",
+      "file": "zlib-1.4-r0.apk",
+      "sha256": "22ff5ae6b704ac1786d6565dcb3f5dde489e44a5038297a565382b76f656ee08",
+      "signatureVerifiedAgainstBase": "sha256:18ece28a429e8a00aa9c5513e7631137de87a16a6b60217a67b011948943ba3c",
+      "name": "zlib",
+      "version": "1.4-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/zlib-1.4-r0.apk",
+      "pkginfoSha256": "7e3684b19afbef46356a63a8c4463d7c24365bd46833fcb7ecc19f22691d8f21"
+    },
+    "3.22": {
+      "branch": "3.22",
+      "repository": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main",
+      "file": "zlib-1.4-r0.apk",
+      "sha256": "a271d6491037f7037010ac98b40f7d2b81c733f425b20294ee771b6ed7571038",
+      "signatureVerifiedAgainstBase": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
+      "name": "zlib",
+      "version": "1.4-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/zlib-1.4-r0.apk",
+      "pkginfoSha256": "8aa770b123b3e6754c5b604a1a48ba774ee7dd9c0bfa9d37c0dece860e70b7a2"
+    }
+  },
+  "nativeFixture": {
+    "compilerImage": "sha256:0efcba554b753bcd4d58045c3db806a14ae078d537faddb42aa65b767cda98a5",
+    "source": "zlib-native.c",
+    "sourceSha256": "68737a02a667f1299d29e749d36e4974f0cfeabd1bfaf141693b985e91456bbb",
+    "binarySha256": "b72fedab8a8ab4ab006b043b6ebcedbea746d5035caeaca42fcc149e78f0b4d2"
+  },
+  "consumerFixtureHashes": {
+    "check-musl-runtimes.py": "5f9a6aecd1e1a135c5d1aa353c7e356e70cdd7d6b6b2789e82ff23d1082f6d53",
+    "check-musl-special.py": "13d5f7b625ed1b945b196b50b36409460b29439361f995f09305fda952a421af",
+    "../go-final/check-native.mjs": "aef7669cdbc46cdf975fcf2a042fc528cdd7c07ac57c59b3f4b8c37eee63d266",
+    "../go-final/check-galene.mjs": "583de1e311ee9d2701e0fc6681f515811c1062c8bab92afaba9e239db2f0f245",
+    "../go-runtime-20261011/check-fmd.mjs": "d682fa57d16d39ca4906f643c8d4a1eab291f70f18955e937db0ae18670e15cd",
+    "../go-leaf-final/check-ntfy.py": "76fa306848a78918b56003f975c2a62e114bdccd5aa85589eeb36a56f8152ca8",
+    "../go-leaf-final/check-opengist.py": "b3efe37c615eadf8444d92ae0b3254485b8c239990ee7c3d42252d2514586a0a",
+    "../../pack/check-galene-lifecycle.mjs": "257b3fa0aba8a90c660f3abc73840421fa46c1eae95feed73130c39e6b92e499",
+    "../../community/binternet-torrc": "65262c0c38364ee9aad12434dc0036c558f3c1899d22f8fd0b55f2d1edbd780e",
+    "check-musl-proxy.py": "6ef40b3e7701d7912a8b8fbc20d03cef72b2bf800e2d952cea5af588f9b0c227"
+  },
+  "rows": [
+    {
+      "key": "projects-app",
+      "base": "sha256:00ef35da2790de82bf81797072c003270a190f788bfd0d1e39c3ea1c03391b53",
+      "oldRef": "utilibre-projects-app:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-projects-app-1"
+      ],
+      "candidate": "utilibre-zlib-projects-app:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "node-runtime",
+      "releaseGroups": [
+        {
+          "key": "projects-projects-app",
+          "containers": [
+            "utilibre-projects-app-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://projects.utilibre.org/"
+    },
+    {
+      "key": "gathio-gathio",
+      "base": "sha256:09816142e47b5e315c3d943dbb2ba4f1511e5ad901d4b0985ed79d0b5571d3f1",
+      "oldRef": "utilibre-gathio-gathio:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-gathio-gathio-1"
+      ],
+      "candidate": "utilibre-zlib-gathio-gathio:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "node-runtime",
+      "releaseGroups": [
+        {
+          "key": "gathio-gathio-gathio",
+          "containers": [
+            "utilibre-gathio-gathio-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://events.utilibre.org/"
+    },
+    {
+      "key": "records-db",
+      "base": "sha256:1719239de7753a912c219c409070f056fb3879484c1eff16e881977edd48897f",
+      "oldRef": "utilibre-records-db:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-identity-postgresql-1",
+        "utilibre-projects-db-1",
+        "utilibre-records-db-1"
+      ],
+      "candidate": "utilibre-zlib-records-db:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "postgres-runtime",
+      "releaseGroups": [
+        {
+          "key": "records-records-db",
+          "containers": [
+            "utilibre-records-db-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "projects-records-db",
+          "containers": [
+            "utilibre-projects-db-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "identity-records-db",
+          "containers": [
+            "utilibre-identity-postgresql-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved"
+    },
+    {
+      "key": "pollaris-worker",
+      "base": "sha256:18ece28a429e8a00aa9c5513e7631137de87a16a6b60217a67b011948943ba3c",
+      "oldRef": "utilibre-abuse-pollaris:20261109",
+      "release": "3.23.6",
+      "branch": "3.23",
+      "containers": [
+        "utilibre-pollaris-pollaris-1",
+        "utilibre-pollaris-worker-1"
+      ],
+      "candidate": "utilibre-zlib-pollaris-worker:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.5-r24",
+      "consumerProfile": "php-runtime",
+      "releaseGroups": [
+        {
+          "key": "pollaris-pollaris-worker",
+          "containers": [
+            "utilibre-pollaris-worker-1",
+            "utilibre-pollaris-pollaris-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://pollaris.utilibre.org/"
+    },
+    {
+      "key": "newsletters-web",
+      "base": "sha256:1ad7c1f9e3f7bdce5a7f538eccedfda0a88ad5139d0b8b3293ee7ee5f5ffc96f",
+      "oldRef": "utilibre-newsletters-web:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-newsletters-web-1"
+      ],
+      "candidate": "utilibre-zlib-newsletters-web:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "node-runtime",
+      "releaseGroups": [
+        {
+          "key": "newsletters-newsletters-web",
+          "containers": [
+            "utilibre-newsletters-web-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://newsletters.utilibre.org/"
+    },
+    {
+      "key": "pack-galene-galene",
+      "base": "sha256:20c01f05c8540315c92fc08f7b4948d07968afc2c777af387b38ff17a3f6325b",
+      "oldRef": "utilibre-pack-galene-galene:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-pack-galene-galene-1"
+      ],
+      "candidate": "utilibre-zlib-pack-galene-galene:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "special-native",
+      "releaseGroups": [
+        {
+          "key": "pack-galene-pack-galene-galene",
+          "containers": [
+            "utilibre-pack-galene-galene-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://meet.utilibre.org/",
+      "restartPrecondition": "No established native HTTP/WebSocket connections immediately before replacement; existing aggregate gate only."
+    },
+    {
+      "key": "bytestash-bytestash",
+      "base": "sha256:2b665b5ef51f9d00467bf460266ebe07c5098fd08b511b14c90c627edf82ec6f",
+      "oldRef": "utilibre-bytestash-bytestash:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-bytestash-bytestash-1"
+      ],
+      "candidate": "utilibre-zlib-bytestash-bytestash:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "node-runtime",
+      "releaseGroups": [
+        {
+          "key": "bytestash-bytestash-bytestash",
+          "containers": [
+            "utilibre-bytestash-bytestash-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://snippets-library.utilibre.org/"
+    },
+    {
+      "key": "biblioreads-biblioreads",
+      "base": "sha256:446bd9eecc8043adba13b89264df3d72dd10f2334905f155936cbbe7f1e87048",
+      "oldRef": "utilibre-biblioreads-biblioreads:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-biblioreads-biblioreads-1"
+      ],
+      "candidate": "utilibre-zlib-biblioreads-biblioreads:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "node-runtime",
+      "releaseGroups": [
+        {
+          "key": "biblioreads-biblioreads-biblioreads",
+          "containers": [
+            "utilibre-biblioreads-biblioreads-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://biblioreads.utilibre.org/"
+    },
+    {
+      "key": "records-bookplate",
+      "base": "sha256:50959d930c7ce4e04e39d8d0d6a97b64da5ec1a2c3d2617b7561c6f0d738e647",
+      "oldRef": "utilibre-records-bookplate:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-records-bookplate-1"
+      ],
+      "candidate": "utilibre-zlib-records-bookplate:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "node-runtime",
+      "releaseGroups": [
+        {
+          "key": "records-records-bookplate",
+          "containers": [
+            "utilibre-records-bookplate-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://bookplate.utilibre.org/"
+    },
+    {
+      "key": "reader-evaluation-fourget",
+      "base": "sha256:5f35b45268b4d2094d90b7ec2ddcc274be557674f6c63ee1df06719e8d9c5664",
+      "oldRef": "utilibre-reader-evaluation-fourget:musl-security-20261109",
+      "release": "3.23.6",
+      "branch": "3.23",
+      "containers": [
+        "utilibre-reader-evaluation-fourget-1"
+      ],
+      "candidate": "utilibre-zlib-reader-evaluation-fourget:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.5-r24",
+      "consumerProfile": "php-runtime",
+      "releaseGroups": [
+        {
+          "key": "reader-evaluation-reader-evaluation-fourget",
+          "containers": [
+            "utilibre-reader-evaluation-fourget-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://4get.utilibre.org/"
+    },
+    {
+      "key": "additions-fmd",
+      "base": "sha256:6aea8114066b5d337faf82f6af5a3c402ff8613de9806147da455d5fe2a4fba3",
+      "oldRef": "utilibre-additions-fmd:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-additions-fmd-1"
+      ],
+      "candidate": "utilibre-zlib-additions-fmd:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "special-native",
+      "releaseGroups": [
+        {
+          "key": "additions-additions-fmd",
+          "containers": [
+            "utilibre-additions-fmd-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved"
+    },
+    {
+      "key": "collaboration-pilot-wbo",
+      "base": "sha256:6f0f6f1192f299a82f85aabe552b5a7bb3e92eb60f03991e3c03e143ced97b6e",
+      "oldRef": "utilibre-abuse-wbo:20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-collaboration-pilot-wbo-1"
+      ],
+      "candidate": "utilibre-zlib-collaboration-pilot-wbo:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "node-runtime",
+      "releaseGroups": [
+        {
+          "key": "collaboration-pilot-collaboration-pilot-wbo",
+          "containers": [
+            "utilibre-collaboration-pilot-wbo-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": "RAM-only boards may be lost on restart; preserve existing work.",
+      "releaseApproval": "held",
+      "publicHome": "https://collab.utilibre.org/"
+    },
+    {
+      "key": "simplelogin-db",
+      "base": "sha256:6f4148e7a33071f2660d939cb6dbf1e84e981c2f67d9b200a9ae40819588cfb3",
+      "oldRef": "utilibre-simplelogin-db:musl-security-20261109",
+      "release": "3.24.1",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-services-postgres-1",
+        "utilibre-expanded-resume-db-1",
+        "utilibre-expanded-penpot-db-1",
+        "utilibre-community-rallly-db-1",
+        "utilibre-pollaris-pollaris-db-1",
+        "utilibre-pack-forms-db-1",
+        "utilibre-spliit-db-1",
+        "utilibre-simplelogin-db-1"
+      ],
+      "candidate": "utilibre-zlib-simplelogin-db:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "postgres-runtime",
+      "releaseGroups": [
+        {
+          "key": "simplelogin-simplelogin-db",
+          "containers": [
+            "utilibre-simplelogin-db-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "spliit-simplelogin-db",
+          "containers": [
+            "utilibre-spliit-db-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "pack-forms-simplelogin-db",
+          "containers": [
+            "utilibre-pack-forms-db-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "pollaris-simplelogin-db",
+          "containers": [
+            "utilibre-pollaris-pollaris-db-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "community-simplelogin-db",
+          "containers": [
+            "utilibre-community-rallly-db-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "expanded-simplelogin-db",
+          "containers": [
+            "utilibre-expanded-penpot-db-1",
+            "utilibre-expanded-resume-db-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "services-simplelogin-db",
+          "containers": [
+            "utilibre-services-postgres-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved"
+    },
+    {
+      "key": "chitchatter-tracker",
+      "base": "sha256:7037f05ca4ebdd9ceede714e6ff549d931291e9d463b83e52bfed23bdb0a45f2",
+      "oldRef": "utilibre-chitchatter-tracker:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-chitchatter-tracker-1"
+      ],
+      "candidate": "utilibre-zlib-chitchatter-tracker:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "node-runtime",
+      "releaseGroups": [
+        {
+          "key": "chitchatter-chitchatter-tracker",
+          "containers": [
+            "utilibre-chitchatter-tracker-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved"
+    },
+    {
+      "key": "razzia-socket",
+      "base": "sha256:834ff073c37633e23b0391bdba53cdccfb480a44bb0732b5df7ac648aec585d0",
+      "oldRef": "utilibre-razzia-socket:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-razzia-socket-1"
+      ],
+      "candidate": "utilibre-zlib-razzia-socket:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "node-runtime",
+      "releaseGroups": [
+        {
+          "key": "razzia-razzia-socket",
+          "containers": [
+            "utilibre-razzia-socket-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved"
+    },
+    {
+      "key": "translite-translite",
+      "base": "sha256:8386dc7505f6dbed90c3b00aba7df64494f131cdc5f4f643c277e9c2f2b82a5c",
+      "oldRef": "utilibre-translite-translite:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-translite-translite-1"
+      ],
+      "candidate": "utilibre-zlib-translite-translite:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "php-runtime",
+      "releaseGroups": [
+        {
+          "key": "translite-translite-translite",
+          "containers": [
+            "utilibre-translite-translite-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://translate.utilibre.org/"
+    },
+    {
+      "key": "reader-evaluation-safetwitch-backend",
+      "base": "sha256:8ecdaeff15cf056c248560e0ef910423ea79e5f44ae0878541507300f25d72ad",
+      "oldRef": "utilibre-reader-evaluation-safetwitch-backend:musl-security-20261109",
+      "release": "3.23.6",
+      "branch": "3.23",
+      "containers": [
+        "utilibre-reader-evaluation-safetwitch-backend-1"
+      ],
+      "candidate": "utilibre-zlib-reader-evaluation-safetwitch-backend:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.5-r24",
+      "consumerProfile": "proxy-native",
+      "releaseGroups": [
+        {
+          "key": "reader-evaluation-reader-evaluation-safetwitch-backend",
+          "containers": [
+            "utilibre-reader-evaluation-safetwitch-backend-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": null
+    },
+    {
+      "key": "binternet-onion-binternet-onion",
+      "base": "sha256:af7e6f5b91241b5852e37c3e3e3fe9345462a916449156354740e6881425f716",
+      "oldRef": "utilibre-binternet-onion-binternet-onion:musl-security-20261109",
+      "release": "3.23.6",
+      "branch": "3.23",
+      "containers": [
+        "utilibre-binternet-binternet-1",
+        "utilibre-binternet-onion-binternet-onion-1"
+      ],
+      "candidate": "utilibre-zlib-binternet-onion-binternet-onion:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.5-r24",
+      "consumerProfile": "php-runtime",
+      "releaseGroups": [
+        {
+          "key": "binternet-onion-binternet-onion-binternet-onion",
+          "containers": [
+            "utilibre-binternet-onion-binternet-onion-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "binternet-binternet-onion-binternet-onion",
+          "containers": [
+            "utilibre-binternet-binternet-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved"
+    },
+    {
+      "key": "addy-redis",
+      "base": "sha256:b89bd2998cbcfbe1b348a7b6903f64b96547652be439305d15a3d455ce3c730e",
+      "oldRef": "utilibre-addy-redis:musl-security-20261109",
+      "release": "3.23.6",
+      "branch": "3.23",
+      "containers": [
+        "utilibre-addy-redis-1"
+      ],
+      "candidate": "utilibre-zlib-addy-redis:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.5-r24",
+      "consumerProfile": "redis-runtime",
+      "releaseGroups": [
+        {
+          "key": "addy-addy-redis",
+          "containers": [
+            "utilibre-addy-redis-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved"
+    },
+    {
+      "key": "newsletters-smtp",
+      "base": "sha256:ca14645f022bdb919b2f0d03237ad4c549ed9529b778257ddcffd59ce219f002",
+      "oldRef": "utilibre-newsletters-smtp:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-newsletters-smtp-1",
+        "utilibre-newsletters-jobs-1"
+      ],
+      "candidate": "utilibre-zlib-newsletters-smtp:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "node-runtime",
+      "releaseGroups": [
+        {
+          "key": "newsletters-newsletters-smtp",
+          "containers": [
+            "utilibre-newsletters-smtp-1",
+            "utilibre-newsletters-jobs-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://newsletters.utilibre.org/"
+    },
+    {
+      "key": "evaluation-degoog",
+      "base": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
+      "oldRef": "utilibre-degoog:1.0.0-search-20261109-p2",
+      "release": "3.22.4",
+      "branch": "3.22",
+      "containers": [
+        "utilibre-evaluation-degoog-1"
+      ],
+      "candidate": "utilibre-zlib-evaluation-degoog:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.5-r13",
+      "consumerProfile": "php-runtime",
+      "releaseGroups": [
+        {
+          "key": "evaluation-evaluation-degoog",
+          "containers": [
+            "utilibre-evaluation-degoog-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "baselineRawScan": {
+        "file": "baseline-degoog.json",
+        "sha256": "22ce387b4a7da7d296528e49f5b1721515b0ed8bec353cbd68e10855fb322819",
+        "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29"
+      },
+      "releaseApproval": "approved",
+      "publicHome": "https://degoog.utilibre.org/"
+    },
+    {
+      "key": "rimgo-rimgo",
+      "base": "sha256:d646a1b9cdc142e56e4cf5b3b431210eddd256395611f38f40b9a82548cf202b",
+      "oldRef": "utilibre-rimgo-rimgo:musl-security-20261109",
+      "release": "3.23.6",
+      "branch": "3.23",
+      "containers": [
+        "utilibre-rimgo-rimgo-1"
+      ],
+      "candidate": "utilibre-zlib-rimgo-rimgo:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.5-r24",
+      "consumerProfile": "proxy-native",
+      "releaseGroups": [
+        {
+          "key": "rimgo-rimgo-rimgo",
+          "containers": [
+            "utilibre-rimgo-rimgo-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": "Superseded by combined x/net and zlib candidate; never release this zlib-only image.",
+      "releaseApproval": "held",
+      "publicHome": "https://rimgo.utilibre.org/"
+    },
+    {
+      "key": "wallabag-app",
+      "base": "sha256:dd97838cbc78992b5e9c97588fa8dfdd52c7fe36e189a4f8fd3dfabe9826a3eb",
+      "oldRef": "utilibre-wallabag-app:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-wallabag-app-1"
+      ],
+      "candidate": "utilibre-zlib-wallabag-app:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "php-runtime",
+      "releaseGroups": [
+        {
+          "key": "wallabag-wallabag-app",
+          "containers": [
+            "utilibre-wallabag-app-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://wallabag.utilibre.org/"
+    },
+    {
+      "key": "opengist-opengist",
+      "base": "sha256:e1ba50881ec396002a1702e877a99d349a8118991ceeb2dfc017846a79800751",
+      "oldRef": "utilibre-opengist-opengist:musl-security-20261109",
+      "release": "3.24.1",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-opengist-opengist-1"
+      ],
+      "candidate": "utilibre-zlib-opengist-opengist:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "native-app",
+      "releaseGroups": [
+        {
+          "key": "opengist-opengist-opengist",
+          "containers": [
+            "utilibre-opengist-opengist-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://snippets.utilibre.org/"
+    },
+    {
+      "key": "reader-evaluation-anonymousoverflow",
+      "base": "sha256:eb455250ab1a76acf13c701f668850e43ef0ce29da2b0c0cd09f793f4310c482",
+      "oldRef": "utilibre-reader-evaluation-anonymousoverflow:musl-security-20261109",
+      "release": "3.23.6",
+      "branch": "3.23",
+      "containers": [
+        "utilibre-reader-evaluation-anonymousoverflow-1"
+      ],
+      "candidate": "utilibre-zlib-reader-evaluation-anonymousoverflow:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.5-r24",
+      "consumerProfile": "proxy-native",
+      "releaseGroups": [
+        {
+          "key": "reader-evaluation-reader-evaluation-anonymousoverflow",
+          "containers": [
+            "utilibre-reader-evaluation-anonymousoverflow-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": "Superseded by combined x/net and zlib candidate; never release this zlib-only image.",
+      "releaseApproval": "held",
+      "publicHome": "https://overflow.utilibre.org/"
+    },
+    {
+      "key": "valkey",
+      "base": "sha256:f295b3af8b8c8743196e8df9d0f6c047a2b94fbb3d70437e494f2b1e253a2352",
+      "oldRef": "utilibre-valkey:musl-security-20261109",
+      "release": "3.24.1",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-kittygram-cache-1",
+        "utilibre-priviblur-cache-1",
+        "utilibre-expanded-penpot-valkey-1",
+        "utilibre-community-secret-cache-1",
+        "utilibre-services-valkey-1",
+        "public-utility-valkey-1"
+      ],
+      "candidate": "utilibre-zlib-valkey:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "redis-runtime",
+      "releaseGroups": [
+        {
+          "key": "public-utility-valkey",
+          "containers": [
+            "public-utility-valkey-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "services-valkey",
+          "containers": [
+            "utilibre-services-valkey-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "community-valkey",
+          "containers": [
+            "utilibre-community-secret-cache-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "expanded-valkey",
+          "containers": [
+            "utilibre-expanded-penpot-valkey-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "priviblur-valkey",
+          "containers": [
+            "utilibre-priviblur-cache-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "kittygram-valkey",
+          "containers": [
+            "utilibre-kittygram-cache-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved"
+    },
+    {
+      "key": "community-ntfy",
+      "base": "sha256:f299862023e18c36a1148d543e107e745e8d05010769b54adbd5d486edfefc38",
+      "oldRef": "utilibre-community-ntfy:musl-security-20261109",
+      "release": "3.24.1",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-community-ntfy-1"
+      ],
+      "candidate": "utilibre-zlib-community-ntfy:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "native-app",
+      "releaseGroups": [
+        {
+          "key": "community-community-ntfy",
+          "containers": [
+            "utilibre-community-ntfy-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://notify.utilibre.org/v1/health"
+    },
+    {
+      "key": "reader-evaluation-gothub",
+      "base": "sha256:f3521f05d81387399a42723ea3bc51426b0cd9eca65279078bad2fad3f8f80c5",
+      "oldRef": "utilibre-reader-evaluation-gothub:musl-security-20261109",
+      "release": "3.23.6",
+      "branch": "3.23",
+      "containers": [
+        "utilibre-reader-evaluation-gothub-1"
+      ],
+      "candidate": "utilibre-zlib-reader-evaluation-gothub:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.5-r24",
+      "consumerProfile": "proxy-native",
+      "releaseGroups": [
+        {
+          "key": "reader-evaluation-reader-evaluation-gothub",
+          "containers": [
+            "utilibre-reader-evaluation-gothub-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://gothub.utilibre.org/"
+    },
+    {
+      "key": "spliit-app",
+      "base": "sha256:fbca10a1f9236b6beaae765de0319897a0f2da88ba9b7d72f72a9e810a0c4b79",
+      "oldRef": "utilibre-spliit-app:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-spliit-app-1"
+      ],
+      "candidate": "utilibre-zlib-spliit-app:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "node-runtime",
+      "releaseGroups": [
+        {
+          "key": "spliit-spliit-app",
+          "containers": [
+            "utilibre-spliit-app-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://expenses.utilibre.org/"
+    },
+    {
+      "key": "binternet-onion-tor",
+      "base": "sha256:fc25152fc8b4dd03c8db7c5eceab8bd266fd2722acf8d21f27ccb514d93f62f3",
+      "oldRef": "utilibre-binternet-onion-tor:musl-security-20261109",
+      "release": "3.23.6",
+      "branch": "3.23",
+      "containers": [
+        "utilibre-binternet-onion-tor-1"
+      ],
+      "candidate": "utilibre-zlib-binternet-onion-tor:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.5-r24",
+      "consumerProfile": "special-native",
+      "releaseGroups": [
+        {
+          "key": "binternet-onion-binternet-onion-tor",
+          "containers": [
+            "utilibre-binternet-onion-tor-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved"
+    },
+    {
+      "key": "additions-dumb",
+      "base": "sha256:fe8fa1882b1e8892d8016277020ffba684b7da5ca69df846af84cfef66c63faa",
+      "oldRef": "utilibre-additions-dumb:musl-security-20261109",
+      "release": "3.24.2",
+      "branch": "3.24",
+      "containers": [
+        "utilibre-additions-dumb-1"
+      ],
+      "candidate": "utilibre-zlib-additions-dumb:candidate-20261109",
+      "installed": "1.3.2-r0",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "node-runtime",
+      "releaseGroups": [
+        {
+          "key": "additions-additions-dumb",
+          "containers": [
+            "utilibre-additions-dumb-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "approval": "preparation-only",
+      "ownerHold": null,
+      "releaseApproval": "approved",
+      "publicHome": "https://lyrics.utilibre.org/"
+    }
+  ],
+  "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29"
+}

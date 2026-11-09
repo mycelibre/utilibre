@@ -1,7 +1,7 @@
 name: utilibre-pack-galene
 services:
   galene:
-    image: utilibre-pack-galene-galene:musl-security-20261109
+    image: utilibre-zlib-pack-galene-galene:candidate-20261109
     # One dedicated interface avoids candidates for unrelated application bridges.
     # A bounded range also constrains STUN sockets; the single-port mux leaves
     # server-reflexive discovery on random ports in this Galene/Pion release.

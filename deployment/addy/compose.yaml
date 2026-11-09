@@ -14,7 +14,7 @@ services:
     healthcheck: {test: [CMD, healthcheck.sh, --connect, --innodb_initialized], interval: 10s, timeout: 5s, retries: 10}
     logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
   redis:
-    image: utilibre-addy-redis:musl-security-20261109
+    image: utilibre-zlib-addy-redis:candidate-20261109
     command: [redis-server, --maxmemory, 32mb, --maxmemory-policy, noeviction, --appendonly, 'no', --save, '']
     networks: {data: {ipv4_address: 172.29.133.21}}
     restart: unless-stopped

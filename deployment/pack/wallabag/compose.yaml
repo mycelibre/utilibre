@@ -1,7 +1,7 @@
 name: utilibre-wallabag
 services:
   app:
-    image: utilibre-wallabag-app:musl-security-20261109
+    image: utilibre-zlib-wallabag-app:candidate-20261109
     restart: 'no'
     read_only: true
     user: '4007:4007'

@@ -1,7 +1,7 @@
 name: utilibre-pack-forms
 services:
   db:
-    image: utilibre-simplelogin-db:musl-security-20261109
+    image: utilibre-zlib-simplelogin-db:candidate-20261109
     user: '70:70'
     restart: unless-stopped
     cap_drop: [ALL]

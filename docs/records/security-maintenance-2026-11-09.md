@@ -280,3 +280,44 @@ No version-only waiver or new advisory exemption was introduced. Eleven review
 writer/batch tests pass without modifying the live ledger during those tests.
 These figures precede the DeGoog and portal image replacements; the next complete
 scan must assess their exact new identities and any subsequent library releases.
+
+### Later signed zlib and x/net rollout
+
+Completed 44 scoped deployment groups using 30 distinct replacement images.
+This is not a count of 44 independent applications. Twenty-eight images received
+signed, same-Alpine-branch zlib 1.4-r0. Rimgo and AnonymousOverflow received a
+combined zlib and x/net v0.62.0 repair, preserving the previously repaired
+compression dependency and request controls. DeGoog keeps its working Brave and
+Mwmbl integration, provider notices and new cache version. No provider queries
+were needed to verify its library-only overlay.
+
+Each zlib candidate passed seven native checks before and after, full unrelated
+filesystem/configuration parity, ABI checks, its existing runtime or native
+application fixture, and an offline scan against the same preserved database.
+PostgreSQL fixtures included native dump/restore. FMD used two synthetic accounts
+without a real phone. Galene used two Linux Chromium clients with fake media,
+screen sharing and reconnection; its deployment waited for the aggregate
+connection gate. Tor never joined its network during isolated checks. These
+checks are bounded compatibility evidence, not universal device coverage.
+
+The x/net regression used 8,192 repeated malformed closing tags in an isolated
+fixture. Baseline allocations were approximately 35.8–36.8 MB; candidate
+allocations were 0.11–1.03 MB across three parsing modes, with text preserved.
+The upstream HTML tests and both applications' existing tests passed. Forty-three
+release-policy/rollback tests passed, including wrong artifacts, missing or
+modified evidence, new high findings and held releases. Matching complete source
+archives at Rimgo and AnonymousOverflow were replaced atomically, old archives
+retained, and public downloads matched their recorded hashes using curl.
+
+WBO is deliberately still on its previous image: restarting it can discard
+RAM-only boards. Its zlib candidate is tested but not activated. Other x/net
+applications and older source-input findings are not cleared by these two builds.
+AnonymousOverflow's pre-existing module-level OpenPGP warning remains recorded;
+its exact native dependency list contains none of the affected OpenPGP packages.
+No suppression was added.
+
+Private evidence: `security-20261109/zlib/`, `security-20261109/xnet/` and
+`security-20261109/after-library-rollout/` under the existing maintenance root.
+A new complete scan was started after all these replacements; the older 420-high
+checkpoint must not be presented as the current outcome before it completes.
+The additional SQLite follow-up is isolated candidate work, not deployed.

@@ -58,7 +58,7 @@ x-authentik: &authentik
 services:
   postgresql:
     <<: *runtime
-    image: utilibre-records-db:musl-security-20261109
+    image: utilibre-zlib-records-db:candidate-20261109
     user: "70:70"
     environment:
       POSTGRES_DB: authentik
