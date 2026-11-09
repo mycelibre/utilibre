@@ -767,5 +767,23 @@
     "prerequisites": [],
     "purpose": "Native EN/ES abuse footer links and exact Go dependency checksum completion for the pinned 16.1.0 build; no encryption fork.",
     "removeWhen": "Upstream footer configuration provides the same reporting links; keep exact dependency locks and rerun native/browser encrypted sharing tests."
+  },
+  {
+    "patch": "deployment/community/degoog-security.patch",
+    "source": "/opt/utilibre/community-src/degoog",
+    "revision": "4a9bcc74f0fceaa33efbab4777f063274cce23d6",
+    "prerequisites": [],
+    "purpose": "Preserve the existing DeGoog browser leak, bounded cache, validated proxy and output-sanitizing source controls. Native runtime and sanitizer dependency locks are separate pinned build inputs.",
+    "removeWhen": "A reviewed upstream release supplies equivalent privacy and security behavior and passes existing native/browser gates."
+  },
+  {
+    "patch": "deployment/community/degoog-search-repair/bridge-and-status.patch",
+    "source": "/opt/utilibre/community-src/degoog",
+    "revision": "4a9bcc74f0fceaa33efbab4777f063274cce23d6",
+    "prerequisites": [
+      "deployment/community/degoog-security.patch"
+    ],
+    "purpose": "Preserve actual provider exception classification, bilingual partial/empty failure notices and exact upstream Brave parsing helpers. Pinned engine files and build locks are in degoog-search-repair.",
+    "removeWhen": "The approved upstream runtime supports these provider formats and error states; rerun native, hostile parsing, saved-preference and browser network checks before removing."
   }
 ]

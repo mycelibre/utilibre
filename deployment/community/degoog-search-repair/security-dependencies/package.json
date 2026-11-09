@@ -1,0 +1,46 @@
+{
+  "name": "degoog",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch src/server/index.ts",
+    "build": "bun run build.ts",
+    "stop": "kill $(lsof -t -i:4444)",
+    "start": "bun run src/server/index.ts",
+    "start:dev": "DEGOOG_PORT=4445 bun run src/server/index.ts --debug",
+    "develop": "yarn build; yarn run stop; yarn run start:dev",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/ --fix",
+    "test": "LOG_LEVEL= DEGOOG_SETTINGS_PATH= DEGOOG_BASE_URL= DEGOOG_DATA_DIR=$(mktemp -d) bun test $(find tests \\( -name '*.test.ts' -o -name '*.test.tsx' \\) ! -path '*/stress/*' | sort | tr '\\n' ' ')",
+    "test:rate-limit": "LOG_LEVEL=debug bun test tests/stress/"
+  },
+  "dependencies": {
+    "cheerio": "1.2.0",
+    "postgres": "3.4.9",
+    "dompurify": "3.4.17",
+    "hono": "4.13.8",
+    "immutable": "5.1.9",
+    "ioredis": "6.0.0",
+    "marked": "18.0.9",
+    "sass": "1.102.0",
+    "socks": "2.8.9"
+  },
+  "engines": {
+    "bun": "1.3.14"
+  },
+  "devDependencies": {
+    "@types/bun": "1.3.14",
+    "esbuild": "0.28.1",
+    "eslint": "10.8.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.66.0"
+  },
+  "resolutions": {
+    "brace-expansion": "5.0.12",
+    "flatted": "3.4.2",
+    "picomatch": "4.0.4",
+    "undici": "7.30.0",
+    "ip-address": "10.7.2"
+  }
+}

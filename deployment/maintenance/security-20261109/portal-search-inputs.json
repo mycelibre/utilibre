@@ -1,0 +1,50 @@
+{
+  "sourceRevision": "5ce6c20dcfe1022c01ce8550ac628d29ee4bc2a5",
+  "base": "sha256:d7dce911628cea028d9cf6211ac6e3c80a8fe080c06bf620f267d7b2f01dead0",
+  "candidate": "utilibre-portal:search-20261109",
+  "imageId": "sha256:18962bc6fb429550ac1767992710efb8ec1849c0185ee171975997b8e8e3baaa",
+  "expectedVersions": [
+    "7.10.8-p2",
+    "1.9.0-p1",
+    "1.21.0-p1",
+    "1.30.4",
+    "3.9.0",
+    "0.42.0-p1",
+    "0.7.101-p1",
+    "4.2.0-p1",
+    "1.3.2-p1",
+    "32.6.10-p1",
+    "16.1.0-p1",
+    "1.0.0 \u00b7 Utilibre search repair 20261109"
+  ],
+  "implementation": "DeGoog verified provider choices and provider failure explanation, EN/ES; existing reporting routes and privacy information preserved",
+  "approved": true,
+  "retainedFindings": [
+    {
+      "id": "CVE-2026-4738",
+      "package": "zlib",
+      "version": "1.3.2-r1",
+      "severity": "MEDIUM"
+    }
+  ],
+  "assessmentNote": "One existing medium zlib record is unchanged, remains in the security queue and is not marked fixed by this metadata-only release.",
+  "changedFiles": {
+    "portal/src/catalog/catalog.ts": "3e2a8c310d0887862b69acf6a698df10e4aa3b0fabb86fae6299c772eea166b7",
+    "portal/src/catalog/guidance.ts": "7b35e714eac8dff2dd5f34dc2e50ee9ca410c1c0e694f04f5785827432f0baf6",
+    "portal/src/catalog/upstreams.ts": "0fe2d54458f290405733a1ec70a0326bc3a6071161c7dd5c4fcecefb1e23581d",
+    "portal/src/catalog/selection.ts": "265438d97f8c0a89f0811a523b42a3adda0d7d1872eb049bceac5745e882946b"
+  },
+  "validation": [
+    "122 unit tests; lint/typecheck/FOSS policy/static and SSR build",
+    "6 live-catalog search tests in isolated dev environment",
+    "6 built-server header reflow tests, desktop/mobile and no JavaScript",
+    "4 EN/ES desktop/mobile no-JavaScript DeGoog cards, no external requests or missing assets",
+    "Exact-image EN/ES routes and same-database runtime package/scan parity"
+  ],
+  "reviewBasis": [
+    "Only four catalogue metadata/help files differ from committed portal input",
+    "Provider facts verified by native isolated and bounded pre-release tests; actual app release gates remain separate",
+    "Existing medium zlib finding retained; no dependency or runtime package change",
+    "Initial staging tests exposed a duplicate dependency copy and wrong dev-server no-JS target; corrected isolated setup passed, original logs retained"
+  ]
+}

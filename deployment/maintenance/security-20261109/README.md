@@ -180,3 +180,9 @@ from exact Git objects and reviewed patches, with local vendor assets/locks and
 previous archive retention. It disables LFS smudge/network fallback; optional
 documentation image pointers remain pointers. Source publication is an explicit
 operator action, not a side effect of preparation or assessment.
+
+The `portal-search` manifest and `--nov9 --search` profile extend the existing
+scoped portal release with the DeGoog repair's accurate EN/ES metadata. Its base
+is the exact preceding `portal-pack` image; the same package/scan parity and
+public route gates apply. Read `docs/records/degoog-search-2026-11-09.md` for the
+separate native application release and actual bounded public-search result.

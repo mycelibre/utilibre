@@ -1,0 +1,16 @@
+[
+  {
+    "name": "esbuild",
+    "version": "0.28.1",
+    "url": "https://registry.npmjs.org/esbuild/-/esbuild-0.28.1.tgz",
+    "integrity": "sha512-HrJrvZv5ayxBzPfwphOoNzkzOIIlifzk0KJrGK2c8R4+LKpMtpYLQeUdjnwjWv/LZlkH2laZk+4w78pi99D4Vw==",
+    "sha256": "eb8ef756f8299d16d5c8b35678606d715ba29923f500db7b37c181310eed40a5"
+  },
+  {
+    "name": "@esbuild/linux-x64",
+    "version": "0.28.1",
+    "url": "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.28.1.tgz",
+    "integrity": "sha512-u/anNYF2mmVOEDwLtnQ1wOr3EZ9sTNGLWrsYGYwHWzGA3Si84IOkHXlbWTD1NB+9/1lcnweYKO54uhxZydNzfA==",
+    "sha256": "9ed00ab5330c94386f3273eda99a1fb0e8f37cfd6cb5270e4ad2fe3527da3546"
+  }
+]

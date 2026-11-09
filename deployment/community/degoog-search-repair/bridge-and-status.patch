@@ -1,0 +1,478 @@
+--- a/src/client/modules/renderer/render.tsx
++++ b/src/client/modules/renderer/render.tsx
+@@ -1,4 +1,5 @@
+ import { clear, render } from "../../../shared/ui/tribute/dom";
++import { searchAvailability } from "../../../shared/search-availability";
+ import { TransText } from "../../../shared/ui/components/primitives/trans-text";
+ import { NoResults } from "../../../shared/ui/components/feedback/no-results";
+ import { NoEnginesLink } from "../../utils/search/engine-stats/no-engines-link";
+@@ -116,6 +117,9 @@
+   if (!container || !layout) return;
+ 
+   const isImageType = isImageSearchType(state.currentType);
++  const availability = searchAvailability(
++    state.currentData?.engineTimings ?? [], results.length > 0, document.documentElement.lang,
++  );
+ 
+   if (isImageType) {
+     layout.classList.add("media-mode");
+@@ -139,7 +143,7 @@
+         }}
+       />
+     ) : (
+-      t("search-templates.no-results")
++      availability || t("search-templates.no-results")
+     );
+     render(<NoResults>{body}</NoResults>, container);
+     if (!isImageType && opts.paginate !== false) {
+@@ -164,6 +168,14 @@
+       (r, i) => renderTemplate("degoog-result", buildResultContext(r, i)) ?? "",
+     )
+     .join("");
++
++  if (availability) {
++    const notice = document.createElement("p");
++    notice.className = "degoog-text";
++    notice.setAttribute("role", "status");
++    notice.textContent = availability;
++    container.prepend(notice);
++  }
+ 
+   hydrateFavicons(container);
+   attachVideoPlayers(container);
+--- a/src/client/utils/search/streaming/streaming-search.tsx
++++ b/src/client/utils/search/streaming/streaming-search.tsx
+@@ -1,4 +1,5 @@
+ import { clear, render } from "../../../../shared/ui/tribute/dom";
++import { searchAvailability } from "../../../../shared/search-availability";
+ import { TransText } from "../../../../shared/ui/components/primitives/trans-text";
+ import { NoResults } from "../../../../shared/ui/components/feedback/no-results";
+ import { NoEnginesLink } from "../engine-stats/no-engines-link";
+@@ -280,9 +281,20 @@
+             }}
+           />
+         ) : (
+-          t("search-templates.no-results")
++          searchAvailability(data.engineTimings, false, document.documentElement.lang) || t("search-templates.no-results")
+         );
+       render(<NoResults>{body}</NoResults>, resultsList);
++    }
++
++    if (currentResults.length > 0 && resultsList) {
++      const availability = searchAvailability(data.engineTimings, true, document.documentElement.lang);
++      if (availability) {
++        const notice = document.createElement("p");
++        notice.className = "degoog-text";
++        notice.setAttribute("role", "status");
++        notice.textContent = availability;
++        resultsList.prepend(notice);
++      }
+     }
+ 
+     if (resultsList) attachVideoPlayers(resultsList);
+--- a/src/server/extensions/compatibility-layer/rpc.ts
++++ b/src/server/extensions/compatibility-layer/rpc.ts
+@@ -47,6 +47,7 @@
+   ok: boolean;
+   data?: T;
+   error?: string;
++  errorType?: string;
+   trace?: string;
+ }
+ 
+@@ -192,7 +193,11 @@
+   }
+   if (!envelope) throw new Error(stderr.trim() || lastLine || failure);
+   if (exitCode !== 0 || !envelope.ok || envelope.data === undefined) {
+-    throw new Error(envelope.error || stderr.trim() || failure);
++    const error = new Error(envelope.error || stderr.trim() || failure);
++    if (spec.label === "SearX" && typeof envelope.errorType === "string") {
++      error.name = envelope.errorType;
++    }
++    throw error;
+   }
+   return envelope.data;
+ };
+--- a/src/server/extensions/compatibility-layer/searx/bridge/errors.py
++++ b/src/server/extensions/compatibility-layer/searx/bridge/errors.py
+@@ -1,5 +1,7 @@
+ class SearxEngineException(Exception):
+     def __init__(self, *args, **kwargs):
++        if not args and kwargs.get("message"):
++            args = (kwargs["message"],)
+         super().__init__(*args)
+         for key, value in kwargs.items():
+             setattr(self, key, value)
+@@ -10,6 +12,10 @@
+ 
+ 
+ class SearxEngineAPIException(SearxEngineException):
++    pass
++
++
++class SearxEngineResponseException(SearxEngineException):
+     pass
+ 
+ 
+--- /dev/null
++++ b/src/server/extensions/compatibility-layer/searx/bridge/js_object.py
+@@ -0,0 +1,235 @@
++# SPDX-License-Identifier: AGPL-3.0-or-later
++# SearXNG utils.py helpers, unchanged from d47cb96bfb79240d487bdb2336886d0dc59f2f30.
++# Source: https://github.com/searxng/searxng/blob/d47cb96bfb79240d487bdb2336886d0dc59f2f30/searx/utils.py
++import re
++import string
++
++_JS_STRING_DELIMITERS = re.compile(r'(["\'`])')
++
++_JS_QUOTE_KEYS_RE = re.compile(r'([\{\s,])([\$_\w][\$_\w0-9]*)(:)')
++
++_JS_VOID_OR_UNDEFINED_RE = re.compile(r'void\s+[0-9]+|void\s*\([0-9]+\)|undefined')
++
++_JS_DECIMAL_RE = re.compile(r"([\[\,:])\s*(\-?)\s*([0-9_]*)\.([0-9_]*)")
++
++_JS_DECIMAL2_RE = re.compile(r"([\[\,:])\s*(\-?)\s*([0-9_]+)")
++
++_JS_EXTRA_COMA_RE = re.compile(r"\s*,\s*([\]\}])")
++
++_JS_STRING_ESCAPE_RE = re.compile(r'\\(.)')
++
++def _j2p_process_escape(match: re.Match[str]) -> str:
++    # deal with ECMA escape characters
++    _escape = match.group(1) or match.group(2)
++    return (
++        Rf'\{_escape}'
++        if _escape in _JSON_PASSTHROUGH_ESCAPES
++        else R'\u00' if _escape == 'x' else '' if _escape == '\n' else _escape
++    )
++
++def _j2p_decimal(match: re.Match[str]) -> str:
++    return (
++        match.group(1)
++        + match.group(2)
++        + (match.group(3).replace("_", "") or "0")
++        + "."
++        + (match.group(4).replace("_", "") or "0")
++    )
++
++def _j2p_decimal2(match: re.Match[str]) -> str:
++    return match.group(1) + match.group(2) + match.group(3).replace("_", "")
++
++def js_obj_str_to_json_str(js_obj_str: str) -> str:
++    if not isinstance(js_obj_str, str):
++        raise ValueError("js_obj_str must be of type str")
++    if js_obj_str == "":
++        raise ValueError("js_obj_str can't be an empty string")
++
++    # when in_string is not None, it contains the character that has opened the string
++    # either simple quote or double quote
++    in_string = None
++    # cut the string:
++    # r"""{ a:"f\"irst", c:'sec"ond'}"""
++    # becomes
++    # ['{ a:', '"', 'f\\', '"', 'irst', '"', ', c:', "'", 'sec', '"', 'ond', "'", '}']
++    parts = _JS_STRING_DELIMITERS.split(js_obj_str)
++    # does the previous part ends with a backslash?
++    blackslash_just_before = False
++    for i, p in enumerate(parts):
++        if p == in_string and not blackslash_just_before:
++            # * the current part matches the character which has opened the string
++            # * there is no antislash just before
++            # --> the current part close the current string
++            in_string = None
++            # replace simple quote and ` by double quote
++            # since JSON supports only double quote for string
++            parts[i] = '"'
++
++        elif in_string:
++            # --> we are in a JS string
++            # replace the colon by a temporary character
++            # so _JS_QUOTE_KEYS_RE doesn't have to deal with colon inside the JS strings
++            p = p.replace(':', chr(1))
++            # replace JS escape sequences by JSON escape sequences
++            p = _JS_STRING_ESCAPE_RE.sub(_j2p_process_escape, p)
++            # the JS string is delimited by simple quote.
++            # This is not supported by JSON.
++            # simple quote delimited string are converted to double quote delimited string
++            # here, inside a JS string, we escape the double quote
++            if in_string == "'":
++                p = p.replace('"', r'\"')
++            parts[i] = p
++            # drop a trailing \ that was escaping the quote
++            # leave it if it has been escaped twice as a literal i.e. two \ and ' in a row
++            if blackslash_just_before and p[:1] == "'":
++                prev = parts[i - 1]
++                num_backslashes = len(prev) - len(prev.rstrip("\\"))
++                if num_backslashes % 2 == 1:
++                    parts[i - 1] = prev[:-1]
++
++        elif in_string is None and p in ('"', "'", "`"):
++            # we are not in string but p is string delimiter
++            # --> that's the start of a new string
++            in_string = p
++            # replace simple quote by double quote
++            # since JSON supports only double quote for string
++            parts[i] = '"'
++
++        elif in_string is None:
++            # we are not in a string
++            # replace by null these values:
++            # * void 0
++            # * void(0)
++            # * undefined
++            # https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/void
++            p = _JS_VOID_OR_UNDEFINED_RE.sub("null", p)
++            # make sure there is a leading zero in front of float
++            p = _JS_DECIMAL_RE.sub(_j2p_decimal, p)
++            p = _JS_DECIMAL2_RE.sub(_j2p_decimal2, p)
++            # remove extra coma in a list or an object
++            # for example [1,2,3,] becomes [1,2,3]
++            p = _JS_EXTRA_COMA_RE.sub(lambda match: match.group(1), p)
++            parts[i] = p
++
++        # update for the next iteration
++        blackslash_just_before = len(p) > 0 and p[-1] == '\\'
++
++    # join the string
++    s = ''.join(parts)
++    # add quote arround the key
++    # { a: 12 }
++    # becomes
++    # { "a": 12 }
++    s = _JS_QUOTE_KEYS_RE.sub(r'\1"\2"\3', s)
++    # replace the surogate character by colon and strip whitespaces
++    s = s.replace(chr(1), ':').strip()
++    return s
++
++def js_find_matching_bracket(text: str, start: int, open_char: str = "{", close_char: str = "}") -> int:
++    """Return index of the matching closing bracket, safely ignoring JS string literals."""
++    depth = 0
++    i = start
++    in_string = None
++    escape_ = False
++
++    while i < len(text):
++        c = text[i]
++        if in_string:
++            if escape_:
++                escape_ = False
++            elif c == "\\":
++                escape_ = True
++            elif c == in_string:
++                in_string = None
++        elif c in ('"', "'", "`"):
++            in_string = c
++        elif c == open_char:
++            depth += 1
++        elif c == close_char:
++            depth -= 1
++            if depth == 0:
++                return i
++        i += 1
++    raise ValueError(f"unbalanced {open_char}{close_char} starting at {start}")
++
++def js_split_args(args_str: str) -> list[str]:
++    """Split a JS argument list, respecting strings and nested brackets."""
++    args: list[str] = []
++    last_pos = 0
++    in_string = None
++    escape_ = False
++    depth = 0
++
++    for idx, c in enumerate(f"{args_str},"):
++        if in_string:
++            if escape_:
++                escape_ = False
++            elif c == "\\":
++                escape_ = True
++            elif c == in_string:
++                in_string = None
++        elif c in ('"', "'", "`"):
++            in_string = c
++        elif c in ("(", "[", "{"):
++            depth += 1
++        elif c in (")", "]", "}"):
++            depth -= 1
++        elif c == "," and depth == 0:
++            if item := args_str[last_pos:idx].strip():
++                args.append(item)
++            last_pos = idx + 1
++    return args
++
++def js_find_variable_positions(js_obj: str) -> list[tuple[str, int]]:
++    """Find all variables referenced in the JavaScript object."""
++    # pylint: disable=too-many-branches
++    # pylint: disable=unsubscriptable-object
++
++    matches: list[tuple[str, int]] = []
++
++    in_string = False
++    in_escape = False
++
++    # flat array like [1,2,3], not e.g. [{"a": 3}]
++    in_flat_array = False
++    # if the current position is inside the place of
++    # a JS value, e.g. the range of ` bar` in {"foo": bar}
++    in_value = False
++    current_var: tuple[str, int] | None = None
++
++    for pos, c in enumerate(js_obj):
++        if in_string:
++            if in_escape:
++                in_escape = False
++            elif c == "\\":
++                in_escape = True
++            elif c == in_string:
++                in_string = None
++        elif c in ("'", "\"", "`"):
++            in_string = c
++        elif c == ":":
++            in_value = True
++        elif c in (",", "{", "}", "[", "]"):
++            # handle matching variables in arrays like [a,b,c]
++            # i.e. if we encounter a "," in such a flat array,
++            # we're still inside a value
++            if c == "[":
++                in_flat_array = True
++            elif c != ",":
++                in_flat_array = False
++            in_value = in_flat_array
++            if current_var:
++                # reached end of variable name
++                if current_var[0] not in ("void0", "true", "false", "null", "undefined"):
++                    matches.append(current_var)
++                current_var = None
++        elif in_value:
++            if current_var and c in (string.ascii_letters + string.digits + "_$"):
++                current_var = (current_var[0] + c, current_var[1])
++            elif c in string.ascii_letters + "_$":
++                # start of new variable name
++                current_var = (c, pos)
++
++    return matches
++
++_JSON_PASSTHROUGH_ESCAPES = R'"\bfnrtu'
+--- a/src/server/extensions/compatibility-layer/searx/bridge/shims.py
++++ b/src/server/extensions/compatibility-layer/searx/bridge/shims.py
+@@ -5,8 +5,10 @@
+ import types
+ 
+ from . import rpc, text
++from .js_object import js_find_matching_bracket, js_split_args, js_find_variable_positions
+ from .errors import (
+     SearxEngineAPIException,
++    SearxEngineResponseException,
+     SearxEngineAccessDeniedException,
+     SearxEngineCaptchaException,
+     SearxEngineException,
+@@ -61,6 +63,7 @@
+         SearxEngineException=SearxEngineException,
+         SearxEngineCaptchaException=SearxEngineCaptchaException,
+         SearxEngineAPIException=SearxEngineAPIException,
++        SearxEngineResponseException=SearxEngineResponseException,
+         SearxEngineAccessDeniedException=SearxEngineAccessDeniedException,
+         SearxEngineXPathException=SearxEngineXPathException,
+         SearxEngineTooManyRequestsException=SearxEngineTooManyRequestsException,
+@@ -79,6 +82,7 @@
+         Translations=Translations,
+         Result=Result,
+         Image=ResultTypes.Image,
++        Video=ResultTypes.Video,
+         ImageRef=ResultTypes.ImageRef,
+         __path__=[],
+     )
+@@ -124,6 +128,9 @@
+         parse_duration_string=lambda value, *a, **k: value,
+         format_duration=text.duration,
+         js_obj_str_to_json_str=text.js_to_json,
++        js_find_matching_bracket=js_find_matching_bracket,
++        js_split_args=js_split_args,
++        js_find_variable_positions=js_find_variable_positions,
+         js_obj_str_to_python=lambda value, *a, **k: json.loads(text.js_to_json(value)),
+         load_module=lambda *a, **k: types.ModuleType("stub"),
+         parse_url=lambda value, *a, **k: str(value),
+--- a/src/server/extensions/compatibility-layer/searx/bridge/text.py
++++ b/src/server/extensions/compatibility-layer/searx/bridge/text.py
+@@ -1,4 +1,5 @@
+ import re
++from .js_object import js_obj_str_to_json_str
+ 
+ try:
+     from lxml import html
+@@ -70,7 +71,4 @@
+ 
+ 
+ def js_to_json(value, *args, **kwargs):
+-    text = str(value)
+-    text = re.sub(r"([{,]\s*)([A-Za-z_$][\w$]*)\s*:", r'\1"\2":', text)
+-    text = re.sub(r",\s*([}\]])", r"\1", text)
+-    return text.replace("'", '"')
++    return js_obj_str_to_json_str(value)
+--- a/src/server/extensions/compatibility-layer/searx/runner.py
++++ b/src/server/extensions/compatibility-layer/searx/runner.py
+@@ -10,5 +10,5 @@
+ try:
+     rpc.emit({"ok": True, "data": actions.run(json.loads(sys.stdin.readline() or "{}"))})
+ except Exception as exc:
+-    rpc.emit({"ok": False, "error": str(exc) or type(exc).__name__, "trace": traceback.format_exc()})
++    rpc.emit({"ok": False, "error": str(exc) or type(exc).__name__, "errorType": type(exc).__name__, "trace": traceback.format_exc()})
+     sys.exit(1)
+--- a/src/server/nojs/router.tsx
++++ b/src/server/nojs/router.tsx
+@@ -1,5 +1,6 @@
+ import { renderHtml } from "../../shared/ui/tribute/html";
+ import { ResultsMeta } from "./results-meta";
++import { searchAvailability } from "../../shared/search-availability";
+ import { RateLimitedPage } from "./rate-limited-page";
+ import { Hono, type Context } from "hono";
+ import {
+@@ -308,7 +309,8 @@
+           { count: String(outcome.results.length), time: String(outcome.totalTime) },
+           locale,
+         );
+-  const meta = renderHtml(<ResultsMeta text={String(metaText)} />);
++  const availability = searchAvailability(outcome.engineTimings, outcome.results.length > 0, locale);
++  const meta = renderHtml(<ResultsMeta text={availability ? `${metaText} ${availability}` : String(metaText)} />);
+ 
+   const pageTotal =
+     outcome.results.length === 0 ? 1 : (outcome.totalPages ?? NOJS_PAGE_TOTAL);
+--- a/src/server/search/index.ts
++++ b/src/server/search/index.ts
+@@ -65,6 +65,9 @@
+     };
+   }
+   const msg = err instanceof Error ? err.message : String(err);
++  if (err instanceof Error && err.name === "SearxEngineTooManyRequestsException") {
++    return { status: THREAT_LEVEL.RATE_LIMITED, reason: "The search provider is temporarily limiting requests." };
++  }
+   if (/timeout/i.test(msg)) {
+     return { status: THREAT_LEVEL.TIMEOUT, reason: msg };
+   }
+--- /dev/null
++++ b/src/shared/search-availability.ts
+@@ -0,0 +1,25 @@
++import type { EngineTiming } from "./search-types";
++
++// Keep provider failures distinct from an ordinary empty search. No queries or
++// provider responses are included; callers render this value as text.
++export const searchAvailability = (
++  timings: EngineTiming[],
++  hasResults: boolean,
++  locale: string,
++): string => {
++  const unavailable = timings.filter((entry) => entry.status && entry.status !== "ok");
++  if (!unavailable.length) return "";
++  const spanish = locale.toLowerCase().startsWith("es");
++  const limited = spanish ? "límite temporal de solicitudes" : "temporarily rate limited";
++  const providers = [...new Set(unavailable.map((entry) =>
++    entry.status === "rate_limited" ? `${entry.name} (${limited})` : entry.name,
++  ))].join(", ");
++  const message = hasResults
++    ? spanish
++      ? "Algunos proveedores no están disponibles: {providers}. Se muestran los resultados de los demás proveedores seleccionados."
++      : "Some providers are unavailable: {providers}. Results from the other selected providers are shown."
++    : spanish
++      ? "Algunos proveedores no están disponibles: {providers}. Los proveedores disponibles no devolvieron resultados. Probá más tarde o revisá los motores seleccionados en Configuración."
++      : "Some providers are unavailable: {providers}. The available providers returned no results. Try later or review the selected engines in Settings.";
++  return message.replace("{providers}", providers);
++};

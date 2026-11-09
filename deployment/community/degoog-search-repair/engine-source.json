@@ -1,0 +1,12 @@
+{
+  "project": "SearXNG",
+  "revision": "d47cb96bfb79240d487bdb2336886d0dc59f2f30",
+  "license": "AGPL-3.0-or-later",
+  "files": {
+    "brave.py": "e571c9f85eac3fa19cd0db28487dc040919b58e347665bf0ddc150ce2fe82688",
+    "brave.traits.json": "53ddc1d8019004f46ca80ec3f9078db9ddc9669e8ba2303b571797db73134c15"
+  },
+  "traitsSourceSha256": "aa4b26e70e27e700fce26cbed570eb57a3ded5824707f1948ccb7d3f87843434",
+  "utilsSourceSha256": "835fcad23f419df9fa285ce97623f0bf9d5b2b3ff578c83dc39878dbb24c142f",
+  "upstreamFix": "https://github.com/searxng/searxng/commit/d47cb96bfb79240d487bdb2336886d0dc59f2f30"
+}

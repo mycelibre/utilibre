@@ -1,7 +1,7 @@
 import subprocess,json,pathlib,sys
-assert sys.argv[1:] in ([],['--shortener'],['--abuse'],['--pack'])
-shortener=bool(sys.argv[1:]);pack=sys.argv[1:]==['--pack'];abuse=pack or sys.argv[1:]==['--abuse']
-profile='portal-pack' if pack else 'portal-abuse' if abuse else 'portal-shortener' if shortener else 'portal'
+assert sys.argv[1:] in ([],['--shortener'],['--abuse'],['--pack'],['--search'])
+shortener=bool(sys.argv[1:]);search=sys.argv[1:]==['--search'];pack=search or sys.argv[1:]==['--pack'];abuse=pack or sys.argv[1:]==['--abuse']
+profile='portal-search' if search else 'portal-pack' if pack else 'portal-abuse' if abuse else 'portal-shortener' if shortener else 'portal'
 r=pathlib.Path('/var/lib/utilibre-maintenance/security-20261109')/(profile if shortener else '.');name='utilibre-'+profile+'-check'
 inputs=json.loads((pathlib.Path(__file__).resolve().parent/(profile+'-inputs.json')).read_text())
 c=json.loads(subprocess.check_output(['docker','inspect','public-utility-portal-1']))[0]
