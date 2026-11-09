@@ -34,6 +34,11 @@ an LLM, submits an instance listing or sends indexing notifications.
   produces the same template as the tested notice overlay. The canonical
   template and discovery helper now target that current source; do not restore
   the stale 2.1.0 template during later runtime rebuilds.
+  The runtime pin was also advanced on 9 November to the exact tested deployed
+  image `sha256:e6a3f0c563c225e055524197f59261f34a805e38d49e4c03c051dcfa19643d6f`.
+  This preserves the later musl repair and reporting overlay in future candidates;
+  it does not grant automatic permission to replace runtimes. Source contracts,
+  configuration hashes, scan gates and isolated upgrade tests remain required.
 - Preserve the reviewed runtime **and its vendor tree**, byte-for-byte at the
   package-inventory level. Only app PHP/templates/static files are replaced.
   This retains the later PHP, nginx, Alpine and library repairs. The source's

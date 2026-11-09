@@ -3,7 +3,7 @@
   "approved": true,
   "family": "2.1",
   "minimum": "2.1.1",
-  "runtimeImage": "sha256:e3fbe8ac43db6ac84c2a566ca276fffa68aec0b0788fbc2f262271d9cc733d67",
+  "runtimeImage": "sha256:e6a3f0c563c225e055524197f59261f34a805e38d49e4c03c051dcfa19643d6f",
   "bootstrapVersion": "2.1.0",
   "maxDatabaseAgeHours": 48,
   "minimumFreeGiB": 8,

@@ -177,7 +177,11 @@ claim real-phone coverage. The initial JavaScript budget remains 215,000 gzip
 bytes; the final metadata build measures 198,085 bytes.
 
 PrivateBin's notice is also in its canonical updater template patch, replayed
-against exact upstream 2.1.1 source. Native overlays validate exact before/after
+against exact upstream 2.1.1 source. Its approved updater runtime pin now matches
+the exact deployed musl-repaired notice image; the twelve updater policy tests
+pass. Future candidates must still pass all unchanged source/configuration,
+native upgrade and security gates. No service restart or paste operation was
+needed for this policy correction. Native overlays validate exact before/after
 hashes, reject unfamiliar inputs and preserve all unrelated image bytes. CryptPad
 uses its native home/About surfaces; Gathio and Rallly use native settings.
 Rallly retains its five-link limit and authentication policy. Pollaris's native
