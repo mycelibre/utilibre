@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-09T18:16:33.046078+00:00",
+  "recordedAt": "2026-11-09T18:51:29.958037+00:00",
   "scanCompletedAt": "2026-11-09T18:08:32.000Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
@@ -8,9 +8,9 @@
   "sourceInputs": 83,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 1192,
+  "pendingHigh": 420,
   "rawFindingsRetained": true,
-  "assessmentNote": "Expiring exact artifact/advisory reviews; not proof of no vulnerabilities or current clearance for future releases.",
+  "assessmentNote": "Frozen 18:08 scan checkpoint with expiring exact artifact/advisory reviews. DeGoog and portal were subsequently replaced; their isolated scans passed, but whole-install revalidation remains pending. Not a security clearance.",
   "musl": {
     "imagesReleased": 62,
     "groupsPassed": 112,
@@ -46,5 +46,12 @@
       "penpot"
     ]
   },
-  "evidence": "/var/lib/utilibre-maintenance/security-20261109/final-assessment/"
+  "evidence": "/var/lib/utilibre-maintenance/security-20261109/final-assessment/",
+  "degoog": {
+    "status": "deployed-public-search-passed",
+    "image": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
+    "publicCheckedAt": "2026-11-09T18:42:26.598Z",
+    "results": 56,
+    "googleCse": "rate-limited"
+  }
 }

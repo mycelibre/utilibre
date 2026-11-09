@@ -262,3 +262,21 @@ November 9 snapshot; future artifacts or advisory data require another assessmen
 All 175 running application containers were running at the bounded health check,
 none reported unhealthy, and no systemd unit was failed. Seven older exited
 initialization/evaluation/fixture containers were left untouched.
+
+A later exact-artifact review at the same frozen scan checkpoint reduced pending
+high records from 1,192 to **420**, with critical still zero. The first batch
+contains 748 HIGH decisions: compiled-kernel-only header attribution, native
+util-linux/mount/blkid repairs, curl and ncurses payload checks. Thirty-five
+header records lacking complete attribution remain open. The next 44 decisions
+cover gzip and HEIF, of which 24 are HIGH. These are reverified existing repairs
+or component-scope decisions, not 792 newly fixed vulnerabilities; raw reports
+remain unchanged. A synthetic mount fixture passed 18 checks without real mounts.
+
+The HEIF review now follows completed, chronological, unambiguous release
+receipts from the original tested image to the current image, then checks the
+actual library bytes and installed package again. Missing, wrong-service,
+ambiguous and after-scan ancestry is rejected; all 17 focused policy tests pass.
+No version-only waiver or new advisory exemption was introduced. Eleven review
+writer/batch tests pass without modifying the live ledger during those tests.
+These figures precede the DeGoog and portal image replacements; the next complete
+scan must assess their exact new identities and any subsequent library releases.

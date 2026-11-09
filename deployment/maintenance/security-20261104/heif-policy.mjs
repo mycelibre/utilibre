@@ -14,3 +14,20 @@ export function comparisonKey(f,image){
  const target=f.type==='debian'&&f.target.startsWith(image+' (debian ')?f.target.slice(image.length):f.target;
  return JSON.stringify({...f,target,installed:f.package==='libheif1'?'reviewed-library-version':f.installed});
 }
+// A later release may retain the repaired library. This proves only the chain;
+// the caller must still compare the current package and actual library bytes.
+export function proveHeifLineage(original,current,target,rows,releasedAt,scanAt){
+ const digest=/^sha256:[a-f0-9]{64}$/;assert(digest.test(original)&&digest.test(current));
+ let image=original,after=Date.parse(releasedAt);const end=Date.parse(scanAt),chain=[];
+ assert(Number.isFinite(after)&&Number.isFinite(end)&&after<=end);
+ const seen=new Set([original]);
+ while(image!==current){
+  const matches=rows.filter(r=>r.name===target&&r.oldImage===image&&r.newImage!==image);
+  assert.equal(matches.length,1,'Missing or ambiguous completed descendant');
+  const row=matches[0],at=Date.parse(row.completedAt);
+  assert(digest.test(row.newImage)&&Number.isFinite(at)&&at>=after&&at<=end);
+  assert(!seen.has(row.newImage),'Cyclic release chain');seen.add(row.newImage);
+  chain.push(row);image=row.newImage;after=at;
+ }
+ return chain;
+}

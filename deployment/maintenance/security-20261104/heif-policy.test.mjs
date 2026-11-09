@@ -7,3 +7,12 @@ for(const key of ['version','packageSha256','isolatedBase','patchSha256'])test('
 for(const key of ['legacyMetadataPreserved','rawDeflatePreserved','corruptMetadataRejected','metadataLimitsEnforced','hevcAv1RgbaOldHeaderRoundtrips'])test('reject missing '+key,()=>{const n=valid();n[key]=false;assert.throws(()=>proveNative(n,spec));});
 test('skipped security regression cannot qualify',()=>{const n=valid();n.upstream.passingNames.pop();assert.throws(()=>proveNative(n,spec));});
 test('comparison keeps new CVEs and other dependency changes',()=>{const f={type:'debian',target:'old (debian 12.0)',package:'libheif1',installed:'old',id:'CVE-a',severity:'HIGH'};const key=comparisonKey(f,'old');assert.equal(key,comparisonKey({...f,target:'new (debian 12.0)',installed:'new'},'new'));assert.notEqual(key,comparisonKey({...f,id:'CVE-b'},'old'));assert.notEqual(comparisonKey({...f,package:'libz',installed:'1'},'old'),comparisonKey({...f,package:'libz',installed:'2'},'old'));});
+import {proveHeifLineage} from './heif-policy.mjs';
+const imageA='sha256:'+'a'.repeat(64),imageB='sha256:'+'b'.repeat(64),imageC='sha256:'+'c'.repeat(64);
+const row={name:'fixture',oldImage:imageA,newImage:imageB,completedAt:'2026-11-09T10:00:00Z'};
+const lineage=rows=>proveHeifLineage(imageA,imageB,'fixture',rows,'2026-11-04T12:00:00Z','2026-11-09T18:00:00Z');
+test('exact later image requires a completed unambiguous chain',()=>assert.deepEqual(lineage([row]),[row]));
+test('no original-image waiver for an unrelated replacement',()=>assert.throws(()=>lineage([])));
+test('wrong service cannot establish image ancestry',()=>assert.throws(()=>lineage([{...row,name:'other'}])));
+test('branching ancestry requires manual review',()=>assert.throws(()=>lineage([row,{...row,newImage:imageC}])));
+test('after-scan or undated receipts do not qualify',()=>{for(const completedAt of ['2026-11-10T10:00:00Z','bad'])assert.throws(()=>lineage([{...row,completedAt}]))});
