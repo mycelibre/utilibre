@@ -1,0 +1,11 @@
+--- a/frontend/index.html
++++ b/frontend/index.html
+@@ -207,6 +207,8 @@
+     </div>
+ 
+     <div name="links-div"><p lang="en">Links expire within 30 days. No click statistics. Keep the original URL.</p><p lang="es">Los enlaces vencen en un plazo máximo de 30 días. Sin estadísticas de clics. Conservá la URL original.</p><p lang="en"><a href="https://utilibre.org/en/">More tools from Utilibre</a> · <a href="https://utilibre.org/en/security">Security and contact</a></p><p lang="es"><a href="https://utilibre.org/es/">Más herramientas de Utilibre</a> · <a href="https://utilibre.org/es/security">Seguridad y contacto</a></p>
++      <p lang="en"><a href="https://utilibre.org/en/abuse" rel="noreferrer" referrerpolicy="no-referrer">Report abuse</a> · <a href="mailto:admin@utilibre.org?subject=Utilibre%20abuse%20report">admin@utilibre.org</a>. Send the short Utilibre URL and a brief description, not copies of the material, passwords or private files.</p>
++      <p lang="es"><a href="https://utilibre.org/es/denunciar-abuso" rel="noreferrer" referrerpolicy="no-referrer">Denunciá abusos</a> · <a href="mailto:admin@utilibre.org?subject=Reporte%20de%20abuso%20en%20Utilibre">admin@utilibre.org</a>. Enviá el enlace corto de Utilibre y una descripción breve, sin copias del material, contraseñas ni archivos privados.</p>
+       <button class="linkButton" id="admin-button" hidden>
+         <!-- https://svgicons.com/icon/109760/account -->
+         <svg

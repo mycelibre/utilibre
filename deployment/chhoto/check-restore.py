@@ -13,7 +13,10 @@ os.chown(restore,65534,65534);os.chown(restore/'urls.sqlite',65534,65534)
 with sqlite3.connect(restore/'urls.sqlite') as db:
  assert db.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
  row=db.execute('select long_url,hits from urls where short_url=?',(slug,)).fetchone();assert row==(fixture['dest'],0)
-cmd=['docker','run','-d','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--memory','256m','--cpus','1','--pids-limit','64','-v',str(restore)+':/data','--env-file','/opt/utilibre/chhoto-private/runtime.env','-e','CHHOTO_DB_URL=/data/urls.sqlite','-e','CHHOTO_HASH_ALGORITHM=Argon2','-e','CHHOTO_DISABLE_BACKUPS=True','-e','CHHOTO_REDIRECT_METHOD=TEMPORARY','-e','RUST_LOG=off','utilibre-chhoto:7.8.3-p1']
+metadata=json.loads((snapshot/'metadata.json').read_text())
+image=metadata['image']
+assert image.startswith('sha256:') and len(image)==71, 'Legacy backup has no immutable image identity; review it explicitly before testing restore'
+cmd=['docker','run','-d','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--memory','256m','--cpus','1','--pids-limit','64','-v',str(restore)+':/data','--env-file','/opt/utilibre/chhoto-private/runtime.env','-e','CHHOTO_DB_URL=/data/urls.sqlite','-e','CHHOTO_HASH_ALGORITHM=Argon2','-e','CHHOTO_DISABLE_BACKUPS=True','-e','CHHOTO_REDIRECT_METHOD=TEMPORARY','-e','RUST_LOG=off',image]
 cid=subprocess.check_output(cmd,text=True).strip()
 try:
  pid=json.loads(subprocess.check_output(['docker','inspect',cid],text=True))[0]['State']['Pid']

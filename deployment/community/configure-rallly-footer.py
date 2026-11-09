@@ -18,12 +18,28 @@ def sql(query):
         'psql', '-X', '-qAt', '-v', 'ON_ERROR_STOP=1', '-U', 'rallly', '-d', 'rallly',
     ], input=query, text=True)
 
+# The reviewed five-link reporting schema combines the bilingual privacy link.
+# Recognize it before the historical two-privacy-link migration and before
+# reading any unrelated instance settings. Do not replace it or exceed the
+# native five-link limit when this maintenance script is rerun.
+report_plan = json.loads((Path(__file__).resolve().parents[1] / 'abuse-reporting/native-hooks.json').read_text())['rallly']
+current_footer = json.loads(sql('SELECT footer_links FROM instance_settings WHERE id=1;'))
+if current_footer == report_plan['after']:
+    print('Approved native home, source, privacy and reporting links already configured; no write performed.')
+    raise SystemExit(0)
+
 before = json.loads(sql('SELECT row_to_json(s) FROM instance_settings s WHERE id=1;'))
 links = before['footer_links']
 assert isinstance(links, list) and len(links) <= 5
-expected = [
+# Keep the first bilingual return links and source link; replace duplicate destinations.
+legacy_duplicate_links = [
     {'label': 'More tools from Utilibre', 'href': 'https://utilibre.org/en/'},
     {'label': 'Más herramientas de Utilibre', 'href': 'https://utilibre.org/es/'},
+]
+links = [link for link in links if link not in legacy_duplicate_links]
+expected = [
+    {'label': 'Privacy', 'href': 'https://utilibre.org/en/privacy'},
+    {'label': 'Privacidad', 'href': 'https://utilibre.org/es/privacidad'},
 ]
 for link in links + expected:
     assert isinstance(link, dict) and set(link) == {'label', 'href'}

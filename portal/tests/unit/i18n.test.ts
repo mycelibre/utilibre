@@ -38,13 +38,13 @@ describe('bilingual content', () => {
     const spanish = es['privacy.portal.body'];
     expect(english).toContain('Cloudflare');
     expect(english).toContain('network address and request headers');
-    expect(english).toContain('search.utilibre.org, binternet.utilibre.org, newsletters.utilibre.org and aliases.utilibre.org also use Cloudflare’s HTTP proxy');
-    expect(english).toContain('speed.utilibre.org connects directly to the HTTPS edge');
+    expect(english).toContain('binternet.utilibre.org, newsletters.utilibre.org and aliases.utilibre.org use Cloudflare’s HTTP proxy');
+    expect(english).toContain('search.utilibre.org and speed.utilibre.org connect directly to the HTTPS edge');
     expect(english).not.toContain('should be checked before each release');
     expect(spanish).toContain('Cloudflare');
     expect(spanish).toContain('dirección de red');
-    expect(spanish).toContain('search.utilibre.org, binternet.utilibre.org, newsletters.utilibre.org y aliases.utilibre.org también usan el proxy HTTP de Cloudflare');
-    expect(spanish).toContain('speed.utilibre.org se conecta directamente al borde HTTPS');
+    expect(spanish).toContain('binternet.utilibre.org, newsletters.utilibre.org y aliases.utilibre.org usan el proxy HTTP de Cloudflare');
+    expect(spanish).toContain('search.utilibre.org y speed.utilibre.org se conectan directamente al borde HTTPS');
     expect(spanish).not.toContain('Se debe comprobar');
   });
 

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "liberaforms": {
+    "baseImage": "sha256:70ee8f5ad5b73227fc2b2705d2c76f0e3323fcb5da1843214f5c03eb5f5cccfc",
+    "files": [
+      {
+        "target": "/app/liberaforms/templates/footer.html",
+        "file": "footer.html",
+        "beforeSha256": "07070284efd573aac95347673b029c66f19725e0cfdd83e79013e662c3fd69d8",
+        "afterSha256": "ed3ff6a7504d857a515b6e712242016b19886c0dc29b79719cd6d3390ca480c3",
+        "patch": "liberaforms-footer.html.patch",
+        "patchSha256": "264592b75dc8c8f2f8f3948adc940741fd48f4ee628bff3bfdc5437dd7360a7e"
+      },
+      {
+        "target": "/app/liberaforms/templates/public_form/partials/footer.html",
+        "file": "public-footer.html",
+        "beforeSha256": "f21adfa2f633adc87611875c9dd164b81d8c570b2acbaba20544d24f7eeb4450",
+        "afterSha256": "340ccc3e140c463ac74b2968a3fa7a3f06a86de9d5457f077dc6776980080153",
+        "patch": "liberaforms-public-footer.html.patch",
+        "patchSha256": "8ca6920c90d2a2a3129f001301e0353ffa9fbaedfe08a1a5212bf5e38bd8938a"
+      }
+    ]
+  },
+  "rustpad": {
+    "sourceRevision": "54e4a9383c84d7317af42a7ddb177ce8bcba058d",
+    "baseImage": "sha256:d184dcaf6a85dcb2f75e7e0496588a9ff44ba0335505a132943b46ebce522ada",
+    "file": "src/Footer.tsx",
+    "beforeSha256": "83dc9e11b843809b069d44388e0c1640e93e76d37f9f8b3baed21282711e88e3",
+    "afterSha256": "48405ae549fe7ceb8c3926248c3af2bdde8b0abe2132510a08c063d1b9530c56",
+    "patch": "rustpad-Footer.tsx.patch",
+    "patchSha256": "9e2224b0a0536703de29b12417b6b8a69bacc1bbf3e5ea7b664c5a6db1fee647"
+  }
+}

@@ -1,0 +1,13 @@
+--- a/deployment/calendar/gathio/config.toml
++++ b/deployment/calendar/gathio/config.toml
+@@ -21,8 +21,8 @@
+ path = "/data-notes"
+ filename = "data-notes.md"
+ [[static_pages]]
+-title = "Private contact / Contacto privado"
+-path = "https://utilibre.org/en/acceptable-use#abuse"
++title = "Report abuse / Denunciá abusos"
++path = "https://utilibre.org/en/abuse"
+ [[static_pages]]
+ title = "Modified source / Código modificado"
+ path = "https://tools.utilibre.org/utilibre-source/gathio-utilibre.tar.gz"

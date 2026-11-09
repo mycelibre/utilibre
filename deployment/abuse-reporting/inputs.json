@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "noticeRoutes": [
+    "https://utilibre.org/en/abuse",
+    "https://utilibre.org/es/denunciar-abuso"
+  ],
+  "services": [
+    {
+      "service": "privatebin",
+      "container": "utilibre-services-privatebin-1",
+      "files": [
+        {
+          "target": "/srv/tpl/bootstrap5-utilibre.php",
+          "file": "bootstrap5-utilibre.php",
+          "beforeSha256": "e5dc72fcc7f172c3d25489cd4e84d05a62e70c8d6ab1535c4a0754ee9ab02926",
+          "afterSha256": "0f89c81214cc605ece521188200b020aa55343c2d2b9901c79a8df2b0cd22b16",
+          "patch": "privatebin-bootstrap5-utilibre.php.patch",
+          "patchSha256": "2575bb554c35ac912c530a581792f9f9aafaf49f50fb96f803744d8b2114b6fe"
+        }
+      ]
+    },
+    {
+      "service": "wbo",
+      "container": "utilibre-collaboration-pilot-wbo-1",
+      "files": [
+        {
+          "target": "/opt/app/client-data/index.html",
+          "file": "index.html",
+          "beforeSha256": "374f70a18e6104f7a07013634ba8f4118e258d14e0395a4755125b72416b50c3",
+          "afterSha256": "30c286fa763197521b4fca03d3397ffad3c04362ced3ce0b079bb86c67a65997",
+          "patch": "wbo-index.html.patch",
+          "patchSha256": "0b3a2025cc50bfba4719c8953e8f4e25fea6f66a7fab88b1617c3fac65edfa2e"
+        },
+        {
+          "target": "/opt/app/client-data/board.html",
+          "file": "board.html",
+          "beforeSha256": "fd09f69bc10b435f58de04a27fe2debcea4b2958277e40082ae7c3654669920c",
+          "afterSha256": "0e21038c005334b7ccc96d692fef260a35877914b1d79b96baa6d3cb747a2fc9",
+          "patch": "wbo-board.html.patch",
+          "patchSha256": "01f779fabca3803d4dd4418aa0b22cdcb8804685ceb205bf2f6442e0d33b8054"
+        }
+      ]
+    },
+    {
+      "service": "pollaris",
+      "container": "utilibre-pollaris-pollaris-1",
+      "files": [
+        {
+          "target": "/app/templates/base.html.twig",
+          "file": "base.html.twig",
+          "beforeSha256": "72121a84a17be9a44fbe101d31f8f85f7a5f24aa453729b46807d94ab24dd5f4",
+          "afterSha256": "53834d4c98943604c1580efabb4fdc4cfbe0303bb0ee9a299428b282c9a306d9",
+          "patch": "pollaris-base.html.twig.patch",
+          "patchSha256": "229afdf59a721151b25fad09d699c2fca8ecb2dbf8933f7ec9d876e8229ff139"
+        }
+      ]
+    },
+    {
+      "service": "cryptpad",
+      "container": "utilibre-pack-cryptpad-cryptpad-1",
+      "files": [
+        {
+          "target": "/cryptpad/customize.dist/pages.js",
+          "file": "pages.js",
+          "beforeSha256": "8250b5f46510f476843af4f6243c852377af755721dec9b8ea21a8a148109b1a",
+          "afterSha256": "cfa07dae519f97481d8014fbff35135a6dd820c421d856801befe823014b38a0",
+          "patch": "cryptpad-pages.js.patch",
+          "patchSha256": "cecc1b1649320cd8abd405aa6bc64b70575bac8ca0165770e856b63170fe294d"
+        },
+        {
+          "target": "/cryptpad/www/common/common-ui-elements.js",
+          "file": "common-ui-elements.js",
+          "beforeSha256": "ce2b762f4d3ae021ef4516ffc8615a54f9332ced010f39b18a1951d6e86cc4ed",
+          "afterSha256": "e2f7baf6bc294abd62482601418ef478b10ed14430929d893cd7fd3a099df6d2",
+          "patch": "cryptpad-common-ui-elements.js.patch",
+          "patchSha256": "1393a30e6ada0c132b9902e676f85b57e09488df2898ac4126aeaf3e2c2a5ec2"
+        }
+      ]
+    }
+  ]
+}

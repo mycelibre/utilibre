@@ -12,14 +12,14 @@ x-runtime: &runtime
 services:
   binternet-onion:
     <<: *runtime
-    image: utilibre-binternet:libraries-security-20261028
+    image: utilibre-binternet-onion-binternet-onion:musl-security-20261109
     user: "65534:65534"
     volumes: ["./binternet-onion-fpm.conf:/etc/php84/utilibre-fpm.conf:ro"]
     networks:
       application: {ipv4_address: 172.29.86.10}
   gateway:
     <<: *runtime
-    image: utilibre-binternet-gateway:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103
+    image: utilibre-binternet-gateway:musl-security-20261109
     user: "101:101"
     entrypoint: ["/bin/sh", "/usr/local/bin/binternet-onion-start.sh"]
     stop_signal: SIGQUIT
@@ -39,7 +39,7 @@ services:
     depends_on: [binternet-onion]
   tor:
     <<: *runtime
-    image: utilibre-binternet-tor:libraries-security-20261028
+    image: utilibre-binternet-onion-tor:musl-security-20261109
     user: "101:101"
     mem_limit: 256m
     volumes:

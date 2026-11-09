@@ -44,3 +44,16 @@ test('native relay row receipts require completed per-role releases',()=>{
  assert.deepEqual(overlayRows({status:'passed',rows:[{...row,oldImage:undefined}]}),[]);
  assert.deepEqual(overlayRows({status:'passed',rows:[row]}),[{name:'relay',oldImage:'old',newImage:'new',completedAt:row.completedAt}]);
 });
+test('scoped release completion dates support exact lineage without accepting observations',()=>{
+ const row={name:'feed',oldImage:'sha256:'+'a'.repeat(64),newImage:'sha256:'+'b'.repeat(64)};
+ const r={status:'passed',project:'feeds',files:['compose.yaml'],configHash:'c'.repeat(64),date:'2026-11-06T03:16:54.348Z',rows:[row]};
+ assert.deepEqual(overlayRows(r),[{...row,completedAt:r.date}]);
+ for(const change of [{status:'prepared'},{date:'invalid'},{configHash:'wrong'},{files:[]},{project:undefined},{rows:[{...row,status:'failed'}]},{rows:[{...row,newImage:'moving-tag'}]}])
+  assert.deepEqual(overlayRows({...r,...change}),[]);
+});
+test('single-group notice receipts still require both completed statuses',()=>{
+ const group={status:'passed',completedAt:'2026-11-09T18:05:41.541Z',rows:[{name:'forms',oldImage:'old',newImage:'new'}]};
+ assert.deepEqual(overlayRows({status:'passed',group}),[{name:'forms',oldImage:'old',newImage:'new',completedAt:group.completedAt}]);
+ assert.deepEqual(overlayRows({status:'pending',group}),[]);
+ assert.deepEqual(overlayRows({status:'passed',group:{...group,status:'failed'}}),[]);
+});

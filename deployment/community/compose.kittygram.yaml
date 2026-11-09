@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   kittygram:
     <<: *runtime
-    image: utilibre-kittygram:expat-security-20261028-expat210-20261103
+    image: utilibre-kittygram-kittygram:musl-security-20261109
     user: "65534:65534"
     mem_limit: 384m
     env_file: /opt/utilibre/kittygram/runtime.env
@@ -37,7 +37,7 @@ services:
     depends_on: [cache]
   cache:
     <<: *runtime
-    image: utilibre-valkey:9.1.1-vendor-security-20261011
+    image: utilibre-valkey:musl-security-20261109
     user: "999:999"
     mem_limit: 192m
     command: [valkey-server, --save, "", --appendonly, "no", --maxmemory, 128mb, --maxmemory-policy, allkeys-lru]
@@ -45,7 +45,7 @@ services:
       instagram: {ipv4_address: 172.29.91.30}
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
+    image: utilibre-calendar-calino:musl-security-20261109
     user: "101:101"
     mem_limit: 128m
     tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=128m,mode=1777"]

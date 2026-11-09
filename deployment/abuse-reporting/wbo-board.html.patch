@@ -1,0 +1,10 @@
+--- a/opt/app/client-data/board.html
++++ b/opt/app/client-data/board.html
+@@ -37,6 +37,7 @@
+ 
+ <body>
+ 	<div id="boardHud" class="board-hud">
++        <div id="utilibre-abuse-report" class="board-status-card"><a href="https://utilibre.org/en/abuse" lang="en" rel="noreferrer" referrerpolicy="no-referrer">Report abuse</a> · <a href="https://utilibre.org/es/denunciar-abuso" lang="es" rel="noreferrer" referrerpolicy="no-referrer">Denunciá abusos</a></div>
+ 		<div class="board-presence">
+ 			<button id="connectedUsersToggle" class="board-presence-toggle" type="button" aria-haspopup="true"
+ 				aria-expanded="false">

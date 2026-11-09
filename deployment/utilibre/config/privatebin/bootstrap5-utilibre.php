@@ -488,7 +488,7 @@ if (!empty($URLSHORTENER)) :
 								<?php if ($SHORTENBYDEFAULT) : ?>
 								data-autoshorten="true"
 								<?php endif; ?>
-								type="button" class="btn btn-primary btn-block d-flex justify-content-center align-items-center gap-1"
+								type="button" class="btn btn-primary btn-block d-flex justify-content-center align-items-center gap-1<?php echo $SHORTENBYDEFAULT ? ' hidden' : ''; ?>"
 						>
 							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#send" /></svg> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
 						</button>
@@ -554,6 +554,7 @@ endif;
 			</section>
 		</main>
 		<footer class="container-fluid mt-auto">
+            <p id="utilibre-abuse-report"><a href="https://utilibre.org/en/abuse" lang="en" rel="noreferrer" referrerpolicy="no-referrer">Report abuse</a> · <a href="https://utilibre.org/es/denunciar-abuso" lang="es" rel="noreferrer" referrerpolicy="no-referrer">Denunciá abusos</a></p>
 			<div class="row">
 				<h5 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h5>
 				<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>

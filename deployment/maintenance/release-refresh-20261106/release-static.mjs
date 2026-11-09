@@ -14,9 +14,10 @@ const specs={
  'one-file-core':{source:'one-file-output',destination:'/opt/utilibre/toolbox-public/apps/one-file-core',url:'https://tools.utilibre.org/apps/one-file-core/',evidence:'one-file-checks/core-results.json'},
  'link-cleaner':{source:'link-cleaner/dist/site',destination:'/opt/utilibre/toolbox-public/apps/link-cleaner',url:'https://tools.utilibre.org/apps/link-cleaner/',evidence:'link-cleaner-checks/result.json'},
  chartdb:{source:'chartdb-source/dist',destination:'/opt/utilibre/toolbox-public/apps/chartdb',url:'https://tools.utilibre.org/apps/chartdb/',evidence:'chartdb-checks/result.json'},
+ drawdb:{source:'drawdb-source/dist',destination:'/opt/utilibre/toolbox-public/apps/drawdb',url:'https://tools.utilibre.org/apps/drawdb/',evidence:'drawdb-checks/result.json'},
 };
 const key=process.argv[2],s=specs[key];assert(s&&process.argv[3]==='--apply');
-assert(november9?key==='chartdb':key!=='chartdb');
+assert(november9?['chartdb','drawdb'].includes(key):!['chartdb','drawdb'].includes(key));
 const run=(cmd,args)=>execFileSync(cmd,args,{encoding:'utf8',stdio:['ignore','pipe','pipe'],timeout:180000,maxBuffer:16*1024**2});
 const inspect=n=>JSON.parse(run('docker',['inspect',n]))[0];
 const digest=dir=>{const h=createHash('sha256');function visit(p){for(const n of readdirSync(dir+'/'+p).sort()){const f=p+n,st=lstatSync(dir+'/'+f);assert(!st.isSymbolicLink(),'Unexpected artifact symlink');if(st.isDirectory())visit(f+'/');else {assert(st.isFile());h.update(f).update('\0').update(readFileSync(dir+'/'+f)).update('\0');}}}visit('');return h.digest('hex');};
@@ -24,6 +25,19 @@ const evidence=JSON.parse(readFileSync(root+'/'+s.evidence));
 if(key==='one-file-core'){assert(evidence.results.length===2);for(const r of evidence.results){assert(r.downloadEditSaveReopen&&r.scriptTextRoundTrip&&r.cspPreserved&&r.unsafeEncryptionCreationDisabled);assert.deepEqual(r.errors,[]);assert.deepEqual(r.externalRequests,[]);}}
 else {assert.deepEqual(evidence.outside,[]);assert.deepEqual(evidence.errors,[]);if(key==='calino')assert(evidence.nativeConnection&&evidence.icsExport&&evidence.vcfExport);if(key==='link-cleaner')assert(evidence.profileRoundtrip&&evidence.redactedExport&&evidence.knownTrackersRemoved);if(key==='mapshaper')assert.equal(evidence.checks.length,3);}
 const candidate=root+'/'+s.source,sha=digest(candidate),record=root+'/'+key+'-static-release.json';
+if(key==='drawdb'){
+ for(const k of ['nativeSqlImport','nativeSqlExport','jsonRoundtrip','reloadPersistence','sharingDisabled'])assert(evidence[k],k);
+ assert(evidence.requests.every(r=>r.method==='GET'));
+ assert.equal(evidence.storage.sentinel,'fictional-other-app-sentinel');
+ assert.equal(evidence.storage.bookmarks,'["fictional-sentinel"]');
+ const replay=JSON.parse(readFileSync(root+'/drawdb-replay.json'));
+ assert(replay.passed&&replay.revision==='a249c7fb730c2de9b5c2ce6e863f2ea7344ac372');
+ assert.equal(createHash('sha256').update(readFileSync(root+'/drawdb-source/package-lock.json')).digest('hex'),replay.lockSha256);
+ assert.equal(createHash('sha256').update(readFileSync(new URL('../../toolbox/drawdb-local-source.patch',import.meta.url))).digest('hex'),replay.patchSha256);
+ const scan=JSON.parse(readFileSync(root+'/drawdb-source-scan.json'));
+ assert(scan.Results.some(r=>r.Type==='npm'));
+ assert(!scan.Results.flatMap(r=>r.Vulnerabilities||[]).some(v=>['CRITICAL','HIGH'].includes(v.Severity)));
+}
 if(key==='chartdb'){
  assert.match(evidence.nativeSql,/CREATE TABLE "public"\."authors"/);
  assert.match(evidence.nativeSql,/FOREIGN KEY\("author_id"\)/);

@@ -3,11 +3,13 @@ import { element } from './utilities/dom';
 import { parseHTML } from 'linkedom';
 import { renderHeader, renderFooter } from './components/shell';
 import { renderStaticPage } from './pages/pages';
+import { renderAbuseReport } from './pages/abuse-report';
+import { renderYourData } from './pages/your-data';
 import { renderPracticalGuides } from './pages/practical-guides';
 import { renderMyUtilibre } from './pages/my-utilibre';
 import { translate } from './i18n';
 import type { PublicConfig } from './config';
-import type { Route } from './routes';
+import { routePath, type Route } from './routes';
 export { parseRoute } from './routes';
 export { pageSeo, serializeStructuredData } from './seo';
 
@@ -32,7 +34,9 @@ export function renderPublicShell(route: Route, config: PublicConfig, search = '
       main = renderPracticalGuides(route.language, config, route.guideId);
     } else if (route.page === 'my') {
       main = renderMyUtilibre(route.language, config);
-    } else main = renderStaticPage(route, config, t, new URLSearchParams(search));
+    } else if (route.page === 'your-data') main = renderYourData(route.language, t);
+    else if (route.page === 'abuse') main = renderAbuseReport(route.language, t, { acceptable: routePath('acceptable', route.language), security: routePath('security', route.language) });
+    else main = renderStaticPage(route, config, t, new URLSearchParams(search));
     shell.append(renderHeader(route, config, t, { search }), main, renderFooter(route, config, t));
     return shell.outerHTML;
   } finally {

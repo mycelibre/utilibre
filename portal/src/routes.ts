@@ -3,7 +3,7 @@ import type { Language } from './i18n/index.ts';
 import { practicalGuides, practicalGuidePath } from './pages/guide-index.ts';
 import { scenarioCollections, collectionPath } from './pages/scenario-collection-data.ts';
 
-export type StaticPage = 'home' | 'services' | 'tools' | 'about' | 'transparency' | 'privacy' | 'security' | 'your-data' | 'acceptable' | 'support' | 'status' | 'software' | 'labels' | 'pdf' | 'qr' | 'guides' | 'my' | 'offline' | 'not-found';
+export type StaticPage = 'home' | 'services' | 'tools' | 'about' | 'transparency' | 'privacy' | 'security' | 'abuse' | 'your-data' | 'acceptable' | 'support' | 'status' | 'software' | 'labels' | 'pdf' | 'qr' | 'guides' | 'my' | 'offline' | 'not-found';
 export interface Route { language: Language; page: StaticPage | 'tool' | 'guide' | 'collection'; toolId?: string; guideId?: string; collectionId?: string; }
 
 const staticPaths: Record<Exclude<StaticPage, 'not-found'>, Record<Language, string>> = {
@@ -13,6 +13,7 @@ const staticPaths: Record<Exclude<StaticPage, 'not-found'>, Record<Language, str
   about: { en: 'about', es: 'acerca' },
   transparency: { en: 'transparency', es: 'transparencia' },
   security: { en: 'security', es: 'security' },
+  abuse: { en: 'abuse', es: 'denunciar-abuso' },
   'your-data': { en: 'your-data', es: 'your-data' },
   privacy: { en: 'privacy', es: 'privacidad' },
   acceptable: { en: 'acceptable-use', es: 'uso-aceptable' },

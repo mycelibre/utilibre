@@ -8,6 +8,7 @@ import { append, element, type Translate } from '../utilities/dom';
 import { privacyLabels } from './privacy-labels';
 import { practicalGuides, practicalGuidePath } from '../pages/guide-index';
 import { routePath } from '../routes';
+import { abuseReportLink, reportableServices } from './abuse-report-link';
 import { pinToStartingCollection } from '../utilities/toolkits';
 
 export interface CatalogLedgerOptions {
@@ -208,6 +209,7 @@ export function renderCatalogRow(
     }
   });
   action.append(save);
+  if (reportableServices.has(entry.providerId)) action.append(abuseReportLink(language, t('report.title'), 'catalog-save'));
   content.append(saved);
   append(article, coordinate, content, processing, action, details);
   item.append(article);

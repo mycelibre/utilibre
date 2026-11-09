@@ -66,8 +66,9 @@ These reviews do not waive other advisories or future images.
 
 `musl-inputs.json` records 62 discovered predecessor images (120 containers),
 including stateful and private services. This is an inventory, not approval to
-upgrade all of them. Only the 20 `static-nginx` rows are approved for this batch.
-The other 42 images need their own consumer, data and supervisor checks.
+upgrade all of them. The initial 20 `static-nginx` rows were followed by the 42 reviewed native consumers.
+All 62 images / 112 groups are now passed in the private receipt; consult each
+row's exact ABI, consumer, configuration and release evidence.
 
 Eight checksum-pinned Alpine APKs were acquired from their original branch and
 verified with `apk verify`. Candidates use the existing
@@ -86,8 +87,9 @@ The existing `scan-brotli.mjs --batch-20261109 --musl KEY` uses the same retaine
 Trivy database for both artifacts. The target finding must disappear and no new
 high/critical finding may appear. The scan alone does not approve deployment.
 The release adapter additionally requires explicit approval, exact candidate
-identity, ABI/consumer proofs and the checked-in test's checksum. Non-static
-consumers are deliberately rejected by this release profile.
+identity, ABI/consumer proofs and the checked-in test's checksum. The later `musl-policy.mjs` extension checks native-consumer proof identities
+and test hashes; it does not treat the original static-server fixture as proof
+for databases, supervisors, media or messaging.
 
 Use the existing `release-brotli.mjs --batch-20261109 --musl prepare GROUP`
 then separately authorized `apply GROUP`; set `APP_BIND_IP` to the existing
@@ -96,8 +98,9 @@ Each group retains its previous pin and configuration hashes and is released
 sequentially through the existing Compose/rollback helper. Public static homes
 must return 200 before release and retain that response afterward. Whisper's
 withdrawn entry remains withdrawn; no public route or model setting is enabled.
-The release report can remain `partial` because the inventory includes 42
-unapproved images; inspect the selected groups' actual statuses.
+The complete release report now has `passed` status; all 112 groups passed.
+Inspect exact group receipts rather than inferring successful user tasks from a
+container being running.
 
 Rollback restores only the exact previous scalar in the receipt's Compose
 file, recreates only the affected static service with no build/pull/dependencies,
@@ -137,3 +140,43 @@ new version. Runtime packages are identical; one existing medium zlib finding
 remains open. No new high/critical finding was introduced. Rollback restores
 only the receipt's previous `PORTAL_IMAGE` and recreates `portal`; this does not
 restore or alter account-application data.
+
+## Subsequent November 9 releases
+
+`vendor-debian-inputs.json` pins 28 authenticated APT/libapt/zlib image repairs.
+`vendor-debian.mjs`, `vendor-debian-policy.mjs` and the distroless
+`vendor-yopass.py` adapter retain the existing release lock, narrow package
+allowlists, ABI checks and previous images. All 33 groups passed. The distroless
+row has its own exact fixture hash; normal Debian fixtures retain their original
+checksum. It receives no shell/package manager.
+
+Chhoto 7.10.8-p2 retains its native migration, anonymous eight-character links,
+custom aliases, administrator auth and no-hit-count setting. Use the existing
+`deployment/chhoto` build and isolated native/browser checks; the source ledger
+records all three ordered patches. Its schema upgrade has a synthetic recovery
+test; do not assume changing an image undoes a database migration.
+
+Yopass 16.1.0-p1 uses `yopass-inputs.json` and
+[`community/yopass/README.md`](../../community/yopass/README.md). The native CLI
+and two-client browser checks cover compatibility, expiry, limits and encryption.
+`release-yopass.mjs` changes only the application, preserves its cache container,
+and explicitly disables audit/metrics/receipts/secret requests. Roll back only
+the app image and recorded flags; do not flush or restart the encrypted cache.
+The optional unused CDK lock's twelve high findings remain open.
+
+The `portal-shortener`, `portal-abuse` and `portal-pack` input manifests record
+successive exact portal builds. The `--nov9 --pack` release updates only catalogue
+versions and the verified retry-retention wording over the tested report routes.
+All builds retain runtime package parity and the existing JavaScript budget.
+
+Native notices use `deployment/abuse-reporting` exact hash-gated template/source
+patches and native configuration. Read `docs/abuse-handling.md` for coverage,
+mail handling and limitations. Restarts of tmpfs-backed tools may lose temporary
+content; WBO's release records that fact. Rustpad is not restarted for an unreviewed
+notice. The portal's 122 tests and EN/ES rendered routes pass.
+
+`publish-application-sources.py chhoto|yopass` creates code-only source offers
+from exact Git objects and reviewed patches, with local vendor assets/locks and
+previous archive retention. It disables LFS smudge/network fallback; optional
+documentation image pointers remain pointers. Source publication is an explicit
+operator action, not a side effect of preparation or assessment.

@@ -9,7 +9,7 @@
   "minimumFreeGiB": 8,
   "scannerVersion": "0.75.0",
   "scannerSha256": "93f9da8e4ba5e0c1c76d8234ed2494cf9afb0a96fd21953e424bb795f3299b8e",
-  "templatePatchSha256": "fa89db755f4f09baab0cca4f8a38118e23d16cf0843362bb8beab55e4de0263a",
+  "templatePatchSha256": "bc377f92d0b4aba939a2192726bb85b59b1787720ec148318bb2ebfd88219b7e",
   "sourceContracts": {
     "composer.json": "3b4f7026604ab0af724f603a6a7b73552134a002d9ada718f58599a736002652",
     "composer.lock": "23386871430c62879f39cb1ab63cfbb726e0835a5983c200f77afeea486a8eec",

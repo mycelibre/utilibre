@@ -1,0 +1,11 @@
+--- a/app/templates/base.html.twig
++++ b/app/templates/base.html.twig
+@@ -74,6 +74,8 @@
+             </main>
+         </div>
+ 
++        <footer id="utilibre-abuse-report" class="layout__body no-print"><p><a href="https://utilibre.org/en/abuse" lang="en" rel="noreferrer" referrerpolicy="no-referrer">Report abuse</a> · <a href="https://utilibre.org/es/denunciar-abuso" lang="es" rel="noreferrer" referrerpolicy="no-referrer">Denunciá abusos</a></p></footer>
++
+         {{ include('_modal_dialog.html.twig') }}
+     </body>
+ </html>

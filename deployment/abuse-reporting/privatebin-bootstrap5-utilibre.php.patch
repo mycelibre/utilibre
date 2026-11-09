@@ -1,0 +1,10 @@
+--- a/srv/tpl/bootstrap5-utilibre.php
++++ b/srv/tpl/bootstrap5-utilibre.php
+@@ -554,6 +554,7 @@
+ 			</section>
+ 		</main>
+ 		<footer class="container-fluid mt-auto">
++            <p id="utilibre-abuse-report"><a href="https://utilibre.org/en/abuse" lang="en" rel="noreferrer" referrerpolicy="no-referrer">Report abuse</a> · <a href="https://utilibre.org/es/denunciar-abuso" lang="es" rel="noreferrer" referrerpolicy="no-referrer">Denunciá abusos</a></p>
+ 			<div class="row">
+ 				<h5 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h5>
+ 				<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>

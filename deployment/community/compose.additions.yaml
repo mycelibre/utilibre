@@ -16,7 +16,7 @@ services:
     # Compatibility service key; LRCLIB replaces the stateless Dumb image here.
     # This preserves the protected network address and existing Caddy target.
     <<: *runtime
-    image: utilibre-dumb:node-security-20261028
+    image: utilibre-additions-dumb:musl-security-20261109
     user: "65532:65532"
     environment: {PORT: "5555"}
     networks:
@@ -28,7 +28,7 @@ services:
       retries: 3
   dumb-gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
+    image: utilibre-calendar-calino:musl-security-20261109
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     ports: ["10.10.1.43:3142:8080"]
@@ -52,7 +52,7 @@ services:
       tenor: {ipv4_address: 172.29.74.10}
   mezzo-gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
+    image: utilibre-calendar-calino:musl-security-20261109
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     ports: ["10.10.1.43:3140:8080"]
@@ -63,7 +63,7 @@ services:
     depends_on: [mezzo]
   fmd:
     <<: *runtime
-    image: utilibre-fmd:text-security-20261028
+    image: utilibre-additions-fmd:musl-security-20261109
     user: "1000:1000"
     command: [--config, /etc/fmd-server/config.yml, --web-dir, /opt/utilibre-web]
     volumes:
@@ -79,7 +79,7 @@ services:
       retries: 3
   fmd-gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
+    image: utilibre-calendar-calino:musl-security-20261109
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     ports: ["10.10.1.43:3141:8080"]

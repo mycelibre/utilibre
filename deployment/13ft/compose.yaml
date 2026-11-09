@@ -9,7 +9,7 @@ x-limits: &limits
 services:
   app:
     <<: *limits
-    image: utilibre-13ft-app:sqlite-rowid-20261103
+    image: utilibre-vendor-13ft-app:security-20261109
     cpus: 1
     mem_limit: 256m
     tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']
@@ -18,7 +18,7 @@ services:
     networks: {isolated: {ipv4_address: 172.29.118.10}}
   proxy:
     <<: *limits
-    image: utilibre-wallabag-proxy:sqlite-rowid-20261103
+    image: utilibre-vendor-records-egress:security-20261109
     cpus: 0.5
     mem_limit: 192m
     tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']
@@ -28,7 +28,7 @@ services:
     networks: {isolated: {ipv4_address: 172.29.118.20}, egress: {ipv4_address: 172.29.119.20}}
   gateway:
     <<: *limits
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
+    image: utilibre-calendar-calino:musl-security-20261109
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.25

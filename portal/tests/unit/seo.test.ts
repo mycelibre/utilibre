@@ -82,7 +82,7 @@ describe('public SEO without tracking or private-content indexing', () => {
     expect(response.status).toBe(200);
     const sitemap = await response.text();
     const urls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]!);
-    expect(urls).toHaveLength(30 + (practicalGuides.length + scenarioCollections.length) * 2);
+    expect(urls).toHaveLength(32 + (practicalGuides.length + scenarioCollections.length) * 2);
     for (const guide of practicalGuides) for (const language of ['en', 'es'] as const) {
       expect(urls, guide.id).toContain(origin + practicalGuidePath(guide.id, language));
     }

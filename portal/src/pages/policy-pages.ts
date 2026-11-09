@@ -20,7 +20,7 @@ export function renderSecurity(language: Language, t: Translate): HTMLElement {
   github.href = 'https://github.com/mycelibre/utilibre/security/advisories/new';
   const links = element('div', 'guide-links'); links.append(email, github); contacts.append(links);
   main.append(contacts, policySection(t('security.reporting.title'), t('security.reporting.body')));
-  const abuse = element('a', 'text-link', t('abuse.title')); abuse.href = `${routePath('acceptable', language)}#abuse`;
+  const abuse = element('a', 'text-link', t('report.title')); abuse.href = routePath('abuse', language);
   main.append(abuse);
   return main;
 }

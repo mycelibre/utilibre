@@ -1,5 +1,5 @@
 diff --git a/frontend/index.html b/frontend/index.html
-index 54c4de0..3174e02 100644
+index f1fa617..3478d6d 100644
 --- a/frontend/index.html
 +++ b/frontend/index.html
 @@ -70,7 +70,7 @@
@@ -7,15 +7,15 @@ index 54c4de0..3174e02 100644
        type="text/css"
        target="_blank"
 -      href="static/styles.css"
-+      href="static/styles.css?v=utilibre-p3-layout2"
++      href="static/styles.css?v=utilibre-7.10.8-p1"
      />
    </head>
  
 diff --git a/frontend/static/styles.css b/frontend/static/styles.css
-index c2369b8..3907a26 100644
+index aa239d9..88a101c 100644
 --- a/frontend/static/styles.css
 +++ b/frontend/static/styles.css
-@@ -505,3 +505,22 @@ summary,
+@@ -555,3 +555,28 @@ summary,
  
  /* Visitor counters are disabled in the backend. */
  [name="hitsColumn"], #info-table tr:has(#info-hits) { display: none; }
@@ -37,4 +37,10 @@ index c2369b8..3907a26 100644
 +div[name="links-div"] p { margin: 0 0 0.75rem; }
 +@media (max-width: 768px) {
 +  .container { max-width: none; margin: 1rem auto; }
++}
++
++/* Keep the native login dialog inside narrow viewports. */
++@media (max-width: 768px) {
++  #login-dialog { min-width: 0; max-width: calc(100vw - 2rem); box-sizing: border-box; }
++  #login-dialog input { max-width: 100%; box-sizing: border-box; }
 +}

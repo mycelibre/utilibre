@@ -324,8 +324,8 @@
   },
   {
     "patch": "deployment/toolbox/drawdb-local-source.patch",
-    "source": "/opt/utilibre/src/drawdb",
-    "revision": "e4e696f2d2b1a17ac99ad1d062927582ff994a3c",
+    "source": "/opt/utilibre/src/drawdb-1.9.0-utilibre",
+    "revision": "a249c7fb730c2de9b5c2ce6e863f2ea7344ac372",
     "prerequisites": [],
     "purpose": "Local assets, no analytics/sharing, namespaced browser storage and dependency security corrections.",
     "removeWhen": "Remove when upstream native configuration supplies these local assets and privacy controls; rerun the recorded native workflow checks and retain source for deployed builds."
@@ -471,8 +471,8 @@
   },
   {
     "patch": "deployment/chhoto/no-analytics-local-assets.patch",
-    "source": "/opt/utilibre/calendar-src/chhoto-url",
-    "revision": "e18a8a0111e94be03145e95c30dcd7f41891633d",
+    "source": "/opt/utilibre/src/chhoto-url-7.10.8",
+    "revision": "93881f699c1e2c900441b6bbb0aa0762b038f25e",
     "prerequisites": [],
     "purpose": "Disable click collection, local assets and accurate instance navigation.",
     "removeWhen": "Native no-count and self-hosted asset options pass the recorded tests."
@@ -663,10 +663,10 @@
   },
   {
     "patch": "deployment/utilibre/privatebin-discovery/homepage-template.patch",
-    "source": "/opt/utilibre/src/privatebin-2.1.0",
-    "revision": "c6f1b7186b8ab37aaf57ef4a2bcb58886e24e9ae",
+    "source": "/opt/utilibre/src/privatebin-2.1.1",
+    "revision": "802b834509628a94a376112ea6561914741d649e",
     "prerequisites": [],
-    "purpose": "Native custom-template homepage-only metadata, EN/ES introduction, local brand icons and browser file-size admission hook. Paste/query/error paths remain noindex; native encryption/storage are unchanged. Upload/expiry limits use separate supported configuration.",
+    "purpose": "Native custom-template homepage-only metadata, EN/ES introduction, local brand icons and browser file-size admission hook. Paste/query/error paths remain noindex; native encryption/storage are unchanged. Upload/expiry limits use separate supported configuration. Native bilingual private abuse-report links preserve the same encryption and upload behavior.",
     "removeWhen": "Replace when upstream native configuration provides equivalent homepage-only metadata/icons and scoped indexing, repeating the recorded privacy/browser checks. Preserve the original upstream template and existing user data."
   },
   {
@@ -682,8 +682,8 @@
   },
   {
     "patch": "deployment/chhoto/layout.patch",
-    "source": "/opt/utilibre/calendar-src/chhoto-url",
-    "revision": "e18a8a0111e94be03145e95c30dcd7f41891633d",
+    "source": "/opt/utilibre/src/chhoto-url-7.10.8",
+    "revision": "93881f699c1e2c900441b6bbb0aa0762b038f25e",
     "prerequisites": [
       "deployment/chhoto/no-analytics-local-assets.patch"
     ],
@@ -748,5 +748,24 @@
     "prerequisites": [],
     "purpose": "Keep network disabled and unsupported encrypted-HTML creation disabled; retain upstream escaping and safe save/reopen.",
     "removeWhen": "Reviewed upstream release provides the same behavior and the native regression checks pass; retain old recipe for previous artifacts."
+  },
+  {
+    "patch": "deployment/chhoto/abuse-report.patch",
+    "source": "/opt/utilibre/src/chhoto-url-7.10.8",
+    "revision": "93881f699c1e2c900441b6bbb0aa0762b038f25e",
+    "prerequisites": [
+      "deployment/chhoto/no-analytics-local-assets.patch",
+      "deployment/chhoto/layout.patch"
+    ],
+    "purpose": "Bilingual private abuse-report links on the native shortener homepage; no copied URL, content or telemetry.",
+    "removeWhen": "Native configurable footer supplies the same private reporting links and passes the existing workflow checks."
+  },
+  {
+    "patch": "deployment/community/yopass/source.patch",
+    "source": "/opt/utilibre/src/yopass-16.1.0-utilibre",
+    "revision": "c341c4a514cc0d5989418355e3d876c60c6910f9",
+    "prerequisites": [],
+    "purpose": "Native EN/ES abuse footer links and exact Go dependency checksum completion for the pinned 16.1.0 build; no encryption fork.",
+    "removeWhen": "Upstream footer configuration provides the same reporting links; keep exact dependency locks and rerun native/browser encrypted sharing tests."
   }
 ]

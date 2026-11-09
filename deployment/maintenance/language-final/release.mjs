@@ -51,6 +51,17 @@ async function gate(g,version){
   try{
    for(const r of g.rows){const x=inspect(r.name);assert.equal(x.Image,r[version+'Image']);assert(x.State.Running);assert.equal(x.RestartCount,expectedRestarts(r,x.Id,version));assert(Date.now()-Date.parse(x.State.StartedAt)>=4000);if(x.State.Health)assert.equal(x.State.Health.Status,'healthy');if(r.namespaceParent)assert.equal(x.HostConfig.NetworkMode,'container:'+inspect(r.namespaceParent).Id,'Stale shared network namespace');}
    assert.deepEqual(await status(g),g.before);
+   if(g.project==='utilibre-addy'){
+    execFileSync('systemctl',['is-active','--quiet','utilibre-addy-smtp.service']);
+    const app=inspect('utilibre-addy-app-1'),pid=String(app.State.Pid);
+    const source=await readFile(new URL('../../addy/start-smtp.sh',import.meta.url),'utf8');
+    const allowed=source.match(/-s ((?:\d+\.){3}\d+)\/32 -j ACCEPT/)?.[1];assert(allowed&&+pid>0);
+    const rules=execFileSync('nsenter',['-t',pid,'-n','iptables','-S','UTILIBRE-SMTP-IN'],{encoding:'utf8'});
+    assert(rules.includes('-s '+allowed+'/32 -j ACCEPT')&&rules.includes('-j REJECT'));
+    assert(execFileSync('nsenter',['-t',pid,'-n','iptables','-S','INPUT'],{encoding:'utf8'}).includes('--dport 25 -j UTILIBRE-SMTP-IN'));
+    assert(execFileSync('nsenter',['-t',pid,'-n','ip6tables','-S','INPUT'],{encoding:'utf8'}).includes('--dport 25 -j REJECT'));
+    assert(docker('exec','utilibre-addy-app-1','cat','/proc/net/tcp','/proc/net/tcp6').split('\n').some(l=>{const f=l.trim().split(/\s+/);return f[3]==='0A'&&f[1]?.endsWith(':0019');}));
+   }
    if(g.project==='utilibre-newsletters'){
     const smtp=inspect('utilibre-newsletters-smtp-1');
     execFileSync('systemctl',['is-active','--quiet','utilibre-newsletters-smtp.service']);
@@ -71,6 +82,10 @@ async function gate(g,version){
  }
 }
 async function recreate(g){
+ if(g.project==='utilibre-addy'&&g.rows.some(r=>r.service==='app')){
+  assert(g.rows.every(r=>r.service==='app'),'Review additional Addy release companions before activation');
+  execFileSync('systemctl',['restart','utilibre-addy-smtp.service'],{timeout:180000,stdio:'ignore'});return;
+ }
  if(coupled.has(g.project)){execFileSync('systemctl',['restart',g.project+'.service'],{timeout:180000,stdio:'ignore'});return;}
  const wallabag=g.project==='utilibre-wallabag';
  const newsletters=g.project==='utilibre-newsletters';

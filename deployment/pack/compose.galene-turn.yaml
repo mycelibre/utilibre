@@ -1,7 +1,7 @@
 name: utilibre-galene-turn
 services:
   turn:
-    image: utilibre-coturn:mongocrypt-security-20261104
+    image: utilibre-vendor-galene-turn-turn:security-20261109
     build: {context: ../community/turn}
     user: '4004:4004'
     entrypoint: [turnserver, -c, /run/config/turnserver.conf]

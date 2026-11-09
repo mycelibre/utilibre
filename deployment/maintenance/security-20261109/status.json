@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-09T18:16:33.046078+00:00",
+  "scanCompletedAt": "2026-11-09T18:08:32.000Z",
+  "scanner": "Trivy 0.75.0",
+  "runtimeImages": 109,
+  "runningContainers": 175,
+  "sourceInputs": 83,
+  "scanStatus": "checked",
+  "pendingCritical": 0,
+  "pendingHigh": 1192,
+  "rawFindingsRetained": true,
+  "assessmentNote": "Expiring exact artifact/advisory reviews; not proof of no vulnerabilities or current clearance for future releases.",
+  "musl": {
+    "imagesReleased": 62,
+    "groupsPassed": 112,
+    "containers": 120
+  },
+  "debianVendor": {
+    "imagesReleased": 28,
+    "groupsPassed": 33
+  },
+  "applicationBatch": {
+    "inventoried": 42,
+    "upgraded": 13,
+    "held": 29
+  },
+  "abuseNotices": {
+    "portal": "live-en-es",
+    "nativeLive": [
+      "chhoto",
+      "privatebin",
+      "yopass",
+      "wbo",
+      "pollaris",
+      "cryptpad",
+      "gathio",
+      "rallly",
+      "liberaforms",
+      "opengist-existing-link"
+    ],
+    "rustpad": "prepared-not-deployed-active-pad-loss",
+    "otherNativeGaps": [
+      "pairdrop",
+      "bytestash",
+      "penpot"
+    ]
+  },
+  "evidence": "/var/lib/utilibre-maintenance/security-20261109/final-assessment/"
+}

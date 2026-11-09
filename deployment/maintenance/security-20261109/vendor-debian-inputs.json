@@ -1,0 +1,1004 @@
+{
+  "version": 1,
+  "advisories": [
+    "CVE-2026-109518",
+    "CVE-2026-85091",
+    "CVE-2026-76844"
+  ],
+  "packages": {
+    "trixie/apt": {
+      "name": "apt",
+      "version": "3.0.4",
+      "file": "apt_3.0.4_amd64.deb",
+      "sha256": "15c2030e0fb46580af4f1b4cc303f4bd26da781b004e99763bc9eff7cf8e19b8",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/a/apt/apt_3.0.4_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "base-passwd (>= 3.6.1) | adduser, sqv (>= 1.3.0), libapt-pkg7.0 (>= 3.0.4), debian-archive-keyring, libc6 (>= 2.38), libgcc-s1 (>= 3.0), libseccomp2 (>= 2.4.2), libssl3t64 (>= 3.0.0), libstdc++6 (>= 13.1), libsystemd0",
+      "preDepends": ""
+    },
+    "trixie/libapt-pkg7.0": {
+      "name": "libapt-pkg7.0",
+      "version": "3.0.4",
+      "file": "libapt-pkg7.0_3.0.4_amd64.deb",
+      "sha256": "577eb8f489de419290102364892dbd13ca256297b61f96d61b114fd4ac18be41",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/a/apt/libapt-pkg7.0_3.0.4_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "libbz2-1.0, libc6 (>= 2.38), libgcc-s1 (>= 3.0), liblz4-1 (>= 0.0~r127), liblzma5 (>= 5.1.1alpha+20120614), libssl3t64 (>= 3.0.0), libstdc++6 (>= 14), libsystemd0 (>= 221), libudev1 (>= 183), libxxhash0 (>= 0.8), libzstd1 (>= 1.5.5), zlib1g (>= 1:1.2.2.3)",
+      "preDepends": ""
+    },
+    "trixie/zlib1g": {
+      "name": "zlib1g",
+      "version": "1:1.3.dfsg+really1.3.1-1+deb13u1",
+      "file": "zlib1g_1.3.dfsg+really1.3.1-1+deb13u1_amd64.deb",
+      "sha256": "8c27c342230503b73dfde629642c3b352e87b554e06d60cf58772f236a305ceb",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/z/zlib/zlib1g_1.3.dfsg+really1.3.1-1+deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "libc6 (>= 2.14)",
+      "preDepends": ""
+    },
+    "bookworm/apt": {
+      "name": "apt",
+      "version": "2.6.2",
+      "file": "apt_2.6.2_amd64.deb",
+      "sha256": "796fc7fe18866f5b1fb27a115d7339e549d71b7ddbc15b8d6fc4226c243e96d1",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/a/apt/apt_2.6.2_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "adduser, gpgv | gpgv2 | gpgv1, libapt-pkg6.0 (>= 2.6.2), debian-archive-keyring, libc6 (>= 2.34), libgcc-s1 (>= 3.0), libgnutls30 (>= 3.7.5), libseccomp2 (>= 2.4.2), libstdc++6 (>= 11), libsystemd0",
+      "preDepends": ""
+    },
+    "bookworm/libapt-pkg6.0": {
+      "name": "libapt-pkg6.0",
+      "version": "2.6.2",
+      "file": "libapt-pkg6.0_2.6.2_amd64.deb",
+      "sha256": "023a7017b75295fc7037c7a4352847f9516a36a82cc5e1650d6832d238860913",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/a/apt/libapt-pkg6.0_2.6.2_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "libbz2-1.0, libc6 (>= 2.34), libgcc-s1 (>= 3.0), libgcrypt20 (>= 1.10.0), liblz4-1 (>= 0.0~r127), liblzma5 (>= 5.1.1alpha+20120614), libstdc++6 (>= 11), libsystemd0 (>= 221), libudev1 (>= 183), libxxhash0 (>= 0.7.1), libzstd1 (>= 1.5.2), zlib1g (>= 1:1.2.2.3)",
+      "preDepends": ""
+    }
+  },
+  "fixture": {
+    "sourceSha256": "68737a02a667f1299d29e749d36e4974f0cfeabd1bfaf141693b985e91456bbb",
+    "binarySha256": "b3116e333d21695860e2179be1470704ce7cafa6976ea0af52b6120323e18d78"
+  },
+  "rows": [
+    {
+      "base": "sha256:061f9db2d5609677a0d38aa80030464373976b02920bf6daca3fe068f124e110",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "records-grist",
+      "candidate": "utilibre-vendor-records-grist:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "records-records-grist",
+          "containers": [
+            "utilibre-records-grist-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://grist.utilibre.org/"
+    },
+    {
+      "base": "sha256:0b0d53a92e5d4cb8d890808851dfa3970a8f37a985583b9c0cb94e6a78bd3a9d",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "suite": "bookworm",
+      "packages": {
+        "libapt-pkg6.0": {
+          "installed": "2.6.1",
+          "package": "bookworm/libapt-pkg6.0"
+        }
+      },
+      "key": "wishlist-app",
+      "candidate": "utilibre-vendor-wishlist-app:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "wishlist-wishlist-app",
+          "containers": [
+            "utilibre-wishlist-app-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://wishlist.utilibre.org/"
+    },
+    {
+      "base": "sha256:0c5f026892e1334ac251bcb2b142aeaafcbdc4f164ef165075e7515718c83df0",
+      "containers": [
+        "utilibre-expanded-resume-1"
+      ],
+      "suite": "bookworm",
+      "packages": {
+        "libapt-pkg6.0": {
+          "installed": "2.6.1",
+          "package": "bookworm/libapt-pkg6.0"
+        }
+      },
+      "key": "expanded-resume",
+      "candidate": "utilibre-vendor-expanded-resume:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "expanded-expanded-resume",
+          "containers": [
+            "utilibre-expanded-resume-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://cv.utilibre.org/"
+    },
+    {
+      "base": "sha256:13131088b2e4889186a3b161228927c17a28af6be04eda2310842df202f48007",
+      "containers": [
+        "utilibre-kitchenowl-app-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "kitchenowl-app",
+      "candidate": "utilibre-vendor-kitchenowl-app:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "kitchenowl-kitchenowl-app",
+          "containers": [
+            "utilibre-kitchenowl-app-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://kitchen.utilibre.org/"
+    },
+    {
+      "base": "sha256:1c4650342eb15e0e4b13ce86cc819d31b75823c8d939bbfb26357b21f1acc19d",
+      "containers": [
+        "utilibre-priviblur-priviblur-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "priviblur-priviblur",
+      "candidate": "utilibre-vendor-priviblur-priviblur:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "priviblur-priviblur-priviblur",
+          "containers": [
+            "utilibre-priviblur-priviblur-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://tumblr.utilibre.org/"
+    },
+    {
+      "base": "sha256:22475b057d3546332125370fa15b1d19f213d932fda1278392457246ba2e3338",
+      "containers": [
+        "utilibre-galene-turn-turn-1",
+        "utilibre-turn-option-turn-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "galene-turn-turn",
+      "candidate": "utilibre-vendor-galene-turn-turn:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "galene-turn-galene-turn-turn",
+          "containers": [
+            "utilibre-galene-turn-turn-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "turn-option-galene-turn-turn",
+          "containers": [
+            "utilibre-turn-option-turn-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": null
+    },
+    {
+      "base": "sha256:2297218097ca2cd0d4088d0d88e11767a8cb4aab3fb6d987b76eed2f5cb2f4e8",
+      "containers": [
+        "utilibre-pack-cryptpad-cryptpad-1"
+      ],
+      "suite": "bookworm",
+      "packages": {
+        "libapt-pkg6.0": {
+          "installed": "2.6.1",
+          "package": "bookworm/libapt-pkg6.0"
+        }
+      },
+      "key": "pack-cryptpad-cryptpad",
+      "candidate": "utilibre-vendor-pack-cryptpad-cryptpad:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "pack-cryptpad-pack-cryptpad-cryptpad",
+          "containers": [
+            "utilibre-pack-cryptpad-cryptpad-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://pad.utilibre.org/"
+    },
+    {
+      "base": "sha256:3a84a8b7a21a4717856ca0b5ab9cf1fa73461025f5c26d28ffe9f7e10ad5a3ad",
+      "containers": [
+        "utilibre-trip-app-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "trip-app",
+      "candidate": "utilibre-vendor-trip-app:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "trip-trip-app",
+          "containers": [
+            "utilibre-trip-app-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://trip.utilibre.org/"
+    },
+    {
+      "base": "sha256:3f838c5535fbe35b9f26cd73eeb489dcb87cbfcce686996ef129c2491497cf62",
+      "containers": [
+        "utilibre-identity-worker-1",
+        "utilibre-identity-server-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "identity-worker",
+      "candidate": "utilibre-vendor-identity-worker:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "identity-identity-worker",
+          "containers": [
+            "utilibre-identity-worker-1",
+            "utilibre-identity-server-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://auth.utilibre.org/"
+    },
+    {
+      "base": "sha256:4378a40617f0b3ec39c32b9d551713ff102499ed4b55608d4d26d1f9ec8eb832",
+      "containers": [
+        "utilibre-pack-forms-app-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "pack-forms-app",
+      "candidate": "utilibre-vendor-pack-forms-app:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "pack-forms-pack-forms-app",
+          "containers": [
+            "utilibre-pack-forms-app-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://forms.utilibre.org/"
+    },
+    {
+      "base": "sha256:46aa631691b25d7afddb1c9d6d39fa379529d12c50792875be7ddcad91dc2be8",
+      "containers": [
+        "utilibre-services-freshrss-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "services-freshrss",
+      "candidate": "utilibre-vendor-services-freshrss:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "services-services-freshrss",
+          "containers": [
+            "utilibre-services-freshrss-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://rss.utilibre.org/"
+    },
+    {
+      "base": "sha256:4eaf42c1a08d26413f48dadfa049ece0828069459821002863e8b1c28c5f4a1b",
+      "containers": [
+        "utilibre-community-rallly-1"
+      ],
+      "suite": "bookworm",
+      "packages": {
+        "apt": {
+          "installed": "2.6.1",
+          "package": "bookworm/apt"
+        },
+        "libapt-pkg6.0": {
+          "installed": "2.6.1",
+          "package": "bookworm/libapt-pkg6.0"
+        }
+      },
+      "key": "community-rallly",
+      "candidate": "utilibre-vendor-community-rallly:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "community-community-rallly",
+          "containers": [
+            "utilibre-community-rallly-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://poll.utilibre.org/"
+    },
+    {
+      "base": "sha256:599726db2bc5f925d833fdfbbf93cf1b2e485bf304d44ca9b8129effececa476",
+      "containers": [
+        "utilibre-calendar-radicale-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "calendar-radicale",
+      "candidate": "utilibre-vendor-calendar-radicale:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "calendar-calendar-radicale",
+          "containers": [
+            "utilibre-calendar-radicale-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://calendar.utilibre.org/"
+    },
+    {
+      "base": "sha256:632bf368ce0f55ed17ec81240607d94a585e0fc5c306a975821bb83c8e046fc1",
+      "containers": [
+        "utilibre-expanded-actual-1"
+      ],
+      "suite": "bookworm",
+      "packages": {
+        "libapt-pkg6.0": {
+          "installed": "2.6.1",
+          "package": "bookworm/libapt-pkg6.0"
+        }
+      },
+      "key": "expanded-actual",
+      "candidate": "utilibre-vendor-expanded-actual:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "expanded-expanded-actual",
+          "containers": [
+            "utilibre-expanded-actual-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://budget.utilibre.org/"
+    },
+    {
+      "base": "sha256:6c4a54d2961cf23a2ce1e0207a69f220bdecc1e6e761d49020a7ac48e856077c",
+      "containers": [
+        "utilibre-expanded-penpot-backend-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "expanded-penpot-backend",
+      "candidate": "utilibre-vendor-expanded-penpot-backend:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "expanded-expanded-penpot-backend",
+          "containers": [
+            "utilibre-expanded-penpot-backend-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://design.utilibre.org/"
+    },
+    {
+      "base": "sha256:6e66886218f4520e091cd46238acefa541494787e2149c39103e8bd330522269",
+      "containers": [
+        "utilibre-community-rssbridge-1"
+      ],
+      "suite": "bookworm",
+      "packages": {
+        "apt": {
+          "installed": "2.6.1",
+          "package": "bookworm/apt"
+        },
+        "libapt-pkg6.0": {
+          "installed": "2.6.1",
+          "package": "bookworm/libapt-pkg6.0"
+        }
+      },
+      "key": "community-rssbridge",
+      "candidate": "utilibre-vendor-community-rssbridge:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "community-community-rssbridge",
+          "containers": [
+            "utilibre-community-rssbridge-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://bridge.utilibre.org/"
+    },
+    {
+      "base": "sha256:707780d5b92de62829142d2a7d9fc20e65be11a6f114e47e797b3f8a015f46c8",
+      "containers": [
+        "utilibre-records-candlr-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "records-candlr",
+      "candidate": "utilibre-vendor-records-candlr:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "records-records-candlr",
+          "containers": [
+            "utilibre-records-candlr-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://candlr.utilibre.org/"
+    },
+    {
+      "base": "sha256:716093473b3ff78e3af452acff3b04f4db9d237403ff17f82a1f5e45c4cdc519",
+      "containers": [
+        "utilibre-records-egress-1",
+        "utilibre-13ft-proxy-1",
+        "utilibre-trip-proxy-1",
+        "utilibre-unfurl-proxy-1",
+        "utilibre-wallabag-proxy-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "records-egress",
+      "candidate": "utilibre-vendor-records-egress:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "records-records-egress",
+          "containers": [
+            "utilibre-records-egress-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "13ft-records-egress",
+          "containers": [
+            "utilibre-13ft-proxy-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "trip-records-egress",
+          "containers": [
+            "utilibre-trip-proxy-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "unfurl-records-egress",
+          "containers": [
+            "utilibre-unfurl-proxy-1"
+          ],
+          "approval": "approved"
+        },
+        {
+          "key": "wallabag-records-egress",
+          "containers": [
+            "utilibre-wallabag-proxy-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": null
+    },
+    {
+      "base": "sha256:73202f190b796913b1b36144d5ffcd2689dfdb8d258c3304b8e3a439c70bf28e",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "services-rsshub",
+      "candidate": "utilibre-vendor-services-rsshub:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "services-services-rsshub",
+          "containers": [
+            "utilibre-services-rsshub-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": null
+    },
+    {
+      "base": "sha256:7d144211ce37c299fe413e702271a04586cfde9b85876eb3eac9d32b31e3682a",
+      "containers": [
+        "utilibre-gathio-postgres-1"
+      ],
+      "suite": "bookworm",
+      "packages": {
+        "apt": {
+          "installed": "2.6.1",
+          "package": "bookworm/apt"
+        },
+        "libapt-pkg6.0": {
+          "installed": "2.6.1",
+          "package": "bookworm/libapt-pkg6.0"
+        }
+      },
+      "key": "gathio-postgres",
+      "candidate": "utilibre-vendor-gathio-postgres:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "gathio-gathio-postgres",
+          "containers": [
+            "utilibre-gathio-postgres-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": null
+    },
+    {
+      "base": "sha256:80a9866dd3ffcd6716ff0b644b9b39ebe21a3a1aa6aaf1870fababf8969dec6b",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "suite": "bookworm",
+      "packages": {
+        "apt": {
+          "installed": "2.6.1",
+          "package": "bookworm/apt"
+        },
+        "libapt-pkg6.0": {
+          "installed": "2.6.1",
+          "package": "bookworm/libapt-pkg6.0"
+        }
+      },
+      "key": "community-uptime-kuma",
+      "candidate": "utilibre-vendor-community-uptime-kuma:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "community-community-uptime-kuma",
+          "containers": [
+            "utilibre-community-uptime-kuma-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://status.utilibre.org/"
+    },
+    {
+      "base": "sha256:835906027a7f9cc936289311ff375064d935f19b23c4ed235faadc0d690171d0",
+      "containers": [
+        "utilibre-linkding-linkding-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "linkding-linkding",
+      "candidate": "utilibre-vendor-linkding-linkding:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "linkding-linkding-linkding",
+          "containers": [
+            "utilibre-linkding-linkding-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://bookmarks.utilibre.org/"
+    },
+    {
+      "base": "sha256:92c77ef464160d1068bd62ea3e55d5df1e68d084c595c48ac4f0aca2367e2118",
+      "containers": [
+        "utilibre-unfurl-app-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "unfurl-app",
+      "candidate": "utilibre-vendor-unfurl-app:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "unfurl-unfurl-app",
+          "containers": [
+            "utilibre-unfurl-app-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": null
+    },
+    {
+      "base": "sha256:ad606c44d85314071a45f78074415f2b209c391b868d8fb737d6c65f63a487c6",
+      "containers": [
+        "utilibre-family-chess-app-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "family-chess-app",
+      "candidate": "utilibre-vendor-family-chess-app:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "family-chess-family-chess-app",
+          "containers": [
+            "utilibre-family-chess-app-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": null
+    },
+    {
+      "base": "sha256:b651453a70b02a6018788f6d71ccb6eb7fb4911b640346ab539ba0eff1c93d1b",
+      "containers": [
+        "utilibre-community-yopass-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "community-yopass",
+      "candidate": "utilibre-vendor-community-yopass:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "community-community-yopass",
+          "containers": [
+            "utilibre-community-yopass-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": null
+    },
+    {
+      "base": "sha256:cf5e333f53926cb6cda640f41889a73c1b8ff16164516dc113c744d871994446",
+      "containers": [
+        "utilibre-expanded-breezewiki-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "expanded-breezewiki",
+      "candidate": "utilibre-vendor-expanded-breezewiki:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "expanded-expanded-breezewiki",
+          "containers": [
+            "utilibre-expanded-breezewiki-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://wiki.utilibre.org/"
+    },
+    {
+      "base": "sha256:db5dbe71e36033fd797a30309d78256e1976679f721dbacb1e2475c6764a9641",
+      "containers": [
+        "utilibre-13ft-app-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "13ft-app",
+      "candidate": "utilibre-vendor-13ft-app:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "13ft-13ft-app",
+          "containers": [
+            "utilibre-13ft-app-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": null
+    },
+    {
+      "base": "sha256:ebae352b95fb84269b91cc1a27a9586437e48f899c9b3abc381927e9352152f8",
+      "containers": [
+        "utilibre-beaverhabits-app-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "apt": {
+          "installed": "3.0.3",
+          "package": "trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3",
+          "package": "trixie/libapt-pkg7.0"
+        },
+        "zlib1g": {
+          "installed": "1:1.3.dfsg+really1.3.1-1+b1",
+          "package": "trixie/zlib1g"
+        }
+      },
+      "key": "beaverhabits-app",
+      "candidate": "utilibre-vendor-beaverhabits-app:security-20261109",
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "beaverhabits-beaverhabits-app",
+          "containers": [
+            "utilibre-beaverhabits-app-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "publicHome": "https://habits.utilibre.org/"
+    }
+  ]
+}

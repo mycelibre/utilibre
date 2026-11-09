@@ -4,9 +4,11 @@ import cp from 'node:child_process';
 import crypto from 'node:crypto';
 import http from 'node:http';
 process.umask(0o077);
-const codec=process.argv.includes('--codec-oct28'),oct28=codec||process.argv.includes('--oct28'),root=codec?'/var/lib/utilibre-maintenance/security-20261028/codec':oct28?'/var/lib/utilibre-maintenance/security-20261028/go':'/var/lib/utilibre-maintenance/go-final-20261011';
-const selected=process.argv.slice(2).filter(a=>!a.startsWith('--'));assert(selected.every(k=>['rimgo','gothub','anonymousoverflow'].includes(k)));
-const specs=oct28?(codec?(selected.length?selected:['rimgo']):['rimgo','gothub','safetwitch','anonymousoverflow']).map(k=>{const s=JSON.parse(fs.readFileSync(root+'/'+k+'/build.json'));return{...s,baseId:s.base};}):JSON.parse(fs.readFileSync(root+'/build.json')).rows.filter(s=>s.key!=='galene');
+const november9=process.argv.includes('--musl-nov9');
+const codec=process.argv.includes('--codec-oct28'),oct28=codec||process.argv.includes('--oct28'),root=november9?'/var/lib/utilibre-maintenance/security-20261109/musl':codec?'/var/lib/utilibre-maintenance/security-20261028/codec':oct28?'/var/lib/utilibre-maintenance/security-20261028/go':'/var/lib/utilibre-maintenance/go-final-20261011';
+const selected=process.argv.slice(2).filter(a=>!a.startsWith('--'));assert(selected.every(k=>(november9?['rimgo','gothub','safetwitch','anonymousoverflow']:['rimgo','gothub','anonymousoverflow']).includes(k)));
+const aliases={rimgo:'rimgo-rimgo',gothub:'reader-evaluation-gothub',safetwitch:'reader-evaluation-safetwitch-backend',anonymousoverflow:'reader-evaluation-anonymousoverflow'};
+const specs=november9?selected.map(k=>{const b=JSON.parse(fs.readFileSync(root+'/'+aliases[k]+'/build.json'));return {...b,key:k,evidenceKey:aliases[k],baseId:b.base};}):oct28?(codec?(selected.length?selected:['rimgo']):['rimgo','gothub','safetwitch','anonymousoverflow']).map(k=>{const s=JSON.parse(fs.readFileSync(root+'/'+k+'/build.json'));return{...s,baseId:s.base};}):JSON.parse(fs.readFileSync(root+'/build.json')).rows.filter(s=>s.key!=='galene');
 const docker=(...a)=>cp.execFileSync('docker',a,{encoding:'utf8',stdio:['ignore','pipe','pipe'],timeout:90000}).trim();
 const definitions={
  rimgo:{port:3000,paths:['/about','/privacy','/static/app.css','/favicon.ico'],env:{PORT:'3000'}},
@@ -29,7 +31,7 @@ try{
     variants.push(responses);
    }finally{try{docker('rm','-f',name);}catch{}}
   }
-  assert.deepEqual(variants[0],variants[1],s.key+' native response drift');rows.push({key:s.key,imageId:s.imageId,status:'passed',responses:variants[1],sourceTests:true});
+  assert.deepEqual(variants[0],variants[1],s.key+' native response drift');if(november9){const file=root+'/'+s.evidenceKey+'/application.json';assert(!fs.existsSync(file));fs.writeFileSync(file,JSON.stringify({passed:true,key:s.evidenceKey,base:s.baseId,imageId:s.imageId,variants,nativeRoutes:d.paths,network:'internal',fixtureSha256:crypto.createHash('sha256').update(fs.readFileSync(new URL(import.meta.url))).digest('hex'),limitation:'Native/static backend parity; upstream proxy content was not requested'},null,2)+'\n');}rows.push({key:s.key,imageId:s.imageId,status:'passed',responses:variants[1],sourceTests:true});
  }
  const destination=root+(selected.length?'/native-'+selected.join('-')+'.json':'/native.json');assert(!selected.length||!fs.existsSync(destination),'Preserve completed evidence');
  fs.writeFileSync(destination,JSON.stringify({date:new Date().toISOString(),status:'passed',rows,network:'internal; no upstream requests possible',productionChanged:false,limitations:'Static/native routes and existing parser/outbound tests; not a fresh broad upstream proxy-content audit.'},null,2)+'\n');console.log(rows.length+' native backend equivalence/privacy checks passed.');

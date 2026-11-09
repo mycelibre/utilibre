@@ -9,12 +9,27 @@ import {validateDecision} from '../triage.mjs';
 import {proveExpat,advisories as expatAdvisories,expatDescendant} from './expat-policy.mjs';
 import {proveXi,advisories as xiAdvisories} from './xi-policy.mjs';
 import{resetAdvisory,proofPath,validateResetProof}from'../security-20261104/expat-reset-proof.mjs';
-process.umask(0o077);assert(process.argv.length===2||(process.argv.length===3&&['--libxi','--reset-advisory'].includes(process.argv[2])));
+process.umask(0o077);assert(process.argv.length===2||(process.argv.length===3&&['--libxi','--reset-advisory','--amplification-advisory'].includes(process.argv[2])));
 const reset=process.argv[2]==='--reset-advisory';
-const xi=process.argv[2]==='--libxi',profile=xi?'libxi':'expat-debian',advisories=xi?xiAdvisories:reset?[resetAdvisory]:expatAdvisories;
+const amplification=process.argv[2]==='--amplification-advisory';
+const xi=process.argv[2]==='--libxi',profile=xi?'libxi':'expat-debian',advisories=xi?xiAdvisories:reset?[resetAdvisory]:amplification?['CVE-2026-115506']:expatAdvisories;
 const root='/var/lib/utilibre-maintenance',dir=root+'/security-20261103/'+profile;
 const read=p=>JSON.parse(fs.readFileSync(p));
 const inputs=read(new URL('./'+profile+'-inputs.json',import.meta.url));
+if(amplification){
+ const source=read(new URL('./expat-bookworm-source.json',import.meta.url));
+ const pin=source.sources.files.find(f=>f.file==='expat_2.10.0.orig.tar.gz');assert(pin);
+ const archive=root+'/security-20261103/packages/debian/'+pin.file;
+ assert.equal(createHash('sha256').update(fs.readFileSync(archive)).digest('hex'),pin.sha256);
+ const paths=cp.execFileSync('tar',['-tzf',archive],{encoding:'utf8',timeout:15000}).split('\n').filter(p=>p.endsWith('/Changes'));
+ assert.equal(paths.length,1);
+ const changes=cp.execFileSync('tar',['-xOf',archive,paths[0]],{encoding:'utf8',timeout:15000});
+ assert.match(changes,/Release 2\.10\.0[\s\S]*CVE-2026-115506 -- Detect billion laughs attacks quicker/);
+ const build=read(root+'/security-20261103/expat-bookworm/output/build.json');
+ assert(build.passed&&build.nativeSuite.checks===5328&&build.nativeSuite.failed===0);
+ assert.equal(build.packageSha256,inputs.packages.bookworm.sha256);
+ assert.equal(createHash('sha256').update(fs.readFileSync(root+'/security-20261103/expat-bookworm/output/native-tests.log')).digest('hex'),build.nativeSuite.sha256);
+}
 const queue=read(root+'/security-queue.json'),scan=read(root+'/security.json');
 freshScan(queue,scan);assert.equal(scan.status,'checked');
 const release=read(dir+'/release.json');assert.equal(release.status,'passed');
@@ -49,7 +64,7 @@ for(const s of inputs.rows){
  }
  proofs.push({key:s.key,imageId,originalImageId:b.imageId,live,buildSha256:createHash('sha256').update(fs.readFileSync(d+'/build.json')).digest('hex')});
 }
-const output=dir+(reset?'/review-reset-':'/review-')+Date.now()+'.json';
+const output=dir+(reset?'/review-reset-':amplification?'/review-amplification-':'/review-')+Date.now()+'.json';
 fs.writeFileSync(output,JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,proofs,decisions,applied:false},null,2)+'\n');
-fs.copyFileSync(output,dir+(reset?'/review-reset.json':'/review.json'));
+fs.copyFileSync(output,dir+(reset?'/review-reset.json':amplification?'/review-amplification.json':'/review.json'));
 console.log(JSON.stringify({prepared:decisions.length,output,applied:false}));

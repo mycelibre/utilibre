@@ -1,0 +1,18 @@
+--- a/app/liberaforms/templates/footer.html
++++ b/app/liberaforms/templates/footer.html
+@@ -4,6 +4,7 @@
+ 
+   <footer id="footer" class="text-center py-4">
+     <p><small><a href="{{config["BASE_URL"]}}" rel="noopener noreferrer">{{g.site.name}}</a></small></p>
++    <p><small><a href="https://utilibre.org/en/abuse" rel="noreferrer" referrerpolicy="no-referrer">Report abuse</a> · <a href="https://utilibre.org/es/denunciar-abuso" rel="noreferrer" referrerpolicy="no-referrer">Denunciá abusos</a></small></p>
+   </footer>
+ 
+ {% else %}
+@@ -23,6 +24,7 @@
+         <small><a href="/feed/rss" alt_text="RSS feed">RSS</a></small>
+       {% endif %}
+     </p>
++    <p><small><a href="https://utilibre.org/en/abuse" rel="noreferrer" referrerpolicy="no-referrer">Report abuse</a> · <a href="https://utilibre.org/es/denunciar-abuso" rel="noreferrer" referrerpolicy="no-referrer">Denunciá abusos</a></small></p>
+   </footer>
+ 
+ {% endif %}

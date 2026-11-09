@@ -11,6 +11,7 @@ import subprocess
 import sys
 import time
 import requests
+import re
 
 HERE = Path(__file__).resolve().parent
 ROOT = Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/output')
@@ -72,8 +73,13 @@ def inside(phase):
 def main():
     os.umask(0o077)
     baseline = '--baseline' in sys.argv
+    image = sys.argv[sys.argv.index('--image-id')+1] if '--image-id' in sys.argv else None
+    output = Path(sys.argv[sys.argv.index('--output')+1]) if '--output' in sys.argv else None
+    if image:
+        assert not baseline and re.fullmatch(r'sha256:[a-f0-9]{64}', image)
+        assert output and str(output).startswith('/var/lib/utilibre-maintenance/') and not output.exists()
     stage = ({'imageId': next(s['baseId'] for s in json.loads((HERE / 'images.json').read_text()) if s['key'] == 'ntfy')}
-             if baseline else json.loads((ROOT / 'ntfy-image.json').read_text()))
+             if baseline else {'imageId':image} if image else json.loads((ROOT / 'ntfy-image.json').read_text()))
     name = 'maintenance-ntfy-native-' + str(os.getpid())
     run = lambda args: subprocess.check_output(args, text=True).strip()
     try:
@@ -97,7 +103,7 @@ def main():
                   'configurationSha256': hashlib.sha256(CONFIG.read_bytes()).hexdigest(),
                   'networkIsolated': True, 'onlySyntheticData': True, **checks,
                   'limitations': ['No real-device UnifiedPush test; production registration and uploads remain disabled.']}
-        (ROOT / ('ntfy-baseline-native.json' if baseline else 'ntfy-native.json')).write_text(json.dumps(report, indent=2) + '\n')
+        (output or ROOT / ('ntfy-baseline-native.json' if baseline else 'ntfy-native.json')).write_text(json.dumps(report, indent=2) + '\n')
         print(json.dumps(report))
     finally:
         subprocess.run(['docker', 'rm', '-f', '-v', name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

@@ -1,0 +1,25 @@
+--- a/cryptpad/customize.dist/pages.js
++++ b/cryptpad/customize.dist/pages.js
+@@ -144,6 +144,10 @@
+     Pages.termsLink = footLink(customURLs.terms, 'terms');
+     Pages.sourceLink = footLink(customURLs.source, 'footer_source');
+     Pages.docsLink = footLink('https://docs.cryptpad.org', 'docs_link');
++    Pages.abuseLink = h('p', [
++        h('a', {href: 'https://utilibre.org/en/abuse', lang: 'en', rel: 'noreferrer', referrerpolicy: 'no-referrer'}, 'Report abuse'), ' · ',
++        h('a', {href: 'https://utilibre.org/es/denunciar-abuso', lang: 'es', rel: 'noreferrer', referrerpolicy: 'no-referrer'}, 'Denunciá abusos')
++    ]);
+     Pages.roadmapLink = footLink(customURLs.roadmap, 'footer_roadmap');
+ 
+ 
+@@ -173,6 +177,11 @@
+                     donateButton,
+                 ])
+             ]),
++            h('div#utilibre-abuse-report.cp-footer-center', [
++                h('a', {href: 'https://utilibre.org/en/abuse', lang: 'en', rel: 'noreferrer', referrerpolicy: 'no-referrer'}, 'Report abuse'),
++                ' · ',
++                h('a', {href: 'https://utilibre.org/es/denunciar-abuso', lang: 'es', rel: 'noreferrer', referrerpolicy: 'no-referrer'}, 'Denunciá abusos'),
++            ]),
+             h('div.cp-footer-right', [
+                 h('div.cp-footer-language', [
+                     Icons.get('language'),

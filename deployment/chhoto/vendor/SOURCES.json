@@ -11,8 +11,8 @@
   },
   {
     "file": "pure-min.css",
-    "url": "https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css",
-    "sha256": "01757dff5e174cd963090a7bbb79f4d95222600202abca1c5e4735d6bbcc952c"
+    "url": "https://cdn.jsdelivr.net/npm/purecss@3.1.0/build/pure-min.css",
+    "sha256": "09e55dd770f449aabdb59ac23f60d0c04f3f5bc755a2117bcedfac5625e53a91"
   },
   {
     "file": "qrcode-LICENSE",
@@ -26,7 +26,7 @@
   },
   {
     "file": "pure-LICENSE",
-    "url": "https://cdn.jsdelivr.net/npm/purecss@3.0.0/LICENSE",
+    "url": "https://cdn.jsdelivr.net/npm/purecss@3.1.0/LICENSE",
     "sha256": "66fe80191874ef13229c0f0f87d28ac25f0942b32c002a1fe49d9cd331e6b3dc"
   }
 ]

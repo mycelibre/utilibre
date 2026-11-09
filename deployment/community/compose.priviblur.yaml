@@ -14,7 +14,7 @@ x-runtime: &runtime
 services:
   priviblur:
     <<: *runtime
-    image: utilibre-priviblur-priviblur:sqlite-rowid-20261103
+    image: utilibre-vendor-priviblur-priviblur:security-20261109
     user: "1000:1000"
     environment:
       PRIVIBLUR_ACCESS_LOG: "false"
@@ -30,7 +30,7 @@ services:
       retries: 3
   cache:
     <<: *runtime
-    image: utilibre-valkey:9.1.1-vendor-security-20261011
+    image: utilibre-valkey:musl-security-20261109
     user: "999:1000"
     command: [valkey-server, --save, "", --appendonly, "no", --maxmemory, 96mb, --maxmemory-policy, allkeys-lru, --loglevel, warning]
     tmpfs: ["/data:rw,nosuid,nodev,noexec,size=8m,uid=999,gid=1000"]
@@ -39,7 +39,7 @@ services:
       tumblr: {ipv4_address: 172.29.73.11}
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
+    image: utilibre-calendar-calino:musl-security-20261109
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     volumes:

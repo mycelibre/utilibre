@@ -8,10 +8,10 @@ import { practicalGuides, practicalGuidePath } from './src/pages/practical-guide
 import { scenarioCollections, collectionPath } from './src/pages/scenario-collection-data.ts';
 
 const dictionaries = { en, es } as const;
-const staticPages: Array<Exclude<StaticPage, 'not-found'>> = ['home', 'services', 'tools', 'about', 'transparency', 'privacy', 'security', 'your-data', 'acceptable', 'support', 'status', 'software', 'labels', 'pdf', 'qr', 'guides', 'my', 'offline'];
+const staticPages: Array<Exclude<StaticPage, 'not-found'>> = ['home', 'services', 'tools', 'about', 'transparency', 'privacy', 'security', 'abuse', 'your-data', 'acceptable', 'support', 'status', 'software', 'labels', 'pdf', 'qr', 'guides', 'my', 'offline'];
 const descriptionKeys = {
   home: 'meta.home.description', services: 'services.intro', tools: 'tools.intro', about: 'about.body1',
-  transparency: 'transparency.why.body', privacy: 'privacy.intro', security: 'meta.security.description', 'your-data': 'meta.your-data.description', acceptable: 'acceptable.intro',
+  transparency: 'transparency.why.body', privacy: 'privacy.intro', security: 'meta.security.description', abuse: 'meta.abuse.description', 'your-data': 'meta.your-data.description', acceptable: 'acceptable.intro',
   support: 'support.body', status: 'status.intro', software: 'software.intro', labels: 'labels.intro',
   pdf: 'meta.pdf.description', qr: 'meta.qr.description', guides: 'meta.guides.description',
   my: 'meta.my.description', offline: 'meta.offline.description',

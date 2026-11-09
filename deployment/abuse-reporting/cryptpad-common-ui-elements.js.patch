@@ -1,0 +1,10 @@
+--- a/cryptpad/www/common/common-ui-elements.js
++++ b/cryptpad/www/common/common-ui-elements.js
+@@ -2089,6 +2089,7 @@
+             privacyLine,
+             legalLine,
+             sourceLine,
++            Pages.abuseLink.cloneNode(true), // utilibre-abuse-report
+         ]);
+ 
+         $(content).find('a').attr('target', '_blank');

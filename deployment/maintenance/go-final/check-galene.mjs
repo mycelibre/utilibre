@@ -2,8 +2,11 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import cp from 'node:child_process';
 process.umask(0o077);
-const oct28=process.argv.includes('--oct28'),root=oct28?'/var/lib/utilibre-maintenance/security-20261028/go':'/var/lib/utilibre-maintenance/go-final-20261011',lab=root+'/galene-stage';
-const s=oct28?JSON.parse(fs.readFileSync(root+'/galene/build.json')):JSON.parse(fs.readFileSync(root+'/build.json')).rows.find(x=>x.key==='galene');
+const args=process.argv.slice(2),explicit=args[0]==='--image-id';
+if(explicit){assert(args.length===4&&args[2]==='--output');assert.match(args[1],/^sha256:[a-f0-9]{64}$/);assert.match(args[3],/^\/var\/lib\/utilibre-maintenance\/security-20261109\/musl\/pack-galene-galene\/(before|after)$/);}
+else assert(args.length===0||(args.length===1&&args[0]==='--oct28'));
+const oct28=args.includes('--oct28'),root=explicit?args[3]:oct28?'/var/lib/utilibre-maintenance/security-20261028/go':'/var/lib/utilibre-maintenance/go-final-20261011',lab=root+'/galene-stage';
+const s=explicit?{candidate:args[1],imageId:args[1]}:oct28?JSON.parse(fs.readFileSync(root+'/galene/build.json')):JSON.parse(fs.readFileSync(root+'/build.json')).rows.find(x=>x.key==='galene');
 const docker=(...a)=>cp.execFileSync('docker',a,{encoding:'utf8',stdio:['ignore','pipe','pipe'],timeout:90000}).trim();
 const name='maintenance-galene-go-native',network=name+'-net';let bridge;
 for(const d of [lab,lab+'/data',lab+'/groups']){fs.mkdirSync(d,{recursive:true,mode:0o755});fs.chownSync(d,4003,4003);}

@@ -10,7 +10,7 @@ services:
   app:
     ulimits: {core: 0}
     <<: *limits
-    image: utilibre-family-chess-app:sqlite-rowid-20261103
+    image: utilibre-vendor-family-chess-app:security-20261109
     healthcheck:
       test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/', timeout=4)"]
       interval: 30s
@@ -30,7 +30,7 @@ services:
   gateway:
     ulimits: {core: 0}
     <<: *limits
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
+    image: utilibre-calendar-calino:musl-security-20261109
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.25

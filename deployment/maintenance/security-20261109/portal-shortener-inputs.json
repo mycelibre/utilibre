@@ -1,0 +1,33 @@
+{
+  "sourceRevision": "a2e55713cab7a89edf5b164aef4d45c791cd0970",
+  "base": "sha256:7f61d39cd62a42536e6edd3ffa4e87cf21c2bbd92f8e8e82461ee9dffb4cbbf6",
+  "candidate": "utilibre-portal:shortener-20261109",
+  "imageId": "sha256:686ecc5c366dc053c5a92e1d6b6a10b2ef4e23aba283c9b9d6eb2492d1c9bfc9",
+  "expectedVersions": [
+    "7.10.8-p1",
+    "1.9.0-p1",
+    "1.21.0-p1",
+    "1.30.4",
+    "3.9.0",
+    "0.42.0-p1",
+    "0.7.101-p1",
+    "4.2.0-p1",
+    "1.3.2-p1",
+    "32.6.10-p1"
+  ],
+  "implementation": "Chhoto and drawDB version/source records and EN/ES shortener guide; existing portal behavior and runtime packages unchanged",
+  "approved": true,
+  "retainedFindings": [
+    {
+      "id": "CVE-2026-4738",
+      "package": "zlib",
+      "version": "1.3.2-r1",
+      "severity": "MEDIUM"
+    }
+  ],
+  "assessmentNote": "One existing medium zlib record is unchanged, remains in the security queue and is not marked fixed by this metadata-only release.",
+  "changedFiles": {
+    "portal/src/catalog/upstreams.ts": "56e074c44ef10a732fb3c02295dbd8c1b9329e93d6fdb5c32ede8fdddc367793",
+    "portal/src/pages/chhoto-guide.ts": "421da64718440e7380c72258256978adc2af6ec31c0cf3d5f7bacf2208561b84"
+  }
+}

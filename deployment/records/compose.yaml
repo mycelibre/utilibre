@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   grist:
     <<: *runtime
-    image: utilibre-grist:js-nov-20261103
+    image: utilibre-vendor-records-grist:security-20261109
     user: '1000:1000'
     cpus: 2
     mem_limit: 8g
@@ -50,7 +50,7 @@ services:
       ingress: {ipv4_address: 172.29.159.11}
   candlr:
     <<: *runtime
-    image: utilibre-candlr:2.0.0-inputs-security-20261104
+    image: utilibre-vendor-records-candlr:security-20261109
     user: '1000:1000'
     entrypoint: ['/bin/sh', '-c']
     command: ['cd /app/backend && alembic upgrade head && exec supervisord -n -c /etc/supervisor/conf.d/candlr.conf']
@@ -65,7 +65,7 @@ services:
       ingress: {ipv4_address: 172.29.159.12}
   bookplate:
     <<: *runtime
-    image: utilibre-bookplate:1.1.0-inputs-security-20261104
+    image: utilibre-records-bookplate:musl-security-20261109
     user: '1000:1000'
     cpus: 1
     mem_limit: 768m
@@ -79,7 +79,7 @@ services:
       ingress: {ipv4_address: 172.29.159.13}
   db:
     <<: *runtime
-    image: utilibre-postgres:16.15-alpine-gosu-security-20261011-p2
+    image: utilibre-records-db:musl-security-20261109
     user: '70:70'
     cpus: 0.5
     mem_limit: 256m
@@ -96,7 +96,7 @@ services:
       retries: 10
   egress:
     <<: *runtime
-    image: utilibre-wallabag-proxy:sqlite-rowid-20261103
+    image: utilibre-vendor-records-egress:security-20261109
     cpus: 0.25
     mem_limit: 128m
     memswap_limit: 128m
@@ -108,7 +108,7 @@ services:
       ingress: {ipv4_address: 172.29.159.20}
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
+    image: utilibre-calendar-calino:musl-security-20261109
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.5

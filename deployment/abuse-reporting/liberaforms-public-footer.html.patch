@@ -1,0 +1,8 @@
+--- a/app/liberaforms/templates/public_form/partials/footer.html
++++ b/app/liberaforms/templates/public_form/partials/footer.html
+@@ -9,4 +9,5 @@
+   {# i18n: This form is encrypted with OpenPGP.js #}
+   <p><small>{{ _("Encrypted with OpenPGP.js") }}</small></p>
+ {% endif %}
++  <p><small><a href="https://utilibre.org/en/abuse" rel="noreferrer" referrerpolicy="no-referrer">Report abuse</a> · <a href="https://utilibre.org/es/denunciar-abuso" rel="noreferrer" referrerpolicy="no-referrer">Denunciá abusos</a></small></p>
+ </div>

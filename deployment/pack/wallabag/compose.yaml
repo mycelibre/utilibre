@@ -1,7 +1,7 @@
 name: utilibre-wallabag
 services:
   app:
-    image: utilibre-wallabag:x11-security-20261028
+    image: utilibre-wallabag-app:musl-security-20261109
     restart: 'no'
     read_only: true
     user: '4007:4007'
@@ -44,7 +44,7 @@ services:
     volumes: ['/opt/utilibre/pack-data/wallabag:/app/data']
     networks: {isolated: {ipv4_address: 172.29.155.2}, ingress: {ipv4_address: 172.29.154.2}}
   proxy:
-    image: utilibre-wallabag-proxy:sqlite-rowid-20261103
+    image: utilibre-vendor-records-egress:security-20261109
     restart: 'no'
     read_only: true
     cap_drop: [ALL]
@@ -59,7 +59,7 @@ services:
     volumes: ['./squid.conf:/etc/squid/squid.conf:ro']
     networks: {isolated: {ipv4_address: 172.29.155.3}, ingress: {ipv4_address: 172.29.154.3}}
   web:
-    image: utilibre-wallabag-web:security-20261011-nginx1305-tiff472-libs20261021-nginx1306-cb20261028-expat210-20261103
+    image: utilibre-wallabag-web:musl-security-20261109
     restart: 'no'
     depends_on: [app, proxy]
     read_only: true

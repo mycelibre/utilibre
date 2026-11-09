@@ -29,6 +29,11 @@ an LLM, submits an instance listing or sends indexing notifications.
   and entrypoint; exact native-template patch application; and exact hashes of
   our non-secret mounted configuration. An incompatible patch stops; no fuzzy
   replacement, conflict resolution or new dependency resolution is attempted.
+  The maintained template patch includes the bilingual abuse-report links on
+  home and paste views. Its 9 November replay against the recorded 2.1.1 source
+  produces the same template as the tested notice overlay. The canonical
+  template and discovery helper now target that current source; do not restore
+  the stale 2.1.0 template during later runtime rebuilds.
 - Preserve the reviewed runtime **and its vendor tree**, byte-for-byte at the
   package-inventory level. Only app PHP/templates/static files are replaced.
   This retains the later PHP, nginx, Alpine and library repairs. The source's

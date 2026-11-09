@@ -1,0 +1,32 @@
+{
+  "sourceRevision": "c341c4a514cc0d5989418355e3d876c60c6910f9",
+  "source": "https://github.com/jhaals/yopass",
+  "version": "16.1.0",
+  "license": "Apache-2.0",
+  "candidate": "utilibre-yopass:16.1.0-p1",
+  "imageId": "sha256:bf4dbe6b6e37c794de993a49a25cf512dab60c267e87d2a8e03b24bfa83a1bca",
+  "base": "sha256:794734dc2a4c47ed892897ecca3ef5668058eff70a1c3fc553382d60c99057d8",
+  "approval": "approved",
+  "binarySha256": {
+    "yopass": "a1fe42f9b7a92189c3f5a51147ad41cc1c999e70bf21e55463630e29f6d5e9e0",
+    "yopass-server": "a89f715f235ec13fa6ab47745534e588906d2469454af49e27adef3b55c2838f"
+  },
+  "purpose": "Supported security update, retained anonymous encrypted one-time one-hour text-only service; native abuse links",
+  "sourceArchiveSha256": "614f55a8ee57eeb6248d4af21d1cabf7904d90318f41ebc80439e5d323214ebe",
+  "patchSha256": "92d883f6daf0dec66db8d4dfd43c0f22ad0e37322139a272dabb796a5ef03901",
+  "locks": {
+    "go.mod": "94f8fda0c453f8d14a5ae5708ea936992afe6267d16128695d7fdb8213616b6b",
+    "go.sum": "e2b479ca786c5c0fa0abe4bc9b3b054f75f17056aab5b46a61c63ea8544fd1ec",
+    "website/package.json": "7a542ac090e1b2c57e89c965e2c99e792fd4255984bd537b4d0a458ce3b493b8",
+    "website/yarn.lock": "1e6ff0491df47632ed08b42291b580caced481c6c02da204f56546ef871bc1ec"
+  },
+  "goBuilder": "golang@sha256:e482b31b5d30c31f9e495f4b8cbdf41429b2d74955dfbcd9c0a904483d738390",
+  "webBuilder": "node@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20",
+  "verification": [
+    "Native encryption/decryption and cross-version compatibility",
+    "One-time race, one-hour TTL and disabled uploads/10KB limits",
+    "181 frontend unit checks and native EN/ES independent-client browser flow",
+    "Pinned candidate runtime scan: zero high/critical with frozen Nov9 database",
+    "Exact upstream source+patch+four lock hashes replayed"
+  ]
+}

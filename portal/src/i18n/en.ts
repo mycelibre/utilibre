@@ -1,4 +1,7 @@
 export const en = {
+  'meta.abuse.title': 'Report abuse',
+  'meta.abuse.description': 'Report an abusive Utilibre link, paste or shared page by email. What to include and how to avoid sharing private information.',
+  'report.title': 'Report abuse',
   "common.needsJavaScript": "This feature needs JavaScript. You can still use the catalog, guides and navigation links.",
   "home.difference.independent.title": "No ads or visitor analytics.",
   "home.difference.independent": "Utilibre is independently hosted, open source and supported by optional donations. User-requested services, such as coding activity and device location, have their own data notes.",
@@ -212,7 +215,7 @@ export const en = {
   'privacy.title': 'Privacy',
   'privacy.intro': 'This page explains what each service receives, sends, stores, and logs. Privacy frontends reduce some direct contact with upstream platforms; they do not make visitors anonymous.',
   'privacy.portal.title': 'Portal access',
-  "privacy.portal.body": "The portal and proxied tools pass through Cloudflare and our separate HTTPS edge. Both receive your network address and request headers and can read ordinary HTTP content at TLS termination. The 12 October 2026 DNS check confirms that search.utilibre.org, binternet.utilibre.org, newsletters.utilibre.org and aliases.utilibre.org also use Cloudflare’s HTTP proxy. speed.utilibre.org connects directly to the HTTPS edge. TURN and Mumble retain DNS-only records for their native TCP/UDP services; SMTP mail routing is separate. The portal application sets no cookies and runs no browser analytics. Language and theme preferences stay in this browser. Tool processing is described separately below; hosting an application does not make the connection anonymous.",
+  "privacy.portal.body": "The portal and proxied tools pass through Cloudflare and our separate HTTPS edge. Both receive your network address and request headers and can read ordinary HTTP content at TLS termination. The 9 November 2026 DNS check confirms that binternet.utilibre.org, newsletters.utilibre.org and aliases.utilibre.org use Cloudflare’s HTTP proxy. search.utilibre.org and speed.utilibre.org connect directly to the HTTPS edge using DNS-only records; Cloudflare does not terminate HTTPS for these two hosts. TURN and Mumble retain DNS-only records for their native TCP/UDP services; SMTP mail routing is separate. The portal application sets no cookies and runs no browser analytics. Language and theme preferences stay in this browser. Tool processing is described separately below; hosting an application does not make the connection anonymous.",
   'privacy.local.title': 'Browser-side encryption and preferences',
   'privacy.local.body': 'PrivateBin encrypts paste content in the browser before sending ciphertext to the server; its catalog record explains storage and expiry. The portal stores language, theme and optional My Utilibre collections in localStorage on this device, without analytics. Collections contain labels and tool IDs, not application documents or accounts. Exports and shared links are readable, not encrypted. Shared URL fragments are not part of the ordinary HTTP page request; recipients and software with access to the link can read them.',
   'privacy.search.title': 'Search',

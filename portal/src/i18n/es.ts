@@ -1,5 +1,8 @@
 import type { en as EnglishDictionary } from './en.ts';
 export const es: Record<keyof typeof EnglishDictionary, string> = {
+  'meta.abuse.title': 'Denunciá abusos',
+  'meta.abuse.description': 'Denunciá por correo un enlace, texto o página compartida abusiva en Utilibre. Qué incluir y cómo evitar compartir información privada.',
+  'report.title': 'Denunciá abusos',
   "common.needsJavaScript": "Esta función necesita JavaScript. Podés seguir usando el catálogo, las guías y los enlaces de navegación.",
   "meta.security.title": "Informar de una vulnerabilidad",
   "meta.security.description": "Contactos privados de seguridad, alcance y condiciones para investigar de buena fe en Utilibre.",
@@ -215,7 +218,7 @@ export const es: Record<keyof typeof EnglishDictionary, string> = {
   'privacy.title': 'Privacidad',
   'privacy.intro': 'Esta página explica qué recibe, envía, almacena y registra cada servicio. Las interfaces de privacidad reducen algunos contactos directos con plataformas externas, pero no vuelven anónimos a sus visitantes.',
   'privacy.portal.title': 'Acceso al portal',
-  "privacy.portal.body": "El portal y las herramientas con proxy pasan por Cloudflare y nuestro borde HTTPS separado. Ambos reciben tu dirección de red y las cabeceras de la solicitud y pueden leer el contenido HTTP ordinario donde termina TLS. La comprobación DNS del 12 de octubre de 2026 confirma que search.utilibre.org, binternet.utilibre.org, newsletters.utilibre.org y aliases.utilibre.org también usan el proxy HTTP de Cloudflare. speed.utilibre.org se conecta directamente al borde HTTPS. TURN y Mumble conservan registros DNS sin proxy para sus servicios nativos TCP/UDP; el enrutamiento del correo SMTP es independiente. El portal no crea cookies ni ejecuta estadísticas de navegación. Las preferencias de idioma y tema quedan en este navegador. Más abajo se explica el procesamiento de cada herramienta; alojar una aplicación no vuelve anónima la conexión.",
+  "privacy.portal.body": "El portal y las herramientas con proxy pasan por Cloudflare y nuestro borde HTTPS separado. Ambos reciben tu dirección de red y las cabeceras de la solicitud y pueden leer el contenido HTTP ordinario donde termina TLS. La comprobación DNS del 9 de noviembre de 2026 confirma que binternet.utilibre.org, newsletters.utilibre.org y aliases.utilibre.org usan el proxy HTTP de Cloudflare. search.utilibre.org y speed.utilibre.org se conectan directamente al borde HTTPS con registros DNS sin proxy; Cloudflare no termina HTTPS para estos dos hosts. TURN y Mumble conservan registros DNS sin proxy para sus servicios nativos TCP/UDP; el enrutamiento del correo SMTP es independiente. El portal no crea cookies ni ejecuta estadísticas de navegación. Las preferencias de idioma y tema quedan en este navegador. Más abajo se explica el procesamiento de cada herramienta; alojar una aplicación no vuelve anónima la conexión.",
   'privacy.local.title': 'Cifrado en el navegador y preferencias',
   'privacy.local.body': 'PrivateBin cifra el texto en el navegador antes de enviarlo al servidor; su ficha explica almacenamiento y vencimiento. El portal guarda idioma, tema y colecciones opcionales de Mi Utilibre en localStorage, sin analítica. Las colecciones contienen nombres e ID de herramientas, no documentos ni cuentas. Exportaciones y enlaces compartidos son legibles, no cifrados. El fragmento de URL no forma parte de la solicitud HTTP normal; destinatarios y software con acceso al enlace pueden leerlo.',
   'privacy.search.title': 'Búsquedas',

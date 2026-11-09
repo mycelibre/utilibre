@@ -310,7 +310,7 @@ services:
   valkey:
     ulimits: {core: 0}
     memswap_limit: ${VALKEY_MEMORY_LIMIT:-128M}
-    image: utilibre-valkey:9.1.1-vendor-security-20261011
+    image: utilibre-valkey:musl-security-20261109
     restart: unless-stopped
     read_only: true
     user: "999:1000"

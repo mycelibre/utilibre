@@ -21,7 +21,7 @@ title = "Data and limits / Datos y límites"
 path = "/data-notes"
 filename = "data-notes.md"
 [[static_pages]]
-title = "Private contact / Contacto privado"
+title = "Report abuse / Denunciá abusos"
 path = "https://utilibre.org/en/abuse"
 [[static_pages]]
 title = "Modified source / Código modificado"

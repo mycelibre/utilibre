@@ -1,0 +1,9 @@
+--- a/opt/app/client-data/index.html
++++ b/opt/app/client-data/index.html
+@@ -39,5 +39,5 @@
+     <p><a href="https://utilibre.org/es/">Volver a Utilibre</a> · <a href="?lang=en" lang="en">English</a></p>
+   </div>
+ </main>
+-<footer><a href="https://github.com/lovasoa/whitebophir">Powered by WBO · AGPL-3.0-or-later</a> · <a href="/utilibre-source/wbo-utilibre.tar.gz">Complete source / Código completo</a></footer>
++<footer><p id="utilibre-abuse-report"><a href="https://utilibre.org/en/abuse" lang="en" rel="noreferrer" referrerpolicy="no-referrer">Report abuse</a> · <a href="https://utilibre.org/es/denunciar-abuso" lang="es" rel="noreferrer" referrerpolicy="no-referrer">Denunciá abusos</a></p><a href="https://github.com/lovasoa/whitebophir">Powered by WBO · AGPL-3.0-or-later</a> · <a href="/utilibre-source/wbo-utilibre.tar.gz">Complete source / Código completo</a></footer>
+ </body></html>

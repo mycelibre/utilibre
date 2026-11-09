@@ -12,7 +12,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-chhoto:7.8.3-auditable-20261011
+    image: utilibre-chhoto:7.10.8-p2
     env_file:
       - path: /opt/utilibre/chhoto-private/runtime.env
         format: raw
@@ -21,7 +21,9 @@ services:
       CHHOTO_PUBLIC_MODE_EXPIRY_DELAY: '2592000'
       CHHOTO_SITE_URL: https://links.utilibre.org
       CHHOTO_SLUG_STYLE: UID
-      CHHOTO_SLUG_LENGTH: '16'
+      CHHOTO_SLUG_LENGTH: '8'
+      CHHOTO_TRY_LONGER_SLUG: 'True'
+      CHHOTO_EXIT_ON_NO_AUTH: 'True'
       CHHOTO_DB_URL: /data/urls.sqlite
       CHHOTO_REDIRECT_METHOD: TEMPORARY
       CHHOTO_DISABLE_BACKUPS: 'True'
@@ -32,7 +34,7 @@ services:
     networks: [backend]
   gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
+    image: utilibre-calendar-calino:musl-security-20261109
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.25

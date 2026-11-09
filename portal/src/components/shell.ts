@@ -2,6 +2,7 @@ import type { PublicConfig } from '../config';
 import type { Language, TranslationKey } from '../i18n';
 import { routePath, translatedPath, type Route } from '../routes';
 import { append, element, type Translate } from '../utilities/dom';
+import { abuseReportLink } from './abuse-report-link';
 
 export type Theme = 'system' | 'light' | 'dark';
 interface ShellOptions {
@@ -113,6 +114,7 @@ export function renderFooter(currentRoute: Route, config: PublicConfig, t: Trans
     link.href = routePath(page, currentRoute.language);
     links.append(link);
   }
+  links.append(abuseReportLink(currentRoute.language, t('report.title'), ''));
   if (config.sourceCodeUrl) {
     const source = element('a', '', t('footer.source'));
     source.href = config.sourceCodeUrl;

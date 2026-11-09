@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "gathio": {
+    "source": "deployment/calendar/gathio/config.toml",
+    "beforeSha256": "b8449a9478b7f005a310f0b3fe1ed07c950221f4189c0bde0a4b46725b9f68d0",
+    "afterSha256": "4e899ddee3f141c44e3acdc77499745647c5048813b89368b9a035610f07aac4",
+    "patch": "gathio-config.patch",
+    "patchSha256": "afe99cdd6415b098fb7bd91c952947f5dc4d46ea22277f51f5b3ec38fee18b60"
+  },
+  "rallly": {
+    "container": "utilibre-community-rallly-db-1",
+    "table": "instance_settings",
+    "id": 1,
+    "field": "footer_links",
+    "before": [
+      {
+        "href": "https://utilibre.org/es/",
+        "label": "Volver a Utilibre"
+      },
+      {
+        "href": "https://utilibre.org/en/",
+        "label": "Back to Utilibre"
+      },
+      {
+        "href": "https://github.com/lukevella/rallly/tree/1e5d48ad410daac9700c38c1947aad94c362ab82",
+        "label": "Source · Código fuente"
+      },
+      {
+        "href": "https://utilibre.org/en/privacy",
+        "label": "Privacy"
+      },
+      {
+        "href": "https://utilibre.org/es/privacidad",
+        "label": "Privacidad"
+      }
+    ],
+    "after": [
+      {
+        "href": "https://utilibre.org/es/",
+        "label": "Volver a Utilibre"
+      },
+      {
+        "href": "https://utilibre.org/en/",
+        "label": "Back to Utilibre"
+      },
+      {
+        "href": "https://github.com/lukevella/rallly/tree/1e5d48ad410daac9700c38c1947aad94c362ab82",
+        "label": "Source · Código fuente"
+      },
+      {
+        "href": "https://utilibre.org/en/privacy",
+        "label": "Privacy / Privacidad"
+      },
+      {
+        "href": "https://utilibre.org/en/abuse",
+        "label": "Report abuse / Denunciá abusos"
+      }
+    ],
+    "beforeCanonicalSha256": "f3c451833716bff9bc09d872921ddacc030322f90d30666c7fa36d01660647d3",
+    "afterCanonicalSha256": "4852b713a8256bf66961abc705f15bc85bcb3f9ff3e3472eb058023d71c36759"
+  }
+}

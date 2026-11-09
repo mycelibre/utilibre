@@ -14,7 +14,7 @@ services:
     healthcheck: {test: [CMD, healthcheck.sh, --connect, --innodb_initialized], interval: 10s, timeout: 5s, retries: 10}
     logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
   redis:
-    image: redis:8.6-alpine@sha256:ac2da09bc822f325a9f68f533120b86fa39c1b8db46b3aa7c1bbea7fdfd4fcba
+    image: utilibre-addy-redis:musl-security-20261109
     command: [redis-server, --maxmemory, 32mb, --maxmemory-policy, noeviction, --appendonly, 'no', --save, '']
     networks: {data: {ipv4_address: 172.29.133.21}}
     restart: unless-stopped
@@ -27,7 +27,7 @@ services:
     mem_limit: 64m
     logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
   app:
-    image: utilibre-addy:glib2865-20261109
+    image: utilibre-addy-app:musl-security-20261109
     # Native s6/Postfix image generates configuration and drops privileges internally.
     # Writable image root/default Docker capabilities are required by that native entrypoint.
     security_opt: [no-new-privileges:true]
@@ -44,7 +44,7 @@ services:
     depends_on: {db: {condition: service_healthy}, redis: {condition: service_started}}
     logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
   gateway:
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
+    image: utilibre-calendar-calino:musl-security-20261109
     user: '101:101'
     read_only: true
     cap_drop: [ALL]

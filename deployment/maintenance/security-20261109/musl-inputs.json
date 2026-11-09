@@ -88,16 +88,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "bytestash-bytestash-bytestash",
           "containers": [
             "utilibre-bytestash-bytestash-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "node-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://snippets-library.utilibre.org/"
     },
     {
       "key": "toolbox-bentopdf",
@@ -149,16 +152,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "gathio-gathio-gathio",
           "containers": [
             "utilibre-gathio-gathio-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "node-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://events.utilibre.org/"
     },
     {
       "key": "creative-batch-glyphr",
@@ -243,7 +249,7 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "newsletters-newsletters-smtp",
@@ -251,9 +257,12 @@
             "utilibre-newsletters-smtp-1",
             "utilibre-newsletters-jobs-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "node-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://newsletters.utilibre.org/"
     },
     {
       "key": "toolbox-hatsh",
@@ -369,16 +378,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "reader-evaluation-reader-evaluation-safetwitch",
           "containers": [
             "utilibre-reader-evaluation-safetwitch-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "nginx-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://twitch.utilibre.org/"
     },
     {
       "key": "toolbox-omnitools",
@@ -437,42 +449,42 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "simplelogin-simplelogin-db",
           "containers": [
             "utilibre-simplelogin-db-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "spliit-simplelogin-db",
           "containers": [
             "utilibre-spliit-db-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "pack-forms-simplelogin-db",
           "containers": [
             "utilibre-pack-forms-db-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "pollaris-simplelogin-db",
           "containers": [
             "utilibre-pollaris-pollaris-db-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "community-simplelogin-db",
           "containers": [
             "utilibre-community-rallly-db-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "expanded-simplelogin-db",
@@ -480,16 +492,18 @@
             "utilibre-expanded-penpot-db-1",
             "utilibre-expanded-resume-db-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "services-simplelogin-db",
           "containers": [
             "utilibre-services-postgres-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "postgres-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09."
     },
     {
       "key": "translite-gateway",
@@ -509,16 +523,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "translite-translite-gateway",
           "containers": [
             "utilibre-translite-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "nginx-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://translate.utilibre.org/"
     },
     {
       "key": "community-ntfy",
@@ -538,16 +555,18 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "community-community-ntfy",
           "containers": [
             "utilibre-community-ntfy-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "native-app",
+      "publicHome": "https://notify.utilibre.org/v1/health"
     },
     {
       "key": "browser-tools-excalidraw",
@@ -599,16 +618,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "additions-additions-dumb",
           "containers": [
             "utilibre-additions-dumb-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "node-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://lyrics.utilibre.org/"
     },
     {
       "key": "reader-evaluation-gothub",
@@ -628,16 +650,18 @@
           "package": "3.23/musl-utils-1.2.5-r24.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "reader-evaluation-reader-evaluation-gothub",
           "containers": [
             "utilibre-reader-evaluation-gothub-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "proxy-native",
+      "publicHome": "https://gothub.utilibre.org/"
     },
     {
       "key": "wallabag-web",
@@ -657,16 +681,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "wallabag-wallabag-web",
           "containers": [
             "utilibre-wallabag-web-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "nginx-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://wallabag.utilibre.org/"
     },
     {
       "key": "openresume-web",
@@ -686,16 +713,18 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "openresume-openresume-web",
           "containers": [
             "utilibre-openresume-web-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "nginx-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09."
     },
     {
       "key": "valkey",
@@ -720,51 +749,53 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "public-utility-valkey",
           "containers": [
             "public-utility-valkey-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "services-valkey",
           "containers": [
             "utilibre-services-valkey-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "community-valkey",
           "containers": [
             "utilibre-community-secret-cache-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "expanded-valkey",
           "containers": [
             "utilibre-expanded-penpot-valkey-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "priviblur-valkey",
           "containers": [
             "utilibre-priviblur-cache-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "kittygram-valkey",
           "containers": [
             "utilibre-kittygram-cache-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "redis-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09."
     },
     {
       "key": "pollaris-worker",
@@ -785,7 +816,7 @@
           "package": "3.23/musl-utils-1.2.5-r24.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "pollaris-pollaris-worker",
@@ -793,9 +824,12 @@
             "utilibre-pollaris-worker-1",
             "utilibre-pollaris-pollaris-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "php-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://pollaris.utilibre.org/"
     },
     {
       "key": "binternet-onion-binternet-onion",
@@ -816,23 +850,25 @@
           "package": "3.23/musl-utils-1.2.5-r24.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "binternet-onion-binternet-onion-binternet-onion",
           "containers": [
             "utilibre-binternet-onion-binternet-onion-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "binternet-binternet-onion-binternet-onion",
           "containers": [
             "utilibre-binternet-binternet-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "php-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09."
     },
     {
       "key": "spliit-app",
@@ -852,16 +888,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "spliit-spliit-app",
           "containers": [
             "utilibre-spliit-app-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "node-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://expenses.utilibre.org/"
     },
     {
       "key": "pack-galene-galene",
@@ -881,16 +920,17 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "pack-galene-pack-galene-galene",
           "containers": [
             "utilibre-pack-galene-galene-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "special-native"
     },
     {
       "key": "reader-evaluation-safetwitch-backend",
@@ -910,16 +950,18 @@
           "package": "3.23/musl-utils-1.2.5-r24.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "reader-evaluation-reader-evaluation-safetwitch-backend",
           "containers": [
             "utilibre-reader-evaluation-safetwitch-backend-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "proxy-native",
+      "publicHome": null
     },
     {
       "key": "browser-tools-audiomass",
@@ -1035,20 +1077,23 @@
           "package": "3.22/musl-utils-1.2.5-r13.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "evaluation-evaluation-degoog",
           "containers": [
             "utilibre-evaluation-degoog-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "php-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://degoog.utilibre.org/"
     },
     {
       "key": "newsletters-web",
-      "base": "sha256:83cc2d93bbb19ff7e822676f057dce5f09ff7a7ec8997ee67b595b622a09d5d9",
+      "base": "sha256:76da4c86c35a18d294965b663ebc71b218e9e5964efd9c2c93f5025ff3fabf1d",
       "candidate": "utilibre-newsletters-web:musl-security-20261109",
       "release": "3.24.2",
       "containers": [
@@ -1064,16 +1109,20 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "newsletters-newsletters-web",
           "containers": [
             "utilibre-newsletters-web-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "node-runtime",
+      "previousRecordedBase": "sha256:83cc2d93bbb19ff7e822676f057dce5f09ff7a7ec8997ee67b595b622a09d5d9",
+      "baselineReview": "Existing privacy-20261109T153143Z image was already running before the libc batch. This finite overlay preserves its application/configuration files rather than replacing it with the stale recorded base.",
+      "publicHome": "https://newsletters.utilibre.org/"
     },
     {
       "key": "browser-tools-zip-manager",
@@ -1125,16 +1174,17 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "additions-additions-fmd",
           "containers": [
             "utilibre-additions-fmd-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "special-native"
     },
     {
       "key": "browser-tools-cyberchef",
@@ -1186,16 +1236,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "pollaris-pollaris-gateway",
           "containers": [
             "utilibre-pollaris-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "nginx-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://pollaris.utilibre.org/"
     },
     {
       "key": "projects-app",
@@ -1215,16 +1268,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "projects-projects-app",
           "containers": [
             "utilibre-projects-app-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "node-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://projects.utilibre.org/"
     },
     {
       "key": "toolbox-miniqr",
@@ -1308,16 +1364,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "services-services-privatebin",
           "containers": [
             "utilibre-services-privatebin-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "php-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://paste.utilibre.org/"
     },
     {
       "key": "rimgo-rimgo",
@@ -1337,16 +1396,18 @@
           "package": "3.23/musl-utils-1.2.5-r24.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "rimgo-rimgo-rimgo",
           "containers": [
             "utilibre-rimgo-rimgo-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "proxy-native",
+      "publicHome": "https://rimgo.utilibre.org/"
     },
     {
       "key": "biblioreads-biblioreads",
@@ -1366,16 +1427,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "biblioreads-biblioreads-biblioreads",
           "containers": [
             "utilibre-biblioreads-biblioreads-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "node-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://biblioreads.utilibre.org/"
     },
     {
       "key": "toolbox-ittools",
@@ -1467,217 +1531,217 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "calendar-calendar-calino",
           "containers": [
             "utilibre-calendar-calino-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "pack-static-calendar-calino",
           "containers": [
             "utilibre-pack-static-static-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "creative-batch-calendar-calino",
           "containers": [
             "utilibre-creative-batch-static-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "records-calendar-calino",
           "containers": [
             "utilibre-records-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "trip-calendar-calino",
           "containers": [
             "utilibre-trip-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "beaverhabits-calendar-calino",
           "containers": [
             "utilibre-beaverhabits-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "donetick-calendar-calino",
           "containers": [
             "utilibre-donetick-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "projects-calendar-calino",
           "containers": [
             "utilibre-projects-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "family-chess-calendar-calino",
           "containers": [
             "utilibre-family-chess-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "addy-calendar-calino",
           "containers": [
             "utilibre-addy-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "13ft-calendar-calino",
           "containers": [
             "utilibre-13ft-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "unfurl-calendar-calino",
           "containers": [
             "utilibre-unfurl-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "chhoto-calendar-calino",
           "containers": [
             "utilibre-chhoto-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "gathio-calendar-calino",
           "containers": [
             "utilibre-gathio-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "chitchatter-calendar-calino",
           "containers": [
             "utilibre-chitchatter-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "simplelogin-calendar-calino",
           "containers": [
             "utilibre-simplelogin-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "bytestash-calendar-calino",
           "containers": [
             "utilibre-bytestash-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "razzia-calendar-calino",
           "containers": [
             "utilibre-razzia-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "kitchenowl-calendar-calino",
           "containers": [
             "utilibre-kitchenowl-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "wishlist-calendar-calino",
           "containers": [
             "utilibre-wishlist-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "vikunja-calendar-calino",
           "containers": [
             "utilibre-vikunja-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "linkding-calendar-calino",
           "containers": [
             "utilibre-linkding-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "opengist-calendar-calino",
           "containers": [
             "utilibre-opengist-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "spliit-calendar-calino",
           "containers": [
             "utilibre-spliit-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "pack-forms-calendar-calino",
           "containers": [
             "utilibre-pack-forms-web-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "collaboration-pilot-calendar-calino",
           "containers": [
             "utilibre-collaboration-pilot-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "evaluation-calendar-calino",
           "containers": [
             "utilibre-evaluation-degoog-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "kittygram-calendar-calino",
           "containers": [
             "utilibre-kittygram-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "rimgo-calendar-calino",
           "containers": [
             "utilibre-rimgo-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "biblioreads-calendar-calino",
           "containers": [
             "utilibre-biblioreads-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "reader-evaluation-calendar-calino",
@@ -1686,7 +1750,7 @@
             "utilibre-reader-evaluation-gothub-gateway-1",
             "utilibre-reader-evaluation-fourget-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "additions-calendar-calino",
@@ -1695,21 +1759,21 @@
             "utilibre-additions-dumb-gateway-1",
             "utilibre-additions-fmd-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "priviblur-calendar-calino",
           "containers": [
             "utilibre-priviblur-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "expanded-calendar-calino",
           "containers": [
             "utilibre-expanded-wiki-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "community-calendar-calino",
@@ -1717,16 +1781,18 @@
             "utilibre-community-gateway-1",
             "utilibre-community-rallly-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "newsletters-calendar-calino",
           "containers": [
             "utilibre-newsletters-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "nginx-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09."
     },
     {
       "key": "addy-app",
@@ -1746,16 +1812,19 @@
           "package": "3.23/musl-utils-1.2.5-r24.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "addy-addy-app",
           "containers": [
             "utilibre-addy-app-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "php-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://aliases.utilibre.org/"
     },
     {
       "key": "opengist-opengist",
@@ -1775,16 +1844,18 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "opengist-opengist-opengist",
           "containers": [
             "utilibre-opengist-opengist-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "native-app",
+      "publicHome": "https://snippets.utilibre.org/"
     },
     {
       "key": "addy-redis",
@@ -1804,16 +1875,18 @@
           "package": "3.23/musl-utils-1.2.5-r24.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "addy-addy-redis",
           "containers": [
             "utilibre-addy-redis-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "redis-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09."
     },
     {
       "key": "browser-tools-markmap",
@@ -1865,16 +1938,18 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "chitchatter-chitchatter-tracker",
           "containers": [
             "utilibre-chitchatter-tracker-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "node-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09."
     },
     {
       "key": "kittygram-kittygram",
@@ -1894,16 +1969,17 @@
           "package": "3.23/musl-utils-1.2.5-r24.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "kittygram-kittygram-kittygram",
           "containers": [
             "utilibre-kittygram-kittygram-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "special-native"
     },
     {
       "key": "wallabag-app",
@@ -1923,16 +1999,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "wallabag-wallabag-app",
           "containers": [
             "utilibre-wallabag-app-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "php-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://wallabag.utilibre.org/"
     },
     {
       "key": "records-db",
@@ -1954,30 +2033,32 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "records-records-db",
           "containers": [
             "utilibre-records-db-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "projects-records-db",
           "containers": [
             "utilibre-projects-db-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "identity-records-db",
           "containers": [
             "utilibre-identity-postgresql-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "postgres-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09."
     },
     {
       "key": "toolbox-drawio",
@@ -2094,16 +2175,19 @@
           "package": "3.21/musl-utils-1.2.5-r12.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "community-community-pairdrop",
           "containers": [
             "utilibre-community-pairdrop-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "node-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://drop.utilibre.org/"
     },
     {
       "key": "collaboration-pilot-wbo",
@@ -2123,16 +2207,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "collaboration-pilot-collaboration-pilot-wbo",
           "containers": [
             "utilibre-collaboration-pilot-wbo-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "node-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://collab.utilibre.org/"
     },
     {
       "key": "reader-evaluation-anonymousoverflow",
@@ -2152,16 +2239,18 @@
           "package": "3.23/musl-utils-1.2.5-r24.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "reader-evaluation-reader-evaluation-anonymousoverflow",
           "containers": [
             "utilibre-reader-evaluation-anonymousoverflow-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "proxy-native",
+      "publicHome": "https://overflow.utilibre.org/"
     },
     {
       "key": "binternet-onion-tor",
@@ -2181,16 +2270,17 @@
           "package": "3.23/musl-utils-1.2.5-r24.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "binternet-onion-binternet-onion-tor",
           "containers": [
             "utilibre-binternet-onion-tor-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "special-native"
     },
     {
       "key": "reader-evaluation-fourget",
@@ -2210,16 +2300,19 @@
           "package": "3.23/musl-utils-1.2.5-r24.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "reader-evaluation-reader-evaluation-fourget",
           "containers": [
             "utilibre-reader-evaluation-fourget-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "php-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://4get.utilibre.org/"
     },
     {
       "key": "binternet-gateway",
@@ -2240,23 +2333,26 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "binternet-binternet-gateway",
           "containers": [
             "utilibre-binternet-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         },
         {
           "key": "binternet-onion-binternet-gateway",
           "containers": [
             "utilibre-binternet-onion-gateway-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "nginx-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://binternet.utilibre.org/"
     },
     {
       "key": "translite-translite",
@@ -2276,16 +2372,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "translite-translite-translite",
           "containers": [
             "utilibre-translite-translite-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "php-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://translate.utilibre.org/"
     },
     {
       "key": "records-bookplate",
@@ -2305,16 +2404,19 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "records-records-bookplate",
           "containers": [
             "utilibre-records-bookplate-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "node-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09.",
+      "publicHome": "https://bookplate.utilibre.org/"
     },
     {
       "key": "razzia-socket",
@@ -2334,16 +2436,18 @@
           "package": "3.24/musl-utils-1.2.6-r3.apk"
         }
       },
-      "approval": "candidate-needs-consumer-review",
+      "approval": "approved",
       "releaseGroups": [
         {
           "key": "razzia-razzia-socket",
           "containers": [
             "utilibre-razzia-socket-1"
           ],
-          "approval": "candidate-needs-consumer-review"
+          "approval": "approved"
         }
-      ]
+      ],
+      "consumerProfile": "node-runtime",
+      "approvalEvidence": "Native consumer and ABI parity, unchanged application/configuration bytes, exact same-branch vendor package and frozen scan. Operator-authorized maintenance, reviewed 2026-11-09."
     }
   ],
   "nativeFixture": {

@@ -1,5 +1,4 @@
 import { licenseText, reviewedFossProviders } from '../catalog/upstreams';
-import { renderYourData } from './your-data';
 import { renderSecurity, policySection, abuseSection } from './policy-pages';
 import { catalog, catalogEntry, localized, reviewedServices, type CatalogEntry, type DiscoveryGroup, type OperationalStatus } from '../catalog/catalog';
 import { discoveryGroups, discoverEntries, entryGroup, entryLaunchable, serviceConfigured, normalizeGroup, catalogViews, type CatalogView, type CatalogDiscoveryState } from '../catalog/discovery';
@@ -18,6 +17,14 @@ import { renderScenarioCollection, renderCollectionLinks } from './scenario-coll
 import { scenarioCollections } from './scenario-collection-data';
 
 export async function renderPage(route: Route, config: PublicConfig, t: Translate, searchParams = new URLSearchParams()): Promise<HTMLElement> {
+  if (route.page === 'your-data') {
+    const { renderYourData } = await import('./your-data');
+    return renderYourData(route.language, t);
+  }
+  if (route.page === 'abuse') {
+    const { renderAbuseReport } = await import('./abuse-report');
+    return renderAbuseReport(route.language, t, { acceptable: routePath('acceptable', route.language), security: routePath('security', route.language) });
+  }
   if (route.page === 'guides' || route.page === 'guide') {
     const { renderPracticalGuides } = await import('./practical-guides');
     return renderPracticalGuides(route.language, config, route.guideId, true);
@@ -42,7 +49,6 @@ export function renderStaticPage(route: Route, config: PublicConfig, t: Translat
   if (route.page === 'services') return renderServices(route.language, config, t);
   if (route.page === 'tools') return renderTools(route.language, config, t);
   if (route.page === 'transparency') return renderTransparency(route.language, config, t);
-  if (route.page === 'your-data') return renderYourData(route.language, t);
   if (route.page === 'security') return renderSecurity(route.language, t);
   if (route.page === 'privacy') return renderPrivacy(route.language, config, t);
   if (route.page === 'about') return prosePage(t('about.title'), '', [['about.title', 'about.body1'], ['about.upstream.title', 'about.body2'], ['transparency.why.title', 'transparency.why.body']], t, true);
@@ -786,7 +792,7 @@ export function pageMeta(route: Route, config: PublicConfig, t: Translate): { ti
     about: 'about.body1',
     transparency: 'transparency.why.body',
     privacy: 'privacy.intro', security: 'meta.security.description', 'your-data': 'meta.your-data.description',
-    acceptable: 'acceptable.intro',
+    acceptable: 'acceptable.intro', abuse: 'meta.abuse.description',
     support: 'support.body',
     status: 'status.intro',
     software: 'software.intro',

@@ -34,13 +34,17 @@ self.MonacoEnvironment = {
 };
 loader.config({ monaco });''')
 replace('src/Footer.tsx','import { Flex, Icon, Text }','import { Flex, Icon, Text, Link }')
+replace('src/Footer.tsx','<Flex h="22px" bgColor="#0071c3" color="white">', '<Flex minH="22px" flexShrink={0} flexWrap="wrap" align="center" bgColor="#0071c3" color="white">')
+replace('src/Footer.tsx','        h="100%"', '        h="22px"')
 replace('src/Footer.tsx','''      </Flex>
     </Flex>''','''      </Flex>
-      <Flex align="center" gap={3} px={2} fontSize="xs">
+      <Flex align="center" flexWrap="wrap" gap={3} rowGap={1} px={2} py={1} fontSize="xs">
         <Link href="https://utilibre.org/en/">More tools</Link>
         <Link href="https://utilibre.org/es/">Más herramientas</Link>
         <Link href="https://utilibre.org/en/guides/shared-code-pad">Data notes</Link>
         <Link href="https://utilibre.org/es/guias/editor-codigo-compartido">Datos</Link>
+        <Link href="https://utilibre.org/en/abuse" rel="noreferrer" referrerPolicy="no-referrer">Report abuse</Link>
+        <Link href="https://utilibre.org/es/denunciar-abuso" rel="noreferrer" referrerPolicy="no-referrer">Denunciá abusos</Link>
       </Flex>
     </Flex>''')
 replace('src/App.tsx','''        Rustpad

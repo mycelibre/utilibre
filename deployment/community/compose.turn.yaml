@@ -1,6 +1,6 @@
 name: utilibre-turn-option
 x-turn: &turn
-  image: utilibre-coturn:mongocrypt-security-20261104
+  image: utilibre-vendor-galene-turn-turn:security-20261109
   build: {context: ./turn}
   user: "65534:65534"
   entrypoint: [turnserver, -c, /run/config/turnserver.conf]

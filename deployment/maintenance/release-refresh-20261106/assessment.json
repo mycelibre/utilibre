@@ -3,8 +3,8 @@
   "assessedOn": "2026-11-06",
   "counts": {
     "inventoried": 42,
-    "upgraded": 9,
-    "held": 33
+    "upgraded": 13,
+    "held": 29
   },
   "limits": [
     "Source findings include build/mobile dependencies and are not deployed exploitable counts.",
@@ -211,62 +211,80 @@
     {
       "id": "chartdb",
       "origin": "https://github.com/chartdb/chartdb",
-      "tag": "v1.21.0",
+      "tag": "1.21.0",
       "recordedVersion": "1.20.1-p1",
       "commit": "ee95448d154cfdcf65264c45745f440c0480ef84",
-      "sourceAssessment": {
-        "status": "assessed",
-        "coverage": [
-          "npm"
+      "status": "deployed-and-task-tested",
+      "reason": "ChartDB native SQL/JSON import/export and persistence; 842 upstream tests, no external requests.",
+      "originalAssessment": {
+        "tag": "v1.21.0",
+        "recordedVersion": "1.20.1-p1",
+        "commit": "ee95448d154cfdcf65264c45745f440c0480ef84",
+        "sourceAssessment": {
+          "status": "assessed",
+          "coverage": [
+            "npm"
+          ],
+          "findings": {
+            "CRITICAL": 0,
+            "HIGH": 1,
+            "MEDIUM": 15,
+            "LOW": 8,
+            "UNKNOWN": 0
+          }
+        },
+        "patchCompatibility": [
+          {
+            "path": "deployment/toolbox/chartdb-local-source.patch",
+            "appliesAlone": false
+          }
         ],
-        "findings": {
-          "CRITICAL": 0,
-          "HIGH": 1,
-          "MEDIUM": 15,
-          "LOW": 8,
-          "UNKNOWN": 0
-        }
+        "status": "held",
+        "reason": "Candidate source contains 0 critical / 1 high lockfile matches; review build/runtime exposure and local repair compatibility and application-specific import/export/access tests."
       },
-      "patchCompatibility": [
-        {
-          "path": "deployment/toolbox/chartdb-local-source.patch",
-          "appliesAlone": false
-        }
-      ],
-      "status": "held",
-      "reason": "Candidate source contains 0 critical / 1 high lockfile matches; review build/runtime exposure and local repair compatibility and application-specific import/export/access tests."
+      "verifiedOn": "2026-11-09",
+      "evidence": "docs/records/security-maintenance-2026-11-09.md"
     },
     {
       "id": "chhoto",
       "origin": "https://github.com/SinTan1729/chhoto-url",
-      "tag": "7.10.7",
+      "tag": "7.10.8",
       "recordedVersion": "7.8.3-p3",
-      "commit": "8372892bfd6ebddf4076db03b965b80c804aa27e",
-      "sourceAssessment": {
-        "status": "assessed",
-        "coverage": [
-          "cargo"
-        ],
-        "findings": {
-          "CRITICAL": 0,
-          "HIGH": 0,
-          "MEDIUM": 0,
-          "LOW": 0,
-          "UNKNOWN": 0
-        }
-      },
-      "patchCompatibility": [
-        {
-          "path": "deployment/chhoto/no-analytics-local-assets.patch",
-          "appliesAlone": false
+      "commit": "93881f699c1e2c900441b6bbb0aa0762b038f25e",
+      "status": "deployed-and-task-tested",
+      "reason": "23 upstream and 12 isolated integration checks; schema4-to5 migration, preserved active mappings, anonymous8-character/custom codes, native auth, 30-day cap, no click counting, synthetic backup/rollback.",
+      "originalAssessment": {
+        "tag": "7.10.7",
+        "recordedVersion": "7.8.3-p3",
+        "commit": "8372892bfd6ebddf4076db03b965b80c804aa27e",
+        "sourceAssessment": {
+          "status": "assessed",
+          "coverage": [
+            "cargo"
+          ],
+          "findings": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "MEDIUM": 0,
+            "LOW": 0,
+            "UNKNOWN": 0
+          }
         },
-        {
-          "path": "deployment/chhoto/layout.patch",
-          "appliesAlone": false
-        }
-      ],
-      "status": "held",
-      "reason": "Privacy and UI patches do not apply to new source. Rebase without restoring analytics; verify redirect/access/data behavior."
+        "patchCompatibility": [
+          {
+            "path": "deployment/chhoto/no-analytics-local-assets.patch",
+            "appliesAlone": false
+          },
+          {
+            "path": "deployment/chhoto/layout.patch",
+            "appliesAlone": false
+          }
+        ],
+        "status": "held",
+        "reason": "Privacy and UI patches do not apply to new source. Rebase without restoring analytics; verify redirect/access/data behavior."
+      },
+      "verifiedOn": "2026-11-09",
+      "evidence": "docs/records/security-maintenance-2026-11-09.md"
     },
     {
       "id": "cryptpad",
@@ -345,30 +363,39 @@
     {
       "id": "drawdb",
       "origin": "https://github.com/drawdb-io/drawdb",
-      "tag": "v1.9.0",
+      "tag": "1.9.0",
       "recordedVersion": "1.8.2-p1",
       "commit": "a249c7fb730c2de9b5c2ce6e863f2ea7344ac372",
-      "sourceAssessment": {
-        "status": "assessed",
-        "coverage": [
-          "npm"
+      "status": "deployed-and-task-tested",
+      "reason": "Native SQL and JSON import/export, fresh-session restore, Spanish UI and persistence; no external requests.",
+      "originalAssessment": {
+        "tag": "v1.9.0",
+        "recordedVersion": "1.8.2-p1",
+        "commit": "a249c7fb730c2de9b5c2ce6e863f2ea7344ac372",
+        "sourceAssessment": {
+          "status": "assessed",
+          "coverage": [
+            "npm"
+          ],
+          "findings": {
+            "CRITICAL": 0,
+            "HIGH": 1,
+            "MEDIUM": 0,
+            "LOW": 0,
+            "UNKNOWN": 0
+          }
+        },
+        "patchCompatibility": [
+          {
+            "path": "deployment/toolbox/drawdb-local-source.patch",
+            "appliesAlone": false
+          }
         ],
-        "findings": {
-          "CRITICAL": 0,
-          "HIGH": 1,
-          "MEDIUM": 0,
-          "LOW": 0,
-          "UNKNOWN": 0
-        }
+        "status": "held",
+        "reason": "Candidate source contains 0 critical / 1 high lockfile matches; review build/runtime exposure and local repair compatibility and application-specific import/export/access tests."
       },
-      "patchCompatibility": [
-        {
-          "path": "deployment/toolbox/drawdb-local-source.patch",
-          "appliesAlone": false
-        }
-      ],
-      "status": "held",
-      "reason": "Candidate source contains 0 critical / 1 high lockfile matches; review build/runtime exposure and local repair compatibility and application-specific import/export/access tests."
+      "verifiedOn": "2026-11-09",
+      "evidence": "docs/records/security-maintenance-2026-11-09.md"
     },
     {
       "id": "drawio",
@@ -1126,27 +1153,37 @@
     {
       "id": "yopass",
       "origin": "https://github.com/jhaals/yopass",
-      "tag": "16.0.1",
+      "tag": "16.1.0",
       "recordedVersion": "14.10.0",
-      "commit": "53b8f53f1303528cd0bc60f9f149f196827e6a3f",
-      "sourceAssessment": {
-        "status": "assessed",
-        "coverage": [
-          "gomod",
-          "npm",
-          "yarn"
-        ],
-        "findings": {
-          "CRITICAL": 0,
-          "HIGH": 12,
-          "MEDIUM": 4,
-          "LOW": 2,
-          "UNKNOWN": 2
-        }
+      "commit": "c341c4a514cc0d5989418355e3d876c60c6910f9",
+      "status": "deployed-and-task-tested",
+      "reason": "Native browser encryption/retrieval, old/new compatibility, one-time race, expiry and 10 KB admission passed; 1,213 Go checks and 181 frontend checks passed. Twelve HIGH matches remain in the optional, unused deploy/cdk lockfile; they are retained for triage, not claimed fixed. Exact deployed runtime has no HIGH/CRITICAL matches in the recorded November 9 snapshot.",
+      "originalAssessment": {
+        "tag": "16.0.1",
+        "recordedVersion": "14.10.0",
+        "commit": "53b8f53f1303528cd0bc60f9f149f196827e6a3f",
+        "sourceAssessment": {
+          "status": "assessed",
+          "coverage": [
+            "gomod",
+            "npm",
+            "yarn"
+          ],
+          "findings": {
+            "CRITICAL": 0,
+            "HIGH": 12,
+            "MEDIUM": 4,
+            "LOW": 2,
+            "UNKNOWN": 2
+          }
+        },
+        "patchCompatibility": [],
+        "status": "held",
+        "reason": "Candidate source contains 0 critical / 12 high lockfile matches; review build/runtime exposure and two major versions, first-retrieval/expiry/encryption semantics."
       },
-      "patchCompatibility": [],
-      "status": "held",
-      "reason": "Candidate source contains 0 critical / 12 high lockfile matches; review build/runtime exposure and two major versions, first-retrieval/expiry/encryption semantics."
+      "verifiedOn": "2026-11-09",
+      "evidence": "docs/records/security-maintenance-2026-11-09.md"
     }
-  ]
+  ],
+  "updatedOn": "2026-11-09"
 }

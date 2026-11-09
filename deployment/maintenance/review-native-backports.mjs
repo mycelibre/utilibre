@@ -64,6 +64,17 @@ import {additionalOverlayReceipts} from './followup-overlays.mjs';
 const overlayReceipts=['closure-release-20261012.json','closure-followup-20261012/expat-release.json','closure-followup-20261012/apache-release.json','closure-followup-20261012/cache-release.json','closure-followup-20261012/bookworm-release.json','closure-followup-20261012/ncurses-release.json','closure-followup-20261012/rsync-release.json','closure-followup-20261012/util-linux-release.json','closure-followup-20261012/curl-release.json','closure-followup-20261012/gzip-release.json','closure-followup-20261012/sqlite-fts-release.json','closure-followup-20261012/urllib3-release.json','closure-followup-20261012/python-system-release.json',...additionalOverlayReceipts];
 export function overlayRows(report){
  if(report.status!=='passed')return [];
+ if(!report.groups&&report.group)return overlayRows({...report,groups:[report.group]});
+ // The November 6 scoped release writes `date` on every saved state; a passed
+ // receipt's date is its completion write. Its group-level success covers rows
+ // without a duplicate status field. Require that exact receipt shape instead
+ // of treating an arbitrary dated observation as a completed release.
+ if(!report.groups&&Array.isArray(report.rows)&&typeof report.project==='string'&&
+    Array.isArray(report.files)&&report.files.length&&/^[a-f0-9]{64}$/.test(report.configHash||'')&&
+    Number.isFinite(Date.parse(report.date)))
+  return report.rows.filter(r=>(r.status===undefined||r.status==='passed')&&r.name&&
+   /^sha256:[a-f0-9]{64}$/.test(r.oldImage||'')&&/^sha256:[a-f0-9]{64}$/.test(r.newImage||''))
+   .map(r=>({name:r.name,oldImage:r.oldImage,newImage:r.newImage,completedAt:report.date}));
  if(!report.groups&&Array.isArray(report.rows))return report.rows.filter(r=>r.status==='passed'&&r.name&&r.oldImage&&r.newImage).map(r=>({name:r.name,oldImage:r.oldImage,newImage:r.newImage,completedAt:r.completedAt||report.completedAt}));
  return (report.groups||[]).filter(g=>g.status==='passed').flatMap(g=>(g.rows||[{name:g.name}]).filter(r=>r.status===undefined||r.status==='passed').map(r=>({name:r.name,oldImage:r.oldImage||g.oldImage,newImage:r.newImage||g.newImage,completedAt:g.completedAt||report.completedAt})));
 }

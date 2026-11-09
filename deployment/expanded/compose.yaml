@@ -61,7 +61,7 @@ services:
 
   breezewiki:
     <<: *runtime
-    image: utilibre-expanded-breezewiki:sqlite-rowid-20261103
+    image: utilibre-vendor-expanded-breezewiki:security-20261109
     read_only: true
     user: "1000:1000"
     environment:
@@ -88,7 +88,7 @@ services:
 
   wiki-gateway:
     <<: *runtime
-    image: utilibre-nginx:1.30.6-curl823-brotli121-20261028-expat210-20261103
+    image: utilibre-calendar-calino:musl-security-20261109
     read_only: true
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
@@ -137,7 +137,7 @@ services:
 
   actual:
     <<: *runtime
-    image: utilibre-actual:redirects-security-20261103
+    image: utilibre-vendor-expanded-actual:security-20261109
     read_only: true
     user: "1000:1000"
     environment:
@@ -166,7 +166,7 @@ services:
   resume:
     <<: *runtime
     # Same pinned upstream runtime; narrow visitor-statistics removal in Dockerfile.resume.
-    image: utilibre-resume:js-nov-20261103
+    image: utilibre-vendor-expanded-resume:security-20261109
     read_only: true
     user: "1000:1000"
     command: ["node", "/usr/local/bin/utilibre-resume-start.mjs"]
@@ -205,7 +205,7 @@ services:
 
   resume-db:
     <<: *runtime
-    image: utilibre-postgres:17.11-alpine-gosu-security-20261011-p2
+    image: utilibre-simplelogin-db:musl-security-20261109
     read_only: true
     user: "70:70"
     environment:
@@ -247,7 +247,7 @@ services:
 
   penpot-backend:
     <<: *runtime
-    image: utilibre-penpot-backend:2.18.3-guava-security-20261104
+    image: utilibre-vendor-expanded-penpot-backend:security-20261109
     user: "1001:1001"
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
@@ -318,7 +318,7 @@ services:
 
   penpot-db:
     <<: *runtime
-    image: utilibre-postgres:17.11-alpine-gosu-security-20261011-p2
+    image: utilibre-simplelogin-db:musl-security-20261109
     read_only: true
     user: "70:70"
     environment:
@@ -338,7 +338,7 @@ services:
 
   penpot-valkey:
     <<: *runtime
-    image: utilibre-valkey:9.1.1-vendor-security-20261011
+    image: utilibre-valkey:musl-security-20261109
     read_only: true
     user: "999:1000"
     command: [valkey-server, --save, "", --appendonly, "no", --maxmemory, 128mb, --maxmemory-policy, noeviction, --loglevel, warning]

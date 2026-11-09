@@ -1,0 +1,55 @@
+{
+  "sourceRevision": "a2e55713cab7a89edf5b164aef4d45c791cd0970",
+  "base": "sha256:11fb404547208a4317d4753d4fa3797eea7e796d093bd6d0521eb9cb9110b2aa",
+  "candidate": "utilibre-portal:abuse-20261109",
+  "imageId": "sha256:de2d171a7d18a251c4159b489f0bc58d29a3576df6a5c0038c2a9da186e56890",
+  "expectedVersions": [
+    "7.10.8-p1",
+    "1.9.0-p1",
+    "1.21.0-p1",
+    "1.30.4",
+    "3.9.0",
+    "0.42.0-p1",
+    "0.7.101-p1",
+    "4.2.0-p1",
+    "1.3.2-p1",
+    "32.6.10-p1"
+  ],
+  "implementation": "Bilingual abuse report routes, native portal links, current Chhoto/drawDB records and preserved deployed DNS privacy clarification; runtime dependencies unchanged",
+  "approved": true,
+  "retainedFindings": [
+    {
+      "id": "CVE-2026-4738",
+      "package": "zlib",
+      "version": "1.3.2-r1",
+      "severity": "MEDIUM"
+    }
+  ],
+  "assessmentNote": "One existing medium zlib record is unchanged, remains in the security queue and is not marked fixed by this metadata-only release.",
+  "changedFiles": {
+    "portal/src/catalog/upstreams.ts": "56e074c44ef10a732fb3c02295dbd8c1b9329e93d6fdb5c32ede8fdddc367793",
+    "portal/src/pages/chhoto-guide.ts": "421da64718440e7380c72258256978adc2af6ec31c0cf3d5f7bacf2208561b84",
+    "portal/src/pages/abuse-report.ts": "bcf754330b40feef045966a1588863539e754c89544fe13cae6ec39a9b763177",
+    "portal/src/components/abuse-report-link.ts": "438ca36aaa5c0ee168abf8ac69ddac98c11806add6c13354bb3290c4053ce8f4",
+    "portal/src/routes.ts": "f8c989606fa7b31db127b5608af65c108ac703bf0f9e28ceb9d8d8bc2a22dd26",
+    "portal/src/server-render.ts": "007dda2742bc9d36384115593c7d89e0066a8ccae7fc165ce345cc17df94d4b6",
+    "portal/src/components/shell.ts": "fccb531a8710bc320107f7338c38b0e6787d49d582960f1d1b1cc675a7cff49f",
+    "portal/src/components/catalog-ledger.ts": "9912e00a2e05f130f8959b71125d8f3987078c2663797920a6d53815ae78e841",
+    "portal/src/pages/pages.ts": "0d73ef4eeb535d3cd90998c56baa8ecd745fae044278d53e90d0f0eb7aa71f3b",
+    "portal/src/pages/policy-pages.ts": "577378f2efad892682a431e60421e429cfca402b4a72478e764fbb83c01713ec",
+    "portal/src/i18n/en.ts": "9b935146d6c04b5456d0dc7542ac0d81706b33541c13441f8e9b7ce254b74d81",
+    "portal/src/i18n/es.ts": "f0137a698749c2afbc30d7644154b5be3082af0b2685b77dca2614eb8c279467",
+    "portal/vite.config.ts": "e5aafa7c71f20f9dcf3e5616a5a574f6f315890358f74f8345d345ce19a86c4f",
+    "portal/tests/unit/abuse-report.test.ts": "5588aca6a7b3bdb3ecb189ae0c229f6a2b5fdcf365661b63fb462e353d2cd4d4",
+    "portal/tests/unit/i18n.test.ts": "7471a9607bc976e0924707dfe7c6bbea853181628d7deb8d5dac97f050710ec9",
+    "portal/tests/unit/seo.test.ts": "7d77490c9fe0ecbc14218b4718654108f5921a5eab181ac28007df2b860caabf"
+  },
+  "validation": [
+    "122 unit tests",
+    "typecheck",
+    "lint",
+    "static and SSR build",
+    "EN/ES desktop/mobile no-JS visual and network checks",
+    "isolated exact-image routes and runtime package/scan parity"
+  ]
+}

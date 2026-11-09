@@ -20,6 +20,14 @@ replace('templates/footer.html', '<small>AGPLv3</small>',
 replace('templates/public_form/partials/footer.html', '<div class="ds-form-footer">',
     '<div class="ds-form-footer"><p><small><a href="/utilibre-source/liberaforms-utilibre.tar.gz">Source / Código fuente · AGPLv3</a></small></p>')
 
+# Native navigation only: no form content or URL is included in a report link.
+report_links = ('<p><small>'
+    '<a href="https://utilibre.org/en/abuse" rel="noreferrer" referrerpolicy="no-referrer">Report abuse</a> · '
+    '<a href="https://utilibre.org/es/denunciar-abuso" rel="noreferrer" referrerpolicy="no-referrer">Denunciá abusos</a>'
+    '</small></p>')
+replace('templates/footer.html', '  </footer>', '    ' + report_links + '\n  </footer>', count=2)
+replace('templates/public_form/partials/footer.html', '</div>', '  ' + report_links + '\n</div>')
+
 replace('models/form.py',
     '        actor = actor if actor else flask_login.current_user.username\n'
     '        FormLog(username=actor, form_id=self.id, message=message).save()',

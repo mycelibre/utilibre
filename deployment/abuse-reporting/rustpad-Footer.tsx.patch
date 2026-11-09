@@ -1,0 +1,29 @@
+--- a/src/Footer.tsx
++++ b/src/Footer.tsx
+@@ -8,9 +8,9 @@
+ 
+ function Footer() {
+   return (
+-    <Flex h="22px" bgColor="#0071c3" color="white">
++    <Flex minH="22px" flexShrink={0} flexWrap="wrap" align="center" bgColor="#0071c3" color="white">
+       <Flex
+-        h="100%"
++        h="22px"
+         bgColor="#09835c"
+         pl={2.5}
+         pr={4}
+@@ -20,11 +20,13 @@
+         <Icon as={VscRemote} mb={-0.5} mr={1} />
+         <Text fontSize="xs">Rustpad ({version})</Text>
+       </Flex>
+-      <Flex align="center" gap={3} px={2} fontSize="xs">
++      <Flex align="center" flexWrap="wrap" gap={3} rowGap={1} px={2} py={1} fontSize="xs">
+         <Link href="https://utilibre.org/en/">More tools</Link>
+         <Link href="https://utilibre.org/es/">Más herramientas</Link>
+         <Link href="https://utilibre.org/en/guides/shared-code-pad">Data notes</Link>
+         <Link href="https://utilibre.org/es/guias/editor-codigo-compartido">Datos</Link>
++        <Link href="https://utilibre.org/en/abuse" rel="noreferrer" referrerPolicy="no-referrer">Report abuse</Link>
++        <Link href="https://utilibre.org/es/denunciar-abuso" rel="noreferrer" referrerPolicy="no-referrer">Denunciá abusos</Link>
+       </Flex>
+     </Flex>
+   );
