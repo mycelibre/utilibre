@@ -1,0 +1,2356 @@
+{
+  "version": 1,
+  "advisories": [
+    "CVE-2026-107891"
+  ],
+  "packages": {
+    "3.21/musl-1.2.5-r12.apk": {
+      "name": "musl",
+      "version": "1.2.5-r12",
+      "file": "musl-1.2.5-r12.apk",
+      "branch": "3.21",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/x86_64/musl-1.2.5-r12.apk",
+      "sha256": "abfcfe822d37bb6fa621d7d682e26eba95152c642dc5619b768b4e4a9789133e"
+    },
+    "3.21/musl-utils-1.2.5-r12.apk": {
+      "name": "musl-utils",
+      "version": "1.2.5-r12",
+      "file": "musl-utils-1.2.5-r12.apk",
+      "branch": "3.21",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/x86_64/musl-utils-1.2.5-r12.apk",
+      "sha256": "42bb107b4f139a289b146ac0404e222c0ae74ad759add38ac69b0063d2a5164c"
+    },
+    "3.22/musl-1.2.5-r13.apk": {
+      "name": "musl",
+      "version": "1.2.5-r13",
+      "file": "musl-1.2.5-r13.apk",
+      "branch": "3.22",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/musl-1.2.5-r13.apk",
+      "sha256": "359890bc7c4dc5fee7a85192de60a471c987e4664767288578beca60a44db2c8"
+    },
+    "3.22/musl-utils-1.2.5-r13.apk": {
+      "name": "musl-utils",
+      "version": "1.2.5-r13",
+      "file": "musl-utils-1.2.5-r13.apk",
+      "branch": "3.22",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/musl-utils-1.2.5-r13.apk",
+      "sha256": "0fb52d1d72f34cd69027258adca48db5d75b20872374c5f6bd00600f0279ddd6"
+    },
+    "3.23/musl-1.2.5-r24.apk": {
+      "name": "musl",
+      "version": "1.2.5-r24",
+      "file": "musl-1.2.5-r24.apk",
+      "branch": "3.23",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/musl-1.2.5-r24.apk",
+      "sha256": "d49d703392f1a6d2fe822db1b57e61735063077e1ad846d5f40d79fe507ec727"
+    },
+    "3.23/musl-utils-1.2.5-r24.apk": {
+      "name": "musl-utils",
+      "version": "1.2.5-r24",
+      "file": "musl-utils-1.2.5-r24.apk",
+      "branch": "3.23",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/musl-utils-1.2.5-r24.apk",
+      "sha256": "ee9a8106067ead36b8930f5ccdb3e515574871ac8e07f88cc7bab7049effc945"
+    },
+    "3.24/musl-1.2.6-r3.apk": {
+      "name": "musl",
+      "version": "1.2.6-r3",
+      "file": "musl-1.2.6-r3.apk",
+      "branch": "3.24",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/musl-1.2.6-r3.apk",
+      "sha256": "e142255d0fa397f14318996bc10378093dcc069dc3dd1b6818c8f28a789c21da"
+    },
+    "3.24/musl-utils-1.2.6-r3.apk": {
+      "name": "musl-utils",
+      "version": "1.2.6-r3",
+      "file": "musl-utils-1.2.6-r3.apk",
+      "branch": "3.24",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/musl-utils-1.2.6-r3.apk",
+      "sha256": "47263d05842c5e12d01e0369e5b5bea51733323501c00ca21968a5102de137ca"
+    }
+  },
+  "rows": [
+    {
+      "key": "bytestash-bytestash",
+      "base": "sha256:028604038d68593643da330203fae0caa047ff37a03e6822c4bca00352e146f2",
+      "candidate": "utilibre-bytestash-bytestash:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-bytestash-bytestash-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "bytestash-bytestash-bytestash",
+          "containers": [
+            "utilibre-bytestash-bytestash-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "toolbox-bentopdf",
+      "base": "sha256:0be34501c73dcab4987a1408e87a13169de7585f58f9f5754e979a843485a24d",
+      "candidate": "utilibre-toolbox-bentopdf:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-toolbox-bentopdf-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-bentopdf",
+          "containers": [
+            "utilibre-toolbox-bentopdf-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://pdf.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "gathio-gathio",
+      "base": "sha256:0bf7d503ecfc8d196e097968c24fde0992083ece0896e55593b750a7240572b2",
+      "candidate": "utilibre-gathio-gathio:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-gathio-gathio-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "gathio-gathio-gathio",
+          "containers": [
+            "utilibre-gathio-gathio-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "creative-batch-glyphr",
+      "base": "sha256:0d4d70dfdb3886012dc1d72f4a66be5e236fd9bb7cbe3289aefd662a4209c2d4",
+      "candidate": "utilibre-creative-batch-glyphr:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-creative-batch-glyphr-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "creative-batch-creative-batch-glyphr",
+          "containers": [
+            "utilibre-creative-batch-glyphr-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://glyphr.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "browser-tools-minipaint",
+      "base": "sha256:11ea5039e1df7ba9959ea50f9abe67d8c00c30dafb77e2034675f77ceb91bafc",
+      "candidate": "utilibre-browser-tools-minipaint:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-browser-tools-minipaint-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-minipaint",
+          "containers": [
+            "utilibre-browser-tools-minipaint-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://paint.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "newsletters-smtp",
+      "base": "sha256:21d9f36fc69f58ae5e3995ddc3c1791cf8651fc919f805ba5928a57ad83e54c4",
+      "candidate": "utilibre-newsletters-smtp:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-newsletters-smtp-1",
+        "utilibre-newsletters-jobs-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "newsletters-newsletters-smtp",
+          "containers": [
+            "utilibre-newsletters-smtp-1",
+            "utilibre-newsletters-jobs-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "toolbox-hatsh",
+      "base": "sha256:262ac6910529c11a4dfb2ac45f3e2086621f6d41a13d8161e396ae78890cfe84",
+      "candidate": "utilibre-toolbox-hatsh:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-toolbox-hatsh-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-hatsh",
+          "containers": [
+            "utilibre-toolbox-hatsh-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://hat.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "expanded-jupyterlite",
+      "base": "sha256:2b5cd87f9bef8130f97bffbe24a1a0eb6a174d25f27d68b5b77494a4db31a14c",
+      "candidate": "utilibre-expanded-jupyterlite:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-expanded-jupyterlite-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "expanded-expanded-jupyterlite",
+          "containers": [
+            "utilibre-expanded-jupyterlite-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://python.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "toolbox-vert",
+      "base": "sha256:2dfb4208a41424082ed075d1bbe43cf08abeed28777ab255296114dd5a0d96f9",
+      "candidate": "utilibre-toolbox-vert:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-toolbox-vert-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-vert",
+          "containers": [
+            "utilibre-toolbox-vert-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://convert.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "reader-evaluation-safetwitch",
+      "base": "sha256:2f16e35758c234fc1e054d58ab327be2d25c1b0788f522c2dc2443efa8597a1a",
+      "candidate": "utilibre-reader-evaluation-safetwitch:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-reader-evaluation-safetwitch-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "reader-evaluation-reader-evaluation-safetwitch",
+          "containers": [
+            "utilibre-reader-evaluation-safetwitch-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "toolbox-omnitools",
+      "base": "sha256:3020c0b1c8bbedc0823f434b8fcb7521f4a9bbad4c5d0568f788f9d49077b5e7",
+      "candidate": "utilibre-toolbox-omnitools:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-toolbox-omnitools-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-omnitools",
+          "containers": [
+            "utilibre-toolbox-omnitools-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://tools.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "simplelogin-db",
+      "base": "sha256:34bce7234d7454085fd6131efd1471061e0e36e47e83baa4cd56ec9fbf1d63c3",
+      "candidate": "utilibre-simplelogin-db:musl-security-20261109",
+      "release": "3.24.1",
+      "containers": [
+        "utilibre-simplelogin-db-1",
+        "utilibre-spliit-db-1",
+        "utilibre-pack-forms-db-1",
+        "utilibre-pollaris-pollaris-db-1",
+        "utilibre-community-rallly-db-1",
+        "utilibre-expanded-penpot-db-1",
+        "utilibre-expanded-resume-db-1",
+        "utilibre-services-postgres-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "simplelogin-simplelogin-db",
+          "containers": [
+            "utilibre-simplelogin-db-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "spliit-simplelogin-db",
+          "containers": [
+            "utilibre-spliit-db-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "pack-forms-simplelogin-db",
+          "containers": [
+            "utilibre-pack-forms-db-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "pollaris-simplelogin-db",
+          "containers": [
+            "utilibre-pollaris-pollaris-db-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "community-simplelogin-db",
+          "containers": [
+            "utilibre-community-rallly-db-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "expanded-simplelogin-db",
+          "containers": [
+            "utilibre-expanded-penpot-db-1",
+            "utilibre-expanded-resume-db-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "services-simplelogin-db",
+          "containers": [
+            "utilibre-services-postgres-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "translite-gateway",
+      "base": "sha256:36018ac38fe9227791ad7f1bc622291ecae200968fe0875c67d06af97dd63a29",
+      "candidate": "utilibre-translite-gateway:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-translite-gateway-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "translite-translite-gateway",
+          "containers": [
+            "utilibre-translite-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "community-ntfy",
+      "base": "sha256:3e33364998ccf69605e83209ffd724f971e4da5c4f852aad054954dea6e3b9d7",
+      "candidate": "utilibre-community-ntfy:musl-security-20261109",
+      "release": "3.24.1",
+      "containers": [
+        "utilibre-community-ntfy-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "community-community-ntfy",
+          "containers": [
+            "utilibre-community-ntfy-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "browser-tools-excalidraw",
+      "base": "sha256:431a3e2785bf21d3619972bbf99256b750350cb334a395fe6992bfdd06fdaa1a",
+      "candidate": "utilibre-browser-tools-excalidraw:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-browser-tools-excalidraw-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-excalidraw",
+          "containers": [
+            "utilibre-browser-tools-excalidraw-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://whiteboard.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "additions-dumb",
+      "base": "sha256:5a45bbe4474a00e8e1a85fd50de4cfe3d4aa403c17f40f1d1b6df462c7767c46",
+      "candidate": "utilibre-additions-dumb:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-additions-dumb-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "additions-additions-dumb",
+          "containers": [
+            "utilibre-additions-dumb-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "reader-evaluation-gothub",
+      "base": "sha256:5dece9c49cf7be0f4a99b41d8d186328dee17443a73afda04ec9c7690e89a05f",
+      "candidate": "utilibre-reader-evaluation-gothub:musl-security-20261109",
+      "release": "3.23.6",
+      "containers": [
+        "utilibre-reader-evaluation-gothub-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-1.2.5-r24.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-utils-1.2.5-r24.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "reader-evaluation-reader-evaluation-gothub",
+          "containers": [
+            "utilibre-reader-evaluation-gothub-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "wallabag-web",
+      "base": "sha256:5faed76d4237245ae3f52bf0eac5554f5a79d013ecf1ba7204406adf475ab075",
+      "candidate": "utilibre-wallabag-web:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-wallabag-web-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "wallabag-wallabag-web",
+          "containers": [
+            "utilibre-wallabag-web-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "openresume-web",
+      "base": "sha256:613549f73cad74ffea98731f43681a2519db76fb8380068affb87fa06e863d80",
+      "candidate": "utilibre-openresume-web:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-openresume-web-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "openresume-openresume-web",
+          "containers": [
+            "utilibre-openresume-web-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "valkey",
+      "base": "sha256:67ae28c25c0ab0968f2f4f9cb810f475af33f29e621f4ed239da9c5d39914ff6",
+      "candidate": "utilibre-valkey:musl-security-20261109",
+      "release": "3.24.1",
+      "containers": [
+        "public-utility-valkey-1",
+        "utilibre-services-valkey-1",
+        "utilibre-community-secret-cache-1",
+        "utilibre-expanded-penpot-valkey-1",
+        "utilibre-priviblur-cache-1",
+        "utilibre-kittygram-cache-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "public-utility-valkey",
+          "containers": [
+            "public-utility-valkey-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "services-valkey",
+          "containers": [
+            "utilibre-services-valkey-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "community-valkey",
+          "containers": [
+            "utilibre-community-secret-cache-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "expanded-valkey",
+          "containers": [
+            "utilibre-expanded-penpot-valkey-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "priviblur-valkey",
+          "containers": [
+            "utilibre-priviblur-cache-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "kittygram-valkey",
+          "containers": [
+            "utilibre-kittygram-cache-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "pollaris-worker",
+      "base": "sha256:6956d582ab37d779579af17c19b854b66d7b1576e1f3448112d978d60ed22bbe",
+      "candidate": "utilibre-pollaris-worker:musl-security-20261109",
+      "release": "3.23.6",
+      "containers": [
+        "utilibre-pollaris-worker-1",
+        "utilibre-pollaris-pollaris-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-1.2.5-r24.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-utils-1.2.5-r24.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "pollaris-pollaris-worker",
+          "containers": [
+            "utilibre-pollaris-worker-1",
+            "utilibre-pollaris-pollaris-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "binternet-onion-binternet-onion",
+      "base": "sha256:698df130cf064c588cf75c5e7e30575722dcbb7667a496c56c42efea2fdfca8c",
+      "candidate": "utilibre-binternet-onion-binternet-onion:musl-security-20261109",
+      "release": "3.23.6",
+      "containers": [
+        "utilibre-binternet-onion-binternet-onion-1",
+        "utilibre-binternet-binternet-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-1.2.5-r24.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-utils-1.2.5-r24.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "binternet-onion-binternet-onion-binternet-onion",
+          "containers": [
+            "utilibre-binternet-onion-binternet-onion-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "binternet-binternet-onion-binternet-onion",
+          "containers": [
+            "utilibre-binternet-binternet-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "spliit-app",
+      "base": "sha256:6bfdc55a7aab54008033fcefcc78d4ba952d7cd660ee9777b57aa226bc5f3bc6",
+      "candidate": "utilibre-spliit-app:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-spliit-app-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "spliit-spliit-app",
+          "containers": [
+            "utilibre-spliit-app-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "pack-galene-galene",
+      "base": "sha256:73fd5c5af4ca3d6f255be3687820d3049d1557072fde56744fedb07910d1930b",
+      "candidate": "utilibre-pack-galene-galene:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-pack-galene-galene-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "pack-galene-pack-galene-galene",
+          "containers": [
+            "utilibre-pack-galene-galene-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "reader-evaluation-safetwitch-backend",
+      "base": "sha256:746cc090d7282a33b8f7bd8a78bda4002ce68a465e426308b538d090e2336a44",
+      "candidate": "utilibre-reader-evaluation-safetwitch-backend:musl-security-20261109",
+      "release": "3.23.6",
+      "containers": [
+        "utilibre-reader-evaluation-safetwitch-backend-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-1.2.5-r24.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-utils-1.2.5-r24.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "reader-evaluation-reader-evaluation-safetwitch-backend",
+          "containers": [
+            "utilibre-reader-evaluation-safetwitch-backend-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "browser-tools-audiomass",
+      "base": "sha256:74952d979e6e30c907039e9ea64853706b0fc2bc72e7f2f8f06cde1e19392fb8",
+      "candidate": "utilibre-browser-tools-audiomass:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-browser-tools-audiomass-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-audiomass",
+          "containers": [
+            "utilibre-browser-tools-audiomass-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://audio.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "browser-tools-image-scrubber",
+      "base": "sha256:7718c61436a3657df8623da497053cad9d16fbb7c7be420eacc3de6e2cc81090",
+      "candidate": "utilibre-browser-tools-image-scrubber:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-browser-tools-image-scrubber-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-image-scrubber",
+          "containers": [
+            "utilibre-browser-tools-image-scrubber-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://scrub.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "qr-offline-qr-offline",
+      "base": "sha256:77514acf9bb83fcf97cbe5e1dc69011ed64466473ea56b76b75467c4b706c08d",
+      "candidate": "utilibre-qr-offline-qr-offline:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-qr-offline-qr-offline-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "qr-offline-qr-offline-qr-offline",
+          "containers": [
+            "utilibre-qr-offline-qr-offline-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://qrtools.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "evaluation-degoog",
+      "base": "sha256:813603d2476b0e95543dc1683f417f6870f2f2e4c7cae35ea8f7c6bfef10b2d6",
+      "candidate": "utilibre-evaluation-degoog:musl-security-20261109",
+      "release": "3.22.4",
+      "containers": [
+        "utilibre-evaluation-degoog-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.5-r12",
+          "package": "3.22/musl-1.2.5-r13.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.5-r12",
+          "package": "3.22/musl-utils-1.2.5-r13.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "evaluation-evaluation-degoog",
+          "containers": [
+            "utilibre-evaluation-degoog-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "newsletters-web",
+      "base": "sha256:83cc2d93bbb19ff7e822676f057dce5f09ff7a7ec8997ee67b595b622a09d5d9",
+      "candidate": "utilibre-newsletters-web:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-newsletters-web-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "newsletters-newsletters-web",
+          "containers": [
+            "utilibre-newsletters-web-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "browser-tools-zip-manager",
+      "base": "sha256:83f0c6f097afe837c24036b644950d03bc98bcb100f0f021ebcd68d2c2bf9d63",
+      "candidate": "utilibre-browser-tools-zip-manager:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-browser-tools-zip-manager-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-zip-manager",
+          "containers": [
+            "utilibre-browser-tools-zip-manager-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://zip.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "additions-fmd",
+      "base": "sha256:885ab84110775977e19de7fa1403d084edecca2581388eeddd33f40a88e18d41",
+      "candidate": "utilibre-additions-fmd:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-additions-fmd-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "additions-additions-fmd",
+          "containers": [
+            "utilibre-additions-fmd-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "browser-tools-cyberchef",
+      "base": "sha256:8c7572cb6ae418ece051c371d929b0de77884d1cd0be67d3981d8d4d6bf770c5",
+      "candidate": "utilibre-browser-tools-cyberchef:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-browser-tools-cyberchef-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-cyberchef",
+          "containers": [
+            "utilibre-browser-tools-cyberchef-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://cyberchef.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "pollaris-gateway",
+      "base": "sha256:8cb9441d7df45e49b700e012afe486f8ca373b97fe503cb85c7eecd0ce118d7f",
+      "candidate": "utilibre-pollaris-gateway:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-pollaris-gateway-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "pollaris-pollaris-gateway",
+          "containers": [
+            "utilibre-pollaris-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "projects-app",
+      "base": "sha256:9084d144780bcfdf0693540a4f6da6f22795357934c3c5f00f7c1da9eb44c1db",
+      "candidate": "utilibre-projects-app:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-projects-app-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "projects-projects-app",
+          "containers": [
+            "utilibre-projects-app-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "toolbox-miniqr",
+      "base": "sha256:90e153a072f93400f79b7883d4fafdb7ab32718181f8ae5f5275c1dff87605dd",
+      "candidate": "utilibre-toolbox-miniqr:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-toolbox-miniqr-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-miniqr",
+          "containers": [
+            "utilibre-toolbox-miniqr-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://qr.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "browser-tools-svgedit",
+      "base": "sha256:95242679095265b091ceb4e88c0fb8b5db5005763a77ec0dd72679f6e7adb83d",
+      "candidate": "utilibre-browser-tools-svgedit:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-browser-tools-svgedit-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-svgedit",
+          "containers": [
+            "utilibre-browser-tools-svgedit-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://svg.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "services-privatebin",
+      "base": "sha256:95d4a7ef121809772bbae5021badc46f0188361677da1e4aa41bc56cddb63f9d",
+      "candidate": "utilibre-services-privatebin:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-services-privatebin-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "services-services-privatebin",
+          "containers": [
+            "utilibre-services-privatebin-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "rimgo-rimgo",
+      "base": "sha256:9a2960c59f72655ef84df1ef96e98248f77ac580fc23c8b6f961823ca66a23c7",
+      "candidate": "utilibre-rimgo-rimgo:musl-security-20261109",
+      "release": "3.23.6",
+      "containers": [
+        "utilibre-rimgo-rimgo-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-1.2.5-r24.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-utils-1.2.5-r24.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "rimgo-rimgo-rimgo",
+          "containers": [
+            "utilibre-rimgo-rimgo-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "biblioreads-biblioreads",
+      "base": "sha256:9a957b71092959d80c876c3db9cf087203137528f1356d0f3f800f4165686047",
+      "candidate": "utilibre-biblioreads-biblioreads:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-biblioreads-biblioreads-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "biblioreads-biblioreads-biblioreads",
+          "containers": [
+            "utilibre-biblioreads-biblioreads-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "toolbox-ittools",
+      "base": "sha256:a09fee059325138b54e1a3a74e5a28d4a0cc31bf849c11ee2070d95d418fb29a",
+      "candidate": "utilibre-toolbox-ittools:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-toolbox-ittools-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-ittools",
+          "containers": [
+            "utilibre-toolbox-ittools-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://dev.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "calendar-calino",
+      "base": "sha256:a3bef0016b742b3884248700da512dc1afc755c4b1653d912d93da7f9e79cab2",
+      "candidate": "utilibre-calendar-calino:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-calendar-calino-1",
+        "utilibre-pack-static-static-1",
+        "utilibre-creative-batch-static-1",
+        "utilibre-records-gateway-1",
+        "utilibre-trip-gateway-1",
+        "utilibre-beaverhabits-gateway-1",
+        "utilibre-donetick-gateway-1",
+        "utilibre-projects-gateway-1",
+        "utilibre-family-chess-gateway-1",
+        "utilibre-addy-gateway-1",
+        "utilibre-13ft-gateway-1",
+        "utilibre-unfurl-gateway-1",
+        "utilibre-chhoto-gateway-1",
+        "utilibre-gathio-gateway-1",
+        "utilibre-chitchatter-gateway-1",
+        "utilibre-simplelogin-gateway-1",
+        "utilibre-bytestash-gateway-1",
+        "utilibre-razzia-gateway-1",
+        "utilibre-kitchenowl-gateway-1",
+        "utilibre-wishlist-gateway-1",
+        "utilibre-vikunja-gateway-1",
+        "utilibre-linkding-gateway-1",
+        "utilibre-opengist-gateway-1",
+        "utilibre-spliit-gateway-1",
+        "utilibre-pack-forms-web-1",
+        "utilibre-collaboration-pilot-gateway-1",
+        "utilibre-evaluation-degoog-gateway-1",
+        "utilibre-kittygram-gateway-1",
+        "utilibre-rimgo-gateway-1",
+        "utilibre-biblioreads-gateway-1",
+        "utilibre-reader-evaluation-anonymousoverflow-gateway-1",
+        "utilibre-reader-evaluation-gothub-gateway-1",
+        "utilibre-reader-evaluation-fourget-gateway-1",
+        "utilibre-additions-mezzo-gateway-1",
+        "utilibre-additions-dumb-gateway-1",
+        "utilibre-additions-fmd-gateway-1",
+        "utilibre-priviblur-gateway-1",
+        "utilibre-expanded-wiki-gateway-1",
+        "utilibre-community-gateway-1",
+        "utilibre-community-rallly-gateway-1",
+        "utilibre-newsletters-gateway-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "calendar-calendar-calino",
+          "containers": [
+            "utilibre-calendar-calino-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "pack-static-calendar-calino",
+          "containers": [
+            "utilibre-pack-static-static-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "creative-batch-calendar-calino",
+          "containers": [
+            "utilibre-creative-batch-static-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "records-calendar-calino",
+          "containers": [
+            "utilibre-records-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "trip-calendar-calino",
+          "containers": [
+            "utilibre-trip-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "beaverhabits-calendar-calino",
+          "containers": [
+            "utilibre-beaverhabits-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "donetick-calendar-calino",
+          "containers": [
+            "utilibre-donetick-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "projects-calendar-calino",
+          "containers": [
+            "utilibre-projects-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "family-chess-calendar-calino",
+          "containers": [
+            "utilibre-family-chess-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "addy-calendar-calino",
+          "containers": [
+            "utilibre-addy-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "13ft-calendar-calino",
+          "containers": [
+            "utilibre-13ft-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "unfurl-calendar-calino",
+          "containers": [
+            "utilibre-unfurl-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "chhoto-calendar-calino",
+          "containers": [
+            "utilibre-chhoto-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "gathio-calendar-calino",
+          "containers": [
+            "utilibre-gathio-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "chitchatter-calendar-calino",
+          "containers": [
+            "utilibre-chitchatter-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "simplelogin-calendar-calino",
+          "containers": [
+            "utilibre-simplelogin-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "bytestash-calendar-calino",
+          "containers": [
+            "utilibre-bytestash-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "razzia-calendar-calino",
+          "containers": [
+            "utilibre-razzia-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "kitchenowl-calendar-calino",
+          "containers": [
+            "utilibre-kitchenowl-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "wishlist-calendar-calino",
+          "containers": [
+            "utilibre-wishlist-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "vikunja-calendar-calino",
+          "containers": [
+            "utilibre-vikunja-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "linkding-calendar-calino",
+          "containers": [
+            "utilibre-linkding-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "opengist-calendar-calino",
+          "containers": [
+            "utilibre-opengist-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "spliit-calendar-calino",
+          "containers": [
+            "utilibre-spliit-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "pack-forms-calendar-calino",
+          "containers": [
+            "utilibre-pack-forms-web-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "collaboration-pilot-calendar-calino",
+          "containers": [
+            "utilibre-collaboration-pilot-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "evaluation-calendar-calino",
+          "containers": [
+            "utilibre-evaluation-degoog-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "kittygram-calendar-calino",
+          "containers": [
+            "utilibre-kittygram-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "rimgo-calendar-calino",
+          "containers": [
+            "utilibre-rimgo-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "biblioreads-calendar-calino",
+          "containers": [
+            "utilibre-biblioreads-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "reader-evaluation-calendar-calino",
+          "containers": [
+            "utilibre-reader-evaluation-anonymousoverflow-gateway-1",
+            "utilibre-reader-evaluation-gothub-gateway-1",
+            "utilibre-reader-evaluation-fourget-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "additions-calendar-calino",
+          "containers": [
+            "utilibre-additions-mezzo-gateway-1",
+            "utilibre-additions-dumb-gateway-1",
+            "utilibre-additions-fmd-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "priviblur-calendar-calino",
+          "containers": [
+            "utilibre-priviblur-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "expanded-calendar-calino",
+          "containers": [
+            "utilibre-expanded-wiki-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "community-calendar-calino",
+          "containers": [
+            "utilibre-community-gateway-1",
+            "utilibre-community-rallly-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "newsletters-calendar-calino",
+          "containers": [
+            "utilibre-newsletters-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "addy-app",
+      "base": "sha256:a7307786cbc147e467503d5c8aa21385a2e0928780a522bb1ac151c3b92aea21",
+      "candidate": "utilibre-addy-app:musl-security-20261109",
+      "release": "3.23.5",
+      "containers": [
+        "utilibre-addy-app-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-1.2.5-r24.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-utils-1.2.5-r24.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "addy-addy-app",
+          "containers": [
+            "utilibre-addy-app-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "opengist-opengist",
+      "base": "sha256:ab780e94f7fb0d7fe7dcb84446b79c7a9842a909612b2bcba3d4991df35d678f",
+      "candidate": "utilibre-opengist-opengist:musl-security-20261109",
+      "release": "3.24.1",
+      "containers": [
+        "utilibre-opengist-opengist-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "opengist-opengist-opengist",
+          "containers": [
+            "utilibre-opengist-opengist-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "addy-redis",
+      "base": "sha256:ac2da09bc822f325a9f68f533120b86fa39c1b8db46b3aa7c1bbea7fdfd4fcba",
+      "candidate": "utilibre-addy-redis:musl-security-20261109",
+      "release": "3.23.6",
+      "containers": [
+        "utilibre-addy-redis-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-1.2.5-r24.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-utils-1.2.5-r24.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "addy-addy-redis",
+          "containers": [
+            "utilibre-addy-redis-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "browser-tools-markmap",
+      "base": "sha256:ad81ded167b15eafbaafcc69e54f6d80a078232a4b47d4bdc048db2c7892199e",
+      "candidate": "utilibre-browser-tools-markmap:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-browser-tools-markmap-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-markmap",
+          "containers": [
+            "utilibre-browser-tools-markmap-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://mindmap.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "chitchatter-tracker",
+      "base": "sha256:aeb11ecc94406ab966a0d87b977f5b7944ce5b19e20a129a3575150f3841bb8b",
+      "candidate": "utilibre-chitchatter-tracker:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-chitchatter-tracker-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "chitchatter-chitchatter-tracker",
+          "containers": [
+            "utilibre-chitchatter-tracker-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "kittygram-kittygram",
+      "base": "sha256:b027390a53612dd94b6d5ff10ffc9b69b3241ac7e8ae7044da9c4a517ad38fbb",
+      "candidate": "utilibre-kittygram-kittygram:musl-security-20261109",
+      "release": "3.23.5",
+      "containers": [
+        "utilibre-kittygram-kittygram-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-1.2.5-r24.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-utils-1.2.5-r24.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "kittygram-kittygram-kittygram",
+          "containers": [
+            "utilibre-kittygram-kittygram-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "wallabag-app",
+      "base": "sha256:b6077d67aafa5331013da429f24fa7d655d47f27aade6399fcc1167a440d58b3",
+      "candidate": "utilibre-wallabag-app:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-wallabag-app-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "wallabag-wallabag-app",
+          "containers": [
+            "utilibre-wallabag-app-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "records-db",
+      "base": "sha256:b7c3316b6f8ebe6b02fd5f21f14b3952f64cfd52051ca21d9de8119226515da0",
+      "candidate": "utilibre-records-db:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-records-db-1",
+        "utilibre-projects-db-1",
+        "utilibre-identity-postgresql-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "records-records-db",
+          "containers": [
+            "utilibre-records-db-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "projects-records-db",
+          "containers": [
+            "utilibre-projects-db-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "identity-records-db",
+          "containers": [
+            "utilibre-identity-postgresql-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "toolbox-drawio",
+      "base": "sha256:b827f5fbd979df27f809cb20580a916d14893dbc8047cd37d2349024fd1e0363",
+      "candidate": "utilibre-toolbox-drawio:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-toolbox-drawio-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-drawio",
+          "containers": [
+            "utilibre-toolbox-drawio-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://draw.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "browser-tools-rawgraphs",
+      "base": "sha256:b99deda4afcbd41fd9880aefb24b7f21079f9a0fcd87f80c5ba2e6f0666fabec",
+      "candidate": "utilibre-browser-tools-rawgraphs:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-browser-tools-rawgraphs-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-rawgraphs",
+          "containers": [
+            "utilibre-browser-tools-rawgraphs-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": "https://charts.utilibre.org/",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "expanded-whisper",
+      "base": "sha256:c48982d645629eafaf76d009a3e2672391394be904fc415312b4ce6036f9129b",
+      "candidate": "utilibre-expanded-whisper:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-expanded-whisper-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "approved",
+      "releaseGroups": [
+        {
+          "key": "expanded-expanded-whisper",
+          "containers": [
+            "utilibre-expanded-whisper-1"
+          ],
+          "approval": "approved"
+        }
+      ],
+      "consumerProfile": "static-nginx",
+      "publicHome": null,
+      "publicAccessNote": "Existing disabled portal entry and access policy retained; no public activation.",
+      "approvalScope": "Reviewed static NGINX library-only update: all application/configuration files identical, libc ABI and 16 native checks, nine server checks on both artifacts, fixed advisory and no new high/critical findings. No account/data migrations or public activation."
+    },
+    {
+      "key": "community-pairdrop",
+      "base": "sha256:c8a7850c7fac0cab04cc8391768cbf066a62f8b8583afafa20747010701b3587",
+      "candidate": "utilibre-community-pairdrop:musl-security-20261109",
+      "release": "3.21.8",
+      "containers": [
+        "utilibre-community-pairdrop-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.5-r11",
+          "package": "3.21/musl-1.2.5-r12.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.5-r11",
+          "package": "3.21/musl-utils-1.2.5-r12.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "community-community-pairdrop",
+          "containers": [
+            "utilibre-community-pairdrop-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "collaboration-pilot-wbo",
+      "base": "sha256:c9d46b716edb213657469eb26a59a692a4cba2a796362835ac88d059b9024397",
+      "candidate": "utilibre-collaboration-pilot-wbo:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-collaboration-pilot-wbo-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "collaboration-pilot-collaboration-pilot-wbo",
+          "containers": [
+            "utilibre-collaboration-pilot-wbo-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "reader-evaluation-anonymousoverflow",
+      "base": "sha256:cf4949a77db03e92fc309eaf70f1dc938049985349489477f71aa0016522307f",
+      "candidate": "utilibre-reader-evaluation-anonymousoverflow:musl-security-20261109",
+      "release": "3.23.6",
+      "containers": [
+        "utilibre-reader-evaluation-anonymousoverflow-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-1.2.5-r24.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-utils-1.2.5-r24.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "reader-evaluation-reader-evaluation-anonymousoverflow",
+          "containers": [
+            "utilibre-reader-evaluation-anonymousoverflow-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "binternet-onion-tor",
+      "base": "sha256:d75fd6ca40c7c6219497b0f7bb196c3a0a393a3d84e19182d4f15b86c2b095f1",
+      "candidate": "utilibre-binternet-onion-tor:musl-security-20261109",
+      "release": "3.23.6",
+      "containers": [
+        "utilibre-binternet-onion-tor-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-1.2.5-r24.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-utils-1.2.5-r24.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "binternet-onion-binternet-onion-tor",
+          "containers": [
+            "utilibre-binternet-onion-tor-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "reader-evaluation-fourget",
+      "base": "sha256:d7ab9527d31a903079de06d9038f3bb5258d31a4189e7acd5ad6463ee05c934e",
+      "candidate": "utilibre-reader-evaluation-fourget:musl-security-20261109",
+      "release": "3.23.6",
+      "containers": [
+        "utilibre-reader-evaluation-fourget-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-1.2.5-r24.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.5-r23",
+          "package": "3.23/musl-utils-1.2.5-r24.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "reader-evaluation-reader-evaluation-fourget",
+          "containers": [
+            "utilibre-reader-evaluation-fourget-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "binternet-gateway",
+      "base": "sha256:e34f7c87982f5ed7788890526056276d0b81cab65eb8eefaddf071ef3fc4f497",
+      "candidate": "utilibre-binternet-gateway:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-binternet-gateway-1",
+        "utilibre-binternet-onion-gateway-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "binternet-binternet-gateway",
+          "containers": [
+            "utilibre-binternet-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        },
+        {
+          "key": "binternet-onion-binternet-gateway",
+          "containers": [
+            "utilibre-binternet-onion-gateway-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "translite-translite",
+      "base": "sha256:ea5cc181e42f45b791f856df7409da4015286b23f5548e911e8fd58d229f79cb",
+      "candidate": "utilibre-translite-translite:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-translite-translite-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "translite-translite-translite",
+          "containers": [
+            "utilibre-translite-translite-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "records-bookplate",
+      "base": "sha256:f3d6bd27f6ed1b2e3650ddd24a6b49078343b51afb03d3256d9c32ed81bb8e92",
+      "candidate": "utilibre-records-bookplate:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-records-bookplate-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "records-records-bookplate",
+          "containers": [
+            "utilibre-records-bookplate-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    },
+    {
+      "key": "razzia-socket",
+      "base": "sha256:fe9e31213c879926c85b5250601ec1437ca20fc7b0229ebd809e63be97bc820b",
+      "candidate": "utilibre-razzia-socket:musl-security-20261109",
+      "release": "3.24.2",
+      "containers": [
+        "utilibre-razzia-socket-1"
+      ],
+      "packages": {
+        "musl": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-1.2.6-r3.apk"
+        },
+        "musl-utils": {
+          "installed": "1.2.6-r2",
+          "package": "3.24/musl-utils-1.2.6-r3.apk"
+        }
+      },
+      "approval": "candidate-needs-consumer-review",
+      "releaseGroups": [
+        {
+          "key": "razzia-razzia-socket",
+          "containers": [
+            "utilibre-razzia-socket-1"
+          ],
+          "approval": "candidate-needs-consumer-review"
+        }
+      ]
+    }
+  ],
+  "nativeFixture": {
+    "source": "musl-native.c",
+    "sourceSha256": "607fd8e961790f6ba5f4e8a9a84350c0ac95f47a21c2dbe6afe25aef48569cbe",
+    "retainedBinarySha256": "8d1319e571b702db460b92d9140edd2f844d33b297e75e7d040d61aba60838fc",
+    "compilerImage": "sha256:0efcba554b753bcd4d58045c3db806a14ae078d537faddb42aa65b767cda98a5",
+    "replay": "Use the retained verified binary. A fresh compiler output needs a new checksum and full native checks; identical build bytes are not claimed."
+  }
+}

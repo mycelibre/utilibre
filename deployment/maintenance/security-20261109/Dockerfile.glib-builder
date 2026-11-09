@@ -1,0 +1,5 @@
+FROM alpine@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0
+# Acquisition only. Freeze the resulting image ID and package inventory before
+# the network-disabled compile. No production files or credentials are mounted.
+RUN apk add --no-cache gcc g++ musl-dev meson ninja pkgconf python3 py3-packaging \
+    libffi-dev pcre2-dev zlib-dev util-linux-dev gettext-dev dbus git patch xz

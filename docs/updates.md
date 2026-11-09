@@ -1,3 +1,12 @@
+## 9 November release checkpoint
+
+ChartDB 1.21.0, Addy/4get's tested GLib parser repair and musl fixes in 20 static
+services are deployed. Previous images/static directories are retained. All
+175 containers are running, with all 90 configured health checks passing.
+The main filesystem expansion completed online; the temporary disk is unchanged.
+The final queue contains 0 pending critical and 674 pending high records, not
+zero vulnerabilities. [Validation and rollback](records/security-maintenance-2026-11-09.md).
+
 # Updates and rollback
 
 Updates are deliberate, one service at a time. Production uses immutable

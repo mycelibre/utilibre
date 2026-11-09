@@ -17,3 +17,6 @@ receipts as dated evidence even after a newer release replaces the image.
 For a new upstream release, check whether it contains the local repair, repeat
 the relevant native and application checks, and retire a patch only after the
 replacement passes. See [source adaptations](../../docs/source-patches.md).
+
+The [9 November checkpoint](security-20261109/README.md) records the pinned GLib
+parser repair, approved static musl batch, ChartDB upgrade and remaining gates.

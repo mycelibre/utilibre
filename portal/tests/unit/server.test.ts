@@ -111,7 +111,16 @@ describe('portal server security boundaries', () => {
     );
     expect(response).toMatch(/^HTTP\/1\.1 431 /);
     expect(response).toContain('Connection: close');
-    expect(response).toContain('"error":"too_many_headers"');
+    // Newer Node releases can reject this request in the native parser before
+    // our handler runs, returning an empty 431 body. Both paths must close it.
+    const body = response.split('\r\n\r\n').slice(1).join('\r\n\r\n');
+    if (body) expect(body).toContain('"error":"too_many_headers"');
+    const withinLimit = Array.from({ length: 97 }, (_, index) => `X-Filler-${index}: value`).join('\r\n');
+    const allowed = await rawHttpRequest(
+      `GET /healthz HTTP/1.1\r\nHost: portal.invalid\r\n${withinLimit}\r\nConnection: close\r\n\r\n`,
+    );
+    expect(allowed).toMatch(/^HTTP\/1\.1 200 /);
+    expect(server.exitCode).toBeNull();
     expect((await fetch(`${base}/healthz`)).status).toBe(200);
   });
 

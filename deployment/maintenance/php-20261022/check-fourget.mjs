@@ -3,7 +3,9 @@ import fs from 'node:fs';
 import cp from 'node:child_process';
 import {output} from './specs.mjs';
 process.umask(0o077);
-const dir=output+'/fourget',b=JSON.parse(fs.readFileSync(dir+'/build.json')),name='utilibre-php-fourget-check';
+const dir=process.env.FOURGET_TEST_REPORT_DIR||output+'/fourget';
+assert(dir.startsWith('/var/lib/utilibre-maintenance/')&&!dir.includes('..'));
+const b=JSON.parse(fs.readFileSync(dir+'/build.json')),name='utilibre-php-fourget-check';
 const docker=(...args)=>{try{return cp.execFileSync('docker',args,{encoding:'utf8',timeout:30000,maxBuffer:1024**2,stdio:['ignore','pipe','pipe']}).trim();}catch(e){fs.writeFileSync(dir+'/application-error.log',String(e.stdout||'')+String(e.stderr||''));throw Error('Private 4get test failed; diagnostic retained');}};
 assert.equal(docker('image','inspect','--format','{{.Id}}',b.candidate),b.imageId);assert.equal(docker('ps','-aq','--filter','name=^/'+name+'$'),'');
 try{

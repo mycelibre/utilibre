@@ -1,0 +1,27 @@
+{
+  "sourceRevision": "0baecdd",
+  "base": "sha256:3c9fe512024ac1f3dfba1f71db55c90f4719a58d370a9abbcb17008ab7c408f1",
+  "candidate": "utilibre-portal:chartdb-20261109",
+  "imageId": "sha256:7f61d39cd62a42536e6edd3ffa4e87cf21c2bbd92f8e8e82461ee9dffb4cbbf6",
+  "expectedVersions": [
+    "1.21.0-p1",
+    "1.30.4",
+    "3.9.0",
+    "0.42.0-p1",
+    "0.7.101-p1",
+    "4.2.0-p1",
+    "1.3.2-p1",
+    "32.6.10-p1"
+  ],
+  "implementation": "ChartDB source/version record only; runtime server and packages unchanged",
+  "approved": true,
+  "retainedFindings": [
+    {
+      "id": "CVE-2026-4738",
+      "package": "zlib",
+      "version": "1.3.2-r1",
+      "severity": "MEDIUM"
+    }
+  ],
+  "assessmentNote": "One existing medium zlib record is unchanged, remains in the security queue and is not marked fixed by this metadata-only release."
+}

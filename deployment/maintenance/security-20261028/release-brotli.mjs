@@ -18,9 +18,9 @@ import {proveXi,xiComparison} from '../security-20261103/xi-policy.mjs';
 import {acquireReleaseLock} from '../security-20261103/release-lock.mjs';
 const batch=selectBatch(process.argv.slice(2));process.argv=[...process.argv.slice(0,2),...batch.args];
 process.umask(0o077);
-const root=batch.root,flags=['--guava','--oauth-debian','--libxi','--js-nov','--sqlite','--redirects','--pyasn1','--expat-debian','--msal','--cfitsio','--trust','--nginx-debian','--zod','--codec-caddy','--filelock','--text','--oauth','--codec','--x11','--health','--markdown','--symfony','--nltk','--msgpack','--multer','--pcre','--postal','--expat','--blkid','--jose-leaf','--jose-caddy','--jose','--drf','--dnspython','--authlib','--alpine','--node-apk','--undici','--body','--go-helpers','--caddy','--go-runtime','--go-services','--node','--curl','--curl-bookworm'];
+const root=batch.root,flags=['--musl','--guava','--oauth-debian','--libxi','--js-nov','--sqlite','--redirects','--pyasn1','--expat-debian','--msal','--cfitsio','--trust','--nginx-debian','--zod','--codec-caddy','--filelock','--text','--oauth','--codec','--x11','--health','--markdown','--symfony','--nltk','--msgpack','--multer','--pcre','--postal','--expat','--blkid','--jose-leaf','--jose-caddy','--jose','--drf','--dnspython','--authlib','--alpine','--node-apk','--undici','--body','--go-helpers','--caddy','--go-runtime','--go-services','--node','--curl','--curl-bookworm'];
 assert(process.argv.filter(a=>flags.includes(a)).length<=1);
-const profile=process.argv.find(a=>flags.includes(a))?.slice(2)||'brotli',guava=profile==='guava',oauthDebian=profile==='oauth-debian',msal=profile==='msal',cfitsio=profile==='cfitsio',trust=profile==='trust',nginx=profile==='nginx-debian',zod=profile==='zod',filelock=profile==='filelock',oauth=profile==='oauth',markdown=profile==='markdown',symfony=profile==='symfony',nltk=profile==='nltk',msgpack=profile==='msgpack',multer=profile==='multer',postal=profile==='postal',blkid=profile==='blkid',jose=['jose','jose-leaf'].includes(profile),drf=profile==='drf',dns=profile==='dnspython',authlib=profile==='authlib',alpine=['alpine','node-apk','expat','pcre','x11'].includes(profile),undici=profile==='undici',body=profile==='body',go=['codec-caddy','text','codec','health','go-helpers','caddy','go-runtime','go-services','jose','jose-caddy','jose-leaf'].includes(profile),node=profile==='node',curl=profile.startsWith('curl');
+const profile=process.argv.find(a=>flags.includes(a))?.slice(2)||'brotli',guava=profile==='guava',oauthDebian=profile==='oauth-debian',msal=profile==='msal',cfitsio=profile==='cfitsio',trust=profile==='trust',nginx=profile==='nginx-debian',zod=profile==='zod',filelock=profile==='filelock',oauth=profile==='oauth',markdown=profile==='markdown',symfony=profile==='symfony',nltk=profile==='nltk',msgpack=profile==='msgpack',multer=profile==='multer',postal=profile==='postal',blkid=profile==='blkid',jose=['jose','jose-leaf'].includes(profile),drf=profile==='drf',dns=profile==='dnspython',authlib=profile==='authlib',alpine=['alpine','node-apk','expat','pcre','x11','musl'].includes(profile),undici=profile==='undici',body=profile==='body',go=['codec-caddy','text','codec','health','go-helpers','caddy','go-runtime','go-services','jose','jose-caddy','jose-leaf'].includes(profile),node=profile==='node',curl=profile.startsWith('curl');
 const specs=JSON.parse(fs.readFileSync(batch.input(profile))).rows.flatMap(s=>s.releaseGroups?s.releaseGroups.map(g=>({...s,...g,evidenceKey:s.key})):[s]);
 const evidence=(s)=>root+'/'+profile+(profile==='curl-bookworm'?'/images':'')+'/'+(s.evidenceKey||s.key);
 const [mode,...keys]=process.argv.slice(2).filter(k=>!flags.includes(k));assert(['prepare','apply','retry','sync-mirrors','verify-completed'].includes(mode));assert(keys.length&&new Set(keys).size===keys.length&&keys.every(k=>specs.some(s=>s.key===k)));
@@ -42,6 +42,7 @@ Object.assign(urls,{'wishlist-app':urls.wishlist,'expanded-resume':urls.resume,'
 if(batch.enabled&&profile==='sqlite')Object.assign(urls,{'expanded-breezewiki':urls.breezewiki,'records-candlr':urls.candlr,'trip-app':urls.trip,'expanded-penpot-exporter':urls.penpot,'beaverhabits-app':urls.beaverhabits,'linkding-linkding':urls.linkding,'identity-worker':urls.authentik,'wallabag-proxy':urls.wallabag,'priviblur-priviblur':urls.priviblur,'expanded-penpot-frontend':urls.penpot,'pack-forms-app':urls.liberaforms,'kitchenowl-app':urls.kitchenowl,'expanded-penpot-backend':urls.penpot,'records-grist':urls.grist,'services-freshrss':urls.freshrss});
 if(batch.enabled&&profile==='libxi')for(const role of ['backend','exporter'])urls['debian-expanded-penpot-'+role]=urls.penpot;
 if(batch.enabled&&profile==='js-nov'){urls.admin='https://design.utilibre.org/admin-console/';urls['grist-decode']=urls.grist;}
+if(profile==='musl')for(const s of specs)urls[s.key]=s.publicHome||null;
 async function publicStatus(key){if(!urls[key])return null;
  // Public IPv4 timed out from this VM. Check the existing Caddy address
  // with the real hostname, SNI and certificate verification; never disable TLS.
@@ -58,6 +59,17 @@ async function publicReady(g){
  }
 }
 function proof(key){const s=specs.find(s=>s.key===key),dir=evidence(s),b=read(dir+'/build.json'),scan=read(dir+'/scan-gate.json');
+ if(profile==='musl'){
+  assert.equal(s.approval,'approved','Native/application evidence and scoped approval required for this musl release');
+  assert.equal(s.consumerProfile,'static-nginx','Other musl consumers require a separately reviewed application gate');
+  const fixture=read(batch.input('musl')).nativeFixture;assert.equal(b.fixtureSha256,fixture.retainedBinarySha256);assert.equal(digest(fs.readFileSync(new URL('../security-20261109/'+fixture.source,import.meta.url))),fixture.sourceSha256);
+  const c=read(dir+'/consumer.json');assert(c.passed&&c.imageId===b.imageId&&c.base===b.base&&c.abiPreserved&&c.baselineExportedSymbols>1000);
+  assert.equal(c.fixtureSha256,digest(fs.readFileSync(new URL('../security-20261109/check-musl-static.py',import.meta.url))));
+  assert.deepEqual(c.rows.map(r=>r.imageId),[b.base,b.imageId]);assert(c.rows.every(r=>r.passed&&r.checks===9));
+  assert.equal(c.rows[0].rootSha256,c.rows[1].rootSha256);assert.deepEqual(c.nativeRows,b.nativeRows);
+  assert(b.nativeRows.length===2&&b.nativeRows.every(r=>r.passed&&r.checks===16));
+  assert(scan.targetedFindingRemoved&&scan.newHighCritical===0);
+ }
  assert(b.passed&&b.configurationUnchanged);
  if(batch.enabled&&profile==='libxi'){proveXi(read(batch.input(profile)),s,b,read(dir+'/consumer.json'),read(dir+'/application.json'));assert(scan.primarySourceFixVerified&&scan.newHighCritical===0);}
  if(batch.enabled&&profile==='js-nov'){proveJsNov(s,b,read(dir+'/native.json'),read(dir+'/application.json'));assert.equal(read(dir+'/native.json').fixtureSha256,digest(fs.readFileSync(new URL('../security-20261103/'+(key==='grist-decode'?'decode-grist-native.mjs':key==='rsshub'?'js-string-native.mjs':'js-nov-native.cjs'),import.meta.url))));}
@@ -129,6 +141,7 @@ if(mode==='prepare')for(const key of keys){
  if(key==='librespeed')g.routeCheck='Existing Caddy private address with public Host/SNI and verified TLS. Direct public IPv4 times out from this VM; outside-Internet reachability not established here.';
  if(key==='simplelogin'&&g.publicBefore===502){await nativeSimpleLogin();g.publicPreExistingFailure='Existing public 502, also documented in certifi-20261021 rollout. Native login gateway returns 200; library repair does not repair the separate edge route.';}
  else assert(g.publicBefore===null||g.publicBefore>=200&&g.publicBefore<500,'Public baseline unavailable; investigate first');
+ if(profile==='musl'&&g.publicBefore!==null)assert.equal(g.publicBefore,200,'Static public home must be available before this release');
  report.groups.push(g);save();console.log(key+': candidate and baseline verified; prepared without live changes');
 }
 if(mode==='retry')for(const key of keys){

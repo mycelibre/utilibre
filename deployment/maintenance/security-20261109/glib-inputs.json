@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "url": "https://download.gnome.org/sources/glib/2.86/glib-2.86.5.tar.xz",
+    "sha256": "ce85a947bb8b3c0204dbeff79aec39bcb46371c6fafb64ba5b8726c71e038d5f",
+    "license": "LGPL-2.1-or-later"
+  },
+  "patches": [
+    {
+      "file": "glib-parser-assertions.patch",
+      "sha256": "4c8234794e8d92d12dced8d9d74725aa6a2cc2b80fac106e0c69b3d743d8b176",
+      "upstream": "https://github.com/GNOME/glib/commit/656ad4582cb1d7a7fa8bafe3ce8aec6aa3c17da0"
+    },
+    {
+      "file": "glib-node-nesting.patch",
+      "sha256": "107db223dcb3d4c1b937c3f4ff55e92267d04bb1ba835c2f43d932a7e79246ad",
+      "upstream": "https://github.com/GNOME/glib/commit/c9da977c178fbfc0e4caf99f9fdf5dc433d6fcc2"
+    }
+  ],
+  "compilerImage": "sha256:0efcba554b753bcd4d58045c3db806a14ae078d537faddb42aa65b767cda98a5",
+  "compilerPackageLockSha256": "1ea0ca0dacd5c50b8c6137733fa7bacb3ab29f122bfa54642b9f62856df6a83e",
+  "librarySha256": "9c3482bbc2974694f3a8989406a4f43c64db2d9a0ff5300de714d9d6dc0debb2",
+  "apk": {
+    "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/glib-2.86.5-r0.apk",
+    "sha256": "9e9fa35d0e7f7e543155720e22e54c60e726722d02e00181e698ce8f8d803b3b"
+  },
+  "rows": [
+    {
+      "key": "addy",
+      "name": "utilibre-addy-app-1",
+      "base": "sha256:79e9ee49b5fea032228016d584e677c209853be4fa14adc2894b4ad3c61470bf",
+      "baseRef": "utilibre-addy:expat-security-20261028-expat210-20261103",
+      "candidate": "utilibre-addy:glib2865-20261109",
+      "imageId": "sha256:a7307786cbc147e467503d5c8aa21385a2e0928780a522bb1ac151c3b92aea21",
+      "changedPackages": [
+        "glib"
+      ],
+      "packageVersion": "2.86.5-r0",
+      "packageSha256": "9e9fa35d0e7f7e543155720e22e54c60e726722d02e00181e698ce8f8d803b3b",
+      "gioSha256": "9c3482bbc2974694f3a8989406a4f43c64db2d9a0ff5300de714d9d6dc0debb2",
+      "upstreamFix": "c9da977c178fbfc0e4caf99f9fdf5dc433d6fcc2",
+      "applicationSha256": "5a322aff083bfa395d0f28d47a1e7b26e788a6c4d7fa30c0cf4785bc00491339",
+      "nativeResult": "Native GIO: valid interface and seven malformed documents passed",
+      "php": "Native PHP image round-trip passed",
+      "configurationUnchanged": true,
+      "status": "passed"
+    },
+    {
+      "key": "fourget",
+      "name": "utilibre-reader-evaluation-fourget-1",
+      "base": "sha256:80658cb1688f290ef13f2d45c67ac18cba881c2433dba67ef451b4b0a636bfe2",
+      "baseRef": "utilibre-fourget:expat-security-20261028-expat210-20261103",
+      "candidate": "utilibre-fourget:glib2865-20261109",
+      "imageId": "sha256:d7ab9527d31a903079de06d9038f3bb5258d31a4189e7acd5ad6463ee05c934e",
+      "changedPackages": [
+        "glib"
+      ],
+      "packageVersion": "2.86.5-r0",
+      "packageSha256": "9e9fa35d0e7f7e543155720e22e54c60e726722d02e00181e698ce8f8d803b3b",
+      "gioSha256": "9c3482bbc2974694f3a8989406a4f43c64db2d9a0ff5300de714d9d6dc0debb2",
+      "upstreamFix": "c9da977c178fbfc0e4caf99f9fdf5dc433d6fcc2",
+      "applicationSha256": "a930da7f4d01415092459a99f9109aa3289546f0d9e0f41861cebf406fc25676",
+      "nativeResult": "Native GIO: valid interface and seven malformed documents passed",
+      "php": "Native PHP image round-trip passed",
+      "configurationUnchanged": true,
+      "status": "passed"
+    }
+  ],
+  "upstreamStatus": "Mainline fix backported to the 2.86.5 source; native regression still fails against the vendor-only APK",
+  "testLimits": "Linux x86_64; synthetic D-Bus/XML tests, native application checks. No real mail delivery, live provider search, or byte-identical build claim."
+}

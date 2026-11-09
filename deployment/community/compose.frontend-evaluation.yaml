@@ -16,7 +16,7 @@ services:
   fourget:
     <<: *runtime
     restart: unless-stopped
-    image: utilibre-fourget:expat-security-20261028-expat210-20261103
+    image: utilibre-fourget:glib2865-20261109
     user: "100:101"
     tmpfs:
       - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777

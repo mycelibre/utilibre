@@ -356,10 +356,10 @@
   },
   {
     "patch": "deployment/toolbox/chartdb-local-source.patch",
-    "source": "/opt/utilibre/src/chartdb",
-    "revision": "c24936a402bb3e24b4858f05282d69a04fcfe25b",
+    "source": "/opt/utilibre/src/chartdb-1.21.0-utilibre",
+    "revision": "ee95448d154cfdcf65264c45745f440c0480ef84",
     "prerequisites": [],
-    "purpose": "Local assets, scoped browser storage and privacy-compatible native static build; see the dated deployment record.",
+    "purpose": "ChartDB 1.21.0: preserve local fonts/workers, namespaced browser storage, no analytics/cloud links; DOMPurify 3.4.17 and Monaco 0.57.0 pinned. Native SQL/JSON import/export and 842 upstream tests pass.",
     "removeWhen": "Replace each patch part when an upstream release or supported configuration supplies its behavior and native workflow checks pass. Preserve source for deployed releases."
   },
   {

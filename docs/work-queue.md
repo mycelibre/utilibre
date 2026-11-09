@@ -1,3 +1,13 @@
+## Latest checkpoint — 9 November 2026
+
+The main guest filesystem was expanded by 25 GiB; the temporary-data disk was
+unchanged. Addy/4get GLib repairs and musl repairs for 20 static services are
+live and verified. ChartDB 1.21.0 and its EN/ES portal records are deployed.
+The final full scan leaves **0 pending critical / 674 pending high records**;
+raw findings remain. Another 42 musl image candidates and 34 newer application
+releases still need their individual gates. Older counts below are historical.
+[Evidence, exact scope and rollback](records/security-maintenance-2026-11-09.md).
+
 ## Release refresh — 6 November 2026
 
 The 42 newer releases have been assessed: **9 upgraded and verified, 33 held**.

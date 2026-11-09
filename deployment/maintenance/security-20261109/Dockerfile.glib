@@ -1,0 +1,8 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+ARG RUNTIME_USER=root
+USER root
+COPY glib-2.86.5-r0.apk /tmp/utilibre-glib.apk
+RUN apk --no-network --no-cache --no-scripts add /tmp/utilibre-glib.apk && rm /tmp/utilibre-glib.apk
+COPY libgio-2.0.so.0.8600.5 /usr/lib/libgio-2.0.so.0.8600.5
+USER ${RUNTIME_USER}
