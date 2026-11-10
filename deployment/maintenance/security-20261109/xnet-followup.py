@@ -17,7 +17,7 @@ common = importlib.util.module_from_spec(loader)
 loader.loader.exec_module(common)
 sha = lambda p: common.sha(Path(p).read_bytes())
 read = lambda p: json.loads(Path(p).read_text())
-assert len(sys.argv) == 3 and sys.argv[1] in ('safetwitch', 'galene', 'gothub', 'mezzo')
+assert len(sys.argv) == 3 and sys.argv[1] in ('safetwitch', 'galene', 'gothub', 'mezzo', 'anubis')
 key, phase = sys.argv[1:]
 assert phase in ('stage', 'native', 'scan')
 manifest = read(HERE / 'xnet-inputs.json')
@@ -70,7 +70,7 @@ else:
     assert build['scopeCheckerSha256'] == sha(__file__)
     if phase == 'native':
         pins = read(HERE / 'zlib-inputs.json')['consumerFixtureHashes']
-        if key == 'mezzo':
+        if key in ('mezzo', 'anubis'):
             pins[spec['nativeFixture']] = spec['nativeFixtureSha256']
         adapters = []
         def adapt(relative, replacements):
@@ -86,7 +86,42 @@ else:
             adapters.append({'fixture': relative, 'fixtureSha256': sha(original),
                              'adapter': str(output), 'adapterSha256': sha(output)})
             return output
-        if key == 'mezzo':
+        if key == 'anubis':
+            fixture = HERE / spec['nativeFixture']
+            code = fixture.read_text()
+            launch = code[code.index(" docker('run','-d'"):code.index(' let ready=false;')]
+            output = next(line for line in code.splitlines() if line.startswith(' await fs.writeFile(trust?'))
+            script = adapt(spec['nativeFixture'], [
+                (next(line for line in code.splitlines() if line.startswith('const closure=')), 'const closure=false,oct28=false,trust=false,before=false;assert.equal(process.argv.length,4);'),
+                (next(line for line in code.splitlines() if line.startswith('const image=')), 'const image=process.argv[2];'),
+                ("../../../portal/node_modules/playwright/index.mjs", '/home/ubuntu/freetools/portal/node_modules/playwright/index.mjs'),
+                (launch, ''),
+                (output, " await fs.writeFile(process.argv[3],JSON.stringify({...receipt,date:new Date().toISOString()},null,2)+'\\n',{mode:0o600,flag:'wx'});"),
+                ("try{docker('rm','-f',name);}catch{}", '')])
+            policy = HERE / '../go-leaf-final/anubis-native-policy.yaml'
+            assert sha(policy) == spec['policySha256']
+            for label, image in [('before', spec['base']), ('after', build['imageId'])]:
+                name = 'maintenance-xnet-anubis-native-' + label
+                try:
+                    common.run(['docker', 'run', '-d', '--name', name, '--network', 'none', '--read-only',
+                        '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges', '--log-driver', 'none',
+                        '--memory', '128m', '--cpus', '.5', '-v', str(policy.resolve()) + ':/policy.yaml:ro', image,
+                        '-bind', '127.0.0.1:33145', '-metrics-bind', '', '-policy-fname', '/policy.yaml',
+                        '-target', 'http://127.0.0.1:33146', '-use-remote-address', '-slog-level', 'ERROR'])
+                    pid = common.run(['docker', 'inspect', '--format', '{{.State.Pid}}', name]).strip()
+                    execute(['nsenter', '-t', pid, '-n', 'node', str(script), image, str(directory / (label + '-native.json'))],
+                            directory / (label + '-native.log'), timeout=180)
+                    result = read(directory / (label + '-native.json'))
+                    assert result['passed'] and result['imageId'] == image and result['nativeAllowAndDeny']
+                    assert result['twoIndependentBrowserPowChallenges'] and result['authenticatedReload'] and result['externalBrowserCalls'] == 0
+                finally:
+                    subprocess.run(['docker', 'rm', '-f', name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30)
+            for file, field in [('check-assets.py', 'assetsFixtureSha256'), ('extract-embed.py', 'embedExtractorSha256')]:
+                assert sha(HERE / '../go-leaf-final' / file) == spec[field]
+            execute([sys.executable, str(HERE / '../go-leaf-final/check-assets.py'), 'anubis', '--binary', str(directory / key), '--output', str(directory / 'assets.json')], directory / 'assets.log')
+            assets = read(directory / 'assets.json')
+            assert assets['passed'] and assets['binarySha256'] == build['binarySha256']
+        elif key == 'mezzo':
             script = adapt(spec['nativeFixture'], [
                 ("ROOT = Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/output')", 'ROOT = Path(' + repr(str(directory)) + ')'),
                 ("IMAGES = ['sha256:f8643c2525c96b3c5708bb737f71759bfc4c01a745301a8a7dbcba609f9c6416',\n          'utilibre-mezzo:1.4.0-go-security-20261011']", 'IMAGES = ' + repr([spec['base'], build['imageId']]))])

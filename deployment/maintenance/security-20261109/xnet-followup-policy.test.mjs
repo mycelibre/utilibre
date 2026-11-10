@@ -22,6 +22,11 @@ test('Mezzo is subject to the same binary, dependency and native proof gates',()
  const d=data();d.s.key='mezzo';assert(validate(d));
  d.b.moduleChanges.push({module:'github.com/PuerkitoBio/goquery',after:'v1.99.0'});assert.throws(()=>validate(d));
 });
+test('Anubis rejects a newly linked telemetry package',()=>{
+ const d=data();d.s.key='anubis';d.s.builderSha256='a'.repeat(64);assert(validate(d));
+ d.dependencies.push('golang.org/x/telemetry/counter');assert.throws(()=>validate(d));
+ d.dependencies.pop();delete d.s.builderSha256;assert.throws(()=>validate(d));
+});
 for(const [label,mutate]of Object.entries({
  'unapproved':d=>d.s.approval='pending','unknown application':d=>d.s.key='unknown',
  'wrong artifact':d=>d.s.imageId='other','unexpected file':d=>d.b.changedFiles.push('/etc/config'),

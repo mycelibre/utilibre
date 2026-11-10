@@ -5,11 +5,35 @@ import {createHash} from 'node:crypto';
 import {verifyV3BuildInput} from '../security-20261028/jose-policy.mjs';
 import {freshScan} from '../review-native-backports.mjs';
 import {validateDecision} from '../triage.mjs';
+import cp from 'node:child_process';
+import {proveFollowup} from '../security-20261109/xnet-followup-policy.mjs';
 process.umask(0o077);
-assert.equal(process.argv.length,2);
+const xnet=process.argv[2]==='--xnet-anubis';
+assert.equal(process.argv.length,xnet?3:2);
 const base=new URL('../',import.meta.url).pathname;
 const privateRoot='/var/lib/utilibre-maintenance',root=privateRoot+'/security-20261103';
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+if(xnet){
+ const scan=read(privateRoot+'/security.json'),q=read(privateRoot+'/security-queue.json');freshScan(q,scan);assert.equal(scan.status,'checked');
+ const s=read(new URL('../security-20261109/xnet-release-inputs.json',import.meta.url)).rows.find(r=>r.key==='anubis');
+ const {b}=proveFollowup(s,{requireRecentCandidate:false});
+ const original=read(new URL('../security-20261109/xnet-inputs.json',import.meta.url)).rows.find(r=>r.key==='anubis');
+ const d=privateRoot+'/security-20261109/xnet/anubis',fixedPath=privateRoot+'/security-20261028/jose/regression/v3-fixed/jwk.go';
+ assert.equal(sha(fixedPath),original.joseV3Sha256);
+ const name='deployment/maintenance/security-20261109/xnet-locks/anubis/go.mod',lock=new URL('../security-20261109/xnet-locks/anubis/go.mod',import.meta.url);
+ assert.equal(sha(lock),original.locks['go.mod']);verifyV3BuildInput(fs.readFileSync(lock,'utf8'),fs.readFileSync(fixedPath));
+ const buildLock=fs.readFileSync(d+'/anubis-build-go.mod','utf8');assert(buildLock.includes('replace github.com/go-jose/go-jose/v3 => /work/jose-v3'));
+ const tests=fs.readFileSync(d+'/anubis-jose-v3-tests.txt','utf8');assert(/^ok\s+github.com\/go-jose\/go-jose\/v3\s/m.test(tests)&&!/(^|\n)FAIL(?:\s|$)/.test(tests));
+ const release=read(privateRoot+'/security-20261109/xnet/release.json').groups.find(g=>g.key==='anubis');assert(release.status==='passed');
+ const container='public-utility-anubis-1';assert.equal(cp.execFileSync('docker',['inspect','--format','{{.Image}}',container],{encoding:'utf8',timeout:10000}).trim(),s.imageId);
+ const temp=fs.mkdtempSync(d+'/review-live-');
+ try{cp.execFileSync('docker',['cp',container+':/ko-app/anubis',temp+'/anubis'],{timeout:30000,stdio:['ignore','pipe','pipe']});assert.equal(sha(temp+'/anubis'),b.binarySha256);}finally{fs.rmSync(temp,{recursive:true});}
+ const matches=q.items.filter(i=>i.scope==='tracked-build-input'&&i.targetName===name&&i.id==='CVE-2026-116587'&&i.package==='github.com/go-jose/go-jose/v3'&&i.installed==='v3.0.5');assert.equal(matches.length,1);
+ const i=matches[0];assert.equal(i.artifact,name+'@sha256:'+original.locks['go.mod']);
+ const decision=validateDecision({key:i.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:'Exact Anubis x/net build retains the previously reviewed JOSE v3 backport with mandatory original/fixed source hashes and an isolated local module replacement. Its v3 suite and native application checks pass; live binary matches the approved artifact. Version metadata remains v3.0.5 and the raw source finding remains. Evidence: security-20261109/xnet/anubis, xnet-inputs.json, xnet-release-inputs.json. This does not waive another image, lock or advisory; re-review if the builder, patch, lock or artifact changes. https://github.com/go-jose/go-jose/commit/a0111f82742fa92bceec9ede40845e73319e6230'});
+ fs.writeFileSync(d+'/v3-review.json',JSON.stringify({schemaVersion:1,date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions:[decision]},null,2)+'\n');
+ console.log('One exact Anubis source-input review prepared; raw finding retained.');process.exit(0);
+}
 const spec=read(new URL('./go-v3-replay-inputs.json',import.meta.url));
 assert.equal(spec.deploymentAllowed,false);
 for(const [f,h]of Object.entries(spec.builders))assert.equal(sha(base+f),h,'Changed repair adapter');

@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T01:34:44.578564+00:00",
-  "scanCompletedAt": "2026-11-10T01:29:36.838Z",
+  "recordedAt": "2026-11-10T02:02:15.002620+00:00",
+  "scanCompletedAt": "2026-11-10T01:59:18.279Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
   "runningContainers": 175,
-  "sourceInputs": 95,
+  "sourceInputs": 99,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 183,
+  "pendingHigh": 181,
   "rawFindingsRetained": true,
-  "assessmentNote": "Completed frozen-database scan after the native library and x/net releases, including GoHub and the three embedded Caddy images. Exact live-file, component and runtime-boundary decisions retain raw findings and expire. This is not complete remediation or security clearance.",
+  "assessmentNote": "Completed frozen-database fleet scan after Mezzo and Anubis. Exact source review preserves the required JOSE backport; raw findings remain and the decision expires. This is not complete remediation or security clearance.",
   "musl": {
     "imagesReleased": 62,
     "groupsPassed": 112,
@@ -46,7 +46,7 @@
       "penpot"
     ]
   },
-  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-caddy",
+  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-anubis",
   "degoog": {
     "status": "deployed-public-search-passed",
     "image": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
@@ -56,12 +56,13 @@
     "currentImage": "sha256:17fc5c2c7a400971ee2c0da2d4d8dbbaf0d8ad8ce4639dc752f628671af45644"
   },
   "zlibAndXnet": {
-    "groupsPassed": 44,
-    "distinctImagesReleased": 30,
-    "selectedContainers": 47,
+    "groupsPassed": 49,
+    "distinctImagesReleased": 36,
+    "selectedContainers": 50,
     "wbo": "held-preserve-ram-boards",
     "xnetOtherApplications": "remaining-reviewed-inventory-not-complete",
-    "releaseTests": 43
+    "releaseTests": 43,
+    "countingNote": "Distinct successful image artifacts across the two release receipts, including superseded intermediate repairs; not a count of independently deployed applications."
   },
   "sqliteFollowup": {
     "status": "deployed",
@@ -80,7 +81,7 @@
     "rawTargetAttributionRetained": true
   },
   "pendingHighByScope": {
-    "runtime-image": 140,
+    "runtime-image": 138,
     "tracked-build-input": 22,
     "mounted-runtime-code": 1,
     "upstream-release-source-lock": 2,
@@ -99,13 +100,16 @@
     "applications": [
       "safetwitch",
       "galene",
-      "gothub"
+      "gothub",
+      "mezzo",
+      "anubis"
     ],
     "dependency": "golang.org/x/net v0.62.0",
     "compiler": "Go 1.26.10",
     "newHighCritical": 0,
     "galene": "two independent Chromium sessions with synthetic media and screen sharing; same-host isolated network",
-    "realDeviceOrExternalRelayTest": false
+    "realDeviceOrExternalRelayTest": false,
+    "anubis": "Two independent Chromium challenge sessions per old/new artifact, authenticated reload and native allow/deny in an isolated network; 71 embedded frontend files and native inline assets unchanged."
   },
   "headerReview": {
     "snapshot": "f28c090f440f4708e405f235942a83ba4deb7ca4",
@@ -113,7 +117,7 @@
     "unresolvedAdvisories": 4,
     "scope": "Exact linux-libc-dev header packages only; no running kernel clearance"
   },
-  "sourceInventoryNote": "Two new Caddy module files included; 95 source inputs checked, no unrechecked targets. UNKNOWN and other raw records remain retained.",
+  "sourceInventoryNote": "99 source inputs checked after adding exact Mezzo and Anubis locks; no unrechecked targets. Remaining medium, low and unknown records are retained.",
   "embeddedCaddy": {
     "status": "deployed",
     "images": 3,

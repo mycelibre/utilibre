@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "date": "2026-11-10T01:34:44.578564+00:00",
-  "scanDate": "2026-11-10T01:29:36.838Z",
+  "scanDate": "2026-11-10T01:59:18.279Z",
   "counts": {
     "runtime": 17,
     "trackedInputs": 22
@@ -553,10 +553,24 @@
       "image": "sha256:0ec2f93d147bc054141d5d9a60615ccf4534ff4a0a3ad6b48027b4ebf007d269",
       "status": "deployed-targeted-finding-removed",
       "completedAt": "2026-11-10T01:08:44.616Z"
+    },
+    {
+      "application": "mezzo",
+      "container": "utilibre-additions-mezzo-1",
+      "image": "sha256:526ac607e52f65564ecb9f13a410fe14b63b6fa4f9eb7e523d36cc0ad18784b6",
+      "status": "deployed-targeted-finding-removed",
+      "completedAt": "2026-11-10T01:44:17.293Z"
+    },
+    {
+      "application": "anubis",
+      "container": "public-utility-anubis-1",
+      "image": "sha256:88db5bdd783682716741f8f47430a08a2672da2430d74f69e70d994c6f17d308",
+      "status": "deployed-targeted-finding-removed",
+      "completedAt": "2026-11-10T01:56:33.850Z"
     }
   ],
   "currentPending": {
-    "runtime": 9,
+    "runtime": 7,
     "trackedInputs": 22
   },
   "embeddedCaddyReleased": [

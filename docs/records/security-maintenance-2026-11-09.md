@@ -589,3 +589,47 @@ and the existing separately authorized `release-brotli.mjs --batch-20261109
 `security-20261109/xnet/mezzo`; rollback pins are in `xnet/release.json`.
 No account data, persistent schema or privacy configuration changes. The fleet
 count above remains the last completed fleet scan; refresh it after this batch.
+
+## Anubis and refreshed fleet evidence — 10 November
+
+Anubis 1.27.0 now uses x/net 0.62.0, compiled with Go 1.26.10. The live
+predecessor exactly matched the retained November build; clean pinned source
+and the existing frontend assets were used. The previous JOSE v3 patch remains
+mandatory in the build and its suite passes. Existing native configuration,
+challenge and web packages pass. The new Go development-tool telemetry module
+is not linked into the runtime; compilation telemetry is disabled. Four linked
+Go module changes are explicitly recorded; other linked modules are unchanged.
+
+Only `/ko-app/anubis` changes in the image. Two independent Chromium sessions
+per old/new artifact completed a native proof-of-work challenge, preserved the
+authenticated reload and passed allow/deny behavior. The browser and synthetic
+upstream ran inside the container's networkless namespace, with zero external
+requests. The 65 web and six Xess assets, plus inline challenge assets, match
+the previous bytes. This is Linux headless-browser coverage, not a real-device
+or public-upstream test. The complete source offer retains licences and build
+steps; two upstream Git-web integration-test key fixtures are explicitly omitted
+from redistribution, while remaining in the private assessed source. They are
+not required by this build or the tested workflows. No scan exclusions changed.
+
+The candidate comparison removes one high and one medium x/net record and
+adds none. Scoped deployment passed exact artifact, health, namespace and public
+route checks. Privacy settings and production policies are unchanged. Current
+code pins the historical checker for completed Mezzo/GoHub releases instead of
+retroactively changing their evidence. All 24 focused follow-up policy tests
+pass. The isolated mount failure is retained; it had no production effect.
+
+The complete 01:59 UTC scan checked 109 images, 175 containers and 99 source
+inputs. After one exact, expiring review of Anubis's retained JOSE backport, the
+pending queue is **0 critical / 181 high package-target records**. Seven x/net
+runtime targets and 22 older build inputs remain open. There are no unrechecked
+targets. Medium, low, UNKNOWN and raw records remain; this is not full remediation.
+Private evidence: `security-20261109/after-anubis` and `xnet/anubis`.
+
+Replay uses the existing `xnet-build.mjs anubis`, `xnet-followup.py anubis
+stage|native|scan`, and separately authorized `release-brotli.mjs --batch-20261109
+--xnet prepare|apply anubis`. `review-go-v3.mjs --xnet-anubis` is a read-only,
+exact-input proposal requiring a fresh scan and live artifact verification;
+recording that decision is a separate operator action. Rollback uses the exact
+previous image/configuration pins in `xnet/release.json`; no database migration
+or persistent-data change is part of this release. The source archive's public
+bytes were verified against its publication receipt.

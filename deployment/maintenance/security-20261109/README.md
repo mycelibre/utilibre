@@ -5,6 +5,38 @@ application tests, Trivy assessment, Compose release and rollback procedures.
 Private evidence is under `/var/lib/utilibre-maintenance/security-20261109`.
 It does not authorize automatic updates of other services.
 
+## Mezzo and Anubis follow-up
+
+The existing `xnet-build.mjs` adapter now supports Mezzo and Anubis through the
+pinned `go-leaf-final/build-one.sh` recipe. Both use Go 1.26.10 and exact x/net
+0.62.0 locks. Mezzo retains `nodwarf5` and its version flag. Anubis retains the
+previous JOSE v3 source repair; only two exact dependency-version assertions in
+the old recipe are adapted. Production application source and frontend bytes
+are unchanged. The full-image comparison permits only the declared Go binary.
+
+`xnet-followup.py NAME stage|native|scan` retains the existing native fixtures.
+Anubis runs the browser and synthetic upstream inside its networkless namespace:
+two independent challenge sessions, authenticated reload, native allow/deny,
+and unchanged embedded/inline frontend assets. The candidate has no linked Go
+development-tool telemetry package; compilation telemetry is off. Mezzo tests
+local native routes/assets/error handling and existing scraper fixtures, without
+querying Tenor. Neither check establishes real-device or live-provider coverage.
+
+`publish-xnet.mjs --mezzo|--anubis` updates the complete corresponding-source
+offers, preserving previous archives. Anubis's two upstream Git-web integration
+test-key files are documented omissions from redistribution, not scanner
+exclusions; they are not needed by the supported build or native checks.
+The existing `release-brotli.mjs --batch-20261109 --xnet prepare|apply NAME`
+uses exact approved images and the original scoped Compose rollback procedure.
+No data migration is involved. Historical checker versions are bound to Git
+commits, so extending the adapter does not rewrite completed release evidence.
+
+`security-20261103/review-go-v3.mjs --xnet-anubis` prepares one exact, expiring
+review of the retained JOSE backport after a fresh fleet scan. It verifies source,
+lock, tests, source offer, completed release and live binary. The operator records
+that reviewed decision separately with the existing triage tool; raw evidence is
+retained. Archived build proofs do not bypass deployment freshness requirements.
+
 ## Embedded Caddy follow-up
 
 `xnet-caddy-inputs.json` captures Caddy 2.11.7 in Wishlist and the newsletter
