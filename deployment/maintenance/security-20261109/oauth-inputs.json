@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-49272",
+  "version": "4.0.1",
+  "license": "BSD-3-Clause",
+  "source": "https://github.com/oauthlib/oauthlib",
+  "upstreamFix": "77a5f1c8ce00da2b0b8c5f6e9cc129920085f114",
+  "wheel": {
+    "file": "oauthlib-4.0.1-py3-none-any.whl",
+    "url": "https://files.pythonhosted.org/packages/df/ef/3b8adde1b32a6f540758bff734d3442c621734c83708e5f02b0ba2f43b84/oauthlib-4.0.1-py3-none-any.whl",
+    "sha256": "498a298876e996301950a5b053d12c31628bb7b895db03666430c69ce182eb61"
+  },
+  "rows": [
+    {
+      "key": "authentik",
+      "approval": "approved",
+      "base": "sha256:d8bfb015ebb16e5617bc4ce5ad095ab9d80a51f99cbce722abd21ae64c64a075",
+      "oldRef": "utilibre-identity-worker:sqlite-security-20261109",
+      "candidate": "utilibre-authentik:oauth-security-20261109",
+      "containers": [
+        "utilibre-identity-server-1",
+        "utilibre-identity-worker-1"
+      ],
+      "python": "/ak-root/.venv/bin/python",
+      "site": "/ak-root/.venv/lib/python3.14/site-packages",
+      "previous": "4.0.0",
+      "method": "upstream-wheel",
+      "approvalEvidence": "oauth/authentik/{build,inventory,stage,scan-gate}.json; reviewed 2026-11-10"
+    },
+    {
+      "key": "trip",
+      "approval": "approved",
+      "base": "sha256:668cbebc3da15038f1e9bba39a211866bbd90f95ed0f0cc1c291b05c8ed20f33",
+      "oldRef": "utilibre-trip-app:sqlite-security-20261109",
+      "candidate": "utilibre-trip:oauth-security-20261109",
+      "containers": [
+        "utilibre-trip-app-1"
+      ],
+      "python": "python",
+      "site": "/usr/local/lib/python3.12/site-packages",
+      "previous": "4.0.0",
+      "method": "upstream-wheel",
+      "approvalEvidence": "oauth/trip/{build,inventory,stage,scan-gate}.json; reviewed 2026-11-10"
+    },
+    {
+      "key": "simplelogin",
+      "approval": "approved",
+      "base": "sha256:5cd5176a8b2346cba63991bde295b6b743e77efab40e754cc7f0ed8b4e0a8257",
+      "oldRef": "utilibre-apt-simplelogin:security-20261109",
+      "candidate": "utilibre-simplelogin:oauth-security-20261109",
+      "containers": [
+        "utilibre-simplelogin-web-1",
+        "utilibre-simplelogin-smtp-1",
+        "utilibre-simplelogin-jobs-1"
+      ],
+      "python": "/code/.venv/bin/python",
+      "site": "/code/.venv/lib/python3.12/site-packages",
+      "previous": "4.0.0",
+      "method": "upstream-wheel",
+      "privateEvaluation": true,
+      "expectedPublicStatus": 503,
+      "approvalEvidence": "oauth/simplelogin/{build,inventory,stage,scan-gate}.json; reviewed 2026-11-10"
+    }
+  ],
+  "requiresPython": ">=3.9",
+  "verificationScope": "Pinned fixed wheel, ordinary authorized OAuth flows and exact consumer isolation; no new vulnerability reproduction",
+  "verification": {
+    "fixtureSha256": "ebc1de2b4ecb29cf36600d16a533b9833b7285a39e8dabcbf73b1bc02b194b2e",
+    "deviceSourceSha256": "e75d01898546168125cff9cdde9cb870ba59d781d53ae40530eb6c0e570cebf4"
+  },
+  "applicationFixtures": {
+    "trip": {
+      "deployment/maintenance/security-20261109/oauth-trip.py": "c8aaa73534149c249ded604c358e26ccc6a6a910c5b5e554f66743d1b150ea05"
+    },
+    "simplelogin": {
+      "deployment/simplelogin/security/check-isolated.py": "f01956681e40a64c53b044df4ab7ebb15f9bd6a318b87480207c158b46d9101c",
+      "deployment/simplelogin/security/native-regression.py": "9f4c96f5144f939994773d951617df4475c21c3875882c6d01e80bea4312dc86",
+      "deployment/simplelogin/security/runtime-regression.py": "1f162bcd2fdbd0efe9d7382da83e2ce1c5abc9d668c7f9ba62a574a74207f427",
+      "deployment/simplelogin/security/fixture-cleanup.py": "b38aac4d56c06be426a577001756db811a421d228ade9ca51ae238641e35e91f"
+    }
+  },
+  "debianComponentReview": {
+    "source": "https://github.com/oauthlib/oauthlib/security/advisories/GHSA-3jp2-3mrg-2vxc",
+    "snapshot": "oauth/device-advisory.json",
+    "snapshotSha256": "b4cca2c41723b7f0fcecb440c1709329ba336a6b575dfdcdd9477e7a5f81c5dc",
+    "reviewedAt": "2026-11-10",
+    "affectedVersionRange": ">=3.3.0",
+    "fixtureSha256": "97fe6827193d62458edb14f32c7d7cd514f1ec408203da7477627d3c9549efe7"
+  },
+  "sourceArchive": {
+    "url": "https://files.pythonhosted.org/packages/33/17/2bb072de0b990303c985f26869fd47bb179024a051f47e7f9d208eb92f8e/oauthlib-4.0.1.tar.gz",
+    "file": "oauthlib-4.0.1.tar.gz",
+    "sha256": "3d73febdb6faa00f277c81fb04be7b7586fb96fc3b7f0b9c772dada69a25ede7",
+    "bytes": 191219
+  }
+}

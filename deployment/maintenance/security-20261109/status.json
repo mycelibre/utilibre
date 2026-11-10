@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T04:28:46.950976+00:00",
-  "scanCompletedAt": "2026-11-10T04:19:58.121Z",
+  "recordedAt": "2026-11-10T04:59:45.400274+00:00",
+  "scanCompletedAt": "2026-11-10T04:52:36.840Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
   "runningContainers": 175,
   "sourceInputs": 107,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 88,
+  "pendingHigh": 79,
   "rawFindingsRetained": true,
   "assessmentNote": "Completed post-release scan, followed by exact current-image source/package/component revalidation. All raw findings remain; reviews expire after seven days. No complete remediation or security clearance.",
   "musl": {
@@ -46,7 +46,7 @@
       "penpot"
     ]
   },
-  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-apt-reviews",
+  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-oauth-reviews",
   "degoog": {
     "status": "deployed-public-search-passed",
     "image": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
@@ -81,11 +81,11 @@
     "rawTargetAttributionRetained": true
   },
   "pendingHighByScope": {
-    "runtime-image": 50,
+    "runtime-image": 42,
     "tracked-build-input": 22,
     "mounted-runtime-code": 1,
     "upstream-release-source-lock": 2,
-    "host-os": 13
+    "host-os": 12
   },
   "bookwormZlib": {
     "status": "deployed",
@@ -259,5 +259,29 @@
     "simplelogin": "private-evaluation; public 503 intentional; local login passed; no email sent",
     "redlib": "daily checker recognizes exact approved OS overlay; new source heads require review",
     "freshFullPenpotBrowserJourney": false
+  },
+  "oauthFollowup": {
+    "status": "deployed",
+    "version": "4.0.1",
+    "images": 3,
+    "containerRoles": 6,
+    "applications": [
+      "Authentik",
+      "TRIP",
+      "SimpleLogin private evaluation"
+    ],
+    "ordinaryChecksPerArtifact": 12,
+    "policyTests": 30,
+    "focusedTests": 52,
+    "newHighCritical": 0,
+    "rawHighFindingsRemoved": 3,
+    "repeatApplyPreservedContainers": true,
+    "fullImageScopeVerified": true,
+    "debianClientOnlyReviews": 2,
+    "debianReviewExpiryDays": 7,
+    "externalIdentityProviderTested": false,
+    "freshBrowserMfaTested": false,
+    "dataMigration": false,
+    "evidence": "security-20261109/oauth/"
   }
 }

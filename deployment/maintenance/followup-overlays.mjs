@@ -140,4 +140,5 @@ export const additionalOverlayReceipts = [
   'security-20261109/rsync/release.json',
   'security-20261109/zlib-bookworm/release.json',
   'security-20261109/xnet-caddy/release.json',
+  'security-20261109/oauth/release.json',
 ];

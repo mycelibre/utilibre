@@ -5,10 +5,10 @@ Usage: python3 check-isolated.py IMAGE PRIVATE_REPORT_DIRECTORY
 No live volumes, listeners, credentials or external SMTP are used. Do not remove
 network isolation to make a failed check pass.
 """
-import json, os, pathlib, secrets, shutil, subprocess, sys, time
+import json, os, pathlib, re, secrets, shutil, subprocess, sys, time
 os.umask(0o077)
 image, report_arg = sys.argv[1:]
-assert image.startswith('utilibre-simplelogin:')
+assert image.startswith('utilibre-simplelogin:') or re.fullmatch(r'sha256:[a-f0-9]{64}',image)
 report = pathlib.Path(report_arg).resolve()
 assert str(report).startswith('/opt/utilibre/reports/')
 report.mkdir(parents=True, exist_ok=False)

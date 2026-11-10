@@ -1,6 +1,6 @@
 name: utilibre-simplelogin
 x-app: &app
-  image: utilibre-apt-simplelogin:security-20261109
+  image: utilibre-simplelogin:oauth-security-20261109
   user: '1000:1000'
   read_only: true
   cap_drop: [ALL]

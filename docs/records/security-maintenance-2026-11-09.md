@@ -935,3 +935,59 @@ change or retention change occurred; image rollback does not undo user edits.
 The final focused check passes 112 tests across release, rollback, source review,
 artifact lineage, vendor payload and Redlib maintenance policies. JavaScript and
 Python syntax checks and the scoped whitespace check pass.
+
+## OAuthlib 4.0.1 — 10 November
+
+The fixed upstream wheel/source is pinned by SHA256 and deployed in Authentik,
+TRIP and the private SimpleLogin evaluation: three images, six container roles.
+Only OAuthlib and its package metadata/bytecode change. Complete image comparisons
+and dependency inventories confirm prior Python, CA, SQLite and application
+repairs remain. All 12 ordinary OAuth checks pass before and after. The fixed
+device-grant source matches the pinned upstream commit and source archive; no
+new invalid-device or token-bypass reproduction was performed.
+
+Native isolated checks cover Authentik account/TOTP and OAuth/OIDC operations;
+TRIP's two-account trip lifecycle and native OIDC factory with a mock transport;
+and SimpleLogin accounts, alias CSV import/export, native crypto, OAuth,
+HTTP/SMTP greeting and synthetic database dump/restore. Fresh temporary databases
+contain only fictional data. No email was sent. Mock identity transport is not
+evidence that a real external identity provider works, and this run does not
+claim fresh browser/MFA/device coverage.
+
+Production health/routes passed. SimpleLogin's public 503 remains intentional;
+its private login returns 200. No registration or public-access setting changed.
+The first Authentik preparation attempts correctly waited for the five-minute
+post-backup restart guard; no bypass was used. Repeating apply after deployment
+preserved all container IDs and start times. There was no database migration.
+Rollback uses each previous image/configuration pin in private
+`security-20261109/oauth/release.json`; it does not undo subsequent user edits.
+
+The upstream advisory identifies the device-server issue in versions >=3.3.0.
+Debian's tracker nevertheless attributes it to its 3.2.2 packages. A separate
+read-only review checks every installed dpkg Python file on the host and Kuma,
+confirms absence of server device-grant/endpoints modules, and exercises ordinary
+client request construction. Only those two exact records receive seven-day
+component applicability decisions; their raw findings remain. The earlier
+identity-binding backport is independently retained and verified.
+Primary references checked 10 November:
+[upstream advisory](https://github.com/oauthlib/oauthlib/security/advisories/GHSA-3jp2-3mrg-2vxc),
+[fixed commit](https://github.com/oauthlib/oauthlib/commit/77a5f1c8ce00da2b0b8c5f6e9cc129920085f114),
+and [Debian attribution](https://security-tracker.debian.org/tracker/CVE-2026-49272).
+
+The same frozen Trivy database reports three fewer high findings and no new
+high/critical findings in these images. The completed 04:52:36 UTC fleet scan
+covers 109 images, 175 containers and 107 source inputs. After exact-image
+revalidation and the narrow applicability reviews, **0 critical / 79 high
+records remain pending**. Raw records remain **24,488 total, 65 critical /
+3,047 high**. Pending high scopes: 42 runtime image, 22 tracked build inputs,
+one mounted runtime lock, two upstream release locks and 12 host packages.
+These are package/target records, not unique vulnerabilities or a clearance.
+Evidence: private `security-20261109/oauth/` and `after-oauth-reviews/`.
+
+Thirty dedicated release-policy tests and 22 existing ancestry/triage tests
+pass. Exact input/fixture/source checks, approval, file scope, successful native
+journeys and same-database scans are required by the reusable release mechanism.
+Future builds retain the new wheel/version in both SimpleLogin requirement files.
+A completed Yopass Go build cache was cleaned using Go's native cache command,
+after confirming no active build or container depended on it. This recovered
+449 MiB; sources, module caches, artifacts, rollback images and backups remain.

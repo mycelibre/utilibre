@@ -5,6 +5,45 @@ application tests, Trivy assessment, Compose release and rollback procedures.
 Private evidence is under `/var/lib/utilibre-maintenance/security-20261109`.
 It does not authorize automatic updates of other services.
 
+## OAuthlib 4.0.1 follow-up
+
+`oauth-inputs.json` pins the official BSD-licensed wheel/source and the three
+exact previous images. The existing wheel adapter, image comparator and release
+mechanism now accept this finite profile. No resolver or latest tag is used.
+The networkless fixture checks 12 ordinary OAuth operations before and after;
+the fixed device-grant source matches the pinned upstream source checksum.
+No new invalid-device or token-bypass reproduction is performed.
+
+Prepare with `security-20261028/dnspython.mjs --batch-20261109 --oauth KEY`,
+then its existing `scan-brotli.mjs` equivalent and
+`go-final/verify.py --oauth-nov9 KEY`. Authentik uses
+`check-auth-python.mjs --oauth-nov9`, with a fresh disposable database.
+TRIP and SimpleLogin use `oauth-apps.py KEY`, testing both old and new images.
+TRIP exercises two isolated accounts, a trip lifecycle and its native OIDC
+factory with a mock transport. SimpleLogin reuses its account, CSV, native
+crypto, private OAuth, HTTP/SMTP greeting and synthetic database-restore fixture;
+no mail or real account data is used. This does not establish a live external
+identity-provider journey or browser/device coverage.
+
+The dedicated policy requires approved exact inputs, fixture hashes, ordinary
+workflows, unchanged unrelated files/configuration and a passed same-database
+scan before the existing scoped `release-brotli.mjs --batch-20261109 --oauth
+prepare|apply KEY` can proceed. Thirty policy tests cover the acceptance and
+failure boundaries. All three groups (six roles) were deployed on 10 November.
+Repeating apply preserved every container identity and start time. Rollback
+uses the previous image/configuration pins recorded in `oauth/release.json`;
+there is no database migration. SimpleLogin remains a private evaluation:
+its intentional public 503 and native private login 200 must both persist.
+
+`security-20261103/review-oauth-debian.mjs --device-absence-nov9` separately
+prepares an exact applicability review for the host/Kuma 3.2.2 packages. It
+checks the pinned upstream advisory's >=3.3.0 range, every dpkg-listed Python
+source file, absent server device-grant/endpoints modules, ordinary client
+preparation, and the previous distinct identity-binding backport. Debian's
+conflicting raw source-package finding stays intact. This is not a package-wide
+exception, an upgrade, or permission to enable another consumer. Run offline;
+review records expire after seven days and require separate operator recording.
+
 ## Mezzo and Anubis follow-up
 
 The existing `xnet-build.mjs` adapter now supports Mezzo and Anubis through the

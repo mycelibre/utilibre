@@ -40,8 +40,8 @@ multidict==6.9.1 \
     --hash=sha256:7bf6478188f4e47bf5686e8a33da4ae28bf43b1b2528d9ee144d28492bfac60b
 newrelic-telemetry-sdk==0.9.0 \
     --hash=sha256:3ce9175c1d263470aef2ef32283d1d6a39c001b7f59a6f2b259405bf5342851f
-oauthlib==4.0.0 \
-    --hash=sha256:624c28c13a0a59cabf9747dfa52af63be3e512a7f2714df16e91b5b3a145e6cd
+oauthlib==4.0.1 \
+    --hash=sha256:498a298876e996301950a5b053d12c31628bb7b895db03666430c69ce182eb61
 pgpy==0.6.0 \
     --hash=sha256:279c2e353f4c3a319f00bd9bd582456e420f8a3ac6de2b4e9731444746828383
 propcache==0.5.4 \

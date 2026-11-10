@@ -31,7 +31,7 @@ WebOb==1.8.11
 cbor2==6.1.5
 filelock==4.0.12
 httplib2==0.32.0
-oauthlib==4.0.0
+oauthlib==4.0.1
 protobuf==7.36.2
 python-dotenv==1.2.4
 rsa==4.9.1

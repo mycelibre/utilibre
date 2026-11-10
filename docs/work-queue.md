@@ -1,11 +1,13 @@
 # Work queue
 
-FerretDB and the six APT image repairs are deployed and verified. Redlib's daily
-checker preserves its approved OS overlay. The completed **10 November 04:19 UTC**
-scan covers 109 images, 175 containers and 107 source inputs. Exact live-payload
-and retained-source reviews leave **0 pending critical / 88 pending high records**.
-Raw findings remain; this is not full remediation. Release-chain checks now
-follow actual completed deployments independently of repair-record file order.
+OAuthlib 4.0.1 is now deployed in Authentik, TRIP and the private SimpleLogin
+installation, retaining their prior fixes. FerretDB and the six APT image
+repairs are also deployed. The completed **10 November 04:52 UTC** scan covers
+109 images, 175 containers and 107 source inputs. Exact live-payload and retained
+source reviews leave **0 pending critical / 79 pending high records**.
+Raw findings remain; this is not full remediation. Redlib's daily checker
+preserves its approved OS overlay, and release-chain checks follow completed
+deployments independently of repair-record file order.
 
 Remaining work includes the ACL caller migration, host maintenance gates,
 remaining application/dependency findings, held upgrades and the active WBO
