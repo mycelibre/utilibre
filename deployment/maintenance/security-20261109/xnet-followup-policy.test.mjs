@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {validateFollowup,validateOAuthNative,validateWakapiNative} from './xnet-followup-policy.mjs';
+import {validateFollowup,validateOAuthNative,validateWakapiNative,validateOpengistNative,validateNtfyNative} from './xnet-followup-policy.mjs';
 function data(){
  const s={key:'safetwitch',mode:'binary-followup',approval:'approved',base:'old',imageId:'new',candidate:'candidate',databaseSha256:'db',checkSha256:'check',rawEvidence:{before:'before',after:'after'}};
  const original={base:'old',binary:'/safetwitch',locks:{'go.mod':'mod','go.sum':'sum'}};
@@ -44,6 +44,17 @@ test('Wakapi requires its exact retained compiler and two native adapters',()=>{
 test('Wakapi requires useful account and authenticated heartbeat behavior',()=>{
  const r={imageId:'image',passed:true,freshSqliteMigrations:true,nativeAccountLoginLogout:true,authenticatedHeartbeatAndAnonymousDenial:true,nativeHealthcheck:true};assert(validateWakapiNative(r,'image'));assert.throws(()=>validateWakapiNative(r,'different'));
  for(const key of Object.keys(r).filter(k=>k!=='imageId'))assert.throws(()=>validateWakapiNative({...r,[key]:false},'image'));
+});
+test('OpenGist requires two-account privacy, editing, Git and native deletion',()=>{
+ const r={imageId:'image',passed:true,blankRamOnlySqlite:true,twoNativeAccountsLogin:true,privateAnonymousAndOtherAccountDenied:true,createEditCommitsZip:true,privateGitClonePushReopen:true,gistsAndAccountsDeletedNatively:true,network:'internal-only, no production mounts, tokens kept in memory'};
+ assert(validateOpengistNative(r,'image'));assert.throws(()=>validateOpengistNative(r,'different'));
+ for(const key of Object.keys(r).filter(k=>!['imageId','network'].includes(k)))assert.throws(()=>validateOpengistNative({...r,[key]:false},'image'));
+ assert.throws(()=>validateOpengistNative({...r,network:'host'},'image'));
+});
+test('ntfy preserves anonymous notifications, limits, disabled collection and RAM-only cache',()=>{
+ const r={imageId:'image',configurationSha256:'configuration',passed:true,networkIsolated:true,onlySyntheticData:true,anonymousPublishAndPoll:true,oneHourExpiry:true,noCacheHonoured:true,attachmentsDisabled:true,registrationDisabled:true,metricsDisabled:true,ramCacheClearedOnRestart:true};
+ assert(validateNtfyNative(r,'image','configuration'));assert.throws(()=>validateNtfyNative(r,'different','configuration'));assert.throws(()=>validateNtfyNative(r,'image','different'));
+ for(const key of Object.keys(r).filter(k=>!['imageId','configurationSha256'].includes(k)))assert.throws(()=>validateNtfyNative({...r,[key]:false},'image','configuration'));
 });
 for(const [label,mutate]of Object.entries({
  'unapproved':d=>d.s.approval='pending','unknown application':d=>d.s.key='unknown',

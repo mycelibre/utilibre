@@ -80,6 +80,60 @@ The separately authorized release selects only Wakapi; saved user data and
 privacy settings are unchanged. `review-go-v3.mjs --xnet-wakapi` prepares
 exact, expiring review records after a fresh scan and verified deployment.
 
+## OpenGist and ntfy follow-up
+
+The same finite adapter now supports OpenGist 1.15.2 and ntfy 2.28.0,
+using their retained Go 1.27.3 compiler and original flags. Source files and old
+executables are reconciled against completed prior builds before preparation.
+Exact x/net 0.62.0 locks are in `xnet-locks/`; no latest-version resolution occurs
+in replay. Full image comparison permits only the declared executable to change.
+
+OpenGist retains Echo 4.16.1 and Chi 5.4.0. Its test-only JOSE v3 dependency uses
+the existing exact source replacement, with the upstream suite retained. The
+native fixture uses two synthetic accounts and a RAM-only database to check
+private access, editing, revision ZIP export, Git clone/push and native deletion.
+All 195 embedded frontend files must match the previous build. The Echo test
+needs the same explicit cache/network environment as the main build; the failed
+read-only-cache attempt is retained, not reported as a passing check.
+
+ntfy retains JOSE v4.1.6, static CGO linkage and its original build tags. Its
+unmodified fixture checks anonymous publish/poll, one-hour expiry, no-cache,
+disabled attachments/registration/metrics and clearing the RAM cache on restart.
+The production nonsecret configuration is mounted read-only in a networkless
+fixture; no production topic, message or account is accessed. All 295 embedded
+site/documentation files must be unchanged. This is not a real-device UnifiedPush
+check. A later ntfy release must account for loss of its intentionally temporary
+in-memory cache on restart; it does not migrate or back up that content.
+
+Use `xnet-build.mjs NAME`, then `xnet-followup.py NAME stage|native|scan`.
+`publish-xnet.mjs --opengist|--ntfy` publishes complete source only after the
+candidate gates pass. Production activation remains a separate exact-artifact
+review through `release-brotli.mjs --batch-20261109 --xnet prepare|apply NAME`.
+Both applications passed the native checks, full-image comparison and same-DB
+scan, and their scoped production releases completed on 10 November. The
+per-service release receipt establishes the exact deployed artifact. Rollback
+restores only its recorded preceding image; ntfy's RAM-only cache cannot be
+recovered by an image rollback. No retention or account settings changed.
+
+## Retained component reviews
+
+The existing DHI attribution policy now recognizes the two exact November
+SQLite descendant images, while retaining prior supported artifacts. Every
+review still requires signed full package payloads, residual-metadata proof,
+completed release ancestry and a fresh image scan. Five systemd/Perl records
+concern components absent from those specific binary packages. They are not
+source-wide exemptions. No installed metadata was changed.
+
+The existing Xvfb passive-grab review similarly recognizes the exact current
+exporter image. It rechecks authenticated patched source, completed release
+proofs, current host/container payloads and isolated ordinary cleanup unit tests.
+Four scoped reviews preserve the prior correction; no new host package or
+service restart is involved. Existing npm, component-inventory and PostGIS
+reviewers also rechecked 16 further records against complete installed payloads
+and retained source/native evidence; no new scanner rule or waiver was added. These reviews expire after seven days and retain
+all raw findings. Private evidence: `binary-scope-revalidation/` and
+`xvfb-passive-revalidation/` under this batch's evidence directory.
+
 ## Embedded Caddy follow-up
 
 `xnet-caddy-inputs.json` captures Caddy 2.11.7 in Wishlist and the newsletter

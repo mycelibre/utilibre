@@ -271,6 +271,77 @@
         "before-native.json": "4fd81dc186c4f90f3c09f14de7331f7a269575e29df0483de45f63d9ef7e2fd2",
         "after-native.json": "aeb5b9aefcef15be8b45925a551f140fe31f3eb330935f0016ed515b54ca93d3",
         "wakapi-assets.json": "97416abb2e054972764b90c4a38c759aef7423649a836699043777b024dccb82"
+      },
+      "checkRevision": "f4b78b8ccc9d4a4d880fde954a2c62e0051bf80d"
+    },
+    {
+      "key": "opengist",
+      "mode": "binary-followup",
+      "approval": "approved",
+      "base": "sha256:ab242621497a1e834e7fc220678a0282313dc63128440f6784f8e6650d427a38",
+      "candidate": "utilibre-opengist:xnet-security-20261109",
+      "imageId": "sha256:5d719639e41ddaefc3c5e1ffc5103b25dd7bb127b89ba78a64762960ac5d9532",
+      "containers": [
+        "utilibre-opengist-opengist-1"
+      ],
+      "publicHome": "https://snippets.utilibre.org/",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "checkSha256": "4f718726562ac01085b063f116c5a0c574d04e3b12262763c0a7f5ec58fbff57",
+      "builderSha256": "67ac4cffd15999d844971715b6bbd794bb80507952faa263fa6245d646579d5f",
+      "rawEvidence": {
+        "before": "0520c7367b0f1a55904aaf41dbe4993cf4b7f4e90f399952a5fc44836eb83d6e",
+        "after": "d21a1feda8bae87b1067ffbde2ebfd3ccbc5446c806702006d2b9ead4ef845c2"
+      },
+      "dependenciesSha256": "b61c72dec4d3683235d2a7940b585979bd6986b0314506238396e527595cbdae",
+      "proofs": {
+        "compiled.json": "607049a99a6d997c554eed73baa24edff2c881a5f702dcc56f01e179e3edaf4c",
+        "build.json": "7a70e78065a3a4659bba6b00c05669433c8e3dc5ef3d86cdfdbdac3e2f1ad2c3",
+        "native.json": "29b6396f2b103ebea100a515d29d2c7075d12a7e2e6a4e21561206d0fc499d11",
+        "scan-gate.json": "bda775e86cfcea5f8c7ca68ff62966b248b3a0aa6cf6cf5299f284d904061d23",
+        "native-dependencies.txt": "b61c72dec4d3683235d2a7940b585979bd6986b0314506238396e527595cbdae",
+        "opengist-tests.txt": "4d322e0ca32ea03bdd512703f2f8b7faa1401f8e23a649190774ed48bed5d075",
+        "opengist-jose-v3-tests.txt": "bded6e2e63dc43d31bb2916d5269cfddfa66985ad77e68c6f30877bd5beae895",
+        "opengist-build-go.mod": "ca31c88057856719301b19ae6144ba424ee79261d6f1389255b0750522cca422",
+        "build-adapter.sh": "37170853d40ea9d6d605a00562e06c80126c5c95e343cdcc133759a7125da5c9",
+        "echo-middleware-tests.txt": "28d5e29fc675f3425ba7ba0063433ee66cb8f63dbc855580c60a731da6938540",
+        "before-native.json": "097ee931a5b558063e6fdf0895e118936d113f06776c4b61e4fd64f933d6040b",
+        "after-native.json": "dcb78a82406092f637d7541e6b09ad0f98bb3c34c86b36893b271619d13cf0d4",
+        "assets.json": "914f9f013c7edcd141627c6e2b7efc964f0c78872360f7c477cc27ed9c0cccc2"
+      }
+    },
+    {
+      "key": "ntfy",
+      "mode": "binary-followup",
+      "approval": "approved",
+      "base": "sha256:533de2718b3998a8bf2d0ea0981e3d0b9bbf228efafdd9f4d00e608ab933f1bb",
+      "candidate": "utilibre-ntfy:xnet-security-20261109",
+      "imageId": "sha256:0039b6246d07abc1d65121da5e632c276e791eb15775e11d7aa5e19d512307e0",
+      "containers": [
+        "utilibre-community-ntfy-1"
+      ],
+      "publicHome": "https://notify.utilibre.org/v1/health",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "checkSha256": "4f718726562ac01085b063f116c5a0c574d04e3b12262763c0a7f5ec58fbff57",
+      "builderSha256": "67ac4cffd15999d844971715b6bbd794bb80507952faa263fa6245d646579d5f",
+      "rawEvidence": {
+        "before": "84feed815a043a0791d0b19c508c81b9e209899eedfdaf20327744c2e4659feb",
+        "after": "ae5ab0cbc80530e72d110580f646d4f73dde79692297e8f10298fb220ec487c2"
+      },
+      "dependenciesSha256": "28ba164b07fbed59c22fc616831d091fc85d96ce6284e7f379cf914fcc7ec8bc",
+      "proofs": {
+        "compiled.json": "69b5a27856fcdb6cf57df679b0d88ce7fedbb9e38be7abee7bbea8d7889f013f",
+        "build.json": "7803e3435fec65b744083ccdcd6e204ffb3e9c6c699fa41af580f421ff33c187",
+        "native.json": "4bb7233d051b25843231f12266192395d6a6a009a265dbaa96196ac7e4a66c85",
+        "scan-gate.json": "17faa77338344ef43b69f9dcab59c215a836c53b462596b84d21d8e0160e10c9",
+        "native-dependencies.txt": "28ba164b07fbed59c22fc616831d091fc85d96ce6284e7f379cf914fcc7ec8bc",
+        "ntfy-tests.txt": "e075d7152a8c9b1ef87c70e61070412cfa73aacab18f1333f09132d9eed680e7",
+        "ntfy-mod-verify.txt": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd",
+        "build-adapter.sh": "c277f3ec0256906911243ebbf86313e5410c154109830b193c87bd8cdc16043f",
+        "before-native.json": "04f8e06c2af44610fa710e4ef6d9cb6888a1818384fd7e6a7d85c2229d35bffe",
+        "after-native.json": "da9229d8cdea13701dd10f8733abd3054706e1dab23a1d0b29f4d767f114f2aa",
+        "assets.json": "d6f485e8be3a6c16f14a42c8f242108faa72e3cdb88f2559acade8ee3f982aa5"
       }
     }
   ]

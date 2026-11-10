@@ -1,11 +1,11 @@
-## Current continuation — 10 November 2026, 03:02 UTC
+## Current continuation — 10 November 2026, 03:19 UTC
 
-Wakapi and OAuth2 Proxy are deployed and verified. The completed 02:35 scan
-covers 103 source inputs, 109 runtime images and 175 containers. Exact retained
-fix and binary-component reviews now leave **0 pending critical / 131 pending
-high records**. Raw findings remain; reviews expire after seven days. OpenGist
-and ntfy are candidates undergoing isolated checks, not completed releases.
-Five x/net runtime targets and 22 historical build inputs still need work.
+OpenGist and ntfy networking repairs are deployed and verified. The completed
+03:18 scan covers 107 source inputs, 109 runtime images and 175 containers.
+The queue now has **0 pending critical / 129 pending high records**. Raw
+findings remain; exact reviews expire after seven days. Donetick, Vikunja and
+FerretDB are the three remaining x/net runtime targets; 22 historical build
+inputs and other repairs also remain. This is not full remediation.
 [Current evidence and limitations](records/security-maintenance-2026-11-09.md).
 
 ## Latest checkpoint — 10 November 2026

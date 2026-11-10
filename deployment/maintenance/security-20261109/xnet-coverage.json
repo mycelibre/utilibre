@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "date": "2026-11-10T01:34:44.578564+00:00",
-  "scanDate": "2026-11-10T02:35:05.831Z",
+  "date": "2026-11-10T03:20:03.313245+00:00",
+  "scanDate": "2026-11-10T03:18:43.767Z",
   "counts": {
     "runtime": 17,
     "trackedInputs": 22
@@ -581,10 +581,24 @@
       "image": "sha256:b3d3d5ebf2416f31617a1163873f0c392e7a8ca1dc2a3e46a78f0b2e3b1457dc",
       "status": "deployed-targeted-finding-removed",
       "completedAt": "2026-11-10T02:32:37.159Z"
+    },
+    {
+      "application": "opengist",
+      "container": "utilibre-opengist-opengist-1",
+      "image": "sha256:5d719639e41ddaefc3c5e1ffc5103b25dd7bb127b89ba78a64762960ac5d9532",
+      "status": "deployed-targeted-finding-removed",
+      "completedAt": "2026-11-10T03:12:42.433Z"
+    },
+    {
+      "application": "ntfy",
+      "container": "utilibre-community-ntfy-1",
+      "image": "sha256:0039b6246d07abc1d65121da5e632c276e791eb15775e11d7aa5e19d512307e0",
+      "status": "deployed-targeted-finding-removed",
+      "completedAt": "2026-11-10T03:17:22.109Z"
     }
   ],
   "currentPending": {
-    "runtime": 5,
+    "runtime": 3,
     "trackedInputs": 22
   },
   "embeddedCaddyReleased": [

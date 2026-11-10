@@ -8,7 +8,7 @@ import {validateDecision} from '../triage.mjs';
 import cp from 'node:child_process';
 import {proveFollowup} from '../security-20261109/xnet-followup-policy.mjs';
 process.umask(0o077);
-const xnet=['--xnet-anubis','--xnet-oauth2-proxy','--xnet-wakapi'].includes(process.argv[2]);
+const xnet=['--xnet-anubis','--xnet-oauth2-proxy','--xnet-wakapi','--xnet-opengist'].includes(process.argv[2]);
 assert.equal(process.argv.length,xnet?3:2);
 const base=new URL('../',import.meta.url).pathname;
 const privateRoot='/var/lib/utilibre-maintenance',root=privateRoot+'/security-20261103';
@@ -27,11 +27,11 @@ if(xnet){
   assert.equal(sha(d+'/jose-v3-jwk.go'),original.joseV3Sha256);
   const prior=read(privateRoot+'/security-20261028/jose-leaf/'+key+'/build.json');assert(prior.joseV3Backport&&prior.joseV3Evidence.passed&&prior.joseV3Evidence.rows[1].sourceSha256===original.joseV3Sha256);
  }else{
-  const buildLock=fs.readFileSync(d+'/anubis-build-go.mod','utf8');assert(buildLock.includes('replace github.com/go-jose/go-jose/v3 => /work/jose-v3'));
-  const tests=fs.readFileSync(d+'/anubis-jose-v3-tests.txt','utf8');assert(/^ok\s+github.com\/go-jose\/go-jose\/v3\s/m.test(tests)&&!/(^|\n)FAIL(?:\s|$)/.test(tests));
+  const buildLock=fs.readFileSync(d+'/'+key+'-build-go.mod','utf8');assert(buildLock.includes('replace github.com/go-jose/go-jose/v3 => /work/jose-v3'));
+  const tests=fs.readFileSync(d+'/'+key+'-jose-v3-tests.txt','utf8');assert(/^ok\s+github.com\/go-jose\/go-jose\/v3\s/m.test(tests)&&!/(^|\n)FAIL(?:\s|$)/.test(tests));
  }
  const release=read(privateRoot+'/security-20261109/xnet/release.json').groups.find(g=>g.key===key);assert(release.status==='passed');
- const container={'oauth2-proxy':'utilibre-records-grist-auth-1',wakapi:'utilibre-expanded-wakapi-1',anubis:'public-utility-anubis-1'}[key];assert.equal(cp.execFileSync('docker',['inspect','--format','{{.Image}}',container],{encoding:'utf8',timeout:10000}).trim(),s.imageId);
+ const container={'oauth2-proxy':'utilibre-records-grist-auth-1',wakapi:'utilibre-expanded-wakapi-1',anubis:'public-utility-anubis-1',opengist:'utilibre-opengist-opengist-1'}[key];assert.equal(cp.execFileSync('docker',['inspect','--format','{{.Image}}',container],{encoding:'utf8',timeout:10000}).trim(),s.imageId);
  const temp=fs.mkdtempSync(d+'/review-live-');
  try{cp.execFileSync('docker',['cp',container+':'+original.binary,temp+'/binary'],{timeout:30000,stdio:['ignore','pipe','pipe']});assert.equal(sha(temp+'/binary'),b.binarySha256);}finally{fs.rmSync(temp,{recursive:true});}
  const matches=q.items.filter(i=>i.scope==='tracked-build-input'&&i.targetName===name&&i.id==='CVE-2026-116587'&&i.package==='github.com/go-jose/go-jose/v3'&&i.installed==='v3.0.5');assert.equal(matches.length,1);

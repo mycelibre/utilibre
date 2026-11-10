@@ -749,3 +749,40 @@ evidence is in `security-20261109/{binary-scope-revalidation,
 xvfb-passive-revalidation,npm-revalidation,component-revalidation,
 geospatial-revalidation,after-component-reviews}`. OpenGist and ntfy are still
 candidates at this checkpoint; their activation requires completed checks.
+
+## OpenGist and ntfy — 10 November, 03:19 UTC
+
+OpenGist 1.15.2 and ntfy 2.28.0 now use x/net 0.62.0 with their retained Go
+1.27.3 compiler, exact prior source and approved dependency repairs. Full image
+comparisons allow only each application's executable to change. Configuration,
+permissions, limits, application data and frontend files are preserved.
+
+OpenGist's native fixtures pass with two synthetic accounts: private access,
+editing, revision ZIP export, Git clone/push, reopening and native deletion. Its
+195 embedded assets are unchanged. Echo middleware tests and the retained
+JOSE v3 test dependency pass. Earlier cache/temp-environment failures remain
+in private evidence; the final complete build was rerun successfully.
+
+ntfy's selected upstream tests and native fixtures pass: publish/poll, one-hour
+expiry, no-cache behavior, disabled attachments/registration/metrics and clearing
+the RAM cache on restart. All 295 embedded assets are unchanged. This release
+does not establish a real-device UnifiedPush check. Its routine restart loses
+temporary cached messages; no configuration or saved account data migrated.
+
+Both exact artifacts passed live release health/route checks. Complete source
+archives and bilingual index entries are provided; public downloads matched the
+published hashes. OpenGist's first Python-client download received 403; curl
+subsequently fetched the exact archive. No WAF or access policy was weakened.
+
+The completed 03:18:43 UTC scan covers 109 images, 175 containers and 107 source
+inputs. After one exact, seven-day review of OpenGist's retained JOSE source
+repair, **0 critical / 129 high package-target records remain pending**. Raw
+findings remain. Three x/net runtime targets and 22 historical build-input
+records still need work; this is not full remediation.
+
+Evidence: private `security-20261109/xnet/{opengist,ntfy}` and
+`after-opengist-ntfy/`. Repeatable inputs, source offers, release proof hashes
+and immutable images are recorded in `xnet-inputs.json` and
+`xnet-release-inputs.json`. Rollback uses each group's preceding image in
+`xnet/release.json` through the existing scoped Compose procedure. There is no
+database-format change. A rollback does not restore ntfy's temporary RAM cache.

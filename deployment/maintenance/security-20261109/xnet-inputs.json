@@ -171,6 +171,52 @@
       "assetsFixtureSha256": "4e695fd8de4dda067a86462061bfef02e5a46b11dcc01c252048f5fc1ff194f5",
       "embedExtractorSha256": "74a874d77f257a0ec83ce8b324f3e1948cd31c64fe9012f6e8cc973c8502ac9c",
       "joseV3Sha256": "7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b"
+    },
+    {
+      "key": "opengist",
+      "sourceRevision": "5afef9ac76d2d69ba11a888bb7a095b1d14e7c9d",
+      "base": "sha256:ab242621497a1e834e7fc220678a0282313dc63128440f6784f8e6650d427a38",
+      "binary": "/app/opengist/opengist",
+      "oldBinarySha256": "d62579ae8996172c19a8943d889dfd93e60e48278b6b31b9c15f6dcec0bc52fd",
+      "candidate": "utilibre-opengist:xnet-security-20261109",
+      "sourceProofSha256": "c710ecb642d5729ad5c9a2c408a2b8d5c0408429ccf8b0b061b291f0e9b275b5",
+      "locks": {
+        "go.mod": "8afc9d2d35c27bf0798ef83149d4568b5deab71a335be892b90dfd66493dcb55",
+        "go.sum": "2d08d72c8a61c919432ef72c6c3f1c4dea347aa888789f7034ec23a574b316e0"
+      },
+      "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+      "compilerVersion": "1.27.3",
+      "buildRecipe": "deployment/maintenance/go-leaf-final/build-one.sh",
+      "buildRecipeSha256": "296d9acbbb46b6eb483813634311aa1ff318e516a346c082ac5ea158b3467085",
+      "moduleCache": "/var/lib/utilibre-maintenance/security-20261103/go-v3-leaf/modules",
+      "nativeFixture": "../go-leaf-final/check-opengist.py",
+      "nativeFixtureSha256": "b3efe37c615eadf8444d92ae0b3254485b8c239990ee7c3d42252d2514586a0a",
+      "assetsFixtureSha256": "f14368781f906a6b1f25d54762401618f679e1fad0446ede9d06ecc0b3895606",
+      "embedExtractorSha256": "74a874d77f257a0ec83ce8b324f3e1948cd31c64fe9012f6e8cc973c8502ac9c",
+      "joseV3Sha256": "7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b"
+    },
+    {
+      "key": "ntfy",
+      "sourceRevision": "10cb6506f836dbb00bb77e3b52669f6ace37f555",
+      "base": "sha256:533de2718b3998a8bf2d0ea0981e3d0b9bbf228efafdd9f4d00e608ab933f1bb",
+      "binary": "/usr/bin/ntfy",
+      "oldBinarySha256": "ffda313a92ce14a740abe6857c0cd5c952aefba81e0ea6c54badaf5e2f9cd482",
+      "candidate": "utilibre-ntfy:xnet-security-20261109",
+      "sourceProofSha256": "29eed0b3867bddb608132efc37e73ee6de7d00c1f980f3ee8e6aac3c28a978c5",
+      "locks": {
+        "go.mod": "abb38495632b110bca54fcb2d750d36257bee37d5f2e9e3eb3fc53bf9eaafc80",
+        "go.sum": "1a91bdfadb81e12f93e4f1c7152ed61be89d26ae51a3f9b3f8301a54a8fe4d7a"
+      },
+      "buildRecipe": "deployment/maintenance/go-leaf-final/build-one.sh",
+      "buildRecipeSha256": "296d9acbbb46b6eb483813634311aa1ff318e516a346c082ac5ea158b3467085",
+      "nativeFixture": "../go-leaf-final/check-ntfy.py",
+      "nativeFixtureSha256": "76fa306848a78918b56003f975c2a62e114bdccd5aa85589eeb36a56f8152ca8",
+      "assetsFixtureSha256": "f14368781f906a6b1f25d54762401618f679e1fad0446ede9d06ecc0b3895606",
+      "embedExtractorSha256": "74a874d77f257a0ec83ce8b324f3e1948cd31c64fe9012f6e8cc973c8502ac9c",
+      "configurationSha256": "d6465d175bbb26185a6c055fae3f0e7ac8edec467cb0f8f586e5a4d0156527c4",
+      "moduleCache": "/var/lib/utilibre-maintenance/security-20261028/jose/ntfy/cache",
+      "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+      "compilerVersion": "1.27.3"
     }
   ]
 }
