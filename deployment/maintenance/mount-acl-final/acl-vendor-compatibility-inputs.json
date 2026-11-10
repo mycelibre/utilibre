@@ -1,0 +1,348 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Verify official ACL 2.4.0 ordinary compatibility; no caller repair or release",
+  "permission": "isolated-compatibility-only",
+  "securityClosureAllowed": false,
+  "candidateVersion": "2.4.0-1~deb12u1+utilibre1",
+  "candidateLibrarySha256": "a78fcb7ab00805b1997336b2cfa68a418c05c0777226f4689a5baf46c537adef",
+  "sourceAuthenticationSha256": "05f5ee41eac237f52cfcc95b53412fbf3591b6f27a0ace1111790de9067712b8",
+  "nativeBuildReceiptSha256": "b75e8a152bd293f75d3a978e8a0939e129b067134063b9290eebe9df6b08a99a",
+  "files": [
+    {
+      "path": "sources/acl_2.3.1-3_amd64.deb",
+      "sha256": "a6954f6eaebac71a758b5da0c9aea8e41fe300122c5a19e15d7ccc9f9c04a2f3"
+    },
+    {
+      "path": "sources/acl_2.4.0-1.debian.tar.xz",
+      "sha256": "65931c2fb3e821bda67f8d8d72d77e99ac61502748dcdf38b6805fe89339085e"
+    },
+    {
+      "path": "sources/acl_2.4.0-1.dsc",
+      "sha256": "b987ebbeb3d498794bad29cd65301b77384978493d8765c94dba8bad8fa325b6"
+    },
+    {
+      "path": "sources/acl_2.4.0.orig.tar.xz",
+      "sha256": "e661131456d2708a01c614a0f400e11d7d1bfaeb6f3e74b75bb980b72f0161a3"
+    },
+    {
+      "path": "sources/acl_2.4.0.orig.tar.xz.asc",
+      "sha256": "5f4f0b9b78821764fe6b88e32aef6ec519628522c211c36706bcb78d6f3f036b"
+    },
+    {
+      "path": "output/acl_2.4.0-1~deb12u1+utilibre1_amd64.deb",
+      "sha256": "f7f794c2ef837c1c59dd3e7b7c0c62eb7ef2d2c36db09e16a62b07ec9cb43715"
+    },
+    {
+      "path": "output/libacl1_2.4.0-1~deb12u1+utilibre1_amd64.deb",
+      "sha256": "b0085afb8077dc8b66dc0bf3a7283e1c6e13db3be674a90cc8a8668db1537647"
+    }
+  ],
+  "targets": [
+    {
+      "artifact": "host-dpkg",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "host-dpkg"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:102838f13a118e05a408c86b7ae6397039351c1dfb081888fcc7f70381bd4b4b",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-services-freshrss-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:14793c0212c6f8e0dcfffa03741e42a9fdd0a6683ef861629b09af12409931ac",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-linkding-linkding-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:1e8305310f2bdb807c19391a06846169d9d95097b8648594f3cd966b152be2c3",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-services-rsshub-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:2b7368079850bcd17c58b5e7da21ddf72d1665b0ef7188b46e444b8364e92772",
+      "version": "2.3.2-2+dhi1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "79fd39768fc61e53d549e88f9af134422742d5dfd28cbfe3b4ba496d7635fc02",
+      "roles": [
+        "utilibre-expanded-penpot-frontend-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:2c58fab3e28bba0ae592138d3797cee5ea2c9a1b4ebfcdd3743436d02495ebd7",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-calendar-radicale-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:342a78264eb0b69ea78826a31bf1f4cd7dfac2b8fb8ac825bb17a35e72363b4c",
+      "version": "2.3.1-3",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2301",
+      "librarySha256": "4b46c012b15c9753a3b86b05088782edc51a6627017144da85e0b95428d15869",
+      "roles": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:39dd887419d6f88c62e0157ffeaf6a3c4fe412b96285e3fd0e9d1b27ef0b7e96",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-turn-option-turn-1",
+        "utilibre-galene-turn-turn-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:3cb8b0ae9222b67e5cd800a1432df8f7b8347c275d7f69e7ebd788a4bb7efefe",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-priviblur-priviblur-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:3d0ebc3247f8386f32eb0679c536c2c8745676df25f9e919e603b217b17472d7",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-records-candlr-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:3f5af0e842ed90e5329e9a545c33025ba416abc7d03461da0fc02142d8ba5fb7",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-unfurl-proxy-1",
+        "utilibre-records-egress-1",
+        "utilibre-13ft-proxy-1",
+        "utilibre-trip-proxy-1",
+        "utilibre-wallabag-proxy-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:44f704ae9920d5791c4b11fb713aaa86ce9886e4c2077f50513ea308291e919e",
+      "version": "2.3.1-3",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2301",
+      "librarySha256": "4b46c012b15c9753a3b86b05088782edc51a6627017144da85e0b95428d15869",
+      "roles": [
+        "utilibre-expanded-actual-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:4f5cbcbbacc96ac7b2f80214ba620097da116f68574111e73c652a997d0a538d",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-records-grist-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:524a835ac72bf3f619e3cbdebf2962996a1111e873532029c2f88f286df6cca2",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-identity-worker-1",
+        "utilibre-identity-server-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:5299186b36ea0e7f68d1f9d67b9e6fdc8f95bece6d89b54f4b09afca34edc7d8",
+      "version": "2.3.1-3",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2301",
+      "librarySha256": "4b46c012b15c9753a3b86b05088782edc51a6627017144da85e0b95428d15869",
+      "roles": [
+        "utilibre-community-rssbridge-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:5776c66bedaa1faf91806748ba84d2c47e3515fdb0818352fc1054872563f1cb",
+      "version": "2.3.1-3",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2301",
+      "librarySha256": "4b46c012b15c9753a3b86b05088782edc51a6627017144da85e0b95428d15869",
+      "roles": [
+        "utilibre-expanded-resume-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:59c1c6b908be50ee32e25d098a360d7e581a7181deb745431e92e1328ae9f83e",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-expanded-penpot-backend-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:93a08e0802d255f04e1f15f170d11c382b9bd59493c69952f25b9dbdff3d53d4",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-expanded-breezewiki-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:969fa23ad70d6c1d4501b31bde59baa31096bc90b84ad334398b772d1acf610e",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-kitchenowl-app-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:b13045cd3fd19a5e6b14eefddf38e5d9fcbbef85a65bda399bd5b449895fcc9f",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-family-chess-app-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:bf748ae83b9d9e0b8ef9ddf4ea57e892cef6614a33f38e573d862f15cc3d40c4",
+      "version": "2.3.2-2+dhi1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "79fd39768fc61e53d549e88f9af134422742d5dfd28cbfe3b4ba496d7635fc02",
+      "roles": [
+        "utilibre-expanded-penpot-exporter-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:ce2467088bf841400262efc8e995cdd28812e59c6a917e7ddcc05092dd33c1bc",
+      "version": "2.3.1-3",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2301",
+      "librarySha256": "4b46c012b15c9753a3b86b05088782edc51a6627017144da85e0b95428d15869",
+      "roles": [
+        "utilibre-pack-cryptpad-cryptpad-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:cfdd5a535e9e27b7007c9942f0bb31e7551280714783613a7a9bf7b8fd82d5e8",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-13ft-app-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:d75618fdee5a53508e391383bef49fbd2deed09fa45c4ecf0203c12a10c3a34f",
+      "version": "2.3.1-3",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2301",
+      "librarySha256": "4b46c012b15c9753a3b86b05088782edc51a6627017144da85e0b95428d15869",
+      "roles": [
+        "utilibre-gathio-postgres-1"
+      ],
+      "rsyncExpected": true
+    },
+    {
+      "artifact": "sha256:da56d2ad99df1b1706f42d4ea0ea9d01744f69e4430aeee40894dc328c042725",
+      "version": "2.3.1-3",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2301",
+      "librarySha256": "4b46c012b15c9753a3b86b05088782edc51a6627017144da85e0b95428d15869",
+      "roles": [
+        "utilibre-community-rallly-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:de382dcb06b5aaccb879b97d93b2f7fa90a1fce9507425f232ab8d24b63496ff",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-pack-forms-app-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:e01160fc2f9e9603b22f5ad1656786d0e573b6a6cdcf52ed34a095b3cef62f1b",
+      "version": "2.3.1-3",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2301",
+      "librarySha256": "4b46c012b15c9753a3b86b05088782edc51a6627017144da85e0b95428d15869",
+      "roles": [
+        "utilibre-wishlist-app-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:e6c3c9bc5b13d85435610e42ecb039ca5e9b4edfee1e227bfe84e370983e9522",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-unfurl-app-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:e93519e3e6760c28a624c8ffca1891d5fb81935383c41333655842a078f0a4d4",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-trip-app-1"
+      ],
+      "rsyncExpected": false
+    },
+    {
+      "artifact": "sha256:f69e4f9d79757281d1f2314e89047aae9ab7a834aceb0f44bdb26a03055fd2f2",
+      "version": "2.3.2-2+b1",
+      "libraryPath": "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2302",
+      "librarySha256": "3c03774961231d8485a4dba36ec359a95939a84719799c58cd26173e44bbde90",
+      "roles": [
+        "utilibre-beaverhabits-app-1"
+      ],
+      "rsyncExpected": false
+    }
+  ]
+}

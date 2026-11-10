@@ -21,6 +21,11 @@ the affected command-line tools are absent. Stable Debian still lists the
 installed ACL versions as affected; a compatible complete caller/library repair
 remains unverified. The current release record contains the evidence and limits.
 
+The official ACL 2.4.0 candidate now passes ordinary baseline/candidate
+copy/archive/ACL checks in all 29 affected images, plus host static-export
+compatibility. This is a verified prerequisite only: no ACL deployment, full
+application check or caller repair is claimed, and all 30 high records remain.
+
 All 175 production containers are running: 90 configured health checks healthy,
 85 without container health checks; no failed systemd units. The Kuma candidate
 passed native setup/login, monitoring/status-page and SMTP/ntfy checks with

@@ -1,5 +1,57 @@
 # Native mount and ACL repair — 12 October 2026
 
+## Vendor compatibility prerequisite: 10 November 2026
+
+`acl-vendor-compatibility.mjs` extends the existing ACL candidate work with
+ordinary checks against the current immutable images. It uses the already
+authenticated ACL 2.4.0 source/build, existing command runner limits, and a
+finite [input manifest](acl-vendor-compatibility-inputs.json). It does not run
+the historical vulnerability fixtures, change production, or record security
+exceptions. `securityClosureAllowed` is deliberately false.
+
+The final check passed **29 images before/after the test-library substitution**:
+ordinary access/default ACL preservation through file copy, tar archive/reopen
+and rename, plus rsync in the one image containing it. Both the old and new
+CLI readers agree on the synthetic results. Every existing dynamic export is
+preserved. The host's installed payload and exports also match; **the host was
+not run with the candidate library**, and no Trixie-native package was prepared.
+This is library compatibility evidence, not end-to-end application testing or
+proof that existing callers use safe pathname handling.
+
+From the recorded repository revision, with the exact private package/source
+inputs already present, use a new output directory:
+
+```sh
+node --test deployment/maintenance/mount-acl-final/acl-vendor-compatibility.test.mjs
+node deployment/maintenance/mount-acl-final/acl-vendor-compatibility.mjs \
+  deployment/maintenance/mount-acl-final/acl-vendor-compatibility-inputs.json \
+  /var/lib/utilibre-maintenance/security-20261110/acl-vendor-compatibility-new
+```
+
+The adapter rejects changed input hashes, unsupported versions, mutable image
+tags, unsafe paths and an existing output directory. It performs no downloads.
+Each disposable container has no network, a read-only root and input mounts,
+UID/GID 65534, dropped capabilities, no-new-privileges, one CPU, 256 MiB RAM,
+64 processes and a 16 MiB scratch filesystem. Each command has a 30-second
+timeout and bounded captured output. Images are processed sequentially. A
+target failure remains a failed aggregate result; other targets can continue.
+Only the adapter's uniquely named test containers are removed on completion.
+
+The first run failed before the operations because of fixture path/access
+errors. Those diagnostics remain private. After correcting the test packaging,
+a two-image preflight and all 29 image checks passed. Both complete runs have
+matching normalized results. Changed package hashes reject before preparation;
+an existing report cannot be overwritten. No failed initial run is described
+as an application regression.
+
+Private results are under
+`/var/lib/utilibre-maintenance/security-20261110/acl-vendor-compatibility-verified/`.
+The [current release record](../../../docs/records/security-maintenance-2026-11-10.md)
+and its status JSON bind the evidence. **All 30 high ACL findings remain open**:
+a compatible caller repair still needs verification. There is no activation
+command in this adapter, and the earlier rejected custom repair/reproduction
+path is not retried by these ordinary vendor compatibility checks.
+
 ## Current ACL boundary: 16 October 2026
 
 `acl-current-assessment.mjs /private/new-report.json` checks the exact queued

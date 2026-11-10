@@ -144,6 +144,36 @@ through the existing recorder. Historical regression evidence was retained,
 not rerun or described as fresh. Evidence: `expired-host-reviews.json`.
 The final recorded pending total remains **0 critical / 30 high**.
 
+### Official ACL candidate compatibility, later follow-up
+
+The existing authenticated **ACL 2.4.0** Bookworm candidate now has a pinned,
+repeatable ordinary compatibility check against **all 29 affected runtime
+images**. Baseline and candidate runs preserve fictional file content and
+access/default ACLs through copying, archive creation/extraction and rename.
+The one image with rsync also preserves those properties through its native
+copy flow. Candidate CLI reads agree with the original CLI. All existing
+dynamic library exports are retained. The host passes static payload/export
+comparison only; its processes never loaded the test library.
+
+Two representative images passed a preflight, and two complete runs have
+identical normalized results. The two policy tests include thirteen rejected
+input changes. Changed package checksums fail before preparation, and an
+existing output report is preserved rather than overwritten.
+An initial fixture-packaging failure is retained and is not attributed to an
+application. Tests used UID 65534 in bounded, networkless, read-only disposable
+containers with synthetic scratch data. No user content, application volumes,
+notifications or production service changes were involved.
+
+[Recipe, limits and replay instructions](../../deployment/maintenance/mount-acl-final/README.md)
+and [exact inputs](../../deployment/maintenance/mount-acl-final/acl-vendor-compatibility-inputs.json).
+Private evidence: `acl-vendor-compatibility-verified/result.json`, the retained
+preflight/initial results and `acl-vendor-compatibility-checks.json`. Their hashes
+are in the batch status. **This completes a compatibility prerequisite, not the
+ACL repair.** No Trixie-native package, safe-caller migration, complete application
+workflow verification or production deployment is claimed. All 30 high ACL
+records remain open; the earlier rejected custom repair/reproduction path was
+not retried.
+
 ## Verification and practical limits
 
 - Initial batch scan completed **13:34:21 UTC**: 109 runtime images, 175 containers,

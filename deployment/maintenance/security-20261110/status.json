@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "date": "2026-11-10T16:00:44.051018+00:00",
+  "date": "2026-11-10T16:22:29.265500+00:00",
   "status": "deployed-with-explicit-unresolved-findings",
   "initialPendingHigh": 319,
   "initialDisposition": {
@@ -340,6 +340,34 @@
     {
       "path": "acl-followup-result.json",
       "sha256": "e579b324edcdf36522e62d2270e20aa144f6c5915cf60ae3621312c65525e021"
+    },
+    {
+      "path": "acl-vendor-compatibility/result.json",
+      "sha256": "6d3287338ca42f5c75e96494d1514864042c1b43d312130fcece39ddac5d8fdf"
+    },
+    {
+      "path": "acl-vendor-compatibility-preflight/result.json",
+      "sha256": "a3f908ddbfc897f79c46432fed8a54c6a92f8d41e4b2096a410e46cc96f588d8"
+    },
+    {
+      "path": "acl-vendor-compatibility-final/result.json",
+      "sha256": "f635c396daa6e9f3178eb2dcbc04598b09afd3d37f155b767f06b52feff41ccb"
+    },
+    {
+      "path": "acl-vendor-compatibility-verified/result.json",
+      "sha256": "70f411da53fc18c4d1e7d79be6b59237293bed4e15f9fa92873b8f042055ca14"
+    },
+    {
+      "path": "acl-vendor-compatibility-checks.json",
+      "sha256": "096afee5206266c68e209b9a1d0bdcc49dd88bb61670521c5fa80452ebf1e600"
+    },
+    {
+      "path": "acl-vendor-compatibility-policy.tap",
+      "sha256": "3841bbbca932d639c2d6e919563dd545becb1444696e7af5c37dfca17dc296df"
+    },
+    {
+      "path": "acl-vendor-compatibility-negative.log",
+      "sha256": "c5a55111cb4e19d087608d663eb066c37a48262a7628092641e4e5aa9a38b6bc"
     }
   ],
   "sourceOffers": [
@@ -406,5 +434,28 @@
       "forkySid": "2.4.0-1 fixed",
       "reference": "https://security-tracker.debian.org/tracker/CVE-2026-54369"
     }
+  },
+  "aclCandidateCompatibility": {
+    "status": "compatibility-prerequisite-verified-repair-incomplete",
+    "candidateVersion": "2.4.0-1~deb12u1+utilibre1",
+    "imagesPassedBeforeAndAfter": 29,
+    "hostStaticChecksPassed": 1,
+    "hostCandidateExecutionTested": false,
+    "fullApplicationWorkflowsTested": false,
+    "repeatNormalizedResultsMatch": true,
+    "unitTestsPassed": 2,
+    "negativeInputCases": 13,
+    "checksumMismatchRejectedBeforePreparation": true,
+    "existingEvidencePreserved": true,
+    "productionChanged": false,
+    "securityFindingsClosed": 0,
+    "vulnerabilityReproductionPerformed": false,
+    "network": "none",
+    "manifest": "../mount-acl-final/acl-vendor-compatibility-inputs.json",
+    "recipe": "../mount-acl-final/acl-vendor-compatibility.mjs",
+    "limitations": [
+      "Library compatibility is not a caller migration or complete vulnerability repair.",
+      "Host execution, Trixie-native packaging and full application workflows are not verified here."
+    ]
   }
 }
