@@ -77,6 +77,19 @@
         "go.mod": "9045347065d00e0b23ce4201455b7bc13b0379cb17c333976230af17219077be",
         "go.sum": "e36fbd22acfa54f4243362d43ce37ca095c15b068c0905822088521bbf013a0f"
       }
+    },
+    {
+      "key": "gothub",
+      "sourceRevision": "24bedc80bed5fc4f72a8f140c97cb38fc2e67ed2",
+      "base": "sha256:db3fa4820794135fda43d9031846b71850b78a26f36cbf49dad0dca76e3250c9",
+      "binary": "/app/gothub",
+      "candidate": "utilibre-gothub:xnet-security-20261109",
+      "oldBinarySha256": "c2ebc1556bd01def5ae9557b3db41f4bd3607743cd8b7c5d0abe8d7ded3b4af1",
+      "sourceProofSha256": "cf3939983eb24a6c3e581ab61c381e1aaeb2815d7ba3467bf020b2dd7c589742",
+      "locks": {
+        "go.mod": "865b9b77e2ee50b8fe65a9058bb2811c4154419ece7ce70a8ba11ff2dcf0cb4b",
+        "go.sum": "d866f3a88309cd6499d134c00475b31590ab8b64894ed83b58ff19ce805477aa"
+      }
     }
   ]
 }

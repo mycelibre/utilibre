@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T00:59:43.584670+00:00",
-  "scanCompletedAt": "2026-11-10T00:58:56.372Z",
+  "recordedAt": "2026-11-10T01:13:26.353733+00:00",
+  "scanCompletedAt": "2026-11-10T01:12:05.404Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
   "runningContainers": 175,
-  "sourceInputs": 91,
+  "sourceInputs": 93,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 191,
+  "pendingHigh": 190,
   "rawFindingsRetained": true,
   "assessmentNote": "Completed frozen-database scan after SQLite, rsync, eight Bookworm zlib images and SafeTwitch/Galene x/net releases. Exact live-file, component and runtime-boundary decisions retain raw findings and expire. This is not complete remediation or security clearance.",
   "musl": {
@@ -46,7 +46,7 @@
       "penpot"
     ]
   },
-  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-xnet-followup",
+  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-gothub",
   "degoog": {
     "status": "deployed-public-search-passed",
     "image": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
@@ -80,7 +80,7 @@
     "rawTargetAttributionRetained": true
   },
   "pendingHighByScope": {
-    "runtime-image": 148,
+    "runtime-image": 147,
     "tracked-build-input": 22,
     "mounted-runtime-code": 1,
     "upstream-release-source-lock": 2,
@@ -98,7 +98,8 @@
     "status": "deployed",
     "applications": [
       "safetwitch",
-      "galene"
+      "galene",
+      "gothub"
     ],
     "dependency": "golang.org/x/net v0.62.0",
     "compiler": "Go 1.26.10",
@@ -112,5 +113,5 @@
     "unresolvedAdvisories": 4,
     "scope": "Exact linux-libc-dev header packages only; no running kernel clearance"
   },
-  "sourceInventoryNote": "Four newly captured Go module files included; 91 source inputs checked, no unrechecked targets. Two added UNKNOWN module records retained."
+  "sourceInventoryNote": "Six newly captured Go module files included; 93 source inputs checked, no unrechecked targets. UNKNOWN records remain retained."
 }

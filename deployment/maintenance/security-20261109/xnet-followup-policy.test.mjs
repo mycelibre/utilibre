@@ -10,6 +10,12 @@ function data(){
 }
 const validate=d=>validateFollowup(d.s,d.original,d.b,d.n,d.scan,d.dependencies);
 test('exact binary-only candidate and unchanged native fixtures can qualify',()=>assert(validate(data())));
+test('historical checker identity is limited to its two completed releases',()=>{
+ const d=data();d.s.checkRevision='c2fa64e01d5de17a9c719cf39975f157346da40e';assert(validate(d));
+ d.s.checkRevision='main';assert.throws(()=>validate(d));
+ d.s.checkRevision='c2fa64e01d5de17a9c719cf39975f157346da40e';d.s.key='gothub';assert.throws(()=>validate(d));
+ delete d.s.checkRevision;assert(validate(d));
+});
 for(const [label,mutate]of Object.entries({
  'unapproved':d=>d.s.approval='pending','unknown application':d=>d.s.key='unknown',
  'wrong artifact':d=>d.s.imageId='other','unexpected file':d=>d.b.changedFiles.push('/etc/config'),

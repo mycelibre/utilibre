@@ -71,7 +71,8 @@
         "native-dependencies.txt": "7387ec43f8ca3c882e42d226cad92cd4f4ba0e14d5d47a614f34fd85ab810f98",
         "safetwitch-tests.txt": "2be77b9e13819d3904608acf49631651ddf899daf8966be5974631ffb64537db",
         "application.json": "86267bcdc9022b2141e94b1be798f0930849ec651fea6e078abbd45eb000e2c3"
-      }
+      },
+      "checkRevision": "c2fa64e01d5de17a9c719cf39975f157346da40e"
     },
     {
       "key": "galene",
@@ -101,6 +102,36 @@
         "galene-tests.txt": "ddb3060775cc7e2eff34f22ae783cb4835cad811773a93a8f1856bc2facbd137",
         "before/galene-native.json": "e5e810fc03759f4c33ff15df3e846aa7fa9f0787987ee5a13e893798e7fa342b",
         "after/galene-native.json": "d47bdf9d256c450756cb299d1d710c5b8436818a022a0084b430c3065e14dc65"
+      },
+      "checkRevision": "c2fa64e01d5de17a9c719cf39975f157346da40e"
+    },
+    {
+      "key": "gothub",
+      "mode": "binary-followup",
+      "approval": "approved",
+      "base": "sha256:db3fa4820794135fda43d9031846b71850b78a26f36cbf49dad0dca76e3250c9",
+      "candidate": "utilibre-gothub:xnet-security-20261109",
+      "imageId": "sha256:0ec2f93d147bc054141d5d9a60615ccf4534ff4a0a3ad6b48027b4ebf007d269",
+      "containers": [
+        "utilibre-reader-evaluation-gothub-1"
+      ],
+      "publicHome": "https://gothub.utilibre.org/",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "checkSha256": "687ba2225245eaf1ea90c041c48d9ba09fe3c948d02020acd49f439996aaf7ae",
+      "rawEvidence": {
+        "before": "dc37ecc200b3134eb3f5923fe7a5ff773a1a200baeb317fa715a43dc6e793e8b",
+        "after": "1ac90002dd421f20b75de5874f7130b248b0be3bc24861575434c74cffff43f5"
+      },
+      "dependenciesSha256": "c85026de1042115f28bd37fd87b0bdcd3d49e30ff2e04ce452ebf231800f0431",
+      "proofs": {
+        "compiled.json": "88a4d06164e45b6d3552e0e9ff81e9ea9dd1b4f1c70c535ea169282237551323",
+        "build.json": "5bf192bef1cba1ca6c08fa7d38845010770bd883025ae668a1f455f4352d2539",
+        "native.json": "84f2a0d4a5b3b3b094321106c7d2a9dc759a5e9ed90f00125f07beb9f50f500c",
+        "scan-gate.json": "d5b731276122c182574c3d4ce1ac4a789cff49e75e3e5a1e04f3e45d96c05710",
+        "native-dependencies.txt": "c85026de1042115f28bd37fd87b0bdcd3d49e30ff2e04ce452ebf231800f0431",
+        "gothub-tests.txt": "14bc4a137f8cd0603da167417a186bcd623752df8fcf0c1cf12f03a49b155c18",
+        "application.json": "a68ff6abe9fd48a93b187ab5e06f6bbb6e80d95e025d86dac834158f95d823a8"
       }
     }
   ]

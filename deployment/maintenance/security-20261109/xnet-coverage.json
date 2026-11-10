@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "date": "2026-11-09T18:42:54.319326+00:00",
-  "scanDate": "2026-11-09T18:08:32.000Z",
+  "date": "2026-11-10T01:13:26.360739+00:00",
+  "scanDate": "2026-11-10T01:12:05.404Z",
   "counts": {
     "runtime": 17,
     "trackedInputs": 22
@@ -515,5 +515,48 @@
       "reason": "Exact application rebuild and behavior proof remain required; dependency version alone does not establish applicability or safe compatibility."
     }
   ],
-  "deploymentNote": "Only Rimgo and AnonymousOverflow native artifacts below are updated. Other runtime records and old source inputs remain open; see exact release receipts."
+  "deploymentNote": "Current releases above are verified by the completed fleet scan and release receipts. Original rows below remain the historical initial inventory; their original status and artifact fields are not current deployment claims. Other runtime applications and older source inputs remain open.",
+  "historicalInventoryDate": "2026-11-09T18:42:54.319326+00:00",
+  "historicalInventoryScanDate": "2026-11-09T18:08:32.000Z",
+  "currentReleases": [
+    {
+      "application": "rimgo",
+      "container": "utilibre-rimgo-rimgo-1",
+      "image": "sha256:6defcbecc4d92814afd170217e61fcad64ebd1c23c655ef7a946a9dacb16cb3c",
+      "status": "deployed-targeted-finding-removed",
+      "completedAt": "2026-11-09T19:08:50.473Z"
+    },
+    {
+      "application": "anonymousoverflow",
+      "container": "utilibre-reader-evaluation-anonymousoverflow-1",
+      "image": "sha256:4d9703ce6f848b16a791e0269869e800aaf3f708d454acfa06b9253600bf3e06",
+      "status": "deployed-targeted-finding-removed",
+      "completedAt": "2026-11-09T19:08:57.730Z"
+    },
+    {
+      "application": "safetwitch",
+      "container": "utilibre-reader-evaluation-safetwitch-backend-1",
+      "image": "sha256:f3b3d1f92936c242bef07fab52fa13025e656aab826ca9ab0699a21ac7a0910b",
+      "status": "deployed-targeted-finding-removed",
+      "completedAt": "2026-11-10T00:44:28.962Z"
+    },
+    {
+      "application": "galene",
+      "container": "utilibre-pack-galene-galene-1",
+      "image": "sha256:50ecfa1f4eb1ac42d85db033ea61afa3eeebda15fa224831c8ab38f5417eb538",
+      "status": "deployed-targeted-finding-removed",
+      "completedAt": "2026-11-10T00:49:26.447Z"
+    },
+    {
+      "application": "gothub",
+      "container": "utilibre-reader-evaluation-gothub-1",
+      "image": "sha256:0ec2f93d147bc054141d5d9a60615ccf4534ff4a0a3ad6b48027b4ebf007d269",
+      "status": "deployed-targeted-finding-removed",
+      "completedAt": "2026-11-10T01:08:44.616Z"
+    }
+  ],
+  "currentPending": {
+    "runtime": 12,
+    "trackedInputs": 22
+  }
 }

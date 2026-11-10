@@ -85,7 +85,7 @@ services:
     depends_on: [anonymousoverflow]
   gothub:
     <<: *runtime
-    image: utilibre-zlib-reader-evaluation-gothub:candidate-20261109
+    image: utilibre-gothub:xnet-security-20261109
     restart: unless-stopped
     environment:
       DOCKER: "true"

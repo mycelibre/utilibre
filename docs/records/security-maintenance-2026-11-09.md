@@ -483,3 +483,38 @@ high/critical counts remain 191/0. Two additional UNKNOWN module-level records
 are retained. The final combined targeted policy run passes 75 tests; syntax
 checks pass. Whitespace warnings are confined to exact upstream patch context,
 which is preserved to keep the source/precondition hashes unchanged.
+
+
+### GoHub continuation (10 November, UTC)
+
+GoHub's x/net 0.62.0 update is deployed and passed exact-image, health, namespace
+and public-route checks. Its running binary came from the newer 3 November
+proxy-status repair, not the older codec build receipt. That mismatch correctly
+blocked the first source selection. The preserved, checksum-verified public
+source archive and matching executable supplied the correct inputs, retaining
+all eight proxy-response cases and the existing destination-policy test.
+
+The offline native suite and old/new page/asset parity pass. The complete image
+comparison permits only `/app/gothub` to change. No new high/critical findings
+appear; both targeted x/net findings disappear in the same-database comparison.
+The source offer `gothub-utilibre.tar.gz` was publicly downloaded and matched
+SHA-256 `e9c3abb9f18202877cee376d78f66a6a72f74e547748137dd66b2ed4f6abab95`.
+No fresh third-party content search or real-device test is claimed.
+
+An initial dependency download failed because its read-only GOPATH had no
+checksum-cache directory. A prematurely started isolated build was cancelled;
+no candidate was accepted from that attempt. The explicit disposable GOPATH
+retry passed `go mod verify`; failure records remain private. Previous source,
+image and configuration receipts remain available for scoped rollback.
+
+The two earlier follow-up releases stay bound to the exact checker at commit
+`c2fa64e01d5de17a9c719cf39975f157346da40e`. Their recorded hashes are verified
+against that commit, rather than rewritten to match this later checker extension.
+The historical-identity test rejects moving refs and cross-application reuse.
+New GoHub acceptance requires the current checker and its exact evidence.
+
+The completed 01:12 UTC scan includes GoHub and both new module files: 109
+runtime images, 175 containers, 93 source inputs and no unrechecked targets.
+The pending queue is now 0 critical / 190 high records. The x/net coverage
+record separately preserves the original inventory and lists five completed
+application releases, 12 remaining runtime targets and 22 older build inputs.

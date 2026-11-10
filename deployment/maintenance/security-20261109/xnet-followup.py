@@ -17,7 +17,7 @@ common = importlib.util.module_from_spec(loader)
 loader.loader.exec_module(common)
 sha = lambda p: common.sha(Path(p).read_bytes())
 read = lambda p: json.loads(Path(p).read_text())
-assert len(sys.argv) == 3 and sys.argv[1] in ('safetwitch', 'galene')
+assert len(sys.argv) == 3 and sys.argv[1] in ('safetwitch', 'galene', 'gothub')
 key, phase = sys.argv[1:]
 assert phase in ('stage', 'native', 'scan')
 manifest = read(HERE / 'xnet-inputs.json')
@@ -84,10 +84,11 @@ else:
             adapters.append({'fixture': relative, 'fixtureSha256': sha(original),
                              'adapter': str(output), 'adapterSha256': sha(output)})
             return output
-        if key == 'safetwitch':
+        if key != 'galene':
+            original_alias = 'reader-evaluation-safetwitch-backend' if key == 'safetwitch' else 'reader-evaluation-gothub'
             script = adapt('../go-final/check-native.mjs', [
                 ('/var/lib/utilibre-maintenance/security-20261109/musl', str(ROOT)),
-                ("safetwitch:'reader-evaluation-safetwitch-backend'", "safetwitch:'safetwitch'")])
+                (f"{key}:'{original_alias}'", f"{key}:'{key}'")])
             execute(['node', str(script), '--musl-nov9', key], directory / 'native.log')
             result = read(directory / 'application.json')
             assert result['passed'] and result['imageId'] == build['imageId']
