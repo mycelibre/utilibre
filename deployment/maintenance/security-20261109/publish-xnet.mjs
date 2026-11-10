@@ -40,6 +40,18 @@ for(const s of m.rows.filter(s=>(single?[single]:followup?['safetwitch','galene'
   prebuild+=s.key==='vikunja'?'export CGO_ENABLED=1 GOFLAGS="-mod=readonly -trimpath -tags=osusergo,netgo"\n':s.key==='ntfy'?`export CGO_ENABLED=1 GOFLAGS="-mod=readonly -trimpath -tags=sqlite_omit_load_extension,osusergo,netgo"\ngo test -p 1 ./server -run '^(TestServer_PublishAndPoll|TestServer_PublishAndSubscribe|TestServer_PublishNoCache|TestServer_Publish_Disallowed_Topic|TestServer_MetricsDisabled)$'\n`:'export GOFLAGS="$GOFLAGS -tags=fs_embed"\n';
  }
  if(s.key==='ferretdb')prebuild+='mkdir -p .git\ngo test -p 1 ./internal/mcp -run "^TestUtilibre" -count=1\n';
+ if(s.key==='donetick'){
+  // Backend build inputs embed frontend output, not its preferred source.
+  // Retain the independently published source/patches/build instructions too.
+  const companion=s.frontendSourceOffer;assert(companion&&companion.sha256==='247b31bfc9180be88ffd15e47015c05272163711c49824ec1817574593a5cc05');
+  assert.equal(sha(companion.archive),companion.sha256);
+  const entries=cp.execFileSync('tar',['-tzf',companion.archive],{encoding:'utf8',timeout:15000,maxBuffer:1024**2}).split('\n');
+  for(const required of ['upstream-frontend/package.json','upstream-frontend/LICENSE.md'])assert(entries.includes(required));
+  assert(entries.some(p=>p.startsWith('upstream-frontend/src/')));
+  copy(companion.archive,out+'/utilibre-recipes/unchanged-frontend-and-integration.tar.gz');
+  fs.writeFileSync(out+'/utilibre-recipes/FRONTEND-SOURCE.txt','The bundled unchanged-frontend-and-integration.tar.gz is the previously published complete upstream frontend source and Utilibre patches/build instructions. Its checksum is '+companion.sha256+'. All 254 compiled frontend files are unchanged. The root Go source, locks and UTILIBRE-REBUILD.sh describe the current backend; the bundled older backend is historical, not the current backend recipe.\n');
+ }
+
  fs.writeFileSync(out+'/UTILIBRE-REBUILD.sh',`#!/bin/sh\nset -eu\ntest "$(go version)" = "go version go${s.compilerVersion||m.compilerVersion} linux/amd64"\nexport GOTOOLCHAIN=local GOTELEMETRY=off CGO_ENABLED=0 GOAMD64=v1 GOFLAGS=-mod=readonly${s.key==='mezzo'?' GOEXPERIMENT=nodwarf5':s.key==='wakapi'?' GOEXPERIMENT=jsonv2 ZONEINFO=/usr/local/go/lib/time/zoneinfo.zip':''}\ngo mod verify\n${prebuild}go test -p 1 ${tests}\ngo build -p 1 -trimpath${s.key==='donetick'?' -buildvcs=false':''} -ldflags='${flags}' -o ${s.key} ${['mezzo','anubis'].includes(s.key)?'./cmd/'+s.key:s.key==='wakapi'?'main.go':s.key==='ferretdb'?'./cmd/ferretdb':'.'}\n`,{mode:0o755});
  if(s.key==='mezzo')copy(here+'../go-leaf-final/build-one.sh',out+'/utilibre-recipes/build-one.sh');
  for(const f of (followup?['xnet-inputs.json','xnet-LICENSE.txt','xnet-build.mjs','xnet-followup.py']:['xnet-inputs.json','xnet-LICENSE.txt','xnet-build.mjs','xnet-check.py','xnet-native.go','xnet-regression.sh','zlib-inputs.json']))copy(here+f,out+'/utilibre-recipes/'+f);

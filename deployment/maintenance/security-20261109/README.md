@@ -650,3 +650,10 @@ runtime images, 175 containers, 93 source inputs and no unrechecked targets.
 The pending queue is now 0 critical / 190 high records. The x/net coverage
 record separately preserves the original inventory and lists five completed
 application releases, 12 remaining runtime targets and 22 older build inputs.
+
+The Donetick Go build embeds compiled frontend output. Its source offer also
+bundles the checksum-pinned earlier complete frontend source, Utilibre patches
+and frontend build instructions. The root backend source/locks are current; the
+bundled previous backend is explicitly historical. The first backend-only offer
+and receipt are preserved under `donetick/source-offer-correction/`; the corrected
+public download was hash-verified. No deployed application bytes changed.

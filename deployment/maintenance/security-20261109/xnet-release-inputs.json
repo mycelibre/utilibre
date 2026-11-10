@@ -376,6 +376,42 @@
         "donetick-baseline.json": "073509671f3d1918677d597612ca4a9f006c83c1f399cf07b9967b3f73805c46",
         "donetick-native.json": "cc2b2c141f999788e1c60f28be6f30ac6ca66fdad718e006e746062f36719466",
         "assets.json": "966b222e751730d936bb75ae555e895a08c25dccc293e0334301c2daa05269c4"
+      },
+      "checkRevision": "7a13c38874e48a29dab68716787ce90bac67a9f8"
+    },
+    {
+      "key": "vikunja",
+      "mode": "binary-followup",
+      "approval": "approved",
+      "base": "sha256:4bec3b37654a63f0e6e1e3f8ed7c2251f197051767982ccd9c89091a63142bc3",
+      "candidate": "utilibre-vikunja:xnet-security-20261109",
+      "imageId": "sha256:359415f79ab1bb719439121fcfed4373a9f5293cf175d8ddcba5b07735b87c70",
+      "containers": [
+        "utilibre-vikunja-vikunja-1"
+      ],
+      "publicHome": "https://tasks.utilibre.org/",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "checkSha256": "b8c757e65ad7d63d80237338e87dc4bc422264f68387a6339dab44287676add7",
+      "builderSha256": "f8997c1efe683a685249f1f88ab35cbbbc0466af6d3c1ea9a48e94929901e01c",
+      "rawEvidence": {
+        "before": "778db9b55c01376ce112d0f08308621093ca8c2deb279be322b6277d2598e288",
+        "after": "6d83e336ca344c9b07ae106df5756719fdb78417e8e3691a8da7c52f74f80469"
+      },
+      "dependenciesSha256": "7cd339e3243dfa0bb9a29fa890e652105222afd0a30a7832c8193bc3a5b930a8",
+      "proofs": {
+        "compiled.json": "cb420acd327195cfbaafa12216558c232000b2fbbe353584d15c4ceb0343254e",
+        "build.json": "d697838b7dae61e7b5eb40dc3a6613c28a605b3d3a17ec3c70871cd304e5f696",
+        "native.json": "fd43919cab4dc14299c1a2ce2c3cea886d1f82a1d6bb80c7ac5e14a83f33cb50",
+        "scan-gate.json": "710922984452c6240136f9321c052c4147e3a14a2727cbc37e47b0f927e5a7b8",
+        "native-dependencies.txt": "7cd339e3243dfa0bb9a29fa890e652105222afd0a30a7832c8193bc3a5b930a8",
+        "vikunja-tests.txt": "5b7c8d4e51b3a39c9353f4911b4838bc919a5691e9ba2b9c9489d01a66a099b2",
+        "vikunja-mod-verify.txt": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd",
+        "build-adapter.sh": "c277f3ec0256906911243ebbf86313e5410c154109830b193c87bd8cdc16043f",
+        "echo-middleware-tests.txt": "4c7469b9a1747125d02d8bc959cea14da88bb14cfff51b99595e76132a344130",
+        "before-native.json": "71ba1660b0667470ffcbb133a6970ae80a638424f484af41d2ddcd5b5c053769",
+        "after-native.json": "507e8cad537aea2609a302b83f761ebb425c37eaadbdab8678b898925d5881db",
+        "assets.json": "1f003e1727664bfcfb7aa2a4c27f27ac065870de5fa35e49b48303d346962032"
       }
     }
   ]

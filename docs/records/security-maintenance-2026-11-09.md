@@ -829,8 +829,27 @@ The scoped application release passed exact image, unchanged configuration,
 health and HTTPS gates. No database migration or account change occurred.
 Rollback is the preceding image recorded in `xnet/release.json`; it does not
 revert subsequent user edits. Complete source archive SHA-256:
-`c2e735f5efb9cabc7d169723007de65de9f42dc27eea01cf6da5ee142edfd373`
-(6,319,544 bytes), verified by downloading the public source route.
+`dc7b4dd797cdaf34782f327c492a5cdd38a7a9d25d92a89ca01bdd8e7a98d1a6`
+(12,175,894 bytes), verified by downloading the public source route.
 
 Vikunja and FerretDB inputs are captured in the same finite adapter; their
 actual build/native/release receipts, not those manifests, establish completion.
+
+## Vikunja networking repair — 10 November
+
+Vikunja 2.7.0 now retains its Go 1.27.3/static build and existing JOSE/Echo
+repairs while using the pinned x/net 0.62.0 module graph. Only the executable
+changes in its complete fifteen-entry image; 361 frontend assets are identical.
+Two synthetic accounts passed task/project and attachment isolation, password
+protected native ZIP export/import, recipient ownership, SQLite recovery,
+reload and deletion checks. Native configuration/utility and Echo middleware
+tests passed. Production OIDC and real users were not exercised.
+
+The same-database comparison removed the targeted advisory with no new HIGH
+or CRITICAL finding. The scoped release passed exact-image, configuration,
+health and HTTPS checks. Existing account settings and user data remain; no
+migration ran. Rollback uses the recorded preceding image in `xnet/release.json`.
+The complete source includes frontend source and compiled assets, exact locks
+and rebuild instructions. Its public download matched SHA-256
+`52a9fbe8ad9463ccd42377d312de93ecf01bd36b2cb032d87257a4719306aa5e`
+(15,639,852 bytes).

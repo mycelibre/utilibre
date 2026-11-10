@@ -261,7 +261,12 @@
       "nativeFixture": "../security-20261028/check-go-services.py",
       "nativeFixtureSha256": "2fe800fd5c0fc8b2ceac454b2061cf00179895a44880dc5a8680731c205b4402",
       "assetsFixtureSha256": "166df8d646cc2b10d18abdcbd559d0d1a89d3aa322f9e963b8523e2e7bb15c95",
-      "configurationSha256": "cc627ff4f0266fa94cfd5507f5654ced91fdccb6126381d5234ff96935b403ee"
+      "configurationSha256": "cc627ff4f0266fa94cfd5507f5654ced91fdccb6126381d5234ff96935b403ee",
+      "frontendSourceOffer": {
+        "archive": "/var/lib/utilibre-maintenance/security-20261109/xnet/source-offer-ThdwMi/previous-donetick-utilibre.tar.gz",
+        "sha256": "247b31bfc9180be88ffd15e47015c05272163711c49824ec1817574593a5cc05",
+        "purpose": "Previously published complete frontend source, patches and build instructions; frontend bytes unchanged."
+      }
     },
     {
       "key": "ferretdb",
