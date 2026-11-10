@@ -19,9 +19,14 @@ not convert more findings into waivers. A pinned, unmodified Debian GRUB
 2.14-5 candidate now passes eight-package dependency simulation and six
 ordinary tool/configuration checks in a networkless unprivileged container.
 Two altered-input checks fail before candidate execution. A repeated preflight
-passes without changing host packages or boot files. This is candidate
-preparation, not installation, a boot test, recovery verification or release
-approval. Proxmox boot/backup details have been requested. Full procedure:
+passes without changing host packages or boot files. Later ordinary boot tests
+passed for both vendor and restored previous EFI loaders, using the running and
+next-default Linux kernels in a synthetic RAM system under OVMF. The operator's
+backup log confirms a successful root/EFI-state backup with temporary storage
+excluded. A private boot-file backup round-tripped all 650 regular files.
+This is candidate preparation and limited boot/recovery testing, not installation,
+real Proxmox boot, whole-VM restoration or release approval. A fresh console and
+coordinated reboot window remains required. Full procedure:
 [vendor GRUB preflight](../../deployment/maintenance/grub-assessment/README.md).
 
 The fresh ACL inventory covers 30 records in 36 host/container locations.
@@ -58,8 +63,12 @@ window; Python-Markdown has no verified compatible upstream fix. Removing its
 Apprise dependency would disable notification functionality. No finding in
 these three groups was accepted merely because it is difficult to repair.
 Earlier automatic approval rejection of the custom ACL/GRUB path remains in
-force. Root free space is also below the existing 8 GiB build reserve; Proxmox
-must enlarge the virtual disk before guest expansion can add space.
+force. The later 40 GiB root expansion below resolves the build-space blocker.
+The same-database GRUB candidate scan adds no high/critical records but retains
+five Trixie matches with no fixed version in that advisory entry. Debian's
+primary tracker and authenticated signed candidate establish the vendor fix;
+raw scanner matches are retained, not suppressed. No installed finding was
+closed in advance of deployment.
 
 [Current inputs, verification and rollback](../../deployment/maintenance/security-20261109/README.md#remaining-high-follow-up--10-november).
 Private receipts: `security-20261109/remaining-high/`. This checkpoint does not
@@ -77,9 +86,17 @@ review blocks; this release does not bypass them.
 
 ## Main disk
 
-Proxmox had already enlarged the main virtual disk to 295 GiB. The guest's
+On 10 November, Proxmox exposed a further 40 GiB enlargement, from 295 to
+335 GiB. The guest root partition and ext4 filesystem were extended online.
+The filesystem is approximately 330 GiB, with 46 GiB available and 86% usage
+at the verification time. Its start and both boot partitions remained unchanged.
+The separate 15 GiB temporary-data disk was untouched. No reboot or service
+restart was needed. Partition-table and filesystem evidence is retained under
+`/var/lib/utilibre-maintenance/disk-expand-20261110/`.
+
+Earlier, Proxmox had enlarged the main virtual disk to 295 GiB. The guest's
 partition and ext4 filesystem were extended into its unused 25 GiB tail.
-The root filesystem is now approximately 291 GiB. The partition start and boot
+The root filesystem was then approximately 291 GiB. The partition start and boot
 partitions are unchanged. The separate 15 GiB temporary-data disk was untouched.
 The operation completed online without reboot or service restart. Before/after
 partition tables are retained in the private maintenance evidence directory.

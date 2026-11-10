@@ -10,8 +10,12 @@ It does not authorize automatic updates of other services.
 The later vendor follow-up has **not reduced the 36 pending records**. It
 prepared an authenticated, unmodified GRUB 2.14-5 candidate instead of retrying
 the rejected custom repair. Exactly eight package upgrades pass dependency
-simulation; six ordinary isolated configuration/tool checks pass. Actual boot,
-recovery and activation remain unverified. See the
+simulation; six ordinary isolated configuration/tool checks pass. Candidate
+and restored old loaders also boot the running and next-default kernels into
+a synthetic RAM-only system under OVMF. Real Proxmox boot and full-VM recovery
+remain unverified, and installation needs a fresh console/reboot window. The
+operator's backup log confirms successful inclusion of root and EFI-state disks.
+No installed package or live boot file changed. See the
 [vendor candidate and remaining boot gates](../grub-assessment/README.md).
 
 The renewed ACL inventory covers 30 finding records at 36 current container/host
@@ -89,9 +93,11 @@ Remaining work is not an accepted exception:
   [Debian still lists it as unfixed](https://security-tracker.debian.org/tracker/CVE-2019-25781).
 
 Earlier automatic approval review rejected the custom ACL/GRUB repair path for
-cybersecurity risk. This follow-up does not retry that path. The VM is also just
-below the 8 GiB build reserve; its virtual disk has no unallocated tail left.
-No backups, retained scanner databases or rollback images were removed.
+cybersecurity risk. This follow-up does not retry that path. The disk-space
+blocker is now resolved: the root partition/filesystem expanded online into
+the enlarged 335 GiB disk, leaving 46 GiB free at 86% usage. The separate 15 GiB
+temporary disk was untouched. No backups, retained scanner databases or
+rollback images were removed.
 
 Rollback of this repository change restores the preceding guard/queue code,
 not application images or data. First remove the associated conditional reviews

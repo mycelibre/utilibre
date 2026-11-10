@@ -475,5 +475,64 @@
       "upstreamLinkIssueStillOpen": 798
     },
     "evidence": "security-20261109/remaining-high/"
+  },
+  "vendorBootFollowup": {
+    "recordedAt": "2026-11-10T09:02:24.084331+00:00",
+    "status": "isolated-vendor-and-restored-loader-boots-passed-awaiting-window",
+    "candidateVersion": "2.14-5",
+    "installed": false,
+    "liveBootFilesChanged": false,
+    "emulator": "Debian QEMU 10.0.13 TCG",
+    "firmware": "OVMF 2025.02-8+deb13u1 4M, Secure Boot disabled",
+    "kernelsTested": [
+      "6.12.115+deb13.1-cloud-amd64",
+      "6.12.116+deb13-cloud-amd64"
+    ],
+    "loadersTested": [
+      "vendor-candidate",
+      "restored-previous-loader"
+    ],
+    "syntheticRootOnly": true,
+    "network": "none",
+    "hostDevicesPassed": false,
+    "repeatPassed": true,
+    "alteredBundleRejectedBeforeContainer": true,
+    "bootArchiveRegularFilesRoundTrip": 650,
+    "bootArchiveSha256": "055f85a057c818c248eaa47dbef42a15286d7b9c4242168c4a7ced35a346092a",
+    "liveBootBackupFilesStillMatch": true,
+    "nativeOwnershipAclRestoreTested": false,
+    "realProxmoxBootTested": false,
+    "wholeVmRestoreTested": false,
+    "ownerBackupLog": {
+      "completed": true,
+      "rootAndEfiStateIncluded": true,
+      "temporaryDiskExcluded": true,
+      "archiveIntegrityTested": false
+    },
+    "candidateAssessment": {
+      "sameAdvisorySnapshot": true,
+      "newHighCritical": 0,
+      "rawGrubRecordsRetained": 5,
+      "vendorFixedReleaseVerified": true,
+      "liveDecisionRecorded": false
+    },
+    "pendingHighAfter": 36,
+    "findingsClosed": 0,
+    "maintenanceWindowConfirmed": false,
+    "evidence": "security-20261109/remaining-high/vendor-boot/",
+    "recoveryEvidence": "security-20261109/remaining-high/vendor-recovery/"
+  },
+  "diskExpansionFollowup": {
+    "completedAt": "2026-11-10T08:34:39.980009+00:00",
+    "previousDiskGiB": 295,
+    "diskGiB": 335,
+    "addedGiB": 40,
+    "rootAvailableBytes": 49080909824,
+    "rootUsedPercent": 86,
+    "temporaryDiskGiB": 15,
+    "partitionStartUnchanged": true,
+    "bootPartitionsUnchanged": true,
+    "rebootRequired": false,
+    "evidence": "disk-expand-20261110/"
   }
 }

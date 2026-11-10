@@ -36,17 +36,118 @@ preflight passed with unchanged host package database and boot files. The first
 automated run failed because the staging directory was inaccessible to its
 unprivileged user; that failed receipt is retained, alongside the corrected run.
 
-This is **not** a tested boot, recovery rehearsal, current security clearance,
-or approved release. No EFI files or installed packages changed; all five host
-findings remain pending. The existing `grub-cloud-amd64` hooks will rewrite boot
-paths during a future installation. The current ESP is `/dev/sdb15` (the device
-name in the older October observation below is historical).
+### Ordinary boot and recovery checks
 
-Remaining gates are boot/firmware compatibility and recovery verification,
-Proxmox boot order/EFI-state evidence, a recoverable boot disk/ESP/EFI-state copy,
-a separate console/reboot window, and fresh release assessment. Do not run a
-generic Sid upgrade or assume an image/package rollback restores EFI state.
-The required Proxmox details have been requested; no reboot is scheduled.
+The candidate and the restored previous loader both boot through the installed
+shim using authenticated Debian QEMU 10.0.13, OVMF 2025.02-8+deb13u1 and virtio
+SCSI. Each loads a Linux kernel into a synthetic RAM-only root and shuts down
+cleanly. Both the running `6.12.115+deb13.1-cloud-amd64` kernel and the next
+default `6.12.116+deb13-cloud-amd64` kernel passed. The latter is the pinned
+replay input. The test uses a fresh 4M OVMF variable template with Secure Boot
+disabled, matching the observed setting; it does not test Secure Boot enforcement.
+
+`vendor-boot.py` verifies the retained bundle and fixture hashes before starting
+two bounded boot cases. The 45 vendor tool packages were checked against signed
+Debian indexes; provenance is in `vendor-boot-packages.json`. The synthetic
+initialization and GRUB configuration are retained alongside the runner.
+
+```sh
+python3 deployment/maintenance/grub-assessment/vendor-boot.py \
+  --inputs /var/lib/utilibre-maintenance/security-20261109/remaining-high/vendor-boot \
+  --report /var/lib/utilibre-maintenance/security-20261109/remaining-high/vendor-boot/new-replay.json
+```
+
+Use a new report path and normal Python execution without `-O`. No downloads
+occur. The unprivileged, networkless container has 768 MiB RAM, one CPU, 128 PIDs
+and a 90-second deadline per boot. Only vendor tools and synthetic boot inputs
+are mounted read-only. QEMU uses software emulation: no KVM, host devices,
+production mounts, firmware variables or container-management socket are passed
+inside. An altered bundle is rejected before any container command.
+
+A fresh private boot/configuration archive contains 650 regular files; their
+contents match after isolated extraction. The restored EFI loader passed the
+same ordinary boot check. Exact authenticated old packages are retained as well.
+This is a **boot-file payload and restored-loader rehearsal**, not a full VM
+restore, native ownership/ACL restoration test or real production-disk boot.
+Private inputs are required for replay; a Git checkout alone does not contain
+the recovery archive or archived binary bundles.
+
+### Control-plane backup evidence and disk expansion
+
+The operator supplied OVMF, `boot: order=scsi0`, a separate EFI-state disk with
+`efitype=4m`, and a 15 GiB `scsi2` excluded from backups. The pasted 10 November
+backup log confirms inclusion of `scsi0` and `efidisk0`, exclusion of `scsi2`,
+and successful completion at 00:28:19 after 21m48s. The log's timezone was not
+provided. The archive is
+`hetzner-backups:backup/vzdump-qemu-144-2026_11_10-00_06_31.vma.zst`.
+Its complete integrity and whole-VM restoration have **not** been tested here.
+Do not reinterpret the completed job as such a test.
+
+After that 295 GiB backup, the virtual disk was enlarged to 335 GiB. The guest
+root partition and ext4 filesystem were expanded online on 10 November, leaving
+46 GiB available (86% used). Partition start and boot partitions are unchanged;
+the separate 15 GiB temporary disk is unchanged. No reboot or service restart
+was needed. This removes the earlier build-space blocker. The current ESP is
+`/dev/sdb15`; October device names below are historical. Use recorded partition
+identities, not guessed device letters, during recovery.
+
+Private evidence: `proxmox-owner-evidence-20261110.json`,
+`proxmox-backup-completion-20261110.json`, `vendor-recovery/boot-files-before.json`
+and `vendor-boot/replay-next-kernel.json` under
+`security-20261109/remaining-high/`; disk evidence is `disk-expand-20261110/`.
+
+### Candidate security result
+
+The isolated before/after package assessment uses Trivy 0.75.0 with the same
+archived database, retrieved 9 November at 06:57 UTC. Its SHA-256 is
+`3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29`.
+No new high/critical records appeared. The five GRUB records remain in raw
+candidate output because the Trixie advisory entry has no fixed version, even
+though the installed candidate version is reported correctly as 2.14-5.
+Debian's primary tracker marks this vendor release fixed since 2.14-1; the
+authenticated signed image also contains the exact new packaged module.
+This is a documented cross-suite scanner limitation, not a suppression or a
+reason to change the operating-system identity. Raw results and the initial
+failed zero-findings assertion are retained. No live decision was recorded;
+the five installed host GRUB records remain pending.
+
+### Activation and rollback boundary
+
+No GRUB package or live boot file has been changed. Deployment remains disabled
+in the manifests. The concrete remaining operating decision is a fresh VM 144
+console/maintenance window with backups, snapshots and other guest-agent jobs
+paused, followed by an explicitly coordinated reboot. The existing
+`grub-cloud-amd64` hooks write BIOS and EFI boot paths during package installation;
+this is why ordinary library-update authorization is insufficient.
+
+For a later approved release:
+
+1. Recheck the eight installed-package preconditions, pinned package hashes,
+   available disk space, mounted ESP, console and paused jobs. Repeat the
+   package simulation against current state; stop if the selected set differs.
+   Recheck advisory freshness under the release policy and the scoped vendor
+   evidence. The archived successful assessment is not indefinite clearance.
+2. Refresh the private boot-file/configuration copy if it changed. Keep the
+   exact eight old Debian packages and the successful Proxmox archive available
+   outside the guest. Do not enable Sid globally or use a wildcard over the
+   mixed assessment package directory.
+3. Install only the eight exact candidate files listed in `vendor-candidate.json`
+   using the native package manager and hooks. Run native `update-grub` and
+   `grub-script-check /boot/grub/grub.cfg`; the trigger-only path does not itself
+   guarantee configuration regeneration. Verify both Debian/fallback EFI copies,
+   native modules, expected kernel entries and package state before reboot.
+4. Coordinate the reboot with the console operator. Verify actual boot, kernel,
+   filesystem mounts, guest-agent ping/thaw state and existing service health.
+   Only then record exact deployed evidence for the five findings.
+
+If the VM remains reachable, a separately approved rollback uses the eight
+retained old packages together, native hooks and configuration regeneration;
+an image rollback cannot undo host boot changes. If it cannot boot, use the
+Proxmox console/rescue environment to identify and mount root and ESP from the
+recorded partition identities before restoring the trusted boot material.
+Keep current account data intact. The successful whole-VM archive is a separate
+fallback that would also revert newer persistent data; do not force-restore it
+over the VM automatically. No restore or reboot is scheduled by these scripts.
 
 Private evidence: `security-20261109/remaining-high/vendor-grub-final.json`,
 `vendor-grub-preflight-2.json`, `vendor-grub-preflight-repeat.json`, and the two `vendor-grub-altered-*.json`

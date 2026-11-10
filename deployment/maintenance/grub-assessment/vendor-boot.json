@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Offline ordinary vendor EFI/current-kernel startup and restored-loader check; never a vulnerability reproduction",
+  "deploymentAllowed": false,
+  "testImage": "sha256:eb92e8373595e96f4dff736d82aa484704579dde4403a4445624f27094e70818",
+  "archives": {
+    "tools": {
+      "file": "tools.tar.gz",
+      "sha256": "b365b4e9a4c565a5e5366e514f99450aca75ab8fe3ab4894d61140c11c08a7c0",
+      "bytes": 37842136,
+      "member": "tools"
+    },
+    "candidate": {
+      "file": "candidate-next-kernel.tar.gz",
+      "sha256": "fa270cbd799dfc638da10b136df6cf7c93bcdc09ee27835118d8ebf97675c7a3",
+      "bytes": 17212720,
+      "member": "fat"
+    },
+    "recovered": {
+      "file": "recovered-next-kernel.tar.gz",
+      "sha256": "7fb705bf7a22c3395423d1b32537aeac276d7a203c9c5a3277356cc2b085cca0",
+      "bytes": 17085335,
+      "member": "fat"
+    }
+  },
+  "sourceFixtures": {
+    "check-vendor-boot.sh": "a526a11aafb819b6bf4f6710b1f313b3cb990d18440c7662f7bf216aafbeeeb8",
+    "vendor-init.sh": "16de6d3a25e7364b15b246ef3f78775658e03180ee50315a62860150a2cbf74f",
+    "vendor-grub.cfg": "7f1e88a7d43050009cb2d1988b4926113ec772c686bda29ed67a3ee2f59cb5cb",
+    "vendor-boot-packages.json": "3faf95c6de50727a66fb37a385ff352bef12484a78c393ba38100f85425aca51"
+  },
+  "kernel": "6.12.116+deb13-cloud-amd64",
+  "kernelSha256": "feac4beed72fa2781a8f0d11f03956044c19c01a6f2a7d42c279862006b18262",
+  "initramfsSha256": "060e68b483d799be4f6bf7060e27645b1d4b7d5274235083ad08e3daea3b1057",
+  "candidateEfiSha256": "5cc98e5c02097d781ad9fbce96d236704ad1011bf18f8aeb994aa4586b9b402d",
+  "recoveredEfiSha256": "425ffb5b84e8738084815d9df4a33c0e5f64409c7aadeb3dd3bcf60357551c5a",
+  "shimSha256": "e103c5d02657879f141b086ed703584d28bb9e2721b423333be085ee1b4d397b",
+  "wholeVmRestoreClaimed": false,
+  "byteReproducibleBuildClaimed": false
+}

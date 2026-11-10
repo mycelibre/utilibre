@@ -15,18 +15,20 @@ runtime patches. All 168 focused tests pass; no service restart was needed.
 Still unresolved: 30 ACL records across the host/images, five host GRUB
 records and one Kuma Markdown record. A later follow-up authenticated the
 unmodified Debian GRUB 2.14-5 candidate: exactly eight upgrades pass package
-simulation and six ordinary isolated checks pass. It is not installed or
-boot/recovery verified; Proxmox boot/backup evidence and a separate console
-window are required. Latest vendor tar still imports legacy ACL APIs, and the
+simulation and six ordinary isolated checks pass. Candidate and restored previous
+loaders boot both the running and next-default kernels in isolated OVMF tests.
+The operator's successful root/EFI-state backup log is recorded. Real Proxmox
+boot and full-VM recovery remain unverified; installation needs a fresh console
+and coordinated reboot window. Latest vendor tar still imports legacy ACL APIs, and the
 deployed rsync rebuild has not enabled the new ACL API. Markdown's link-parser
 issue remains open upstream. None of these 36 records was closed by this
 follow-up. Earlier custom ACL/GRUB repair restrictions remain. Held application
 upgrades and documented functional gaps are still open. Historical source locks
 have not been rewritten to hide findings.
 
-The main disk is just below the 8 GiB build reserve and has no unallocated
-virtual-disk tail. Additional guest expansion requires Proxmox to enlarge it.
-Backups, scanner snapshots and rollback images were preserved.
+The main disk/root filesystem has now expanded from 295 to 335 GiB, with
+46 GiB available at 86% usage. No reboot was needed. The separate 15 GiB
+temporary disk, backups, scanner snapshots and rollback images were preserved.
 
 Current evidence: `deployment/maintenance/security-20261109/status.json` and
 `docs/records/security-maintenance-2026-11-09.md`. Older entries below are historical.

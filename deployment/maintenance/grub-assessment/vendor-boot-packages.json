@@ -1,0 +1,292 @@
+{
+  "method": "sqv-authenticated archived Debian indexes and exact package SHA256 verification; no apt installation",
+  "indexes": [
+    {
+      "releaseSha256": "0584fba32e13e0ab8285fb16c27adea1ec03a73669c18702821094fd6ca86675",
+      "indexSha256": "4f2c68d67001d595fbd343f6dbad44468953a51c4d9dec3a4803249f6e295940",
+      "suite": "debian_dists_trixie"
+    },
+    {
+      "releaseSha256": "1c92c2be0463b868e4918b0ab6534ab6de97ea6ccd094b1a9b5ab396ca9e3aa9",
+      "indexSha256": "e3feb64dc7da56f3911ac39e5db4316f3aada9ef7b20dcf9e5fe7b37fa948501",
+      "suite": "debian-security_dists_trixie-security"
+    },
+    {
+      "releaseSha256": "b3362343da032268197456bc9acbf8ab8aa0092fae0edcf1fd98155aced0aab3",
+      "indexSha256": "a855cb0d5a041e97b7e449de8de7c233ef6207f10c7ba62df6a77a887a461f13",
+      "suite": "debian_dists_trixie-updates"
+    }
+  ],
+  "packages": [
+    {
+      "name": "adduser",
+      "version": "3.152",
+      "sha256": "e50984d2e1ef6300e3fd51303839842189a077b10cb5cadff1923df10c61c493",
+      "bytes": 190932
+    },
+    {
+      "name": "ipxe-qemu",
+      "version": "1.21.1+git20250501.dad20602+dfsg-1",
+      "sha256": "b3b799d90b87ef2d6defa925cd48cf1691a19806f08041733a4f884d4a218b17",
+      "bytes": 1225404
+    },
+    {
+      "name": "libaio1t64",
+      "version": "0.3.113-8+b1",
+      "sha256": "490c8a2d116001a5f3b0a6d7a7aabf6a7b629366590dc5c3f75b078e931dd129",
+      "bytes": 14888
+    },
+    {
+      "name": "libasound2-data",
+      "version": "1.2.14-1+deb13u1",
+      "sha256": "04688afdff3769c0f685541daed7b2f6f0cb946799ddf1d5847ddf11fe245559",
+      "bytes": 21188
+    },
+    {
+      "name": "libasound2t64",
+      "version": "1.2.14-1+deb13u1",
+      "sha256": "5495496142d57e5ad6d581ac5456ec3c87f872c109a2bfb815d154b673eebc67",
+      "bytes": 380896
+    },
+    {
+      "name": "libbpf1",
+      "version": "1:1.5.0-3",
+      "sha256": "04c96ead3024888d80d08c8d08cc8cf4589f4614627acc69519f87ffb5adc1c2",
+      "bytes": 168832
+    },
+    {
+      "name": "libbrlapi0.8",
+      "version": "6.7-3.1+deb13u3",
+      "sha256": "d8767805735bfae0edbe793fc8b6f6266ac9e55bec88c3d36b567c41b6438ca2",
+      "bytes": 92960
+    },
+    {
+      "name": "libburn4t64",
+      "version": "1.5.6-1.1+b1",
+      "sha256": "59edae2bc41ec2319d1569157b82c49f54b64e7459ce57c7ff443029fa8bb82f",
+      "bytes": 164240
+    },
+    {
+      "name": "libglib2.0-0t64",
+      "version": "2.84.4-3~deb13u5",
+      "sha256": "e2baf92c57d1db1753e5781a61450d9a01e7833c7bd2dfe87776a6811c11ecc2",
+      "bytes": 1521120
+    },
+    {
+      "name": "libnspr4",
+      "version": "2:4.36-1",
+      "sha256": "87fc2039ee89cff2b8010fa9535706b1def40031acfc52bf12197dcb3cb7b064",
+      "bytes": 109800
+    },
+    {
+      "name": "libnss3",
+      "version": "2:3.110-1+deb13u4",
+      "sha256": "8d20d0754039e15e9bd2c8484e98dc9c2982907d4f20834da29a9501913d00b5",
+      "bytes": 1394236
+    },
+    {
+      "name": "libpcsclite1",
+      "version": "2.3.3-1",
+      "sha256": "a8bc4725549060d1e696d358e32a3699d947d5381871553a290389830bebccbd",
+      "bytes": 55248
+    },
+    {
+      "name": "libcacard0",
+      "version": "1:2.8.0-3+b2",
+      "sha256": "1d6a8d17b893e54dfea8fe78df16c9a8ab4a6e626f9312881784592d480d9317",
+      "bytes": 90904
+    },
+    {
+      "name": "libcapstone5",
+      "version": "5.0.7-1~deb13u1",
+      "sha256": "775187a7be26bb0b076d1979a02163b943dbc13eb4adb0efc503223a03c75422",
+      "bytes": 778216
+    },
+    {
+      "name": "libkmod2",
+      "version": "34.2-2",
+      "sha256": "ee6c50ebac79aa9795e8bf9aa01d94c99984d09d22598c66be0f8ba917b62179",
+      "bytes": 63196
+    },
+    {
+      "name": "libdaxctl1",
+      "version": "81-1",
+      "sha256": "6296eb5c976743ba0defb7a061ef081238ca072cf569c6bb96fd3f9095c58a30",
+      "bytes": 22188
+    },
+    {
+      "name": "libexecs1",
+      "version": "1.4-2+b2",
+      "sha256": "05b578fead365a81141fe834c3b3b6df89d17a050784a237f736489fbd426105",
+      "bytes": 7820
+    },
+    {
+      "name": "libfdt1",
+      "version": "1.7.2-2+b1",
+      "sha256": "8e37034d7864807ae2063efcc82fc79aad59069546212e6e0908ed67f9f7e107",
+      "bytes": 19996
+    },
+    {
+      "name": "libfuse3-4",
+      "version": "3.17.2-3",
+      "sha256": "92e2d521ff872755a13aa69dba7b24025a7dc0f0f5aa708c9a86cd3565f570da",
+      "bytes": 98748
+    },
+    {
+      "name": "libnl-3-200",
+      "version": "3.7.0-2",
+      "sha256": "ce5c153953016be42def7b105f37d55eae07a9608d1dfe6bcb03cc017fc384cb",
+      "bytes": 59432
+    },
+    {
+      "name": "libnl-route-3-200",
+      "version": "3.7.0-2",
+      "sha256": "1c8c95542688996cff8e954583642b10a3bd78b69954f565fda62144c2bc3897",
+      "bytes": 181704
+    },
+    {
+      "name": "libibverbs1",
+      "version": "56.1-1",
+      "sha256": "4c3b889607586e6328964a5f98e01ef01daa415be24334d743d6654aab4c47a4",
+      "bytes": 62428
+    },
+    {
+      "name": "libjte2",
+      "version": "1.22-4+b2",
+      "sha256": "2e7799a28deac613ffaa75bb131046e8f9311fc211b747a10cf6760f15f0c4ae",
+      "bytes": 29592
+    },
+    {
+      "name": "libisofs6t64",
+      "version": "1.5.6.pl01-1.1+b1",
+      "sha256": "52e9b19b888ff9af70299068ccd2bad790583da54ef8b6b6d8cb16b55d16aa88",
+      "bytes": 218604
+    },
+    {
+      "name": "libisoburn1t64",
+      "version": "1.5.6-1.2+b1",
+      "sha256": "b80bb60269492aaf4a7dd316b238db0e1fc34647f59bc0d86aeb9d298089931d",
+      "bytes": 410400
+    },
+    {
+      "name": "libjpeg62-turbo",
+      "version": "1:2.1.5-4",
+      "sha256": "5504299ad0e3c0a9ca9f962a68a650a040db52f9f416a109e74df48d55601d3f",
+      "bytes": 168152
+    },
+    {
+      "name": "libndctl6",
+      "version": "81-1",
+      "sha256": "fe60a05d42e61cb9f49a90b872aa5ca569363b13459ee0d405243c37a7de7c93",
+      "bytes": 62312
+    },
+    {
+      "name": "libnuma1",
+      "version": "2.0.19-1",
+      "sha256": "e578583f73f8208564e5035b18aa729c441fc7ecb389c666923552e123f4d655",
+      "bytes": 22212
+    },
+    {
+      "name": "libpixman-1-0",
+      "version": "0.44.0-3",
+      "sha256": "3862c87596f6b4b60fc916395fd69aa10af28a875a8e5c081a8cf30ddd120bd6",
+      "bytes": 247888
+    },
+    {
+      "name": "libpmem1",
+      "version": "1.13.1-1.1+b1",
+      "sha256": "7d972d6958e915ce602e4b90debc6b4b91a01dfea1fe003d0b013756e7d9d863",
+      "bytes": 91708
+    },
+    {
+      "name": "libpng16-16t64",
+      "version": "1.6.48-1+deb13u5",
+      "sha256": "2465b4e9fa85cff54dc10a6da3e64074d8d9292c86e4a8f989b809d6b158e97e",
+      "bytes": 283204
+    },
+    {
+      "name": "librdmacm1t64",
+      "version": "56.1-1",
+      "sha256": "5b56911725905b8e2a8389c99416ca078395c4ca8ce0d516bc758d5be0134687",
+      "bytes": 70396
+    },
+    {
+      "name": "libslirp0",
+      "version": "4.8.0-1+deb13u1",
+      "sha256": "6125698173f8be0d0de01ff897a0df3c5e50fb09f70238b26dd6574aaa0934e1",
+      "bytes": 66544
+    },
+    {
+      "name": "liburing2",
+      "version": "2.9-1",
+      "sha256": "4b589c00c7a51172aace2cb2fb3d3ff32daf86c644023126dcfcaa840cc941ea",
+      "bytes": 26448
+    },
+    {
+      "name": "libusb-1.0-0",
+      "version": "2:1.0.28-1",
+      "sha256": "bb6467a002915c4ac464aa1b22204907951a30e43bcb86596ebd3539e84458e9",
+      "bytes": 59552
+    },
+    {
+      "name": "libusbredirparser1t64",
+      "version": "0.15.0-1",
+      "sha256": "4b039802dac140bae5a6f3fb6341eeeb9ea8c3e4d7b95ad36a07a8c28572f177",
+      "bytes": 19560
+    },
+    {
+      "name": "libvdeplug2t64",
+      "version": "4.0.1-5.1+b1",
+      "sha256": "01291e2c8e28e91eac6b59c983a3a44e29ad0ddb8622699fbb84cbd5f26334a4",
+      "bytes": 28456
+    },
+    {
+      "name": "ovmf",
+      "version": "2025.02-8+deb13u1",
+      "sha256": "78e0d54df11fc77406cb7a0bc9a39e5bca6d1cbe06556b91d9a73491c52decdf",
+      "bytes": 5779964
+    },
+    {
+      "name": "qemu-system-common",
+      "version": "1:10.0.13+ds-0+deb13u1",
+      "sha256": "3a99dc23c42c66bb7e96dc1f2ba12b1797d154a472fbdb1cfcd822d9fb69e85b",
+      "bytes": 1000628
+    },
+    {
+      "name": "qemu-system-data",
+      "version": "1:10.0.13+ds-0+deb13u1",
+      "sha256": "a0e03c526cc09d4c2ab20aa19a8c12e916cdc49a170acb16a6563c28f70eafd3",
+      "bytes": 2144176
+    },
+    {
+      "name": "seabios",
+      "version": "1.16.3-2",
+      "sha256": "2b590534250b940f43222eeab9a8f57f337a9d9a73fc412a43ab8cd07a7e56f6",
+      "bytes": 163272
+    },
+    {
+      "name": "qemu-system-x86",
+      "version": "1:10.0.13+ds-0+deb13u1",
+      "sha256": "5e841d0723a657fd8bc2e9e1a085d24f47fcb3e4a0f94762e6c38b429f22fbb1",
+      "bytes": 10278596
+    },
+    {
+      "name": "xorriso",
+      "version": "1.5.6-1.2+b1",
+      "sha256": "9ee40b0f45479283c1c69e5d914f69c44051c61b6efb3f86994238a62ceddd1a",
+      "bytes": 323180
+    },
+    {
+      "name": "libsigsegv2",
+      "version": "2.14-1+b2",
+      "sha256": "bac603b965f303ea88dc39cd723b3d88cd86e3be9c948783f0d5e0d00e971302",
+      "bytes": 34368
+    },
+    {
+      "name": "gawk",
+      "version": "1:5.2.1-2+b1",
+      "sha256": "0e3b376e74cadfa5049bc8248c563efe89fd45e31466f8891c094c65c0879f5c",
+      "bytes": 673696
+    }
+  ]
+}
