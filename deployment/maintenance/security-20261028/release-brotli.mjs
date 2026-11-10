@@ -1,3 +1,4 @@
+import {proveCaddy} from '../security-20261109/xnet-caddy-policy.mjs';
 import {proveZlibBookworm,zlibBookwormRelease} from '../security-20261109/zlib-bookworm-policy.mjs';
 import {proveRsync} from '../security-20261109/rsync-policy.mjs';
 import {boundRelaySockets} from '../security-20261109/relay-idle.mjs';
@@ -26,7 +27,7 @@ import {proveXi,xiComparison} from '../security-20261103/xi-policy.mjs';
 import {acquireReleaseLock} from '../security-20261103/release-lock.mjs';
 const batch=selectBatch(process.argv.slice(2));process.argv=[...process.argv.slice(0,2),...batch.args];
 process.umask(0o077);
-const root=batch.root,flags=['--zlib-bookworm','--rsync','--sqlite-followup','--xnet','--zlib','--vendor-debian','--musl','--guava','--oauth-debian','--libxi','--js-nov','--sqlite','--redirects','--pyasn1','--expat-debian','--msal','--cfitsio','--trust','--nginx-debian','--zod','--codec-caddy','--filelock','--text','--oauth','--codec','--x11','--health','--markdown','--symfony','--nltk','--msgpack','--multer','--pcre','--postal','--expat','--blkid','--jose-leaf','--jose-caddy','--jose','--drf','--dnspython','--authlib','--alpine','--node-apk','--undici','--body','--go-helpers','--caddy','--go-runtime','--go-services','--node','--curl','--curl-bookworm'];
+const root=batch.root,flags=['--xnet-caddy','--zlib-bookworm','--rsync','--sqlite-followup','--xnet','--zlib','--vendor-debian','--musl','--guava','--oauth-debian','--libxi','--js-nov','--sqlite','--redirects','--pyasn1','--expat-debian','--msal','--cfitsio','--trust','--nginx-debian','--zod','--codec-caddy','--filelock','--text','--oauth','--codec','--x11','--health','--markdown','--symfony','--nltk','--msgpack','--multer','--pcre','--postal','--expat','--blkid','--jose-leaf','--jose-caddy','--jose','--drf','--dnspython','--authlib','--alpine','--node-apk','--undici','--body','--go-helpers','--caddy','--go-runtime','--go-services','--node','--curl','--curl-bookworm'];
 assert(process.argv.filter(a=>flags.includes(a)).length<=1);
 const profile=process.argv.find(a=>flags.includes(a))?.slice(2)||'brotli',guava=profile==='guava',oauthDebian=profile==='oauth-debian',msal=profile==='msal',cfitsio=profile==='cfitsio',trust=profile==='trust',nginx=profile==='nginx-debian',zod=profile==='zod',filelock=profile==='filelock',oauth=profile==='oauth',markdown=profile==='markdown',symfony=profile==='symfony',nltk=profile==='nltk',msgpack=profile==='msgpack',multer=profile==='multer',postal=profile==='postal',blkid=profile==='blkid',jose=['jose','jose-leaf'].includes(profile),drf=profile==='drf',dns=profile==='dnspython',authlib=profile==='authlib',alpine=['alpine','node-apk','expat','pcre','x11','musl'].includes(profile),undici=profile==='undici',body=profile==='body',go=['codec-caddy','text','codec','health','go-helpers','caddy','go-runtime','go-services','jose','jose-caddy','jose-leaf'].includes(profile),node=profile==='node',curl=profile.startsWith('curl');
 const specs=JSON.parse(fs.readFileSync(batch.input(profile))).rows.flatMap(s=>s.releaseGroups?s.releaseGroups.map(g=>({...s,...g,evidenceKey:s.key})):[s]);
@@ -78,7 +79,7 @@ function protectedActivityGate(g){
  const name='utilibre-pack-galene-galene-1',pid=Number(docker('inspect','--format','{{.State.Pid}}',name));assert(Number.isInteger(pid)&&pid>0);
  assert.equal(establishedOnPort(['tcp','tcp6'].map(p=>fs.readFileSync('/proc/'+pid+'/net/'+p,'utf8')),8080),0,'An active Galene connection prevents this restart');
 }
-function proof(key){const s=specs.find(s=>s.key===key),dir=evidence(s);if(profile==='xnet'){const r=proveXnet(s);assert.equal(image(s.candidate),s.imageId);return r;}const b=read(dir+'/build.json'),scan=read(dir+'/scan-gate.json');
+function proof(key){const s=specs.find(s=>s.key===key),dir=evidence(s);if(['xnet','xnet-caddy'].includes(profile)){const r=profile==='xnet'?proveXnet(s):proveCaddy(s);assert.equal(image(s.candidate),s.imageId);return r;}const b=read(dir+'/build.json'),scan=read(dir+'/scan-gate.json');
  if(profile==='vendor-debian')proveVendorDebian(read(batch.input(profile)),s,b,read(dir+'/consumer.json'),scan,read(root+'/debian-acquisition/authenticated.json'),root);
  if(profile==='musl')proveMusl(read(batch.input('musl')),s,b,read(dir+'/consumer.json'),scan);
  if(profile==='zlib')proveZlib(read(batch.input(profile)),s,b,{...read(dir+'/consumer.json'),path:dir+'/consumer.json'},{...scan,rawPath:dir+'/after-scan.json'},{...read(dir+'/scope.json'),path:dir+'/scope.json'});

@@ -518,3 +518,50 @@ runtime images, 175 containers, 93 source inputs and no unrechecked targets.
 The pending queue is now 0 critical / 190 high records. The x/net coverage
 record separately preserves the original inventory and lists five completed
 application releases, 12 remaining runtime targets and 22 older build inputs.
+
+### Embedded Caddy continuation (10 November, 01:27 UTC)
+
+Wishlist and the three newsletter roles now use the tested Caddy binary with
+x/net 0.62.0. The separate edge proxy is unchanged. Three candidate images and
+all three release groups passed; the newsletter web release also recreated its
+existing namespace companion. Native proxy/gzip/SSE/HTTP2 behavior, Wishlist
+account/list/item persistence and anonymous denial, and synthetic newsletter
+SMTP-to-Atom creation/deletion all passed in isolated environments. No external
+browser origins were requested. This does not claim live external mail delivery.
+
+The source sequence was reconstructed from the pinned Caddy buildable archive
+and earlier approved fixes. Native vendoring initially removed 416 unrelated
+source/test files from the JOSE/compression trees; the strict scope check
+rejected that result. Restoring those exact files from the verified baseline
+made the final scope pass. Six explicit Go module version changes remain; the
+earlier JOSE v3 source backport, JOSE v4 and compression fixes are intact.
+
+Full image comparison permits only the binary and four build/module notices.
+The three same-database comparisons remove CVE-2026-78661 and CVE-2026-97045,
+with no new high/critical findings. The retained UNKNOWN OpenPGP attribution
+changes its module version; the actual linked-package inventory excludes that
+API. Other raw findings are retained for separate review, not silently waived.
+Seventy-two targeted release/policy tests passed, including rejection of changed
+inputs, incomplete behavior proofs and additional unreviewed findings.
+
+The complete source offer was downloaded through the existing tools-origin
+route and matched its recorded length and SHA-256. Python urllib received 403;
+native Node HTTPS fetched the exact archive successfully. This establishes that
+tested fetch, not universal crawler access.
+[Source and offline rebuild instructions](https://tools.utilibre.org/utilibre-source/security-xnet-caddy-20261109-source.tar.gz):
+51,110,045 bytes, SHA-256
+`1e7ae55f6bde26ade9bd0ab0dc441eafb701b7d7b9713fbfdf9a61f52c0e57d5`.
+
+Private evidence: `security-20261109/xnet-caddy/`; scoped previous pins and
+configuration hashes: `xnet-caddy/release.json`. No account/data migration,
+retention change, public-route activation, external email or host reboot.
+
+The completed 01:29 UTC scan checks all 109 images, 175 containers and 95
+source inputs. Forty-two exact, seven-day reviews revalidate retained patches
+and component boundaries, including the new Caddy lock. Raw evidence remains.
+The resulting pending queue is **0 critical / 183 high package-target records**.
+There are nine remaining x/net runtime targets and 22 historical build inputs.
+Forty-four review-policy tests pass (overlapping the release-policy suite); no
+new exploit reproduction was run. Incomplete historical newsletter image ancestry
+was not silently accepted: the new Caddy review uses its independently proven
+source, original binary identity, complete native/build receipts and live hashes.

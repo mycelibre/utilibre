@@ -2,6 +2,7 @@
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';import {additionalOverlayReceipts} from '../followup-overlays.mjs';import {expatDescendant} from '../security-20261103/expat-policy.mjs';import {validateDecision} from '../triage.mjs';
 import {cases,eligible,prove} from './platform-policy.mjs';
+import {proveCaddy} from '../security-20261109/xnet-caddy-policy.mjs';
 import {createHash} from 'node:crypto';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/security-20261028/platform';fs.mkdirSync(dir,{recursive:true});
@@ -34,7 +35,7 @@ for(const item of queue.items){
    observed.version='v'+info.match(/^\/binary: go([0-9.]+)$/m)?.[1];observed.compiledOs=info.match(/\bGOOS=(\w+)/)?.[1];observed.compiledArch=info.match(/\bGOARCH=(\w+)/)?.[1];observed.module=info.match(/\bpath\s+(\S+)/)?.[1];
    const check='const m=require("./node_modules/.pnpm/esbuild@0.19.12/node_modules/esbuild"),a=require("assert/strict");a.equal(m.version,"0.19.12");a.match(m.transformSync("const n: number = 7;",{loader:"ts"}).code,/const n = 7/);console.log("passed")';
    observed.nativeTransform=run('docker',['run','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--memory','256m','--cpus','1','--pids-limit','32','--log-driver','none','--tmpfs','/tmp:rw,size=16m,mode=1777','--entrypoint','node',s.image,'-e',check])==='passed';observed.network='none';
-   const a=read(root+'/security-20261028/zod/wishlist/application.json');assert(a.passed&&a.imageId===s.image&&a.typescriptTransform&&a.nativeAccountCreated&&a.listCreated&&a.itemCreated&&a.reloadPersistence&&a.anonymousListDenied&&a.externalBrowserOrigins.length===0);observed.nativeApplication=true;
+   let appProof=root+'/security-20261028/zod/wishlist/application.json';const currentInputs=new URL('../security-20261109/xnet-caddy-release-inputs.json',import.meta.url);if(fs.existsSync(currentInputs)){const current=read(currentInputs).rows.find(r=>r.key==='caddy-wishlist'&&r.imageId===s.image);if(current){proveCaddy(current,{requireRecentCandidate:false});appProof=root+'/security-20261109/xnet-caddy/wishlist-stage.json';}}const a=read(appProof);assert(a.passed&&a.imageId===s.image&&a.typescriptTransform&&a.nativeAccountCreated&&a.listCreated&&a.itemCreated&&a.reloadPersistence&&a.anonymousListDenied&&a.externalBrowserOrigins.length===0);observed.nativeApplication=true;
   }else if(s.package==='vite'){
    const code='const fs=require("fs"),h=require("crypto");const p=process.argv[1],b=fs.readFileSync(p+"/package.json");console.log(JSON.stringify({path:p,version:JSON.parse(b).version,metadataSha256:h.createHash("sha256").update(b).digest("hex"),runtimePlatform:process.platform,uncLikePathExists:fs.existsSync("/tmp/utilibre-fictional-nonexistent\\\\..") }));';
    observed=JSON.parse(run('docker',['exec',name,'node','-e',code,s.path]));

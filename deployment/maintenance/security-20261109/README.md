@@ -5,6 +5,45 @@ application tests, Trivy assessment, Compose release and rollback procedures.
 Private evidence is under `/var/lib/utilibre-maintenance/security-20261109`.
 It does not authorize automatic updates of other services.
 
+## Embedded Caddy follow-up
+
+`xnet-caddy-inputs.json` captures Caddy 2.11.7 in Wishlist and the newsletter
+web/SMTP/jobs roles. The prepared source retains the previous JOSE v3 backport,
+JOSE v4.1.6 and compression v1.20.2 source. Six explicit Go module version
+changes are recorded; x/net becomes 0.62.0. Go 1.26.10 compiles offline from the
+complete checksum-pinned vendor archive. `xnet-locks/caddy` preserves the exact
+resolved module graph; replay never resolves newer dependencies.
+
+`xnet-caddy.py build|stage|native|scan` extends the existing compiler, full-image
+comparator, native fixtures and Trivy scanner. The initial acquisition and source
+comparison are retained privately; the complete prepared source and standalone
+offline build recipe are in `security-xnet-caddy-20261109-source.tar.gz` at the
+existing source-download route. Scope is only the binary and four build/module
+notice files. Other application bytes, ownership, modes, packages and container
+configuration remain unchanged. Commands fail rather than overwrite receipts.
+
+The native checks cover proxying, gzip, live SSE, HTTP/2, Wishlist account/list/
+item persistence and anonymous denial, and newsletter creation, synthetic
+internal SMTP-to-Atom delivery and deletion. Browser fixtures reject external
+origins. They do not send production email or claim external delivery coverage.
+The same frozen advisory database compares old/new images. A retained UNKNOWN
+OpenPGP module record requires proof that no OpenPGP package is linked; it is
+not hidden from scan output. Previously reviewed raw findings also remain.
+
+The separately reviewed `xnet-caddy-release-inputs.json` binds all evidence to
+the three exact images. Use the existing `security-20261028/release-brotli.mjs
+--batch-20261109 --xnet-caddy prepare KEY` and separately authorized `apply KEY`.
+Three groups affect four application roles plus the existing newsletter gateway
+namespace companion. The separate edge Caddy VM is outside this release.
+Rollback uses the prior image/configuration pins in `xnet-caddy/release.json`
+through the same scoped Compose procedure; no database format changes occur.
+
+The source archive is 51,110,045 bytes, SHA-256
+`1e7ae55f6bde26ade9bd0ab0dc441eafb701b7d7b9713fbfdf9a61f52c0e57d5`.
+It contains source, licences and rebuild instructions, without runtime data or
+credentials. Exact-input replay is supported; identical build bytes are not
+claimed. Complete evidence is under the private `xnet-caddy/` directory.
+
 ## GLib: Addy and 4get
 
 `glib-inputs.json` pins the two repaired predecessor images, signed Alpine APK,

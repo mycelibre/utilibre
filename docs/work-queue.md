@@ -1,10 +1,11 @@
-## Current continuation — 10 November 2026, 01:12 UTC
+## Current continuation — 10 November 2026, 01:29 UTC
 
-GoHub's dependency update is deployed, preserving its newer proxy-status fix.
-The completed scan now covers 93 source inputs alongside 109 runtime images
-and 175 containers: **0 pending critical / 190 pending high records**. All
-observed targets were rechecked. The five completed x/net application releases
-are distinct from 12 remaining runtime targets and 22 historical build inputs.
+The embedded Caddy update is deployed in Wishlist and all newsletter roles,
+with earlier JOSE/compression fixes preserved. The completed scan covers 95
+source inputs, 109 runtime images and 175 containers: **0 pending critical /
+183 pending high records**. All observed targets were rechecked. Nine x/net
+runtime targets and 22 historical build inputs still need work. Exact reviews
+retain raw findings and expire; this is not full remediation.
 [Current evidence and limitations](records/security-maintenance-2026-11-09.md).
 
 ## Latest checkpoint — 10 November 2026

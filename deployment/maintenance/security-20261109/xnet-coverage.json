@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "date": "2026-11-10T01:13:26.360739+00:00",
-  "scanDate": "2026-11-10T01:12:05.404Z",
+  "date": "2026-11-10T01:34:44.578564+00:00",
+  "scanDate": "2026-11-10T01:29:36.838Z",
   "counts": {
     "runtime": 17,
     "trackedInputs": 22
@@ -556,7 +556,31 @@
     }
   ],
   "currentPending": {
-    "runtime": 12,
+    "runtime": 9,
     "trackedInputs": 22
-  }
+  },
+  "embeddedCaddyReleased": [
+    {
+      "key": "caddy-wishlist",
+      "completedAt": "2026-11-10T01:27:17.407Z",
+      "images": [
+        "sha256:e01160fc2f9e9603b22f5ad1656786d0e573b6a6cdcf52ed34a095b3cef62f1b"
+      ]
+    },
+    {
+      "key": "caddy-newsletters-web",
+      "completedAt": "2026-11-10T01:27:26.898Z",
+      "images": [
+        "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+        "sha256:df25366f8a0a8f48d7548f7c20dee1950e238b4ce64719ab94c091c9fd044dcf"
+      ]
+    },
+    {
+      "key": "caddy-newsletters-mail-jobs",
+      "completedAt": "2026-11-10T01:27:36.093Z",
+      "images": [
+        "sha256:2a93e71af15883beb34e5526ef9b04b094f86ea542f3594f20ab489ce8be7ea2"
+      ]
+    }
+  ]
 }

@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "approval": "candidate-only",
+  "compiler": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+  "compilerVersion": "1.26.10",
+  "sourceArchiveSha256": "44feb4e169c960d39b3e38d3c6401c467283db667e96c8388cd8109066522dfc",
+  "sourceScopeSha256": "69c18550190d1eafcfe82ef4812d48f974712898cf7b3c66a09449f485ebc3b2",
+  "nativeRecipe": "deployment/maintenance/caddy-security/compile.sh",
+  "nativeRecipeSha256": "f7a26f3bb4b87cfd06352d5e941f7399564b93de3414535aa38a7c02c40663e4",
+  "adapterSha256": "7971f022f7139680d238e91d2fb35b832e04e944be0e21d1de2f7a569c3eb292",
+  "priorSourceProofSha256": "893fc963ab18eda53fdd9863e2146c1213e765021752db2b281b31b9e2a47e05",
+  "goModSha256": "0f431574ce372e9510961f8bbb3e32d244df037dd409298fcf6e5fe807949fcd",
+  "goSumSha256": "800607d90f3d5b7b90e6ad637d8d2c54bb7092f335803f08c24cb9cf974f1945",
+  "network": "none",
+  "productionChanged": false,
+  "rows": [
+    {
+      "key": "caddy-wishlist",
+      "kind": "wishlist",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "base": "sha256:b58c9f93de9d6ac4762e2f90d1054d244369d653b116f9b1e74c9a7ebda01a37",
+      "baseId": "sha256:b58c9f93de9d6ac4762e2f90d1054d244369d653b116f9b1e74c9a7ebda01a37",
+      "oldRef": "sha256:b58c9f93de9d6ac4762e2f90d1054d244369d653b116f9b1e74c9a7ebda01a37",
+      "binary": "/usr/bin/caddy",
+      "path": "/usr/bin/caddy",
+      "oldBinarySha256": "5b8f4e10f9ea89569930c27404a70e80a00238e47653ced2c0a4d5694c35d702",
+      "candidate": "utilibre-caddy-wishlist:xnet-security-20261109",
+      "compilerVersion": "1.26.10"
+    },
+    {
+      "key": "caddy-newsletters-web",
+      "kind": "newsletters-web",
+      "containers": [
+        "utilibre-newsletters-web-1"
+      ],
+      "base": "sha256:1c4893a78930793b179523863886d2b8024e4e44f022eaa09a1cda5aed44f234",
+      "baseId": "sha256:1c4893a78930793b179523863886d2b8024e4e44f022eaa09a1cda5aed44f234",
+      "oldRef": "sha256:1c4893a78930793b179523863886d2b8024e4e44f022eaa09a1cda5aed44f234",
+      "binary": "/app/node_modules/.bin/caddy",
+      "path": "/app/node_modules/.bin/caddy",
+      "oldBinarySha256": "5b8f4e10f9ea89569930c27404a70e80a00238e47653ced2c0a4d5694c35d702",
+      "candidate": "utilibre-caddy-newsletters-web:xnet-security-20261109",
+      "compilerVersion": "1.26.10"
+    },
+    {
+      "key": "caddy-newsletters-mail-jobs",
+      "kind": "newsletters-mail-jobs",
+      "containers": [
+        "utilibre-newsletters-smtp-1",
+        "utilibre-newsletters-jobs-1"
+      ],
+      "base": "sha256:d512043fa8e5748060078af4456839cee1223b083ec5c1be8c6db91e21ed163e",
+      "baseId": "sha256:d512043fa8e5748060078af4456839cee1223b083ec5c1be8c6db91e21ed163e",
+      "oldRef": "sha256:d512043fa8e5748060078af4456839cee1223b083ec5c1be8c6db91e21ed163e",
+      "binary": "/app/node_modules/.bin/caddy",
+      "path": "/app/node_modules/.bin/caddy",
+      "oldBinarySha256": "5b8f4e10f9ea89569930c27404a70e80a00238e47653ced2c0a4d5694c35d702",
+      "candidate": "utilibre-caddy-newsletters-mail-jobs:xnet-security-20261109",
+      "compilerVersion": "1.26.10"
+    }
+  ],
+  "dependency": "golang.org/x/net",
+  "previousVersion": "v0.60.0",
+  "version": "v0.62.0",
+  "advisory": "CVE-2026-78661",
+  "primary": "https://pkg.go.dev/vuln/GO-2026-6860",
+  "moduleChanges": {
+    "golang.org/x/net": [
+      "v0.60.0",
+      "v0.62.0"
+    ],
+    "golang.org/x/crypto": [
+      "v0.57.0",
+      "v0.58.0"
+    ],
+    "golang.org/x/sync": [
+      "v0.23.0",
+      "v0.24.0"
+    ],
+    "golang.org/x/sys": [
+      "v0.48.0",
+      "v0.49.0"
+    ],
+    "golang.org/x/term": [
+      "v0.46.0",
+      "v0.47.0"
+    ],
+    "golang.org/x/text": [
+      "v0.42.0",
+      "v0.43.0"
+    ]
+  },
+  "sourceVersion": "2.11.7",
+  "fixtures": {
+    "deployment/maintenance/caddy-security/check.mjs": "1a2c03385b0295d1495b65adcd318ca8b4e1c3f2bf876be871e6654f43233ab3",
+    "deployment/maintenance/caddy-security/native.cjs": "71149c03cdf29827340e0d823785fed3d19bce13076f78a124d02ca6395bea75",
+    "deployment/maintenance/caddy-security/check-newsletters.mjs": "6eeb4a5cf0805db4f15eceb3a56085c78552a9dc2d35c5b65f43cc7e04646fd3",
+    "deployment/maintenance/check-wishlist-esbuild.mjs": "63fe243ff580ba84a7ce8c42f9e97aa320ff7dfbde26175052eea319915eb419"
+  },
+  "limits": {
+    "minimumFreeBytes": 8589934592,
+    "network": "none; internal native fixtures only",
+    "parallelBuilds": 1
+  }
+}

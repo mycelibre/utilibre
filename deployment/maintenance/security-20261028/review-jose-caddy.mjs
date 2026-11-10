@@ -2,6 +2,7 @@
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 import {compressionRebuildHash, zodPreservesBinary} from './jose-rebuild-proof.mjs';
+import {proveCaddy} from '../security-20261109/xnet-caddy-policy.mjs';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';
 process.umask(0o077);
 const leaf=process.argv[2]==='--leaf';assert(!process.argv[2]||leaf);
@@ -23,7 +24,7 @@ for(const s of inputs.rows){
  // Follow each role independently; shared SMTP/jobs must end at the same exact
  // artifact. Every role still requires its own successful release and live hash.
  const artifacts=s.containers.map(name=>{let current=b.imageId;for(const r of descendants.filter(r=>r.name===name))if(r.oldImage===current&&r.oldImage!==r.newImage){assert(Date.parse(r.completedAt)<=Date.parse(scan.date));current=r.newImage;}return current;});
- assert.equal(new Set(artifacts).size,1,'Shared roles diverged');const artifact=artifacts[0];
+ assert.equal(new Set(artifacts).size,1,'Shared roles diverged');let artifact=artifacts[0];
  let hash=b.binaries.find(x=>x.path===s.binary).binarySha256,proofProfile=profile;
  if(!leaf){
   const next=read(new URL('./codec-caddy-inputs.json',import.meta.url)).rows.find(row=>row.key===s.key),nextDir=root+'/security-20261028/codec-caddy';
@@ -49,9 +50,36 @@ for(const s of inputs.rows){
    }
   }
  }
+ if(!leaf&&fs.existsSync(root+'/security-20261109/xnet-caddy/release.json')){
+  const next=read(new URL('../security-20261109/xnet-caddy-release-inputs.json',import.meta.url)).rows.find(r=>r.key===s.key);
+  if(next){
+   const checked=proveCaddy(next,{requireRecentCandidate:false}),nextDir=root+'/security-20261109/xnet-caddy';
+   // This later binary was independently rebuilt from the proven codec source.
+   // Do not infer preservation from incomplete intervening application receipts.
+   assert.equal(next.oldBinarySha256,sha(fs.readFileSync(root+'/security-20261028/codec-caddy/artifact/caddy')));
+   assert.deepEqual([...next.containers].sort(),[...s.containers].sort());
+   artifact=next.imageId;
+   assert.equal(sha(fs.readFileSync(nextDir+'/source/vendor/github.com/go-jose/go-jose/v3/jwk.go')),spec.afterSha256);
+   assert.equal(sha(fs.readFileSync(nextDir+'/artifact/notices/jose-v3.patch')),spec.patchSha256);
+   const complete=read(nextDir+'/release.json');assert.equal(complete.status,'passed');
+   for(const name of s.containers)assert(overlayRows(complete).some(r=>r.name===name&&r.oldImage===next.base&&r.newImage===artifact&&Date.parse(r.completedAt)<=Date.parse(scan.date)));
+   hash=checked.b.binarySha256;proofProfile='../security-20261109/xnet-caddy';
+  }
+ }
  for(const name of s.containers){const r=roles.find(r=>r.name===name);assert(r&&r.newImage===b.imageId&&r.oldImage===s.base&&Date.parse(r.completedAt)<=Date.parse(scan.completedAt));assert.equal(docker('inspect','--format','{{.Image}}',name),artifact);assert.equal(liveHash(name,s.binary),hash);}
  for(const item of queue.items.filter(i=>i.status==='needs-review'&&i.scope==='runtime-image'&&i.id==='CVE-2026-116587'&&i.type==='gobinary'&&i.package==='github.com/go-jose/go-jose/v3'&&i.installed==='v3.0.5'&&i.artifact===artifact&&'/'+i.target.replace(/^\/+/, '')===s.binary)){
   assert.deepEqual([...item.containers].sort(),[...s.containers].sort());decisions.push(validateDecision({key:item.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:`Exact upstream RSA modulus and prime-product bounds from a0111f82742fa92bceec9ede40845e73319e6230 backported to go-jose/v3 3.0.5 jwk.go. Patch SHA-256 ${spec.patchSha256}; pre/post source identity checked before offline ${leaf?s.key:"Caddy"} compilation. Full v3 native suites (262 checks each), bounded missing-limit baseline and fixed rejection, unchanged modules except reviewed v4.1.6, isolated ${leaf?s.key+" native account/authorization":"proxy/TLS/HTTP2 and application workflow"} checks passed. Whole-image changed-file scope, complete release and live binary SHA-256 ${hash} verified in every declared role. Version metadata remains 3.0.5, so raw scanner finding is retained. Only this advisory, binary and exact image; no exception for v3 in other consumers. Evidence: security-20261028/${profile}/${s.key}/ and security-20261028/${proofProfile}/${s.key}/.`}));
+ }
+}
+if(!leaf&&fs.existsSync(root+'/security-20261109/xnet-caddy/release.json')){
+ const manifest=read(new URL('../security-20261109/xnet-caddy-inputs.json',import.meta.url));
+ const name='deployment/maintenance/security-20261109/xnet-locks/caddy/go.mod';
+ assert.equal(sha(fs.readFileSync(new URL('../security-20261109/xnet-locks/caddy/go.mod',import.meta.url))),manifest.goModSha256);
+ // The reviewed offline compiler requires the exact prepared vendor archive;
+ // the unchanged v3 label in this lock alone does not describe its patched code.
+ for(const item of queue.items.filter(i=>i.status==='needs-review'&&i.scope==='tracked-build-input'&&i.targetName===name&&i.id==='CVE-2026-116587'&&i.package==='github.com/go-jose/go-jose/v3'&&i.installed==='v3.0.5')){
+  assert.equal(item.artifact,name+'@sha256:'+manifest.goModSha256);
+  decisions.push(validateDecision({key:item.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:'This exact Caddy module graph is compiled with -mod=vendor from checksum-pinned prepared source, not an unpatched module download. The mandatory source contains the byte-verified approved JOSE v3 RSA bounds backport, SHA256 '+spec.afterSha256+'. Complete source-scope, compiler, application, release and live-binary proofs were verified above for all three Caddy images. Prior 262-case upstream evidence is retained; this is not a fresh exploit reproduction. Raw v3.0.5 metadata remains. Only this graph and advisory are reviewed; another consumer or a changed builder/source requires new review. Evidence: security-20261109/xnet-caddy-inputs.json, xnet-caddy-release-inputs.json and xnet-caddy/source-scope-verified.json. https://github.com/go-jose/go-jose/commit/a0111f82742fa92bceec9ede40845e73319e6230'}));
  }
 }
 fs.writeFileSync(dir+'/review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions},null,2)+'\n');console.log(JSON.stringify({prepared:decisions.length,applied:false}));

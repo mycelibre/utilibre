@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "scope": "Exact tested embedded Caddy binaries in three existing images; four roles. No new routes, edge Caddy change or data migration.",
+  "approvalBasis": "Existing application maintenance/release authorization; isolated native checks, exact file scope, same-database scans and prior-fix preservation verified.",
+  "rollback": "Existing transactional Compose image rollback; no persistent format change.",
+  "rows": [
+    {
+      "key": "caddy-wishlist",
+      "kind": "wishlist",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "base": "sha256:b58c9f93de9d6ac4762e2f90d1054d244369d653b116f9b1e74c9a7ebda01a37",
+      "baseId": "sha256:b58c9f93de9d6ac4762e2f90d1054d244369d653b116f9b1e74c9a7ebda01a37",
+      "oldRef": "sha256:b58c9f93de9d6ac4762e2f90d1054d244369d653b116f9b1e74c9a7ebda01a37",
+      "binary": "/usr/bin/caddy",
+      "path": "/usr/bin/caddy",
+      "oldBinarySha256": "5b8f4e10f9ea89569930c27404a70e80a00238e47653ced2c0a4d5694c35d702",
+      "candidate": "utilibre-caddy-wishlist:xnet-security-20261109",
+      "compilerVersion": "1.26.10",
+      "approval": "approved",
+      "imageId": "sha256:e01160fc2f9e9603b22f5ad1656786d0e573b6a6cdcf52ed34a095b3cef62f1b",
+      "binarySha256": "9f66b55a7c88ca99fed65c6dc03b7aa12dac8bccd77a7e688ecf93f23695e4c2",
+      "checkSha256": "f62007cde47d288610827789a8765b54fefd9f36b1f461b5553573ff9885c110",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "rawEvidence": {
+        "before": "e2e19207db53982acffaa2bae79d901a3b13a0c09112701391bf7bc75d7b754f",
+        "after": "fe97ca964611941f5351b0887915d8a4fac70a2cf18e7a99864f5b8079437706"
+      },
+      "proofs": {
+        "build.json": "ec8efa7ab982284aa0d0801d78114fa3837550b39e8493a50b7b81f4ec20bf56",
+        "native.json": "3cc0d54c0f0b2e677dea33f2471e660951dd19874df06a5d5ca1325b2188b0ab",
+        "checks.json": "d048f3aa53ad1246f1a189a2cbe2bb6352d35451509fd076563073edb5c7eaa7",
+        "wishlist-stage.json": "518bff98e9bcaa400e128c92de76d8454fb9959d3245275726b32184a9f52c31",
+        "newsletters-stage.json": "a30198c5fef4428f16a29b00bbf5ad1e15420e6481547f85426ecfb6643e9ae5",
+        "source-offer.json": "57d5b09cc553a028b9f00fa3685b2c321ba736ce3d759341b861642147b39b9b",
+        "artifact/notices/linked-packages.txt": "5f68c0c011f2f5c1917458dada6c557b11f97486e8d825ea59817a55453448c2",
+        "caddy-wishlist/build.json": "405461f9add7bff5e5ecee622d8387c56831fe7c7b491c39e1d78c68fa4ab7fd",
+        "caddy-wishlist/scan-gate.json": "6887590b8a2d928c2afa1ab8dac98e919e458df51ad24525016a8a5dd8bc7192"
+      }
+    },
+    {
+      "key": "caddy-newsletters-web",
+      "kind": "newsletters-web",
+      "containers": [
+        "utilibre-newsletters-web-1"
+      ],
+      "base": "sha256:1c4893a78930793b179523863886d2b8024e4e44f022eaa09a1cda5aed44f234",
+      "baseId": "sha256:1c4893a78930793b179523863886d2b8024e4e44f022eaa09a1cda5aed44f234",
+      "oldRef": "sha256:1c4893a78930793b179523863886d2b8024e4e44f022eaa09a1cda5aed44f234",
+      "binary": "/app/node_modules/.bin/caddy",
+      "path": "/app/node_modules/.bin/caddy",
+      "oldBinarySha256": "5b8f4e10f9ea89569930c27404a70e80a00238e47653ced2c0a4d5694c35d702",
+      "candidate": "utilibre-caddy-newsletters-web:xnet-security-20261109",
+      "compilerVersion": "1.26.10",
+      "approval": "approved",
+      "imageId": "sha256:df25366f8a0a8f48d7548f7c20dee1950e238b4ce64719ab94c091c9fd044dcf",
+      "binarySha256": "9f66b55a7c88ca99fed65c6dc03b7aa12dac8bccd77a7e688ecf93f23695e4c2",
+      "checkSha256": "f62007cde47d288610827789a8765b54fefd9f36b1f461b5553573ff9885c110",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "rawEvidence": {
+        "before": "5aa76a9e958130898655478cf8faa398cf9daa9a4d2b74f68b1ec9d162d73835",
+        "after": "dad7d3d55915cb7ed8a38aa1f094077c14768b9705f2eda4ae9b23416febf25b"
+      },
+      "proofs": {
+        "build.json": "ec8efa7ab982284aa0d0801d78114fa3837550b39e8493a50b7b81f4ec20bf56",
+        "native.json": "3cc0d54c0f0b2e677dea33f2471e660951dd19874df06a5d5ca1325b2188b0ab",
+        "checks.json": "d048f3aa53ad1246f1a189a2cbe2bb6352d35451509fd076563073edb5c7eaa7",
+        "wishlist-stage.json": "518bff98e9bcaa400e128c92de76d8454fb9959d3245275726b32184a9f52c31",
+        "newsletters-stage.json": "a30198c5fef4428f16a29b00bbf5ad1e15420e6481547f85426ecfb6643e9ae5",
+        "source-offer.json": "57d5b09cc553a028b9f00fa3685b2c321ba736ce3d759341b861642147b39b9b",
+        "artifact/notices/linked-packages.txt": "5f68c0c011f2f5c1917458dada6c557b11f97486e8d825ea59817a55453448c2",
+        "caddy-newsletters-web/build.json": "e322d6528dc3336d4f52c0fe9f503fe52376355166d92455316b1fd21b0fb283",
+        "caddy-newsletters-web/scan-gate.json": "754202d05e54a80e740fd88ef67289515a4bde8be78d8fb791339da50a8b786d"
+      }
+    },
+    {
+      "key": "caddy-newsletters-mail-jobs",
+      "kind": "newsletters-mail-jobs",
+      "containers": [
+        "utilibre-newsletters-smtp-1",
+        "utilibre-newsletters-jobs-1"
+      ],
+      "base": "sha256:d512043fa8e5748060078af4456839cee1223b083ec5c1be8c6db91e21ed163e",
+      "baseId": "sha256:d512043fa8e5748060078af4456839cee1223b083ec5c1be8c6db91e21ed163e",
+      "oldRef": "sha256:d512043fa8e5748060078af4456839cee1223b083ec5c1be8c6db91e21ed163e",
+      "binary": "/app/node_modules/.bin/caddy",
+      "path": "/app/node_modules/.bin/caddy",
+      "oldBinarySha256": "5b8f4e10f9ea89569930c27404a70e80a00238e47653ced2c0a4d5694c35d702",
+      "candidate": "utilibre-caddy-newsletters-mail-jobs:xnet-security-20261109",
+      "compilerVersion": "1.26.10",
+      "approval": "approved",
+      "imageId": "sha256:2a93e71af15883beb34e5526ef9b04b094f86ea542f3594f20ab489ce8be7ea2",
+      "binarySha256": "9f66b55a7c88ca99fed65c6dc03b7aa12dac8bccd77a7e688ecf93f23695e4c2",
+      "checkSha256": "f62007cde47d288610827789a8765b54fefd9f36b1f461b5553573ff9885c110",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "rawEvidence": {
+        "before": "9dbbba335217ff653065645dd0650ab708d0b7646803a023724d890d4e643913",
+        "after": "5121dffb31579429bb9a3eec1779447bd9a8aa738a234a5b3d0c83cdc66e66a3"
+      },
+      "proofs": {
+        "build.json": "ec8efa7ab982284aa0d0801d78114fa3837550b39e8493a50b7b81f4ec20bf56",
+        "native.json": "3cc0d54c0f0b2e677dea33f2471e660951dd19874df06a5d5ca1325b2188b0ab",
+        "checks.json": "d048f3aa53ad1246f1a189a2cbe2bb6352d35451509fd076563073edb5c7eaa7",
+        "wishlist-stage.json": "518bff98e9bcaa400e128c92de76d8454fb9959d3245275726b32184a9f52c31",
+        "newsletters-stage.json": "a30198c5fef4428f16a29b00bbf5ad1e15420e6481547f85426ecfb6643e9ae5",
+        "source-offer.json": "57d5b09cc553a028b9f00fa3685b2c321ba736ce3d759341b861642147b39b9b",
+        "artifact/notices/linked-packages.txt": "5f68c0c011f2f5c1917458dada6c557b11f97486e8d825ea59817a55453448c2",
+        "caddy-newsletters-mail-jobs/build.json": "e8708f74f15b8135cfe808ce0e465a10860b1721a66015e7d16beb50fe74aa74",
+        "caddy-newsletters-mail-jobs/scan-gate.json": "1280780b4ac1e403d36610be68e9e06089db1f83e0a7e46f55759a73b80412aa"
+      }
+    }
+  ]
+}
