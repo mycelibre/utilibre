@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "approval": "assessment-only",
+  "purpose": "Unmodified Debian vendor-signed GRUB candidate; no custom repair or production activation",
+  "advisory": "CVE-2025-61662",
+  "origin": "https://deb.debian.org/debian/",
+  "suite": "sid",
+  "acquiredAt": "2026-11-10T07:46:31.176339+00:00",
+  "releaseSha256": "ec915bac2809762b3186e5905b1cbcb01990d7cb20392038a19b3e3e4e8ea322",
+  "packagesIndexSha256": "a0c91c0f33f6dd0686e8daa5578421cec87fbe7df0645a29f04f0a23c2a470c5",
+  "keyringSha256": "506b815cbb32d9b6066b4a2aa524071e071761e7e7f68c3ac74f3061ba852017",
+  "packages": [
+    {
+      "name": "libefiboot1t64",
+      "version": "39-2+b2",
+      "path": "pool/main/e/efivar/libefiboot1t64_39-2+b2_amd64.deb",
+      "bytes": 44060,
+      "sha256": "14c944aaf965ae832f8af4fc5ff48fd2f2926e33308a7e964038540024723311"
+    },
+    {
+      "name": "libefivar1t64",
+      "version": "39-2+b2",
+      "path": "pool/main/e/efivar/libefivar1t64_39-2+b2_amd64.deb",
+      "bytes": 60500,
+      "sha256": "805590194b2c623da20d3225fffc74ffb1808b8a8aef4cf23910127059d1ba32"
+    },
+    {
+      "name": "grub-efi-amd64-signed",
+      "version": "1+2.14+5",
+      "path": "pool/main/g/grub-efi-amd64-signed/grub-efi-amd64-signed_1+2.14+5_amd64.deb",
+      "bytes": 1414068,
+      "sha256": "40d13a546543542b3aee546984fffd7fee3a6543163b2a7c89def72db6d39799"
+    },
+    {
+      "name": "grub-common",
+      "version": "2.14-5",
+      "path": "pool/main/g/grub2/grub-common_2.14-5_amd64.deb",
+      "bytes": 2360,
+      "sha256": "00c71312444d343c77e5856cd737b91b676d1c3d8f3ec8c3819c46ded5d615ca"
+    },
+    {
+      "name": "grub-efi-amd64-bin",
+      "version": "2.14-5",
+      "path": "pool/main/g/grub2/grub-efi-amd64-bin_2.14-5_amd64.deb",
+      "bytes": 1283084,
+      "sha256": "ac5f1f92baaa91d2559cd429e6d6553a02c7fbbe2ad2604a823a1d0ab0192c4e"
+    },
+    {
+      "name": "grub-efi-amd64-unsigned",
+      "version": "2.14-5",
+      "path": "pool/main/g/grub2/grub-efi-amd64-unsigned_2.14-5_amd64.deb",
+      "bytes": 1412224,
+      "sha256": "fc68fc889d6c0447842791bbaae9fe022b725b27e9e2163c61651c10a6e416c9"
+    },
+    {
+      "name": "grub-pc-bin",
+      "version": "2.14-5",
+      "path": "pool/main/g/grub2/grub-pc-bin_2.14-5_amd64.deb",
+      "bytes": 1237436,
+      "sha256": "9a51483083e2d434c3cfc70e9d8dee540669df30aa4c5ef7b44b435047dccd8d"
+    },
+    {
+      "name": "grub2-common",
+      "version": "2.14-5",
+      "path": "pool/main/g/grub2/grub2-common_2.14-5_amd64.deb",
+      "bytes": 3588012,
+      "sha256": "b29ff4f0c3ad72e2c7fe8718b39748c7c674b84e82df3e538d634c3c40c62406"
+    }
+  ],
+  "installedPreconditions": {
+    "libefiboot1t64": "38-3.1+b1",
+    "libefivar1t64": "38-3.1+b1",
+    "grub-efi-amd64-signed": "1+2.12+9+deb13u2",
+    "grub-common": "2.12-9+deb13u2",
+    "grub-efi-amd64-bin": "2.12-9+deb13u2",
+    "grub-efi-amd64-unsigned": "2.12-9+deb13u2",
+    "grub-pc-bin": "2.12-9+deb13u2",
+    "grub2-common": "2.12-9+deb13u2"
+  },
+  "testImage": "sha256:eb92e8373595e96f4dff736d82aa484704579dde4403a4445624f27094e70818",
+  "testFixtureSha256": "bc49656d60b75dca4983adc47a69be45eb71a38b425fe4ca9b88b6f7f4daad24",
+  "runtimeLibrary": {
+    "path": "/usr/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1",
+    "sha256": "a8eb20adcdb8dbd17c56ecfae3e8ff5deee49666b9351b9ceaa89b0cdcafd5a4"
+  },
+  "signedEfiSha256": "5cc98e5c02097d781ad9fbce96d236704ad1011bf18f8aeb994aa4586b9b402d",
+  "deploymentAllowed": false,
+  "remainingGates": [
+    "Boot/firmware compatibility and recovery rehearsal",
+    "Proxmox boot order and EFI-state inspection",
+    "Recoverable boot disk/ESP/EFI-state backup",
+    "Separate approved console/reboot window",
+    "Fresh release assessment; archived metadata is not current security clearance"
+  ]
+}

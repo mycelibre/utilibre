@@ -14,6 +14,24 @@ The current private `security-queue.json` is the authoritative dated queue.
 
 ### 10 November: follow-up on the 60 remaining high records
 
+The subsequent vendor investigation leaves the same **36 pending**. It does
+not convert more findings into waivers. A pinned, unmodified Debian GRUB
+2.14-5 candidate now passes eight-package dependency simulation and six
+ordinary tool/configuration checks in a networkless unprivileged container.
+Two altered-input checks fail before candidate execution. A repeated preflight
+passes without changing host packages or boot files. This is candidate
+preparation, not installation, a boot test, recovery verification or release
+approval. Proxmox boot/backup details have been requested. Full procedure:
+[vendor GRUB preflight](../../deployment/maintenance/grub-assessment/README.md).
+
+The fresh ACL inventory covers 30 records in 36 host/container locations.
+Authenticated vendor tar 1.35+dfsg-7 still imports the old pathname APIs. The
+current Bookworm rsync 3.5.2 rebuild has the descriptor API disabled; the Sid
+binary requires a newer libc. No incompatible cross-release packages were
+installed. Python-Markdown's link-scanning issue remains open upstream;
+closing its duplicate report did not fix the parser. These observations do
+not establish exploitability or justify changing scanner severity.
+
 The same completed scan now has **0 pending critical / 36 pending high records**.
 This reduction is **24 scoped mitigations, not 24 newly patched vulnerabilities**:
 

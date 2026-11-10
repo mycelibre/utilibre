@@ -7,6 +7,29 @@ It does not authorize automatic updates of other services.
 
 ## Remaining-high follow-up — 10 November
 
+The later vendor follow-up has **not reduced the 36 pending records**. It
+prepared an authenticated, unmodified GRUB 2.14-5 candidate instead of retrying
+the rejected custom repair. Exactly eight package upgrades pass dependency
+simulation; six ordinary isolated configuration/tool checks pass. Actual boot,
+recovery and activation remain unverified. See the
+[vendor candidate and remaining boot gates](../grub-assessment/README.md).
+
+The renewed ACL inventory covers 30 finding records at 36 current container/host
+locations. Static inspection of authenticated Debian tar 1.35+dfsg-7 still finds
+legacy path-based ACL imports. Debian rsync 3.5.2+ds1-2 offers the new APIs, but
+the deployed Bookworm rebuild has `HAVE_LIBACL_AT` disabled. The current vendor
+binaries require libc >= 2.38; Bookworm's libc is 2.36. Neither a newer version
+number nor replacing libacl alone establishes a complete caller repair.
+This is package/source inspection, not a vulnerability reproduction or an
+exhaustive inventory of every library caller. No ACL finding was waived.
+
+Python-Markdown issue 1654 being closed is not a completed link-parser fix:
+maintainer comments refer the link-scanning work to the still-open issue 798.
+Debian still records it as unfixed. Apprise and notifications remain intact.
+Sources checked 10 November:
+<https://github.com/Python-Markdown/markdown/issues/1654#issuecomment-6137615616>,
+<https://github.com/Python-Markdown/markdown/issues/798>.
+
 The 05:54 UTC completed scan initially had 60 pending high records. The
 follow-up leaves **36 pending**: 30 ACL, five GRUB and one Kuma Markdown.
 No additional application was upgraded in this follow-up. Two Grist records

@@ -60,7 +60,7 @@
     "distinctImagesReleased": 44,
     "selectedContainers": 56,
     "wbo": "deployed-after-empty-store-and-no-connection-checks",
-    "xnetOtherApplications": "remaining-reviewed-inventory-not-complete",
+    "xnetOtherApplications": "14 repaired applications revalidated; exact historical-source reviews are conditional and expire",
     "releaseTests": 43,
     "countingNote": "Distinct successful image artifacts across the two release receipts, including superseded intermediate repairs; not a count of independently deployed applications."
   },
@@ -81,10 +81,8 @@
     "rawTargetAttributionRetained": true
   },
   "pendingHighByScope": {
-    "runtime-image": 30,
-    "tracked-build-input": 22,
-    "upstream-release-source-lock": 2,
-    "host-os": 6
+    "host-os": 6,
+    "runtime-image": 30
   },
   "bookwormZlib": {
     "status": "deployed",
@@ -383,9 +381,9 @@
     }
   ],
   "remainingChecks": {
-    "acl": "30 pending: descriptor-safe library API and caller migration required; library-only replacement is insufficient. Earlier custom repair review block remains.",
+    "acl": "30 pending. Current caller inventory and authenticated vendor tar/rsync inspected. Latest tar retains legacy ACL imports; deployed Bookworm rsync has HAVE_LIBACL_AT disabled. No compatible complete caller migration; earlier custom repair restriction retained.",
     "aclSource": "https://security-tracker.debian.org/tracker/CVE-2026-54369",
-    "grub": "Five pending: compatible boot-chain fix, recovery validation and maintenance window required. No bootloader changed; earlier custom repair review block remains.",
+    "grub": "Five pending. Unmodified Debian 2.14-5/1+2.14+5 candidate authenticated; eight-package simulation and six ordinary isolated checks pass. No boot/restore test or installation; Proxmox recovery and separate console/reboot window still required.",
     "grubSource": "https://security-tracker.debian.org/tracker/CVE-2025-61662",
     "pythonMarkdown": "One Kuma finding pending: Debian still lists it unfixed. Removing its package also removes Apprise; notifications were preserved.",
     "source": "https://security-tracker.debian.org/tracker/CVE-2019-25781"
@@ -447,5 +445,35 @@
     "evidence": "security-20261109/remaining-high/",
     "rootAvailableBytes": 8557088768,
     "buildReserveBytes": 8589934592
+  },
+  "vendorFollowup": {
+    "recordedAt": "2026-11-10T07:59:00.647260+00:00",
+    "pendingHighBefore": 36,
+    "pendingHighAfter": 36,
+    "findingsClosed": 0,
+    "productionChanged": false,
+    "grub": {
+      "status": "vendor-candidate-preflight-passed-not-approved",
+      "version": "2.14-5",
+      "packageUpgrades": 8,
+      "newPackages": 0,
+      "removals": 0,
+      "ordinaryChecks": 6,
+      "bootTested": false,
+      "restoreTested": false,
+      "installed": false
+    },
+    "acl": {
+      "records": 30,
+      "locations": 36,
+      "latestTar": "1.35+dfsg-7",
+      "latestTarLegacyPathImports": true,
+      "deployedRsyncDescriptorApiEnabled": false
+    },
+    "markdown": {
+      "compatibleFixFound": false,
+      "upstreamLinkIssueStillOpen": 798
+    },
+    "evidence": "security-20261109/remaining-high/"
   }
 }

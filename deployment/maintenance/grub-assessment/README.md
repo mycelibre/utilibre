@@ -1,5 +1,61 @@
 # Read-only GRUB assessment — 12 October 2026
 
+## Vendor-signed candidate follow-up — 10 November 2026
+
+There is now a separate **unmodified Debian package candidate**, pinned in
+`vendor-candidate.json`. This does not resume the rejected custom-patch build
+below. Debian identifies GRUB 2.14 as fixed for CVE-2025-61662. The current
+authenticated Sid input is 2.14-5, with signed EFI package 1+2.14+5 and
+`libefiboot1t64`/`libefivar1t64` 39-2+b2. No Sid repository was enabled on the VM.
+
+The isolated APT simulation selects exactly eight upgrades, no additions or
+removals, and no libc/kernel upgrade. Six ordinary checks pass: version, the
+current boot configuration, a synthetic valid configuration, rejection of an
+incomplete configuration, and recognition of both packaged EFI images.
+The container runs without networking, as an unprivileged user with a read-only
+root, no capabilities, 256 MiB RAM, one CPU and 64 PIDs. It receives authenticated
+packages, a private copy of the boot configuration and one pinned public runtime
+library. It receives no host boot device, firmware variables or Docker socket.
+An executable RAM workspace is needed to run the candidate's tools; other
+temporary files remain non-executable. No vulnerability reproduction is run.
+
+`vendor-preflight.py` reuses the distribution signature/index/package checks,
+APT simulation and Docker isolation. It performs **no downloads or installation**:
+
+```sh
+python3 deployment/maintenance/grub-assessment/vendor-preflight.py \
+  --inputs /var/lib/utilibre-maintenance/security-20261109/remaining-high/vendor-inputs \
+  --report /var/lib/utilibre-maintenance/security-20261109/remaining-high/vendor-grub-new-check.json
+```
+
+Use a new report filename; retained reports are never overwritten. Inputs include
+the archived InRelease, compressed package index, archive keyring and exact .debs.
+All identities and the current installed-package preconditions are pinned. A
+changed package/index is rejected before candidate execution. Repeating the
+preflight passed with unchanged host package database and boot files. The first
+automated run failed because the staging directory was inaccessible to its
+unprivileged user; that failed receipt is retained, alongside the corrected run.
+
+This is **not** a tested boot, recovery rehearsal, current security clearance,
+or approved release. No EFI files or installed packages changed; all five host
+findings remain pending. The existing `grub-cloud-amd64` hooks will rewrite boot
+paths during a future installation. The current ESP is `/dev/sdb15` (the device
+name in the older October observation below is historical).
+
+Remaining gates are boot/firmware compatibility and recovery verification,
+Proxmox boot order/EFI-state evidence, a recoverable boot disk/ESP/EFI-state copy,
+a separate console/reboot window, and fresh release assessment. Do not run a
+generic Sid upgrade or assume an image/package rollback restores EFI state.
+The required Proxmox details have been requested; no reboot is scheduled.
+
+Private evidence: `security-20261109/remaining-high/vendor-grub-final.json`,
+`vendor-grub-preflight-2.json`, `vendor-grub-preflight-repeat.json`, and the two `vendor-grub-altered-*.json`
+rejection reports. The package source is
+<https://deb.debian.org/debian/>; vulnerability status is
+<https://security-tracker.debian.org/tracker/CVE-2025-61662>.
+
+## Historical October assessment
+
 This is **not a deployed repair or a vulnerability waiver**. It investigates
 CVE-2025-61662 only; no GRUB package install, EFI/NVRAM write, `grub-install`,
 `update-grub`, VM reboot or live boot test was performed. QEMU guest-agent's
