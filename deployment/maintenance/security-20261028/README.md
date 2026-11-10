@@ -4,6 +4,12 @@ This batch extends the existing native-package, exact-JavaScript-package and
 transactional release scripts. It does not replace the maintenance system.
 No LLM is part of replay, tests or release checks.
 
+**Historical Go activation retired, 10 November:** superseded Go selections in
+the old codec/helper/JOSE/service profiles now fail before Docker or configuration
+writes. Historical source and receipts remain. The current November x/net profile
+and unrelated package profiles keep their own approval gates. See the
+[exact successors and guard scope](../security-20261109/README.md#remaining-high-follow-up--10-november).
+
 ## Completed CFITSIO bounds repair
 
 `released-cfitsio.json` records the Gathio database image with only

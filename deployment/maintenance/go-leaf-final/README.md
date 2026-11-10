@@ -1,5 +1,10 @@
 # Final Go runtime repairs — 2026-10-11/12
 
+**Historical activation retired, 10 November:** the source/locks and evidence
+below remain available for isolated replay. `release.mjs`, including its October
+24 profile, now refuses the superseded Go activations. Use the
+[reviewed x/net successors](../security-20261109/README.md#remaining-high-follow-up--10-november).
+
 This batch replaces native binaries, not application data or access policies.
 `images.json` records exact original image IDs, source commits, destination paths,
 compiler versions and candidate tags. A tag alone is not release evidence.

@@ -1,4 +1,5 @@
 import {proveMongocRelease} from '../security-20261109/mongoc-policy.mjs';
+import {assertCurrentGoRelease} from '../security-20261109/superseded-go.mjs';
 import {requireEmptyWhiteboard} from '../security-20261109/wbo-idle.mjs';
 import {proveExpressionRelease} from '../security-20261109/expression-policy.mjs';
 import {proveOauth as proveNovemberOauth} from '../security-20261109/oauth-policy.mjs';
@@ -38,6 +39,7 @@ const profile=process.argv.find(a=>flags.includes(a))?.slice(2)||'brotli',guava=
 const specs=JSON.parse(fs.readFileSync(batch.input(profile))).rows.flatMap(s=>s.releaseGroups?s.releaseGroups.map(g=>({...s,...g,evidenceKey:s.key})):[s]);
 const evidence=(s)=>root+'/'+profile+(profile==='curl-bookworm'?'/images':'')+'/'+(s.evidenceKey||s.key);
 const [mode,...keys]=process.argv.slice(2).filter(k=>!flags.includes(k));assert(['prepare','apply','retry','sync-mirrors','verify-completed'].includes(mode));assert(keys.length&&new Set(keys).size===keys.length&&keys.every(k=>specs.some(s=>s.key===k)));
+assertCurrentGoRelease('package-release', keys, profile);
 // All profiles share Compose projects. Serialize report and pin mutations.
 const unlock=acquireReleaseLock('/var/lib/utilibre-maintenance/package-release.lock');process.once('exit',unlock);
 

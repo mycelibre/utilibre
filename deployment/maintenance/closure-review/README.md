@@ -1,5 +1,10 @@
 # Compatible dependency closure — 12 October 2026
 
+**Anubis/FerretDB activation retired, 10 November:** their historical inputs and
+receipts remain; `release.mjs` refuses those two superseded Go selections.
+Other selections retain their existing checks. Use the
+[reviewed x/net successors](../security-20261109/README.md#remaining-high-follow-up--10-november).
+
 This is a bounded security release, not a claim that the fleet has no remaining
 vulnerabilities. Existing access, privacy, retention, quotas and user data stay
 unchanged. No new public service, account registration or VM reboot is involved.

@@ -12,6 +12,41 @@ image replacements. Raw findings and scoped reviews remain; reviewed backports
 must be rebound to the exact new artifacts rather than inheriting a version waiver.
 The current private `security-queue.json` is the authoritative dated queue.
 
+### 10 November: follow-up on the 60 remaining high records
+
+The same completed scan now has **0 pending critical / 36 pending high records**.
+This reduction is **24 scoped mitigations, not 24 newly patched vulnerabilities**:
+
+- Two Grist/Hickory source-lock findings: fresh networkless native checks
+  confirmed the running Deno sandbox boundary; ordinary Pyodide operation passed.
+- Twenty-two historical Go-lock findings: all 14 successor applications already
+  run the verified x/net 0.62.0 binaries. Four superseded release entry points
+  now explicitly reject their old Go activations. Every queue rebuild verifies
+  the exact guard, recipe, lock and running-binary evidence before retaining
+  these seven-day reviews. Missing/changed evidence reopens the records.
+
+All historical source locks and raw findings remain. No scanner exclusions,
+severity changes, package removals, service restarts, emails or live exploit
+checks were used. The fresh work consists of release/ledger safeguards and
+evidence validation; no new application or host package was deployed here.
+**168 focused tests passed**: 50 release/retired-command, 83 policy/condition and
+35 queue regression checks. The per-application workflows were retained and
+hash-verified, not newly rerun against production accounts.
+
+The 36 unresolved records represent 30 ACL package/target occurrences, five
+GRUB packages and one Kuma Python-Markdown package. ACL needs both library and
+caller migration; GRUB needs a compatible boot-chain candidate and recovery
+window; Python-Markdown has no verified compatible upstream fix. Removing its
+Apprise dependency would disable notification functionality. No finding in
+these three groups was accepted merely because it is difficult to repair.
+Earlier automatic approval rejection of the custom ACL/GRUB path remains in
+force. Root free space is also below the existing 8 GiB build reserve; Proxmox
+must enlarge the virtual disk before guest expansion can add space.
+
+[Current inputs, verification and rollback](../../deployment/maintenance/security-20261109/README.md#remaining-high-follow-up--10-november).
+Private receipts: `security-20261109/remaining-high/`. This checkpoint does not
+claim current security clearance, byte-reproducible builds or new device coverage.
+
 The entire musl batch is now released: **62 images, 112 release groups and 120
 containers**, including the original 20 static servers. The Debian vendor batch
 also passed: **28 images and 33 release groups**. ChartDB, drawDB, Chhoto and

@@ -69,7 +69,13 @@ export async function run(){
   queue.items=retainUnrechecked(queue,report,previous);
  }
  let decisions=[];try{decisions=JSON.parse(await readFile(directory+'/security-decisions.json','utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
- queue.items=applyDecisions(queue.items,decisions);
+ const verifiedConditions=new Set();queue.reviewConditions=[];
+ for(const value of new Map(decisions.filter(d=>d.condition&&Date.parse(d.expiresAt)>Date.now()).map(d=>[d.condition.sha256,d.condition])).values()){
+  let verified=false;
+  try{if(value.kind==='superseded-go-v1'){const {verifyReview}=await import('./security-20261109/superseded-go-condition.mjs');const keys=verifyReview(value.sha256);for(const key of keys)verifiedConditions.add(value.sha256+':'+key);verified=true;}}catch{/* Missing evidence is not acceptance. */}
+  queue.reviewConditions.push({...value,verified});
+ }
+ queue.items=applyDecisions(queue.items,decisions,Date.now(),verifiedConditions);
  await writeFile(directory+'/security-queue.json.tmp',JSON.stringify(queue,null,2)+'\n',{mode:0o600});await rename(directory+'/security-queue.json.tmp',directory+'/security-queue.json');
  const counts=queueCounts(queue.items);
  console.log(`Private review queue (${queue.status}): ${counts.packageTargetRecords} raw package/target records; ${counts.CRITICAL.raw} critical / ${counts.HIGH.raw} high raw. Awaiting review, including replacement-image revalidation: ${counts.CRITICAL.needsReview} critical / ${counts.HIGH.needsReview} high. These are not unique vulnerabilities or a security clearance.`);

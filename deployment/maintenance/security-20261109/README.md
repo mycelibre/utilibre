@@ -5,6 +5,77 @@ application tests, Trivy assessment, Compose release and rollback procedures.
 Private evidence is under `/var/lib/utilibre-maintenance/security-20261109`.
 It does not authorize automatic updates of other services.
 
+## Remaining-high follow-up — 10 November
+
+The 05:54 UTC completed scan initially had 60 pending high records. The
+follow-up leaves **36 pending**: 30 ACL, five GRUB and one Kuma Markdown.
+No additional application was upgraded in this follow-up. Two Grist records
+have a verified sandbox mitigation; 22 historical Go-source records have a
+guarded, expiring review tied to already-repaired running artifacts. Raw scan
+records, historical locks, earlier receipts and source archives are retained.
+
+`superseded-go.json` maps those 22 exact historical locks to the 14 tested
+x/net 0.62.0 applications. The four old release entry points reject the affected
+Go selections before Docker/configuration writes. Other applications and the
+current `--batch-20261109 --xnet` activation path keep their existing gates.
+Historical compilation is still available for isolated comparison; an old
+release command is no longer an activation or rollback shortcut. Do not check
+out old maintenance code into the live production tree.
+
+`review-superseded-go.mjs` reuses the existing per-application build, native,
+full-image comparison, source-offer and scan proofs, then verifies each running
+image and executable. It prepares a private review and batch; it never accepts
+findings or deploys services. Preparation requires the recorded 50 release tests
+and 83 policy/condition tests. The additional 35 ledger regression tests pass.
+All checks use existing retained inputs or local read access; no provider queries,
+notifications or vulnerability reproductions are needed.
+
+The review's `superseded-go-v1` condition binds its exact evidence file, all old
+and current locks, relevant code/recipe hashes and current runtime executables.
+Queue construction rechecks these locally. Missing evidence, a failed check or
+a changed artifact reopens the affected records. The condition applies only to
+the 22 listed finding keys and expires after seven days. Regenerating the review
+changes its identity and requires a separate operator decision:
+
+```sh
+node deployment/maintenance/security-20261109/review-superseded-go.mjs
+# Inspect the generated private review and exact decisions before recording:
+node deployment/maintenance/triage.mjs record-batch /var/lib/utilibre-maintenance/security-20261109/remaining-high/superseded-go-decisions.json
+```
+
+The reviewer reads historical proofs without treating them as fresh release
+approval. `proveXnet` still requires recent candidate/advisory evidence by
+default; only explicit read-only review disables candidate-age checks, alongside
+a fresh completed fleet scan and current runtime verification.
+
+Grist uses the existing `sandbox-inventory/check-runtime.mjs` and `review.mjs`:
+native Pyodide echo succeeds, while DNS, TCP, HTTP, process and FFI operations
+are denied in an isolated copy. The exact production wrapper/configuration and
+Deno executable match. This does not patch Hickory or prove a binary crate SBOM.
+
+Remaining work is not an accepted exception:
+
+- ACL: the newer API also requires callers to adopt it. Replacing the library
+  alone is insufficient; the retained assessment identifies legacy callers.
+  [Debian's current status](https://security-tracker.debian.org/tracker/CVE-2026-54369).
+- GRUB: Trixie's package remains affected. A compatible boot-chain update and
+  tested recovery/console window are required; no boot files were changed.
+  [Debian's current status](https://security-tracker.debian.org/tracker/CVE-2025-61662).
+- Kuma: Python-Markdown remains required by Apprise. Removal would remove that
+  notification functionality. No approved compatible parser fix was found;
+  [Debian still lists it as unfixed](https://security-tracker.debian.org/tracker/CVE-2019-25781).
+
+Earlier automatic approval review rejected the custom ACL/GRUB repair path for
+cybersecurity risk. This follow-up does not retry that path. The VM is also just
+below the 8 GiB build reserve; its virtual disk has no unallocated tail left.
+No backups, retained scanner databases or rollback images were removed.
+
+Rollback of this repository change restores the preceding guard/queue code,
+not application images or data. First remove the associated conditional reviews
+or rebuild the ledger without them; never leave a mitigation accepted after its
+guard is removed. Prefer correcting a guard defect over enabling a superseded
+release path. Current-service rollback remains separately reviewed.
+
 ## OAuthlib 4.0.1 follow-up
 
 `oauth-inputs.json` pins the official BSD-licensed wheel/source and the three

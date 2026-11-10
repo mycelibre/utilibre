@@ -1,21 +1,26 @@
 # Work queue
 
-The whiteboard zlib update and host SQLite follow-up are deployed and verified,
-in addition to the Wallabag/Pollaris parser and relay-driver corrections.
 The completed **10 November 05:54 UTC** scan covers 109 images, 175 containers
-and 107 source inputs. After exact payload reviews, **0 critical / 60 high
-records remain pending**. Raw findings remain; this is not full remediation
-or a security clearance.
+and 107 source inputs. Follow-up verification leaves **0 critical / 36 high
+records pending**, down from 60. Raw findings remain; this is not full
+remediation or a security clearance.
 
-Remaining high records: 30 ACL records across the host/images; 22 historical
-x/net build-input records; five host GRUB records; two Grist Deno/Hickory
-source-lock records; and one Kuma Markdown record. Earlier ACL/GRUB review
-restrictions remain. Held application upgrades and documented functional gaps
-are still open. Historical source locks have not been rewritten to hide findings.
+Two Grist findings have a verified sandbox mitigation. Twenty-two historical
+Go-lock findings are tied to the 14 already-repaired running applications;
+superseded activation commands are now blocked. Their exact guard, recipe,
+lock and runtime conditions are rechecked during queue construction, and the
+reviews expire after seven days. These are scoped mitigations, not 24 new
+runtime patches. All 168 focused tests pass; no service restart was needed.
 
-WBO was empty and had zero active connections at all release gates; its native
-RAM-only storage policy is unchanged. Host SQLite passed ordinary database and
-backup/restore checks with no service restart or unrelated package changes.
+Still unresolved: 30 ACL records across the host/images, five host GRUB
+records and one Kuma Markdown record. Compatible fixes/caller migration and
+boot-chain verification remain necessary. Earlier ACL/GRUB review restrictions
+remain. Held application upgrades and documented functional gaps are still
+open. Historical source locks have not been rewritten to hide findings.
+
+The main disk is just below the 8 GiB build reserve and has no unallocated
+virtual-disk tail. Additional guest expansion requires Proxmox to enlarge it.
+Backups, scanner snapshots and rollback images were preserved.
 
 Current evidence: `deployment/maintenance/security-20261109/status.json` and
 `docs/records/security-maintenance-2026-11-09.md`. Older entries below are historical.

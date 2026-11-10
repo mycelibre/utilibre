@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T05:56:56.000883+00:00",
+  "recordedAt": "2026-11-10T06:42:01.537643+00:00",
   "scanCompletedAt": "2026-11-10T05:54:41.763Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
@@ -8,7 +8,7 @@
   "sourceInputs": 107,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 60,
+  "pendingHigh": 36,
   "rawFindingsRetained": true,
   "assessmentNote": "Completed post-release scan, followed by exact current-image source/package/component revalidation. All raw findings remain; reviews expire after seven days. No complete remediation or security clearance.",
   "musl": {
@@ -334,33 +334,9 @@
   },
   "remainingHighGroups": [
     {
-      "advisory": "CVE-2026-54369",
-      "package": "libacl1",
-      "scope": "runtime-image",
-      "records": 29
-    },
-    {
       "advisory": "CVE-2019-25781",
       "package": "python3-markdown",
       "scope": "runtime-image",
-      "records": 1
-    },
-    {
-      "advisory": "CVE-2026-78661",
-      "package": "golang.org/x/net",
-      "scope": "tracked-build-input",
-      "records": 22
-    },
-    {
-      "advisory": "GHSA-3v94-mw7p-v465",
-      "package": "hickory-proto",
-      "scope": "upstream-release-source-lock",
-      "records": 1
-    },
-    {
-      "advisory": "GHSA-5j98-2g5x-46v6",
-      "package": "hickory-resolver",
-      "scope": "upstream-release-source-lock",
       "records": 1
     },
     {
@@ -398,10 +374,20 @@
       "package": "libacl1",
       "scope": "host-os",
       "records": 1
+    },
+    {
+      "advisory": "CVE-2026-54369",
+      "package": "libacl1",
+      "scope": "runtime-image",
+      "records": 29
     }
   ],
   "remainingChecks": {
-    "pythonMarkdown": "Debian still marks CVE-2019-25781 unfixed on 10 November; no compatible approved upstream repair identified.",
+    "acl": "30 pending: descriptor-safe library API and caller migration required; library-only replacement is insufficient. Earlier custom repair review block remains.",
+    "aclSource": "https://security-tracker.debian.org/tracker/CVE-2026-54369",
+    "grub": "Five pending: compatible boot-chain fix, recovery validation and maintenance window required. No bootloader changed; earlier custom repair review block remains.",
+    "grubSource": "https://security-tracker.debian.org/tracker/CVE-2025-61662",
+    "pythonMarkdown": "One Kuma finding pending: Debian still lists it unfixed. Removing its package also removes Apprise; notifications were preserved.",
     "source": "https://security-tracker.debian.org/tracker/CVE-2019-25781"
   },
   "wboFollowup": {
@@ -443,5 +429,23 @@
     "noServiceRestart": true,
     "unrelatedPackages": "unchanged",
     "repeatedApply": "exact-package-preserved-no-install"
+  },
+  "remainingHighFollowup": {
+    "startingPendingHigh": 60,
+    "endingPendingHigh": 36,
+    "additionalRuntimePatches": 0,
+    "gristSandboxMitigations": 2,
+    "historicalGoMitigations": 22,
+    "fixedGoApplicationsRevalidated": 14,
+    "historicalLocksRetained": true,
+    "conditionalReview": "Exact code, lock, recipe and runtime bindings rechecked during every queue rebuild; failure reopens exact records.",
+    "reviewExpiryDays": 7,
+    "testsPassed": 168,
+    "liveChecks": "Read-only image, executable, sandbox and configuration identity; no production account or provider workflow rerun.",
+    "guardedReleaseEntryPoints": 4,
+    "restart": false,
+    "evidence": "security-20261109/remaining-high/",
+    "rootAvailableBytes": 8557088768,
+    "buildReserveBytes": 8589934592
   }
 }

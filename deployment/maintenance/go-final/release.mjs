@@ -1,4 +1,5 @@
 // Finite same-source Go release; no database, room or user-content migration.
+import {assertCurrentGoRelease} from '../security-20261109/superseded-go.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import cp from 'node:child_process';
@@ -34,6 +35,7 @@ async function health(g,version){
 function repin(g,from,to){let count=0;for(const f of g.files){const old=fs.readFileSync(f,'utf8'),out=replaceImagePins(old,[{from,to}]);if(out.replaced){fs.writeFileSync(f,out.text);count+=out.replaced;}}assert.equal(count,1,'Expected exactly one service image scalar');}
 async function main(){
  const mode=process.argv[2];assert(['prepare','apply'].includes(mode));
+ assertCurrentGoRelease('go-final', ['rimgo','galene','safetwitch','gothub','anonymousoverflow']);
  if(mode==='prepare'){
   const build=JSON.parse(fs.readFileSync(dir+'/build.json')),inventory=JSON.parse(fs.readFileSync(dir+'/inventory.json')),native=JSON.parse(fs.readFileSync(dir+'/native.json')),galene=JSON.parse(fs.readFileSync(dir+'/galene-native.json'));
   for(const r of [build,inventory,native,galene])assert.equal(r.status,'passed');

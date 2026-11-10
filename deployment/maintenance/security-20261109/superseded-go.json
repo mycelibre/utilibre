@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "approval": "Operator-reviewed retirement of historical activation paths; no automatic finding acceptance or deployment",
+  "advisory": "CVE-2026-78661",
+  "fixedVersion": "v0.62.0",
+  "sourceHistoryCommit": "b1690050406631d6bc22a7dff621c4d89a59fdcc",
+  "releaseEntries": [
+    {
+      "entry": "go-final",
+      "path": "deployment/maintenance/go-final/release.mjs",
+      "applications": [
+        "rimgo",
+        "galene",
+        "safetwitch",
+        "gothub",
+        "anonymousoverflow"
+      ]
+    },
+    {
+      "entry": "go-leaf-final",
+      "path": "deployment/maintenance/go-leaf-final/release.mjs",
+      "applications": [
+        "mezzo",
+        "anubis",
+        "oauth2-proxy",
+        "wakapi-healthcheck",
+        "opengist",
+        "ntfy",
+        "vikunja"
+      ]
+    },
+    {
+      "entry": "closure-review",
+      "path": "deployment/maintenance/closure-review/release.mjs",
+      "applications": [
+        "anubis",
+        "ferretdb"
+      ]
+    },
+    {
+      "entry": "package-release",
+      "path": "deployment/maintenance/security-20261028/release-brotli.mjs",
+      "profiles": [
+        "codec",
+        "health",
+        "go-helpers",
+        "go-services",
+        "jose",
+        "jose-leaf",
+        "text"
+      ],
+      "applications": [
+        "anonymousoverflow",
+        "anubis",
+        "donetick",
+        "ferretdb",
+        "galene",
+        "gothub",
+        "mezzo",
+        "ntfy",
+        "oauth2-proxy",
+        "opengist",
+        "rimgo",
+        "safetwitch",
+        "vikunja",
+        "wakapi"
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "application": "ferretdb",
+      "historicalLock": "deployment/maintenance/ferretdb-libraries/go.mod",
+      "historicalSha256": "d65ba2340f17574f880710f2427a12c8c55e92c755606cce0031fe03a07c0515",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/ferretdb/go.mod",
+      "currentSha256": "a797e586e7a6090e01069b007b424e74c7af11ca7f185a8c5a334ee64ecedf64"
+    },
+    {
+      "application": "anonymousoverflow",
+      "historicalLock": "deployment/maintenance/go-final/locks/anonymousoverflow/go.mod",
+      "historicalSha256": "060427c81743f370877acd3db5f511b88d4fdf9ba51a123a1cbdbc46a9ae8d21",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/anonymousoverflow/go.mod",
+      "currentSha256": "a47b1bfffc5d8936003f6227454445c42efed48e121464c638cb39b8efdaafd5"
+    },
+    {
+      "application": "galene",
+      "historicalLock": "deployment/maintenance/go-final/locks/galene/go.mod",
+      "historicalSha256": "fa7495e6f55b9358d2652d4fa0d68ff97dc1c551570c43bf09d541b8aefc85b4",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/galene/go.mod",
+      "currentSha256": "9045347065d00e0b23ce4201455b7bc13b0379cb17c333976230af17219077be"
+    },
+    {
+      "application": "gothub",
+      "historicalLock": "deployment/maintenance/go-final/locks/gothub/go.mod",
+      "historicalSha256": "f8e6adfe85e542fecdadba9b8b0cd53fd9eb196f3df7c01f15c1272ea6f265ec",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/gothub/go.mod",
+      "currentSha256": "865b9b77e2ee50b8fe65a9058bb2811c4154419ece7ce70a8ba11ff2dcf0cb4b"
+    },
+    {
+      "application": "rimgo",
+      "historicalLock": "deployment/maintenance/go-final/locks/rimgo/go.mod",
+      "historicalSha256": "50f8cc72d97edc3e190c040effd9cd8a51fb461c44636e4be3e847dfb9568da0",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/rimgo/go.mod",
+      "currentSha256": "0c3a59e6b1f2050aeb615b18e7ee2f0a9860a47adfe6fd795d7229ccbd63395c"
+    },
+    {
+      "application": "safetwitch",
+      "historicalLock": "deployment/maintenance/go-final/locks/safetwitch/go.mod",
+      "historicalSha256": "cf7fdd57a8b4050c12b219f2157953f3ffdc152663adbe73b57005db94c8a72d",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/safetwitch/go.mod",
+      "currentSha256": "cff2b1aeafd5a6b8cda7ffef30b1a45662851f4ad481b0a428905d31003a6fc7"
+    },
+    {
+      "application": "anubis",
+      "historicalLock": "deployment/maintenance/go-leaf-final/locks/anubis/go.mod",
+      "historicalSha256": "dc0c38923f0028a13a57ef58271e2ac4e193a7bb3fe2b27ebe69671cdecc5a52",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/anubis/go.mod",
+      "currentSha256": "5808c749d23dd556be5bd71bbd0aad418a26429ddca273080dafd453ae2d6c81"
+    },
+    {
+      "application": "mezzo",
+      "historicalLock": "deployment/maintenance/go-leaf-final/locks/mezzo/go.mod",
+      "historicalSha256": "267e3d05c6cd53eacdb8b6774e0e899b63cfead06d0f2e8930414fc56a68e4f9",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/mezzo/go.mod",
+      "currentSha256": "93152ce6f4ac68ebc3b1f790430bc9f334c1e245da239616855c98c622b28561"
+    },
+    {
+      "application": "ntfy",
+      "historicalLock": "deployment/maintenance/go-leaf-final/locks/ntfy/go.mod",
+      "historicalSha256": "90fd83f855e27d4c6e7db102b46fd8643b641438d01b625e9f7ae35fcd80b4af",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/ntfy/go.mod",
+      "currentSha256": "abb38495632b110bca54fcb2d750d36257bee37d5f2e9e3eb3fc53bf9eaafc80"
+    },
+    {
+      "application": "oauth2-proxy",
+      "historicalLock": "deployment/maintenance/go-leaf-final/locks/oauth2-proxy/go.mod",
+      "historicalSha256": "398e8e07d7a13f4b0dc326e4f2a161ee7013736da44e5890c6b16bac4820ac51",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/oauth2-proxy/go.mod",
+      "currentSha256": "078f1c434ad74f630084aa7b945686f872e9cd0794a87b996a302fc4be363374"
+    },
+    {
+      "application": "opengist",
+      "historicalLock": "deployment/maintenance/go-leaf-final/locks/opengist/go.mod",
+      "historicalSha256": "6487998feb14f2c14e1789766765c29ba26809d705ff4cafc6535b3504596931",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/opengist/go.mod",
+      "currentSha256": "8afc9d2d35c27bf0798ef83149d4568b5deab71a335be892b90dfd66493dcb55"
+    },
+    {
+      "application": "vikunja",
+      "historicalLock": "deployment/maintenance/go-leaf-final/locks/vikunja/go.mod",
+      "historicalSha256": "efa14649653f2650fa196cc7c69a3f4b33ff62e950f78c3006638b2f6c93547a",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/vikunja/go.mod",
+      "currentSha256": "de75aa8426688556f473e7baecf5a3f6006c40fa2b783383aadb58fd55c53c99"
+    },
+    {
+      "application": "wakapi",
+      "historicalLock": "deployment/maintenance/go-leaf-final/locks/wakapi/go.mod",
+      "historicalSha256": "5f7fdd2eb29e5e1ea51b27a78feafce19eea62f81ecd673d0fc6dc26fd32d59e",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/wakapi/go.mod",
+      "currentSha256": "2dfdcee7b887e7afa4a30415af3d3fb84bd4981549b739501599057b747a7b46"
+    },
+    {
+      "application": "anonymousoverflow",
+      "historicalLock": "deployment/maintenance/security-20261028/locks/codec/anonymousoverflow/go.mod",
+      "historicalSha256": "3b0d5696847f15cf354c30c6bfe58fd0966e703a58e283226a4fccc56e18dd91",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/anonymousoverflow/go.mod",
+      "currentSha256": "a47b1bfffc5d8936003f6227454445c42efed48e121464c638cb39b8efdaafd5"
+    },
+    {
+      "application": "ferretdb",
+      "historicalLock": "deployment/maintenance/security-20261028/locks/codec/ferretdb/go.mod",
+      "historicalSha256": "d65ba2340f17574f880710f2427a12c8c55e92c755606cce0031fe03a07c0515",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/ferretdb/go.mod",
+      "currentSha256": "a797e586e7a6090e01069b007b424e74c7af11ca7f185a8c5a334ee64ecedf64"
+    },
+    {
+      "application": "gothub",
+      "historicalLock": "deployment/maintenance/security-20261028/locks/codec/gothub/go.mod",
+      "historicalSha256": "67a40d20ccc4ccdbb9ccf01c59c3c67c25b572a9f3c3284ce90c3075f5a083c9",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/gothub/go.mod",
+      "currentSha256": "865b9b77e2ee50b8fe65a9058bb2811c4154419ece7ce70a8ba11ff2dcf0cb4b"
+    },
+    {
+      "application": "rimgo",
+      "historicalLock": "deployment/maintenance/security-20261028/locks/codec/rimgo/go.mod",
+      "historicalSha256": "50f8cc72d97edc3e190c040effd9cd8a51fb461c44636e4be3e847dfb9568da0",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/rimgo/go.mod",
+      "currentSha256": "0c3a59e6b1f2050aeb615b18e7ee2f0a9860a47adfe6fd795d7229ccbd63395c"
+    },
+    {
+      "application": "oauth2-proxy",
+      "historicalLock": "deployment/maintenance/security-20261028/locks/jose-leaf/oauth2-proxy/go.mod",
+      "historicalSha256": "398e8e07d7a13f4b0dc326e4f2a161ee7013736da44e5890c6b16bac4820ac51",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/oauth2-proxy/go.mod",
+      "currentSha256": "078f1c434ad74f630084aa7b945686f872e9cd0794a87b996a302fc4be363374"
+    },
+    {
+      "application": "wakapi",
+      "historicalLock": "deployment/maintenance/security-20261028/locks/jose-leaf/wakapi/go.mod",
+      "historicalSha256": "5f7fdd2eb29e5e1ea51b27a78feafce19eea62f81ecd673d0fc6dc26fd32d59e",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/wakapi/go.mod",
+      "currentSha256": "2dfdcee7b887e7afa4a30415af3d3fb84bd4981549b739501599057b747a7b46"
+    },
+    {
+      "application": "donetick",
+      "historicalLock": "deployment/maintenance/security-20261028/locks/jose/donetick/go.mod",
+      "historicalSha256": "f4194baf8295eac79934da23337fbaf032fd454f19604f9892499fbdf68db24a",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/donetick/go.mod",
+      "currentSha256": "28e1eacbba4f5da743bd630d0e666e7741457ee3fa2568340338bbe05ad86d80"
+    },
+    {
+      "application": "ntfy",
+      "historicalLock": "deployment/maintenance/security-20261028/locks/jose/ntfy/go.mod",
+      "historicalSha256": "90fd83f855e27d4c6e7db102b46fd8643b641438d01b625e9f7ae35fcd80b4af",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/ntfy/go.mod",
+      "currentSha256": "abb38495632b110bca54fcb2d750d36257bee37d5f2e9e3eb3fc53bf9eaafc80"
+    },
+    {
+      "application": "vikunja",
+      "historicalLock": "deployment/maintenance/security-20261028/locks/jose/vikunja/go.mod",
+      "historicalSha256": "efa14649653f2650fa196cc7c69a3f4b33ff62e950f78c3006638b2f6c93547a",
+      "currentLock": "deployment/maintenance/security-20261109/xnet-locks/vikunja/go.mod",
+      "currentSha256": "de75aa8426688556f473e7baecf5a3f6006c40fa2b783383aadb58fd55c53c99"
+    }
+  ]
+}

@@ -7,7 +7,8 @@ export function validateDecision(value,now=Date.now()){
  if(typeof value.reason!=='string'||value.reason.trim().length<20||value.reason.length>1200)throw Error('An evidence-backed reason (20–1200 characters) is required');
  const expiry=Date.parse(value.expiresAt);
  if(!Number.isFinite(expiry)||expiry<=now||expiry>now+30*86400000)throw Error('Review expiry must be in the next 30 days');
- return {key:value.key,status:value.status,reason:value.reason.trim(),expiresAt:new Date(expiry).toISOString(),reviewedAt:new Date(now).toISOString()};
+ if(value.condition!==undefined&&(!value.condition||Object.keys(value.condition).sort().join(',')!=='kind,sha256'||value.condition.kind!=='superseded-go-v1'||!/^[a-f0-9]{64}$/.test(value.condition.sha256)))throw Error('Unsupported or malformed review condition');
+ return {key:value.key,status:value.status,reason:value.reason.trim(),expiresAt:new Date(expiry).toISOString(),reviewedAt:new Date(now).toISOString(),...(value.condition?{condition:{...value.condition}}:{})};
 }
 // Operator-reviewed exact decisions only. Validate the entire set before any
 // write, so one invalid/stale entry cannot leave a partially accepted batch.
@@ -23,7 +24,7 @@ export function validateBatch(value,queue,now=Date.now()){
   seen.add(d.key);return d;
  });
 }
-export function applyDecisions(items,decisions,now=Date.now()){
+export function applyDecisions(items,decisions,now=Date.now(),verifiedConditions=new Set()){
  const byKey=new Map(decisions.map(x=>[x.key,x]));
  return items.map(item=>{
   // A retained observation is historical until its target is scanned again.
@@ -31,6 +32,9 @@ export function applyDecisions(items,decisions,now=Date.now()){
   if(item.status==='not-rechecked')return item;
   const decision=byKey.get(item.key);
   if(!decision||Date.parse(decision.expiresAt)<=now)return item;
+  // An archived-source review depends on current guard/runtime evidence, not
+  // just the old source hash. Missing/failed verification reopens the finding.
+  if(decision.condition&&!verifiedConditions.has(decision.condition.sha256+':'+item.key))return {...item,status:'needs-review',decision:undefined};
   try{
    const reviewed=Date.parse(decision.reviewedAt);
    if(!Number.isFinite(reviewed)||reviewed>now+300000)throw Error('Invalid review time');

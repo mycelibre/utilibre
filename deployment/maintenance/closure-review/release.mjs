@@ -1,4 +1,5 @@
 // Finite evidence-gated image rollout; only existing image scalars change.
+import {assertCurrentGoRelease} from '../security-20261109/superseded-go.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import cp from 'node:child_process';
@@ -47,6 +48,7 @@ function evidence(key){
  fresh(n);assert.equal(n.imageId,b.imageId);return b;
 }
 const[mode,...keys]=process.argv.slice(2);assert(['prepare','apply'].includes(mode));assert(keys.length);
+assertCurrentGoRelease('closure-review', keys);
 const report=fs.existsSync(file)?read(file):{date:new Date().toISOString(),groups:[]};
 const save=()=>fs.writeFileSync(file,JSON.stringify(report,null,2)+'\n');
 async function gate(g,which){

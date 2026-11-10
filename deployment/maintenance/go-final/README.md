@@ -1,5 +1,9 @@
 # Five existing Go services: final compatible security rebuild
 
+**Historical activation retired, 10 November:** the source/locks and evidence
+below remain available for isolated replay. `release.mjs` now refuses activation
+of this superseded batch. Use the [reviewed x/net successors](../security-20261109/README.md#remaining-high-follow-up--10-november).
+
 This bounded batch preserves the existing applications, source revisions,
 privacy patches, static assets and runtime configuration. It changes the Go
 compiler from 1.26.8 to **1.26.9** and the explicitly reviewed compatible module

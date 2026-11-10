@@ -1,4 +1,5 @@
 // Seven bounded existing-service releases; no database or retention migration.
+import {assertCurrentGoRelease} from '../security-20261109/superseded-go.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import cp from 'node:child_process';
@@ -65,6 +66,7 @@ function repin(g,from,to){
 }
 async function main(){
  const [mode,...keys]=process.argv.slice(2).filter(a=>a!=='--batch=security-20261024');assert(['prepare','apply'].includes(mode));assert(keys.length&&new Set(keys).size===keys.length);for(const key of keys)assert(specs.some(s=>s.key===key));
+ assertCurrentGoRelease('go-leaf-final', keys);
  const report=fs.existsSync(receipt)?JSON.parse(fs.readFileSync(receipt)):{date:new Date().toISOString(),status:'preparing',groups:[]};
  const save=()=>fs.writeFileSync(receipt,JSON.stringify(report,null,2)+'\n');
  if(mode==='prepare'){
