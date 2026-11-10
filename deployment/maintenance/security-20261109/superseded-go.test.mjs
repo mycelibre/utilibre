@@ -22,6 +22,15 @@ test('current xnet activation still relies on its own unchanged approval gates',
     assert.doesNotThrow(() => assertCurrentGoRelease('package-release', ['rimgo','ferretdb'], profile));
   }
 });
+test('the new finite library batch cannot activate an old Go application',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'utilibre-finite-release-'));
+ try{
+  const sentinel=path.join(dir,'called');
+  fs.writeFileSync(path.join(dir,'docker'),'#!/bin/sh\n: > "$UTILIBRE_FORBIDDEN_CALL"\nexit 85\n',{mode:0o700});
+  const result=cp.spawnSync(process.execPath,[new URL('../security-20261028/release-brotli.mjs',import.meta.url).pathname,'--batch-20261110','--vendor-debian','apply','rimgo'],{encoding:'utf8',timeout:10000,env:{PATH:dir+':/usr/bin:/bin',LANG:'C.UTF-8',UTILIBRE_FORBIDDEN_CALL:sentinel}});
+  assert(!result.error);assert.notEqual(result.status,0);assert(!fs.existsSync(sentinel));
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
 const invocations = [
   ['go-final/release.mjs', []],
   ['go-final/release.mjs', ['--oct28']],

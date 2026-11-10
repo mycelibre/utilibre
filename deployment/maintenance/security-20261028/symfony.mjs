@@ -3,11 +3,11 @@ import fs from 'node:fs';import cp from 'node:child_process';import assert from 
 process.umask(0o077);
 import {selectBatch} from '../security-20261103/batch.mjs';
 const batch=selectBatch(process.argv.slice(2));process.argv=[...process.argv.slice(0,2),...batch.args];
-const msal=process.argv.includes('--msal'),profile=msal?'msal':'symfony',expression=batch.root.endsWith('20261109');
-assert(!expression||profile==='symfony');
+const msal=process.argv.includes('--msal'),profile=msal?'msal':'symfony',expression=batch.root.endsWith('20261109'),httpClient=batch.root.endsWith('20261110');
+assert(!(expression||httpClient)||profile==='symfony');
 const input=JSON.parse(fs.readFileSync(batch.input(profile))),keys=process.argv.slice(2).filter(k=>!['--msal','--symfony'].includes(k)),root=batch.root+'/'+profile;
-const fixture=new URL(expression?'../security-20261109/expression-check.php':'./symfony-check.php',import.meta.url).pathname;
-if(expression)assert.equal(createHash('sha256').update(fs.readFileSync(fixture)).digest('hex'),input.fixtureSha256);
+const fixture=new URL(httpClient?'../security-20261110/http-client-check.php':expression?'../security-20261109/expression-check.php':'./symfony-check.php',import.meta.url).pathname;
+if(expression||httpClient)assert.equal(createHash('sha256').update(fs.readFileSync(fixture)).digest('hex'),input.fixtureSha256);
 assert(keys.length&&new Set(keys).size===keys.length&&keys.every(k=>input.rows.some(s=>s.key===k)));
 const sha=b=>createHash('sha256').update(b).digest('hex');
 for(const key of keys){
@@ -21,9 +21,9 @@ for(const key of keys){
   const old=JSON.parse(docker('image','inspect',s.base))[0],c=docker('create','--entrypoint','/bin/true',s.base);
   try{for(const f of s.files){fs.mkdirSync(work+'/'+f.path.split('/').slice(0,-1).join('/'),{recursive:true});docker('cp',c+':'+s.site+'/'+f.path,work+'/'+f.path);assert.equal(sha(fs.readFileSync(work+'/'+f.path)),f.beforeSha256);}}
   finally{docker('rm',c);}
-  if(expression){
-   assert.equal(s.files.length,1);assert.equal(s.files[0].path,'expression-language/Parser.php');
-   const source=fs.readFileSync(dir+'/Parser.php');assert.equal(sha(source),s.source.sha256);assert.equal(s.source.sha256,s.files[0].afterSha256);
+  if(expression||httpClient){
+   assert.equal(s.files.length,1);assert.equal(s.files[0].path,httpClient?'http-client/ScopingHttpClient.php':'expression-language/Parser.php');
+   const source=fs.readFileSync(dir+(httpClient?'/ScopingHttpClient.php':'/Parser.php'));assert.equal(sha(source),s.source.sha256);assert.equal(s.source.sha256,s.files[0].afterSha256);
    const commit=fs.readFileSync(dir+'/source-commit.json');assert.equal(sha(commit),s.source.commitResponseSha256);assert.equal(JSON.parse(commit).sha,s.source.commit);
    fs.writeFileSync(work+'/'+s.files[0].path,source);
   }
@@ -34,7 +34,8 @@ for(const key of keys){
   run('docker',['build','--network','none','--pull=false','--memory','256m','--cpu-period','100000','--cpu-quota','100000','-t',s.candidate,work],{env:{...process.env,DOCKER_BUILDKIT:'0'}});
   const next=JSON.parse(docker('image','inspect',s.candidate))[0];assert.deepEqual(next.Config,old.Config);const n=native(next.Id,'fixed');
   if(expression){assert(baseline.passed&&baseline.normalChecks===18&&n.passed&&n.normalChecks===18&&n.hasDepthGuard);assert.equal(baseline.parserSha256,s.files[0].beforeSha256);assert.equal(n.parserSha256,s.files[0].afterSha256);}
-  fs.writeFileSync(dir+'/build.json',JSON.stringify({...s,date:new Date().toISOString(),imageId:next.Id,passed:true,configurationUnchanged:true,...(expression?{fixtureSha256:input.fixtureSha256,upstreamSourceVerified:true,excessiveDepthReproduction:false}:{}),changedFiles:s.files.map(f=>s.site+'/'+f.path).sort(),baseline,native:n,deployed:false},null,2)+'\n');
+  if(httpClient){assert(baseline.passed&&baseline.normalChecks===20&&n.passed&&n.normalChecks===20);assert.equal(baseline.sourceSha256,s.files[0].beforeSha256);assert.equal(n.sourceSha256,s.files[0].afterSha256);}
+  fs.writeFileSync(dir+'/build.json',JSON.stringify({...s,date:new Date().toISOString(),imageId:next.Id,passed:true,configurationUnchanged:true,...(expression?{fixtureSha256:input.fixtureSha256,upstreamSourceVerified:true,excessiveDepthReproduction:false}:{}),...(httpClient?{fixtureSha256:input.fixtureSha256,upstreamSourceVerified:true,credentialLeakReproduction:false}:{}),changedFiles:s.files.map(f=>s.site+'/'+f.path).sort(),baseline,native:n,deployed:false},null,2)+'\n');
   console.log(key+': exact upstream source checks passed; full-image and application gates still required');
  }finally{fs.rmSync(work,{recursive:true});}
 }

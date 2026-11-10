@@ -6,4 +6,9 @@ test('current exporter requires its reviewed artifact, native package and exact 
  for(const image of exporterImages) assert(eligible({...row,artifact:image,targetName:image}));assert(eligible({...row,package:'xserver-common',installed:'2:21.1.16-1.3+deb13u4+dhi1'}));
  for(const delta of [{artifact:'sha256:'+'f'.repeat(64),targetName:'sha256:'+'f'.repeat(64)},{containers:['utilibre-expanded-penpot-backend-1']},{installed:'2:21.1.16-1.3+deb13u4+dhi1'},{id:'CVE-2026-93517'}])assert(!eligible({...row,...delta}));
 });
+test('November Kerberos overlay retains the exact native package boundary',()=>{
+ const image='sha256:bf748ae83b9d9e0b8ef9ddf4ea57e892cef6614a33f38e573d862f15cc3d40c4';
+ const row={...i,scope:'runtime-image',artifact:image,targetName:image,installed:'2:21.1.16-1.3+deb13u4+dhi1+utilibre1',containers:['utilibre-expanded-penpot-exporter-1']};
+ assert(eligible(row));assert(!eligible({...row,installed:'2:21.1.16-1'}));assert(!eligible({...row,containers:['other']}));
+});
 test('missing fix or incorrectly ordered cleanup rejected',()=>{assert.throws(()=>functionBlock('unpatched'));const s='preamble\nstatic Bool\nGrabReferencesDevice() { return grab->device == dev || grab->modifierDevice == dev; }\n/**\n * Remove a device from the device list\n*/\nint\nRemoveDevice() { CloseDevice(dev); RemovePassiveGrabsForDevice(dev);\n}\nint\nnext';assert.throws(()=>functionBlock(s));assert(functionBlock(s.replace('CloseDevice(dev); RemovePassiveGrabsForDevice(dev);','RemovePassiveGrabsForDevice(dev); CloseDevice(dev);')).includes('modifierDevice'));});

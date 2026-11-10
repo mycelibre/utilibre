@@ -1,7 +1,7 @@
 name: utilibre-wallabag
 services:
   app:
-    image: utilibre-wallabag:expression-security-20261109
+    image: utilibre-wallabag:http-client-security-20261110
     restart: 'no'
     read_only: true
     user: '4007:4007'

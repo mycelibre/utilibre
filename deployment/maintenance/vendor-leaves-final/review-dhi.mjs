@@ -81,11 +81,11 @@ assert.equal(aptRelease.status,'passed');
 for(const key of ['apt-penpot-frontend','apt-penpot-exporter']){
  const s=aptInputs.rows.find(s=>s.key===key),d=aptRoot+'/vendor-debian/'+key;
  const b=readJson(d+'/build.json'),p=readJson(d+'/dhi-payload.json');
- proveVendorDebian(aptInputs,s,b,readJson(d+'/consumer.json'),readJson(d+'/scan-gate.json'),readJson(aptRoot+'/dhi-acquisition/authenticated.json'),aptRoot);
+ proveVendorDebian(aptInputs,s,b,readJson(d+'/consumer.json'),readJson(d+'/scan-gate.json'),readJson(aptRoot+'/dhi-acquisition/authenticated.json'),aptRoot,{recordedRevision:'f5c2e09f812e920a3b1c95e8c6673227abf1ca6d'});
  const g=aptRelease.groups.find(g=>g.key===key);assert.equal(g?.status,'passed');
  assert(Date.parse(g.completedAt)<=Date.parse(scan.date));
  assert(g.rows.every(r=>r.oldImage===s.base&&r.newImage===b.imageId));
- for(const name of s.containers)assert.equal(images.find(i=>i[0]===name)?.[1],b.imageId);
+ for(const name of s.containers)assert.equal(images.find(i=>i[0]===name)?.[1],expatDescendant(name,b.imageId,g.completedAt,completedScan.completedAt,completedOverlays));
  for(const row of p.rows){
   const pin=aptInputs.packages[s.packages[row.package].package],deb=aptRoot+'/debian-acquisition/'+pin.file;
   assert.equal(sha(fs.readFileSync(deb)),pin.sha256);

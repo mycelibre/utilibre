@@ -1,4 +1,13 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {selectBatch} from './batch.mjs';
+test('10 November accepts only one reviewed Symfony or Kerberos profile',()=>{
+ for(const profile of ['symfony','vendor-debian']){
+  const b=selectBatch(['--batch-20261110','--'+profile,'prepare','fixture']);
+  assert.equal(b.root,'/var/lib/utilibre-maintenance/security-20261110');
+  assert(b.input(profile).pathname.endsWith(profile==='symfony'?'/symfony-inputs.json':'/kerberos-inputs.json'));
+ }
+ assert.throws(()=>selectBatch(['--batch-20261110','--symfony','--vendor-debian']));
+ assert.throws(()=>selectBatch(['--batch-20261110','--node']));
+});
 test('batch selection preserves old releases and restricts the new profile',()=>{
  assert.equal(selectBatch(['--expat']).enabled,false);
  const b=selectBatch(['--expat','--batch-20261103','prepare','fixture']);assert(b.enabled);assert(b.root.endsWith('20261103'));assert.deepEqual(b.args,['--expat','prepare','fixture']);

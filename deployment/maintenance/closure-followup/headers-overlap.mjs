@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 const sha=v=>createHash('sha256').update(v).digest('hex');
 export const overlapSpecs={
+ 'CVE-2026-74582':{commit:'bcd4df60ac9481b1ceffdfe5ec38fe51dcaae812',sha256:'e9df7de6ff2d2737aed9a03d85e9bbe2f5899729b411bf776c70fed028771717',headers:{'include/linux/netdevice.h':['LL_RESERVED_SPACE_EX','hard_header_len','packet_snd','packet_sendmsg_spkt']}},
  'CVE-2025-71202':{commit:'9f0a7ab700f8620e433b05c57fbd26c92ea186d9',sha256:'7d94fc4da6842c807bb5038de02ff8aaa75a090a71cc83103bea5b911e942469',headers:{'include/linux/iommu.h':['iommu_mm_data','sva_domains','mm_list_elm','iommu_sva_invalidate_kva_range']}},
  'CVE-2026-64078':{commit:'b4597d5fd7d2f8cebfffd40dffb5e003cc78964c',sha256:'92aca995269a2d737dccd8b5281449b6674d3f0e7fa621dc5c2132fe7ec51767',headers:{'include/linux/netfilter/x_tables.h':['xt_unregister_table','xt_unregister_table_pre_exit','xt_unregister_table_exit']}},
  'CVE-2026-98799':{commit:'17637e1a581a22466ac3620a91e099683ff9cc6f',sha256:'66b97d978f0046e95af1ea844cf2d1d9ca9cb9b2d55b6aa5272faa41fd91af75',headers:{'include/linux/bpf.h':['bpf_tramp_skip','bpf_tramp_image','bpf_tramp_image_add_skip','arch_bpf_trampoline_skip','BPF_MAX_TRAMP_LINKS']}},

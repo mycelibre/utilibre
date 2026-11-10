@@ -70,3 +70,7 @@ test('an invalid creation response never targets another container for cleanup',
 });
 
 test('explicit MariaDB-only review does not select authentication probes',()=>{assert.equal(reviewOptions(['--only-kind=mariadb']).onlyKind,'mariadb');assert.throws(()=>reviewOptions(['--only-kind=jwt']));});
+test('ordinary JWT compatibility selection is explicit and bounded',()=>{
+ assert.equal(reviewOptions(['--only-kind=jwt','--ordinary-jwt']).ordinaryJwt,true);
+ for(const args of [['--ordinary-jwt'],['--only-kind=mariadb','--ordinary-jwt'],['--only-kind=jwt','--ordinary-jwt','--ordinary-jwt'],['--only-kind=unknown']])assert.throws(()=>reviewOptions(args));
+});

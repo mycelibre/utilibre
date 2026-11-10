@@ -17,8 +17,9 @@ OAUTH='--oauth-oct28' in sys.argv or OAUTH_NOV9
 CODEC='--codec-oct28' in sys.argv
 HEALTH='--health-oct28' in sys.argv
 MARKDOWN='--markdown-oct28' in sys.argv
+SYMFONY_NOV10='--symfony-nov10' in sys.argv
 SYMFONY_NOV9='--symfony-nov9' in sys.argv
-SYMFONY='--symfony-oct28' in sys.argv or SYMFONY_NOV9
+SYMFONY='--symfony-oct28' in sys.argv or SYMFONY_NOV9 or SYMFONY_NOV10
 NLTK='--weka-oct28' in sys.argv
 MSGPACK='--msgpack-oct28' in sys.argv
 BLKID='--blkid-oct28' in sys.argv
@@ -42,6 +43,10 @@ if OAUTH_NOV9:
  assert '--oauth-oct28' not in sys.argv
  ROOT=Path('/var/lib/utilibre-maintenance/security-20261109/oauth')
  sys.argv.remove('--oauth-nov9')
+if SYMFONY_NOV10:
+ assert not SYMFONY_NOV9 and '--symfony-oct28' not in sys.argv
+ ROOT=Path('/var/lib/utilibre-maintenance/security-20261110/symfony')
+ sys.argv.remove('--symfony-nov10')
 if SYMFONY_NOV9:
  assert '--symfony-oct28' not in sys.argv
  ROOT=Path('/var/lib/utilibre-maintenance/security-20261109/symfony')

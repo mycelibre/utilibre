@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "approval": "approved",
+  "source": "https://pypi.org/project/psycopg2-binary/2.9.12/",
+  "sourceSha256": "5ac9444edc768c02a6b6a591f070b8aae28ff3a99be57560ac996001580f294c",
+  "version": "2.9.12",
+  "base": "sha256:2d0f32cb62d0e051bac25466212df8edadeea307d2a05cd57ebbd3b7f43d294e",
+  "candidate": "utilibre-kitchenowl:kerberos-native-driver-20261110",
+  "package": {
+    "name": "libpq5",
+    "file": "libpq5_17.11-0+deb13u1_amd64.deb",
+    "version": "17.11-0+deb13u1",
+    "sha256": "20a4c9ef58b4baf90deda67cfb2cc062871c062830dddc234d28f5ac7931b86b"
+  },
+  "binary": {
+    "file": "_psycopg.cpython-314-x86_64-linux-gnu.so",
+    "sha256": "b9d100d58848603120e8dece0590fd1af7397512150b0f15f29b0500a85a981f"
+  },
+  "site": "/opt/venv/lib/python3.14/site-packages"
+}

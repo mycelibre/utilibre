@@ -1,6 +1,14 @@
 import assert from 'node:assert/strict';
 // Explicit finite batch; old release receipts and replay paths remain untouched.
 export function selectBatch(args){
+ if(args.includes('--batch-20261110')){
+  assert.equal(args.filter(a=>a==='--batch-20261110').length,1);
+  assert.equal(args.filter(a=>['--symfony','--vendor-debian'].includes(a)).length,1);
+  assert(!args.some(a=>a.startsWith('--')&&!['--batch-20261110','--symfony','--vendor-debian'].includes(a)));
+  return {args:args.filter(a=>a!=='--batch-20261110'),enabled:true,
+   root:'/var/lib/utilibre-maintenance/security-20261110',
+   input:profile=>{assert(['symfony','vendor-debian'].includes(profile));return new URL('../security-20261110/'+(profile==='vendor-debian'?'kerberos':profile)+'-inputs.json',import.meta.url);}};
+ }
  const november9=args.includes('--batch-20261109');
  if(november9){
   assert.equal(args.filter(a=>a==='--batch-20261109').length,1);

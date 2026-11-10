@@ -14,7 +14,7 @@ x-runtime: &runtime
 services:
   priviblur:
     <<: *runtime
-    image: utilibre-priviblur-priviblur:sqlite-security-20261109
+    image: utilibre-krb5-priviblur-priviblur:1.22.3-20261110
     user: "1000:1000"
     environment:
       PRIVIBLUR_ACCESS_LOG: "false"

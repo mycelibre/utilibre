@@ -1,37 +1,30 @@
 # Work queue
 
-The scheduled **10 November 10:28 UTC** scan covers 109 images, 175 containers
-and 113 source inputs. Following the verified GRUB release, the queue has
-**0 critical / 319 high records needing review**.
-The earlier 36-record count is historical. The refreshed advisory data adds
-284 Kerberos package-target occurrences, two Symfony occurrences and two
-kernel-header occurrences. These are review records, not confirmed exploitability
-or evidence that every earlier repair regressed.
+Current security checkpoint: **10 November 2026**, following the 13:34 UTC
+complete fleet scan and exact deployed-payload revalidation. The pending queue
+is **0 critical / 31 high records**, down from 319. Signed Kerberos 1.22.3 and
+compatible Symfony HttpClient fixes are deployed across 18 images / 21 container
+roles, plus four unloaded host libraries. The two original header-package
+records were reviewed against affected-component evidence. Raw matches remain.
 
-The separately approved GRUB vendor update is installed as of 11:40 UTC:
-eight exact Debian packages, native BIOS/EFI installation and boot-menu checks
-passed. Both EFI copies and modules match the tested inputs; shim and firmware
-variables are unchanged. All 175 running container IDs were unchanged. Actual
-VM reboot verification now passes: expected kernel, correct mounts, all 175
-named containers running with no unhealthy status, no failed systemd units and
-successful local/public portal responses. Five exact GRUB package/version
-records are reviewed as vendor-fixed for seven days. The fresh same-database
-before/candidate/installed comparison adds no high or critical records. Raw
-scanner matches remain. Final host-side guest-agent ping/thaw confirmation is
-requested before resuming backups.
+The remaining 31 are **30 ACL records requiring compatible caller migration**
+and **one Kuma Python-Markdown record without a verified compatible repair**.
+The earlier custom ACL repair/reproduction path was rejected by automatic
+approval review; it was not retried or suppressed. This is not full remediation.
 
-Thirty ACL records still require compatible caller migration; one Kuma Markdown
-record has no verified compatible fix. Earlier custom ACL/GRUB repair restrictions
-remain. Held application upgrades and documented functional gaps remain open.
-The already verified Grist and historical Go mitigations retain their exact,
-expiring artifact conditions; historical source locks were not rewritten.
+All 175 production containers are running: 90 configured health checks healthy,
+85 without container health checks; no failed systemd units. Native, isolated
+application, database/relay and source-replay checks pass. No host service was
+restarted by this library batch. The previously approved GRUB reboot was already
+verified separately; the outstanding host-side guest-agent confirmation remains
+separate. Main root filesystem has about 42 GiB free; the temporary disk,
+backups and rollback artifacts were preserved.
 
-The main disk/root filesystem expanded from 295 to 335 GiB, with 46 GiB available
-at verification. No reboot was needed for that operation. The separate 15 GiB
-temporary disk, backups, scanner snapshots and rollback images were preserved.
-
-Current evidence: `deployment/maintenance/security-20261109/status.json` and
-`docs/records/security-maintenance-2026-11-09.md`. Older entries below are historical.
+Current evidence: [release record](records/security-maintenance-2026-11-10.md),
+[exact status](../deployment/maintenance/security-20261110/status.json) and
+[repeatable recipes / rollback](../deployment/maintenance/security-20261110/README.md).
+Held application upgrades and previously documented functional gaps remain open.
+Older entries below are historical; do not treat their counts as current.
 
 ## Latest checkpoint — 10 November 2026
 

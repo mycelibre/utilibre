@@ -19,7 +19,7 @@ services:
     memswap_limit: 256m
     <<: *runtime
     # Same upstream app; staged Debian 12 security package refresh (see maintenance runbook).
-    image: utilibre-community-rssbridge:zlib-bookworm-security-20261109
+    image: utilibre-krb5-community-rssbridge:1.22.3-20261110
     user: "33:33"
     entrypoint: [/bin/sh, -ec]
     command: ["mkdir -p /run/php; nginx -c /etc/nginx/utilibre.conf; exec php-fpm8.2 --fpm-config /etc/php/8.2/fpm/utilibre.conf --nodaemonize"]
@@ -111,7 +111,7 @@ services:
   uptime-kuma:
     <<: *runtime
     # Same app version; native SQLite/HTTP/TCP checks need no bundled Chromium/MariaDB.
-    image: utilibre-community-uptime-kuma:zlib-bookworm-security-20261109
+    image: utilibre-krb5-community-uptime-kuma:1.22.3-20261110
     user: "1000:1000"
     environment:
       UPTIME_KUMA_DB_TYPE: sqlite
@@ -143,7 +143,7 @@ services:
   rallly:
     <<: *runtime
     profiles: [rallly]
-    image: utilibre-community-rallly:zlib-bookworm-security-20261109
+    image: utilibre-krb5-community-rallly:1.22.3-20261110
     environment:
       DATABASE_URL: postgres://rallly:${RALLLY_DB_PASSWORD:-UNCONFIGURED}@rallly-db:5432/rallly
       SECRET_PASSWORD: ${RALLLY_SECRET_PASSWORD:-UNCONFIGURED}

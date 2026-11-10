@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {rows,archives,eligible,prove,exporterBefore,exporterAfter,exporterCurrent,restrictedXvfb,exporterAncestry,novemberImages,novemberSqliteImages,novemberAptImages} from './policy.mjs';
+import {rows,archives,eligible,prove,exporterBefore,exporterAfter,exporterCurrent,restrictedXvfb,exporterAncestry,novemberImages,novemberSqliteImages,novemberAptImages,novemberKerberosExporter} from './policy.mjs';
 const item=r=>({status:'needs-review',scope:'runtime-image',type:'debian',package:r.package,id:r.id,artifact:r.artifact,targetName:r.artifact,installed:r.stale,containers:[r.container]});
 const proof=r=>({image:r.artifact,container:r.container,package:r.package,actualVersion:archives[r.package].version,archiveSha256:archives[r.package].sha256,residual:{path:'/var/lib/dpkg/status.d/'+r.package,version:r.stale,source:r.source,sha256:'a'.repeat(64)},authenticatedIndex:true,payloadExact:true,fileCount:3,inventorySha256:'b'.repeat(64),componentAbsentFromPackage:true,component:r.source==='perl'?'Archive::Tar':'systemd-homed'});
 test('all five exact stale records need current signed-payload and residual proofs',()=>{assert.equal(rows.length,5);for(const r of rows){assert(eligible(item(r)));assert(prove(item(r),proof(r)));}});
@@ -38,3 +38,11 @@ test('current exporter still needs exact signed Perl payload and completed live 
 });
 
 test('November images require exact same vendor payload plus completed role lineage',()=>{for(const images of [novemberImages,novemberSqliteImages,novemberAptImages])for(const r of rows){const image=images[r.container],i={...item(r),artifact:image,targetName:image},p={...proof(r),image,completedChain:{from:r.artifact,to:image,container:r.container}};if(r.artifact===exporterBefore){const t=transition();t.verified.image=image;p.ancestry=exporterAncestry(t.stage,t.release,t.verified,t.scan);}assert(eligible(i));assert(prove(i,p));for(const change of [p=>delete p.completedChain,p=>p.completedChain.from='wrong',p=>p.completedChain.to='wrong',p=>p.completedChain.container='wrong',p=>p.payloadExact=false]){const v=structuredClone(p);change(v);assert.throws(()=>prove(i,v));}}});
+test('Kerberos overlay permits only exporter records with exact payload and completed lineage',()=>{
+ for(const r of rows){const image=novemberKerberosExporter,i={...item(r),artifact:image,targetName:image};
+  assert.equal(eligible(i),r.artifact===exporterBefore);if(r.artifact!==exporterBefore)continue;
+  const t=transition();t.verified.image=image;
+  const p={...proof(r),image,completedChain:{from:r.artifact,to:image,container:r.container},ancestry:exporterAncestry(t.stage,t.release,t.verified,t.scan)};
+  assert(prove(i,p));for(const change of [v=>delete v.completedChain,v=>v.payloadExact=false,v=>v.ancestry.image=exporterBefore]){const v=structuredClone(p);change(v);assert.throws(()=>prove(i,v));}
+ }
+});

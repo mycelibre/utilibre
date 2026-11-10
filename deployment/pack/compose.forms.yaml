@@ -21,7 +21,7 @@ services:
       timeout: 3s
       retries: 5
   app:
-    image: utilibre-pack-forms-app:sqlite-security-20261109
+    image: utilibre-krb5-pack-forms-app:1.22.3-20261110
     restart: unless-stopped
     depends_on: {db: {condition: service_healthy}}
     user: '4002:4002'

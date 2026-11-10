@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "advisories": [
+    "CVE-2026-121971"
+  ],
+  "license": "MIT",
+  "method": "exact compatible upstream ScopingHttpClient.php; existing HttpClientTrait and ExpressionLanguage fixes retained",
+  "rows": [
+    {
+      "key": "wallabag",
+      "base": "sha256:71f4034acca0f0d17881f20cbfb6399784eead482d537cba351b7ad1a3e80def",
+      "oldRef": "utilibre-wallabag:expression-security-20261109",
+      "candidate": "utilibre-wallabag:http-client-security-20261110",
+      "containers": [
+        "utilibre-wallabag-app-1"
+      ],
+      "site": "/app/vendor/symfony",
+      "packages": {
+        "symfony/http-client": "v5.4.53"
+      },
+      "files": [
+        {
+          "path": "http-client/ScopingHttpClient.php",
+          "beforeSha256": "4d66db7967951b641e84058ec84f1462a59cd922dddc888883fa8353aeaa8e58",
+          "afterSha256": "26c054a37f6bb84f7a433741dd9a174a2093a9a510eb10e20ac7da289a321d03"
+        }
+      ],
+      "source": {
+        "url": "https://raw.githubusercontent.com/symfony/http-client/979468e41c5882435793215112a5d9db54715df4/ScopingHttpClient.php",
+        "commit": "979468e41c5882435793215112a5d9db54715df4",
+        "tag": "v5.4.56",
+        "sha256": "26c054a37f6bb84f7a433741dd9a174a2093a9a510eb10e20ac7da289a321d03",
+        "commitResponseSha256": "f280fbc0f873838ed838670f9147e8fad50837af94325fe66f6978a5fd55a0cc"
+      },
+      "approval": "approved",
+      "patches": [],
+      "approvalEvidence": [
+        "build.json",
+        "inventory.json",
+        "application.json",
+        "scan-gate.json"
+      ]
+    },
+    {
+      "key": "pollaris",
+      "base": "sha256:f0aab1456667e3ad93dba2bd78dabd59536d2899a899bb680438ad44cb7f412d",
+      "oldRef": "utilibre-pollaris:expression-security-20261109",
+      "candidate": "utilibre-pollaris:http-client-security-20261110",
+      "containers": [
+        "utilibre-pollaris-pollaris-1",
+        "utilibre-pollaris-worker-1"
+      ],
+      "site": "/app/vendor/symfony",
+      "packages": {
+        "symfony/http-client": "v7.4.14"
+      },
+      "files": [
+        {
+          "path": "http-client/ScopingHttpClient.php",
+          "beforeSha256": "4eda8d4f2bff3ba96f7faa06adc3e5c1b2a10dcb214c9d9fe28da02809f0141e",
+          "afterSha256": "f3559fd189003653de61f26cedb533962833b8be2e204df0278f4831d9d0a1fb"
+        }
+      ],
+      "source": {
+        "url": "https://raw.githubusercontent.com/symfony/http-client/ed012bfca0f7b45d97016efcdf9b0639c52a1722/ScopingHttpClient.php",
+        "commit": "ed012bfca0f7b45d97016efcdf9b0639c52a1722",
+        "tag": "v7.4.23",
+        "sha256": "f3559fd189003653de61f26cedb533962833b8be2e204df0278f4831d9d0a1fb",
+        "commitResponseSha256": "cd5a9ec60510c8777f669542c8cb890d946165af0094918bd5747bd07fed1ccc"
+      },
+      "approval": "approved",
+      "patches": [],
+      "approvalEvidence": [
+        "build.json",
+        "inventory.json",
+        "application.json",
+        "scan-gate.json"
+      ]
+    }
+  ],
+  "fixtureSha256": "f385f9b2ce2ca7289f07ba01e9f45263e909d49b061f0a55cbc28db3620b7255",
+  "patches": [],
+  "applicationFixtures": {
+    "wallabag": {
+      "deployment/maintenance/php-20261022/check-native.mjs": "f8ca2eae4ee565da7ac997928365cc2557610ae6f31306c222202b2868084798",
+      "deployment/pack/wallabag/check-private-library.php": "3e37f50a507faa1eca5cce52b0edae75f4deed890357bad73a07aafe97b8aac5"
+    },
+    "pollaris": {
+      "deployment/maintenance/php-20261022/check-pollaris.mjs": "b65a6d1d2990f83f361b65ebd5dd9fd993c802b64ee34003f5f6a572dd0f045f",
+      "deployment/maintenance/php-20261022/pollaris-browser.mjs": "9316264115ee77bc6e5e5abe7dacd2a1abd7d369e636228b5cbbd69041facc10"
+    }
+  }
+}

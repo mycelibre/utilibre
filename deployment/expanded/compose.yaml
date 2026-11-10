@@ -61,7 +61,7 @@ services:
 
   breezewiki:
     <<: *runtime
-    image: utilibre-expanded-breezewiki:sqlite-security-20261109
+    image: utilibre-krb5-expanded-breezewiki:1.22.3-20261110
     read_only: true
     user: "1000:1000"
     environment:
@@ -247,7 +247,7 @@ services:
 
   penpot-backend:
     <<: *runtime
-    image: utilibre-expanded-penpot-backend:sqlite-security-20261109
+    image: utilibre-krb5-expanded-penpot-backend:1.22.3-20261110
     user: "1001:1001"
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
@@ -303,7 +303,7 @@ services:
 
   penpot-exporter:
     <<: *runtime
-    image: utilibre-apt-penpot-exporter:security-20261109
+    image: utilibre-krb5-expanded-penpot-exporter:1.22.3-20261110
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
       PENPOT_INTERNAL_URI: http://penpot-frontend:8080

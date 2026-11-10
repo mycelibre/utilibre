@@ -1,0 +1,303 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-10T14:01:57.534413+00:00",
+  "status": "deployed-with-explicit-unresolved-findings",
+  "initialPendingHigh": 319,
+  "initialDisposition": {
+    "kerberosFixed": 284,
+    "symfonyFixed": 2,
+    "headerPackageAttributionReviewed": 2,
+    "remainingHigh": 31
+  },
+  "currentPending": {
+    "critical": 0,
+    "high": 31
+  },
+  "rawFindings": {
+    "packageTargets": 24782,
+    "critical": 66,
+    "high": 3356,
+    "preserved": true
+  },
+  "assessment": {
+    "scanner": "Trivy 0.75.0",
+    "completedAt": "2026-11-10T13:34:21.860Z",
+    "database": {
+      "updatedAt": "2026-11-10T06:59:14.229854289Z",
+      "downloadedAt": "2026-11-10T10:26:50.830687165Z",
+      "refreshRequested": false
+    },
+    "images": 109,
+    "containers": 175,
+    "sourceInputs": 113,
+    "host": "checked",
+    "incompleteTargets": 0
+  },
+  "deployment": {
+    "images": 18,
+    "containerRoles": 21,
+    "hostLibraries": 4,
+    "hostServicesRestarted": false,
+    "rebootPerformedInThisBatch": false,
+    "rows": [
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-linkding-linkding",
+        "container": "utilibre-linkding-linkding-1",
+        "previousArtifact": "sha256:0f5a7f1726fcbcbbce2c77d7e7f363fa884b317752cbccbfadbc7c56776472b1",
+        "artifact": "sha256:14793c0212c6f8e0dcfffa03741e42a9fdd0a6683ef861629b09af12409931ac",
+        "reference": "utilibre-krb5-linkding-linkding:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-services-freshrss",
+        "container": "utilibre-services-freshrss-1",
+        "previousArtifact": "sha256:0fa6b5fd2d43f15d9aba4fef8162e615d0028cc17a5c1c3bddabd913c2d1192a",
+        "artifact": "sha256:102838f13a118e05a408c86b7ae6397039351c1dfb081888fcc7f70381bd4b4b",
+        "reference": "utilibre-krb5-services-freshrss:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-community-rallly",
+        "container": "utilibre-community-rallly-1",
+        "previousArtifact": "sha256:10199c0f1580fd9633c3a61a6b1147567c4943b49907d1186fef0fd1f317ce77",
+        "artifact": "sha256:da56d2ad99df1b1706f42d4ea0ea9d01744f69e4430aeee40894dc328c042725",
+        "reference": "utilibre-krb5-community-rallly:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-priviblur-priviblur",
+        "container": "utilibre-priviblur-priviblur-1",
+        "previousArtifact": "sha256:1939874c2a2a386fb5a1fcf59b046bb878937a98c6a15c834fd7708b206ea2b0",
+        "artifact": "sha256:3cb8b0ae9222b67e5cd800a1432df8f7b8347c275d7f69e7ebd788a4bb7efefe",
+        "reference": "utilibre-krb5-priviblur-priviblur:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-services-rsshub",
+        "container": "utilibre-services-rsshub-1",
+        "previousArtifact": "sha256:252da187ca4069649e06200cf3836eb1bed0066c27eb95129606f8f09ba9dd0b",
+        "artifact": "sha256:1e8305310f2bdb807c19391a06846169d9d95097b8648594f3cd966b152be2c3",
+        "reference": "utilibre-krb5-services-rsshub:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-expanded-penpot-backend",
+        "container": "utilibre-expanded-penpot-backend-1",
+        "previousArtifact": "sha256:3af97666e4831def95e49b8391bad29de7fdc7fa8a839b67bb00b20d31bb4510",
+        "artifact": "sha256:59c1c6b908be50ee32e25d098a360d7e581a7181deb745431e92e1328ae9f83e",
+        "reference": "utilibre-krb5-expanded-penpot-backend:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-expanded-breezewiki",
+        "container": "utilibre-expanded-breezewiki-1",
+        "previousArtifact": "sha256:4cbaf0c5f105dfe488bd1d02e3a670365fd29a8bcab26331ae166b02430059ad",
+        "artifact": "sha256:93a08e0802d255f04e1f15f170d11c382b9bd59493c69952f25b9dbdff3d53d4",
+        "reference": "utilibre-krb5-expanded-breezewiki:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-community-uptime-kuma",
+        "container": "utilibre-community-uptime-kuma-1",
+        "previousArtifact": "sha256:4d9a94de25dc18eef27718bf488fa2f578d8fcbf707af6c6fed659bb20e3df68",
+        "artifact": "sha256:81721ff6d94bb8afb0f4fbb4368f8558799a9cb20d741500ceec952bee7b3098",
+        "reference": "utilibre-krb5-community-uptime-kuma:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-gathio-postgres",
+        "container": "utilibre-gathio-postgres-1",
+        "previousArtifact": "sha256:7eb421ce1870b20ccb8db10213814eedb936d9faaaa4ba7ac110d8a7b8ecdd5a",
+        "artifact": "sha256:d75618fdee5a53508e391383bef49fbd2deed09fa45c4ecf0203c12a10c3a34f",
+        "reference": "utilibre-krb5-gathio-postgres:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-community-rssbridge",
+        "container": "utilibre-community-rssbridge-1",
+        "previousArtifact": "sha256:7f51c953af89f2bbac97a98f0a5c2dbc0c1ef252c7968390c0cf053cabbc0d70",
+        "artifact": "sha256:5299186b36ea0e7f68d1f9d67b9e6fdc8f95bece6d89b54f4b09afca34edc7d8",
+        "reference": "utilibre-krb5-community-rssbridge:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-pack-forms-app",
+        "container": "utilibre-pack-forms-app-1",
+        "previousArtifact": "sha256:95ca959958c0ee8547e56151204343a4b3736647e9ccb9e04ecd66a251d3981e",
+        "artifact": "sha256:de382dcb06b5aaccb879b97d93b2f7fa90a1fce9507425f232ab8d24b63496ff",
+        "reference": "utilibre-krb5-pack-forms-app:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-identity-server",
+        "container": "utilibre-identity-server-1",
+        "previousArtifact": "sha256:ae10237a2646601640e15fc73e970e8bd48556487a9dd10b19ac4766a8e67b83",
+        "artifact": "sha256:524a835ac72bf3f619e3cbdebf2962996a1111e873532029c2f88f286df6cca2",
+        "reference": "utilibre-krb5-identity-server:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-identity-server",
+        "container": "utilibre-identity-worker-1",
+        "previousArtifact": "sha256:ae10237a2646601640e15fc73e970e8bd48556487a9dd10b19ac4766a8e67b83",
+        "artifact": "sha256:524a835ac72bf3f619e3cbdebf2962996a1111e873532029c2f88f286df6cca2",
+        "reference": "utilibre-krb5-identity-server:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-records-grist",
+        "container": "utilibre-records-grist-1",
+        "previousArtifact": "sha256:c47570b10d5744dbaac31d286c6270d290b4257f4d3317c4acd8d0cb473412e7",
+        "artifact": "sha256:4f5cbcbbacc96ac7b2f80214ba620097da116f68574111e73c652a997d0a538d",
+        "reference": "utilibre-krb5-records-grist:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-expanded-penpot-exporter",
+        "container": "utilibre-expanded-penpot-exporter-1",
+        "previousArtifact": "sha256:ce212e9343d9bb10c61ed40543bae62875f1327b1401308b4495d8544b24897c",
+        "artifact": "sha256:bf748ae83b9d9e0b8ef9ddf4ea57e892cef6614a33f38e573d862f15cc3d40c4",
+        "reference": "utilibre-krb5-expanded-penpot-exporter:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "galene-turn",
+        "container": "utilibre-galene-turn-turn-1",
+        "previousArtifact": "sha256:ce50e8f5c03d821dc6c2c15ffa58a08bdc2c57dc0c8766b7ca22c91e30398ab0",
+        "artifact": "sha256:39dd887419d6f88c62e0157ffeaf6a3c4fe412b96285e3fd0e9d1b27ef0b7e96",
+        "reference": "utilibre-krb5-galene-turn-turn:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "turn-option",
+        "container": "utilibre-turn-option-turn-1",
+        "previousArtifact": "sha256:ce50e8f5c03d821dc6c2c15ffa58a08bdc2c57dc0c8766b7ca22c91e30398ab0",
+        "artifact": "sha256:39dd887419d6f88c62e0157ffeaf6a3c4fe412b96285e3fd0e9d1b27ef0b7e96",
+        "reference": "utilibre-krb5-galene-turn-turn:1.22.3-20261110"
+      },
+      {
+        "profile": "vendor-debian",
+        "group": "krb5-kitchenowl-app",
+        "container": "utilibre-kitchenowl-app-1",
+        "previousArtifact": "sha256:ef957feb4c5d99913770de3b9440584ed17e13e1afda202ab0eea9c18dd9b842",
+        "artifact": "sha256:969fa23ad70d6c1d4501b31bde59baa31096bc90b84ad334398b772d1acf610e",
+        "reference": "utilibre-krb5-kitchenowl-app:1.22.3-20261110"
+      },
+      {
+        "profile": "symfony",
+        "group": "wallabag",
+        "container": "utilibre-wallabag-app-1",
+        "previousArtifact": "sha256:71f4034acca0f0d17881f20cbfb6399784eead482d537cba351b7ad1a3e80def",
+        "artifact": "sha256:3b869709d9174e5933249d087e7a04e13420397a30d6dee719f362f2165e6789",
+        "reference": "utilibre-wallabag:http-client-security-20261110"
+      },
+      {
+        "profile": "symfony",
+        "group": "pollaris",
+        "container": "utilibre-pollaris-pollaris-1",
+        "previousArtifact": "sha256:f0aab1456667e3ad93dba2bd78dabd59536d2899a899bb680438ad44cb7f412d",
+        "artifact": "sha256:bf1fbf0a61bc7735e06ba82d2e19c50c07a39aeceb69add8de6e288331485a88",
+        "reference": "utilibre-pollaris:http-client-security-20261110"
+      },
+      {
+        "profile": "symfony",
+        "group": "pollaris",
+        "container": "utilibre-pollaris-worker-1",
+        "previousArtifact": "sha256:f0aab1456667e3ad93dba2bd78dabd59536d2899a899bb680438ad44cb7f412d",
+        "artifact": "sha256:bf1fbf0a61bc7735e06ba82d2e19c50c07a39aeceb69add8de6e288331485a88",
+        "reference": "utilibre-pollaris:http-client-security-20261110"
+      }
+    ]
+  },
+  "health": {
+    "runningContainers": 175,
+    "containerHealth": {
+      "healthy": 90,
+      "no-healthcheck": 85
+    },
+    "failedSystemdUnits": 0,
+    "note": "Reachability/process health is distinct from full user workflows."
+  },
+  "verification": {
+    "maintenancePolicyTestsPassed": 75,
+    "retiredCommandTestsPassed": 50,
+    "conditionPolicyTestsPassed": 83,
+    "kerberosRecipesVerified": 16,
+    "kerberosNegativeChecks": 8,
+    "comparisonBoundaryChecks": 2,
+    "nativeApiChecksPerOldAndNewArtifact": 15,
+    "isolatedKdcSuites": [
+      "bookworm",
+      "trixie"
+    ],
+    "symfonyOrdinaryChecksPerOldAndNewImage": 20,
+    "cleanSourcePreparationSuites": 2,
+    "driverReplayMatchedRecordedBinary": true,
+    "fullByteReproducibleBuildClaimed": false,
+    "vulnerabilityReproductionPerformed": false
+  },
+  "remaining": [
+    {
+      "id": "CVE-2026-54369",
+      "package": "libacl1",
+      "records": 30,
+      "status": "open",
+      "dependency": "Compatible caller/library migration. Earlier custom repair/reproduction rejected by automatic approval review; not retried or suppressed."
+    },
+    {
+      "id": "CVE-2019-25781",
+      "package": "python3-markdown",
+      "records": 1,
+      "status": "open",
+      "dependency": "No verified compatible repair for the existing Kuma/Apprise notification dependency."
+    }
+  ],
+  "evidenceRoot": "/var/lib/utilibre-maintenance/security-20261110",
+  "evidence": [
+    {
+      "path": "vendor-debian/release.json",
+      "sha256": "44c41775b95c74e04713e27b62dd8751956bc1030c64c9cfdbb1d9c418c69edf"
+    },
+    {
+      "path": "symfony/release.json",
+      "sha256": "d13e2ee7781f866be5a776d35a526fd8105a5416a9a8393283dcb4fc28b92cfd"
+    },
+    {
+      "path": "kerberos/host/release.json",
+      "sha256": "ace8e72fd7de04ddd42d0eae3f29df94bd1ce731a9c48d1531e7d5039b1dd415"
+    },
+    {
+      "path": "kerberos/policy-checks.json",
+      "sha256": "7e71a829f01faaf7d08d08c17147ec853b17069f39e38172d2d4a293cfe532f0"
+    },
+    {
+      "path": "kerberos/source-replay-check.json",
+      "sha256": "fa17b5c4be7023fd904334c105ddda1158c341a4e01bcbb3379f4daaf4067620"
+    },
+    {
+      "path": "kerberos/kitchenowl/replay/result.json",
+      "sha256": "4df06ece3bcfe0744889f6406fa3c0c775a0a9fb40093afbc31d42edc2d1ec32"
+    },
+    {
+      "path": "kerberos/source-offer-r2.json",
+      "sha256": "d47c9a7f55fb56cc6e39ab472668a0380a9f398cd6b8c5603663ffe95488ffcc"
+    },
+    {
+      "path": "final-policy-tests.tap",
+      "sha256": "61688da272f52d59768e2cfa20ccf0b41478e888288470688aab312d9b46b2e0"
+    }
+  ],
+  "sourceOffers": [
+    {
+      "filename": "security-kerberos-20261110-r2-source.tar.gz",
+      "sha256": "4aa400decf63c81c9696d4479da31f83424e18c3b444729015c39298bfac2322"
+    },
+    {
+      "filename": "security-symfony-20261110-source.tar.gz",
+      "sha256": "c71b6353b27b7b87bf24729cb3b6ec65ef076b901b5b29f1c3edaf06c5b62c61"
+    }
+  ],
+  "reviewLifetimeDays": 7,
+  "securityClearanceClaimed": false
+}

@@ -21,15 +21,20 @@ if(process.argv.includes('--cursor-nov9')){
  assert.equal(auth.sourceTreeSha256,input.sourceTreeSha256);assert.equal(native.status,'passed');
  // The new patch changes only cursor source, preserving the previous OCSP fix;
  // the already corrected BSON library is unchanged in the full image inventory.
+ const chain=additionalOverlayReceipts.filter(f=>fs.existsSync(p+'/'+f)).flatMap(f=>overlayRows(read(p+'/'+f)));
+ const artifacts=targets.map(name=>{
+  const g=release.groups.find(g=>g.rows.some(r=>r.name===name&&r.oldImage===s.base&&r.newImage===b.imageId));assert(g);
+  return expatDescendant(name,b.imageId,g.completedAt,scan.completedAt,chain);
+ });assert.equal(new Set(artifacts).size,1);const artifact=artifacts[0];
  const actual=[];
  for(const name of targets){
-  assert.equal(inspect(name).Image,b.imageId);
+  assert.equal(inspect(name).Image,artifact);
   assert(release.groups.some(g=>g.rows.some(r=>r.name===name&&r.oldImage===s.base&&r.newImage===b.imageId)));
   for(const [file,expected] of [[input.library,b.librarySha256],['/usr/lib/x86_64-linux-gnu/libbson-1.0.so.0.0.0',native.librarySha256]]){
    const hash=docker('exec',name,'sha256sum',file).split(/\s/)[0];assert.equal(hash,expected);actual.push({name,file,sha256:hash});
   }
  }
- const decisions=queue.items.filter(i=>i.status==='needs-review'&&i.scope==='runtime-image'&&i.type==='debian'&&i.artifact===b.imageId&&i.installed===version&&['libmongoc-1.0-0t64','libbson-1.0-0t64'].includes(i.package)&&['CVE-2026-120956','CVE-2026-84964','CVE-2026-106437'].includes(i.id)&&JSON.stringify([...i.containers].sort())===JSON.stringify([...targets].sort())).map(i=>validateDecision({key:i.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:`Exact cursor fixes 9e5423f882089c2fbede5cafd5a1fee1bab58780 and 4fdc5d553801fcde7bd5c86370917cc4ac704f54, applied without fuzz to authenticated source retaining the prior OCSP repair. Cursor SHA256 ${input.cursor.afterSha256}; live libmongoc SHA256 ${b.librarySha256}. All 1710 exports and linked features preserved; ordinary old-header client passed before/after. Full-image comparison changes only libmongoc; corrected BSON bytes remain unchanged. Isolated UDP/TCP/TLS transfer, authentication, quota and private-peer denial passed. Both idle-checked releases and live hashes verified. No malicious-server, actual MongoDB service or external-NAT test claimed. Original package metadata and raw findings retained. Exact advisory/package/artifact/roles only. https://github.com/mongodb/mongo-c-driver/commit/4fdc5d553801fcde7bd5c86370917cc4ac704f54 ; evidence security-20261109/mongoc/.`}));
+ const decisions=queue.items.filter(i=>i.status==='needs-review'&&i.scope==='runtime-image'&&i.type==='debian'&&i.artifact===artifact&&i.installed===version&&['libmongoc-1.0-0t64','libbson-1.0-0t64'].includes(i.package)&&['CVE-2026-120956','CVE-2026-84964','CVE-2026-106437'].includes(i.id)&&JSON.stringify([...i.containers].sort())===JSON.stringify([...targets].sort())).map(i=>validateDecision({key:i.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:`Exact cursor fixes 9e5423f882089c2fbede5cafd5a1fee1bab58780 and 4fdc5d553801fcde7bd5c86370917cc4ac704f54, applied without fuzz to authenticated source retaining the prior OCSP repair. Cursor SHA256 ${input.cursor.afterSha256}; live libmongoc SHA256 ${b.librarySha256}. All 1710 exports and linked features preserved; ordinary old-header client passed before/after. Full-image comparison changes only libmongoc; corrected BSON bytes remain unchanged. Isolated UDP/TCP/TLS transfer, authentication, quota and private-peer denial passed. Both idle-checked releases and live hashes verified. No malicious-server, actual MongoDB service or external-NAT test claimed. Original package metadata and raw findings retained. Exact advisory/package/artifact/roles only. https://github.com/mongodb/mongo-c-driver/commit/4fdc5d553801fcde7bd5c86370917cc4ac704f54 ; evidence security-20261109/mongoc/.`}));
  assert.equal(read(p+'/security.json').completedAt,scan.completedAt);
  fs.writeFileSync(dir+'/review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,actual},null,2)+'\n');
  console.log(JSON.stringify({prepared:decisions.length,applied:false}));process.exit(0);

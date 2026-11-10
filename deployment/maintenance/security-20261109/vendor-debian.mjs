@@ -2,7 +2,9 @@
 // release pattern. Only builds candidates: no production dpkg, migration or pull.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 process.umask(0o077);
-const root='/var/lib/utilibre-maintenance/security-20261109',here=new URL('.',import.meta.url),inputs=JSON.parse(fs.readFileSync(new URL('vendor-debian-inputs.json',here)));
+const kerberos=process.argv.includes('--kerberos-nov10');if(kerberos)process.argv=process.argv.filter(a=>a!=='--kerberos-nov10');
+const root='/var/lib/utilibre-maintenance/security-'+(kerberos?'20261110':'20261109'),here=new URL('.',import.meta.url),inputs=JSON.parse(fs.readFileSync(new URL(kerberos?'../security-20261110/kerberos-inputs.json':'vendor-debian-inputs.json',here)));
+if(kerberos)assert.equal(inputs.upstreamVersion,'1.22.3');
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
 const limits=['--hostname','utilibre-vendor-fixture','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--cpus','1','--memory','384m','--memory-swap','384m','--pids-limit','64','--log-driver','none'];
 for(const key of process.argv.slice(2)){
@@ -54,8 +56,9 @@ for(const key of process.argv.slice(2)){
    assert.equal(sha(fs.readFileSync(new URL('zlib-native.c',here))),inputs.fixture.sourceSha256);
    assert.equal(docker('run','--rm',...limits,'-v',root+'/vendor-debian/zlib-native:/native:ro','--entrypoint','/native',image),'ZLIB_NATIVE_PASSED checks=7');checks+=7;
   }
+  if(kerberos){assert.equal(sha(fs.readFileSync(root+'/vendor-debian/kerberos-native')),inputs.fixture.binarySha256);assert.equal(sha(fs.readFileSync(new URL('../security-20261110/kerberos-native.c',here))),inputs.fixture.sourceSha256);assert.equal(docker('run','--rm',...limits,'-v',root+'/vendor-debian/kerberos-native:/native:ro','--entrypoint','/native',image),'KERBEROS_NATIVE_PASSED checks=15');checks+=15;}
   assert(checks>0);nativeRows.push({imageId:image,passed:true,checks});
  }
- const proof={...s,date:new Date().toISOString(),imageId,passed:true,configurationUnchanged:true,unrelatedPackagesUnchanged:true,applicationSha256:fingerprint.split(' ')[0],pins,nativeRows,fixtureSha256:sha(fs.readFileSync(new URL('vendor-debian.mjs',here))),deployed:false,limitation:'Native package compatibility and vendor fix evidence. No hostile HTTP APT race or zlib exploit reproduction is claimed.'};
+ const proof={...s,date:new Date().toISOString(),imageId,passed:true,configurationUnchanged:true,unrelatedPackagesUnchanged:true,applicationSha256:fingerprint.split(' ')[0],pins,nativeRows,fixtureSha256:sha(fs.readFileSync(new URL('vendor-debian.mjs',here))),deployed:false,limitation:kerberos?'Native library upgrade from authenticated MIT release, with ordinary API checks. Full application and live-provider behavior are separate checks. No vulnerability reproduction.':'Native package compatibility and vendor fix evidence. No hostile HTTP APT race or zlib exploit reproduction is claimed.'};
  fs.writeFileSync(dir+'/build.json',JSON.stringify(proof,null,2)+'\n');console.log(key+': exact vendor packages and native checks passed');
 }

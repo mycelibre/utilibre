@@ -130,16 +130,19 @@ import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 export function reviewOptions(args=[]){
  const options={output:root+'vendor-fixed-review.json'},seen=new Set();
  for(const arg of args){
+  if(arg==='--ordinary-jwt'){assert(!options.ordinaryJwt);options.ordinaryJwt=true;continue;}
   const match=/^--(only-cve|only-kind|output|host-sandbox)=(.+)$/.exec(arg);
   assert(match,'Supported options: --only-cve=CVE-YYYY-NNNN --output=/absolute/path --host-sandbox=/absolute/bwrap');
   const key={'only-cve':'onlyCve','only-kind':'onlyKind',output:'output','host-sandbox':'hostSandbox'}[match[1]];
   assert(!seen.has(key),'Duplicate option');seen.add(key);
   if(key==='onlyCve')assert(/^CVE-\d{4}-\d{4,}$/.test(match[2]),'Invalid CVE');
-  else if(key==='onlyKind')assert(['mariadb'].includes(match[2]),'Only the reviewed MariaDB payload subset is selectable');
+  else if(key==='onlyKind')assert(['mariadb','jwt','aom','click'].includes(match[2]),'Only a reviewed payload subset is selectable');
   else assert(path.isAbsolute(match[2]),'Absolute output/sandbox path required');
   options[key]=match[2];
  }
  if(options.onlyCve)assert(specs.some(s=>s.ids.includes(options.onlyCve)),'CVE has no reviewed proof adapter');
+ if(options.ordinaryJwt)assert.equal(options.onlyKind,'jwt');
+ if(options.onlyKind==='jwt')assert(options.ordinaryJwt,'Explicit JWT subset requires ordinary compatibility mode');
  return options;
 }
 export function run(options=reviewOptions(process.argv.slice(2))){
@@ -169,11 +172,14 @@ export function run(options=reviewOptions(process.argv.slice(2))){
      }
      let native;
      if(spec.kind==='jwt'){
-      const fixture=fs.readFileSync(here+'/jwt-regressions.py','utf8');
+      const fixture=fs.readFileSync(options.ordinaryJwt?here+'/../security-20261110/jwt-ordinary.py':here+'/jwt-regressions.py','utf8');
       native=runNativeJwt(spec.artifact,fixture,options.hostSandbox);
+      if(options.ordinaryJwt){assert(native.passed&&native.version==='2.15.1'&&native.validAlgorithmRoundTrips===3&&native.network==='none'&&native.bypassReproduction===false);}
+      else{
       assert.equal(native.passed,true);assert.equal(native.redirectTargetRequests,0);assert.equal(native.externalRequests,0);
       assert.equal(native.pemHmacConfusionDenied,true);assert.equal(native.validAlgorithmRoundTrips,3);
       assert.equal(native.pemVariantsRejected,8);
+      }
      }
      if(spec.package==='libmariadb3'){
       const library=temp+'/usr/lib/x86_64-linux-gnu/libmariadb.so.3';
@@ -183,13 +189,14 @@ export function run(options=reviewOptions(process.argv.slice(2))){
      proof={artifact:spec.artifact,package:spec.package,version:spec.version,debSha:spec.debSha,manifestSha256:sha(JSON.stringify(manifest)),manifest,observations,releaseReceipts,native};cache.set(key,proof);
     }finally{fs.rmSync(temp,{recursive:true,force:true});}
    }
-   decisions.push(validateDecision({key:item.key,status:'not-affected',reason:reasonFor(item,spec,proof),expiresAt:new Date(Date.now()+7*86400000).toISOString()}));
+   const reason=options.ordinaryJwt?`Exact authenticated PyJWT 2.15.1-1 fixes ${item.id}; every installed source file matches Debian archive SHA256 ${spec.debSha}, complete manifest ${proof.manifestSha256}. Original completed release and current image lineage verified. Three legitimate HS256/RS256/ES256 round trips passed in a credential-free, networkless sandbox. No key-confusion, redirect or bypass reproduction was run in this review. Raw base-distribution match remains; this covers only the exact package/artifact/CVE and expires in seven days. https://security-tracker.debian.org/tracker/${item.id} . Evidence: security-20261110/review-jwt-runtime.json.`:reasonFor(item,spec,proof);
+   decisions.push(validateDecision({key:item.key,status:'not-affected',reason,expiresAt:new Date(Date.now()+7*86400000).toISOString()}));
    proofs.push({key:item.key,id:item.id,...proof});
   }catch(error){skipped.push({key:item.key,id:item.id,artifact:item.artifact,package:item.package,error:error.message.slice(0,180)});}
  }
  const report={date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,onlyCve:options.onlyCve||null,onlyKind:options.onlyKind||null,
   inputs:{queueSha256:sha(fs.readFileSync(root+'security-queue.json')),scanSha256:sha(fs.readFileSync(root+'security.json')),
-   checkerSha256:sha(fs.readFileSync(fileURLToPath(import.meta.url))),fixtureSha256:sha(fs.readFileSync(here+'/jwt-regressions.py')),
+   checkerSha256:sha(fs.readFileSync(fileURLToPath(import.meta.url))),fixtureSha256:sha(fs.readFileSync(options.ordinaryJwt?here+'/../security-20261110/jwt-ordinary.py':here+'/jwt-regressions.py')),ordinaryJwt:!!options.ordinaryJwt,
    adapterSha256:sha(fs.readFileSync(here+'/isolated-jwt.mjs')),node:process.version},decisions,proofs,skipped};
  fs.writeFileSync(options.output,JSON.stringify(report,null,2)+'\n',{mode:0o600});
  console.log(JSON.stringify({prepared:decisions.length,skipped:skipped.length,applied:false,report:options.output}));return report;

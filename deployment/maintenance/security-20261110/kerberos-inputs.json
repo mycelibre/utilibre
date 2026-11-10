@@ -1,0 +1,608 @@
+{
+  "schemaVersion": 1,
+  "upstreamVersion": "1.22.3",
+  "advisories": [
+    "CVE-2026-112321",
+    "CVE-2026-112322",
+    "CVE-2026-112323",
+    "CVE-2026-119079"
+  ],
+  "source": {
+    "url": "https://kerberos.org/dist/krb5/1.22/krb5-1.22.3.tar.gz",
+    "sha256": "fe90af8441ad9fa9b064b8e53077cefb782a96f8a68276b031dc54af1789ff0b",
+    "signingKey": "C4493CB739F4A89F9852CBC20CBA08575F8372DF"
+  },
+  "fixture": {
+    "sourceSha256": "1251fcc0cfcbcdcaa03b7d2193f900c99518631717ddf7723b088bc0e3b4ab16",
+    "binarySha256": "3a7575fe5d120c7ac5ba1a61d1768841d5e317369da9aa01028e0870daa1ab06"
+  },
+  "packages": {
+    "bookworm-libgssapi-krb5-2": {
+      "name": "libgssapi-krb5-2",
+      "file": "libgssapi-krb5-2_1.22.3-0+utilibre1~deb12u1_amd64.deb",
+      "version": "1.22.3-0+utilibre1~deb12u1",
+      "sha256": "2a307a1ab7b15f41da9b46d5964a50256fab254e83061df4d70d8ac3b225d89a"
+    },
+    "bookworm-libk5crypto3": {
+      "name": "libk5crypto3",
+      "file": "libk5crypto3_1.22.3-0+utilibre1~deb12u1_amd64.deb",
+      "version": "1.22.3-0+utilibre1~deb12u1",
+      "sha256": "433ddba7fdcef47ff20cfe2d032ae58685ab5a75fb9d337e275079af1169d17c"
+    },
+    "bookworm-libkrb5support0": {
+      "name": "libkrb5support0",
+      "file": "libkrb5support0_1.22.3-0+utilibre1~deb12u1_amd64.deb",
+      "version": "1.22.3-0+utilibre1~deb12u1",
+      "sha256": "bd0f641e5c8c668f5bb5f2873397ba1cb8431e1381d2c9e0cba1d9b0727027d3"
+    },
+    "bookworm-libkrb5-3": {
+      "name": "libkrb5-3",
+      "file": "libkrb5-3_1.22.3-0+utilibre1~deb12u1_amd64.deb",
+      "version": "1.22.3-0+utilibre1~deb12u1",
+      "sha256": "959e3669a2eb3bb2066249853cd735f013362a786bb6d9c63a24fd93a74f9c82"
+    },
+    "bookworm-libkadm5clnt-mit12": {
+      "name": "libkadm5clnt-mit12",
+      "file": "libkadm5clnt-mit12_1.22.3-0+utilibre1~deb12u1_amd64.deb",
+      "version": "1.22.3-0+utilibre1~deb12u1",
+      "sha256": "19a7addf1495684a86c246f62722efebee0e03c0de8d17c59df52b0d087bca2c"
+    },
+    "trixie-libk5crypto3": {
+      "name": "libk5crypto3",
+      "file": "libk5crypto3_1.22.3-0+utilibre1~deb13u1_amd64.deb",
+      "version": "1.22.3-0+utilibre1~deb13u1",
+      "sha256": "ee0b84f93fe80d3a72dfaba219807f712ba4321aae4920263b18d3c8dab31486"
+    },
+    "trixie-libkadm5clnt-mit12": {
+      "name": "libkadm5clnt-mit12",
+      "file": "libkadm5clnt-mit12_1.22.3-0+utilibre1~deb13u1_amd64.deb",
+      "version": "1.22.3-0+utilibre1~deb13u1",
+      "sha256": "a78ff900a19bf5cb3a9a436a37e72ee9f030fe386c7090799f7b85079dd70f1c"
+    },
+    "trixie-libgssapi-krb5-2": {
+      "name": "libgssapi-krb5-2",
+      "file": "libgssapi-krb5-2_1.22.3-0+utilibre1~deb13u1_amd64.deb",
+      "version": "1.22.3-0+utilibre1~deb13u1",
+      "sha256": "4e3e084a2f1f0e1a066584f94665c515b8a7ad5dc465ed6d7181c13586f34562"
+    },
+    "trixie-libgssrpc4t64": {
+      "name": "libgssrpc4t64",
+      "file": "libgssrpc4t64_1.22.3-0+utilibre1~deb13u1_amd64.deb",
+      "version": "1.22.3-0+utilibre1~deb13u1",
+      "sha256": "95c13947d3165bc3f561bf9f4aa8d2d1a305ea884a50642c4f3882bf0e5bb459"
+    },
+    "trixie-libkrb5support0": {
+      "name": "libkrb5support0",
+      "file": "libkrb5support0_1.22.3-0+utilibre1~deb13u1_amd64.deb",
+      "version": "1.22.3-0+utilibre1~deb13u1",
+      "sha256": "a5d32945d127f8362a22fb879557364e880dec0e507c203aded5158e5a7193f5"
+    },
+    "trixie-libkrb5-3": {
+      "name": "libkrb5-3",
+      "file": "libkrb5-3_1.22.3-0+utilibre1~deb13u1_amd64.deb",
+      "version": "1.22.3-0+utilibre1~deb13u1",
+      "sha256": "b7bd449dad966768c7f4f461bd91d68f28617002cb73a7105b34e9baf5b01529"
+    }
+  },
+  "rows": [
+    {
+      "key": "krb5-linkding-linkding",
+      "base": "sha256:0f5a7f1726fcbcbbce2c77d7e7f363fa884b317752cbccbfadbc7c56776472b1",
+      "candidate": "utilibre-krb5-linkding-linkding:1.22.3-20261110",
+      "containers": [
+        "utilibre-linkding-linkding-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://bookmarks.utilibre.org/",
+      "unchangedDataPackages": {
+        "krb5-locales": "1.21.3-5+deb13u1"
+      }
+    },
+    {
+      "key": "krb5-services-freshrss",
+      "base": "sha256:0fa6b5fd2d43f15d9aba4fef8162e615d0028cc17a5c1c3bddabd913c2d1192a",
+      "candidate": "utilibre-krb5-services-freshrss:1.22.3-20261110",
+      "containers": [
+        "utilibre-services-freshrss-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://rss.utilibre.org/",
+      "mirrorFiles": [
+        "/home/ubuntu/freetools/deployment/utilibre/compose.yaml"
+      ]
+    },
+    {
+      "key": "krb5-community-rallly",
+      "base": "sha256:10199c0f1580fd9633c3a61a6b1147567c4943b49907d1186fef0fd1f317ce77",
+      "candidate": "utilibre-krb5-community-rallly:1.22.3-20261110",
+      "containers": [
+        "utilibre-community-rallly-1"
+      ],
+      "suite": "bookworm",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://poll.utilibre.org/"
+    },
+    {
+      "key": "krb5-priviblur-priviblur",
+      "base": "sha256:1939874c2a2a386fb5a1fcf59b046bb878937a98c6a15c834fd7708b206ea2b0",
+      "candidate": "utilibre-krb5-priviblur-priviblur:1.22.3-20261110",
+      "containers": [
+        "utilibre-priviblur-priviblur-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://tumblr.utilibre.org/"
+    },
+    {
+      "key": "krb5-services-rsshub",
+      "base": "sha256:252da187ca4069649e06200cf3836eb1bed0066c27eb95129606f8f09ba9dd0b",
+      "candidate": "utilibre-krb5-services-rsshub:1.22.3-20261110",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": null,
+      "mirrorFiles": [
+        "/home/ubuntu/freetools/deployment/utilibre/compose.yaml"
+      ]
+    },
+    {
+      "key": "krb5-expanded-penpot-backend",
+      "base": "sha256:3af97666e4831def95e49b8391bad29de7fdc7fa8a839b67bb00b20d31bb4510",
+      "candidate": "utilibre-krb5-expanded-penpot-backend:1.22.3-20261110",
+      "containers": [
+        "utilibre-expanded-penpot-backend-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://design.utilibre.org/"
+    },
+    {
+      "key": "krb5-expanded-breezewiki",
+      "base": "sha256:4cbaf0c5f105dfe488bd1d02e3a670365fd29a8bcab26331ae166b02430059ad",
+      "candidate": "utilibre-krb5-expanded-breezewiki:1.22.3-20261110",
+      "containers": [
+        "utilibre-expanded-breezewiki-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://wiki.utilibre.org/"
+    },
+    {
+      "key": "krb5-community-uptime-kuma",
+      "base": "sha256:4d9a94de25dc18eef27718bf488fa2f578d8fcbf707af6c6fed659bb20e3df68",
+      "candidate": "utilibre-krb5-community-uptime-kuma:1.22.3-20261110",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "suite": "bookworm",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://status.utilibre.org/"
+    },
+    {
+      "key": "krb5-gathio-postgres",
+      "base": "sha256:7eb421ce1870b20ccb8db10213814eedb936d9faaaa4ba7ac110d8a7b8ecdd5a",
+      "candidate": "utilibre-krb5-gathio-postgres:1.22.3-20261110",
+      "containers": [
+        "utilibre-gathio-postgres-1"
+      ],
+      "suite": "bookworm",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://events.utilibre.org/"
+    },
+    {
+      "key": "krb5-community-rssbridge",
+      "base": "sha256:7f51c953af89f2bbac97a98f0a5c2dbc0c1ef252c7968390c0cf053cabbc0d70",
+      "candidate": "utilibre-krb5-community-rssbridge:1.22.3-20261110",
+      "containers": [
+        "utilibre-community-rssbridge-1"
+      ],
+      "suite": "bookworm",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.20.1-2+deb12u5",
+          "package": "bookworm-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://bridge.utilibre.org/"
+    },
+    {
+      "key": "krb5-pack-forms-app",
+      "base": "sha256:95ca959958c0ee8547e56151204343a4b3736647e9ccb9e04ecd66a251d3981e",
+      "candidate": "utilibre-krb5-pack-forms-app:1.22.3-20261110",
+      "containers": [
+        "utilibre-pack-forms-app-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://forms.utilibre.org/"
+    },
+    {
+      "key": "krb5-identity-server",
+      "base": "sha256:ae10237a2646601640e15fc73e970e8bd48556487a9dd10b19ac4766a8e67b83",
+      "candidate": "utilibre-krb5-identity-server:1.22.3-20261110",
+      "containers": [
+        "utilibre-identity-server-1",
+        "utilibre-identity-worker-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libgssapi-krb5-2"
+        },
+        "libgssrpc4t64": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libgssrpc4t64"
+        },
+        "libk5crypto3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libk5crypto3"
+        },
+        "libkadm5clnt-mit12": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkadm5clnt-mit12"
+        },
+        "libkrb5-3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://auth.utilibre.org/"
+    },
+    {
+      "key": "krb5-records-grist",
+      "base": "sha256:c47570b10d5744dbaac31d286c6270d290b4257f4d3317c4acd8d0cb473412e7",
+      "candidate": "utilibre-krb5-records-grist:1.22.3-20261110",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://grist.utilibre.org/"
+    },
+    {
+      "key": "krb5-expanded-penpot-exporter",
+      "base": "sha256:ce212e9343d9bb10c61ed40543bae62875f1327b1401308b4495d8544b24897c",
+      "candidate": "utilibre-krb5-expanded-penpot-exporter:1.22.3-20261110",
+      "containers": [
+        "utilibre-expanded-penpot-exporter-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.21.3-5+dhi2",
+          "package": "trixie-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.21.3-5+dhi2",
+          "package": "trixie-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.21.3-5+dhi2",
+          "package": "trixie-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.21.3-5+dhi2",
+          "package": "trixie-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://design.utilibre.org/"
+    },
+    {
+      "key": "krb5-galene-turn-turn",
+      "base": "sha256:ce50e8f5c03d821dc6c2c15ffa58a08bdc2c57dc0c8766b7ca22c91e30398ab0",
+      "candidate": "utilibre-krb5-galene-turn-turn:1.22.3-20261110",
+      "containers": [
+        "utilibre-galene-turn-turn-1",
+        "utilibre-turn-option-turn-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": null,
+      "releaseGroups": [
+        {
+          "key": "galene-turn",
+          "containers": [
+            "utilibre-galene-turn-turn-1"
+          ],
+          "publicHome": null
+        },
+        {
+          "key": "turn-option",
+          "containers": [
+            "utilibre-turn-option-turn-1"
+          ],
+          "publicHome": null
+        }
+      ]
+    },
+    {
+      "key": "krb5-kitchenowl-app",
+      "base": "sha256:ef957feb4c5d99913770de3b9440584ed17e13e1afda202ab0eea9c18dd9b842",
+      "candidate": "utilibre-krb5-kitchenowl-app:1.22.3-20261110",
+      "containers": [
+        "utilibre-kitchenowl-app-1"
+      ],
+      "suite": "trixie",
+      "packages": {
+        "libgssapi-krb5-2": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libgssapi-krb5-2"
+        },
+        "libk5crypto3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libk5crypto3"
+        },
+        "libkrb5-3": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5-3"
+        },
+        "libkrb5support0": {
+          "installed": "1.21.3-5+deb13u1",
+          "package": "trixie-libkrb5support0"
+        }
+      },
+      "approval": "approved",
+      "publicHome": "https://kitchen.utilibre.org/",
+      "driverRecipe": "kerberos-driver-inputs.json"
+    }
+  ],
+  "buildEvidence": {
+    "bookworm": {
+      "krb5_1.22.3-0+utilibre1~deb12u1.dsc": "9bdc1350b238ad80cb53d52dc6e97eb65f559a29356f6e35af5b9e016dacf900",
+      "build-packages.lock": "8a06980e538422b3c3e4fc4c0ca99f14dcfbfa110680a07d49a868ddb2a0e222",
+      "krb5_1.22.3-0+utilibre1~deb12u1_amd64.buildinfo": "e69947844582bbe9a50139813e0466875a60954e84bfc77b1366de6fcc22dd39",
+      "realm.json": "cb57297ab1924397bc4b30203598d32a59af805e8d334b2cfa65cefca06fced5"
+    },
+    "trixie": {
+      "krb5_1.22.3-0+utilibre1~deb13u1_amd64.buildinfo": "9643ac34fa54033a701fe4e607c1725048eb5f848152608831851a10d86e21cd",
+      "build-packages.lock": "bd32732780346f57fbfb520b206abc7df85f7845e18bf4e0fa8ace886e8e5c22",
+      "realm.json": "cb57297ab1924397bc4b30203598d32a59af805e8d334b2cfa65cefca06fced5",
+      "krb5_1.22.3-0+utilibre1~deb13u1.dsc": "71539f0ba9e606a0c5c75ebb48728caa62af5741e1f3cca1293556d105ab9c75"
+    }
+  },
+  "compilerImages": {
+    "utilibre-krb5-build-bookworm-20261110": "sha256:dffee2a31557ade04fbc579f44d466fb6d14419a4bc3a3440e64b3253ca5482b",
+    "utilibre-krb5-build-trixie-20261110": "sha256:0aa7f81d9268988debf996645427f83e9e72dbc5f1030fa5ec080510edab9994",
+    "utilibre-kitchen-psycopg-20261110": "sha256:404b83c337c634b8ad5b54236be2c9a15e7d28f27534f506400fa755acb91431"
+  }
+}

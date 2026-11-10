@@ -143,4 +143,6 @@ export const additionalOverlayReceipts = [
   'security-20261109/xnet-caddy/release.json',
   'security-20261109/oauth/release.json',
  'security-20261109/symfony/release.json',
+ 'security-20261110/symfony/release.json',
+ 'security-20261110/vendor-debian/release.json',
 ];

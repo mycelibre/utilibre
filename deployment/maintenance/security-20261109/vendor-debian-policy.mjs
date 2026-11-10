@@ -19,16 +19,26 @@ export function proveDhiPayload(inputs,s,b,p){
  }
  return true;
 }
-export function proveVendorDebian(inputs,s,b,c,scan,acquired,root){
+export function proveVendorDebian(inputs,s,b,c,scan,acquired,root,{recordedRevision=null}={}){
  assert.equal(s.approval,'approved');
  assert.equal(b.base,s.base);assert.equal(b.candidate,s.candidate);
  assert(b.passed&&b.configurationUnchanged&&b.unrelatedPackagesUnchanged);
  const distroless=(s.evidenceKey||s.key)==='community-yopass';
  if(distroless){assert.equal(s.base,'sha256:b651453a70b02a6018788f6d71ccb6eb7fb4911b640346ab539ba0eff1c93d1b');assert.deepEqual(Object.keys(s.packages),['zlib1g']);}
- assert.equal(b.fixtureSha256,file(distroless?'vendor-yopass.py':'vendor-debian.mjs'));
+ // Read-only historical review may verify the exact recorded compiler adapter.
+ // Current release callers omit this option and still require current code.
+ if(recordedRevision){
+  assert.equal(recordedRevision,'f5c2e09f812e920a3b1c95e8c6673227abf1ca6d');
+  assert(['apt-penpot-frontend','apt-penpot-exporter'].includes(s.key));
+  const original=cp.execFileSync('git',['show',recordedRevision+':deployment/maintenance/security-20261109/vendor-debian.mjs'],{cwd:new URL('../../../',import.meta.url),timeout:10000,maxBuffer:65536});
+  assert.equal(b.fixtureSha256,sha(original));
+ }else assert.equal(b.fixtureSha256,file(distroless?'vendor-yopass.py':'vendor-debian.mjs'));
  if(s.abiFixtureRevision){
   assert(!distroless);assert.equal(s.abiFixtureRevision,'21c74566a0fb3adc8148067b66add60d056dc891');
   const original=cp.execFileSync('git',['show',s.abiFixtureRevision+':deployment/maintenance/security-20261109/check-vendor-abi.py'],{cwd:new URL('../../../',import.meta.url),timeout:10000,maxBuffer:65536});
+  assert.equal(c.fixtureSha256,sha(original));
+ }else if(recordedRevision){
+  const original=cp.execFileSync('git',['show',recordedRevision+':deployment/maintenance/security-20261109/check-vendor-abi.py'],{cwd:new URL('../../../',import.meta.url),timeout:10000,maxBuffer:65536});
   assert.equal(c.fixtureSha256,sha(original));
  }else assert.equal(c.fixtureSha256,file(distroless?'vendor-yopass.py':'check-vendor-abi.py'));
  if(s.acquisition){
