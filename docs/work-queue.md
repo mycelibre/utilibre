@@ -1,12 +1,14 @@
-## Current continuation — 10 November 2026, 03:19 UTC
+# Work queue
 
 OpenGist and ntfy networking repairs are deployed and verified. The completed
-03:18 scan covers 107 source inputs, 109 runtime images and 175 containers.
-The queue now has **0 pending critical / 129 pending high records**. Raw
-findings remain; exact reviews expire after seven days. Donetick, Vikunja and
-FerretDB are the three remaining x/net runtime targets; 22 historical build
-inputs and other repairs also remain. This is not full remediation.
-[Current evidence and limitations](records/security-maintenance-2026-11-09.md).
+10 November 03:18 UTC scan covers 109 images, 175 containers and 107 source inputs.
+After exact retained native/component reviews, **0 critical / 109 high records**
+remain pending. Raw findings and separate unresolved limitations are retained.
+Donetick, Vikunja and FerretDB candidates are being prepared; none of these
+three is deployed by this checkpoint. Donetick's first temporary workspace
+filled; its failed evidence is preserved and the isolated build is retrying.
+Current evidence: `deployment/maintenance/security-20261109/status.json` and
+`docs/records/security-maintenance-2026-11-09.md`. Older entries are historical.
 
 ## Latest checkpoint — 10 November 2026
 

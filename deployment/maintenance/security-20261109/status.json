@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T03:20:03.313245+00:00",
+  "recordedAt": "2026-11-10T03:39:15.046282+00:00",
   "scanCompletedAt": "2026-11-10T03:18:43.767Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
@@ -8,9 +8,9 @@
   "sourceInputs": 107,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 129,
+  "pendingHigh": 109,
   "rawFindingsRetained": true,
-  "assessmentNote": "Completed same-database scan includes deployed OpenGist and ntfy networking repairs and exact retained JOSE source review. Raw findings remain. Reviews expire; this is not complete remediation or security clearance.",
+  "assessmentNote": "Same completed scan with exact retained GnuPG component, Wget, sudo, HDF5, CFITSIO and host Expat reviews. Raw findings remain. Reviews expire; no complete remediation or security clearance.",
   "musl": {
     "imagesReleased": 62,
     "groupsPassed": 112,
@@ -46,7 +46,7 @@
       "penpot"
     ]
   },
-  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-opengist-ntfy",
+  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-retained-native-reviews",
   "degoog": {
     "status": "deployed-public-search-passed",
     "image": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
@@ -81,11 +81,11 @@
     "rawTargetAttributionRetained": true
   },
   "pendingHighByScope": {
-    "runtime-image": 88,
+    "runtime-image": 71,
     "tracked-build-input": 22,
     "mounted-runtime-code": 1,
     "upstream-release-source-lock": 2,
-    "host-os": 16
+    "host-os": 13
   },
   "bookwormZlib": {
     "status": "deployed",
@@ -182,6 +182,30 @@
     "postgis": {
       "high": 1,
       "status": "native-backport-and-complete-payload-revalidated"
+    },
+    "gnupgComponent": {
+      "high": 13,
+      "status": "exact-current-payload-and-retained-proof-revalidated"
+    },
+    "wget": {
+      "high": 2,
+      "status": "exact-current-payload-and-retained-proof-revalidated"
+    },
+    "sudo": {
+      "high": 1,
+      "status": "exact-current-payload-and-retained-proof-revalidated"
+    },
+    "hdf5": {
+      "high": 2,
+      "status": "exact-current-payload-and-retained-proof-revalidated"
+    },
+    "cfitsio": {
+      "high": 1,
+      "status": "exact-current-payload-and-retained-proof-revalidated"
+    },
+    "hostExpat": {
+      "high": 1,
+      "status": "exact-current-payload-and-retained-proof-revalidated"
     }
   }
 }

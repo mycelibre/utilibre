@@ -786,3 +786,24 @@ and immutable images are recorded in `xnet-inputs.json` and
 `xnet-release-inputs.json`. Rollback uses each group's preceding image in
 `xnet/release.json` through the existing scoped Compose procedure. There is no
 database-format change. A rollback does not restore ntfy's temporary RAM cache.
+
+## Retained native reviews — 10 November, 03:47 UTC
+
+On the completed 03:18 UTC scan, 20 further HIGH package/target records
+received exact, seven-day reviews. Thirteen GnuPG records concern the absent
+`tpm2daemon` component: eleven complete installed package payloads match their
+authenticated archives, and executable/library paths contain no such daemon.
+Wget (two), sudo (one), HDF5 (two) and CFITSIO (one) still match the previously
+tested repairs and completed release chains. Their raw findings remain.
+The separate CFITSIO variable-length string limitation remains unresolved.
+
+The host Expat review now supports the same explicit amplification advisory
+mode as the existing container reviewer. It checks the signed 2.10.0 source
+release statement and retained upstream test log, the complete host package,
+and observed resident-library mappings. All matched. No new exploit, service
+restart or package installation was performed for these reviews.
+
+The resulting queue is **0 pending CRITICAL / 109 pending HIGH**. This is a
+review checkpoint, not completion or a fresh advisory-database assessment.
+Evidence: `security-20261109/after-retained-native-reviews/` and the per-component
+`*-revalidation/` directories in the private maintenance store.
