@@ -1,28 +1,30 @@
 # Work queue
 
-Current security checkpoint: **10 November 2026**, following the 13:34 UTC
+Current security checkpoint: **10 November 2026**, following the 14:53 UTC
 complete fleet scan and exact deployed-payload revalidation. The pending queue
-is **0 critical / 31 high records**, down from 319. Signed Kerberos 1.22.3 and
-compatible Symfony HttpClient fixes are deployed across 18 images / 21 container
-roles, plus four unloaded host libraries. The two original header-package
-records were reviewed against affected-component evidence. Raw matches remain.
+is **0 critical / 30 high records**, down from 319. Kerberos 1.22.3 and compatible
+Symfony HttpClient fixes are deployed across 18 images / 21 container roles,
+plus four unloaded host libraries. The separately approved Kuma follow-up
+removed unused Apprise and Python-Markdown; native notifications, monitors,
+accounts and status pages remain. The old image and protected SQLite snapshot
+are retained for rollback. No real notification was sent during the tests.
 
-The remaining 31 are **30 ACL records requiring compatible caller migration**
-and **one Kuma Python-Markdown record without a verified compatible repair**.
+The remaining 30 are **ACL records requiring compatible caller migration**.
 The earlier custom ACL repair/reproduction path was rejected by automatic
 approval review; it was not retried or suppressed. This is not full remediation.
+Raw scanner matches remain visible and exact reviewed decisions expire.
 
 All 175 production containers are running: 90 configured health checks healthy,
-85 without container health checks; no failed systemd units. Native, isolated
-application, database/relay and source-replay checks pass. No host service was
-restarted by this library batch. The previously approved GRUB reboot was already
-verified separately; the outstanding host-side guest-agent confirmation remains
-separate. Main root filesystem has about 42 GiB free; the temporary disk,
-backups and rollback artifacts were preserved.
+85 without container health checks; no failed systemd units. The Kuma candidate
+passed native setup/login, monitoring/status-page and SMTP/ntfy checks with
+fictional data in networkless containers. Only Kuma was recreated in this
+follow-up. No host service was restarted; disk, backups and earlier rollout
+artifacts were preserved. The separate guest-agent confirmation remains open.
 
 Current evidence: [release record](records/security-maintenance-2026-11-10.md),
-[exact status](../deployment/maintenance/security-20261110/status.json) and
-[repeatable recipes / rollback](../deployment/maintenance/security-20261110/README.md).
+[exact status](../deployment/maintenance/security-20261110/status.json),
+[repeatable recipes / rollback](../deployment/maintenance/security-20261110/README.md)
+and [Kuma removal](../deployment/maintenance/security-20261110/kuma-without-apprise/README.md).
 Held application upgrades and previously documented functional gaps remain open.
 Older entries below are historical; do not treat their counts as current.
 

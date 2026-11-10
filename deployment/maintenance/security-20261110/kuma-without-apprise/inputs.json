@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "kuma-remove-unused-apprise-20261110",
+  "approval": "Owner explicitly approved removing the unused Apprise integration after isolated verification",
+  "category": "runtime-minimization",
+  "advisory": "CVE-2019-25781",
+  "upstreamVersion": "2.5.6",
+  "base": "sha256:81721ff6d94bb8afb0f4fbb4368f8558799a9cb20d741500ceec952bee7b3098",
+  "baseTag": "utilibre-krb5-community-uptime-kuma:1.22.3-20261110",
+  "candidate": "utilibre-kuma:without-apprise-20261110",
+  "container": "utilibre-community-uptime-kuma-1",
+  "packages": {"apprise": "1.10.0-1", "python3-markdown": "3.4.1-2+deb12u1"},
+  "method": "Native dpkg purge of these two packages only; no autoremove or source patch",
+  "tests": ["complete image/config/package comparison", "fresh native setup/login", "native Apprise availability detection", "local monitor/status-page workflow", "native SMTP and ntfy to isolated loopback sinks", "same-database before/after image assessment"],
+  "network": "Build and functional tests use Docker network none; scanner uses local advisory data without refresh",
+  "deploymentScope": "Only uptime-kuma in utilibre-community; require zero configured Apprise channels, SQLite backup and unchanged configuration",
+  "rollback": "Retained exact base image; no schema or persistent-data change intended",
+  "upstreamStatus": "local-only supported optional-integration removal"
+}

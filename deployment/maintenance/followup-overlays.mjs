@@ -145,4 +145,5 @@ export const additionalOverlayReceipts = [
  'security-20261109/symfony/release.json',
  'security-20261110/symfony/release.json',
  'security-20261110/vendor-debian/release.json',
+ 'security-20261110/kuma-without-apprise/release.json',
 ];

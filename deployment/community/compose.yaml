@@ -111,7 +111,8 @@ services:
   uptime-kuma:
     <<: *runtime
     # Same app version; native SQLite/HTTP/TCP checks need no bundled Chromium/MariaDB.
-    image: utilibre-krb5-community-uptime-kuma:1.22.3-20261110
+    # Unused Apprise/Markdown removed; native SMTP/ntfy and saved monitors retained.
+    image: utilibre-kuma:without-apprise-20261110
     user: "1000:1000"
     environment:
       UPTIME_KUMA_DB_TYPE: sqlite

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "date": "2026-11-10T14:01:57.534413+00:00",
+  "date": "2026-11-10T14:59:51.563854+00:00",
   "status": "deployed-with-explicit-unresolved-findings",
   "initialPendingHigh": 319,
   "initialDisposition": {
@@ -11,17 +11,17 @@
   },
   "currentPending": {
     "critical": 0,
-    "high": 31
+    "high": 30
   },
   "rawFindings": {
-    "packageTargets": 24782,
+    "packageTargets": 24771,
     "critical": 66,
-    "high": 3356,
+    "high": 3354,
     "preserved": true
   },
   "assessment": {
     "scanner": "Trivy 0.75.0",
-    "completedAt": "2026-11-10T13:34:21.860Z",
+    "completedAt": "2026-11-10T14:53:24.955Z",
     "database": {
       "updatedAt": "2026-11-10T06:59:14.229854289Z",
       "downloadedAt": "2026-11-10T10:26:50.830687165Z",
@@ -101,8 +101,9 @@
         "group": "krb5-community-uptime-kuma",
         "container": "utilibre-community-uptime-kuma-1",
         "previousArtifact": "sha256:4d9a94de25dc18eef27718bf488fa2f578d8fcbf707af6c6fed659bb20e3df68",
-        "artifact": "sha256:81721ff6d94bb8afb0f4fbb4368f8558799a9cb20d741500ceec952bee7b3098",
-        "reference": "utilibre-krb5-community-uptime-kuma:1.22.3-20261110"
+        "artifact": "sha256:342a78264eb0b69ea78826a31bf1f4cd7dfac2b8fb8ac825bb17a35e72363b4c",
+        "reference": "utilibre-kuma:without-apprise-20261110",
+        "intermediateArtifact": "sha256:81721ff6d94bb8afb0f4fbb4368f8558799a9cb20d741500ceec952bee7b3098"
       },
       {
         "profile": "vendor-debian",
@@ -244,13 +245,6 @@
       "records": 30,
       "status": "open",
       "dependency": "Compatible caller/library migration. Earlier custom repair/reproduction rejected by automatic approval review; not retried or suppressed."
-    },
-    {
-      "id": "CVE-2019-25781",
-      "package": "python3-markdown",
-      "records": 1,
-      "status": "open",
-      "dependency": "No verified compatible repair for the existing Kuma/Apprise notification dependency."
     }
   ],
   "evidenceRoot": "/var/lib/utilibre-maintenance/security-20261110",
@@ -286,6 +280,42 @@
     {
       "path": "final-policy-tests.tap",
       "sha256": "61688da272f52d59768e2cfa20ccf0b41478e888288470688aab312d9b46b2e0"
+    },
+    {
+      "path": "kuma-without-apprise/release.json",
+      "sha256": "7878021ea678c27c835eda860bcd18a0ec55e6d24f0ab1254550f643faf08496"
+    },
+    {
+      "path": "kuma-without-apprise/build.json",
+      "sha256": "2da8a4ab78f941b1dc8ccc1af8c54dfce6bc05b4b3968e5733021cd3df989f8c"
+    },
+    {
+      "path": "kuma-without-apprise/application.json",
+      "sha256": "415491d9d2b6ec4b1c9cf0639f4070227b65783ea120bb2b746cfeaf816cb313"
+    },
+    {
+      "path": "kuma-without-apprise/scan-gate.json",
+      "sha256": "dfd3ba132cf43f635900f9ad3800fd01f5b721ee9a8ef015b81477315da95c64"
+    },
+    {
+      "path": "kuma-without-apprise/repeat.json",
+      "sha256": "347690eb31eeceb55394303721549a99655b282a05c93bd5d3ddd40bb03ff355"
+    },
+    {
+      "path": "kuma-without-apprise/negative.json",
+      "sha256": "a5905adc4b93533e7d54203a34596f40de9369fb04c1fd2c45e8223c05299f06"
+    },
+    {
+      "path": "kuma-without-apprise/review-decisions.json",
+      "sha256": "4c0dfe45ef81da67897ca0c8e6d0ab5c1d500af0e3b56d54b533518612b10446"
+    },
+    {
+      "path": "kuma-without-apprise/policy-tests.tap",
+      "sha256": "2ca8482ef917a1700f59d61f944202ae18f775ef86686da3c52e52b0314f0f8e"
+    },
+    {
+      "path": "kuma-without-apprise/release-tests.tap",
+      "sha256": "be49fe14e8e7df963994e3e2e7b5f9d57f3906c5ecfa3bc47f70536e0366257e"
     }
   ],
   "sourceOffers": [
@@ -299,5 +329,29 @@
     }
   ],
   "reviewLifetimeDays": 7,
-  "securityClearanceClaimed": false
+  "securityClearanceClaimed": false,
+  "kumaOptionalIntegrationRemoval": {
+    "status": "deployed-and-verified",
+    "completedAt": "2026-11-10T14:51:15.879Z",
+    "version": "2.5.6",
+    "artifact": "sha256:342a78264eb0b69ea78826a31bf1f4cd7dfac2b8fb8ac825bb17a35e72363b4c",
+    "previousArtifact": "sha256:81721ff6d94bb8afb0f4fbb4368f8558799a9cb20d741500ceec952bee7b3098",
+    "reference": "utilibre-kuma:without-apprise-20261110",
+    "removedPackages": [
+      "apprise 1.10.0-1",
+      "python3-markdown 3.4.1-2+deb12u1"
+    ],
+    "configuredAppriseChannels": 0,
+    "nativeNotificationProvidersPreserved": true,
+    "syntheticFunctionalChecksPerImage": 8,
+    "realNotificationsSent": 0,
+    "unchangedPackages": 150,
+    "unchangedFilesystemEntries": 48633,
+    "unexpectedChangedFiles": 0,
+    "savedConfigurationPreserved": true,
+    "unrelatedContainerIdsPreserved": true,
+    "repeatedApplyRecreated": false,
+    "upstreamVulnerabilityRepairClaimed": false,
+    "recipe": "kuma-without-apprise/inputs.json"
+  }
 }

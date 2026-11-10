@@ -1,4 +1,4 @@
-# 10 November 2026: Kerberos and Symfony maintenance
+# 10 November 2026: Kerberos, Symfony and Kuma maintenance
 
 Status and the exact deployed artifacts: [status.json](status.json).
 Operator outcome: [release record](../../../docs/records/security-maintenance-2026-11-10.md).
@@ -134,7 +134,9 @@ and arrange a maintenance window if needed before any host rollback.
 
 Thirty `libacl1` CVE-2026-54369 records need a compatible caller/library migration;
 the previously attempted custom repair/reproduction path was rejected by
-automatic approval review. It was not retried or suppressed. Kuma's one
-Python-Markdown CVE-2019-25781 record has no verified compatible replacement;
-removing its dependency would break the existing notification feature.
-These **31 high records remain open**. Expiring review is not a security clearance.
+automatic approval review. It was not retried or suppressed. Kuma's optional
+Apprise integration was subsequently confirmed unused and its removal explicitly
+approved. The [finite removal recipe](kuma-without-apprise/README.md) removes
+Apprise and Python-Markdown while retaining native notifications, monitoring and
+saved configuration. It does not repair Python-Markdown upstream. The separate
+ACL records remain open. Expiring review is not a security clearance.

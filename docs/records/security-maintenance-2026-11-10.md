@@ -1,6 +1,6 @@
 # Security maintenance — 10 November 2026
 
-**Deployed and verified. The pending queue fell from 319 to 31 high
+**Deployed and verified. The pending queue fell from 319 to 30 high
 package-target records; zero critical records await review.** This is not
 completion of all security work or a claim that raw scanner matches vanished.
 
@@ -10,7 +10,7 @@ completion of all security work or a claim that raw scanner matches vanished.
 | 2 Symfony HttpClient occurrences | Exact compatible upstream source installed |
 | 2 Linux header-package occurrences | Reviewed against affected-component evidence |
 | 30 ACL occurrences | Open: compatible caller/library migration required |
-| 1 Python-Markdown occurrence | Open: compatible verified repair unavailable |
+| 1 Python-Markdown occurrence | Removed with the explicitly approved unused Apprise integration |
 
 The rebuilds changed image identities, so existing artifact-bound reviews were
 revalidated against their exact current bytes and completed release ancestry.
@@ -44,16 +44,65 @@ hashes are in [status.json](../../deployment/maintenance/security-20261110/statu
 The [operator recipe](../../deployment/maintenance/security-20261110/README.md)
 describes build, verification, release boundaries and rollback.
 
+## Follow-up: optional Kuma integration removed
+
+At **14:51 UTC**, the owner-approved removal of unused Apprise was deployed to
+Uptime Kuma **2.5.6**. Read-only inspection found no configured notification
+channels. The native availability check now detects Apprise as absent; native
+SMTP/ntfy providers and the separate SMTP maintenance-email implementation remain.
+This intentionally removes an optional capability, not a Python-Markdown source
+repair. No application, account, monitor, access or retention policy was changed.
+
+The final image is
+`sha256:342a78264eb0b69ea78826a31bf1f4cd7dfac2b8fb8ac825bb17a35e72363b4c`,
+referenced by `utilibre-kuma:without-apprise-20261110`. Only Apprise 1.10.0-1 and
+Python-Markdown 3.4.1-2+deb12u1 were purged. **150 retained packages and 48,633
+filesystem entries** are unchanged, including previous repairs. The 573 changed
+paths are the removed packages' files/cache/directories and exact dpkg bookkeeping;
+image runtime configuration is unchanged. No automatic dependency removal.
+
+Both old and new images passed eight ordinary functional checks in fresh,
+networkless, bounded containers: setup, authenticated login, native Apprise
+detection, ntfy delivery, SMTP delivery, a successful HTTP monitor heartbeat,
+status-page creation and monitor deletion. All inputs were fictional; notification
+receivers were loopback test sinks. No real email/ntfy message or exploit test.
+The saved native SQLite configuration was backed up before deployment; accounts,
+monitors, notification settings, tags and status pages match afterward. Repeating
+the release verified the current state without recreation; unsupported baseline
+preparation rejected safely. Existing release/lineage unit suites pass **24 tests**.
+
+The **14:53:24 UTC** complete fleet scan covers 109 runtime images, 175 containers,
+113 source inputs and the host with no incomplete targets, using the same local
+Trivy 0.75.0 advisory snapshot. The removed packages and Markdown finding are
+absent, with no new high/critical candidate findings. Existing Kuma repairs were
+revalidated using 171 exact, expiring payload/component decisions; raw findings
+remain. Current fleet totals are **24,771 raw package-target records**, including
+**66 critical / 3,354 high** raw matches, distinct from **0 critical / 30 high
+pending**. All pending high records concern the separate ACL migration.
+
+After release, all 175 production containers remain running (90 healthy checks,
+85 without container health checks), with no failed systemd unit. Only Kuma's
+container was replaced; no host service was restarted. Its public status page
+returns HTTP 200. This check does not establish historical uptime or every
+provider's live external connectivity.
+
+[Removal recipe, commands and rollback](../../deployment/maintenance/security-20261110/kuma-without-apprise/README.md).
+Private evidence: `security-20261110/kuma-without-apprise/` under the existing
+maintenance evidence root. The old exact image and protected SQLite snapshot
+remain available. Future upstream upgrades must preserve the package-absence
+gate and native workflows or explicitly review a replacement integration.
+
 ## Verification and practical limits
 
-- Full scan completed **13:34:21 UTC**: 109 runtime images, 175 containers,
+- Initial batch scan completed **13:34:21 UTC**: 109 runtime images, 175 containers,
   113 source inputs and host assessment checked; no incomplete target.
   Trivy 0.75.0, advisory DB updated **06:59:14 UTC**, retained unchanged for
   the before/candidate comparisons. All candidate gates found no new high or
   critical findings. Archived results are not future security clearance.
-- Raw fleet totals remain **24,782 package-target records**, including
+- That initial scan recorded **24,782 package-target records**, including
   **66 critical / 3,356 high** version-based matches. Exact mitigation/component
-  reviews distinguish these from the **0 critical / 31 high pending** queue.
+  reviews distinguished these from its **0 critical / 31 high pending** queue.
+  The later Kuma follow-up and latest counts are recorded above.
 - 15 ordinary Kerberos API operations before/after each candidate; isolated
   KDC ticket acquisition, GSS and SPNEGO exchanges and ticket destruction pass
   for both Debian suites. Complete payload, ELF consumer, public ABI and SONAME
@@ -108,9 +157,10 @@ no user documents, account fixtures, runtime configuration or secret values.
 1. **30 libacl1 records, CVE-2026-54369:** a compatible caller/library migration
    remains necessary. Earlier automatic approval review rejected the custom
    repair/reproduction path. It was not retried or treated as resolved.
-2. **One Kuma Python-Markdown record, CVE-2019-25781:** no verified compatible
-   correction for the existing Apprise notification dependency. Removing it
-   would disable legitimate functionality. It remains open.
+
+The earlier Kuma Python-Markdown blocker is resolved by the separately approved
+removal above. The corresponding optional Apprise capability is unavailable;
+native notification providers remain. No upstream fixed-version claim is made.
 
 Rollback preserves data: restore only the recorded previous image/configuration
 for the affected service group and repeat its health/route/companion checks.
