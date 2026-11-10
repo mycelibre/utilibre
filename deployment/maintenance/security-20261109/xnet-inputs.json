@@ -148,6 +148,29 @@
       "nativeFixture": "../go-leaf-final/check-oauth.py",
       "nativeFixtureSha256": "d360a014729809d27d74b20f0313f39a236211ebdacb9597a2636b13725e13eb",
       "joseV3Sha256": "7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b"
+    },
+    {
+      "key": "wakapi",
+      "sourceRevision": "347f1f45ae2863d9499236471317a76630c5308f",
+      "base": "sha256:4eeff36fc2c71bda8851e095d7c1f31ee066265176946683a57f4107a3c9750a",
+      "binary": "/app/wakapi",
+      "oldBinarySha256": "325924c93b7acde12b2a7a9ef205e55576aa038743dd6bbacdb7fd5bce54bbb2",
+      "candidate": "utilibre-wakapi:xnet-security-20261109",
+      "sourceProofSha256": "ef25bb519eeae0e2720eb0763990bc6d4f6bcc5d5f337b760465888c6c2e63a5",
+      "locks": {
+        "go.mod": "2dfdcee7b887e7afa4a30415af3d3fb84bd4981549b739501599057b747a7b46",
+        "go.sum": "77c130de9aaa4c53235e2d59dfdcac6b933ff9f74ef1bcdd4a9c792e47a0ea01"
+      },
+      "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+      "compilerVersion": "1.27.3",
+      "buildRecipe": "deployment/maintenance/go-leaf-final/build-one.sh",
+      "buildRecipeSha256": "296d9acbbb46b6eb483813634311aa1ff318e516a346c082ac5ea158b3467085",
+      "moduleCache": "/var/lib/utilibre-maintenance/security-20261028/jose-leaf/wakapi/cache",
+      "nativeFixture": "../go-leaf-final/check-wakapi.py",
+      "nativeFixtureSha256": "d7694bd2e6693454f52e7f82825061fbb41b2a9f2cff21cc4d8adc8df17e15b9",
+      "assetsFixtureSha256": "4e695fd8de4dda067a86462061bfef02e5a46b11dcc01c252048f5fc1ff194f5",
+      "embedExtractorSha256": "74a874d77f257a0ec83ce8b324f3e1948cd31c64fe9012f6e8cc973c8502ac9c",
+      "joseV3Sha256": "7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b"
     }
   ]
 }

@@ -8,13 +8,13 @@ import {validateDecision} from '../triage.mjs';
 import cp from 'node:child_process';
 import {proveFollowup} from '../security-20261109/xnet-followup-policy.mjs';
 process.umask(0o077);
-const xnet=['--xnet-anubis','--xnet-oauth2-proxy'].includes(process.argv[2]);
+const xnet=['--xnet-anubis','--xnet-oauth2-proxy','--xnet-wakapi'].includes(process.argv[2]);
 assert.equal(process.argv.length,xnet?3:2);
 const base=new URL('../',import.meta.url).pathname;
 const privateRoot='/var/lib/utilibre-maintenance',root=privateRoot+'/security-20261103';
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 if(xnet){
- const key=process.argv[2].slice(7),oauth=key==='oauth2-proxy';
+ const key=process.argv[2].slice(7),vendored=['oauth2-proxy','wakapi'].includes(key);
  const scan=read(privateRoot+'/security.json'),q=read(privateRoot+'/security-queue.json');freshScan(q,scan);assert.equal(scan.status,'checked');
  const s=read(new URL('../security-20261109/xnet-release-inputs.json',import.meta.url)).rows.find(r=>r.key===key);
  const {b}=proveFollowup(s,{requireRecentCandidate:false});
@@ -23,21 +23,21 @@ if(xnet){
  assert.equal(sha(fixedPath),original.joseV3Sha256);
  const name='deployment/maintenance/security-20261109/xnet-locks/'+key+'/go.mod',lock=new URL('../security-20261109/xnet-locks/'+key+'/go.mod',import.meta.url);
  assert.equal(sha(lock),original.locks['go.mod']);verifyV3BuildInput(fs.readFileSync(lock,'utf8'),fs.readFileSync(fixedPath));
- if(oauth){
+ if(vendored){
   assert.equal(sha(d+'/jose-v3-jwk.go'),original.joseV3Sha256);
-  const prior=read(privateRoot+'/security-20261028/jose-leaf/oauth2-proxy/build.json');assert(prior.joseV3Backport&&prior.joseV3Evidence.passed&&prior.joseV3Evidence.rows[1].sourceSha256===original.joseV3Sha256);
+  const prior=read(privateRoot+'/security-20261028/jose-leaf/'+key+'/build.json');assert(prior.joseV3Backport&&prior.joseV3Evidence.passed&&prior.joseV3Evidence.rows[1].sourceSha256===original.joseV3Sha256);
  }else{
   const buildLock=fs.readFileSync(d+'/anubis-build-go.mod','utf8');assert(buildLock.includes('replace github.com/go-jose/go-jose/v3 => /work/jose-v3'));
   const tests=fs.readFileSync(d+'/anubis-jose-v3-tests.txt','utf8');assert(/^ok\s+github.com\/go-jose\/go-jose\/v3\s/m.test(tests)&&!/(^|\n)FAIL(?:\s|$)/.test(tests));
  }
  const release=read(privateRoot+'/security-20261109/xnet/release.json').groups.find(g=>g.key===key);assert(release.status==='passed');
- const container=oauth?'utilibre-records-grist-auth-1':'public-utility-anubis-1';assert.equal(cp.execFileSync('docker',['inspect','--format','{{.Image}}',container],{encoding:'utf8',timeout:10000}).trim(),s.imageId);
+ const container={'oauth2-proxy':'utilibre-records-grist-auth-1',wakapi:'utilibre-expanded-wakapi-1',anubis:'public-utility-anubis-1'}[key];assert.equal(cp.execFileSync('docker',['inspect','--format','{{.Image}}',container],{encoding:'utf8',timeout:10000}).trim(),s.imageId);
  const temp=fs.mkdtempSync(d+'/review-live-');
  try{cp.execFileSync('docker',['cp',container+':'+original.binary,temp+'/binary'],{timeout:30000,stdio:['ignore','pipe','pipe']});assert.equal(sha(temp+'/binary'),b.binarySha256);}finally{fs.rmSync(temp,{recursive:true});}
  const matches=q.items.filter(i=>i.scope==='tracked-build-input'&&i.targetName===name&&i.id==='CVE-2026-116587'&&i.package==='github.com/go-jose/go-jose/v3'&&i.installed==='v3.0.5');assert.equal(matches.length,1);
  assert.equal(matches[0].artifact,name+'@sha256:'+original.locks['go.mod']);
- if(oauth){const runtime=q.items.filter(i=>i.scope==='runtime-image'&&i.artifact===s.imageId&&i.id==='CVE-2026-116587'&&i.package==='github.com/go-jose/go-jose/v3'&&i.installed==='v3.0.5');assert.equal(runtime.length,1);matches.push(...runtime);}
- const reason='Exact '+key+' build retains the reviewed JOSE v3 backport with mandatory source hashes. '+(oauth?'The compiler uses the byte-verified patched vendor tree. Native isolated OIDC/PKCE, identity, CSRF and logout checks pass. Prior v3 regression evidence is retained; this is not a new exploit reproduction. ':'The isolated local module replacement, v3 suite and native application checks pass. ')+'Live binary matches the approved artifact. Raw v3.0.5 metadata remains. Evidence: security-20261109/xnet/'+key+', xnet-inputs.json and xnet-release-inputs.json. Limited to these exact keys; re-review changed builder, patch, lock or artifact. https://github.com/go-jose/go-jose/commit/a0111f82742fa92bceec9ede40845e73319e6230';
+ if(vendored){const runtime=q.items.filter(i=>i.scope==='runtime-image'&&i.artifact===s.imageId&&i.id==='CVE-2026-116587'&&i.package==='github.com/go-jose/go-jose/v3'&&i.installed==='v3.0.5');assert.equal(runtime.length,1);matches.push(...runtime);}
+ const reason='Exact '+key+' build retains the reviewed JOSE v3 backport with mandatory source hashes. '+(vendored?'The compiler uses the byte-verified patched vendor tree. The application-specific isolated native workflow and access-control checks pass. Prior v3 regression evidence is retained; this is not a new exploit reproduction. ':'The isolated local module replacement, v3 suite and native application checks pass. ')+'Live binary matches the approved artifact. Raw v3.0.5 metadata remains. Evidence: security-20261109/xnet/'+key+', xnet-inputs.json and xnet-release-inputs.json. Limited to these exact keys; re-review changed builder, patch, lock or artifact. https://github.com/go-jose/go-jose/commit/a0111f82742fa92bceec9ede40845e73319e6230';
  const decisions=matches.map(i=>validateDecision({key:i.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason}));
  fs.writeFileSync(d+'/v3-review.json',JSON.stringify({schemaVersion:1,date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions},null,2)+'\n');
  console.log(decisions.length+' exact '+key+' review proposals prepared; raw findings retained.');process.exit(0);

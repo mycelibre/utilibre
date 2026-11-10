@@ -673,3 +673,52 @@ files; the corrected archive adds only those files, preserves all previous
 source bytes, and retains the previous archive/receipt in
 `xnet/anubis-license-6wnw7qcy`. Its public bytes were also verified. No running
 Anubis changes or additional restart were required for the source correction.
+
+## Wakapi and retained-fix revalidation — 10 November
+
+Wakapi 2.18.1 now uses x/net 0.62.0, retaining its exact Go 1.27.3 toolchain,
+`jsonv2` build setting, prior JOSE v3 repair and JOSE v4.1.6. All 549 non-lock
+source files match the prior manifest, including existing privacy edits. Its
+previous compiled dependency locks were verified separately from the older
+acquisition source. The first download attempt failed because the read-only
+container lacked a writable Go checksum-state directory; the corrected bounded
+acquisition used temporary state and verified all modules. No production
+setting changed to resolve that preparation failure.
+
+The offline utility, helper and configuration tests passed. Both old and new
+images passed fresh temporary SQLite setup, account creation, login/logout,
+authenticated heartbeat submission, anonymous denial and the native healthcheck.
+These are fictional local-account workflows in networkless containers, not
+production OIDC or user-activity tests. All 82 embedded static, UI/mail-template
+and colour-data files remain byte-identical. The full-image comparison permits
+only `/app/wakapi` to change. The same frozen scanner data removes one high and
+one medium x/net record and adds no high or critical record. The unimported
+OpenPGP attribution remains visible under the newer module version.
+
+Scoped deployment passed artifact, configuration, health and public-home checks.
+Existing saved records and access/privacy settings are unchanged. Rollback is
+the prior exact image/configuration pin in `security-20261109/xnet/release.json`;
+there is no production schema migration. The full source archive is published
+and its public bytes verified. Replay uses the finite Wakapi adapter described
+in the maintenance README. All 38 selected follow-up/JOSE policy tests pass.
+
+Separately, the existing OpenLDAP reviewer revalidated four exact repaired
+library findings using retained authenticated source, patches, package/build
+and ABI evidence, release ancestry and current live library hashes. Penpot's
+existing DHI reviewer revalidated 124 old-metadata attributions: 17 high,
+75 medium and 32 low records. Every actual package file and symlink matched
+the retained authenticated fixed vendor archive, and current primary Debian
+tracker records established the relevant fixed versions. Those 124 records
+cover PCRE2 and OpenSSL packages, not APT or unrelated Penpot findings. No
+scanner metadata was edited, no finding was suppressed and no service restart
+was needed for these reviews. Decisions are exact and expire after seven days.
+Private evidence is in `security-20261109/openldap-revalidation` and
+`security-20261109/dhi-revalidation`. Raw findings remain available.
+
+The complete 02:35 UTC scan checks 109 images, 175 containers and 103 source
+inputs, with no unrechecked targets. After exact retained-fix reviews, the
+pending queue is **0 critical / 156 high package-target records**. Five x/net
+runtime targets and 22 historical build inputs remain open. New and unresolved
+medium, low and UNKNOWN records remain; this is not full remediation. Evidence:
+`security-20261109/after-wakapi` and `xnet/wakapi`. OpenGist is being prepared;
+it is not included in these completed releases.

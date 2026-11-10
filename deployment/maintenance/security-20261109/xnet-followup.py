@@ -17,7 +17,7 @@ common = importlib.util.module_from_spec(loader)
 loader.loader.exec_module(common)
 sha = lambda p: common.sha(Path(p).read_bytes())
 read = lambda p: json.loads(Path(p).read_text())
-assert len(sys.argv) == 3 and sys.argv[1] in ('safetwitch', 'galene', 'gothub', 'mezzo', 'anubis', 'oauth2-proxy')
+assert len(sys.argv) == 3 and sys.argv[1] in ('safetwitch', 'galene', 'gothub', 'mezzo', 'anubis', 'oauth2-proxy', 'wakapi')
 key, phase = sys.argv[1:]
 assert phase in ('stage', 'native', 'scan')
 manifest = read(HERE / 'xnet-inputs.json')
@@ -70,8 +70,10 @@ else:
     assert build['scopeCheckerSha256'] == sha(__file__)
     if phase == 'native':
         pins = read(HERE / 'zlib-inputs.json')['consumerFixtureHashes']
-        if key in ('mezzo', 'anubis', 'oauth2-proxy'):
+        if key in ('mezzo', 'anubis', 'oauth2-proxy', 'wakapi'):
             pins[spec['nativeFixture']] = spec['nativeFixtureSha256']
+        if key == 'wakapi':
+            pins['../go-leaf-final/check-wakapi-assets.py'] = spec['assetsFixtureSha256']
         adapters = []
         def adapt(relative, replacements):
             original = (HERE / relative).resolve()
@@ -86,7 +88,29 @@ else:
             adapters.append({'fixture': relative, 'fixtureSha256': sha(original),
                              'adapter': str(output), 'adapterSha256': sha(output)})
             return output
-        if key == 'oauth2-proxy':
+        if key == 'wakapi':
+            script = adapt(spec['nativeFixture'], [
+                ("IMAGE='utilibre-wakapi:jose-security-20261028'", "IMAGE=os.environ['UTILIBRE_TEST_IMAGE']"),
+                ("OUT=Path('/var/lib/utilibre-maintenance/security-20261028/jose-leaf/wakapi/output/wakapi-native.json')", "OUT=Path(os.environ['UTILIBRE_TEST_OUTPUT'])")])
+            for label, image in [('before', spec['base']), ('after', build['imageId'])]:
+                assert not common.run(['docker', 'ps', '-aq', '--filter', 'name=^/maintenance-wakapi-native$']).strip()
+                execute([sys.executable, str(script), '--jose'], directory / (label + '-native.log'),
+                        env={'PATH': os.environ['PATH'], 'UTILIBRE_TEST_OUTPUT': str(directory / (label + '-native.json')), 'UTILIBRE_TEST_IMAGE': image})
+                result = read(directory / (label + '-native.json'))
+                assert result['imageId'] == image
+                for field in ['passed', 'freshSqliteMigrations', 'nativeAccountLoginLogout',
+                              'authenticatedHeartbeatAndAnonymousDenial', 'nativeHealthcheck']:
+                    assert result[field], field
+            assets_script = adapt('../go-leaf-final/check-wakapi-assets.py', [
+                ('HERE = Path(__file__).resolve().parent', 'HERE = Path(' + repr(str((HERE / '../go-leaf-final').resolve())) + ')'),
+                ("ROOT = Path('/var/lib/utilibre-maintenance/security-20261028/jose-leaf/wakapi/output')", 'ROOT = Path(' + repr(str(directory)) + ')'),
+                ("current = next(s for s in json.loads((HERE/'../security-20261028/jose-leaf-inputs.json').read_text())['rows'] if s['key']=='wakapi')", 'current = ' + repr({'base': spec['base']}))])
+            assert sha(HERE / '../go-leaf-final/extract-embed.py') == spec['embedExtractorSha256']
+            execute([sys.executable, str(assets_script), '--jose'], directory / 'assets.log')
+            assets = read(directory / 'wakapi-assets.json')
+            assert assets['passed'] and assets['binarySha256'] == build['binarySha256']
+            assert assets['baseImageId'] == spec['base'] and assets['unchangedEmbeddedFiles'] == 82
+        elif key == 'oauth2-proxy':
             script = adapt(spec['nativeFixture'], [
                 ("ROOT = Path('/var/lib/utilibre-maintenance/security-20261028/jose-leaf/oauth2-proxy/output')", "ROOT = Path(os.environ['UTILIBRE_TEST_OUTPUT'])"),
                 ("IMAGE = 'utilibre-oauth2-proxy:jose-security-20261028'", "IMAGE = os.environ['UTILIBRE_TEST_IMAGE']")])

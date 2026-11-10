@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T02:24:39.098269+00:00",
-  "scanCompletedAt": "2026-11-10T02:23:06.243Z",
+  "recordedAt": "2026-11-10T02:35:51.506084+00:00",
+  "scanCompletedAt": "2026-11-10T02:35:05.831Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
   "runningContainers": 175,
-  "sourceInputs": 101,
+  "sourceInputs": 103,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 179,
+  "pendingHigh": 156,
   "rawFindingsRetained": true,
-  "assessmentNote": "Completed frozen-database fleet scan after OAuth2 Proxy. Exact source/runtime reviews preserve the required JOSE backport; raw findings remain and decisions expire. This is not complete remediation or security clearance.",
+  "assessmentNote": "Completed frozen-database fleet scan after Wakapi. Exact JOSE, OpenLDAP and fixed DHI payload reviews retain raw findings and expire. This is not complete remediation or security clearance.",
   "musl": {
     "imagesReleased": 62,
     "groupsPassed": 112,
@@ -46,7 +46,7 @@
       "penpot"
     ]
   },
-  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-oauth2-proxy",
+  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-wakapi",
   "degoog": {
     "status": "deployed-public-search-passed",
     "image": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
@@ -103,15 +103,17 @@
       "gothub",
       "mezzo",
       "anubis",
-      "oauth2-proxy"
+      "oauth2-proxy",
+      "wakapi"
     ],
     "dependency": "golang.org/x/net v0.62.0",
-    "compiler": "Go 1.26.10",
+    "compiler": "Go 1.26.10, and retained Go 1.27.3 for Wakapi",
     "newHighCritical": 0,
     "galene": "two independent Chromium sessions with synthetic media and screen sharing; same-host isolated network",
     "realDeviceOrExternalRelayTest": false,
     "anubis": "Two independent Chromium challenge sessions per old/new artifact, authenticated reload and native allow/deny in an isolated network; 71 embedded frontend files and native inline assets unchanged.",
-    "oauth2Proxy": "Native isolated OIDC/PKCE, signed identity, cookies, CSRF rejection, anonymous denial and logout; production identity provider not exercised."
+    "oauth2Proxy": "Native isolated OIDC/PKCE, signed identity, cookies, CSRF rejection, anonymous denial and logout; production identity provider not exercised.",
+    "wakapi": "Native isolated local accounts, authenticated heartbeat, anonymous denial, logout and native healthcheck; all 82 embedded assets unchanged. Production OIDC not exercised."
   },
   "headerReview": {
     "snapshot": "f28c090f440f4708e405f235942a83ba4deb7ca4",
@@ -119,7 +121,7 @@
     "unresolvedAdvisories": 4,
     "scope": "Exact linux-libc-dev header packages only; no running kernel clearance"
   },
-  "sourceInventoryNote": "101 source inputs checked after adding exact OAuth2 Proxy locks; no unrechecked targets. Remaining medium, low and unknown records are retained.",
+  "sourceInventoryNote": "103 source inputs checked after adding exact Wakapi locks; no unrechecked targets. Remaining medium, low and unknown records retained.",
   "embeddedCaddy": {
     "status": "deployed",
     "images": 3,
@@ -142,5 +144,18 @@
     "completedAt": "2026-11-10T02:20:35.959Z",
     "onlyBinaryChanged": true,
     "productionIdentityProviderTested": false
+  },
+  "retainedFixReviews": {
+    "openldap": {
+      "high": 4,
+      "status": "exact-live-backport-revalidated"
+    },
+    "dhi": {
+      "high": 17,
+      "medium": 75,
+      "low": 32,
+      "status": "actual-fixed-payload-verified-old-metadata-retained"
+    },
+    "expiryDays": 7
   }
 }

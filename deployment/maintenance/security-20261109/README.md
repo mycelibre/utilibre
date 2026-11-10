@@ -60,6 +60,26 @@ adding only those two files; previous archive and receipt remain in private
 `xnet/anubis-license-6wnw7qcy`. No running Anubis bytes changed. Both public
 source archives were downloaded and matched their current hashes.
 
+## Wakapi follow-up
+
+The same adapter now accepts the exact Wakapi 2.18.1 input with its retained
+Go 1.27.3 compiler and `jsonv2` build experiment. All 549 application files,
+including existing privacy edits, match the approved source manifest. The
+baseline locks come from the recorded compiled JOSE output rather than the
+older acquisition tree. The mandatory vendored JOSE v3 repair and JOSE v4.1.6
+remain; only the main executable changes in the complete image comparison.
+
+Use `xnet-build.mjs wakapi`, `xnet-followup.py wakapi stage|native|scan`, and
+`publish-xnet.mjs --wakapi`. The existing fixture tests two clean instances,
+one per old/new image: local account creation, login/logout, authenticated
+heartbeat and anonymous denial, temporary SQLite setup and native healthcheck.
+All 82 embedded assets/templates/colour files must remain byte-identical.
+This is a local-account test, not a production OIDC or user-telemetry test.
+The source offer includes the pinned compiler, flags, locks and JOSE licence.
+The separately authorized release selects only Wakapi; saved user data and
+privacy settings are unchanged. `review-go-v3.mjs --xnet-wakapi` prepares
+exact, expiring review records after a fresh scan and verified deployment.
+
 ## Embedded Caddy follow-up
 
 `xnet-caddy-inputs.json` captures Caddy 2.11.7 in Wishlist and the newsletter

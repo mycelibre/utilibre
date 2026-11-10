@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {validateFollowup,validateOAuthNative} from './xnet-followup-policy.mjs';
+import {validateFollowup,validateOAuthNative,validateWakapiNative} from './xnet-followup-policy.mjs';
 function data(){
  const s={key:'safetwitch',mode:'binary-followup',approval:'approved',base:'old',imageId:'new',candidate:'candidate',databaseSha256:'db',checkSha256:'check',rawEvidence:{before:'before',after:'after'}};
  const original={base:'old',binary:'/safetwitch',locks:{'go.mod':'mod','go.sum':'sum'}};
@@ -34,6 +34,16 @@ test('vendored version notation is limited to the reviewed OAuth build',()=>{
 test('OAuth requires complete login, identity, rejection, logout and isolation checks',()=>{
  const r={imageId:'image',passed:true,nativeDiscoveryAuthorizationCodePkceAndSignedIdToken:true,authenticatedCookieAndIdentityHeader:true,invalidCsrfRejected:true,anonymousDeniedAndLogoutCleared:true,onlyLoopbackIssuer:true,networkIsolated:true};assert(validateOAuthNative(r,'image'));assert.throws(()=>validateOAuthNative(r,'different'));
  for(const key of Object.keys(r).filter(k=>k!=='imageId'))assert.throws(()=>validateOAuthNative({...r,[key]:false},'image'));
+});
+test('Wakapi requires its exact retained compiler and two native adapters',()=>{
+ const d=data();d.s.key='wakapi';d.s.builderSha256='a'.repeat(64);d.b.compilerVersion='1.27.3';d.b.compiler='sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b';d.n.adapters.push({});assert(validate(d));
+ d.b.compilerVersion='1.26.10';assert.throws(()=>validate(d));d.b.compilerVersion='1.27.3';
+ d.b.compiler='different';assert.throws(()=>validate(d));d.b.compiler='sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b';
+ d.n.adapters.pop();assert.throws(()=>validate(d));
+});
+test('Wakapi requires useful account and authenticated heartbeat behavior',()=>{
+ const r={imageId:'image',passed:true,freshSqliteMigrations:true,nativeAccountLoginLogout:true,authenticatedHeartbeatAndAnonymousDenial:true,nativeHealthcheck:true};assert(validateWakapiNative(r,'image'));assert.throws(()=>validateWakapiNative(r,'different'));
+ for(const key of Object.keys(r).filter(k=>k!=='imageId'))assert.throws(()=>validateWakapiNative({...r,[key]:false},'image'));
 });
 for(const [label,mutate]of Object.entries({
  'unapproved':d=>d.s.approval='pending','unknown application':d=>d.s.key='unknown',

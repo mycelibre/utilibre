@@ -235,6 +235,42 @@
         "build-adapter.sh": "c277f3ec0256906911243ebbf86313e5410c154109830b193c87bd8cdc16043f",
         "before/oauth2-proxy-native.json": "7422cb3512d4ee8085a833ca091f9f678f4931881abd904601b083d89b4fcc13",
         "after/oauth2-proxy-native.json": "5e5a9d7a942a51511f36e8fba04de7c52d5e72579304e7f72a7a8653cea1ef9e"
+      },
+      "checkRevision": "91fc41f5cb6e87495a1c68299960fa86468c893a"
+    },
+    {
+      "key": "wakapi",
+      "mode": "binary-followup",
+      "approval": "approved",
+      "base": "sha256:4eeff36fc2c71bda8851e095d7c1f31ee066265176946683a57f4107a3c9750a",
+      "candidate": "utilibre-wakapi:xnet-security-20261109",
+      "imageId": "sha256:b3d3d5ebf2416f31617a1163873f0c392e7a8ca1dc2a3e46a78f0b2e3b1457dc",
+      "containers": [
+        "utilibre-expanded-wakapi-1"
+      ],
+      "publicHome": "https://wakapi.utilibre.org/",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "checkSha256": "ea1048faeb4b0f7b1e5736cb48a2fa2107dcc11a1e34d82fcc62c495ed955c55",
+      "builderSha256": "10351a6925c550ca0213814a8ed2a62923720f25ee775a62b653772e5d936a26",
+      "rawEvidence": {
+        "before": "1f2a69f32fd512f93d82bd1902b435195eed288c2caee13a876aed1a2563f318",
+        "after": "7450238ba4ef02fc499ec7f08bd863727f820206bca3242d80e640745432fae5"
+      },
+      "dependenciesSha256": "c74fa0438630896f048a4c34017dc071acdc673976f0ad7817f97397d7e08524",
+      "proofs": {
+        "compiled.json": "df5cc1afa5a278b695ef7af06c69a0b24543b5e310e0b840b39f3f01d572f6a7",
+        "build.json": "d5ef6fcaf7d26e5385056805713084b28c56d9137e584c547c7fae266797e5e5",
+        "native.json": "02ac3768844489b35fc3d28c32bbd84a893bec3d33f631b0786135146ff001ac",
+        "scan-gate.json": "4d286b3aef3712bf5d1f49d383a50b9915e8c500b7670376b0775bdce8ae6024",
+        "native-dependencies.txt": "c74fa0438630896f048a4c34017dc071acdc673976f0ad7817f97397d7e08524",
+        "wakapi-tests.txt": "d4e4346787e2cb1a5347ad0757a942811ccd55dd2aa7fefbdeeff92ff4d51cf6",
+        "wakapi-vendor-modules.txt": "f143a730cb9bec9bf09591c96f00b8f68d983fe6ec96a88c8ac1b3b98998ae68",
+        "jose-v3-jwk.go": "7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b",
+        "build-adapter.sh": "c277f3ec0256906911243ebbf86313e5410c154109830b193c87bd8cdc16043f",
+        "before-native.json": "4fd81dc186c4f90f3c09f14de7331f7a269575e29df0483de45f63d9ef7e2fd2",
+        "after-native.json": "aeb5b9aefcef15be8b45925a551f140fe31f3eb330935f0016ed515b54ca93d3",
+        "wakapi-assets.json": "97416abb2e054972764b90c4a38c759aef7423649a836699043777b024dccb82"
       }
     }
   ]

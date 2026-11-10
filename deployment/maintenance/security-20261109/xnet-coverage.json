@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "date": "2026-11-10T01:34:44.578564+00:00",
-  "scanDate": "2026-11-10T02:23:06.243Z",
+  "scanDate": "2026-11-10T02:35:05.831Z",
   "counts": {
     "runtime": 17,
     "trackedInputs": 22
@@ -574,10 +574,17 @@
       "image": "sha256:c88534c50376f7fb5f06fad7639b44c9bf0991e77301cd82cf8c72b69ede1c43",
       "status": "deployed-targeted-finding-removed",
       "completedAt": "2026-11-10T02:20:35.959Z"
+    },
+    {
+      "application": "wakapi",
+      "container": "utilibre-expanded-wakapi-1",
+      "image": "sha256:b3d3d5ebf2416f31617a1163873f0c392e7a8ca1dc2a3e46a78f0b2e3b1457dc",
+      "status": "deployed-targeted-finding-removed",
+      "completedAt": "2026-11-10T02:32:37.159Z"
     }
   ],
   "currentPending": {
-    "runtime": 6,
+    "runtime": 5,
     "trackedInputs": 22
   },
   "embeddedCaddyReleased": [
