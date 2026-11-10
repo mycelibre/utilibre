@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T11:43:24.651707+00:00",
+  "recordedAt": "2026-11-10T12:01:45.780145+00:00",
   "scanCompletedAt": "2026-11-10T10:28:49.230Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
@@ -8,7 +8,7 @@
   "sourceInputs": 113,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 324,
+  "pendingHigh": 319,
   "rawFindingsRetained": true,
   "assessmentNote": "Completed post-release scan, followed by exact current-image source/package/component revalidation. All raw findings remain; reviews expire after seven days. No complete remediation or security clearance.",
   "musl": {
@@ -82,7 +82,7 @@
   },
   "pendingHighByScope": {
     "runtime-image": 302,
-    "host-os": 22
+    "host-os": 17
   },
   "bookwormZlib": {
     "status": "deployed",
@@ -547,13 +547,13 @@
   },
   "vendorGrubRelease": {
     "startedAt": "2026-11-10T11:40:05.602408+00:00",
-    "status": "installed-verified-awaiting-reboot",
+    "status": "deployed-real-boot-verified",
     "coordinatorSha256": "edf78a6d9832d5ddc7d5bfb0906299025a1ea772c898061c1ec4a459fe7ed99f",
     "manifestSha256": "c62a60437e560b533e4c451147da4c0897870cc2478bf953d9dad5e232e69f04",
     "approvalSha256": "57aa1408af3d8a5253d1bbc161b7f947651c986c160ada86588c59f9d8988087",
-    "rebooted": false,
-    "realBootVerified": false,
-    "findingsClosed": 0,
+    "rebooted": true,
+    "realBootVerified": true,
+    "findingsClosed": 5,
     "packageChanges": [
       "grub-common",
       "grub-efi-amd64-bin",
@@ -572,6 +572,41 @@
     "completedAt": "2026-11-10T11:40:17.426998+00:00",
     "evidence": "security-20261109/remaining-high/vendor-release-20261110/",
     "containersUnchanged": 175,
-    "sameDatabaseInstalledScanPassed": true
+    "sameDatabaseInstalledScanPassed": true,
+    "rawMatchesRetained": true,
+    "reviewExpiryDays": 7,
+    "postReboot": {
+      "verifiedAt": "2026-11-10T11:59:01.692088+00:00",
+      "passed": true,
+      "rebootConfirmed": true,
+      "kernel": "6.12.116+deb13-cloud-amd64",
+      "kernelSha256": "feac4beed72fa2781a8f0d11f03956044c19c01a6f2a7d42c279862006b18262",
+      "grubVersion": "2.14-5",
+      "packageVersionsVerified": 8,
+      "signedEfiSha256": "5cc98e5c02097d781ad9fbce96d236704ad1011bf18f8aeb994aa4586b9b402d",
+      "moduleSha256": "418aee464692716bcff5045907f44dbe94d12a1c62c82baf7e8df38cabc1257f",
+      "shimUnchanged": true,
+      "bootConfigValid": true,
+      "packageDatabaseClean": true,
+      "failedSystemdUnits": 0,
+      "runningContainers": 175,
+      "missingContainers": [],
+      "unhealthyContainers": [],
+      "recreatedContainersWithSameImage": [
+        "utilibre-addy-app-1",
+        "utilibre-newsletters-smtp-1"
+      ],
+      "rootAndEfiPartitionIdentitiesUnchanged": true,
+      "realVmBootVerified": true,
+      "wholeVmRestoreTested": false,
+      "guestAgentHostSidePingAndThaw": "awaiting-operator-check",
+      "noProductionWritesThisCheck": true
+    },
+    "portalChecks": {
+      "localHttp": 200,
+      "publicHttps": 200,
+      "requests": 2,
+      "wholeApplicationWorkflowsRetested": false
+    }
   }
 }

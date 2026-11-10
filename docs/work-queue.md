@@ -1,7 +1,8 @@
 # Work queue
 
 The scheduled **10 November 10:28 UTC** scan covers 109 images, 175 containers
-and 113 source inputs. It has **0 critical / 324 high records needing review**.
+and 113 source inputs. Following the verified GRUB release, the queue has
+**0 critical / 319 high records needing review**.
 The earlier 36-record count is historical. The refreshed advisory data adds
 284 Kerberos package-target occurrences, two Symfony occurrences and two
 kernel-header occurrences. These are review records, not confirmed exploitability
@@ -11,9 +12,13 @@ The separately approved GRUB vendor update is installed as of 11:40 UTC:
 eight exact Debian packages, native BIOS/EFI installation and boot-menu checks
 passed. Both EFI copies and modules match the tested inputs; shim and firmware
 variables are unchanged. All 175 running container IDs were unchanged. Actual
-VM reboot verification is still pending, so the five GRUB records remain open.
-The fresh same-database before/candidate/installed comparison adds no high or
-critical records. Raw scanner matches are retained.
+VM reboot verification now passes: expected kernel, correct mounts, all 175
+named containers running with no unhealthy status, no failed systemd units and
+successful local/public portal responses. Five exact GRUB package/version
+records are reviewed as vendor-fixed for seven days. The fresh same-database
+before/candidate/installed comparison adds no high or critical records. Raw
+scanner matches remain. Final host-side guest-agent ping/thaw confirmation is
+requested before resuming backups.
 
 Thirty ACL records still require compatible caller migration; one Kuma Markdown
 record has no verified compatible fix. Earlier custom ACL/GRUB repair restrictions

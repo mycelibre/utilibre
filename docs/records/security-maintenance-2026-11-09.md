@@ -10,11 +10,17 @@ At 11:40 UTC on 10 November, the separately approved GRUB update installed the
 eight authenticated vendor packages and regenerated the boot menu. Native boot
 hooks, exact EFI/module verification and package-scope checks passed. Shim,
 firmware boot variables and all 175 running container IDs were unchanged.
-Actual reboot/boot verification is still pending; no finding has been closed
-in advance. [Installation and rollback evidence](../../deployment/maintenance/grub-assessment/README.md).
+The later operator reboot is verified: expected kernel 6.12.116, clean package
+state, no failed systemd units, all 175 named containers running without unhealthy
+status, correct mounts and successful local/public portal responses. The exact
+vendor loaders/modules still match. Five GRUB package/version matches are now
+reviewed as vendor-fixed for seven days; their raw scan records remain. The
+current queue is **0 critical / 319 high needing review**. Host-side guest-agent
+ping/thaw confirmation remains requested; a whole-VM restore is not claimed.
+[Installation and rollback evidence](../../deployment/maintenance/grub-assessment/README.md).
 
 The scheduled 10:28 UTC advisory refresh predates that installation and now
-reports **0 critical / 324 high records needing review**. The earlier 36 below
+reported **0 critical / 324 high records needing review**. The earlier 36 below
 is historical. Four Kerberos advisories account for 284 additional package-target
 occurrences; two Symfony occurrences and two kernel-header occurrences account
 for the other four. These are new review records, not evidence that 288 prior

@@ -8,11 +8,15 @@ It does not authorize automatic updates of other services.
 ## Remaining-high follow-up — 10 November
 
 The 11:40 UTC approved vendor GRUB installation passed native boot-hook,
-configuration and exact EFI/module checks. Real reboot verification remains
-pending; no GRUB findings have yet been closed. The separately scheduled 10:28
-advisory refresh now has 324 high records awaiting review (zero critical),
-including 288 additional Kerberos, Symfony and kernel-header records. The
-earlier 36-record checkpoint below is historical, not the refreshed total.
+configuration and exact EFI/module checks. The operator's reboot also passed:
+the expected kernel is running, all 175 named containers returned without
+unhealthy status, mounts are correct and the portal responds. Five exact GRUB
+package/version records are reviewed as vendor-fixed with seven-day expiry;
+raw matches remain. The queue is now **0 critical / 319 high needing review**.
+The separately scheduled 10:28 advisory refresh had added 288 Kerberos, Symfony
+and kernel-header records before this installation. The earlier 36-record
+checkpoint below is historical, not the refreshed total. Host-side guest-agent
+ping/thaw confirmation is still requested before resuming backups.
 
 The later vendor follow-up has **not reduced the 36 pending records**. It
 prepared an authenticated, unmodified GRUB 2.14-5 candidate instead of retrying

@@ -9,7 +9,24 @@ successfully installed both BIOS and EFI paths; `update-grub` and its syntax
 check passed. Both live EFI loader copies match the authenticated candidate,
 and the native/boot module copies match. Shim and firmware boot variables are
 unchanged. Docker, SSH and guest-agent PIDs and all 175 running container IDs
-were unchanged. No reboot has yet been performed or verified.
+were unchanged during installation.
+
+After the operator's reboot, the boot ID changed and the VM returned on the
+expected `6.12.116+deb13-cloud-amd64` kernel. All eight package versions, both
+EFI loader copies, native/boot modules and signed shim still match the approved
+inputs. The boot menu passes its native syntax check; package state is clean.
+All 175 named containers returned, with none reporting unhealthy or starting
+status; two mail-related containers were recreated using the same scanned
+images. There are no failed systemd units. Root, EFI and temporary mounts are
+correct. Device letters switched after reboot, but partition identities and the
+15 GiB temporary disk are unchanged. Local and public portal requests returned
+200. These are boot/readiness checks, not a fresh full workflow test of every app.
+
+Five exact GRUB package/version records are now reviewed as vendor-fixed, with
+seven-day expiry and raw scanner matches preserved. The current queue has
+0 critical / 319 high records needing review. The host-side guest-agent ping
+and thaw status still require the operator's final Proxmox confirmation before
+resuming backups. No whole-VM restore is claimed.
 
 `vendor-release.py` is a narrow explicit activation adapter, not an unattended
 updater. It requires a current private approval receipt, exact package/input
@@ -23,12 +40,17 @@ automatically restore boot state.
 Private release evidence is `security-20261109/remaining-high/vendor-release-20261110/`.
 The before/candidate/installed scans use the same preserved 10 November database
 and show no new high/critical records caused by this change. Raw GRUB matches
-remain because of the documented cross-suite advisory limitation. Real VM boot
-validation and the corresponding deployed-fix review are still outstanding.
+remain because of the documented cross-suite advisory limitation. The immutable
+installation receipt records its pre-reboot state; `post-reboot.json`,
+`reviewed-vendor-decisions.json` and `boot-closure.json` record the later boot
+verification and exact deployed-fix review.
 The earlier assessment-only manifests remain unchanged; the scoped user approval
 is recorded separately rather than granting a standing deployment permission.
 
 ## Vendor-signed candidate follow-up — 10 November 2026
+
+This section records preparation before the completed installation and boot
+verification above. Its assessment-only permission does not authorize releases.
 
 There is now a separate **unmodified Debian package candidate**, pinned in
 `vendor-candidate.json`. This does not resume the rejected custom-patch build
