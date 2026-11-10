@@ -92,6 +92,58 @@ maintenance evidence root. The old exact image and protected SQLite snapshot
 remain available. Future upstream upgrades must preserve the package-absence
 gate and native workflows or explicitly review a replacement integration.
 
+## ACL follow-up: assessment completed, repair still open
+
+At **15:46 UTC**, the existing read-only ACL collector checked all **30 high
+records** against **36 host/container locations**: 29 immutable images and the
+host, with no unverified locations. It records actual installed library hashes,
+versions, caller packages and selected isolation settings. No user-content tree
+was traversed, package replaced, service restarted or vulnerability reproduced.
+The October caller observation is linked by hash and explicitly remains
+historical; it was not rerun or presented as a new behavioral test.
+
+The host has `libacl1 2.3.2-2+b1`, also the candidate in its locally cached APT
+metadata. Debian's current [CVE-2026-54369 record](https://security-tracker.debian.org/tracker/CVE-2026-54369)
+still lists Bookworm 2.3.1-3 and Trixie 2.3.2-2 as affected. It lists 2.4.0-1 as
+fixed in Forky/Sid, with a Trixie point-release update planned rather than an
+individual patch backport. Thus an up-to-date stable installation can still
+carry this finding. This vendor check was made on 10 November 2026; it is not
+an assertion about future stable packages.
+
+The retained signed-vendor assessment checked GNU tar `1.35+dfsg-7` and rsync
+`3.5.2+ds1-2`. Tar still imports the legacy pathname ACL functions; rsync imports
+both old and new APIs. The deployed Bookworm rsync build does not enable
+`HAVE_LIBACL_AT`. An import alone does not prove exploitable behavior, but these
+facts do not establish the complete safe-caller migration needed to close the
+remaining records. The newer vendor binaries also require a libc version that
+Bookworm does not supply. No Sid crossgrade or library-only closure was made.
+
+One **separate medium CVE-2026-54370** attribution was revalidated for the new
+Kuma image. Live package/command checks and an isolated read-only image check
+confirmed the affected `getfacl`, `setfacl` and `chacl` tools and `acl` package
+are absent. The existing reviewer recorded a seven-day, exact-artifact
+not-affected decision; raw scanner evidence remains. Its two policy tests pass,
+including refusal to close the high library CVE using CLI-absence evidence.
+This is a component-attribution correction, not a source-code repair.
+
+Private evidence in `security-20261110/`: `acl-current-request.json`,
+`acl-vendor-followup.json`, `acl-cli-reviewed-decisions.json`,
+`acl-cli-policy-tests.tap` and `acl-followup-result.json`. Their identities and
+the explicit unresolved status are recorded in `status.json`. **Zero high
+findings were closed by this follow-up; no ACL candidate was deployed.**
+The earlier automatic approval rejection of the custom ACL repair/reproduction
+path for cybersecurity risk remains recorded and was not bypassed. A later
+repair needs a compatible vendor/caller update and ordinary functional checks;
+an incomplete library-only change must not be presented as full remediation.
+
+Two unrelated host decisions (libpcap CVE-2026-0799 and the setuptools vendored
+jaraco.context CVE-2026-23949) expired during this review. Fresh read-only
+package, whole-payload and authenticated-source checks matched their previously
+tested installed repairs. Their exact decisions were renewed for seven days
+through the existing recorder. Historical regression evidence was retained,
+not rerun or described as fresh. Evidence: `expired-host-reviews.json`.
+The final recorded pending total remains **0 critical / 30 high**.
+
 ## Verification and practical limits
 
 - Initial batch scan completed **13:34:21 UTC**: 109 runtime images, 175 containers,

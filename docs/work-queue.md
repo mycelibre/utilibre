@@ -14,6 +14,13 @@ The earlier custom ACL repair/reproduction path was rejected by automatic
 approval review; it was not retried or suppressed. This is not full remediation.
 Raw scanner matches remain visible and exact reviewed decisions expire.
 
+The 15:46 UTC ACL follow-up rechecked all 30 records across 36 host/container
+locations with no unverified locations. It closed no high findings and deployed
+no ACL change. Kuma's separate medium CLI-only attribution was revalidated:
+the affected command-line tools are absent. Stable Debian still lists the
+installed ACL versions as affected; a compatible complete caller/library repair
+remains unverified. The current release record contains the evidence and limits.
+
 All 175 production containers are running: 90 configured health checks healthy,
 85 without container health checks; no failed systemd units. The Kuma candidate
 passed native setup/login, monitoring/status-page and SMTP/ntfy checks with

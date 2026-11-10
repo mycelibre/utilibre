@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "date": "2026-11-10T14:59:51.563854+00:00",
+  "date": "2026-11-10T16:00:44.051018+00:00",
   "status": "deployed-with-explicit-unresolved-findings",
   "initialPendingHigh": 319,
   "initialDisposition": {
@@ -316,6 +316,30 @@
     {
       "path": "kuma-without-apprise/release-tests.tap",
       "sha256": "be49fe14e8e7df963994e3e2e7b5f9d57f3906c5ecfa3bc47f70536e0366257e"
+    },
+    {
+      "path": "acl-current-request.json",
+      "sha256": "452cb2f2864a03f7bdb63295df3e868f9529567c5c43d8bcd751a30266e1e5c9"
+    },
+    {
+      "path": "acl-vendor-followup.json",
+      "sha256": "4b294b34cbf3a10ca1e1af04f36b4d78c047378d2e7f44cd7419ecc5f6ce1050"
+    },
+    {
+      "path": "acl-cli-reviewed-decisions.json",
+      "sha256": "5ce59e3af879137b65f916587c5a96236fe0a1575e7a8dfac469d04e0b962d3a"
+    },
+    {
+      "path": "acl-cli-policy-tests.tap",
+      "sha256": "ec765ebfd0bc1f7e243a4190f04e42f2e84428da8788a3303c6ccf4c08699b64"
+    },
+    {
+      "path": "expired-host-reviews.json",
+      "sha256": "d27a2e3eaeae6f4249faf71bb88ee1083660408265d2168889b8e54346fec062"
+    },
+    {
+      "path": "acl-followup-result.json",
+      "sha256": "e579b324edcdf36522e62d2270e20aa144f6c5915cf60ae3621312c65525e021"
     }
   ],
   "sourceOffers": [
@@ -353,5 +377,34 @@
     "repeatedApplyRecreated": false,
     "upstreamVulnerabilityRepairClaimed": false,
     "recipe": "kuma-without-apprise/inputs.json"
+  },
+  "aclFollowup": {
+    "date": "2026-11-10T16:00:44.051018+00:00",
+    "status": "assessment-complete-repair-unresolved",
+    "assessmentDate": "2026-11-10T15:46:12.618Z",
+    "scanDate": "2026-11-10T14:53:24.955Z",
+    "queueDate": "2026-11-10T16:00:03.548Z",
+    "pendingCritical": 0,
+    "pendingHigh": 30,
+    "aclHighRecords": 30,
+    "images": 29,
+    "hostTargets": 1,
+    "hostAndContainerLocations": 36,
+    "unverifiedLocations": 0,
+    "highFindingsClosed": 0,
+    "mediumCliAttributionsRevalidated": 1,
+    "expiredHostDecisionsRevalidated": 2,
+    "policyTestsPassed": 2,
+    "productionChanged": false,
+    "vulnerabilityReproductionPerformed": false,
+    "historicalCallerEvidenceRerun": false,
+    "noCompleteCompatibleFixVerified": true,
+    "stableVendorStatus": {
+      "checkedOn": "2026-11-10",
+      "bookworm": "2.3.1-3 vulnerable",
+      "trixie": "2.3.2-2 vulnerable",
+      "forkySid": "2.4.0-1 fixed",
+      "reference": "https://security-tracker.debian.org/tracker/CVE-2026-54369"
+    }
   }
 }

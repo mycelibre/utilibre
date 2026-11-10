@@ -140,3 +140,13 @@ approved. The [finite removal recipe](kuma-without-apprise/README.md) removes
 Apprise and Python-Markdown while retaining native notifications, monitoring and
 saved configuration. It does not repair Python-Markdown upstream. The separate
 ACL records remain open. Expiring review is not a security clearance.
+
+The 15:46 UTC read-only follow-up rechecked all 30 high ACL records across 36
+host/container locations, without a new vulnerability reproduction or runtime
+change. The signed-vendor assessment does not establish a compatible complete
+caller migration. The new Kuma image's separate medium CLI-only attribution was
+revalidated and recorded with seven-day expiry; the CLI tools are absent. The
+two existing CLI-review policy tests pass and reject applying that disposition
+to the high library issue. See the release record's ACL follow-up and
+`status.json.aclFollowup` for exact private evidence identities. No ACL source
+repair or high-finding closure is claimed.
