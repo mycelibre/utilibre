@@ -17,7 +17,7 @@ common = importlib.util.module_from_spec(loader)
 loader.loader.exec_module(common)
 sha = lambda p: common.sha(Path(p).read_bytes())
 read = lambda p: json.loads(Path(p).read_text())
-assert len(sys.argv) == 3 and sys.argv[1] in ('safetwitch', 'galene', 'gothub')
+assert len(sys.argv) == 3 and sys.argv[1] in ('safetwitch', 'galene', 'gothub', 'mezzo')
 key, phase = sys.argv[1:]
 assert phase in ('stage', 'native', 'scan')
 manifest = read(HERE / 'xnet-inputs.json')
@@ -70,6 +70,8 @@ else:
     assert build['scopeCheckerSha256'] == sha(__file__)
     if phase == 'native':
         pins = read(HERE / 'zlib-inputs.json')['consumerFixtureHashes']
+        if key == 'mezzo':
+            pins[spec['nativeFixture']] = spec['nativeFixtureSha256']
         adapters = []
         def adapt(relative, replacements):
             original = (HERE / relative).resolve()
@@ -84,7 +86,16 @@ else:
             adapters.append({'fixture': relative, 'fixtureSha256': sha(original),
                              'adapter': str(output), 'adapterSha256': sha(output)})
             return output
-        if key != 'galene':
+        if key == 'mezzo':
+            script = adapt(spec['nativeFixture'], [
+                ("ROOT = Path('/var/lib/utilibre-maintenance/go-leaf-final-20261011/output')", 'ROOT = Path(' + repr(str(directory)) + ')'),
+                ("IMAGES = ['sha256:f8643c2525c96b3c5708bb737f71759bfc4c01a745301a8a7dbcba609f9c6416',\n          'utilibre-mezzo:1.4.0-go-security-20261011']", 'IMAGES = ' + repr([spec['base'], build['imageId']]))])
+            execute([sys.executable, str(script)], directory / 'native.log')
+            result = read(directory / 'mezzo-native.json')
+            assert result['passed'] and result['imageId'] == build['imageId']
+            assert len(result['checks']) == 2
+            assert result['checks'][0]['staticAssets'] == result['checks'][1]['staticAssets']
+        elif key != 'galene':
             original_alias = 'reader-evaluation-safetwitch-backend' if key == 'safetwitch' else 'reader-evaluation-gothub'
             script = adapt('../go-final/check-native.mjs', [
                 ('/var/lib/utilibre-maintenance/security-20261109/musl', str(ROOT)),

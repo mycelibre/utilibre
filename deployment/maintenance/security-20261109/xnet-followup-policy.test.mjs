@@ -10,11 +10,17 @@ function data(){
 }
 const validate=d=>validateFollowup(d.s,d.original,d.b,d.n,d.scan,d.dependencies);
 test('exact binary-only candidate and unchanged native fixtures can qualify',()=>assert(validate(data())));
-test('historical checker identity is limited to its two completed releases',()=>{
+test('historical checker identity is limited to its exact completed releases',()=>{
  const d=data();d.s.checkRevision='c2fa64e01d5de17a9c719cf39975f157346da40e';assert(validate(d));
  d.s.checkRevision='main';assert.throws(()=>validate(d));
  d.s.checkRevision='c2fa64e01d5de17a9c719cf39975f157346da40e';d.s.key='gothub';assert.throws(()=>validate(d));
+ d.s.checkRevision='9c13c74ee95db4039b15c3b4be6323c8379fa98a';assert(validate(d));
+ d.s.key='mezzo';assert.throws(()=>validate(d));
  delete d.s.checkRevision;assert(validate(d));
+});
+test('Mezzo is subject to the same binary, dependency and native proof gates',()=>{
+ const d=data();d.s.key='mezzo';assert(validate(d));
+ d.b.moduleChanges.push({module:'github.com/PuerkitoBio/goquery',after:'v1.99.0'});assert.throws(()=>validate(d));
 });
 for(const [label,mutate]of Object.entries({
  'unapproved':d=>d.s.approval='pending','unknown application':d=>d.s.key='unknown',

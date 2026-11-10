@@ -90,6 +90,23 @@
         "go.mod": "865b9b77e2ee50b8fe65a9058bb2811c4154419ece7ce70a8ba11ff2dcf0cb4b",
         "go.sum": "d866f3a88309cd6499d134c00475b31590ab8b64894ed83b58ff19ce805477aa"
       }
+    },
+    {
+      "key": "mezzo",
+      "sourceRevision": "9cb99bd6a8570bb104021a094b1e598c8dda49db",
+      "base": "sha256:463a075bc6a1b7735a1a3fe864ef5d5dfaf24f5dffaf2191878365b30a40da5f",
+      "binary": "/ko-app/mezzo",
+      "oldBinarySha256": "faee033dadf6108e9f0229dcebde1f6b0421bc1e96a6683854a8fc9200d72d2b",
+      "candidate": "utilibre-mezzo:xnet-security-20261109",
+      "sourceProofSha256": "62b946908ef126af95641bffea27543a71b811fd2fab33d6dbb00ce6f91874cf",
+      "locks": {
+        "go.mod": "93152ce6f4ac68ebc3b1f790430bc9f334c1e245da239616855c98c622b28561",
+        "go.sum": "aecb942fb2c6421f16b0460b929706854df058a9c76a2bd51fb5f675c5938e4d"
+      },
+      "buildRecipe": "deployment/maintenance/go-leaf-final/build-one.sh",
+      "buildRecipeSha256": "296d9acbbb46b6eb483813634311aa1ff318e516a346c082ac5ea158b3467085",
+      "nativeFixture": "../go-leaf-final/check-mezzo.py",
+      "nativeFixtureSha256": "a3e12f58a42aeaa7b6165529d8785ece1bb3aff0e6d041792d344725c8e9b889"
     }
   ]
 }

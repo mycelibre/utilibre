@@ -4,9 +4,10 @@ import cp from 'node:child_process';
 import {createHash} from 'node:crypto';
 const root='/var/lib/utilibre-maintenance/security-20261109/xnet';
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+const completedCheckers={safetwitch:'c2fa64e01d5de17a9c719cf39975f157346da40e',galene:'c2fa64e01d5de17a9c719cf39975f157346da40e',gothub:'9c13c74ee95db4039b15c3b4be6323c8379fa98a'};
 export function validateFollowup(s,original,b,n,scan,dependencies){
- assert(['safetwitch','galene','gothub'].includes(s.key)&&s.mode==='binary-followup'&&s.approval==='approved');
- if(s.checkRevision){assert(['safetwitch','galene'].includes(s.key));assert.equal(s.checkRevision,'c2fa64e01d5de17a9c719cf39975f157346da40e');}
+ assert(['safetwitch','galene','gothub','mezzo'].includes(s.key)&&s.mode==='binary-followup'&&s.approval==='approved');
+ if(s.checkRevision){assert(completedCheckers[s.key]);assert.equal(s.checkRevision,completedCheckers[s.key]);}
  assert(b.passed&&b.sourceUnchanged&&b.configurationUnchanged&&b.allOtherFilesUnchanged);
  assert.equal(b.base,s.base);assert.equal(b.base,original.base);assert.equal(b.imageId,s.imageId);assert.equal(b.candidate,s.candidate);
  assert.deepEqual(b.changedFiles,[original.binary]);assert(b.imageEntries>100);
@@ -38,8 +39,8 @@ export function proveFollowup(s){
  if(s.checkRevision){
   // Completed releases remain bound to the exact committed checker used then.
   // A later checker edit cannot retroactively rewrite their recorded evidence.
-  assert(['safetwitch','galene'].includes(s.key));
-  assert.equal(s.checkRevision,'c2fa64e01d5de17a9c719cf39975f157346da40e');
+  assert(completedCheckers[s.key]);
+  assert.equal(s.checkRevision,completedCheckers[s.key]);
   const source=cp.execFileSync('git',['show',s.checkRevision+':deployment/maintenance/security-20261109/xnet-followup.py'],{cwd:new URL('../../../',import.meta.url),timeout:10000,maxBuffer:128*1024});
   assert.equal(createHash('sha256').update(source).digest('hex'),s.checkSha256);
  }else assert.equal(sha(new URL('./xnet-followup.py',import.meta.url)),s.checkSha256);
@@ -47,7 +48,7 @@ export function proveFollowup(s){
  for(const a of n.adapters){assert.equal(sha(new URL(a.fixture,import.meta.url)),a.fixtureSha256);assert.equal(sha(a.adapter),a.adapterSha256);}
  for(const [f,h]of Object.entries(s.proofs))assert.equal(sha(d+'/'+f),h);
  for(const phase of ['before','after'])assert.equal(sha(d+'/'+phase+'-scan.json'),s.rawEvidence[phase]);
- const source=read(root+(s.key==='gothub'?'/published-gothub-source.json':'/published-followup-source.json'));assert(source.passed);
+ const source=read(root+(['gothub','mezzo'].includes(s.key)?'/published-'+s.key+'-source.json':'/published-followup-source.json'));assert(source.passed);
  const offer=source.rows.find(r=>r.key===s.key&&r.imageId===b.imageId);assert(offer);assert.equal(sha('/opt/utilibre/toolbox-public/'+offer.archive),offer.sha256);
  assert(Date.now()-Date.parse(b.date)<86400000&&Date.now()-Date.parse(scan.date)<86400000);
  assert(Date.now()-Date.parse(s.advisoryUpdatedAt)<48*3600000);

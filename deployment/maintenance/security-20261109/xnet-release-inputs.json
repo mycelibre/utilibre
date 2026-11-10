@@ -132,6 +132,36 @@
         "native-dependencies.txt": "c85026de1042115f28bd37fd87b0bdcd3d49e30ff2e04ce452ebf231800f0431",
         "gothub-tests.txt": "14bc4a137f8cd0603da167417a186bcd623752df8fcf0c1cf12f03a49b155c18",
         "application.json": "a68ff6abe9fd48a93b187ab5e06f6bbb6e80d95e025d86dac834158f95d823a8"
+      },
+      "checkRevision": "9c13c74ee95db4039b15c3b4be6323c8379fa98a"
+    },
+    {
+      "key": "mezzo",
+      "mode": "binary-followup",
+      "approval": "approved",
+      "base": "sha256:463a075bc6a1b7735a1a3fe864ef5d5dfaf24f5dffaf2191878365b30a40da5f",
+      "candidate": "utilibre-mezzo:xnet-security-20261109",
+      "imageId": "sha256:526ac607e52f65564ecb9f13a410fe14b63b6fa4f9eb7e523d36cc0ad18784b6",
+      "containers": [
+        "utilibre-additions-mezzo-1"
+      ],
+      "publicHome": "https://tenor.utilibre.org/",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "checkSha256": "874e44593965d1c448c8587cf1f1fef1c40c0162b54dee28f2a56815873321c0",
+      "rawEvidence": {
+        "before": "6bd257b6f545f40afb16021f8104342094c110127d0d634d4e6bd9e5282a4da7",
+        "after": "aed6fec4729a15267072ff2d2955b8407b0143b749ccf0a65a9937586fbe6e20"
+      },
+      "dependenciesSha256": "d3557318f73f15b630f2c26c89ed8b2c59f71612b32a154b19aab4014d1b4a01",
+      "proofs": {
+        "compiled.json": "b886189fda2aee705c3f9fcea7f4a34b255e6fff549a61902e5f46d59db12808",
+        "build.json": "8a7b0f8c2b7be0f5217056853666f78a735ec82bc67b0502f724e999368e42f7",
+        "native.json": "e1e1950b6230fa98f0c511cd5c1ba5e8d3d854d5a9c887d7323f6e8b43993ee1",
+        "scan-gate.json": "3da0787b40189f78e4bb8bdc8eac46731da18e425afd43e838523282fdff90a3",
+        "native-dependencies.txt": "d3557318f73f15b630f2c26c89ed8b2c59f71612b32a154b19aab4014d1b4a01",
+        "mezzo-tests.txt": "cc5cd6f1a57cd06919cef3fcd715373119c82e84d2fc523e776af8af1f0747eb",
+        "mezzo-native.json": "061f79bc1ffc66c69d5134042e2e1e0a78d17be421abcba848daab9374450da2"
       }
     }
   ]

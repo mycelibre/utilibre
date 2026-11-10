@@ -565,3 +565,27 @@ Forty-four review-policy tests pass (overlapping the release-policy suite); no
 new exploit reproduction was run. Incomplete historical newsletter image ancestry
 was not silently accepted: the new Caddy review uses its independently proven
 source, original binary identity, complete native/build receipts and live hashes.
+
+## Mezzo x/net follow-up — 10 November
+
+Mezzo 1.4.0 at `tenor.utilibre.org` now uses x/net 0.62.0. Its exact original
+Git archive, previous resolved locks and live binary were reconciled separately;
+the earlier source inventory predates those resolved locks. Every application
+source file is retained. Only `/ko-app/mezzo` changes in the full 1,345-entry
+image comparison; configuration, frontend bytes and all other files match.
+
+The existing offline Go 1.26.10 build passed cache, configuration, scraper and
+server unit tests. Both old and new images passed native home/assets/version,
+missing-file and unsupported-proxy checks on isolated loopback, without a Tenor
+request. The frozen database comparison removes one high and one medium x/net
+record, adds no finding and reports no remaining vulnerability in this image.
+That result covers this scanner/artifact, not every security risk or live search.
+The scoped release passed exact-image, health, namespace and public-home gates.
+The updated complete source archive is published and its public bytes verified.
+
+Replay uses `xnet-build.mjs mezzo`, `xnet-followup.py mezzo stage|native|scan`,
+and the existing separately authorized `release-brotli.mjs --batch-20261109
+--xnet prepare|apply mezzo` procedure. Private evidence is in
+`security-20261109/xnet/mezzo`; rollback pins are in `xnet/release.json`.
+No account data, persistent schema or privacy configuration changes. The fleet
+count above remains the last completed fleet scan; refresh it after this batch.
