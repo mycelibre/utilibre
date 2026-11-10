@@ -1,24 +1,24 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T03:51:08.707377+00:00",
-  "scanCompletedAt": "2026-11-10T03:18:43.767Z",
+  "recordedAt": "2026-11-10T04:28:46.950976+00:00",
+  "scanCompletedAt": "2026-11-10T04:19:58.121Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
   "runningContainers": 175,
   "sourceInputs": 107,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 109,
+  "pendingHigh": 88,
   "rawFindingsRetained": true,
-  "assessmentNote": "Same completed scan with exact retained GnuPG component, Wget, sudo, HDF5, CFITSIO and host Expat reviews. Raw findings remain. Reviews expire; no complete remediation or security clearance. Donetick and Vikunja releases follow this scan; a subsequent fleet scan is pending.",
+  "assessmentNote": "Completed post-release scan, followed by exact current-image source/package/component revalidation. All raw findings remain; reviews expire after seven days. No complete remediation or security clearance.",
   "musl": {
     "imagesReleased": 62,
     "groupsPassed": 112,
     "containers": 120
   },
   "debianVendor": {
-    "imagesReleased": 28,
-    "groupsPassed": 33
+    "imagesReleased": 34,
+    "groupsPassed": 39
   },
   "applicationBatch": {
     "inventoried": 42,
@@ -46,7 +46,7 @@
       "penpot"
     ]
   },
-  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-retained-native-reviews",
+  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-apt-reviews",
   "degoog": {
     "status": "deployed-public-search-passed",
     "image": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
@@ -56,9 +56,9 @@
     "currentImage": "sha256:17fc5c2c7a400971ee2c0da2d4d8dbbaf0d8ad8ce4639dc752f628671af45644"
   },
   "zlibAndXnet": {
-    "groupsPassed": 51,
-    "distinctImagesReleased": 38,
-    "selectedContainers": 52,
+    "groupsPassed": 52,
+    "distinctImagesReleased": 39,
+    "selectedContainers": 53,
     "wbo": "held-preserve-ram-boards",
     "xnetOtherApplications": "remaining-reviewed-inventory-not-complete",
     "releaseTests": 43,
@@ -81,7 +81,7 @@
     "rawTargetAttributionRetained": true
   },
   "pendingHighByScope": {
-    "runtime-image": 71,
+    "runtime-image": 50,
     "tracked-build-input": 22,
     "mounted-runtime-code": 1,
     "upstream-release-source-lock": 2,
@@ -108,7 +108,8 @@
       "opengist",
       "ntfy",
       "donetick",
-      "vikunja"
+      "vikunja",
+      "ferretdb"
     ],
     "dependency": "golang.org/x/net v0.62.0",
     "compiler": "Go 1.26.10 and retained Go 1.27.3 for Wakapi, OpenGist, ntfy, Donetick and Vikunja",
@@ -121,7 +122,8 @@
     "opengist": "Two isolated native accounts, private access, edit/revision export, Git clone/push and deletion; 195 embedded frontend assets unchanged. Production OIDC and real browsers not replayed.",
     "ntfy": "Isolated publish/poll, one-hour expiry, no-cache, disabled uploads/registration/metrics, RAM-cache restart; 295 embedded frontend assets unchanged. No real-device UnifiedPush test.",
     "donetick": "Isolated two-account chore lifecycle, anonymous/cross-account denial and 254 unchanged frontend files; public route passed. Existing inaccessible/deleted lookups still return HTTP 500 without content.",
-    "vikunja": "Two isolated accounts: task completion, project/attachment isolation, native ZIP export/import, SQLite recovery, reload and deletion. 361 frontend files unchanged; production OIDC not exercised."
+    "vikunja": "Two isolated accounts: task completion, project/attachment isolation, native ZIP export/import, SQLite recovery, reload and deletion. 361 frontend files unchanged; production OIDC not exercised.",
+    "ferretdb": "Isolated Gathio event/edit permissions, image upload, ICS import/export and stopped synthetic PostgreSQL restore; only FerretDB executable changed, production MCP remains disabled."
   },
   "headerReview": {
     "snapshot": "f28c090f440f4708e405f235942a83ba4deb7ca4",
@@ -210,6 +212,13 @@
     "hostExpat": {
       "high": 1,
       "status": "exact-current-payload-and-retained-proof-revalidated"
+    },
+    "penpotApt": {
+      "status": "full-signed-payload-and-prior-repairs-revalidated",
+      "firstReviewDecisions": 253,
+      "secondReviewDecisions": 197,
+      "secondReviewScope": "Includes other exact current-image source and curl repairs, not only Penpot",
+      "lineage": "Completed same-role chronological edges; file order is irrelevant; ambiguity fails"
     }
   },
   "donetick": {
@@ -225,5 +234,30 @@
     "completedAt": "2026-11-10T03:49:52.125Z",
     "onlyBinaryChanged": true,
     "productionIdentityProviderTested": false
+  },
+  "ferretdb": {
+    "status": "deployed-native-verified",
+    "image": "sha256:8cd6f171ff9bad49a995fffe8d6bed87d9d6ef1b29fdaf2f15b25381f6585803",
+    "completedAt": "2026-11-10T03:58:24.994Z",
+    "onlyBinaryChanged": true,
+    "productionDatabaseMigration": false
+  },
+  "aptFollowup": {
+    "imagesReleased": 6,
+    "containerRoles": 8,
+    "ubuntuVersions": [
+      "2.8.4ubuntu0.1",
+      "2.4.15ubuntu0.1"
+    ],
+    "dhiVersion": "3.0.4+dhi0",
+    "ordinaryChecksPerArtifact": 4,
+    "abiAndApplicationScopePreserved": true,
+    "newHighCritical": 0,
+    "dhiRawResidualRecords": 4,
+    "dhiResidualMetadataPreserved": true,
+    "dhiFixedPayloadVerifiedLive": true,
+    "simplelogin": "private-evaluation; public 503 intentional; local login passed; no email sent",
+    "redlib": "daily checker recognizes exact approved OS overlay; new source heads require review",
+    "freshFullPenpotBrowserJourney": false
   }
 }

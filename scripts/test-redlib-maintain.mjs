@@ -2,11 +2,32 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {ROOT,command,sha,validateApproval,decide,normalizedFindings,checkScans,selectedLines,replaceLines,validateRuntimeDiff,validateJournal,activate} from './redlib-maintain.mjs';
+import {ROOT,command,sha,validateApproval,decide,retainedRuntimeIdentity,normalizedFindings,checkScans,selectedLines,replaceLines,replaceImageOverride,validateRuntimeDiff,validateJournal,activate} from './redlib-maintain.mjs';
 import {redlibUpdateIssues} from '../deployment/maintenance/report-health.mjs';
 const root=new URL('../',import.meta.url),bytes=readFileSync(new URL('config/redlib/recipe.json',root)),recipe=JSON.parse(bytes),policy=JSON.parse(readFileSync(new URL('config/redlib/update-policy.json',root)));
 const readPatch=p=>readFileSync(new URL('config/redlib/'+p,root));
 const check=(r=recipe,p=policy,b=bytes,read=readPatch)=>validateApproval(r,p,b,read);
+test('package overlay changes only the exact image override and supports rollback',()=>{
+ const old='utilibre-redlib:previous',next='utilibre-apt-redlib:reviewed';
+ const text='UNRELATED=keep\nREDLIB_IMAGE='+old+'\nREDLIB_BANNER=keep banner\n';
+ const result=replaceImageOverride(text,old,next);
+ assert.equal(result,text.replace('REDLIB_IMAGE='+old,'REDLIB_IMAGE='+next));
+ assert.equal(replaceImageOverride(result,next,old),text);
+ for(const bad of [text.replace(old,'utilibre-redlib:drift'),text+'REDLIB_IMAGE='+old+'\n','UNRELATED=keep\n'])assert.throws(()=>replaceImageOverride(bad,old,next));
+ for(const bad of ['external/image:tag',next+'\nUNRELATED=changed'])assert.throws(()=>replaceImageOverride(text,old,bad));
+});
+test('retained OS overlay cannot authorize a downgrade or unknown runtime',()=>{
+ const base=recipe.candidate.imageId,live='sha256:'+'f'.repeat(64);
+ const s={key:'apt-redlib',approval:'approved',base,candidate:'utilibre-apt-redlib:reviewed',packages:{apt:{},'libapt-pkg6.0t64':{}}};
+ const b={base,imageId:live,candidate:s.candidate,passed:true,configurationUnchanged:true,unrelatedPackagesUnchanged:true};
+ const release={key:s.key,status:'passed',rows:[{service:'redlib',oldImage:base,newImage:live}]};
+ assert.equal(retainedRuntimeIdentity(recipe,live,s,b,release),base);
+ assert.equal(decide(recipe.source.revision,retainedRuntimeIdentity(recipe,live,s,b,release),recipe),'up-to-date');
+ for(const x of [{...s,approval:'proposed'},{...s,base:'wrong'},{...s,packages:{...s.packages,unrelated:{}}}])assert.throws(()=>retainedRuntimeIdentity(recipe,live,x,b,release));
+ assert.throws(()=>retainedRuntimeIdentity(recipe,'unknown',s,b,release));
+ assert.throws(()=>retainedRuntimeIdentity(recipe,live,s,{...b,unrelatedPackagesUnchanged:false},release));
+ assert.throws(()=>retainedRuntimeIdentity(recipe,live,s,b,{...release,status:'failed'}));
+});
 test('exact recipe, ordered patches and source approval validate',()=>check());
 test('changed recipe and patches require review',()=>{
  assert.throws(()=>check(recipe,policy,Buffer.concat([bytes,Buffer.from('\n')])));

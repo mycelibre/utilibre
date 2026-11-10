@@ -19,6 +19,10 @@ export const novemberSqliteImages={
  'utilibre-expanded-penpot-frontend-1':'sha256:10a3f6310f9c58446ac964acca091f5d3637aac2cd43e7ca092862abc7ca8eae',
  'utilibre-expanded-penpot-exporter-1':'sha256:f2ab9e2bcdafa62f693227581299b481a0184a89fc7b35cb03094902490b82f0',
 };
+export const novemberAptImages={
+ 'utilibre-expanded-penpot-frontend-1':'sha256:2b7368079850bcd17c58b5e7da21ddf72d1665b0ef7188b46e444b8364e92772',
+ 'utilibre-expanded-penpot-exporter-1':'sha256:ce212e9343d9bb10c61ed40543bae62875f1327b1401308b4495d8544b24897c',
+};
 export const restrictedXvfb='620f43dd4999c7602e86730c208e2c78f0007170451669fb9220f1a0a32c4891';
 export const archives=Object.freeze({
  'libperl5.40':{version:perlVersion,sha256:'6c04a71ed211300491d9d16fb8ad4d77c38426b99a80441d6a8500a85d877d73'},
@@ -35,7 +39,7 @@ export function matchingRow(i){
  if(i?.status!=='needs-review'||i.scope!=='runtime-image'||i.type!=='debian'||i.targetName!==i.artifact||!Array.isArray(i.containers)||i.containers.length!==1)return null;
  const original=rows.find(r=>r.package===i.package&&r.id===i.id&&r.container===i.containers[0]&&r.stale===i.installed);if(!original)return null;
  if(original.artifact===i.artifact)return original;
- if([novemberImages[original.container],novemberSqliteImages[original.container]].includes(i.artifact))return {...original,artifact:i.artifact,chainFrom:original.artifact,...(original.artifact===exporterBefore?{predecessor:exporterBefore}:{})};
+ if([novemberImages[original.container],novemberSqliteImages[original.container],novemberAptImages[original.container]].includes(i.artifact))return {...original,artifact:i.artifact,chainFrom:original.artifact,...(original.artifact===exporterBefore?{predecessor:exporterBefore}:{})};
  // Only the separately proved one-screen transition; never arbitrary descendants.
  if(original.artifact===exporterBefore&&[exporterAfter,exporterCurrent].includes(i.artifact))return {...original,artifact:i.artifact,predecessor:exporterBefore};
  return null;
@@ -47,7 +51,7 @@ export function exporterAncestry(stage,release,verified,scan){
  exporterBinding(release,stage);assert(Date.parse(release.completedAt)<=Date.parse(scan.date),'Fresh scan must follow exporter release');
  // verified is produced by completed("dhi", scan), which rechecks the full
  // source/native/application gates and live Xvfb/common-package payloads.
- assert.equal(verified.role,'dhi');assert([exporterAfter,exporterCurrent,novemberImages['utilibre-expanded-penpot-exporter-1'],novemberSqliteImages['utilibre-expanded-penpot-exporter-1']].includes(verified.image));assert.equal(verified.binarySha256,restrictedXvfb);assert.equal(verified.completedAt,release.completedAt);assert.match(verified.receiptSha256,/^[a-f0-9]{64}$/);
+ assert.equal(verified.role,'dhi');assert([exporterAfter,exporterCurrent,novemberImages['utilibre-expanded-penpot-exporter-1'],novemberSqliteImages['utilibre-expanded-penpot-exporter-1'],novemberAptImages['utilibre-expanded-penpot-exporter-1']].includes(verified.image));assert.equal(verified.binarySha256,restrictedXvfb);assert.equal(verified.completedAt,release.completedAt);assert.match(verified.receiptSha256,/^[a-f0-9]{64}$/);
  return {predecessor:exporterBefore,...verified};
 }
 export function prove(i,p){

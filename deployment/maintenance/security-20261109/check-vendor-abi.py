@@ -15,7 +15,7 @@ for key in sys.argv[1:]:
     paths=[]
     for name in spec['packages']:
         if name=='zlib1g':paths.append('/usr/lib/x86_64-linux-gnu/libz.so.1')
-        elif name.startswith('libapt-pkg'):paths.append('/usr/lib/x86_64-linux-gnu/libapt-pkg.so.'+name.removeprefix('libapt-pkg'))
+        elif name.startswith('libapt-pkg'):paths.append('/usr/lib/x86_64-linux-gnu/libapt-pkg.so.'+name.removeprefix('libapt-pkg').removesuffix('t64'))
     assert paths
     abi=[]
     with tempfile.TemporaryDirectory(dir=d) as t:

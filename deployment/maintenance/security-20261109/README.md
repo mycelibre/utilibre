@@ -345,6 +345,80 @@ restore or alter account-application data.
 
 ## Subsequent November 9 releases
 
+### Ubuntu APT follow-up, 10 November
+
+Four additional image overlays repair the vendor APT packages in Mumble,
+SimpleLogin, Addy's database and Redlib. Noble uses 2.8.4ubuntu0.1 and Jammy
+2.4.15ubuntu0.1. The version evidence is
+[Ubuntu's advisory](https://ubuntu.com/security/CVE-2026-109518) and
+[Debian's tracker](https://security-tracker.debian.org/tracker/CVE-2026-109518),
+checked on 10 November. This is a package-manager repair, not a new application
+release or a claim that all findings in those images are resolved.
+
+`acquire-debian.py --download --ubuntu` authenticates the exact Ubuntu signing
+key, signed repository indexes and four package hashes. Ubuntu keeps a separate
+receipt; immutable package copies use the existing package pool. Replaying with
+network disabled verifies cached inputs and preserves the original receipt and
+retrieval date. The original 28 Debian proof records remain valid through their
+pinned historical ABI-checker revision; they are not silently rewritten.
+
+The existing `vendor-debian.mjs KEY`, `check-vendor-abi.py KEY`, same-database
+scan and `release-brotli.mjs --batch-20261109 --vendor-debian` gates are reused.
+Four ordinary APT commands pass for each old/new image; exported library symbols,
+dynamic dependencies, application files and configuration remain unchanged.
+All four candidates remove the targeted finding without new high/critical
+findings under the recorded database. No exploit reproduction is claimed.
+
+SimpleLogin remains private: its existing public 503 notice is intentional and
+its local login route is the readiness check. No email is sent. Mumble requires
+zero established voice/control connections before its scoped restart. Addy's
+database release preserves the SMTP boundary and checks the existing alias route.
+
+Redlib's first activation attempt changed no container: its image is selected by
+`REDLIB_IMAGE` in the protected environment file, not a plain Compose scalar.
+The retry uses `scripts/redlib-maintain.mjs`'s atomic writer, changes only that
+exact setting and preserves the banner and unrelated settings. Regression tests
+cover drift, duplicate settings, invalid references and rollback. The daily
+checker verifies this exact completed OS overlay before recognizing the current
+application revision; it never downgrades to the older image or treats archived
+evidence as current security clearance. New upstream revisions still need review.
+
+All four releases passed. Rollback uses each receipt's old image and the same
+scoped release gates; Redlib restores its environment override. No database
+migration or retention change occurred.
+
+Both Penpot DHI APT images are also deployed with authenticated APT/libapt
+3.0.4+dhi0. `acquire-debian.py --download --dhi` verifies its separately pinned
+key, signed index and exact package archives. `check-vendor-dhi.py` compares
+every installed package file and symlink. Four older status.d records remain
+unchanged; the live fixed payload, ABI and configuration checks pass. The scan
+gate records those residuals explicitly and rejects any different residual or
+new high/critical finding. It does not delete metadata or suppress the scanner.
+`vendor-leaves-final/review-dhi.mjs` separately checks the complete live package
+payload and the current primary vendor advisory before preparing exact reviews.
+
+The current vendor batch totals 34 distinct images and 39 completed groups.
+The new six-image batch affects eight container roles. These are package repairs;
+a fresh complete Penpot browser workflow is not claimed. The earlier native and
+application proof remains bound to unchanged files and completed release history.
+
+### Release-chain review correction
+
+`review-native-backports.mjs` now follows exact completed release edges, rather
+than assuming the receipt list is chronological. It rejects divergent role
+histories, ambiguous successors, cycles and invalid/out-of-order timestamps.
+Existing curl, ncurses, util-linux, XML, TIFF, Xlib and source-patch reviewers
+reuse this check or the existing tested `expatDescendant` helper. No finding is
+cleared solely because an image is a descendant: each reviewer still verifies
+its specific deployed file hashes and retained source/test evidence.
+
+The 04:19 UTC scan and subsequent exact reviews leave 0 critical / 88 high
+records pending. There are 24,491 raw package/target observations, including
+65 critical / 3,050 high; these are retained and are not unique vulnerabilities.
+The separate review ledger does not change scanner output. Private receipts are
+under `apt-followup/` and `after-apt-reviews/`. Seven-day review expiry and normal
+advisory freshness requirements remain. No new exploit reproduction was run.
+
 `vendor-debian-inputs.json` pins 28 authenticated APT/libapt/zlib image repairs.
 `vendor-debian.mjs`, `vendor-debian-policy.mjs` and the distroless
 `vendor-yopass.py` adapter retain the existing release lock, narrow package

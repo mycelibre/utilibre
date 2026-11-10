@@ -9,6 +9,8 @@ import {exactDhiFinding} from './policy.mjs';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';
 import {authenticateArchive,payloadManifest,validatePayload,validatePackageStatus} from './dhi-proof.mjs';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
+import {expatDescendant} from '../security-20261103/expat-policy.mjs';
+import {proveVendorDebian} from '../security-20261109/vendor-debian-policy.mjs';
 process.umask(0o077);
 const dir='/var/lib/utilibre-maintenance/vendor-leaves-final-20261011',out=dir+'/dhi-fixed',sha=b=>createHash('sha256').update(b).digest('hex');fs.mkdirSync(out,{recursive:true});
 const images=[['utilibre-expanded-penpot-frontend-1','sha256:ca4f4adc5367a40e1597bea7d6032de0d08266b6d65cdf083ae4c695d54d23a7'],['utilibre-expanded-penpot-exporter-1','sha256:a3102615b1349f141d787dd806bc3464a49d223a5336471b3e09b1bc74a6d8da']];
@@ -33,11 +35,14 @@ if(fs.existsSync(curlRelease)){
 // stale aggregate dpkg metadata. Use its existing Node runtime for read-only
 // inspection; do not install a shell or package manager into production.
 images.push(['utilibre-expanded-penpot-admin-console-1','sha256:dd9e60cd964fc098ef195d88ff6f132e143bfeb603d801cae95e50a2938098fa']);
+const completedOverlays=[];
 for(const receipt of additionalOverlayReceipts){
  const file='/var/lib/utilibre-maintenance/'+receipt;if(!fs.existsSync(file))continue;
  const report=JSON.parse(fs.readFileSync(file));assert.equal(report.status,'passed');
- for(const image of images){const row=overlayRows(report).find(r=>r.name===image[0]&&r.oldImage===image[1]);if(row)image[1]=row.newImage;}
+ completedOverlays.push(...overlayRows(report));
 }
+const completedScan=JSON.parse(fs.readFileSync('/var/lib/utilibre-maintenance/security.json'));
+for(const image of images)image[1]=expatDescendant(image[0],image[1],'1970-01-01T00:00:00Z',completedScan.completedAt,completedOverlays);
 const versions={'libpcre2-8-0':['pcre2','10.46-1~deb13u3+dhi0'],'libsqlite3-0':['sqlite3','3.46.1-7+deb13u2+dhi1'],...Object.fromEntries(['libssl3t64','openssl','openssl-provider-legacy'].map(p=>[p,['openssl','3.5.7-1~deb13u3+dhi0']])),...Object.fromEntries(['util-linux','libmount1','libblkid1','liblastlog2-2','libsmartcols1','libuuid1'].map(p=>[p,['util-linux','2.41.5-0+deb13u1+dhi3']]))};
 const allowed=new Set('103111 86145 89157 89161 89156 89158 89160 89162 11822 11824 84782 42772 54872 54873 54875 72897 75804 75805 75806 77696 84784 35189 35191 14456 18798 63072 63076 14457 54874 63073 63074 63075 75803 53612 53613 53614 13595 27456 53615'.split(' ').map(x=>'CVE-2026-'+x));allowed.add('CVE-2025-14104');
 const docker=(args)=>{try{return execFileSync('docker',args,{encoding:'utf8',timeout:180000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe']});}catch(e){fs.writeFileSync(out+'/error.log',String(e.stdout||'')+String(e.stderr||e));throw Error('DHI proof failed; private diagnostic retained');}};
@@ -64,10 +69,42 @@ const response=await fetch(sourceUrl,{signal:AbortSignal.timeout(30000)});assert
 const sourceEvidence={url:sourceUrl,checkedAt:new Date().toISOString(),sha256:sha(bytes),records:{}};
 const queue=JSON.parse(fs.readFileSync('/var/lib/utilibre-maintenance/security-queue.json')),scan=JSON.parse(fs.readFileSync('/var/lib/utilibre-maintenance/security.json')),decisions=[],proofs=[],skipped=[];
 freshScan(queue,scan);
+// The November APT overlays use a separately authenticated DHI snapshot.
+// Keep the older eleven-package proof intact; verify the exact new release,
+// archive, native/ABI and retained-metadata receipts before checking live files.
+const aptVersions={},aptProofs=[];
+const aptRoot='/var/lib/utilibre-maintenance/security-20261109';
+const readJson=p=>JSON.parse(fs.readFileSync(p));
+const aptInputs=readJson(new URL('../security-20261109/vendor-debian-inputs.json',import.meta.url));
+const aptRelease=readJson(aptRoot+'/vendor-debian/release.json');
+assert.equal(aptRelease.status,'passed');
+for(const key of ['apt-penpot-frontend','apt-penpot-exporter']){
+ const s=aptInputs.rows.find(s=>s.key===key),d=aptRoot+'/vendor-debian/'+key;
+ const b=readJson(d+'/build.json'),p=readJson(d+'/dhi-payload.json');
+ proveVendorDebian(aptInputs,s,b,readJson(d+'/consumer.json'),readJson(d+'/scan-gate.json'),readJson(aptRoot+'/dhi-acquisition/authenticated.json'),aptRoot);
+ const g=aptRelease.groups.find(g=>g.key===key);assert.equal(g?.status,'passed');
+ assert(Date.parse(g.completedAt)<=Date.parse(scan.date));
+ assert(g.rows.every(r=>r.oldImage===s.base&&r.newImage===b.imageId));
+ for(const name of s.containers)assert.equal(images.find(i=>i[0]===name)?.[1],b.imageId);
+ for(const row of p.rows){
+  const pin=aptInputs.packages[s.packages[row.package].package],deb=aptRoot+'/debian-acquisition/'+pin.file;
+  assert.equal(sha(fs.readFileSync(deb)),pin.sha256);
+  const scratch=fs.mkdtempSync('/dev/shm/utilibre-apt-proof-');
+  try{
+   execFileSync('dpkg-deb',['--extract',deb,scratch],{timeout:30000});
+   const manifest=payloadManifest(scratch);
+   const captured=row.files.map(f=>f.type==='file'?{path:f.path,type:f.type,sha256:f.value}:{path:f.path,type:f.type,target:f.value}).sort((a,b)=>a.path.localeCompare(b.path));
+   assert.deepEqual(captured,manifest);manifests.set(row.package,manifest);
+  }finally{fs.rmSync(scratch,{recursive:true});}
+  aptVersions[row.package]=['apt',row.version];
+ }
+ aptProofs.push({key,imageId:b.imageId,payloadSha256:sha(fs.readFileSync(d+'/dhi-payload.json')),releaseCompletedAt:g.completedAt});
+}
+allowed.add('CVE-2026-109518');
 for(const [name,image] of images){
  const live=JSON.parse(docker(['inspect',name]))[0];assert.equal(live.Image,image);assert(live.State.Running);
  assert.equal(scan.images.find(s=>s.id===image)?.status,'checked');
- for(const[p,[source,version]]of Object.entries(versions)){
+ for(const[p,[source,version]]of Object.entries({...versions,...aptVersions})){
   const relevant=queue.items.filter(x=>exactDhiFinding(x,name,image,p,allowed));
   if(!relevant.length)continue;
   try{
@@ -80,6 +117,11 @@ for(const [name,image] of images){
     validatePackageStatus(result.status,p,version);observed=result.observed;
    }else{
     assert.equal(docker(['exec',name,'dpkg-query','-W','-f=${Version}',p]).trim(),version);
+    if(Object.hasOwn(aptVersions,p)){
+     const s=aptInputs.rows.find(s=>s.containers.includes(name));assert(s?.residual[p]);
+     assert(relevant.every(i=>i.id==='CVE-2026-109518'&&i.installed===s.residual[p].version));
+     assert.equal(sha(Buffer.from(docker(['exec',name,'cat',s.residual[p].path]))),s.residual[p].sha256);
+    }
     const hashes=docker(['exec',name,'sha256sum','--',...files.map(f=>f.path)]).trim().split('\n');
     assert.equal(hashes.length,files.length);
     const actual=new Map(hashes.map((line,i)=>{const hash=line.slice(0,64);assert.match(hash,/^[a-f0-9]{64}$/);assert.equal(line.slice(66),files[i].path);return[files[i].path,hash];}));
@@ -98,5 +140,5 @@ for(const [name,image] of images){
  }
 }
 fs.writeFileSync(out+'/primary-evidence.json',JSON.stringify(sourceEvidence,null,2)+'\n');
-fs.writeFileSync(dir+'/dhi-fixed-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:queue.scanDate,applied:false,decisions,proofs,archives,primaryEvidenceSha256:sha(fs.readFileSync(out+'/primary-evidence.json')),skipped},null,2)+'\n');
+fs.writeFileSync(dir+'/dhi-fixed-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:queue.scanDate,applied:false,decisions,proofs,archives,aptProofs,primaryEvidenceSha256:sha(fs.readFileSync(out+'/primary-evidence.json')),skipped},null,2)+'\n');
 console.log(JSON.stringify({prepared:decisions.length,skipped:skipped.length,applied:false}));

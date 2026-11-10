@@ -853,3 +853,85 @@ The complete source includes frontend source and compiled assets, exact locks
 and rebuild instructions. Its public download matched SHA-256
 `52a9fbe8ad9463ccd42377d312de93ecf01bd36b2cb032d87257a4719306aa5e`
 (15,639,852 bytes).
+
+## FerretDB networking repair — 10 November
+
+FerretDB 2.7.0 retains Go 1.26.10, the existing MCP compatibility patch,
+MCP 1.4.1 and compression 1.20.2, with the exact x/net 0.62.0 graph. Only
+`/ferretdb` changes in the complete twelve-entry image. Native MCP/utility tests
+and separate old/new Gathio fixtures passed event editing, invalid edit-token
+denial, image upload, calendar import/export and stopped synthetic PostgreSQL
+copy/restore. Production MCP remains disabled. No real event or database was
+used in testing. The synthetic test directories were subsequently compressed;
+all 4,236 files and their permissions were compared with the archive before
+removing only the duplicate uncompressed fixture copies.
+
+The frozen-database comparison removes the targeted finding with no new HIGH
+or CRITICAL finding. The scoped release passed image/configuration/health and
+public HTTPS gates, without a database migration or application configuration
+change. Rollback uses the preceding FerretDB image in `xnet/release.json`; it
+does not undo user changes. Complete source archive SHA-256 is
+`6130a5ad3d5d5e8e5161af3e2f248592f10abd72126b4b49b83c6d12bc8eaa32`
+(59,568,217 bytes), verified by public download.
+
+Ten byte- and permission-identical generated build-context binaries were
+deduplicated through hard links, retaining both paths and every source, proof
+and rollback image. One copy with different permissions was left intact. This
+recovered 505,084,096 bytes; synthetic-fixture compression recovered a further
+238,495,960 bytes. This is scoped build-space cleanup, not backup pruning.
+
+
+## APT repairs and retained-fix verification — 10 November
+
+Six signed vendor-package overlays are deployed: Mumble, SimpleLogin, Addy's
+MariaDB image, Redlib and Penpot's frontend/exporter (eight container roles).
+Ubuntu Noble uses APT/libapt 2.8.4ubuntu0.1, Jammy 2.4.15ubuntu0.1, and DHI
+Trixie 3.0.4+dhi0. Acquisition verifies pinned signing keys, repository indexes,
+archive hashes and lengths. Cached replay without networking retains the
+original acquisition receipt. Ordinary APT checks pass on both old/new artifacts;
+ABI, dynamic dependencies, application/configuration and unrelated packages are
+unchanged. The same frozen Trivy database reports no new high/critical findings.
+Primary references, checked 10 November:
+[Ubuntu](https://ubuntu.com/security/CVE-2026-109518) and
+[Debian](https://security-tracker.debian.org/tracker/CVE-2026-109518).
+
+Penpot retains four raw findings from old status.d metadata. Every regular file
+and symlink from the signed fixed packages matches the candidate and live
+containers; actual dpkg package versions are fixed. The old metadata was not
+removed. Exact, expiring review records distinguish this attribution from an
+unrepaired library. A new full two-browser Penpot workflow was not performed:
+the application is unchanged and prior workflow evidence is retained.
+
+SimpleLogin stays private, with its intentional public unavailable notice and
+successful local login check. No mail was sent. Its previously tested Python
+interpreter and full Flask/Werkzeug modules match all three running roles.
+Mumble's restart occurred only after zero established connections. Addy's
+existing mail boundary and public alias route passed. Redlib's first release
+attempt stopped at its environment-variable pin before changing a container;
+the corrected exact override and retry passed. Its deterministic daily checker
+now recognizes the approved OS overlay without replacing it with an older image.
+A new upstream revision still requires the ordinary review gates.
+
+Several old reviewers assumed repair-family files were chronological. The
+corrected shared check follows completed same-role image transitions and rejects
+ambiguity, divergent roles, cycles and invalid chronology. Existing reviewers
+then recheck their own source proofs and live hashes. This restored the evidence
+for preserved XML, Xlib, TIFF, Xvfb, curl, ncurses, util-linux, Perl and application
+source fixes without replaying malicious inputs or changing the applications.
+
+The complete 04:19:58 UTC fleet scan covers 109 images, 175 containers and
+107 source inputs. After review, **0 critical / 88 high records remain pending**.
+Raw records remain **24,491 total, 65 critical / 3,050 high**. These are package/
+target counts, not unique exploitable vulnerabilities or a security clearance.
+Remaining records, expired reviews and known separate limitations stay open.
+Evidence: private `security-20261109/apt-followup/`, `after-apt-reviews/`,
+`vendor-debian/release.json`, and the existing per-component review receipts.
+
+Rollback selects each exact previous image/configuration pin in the release
+receipt and uses the existing scoped release checks. Redlib additionally restores
+its protected environment image setting. No database migration, reboot, account
+change or retention change occurred; image rollback does not undo user edits.
+
+The final focused check passes 112 tests across release, rollback, source review,
+artifact lineage, vendor payload and Redlib maintenance policies. JavaScript and
+Python syntax checks and the scoped whitespace check pass.

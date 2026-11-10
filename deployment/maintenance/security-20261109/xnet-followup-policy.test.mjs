@@ -103,3 +103,8 @@ test('Vikunja retains its complete minimal image inventory',()=>{
  const d=data();d.s.key='vikunja';d.s.builderSha256='a'.repeat(64);d.b.compilerVersion='1.27.3';d.b.compiler='sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b';d.b.imageEntries=15;assert(validate(d));
  d.b.imageEntries=14;assert.throws(()=>validate(d));d.b.imageEntries=16;assert.throws(()=>validate(d));
 });
+
+test('FerretDB retains its complete minimal image inventory',()=>{
+ const d=data();d.s.key='ferretdb';d.s.builderSha256='a'.repeat(64);d.b.imageEntries=12;assert(validate(d));
+ d.b.imageEntries=11;assert.throws(()=>validate(d));d.b.imageEntries=13;assert.throws(()=>validate(d));
+});

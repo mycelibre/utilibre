@@ -225,7 +225,7 @@ services:
 
   penpot-frontend:
     <<: *runtime
-    image: utilibre-expanded-penpot-frontend:sqlite-security-20261109
+    image: utilibre-apt-penpot-frontend:security-20261109
     user: "1001:1001"
     # Run after the upstream entrypoint has generated its environment config.
     command: ["/bin/sh", "/usr/local/bin/utilibre-penpot-nginx-start.sh"]
@@ -303,7 +303,7 @@ services:
 
   penpot-exporter:
     <<: *runtime
-    image: utilibre-expanded-penpot-exporter:sqlite-security-20261109
+    image: utilibre-apt-penpot-exporter:security-20261109
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
       PENPOT_INTERNAL_URI: http://penpot-frontend:8080

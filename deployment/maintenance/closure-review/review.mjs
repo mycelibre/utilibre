@@ -7,7 +7,7 @@ import {validateDecision} from '../triage.mjs';
 import {run as rebuild} from '../build-queue.mjs';
 import {overlayRows} from '../review-native-backports.mjs';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
-const simpleOnly=process.argv.includes('--simplelogin-oct28');assert(process.argv.slice(2).every(a=>['--apply','--simplelogin-oct28'].includes(a)));
+const simpleOnly=process.argv.includes('--simplelogin-oct28'),retained=process.argv.includes('--retained-native');assert(process.argv.slice(2).every(a=>['--apply','--simplelogin-oct28','--retained-native'].includes(a)));assert(!retained||simpleOnly&&!process.argv.includes('--apply'));
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',read=p=>JSON.parse(fs.readFileSync(root+'/'+p));
 const q=read('security-queue.json'),scan=read('security.json');
@@ -31,7 +31,24 @@ for(const item of q.items.filter(x=>x.status==='needs-review'&&x.scope==='host-o
 
 const simple=group('simplelogin');
 const simpleNative=read('python-closure-20261012/simplelogin-parity.json');assert.equal(simpleNative.imageId,simple.originalImage);
-const direct=JSON.parse(exec('docker',['run','--rm','-i','--network','none','--log-driver','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--memory','256m','--cpus','1','--entrypoint','/code/.venv/bin/python',simple.newImage,'-'],{input:fs.readFileSync(new URL('../python-closure/check-backports.py',import.meta.url))}));assert(direct.passed);
+let direct,retainedProof;
+if(retained){
+ const previous='security-20261109/apt-followup/retained-reviews/previous-simplelogin.json';
+ assert.equal(sha(root+'/'+previous),'02f1e6fd474089952017ad31036ada42b74b75f416c513f0150e2f72e6aaf6ef');
+ const p=read(previous).proofs.find(p=>p.service==='simplelogin');assert.equal(p.image,'sha256:324101c7312548e055ce8712dabe30e2d42a9e5b33f97c90ba249558a24c3b4b');
+ direct=p.native;assert(direct.passed&&direct.checks.length===4);
+ const collector=`import pathlib,hashlib,json,sys
+r=pathlib.Path('/code/.venv/lib/python3.12/site-packages');out={}
+for name in ['flask','werkzeug']:
+ for p in sorted((r/name).rglob('*')):
+  if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc':out[str(p)]=hashlib.sha256(p.read_bytes()).hexdigest()
+executable=pathlib.Path(sys.executable).resolve();out[str(executable)]=hashlib.sha256(executable.read_bytes()).hexdigest()
+assert len(out)>50
+print(json.dumps(out,sort_keys=True))`;
+ const expected=exec('docker',['run','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--memory','128m','--cpus','1','--pids-limit','32','--log-driver','none','--entrypoint','/code/.venv/bin/python',p.image,'-I','-B','-c',collector]);
+ for(const r of simple.rows)assert.equal(exec('docker',['exec',r.name,'/code/.venv/bin/python','-I','-B','-c',collector]),expected);
+ retainedProof={previous,previousSha256:sha(root+'/'+previous),fullModuleAndInterpreterSha256:createHash('sha256').update(expected).digest('hex'),files:Object.keys(JSON.parse(expected)).length,roles:simple.rows.map(r=>r.name),newNativeExecution:false};
+}else direct=JSON.parse(exec('docker',['run','--rm','-i','--network','none','--log-driver','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--memory','256m','--cpus','1','--entrypoint','/code/.venv/bin/python',simple.newImage,'-'],{input:fs.readFileSync(new URL('../python-closure/check-backports.py',import.meta.url))}));assert(direct.passed);
 const patches=read('python-closure-20261012/patches.json');
 for(const p of patches)assert.equal(sha(root+'/python-closure-20261012/'+p.file),p.runtimeSha256);
 // Reverse each signed-vendor hunk in order on disposable package copies. The
@@ -42,9 +59,9 @@ for name in ['flask','werkzeug']:
 for p in reversed(json.load(open('/proof/patches.json'))):
  subprocess.run(['patch','--batch','--reverse','--force','--fuzz=0','-p2','-d','/tmp/proof','-i','/proof/'+p['file']],check=True,capture_output=True)
 print('passed')`]);
-proofs.push({service:'simplelogin',image:simple.newImage,native:direct,patches});
+proofs.push({service:'simplelogin',image:simple.newImage,native:direct,patches,...(retained?{retainedProof}:{})});
 for(const item of q.items.filter(x=>x.status==='needs-review'&&x.artifact===simple.newImage&&((x.package==='Flask'&&x.id==='CVE-2023-30861')||(x.package==='Werkzeug'&&['CVE-2023-25577','CVE-2024-34069','CVE-2023-23934'].includes(x.id))))){
- decide(item,`Signed Debian Flask 1.1.2 / Werkzeug 1.0.1 security backports applied to exact image ${simple.newImage}. Reverse application of every retained hunk on disposable copies and direct native regressions passed: session Vary: Cookie, multipart part limits, untrusted debugger host rejection and leading-equals cookie parsing. Application/interpreter hashes preserved; fresh native auth/CSRF/SMTP and fixture dump/restore passed. Stable package metadata intentionally unchanged. Evidence: python-closure-20261012/patches.json, simplelogin-parity.json; closure-review/review.mjs. Only the named backported defect is mitigated; legacy-framework/public-activation restrictions remain.`);
+ decide(item,retained?`Signed Debian Flask/Werkzeug backports retained in exact image ${simple.newImage}. Complete module files and Python interpreter match the previous tested image in all three live roles; inventory hash ${retainedProof.fullModuleAndInterpreterSha256}. Every signed-vendor patch reverses exactly on disposable copies. The pinned earlier native receipt records session Vary, multipart bounds, debugger host checks and cookie compatibility; these regressions were not rerun. Existing public-evaluation restriction and other findings remain. Evidence: security-20261109/apt-followup/retained-reviews/previous-simplelogin.json and security-20261028/simplelogin-review.json. No metadata suppression, new exploit or email.`:`Signed Debian Flask 1.1.2 / Werkzeug 1.0.1 security backports applied to exact image ${simple.newImage}. Reverse application of every retained hunk on disposable copies and direct native regressions passed: session Vary: Cookie, multipart part limits, untrusted debugger host rejection and leading-equals cookie parsing. Application/interpreter hashes preserved; fresh native auth/CSRF/SMTP and fixture dump/restore passed. Stable package metadata intentionally unchanged. Evidence: python-closure-20261012/patches.json, simplelogin-parity.json; closure-review/review.mjs. Only the named backported defect is mitigated; legacy-framework/public-activation restrictions remain.`);
 }
 
 // Revalidate unchanged earlier native backports after the JS/FIPS overlays.

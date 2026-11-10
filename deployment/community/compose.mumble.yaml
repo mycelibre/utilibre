@@ -1,7 +1,7 @@
 name: utilibre-mumble
 services:
   mumble:
-    image: utilibre-mumble:openssl-vendor-security-20261011
+    image: utilibre-apt-mumble:security-20261109
     restart: unless-stopped
     read_only: true
     user: "10000:10000"

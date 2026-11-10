@@ -89,6 +89,31 @@ export function freshScan(queue,scan,now=Date.now()){
  assert(Number.isFinite(completed)&&completed<=now+300000&&completed>now-86400000,'Fresh completed scanner evidence required');
  assert.equal(queue.scanDate,scan.completedAt,'Queue must come from this exact scan');
 }
+// Receipts are grouped by repair family, not chronological deployment order.
+// Follow exact completed edges independently of their filenames/list order.
+export function followOverlaySpecs(original,receipts){
+ const edges=receipts.flatMap(({path,report})=>overlayRows(report).map(r=>({...r,receipt:path})));
+ const result=[...original];
+ for(const first of original){
+  if(!first.containers.length)continue;
+  let spec=first,at=first.completedAt?Date.parse(first.completedAt):-Infinity;const seen=new Set([spec.artifact]);
+  assert(at===-Infinity||Number.isFinite(at),'Invalid initial release date');
+  while(true){
+   const choices=spec.containers.map(name=>edges.filter(r=>r.name===name&&r.oldImage===spec.artifact&&r.newImage!==r.oldImage));
+   if(choices.every(rows=>!rows.length))break;
+   assert(choices.every(rows=>rows.length===1),'Ambiguous or incomplete role lineage');
+   const rows=choices.map(a=>a[0]);
+   assert.equal(new Set(rows.map(r=>r.newImage)).size,1,'Roles have different successors');
+   assert.equal(new Set(rows.map(r=>r.receipt)).size,1,'Roles need one completed release');
+   const nextAt=Math.max(...rows.map(r=>Date.parse(r.completedAt)));
+   assert(Number.isFinite(nextAt)&&rows.every(r=>Date.parse(r.completedAt)>=at),'Nonchronological release lineage');
+   assert(!seen.has(rows[0].newImage),'Cyclic release lineage');
+   spec={...spec,artifact:rows[0].newImage,completedAt:new Date(nextAt).toISOString(),overlayPredecessor:spec,overlayReceipt:rows[0].receipt};
+   result.push(spec);seen.add(spec.artifact);at=nextAt;
+  }
+ }
+ return result;
+}
 const read=path=>JSON.parse(fs.readFileSync(root+path));
 const sha=path=>createHash('sha256').update(fs.readFileSync(path)).digest('hex');
 function sameFile(path,hash){assert.equal(sha(root+path),hash,'Retained source/package artifact hash mismatch');}
@@ -201,16 +226,8 @@ export function validateObserved(spec,item,observed){
 export function run(){
  process.umask(0o077);
  const queue=read('security-queue.json'),scan=read('security.json');freshScan(queue,scan);
- const decisions=[],skipped=[],proofs=[],currentSpecs=[...specs];
- for(const receipt of overlayReceipts){
-  if(!fs.existsSync(root+receipt))continue;const rows=overlayRows(read(receipt));
-  for(const spec of [...currentSpecs]){
-   if(!spec.containers.length)continue;
-   const matches=spec.containers.map(name=>rows.find(r=>r.name===name&&r.oldImage===spec.artifact));
-   if(matches.every(Boolean)&&new Set(matches.map(r=>r.newImage)).size===1&&matches[0].newImage!==spec.artifact)
-    currentSpecs.push({...spec,artifact:matches[0].newImage,overlayPredecessor:spec,overlayReceipt:receipt});
-  }
- }
+ const decisions=[],skipped=[],proofs=[],currentSpecs=followOverlaySpecs(specs,
+  [...new Set(overlayReceipts)].filter(p=>fs.existsSync(root+p)).map(path=>({path,report:read(path)})));
  const command=(p,args)=>execFileSync(p,args,{encoding:'utf8',timeout:10000,maxBuffer:1024*1024,stdio:['ignore','pipe','pipe']}).trim();
  for(const item of queue.items){
   const spec=currentSpecs.find(s=>matches(item,s));if(!spec)continue;

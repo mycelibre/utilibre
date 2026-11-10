@@ -55,6 +55,66 @@
       "distribution": "bookworm-security",
       "depends": "libbz2-1.0, libc6 (>= 2.34), libgcc-s1 (>= 3.0), libgcrypt20 (>= 1.10.0), liblz4-1 (>= 0.0~r127), liblzma5 (>= 5.1.1alpha+20120614), libstdc++6 (>= 11), libsystemd0 (>= 221), libudev1 (>= 183), libxxhash0 (>= 0.7.1), libzstd1 (>= 1.5.2), zlib1g (>= 1:1.2.2.3)",
       "preDepends": ""
+    },
+    "noble/apt": {
+      "name": "apt",
+      "version": "2.8.4ubuntu0.1",
+      "file": "apt_2.8.4ubuntu0.1_amd64.deb",
+      "sha256": "ad2ea7f107f250ba88b0bfdba31812a341e3247589647aa2b03b9dc4e8abf8ed",
+      "url": "https://security.ubuntu.com/ubuntu/pool/main/a/apt/apt_2.8.4ubuntu0.1_amd64.deb",
+      "distribution": "noble-security",
+      "depends": "base-passwd (>= 3.6.1) | adduser, gpgv, libapt-pkg6.0t64 (>= 2.8.4ubuntu0.1), ubuntu-keyring, libc6 (>= 2.38), libgcc-s1 (>= 3.3.1), libgnutls30t64 (>= 3.8.1), libseccomp2 (>= 2.4.2), libstdc++6 (>= 13.1), libsystemd0",
+      "preDepends": ""
+    },
+    "noble/libapt-pkg6.0t64": {
+      "name": "libapt-pkg6.0t64",
+      "version": "2.8.4ubuntu0.1",
+      "file": "libapt-pkg6.0t64_2.8.4ubuntu0.1_amd64.deb",
+      "sha256": "a50f3e68a793f90b05f44a4b5f2f59f3ec7687e39b5d8bbd1da44c84671fa3d6",
+      "url": "https://security.ubuntu.com/ubuntu/pool/main/a/apt/libapt-pkg6.0t64_2.8.4ubuntu0.1_amd64.deb",
+      "distribution": "noble-security",
+      "depends": "libbz2-1.0, libc6 (>= 2.38), libgcc-s1 (>= 3.3.1), libgcrypt20 (>= 1.10.0), liblz4-1 (>= 0.0~r127), liblzma5 (>= 5.1.1alpha+20120614), libstdc++6 (>= 13.1), libsystemd0 (>= 221), libudev1 (>= 183), libxxhash0 (>= 0.7.1), libzstd1 (>= 1.5.5), zlib1g (>= 1:1.2.2.3)",
+      "preDepends": ""
+    },
+    "jammy/apt": {
+      "name": "apt",
+      "version": "2.4.15ubuntu0.1",
+      "file": "apt_2.4.15ubuntu0.1_amd64.deb",
+      "sha256": "2d4db9a3017c5364e50af5bc2f0c76828b52933b682eff4728f1211e081c6736",
+      "url": "https://security.ubuntu.com/ubuntu/pool/main/a/apt/apt_2.4.15ubuntu0.1_amd64.deb",
+      "distribution": "jammy-security",
+      "depends": "adduser, gpgv | gpgv2 | gpgv1, libapt-pkg6.0 (>= 2.4.15ubuntu0.1), ubuntu-keyring, libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), libgnutls30 (>= 3.7.0), libseccomp2 (>= 2.4.2), libstdc++6 (>= 11), libsystemd0",
+      "preDepends": ""
+    },
+    "jammy/libapt-pkg6.0": {
+      "name": "libapt-pkg6.0",
+      "version": "2.4.15ubuntu0.1",
+      "file": "libapt-pkg6.0_2.4.15ubuntu0.1_amd64.deb",
+      "sha256": "3a6fbab029e15ca7b8da642c17ec110995a6e3a0bc40eaa08e239cfc94d6c426",
+      "url": "https://security.ubuntu.com/ubuntu/pool/main/a/apt/libapt-pkg6.0_2.4.15ubuntu0.1_amd64.deb",
+      "distribution": "jammy-security",
+      "depends": "libbz2-1.0, libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), libgcrypt20 (>= 1.9.0), liblz4-1 (>= 0.0~r127), liblzma5 (>= 5.1.1alpha+20120614), libstdc++6 (>= 11), libsystemd0 (>= 221), libudev1 (>= 183), libxxhash0 (>= 0.7.1), libzstd1 (>= 1.4.0), zlib1g (>= 1:1.2.2.3)",
+      "preDepends": ""
+    },
+    "dhi-trixie/apt": {
+      "name": "apt",
+      "version": "3.0.4+dhi0",
+      "file": "apt_3.0.4+dhi0_amd64.deb",
+      "sha256": "d5517cd417608e681987233d9694f8f72b94c36d916a41df4988ca796961c7d4",
+      "url": "https://dhi.io/deb/debian/main/pool/trixie/main/a/ap/apt_3.0.4+dhi0/apt_3.0.4+dhi0_amd64.deb",
+      "distribution": "trixie",
+      "depends": "base-passwd (>= 3.6.1) | adduser, gpgv, libapt-pkg7.0 (>= 3.0.4+dhi0), debian-archive-keyring, libc6 (>= 2.41), libgcc-s1, libseccomp2 (>= 2.6.0), libssl3t64 (>= 3.5.7), libstdc++6, libsystemd0 (>= 257.13)",
+      "preDepends": ""
+    },
+    "dhi-trixie/libapt-pkg7.0": {
+      "name": "libapt-pkg7.0",
+      "version": "3.0.4+dhi0",
+      "file": "libapt-pkg7.0_3.0.4+dhi0_amd64.deb",
+      "sha256": "781179c72afb51bccbd44ca5c7483e903410488e645bfbeea1cb1c733ffce132",
+      "url": "https://dhi.io/deb/debian/main/pool/trixie/main/l/li/libapt-pkg7.0_3.0.4+dhi0/libapt-pkg7.0_3.0.4+dhi0_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libbz2-1.0, libc6 (>= 2.41), libgcc-s1, liblz4-1 (>= 1.10.0), liblzma5 (>= 5.8.1), libssl3t64 (>= 3.5.7), libstdc++6, libsystemd0 (>= 257.13), libudev1 (>= 257.13), libxxhash0 (>= 0.8.3), libzstd1 (>= 1.5.5), zlib1g (>= 1:1.2.3.3.dfsg-1)",
+      "preDepends": ""
     }
   },
   "fixture": {
@@ -94,7 +154,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://grist.utilibre.org/"
+      "publicHome": "https://grist.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:0b0d53a92e5d4cb8d890808851dfa3970a8f37a985583b9c0cb94e6a78bd3a9d",
@@ -120,7 +181,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://wishlist.utilibre.org/"
+      "publicHome": "https://wishlist.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:0c5f026892e1334ac251bcb2b142aeaafcbdc4f164ef165075e7515718c83df0",
@@ -146,7 +208,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://cv.utilibre.org/"
+      "publicHome": "https://cv.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:13131088b2e4889186a3b161228927c17a28af6be04eda2310842df202f48007",
@@ -180,7 +243,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://kitchen.utilibre.org/"
+      "publicHome": "https://kitchen.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:1c4650342eb15e0e4b13ce86cc819d31b75823c8d939bbfb26357b21f1acc19d",
@@ -214,7 +278,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://tumblr.utilibre.org/"
+      "publicHome": "https://tumblr.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:22475b057d3546332125370fa15b1d19f213d932fda1278392457246ba2e3338",
@@ -256,7 +321,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": null
+      "publicHome": null,
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:2297218097ca2cd0d4088d0d88e11767a8cb4aab3fb6d987b76eed2f5cb2f4e8",
@@ -282,7 +348,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://pad.utilibre.org/"
+      "publicHome": "https://pad.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:3a84a8b7a21a4717856ca0b5ab9cf1fa73461025f5c26d28ffe9f7e10ad5a3ad",
@@ -316,7 +383,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://trip.utilibre.org/"
+      "publicHome": "https://trip.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:3f838c5535fbe35b9f26cd73eeb489dcb87cbfcce686996ef129c2491497cf62",
@@ -352,7 +420,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://auth.utilibre.org/"
+      "publicHome": "https://auth.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:4378a40617f0b3ec39c32b9d551713ff102499ed4b55608d4d26d1f9ec8eb832",
@@ -386,7 +455,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://forms.utilibre.org/"
+      "publicHome": "https://forms.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:46aa631691b25d7afddb1c9d6d39fa379529d12c50792875be7ddcad91dc2be8",
@@ -420,7 +490,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://rss.utilibre.org/"
+      "publicHome": "https://rss.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:4eaf42c1a08d26413f48dadfa049ece0828069459821002863e8b1c28c5f4a1b",
@@ -450,7 +521,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://poll.utilibre.org/"
+      "publicHome": "https://poll.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:599726db2bc5f925d833fdfbbf93cf1b2e485bf304d44ca9b8129effececa476",
@@ -484,7 +556,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://calendar.utilibre.org/"
+      "publicHome": "https://calendar.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:632bf368ce0f55ed17ec81240607d94a585e0fc5c306a975821bb83c8e046fc1",
@@ -510,7 +583,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://budget.utilibre.org/"
+      "publicHome": "https://budget.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:6c4a54d2961cf23a2ce1e0207a69f220bdecc1e6e761d49020a7ac48e856077c",
@@ -544,7 +618,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://design.utilibre.org/"
+      "publicHome": "https://design.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:6e66886218f4520e091cd46238acefa541494787e2149c39103e8bd330522269",
@@ -574,7 +649,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://bridge.utilibre.org/"
+      "publicHome": "https://bridge.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:707780d5b92de62829142d2a7d9fc20e65be11a6f114e47e797b3f8a015f46c8",
@@ -608,7 +684,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://candlr.utilibre.org/"
+      "publicHome": "https://candlr.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:716093473b3ff78e3af452acff3b04f4db9d237403ff17f82a1f5e45c4cdc519",
@@ -674,7 +751,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": null
+      "publicHome": null,
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:73202f190b796913b1b36144d5ffcd2689dfdb8d258c3304b8e3a439c70bf28e",
@@ -708,7 +786,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": null
+      "publicHome": null,
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:7d144211ce37c299fe413e702271a04586cfde9b85876eb3eac9d32b31e3682a",
@@ -738,7 +817,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": null
+      "publicHome": null,
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:80a9866dd3ffcd6716ff0b644b9b39ebe21a3a1aa6aaf1870fababf8969dec6b",
@@ -768,7 +848,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://status.utilibre.org/"
+      "publicHome": "https://status.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:835906027a7f9cc936289311ff375064d935f19b23c4ed235faadc0d690171d0",
@@ -802,7 +883,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://bookmarks.utilibre.org/"
+      "publicHome": "https://bookmarks.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:92c77ef464160d1068bd62ea3e55d5df1e68d084c595c48ac4f0aca2367e2118",
@@ -836,7 +918,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": null
+      "publicHome": null,
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:ad606c44d85314071a45f78074415f2b209c391b868d8fb737d6c65f63a487c6",
@@ -870,7 +953,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": null
+      "publicHome": null,
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:b651453a70b02a6018788f6d71ccb6eb7fb4911b640346ab539ba0eff1c93d1b",
@@ -930,7 +1014,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://wiki.utilibre.org/"
+      "publicHome": "https://wiki.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:db5dbe71e36033fd797a30309d78256e1976679f721dbacb1e2475c6764a9641",
@@ -964,7 +1049,8 @@
           "approval": "approved"
         }
       ],
-      "publicHome": null
+      "publicHome": null,
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
     },
     {
       "base": "sha256:ebae352b95fb84269b91cc1a27a9586437e48f899c9b3abc381927e9352152f8",
@@ -998,7 +1084,174 @@
           "approval": "approved"
         }
       ],
-      "publicHome": "https://habits.utilibre.org/"
+      "publicHome": "https://habits.utilibre.org/",
+      "abiFixtureRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
+    },
+    {
+      "key": "apt-mumble",
+      "suite": "noble",
+      "base": "sha256:123ee629f394be73c61eda71d4974eb6aea92b2b234185c28015e1d670d112dc",
+      "containers": [
+        "utilibre-mumble-mumble-1"
+      ],
+      "packages": {
+        "apt": {
+          "installed": "2.8.3",
+          "package": "noble/apt"
+        },
+        "libapt-pkg6.0t64": {
+          "installed": "2.8.3",
+          "package": "noble/libapt-pkg6.0t64"
+        }
+      },
+      "candidate": "utilibre-apt-mumble:security-20261109",
+      "approval": "approved",
+      "publicHome": null,
+      "acquisition": "ubuntu",
+      "acquisitionSha256": "a81c4f8b6f781a2bc67a4338df4b7404f2c0e468472b4e7c01b5fa5b30bdff1f"
+    },
+    {
+      "key": "apt-simplelogin",
+      "suite": "jammy",
+      "base": "sha256:324101c7312548e055ce8712dabe30e2d42a9e5b33f97c90ba249558a24c3b4b",
+      "containers": [
+        "utilibre-simplelogin-web-1",
+        "utilibre-simplelogin-jobs-1",
+        "utilibre-simplelogin-smtp-1"
+      ],
+      "packages": {
+        "apt": {
+          "installed": "2.4.14",
+          "package": "jammy/apt"
+        },
+        "libapt-pkg6.0": {
+          "installed": "2.4.14",
+          "package": "jammy/libapt-pkg6.0"
+        }
+      },
+      "candidate": "utilibre-apt-simplelogin:security-20261109",
+      "approval": "approved",
+      "publicHome": null,
+      "acquisition": "ubuntu",
+      "acquisitionSha256": "a81c4f8b6f781a2bc67a4338df4b7404f2c0e468472b4e7c01b5fa5b30bdff1f",
+      "deploymentState": "private-evaluation",
+      "healthBoundary": "Existing loopback login gateway only; public hostname intentionally remains HTTP 503."
+    },
+    {
+      "key": "apt-addy-db",
+      "suite": "noble",
+      "base": "sha256:6e62c03e89db9479b74a832a7364c7928bf4af0c57ddd082468f050f05cb4872",
+      "containers": [
+        "utilibre-addy-db-1"
+      ],
+      "packages": {
+        "apt": {
+          "installed": "2.8.3",
+          "package": "noble/apt"
+        },
+        "libapt-pkg6.0t64": {
+          "installed": "2.8.3",
+          "package": "noble/libapt-pkg6.0t64"
+        }
+      },
+      "candidate": "utilibre-apt-addy-db:security-20261109",
+      "approval": "approved",
+      "publicHome": "https://aliases.utilibre.org/",
+      "acquisition": "ubuntu",
+      "acquisitionSha256": "a81c4f8b6f781a2bc67a4338df4b7404f2c0e468472b4e7c01b5fa5b30bdff1f"
+    },
+    {
+      "key": "apt-redlib",
+      "suite": "noble",
+      "base": "sha256:cda5d1262d991178f235db4bb259f426cc00901a50ee7f85e87e45173df71e54",
+      "containers": [
+        "public-utility-redlib-1"
+      ],
+      "packages": {
+        "apt": {
+          "installed": "2.8.3",
+          "package": "noble/apt"
+        },
+        "libapt-pkg6.0t64": {
+          "installed": "2.8.3",
+          "package": "noble/libapt-pkg6.0t64"
+        }
+      },
+      "candidate": "utilibre-apt-redlib:security-20261109",
+      "approval": "approved",
+      "publicHome": "https://redlib.utilibre.org/",
+      "acquisition": "ubuntu",
+      "acquisitionSha256": "a81c4f8b6f781a2bc67a4338df4b7404f2c0e468472b4e7c01b5fa5b30bdff1f"
+    },
+    {
+      "key": "apt-penpot-frontend",
+      "suite": "trixie",
+      "base": "sha256:10a3f6310f9c58446ac964acca091f5d3637aac2cd43e7ca092862abc7ca8eae",
+      "containers": [
+        "utilibre-expanded-penpot-frontend-1"
+      ],
+      "packages": {
+        "apt": {
+          "installed": "3.0.3+dhi2",
+          "package": "dhi-trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3+dhi2",
+          "package": "dhi-trixie/libapt-pkg7.0"
+        }
+      },
+      "candidate": "utilibre-apt-penpot-frontend:security-20261109",
+      "approval": "approved",
+      "publicHome": "https://design.utilibre.org/",
+      "acquisition": "dhi",
+      "acquisitionSha256": "cf41853fff2f20da179fb6a8d9aa9260580d84945100f3a04dd463c8bc99d8be",
+      "residual": {
+        "apt": {
+          "path": "/var/lib/dpkg/status.d/apt",
+          "version": "3.0.3+dhi1",
+          "sha256": "2d2e77a6439625f276da9de15ca623a9162411e44c673cdb034e4f37b759fbf8"
+        },
+        "libapt-pkg7.0": {
+          "path": "/var/lib/dpkg/status.d/libapt-pkg7.0",
+          "version": "3.0.3+dhi1",
+          "sha256": "e308a2004cf53609956887d8fdd9a0eac61edca45bf22c09f8d0bd11b3c8c9db"
+        }
+      }
+    },
+    {
+      "key": "apt-penpot-exporter",
+      "suite": "trixie",
+      "base": "sha256:f2ab9e2bcdafa62f693227581299b481a0184a89fc7b35cb03094902490b82f0",
+      "containers": [
+        "utilibre-expanded-penpot-exporter-1"
+      ],
+      "packages": {
+        "apt": {
+          "installed": "3.0.3+dhi2",
+          "package": "dhi-trixie/apt"
+        },
+        "libapt-pkg7.0": {
+          "installed": "3.0.3+dhi2",
+          "package": "dhi-trixie/libapt-pkg7.0"
+        }
+      },
+      "candidate": "utilibre-apt-penpot-exporter:security-20261109",
+      "approval": "approved",
+      "publicHome": "https://design.utilibre.org/",
+      "acquisition": "dhi",
+      "acquisitionSha256": "cf41853fff2f20da179fb6a8d9aa9260580d84945100f3a04dd463c8bc99d8be",
+      "residual": {
+        "apt": {
+          "path": "/var/lib/dpkg/status.d/apt",
+          "version": "3.0.3+dhi2",
+          "sha256": "c77c3e8312858184004a63a5f86bb00582e101e939b4db54823a467f52eb0efe"
+        },
+        "libapt-pkg7.0": {
+          "path": "/var/lib/dpkg/status.d/libapt-pkg7.0",
+          "version": "3.0.3+dhi2",
+          "sha256": "5a7c47338e8adf3384702176648e743366cdedfcaf91f6b148424d334d71d811"
+        }
+      }
     }
   ]
 }

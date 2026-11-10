@@ -1,7 +1,20 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {specs,matches,freshScan,validateObserved,validateRelease,overlayRows} from './review-native-backports.mjs';
+import {specs,matches,freshScan,validateObserved,validateRelease,overlayRows,followOverlaySpecs} from './review-native-backports.mjs';
 const item=s=>({status:'needs-review',scope:s.kind==='host'?'host-os':'runtime-image',type:'debian',id:s.id,artifact:s.artifact,installed:s.version,package:s.packages[0],containers:s.containers});
+const edge=(oldImage,newImage,date,names=['app'])=>({path:oldImage+'.json',report:{status:'passed',groups:[{status:'passed',completedAt:date,rows:names.map(name=>({name,oldImage,newImage}))}]}});
+test('overlay ancestry is independent of repair-family receipt ordering',()=>{
+ const a=edge('old','middle','2026-11-09T01:00:00Z'),b=edge('middle','new','2026-11-09T02:00:00Z');
+ const rows=followOverlaySpecs([{artifact:'old',containers:['app']}],[b,a]);
+ assert.deepEqual(rows.map(r=>r.artifact),['old','middle','new']);
+ assert.equal(rows[2].overlayPredecessor,rows[1]);assert.equal(rows[1].overlayReceipt,'old.json');
+});
+test('overlay ancestry rejects ambiguous, incomplete, cyclic and nonchronological releases',()=>{
+ const start=[{artifact:'old',containers:['app']}],a=edge('old','middle','2026-11-09T02:00:00Z');
+ for(const b of [edge('old','other','2026-11-09T03:00:00Z'),edge('middle','old','2026-11-09T03:00:00Z'),edge('middle','new','2026-11-09T01:00:00Z'),edge('middle','new','invalid')])assert.throws(()=>followOverlaySpecs(start,[a,b]));
+ assert.throws(()=>followOverlaySpecs([{artifact:'old',containers:['app','worker']}],[a]));
+ assert.deepEqual(followOverlaySpecs(start,[{...a,report:{...a.report,status:'failed'}}]),start);
+});
 test('only exact CVE, version, image, package and role qualify',()=>{
  for(const s of specs){assert(matches(item(s),s));for(const change of [{id:'CVE-2026-11822'},{artifact:'sha256:'+'0'.repeat(64)},{installed:'2.9.14'},{package:'unrelated'},{type:'npm'},{scope:'source'},{status:'confirmed'},{containers:['other-container']}])assert.equal(matches({...item(s),...change},s),false);}
 });

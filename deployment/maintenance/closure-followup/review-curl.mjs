@@ -1,6 +1,6 @@
 // Fixed upstream native code only, with exact live payload and release proof.
 import fs from 'node:fs';import cp from 'node:child_process';import path from 'node:path';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
-import {validateDecision} from '../triage.mjs';import {freshScan,overlayRows} from '../review-native-backports.mjs';
+import {validateDecision} from '../triage.mjs';import {freshScan,overlayRows,followOverlaySpecs} from '../review-native-backports.mjs';
 import {curlFixedUpstream} from './curl-policy.mjs';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 process.umask(0o077);
@@ -21,9 +21,9 @@ if(!oct28&&!bookworm&&fs.existsSync(dir+'/python-system-release.json')){
 if(bookworm&&!oct28){
  const rss=read(dir+'/rssbridge-curl-release.json');assert.equal(rss.status,'passed');rows.push(...overlayRows(rss));
 }
-for(const receipt of additionalOverlayReceipts)if(fs.existsSync(root+'/'+receipt)){
-  for(const next of overlayRows(read(root+'/'+receipt)))if(next.oldImage!==next.newImage&&rows.some(r=>r.name===next.name&&r.newImage===next.oldImage))rows.push(next);
-}
+const lineage=followOverlaySpecs(rows.map(r=>({...r,artifact:r.newImage,containers:[r.name]})),
+ additionalOverlayReceipts.filter(p=>fs.existsSync(root+'/'+p)).map(path=>({path,report:read(root+'/'+path)})));
+rows.splice(0,rows.length,...new Map(lineage.map(s=>[s.name+'|'+s.artifact,{...s,newImage:s.artifact}])).values());
 const hostDirectory=oct28?batch:dir;const host=!bookworm&&fs.existsSync(hostDirectory+'/curl-host.json')?read(hostDirectory+'/curl-host.json'):null;
 const sums=new Map(fs.readFileSync(build+'/SHA256SUMS','utf8').trim().split('\n').map(l=>[path.basename(l.slice(66)),l.slice(0,64)]));
 const debs=new Map(fs.readdirSync(build).filter(f=>f.endsWith('_amd64.deb')).map(f=>[run('dpkg-deb',['-f',build+'/'+f,'Package']),f]));

@@ -412,6 +412,41 @@
         "before-native.json": "71ba1660b0667470ffcbb133a6970ae80a638424f484af41d2ddcd5b5c053769",
         "after-native.json": "507e8cad537aea2609a302b83f761ebb425c37eaadbdab8678b898925d5881db",
         "assets.json": "1f003e1727664bfcfb7aa2a4c27f27ac065870de5fa35e49b48303d346962032"
+      },
+      "checkRevision": "21c74566a0fb3adc8148067b66add60d056dc891"
+    },
+    {
+      "key": "ferretdb",
+      "mode": "binary-followup",
+      "approval": "approved",
+      "base": "sha256:b65c8ff64cae5aa838cebfaaf2728913c7dc88a13301f99dee7b69f89a2ed191",
+      "candidate": "utilibre-ferretdb:xnet-security-20261109",
+      "imageId": "sha256:8cd6f171ff9bad49a995fffe8d6bed87d9d6ef1b29fdaf2f15b25381f6585803",
+      "containers": [
+        "utilibre-gathio-ferretdb-1"
+      ],
+      "publicHome": "https://events.utilibre.org/",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "checkSha256": "b8c757e65ad7d63d80237338e87dc4bc422264f68387a6339dab44287676add7",
+      "builderSha256": "f8997c1efe683a685249f1f88ab35cbbbc0466af6d3c1ea9a48e94929901e01c",
+      "rawEvidence": {
+        "before": "f0247cf36c3fa2c74e284fd837865ff9d71c6449e4ef65c7b7bd4bccf1799264",
+        "after": "d2bfc62205ddc7b4e0c05a2b0ada65e99cd23a0a7b2010d98239c7fd1de55d34"
+      },
+      "dependenciesSha256": "7ab7a30b2262c68b452329f23a44e51d74615c99d1a83d38fa0b20508592e555",
+      "proofs": {
+        "compiled.json": "cb736059b776174fb8b131e9e5c8171f62643da5142159d71b44ffd37a38e079",
+        "build.json": "ba7305c9398985ccd09165a3967adb5ea178ddcd6c34cd3267cdb0687f4d45c5",
+        "native.json": "cbbb359100d7fc6b4db50fee81efa6196630c9c116a91c3b00eaf5a6fcedabb1",
+        "scan-gate.json": "0f31f214ca86c68bac144229a357ea785775c0956e842b58834d0767b971ee9a",
+        "native-dependencies.txt": "7ab7a30b2262c68b452329f23a44e51d74615c99d1a83d38fa0b20508592e555",
+        "ferretdb-tests.txt": "dcd44abab72182c562549bea0cd9b6db4c0ae6eff4758d466efecda2d7d913b3",
+        "ferretdb-mcp-tests.txt": "d7eaaf9f2e45f05030b2eaf7579731c50d316e5899475ffbc7fc55ac43c9e9a0",
+        "ferretdb-native-tests.txt": "effe47c8e8bffecc31189e1e75fc345b5168f5bbdce5ce2149e24cc1209fb9a8",
+        "ferretdb-modules.txt": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd",
+        "before/native.json": "cd79e637622e0d0a9b751f1a1d0aa583564e49766b2ac2659b2ad16d32be677a",
+        "after/native.json": "7a9bd11078ea8f6bbd56d63b78843c59ecf089cb96a7056780cd30fdf9d98355"
       }
     }
   ]

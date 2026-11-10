@@ -4,7 +4,7 @@ import cp from 'node:child_process';
 import {createHash} from 'node:crypto';
 const root='/var/lib/utilibre-maintenance/security-20261109/xnet';
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
-const completedCheckers={safetwitch:'c2fa64e01d5de17a9c719cf39975f157346da40e',galene:'c2fa64e01d5de17a9c719cf39975f157346da40e',gothub:'9c13c74ee95db4039b15c3b4be6323c8379fa98a',mezzo:'807cfe54e3c181d543b8fc074bbb55fd225555dd',anubis:'aa6bb5e5c1fda827efe478e2e02ec81e242e3b11','oauth2-proxy':'91fc41f5cb6e87495a1c68299960fa86468c893a',wakapi:'f4b78b8ccc9d4a4d880fde954a2c62e0051bf80d',opengist:'f6417791c58a5cde10435dca893df3577ed6a9b6',ntfy:'f6417791c58a5cde10435dca893df3577ed6a9b6',donetick:'7a13c38874e48a29dab68716787ce90bac67a9f8'};
+const completedCheckers={safetwitch:'c2fa64e01d5de17a9c719cf39975f157346da40e',galene:'c2fa64e01d5de17a9c719cf39975f157346da40e',gothub:'9c13c74ee95db4039b15c3b4be6323c8379fa98a',mezzo:'807cfe54e3c181d543b8fc074bbb55fd225555dd',anubis:'aa6bb5e5c1fda827efe478e2e02ec81e242e3b11','oauth2-proxy':'91fc41f5cb6e87495a1c68299960fa86468c893a',wakapi:'f4b78b8ccc9d4a4d880fde954a2c62e0051bf80d',opengist:'f6417791c58a5cde10435dca893df3577ed6a9b6',ntfy:'f6417791c58a5cde10435dca893df3577ed6a9b6',donetick:'7a13c38874e48a29dab68716787ce90bac67a9f8',vikunja:'21c74566a0fb3adc8148067b66add60d056dc891'};
 export function validateOAuthNative(r,image){
  assert.equal(r.imageId,image);
  for(const f of ['passed','nativeDiscoveryAuthorizationCodePkceAndSignedIdToken','authenticatedCookieAndIdentityHeader','invalidCsrfRejected','anonymousDeniedAndLogoutCleared','onlyLoopbackIssuer','networkIsolated'])assert.equal(r[f],true,f);
@@ -48,7 +48,7 @@ export function validateFollowup(s,original,b,n,scan,dependencies){
  assert.deepEqual(b.changedFiles,[original.binary]);
  // Retained minimal images still require a complete comparison, permitting
  // only the executable to differ; file count is not a security threshold.
- const minimalEntries={donetick:10,vikunja:15};
+ const minimalEntries={donetick:10,vikunja:15,ferretdb:12};
  assert(Object.hasOwn(minimalEntries,s.key)?b.imageEntries===minimalEntries[s.key]:b.imageEntries>100);
  assert.deepEqual(b.locks,original.locks);assert.equal(b.compilerVersion,['wakapi','opengist','ntfy','vikunja','donetick'].includes(s.key)?'1.27.3':'1.26.10');
  if(['wakapi','opengist','ntfy','vikunja','donetick'].includes(s.key))assert.equal(b.compiler,'sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b');

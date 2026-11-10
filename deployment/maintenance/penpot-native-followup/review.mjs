@@ -6,6 +6,7 @@ import {freshScan,overlayRows} from '../review-native-backports.mjs';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 import {validateDecision} from '../triage.mjs';
 import {eligible} from './review-policy.mjs';
+import {expatDescendant} from '../security-20261103/expat-policy.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',read=p=>JSON.parse(fs.readFileSync(p));
 const queue=read(root+'/security-queue.json'),scan=read(root+'/security.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
@@ -18,11 +19,12 @@ assert.equal(sha(directory+'/sources/librsvg-2.60.3.tar.xz'),'ca7d206d37426147e9
 assert.equal(sha(directory+'/tiff/sources/tiff_4.7.2.orig.tar.bz2'),'c5086d8f7c5ba51ca98241f24a8bd1cb66218c399077aeccbf6a236cf3152acc');
 assert.match(fs.readFileSync(directory+'/tiff/output/upstream-tests.log','utf8'),/# PASS:\s+109/);
 assert.match(fs.readFileSync(directory+'/tiff/output/upstream-tests.log','utf8'),/# FAIL:\s+0/);
-const rows=overlayRows(release);for(const receipt of additionalOverlayReceipts){const file=root+'/'+receipt;if(!fs.existsSync(file)||file===directory+'/penpot-release.json')continue;for(const r of overlayRows(read(file))){if(rows.some(p=>p.name===r.name&&p.newImage===r.oldImage))rows.push(r);}}
+const rows=additionalOverlayReceipts.filter(p=>fs.existsSync(root+'/'+p)&&root+'/'+p!==directory+'/penpot-release.json').flatMap(p=>overlayRows(read(root+'/'+p)));
 const docker=(...args)=>cp.execFileSync('docker',args,{encoding:'utf8',timeout:30000,maxBuffer:1024**2,stdio:['ignore','pipe','pipe']}).trim();
 const decisions=[],checked=new Set;
 for(const item of queue.items.filter(eligible)){
- const name=item.containers[0],row=rows.find(r=>r.name===name&&r.newImage===item.artifact);assert(row);assert(Date.parse(row.completedAt)<=Date.parse(scan.date));
+ const name=item.containers[0],initial=overlayRows(release).find(r=>r.name===name);assert(initial);
+ assert.equal(expatDescendant(name,initial.newImage,initial.completedAt,scan.date,rows),item.artifact);
  if(!checked.has(name)){assert.equal(docker('inspect',name,'--format','{{.Image}}'),item.artifact);liveNative(docker,name);checked.add(name);}
  assert.equal(docker('exec',name,'dpkg-query','-W','-f=${Version}',item.package),item.installed);
  const svgFinding=item.package.startsWith('librsvg');

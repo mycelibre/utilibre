@@ -54,6 +54,31 @@ export function decide(head,live,recipe){
  if(head!==recipe.source.revision)return 'review-required';
  return live===recipe.candidate.imageId?'up-to-date':'approved-update';
 }
+export function retainedRuntimeIdentity(recipe,live,s,b,release){
+ assert.equal(s.key,'apt-redlib');assert.equal(s.approval,'approved');
+ assert.equal(s.base,recipe.candidate.imageId);assert.equal(b.base,s.base);
+ assert.equal(b.imageId,live);assert.equal(b.candidate,s.candidate);
+ assert(b.passed&&b.configurationUnchanged&&b.unrelatedPackagesUnchanged);
+ assert.deepEqual(Object.keys(s.packages).sort(),['apt','libapt-pkg6.0t64']);
+ assert.equal(release.key,s.key);assert.equal(release.status,'passed');
+ assert.equal(release.rows.length,1);const row=release.rows[0];
+ assert.equal(row.service,'redlib');assert.equal(row.oldImage,s.base);assert.equal(row.newImage,live);
+ return recipe.candidate.imageId;
+}
+export async function reviewedRuntimeIdentity(recipe,live){
+ if([recipe.runtime.imageId,recipe.candidate.imageId].includes(live))return live;
+ // One reviewed OS-only overlay, not permission for arbitrary descendants.
+ // Current advisory assessment is separate from this archived repair proof.
+ const batch=ROOT+'/deployment/maintenance/security-20261109',evidence='/var/lib/utilibre-maintenance/security-20261109';
+ const inputs=json(batch+'/vendor-debian-inputs.json'),s=inputs.rows.find(r=>r.key==='apt-redlib');
+ assert(s,'Unknown runtime; operator review required');
+ const dir=evidence+'/vendor-debian/'+s.key,b=json(dir+'/build.json');
+ const {proveVendorDebian}=await import('../deployment/maintenance/security-20261109/vendor-debian-policy.mjs');
+ proveVendorDebian(inputs,s,b,json(dir+'/consumer.json'),json(dir+'/scan-gate.json'),json(evidence+'/ubuntu-acquisition/authenticated.json'),evidence);
+ assert.equal(inspect(s.candidate).Id,live,'Reviewed overlay tag drift');
+ const release=json(evidence+'/vendor-debian/release.json').groups.find(g=>g.key===s.key);
+ return retainedRuntimeIdentity(recipe,live,s,b,release);
+}
 export function normalizedFindings(reports){
  return reports.flatMap(report=>{
   assert(Array.isArray(report.Results)&&report.Results.length,'Missing scanner coverage');
@@ -96,6 +121,19 @@ function editEnv(expected,next){
  const file=ROOT+'/.env',stat=lstatSync(file,{throwIfNoEntry:true});assert(!stat.isSymbolicLink()&&stat.isFile()&&(stat.mode&0o077)===0,'Private regular .env required');
  const before=readFileSync(file,'utf8');assert.equal(sha(before),expected,'Concurrent environment change; refusing overwrite');const temporary=file+'.redlib-'+randomUUID();
  try{writeFileSync(temporary,next,{mode:stat.mode&0o777,flag:'wx'});chownSync(temporary,stat.uid,stat.gid);assert.equal(sha(readFileSync(file)),expected,'Concurrent environment change');renameSync(temporary,file);}finally{rmSync(temporary,{force:true});}
+}
+// Package-only maintenance uses the same private, atomic environment writer.
+// It cannot edit the banner, other services, or arbitrary environment keys.
+export function replaceImageOverride(text,expected,next){
+ const reference=/^utilibre-(?:apt-)?redlib:[a-zA-Z0-9_.-]+$/;
+ assert(reference.test(expected)&&reference.test(next),'Invalid Redlib image reference');
+ const values=selectedLines(text);
+ assert.equal(values.REDLIB_IMAGE,'REDLIB_IMAGE='+expected,'Redlib image override drift');
+ return replaceLines(text,{...values,REDLIB_IMAGE:'REDLIB_IMAGE='+next});
+}
+export function editImageOverride(expected,next){
+ const before=readFileSync(ROOT+'/.env','utf8');
+ editEnv(sha(before),replaceImageOverride(before,expected,next));
 }
 function serviceHash(row){const copy=structuredClone(row);delete copy.image;delete copy.environment.REDLIB_BANNER;return sha(JSON.stringify(copy));}
 export function validateRuntimeDiff(changes,init,containerHash,hostHash){
@@ -207,8 +245,10 @@ export async function main(args=process.argv.slice(2)){
   if(existsSync(STATE+'/stage-pending.json')){assert.notEqual(mode,'--check','Interrupted staging requires --apply or --stage cleanup');cleanupStage();}
   if(existsSync(STATE+'/pending.json')){assert.equal(mode,'--apply','Interrupted release requires --apply recovery');await recover();report.status='recovered';save(reportFile,report);return;}
   const recipeBytes=readFileSync(ROOT+'/config/redlib/recipe.json'),recipe=JSON.parse(recipeBytes),policy=json(ROOT+'/config/redlib/update-policy.json');validateApproval(recipe,policy,recipeBytes,p=>readFileSync(ROOT+'/config/redlib/'+p));
-  const {config,live}=current();report.installedImage=live.Image;report.head=await upstream();report.approvedRevision=recipe.source.revision;report.status=decide(report.head,live.Image,recipe);
+  const {config,live}=current(),identity=await reviewedRuntimeIdentity(recipe,live.Image);report.installedImage=live.Image;report.head=await upstream();report.approvedRevision=recipe.source.revision;report.status=decide(report.head,identity,recipe);
+  if(identity!==live.Image)report.retainedRuntimeOverlay='Exact approved APT overlay verified; archived proof is not current security clearance';
   if(mode==='--check')return;
+  if(mode==='--stage'&&identity!==live.Image)return;
   if(mode==='--apply'&&['up-to-date','review-required'].includes(report.status)){
    const check=workflow(origin(live),STATE+'/last-browsing.json');report.browsing={passed:true,requests:check.requests};return;
   }

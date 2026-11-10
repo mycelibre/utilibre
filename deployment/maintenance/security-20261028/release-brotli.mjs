@@ -1,4 +1,5 @@
 import {proveCaddy} from '../security-20261109/xnet-caddy-policy.mjs';
+import {editImageOverride} from '../../../scripts/redlib-maintain.mjs';
 import {proveZlibBookworm,zlibBookwormRelease} from '../security-20261109/zlib-bookworm-policy.mjs';
 import {proveRsync} from '../security-20261109/rsync-policy.mjs';
 import {boundRelaySockets} from '../security-20261109/relay-idle.mjs';
@@ -64,11 +65,16 @@ async function publicReady(g){
  // A running S6/Laravel container is not yet HTTP-ready. Bounded readiness
  // avoids declaring failure at four seconds and rolling back a healthy boot.
  for(let attempt=0;attempt<13;attempt++){
-  try{assert.equal(await publicStatus(g.key),g.publicBefore);if(g.key==='simplelogin')await nativeSimpleLogin();return;}
+  try{assert.equal(await publicStatus(g.key),g.publicBefore);if(['simplelogin','apt-simplelogin'].includes(g.key))await nativeSimpleLogin();return;}
   catch{if(attempt===12)throw Error(g.key+': public readiness failed within one minute');await new Promise(r=>setTimeout(r,5000));}
  }
 }
 function protectedActivityGate(g){
+ if(profile==='vendor-debian'&&g.key==='apt-mumble'){
+  const name='utilibre-mumble-mumble-1',pid=Number(docker('inspect','--format','{{.State.Pid}}',name));assert(Number.isInteger(pid)&&pid>0);
+  assert.equal(establishedOnPort(['tcp','tcp6'].map(p=>fs.readFileSync('/proc/'+pid+'/net/'+p,'utf8')),64738),0,'An active Mumble voice/control session prevents this restart');
+ }
+
  if(profile==='sqlite-followup'&&['galene-turn-sqlite','turn-option-sqlite'].includes(g.key)){
   const pairdrop=g.key==='turn-option-sqlite',name=pairdrop?'utilibre-turn-option-turn-1':'utilibre-galene-turn-turn-1';
   const pid=Number(docker('inspect','--format','{{.State.Pid}}',name));assert(Number.isInteger(pid)&&pid>0);
@@ -80,7 +86,7 @@ function protectedActivityGate(g){
  assert.equal(establishedOnPort(['tcp','tcp6'].map(p=>fs.readFileSync('/proc/'+pid+'/net/'+p,'utf8')),8080),0,'An active Galene connection prevents this restart');
 }
 function proof(key){const s=specs.find(s=>s.key===key),dir=evidence(s);if(['xnet','xnet-caddy'].includes(profile)){const r=profile==='xnet'?proveXnet(s):proveCaddy(s);assert.equal(image(s.candidate),s.imageId);return r;}const b=read(dir+'/build.json'),scan=read(dir+'/scan-gate.json');
- if(profile==='vendor-debian')proveVendorDebian(read(batch.input(profile)),s,b,read(dir+'/consumer.json'),scan,read(root+'/debian-acquisition/authenticated.json'),root);
+ if(profile==='vendor-debian')proveVendorDebian(read(batch.input(profile)),s,b,read(dir+'/consumer.json'),scan,read(root+(s.acquisition?'/'+s.acquisition+'-acquisition/authenticated.json':'/debian-acquisition/authenticated.json')),root);
  if(profile==='musl')proveMusl(read(batch.input('musl')),s,b,read(dir+'/consumer.json'),scan);
  if(profile==='zlib')proveZlib(read(batch.input(profile)),s,b,{...read(dir+'/consumer.json'),path:dir+'/consumer.json'},{...scan,rawPath:dir+'/after-scan.json'},{...read(dir+'/scope.json'),path:dir+'/scope.json'});
 
@@ -124,7 +130,7 @@ function proof(key){const s=specs.find(s=>s.key===key),dir=evidence(s);if(['xnet
  }else if(batch.enabled&&['pyasn1','redirects','js-nov'].includes(profile)){assert(profile==='pyasn1'?b.unrelatedDependencyFilesUnchanged:b.unchangedOtherAppFiles>0);}
  else if(profile==='zlib-bookworm'){const i=read(batch.input(profile));proveZlibBookworm(i,s,b,read(dir+'/native.json'),read(root+'/'+profile+'/output/build.json'));if(s.key==='gathio-postgres'){const d=read(dir+'/database.json');assert(d.passed&&d.imageId===b.imageId&&d.nativeDumpRestore&&d.documentdbTypedDataAndRoleIsolation&&d.nativePostgresXml&&d.gdal);assert.equal(digest(fs.readFileSync(new URL('../xml-final/check-gathio.mjs',import.meta.url))),i.verification.databaseChecker);}zlibBookwormRelease(i,s,b,scan,read(dir+'/scope.json'),{scope:digest(fs.readFileSync(dir+'/scope.json')),source:digest(fs.readFileSync(root+'/'+profile+'/output/build.json')),preparer:digest(fs.readFileSync(new URL('../security-20261109/zlib-bookworm.mjs',import.meta.url))),scopeChecker:digest(fs.readFileSync(new URL('../security-20261109/zlib-bookworm-scope.py',import.meta.url))),exporter:digest(fs.readFileSync(new URL('../security-20261109/zlib-check.py',import.meta.url)))});}
  else if(profile==='rsync'){const i=read(batch.input(profile));assert.equal(s.releaseApproval,'approved');for(const [f,h]of Object.entries(i.evidence))assert.equal(digest(fs.readFileSync(root+'/rsync/'+f)),h);assert.equal(digest(fs.readFileSync(new URL('../closure-followup/rsync-native.sh',import.meta.url))),i.fixtureSha256);proveRsync(i,s,b,read(dir+'/native.json'),read(dir+'/database.json'));} else assert(b.unrelatedPackagesUnchanged&&(b.nativeRows.length===2||(alpine&&!s.packages['brotli-libs']))&&b.nativeRows.every(r=>r.passed));assert.equal(b.base,s.base);assert.equal(b.candidate,s.candidate);assert.equal(image(s.candidate),b.imageId);if(s.oldRef)assert.equal(image(s.oldRef),s.base);
- assert(scan.passed&&(scan.targetedFindingRemoved||((batch.enabled&&['oauth-debian','libxi','expat-debian','sqlite','sqlite-followup','rsync','zlib-bookworm'].includes(profile)||msal||cfitsio||nginx||symfony||nltk||blkid||curl||node||dns||drf||s.primaryOnly)&&scan.primarySourceFixVerified))&&scan.newHighCritical===0);assert.equal(scan.imageId,b.imageId);assert.equal(scan.base,b.base);assert(Date.now()-Date.parse(scan.advisoryUpdatedAt)<48*3600000);assert(Date.now()-Date.parse(b.date)<86400000&&Date.now()-Date.parse(scan.date)<86400000);
+ assert(scan.passed&&(scan.targetedFindingRemoved||(profile==='vendor-debian'&&s.acquisition==='dhi'&&scan.primarySourceFixVerified)||((batch.enabled&&['oauth-debian','libxi','expat-debian','sqlite','sqlite-followup','rsync','zlib-bookworm'].includes(profile)||msal||cfitsio||nginx||symfony||nltk||blkid||curl||node||dns||drf||s.primaryOnly)&&scan.primarySourceFixVerified))&&scan.newHighCritical===0);assert.equal(scan.imageId,b.imageId);assert.equal(scan.base,b.base);assert(Date.now()-Date.parse(scan.advisoryUpdatedAt)<48*3600000);assert(Date.now()-Date.parse(b.date)<86400000&&Date.now()-Date.parse(scan.date)<86400000);
  if(profile==='pcre'){const a=read(dir+'/app.json');assert(a.passed&&a.imageId===b.imageId&&a.applicationParity.length===2&&b.nativeRows.length===2&&b.nativeRows.every(r=>r.passed&&r.checks===7));}
  if(profile==='x11'){const a=read(dir+'/application.json'),c=read(dir+'/consumer.json');assert(a.passed&&a.imageId===b.imageId&&a.proofs.length===2&&a.proofs.every(r=>r.passed&&r.checks===26));assert(c.passed&&c.imageId===b.imageId&&c.abiPreserved&&c.neededPreserved&&b.nativeRows.length===2&&b.nativeRows.every(r=>r.passed&&r.checks===8));}
  if(alpine&&!['expat','pcre','x11'].includes(profile)){const c=read(dir+'/consumer.json');assert(c.passed&&c.imageId===b.imageId&&c.rows.length===2&&c.rows.every(r=>r.passed));if(key==='privatebin')assert(c.privatebinUploads.passed&&c.privatebinUploads.imageId===b.imageId);}
@@ -133,7 +139,7 @@ function proof(key){const s=specs.find(s=>s.key===key),dir=evidence(s);if(['xnet
  if(key==='rssbridge'){if(curl){const c=read(dir+'/impersonate.json');assert(c.passed&&c.imageId===b.imageId&&c.release==='v2.3.1'&&c.removedMask===0&&c.removedProtocols.length===0&&c.proofs.length===2&&c.proofs.every(r=>r.http2Negotiated&&r.fictionalGithubHttpsToAtom&&r.chrome131Preserved));}else{const c=read(dir+'/consumer.json');assert(c.passed&&c.imageId===b.imageId&&c.rows.length===2&&c.rows.every(r=>r.fictionalFeed&&r.http2Negotiated));}}
  return {s,b,scan};}
 function validateMirrors(g,version){for(const f of g.mirrorFiles||[]){assert(f.startsWith('/home/ubuntu/freetools/deployment/')&&!f.split('/').includes('..'));const text=fs.readFileSync(f,'utf8'),rows=g.rows.filter(r=>r.oldRef!==r.newRef),pairs=rows.map(r=>({from:r[version+'Ref'],to:r[version+'Ref']}));assert(replaceImagePins(text,pairs).replaced>0,'Mirror has no exact expected image');assert.equal(replaceImagePins(text,rows.map(r=>({from:r[version==='new'?'oldRef':'newRef'],to:r[version+'Ref']}))).replaced,0,'Mirror has mixed release pins');}}
-function pins(g,version){const pairs=g.rows.filter(r=>r.oldRef!==r.newRef).map(r=>({from:r[version==='new'?'oldRef':'newRef'],to:r[version+'Ref']}));const edits=rollbackFiles(g).map(f=>({f,...replaceImagePins(fs.readFileSync(f,'utf8'),pairs)}));assert(edits.reduce((n,e)=>n+e.replaced,0)>=1,'No exact image scalar');for(const e of edits)if(e.replaced)fs.writeFileSync(e.f,e.text);}
+function pins(g,version){if(profile==='vendor-debian'&&g.key==='apt-redlib'){assert.equal(g.rows.length,1);const r=g.rows[0];assert.equal(r.service,'redlib');editImageOverride(r[version==='new'?'oldRef':'newRef'],r[version+'Ref']);return;}const pairs=g.rows.filter(r=>r.oldRef!==r.newRef).map(r=>({from:r[version==='new'?'oldRef':'newRef'],to:r[version+'Ref']}));const edits=rollbackFiles(g).map(f=>({f,...replaceImagePins(fs.readFileSync(f,'utf8'),pairs)}));assert(edits.reduce((n,e)=>n+e.replaced,0)>=1,'No exact image scalar');for(const e of edits)if(e.replaced)fs.writeFileSync(e.f,e.text);}
 if(mode==='verify-completed')for(const key of keys){
  const {b}=proof(key),g=report.groups.find(g=>g.key===key);assert(g&&g.status==='applying');
  const c=config(g);validateMirrors(g,'new');
@@ -152,7 +158,7 @@ if(mode==='prepare')for(const key of keys){
   const parent=all.find(p=>'container:'+p.Id===x.HostConfig.NetworkMode)?.Name.slice(1);assert(Date.now()-Date.parse(x.State.StartedAt)>300000);
   g.rows.push({name,service,oldContainerId:x.Id,oldRestartCount:x.RestartCount,oldRef:c.image,oldImage:x.Image,newRef:selected?s.candidate:c.image,newImage:selected?b.imageId:x.Image,configHash:hash(c),...(parent?{namespaceParent:parent}:{})});
  }
- protectedActivityGate(g);validateMirrors(g,'old');g.before=await existingGroupStatus(g);await checkExistingGroup(g,'old');g.publicBefore=await publicStatus(key);
+ protectedActivityGate(g);validateMirrors(g,'old');g.before=await existingGroupStatus(g);await checkExistingGroup(g,'old');g.publicBefore=await publicStatus(key);if(key==='apt-simplelogin')await nativeSimpleLogin();
  if(key==='librespeed')g.routeCheck='Existing Caddy private address with public Host/SNI and verified TLS. Direct public IPv4 times out from this VM; outside-Internet reachability not established here.';
  if(key==='simplelogin'&&g.publicBefore===502){await nativeSimpleLogin();g.publicPreExistingFailure='Existing public 502, also documented in certifi-20261021 rollout. Native login gateway returns 200; library repair does not repair the separate edge route.';}
  else assert(g.publicBefore===null||g.publicBefore>=200&&g.publicBefore<500,'Public baseline unavailable; investigate first');

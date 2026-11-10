@@ -1,6 +1,6 @@
 // Exact fixed-code decisions, bounded by completed release and live bytes.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
-import {freshScan,overlayRows} from '../review-native-backports.mjs';
+import {freshScan,overlayRows,followOverlaySpecs} from '../review-native-backports.mjs';
 import {validateDecision} from '../triage.mjs';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 process.umask(0o077);
@@ -14,14 +14,9 @@ const regressions=read(dir+'/util-linux-regression.json');assert(regressions.pas
 const rows=overlayRows(release);const primary=read(dir+'/debian-primary.json');assert(Date.now()-Date.parse(primary.date)<86400000);
 // Only completed, checked overlays may advance IDs; all util-linux bytes are
 // independently compared again below, including Penpot's private libraries.
-for(const file of ['curl-release.json','python-system-release.json',...additionalOverlayReceipts.map(p=>'../'+p)])if(fs.existsSync(dir+'/'+file)){
- const next=read(dir+'/'+file);assert.equal(next.status,'passed');
- for(const row of overlayRows(next)){
-  if(row.oldImage===row.newImage)continue;
-  const prior=rows.find(p=>p.name===row.name&&p.newImage===row.oldImage);if(!prior)continue;
-  rows.push({...prior,newImage:row.newImage,completedAt:row.completedAt});
- }
-}
+const lineage=followOverlaySpecs(rows.map(r=>({...r,artifact:r.newImage,containers:[r.name]})),
+ ['curl-release.json','python-system-release.json',...additionalOverlayReceipts.map(p=>'../'+p)].filter(p=>fs.existsSync(dir+'/'+p)).map(path=>({path,report:read(dir+'/'+path)})));
+rows.splice(0,rows.length,...new Map(lineage.map(s=>[s.name+'|'+s.artifact,{...s,newImage:s.artifact}])).values());
 const sums=new Map(fs.readFileSync(build+'/SHA256SUMS','utf8').trim().split('\n').map(l=>[l.slice(66).split('/').pop(),l.slice(0,64)]));
 const debs=new Map(fs.readdirSync(build).filter(f=>f.endsWith('_amd64.deb')).map(f=>[run('dpkg-deb',['-f',build+'/'+f,'Package']),build+'/'+f]));
 // These are the explicit unchanged upstream/DHI security patches in the source.
