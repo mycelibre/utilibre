@@ -787,7 +787,7 @@ and immutable images are recorded in `xnet-inputs.json` and
 `xnet/release.json` through the existing scoped Compose procedure. There is no
 database-format change. A rollback does not restore ntfy's temporary RAM cache.
 
-## Retained native reviews — 10 November, 03:47 UTC
+## Retained native reviews — 10 November, 03:38 UTC
 
 On the completed 03:18 UTC scan, 20 further HIGH package/target records
 received exact, seven-day reviews. Thirteen GnuPG records concern the absent
@@ -807,3 +807,30 @@ The resulting queue is **0 pending CRITICAL / 109 pending HIGH**. This is a
 review checkpoint, not completion or a fresh advisory-database assessment.
 Evidence: `security-20261109/after-retained-native-reviews/` and the per-component
 `*-revalidation/` directories in the private maintenance store.
+
+## Donetick networking repair — 10 November
+
+Donetick 0.1.80-p3 now uses the exact x/net 0.62.0 module graph and its
+retained Go 1.27.3 compiler, JOSE 4.1.6 repair and original build flags. Only
+`/donetick` changes across its ten-entry scratch image. All 254 frontend files
+remain byte-identical. Storage/user/auth tests and the isolated two-account
+create/read/delete and access-isolation workflow passed for old and new images.
+The existing upstream lookup returns 500 for inaccessible/deleted objects;
+content denial passed, but that error behavior is not claimed fixed.
+
+The first compilation exhausted its 2 GiB temporary workspace, without filling
+the VM disk or producing a candidate. The retry used the earlier successful
+6 GiB memory/4 GiB workspace allowance and passed. Scanning both artifacts with
+the same frozen database removes the targeted HIGH and MEDIUM findings, adds
+no HIGH/CRITICAL findings, and retains an UNKNOWN OpenPGP module attribution
+with no OpenPGP package linked. No byte-for-byte build claim is made.
+
+The scoped application release passed exact image, unchanged configuration,
+health and HTTPS gates. No database migration or account change occurred.
+Rollback is the preceding image recorded in `xnet/release.json`; it does not
+revert subsequent user edits. Complete source archive SHA-256:
+`c2e735f5efb9cabc7d169723007de65de9f42dc27eea01cf6da5ee142edfd373`
+(6,319,544 bytes), verified by downloading the public source route.
+
+Vikunja and FerretDB inputs are captured in the same finite adapter; their
+actual build/native/release receipts, not those manifests, establish completion.

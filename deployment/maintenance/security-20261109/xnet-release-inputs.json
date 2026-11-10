@@ -308,7 +308,8 @@
         "before-native.json": "097ee931a5b558063e6fdf0895e118936d113f06776c4b61e4fd64f933d6040b",
         "after-native.json": "dcb78a82406092f637d7541e6b09ad0f98bb3c34c86b36893b271619d13cf0d4",
         "assets.json": "914f9f013c7edcd141627c6e2b7efc964f0c78872360f7c477cc27ed9c0cccc2"
-      }
+      },
+      "checkRevision": "f6417791c58a5cde10435dca893df3577ed6a9b6"
     },
     {
       "key": "ntfy",
@@ -342,6 +343,39 @@
         "before-native.json": "04f8e06c2af44610fa710e4ef6d9cb6888a1818384fd7e6a7d85c2229d35bffe",
         "after-native.json": "da9229d8cdea13701dd10f8733abd3054706e1dab23a1d0b29f4d767f114f2aa",
         "assets.json": "d6f485e8be3a6c16f14a42c8f242108faa72e3cdb88f2559acade8ee3f982aa5"
+      },
+      "checkRevision": "f6417791c58a5cde10435dca893df3577ed6a9b6"
+    },
+    {
+      "key": "donetick",
+      "mode": "binary-followup",
+      "approval": "approved",
+      "base": "sha256:7fe039c66cc0f519d5dab499f346cbf6cc244404934deef33100a99610be3b4d",
+      "candidate": "utilibre-donetick:xnet-security-20261109",
+      "imageId": "sha256:84b3647cd87035fbac35165c87429c4a349f5587b7c74917ac3805413868a24a",
+      "containers": [
+        "utilibre-donetick-app-1"
+      ],
+      "publicHome": "https://chores.utilibre.org/",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "checkSha256": "b8c757e65ad7d63d80237338e87dc4bc422264f68387a6339dab44287676add7",
+      "builderSha256": "f8997c1efe683a685249f1f88ab35cbbbc0466af6d3c1ea9a48e94929901e01c",
+      "rawEvidence": {
+        "before": "b41685b2a7a83919efb754956b091fe12acef8b3c6ac7f15a94e863ba7fa8aa2",
+        "after": "9a96d5b1256229667e9e73181f74aadbc1ccc280e700ab9f7b820cb8af8e4187"
+      },
+      "dependenciesSha256": "2dd834c529e8ec5cf8ce366f9fbe94b9c1d55e070a57f2513bf264da2a96a5dd",
+      "proofs": {
+        "compiled.json": "f299410b2662986aa6af4851ebd2b71878b97f4c1e183a5f5a912707f577647a",
+        "build.json": "1d4480a0a84c6ef9422b344e1b3fc97c2653cdc626bd916f3876317105d9eb31",
+        "native.json": "6c805dec0b9c40d1bde7f9546c093abb0c99f6888c56a6c3da60db8f9e2a1db0",
+        "scan-gate.json": "3a0f3209fd0e383027a8447cc2a611b9b6c6a10b203a47925b50907531fbe009",
+        "native-dependencies.txt": "2dd834c529e8ec5cf8ce366f9fbe94b9c1d55e070a57f2513bf264da2a96a5dd",
+        "donetick-tests.txt": "33a7063e3b42763bd703f55bb20745dc9c5c9f7d5c925b5f851a8d33dc3351e1",
+        "donetick-baseline.json": "073509671f3d1918677d597612ca4a9f006c83c1f399cf07b9967b3f73805c46",
+        "donetick-native.json": "cc2b2c141f999788e1c60f28be6f30ac6ca66fdad718e006e746062f36719466",
+        "assets.json": "966b222e751730d936bb75ae555e895a08c25dccc293e0334301c2daa05269c4"
       }
     }
   ]

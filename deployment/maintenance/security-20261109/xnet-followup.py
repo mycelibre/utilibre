@@ -17,7 +17,7 @@ common = importlib.util.module_from_spec(loader)
 loader.loader.exec_module(common)
 sha = lambda p: common.sha(Path(p).read_bytes())
 read = lambda p: json.loads(Path(p).read_text())
-assert len(sys.argv) == 3 and sys.argv[1] in ('safetwitch', 'galene', 'gothub', 'mezzo', 'anubis', 'oauth2-proxy', 'wakapi', 'opengist', 'ntfy')
+assert len(sys.argv) == 3 and sys.argv[1] in ('safetwitch', 'galene', 'gothub', 'mezzo', 'anubis', 'oauth2-proxy', 'wakapi', 'opengist', 'ntfy', 'vikunja', 'donetick', 'ferretdb')
 key, phase = sys.argv[1:]
 assert phase in ('stage', 'native', 'scan')
 manifest = read(HERE / 'xnet-inputs.json')
@@ -70,7 +70,7 @@ else:
     assert build['scopeCheckerSha256'] == sha(__file__)
     if phase == 'native':
         pins = read(HERE / 'zlib-inputs.json')['consumerFixtureHashes']
-        if key in ('mezzo', 'anubis', 'oauth2-proxy', 'wakapi', 'opengist', 'ntfy'):
+        if key in ('mezzo', 'anubis', 'oauth2-proxy', 'wakapi', 'opengist', 'ntfy', 'vikunja', 'donetick', 'ferretdb'):
             pins[spec['nativeFixture']] = spec['nativeFixtureSha256']
         if key == 'wakapi':
             pins['../go-leaf-final/check-wakapi-assets.py'] = spec['assetsFixtureSha256']
@@ -88,7 +88,7 @@ else:
             adapters.append({'fixture': relative, 'fixtureSha256': sha(original),
                              'adapter': str(output), 'adapterSha256': sha(output)})
             return output
-        if key in ('opengist', 'ntfy'):
+        if key in ('opengist', 'ntfy', 'vikunja'):
             script = (HERE / spec['nativeFixture']).resolve()
             assert sha(script) == spec['nativeFixtureSha256']
             adapters.append({'fixture': spec['nativeFixture'], 'fixtureSha256': sha(script),
@@ -103,16 +103,58 @@ else:
                            'privateGitClonePushReopen', 'gistsAndAccountsDeletedNatively'] if key == 'opengist' else
                           ['passed', 'networkIsolated', 'onlySyntheticData', 'anonymousPublishAndPoll',
                            'oneHourExpiry', 'noCacheHonoured', 'attachmentsDisabled',
-                           'registrationDisabled', 'metricsDisabled', 'ramCacheClearedOnRestart'])
+                           'registrationDisabled', 'metricsDisabled', 'ramCacheClearedOnRestart'] if key == 'ntfy' else
+                          ['passed', 'networkIsolated', 'onlySyntheticData', 'twoNativeAccounts',
+                           'createCompleteTask', 'projectAndAttachmentIsolation', 'attachmentRoundTrip',
+                           'exportPasswordRequired', 'nativeZipExportImport', 'importedProjectOwnedByRecipient',
+                           'syntheticSqliteBackupRestore', 'reloadPreservesTaskAndAttachment', 'nativeProjectDeletion'])
                 for field in fields:
                     assert result[field], field
                 if key == 'ntfy':
                     assert result['configurationSha256'] == spec['configurationSha256']
+                if key == 'vikunja':
+                    assert result['configurationSourceSha256'] == spec['configurationSha256']
             for file, field in [('check-assets.py', 'assetsFixtureSha256'), ('extract-embed.py', 'embedExtractorSha256')]:
                 assert sha(HERE / '../go-leaf-final' / file) == spec[field]
             execute([sys.executable, str(HERE / '../go-leaf-final/check-assets.py'), key, '--binary', str(directory / key), '--output', str(directory / 'assets.json')], directory / 'assets.log')
             assets = read(directory / 'assets.json')
             assert assets['passed'] and assets['binarySha256'] == build['binarySha256']
+        elif key == 'donetick':
+            script = adapt(spec['nativeFixture'], [
+                ("root=pathlib.Path('/var/lib/utilibre-maintenance/security-20261028')/profile;s=next(s for s in json.loads((pathlib.Path('deployment/maintenance/security-20261028')/(profile+'-inputs.json')).read_text())['rows'] if s['key']==key)",
+                 "root=pathlib.Path(" + repr(str(directory)) + ");s=next(s for s in json.loads(pathlib.Path(" + repr(str(HERE / 'xnet-inputs.json')) + ").read_text())['rows'] if s['key']==key)")])
+            assert sha(HERE / '../../donetick/config.yaml') == spec['configurationSha256']
+            for label, extra in [('before', ['--baseline']), ('after', [])]:
+                execute([sys.executable, str(script), key, '--jose', *extra], directory / (label + '-native.log'), env={'PATH': os.environ['PATH']})
+                result = read(directory / (key + ('-baseline' if label == 'before' else '-native') + '.json'))
+                assert result['status'] == 'passed' and result['imageId'] == (spec['base'] if label == 'before' else build['imageId'])
+                for field in ['twoFictionalAccounts', 'createReadDelete', 'crossAccountDenied', 'deletedAbsentFromList', 'anonymousDenied']:
+                    assert result['checks'][field], field
+            pins['../security-20261028/check-donetick-assets.py'] = spec['assetsFixtureSha256']
+            asset_script = adapt('../security-20261028/check-donetick-assets.py', [
+                ("root=Path('/var/lib/utilibre-maintenance/security-20261028/jose/donetick') if '--jose' in sys.argv else prior", "root=Path(" + repr(str(directory)) + ")"),
+                ("old=(root/'output/before-donetick').read_bytes();new=(root/'output/donetick').read_bytes()", "old=(root/'donetick-original').read_bytes();new=(root/'donetick').read_bytes()")])
+            execute([sys.executable, str(asset_script), '--jose'], directory / 'assets.log')
+            assets = read(directory / 'assets.json'); assert assets['passed'] and len(assets['unchangedEmbeddedAssets']) == 254
+        elif key == 'ferretdb':
+            for file, checksum in spec['fixtureFiles'].items():
+                assert sha(HERE.parents[2] / file) == checksum
+            original = (HERE / spec['nativeFixture']).read_text()
+            def line(prefix):
+                matches = [x for x in original.splitlines() if x.startswith(prefix)]
+                assert len(matches) == 1
+                return matches[0]
+            script = adapt(spec['nativeFixture'], [
+                (line('const root='), 'const root=process.env.UTILIBRE_FIXTURE_ROOT;'),
+                (line('const image='), 'const image=process.env.UTILIBRE_FIXTURE_IMAGE;'),
+                (line('const pgImage='), 'const pgImage=' + json.dumps(spec['fixtureCompanionImages']['utilibre-gathio-postgres-1']) + ',appImage=' + json.dumps(spec['fixtureCompanionImages']['utilibre-gathio-gathio-1']) + ';')])
+            for label, image in [('before', spec['base']), ('after', build['imageId'])]:
+                dest = directory / label; dest.mkdir()
+                execute(['node', str(script)], directory / (label + '-native.log'), timeout=360,
+                        env={'PATH': os.environ['PATH'], 'UTILIBRE_FIXTURE_ROOT': str(dest), 'UTILIBRE_FIXTURE_IMAGE': image})
+                result = read(dest / 'native.json'); assert result['imageId'] == image
+                for field in ['passed', 'nativeGathioCreateEdit', 'invalidEditTokenDenied', 'imageUpload', 'icsImportExport', 'stoppedDatabaseCopyRestore', 'reopenedOriginalAndImportedEvents']:
+                    assert result[field], field
         elif key == 'wakapi':
             script = adapt(spec['nativeFixture'], [
                 ("IMAGE='utilibre-wakapi:jose-security-20261028'", "IMAGE=os.environ['UTILIBRE_TEST_IMAGE']"),

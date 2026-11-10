@@ -217,6 +217,81 @@
       "moduleCache": "/var/lib/utilibre-maintenance/security-20261028/jose/ntfy/cache",
       "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
       "compilerVersion": "1.27.3"
+    },
+    {
+      "key": "vikunja",
+      "sourceRevision": "a16be96aa454671fdf213b0fbe411dd38a098418",
+      "base": "sha256:4bec3b37654a63f0e6e1e3f8ed7c2251f197051767982ccd9c89091a63142bc3",
+      "binary": "/app/vikunja/vikunja",
+      "oldBinarySha256": "a17185f86c7ac34bac90eebde7d890939abd3c3c20a911dee1c409241aadc024",
+      "candidate": "utilibre-vikunja:xnet-security-20261109",
+      "sourceProofSha256": "0b58f27305858a82b42310f16822c20abc1d74d6fca5bf9bb544bc69c685159d",
+      "locks": {
+        "go.mod": "de75aa8426688556f473e7baecf5a3f6006c40fa2b783383aadb58fd55c53c99",
+        "go.sum": "a5bd959908e881cf67d9aca4b65de1e236eeca1b17568118152164140d23d6d5"
+      },
+      "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+      "compilerVersion": "1.27.3",
+      "buildRecipe": "deployment/maintenance/go-leaf-final/build-one.sh",
+      "buildRecipeSha256": "296d9acbbb46b6eb483813634311aa1ff318e516a346c082ac5ea158b3467085",
+      "moduleCache": "/var/lib/utilibre-maintenance/security-20261028/jose/vikunja/cache",
+      "nativeFixture": "../go-leaf-final/check-vikunja.py",
+      "nativeFixtureSha256": "1fcfd6e9944a16cc0d52551e49ce1a94b24558bda04f6f858c6e8ddacf34f490",
+      "assetsFixtureSha256": "f14368781f906a6b1f25d54762401618f679e1fad0446ede9d06ecc0b3895606",
+      "embedExtractorSha256": "74a874d77f257a0ec83ce8b324f3e1948cd31c64fe9012f6e8cc973c8502ac9c",
+      "configurationSha256": "252e068652d41b746e227721532d26df86546aafb68df05dda3a67846f38f4b9"
+    },
+    {
+      "key": "donetick",
+      "sourceRevision": "e88d8bea62405ca02288f93dd70efab8c0f1ff2c",
+      "base": "sha256:7fe039c66cc0f519d5dab499f346cbf6cc244404934deef33100a99610be3b4d",
+      "binary": "/donetick",
+      "oldBinarySha256": "279c995b73ba9c5d70649f96800bf5d24f4ac8c0d13ff00b77514a4dd58ca836",
+      "candidate": "utilibre-donetick:xnet-security-20261109",
+      "sourceProofSha256": "2697c6feb54b75a09ef6192b04e2e0ece1233f4677b165664963890c90b91094",
+      "locks": {
+        "go.mod": "28e1eacbba4f5da743bd630d0e666e7741457ee3fa2568340338bbe05ad86d80",
+        "go.sum": "9abf132af3d0f04980cc022c5ce9369a7533027675650bd06100fedca0142f2c"
+      },
+      "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+      "compilerVersion": "1.27.3",
+      "buildRecipe": "deployment/maintenance/security-20261028/build-go-services.sh",
+      "buildRecipeSha256": "6846444d4826119b0aac979aeb9a2e891367c9fb10953b127a4975e62812a044",
+      "moduleCache": "/var/lib/utilibre-maintenance/security-20261028/jose/donetick/cache",
+      "nativeFixture": "../security-20261028/check-go-services.py",
+      "nativeFixtureSha256": "2fe800fd5c0fc8b2ceac454b2061cf00179895a44880dc5a8680731c205b4402",
+      "assetsFixtureSha256": "166df8d646cc2b10d18abdcbd559d0d1a89d3aa322f9e963b8523e2e7bb15c95",
+      "configurationSha256": "cc627ff4f0266fa94cfd5507f5654ced91fdccb6126381d5234ff96935b403ee"
+    },
+    {
+      "key": "ferretdb",
+      "sourceRevision": "0d5eb3343a50b800634cc08ace608bb6f3a3f74b",
+      "base": "sha256:b65c8ff64cae5aa838cebfaaf2728913c7dc88a13301f99dee7b69f89a2ed191",
+      "binary": "/ferretdb",
+      "oldBinarySha256": "414f8843d441b70d24847f02eb9d10b8842ad5a5ebd4446933902c699ddecf2f",
+      "candidate": "utilibre-ferretdb:xnet-security-20261109",
+      "sourceProofSha256": "56483788585f856edc89684b12469e0d36d9586ae799d80dc12b832ef85a71e6",
+      "locks": {
+        "go.mod": "a797e586e7a6090e01069b007b424e74c7af11ca7f185a8c5a334ee64ecedf64",
+        "go.sum": "c6b8ad924220c6f3a4f4a440f1d7813532b60101bd0e676215c8ed4a20658426"
+      },
+      "compiler": "sha256:5bba7feafd0a05a85a6454714b44e5909beebda3dfda1018bb0f4fd5acc66d1f",
+      "compilerVersion": "1.26.10",
+      "buildRecipe": "deployment/maintenance/go-closure/build-ferretdb.sh",
+      "buildRecipeSha256": "4859f754cb9aecf0204361c7ecb4ce4c8d5c93dfc43fa0803b1d8c7fc14c5658",
+      "moduleCache": "/var/lib/utilibre-maintenance/security-20261028/codec/modules",
+      "nativeFixture": "../go-closure/check-ferretdb.mjs",
+      "nativeFixtureSha256": "10ee66156e2e481b7eaeb79b24358e5cebb6593616537498d09a8cda9137b30a",
+      "fixtureCompanionImages": {
+        "utilibre-gathio-postgres-1": "sha256:7eb421ce1870b20ccb8db10213814eedb936d9faaaa4ba7ac110d8a7b8ecdd5a",
+        "utilibre-gathio-gathio-1": "sha256:7c9b3c1853bf0f3d8b49db5e7f77b4d1591613028cb2df2aa97c7b663c4775e9"
+      },
+      "fixtureFiles": {
+        "deployment/calendar/gathio/config.toml": "4e899ddee3f141c44e3acdc77499745647c5048813b89368b9a035610f07aac4",
+        "deployment/calendar/gathio/data-notes.md": "e166f19084d5ef84260f3ff3cbbcf636cceff51939ea86cdd08bb02a5c3f5ea0",
+        "deployment/calendar/check-gathio-native.mjs": "33c1fd8379b34e67585eaf5c9b24459f6b8c1a6fc83907a1e1e79fd22fed889e",
+        "deployment/calendar/check-gathio-flows.mjs": "b8f643158bd50ebe20189bee6515935f2a3044e41c235d188efdbec1b8c3fcac"
+      }
     }
   ]
 }

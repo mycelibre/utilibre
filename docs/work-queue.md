@@ -1,12 +1,12 @@
 # Work queue
 
-OpenGist and ntfy networking repairs are deployed and verified. The completed
+OpenGist, ntfy and Donetick networking repairs are deployed and verified. The completed
 10 November 03:18 UTC scan covers 109 images, 175 containers and 107 source inputs.
 After exact retained native/component reviews, **0 critical / 109 high records**
 remain pending. Raw findings and separate unresolved limitations are retained.
-Donetick, Vikunja and FerretDB candidates are being prepared; none of these
-three is deployed by this checkpoint. Donetick's first temporary workspace
-filled; its failed evidence is preserved and the isolated build is retrying.
+The scan predates the Donetick release; the next completed scan will update its
+queue status. Vikunja and FerretDB remain candidate work. Donetick's initial
+workspace failure is retained; the larger isolated retry and native checks passed.
 Current evidence: `deployment/maintenance/security-20261109/status.json` and
 `docs/records/security-maintenance-2026-11-09.md`. Older entries are historical.
 

@@ -115,6 +115,40 @@ per-service release receipt establishes the exact deployed artifact. Rollback
 restores only its recorded preceding image; ntfy's RAM-only cache cannot be
 recovered by an image rollback. No retention or account settings changed.
 
+## Remaining Go application candidates
+
+Donetick, Vikunja and FerretDB use the same finite x/net adapter. The input
+manifest reconciles each current executable with a completed prior build,
+preserves exact source archives and records the new module locks. Preparation
+downloaded only pinned Go modules using the normal checksum mechanism. Builds
+run one at a time, without networking or production mounts, at one CPU,
+with an 8 GiB free-disk floor. Donetick uses its prior 6 GiB memory/4 GiB
+temporary-workspace budget, Vikunja 5 GiB/4 GiB, and FerretDB 3 GiB/2 GiB.
+Donetick’s first 2 GiB workspace filled during compilation; its failed evidence
+is retained and no image was produced or deployed by that attempt. A captured input is not a completed release.
+
+Donetick reuses `security-20261028/build-go-services.sh`, including its native
+storage/user/auth tests and original version flags. Its two-account fixture
+checks a complete chore lifecycle and denial, plus 254 unchanged frontend
+assets. The existing fixture also records upstream's error status for inaccessible
+or deleted objects; a 500 is not represented as improved error handling.
+
+Vikunja reuses `go-leaf-final/build-one.sh`, its static build tags, the Echo
+middleware suite and its account/project/task/attachment/export/import/restore
+fixture. The existing frontend manifest covers 361 files. The production OIDC
+configuration is preserved; the fixture uses isolated local authentication.
+
+FerretDB reuses `go-closure/build-ferretdb.sh`, the exact MCP compatibility patch,
+MCP 1.4.1 and compression 1.20.2. Its native Gathio fixture checks event editing,
+image upload, calendar import/export and a stopped synthetic database restore.
+The companion application and database images, nonsecret configuration and
+fixture scripts are pinned. Production MCP stays disabled. No production
+database or real event is used.
+
+Use the same `xnet-build.mjs NAME`, `xnet-followup.py NAME stage|native|scan`,
+source publication and separately authorized scoped release sequence. The
+individual private receipts establish actual results and deployment status.
+
 ## Retained component reviews
 
 The existing DHI attribution policy now recognizes the two exact November

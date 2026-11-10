@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T03:39:15.046282+00:00",
+  "recordedAt": "2026-11-10T03:42:10.985134+00:00",
   "scanCompletedAt": "2026-11-10T03:18:43.767Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
@@ -10,7 +10,7 @@
   "pendingCritical": 0,
   "pendingHigh": 109,
   "rawFindingsRetained": true,
-  "assessmentNote": "Same completed scan with exact retained GnuPG component, Wget, sudo, HDF5, CFITSIO and host Expat reviews. Raw findings remain. Reviews expire; no complete remediation or security clearance.",
+  "assessmentNote": "Same completed scan with exact retained GnuPG component, Wget, sudo, HDF5, CFITSIO and host Expat reviews. Raw findings remain. Reviews expire; no complete remediation or security clearance. Donetick release follows this scan; a subsequent fleet scan is pending.",
   "musl": {
     "imagesReleased": 62,
     "groupsPassed": 112,
@@ -56,9 +56,9 @@
     "currentImage": "sha256:17fc5c2c7a400971ee2c0da2d4d8dbbaf0d8ad8ce4639dc752f628671af45644"
   },
   "zlibAndXnet": {
-    "groupsPassed": 49,
-    "distinctImagesReleased": 36,
-    "selectedContainers": 50,
+    "groupsPassed": 50,
+    "distinctImagesReleased": 37,
+    "selectedContainers": 51,
     "wbo": "held-preserve-ram-boards",
     "xnetOtherApplications": "remaining-reviewed-inventory-not-complete",
     "releaseTests": 43,
@@ -106,10 +106,11 @@
       "oauth2-proxy",
       "wakapi",
       "opengist",
-      "ntfy"
+      "ntfy",
+      "donetick"
     ],
     "dependency": "golang.org/x/net v0.62.0",
-    "compiler": "Go 1.26.10 and retained Go 1.27.3 for Wakapi, OpenGist and ntfy",
+    "compiler": "Go 1.26.10 and retained Go 1.27.3 for Wakapi, OpenGist, ntfy and Donetick",
     "newHighCritical": 0,
     "galene": "two independent Chromium sessions with synthetic media and screen sharing; same-host isolated network",
     "realDeviceOrExternalRelayTest": false,
@@ -117,7 +118,8 @@
     "oauth2Proxy": "Native isolated OIDC/PKCE, signed identity, cookies, CSRF rejection, anonymous denial and logout; production identity provider not exercised.",
     "wakapi": "Native isolated local accounts, authenticated heartbeat, anonymous denial, logout and native healthcheck; all 82 embedded assets unchanged. Production OIDC not exercised.",
     "opengist": "Two isolated native accounts, private access, edit/revision export, Git clone/push and deletion; 195 embedded frontend assets unchanged. Production OIDC and real browsers not replayed.",
-    "ntfy": "Isolated publish/poll, one-hour expiry, no-cache, disabled uploads/registration/metrics, RAM-cache restart; 295 embedded frontend assets unchanged. No real-device UnifiedPush test."
+    "ntfy": "Isolated publish/poll, one-hour expiry, no-cache, disabled uploads/registration/metrics, RAM-cache restart; 295 embedded frontend assets unchanged. No real-device UnifiedPush test.",
+    "donetick": "Isolated two-account chore lifecycle, anonymous/cross-account denial and 254 unchanged frontend files; public route passed. Existing inaccessible/deleted lookups still return HTTP 500 without content."
   },
   "headerReview": {
     "snapshot": "f28c090f440f4708e405f235942a83ba4deb7ca4",
@@ -207,5 +209,12 @@
       "high": 1,
       "status": "exact-current-payload-and-retained-proof-revalidated"
     }
+  },
+  "donetick": {
+    "status": "deployed-native-verified",
+    "image": "sha256:84b3647cd87035fbac35165c87429c4a349f5587b7c74917ac3805413868a24a",
+    "completedAt": "2026-11-10T03:41:16.172Z",
+    "onlyBinaryChanged": true,
+    "productionIdentityProviderTested": false
   }
 }

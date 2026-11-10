@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {validateFollowup,validateOAuthNative,validateWakapiNative,validateOpengistNative,validateNtfyNative} from './xnet-followup-policy.mjs';
+import {validateFollowup,validateOAuthNative,validateWakapiNative,validateOpengistNative,validateNtfyNative,validateVikunjaNative,validateDonetickNative,validateFerretNative} from './xnet-followup-policy.mjs';
 function data(){
  const s={key:'safetwitch',mode:'binary-followup',approval:'approved',base:'old',imageId:'new',candidate:'candidate',databaseSha256:'db',checkSha256:'check',rawEvidence:{before:'before',after:'after'}};
  const original={base:'old',binary:'/safetwitch',locks:{'go.mod':'mod','go.sum':'sum'}};
@@ -56,6 +56,25 @@ test('ntfy preserves anonymous notifications, limits, disabled collection and RA
  assert(validateNtfyNative(r,'image','configuration'));assert.throws(()=>validateNtfyNative(r,'different','configuration'));assert.throws(()=>validateNtfyNative(r,'image','different'));
  for(const key of Object.keys(r).filter(k=>!['imageId','configurationSha256'].includes(k)))assert.throws(()=>validateNtfyNative({...r,[key]:false},'image','configuration'));
 });
+test('Vikunja requires account isolation, exports, attachment persistence and restore',()=>{
+ const r={imageId:'image',configurationSourceSha256:'configuration'};
+ for(const f of ['passed','networkIsolated','onlySyntheticData','twoNativeAccounts','createCompleteTask','projectAndAttachmentIsolation','attachmentRoundTrip','exportPasswordRequired','nativeZipExportImport','importedProjectOwnedByRecipient','syntheticSqliteBackupRestore','reloadPreservesTaskAndAttachment','nativeProjectDeletion'])r[f]=true;
+ assert(validateVikunjaNative(r,'image','configuration'));
+ assert.throws(()=>validateVikunjaNative(r,'different','configuration'));assert.throws(()=>validateVikunjaNative(r,'image','different'));
+ for(const f of Object.keys(r).filter(k=>typeof r[k]==='boolean'))assert.throws(()=>validateVikunjaNative({...r,[f]:false},'image','configuration'));
+});
+test('Donetick requires a working native chore lifecycle as well as denial',()=>{
+ const r={imageId:'image',status:'passed',network:'Docker internal bridge; no external route',checks:{twoFictionalAccounts:true,createReadDelete:true,crossAccountDenied:true,deletedAbsentFromList:true,anonymousDenied:true,crossAccountStatus:404,deletedLookupStatus:404}};
+ assert(validateDonetickNative(r,'image'));assert.throws(()=>validateDonetickNative(r,'different'));
+ for(const f of Object.keys(r.checks).filter(k=>typeof r.checks[k]==='boolean'))assert.throws(()=>validateDonetickNative({...r,checks:{...r.checks,[f]:false}},'image'));
+ assert.throws(()=>validateDonetickNative({...r,checks:{...r.checks,crossAccountStatus:200}},'image'));
+});
+test('FerretDB requires native application behavior and a synthetic restored database',()=>{
+ const r={imageId:'image',productionChanged:false,network:'none/shared fictional loopback only'};
+ for(const f of ['passed','nativeGathioCreateEdit','invalidEditTokenDenied','imageUpload','icsImportExport','stoppedDatabaseCopyRestore','reopenedOriginalAndImportedEvents'])r[f]=true;
+ assert(validateFerretNative(r,'image'));assert.throws(()=>validateFerretNative(r,'different'));
+ for(const f of Object.keys(r).filter(k=>typeof r[k]==='boolean'))assert.throws(()=>validateFerretNative({...r,[f]:!r[f]},'image'));
+});
 for(const [label,mutate]of Object.entries({
  'unapproved':d=>d.s.approval='pending','unknown application':d=>d.s.key='unknown',
  'wrong artifact':d=>d.s.imageId='other','unexpected file':d=>d.b.changedFiles.push('/etc/config'),
@@ -73,4 +92,9 @@ test('retained OpenPGP attribution requires exact before/after and absent import
  d.scan.removedFindings=[['GO-2026-5932','golang.org/x/crypto','v0.57.0','UNKNOWN']];assert(validate(d));
  d.dependencies.push('golang.org/x/crypto/openpgp/packet');assert.throws(()=>validate(d));
  d.dependencies.pop();d.scan.removedFindings=[];assert.throws(()=>validate(d));
+});
+
+test('Donetick retains its exact minimal image inventory and two native fixtures',()=>{
+ const d=data();d.s.key='donetick';d.s.builderSha256='a'.repeat(64);d.b.compilerVersion='1.27.3';d.b.compiler='sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b';d.n.adapters.push({});d.b.imageEntries=10;assert(validate(d));
+ d.b.imageEntries=9;assert.throws(()=>validate(d));d.b.imageEntries=11;assert.throws(()=>validate(d));
 });
