@@ -722,3 +722,30 @@ runtime targets and 22 historical build inputs remain open. New and unresolved
 medium, low and UNKNOWN records remain; this is not full remediation. Evidence:
 `security-20261109/after-wakapi` and `xnet/wakapi`. OpenGist is being prepared;
 it is not included in these completed releases.
+
+## Retained component revalidation — 10 November, 03:02 UTC
+
+The completed 02:35 UTC scan remains the assessment input. Read-only installed
+payload and source checks resolve 25 further high package-target records:
+five DHI systemd/Perl binary-component attributions; four retained host/exporter
+Xvfb corrections; two npm records whose 2,198 installed files/links match the
+signed fixed package; 13 exact GDAL/MariaDB/PostGIS component inventories; and
+one already-deployed PostGIS native backport. These are scoped reviews, not
+25 newly patched vulnerabilities. No raw findings or package metadata changed.
+
+All decisions expire in seven days. Only the exact current Penpot descendant
+images were added to existing policy allowlists; full signed-payload and
+completed-release ancestry checks remain mandatory. The cleanup unit fixture
+uses synthetic in-memory objects, with no live display or exploit probe.
+PostGIS retains its recorded native ABI, application and synthetic restore
+evidence and matches the tested package bytes. No running service was changed
+by these reviews. The component report now avoids claiming that an independently
+reviewed sibling package is necessarily still unresolved.
+
+The current pending queue is **0 critical / 131 high records**. The machine
+record's scope counts are now derived from that same queue; previously those
+subtotals lagged its headline total. Medium/low/unknown findings remain. Private
+evidence is in `security-20261109/{binary-scope-revalidation,
+xvfb-passive-revalidation,npm-revalidation,component-revalidation,
+geospatial-revalidation,after-component-reviews}`. OpenGist and ntfy are still
+candidates at this checkpoint; their activation requires completed checks.

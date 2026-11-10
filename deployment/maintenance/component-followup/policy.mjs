@@ -38,7 +38,7 @@ export function componentPolicy(item, records) {
     return 'tiffcrop process_command_opts() in the separately built tools/tiffcrop.c executable, not the libtiff shared decoder library; other TIFF decoder findings remain separate';
   if (gdalIds.includes(item.id) && item.installed === '3.13.2+dfsg-1.pgdg12+1') {
     if (item.package === 'gdal-data' && noNative && files.length > 100 && files.every(r => docs(r.path) || r.path.startsWith('/usr/share/gdal/')))
-      return 'GDAL netCDF/HDF4 C/C++ decoder, not its installed reference-data files; libgdal32 remains a separate unresolved finding';
+      return 'GDAL netCDF/HDF4 C/C++ decoder, not its installed reference-data files; libgdal32 requires its separate exact-payload review';
     if (item.package === 'gdal-plugins' && noNative && files.some(r => r.path === '/usr/lib/x86_64-linux-gnu/gdalplugins/drivers.ini') &&
       files.every(r => docs(r.path) || r.path === '/usr/lib/x86_64-linux-gnu/gdalplugins/drivers.ini'))
       return 'GDAL netCDF/HDF4 C/C++ decoder; this exact plugins package has only drivers.ini and documentation, not any native plugin';

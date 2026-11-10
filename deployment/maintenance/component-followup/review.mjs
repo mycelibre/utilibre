@@ -66,7 +66,7 @@ export function run() {
     if (!record) continue;
     const component = exactInventory(item, record.result.records, spec);
     assert(component);
-    const reason = `Exact binary-component attribution: ${component}. Installed ${item.package} ${item.installed}; full package path/type/content/link inventory SHA256 ${spec.inventorySha256}, rechecked in this scanned runtime. Primary evidence ${advisorySources[item.id]}. Actual vulnerable sibling packages and unrelated CVEs remain open. This is not a whole-image safety claim and not a new package repair.`;
+    const reason = `Exact binary-component attribution: ${component}. Installed ${item.package} ${item.installed}; full package path/type/content/link inventory SHA256 ${spec.inventorySha256}, rechecked in this scanned runtime. Primary evidence ${advisorySources[item.id]}. Sibling packages and unrelated CVEs retain their own review status. This is not a whole-image safety claim and not a new package repair.`;
     decisions.push(validateDecision({key: item.key, status: 'not-affected', reason, expiresAt: new Date(Date.now() + 7 * 86400000).toISOString()}));
   }
   // A concurrent deployment/rescan invalidates this read-only review run.

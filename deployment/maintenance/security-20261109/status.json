@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T02:35:51.506084+00:00",
+  "recordedAt": "2026-11-10T03:02:52.030012+00:00",
   "scanCompletedAt": "2026-11-10T02:35:05.831Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
@@ -8,9 +8,9 @@
   "sourceInputs": 103,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 156,
+  "pendingHigh": 131,
   "rawFindingsRetained": true,
-  "assessmentNote": "Completed frozen-database fleet scan after Wakapi. Exact JOSE, OpenLDAP and fixed DHI payload reviews retain raw findings and expire. This is not complete remediation or security clearance.",
+  "assessmentNote": "Same completed frozen-database scan after Wakapi, with exact retained-fix and binary-component revalidation. Reviews retain raw findings and expire. OpenGist and ntfy candidates are not deployed. This is not complete remediation or security clearance.",
   "musl": {
     "imagesReleased": 62,
     "groupsPassed": 112,
@@ -46,7 +46,7 @@
       "penpot"
     ]
   },
-  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-wakapi",
+  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-component-reviews",
   "degoog": {
     "status": "deployed-public-search-passed",
     "image": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
@@ -81,11 +81,11 @@
     "rawTargetAttributionRetained": true
   },
   "pendingHighByScope": {
-    "runtime-image": 138,
+    "runtime-image": 90,
     "tracked-build-input": 22,
     "mounted-runtime-code": 1,
     "upstream-release-source-lock": 2,
-    "host-os": 18
+    "host-os": 16
   },
   "bookwormZlib": {
     "status": "deployed",
@@ -156,6 +156,28 @@
       "low": 32,
       "status": "actual-fixed-payload-verified-old-metadata-retained"
     },
-    "expiryDays": 7
+    "expiryDays": 7,
+    "dhiBinaryAttribution": {
+      "high": 5,
+      "status": "exact-signed-binary-components-absent"
+    },
+    "xvfb": {
+      "high": 4,
+      "status": "authenticated-source-and-live-payload-revalidated"
+    },
+    "npm": {
+      "high": 2,
+      "payloadFiles": 2198,
+      "status": "signed-fixed-package-payload-revalidated"
+    },
+    "binaryComponents": {
+      "high": 13,
+      "inventoryGroups": 5,
+      "status": "exact-reviewed-component-inventories-revalidated"
+    },
+    "postgis": {
+      "high": 1,
+      "status": "native-backport-and-complete-payload-revalidated"
+    }
   }
 }

@@ -1,12 +1,11 @@
-## Current continuation — 10 November 2026, 02:35 UTC
+## Current continuation — 10 November 2026, 03:02 UTC
 
-Wakapi and OAuth2 Proxy are deployed and verified, following Mezzo, Anubis and
-embedded Caddy. The completed scan covers 103 source inputs, 109 runtime images
-and 175 containers: **0 pending critical / 156 pending high records**. All
-observed targets were rechecked. Five x/net runtime targets and 22 historical
-build inputs still need work. Exact JOSE, OpenLDAP and fixed DHI payload reviews
-retain raw findings and expire; this is not full remediation. OpenGist is in
-preparation, not a completed release.
+Wakapi and OAuth2 Proxy are deployed and verified. The completed 02:35 scan
+covers 103 source inputs, 109 runtime images and 175 containers. Exact retained
+fix and binary-component reviews now leave **0 pending critical / 131 pending
+high records**. Raw findings remain; reviews expire after seven days. OpenGist
+and ntfy are candidates undergoing isolated checks, not completed releases.
+Five x/net runtime targets and 22 historical build inputs still need work.
 [Current evidence and limitations](records/security-maintenance-2026-11-09.md).
 
 ## Latest checkpoint — 10 November 2026
