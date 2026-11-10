@@ -1,18 +1,21 @@
 # Work queue
 
-Wallabag/Pollaris expression-parser fixes and both relay Mongo C driver fixes
-are deployed and verified, preserving prior repairs. OAuthlib, FerretDB and the
-six APT image repairs are also deployed. The completed **10 November 05:34 UTC**
-scan covers 109 images, 175 containers and 107 source inputs. After exact live
-payload and component reviews, **0 critical / 63 high records remain pending**.
-Raw findings remain; this is not full remediation or a security clearance.
+The whiteboard zlib update and host SQLite follow-up are deployed and verified,
+in addition to the Wallabag/Pollaris parser and relay-driver corrections.
+The completed **10 November 05:54 UTC** scan covers 109 images, 175 containers
+and 107 source inputs. After exact payload reviews, **0 critical / 60 high
+records remain pending**. Raw findings remain; this is not full remediation
+or a security clearance.
 
 Remaining high records: 30 ACL records across the host/images; 22 historical
-x/net build-input records; five host GRUB records; two host SQLite records;
-two Grist Deno/Hickory source-lock records; one Kuma Markdown record; and one
-WBO zlib record held to preserve RAM-only boards. Host releases require their
-specific maintenance gates; earlier ACL/GRUB approval-review blocks remain.
-Held application upgrades and other documented functional gaps are still open.
+x/net build-input records; five host GRUB records; two Grist Deno/Hickory
+source-lock records; and one Kuma Markdown record. Earlier ACL/GRUB review
+restrictions remain. Held application upgrades and documented functional gaps
+are still open. Historical source locks have not been rewritten to hide findings.
+
+WBO was empty and had zero active connections at all release gates; its native
+RAM-only storage policy is unchanged. Host SQLite passed ordinary database and
+backup/restore checks with no service restart or unrelated package changes.
 
 Current evidence: `deployment/maintenance/security-20261109/status.json` and
 `docs/records/security-maintenance-2026-11-09.md`. Older entries below are historical.

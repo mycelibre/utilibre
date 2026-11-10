@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "approval": "approved",
+  "scope": "One unloaded host SQLite library; no service restart or data migration. Refuse active consumers.",
+  "sourceReceiptSha256": "8c08d653d9253f5bdaac0aed652e913dad3881f68d94b93b617a093a33682c27",
+  "fixtureSha256": "5547c10390f4e9bdd0cf6d1a76aee0f850b7204cf65be4cc39189f837fab005b",
+  "packages": [
+    {
+      "package": "libsqlite3-0",
+      "before": "3.46.1-7+deb13u2+utilibre1",
+      "file": "/var/lib/utilibre-maintenance/security-20261103/sqlite/trixie/output/libsqlite3-0_3.46.1-7+deb13u2+utilibre1_amd64.deb",
+      "sha256": "e5a3630c20df23e6de94361c0e0b3e2b1bdcb8ce7f161fb2dc445dd53fc6704a",
+      "after": "3.46.1-7+deb13u2+utilibre2",
+      "candidateFile": "/var/lib/utilibre-maintenance/security-20261109/sqlite-followup/trixie/output/libsqlite3-0_3.46.1-7+deb13u2+utilibre2_amd64.deb",
+      "candidateSha256": "fb3eede99d50e07a20fd97294fd4669ce1777748c9f92b5e7fc5de3c8e1d20ad",
+      "library": "/usr/lib/x86_64-linux-gnu/libsqlite3.so.0",
+      "librarySha256": "bf6c657d8c2201d1d62f2bcdb3cff071b08728117d8eaae9f91e2edefb620c47"
+    }
+  ]
+}

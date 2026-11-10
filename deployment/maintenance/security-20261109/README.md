@@ -818,5 +818,42 @@ and live library hashes before preparing expiring, exact finding decisions.
 Wallabag's separate retained OTPHP correction is rechecked with ordinary
 provisioning/RFC6238/native authentication cases and exact corrected-file hashes.
 The former vulnerability-reproduction fixture is not run by this review path.
+
+### WBO empty-store release and unloaded host SQLite — 10 November
+
+The existing WBO RAM-history rehearsal now accepts two exact image IDs. The
+November zlib candidate passes native drawing, reopening, further editing and
+rollback with fictional boards. Its production release additionally requires
+zero board files, zero board bytes and zero established application connections
+at each release gate. Only aggregate counts are retained. Any nonzero or unknown
+state holds the release; this is not permission to discard active boards. The
+native RAM-only retention model is unchanged. Nine focused idle-gate tests and
+13 existing zlib-policy tests pass. Repeated apply leaves the container identity
+and start time unchanged.
+
+The existing `security-20261103/host-libraries.mjs --batch-20261109
+prepare|apply` selects the single-package `host-library-inputs.json` here. It
+uses the already-tested native Trixie SQLite archive, exact retained rollback
+package, package-file comparison, exported symbols and linked dependencies.
+It refuses loaded host consumers, unrelated package changes, stale preparation
+or an unexpected installed state. No service restart or data migration occurs.
+Fifteen ordinary checks exercise queries, transactions, text search, UTF-8,
+synthetic backup/restore and deletion before and after, under an unprivileged
+account without network access. No historical vulnerability fixture is rerun.
+The old host-library mode is retained for its historical recipe; it is not the
+current follow-up command.
+
+`security-20261103/review-host-libraries.mjs --batch-20261109` prepares exact
+current-scan decisions from the completed release, package and library hashes,
+retained source evidence and ordinary checks. It does not record them or waive
+unrelated findings. Future unattended-upgrade protection still covers the local
+package. Source is already in the published SQLite corresponding-source offer;
+the host adapter and fixture are included in the committed integration source.
+
+Evidence: private `security-20261109/zlib/collaboration-pilot-wbo/`,
+`zlib/release.json`, `wbo-idempotence.json`, `wbo-idle-tests.log`, and
+`host-libraries/{prepared,release,review}.json`. Rollback preserves the previous
+WBO image and exact host package; it requires a fresh idle/consumer check and
+does not restore user content created after a release.
 All review writers remain explicit; preparation does not automatically approve
 or suppress a finding. No byte-for-byte build reproducibility is claimed.

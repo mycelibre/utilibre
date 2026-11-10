@@ -396,10 +396,12 @@
           "approval": "approved"
         }
       ],
-      "approval": "preparation-only",
-      "ownerHold": "RAM-only boards may be lost on restart; preserve existing work.",
-      "releaseApproval": "held",
-      "publicHome": "https://collab.utilibre.org/"
+      "approval": "approved",
+      "releaseApproval": "approved",
+      "publicHome": "https://collab.utilibre.org/",
+      "releaseCondition": "No saved board files/bytes and no established TCP connections on the native port, checked immediately before recreation; otherwise hold.",
+      "boardFixtureSha256": "6c20eef18132560859aa457d7847106899bbc453e050a10f5f3ac0e5222d54d4",
+      "boardAdapterSha256": "86bf8f6bd485f5a2eea44d9fa3d92dcecce3bb87517a926fabab6d90c37bba49"
     },
     {
       "key": "simplelogin-db",

@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T05:39:16.483149+00:00",
-  "scanCompletedAt": "2026-11-10T05:34:58.626Z",
+  "recordedAt": "2026-11-10T05:56:56.000883+00:00",
+  "scanCompletedAt": "2026-11-10T05:54:41.763Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
   "runningContainers": 175,
   "sourceInputs": 107,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 63,
+  "pendingHigh": 60,
   "rawFindingsRetained": true,
   "assessmentNote": "Completed post-release scan, followed by exact current-image source/package/component revalidation. All raw findings remain; reviews expire after seven days. No complete remediation or security clearance.",
   "musl": {
@@ -46,7 +46,7 @@
       "penpot"
     ]
   },
-  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-followups-reviews",
+  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-wbo-host-reviews",
   "degoog": {
     "status": "deployed-public-search-passed",
     "image": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
@@ -56,10 +56,10 @@
     "currentImage": "sha256:17fc5c2c7a400971ee2c0da2d4d8dbbaf0d8ad8ce4639dc752f628671af45644"
   },
   "zlibAndXnet": {
-    "groupsPassed": 52,
-    "distinctImagesReleased": 39,
-    "selectedContainers": 53,
-    "wbo": "held-preserve-ram-boards",
+    "groupsPassed": 57,
+    "distinctImagesReleased": 44,
+    "selectedContainers": 56,
+    "wbo": "deployed-after-empty-store-and-no-connection-checks",
     "xnetOtherApplications": "remaining-reviewed-inventory-not-complete",
     "releaseTests": 43,
     "countingNote": "Distinct successful image artifacts across the two release receipts, including superseded intermediate repairs; not a count of independently deployed applications."
@@ -81,10 +81,10 @@
     "rawTargetAttributionRetained": true
   },
   "pendingHighByScope": {
-    "runtime-image": 31,
+    "runtime-image": 30,
     "tracked-build-input": 22,
     "upstream-release-source-lock": 2,
-    "host-os": 8
+    "host-os": 6
   },
   "bookwormZlib": {
     "status": "deployed",
@@ -346,12 +346,6 @@
       "records": 1
     },
     {
-      "advisory": "CVE-2026-85091",
-      "package": "zlib",
-      "scope": "runtime-image",
-      "records": 1
-    },
-    {
       "advisory": "CVE-2026-78661",
       "package": "golang.org/x/net",
       "scope": "tracked-build-input",
@@ -404,22 +398,50 @@
       "package": "libacl1",
       "scope": "host-os",
       "records": 1
-    },
-    {
-      "advisory": "CVE-2026-119374",
-      "package": "libsqlite3-0",
-      "scope": "host-os",
-      "records": 1
-    },
-    {
-      "advisory": "CVE-2026-119379",
-      "package": "libsqlite3-0",
-      "scope": "host-os",
-      "records": 1
     }
   ],
   "remainingChecks": {
     "pythonMarkdown": "Debian still marks CVE-2019-25781 unfixed on 10 November; no compatible approved upstream repair identified.",
     "source": "https://security-tracker.debian.org/tracker/CVE-2019-25781"
+  },
+  "wboFollowup": {
+    "status": "deployed",
+    "completedAt": "2026-11-10T05:47:00.469Z",
+    "image": "sha256:6bbc458f700d5ea70d731eecd05ddd100d2c54e104aed7b4ee046961c568f771",
+    "idleChecks": [
+      {
+        "date": "2026-11-10T05:45:24.184Z",
+        "files": 0,
+        "bytes": 0,
+        "connections": 0
+      },
+      {
+        "date": "2026-11-10T05:45:58.270Z",
+        "files": 0,
+        "bytes": 0,
+        "connections": 0
+      },
+      {
+        "date": "2026-11-10T05:45:58.764Z",
+        "files": 0,
+        "bytes": 0,
+        "connections": 0
+      }
+    ],
+    "ramReopenEditRollback": "passed-isolated-synthetic-board",
+    "policyTests": 22,
+    "repeatedApply": "container-and-start-time-unchanged"
+  },
+  "hostSqliteFollowup": {
+    "status": "passed",
+    "completedAt": "2026-11-10T05:52:23.932Z",
+    "version": "3.46.1-7+deb13u2+utilibre2",
+    "librarySha256": "bf6c657d8c2201d1d62f2bcdb3cff071b08728117d8eaae9f91e2edefb620c47",
+    "ordinaryChecks": 15,
+    "network": "none",
+    "backupRestore": true,
+    "noServiceRestart": true,
+    "unrelatedPackages": "unchanged",
+    "repeatedApply": "exact-package-preserved-no-install"
   }
 }

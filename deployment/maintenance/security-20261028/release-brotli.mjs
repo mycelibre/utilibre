@@ -1,4 +1,5 @@
 import {proveMongocRelease} from '../security-20261109/mongoc-policy.mjs';
+import {requireEmptyWhiteboard} from '../security-20261109/wbo-idle.mjs';
 import {proveExpressionRelease} from '../security-20261109/expression-policy.mjs';
 import {proveOauth as proveNovemberOauth} from '../security-20261109/oauth-policy.mjs';
 import {proveCaddy} from '../security-20261109/xnet-caddy-policy.mjs';
@@ -73,6 +74,14 @@ async function publicReady(g){
  }
 }
 function protectedActivityGate(g){
+ if(profile==='zlib'&&g.key==='collaboration-pilot-collaboration-pilot-wbo'){
+  const name='utilibre-collaboration-pilot-wbo-1',pid=Number(docker('inspect','--format','{{.State.Pid}}',name));assert(Number.isInteger(pid)&&pid>0);
+  const code='const fs=require("fs");let files=0,bytes=0;function walk(p){for(const e of fs.readdirSync(p,{withFileTypes:true})){const q=p+"/"+e.name;if(e.isDirectory())walk(q);else if(e.isFile()){files++;bytes+=fs.statSync(q).size;}else throw Error("Unsupported board-store entry");}}walk("/opt/app/server-data");console.log(JSON.stringify({files,bytes}));';
+  const store=JSON.parse(docker('exec',name,'node','-e',code));
+  const connections=establishedOnPort(['tcp','tcp6'].map(p=>fs.readFileSync('/proc/'+pid+'/net/'+p,'utf8')),8080);
+  const proof=requireEmptyWhiteboard(store,connections);
+  g.whiteboardIdleChecks=[...(g.whiteboardIdleChecks||[]),{date:new Date().toISOString(),...proof}];
+ }
  if(profile==='vendor-debian'&&g.key==='apt-mumble'){
   const name='utilibre-mumble-mumble-1',pid=Number(docker('inspect','--format','{{.State.Pid}}',name));assert(Number.isInteger(pid)&&pid>0);
   assert.equal(establishedOnPort(['tcp','tcp6'].map(p=>fs.readFileSync('/proc/'+pid+'/net/'+p,'utf8')),64738),0,'An active Mumble voice/control session prevents this restart');
@@ -92,6 +101,13 @@ function proof(key){const s=specs.find(s=>s.key===key),dir=evidence(s);if(['xnet
  if(profile==='vendor-debian')proveVendorDebian(read(batch.input(profile)),s,b,read(dir+'/consumer.json'),scan,read(root+(s.acquisition?'/'+s.acquisition+'-acquisition/authenticated.json':'/debian-acquisition/authenticated.json')),root);
  if(profile==='musl')proveMusl(read(batch.input('musl')),s,b,read(dir+'/consumer.json'),scan);
  if(profile==='zlib')proveZlib(read(batch.input(profile)),s,b,{...read(dir+'/consumer.json'),path:dir+'/consumer.json'},{...scan,rawPath:dir+'/after-scan.json'},{...read(dir+'/scope.json'),path:dir+'/scope.json'});
+ if(profile==='zlib'&&s.evidenceKey==='collaboration-pilot-wbo'){
+  const a=read(dir+'/board-rehearsal.json');
+  assert.equal(a.result,'PASS');assert.equal(a.before,s.base);assert.equal(a.after,b.imageId);
+  assert(a.native_reopen_and_new_mutation&&a.rollback_reopen&&a.network==='none'&&a.regular_file_board_archives===0);
+  assert.equal(digest(fs.readFileSync(new URL('../../community/wbo/check-ram-reload.py',import.meta.url))),s.boardFixtureSha256);
+  assert.equal(digest(fs.readFileSync(new URL('../../community/wbo/ram_history.py',import.meta.url))),s.boardAdapterSha256);
+ }
 
  assert(b.passed&&b.configurationUnchanged);
  if(batch.enabled&&profile==='libxi'){proveXi(read(batch.input(profile)),s,b,read(dir+'/consumer.json'),read(dir+'/application.json'));assert(scan.primarySourceFixVerified&&scan.newHighCritical===0);}

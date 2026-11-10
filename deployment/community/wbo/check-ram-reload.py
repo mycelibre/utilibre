@@ -1,4 +1,8 @@
 from ram_history import *
+import re, sys
+assert len(sys.argv) in (1,3), 'Supply both exact images or use the retained rehearsal'
+before_image, after_image = sys.argv[1:] if len(sys.argv)==3 else ('utilibre-wbo:2.9.0-p2','utilibre-wbo:2.9.0-p3')
+if len(sys.argv)==3: assert all(re.fullmatch(r'sha256:[a-f0-9]{64}', image) for image in [before_image,after_image])
 NAME='utilibre-wbo-fictional-ram-rehearsal'
 old_fd=None; data=None
 assert NAME not in run('docker','ps','-a','--format','{{.Names}}').decode().splitlines(), 'Do not overwrite an existing container'
@@ -27,7 +31,7 @@ def count_expected(number):
     run('docker','exec',NAME,'node','-e',script,str(number))
 
 try:
-    start('utilibre-wbo:2.9.0-p2'); draw(1)
+    start(before_image); draw(1)
     time.sleep(3); count_expected(1)
     old_fd=directory_fd(NAME)
     run('docker','stop','--time','30',NAME)
@@ -37,7 +41,7 @@ try:
     # Removing the stopped container must not free the held tmpfs filesystem.
     run('docker','rm',NAME)
     assert aggregate(old_fd)==expected
-    start('utilibre-wbo:2.9.0-p3'); restore(NAME,data,expected)
+    start(after_image); restore(NAME,data,expected)
     assert aggregate(old_fd)==expected
     count_expected(1); draw(2); count_expected(2)
     # Rehearse rollback into the original image from a new native final save.
@@ -45,9 +49,9 @@ try:
     run('docker','stop','--time','30',NAME)
     rollback, after=archive(second_fd)
     run('docker','rm',NAME)
-    start('utilibre-wbo:2.9.0-p2'); restore(NAME,rollback,after); count_expected(2)
+    start(before_image); restore(NAME,rollback,after); count_expected(2)
     os.close(second_fd)
-    print(json.dumps({'result':'PASS','native_shutdown_exit':0,'network':'none','tmpfs_survives_stop_and_remove_while_descriptor_open':True,'original':expected,'native_reopen_and_new_mutation':True,'rollback_reopen':True,'regular_file_board_archives':0}))
+    print(json.dumps({'result':'PASS','before':before_image,'after':after_image,'native_shutdown_exit':0,'network':'none','tmpfs_survives_stop_and_remove_while_descriptor_open':True,'original':expected,'native_reopen_and_new_mutation':True,'rollback_reopen':True,'regular_file_board_archives':0}))
 finally:
     try: run('docker','rm','-f',NAME)
     except RuntimeError: pass

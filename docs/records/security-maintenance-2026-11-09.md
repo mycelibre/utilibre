@@ -1068,3 +1068,51 @@ The remaining Kuma Python-Markdown record was rechecked against the
 on 10 November: Bookworm, Trixie and unstable remain listed as vulnerable, with
 no fixed package recorded. No unreviewed parser rewrite or oversized-input
 reproduction was substituted for an approved upstream repair.
+
+## Whiteboard and host SQLite closure — 10 November, 05:54 UTC
+
+WBO's zlib 1.4-r0 candidate is now deployed. The previously held board-loss
+condition was resolved by verifying an empty temporary store and zero active
+connections at preparation and immediately before replacement. No production
+board content or peer identifiers were inspected or retained. The existing
+RAM-history rehearsal was extended to the exact old/candidate image IDs and
+passed drawing, reopening, further editing and rollback using fictional data.
+Nine idle-gate checks and 13 zlib-policy checks pass. Native runtime checks,
+full image scope, frozen-database candidate assessment and live release health
+gates also passed. Repeating apply preserved container identity/start time.
+The runtime-only retention model and abuse-report link remain unchanged.
+
+The host now uses `libsqlite3-0 3.46.1-7+deb13u2+utilibre2`, the same exact native
+archive already verified for the Trixie application images. No host process had
+the library loaded at release gates. The existing host release adapter verifies
+the previous rollback archive, complete installed package, all exports and
+linked dependencies, and permits only that one package to change. Fifteen
+ordinary queries/transactions/FTS/UTF-8 and synthetic backup/restore/deletion
+checks pass before and after, without network access as an unprivileged user.
+Services and unrelated packages remained unchanged. Repeated apply performs no
+installation. The protected local-package update rule remains in place.
+No new vulnerability reproduction or production user database was used.
+
+- WBO release: `2026-11-10T05:47:00.469Z`, image `sha256:6bbc458f700d5ea70d731eecd05ddd100d2c54e104aed7b4ee046961c568f771`.
+- SQLite library SHA256: `bf6c657d8c2201d1d62f2bcdb3cff071b08728117d8eaae9f91e2edefb620c47`.
+- SQLite package SHA256: `fb3eede99d50e07a20fd97294fd4669ce1777748c9f92b5e7fc5de3c8e1d20ad`.
+
+The post-release scan completed at **05:54:41 UTC**, covering 109 images,
+175 containers, 107 source inputs and host packages. Three exact host SQLite
+reviews preserve the prior rowid repair and verify the two new corrections.
+The pending queue is **0 critical / 60 high**, comprising 30 runtime-image,
+22 historical build-input, two upstream-lock and six host records. Raw findings
+remain 24,486 total, 65 critical / 3,046 high; they are not unique exploitable
+vulnerabilities. Nothing was suppressed, and the new reviews expire after seven
+days. Lower-severity and unknown findings remain separately in the private queue.
+
+Evidence: private `security-20261109/after-wbo-host-reviews/`,
+`host-libraries/{prepared,release,review,reviewed-batch}.json`,
+`zlib/collaboration-pilot-wbo/board-rehearsal.json`, `zlib/release.json`,
+`wbo-idempotence.json` and `wbo-idle-tests.log`.
+The host and WBO previous artifacts remain retained. A rollback must repeat
+consumer/idle checks and does not recover content created after a release.
+The rest of the maintenance queue is not claimed complete: ACL/GRUB restrictions,
+historical x/net inputs, Grist's source locks, Kuma Markdown and 29 held application
+upgrades remain as recorded. This follow-up did not reboot the VM, send email,
+change access/retention rules or add public services.
