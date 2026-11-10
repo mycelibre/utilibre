@@ -63,6 +63,24 @@ export function validateOverlayChain(initial,expected,name,rows,scanDate){
  }
  assert.equal(image,expected,'Unproven repair-to-current-image ancestry');return true;
 }
+// Reuse retained ordinary helper checks only when the source, native package,
+// original repair receipts and actual live library bytes were independently
+// revalidated by repairedBookwormEvidence. An image rename alone is not proof.
+export function validateRetainedHookEvidence(item,scan,proof,repair,overlays){
+ assert(repairedBookwormComponentCase(item)&&bookwormHookCase(item));
+ assert(proof.passed&&Date.parse(proof.date)<=Date.parse(scan.date));
+ const prior=proof.repairedProofs.filter(p=>p.container===item.containers[0]);assert.equal(prior.length,1);
+ const old=prior[0];assert.equal(repair.artifact,item.artifact);assert.equal(repair.container,item.containers[0]);
+ for(const field of ['root','version','container','source','receiptHashes','libraryPath','librarySha256'])assert.deepEqual(old[field],repair[field],`Changed retained ${field}`);
+ assert.equal(old.version,item.installed);
+ validateOverlayChain(old.artifact,item.artifact,item.containers[0],overlays,scan.date);
+ const rows=proof.rows.filter(r=>r.legacy&&r.artifact===old.artifact);
+ assert.equal(rows.length,2);assert.deepEqual(rows.map(r=>r.helperExit).sort(),[0,1]);
+ assert(rows.every(r=>r.passed&&r.version===item.installed&&r.containers.length===1&&r.containers[0]===item.containers[0]));
+ const controls=proof.rows.filter(r=>!r.legacy);assert.equal(controls.length,2);
+ assert(controls.every(r=>r.passed));assert.deepEqual(controls.map(r=>r.helperExit).sort(),[0,1]);
+ return {testedArtifact:old.artifact,currentArtifact:item.artifact,retainedDate:proof.date,librarySha256:repair.librarySha256};
+}
 export function verifyRepairedSource(){
  if(sourceProof)return sourceProof;
  const offer=read(root+'/source-offer.json');assert(offer.published);assert.equal(offer.sha256,sourceSha);assert.equal(fileSha(offer.archive),sourceSha);

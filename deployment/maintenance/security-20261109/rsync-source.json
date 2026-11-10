@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-119741",
+  "upstreamCommit": "a7404a9a633cff28ee1602f328b9c3fa69cdbd04",
+  "sourceVersion": "3.5.2+ds1-2",
+  "outputVersion": "3.5.2+ds1-2~deb12u1+utilibre1",
+  "sdkImage": "sha256:de9ffc595352ed7afc6425b14b36a900dced0a5442915d6a569121df2ca01df7",
+  "files": {
+    "rsync_3.5.2+ds1-2.debian.tar.xz": "852ca104ad228877ea6297ebf86f6252d92a13b75ce52f22d935fca5f14258d7",
+    "rsync_3.5.2+ds1-2.dsc": "59c1dabfc207acccf9f3b7b4d9b59ba166c70b5e61c52198a0f0292280c927b1",
+    "rsync_3.5.2+ds1.orig.tar.xz": "a2cc02b428f109d15b0b60d859ae74e2dcbabd23254296df5399714f74cbbdff"
+  },
+  "authentication": "APT verified signed Debian sid Sources index; retained InRelease and index hash; no host APT configuration change",
+  "status": "isolated-preparation-only"
+}

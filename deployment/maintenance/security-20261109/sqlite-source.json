@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "advisories": [
+    "CVE-2026-119374",
+    "CVE-2026-119379"
+  ],
+  "upstreamCommits": {
+    "CVE-2026-119374": "d9de6eedbe918c074c7556400fa21df5960704d9",
+    "CVE-2026-119379": "64459c87cc702d600704fb77ee40ca1782398a52"
+  },
+  "approval": "isolated-preparation-only",
+  "suites": {
+    "bookworm": {
+      "inputVersion": "3.40.1-2+deb12u2+utilibre3",
+      "version": "3.40.1-2+deb12u2+utilibre4",
+      "sourceVersion": "3.40.1",
+      "sdkImage": "sha256:6a07f38a6ecf26ef67524730274c6ee2d641402c653ceff51dc13d0d976616e8",
+      "files": [
+        {
+          "file": "sqlite3_3.40.1-2+deb12u2+utilibre3.debian.tar.xz",
+          "sha256": "29cb8e1c733784056ea65907905fe7b68ead42f77aab3bebb4a245fdf24344c1"
+        },
+        {
+          "file": "sqlite3_3.40.1-2+deb12u2+utilibre3.dsc",
+          "sha256": "a8b97dd413d49d2ccc8da6ac5353d8a60e0eb57536e681b0c0d57e9b498a1986"
+        },
+        {
+          "file": "sqlite3_3.40.1.orig-www.tar.xz",
+          "sha256": "a5e95a18d1b59729278860559ded78751b9163ffb5bb906c5cd24c015f71d5fd"
+        },
+        {
+          "file": "sqlite3_3.40.1.orig.tar.xz",
+          "sha256": "aaa776260ab4dc976db34aa7891819484c8676b5b2783123ebc6301e2ca5d655"
+        }
+      ],
+      "filePreconditions": {
+        "ext/session/sqlite3session.c": "288395c532b7704303ef60c0bd54de12108eaa2ac0a7f2eac738cba98d7e353c",
+        "debian/rules": "172b1f317341d5425eb9415048086f6a403f6cb268c582bfa228f4272917188d"
+      },
+      "filePostconditions": {
+        "ext/session/sqlite3session.c": "55096dcf1ba84819c56038d976a2b7b171236bcd880a0c851a62ae3e665af6d9"
+      },
+      "patches": [
+        {
+          "file": "sqlite-session-bookworm.patch",
+          "sha256": "98cbc928faafef8efb00572bda480672a7562150ca235802c64f17f1b1f9ee75"
+        }
+      ],
+      "secureDelete": "not-present-in-3.40-source"
+    },
+    "trixie": {
+      "inputVersion": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "sourceVersion": "3.46.1",
+      "sdkImage": "sha256:eb92e8373595e96f4dff736d82aa484704579dde4403a4445624f27094e70818",
+      "files": [
+        {
+          "file": "sqlite3_3.46.1-7+deb13u2+utilibre1.debian.tar.xz",
+          "sha256": "06c55f8f09f5bb7e44d2d83a47763735b6f1c587ab89a1f41b75b1ae968865a1"
+        },
+        {
+          "file": "sqlite3_3.46.1-7+deb13u2+utilibre1.dsc",
+          "sha256": "2146f7d4ab9152d8021f8eb789d4e90e545a749cb3fccfa205c2950dc6931635"
+        },
+        {
+          "file": "sqlite3_3.46.1.orig-www.tar.xz",
+          "sha256": "648df41a8e532882b1905df45919aae4bafaf74c455f66bc86f1f52f45c8b8f0"
+        },
+        {
+          "file": "sqlite3_3.46.1.orig.tar.xz",
+          "sha256": "d0cdd2ece271b29e7ce18095745d892517ee26d0f270065b3a25c2e9eb11639c"
+        }
+      ],
+      "filePreconditions": {
+        "ext/session/sqlite3session.c": "0a7996f44e01fb5540eaa7d524d0972e29b82f1c04b24042019b58b1fd461197",
+        "ext/fts5/fts5_index.c": "ccf04f272425655b44e8377e992c799278550d650fa070481fbe584201793ef8",
+        "debian/rules": "6dcffe1e100a489ed0dd995fc08ebbf207c4c6f61366b5c875bc4feb05b27082"
+      },
+      "filePostconditions": {
+        "ext/session/sqlite3session.c": "4d569c7915de36a98eb6766e0e25ea694b7adb377fc7cd4835fb75cf35e114b1",
+        "ext/fts5/fts5_index.c": "db202203733a3318f2f94f10b794a10d248828c3d2190ce7084705c6d1019fbe"
+      },
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "secureDelete": "upstream-backport"
+    }
+  },
+  "fixtures": {
+    "sqlite-secure-delete-corrupt.db": "6403bc6c08deee687c69e6d05c680a443f7d994bda19071131db0bd196538fa3",
+    "sqlite-secure-delete-native.c": "dc3a3798a059775b5f5bfbbc15440175637e69695fc1e4d8ea9304b824c2804c",
+    "sqlite-session-corrupt.bin": "a5fd19bffb0cce234d4ec6b58b5977a2dbbe7ce9f17d3c54fe78e1d69ec81403",
+    "sqlite-session-native.c": "53864893f35af3e027d2e633318b50a3314b2c4a2f2c6a730613a0b4d098328e"
+  }
+}

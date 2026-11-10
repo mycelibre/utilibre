@@ -3,9 +3,10 @@ import fs from 'node:fs';
 import cp from 'node:child_process';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {freshScan} from '../review-native-backports.mjs';
+import {freshScan,overlayRows} from '../review-native-backports.mjs';
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 import {validateDecision} from '../triage.mjs';
-import {bookwormHookCase,repairedVersion,repairedPackages,repairedBookwormComponentCase,repairedBookwormEvidence,legacyAbsence} from './mount-component-policy.mjs';
+import {bookwormHookCase,repairedVersion,repairedPackages,repairedBookwormComponentCase,repairedBookwormEvidence,legacyAbsence,validateRetainedHookEvidence} from './mount-component-policy.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/closure-followup-20261012',source=dir+'/sources';
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
@@ -65,8 +66,12 @@ for(const item of queue.items){
   if(spec.repaired){assert(repairedBookwormComponentCase(item));repair=repairedBookwormEvidence(item,scan);}
   if(legacyHooks){
    const p=read(dir+'/bookworm-mount-hooks/proof.json');assert(p.passed&&Date.now()-Date.parse(p.date)<86400000);
-   const native=p.rows.filter(r=>r.legacy&&r.artifact===item.artifact);assert.equal(native.length,2);assert.deepEqual(native.map(r=>r.helperExit).sort(),[0,1]);assert(native.every(r=>r.passed&&item.containers.every(name=>r.containers.includes(name))));
-   if(repair){assert.equal(p.scanDate,scan.completedAt);assert(Date.parse(p.date)>=Date.parse(scan.completedAt));assert(native.every(r=>r.version===item.installed));const proved=p.repairedProofs.find(x=>x.artifact===item.artifact&&x.container===item.containers[0]);assert.deepEqual(proved,repair);}
+   if(repair){
+    const overlays=additionalOverlayReceipts.filter(f=>fs.existsSync(root+'/'+f)).flatMap(f=>overlayRows(read(root+'/'+f)));
+    validateRetainedHookEvidence(item,scan,p,repair,overlays);
+   }else{
+    const native=p.rows.filter(r=>r.legacy&&r.artifact===item.artifact);assert.equal(native.length,2);assert.deepEqual(native.map(r=>r.helperExit).sort(),[0,1]);assert(native.every(r=>r.passed&&item.containers.every(name=>r.containers.includes(name))));
+   }
    const control=p.rows.filter(r=>!r.legacy);assert.equal(control.length,2);assert(control.every(r=>r.passed));
   }
   const key=item.artifact+'|'+item.package+'|'+item.installed;

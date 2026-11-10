@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-76844",
+  "upstreamCommit": "df84af25dc1942490e1d1c899a07619152a46148",
+  "version": "1:1.2.13.dfsg-1+utilibre1",
+  "inputVersion": "1:1.2.13.dfsg-1",
+  "sdkImage": "sha256:6a07f38a6ecf26ef67524730274c6ee2d641402c653ceff51dc13d0d976616e8",
+  "files": {
+    "zlib_1.2.13.dfsg-1.debian.tar.xz": "f66cf3d4f2d7defcd4d1fd1fb0a11ee39f1e01b42ec7d059c9dc5c1695133c44",
+    "zlib_1.2.13.dfsg-1.dsc": "3fa1e6b2fc525062aa88207dda52fed8e045373c809d362fe8a2bfbf7cf515a8",
+    "zlib_1.2.13.dfsg.orig.tar.bz2": "71feb7947e3c00ef125f83b79a4e529bde31171e5babe48b391f06758d1ab0a1"
+  },
+  "patchSha256": "71d36bb2192c62c0ecc7a2efaaf31f19cf6d1d80175e37f2eef29947cc0f84cf",
+  "preconditions": {
+    "gzwrite.c": "c7454689751c8f41ec63a1381a0053fb149095abe1c3b89c8a996b2d7ac8adce",
+    "debian/rules": "19cf009de92323922a50c67b5ea75d5602ba9e3a1d913ce65584986ab9939aaf"
+  },
+  "contextAdjustment": "Same upstream avail_in/next_in reset on failure; Bookworm uses gz_comp directly and returns zero instead of newer ret/state->again code. No fuzzy patching.",
+  "status": "isolated-preparation-only",
+  "CVE-2026-85091": "gz_vacate absent from this older branch; separate source-component assessment required"
+}

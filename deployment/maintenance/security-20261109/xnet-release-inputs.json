@@ -43,6 +43,65 @@
         "regression-after": "313f9b28e02a6fa2cece1e7c35f365b2adfaf47dd4bf7c334e08c02890f34dd6"
       },
       "retainedAdvisoryReviewSha256": "406fd035b4ddc8731e786eeaabcb04db6aa0f8a8b0049f8d7df393798d14ecfb"
+    },
+    {
+      "key": "safetwitch",
+      "mode": "binary-followup",
+      "approval": "approved",
+      "base": "sha256:aee65512907cdf94f3d2b806588fd57918c20eb1629ab7b679a713dd75d114fe",
+      "candidate": "utilibre-safetwitch:xnet-security-20261109",
+      "imageId": "sha256:f3b3d1f92936c242bef07fab52fa13025e656aab826ca9ab0699a21ac7a0910b",
+      "containers": [
+        "utilibre-reader-evaluation-safetwitch-backend-1"
+      ],
+      "publicHome": "https://twitch.utilibre.org/",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "checkSha256": "98db70c27e4f7946c4d5dc0b6adb60099332337613b0afa2604219ada0c6c089",
+      "rawEvidence": {
+        "before": "ae64d250ba28c2c00d7fa3f211cbe5cc9eb7f26324d87ce741ed1f82969aa2ca",
+        "after": "5a22e5a04fc56cb31f4f5105173b87fe65cfac290b1f7002fcc9ea0bc13acfb3"
+      },
+      "dependenciesSha256": "7387ec43f8ca3c882e42d226cad92cd4f4ba0e14d5d47a614f34fd85ab810f98",
+      "proofs": {
+        "compiled.json": "8e306e5008a3f260e835db969f94b632c9e4cec58badbc8a0a47418063e859dc",
+        "build.json": "3fbc079baa4f9beb19ef7dad0a6ba8d473c0cf3f6613242787b882c9f01bd413",
+        "native.json": "7bd005a62e17356c131f7483885b9789e11a55c26e86079a28322283b02ae6cd",
+        "scan-gate.json": "b011efeb5bbeca5d7a43ffc3f2f62ef5665d17835a573b751f1711fa3f1e6611",
+        "native-dependencies.txt": "7387ec43f8ca3c882e42d226cad92cd4f4ba0e14d5d47a614f34fd85ab810f98",
+        "safetwitch-tests.txt": "2be77b9e13819d3904608acf49631651ddf899daf8966be5974631ffb64537db",
+        "application.json": "86267bcdc9022b2141e94b1be798f0930849ec651fea6e078abbd45eb000e2c3"
+      }
+    },
+    {
+      "key": "galene",
+      "mode": "binary-followup",
+      "approval": "approved",
+      "base": "sha256:ebef7131b46a1c1fbd30e62b241b64305ca926477a6eb845519cd3751428f8e6",
+      "candidate": "utilibre-galene:xnet-security-20261109",
+      "imageId": "sha256:50ecfa1f4eb1ac42d85db033ea61afa3eeebda15fa224831c8ab38f5417eb538",
+      "containers": [
+        "utilibre-pack-galene-galene-1"
+      ],
+      "publicHome": "https://meet.utilibre.org/",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "checkSha256": "98db70c27e4f7946c4d5dc0b6adb60099332337613b0afa2604219ada0c6c089",
+      "rawEvidence": {
+        "before": "12d7267ba13f1a0af7e6fccf9978c033747bb1319a356c048f1a58bd0ec54b83",
+        "after": "1417c985d9b487a2a68485c50cb0db279f638f484b7a77f5cebfa27141c6c048"
+      },
+      "dependenciesSha256": "dcbf73eaa200f37c973eeee6b7977dd209baafd456aa458b3e0f0e18d030b552",
+      "proofs": {
+        "compiled.json": "f373c24bfd5438696c037dbfefa61d6f9c4687118d4e46259f133bc058130b05",
+        "build.json": "7c55622e44c0abce9d9485d0f5c20e2fdd60a5e5ee01860b1259b7feb1cc1069",
+        "native.json": "c706a61389ccd7b6482214f15db137a5aa381a3d215131fc94d73e58b49e3588",
+        "scan-gate.json": "7f71dd56da067e5e205c65cb36b84933986363ad988e644dcf2bd23da168a9a7",
+        "native-dependencies.txt": "dcbf73eaa200f37c973eeee6b7977dd209baafd456aa458b3e0f0e18d030b552",
+        "galene-tests.txt": "ddb3060775cc7e2eff34f22ae783cb4835cad811773a93a8f1856bc2facbd137",
+        "before/galene-native.json": "e5e810fc03759f4c33ff15df3e846aa7fa9f0787987ee5a13e893798e7fa342b",
+        "after/galene-native.json": "d47bdf9d256c450756cb299d1d710c5b8436818a022a0084b430c3065e14dc65"
+      }
     }
   ]
 }

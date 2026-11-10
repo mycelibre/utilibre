@@ -51,6 +51,7 @@ export function headerOverlap(paths,inventory){
 // documentation. Keep the general path allowlist strict; review only these
 // immutable records, with installed UAPI overlap checks still mandatory.
 export const additionalKernelRecords={
+ 'CVE-2026-99236':{sha256:'6962dfd139d4521c45641800d5171abf1edbc2e4bd1d0d44e1bd0e99ad4faff0',files:['kernel/trace/trace_events_filter.c','tools/testing/selftests/ftrace/test.d/filter/event-filter-incomplete.tc']},
  'CVE-2026-99018':{sha256:'543bb777d9788decbb00d04779bc8d4f483cd1f2daa215281d23227a13839cd1',files:['arch/riscv/include/asm/scs.h','arch/riscv/kernel/entry.S']},
  'CVE-2025-71202':{sha256:'4dcea577e35a7412f222b410188a87ebf3a6399dde8f5dbc0474271377084442',files:['arch/x86/Kconfig','drivers/iommu/iommu-sva.c','include/linux/iommu.h','mm/pgtable-generic.c']},
  'CVE-2026-97906':{sha256:'3845a5eb7af1fc8f2962edab3698e1e36bb6d72dc31802cbae34b66ba072d57e',files:['init/main.c']},

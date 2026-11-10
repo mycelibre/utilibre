@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-09T21:06:20.198841+00:00",
-  "scanCompletedAt": "2026-11-09T18:08:32.000Z",
+  "recordedAt": "2026-11-10T00:59:43.584670+00:00",
+  "scanCompletedAt": "2026-11-10T00:58:56.372Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
   "runningContainers": 175,
-  "sourceInputs": 83,
+  "sourceInputs": 91,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 420,
+  "pendingHigh": 191,
   "rawFindingsRetained": true,
-  "assessmentNote": "18:08 scan/triage checkpoint only. Subsequent DeGoog, portal and 30 library image replacements passed scoped gates. Complete frozen-database revalidation is running; pending counts are not current clearance.",
+  "assessmentNote": "Completed frozen-database scan after SQLite, rsync, eight Bookworm zlib images and SafeTwitch/Galene x/net releases. Exact live-file, component and runtime-boundary decisions retain raw findings and expire. This is not complete remediation or security clearance.",
   "musl": {
     "imagesReleased": 62,
     "groupsPassed": 112,
@@ -46,7 +46,7 @@
       "penpot"
     ]
   },
-  "evidence": "/var/lib/utilibre-maintenance/security-20261109/final-assessment/",
+  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-xnet-followup",
   "degoog": {
     "status": "deployed-public-search-passed",
     "image": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
@@ -62,5 +62,55 @@
     "wbo": "held-preserve-ram-boards",
     "xnetOtherApplications": "remaining-reviewed-inventory-not-complete",
     "releaseTests": 43
-  }
+  },
+  "sqliteFollowup": {
+    "status": "deployed",
+    "images": 24,
+    "groups": 29,
+    "containers": 30,
+    "bookwormTests": 314,
+    "trixieTests": 11356
+  },
+  "rsyncFollowup": {
+    "status": "deployed",
+    "version": "3.5.2+ds1-2~deb12u1+utilibre1",
+    "upstreamPassed": 286,
+    "upstreamSkipped": 90,
+    "collisionBaselineReproduced": true,
+    "rawTargetAttributionRetained": true
+  },
+  "pendingHighByScope": {
+    "runtime-image": 148,
+    "tracked-build-input": 22,
+    "mounted-runtime-code": 1,
+    "upstream-release-source-lock": 2,
+    "host-os": 18
+  },
+  "bookwormZlib": {
+    "status": "deployed",
+    "images": 8,
+    "groups": 8,
+    "version": "1:1.2.13.dfsg-1+utilibre1",
+    "ordinaryChecksPerArtifact": 7,
+    "fullImageScopeVerified": true
+  },
+  "xnetFollowup": {
+    "status": "deployed",
+    "applications": [
+      "safetwitch",
+      "galene"
+    ],
+    "dependency": "golang.org/x/net v0.62.0",
+    "compiler": "Go 1.26.10",
+    "newHighCritical": 0,
+    "galene": "two independent Chromium sessions with synthetic media and screen sharing; same-host isolated network",
+    "realDeviceOrExternalRelayTest": false
+  },
+  "headerReview": {
+    "snapshot": "f28c090f440f4708e405f235942a83ba4deb7ca4",
+    "decisions": 19,
+    "unresolvedAdvisories": 4,
+    "scope": "Exact linux-libc-dev header packages only; no running kernel clearance"
+  },
+  "sourceInventoryNote": "Four newly captured Go module files included; 91 source inputs checked, no unrechecked targets. Two added UNKNOWN module records retained."
 }

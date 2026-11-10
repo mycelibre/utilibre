@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {bookwormHookCase,repairedBookwormComponentCase,repairedVersion,repairedPackages,repairedRoles,legacyAbsence,validateRepairedRelease,validateOverlayChain} from './mount-component-policy.mjs';
+import {bookwormHookCase,repairedBookwormComponentCase,repairedVersion,repairedPackages,repairedRoles,legacyAbsence,validateRepairedRelease,validateOverlayChain,validateRetainedHookEvidence} from './mount-component-policy.mjs';
 const item={type:'debian',scope:'runtime-image',installed:'2.38.1-5+deb12u3',package:'libmount1',id:'CVE-2026-76642'};
 test('only the exact legacy owner/idmap-hook findings qualify',()=>{
  for(const id of ['CVE-2026-76642','CVE-2026-78410'])for(const pkg of ['libmount1','mount'])assert(bookwormHookCase({...item,id,package:pkg}));
@@ -32,6 +32,17 @@ function fixture(){
  return {stage,hashes,release:{status:'passed',key:'kuma',completedAt,proofs:{...hashes},groups:[{status:'passed',completedAt,rows:[{name:stage.name,oldImage:stage.base,newImage:stage.image,oldRef:stage.baseRef,newRef:stage.candidate}]}]},native:{status:'passed',version:repairedVersion,librarySha256:'79a898619cf9e100a80a30c75cb61ab30ca925809ae2b16aea2f87e09be084e0',exports:312,exactExportsPreserved:true,sonameAndNeededPreserved:true,bookwormLibcCompatible:true,checks:Array.from({length:12},()=>({passed:true})),packages:structuredClone(packages)},consumer:{passed:true,imageId:stage.image,cases:Array.from({length:6},()=>({})),nativeSha256:hashes.native,network:'none',user:65534,kernelMounts:false},application:{passed:true,imageId:stage.image},source:{published:true,sha256:'4d25fc4768bcfd418ae87e3bc64cd3389e7137a79dda6535665f2a5abbaf7480'},upstreamException:{baselineAndCandidateSameFailure:true,candidateFailures:1}};
 }
 const scan={date:'2026-10-12T18:01:00.000Z'};
+test('retained helper evidence requires identical repair proofs and completed ancestry',()=>{
+ const prior={root:'/evidence',version:repairedVersion,artifact:'sha256:'+'b'.repeat(64),container:repaired.containers[0],source:{hash:'exact'},receiptHashes:{native:'exact'},libraryPath:'/lib/libmount.so.1',librarySha256:'1'.repeat(64)};
+ const current={...structuredClone(prior),artifact:repaired.artifact};
+ const p={passed:true,date:'2026-10-12T17:00:00Z',repairedProofs:[prior],rows:[...[0,1].map(helperExit=>({legacy:true,artifact:prior.artifact,containers:repaired.containers,version:repairedVersion,helperExit,passed:true})),...[0,1].map(helperExit=>({legacy:false,helperExit,passed:true}))]};
+ const chain=[{name:prior.container,oldImage:prior.artifact,newImage:current.artifact,completedAt:'2026-10-12T18:00:00Z'}];
+ assert.equal(validateRetainedHookEvidence(repaired,scan,p,current,chain).testedArtifact,prior.artifact);
+ for(const field of ['source','receiptHashes','librarySha256','libraryPath','version','root']){const bad=structuredClone(current);bad[field]='changed';assert.throws(()=>validateRetainedHookEvidence(repaired,scan,p,bad,chain));}
+ for(const mutate of [q=>q.passed=false,q=>q.date='invalid',q=>q.repairedProofs=[],q=>q.repairedProofs.push(prior),q=>q.rows[0].passed=false,q=>q.rows[0].helperExit=1,q=>q.rows[0].containers=['wrong'],q=>q.rows[2].passed=false,q=>q.rows.pop()]){const bad=structuredClone(p);mutate(bad);assert.throws(()=>validateRetainedHookEvidence(repaired,scan,bad,current,chain));}
+ assert.throws(()=>validateRetainedHookEvidence(repaired,scan,p,current,[]));
+ assert.throws(()=>validateRetainedHookEvidence({...repaired,id:'CVE-2026-53613'},scan,p,current,chain));
+});
 test('later overlays require an unbroken same-role completed chain before this scan',()=>{
  const a='sha256:'+'a'.repeat(64),b='sha256:'+'b'.repeat(64),c='sha256:'+'c'.repeat(64);
  const rows=[{name:'role',oldImage:a,newImage:b,completedAt:'2026-10-12T17:00:00Z'},{name:'role',oldImage:b,newImage:c,completedAt:'2026-10-12T18:00:00Z'}];

@@ -239,3 +239,177 @@ applications' x/net findings remain separate work in `xnet-coverage.json`.
 Rollback uses the previous image/pin and existing scoped release procedure.
 These overlays perform no database migration. A code rollback cannot recover
 transient cache contents lost during an ordinary service restart.
+
+## Native SQLite and rsync follow-ups
+
+`sqlite-source.json` pins the already-repaired Bookworm 3.40.1 and Trixie
+3.46.1 sources, compiler images, exact file preconditions and upstream-derived
+session/FTS5 patches. The retained private diagnostic receipts record the
+historical before/after checks on both branches. Those standalone diagnostic
+inputs remain in the protected `retained-diagnostics/` directory and are not
+part of the public recipe or corresponding-source archive. The public native
+package build and upstream test suites are repeatable from the declared source.
+Operator finalization additionally requires the original protected evidence;
+missing evidence blocks it. No historical diagnostic was rerun in this follow-up.
+Bookworm does not implement FTS5 secure-delete; do not imply that test ran there.
+Native packaging preserves the earlier rowid, DISTINCT and corrupt-FTS repairs.
+The upstream suites pass 314 tests on Bookworm and 11,356 on Trixie.
+
+The existing `security-20261103/sqlite-source.mjs --batch-20261109 build|finalize
+SUITE` and `sqlite.mjs --batch-20261109 KEY` implement preparation. They verify
+source/package hashes, the allowed package scope, ABI, compile options,
+unchanged application/configuration files and synthetic backup/restore. Native
+builds and checks use bounded disposable containers with networking disabled.
+`sqlite-followup-inputs.json` lists the finite image/role inventory. A prepared
+candidate does not grant release approval.
+
+Use the existing `security-20261028/scan-brotli.mjs --batch-20261109
+--sqlite-followup KEY` offline assessment and `release-brotli.mjs
+--batch-20261109 --sqlite-followup prepare|apply GROUP` release interface.
+TURN releases additionally require no active relay allocations or established
+control connections. The guard reads socket state and records counts only;
+it does not collect peer identifiers. Service stability, namespace companions,
+health, route and rollback checks remain required.
+
+`rsync-source.json` pins authenticated Debian 3.5.2+ds1-2 source and its native
+Bookworm compiler. `build-rsync.sh` produces 3.5.2+ds1-2~deb12u1+utilibre1 without
+upstream code changes. Historical diagnostic receipts are retained privately,
+including an initial noexec-fixture failure which is not accepted as evidence
+of the defect. Standalone reproduction inputs are not distributed with the
+public recipe. Its ordinary native packaging and upstream suite are retained;
+the suite passes 286 tests with 90 environment/platform skips. New build
+acceptance still requires the declared evidence; absence does not grant approval.
+
+`closure-followup/rsync-stage.mjs --batch-20261109` and
+`xml-final/check-gathio.mjs --rsync-20261109` verify the exact package, ordinary
+transfers, permissions, PostgreSQL/DocumentDB behavior and synthetic restore.
+The finite `rsync-followup-inputs.json` profile uses the same scanner/release
+commands with `--rsync`. It changes no public rsync daemon or data format.
+
+The preserved Debian scanner data still attributes the backported SQLite
+packages and rsync 3.5.2 to some advisories. Raw findings remain recorded.
+`security-20261103/review-sqlite.mjs --batch-20261109` and
+`closure-followup/review-rsync.mjs --batch-20261109` require a fresh complete
+scan, completed release lineage, exact live payloads and prior behavior proof.
+They only prepare scoped review decisions, which expire after seven days.
+They neither change scanner severities nor authorize deployment.
+
+Complete corresponding source is published as
+`security-sqlite-20261109-source.tar.gz` and
+`security-rsync-20261109-source.tar.gz`, alongside the shared integration source.
+Prior artifacts and source offers are retained. These are repeatable exact-input
+recipes; byte-for-byte reproducible build output is not claimed. Rollback uses
+the recorded preceding image and configuration through the existing scoped
+release mechanism. No database migration or retention change is included.
+
+
+## Bookworm zlib follow-up (completed 10 November)
+
+`zlib-bookworm-source.json` records authenticated Debian 1.2.13 inputs, the
+retained compiler, exact source preconditions and the upstream error-state
+correction. The native package is `1:1.2.13.dfsg-1+utilibre1`. Its Debian source
+package and build-dependency lock are included in
+`security-zlib-bookworm-20261109-source.tar.gz`; use `dpkg-source -x` and the
+native packaging instructions in that archive. The source receipt retains the
+original isolated verification evidence; those diagnostic cases are not run
+against production or repeated per application.
+
+`zlib-bookworm.mjs KEY` prepares one of eight explicitly pinned predecessors.
+It checks the package hash, unchanged application/configuration, seven ordinary
+compression checks on each artifact, ABI and dependencies. The accompanying
+scope checker reuses the existing unstarted-image exporter and compares every
+file's content, type, permissions, owner and link. Only exact zlib payload and
+package/loader bookkeeping paths may differ. Unrelated dpkg records must match.
+Docker-generated hostname/hosts/resolver files and timestamps are not application
+payload. The initial temporary-hostname mismatch is retained as a failed test,
+not a claimed application regression.
+
+Use the existing scanner and release commands with `--batch-20261109
+--zlib-bookworm`. `zlib-bookworm-policy.mjs` binds the candidate to the recorded
+source, preparation/checker hashes, full-image proof, explicit approval and
+unchanged-database scan. Required checks reject unsupported inputs and changes;
+there is no fuzzy patch repair or deployment based only on a version label.
+The Gathio row also requires its isolated PostgreSQL/DocumentDB/XML/PostGIS and
+synthetic restore check. Other rows preserve application bytes and use existing
+post-release health/route checks; this is not a fresh test of every user workflow.
+
+All eight image/role releases passed. No data migration, retention change,
+account change or reboot occurred. Earlier artifacts and source offers remain
+available. Rollback restores only the preceding image/pin recorded in each
+release group, using the existing scoped Compose release and its configuration,
+health, namespace and route checks. It does not restore or remove user data.
+
+`review-zlib-bookworm.mjs` only prepares expiring exact-artifact decisions after
+a complete current scan and successful source publication. It rechecks every
+running library hash. The error-state fix is separate from the branch-absence
+assessment for `gz_vacate`, which is not implemented by this source version.
+Raw scanner attribution remains; neither an assessment nor a successful archived
+replay is current security clearance. Gate tests cover unapproved candidates,
+wrong identities, unexpected file/package changes and new or failed findings.
+
+
+## SafeTwitch and Galene binary follow-up (10 November)
+
+The existing source-pinned `go-final/build.sh` now also prepares the two
+explicit inputs in `xnet-inputs.json` through `xnet-build.mjs`. It uses Go
+1.26.10 and x/net 0.62.0 with checked-in module locks. Module acquisition is
+separate from the offline build. Original application source, runtime assets,
+configuration, users and entrypoints are preserved. The old/new complete-image
+comparison permits exactly `/safetwitch` or `/app/galene` to change.
+
+`xnet-followup.py KEY stage|native|scan` reuses the existing image exporter and
+native application fixtures. Its adapters change only private evidence paths
+and module resolution; their original and adapted hashes are recorded. The
+native source tests pass. SafeTwitch's native response and disabled-chat behavior
+match. Galene passes two independent Chromium sessions with synthetic audio/video,
+screen sharing/stop and guest rejoin on an isolated same-host network. This is
+not a real-device or fresh restrictive-network/relay claim.
+
+Both scans use the same frozen advisory database. The targeted x/net findings
+are absent and no new high/critical finding is introduced. The retained UNKNOWN
+OpenPGP module-level attribution has a new version label; exact dependency
+inventories confirm neither application imports that API. It remains in raw
+scanner evidence. `xnet-followup-policy.mjs` requires the exact source, locks,
+image scope, test and scan receipts, approved release rows and published source
+hashes. Its 21 rejection/acceptance tests pass.
+
+The existing `release-brotli.mjs --batch-20261109 --xnet` release path accepted
+both groups. Galene's connection guard first held the restart while one
+connection existed; activation succeeded only after the count reached zero.
+Complete corresponding source is available in `safetwitch-backend-utilibre.tar.gz`
+and `galene-utilibre.tar.gz`; public download hashes match the publication receipt.
+Previous images, source archives and configuration receipts are retained. Scoped
+rollback restores the recorded predecessor image without a data migration.
+
+## Current assessment checkpoint
+
+The 10 November 00:54 UTC scan completed for 109 runtime images, 175 containers
+and 87 source inputs, using Trivy 0.75.0 and the unchanged 9 November database.
+After exact-artifact review, 0 critical and 191 high package/target findings
+remain pending. Of the high records, 148 concern runtime images, 22 tracked
+build inputs, 18 host packages, two upstream release locks and one mounted
+runtime lock. Raw observations remain; this is not full clearance.
+
+The recorded CNA snapshot `f28c090f440f4708e405f235942a83ba4deb7ca4` was retrieved
+deliberately for ten unresolved header advisories. Six identify kernel-internal
+code and permitted 19 exact installed-header decisions. Four remain unresolved.
+The narrowly pinned tracing record also names an upstream test file; the general
+path policy remains strict. These decisions never exempt a running kernel.
+Seven policy tests pass. The first retry correctly rejected a queue belonging
+to the preceding scan; rebuilding the queue and rechecking succeeded.
+
+The libmongocrypt, OAuthlib and util-linux component reviewers also verify
+completed overlay ancestry and exact current library bytes. Historical native
+proof is retained only when its version, source and artifact checks match.
+No scanner severities, exclusions or thresholds were changed. Raw reports and
+review receipts are private under `security-20261109/after-zlib-bookworm/` and
+`security-20261109/after-xnet-followup/`. Host repairs requiring a maintenance
+window, remaining x/net applications and unresolved ACL caller migration remain
+open. Do not infer their completion from this batch.
+
+The final 00:58 UTC scan also includes the four newly captured SafeTwitch/Galene
+module files: 91 source inputs checked, with no unrechecked targets. The pending
+high/critical counts remain 191/0. Two additional UNKNOWN module-level records
+are retained. The final combined targeted policy run passes 75 tests; syntax
+checks pass. Whitespace warnings are confined to exact upstream patch context,
+which is preserved to keep the source/precondition hashes unchanged.

@@ -10,7 +10,7 @@ services:
   app:
     ulimits: {core: 0}
     <<: *limits
-    image: utilibre-vendor-family-chess-app:security-20261109
+    image: utilibre-family-chess-app:sqlite-security-20261109
     healthcheck:
       test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/', timeout=4)"]
       interval: 30s

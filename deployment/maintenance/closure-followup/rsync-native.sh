@@ -5,7 +5,9 @@ TASK_RSYNC_TMP=$(mktemp -d /tmp/utilibre-rsync-XXXXXXXX)
 TASK_RSYNC_PID=
 trap 'if test -n "$TASK_RSYNC_PID"; then kill "$TASK_RSYNC_PID" 2>/dev/null || true; wait "$TASK_RSYNC_PID" 2>/dev/null || true; fi; rm -r -- "$TASK_RSYNC_TMP"' EXIT HUP INT TERM
 cd "$TASK_RSYNC_TMP"
-rsync --version | head -1 | grep -q 'version 3.5.1'
+expected=${1:-3.5.1}
+case "$expected" in 3.5.1|3.5.2) :;; *) exit 2;; esac
+rsync --version | head -1 | grep -Fq "version $expected"
 ldd -r /usr/bin/rsync > imports
 ! grep -E 'not found|undefined symbol' imports
 mkdir source destination daemon-copy

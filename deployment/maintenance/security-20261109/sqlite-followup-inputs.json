@@ -1,0 +1,831 @@
+{
+  "schemaVersion": 1,
+  "advisories": [
+    "CVE-2026-119374",
+    "CVE-2026-119379"
+  ],
+  "packages": {
+    "bookworm": {
+      "receiptSha256": "fec9dfb26d99e082d7e6c0bce57438e6dc3c6d8f924a6371d4d1f296e54f876c"
+    },
+    "trixie": {
+      "receiptSha256": "8c08d653d9253f5bdaac0aed652e913dad3881f68d94b93b617a093a33682c27"
+    }
+  },
+  "rows": [
+    {
+      "key": "expanded-breezewiki",
+      "suite": "trixie",
+      "base": "sha256:c5854641a8a3d9b7427f680bed2493e796c4ff3e84cbd46fe5dc9dd524e9d4f5",
+      "oldRef": "utilibre-vendor-expanded-breezewiki:security-20261109",
+      "candidate": "utilibre-expanded-breezewiki:sqlite-security-20261109",
+      "containers": [
+        "utilibre-expanded-breezewiki-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "publicHome": "https://wiki.utilibre.org/"
+    },
+    {
+      "key": "family-chess-app",
+      "suite": "trixie",
+      "base": "sha256:453d6388da7da5f05c938a18d2cb27ed4369969094578ac89b7919b43dcb27bc",
+      "oldRef": "utilibre-vendor-family-chess-app:security-20261109",
+      "candidate": "utilibre-family-chess-app:sqlite-security-20261109",
+      "containers": [
+        "utilibre-family-chess-app-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ]
+    },
+    {
+      "key": "records-candlr",
+      "suite": "trixie",
+      "base": "sha256:77ce2835111e648f5d7903b46b414aac9bb62ddbc7c51b08fd88178f34fb297f",
+      "oldRef": "utilibre-vendor-records-candlr:security-20261109",
+      "candidate": "utilibre-records-candlr:sqlite-security-20261109",
+      "containers": [
+        "utilibre-records-candlr-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "publicHome": "https://candlr.utilibre.org/"
+    },
+    {
+      "key": "trip-app",
+      "suite": "trixie",
+      "base": "sha256:65e4e39f7aff44d6f227aa6c277e950dabe7e18ceae9028296c2fb6b572837fd",
+      "oldRef": "utilibre-vendor-trip-app:security-20261109",
+      "candidate": "utilibre-trip-app:sqlite-security-20261109",
+      "containers": [
+        "utilibre-trip-app-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "publicHome": "https://trip.utilibre.org/"
+    },
+    {
+      "key": "13ft-app",
+      "suite": "trixie",
+      "base": "sha256:d9b5f854a695daa4da979c66b332c20f7134af2b778237bd5ffc222d2c8bad09",
+      "oldRef": "utilibre-vendor-13ft-app:security-20261109",
+      "candidate": "utilibre-13ft-app:sqlite-security-20261109",
+      "containers": [
+        "utilibre-13ft-app-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ]
+    },
+    {
+      "key": "galene-turn-turn",
+      "suite": "trixie",
+      "base": "sha256:6a6c07bc02d2b272dfcd8117104a651e8052ea24c7a7a6136fa1ef2610c17946",
+      "oldRef": "utilibre-vendor-galene-turn-turn:security-20261109",
+      "candidate": "utilibre-galene-turn-turn:sqlite-security-20261109",
+      "containers": [
+        "utilibre-galene-turn-turn-1",
+        "utilibre-turn-option-turn-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseGroups": [
+        {
+          "key": "galene-turn-sqlite",
+          "containers": [
+            "utilibre-galene-turn-turn-1"
+          ]
+        },
+        {
+          "key": "turn-option-sqlite",
+          "containers": [
+            "utilibre-turn-option-turn-1"
+          ]
+        }
+      ],
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ]
+    },
+    {
+      "key": "unfurl-app",
+      "suite": "trixie",
+      "base": "sha256:849d4e999a314dc7afe6d3177d34ebfff665d973dc8586f2eb00c76a13056025",
+      "oldRef": "utilibre-vendor-unfurl-app:security-20261109",
+      "candidate": "utilibre-unfurl-app:sqlite-security-20261109",
+      "containers": [
+        "utilibre-unfurl-app-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ]
+    },
+    {
+      "key": "community-rssbridge",
+      "suite": "bookworm",
+      "base": "sha256:19416648591b3785385a3d2ed00d4534fc7890326929925a8dcb8803387c7ebc",
+      "oldRef": "utilibre-vendor-community-rssbridge:security-20261109",
+      "candidate": "utilibre-community-rssbridge:sqlite-security-20261109",
+      "containers": [
+        "utilibre-community-rssbridge-1"
+      ],
+      "installed": "3.40.1-2+deb12u2+utilibre3",
+      "version": "3.40.1-2+deb12u2+utilibre4",
+      "packages": {
+        "libsqlite3-0": "3.40.1-2+deb12u2+utilibre3"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-bookworm.patch",
+          "sha256": "98cbc928faafef8efb00572bda480672a7562150ca235802c64f17f1b1f9ee75"
+        }
+      ],
+      "publicHome": "https://bridge.utilibre.org/"
+    },
+    {
+      "key": "expanded-penpot-exporter",
+      "suite": "trixie",
+      "base": "sha256:a56172fb170d7e91574401b1703e77f8e1c32e1a86694348c0a93f806ab78a13",
+      "oldRef": "utilibre-expanded-penpot-exporter:libxi184-20261103",
+      "candidate": "utilibre-expanded-penpot-exporter:sqlite-security-20261109",
+      "containers": [
+        "utilibre-expanded-penpot-exporter-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "statusFragment": {
+        "path": "/var/lib/dpkg/status.d/libsqlite3-0",
+        "beforeSha256": "77712c12a88e01174b4d3b718fab15d9c73244976d7d534987f4e766968af5ec"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ]
+    },
+    {
+      "key": "calendar-radicale",
+      "suite": "trixie",
+      "base": "sha256:b41c71ac6ff369189deba87c5704fa70a06dd389c0eec7518496d8c2520f84c1",
+      "oldRef": "utilibre-vendor-calendar-radicale:security-20261109",
+      "candidate": "utilibre-calendar-radicale:sqlite-security-20261109",
+      "containers": [
+        "utilibre-calendar-radicale-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "publicHome": "https://calendar.utilibre.org/"
+    },
+    {
+      "key": "beaverhabits-app",
+      "suite": "trixie",
+      "base": "sha256:085c6bdce6a5678931d9f678deb279c3797f6999bd7a4492f4afc966fe8cacd8",
+      "oldRef": "utilibre-vendor-beaverhabits-app:security-20261109",
+      "candidate": "utilibre-beaverhabits-app:sqlite-security-20261109",
+      "containers": [
+        "utilibre-beaverhabits-app-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "publicHome": "https://habits.utilibre.org/"
+    },
+    {
+      "key": "linkding-linkding",
+      "suite": "trixie",
+      "base": "sha256:0e14ac636eb9c83f10c4006f586a59f4557853576a013466667adcaa4102631b",
+      "oldRef": "utilibre-vendor-linkding-linkding:security-20261109",
+      "candidate": "utilibre-linkding-linkding:sqlite-security-20261109",
+      "containers": [
+        "utilibre-linkding-linkding-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "publicHome": "https://bookmarks.utilibre.org/"
+    },
+    {
+      "key": "identity-worker",
+      "suite": "trixie",
+      "base": "sha256:f801fc1a0b51f5649dd8cf2cab6d50e46bb809ea1c3a0afbc4f415b7c84a8273",
+      "oldRef": "utilibre-vendor-identity-worker:security-20261109",
+      "candidate": "utilibre-identity-worker:sqlite-security-20261109",
+      "containers": [
+        "utilibre-identity-worker-1",
+        "utilibre-identity-server-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "publicHome": "https://auth.utilibre.org/"
+    },
+    {
+      "key": "wallabag-proxy",
+      "suite": "trixie",
+      "base": "sha256:0d6702ef0d692a21cea1030dd0ca8f376a8b2902858366adc987cace55ac927b",
+      "oldRef": "utilibre-vendor-records-egress:security-20261109",
+      "candidate": "utilibre-wallabag-proxy:sqlite-security-20261109",
+      "containers": [
+        "utilibre-wallabag-proxy-1",
+        "utilibre-unfurl-proxy-1",
+        "utilibre-trip-proxy-1",
+        "utilibre-13ft-proxy-1",
+        "utilibre-records-egress-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseGroups": [
+        {
+          "key": "wallabag-sqlite",
+          "containers": [
+            "utilibre-wallabag-proxy-1"
+          ]
+        },
+        {
+          "key": "unfurl-sqlite",
+          "containers": [
+            "utilibre-unfurl-proxy-1"
+          ]
+        },
+        {
+          "key": "trip-sqlite",
+          "containers": [
+            "utilibre-trip-proxy-1"
+          ]
+        },
+        {
+          "key": "13ft-sqlite",
+          "containers": [
+            "utilibre-13ft-proxy-1"
+          ]
+        },
+        {
+          "key": "records-sqlite",
+          "containers": [
+            "utilibre-records-egress-1"
+          ]
+        }
+      ],
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ]
+    },
+    {
+      "key": "priviblur-priviblur",
+      "suite": "trixie",
+      "base": "sha256:42725e319edd91c115e306b8fd929ae8a9c354343a1e8043699eaf558b7d60df",
+      "oldRef": "utilibre-vendor-priviblur-priviblur:security-20261109",
+      "candidate": "utilibre-priviblur-priviblur:sqlite-security-20261109",
+      "containers": [
+        "utilibre-priviblur-priviblur-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "publicHome": "https://tumblr.utilibre.org/"
+    },
+    {
+      "key": "gathio-postgres",
+      "suite": "bookworm",
+      "base": "sha256:2382cdcc30b1911f553b72173b756bf091714488bdba5f285225f9be74313d3f",
+      "oldRef": "utilibre-vendor-gathio-postgres:security-20261109",
+      "candidate": "utilibre-gathio-postgres:sqlite-security-20261109",
+      "containers": [
+        "utilibre-gathio-postgres-1"
+      ],
+      "installed": "3.40.1-2+deb12u2+utilibre3",
+      "version": "3.40.1-2+deb12u2+utilibre4",
+      "packages": {
+        "libsqlite3-0": "3.40.1-2+deb12u2+utilibre3"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-bookworm.patch",
+          "sha256": "98cbc928faafef8efb00572bda480672a7562150ca235802c64f17f1b1f9ee75"
+        }
+      ]
+    },
+    {
+      "key": "expanded-penpot-frontend",
+      "suite": "trixie",
+      "base": "sha256:1de219422d2ffe879f990f0a780f41c5abd2433c10d3d71ed8a0404ef2ea679f",
+      "oldRef": "utilibre-expanded-penpot-frontend:sqlite-rowid-20261103",
+      "candidate": "utilibre-expanded-penpot-frontend:sqlite-security-20261109",
+      "containers": [
+        "utilibre-expanded-penpot-frontend-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "statusFragment": {
+        "path": "/var/lib/dpkg/status.d/libsqlite3-0",
+        "beforeSha256": "77712c12a88e01174b4d3b718fab15d9c73244976d7d534987f4e766968af5ec"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ]
+    },
+    {
+      "key": "community-uptime-kuma",
+      "suite": "bookworm",
+      "base": "sha256:cf76baeba99c10e7dde7630654bb047f76f21c2b75de9cba9efd9a6f8c1ea7bf",
+      "oldRef": "utilibre-vendor-community-uptime-kuma:security-20261109",
+      "candidate": "utilibre-community-uptime-kuma:sqlite-security-20261109",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "installed": "3.40.1-2+deb12u2+utilibre3",
+      "version": "3.40.1-2+deb12u2+utilibre4",
+      "packages": {
+        "libsqlite3-0": "3.40.1-2+deb12u2+utilibre3",
+        "sqlite3": "3.40.1-2+deb12u2+utilibre3"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-bookworm.patch",
+          "sha256": "98cbc928faafef8efb00572bda480672a7562150ca235802c64f17f1b1f9ee75"
+        }
+      ],
+      "publicHome": "https://status.utilibre.org/"
+    },
+    {
+      "key": "pack-forms-app",
+      "suite": "trixie",
+      "base": "sha256:a8eacff8ea9720cb6ab7ba3815a7280a6f0279551fdbe5522b19e0ebc6cde798",
+      "oldRef": "utilibre-abuse-liberaforms:20261109",
+      "candidate": "utilibre-pack-forms-app:sqlite-security-20261109",
+      "containers": [
+        "utilibre-pack-forms-app-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "publicHome": "https://forms.utilibre.org/"
+    },
+    {
+      "key": "services-rsshub",
+      "suite": "trixie",
+      "base": "sha256:01c692e814de5b13ff472a598236dd0fc487a5929ac20f5d66de4f8d9f369a33",
+      "oldRef": "utilibre-vendor-services-rsshub:security-20261109",
+      "candidate": "utilibre-services-rsshub:sqlite-security-20261109",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "mirrorFiles": [
+        "/home/ubuntu/freetools/deployment/utilibre/compose.yaml"
+      ],
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ]
+    },
+    {
+      "key": "kitchenowl-app",
+      "suite": "trixie",
+      "base": "sha256:55e44ba620520dce1f1f580f0faf0eea4daaf9e0b6d37e5ba8b1867eed7c9b39",
+      "oldRef": "utilibre-vendor-kitchenowl-app:security-20261109",
+      "candidate": "utilibre-kitchenowl-app:sqlite-security-20261109",
+      "containers": [
+        "utilibre-kitchenowl-app-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "publicHome": "https://kitchen.utilibre.org/"
+    },
+    {
+      "key": "expanded-penpot-backend",
+      "suite": "trixie",
+      "base": "sha256:a08ca1472cb2dbbafd6baaa8c63c4f407757f07820ba460aeddcca8e7ae45f2e",
+      "oldRef": "utilibre-vendor-expanded-penpot-backend:security-20261109",
+      "candidate": "utilibre-expanded-penpot-backend:sqlite-security-20261109",
+      "containers": [
+        "utilibre-expanded-penpot-backend-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "publicHome": "https://design.utilibre.org/"
+    },
+    {
+      "key": "records-grist",
+      "suite": "trixie",
+      "base": "sha256:8a735ebf8d64c994f8d8169d36c58df50ebfebf86ea19bfcb475e668afbd8ce0",
+      "oldRef": "utilibre-vendor-records-grist:security-20261109",
+      "candidate": "utilibre-records-grist:sqlite-security-20261109",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "publicHome": "https://grist.utilibre.org/"
+    },
+    {
+      "key": "services-freshrss",
+      "suite": "trixie",
+      "base": "sha256:57a9b6c773581e09c0b2839eb48454606970bbf94d8fc17f401d6a5b18a9713e",
+      "oldRef": "utilibre-vendor-services-freshrss:security-20261109",
+      "candidate": "utilibre-services-freshrss:sqlite-security-20261109",
+      "containers": [
+        "utilibre-services-freshrss-1"
+      ],
+      "installed": "3.46.1-7+deb13u2+utilibre1",
+      "version": "3.46.1-7+deb13u2+utilibre2",
+      "packages": {
+        "libsqlite3-0": "3.46.1-7+deb13u2+utilibre1"
+      },
+      "mirrorFiles": [
+        "/home/ubuntu/freetools/deployment/utilibre/compose.yaml"
+      ],
+      "releaseApproval": "approved",
+      "releaseScope": "system-sqlite-library-only",
+      "dataMigration": false,
+      "sourceSpecSha256": "9dc297a9c1f76a9fa7ddcea81e91a180b67483cd9474f2e1f63e4f82e446bc21",
+      "buildScriptSha256": "f7551b6b7e164303639eda2dd8cde4f9f3ed46f7a56d52a949c406dbf75293a1",
+      "sanitizerScriptSha256": "f523df96c2765a95ee8f8c64e7c192ead5a209540c486a3d2b48c4b62a694975",
+      "patches": [
+        {
+          "file": "sqlite-session-trixie.patch",
+          "sha256": "dd9908463533163eb691b4ce73706bcdf7713e4907eed60911e1fb2cf6d5eb19"
+        },
+        {
+          "file": "sqlite-secure-delete-trixie.patch",
+          "sha256": "626ea6691df02e16764dc6a973b02539f8cec99d8759e58e58a8ed01fc287a4c"
+        }
+      ],
+      "publicHome": "https://rss.utilibre.org/"
+    }
+  ]
+}

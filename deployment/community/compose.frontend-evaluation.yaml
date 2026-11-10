@@ -39,7 +39,7 @@ services:
   safetwitch-backend:
     <<: *runtime
     restart: unless-stopped
-    image: utilibre-zlib-reader-evaluation-safetwitch-backend:candidate-20261109
+    image: utilibre-safetwitch:xnet-security-20261109
     mem_limit: 512m
     environment: {PORT: "7000", URL: "https://twitch.utilibre.org", GIN_MODE: release, UTILIBRE_CHAT_ENABLED: "false", GOMEMLIMIT: 256MiB}
     networks:

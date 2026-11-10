@@ -44,7 +44,7 @@ services:
     volumes: ['/opt/utilibre/pack-data/wallabag:/app/data']
     networks: {isolated: {ipv4_address: 172.29.155.2}, ingress: {ipv4_address: 172.29.154.2}}
   proxy:
-    image: utilibre-vendor-records-egress:security-20261109
+    image: utilibre-wallabag-proxy:sqlite-security-20261109
     restart: 'no'
     read_only: true
     cap_drop: [ALL]

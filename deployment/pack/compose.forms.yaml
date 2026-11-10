@@ -21,7 +21,7 @@ services:
       timeout: 3s
       retries: 5
   app:
-    image: utilibre-abuse-liberaforms:20261109
+    image: utilibre-pack-forms-app:sqlite-security-20261109
     restart: unless-stopped
     depends_on: {db: {condition: service_healthy}}
     user: '4002:4002'

@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "advisories": [
+    "CVE-2026-76844",
+    "CVE-2026-85091"
+  ],
+  "sourceReceiptSha256": "1c57503e06f5bc342a47d60c21aaa0ba09ad30ab85aabeff71cd8fd5266c07df",
+  "rows": [
+    {
+      "key": "community-rallly",
+      "base": "sha256:6b780d02e1d9d5ff5f6c46edf2287f926e9be2c9ca51e618d813ec820522ae87",
+      "candidate": "utilibre-community-rallly:zlib-bookworm-security-20261109",
+      "containers": [
+        "utilibre-community-rallly-1"
+      ],
+      "installed": "1:1.2.13.dfsg-1",
+      "version": "1:1.2.13.dfsg-1+utilibre1",
+      "packages": {
+        "zlib1g": "1:1.2.13.dfsg-1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-zlib-library-only",
+      "dataMigration": false
+    },
+    {
+      "key": "community-rssbridge",
+      "base": "sha256:dac52ca3ddbd31130ea369bf6226ec2d6c7896fc19db9554ff52912cc55e3d58",
+      "candidate": "utilibre-community-rssbridge:zlib-bookworm-security-20261109",
+      "containers": [
+        "utilibre-community-rssbridge-1"
+      ],
+      "installed": "1:1.2.13.dfsg-1",
+      "version": "1:1.2.13.dfsg-1+utilibre1",
+      "packages": {
+        "zlib1g": "1:1.2.13.dfsg-1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-zlib-library-only",
+      "dataMigration": false
+    },
+    {
+      "key": "community-uptime-kuma",
+      "base": "sha256:6a4338488fa7134d1c58a22971f3ec5a14ff34ec32c661852c170f984f1e6e08",
+      "candidate": "utilibre-community-uptime-kuma:zlib-bookworm-security-20261109",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "installed": "1:1.2.13.dfsg-1",
+      "version": "1:1.2.13.dfsg-1+utilibre1",
+      "packages": {
+        "zlib1g": "1:1.2.13.dfsg-1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-zlib-library-only",
+      "dataMigration": false
+    },
+    {
+      "key": "expanded-actual",
+      "base": "sha256:d89620bddbc200c582da809c36345a1bb9a54a221df5c03e7d7c3c43ad4fd780",
+      "candidate": "utilibre-expanded-actual:zlib-bookworm-security-20261109",
+      "containers": [
+        "utilibre-expanded-actual-1"
+      ],
+      "installed": "1:1.2.13.dfsg-1",
+      "version": "1:1.2.13.dfsg-1+utilibre1",
+      "packages": {
+        "zlib1g": "1:1.2.13.dfsg-1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-zlib-library-only",
+      "dataMigration": false
+    },
+    {
+      "key": "expanded-resume",
+      "base": "sha256:257e8d35b5004eb0cb5942d10e86363e363ce493a483cac725af188075ec0da8",
+      "candidate": "utilibre-expanded-resume:zlib-bookworm-security-20261109",
+      "containers": [
+        "utilibre-expanded-resume-1"
+      ],
+      "installed": "1:1.2.13.dfsg-1",
+      "version": "1:1.2.13.dfsg-1+utilibre1",
+      "packages": {
+        "zlib1g": "1:1.2.13.dfsg-1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-zlib-library-only",
+      "dataMigration": false
+    },
+    {
+      "key": "gathio-postgres",
+      "base": "sha256:be4b1526d4464389134279836db704de44c7ab4023972b6aed22312323f50352",
+      "candidate": "utilibre-gathio-postgres:zlib-bookworm-security-20261109",
+      "containers": [
+        "utilibre-gathio-postgres-1"
+      ],
+      "installed": "1:1.2.13.dfsg-1",
+      "version": "1:1.2.13.dfsg-1+utilibre1",
+      "packages": {
+        "zlib1g": "1:1.2.13.dfsg-1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-zlib-library-only",
+      "dataMigration": false
+    },
+    {
+      "key": "pack-cryptpad-cryptpad",
+      "base": "sha256:19215c1345623b522a31c4f32d1686ac4801f423b48d746cd80ea38bb68a5415",
+      "candidate": "utilibre-pack-cryptpad-cryptpad:zlib-bookworm-security-20261109",
+      "containers": [
+        "utilibre-pack-cryptpad-cryptpad-1"
+      ],
+      "installed": "1:1.2.13.dfsg-1",
+      "version": "1:1.2.13.dfsg-1+utilibre1",
+      "packages": {
+        "zlib1g": "1:1.2.13.dfsg-1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-zlib-library-only",
+      "dataMigration": false
+    },
+    {
+      "key": "wishlist-app",
+      "base": "sha256:f10e569464c8c20962b8f3be8f0edd6ebd6bd1562bb5be164c85b9ea6ec648e0",
+      "candidate": "utilibre-wishlist-app:zlib-bookworm-security-20261109",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "installed": "1:1.2.13.dfsg-1",
+      "version": "1:1.2.13.dfsg-1+utilibre1",
+      "packages": {
+        "zlib1g": "1:1.2.13.dfsg-1"
+      },
+      "releaseApproval": "approved",
+      "releaseScope": "system-zlib-library-only",
+      "dataMigration": false
+    }
+  ],
+  "verification": {
+    "preparer": "0ec031bc52fd0dc7e95cbbafed8fc69d10d325106904082071f5c2268968a79b",
+    "scopeChecker": "32735830984a5792b8da6df69411e3044ab193dbae7d050e513c7e9facce0335",
+    "exporter": "9f797b5779184fe55949c1b450e5485bc48bf20893aa9a9d3c2a90268a7d2b9d",
+    "databaseChecker": "46654555c7eb17739aa94df9d8f9224fad373aceeb300c9c5a933bdb3febe340"
+  }
+}

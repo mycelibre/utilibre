@@ -1,3 +1,18 @@
+## Latest checkpoint — 10 November 2026
+
+All 62 musl image releases, 28 Debian vendor images, the SQLite/rsync follow-up,
+eight Bookworm zlib images and four x/net application updates have passed their
+scoped release checks. SafeTwitch and Galene are the latest two deployments.
+The completed 00:58 UTC scan covers 109 runtime images, 175 containers and
+91 source inputs, with **0 pending critical / 191 pending high records** and
+no unrechecked targets. Raw findings remain. This is not full remediation.
+
+The remaining high records include 148 runtime-image, 22 tracked build-input,
+18 host, two upstream-lock and one mounted-runtime-lock findings. Remaining
+x/net applications, the ACL caller migration, host maintenance gates and held
+application upgrades still need work. Do not use older counts below as current.
+[Evidence, repeatable recipes and rollback](records/security-maintenance-2026-11-09.md).
+
 ## Latest checkpoint — 9 November 2026
 
 The main guest filesystem was expanded by 25 GiB; the temporary-data disk was

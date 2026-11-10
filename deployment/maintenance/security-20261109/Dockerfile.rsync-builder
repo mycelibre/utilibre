@@ -1,0 +1,4 @@
+# Controlled acquisition only. Later builds must use its recorded image digest.
+# Network: signed Debian Bookworm package repositories; no application data.
+FROM sha256:6a07f38a6ecf26ef67524730274c6ee2d641402c653ceff51dc13d0d976616e8
+RUN apt-get update -qq && apt-get install -y --no-install-recommends libacl1-dev libpopt-dev liblz4-dev libxxhash-dev libzstd-dev libssl-dev libidn2-dev python3-cmarkgfm acl attr && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*.deb

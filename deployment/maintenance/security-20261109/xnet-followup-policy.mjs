@@ -1,0 +1,46 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+const root='/var/lib/utilibre-maintenance/security-20261109/xnet';
+const read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+export function validateFollowup(s,original,b,n,scan,dependencies){
+ assert(['safetwitch','galene'].includes(s.key)&&s.mode==='binary-followup'&&s.approval==='approved');
+ assert(b.passed&&b.sourceUnchanged&&b.configurationUnchanged&&b.allOtherFilesUnchanged);
+ assert.equal(b.base,s.base);assert.equal(b.base,original.base);assert.equal(b.imageId,s.imageId);assert.equal(b.candidate,s.candidate);
+ assert.deepEqual(b.changedFiles,[original.binary]);assert(b.imageEntries>100);
+ assert.deepEqual(b.locks,original.locks);assert.equal(b.compilerVersion,'1.26.10');
+ assert(b.moduleChanges.some(r=>r.module==='golang.org/x/net'&&r.after.startsWith('v0.62.0 ')));
+ assert(b.moduleChanges.every(r=>['golang.org/x/net','golang.org/x/crypto','golang.org/x/sys','golang.org/x/text','golang.org/x/sync','golang.org/x/tools','golang.org/x/term'].includes(r.module)));
+ assert(n.passed&&n.productionChanged===false&&n.network==='internal; no upstream requests');
+ assert.equal(n.imageId,b.imageId);assert.equal(n.base,b.base);assert.equal(n.adapters.length,s.key==='galene'?2:1);
+ assert(scan.passed&&scan.targetedFindingRemoved&&scan.newHighCritical===0);assert.equal(scan.imageId,b.imageId);assert.equal(scan.base,b.base);
+ assert.equal(scan.databaseSha256,s.databaseSha256);assert.equal(b.scopeCheckerSha256,s.checkSha256);
+ assert.deepEqual(scan.rawEvidence,s.rawEvidence);
+ // The old OpenPGP module-level attribution may change its version label.
+ // Require proof that the application does not import that unmaintained API.
+ if(scan.newFindings.length){
+  assert.deepEqual(scan.newFindings,[['GO-2026-5932','golang.org/x/crypto','v0.58.0','UNKNOWN']]);
+  assert(scan.removedFindings.some(f=>f[0]==='GO-2026-5932'&&f[1]==='golang.org/x/crypto'&&f[2]==='v0.57.0'));
+  assert(dependencies.length>100&&!dependencies.some(p=>p.startsWith('golang.org/x/crypto/openpgp')));
+ }
+ return true;
+}
+export function proveFollowup(s){
+ const d=root+'/'+s.key,m=read(new URL('./xnet-inputs.json',import.meta.url)),original=m.rows.find(r=>r.key===s.key);
+ assert(original);const b=read(d+'/build.json'),n=read(d+'/native.json'),scan=read(d+'/scan-gate.json');
+ assert.equal(sha(d+'/native-dependencies.txt'),s.dependenciesSha256);
+ validateFollowup(s,original,b,n,scan,fs.readFileSync(d+'/native-dependencies.txt','utf8').trim().split('\n'));
+ assert.equal(sha(d+'/'+s.key),b.binarySha256);assert.equal(sha(d+'/source-proof.json'),original.sourceProofSha256);
+ for(const f of read(d+'/source-proof.json').sourceFiles)assert.equal(sha(d+'/source/'+f.path),f.sha256);
+ for(const [f,h]of Object.entries(original.locks)){assert.equal(sha(d+'/source/'+f),h);assert.equal(sha(new URL('./xnet-locks/'+s.key+'/'+f,import.meta.url)),h);}
+ assert.equal(sha(new URL('./xnet-followup.py',import.meta.url)),s.checkSha256);
+ assert.equal(sha(new URL('./zlib-check.py',import.meta.url)),b.exporterSha256);
+ for(const a of n.adapters){assert.equal(sha(new URL(a.fixture,import.meta.url)),a.fixtureSha256);assert.equal(sha(a.adapter),a.adapterSha256);}
+ for(const [f,h]of Object.entries(s.proofs))assert.equal(sha(d+'/'+f),h);
+ for(const phase of ['before','after'])assert.equal(sha(d+'/'+phase+'-scan.json'),s.rawEvidence[phase]);
+ const source=read(root+'/published-followup-source.json');assert(source.passed);
+ const offer=source.rows.find(r=>r.key===s.key&&r.imageId===b.imageId);assert(offer);assert.equal(sha('/opt/utilibre/toolbox-public/'+offer.archive),offer.sha256);
+ assert(Date.now()-Date.parse(b.date)<86400000&&Date.now()-Date.parse(scan.date)<86400000);
+ assert(Date.now()-Date.parse(s.advisoryUpdatedAt)<48*3600000);
+ return {s,b,scan:{passed:true,base:s.base,imageId:s.imageId,remainingHigh:scan.remainingCounts.HIGH||0,remainingCritical:scan.remainingCounts.CRITICAL||0}};
+}

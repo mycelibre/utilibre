@@ -37,8 +37,8 @@ test('kernel build exception rejects invented or changed primary records',()=>{
  assert.throws(()=>kernelComponentPaths(record(['Makefile']),'CVE-2026-12345'));
 });
 test('individually pinned kernel records cannot authorize arbitrary boot/build/assembly attribution',()=>{
- assert.equal(Object.keys(additionalKernelRecords).length,4);
+ assert.equal(Object.keys(additionalKernelRecords).length,5);
  for(const id of Object.keys(additionalKernelRecords))assert.throws(()=>additionalKernelPaths(JSON.stringify(record(additionalKernelRecords[id].files)),id));
  assert.throws(()=>additionalKernelPaths('{}','CVE-2026-12345'));
- for(const p of ['init/main.c','arch/x86/Kconfig','Documentation/networking/strparser.rst','arch/riscv/kernel/entry.S'])assert.throws(()=>kernelComponentPaths(record([p]),'CVE-2026-12345'));
+ for(const p of ['init/main.c','arch/x86/Kconfig','Documentation/networking/strparser.rst','arch/riscv/kernel/entry.S','tools/testing/selftests/ftrace/test.d/filter/event-filter-incomplete.tc'])assert.throws(()=>kernelComponentPaths(record([p]),'CVE-2026-12345'));
 });

@@ -318,6 +318,168 @@ No suppression was added.
 
 Private evidence: `security-20261109/zlib/`, `security-20261109/xnet/` and
 `security-20261109/after-library-rollout/` under the existing maintenance root.
-A new complete scan was started after all these replacements; the older 420-high
-checkpoint must not be presented as the current outcome before it completes.
-The additional SQLite follow-up is isolated candidate work, not deployed.
+The complete frozen-database scan finished at 21:07 UTC: 109 running images,
+175 containers and 87 source inputs; coverage passed. Pending findings are now
+**0 critical / 388 high** (previously 420 high). This is an exact checkpoint,
+not full security clearance. The additional SQLite follow-up remains isolated
+candidate work until its package, compatibility and release gates pass.
+
+## SQLite and rsync follow-up release
+
+The subsequent exact-file reviews at the same 21:07 scan checkpoint reduced
+pending HIGH records from 388 to 351. Those were verified prior repairs or
+component-attribution decisions, not 37 new software patches. That checkpoint
+predates the releases below and must not be presented as their final scan.
+
+The SQLite follow-up is now deployed: 24 distinct images across 29 release
+groups and 30 running containers. It uses native Bookworm
+`3.40.1-2+deb12u2+utilibre4` and Trixie `3.46.1-7+deb13u2+utilibre2` packages.
+Upstream's [session changeset repair](https://github.com/sqlite/sqlite/commit/64459c87cc702d600704fb77ee40ca1782398a52)
+and [FTS5 secure-delete repair](https://github.com/sqlite/sqlite/commit/d9de6eedbe918c074c7556400fa21df5960704d9)
+are backported with exact source preconditions. Bookworm does not implement
+the affected FTS5 secure-delete feature. Earlier rowid, DISTINCT and corrupt
+FTS corrections remain included.
+
+Both session baselines reproduce the heap overflow under AddressSanitizer;
+the corrected builds pass the same fixtures and legitimate changesets.
+Trixie's secure-delete baseline reproduces signed overflow under UBSan and
+passes after repair. Native upstream suites pass 314 tests on Bookworm and
+11,356 on Trixie. Per-image checks preserve application/configuration bytes,
+unrelated packages, ABI and compile options, and exercise synthetic restore.
+TURN deployment additionally verifies idle allocations/control connections;
+only aggregate counts are recorded. It does not change relay limits or logging.
+
+Gathio's database image additionally receives native rsync
+`3.5.2+ds1-2~deb12u1+utilibre1`. Two upstream collision regressions fail on
+3.5.1 for their intended reasons and pass on 3.5.2; 286 upstream tests pass,
+with 90 environment/platform skips. Ordinary incremental transfers, safe
+links, a read-only isolated daemon, PostgreSQL/DocumentDB, GDAL/PostGIS and
+synthetic dump/restore checks pass. No production rsync daemon is enabled.
+An initial fixture failed because its temporary directory was noexec; that
+failure remains recorded and is not counted as reproduction of the defect.
+
+All releases retain health, exact artifact, namespace-companion, configuration
+and rollback checks. The stability gate correctly delayed a second change to
+Unfurl. RSSHub/FreshRSS repository mirrors were reconciled to their already
+completed vendor releases before the SQLite pin updates; the failed preflights
+changed no running service. No data migration or retention change is included.
+
+Fifty focused policy/release tests pass. Complete source offers are available:
+
+- [SQLite source and recipes](https://tools.utilibre.org/utilibre-source/security-sqlite-20261109-source.tar.gz),
+  SHA-256 `3186e2eabe137fdae01705eaa3c399b5c225f597469065ea1ba9a5dc43d537f7`.
+- [rsync source and recipes](https://tools.utilibre.org/utilibre-source/security-rsync-20261109-source.tar.gz),
+  SHA-256 `6aadf7b1f4621f16a778d50ccb837cfcfd027611b7e12fd4bf37e5118205a058`.
+
+Both archives were downloaded and their hashes verified through the public
+URL with curl. Python urllib's default request received 403; this does not
+establish universal crawler access. The bilingual source-index additions were
+visually checked at 1280×900 and 390×844, with no horizontal overflow.
+
+The frozen Debian scanner data still attributes some repaired package versions
+to advisories. Raw findings remain present; narrowly scoped reviews require
+fresh full scans, completed release lineage and matching live payload hashes.
+An rsync scan's initial console message incorrectly said the target was removed;
+its machine-readable report correctly says `targetedFindingRemoved: false`.
+The console wording is corrected and the earlier discrepancy retained privately.
+No whole-service security clearance or reproducible build-byte claim is made.
+
+Evidence: `security-20261109/sqlite-followup/`, `security-20261109/rsync/` and
+`security-20261109/after-sqlite-rsync/` in the private maintenance directory.
+Prior images and configuration receipts remain available for scoped rollback.
+
+### Post-release scan reconciliation (10 November, UTC)
+
+The 9 November 21:50 UTC scan completed with coverage intact: 109 runtime
+images, 175 containers and 87 source inputs. Exact image/file and completed
+release-history checks reduced the current pending review queue to 0 critical
+and 308 high package/target records. Raw scan findings remain unchanged; this
+is not a claim of zero vulnerabilities or full clearance.
+
+Two overlapping util-linux reviews were reconciled using the narrower installed
+binary-component proof: packages containing none of the affected component are
+not affected by that specific advisory. The separate source-family patch proof
+is retained. The libmongocrypt reviewer now follows completed image overlays
+and still checks both actual running library files; a newer image alone cannot
+inherit a decision. Grist’s current isolated runtime permission checks passed
+and refreshed its exact Deno source-lock boundary review.
+
+Evidence: private `security-20261109/after-sqlite-rsync/`, including the original
+review failures, reconciliation record and raw scanner output. Bookworm zlib
+preparation is separate and is not counted as a deployment in this checkpoint.
+
+### Bookworm zlib deployment (10 November, UTC)
+
+The eight scoped releases passed: Rallly, RSS-Bridge, Uptime Kuma, Actual
+Budget, Reactive Resume, Gathio's database, CryptPad and Wishlist. They use
+`zlib1g 1:1.2.13.dfsg-1+utilibre1`, preserving their application/configuration
+and unrelated packages. Each old/new artifact passed seven ordinary compression
+checks, unchanged ABI/dependencies and a complete image-file comparison.
+Gathio additionally passed a synthetic database import/restore and native
+XML/PostGIS/DocumentDB compatibility check. All candidate scans used the same
+retained database and introduced no new high/critical record. The 67 targeted
+release-policy tests and 13 lineage-policy tests passed.
+
+Complete source (1,279,511 bytes) is published at
+`https://tools.utilibre.org/utilibre-source/security-zlib-bookworm-20261109-source.tar.gz`,
+SHA256 `0e92459b36ef55f08eb5ec19cbaee259d59e416118ccc64e1c8cbb8510cbafed`.
+The 1.2.13 source, original notices, native packaging, upstream correction and
+build-dependency lock are included. No source-code or user-content telemetry was
+added. This does not claim byte-identical reproducible builds.
+
+Release receipts and exact previous image/configuration pins are retained in
+private `security-20261109/zlib-bookworm/release.json`. Rollback uses those scoped
+pins and the existing health checks; no persistent-data migration was performed.
+The post-release fleet scan is tracked separately below; the earlier 308-high
+checkpoint must not be interpreted as the new deployed-image result.
+
+
+### SafeTwitch/Galene release and assessment (10 November, UTC)
+
+SafeTwitch backend and Galene now use x/net 0.62.0 with the existing Go 1.26.10
+compiler. Their original application source and all image files except the
+single service binary are unchanged. Upstream native tests pass. SafeTwitch's
+ordinary responses and disabled-chat status match its predecessor. Galene's
+isolated two-client synthetic-media, screen-share/stop and guest-rejoin checks
+pass. These Linux/Chromium same-host checks do not establish real-phone or
+public-relay coverage. A detected Galene connection initially held deployment;
+the release succeeded after it ended. Both scoped release groups passed.
+
+Public corresponding-source downloads were checked against these SHA-256 values:
+
+- SafeTwitch: `f4480d545e5c927183caa6bf1d77f6c3727db3ec65f0140f542f2f51f8f98917`.
+- Galene: `e080d671ea595c1c419661b62251bd61d6ac7e6a5ebc46f05ad6463761a69d6c`.
+
+The 00:54 UTC fleet scan completed: 109 images, 175 containers and 87 source
+inputs, with the same retained Trivy database. The pending high count is 191;
+pending critical remains zero. This follows actual library/binary updates plus
+exact-artifact review, not deletion of raw findings. The remaining high records
+span 148 runtime-image, 22 tracked-input, 18 host, two upstream-lock and one
+mounted-runtime-lock records. Some other severity records also remain pending.
+
+Nineteen installed-header findings were attributed to absent kernel-internal
+components using a deliberately selected, preserved primary CNA snapshot:
+[CVEProject revision f28c090](https://github.com/CVEProject/cvelistV5/tree/f28c090f440f4708e405f235942a83ba4deb7ca4).
+Four header advisories remain unresolved. This does not assess the running VM
+or Proxmox kernel. The general component policy was not loosened; one exact
+tracing record is checksum-pinned because it also names an upstream test file.
+
+Review decisions retain their raw observations and seven-day expiry. Tests
+include 74 focused follow-up policy checks, six native-package policy checks
+and seven header-policy checks. The source and native package recipes are
+published; historical standalone diagnostic inputs remain protected operator
+evidence and are not distributed in newly prepared source offers. Rebuilding
+ordinary packages is distinct from replaying those retained diagnostic proofs.
+No byte-identical reproducibility or whole-service security clearance is claimed.
+
+Evidence: private `security-20261109/after-xnet-followup/`,
+`security-20261109/xnet/release.json` and the source-publication receipts. Scoped
+rollback uses each preceding image and configuration pin; no persistent-data
+migration, retention change, account change or host reboot was performed.
+
+The final 00:58 UTC scan also includes the four newly captured SafeTwitch/Galene
+module files: 91 source inputs checked, with no unrechecked targets. The pending
+high/critical counts remain 191/0. Two additional UNKNOWN module-level records
+are retained. The final combined targeted policy run passes 75 tests; syntax
+checks pass. Whitespace warnings are confined to exact upstream patch context,
+which is preserved to keep the source/precondition hashes unchanged.

@@ -14,7 +14,7 @@ x-runtime: &runtime
 services:
   radicale:
     <<: *runtime
-    image: utilibre-vendor-calendar-radicale:security-20261109
+    image: utilibre-calendar-radicale:sqlite-security-20261109
     build:
       context: .
       dockerfile: Dockerfile.radicale

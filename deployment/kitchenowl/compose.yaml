@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-vendor-kitchenowl-app:security-20261109
+    image: utilibre-kitchenowl-app:sqlite-security-20261109
     build: .
     user: '1000:1000'
     env_file: /opt/utilibre/kitchenowl/private/app.env

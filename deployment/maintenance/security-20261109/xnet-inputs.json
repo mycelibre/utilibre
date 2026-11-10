@@ -51,6 +51,32 @@
         "go.mod": "a47b1bfffc5d8936003f6227454445c42efed48e121464c638cb39b8efdaafd5",
         "go.sum": "1763cc80a17f1267b5c1f80d234946b4b9e8f6e05db98f548d8cdc851a6ab61b"
       }
+    },
+    {
+      "key": "safetwitch",
+      "sourceRevision": "91dda1ceb50822cc9b5306f6c1a92f7e8aaf747b",
+      "base": "sha256:aee65512907cdf94f3d2b806588fd57918c20eb1629ab7b679a713dd75d114fe",
+      "binary": "/safetwitch",
+      "candidate": "utilibre-safetwitch:xnet-security-20261109",
+      "oldBinarySha256": "65a14575acd35c824ebeb8cf6ae1603e744d49df40679bcb04521e19c4c2ab6f",
+      "sourceProofSha256": "5b7932d502ac540fe6f3eed1ee3a6ccf7ca261191ff5fc1c17eb6040127d682c",
+      "locks": {
+        "go.mod": "cff2b1aeafd5a6b8cda7ffef30b1a45662851f4ad481b0a428905d31003a6fc7",
+        "go.sum": "5cef3b55334242ccb1fc49b2f171da2acccd32fa08c4f683f8d5e936762d385d"
+      }
+    },
+    {
+      "key": "galene",
+      "sourceRevision": "6d9338e909fdecdd906150e4dda34e10d9869654",
+      "base": "sha256:ebef7131b46a1c1fbd30e62b241b64305ca926477a6eb845519cd3751428f8e6",
+      "binary": "/app/galene",
+      "candidate": "utilibre-galene:xnet-security-20261109",
+      "oldBinarySha256": "f92a7cccc41b07c7614230fb907f1f6255384a9883d4b103457c12cfac90912c",
+      "sourceProofSha256": "1e3037f3ff2a2022111ed3e71dbabe94b81d34792e99f7d70cf6a3d089fef300",
+      "locks": {
+        "go.mod": "9045347065d00e0b23ce4201455b7bc13b0379cb17c333976230af17219077be",
+        "go.sum": "e36fbd22acfa54f4243362d43ce37ca095c15b068c0905822088521bbf013a0f"
+      }
     }
   ]
 }

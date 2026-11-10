@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-119741",
+  "package": {
+    "file": "rsync_3.5.2+ds1-2~deb12u1+utilibre1_amd64.deb",
+    "version": "3.5.2+ds1-2~deb12u1+utilibre1",
+    "sha256": "745918617c7d1f1bfb956b14010a0d91607174100cd5d04c9d4a33bccbb483bb"
+  },
+  "fixtureSha256": "594e34d11dc3c9a517205e6343037c02d90d0be794c830f855f7213c4c8a4b3b",
+  "evidence": {
+    "output/build.log": "2457da3b59abb027065202a80b2131da76da9f5a1146fefee1ce633d0faa0524",
+    "regression-run2.log": "157e5940903f8b5b2da7b8f3f77d3141b118d3d82cd41d12f555270710361647",
+    "regression/after-hashsearch-collision-skip.log": "d8fcce747f51ce3090c2183d58d73aebd08cd3e69bb74e233d138b79a7ed2044",
+    "regression/after-hashsearch-collision-skip.status": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "regression/after-hashsearch-dup-chain.log": "4e2af35d486d437f788b5fd6f06ba6fbc6a8dd0bc4f29de9292f048f2415db17",
+    "regression/after-hashsearch-dup-chain.status": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "regression/before-hashsearch-collision-skip.log": "31f1ce91ec8489135886cee7970269640c128481961100d57a236fc49a79f943",
+    "regression/before-hashsearch-collision-skip.status": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "regression/before-hashsearch-dup-chain.log": "1120fc48a2f17aaf01b62ed2c4d02494ed10fc874b268205dfe2e074e4e0fdc8",
+    "regression/before-hashsearch-dup-chain.status": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "rows": [
+    {
+      "key": "rsync-gathio-postgres",
+      "base": "sha256:afd1bbca0e600d9d5a5847619bb9d6bd92585b1c64f0bfe64fbfeb11a850b278",
+      "oldRef": "utilibre-gathio-postgres:sqlite-security-20261109",
+      "candidate": "utilibre-gathio-documentdb:rsync-3.5.2-security-20261109",
+      "installed": "3.5.1+ds1-1~deb12u1+utilibre1",
+      "version": "3.5.2+ds1-2~deb12u1+utilibre1",
+      "containers": [
+        "utilibre-gathio-postgres-1"
+      ],
+      "releaseApproval": "approved",
+      "publicHome": "https://events.utilibre.org/"
+    }
+  ]
+}

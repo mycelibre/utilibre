@@ -14,6 +14,11 @@ assert.equal(sha(fs.readFileSync(dir+'/'+key+'-original')),spec.oldBinarySha256)
 assert(!fs.existsSync(dir+'/'+key),'Preserve completed candidate');
 const args=['run','--rm','--name','maintenance-xnet-'+key,'--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--log-driver','none','--cpus','1','--memory','3g','--memory-swap','3g','--pids-limit','256','--tmpfs','/work:rw,exec,size=2g,mode=1777','--tmpfs','/tmp:rw,size=16m','-e','EXPECTED_GO='+manifest.compilerVersion,'-e','UTILIBRE_PHASE=build','-e','UTILIBRE_MODULE_CACHE=/modules','-v',root+'/modules:/modules:ro','-v',dir+'/source:/source/'+key+':ro','-v',dir+':/input:ro','-v',dir+':/output','-v',recipe+':/recipe:ro','-v',here+'xnet-locks/'+key+':/recipe/locks/'+key+':ro',manifest.compiler,'sh','/recipe/build.sh',key];
 const fd=fs.openSync(dir+'/build.log','wx',0o600);const result=cp.spawnSync('docker',args,{timeout:1200000,stdio:['ignore',fd,fd]});fs.closeSync(fd);assert.equal(result.status,0,'Build failed; private evidence retained');
+// Revalidate mounted preparation inputs after upstream tests; output access must
+// never turn an altered input into an accepted source-provenance statement.
+for(const f of proof.sourceFiles)assert.equal(sha(fs.readFileSync(dir+'/source/'+f.path)),f.sha256,f.path);
+for(const [f,h]of Object.entries(spec.locks))assert.equal(sha(fs.readFileSync(dir+'/source/'+f)),h);
+assert.equal(sha(fs.readFileSync(dir+'/source-proof.json')),spec.sourceProofSha256);
 const old=fs.readFileSync(dir+'/'+key+'-before-buildinfo.txt','utf8'),fresh=fs.readFileSync(dir+'/'+key+'-buildinfo.txt','utf8');
 assert(fresh.split('\n')[0].endsWith('go'+manifest.compilerVersion));
 const modules=t=>new Map(t.split('\n').filter(l=>/^\s+dep\s/.test(l)).map(l=>l.trim().split(/\s+/)).map(a=>[a[1],a.slice(2).join(' ')]));
