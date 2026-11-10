@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T06:42:01.537643+00:00",
-  "scanCompletedAt": "2026-11-10T05:54:41.763Z",
+  "recordedAt": "2026-11-10T11:43:24.651707+00:00",
+  "scanCompletedAt": "2026-11-10T10:28:49.230Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
   "runningContainers": 175,
-  "sourceInputs": 107,
+  "sourceInputs": 113,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 36,
+  "pendingHigh": 324,
   "rawFindingsRetained": true,
   "assessmentNote": "Completed post-release scan, followed by exact current-image source/package/component revalidation. All raw findings remain; reviews expire after seven days. No complete remediation or security clearance.",
   "musl": {
@@ -81,8 +81,8 @@
     "rawTargetAttributionRetained": true
   },
   "pendingHighByScope": {
-    "host-os": 6,
-    "runtime-image": 30
+    "runtime-image": 302,
+    "host-os": 22
   },
   "bookwormZlib": {
     "status": "deployed",
@@ -534,5 +534,44 @@
     "bootPartitionsUnchanged": true,
     "rebootRequired": false,
     "evidence": "disk-expand-20261110/"
+  },
+  "advisoryRefreshFollowup": {
+    "completedAt": "2026-11-10T10:28:49.230Z",
+    "previousPendingHigh": 36,
+    "pendingHigh": 324,
+    "additionalRecords": 288,
+    "kerberosRecords": 284,
+    "symfonyRecords": 2,
+    "kernelHeaderRecords": 2,
+    "newExploitabilityConfirmed": false
+  },
+  "vendorGrubRelease": {
+    "startedAt": "2026-11-10T11:40:05.602408+00:00",
+    "status": "installed-verified-awaiting-reboot",
+    "coordinatorSha256": "edf78a6d9832d5ddc7d5bfb0906299025a1ea772c898061c1ec4a459fe7ed99f",
+    "manifestSha256": "c62a60437e560b533e4c451147da4c0897870cc2478bf953d9dad5e232e69f04",
+    "approvalSha256": "57aa1408af3d8a5253d1bbc161b7f947651c986c160ada86588c59f9d8988087",
+    "rebooted": false,
+    "realBootVerified": false,
+    "findingsClosed": 0,
+    "packageChanges": [
+      "grub-common",
+      "grub-efi-amd64-bin",
+      "grub-efi-amd64-signed",
+      "grub-efi-amd64-unsigned",
+      "grub-pc-bin",
+      "grub2-common",
+      "libefiboot1t64",
+      "libefivar1t64"
+    ],
+    "signedEfiSha256": "5cc98e5c02097d781ad9fbce96d236704ad1011bf18f8aeb994aa4586b9b402d",
+    "moduleSha256": "418aee464692716bcff5045907f44dbe94d12a1c62c82baf7e8df38cabc1257f",
+    "bootVariablesUnchanged": true,
+    "shimUnchanged": true,
+    "servicePidsUnchanged": true,
+    "completedAt": "2026-11-10T11:40:17.426998+00:00",
+    "evidence": "security-20261109/remaining-high/vendor-release-20261110/",
+    "containersUnchanged": 175,
+    "sameDatabaseInstalledScanPassed": true
   }
 }

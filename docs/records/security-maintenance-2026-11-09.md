@@ -6,6 +6,21 @@ that every pending advisory or newer application version is resolved.
 
 ## Completed release and remaining work
 
+At 11:40 UTC on 10 November, the separately approved GRUB update installed the
+eight authenticated vendor packages and regenerated the boot menu. Native boot
+hooks, exact EFI/module verification and package-scope checks passed. Shim,
+firmware boot variables and all 175 running container IDs were unchanged.
+Actual reboot/boot verification is still pending; no finding has been closed
+in advance. [Installation and rollback evidence](../../deployment/maintenance/grub-assessment/README.md).
+
+The scheduled 10:28 UTC advisory refresh predates that installation and now
+reports **0 critical / 324 high records needing review**. The earlier 36 below
+is historical. Four Kerberos advisories account for 284 additional package-target
+occurrences; two Symfony occurrences and two kernel-header occurrences account
+for the other four. These are new review records, not evidence that 288 prior
+repairs regressed or that every match is exploitable. The scoped GRUB candidate
+comparison against this same new database introduced no high/critical records.
+
 The earlier static-only checkpoint had **0 pending critical / 674 pending high
 package-target records**. It is historical, not the final status after subsequent
 image replacements. Raw findings and scoped reviews remain; reviewed backports

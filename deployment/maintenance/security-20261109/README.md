@@ -7,6 +7,13 @@ It does not authorize automatic updates of other services.
 
 ## Remaining-high follow-up — 10 November
 
+The 11:40 UTC approved vendor GRUB installation passed native boot-hook,
+configuration and exact EFI/module checks. Real reboot verification remains
+pending; no GRUB findings have yet been closed. The separately scheduled 10:28
+advisory refresh now has 324 high records awaiting review (zero critical),
+including 288 additional Kerberos, Symfony and kernel-header records. The
+earlier 36-record checkpoint below is historical, not the refreshed total.
+
 The later vendor follow-up has **not reduced the 36 pending records**. It
 prepared an authenticated, unmodified GRUB 2.14-5 candidate instead of retrying
 the rejected custom repair. Exactly eight package upgrades pass dependency

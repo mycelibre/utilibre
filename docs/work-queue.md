@@ -1,33 +1,28 @@
 # Work queue
 
-The completed **10 November 05:54 UTC** scan covers 109 images, 175 containers
-and 107 source inputs. Follow-up verification leaves **0 critical / 36 high
-records pending**, down from 60. Raw findings remain; this is not full
-remediation or a security clearance.
+The scheduled **10 November 10:28 UTC** scan covers 109 images, 175 containers
+and 113 source inputs. It has **0 critical / 324 high records needing review**.
+The earlier 36-record count is historical. The refreshed advisory data adds
+284 Kerberos package-target occurrences, two Symfony occurrences and two
+kernel-header occurrences. These are review records, not confirmed exploitability
+or evidence that every earlier repair regressed.
 
-Two Grist findings have a verified sandbox mitigation. Twenty-two historical
-Go-lock findings are tied to the 14 already-repaired running applications;
-superseded activation commands are now blocked. Their exact guard, recipe,
-lock and runtime conditions are rechecked during queue construction, and the
-reviews expire after seven days. These are scoped mitigations, not 24 new
-runtime patches. All 168 focused tests pass; no service restart was needed.
+The separately approved GRUB vendor update is installed as of 11:40 UTC:
+eight exact Debian packages, native BIOS/EFI installation and boot-menu checks
+passed. Both EFI copies and modules match the tested inputs; shim and firmware
+variables are unchanged. All 175 running container IDs were unchanged. Actual
+VM reboot verification is still pending, so the five GRUB records remain open.
+The fresh same-database before/candidate/installed comparison adds no high or
+critical records. Raw scanner matches are retained.
 
-Still unresolved: 30 ACL records across the host/images, five host GRUB
-records and one Kuma Markdown record. A later follow-up authenticated the
-unmodified Debian GRUB 2.14-5 candidate: exactly eight upgrades pass package
-simulation and six ordinary isolated checks pass. Candidate and restored previous
-loaders boot both the running and next-default kernels in isolated OVMF tests.
-The operator's successful root/EFI-state backup log is recorded. Real Proxmox
-boot and full-VM recovery remain unverified; installation needs a fresh console
-and coordinated reboot window. Latest vendor tar still imports legacy ACL APIs, and the
-deployed rsync rebuild has not enabled the new ACL API. Markdown's link-parser
-issue remains open upstream. None of these 36 records was closed by this
-follow-up. Earlier custom ACL/GRUB repair restrictions remain. Held application
-upgrades and documented functional gaps are still open. Historical source locks
-have not been rewritten to hide findings.
+Thirty ACL records still require compatible caller migration; one Kuma Markdown
+record has no verified compatible fix. Earlier custom ACL/GRUB repair restrictions
+remain. Held application upgrades and documented functional gaps remain open.
+The already verified Grist and historical Go mitigations retain their exact,
+expiring artifact conditions; historical source locks were not rewritten.
 
-The main disk/root filesystem has now expanded from 295 to 335 GiB, with
-46 GiB available at 86% usage. No reboot was needed. The separate 15 GiB
+The main disk/root filesystem expanded from 295 to 335 GiB, with 46 GiB available
+at verification. No reboot was needed for that operation. The separate 15 GiB
 temporary disk, backups, scanner snapshots and rollback images were preserved.
 
 Current evidence: `deployment/maintenance/security-20261109/status.json` and

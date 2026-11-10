@@ -1,4 +1,32 @@
-# Read-only GRUB assessment — 12 October 2026
+# GRUB vendor assessment and release
+
+## Vendor package installation — 10 November, 11:40 UTC
+
+The operator explicitly confirmed console access and paused backup/snapshot jobs
+for a 15-minute window. The eight pinned vendor packages are now installed:
+GRUB 2.14-5, signed EFI package 1+2.14+5, and EFI libraries 39-2+b2. Native hooks
+successfully installed both BIOS and EFI paths; `update-grub` and its syntax
+check passed. Both live EFI loader copies match the authenticated candidate,
+and the native/boot module copies match. Shim and firmware boot variables are
+unchanged. Docker, SSH and guest-agent PIDs and all 175 running container IDs
+were unchanged. No reboot has yet been performed or verified.
+
+`vendor-release.py` is a narrow explicit activation adapter, not an unattended
+updater. It requires a current private approval receipt, exact package/input
+preconditions, fresh preflight and advisory evidence, the saved boot files and
+all eight old packages. It invokes native `dpkg` and hooks, retains local config,
+then checks package scope and boot outputs. It does not enable Sid, download,
+notify, reboot or accept findings. A repeated invocation refuses the existing
+receipt instead of reinstalling. Failure requires operator review; it does not
+automatically restore boot state.
+
+Private release evidence is `security-20261109/remaining-high/vendor-release-20261110/`.
+The before/candidate/installed scans use the same preserved 10 November database
+and show no new high/critical records caused by this change. Raw GRUB matches
+remain because of the documented cross-suite advisory limitation. Real VM boot
+validation and the corresponding deployed-fix review are still outstanding.
+The earlier assessment-only manifests remain unchanged; the scoped user approval
+is recorded separately rather than granting a standing deployment permission.
 
 ## Vendor-signed candidate follow-up — 10 November 2026
 
@@ -113,8 +141,10 @@ the five installed host GRUB records remain pending.
 
 ### Activation and rollback boundary
 
-No GRUB package or live boot file has been changed. Deployment remains disabled
-in the manifests. The concrete remaining operating decision is a fresh VM 144
+At the earlier preparation checkpoint, no GRUB package or live boot file had
+been changed. Standing deployment remains disabled in the assessment manifests.
+The installation above used a separate scoped approval. Its required decision
+was a fresh VM 144
 console/maintenance window with backups, snapshots and other guest-agent jobs
 paused, followed by an explicitly coordinated reboot. The existing
 `grub-cloud-amd64` hooks write BIOS and EFI boot paths during package installation;
