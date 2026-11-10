@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "date": "2026-11-10T01:34:44.578564+00:00",
-  "scanDate": "2026-11-10T01:59:18.279Z",
+  "scanDate": "2026-11-10T02:23:06.243Z",
   "counts": {
     "runtime": 17,
     "trackedInputs": 22
@@ -567,10 +567,17 @@
       "image": "sha256:88db5bdd783682716741f8f47430a08a2672da2430d74f69e70d994c6f17d308",
       "status": "deployed-targeted-finding-removed",
       "completedAt": "2026-11-10T01:56:33.850Z"
+    },
+    {
+      "application": "oauth2-proxy",
+      "container": "utilibre-records-grist-auth-1",
+      "image": "sha256:c88534c50376f7fb5f06fad7639b44c9bf0991e77301cd82cf8c72b69ede1c43",
+      "status": "deployed-targeted-finding-removed",
+      "completedAt": "2026-11-10T02:20:35.959Z"
     }
   ],
   "currentPending": {
-    "runtime": 7,
+    "runtime": 6,
     "trackedInputs": 22
   },
   "embeddedCaddyReleased": [

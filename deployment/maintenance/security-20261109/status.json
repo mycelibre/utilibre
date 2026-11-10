@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T02:02:15.002620+00:00",
-  "scanCompletedAt": "2026-11-10T01:59:18.279Z",
+  "recordedAt": "2026-11-10T02:24:39.098269+00:00",
+  "scanCompletedAt": "2026-11-10T02:23:06.243Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
   "runningContainers": 175,
-  "sourceInputs": 99,
+  "sourceInputs": 101,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 181,
+  "pendingHigh": 179,
   "rawFindingsRetained": true,
-  "assessmentNote": "Completed frozen-database fleet scan after Mezzo and Anubis. Exact source review preserves the required JOSE backport; raw findings remain and the decision expires. This is not complete remediation or security clearance.",
+  "assessmentNote": "Completed frozen-database fleet scan after OAuth2 Proxy. Exact source/runtime reviews preserve the required JOSE backport; raw findings remain and decisions expire. This is not complete remediation or security clearance.",
   "musl": {
     "imagesReleased": 62,
     "groupsPassed": 112,
@@ -46,7 +46,7 @@
       "penpot"
     ]
   },
-  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-anubis",
+  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-oauth2-proxy",
   "degoog": {
     "status": "deployed-public-search-passed",
     "image": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
@@ -102,14 +102,16 @@
       "galene",
       "gothub",
       "mezzo",
-      "anubis"
+      "anubis",
+      "oauth2-proxy"
     ],
     "dependency": "golang.org/x/net v0.62.0",
     "compiler": "Go 1.26.10",
     "newHighCritical": 0,
     "galene": "two independent Chromium sessions with synthetic media and screen sharing; same-host isolated network",
     "realDeviceOrExternalRelayTest": false,
-    "anubis": "Two independent Chromium challenge sessions per old/new artifact, authenticated reload and native allow/deny in an isolated network; 71 embedded frontend files and native inline assets unchanged."
+    "anubis": "Two independent Chromium challenge sessions per old/new artifact, authenticated reload and native allow/deny in an isolated network; 71 embedded frontend files and native inline assets unchanged.",
+    "oauth2Proxy": "Native isolated OIDC/PKCE, signed identity, cookies, CSRF rejection, anonymous denial and logout; production identity provider not exercised."
   },
   "headerReview": {
     "snapshot": "f28c090f440f4708e405f235942a83ba4deb7ca4",
@@ -117,7 +119,7 @@
     "unresolvedAdvisories": 4,
     "scope": "Exact linux-libc-dev header packages only; no running kernel clearance"
   },
-  "sourceInventoryNote": "99 source inputs checked after adding exact Mezzo and Anubis locks; no unrechecked targets. Remaining medium, low and unknown records are retained.",
+  "sourceInventoryNote": "101 source inputs checked after adding exact OAuth2 Proxy locks; no unrechecked targets. Remaining medium, low and unknown records are retained.",
   "embeddedCaddy": {
     "status": "deployed",
     "images": 3,
@@ -133,5 +135,12 @@
     "overlapBetweenTestRuns": true,
     "sourceBytes": 51110045,
     "sourceSha256": "1e7ae55f6bde26ade9bd0ab0dc441eafb701b7d7b9713fbfdf9a61f52c0e57d5"
+  },
+  "oauth2Proxy": {
+    "status": "deployed-native-verified",
+    "image": "sha256:c88534c50376f7fb5f06fad7639b44c9bf0991e77301cd82cf8c72b69ede1c43",
+    "completedAt": "2026-11-10T02:20:35.959Z",
+    "onlyBinaryChanged": true,
+    "productionIdentityProviderTested": false
   }
 }

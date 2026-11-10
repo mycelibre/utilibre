@@ -633,3 +633,43 @@ recording that decision is a separate operator action. Rollback uses the exact
 previous image/configuration pins in `xnet/release.json`; no database migration
 or persistent-data change is part of this release. The source archive's public
 bytes were verified against its publication receipt.
+
+## OAuth2 Proxy follow-up — 10 November, 02:23 UTC
+
+OAuth2 Proxy 7.15.5 now uses x/net 0.62.0 at Grist's authentication gateway.
+The exact previous source and compiled locks were reconciled against its live
+binary. Go 1.26.10 compiled offline; existing package/provider tests passed.
+The prior JOSE v3 source repair and JOSE v4.1.6 remain mandatory. Only
+`/usr/bin/oauth2-proxy` changed in the image; settings and other bytes match.
+
+Both old and new artifacts passed native OIDC discovery, authorization code
+with PKCE, signed identity, cookies/headers, CSRF rejection, anonymous denial
+and logout, using a synthetic issuer in a networkless container namespace.
+The real production identity provider was not exercised by that test. The
+scoped deployment passed exact image, health and public login-route checks.
+No account data or schema changed; rollback uses the previous pin recorded in
+`security-20261109/xnet/release.json`. All 36 selected release/JOSE policy tests
+passed. Compilation is deterministic in its inputs; reproducible bytes are not
+claimed.
+
+The frozen-database comparison removed one high and one medium x/net record.
+The pre-existing OpenPGP attribution changes its module version label; the API
+is not imported, and the raw UNKNOWN record remains. JOSE v3 version metadata
+still reports the already-backported issue. Exact source/runtime reviews are
+bound to the verified patch, build, native checks and live binary, and expire
+in seven days. Other medium and UNKNOWN findings remain open.
+
+The complete 02:23 UTC scan checked all 109 images, 175 containers and 101
+source inputs. The pending queue is **0 critical / 179 high package-target
+records**, with six x/net runtime targets and 22 historical build inputs still
+open. It is not full remediation. Private before/after scan evidence is in
+`security-20261109/after-oauth2-proxy`; build, workflow and release evidence is
+in `xnet/oauth2-proxy`.
+
+The OAuth2 Proxy complete source offer is published and its public bytes match
+the receipt. Its bundled JOSE source includes the Apache-2.0 licence and
+modification notice. Anubis's earlier source offer omitted these two companion
+files; the corrected archive adds only those files, preserves all previous
+source bytes, and retains the previous archive/receipt in
+`xnet/anubis-license-6wnw7qcy`. Its public bytes were also verified. No running
+Anubis changes or additional restart were required for the source correction.

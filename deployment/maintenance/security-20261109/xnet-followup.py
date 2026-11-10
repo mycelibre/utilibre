@@ -17,7 +17,7 @@ common = importlib.util.module_from_spec(loader)
 loader.loader.exec_module(common)
 sha = lambda p: common.sha(Path(p).read_bytes())
 read = lambda p: json.loads(Path(p).read_text())
-assert len(sys.argv) == 3 and sys.argv[1] in ('safetwitch', 'galene', 'gothub', 'mezzo', 'anubis')
+assert len(sys.argv) == 3 and sys.argv[1] in ('safetwitch', 'galene', 'gothub', 'mezzo', 'anubis', 'oauth2-proxy')
 key, phase = sys.argv[1:]
 assert phase in ('stage', 'native', 'scan')
 manifest = read(HERE / 'xnet-inputs.json')
@@ -70,7 +70,7 @@ else:
     assert build['scopeCheckerSha256'] == sha(__file__)
     if phase == 'native':
         pins = read(HERE / 'zlib-inputs.json')['consumerFixtureHashes']
-        if key in ('mezzo', 'anubis'):
+        if key in ('mezzo', 'anubis', 'oauth2-proxy'):
             pins[spec['nativeFixture']] = spec['nativeFixtureSha256']
         adapters = []
         def adapt(relative, replacements):
@@ -86,7 +86,22 @@ else:
             adapters.append({'fixture': relative, 'fixtureSha256': sha(original),
                              'adapter': str(output), 'adapterSha256': sha(output)})
             return output
-        if key == 'anubis':
+        if key == 'oauth2-proxy':
+            script = adapt(spec['nativeFixture'], [
+                ("ROOT = Path('/var/lib/utilibre-maintenance/security-20261028/jose-leaf/oauth2-proxy/output')", "ROOT = Path(os.environ['UTILIBRE_TEST_OUTPUT'])"),
+                ("IMAGE = 'utilibre-oauth2-proxy:jose-security-20261028'", "IMAGE = os.environ['UTILIBRE_TEST_IMAGE']")])
+            for label, image in [('before', spec['base']), ('after', build['imageId'])]:
+                assert not common.run(['docker', 'ps', '-aq', '--filter', 'name=^/maintenance-oauth-native$']).strip()
+                output = directory / label
+                output.mkdir()
+                execute([sys.executable, str(script), '--jose'], directory / (label + '-native.log'),
+                        env={'PATH': os.environ['PATH'], 'UTILIBRE_TEST_OUTPUT': str(output), 'UTILIBRE_TEST_IMAGE': image})
+                result = read(output / 'oauth2-proxy-native.json')
+                assert result['imageId'] == image
+                for field in ['passed', 'nativeDiscoveryAuthorizationCodePkceAndSignedIdToken', 'authenticatedCookieAndIdentityHeader',
+                              'invalidCsrfRejected', 'anonymousDeniedAndLogoutCleared', 'onlyLoopbackIssuer', 'networkIsolated']:
+                    assert result[field], field
+        elif key == 'anubis':
             fixture = HERE / spec['nativeFixture']
             code = fixture.read_text()
             launch = code[code.index(" docker('run','-d'"):code.index(' let ready=false;')]

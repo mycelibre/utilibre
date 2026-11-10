@@ -129,6 +129,25 @@
       "embedExtractorSha256": "74a874d77f257a0ec83ce8b324f3e1948cd31c64fe9012f6e8cc973c8502ac9c",
       "policySha256": "9ee97075ae6969e8d0838295ab4f19bde04590f39b204e45abd7525b422c2d37",
       "joseV3Sha256": "7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b"
+    },
+    {
+      "key": "oauth2-proxy",
+      "sourceRevision": "bea3f04bf87b93f5354f392fe2216a88e6031350",
+      "base": "sha256:f5e8e32f05978929a25b4f01921fa71174de5273b1f191d73ddfbfdc445232a3",
+      "binary": "/usr/bin/oauth2-proxy",
+      "oldBinarySha256": "b2c7edd89affbb46e57775e5e2a1c6d12ecaed824ed19f683fa8651071e8ec53",
+      "candidate": "utilibre-oauth2-proxy:xnet-security-20261109",
+      "sourceProofSha256": "d0f5af377b4aca9eb209b620e0afb90bb5cb5afa5e972428582722e740a72a7f",
+      "locks": {
+        "go.mod": "078f1c434ad74f630084aa7b945686f872e9cd0794a87b996a302fc4be363374",
+        "go.sum": "5407de5d8004b0400ea9d79c8146ad87e075b707e8e731a6da54af837734f14b"
+      },
+      "buildRecipe": "deployment/maintenance/go-leaf-final/build-one.sh",
+      "buildRecipeSha256": "296d9acbbb46b6eb483813634311aa1ff318e516a346c082ac5ea158b3467085",
+      "moduleCache": "/var/lib/utilibre-maintenance/security-20261028/jose-leaf/oauth2-proxy/cache",
+      "nativeFixture": "../go-leaf-final/check-oauth.py",
+      "nativeFixtureSha256": "d360a014729809d27d74b20f0313f39a236211ebdacb9597a2636b13725e13eb",
+      "joseV3Sha256": "7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b"
     }
   ]
 }

@@ -37,6 +37,29 @@ lock, tests, source offer, completed release and live binary. The operator recor
 that reviewed decision separately with the existing triage tool; raw evidence is
 retained. Archived build proofs do not bypass deployment freshness requirements.
 
+## OAuth2 Proxy follow-up
+
+The same finite adapter supports OAuth2 Proxy 7.15.5 with Go 1.26.10 and
+x/net 0.62.0. Its exact previous source, locks and live binary are reconciled.
+The mandatory JOSE v3 vendor repair and JOSE v4.1.6 remain. Only the declared
+binary changes; all configuration, assets and unrelated linked modules remain.
+The networkless native fixture tests OIDC discovery, authorization code with
+PKCE, identity headers, cookies, CSRF rejection, anonymous denial and logout
+against a synthetic local issuer. Production Authentik is not exercised.
+
+Use `xnet-build.mjs oauth2-proxy`, then `xnet-followup.py oauth2-proxy
+stage|native|scan`, and `publish-xnet.mjs --oauth2-proxy`. The existing release
+procedure selects only Grist's authentication proxy. `review-go-v3.mjs
+--xnet-oauth2-proxy` prepares exact, expiring source/runtime reviews only after
+a fresh fleet scan, passed release and live binary verification. Raw findings
+remain. An unimported OpenPGP module attribution is recorded, not suppressed.
+
+The source publisher includes the Apache-2.0 licence and modification notice
+alongside redistributed JOSE source. Anubis's earlier offer was corrected by
+adding only those two files; previous archive and receipt remain in private
+`xnet/anubis-license-6wnw7qcy`. No running Anubis bytes changed. Both public
+source archives were downloaded and matched their current hashes.
+
 ## Embedded Caddy follow-up
 
 `xnet-caddy-inputs.json` captures Caddy 2.11.7 in Wishlist and the newsletter

@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {validateFollowup} from './xnet-followup-policy.mjs';
+import {validateFollowup,validateOAuthNative} from './xnet-followup-policy.mjs';
 function data(){
  const s={key:'safetwitch',mode:'binary-followup',approval:'approved',base:'old',imageId:'new',candidate:'candidate',databaseSha256:'db',checkSha256:'check',rawEvidence:{before:'before',after:'after'}};
  const original={base:'old',binary:'/safetwitch',locks:{'go.mod':'mod','go.sum':'sum'}};
@@ -26,6 +26,14 @@ test('Anubis rejects a newly linked telemetry package',()=>{
  const d=data();d.s.key='anubis';d.s.builderSha256='a'.repeat(64);assert(validate(d));
  d.dependencies.push('golang.org/x/telemetry/counter');assert.throws(()=>validate(d));
  d.dependencies.pop();delete d.s.builderSha256;assert.throws(()=>validate(d));
+});
+test('vendored version notation is limited to the reviewed OAuth build',()=>{
+ const d=data();d.b.moduleChanges[0].after='v0.62.0';assert.throws(()=>validate(d));
+ d.s.key='oauth2-proxy';d.s.builderSha256='a'.repeat(64);assert(validate(d));
+});
+test('OAuth requires complete login, identity, rejection, logout and isolation checks',()=>{
+ const r={imageId:'image',passed:true,nativeDiscoveryAuthorizationCodePkceAndSignedIdToken:true,authenticatedCookieAndIdentityHeader:true,invalidCsrfRejected:true,anonymousDeniedAndLogoutCleared:true,onlyLoopbackIssuer:true,networkIsolated:true};assert(validateOAuthNative(r,'image'));assert.throws(()=>validateOAuthNative(r,'different'));
+ for(const key of Object.keys(r).filter(k=>k!=='imageId'))assert.throws(()=>validateOAuthNative({...r,[key]:false},'image'));
 });
 for(const [label,mutate]of Object.entries({
  'unapproved':d=>d.s.approval='pending','unknown application':d=>d.s.key='unknown',

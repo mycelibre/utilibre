@@ -200,7 +200,42 @@
         "anubis-mod-verify.txt": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd",
         "build.log": "da6e9f7877690cba3ed575d4084f172ac2fe2888427261936e1e9b0adc47fb99"
       },
-      "builderSha256": "0b400a03b0589c1084f0ac0f26299255adfa727a002041f483ef60a6241d235c"
+      "builderSha256": "0b400a03b0589c1084f0ac0f26299255adfa727a002041f483ef60a6241d235c",
+      "checkRevision": "aa6bb5e5c1fda827efe478e2e02ec81e242e3b11"
+    },
+    {
+      "key": "oauth2-proxy",
+      "mode": "binary-followup",
+      "approval": "approved",
+      "base": "sha256:f5e8e32f05978929a25b4f01921fa71174de5273b1f191d73ddfbfdc445232a3",
+      "candidate": "utilibre-oauth2-proxy:xnet-security-20261109",
+      "imageId": "sha256:c88534c50376f7fb5f06fad7639b44c9bf0991e77301cd82cf8c72b69ede1c43",
+      "containers": [
+        "utilibre-records-grist-auth-1"
+      ],
+      "publicHome": "https://grist.utilibre.org/",
+      "databaseSha256": "3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29",
+      "advisoryUpdatedAt": "2026-11-09T06:57:06.372182267Z",
+      "checkSha256": "f4d49148bfb4f31c968b5b4e4382fee7a5c999a8b3bb58a78cba5ce070c30bf6",
+      "builderSha256": "d83cc1ea4e68726c5d7641924f3cd60b10f25321724ad22cf942bcd36cd59395",
+      "rawEvidence": {
+        "before": "042bc3fe9665b33e027e333d0628778095d979c5b232c6fb4321383683362d70",
+        "after": "6bff68aa81b688399692d2b20891e274b3505ebad05cae88c3c7393b6aa37884"
+      },
+      "dependenciesSha256": "59e9fbeb9d9dd90d25a1a4c26db552039331b4330a8525705dfd15025568a8e5",
+      "proofs": {
+        "compiled.json": "9125623d3e503ce4b6c54f6cad9f52f227aed7189e612ac762b0f5f0d00c7aaf",
+        "build.json": "0e952e8909aa72385d75bb416ea53ee057e6f5da52d3eeb54a245450533585d3",
+        "native.json": "9a742be5582c4c82cae1c8264c756cccc63afd1fbddc2a697447067f1e8ad995",
+        "scan-gate.json": "83c0c351b9b45c68d7cd4bd5d7b826cb0c26241dd25e762c16513a993dc3bdb9",
+        "native-dependencies.txt": "59e9fbeb9d9dd90d25a1a4c26db552039331b4330a8525705dfd15025568a8e5",
+        "oauth2-proxy-tests.txt": "53cbf80df9f03e846dd15deb209fecdad4faea023a2730b53b466bc92a4451da",
+        "oauth2-proxy-vendor-modules.txt": "783571a42ba523c1faf39cb2644d21acc74516efc8b2f8d7562a2d1364b06434",
+        "jose-v3-jwk.go": "7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b",
+        "build-adapter.sh": "c277f3ec0256906911243ebbf86313e5410c154109830b193c87bd8cdc16043f",
+        "before/oauth2-proxy-native.json": "7422cb3512d4ee8085a833ca091f9f678f4931881abd904601b083d89b4fcc13",
+        "after/oauth2-proxy-native.json": "5e5a9d7a942a51511f36e8fba04de7c52d5e72579304e7f72a7a8653cea1ef9e"
+      }
     }
   ]
 }

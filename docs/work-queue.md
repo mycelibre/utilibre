@@ -1,11 +1,11 @@
-## Current continuation — 10 November 2026, 01:59 UTC
+## Current continuation — 10 November 2026, 02:23 UTC
 
-Mezzo and Anubis networking-library repairs are deployed and verified, following
-the embedded Caddy update. The completed scan covers 99 source inputs, 109
-runtime images and 175 containers: **0 pending critical / 181 pending high
-records**. All observed targets were rechecked. Seven x/net runtime targets
-and 22 historical build inputs still need work. Exact reviews retain raw
-findings and expire; this is not full remediation.
+OAuth2 Proxy is deployed and verified, following Mezzo, Anubis and embedded
+Caddy. The completed scan covers 101 source inputs, 109 runtime images and 175
+containers: **0 pending critical / 179 pending high records**. All observed
+targets were rechecked. Six x/net runtime targets and 22 historical build inputs
+still need work. Exact reviews retain raw findings and expire; this is not full
+remediation. Wakapi preparation is in progress, not a completed release.
 [Current evidence and limitations](records/security-maintenance-2026-11-09.md).
 
 ## Latest checkpoint — 10 November 2026
