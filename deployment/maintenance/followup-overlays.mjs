@@ -2,6 +2,7 @@
 // Reviewers still require an exact role/image chain and recheck live payloads.
 export const additionalOverlayReceipts = [
 
+  'security-20261109/mongoc/release.json',
   'closure-followup-20261012/bookworm-curl-release.json',
   'geospatial-followup-20261012/release.json',
   'closure-followup-20261012/rssbridge-curl-release.json',
@@ -141,4 +142,5 @@ export const additionalOverlayReceipts = [
   'security-20261109/zlib-bookworm/release.json',
   'security-20261109/xnet-caddy/release.json',
   'security-20261109/oauth/release.json',
+ 'security-20261109/symfony/release.json',
 ];

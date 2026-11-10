@@ -991,3 +991,80 @@ Future builds retain the new wheel/version in both SimpleLogin requirement files
 A completed Yopass Go build cache was cleaned using Go's native cache command,
 after confirming no active build or container depended on it. This recovered
 449 MiB; sources, module caches, artifacts, rollback images and backups remain.
+
+## Symfony and relay driver corrections — 10 November
+
+Wallabag and Pollaris now use the exact compatible upstream ExpressionLanguage
+parser from 5.4.54 and 7.4.21. Only that PHP file changed in each image. The
+complete depth fix is included; earlier partial upstream corrections were not
+selected. Eighteen ordinary expressions pass before/after. Wallabag passed two
+isolated accounts, private article storage and JSON export; Pollaris passed two
+independent Chromium sessions, poll creation/voting, CSV export, deletion and
+worker startup. No excessive-depth crash reproduction was run. Pollaris's first
+release preparation waited for its normal worker restart to satisfy the existing
+five-minute stability gate. Production health/routes subsequently passed.
+
+Both PairDrop and Galene relay containers now contain the native Mongo C driver
+cursor correction. The exact two-patch sequence applies to retained authenticated
+source and preserves prior OCSP/BSON corrections. All 1,710 exports and linked
+features remain. The complete image comparison permits only libmongoc to change;
+libbson, libmongocrypt, the relay executable and configuration remain unchanged.
+Ordinary old-header client checks pass before/after. Isolated UDP/TCP/TLS transfer,
+authentication, quotas and private-peer denial pass. Each release checked for
+active allocations and control connections before restarting its own relay.
+This does not establish actual MongoDB-server compatibility, external-NAT/device
+coverage or throughput. No migration, account, access, quota or retention change.
+
+The initial isolated compiler lacked development dependencies; after obtaining
+exact APT packages, a build-directory RUNPATH was also rejected. Both issues were
+corrected before staging/release. No production feature was disabled to force
+compilation. Compilation ran with no network, bounded RAM/CPU and temporary RAM
+storage. A BuildKit attempt interpreted the local image ID as a registry name;
+that failed metadata lookup is recorded. The final build used the exact local
+legacy builder without registry resolution.
+
+The same frozen advisory database found no new high/critical records in these
+candidates. Preserved version metadata means raw source-package attributions
+remain; they require exact live-payload review rather than a fabricated version
+bump. The source offers were downloaded through the public HTTPS route using
+curl and matched their checksums. Python urllib received 403 on its attempt, so
+this is not a claim that all automated clients are allowed by the edge.
+
+- [Symfony source, 63,562 bytes](https://tools.utilibre.org/utilibre-source/security-symfony-20261109-source.tar.gz), SHA256 `a57098ea59f6549a08c536e5382f82be934369f47b29d1af2af3d08abefafe71`.
+- [Mongo C driver source, 6,940,655 bytes](https://tools.utilibre.org/utilibre-source/security-mongoc-20261109-source.tar.gz), SHA256 `c3c974ba1cf1bdc4bfe460e9f6ffcb1df1f95080c4f7fa83019c80f727e48a72`.
+
+Rollback uses the exact previous image/configuration pins in private
+`security-20261109/symfony/release.json` and `mongoc/release.json`. It does not undo
+subsequent user changes. Repeating apply is checked against container identities
+and start times. Focused release/source/component policy tests: 72 passed.
+Primary sources checked 10 November: [Symfony's complete-fix advisory](https://symfony.com/blog/cve-2026-109449-unbounded-nesting-in-the-expression-parser-lets-untrusted-expressions-crash-the-process),
+[Mongo C driver correction](https://github.com/mongodb/mongo-c-driver/commit/4fdc5d553801fcde7bd5c86370917cc4ac704f54),
+and [Debian attribution](https://security-tracker.debian.org/tracker/CVE-2026-120956).
+
+The final scan completed at **05:34:58 UTC**, covering 109 images, 175 containers
+and 107 source inputs, with no unrechecked targets. Exact current-image source,
+package and component revalidation leaves **0 critical / 63 high records pending**.
+Raw counts remain 24,488 total, 65 critical / 3,047 high. These are package-target
+records; repeated raw attributions are not unique exploitable vulnerabilities.
+The review set contains 86 exact, seven-day decisions; no raw record was removed.
+Overlapping util-linux decisions use the narrower component-absence finding.
+The shared completed-release traversal also replaces the remaining chronological
+assumption in the MariaDB reviewer; its explicit subset avoids authentication
+probe execution. Twenty-six additional vendor policy tests and 12 existing release-lineage tests
+pass (110 focused tests total for this follow-up). Repeated apply preserves all five container
+identities/start times. Evidence: private `after-followups-reviews/`,
+`followup-idempotence.json`, and `followup-source-public.json`.
+
+Remaining high records: 29 image ACL plus one host ACL; 22 historical x/net
+build-input records; five host GRUB; two host SQLite; two Grist Deno/Hickory
+source-lock records; one Kuma Markdown; and one WBO zlib. Historical locks are
+not rewritten to manufacture scan results. WBO's candidate is held to preserve
+RAM-only user boards. Host maintenance gates and the earlier ACL/GRUB review
+restrictions remain. The separate application assessment still has 29 held
+upgrades; this release does not claim those applications were upgraded.
+
+The remaining Kuma Python-Markdown record was rechecked against the
+[Debian tracker](https://security-tracker.debian.org/tracker/CVE-2019-25781)
+on 10 November: Bookworm, Trixie and unstable remain listed as vulnerable, with
+no fixed package recorded. No unreviewed parser rewrite or oversized-input
+reproduction was substituted for an approved upstream repair.

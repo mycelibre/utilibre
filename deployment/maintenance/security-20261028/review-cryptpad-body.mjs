@@ -1,6 +1,8 @@
 // Exact mounted-source mitigation. No version relabelling or automatic upgrades.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
-import {freshScan} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';import {eligible} from './cryptpad-body-policy.mjs';
+import {freshScan,overlayRows} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';import {eligible} from './cryptpad-body-policy.mjs';
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';
+import {expatDescendant as completedDescendant} from '../security-20261103/expat-policy.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/security-20261028/cryptpad-body',read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
 const scan=read(root+'/security.json'),queue=read(root+'/security-queue.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
@@ -12,10 +14,13 @@ assert(offer.published);assert.equal(sha(fs.readFileSync('/opt/utilibre/toolbox-
 for(const [path,hash] of Object.entries(release.groups[0].proofs))assert.equal(sha(fs.readFileSync(path)),hash);
 const docker=(...args)=>cp.execFileSync('docker',args,{encoding:'utf8',timeout:30000,maxBuffer:1024*1024,stdio:['ignore','pipe','pipe']}).trim();
 const container='utilibre-pack-cryptpad-cryptpad-1',live='/opt/utilibre/src/cryptpad';
-assert.equal(docker('inspect','--format','{{.Image}}',container),spec.runtimeImage);
+const chain=additionalOverlayReceipts.filter(p=>fs.existsSync(root+'/'+p)).flatMap(p=>overlayRows(read(root+'/'+p)));
+const runtimeImage=completedDescendant(container,spec.runtimeImage,release.completedAt,scan.completedAt,chain);
+assert.equal(docker('inspect','--format','{{.Image}}',container),runtimeImage);
+assert.equal(scan.images.find(i=>i.id===runtimeImage)?.status,'checked');
 assert.equal(sha(fs.readFileSync(live+'/'+spec.file)),spec.afterSha256);assert.equal(sha(fs.readFileSync(live+'/package-lock.json')),spec.lockSha256);
 const mounts=JSON.parse(docker('inspect','--format','{{json .Mounts}}',container));const mount=mounts.find(m=>m.Source===live);assert(mount);
 assert.equal(docker('exec',container,'sha256sum',mount.Destination+'/'+spec.file).split(/\s/)[0],spec.afterSha256);
 assert.equal(sha(fs.readFileSync(new URL('./cryptpad-body.patch',import.meta.url))),spec.patchSha256);
-const decisions=queue.items.filter(eligible).map(i=>validateDecision({key:i.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:'Exact upstream body-parser request-stream lifecycle fix f7075eae3a84c3473ab4bf0a777da28db208e916 backported to CryptPad 2026.9.0 body-parser 2.3.0. One mounted source file verified in host and running container: '+spec.afterSha256+'. Original crash reproduced in an isolated no-network fixture; seven legitimate parser checks per state and three lifecycle checks pass after repair. Full two-account/document/upload/team/import/export workflow passed with disposable state, no outside browser requests. Unchanged dependency lock and runtime image verified; raw version findings remain. Source offer SHA256 '+offer.sha256+'. Applies only to this exact lock and mounted file; reinstalling dependencies requires reapplying the pinned patch. https://github.com/expressjs/body-parser/security/advisories/GHSA-27r3-jxmh-p828'}));
-assert.equal(read(root+'/security.json').completedAt,scan.completedAt);fs.writeFileSync(dir+'/review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,afterSha256:spec.afterSha256,releaseCompletedAt:release.completedAt},null,2)+'\n');console.log(JSON.stringify({prepared:decisions.length,applied:false}));
+const decisions=queue.items.filter(eligible).map(i=>validateDecision({key:i.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:'Exact upstream body-parser request-stream lifecycle fix f7075eae3a84c3473ab4bf0a777da28db208e916 backported to CryptPad 2026.9.0 body-parser 2.3.0. One mounted source file verified in host and running container: '+spec.afterSha256+'. Original crash reproduced in an isolated no-network fixture; seven legitimate parser checks per state and three lifecycle checks pass after repair. Full two-account/document/upload/team/import/export workflow passed with disposable state, no outside browser requests. Unchanged mounted file/lock and completed runtime-overlay lineage verified; raw version findings remain. Source offer SHA256 '+offer.sha256+'. Applies only to this exact lock and mounted file; reinstalling dependencies requires reapplying the pinned patch. https://github.com/expressjs/body-parser/security/advisories/GHSA-27r3-jxmh-p828'}));
+assert.equal(read(root+'/security.json').completedAt,scan.completedAt);fs.writeFileSync(dir+'/review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,afterSha256:spec.afterSha256,releaseCompletedAt:release.completedAt,originalRuntimeImage:spec.runtimeImage,runtimeImage},null,2)+'\n');console.log(JSON.stringify({prepared:decisions.length,applied:false}));

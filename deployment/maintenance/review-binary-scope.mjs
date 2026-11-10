@@ -24,6 +24,8 @@ export function absentComponent(item,files){
  // Keep the affected server/client-executable packages outside this rule.
  if(['CVE-2026-85746','CVE-2026-92262','CVE-2026-86047','CVE-2026-97380'].includes(item.id)&&['libmariadb3','mariadb-common'].includes(item.package)&&!files.some(p=>/\/(?:mariadbd|mysqld|mariadb-dump|mysqldump)(?:\.|$)|\/sql\//.test(p)))
   return 'MariaDB server ST_AsText / table-name encoding / GRANT PROXY / SHOW CREATE, and mariadb-dump SQL serialization; not Connector/C or the common configuration subpackage';
+ if(item.id==='CVE-2026-102523'&&['libmariadb3','mariadb-common'].includes(item.package)&&!files.some(p=>/\/(?:mariadbd|mysqld|ha_partition)(?:\.|$)|\/sql\//.test(p)))
+  return 'MariaDB server ALTER TABLE CONVERT PARTITION filename encoding; not Connector/C or common configuration. Upstream scope: https://github.com/MariaDB/server/security/advisories/GHSA-h4vr-wpff-jfx4';
  if(item.id==='CVE-2026-12064'&&/^libcurl(?:3|4)(?:t64)?(?:-gnutls|-openssl-dev|-gnutls-dev)?$/.test(item.package)&&!files.some(p=>/\/(?:s?bin)\/curl$/.test(p)))
   return 'curl CLI --proto-default SSH option initialization; upstream explicitly excludes libcurl (https://curl.se/docs/CVE-2026-12064.html)';
  if(item.id==='CVE-2026-6276'&&item.package==='curl'&&!files.some(p=>/\/libcurl[^/]*\.(?:so|a)/.test(p)))
@@ -58,6 +60,7 @@ export function absentComponent(item,files){
 export function run(){
  process.umask(0o077);
  const base='/var/lib/utilibre-maintenance/',queue=JSON.parse(fs.readFileSync(base+'security-queue.json')),scan=JSON.parse(fs.readFileSync(base+'security.json'));
+ assert.equal(scan.status,'checked');assert.equal(queue.status,'current');assert.equal(queue.scanDate,scan.completedAt);
  assert(Date.now()-Date.parse(scan.completedAt)<86400000,'Fresh scanner evidence required');
  const cache=new Map,rows=[],skipped=[];
  const exec=(name,args)=>execFileSync(name,args,{encoding:'utf8',timeout:10000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe']}).trim();

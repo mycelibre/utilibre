@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2026-120956",
+  "license": "Apache-2.0; retained Debian/upstream notices",
+  "compiler": "sha256:e507823c91540e6b8a1c495dab33635af42d3ed59f909457a0b0810c471aa6cc",
+  "sourceTreeSha256": "155f518193873191ff1bb3031142d47d24277337231b26842ba756021ff3e2cd",
+  "retainedSourceProofSha256": "4f8ea860b87d6a359852e895ed8b0214208a08b6256af6bdcdd8699cf8d47a09",
+  "library": "/usr/lib/x86_64-linux-gnu/libmongoc-1.0.so.0.0.0",
+  "previousLibrarySha256": "821fb5af2acdd69e2ed283278b9fe484b48f46a071b8f8313ba57181d0eeffc6",
+  "cursor": {
+    "beforeSha256": "a642e34f1c3eb2579e1b4844f7bdb54b1bb89d0f8b7016f401275938fd5b061a",
+    "afterSha256": "12dde11bafadcb30ea25bdffb533863708fee29431d81fd2c757691a3a6870e8",
+    "pins": [
+      {
+        "revision": "9e5423f882089c2fbede5cafd5a1fee1bab58780",
+        "parent": "811030d131c4caba8dc9645c54319d692ca7b851",
+        "file": "src/libmongoc/src/mongoc/mongoc-cursor.c",
+        "patchSha256": "b1b1488d5ac8b538c26bbe985a36b23851983dfa3af3638e7532faf84d2b84ac",
+        "beforeSha256": "6d0092726c67a5048bfbe5283368e38158fd1b2d3980d62d823826036c5829a6",
+        "afterSha256": "51b46cad17f61aefdacc57a4f21cf587727ade6d1e908351d42abd6500c70ba0",
+        "patchFile": "mongoc-9e5423f88208.patch"
+      },
+      {
+        "revision": "4fdc5d553801fcde7bd5c86370917cc4ac704f54",
+        "parent": "9e5423f882089c2fbede5cafd5a1fee1bab58780",
+        "file": "src/libmongoc/src/mongoc/mongoc-cursor.c",
+        "patchSha256": "b8cab77dd2a34aadefa268364477a74e12c4e66e931227ba26ac59b2142f32d7",
+        "beforeSha256": "51b46cad17f61aefdacc57a4f21cf587727ade6d1e908351d42abd6500c70ba0",
+        "afterSha256": "a5fd3f2596c9af959727610154fa8873c993ff9ff926be3433e1d4db1238c1c4",
+        "patchFile": "mongoc-4fdc5d553801.patch"
+      }
+    ],
+    "files": [
+      "src/libmongoc/src/mongoc/mongoc-cursor.c"
+    ]
+  },
+  "fixtures": {
+    "ordinaryConsumer": "deployment/maintenance/coturn-bson-final/native.c",
+    "ordinaryConsumerSha256": "6086fd6cad47b5023e16a7d2c6dbb01726ec4300996e45a5c832805f434507f9",
+    "relay": "deployment/maintenance/native-final/check-coturn.py",
+    "relaySha256": "f14a49347eca5e6ecedd2cb921605228cd8b1ea2869844b2cdee1ffc5bfe8eec",
+    "retainedOrdinaryConsumerSha256": "63e7adc281e9b7e8fcefabd649747f83c903ef6ce8f474e7067df2ad19941695"
+  },
+  "rows": [
+    {
+      "key": "coturn",
+      "base": "sha256:d0f36f905c6ca95405837c4abfc28f3b5c179d986f448212bacbffd13a9392e3",
+      "candidate": "utilibre-coturn:mongoc-namespace-security-20261109",
+      "containers": [
+        "utilibre-turn-option-turn-1",
+        "utilibre-galene-turn-turn-1"
+      ],
+      "releaseGroups": [
+        {
+          "key": "turn-option-mongoc",
+          "containers": [
+            "utilibre-turn-option-turn-1"
+          ],
+          "oldRef": "utilibre-galene-turn-turn:sqlite-security-20261109"
+        },
+        {
+          "key": "galene-turn-mongoc",
+          "containers": [
+            "utilibre-galene-turn-turn-1"
+          ],
+          "oldRef": "utilibre-galene-turn-turn:sqlite-security-20261109"
+        }
+      ],
+      "approval": "approved"
+    }
+  ],
+  "compilerBase": "sha256:9da66c3f0c1d9306b11cf13c883c78889fcb54ff317c92a53848f327053d3156",
+  "compilerPackages": [
+    {
+      "package": "libutf8proc-dev",
+      "version": "2.9.0-1+b2",
+      "file": "libutf8proc-dev_2.9.0-1+b2_amd64.deb",
+      "sha256": "6955531b32bd744455bd46113c8d4f077f905a3ab0f51564f37af1253ecd588a"
+    },
+    {
+      "package": "libutf8proc3",
+      "version": "2.9.0-1+b2",
+      "file": "libutf8proc3_2.9.0-1+b2_amd64.deb",
+      "sha256": "d26d6916c35a74bc6a0d51e6efef222c3c096405a8fb65a229fd33ebad3ad500"
+    },
+    {
+      "package": "libsnappy-dev",
+      "version": "1.2.2-1",
+      "file": "libsnappy-dev_1.2.2-1_amd64.deb",
+      "sha256": "ecfcbb8499eb6c1d8e27e85b5ac53a33706effb71ec9b1817a1e53f864a275ed"
+    },
+    {
+      "package": "libsnappy1v5",
+      "version": "1.2.2-1",
+      "file": "libsnappy1v5_1.2.2-1_amd64.deb",
+      "sha256": "53ec5f1050d64375a63cd1c30ee4a6d21ef0cfd485f9999aa0b70dd424ca3465"
+    },
+    {
+      "package": "libsasl2-dev",
+      "version": "2.1.28+dfsg1-9",
+      "file": "libsasl2-dev_2.1.28+dfsg1-9_amd64.deb",
+      "sha256": "ffb10079c52733a6073f1e0f5df88f19ca8e89dd959edee725515b0075391851"
+    },
+    {
+      "file": "libmongocrypt-dev_1.13.2-1+deb13u1+utilibre1_amd64.deb",
+      "sha256": "aa7f100a03e1c68267adec4eb02fe259f6092efe255c2c4bc07344c3dd0a25ca"
+    },
+    {
+      "file": "libmongocrypt0_1.13.2-1+deb13u1+utilibre1_amd64.deb",
+      "sha256": "ea81a711145bdd78eb5acc092ee213316df6d133701207797a3677123dffff10"
+    },
+    {
+      "file": "libbson-dev_1.30.4-1+deb13u3_amd64.deb",
+      "sha256": "23b8b5dd6b3796a1bcfd59300666c013dce0201bb940b2ee2dcf8af0280663d2"
+    },
+    {
+      "file": "libbson-1.0-0t64_1.30.4-1+deb13u3_amd64.deb",
+      "sha256": "28f8d1affa5efb1a198cff521b792dac6b31e1b20fa1a973b001ae8242a61bc2"
+    }
+  ],
+  "implementationSha256": {
+    "build-mongoc.sh": "8d2a9a98cef82691b564a37a73949e748f4628efac5448aa1e648c6dae072ce1",
+    "mongoc-compiler.Dockerfile": "7cffffe5cd79f623ea09627c97b66dbdbdacb222c27e4f7bd6792a3c82d1683f"
+  }
+}

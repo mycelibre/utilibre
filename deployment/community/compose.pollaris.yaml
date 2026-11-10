@@ -15,7 +15,7 @@ x-runtime: &runtime
 
 x-application: &application
   <<: *runtime
-  image: utilibre-zlib-pollaris-worker:candidate-20261109
+  image: utilibre-pollaris:expression-security-20261109
   user: "82:82"
   env_file: [/opt/utilibre/community-data/pollaris-private/application.env]
   extra_hosts: ["mx.mailgt.dev:10.10.1.20"]

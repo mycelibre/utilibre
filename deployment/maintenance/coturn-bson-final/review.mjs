@@ -5,8 +5,35 @@ import {root,sha,read,run,docker,inspect,names,version,targets,reserve,reserveSp
 import {eligible,reserveEligible} from './review-policy.mjs';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';import {additionalOverlayReceipts}from'../followup-overlays.mjs';import {expatDescendant}from'../security-20261103/expat-policy.mjs';
 import {validateDecision} from '../triage.mjs';
+import {proveMongocRelease} from '../security-20261109/mongoc-policy.mjs';
 process.umask(0o077);
 const p='/var/lib/utilibre-maintenance',queue=read(p+'/security-queue.json'),scan=read(p+'/security.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
+if(process.argv.includes('--cursor-nov9')){
+ assert.deepEqual(process.argv.slice(2),['--cursor-nov9']);
+ const dir=p+'/security-20261109/mongoc',input=read(new URL('../security-20261109/mongoc-inputs.json',import.meta.url)),s=input.rows[0];
+ const b=read(dir+'/coturn/build.json'),v=read(dir+'/coturn/inventory.json'),a=read(dir+'/coturn/application.json'),g=read(dir+'/coturn/scan-gate.json'),release=read(dir+'/release.json');
+ proveMongocRelease(input,s,b,v,a,g);
+ assert.equal(release.status,'passed');assert.equal(release.groups.length,2);
+ assert(release.groups.every(g=>g.status==='passed'&&Date.parse(g.completedAt)<=Date.parse(scan.completedAt)));
+ const offer=read(dir+'/source-offer.json');assert(offer.published);assert.equal(sha(fs.readFileSync(offer.archive)),offer.sha256);
+ const prior=p+'/security-20261028/bson',auth=read(prior+'/authenticated.json'),native=read(prior+'/native.json');
+ assert.equal(sha(fs.readFileSync(prior+'/authenticated.json')),input.retainedSourceProofSha256);
+ assert.equal(auth.sourceTreeSha256,input.sourceTreeSha256);assert.equal(native.status,'passed');
+ // The new patch changes only cursor source, preserving the previous OCSP fix;
+ // the already corrected BSON library is unchanged in the full image inventory.
+ const actual=[];
+ for(const name of targets){
+  assert.equal(inspect(name).Image,b.imageId);
+  assert(release.groups.some(g=>g.rows.some(r=>r.name===name&&r.oldImage===s.base&&r.newImage===b.imageId)));
+  for(const [file,expected] of [[input.library,b.librarySha256],['/usr/lib/x86_64-linux-gnu/libbson-1.0.so.0.0.0',native.librarySha256]]){
+   const hash=docker('exec',name,'sha256sum',file).split(/\s/)[0];assert.equal(hash,expected);actual.push({name,file,sha256:hash});
+  }
+ }
+ const decisions=queue.items.filter(i=>i.status==='needs-review'&&i.scope==='runtime-image'&&i.type==='debian'&&i.artifact===b.imageId&&i.installed===version&&['libmongoc-1.0-0t64','libbson-1.0-0t64'].includes(i.package)&&['CVE-2026-120956','CVE-2026-84964','CVE-2026-106437'].includes(i.id)&&JSON.stringify([...i.containers].sort())===JSON.stringify([...targets].sort())).map(i=>validateDecision({key:i.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:`Exact cursor fixes 9e5423f882089c2fbede5cafd5a1fee1bab58780 and 4fdc5d553801fcde7bd5c86370917cc4ac704f54, applied without fuzz to authenticated source retaining the prior OCSP repair. Cursor SHA256 ${input.cursor.afterSha256}; live libmongoc SHA256 ${b.librarySha256}. All 1710 exports and linked features preserved; ordinary old-header client passed before/after. Full-image comparison changes only libmongoc; corrected BSON bytes remain unchanged. Isolated UDP/TCP/TLS transfer, authentication, quota and private-peer denial passed. Both idle-checked releases and live hashes verified. No malicious-server, actual MongoDB service or external-NAT test claimed. Original package metadata and raw findings retained. Exact advisory/package/artifact/roles only. https://github.com/mongodb/mongo-c-driver/commit/4fdc5d553801fcde7bd5c86370917cc4ac704f54 ; evidence security-20261109/mongoc/.`}));
+ assert.equal(read(p+'/security.json').completedAt,scan.completedAt);
+ fs.writeFileSync(dir+'/review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,actual},null,2)+'\n');
+ console.log(JSON.stringify({prepared:decisions.length,applied:false}));process.exit(0);
+}
 if(reserve){
  const release=read(root+'/release.json'),n=read(root+'/native.json'),stage=read(root+'/stage.json'),app=read(root+'/application.json'),offer=read(root+'/source-offer.json');
  const v=read(root+'/coturn/inventory.json'),g=read(root+'/coturn/scan-gate.json'),auth=read(root+'/authenticated.json');

@@ -68,3 +68,5 @@ test('an invalid creation response never targets another container for cleanup',
  assert.throws(()=>runNativeJwt('sha256:'+'a'.repeat(64),'fixture',undefined,(_p,args)=>{calls.push(args);return 'unexpected';}));
  assert.equal(calls.length,1);assert.equal(calls[0][0],'create');
 });
+
+test('explicit MariaDB-only review does not select authentication probes',()=>{assert.equal(reviewOptions(['--only-kind=mariadb']).onlyKind,'mariadb');assert.throws(()=>reviewOptions(['--only-kind=jwt']));});

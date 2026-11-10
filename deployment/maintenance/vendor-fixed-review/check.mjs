@@ -7,7 +7,7 @@ import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {fileURLToPath,pathToFileURL} from 'node:url';
-import {freshScan,validateRelease,overlayRows} from '../review-native-backports.mjs';
+import {freshScan,validateRelease,overlayRows,followOverlaySpecs} from '../review-native-backports.mjs';
 import {validateDecision} from '../triage.mjs';
 import {runNativeJwt} from './isolated-jwt.mjs';
 const root='/var/lib/utilibre-maintenance/';
@@ -130,11 +130,12 @@ import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 export function reviewOptions(args=[]){
  const options={output:root+'vendor-fixed-review.json'},seen=new Set();
  for(const arg of args){
-  const match=/^--(only-cve|output|host-sandbox)=(.+)$/.exec(arg);
+  const match=/^--(only-cve|only-kind|output|host-sandbox)=(.+)$/.exec(arg);
   assert(match,'Supported options: --only-cve=CVE-YYYY-NNNN --output=/absolute/path --host-sandbox=/absolute/bwrap');
-  const key={'only-cve':'onlyCve',output:'output','host-sandbox':'hostSandbox'}[match[1]];
+  const key={'only-cve':'onlyCve','only-kind':'onlyKind',output:'output','host-sandbox':'hostSandbox'}[match[1]];
   assert(!seen.has(key),'Duplicate option');seen.add(key);
   if(key==='onlyCve')assert(/^CVE-\d{4}-\d{4,}$/.test(match[2]),'Invalid CVE');
+  else if(key==='onlyKind')assert(['mariadb'].includes(match[2]),'Only the reviewed MariaDB payload subset is selectable');
   else assert(path.isAbsolute(match[2]),'Absolute output/sandbox path required');
   options[key]=match[2];
  }
@@ -144,16 +145,8 @@ export function reviewOptions(args=[]){
 export function run(options=reviewOptions(process.argv.slice(2))){
  process.umask(0o077);const queue=read('security-queue.json'),scan=read('security.json');freshScan(queue,scan);
  const decisions=[],proofs=[],skipped=[],cache=new Map();
- const currentSpecs=[...specs];
- for(const receipt of ['closure-followup-20261012/bookworm-release.json','closure-followup-20261012/ncurses-release.json','closure-followup-20261012/rsync-release.json','closure-followup-20261012/util-linux-release.json','closure-followup-20261012/curl-release.json','closure-followup-20261012/gzip-release.json','closure-followup-20261012/sqlite-fts-release.json','closure-followup-20261012/urllib3-release.json','closure-followup-20261012/python-system-release.json',...additionalOverlayReceipts]){
-  if(!fs.existsSync(root+receipt))continue;const rows=overlayRows(read(receipt));
-  for(const s of [...currentSpecs]){if(!s.containers.length)continue;
-   const matched=s.containers.map(name=>rows.find(r=>r.name===name&&r.oldImage===s.artifact));
-   if(matched.every(Boolean)&&new Set(matched.map(r=>r.newImage)).size===1&&matched[0].newImage!==s.artifact)
-    currentSpecs.push({...s,artifact:matched[0].newImage,overlayPredecessor:s,overlayReceipt:receipt});
-  }
- }
- for(const item of queue.items){if(options.onlyCve&&item.id!==options.onlyCve)continue;const spec=currentSpecs.find(s=>matches(item,s));if(!spec)continue;
+ const currentSpecs=followOverlaySpecs(specs,['closure-followup-20261012/bookworm-release.json','closure-followup-20261012/ncurses-release.json','closure-followup-20261012/rsync-release.json','closure-followup-20261012/util-linux-release.json','closure-followup-20261012/curl-release.json','closure-followup-20261012/gzip-release.json','closure-followup-20261012/sqlite-fts-release.json','closure-followup-20261012/urllib3-release.json','closure-followup-20261012/python-system-release.json',...additionalOverlayReceipts].filter(receipt=>fs.existsSync(root+receipt)).map(receipt=>({path:receipt,report:read(receipt)})));
+ for(const item of queue.items){if(options.onlyCve&&item.id!==options.onlyCve)continue;const spec=currentSpecs.find(s=>matches(item,s));if(!spec||options.onlyKind&&spec.kind!==options.onlyKind)continue;
   try{
    const key=spec.artifact+spec.package;let proof=cache.get(key);
    if(!proof){
@@ -194,7 +187,7 @@ export function run(options=reviewOptions(process.argv.slice(2))){
    proofs.push({key:item.key,id:item.id,...proof});
   }catch(error){skipped.push({key:item.key,id:item.id,artifact:item.artifact,package:item.package,error:error.message.slice(0,180)});}
  }
- const report={date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,onlyCve:options.onlyCve||null,
+ const report={date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,onlyCve:options.onlyCve||null,onlyKind:options.onlyKind||null,
   inputs:{queueSha256:sha(fs.readFileSync(root+'security-queue.json')),scanSha256:sha(fs.readFileSync(root+'security.json')),
    checkerSha256:sha(fs.readFileSync(fileURLToPath(import.meta.url))),fixtureSha256:sha(fs.readFileSync(here+'/jwt-regressions.py')),
    adapterSha256:sha(fs.readFileSync(here+'/isolated-jwt.mjs')),node:process.version},decisions,proofs,skipped};

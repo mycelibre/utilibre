@@ -1,7 +1,7 @@
 name: utilibre-galene-turn
 services:
   turn:
-    image: utilibre-galene-turn-turn:sqlite-security-20261109
+    image: utilibre-coturn:mongoc-namespace-security-20261109
     build: {context: ../community/turn}
     user: '4004:4004'
     entrypoint: [turnserver, -c, /run/config/turnserver.conf]

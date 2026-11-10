@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-10T04:59:45.400274+00:00",
-  "scanCompletedAt": "2026-11-10T04:52:36.840Z",
+  "recordedAt": "2026-11-10T05:39:16.483149+00:00",
+  "scanCompletedAt": "2026-11-10T05:34:58.626Z",
   "scanner": "Trivy 0.75.0",
   "runtimeImages": 109,
   "runningContainers": 175,
   "sourceInputs": 107,
   "scanStatus": "checked",
   "pendingCritical": 0,
-  "pendingHigh": 79,
+  "pendingHigh": 63,
   "rawFindingsRetained": true,
   "assessmentNote": "Completed post-release scan, followed by exact current-image source/package/component revalidation. All raw findings remain; reviews expire after seven days. No complete remediation or security clearance.",
   "musl": {
@@ -46,7 +46,7 @@
       "penpot"
     ]
   },
-  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-oauth-reviews",
+  "evidence": "/var/lib/utilibre-maintenance/security-20261109/after-followups-reviews",
   "degoog": {
     "status": "deployed-public-search-passed",
     "image": "sha256:fe60e5c42c3e2bc2e58517110b01d31601830b34d781a827b517bd44606a436c",
@@ -81,11 +81,10 @@
     "rawTargetAttributionRetained": true
   },
   "pendingHighByScope": {
-    "runtime-image": 42,
+    "runtime-image": 31,
     "tracked-build-input": 22,
-    "mounted-runtime-code": 1,
     "upstream-release-source-lock": 2,
-    "host-os": 12
+    "host-os": 8
   },
   "bookwormZlib": {
     "status": "deployed",
@@ -283,5 +282,144 @@
     "freshBrowserMfaTested": false,
     "dataMigration": false,
     "evidence": "security-20261109/oauth/"
+  },
+  "symfonyExpression": {
+    "status": "deployed",
+    "applications": [
+      "wallabag",
+      "pollaris"
+    ],
+    "compatibleUpstreamVersions": [
+      "5.4.54",
+      "7.4.21"
+    ],
+    "changedFile": "ExpressionLanguage Parser.php only",
+    "ordinaryChecksPerArtifact": 18,
+    "wallabag": "Two isolated native accounts; private article lifecycle, JSON export and access isolation.",
+    "pollaris": "Two independent Chromium sessions; create, vote, CSV export, delete and worker startup.",
+    "excessiveDepthReproduction": false,
+    "sourceOfferSha256": "a57098ea59f6549a08c536e5382f82be934369f47b29d1af2af3d08abefafe71"
+  },
+  "mongoCursor": {
+    "status": "deployed",
+    "image": "sha256:ce50e8f5c03d821dc6c2c15ffa58a08bdc2c57dc0c8766b7ca22c91e30398ab0",
+    "roles": [
+      "utilibre-turn-option-turn-1",
+      "utilibre-galene-turn-turn-1"
+    ],
+    "upstreamCommits": [
+      "9e5423f882089c2fbede5cafd5a1fee1bab58780",
+      "4fdc5d553801fcde7bd5c86370917cc4ac704f54"
+    ],
+    "exportsPreserved": 1710,
+    "linkedFeaturesPreserved": true,
+    "changedFiles": [
+      "/usr/lib/x86_64-linux-gnu/libmongoc-1.0.so.0.0.0"
+    ],
+    "librarySha256": "565d876b0116625a2b69ab40450f22f0317227b6fd880c536a9c64ac15efcada",
+    "isolatedRelayPassed": true,
+    "ordinaryOldHeaderClientPassed": true,
+    "actualMongoDatabaseTested": false,
+    "externalNatTested": false,
+    "sourceOfferSha256": "c3c974ba1cf1bdc4bfe460e9f6ffcb1df1f95080c4f7fa83019c80f727e48a72"
+  },
+  "followupValidation": {
+    "repeatedApplyContainersUnchanged": 5,
+    "policyTests": 110,
+    "liveReviewDecisions": 86,
+    "rawRecordsRetained": true,
+    "ordinaryOtphpChecks": 14,
+    "publicSourceDownloads": "curl matched both archive hashes; Python urllib received 403",
+    "byteReproducibleBuildsClaimed": false
+  },
+  "remainingHighGroups": [
+    {
+      "advisory": "CVE-2026-54369",
+      "package": "libacl1",
+      "scope": "runtime-image",
+      "records": 29
+    },
+    {
+      "advisory": "CVE-2019-25781",
+      "package": "python3-markdown",
+      "scope": "runtime-image",
+      "records": 1
+    },
+    {
+      "advisory": "CVE-2026-85091",
+      "package": "zlib",
+      "scope": "runtime-image",
+      "records": 1
+    },
+    {
+      "advisory": "CVE-2026-78661",
+      "package": "golang.org/x/net",
+      "scope": "tracked-build-input",
+      "records": 22
+    },
+    {
+      "advisory": "GHSA-3v94-mw7p-v465",
+      "package": "hickory-proto",
+      "scope": "upstream-release-source-lock",
+      "records": 1
+    },
+    {
+      "advisory": "GHSA-5j98-2g5x-46v6",
+      "package": "hickory-resolver",
+      "scope": "upstream-release-source-lock",
+      "records": 1
+    },
+    {
+      "advisory": "CVE-2025-61662",
+      "package": "grub-common",
+      "scope": "host-os",
+      "records": 1
+    },
+    {
+      "advisory": "CVE-2025-61662",
+      "package": "grub-efi-amd64-bin",
+      "scope": "host-os",
+      "records": 1
+    },
+    {
+      "advisory": "CVE-2025-61662",
+      "package": "grub-efi-amd64-unsigned",
+      "scope": "host-os",
+      "records": 1
+    },
+    {
+      "advisory": "CVE-2025-61662",
+      "package": "grub-pc-bin",
+      "scope": "host-os",
+      "records": 1
+    },
+    {
+      "advisory": "CVE-2025-61662",
+      "package": "grub2-common",
+      "scope": "host-os",
+      "records": 1
+    },
+    {
+      "advisory": "CVE-2026-54369",
+      "package": "libacl1",
+      "scope": "host-os",
+      "records": 1
+    },
+    {
+      "advisory": "CVE-2026-119374",
+      "package": "libsqlite3-0",
+      "scope": "host-os",
+      "records": 1
+    },
+    {
+      "advisory": "CVE-2026-119379",
+      "package": "libsqlite3-0",
+      "scope": "host-os",
+      "records": 1
+    }
+  ],
+  "remainingChecks": {
+    "pythonMarkdown": "Debian still marks CVE-2019-25781 unfixed on 10 November; no compatible approved upstream repair identified.",
+    "source": "https://security-tracker.debian.org/tracker/CVE-2019-25781"
   }
 }

@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "advisories": [
+    "CVE-2026-109449"
+  ],
+  "license": "MIT",
+  "method": "exact upstream Parser.php from compatible maintenance branch",
+  "rows": [
+    {
+      "key": "wallabag",
+      "base": "sha256:a1054e60e619f4dbaaa89b1831b309cdfc2f888639fe2037b5317727b8616cc4",
+      "oldRef": "utilibre-zlib-wallabag-app:candidate-20261109",
+      "candidate": "utilibre-wallabag:expression-security-20261109",
+      "containers": [
+        "utilibre-wallabag-app-1"
+      ],
+      "site": "/app/vendor/symfony",
+      "packages": {
+        "symfony/expression-language": "v5.4.45"
+      },
+      "files": [
+        {
+          "path": "expression-language/Parser.php",
+          "beforeSha256": "aab358fc18ebcffb7db500062c49b0c7181a1138eb8433a6e35af1a0ca3562f5",
+          "afterSha256": "46bf564570f37a879d8254a2ebe9d3f4cadafe40c2043dbd139ac0358ceb844e"
+        }
+      ],
+      "source": {
+        "url": "https://raw.githubusercontent.com/symfony/expression-language/f371786ec76ca4bed6a7ec03802ba2525f6714db/Parser.php",
+        "commit": "f371786ec76ca4bed6a7ec03802ba2525f6714db",
+        "tag": "v5.4.54",
+        "sha256": "46bf564570f37a879d8254a2ebe9d3f4cadafe40c2043dbd139ac0358ceb844e",
+        "commitResponseSha256": "1d789767f440dec92d3c42a4b6de18383885114ff50e426269cf7cf3237fd14a"
+      },
+      "approval": "approved",
+      "patches": [],
+      "approvalEvidence": [
+        "build.json",
+        "inventory.json",
+        "application.json",
+        "scan-gate.json"
+      ]
+    },
+    {
+      "key": "pollaris",
+      "base": "sha256:9701b72255dd5b9534de7f6699c18118a9d2bdd4b62cbb7da98ddbe798303121",
+      "oldRef": "utilibre-zlib-pollaris-worker:candidate-20261109",
+      "candidate": "utilibre-pollaris:expression-security-20261109",
+      "containers": [
+        "utilibre-pollaris-pollaris-1",
+        "utilibre-pollaris-worker-1"
+      ],
+      "site": "/app/vendor/symfony",
+      "packages": {
+        "symfony/expression-language": "v7.4.14"
+      },
+      "files": [
+        {
+          "path": "expression-language/Parser.php",
+          "beforeSha256": "7c387488411291cb2c9d2f5f3a4e2c20bc770422aedbfdfbb96386646cacbe2e",
+          "afterSha256": "1949f0a67e60af1d4ddcb337c89baf641c2ab6c1455727641076ef46a68949ac"
+        }
+      ],
+      "source": {
+        "url": "https://raw.githubusercontent.com/symfony/expression-language/51c52817a02119ecd46a3369a2b38fc7f24dbf5e/Parser.php",
+        "commit": "51c52817a02119ecd46a3369a2b38fc7f24dbf5e",
+        "tag": "v7.4.21",
+        "sha256": "1949f0a67e60af1d4ddcb337c89baf641c2ab6c1455727641076ef46a68949ac",
+        "commitResponseSha256": "8c97f63a99f749d85530564003b14a2aea0e84ce6b62c87455bd3434dee7036a"
+      },
+      "approval": "approved",
+      "patches": [],
+      "approvalEvidence": [
+        "build.json",
+        "inventory.json",
+        "application.json",
+        "scan-gate.json"
+      ]
+    }
+  ],
+  "fixtureSha256": "b4c71a357c70161049b3e0a74edaea253dcce6b3e23b2ae7aff6391f827bb09b",
+  "patches": [],
+  "applicationFixtures": {
+    "wallabag": {
+      "deployment/maintenance/php-20261022/check-native.mjs": "0edd1390b3ad14cbbca7e83312850bc3b30e9eef0b33755e7325c5ba9d9bed66",
+      "deployment/pack/wallabag/check-private-library.php": "3e37f50a507faa1eca5cce52b0edae75f4deed890357bad73a07aafe97b8aac5"
+    },
+    "pollaris": {
+      "deployment/maintenance/php-20261022/check-pollaris.mjs": "bd582fddfc8e00499c4dd5bf03d7e1872576e8bf49e2081fe6e19d0f64d13353",
+      "deployment/maintenance/php-20261022/pollaris-browser.mjs": "9316264115ee77bc6e5e5abe7dacd2a1abd7d369e636228b5cbbd69041facc10"
+    }
+  }
+}

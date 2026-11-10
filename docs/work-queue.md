@@ -1,18 +1,20 @@
 # Work queue
 
-OAuthlib 4.0.1 is now deployed in Authentik, TRIP and the private SimpleLogin
-installation, retaining their prior fixes. FerretDB and the six APT image
-repairs are also deployed. The completed **10 November 04:52 UTC** scan covers
-109 images, 175 containers and 107 source inputs. Exact live-payload and retained
-source reviews leave **0 pending critical / 79 pending high records**.
-Raw findings remain; this is not full remediation. Redlib's daily checker
-preserves its approved OS overlay, and release-chain checks follow completed
-deployments independently of repair-record file order.
+Wallabag/Pollaris expression-parser fixes and both relay Mongo C driver fixes
+are deployed and verified, preserving prior repairs. OAuthlib, FerretDB and the
+six APT image repairs are also deployed. The completed **10 November 05:34 UTC**
+scan covers 109 images, 175 containers and 107 source inputs. After exact live
+payload and component reviews, **0 critical / 63 high records remain pending**.
+Raw findings remain; this is not full remediation or a security clearance.
 
-Remaining work includes the ACL caller migration, host maintenance gates,
-remaining application/dependency findings, held upgrades and the active WBO
-boards that must survive any restart. Current evidence:
-`deployment/maintenance/security-20261109/status.json` and
+Remaining high records: 30 ACL records across the host/images; 22 historical
+x/net build-input records; five host GRUB records; two host SQLite records;
+two Grist Deno/Hickory source-lock records; one Kuma Markdown record; and one
+WBO zlib record held to preserve RAM-only boards. Host releases require their
+specific maintenance gates; earlier ACL/GRUB approval-review blocks remain.
+Held application upgrades and other documented functional gaps are still open.
+
+Current evidence: `deployment/maintenance/security-20261109/status.json` and
 `docs/records/security-maintenance-2026-11-09.md`. Older entries below are historical.
 
 ## Latest checkpoint — 10 November 2026

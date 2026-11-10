@@ -7,6 +7,8 @@ test('only the reviewed package, IDs, roles and versions; never a kernel',()=>{
  for(const id of Object.keys(components))assert(eligible({...base,id}));
  for(const id of Object.keys(components))assert(eligible({...base,id,installed:'6.12.113-1'}));
  for(const id of Object.keys(components))assert(eligible({...base,id,installed:'6.12.115-2'}));
+ for(const id of Object.keys(components))assert(eligible({...base,id,installed:'6.12.116-1'}));
+ assert(!eligible({...base,installed:'6.12.117-1'}));
  assert(!eligible({...base,installed:'6.12.114-1'}));
  for(const change of [{package:'linux-image-6.12.111'},{package:'linux-headers-6.12.111'},{id:'CVE-2026-12345'},{installed:'6.12.112-1'},{status:'mitigated'},{scope:'runtime-image'},{type:'ubuntu'},{containers:['unexpected']}])assert(!eligible({...base,...change}));
  const runtime={...base,scope:'runtime-image',artifact:'sha256:'+'a'.repeat(64),targetName:'sha256:'+'a'.repeat(64),containers:['utilibre-linkding-linkding-1']};assert(eligible(runtime));

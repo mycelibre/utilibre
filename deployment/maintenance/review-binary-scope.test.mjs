@@ -10,6 +10,15 @@ test('CUPS scheduler attribution never exempts the server or an included schedul
  assert.equal(absentComponent({...item,id:'CVE-2026-99999'},['/.','/usr/lib/libcups.so.2']),null);
 });
 const files=['/.','/usr/lib/libuuid.so.1'];
+test('MariaDB partition finding remains open for server or partition implementation',()=>{
+ for(const packageName of ['libmariadb3','mariadb-common']){
+  const item={id:'CVE-2026-102523',package:packageName};
+  assert.match(absentComponent(item,['/.','/usr/lib/libmariadb.so.3']),/server ALTER TABLE/);
+  for(const path of ['/usr/sbin/mariadbd','/usr/sbin/mysqld','/usr/lib/mysql/plugin/ha_partition.so','/src/sql/sql_partition.cc'])assert.equal(absentComponent(item,[...files,path]),null);
+ }
+ for(const packageName of ['mariadb-server','mariadb-server-core','mariadb-plugin-partition'])assert.equal(absentComponent({id:'CVE-2026-102523',package:packageName},files),null);
+ assert.equal(absentComponent({id:'CVE-2026-44172',package:'libmariadb3'},files),null);
+});
 test('IPP backend injection is not blanket CUPS client clearance',()=>{
  const item={id:'CVE-2026-55453',package:'libcups2t64'};
  assert.match(absentComponent(item,['/.','/usr/lib/libcups.so.2']),/backend status-line/);

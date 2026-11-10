@@ -770,3 +770,53 @@ and frontend build instructions. The root backend source/locks are current; the
 bundled previous backend is explicitly historical. The first backend-only offer
 and receipt are preserved under `donetick/source-offer-correction/`; the corrected
 public download was hash-verified. No deployed application bytes changed.
+
+## Symfony expression parser and relay driver follow-up — 10 November
+
+Wallabag and Pollaris retain their installed compatible Symfony major versions.
+Only ExpressionLanguage `Parser.php` changes, to the exact upstream 5.4.54 and
+7.4.21 files pinned in `symfony-inputs.json`. These include the complete nesting
+and depth correction. Eighteen ordinary expressions pass before/after, followed
+by Wallabag's two-account private library/export checks and Pollaris's independent
+browser poll/vote/CSV/delete/worker checks. No excessive-depth reproduction was
+performed. Use the existing Symfony builder, scanner and publisher with
+`--batch-20261109`, and the image/native checkers with `--symfony-nov9`.
+The scoped release has completed for both applications; the public source offer
+is `security-symfony-20261109-source.tar.gz`.
+
+`mongoc-inputs.json` continues the authenticated 1.30.4 C-driver source, preserving
+prior OCSP and BSON repairs. Two exact upstream cursor patches apply in order
+with zero fuzz; the source postimage is pinned. `mongoc.mjs build|stage|native`
+uses the retained compiler plus the nine checksum-pinned development packages
+in `mongoc-compiler.Dockerfile`. Download preparation is separate from replay;
+no dependency resolution occurs in the networkless build. Use the legacy local
+builder with `DOCKER_BUILDKIT=0`: BuildKit interprets a bare local image ID as a
+registry name. Its failed metadata lookup is retained, not a successful offline
+build. Missing development features and an embedded build RUNPATH both failed
+closed before correction. No running service was changed by those attempts.
+
+The final library retains all 1,710 exports, SONAME, linked encryption/SASL/
+compression dependencies and immediate binding. The ordinary consumer compiled
+against the old headers passes on old/new libraries. The existing isolated relay
+fixture verifies UDP/TCP/TLS allocations, authentication, private-peer denial,
+quota enforcement, exact-byte transfer and allocation deletion. This is not an
+actual MongoDB-server compatibility test, real-device/public-NAT test or capacity
+measurement. Only libmongoc changes in the complete image comparison; corrected
+libbson/libmongocrypt and the native relay executable remain unchanged.
+
+Use the existing scanner/release adapter with `--batch-20261109 --mongoc`, and
+`go-final/verify.py --mongoc-nov9 coturn`. Both declared relay groups require idle
+allocation/control-connection checks immediately before recreation. Configuration,
+quotas, ports and privacy controls do not change. Rollback selects the exact prior
+image/configuration in `mongoc/release.json`; no persistent migration is involved.
+`publish-symfony.mjs --mongoc-nov9` publishes complete retained driver source,
+patches, notices and build recipe. Raw scanner records remain because package
+version labels are intentionally unchanged. `coturn-bson-final/review.mjs
+--cursor-nov9` checks the current image, completed release, source/native proofs
+and live library hashes before preparing expiring, exact finding decisions.
+
+Wallabag's separate retained OTPHP correction is rechecked with ordinary
+provisioning/RFC6238/native authentication cases and exact corrected-file hashes.
+The former vulnerability-reproduction fixture is not run by this review path.
+All review writers remain explicit; preparation does not automatically approve
+or suppress a finding. No byte-for-byte build reproducibility is claimed.

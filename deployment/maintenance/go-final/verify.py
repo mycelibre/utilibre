@@ -6,7 +6,8 @@ MSAL='--msal-oct28' in sys.argv
 CFITSIO='--cfitsio-oct28' in sys.argv
 TRUST='--trust-oct28' in sys.argv
 NGINX='--nginx-debian-oct28' in sys.argv
-BSON='--bson-oct28' in sys.argv
+MONGOC='--mongoc-nov9' in sys.argv
+BSON='--bson-oct28' in sys.argv or MONGOC
 ZOD='--zod-oct28' in sys.argv
 CODEC_CADDY='--codec-caddy-oct28' in sys.argv
 FILELOCK='--filelock-oct28' in sys.argv
@@ -16,7 +17,8 @@ OAUTH='--oauth-oct28' in sys.argv or OAUTH_NOV9
 CODEC='--codec-oct28' in sys.argv
 HEALTH='--health-oct28' in sys.argv
 MARKDOWN='--markdown-oct28' in sys.argv
-SYMFONY='--symfony-oct28' in sys.argv
+SYMFONY_NOV9='--symfony-nov9' in sys.argv
+SYMFONY='--symfony-oct28' in sys.argv or SYMFONY_NOV9
 NLTK='--weka-oct28' in sys.argv
 MSGPACK='--msgpack-oct28' in sys.argv
 BLKID='--blkid-oct28' in sys.argv
@@ -33,10 +35,17 @@ HELPERS=MSAL or CFITSIO or TRUST or NGINX or BSON or ZOD or CODEC_CADDY or FILEL
 OCT28='--oct28' in sys.argv or HELPERS
 ROOT=Path('/var/lib/utilibre-maintenance/security-20261028/go' if OCT28 else '/var/lib/utilibre-maintenance/go-final-20261011')
 if HELPERS: ROOT=Path('/var/lib/utilibre-maintenance/security-20261028/'+('msal' if MSAL else 'cfitsio' if CFITSIO else 'trust' if TRUST else 'nginx-debian' if NGINX else 'bson' if BSON else 'zod' if ZOD else 'codec-caddy' if CODEC_CADDY else 'filelock' if FILELOCK else 'text' if TEXT else 'oauth' if OAUTH else 'codec' if CODEC else 'health' if HEALTH else 'markdown' if MARKDOWN else 'symfony' if SYMFONY else 'nltk' if NLTK else 'msgpack' if MSGPACK else 'blkid' if BLKID else 'jose-caddy' if JOSE_CADDY else 'jose-leaf' if JOSE_LEAF else 'jose' if JOSE else 'drf' if DRF else 'dnspython' if DNS else 'authlib' if AUTHLIB else 'caddy' if CADDY else 'go-services' if SERVICES else 'go-runtime' if RUNTIME else 'go-helpers'))
+if MONGOC:
+ ROOT=Path('/var/lib/utilibre-maintenance/security-20261109/mongoc')
+ sys.argv.remove('--mongoc-nov9')
 if OAUTH_NOV9:
  assert '--oauth-oct28' not in sys.argv
  ROOT=Path('/var/lib/utilibre-maintenance/security-20261109/oauth')
  sys.argv.remove('--oauth-nov9')
+if SYMFONY_NOV9:
+ assert '--symfony-oct28' not in sys.argv
+ ROOT=Path('/var/lib/utilibre-maintenance/security-20261109/symfony')
+ sys.argv.remove('--symfony-nov9')
 if hasattr(os,'sched_getaffinity'):os.sched_setaffinity(0,{min(os.sched_getaffinity(0))})
 def files(image):
  c=subprocess.check_output(['docker','create','--entrypoint','/bin/true',image],text=True).strip()

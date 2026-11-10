@@ -1,6 +1,6 @@
 name: utilibre-turn-option
 x-turn: &turn
-  image: utilibre-galene-turn-turn:sqlite-security-20261109
+  image: utilibre-coturn:mongoc-namespace-security-20261109
   build: {context: ./turn}
   user: "65534:65534"
   entrypoint: [turnserver, -c, /run/config/turnserver.conf]
