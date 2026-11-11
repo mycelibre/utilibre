@@ -1,0 +1,143 @@
+# 11 November: updater receipts and BentoPDF
+
+This batch reuses the existing updaters, native BentoPDF build, air-gap packager,
+source publisher and scoped release helpers. It adds no scheduler or service.
+
+## Updater audit
+
+SearXNG's exact upstream image and writable-layer guard passed. Redlib's last
+scheduled run had succeeded, but a later change to the shared Debian build
+adapter made its historical APT-overlay receipt fail validation. Its archived
+builder and ABI checker both match commit
+`f5c2e09f812e920a3b1c95e8c6673227abf1ca6d` exactly. The historical verifier now
+allows that revision for the single installed Redlib image
+`sha256:33db5cc7e6acb445a3db73408c82fcedf42cbf2d0d604ce4261d8fd952131356`.
+New builds still require the current adapter; unknown images remain blocked.
+The ordinary Redlib `--check` reports `up-to-date`. No restart or Reddit request
+was needed. An archived repair proof is not current security clearance.
+
+Recheck without searches, deployment or notifications:
+
+```sh
+python3 scripts/test-searxng-maintain.py
+node --test scripts/test-redlib-maintain.mjs deployment/maintenance/security-20261109/vendor-debian-policy.test.mjs
+node scripts/redlib-maintain.mjs --check
+```
+
+The first two commands are offline tests. The last makes one upstream-head
+lookup, reads local evidence and writes its private check receipt.
+
+## BentoPDF inputs and build
+
+Upstream 2.8.11 is pinned to
+`f638f8e4db66cb69dec35ca061ad89034dd62445`. Apply
+`bentopdf-dependencies.patch` with `git apply --check` followed by `git apply`
+in a clean detached checkout. It pins node-forge 1.4.1,
+i18next-http-backend 4.0.4 and VitePress's build-only Vite 6.4.5. It does not
+replace PDF processing or cryptographic algorithms. The old 2.8.8 lockfile
+patch is historical and must not be applied to this revision.
+
+Use the existing Node 24.21.0 Alpine image
+`sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1`.
+Resolve nothing during replay: `npm ci --ignore-scripts --no-audit --no-fund`
+uses the reviewed lock. Dependency acquisition needs the exact lockfile
+destinations (npm registry and SheetJS); runtime asset acquisition uses only
+`deployment/toolbox/bentopdf-runtime-lock.json`. Then run the existing build
+adapter inside a non-root, networkless container with only the disposable
+checkout writable, no production mounts and no Docker socket:
+
+```sh
+node /integration/build-bentopdf.mjs /work
+# In a SECOND clean checkout with the same patch and dependencies:
+NODE_OPTIONS=--max-old-space-size=4096 npm run docs:build
+```
+
+The application build used two CPUs and 4 GiB; the separate documentation
+build used two CPUs and 6 GiB. Do not reuse their generated output directories. The application adapter caps its
+Node heap at 3 GiB; the documentation build needs a larger heap than Node's
+default. This is build-time demand, not the static service's runtime budget.
+
+After the build, run `prepare-bentopdf-airgap.mjs SOURCE NEW_OUTPUT_DIRECTORY`.
+It refuses a different source revision or an existing output directory, checks
+the runtime downloads and retains component licenses. Signature validation stays
+disabled. PDF engines, workers, OCR English/Spanish data and fonts stay local.
+Hyper Compress 1.0.3 is upstream AGPL-3.0-only, with matching source tag commit
+`148f20f3f4cd11035fdd53dd1c20fb5a5d21cf3b`; its source archive is retained with
+the published application source.
+
+`deployment/toolbox/Dockerfile.bentopdf` replaces only the static application
+directory on the exact previous runtime image. Retain that image for replay
+and rollback; do not substitute a moving nginx tag. This preserves the existing
+nginx, Expat, TIFF, zlib and musl repairs. No application data migration exists.
+Use the local image-ID builder path (BuildKit interprets this raw ID as a remote
+repository). No image pull or build-step network is permitted:
+
+```sh
+DOCKER_BUILDKIT=0 docker build --network none --pull=false \
+  -f deployment/toolbox/Dockerfile.bentopdf \
+  -t utilibre-toolbox-bentopdf:2.8.11-p1 \
+  /opt/utilibre/pack-static/bentopdf-2.8.11-p1
+```
+
+The reviewed image ID is in `bentopdf-release.json`; rebuilding must produce a
+new candidate and fresh review if its ID differs. Byte-for-byte reproducible
+builds are not claimed. Preserve the pinned predecessor image: a Git checkout
+alone is insufficient to reconstruct its runtime repair layers.
+
+## Verification and evidence
+
+Private evidence is under
+`/var/lib/utilibre-maintenance/releases-20261111/`. Source scans include build
+dependencies. Before/after scans share a preserved Trivy database; they do not
+silently refresh it. Raw remaining findings stay in the reports.
+
+The workflow checker uses synthetic PDFs and the checkout's pinned PDF.js
+parser in a separate, entirely intercepted test context. It no longer relies
+on a minified application export name. `--local-candidate` maps only
+`pdf.utilibre.org` to a loopback-only HTTPS candidate. Without that flag it
+checks the public deployment. Set `BENTO_TEST_SOURCE` to the reviewed checkout.
+The Markdown check verifies native print invocation and Chromium PDF output;
+it cannot automate a user's operating-system Save as PDF dialog. This is
+desktop Chromium coverage, not a claim about all tools or real phones.
+
+Release/rollback status and artifact identities are recorded alongside the
+private evidence. The prior image and Compose configuration are retained;
+rollback changes the application image only, with no user-data deletion.
+The separate ACL caller-migration issue remains open.
+
+## Exact release interface
+
+The reviewed manifests bind the source lock, integration hashes, browser
+report, filesystem comparison and same-database scans to the candidate IDs.
+BentoPDF's release gate requires an advisory database no more than 48 hours
+old. This is a release policy, not a claim that older evidence is current.
+The source scan has zero high/critical findings; three medium and one low
+remain. The unchanged BentoPDF runtime retains two medium findings (zlib and
+libxpm); the unchanged portal runtime retains one medium zlib finding.
+Scans sharing a cache must run sequentially: an attempted parallel portal
+scan was rejected by the cache lock, then rerun successfully. Its failure log
+is preserved rather than counted as a pass.
+
+After committing the reviewed source, publish the application source using
+`node deployment/pack/publish-source.mjs bentopdf`, then:
+
+```sh
+node deployment/maintenance/releases-20261111/release-bentopdf.mjs --prepare
+node deployment/maintenance/releases-20261111/release-bentopdf.mjs --apply
+node deployment/maintenance/release-refresh-20261106/release-portal.mjs --apply --bentopdf
+node scripts/publish-integration-source.mjs
+```
+
+These are production operations: they require the established deployment
+authorization. Only BentoPDF and portal may be recreated. No migration,
+notification, indexing request, cache purge or new public service is included.
+The two release helpers acquire the existing exclusive package-release lock.
+A repeated successful apply verifies the exact running image and does not
+restart it. Compose settings and predecessor artifacts are retained privately.
+
+BentoPDF rollback is the exact `--rollback` mode of its release helper. Restore
+the previous portal `PORTAL_IMAGE` line recorded in `portal-release.json`, then
+use the existing scoped portal Compose process (`up -d --no-deps --no-build
+--pull never portal`) and check its health. Restore the matching prior source
+archive/index from the publisher's recorded staging directories when rolling
+back the public application. No browser documents are deleted by either step.

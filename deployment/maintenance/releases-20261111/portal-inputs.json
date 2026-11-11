@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "sourceRevision": "6f6cbe0cb80de68c0867ead124d43756090c8ff8",
+  "sourceChanges": {
+    "portal/src/catalog/upstreams.ts": "f3640ec7f488293fa583d9b3532a92817a21d4887220d5537aa22cc5a697a6aa"
+  },
+  "base": "sha256:18962bc6fb429550ac1767992710efb8ec1849c0185ee171975997b8e8e3baaa",
+  "candidate": "utilibre-portal:bentopdf-20261111",
+  "imageId": "sha256:7d9b400bcea2e1fc1d1ce3f0fb0dee4375e6726612cbcf070fa6a7a7020513f6",
+  "expectedVersions": [
+    "2.8.11-p1"
+  ],
+  "retainedFindings": [
+    {
+      "id": "CVE-2026-4738",
+      "package": "zlib",
+      "version": "1.3.2-r1",
+      "severity": "MEDIUM"
+    }
+  ],
+  "evidence": {
+    "portal-staging.txt": "5ef3f23ae9ebbb70167d56831486fd688356bf6a697223c034db76512cef0643",
+    "portal-before-scan.json": "ccef9f868498010936fb70d2d5d838b7384065cb900b80ef4912df30f1d5570a",
+    "portal-after-scan.json": "47e26ebf7b82ced66324d2452d3a080d515a5553ae2d06881cd2bb723449058b"
+  }
+}

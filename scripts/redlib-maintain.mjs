@@ -74,7 +74,7 @@ export async function reviewedRuntimeIdentity(recipe,live){
  assert(s,'Unknown runtime; operator review required');
  const dir=evidence+'/vendor-debian/'+s.key,b=json(dir+'/build.json');
  const {proveVendorDebian}=await import('../deployment/maintenance/security-20261109/vendor-debian-policy.mjs');
- proveVendorDebian(inputs,s,b,json(dir+'/consumer.json'),json(dir+'/scan-gate.json'),json(evidence+'/ubuntu-acquisition/authenticated.json'),evidence);
+ proveVendorDebian(inputs,s,b,json(dir+'/consumer.json'),json(dir+'/scan-gate.json'),json(evidence+'/ubuntu-acquisition/authenticated.json'),evidence,{recordedRevision:'f5c2e09f812e920a3b1c95e8c6673227abf1ca6d'});
  assert.equal(inspect(s.candidate).Id,live,'Reviewed overlay tag drift');
  const release=json(evidence+'/vendor-debian/release.json').groups.find(g=>g.key===s.key);
  return retainedRuntimeIdentity(recipe,live,s,b,release);

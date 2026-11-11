@@ -29,7 +29,10 @@ export function proveVendorDebian(inputs,s,b,c,scan,acquired,root,{recordedRevis
  // Current release callers omit this option and still require current code.
  if(recordedRevision){
   assert.equal(recordedRevision,'f5c2e09f812e920a3b1c95e8c6673227abf1ca6d');
-  assert(['apt-penpot-frontend','apt-penpot-exporter'].includes(s.key));
+  assert(['apt-penpot-frontend','apt-penpot-exporter','apt-redlib'].includes(s.key));
+  // Redlib's installed APT-only overlay was built by this recorded adapter.
+  // This is historical identity evidence, never permission for a new build.
+  if(s.key==='apt-redlib')assert.equal(b.imageId,'sha256:33db5cc7e6acb445a3db73408c82fcedf42cbf2d0d604ce4261d8fd952131356','Unknown historical Redlib artifact');
   const original=cp.execFileSync('git',['show',recordedRevision+':deployment/maintenance/security-20261109/vendor-debian.mjs'],{cwd:new URL('../../../',import.meta.url),timeout:10000,maxBuffer:65536});
   assert.equal(b.fixtureSha256,sha(original));
  }else assert.equal(b.fixtureSha256,file(distroless?'vendor-yopass.py':'vendor-debian.mjs'));

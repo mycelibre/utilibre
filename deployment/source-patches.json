@@ -257,11 +257,11 @@
     "removeWhen": "Use a supported upstream release with equivalent local-only behavior and clean dependency/build/browser checks. Preserve the existing speech-quality limitations until tested on the affected device."
   },
   {
-    "patch": "deployment/pack/bentopdf.dependencies.patch",
-    "source": "/opt/utilibre/src/bentopdf",
-    "revision": "f96cd4e5166f3d51393dfe9f3c440b5bb77802f1",
+    "patch": "deployment/maintenance/releases-20261111/bentopdf-dependencies.patch",
+    "source": "/var/lib/utilibre-maintenance/releases-20261111/bentopdf",
+    "revision": "f638f8e4db66cb69dec35ca061ad89034dd62445",
     "prerequisites": [],
-    "purpose": "Lockfile dependency fixes only.",
+    "purpose": "Pinned node-forge and translation-backend fixes; documentation-only Vite update. Native PDF/OCR code unchanged.",
     "removeWhen": "Remove once the pinned upstream lockfiles include the fixes and clean native installation, advisory review and relevant workflow checks pass."
   },
   {

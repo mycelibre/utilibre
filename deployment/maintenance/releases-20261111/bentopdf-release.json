@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "purpose": "Reviewed BentoPDF 2.8.11 release preserving existing runtime and local processing",
+  "sourceOrigin": "https://github.com/alam00000/bentopdf",
+  "sourceRevision": "f638f8e4db66cb69dec35ca061ad89034dd62445",
+  "base": "sha256:2c135f176fb9abd3a0ae4392cf3c9e846d4e3e3d9c49e8ff52e9c2dc22c46ee9",
+  "candidate": "utilibre-toolbox-bentopdf:2.8.11-p1",
+  "imageId": "sha256:4ef5701dd01a0d38d6ea88d2f6a9af9a2e6f6eff3a416a1b3210661e5cf59a96",
+  "lockSha256": "59590098e450c2197d3b9b170a45b82b2adddc267a7755036cc609a84dab4f19",
+  "integrationHashes": {
+    "deployment/maintenance/releases-20261111/bentopdf-dependencies.patch": "96918c467a6457568cf0ed293b9fa645b6cd2daa1dd6249d3b099352c891b0bf",
+    "deployment/toolbox/build-bentopdf.mjs": "3783aff7b210780c411c616ee5f769ae0965d24b90f1b81a118476c9a514669a",
+    "deployment/toolbox/prepare-bentopdf-airgap.mjs": "e1f0a4dbbaf154f1bf845a53d8e817596d487e61583c4c6b90264ca039d643ec",
+    "deployment/toolbox/bentopdf-runtime-lock.json": "42fb48477d4265165d9c9483997ce45bc49ec4bc468734192748ac89ec0ebe06",
+    "deployment/toolbox/Dockerfile.bentopdf": "38a6d2bfd88f5a2e88a35a4001b04d3d2227568113ed3f384353b4a190e4ada6",
+    "deployment/toolbox/check-pdf-tools.mjs": "803498998a808d5bd033c48cd1ca46e4cff2c6686cd5c916a56db6c3d5fd0cc5",
+    "deployment/maintenance/releases-20261111/check-bentopdf-runtime.py": "9c08d7e49c3f6ed9f3a759e9a5bd9d3a299060a8f4f52f8b5faab021733ee443"
+  },
+  "evidence": {
+    "candidate-workflows.json": "8bc558b5438d75834c31c8479fb44613edf4a7ce0210dca4bf55627116410e15",
+    "runtime-equivalence.json": "13cb348d9e144fdceeddfd3a72f50beb5b2a9fd11dcf71181ac5b45bc0548249",
+    "security-gate.json": "4a09f4c3f9e92f3073a759a289a02e3508db0d6a0e25d93890244973e0fd19e4"
+  },
+  "maximumDatabaseAgeHours": 48,
+  "deploymentScope": [
+    "utilibre-toolbox/bentopdf"
+  ],
+  "migration": "none; statically served client application",
+  "rollback": "restore retained image and Compose pin; does not modify user files",
+  "buildReproducibility": "Exact input hashes and deterministic checks; byte-identical rebuild not claimed",
+  "approvalBasis": "User-authorized update; reviewed native workflows, source assessment, identical repaired runtime and scoped rollback"
+}

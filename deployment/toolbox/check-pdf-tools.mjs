@@ -7,14 +7,20 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import {execFileSync} from 'node:child_process';
 
 const require = createRequire(new URL('../../portal/package.json', import.meta.url));
 const { chromium } = require('playwright');
 const diagnostic = process.argv.includes('--diagnostic-fresh-workers');
-assert(process.argv.slice(2).every((arg) => arg === '--diagnostic-fresh-workers'), 'Unknown option');
+const staged = process.argv.includes('--local-candidate');
+const testArtifact=staged?execFileSync('docker',['inspect','--format','{{.Image}}','utilibre-bento-candidate-20261111'],{encoding:'utf8',timeout:10000}).trim():undefined;
+const parserSource=process.env.BENTO_TEST_SOURCE;
+assert(parserSource, 'Set BENTO_TEST_SOURCE to the reviewed checkout with npm ci dependencies');
+assert(process.argv.slice(2).every((arg) => ['--diagnostic-fresh-workers','--local-candidate'].includes(arg)), 'Unknown option');
 const origin = 'https://pdf.utilibre.org';
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ acceptDownloads: true });
+const browser = await chromium.launch({ headless: true, args: staged ? ['--no-proxy-server','--host-resolver-rules=MAP pdf.utilibre.org 127.0.0.1'] : [] });
+const context = await browser.newContext({ acceptDownloads: true, ignoreHTTPSErrors: staged });
 context.setDefaultTimeout(30_000);
 const failures = [];
 const assets = new Map();
@@ -58,16 +64,24 @@ async function downloadBytes(download) {
   return bytes;
 }
 
-async function readPdf(page, bytes) {
+// Independent pinned PDF.js parser: no dependency on minified app export names.
+// All requests in this separate context are fulfilled from local test inputs.
+const parserContext=await browser.newContext();
+await parserContext.route('**/*',async route=>{
+  const url=new URL(route.request().url());
+  assert.equal(url.origin,'http://pdf-parser.test');
+  if(url.pathname==='/')return route.fulfill({contentType:'text/html',body:'<!doctype html><title>Local PDF output check</title>'});
+  assert(['/pdf.mjs','/pdf.worker.mjs'].includes(url.pathname));
+  return route.fulfill({contentType:'text/javascript',body:await readFile(resolve(parserSource,'node_modules/pdfjs-dist/legacy/build',url.pathname.slice(1)))});
+});
+const parserPage=await parserContext.newPage();
+await parserPage.goto('http://pdf-parser.test/');
+async function readPdf(_page, bytes) {
   assert(bytes.subarray(0, 5).toString() === '%PDF-', 'Output is not a PDF');
-  return page.evaluate(async (data) => {
-    const main = [...document.querySelectorAll('link[href]')].find((link) => /\/assets\/main-[^/]+\.js$/.test(link.getAttribute('href')));
-    if (!main) throw new Error('BentoPDF main module not found; review test for upstream changes');
-    const module = await import(main.href);
-    // BentoPDF 2.8.8 exposes its PDF.js getDocument implementation as z.
-    // Using the deployed parser also exercises the ordinary public worker URL.
-    if (typeof module.z !== 'function') throw new Error('BentoPDF PDF.js export changed; update the test');
-    const task = module.z({ data: new Uint8Array(data) });
+  return parserPage.evaluate(async (data) => {
+    const module = await import('/pdf.mjs');
+    module.GlobalWorkerOptions.workerSrc='/pdf.worker.mjs';
+    const task = module.getDocument({ data: new Uint8Array(data),useSystemFonts:false,isEvalSupported:false,disableFontFace:true });
     if (!task?.promise) throw new Error('BentoPDF PDF.js contract changed');
     const pdf = await task.promise;
     const pages = [];
@@ -78,6 +92,37 @@ async function readPdf(page, bytes) {
     await pdf.destroy();
     return { pageCount: pages.length, pages };
   }, [...bytes]);
+}
+
+async function compressCheck() {
+  const page=await context.newPage();
+  await page.goto(`${origin}/compress-pdf.html`,{waitUntil:'networkidle'});
+  const fixture=await readFile(new URL('../../portal/public/examples/scan-en.pdf',import.meta.url));
+  await page.locator('#file-input').setInputFiles({name:'fictional-scan.pdf',mimeType:'application/pdf',buffer:fixture});
+  const [download]=await Promise.all([page.waitForEvent('download',{timeout:90000}),page.locator('#process-btn').click()]);
+  const bytes=await downloadBytes(download),output=await readPdf(page,bytes);
+  assert.equal(output.pageCount,1);
+  checks.push({task:'compress',result:'passed',inputBytes:fixture.length,outputBytes:bytes.length,pageCount:output.pageCount,filename:download.suggestedFilename()});
+  await page.close();
+}
+
+async function markdownCheck() {
+  const page=await context.newPage();
+  await page.goto(`${origin}/markdown-to-pdf.html`,{waitUntil:'networkidle'});
+  await page.locator('#markdown-editor-container textarea').fill('# Fictional workshop\n\nBring 24 books on 12 May 2030.\n\n| Item | Count |\n| --- | --- |\n| Books | 24 |\n\n```mermaid\ngraph LR\nA[Prepare]-->B[Share]\n```');
+  await page.waitForFunction(()=>document.querySelector('#mdPreview')?.textContent.includes('Bring 24 books'));
+  await page.locator('#mdPreview svg').waitFor({state:'visible'});
+  // Headless Chromium cannot accept the OS print dialog. Verify the native
+  // button invokes print, then check the same document through Chromium's PDF API.
+  await page.evaluate(()=>{window.__utilibrePrintCalled=false;window.print=()=>{window.__utilibrePrintCalled=true;};});
+  await page.locator('#mdExport').click();
+  assert(await page.evaluate(()=>window.__utilibrePrintCalled));
+  const bytes=await page.pdf({format:'A4',printBackground:true});
+  const output=await readPdf(page,bytes);
+  assert.match(output.pages.join(' '),/Fictional workshop/);
+  assert.match(output.pages.join(' '),/24 books/);
+  checks.push({task:'markdown-print',result:'passed-headless',pageCount:output.pageCount,limitation:'Print handler and Chromium PDF output verified; OS Save as PDF dialog not automated.'});
+  await page.close();
 }
 
 // A raster-only PDF, not an existing selectable text layer. Generated in memory.
@@ -147,17 +192,20 @@ async function ocrCheck(language) {
 let error;
 try {
   await mergeCheck();
+  await compressCheck();
+  await markdownCheck();
   await ocrCheck('en');
   await ocrCheck('es');
   assert.deepEqual(unexpectedWrites, [], 'Unexpected application write/upload requests');
   assert.deepEqual([...externalOrigins], [], 'PDF/OCR runtime assets must be served by Utilibre');
+  assert.deepEqual(failures.filter(x=>!x.reason?.includes('ERR_ABORTED')),[], 'Required app requests failed');
 } catch (failure) { error = String(failure); process.exitCode = 1; }
 finally {
   await Promise.allSettled(pendingHeaders);
   await browser.close();
   console.log(JSON.stringify({
-    checkedAt: new Date().toISOString(), origin,
-    mode: diagnostic ? 'diagnostic-interception-not-production' : 'ordinary-public-requests',
+    checkedAt: new Date().toISOString(), origin, testArtifact,
+    mode: diagnostic ? 'diagnostic-interception-not-production' : staged ? 'isolated-candidate-local-dns' : 'ordinary-public-requests',
     result: error ? 'failed' : diagnostic ? 'diagnostic-passed-not-production' : 'passed',
     checks, error, failedRequests: failures, unexpectedWrites,
     externalAssetOrigins: [...externalOrigins].sort(),

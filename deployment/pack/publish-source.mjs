@@ -20,6 +20,7 @@ const applications={
 };
 const name=process.argv[2],spec=applications[name];assert(spec,'Select one reviewed pack application');
 const refresh={
+  bentopdf:'f638f8e4db66cb69dec35ca061ad89034dd62445',
   mapshaper:'b44c0fa95effac3d91526c8b62dc0de0ab88b464',
   freshrss:'08f97bd497ace733c151ea1c709d85cd5b65cc53',
   radicale:'4d3887e0fe5f4d3cf815d65e2a4d8bf9b0ca5b75',
@@ -28,7 +29,7 @@ const refresh={
   'link-cleaner':'e3bf8286e1d6dada00099eef2c392df2088e743a',
   drawio:'c72c9a98b7a6ce392556ed04c05e0ff19f43f5c3',
 };
-const root=refresh[name]?`/var/lib/utilibre-maintenance/releases-20261106/${name}`:`/opt/utilibre/src/${spec[0]}`;
+const root=name==='bentopdf'?'/var/lib/utilibre-maintenance/releases-20261111/bentopdf':refresh[name]?`/var/lib/utilibre-maintenance/releases-20261106/${name}`:`/opt/utilibre/src/${spec[0]}`;
 if(refresh[name])spec[1]=refresh[name];
 assert.equal(execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),spec[1]);
 const paths=execFileSync('git',['ls-files','-z'],{cwd:root,encoding:'utf8'}).split('\0').filter(Boolean);
@@ -56,12 +57,21 @@ await mkdir('/opt/utilibre/toolbox-public',{recursive:true});
 // Include reviewed integration files only, never .env or private runtime state.
 const prefixes=['deployment/pack/','deployment/toolbox/','deployment/expanded/','deployment/calendar/','deployment/link-cleaner/','deployment/one-file-core/','deployment/maintenance/release-refresh-20261106/','deployment/utilibre/','docs/records/release-refresh-2026-11-06.md','docs/service-pack.md'];
 const integration=execFileSync('git',['ls-tree','-r','--name-only','-z','HEAD'],{encoding:'utf8'}).split('\0').filter(p=>p&&prefixes.some(prefix=>p.startsWith(prefix)));
+if(name==='bentopdf')integration.push(...execFileSync('git',['ls-tree','-r','--name-only','HEAD','--','deployment/maintenance/releases-20261111','docs/records/bentopdf-updater-2026-11-11.md'],{encoding:'utf8'}).trim().split('\n').filter(Boolean));
 assert(integration.includes('deployment/pack/publish-source.mjs'),'Stage the reviewed release before source publication');
 for(const p of integration)assert(!/(^|\/)(?:node_modules|secrets|backups|\.env)(\/|$)/.test(p)&&!(await lstat(p)).isSymbolicLink());
 await writeFile(`${stage}/integration-files`,integration.join('\0')+'\0');
 await mkdir(`${stage}/integration`);
 execFileSync('git',['archive','--format=tar',`--output=${stage}/integration.tar`,'HEAD','--',...integration]);
 execFileSync('tar',['-xf',`${stage}/integration.tar`,'-C',`${stage}/integration`]);
+if(name==='bentopdf'){
+  const component='/var/lib/utilibre-maintenance/releases-20261111/hyper-compress-1.0.3-source.tar.gz';
+  assert.equal(createHash('sha256').update(await readFile(component)).digest('hex'),'562522f3acdb6ce85d3b355526a6ba433cdfc2ccc32ec5d16bc8d7a9d9d42be2');
+  await mkdir(`${stage}/integration/components`);
+  await copyFile(component,`${stage}/integration/components/hyper-compress-1.0.3-source.tar.gz`);
+  integration.push('components/hyper-compress-1.0.3-source.tar.gz');
+  await writeFile(`${stage}/integration-files`,integration.join('\0')+'\0');
+}
 execFileSync('tar',['-czf',`${stage}/${name}-utilibre.tar.gz`,'-C',root,'--null','-T',`${stage}/upstream-files`,'-C',`${stage}/integration`,'--null','-T',`${stage}/integration-files`],{stdio:'pipe'});
 const destination=`/opt/utilibre/toolbox-public/${name}-utilibre.tar.gz`;
 try{await copyFile(destination,`${stage}/previous.tar.gz`)}catch(e){if(e.code!=='ENOENT')throw e}

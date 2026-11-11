@@ -1,14 +1,18 @@
-// Use BentoPDF 2.8.8's native VITE_* air-gap configuration. No PDF/OCR engine changes.
+// Use BentoPDF 2.8.11's native VITE_* air-gap configuration. No PDF/OCR engine changes.
 // Build first with the environment documented in docs/service-pack.md, then run.
 import {execFileSync} from 'node:child_process';
 import {readFile,writeFile,mkdir,mkdtemp,cp} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
+import {resolve} from 'node:path';
 import {prepareBentoSeo} from './prepare-bentopdf-seo.mjs';
-const source='/opt/utilibre/src/bentopdf';
-assert.equal(execFileSync('git',['rev-parse','HEAD'],{cwd:source,encoding:'utf8'}).trim(),'f96cd4e5166f3d51393dfe9f3c440b5bb77802f1');
-const target='/opt/utilibre/pack-static/bentopdf-2.8.8-p4';
-await mkdir(target,{recursive:true});await cp(`${source}/dist`,target,{recursive:true});
+assert(process.argv.length<=4,'Usage: prepare-bentopdf-airgap.mjs [source-directory] [new-output-directory]');
+const source=resolve(process.argv[2]||'/opt/utilibre/src/bentopdf-2.8.11');
+assert.equal((await readFile(source+'/.git/HEAD','utf8')).trim(),'f638f8e4db66cb69dec35ca061ad89034dd62445');
+const target=resolve(process.argv[3]||'/opt/utilibre/pack-static/bentopdf-2.8.11-p1');
+assert(target!==source&&!target.startsWith(source+'/'),'Output must be separate from source');
+// Never merge a new release with an older output tree or overwrite live assets.
+await mkdir(target,{recursive:false});await cp(`${source}/dist`,target,{recursive:true});
 const temp=await mkdtemp('/opt/utilibre/bentopdf-assets-');
 const manifest=[];
 const locked=JSON.parse(await readFile(new URL('./bentopdf-runtime-lock.json',import.meta.url),'utf8'));

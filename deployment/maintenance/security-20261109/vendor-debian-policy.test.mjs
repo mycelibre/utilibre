@@ -18,9 +18,14 @@ test('historical adapter review cannot choose an arbitrary Git revision',()=>{
  const {s}=fixture(),b={base:s.base,candidate:s.candidate,passed:true,configurationUnchanged:true,unrelatedPackagesUnchanged:true};
  assert.throws(()=>proveVendorDebian(inputs,s,b,{}, {}, {},'/unused',{recordedRevision:'0'.repeat(40)}),{code:'ERR_ASSERTION'});
 });
-test('historical adapter review is confined to the two recorded APT services',()=>{
+test('historical adapter review is confined to recorded APT services',()=>{
  const {s}=fixture();s.key='unreviewed-service';const b={base:s.base,candidate:s.candidate,passed:true,configurationUnchanged:true,unrelatedPackagesUnchanged:true};
  assert.throws(()=>proveVendorDebian(inputs,s,b,{}, {}, {},'/unused',{recordedRevision:'f5c2e09f812e920a3b1c95e8c6673227abf1ca6d'}),{code:'ERR_ASSERTION'});
+});
+test('historical Redlib adapter cannot authorize another artifact',()=>{
+ const s=structuredClone(inputs.rows.find(s=>s.key==='apt-redlib'));
+ const b={base:s.base,candidate:s.candidate,imageId:'sha256:'+'a'.repeat(64),passed:true,configurationUnchanged:true,unrelatedPackagesUnchanged:true};
+ assert.throws(()=>proveVendorDebian(inputs,s,b,{}, {}, {},'/unused',{recordedRevision:'f5c2e09f812e920a3b1c95e8c6673227abf1ca6d'}),/Unknown historical Redlib artifact/);
 });
 for(const [name,change] of Object.entries({
  'wrong service':x=>x.s.key='another-service',
