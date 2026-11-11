@@ -79,7 +79,8 @@ try{
      let report;try{report=command(['node','deployment/toolbox/check-pdf-tools.mjs'],{timeout:300000,env:{...process.env,BENTO_TEST_SOURCE:source}});}catch(error){
       writeFileSync(state+'/public-workflows-failure.log',String(error.stdout||'')+'\n'+String(error.stderr||''),{mode:0o600});throw Error('Public workflow failed; private evidence retained');
      }
-     writeFileSync(state+'/public-workflows.json',report,{mode:0o600});assert.equal(JSON.parse(report).result,'passed');
+     writeFileSync(state+'/public-workflows.json',report,{mode:0o600});const live=JSON.parse(report);assert.equal(live.result,'passed');
+     assert.deepEqual(live.workerResponses.map(x=>x.url).sort(),native.workerResponses.map(x=>x.url).sort(),'Public assets differ from the reviewed candidate');
     }},
    });console.log('BentoPDF deployed and public workflows passed.');
   }

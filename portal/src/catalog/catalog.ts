@@ -551,7 +551,7 @@ function browserTool(
     temporaryStorage: browserMemory,
     retention: { en: 'Utilibre stores no input files for these tools. Downloads remain on your device; application caches, preferences or local drafts can remain in browser storage until you clear the site’s data. Read the tool-specific help before using a shared device.', es: 'Utilibre no almacena los archivos ingresados en estas herramientas. Las descargas quedan en tu dispositivo; las cachés, preferencias o borradores locales pueden permanecer en el navegador hasta que borrés los datos del sitio. Leé la ayuda antes de usar un dispositivo compartido.' },
     logging: { en: 'Tool web-server access logs are disabled. Bounded error logs can contain request metadata. Cloudflare and the separate HTTPS edge see connections and asset requests, not browser-local file contents; their retention is separate.', es: 'El registro de accesos del servidor de herramientas está desactivado. Los registros limitados de errores pueden incluir metadatos. Cloudflare y el borde HTTPS reciben conexiones y solicitudes de recursos, no el contenido de archivos procesado localmente; su conservación es independiente.' },
-    modified: ['vert', 'omnitools', 'ittools', 'drawio', 'whisper-web', 'qr-offline'].includes(providerId), operationalStatus: 'operational',
+    modified: ['bentopdf', 'vert', 'omnitools', 'ittools', 'drawio', 'whisper-web', 'qr-offline'].includes(providerId), operationalStatus: 'operational',
   };
 }
 

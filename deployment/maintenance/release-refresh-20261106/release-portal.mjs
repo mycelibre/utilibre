@@ -13,7 +13,7 @@ const unlock=bento?acquireReleaseLock('/var/lib/utilibre-maintenance/package-rel
 if(unlock)process.on('exit',unlock);
 const next=bento?JSON.parse(readFileSync(new URL('../releases-20261111/portal-inputs.json',import.meta.url))):nov9?JSON.parse(readFileSync(new URL('../security-20261109/'+(search?'portal-search-inputs.json':pack?'portal-pack-inputs.json':abuse?'portal-abuse-inputs.json':shortener?'portal-shortener-inputs.json':'portal-inputs.json'),import.meta.url))):null;
 if(nov9)assert(next.approved&&next.base===(search?'sha256:d7dce911628cea028d9cf6211ac6e3c80a8fe080c06bf620f267d7b2f01dead0':pack?'sha256:de2d171a7d18a251c4159b489f0bc58d29a3576df6a5c0038c2a9da186e56890':abuse?'sha256:11fb404547208a4317d4753d4fa3797eea7e796d093bd6d0521eb9cb9110b2aa':shortener?'sha256:7f61d39cd62a42536e6edd3ffa4e87cf21c2bbd92f8e8e82461ee9dffb4cbbf6':'sha256:3c9fe512024ac1f3dfba1f71db55c90f4719a58d370a9abbcb17008ab7c408f1'));
-if(bento)assert(next.approved&&next.base==='sha256:18962bc6fb429550ac1767992710efb8ec1849c0185ee171975997b8e8e3baaa');
+if(bento)assert(next.approved&&next.base==='sha256:7d9b400bcea2e1fc1d1ce3f0fb0dee4375e6726612cbcf070fa6a7a7020513f6');
 const root=bento?'/var/lib/utilibre-maintenance/releases-20261111':nov9?'/var/lib/utilibre-maintenance/security-20261109'+(search?'/portal-search':pack?'/portal-pack':abuse?'/portal-abuse':shortener?'/portal-shortener':''):'/var/lib/utilibre-maintenance/releases-20261106';
 if(bento)for(const [name,digest]of Object.entries(next.evidence)){assert(/^[a-z-]+\.(?:txt|json)$/.test(name));assert.equal(createHash('sha256').update(readFileSync(root+'/'+name)).digest('hex'),digest);}
 const run=(cmd,args)=>execFileSync(cmd,args,{encoding:'utf8',timeout:180000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe']});

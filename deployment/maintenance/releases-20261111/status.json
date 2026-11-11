@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-11",
+  "status": "deployed-and-verified",
+  "preparedCommit": "24fa2ed6a73ed78d5b6668307c3c326ec212b850",
+  "applications": [
+    {
+      "id": "bentopdf",
+      "version": "2.8.11-p1",
+      "url": "https://pdf.utilibre.org/",
+      "image": "sha256:4ef5701dd01a0d38d6ea88d2f6a9af9a2e6f6eff3a416a1b3210661e5cf59a96",
+      "sourceRevision": "f638f8e4db66cb69dec35ca061ad89034dd62445"
+    },
+    {
+      "id": "portal",
+      "urls": [
+        "https://utilibre.org/en/software",
+        "https://utilibre.org/es/software"
+      ],
+      "image": "sha256:54cf14a4b97902bb05e2b8095bd070576f1ed3347286561c26e5b82cf9dadfef",
+      "scope": "BentoPDF provider version/source metadata and local-modification attribution"
+    }
+  ],
+  "updaters": {
+    "redlib": "Historical exact-image builder receipt repaired; ordinary check up-to-date; no restart",
+    "searxng": "Exact upstream image/runtime guard passed; scheduled timer active",
+    "privatebin": "Earlier receipt fix retained; no application change in this batch"
+  },
+  "checks": {
+    "updaterTests": 56,
+    "portalUnitTests": 122,
+    "portalUnitFiles": 16,
+    "portalBuildLintTypecheckPolicy": "passed",
+    "pdfCandidateAndPublicWorkflows": [
+      "merge",
+      "compress",
+      "markdown-print",
+      "ocr:en",
+      "ocr:es"
+    ],
+    "runtimePathsUnchanged": 2127,
+    "publicWorkerUrlsMatchCandidate": true,
+    "pdfObservedExternalAssetOrigins": [],
+    "pdfObservedApplicationUploads": [],
+    "repeatRelease": "already active; no second restart",
+    "production": {
+      "checkedAt": "2026-11-11T01:29:10.095380+00:00",
+      "changedContainers": [
+        "public-utility-portal-1",
+        "utilibre-toolbox-bentopdf-1"
+      ],
+      "health": {
+        "running": 175,
+        "healthy": 90,
+        "withoutHealthcheck": 85
+      },
+      "failedSystemdUnits": 0
+    },
+    "publicPages": {
+      "passed": true,
+      "browser": "Chromium",
+      "coverage": "Desktop and emulated narrow viewport, not real mobile hardware",
+      "checks": [
+        {
+          "page": "en/software",
+          "width": 1280,
+          "version": "2.8.11-p1",
+          "localModificationsDisclosed": true,
+          "horizontalOverflow": false
+        },
+        {
+          "page": "es/software",
+          "width": 390,
+          "version": "2.8.11-p1",
+          "localModificationsDisclosed": true,
+          "horizontalOverflow": false
+        },
+        {
+          "page": "/ocr-pdf.html",
+          "indexableMetadata": true
+        },
+        {
+          "page": "/es/ocr-pdf.html",
+          "indexableMetadata": true
+        },
+        {
+          "page": "/utilibre-source/",
+          "version": "2.8.11-p1",
+          "returnLinks": true,
+          "sameOriginFavicon": true
+        }
+      ]
+    }
+  },
+  "security": {
+    "snapshot": {
+      "metadata": {
+        "Version": 2,
+        "NextUpdate": "2026-11-11T06:59:14.229854019Z",
+        "UpdatedAt": "2026-11-10T06:59:14.229854289Z",
+        "DownloadedAt": "2026-11-10T10:26:50.830687165Z"
+      },
+      "sha256": "c5c0b8f89197cd5e1f2d4588d708bde91ea4aa930e80cca058ee13da377828f0"
+    },
+    "sourceCounts": {
+      "critical": 0,
+      "high": 0,
+      "medium": 3,
+      "low": 1
+    },
+    "bentopdfRuntimeFindings": [
+      [
+        "CVE-2026-4738",
+        "zlib",
+        "1.3.2-r1",
+        "MEDIUM"
+      ],
+      [
+        "CVE-2026-94287",
+        "libxpm",
+        "3.5.19-r0",
+        "MEDIUM"
+      ]
+    ],
+    "portalRuntimeFindings": [
+      {
+        "id": "CVE-2026-4738",
+        "package": "zlib",
+        "version": "1.3.2-r1",
+        "severity": "MEDIUM"
+      }
+    ],
+    "priorFleetPending": {
+      "critical": 0,
+      "high": 30,
+      "kind": "ACL records",
+      "checkpoint": "2026-11-10T14:53:00Z",
+      "rescannedThisBatch": false
+    },
+    "suppressionsAdded": false
+  },
+  "limits": [
+    "Synthetic desktop Chromium PDF workflows; not every tool or file type",
+    "English OCR required an accent correction",
+    "OS Save as PDF dialog not automated",
+    "Full portal Playwright suite not rerun for metadata-only change",
+    "Archived advisory snapshot is not future clearance",
+    "Exact inputs and deterministic checks; byte-identical builds not demonstrated"
+  ],
+  "evidenceHashes": {
+    "candidate-workflows.json": "8bc558b5438d75834c31c8479fb44613edf4a7ce0210dca4bf55627116410e15",
+    "public-workflows.json": "8745e2d70c78a93246e8e7271982f6a7f0dbc8f6f4feb1b729a81add1e3dc3af",
+    "runtime-equivalence.json": "13cb348d9e144fdceeddfd3a72f50beb5b2a9fd11dcf71181ac5b45bc0548249",
+    "security-gate.json": "4a09f4c3f9e92f3073a759a289a02e3508db0d6a0e25d93890244973e0fd19e4",
+    "production-after.json": "c8377ad38c2cee98e9b725feea7283c7985250b2b78eede7b4dc5d4cdd0bed5a",
+    "portal-staging.txt": "5ef3f23ae9ebbb70167d56831486fd688356bf6a697223c034db76512cef0643",
+    "public-pages.json": "3481eff3d3d29065d5585ffa58d012f555a25c9b7a98929d4b825feec7b85384"
+  },
+  "privateEvidenceDirectory": "/var/lib/utilibre-maintenance/releases-20261111",
+  "rollback": "Exact old image/configuration retained; see README.md; no migration or user-data deletion"
+}

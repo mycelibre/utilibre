@@ -136,8 +136,15 @@ A repeated successful apply verifies the exact running image and does not
 restart it. Compose settings and predecessor artifacts are retained privately.
 
 BentoPDF rollback is the exact `--rollback` mode of its release helper. Restore
-the previous portal `PORTAL_IMAGE` line recorded in `portal-release.json`, then
+the previous portal `PORTAL_IMAGE` line recorded in
+`portal-first-release/portal-release.json` for a whole-batch rollback (the final
+`portal-release.json` rolls back only the attribution-label correction), then
 use the existing scoped portal Compose process (`up -d --no-deps --no-build
 --pull never portal`) and check its health. Restore the matching prior source
 archive/index from the publisher's recorded staging directories when rolling
 back the public application. No browser documents are deleted by either step.
+
+The final portal follow-up marks BentoPDF as locally modified, acknowledging
+the dependency patch. Both portal artifacts passed the same runtime and unit
+checks; the first release receipts remain under `portal-first-release/`.
+`source-rollback.json` identifies the original 2.8.8 source-offer backup.

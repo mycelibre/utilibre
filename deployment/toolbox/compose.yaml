@@ -25,9 +25,9 @@ x-source: &source /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
 services:
   bentopdf:
     <<: *static
-    image: utilibre-toolbox-bentopdf:musl-security-20261109
+    image: utilibre-toolbox-bentopdf:2.8.11-p1
     build:
-      context: /opt/utilibre/pack-static/bentopdf-2.8.8-p4
+      context: /opt/utilibre/pack-static/bentopdf-2.8.11-p1
       dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.bentopdf
     ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3101:8080"]
     logging: {driver: none}

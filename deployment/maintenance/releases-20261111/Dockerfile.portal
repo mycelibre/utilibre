@@ -1,4 +1,4 @@
-FROM sha256:18962bc6fb429550ac1767992710efb8ec1849c0185ee171975997b8e8e3baaa
+FROM sha256:7d9b400bcea2e1fc1d1ce3f0fb0dee4375e6726612cbcf070fa6a7a7020513f6
 USER root
 RUN rm -rf /app/dist /app/server-built
 COPY --chown=node:node dist /app/dist

@@ -49,6 +49,14 @@ job now succeeds as up to date (2.1.1), the timer remains active, and no failed
 systemd units remain. Eighteen updater tests pass; unknown images and changed
 review evidence still stop updates. No PrivateBin restart or paste access.
 
+The 11 November BentoPDF release is complete: 2.8.11-p1 and the matching portal
+metadata are deployed. Local/public merge, compression, Markdown printing and
+EN/ES searchable OCR checks pass; only these two containers changed. Redlib's
+updater now verifies its historical APT-overlay against the exact recorded
+builder, and its ordinary check passes without a restart. SearXNG's current
+runtime guard passes. This batch did not change or close the 30 ACL records.
+[Release evidence and limits](records/bentopdf-updater-2026-11-11.md).
+
 Current evidence: [release record](records/security-maintenance-2026-11-10.md),
 [exact status](../deployment/maintenance/security-20261110/status.json),
 [repeatable recipes / rollback](../deployment/maintenance/security-20261110/README.md)
