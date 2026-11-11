@@ -1,5 +1,27 @@
 # 11 November: updater receipts and BentoPDF
 
+## Held application upgrades and disk follow-up
+
+Wakapi 2.18.2 and GridSpace 4.7.3-p1 are deployed with retained repairs and
+native workflow checks; their two catalogue records are also released.
+`upgrade-status.json` records all 30 reviewed candidates and the 28 held
+upgrades, including unsupported inventories and conflicting patches. It does
+not declare the entire upgrade queue complete. The ACL caller gap remains open.
+
+See [the release, cleanup, evidence and rollback record](../../../docs/records/upgrade-closure-2026-11-11.md).
+`upgrade-inputs.json`, `grid-upgrade.json` and `upgrade-portal.json` bind the
+finite approved artifacts. `build-wakapi.mjs` prepares only the declared
+revision with retained locks/backport; `check-wakapi-upgrade.py` reuses the
+existing synthetic native fixture. `prepare-upgrade-sources.mjs` prepares
+matching source offers without publishing them. Existing release adapters
+perform scoped activation separately. No new scheduler or LLM is required.
+
+`review-wakapi-upgrade.mjs` proposes one exact runtime review from the retained
+backport and new native/live-binary evidence; it does not reproduce a
+vulnerability or suppress the raw finding. The prior conditional Go-source
+reviews are revalidated against the new live Wakapi artifact. Review changes
+expire and remain distinct from source fixes or deployment approval.
+
 ## Signed libxslt and Kerberos follow-up
 
 `vendor-inputs.json` captures 31 exact predecessor images and official

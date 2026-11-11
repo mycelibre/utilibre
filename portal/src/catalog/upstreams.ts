@@ -159,7 +159,7 @@ export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider>
     licenseEvidenceUrls: ['https://gitlab.com/fmd-foss/fmd-server/-/blob/v0.17.0/LICENSE'],
     selfHostingEvidenceUrl: 'https://fmd-foss.org/docs/fmd-server/installation/overview/', maintenanceEvidenceUrl: 'https://gitlab.com/fmd-foss/fmd-server/-/tags', reviewStatus: 'deployed',
   },
-  wakapi: { ...toolboxProvider('Wakapi', 'muety/wakapi', '347f1f45ae2863d9499236471317a76630c5308f', 'MIT', '2.18.1 · local copy and empty-state fixes', 'source:347f1f45ae2863d9499236471317a76630c5308f+deployment/expanded/Dockerfile.wakapi'), integration: 'source-build' },
+  wakapi: { ...toolboxProvider('Wakapi', 'muety/wakapi', '1157f203c8b646466b4e72563764738b10f0cd0d', 'MIT', '2.18.2 · retained privacy and dependency fixes', 'source:1157f203c8b646466b4e72563764738b10f0cd0d+deployment/maintenance/releases-20261111/build-wakapi.mjs'), integration: 'source-build' },
   breezewiki: {
     project: 'BreezeWiki', sourceUrl: 'https://gitdab.com/cadence/breezewiki',
     reviewedSourceUrl: 'https://gitdab.com/cadence/breezewiki/src/commit/6d09507b6e7ecec0cbac4c2c4eb223c10ccc23a4',

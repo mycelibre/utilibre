@@ -1,0 +1,960 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-11T16:34:36.868395+00:00",
+  "scope": "Items 1, 2 and 4: disk, held upstream upgrades, ACL vendor remedy review",
+  "counts": {
+    "assessedCandidates": 30,
+    "deployedApplications": 2,
+    "heldApplications": 28,
+    "sourceInputsSupported": 27,
+    "sourceCoverageGaps": 3,
+    "recordedPatchConflicts": 12
+  },
+  "sourceFindingCaveat": "Counts describe candidate inputs and include build dependencies. They are not deployed vulnerabilities or exploitability proof. Missing inventory is not zero risk. Wakapi has a separate repaired artifact assessment; Grid uses a browser-only dependency graph.",
+  "evidenceRoot": "/var/lib/utilibre-maintenance/upgrade-closure-20261111",
+  "rows": [
+    {
+      "application": "grist",
+      "candidateVersion": "v1.7.22",
+      "revision": "a10b7227365adfe2555be40ae87bb9741284c0ca",
+      "status": "held",
+      "reason": "Reconcile 24 high source findings with retained repairs and sandbox inventories; verify document/account workflows.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "pip",
+          "yarn"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 24,
+          "MEDIUM": 43,
+          "LOW": 10,
+          "UNKNOWN": 0
+        },
+        "sha256": "3b5dec3bd868f3c0988c40c8e7da95100bb43a9d438563bd020d91b14444754f"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "candlr",
+      "candidateVersion": "v2.4.0",
+      "revision": "e6f7b2c80bb638ae868df218a249cf645bb29031",
+      "status": "held",
+      "reason": "Repair/review 6 critical and 29 high candidate-source findings before native PDF/browser compatibility checks.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "npm",
+          "pip"
+        ],
+        "rawFindings": {
+          "CRITICAL": 6,
+          "HIGH": 29,
+          "MEDIUM": 21,
+          "LOW": 2,
+          "UNKNOWN": 0
+        },
+        "sha256": "b1ce7cabf4d7129287b5942a16f48a0332a77ce370f92c1d42720f9f649478e7"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "grid",
+      "candidateVersion": "4.7.3",
+      "revision": "ff7692241c48c3495da0bb8eb7455f906f3abb2d",
+      "status": "deployed-verified",
+      "reason": "Deployed native browser-only build; STL import, slicing and G-code export passed with no external requests.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "npm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 2,
+          "LOW": 4,
+          "UNKNOWN": 0
+        },
+        "sha256": "8eb607b00ada7e425a199086d8790aa5aa65bb0d0de8ca93ba5c6a4f0285a7a8"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "addy",
+      "candidateVersion": "v1.7.4",
+      "revision": "0315a78015ae8a0f0f5fbeccf1d53bae7b3d27cc",
+      "status": "held",
+      "reason": "Candidate locks have no high/critical matches; controlled forwarding/reply, account and retained mail privacy checks are not complete.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "composer",
+          "npm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 1,
+          "LOW": 0,
+          "UNKNOWN": 6
+        },
+        "sha256": "6375b40e237b7a4be10eb84b4aa974916b7d6ff4b6093102d0ba1fb0689e1d2d"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "donetick",
+      "candidateVersion": "v0.1.86",
+      "revision": "ebfb340d7bd4e2e009d6f2f9ad073868acaf6412",
+      "status": "held",
+      "reason": "Recorded backend patch conflicts; candidate source has 2 critical and 29 high matches.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "gomod"
+        ],
+        "rawFindings": {
+          "CRITICAL": 2,
+          "HIGH": 29,
+          "MEDIUM": 19,
+          "LOW": 2,
+          "UNKNOWN": 2
+        },
+        "sha256": "a8a1bdc676c7f41501324de4991aebe6d455cdcaab1058c77d431ca46da3dd32"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/donetick/backend.patch",
+            "sha256": "4da4ccfdae10184b136e4130374353d08223c4f7d7e08c2e6d5ab1cc66ac6980",
+            "appliesInSequence": false
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "blocked-patch-conflict"
+      }
+    },
+    {
+      "application": "newton",
+      "candidateVersion": "v5.5.0",
+      "revision": "6c1833a4c50e87091dad9766f59b9c5f091904e8",
+      "status": "held",
+      "reason": "Recorded local-static patch conflicts; scanner extracted no supported dependency inventory, not a clean assessment.",
+      "sourceAssessment": {
+        "status": "no-supported-input-extracted",
+        "ecosystems": [],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        },
+        "sha256": "bafec5a26e49a93799b08dd8a95836cd24abcacfd88a90fd4e7531775e555022"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/newton/local-static.patch",
+            "sha256": "d882d836a2b3c269626795518009b8b4f34838fd25c1fc3d33ed1081f833e9a5",
+            "appliesInSequence": false
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "blocked-patch-conflict"
+      }
+    },
+    {
+      "application": "unfurl",
+      "candidateVersion": "v2026.11",
+      "revision": "31600b855bdbe695e8c429cf3ad6c26575a3c66c",
+      "status": "held",
+      "reason": "Recorded patch applies, but no supported dependency inventory was extracted; fetch boundaries and native parsing/import/export need verification.",
+      "sourceAssessment": {
+        "status": "no-supported-input-extracted",
+        "ecosystems": [],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        },
+        "sha256": "c55673fab4373302b2c1ed88eb0bee92d011874418ba38eed7999e307687e751"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/unfurl/source.patch",
+            "sha256": "e4493a623fe970ff22e85dae20260a5f614b7c1b0021bcde0feb681330bd9fa4",
+            "appliesInSequence": true
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "recorded-sequence-applies"
+      }
+    },
+    {
+      "application": "razzia",
+      "candidateVersion": "4.0.2",
+      "revision": "8345663f7f47a8d466964fcf5b642cc7a4ed90fb",
+      "status": "held",
+      "reason": "Major-version transition; retained dependency patch conflicts. Replay and native restore checks needed.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "pnpm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        },
+        "sha256": "a33cbc50603439ddc409a9c3921d514f40f5e846cf05f7a6a732d32d82af2091"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/razzia/security-dependencies.patch",
+            "sha256": "46bd8d46c84469ebc96c0ef59e7e436c5cd0e2547c910f1215b27bc6074c560b",
+            "appliesInSequence": false
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "blocked-patch-conflict"
+      }
+    },
+    {
+      "application": "chhoto",
+      "candidateVersion": "7.11.3",
+      "revision": "efb604ff99dc583ac836a2dde0b7cea09addda72",
+      "status": "held",
+      "reason": "New 7.11.3 release adds one candidate to the prior 29. Zero-tracking/local-assets patch conflicts with changed authentication/configuration paths.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "cargo"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        },
+        "sha256": "ffa1abc404bc8c77d964dff22fa311486c7f3b2be9f3fd7cfabfe00789dbd50b"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/chhoto/no-analytics-local-assets.patch",
+            "sha256": "aac1682180d3de2f11d5ee1e8d60bb2da6562c6f27bc6fc4b2c06d3f6d37d047",
+            "appliesInSequence": false
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "blocked-patch-conflict"
+      }
+    },
+    {
+      "application": "spliit",
+      "candidateVersion": "1.30.0",
+      "revision": "28d360d2372b51782d8be92de03d73e220b19dc6",
+      "status": "held",
+      "reason": "Retained dependency patch conflicts; candidate has 2 critical and 9 high source matches.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "npm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 2,
+          "HIGH": 9,
+          "MEDIUM": 6,
+          "LOW": 2,
+          "UNKNOWN": 0
+        },
+        "sha256": "d7afe407be4a0f588fcc38232b7179ede8527eb7fe400b04e62a0859d1b57a08"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/spliit/security-dependencies.patch",
+            "sha256": "884e05ee850d0e935049e5690342e13e86394c4018480f55a6ceebaab2d14a01",
+            "appliesInSequence": false
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "blocked-patch-conflict"
+      }
+    },
+    {
+      "application": "wishlist",
+      "candidateVersion": "v0.69.0",
+      "revision": "a76e1277e39d3e2d98cb715a9a07b663bab23dee",
+      "status": "held",
+      "reason": "Retained dependency patch conflicts; candidate has 30 high source matches.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "pnpm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 30,
+          "MEDIUM": 32,
+          "LOW": 8,
+          "UNKNOWN": 0
+        },
+        "sha256": "91901518a39a9c1209030bf5b5dab06cac5d68b420220b1fe223798f33b8ba78"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/wishlist/security-dependencies.patch",
+            "sha256": "89c8d26b68fd347a0d79ddb19d9aee8de2fbdec73781c174fadff566ff855f54",
+            "appliesInSequence": false
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "blocked-patch-conflict"
+      }
+    },
+    {
+      "application": "kitchenowl",
+      "candidateVersion": "v0.8.1",
+      "revision": "3cc27f41e3de3d805abd66bdac9eb283eb16e72c",
+      "status": "held",
+      "reason": "Candidate locks have no high/critical matches; coupled frontend/backend, saved-account migration and export checks not completed.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "pip",
+          "pub",
+          "uv"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 1,
+          "LOW": 0,
+          "UNKNOWN": 0
+        },
+        "sha256": "93cd58ccbeb98767a64b7db864bc52c0c04368a4e1056e3f1eb6a0c6d400e5af"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "opengist",
+      "candidateVersion": "v1.15.3",
+      "revision": "2acf3dae87f9c3d536e0a870787941bbd06d0b46",
+      "status": "held",
+      "reason": "Retained dependency patch conflicts; candidate has 1 critical and 5 high source matches.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "gomod"
+        ],
+        "rawFindings": {
+          "CRITICAL": 1,
+          "HIGH": 5,
+          "MEDIUM": 5,
+          "LOW": 0,
+          "UNKNOWN": 1
+        },
+        "sha256": "3f256af0d5ea26711865f3a6ed462121401d39a5cfb1e7a18719e01ef4eaf75d"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/maintenance/go-leaf-final/patches/opengist-go-security-20261011.patch",
+            "sha256": "3f92eb77c40d83de93219875a7e52c5382d6630717cde44c9560b0fa5a44d8e1",
+            "appliesInSequence": false
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "blocked-patch-conflict"
+      }
+    },
+    {
+      "application": "vikunja",
+      "candidateVersion": "v2.8.0",
+      "revision": "6e788bf87cebe50e2b8d034b213fcf94ae5449ee",
+      "status": "held",
+      "reason": "Retained Go patch conflicts; repaired graph, account-data migration and workflow checks remain.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "gomod",
+          "pnpm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 1,
+          "UNKNOWN": 1
+        },
+        "sha256": "c57daab17889d7373de94a393f969f4733d9505a7f953cf1536e094b9a1b7e72"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/maintenance/go-leaf-final/patches/vikunja-go-security-20261011.patch",
+            "sha256": "2a788d9bc232e842a4376172438fe168f66c24af02fc0d30e72b8b18f7c52e7c",
+            "appliesInSequence": false
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "blocked-patch-conflict"
+      }
+    },
+    {
+      "application": "bytestash",
+      "candidateVersion": "v1.6.2",
+      "revision": "eb4ecdfc30f2e7d1424137fa7fe3a9eed663218b",
+      "status": "held",
+      "reason": "Retained privacy patch conflicts in OIDC/client/server paths; login, account isolation and export require verification.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "npm",
+          "pip"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 11,
+          "LOW": 3,
+          "UNKNOWN": 0
+        },
+        "sha256": "44d88c78c99784c2528fa55dfbd2770cbb9610bd78f77248f360dc1697fce166"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/community/bytestash/privacy.patch",
+            "sha256": "ff7b0af984ce8da0db2a0e0c0e289122d487bb7c366c11249310f3d4493a84d6",
+            "appliesInSequence": false
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "blocked-patch-conflict"
+      }
+    },
+    {
+      "application": "cryptpad",
+      "candidateVersion": "2026.10.1",
+      "revision": "fd2850ba0ccef87bfb82c195b149bb061f79c8bc",
+      "status": "held",
+      "reason": "Candidate npm scan has no high/critical matches; complete office assets, sandbox, two-client editing and retained privacy/retention gates remain.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "npm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 5,
+          "LOW": 0,
+          "UNKNOWN": 0
+        },
+        "sha256": "cebab26127c325fafef910c492cde70509e668a8f961185a563cd10579396436"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "super-productivity",
+      "candidateVersion": "v20.0.0",
+      "revision": "4db0e11236bc784d3184a9e252930b4bd53df823",
+      "status": "held",
+      "reason": "Major-version transition; retained local-mode source patch conflicts. Native local-project migration/export and network checks remain.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "bundler",
+          "cargo",
+          "cocoapods",
+          "npm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 8,
+          "LOW": 1,
+          "UNKNOWN": 0
+        },
+        "sha256": "4c00ef2dd388b29cb42d3063dfd2dc5fb83efd62a4cf2d55734814491ba24001"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/pack/super-productivity.dependencies.patch",
+            "sha256": "c84e96a8d9db20f5d45cac8b76642799d2705d5748bdc8bfb93b5c6921a6f5aa",
+            "appliesInSequence": false
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "blocked-patch-conflict"
+      }
+    },
+    {
+      "application": "wbo",
+      "candidateVersion": "v2.18.33",
+      "revision": "90ae10b5e46e8efeb9b0c8ad918524e336b3fedc",
+      "status": "held",
+      "reason": "Major OpenTelemetry API/dependency changes need verification with retained disabled-export settings; two-client editing and temporary history compatibility also remain unverified.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "npm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        },
+        "sha256": "3447e2f2b146aa015d28d3ef105a17db3992eea26a749ae448ec458db2f39783"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "markmap",
+      "candidateVersion": "v1.1.0",
+      "revision": "1b3e86c3ae0f36db94085e839363345ffd5270a7",
+      "status": "held",
+      "reason": "Upstream packages changed from markmap-lib/view 0.18.12 to @markmap/* 1.1.0; adapter compatibility, safe imports and exports need migration/testing.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "pnpm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 1,
+          "UNKNOWN": 0
+        },
+        "sha256": "df4a61fd69d10bc2d44449c07dd98a37484c6dfa93948f6e3ba5140431eb3f19"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "mumble",
+      "candidateVersion": "v1.5.939",
+      "revision": "dfbac8d3d9c967003e74b4ffc5610f7d45e8f666",
+      "status": "held",
+      "reason": "No supported source dependency inventory extracted; repaired TLS stack and authorized native voice workflow remain required.",
+      "sourceAssessment": {
+        "status": "no-supported-input-extracted",
+        "ecosystems": [],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        },
+        "sha256": "c32171b082d392b897b2d0de0104560c3700e11a3b21ea3219dc6ad89eae25e9"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "degoog",
+      "candidateVersion": "1.1.1",
+      "revision": "d8b7f7c3ae5f3fc1efc2553d2c12ab272e42409a",
+      "status": "held",
+      "reason": "PHP-to-Bun runtime change; cannot substitute into the current deployment without retaining privacy and validating search.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "bun"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 0,
+          "LOW": 0,
+          "UNKNOWN": 0
+        },
+        "sha256": "7fa1cdb0ad59c2dcbe2135269756630836e6cfe105062ce4fac0f2dafefaf01a"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "reactive-resume",
+      "candidateVersion": "v6.1.0",
+      "revision": "8034bc43e8e101c83c99b79541ee249d3658a46e",
+      "status": "held",
+      "reason": "One high source finding plus retained repair replay and account/PDF export gates remain.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "bundler",
+          "cargo",
+          "pnpm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 1,
+          "MEDIUM": 8,
+          "LOW": 1,
+          "UNKNOWN": 0
+        },
+        "sha256": "841c2663478ff67a94596b073541c86c5f47d79aab4e7b741d642872f9ba1e67"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "penpot",
+      "candidateVersion": "2.19.1",
+      "revision": "5e5722dfe7f2f92c5b9a10d74ef7030bd641b2b7",
+      "status": "held",
+      "reason": "One critical and 16 high source findings; coupled frontend/backend/exporter and repaired JVM native workflows remain.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "cargo",
+          "npm",
+          "pnpm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 1,
+          "HIGH": 16,
+          "MEDIUM": 14,
+          "LOW": 3,
+          "UNKNOWN": 0
+        },
+        "sha256": "5cae77275d4be391324696616d653f59779d06b503860c4bb62a9c4fd5dd6ab1"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "actual",
+      "candidateVersion": "v26.11.0",
+      "revision": "1766241e3f4b3c578e424c4fa15f1eb83c0da17d",
+      "status": "held",
+      "reason": "Two critical and 21 high source findings; retained dependencies and synthetic budget/account migration gates remain.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "cocoapods",
+          "yarn"
+        ],
+        "rawFindings": {
+          "CRITICAL": 2,
+          "HIGH": 21,
+          "MEDIUM": 22,
+          "LOW": 4,
+          "UNKNOWN": 0
+        },
+        "sha256": "22c2ef6dd7ee09ca041b796e1a59bf6b874d4143ef1c466ee67ad51a88acdf04"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "wakapi",
+      "candidateVersion": "2.18.2",
+      "revision": "1157f203c8b646466b4e72563764738b10f0cd0d",
+      "status": "deployed-verified",
+      "reason": "Deployed 2.18.2 with all 99 repaired runtime dependency versions retained; five native synthetic lifecycle checks passed.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "gomod",
+          "yarn"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 5,
+          "MEDIUM": 8,
+          "LOW": 0,
+          "UNKNOWN": 2
+        },
+        "sha256": "045ae7b190ec72f3c1d363ce94109677f47147c504961782d29010d46d783c43"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/maintenance/go-leaf-final/patches/wakapi-go-security-20261011.patch",
+            "sha256": "d39a33a5a65129173c461a53bf189a86d12037b488f2f5ec611f33f7b95badf7",
+            "appliesInSequence": true
+          },
+          {
+            "path": "deployment/expanded/wakapi-summary.patch",
+            "sha256": "44ae84729247b8dd575b7ae8660fa0b0a005dfab44b37e8a135257e6523ba99e",
+            "appliesInSequence": true
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "recorded-sequence-applies"
+      }
+    },
+    {
+      "application": "jupyterlite",
+      "candidateVersion": "v0.8.7",
+      "revision": "73c1526485e136aa0180e769717ee0f109bb8c39",
+      "status": "held",
+      "reason": "Three critical and 65 high source findings; kernel/WASM compatibility and retained privacy controls require work.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "yarn"
+        ],
+        "rawFindings": {
+          "CRITICAL": 3,
+          "HIGH": 65,
+          "MEDIUM": 47,
+          "LOW": 16,
+          "UNKNOWN": 0
+        },
+        "sha256": "8a8b3182af7141dc06b07c7dea8948b891d897ed45f15fca0a20900e41453368"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "ntfy",
+      "candidateVersion": "v2.37.2",
+      "revision": "05109571fd0931affb6f92b17bbfd62c4d2ea68a",
+      "status": "held",
+      "reason": "Retained Go patch conflicts; one high source finding and native permission/cache/notification gates remain.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "gomod",
+          "npm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 0,
+          "HIGH": 1,
+          "MEDIUM": 1,
+          "LOW": 0,
+          "UNKNOWN": 1
+        },
+        "sha256": "a2d4d89edccc3443811e3e963a77e8f0658d140549d8667fdb9b2d5464121616"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/maintenance/go-leaf-final/patches/ntfy-go-security-20261011.patch",
+            "sha256": "52a79b9edc7d3bb99903505932403b2550c76038a9807f1e057373635caa5af6",
+            "appliesInSequence": false
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "blocked-patch-conflict"
+      }
+    },
+    {
+      "application": "uptime-kuma",
+      "candidateVersion": "2.5.9",
+      "revision": "df601c58d9205562f34cfe5ef35264b341019d19",
+      "status": "held",
+      "reason": "Two critical and 35 high source findings; retained runtime removals/repairs and monitor/account restore checks remain.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "npm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 2,
+          "HIGH": 35,
+          "MEDIUM": 40,
+          "LOW": 3,
+          "UNKNOWN": 0
+        },
+        "sha256": "a85aaa54c803554dcda791a1ae0321385fa47ae39ff67cb1515fea56b6fd0219"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    },
+    {
+      "application": "omnitools",
+      "candidateVersion": "v0.7.0",
+      "revision": "5f8f4c7b92060f904b40fafb0649701921fe7746",
+      "status": "held",
+      "reason": "Retained privacy/local-assets patch conflicts; six critical and 50 high source findings.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "npm",
+          "pnpm"
+        ],
+        "rawFindings": {
+          "CRITICAL": 6,
+          "HIGH": 50,
+          "MEDIUM": 57,
+          "LOW": 13,
+          "UNKNOWN": 0
+        },
+        "sha256": "fce0cc7a334013624f126fb9d0ad26844bf9786f011a08a7a3da0cf41b5ade53"
+      },
+      "historicalPatchCheck": {
+        "patches": [
+          {
+            "path": "deployment/toolbox/omnitools-secure-random.patch",
+            "sha256": "bdcd7cdee9d5c4ee8393de41a4674cf0ee12b178153533a2c601c772dff40b89",
+            "appliesInSequence": false
+          }
+        ],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "blocked-patch-conflict"
+      }
+    },
+    {
+      "application": "authentik",
+      "candidateVersion": "version/2026.8.5",
+      "revision": "4ec0d19b98da3c329781894cd550da95d3033954",
+      "status": "held",
+      "reason": "Thirteen critical and 150 high source findings; coupled identity/database migration and retained repair gates remain.",
+      "sourceAssessment": {
+        "status": "assessed",
+        "ecosystems": [
+          "cargo",
+          "gomod",
+          "pnpm",
+          "uv"
+        ],
+        "rawFindings": {
+          "CRITICAL": 13,
+          "HIGH": 150,
+          "MEDIUM": 91,
+          "LOW": 21,
+          "UNKNOWN": 1
+        },
+        "sha256": "c5f20be0f0e73e3b05ebad50c3c8f053394736f6635eaf8cd29ee2c50a8a2401"
+      },
+      "historicalPatchCheck": {
+        "patches": [],
+        "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
+        "status": "no-patch-sequence-recorded"
+      }
+    }
+  ],
+  "acl": {
+    "pendingRecords": 30,
+    "observedLocations": 36,
+    "closed": 0,
+    "productionChanged": false,
+    "reason": "Stable legacy caller migration lacks an approved compatible remedy; ACL 2.4 alone does not fix unchanged callers."
+  },
+  "assessment": {
+    "completedAt": "2026-11-11T16:31:34.359Z",
+    "status": "checked",
+    "images": 109,
+    "sourceInputs": 113,
+    "host": "checked",
+    "database": {
+      "updatedAt": "2026-11-10T19:01:23.081219346Z",
+      "downloadedAt": "2026-11-11T10:25:50.991726515Z",
+      "refreshRequested": false
+    },
+    "pendingCritical": 0,
+    "pendingHigh": 30,
+    "rawRecords": 26177,
+    "note": "Raw findings retained. Twenty-two prior conditional reviews revalidated and one exact new runtime backport review recorded; no new ACL mitigation."
+  },
+  "health": {
+    "date": "2026-11-11T16:33:19.148738+00:00",
+    "containers": 186,
+    "running": 175,
+    "healthy": 90,
+    "unhealthy": 0,
+    "notRunning": [
+      "utilibre-kitchen-psycopg-20261110",
+      "utilibre-krb5-build-bookworm-20261110",
+      "utilibre-krb5-build-trixie-20261110",
+      "utilibre-krb5-packaging-20261110",
+      "utilibre-whisper-repair-preview",
+      "utilibre-simplelogin-initialize-1",
+      "utilibre-simplelogin-migrate-1",
+      "utilibre-newsletters-initialize-1",
+      "utilibre-qr-previous-check",
+      "utilibre-qr-feature-check",
+      "utilibre-evaluation-libremdb-1"
+    ],
+    "failedSystemdUnits": 0
+  },
+  "disk": {
+    "dependencyCachesReclaimedBytes": 2033876992,
+    "buildCacheEngineReported": "362.6 MB",
+    "buildCacheNote": "Five exact stale unshared records; image/container identities preserved. Engine figure rounded.",
+    "archivedFiles": 11,
+    "archivedBytes": 5222865981,
+    "snapshot": "b022dd9c556bb2fd7ef3500f6b7434dac4688330b8fb4e959ea1b32e46a19dc6",
+    "tag": "maintenance-build-archives-20261028",
+    "archiveRestoreByteVerified": true,
+    "localArchiveCopiesRemoved": true,
+    "rollbackArtifactsAndAccountBackupsPreserved": true,
+    "grossRecoveredApproxGiB": 7.1,
+    "availableBytesAtClose": 35890724864,
+    "recordedAt": "2026-11-11T16:38:12.172750+00:00"
+  }
+}

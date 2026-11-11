@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "wakapi": {
+    "approved": true,
+    "version": "2.18.2",
+    "revision": "1157f203c8b646466b4e72563764738b10f0cd0d",
+    "base": "sha256:b3d3d5ebf2416f31617a1163873f0c392e7a8ca1dc2a3e46a78f0b2e3b1457dc",
+    "imageId": "sha256:59914b69d36255f24f39aae0a97f82acc937a2f4c0536818dd167d22b09b8869",
+    "candidate": "utilibre-wakapi:2.18.2-20261111",
+    "binarySha256": "5007ce32dc3cfdaea0244749445f31e40c6ac6dcf75c4559b50dd8a692e07355",
+    "databaseUpdatedAt": "2026-11-10T19:01:23.081219346Z",
+    "evidence": {
+      "compiled.json": "fba5ff562728c2caee86252dd22460f7893417c25c6f1b33862f86a3492aaeb4",
+      "image.json": "d3c64ffe5150a36c052fa7b1031045bc12085901219819917027bbc84c877124",
+      "scope.json": "feb5fb3da950660fe090ec5b5e0682d9ba3f4d3e2e6b7afb7c2f69e61da9a256",
+      "migration.json": "36974df1d64b1ffa6b60754ec4b080826247a55975aef0e6aa08364e9664f5cd",
+      "scan-gate.json": "0dc2f797c3c6465c616678848d55565d4c98ba02e8f311438f5386d0b710a399",
+      "source-offer.json": "3507b13432aac5d70f409b1ee317becaf87f8e05e87c4cfb959c36c9bdaa8edd",
+      "before-scan.json": "4866cfa049254eec899d1a7c549bd4fada5716641b4fbda1d225d54fe0834751",
+      "after-scan.json": "10fde230dbcf1fd06213ae2b27719b7eebc2b69de626d52ab3400a48b87d6b80",
+      "wakapi-tests.txt": "34cadd7e58606d2aef2ebce317d1bbc5cea53e8151aba4e89af56df9b7c6e4be",
+      "wakapi-buildinfo.txt": "d77b47d950fd9e24237d5483a4fae92f8cf7ed360bc683e8cfbf16fc26f0e367",
+      "wakapi-vendor-modules.txt": "aacd3084fef24cc46e189068c7a18d035d70d59fee27fa5064c5093709d5bca0",
+      "retained.patch": "44ae84729247b8dd575b7ae8660fa0b0a005dfab44b37e8a135257e6523ba99e",
+      "build-adapter.sh": "c277f3ec0256906911243ebbf86313e5410c154109830b193c87bd8cdc16043f"
+    },
+    "recipes": {
+      "deployment/maintenance/releases-20261111/build-wakapi.mjs": "b369830a177281770c46831ce10f29a8405a77314224c4ba2de7a25b15056740",
+      "deployment/maintenance/releases-20261111/check-wakapi-upgrade.py": "fa565a6d9ef3f3d41fed40bcda10c5058402c2a17dbde7368749fbe269b27b5b",
+      "deployment/maintenance/releases-20261111/prepare-upgrade-sources.mjs": "ea9d47ce8bd6ab9043b7e0e140dc1a8d03e53bca2fda7e8fe764d9d98abe34dc",
+      "deployment/maintenance/releases-20261111/upgrade-policy.mjs": "a8d9da8d7d1ed0510f5265f3a6471c74753dcaddf16d433491eab4109b515bbf",
+      "deployment/maintenance/go-leaf-final/build-one.sh": "296d9acbbb46b6eb483813634311aa1ff318e516a346c082ac5ea158b3467085",
+      "deployment/expanded/wakapi-summary.patch": "44ae84729247b8dd575b7ae8660fa0b0a005dfab44b37e8a135257e6523ba99e",
+      "deployment/maintenance/security-20261109/xnet-locks/wakapi/go.mod": "2dfdcee7b887e7afa4a30415af3d3fb84bd4981549b739501599057b747a7b46",
+      "deployment/maintenance/security-20261109/xnet-locks/wakapi/go.sum": "77c130de9aaa4c53235e2d59dfdcac6b933ff9f74ef1bcdd4a9c792e47a0ea01"
+    },
+    "rollback": "Prior binary passed the migrated synthetic SQLite store; exact pre-release backup retained separately. No automatic data restore."
+  }
+}

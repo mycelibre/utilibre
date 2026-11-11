@@ -23,6 +23,10 @@ targets.push(...[
 targets.push('/var/lib/utilibre-maintenance/releases-20261111/bentopdf/node_modules',
  '/var/lib/utilibre-maintenance/releases-20261111/bentopdf-build-investigation/node_modules',
  '/var/lib/utilibre-maintenance/stabilization-20261111/texlyre/source/node_modules');
+// Completed native browser checks/builds; source, lock and exported assets stay.
+targets.push('/var/lib/utilibre-maintenance/cv-20261106/source/node_modules',
+ '/var/lib/utilibre-maintenance/security-20261109/chartdb-source/node_modules',
+ '/var/lib/utilibre-maintenance/security-20261109/drawdb-source/node_modules');
 const generatedCaches=new Map([
  ...['bookplate','markmap','candlr'].map(n=>[
   `/var/lib/utilibre-maintenance/security-20261103/${n}/npm-cache`,
@@ -30,6 +34,7 @@ const generatedCaches=new Map([
  ['/var/lib/utilibre-maintenance/cv-20261106/npm-cache','/var/lib/utilibre-maintenance/cv-20261106/source/package-lock.json'],
  ['/var/lib/utilibre-maintenance/security-20261109/yopass/go-cache','/var/lib/utilibre-maintenance/security-20261109/yopass/source/go.sum'],
  ['/var/lib/utilibre-maintenance/security-20261109/yopass/yarn-cache','/var/lib/utilibre-maintenance/security-20261109/yopass/source/website/yarn.lock'],
+ ['/var/lib/utilibre-maintenance/cv-20261106/source/.next/cache','/var/lib/utilibre-maintenance/cv-20261106/source/package-lock.json'],
 ]);
 targets.push(...generatedCaches.keys());
 const run=(cmd,args)=>execFileSync(cmd,args,{encoding:'utf8',maxBuffer:4*1024**2,timeout:30000});

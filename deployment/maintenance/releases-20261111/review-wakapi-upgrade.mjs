@@ -1,0 +1,25 @@
+// Evidence review for one exact deployed artifact. No new vulnerability probes.
+import fs from 'node:fs';
+import cp from 'node:child_process';
+import assert from 'node:assert/strict';
+import {verifyWakapiUpgrade,upgradeRoot,fileHash} from './upgrade-policy.mjs';
+import {freshScan} from '../review-native-backports.mjs';
+import {validateDecision} from '../triage.mjs';
+assert.equal(process.argv.length,2);process.umask(0o077);
+const read=p=>JSON.parse(fs.readFileSync(p));
+const root='/var/lib/utilibre-maintenance',scan=read(root+'/security.json'),queue=read(root+'/security-queue.json');
+freshScan(queue,scan);assert.equal(scan.status,'checked');
+const {s}=verifyWakapiUpgrade({fresh:false});
+assert.equal(read(upgradeRoot+'/wakapi-release/result.json').status,'passed');
+const inspect=()=>JSON.parse(cp.execFileSync('docker',['inspect','utilibre-expanded-wakapi-1','--format','{"image":{{json .Image}},"pid":{{.State.Pid}},"running":{{.State.Running}}}'],{encoding:'utf8',timeout:10000}));
+const live=inspect();assert(live.running&&live.pid>0);assert.equal(live.image,s.imageId);
+assert.equal(fileHash('/proc/'+live.pid+'/root/app/wakapi'),s.binarySha256);
+assert.deepEqual(inspect(),live);
+const build=read(upgradeRoot+'/wakapi/compiled.json');
+assert.equal(build.joseV3Sha256,'7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b');
+const matches=queue.items.filter(i=>i.scope==='runtime-image'&&i.artifact===s.imageId&&i.id==='CVE-2026-116587'&&i.package==='github.com/go-jose/go-jose/v3'&&i.installed==='v3.0.5');
+assert.equal(matches.length,1,'Changed or missing runtime inventory requires review');
+const reason='Wakapi 2.18.2 exact runtime retains the previously reviewed JOSE v3 source backport (SHA-256 7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b), mandatory in the locked vendor build. All 99 runtime dependency versions and image configuration are preserved; only /app/wakapi changes. Five isolated native account/heartbeat, persistence and rollback stages pass. The live executable matches the approved build. Raw v3.0.5 metadata remains; no new vulnerability reproduction or real OIDC-provider test is claimed. Evidence: releases-20261111/upgrade-inputs.json and private upgrade-closure-20261111/wakapi/{compiled,migration,scope,scan-gate}.json. Re-review a changed artifact, builder, patch or lock. https://github.com/go-jose/go-jose/commit/a0111f82742fa92bceec9ede40845e73319e6230';
+const decisions=matches.map(i=>validateDecision({key:i.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason}));
+fs.writeFileSync(upgradeRoot+'/wakapi/v3-review.json',JSON.stringify({schemaVersion:1,scanDate:scan.completedAt,decisions},null,2)+'\n',{mode:0o600});
+console.log('One exact runtime review prepared; raw finding retained.');

@@ -9,13 +9,13 @@ const items={
  blockbench:['blockbench','7c92e27d237e365110030d73e92c5d1605f0d311'],
  glyphr:['glyphr','29b3dfb0fd58ecc8503a9af7d5ca2110373c2a44'],
  jscad:['jscad','f245ea3a5072024b789f276c6fb9ce6c3eb3fd0d'],
- grid:['grid','d138275bbe9d4e4030d8cb8b2dcf66607da9295a'],
+ grid:['grid','ff7692241c48c3495da0bb8eb7455f906f3abb2d'],
  fossflow:['fossflow','a3c5b7cafb8f2573e26a8dd086d51f037feb9fb6'],
  vvveb:['vvvebjs','1acbab7ebfe3e7b004f1f18c039d26550fc04bd8'],
 };
 const selected=process.argv[2];if(selected&&!items[selected])throw Error('Unknown source publication');
 for(const [name,[folder,revision]]of Object.entries(items).filter(([name])=>!selected||name===selected)){
- const src=name==='glyphr'?'/var/lib/utilibre-maintenance/releases-20261106/glyphr':'/opt/utilibre/evaluation-src/'+folder+'-20261011',dst=root+'/'+name;
+ const src=name==='grid'?'/var/lib/utilibre-maintenance/upgrade-closure-20261111/grid/source':name==='glyphr'?'/var/lib/utilibre-maintenance/releases-20261106/glyphr':'/opt/utilibre/evaluation-src/'+folder+'-20261011',dst=root+'/'+name;
  if(execFileSync('git',['rev-parse','HEAD'],{cwd:src,encoding:'utf8'}).trim()!==revision)throw Error('Source mismatch');
  const tmp=mkdtempSync('/opt/utilibre/creative-source-');mkdirSync(dst,{recursive:true});
  try{

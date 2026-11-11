@@ -17,7 +17,7 @@ export const creativeProviders = {
   glyphr: reviewed('Glyphr Studio', 'glyphr-studio/Glyphr-Studio-2', '29b3dfb0fd58ecc8503a9af7d5ca2110373c2a44', 'GPL-3.0-or-later', 'LICENSE-gpl-3.0.txt', '2.10.8-p1'),
   graphite: reviewed('Graphite', 'GraphiteEditor/Graphite', '7477cd2fab315494e4c2613bc446c707733e6e7b', 'Apache-2.0', 'LICENSE-APACHE', '7477cd2-p1 · alpha', false),
   jscad: reviewed('JSCAD', 'jscad/OpenJSCAD.org', 'f245ea3a5072024b789f276c6fb9ce6c3eb3fd0d', 'MIT', 'LICENSE', 'Web 2.6.13'),
-  grid: reviewed('GridSpace', 'GridSpace/grid-apps', 'd138275bbe9d4e4030d8cb8b2dcf66607da9295a', 'MIT', 'license.md', '4.7.0-p1'),
+  grid: reviewed('GridSpace', 'GridSpace/grid-apps', 'ff7692241c48c3495da0bb8eb7455f906f3abb2d', 'MIT', 'license.md', '4.7.3-p1'),
   fossflow: reviewed('FossFLOW', 'jravenel/fossflow', 'a3c5b7cafb8f2573e26a8dd086d51f037feb9fb6', 'MIT', 'LICENSE', '1.4.0'),
   vvveb: reviewed('VvvebJs', 'givanz/VvvebJs', '1acbab7ebfe3e7b004f1f18c039d26550fc04bd8', 'Apache-2.0', 'LICENSE', '1acbab7-p1'),
   microstudio: reviewed('microStudio', 'pmgl/microstudio', 'b59d904b56a8cdbdde1b08a1b107c90bab59b31f', 'MIT', 'LICENSE.txt', 'b59d904 · security review; not deployed', false),

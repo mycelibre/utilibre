@@ -5,21 +5,30 @@ import {execFileSync} from 'node:child_process';
 import {readFileSync,writeFileSync,mkdirSync,statfsSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {existingComposeArgs,checkExistingGroup,recreateExistingGroup,releaseGroup,replaceImagePins} from '../language-final/release.mjs';
+import {verifyWakapiUpgrade,upgradeRoot} from '../releases-20261111/upgrade-policy.mjs';
+import {acquireReleaseLock} from '../security-20261103/release-lock.mjs';
 process.umask(0o077);
-const root='/var/lib/utilibre-maintenance/releases-20261106';
+const wakapiUpgrade=process.argv[4]==='--wakapi-nov11';
+assert.equal(process.argv.length,wakapiUpgrade?5:4);
+const root=wakapiUpgrade?upgradeRoot:'/var/lib/utilibre-maintenance/releases-20261106';
 const specs={
  drawio:{name:'utilibre-toolbox-drawio-1',oldImage:'sha256:4924fd72d26336b8f3ebb4ace5f1e4d05752baf7df903d2c5b19c548fd0d4836',newImage:'sha256:b827f5fbd979df27f809cb20580a916d14893dbc8047cd37d2349024fd1e0363',newRef:'utilibre-drawio:32.6.10-20261106',url:'https://draw.utilibre.org/'},
  glyphr:{name:'utilibre-creative-batch-glyphr-1',oldImage:'sha256:e692e6a442ec4896bd4baaadd0e1dc541f67d4f126dbc513f516f32a90d640d8',newImage:'sha256:0d4d70dfdb3886012dc1d72f4a66be5e236fd9bb7cbe3289aefd662a4209c2d4',newRef:'utilibre-glyphr:2.10.8-20261106',url:'https://glyphr.utilibre.org/'},
  freshrss:{name:'utilibre-services-freshrss-1',oldImage:'sha256:fa0df9fc48de5bde089e96d40b4adf6471cca4e75172ca7bc6a5e48b8a39e373',newImage:'sha256:46aa631691b25d7afddb1c9d6d39fa379529d12c50792875be7ddcad91dc2be8',newRef:'utilibre-freshrss:1.30.4-20261106',url:'https://rss.utilibre.org/',mirror:'/home/ubuntu/freetools/deployment/utilibre/compose.yaml'},
  radicale:{name:'utilibre-calendar-radicale-1',oldImage:'sha256:22f35a8562adba07ab50324c56cf290f2f183012b708abcc0b412a8d9561821a',newImage:'sha256:599726db2bc5f925d833fdfbbf93cf1b2e485bf304d44ca9b8129effececa476',newRef:'utilibre-radicale:3.9.0-20261106',url:'https://calendar.utilibre.org/dav/.web/'},
 };
+if(wakapiUpgrade){
+ assert.equal(process.argv[2],'wakapi');const {s}=verifyWakapiUpgrade();
+ specs.wakapi={name:'utilibre-expanded-wakapi-1',oldImage:s.base,newImage:s.imageId,newRef:s.candidate,url:'https://wakapi.utilibre.org/'};
+ process.on('exit',acquireReleaseLock('/var/lib/utilibre-maintenance/package-release.lock'));
+}
 const key=process.argv[2],s=specs[key];assert(s&&process.argv[3]==='--apply','Select a reviewed service and --apply');
 const run=(cmd,args)=>{try{return execFileSync(cmd,args,{encoding:'utf8',timeout:180000,maxBuffer:32*1024**2,stdio:['ignore','pipe','pipe'],env:{...process.env,APP_BIND_IP:'10.10.1.43'}});}catch{throw Error('Release command failed; configuration/output withheld');}};
 const docker=(...a)=>run('docker',a),inspect=n=>JSON.parse(docker('inspect',n))[0],json=p=>JSON.parse(readFileSync(root+'/'+p));
 const hash=x=>createHash('sha256').update(x).digest('hex');
 const shape=x=>{const {image,...rest}=x;return hash(JSON.stringify(rest));};
 assert.equal(inspect(s.newRef).Id,s.newImage);
-assert.deepEqual(json(key+'-scan-comparison.json').newFindings,[]);
+if(!wakapiUpgrade)assert.deepEqual(json(key+'-scan-comparison.json').newFindings,[]);
 if(key==='glyphr')for(const f of ['glyphr-task.json','glyphr-import.json']){const r=json('glyphr-checks/'+f);assert(!r.failure);assert.deepEqual(r.errors,[]);assert.deepEqual(r.external,[]);}
 if(key==='freshrss'){const r=json('freshrss-checks/application.json');assert(r.passed&&r.imageId===s.newImage);assert(json('freshrss-browser-restore-p5j80rro/result.json').passed);}
 if(key==='radicale'){const r=json('radicale-checks/result.json');assert(r.passed&&r.image===s.newImage);}
@@ -46,6 +55,10 @@ if(key==='freshrss'){
  writeFileSync(directory+'/database.dump',dump);run('tar',['-C','/opt/utilibre/data','-czf',directory+'/saved-account-files.tar.gz','freshrss']);
 }
 if(key==='radicale')run('tar',['-C','/opt/utilibre','-czf',directory+'/saved-account-files.tar.gz','calendar-data','calendar-private']);
+if(key==='wakapi'){
+ // Native online SQLite backup. Never print records or read unrelated accounts.
+ run('python3',['-c',"import sqlite3,sys; source=sqlite3.connect('file:/opt/utilibre/expanded-data/wakapi/wakapi.db?mode=ro',uri=True); destination=sqlite3.connect(sys.argv[1]); source.backup(destination); assert destination.execute('PRAGMA integrity_check').fetchone()==('ok',); destination.close(); source.close()",directory+'/wakapi-before.sqlite']);
+}
 const save=async()=>writeFileSync(directory+'/result.json',JSON.stringify({date:new Date().toISOString(),...g,configHash,files:[...originals.keys()],dataRollback:'Image rollback does not restore data; recovery copies retained privately'},null,2)+'\n');
 await releaseGroup(g,{
  preflight:async()=>{

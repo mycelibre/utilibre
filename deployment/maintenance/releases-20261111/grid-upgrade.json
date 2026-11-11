@@ -1,0 +1,22 @@
+{
+  "approved": true,
+  "revision": "ff7692241c48c3495da0bb8eb7455f906f3abb2d",
+  "version": "4.7.3-p1",
+  "staticSha256": "ad340db55bf28b2e2fbf5e137b7f5ebfb84b42e9e3f510493024956318edb42c",
+  "databaseUpdatedAt": "2026-11-10T19:01:23.081219346Z",
+  "sourceArchiveSha256": "9f30fa60ca351d56073bfb37e510e2e3ea2e088d475792036d5cdb056ae28727",
+  "lockSha256": "87b535ec6abf0c9ab8b37ef58bc8ad7e8a87ff6bae1b9586b8a782794d59eea5",
+  "evidence": {
+    "browser/grid-task.json": "bb661d91d9daefc519f9023b64aef84d4f58495425fd23100db23b485b66607a",
+    "browser/grid-practice.gcode": "79bbf7a3777e6d4bbb2779a3a4e77c1bf554119495ce03358fb360b4f3275196",
+    "browser-source-scan.json": "803abd3a0c10f862ebcadc9a9c6f13968c4846d4f0f716f08e1c36e60d2f2d98",
+    "source-offer.json": "38cb2bac366e5025a852a466a377884404afcac27102ced973688bb4188949da"
+  },
+  "recipes": {
+    "deployment/creative-batch/grid-prepare.mjs": "a45ec3d36c212c13286349970f4271defca5c5c5d1780ce7395a5077e3e58c06",
+    "deployment/creative-batch/grid-publish.mjs": "4f88614b9c9eb70be25d76656b04cd408bf0b1e5431d231f112b0097c2499f0a",
+    "deployment/creative-batch/check-tasks.mjs": "29bbb76a9aea0059fa212adeba47ae2ca91ed347d2f2e443a37f6c88b1826623",
+    "deployment/maintenance/releases-20261111/grid-browser-build.patch": "9749b5ddd607d4b3b2f1b4c4bc20fc71b8bc2a2dba1922cc2bf328b11e62e36e",
+    "deployment/maintenance/releases-20261111/grid-browser-package-lock.json": "87b535ec6abf0c9ab8b37ef58bc8ad7e8a87ff6bae1b9586b8a782794d59eea5"
+  }
+}

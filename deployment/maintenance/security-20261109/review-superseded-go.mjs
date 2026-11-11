@@ -8,7 +8,9 @@ import {proveXnet} from './xnet-policy.mjs';
 import {proveFollowup} from './xnet-followup-policy.mjs';
 import {freshScan} from '../review-native-backports.mjs';
 import {validateDecision} from '../triage.mjs';
+import {verifyWakapiUpgrade} from '../releases-20261111/upgrade-policy.mjs';
 process.umask(0o077);
+const wakapiUpgrade=process.argv[2]==='--wakapi-nov11';assert.equal(process.argv.length,wakapiUpgrade?3:2);
 const repo=new URL('../../../',import.meta.url).pathname;
 const privateRoot='/var/lib/utilibre-maintenance/';
 const read=p=>JSON.parse(fs.readFileSync(p));
@@ -31,8 +33,10 @@ assert.equal(matches.length,22,'Changed source inventory requires review');
 const command=(...a)=>cp.execFileSync('docker',a,{encoding:'utf8',timeout:30000,maxBuffer:65536,stdio:['ignore','pipe','pipe']}).trim();
 const replacements=[],decisions=[];
 for(const key of [...new Set(manifest.rows.map(r=>r.application))].sort()){
-  const s=approved.rows.find(r=>r.key===key),original=inputs.rows.find(r=>r.key===key);assert(s&&original);
-  const proof=s.mode==='binary-followup'?proveFollowup(s,{requireRecentCandidate:false}):proveXnet(s,{requireRecentCandidate:false});
+  let s=approved.rows.find(r=>r.key===key);const original=inputs.rows.find(r=>r.key===key);assert(s&&original);
+  let proof;
+  if(key==='wakapi'&&wakapiUpgrade){proof=verifyWakapiUpgrade({fresh:false});s={...s,imageId:proof.s.imageId};}
+  else proof=s.mode==='binary-followup'?proveFollowup(s,{requireRecentCandidate:false}):proveXnet(s,{requireRecentCandidate:false});
   assert.equal(proof.b.imageId,s.imageId);
   for(const name of s.containers){
     const inspect=()=>JSON.parse(command('inspect',name,'--format','{"image":{{json .Image}},"pid":{{.State.Pid}},"running":{{.State.Running}}}'));
@@ -42,7 +46,7 @@ for(const key of [...new Set(manifest.rows.map(r=>r.application))].sort()){
     assert.equal(sha('/proc/'+live.pid+'/root'+original.binary),proof.b.binarySha256);
     assert.deepEqual(inspect(),live,'Runtime changed during executable check');
   }
-  replacements.push({application:key,imageId:s.imageId,binarySha256:proof.b.binarySha256,binary:original.binary,containers:s.containers,locks:original.locks,evidence:'security-20261109/xnet/'+key});
+  replacements.push({application:key,imageId:s.imageId,binarySha256:proof.b.binarySha256,binary:original.binary,containers:s.containers,locks:original.locks,evidence:key==='wakapi'&&wakapiUpgrade?'upgrade-closure-20261111/wakapi':'security-20261109/xnet/'+key});
 }
 for(const row of manifest.rows){
   assert.equal(sha(repo+row.historicalLock),row.historicalSha256);
@@ -55,6 +59,7 @@ for(const row of manifest.rows){
     reason:`Historical ${row.application} build input, still vulnerable as source and retained in raw scans. Current exact runtime ${replacement.imageId} and binary match the completed x/net 0.62.0 build, native workflow and same-database scan. Superseded activation entry points are explicitly blocked before Docker/configuration writes; current activation requires the separately approved xnet profile. This is an expiring deployment/rebuild-path mitigation, not a patch to the historical lock or permission to execute it. Re-review any lock, guard, recipe or runtime change. Evidence: security-20261109/remaining-high/superseded-go-review.json; superseded-go.json; xnet/${row.application}/.`}));
 }
 const guardPaths=['superseded-go.mjs','superseded-go.json','superseded-go.test.mjs','superseded-go-condition.mjs','superseded-go-condition.test.mjs','review-superseded-go.mjs','xnet-inputs.json','xnet-release-inputs.json','xnet-build.mjs','xnet-policy.mjs','xnet-followup-policy.mjs'].map(f=>'deployment/maintenance/security-20261109/'+f);
+if(wakapiUpgrade)guardPaths.push(...['upgrade-policy.mjs','upgrade-inputs.json','build-wakapi.mjs','check-wakapi-upgrade.py'].map(f=>'deployment/maintenance/releases-20261111/'+f));
 guardPaths.push('deployment/maintenance/triage.mjs','deployment/maintenance/build-queue.mjs');
 guardPaths.push(inputs.existingBuildRecipe,...inputs.rows.map(r=>r.buildRecipe).filter(Boolean),...manifest.releaseEntries.map(r=>r.path));
 for(const row of manifest.rows)for(const path of [row.historicalLock,row.currentLock])guardPaths.push(path,path.replace(/go\.mod$/,'go.sum'));

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "sourceRevision": "a120c529bf17ed992b74287aa592d7fc9dbc81d4",
+  "base": "sha256:cc793c0593dd1056343f456596b01bb8d584c83b74c73697fa9fed8b8b45a94f",
+  "imageId": "sha256:adeee2a5e23cacbd439c5a81397e2232e93de698344a9a1146bb4fa88aad73ee",
+  "candidate": "utilibre-portal:upgrades-20261111",
+  "expectedVersions": [
+    "2.18.2",
+    "4.7.3-p1",
+    "0.14.1-p1",
+    "2.8.11-p1"
+  ],
+  "retainedFindings": [],
+  "evidence": {
+    "portal-staging.txt": "5ef3f23ae9ebbb70167d56831486fd688356bf6a697223c034db76512cef0643",
+    "portal-before-scan.json": "9eac1e8a2554419a70e6c36c9330b77e3ead40fccda1bb16a833c13b54f95067",
+    "portal-after-scan.json": "c8dbd79ed90878d823bc617f61b7c0da71b049ace8652438877e3d1b25f96b97"
+  },
+  "sourceChanges": {
+    "portal/src/catalog/upstreams.ts": "355a9e340ab78c08beca59cf4987c4f9e0e11aa861fcba34be1c007cab6002df",
+    "portal/src/catalog/creative-providers.ts": "abfd6b0c793d4695b28285ffccef48d6b50f554c80945c92d27d405f72405f6e"
+  },
+  "buildScope": "Committed HEAD snapshot plus the two provider records; unrelated worktree changes excluded."
+}

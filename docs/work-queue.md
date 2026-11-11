@@ -1,5 +1,28 @@
 # Work queue
 
+## Current upgrade and disk checkpoint — 11 November 2026
+
+**Wakapi 2.18.2 and GridSpace 4.7.3-p1 are deployed**, with retained repairs,
+native workflow checks and updated EN/ES catalogue records. Thirty current
+candidates were assessed; **28 upgrades remain held**, with exact reasons and
+source/patch coverage recorded. This does not close the full upgrade queue.
+
+Safe cleanup recovered **about 7.1 GiB gross**. Eleven cold source archives
+were uploaded to the existing encrypted Storage Box, restored and byte-verified
+before local removal. Rollback images and saved account backups remain.
+Root filesystem availability after the new builds is **33.4 GiB**.
+
+The final 16:31 UTC scan completed 109 images, 113 source inputs and host
+packages. Exact reviews leave **0 critical / 30 high pending**, all ACL caller
+migration. The upstream recheck did not establish a safe compatible closure;
+no ACL change or suppression was made. There are 175 running containers,
+90 healthy configured checks and no failed systemd units.
+
+[Release, archive recovery, remaining upgrades and rollback](records/upgrade-closure-2026-11-11.md)
+· [Machine-readable coverage](../deployment/maintenance/releases-20261111/upgrade-status.json).
+The older checkpoints below describe historical state. Full-VM recovery still
+awaits an isolated Proxmox target and was not part of these selected items.
+
 ## Current vendor-library checkpoint — 11 November 2026, 14:07 UTC
 
 **94 of the 124 pending high records are fixed and deployed.** The complete

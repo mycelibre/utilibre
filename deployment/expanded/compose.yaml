@@ -103,7 +103,7 @@ services:
 
   wakapi:
     <<: *runtime
-    image: utilibre-wakapi:xnet-security-20261109
+    image: utilibre-wakapi:2.18.2-20261111
     read_only: true
     user: "65532:65532"
     environment:
