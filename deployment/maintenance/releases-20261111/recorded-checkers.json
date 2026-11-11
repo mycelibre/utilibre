@@ -1,0 +1,327 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Verify historical checker identities for these exact completed candidates; never approve a new candidate or suppress a finding.",
+  "rows": [
+    {
+      "path": "deployment/maintenance/security-20261109/zlib-check.py",
+      "revision": "271686f0161c26f51c8cd35bd09c2dc90eaa33be",
+      "sha256": "9f797b5779184fe55949c1b450e5485bc48bf20893aa9a9d3c2a90268a7d2b9d",
+      "artifacts": [
+        {
+          "imageId": "sha256:526ac607e52f65564ecb9f13a410fe14b63b6fa4f9eb7e523d36cc0ad18784b6",
+          "family": "xnet",
+          "key": "mezzo",
+          "completedGroups": [
+            "mezzo"
+          ],
+          "releaseReceiptSha256": "af1f6370c973c97be7769dc2daa8de4fc82d217e5f0c575e7c8cb5b56d2f3855"
+        },
+        {
+          "imageId": "sha256:8cd6f171ff9bad49a995fffe8d6bed87d9d6ef1b29fdaf2f15b25381f6585803",
+          "family": "xnet",
+          "key": "ferretdb",
+          "completedGroups": [
+            "ferretdb"
+          ],
+          "releaseReceiptSha256": "af1f6370c973c97be7769dc2daa8de4fc82d217e5f0c575e7c8cb5b56d2f3855"
+        },
+        {
+          "imageId": "sha256:c88534c50376f7fb5f06fad7639b44c9bf0991e77301cd82cf8c72b69ede1c43",
+          "family": "xnet",
+          "key": "oauth2-proxy",
+          "completedGroups": [
+            "oauth2-proxy"
+          ],
+          "releaseReceiptSha256": "af1f6370c973c97be7769dc2daa8de4fc82d217e5f0c575e7c8cb5b56d2f3855"
+        },
+        {
+          "imageId": "sha256:50ecfa1f4eb1ac42d85db033ea61afa3eeebda15fa224831c8ab38f5417eb538",
+          "family": "xnet",
+          "key": "galene",
+          "completedGroups": [
+            "galene"
+          ],
+          "releaseReceiptSha256": "af1f6370c973c97be7769dc2daa8de4fc82d217e5f0c575e7c8cb5b56d2f3855"
+        },
+        {
+          "imageId": "sha256:0039b6246d07abc1d65121da5e632c276e791eb15775e11d7aa5e19d512307e0",
+          "family": "xnet",
+          "key": "ntfy",
+          "completedGroups": [
+            "ntfy"
+          ],
+          "releaseReceiptSha256": "af1f6370c973c97be7769dc2daa8de4fc82d217e5f0c575e7c8cb5b56d2f3855"
+        },
+        {
+          "imageId": "sha256:5d719639e41ddaefc3c5e1ffc5103b25dd7bb127b89ba78a64762960ac5d9532",
+          "family": "xnet",
+          "key": "opengist",
+          "completedGroups": [
+            "opengist"
+          ],
+          "releaseReceiptSha256": "af1f6370c973c97be7769dc2daa8de4fc82d217e5f0c575e7c8cb5b56d2f3855"
+        },
+        {
+          "imageId": "sha256:b3d3d5ebf2416f31617a1163873f0c392e7a8ca1dc2a3e46a78f0b2e3b1457dc",
+          "family": "xnet",
+          "key": "wakapi",
+          "completedGroups": [
+            "wakapi"
+          ],
+          "releaseReceiptSha256": "af1f6370c973c97be7769dc2daa8de4fc82d217e5f0c575e7c8cb5b56d2f3855"
+        },
+        {
+          "imageId": "sha256:88db5bdd783682716741f8f47430a08a2672da2430d74f69e70d994c6f17d308",
+          "family": "xnet",
+          "key": "anubis",
+          "completedGroups": [
+            "anubis"
+          ],
+          "releaseReceiptSha256": "af1f6370c973c97be7769dc2daa8de4fc82d217e5f0c575e7c8cb5b56d2f3855"
+        },
+        {
+          "imageId": "sha256:0ec2f93d147bc054141d5d9a60615ccf4534ff4a0a3ad6b48027b4ebf007d269",
+          "family": "xnet",
+          "key": "gothub",
+          "completedGroups": [
+            "gothub"
+          ],
+          "releaseReceiptSha256": "af1f6370c973c97be7769dc2daa8de4fc82d217e5f0c575e7c8cb5b56d2f3855"
+        },
+        {
+          "imageId": "sha256:359415f79ab1bb719439121fcfed4373a9f5293cf175d8ddcba5b07735b87c70",
+          "family": "xnet",
+          "key": "vikunja",
+          "completedGroups": [
+            "vikunja"
+          ],
+          "releaseReceiptSha256": "af1f6370c973c97be7769dc2daa8de4fc82d217e5f0c575e7c8cb5b56d2f3855"
+        },
+        {
+          "imageId": "sha256:84b3647cd87035fbac35165c87429c4a349f5587b7c74917ac3805413868a24a",
+          "family": "xnet",
+          "key": "donetick",
+          "completedGroups": [
+            "donetick"
+          ],
+          "releaseReceiptSha256": "af1f6370c973c97be7769dc2daa8de4fc82d217e5f0c575e7c8cb5b56d2f3855"
+        },
+        {
+          "imageId": "sha256:f3b3d1f92936c242bef07fab52fa13025e656aab826ca9ab0699a21ac7a0910b",
+          "family": "xnet",
+          "key": "safetwitch",
+          "completedGroups": [
+            "safetwitch"
+          ],
+          "releaseReceiptSha256": "af1f6370c973c97be7769dc2daa8de4fc82d217e5f0c575e7c8cb5b56d2f3855"
+        },
+        {
+          "imageId": "sha256:2a93e71af15883beb34e5526ef9b04b094f86ea542f3594f20ab489ce8be7ea2",
+          "family": "xnet-caddy",
+          "key": "caddy-newsletters-mail-jobs",
+          "completedGroups": [
+            "caddy-newsletters-mail-jobs"
+          ],
+          "releaseReceiptSha256": "15e9860969cb9cfffce03ee113de5f3c276b6e6d4a26afc75a099b8ea1078a6f"
+        },
+        {
+          "imageId": "sha256:e01160fc2f9e9603b22f5ad1656786d0e573b6a6cdcf52ed34a095b3cef62f1b",
+          "family": "xnet-caddy",
+          "key": "caddy-wishlist",
+          "completedGroups": [
+            "caddy-wishlist"
+          ],
+          "releaseReceiptSha256": "15e9860969cb9cfffce03ee113de5f3c276b6e6d4a26afc75a099b8ea1078a6f"
+        },
+        {
+          "imageId": "sha256:df25366f8a0a8f48d7548f7c20dee1950e238b4ce64719ab94c091c9fd044dcf",
+          "family": "xnet-caddy",
+          "key": "caddy-newsletters-web",
+          "completedGroups": [
+            "caddy-newsletters-web"
+          ],
+          "releaseReceiptSha256": "15e9860969cb9cfffce03ee113de5f3c276b6e6d4a26afc75a099b8ea1078a6f"
+        },
+        {
+          "imageId": "sha256:b58c9f93de9d6ac4762e2f90d1054d244369d653b116f9b1e74c9a7ebda01a37",
+          "family": "zlib-bookworm",
+          "key": "wishlist-app",
+          "completedGroups": [
+            "wishlist-app"
+          ],
+          "releaseReceiptSha256": "0414e8a22a7780a29ef72a0b9ec29bfb83b31434dab7c67bbae6aa436ff641dd"
+        },
+        {
+          "imageId": "sha256:10199c0f1580fd9633c3a61a6b1147567c4943b49907d1186fef0fd1f317ce77",
+          "family": "zlib-bookworm",
+          "key": "community-rallly",
+          "completedGroups": [
+            "community-rallly"
+          ],
+          "releaseReceiptSha256": "0414e8a22a7780a29ef72a0b9ec29bfb83b31434dab7c67bbae6aa436ff641dd"
+        },
+        {
+          "imageId": "sha256:44f704ae9920d5791c4b11fb713aaa86ce9886e4c2077f50513ea308291e919e",
+          "family": "zlib-bookworm",
+          "key": "expanded-actual",
+          "completedGroups": [
+            "expanded-actual"
+          ],
+          "releaseReceiptSha256": "0414e8a22a7780a29ef72a0b9ec29bfb83b31434dab7c67bbae6aa436ff641dd"
+        },
+        {
+          "imageId": "sha256:7f51c953af89f2bbac97a98f0a5c2dbc0c1ef252c7968390c0cf053cabbc0d70",
+          "family": "zlib-bookworm",
+          "key": "community-rssbridge",
+          "completedGroups": [
+            "community-rssbridge"
+          ],
+          "releaseReceiptSha256": "0414e8a22a7780a29ef72a0b9ec29bfb83b31434dab7c67bbae6aa436ff641dd"
+        },
+        {
+          "imageId": "sha256:4d9a94de25dc18eef27718bf488fa2f578d8fcbf707af6c6fed659bb20e3df68",
+          "family": "zlib-bookworm",
+          "key": "community-uptime-kuma",
+          "completedGroups": [
+            "community-uptime-kuma"
+          ],
+          "releaseReceiptSha256": "0414e8a22a7780a29ef72a0b9ec29bfb83b31434dab7c67bbae6aa436ff641dd"
+        },
+        {
+          "imageId": "sha256:7eb421ce1870b20ccb8db10213814eedb936d9faaaa4ba7ac110d8a7b8ecdd5a",
+          "family": "zlib-bookworm",
+          "key": "gathio-postgres",
+          "completedGroups": [
+            "gathio-postgres"
+          ],
+          "releaseReceiptSha256": "0414e8a22a7780a29ef72a0b9ec29bfb83b31434dab7c67bbae6aa436ff641dd"
+        },
+        {
+          "imageId": "sha256:ce2467088bf841400262efc8e995cdd28812e59c6a917e7ddcc05092dd33c1bc",
+          "family": "zlib-bookworm",
+          "key": "pack-cryptpad-cryptpad",
+          "completedGroups": [
+            "pack-cryptpad-cryptpad"
+          ],
+          "releaseReceiptSha256": "0414e8a22a7780a29ef72a0b9ec29bfb83b31434dab7c67bbae6aa436ff641dd"
+        },
+        {
+          "imageId": "sha256:5776c66bedaa1faf91806748ba84d2c47e3515fdb0818352fc1054872563f1cb",
+          "family": "zlib-bookworm",
+          "key": "expanded-resume",
+          "completedGroups": [
+            "expanded-resume"
+          ],
+          "releaseReceiptSha256": "0414e8a22a7780a29ef72a0b9ec29bfb83b31434dab7c67bbae6aa436ff641dd"
+        }
+      ]
+    },
+    {
+      "path": "deployment/maintenance/security-20261109/check-musl-nginx.py",
+      "revision": "271686f0161c26f51c8cd35bd09c2dc90eaa33be",
+      "sha256": "987f4af7200cf19f4a3984f9f9e2fcea46fc9a2b3adf3bdb87f984b5e20b2fcb",
+      "artifacts": [
+        {
+          "imageId": "sha256:fb8f3f6ca1f0094cb4f2aae4e31493d835ac244d9e53761cf7bcd1ad8bb7059a",
+          "family": "musl",
+          "key": "pollaris-gateway",
+          "completedGroups": [
+            "pollaris-pollaris-gateway"
+          ],
+          "releaseReceiptSha256": "f845419a9445945a8c03a00aea380bf67a449bf6704ffa76b2f5c7b9b4d3247b"
+        },
+        {
+          "imageId": "sha256:ffddc17eb392b731ddc1e43e7729f8e76046187a30b972a3f7b030ddf16134d2",
+          "family": "musl",
+          "key": "wallabag-web",
+          "completedGroups": [
+            "wallabag-wallabag-web"
+          ],
+          "releaseReceiptSha256": "f845419a9445945a8c03a00aea380bf67a449bf6704ffa76b2f5c7b9b4d3247b"
+        },
+        {
+          "imageId": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+          "family": "musl",
+          "key": "calendar-calino",
+          "completedGroups": [
+            "calendar-calendar-calino",
+            "pack-static-calendar-calino",
+            "creative-batch-calendar-calino",
+            "records-calendar-calino",
+            "trip-calendar-calino",
+            "beaverhabits-calendar-calino",
+            "donetick-calendar-calino",
+            "projects-calendar-calino",
+            "family-chess-calendar-calino",
+            "addy-calendar-calino",
+            "13ft-calendar-calino",
+            "unfurl-calendar-calino",
+            "chhoto-calendar-calino",
+            "gathio-calendar-calino",
+            "chitchatter-calendar-calino",
+            "simplelogin-calendar-calino",
+            "bytestash-calendar-calino",
+            "razzia-calendar-calino",
+            "kitchenowl-calendar-calino",
+            "wishlist-calendar-calino",
+            "vikunja-calendar-calino",
+            "linkding-calendar-calino",
+            "opengist-calendar-calino",
+            "spliit-calendar-calino",
+            "pack-forms-calendar-calino",
+            "collaboration-pilot-calendar-calino",
+            "evaluation-calendar-calino",
+            "kittygram-calendar-calino",
+            "rimgo-calendar-calino",
+            "biblioreads-calendar-calino",
+            "reader-evaluation-calendar-calino",
+            "additions-calendar-calino",
+            "priviblur-calendar-calino",
+            "expanded-calendar-calino",
+            "community-calendar-calino",
+            "newsletters-calendar-calino",
+            "newsletters-newsletters-web"
+          ],
+          "releaseReceiptSha256": "f845419a9445945a8c03a00aea380bf67a449bf6704ffa76b2f5c7b9b4d3247b"
+        },
+        {
+          "imageId": "sha256:76e33503470b3c8869c18cb9e1bbb5fa0b38e092accf1155924260de2b078372",
+          "family": "musl",
+          "key": "openresume-web",
+          "completedGroups": [
+            "openresume-openresume-web"
+          ],
+          "releaseReceiptSha256": "f845419a9445945a8c03a00aea380bf67a449bf6704ffa76b2f5c7b9b4d3247b"
+        },
+        {
+          "imageId": "sha256:784e96a96a35963e548c004548da808724ba1e5009ec6b74064ddd111c551700",
+          "family": "musl",
+          "key": "translite-gateway",
+          "completedGroups": [
+            "translite-translite-gateway"
+          ],
+          "releaseReceiptSha256": "f845419a9445945a8c03a00aea380bf67a449bf6704ffa76b2f5c7b9b4d3247b"
+        },
+        {
+          "imageId": "sha256:4cce7c5d42c8efbaeb188b1fc0b514d9ac625d2668c6aab284fa21db69ab6ac4",
+          "family": "musl",
+          "key": "binternet-gateway",
+          "completedGroups": [
+            "binternet-binternet-gateway",
+            "binternet-onion-binternet-gateway"
+          ],
+          "releaseReceiptSha256": "f845419a9445945a8c03a00aea380bf67a449bf6704ffa76b2f5c7b9b4d3247b"
+        },
+        {
+          "imageId": "sha256:e30758662d4cf1f4861d89aec002cad3bd19fd897abfe2850f7cb6df09dd079b",
+          "family": "musl",
+          "key": "reader-evaluation-safetwitch",
+          "completedGroups": [
+            "reader-evaluation-reader-evaluation-safetwitch"
+          ],
+          "releaseReceiptSha256": "f845419a9445945a8c03a00aea380bf67a449bf6704ffa76b2f5c7b9b4d3247b"
+        }
+      ]
+    }
+  ]
+}

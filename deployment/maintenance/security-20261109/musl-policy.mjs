@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
+import {checkerIdentity} from '../releases-20261111/recorded-checkers.mjs';
 const sha=p=>createHash('sha256').update(fs.readFileSync(new URL(p,import.meta.url))).digest('hex');
 const profiles={
  'static-nginx':['check-musl-static.py',9],
@@ -21,7 +22,7 @@ export function proveMusl(inputs,s,b,c,scan){
  assert.equal(sha(fixture.source),fixture.sourceSha256);
  assert(b.passed&&b.configurationUnchanged&&b.unrelatedPackagesUnchanged);
  assert(c.passed&&c.imageId===b.imageId&&c.base===b.base&&c.abiPreserved&&c.baselineExportedSymbols>1000);
- assert.equal(c.fixtureSha256,sha(profile[0]));
+ assert.equal(c.fixtureSha256,profile[0]==='check-musl-nginx.py'?checkerIdentity('deployment/maintenance/security-20261109/'+profile[0],c.fixtureSha256,b.imageId):sha(profile[0]));
  assert.deepEqual(c.rows.map(r=>r.imageId),[b.base,b.imageId]);
  assert(c.rows.every(r=>r.passed&&r.checks===profile[1]));
  if(s.consumerProfile.endsWith('nginx')||s.consumerProfile==='nginx-runtime')

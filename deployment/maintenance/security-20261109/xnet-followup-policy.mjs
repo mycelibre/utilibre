@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import cp from 'node:child_process';
 import {createHash} from 'node:crypto';
+import {checkerIdentity} from '../releases-20261111/recorded-checkers.mjs';
 const root='/var/lib/utilibre-maintenance/security-20261109/xnet';
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 const completedCheckers={safetwitch:'c2fa64e01d5de17a9c719cf39975f157346da40e',galene:'c2fa64e01d5de17a9c719cf39975f157346da40e',gothub:'9c13c74ee95db4039b15c3b4be6323c8379fa98a',mezzo:'807cfe54e3c181d543b8fc074bbb55fd225555dd',anubis:'aa6bb5e5c1fda827efe478e2e02ec81e242e3b11','oauth2-proxy':'91fc41f5cb6e87495a1c68299960fa86468c893a',wakapi:'f4b78b8ccc9d4a4d880fde954a2c62e0051bf80d',opengist:'f6417791c58a5cde10435dca893df3577ed6a9b6',ntfy:'f6417791c58a5cde10435dca893df3577ed6a9b6',donetick:'7a13c38874e48a29dab68716787ce90bac67a9f8',vikunja:'21c74566a0fb3adc8148067b66add60d056dc891'};
@@ -88,7 +89,7 @@ export function proveFollowup(s,{requireRecentCandidate=true}={}){
   const source=cp.execFileSync('git',['show',s.checkRevision+':deployment/maintenance/security-20261109/xnet-followup.py'],{cwd:new URL('../../../',import.meta.url),timeout:10000,maxBuffer:128*1024});
   assert.equal(createHash('sha256').update(source).digest('hex'),s.checkSha256);
  }else assert.equal(sha(new URL('./xnet-followup.py',import.meta.url)),s.checkSha256);
- assert.equal(sha(new URL('./zlib-check.py',import.meta.url)),b.exporterSha256);
+ assert.equal(checkerIdentity('deployment/maintenance/security-20261109/zlib-check.py',b.exporterSha256,b.imageId),b.exporterSha256);
  for(const a of n.adapters){assert.equal(sha(new URL(a.fixture,import.meta.url)),a.fixtureSha256);assert.equal(sha(a.adapter),a.adapterSha256);}
  if(['anubis','oauth2-proxy','wakapi','opengist','ntfy','vikunja','donetick','ferretdb'].includes(s.key)){
   const builder=s.checkRevision?cp.execFileSync('git',['show',s.checkRevision+':deployment/maintenance/security-20261109/xnet-build.mjs'],{cwd:new URL('../../../',import.meta.url),timeout:10000,maxBuffer:128*1024}):fs.readFileSync(new URL('./xnet-build.mjs',import.meta.url));

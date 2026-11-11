@@ -25,7 +25,7 @@ x-source: &source /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
 services:
   bentopdf:
     <<: *static
-    image: utilibre-toolbox-bentopdf:2.8.11-p1
+    image: utilibre-libraries-toolbox-bentopdf:20261111
     build:
       context: /opt/utilibre/pack-static/bentopdf-2.8.11-p1
       dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.bentopdf
@@ -37,7 +37,7 @@ services:
       - *source
   vert:
     <<: *static
-    image: utilibre-toolbox-vert:musl-security-20261109
+    image: utilibre-libraries-toolbox-vert:20261111
     build:
       context: ${TOOLBOX_SOURCE_ROOT:-/opt/utilibre/src}/vert
       dockerfile: ${TOOLBOX_CONFIG_ROOT:-/home/ubuntu/freetools/deployment/toolbox}/Dockerfile.vert
@@ -53,7 +53,7 @@ services:
     # Static apps plus streaming speed-test traffic; avoid a 0.5-core bottleneck.
     cpus: 1.0
     networks: [tools, rustpad, librespeed]
-    image: utilibre-toolbox-omnitools:musl-security-20261109
+    image: utilibre-libraries-toolbox-omnitools:20261111
     build:
       context: .
       dockerfile: Dockerfile.omnitools
@@ -70,7 +70,7 @@ services:
       - *source
   ittools:
     <<: *static
-    image: utilibre-toolbox-ittools:musl-security-20261109
+    image: utilibre-libraries-toolbox-ittools:20261111
     build:
       context: .
       dockerfile: Dockerfile.ittools
@@ -81,7 +81,7 @@ services:
       - *source
   hatsh:
     <<: *static
-    image: utilibre-toolbox-hatsh:musl-security-20261109
+    image: utilibre-libraries-toolbox-hatsh:20261111
     build:
       context: ${TOOLBOX_SOURCE_ROOT:-/opt/utilibre/src}/hatsh
       dockerfile: ${TOOLBOX_CONFIG_ROOT:-/home/ubuntu/freetools/deployment/toolbox}/Dockerfile.hatsh
@@ -92,7 +92,7 @@ services:
       - *source
   drawio:
     <<: *static
-    image: utilibre-toolbox-drawio:musl-security-20261109
+    image: utilibre-libraries-toolbox-drawio:20261111
     build: {context: ., dockerfile: Dockerfile.drawio}
     ports: ["${APP_BIND_IP:?Set APP_BIND_IP}:3111:8080"]
     volumes:
@@ -101,7 +101,7 @@ services:
       - *source
   miniqr:
     <<: *static
-    image: utilibre-toolbox-miniqr:musl-security-20261109
+    image: utilibre-libraries-toolbox-miniqr:20261111
     build:
       context: ${TOOLBOX_SOURCE_ROOT:-/opt/utilibre/src}/mini-qr
       dockerfile: ${TOOLBOX_CONFIG_ROOT:-/home/ubuntu/freetools/deployment/toolbox}/Dockerfile.miniqr

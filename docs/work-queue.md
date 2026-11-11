@@ -57,6 +57,17 @@ builder, and its ordinary check passes without a restart. SearXNG's current
 runtime guard passes. This batch did not change or close the 30 ACL records.
 [Release evidence and limits](records/bentopdf-updater-2026-11-11.md).
 
+At 02:36 UTC on 11 November, the signed zlib/libXpm follow-up was deployed to
+23 stateless frontends. Same-database scans remove 45 medium package findings;
+all candidate runtime scans have zero high/critical findings. Application,
+privacy and unrelated runtime files are unchanged. All 175 containers are
+running and 90 configured health checks are healthy; only the 23 selected
+container identities changed. Public BentoPDF workflows pass again. Historical
+checker bindings now preserve 30 completed repair proofs without authorizing
+new artifacts or suppressing findings. The 30 ACL high records remain open;
+this was a targeted assessment, not a new complete fleet scan.
+[Evidence and rollback](records/stateless-libraries-2026-11-11.md).
+
 Current evidence: [release record](records/security-maintenance-2026-11-10.md),
 [exact status](../deployment/maintenance/security-20261110/status.json),
 [repeatable recipes / rollback](../deployment/maintenance/security-20261110/README.md)

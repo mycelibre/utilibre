@@ -40,7 +40,7 @@ services:
       - '10.10.1.43:3239:3239'
     networks: [static, ingress]
   glyphr:
-    image: utilibre-creative-batch-glyphr:musl-security-20261109
+    image: utilibre-libraries-creative-batch-glyphr:20261111
     restart: unless-stopped
     read_only: true
     user: '101:101'

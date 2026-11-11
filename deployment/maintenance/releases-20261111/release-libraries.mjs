@@ -30,7 +30,11 @@ const config = g => JSON.parse(command(['docker', ...existingComposeArgs(g), 'co
 const configHash = s => { const {image, ...rest} = s; return hash(JSON.stringify(rest)); };
 const reportFile = root + '/release.json';
 const report = fs.existsSync(reportFile) ? read(reportFile) : {date: new Date().toISOString(), groups: []};
-const save = () => fs.writeFileSync(reportFile, JSON.stringify(report, null, 2) + '\n');
+const save = () => {
+  report.status = report.groups.length === inputs.rows.length && report.groups.every(g => g.status === 'passed') ? 'passed' : 'partial';
+  if (report.status === 'passed') report.completedAt = report.groups.map(g => g.completedAt).filter(Boolean).sort().at(-1);
+  fs.writeFileSync(reportFile, JSON.stringify(report, null, 2) + '\n');
+};
 
 function proof(s) {
   const dir = root + '/' + s.key;

@@ -1,7 +1,7 @@
 name: utilibre-qr-offline
 services:
   qr-offline:
-    image: utilibre-qr-offline-qr-offline:musl-security-20261109
+    image: utilibre-libraries-qr-offline-qr-offline:20261111
     build:
       context: /opt/utilibre/community-src/qr-offline-utilibre-p1
       dockerfile: /home/ubuntu/freetools/deployment/community/Dockerfile.qr-offline

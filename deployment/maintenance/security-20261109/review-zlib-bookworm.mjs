@@ -5,6 +5,7 @@ import{additionalOverlayReceipts}from'../followup-overlays.mjs';
 import{expatDescendant}from'../security-20261103/expat-policy.mjs';
 import{validateDecision}from'../triage.mjs';
 import{proveZlibBookworm,zlibBookwormRelease}from'./zlib-bookworm-policy.mjs';
+import{checkerIdentity}from'../releases-20261111/recorded-checkers.mjs';
 process.umask(0o077);assert.equal(process.argv.length,2);
 const root='/var/lib/utilibre-maintenance',dir=root+'/security-20261109/zlib-bookworm',read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 const spec=read(new URL('./zlib-bookworm-inputs.json',import.meta.url)),sourceSpec=read(new URL('./zlib-bookworm-source.json',import.meta.url)),source=read(dir+'/output/build.json'),release=read(dir+'/release.json'),offer=read(dir+'/source-offer.json'),scan=read(root+'/security.json'),queue=read(root+'/security-queue.json');
@@ -21,7 +22,7 @@ const run=args=>cp.execFileSync('docker',args,{encoding:'utf8',timeout:30000,max
 for(const s of spec.rows){
  const p=dir+'/'+s.key,b=read(p+'/build.json'),n=read(p+'/native.json'),gate=read(p+'/scan-gate.json'),scope=read(p+'/scope.json');
  proveZlibBookworm(spec,s,b,n,source);
- zlibBookwormRelease(spec,s,b,gate,scope,{source:sha(dir+'/output/build.json'),scope:sha(p+'/scope.json'),preparer:sha(new URL('./zlib-bookworm.mjs',import.meta.url)),scopeChecker:sha(new URL('./zlib-bookworm-scope.py',import.meta.url)),exporter:sha(new URL('./zlib-check.py',import.meta.url))});
+ zlibBookwormRelease(spec,s,b,gate,scope,{source:sha(dir+'/output/build.json'),scope:sha(p+'/scope.json'),preparer:sha(new URL('./zlib-bookworm.mjs',import.meta.url)),scopeChecker:sha(new URL('./zlib-bookworm-scope.py',import.meta.url)),exporter:checkerIdentity('deployment/maintenance/security-20261109/zlib-check.py',spec.verification.exporter,b.imageId)});
  const artifacts=s.containers.map(name=>expatDescendant(name,b.imageId,'1970-01-01T00:00:00Z',scan.date,descendants));
  assert.equal(new Set(artifacts).size,1,'Shared zlib roles diverged');const artifact=artifacts[0];
  assert.equal(scan.images.find(i=>i.id===artifact)?.status,'checked');

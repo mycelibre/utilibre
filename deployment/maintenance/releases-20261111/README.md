@@ -76,6 +76,20 @@ change or application migration is included. These stateless checks do not
 establish new browser/device coverage. Stateful/gateway packages and the
 separate ACL caller migration remain outside this release.
 
+Changing shared verification scripts must not invalidate completed repairs.
+`recorded-checkers.json` binds the old scope checker and nginx fixture to their
+exact source in commit `271686f`, for 30 specific previously deployed images.
+The complete historical proof gates still pass; unknown image IDs or changed
+hashes are rejected. New builds continue to use current checker bytes. This
+is source/evidence identity, not an advisory exception, finding suppression or
+permission to activate a stale candidate. No historical reproduction fixture
+was rerun. Retained evidence was read and checked only.
+
+Future application upgrades must preserve these package versions by building
+on the reviewed runtime or replaying the signed package step with new baseline
+and consumer proofs. This finite recipe does not automatically approve another
+upstream version, modified package, or arbitrary descendant image.
+
 This batch reuses the existing updaters, native BentoPDF build, air-gap packager,
 source publisher and scoped release helpers. It adds no scheduler or service.
 

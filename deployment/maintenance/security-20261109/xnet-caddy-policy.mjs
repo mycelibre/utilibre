@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
+import {checkerIdentity} from '../releases-20261111/recorded-checkers.mjs';
 const root='/var/lib/utilibre-maintenance/security-20261109/xnet-caddy';
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 const keys=['caddy-wishlist','caddy-newsletters-web','caddy-newsletters-mail-jobs'];
@@ -53,7 +54,7 @@ export function proveCaddy(s,{requireRecentCandidate=true}={}){
  const dependencies=fs.readFileSync(root+'/artifact/notices/linked-packages.txt','utf8').trim().split('\n');
  validateCaddy(s,b,n,checks,app,scan,dependencies);
  assert.equal(sha(new URL('./xnet-caddy.py',import.meta.url)),s.checkSha256);
- assert.equal(sha(new URL('./zlib-check.py',import.meta.url)),b.exporterSha256);
+ assert.equal(checkerIdentity('deployment/maintenance/security-20261109/zlib-check.py',b.exporterSha256,b.imageId),b.exporterSha256);
  assert.equal(sha(root+'/artifact/caddy'),s.binarySha256);
  assert.equal(sha(root+'/input/source.tar.gz'),inputs.sourceArchiveSha256);
  assert.equal(sha(root+'/source-scope-verified.json'),inputs.sourceScopeSha256);
