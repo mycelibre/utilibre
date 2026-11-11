@@ -7,6 +7,7 @@ import cp from 'node:child_process';
 
 // Exercise the real CLI rejection path, before privileged tools or writes.
 const cases=[
+ ['KitchenOwl portal profile is exclusive','../release-refresh-20261106/release-portal.mjs',['--apply','--kitchenowl','--held-upgrades'],/AssertionError/],
  ['retired Grid publisher','../../creative-batch/grid-publish.mjs',[],/Retired GridSpace/],
  ['unknown Grid flag','../../creative-batch/grid-publish.mjs',['--latest'],/Use --prepare-nov11/],
  ['conflicting portal profiles','../release-refresh-20261106/release-portal.mjs',['--apply','--upgrades','--stabilization'],/AssertionError/],
@@ -18,6 +19,9 @@ const cases=[
  ['CryptPad requires explicit activation','./release-cryptpad-upgrade.mjs',[],/AssertionError/],
  ['CryptPad refuses extra activation flags','./release-cryptpad-upgrade.mjs',['--apply','--latest'],/AssertionError/],
  ['portal release profiles remain exclusive','../release-refresh-20261106/release-portal.mjs',['--apply','--upgrades','--held-upgrades'],/AssertionError/],
+ ['KitchenOwl cannot activate through preparation','./prepare-kitchenowl.mjs',['--deploy','unused'],/AssertionError/],
+ ['KitchenOwl rejects output traversal','./prepare-kitchenowl.mjs',['--build','../outside'],/AssertionError/],
+ ['KitchenOwl source offer has one destination','./prepare-kitchenowl.mjs',['--source','other'],/AssertionError/],
 ];
 for(const [label,file,args,message]of cases)test(label,()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'utilibre-upgrade-boundary-'));

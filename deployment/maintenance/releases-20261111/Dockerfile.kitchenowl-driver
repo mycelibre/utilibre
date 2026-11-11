@@ -1,0 +1,7 @@
+FROM utilibre-kitchenowl:0.8.1-candidate
+USER root
+RUN PYTHONDONTWRITEBYTECODE=1 /opt/venv/bin/python -c 'import importlib.metadata as m; assert m.version("psycopg-binary")=="3.3.8"; assert m.version("psycopg")=="3.3.8"'
+RUN rm -rf /opt/venv/lib/python3.14/site-packages/psycopg_binary /opt/venv/lib/python3.14/site-packages/psycopg_binary.libs /opt/venv/lib/python3.14/site-packages/psycopg_binary-3.3.8.dist-info
+ENV PSYCOPG_IMPL=python
+RUN PYTHONDONTWRITEBYTECODE=1 /opt/venv/bin/python -c 'import psycopg; assert psycopg.pq.__impl__=="python"; assert psycopg.pq.version()==170011'
+USER 1000:1000

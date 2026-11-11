@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "previousQueueSha256": "660fc4aec221bbaa8d80035d29ddfbdd5aab2317ccb30e9bcf5ac390c2bf2ff2",
+  "decisions": 226,
+  "scope": "Exact unchanged Debian component decisions only, same database, original expiries; ACL stays open."
+}

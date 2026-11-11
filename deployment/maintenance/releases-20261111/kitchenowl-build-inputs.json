@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "3cc27f41e3de3d805abd66bdac9eb283eb16e72c",
+  "flutterRevision": "c197ca5199e9ee5661e865596c9c07294dfab51c",
+  "flutterVersion": "3.47.9",
+  "engineRevision": "89c39edfdfae2949f6806e4a315c0c08522238b7",
+  "upstreamImage": "tombursch/kitchenowl@sha256:544389fa6f783e5357a014118f008a1e3dfa1750c6f6cb708853b905ae3fbe54",
+  "images": {
+    "utilibre-krb5-kitchenowl-app:1.22.3-20261110": "sha256:969fa23ad70d6c1d4501b31bde59baa31096bc90b84ad334398b772d1acf610e",
+    "utilibre-kitchenowl:0.8.1-candidate": "sha256:c2f5c5020330944b50309585dd1c4d10d489b441f2ecde2f42c2d69d65d5b109",
+    "utilibre-kitchenowl:0.8.1-system-driver": "sha256:c02fe943caf69ec02541f9bcc3bd1164e158854e3f0f4c225959ef71e896e42d",
+    "utilibre-kitchenowl-flutter-builder:20261111": "sha256:150e5fe6846de565306e3ae316725f856f9ea1e6d13184eded52b0d8c34e1d43"
+  },
+  "patchSha256": "344c6de79d78eccf81a3452f05938475a5883ce9a407e6a8c6acc26fd1c3f5cf",
+  "applicationLockSha256": "49c0cf2ad485ea516aaba33505ff9d13e752fffa30eeba13055fa412e725011b",
+  "flutterToolLockSha256": "6a98afb61c0cc72f31631ab444932f072fd275aa04d56cde2bf6831ba02fc8f8",
+  "outputImage": "sha256:c8fc1a7e79c48e8f5644bfb5e2df37e5a81a77cc92f3212d869013d9e1868960",
+  "replay": "Requires the recorded local compiler and dependency cache; missing inputs are a failure. No network during build; no byte-identical build claim. The Dart-to-Wasm alternate target is not approved.",
+  "sdkFiles": {
+    "bin/internal/engine.version": "baa7fb8bf22221a96dd53bda2615b95049b2fbe59bdbe4e0c6b6c6af98c3a8d9",
+    "bin/cache/dart-sdk/bin/dart": "01e869e4af277734b02ab8898b870c6b00c9bec61bbcf9c923cd14de7ed85fbb",
+    "bin/cache/flutter_tools.snapshot": "ad49e0a0e679235fd4a7bf3fbe93eb6ec364f9cb8a81405d1719337640294a54",
+    "packages/flutter_tools/pubspec.lock": "6a98afb61c0cc72f31631ab444932f072fd275aa04d56cde2bf6831ba02fc8f8"
+  },
+  "patchedMainSha256": "308475f6cdfeb7a2829d2f7a630f1cc52d91839e8c839a62591a861a1692ec79",
+  "preparedDependencies": {
+    ".dart_tool/package_config.json": "d4285e5988f879bf09d0a130df26f0c02af745b08627b25c1a3bdf95dda559da",
+    ".dart_tool/package_graph.json": "8d7f6d60e2ec0e0ce4ec580124b880189ea6a4889c619574fc3925a4f1924f02",
+    ".flutter-plugins-dependencies": "5057d83d6b54d9f6e89b31aeac49d3da59d9e3d2b5bef9f11f4c381805d43d31"
+  }
+}

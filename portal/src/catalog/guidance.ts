@@ -255,10 +255,10 @@ const october9TaskChecks: Partial<Record<string, LocalizedText>> = {
     en: "9 October 2026: Public native sign-in, fictional group/list/item creation, private-list access denial, deletion and isolated restore passed. An isolated image/claim check also passed. Direct item deletion removed its image; group deletion left an uploaded image accessible. Atomic database/image snapshots were not tested.",
     es: "9 de octubre de 2026: Pasaron el acceso nativo público, la creación de un grupo, lista y artículo ficticios, el rechazo de acceso a listas privadas, la eliminación y una restauración aislada. También pasó una prueba aislada de imágenes y reservas. Borrar un artículo directamente eliminó su imagen; borrar el grupo dejó una imagen cargada accesible. No se probaron instantáneas atómicas de base de datos e imágenes.",
   },
-  // docs/records/kitchenowl-deployment-2026-10-09.md
+  // docs/records/held-upgrades-2026-11-11.md
   "kitchenowl": {
-    en: "9 October 2026: Public native sign-in and a fictional item/recipe JSON round trip between two households passed, with access denial, deletion and isolated backup checks. Image/expense migration and other clients were not tested.",
-    es: "9 de octubre de 2026: Pasaron el acceso nativo público y la exportación e importación JSON de artículos y recetas ficticios entre dos hogares, con rechazo de acceso, eliminación y respaldo aislado. No se probaron la migración de imágenes o gastos ni otros clientes.",
+    en: "11 November 2026: Isolated checks passed for sign-in, session refresh, household and recipe migration, JSON export/import, reload, deletion and backup restore. Browser checks used a synthetic identity provider and a 390px viewport. Image/expense migration and native mobile clients were not tested.",
+    es: "11 de noviembre de 2026: Pasaron pruebas aisladas de acceso, renovación de sesión, migración de hogares y recetas, exportación e importación JSON, recarga, eliminación y restauración de respaldos. Las pruebas de navegador usaron un proveedor de identidad ficticio y una vista de 390 px. No se probaron la migración de imágenes o gastos ni las aplicaciones móviles nativas.",
   },
   // docs/records/opengist-deployment-2026-10-09.md
   "opengist": {

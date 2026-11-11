@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "date": "2026-11-11T18:08:31.983585+00:00",
+  "date": "2026-11-11T19:06:35.238204+00:00",
   "scope": "Held upstream upgrade completion and ACL vendor review; host status checked separately",
   "counts": {
     "assessedCandidates": 30,
-    "deployedApplications": 7,
-    "heldApplications": 23,
+    "deployedApplications": 8,
+    "heldApplications": 22,
     "sourceInputsSupported": 27,
     "sourceCoverageGaps": 3,
     "recordedPatchConflicts": 12
@@ -352,8 +352,8 @@
       "application": "kitchenowl",
       "candidateVersion": "v0.8.1",
       "revision": "3cc27f41e3de3d805abd66bdac9eb283eb16e72c",
-      "status": "held",
-      "reason": "Prepared 0.8.1 with repaired runtime preserved; native migration/export/restore passes. Browser OIDC fixture is unresolved on candidate and predecessor; production unchanged.",
+      "status": "deployed-verified",
+      "reason": "Deployed 0.8.1-p1 with retained runtime and native Psycopg system driver; startup callback correction passed repeated browser sign-in, session refresh, migration, JSON export/import and restore. Existing ACL finding stays open.",
       "sourceAssessment": {
         "status": "assessed",
         "ecosystems": [
@@ -374,7 +374,11 @@
         "patches": [],
         "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
         "status": "no-patch-sequence-recorded"
-      }
+      },
+      "releasedArtifact": "sha256:c8fc1a7e79c48e8f5644bfb5e2df37e5a81a77cc92f3212d869013d9e1868960",
+      "retainedFixRecipe": "deployment/maintenance/releases-20261111/held-inputs.json#kitchenowl",
+      "evidenceRoot": "/var/lib/utilibre-maintenance/held-upgrades-20261111/kitchenowl",
+      "releaseReceiptSha256": "1ed54f8929302ef041020e60147d2cc4924cb4269136babb52759ebdbe346a4d"
     },
     {
       "application": "opengist",

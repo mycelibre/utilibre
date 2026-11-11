@@ -5,6 +5,7 @@ export const additionalOverlayReceipts = [
   // Reviewers verify each retained native repair in the successor image.
   // This records release lineage; it is not a blanket waiver.
   'held-upgrades-20261111/candlr-release/result.json',
+  'held-upgrades-20261111/kitchenowl-release/result.json',
 
   'vendor-libs-20261111/release.json',
   'libraries-20261111/release.json',

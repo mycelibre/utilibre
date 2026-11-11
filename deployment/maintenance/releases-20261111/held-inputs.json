@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "scope": "Finite reviewed Chhoto, ByteStash and WBO upgrades; no universal update approval",
+  "scope": "Finite reviewed application upgrades; no universal update approval",
   "applications": {
     "chhoto": {
       "approval": "approved-exact-tested-candidate",
@@ -149,6 +149,59 @@
         "utilibre-candlr-frontend:2.4.0-candidate": "sha256:8be05df6fbd3222fcb735ed83f74f394d5d4b653a441d7ef3492e68c287c727a"
       },
       "patchedLockSha256": "37c8ea2429bf1e3534e326e71d96167b849deaa3733e0482b2149434dc4c9496"
+    },
+    "kitchenowl": {
+      "approval": "approved-exact-tested-candidate",
+      "version": "0.8.1-p1",
+      "revision": "3cc27f41e3de3d805abd66bdac9eb283eb16e72c",
+      "name": "utilibre-kitchenowl-app-1",
+      "oldImage": "sha256:969fa23ad70d6c1d4501b31bde59baa31096bc90b84ad334398b772d1acf610e",
+      "newImage": "sha256:c8fc1a7e79c48e8f5644bfb5e2df37e5a81a77cc92f3212d869013d9e1868960",
+      "newRef": "utilibre-kitchenowl:0.8.1-startup-fixed",
+      "url": "https://kitchen.utilibre.org/",
+      "archive": "kitchenowl-utilibre.tar.gz",
+      "native": "migration-native/result.json",
+      "scan": "startup-final-scan.json",
+      "retainedRuntime": "startup-retained-runtime.json",
+      "additionalNative": [
+        "browser-native/result.json"
+      ],
+      "evidence": {
+        "migration-native/result.json": "835ea4bae2e59775c9d62beeeff860dcf2eaa3f6a9b144782e27b7a885e44e10",
+        "browser-native/result.json": "9cbb0bccc175fa8748c3302403e453d76879271fa6673e56eed0a86b09e2ce05",
+        "startup-final-scan.json": "702d70c3b165890b58a153ce247d948302324d6a70afac98873dbc350fa31017",
+        "startup-retained-runtime.json": "3c5b87964a1db247e627f09f843df5fd4f05344c0b62508f56d62cd680d7b5c1",
+        "recipe-replay-3/result.json": "16ece04dc1126c4dd049021dbcef61b02faf13b2912dc73c63b081b2420e7a60"
+      },
+      "recipes": {
+        "deployment/maintenance/releases-20261111/Dockerfile.kitchenowl-upstream": "f0802ace5951b4625f6ef7707cc595cfb6af0727197a48605d1047b57fadf8b3",
+        "deployment/maintenance/releases-20261111/Dockerfile.kitchenowl-driver": "1f74c3c95b0d5f015893cb61588b8d7687b7d7a0387afdeb56c638c8dda60767",
+        "deployment/maintenance/releases-20261111/Dockerfile.kitchenowl-web": "d178b84756ddfc97c1fcbcac6ea1156e092eb8a8f1d5d1bbf3259485bb59f0f6",
+        "deployment/maintenance/releases-20261111/Dockerfile.kitchenowl-compiler": "bfae9d4c06d13e95190a13fce35f5a4ba4c4572596df6cc70ad39c687ae94e9a",
+        "deployment/maintenance/releases-20261111/check-kitchenowl-upgrade.py": "ad7c946dc47fac7d9f00ca765c42c675b3222756c878dc33bc28efc19a926665",
+        "deployment/maintenance/releases-20261111/check-kitchenowl-browser.py": "d4fbb9491b3cf85f780d7dbdf93a5a775b9c7d476aa3b0e69b001edecf7224a1",
+        "deployment/maintenance/releases-20261111/check-kitchenowl-browser.mjs": "dca2f6de943216838f3b0891893e4dc3edee763e982e325a4a64c5608b1afc1b",
+        "deployment/maintenance/releases-20261111/check-kitchenowl-runtime.py": "3749138e7775620d805c7f4f16930b3b053a88757da9a2c12dab55ebd6b6f57a",
+        "deployment/maintenance/releases-20261111/kitchenowl-0.8.1.patch": "344c6de79d78eccf81a3452f05938475a5883ce9a407e6a8c6acc26fd1c3f5cf",
+        "deployment/maintenance/releases-20261111/kitchenowl-build-inputs.json": "b85aadd57ab05309228e4f4c062a0ada3d1e0fe59760f585cca005812267ca83",
+        "deployment/maintenance/releases-20261111/prepare-kitchenowl.mjs": "356f02e5c2ab546484ea2dd713fc80d4d1de5b84ae31f43be04bd095054c7b92",
+        "deployment/maintenance/releases-20261111/KITCHENOWL.md": "360afe41a6e10f573d188774202e4e4e04ce9a18752ab0f26a4d46be78fdc17e",
+        "deployment/maintenance/releases-20261111/held-policy.mjs": "8e88f150dec48216e4e2fafb260948830b9b156a7291d0e270109598706dc794"
+      },
+      "databaseUpdatedAt": "2026-11-10T19:01:23.081219346Z",
+      "rollback": "Retain old image, native SQLite snapshot and saved-account files. Image rollback does not reverse migration; restoring a snapshot needs a separate decision and can discard later writes.",
+      "limitations": [
+        "Synthetic OIDC issuer and Chromium 390px viewport; real identity provider, native clients and image/expense migration not retested.",
+        "ACL caller finding remains open. Unchanged Debian component decisions keep their original expiry.",
+        "Git alone is not a complete runtime backup; replay needs the retained compiler and dependency inputs. No byte-identical build claim."
+      ],
+      "buildImages": {
+        "utilibre-krb5-kitchenowl-app:1.22.3-20261110": "sha256:969fa23ad70d6c1d4501b31bde59baa31096bc90b84ad334398b772d1acf610e",
+        "utilibre-kitchenowl:0.8.1-candidate": "sha256:c2f5c5020330944b50309585dd1c4d10d489b441f2ecde2f42c2d69d65d5b109",
+        "utilibre-kitchenowl:0.8.1-system-driver": "sha256:c02fe943caf69ec02541f9bcc3bd1164e158854e3f0f4c225959ef71e896e42d",
+        "utilibre-kitchenowl-flutter-builder:20261111": "sha256:150e5fe6846de565306e3ae316725f856f9ea1e6d13184eded52b0d8c34e1d43"
+      },
+      "patchedLockSha256": "49c0cf2ad485ea516aaba33505ff9d13e752fffa30eeba13055fa412e725011b"
     }
   }
 }

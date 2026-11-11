@@ -3,11 +3,11 @@
 ## Held upgrades: second checkpoint
 
 Chhoto 7.11.3-p1, ByteStash 1.6.2-p1, WBO 2.18.33-p1, Candlr 2.4.0-p1
-and CryptPad 2026.10.1 are deployed. With the earlier Wakapi and GridSpace
-updates, the matrix now records **7 deployed / 23 held** candidates. See the
+CryptPad 2026.10.1 and KitchenOwl 0.8.1-p1 are deployed. With the earlier Wakapi and GridSpace
+updates, the matrix now records **8 deployed / 22 held** candidates. See the
 [native checks, host inspection and recovery record](../../../docs/records/held-upgrades-2026-11-11.md).
 
-`held-inputs.json` and `held-policy.mjs` bind the four image replacements to
+`held-inputs.json` and `held-policy.mjs` bind the five image replacements to
 their exact source, lockfile, recipes, evidence and images. The existing release
 adapter accepts `SERVICE --apply --held-nov11` only for those reviewed inputs.
 `prepare-held-sources.mjs` prepares corresponding source independently of
@@ -27,11 +27,18 @@ directory. Replay them only in an isolated environment with the exact retained
 inputs; do not overwrite previous reports. A passing historical test is not
 current advisory clearance. No byte-identical build claim is made.
 
+[KitchenOwl's recipe](KITCHENOWL.md) records the native sign-in timing repair,
+repaired-system Psycopg driver, offline Flutter build and migration/recovery
+checks. Preparation never activates the candidate. The completed release and
+new portal metadata have their own exact artifact/evidence bindings.
+
 `review-candlr-upgrade.mjs` revalidates 46 exact prior Debian component
 decisions against the completed release and full filesystem comparison. It
 requires the same advisory snapshot, exact old queue hash and still-valid
 original expiry. Its private output is applied separately with the existing
-triage command; the ACL finding remains open. The 18:19 UTC fleet assessment
+triage command; the ACL finding remains open. Its explicit `kitchenowl` mode
+uses the same checks for 226 prior unchanged Debian component decisions with
+a separate SHA-bound queue and the original expiries. The 18:19 UTC fleet assessment
 completed 109 images, 113 source inputs and host packages. See the release
 record for the separately discovered unmanaged host-tool coverage gaps.
 

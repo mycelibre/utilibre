@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "deployed-verified",
+  "version": "0.8.1-p1",
+  "imageId": "sha256:c8fc1a7e79c48e8f5644bfb5e2df37e5a81a77cc92f3212d869013d9e1868960",
+  "portalImage": "sha256:08671fd6eef21b510e276ccb7f465d26e10c5feb6f6552753e0786bfb96182e2",
+  "releaseReceiptSha256": "1ed54f8929302ef041020e60147d2cc4924cb4269136babb52759ebdbe346a4d",
+  "portalReleaseReceiptSha256": "8ade968cb0e5f7e41228db5e9d613d1157e5eb8f401c6c683ff154fd2251568a",
+  "sourceOfferSha256": "ee09c4538eca16fc143dfce91ed545037e31f59362c64318b869c9d7430ae3bc",
+  "securityCompletedAt": "2026-11-11T19:09:00.473Z",
+  "securityReportSha256": "74df701819829a68b42620039f34a25ec2bc1984c3f763c49fc48303f3453ead",
+  "pendingCritical": 0,
+  "pendingHigh": 30,
+  "pendingScope": "ACL across fleet; not a count of new KitchenOwl findings",
+  "retainedRuntimeReviews": 226,
+  "rawCritical": 66,
+  "rawHigh": 4085,
+  "hostUpdatesPerformed": false,
+  "realProviderRetested": false,
+  "realPhoneRetested": false,
+  "evidenceRoot": "/var/lib/utilibre-maintenance/held-upgrades-20261111/kitchenowl"
+}

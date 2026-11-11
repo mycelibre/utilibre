@@ -817,5 +817,13 @@
     "prerequisites": [],
     "purpose": "Forward-port the abuse-report footer and retain the exact vendored braces repair on 2026.10.1; activation has separate native gates.",
     "removeWhen": "A supported upstream configuration or correction passes the corresponding native, privacy and upgrade checks."
+  },
+  {
+    "patch": "deployment/maintenance/releases-20261111/kitchenowl-0.8.1.patch",
+    "source": "/var/lib/utilibre-maintenance/held-upgrades-20261111/kitchenowl/source",
+    "revision": "3cc27f41e3de3d805abd66bdac9eb283eb16e72c",
+    "prerequisites": [],
+    "purpose": "Capture the requested web route before asynchronous startup so a fast native health response does not discard the OIDC callback; native authentication and permissions are preserved.",
+    "removeWhen": "Upstream captures the startup route before asynchronous authentication and the native migration, callback, reload and privacy checks pass without this patch."
   }
 ]

@@ -1,0 +1,5 @@
+FROM utilibre-kitchenowl:0.8.1-system-driver
+USER root
+RUN rm -rf /var/www/web/kitchenowl && mkdir -p /var/www/web/kitchenowl && chown 1000:1000 /var/www/web/kitchenowl
+COPY --chown=1000:1000 web/ /var/www/web/kitchenowl/
+USER 1000:1000

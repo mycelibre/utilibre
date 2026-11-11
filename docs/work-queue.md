@@ -3,17 +3,18 @@
 ## Current held-upgrade checkpoint — 11 November 2026
 
 Chhoto 7.11.3-p1, ByteStash 1.6.2-p1, WBO 2.18.33-p1, Candlr 2.4.0-p1
-and CryptPad 2026.10.1 are deployed with retained repairs and native workflow
-checks. Including Wakapi and GridSpace, **7 of 30 candidates are deployed;
-23 remain held**. KitchenOwl migration/export/restore checks pass, but its
-browser sign-in fixture still needs resolution before release.
+CryptPad 2026.10.1 and KitchenOwl 0.8.1-p1 are deployed with retained repairs
+and native workflow checks. Including Wakapi and GridSpace, **8 of 30 candidates
+are deployed; 22 remain held**. KitchenOwl's startup callback correction passed
+repeated isolated sign-in, migration/export/restore, privacy and browser checks.
+The corresponding source and EN/ES catalogue update are also deployed.
 
 Read-only VM inspection found no pending APT upgrades against the same-day
 package index, the newest installed kernel already running, and no reboot
 marker. Separate checks found newer Node 24.22.3, Trivy 0.76.2, Python 3.13.18
 and Restic 0.19.1 releases than the executing host tools. These need their own
 compatibility/update work; APT does not establish that all background tools
-are current. The 18:19 UTC frozen-database scan completed all 109 images,
+are current. The 19:09 UTC frozen-database scan completed all 109 images,
 113 source inputs and host packages; 0 critical / 30 ACL high records remain
 pending. This does not close those unmanaged-tool gaps or verify the separate
 Proxmox/Caddy hosts. [Checks, exact evidence and recovery](records/held-upgrades-2026-11-11.md).

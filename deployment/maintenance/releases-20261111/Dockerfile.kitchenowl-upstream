@@ -1,0 +1,8 @@
+FROM tombursch/kitchenowl@sha256:544389fa6f783e5357a014118f008a1e3dfa1750c6f6cb708853b905ae3fbe54 AS upstream
+FROM utilibre-krb5-kitchenowl-app:1.22.3-20261110
+USER root
+RUN rm -rf /opt/venv /usr/src/kitchenowl /var/www/web/kitchenowl
+COPY --from=upstream --chown=1000:1000 /opt/venv /opt/venv
+COPY --from=upstream --chown=1000:1000 /usr/src/kitchenowl /usr/src/kitchenowl
+COPY --from=upstream --chown=1000:1000 /var/www/web/kitchenowl /var/www/web/kitchenowl
+USER 1000:1000

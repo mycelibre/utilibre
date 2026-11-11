@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "base": "sha256:e69df837b3e3e9557cc2d91939e8a41bfc8d9d0e71aec77de74ebee2ad932458",
+  "imageId": "sha256:08671fd6eef21b510e276ccb7f465d26e10c5feb6f6552753e0786bfb96182e2",
+  "candidate": "utilibre-portal:kitchenowl-20261111",
+  "sourceRevision": "0ff804a917b01c6f9454687b6eebeca8ff4bd36f",
+  "expectedVersions": [
+    "0.8.1-p1",
+    "7.11.3-p1",
+    "1.6.2-p1",
+    "2.18.33-p1",
+    "2.4.0-p1",
+    "2026.10.1"
+  ],
+  "retainedFindings": [],
+  "evidence": {
+    "portal-staging.txt": "429cf1035dc9cb0f6942a27063075586123306d39e17e8950fd1fdedfcaceac0",
+    "portal-checks.txt": "5bf19d1ff7d6521bb131ea92fc64ae0210c838042f898e621721fb83da3e8c5f",
+    "portal-before-scan.json": "d17bc3185eb202fb140eb5a61dc33c79ff16bd3b9308f6c7867bf3f864da43b3",
+    "portal-after-scan.json": "38d24b5885e0a1987621b63067333394192ea01607dc50411f80810218f0f95a"
+  },
+  "sourceChanges": {
+    "portal/src/catalog/upstreams.ts": "135b288c39037516ca553e6bf955284b9714103e4b2e2f70f75f2f31ff3213a0",
+    "portal/src/catalog/guidance.ts": "9876cab19a3014b34b525cbdabdfd4c655b5597605872070c2feede667ec2873"
+  },
+  "buildScope": "Clean committed snapshot plus only KitchenOwl metadata and source patch; recorded locked dependencies, offline 2-CPU/2-GiB build."
+}

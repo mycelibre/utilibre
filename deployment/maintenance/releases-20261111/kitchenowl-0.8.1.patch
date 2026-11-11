@@ -1,0 +1,22 @@
+--- a/kitchenowl/lib/main.dart
++++ b/kitchenowl/lib/main.dart
+@@ -9,8 +9,19 @@
+ import 'package:kitchenowl/services/api/api_service.dart';
+ import 'package:kitchenowl/services/background_task.dart';
+ import 'app.dart';
++import 'router.dart' show initialLocation;
+ 
+ Future main() async {
++  // Capture the requested web route before asynchronous authentication startup.
++  // A fast health response must not discard an OIDC callback or deep link.
++  if (kIsWeb) {
++    final requested = Uri.base;
++    initialLocation = Uri(
++      path: requested.path,
++      query: requested.hasQuery ? requested.query : null,
++      fragment: requested.hasFragment ? requested.fragment : null,
++    );
++  }
+   WidgetsFlutterBinding.ensureInitialized();
+   usePathUrlStrategy();
+   if (!kIsWeb) await findSystemLocale(); //BUG in package for web?

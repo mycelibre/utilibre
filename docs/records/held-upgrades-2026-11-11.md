@@ -14,6 +14,7 @@ issues.
 | WBO | 2.18.33-p1 | Native telemetry SDK remains disabled, with all exporters disabled and the internal network retained. Two browser sessions edited, reconnected and exported SVG; legacy board parsing passed. Activation required an empty temporary board store and zero connections. |
 | Candlr | 2.4.0-p1 | Retained dependency repairs, disabled automatic update requests and external notification/media controls. Saved-account migration, private events, JSON export, reload, deletion and backup/old-image recovery passed. Native OIDC router bytes are unchanged; a real identity-provider login was not exercised. |
 | CryptPad | 2026.10.1 | Retained privacy configuration, vendored repair and Office 9.3.2+3 assets. Old accounts, Rich Text and Office documents migrated; native team/personal exports, two-client editing, Document Undo, reload and Word export passed. Both production origins and container health passed. |
+| KitchenOwl | 0.8.1-p1 | Retained system-library repairs, supported Psycopg system driver and a startup-route correction. Synthetic OIDC, refreshed-session rejection, household/recipe migration, JSON import/export, reload, deletion, backup/old-image recovery and production-equivalent browser headers passed. |
 
 Each exact image passed the existing scoped release health/public-route checks.
 Corresponding source archives were published at the existing source-offer URLs;
@@ -21,7 +22,7 @@ previous images and archives remain available. Account data, access rules and
 retention were preserved. Tests used fictional inputs and isolated services.
 Chromium viewport checks are not a new physical-phone verification.
 
-The EN/ES catalogue now reports all five releases. Its isolated build, lint,
+The EN/ES catalogue now reports all six releases. Its isolated build, lint,
 typecheck, FOSS policy and all 122 unit tests pass; the scoped release passed
 public version checks. Staging also returned a genuine 404 for an absent page.
 Both old and new portal runtime scans had zero matches against the same
@@ -44,14 +45,32 @@ Document Undo does not imply spreadsheet Undo works in Fast mode; the
 [native spreadsheet instructions](https://docs.cryptpad.org/en/user_guide/apps/sheets.html#undo-and-collaboration-modes)
 describe that distinction (checked 11 November).
 
-KitchenOwl 0.8.1 preserves repaired system libraries and uses Psycopg's
-supported Python implementation with system libpq. Synthetic database
-migration, household/recipe export, backup restore and old-image recovery
-pass. Browser OIDC verification is incomplete: the fixture's redirect/waiting
-behavior also failed against the installed predecessor. This is not evidence
-that production OIDC is broken. Keep the production version until the browser
-journey passes. The final image has no added high/critical matches relative to
-the exact retained runtime; the open ACL record remains.
+KitchenOwl 0.8.1-p1 is now deployed. Investigation identified a timing issue:
+a fast health response could redirect before the browser captured the OIDC
+callback. The predecessor also exhibited it; this is not presented as a new
+upstream security vulnerability. A 12-line startup correction preserves the
+requested route before asynchronous authentication. Repeated browser checks
+passed with a synthetic issuer, session refresh and rejection of the old
+session, household JSON import/export, reload and deletion. The tested
+production-equivalent CSP also passed, with no external origins observed.
+Native mobile clients, real-provider login and image/expense migration were
+not retested.
+
+The exact source/patch was replayed from a clean Git archive with networking
+disabled. This Flutter SDK attempted an advisory lookup even in offline
+`pub get`; that run failed safely. The final adapter uses hash-bound native
+package-configuration files from controlled acquisition and `--no-pub`.
+The 4 GiB compiler attempt failed; the 6 GiB, two-CPU JavaScript build passed.
+The alternate Dart-to-Wasm dry run failed and is not approved. No
+byte-identical build claim is made. Failed scratch source copies were removed
+only after preserving their logs; release artifacts and rollback inputs remain.
+
+See [the exact build, tests, source publication and rollback recipe](../../deployment/maintenance/releases-20261111/KITCHENOWL.md).
+The application image, frontend and source offer are deployed. The catalogue
+build passed lint, typecheck, FOSS policy and 122 unit tests, followed by EN/ES
+staging, missing-page and public version checks. Both portal runtime scans had
+zero matches in the same database. The matrix now records **8 deployed / 22
+held** candidates; neither this upgrade nor APT currency completes that queue.
 
 ## Debian and the underlying VM
 
@@ -111,6 +130,23 @@ backports and component-specific non-applicability. These are not counts of
 confirmed exploitable vulnerabilities. The unmanaged-tool gaps above remain
 separate work and must not be hidden by this queue total.
 
+The KitchenOwl/portal follow-up scan completed at **19:09 UTC**, again checking
+109 images, 113 configured source inputs and host packages with the same DB.
+The native tests and full image comparison allowed 226 prior unchanged Debian
+component decisions to be carried to the exact KitchenOwl image, retaining
+their original expiry. No new exception was created. The current queue remains
+**0 critical / 30 high pending**, all ACL; raw observations are 66 critical /
+4,085 high. This does not include unmanaged Node/Trivy coverage or prove every
+compiled frontend dependency is routinely scanned. KitchenOwl's separate
+candidate-source assessment is preserved in the upgrade matrix.
+
+All 175 production containers were running, no configured health check was
+unhealthy/starting, and no systemd unit was failed. Repeating the KitchenOwl
+release command verified the exact artifact without restarting it. The
+15 release/preparation boundary tests and 12 review-policy tests passed.
+The repository diff check's only issue within this change was the required
+blank context line in the unified patch; other changed files passed.
+
 ## Evidence and recovery
 
 Private evidence is under
@@ -133,8 +169,11 @@ node deployment/maintenance/release-refresh-20261106/release.mjs chhoto --apply 
 node deployment/maintenance/release-refresh-20261106/release.mjs bytestash --apply --held-nov11
 node deployment/maintenance/release-refresh-20261106/release.mjs wbo --apply --held-nov11
 node deployment/maintenance/release-refresh-20261106/release.mjs candlr --apply --held-nov11
+node deployment/maintenance/release-refresh-20261106/release.mjs kitchenowl --apply --held-nov11
 node deployment/maintenance/releases-20261111/release-cryptpad-upgrade.mjs --apply
 node deployment/maintenance/release-refresh-20261106/release-portal.mjs --apply --held-upgrades
+# Later KitchenOwl metadata artifact:
+node deployment/maintenance/release-refresh-20261106/release-portal.mjs --apply --kitchenowl
 ```
 
 Do not rebuild or resolve new dependencies during activation. Roll back only

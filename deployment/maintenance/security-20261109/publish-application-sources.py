@@ -32,7 +32,7 @@ def publish(key, held=False):
         receipt = json.loads((source / 'source-offer.json').read_text())
         assert hashlib.sha256((source / 'source.tar.gz').read_bytes()).hexdigest() == receipt['archiveSha256']
         name = spec['archive']
-        assert name in ('chhoto-utilibre.tar.gz', 'bytestash-utilibre.tar.gz', 'wbo-utilibre.tar.gz', 'candlr-utilibre.tar.gz')
+        assert name in ('chhoto-utilibre.tar.gz', 'bytestash-utilibre.tar.gz', 'wbo-utilibre.tar.gz', 'candlr-utilibre.tar.gz', 'kitchenowl-utilibre.tar.gz')
         dest = Path('/opt/utilibre/records/public') if key == 'candlr' else DEST
         if (dest / name).exists() and hashlib.sha256((dest / name).read_bytes()).hexdigest() == receipt['archiveSha256']:
             print(key + ': exact source offer already published; nothing changed')
@@ -106,5 +106,5 @@ def publish(key, held=False):
 if __name__ == '__main__':
     import sys
     held = len(sys.argv) == 3 and sys.argv[2] == '--held-nov11'
-    assert (held and sys.argv[1] in ('chhoto', 'bytestash', 'wbo', 'candlr')) or (len(sys.argv) == 2 and sys.argv[1] in PACKS)
+    assert (held and sys.argv[1] in ('chhoto', 'bytestash', 'wbo', 'candlr', 'kitchenowl')) or (len(sys.argv) == 2 and sys.argv[1] in PACKS)
     publish(sys.argv[1], held)
