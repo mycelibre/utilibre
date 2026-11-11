@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "scope": "Finite reviewed Chhoto, ByteStash and WBO upgrades; no universal update approval",
+  "applications": {
+    "chhoto": {
+      "approval": "approved-exact-tested-candidate",
+      "version": "7.11.3-p1",
+      "revision": "efb604ff99dc583ac836a2dde0b7cea09addda72",
+      "name": "utilibre-chhoto-app-1",
+      "oldImage": "sha256:ef26a9742a9a1e8e77551f074d741146924af0f3956d3c987535956c3fe7de98",
+      "newImage": "sha256:95f4ed2d99ac167790c5c4bf1e6c3b6615108dfb8bac75efdc97e493f27dcd3d",
+      "newRef": "utilibre-chhoto:7.11.3-candidate",
+      "url": "https://links.utilibre.org/",
+      "archive": "chhoto-utilibre.tar.gz",
+      "native": "native-final/result.json",
+      "scan": "candidate-scan.json",
+      "evidence": {
+        "native-final/result.json": "77e9a2bda5278c003be84513a61585642a64ddeddb90b88109788e77a918f953",
+        "candidate-scan.json": "e167850011d32fa1252f4326a19032592f62f0667247607245ae1f9b889687d8"
+      },
+      "recipes": {
+        "deployment/maintenance/releases-20261111/check-chhoto-upgrade.py": "b4cec30fbb6431fdc7f68a564af4fdecb53378e1ad38f08e358c854011e87334",
+        "deployment/maintenance/releases-20261111/Dockerfile.chhoto-fetch": "8f2c89bf528189819efe395e4906663ba0fc67c93f974238593f5ff7f519458b",
+        "deployment/maintenance/releases-20261111/Dockerfile.chhoto-build": "ecbc7f46f10ba782b69cd4744e352ce9b8fb1bf9c9c45d0be838921849ef04bd",
+        "deployment/maintenance/releases-20261111/chhoto-7.11.3.patch": "41cf24c6361599f8f4b7970f37a6c92313a3cd9d601871d99c054de1e4026044",
+        "deployment/maintenance/releases-20261111/held-policy.mjs": "8e88f150dec48216e4e2fafb260948830b9b156a7291d0e270109598706dc794",
+        "deployment/maintenance/releases-20261111/prepare-held-sources.mjs": "308db6d29f317c5f4934f3138f154d1c0bf60788169daff2ede12a9ae1b86193"
+      },
+      "databaseUpdatedAt": "2026-11-10T19:01:23.081219346Z",
+      "rollback": "Retained old image and before-upgrade saved-account snapshot; do not downgrade a migrated database automatically.",
+      "buildImages": {
+        "utilibre-chhoto-dependencies:7.10.8-p1": "sha256:b3254f1dda9fce782c35f70f3489214174d85ee60c512a3400d033db9b31e24f",
+        "utilibre-chhoto-dependencies:7.11.3-candidate": "sha256:86040ceb25478e0737b803cfd74699a432ec60114deb663ec50a6eadebe625df"
+      },
+      "patchedLockSha256": "b4123291682e403747ba4e5656074237abbd62e6197c85e5402c9a3db020e418",
+      "sourceInventoryScope": "Runtime image plus exact patched source lock; production credentials and account contents excluded."
+    },
+    "bytestash": {
+      "approval": "approved-exact-tested-candidate",
+      "version": "1.6.2-p1",
+      "revision": "eb4ecdfc30f2e7d1424137fa7fe3a9eed663218b",
+      "name": "utilibre-bytestash-bytestash-1",
+      "oldImage": "sha256:94d81d16e0eff04fefd3696398222b39cc629c11f574d616f629cd6da72852b3",
+      "newImage": "sha256:3e7ee6694aab40d09766f19929f389ddba7583ff80d1bff12d8aeb1ce0a3a01e",
+      "newRef": "utilibre-bytestash:1.6.2-candidate",
+      "url": "https://snippets-library.utilibre.org/",
+      "archive": "bytestash-utilibre.tar.gz",
+      "native": "native/result.json",
+      "scan": "candidate-scan-final.json",
+      "evidence": {
+        "native/result.json": "3e7898a7e151545af164b348f576a34e4b1185573c31f921cd4b9cb9ecce1abc",
+        "candidate-scan-final.json": "528278ea272bb43e0378a40b02d520d7c2f7a1090c1f65dd855718e37ff525fd"
+      },
+      "recipes": {
+        "deployment/maintenance/releases-20261111/check-bytestash-upgrade.py": "0d1ff7cfe7b5b2c5cea6960a5ac7b5f0fb283627055b500d7df8ecdc85498a16",
+        "deployment/maintenance/releases-20261111/Dockerfile.bytestash-fetch": "e71c60dd2662591b3e7561f14d4fb4baf77a2ea134393730a5416084dd08d912",
+        "deployment/maintenance/releases-20261111/Dockerfile.bytestash-build": "7218fe7cd8e7f7cf5f19919d18855ea4f089372617aaf11398deec63f7e101b3",
+        "deployment/maintenance/releases-20261111/bytestash-1.6.2.patch": "d53d1efa0ef188ad4466cac00f689fe5a9892619ea9b7053f93b5e2b7bd872aa",
+        "deployment/maintenance/releases-20261111/check-bytestash-upgrade-browser.mjs": "68f8aa43b39ca5b8d352acc12c15dda216162cc7dfdb413ac2f35649034616f5",
+        "deployment/maintenance/releases-20261111/held-policy.mjs": "8e88f150dec48216e4e2fafb260948830b9b156a7291d0e270109598706dc794",
+        "deployment/maintenance/releases-20261111/prepare-held-sources.mjs": "308db6d29f317c5f4934f3138f154d1c0bf60788169daff2ede12a9ae1b86193"
+      },
+      "databaseUpdatedAt": "2026-11-10T19:01:23.081219346Z",
+      "rollback": "Retained old image and before-upgrade saved-account snapshot; do not downgrade a migrated database automatically.",
+      "buildImages": {
+        "node:22-alpine": "sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402",
+        "utilibre-bytestash-deps:1.6.2-candidate": "sha256:e3d99645d8d7a4c954d17a4a664e5de3bb177479b921279c44539293e6890bc2"
+      },
+      "patchedLockSha256": "33cb2ba5052e18d8e800026abb41d51e122160a9cdb8024c7977018ed3874ec8",
+      "sourceInventoryScope": "Runtime image plus exact patched source lock; production credentials and account contents excluded."
+    },
+    "wbo": {
+      "approval": "approved-exact-tested-candidate",
+      "version": "2.18.33-p1",
+      "revision": "90ae10b5e46e8efeb9b0c8ad918524e336b3fedc",
+      "name": "utilibre-collaboration-pilot-wbo-1",
+      "oldImage": "sha256:6bbc458f700d5ea70d731eecd05ddd100d2c54e104aed7b4ee046961c568f771",
+      "newImage": "sha256:27f24ce0c306f14e86981b2456cbc8d2528af41106834887f44a364c6d6fb60a",
+      "newRef": "utilibre-wbo:2.18.33-candidate",
+      "url": "https://collab.utilibre.org/",
+      "archive": "wbo-utilibre.tar.gz",
+      "native": "native/result.json",
+      "scan": "candidate-scan.json",
+      "evidence": {
+        "native/result.json": "532dfd99c4f6328460b45f346360addb0ccabcd807e00780844769d5537e9ca0",
+        "candidate-scan.json": "fb4ffebd151d16dd0a2597f443ef4e97b5f1e4232551aa4bacd8db2ee4d39d8a"
+      },
+      "recipes": {
+        "deployment/maintenance/releases-20261111/check-wbo-upgrade.py": "90f18ace02fff5a4c95dffb8681e7aec660eb69f43d773ef66c4287df5a0f3f4",
+        "deployment/maintenance/releases-20261111/Dockerfile.wbo-fetch": "617d8daf12acf80aa9fa80442a80445098e885c246fc5278b5da39c504159c06",
+        "deployment/maintenance/releases-20261111/Dockerfile.wbo-build": "2d17823ca3d9e1b47891b7bb4062ce61e296773725bdb5acdb47bb1505efa2c2",
+        "deployment/maintenance/releases-20261111/held-policy.mjs": "8e88f150dec48216e4e2fafb260948830b9b156a7291d0e270109598706dc794",
+        "deployment/maintenance/releases-20261111/prepare-held-sources.mjs": "308db6d29f317c5f4934f3138f154d1c0bf60788169daff2ede12a9ae1b86193",
+        "deployment/maintenance/releases-20261111/check-wbo-idle.py": "5b4f490eb521dd274567255fd22184fe23e4053e5eb7f2d1c370be4b4dc4369a"
+      },
+      "databaseUpdatedAt": "2026-11-10T19:01:23.081219346Z",
+      "rollback": "No saved-account store; refuse recreation unless board store and connections are empty.",
+      "buildImages": {
+        "node:22-alpine": "sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402",
+        "utilibre-wbo-deps:2.18.33-candidate": "sha256:6d71c19a9f5b432f0c99dd1b75fd74fc2834b9bfc0be81f0886aaa0aabf409b8"
+      },
+      "patchedLockSha256": "ef8e9a32eac46a7e3b0a4850bd184e9495d63f414741e65923594ed2a144754b",
+      "sourceInventoryScope": "Runtime image plus exact patched source lock; production credentials and account contents excluded."
+    },
+    "candlr": {
+      "approval": "approved-exact-tested-candidate",
+      "version": "2.4.0-p1",
+      "revision": "e6f7b2c80bb638ae868df218a249cf645bb29031",
+      "name": "utilibre-records-candlr-1",
+      "oldImage": "sha256:3d0ebc3247f8386f32eb0679c536c2c8745676df25f9e919e603b217b17472d7",
+      "newImage": "sha256:c5986394f0853a13bb6f90abcfb33738a5ca5d52a0e6b577afad6c388b19f1bd",
+      "newRef": "utilibre-candlr:2.4.0-candidate",
+      "url": "https://candlr.utilibre.org/",
+      "archive": "candlr-utilibre.tar.gz",
+      "native": "migration/result.json",
+      "scan": "candidate-final-scan.json",
+      "retainedRuntime": "retained-runtime.json",
+      "additionalNative": [
+        "browser.json"
+      ],
+      "evidence": {
+        "migration/result.json": "a54db7984597d31d0eeaa0f11f3fc6fd11ee04056aca8fcc6afc1aa0e041c8d0",
+        "browser.json": "1fa981500bd95e4a75d551171900df8d0d3ae91238157c45dd4dbc0ff6a77199",
+        "source-scan.json": "65c29435cb527db6f69559e7e4fb24e8037846459332ab4eb192e373b2d98916",
+        "candidate-final-scan.json": "7ad5b32cd88abfbc69c354f72868383a6a5e0057f59b28f413e539e4eedf049f",
+        "retained-runtime.json": "197e69ad1a29470445b151bfc6a3c6041f6bec07b55a9b7ec47d0ae685ee42a3",
+        "final-scan-identity.json": "54021341d4b314f3b9fa92774823ae4a2c2098d79599a0d586c4b9a5c9745e7e"
+      },
+      "recipes": {
+        "deployment/maintenance/releases-20261111/Dockerfile.candlr-fetch": "e85a31ee508fe8cd19502825ad5f9e9975ea4ad9acce8d132f49947e06567a04",
+        "deployment/maintenance/releases-20261111/Dockerfile.candlr-build": "e29f50281e9c307e14e61510c44942eb633a2457a5143aaca081a2e173292515",
+        "deployment/maintenance/releases-20261111/Dockerfile.candlr-runtime": "a371b2bcfa8a3bef3e97cc1f50c7c629b24c81ddcebe84b59f6331c2ca48bc07",
+        "deployment/maintenance/releases-20261111/check-candlr-upgrade.py": "a830a29f322cdab5da1c87a5847d8955b93e2dbc5da0976c4352a7d232a644b4",
+        "deployment/maintenance/releases-20261111/check-candlr-upgrade-browser.mjs": "3a2dae9dc2b6f69d2800dd7d1401fb624e9800842a55b66c220e896caa2c3334",
+        "deployment/maintenance/releases-20261111/candlr-2.4.0.patch": "59cf45738223d825da9831c354a05d7bb335c2dd2e1e9b629b9af9c75b9be916",
+        "deployment/maintenance/releases-20261111/check-retained-runtime.py": "2f6048fdfacf1baddf71e46f184bd99556afb43f9afe7c75dd70f42d96943829",
+        "deployment/maintenance/releases-20261111/held-policy.mjs": "8e88f150dec48216e4e2fafb260948830b9b156a7291d0e270109598706dc794",
+        "deployment/maintenance/releases-20261111/prepare-held-sources.mjs": "308db6d29f317c5f4934f3138f154d1c0bf60788169daff2ede12a9ae1b86193"
+      },
+      "databaseUpdatedAt": "2026-11-10T19:01:23.081219346Z",
+      "rollback": "Old image and saved-account backup retained; restoring account data is a separate decision which can discard later writes.",
+      "limitations": [
+        "Synthetic local accounts and browser checks; real identity provider not exercised. Native OIDC router payload is unchanged.",
+        "Existing ACL caller finding remains open; unchanged Debian repair payloads and previously reviewed matches are preserved."
+      ],
+      "buildImages": {
+        "node:22-alpine": "sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402",
+        "utilibre-candlr-deps:2.4.0-candidate": "sha256:9f95e464e78bef84dc780a3a5f01309d6239b2fcd7fbced1c2e891f05f9263af",
+        "utilibre-candlr-frontend:2.4.0-candidate": "sha256:8be05df6fbd3222fcb735ed83f74f394d5d4b653a441d7ef3492e68c287c727a"
+      },
+      "patchedLockSha256": "37c8ea2429bf1e3534e326e71d96167b849deaa3733e0482b2149434dc4c9496"
+    }
+  }
+}

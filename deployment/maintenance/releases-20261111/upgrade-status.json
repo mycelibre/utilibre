@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "date": "2026-11-11T16:34:36.868395+00:00",
-  "scope": "Items 1, 2 and 4: disk, held upstream upgrades, ACL vendor remedy review",
+  "date": "2026-11-11T18:08:31.983585+00:00",
+  "scope": "Held upstream upgrade completion and ACL vendor review; host status checked separately",
   "counts": {
     "assessedCandidates": 30,
-    "deployedApplications": 2,
-    "heldApplications": 28,
+    "deployedApplications": 7,
+    "heldApplications": 23,
     "sourceInputsSupported": 27,
     "sourceCoverageGaps": 3,
     "recordedPatchConflicts": 12
@@ -44,8 +44,8 @@
       "application": "candlr",
       "candidateVersion": "v2.4.0",
       "revision": "e6f7b2c80bb638ae868df218a249cf645bb29031",
-      "status": "held",
-      "reason": "Repair/review 6 critical and 29 high candidate-source findings before native PDF/browser compatibility checks.",
+      "status": "deployed-verified",
+      "reason": "Deployed 2.4.0-p1 with repaired locked dependencies; native account/record migration, restore, privacy and 390px browser checks passed. Existing ACL finding remains open.",
       "sourceAssessment": {
         "status": "assessed",
         "ecosystems": [
@@ -65,7 +65,11 @@
         "patches": [],
         "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
         "status": "no-patch-sequence-recorded"
-      }
+      },
+      "releasedArtifact": "sha256:c5986394f0853a13bb6f90abcfb33738a5ca5d52a0e6b577afad6c388b19f1bd",
+      "retainedFixRecipe": "deployment/maintenance/releases-20261111/held-inputs.json#candlr",
+      "evidenceRoot": "/var/lib/utilibre-maintenance/held-upgrades-20261111/candlr",
+      "releaseReceiptSha256": "1a04a86be99abb6947715c145b1d18d3199f7c26bbd5849ac01d7f0cd3c12711"
     },
     {
       "application": "grid",
@@ -248,8 +252,8 @@
       "application": "chhoto",
       "candidateVersion": "7.11.3",
       "revision": "efb604ff99dc583ac836a2dde0b7cea09addda72",
-      "status": "held",
-      "reason": "New 7.11.3 release adds one candidate to the prior 29. Zero-tracking/local-assets patch conflicts with changed authentication/configuration paths.",
+      "status": "deployed-verified",
+      "reason": "Deployed 7.11.3-p1; retained zero click collection/local assets/abuse links; native account, shortcode, mobile, migration and restore checks passed.",
       "sourceAssessment": {
         "status": "assessed",
         "ecosystems": [
@@ -274,7 +278,11 @@
         ],
         "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
         "status": "blocked-patch-conflict"
-      }
+      },
+      "releasedArtifact": "sha256:95f4ed2d99ac167790c5c4bf1e6c3b6615108dfb8bac75efdc97e493f27dcd3d",
+      "retainedFixRecipe": "deployment/maintenance/releases-20261111/held-inputs.json#chhoto",
+      "evidenceRoot": "/var/lib/utilibre-maintenance/held-upgrades-20261111/chhoto",
+      "releaseReceiptSha256": "6f13fc4585b664d5522239c5b7e570634627848d9f1a4307a9776eab45d5a7f2"
     },
     {
       "application": "spliit",
@@ -345,7 +353,7 @@
       "candidateVersion": "v0.8.1",
       "revision": "3cc27f41e3de3d805abd66bdac9eb283eb16e72c",
       "status": "held",
-      "reason": "Candidate locks have no high/critical matches; coupled frontend/backend, saved-account migration and export checks not completed.",
+      "reason": "Prepared 0.8.1 with repaired runtime preserved; native migration/export/restore passes. Browser OIDC fixture is unresolved on candidate and predecessor; production unchanged.",
       "sourceAssessment": {
         "status": "assessed",
         "ecosystems": [
@@ -437,8 +445,8 @@
       "application": "bytestash",
       "candidateVersion": "v1.6.2",
       "revision": "eb4ecdfc30f2e7d1424137fa7fe3a9eed663218b",
-      "status": "held",
-      "reason": "Retained privacy patch conflicts in OIDC/client/server paths; login, account isolation and export require verification.",
+      "status": "deployed-verified",
+      "reason": "Deployed 1.6.2-p1; upstream secure-cookie OIDC flow, local editor/release assets, native migration/export/import/isolation and mobile checks passed.",
       "sourceAssessment": {
         "status": "assessed",
         "ecosystems": [
@@ -464,14 +472,18 @@
         ],
         "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
         "status": "blocked-patch-conflict"
-      }
+      },
+      "releasedArtifact": "sha256:3e7ee6694aab40d09766f19929f389ddba7583ff80d1bff12d8aeb1ce0a3a01e",
+      "retainedFixRecipe": "deployment/maintenance/releases-20261111/held-inputs.json#bytestash",
+      "evidenceRoot": "/var/lib/utilibre-maintenance/held-upgrades-20261111/bytestash",
+      "releaseReceiptSha256": "8ec1d80a5e8c7fc3658e8dacf696b7a731afee986043f4a2bbc6afc1d39fd134"
     },
     {
       "application": "cryptpad",
       "candidateVersion": "2026.10.1",
       "revision": "fd2850ba0ccef87bfb82c195b149bb061f79c8bc",
-      "status": "held",
-      "reason": "Candidate npm scan has no high/critical matches; complete office assets, sandbox, two-client editing and retained privacy/retention gates remain.",
+      "status": "deployed",
+      "reason": "2026.10.1 deployed with unchanged repaired runtime, Office assets and privacy controls. Old-account and Office migration, native exports, two-client editing, Document Undo and public-origin checks passed.",
       "sourceAssessment": {
         "status": "assessed",
         "ecosystems": [
@@ -490,7 +502,9 @@
         "patches": [],
         "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
         "status": "no-patch-sequence-recorded"
-      }
+      },
+      "releaseReceipt": "held-upgrades-20261111/cryptpad/release.json",
+      "releaseReceiptSha256": "8f497f13e422723b2c28817ec7e67a8a0cfc19ff1406bceea921722741232973"
     },
     {
       "application": "super-productivity",
@@ -531,8 +545,8 @@
       "application": "wbo",
       "candidateVersion": "v2.18.33",
       "revision": "90ae10b5e46e8efeb9b0c8ad918524e336b3fedc",
-      "status": "held",
-      "reason": "Major OpenTelemetry API/dependency changes need verification with retained disabled-export settings; two-client editing and temporary history compatibility also remain unverified.",
+      "status": "deployed-verified",
+      "reason": "Deployed 2.18.33-p1; telemetry disabled, two-client editing/reconnection/SVG export and old board format checks passed; no live board or connection interrupted.",
       "sourceAssessment": {
         "status": "assessed",
         "ecosystems": [
@@ -551,7 +565,11 @@
         "patches": [],
         "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
         "status": "no-patch-sequence-recorded"
-      }
+      },
+      "releasedArtifact": "sha256:27f24ce0c306f14e86981b2456cbc8d2528af41106834887f44a364c6d6fb60a",
+      "retainedFixRecipe": "deployment/maintenance/releases-20261111/held-inputs.json#wbo",
+      "evidenceRoot": "/var/lib/utilibre-maintenance/held-upgrades-20261111/wbo",
+      "releaseReceiptSha256": "9233235a1bfc004420b080b08831b5a018978ff3c2da2c64075fefbcffd46324"
     },
     {
       "application": "markmap",

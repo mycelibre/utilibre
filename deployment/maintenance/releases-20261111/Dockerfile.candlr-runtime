@@ -1,0 +1,14 @@
+FROM utilibre-candlr-frontend:2.4.0-candidate AS frontend
+RUN npm prune --offline --omit=dev --ignore-scripts --no-audit --no-fund
+FROM utilibre-records-candlr:sqlite-security-20261109
+USER root
+RUN rm -rf /app/backend/app /app/backend/alembic /app/backend/scripts /app/frontend
+COPY --chown=1000:1000 backend/app /app/backend/app
+COPY --chown=1000:1000 backend/alembic /app/backend/alembic
+COPY --chown=1000:1000 backend/scripts /app/backend/scripts
+COPY --chown=1000:1000 backend/alembic.ini backend/requirements.txt /app/backend/
+COPY --from=frontend --chown=1000:1000 /candidate/dist /app/frontend/dist
+COPY --from=frontend --chown=1000:1000 /candidate/node_modules /app/frontend/node_modules
+COPY --from=frontend --chown=1000:1000 /candidate/package.json /candidate/package-lock.json /app/frontend/
+ENV APP_VERSION=2.4.0-p1 UTILIBRE_DISABLE_UPDATE_CHECK=true ASTRO_TELEMETRY_DISABLED=1
+USER 1000:1000

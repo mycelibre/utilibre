@@ -50,7 +50,7 @@ services:
       ingress: {ipv4_address: 172.29.159.11}
   candlr:
     <<: *runtime
-    image: utilibre-records-candlr:sqlite-security-20261109
+    image: utilibre-candlr:2.4.0-candidate
     user: '1000:1000'
     entrypoint: ['/bin/sh', '-c']
     command: ['cd /app/backend && alembic upgrade head && exec supervisord -n -c /etc/supervisor/conf.d/candlr.conf']

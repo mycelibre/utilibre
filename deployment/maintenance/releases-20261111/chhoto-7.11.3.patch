@@ -1,0 +1,213 @@
+diff --git a/backend/src/database/events.rs b/backend/src/database/events.rs
+index 73e61b9..2f8372e 100644
+--- a/backend/src/database/events.rs
++++ b/backend/src/database/events.rs
+@@ -164,7 +164,7 @@ pub(crate) fn find_longlink(shortlink: &str, data: &AppState) -> Result<String,
+         return Err(());
+     };
+ 
+-    debug!("Accessed link: {shortlink}.");
++    // Utilibre: do not log the resolved shortlink.
+     Ok(long_url)
+ }
+ // Add hits
+diff --git a/backend/src/services/get.rs b/backend/src/services/get.rs
+index 61ed365..e455c7d 100644
+--- a/backend/src/services/get.rs
++++ b/backend/src/services/get.rs
+@@ -188,9 +188,7 @@ pub(super) async fn link_handler(
+     })
+     .await
+     {
+-        if let Err(err) = data.hits_tx.send((shortlink.to_owned(), false)).await {
+-            error!("Failed to enqueue hit update after access: {err}");
+-        }
++        // Utilibre: resolving a link does not record visitor activity.
+         if data.config.use_temp_redirect {
+             respond(Redirect::to(longlink), &req)
+         } else {
+diff --git a/backend/src/services/put.rs b/backend/src/services/put.rs
+index 87a1726..fdbb1f5 100644
+--- a/backend/src/services/put.rs
++++ b/backend/src/services/put.rs
+@@ -5,7 +5,6 @@ use actix_web::{
+     HttpResponse,
+     web::{self, ServiceConfig, put},
+ };
+-use log::error;
+ use tokio::task::spawn_blocking;
+ 
+ use crate::{
+@@ -46,17 +45,13 @@ async fn edit_link(req: String, auth: Auth, data: web::Data<AppState>) -> HttpRe
+             .map_err(|_| ServerError)
+             .flatten()
+             {
+-                Ok(result) => {
++                Ok(_result) => {
+                     let body = JSONResponse {
+                         success: true,
+                         error: false,
+                         reason: String::from("Edit was successful."),
+                     };
+-                    if let Some(shortlink) = result
+-                        && let Err(err) = data.hits_tx.send((shortlink.to_owned(), false)).await
+-                    {
+-                        error!("Failed to enqueue hit update after edit: {err}");
+-                    }
++                    // Utilibre: edits do not record visitor activity.
+                     HttpResponse::Created().json(body)
+                 }
+                 Err(ServerError) => server_error,
+diff --git a/backend/src/tests/access.rs b/backend/src/tests/access.rs
+index 9ad4bce..4bf3218 100644
+--- a/backend/src/tests/access.rs
++++ b/backend/src/tests/access.rs
+@@ -60,7 +60,7 @@ async fn data_fetching_all() {
+     assert_eq!(reply[1].shortlink, "test3");
+     assert_eq!(reply[0].longlink, "https://example-test1.com");
+     assert_eq!(reply[1].longlink, "https://example-test3.com");
+-    assert_eq!(reply[0].hits, 1);
++    assert_eq!(reply[0].hits, 0);
+     assert_eq!(reply[1].hits, 0);
+     assert_ne!(reply[0].expiry_time, 0);
+     assert_ne!(reply[1].expiry_time, 0);
+diff --git a/backend/src/tests/insertion.rs b/backend/src/tests/insertion.rs
+index ef98695..b5575ba 100644
+--- a/backend/src/tests/insertion.rs
++++ b/backend/src/tests/insertion.rs
+@@ -280,7 +280,7 @@ async fn link_editing() {
+     let (status, reply) = expand(&app, &api_key, "test2").await;
+     assert!(status.is_success());
+     assert_eq!(reply.longlink, "https://edited-test2.com");
+-    assert_eq!(reply.hits, 1);
++    assert_eq!(reply.hits, 0);
+     assert_eq!(reply.expiry_time, now + 1);
+ 
+     assert!(resp.status().is_redirection());
+diff --git a/frontend/index.html b/frontend/index.html
+index 956720c..66db251 100644
+--- a/frontend/index.html
++++ b/frontend/index.html
+@@ -24,7 +24,7 @@
+     />
+     <meta
+       property="og:image"
+-      content="https://chhoto.link/static/assets/banner.png"
++      content="https://links.utilibre.org/assets/favicon-196.png"
+     />
+ 
+     <meta
+@@ -51,22 +51,14 @@
+       sizes="196x196"
+     />
+ 
+-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+     <script
+-      src="https://cdn.jsdelivr.net/gh/sintan1729/qrcodejs@0.1.0/qrcode.min.js"
++      src="static/vendor/qrcode.min.js"
+       async
+     ></script>
+     <script src="static/script.js" defer></script>
+     <link
+-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+       rel="stylesheet"
+-      crossorigin="anonymous"
+-    />
+-    <link
+-      rel="stylesheet"
+-      href="https://cdn.jsdelivr.net/npm/purecss@3.1.0/build/pure-min.css"
++      href="static/vendor/pure-min.css"
+       integrity="sha384-kj0X2NG2KHBie8Tq8fH1kxnyWM9XsXQpq7XdwbKmFKjwwaXGKBlB2Klu3VOltSFx"
+       crossorigin="anonymous"
+     />
+@@ -74,7 +66,7 @@
+       rel="stylesheet"
+       type="text/css"
+       target="_blank"
+-      href="static/styles.css"
++      href="static/styles.css?v=utilibre-7.11.3-p1"
+     />
+   </head>
+ 
+@@ -209,7 +201,9 @@
+       </table>
+     </div>
+ 
+-    <div name="links-div">
++    <div name="links-div"><p lang="en">Links expire within 30 days. No click statistics. Keep the original URL.</p><p lang="es">Los enlaces vencen en un plazo máximo de 30 días. Sin estadísticas de clics. Conservá la URL original.</p><p lang="en"><a href="https://utilibre.org/en/">More tools from Utilibre</a> · <a href="https://utilibre.org/en/security">Security and contact</a></p><p lang="es"><a href="https://utilibre.org/es/">Más herramientas de Utilibre</a> · <a href="https://utilibre.org/es/security">Seguridad y contacto</a></p>
++      <p lang="en"><a href="https://utilibre.org/en/abuse" rel="noreferrer" referrerpolicy="no-referrer">Report abuse</a> · <a href="mailto:admin@utilibre.org?subject=Utilibre%20abuse%20report">admin@utilibre.org</a>. Send the short Utilibre URL and a brief description, not copies of the material, passwords or private files.</p>
++      <p lang="es"><a href="https://utilibre.org/es/denunciar-abuso" rel="noreferrer" referrerpolicy="no-referrer">Denunciá abusos</a> · <a href="mailto:admin@utilibre.org?subject=Reporte%20de%20abuso%20en%20Utilibre">admin@utilibre.org</a>. Enviá el enlace corto de Utilibre y una descripción breve, sin copias del material, contraseñas ni archivos privados.</p>
+       <button class="linkButton" id="admin-button" hidden>
+         <!-- https://svgicons.com/icon/109760/account -->
+         <svg
+diff --git a/frontend/static/404.html b/frontend/static/404.html
+index 1f469a9..0531614 100644
+--- a/frontend/static/404.html
++++ b/frontend/static/404.html
+@@ -59,10 +59,7 @@
+     />
+   </head>
+ 
+-  <link rel="preconnect" href="https://fonts.googleapis.com" />
+-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+   <style>
+-    @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+     @font-face {
+       font-family: Montserrat, "Open Sans", Helvetica, Arial, sans-serif;
+       font-optical-sizing: auto;
+diff --git a/frontend/static/styles.css b/frontend/static/styles.css
+index 26815bc..825d7f8 100644
+--- a/frontend/static/styles.css
++++ b/frontend/static/styles.css
+@@ -3,7 +3,7 @@
+ 
+ :root {
+   color-scheme: light dark;
+-  font-family: 'Montserrat', 'Open Sans', Helvetica, Arial, sans-serif;
++  font-family: system-ui, sans-serif;
+   /* Colors */
+   --text: light-dark(black, #e8e6e3);
+   --bg: light-dark(white, #181a1b);
+@@ -154,7 +154,7 @@ a {
+   text-align: left;
+   font-size: 1.5em;
+   font-style: normal;
+-  font-family: Montserrat;
++  font-family: system-ui, sans-serif;
+   padding: 0em;
+ }
+ .chhoto-table thead {
+@@ -565,3 +565,31 @@ summary,
+     margin-left: -4em;
+   }
+ }
++
++/* Visitor counters are disabled in the backend. */
++[name="hitsColumn"], #info-table tr:has(#info-hits) { display: none; }
++
++/* Keep the instance notes below the form, including at narrow widths. */
++.container {
++  max-width: 64rem;
++  margin: 2rem auto;
++  padding: 0 1rem;
++}
++div[name="links-div"] {
++  position: static;
++  max-width: 64rem;
++  margin: 2rem auto;
++  padding: 1rem 1rem 0;
++  border-top: 1px solid var(--border);
++  line-height: 1.5;
++}
++div[name="links-div"] p { margin: 0 0 0.75rem; }
++@media (max-width: 768px) {
++  .container { max-width: none; margin: 1rem auto; }
++}
++
++/* Keep the native login dialog inside narrow viewports. */
++@media (max-width: 768px) {
++  #login-dialog { min-width: 0; max-width: calc(100vw - 2rem); box-sizing: border-box; }
++  #login-dialog input { max-width: 100%; box-sizing: border-box; }
++}

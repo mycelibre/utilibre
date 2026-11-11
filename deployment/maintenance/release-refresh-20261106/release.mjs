@@ -6,11 +6,13 @@ import {readFileSync,writeFileSync,mkdirSync,statfsSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {existingComposeArgs,checkExistingGroup,recreateExistingGroup,releaseGroup,replaceImagePins} from '../language-final/release.mjs';
 import {verifyWakapiUpgrade,upgradeRoot} from '../releases-20261111/upgrade-policy.mjs';
+import {verifyHeldUpgrade,heldRoot} from '../releases-20261111/held-policy.mjs';
 import {acquireReleaseLock} from '../security-20261103/release-lock.mjs';
 process.umask(0o077);
 const wakapiUpgrade=process.argv[4]==='--wakapi-nov11';
-assert.equal(process.argv.length,wakapiUpgrade?5:4);
-const root=wakapiUpgrade?upgradeRoot:'/var/lib/utilibre-maintenance/releases-20261106';
+const heldUpgrade=process.argv[4]==='--held-nov11';
+assert.equal(process.argv.length,wakapiUpgrade||heldUpgrade?5:4);
+const root=heldUpgrade?heldRoot:wakapiUpgrade?upgradeRoot:'/var/lib/utilibre-maintenance/releases-20261106';
 const specs={
  drawio:{name:'utilibre-toolbox-drawio-1',oldImage:'sha256:4924fd72d26336b8f3ebb4ace5f1e4d05752baf7df903d2c5b19c548fd0d4836',newImage:'sha256:b827f5fbd979df27f809cb20580a916d14893dbc8047cd37d2349024fd1e0363',newRef:'utilibre-drawio:32.6.10-20261106',url:'https://draw.utilibre.org/'},
  glyphr:{name:'utilibre-creative-batch-glyphr-1',oldImage:'sha256:e692e6a442ec4896bd4baaadd0e1dc541f67d4f126dbc513f516f32a90d640d8',newImage:'sha256:0d4d70dfdb3886012dc1d72f4a66be5e236fd9bb7cbe3289aefd662a4209c2d4',newRef:'utilibre-glyphr:2.10.8-20261106',url:'https://glyphr.utilibre.org/'},
@@ -22,13 +24,17 @@ if(wakapiUpgrade){
  specs.wakapi={name:'utilibre-expanded-wakapi-1',oldImage:s.base,newImage:s.imageId,newRef:s.candidate,url:'https://wakapi.utilibre.org/'};
  process.on('exit',acquireReleaseLock('/var/lib/utilibre-maintenance/package-release.lock'));
 }
+if(heldUpgrade){
+ const {s}=verifyHeldUpgrade(process.argv[2]);specs[process.argv[2]]=s;
+ process.on('exit',acquireReleaseLock('/var/lib/utilibre-maintenance/package-release.lock'));
+}
 const key=process.argv[2],s=specs[key];assert(s&&process.argv[3]==='--apply','Select a reviewed service and --apply');
 const run=(cmd,args)=>{try{return execFileSync(cmd,args,{encoding:'utf8',timeout:180000,maxBuffer:32*1024**2,stdio:['ignore','pipe','pipe'],env:{...process.env,APP_BIND_IP:'10.10.1.43'}});}catch{throw Error('Release command failed; configuration/output withheld');}};
 const docker=(...a)=>run('docker',a),inspect=n=>JSON.parse(docker('inspect',n))[0],json=p=>JSON.parse(readFileSync(root+'/'+p));
 const hash=x=>createHash('sha256').update(x).digest('hex');
 const shape=x=>{const {image,...rest}=x;return hash(JSON.stringify(rest));};
 assert.equal(inspect(s.newRef).Id,s.newImage);
-if(!wakapiUpgrade)assert.deepEqual(json(key+'-scan-comparison.json').newFindings,[]);
+if(!wakapiUpgrade&&!heldUpgrade)assert.deepEqual(json(key+'-scan-comparison.json').newFindings,[]);
 if(key==='glyphr')for(const f of ['glyphr-task.json','glyphr-import.json']){const r=json('glyphr-checks/'+f);assert(!r.failure);assert.deepEqual(r.errors,[]);assert.deepEqual(r.external,[]);}
 if(key==='freshrss'){const r=json('freshrss-checks/application.json');assert(r.passed&&r.imageId===s.newImage);assert(json('freshrss-browser-restore-p5j80rro/result.json').passed);}
 if(key==='radicale'){const r=json('radicale-checks/result.json');assert(r.passed&&r.image===s.newImage);}
@@ -59,9 +65,26 @@ if(key==='wakapi'){
  // Native online SQLite backup. Never print records or read unrelated accounts.
  run('python3',['-c',"import sqlite3,sys; source=sqlite3.connect('file:/opt/utilibre/expanded-data/wakapi/wakapi.db?mode=ro',uri=True); destination=sqlite3.connect(sys.argv[1]); source.backup(destination); assert destination.execute('PRAGMA integrity_check').fetchone()==('ok',); destination.close(); source.close()",directory+'/wakapi-before.sqlite']);
 }
+if(heldUpgrade&&['chhoto','bytestash','candlr','kitchenowl'].includes(key)){
+ const db={chhoto:'/opt/utilibre/chhoto-data/urls.sqlite',bytestash:'/opt/utilibre/community-data/bytestash/snippets.db',candlr:'/opt/utilibre/records/data/candlr/candlr.db',kitchenowl:'/opt/utilibre/kitchenowl/data/database.db'}[key];
+ run('python3',['-c',"import sqlite3,sys; a=sqlite3.connect('file:'+sys.argv[1]+'?mode=ro',uri=True); b=sqlite3.connect(sys.argv[2]); a.backup(b); assert b.execute('PRAGMA integrity_check').fetchone()==('ok',); b.close(); a.close()",db,directory+'/before.sqlite']);
+ if(['candlr','kitchenowl'].includes(key))run('tar',['-C',key==='candlr'?'/opt/utilibre/records/data/candlr':'/opt/utilibre/kitchenowl/data','--exclude=*.db','--exclude=*.db-wal','--exclude=*.db-shm','-czf',directory+'/saved-account-files.tar.gz','.']);
+}
+function requireIdleBoard(){
+ if(!heldUpgrade||key!=='wbo')return;
+ // Aggregate only: no board names, contents or persistent temporary-data copies.
+ run('python3',[new URL('../releases-20261111/check-wbo-idle.py',import.meta.url).pathname]);
+}
 const save=async()=>writeFileSync(directory+'/result.json',JSON.stringify({date:new Date().toISOString(),...g,configHash,files:[...originals.keys()],dataRollback:'Image rollback does not restore data; recovery copies retained privately'},null,2)+'\n');
+let pausedGateway=false;
+try {
+if(heldUpgrade&&key==='wbo'){
+ const gateway=inspect('utilibre-collaboration-pilot-gateway-1');assert(!gateway.State.Paused);
+ requireIdleBoard();docker('pause',gateway.Id);pausedGateway=true;requireIdleBoard();
+}
 await releaseGroup(g,{
  preflight:async()=>{
+  requireIdleBoard();
   assert.equal(inspect(s.name).Image,s.oldImage);assert.equal(shape(config()),configHash);
   for(const [f,v] of originals)assert.equal(readFileSync(f,'utf8'),v,'Concurrent configuration edit');
  },save,recreate:async()=>{
@@ -71,7 +94,12 @@ await releaseGroup(g,{
   }
   await recreateExistingGroup(g);
  },
- gate:async version=>{await checkExistingGroup(g,version);checkPublic();},
+ gate:async version=>{
+  await checkExistingGroup(g,version);
+  if(pausedGateway){docker('unpause','utilibre-collaboration-pilot-gateway-1');pausedGateway=false;}
+  checkPublic();
+ },
  rollbackPins:async()=>{for(const [f,v] of changed)assert.equal(readFileSync(f,'utf8'),v,'Concurrent edit prevents automatic rollback');for(const [f,v] of originals)writeFileSync(f,v);},
 });
+} finally {if(pausedGateway)docker('unpause','utilibre-collaboration-pilot-gateway-1');}
 console.log(key+': deployed exact tested artifact; health and public route passed');

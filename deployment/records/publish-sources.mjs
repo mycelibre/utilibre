@@ -3,6 +3,7 @@ import {execFileSync} from 'node:child_process';
 import {mkdirSync,mkdtempSync,copyFileSync,writeFileSync,existsSync,readFileSync,chmodSync,statSync} from 'node:fs';
 import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 const repo='/home/ubuntu/freetools';
+if(!process.argv.slice(2).length||process.argv.slice(2).includes('candlr'))throw Error('Retired Candlr source recipe: use deployment/maintenance/security-20261109/publish-application-sources.py candlr --held-nov11; publish Bookplate separately');
 const out='/opt/utilibre/records/public';mkdirSync(out,{recursive:true});
 const items=[['candlr','c8ac0eb11703e92c6daa3ad7908f2f219265e1a3'],['bookplate','47e53a7aec56aa9e76d4cf425deb48102e4a2fd7']];
 const nov4=process.argv.includes('--candlr-nov4'),evidence='/var/lib/utilibre-maintenance/security-20261103/candlr';

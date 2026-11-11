@@ -20,7 +20,32 @@ PACKS = {
 }
 
 
-def publish(key):
+def publish(key, held=False):
+    if key == 'chhoto' and not held:
+        raise SystemExit('Retired Chhoto source recipe: use chhoto --held-nov11 for the deployed 7.11.3 source offer')
+    if held:
+        inputs = json.loads((ROOT / 'deployment/maintenance/releases-20261111/held-inputs.json').read_text())
+        spec = inputs['applications'][key]
+        subprocess.run(['node', '--input-type=module', '-e',
+            "import {verifyHeldUpgrade} from './deployment/maintenance/releases-20261111/held-policy.mjs'; verifyHeldUpgrade(process.argv[1]);", key], cwd=ROOT, check=True)
+        source = Path('/var/lib/utilibre-maintenance/held-upgrades-20261111') / key
+        receipt = json.loads((source / 'source-offer.json').read_text())
+        assert hashlib.sha256((source / 'source.tar.gz').read_bytes()).hexdigest() == receipt['archiveSha256']
+        name = spec['archive']
+        assert name in ('chhoto-utilibre.tar.gz', 'bytestash-utilibre.tar.gz', 'wbo-utilibre.tar.gz', 'candlr-utilibre.tar.gz')
+        dest = Path('/opt/utilibre/records/public') if key == 'candlr' else DEST
+        if (dest / name).exists() and hashlib.sha256((dest / name).read_bytes()).hexdigest() == receipt['archiveSha256']:
+            print(key + ': exact source offer already published; nothing changed')
+            return
+        publication = Path(tempfile.mkdtemp(prefix='source-update-', dir=dest.parent))
+        if (dest / name).exists():
+            shutil.copyfile(dest / name, publication / ('previous-' + name))
+        shutil.copyfile(source / 'source.tar.gz', publication / name)
+        (publication / name).chmod(0o644)
+        (publication / name).replace(dest / name)
+        (source / 'source-publication.json').write_text(json.dumps({'archiveSha256': receipt['archiveSha256'], 'previousDirectory': str(publication), 'file': name}, indent=2) + '\n')
+        print(key + ': exact corresponding source published; previous archive retained')
+        return
     patch, filename, recipes = PACKS[key]
     row = next(r for r in LEDGER if r['patch'] == patch)
     with tempfile.TemporaryDirectory(prefix='utilibre-publish-source-') as work:
@@ -80,5 +105,6 @@ def publish(key):
 
 if __name__ == '__main__':
     import sys
-    assert len(sys.argv) == 2 and sys.argv[1] in PACKS
-    publish(sys.argv[1])
+    held = len(sys.argv) == 3 and sys.argv[2] == '--held-nov11'
+    assert (held and sys.argv[1] in ('chhoto', 'bytestash', 'wbo', 'candlr')) or (len(sys.argv) == 2 and sys.argv[1] in PACKS)
+    publish(sys.argv[1], held)

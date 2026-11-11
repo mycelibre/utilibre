@@ -9,7 +9,7 @@ function reviewed(project: string, repo: string, revision: string, license: Revi
 }
 export const creativeProviders = {
   grist: { ...reviewed('Grist', 'gristlabs/grist-core', '6dfae2fa33af6ef057b5de676afc85e6f3026fc6', 'Apache-2.0', 'LICENSE.txt', '1.7.21'), integration: 'container', artifactReference: 'gristlabs/grist-oss:1.7.21@sha256:73e4815fcc1b5dfff6cd47b37a3ec2bb80d3c70b27efba4c8714a57781d414d1' },
-  candlr: { ...reviewed('Candlr', 'ellite/candlr', 'c8ac0eb11703e92c6daa3ad7908f2f219265e1a3', 'GNU GPLv3 (version scope unconfirmed)', 'LICENSE.md', '2.0.0-p1'), artifactReference: 'source:c8ac0eb11703e92c6daa3ad7908f2f219265e1a3+deployment/candlr' },
+  candlr: { ...reviewed('Candlr', 'ellite/candlr', 'e6f7b2c80bb638ae868df218a249cf645bb29031', 'GNU GPLv3 (version scope unconfirmed)', 'LICENSE.md', '2.4.0-p1'), reviewedOn: '2026-11-11', artifactReference: 'source:e6f7b2c80bb638ae868df218a249cf645bb29031+deployment/maintenance/releases-20261111/candlr-2.4.0.patch' },
   bookplate: { ...reviewed('Bookplate', 'LeoPhh/bookplate', '47e53a7aec56aa9e76d4cf425deb48102e4a2fd7', 'Apache-2.0', 'LICENSE', '1.1.0-p1'), artifactReference: 'source:47e53a7aec56aa9e76d4cf425deb48102e4a2fd7+deployment/bookplate' },
   openreel: reviewed('OpenReel', 'Augani/openreel-video', 'c9340465e5d37e684cc25bdbe746c4ccd45e165c', 'MIT', 'LICENSE', '0.1.2-p1'),
   openplan3d: reviewed('OpenPlan3D', 'laanlabs/openPlan3D', 'd68cadf703578f2cd3a7c77f820e18d342580c32', 'MIT', 'LICENSE', '0.9.0-p1'),

@@ -1,0 +1,119 @@
+diff --git a/client/src/components/common/modals/ChangelogModal.tsx b/client/src/components/common/modals/ChangelogModal.tsx
+index a88dda8..912aa43 100644
+--- a/client/src/components/common/modals/ChangelogModal.tsx
++++ b/client/src/components/common/modals/ChangelogModal.tsx
+@@ -53,7 +53,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ isOpen, onClose }) => {
+       setError(null);
+ 
+       try {
+-        const response = await fetch('https://api.github.com/repos/jordan-dalby/ByteStash/releases');
++        const response = await fetch('/utilibre-releases.json');
+         if (!response.ok) {
+           throw new Error('Failed to fetch releases');
+         }
+diff --git a/client/src/components/search/SearchAndFilter.tsx b/client/src/components/search/SearchAndFilter.tsx
+index ce880b9..ca99120 100644
+--- a/client/src/components/search/SearchAndFilter.tsx
++++ b/client/src/components/search/SearchAndFilter.tsx
+@@ -123,7 +123,7 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = memo(({
+         />
+       </div>
+ 
+-      <div className="flex items-center gap-2">
++      <div className="flex flex-wrap items-center gap-2">
+         <IconButton
+           icon={<Grid size={20} />}
+           onClick={() => setViewMode("grid")}
+diff --git a/client/src/index.tsx b/client/src/index.tsx
+index 98fbcbf..4a36d29 100644
+--- a/client/src/index.tsx
++++ b/client/src/index.tsx
+@@ -1,3 +1,7 @@
++import { loader } from '@monaco-editor/react';
++import * as monaco from 'monaco-editor';
++// Reuse the bundled editor instead of the loader's external CDN.
++loader.config({ monaco });
+ import React from 'react'
+ import ReactDOM from 'react-dom/client'
+ import App from './App'
+diff --git a/package-lock.json b/package-lock.json
+index d79e938..67f08e3 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -3317,9 +3317,9 @@
+       }
+     },
+     "node_modules/better-sqlite3": {
+-      "version": "11.5.0",
+-      "resolved": "https://registry.npmjs.org/better-sqlite3/-/better-sqlite3-11.5.0.tgz",
+-      "integrity": "sha512-e/6eggfOutzoK0JWiU36jsisdWoHOfN9iWiW/SieKvb7SAa6aGNmBM/UKyp+/wWSXpLlWNN8tCPwoDNPhzUvuQ==",
++      "version": "11.10.0",
++      "resolved": "https://registry.npmjs.org/better-sqlite3/-/better-sqlite3-11.10.0.tgz",
++      "integrity": "sha512-EwhOpyXiOEL/lKzHz9AW1msWFNzGc/z+LzeB3/jnFJpxu+th2yqvzsSWas1v9jgs9+xiXJcD5A8CJxAG2TaghQ==",
+       "hasInstallScript": true,
+       "license": "MIT",
+       "dependencies": {
+@@ -10435,7 +10435,7 @@
+         "@modelcontextprotocol/sdk": "^1.31.0",
+         "bad-words": "^4.0.0",
+         "bcrypt": "^6.0.0",
+-        "better-sqlite3": "^11.5.0",
++        "better-sqlite3": "11.10.0",
+         "body-parser": "^1.20.9",
+         "cookie-parser": "^1.4.7",
+         "cors": "^2.8.5",
+diff --git a/server/package.json b/server/package.json
+index 44b5606..5c1e319 100644
+--- a/server/package.json
++++ b/server/package.json
+@@ -16,7 +16,7 @@
+     "@modelcontextprotocol/sdk": "^1.31.0",
+     "bad-words": "^4.0.0",
+     "bcrypt": "^6.0.0",
+-    "better-sqlite3": "^11.5.0",
++    "better-sqlite3": "11.10.0",
+     "body-parser": "^1.20.9",
+     "cookie-parser": "^1.4.7",
+     "cors": "^2.8.5",
+diff --git a/server/src/logger.js b/server/src/logger.js
+index f3735ba..54d564b 100644
+--- a/server/src/logger.js
++++ b/server/src/logger.js
+@@ -1,30 +1,8 @@
+-const DEBUG = process.env.DEBUG === 'true';
+-
++// Utilibre: retain operational failure categories without account or content data.
+ class Logger {
+-  static debug(...args) {
+-    if (DEBUG) {
+-      console.log('[DEBUG]', ...args);
+-    }
+-  }
+-
+-  static error(...args) {
+-    if (DEBUG) {
+-      console.error('[ERROR]', ...args);
+-    } else {
+-      const messages = args.map(arg => 
+-        arg instanceof Error ? arg.message : arg
+-      );
+-      console.error('[ERROR]', ...messages);
+-    }
+-  }
+-
+-  static info(...args) {
+-    console.log('[INFO]', ...args);
+-  }
+-
+-  static warn(...args) {
+-    console.warn('[WARN]', ...args);
+-  }
++  static debug() {}
++  static info() {}
++  static error() { console.error('[ERROR] Application operation failed'); }
++  static warn() { console.warn('[WARN] Application warning'); }
+ }
+-
+-export default Logger;
+\ No newline at end of file
++export default Logger;

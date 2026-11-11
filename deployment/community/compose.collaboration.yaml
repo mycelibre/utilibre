@@ -3,7 +3,7 @@ services:
   wbo:
     ulimits: {core: 0}
     profiles: [pilot]
-    image: utilibre-zlib-collaboration-pilot-wbo:candidate-20261109
+    image: utilibre-wbo:2.18.33-candidate
     build:
       context: /opt/utilibre/src/whitebophir
       dockerfile: /home/ubuntu/freetools/deployment/community/wbo/Dockerfile

@@ -1,0 +1,18 @@
+FROM utilibre-bytestash-deps:1.6.2-candidate AS client
+ENV NODE_OPTIONS=--max-old-space-size=2048 VITE_APP_VERSION=1.6.2-p1
+RUN npm run build --workspace client
+FROM utilibre-bytestash-deps:1.6.2-candidate AS dependencies
+RUN rm -rf node_modules && npm ci --workspace server --omit=dev --ignore-scripts --offline --no-audit --no-fund
+FROM utilibre-zlib-bytestash-bytestash:candidate-20261109 AS previous
+FROM previous
+USER root
+RUN rm -rf /app /client
+COPY --from=dependencies /work/node_modules /app/node_modules
+COPY --from=previous /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node
+COPY server/src /app/src
+COPY server/docs /app/docs
+COPY server/package.json /app/package.json
+COPY --from=client /work/client/build /client/build
+LABEL org.opencontainers.image.revision="eb4ecdfc30f2e7d1424137fa7fe3a9eed663218b" org.opencontainers.image.version="1.6.2-p1"
+WORKDIR /app
+USER 1000:1000

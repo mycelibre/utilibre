@@ -1,0 +1,28 @@
+{
+  "base": "sha256:adeee2a5e23cacbd439c5a81397e2232e93de698344a9a1146bb4fa88aad73ee",
+  "imageId": "sha256:e69df837b3e3e9557cc2d91939e8a41bfc8d9d0e71aec77de74ebee2ad932458",
+  "candidate": "utilibre-portal:held-upgrades-20261111",
+  "schemaVersion": 1,
+  "approved": true,
+  "sourceRevision": "d1af5e02f8163ab533678341b2afd6492ca77108",
+  "expectedVersions": [
+    "7.11.3-p1",
+    "1.6.2-p1",
+    "2.18.33-p1",
+    "2.4.0-p1",
+    "2026.10.1"
+  ],
+  "retainedFindings": [],
+  "evidence": {
+    "portal-staging.txt": "429cf1035dc9cb0f6942a27063075586123306d39e17e8950fd1fdedfcaceac0",
+    "portal-before-scan.json": "ee2080ed81bfd7aa288d6bbae0a09b8c18911afb6ee09f952171843d28f3aae9",
+    "portal-after-scan.json": "d17bc3185eb202fb140eb5a61dc33c79ff16bd3b9308f6c7867bf3f864da43b3",
+    "portal-checks.txt": "1acc489766de30bf14d7a4edfd20af3d622173c56b588dc804a8396175294db1",
+    "portal-units.txt": "04662fda0d838b7d6965998d81a50797043df5fefa5a853883d384e0f635ab33"
+  },
+  "sourceChanges": {
+    "portal/src/catalog/upstreams.ts": "f6fefbb7a79441a0a09a53639d041f0bcee2735516ebbe193cae4b16cc94640d",
+    "portal/src/catalog/creative-providers.ts": "7e662cbc55f6275841d22fdb5663bbfaf93c59e96998360b6c972414ef99d654"
+  },
+  "buildScope": "Clean committed snapshot plus only reviewed catalogue metadata and corresponding source/reference files; original locked dependencies reused offline."
+}

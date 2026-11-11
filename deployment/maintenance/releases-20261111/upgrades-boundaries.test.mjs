@@ -12,6 +12,12 @@ const cases=[
  ['conflicting portal profiles','../release-refresh-20261106/release-portal.mjs',['--apply','--upgrades','--stabilization'],/AssertionError/],
  ['old and new portal profiles','../release-refresh-20261106/release-portal.mjs',['--apply','--upgrades','--nov9'],/Choose one exact release profile/],
  ['wrong service in Wakapi profile','../release-refresh-20261106/release.mjs',['grist','--apply','--wakapi-nov11'],/AssertionError/],
+ ['retired Candlr source publisher','../../records/publish-sources.mjs',[],/Retired Candlr source recipe/],
+ ['retired Candlr source flag','../../records/publish-sources.mjs',['candlr','--candlr-nov4'],/Retired Candlr source recipe/],
+ ['unknown held upgrade','../release-refresh-20261106/release.mjs',['grist','--apply','--held-nov11'],/AssertionError/],
+ ['CryptPad requires explicit activation','./release-cryptpad-upgrade.mjs',[],/AssertionError/],
+ ['CryptPad refuses extra activation flags','./release-cryptpad-upgrade.mjs',['--apply','--latest'],/AssertionError/],
+ ['portal release profiles remain exclusive','../release-refresh-20261106/release-portal.mjs',['--apply','--upgrades','--held-upgrades'],/AssertionError/],
 ];
 for(const [label,file,args,message]of cases)test(label,()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'utilibre-upgrade-boundary-'));

@@ -1,0 +1,20 @@
+import json,ast,subprocess,hashlib,tarfile,os,datetime
+from pathlib import Path
+os.umask(0o077)
+repo=Path('/home/ubuntu/freetools');root=Path('/var/lib/utilibre-maintenance/held-upgrades-20261111')
+# Reuse the existing streamed image-payload inventory, without its old release driver.
+source=repo/'deployment/maintenance/go-final/verify.py';tree=ast.parse(source.read_text());node=next(x for x in tree.body if isinstance(x,ast.FunctionDef) and x.name=='files');ZOD=False
+exec(compile(ast.Module(body=[node],type_ignores=[]),str(source),'exec'))
+queue=json.loads(Path('/var/lib/utilibre-maintenance/security-queue.json').read_text());scan=json.loads(Path('/var/lib/utilibre-maintenance/security.json').read_text())
+for key,container,tag,prefixes in [('candlr','utilibre-records-candlr-1','utilibre-candlr:2.4.0-candidate',['/app/backend/app/','/app/backend/alembic/','/app/backend/scripts/','/app/frontend/','/app/backend/alembic.ini','/app/backend/requirements.txt']),('kitchenowl','utilibre-kitchenowl-app-1','utilibre-kitchenowl:0.8.1-system-driver',['/opt/venv/','/usr/src/kitchenowl/','/var/www/web/kitchenowl/'])]:
+ d=root/key;old=next(x for x in scan['images'] if container in x['containers']);new=json.loads(subprocess.check_output(['docker','image','inspect',tag]))[0];assert old['status']=='checked'
+ before,after=files(old['id']),files(new['Id']);changes=sorted(p for p in before.keys()|after.keys() if before.get(p)!=after.get(p));unexpected=[p for p in changes if not any(p==x or (x.endswith('/') and p.startswith(x)) for x in prefixes)];assert not unexpected,unexpected[:30]
+ data=json.loads((d/'candidate-final-scan.json').read_text());assert data['Metadata']['ImageID']==new['Id'];candidate=[v for r in data['Results'] for v in r.get('Vulnerabilities',[]) if v['Severity'] in ('HIGH','CRITICAL')];assert all(r['Type']=='debian' for r in data['Results'] if any(v['Severity'] in ('HIGH','CRITICAL') for v in r.get('Vulnerabilities',[])))
+ items=[x for x in queue['items'] if container in x.get('containers',[])];matches=[]
+ for v in candidate:
+  same=[x for x in items if x['id']==v['VulnerabilityID'] and x['package']==v['PkgName'] and x['installed']==v['InstalledVersion']];assert len(same)==1,(v['PkgName'],v['VulnerabilityID'],len(same));q=same[0]
+  assert q['status'] in ('mitigated','not-affected') or (q['package']=='libacl1' and q['id']=='CVE-2026-54369' and q['status']=='needs-review'),q['key'];matches.append({'id':q['id'],'package':q['package'],'installed':q['installed'],'status':q['status'],'previousKey':q['key']})
+ config=json.loads(subprocess.check_output(['docker','image','inspect',old['id']]))[0]['Config'];nc=new['Config'];a={k:v for k,v in config.items() if k not in ('Env','Labels')};b={k:v for k,v in nc.items() if k not in ('Env','Labels')};assert a==b or (key=='candlr' and a.get('User')=='root' and b.get('User')=='1000:1000' and {k:v for k,v in a.items() if k!='User'}=={k:v for k,v in b.items() if k!='User'}),'Unexpected image execution configuration change'
+ e=lambda c:dict(x.split('=',1) for x in c['Env']);a,b=e(config),e(nc);env={k:[a.get(k),b.get(k)] for k in a.keys()|b.keys() if a.get(k)!=b.get(k)};assert set(env)<=({'APP_VERSION','UTILIBRE_DISABLE_UPDATE_CHECK','ASTRO_TELEMETRY_DISABLED'} if key=='candlr' else {'PSYCOPG_IMPL'}),env
+ proof={'passed':True,'oldImage':old['id'],'imageId':new['Id'],'checkedAt':datetime.datetime.now(datetime.UTC).isoformat(),'allowedPrefixes':prefixes,'changedFileCount':len(changes),'unchangedFiles':sum(before.get(k)==v for k,v in after.items()),'outsideApplicationPayloadUnchanged':True,'configurationChanges':env,'retainedRawHighCritical':matches,'newHighCritical':[],'existingAclGapRetained':True,'inventoryHelperSha256':hashlib.sha256(source.read_bytes()).hexdigest(),'candidateScanSha256':hashlib.sha256((d/'candidate-final-scan.json').read_bytes()).hexdigest(),'scanDate':scan['completedAt'],'productionChanged':False}
+ (d/'retained-runtime.json').write_text(json.dumps(proof,indent=2)+'\n');(d/'changed-files.json').write_text(json.dumps(changes,indent=2)+'\n');print(key+' repaired runtime retained; no added high/critical match',flush=True)

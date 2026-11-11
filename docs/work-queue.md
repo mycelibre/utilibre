@@ -1,5 +1,21 @@
 # Work queue
 
+## Current held-upgrade checkpoint — 11 November 2026
+
+Chhoto 7.11.3-p1, ByteStash 1.6.2-p1, WBO 2.18.33-p1, Candlr 2.4.0-p1
+and CryptPad 2026.10.1 are deployed with retained repairs and native workflow
+checks. Including Wakapi and GridSpace, **7 of 30 candidates are deployed;
+23 remain held**. KitchenOwl migration/export/restore checks pass, but its
+browser sign-in fixture still needs resolution before release.
+
+Read-only VM inspection found no pending APT upgrades against the same-day
+package index, the newest installed kernel already running, and no reboot
+marker. This does not close the ACL caller-migration gap or verify the separate
+Proxmox/Caddy hosts. [Checks, exact evidence and recovery](records/held-upgrades-2026-11-11.md).
+
+The older checkpoints below describe earlier measurements, including disk
+availability and security counts; they are not fresh post-upgrade measurements.
+
 ## Current upgrade and disk checkpoint — 11 November 2026
 
 **Wakapi 2.18.2 and GridSpace 4.7.3-p1 are deployed**, with retained repairs,

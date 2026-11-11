@@ -1,0 +1,3 @@
+FROM utilibre-candlr-deps:2.4.0-candidate
+ENV ASTRO_TELEMETRY_DISABLED=1 NODE_OPTIONS=--max-old-space-size=2048
+RUN npm run build

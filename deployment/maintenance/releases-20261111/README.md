@@ -1,5 +1,32 @@
 # 11 November: updater receipts and BentoPDF
 
+## Held upgrades: second checkpoint
+
+Chhoto 7.11.3-p1, ByteStash 1.6.2-p1, WBO 2.18.33-p1, Candlr 2.4.0-p1
+and CryptPad 2026.10.1 are deployed. With the earlier Wakapi and GridSpace
+updates, the matrix now records **7 deployed / 23 held** candidates. See the
+[native checks, host inspection and recovery record](../../../docs/records/held-upgrades-2026-11-11.md).
+
+`held-inputs.json` and `held-policy.mjs` bind the four image replacements to
+their exact source, lockfile, recipes, evidence and images. The existing release
+adapter accepts `SERVICE --apply --held-nov11` only for those reviewed inputs.
+`prepare-held-sources.mjs` prepares corresponding source independently of
+activation; the existing source publisher uses `SERVICE --held-nov11`.
+It rejects stale historical Chhoto/Candlr recipes before publication.
+
+CryptPad retains its runtime image and replaces a verified source tree.
+`cryptpad-upgrade.json` binds its migration, two-client and Office checks;
+`release-cryptpad-upgrade.mjs --apply` reuses the release lock/rollback driver,
+validates an encrypted native backup, then changes only that source mount.
+The old source and saved-account snapshot remain private. Its native source
+publisher includes the exact vendored repair. No plaintext documents or
+credentials are included in source offers.
+
+The archived tests use the recorded fixture ports and protected evidence
+directory. Replay them only in an isolated environment with the exact retained
+inputs; do not overwrite previous reports. A passing historical test is not
+current advisory clearance. No byte-identical build claim is made.
+
 ## Held application upgrades and disk follow-up
 
 Wakapi 2.18.2 and GridSpace 4.7.3-p1 are deployed with retained repairs and

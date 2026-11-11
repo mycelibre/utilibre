@@ -1,0 +1,197 @@
+diff --git a/customize.dist/pages.js b/customize.dist/pages.js
+index d33fbc4..c739910 100644
+--- a/customize.dist/pages.js
++++ b/customize.dist/pages.js
+@@ -144,6 +144,10 @@ define([
+     Pages.termsLink = footLink(customURLs.terms, 'terms');
+     Pages.sourceLink = footLink(customURLs.source, 'footer_source');
+     Pages.docsLink = footLink('https://docs.cryptpad.org', 'docs_link');
++    Pages.abuseLink = h('p', [
++        h('a', {href: 'https://utilibre.org/en/abuse', lang: 'en', rel: 'noreferrer', referrerpolicy: 'no-referrer'}, 'Report abuse'), ' · ',
++        h('a', {href: 'https://utilibre.org/es/denunciar-abuso', lang: 'es', rel: 'noreferrer', referrerpolicy: 'no-referrer'}, 'Denunciá abusos')
++    ]);
+     Pages.roadmapLink = footLink(customURLs.roadmap, 'footer_roadmap');
+ 
+ 
+@@ -173,6 +177,11 @@ define([
+                     donateButton,
+                 ])
+             ]),
++            h('div#utilibre-abuse-report.cp-footer-center', [
++                h('a', {href: 'https://utilibre.org/en/abuse', lang: 'en', rel: 'noreferrer', referrerpolicy: 'no-referrer'}, 'Report abuse'),
++                ' · ',
++                h('a', {href: 'https://utilibre.org/es/denunciar-abuso', lang: 'es', rel: 'noreferrer', referrerpolicy: 'no-referrer'}, 'Denunciá abusos'),
++            ]),
+             h('div.cp-footer-right', [
+                 h('div.cp-footer-language', [
+                     Icons.get('language'),
+diff --git a/package-lock.json b/package-lock.json
+index 3be4cff..ce77ef8 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -366,9 +366,6 @@
+         "x64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -628,9 +625,6 @@
+         "arm"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -645,9 +639,6 @@
+         "arm"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -662,9 +653,6 @@
+         "arm64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -679,9 +667,6 @@
+         "arm64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -696,9 +681,6 @@
+         "loong64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -713,9 +695,6 @@
+         "loong64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -730,9 +709,6 @@
+         "ppc64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -747,9 +723,6 @@
+         "ppc64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -764,9 +737,6 @@
+         "riscv64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -781,9 +751,6 @@
+         "riscv64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -798,9 +765,6 @@
+         "s390x"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -815,9 +779,6 @@
+         "x64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -832,9 +793,6 @@
+         "x64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+diff --git a/package.json b/package.json
+index c50e194..742608f 100644
+--- a/package.json
++++ b/package.json
+@@ -71,7 +71,8 @@
+     "minimatch": "~11.0.1",
+     "ws": "^8.17.1",
+     "jquery": "3.6.0",
+-    "http-proxy": "npm:http-proxy-3@^1.23.2"
++    "http-proxy": "npm:http-proxy-3@^1.23.2",
++    "braces": "file:utilibre-vendor/braces-3.0.3-utilibre.1.tgz"
+   },
+   "scripts": {
+     "install:components": "node scripts/copy-components.js",
+diff --git a/www/common/common-ui-elements.js b/www/common/common-ui-elements.js
+index 9f3ba3a..e9982d6 100644
+--- a/www/common/common-ui-elements.js
++++ b/www/common/common-ui-elements.js
+@@ -2091,6 +2091,7 @@ define([
+             h('hr'),
+             faqLine,
+             termsLine,
++            Pages.abuseLink.cloneNode(true), // utilibre-abuse-report
+             privacyLine,
+             legalLine,
+             sourceLine,

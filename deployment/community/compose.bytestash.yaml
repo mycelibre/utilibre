@@ -11,7 +11,7 @@ x-bounded: &bounded
 services:
   bytestash:
     <<: *bounded
-    image: utilibre-zlib-bytestash-bytestash:candidate-20261109
+    image: utilibre-bytestash:1.6.2-candidate
     user: '1000:1000'
     cpus: 1.0
     mem_limit: 512m

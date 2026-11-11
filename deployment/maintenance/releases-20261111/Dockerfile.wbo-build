@@ -1,0 +1,10 @@
+FROM utilibre-wbo-deps:2.18.33-candidate AS dependencies
+RUN npm prune --omit=dev --ignore-scripts --offline --no-audit --no-fund
+FROM utilibre-zlib-collaboration-pilot-wbo:candidate-20261109
+USER root
+RUN rm -rf /opt/app
+COPY --from=dependencies --chown=1000:1000 /candidate /opt/app
+WORKDIR /opt/app
+ENV WBO_SILENT=true OTEL_SDK_DISABLED=true OTEL_TRACES_EXPORTER=none OTEL_METRICS_EXPORTER=none OTEL_LOGS_EXPORTER=none
+LABEL org.opencontainers.image.revision="90ae10b5e46e8efeb9b0c8ad918524e336b3fedc"
+USER 1000:1000

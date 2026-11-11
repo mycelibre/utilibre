@@ -12,7 +12,7 @@ const applications={
   mapshaper:['mapshaper','9e39193444f70a48eeffda20d8d44f82567e6d54'],
   numbat:['numbat','79046422203060e296da41c8c762c506200d2c93'],
   'super-productivity':['super-productivity','42ded9f31a132bf92633b0c78ad4ebf1d87c0f71'],
-  cryptpad:['cryptpad','c4a257e46919ba2e4e710c26f7e5dc067686e2b5'],
+  cryptpad:['cryptpad','fd2850ba0ccef87bfb82c195b149bb061f79c8bc'],
   liberaforms:['liberaforms','4d5967411a8c53742501c84142cdcf9aeca0860e'],
   galene:['galene','6d9338e909fdecdd906150e4dda34e10d9869654'],
   bentopdf:['bentopdf','f96cd4e5166f3d51393dfe9f3c440b5bb77802f1'],
@@ -33,7 +33,13 @@ const root=name==='bentopdf'?'/var/lib/utilibre-maintenance/releases-20261111/be
 if(refresh[name])spec[1]=refresh[name];
 assert.equal(execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),spec[1]);
 const paths=execFileSync('git',['ls-files','-z'],{cwd:root,encoding:'utf8'}).split('\0').filter(Boolean);
-if(name==='cryptpad')paths.push('customize/application_config.js','customize/ckeditor-config.js');
+if(name==='cryptpad'){
+  const release=JSON.parse(await readFile(new URL('../maintenance/releases-20261111/cryptpad-upgrade.json',import.meta.url)));
+  assert.equal(release.revision,spec[1]);
+  const vendor='utilibre-vendor/braces-3.0.3-utilibre.1.tgz';
+  assert.equal(createHash('sha256').update(await readFile(root+'/'+vendor)).digest('hex'),release.vendorSha256);
+  paths.push('customize/application_config.js','customize/ckeditor-config.js',vendor);
+}
 const files=[];
 for(const p of new Set(paths)){
   assert(!p.startsWith('/')&&!p.split('/').includes('..'));
@@ -58,6 +64,7 @@ await mkdir('/opt/utilibre/toolbox-public',{recursive:true});
 const prefixes=['deployment/pack/','deployment/toolbox/','deployment/expanded/','deployment/calendar/','deployment/link-cleaner/','deployment/one-file-core/','deployment/maintenance/release-refresh-20261106/','deployment/utilibre/','docs/records/release-refresh-2026-11-06.md','docs/service-pack.md'];
 const integration=execFileSync('git',['ls-tree','-r','--name-only','-z','HEAD'],{encoding:'utf8'}).split('\0').filter(p=>p&&prefixes.some(prefix=>p.startsWith(prefix)));
 if(name==='bentopdf')integration.push(...execFileSync('git',['ls-tree','-r','--name-only','HEAD','--','deployment/maintenance/releases-20261111','docs/records/bentopdf-updater-2026-11-11.md'],{encoding:'utf8'}).trim().split('\n').filter(Boolean));
+if(name==='cryptpad')integration.push(...execFileSync('git',['ls-tree','-r','--name-only','HEAD','--','deployment/maintenance/releases-20261111','docs/records/held-upgrades-2026-11-11.md'],{encoding:'utf8'}).trim().split('\n').filter(Boolean));
 assert(integration.includes('deployment/pack/publish-source.mjs'),'Stage the reviewed release before source publication');
 for(const p of integration)assert(!/(^|\/)(?:node_modules|secrets|backups|\.env)(\/|$)/.test(p)&&!(await lstat(p)).isSymbolicLink());
 await writeFile(`${stage}/integration-files`,integration.join('\0')+'\0');

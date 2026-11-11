@@ -785,5 +785,37 @@
     ],
     "purpose": "Preserve actual provider exception classification, bilingual partial/empty failure notices and exact upstream Brave parsing helpers. Pinned engine files and build locks are in degoog-search-repair.",
     "removeWhen": "The approved upstream runtime supports these provider formats and error states; rerun native, hostile parsing, saved-preference and browser network checks before removing."
+  },
+  {
+    "patch": "deployment/maintenance/releases-20261111/chhoto-7.11.3.patch",
+    "source": "/var/lib/utilibre-maintenance/held-upgrades-20261111/chhoto/source",
+    "revision": "efb604ff99dc583ac836a2dde0b7cea09addda72",
+    "prerequisites": [],
+    "purpose": "Retain no-click collection, local assets, restrained logging and the approved shortener interface on 7.11.3.",
+    "removeWhen": "A supported upstream configuration or correction passes the corresponding native, privacy and upgrade checks."
+  },
+  {
+    "patch": "deployment/maintenance/releases-20261111/bytestash-1.6.2.patch",
+    "source": "/var/lib/utilibre-maintenance/held-upgrades-20261111/bytestash/source",
+    "revision": "eb4ecdfc30f2e7d1424137fa7fe3a9eed663218b",
+    "prerequisites": [],
+    "purpose": "Native 1.6.2 authentication, local editor assets, retained SQLite repair and narrow-screen toolbar wrapping.",
+    "removeWhen": "A supported upstream configuration or correction passes the corresponding native, privacy and upgrade checks."
+  },
+  {
+    "patch": "deployment/maintenance/releases-20261111/candlr-2.4.0.patch",
+    "source": "/var/lib/utilibre-maintenance/held-upgrades-20261111/candlr/source",
+    "revision": "e6f7b2c80bb638ae868df218a249cf645bb29031",
+    "prerequisites": [],
+    "purpose": "Preserve reviewed dependency corrections and private local use without automatic release/provider requests.",
+    "removeWhen": "A supported upstream configuration or correction passes the corresponding native, privacy and upgrade checks."
+  },
+  {
+    "patch": "deployment/maintenance/releases-20261111/cryptpad-2026.10.1.patch",
+    "source": "/var/lib/utilibre-maintenance/held-upgrades-20261111/cryptpad/source",
+    "revision": "fd2850ba0ccef87bfb82c195b149bb061f79c8bc",
+    "prerequisites": [],
+    "purpose": "Forward-port the abuse-report footer and retain the exact vendored braces repair on 2026.10.1; activation has separate native gates.",
+    "removeWhen": "A supported upstream configuration or correction passes the corresponding native, privacy and upgrade checks."
   }
 ]

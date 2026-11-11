@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "approval": "approved-exact-tested-candidate",
+  "version": "2026.10.1",
+  "revision": "fd2850ba0ccef87bfb82c195b149bb061f79c8bc",
+  "oldRevision": "c4a257e46919ba2e4e710c26f7e5dc067686e2b5",
+  "runtimeImage": "sha256:ce2467088bf841400262efc8e995cdd28812e59c6a917e7ddcc05092dd33c1bc",
+  "databaseUpdatedAt": "2026-11-10T19:01:23.081219346Z",
+  "native": [
+    "native-5qHMU6/result.json",
+    "office-liITHf/result.json",
+    "native-n6tbpT/result.json"
+  ],
+  "evidence": {
+    "source-identity.json": "242943fe6d5af7c2b76d4f1ca3e5121dd4511fcfdab15fe544af0b76c1332007",
+    "source-manifest.json": "0af4e2ab5a25d45d6ed230a5a8333645a09053f299494a0bcaa04f0822bdf3c4",
+    "candidate-scan.json": "a92d918a24a4d97ff67d5f05be30eb501d418f6b39a8b322463cecc538774893",
+    "native-5qHMU6/result.json": "b9455eb152613b64dc07d5aa83f1853ed25d948f403f891468c7d4406f1b22aa",
+    "office-liITHf/result.json": "f03e3b534d695bf713e9baa752e174e15ffdba9490bbd67bfd45c8d958730495",
+    "native-n6tbpT/result.json": "2be4eeabb0da3468cdab182003b0f3805315f486c3197116607fe275ed2ac795"
+  },
+  "recipes": {
+    "deployment/maintenance/releases-20261111/cryptpad-2026.10.1.patch": "20a156d17138f0fa2aa596bfec495e3519347b65d67dcf50dde8e74f723151f2",
+    "deployment/maintenance/releases-20261111/check-cryptpad-migration.mjs": "977ad9587d88e615111187229751354df573cb10f4f2e8ffd72db2aed29ad1f1",
+    "deployment/maintenance/releases-20261111/check-cryptpad-office.mjs": "b3ac8c357c13e7677929109ea102ad206c167a05a2441d8cc93a4f5781f4bc7a",
+    "deployment/maintenance/releases-20261111/check-cryptpad-old-office.mjs": "09548bdc1d1907eeb1fb888c6c97e5558b88ebf7b8ff050d9b8e821803738560",
+    "deployment/maintenance/releases-20261111/check-cryptpad-tree.py": "89b550c2935e73c807c73d94d1cff93ccc8d7479125833219088206a4ab054dc",
+    "deployment/maintenance/releases-20261111/release-cryptpad-upgrade.mjs": "679b7cd0e0a6834512717f5db25438e29467b4b76bbd03d1b80fabee9abcc63d",
+    "deployment/maintenance/releases-20261111/Dockerfile.cryptpad-fetch": "9cc09db4a92c71d3e68438f9df14be116c782f9237952a35e3d9feb48f6aa11c"
+  },
+  "officeAssets": "9.3.2+3, exact installed assets retained; Document workflow and old-document migration checked",
+  "vendorSha256": "a2b31911df5cde1cd71d436220225cc18a4f6c43d32b2f91643ea834d5415620",
+  "limitations": [
+    "Spreadsheet/Presentation workflows not independently rerun in this Document check.",
+    "Synthetic Chromium accounts and documents; no new real-device coverage.",
+    "No automatic restoration of account data during code rollback."
+  ]
+}

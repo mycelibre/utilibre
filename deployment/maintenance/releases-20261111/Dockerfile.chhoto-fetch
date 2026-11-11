@@ -1,0 +1,4 @@
+FROM utilibre-chhoto-dependencies:7.10.8-p1
+WORKDIR /candidate
+COPY backend/ ./
+RUN cargo fetch --locked
