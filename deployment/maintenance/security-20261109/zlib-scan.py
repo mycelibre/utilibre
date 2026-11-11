@@ -12,10 +12,12 @@ from datetime import datetime, timezone
 
 os.umask(0o077)
 HERE = Path(__file__).resolve().parent
-ROOT = Path('/var/lib/utilibre-maintenance/security-20261109/zlib')
-INPUTS = json.loads((HERE / 'zlib-inputs.json').read_text())
-DB = Path('/var/cache/utilibre-security/db/trivy.db')
-EXPECTED_DB = '3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29'
+LIBRARIES = '--libraries-nov11' in sys.argv
+if LIBRARIES: sys.argv.remove('--libraries-nov11')
+ROOT = Path('/var/lib/utilibre-maintenance/libraries-20261111' if LIBRARIES else '/var/lib/utilibre-maintenance/security-20261109/zlib')
+INPUTS = json.loads((HERE / ('../releases-20261111/libraries-inputs.json' if LIBRARIES else 'zlib-inputs.json')).read_text())
+DB = ROOT/'scan-cache/db/trivy.db' if LIBRARIES else Path('/var/cache/utilibre-security/db/trivy.db')
+EXPECTED_DB = INPUTS['databaseSha256'] if LIBRARIES else '3f021611ab6c0b94ca9f4fb630fb583c200663e8cae430446f89ded1b99fdb29'
 
 def sha(path):
     with Path(path).open('rb') as stream:
@@ -54,7 +56,7 @@ for key in sys.argv[1:]:
     assert before['status'] == 'checked'
     image = build['imageId']
     args = ['unshare', '--net', '--', '/opt/utilibre/maintenance/bin/trivy', 'image', '--config', '/dev/null', '--ignorefile', '/dev/null', '--skip-check-update', '--skip-version-check', '--skip-vex-repo-update', '--disable-telemetry',
-            '--cache-dir', '/var/cache/utilibre-security', '--cache-backend', 'memory',
+            '--cache-dir', str(ROOT/'scan-cache') if LIBRARIES else '/var/cache/utilibre-security', '--cache-backend', 'memory',
             '--scanners', 'vuln', '--offline-scan', '--skip-db-update', '--skip-java-db-update',
             '--parallel', '1', '--timeout', '5m', '--no-progress', '--list-all-pkgs',
             '--image-src', 'docker', '--format', 'json', '--output', str(out / 'after-scan.json'), image]
@@ -75,12 +77,13 @@ for key in sys.argv[1:]:
     actual = {p['ID'] for result in scan['Results'] if result['Type'] == 'alpine' for p in result.get('Packages', [])}
     assert expected and set(expected) == actual, 'Incomplete or unexpected native APK inventory'
     assert 'zlib@1.4-r0' in actual
+    if LIBRARIES and 'libxpm' in spec['packages']: assert 'libxpm@3.5.20-r0' in actual
     old = [{**finding, 'target': 'alpine' if finding['type'] == 'alpine' else finding['target']} for finding in before['findings']]
     new = [{'id': v['VulnerabilityID'], 'package': v['PkgName'], 'installed': v['InstalledVersion'],
             'severity': v['Severity'], 'type': result['Type'],
             'target': 'alpine' if result['Type'] == 'alpine' else result['Target']}
            for result in scan['Results'] for v in result.get('Vulnerabilities', [])]
-    targets = lambda rows: [r for r in rows if r['package'] == 'zlib' and r['id'] in INPUTS['advisories']]
+    targets = lambda rows: [r for r in rows if r['package'] in (spec['packages'] if LIBRARIES else ['zlib']) and r['id'] in INPUTS['advisories']]
     assert targets(old) and not targets(new), 'Target finding absent in baseline or remains in candidate'
     known = {identity(row) for row in old}
     added = [row for row in new if row['severity'] in ('HIGH', 'CRITICAL') and identity(row) not in known]
@@ -96,4 +99,4 @@ for key in sys.argv[1:]:
              'consumerSha256': sha(out / 'consumer.json'), 'fixtureSha256': sha(__file__),
              'scope': 'Candidate only; unchanged frozen DB, native APK completeness and existing scan baseline. Other findings remain open; queue untouched.'}
     (out / 'scan-gate.json').write_text(json.dumps(proof, indent=2) + '\n')
-    print(key + ': zlib HIGH removed; no new HIGH/CRITICAL findings', flush=True)
+    print(key + ': targeted package findings removed; no new HIGH/CRITICAL findings', flush=True)

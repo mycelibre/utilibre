@@ -1,5 +1,81 @@
 # 11 November: updater receipts and BentoPDF
 
+## Stateless library follow-up
+
+`libraries-inputs.json` captures a separate signed-vendor update for 23 existing
+stateless frontends: zlib 1.4-r0 and, in the 22 nginx images, libxpm 3.5.20-r0.
+Both packages come from the same Alpine 3.24 branch already installed. There
+are no application, privacy-policy, storage, access or port changes. The
+earlier BentoPDF/portal runtime findings documented below describe their
+predecessors; see `libraries-status.json` for the later deployment state.
+
+This extends the existing finite zlib preparation/scope/scanner adapters with
+`--libraries-nov11` and reuses the existing nginx/Node checks and transactional
+Compose helper. It does not start another updater or scheduler. The approved
+inputs, signed APK hashes, predecessor images, fixture hashes and private raw
+proofs are required. Never substitute an unreviewed newer package or base.
+
+Private evidence and retained inputs:
+`/var/lib/utilibre-maintenance/libraries-20261111/`. Keep these inputs and the
+predecessor/candidate images; Git alone is not a complete runtime backup.
+The preparation path deliberately refuses existing proof directories instead
+of overwriting successful or failed evidence. To replay historically, restore
+the captured inputs into a separate staging environment with the same private
+layout. It neither pulls images nor downloads packages during preparation.
+
+```sh
+# KEY is one exact key from libraries-inputs.json; preparation never releases.
+node deployment/maintenance/security-20261109/zlib-prepare.mjs --libraries-nov11 KEY
+python3 deployment/maintenance/security-20261109/check-musl-nginx.py --libraries-nov11 KEY
+# Portal uses the existing Node consumer instead of the nginx command:
+python3 deployment/maintenance/security-20261109/zlib-check.py --libraries-nov11 --runtime public-utility-portal
+python3 deployment/maintenance/security-20261109/zlib-scan.py --libraries-nov11 KEY
+node --test deployment/maintenance/releases-20261111/libraries-policy.test.mjs
+```
+
+The new XPM fixture opens/writes a fictional two-by-two-pixel XPM through the
+native library without an X server. It is an ordinary compatibility test, not
+a vulnerability reproduction. The library API reports 30411, independently of
+the 3.5.20 package release. An initial incorrect API-version assumption and an
+incomplete package-file allowlist were rejected during preparation, preserved,
+then corrected. The allowed vendor payload includes libXpm's native `cxpm` and
+`sxpm` utilities. No unrelated file content, mode, owner, link, package record
+or image configuration may change; archive timestamps are not compared.
+
+The scan cache holds the recorded advisory DB and the separate Java package
+index. Scanning draw.io initially failed because the latter was absent; that
+failure remains recorded. The existing local index was copied without a
+network refresh, and draw.io's baseline was repeated with it. Scans run in a
+network namespace with no external network, no ignore file, and no advisory or
+registry update. A successful historical replay is not current clearance; the
+release gate requires an advisory snapshot less than 48 hours old. The older
+Java index identifies packages and is recorded separately from advisory data.
+
+Reviewed activation uses exact artifacts and only existing services:
+
+```sh
+node deployment/maintenance/releases-20261111/release-libraries.mjs prepare KEY
+node deployment/maintenance/releases-20261111/release-libraries.mjs apply KEY
+# Exact retained predecessor; no data migration, deletion or restore:
+node deployment/maintenance/releases-20261111/release-libraries.mjs rollback KEY
+```
+
+Release requires explicit `releaseApproval: approved`, unchanged evidence,
+complete native package inventory, no high/critical candidate findings, and
+all normal compatibility checks. It checks namespace dependencies, preserves
+all non-image Compose settings and existing bind addresses, acquires the
+existing exclusive release lock, recreates only the selected service, and
+verifies health and the existing public home where configured. A repeated
+apply validates the deployed state without another restart. A failed rollout
+uses the existing transaction helper to restore the previous pin and image.
+Rollback does not silently bypass a changed configuration or missing artifact.
+
+Only the protected portal `PORTAL_IMAGE` value and the other selected Compose
+image scalars change. No host restart, notification, indexing request, backup
+change or application migration is included. These stateless checks do not
+establish new browser/device coverage. Stateful/gateway packages and the
+separate ACL caller migration remain outside this release.
+
 This batch reuses the existing updaters, native BentoPDF build, air-gap packager,
 source publisher and scoped release helpers. It adds no scheduler or service.
 

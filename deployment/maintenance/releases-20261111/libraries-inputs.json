@@ -1,0 +1,1010 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Same-branch signed zlib/libXpm updates for stateless frontends; no application changes",
+  "advisories": [
+    "CVE-2026-4738",
+    "CVE-2026-94287"
+  ],
+  "minimumFreeBytes": 8589934592,
+  "maximumDatabaseAgeHours": 48,
+  "packages": {
+    "3.24": {
+      "branch": "3.24",
+      "repository": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main",
+      "file": "zlib-1.4-r0.apk",
+      "sha256": "7b05bc778b8b25cd880835b40114182bd4d1581717504d0129c810c0a14291cb",
+      "signatureVerifiedAgainstBase": "sha256:00ef35da2790de82bf81797072c003270a190f788bfd0d1e39c3ea1c03391b53",
+      "name": "zlib",
+      "version": "1.4-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/zlib-1.4-r0.apk",
+      "pkginfoSha256": "2eb5885520ad91e7ad574c6a77472ba3cd33a145235c2bc17156d8d7c19ba1da"
+    },
+    "3.24-libxpm": {
+      "name": "libxpm",
+      "version": "3.5.20-r0",
+      "branch": "3.24",
+      "repository": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main",
+      "file": "libxpm-3.5.20-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libxpm-3.5.20-r0.apk",
+      "sha256": "1ed312a00abac5a5840c1f3721921ea8183e664566c19763ed00aa9f35bb2178",
+      "signatureVerifiedAgainstBase": "sha256:4ef5701dd01a0d38d6ea88d2f6a9af9a2e6f6eff3a416a1b3210661e5cf59a96"
+    }
+  },
+  "nativeFixture": {
+    "compilerImage": "sha256:0efcba554b753bcd4d58045c3db806a14ae078d537faddb42aa65b767cda98a5",
+    "source": "zlib-native.c",
+    "sourceSha256": "68737a02a667f1299d29e749d36e4974f0cfeabd1bfaf141693b985e91456bbb",
+    "binarySha256": "b72fedab8a8ab4ab006b043b6ebcedbea746d5035caeaca42fcc149e78f0b4d2"
+  },
+  "consumerFixtureHashes": {
+    "check-musl-runtimes.py": "5f9a6aecd1e1a135c5d1aa353c7e356e70cdd7d6b6b2789e82ff23d1082f6d53",
+    "check-musl-special.py": "13d5f7b625ed1b945b196b50b36409460b29439361f995f09305fda952a421af",
+    "../go-final/check-native.mjs": "aef7669cdbc46cdf975fcf2a042fc528cdd7c07ac57c59b3f4b8c37eee63d266",
+    "../go-final/check-galene.mjs": "583de1e311ee9d2701e0fc6681f515811c1062c8bab92afaba9e239db2f0f245",
+    "../go-runtime-20261011/check-fmd.mjs": "d682fa57d16d39ca4906f643c8d4a1eab291f70f18955e937db0ae18670e15cd",
+    "../go-leaf-final/check-ntfy.py": "76fa306848a78918b56003f975c2a62e114bdccd5aa85589eeb36a56f8152ca8",
+    "../go-leaf-final/check-opengist.py": "b3efe37c615eadf8444d92ae0b3254485b8c239990ee7c3d42252d2514586a0a",
+    "../../pack/check-galene-lifecycle.mjs": "257b3fa0aba8a90c660f3abc73840421fa46c1eae95feed73130c39e6b92e499",
+    "../../community/binternet-torrc": "65262c0c38364ee9aad12434dc0036c558f3c1899d22f8fd0b55f2d1edbd780e",
+    "check-musl-proxy.py": "6ef40b3e7701d7912a8b8fbc20d03cef72b2bf800e2d952cea5af588f9b0c227"
+  },
+  "rows": [
+    {
+      "key": "public-utility-portal",
+      "base": "sha256:54cf14a4b97902bb05e2b8095bd070576f1ed3347286561c26e5b82cf9dadfef",
+      "oldRef": "utilibre-portal:bentopdf-20261111-p2",
+      "candidate": "utilibre-libraries-public-utility-portal:20261111",
+      "containers": [
+        "public-utility-portal-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "node-runtime",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://utilibre.org/en/",
+      "reviewedEvidence": {
+        "build.json": "55bce26aa7f8a2072c1d6d7c88380850c9a2e20570a260d673f9b9376c70f9e3",
+        "scope.json": "78695aa4abdb496a241774da8b52185862b8f689ab396dd930d27967a6cbf526",
+        "consumer.json": "49ac4aec956cb24280da78166afa580f063b29bb1df07b0dd00004f8e553b886",
+        "scan-gate.json": "668cf7446c6b771b7b4325563f02290015933910129a88ff354907510f9a57e0",
+        "after-scan.json": "662dbf55e4e91109e90f9325a6fb8cd8abbd1cceb9163ee9fd85a964fbbc508e"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "browser-tools-audiomass",
+      "base": "sha256:311a2bda7be18c4e571307b11bbd37983916053eace5acaa3a98f1099ee6847e",
+      "oldRef": "utilibre-browser-tools-audiomass:musl-security-20261109",
+      "candidate": "utilibre-libraries-browser-tools-audiomass:20261111",
+      "containers": [
+        "utilibre-browser-tools-audiomass-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://audio.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "10567b7f5b01561fdf65c80359cd4a3c7124c02eb047024b47c74161723efb50",
+        "scope.json": "79ddd22e338d4f71f3ec5aad5aaabb0434d6dc6e759dbf227e8335a63fb785de",
+        "consumer.json": "51776583c7eac9e9a70388f03f8d70f542598cfefd45e1f076d544f81369fb6b",
+        "scan-gate.json": "295e45e04c3c38a27cff8ff31dcf8d346e72d86390e839f278e6b7ed1f0db1ea",
+        "after-scan.json": "5b15105b3bfb47259184d8465c5d25cd6b3bfe2e703ca3271aa2f08c740a2f31"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "browser-tools-cyberchef",
+      "base": "sha256:9690f8d531c12c96d509eec4f6b5f531c1d876aef00b49ed13e5a204dbd5232c",
+      "oldRef": "utilibre-browser-tools-cyberchef:musl-security-20261109",
+      "candidate": "utilibre-libraries-browser-tools-cyberchef:20261111",
+      "containers": [
+        "utilibre-browser-tools-cyberchef-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://cyberchef.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "0001ec5cc881296c82636edc5c4f2e8ddc48d7533c2cd2cc9675da0b928d07fc",
+        "scope.json": "998416f70f2f40f9fd33825f11755afb23091c7139fd27cb2a2c037ed7ac2dda",
+        "consumer.json": "9692c0bb65bec8ce13d4c28f5a18ea6354c968245568a51288b3cdd732f842f9",
+        "scan-gate.json": "2fd2f1eaf2ffe6c7dfef5d30688ce7107589f1784eaa09191bafc35594860f69",
+        "after-scan.json": "a8698823d821de32e33b52054f2a868d36283f0037cd8475840ff1d89d603311"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "browser-tools-excalidraw",
+      "base": "sha256:d01fac66121e1c6bcd390369972a7df12a363c3eeb410e6a70108e6c10fd3a14",
+      "oldRef": "utilibre-browser-tools-excalidraw:musl-security-20261109",
+      "candidate": "utilibre-libraries-browser-tools-excalidraw:20261111",
+      "containers": [
+        "utilibre-browser-tools-excalidraw-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://whiteboard.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "91c934cb368f2a9cb473e30921a3250aa87c3f5c9a120038b549aef24456f4eb",
+        "scope.json": "c69cadcaf991d1b8f6eb9fea34e95393fa6369a6abf9e58b72b7df02b1c08bed",
+        "consumer.json": "9405f50060a051afa62183a32c221a2b0638327805b27b5b3787eadd60f034bb",
+        "scan-gate.json": "8a7deeb87a2eebb3f4312520fb743ac4c01ad8d4c1600c9f5f7cbc84b1362fc5",
+        "after-scan.json": "8e6a7c91273ca9289d02a9e9be8e48b367ff82fa885e8e15dffbdfbd39744998"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "browser-tools-image-scrubber",
+      "base": "sha256:be83dabcc043c5affab968f453af2a194596322ad52551a1434d30edfd2971cf",
+      "oldRef": "utilibre-browser-tools-image-scrubber:musl-security-20261109",
+      "candidate": "utilibre-libraries-browser-tools-image-scrubber:20261111",
+      "containers": [
+        "utilibre-browser-tools-image-scrubber-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://scrub.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "fbf73bf1dfc7b59fd675f36aa91c347a9de2b3df6862b2f19cd9129f0b4ad007",
+        "scope.json": "2e5e61dde9ee1455c99cfecfd351d3102e31d492010d74705e912aed388c680c",
+        "consumer.json": "2a5ac6f7b31b5561c31e50e56259bdd8508a29ec60793c700359e2d0e91dbbf9",
+        "scan-gate.json": "c869f9ee0fdf7b30608b26328b4da2a787dd66a73962c35066e517a213e4b4fc",
+        "after-scan.json": "a8d2257f787019160db5072e7f579925fb64d59d32e05482656a598405f8b762"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "browser-tools-markmap",
+      "base": "sha256:509a72bc281a2ad19e4a772cfd2c80ac02e09900926429185acf515e694331dc",
+      "oldRef": "utilibre-browser-tools-markmap:musl-security-20261109",
+      "candidate": "utilibre-libraries-browser-tools-markmap:20261111",
+      "containers": [
+        "utilibre-browser-tools-markmap-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://mindmap.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "e7a6c72e7ad006054f9877f5c3ae14b59af090f5d3836667056ac059e617f51d",
+        "scope.json": "e6bfea75b0f28cc849dfcaf7582c379026eed3f9bfd2997d38bd1134a10e3c09",
+        "consumer.json": "e8e37a961842eb3c98198744fffdbfa96b0b7cf3ab85c0329bf3cb2aff62102c",
+        "scan-gate.json": "b2821c18047982e86999d3f0e3f66a9282b81a68a36697779d5c5ab08b601759",
+        "after-scan.json": "c2a3cf4bdec45c286fc2f57fade1b7371b9697829eda0f05d1bc10efff65a9b3"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "browser-tools-minipaint",
+      "base": "sha256:49779233e8cdbd71448453e5760080ae25470d467d606699157fb8014d6d0db2",
+      "oldRef": "utilibre-browser-tools-minipaint:musl-security-20261109",
+      "candidate": "utilibre-libraries-browser-tools-minipaint:20261111",
+      "containers": [
+        "utilibre-browser-tools-minipaint-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://paint.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "1797201649a8f962db989d8a995d1050e58ca094aa271fc7e21a805ba214bba3",
+        "scope.json": "d01b7cff464cdde157cce0200a5961b2be5972f74ddde7a29e423c20a6ae86b4",
+        "consumer.json": "1a37a2bb7b5c5bfb6a77dcc7a17cff5b42c0321da4ed20b032cff56c496798e7",
+        "scan-gate.json": "089052102015bd99466877344bb8d93b486506025f5477901160df9eef7e485a",
+        "after-scan.json": "a251919445f298887d459b2ce36b48fcdadffdc67646ebe993a3b115e7154195"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "browser-tools-rawgraphs",
+      "base": "sha256:ec34a615f2a78732f9f98e8e76d5ca942304e6a0d82c890da9f803d8c4daa47e",
+      "oldRef": "utilibre-browser-tools-rawgraphs:musl-security-20261109",
+      "candidate": "utilibre-libraries-browser-tools-rawgraphs:20261111",
+      "containers": [
+        "utilibre-browser-tools-rawgraphs-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://charts.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "2709f49db98dba805db12dde2fe55a8b395ee2d39a3ff3331ef04354139bb7f8",
+        "scope.json": "43326fdd505363818bec277c7af8f8e90b6fdfe717ec092e6eff11cf7f4d1c3a",
+        "consumer.json": "96d361c09b16b94168490933379b51dad766fe18b4bdaccc02f89d4f2007a435",
+        "scan-gate.json": "b74386e03e7afdec6fa3961a11693478610ea1dd4fe502a9d94a714a59059f97",
+        "after-scan.json": "6812a3cc5cdd11c000bdf6f306143c3a68f2e9f6f1aaa7a742d22cdf0640354b"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "browser-tools-svgedit",
+      "base": "sha256:c4244d21ba1013a29f5c8e4ee2ba9e2e0391931e2d0f34ffc9ea3749d7d32c81",
+      "oldRef": "utilibre-browser-tools-svgedit:musl-security-20261109",
+      "candidate": "utilibre-libraries-browser-tools-svgedit:20261111",
+      "containers": [
+        "utilibre-browser-tools-svgedit-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://svg.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "88da1e2e6254f631973c4a4a3b8a38b77492947b38c3b18d67bba5036ccd1562",
+        "scope.json": "8f8d005c7eb14bc09fe06e5a627fdb16dd29b4afc31df28d1e158574dd61f1dd",
+        "consumer.json": "9dbf516bb321fb88ed292a47cb7e4c9cf2e24235714fa3cde413e80a2057544c",
+        "scan-gate.json": "cb4b41e35288435ccce526d7ca143a6e851954734618af898fdefbfa6042b671",
+        "after-scan.json": "d71a49cf849dab2a20ea23ec56788352a28506d19ec76a1d9f2923567bd3b01c"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "browser-tools-zip-manager",
+      "base": "sha256:865f86c76f40f38bc1e87676a1835271bc48a3bbc56ef83457754647543b0709",
+      "oldRef": "utilibre-browser-tools-zip-manager:musl-security-20261109",
+      "candidate": "utilibre-libraries-browser-tools-zip-manager:20261111",
+      "containers": [
+        "utilibre-browser-tools-zip-manager-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://zip.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "7e3b32b272b51cfe2154b8934a08105a816f8bbf73f6ab8fc5cf52e16c5ed9d5",
+        "scope.json": "e53ee3b7cd83eb6a80e268f7eda58517e6c2053aefc949018f90ddc2f9044443",
+        "consumer.json": "1b4a0011bb9d9c33091c06e3a3c5c3e9d60d85281a6c3944447eb46edb329bd5",
+        "scan-gate.json": "0443a4c2ce5ebb71c3d3df0870e45c33144b2538350338d708a9676514e9f1f1",
+        "after-scan.json": "aeab1a7b0ff647010f85e870cd5cc6caf0c4cde3219de5786c24a86b1492d660"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "creative-batch-glyphr",
+      "base": "sha256:7e92367574ddb532da2318f560e8739b4939ed78a5bcb9df80fcfe6558ed24ee",
+      "oldRef": "utilibre-creative-batch-glyphr:musl-security-20261109",
+      "candidate": "utilibre-libraries-creative-batch-glyphr:20261111",
+      "containers": [
+        "utilibre-creative-batch-glyphr-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://glyphr.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "ddc0ebdee2f312d876feb557fe93836735ca7a9b381701465aa6d8f9a014a71d",
+        "scope.json": "dbd80ecf8bb6862f1359ae7fb3314514ca6259896b0ee8ed1347dee7c40838cf",
+        "consumer.json": "7a1c53a6a6c02c15e1cb44beece0c0afd595ba753fd9c570644e35ada625ba03",
+        "scan-gate.json": "453ff1940cd0a658d05680e11e514569e9d431ef58769e481a5724d4d7042cb2",
+        "after-scan.json": "beb0f7fc5925b42ad7d3c312c05ab0897361e50d3755a168425607c304f299a2"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "expanded-jupyterlite",
+      "base": "sha256:d24228b354e0b1201485b156bca58dca6928dd5683065933c753151184025e8e",
+      "oldRef": "utilibre-expanded-jupyterlite:musl-security-20261109",
+      "candidate": "utilibre-libraries-expanded-jupyterlite:20261111",
+      "containers": [
+        "utilibre-expanded-jupyterlite-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://python.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "c6def9c268a1f19e5c747cf5b65f9d930bd850ce62740ee3e32caf9fe55088c5",
+        "scope.json": "cc0629b8ea289d85f57bb32eadb83fc6349e153c9b50cc31afdffc1d185779b1",
+        "consumer.json": "3c2580e82082eee6699ad985492921a2cf71fb199f99966cef0c71baf09c2bb9",
+        "scan-gate.json": "03819e752e9b5786326385f33bff69504b742e3e81d00e450607e9214c5d119f",
+        "after-scan.json": "741bfd9b83e0a50b54debf0a5cb1ff28c08176e35c71fb83e662c1ffc38e80ff"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "expanded-whisper",
+      "base": "sha256:bcbd9064d7091bcf61667d2939480bb11d9103a0687e079362d37375471f3a35",
+      "oldRef": "utilibre-expanded-whisper:musl-security-20261109",
+      "candidate": "utilibre-libraries-expanded-whisper:20261111",
+      "containers": [
+        "utilibre-expanded-whisper-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": null,
+      "reviewedEvidence": {
+        "build.json": "a6c2eba78454855cefc3c2d1b1a079688059a29696cf3d6dd293ef8904dfd40e",
+        "scope.json": "b1a17eb986bc879cf96d40fb8ce381765fd6cb86014ec8e0aa97c398f4e8505a",
+        "consumer.json": "cf623d549c5f62fdba1c96224b0e57d24c2fb738cc02f618ae16b28fb87d4ed4",
+        "scan-gate.json": "2d6d8eeccd8d068bf0cd3a635185578470986d2f4388965771400d7d9b0ebd9a",
+        "after-scan.json": "73dbbf0e966b39c4a5045bb842549688b5cf894c30b629c483600a1078d1f67e"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "openresume-web",
+      "base": "sha256:76e33503470b3c8869c18cb9e1bbb5fa0b38e092accf1155924260de2b078372",
+      "oldRef": "utilibre-openresume-web:musl-security-20261109",
+      "candidate": "utilibre-libraries-openresume-web:20261111",
+      "containers": [
+        "utilibre-openresume-web-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": null,
+      "reviewedEvidence": {
+        "build.json": "f3238f96bc0467732414f68a580566eec4ab20c695de87220408254295421cfc",
+        "scope.json": "5db62238f1836388b7eb802afd8f7e0d62976c0c436baae415504bc75c049e57",
+        "consumer.json": "bbf94462092c52969a1030c4123e76f73ec6dc06231ad5ba8e2dfaab4ec114e4",
+        "scan-gate.json": "4b761e03aba4e2c67bc565548c36eb92443a260395093d2f2f1158d055639a95",
+        "after-scan.json": "c72074d7d1c7c932eb5a0de6e1b34ad963223a732acb233ffba71b444d9171ec"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "qr-offline-qr-offline",
+      "base": "sha256:a0eea39c40bbc648af1b34fd1d00535a73070c010e2937281933475b073a5058",
+      "oldRef": "utilibre-qr-offline-qr-offline:musl-security-20261109",
+      "candidate": "utilibre-libraries-qr-offline-qr-offline:20261111",
+      "containers": [
+        "utilibre-qr-offline-qr-offline-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://qrtools.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "36e478a63c3d9ca5b8f568dabc3e14b968017b19b66251d34f9f002654960480",
+        "scope.json": "6680015a5f06bde79d0699de4d8c99ef7f609414e9b249e197dc02c462c0e359",
+        "consumer.json": "ec9ca9571f00a13bd4b96d91a5e8a3ea8dae7fb0e7013b0bc916c5bc801825b7",
+        "scan-gate.json": "eb6dd6a33742f1aa180199ead1bcf4635ccbc4295fc8729e9ff14ff9c4bc65e9",
+        "after-scan.json": "275e40ba99cf0ce31eefe82b1a0def005efd789b097c88dfc3691f7557de965a"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "reader-evaluation-safetwitch",
+      "base": "sha256:e30758662d4cf1f4861d89aec002cad3bd19fd897abfe2850f7cb6df09dd079b",
+      "oldRef": "utilibre-reader-evaluation-safetwitch:musl-security-20261109",
+      "candidate": "utilibre-libraries-reader-evaluation-safetwitch:20261111",
+      "containers": [
+        "utilibre-reader-evaluation-safetwitch-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://twitch.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "9193779a7def8eb86c4d7d69693e67d65f1633b2a9b705eb4bf31ca18280b421",
+        "scope.json": "8de3591f92f0698d30b4a01a310f4fc741c152d9c7877be8706d4c5c58acb310",
+        "consumer.json": "878eabfc8a29f13d6139f9384ab64e4a92b58c40bd54a6d6d515ec4480ed36c4",
+        "scan-gate.json": "1b951012e2dac809c1761752eb3145d19bad16e086729be0fdb317eefd33ca1b",
+        "after-scan.json": "c0816c15de22dac7587e814d0a1c811af6f716a496dde5c70294c737b4ac49c0"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "toolbox-bentopdf",
+      "base": "sha256:4ef5701dd01a0d38d6ea88d2f6a9af9a2e6f6eff3a416a1b3210661e5cf59a96",
+      "oldRef": "utilibre-toolbox-bentopdf:2.8.11-p1",
+      "candidate": "utilibre-libraries-toolbox-bentopdf:20261111",
+      "containers": [
+        "utilibre-toolbox-bentopdf-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://pdf.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "d0e301fd9c1de605a332b173abf3ef88705b49241dbca9742b87ae0475e00d93",
+        "scope.json": "546ec541f8357b83086c76a35f3d6627daa01f61c12949d26e1eb5b25981b4ff",
+        "consumer.json": "afb6a4b5c6b2c62c8634a3e2cc4d68d4d1ebd476a7ca6d3fe396573e236b80c6",
+        "scan-gate.json": "b4ecb29647ab9c14b356dfed5b6518e6a926b05353f0af7b992519c8e1329963",
+        "after-scan.json": "f5c9008b101b8f60cf4519ff130a72101f7c379d499b62dd50dc49e4655d27e3"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "toolbox-drawio",
+      "base": "sha256:e4e1d455f2a462a57af8b67524f591df8c6483d707ea6974d5f8df7ee7e7a9dd",
+      "oldRef": "utilibre-toolbox-drawio:musl-security-20261109",
+      "candidate": "utilibre-libraries-toolbox-drawio:20261111",
+      "containers": [
+        "utilibre-toolbox-drawio-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://draw.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "d68c67dd72de89d7ffd04a0a55bf1f3400b1a1b4f464b18a88da204b6ce9d53c",
+        "scope.json": "74037c1fb14e563a239afcd6f3997a412d7c017f40aa3d203165a06040f497de",
+        "consumer.json": "72415fa0f4efb0a9a6c58a774ca7d21c547138f5c6b46406f00e70a996986dd2",
+        "scan-gate.json": "921970d52b9ddeaf5a86703e4a853042b2af5fd58eda710fbf3d9d5e2e0c66a0",
+        "after-scan.json": "0fe9b78dfad2a7adce70e4b9d53d38583e2a47d9acded1b691bdcd93e1408d1c",
+        "java-baseline.json": "255dbd021b35af0a5440e3e1074de990a7802520a80324ae7b0ff752e402d528"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "toolbox-hatsh",
+      "base": "sha256:7db4b0cfea810bdf4b0ca8d2f9f3a89d3eb77c556a63e08790533fa5d774e6e3",
+      "oldRef": "utilibre-toolbox-hatsh:musl-security-20261109",
+      "candidate": "utilibre-libraries-toolbox-hatsh:20261111",
+      "containers": [
+        "utilibre-toolbox-hatsh-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://hat.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "1f74d1ab8754645bf113fd210ccb58d6554f2599e4ae4b7b634645dea9056bb4",
+        "scope.json": "894737922bbcebae16b52c452ae23163b794a5096b2616cb8711ec3c8e528aeb",
+        "consumer.json": "869808229d817fea6fe396b61b6d95e146370c7b9a3deadadb1445575705b569",
+        "scan-gate.json": "fdad5ef7d9f5838af7e71338f39520585154b30c9ea964a6640cd76ee13c723d",
+        "after-scan.json": "b39105761e32b9bc456ceb53be4eb495077aed2c091e4ea0075790d84ab84af9"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "toolbox-ittools",
+      "base": "sha256:6e0ea4b326b02df8b5a7af03e1e85c2f08c5d23d790681645024f9c3de411650",
+      "oldRef": "utilibre-toolbox-ittools:musl-security-20261109",
+      "candidate": "utilibre-libraries-toolbox-ittools:20261111",
+      "containers": [
+        "utilibre-toolbox-ittools-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://dev.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "3050e79bbc4ad3c3265ab0afaef11c5a1383c5e183f261ab410e527f4ac4a135",
+        "scope.json": "fdc621d0fbf4b1dfb68c312a6c75be79728b7472ac4a4cab6cf24373bed1576f",
+        "consumer.json": "cf030fa2ac7b4001e3f3675731f498e96b52dc3d20ac236016d23349d883d3e2",
+        "scan-gate.json": "1a2caaba3292fc0c0632016ae7d5e95b167dc51103585e3b52f51b8f40a79f36",
+        "after-scan.json": "0b2d0f7eb13342b81e501f9b048ddf5edd881bd5e09a24346efd69087fe32a92"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "toolbox-miniqr",
+      "base": "sha256:dbaa86318486308b8c48c4ec04f8eb77a247bcf4ac7f7acd12377101b956bef4",
+      "oldRef": "utilibre-toolbox-miniqr:musl-security-20261109",
+      "candidate": "utilibre-libraries-toolbox-miniqr:20261111",
+      "containers": [
+        "utilibre-toolbox-miniqr-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://qr.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "496a5f4b89f26af6378f340d674aed430b18f69c47a12f56f1d5fde3435fa092",
+        "scope.json": "f625f796247e5a436ee46b08706cd4c358a72a57a3f03baed7075bad0a095d5a",
+        "consumer.json": "d5b6153acd356cd6e0ee19b062ba4948cf0644b40e7b24cd483bbfa4b61eca72",
+        "scan-gate.json": "a682f797f68cfbd7095f8507286384fafd3c267e85ff336ac9310fbf681fb8b8",
+        "after-scan.json": "39f3d14ed128a6b1651df2eb6de5945d926b5fb73908d1c2d341c2cc794d85ab"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "toolbox-omnitools",
+      "base": "sha256:a4db31da5d38d89ccd256352725e8e11db0c63588b0b2f0c09758759cba0bcbf",
+      "oldRef": "utilibre-toolbox-omnitools:musl-security-20261109",
+      "candidate": "utilibre-libraries-toolbox-omnitools:20261111",
+      "containers": [
+        "utilibre-toolbox-omnitools-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://tools.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "15055973cc3778b3a39a83144b6be1c62c3319c2950d3b6e05897beab8617fb1",
+        "scope.json": "075cd7b4229dde3125142339980c45b8484dd14d2725617d8d481ad1e7babc9f",
+        "consumer.json": "f9568c305bd1bd16d85b9ae0b6b6e10bd17d0fe33010e39856c576222cf5a9ac",
+        "scan-gate.json": "20f3610472ca8885d9b0bae2ece25e9a7c902a9c667d69feacb485b494d805b0",
+        "after-scan.json": "7f2b1921223da046b2386f3046ceebb2095398aa009e055a04c6ff563e0b1c97"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    },
+    {
+      "key": "toolbox-vert",
+      "base": "sha256:6b86d8eb53e770738d3870ade2594f0da5cc19d9cfc41aee55f60389bbc5cc56",
+      "oldRef": "utilibre-toolbox-vert:musl-security-20261109",
+      "candidate": "utilibre-libraries-toolbox-vert:20261111",
+      "containers": [
+        "utilibre-toolbox-vert-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "packages": {
+        "zlib": "1.3.2-r1",
+        "libxpm": "3.5.19-r0"
+      },
+      "installed": "1.3.2-r1",
+      "musl": "1.2.6-r3",
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "ownerHold": null,
+      "publicHome": "https://convert.utilibre.org/",
+      "reviewedEvidence": {
+        "build.json": "46f63cddef2b6e7fc56b1969abb45f26ab032fbfef27f699ab1ad3f683236b87",
+        "scope.json": "b25a6112d5ca9f7ec394bd312dbec2099fe90e91840f8cc64f54d07b81677bc8",
+        "consumer.json": "ff1dbd6d660338c17f76fffda822d75a59b3d3df171f40efe6531a7fd6d644f2",
+        "scan-gate.json": "e5011d5a34786a15e57cd2a5fe82e7f1e8ee553e3b2ad6e654eef926e906a7d5",
+        "after-scan.json": "3bde968e66b0b7dce37c97339240570ce612eb6070efe83f3001542591baa1a8"
+      },
+      "approvalBasis": "Maintainer review of exact signed same-branch packages, full unrelated-file/configuration parity, ABI/native compatibility and frozen-database comparison; no user-data or application change."
+    }
+  ],
+  "unselected": [
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-13ft-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-additions-dumb-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-additions-fmd-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-additions-mezzo-gateway-1"
+    },
+    {
+      "image": "sha256:f658ff59bd7b51bdff958de65f46604034106d90d153455a40ee37129cfff209",
+      "name": "utilibre-addy-app-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-addy-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-beaverhabits-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-biblioreads-gateway-1"
+    },
+    {
+      "image": "sha256:4cce7c5d42c8efbaeb188b1fc0b514d9ac625d2668c6aab284fa21db69ab6ac4",
+      "name": "utilibre-binternet-gateway-1"
+    },
+    {
+      "image": "sha256:4cce7c5d42c8efbaeb188b1fc0b514d9ac625d2668c6aab284fa21db69ab6ac4",
+      "name": "utilibre-binternet-onion-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-bytestash-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-calendar-calino-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-chhoto-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-chitchatter-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-collaboration-pilot-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-community-gateway-1"
+    },
+    {
+      "image": "sha256:1fe576f413b7c79ec91ad279d7fd036fa86844912b7b316b41513ae82f50deb3",
+      "name": "utilibre-community-pairdrop-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-community-rallly-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-creative-batch-static-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-donetick-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-evaluation-degoog-gateway-1"
+    },
+    {
+      "image": "sha256:bf748ae83b9d9e0b8ef9ddf4ea57e892cef6614a33f38e573d862f15cc3d40c4",
+      "name": "utilibre-expanded-penpot-exporter-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-expanded-wiki-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-family-chess-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-gathio-gateway-1"
+    },
+    {
+      "image": "sha256:d75618fdee5a53508e391383bef49fbd2deed09fa45c4ecf0203c12a10c3a34f",
+      "name": "utilibre-gathio-postgres-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-kitchenowl-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-kittygram-gateway-1"
+    },
+    {
+      "image": "sha256:969a31768c6ce01b42e3bd6eac6ffe9f5e43c938a9e4031cdbd147e124f55d73",
+      "name": "utilibre-kittygram-kittygram-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-linkding-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-newsletters-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-opengist-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-pack-forms-web-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-pack-static-static-1"
+    },
+    {
+      "image": "sha256:fb8f3f6ca1f0094cb4f2aae4e31493d835ac244d9e53761cf7bcd1ad8bb7059a",
+      "name": "utilibre-pollaris-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-priviblur-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-projects-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-razzia-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-reader-evaluation-anonymousoverflow-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-reader-evaluation-fourget-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-reader-evaluation-gothub-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-records-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-rimgo-gateway-1"
+    },
+    {
+      "image": "sha256:e6a3f0c563c225e055524197f59261f34a805e38d49e4c03c051dcfa19643d6f",
+      "name": "utilibre-services-privatebin-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-simplelogin-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-spliit-gateway-1"
+    },
+    {
+      "image": "sha256:784e96a96a35963e548c004548da808724ba1e5009ec6b74064ddd111c551700",
+      "name": "utilibre-translite-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-trip-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-unfurl-gateway-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-vikunja-gateway-1"
+    },
+    {
+      "image": "sha256:3b869709d9174e5933249d087e7a04e13420397a30d6dee719f362f2165e6789",
+      "name": "utilibre-wallabag-app-1"
+    },
+    {
+      "image": "sha256:ffddc17eb392b731ddc1e43e7729f8e76046187a30b972a3f7b030ddf16134d2",
+      "name": "utilibre-wallabag-web-1"
+    },
+    {
+      "image": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "name": "utilibre-wishlist-gateway-1"
+    }
+  ],
+  "upstreamSources": [
+    {
+      "url": "https://zlib.net/",
+      "checkedOn": "2026-11-11"
+    },
+    {
+      "url": "https://www.x.org/releases/individual/lib/libXpm-3.5.20.tar.xz",
+      "sha256": "c064ead03e4dde78afdeb121fe0b644d25c550444cf903fbdc537f1a78f3ef74"
+    }
+  ],
+  "xpmFixture": {
+    "source": "deployment/maintenance/releases-20261111/xpm-native.c",
+    "sourceSha256": "e3003318cee8c8257ec5df58a0f174f0dba5e43e6483e19a5882df4f42954b06",
+    "binarySha256": "fcabfc1cebb8b1644a19f06b8907930bdac694febdd0275f12ee1695fb432625",
+    "compilerImage": "sha256:0efcba554b753bcd4d58045c3db806a14ae078d537faddb42aa65b767cda98a5",
+    "upstreamAbiHeaderSha256": "652b9aa90b3c5a516b367c1a4bed0658920505290657ea0d9362152a3e7c6388"
+  },
+  "baselineScanSha256": "a5827bec272eba7f91f28b8395c117929cbcc1980fd01cc362767605fd82b221",
+  "databaseSha256": "c5c0b8f89197cd5e1f2d4588d708bde91ea4aa930e80cca058ee13da377828f0",
+  "baselineProvenance": "Existing complete 10 November runtime scan plus exact 11 November BentoPDF/portal raw scans, same preserved database",
+  "projects": [
+    "public-utility",
+    "utilibre-browser-tools",
+    "utilibre-creative-batch",
+    "utilibre-expanded",
+    "utilibre-openresume",
+    "utilibre-qr-offline",
+    "utilibre-reader-evaluation",
+    "utilibre-toolbox"
+  ],
+  "verificationHashes": {
+    "deployment/maintenance/security-20261109/zlib-prepare.mjs": "0daecba293ca5be44b2369a0d125e7269df5ee6c949da707f071604afe6eae2a",
+    "deployment/maintenance/security-20261109/zlib-check.py": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+    "deployment/maintenance/security-20261109/zlib-scan.py": "881c474d7ca69c754b97eee6204b2681d140a58b8b4d946199abfe6d5d9e3e27",
+    "deployment/maintenance/security-20261109/check-musl-nginx.py": "4cf498c5c38a1b7a672e097001ea866ce637b942ad077a24942b90e76ea0400b",
+    "deployment/maintenance/security-20261109/check-musl-runtimes.py": "5f9a6aecd1e1a135c5d1aa353c7e356e70cdd7d6b6b2789e82ff23d1082f6d53",
+    "deployment/maintenance/security-20261109/zlib-native.c": "68737a02a667f1299d29e749d36e4974f0cfeabd1bfaf141693b985e91456bbb",
+    "deployment/maintenance/releases-20261111/libraries-policy.mjs": "44bad9fa0b76f9c6ad86b1f4797fa23c607c294e26709d7bd8accb7fb6224d82",
+    "deployment/maintenance/releases-20261111/release-libraries.mjs": "ff26f4600f1eeb5885a9663d69181b675dc0737d94444e55e6b5cd8b0d153c2e",
+    "deployment/maintenance/releases-20261111/xpm-native.c": "e3003318cee8c8257ec5df58a0f174f0dba5e43e6483e19a5882df4f42954b06",
+    "deployment/maintenance/language-final/release.mjs": "6c4387664ddaef799dc6a7129b811cec9a1f5e9a56b9214a24efef0ca4360817",
+    "deployment/maintenance/security-20261103/release-lock.mjs": "ac8fc285de9d1ea2f1c3647e06c6103eacb3193da232ff5c3ac2b3b389196563"
+  },
+  "javaExtractionDatabase": {
+    "sha256": "63e601fd41448f5c350d6f50411974217d70add617928405634884eb6d8ac701",
+    "metadata": {
+      "Version": 1,
+      "NextUpdate": "2026-11-11T00:58:16.536522502Z",
+      "UpdatedAt": "2026-11-08T00:58:16.536522772Z",
+      "DownloadedAt": "2026-11-08T10:23:58.497756203Z"
+    },
+    "purpose": "Preserved Java package-identification index, separate from vulnerability advisory DB; no update or network lookup."
+  }
+}

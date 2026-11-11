@@ -12,8 +12,10 @@ from datetime import datetime, timezone
 
 os.umask(0o077)
 HERE = Path(__file__).resolve().parent
-ROOT = Path('/var/lib/utilibre-maintenance/security-20261109/zlib')
-INPUTS = json.loads((HERE / 'zlib-inputs.json').read_text())
+LIBRARIES = '--libraries-nov11' in sys.argv
+if LIBRARIES: sys.argv.remove('--libraries-nov11')
+ROOT = Path('/var/lib/utilibre-maintenance/libraries-20261111' if LIBRARIES else '/var/lib/utilibre-maintenance/security-20261109/zlib')
+INPUTS = json.loads((HERE / ('../releases-20261111/libraries-inputs.json' if LIBRARIES else 'zlib-inputs.json')).read_text())
 LIMITS = ['--network', 'none', '--read-only', '--cap-drop', 'ALL',
           '--security-opt', 'no-new-privileges', '--cpus', '1', '--memory', '256m',
           '--memory-swap', '256m', '--pids-limit', '64', '--log-driver', 'none']
@@ -90,21 +92,26 @@ def scope(key):
     before, after = export_manifest(base), export_manifest(image)
     olddb, newdb = inventory(image_file(base, '/lib/apk/db/installed')), inventory(image_file(image, '/lib/apk/db/installed'))
     assert olddb.keys() == newdb.keys()
-    assert {k: v for k, v in olddb.items() if k != 'zlib'} == {k: v for k, v in newdb.items() if k != 'zlib'}, 'Non-zlib APK metadata changed'
-    oldfiles = run(['docker', 'run', '--rm', *LIMITS, '--user', '0', '--entrypoint', 'apk', base, 'info', '-L', 'zlib']).decode().splitlines()[1:]
-    newfiles = run(['docker', 'run', '--rm', *LIMITS, '--user', '0', '--entrypoint', 'apk', image, 'info', '-L', 'zlib']).decode().splitlines()[1:]
-    payload = {path for path in oldfiles + newfiles if path}
-    assert payload and all(path.startswith('usr/lib/libz.so.') for path in payload), payload
+    names = list(spec['packages']) if LIBRARIES else ['zlib']
+    assert {k: v for k, v in olddb.items() if k not in names} == {k: v for k, v in newdb.items() if k not in names}, 'Unrelated APK metadata changed'
+    payload = set()
+    for name in names:
+        for identifier in (base, image):
+            files = run(['docker', 'run', '--rm', *LIMITS, '--user', '0', '--entrypoint', 'apk', identifier, '--no-network', 'info', '-L', name]).decode().splitlines()[1:]
+            allowed_prefix = 'usr/lib/libz.so.' if name == 'zlib' else 'usr/lib/libXpm.so.'
+            assert any(files) and all(not p or p.startswith(allowed_prefix) or name == 'libxpm' and p in ('usr/bin/cxpm','usr/bin/sxpm') for p in files)
+            payload.update(p for p in files if p)
     allowed = payload | {'lib/apk/db/installed', 'etc/apk/world'}
     changed = {path: {'before': before.get(path), 'after': after.get(path)} for path in sorted(before.keys() | after.keys()) if before.get(path) != after.get(path)}
     assert changed and set(changed) <= allowed, 'Unexpected image file changes: ' + repr(set(changed) - allowed)
     worlds = [image_file(i, '/etc/apk/world').decode().splitlines() for i in (base, image)]
-    def zlib_constraint(value):
-        return value == 'zlib' or value.startswith(('zlib=', 'zlib><'))
-    assert [v for v in worlds[0] if not zlib_constraint(v)] == [v for v in worlds[1] if not zlib_constraint(v)]
-    for world, record, version in zip(worlds, [olddb['zlib'], newdb['zlib']], ['1.3.2-r0', '1.4-r0']):
-        checksum = next(line[2:] for line in record.splitlines() if line.startswith('C:'))
-        assert all(v in ('zlib', 'zlib=' + version, 'zlib><' + checksum) for v in world if zlib_constraint(v))
+    def package_constraint(value, name):
+        return value == name or value.startswith((name + '=', name + '><'))
+    assert [v for v in worlds[0] if not any(package_constraint(v,n) for n in names)] == [v for v in worlds[1] if not any(package_constraint(v,n) for n in names)]
+    for name in names:
+        for world, database in zip(worlds, [olddb, newdb]):
+            fields = {line[0]:line[2:] for line in database[name].splitlines() if line.startswith(('C:', 'V:'))}
+            assert all(v in (name, name+'='+fields['V'], name+'><'+fields['C']) for v in world if package_constraint(v,name))
     musl = 'lib/ld-musl-x86_64.so.1'
     assert before[musl] == after[musl]
     exports = []
@@ -117,7 +124,16 @@ def scope(key):
             dynamic.append([line.strip().split(')', 1)[1].strip() for line in run(['readelf', '-d', str(lib)]).decode().splitlines() if '(NEEDED)' in line or '(SONAME)' in line])
     assert exports[0] <= exports[1] and len(exports[0]) >= 80
     assert dynamic[0] == dynamic[1]
-    proof = {'date': datetime.now(timezone.utc).isoformat(), 'passed': True, 'base': base,
+    xpm_abi = None
+    if 'libxpm' in names:
+        with tempfile.TemporaryDirectory(dir=out, prefix='xpm-abi-') as tmp:
+            rows=[]
+            for n, identifier in enumerate((base, image)):
+                lib=Path(tmp)/str(n);lib.write_bytes(image_file(identifier, '/usr/lib/libXpm.so.4'))
+                rows.append((symbols(lib),[line.strip().split(')',1)[1].strip() for line in run(['readelf','-d',str(lib)]).decode().splitlines() if '(NEEDED)' in line or '(SONAME)' in line]))
+            assert rows[0][0] <= rows[1][0] and rows[0][1] == rows[1][1]
+            xpm_abi={'preserved':True,'baselineExportedSymbols':len(rows[0][0]),'dependenciesAndSoname':rows[0][1]}
+    proof = {'packages':names,'xpmAbi':xpm_abi,'date': datetime.now(timezone.utc).isoformat(), 'passed': True, 'base': base,
              'imageId': image, 'changed': changed, 'imageEntries': [len(before), len(after)],
              'allUnrelatedImageFilesUnchanged': True, 'unrelatedApkRecordsUnchanged': True,
              'muslUnchanged': True, 'muslSha256': before[musl].get('sha256'),
@@ -135,7 +151,7 @@ def consumer_runtime(keys):
     code = original.decode()
     assert code.count("ROOT = Path('/var/lib/utilibre-maintenance/security-20261109/musl')") == 1
     assert code.count("HERE / 'musl-inputs.json'") == 1
-    adapted = code.replace("ROOT = Path('/var/lib/utilibre-maintenance/security-20261109/musl')", "ROOT = Path('/var/lib/utilibre-maintenance/security-20261109/zlib')").replace("HERE / 'musl-inputs.json'", "HERE / 'zlib-inputs.json'")
+    adapted = code.replace("ROOT = Path('/var/lib/utilibre-maintenance/security-20261109/musl')", "ROOT = Path('"+str(ROOT)+"')").replace("HERE / 'musl-inputs.json'", "HERE / '"+("../releases-20261111/libraries-inputs.json" if LIBRARIES else "zlib-inputs.json")+"'")
     adapter = ROOT / 'runtime-adapter.py'
     if adapter.exists():
         assert adapter.read_text() == adapted

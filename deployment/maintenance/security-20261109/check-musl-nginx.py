@@ -15,8 +15,11 @@ from datetime import datetime, timezone
 
 os.umask(0o077)
 HERE = Path(__file__).resolve().parent
-ROOT = Path('/var/lib/utilibre-maintenance/security-20261109')
-SPECS = json.loads((HERE / 'musl-inputs.json').read_text())['rows']
+LIBRARIES = '--libraries-nov11' in sys.argv
+if LIBRARIES: sys.argv.remove('--libraries-nov11')
+ROOT = Path('/var/lib/utilibre-maintenance/libraries-20261111' if LIBRARIES else '/var/lib/utilibre-maintenance/security-20261109')
+INPUTS = json.loads((HERE / ('../releases-20261111/libraries-inputs.json' if LIBRARIES else 'musl-inputs.json')).read_text())
+SPECS = INPUTS['rows']
 KEYS = sys.argv[1:]
 assert KEYS and len(KEYS) == len(set(KEYS))
 LIMITS = ['--read-only', '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges',
@@ -60,11 +63,17 @@ def symbols(path):
 for key in KEYS:
     s=next(row for row in SPECS if row['key']==key)
     assert s.get('consumerProfile') in ('static-nginx', 'nginx-runtime'), 'Not a reviewed NGINX input'
-    out=ROOT/'musl'/key
+    out=ROOT/key if LIBRARIES else ROOT/'musl'/key
     b=json.loads((out/'build.json').read_text())
     assert b['passed'] and b['configurationUnchanged'] and b['unrelatedPackagesUnchanged']
     assert not (out/'consumer.json').exists(), 'Preserve completed proof'
-    rows=[]; abi=[]
+    rows=[]; abi=[]; xpm=[]
+    if LIBRARIES:
+        assert hashlib.sha256((ROOT/'fixture/xpm-native').read_bytes()).hexdigest()==INPUTS['xpmFixture']['binarySha256']
+        for image in [b['base'],b['imageId']]:
+            value=run(['docker','run','--rm',*LIMITS,'--network','none','--user','65534:65534','--tmpfs','/tmp:rw,size=4m','-v',str(ROOT/'fixture/xpm-native')+':/xpm-native:ro','--entrypoint','/xpm-native',image]).decode().strip()
+            assert value=='XPM_NATIVE_PASSED synthetic-pixel-file-roundtrip'
+            xpm.append({'imageId':image,'passed':True,'operation':'native fictional pixel-file round-trip'})
     with tempfile.TemporaryDirectory(prefix='static-fixture-',dir=out) as temp:
         t=Path(temp);t.chmod(0o755)
         (t/'site').mkdir(); (t/'site/index.html').write_text('<!doctype html><html lang="en"><head><title>Fictional runtime check</title></head><body><h1>Fictional fixture</h1><p>No user data or outside services.</p></body></html>')
@@ -106,7 +115,7 @@ http { access_log off; client_body_temp_path /tmp/body;
                 subprocess.run(['docker','rm','-f','-v',name],capture_output=True,timeout=30)
     assert set(abi[0])<=set(abi[1]), 'Removed libc exports'
     assert rows[0]['rootSha256']==rows[1]['rootSha256']
-    proof={'date':datetime.now(timezone.utc).isoformat(),'passed':True,
+    proof={'xpmRows':xpm,'date':datetime.now(timezone.utc).isoformat(),'passed':True,
            'imageId':b['imageId'],'base':b['base'],'rows':rows,
            'abiPreserved':True,'baselineExportedSymbols':len(abi[0]),
            'nativeRows':b['nativeRows'],'fixtureSha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
