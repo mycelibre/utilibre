@@ -1,14 +1,27 @@
 import assert from 'node:assert/strict';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync, renameSync } from 'node:fs';
 import { chromium } from '../../portal/node_modules/playwright/index.mjs';
-assert(process.argv.slice(2).length===0||JSON.stringify(process.argv.slice(2))==='["--oct22"]');
+import {loadParser,parserDirectory} from '../toolbox/pdf-parser-input.mjs';
+assert(process.argv.slice(2).length===0||['["--oct22"]','["--candidate"]','["--live"]'].includes(JSON.stringify(process.argv.slice(2))));
 const oct22=process.argv.includes('--oct22');
-const report=oct22?'/var/lib/utilibre-maintenance/security-20261022/texlyre':'/opt/utilibre/reports/texlyre-20261011';
-const base=oct22?'http://127.0.0.1:3441':'https://latex.utilibre.org';
-const getDocument=oct22?null:(await import('/opt/utilibre/evaluation-src/texlyre-20261011/node_modules/pdfjs-dist/legacy/build/pdf.mjs')).getDocument;
+const candidate=process.argv.includes('--candidate');
+const live=process.argv.includes('--live');
+const report=candidate||live?process.env.TEXLYRE_CHECK_REPORT:oct22?'/var/lib/utilibre-maintenance/security-20261022/texlyre':'/opt/utilibre/reports/texlyre-20261011';
+if(candidate||live)assert(/^\/var\/lib\/utilibre-maintenance\/[a-zA-Z0-9/-]+$/.test(report)&&!report.includes('..'));
+const base=candidate?'http://127.0.0.1:3442':oct22?'http://127.0.0.1:3441':'https://latex.utilibre.org';
+const local=candidate||oct22;
+const migration=process.env.TEXLYRE_MIGRATE_FROM_013==='1';
+if(migration)assert(candidate,'Migration is restricted to the disposable candidate');
+const getDocument=local||live?null:(await import('/opt/utilibre/evaluation-src/texlyre-20261011/node_modules/pdfjs-dist/legacy/build/pdf.mjs')).getDocument;
 mkdirSync(report,{recursive:true});
-const browser=await chromium.launch(oct22?{}:{args:['--host-resolver-rules=MAP latex.utilibre.org 10.10.1.3']});
+const browser=await chromium.launch(local||live?{}:{args:['--host-resolver-rules=MAP latex.utilibre.org 10.10.1.3']});
 const context=await browser.newContext({viewport:{width:1440,height:1000},acceptDownloads:true});
+const liveParser=live?await loadParser(parserDirectory):null;
+if(live)await context.route(base+'/test-only-pdfjs/build/*',async route=>{
+  const name=new URL(route.request().url()).pathname.split('/').pop();
+  assert(['pdf.mjs','pdf.worker.mjs'].includes(name));
+  await route.fulfill({contentType:'application/javascript',body:liveParser.get('/'+name)});
+});
 const outside=[],errors=[],requests=[];
 context.on('request',r=>{
   if(/^https?:/.test(r.url())) {
@@ -37,7 +50,7 @@ try {
   await page.getByTitle('Export',{exact:true}).click();
   const pdf=await pdfDownload; await pdf.saveAs(`${report}/practice.pdf`);
   const pdfBytes=[...readFileSync(`${report}/practice.pdf`)];
-  const text=oct22?await page.evaluate(async bytes=>{
+  const text=local||live?await page.evaluate(async bytes=>{
     // Pinned PDF.js runs in the actual browser, avoiding a test-only native
     // canvas dependency. PDF bytes arrive over Playwright, not an HTTP upload.
     const pdf=await import('/test-only-pdfjs/build/pdf.mjs');
@@ -51,6 +64,15 @@ try {
   const zipDownload=page.waitForEvent('download');
   await page.getByRole('button',{name:'Export 1 Project',exact:true}).click();
   const zip=await zipDownload;await zip.saveAs(`${report}/project.zip`);
+  if(migration){
+    // Only the loopback fixture changes. Keep the browser profile and its
+    // IndexedDB intact while replacing the old static app with the candidate.
+    const fixture='/var/lib/utilibre-maintenance/stabilization-20261111/texlyre/compat';
+    renameSync(fixture+'/texlyre',fixture+'/previous');
+    renameSync(fixture+'/next',fixture+'/texlyre');
+    const response=await fetch(base+'/');assert(response.ok);
+    assert.equal(await response.text(),readFileSync(fixture+'/texlyre/index.html','utf8'));
+  }
   await page.reload();
   await page.getByText('main.tex',{exact:true}).first().waitFor();
   console.log('Native project export and reload persistence passed');
@@ -62,8 +84,17 @@ try {
   await page.getByLabel('Import as collaborator (preserve original ownership)').uncheck();
   await page.getByRole('button',{name:'Import 1 Project',exact:true}).click();
   await page.getByRole('button',{name:'Importing...',exact:true}).waitFor({state:'hidden',timeout:30000});
-  assert.equal(await page.getByRole('button',{name:'Open',exact:true}).count(),2);
-  await page.getByRole('button',{name:'Open',exact:true}).first().click();
+  if(candidate||live){
+    // 0.14 names the split button after its default file; scope the action to
+    // the imported project so this checks the restored copy, not the original.
+    assert.equal(await page.locator('[data-role="project"]').count(),2);
+    const restored=page.locator('[data-role="project"]').filter({has:page.getByRole('heading',{name:'Utilibre fictional practice (imported)',exact:true})});
+    assert.equal(await restored.count(),1);
+    await restored.locator('[data-role="project-open"] button.ui-split-main').click();
+  }else{
+    assert.equal(await page.getByRole('button',{name:'Open',exact:true}).count(),2);
+    await page.getByRole('button',{name:'Open',exact:true}).first().click();
+  }
   await page.getByText('main.tex',{exact:true}).first().click();
   assert((await page.locator('.cm-content').innerText()).includes('español'));
   console.log('Native project restore as independent copy passed');
@@ -89,7 +120,8 @@ try {
   await mobilePage.getByRole('button',{name:'Try as Guest',exact:true}).click();
   await mobilePage.getByRole('button',{name:'Start Guest Session',exact:true}).waitFor();
   await mobilePage.screenshot({path:`${report}/mobile-login.png`,fullPage:true});
-  console.log('Mobile-emulated login overflow:',await mobilePage.evaluate(()=>document.documentElement.scrollWidth>innerWidth));
+  const mobileOverflow=await mobilePage.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
+  assert.equal(mobileOverflow,false,'Mobile-emulated login overflows');
   await mobile.close();
-  writeFileSync(`${report}/inspection.json`,JSON.stringify({date:new Date().toISOString(),passed:true,outside,errors,requests,guestProject:true,compiledPdfAccentsFormula:true,projectExportImport:true,localAccountUpgrade:true,reloadPersistence:true,mobileEmulation:true,productionChanged:!oct22},null,2));
+  writeFileSync(`${report}/inspection.json`,JSON.stringify({date:new Date().toISOString(),passed:true,outside,errors,requests,guestProject:true,compiledPdfAccentsFormula:true,projectExportImport:true,localAccountUpgrade:true,reloadPersistence:true,migrationFrom013:migration,mobileEmulation:true,mobileOverflow,publicHttps:live,parserInjectedIntoTestBrowser:live,productionChanged:false},null,2));
 } catch(e){writeFileSync(`${report}/browser-error.json`,JSON.stringify({message:e.message,outside,errors,requests},null,2));writeFileSync(`${report}/browser-body.txt`,await page.locator('body').innerText());await page.screenshot({path:`${report}/browser-error.png`});throw e;} finally {await browser.close();}

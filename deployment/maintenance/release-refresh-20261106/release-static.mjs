@@ -5,9 +5,12 @@ import {execFileSync} from 'node:child_process';
 import {readFileSync,writeFileSync,mkdirSync,cpSync,renameSync,existsSync,readdirSync,lstatSync,statfsSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {existingComposeArgs,recreateExistingGroup,checkExistingGroup} from '../language-final/release.mjs';
+import {acquireReleaseLock} from '../security-20261103/release-lock.mjs';
 process.umask(0o022);
 const november9=process.argv.includes('--nov9');
-const root=november9?'/var/lib/utilibre-maintenance/security-20261109':'/var/lib/utilibre-maintenance/releases-20261106';
+const texlyre=process.argv.includes('--texlyre-nov11');assert(!(november9&&texlyre));
+if(texlyre)process.on('exit',acquireReleaseLock('/var/lib/utilibre-maintenance/package-release.lock'));
+const root=texlyre?'/var/lib/utilibre-maintenance/stabilization-20261111/texlyre':november9?'/var/lib/utilibre-maintenance/security-20261109':'/var/lib/utilibre-maintenance/releases-20261106';
 const specs={
  mapshaper:{source:'mapshaper-output',destination:'/opt/utilibre/pack-static/mapshaper-0.7.101-p1',old:'/opt/utilibre/pack-static/mapshaper-0.7.80-p1',name:'utilibre-pack-static-static-1',url:'https://maps.utilibre.org/',evidence:'mapshaper-checks/native.log'},
  calino:{source:'calino/dist',destination:'/opt/utilibre/calendar-static-0.42.0',old:'/opt/utilibre/calendar-static',name:'utilibre-calendar-calino-1',url:'https://calendar.utilibre.org/',evidence:'calino-checks/calino-browser-result.json'},
@@ -15,9 +18,10 @@ const specs={
  'link-cleaner':{source:'link-cleaner/dist/site',destination:'/opt/utilibre/toolbox-public/apps/link-cleaner',url:'https://tools.utilibre.org/apps/link-cleaner/',evidence:'link-cleaner-checks/result.json'},
  chartdb:{source:'chartdb-source/dist',destination:'/opt/utilibre/toolbox-public/apps/chartdb',url:'https://tools.utilibre.org/apps/chartdb/',evidence:'chartdb-checks/result.json'},
  drawdb:{source:'drawdb-source/dist',destination:'/opt/utilibre/toolbox-public/apps/drawdb',url:'https://tools.utilibre.org/apps/drawdb/',evidence:'drawdb-checks/result.json'},
+ texlyre:{source:'source/dist',destination:'/opt/utilibre/toolbox-public/apps/texlyre',url:'https://latex.utilibre.org/',evidence:'browser/inspection.json'},
 };
 const key=process.argv[2],s=specs[key];assert(s&&process.argv[3]==='--apply');
-assert(november9?['chartdb','drawdb'].includes(key):!['chartdb','drawdb'].includes(key));
+assert(texlyre?key==='texlyre':november9?['chartdb','drawdb'].includes(key):!['chartdb','drawdb','texlyre'].includes(key));
 const run=(cmd,args)=>execFileSync(cmd,args,{encoding:'utf8',stdio:['ignore','pipe','pipe'],timeout:180000,maxBuffer:16*1024**2});
 const inspect=n=>JSON.parse(run('docker',['inspect',n]))[0];
 const digest=dir=>{const h=createHash('sha256');function visit(p){for(const n of readdirSync(dir+'/'+p).sort()){const f=p+n,st=lstatSync(dir+'/'+f);assert(!st.isSymbolicLink(),'Unexpected artifact symlink');if(st.isDirectory())visit(f+'/');else {assert(st.isFile());h.update(f).update('\0').update(readFileSync(dir+'/'+f)).update('\0');}}}visit('');return h.digest('hex');};
@@ -25,6 +29,24 @@ const evidence=JSON.parse(readFileSync(root+'/'+s.evidence));
 if(key==='one-file-core'){assert(evidence.results.length===2);for(const r of evidence.results){assert(r.downloadEditSaveReopen&&r.scriptTextRoundTrip&&r.cspPreserved&&r.unsafeEncryptionCreationDisabled);assert.deepEqual(r.errors,[]);assert.deepEqual(r.externalRequests,[]);}}
 else {assert.deepEqual(evidence.outside,[]);assert.deepEqual(evidence.errors,[]);if(key==='calino')assert(evidence.nativeConnection&&evidence.icsExport&&evidence.vcfExport);if(key==='link-cleaner')assert(evidence.profileRoundtrip&&evidence.redactedExport&&evidence.knownTrackersRemoved);if(key==='mapshaper')assert.equal(evidence.checks.length,3);}
 const candidate=root+'/'+s.source,sha=digest(candidate),record=root+'/'+key+'-static-release.json';
+if(texlyre){
+ const proof=JSON.parse(readFileSync(root+'/candidate.json'));
+ assert(proof.passed&&proof.revision==='697759981a2a7291fdd3855ea6e09cc6ca5c7723');
+ assert.equal(sha,proof.staticSha256);
+ assert(Date.now()-Date.parse(proof.date)<86400000);
+ assert(Date.now()-Date.parse(proof.databaseUpdatedAt)<48*3600000);
+ for(const [path,hash]of Object.entries(proof.evidence)){
+  assert(/^[a-zA-Z0-9/._-]+$/.test(path)&&!path.split('/').includes('..'));
+  assert.equal(createHash('sha256').update(readFileSync(root+'/'+path)).digest('hex'),hash);
+ }
+ for(const p of [evidence,JSON.parse(readFileSync(root+'/migration/inspection.json'))]){
+  assert(p.passed&&p.productionChanged===false);
+  for(const k of ['guestProject','compiledPdfAccentsFormula','projectExportImport','localAccountUpgrade','reloadPersistence'])assert(p[k]);
+  assert.deepEqual(p.outside,[]);assert.deepEqual(p.errors,[]);
+ }
+ assert(JSON.parse(readFileSync(root+'/migration/inspection.json')).migrationFrom013);
+ assert(proof.npmCriticalHigh===0&&proof.otherLockAliasVerified);
+}
 if(key==='drawdb'){
  for(const k of ['nativeSqlImport','nativeSqlExport','jsonRoundtrip','reloadPersistence','sharingDisabled'])assert(evidence[k],k);
  assert(evidence.requests.every(r=>r.method==='GET'));
@@ -51,7 +73,7 @@ if(existsSync(record)){const r=JSON.parse(readFileSync(record));assert.equal(r.s
 const fs=statfsSync(root);assert(fs.bavail*fs.bsize>5*1024**3);
 let g,file,before,after;
 if(s.name){const x=inspect(s.name),l=x.Config.Labels;g={project:l['com.docker.compose.project'],cwd:l['com.docker.compose.project.working_dir'],files:l['com.docker.compose.project.config_files'].split(','),rows:[{name:s.name,service:l['com.docker.compose.service'],oldImage:x.Image,newImage:x.Image,oldContainerId:x.Id,oldRestartCount:x.RestartCount}],before:[]};assert.equal(g.files.length,1);file=g.files[0];before=readFileSync(file,'utf8');assert.equal(before.split(s.old+':').length,2);after=before.replace(s.old+':',s.destination+':');assert(!existsSync(s.destination));}
-const staged=s.destination+'.candidate-'+(november9?'20261109':'20261106');assert(!existsSync(staged));cpSync(candidate,staged,{recursive:true});assert.equal(digest(staged),sha);
+const staged=s.destination+'.candidate-'+(texlyre?'20261111':november9?'20261109':'20261106');assert(!existsSync(staged));cpSync(candidate,staged,{recursive:true});assert.equal(digest(staged),sha);
 const backup=root+'/'+key+'-previous-public-assets';let moved=false,wrote=false;
 const receipt={date:new Date().toISOString(),key,sha256:sha,evidence:s.evidence,destination:s.destination,previous:s.old||backup,status:'applying'};
 writeFileSync(record,JSON.stringify(receipt,null,2)+'\n',{mode:0o600});

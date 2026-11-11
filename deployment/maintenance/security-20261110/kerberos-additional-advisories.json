@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-11",
+  "purpose": "Additional advisory attribution for the already authenticated and deployed MIT Kerberos 1.22.3; no package changes",
+  "upstream": "https://web.mit.edu/kerberos/krb5-1.22/krb5-1.22.3.html",
+  "sourceSha256": "fe90af8441ad9fa9b064b8e53077cefb782a96f8a68276b031dc54af1789ff0b",
+  "releaseNotesSha256": "3f4031fe195ba1c50fb14f74f43ae5cc79c2b916115a92268e587a0532e1e2e5",
+  "advisories": [
+    "CVE-2026-107364",
+    "CVE-2026-112315",
+    "CVE-2026-112316",
+    "CVE-2026-112317",
+    "CVE-2026-112318",
+    "CVE-2026-112319",
+    "CVE-2026-112320",
+    "CVE-2026-118380",
+    "CVE-2026-71199",
+    "CVE-2026-71200"
+  ]
+}

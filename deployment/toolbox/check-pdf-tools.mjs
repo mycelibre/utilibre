@@ -7,16 +7,15 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
 import {execFileSync} from 'node:child_process';
+import {loadParser} from './pdf-parser-input.mjs';
 
 const require = createRequire(new URL('../../portal/package.json', import.meta.url));
 const { chromium } = require('playwright');
 const diagnostic = process.argv.includes('--diagnostic-fresh-workers');
 const staged = process.argv.includes('--local-candidate');
 const testArtifact=staged?execFileSync('docker',['inspect','--format','{{.Image}}','utilibre-bento-candidate-20261111'],{encoding:'utf8',timeout:10000}).trim():undefined;
-const parserSource=process.env.BENTO_TEST_SOURCE;
-assert(parserSource, 'Set BENTO_TEST_SOURCE to the reviewed checkout with npm ci dependencies');
+const parserAssets=await loadParser();
 assert(process.argv.slice(2).every((arg) => ['--diagnostic-fresh-workers','--local-candidate'].includes(arg)), 'Unknown option');
 const origin = 'https://pdf.utilibre.org';
 const browser = await chromium.launch({ headless: true, args: staged ? ['--no-proxy-server','--host-resolver-rules=MAP pdf.utilibre.org 127.0.0.1'] : [] });
@@ -72,7 +71,7 @@ await parserContext.route('**/*',async route=>{
   assert.equal(url.origin,'http://pdf-parser.test');
   if(url.pathname==='/')return route.fulfill({contentType:'text/html',body:'<!doctype html><title>Local PDF output check</title>'});
   assert(['/pdf.mjs','/pdf.worker.mjs'].includes(url.pathname));
-  return route.fulfill({contentType:'text/javascript',body:await readFile(resolve(parserSource,'node_modules/pdfjs-dist/legacy/build',url.pathname.slice(1)))});
+  return route.fulfill({contentType:'text/javascript',body:parserAssets.get(url.pathname)});
 });
 const parserPage=await parserContext.newPage();
 await parserPage.goto('http://pdf-parser.test/');

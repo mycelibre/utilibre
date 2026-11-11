@@ -8,6 +8,7 @@ import {validateDecision} from '../triage.mjs';
 import {proveKerberos} from './kerberos-policy.mjs';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 import {expatDescendant} from '../security-20261103/expat-policy.mjs';
+import {additionalAdvisories} from './kerberos-advisory-policy.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/security-20261110';
 const read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
@@ -18,6 +19,11 @@ const release=read(dir+'/vendor-debian/release.json');assert.equal(release.statu
 const deployed=overlayRows(release),proofs=[],decisions=[];
 const descendants=additionalOverlayReceipts.filter(p=>fs.existsSync(root+'/'+p)).flatMap(p=>overlayRows(read(root+'/'+p)));
 const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:30000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe']}).trim();
+const advisoryManifest=read(new URL('./kerberos-additional-advisories.json',import.meta.url));
+const archive=dir+'/kerberos/source/krb5-1.22.3.tar.gz';
+assert.equal(sha(fs.readFileSync(archive)),input.source.sha256);
+const notes=cp.execFileSync('tar',['-xOzf',archive,'krb5-1.22.3/README'],{timeout:30000,maxBuffer:1024**2,stdio:['ignore','pipe','pipe']});
+const advisories=[...input.advisories,...additionalAdvisories(advisoryManifest,input.source.sha256,notes)];
 function payload(name,files,retained=[]){
  const execute=(p,a)=>name?run('docker',['exec',name,p,...a]):run(p,a);
  const entries=files.filter(f=>!retained.some(r=>r.path===f.path));
@@ -49,7 +55,7 @@ for(const s of input.rows){
  assert.equal(new Set(currentArtifacts).size,1,'Split Kerberos service roles require separate review');
  const currentImage=currentArtifacts[0];
  proofs.push({key:s.key,imageId:currentImage,originalImage:b.imageId,payloadSha256:sha(fs.readFileSync(d+'/payload.json')),releaseRows:deployed.filter(r=>s.containers.includes(r.name))});
- for(const item of queue.items.filter(i=>i.status==='needs-review'&&i.scope==='runtime-image'&&i.type==='debian'&&i.artifact===currentImage&&input.advisories.includes(i.id))){
+ for(const item of queue.items.filter(i=>i.status==='needs-review'&&i.scope==='runtime-image'&&i.type==='debian'&&i.artifact===currentImage&&advisories.includes(i.id))){
   assert.deepEqual([...item.containers].sort(),[...s.containers].sort());
   const pRow=p.rows.find(r=>r.package===item.package);
   if(pRow){
@@ -72,7 +78,7 @@ assert(Date.parse(host.completedAt)<=Date.parse(scan.completedAt));
 for(const row of host.rows){
  assert.equal(run('dpkg-query',['-W','-f=${Version}',row.package]),row.new.version);
  assert.equal(sha(fs.readFileSync(row.new.path)),row.new.sha256);payload(null,row.newPayload);
- for(const item of queue.items.filter(i=>i.status==='needs-review'&&i.scope==='host-os'&&i.artifact==='host-dpkg'&&i.type==='debian'&&i.package===row.package&&input.advisories.includes(i.id))){
+ for(const item of queue.items.filter(i=>i.status==='needs-review'&&i.scope==='host-os'&&i.artifact==='host-dpkg'&&i.type==='debian'&&i.package===row.package&&advisories.includes(i.id))){
   assert.equal(item.installed,row.new.version);decision(item,'kerberos/host/release.json',`Host ${row.package} ${row.new.version}; every installed file matches its archive. No service restart was needed.`);
  }
 }

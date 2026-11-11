@@ -1,7 +1,7 @@
 // Revalidate the exact native host release; no source-wide or version-only waiver.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 import {inventory} from '../component-followup/inventory.mjs';import {validatePayload} from '../vendor-leaves-final/dhi-proof.mjs';import {freshScan} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';
-process.umask(0o077);const followup=process.argv.includes('--batch-20261109');assert.deepEqual(process.argv.slice(2),followup?['--batch-20261109']:[]);
+process.umask(0o077);const followup=process.argv.includes('--batch-20261109'),onlyXi=process.argv.includes('--only-xi');assert.deepEqual(process.argv.slice(2),followup?['--batch-20261109']:onlyXi?['--only-xi']:[]);
 const root='/var/lib/utilibre-maintenance',dir=root+(followup?'/security-20261109':'/security-20261103')+'/host-libraries',read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 const scan=read(root+'/security.json'),q=read(root+'/security-queue.json');freshScan(q,scan);assert.equal(scan.status,'checked');assert.equal(scan.host.status,'checked');
 const release=read(dir+'/release.json'),spec=read(new URL(followup?'../security-20261109/host-library-inputs.json':'./host-library-inputs.json',import.meta.url));assert.equal(release.status,'passed');assert(release.noServiceRestart&&release.native.passed);assert(Date.parse(release.completedAt)<Date.parse(scan.date));
@@ -10,7 +10,7 @@ if(followup){assert(release.native.backupRestore&&release.native.checks===15);as
 else assert(release.native.sqliteBackupRestore&&release.native.sqliteCorruptFtsRejected&&release.native.xiHostLoad);
 const allowed={'libxi6':['CVE-2026-109089','CVE-2026-109090'],'libsqlite3-0':['CVE-2026-119373','CVE-2025-7458','CVE-2026-11822','CVE-2026-11824',...(followup?['CVE-2026-119374','CVE-2026-119379']:[])]};
 const proofs=[],decisions=[];
-for(const p of spec.packages){
+for(const p of spec.packages.filter(p=>!onlyXi||p.package==='libxi6')){
  const row=release.rows.find(r=>r.package===p.package);assert(row);assert.equal(sha(p.candidateFile),p.candidateSha256);assert.equal(sha(p.library),p.librarySha256);
  const actual=inventory(p.package);assert.equal(actual.installed,p.after);validatePayload(row.newPayload,actual.records.filter(r=>r.type!=='directory').map(r=>r.type==='regular'?{path:r.path,type:'file',sha256:r.sha256}:r.type==='symlink'?{path:r.path,type:'symlink',target:r.target}:r).sort((a,b)=>a.path.localeCompare(b.path)));
  if(p.package==='libsqlite3-0')assert.equal(p.librarySha256,sql.librarySha256);
@@ -20,4 +20,4 @@ for(const p of spec.packages){
   decisions.push(validateDecision({key:i.key,status:p.package==='libxi6'?'not-affected':'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:`${basis} Every installed package file matches the tested archive and completed release. Only ${p.package} ${p.after}, this host and ${i.id} are covered. Raw distribution-version findings remain. Evidence: ${followup?'security-20261109':'security-20261103'}/host-libraries/{prepared,release,review}.json; https://security-tracker.debian.org/tracker/${i.id}`}));
  }
 }
-fs.writeFileSync(dir+'/review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,proofs,decisions},null,2)+'\n');console.log(JSON.stringify({prepared:decisions.length,applied:false}));
+fs.writeFileSync(dir+(onlyXi?'/xi-review.json':'/review.json'),JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,proofs,decisions},null,2)+'\n');console.log(JSON.stringify({prepared:decisions.length,applied:false}));

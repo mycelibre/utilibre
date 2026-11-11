@@ -1,6 +1,7 @@
 // Explicit disposable build dependencies only. Never prune images or user data.
 import {execFileSync} from 'node:child_process';
-import {existsSync,lstatSync,realpathSync,rmSync,statfsSync} from 'node:fs';
+import {existsSync,lstatSync,realpathSync,rmSync,statfsSync,readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
 const apply=process.argv.includes('--apply');
 if(process.argv.slice(2).some(a=>!['--apply','--dry-run'].includes(a)))throw Error('Use --dry-run or --apply');
 const targets=['grid','jscad','fossflow','blockbench','bookplate','openreel','openplan3d','texlyre']
@@ -18,6 +19,19 @@ targets.push(...[
  'google-calendar-provider','ai-productivity-prompts','caldav-calendar-provider','todoist-import',
  'trello-issue-provider'].map(n=>'/opt/utilibre/src/super-productivity/packages/plugin-dev/'+n),
 ].map(source=>source+'/node_modules'));
+// Completed November builds only. Keep sources, locks, output and scanner DBs.
+targets.push('/var/lib/utilibre-maintenance/releases-20261111/bentopdf/node_modules',
+ '/var/lib/utilibre-maintenance/releases-20261111/bentopdf-build-investigation/node_modules',
+ '/var/lib/utilibre-maintenance/stabilization-20261111/texlyre/source/node_modules');
+const generatedCaches=new Map([
+ ...['bookplate','markmap','candlr'].map(n=>[
+  `/var/lib/utilibre-maintenance/security-20261103/${n}/npm-cache`,
+  `/var/lib/utilibre-maintenance/security-20261103/${n}/package-lock.json`]),
+ ['/var/lib/utilibre-maintenance/cv-20261106/npm-cache','/var/lib/utilibre-maintenance/cv-20261106/source/package-lock.json'],
+ ['/var/lib/utilibre-maintenance/security-20261109/yopass/go-cache','/var/lib/utilibre-maintenance/security-20261109/yopass/source/go.sum'],
+ ['/var/lib/utilibre-maintenance/security-20261109/yopass/yarn-cache','/var/lib/utilibre-maintenance/security-20261109/yopass/source/website/yarn.lock'],
+]);
+targets.push(...generatedCaches.keys());
 const run=(cmd,args)=>execFileSync(cmd,args,{encoding:'utf8',maxBuffer:4*1024**2,timeout:30000});
 const ids=run('docker',['ps','-aq']).trim().split('\n').filter(Boolean);
 const mounts=run('docker',['inspect','--format','{{range .Mounts}}{{println .Source}}{{end}}',...ids]).split('\n').filter(Boolean);
@@ -28,10 +42,17 @@ for(const path of targets){
  if(!existsSync(path))continue;
  if(lstatSync(path).isSymbolicLink()||realpathSync(path)!==path)throw Error('Unexpected link: '+path);
  if(mounts.some(m=>path===m||path.startsWith(m+'/')||m.startsWith(path+'/')))throw Error('Container mount overlaps: '+path);
+ if(generatedCaches.has(path)){
+  const input=generatedCaches.get(path);
+  if(!existsSync(input)||lstatSync(input).isSymbolicLink()||realpathSync(input)!==input)throw Error('Missing retained lock: '+input);
+  checked.push({path,bytes:Number(run('du',['-sx','--block-size=1',path]).split(/\s/)[0]),input,inputSha256:createHash('sha256').update(readFileSync(input)).digest('hex')});
+  continue;
+ }
  const source=path.slice(0,-'/node_modules'.length);
- const checkout=run('git',['-C',source,'rev-parse','--show-toplevel']).trim();
+ const gitArgs=['-c','safe.directory='+source,'-C',source];
+ const checkout=run('git',[...gitArgs,'rev-parse','--show-toplevel']).trim();
  if(!['package-lock.json','pnpm-lock.yaml','yarn.lock','bun.lock','bun.lockb'].some(n=>existsSync(source+'/'+n)||existsSync(checkout+'/'+n)))throw Error('No retained dependency lock: '+source);
- if(run('git',['-C',source,'ls-files','--','node_modules']).trim())throw Error('Tracked dependency data: '+path);
+ if(run('git',[...gitArgs,'ls-files','--','node_modules']).trim())throw Error('Tracked dependency data: '+path);
  // Source, lockfiles, build output and notices are deliberately retained.
  checked.push({path,bytes:Number(run('du',['-sx','--block-size=1',path]).split(/\s/)[0])});
 }

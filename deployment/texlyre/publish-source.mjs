@@ -1,10 +1,11 @@
 import {execFileSync} from 'node:child_process';
-import {mkdtempSync,mkdirSync,cpSync,renameSync,existsSync,copyFileSync} from 'node:fs';
+import {mkdtempSync,mkdirSync,cpSync,renameSync,existsSync,copyFileSync,readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 const source=process.argv[2]||'/opt/utilibre/evaluation-src/texlyre-20261011';
 const busy=process.argv[3]||'/opt/utilibre/evaluation-src/texlyre-busytex-1.4.0';
-for(const [path,revision] of [[source,'0b5ebfd3dbcd2d3647dc777e8de9cbe0692b7950'],[busy,'1d9ba827ad0da2c85d05da2ada26a4debf6df81e']]) {
-  if(execFileSync('git',['rev-parse','HEAD'],{cwd:path,encoding:'utf8'}).trim()!==revision)throw Error('Unexpected source revision');
+const inputs=JSON.parse(readFileSync(new URL('./inputs.json',import.meta.url)));
+for(const [path,revisions] of [[source,['0b5ebfd3dbcd2d3647dc777e8de9cbe0692b7950',inputs.revision]],[busy,[inputs.busytexRevision]]]) {
+  if(!revisions.includes(execFileSync('git',['rev-parse','HEAD'],{cwd:path,encoding:'utf8'}).trim()))throw Error('Unexpected source revision');
 }
 const stage=mkdtempSync('/opt/utilibre/texlyre-source-');
 for(const [path,name] of [[source,'texlyre'],[busy,'texlyre-busytex']]) {
@@ -19,4 +20,4 @@ execFileSync('tar',['-czf',`${stage}/texlyre-utilibre.tar.gz`,'texlyre','texlyre
 const destination='/opt/utilibre/toolbox-public/texlyre-utilibre.tar.gz';
 if(existsSync(destination))copyFileSync(destination,`${stage}/previous-source.tar.gz`);
 renameSync(`${stage}/texlyre-utilibre.tar.gz`,destination);
-console.log('Published modified TeXlyre source, BusyTeX wrapper, dependency pins and integration.');
+console.log(JSON.stringify({published:true,destination,previous:`${stage}/previous-source.tar.gz`}));

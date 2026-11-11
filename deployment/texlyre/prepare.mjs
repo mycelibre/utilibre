@@ -1,12 +1,12 @@
-// Reproducible, narrow packaging changes to pinned TeXlyre 0.13.0.
+// Reproducible, narrow packaging changes to reviewed TeXlyre revisions.
 import { readFileSync, writeFileSync, copyFileSync } from 'node:fs';
 import { resolve, join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 const source = resolve(process.argv[2] || '/opt/utilibre/evaluation-src/texlyre-20261011');
 const integration = dirname(fileURLToPath(import.meta.url));
-const revision = '0b5ebfd3dbcd2d3647dc777e8de9cbe0692b7950';
-if (execFileSync('git', ['rev-parse','HEAD'], {cwd:source,encoding:'utf8'}).trim() !== revision) throw Error('Unexpected source');
+const revision = execFileSync('git', ['rev-parse','HEAD'], {cwd:source,encoding:'utf8'}).trim();
+if (!['0b5ebfd3dbcd2d3647dc777e8de9cbe0692b7950','697759981a2a7291fdd3855ea6e09cc6ca5c7723'].includes(revision)) throw Error('Unexpected source');
 const upstream = path => execFileSync('git',['show',`HEAD:${path}`],{cwd:source,encoding:'utf8'});
 const patch = (path, from, to) => {
   const input = upstream(path);
@@ -25,6 +25,15 @@ writeFileSync(guestPath,readFileSync(guestPath,'utf8')
 // Unused diagram embeds are not downloaded or served. Keep the upstream asset
 // downloader for the pinned compiler bundles, formatter, grammar and fonts.
 patch('scripts/download-core-assets.cjs','for (const asset of ASSETS) {',"for (const asset of ASSETS.filter(asset => !['drawio-embed', 'tikz-editor'].includes(asset.name))) {");
+if (revision === '697759981a2a7291fdd3855ea6e09cc6ca5c7723') {
+  // This release retains the tested 1.4.0 compiler payload and its manifest.
+  // A clean rebuild must not silently substitute upstream's newer compiler.
+  const path=join(source,'scripts/download-core-assets.cjs');
+  const input=readFileSync(path,'utf8');
+  const from="name: 'texlyre-busytex',\n\t\tversion: 'v1.4.1'";
+  if(input.split(from).length!==2)throw Error('Compiler asset declaration changed');
+  writeFileSync(path,input.replace(from,"name: 'texlyre-busytex',\n\t\tversion: 'v1.4.0'"));
+}
 // SwiftLaTeX needs a separate TeX Live 2020 package server. Do not offer it as a
 // working engine here. BusyTeX's native bundled TeX Live 2026 remains available.
 patch('src/settings/registerLatexSettings.ts',
@@ -38,7 +47,7 @@ for (const name of ['LaTeXCompileButton', 'LaTeXExportButton']) {
   writeFileSync(join(source,path),changed);
 }
 const pkg = JSON.parse(upstream('package.json'));
-Object.assign(pkg.overrides, {
+if (revision === '0b5ebfd3dbcd2d3647dc777e8de9cbe0692b7950') Object.assign(pkg.overrides, {
   dompurify: '3.4.17', vue: '3.5.43', 'prosemirror-view': '1.42.6',
   'source-map-js': '1.2.2', 'micromark-extension-math': {katex:'0.18.4'},
 });

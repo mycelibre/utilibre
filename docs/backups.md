@@ -1,5 +1,21 @@
 # Backups, restore, and removal
 
+## Latest verification — 11 November 2026
+
+The existing protected Storage Box connection downloaded the latest backup into
+private temporary staging. All 95 files from 25 configured sources matched
+checksums; Authentik restored in a disposable networkless PostgreSQL instance.
+The scheduled fictional FreshRSS restore and encrypted Storage Box roundtrip
+also passed. Other application archives were byte-verified, not each freshly
+restored functionally. Downloaded temporary copies were removed; live data and
+backup retention were unchanged.
+
+A full-VM restore is still unverified: the owner has no spare isolated target.
+See the [stabilization record](records/stabilization-2026-11-11.md#recovery-dependency)
+for the prerequisites, including intentional temporary-disk exclusion. Never
+restore over the running VM or let a rehearsal duplicate live network identities.
+
+
 ## Scheduled representative restore — 11 October 2026
 
 `utilibre-recovery-check.timer` runs Sunday 12:25 UTC plus up to ten minutes'

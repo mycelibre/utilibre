@@ -6,6 +6,7 @@ import {createHash} from 'node:crypto';
 import {freshScan} from '../review-native-backports.mjs';
 import {validateDecision} from '../triage.mjs';
 process.umask(0o077);
+const retained=process.argv.includes('--retained');assert.deepEqual(process.argv.slice(2),retained?['--retained']:[]);
 const root='/var/lib/utilibre-maintenance',dir=root+'/host-extra-followup-20261012';
 const read=p=>JSON.parse(fs.readFileSync(p));
 const run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:30000,maxBuffer:1024**2,stdio:['ignore','pipe','pipe']}).trim();
@@ -20,9 +21,15 @@ const version='1.10.7-1',sha='161a4b0dc1cc545ac2e33b84ef7b28d54f136897890a0f434e
 assert.equal(hash(dir+'/pcap/libpcap0.8t64_'+version+'_amd64.deb'),sha);
 assert.equal(run('dpkg-query',['-W','-f=${Version}','libpcap0.8t64']),version);
 assert.equal(hash('/usr/lib/x86_64-linux-gnu/libpcap.so.1.10.7'),release.newLibrarySha256);
-const native=JSON.parse(run('setpriv',['--reuid=65534','--regid=65534','--clear-groups','--no-new-privs','env','-i','PATH=/usr/bin:/bin','timeout','5','python3',new URL('./check-pcap.py',import.meta.url).pathname,'/usr/lib/x86_64-linux-gnu/libpcap.so.1.10.7']));
+const previous=retained?read(dir+'/pcap/loop-check.json'):null;
+if(retained){
+ assert(Date.parse(previous.date)<=Date.parse(scan.date));
+ assert.equal(previous.librarySha256,release.newLibrarySha256);
+ assert.equal(previous.fixtureSha256,hash(new URL('./check-pcap.py',import.meta.url)));
+}
+const native=retained?previous.native:JSON.parse(run('setpriv',['--reuid=65534','--regid=65534','--clear-groups','--no-new-privs','env','-i','PATH=/usr/bin:/bin','timeout','5','python3',new URL('./check-pcap.py',import.meta.url).pathname,'/usr/lib/x86_64-linux-gnu/libpcap.so.1.10.7']));
 assert(native.passed&&native.boundedLoopCases===4&&native.forwardJumpAccepted&&native.livePacketsCaptured===0);
-fs.writeFileSync(dir+'/pcap/loop-check.json',JSON.stringify({date:new Date().toISOString(),native,fixtureSha256:hash(new URL('./check-pcap.py',import.meta.url)),librarySha256:release.newLibrarySha256},null,2)+'\n');
-const decisions=queue.items.filter(item=>item.status==='needs-review'&&item.scope==='host-os'&&item.type==='debian'&&item.package==='libpcap0.8t64'&&item.installed===version&&['CVE-2026-0799','CVE-2026-6554'].includes(item.id)).map(item=>validateDecision({key:item.key,status:'not-affected',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:`Signed Debian libpcap 1.10.7-1 fixes ${item.id}. Exact live library matches the staged and installed package SHA256 ${sha}; 96 native ABI exports preserved. Fresh unprivileged offline check passed eight scratch-bound cases, four bounded-loop cases, legitimate forward jumps, and synthetic filter/file round-trip. A five-second process timeout is enforced. No traffic captured or service restarted. https://security-tracker.debian.org/tracker/${item.id} . Evidence: host-extra-followup-20261012/pcap/{release,loop-check}.json. Only this exact fixed package finding; no image-wide clearance.`}));
-fs.writeFileSync(dir+'/pcap-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,packageSha256:sha,librarySha256:release.newLibrarySha256},null,2)+'\n');
+if(!retained)fs.writeFileSync(dir+'/pcap/loop-check.json',JSON.stringify({date:new Date().toISOString(),native,fixtureSha256:hash(new URL('./check-pcap.py',import.meta.url)),librarySha256:release.newLibrarySha256},null,2)+'\n');
+const decisions=queue.items.filter(item=>item.status==='needs-review'&&item.scope==='host-os'&&item.type==='debian'&&item.package==='libpcap0.8t64'&&item.installed===version&&['CVE-2026-0799','CVE-2026-6554'].includes(item.id)).map(item=>validateDecision({key:item.key,status:'not-affected',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:`Signed Debian libpcap 1.10.7-1 fixes ${item.id}. Exact live library matches the staged and installed package SHA256 ${sha}; 96 native ABI exports preserved. ${retained?'Retained unprivileged offline evidence, bound to the unchanged installed library and test fixture, records':'Fresh unprivileged offline check passed'} eight scratch-bound cases, four bounded-loop cases, legitimate forward jumps, and synthetic filter/file round-trip. A five-second process timeout is enforced. No traffic captured or service restarted. https://security-tracker.debian.org/tracker/${item.id} . Evidence: host-extra-followup-20261012/pcap/{release,loop-check}.json. Only this exact fixed package finding; no image-wide clearance.`}));
+fs.writeFileSync(dir+'/pcap-review.json',JSON.stringify({date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,decisions,packageSha256:sha,librarySha256:release.newLibrarySha256,retainedEvidence:retained,nativeCheckDate:retained?previous.date:new Date().toISOString()},null,2)+'\n');
 console.log(JSON.stringify({prepared:decisions.length,applied:false}));

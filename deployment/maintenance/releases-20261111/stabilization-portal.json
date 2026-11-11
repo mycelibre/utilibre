@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "sourceRevision": "26de8f17677c62c7e66da65616eaab407ca33f70",
+  "base": "sha256:05c04b21a2f4be78de06a57f4865f6c7d21df67935ac16dd5718788cb0ab3a57",
+  "candidate": "utilibre-portal:stabilization-20261111",
+  "imageId": "sha256:cc793c0593dd1056343f456596b01bb8d584c83b74c73697fa9fed8b8b45a94f",
+  "expectedVersions": [
+    "0.14.1-p1",
+    "2.8.11-p1"
+  ],
+  "retainedFindings": [],
+  "evidence": {
+    "portal-staging.txt": "5ef3f23ae9ebbb70167d56831486fd688356bf6a697223c034db76512cef0643",
+    "portal-before-scan.json": "956ddb4abcac1b2ea96fde546598cd014d33145547f74b03fa4b985b4beb175c",
+    "portal-after-scan.json": "34b7af7114e6e460062edb4bdd925d2b522031dae5a4cea933a53df93c9c2a36"
+  },
+  "sourceChanges": {
+    "portal/src/catalog/upstreams.ts": "333316a52287c9ba574656121b5bd5d40926be47f023fdcd6e145ca51fd7eb23"
+  },
+  "buildScope": "previous isolated BentoPDF portal build plus the TeXlyre provider record only"
+}

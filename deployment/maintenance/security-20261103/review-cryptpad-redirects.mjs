@@ -1,6 +1,7 @@
 // Exact mounted-source mitigation. No version relabelling or automatic upgrades.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
-import {freshScan} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';import {eligible,proveChecks} from './cryptpad-redirects-policy.mjs';
+import {freshScan,overlayRows} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';import {eligible,proveChecks} from './cryptpad-redirects-policy.mjs';
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';import {expatDescendant} from './expat-policy.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/security-20261103/cryptpad-redirects',read=p=>JSON.parse(fs.readFileSync(p)),sha=b=>createHash('sha256').update(b).digest('hex');
 const scan=read(root+'/security.json'),queue=read(root+'/security-queue.json');freshScan(queue,scan);assert.equal(scan.status,'checked');
@@ -12,7 +13,10 @@ assert(offer.published);assert.equal(sha(fs.readFileSync('/opt/utilibre/toolbox-
 for(const [path,hash] of Object.entries(release.groups[0].proofs))assert.equal(sha(fs.readFileSync(path)),hash);
 const docker=(...args)=>cp.execFileSync('docker',args,{encoding:'utf8',timeout:30000,maxBuffer:1024*1024,stdio:['ignore','pipe','pipe']}).trim();
 const container='utilibre-pack-cryptpad-cryptpad-1',live='/opt/utilibre/src/cryptpad';
-assert.equal(docker('inspect','--format','{{.Image}}',container),spec.runtimeImage);
+const overlays=additionalOverlayReceipts.filter(p=>fs.existsSync(root+'/'+p)).flatMap(p=>overlayRows(read(root+'/'+p)));
+const artifact=expatDescendant(container,spec.runtimeImage,release.completedAt,scan.completedAt,overlays);
+assert.equal(scan.images.find(i=>i.id===artifact)?.status,'checked');
+assert.equal(docker('inspect','--format','{{.Image}}',container),artifact);
 assert.equal(sha(fs.readFileSync(live+'/'+spec.file)),spec.afterSha256);assert.equal(sha(fs.readFileSync(live+'/package-lock.json')),spec.lockSha256);
 const mounts=JSON.parse(docker('inspect','--format','{{json .Mounts}}',container));const mount=mounts.find(m=>m.Source===live);assert(mount);
 assert.equal(docker('exec',container,'sha256sum',mount.Destination+'/'+spec.file).split(/\s/)[0],spec.afterSha256);

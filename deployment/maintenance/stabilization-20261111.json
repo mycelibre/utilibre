@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-11T12:52:36.317796+00:00",
+  "status": "bounded-batch-complete-with-explicit-open-work",
+  "security": {
+    "initialPending": {
+      "critical": 5,
+      "high": 962
+    },
+    "pending": {
+      "critical": 0,
+      "high": 124
+    },
+    "rawPreserved": {
+      "records": 26343,
+      "critical": 66,
+      "high": 4187
+    },
+    "scanCompletedAt": "2026-11-11T12:50:54.947Z",
+    "status": "checked",
+    "database": {
+      "updatedAt": "2026-11-10T19:01:23.081219346Z",
+      "downloadedAt": "2026-11-11T10:25:50.991726515Z",
+      "refreshRequested": false
+    },
+    "runtimeImages": 109,
+    "containerRoles": 175,
+    "sourceInputs": 113,
+    "host": "checked",
+    "pendingGroups": [
+      {
+        "package": "libxslt",
+        "highRecords": 62,
+        "images": 31,
+        "roles": 81,
+        "vendorCandidate": "1.1.43-r4",
+        "state": "package/application rollout gates outstanding"
+      },
+      {
+        "package": "krb5-libs",
+        "highRecords": 32,
+        "images": 2,
+        "roles": 11,
+        "vendorCandidate": "1.22.3-r0",
+        "state": "stateful consumer gates outstanding"
+      },
+      {
+        "package": "ACL",
+        "highRecords": 30,
+        "state": "compatible caller migration unresolved; no repair claimed"
+      }
+    ]
+  },
+  "journeys": {
+    "passed": 8,
+    "report": "/var/lib/utilibre-maintenance/journeys.json",
+    "date": "2026-11-11T12:18:51.777Z"
+  },
+  "recovery": {
+    "downloadedFilesVerified": 95,
+    "backupSources": 25,
+    "authentikIsolatedDatabaseRestore": "passed",
+    "freshRssSyntheticRestore": "passed",
+    "storageBoxEncryptedRoundtrip": "passed",
+    "fullVmRestore": "blocked: no spare isolated restore target",
+    "operatorIphone": {
+      "downloadFictionalPDFsMergeSaveReopen": "passed per operator",
+      "pairdropToComputerOpenReceivedPDF": "passed per operator"
+    },
+    "iphoneNetworkMode": "unreported"
+  },
+  "disk": {
+    "grossBytesReclaimed": 8467316736,
+    "availableBytes": 34340659200,
+    "retained": "sources, locks, live data, rollback images/artifacts and backups"
+  },
+  "deployment": {
+    "texlyre": {
+      "version": "0.14.1-p1",
+      "url": "https://latex.utilibre.org/",
+      "revision": "697759981a2a7291fdd3855ea6e09cc6ca5c7723",
+      "staticSha256": "e6aa4c0d325ab8a17762b73c7fb582c921fdab7ef44191913c41f615f3c94db9",
+      "publicNativeWorkflow": "passed",
+      "oldProjectMigration": "passed in same disposable HTTP browser profile",
+      "offlineLifecycle": "not fully tested"
+    },
+    "portal": {
+      "image": "sha256:cc793c0593dd1056343f456596b01bb8d584c83b74c73697fa9fed8b8b45a94f",
+      "oldImage": "sha256:05c04b21a2f4be78de06a57f4865f6c7d21df67935ac16dd5718788cb0ab3a57",
+      "status": "passed",
+      "unitTests": 122
+    },
+    "otherServicesChanged": false
+  },
+  "health": {
+    "running": 175,
+    "healthy": 90,
+    "withoutHealthcheck": 85,
+    "failedSystemdUnits": 0
+  },
+  "otherHeldUpgrades": [
+    "grist",
+    "candlr",
+    "grid",
+    "addy",
+    "donetick",
+    "newton",
+    "unfurl",
+    "razzia",
+    "spliit",
+    "wishlist",
+    "kitchenowl",
+    "opengist",
+    "vikunja",
+    "bytestash",
+    "cryptpad",
+    "super-productivity",
+    "wbo",
+    "markmap",
+    "mumble",
+    "degoog",
+    "reactive-resume",
+    "penpot",
+    "actual",
+    "wakapi",
+    "jupyterlite",
+    "ntfy",
+    "uptime-kuma",
+    "omnitools",
+    "authentik"
+  ],
+  "evidenceRoot": "/var/lib/utilibre-maintenance/stabilization-20261111",
+  "limits": [
+    "No complete C/WASM assessment for TeXlyre",
+    "No full-VM restore",
+    "Other held application upgrades not completed",
+    "Raw findings are package/target occurrences, not proof of exploitability",
+    "No new public services, account permissions, retention policies or analytics"
+  ]
+}

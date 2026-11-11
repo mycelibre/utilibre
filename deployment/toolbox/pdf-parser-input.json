@@ -1,0 +1,9 @@
+{
+  "package": "pdfjs-dist",
+  "version": "5.5.207",
+  "license": "Apache-2.0",
+  "files": {
+    "pdf.mjs": "105e69d71ebad9fccdddf36b84bb5d038b9d66f6d9db515ddd450c1b4f792432",
+    "pdf.worker.mjs": "e4e4df8fa2b07328c22ff3391aa78287c6a1897364f9cf4328cd67d8cd541085"
+  }
+}

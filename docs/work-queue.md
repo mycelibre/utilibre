@@ -1,5 +1,30 @@
 # Work queue
 
+## Current stabilization checkpoint — 11 November 2026, 12:51 UTC
+
+The completed same-database fleet scan and exact installed-payload reviews leave
+**0 critical / 124 high package-target records pending**, from 5 / 962 at the
+start of this batch. Remaining: 62 libxslt, 32 Alpine Kerberos and 30 ACL records.
+These need compatible tested updates; no full-remediation claim or raw-finding
+suppression. All 109 images, 113 source inputs and host package checks completed.
+
+The scheduled PDF parser is now independent of disposable build directories;
+all eight scheduled workflows pass. Safe cleanup reclaimed 7.89 GiB gross,
+with about 33 GiB currently available after new release artifacts. TeXlyre
+0.14.1-p1 and the matching EN/ES portal metadata are deployed; old local projects,
+compilation, export/import, privacy and public-path checks pass. The other 29
+held application upgrades remain subject to their existing gates.
+
+Off-host recovery verified 95 files / 25 backup sources and an isolated Authentik
+restore. FreshRSS synthetic restore passed. The operator confirmed the iPhone
+PDF and PairDrop tasks worked; network mode/browser version were not supplied.
+A full-VM rehearsal awaits a spare isolated Proxmox restore target. All 175
+production containers are running, 90 configured health checks healthy, and no
+systemd units failed. [Evidence, remaining work and rollback](records/stabilization-2026-11-11.md).
+
+The checkpoints below are historical.
+
+
 Current security checkpoint: **10 November 2026**, following the 14:53 UTC
 complete fleet scan and exact deployed-payload revalidation. The pending queue
 is **0 critical / 30 high records**, down from 319. Kerberos 1.22.3 and compatible
