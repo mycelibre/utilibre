@@ -1,4 +1,5 @@
 import {checkerIdentity} from '../releases-20261111/recorded-checkers.mjs';
+import {verifyVendorRelease} from '../releases-20261111/vendor-policy.mjs';
 import {proveKerberos} from '../security-20261110/kerberos-policy.mjs';
 import {proveHttpClientRelease} from '../security-20261110/http-client-policy.mjs';
 import {proveMongocRelease} from '../security-20261109/mongoc-policy.mjs';
@@ -37,9 +38,15 @@ import {acquireReleaseLock} from '../security-20261103/release-lock.mjs';
 const batch=selectBatch(process.argv.slice(2));process.argv=[...process.argv.slice(0,2),...batch.args];
 process.umask(0o077);
 const root=batch.root,flags=['--mongoc','--xnet-caddy','--zlib-bookworm','--rsync','--sqlite-followup','--xnet','--zlib','--vendor-debian','--musl','--guava','--oauth-debian','--libxi','--js-nov','--sqlite','--redirects','--pyasn1','--expat-debian','--msal','--cfitsio','--trust','--nginx-debian','--zod','--codec-caddy','--filelock','--text','--oauth','--codec','--x11','--health','--markdown','--symfony','--nltk','--msgpack','--multer','--pcre','--postal','--expat','--blkid','--jose-leaf','--jose-caddy','--jose','--drf','--dnspython','--authlib','--alpine','--node-apk','--undici','--body','--go-helpers','--caddy','--go-runtime','--go-services','--node','--curl','--curl-bookworm'];
+flags.push('--vendor-libs-20261111');
 assert(process.argv.filter(a=>flags.includes(a)).length<=1);
 const profile=process.argv.find(a=>flags.includes(a))?.slice(2)||'brotli',guava=profile==='guava',oauthDebian=profile==='oauth-debian',msal=profile==='msal',cfitsio=profile==='cfitsio',trust=profile==='trust',nginx=profile==='nginx-debian',zod=profile==='zod',filelock=profile==='filelock',oauth=profile==='oauth',markdown=profile==='markdown',symfony=profile==='symfony',nltk=profile==='nltk',msgpack=profile==='msgpack',multer=profile==='multer',postal=profile==='postal',blkid=profile==='blkid',jose=['jose','jose-leaf'].includes(profile),drf=profile==='drf',dns=profile==='dnspython',authlib=profile==='authlib',alpine=['alpine','node-apk','expat','pcre','x11','musl'].includes(profile),undici=profile==='undici',body=profile==='body',go=['codec-caddy','text','codec','health','go-helpers','caddy','go-runtime','go-services','jose','jose-caddy','jose-leaf'].includes(profile),node=profile==='node',curl=profile.startsWith('curl');
 const kerberos=profile==='vendor-debian'&&batch.root.endsWith('20261110');
+if(profile==='vendor-libs-20261111'&&!process.env.APP_BIND_IP){
+ const address=fs.readFileSync(new URL('../../../.env',import.meta.url),'utf8').match(/^PRIVATE_BIND_IP=([^\r\n]+)$/m)?.[1];
+ assert(address&&/^[a-fA-F0-9.:]+$/.test(address),'Existing protected bind setting is required');
+ process.env.APP_BIND_IP=address;
+}
 const specs=JSON.parse(fs.readFileSync(batch.input(profile))).rows.flatMap(s=>s.releaseGroups?s.releaseGroups.map(g=>({...s,...g,evidenceKey:s.key})):[s]);
 const evidence=(s)=>root+'/'+profile+(profile==='curl-bookworm'?'/images':'')+'/'+(s.evidenceKey||s.key);
 const [mode,...keys]=process.argv.slice(2).filter(k=>!flags.includes(k));assert(['prepare','apply','retry','sync-mirrors','verify-completed'].includes(mode));assert(keys.length&&new Set(keys).size===keys.length&&keys.every(k=>specs.some(s=>s.key===k)));
@@ -63,6 +70,7 @@ if(batch.enabled&&['sqlite','sqlite-followup'].includes(profile))Object.assign(u
 if(batch.enabled&&profile==='libxi')for(const role of ['backend','exporter'])urls['debian-expanded-penpot-'+role]=urls.penpot;
 if(batch.enabled&&profile==='js-nov'){urls.admin='https://design.utilibre.org/admin-console/';urls['grist-decode']=urls.grist;}
 if(['musl','vendor-debian','zlib','xnet'].includes(profile))for(const s of specs)urls[s.key]=s.publicHome||null;
+if(profile==='vendor-libs-20261111')for(const s of specs)urls[s.key]=s.publicHome||null;
 if(['sqlite-followup','rsync','zlib-bookworm','mongoc'].includes(profile))for(const s of specs)if(s.publicHome)urls[s.key]=s.publicHome;
 async function publicStatus(key){if(!urls[key])return null;
  // Public IPv4 timed out from this VM. Check the existing Caddy address
@@ -106,6 +114,7 @@ function protectedActivityGate(g){
 function proof(key){const s=specs.find(s=>s.key===key),dir=evidence(s);if(['xnet','xnet-caddy'].includes(profile)){const r=profile==='xnet'?proveXnet(s):proveCaddy(s);assert.equal(image(s.candidate),s.imageId);return r;}const b=read(dir+'/build.json'),scan=read(dir+'/scan-gate.json');
  if(kerberos)proveKerberos(read(batch.input(profile)),s,b,root,{release:true,scan});
  else if(profile==='vendor-debian')proveVendorDebian(read(batch.input(profile)),s,b,read(dir+'/consumer.json'),scan,read(root+(s.acquisition?'/'+s.acquisition+'-acquisition/authenticated.json':'/debian-acquisition/authenticated.json')),root);
+ if(profile==='vendor-libs-20261111')verifyVendorRelease(read(batch.input(profile)),s,b,read(dir+'/scope.json'),read(dir+'/consumer.json'),scan,dir);
  if(profile==='musl')proveMusl(read(batch.input('musl')),s,b,read(dir+'/consumer.json'),scan);
  if(profile==='zlib')proveZlib(read(batch.input(profile)),s,b,{...read(dir+'/consumer.json'),path:dir+'/consumer.json'},{...scan,rawPath:dir+'/after-scan.json'},{...read(dir+'/scope.json'),path:dir+'/scope.json'});
  if(profile==='zlib'&&s.evidenceKey==='collaboration-pilot-wbo'){

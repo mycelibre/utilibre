@@ -19,7 +19,7 @@ services:
       binternet: {ipv4_address: 172.29.85.10}
   gateway:
     <<: *runtime
-    image: utilibre-binternet-gateway:musl-security-20261109
+    image: utilibre-vendor-binternet-gateway:20261111
     user: "101:101"
     ports: ["10.10.1.43:3150:8080"]
     volumes:

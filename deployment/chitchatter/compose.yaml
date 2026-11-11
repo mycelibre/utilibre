@@ -18,7 +18,7 @@ services:
       timeout: 5s
       retries: 3
   gateway:
-    image: utilibre-calendar-calino:musl-security-20261109
+    image: utilibre-vendor-calendar-calino:20261111
     entrypoint: [nginx, -g, 'daemon off;']
     restart: unless-stopped
     read_only: true

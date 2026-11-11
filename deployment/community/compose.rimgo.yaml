@@ -31,7 +31,7 @@ services:
       images: {ipv4_address: 172.29.90.10}
   gateway:
     <<: *runtime
-    image: utilibre-calendar-calino:musl-security-20261109
+    image: utilibre-vendor-calendar-calino:20261111
     user: "101:101"
     mem_limit: 128m
     entrypoint: [nginx, -g, "daemon off;"]

@@ -44,7 +44,7 @@ services:
     depends_on: {db: {condition: service_healthy}, redis: {condition: service_started}}
     logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
   gateway:
-    image: utilibre-calendar-calino:musl-security-20261109
+    image: utilibre-vendor-calendar-calino:20261111
     user: '101:101'
     read_only: true
     cap_drop: [ALL]

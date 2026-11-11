@@ -8,7 +8,7 @@ x-runtime: &runtime
 services:
   gateway:
     <<: *runtime
-    image: utilibre-calendar-calino:musl-security-20261109
+    image: utilibre-vendor-calendar-calino:20261111
     entrypoint: [nginx, -g, 'daemon off;']
     user: '101:101'
     volumes: ['./nginx.conf:/etc/nginx/nginx.conf:ro']
@@ -23,7 +23,7 @@ services:
       ingress: {ipv4_address: 172.29.149.20}
   db:
     <<: *runtime
-    image: utilibre-zlib-records-db:candidate-20261109
+    image: utilibre-vendor-records-db:20261111
     user: '70:70'
     env_file: /opt/utilibre/projects/private/database.env
     volumes: ['/opt/utilibre/projects/database:/var/lib/postgresql/data']

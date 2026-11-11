@@ -19,7 +19,7 @@ x-app: &app
   logging: {driver: json-file, options: {max-size: 1m, max-file: '2'}}
 services:
   db:
-    image: utilibre-zlib-simplelogin-db:candidate-20261109
+    image: utilibre-vendor-simplelogin-db:20261111
     env_file: [/opt/utilibre/simplelogin/private/db.env]
     volumes: [/opt/utilibre/simplelogin/data/postgres:/var/lib/postgresql/data]
     networks: {data: {ipv4_address: 172.29.135.20}}
@@ -63,7 +63,7 @@ services:
     restart: unless-stopped
     depends_on: {initialize: {condition: service_completed_successfully}}
   gateway:
-    image: utilibre-calendar-calino:musl-security-20261109
+    image: utilibre-vendor-calendar-calino:20261111
     user: '101:101'
     read_only: true
     cap_drop: [ALL]

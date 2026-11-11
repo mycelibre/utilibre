@@ -17,7 +17,7 @@ services:
     ulimits: {core: 0}
     memswap_limit: 512m
     <<: *runtime
-    image: utilibre-zlib-evaluation-degoog:candidate-20261109
+    image: utilibre-vendor-evaluation-degoog:20261111
     user: "1000:1000"
     entrypoint: [bun, run, src/server/index.ts]
     env_file: /opt/utilibre/community-data/degoog-private/runtime.env
@@ -44,7 +44,7 @@ services:
     ulimits: {core: 0}
     memswap_limit: 64m
     <<: *runtime
-    image: utilibre-calendar-calino:musl-security-20261109
+    image: utilibre-vendor-calendar-calino:20261111
     user: "101:101"
     mem_limit: 64m
     logging: {driver: none}

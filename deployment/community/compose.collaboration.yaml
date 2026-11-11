@@ -48,7 +48,7 @@ services:
   gateway:
     ulimits: {core: 0}
     profiles: [pilot]
-    image: utilibre-calendar-calino:musl-security-20261109
+    image: utilibre-vendor-calendar-calino:20261111
     entrypoint: [nginx, -g, "daemon off;"]
     restart: "no"
     user: "101:101"

@@ -1,5 +1,18 @@
 # 11 November: updater receipts and BentoPDF
 
+## Signed libxslt and Kerberos follow-up
+
+`vendor-inputs.json` captures 31 exact predecessor images and official
+same-branch Alpine packages for 94 pending high package-target records. It
+extends the existing finite preparation, consumer-test and transactional
+release adapters. Approval is explicit; a scanner result cannot grant it.
+See [the verified inputs, replay commands, release evidence and rollback
+limits](../../../docs/records/vendor-libraries-2026-11-11.md). The separate ACL
+caller-migration findings remain open. This recipe does not approve a different
+upstream release or automatically enable any service.
+[`vendor-status.json`](vendor-status.json) records the completed 75-group release,
+exact artifacts, final scan coverage and the remaining 30 ACL records.
+
 ## Stateless library follow-up
 
 `libraries-inputs.json` captures a separate signed-vendor update for 23 existing

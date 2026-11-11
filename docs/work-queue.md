@@ -1,6 +1,27 @@
 # Work queue
 
-## Current stabilization checkpoint — 11 November 2026, 12:51 UTC
+## Current vendor-library checkpoint — 11 November 2026, 14:07 UTC
+
+**94 of the 124 pending high records are fixed and deployed.** The complete
+same-database fleet scan and exact component reviews leave **0 critical / 30
+high package-target records pending**, all for the existing ACL caller-migration
+gap. No raw finding was suppressed and no ACL closure is claimed.
+
+Official libxslt and Kerberos updates passed isolated scope/ABI/native/consumer
+checks and all 75 release groups: 31 images across 81 container roles. Previous
+artifacts and data are preserved. All 175 containers are running, 90 configured
+health checks are healthy, no systemd unit is failed, and all eight bounded
+browser workflows pass. The scan completed 109 images, 113 source inputs and
+host packages with no incomplete or unrechecked target. These checks do not
+establish all-device coverage or full remediation.
+
+Replay recipes, exact artifacts and rollback are in the
+[release record](records/vendor-libraries-2026-11-11.md) and
+[machine-readable status](../deployment/maintenance/releases-20261111/vendor-status.json).
+The separate 29 held application upgrades and isolated full-VM recovery rehearsal
+remain subject to their earlier requirements. The checkpoints below are historical.
+
+## Earlier stabilization checkpoint — 11 November 2026, 12:51 UTC
 
 The completed same-database fleet scan and exact installed-payload reviews leave
 **0 critical / 124 high package-target records pending**, from 5 / 962 at the

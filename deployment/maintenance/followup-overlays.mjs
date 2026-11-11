@@ -2,6 +2,7 @@
 // Reviewers still require an exact role/image chain and recheck live payloads.
 export const additionalOverlayReceipts = [
 
+  'vendor-libs-20261111/release.json',
   'libraries-20261111/release.json',
 
   'security-20261109/mongoc/release.json',

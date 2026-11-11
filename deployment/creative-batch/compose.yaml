@@ -1,7 +1,7 @@
 name: utilibre-creative-batch
 services:
   static:
-    image: utilibre-calendar-calino:musl-security-20261109
+    image: utilibre-vendor-calendar-calino:20261111
     entrypoint: [nginx, -g, 'daemon off;']
     restart: unless-stopped
     read_only: true
@@ -40,7 +40,7 @@ services:
       - '10.10.1.43:3239:3239'
     networks: [static, ingress]
   glyphr:
-    image: utilibre-libraries-creative-batch-glyphr:20261111
+    image: utilibre-vendor-creative-batch-glyphr:20261111
     restart: unless-stopped
     read_only: true
     user: '101:101'

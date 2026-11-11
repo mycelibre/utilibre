@@ -46,7 +46,7 @@ services:
     networks: {isolated: {ipv4_address: 172.29.152.20}, egress: {ipv4_address: 172.29.153.20}}
   gateway:
     <<: *limits
-    image: utilibre-calendar-calino:musl-security-20261109
+    image: utilibre-vendor-calendar-calino:20261111
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.25

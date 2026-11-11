@@ -9,7 +9,7 @@ x-security: &default-security
 
 services:
   postgres:
-    image: utilibre-postgres:17.11-alpine-gosu-security-20261011-p2
+    image: utilibre-vendor-simplelogin-db:20261111
     user: "70:70"
     restart: unless-stopped
     <<: *default-security

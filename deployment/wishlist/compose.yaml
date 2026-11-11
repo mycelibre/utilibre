@@ -42,7 +42,7 @@ services:
       start_period: 60s
   gateway:
     <<: *runtime
-    image: utilibre-calendar-calino:musl-security-20261109
+    image: utilibre-vendor-calendar-calino:20261111
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     mem_limit: 96m

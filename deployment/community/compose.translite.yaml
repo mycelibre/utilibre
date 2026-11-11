@@ -21,7 +21,7 @@ services:
       translate: {ipv4_address: 172.29.89.10}
   gateway:
     <<: *runtime
-    image: utilibre-translite-gateway:musl-security-20261109
+    image: utilibre-vendor-translite-gateway:20261111
     user: "101:101"
     ports: ["10.10.1.43:3152:8080"]
     volumes:

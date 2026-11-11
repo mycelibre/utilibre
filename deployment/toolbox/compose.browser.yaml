@@ -23,7 +23,7 @@ x-browser: &browser
 services:
   markmap:
     <<: *browser
-    image: utilibre-libraries-browser-tools-markmap:20261111
+    image: utilibre-vendor-browser-tools-markmap:20261111
     build:
       context: ./markmap
       dockerfile: ../Dockerfile.markmap
@@ -35,7 +35,7 @@ services:
       - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
   zip-manager:
     <<: *browser
-    image: utilibre-libraries-browser-tools-zip-manager:20261111
+    image: utilibre-vendor-browser-tools-zip-manager:20261111
     build:
       context: /opt/utilibre/src/zip-manager
       dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.browser
@@ -48,7 +48,7 @@ services:
       - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
   rawgraphs:
     <<: *browser
-    image: utilibre-libraries-browser-tools-rawgraphs:20261111
+    image: utilibre-vendor-browser-tools-rawgraphs:20261111
     build:
       context: /opt/utilibre/src/rawgraphs
       dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.rawgraphs
@@ -60,7 +60,7 @@ services:
       - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
   audiomass:
     <<: *browser
-    image: utilibre-libraries-browser-tools-audiomass:20261111
+    image: utilibre-vendor-browser-tools-audiomass:20261111
     build:
       context: /opt/utilibre/src/audiomass
       dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.audiomass
@@ -72,7 +72,7 @@ services:
       - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
   minipaint:
     <<: *browser
-    image: utilibre-libraries-browser-tools-minipaint:20261111
+    image: utilibre-vendor-browser-tools-minipaint:20261111
     build:
       context: /opt/utilibre/src/minipaint
       dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.browser
@@ -86,7 +86,7 @@ services:
 
   excalidraw:
     <<: *browser
-    image: utilibre-libraries-browser-tools-excalidraw:20261111
+    image: utilibre-vendor-browser-tools-excalidraw:20261111
     build:
       context: /opt/utilibre/src/excalidraw
       dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.excalidraw
@@ -98,7 +98,7 @@ services:
       - /opt/utilibre/toolbox-public:/srv/utilibre-source:ro
   svgedit:
     <<: *browser
-    image: utilibre-libraries-browser-tools-svgedit:20261111
+    image: utilibre-vendor-browser-tools-svgedit:20261111
     build:
       context: /opt/utilibre/src/svgedit
       dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.svgedit
@@ -111,7 +111,7 @@ services:
 
   image-scrubber:
     <<: *browser
-    image: utilibre-libraries-browser-tools-image-scrubber:20261111
+    image: utilibre-vendor-browser-tools-image-scrubber:20261111
     build:
       context: /opt/utilibre/src/image-scrubber
       dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.image-scrubber
@@ -124,7 +124,7 @@ services:
 
   cyberchef:
     <<: *browser
-    image: utilibre-libraries-browser-tools-cyberchef:20261111
+    image: utilibre-vendor-browser-tools-cyberchef:20261111
     build:
       context: /opt/utilibre/src/cyberchef
       dockerfile: /home/ubuntu/freetools/deployment/toolbox/Dockerfile.cyberchef

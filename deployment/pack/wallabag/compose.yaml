@@ -59,7 +59,7 @@ services:
     volumes: ['./squid.conf:/etc/squid/squid.conf:ro']
     networks: {isolated: {ipv4_address: 172.29.155.3}, ingress: {ipv4_address: 172.29.154.3}}
   web:
-    image: utilibre-wallabag-web:musl-security-20261109
+    image: utilibre-vendor-wallabag-web:20261111
     restart: 'no'
     depends_on: [app, proxy]
     read_only: true

@@ -1,0 +1,1648 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Finite official Alpine libxslt/Kerberos updates; preserve prior fixes and production boundaries",
+  "date": "2026-11-11",
+  "minimumFreeBytes": 8589934592,
+  "maximumDatabaseAgeHours": 48,
+  "baselineScanSha256": "077914225057819aaa374b68ee0df548481a332e6b81d99a8cb6a709081b9f5b",
+  "databaseSha256": "cf7fa3086682e8f77298ca8178419a530f97d7c4bd3ac203a64f2977f82e94a6",
+  "javaDatabaseSha256": "649c68be4572cf540e12718ad017a94d275f68968a0e61f87a1ae287405bfc26",
+  "packages": {
+    "3.22/libxslt": {
+      "name": "libxslt",
+      "branch": "3.22",
+      "version": "1.1.43-r4",
+      "file": "libxslt-1.1.43-r4.apk",
+      "sha256": "4d5456a606f5cc3335216df16e2d93e9602ef84e5a641c45994b144c253dae31",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libxslt-1.1.43-r4.apk",
+      "license": "X11",
+      "aportsCommit": "d4c3f9a4384bd655b7703c510a12a256d643baa8"
+    },
+    "3.23/libxslt": {
+      "name": "libxslt",
+      "branch": "3.23",
+      "version": "1.1.43-r4",
+      "file": "libxslt-1.1.43-r4.apk",
+      "sha256": "0469e5c1ebc5f9d07c260f403b8bc7faaf65f8672a1f113fda9d34ab5b6701a0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/libxslt-1.1.43-r4.apk",
+      "license": "X11",
+      "aportsCommit": "8b367fdee54989e3f08a4ce2153d3ad2d25ce42b"
+    },
+    "3.24/libxslt": {
+      "name": "libxslt",
+      "branch": "3.24",
+      "version": "1.1.43-r4",
+      "file": "libxslt-1.1.43-r4.apk",
+      "sha256": "40e6cc7d09ce1e69421c2b37e1da4e9afef486843f21c3a79339cd6d93c1c617",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libxslt-1.1.43-r4.apk",
+      "license": "X11",
+      "aportsCommit": "e85ecba78539486bd0a685963ca5da3e1652fbd0"
+    },
+    "3.24/krb5-libs": {
+      "name": "krb5-libs",
+      "branch": "3.24",
+      "version": "1.22.3-r0",
+      "file": "krb5-libs-1.22.3-r0.apk",
+      "sha256": "fad5b46a953e6a37a1bb61a84538fa08ecb6a07816f439eb06f2735aebfcbfbf",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/krb5-libs-1.22.3-r0.apk",
+      "license": "MIT",
+      "aportsCommit": "95ecd1043f781a308ae20a7aa08b86070806946f"
+    },
+    "3.24/krb5-dev": {
+      "name": "krb5-dev",
+      "branch": "3.24",
+      "version": "1.22.3-r0",
+      "file": "krb5-dev-1.22.3-r0.apk",
+      "sha256": "cdd2d4a6f42c6ae5f5b511053b616b97bff92797541f442311fd26cdeb5a6bc1",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/krb5-dev-1.22.3-r0.apk",
+      "license": "MIT",
+      "aportsCommit": "95ecd1043f781a308ae20a7aa08b86070806946f"
+    },
+    "3.24/libxslt-dev": {
+      "name": "libxslt-dev",
+      "branch": "3.24",
+      "version": "1.1.43-r4",
+      "file": "libxslt-dev-1.1.43-r4.apk",
+      "sha256": "e8db72cc17956c32354d01ebecbab79516d323ad8f533d5b4a25d58c440523a1",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libxslt-dev-1.1.43-r4.apk",
+      "license": "X11",
+      "aportsCommit": "e85ecba78539486bd0a685963ca5da3e1652fbd0"
+    },
+    "3.24/libxml2-dev": {
+      "name": "libxml2-dev",
+      "branch": "3.24",
+      "version": "2.13.9-r2",
+      "file": "libxml2-dev-2.13.9-r2.apk",
+      "sha256": "02137d27a68f7cdc4ae7d25fe8cdff4b4557037cd58c590a962ce4932d4ad91c",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libxml2-dev-2.13.9-r2.apk",
+      "license": "MIT",
+      "aportsCommit": "f1bd5b6767a0e7fdda380c95138a1c938eb6e102"
+    },
+    "3.24/e2fsprogs-dev": {
+      "name": "e2fsprogs-dev",
+      "branch": "3.24",
+      "version": "1.47.4-r0",
+      "file": "e2fsprogs-dev-1.47.4-r0.apk",
+      "sha256": "ce77ffbdb9162df04b395831bedbc5f3190da5675f75eeb96c0ac1221687b91a",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/e2fsprogs-dev-1.47.4-r0.apk",
+      "license": "GPL-2.0-or-later AND LGPL-2.0-or-later AND BSD-3-Clause AND MIT",
+      "aportsCommit": "8683a6972cb245fbbdb535dad6435a9930bb9374"
+    }
+  },
+  "fixtureHashes": {
+    "security-20261109/zlib-check.py": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+    "security-20261109/check-musl-nginx.py": "4cf498c5c38a1b7a672e097001ea866ce637b942ad077a24942b90e76ea0400b",
+    "security-20261109/check-musl-runtimes.py": "5f9a6aecd1e1a135c5d1aa353c7e356e70cdd7d6b6b2789e82ff23d1082f6d53",
+    "security-20261109/check-musl-special.py": "13d5f7b625ed1b945b196b50b36409460b29439361f995f09305fda952a421af",
+    "security-20261110/kerberos-native.c": "1251fcc0cfcbcdcaa03b7d2193f900c99518631717ddf7723b088bc0e3b4ab16",
+    "security-20261109/zlib-scan.py": "881c474d7ca69c754b97eee6204b2681d140a58b8b4d946199abfe6d5d9e3e27"
+  },
+  "rows": [
+    {
+      "key": "openresume-web",
+      "base": "sha256:104148ef9fa8eceb51ee906b180d96aa7c4cc73b69cb46c431904e06f950968c",
+      "candidate": "utilibre-vendor-openresume-web:20261111",
+      "containers": [
+        "utilibre-openresume-web-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": null,
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "openresume-openresume-web",
+          "containers": [
+            "utilibre-openresume-web-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "5f8bb3760a59010edb44a9c667a99a6690fc9aa6dbc56b96e06196c2025e26dd",
+        "scope.json": "99ddb82708a2e8e9772726d0ac816432baf89c41c89fd7f3fd442724fccad726",
+        "consumer.json": "f241739c16c31f793704e707962369e94f420dea1a665f9a3cce22213f3b8151",
+        "scan-gate.json": "eb28ee479ccd3575f51e52e76b2a4728c9ab7bc156beb64ab726ff1d5cc798c7"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "browser-tools-image-scrubber",
+      "base": "sha256:115270d93d288a6dd8b6fb0742dd33f40f86efd665ca3d27753ce18b9ae07ef3",
+      "candidate": "utilibre-vendor-browser-tools-image-scrubber:20261111",
+      "containers": [
+        "utilibre-browser-tools-image-scrubber-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://scrub.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-image-scrubber",
+          "containers": [
+            "utilibre-browser-tools-image-scrubber-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "82d6fa6e55456b222f6b10056b2e23a590ec002c32cb9914b0bd8a682a3d4277",
+        "scope.json": "c149c81b9ef3607862f6191c0d6aa49324825e74f1bf36afc853e0a46e24f247",
+        "consumer.json": "7993b95777ae30225d06cac447a142b0d1dc6bcd6b795eccfb9556566c73bb01",
+        "scan-gate.json": "a8857147b8fef0cae0fbe4d9603a4c4260a1e5f7ebff350458ffefa2bfa61ab9"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "toolbox-drawio",
+      "base": "sha256:177fb441923fd01053996b841ace065d4470f520c275beec9cd2ad9f3fb23285",
+      "candidate": "utilibre-vendor-toolbox-drawio:20261111",
+      "containers": [
+        "utilibre-toolbox-drawio-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://draw.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-drawio",
+          "containers": [
+            "utilibre-toolbox-drawio-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "7c72ad26579e7d207d0e2a7d4e550eba878ca58d15af916735564a935b0e3646",
+        "scope.json": "e5da5828c9ca24b6e2f7c2c15017c8811e1c5a76f60b332eb00c1b9be1310306",
+        "consumer.json": "f6695ebf38b7472acec6c15849234f235f0f1e48385c1370dcd5f240e364bdd7",
+        "scan-gate.json": "85d173a527098d664a6d98bb74f2910727586431a44b26484cd809ea814d8b58"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "evaluation-degoog",
+      "base": "sha256:17fc5c2c7a400971ee2c0da2d4d8dbbaf0d8ad8ce4639dc752f628671af45644",
+      "candidate": "utilibre-vendor-evaluation-degoog:20261111",
+      "containers": [
+        "utilibre-evaluation-degoog-1"
+      ],
+      "release": "3.22.4",
+      "branch": "3.22",
+      "musl": "1.2.5-r13",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "php-runtime",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://degoog.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "evaluation-evaluation-degoog",
+          "containers": [
+            "utilibre-evaluation-degoog-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "972878b542fd6f910baaa0622995054d850f5964873017857be6c33863d2e6d2",
+        "scope.json": "af978f3295de2a141f82270dee739d5e5dbc219bfed8dfaed17c7af8a96b1b8e",
+        "consumer.json": "760aa36a8b2970876615cccfc4b781fed717269bbb25f0ac825b033e45fe32b3",
+        "scan-gate.json": "24f9598e3de576f839260f805015247e2a264ea01ebd34012ca55db73a6ceeef"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "records-db",
+      "base": "sha256:1a3bad1fbe06698225de5524c3f7b4fde6758abad54cc78833d1dea86144f313",
+      "candidate": "utilibre-vendor-records-db:20261111",
+      "containers": [
+        "utilibre-identity-postgresql-1",
+        "utilibre-projects-db-1",
+        "utilibre-records-db-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "krb5-libs": "1.22.2-r1",
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "postgres-runtime",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": null,
+      "advisories": [
+        "CVE-2026-107364",
+        "CVE-2026-112315",
+        "CVE-2026-112316",
+        "CVE-2026-112317",
+        "CVE-2026-112318",
+        "CVE-2026-112319",
+        "CVE-2026-112320",
+        "CVE-2026-112321",
+        "CVE-2026-112322",
+        "CVE-2026-112323",
+        "CVE-2026-118380",
+        "CVE-2026-119079",
+        "CVE-2026-40355",
+        "CVE-2026-40356",
+        "CVE-2026-71199",
+        "CVE-2026-71200",
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "identity-records-db",
+          "containers": [
+            "utilibre-identity-postgresql-1"
+          ]
+        },
+        {
+          "key": "projects-records-db",
+          "containers": [
+            "utilibre-projects-db-1"
+          ]
+        },
+        {
+          "key": "records-records-db",
+          "containers": [
+            "utilibre-records-db-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "5651a557b58dc1e9d4dfa5390e9f44a63ac49ae0220e34508550d00f0aaa138f",
+        "scope.json": "e8776316527ab1c190f74bf51b69bb3827721956582fe8b6daf39d940f81a186",
+        "consumer.json": "a397b10d20b16f8ba1701ffc5a09a3a7253a91433b0609d5e001eda6decd08b9",
+        "scan-gate.json": "6293491b9c87fe5bbbf63bee7cb67f1dcc3410134471ebfdd71e8927060be017"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "calendar-calino",
+      "base": "sha256:1c846c1f096720a5f0075d4368be9a733c39b5564a8b59caca4af36db1878b2e",
+      "candidate": "utilibre-vendor-calendar-calino:20261111",
+      "containers": [
+        "utilibre-13ft-gateway-1",
+        "utilibre-additions-dumb-gateway-1",
+        "utilibre-additions-fmd-gateway-1",
+        "utilibre-additions-mezzo-gateway-1",
+        "utilibre-addy-gateway-1",
+        "utilibre-beaverhabits-gateway-1",
+        "utilibre-biblioreads-gateway-1",
+        "utilibre-bytestash-gateway-1",
+        "utilibre-calendar-calino-1",
+        "utilibre-chhoto-gateway-1",
+        "utilibre-chitchatter-gateway-1",
+        "utilibre-collaboration-pilot-gateway-1",
+        "utilibre-community-gateway-1",
+        "utilibre-community-rallly-gateway-1",
+        "utilibre-creative-batch-static-1",
+        "utilibre-donetick-gateway-1",
+        "utilibre-evaluation-degoog-gateway-1",
+        "utilibre-expanded-wiki-gateway-1",
+        "utilibre-family-chess-gateway-1",
+        "utilibre-gathio-gateway-1",
+        "utilibre-kitchenowl-gateway-1",
+        "utilibre-kittygram-gateway-1",
+        "utilibre-linkding-gateway-1",
+        "utilibre-newsletters-gateway-1",
+        "utilibre-opengist-gateway-1",
+        "utilibre-pack-forms-web-1",
+        "utilibre-pack-static-static-1",
+        "utilibre-priviblur-gateway-1",
+        "utilibre-projects-gateway-1",
+        "utilibre-razzia-gateway-1",
+        "utilibre-reader-evaluation-anonymousoverflow-gateway-1",
+        "utilibre-reader-evaluation-fourget-gateway-1",
+        "utilibre-reader-evaluation-gothub-gateway-1",
+        "utilibre-records-gateway-1",
+        "utilibre-rimgo-gateway-1",
+        "utilibre-simplelogin-gateway-1",
+        "utilibre-spliit-gateway-1",
+        "utilibre-trip-gateway-1",
+        "utilibre-unfurl-gateway-1",
+        "utilibre-vikunja-gateway-1",
+        "utilibre-wishlist-gateway-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "nginx-runtime",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": null,
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "13ft-calendar-calino",
+          "containers": [
+            "utilibre-13ft-gateway-1"
+          ]
+        },
+        {
+          "key": "additions-calendar-calino",
+          "containers": [
+            "utilibre-additions-dumb-gateway-1",
+            "utilibre-additions-fmd-gateway-1",
+            "utilibre-additions-mezzo-gateway-1"
+          ]
+        },
+        {
+          "key": "addy-calendar-calino",
+          "containers": [
+            "utilibre-addy-gateway-1"
+          ]
+        },
+        {
+          "key": "beaverhabits-calendar-calino",
+          "containers": [
+            "utilibre-beaverhabits-gateway-1"
+          ]
+        },
+        {
+          "key": "biblioreads-calendar-calino",
+          "containers": [
+            "utilibre-biblioreads-gateway-1"
+          ]
+        },
+        {
+          "key": "bytestash-calendar-calino",
+          "containers": [
+            "utilibre-bytestash-gateway-1"
+          ]
+        },
+        {
+          "key": "calendar-calendar-calino",
+          "containers": [
+            "utilibre-calendar-calino-1"
+          ]
+        },
+        {
+          "key": "chhoto-calendar-calino",
+          "containers": [
+            "utilibre-chhoto-gateway-1"
+          ]
+        },
+        {
+          "key": "chitchatter-calendar-calino",
+          "containers": [
+            "utilibre-chitchatter-gateway-1"
+          ]
+        },
+        {
+          "key": "collaboration-pilot-calendar-calino",
+          "containers": [
+            "utilibre-collaboration-pilot-gateway-1"
+          ]
+        },
+        {
+          "key": "community-calendar-calino",
+          "containers": [
+            "utilibre-community-gateway-1",
+            "utilibre-community-rallly-gateway-1"
+          ]
+        },
+        {
+          "key": "creative-batch-calendar-calino",
+          "containers": [
+            "utilibre-creative-batch-static-1"
+          ]
+        },
+        {
+          "key": "donetick-calendar-calino",
+          "containers": [
+            "utilibre-donetick-gateway-1"
+          ]
+        },
+        {
+          "key": "evaluation-calendar-calino",
+          "containers": [
+            "utilibre-evaluation-degoog-gateway-1"
+          ]
+        },
+        {
+          "key": "expanded-calendar-calino",
+          "containers": [
+            "utilibre-expanded-wiki-gateway-1"
+          ]
+        },
+        {
+          "key": "family-chess-calendar-calino",
+          "containers": [
+            "utilibre-family-chess-gateway-1"
+          ]
+        },
+        {
+          "key": "gathio-calendar-calino",
+          "containers": [
+            "utilibre-gathio-gateway-1"
+          ]
+        },
+        {
+          "key": "kitchenowl-calendar-calino",
+          "containers": [
+            "utilibre-kitchenowl-gateway-1"
+          ]
+        },
+        {
+          "key": "kittygram-calendar-calino",
+          "containers": [
+            "utilibre-kittygram-gateway-1"
+          ]
+        },
+        {
+          "key": "linkding-calendar-calino",
+          "containers": [
+            "utilibre-linkding-gateway-1"
+          ]
+        },
+        {
+          "key": "newsletters-calendar-calino",
+          "containers": [
+            "utilibre-newsletters-gateway-1"
+          ]
+        },
+        {
+          "key": "opengist-calendar-calino",
+          "containers": [
+            "utilibre-opengist-gateway-1"
+          ]
+        },
+        {
+          "key": "pack-forms-calendar-calino",
+          "containers": [
+            "utilibre-pack-forms-web-1"
+          ]
+        },
+        {
+          "key": "pack-static-calendar-calino",
+          "containers": [
+            "utilibre-pack-static-static-1"
+          ]
+        },
+        {
+          "key": "priviblur-calendar-calino",
+          "containers": [
+            "utilibre-priviblur-gateway-1"
+          ]
+        },
+        {
+          "key": "projects-calendar-calino",
+          "containers": [
+            "utilibre-projects-gateway-1"
+          ]
+        },
+        {
+          "key": "razzia-calendar-calino",
+          "containers": [
+            "utilibre-razzia-gateway-1"
+          ]
+        },
+        {
+          "key": "reader-evaluation-calendar-calino",
+          "containers": [
+            "utilibre-reader-evaluation-anonymousoverflow-gateway-1",
+            "utilibre-reader-evaluation-fourget-gateway-1",
+            "utilibre-reader-evaluation-gothub-gateway-1"
+          ]
+        },
+        {
+          "key": "records-calendar-calino",
+          "containers": [
+            "utilibre-records-gateway-1"
+          ]
+        },
+        {
+          "key": "rimgo-calendar-calino",
+          "containers": [
+            "utilibre-rimgo-gateway-1"
+          ]
+        },
+        {
+          "key": "simplelogin-calendar-calino",
+          "containers": [
+            "utilibre-simplelogin-gateway-1"
+          ]
+        },
+        {
+          "key": "spliit-calendar-calino",
+          "containers": [
+            "utilibre-spliit-gateway-1"
+          ]
+        },
+        {
+          "key": "trip-calendar-calino",
+          "containers": [
+            "utilibre-trip-gateway-1"
+          ]
+        },
+        {
+          "key": "unfurl-calendar-calino",
+          "containers": [
+            "utilibre-unfurl-gateway-1"
+          ]
+        },
+        {
+          "key": "vikunja-calendar-calino",
+          "containers": [
+            "utilibre-vikunja-gateway-1"
+          ]
+        },
+        {
+          "key": "wishlist-calendar-calino",
+          "containers": [
+            "utilibre-wishlist-gateway-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "d2fa723f6a10f61754f0a6304a9f03eda04d82ba3254937c85e5a009a8c1ab08",
+        "scope.json": "f65795adde343de294dbb9c66912ea103693ce84aeafca21d419930fad243d52",
+        "consumer.json": "606328fef8af3c007a44853de05974cd7f16ef109ea4a0779b25885dd93aa5fc",
+        "scan-gate.json": "a9ac710d945ccaf06c4d58f148d2421e5e20a7e08f9c5024d997eb20733a7f74"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "toolbox-hatsh",
+      "base": "sha256:1f42ce220c6881806141c9b955b3f20238a9eb00baa04ff9d9490c29ea72f32c",
+      "candidate": "utilibre-vendor-toolbox-hatsh:20261111",
+      "containers": [
+        "utilibre-toolbox-hatsh-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://hat.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-hatsh",
+          "containers": [
+            "utilibre-toolbox-hatsh-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "7365877574da53a47eea74db1895ed7a030ce39ec0870c6f1b2d82be5e8ab37d",
+        "scope.json": "4e50129656697dfaf4395b90bc02c1d45b8b95008b7a341339dd683a73a2f08c",
+        "consumer.json": "21413dae19b9744feb77e939afb3865ce892c7026bfc280cb721983ea38e1b33",
+        "scan-gate.json": "c2dd25b6e483df875c94db33b9b38ad2734c42f30db4e0c738802927c0ea74f6"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "creative-batch-glyphr",
+      "base": "sha256:3a4187d33f650b2fb5f0d2ffa48bc70c786b56f7f1508ae675289b862d97757f",
+      "candidate": "utilibre-vendor-creative-batch-glyphr:20261111",
+      "containers": [
+        "utilibre-creative-batch-glyphr-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://glyphr.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "creative-batch-creative-batch-glyphr",
+          "containers": [
+            "utilibre-creative-batch-glyphr-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "1ad7900a679d797b50c6dbb5bc818824cd3f22d7a39e8956371875ec4174007a",
+        "scope.json": "ef89d25469aa34a4d0817879c9042c60b9fbcf3ace0e18d12ee499a2de936e15",
+        "consumer.json": "64f5abbfa82a41e59b9249507cd8138eb7e3f0096ebbee09d1bcf4fc968f5831",
+        "scan-gate.json": "de0698f9a49c7d432db6c985a167575b6c02c612b76eb9c3e0aacd30dcd8f9cb"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "browser-tools-zip-manager",
+      "base": "sha256:3d98eb48d3a9ed951f234d06301ac493c31229e3f959d30b256c35f265ddf695",
+      "candidate": "utilibre-vendor-browser-tools-zip-manager:20261111",
+      "containers": [
+        "utilibre-browser-tools-zip-manager-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://zip.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-zip-manager",
+          "containers": [
+            "utilibre-browser-tools-zip-manager-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "070445baa525401e9efb6c4f1241999ce7bdf61fbc04d94afc337c51a6e47026",
+        "scope.json": "b7f3bd34ecef9db76e5f127e65edd65bf39d50b88884b77301cb13e3fc481d89",
+        "consumer.json": "10eaa0a27d4be8dbe064a634f9e3915e1eb960a5326f78f40933a31d3d802e44",
+        "scan-gate.json": "c4c02ad0256d784cbf86de8f7e838d81b628e963b98de3fca2e041cf412225bc"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "browser-tools-cyberchef",
+      "base": "sha256:4aaecd5c625719f61a1b6d096fea02eaebdac07d3dd504dab93bc222116ee235",
+      "candidate": "utilibre-vendor-browser-tools-cyberchef:20261111",
+      "containers": [
+        "utilibre-browser-tools-cyberchef-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://cyberchef.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-cyberchef",
+          "containers": [
+            "utilibre-browser-tools-cyberchef-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "257874b097e4a400c4dffe0a20ff2cdafdd13ee1e0ecd1e1da59f14e638855be",
+        "scope.json": "1424d1161408248314f47b1d92d5e093c9ea624438b8da95fcf62b59ab7db64c",
+        "consumer.json": "909246f63140c43fccf1a42394d18b636548a16326ed4f39810467e6aba17e85",
+        "scan-gate.json": "cea40dae4b823d6fcab01de1c091ae34ebd8668e7a812395fd59839006a03b74"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "binternet-gateway",
+      "base": "sha256:4cce7c5d42c8efbaeb188b1fc0b514d9ac625d2668c6aab284fa21db69ab6ac4",
+      "candidate": "utilibre-vendor-binternet-gateway:20261111",
+      "containers": [
+        "utilibre-binternet-gateway-1",
+        "utilibre-binternet-onion-gateway-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "nginx-runtime",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://binternet.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "binternet-binternet-gateway",
+          "containers": [
+            "utilibre-binternet-gateway-1"
+          ]
+        },
+        {
+          "key": "binternet-onion-binternet-gateway",
+          "containers": [
+            "utilibre-binternet-onion-gateway-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "95a50322915129e850ac65607bcfc10f7923f903f2333ceab821c7359396c13c",
+        "scope.json": "67899b62b35872504c12cdb8304162e8a3c878648cd9e31d9dca5021eeb9a389",
+        "consumer.json": "cbe9e62cde6819e0bf50b6a51a3253a7ea0c9562215e5e8a50ace47cd4ea983c",
+        "scan-gate.json": "c6a435bbf828939e7e49d9a2b2d0315ecb758b18d16f7828598b41e0110af6b3"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "simplelogin-db",
+      "base": "sha256:5969ee58e25dcaaf48990412b64c93d4fa57699e867e4da84797290c57c96ac2",
+      "candidate": "utilibre-vendor-simplelogin-db:20261111",
+      "containers": [
+        "utilibre-community-rallly-db-1",
+        "utilibre-expanded-penpot-db-1",
+        "utilibre-expanded-resume-db-1",
+        "utilibre-pack-forms-db-1",
+        "utilibre-pollaris-pollaris-db-1",
+        "utilibre-services-postgres-1",
+        "utilibre-simplelogin-db-1",
+        "utilibre-spliit-db-1"
+      ],
+      "release": "3.24.1",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "krb5-libs": "1.22.2-r1",
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "postgres-runtime",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": null,
+      "advisories": [
+        "CVE-2026-107364",
+        "CVE-2026-112315",
+        "CVE-2026-112316",
+        "CVE-2026-112317",
+        "CVE-2026-112318",
+        "CVE-2026-112319",
+        "CVE-2026-112320",
+        "CVE-2026-112321",
+        "CVE-2026-112322",
+        "CVE-2026-112323",
+        "CVE-2026-118380",
+        "CVE-2026-119079",
+        "CVE-2026-40355",
+        "CVE-2026-40356",
+        "CVE-2026-71199",
+        "CVE-2026-71200",
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "community-simplelogin-db",
+          "containers": [
+            "utilibre-community-rallly-db-1"
+          ]
+        },
+        {
+          "key": "expanded-simplelogin-db",
+          "containers": [
+            "utilibre-expanded-penpot-db-1",
+            "utilibre-expanded-resume-db-1"
+          ]
+        },
+        {
+          "key": "pack-forms-simplelogin-db",
+          "containers": [
+            "utilibre-pack-forms-db-1"
+          ]
+        },
+        {
+          "key": "pollaris-simplelogin-db",
+          "containers": [
+            "utilibre-pollaris-pollaris-db-1"
+          ]
+        },
+        {
+          "key": "services-simplelogin-db",
+          "containers": [
+            "utilibre-services-postgres-1"
+          ]
+        },
+        {
+          "key": "simplelogin-simplelogin-db",
+          "containers": [
+            "utilibre-simplelogin-db-1"
+          ]
+        },
+        {
+          "key": "spliit-simplelogin-db",
+          "containers": [
+            "utilibre-spliit-db-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "977ce1e4aa386b93059dd22a6a6b22612bef38cef2317c31afe91c33e90b7d6a",
+        "scope.json": "bb79363f8e2b8a0c966dd706bd190761f76cc15d43df7bd4e6d0e6d6705cfdd1",
+        "consumer.json": "2e4f30f9ae7fe635692a59e6b78a91dea9064c59e5686d68483c4f095ef8125d",
+        "scan-gate.json": "2d3866f2366e5cf39ab7b761f4b16e4409994e813256bfab2fd5bfc71d53b7c6"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "translite-gateway",
+      "base": "sha256:784e96a96a35963e548c004548da808724ba1e5009ec6b74064ddd111c551700",
+      "candidate": "utilibre-vendor-translite-gateway:20261111",
+      "containers": [
+        "utilibre-translite-gateway-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "nginx-runtime",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://translate.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "translite-translite-gateway",
+          "containers": [
+            "utilibre-translite-gateway-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "5cb797531481a26e4898d04357392175468de4bf695bb5282388711cf8f0ebd9",
+        "scope.json": "0e59c6fc7eb8363105cd126938152faf89eb63fe23b1a6352470338c8ea8150a",
+        "consumer.json": "e1977064144f9c73ac095ac655eb9205ea73d77478b9162c1488c0a797db3313",
+        "scan-gate.json": "4eee5ccc75a5c2e3cd04691f3489024e80008b6c1f34095678bccdab8df0c221"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "toolbox-miniqr",
+      "base": "sha256:7a89fd64b61ee4fc25eded2662ded03121cfe186acc9f05980f6a6df09d921b1",
+      "candidate": "utilibre-vendor-toolbox-miniqr:20261111",
+      "containers": [
+        "utilibre-toolbox-miniqr-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://qr.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-miniqr",
+          "containers": [
+            "utilibre-toolbox-miniqr-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "3356ec64a8b63add8fec8b14c2d2891e91fb5830bf5e3c42f33ac9fdd9869bda",
+        "scope.json": "638479170567fff76d96c70699396d6ecd05056a2976a7771eb74148c657227a",
+        "consumer.json": "77d3af5758bc4026a8b55a71096b87f27bdec11cede8ff04bab3fb50c26cbb85",
+        "scan-gate.json": "488b4c93f4552bca80c4d244ccb1fcb1d6518d8f75ff20a56d462853e26c1bbc"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "expanded-whisper",
+      "base": "sha256:86a9473b2fd620f6913ecbf676bae7c86e0bc6c0d62de44a5d3eee9a9667a238",
+      "candidate": "utilibre-vendor-expanded-whisper:20261111",
+      "containers": [
+        "utilibre-expanded-whisper-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": null,
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "expanded-expanded-whisper",
+          "containers": [
+            "utilibre-expanded-whisper-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "e3842c4faf08ae6571e1b0c742fbb0477a5fb7c068b1b168650c2f9c8478089b",
+        "scope.json": "8e5842b5ed216ccea26b05c9a9a0568b6da17ac02956fa0f46f7c548ddcc3a4b",
+        "consumer.json": "6cb7dca3137d1c281cc1f2494b971c35a3aeb4c6e3213bd98bebd957ec30ad94",
+        "scan-gate.json": "728a208953836c85676242ff5f6a5f14499c6a078cd44c3cbe3cf3ee3bb691b7"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "kittygram-kittygram",
+      "base": "sha256:969a31768c6ce01b42e3bd6eac6ffe9f5e43c938a9e4031cdbd147e124f55d73",
+      "candidate": "utilibre-vendor-kittygram-kittygram:20261111",
+      "containers": [
+        "utilibre-kittygram-kittygram-1"
+      ],
+      "release": "3.23.5",
+      "branch": "3.23",
+      "musl": "1.2.5-r24",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "special-native",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": null,
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "kittygram-kittygram-kittygram",
+          "containers": [
+            "utilibre-kittygram-kittygram-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "867caacb79cd86d66a7d5c92f0c647d17a4fb1e4f8085217497fa73dc8724315",
+        "scope.json": "315c3f50cb44e62d2ad0cbaa5fa60cc3feb3adf2c6887caeb7430eb206a2f3a6",
+        "consumer.json": "c4ed981930588f57cd66d8b2f5f140243871c2b2090d80393315a87432103248",
+        "scan-gate.json": "9954558ebd5ecbcea76234e91c4e05acdd91508726ebac405286885cf0f54f69"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "browser-tools-markmap",
+      "base": "sha256:96ac79e2c2ddd72384ce8d6d17ff070317bbd72b3cb8020a78c5a376647ce67a",
+      "candidate": "utilibre-vendor-browser-tools-markmap:20261111",
+      "containers": [
+        "utilibre-browser-tools-markmap-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://mindmap.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-markmap",
+          "containers": [
+            "utilibre-browser-tools-markmap-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "c5ae9cc4a131a4bb56a5ad2d60093e880e590c302a113e946216d23284199a29",
+        "scope.json": "59b29bfc729b91fa42cf6edaaf55098d95d222d0254ce400761dc6aa124b39b4",
+        "consumer.json": "5424a14b2b250bcafd3157997dc342009cbb3cd5dccc6774e94fec41bad4dd33",
+        "scan-gate.json": "97a5d4480544d20e857e74bf7a5cfa8aa9916c04ec6aafb5a36549d2d357f29e"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "toolbox-omnitools",
+      "base": "sha256:a285ac04c4aa98f4f49bf537701dc3b0b68242d7468f15c1be989cd2bc74ae6d",
+      "candidate": "utilibre-vendor-toolbox-omnitools:20261111",
+      "containers": [
+        "utilibre-toolbox-omnitools-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://tools.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-omnitools",
+          "containers": [
+            "utilibre-toolbox-omnitools-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "0015d5f9f653505053e597581d19831d739d9c27ef5d7890fc9ec1b58db4ca1b",
+        "scope.json": "5cd6aa9df020f4f6a8fa14ccd0f328614d432c9b8f36b0887a18277d8104c8dc",
+        "consumer.json": "8c00f07d12f8ac82114fbc5b8712ba9647def047c5973609af7d390335afe95d",
+        "scan-gate.json": "0fbdbed033d5d2307f1888ff59ae8c0f3e48ab564b609a75bea4ba828643bcd8"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "reader-evaluation-safetwitch",
+      "base": "sha256:a2affedcce6e0fa6baed86b67a00604974b80d5ec694afc3810d5c009d441ca9",
+      "candidate": "utilibre-vendor-reader-evaluation-safetwitch:20261111",
+      "containers": [
+        "utilibre-reader-evaluation-safetwitch-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://twitch.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "reader-evaluation-reader-evaluation-safetwitch",
+          "containers": [
+            "utilibre-reader-evaluation-safetwitch-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "a5a015a885f11fa6403f0f95580241a855596d6b169cd32883bb6588fbf1405d",
+        "scope.json": "dada3f933babe345793a771af645c12377899c852a0a2a3b993953d261fba9d7",
+        "consumer.json": "2e5ff2b53473e2fc62d7ef1c454b00f41a1ea59de5e989e9a28cd481d106da45",
+        "scan-gate.json": "c9366ddcc646ab9359efd00040bf2cce891d1bd6e9a324b77f6a8db2c863e427"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "browser-tools-rawgraphs",
+      "base": "sha256:a6a46f4b448d21771ee9e92e905c2b852f213874ed9b0ede783470c4f8e77407",
+      "candidate": "utilibre-vendor-browser-tools-rawgraphs:20261111",
+      "containers": [
+        "utilibre-browser-tools-rawgraphs-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://charts.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-rawgraphs",
+          "containers": [
+            "utilibre-browser-tools-rawgraphs-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "b8faee97bd94a3942d15ae9de658278a59aff13fa81c4281d082102f77dad74f",
+        "scope.json": "0ed925d5852e96055998ea485173ebc94bf0e15bd780c8fe1d5566c83c681933",
+        "consumer.json": "44a1432f7231b12b51241a862386c51233ee1f3e32d80822aa9f3e20afe51907",
+        "scan-gate.json": "66c3ebba24e923586d94aeb2ad667cb9281fe82472c805e3985700ac1e737ebe"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "browser-tools-minipaint",
+      "base": "sha256:a954b83eb05c8259968019c28b022f6e41f0a4b6138bda6816a5887c1da2dd6c",
+      "candidate": "utilibre-vendor-browser-tools-minipaint:20261111",
+      "containers": [
+        "utilibre-browser-tools-minipaint-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://paint.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-minipaint",
+          "containers": [
+            "utilibre-browser-tools-minipaint-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "14c22a4fd9e455a16b17ed4414492728c1e05a3e5f0550b4d67dbd0917db49b3",
+        "scope.json": "e301d6ac934bd6d84abef51035a27e231edd6c6bee1a6b2e72b301cc77ac5790",
+        "consumer.json": "0ce290b0ed4584502ea5e5977e75cc64a19cd6eb9b2b216c9e65e0649f2d4a91",
+        "scan-gate.json": "3b678495be0a51b1a91994211c0f444fa1c0042127acd8898c648847a049bb9e"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "browser-tools-svgedit",
+      "base": "sha256:bcca19e9da9ee1d3cc6b331c92c41e7e94c1cf1baf264fad6a6883e1688d7d76",
+      "candidate": "utilibre-vendor-browser-tools-svgedit:20261111",
+      "containers": [
+        "utilibre-browser-tools-svgedit-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://svg.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-svgedit",
+          "containers": [
+            "utilibre-browser-tools-svgedit-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "0f94c172ea0200666ecebc3687b1609625326ef1f3dcb45b4c9d1f60e6821f8c",
+        "scope.json": "c0679394f5300f0af12c2a2e5825ed802389b6f3d1a86e0f6913898e2d231633",
+        "consumer.json": "a37c333685464eced7d09a36ddcabd210a8bf9a62bf05c2d0462a0eca395c686",
+        "scan-gate.json": "57d6841d8be30beb4e49821cc4526d21ad71c30eaef493db73b4f4f5221f8858"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "browser-tools-excalidraw",
+      "base": "sha256:bda3ca8a23fbb5ea5e7da61c608bffebcab0a42ca5b9ee4ae6f4f3b2abd7c2cf",
+      "candidate": "utilibre-vendor-browser-tools-excalidraw:20261111",
+      "containers": [
+        "utilibre-browser-tools-excalidraw-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://whiteboard.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-excalidraw",
+          "containers": [
+            "utilibre-browser-tools-excalidraw-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "b397d02e08f4daf40a8ce52f0241787d001d40e32f3ca970e10e2d03982f3903",
+        "scope.json": "5d98babb5b6e6c7801cc1e4e806d617ff9ab5bbd8dede61a55960fb696fc60e5",
+        "consumer.json": "e2b23c33bd703470967d3a0e45f26531f84fdbc70102ba749348d22577835af3",
+        "scan-gate.json": "30090c9ea6b1df0112a6cf1ae83474684e580ec4189195550b6275da67d3d206"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "toolbox-ittools",
+      "base": "sha256:bf337e6410a53491040b445e92b4e34a54a3aaeeecea52cc910a5e628865b998",
+      "candidate": "utilibre-vendor-toolbox-ittools:20261111",
+      "containers": [
+        "utilibre-toolbox-ittools-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://dev.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-ittools",
+          "containers": [
+            "utilibre-toolbox-ittools-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "eb6bb61d369b3079577a976a762d60881cdb329ff3413aa1810e9bf26a9d0464",
+        "scope.json": "09e0b9d825c25255f207c84be97b990ca7dff4eff0cb34521c02b1a9d653c785",
+        "consumer.json": "8f171711b799b2f5636c0a4105b1bf0cb25867237f9ecf20861a9cbf214bbcc6",
+        "scan-gate.json": "4c698021862c33700d5f9945bbbf60ad4d2772d9bd5119994ed445c1d45a7a9a"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "toolbox-vert",
+      "base": "sha256:c50ba4177908eb4537433fdba03432d04d67228047c49d171c7001a7898f2156",
+      "candidate": "utilibre-vendor-toolbox-vert:20261111",
+      "containers": [
+        "utilibre-toolbox-vert-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://convert.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-vert",
+          "containers": [
+            "utilibre-toolbox-vert-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "b59ed6e32519ee2f8bfa714b8370924d84c36cec8e09356b0ba16f8590a6aa16",
+        "scope.json": "7501502b5867332f784a52594332592438c02e744c53b30b73a589dd6734574f",
+        "consumer.json": "76a53d17e142bf8a27d0d0736b40edf3529332f85fbab9b83bb2c1b66d3e0f4c",
+        "scan-gate.json": "171b9fdf5a8261c484e584fc0e32bf493adb266f19444be035feea8828b2390a"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "expanded-jupyterlite",
+      "base": "sha256:caae0b16dd1d5a3cb7df478e2e5eaa0080bcb7b0128aeb42e4097874d27c5f10",
+      "candidate": "utilibre-vendor-expanded-jupyterlite:20261111",
+      "containers": [
+        "utilibre-expanded-jupyterlite-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://python.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "expanded-expanded-jupyterlite",
+          "containers": [
+            "utilibre-expanded-jupyterlite-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "5f5bfad08954fc6056d765f4713caa82e753e28086bc480131a6f472d6ac52a1",
+        "scope.json": "ad99bf696e9f5b05339f81e3dc7bfa66e534144723f32f4d05ff2534c2a82ebf",
+        "consumer.json": "46f27b4b3eb0d77b2a2e86ede495bd7202d885583dfb1f41719f3afe03998e01",
+        "scan-gate.json": "a9aae7e6f8ab94811387013779e9df3f3ea2f067d5848b331f5d3e9e307a427c"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "toolbox-bentopdf",
+      "base": "sha256:d4bc773013fca16ac7d4fd896d328df162952f19db304ef72ef6e74cafa97ce7",
+      "candidate": "utilibre-vendor-toolbox-bentopdf:20261111",
+      "containers": [
+        "utilibre-toolbox-bentopdf-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://pdf.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "toolbox-toolbox-bentopdf",
+          "containers": [
+            "utilibre-toolbox-bentopdf-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "6032d9c93d47b41d5f19ce7312cd5203cc45f7efa8ed7b1c9efc8c1624411efe",
+        "scope.json": "fc596ad57088ecb6a8a26eea5f15192587d2cd965685829624d9315ace6d74d2",
+        "consumer.json": "90fa9df46d709e8986d2cd8797e2e333e5992e370997b197bf3784c449676acc",
+        "scan-gate.json": "fd0fd2bb8ad2314e2ace25fd83b0a4b008b86b8efc4eb9d30932247bcab1fc2f"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "browser-tools-audiomass",
+      "base": "sha256:dde0d4f6287ad918399f3369fc180fa97920a8f715b15f3cf194d99f2d5b3070",
+      "candidate": "utilibre-vendor-browser-tools-audiomass:20261111",
+      "containers": [
+        "utilibre-browser-tools-audiomass-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://audio.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "browser-tools-browser-tools-audiomass",
+          "containers": [
+            "utilibre-browser-tools-audiomass-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "a463882a8be00847895d979bde778ef742a417bd0d60dbd579a59ca6cbe12718",
+        "scope.json": "20c739a7991024772718fb5cd23b0814fa5643801a6185e3f5a0923d460f526b",
+        "consumer.json": "acb34cc85c157981d06cf760e493731fb3fe94138c229145089f0ac704ba37b2",
+        "scan-gate.json": "c8bb582f5d767dd4ac9b9486dbf2df536c01ae554a2fb76c70887b0aef5caf1d"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "qr-offline-qr-offline",
+      "base": "sha256:fade8b07d10d15124f854c8b6aabaea6d455bd7fd1481f527e1b79becf465f1d",
+      "candidate": "utilibre-vendor-qr-offline-qr-offline:20261111",
+      "containers": [
+        "utilibre-qr-offline-qr-offline-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "static-nginx",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://qrtools.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "qr-offline-qr-offline-qr-offline",
+          "containers": [
+            "utilibre-qr-offline-qr-offline-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "800df9c7e80b09bd13bbc06a47aaaf25236e34ef7671f271d00c7180d6e59bd1",
+        "scope.json": "f7e2945a59d6954595adbff989a82565922dac01a6138a6ce3f1ebc8bb3d2581",
+        "consumer.json": "3da5663397072217685e25684349a617947f49986d1825d9e6f0c84972e9c821",
+        "scan-gate.json": "b2da9aa36b66c809223ebfa1e456ce5130f87ffb260a10ace646bdd8b54fe58a"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "pollaris-gateway",
+      "base": "sha256:fb8f3f6ca1f0094cb4f2aae4e31493d835ac244d9e53761cf7bcd1ad8bb7059a",
+      "candidate": "utilibre-vendor-pollaris-gateway:20261111",
+      "containers": [
+        "utilibre-pollaris-gateway-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "nginx-runtime",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://pollaris.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "pollaris-pollaris-gateway",
+          "containers": [
+            "utilibre-pollaris-gateway-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "7edcb26c70b8daa735d9ee6ecdc01c7998d8fe2b99aded9dbd5b349198e2bf60",
+        "scope.json": "10a7adf95fa96c58b4f71053222d521bfe7170d058e579af561ca7e843e25f4f",
+        "consumer.json": "9115a7bb9b3652e4428f9314e1ae8cc95137c302a308bfcca1a36325f8c7e258",
+        "scan-gate.json": "aa16430b96f2d43e69e140b8ed4a73157d6e96532e804e11a327505b708f5284"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    },
+    {
+      "key": "wallabag-web",
+      "base": "sha256:ffddc17eb392b731ddc1e43e7729f8e76046187a30b972a3f7b030ddf16134d2",
+      "candidate": "utilibre-vendor-wallabag-web:20261111",
+      "containers": [
+        "utilibre-wallabag-web-1"
+      ],
+      "release": "3.24.2",
+      "branch": "3.24",
+      "musl": "1.2.6-r3",
+      "packages": {
+        "libxslt": "1.1.43-r3"
+      },
+      "consumerProfile": "nginx-runtime",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "publicHome": "https://wallabag.utilibre.org/",
+      "advisories": [
+        "CVE-2026-87636",
+        "CVE-2026-9947"
+      ],
+      "releaseGroups": [
+        {
+          "key": "wallabag-wallabag-web",
+          "containers": [
+            "utilibre-wallabag-web-1"
+          ]
+        }
+      ],
+      "reviewedEvidence": {
+        "build.json": "f241506d081af2f0b4b0943438f2e8e27353efe465c2207c9aa60000fc23881f",
+        "scope.json": "9c40b470f5a3d0245ae6dd4cdebe33a769b416e0d92b146c55b51a878159d243",
+        "consumer.json": "ce32a019083934cb48972eed1356a44ed5dbb8a7086b7dcd422b54819a5a490a",
+        "scan-gate.json": "7d4782c7b98130cc74b48110c51eb9772fd078a3418e4c007dd33b1c7a6dc1c0"
+      },
+      "approvalEvidence": "Operator-authorized vendor update. Exact old/new native, ABI, consumer, full-file scope and same-database comparison reviewed; application bytes and prior corrections unchanged. No migrations."
+    }
+  ],
+  "nativeFixture": {
+    "compiler": "sha256:0efcba554b753bcd4d58045c3db806a14ae078d537faddb42aa65b767cda98a5",
+    "network": "none",
+    "sources": {
+      "xslt-native": "7b79a8a2da8ce2e23cd14cb5aa34a674418f7049d4baa0e872591fd6fc1f8b5b",
+      "kerberos-native": "1251fcc0cfcbcdcaa03b7d2193f900c99518631717ddf7723b088bc0e3b4ab16"
+    },
+    "binaries": {
+      "kerberos-native": "1b49f4b9e501522b1fbab1b9ecf4bdae85e56321b77d9e06fa9d06e165d67ba4",
+      "xslt-native": "1843be009dfa91fc50cb7d9b1e401c8e5e75debd6cfbb4a3e526e4f73cf247f5"
+    }
+  },
+  "advisories": [
+    "CVE-2026-107364",
+    "CVE-2026-112315",
+    "CVE-2026-112316",
+    "CVE-2026-112317",
+    "CVE-2026-112318",
+    "CVE-2026-112319",
+    "CVE-2026-112320",
+    "CVE-2026-112321",
+    "CVE-2026-112322",
+    "CVE-2026-112323",
+    "CVE-2026-118380",
+    "CVE-2026-119079",
+    "CVE-2026-40355",
+    "CVE-2026-40356",
+    "CVE-2026-71199",
+    "CVE-2026-71200",
+    "CVE-2026-87636",
+    "CVE-2026-9947"
+  ],
+  "fixtureXmlInput": {
+    "image": "sha256:1a3bad1fbe06698225de5524c3f7b4fde6758abad54cc78833d1dea86144f313",
+    "sha256": "c7742d413585cee3e2750472e04da810a7a9883a1c10a8270c2f6e8c56231ad7"
+  },
+  "verificationHashes": {
+    "releases-20261111/vendor-prepare.py": "a6288f747ce4e1e21ee0c888904c9173996befd4cbf3a2df87d9d1b0ad20c173",
+    "releases-20261111/vendor-check.py": "b40247dbf94c4af2baafeb161d0754b4b18606f338c292dd0519b74779cf17d5",
+    "releases-20261111/vendor-fixtures.py": "5e935f7a4dc894d5d761d2a8ee66ba523c9d4c08dd4b96db2f1e4ecce9f70658",
+    "releases-20261111/vendor-policy.mjs": "104d165f8d8a0b6a56a08aa9a5939940e28e2fbed8a730c4103cb413368d9cbe",
+    "releases-20261111/xslt-native.c": "7b79a8a2da8ce2e23cd14cb5aa34a674418f7049d4baa0e872591fd6fc1f8b5b",
+    "security-20261028/release-brotli.mjs": "c5f1b3257e2a78128bbc238dd4a6929ba6ef7335c91bbd34e38e5af9ec3dba6d",
+    "security-20261103/batch.mjs": "aa3a77ec5ab017aaf546551f1c84590f8f5fb309c19b0e6f86c4e3732d1153df"
+  }
+}

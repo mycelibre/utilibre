@@ -1,7 +1,7 @@
 name: utilibre-openresume
 services:
   web:
-    image: utilibre-libraries-openresume-web:20261111
+    image: utilibre-vendor-openresume-web:20261111
     restart: unless-stopped
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']

@@ -1,0 +1,382 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-11T14:09:44.735911+00:00",
+  "status": "deployed-with-explicit-unresolved-findings",
+  "initialPendingHigh": 124,
+  "fixedHigh": 94,
+  "fixesByPackage": {
+    "libxslt": 62,
+    "krb5-libs": 32
+  },
+  "currentPending": {
+    "critical": 0,
+    "high": 30
+  },
+  "remaining": {
+    "package": "libacl1",
+    "runtimeImages": 29,
+    "hostRecords": 1,
+    "reason": "Compatible caller migration remains unverified; library upgrade alone is not remediation.",
+    "suppressed": false
+  },
+  "rawFindings": {
+    "packageTargets": 26177,
+    "critical": 66,
+    "high": 4093,
+    "preserved": true
+  },
+  "assessment": {
+    "scanner": "Trivy 0.75.0",
+    "completedAt": "2026-11-11T14:07:23.193Z",
+    "database": {
+      "updatedAt": "2026-11-10T19:01:23.081219346Z",
+      "downloadedAt": "2026-11-11T10:25:50.991726515Z",
+      "refreshRequested": false
+    },
+    "databaseSha256": "cf7fa3086682e8f77298ca8178419a530f97d7c4bd3ac203a64f2977f82e94a6",
+    "javaPackageIndexSha256": "649c68be4572cf540e12718ad017a94d275f68968a0e61f87a1ae287405bfc26",
+    "images": 109,
+    "containers": 175,
+    "sourceInputs": 113,
+    "host": "checked",
+    "incompleteTargets": 0,
+    "unrecheckedFindings": 0,
+    "networkRefresh": false,
+    "imageMethods": {
+      "local-image": 109
+    }
+  },
+  "deployment": {
+    "completedAt": "2026-11-11T14:03:28.245Z",
+    "releaseGroups": 75,
+    "images": 31,
+    "containerRoles": 81,
+    "rollbackRequired": false,
+    "hostPackagesChanged": false,
+    "hostServicesRestarted": false,
+    "databaseEngineChanged": false,
+    "schemaMigration": false,
+    "rows": [
+      {
+        "key": "openresume-web",
+        "artifact": "sha256:51d3e64265feda0f79e4e0a6751e23ee34ff2ac16ab46bd1e82e6cc10af59488",
+        "reference": "utilibre-vendor-openresume-web:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "browser-tools-image-scrubber",
+        "artifact": "sha256:b19d6df9b9f5ca5a452e500553257ea3d7b375fad8c6354e246784ccd4195d77",
+        "reference": "utilibre-vendor-browser-tools-image-scrubber:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "toolbox-drawio",
+        "artifact": "sha256:1ca2fd9fbf94758fd4726446a77924883c59bc3baf805885a87eace5d68973c6",
+        "reference": "utilibre-vendor-toolbox-drawio:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "evaluation-degoog",
+        "artifact": "sha256:7bd321b2ed315ad08d0aa5dbbdf392204d16a04e9496d89af4d76a692e218b15",
+        "reference": "utilibre-vendor-evaluation-degoog:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "records-db",
+        "artifact": "sha256:7ea8e74b630e1837d31e28771667522147c990ba586e3f8c297c85a328c24a15",
+        "reference": "utilibre-vendor-records-db:20261111",
+        "containerRoles": 3,
+        "verification": "passed"
+      },
+      {
+        "key": "calendar-calino",
+        "artifact": "sha256:f818900e82bdbbfb9fc84e699dab867221e1fa634f26807bb3b67ef3bd4f89d5",
+        "reference": "utilibre-vendor-calendar-calino:20261111",
+        "containerRoles": 41,
+        "verification": "passed"
+      },
+      {
+        "key": "toolbox-hatsh",
+        "artifact": "sha256:8a04695c7ab9d5f34d9636a9e0596bae9d436b01ea72ec4cd6e02e56b1988fa8",
+        "reference": "utilibre-vendor-toolbox-hatsh:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "creative-batch-glyphr",
+        "artifact": "sha256:da58a576530611471798d74f48c9d79f9114fe247b5a9837ba89c260e29165f9",
+        "reference": "utilibre-vendor-creative-batch-glyphr:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "browser-tools-zip-manager",
+        "artifact": "sha256:d3a69169efb0d961ed4d5a675668b38145b5a9f09ffd512e9c6720f688065f4b",
+        "reference": "utilibre-vendor-browser-tools-zip-manager:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "browser-tools-cyberchef",
+        "artifact": "sha256:1da1db80583f97b2ef6375e43c3ab005946c3921fb6fa6daf7541c7156c3fb74",
+        "reference": "utilibre-vendor-browser-tools-cyberchef:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "binternet-gateway",
+        "artifact": "sha256:b90c610484865c1203ef9058d082698fc0dd82aad6a08f0f293d7a12df79b6cf",
+        "reference": "utilibre-vendor-binternet-gateway:20261111",
+        "containerRoles": 2,
+        "verification": "passed"
+      },
+      {
+        "key": "simplelogin-db",
+        "artifact": "sha256:fced8ac82a30f0ae11e14660841b6d6a3085a82dfb1d8691cf8c2c2ee6184807",
+        "reference": "utilibre-vendor-simplelogin-db:20261111",
+        "containerRoles": 8,
+        "verification": "passed"
+      },
+      {
+        "key": "translite-gateway",
+        "artifact": "sha256:7165bb08a0704caa83ddce9dd3c7dafcdbdcb08af8acd469e728f7a29145a5ac",
+        "reference": "utilibre-vendor-translite-gateway:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "toolbox-miniqr",
+        "artifact": "sha256:d4438f0de17cebcc1cd40bc7933ed8e47c88ad706064295c9636c7e55e2f49b6",
+        "reference": "utilibre-vendor-toolbox-miniqr:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "expanded-whisper",
+        "artifact": "sha256:4a04c59fa746582a542499e5abca91f3ba6ce3b4baec0163debd50b780f3b278",
+        "reference": "utilibre-vendor-expanded-whisper:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "kittygram-kittygram",
+        "artifact": "sha256:1baf088543d96d7e0225355dd7294fa120a0f98b69922d76e25c2ebae648f349",
+        "reference": "utilibre-vendor-kittygram-kittygram:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "browser-tools-markmap",
+        "artifact": "sha256:c7173c515af0a040b9264f1def4ebf08690f7a9bd424c147d99d1b3c81fd0999",
+        "reference": "utilibre-vendor-browser-tools-markmap:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "toolbox-omnitools",
+        "artifact": "sha256:e2357562115a5c2efc11eb3a63bdbc5a762b2eaef05ff05e8790bd2abb3ca686",
+        "reference": "utilibre-vendor-toolbox-omnitools:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "reader-evaluation-safetwitch",
+        "artifact": "sha256:3c97ef2b794a731cb33c320af517a5e9cf572579bc8e05b77a44ca59323dce7c",
+        "reference": "utilibre-vendor-reader-evaluation-safetwitch:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "browser-tools-rawgraphs",
+        "artifact": "sha256:f6cd8a4630bd7fdfb31397fe592944b3c1b099e147b129cb7d9a23931527e68f",
+        "reference": "utilibre-vendor-browser-tools-rawgraphs:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "browser-tools-minipaint",
+        "artifact": "sha256:8b30b7f8f49ab90c4598fb8a0314f79719959174d86c26ad806f8e59fa61f321",
+        "reference": "utilibre-vendor-browser-tools-minipaint:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "browser-tools-svgedit",
+        "artifact": "sha256:211bb113471223f363bc15911a53994fa424dd9b72b47f537b15fa8c067e6f35",
+        "reference": "utilibre-vendor-browser-tools-svgedit:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "browser-tools-excalidraw",
+        "artifact": "sha256:a0bfed120dc26ab3bd13c3e79e2970ecd961a7da7957ce109ef896bcd731dc2f",
+        "reference": "utilibre-vendor-browser-tools-excalidraw:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "toolbox-ittools",
+        "artifact": "sha256:bee2e6a1b421fdcbf6e3ada8bfc84437901c2801c2e80644eacebe1054dc5396",
+        "reference": "utilibre-vendor-toolbox-ittools:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "toolbox-vert",
+        "artifact": "sha256:4b6c9ce308c878a9188e9f4256616ba1711a6ddcea002877a2bee23766beee2d",
+        "reference": "utilibre-vendor-toolbox-vert:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "expanded-jupyterlite",
+        "artifact": "sha256:4dff46b18e4d0f62d7a4236248ce148741abf6c7fc44fd748ad9ff4ab12f605c",
+        "reference": "utilibre-vendor-expanded-jupyterlite:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "toolbox-bentopdf",
+        "artifact": "sha256:e2c11ea4f7ead52c029b49065efe859cab4c786643ada84ac0fb01082f756a0c",
+        "reference": "utilibre-vendor-toolbox-bentopdf:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "browser-tools-audiomass",
+        "artifact": "sha256:0e5f539deedf3c8f450ba6b3e17f3fc90e023b7d8f44653c310a2923f5176f53",
+        "reference": "utilibre-vendor-browser-tools-audiomass:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "qr-offline-qr-offline",
+        "artifact": "sha256:4750e2f441c6fe307ea4d0b32320f25ca56a6e6ea86fe4392c99f38bd62a3d1c",
+        "reference": "utilibre-vendor-qr-offline-qr-offline:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "pollaris-gateway",
+        "artifact": "sha256:8a8773d5148ccb2a74ffba53fe5da9d69934e14ca0f7be1c233049785dd8f1f8",
+        "reference": "utilibre-vendor-pollaris-gateway:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      },
+      {
+        "key": "wallabag-web",
+        "artifact": "sha256:c2e46139f13e5dba78e2d92bf7fd4eeda44cc203a9233568b536dc4cf6e6429f",
+        "reference": "utilibre-vendor-wallabag-web:20261111",
+        "containerRoles": 1,
+        "verification": "passed"
+      }
+    ]
+  },
+  "verification": {
+    "containerHealth": {
+      "running": 175,
+      "healthy": 90,
+      "withoutHealthcheck": 85,
+      "unhealthy": 0
+    },
+    "failedSystemdUnits": 0,
+    "resources": {
+      "rootAvailableBytes": 30795198464,
+      "memoryAvailableBytes": 23599194112,
+      "swapUsedBytes": 818368512
+    },
+    "candidateScopeAbiConsumerAndScan": "31/31 passed",
+    "nativeFixtureRebuild": "2/2 recorded binary hashes matched",
+    "policyTests": 24,
+    "supersededReleaseTests": 50,
+    "conditionalPolicyTests": 83,
+    "workflowChecks": {
+      "date": "2026-11-11T14:05:27.734Z",
+      "status": "passed",
+      "results": [
+        {
+          "id": "portal-en-es-mobile",
+          "status": "passed",
+          "reason": "workflow completed",
+          "seconds": 11
+        },
+        {
+          "id": "pdf-merge-ocr-en-es",
+          "status": "passed",
+          "reason": "workflow completed",
+          "seconds": 27
+        },
+        {
+          "id": "charts-export",
+          "status": "passed",
+          "reason": "workflow completed",
+          "seconds": 3
+        },
+        {
+          "id": "image-export",
+          "status": "passed",
+          "reason": "workflow completed",
+          "seconds": 2
+        },
+        {
+          "id": "zip-roundtrip",
+          "status": "passed",
+          "reason": "workflow completed",
+          "seconds": 2
+        },
+        {
+          "id": "qr-export-offline-mobile",
+          "status": "passed",
+          "reason": "workflow completed",
+          "seconds": 12
+        },
+        {
+          "id": "pairdrop-direct",
+          "status": "passed",
+          "reason": "workflow completed",
+          "seconds": 7
+        },
+        {
+          "id": "poll-create-vote-export-delete",
+          "status": "passed",
+          "reason": "workflow completed",
+          "seconds": 8
+        }
+      ],
+      "environment": "Linux Chromium; clean profiles, desktop and 390px mobile emulation; requests from the application VM",
+      "limitations": [
+        "Not physical phones, all browsers, all tools or a whole-host external check.",
+        "Only synthetic data; a failing cleanup must be resolved from its private fixture manifest.",
+        "SearXNG search is already checked by its existing daily guarded updater."
+      ]
+    },
+    "gosuExactRevalidation": {
+      "imageRecords": 2,
+      "liveRoles": 11,
+      "productionChanged": false,
+      "reason": "The affected crypto/x509 code is absent from the exact linked helper; raw findings retained."
+    }
+  },
+  "privateEvidenceRoot": "/var/lib/utilibre-maintenance/vendor-libs-20261111",
+  "evidenceHashes": {
+    "release.json": "2d2cc35e251167b54b8511f702b2d6af4dfeb728df340b962b2822fa40f63d60",
+    "live-verification.json": "456cf74743a239800e5ddd567a414fc5bc9e14ed3f51b95b767357b9be0c8795",
+    "journeys.json": "3e22d17ab8a3604b27de0c7b451d157baad1eb1355d25bea6a33934427a504c4",
+    "gosu-revalidation.json": "13bd6dc83f997bea03dc507ecbc3a468c9267e42e31e2ae27fdda920e1e7fe02",
+    "acl-state.json": "da04340d69c5b25766a8b792db7e59bf6a3cd42b6d03d07feeeb4ebf62d8cbd2",
+    "vendor-policy-tests.tap": "721ecf234b8d01166b39a58565413b8b43f5b4ac0412f513582b72bef015bebc",
+    "retired-release-tests.tap": "bd3559f346293969340ad524a39574a1d0cc36efc4f5f58f89316aab1be604b1",
+    "condition-policy-tests.tap": "8299e757867592ea5fa666adbc2a3003b335c28dcbb06a9c040312bc1cad56c7"
+  },
+  "limitations": [
+    "Thirty ACL findings remain unresolved.",
+    "Raw matches are not unique exploitable vulnerabilities; reviewed decisions are scoped and expire.",
+    "No physical-phone, all-browser, every-tool or whole-VM restore claim.",
+    "Separate Caddy and Proxmox hosts are outside this fleet scan.",
+    "Full application image bytes were not demonstrated reproducible; exact fixture rebuilds are narrower evidence."
+  ]
+}

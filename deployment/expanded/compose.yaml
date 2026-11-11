@@ -16,7 +16,7 @@ x-runtime: &runtime
 services:
   jupyterlite:
     <<: *runtime
-    image: utilibre-libraries-expanded-jupyterlite:20261111
+    image: utilibre-vendor-expanded-jupyterlite:20261111
     read_only: true
     user: "101:101"
     volumes:
@@ -37,7 +37,7 @@ services:
   # Rollback: compose.whisper-withdrawn.yaml restores the previous 410 notice.
   whisper:
     <<: *runtime
-    image: utilibre-libraries-expanded-whisper:20261111
+    image: utilibre-vendor-expanded-whisper:20261111
     entrypoint: [nginx, -g, 'daemon off;']
     read_only: true
     user: "101:101"
@@ -88,7 +88,7 @@ services:
 
   wiki-gateway:
     <<: *runtime
-    image: utilibre-calendar-calino:musl-security-20261109
+    image: utilibre-vendor-calendar-calino:20261111
     read_only: true
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
@@ -205,7 +205,7 @@ services:
 
   resume-db:
     <<: *runtime
-    image: utilibre-zlib-simplelogin-db:candidate-20261109
+    image: utilibre-vendor-simplelogin-db:20261111
     read_only: true
     user: "70:70"
     environment:
@@ -318,7 +318,7 @@ services:
 
   penpot-db:
     <<: *runtime
-    image: utilibre-zlib-simplelogin-db:candidate-20261109
+    image: utilibre-vendor-simplelogin-db:20261111
     read_only: true
     user: "70:70"
     environment:
