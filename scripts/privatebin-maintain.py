@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Guarded PrivateBin patch updates; --check, --stage, or explicitly --apply.
+"""Guarded PrivateBin updates; --check, --stage, --apply, or --reconcile-runtime.
 
 Reuses the deployed security runtime, native configuration and existing browser
 checks. No credentials, user content, migrations, notifications or LLM calls.
@@ -33,6 +33,7 @@ DB = Path('/var/cache/utilibre-security/db')
 COMPOSE = ['docker', 'compose', '--project-directory', str(LIVE), '-p', 'utilibre-services', '-f', str(LIVE / 'compose.yaml')]
 IMAGE = re.compile(r'^sha256:[a-f0-9]{64}$')
 REV = re.compile(r'^[a-f0-9]{40}$')
+EVIDENCE = Path('/var/lib/utilibre-maintenance')
 
 
 class ReviewRequired(RuntimeError):
@@ -188,6 +189,100 @@ def inspect():
     return row
 
 
+def reconciliation_record(policy, installed, current, source, payload_hashes):
+    """Explicit same-source transition only; routine updates never call this."""
+    review = policy.get('reviewedRuntimeTransition', {})
+    require(review.get('approved') is True, 'No approved runtime transition')
+    require(IMAGE.fullmatch(current) and current == policy['runtimeImage'] == review.get('image'),
+            'Runtime transition does not match the reviewed image')
+    require(isinstance(installed, dict) and installed.get('image') in (review.get('previousImage'), current),
+            'Installed receipt is not a reviewed predecessor')
+    require(IMAGE.fullmatch(review.get('previousImage', '')), 'Invalid reviewed predecessor')
+    for key in ('version', 'revision', 'archiveSha256'):
+        require(installed.get(key) == source.get(key) == review.get(key) and source.get(key),
+                'Runtime transition changed application source: ' + key)
+    require(REV.fullmatch(source['revision']) and re.fullmatch(r'[a-f0-9]{64}', source['archiveSha256']),
+            'Malformed application source identity')
+    require(decide(source['version'], installed['version'], policy) == 'up-to-date',
+            'Reconciliation cannot upgrade or downgrade the application')
+    require(payload_hashes == review.get('payloadHashes'), 'Reviewed application payload mismatch')
+    require(payload_hashes.keys() == {'/usr/share/doc/privatebin/utilibre-release.json',
+                                     '/srv/tpl/bootstrap5-utilibre.php', '/srv/lib/Controller.php'},
+            'Incomplete runtime payload verification')
+    require(review.get('deployedAt') and datetime.fromisoformat(review['deployedAt'].replace('Z', '+00:00')).tzinfo,
+            'Reviewed deployment date required')
+    if installed['image'] == current:
+        require(installed.get('runtimeImage') == current, 'Installed runtime receipt is inconsistent')
+        return installed, False
+    record = {key: source[key] for key in ('version', 'revision', 'archiveSha256',
+                                          'publishedAt', 'tagObject', 'tagVerification')}
+    record.update({'image': current, 'runtimeImage': current, 'deployedAt': review['deployedAt'],
+                   'templatePatchSha256': policy['templatePatchSha256'], 'reconciledAt': now(),
+                   'recordKind': 'reviewed-runtime-reconciliation',
+                   'previousImage': installed['image'], 'runtimeReview': review})
+    # Old scanner/test receipts remain in installed-before.json. They are not
+    # reassigned to a different runtime or presented as fresh clearance.
+    return record, True
+
+
+def reconcile_runtime(policy, installed, current, run):
+    review = policy.get('reviewedRuntimeTransition', {})
+    proofs = review.get('evidence', {})
+    require(proofs.keys() == {'native', 'deployment', 'runtimeBuild', 'runtimeConsumer', 'runtimeScan', 'sourceReplay'},
+            'Missing runtime review evidence')
+    for proof in proofs.values():
+        rel = Path(proof['path'])
+        require(not rel.is_absolute() and '..' not in rel.parts, 'Invalid evidence path')
+        path = EVIDENCE / rel
+        require(path.is_file() and path.stat().st_size <= 8 * 1024**2, 'Missing or oversized runtime evidence')
+        require(sha(path.read_bytes()) == proof['sha256'], 'Runtime review evidence changed')
+    source_raw = command(['docker', 'exec', NAME, 'cat', '/usr/share/doc/privatebin/utilibre-release.json'])
+    source = json.loads(source_raw)
+    paths = ['/usr/share/doc/privatebin/utilibre-release.json', '/srv/tpl/bootstrap5-utilibre.php', '/srv/lib/Controller.php']
+    hashes = command(['docker', 'exec', NAME, 'sha256sum', *paths])
+    payload_hashes = {line.split(None, 1)[1]: line.split(None, 1)[0] for line in hashes.splitlines()}
+    record, changed = reconciliation_record(policy, installed, current, source, payload_hashes)
+    require("const VERSION = '" + source['version'] + "'" in command(['docker', 'exec', NAME, 'cat', '/srv/lib/Controller.php']),
+            'Application version does not match the source receipt')
+    require(sha(PATCH.read_bytes()) == policy['templatePatchSha256'], 'Template patch changed')
+    settings = json.loads(command(COMPOSE + ['config', '--format', 'json']))['services']['privatebin']
+    require(command(['docker', 'image', 'inspect', '--format', '{{.Id}}', settings['image']]).strip() == current,
+            'Compose/live mismatch')
+    public_path = LIVE / 'update-public/privatebin.json'
+    public = {key: record[key] for key in ('version', 'revision', 'image', 'deployedAt', 'archiveSha256')}
+    if not changed:
+        require(public_path.is_file() and json.loads(public_path.read_text()) == public,
+                'Public installation receipt does not match the reconciled state')
+        return False
+    save(run / 'installed-before.json', installed)
+    if public_path.exists():
+        save(run / 'public-before.json', public_path.read_bytes())
+    record['policySha256'] = sha((RECIPE / 'policy.json').read_bytes())
+    save(run / 'reconciled.json', record)
+    configuration(policy)
+    require(inspect()['image'] == current, 'Live image changed during reconciliation')
+    require(json.loads((STATE / 'installed.json').read_text()) == installed, 'Installed receipt changed concurrently')
+    # A filesystem error must not leave the two receipts knowingly inconsistent.
+    try:
+        save(public_path, public, 0o644)
+        save(STATE / 'installed.json', record)
+    except BaseException:
+        save(STATE / 'installed.json', installed)
+        if (run / 'public-before.json').exists():
+            save(public_path, (run / 'public-before.json').read_bytes(), 0o644)
+        elif public_path.exists():
+            public_path.unlink()
+        raise
+    return True
+
+
+def reverse_compatibility_required(previous_version):
+    # A reviewed runtime rebuild of 2.1.1 is not the historical 2.1.0 bootstrap.
+    previous = version(previous_version)
+    require(previous >= (2, 1, 0), 'Unreviewed bootstrap version')
+    return previous != (2, 1, 0)
+
+
 def findings(report):
     rows = report.get('Results')
     require(isinstance(rows, list) and rows, 'Missing scanner results')
@@ -243,7 +338,7 @@ def scan_pair(previous, candidate, run, policy):
     return security
 
 
-def prepare(upstream, previous, run, policy):
+def prepare(upstream, previous, run, policy, previous_version):
     require(shutil.disk_usage(STATE).free >= policy['minimumFreeGiB'] * 1024**3, 'Insufficient preparation headroom')
     data = get('https://codeload.github.com/PrivateBin/PrivateBin/tar.gz/' + upstream['revision'])
     save(run / 'upstream.tar.gz', data)
@@ -285,12 +380,13 @@ def prepare(upstream, previous, run, policy):
                         '--log-driver=none', '--entrypoint=/bin/cat', image, '/lib/apk/db/installed'])
     require(packages(candidate) == packages(policy['runtimeImage']), 'Runtime package inventory changed')
     record['security'] = scan_pair(previous, candidate, run, policy)
+    reverse_required = reverse_compatibility_required(previous_version)
     env = {'PRIVATEBIN_TEST_IMAGE': candidate, 'PRIVATEBIN_TEST_CONFIG': str(run / 'config'),
            'PRIVATEBIN_PREVIOUS_IMAGE': previous, 'PRIVATEBIN_PREVIOUS_CONFIG': str(LIVE / 'config/privatebin'),
-           'PRIVATEBIN_ROLLBACK_COMPAT_REQUIRED': '0' if previous == policy['runtimeImage'] else '1'}
+           'PRIVATEBIN_ROLLBACK_COMPAT_REQUIRED': '1' if reverse_required else '0'}
     # For subsequent upgrades use the previous image's baked template, never the
     # historical 2.1.0 bind-mount template retained on disk for rollback.
-    if previous != policy['runtimeImage']:
+    if reverse_required:
         shutil.copytree(CONFIG, run / 'previous-config')
         cid = command(['docker', 'create', previous]).strip()
         try:
@@ -373,10 +469,10 @@ def deploy(record, previous, run, policy):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
-    for option in ('check', 'stage', 'apply'):
+    for option in ('check', 'stage', 'apply', 'reconcile-runtime'):
         mode.add_argument('--' + option, action='store_true')
     args = parser.parse_args()
-    selected = 'apply' if args.apply else 'stage' if args.stage else 'check'
+    selected = 'reconcile-runtime' if args.reconcile_runtime else 'apply' if args.apply else 'stage' if args.stage else 'check'
     def interrupted(_signal, _frame):
         raise InterruptedError('Updater interrupted; inspect receipt and pending journal')
     signal.signal(signal.SIGTERM, interrupted)
@@ -394,6 +490,17 @@ def main():
             configuration(policy)
             previous = inspect()['image']
             installed = json.loads((STATE / 'installed.json').read_text()) if (STATE / 'installed.json').exists() else None
+            if selected == 'reconcile-runtime':
+                changed = reconcile_runtime(policy, installed, previous, run)
+                report.update({'status': 'reconciled' if changed else 'already-reconciled',
+                               'image': previous, 'applicationChanged': False, 'serviceRestarted': False,
+                               'completedAt': now()})
+                save(run / 'result.json', report)
+                save(STATE / 'reconcile-runtime.json', report)
+                print(json.dumps(report))
+                return 0
+            require(installed is not None or not policy.get('reviewedRuntimeTransition'),
+                    'Installed receipt missing; recover the reviewed runtime record')
             require(previous == (installed['image'] if installed else policy['runtimeImage']), 'Unreviewed live image')
             current = installed['version'] if installed else policy['bootstrapVersion']
             upstream = release()
@@ -406,7 +513,7 @@ def main():
             elif selected == 'check':
                 report['status'] = 'update-available'
             else:
-                record = prepare(upstream, previous, run, policy)
+                record = prepare(upstream, previous, run, policy, current)
                 if selected == 'apply':
                     deploy(record, previous, run, policy)
                 report['status'] = 'updated' if selected == 'apply' else 'staged'

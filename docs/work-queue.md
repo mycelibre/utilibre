@@ -43,9 +43,11 @@ All 25 configured backup locations have protected root-owned ancestors. No ACL
 finding was closed. The compatible complete caller migration remains unresolved.
 
 Post-release: all 175 containers running, 90 configured health checks healthy.
-One older failed unit remains: `utilibre-privatebin-update.service`, held since
-10 November 21:09 UTC because its live image needs baseline review. PrivateBin
-itself is healthy; the failed updater did not deploy an unreviewed image.
+The PrivateBin updater's stale installed receipt was reconciled against the
+reviewed runtime/source proofs on 11 November at 00:20 UTC. Its normal scheduled
+job now succeeds as up to date (2.1.1), the timer remains active, and no failed
+systemd units remain. Eighteen updater tests pass; unknown images and changed
+review evidence still stop updates. No PrivateBin restart or paste access.
 
 Current evidence: [release record](records/security-maintenance-2026-11-10.md),
 [exact status](../deployment/maintenance/security-20261110/status.json),

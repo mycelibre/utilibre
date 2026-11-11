@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "date": "2026-11-11T00:10:13.712311+00:00",
+  "date": "2026-11-11T00:22:06.041811+00:00",
   "status": "deployed-with-explicit-unresolved-findings",
   "initialPendingHigh": 319,
   "initialDisposition": {
@@ -212,20 +212,14 @@
     ]
   },
   "health": {
-    "date": "2026-11-11T00:08:23.390302+00:00",
+    "date": "2026-11-11T00:22:06.041811+00:00",
     "runningContainers": 175,
     "containerHealth": {
       "healthy": 90,
       "no-healthcheck": 85
     },
-    "failedSystemdUnits": 1,
-    "existingHold": {
-      "service": "utilibre-privatebin-update.service",
-      "reason": "Unreviewed live image",
-      "failedAt": "2026-11-10T21:09:09Z",
-      "runningPrivateBinChanged": false
-    },
-    "note": "Native health is distinct from full user workflows. PrivateBin update hold predates this rollout; its running container is healthy."
+    "failedSystemdUnits": 0,
+    "note": "All configured container checks healthy; PrivateBin updater hold resolved by exact reviewed receipt reconciliation. Full app workflows are separate evidence."
   },
   "verification": {
     "maintenancePolicyTestsPassed": 75,
@@ -403,6 +397,14 @@
     {
       "path": "freshrss-public-canonical-login.json",
       "sha256": "9d99bb54224a4366ddcef7f8e90a54da33dc4619e9479bd41e92457b2dab7ac3"
+    },
+    {
+      "path": "privatebin-updater-reconciliation.json",
+      "sha256": "d99de16f6686128e526bb4588be91b70bd36152651f18fea02400204ac0dda1e"
+    },
+    {
+      "path": "privatebin-updater-policy-tests.log",
+      "sha256": "a84c94a7795b38b6269ef41b7721e06741101e5560100997a0e2b8779e40c71c"
     }
   ],
   "sourceOffers": [
@@ -533,5 +535,27 @@
     "manifest": "freshrss-permissions.json",
     "preparation": "check-freshrss-permissions.mjs",
     "release": "release-freshrss-permissions.mjs"
+  },
+  "privatebinUpdaterReconciliation": {
+    "date": "2026-11-11T00:22:06.041811+00:00",
+    "status": "completed",
+    "image": "sha256:e6a3f0c563c225e055524197f59261f34a805e38d49e4c03c051dcfa19643d6f",
+    "version": "2.1.1",
+    "containerUnchanged": true,
+    "health": "healthy",
+    "sourceRevision": "802b834509628a94a376112ea6561914741d649e",
+    "reconciledAt": "2026-11-11T00:18:58.515974+00:00",
+    "runtimeDeployedAt": "2026-11-09T17:39:05.078Z",
+    "updaterStatus": "up-to-date",
+    "upstreamVersion": "2.1.1",
+    "updaterCompletedAt": "2026-11-11T00:20:40.254150+00:00",
+    "timerActive": true,
+    "network": "Official PrivateBin release/tag/advisory metadata only; no paste requests",
+    "policyTestsPassed": 18,
+    "repeatedReconciliationChangedReceipts": false,
+    "applicationRestarted": false,
+    "pasteDataAccessed": false,
+    "reviewGatesPreserved": true,
+    "reverseCompatibilityNowUsesVersion": true
   }
 }

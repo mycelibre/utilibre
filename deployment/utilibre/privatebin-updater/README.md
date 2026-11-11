@@ -135,3 +135,47 @@ Software source/update evidence can be retained under existing operational
 retention. Temporary-content backups remain excluded. Future runtime/library
 repairs require updating the reviewed base and policy through their own tested
 release, not rebasing automatically onto the upstream container.
+
+### Reconcile a reviewed runtime rebuild
+
+An application-only updater receipt does not automatically follow a separate
+runtime/security rebuild. After that rebuild's release has passed, reconcile
+the receipt explicitly rather than deleting it, changing its image by hand or
+allowing any image that happens to run:
+
+```sh
+python3 scripts/privatebin-maintain.py --reconcile-runtime
+python3 scripts/privatebin-maintain.py --check
+```
+
+`policy.json` must contain an approved `reviewedRuntimeTransition` for the exact
+previous/current images, unchanged application version/revision/archive hash,
+actual deployment time, three application payload hashes and six preserved
+build/consumer/scan/native/deployment/source-replay proofs. Missing, changed or
+unreviewed inputs fail closed. The running container must still pass the normal
+health/isolation/configuration checks, match Compose and contain the reviewed
+application-source receipt and maintained template. This is a finite reviewed
+transition, not automatic approval of a different live image.
+
+Reconciliation uses the updater lock and never downloads source, builds an image,
+restarts PrivateBin, creates a paste, copies paste data or sends notifications.
+It preserves `installed-before.json` and `public-before.json` in its private run
+directory, then updates the installed and public software receipts. Old scan/test
+results remain historical evidence; they are not assigned to the new runtime or
+treated as current security clearance. Repeating the command verifies the same
+receipts without rewriting them. An I/O failure restores the previous receipts.
+The separate `reconcile-runtime.json` does not conceal a failed scheduled run;
+the normal update service must subsequently complete successfully.
+
+On 11 November this repaired the stale 6 November receipt after the already
+reviewed 9 November musl/abuse-notice rebuild. PrivateBin stayed on **2.1.1**.
+Future 2.1.1-or-newer upgrades require reverse compatibility regardless of whether
+the preceding image is also the runtime baseline. Only the historical 2.1.0
+bootstrap has the documented exception. The decision follows the application
+version, not image equality.
+
+For receipt-only rollback, first confirm the running image and maintenance job
+state. Restore the preserved installed/public receipts together only if they
+describe the intended running baseline; an older image identity deliberately
+puts routine updates back on hold. This does not roll back an image, configuration
+or user data. A new runtime needs new reviewed transition evidence.

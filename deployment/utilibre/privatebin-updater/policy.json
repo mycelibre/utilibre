@@ -33,5 +33,46 @@
     "uploads.ini": "946ebc1b94b1d03dc969de98baa8102f2411960a9c7abc179c0e0271e01819b8"
   },
   "scope": "PrivateBin application-only stable 2.1.x; unchanged runtime, dependencies, config contract; exact template patch and isolated regressions required. No migrations, data copy, notification or other service activation.",
-  "applicationAdvisorySnapshotSha256": "2d991927eb54da335f7b3811dc77b9a138aa07ed5c1e7593281878a9cbb19d54"
+  "applicationAdvisorySnapshotSha256": "2d991927eb54da335f7b3811dc77b9a138aa07ed5c1e7593281878a9cbb19d54",
+  "reviewedRuntimeTransition": {
+    "approved": true,
+    "previousImage": "sha256:95d4a7ef121809772bbae5021badc46f0188361677da1e4aa41bc56cddb63f9d",
+    "image": "sha256:e6a3f0c563c225e055524197f59261f34a805e38d49e4c03c051dcfa19643d6f",
+    "version": "2.1.1",
+    "revision": "802b834509628a94a376112ea6561914741d649e",
+    "archiveSha256": "5b8e6600b03b2a0cd945de1508a636eeb43390afb6ccbba9712b1c4cd44aa5f0",
+    "deployedAt": "2026-11-09T17:39:05.078Z",
+    "purpose": "Reconcile the already-deployed, reviewed musl and abuse-notice rebuild; same PrivateBin application source, no activation.",
+    "payloadHashes": {
+      "/usr/share/doc/privatebin/utilibre-release.json": "7de3b0e0b7906312c6e463d19ec407e92f749d1439bde4452f19757962e59aa7",
+      "/srv/tpl/bootstrap5-utilibre.php": "0f89c81214cc605ece521188200b020aa55343c2d2b9901c79a8df2b0cd22b16",
+      "/srv/lib/Controller.php": "854be44d1cc07d837fcc397f1c21a24ffe80c012cbab8f7e403446988f51da5c"
+    },
+    "evidence": {
+      "native": {
+        "path": "security-20261109/abuse-reporting/images.json",
+        "sha256": "21a81087396b9f693d7f4aa0e5a4fede29e0f4efb60880c6c746f8b64a8facd6"
+      },
+      "deployment": {
+        "path": "security-20261109/abuse-reporting/release.json",
+        "sha256": "109cd13a8cafc46f23beaae8732d900b526964ff278effd9ab4beda279746de2"
+      },
+      "runtimeBuild": {
+        "path": "security-20261109/musl/services-privatebin/build.json",
+        "sha256": "199fe7a5d948c79789a39217a098adfad818e8d8b86b9433b17b31d22c79e313"
+      },
+      "runtimeConsumer": {
+        "path": "security-20261109/musl/services-privatebin/consumer.json",
+        "sha256": "4986a198811a29e3cc22c9584c2f232a875d98f1fc3d8335a1303a9c5b66af9b"
+      },
+      "runtimeScan": {
+        "path": "security-20261109/musl/services-privatebin/scan-gate.json",
+        "sha256": "e543d481dc2f6b0cb28c519dd437ff3b3cb5fb876e1eb1250e7edbbffde624f3"
+      },
+      "sourceReplay": {
+        "path": "security-20261109/abuse-reporting/privatebin-updater-replay.json",
+        "sha256": "76ecc68dc5f4d98b0871ea8f4573016c731ffd71ab06968037a35beffb8b3b28"
+      }
+    }
+  }
 }

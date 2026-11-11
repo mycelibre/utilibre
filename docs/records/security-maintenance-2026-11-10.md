@@ -273,10 +273,33 @@ recreated. Repeated verification made no changes. Image/data mounts, accounts an
 other containers were preserved; no migration or host restart occurred.
 
 Post-release: **175 running containers, 90 healthy configured checks, 85 without
-container health checks**. One older failed updater unit remains:
+container health checks**. At that checkpoint, one older failed updater unit remained:
 `utilibre-privatebin-update.service` stopped at its “Unreviewed live image” guard
 on 10 November at 21:09 UTC. PrivateBin's running container remains healthy. That
-baseline review is separate from this rollout and was not bypassed or cleared.
+baseline review was separate from that rollout and was not bypassed.
+
+At **00:20 UTC on 11 November**, the PrivateBin updater hold was resolved. The
+running **2.1.1** image already matched its reviewed runtime policy, but the
+installed/public updater receipts still named the preceding 6 November image.
+The new explicit `--reconcile-runtime` path validated the exact same application
+revision/archive, image payloads, configuration and six preserved runtime/native/
+deployment/source-replay proofs. It preserved the old receipts and synchronized
+the software records. Repeating reconciliation made no changes. Unknown images,
+missing receipts and missing/changed proof files still fail closed; the normal
+check/update paths never adopt a different image automatically.
+
+The ordinary systemd update job then completed successfully as **up to date**
+against the official signed 2.1.1 release and unchanged advisory snapshot. The
+existing four-times-daily timer remains active; there are no failed systemd units.
+PrivateBin's container ID and image stayed unchanged and healthy. No application
+restart, paste request, paste copy, migration or notification was performed.
+Eighteen offline updater tests pass, including identity rejection, idempotence,
+receipt-write rollback and preservation of the normal mismatch guard. Future
+reverse-compatibility requirements now follow the previous application version,
+so a 2.1.1 runtime rebuild cannot receive the historical 2.1.0 bootstrap exception.
+Old scanner results were retained as historical evidence, not reclassified as
+current clearance. See the [updater instructions](../../deployment/utilibre/privatebin-updater/README.md)
+and the existing status file's `privatebinUpdaterReconciliation` record.
 
 The last complete scanner assessment remains 10 November 14:53 UTC, with
 **0 pending critical / 30 pending high ACL records**. No finding was suppressed
