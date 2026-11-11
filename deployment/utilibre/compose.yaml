@@ -85,6 +85,10 @@ services:
     init: true
     restart: unless-stopped
     <<: *default-security
+    # Native startup repairs permissions; Apache/cron drop to www-data.
+    # Ordinary startup, save/export, cron, reload and stop checks: security-20261110.
+    cap_drop: [ALL]
+    cap_add: [AUDIT_WRITE, CHOWN, DAC_OVERRIDE, FOWNER, KILL, NET_BIND_SERVICE, SETGID, SETUID]
     ports:
       - target: 80
         published: "${FRESHRSS_PORT:-3106}"

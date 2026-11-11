@@ -27,6 +27,21 @@ backup=$(./scripts/backup.sh)
 For a manual check without expiring any old local generations, use
 `./scripts/backup.sh --no-prune`. Scheduled generation retention is unchanged.
 
+The core helpers require `scripts/check-backup-input.py` (Python standard
+library only). Snapshot directories, files and their ancestors must belong to
+root/the executing operator and must not be group/other writable. Symlinked
+inputs are rejected. Root-owned sticky ancestors such as `/tmp` are allowed
+when the actual snapshot is private. Copy an off-host snapshot into a protected
+operator-owned directory before using it; do not relax permissions to bypass
+this check. This establishes who controls the input, not whether an arbitrary
+third-party archive is safe. Use only trusted native backups.
+
+Both helpers ignore inherited `TAR_OPTIONS`; extended ACL handling stays
+disabled explicitly. Native Unix modes/ownership are still preserved. Restores
+use umask `077` and private staging directories. Checksums detect changed backup
+bytes, not the authenticity of an untrusted archive. No ACL vulnerability is
+claimed fixed by these precautions.
+
 Supported content restore targets are `freshrss` and `freshrss-files`.
 Always rehearse first:
 

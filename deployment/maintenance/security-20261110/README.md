@@ -6,6 +6,65 @@ Private evidence root: `/var/lib/utilibre-maintenance/security-20261110/`.
 These are finite extensions of the existing build, scan and release adapters,
 not an unattended upgrade mechanism or authorization for future deployment.
 
+## ACL exposure reduction — 11 November follow-up
+
+`freshrss-permissions.json` records a configuration-only reduction on the exact
+existing FreshRSS 1.30.4 image. Both canonical Compose definitions drop all
+capabilities and add back eight for native permission repair, Apache and cron.
+Six Docker defaults are removed: FSETID, MKNOD, NET_RAW, SETFCAP, SETPCAP and
+SYS_CHROOT. Apache workers remain UID/GID 33; root supervision and filesystem
+privileges remain. This is defense in depth, **not CVE-2026-54369 remediation**.
+
+`check-freshrss-permissions.mjs /absolute/new/private/report-directory` checks
+the baseline and restricted configuration with the same immutable local image.
+It reuses the existing restored-account browser helper and a new ordinary
+fictional feed fixture. Native install/login, stored articles, OPML export,
+actual cron/PAM refresh from a loopback feed, graceful reload and shutdown must
+pass. Docker networking is internal; there are no production mounts, account
+credentials, Internet feeds or emails. Each container is bounded to 1 CPU,
+512 MiB and 128 PIDs. Port 33291 is loopback-only and must be free. The test
+creates/removes only its own containers and network. Chromium and socat must
+already be available. SQLite is used for isolated storage; production's
+PostgreSQL settings are unchanged and native live health is checked separately.
+
+`release-freshrss-permissions.mjs prepare|apply|verify` reuses the existing
+release lock, scoped recreation, health and rollback adapters. The completed
+release must not be replayed as a fresh rollout. Prepare checks exact image,
+helper baselines, current test-input hashes, no namespace dependents, no active
+backup service and a resolved configuration diff limited to the two capability
+fields. It preserves configuration and takes a checksummed `--no-prune` backup.
+Apply checks the prepared inputs again, installs the core backup helpers and
+recreates only FreshRSS. Verify checks the installed state without recreation.
+A different image/configuration needs new review and fresh evidence.
+
+The core backup helpers now enforce protected operator-owned inputs, umask 077
+and the existing no-extended-ACL archive policy. `TAR_OPTIONS` cannot inject
+different archive behavior. A copied Storage Box snapshot must first be placed
+in a protected operator-owned directory. These are trusted native-archive
+preconditions, **not a general-purpose untrusted archive importer**. Existing
+Unix ownership/modes, durable-account backups, temporary-content exclusion and
+retention are preserved. A metadata-only inspection of all 25 configured native
+backup sources found root-owned non-writable ancestors. Other backup families
+were reviewed for explicit ACL options; they were not rewritten or exercised
+against saved user content. Weekly core `cp -al` operates on the protected
+completed snapshot; it is not a copy from an application-writable directory.
+
+Evidence is private under `security-20261110/freshrss-permissions-verified/`,
+`freshrss-permissions-release/` and `backup-ownership.json`. Earlier failed test
+runs remain: the initial harness discarded stdin, leaving its fixture feed and
+crontab empty. This was a harness defect, not evidence of broken production cron.
+The corrected baseline and candidate checks both passed twice.
+
+Rollback: the release's private `originals.json` retains the two Compose files
+and previous core helper contents; `release.json` identifies the saved-work
+snapshot and previous image. Restore only those reviewed files, remove the new
+input helper only if returning to the old scripts, and recreate **freshrss** with
+the same two Compose files and existing project directory. Confirm native
+health, login and unchanged mounts. No image change or database migration was
+made; do not restore user data merely to undo a capability change. Reconcile
+the canonical repository definitions before the next deployment. Normal
+rollback does not touch other applications, backups or retention.
+
 ## Inputs and correction
 
 - `kerberos-inputs.json`: authenticated MIT Kerberos **1.22.3**, exact Bookworm/

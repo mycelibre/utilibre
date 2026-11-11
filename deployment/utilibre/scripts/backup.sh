@@ -15,7 +15,10 @@ set -a
 # shellcheck disable=SC1091
 . "$root_dir/.env"
 set +a
+# Do not inherit archive features or filters from an interactive environment.
+unset TAR_OPTIONS
 backup_root="$root_dir/data/backups"
+python3 "$root_dir/scripts/check-backup-input.py" directory "$backup_root"
 timestamp=$(date -u +%Y%m%d-%H%M%S)
 final_dir="$backup_root/daily-$timestamp"
 incomplete_dir=$(mktemp -d "$backup_root/.incomplete-$timestamp.XXXXXX")
@@ -51,9 +54,9 @@ echo "Backup started: $(date -u --iso-8601=seconds)"
 mkdir -p "$incomplete_dir/postgres" "$incomplete_dir/files"
 docker compose exec -T postgres pg_dump -U postgres -Fc freshrss > "$incomplete_dir/postgres/freshrss.dump"
 
-tar -C "$root_dir" -czf "$incomplete_dir/files/configuration.tar.gz" \
+tar --no-acls -C "$root_dir" -czf "$incomplete_dir/files/configuration.tar.gz" \
   compose.yaml .env .env.example README.md SOURCE_MANIFEST.md config scripts system systemd edge docs secrets
-tar -C "$root_dir/data" -czf "$incomplete_dir/files/freshrss-data.tar.gz" freshrss
+tar --no-acls -C "$root_dir/data" -czf "$incomplete_dir/files/freshrss-data.tar.gz" freshrss
 # PrivateBin's expiring ciphertext is deliberately not a recovery asset.
 # Its configuration is included above; never archive its data directory.
 

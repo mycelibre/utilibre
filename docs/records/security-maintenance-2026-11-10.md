@@ -236,6 +236,58 @@ no user documents, account fixtures, runtime configuration or secret values.
 
 ## Remaining blockers
 
+### 11 November: scoped exposure reduction completed
+
+FreshRSS 1.30.4 keeps its exact previously repaired image. Its configuration now
+drops all Linux capabilities and retains eight for the tested native
+startup/Apache/cron flow. FSETID, MKNOD, NET_RAW, SETFCAP, SETPCAP and SYS_CHROOT
+are removed. Web workers remain UID/GID 33; root supervision and necessary
+filesystem privileges remain. This is defense in depth, not ACL remediation.
+
+Two complete ordinary baseline/candidate runs passed: native initialization and
+account creation, saved fictional article, OPML export, browser login, actual
+cron/PAM refresh from a loopback feed, reading that article, Apache reload and
+graceful shutdown. Apache request logging remained empty. The isolated browser
+stayed on the fixture origin; there were no production data mounts or Internet
+feeds. The test used SQLite, 1 CPU, 512 MiB and 128 PIDs. PostgreSQL configuration
+was not changed. Production native health and a public Chromium login at
+`rss.utilibre.org` passed separately; there were no unrelated browser requests.
+A Python request to the `feeds` alias received an edge 403, while normal
+Chromium loaded the login. Edge rules were not changed to bypass that restriction.
+
+The core backup and restore helpers now enforce operator/root-owned protected
+snapshot paths, reject symlinks and writable inputs, ignore inherited
+`TAR_OPTIONS`, explicitly keep extended ACL handling disabled and use private
+restore staging. Native Unix ownership/modes are preserved. These checks accept
+trusted native backups, not arbitrary third-party archives. All **25 configured
+native backup locations** and their ancestors passed the read-only ownership
+review. Other backup families were inspected for explicit ACL handling but were
+not changed or run against user content. Seven focused backup-policy tests pass;
+a new deployed native backup and all its checksums pass, without pruning or a
+live restore. Retention and temporary-content exclusions are unchanged.
+
+The scoped release reused the existing lock/recreation/rollback adapters,
+preserved its configuration and recovery snapshot, and verified that the resolved
+Compose diff contains only FreshRSS's capability fields. Only FreshRSS was
+recreated. Repeated verification made no changes. Image/data mounts, accounts and
+other containers were preserved; no migration or host restart occurred.
+
+Post-release: **175 running containers, 90 healthy configured checks, 85 without
+container health checks**. One older failed updater unit remains:
+`utilibre-privatebin-update.service` stopped at its “Unreviewed live image” guard
+on 10 November at 21:09 UTC. PrivateBin's running container remains healthy. That
+baseline review is separate from this rollout and was not bypassed or cleared.
+
+The last complete scanner assessment remains 10 November 14:53 UTC, with
+**0 pending critical / 30 pending high ACL records**. No finding was suppressed
+or closed by this configuration change, and no full rescan is claimed. The
+official ACL 2.4.0 compatibility preparation remains available; a library upgrade
+alone does not establish migration of the affected callers. Operator commands,
+exact evidence and rollback are in the existing
+[maintenance README](../../deployment/maintenance/security-20261110/README.md).
+
+### Remaining complete-repair prerequisite
+
 1. **30 libacl1 records, CVE-2026-54369:** a compatible caller/library migration
    remains necessary. Earlier automatic approval review rejected the custom
    repair/reproduction path. It was not retried or treated as resolved.

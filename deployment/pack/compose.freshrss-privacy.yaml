@@ -1,6 +1,8 @@
 # Overlay the existing /opt/utilibre/compose.yaml; do not replace data or accounts.
 services:
   freshrss:
+    cap_drop: [ALL]
+    cap_add: [AUDIT_WRITE, CHOWN, DAC_OVERRIDE, FOWNER, KILL, NET_BIND_SERVICE, SETGID, SETUID]
     environment:
       FRESHRSS_ENV: silent
       COPY_LOG_TO_SYSLOG: 'Off'

@@ -26,12 +26,26 @@ copy/archive/ACL checks in all 29 affected images, plus host static-export
 compatibility. This is a verified prerequisite only: no ACL deployment, full
 application check or caller repair is claimed, and all 30 high records remain.
 
-All 175 production containers are running: 90 configured health checks healthy,
-85 without container health checks; no failed systemd units. The Kuma candidate
+At the earlier scan checkpoint, all 175 production containers were running:
+90 configured health checks healthy, 85 without container health checks. The Kuma candidate
 passed native setup/login, monitoring/status-page and SMTP/ntfy checks with
 fictional data in networkless containers. Only Kuma was recreated in this
 follow-up. No host service was restarted; disk, backups and earlier rollout
 artifacts were preserved. The separate guest-agent confirmation remains open.
+
+The 11 November 00:05 UTC exposure-reduction release removed six unnecessary
+FreshRSS capabilities without changing its image or data mounts. Ordinary native
+startup/login, stored articles, OPML export, actual cron refresh, graceful reload
+and shutdown pass before/after in isolation. Public Chromium login is HTTP 200.
+Core backup/restore now rejects mutable/symlinked input, uses private staging and
+ignores inherited tar flags; seven focused tests and a fresh native backup pass.
+All 25 configured backup locations have protected root-owned ancestors. No ACL
+finding was closed. The compatible complete caller migration remains unresolved.
+
+Post-release: all 175 containers running, 90 configured health checks healthy.
+One older failed unit remains: `utilibre-privatebin-update.service`, held since
+10 November 21:09 UTC because its live image needs baseline review. PrivateBin
+itself is healthy; the failed updater did not deploy an unreviewed image.
 
 Current evidence: [release record](records/security-maintenance-2026-11-10.md),
 [exact status](../deployment/maintenance/security-20261110/status.json),

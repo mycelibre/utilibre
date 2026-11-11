@@ -1,5 +1,9 @@
 #!/bin/sh
 set -eu
+umask 077
+# Core archives preserve native modes/owners, not extended ACLs. Do not let
+# inherited flags silently change extraction or activate additional features.
+unset TAR_OPTIONS
 
 usage() {
   echo "Usage: $0 BACKUP_DIR TARGET (--rehearsal|--live)" >&2
@@ -17,10 +21,10 @@ if [ "$target" = privatebin ]; then
 fi
 [ "$mode" = --rehearsal ] || [ "$mode" = --live ] || usage
 [ -d "$backup_dir" ] || { echo "Backup directory not found" >&2; exit 1; }
-
-(cd "$backup_dir" && sha256sum -c SHA256SUMS)
-
 root_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+python3 "$root_dir/scripts/check-backup-input.py" snapshot "$backup_dir"
+backup_dir=$(CDPATH= cd -- "$backup_dir" && pwd)
+(cd "$backup_dir" && sha256sum -c SHA256SUMS)
 cd "$root_dir"
 
 if [ "$mode" = --live ]; then
@@ -83,7 +87,7 @@ file_rehearsal() {
   archive=$1
   rehearsal_dir=$(mktemp -d /tmp/utilibre-restore.XXXXXX)
   trap 'rm -rf -- "$rehearsal_dir"' EXIT HUP INT TERM
-  tar -C "$rehearsal_dir" -xzf "$archive"
+  tar --no-acls -C "$rehearsal_dir" -xzf "$archive"
   find "$rehearsal_dir" -type f -print -quit | grep -q .
   rm -rf -- "$rehearsal_dir"
   trap - EXIT HUP INT TERM
@@ -95,9 +99,10 @@ file_live_restore() {
   archive=$3
   current="$root_dir/data/$target_dir"
   [ -d "$current" ] || { echo "Current data directory not found: $current" >&2; exit 1; }
+  python3 "$root_dir/scripts/check-backup-input.py" directory "$root_dir/data"
   timestamp=$(date -u +%Y%m%d%H%M%S)
   staging_dir=$(mktemp -d "$root_dir/data/.restore-${service}.XXXXXX")
-  tar -C "$staging_dir" -xzf "$archive"
+  tar --no-acls -C "$staging_dir" -xzf "$archive"
   [ -d "$staging_dir/$target_dir" ] || {
     rm -rf -- "$staging_dir"
     echo "Archive does not contain expected $target_dir directory" >&2

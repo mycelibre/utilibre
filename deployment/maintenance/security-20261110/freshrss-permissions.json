@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Reduce FreshRSS Linux capabilities while preserving its native root startup, Apache privilege drop and cron",
+  "image": "sha256:102838f13a118e05a408c86b7ae6397039351c1dfb081888fcc7f70381bd4b4b",
+  "container": "utilibre-services-freshrss-1",
+  "service": "freshrss",
+  "capDrop": ["ALL"],
+  "capAdd": ["AUDIT_WRITE", "CHOWN", "DAC_OVERRIDE", "FOWNER", "KILL", "NET_BIND_SERVICE", "SETGID", "SETUID"],
+  "retainedPrivileges": "Native entrypoint repairs ownership/modes; Apache and cron must switch users, bind port 80 and stop their workers. PAM uses audit access.",
+  "removedCapabilities": ["FSETID", "MKNOD", "NET_RAW", "SETFCAP", "SETPCAP", "SYS_CHROOT"],
+  "limitations": "Root supervision and required filesystem privileges remain. This is defense in depth, not an ACL caller repair or CVE closure."
+}
