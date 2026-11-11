@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "previousQueueSha256": "0f6968e1404ed3594dc366b65d0f6615d4d6f820002e60d5e065056eff20dad9",
+  "decisions": 46,
+  "scope": "Existing component-specific decisions only; same advisory snapshot and unchanged Debian file payload; original expiry retained."
+}

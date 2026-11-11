@@ -10,7 +10,12 @@ browser sign-in fixture still needs resolution before release.
 
 Read-only VM inspection found no pending APT upgrades against the same-day
 package index, the newest installed kernel already running, and no reboot
-marker. This does not close the ACL caller-migration gap or verify the separate
+marker. Separate checks found newer Node 24.22.3, Trivy 0.76.2, Python 3.13.18
+and Restic 0.19.1 releases than the executing host tools. These need their own
+compatibility/update work; APT does not establish that all background tools
+are current. The 18:19 UTC frozen-database scan completed all 109 images,
+113 source inputs and host packages; 0 critical / 30 ACL high records remain
+pending. This does not close those unmanaged-tool gaps or verify the separate
 Proxmox/Caddy hosts. [Checks, exact evidence and recovery](records/held-upgrades-2026-11-11.md).
 
 The older checkpoints below describe earlier measurements, including disk

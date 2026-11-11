@@ -71,16 +71,45 @@ this is not an exhaustive process audit.
 
 The APT result does **not** cover all maintenance runtimes. Fifteen installed
 service files explicitly use Node 24.14.0 from NVM, including the Storage Box
-job. Trivy 0.75.0 is a separately pinned binary. Both require their own version
-and compatibility review; they are not evidence that all infrastructure is
-current. Python's executable version and local backports must likewise be
-checked independently of the `python3` metapackage version. No host runtime
-replacement was authorized or performed by this read-only inspection.
+job. The separate upstream check found these gaps on 11 November:
+
+| Component | Installed | Upstream release to review | Qualification |
+| --- | --- | --- | --- |
+| Node | 24.14.0 | [24.22.3 security release](https://nodejs.org/dist/index.json) | Thirteen service files invoke this exact binary; two include it in PATH. Even the 24.21.0 build environment predates this release. |
+| Trivy | 0.75.0 | [0.76.2 security release](https://github.com/aquasecurity/trivy/releases/tag/v0.76.2) | The standalone binary needs the Go dependency fixes; its container-base changes are not host fixes. Scanner compatibility and policy hashes must be checked before replacement. |
+| Python | 3.13.16, locally repaired Debian packages | [3.13.18 security release](https://www.python.org/downloads/release/python-31318/) | The executable and local patches matter, not the older `python3` metapackage version. The host queue still records the later tarfile and CA-distrust advisories; do not infer all fixes were backported. |
+| Restic | 0.18.0-1+b4 | [0.19.1](https://github.com/restic/restic/releases/tag/v0.19.1) | Debian's available package is current against APT; upstream has later backup, snapshot and SFTP corrections. This version gap is not itself proof of an exploitable vulnerability. |
+
+No host runtime replacement was performed by this read-only inspection.
+The host scanner currently covers dpkg packages, not unmanaged Node/Trivy
+binaries. A complete background-maintenance assessment must include those
+tools and their exact executing paths. Test maintenance commands without
+notifications and backup/export compatibility before changing them; preserve
+the existing local repairs and rollback binaries.
 
 Being current against APT does not close the ACL caller-migration issue. The
 host has one of the 30 previously reviewed open high records. No ACL repair,
 suppression, reboot or major Debian migration was performed here. The separate
 Proxmox host and Caddy VM are outside this guest inspection.
+
+## Post-release assessment
+
+The scan completed at 18:19 UTC: all 109 runtime images, 113 source inputs and
+the host package inventory were checked. It used the recorded 10 November
+19:01 UTC advisory database without a network refresh. The result is an
+assessment against that snapshot, not clearance for advisories published later.
+
+The exact Candlr replacement initially reopened 46 prior component decisions.
+Full image-file comparison and the recorded native repair evidence establish
+that those Debian components are unchanged. The narrow review adapter carries
+only those exact, still-valid decisions with their original expiry; it refuses
+a different image, changed evidence or advisory snapshot. No new exception,
+expiry extension or raw-finding suppression was added. The remaining queue is
+**0 critical / 30 high pending**, all `CVE-2026-54369`. Raw observations remain
+visible: 66 critical / 4,089 high package-target records, including reviewed
+backports and component-specific non-applicability. These are not counts of
+confirmed exploitable vulnerabilities. The unmanaged-tool gaps above remain
+separate work and must not be hidden by this queue total.
 
 ## Evidence and recovery
 

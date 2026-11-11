@@ -27,11 +27,19 @@ directory. Replay them only in an isolated environment with the exact retained
 inputs; do not overwrite previous reports. A passing historical test is not
 current advisory clearance. No byte-identical build claim is made.
 
+`review-candlr-upgrade.mjs` revalidates 46 exact prior Debian component
+decisions against the completed release and full filesystem comparison. It
+requires the same advisory snapshot, exact old queue hash and still-valid
+original expiry. Its private output is applied separately with the existing
+triage command; the ACL finding remains open. The 18:19 UTC fleet assessment
+completed 109 images, 113 source inputs and host packages. See the release
+record for the separately discovered unmanaged host-tool coverage gaps.
+
 ## Held application upgrades and disk follow-up
 
 Wakapi 2.18.2 and GridSpace 4.7.3-p1 are deployed with retained repairs and
 native workflow checks; their two catalogue records are also released.
-`upgrade-status.json` records all 30 reviewed candidates and the 28 held
+`upgrade-status.json` records all 30 reviewed candidates and the current held
 upgrades, including unsupported inventories and conflicting patches. It does
 not declare the entire upgrade queue complete. The ACL caller gap remains open.
 
