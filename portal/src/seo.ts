@@ -1,7 +1,8 @@
 import type { PublicConfig } from './config';
 import { translate } from './i18n';
 import { pageMeta } from './pages/pages';
-import { translatedPath, type Route } from './routes';
+import { routePath, translatedPath, type Route } from './routes';
+import { practicalGuides } from './pages/guide-index';
 
 // One source for browser navigation and the initial HTTP document. The origin
 // comes from operator configuration, never Host/X-Forwarded-Host or a query.
@@ -27,11 +28,19 @@ export function pageSeo(route: Route, config: PublicConfig, search = '', fallbac
     : route.page === 'guide' && route.guideId === 'openresume' ? (route.language === 'es' ? 'Currículum de práctica con información ficticia' : 'Practice résumé with fictional information')
     : route.language === 'es' ? `Logo de ${config.projectName}` : `${config.projectName} logo`;
   const twitterCard = route.page === 'collection' ? 'summary_large_image' : 'summary';
+  // Describe existing return links and headings. Private/noindex routes never
+  // receive a breadcrumb graph, and there is no invented collection-index URL.
+  const breadcrumbs = origin && canonical && (route.page === 'guide' || route.page === 'collection') ? [
+    { name: translate(route.language, 'nav.catalog'), item: new URL(routePath('home', route.language), origin).href },
+    ...(route.page === 'guide' ? [{ name: translate(route.language, 'nav.guides'), item: new URL(routePath('guides', route.language), origin).href }] : []),
+    { name: route.page === 'guide' ? practicalGuides.find(guide => guide.id === route.guideId)?.copy[route.language].title || meta.title : meta.title, item: canonical },
+  ] : [];
   const structuredData = robots === 'index,follow' && canonical ? {
     '@context': 'https://schema.org',
     '@graph': [
       ...(route.page === 'home' ? [{ '@type': 'WebSite', '@id': `${origin}/#website`, url: `${origin}/`, name: config.projectName, inLanguage: ['en', 'es'] }] : []),
-      { '@type': 'WebPage', '@id': canonical, url: canonical, name: title, description: meta.description, inLanguage: route.language, isPartOf: { '@id': `${origin}/#website` } },
+      { '@type': 'WebPage', '@id': canonical, url: canonical, name: title, description: meta.description, inLanguage: route.language, isPartOf: { '@id': `${origin}/#website` }, ...(breadcrumbs.length ? { breadcrumb: { '@id': `${canonical}#breadcrumb` } } : {}) },
+      ...(breadcrumbs.length ? [{ '@type': 'BreadcrumbList', '@id': `${canonical}#breadcrumb`, itemListElement: breadcrumbs.map((crumb, index) => ({ '@type': 'ListItem', position: index + 1, ...crumb })) }] : []),
     ],
   } : null;
   return { ...meta, title, robots, canonical, alternates, image, imageAlt, twitterCard, structuredData };

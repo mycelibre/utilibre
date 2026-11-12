@@ -9,3 +9,7 @@ for the current decision.
 observations. The short files in this directory with dated names are links
 kept for existing GitHub and source-package URLs; the complete record lives
 under `records/`.
+
+The [12 November SEO skill and guide-presentation record](records/seo-skill-2026-11-12.md)
+documents the pinned skill, deployed metadata/runtime changes, and local and
+production verification.

@@ -49,7 +49,7 @@ export default defineConfig({
         }
         for (const guide of practicalGuides) {
           output[metadataPath(practicalGuidePath(guide.id, language))] = {
-            language, title: guide.copy[language].title, description: guide.copy[language].intro,
+            language, title: guide.copy[language].seoTitle || guide.copy[language].title, description: guide.copy[language].seoDescription || guide.copy[language].intro,
             robots: 'index,follow', alternates: { en: practicalGuidePath(guide.id, 'en'), es: practicalGuidePath(guide.id, 'es') },
           };
         }

@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1.8
-FROM node:24.21.0-alpine3.24@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS base
+FROM node:24.22.3-alpine3.24@sha256:116b800c3754b440ee0aa3ed2f20f5bf3d99a554bfd9adeea09ea8017f6e85f5 AS base
 # Retain Alpine's reviewed fixes even while the pinned Node image predates them.
 # Remove these pins only when a replacement base passes the same image scan.
-RUN apk add --no-cache --upgrade musl=1.2.6-r3 musl-utils=1.2.6-r3 zlib=1.3.2-r1 \
-    && apk info --exists musl=1.2.6-r3 musl-utils=1.2.6-r3 zlib=1.3.2-r1
+RUN apk add --no-cache --upgrade musl=1.2.6-r3 musl-utils=1.2.6-r3 zlib=1.4-r0 \
+    && apk info --exists musl=1.2.6-r3 musl-utils=1.2.6-r3 zlib=1.4-r0
 
 FROM base AS build
 WORKDIR /app

@@ -772,7 +772,7 @@ export function pageMeta(route: Route, config: PublicConfig, t: Translate): { ti
   }
   if (route.page === 'guide') {
     const copy = practicalGuides.find((guide) => guide.id === route.guideId)?.copy[route.language];
-    return { title: copy?.seoTitle || copy?.title || t('common.notFound.title'), description: copy?.intro || '', robots: copy ? 'index,follow' : 'noindex,nofollow' };
+    return { title: copy?.seoTitle || copy?.title || t('common.notFound.title'), description: copy?.seoDescription || copy?.intro || '', robots: copy ? 'index,follow' : 'noindex,nofollow' };
   }
   if (route.page === 'tool' && route.toolId) {
     const entry = catalogEntry(route.toolId);

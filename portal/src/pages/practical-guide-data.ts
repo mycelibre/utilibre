@@ -34,7 +34,7 @@ import { browserAdditionGuides } from './browser-addition-guides.ts';
 import { everydayGuides } from './everyday-guide-data.ts';
 
 export interface GuideCopy {
-  title: string; seoTitle?: string; intro: string; prerequisites: string;
+  title: string; seoTitle?: string; seoDescription?: string; intro: string; prerequisites: string;
   steps: string[]; success: string; troubleshooting: string; privacy: string; next: string;
 }
 export interface PracticalGuide {
@@ -130,6 +130,8 @@ export const practicalGuides: PracticalGuide[] = [
     copy: {
       en: {
         title: 'Turn a scanned document into useful text and share it',
+        seoTitle: 'Extract text from a scanned PDF with OCR',
+        seoDescription: 'Recognize English or Spanish text with BentoPDF in your browser. Try a sample scan, review the words and download a searchable PDF. No account needed.',
         intro: 'Use BentoPDF to recognize a page, check the result and save a searchable PDF or share corrected text. No account is needed.',
         prerequisites: 'Keep the original. Start with the fictional notice below and a browser that can download files. OCR downloads processing components and language data on first use; allow time and network access. A small, upright scan is a better starting point than a large document.',
         steps: [
@@ -147,6 +149,8 @@ export const practicalGuides: PracticalGuide[] = [
       },
       es: {
         title: 'Convertí un documento escaneado en texto útil y compartilo',
+        seoTitle: 'Extraer texto de un PDF escaneado con OCR',
+        seoDescription: 'Reconocé texto en español o inglés con BentoPDF en el navegador. Probá un escaneo, revisá las palabras y guardá un PDF con texto seleccionable. Sin cuenta.',
         intro: 'Usá BentoPDF para reconocer una página, revisar el resultado y guardar un PDF con texto seleccionable o compartir texto corregido. No necesitás cuenta.',
         prerequisites: 'Conservá el original. Empezá con el aviso ficticio de abajo y un navegador que permita descargar archivos. El primer OCR descarga componentes y datos del idioma: dejá tiempo y acceso a la red. Conviene empezar con una página pequeña y derecha.',
         steps: [
@@ -171,6 +175,8 @@ export const practicalGuides: PracticalGuide[] = [
     copy: {
       en: {
         title: 'Prepare an image for a website or application',
+        seoTitle: 'Resize and compress an image for an upload',
+        seoDescription: 'Resize one image in miniPaint, then compress it in OmniTools if needed. Work in your browser, compare file size and dimensions, and download the result.',
         intro: "Make an image smaller, inspect it and download a usable file. Use miniPaint for dimensions and OmniTools for compression. Process one image at a time, with a manual download/import between applications. Automatic batches and ZIP output are not part of this workflow.",
         prerequisites: 'Read the destination’s actual rules first: dimensions, maximum file size and accepted formats. Our hypothetical practice requirement is 600 × 400 pixels and under 200 KB, not a passport or identity-photo standard. The sample is a generated illustration, not an application screenshot.',
         steps: [
@@ -188,6 +194,8 @@ export const practicalGuides: PracticalGuide[] = [
       },
       es: {
         title: 'Prepará una imagen para una web o una solicitud',
+        seoTitle: 'Reducir el tamaño y peso de una imagen',
+        seoDescription: 'Cambiá las dimensiones de una imagen en miniPaint y comprimila en OmniTools si hace falta. Trabajá en el navegador, revisá el peso y descargá el resultado.',
         intro: 'Reducí una imagen, revisala y descargá un archivo útil. Usá miniPaint para las dimensiones y OmniTools para comprimir. Procesá una por vez, descargando e importando manualmente entre aplicaciones; no hay lotes ni ZIP automáticos.',
         prerequisites: 'Leé primero las reglas reales del destino: dimensiones, tamaño máximo y formatos admitidos. El requisito hipotético del ejercicio es 600 × 400 píxeles y menos de 200 KB; no es una norma para pasaportes o fotos de identidad. El ejemplo es una ilustración generada, no una captura de la aplicación.',
         steps: [
@@ -292,6 +300,8 @@ export const practicalGuides: PracticalGuide[] = [
     copy: {
       en: {
         title: 'Turn a CSV into a clear chart',
+        seoTitle: 'Create a bar chart from a CSV file',
+        seoDescription: 'Turn a CSV into a bar chart with RAWGraphs in your browser. Practice with fictional data, check numeric fields and labels, then download an SVG.',
         intro: 'Compare three fictional study activities with a bar chart in RAWGraphs and download an SVG. The question is: which activity accounts for the most hours?',
         prerequisites: 'Download the UTF-8 sample below. Activity is a category; Hours is a numeric quantity in hours: Reading 12, Practice 8 and Review 6. These are invented totals, not Utilibre usage statistics. The installed application uses English interface labels.',
         steps: [
@@ -309,6 +319,8 @@ export const practicalGuides: PracticalGuide[] = [
       },
       es: {
         title: 'Convertí un CSV en una gráfica clara',
+        seoTitle: 'Crear una gráfica de barras desde un CSV',
+        seoDescription: 'Convertí un CSV en una gráfica de barras con RAWGraphs en el navegador. Practicá con datos ficticios, revisá números y etiquetas y descargá un SVG.',
         intro: 'Compará tres actividades de estudio ficticias con barras en RAWGraphs y descargá un SVG. La pregunta es: ¿qué actividad ocupa más horas?',
         prerequisites: 'Descargá el ejemplo UTF-8. Actividad es una categoría; Horas es una cantidad numérica: Lectura 12, Práctica 8 y Repaso 6 horas. Son cifras inventadas, no estadísticas de uso de Utilibre. La aplicación instalada muestra controles en inglés.',
         steps: [
@@ -333,6 +345,8 @@ export const practicalGuides: PracticalGuide[] = [
     copy: {
       en: {
         title: 'Move a file from your phone to your computer',
+        seoTitle: 'Send a file from your phone to your computer',
+        seoDescription: 'Open PairDrop on both devices, choose a file, accept it and check the download. Try a small sample first; network restrictions can prevent a connection.',
         intro: 'Try a small file with PairDrop before sending something important. Both devices need the page open and must be able to establish a peer connection.',
         prerequisites: 'Download the harmless text sample to the sending device. Use an up-to-date browser with WebRTC and downloads enabled. Start on the same trusted local network. Direct transfers and encrypted relay transfers over UDP, TCP and TLS were checked with synthetic files in Chromium, including from an external test machine. Physical phones and every network combination were not tested.',
         steps: [
@@ -350,6 +364,8 @@ export const practicalGuides: PracticalGuide[] = [
       },
       es: {
         title: 'Pasá un archivo del teléfono a la computadora',
+        seoTitle: 'Pasar archivos del teléfono a la computadora',
+        seoDescription: 'Abrí PairDrop en ambos dispositivos, elegí un archivo, aceptalo y revisá la descarga. Probá un ejemplo pequeño: algunas redes pueden impedir la conexión.',
         intro: 'Probá un archivo pequeño con PairDrop antes de enviar algo importante. Ambos dispositivos necesitan la página abierta y una conexión entre pares que funcione.',
         prerequisites: 'Descargá el texto de práctica al dispositivo emisor. Usá un navegador actualizado con WebRTC y descargas habilitadas. Empezá en la misma red local de confianza. Se probaron archivos ficticios en Chromium por conexión directa y por retransmisión cifrada UDP, TCP y TLS, también desde un equipo externo. No se probaron teléfonos físicos ni todas las combinaciones de redes.',
         steps: [
