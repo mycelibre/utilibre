@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "id": "vikunja-upstream-2.8.0-20261112",
+  "application": "vikunja",
+  "status": "prepared-held-retention-decision",
+  "productionChanged": false,
+  "activationAllowed": false,
+  "input": {
+    "origin": "https://github.com/go-vikunja/vikunja",
+    "version": "2.8.0",
+    "revision": "6e788bf87cebe50e2b8d034b213fcf94ae5449ee",
+    "sourceDirectory": "/var/lib/utilibre-maintenance/releases-20261106/vikunja",
+    "sourceTree": "cdf271f4ed8eea113e76c1414421295572586c7c",
+    "archive": "/var/lib/utilibre-maintenance/vikunja-upgrade-20261112/vikunja-2.8.0-upstream.tar.gz",
+    "archiveSha256": "baade370e7e47bcb765438c81ea550cca409c9af22dde736e5beba23c4beb8c9",
+    "license": "AGPL-3.0-or-later"
+  },
+  "implementation": {
+    "method": "Official immutable upstream amd64 image; no local source patch or rebuild.",
+    "image": "vikunja/vikunja@sha256:12c860da57e1d354d3a75f01ec6b88acb35ea3a38b213a1b9ecab339d59aa243",
+    "imageId": "sha256:12c860da57e1d354d3a75f01ec6b88acb35ea3a38b213a1b9ecab339d59aa243",
+    "previousImage": "sha256:359415f79ab1bb719439121fcfed4373a9f5293cf175d8ddcba5b07735b87c70",
+    "binarySha256": "8feb99131ba64d44ab80a11aea6cbf60dd75518b77500ae59c55d585463c820c",
+    "compiler": "go1.27.3",
+    "localSourceChanges": [],
+    "imageBytes": 178534582,
+    "byteReproducibleBuildClaim": false
+  },
+  "preservedConfiguration": {
+    "deployment/community/vikunja/config.yml": "252e068652d41b746e227721532d26df86546aafb68df05dda3a67846f38f4b9",
+    "deployment/community/vikunja/nginx.conf": "f0d58ac45966145ffe8a79f674c08b46926e181d9662e2154960687fe2a91adc"
+  },
+  "retainedRepairs": {
+    "historicalPatch": "deployment/maintenance/go-leaf-final/patches/vikunja-go-security-20261011.patch",
+    "historicalPatchSha256": "2a788d9bc232e842a4376172438fe168f66c24af02fc0d30e72b8b18f7c52e7c",
+    "state": "Superseded by native 2.8 candidate; keep active historical ledger until activation.",
+    "nativeVersions": {
+      "go": "1.27.3",
+      "golang.org/x/net": "v0.62.0",
+      "github.com/go-jose/go-jose/v4": "v4.1.6",
+      "github.com/labstack/echo/v4": "v4.16.3",
+      "github.com/labstack/echo/v5": "v5.4.2",
+      "github.com/go-chi/chi/v5": "v5.5.0"
+    },
+    "configAndGatewayUnchanged": true,
+    "nativeModuleDiff": {
+      "path": "/var/lib/utilibre-maintenance/vikunja-upgrade-20261112/module-diff.json",
+      "sha256": "ae8b8b50394962ff7cef5aa334579da8b45d8720cdab8b04dc016a52fc152576",
+      "changes": 31
+    }
+  },
+  "verification": {
+    "native-workflow.json": {
+      "path": "/var/lib/utilibre-maintenance/vikunja-upgrade-20261112/native-workflow.json",
+      "sha256": "b6fb50fc9e4173f1e07639ba9debd43766b21c13c83ce901650a5047e628029e",
+      "passed": true,
+      "date": "2026-11-12T03:30:38Z"
+    },
+    "upgrade-rollback.json": {
+      "path": "/var/lib/utilibre-maintenance/vikunja-upgrade-20261112/upgrade-rollback.json",
+      "sha256": "18655e848e6785f32086e0f0ffda1562a7e849bebcc10dd385c630eb2fb2fefe",
+      "passed": true,
+      "date": "2026-11-12T03:33:49Z"
+    },
+    "oidc-browser-final.json": {
+      "path": "/var/lib/utilibre-maintenance/vikunja-upgrade-20261112/oidc-browser-final.json",
+      "sha256": "bd050c199ccd90e8a8a3928b3b43fe7db58750dc4c9d61631a6829a204f71ee3",
+      "passed": true,
+      "date": "2026-11-12T03:42:59.988Z"
+    }
+  },
+  "checkFiles": {
+    "deployment/maintenance/go-leaf-final/check-vikunja.py": "1fcfd6e9944a16cc0d52551e49ce1a94b24558bda04f6f858c6e8ddacf34f490",
+    "deployment/maintenance/releases-20261112/vikunja/check-upgrade.py": "1cc09f3a2edc5d6df809bd6b136d6619802b888fed0170b0c718230875493f71",
+    "deployment/maintenance/releases-20261112/vikunja/check-oidc.py": "5c58cb3bb55886a3e18cbb0b0ae2c3dd955f30c53874837151db4e0d9399ff42",
+    "deployment/maintenance/releases-20261112/vikunja/check-browser.mjs": "f1f3de94aa003ba33438dca2e4c4ff6d73e73e01fd53f9488696a1746f3b4172"
+  },
+  "securityAssessment": {
+    "tool": "Trivy",
+    "version": "0.76.2",
+    "toolSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "advisoryDatabaseSha256": "cf7fa3086682e8f77298ca8178419a530f97d7c4bd3ac203a64f2977f82e94a6",
+    "advisoryMetadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-11T19:01:23.081218965Z",
+      "UpdatedAt": "2026-11-10T19:01:23.081219346Z",
+      "DownloadedAt": "2026-11-11T10:25:50.991726515Z"
+    },
+    "refreshed": false,
+    "before": {
+      "report": "/var/lib/utilibre-maintenance/vikunja-upgrade-20261112/before-runtime-scan.json",
+      "sha256": "3c56b385de0906d70bf946574324eeabaf05231ebf3dbfa43ec3788c3aef245a",
+      "counts": {
+        "LOW": 1,
+        "MEDIUM": 2,
+        "UNKNOWN": 1
+      },
+      "findings": [
+        {
+          "id": "CVE-2023-36308",
+          "package": "github.com/disintegration/imaging",
+          "version": "v1.6.2",
+          "severity": "LOW"
+        },
+        {
+          "id": "CVE-2026-118651",
+          "package": "github.com/labstack/echo/v4",
+          "version": "v4.16.1",
+          "severity": "MEDIUM"
+        },
+        {
+          "id": "CVE-2026-118653",
+          "package": "github.com/labstack/echo/v4",
+          "version": "v4.16.1",
+          "severity": "MEDIUM"
+        },
+        {
+          "id": "GO-2026-5932",
+          "package": "golang.org/x/crypto",
+          "version": "v0.58.0",
+          "severity": "UNKNOWN"
+        }
+      ]
+    },
+    "candidate": {
+      "report": "/var/lib/utilibre-maintenance/vikunja-upgrade-20261112/runtime-scan.json",
+      "sha256": "96e6b52943cadf9207c84d98627fe818b6e397c42fcf82fae7b6fa5c3ea47b7f",
+      "counts": {
+        "LOW": 1,
+        "UNKNOWN": 1
+      },
+      "findings": [
+        {
+          "id": "CVE-2023-36308",
+          "package": "github.com/disintegration/imaging",
+          "version": "v1.6.2",
+          "severity": "LOW"
+        },
+        {
+          "id": "GO-2026-5932",
+          "package": "golang.org/x/crypto",
+          "version": "v0.58.0",
+          "severity": "UNKNOWN"
+        }
+      ]
+    },
+    "source": {
+      "report": "/var/lib/utilibre-maintenance/vikunja-upgrade-20261112/source-scan.json",
+      "sha256": "df15f509e668baf8587bbbf81ded88d06ee199c4271b8b4c420263358b11d18a",
+      "counts": {
+        "LOW": 1,
+        "UNKNOWN": 1
+      },
+      "findings": [
+        {
+          "id": "CVE-2023-36308",
+          "package": "github.com/disintegration/imaging",
+          "version": "v1.6.2",
+          "severity": "LOW"
+        },
+        {
+          "id": "GO-2026-5932",
+          "package": "golang.org/x/crypto",
+          "version": "v0.58.0",
+          "severity": "UNKNOWN"
+        }
+      ]
+    },
+    "noSuppressionsAdded": true,
+    "coverageLimits": [
+      "No exploitability determination.",
+      "Static C dependencies in the scratch-image Go binary are not fully assessed.",
+      "Frozen advisory replay is not future security clearance."
+    ]
+  },
+  "releaseGates": [
+    "Owner decision on 30-day project Trash retention newly added by 2.8.0. Individual deleted tasks already have 30-day native retention in 2.7.0. Existing instruction forbids silently changing retention.",
+    "Apply pending EN/ES privacy/help changes only with the approved release.",
+    "Publish corresponding source through the established process.",
+    "Deliberately fresh advisory review and established stopped-service backup.",
+    "Post-activation real Authentik/MFA and native workflow checks."
+  ],
+  "rollback": "Restore prior image together with pre-upgrade database/files/config; a migrated database is not an image-only rollback.",
+  "isolatedLimits": {
+    "applicationCPUs": 1,
+    "applicationMemoryMiB": 512,
+    "helperMemoryMiB": 64,
+    "network": "none; fictional provider shares isolated loopback",
+    "productionMounts": false,
+    "productionCredentials": false,
+    "emails": false,
+    "indexingRequests": false,
+    "sourcePublication": false
+  },
+  "evidenceRoot": "/var/lib/utilibre-maintenance/vikunja-upgrade-20261112",
+  "limitations": [
+    "No real production account, identity provider, phone, restored production backup or Internet-dependent integration was tested.",
+    "No production activation was performed."
+  ],
+  "retentionEvidence": {
+    "previousSource": "a16be96aa454671fdf213b0fbe411dd38a098418",
+    "previousTaskRetention": "pkg/models/task_delete_cron.go: TaskDeleteRetention = 30 * 24 * time.Hour; hourly cleanup",
+    "previousProjectDeletion": "pkg/models/project.go: Project.Delete hard-deletes tasks and related project entities",
+    "candidateRetention": "pkg/models/task_delete_cron.go: TrashRetention = 30 * 24 * time.Hour; task cleanup hourly at :00, project cleanup hourly at :30",
+    "nativeRetentionConfiguration": "No setting exists in the pinned config definitions."
+  }
+}

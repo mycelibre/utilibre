@@ -4,10 +4,11 @@ Requires=docker.service
 After=docker.service network-online.target
 
 [Service]
+Environment=GH_TELEMETRY=disabled
 Type=oneshot
 User=root
 WorkingDirectory=/home/ubuntu/freetools
-Environment=PATH=/root/.nvm/versions/node/v24.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=PATH=/root/.nvm/versions/node/v24.22.3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ExecStart=/usr/bin/flock -n /run/utilibre-community-backup.lock /usr/bin/env node deployment/community/scheduled-backup.mjs
 UMask=0077
 TimeoutStartSec=10min

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "version": "2.103.3+utilibre1",
+  "revision": "63837fb778d6a39f02be0ce76ff89f2bc8d74bdc",
+  "sourceUrl": "https://codeload.github.com/cli/cli/tar.gz/63837fb778d6a39f02be0ce76ff89f2bc8d74bdc",
+  "sourceSha256": "1a64dc5be667fa8c6458c0e639292ee1a5e215854705db267882e1bcf865b335",
+  "goVersion": "1.27.4",
+  "goArchiveUrl": "https://go.dev/dl/go1.27.4.linux-amd64.tar.gz",
+  "goArchiveSha256": "7226736c2339719cda28fbf3a54d71aa63bcefe376e98cef00034268dab24840",
+  "builder": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+  "goModSha256": "96347aa04b8f49906e08973b0c560673efa36228634c4170db31c8334042b38a",
+  "goSumSha256": "0ce47cc1b13e8b08b42358b55470022bff9bdb77323bfef37f61dee75ff2900a",
+  "binarySha256": "a88a74d46e4d4e6cf669d42d16b5f1124a032f31ce415b6515b6691befb880ee",
+  "packageSha256": "15cf7e8bdbfbd9dae1f1314590d6d6df857170527c0c1710e1f5e22285143f18",
+  "previousBinarySha256": "b768184570b12536be4ac1528893f6340d1c6a7b40b56ad45bca9cd0e87ad34d",
+  "previousPackage": "/var/lib/utilibre-maintenance/releases-20261106/gh_2.103.3_linux_amd64.deb",
+  "previousPackageSha256": "e3bafef96328d1a67de3a968bdfe1cc2ffd58cf6aba8b5e201356897ed06bb3d",
+  "license": "MIT",
+  "scope": "Host CLI only; native Go dependency locks/compiler updates, no upstream application source patch",
+  "checks": {
+    "candidate-scan.json": "d07adc7ba467eca396bc2e5f555276d592bbd038bcdc82b0844127667cd35bc9",
+    "test-retry.log": "fd94905236c0cc39e412ca940f5f6fb27afbac3a6fb5ee7ac1191165045e5ac7"
+  }
+}

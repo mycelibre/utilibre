@@ -1,0 +1,38 @@
+{
+  "status": "Prepared only. Apply with the approved 2.8.0 release; current production remains 2.7.0.",
+  "decisionRequired": "Approve 30-day project Trash retention added by 2.8.0, or retain 2.7.0. Deleted individual tasks already have native 30-day retention in the pinned 2.7.0 source. Neither release offers a supported setting for this period.",
+  "catalogRetention": {
+    "file": "portal/src/catalog/account-additions.ts",
+    "entry": "vikunja",
+    "en": "Deleting a task or project moves it to Trash. You can restore it or permanently delete it there; the server automatically purges it after 30 days. Revoke sharing links separately. Account deletion requires the operator’s native CLI here; discuss shared ownership first. Export/import copies tasks and attachments, not every account, team or permission setting.",
+    "es": "Borrar una tarea o un proyecto lo mueve a la Papelera. Allí podés restaurarlo o eliminarlo definitivamente; el servidor lo purga automáticamente después de 30 días. Revocá los enlaces compartidos por separado. Acá la cuenta se elimina con la herramienta nativa del operador; revisá primero la propiedad compartida. La exportación/importación copia tareas y adjuntos, no todos los ajustes de cuenta, equipos o permisos.",
+    "appendExistingBackupRetention": true
+  },
+  "guideDeletionStep": {
+    "file": "portal/src/pages/account-addition-guides.ts",
+    "routes": [
+      "/en/guides/tasks-export",
+      "/es/guias/exportar-tareas"
+    ],
+    "en": "Delete the fictional task or project through its menu, then open Trash. Restore it to check that undo works. Delete it again and choose permanent deletion when you no longer need it; otherwise the scheduled cleanup removes it after 30 days. Revoke sharing links separately. Account deletion currently needs operator assistance because native email confirmation cannot be delivered here. Discuss shared ownership before deleting an account.",
+    "es": "Borrá la tarea o el proyecto ficticio desde su menú y abrí Trash (Papelera). Restauralo para comprobar que podés deshacerlo. Volvé a borrarlo y elegí la eliminación definitiva cuando ya no lo necesités; de lo contrario la limpieza programada lo elimina después de 30 días. Revocá los enlaces compartidos por separado. La eliminación de la cuenta requiere ayuda del operador porque acá no se entrega la confirmación nativa por correo. Revisá la propiedad compartida antes de borrar una cuenta."
+  },
+  "verificationCopy": {
+    "file": "portal/src/catalog/guidance.ts",
+    "en": "12 November 2026: isolated synthetic checks passed for two accounts, tasks, attachments, native ZIP export/import, the 2.7-to-2.8 database upgrade and restoration of the pre-upgrade backup. Trash restoration and permanent deletion passed. Production Authentik/MFA was not exercised by these checks.",
+    "es": "12 de noviembre de 2026: pasaron las pruebas aisladas con datos ficticios de dos cuentas, tareas, adjuntos, exportación/importación ZIP nativa, actualización de la base de datos de 2.7 a 2.8 y restauración de la copia previa. Pasaron la restauración desde la Papelera y la eliminación definitiva. Estas pruebas no comprobaron Authentik/MFA en producción."
+  },
+  "upstreamMetadata": {
+    "file": "portal/src/catalog/upstreams.ts",
+    "entry": "vikunja",
+    "version": "2.8.0",
+    "revision": "6e788bf87cebe50e2b8d034b213fcf94ae5449ee",
+    "image": "vikunja/vikunja@sha256:12c860da57e1d354d3a75f01ec6b88acb35ea3a38b213a1b9ecab339d59aa243",
+    "reviewStatus": "Set deployed only after actual deployment verification."
+  },
+  "current2_7PrivacyCorrection": {
+    "status": "Independent copy correction supported by the existing 2.7.0 source; does not authorize a retention change.",
+    "en": "Deleted individual tasks are retained for undo and scheduled for cleanup after 30 days. Deleting an entire project removes its tasks, including tasks previously deleted individually. Revoke sharing links separately. Backups follow the existing saved-work retention policy.",
+    "es": "Las tareas borradas individualmente se conservan para poder deshacerlo y se programan para limpieza después de 30 días. Borrar un proyecto completo elimina sus tareas, incluidas las borradas individualmente. Revocá los enlaces compartidos por separado. Las copias de seguridad siguen la política existente para trabajo guardado."
+  }
+}

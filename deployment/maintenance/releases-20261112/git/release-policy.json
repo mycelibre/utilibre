@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "approval": "approved-opengist-only",
+  "authority": "Owner authorized maintenance updates; parent delegated this exact tested candidate for normal Opengist-only release on 2026-11-12. No other service activation.",
+  "preparationStatusSha256": "41cd6c67ac2586cdb92379955e224ef231fd03f330f1b4d64c06eb03b322f915",
+  "maximumEvidenceAgeHours": 24,
+  "maximumAdvisoryAgeHours": 24,
+  "sourceName": "git-2.54.1-alpine-source.tar.gz",
+  "files": {
+    "scripts/publish-source-index.mjs": "1e09250247c6c23000c774cbf113666247c48211b7261c32e0dc9568aaba215d",
+    "deployment/maintenance/language-final/release.mjs": "6c4387664ddaef799dc6a7129b811cec9a1f5e9a56b9214a24efef0ca4360817",
+    "deployment/maintenance/security-20261103/release-lock.mjs": "ac8fc285de9d1ea2f1c3647e06c6103eacb3193da232ff5c3ac2b3b389196563",
+    "deployment/toolbox/source-index.html": "bf8840117238ed2dfb9189379520d0cf5570f388c09efa008d4e3f2f23c34a07",
+    "portal/public/brand/favicon/favicon.ico": "19e62c12c419cfc4f990a25f7586ed62bb8fc3ef4885caba99a00d4e704c7906",
+    "portal/public/brand/favicon/utilibre-appicon-simple.svg": "6619ef2e5c026cae41aaf831b561da92e07bd8e3a51d5056efb60c85759f483d",
+    "deployment/maintenance/releases-20261112/git/release-opengist.mjs": "04de583fa12d88ef69a08ece32aa1b72e0fe1805636ac73a3ca9734e173010a1"
+  },
+  "sideEffects": [
+    "Publish this exact Git source archive and the existing source index.",
+    "Change only the Opengist image pin and recreate only that service.",
+    "Reload the same gateway only upon failed health following a changed app address."
+  ],
+  "network": [
+    "GET source archive headers/body cancellation once after publication",
+    "GET existing private gateway health at baseline and after release; at most three additional checks only after a needed DNS reload",
+    "GET existing public snippets health once after activation or rollback"
+  ],
+  "remainingFindings": "Retain all three medium and two unknown findings; no new findings in frozen before/after assessment. Other 27 Debian/DHI Git high records remain open.",
+  "rollback": "Restore exact previous Compose image pin and recreate Opengist using established releaseGroup; no database migration, data/config restoration or deletion."
+}

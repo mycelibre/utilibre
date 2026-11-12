@@ -11,7 +11,7 @@ x-bounded: &bounded
 services:
   vikunja:
     <<: *bounded
-    image: utilibre-vikunja:xnet-security-20261109
+    image: vikunja/vikunja@sha256:12c860da57e1d354d3a75f01ec6b88acb35ea3a38b213a1b9ecab339d59aa243
     user: '1000:1000'
     cpus: 1.5
     mem_limit: 768m

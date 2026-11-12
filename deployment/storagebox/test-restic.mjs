@@ -21,7 +21,8 @@ const password = join(root, 'password');
 writeFileSync(password, randomBytes(48).toString('base64'), { mode: 0o600 });
 const args = ['--repo', join(root, 'repository'), '--password-file', password, '--no-cache', '--quiet'];
 const wrapper = fileURLToPath(new URL('./restic.sh', import.meta.url));
-const program = remote ? 'sh' : 'restic';
+const restic = remote ? '/opt/utilibre/maintenance/bin/restic' : 'restic';
+const program = remote ? 'sh' : restic;
 const prefix = remote ? [wrapper] : args;
 const run = (...extra) => execFileSync(program, [...prefix, ...extra], { cwd: root, encoding: 'utf8', env: { ...process.env, GOMAXPROCS: '2' }, stdio: ['ignore', 'pipe', 'pipe'] });
 if (!remote) run('init', '--repository-version', '2');
@@ -38,7 +39,7 @@ writeFileSync(wrongPassword, randomBytes(48).toString('base64'), { mode: 0o600 }
 const refused = spawnSync(program, [...prefix, 'snapshots', '--password-file', wrongPassword], { encoding: 'utf8' });
 assert.equal(refused.status, 12, 'Wrong repository password must be rejected.');
 const result = {
-  date: new Date().toISOString(), version: execFileSync('restic', ['version'], { encoding: 'utf8' }).trim(),
+  date: new Date().toISOString(), version: execFileSync(restic, ['version'], { encoding: 'utf8' }).trim(),
   scope: remote ? 'SFTP repository and fictional text; not a live application or whole-VM restore.' : 'Local filesystem repository and fictional text; no SFTP or live application restore.',
   init: remote ? 'previously initialized' : 'passed', backup: 'passed', metadataCheck: 'passed',
   fullDataCheck: remote ? 'not repeated; exact fictional snapshot restored and verified' : 'passed',

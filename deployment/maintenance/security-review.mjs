@@ -81,7 +81,7 @@ async function atomic(file,data){await writeFile(file+'.tmp',JSON.stringify(data
 export async function run({refreshDatabase=true}={}){
  if(typeof refreshDatabase!=='boolean')throw Error('refreshDatabase must be boolean');
  await mkdir(directory,{recursive:true,mode:0o700});await mkdir(cache,{recursive:true,mode:0o700});
- const started=Date.now(),report={date:new Date().toISOString(),status:'running',scanner:'Trivy 0.75.0',images:[],sources:[],limitations:['No exploitation or reachability proof. Findings require review; patched vendored code may need evidence-backed exceptions.','Image scans do not inspect mounted user data or a container writable layer.','Source-lock checks cover the listed code manifests, not every minified browser bundle.','Grist supplements image scans with a runtime-bound Deno release-source lock and shipped Pyodide wheel metadata. This is not a linked Rust-crate SBOM and does not inventory native Python/WASM components. See deployment/maintenance/sandbox-inventory/README.md.','Separate Caddy/Proxmox hosts are outside this VM scan.']};
+ const started=Date.now(),report={date:new Date().toISOString(),status:'running',scanner:'unverified',images:[],sources:[],limitations:['No exploitation or reachability proof. Findings require review; patched vendored code may need evidence-backed exceptions.','Image scans do not inspect mounted user data or a container writable layer.','Source-lock checks cover the listed code manifests, not every minified browser bundle.','Host Go tools have embedded dependency inventory; unmanaged Node uses vendor release/advisory review, not a complete embedded native-library SBOM.','Grist supplements image scans with a runtime-bound Deno release-source lock and shipped Pyodide wheel metadata. This is not a linked Rust-crate SBOM and does not inventory native Python/WASM components. See deployment/maintenance/sandbox-inventory/README.md.','Separate Caddy/Proxmox hosts are outside this VM scan.']};
  const latest=directory+'/security.json';
  await atomic(directory+'/security-progress.json',report);
  let scratch,stage='disk-preflight';
@@ -90,6 +90,10 @@ export async function run({refreshDatabase=true}={}){
   // A preflight failure must not point operators at an unrelated old exception.
   await rm(directory+'/security-last-error.log',{force:true});
   report.preflight=diskPreflight(await statfs(directory));if(!report.preflight.passed)throw Error('Disk floor');
+  stage='scanner-identity';
+  const version=(await command(binary,['--version'],10000)).match(/^Version: (\d+\.\d+\.\d+)/)?.[1];
+  if(!version)throw Error('Unrecognized scanner version');
+  report.scanner='Trivy '+version;report.scannerSha256=createHash('sha256').update(await readFile(binary)).digest('hex');
   stage='advisory-database';
   if(refreshDatabase){
    await command(binary,['image','--disable-telemetry','--cache-dir',cache,'--db-repository','ghcr.io/aquasecurity/trivy-db:2','--download-db-only','--no-progress'],300000);
@@ -132,6 +136,18 @@ export async function run({refreshDatabase=true}={}){
   await copyFile('/etc/os-release',osRoot+'/etc/os-release');await copyFile('/etc/debian_version',osRoot+'/etc/debian_version');await copyFile('/var/lib/dpkg/status',osRoot+'/var/lib/dpkg/status');
   report.host={status:'checked',...await scan('rootfs',osRoot,['--pkg-types','os'])};
   if(!report.host.packages)throw Error('Host package inventory was empty');
+  // Only named maintenance executables: never walk live data or secret paths.
+  stage='host-tool-scan';
+  const hostTools=JSON.parse(await readFile(new URL('./host-tools/runtime-artifacts.json',import.meta.url),'utf8'));
+  for(const tool of hostTools){
+   try{
+    const dest=path.join(scratch,'host-tool-'+tool.name);await mkdir(dest);
+    await copyFile(tool.path,path.join(dest,tool.name));
+    const sha256=createHash('sha256').update(await readFile(path.join(dest,tool.name))).digest('hex');
+    const result=await scan('rootfs',dest,['--pkg-types','library']);
+    report.sources.push({name:tool.name,scope:'host-runtime-tool',sha256,...result,status:result.goModules.length&&result.packages>0?'checked':'incomplete'});
+   }catch{report.sources.push({name:tool.name,scope:'host-runtime-tool',status:'failed'});}
+  }
   // Explicit code-only roots. Extra/missing source manifests are reported, not
   // interpreted as proof of what is bundled in a deployed static application.
   stage='source-inventory';

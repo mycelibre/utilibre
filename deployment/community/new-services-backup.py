@@ -8,7 +8,7 @@ with open('/run/lock/utilibre-community-backup.lock','w') as lock:
  failures=[]
  # Preserve the original Rallly/Pollaris/FMD/Kuma/Mumble/onion snapshots too.
  # Their existing helper uses native online dumps and isolated restore checks.
- node='/root/.nvm/versions/node/v24.14.0/bin/node'
+ node='/root/.nvm/versions/node/v24.22.3/bin/node'
  if subprocess.run([node,str(root/'scheduled-backup.mjs')]).returncode:
   failures.append('original-community')
  for service in ['opengist','linkding','vikunja','bytestash']:

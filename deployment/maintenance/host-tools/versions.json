@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-12",
+  "node": {
+    "version": "24.22.3",
+    "previousVersion": "24.14.0",
+    "archive": "https://nodejs.org/dist/v24.22.3/node-v24.22.3-linux-x64.tar.xz",
+    "archiveSha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb",
+    "binarySha256": "a7ec1b37e6ff9d187e4198c5b6df9a4eb1c74dd31804fb3bac55cc4ceca1ac01",
+    "previousBinarySha256": "e237a2839d0cbdc9a9a2adda1a184afc0f5b20306ffbe923af5686550472d8a8",
+    "templates": [
+      "deployment/utilibre/systemd/utilibre-account-backup.service",
+      "deployment/utilibre/systemd/utilibre-community-backup.service",
+      "deployment/utilibre/systemd/utilibre-journeys.service",
+      "deployment/utilibre/systemd/utilibre-maintenance-digest.service",
+      "deployment/utilibre/systemd/utilibre-maintenance-review.service",
+      "deployment/utilibre/systemd/utilibre-monitor-alerts.service",
+      "deployment/utilibre/systemd/utilibre-performance.service",
+      "deployment/utilibre/systemd/utilibre-privatebin-update.service",
+      "deployment/utilibre/systemd/utilibre-recovery-check.service",
+      "deployment/utilibre/systemd/utilibre-redlib-update.service",
+      "deployment/utilibre/systemd/utilibre-searx-update.service",
+      "deployment/utilibre/systemd/utilibre-security-review.service",
+      "deployment/pack/utilibre-pack-backup.service",
+      "deployment/pack/utilibre-pack-forms-maintenance.service",
+      "deployment/spliit/utilibre-spliit-backup.service",
+      "deployment/storagebox/utilibre-storagebox-backup.service",
+      "deployment/community/new-services-backup.py"
+    ],
+    "units": [
+      "utilibre-account-backup.service",
+      "utilibre-journeys.service",
+      "utilibre-maintenance-digest.service",
+      "utilibre-maintenance-review.service",
+      "utilibre-monitor-alerts.service",
+      "utilibre-pack-backup.service",
+      "utilibre-pack-forms-maintenance.service",
+      "utilibre-performance.service",
+      "utilibre-privatebin-update.service",
+      "utilibre-recovery-check.service",
+      "utilibre-redlib-update.service",
+      "utilibre-searx-update.service",
+      "utilibre-security-review.service",
+      "utilibre-spliit-backup.service",
+      "utilibre-storagebox-backup.service"
+    ]
+  },
+  "trivy": {
+    "version": "0.76.2",
+    "previousVersion": "0.75.0",
+    "archive": "https://github.com/aquasecurity/trivy/releases/download/v0.76.2/trivy_0.76.2_Linux-64bit.tar.gz",
+    "archiveSha256": "bc0fc726e017b8927a62b2d3531d7a84ee01769daf5c99ed866dced54089fdbf",
+    "binarySha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "previousBinarySha256": "93f9da8e4ba5e0c1c76d8234ed2494cf9afb0a96fd21953e424bb795f3299b8e"
+  },
+  "restic": {
+    "version": "0.19.1",
+    "revision": "6aa3a516ce654808a1f28f9fa21e9b7c8e6e90bf",
+    "archive": "https://codeload.github.com/restic/restic/tar.gz/6aa3a516ce654808a1f28f9fa21e9b7c8e6e90bf",
+    "archiveSha256": "6318c51f187bafbaf33d1ab6dcb5abde9a94de11476651cbb2982f1ba89ca8a8",
+    "compiler": "sha256:942720fe0171599572cc00a947269179ed3eb7f0cfa5591dbb621766df35022b",
+    "compilerVersion": "1.27.3",
+    "goModSha256": "93255ac9e2be5628428a704b18ee3d5170f9b9f18c80ddb238c6c1ecb59e88e5",
+    "goSumSha256": "0ea964fb3f66c73954834a5cb8e7cdf512407c3a4f59c239629e31b7f9697d64",
+    "binarySha256": "bb246d54f28f389fe66db4bc8f7bf7839962145fb147e2faf0f1d4b5a50cc790",
+    "previousBinarySha256": "7135345e471b64fe43356f8cc665d33d9e52fb042ba39e5cff77310c46d46857",
+    "license": "BSD-2-Clause",
+    "changes": "Native go.mod/go.sum dependency updates only; exact resolved locks retained; no source or storage-format patch."
+  },
+  "python": {
+    "version": "3.13.18",
+    "packageVersion": "3.13.18-1~deb13u1+utilibre1",
+    "vendorPackageVersion": "3.13.18-1",
+    "upstreamArchiveSha256": "abb0102e6d4ae027509bcb82327d9dd85515b44a3ba8ad538cfc5e9847029f68",
+    "debianArchiveSha256": "8f12d82b3cedd95970133622a48a3c3309a3ce8560e5c026d3438d3aecc8ef8b",
+    "dscSha256": "b6ba67e05744b11615fb41390ef13aa1ca3035a5425909bcde46e053f4d77892",
+    "builder": "debian@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f",
+    "provenance": "Debian signed sid Sources index; source rebuilt with Trixie dependencies, no sid runtime package install",
+    "license": "PSF-2.0 and retained Debian packaging notices",
+    "preparedBuilder": "sha256:53f0cb1d3d6a36a39290caedc32bfd4ddf6d4dcec26bd0476beb58bcf6c29c69"
+  }
+}

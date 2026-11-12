@@ -21,7 +21,7 @@ done
 # Disable the disk cache to preserve VM headroom. Restic can recreate it later.
 export GOMAXPROCS=2
 exec flock -n /run/lock/utilibre-storagebox.lock nice -n 10 ionice -c 2 -n 7 \
-    restic --repository-file "$base/repository" --password-file "$base/restic-password" \
+    /opt/utilibre/maintenance/bin/restic --repository-file "$base/repository" --password-file "$base/restic-password" \
     --no-cache --retry-lock 1m --limit-upload 4096 --limit-download 4096 \
     -o sftp.connections=2 \
     -o "sftp.command=ssh -F $base/ssh_config utilibre-storagebox -s sftp" "$@"

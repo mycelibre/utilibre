@@ -470,6 +470,16 @@
     "removeWhen": "Remove when upstream native settings and security fixes provide the same verified behavior."
   },
   {
+    "patch": "deployment/maintenance/releases-20261112/gathio/source-update.patch",
+    "source": "/opt/utilibre/calendar-src/gathio",
+    "revision": "98a5e9b719120e2f3e72f712a78c97fba1eff8e7",
+    "prerequisites": [
+      "deployment/calendar/gathio/privacy-security.patch"
+    ],
+    "purpose": "Exact native Mongoose 6.13.12/mquery 4.0.4 lock update. Input hashes, runtime overlay and workflow evidence: deployment/maintenance/releases-20261112/gathio/.",
+    "removeWhen": "Reviewed upstream includes these dependency fixes and passes event/image/ICS/restore tests while retaining privacy restrictions."
+  },
+  {
     "patch": "deployment/chhoto/no-analytics-local-assets.patch",
     "source": "/opt/utilibre/src/chhoto-url-7.10.8",
     "revision": "93881f699c1e2c900441b6bbb0aa0762b038f25e",

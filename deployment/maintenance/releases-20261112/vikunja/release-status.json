@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "status": "deployed-verified",
+  "date": "2026-11-12T05:16:24.553Z",
+  "applicationVersion": "2.8.0",
+  "image": "sha256:12c860da57e1d354d3a75f01ec6b88acb35ea3a38b213a1b9ecab339d59aa243",
+  "previousImage": "sha256:359415f79ab1bb719439121fcfed4373a9f5293cf175d8ddcba5b07735b87c70",
+  "ownerApprovedProjectTrashDays": 30,
+  "privacyConfigurationUnchanged": true,
+  "backup": {
+    "nativeArchiveIntegrity": true,
+    "coldSqliteIntegrity": true,
+    "preUpgradeImageAndDataRetained": true
+  },
+  "liveWorkflow": {
+    "passed": true,
+    "date": "2026-11-12T05:15:12.423Z",
+    "version": "2.8.0",
+    "publicOidcMfa": true,
+    "syntheticAccountOnly": true,
+    "nativeTaskAttachmentExportImport": true,
+    "trashRestorePermanentDelete": true,
+    "exportedAttachmentBytes": true,
+    "browser": "151.0.7922.34",
+    "viewports": [
+      "1365x900",
+      "390x844"
+    ],
+    "mobileNoOverflow": true,
+    "hosts": [
+      "auth.utilibre.org",
+      "tasks.utilibre.org"
+    ],
+    "javascriptErrors": [],
+    "deviceCoverage": "Chromium desktop and mobile viewport emulation; not physical phone",
+    "mobileLimitation": null
+  },
+  "testIdentityRetired": true,
+  "testApplicationAccountDeleted": true,
+  "remainingFindings": [
+    {
+      "id": "CVE-2023-36308",
+      "package": "github.com/disintegration/imaging",
+      "version": "v1.6.2",
+      "severity": "LOW"
+    },
+    {
+      "id": "GO-2026-5932",
+      "package": "golang.org/x/crypto",
+      "version": "v0.58.0",
+      "severity": "UNKNOWN"
+    },
+    {
+      "id": "CVE-2026-97054",
+      "package": "stdlib",
+      "version": "v1.27.3",
+      "severity": "UNKNOWN"
+    }
+  ],
+  "source": {
+    "name": "vikunja-2.8.0-upstream.tar.gz",
+    "sha256": "baade370e7e47bcb765438c81ea550cca409c9af22dde736e5beba23c4beb8c9",
+    "previousIndex": "/opt/utilibre/source-index-update-WUs6I5",
+    "published": true
+  },
+  "portal": {
+    "image": "sha256:a9cdd99d55808fd4471feb7b8cc6dcdca3cb88521431419d15a5e6d6f0295fbe",
+    "previousImage": "sha256:66dd5e3669b384332c49790fed7a74ab253540bb34b18790cc4e5d57210dbdb6",
+    "status": "passed"
+  },
+  "evidenceRoot": "/var/lib/utilibre-maintenance/vikunja-upgrade-20261112",
+  "limitations": [
+    "Mobile viewport emulation is not a physical phone test.",
+    "Remaining low/unknown findings are not suppressed or claimed fixed.",
+    "Native export and cold-copy integrity passed; the full-VM recovery rehearsal is separate."
+  ]
+}

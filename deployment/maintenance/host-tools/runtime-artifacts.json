@@ -1,0 +1,14 @@
+[
+  {
+    "name": "trivy",
+    "path": "/opt/utilibre/maintenance/bin/trivy"
+  },
+  {
+    "name": "restic",
+    "path": "/opt/utilibre/maintenance/bin/restic"
+  },
+  {
+    "name": "github-cli",
+    "path": "/usr/bin/gh"
+  }
+]

@@ -29,10 +29,49 @@
   "github-cli-host": {
     "project": "GitHub CLI (host maintenance client)",
     "sourceUrl": "https://github.com/cli/cli",
-    "reviewedSourceUrl": "https://github.com/cli/cli/tree/v2.103.3",
+    "reviewedSourceUrl": "https://github.com/cli/cli/tree/63837fb778d6a39f02be0ce76ff89f2bc8d74bdc",
     "installedVersion": "2.103.3",
-    "reviewedOn": "2026-11-06",
+    "reviewedOn": "2026-11-12",
     "reviewStatus": "deployed",
-    "reviewDocument": "docs/records/release-refresh-2026-11-06.md"
+    "reviewDocument": "deployment/maintenance/host-tools/README.md"
+  },
+  "node-host": {
+    "project": "Node.js (host maintenance runtime)",
+    "sourceUrl": "https://github.com/nodejs/node",
+    "reviewedSourceUrl": "https://github.com/nodejs/node/tree/v24.22.3",
+    "installedVersion": "24.22.3",
+    "reviewedOn": "2026-11-12",
+    "reviewStatus": "deployed",
+    "reviewDocument": "deployment/maintenance/host-tools/README.md",
+    "releaseLine": "24."
+  },
+  "trivy-host": {
+    "project": "Trivy (host assessment engine)",
+    "sourceUrl": "https://github.com/aquasecurity/trivy",
+    "reviewedSourceUrl": "https://github.com/aquasecurity/trivy/tree/v0.76.2",
+    "installedVersion": "0.76.2",
+    "reviewedOn": "2026-11-12",
+    "reviewStatus": "deployed",
+    "reviewDocument": "deployment/maintenance/host-tools/README.md"
+  },
+  "python-host": {
+    "project": "Python (native host maintenance runtime)",
+    "sourceUrl": "https://github.com/python/cpython",
+    "reviewedSourceUrl": "https://github.com/python/cpython/tree/v3.13.18",
+    "installedVersion": "3.13.18",
+    "reviewedOn": "2026-11-12",
+    "reviewStatus": "deployed",
+    "reviewDocument": "deployment/maintenance/host-tools/README.md",
+    "releaseLine": "3.13.",
+    "releaseSource": "git-tags"
+  },
+  "restic-host": {
+    "project": "Restic (encrypted host backup client)",
+    "sourceUrl": "https://github.com/restic/restic",
+    "reviewedSourceUrl": "https://github.com/restic/restic/tree/v0.19.1",
+    "installedVersion": "0.19.1 + local dependency repairs",
+    "reviewedOn": "2026-11-12",
+    "reviewStatus": "deployed",
+    "reviewDocument": "deployment/maintenance/host-tools/README.md"
   }
 }

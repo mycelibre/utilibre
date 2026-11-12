@@ -3968,11 +3968,11 @@
     ]
   },
   "github-cli-host": {
-    "version": "2.102.0",
-    "reviewedAt": "2026-10-11",
+    "version": "2.103.3",
+    "reviewedAt": "2026-11-12",
     "containers": {},
     "files": {
-      "/usr/bin/gh": "7469124f706944133d6a169691dd1c6c3511b12e85878d255e044e2948df4c9b"
+      "/usr/bin/gh": "a88a74d46e4d4e6cf669d42d16b5f1124a032f31ce415b6515b6691befb880ee"
     },
     "advisories": [
       {
@@ -3985,7 +3985,7 @@
             "patched": "v2.102.0"
           }
         ],
-        "reason": "Reviewed installed 2.102.0 is outside every bounded upstream application range in this advisory. Exact running image identities and host binary bytes are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-4mq3-hpgx-9cx8"
       },
       {
@@ -3998,7 +3998,7 @@
             "patched": "v2.102.0"
           }
         ],
-        "reason": "Reviewed installed 2.102.0 is outside every bounded upstream application range in this advisory. Exact running image identities and host binary bytes are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-wjmr-j3rp-mh2g"
       },
       {
@@ -4011,7 +4011,7 @@
             "patched": "v2.102.0"
           }
         ],
-        "reason": "Reviewed installed 2.102.0 is outside every bounded upstream application range in this advisory. Exact running image identities and host binary bytes are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-39wj-f2f4-978v"
       },
       {
@@ -4024,7 +4024,7 @@
             "patched": "v2.102.0"
           }
         ],
-        "reason": "Reviewed installed 2.102.0 is outside every bounded upstream application range in this advisory. Exact running image identities and host binary bytes are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-qcwj-mr2r-2cx7"
       },
       {
@@ -4037,7 +4037,7 @@
             "patched": "v2.97.0"
           }
         ],
-        "reason": "Reviewed installed 2.102.0 is outside every bounded upstream application range in this advisory. Exact running image identities and host binary bytes are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-4fjg-2h4q-fwg3"
       },
       {
@@ -4050,7 +4050,7 @@
             "patched": "v2.97.0"
           }
         ],
-        "reason": "Reviewed installed 2.102.0 is outside every bounded upstream application range in this advisory. Exact running image identities and host binary bytes are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-3m3g-3wcr-px46"
       },
       {
@@ -4063,7 +4063,7 @@
             "patched": "v2.97.0"
           }
         ],
-        "reason": "Reviewed installed 2.102.0 is outside every bounded upstream application range in this advisory. Exact running image identities and host binary bytes are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-cg6r-mpgc-h9mm"
       },
       {
@@ -4076,7 +4076,7 @@
             "patched": "v2.97.0"
           }
         ],
-        "reason": "Reviewed installed 2.102.0 is outside every bounded upstream application range in this advisory. Exact running image identities and host binary bytes are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-mm27-mwq9-fr5g"
       },
       {
@@ -4089,7 +4089,7 @@
             "patched": "v2.93.0"
           }
         ],
-        "reason": "Reviewed installed 2.102.0 is outside every bounded upstream application range in this advisory. Exact running image identities and host binary bytes are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-8xvp-7hj6-mcj9"
       },
       {
@@ -4102,7 +4102,7 @@
             "patched": "2.63.1"
           }
         ],
-        "reason": "Reviewed installed 2.102.0 is outside every bounded upstream application range in this advisory. Exact running image identities and host binary bytes are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-2m9h-r57g-45pj"
       },
       {
@@ -4115,7 +4115,7 @@
             "patched": "2.62.0"
           }
         ],
-        "reason": "Reviewed installed 2.102.0 is outside every bounded upstream application range in this advisory. Exact running image identities and host binary bytes are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-p2h2-3vg9-4p87"
       },
       {
@@ -4128,7 +4128,7 @@
             "patched": "2.63.0"
           }
         ],
-        "reason": "Reviewed installed 2.102.0 is outside every bounded upstream application range in this advisory. Exact running image identities and host binary bytes are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-jwcm-9g39-pmcw"
       },
       {
@@ -4141,7 +4141,7 @@
             "patched": "1.2.1"
           }
         ],
-        "reason": "Reviewed installed 2.102.0 is outside every bounded upstream application range in this advisory. Exact running image identities and host binary bytes are recorded; new images, advisory edits or changed ranges reopen the review. Bundled dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-fqfh-778m-2v32"
       },
       {
@@ -4155,7 +4155,7 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): v2.98.0; reviewed installed 2.102.0 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-vfhh-p7hm-pxfh"
       },
       {
@@ -4169,7 +4169,7 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): v2.96.0; reviewed installed 2.102.0 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-8cg3-r6g9-fpg2"
       },
       {
@@ -4183,7 +4183,7 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): v2.92.0; reviewed installed 2.102.0 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-crc3-h8v6-qh57"
       },
       {
@@ -4197,7 +4197,7 @@
           }
         ],
         "disposition": "not-affected-at-reviewed-version",
-        "reason": "Published patched version(s): v2.67.0; reviewed installed 2.102.0 is later. Historical range syntax may omit an upper bound; this review follows the explicit patch statement, not automatic interpretation of that incomplete range. Exact runtime identities are bound; dependency findings remain separate.",
+        "reason": "Pinned upstream 2.103.3 source includes each previously reviewed application correction (all fixed releases at or before 2.102.0). Current upstream advisory revision/ranges rechecked unchanged on 2026-11-12. Only native Go dependency locks/compiler differ; application source matches the exact archive. Installed binary SHA256 and ordinary CLI/API/telemetry tests verified. Changed binary, range or advisory reopens review; dependency findings remain separate.",
         "source": "https://github.com/cli/cli/security/advisories/GHSA-fgw4-v983-mgp8"
       }
     ]
@@ -5485,6 +5485,106 @@
         ],
         "reason": "Both live native Python application modules report Authentik 2026.8.3, outside all bounded older release ranges listed here. Exact vendor-layer server/worker image retains tested PyJWT 2.14.0 and AnyIO 4.14.2, adds urllib3 2.8.0 and signed PCRE2 update, and passed isolated native password/TOTP/OAuth/JWKS/replay checks. This application-advisory review does not waive runtime dependency findings.",
         "source": "https://github.com/goauthentik/authentik/security/advisories/GHSA-mjfw-54m5-fvjf"
+      }
+    ]
+  },
+  "trivy-host": {
+    "version": "0.76.2",
+    "reviewedAt": "2026-11-12T03:23:04.411668+00:00",
+    "files": {
+      "/opt/utilibre/maintenance/bin/trivy": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3"
+    },
+    "containers": {},
+    "advisories": [
+      {
+        "id": "GHSA-q3fv-x8vg-qqm4",
+        "severity": "medium",
+        "url": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-q3fv-x8vg-qqm4",
+        "published": "2026-06-04T07:41:17Z",
+        "updated": "2026-06-15T18:15:57Z",
+        "affected": [
+          {
+            "package": "github.com/aquasecurity/trivy",
+            "range": "<0.71.0",
+            "patched": "0.71.0"
+          }
+        ],
+        "reason": "The installed standalone Trivy 0.76.2 is newer than the upstream fixed release 0.71.0. Version output, official archive SHA256 and exact executable are recorded in host-tools/versions.json. No CI action or Trivy server is installed by this host recipe.",
+        "source": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-q3fv-x8vg-qqm4"
+      },
+      {
+        "id": "GHSA-69fq-xp46-6x23",
+        "severity": "critical",
+        "url": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23",
+        "published": "2026-03-21T15:51:56Z",
+        "updated": "2026-03-30T16:44:30Z",
+        "affected": [
+          {
+            "package": "github.com/aquasecurity/trivy",
+            "range": "=0.69.4",
+            "patched": "0.69.3"
+          },
+          {
+            "package": "aquasecurity/trivy-action",
+            "range": "<0.35.0",
+            "patched": "0.35.0"
+          },
+          {
+            "package": "aquasecurity/setup-trivy",
+            "range": "<0.2.6",
+            "patched": "0.2.6"
+          }
+        ],
+        "reason": "The exact installed official standalone binary is 0.76.2, not the affected 0.69.4. This host recipe does not use trivy-action or setup-trivy. This current-version finding review is not a historical incident/compromise assessment.",
+        "source": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23"
+      },
+      {
+        "id": "GHSA-mcj4-mphf-j9ff",
+        "severity": "high",
+        "url": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-mcj4-mphf-j9ff",
+        "published": "2026-06-15T10:05:30Z",
+        "updated": "2026-06-16T15:16:32Z",
+        "affected": [
+          {
+            "package": "github.com/aquasecurity/trivy",
+            "range": "<0.71.1",
+            "patched": "0.71.1"
+          }
+        ],
+        "reason": "The installed standalone Trivy 0.76.2 is newer than the upstream fixed release 0.71.1. Version output, official archive SHA256 and exact executable are recorded in host-tools/versions.json. No CI action or Trivy server is installed by this host recipe.",
+        "source": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-mcj4-mphf-j9ff"
+      },
+      {
+        "id": "GHSA-8rc5-4fr6-64pw",
+        "severity": "medium",
+        "url": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-8rc5-4fr6-64pw",
+        "published": "2026-06-30T12:14:12Z",
+        "updated": "2026-07-16T17:40:01Z",
+        "affected": [
+          {
+            "package": "github.com/aquasecurity/trivy",
+            "range": "<0.72.0",
+            "patched": "0.72.0"
+          }
+        ],
+        "reason": "The installed standalone Trivy 0.76.2 is newer than the upstream fixed release 0.72.0. Version output, official archive SHA256 and exact executable are recorded in host-tools/versions.json. No CI action or Trivy server is installed by this host recipe.",
+        "source": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-8rc5-4fr6-64pw"
+      },
+      {
+        "id": "GHSA-xcq4-m2r3-cmrj",
+        "severity": "medium",
+        "url": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-xcq4-m2r3-cmrj",
+        "published": "2024-05-20T07:09:20Z",
+        "updated": "2026-03-01T00:28:08Z",
+        "affected": [
+          {
+            "package": "github.com/aquasecurity/trivy",
+            "range": "< 0.51.2",
+            "patched": "0.51.2"
+          }
+        ],
+        "reason": "The installed standalone Trivy 0.76.2 is newer than the upstream fixed release 0.51.2. Version output, official archive SHA256 and exact executable are recorded in host-tools/versions.json. No CI action or Trivy server is installed by this host recipe.",
+        "source": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-xcq4-m2r3-cmrj"
       }
     ]
   }

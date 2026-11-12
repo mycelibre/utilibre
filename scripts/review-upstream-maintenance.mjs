@@ -50,8 +50,24 @@ export function releaseComparison(installed,tag){
  for(let i=0;i<3;i++){if((b[i]||0)>(a[i]||0))return 'newer-release';if((b[i]||0)<(a[i]||0))return 'catalogue-ahead';}
  return 'same-version';
 }
+export function selectStableRelease(rows,line){
+ if(line!==undefined&&!/^\d+(?:\.\d+)?\.$/.test(line))throw Error('Invalid release line');
+ return rows.filter(x=>!x.prerelease&&!x.draft&&/^v?\d+\.\d+\.\d+$/.test(x.tag_name)&&(!line||x.tag_name.replace(/^v/,'').startsWith(line)))
+  .sort((a,b)=>a.tag_name.replace(/^v/,'').localeCompare(b.tag_name.replace(/^v/,''),undefined,{numeric:true})).at(-1);
+}
+export function parseRuntimeVersion(output){
+ const value=output.trim().split('\n')[0].match(/^(?:v|Python |restic |Version: |gh version )(\d+\.\d+\.\d+)(?:\+utilibre\d+)?(?:\s|$)/)?.[1];
+ if(!value)throw Error('Unrecognized host runtime version');return value;
+}
+const hostCommands={
+ 'github-cli-host':['/usr/bin/gh',['--version']],
+ 'node-host':['/root/.nvm/versions/node/v24.22.3/bin/node',['--version']],
+ 'python-host':['/usr/bin/python3.13',['--version']],
+ 'trivy-host':['/opt/utilibre/maintenance/bin/trivy',['--version']],
+ 'restic-host':['/opt/utilibre/maintenance/bin/restic',['version']],
+};
 async function gh(path){
- const {stdout}=await exec('gh',['api','--hostname','github.com',path],{timeout:25000,maxBuffer:4*1024**2});return JSON.parse(stdout);
+ const {stdout}=await exec('gh',['api','--hostname','github.com',path],{timeout:25000,maxBuffer:4*1024**2,env:{...process.env,GH_TELEMETRY:'disabled'}});return JSON.parse(stdout);
 }
 export async function inspectProvider(id,p){
  if(id==='searxng'||id==='privatebin'){
@@ -63,13 +79,31 @@ export async function inspectProvider(id,p){
  }
  const result={id,project:p.project,installed:p.installedVersion,source:p.reviewedSourceUrl,reviewedOn:p.reviewedOn,runbook:p.reviewDocument,mode:id==='searxng'?'existing-guarded-updater':id==='redlib'?'guarded-reviewed-artifact-updater':id==='privatebin'?'guarded-stable-patch-updater':'review-before-update'};
  try{
+  if(Object.hasOwn(hostCommands,id)){
+   const [program,args]=hostCommands[id];
+   const {stdout}=await exec(program,args,{timeout:10000,maxBuffer:16384,env:{PATH:'/usr/bin:/bin',GH_TELEMETRY:'disabled',TRIVY_DISABLE_TELEMETRY:'true',TRIVY_SKIP_VERSION_CHECK:'true'}});
+   result.installed=parseRuntimeVersion(stdout);result.runtimeEvidence={path:program,sha256:createHash('sha256').update(readFileSync(program)).digest('hex')};
+   if(id==='github-cli-host'){
+    const {stdout:telemetry}=await exec(program,['config','get','telemetry'],{timeout:10000,maxBuffer:1024,env:{PATH:'/usr/bin:/bin',HOME:'/root',GH_TELEMETRY:'disabled'}});
+    if(telemetry.trim()!=='disabled')throw Error('Host CLI telemetry configuration does not satisfy the disabled policy');
+    result.privacy={usageTelemetry:'disabled',environmentOverride:'disabled'};
+   }
+  }
   const r=repository(p.sourceUrl),ref=reviewedRef(p.reviewedSourceUrl);
   if(r.host==='github.com'){
    const base='repos'+r.path;
-   const releases=await gh(base+'/releases?per_page=10');
-   const latest=releases.find(x=>!x.prerelease&&!x.draft);
+   const releases=await gh(base+'/releases?per_page='+(p.releaseLine?'100':'10'));
+   let latest=p.releaseLine?selectStableRelease(releases,p.releaseLine):releases.find(x=>!x.prerelease&&!x.draft);
+   if(p.releaseSource==='git-tags'){
+    if(!/^\d+\.\d+\.$/.test(p.releaseLine||''))throw Error('Invalid tag release line');
+    const {stdout}=await exec('git',['ls-remote','--tags','--refs',r.clone,'refs/tags/v'+p.releaseLine+'*'],{timeout:25000,maxBuffer:65536,env:{...process.env,GIT_TERMINAL_PROMPT:'0'}});
+    latest=selectStableRelease(stdout.trim().split('\n').map(row=>({tag_name:row.split('\t')[1]?.replace('refs/tags/','')})),p.releaseLine);
+    if(latest)latest={...latest,html_url:p.sourceUrl+'/releases/tag/'+latest.tag_name,published_at:null};
+    result.releaseEvidence='Stable upstream Git tags; publication date unavailable';
+   }
    result.release=latest?{tag:latest.tag_name,url:latest.html_url,published:latest.published_at}:null;
-   result.releaseComparison=latest?releaseComparison(p.installedVersion,latest.tag_name):'no-stable-release';
+   result.releaseComparison=latest?releaseComparison(result.installed,latest.tag_name):'no-stable-release';
+   if(p.releaseLine){result.releaseLine=p.releaseLine;if(!latest)throw Error('No supported-line release found');}
    const commits=await gh(base+'/commits?per_page=1');
    result.defaultBranchHead=commits[0]?.sha||null;
    result.branchChanged=/^[a-f0-9]{40}$/i.test(ref)?ref!==result.defaultBranchHead:null;

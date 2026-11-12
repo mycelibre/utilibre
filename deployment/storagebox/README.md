@@ -50,10 +50,14 @@ home is already that directory, so its repository URI is
 `sftp:utilibre-storagebox:.`. Do not append the directory again, initialize the
 share root, reinitialize the existing repository, or synchronize with `--delete`.
 
-Components: Debian `restic 0.18.0-1+b4` (Restic reports 0.18.0), native OpenSSH
-SFTP, and small setup/command wrappers. No filesystem mount, database service,
-public endpoint or application credential distribution is involved. Upstream
-Restic is BSD-2-Clause; this is the distro package, not a claim of latest upstream.
+Components: Restic **0.19.1**, rebuilt with reviewed dependency updates and
+Go 1.27.3, native OpenSSH SFTP, and small setup/command wrappers. The backup
+wrapper selects `/opt/utilibre/maintenance/bin/restic` explicitly. Debian's
+0.18.0 package remains installed for rollback; an unqualified `restic` command
+can still select that older binary. Upstream Restic is BSD-2-Clause.
+See [host tool inputs, checks and rollback](../maintenance/host-tools/README.md).
+No filesystem mount, database service, public endpoint or application
+credential distribution is involved.
 
 ## Restricted backup account — activated 10 October, 21:28 UTC
 

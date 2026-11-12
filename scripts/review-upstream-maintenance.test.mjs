@@ -1,9 +1,21 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {repository,reviewedRef,recentAdvisories,partitionReviewed,runtimeEvidenceFormat,releaseComparison} from './review-upstream-maintenance.mjs';
+import {repository,reviewedRef,recentAdvisories,partitionReviewed,runtimeEvidenceFormat,releaseComparison,selectStableRelease,parseRuntimeVersion} from './review-upstream-maintenance.mjs';
 import {creativeProviders} from '../portal/src/catalog/creative-providers.ts';
 test('runtime advisory evidence requests no environment, credentials or mount data',()=>{
  assert.deepEqual([...runtimeEvidenceFormat.matchAll(/\{\{json ([^}]+)\}\}/g)].map(m=>m[1]),['.Name','.Image','.State.Running']);
+});
+test('host release line ignores newer majors, prereleases and unordered provider data',()=>{
+ const rows=['v26.1.0','v24.9.1','v24.22.3','v24.23.0-rc1','v24.14.0'].map(tag_name=>({tag_name}));
+ assert.equal(selectStableRelease(rows,'24.').tag_name,'v24.22.3');
+ assert.equal(selectStableRelease([{tag_name:'v3.13.18'},{tag_name:'v3.15.1'}],'3.13.').tag_name,'v3.13.18');
+ assert.equal(selectStableRelease(rows,'23.'),undefined);
+ assert.throws(()=>selectStableRelease(rows,'24.*'));
+ assert.equal(selectStableRelease([{tag_name:'v24.30.0',draft:true},...rows],'24.').tag_name,'v24.22.3');
+});
+test('runtime reports inspect executable versions without accepting arbitrary output',()=>{
+ for(const [output,expected] of [['gh version 2.103.3+utilibre1 (2026-11-12)','2.103.3'],['v24.22.3\n','24.22.3'],['Python 3.13.18','3.13.18'],['restic 0.19.1+utilibre1 compiled with go1.27.3','0.19.1'],['Version: 0.76.2\nDB information','0.76.2']])assert.equal(parseRuntimeVersion(output),expected);
+ for(const output of ['error 3.13.18','v24.22.3rc1',''])assert.throws(()=>parseRuntimeVersion(output));
 });
 test('review source URLs without accepting credentials or query injection',()=>{
  assert.equal(repository('https://github.com/gristlabs/grist-core').clone,'https://github.com/gristlabs/grist-core.git');

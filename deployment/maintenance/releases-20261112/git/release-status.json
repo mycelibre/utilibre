@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-11-12T04:12:15.703Z",
+  "completedAt": "2026-11-12T04:12:22.410Z",
+  "scope": "Opengist Git packages only",
+  "approval": "approved-opengist-only",
+  "base": "sha256:5d719639e41ddaefc3c5e1ffc5103b25dd7bb127b89ba78a64762960ac5d9532",
+  "candidate": "sha256:8733803eb5bf9ddc7044016ab92f9725107b615c13e05e4057f4ab1646af5414",
+  "candidateReference": "utilibre-opengist:git-vendor-20261112",
+  "preparationStatusSha256": "41cd6c67ac2586cdb92379955e224ef231fd03f330f1b4d64c06eb03b322f915",
+  "policySha256": "31bbe2866ebbbedfbc60f5a9ca70cb43dffe7a515a3ac59492955c26346d8855",
+  "adapterSha256": "04de583fa12d88ef69a08ece32aa1b72e0fe1805636ac73a3ca9734e173010a1",
+  "gitVersion": "git version 2.54.1",
+  "composeSha256": "97828cb0c027b17684ccf6027f43c90044b6c4de98f89a505ad0072a655890bb",
+  "gateway": {
+    "recreated": false,
+    "reloaded": false
+  },
+  "onlyOpengistContainerRecreated": true,
+  "applicationConfigurationUnchanged": true,
+  "retentionAndDataMountsUnchanged": true,
+  "remainingDebianDhiGitHighRecords": 27,
+  "remainingCandidateFindings": [
+    {
+      "id": "CVE-2026-58055",
+      "package": "nghttp2-libs",
+      "severity": "MEDIUM",
+      "version": "1.69.0-r0"
+    },
+    {
+      "id": "CVE-2026-118651",
+      "package": "github.com/labstack/echo/v4",
+      "severity": "MEDIUM",
+      "version": "v4.16.1"
+    },
+    {
+      "id": "CVE-2026-118653",
+      "package": "github.com/labstack/echo/v4",
+      "severity": "MEDIUM",
+      "version": "v4.16.1"
+    },
+    {
+      "id": "GO-2026-5932",
+      "package": "golang.org/x/crypto",
+      "severity": "UNKNOWN",
+      "version": "v0.58.0"
+    },
+    {
+      "id": "CVE-2026-97054",
+      "package": "stdlib",
+      "severity": "UNKNOWN",
+      "version": "v1.27.3"
+    }
+  ],
+  "source": {
+    "url": "https://tools.utilibre.org/utilibre-source/git-2.54.1-alpine-source.tar.gz",
+    "sha256": "dfc1416f1bd3b0198465eef2298e617dd6f96ec2c1adc42416ce960dcdd9c84a",
+    "published": true,
+    "indexSha256": "bf8840117238ed2dfb9189379520d0cf5570f388c09efa008d4e3f2f23c34a07"
+  },
+  "publicHealth": {
+    "url": "https://snippets.utilibre.org/healthcheck",
+    "status": 200
+  },
+  "privateGatewayHealthPassed": true,
+  "productionDataModifiedByTests": false,
+  "evidence": {
+    "path": "/var/lib/utilibre-maintenance/git-vendor-20261112/release.json",
+    "sha256": "38330dea068a7f45f6ae93e37c577d646506fe90348d04f9b80ce39144c7eaea"
+  },
+  "limits": [
+    "Only anonymous read-only health was verified in production.",
+    "Two-account Git/API workflows passed in isolated synthetic environments, not with production accounts.",
+    "No other app or host Git package was updated.",
+    "Preparation status is retained unchanged as historical evidence."
+  ]
+}

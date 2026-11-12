@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "state": "owner-approved",
+  "date": "2026-11-12",
+  "version": "2.8.0",
+  "image": "sha256:12c860da57e1d354d3a75f01ec6b88acb35ea3a38b213a1b9ecab339d59aa243",
+  "projectTrashDays": 30,
+  "basis": "Owner answered Okay to the specific 30-day project Trash retention question and continuation of the maintenance release.",
+  "scope": "Vikunja only; existing account access, quotas, saved-work backup retention and privacy controls remain unchanged.",
+  "securityReview": "Fresh Nov 12 snapshot: no critical/high findings and no added findings relative to the running image. Two medium Echo records removed. One low imaging record and two unknown records (OpenPGP module and Go MaxBytesReader concurrency) remain unresolved, not waived or represented as repaired. The upgrade retains the same Go 1.27.3 compiler as the predecessor.",
+  "rollback": "Use both previous image and stopped pre-upgrade data; preserve failed candidate data. Never downgrade the migrated database in place."
+}

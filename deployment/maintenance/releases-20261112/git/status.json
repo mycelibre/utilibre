@@ -1,0 +1,267 @@
+{
+  "version": 1,
+  "date": "2026-11-12",
+  "productionChanged": false,
+  "queueDate": "2026-11-12T03:49:08.703Z",
+  "selectedHighRecords": 33,
+  "candidateAddressesHighRecords": 6,
+  "remainingVendorBlockedHighRecords": 27,
+  "targets": {
+    "sha256:1e8305310f2bdb807c19391a06846169d9d95097b8648594f3cd966b152be2c3": {
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "scope": "runtime-image",
+      "packages": {
+        "git": "1:2.47.3-0+deb13u1",
+        "git-man": "1:2.47.3-0+deb13u1"
+      },
+      "records": 6,
+      "state": "blocked-vendor-package-unavailable"
+    },
+    "sha256:3cb8b0ae9222b67e5cd800a1432df8f7b8347c275d7f69e7ebd788a4bb7efefe": {
+      "containers": [
+        "utilibre-priviblur-priviblur-1"
+      ],
+      "scope": "runtime-image",
+      "packages": {
+        "git": "1:2.47.3-0+deb13u1",
+        "git-man": "1:2.47.3-0+deb13u1"
+      },
+      "records": 6,
+      "state": "blocked-vendor-package-unavailable"
+    },
+    "sha256:5d719639e41ddaefc3c5e1ffc5103b25dd7bb127b89ba78a64762960ac5d9532": {
+      "containers": [
+        "utilibre-opengist-opengist-1"
+      ],
+      "scope": "runtime-image",
+      "packages": {
+        "git": "2.54.0-r0",
+        "git-init-template": "2.54.0-r0"
+      },
+      "records": 6,
+      "state": "candidate-ready-not-deployed"
+    },
+    "sha256:93a08e0802d255f04e1f15f170d11c382b9bd59493c69952f25b9dbdff3d53d4": {
+      "containers": [
+        "utilibre-expanded-breezewiki-1"
+      ],
+      "scope": "runtime-image",
+      "packages": {
+        "git": "1:2.47.3-0+deb13u1",
+        "git-man": "1:2.47.3-0+deb13u1"
+      },
+      "records": 6,
+      "state": "blocked-vendor-package-unavailable"
+    },
+    "sha256:bf748ae83b9d9e0b8ef9ddf4ea57e892cef6614a33f38e573d862f15cc3d40c4": {
+      "containers": [
+        "utilibre-expanded-penpot-exporter-1"
+      ],
+      "scope": "runtime-image",
+      "packages": {
+        "git": "1:2.47.3-0+deb13u1+dhi2"
+      },
+      "records": 3,
+      "state": "blocked-vendor-package-unavailable"
+    },
+    "host-dpkg": {
+      "containers": [],
+      "scope": "host-os",
+      "packages": {
+        "git": "1:2.47.3-0+deb13u1",
+        "git-man": "1:2.47.3-0+deb13u1"
+      },
+      "records": 6,
+      "state": "blocked-vendor-package-unavailable"
+    }
+  },
+  "candidate": "sha256:8733803eb5bf9ddc7044016ab92f9725107b615c13e05e4057f4ab1646af5414",
+  "candidateReference": "utilibre-opengist:git-vendor-20261112",
+  "sourcePublicationCompleted": false,
+  "nativeChecks": {
+    "build.json": {
+      "path": "/var/lib/utilibre-maintenance/git-vendor-20261112/opengist/build.json",
+      "sha256": "527b3d0c949659609243e645f3b20a65af6a1a5dd68af3b9f282a86733643682",
+      "passed": true
+    },
+    "scope.json": {
+      "path": "/var/lib/utilibre-maintenance/git-vendor-20261112/opengist/scope.json",
+      "sha256": "5d1a25c821b6649b594588d794cccf1d838241244876b7cf92147ff2183b4e44",
+      "passed": true
+    },
+    "before-native.json": {
+      "path": "/var/lib/utilibre-maintenance/git-vendor-20261112/opengist/before-native.json",
+      "sha256": "dcb78a82406092f637d7541e6b09ad0f98bb3c34c86b36893b271619d13cf0d4",
+      "passed": true
+    },
+    "native.json": {
+      "path": "/var/lib/utilibre-maintenance/git-vendor-20261112/opengist/native.json",
+      "sha256": "05ff0fdfb71f522369fee7585990e07af5f4f65c484b9a1a415dc6be39522bbe",
+      "passed": true
+    }
+  },
+  "scans": {
+    "tool": "Trivy 0.76.2",
+    "database": {
+      "Version": 2,
+      "NextUpdate": "2026-11-13T01:03:48.608294356Z",
+      "UpdatedAt": "2026-11-12T01:03:48.608294617Z",
+      "DownloadedAt": "2026-11-12T03:47:02.924724769Z"
+    },
+    "databaseSha256": "719de0cb21fdbc1bf3cb433f7ea57f68910c9d1771f8334026035f5fb11ff325",
+    "before": {
+      "path": "/var/lib/utilibre-maintenance/git-vendor-20261112/opengist/before-scan.json",
+      "sha256": "6c2b135e14ad8d33cc2d4c531ee8179ad33e4c0ab5ad678e3c74673d3bec9944",
+      "counts": {
+        "HIGH": 6,
+        "MEDIUM": 7,
+        "UNKNOWN": 4
+      }
+    },
+    "after": {
+      "path": "/var/lib/utilibre-maintenance/git-vendor-20261112/opengist/scan.json",
+      "sha256": "0ea8b97b062ff88850d5cc7687957b324781f3f93f6198ae8caef8ffcd8f02be",
+      "counts": {
+        "MEDIUM": 3,
+        "UNKNOWN": 2
+      }
+    },
+    "noNewFindings": true,
+    "removed": [
+      {
+        "id": "CVE-2026-105437",
+        "package": "git",
+        "severity": "HIGH"
+      },
+      {
+        "id": "CVE-2026-111760",
+        "package": "git",
+        "severity": "HIGH"
+      },
+      {
+        "id": "CVE-2026-114466",
+        "package": "git",
+        "severity": "HIGH"
+      },
+      {
+        "id": "CVE-2026-113408",
+        "package": "git",
+        "severity": "MEDIUM"
+      },
+      {
+        "id": "CVE-2026-114469",
+        "package": "git",
+        "severity": "MEDIUM"
+      },
+      {
+        "id": "CVE-2026-114467",
+        "package": "git",
+        "severity": "UNKNOWN"
+      },
+      {
+        "id": "CVE-2026-105437",
+        "package": "git-init-template",
+        "severity": "HIGH"
+      },
+      {
+        "id": "CVE-2026-111760",
+        "package": "git-init-template",
+        "severity": "HIGH"
+      },
+      {
+        "id": "CVE-2026-114466",
+        "package": "git-init-template",
+        "severity": "HIGH"
+      },
+      {
+        "id": "CVE-2026-113408",
+        "package": "git-init-template",
+        "severity": "MEDIUM"
+      },
+      {
+        "id": "CVE-2026-114469",
+        "package": "git-init-template",
+        "severity": "MEDIUM"
+      },
+      {
+        "id": "CVE-2026-114467",
+        "package": "git-init-template",
+        "severity": "UNKNOWN"
+      }
+    ],
+    "remaining": [
+      {
+        "id": "CVE-2026-58055",
+        "package": "nghttp2-libs",
+        "severity": "MEDIUM",
+        "version": "1.69.0-r0"
+      },
+      {
+        "id": "CVE-2026-118651",
+        "package": "github.com/labstack/echo/v4",
+        "severity": "MEDIUM",
+        "version": "v4.16.1"
+      },
+      {
+        "id": "CVE-2026-118653",
+        "package": "github.com/labstack/echo/v4",
+        "severity": "MEDIUM",
+        "version": "v4.16.1"
+      },
+      {
+        "id": "GO-2026-5932",
+        "package": "golang.org/x/crypto",
+        "severity": "UNKNOWN",
+        "version": "v0.58.0"
+      },
+      {
+        "id": "CVE-2026-97054",
+        "package": "stdlib",
+        "severity": "UNKNOWN",
+        "version": "v1.27.3"
+      }
+    ]
+  },
+  "vendorAcquisition": {
+    "receipt": "/var/lib/utilibre-maintenance/git-vendor-20261112/debian-discovery.json",
+    "sha256": "3004d45c54131d86f26f40f7d8337619f8c4615d50453369270bffb4b75dbbd8",
+    "verifiedDistributions": [
+      "trixie",
+      "trixie-security",
+      "trixie-updates",
+      "dhi-trixie"
+    ]
+  },
+  "sourceOffer": {
+    "path": "/var/lib/utilibre-maintenance/git-vendor-20261112/git-2.54.1-alpine-source.tar.gz",
+    "sha256": "dfc1416f1bd3b0198465eef2298e617dd6f96ec2c1adc42416ce960dcdd9c84a",
+    "manifest": "/var/lib/utilibre-maintenance/git-vendor-20261112/source/source-manifest.json",
+    "manifestSha256": "681bfd95b512bc038e7473b3b7e0947c3c6e300c7de9f6bd68b1847fb172971f",
+    "published": false
+  },
+  "files": {
+    "deployment/maintenance/releases-20261112/git/inputs.json": "d04c072897af51ecc61d84b9d9d8bfffc6d6c01933b5d0c9fa2da22b5024d65a",
+    "deployment/maintenance/releases-20261112/git/prepare-opengist.py": "7a5238dbc1e0035f622c7ce070f1a2f28ce80746fd8ba6a95ad111901ce99c0e",
+    "deployment/maintenance/releases-20261112/git/native-git.sh": "86e254c75db8dfafc2c3dea83db816c84b84c004b25bb23037669537c0b2b638",
+    "deployment/maintenance/go-leaf-final/check-opengist.py": "b3efe37c615eadf8444d92ae0b3254485b8c239990ee7c3d42252d2514586a0a",
+    "deployment/maintenance/security-20261109/zlib-check.py": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08"
+  },
+  "configurationPreconditions": {
+    "deployment/community/opengist/config.yml": "532487b369494f62d726e61ba47ebb50d63101ffc0153fd771858a7f3493408c",
+    "deployment/community/opengist/nginx.conf": "54cd7eaf261bdad4b159525688a71d3e6574d2fda05e3ecead37c2b8d09b7927",
+    "deployment/community/compose.opengist.yaml": "69b69b5f491134650d80b0fc4cf2cd79cc0c245c98aead411fa88529574cb5ff"
+  },
+  "releaseRequirements": [
+    "Publish exact corresponding Git source through established process.",
+    "Recheck live base, configuration/checker/evidence hashes and current advisory freshness.",
+    "Use normal authorized Opengist-only release process and bounded post-deploy verification."
+  ],
+  "evidenceRoot": "/var/lib/utilibre-maintenance/git-vendor-20261112",
+  "limitations": [
+    "No host or Debian-based runtime update candidate exists in signed repositories at the recorded check.",
+    "No production data, identity provider or real browser tested.",
+    "No exploit reproduction or exploitability claim."
+  ]
+}

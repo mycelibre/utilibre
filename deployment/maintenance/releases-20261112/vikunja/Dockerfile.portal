@@ -1,0 +1,7 @@
+# Content-only release: preserve the exact repaired Node/Alpine runtime.
+FROM sha256:66dd5e3669b384332c49790fed7a74ab253540bb34b18790cc4e5d57210dbdb6
+USER root
+RUN rm -rf /app/dist /app/server-built
+COPY --chown=node:node dist /app/dist
+COPY --chown=node:node server-built /app/server-built
+USER node

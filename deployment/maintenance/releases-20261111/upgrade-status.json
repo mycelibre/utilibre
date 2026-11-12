@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "date": "2026-11-11T19:06:35.238204+00:00",
+  "date": "2026-11-12T05:16:24.553Z",
   "scope": "Held upstream upgrade completion and ACL vendor review; host status checked separately",
   "counts": {
     "assessedCandidates": 30,
-    "deployedApplications": 8,
-    "heldApplications": 22,
+    "deployedApplications": 9,
+    "heldApplications": 21,
     "sourceInputsSupported": 27,
     "sourceCoverageGaps": 3,
     "recordedPatchConflicts": 12
@@ -416,8 +416,8 @@
       "application": "vikunja",
       "candidateVersion": "v2.8.0",
       "revision": "6e788bf87cebe50e2b8d034b213fcf94ae5449ee",
-      "status": "held",
-      "reason": "Retained Go patch conflicts; repaired graph, account-data migration and workflow checks remain.",
+      "status": "deployed-verified",
+      "reason": "Owner approved 30-day project Trash. Deployed official 2.8.0; isolated migration/rollback and public synthetic OIDC/MFA, task/attachment ZIP export/import, Trash restore/permanent deletion passed. Existing privacy config unchanged; low/unknown findings remain visible.",
       "sourceAssessment": {
         "status": "assessed",
         "ecosystems": [
@@ -443,7 +443,10 @@
         ],
         "scope": "Recorded source patches only; native configuration, dependency overlays and workflow approval are separate.",
         "status": "blocked-patch-conflict"
-      }
+      },
+      "candidateEvidence": "deployment/maintenance/releases-20261112/vikunja/recipe.json",
+      "followupDate": "2026-11-12",
+      "releaseRecord": "deployment/maintenance/releases-20261112/vikunja/release-status.json"
     },
     {
       "application": "bytestash",

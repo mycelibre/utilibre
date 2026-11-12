@@ -272,8 +272,8 @@ const october9TaskChecks: Partial<Record<string, LocalizedText>> = {
   },
   // docs/records/vikunja-deployment-2026-10-09.md
   "vikunja": {
-    en: "9 October 2026: Fictional project ZIP export/import and an isolated native restore reopened project copies and their attachments. Native MFA sign-in passed over public HTTPS. Other client versions and every project setting were not tested.",
-    es: "9 de octubre de 2026: La exportación e importación ZIP de un proyecto ficticio y una restauración nativa aislada reabrieron copias del proyecto y sus adjuntos. El acceso nativo con MFA pasó por HTTPS público. No se probaron otras versiones de cliente ni todos los ajustes del proyecto.",
+    en: "12 November 2026: isolated synthetic checks passed for two accounts, tasks, attachments, native ZIP export/import, the 2.7-to-2.8 database upgrade and restoration of the pre-upgrade backup. Trash restoration and permanent deletion passed. Production Authentik/MFA was not exercised by these checks.",
+    es: "12 de noviembre de 2026: pasaron las pruebas aisladas con datos ficticios de dos cuentas, tareas, adjuntos, exportación/importación ZIP nativa, actualización de la base de datos de 2.7 a 2.8 y restauración de la copia previa. Pasaron la restauración desde la Papelera y la eliminación definitiva. Estas pruebas no comprobaron Authentik/MFA en producción.",
   },
   // docs/records/bytestash-deployment-2026-10-09.md
   "bytestash": {
