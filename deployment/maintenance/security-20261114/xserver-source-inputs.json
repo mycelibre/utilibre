@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-12T18:08:56.328Z",
+  "rows": [
+    {
+      "role": "host",
+      "dir": "/var/lib/utilibre-maintenance/xserver-followup-20261012/sources",
+      "dsc": "xorg-server_21.1.25-1.dsc",
+      "version": "2:21.1.25-1",
+      "archives": [
+        {
+          "file": "xorg-server_21.1.25-1.dsc",
+          "sha256": "9f2b751df4f3b9e1d2c9b0fea545a7aa5727a336845bee33035846af0fe4afa6",
+          "bytes": 4252
+        },
+        {
+          "file": "xorg-server_21.1.25.orig.tar.gz",
+          "sha256": "fdb5ec9b4ab7371745b182b68c7054ed72fc4d13e185fc369cfc45e0c3a174e7",
+          "bytes": 9055649
+        },
+        {
+          "file": "xorg-server_21.1.25.orig.tar.gz.asc",
+          "sha256": "6f7a1b99cfc94938397631b13a81d78a851c9d83a276c45f6850c10c363ad7aa",
+          "bytes": 195
+        },
+        {
+          "file": "xorg-server_21.1.25-1.diff.gz",
+          "sha256": "558d175d520010ad030bb937250e0c47a6cf293e507e4ea2f9622cbb3060ba68",
+          "bytes": 174496
+        }
+      ],
+      "source": "/var/lib/utilibre-maintenance/xvfb-single-screen-final-20261012/work/source-host",
+      "flagsSha256": "d09043f1d189d9dca1fcd28728a076885bef030add9261c6d9c4867437af0118"
+    },
+    {
+      "role": "dhi",
+      "dir": "/var/lib/utilibre-maintenance/xserver-followup-20261012/dhi",
+      "dsc": "xorg-server_21.1.16-1.3+deb13u4+dhi1.dsc",
+      "version": "2:21.1.16-1.3+deb13u4+dhi1",
+      "archives": [
+        {
+          "sha256": "2de4f027ca5fbe4128f249a2bbf48c9f152d7a70f1d6256b22481941dd7cdee7",
+          "bytes": 3015,
+          "file": "xorg-server_21.1.16-1.3+deb13u4+dhi1.dsc"
+        },
+        {
+          "sha256": "de89a475ad27c805cb0d576047fe30951b1478f9af62d9c496df36733986cd20",
+          "bytes": 9302847,
+          "file": "xorg-server_21.1.16-1.3+deb13u4+dhi1.tar.gz"
+        }
+      ],
+      "source": "/var/lib/utilibre-maintenance/xvfb-single-screen-final-20261012/work/source-dhi",
+      "flagsSha256": "13d966a9304e43124f19d105e71470b75ec8fea4458e7e70e60a49b863c3c89e"
+    }
+  ],
+  "primary": "https://security-tracker.debian.org/tracker/CVE-2023-5574",
+  "method": "Supported compiler definition MAXSCREENS=1; no source-code patch; all three previously verified Xserver fixes retained.",
+  "passed": true
+}

@@ -1,0 +1,662 @@
+{
+  "date": "2026-11-14T15:59:56.958983+00:00",
+  "scope": "14 November exact native/security fixes, not whole-project completion",
+  "baseline": {
+    "scanDate": "2026-11-14T10:32:06.498Z",
+    "pendingCritical": 5,
+    "pendingHigh": 452
+  },
+  "finalAssessment": {
+    "scanDate": "2026-11-14T15:44:42.131Z",
+    "status": "checked",
+    "images": 109,
+    "sourcesAndTools": 120,
+    "hostPackages": 507,
+    "rawCritical": 58,
+    "rawHigh": 3862,
+    "pendingCritical": 0,
+    "pendingHigh": 30,
+    "scanSha256": "10a649b234c14f96e2c4ee56130572d7de98f477c3706b1cf38fddaf09888944",
+    "queueSha256": "21354eebcda381ebc642c398b3a4658acc99d43542cd2dc19326875b1590bdf4",
+    "databaseSha256": "56cee031199d053394380bdc3be3d1c0fd6198054811001d66ebf7028a44a882"
+  },
+  "releases": [
+    {
+      "receipt": "security-20261114/community-pairdrop/release-utilibre-community.json",
+      "sha256": "c6909244b96710697e845bd04081c0737b319aaf3dc5374b0d8f92771bfdbaef",
+      "completedAt": "2026-11-14T14:56:31.728Z",
+      "rows": [
+        {
+          "name": "utilibre-community-pairdrop-1",
+          "service": "pairdrop",
+          "oldRef": "utilibre-community-pairdrop:musl-security-20261109",
+          "newRef": "utilibre-vendor-community-pairdrop:20261114",
+          "oldImage": "sha256:1fe576f413b7c79ec91ad279d7fd036fa86844912b7b316b41513ae82f50deb3",
+          "newImage": "sha256:e71ee199862aacc50dd28d2c82ac0d915951cc8b6f8e13dc9b0ecc2fd612f2c2"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/git/breezewiki/release-utilibre-expanded.json",
+      "sha256": "0b196dda20c76184e9db33a3a6d1bb27bb193fc6b4d6b39228ac8aee302ac07c",
+      "completedAt": "2026-11-14T15:39:10.715Z",
+      "rows": [
+        {
+          "name": "utilibre-expanded-breezewiki-1",
+          "service": "breezewiki",
+          "oldRef": "utilibre-krb5-expanded-breezewiki:1.22.3-20261110",
+          "newRef": "utilibre-git-breezewiki:2.54.1-20261114",
+          "oldImage": "sha256:93a08e0802d255f04e1f15f170d11c382b9bd59493c69952f25b9dbdff3d53d4",
+          "newImage": "sha256:dde5bb3d0ecdf415847292ab12f219033615a9a8e553f06006a2d3409dd18a89"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/git/penpot-exporter/release-utilibre-expanded.json",
+      "sha256": "9e6b8c7f128c4b7a6bb39e06ed17e73a85c4b3a66efcc2a47a11a8c8f23a20ac",
+      "completedAt": "2026-11-14T15:39:27.456Z",
+      "rows": [
+        {
+          "name": "utilibre-expanded-penpot-exporter-1",
+          "service": "penpot-exporter",
+          "oldRef": "utilibre-penpot-exporter:xserver-20261114",
+          "newRef": "utilibre-git-penpot-exporter:2.54.1-20261114",
+          "oldImage": "sha256:18437fd8e5d3395501acdc7046e629ae6df39f25dbd1b3ef7e339a4959b1431a",
+          "newImage": "sha256:5e117430ae0e4bbac92039308555757e58800c658b65488b04e2cdcefae1fe84"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/git/priviblur/release-utilibre-priviblur.json",
+      "sha256": "c3649c2eed47df309c2f5cee9811eea9a87c750e4e6eb07c3adcf096e301a009",
+      "completedAt": "2026-11-14T15:33:50.143Z",
+      "rows": [
+        {
+          "name": "utilibre-priviblur-priviblur-1",
+          "service": "priviblur",
+          "oldRef": "utilibre-krb5-priviblur-priviblur:1.22.3-20261110",
+          "newRef": "utilibre-git-priviblur:2.54.1-20261114",
+          "oldImage": "sha256:3cb8b0ae9222b67e5cd800a1432df8f7b8347c275d7f69e7ebd788a4bb7efefe",
+          "newImage": "sha256:ae5bedde3da5e9de32dae2ba431c525fc8a2fcdfe0ffd7c610b7164acf0bbb3f"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/git/rsshub/release-utilibre-services.json",
+      "sha256": "0feb62104ddbaaf182e5238d9e93e433a1a2930430375bce454c0cf9bbbc35f9",
+      "completedAt": "2026-11-14T15:33:34.747Z",
+      "rows": [
+        {
+          "name": "utilibre-services-rsshub-1",
+          "service": "rsshub",
+          "oldRef": "utilibre-krb5-services-rsshub:1.22.3-20261110",
+          "newRef": "utilibre-git-rsshub:2.54.1-20261114",
+          "oldImage": "sha256:1e8305310f2bdb807c19391a06846169d9d95097b8648594f3cd966b152be2c3",
+          "newImage": "sha256:d2e2e968fb02f4f918a0742d4ea1282a4a800eb58ec8f8fedf89b02522ebf9fb"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/headers/host/release.json",
+      "sha256": "b996ab55c7fc722a848c6438ce0efe96d67f018bad61d4ed49d6e4b2972fad1c",
+      "completedAt": "2026-11-14T15:16:34.261508+00:00",
+      "rows": []
+    },
+    {
+      "receipt": "security-20261114/headers/vendor-debian/gathio-postgres/release-utilibre-gathio.json",
+      "sha256": "ab216f40265ff51e7a551b7ecc1f7c85ecde28c60c534d3ee4a327d8ee11ca23",
+      "completedAt": "2026-11-14T15:17:48.603Z",
+      "rows": [
+        {
+          "name": "utilibre-gathio-postgres-1",
+          "service": "postgres",
+          "oldRef": "utilibre-krb5-gathio-postgres:1.22.3-20261110",
+          "newRef": "utilibre-headers-gathio-postgres:20261114",
+          "oldImage": "sha256:d75618fdee5a53508e391383bef49fbd2deed09fa45c4ecf0203c12a10c3a34f",
+          "newImage": "sha256:43bc9dd264170991cca34544965aeabbea2e9f34b3af5b4f653cc5ba263aa1e6"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/headers/vendor-debian/kitchenowl-app/release-utilibre-kitchenowl.json",
+      "sha256": "2715d739e1b3f879a0e12593e4ba22964304c2115b6669fa7a08932fe93c0e73",
+      "completedAt": "2026-11-14T15:17:02.916Z",
+      "rows": [
+        {
+          "name": "utilibre-kitchenowl-app-1",
+          "service": "app",
+          "oldRef": "utilibre-vendor-kitchenowl-app:20261114",
+          "newRef": "utilibre-headers-kitchenowl-app:20261114",
+          "oldImage": "sha256:8c1fbe868778a0ea86ea287b84f4825c6f9edaf6cecf3a1552469111f8658dc6",
+          "newImage": "sha256:76f194a524acf433828029bdacb836b90cf02882a44a587f6dd20eceaf9fad6b"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/headers/vendor-debian/linkding-linkding/release-utilibre-linkding.json",
+      "sha256": "5b4e9c810c0b56563468d3f48435205906dd3e281d23d185d5a917776192ae8b",
+      "completedAt": "2026-11-14T15:15:52.972Z",
+      "rows": [
+        {
+          "name": "utilibre-linkding-linkding-1",
+          "service": "linkding",
+          "oldRef": "utilibre-python-linkding-linkding:20261114",
+          "newRef": "utilibre-headers-linkding-linkding:20261114",
+          "oldImage": "sha256:fa556833be294cd17a40b035cd8f7921de95dca556aa7e492f308422293f7310",
+          "newImage": "sha256:71772c6276f17a9523a69a365d6d704d7d99b5dc12b8e0297b342db90bdef257"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/headers/vendor-debian/simplelogin-web/release-utilibre-simplelogin.json",
+      "sha256": "3ac9fed32f7194dcd1b5685642a2305c015650abfb3e181c54f0626c3407b148",
+      "completedAt": "2026-11-14T15:17:30.143Z",
+      "rows": [
+        {
+          "name": "utilibre-simplelogin-web-1",
+          "service": "web",
+          "oldRef": "utilibre-python-simplelogin-web:20261114",
+          "newRef": "utilibre-headers-simplelogin-web:20261114",
+          "oldImage": "sha256:05858de90e51d3e6b07b38e914ef7be4d7c5c49586469b3fa232c6e28d536f44",
+          "newImage": "sha256:f723e9d31834dd325c21f1016de4d91b0ca797692ee83dad32be6686041a3985"
+        },
+        {
+          "name": "utilibre-simplelogin-jobs-1",
+          "service": "jobs",
+          "oldRef": "utilibre-python-simplelogin-web:20261114",
+          "newRef": "utilibre-headers-simplelogin-web:20261114",
+          "oldImage": "sha256:05858de90e51d3e6b07b38e914ef7be4d7c5c49586469b3fa232c6e28d536f44",
+          "newImage": "sha256:f723e9d31834dd325c21f1016de4d91b0ca797692ee83dad32be6686041a3985"
+        },
+        {
+          "name": "utilibre-simplelogin-smtp-1",
+          "service": "smtp",
+          "oldRef": "utilibre-python-simplelogin-web:20261114",
+          "newRef": "utilibre-headers-simplelogin-web:20261114",
+          "oldImage": "sha256:05858de90e51d3e6b07b38e914ef7be4d7c5c49586469b3fa232c6e28d536f44",
+          "newImage": "sha256:f723e9d31834dd325c21f1016de4d91b0ca797692ee83dad32be6686041a3985"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/pollaris-pollaris/release-utilibre-pollaris.json",
+      "sha256": "d287d738c56c4dfca6b64f5e9d09ece18e10c75bdd5c645d13d95680b2aaf037",
+      "completedAt": "2026-11-14T14:53:57.462Z",
+      "rows": [
+        {
+          "name": "utilibre-pollaris-pollaris-1",
+          "service": "pollaris",
+          "oldRef": "utilibre-pollaris:http-client-security-20261110",
+          "newRef": "utilibre-vendor-pollaris-pollaris:20261114",
+          "oldImage": "sha256:bf1fbf0a61bc7735e06ba82d2e19c50c07a39aeceb69add8de6e288331485a88",
+          "newImage": "sha256:5de81630cd1feb5ff68d8f7b64fa465d0e70f1951eb08eb86f1c0652f954d4a9"
+        },
+        {
+          "name": "utilibre-pollaris-worker-1",
+          "service": "worker",
+          "oldRef": "utilibre-pollaris:http-client-security-20261110",
+          "newRef": "utilibre-vendor-pollaris-pollaris:20261114",
+          "oldImage": "sha256:bf1fbf0a61bc7735e06ba82d2e19c50c07a39aeceb69add8de6e288331485a88",
+          "newImage": "sha256:5de81630cd1feb5ff68d8f7b64fa465d0e70f1951eb08eb86f1c0652f954d4a9"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/python/13ft-app/release-utilibre-13ft.json",
+      "sha256": "90c8117a45518b31fef32344b85520436e3d5c46ed302f2a85935451189221ce",
+      "completedAt": "2026-11-14T14:59:56.245Z",
+      "rows": [
+        {
+          "name": "utilibre-13ft-app-1",
+          "service": "app",
+          "oldRef": "utilibre-13ft-app:sqlite-security-20261109",
+          "newRef": "utilibre-python-13ft-app:20261114",
+          "oldImage": "sha256:cfdd5a535e9e27b7007c9942f0bb31e7551280714783613a7a9bf7b8fd82d5e8",
+          "newImage": "sha256:f6fa1dc812ba068d176435b99ed8baab80d51baf217120706810405742b3d775"
+        },
+        {
+          "name": "utilibre-13ft-gateway-1",
+          "service": "gateway",
+          "oldRef": "utilibre-vendor-calendar-calino:20261111",
+          "newRef": "utilibre-vendor-calendar-calino:20261111",
+          "oldImage": "sha256:f818900e82bdbbfb9fc84e699dab867221e1fa634f26807bb3b67ef3bd4f89d5",
+          "newImage": "sha256:f818900e82bdbbfb9fc84e699dab867221e1fa634f26807bb3b67ef3bd4f89d5"
+        },
+        {
+          "name": "utilibre-13ft-proxy-1",
+          "service": "proxy",
+          "oldRef": "utilibre-wallabag-proxy:sqlite-security-20261109",
+          "newRef": "utilibre-wallabag-proxy:sqlite-security-20261109",
+          "oldImage": "sha256:3f5af0e842ed90e5329e9a545c33025ba416abc7d03461da0fc02142d8ba5fb7",
+          "newImage": "sha256:3f5af0e842ed90e5329e9a545c33025ba416abc7d03461da0fc02142d8ba5fb7"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/python/beaverhabits-app/release-utilibre-beaverhabits.json",
+      "sha256": "f71f93624b30f6c1062e7527ddade6557642b4da31fe05eafb2d501fb8e243b6",
+      "completedAt": "2026-11-14T15:00:46.298Z",
+      "rows": [
+        {
+          "name": "utilibre-beaverhabits-app-1",
+          "service": "app",
+          "oldRef": "utilibre-beaverhabits-app:sqlite-security-20261109",
+          "newRef": "utilibre-python-beaverhabits-app:20261114",
+          "oldImage": "sha256:f69e4f9d79757281d1f2314e89047aae9ab7a834aceb0f44bdb26a03055fd2f2",
+          "newImage": "sha256:30772b5c6358b3bcdd524f1ff7a1c18a9284ffe8741f055db902b5633d0bca71"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/python/identity-worker/release-utilibre-identity.json",
+      "sha256": "58b8ad8b36b5382f277e5646e3658dc3cdc071128a2e0f2a9e1b47ab58273883",
+      "completedAt": "2026-11-14T14:58:34.126Z",
+      "rows": [
+        {
+          "name": "utilibre-identity-worker-1",
+          "service": "worker",
+          "oldRef": "utilibre-vendor-identity-worker:20261114",
+          "newRef": "utilibre-python-identity-worker:20261114",
+          "oldImage": "sha256:848a88c44e4ee938628e88624cf452193ab6b15723142fba53e61f0cba534e88",
+          "newImage": "sha256:750992ab3b4bbe0802c629d64b35dbeb59120c06e35899feb0a3ae719de4a95e"
+        },
+        {
+          "name": "utilibre-identity-server-1",
+          "service": "server",
+          "oldRef": "utilibre-vendor-identity-worker:20261114",
+          "newRef": "utilibre-python-identity-worker:20261114",
+          "oldImage": "sha256:848a88c44e4ee938628e88624cf452193ab6b15723142fba53e61f0cba534e88",
+          "newImage": "sha256:750992ab3b4bbe0802c629d64b35dbeb59120c06e35899feb0a3ae719de4a95e"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/python/linkding-linkding/release-utilibre-linkding.json",
+      "sha256": "88a5c4b1aac0f2fcb24670eb8ffe088d2cd22eee22d891068a427ccb36c4664c",
+      "completedAt": "2026-11-14T14:57:58.501Z",
+      "rows": [
+        {
+          "name": "utilibre-linkding-linkding-1",
+          "service": "linkding",
+          "oldRef": "utilibre-vendor-linkding-linkding:20261114",
+          "newRef": "utilibre-python-linkding-linkding:20261114",
+          "oldImage": "sha256:f4a81e949b4484ba18e8cf0ded53fe7fd611581514c77c7d06945d5922742f08",
+          "newImage": "sha256:fa556833be294cd17a40b035cd8f7921de95dca556aa7e492f308422293f7310"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/python/pack-forms-app/release-utilibre-pack-forms.json",
+      "sha256": "85d2054cd76ebbe440513e44b6ef6e03e6fe60d5526acd6d2e685530be2add9a",
+      "completedAt": "2026-11-14T14:58:45.200Z",
+      "rows": [
+        {
+          "name": "utilibre-pack-forms-app-1",
+          "service": "app",
+          "oldRef": "utilibre-vendor-pack-forms-app:20261114",
+          "newRef": "utilibre-python-pack-forms-app:20261114",
+          "oldImage": "sha256:838c602f7550049c394120f2bda7247e96379ae6481a54d371549531e177fcde",
+          "newImage": "sha256:c926925189b4f783a9cdc5ab438727f42809ff0d18ac4b9582914b33f1b23f95"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/python/records-candlr/release-utilibre-records.json",
+      "sha256": "e04fd9988f1d36fcb003af74ed1701723a55a345ac8282f90c7db482d9936564",
+      "completedAt": "2026-11-14T14:59:23.918Z",
+      "rows": [
+        {
+          "name": "utilibre-records-candlr-1",
+          "service": "candlr",
+          "oldRef": "utilibre-candlr:2.4.0-candidate",
+          "newRef": "utilibre-python-records-candlr:20261114",
+          "oldImage": "sha256:c5986394f0853a13bb6f90abcfb33738a5ca5d52a0e6b577afad6c388b19f1bd",
+          "newImage": "sha256:04564418838894d524b13be8a411eb78f27c309bdefe7c1a34a68f38985bc1f2"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/python/simplelogin-web/release-utilibre-simplelogin.json",
+      "sha256": "79c7da85ad64fcf9ed65a9b8cd438815f2329e8713babf384b50bc9393813956",
+      "completedAt": "2026-11-14T15:01:58.518Z",
+      "rows": [
+        {
+          "name": "utilibre-simplelogin-web-1",
+          "service": "web",
+          "oldRef": "utilibre-simplelogin:oauth-security-20261109",
+          "newRef": "utilibre-python-simplelogin-web:20261114",
+          "oldImage": "sha256:11eb7cdaf08f0465d15e48be2b06bdf2ea2939b95a6e620d5d6b364a3ddde2f5",
+          "newImage": "sha256:05858de90e51d3e6b07b38e914ef7be4d7c5c49586469b3fa232c6e28d536f44"
+        },
+        {
+          "name": "utilibre-simplelogin-jobs-1",
+          "service": "jobs",
+          "oldRef": "utilibre-simplelogin:oauth-security-20261109",
+          "newRef": "utilibre-python-simplelogin-web:20261114",
+          "oldImage": "sha256:11eb7cdaf08f0465d15e48be2b06bdf2ea2939b95a6e620d5d6b364a3ddde2f5",
+          "newImage": "sha256:05858de90e51d3e6b07b38e914ef7be4d7c5c49586469b3fa232c6e28d536f44"
+        },
+        {
+          "name": "utilibre-simplelogin-smtp-1",
+          "service": "smtp",
+          "oldRef": "utilibre-simplelogin:oauth-security-20261109",
+          "newRef": "utilibre-python-simplelogin-web:20261114",
+          "oldImage": "sha256:11eb7cdaf08f0465d15e48be2b06bdf2ea2939b95a6e620d5d6b364a3ddde2f5",
+          "newImage": "sha256:05858de90e51d3e6b07b38e914ef7be4d7c5c49586469b3fa232c6e28d536f44"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/python/trip-app/release-utilibre-trip.json",
+      "sha256": "0c3d1c02bb345718166f0ae8d981e4a72d9584d5f94510e02ee409a64cd4266d",
+      "completedAt": "2026-11-14T14:59:42.440Z",
+      "rows": [
+        {
+          "name": "utilibre-trip-app-1",
+          "service": "app",
+          "oldRef": "utilibre-trip:oauth-security-20261109",
+          "newRef": "utilibre-python-trip-app:20261114",
+          "oldImage": "sha256:e93519e3e6760c28a624c8ffca1891d5fb81935383c41333655842a078f0a4d4",
+          "newImage": "sha256:98e47c60d603032f695077c889625fe3f662edb306fe14d35f51c3ac1492e0ae"
+        },
+        {
+          "name": "utilibre-trip-gateway-1",
+          "service": "gateway",
+          "oldRef": "utilibre-vendor-calendar-calino:20261111",
+          "newRef": "utilibre-vendor-calendar-calino:20261111",
+          "oldImage": "sha256:f818900e82bdbbfb9fc84e699dab867221e1fa634f26807bb3b67ef3bd4f89d5",
+          "newImage": "sha256:f818900e82bdbbfb9fc84e699dab867221e1fa634f26807bb3b67ef3bd4f89d5"
+        },
+        {
+          "name": "utilibre-trip-proxy-1",
+          "service": "proxy",
+          "oldRef": "utilibre-wallabag-proxy:sqlite-security-20261109",
+          "newRef": "utilibre-wallabag-proxy:sqlite-security-20261109",
+          "oldImage": "sha256:3f5af0e842ed90e5329e9a545c33025ba416abc7d03461da0fc02142d8ba5fb7",
+          "newImage": "sha256:3f5af0e842ed90e5329e9a545c33025ba416abc7d03461da0fc02142d8ba5fb7"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/python/unfurl-app/release-utilibre-unfurl.json",
+      "sha256": "1dfd758cf2709226649ae5c032fe58905a23ec032b52d7edac4b5831e6d70aa1",
+      "completedAt": "2026-11-14T15:00:35.970Z",
+      "rows": [
+        {
+          "name": "utilibre-unfurl-app-1",
+          "service": "app",
+          "oldRef": "utilibre-unfurl-app:sqlite-security-20261109",
+          "newRef": "utilibre-python-unfurl-app:20261114",
+          "oldImage": "sha256:e6c3c9bc5b13d85435610e42ecb039ca5e9b4edfee1e227bfe84e370983e9522",
+          "newImage": "sha256:f335dcee2ca75041d03eb5a632fa1b70de30e3b6332c7b64a41f1194ab671e73"
+        },
+        {
+          "name": "utilibre-unfurl-gateway-1",
+          "service": "gateway",
+          "oldRef": "utilibre-vendor-calendar-calino:20261111",
+          "newRef": "utilibre-vendor-calendar-calino:20261111",
+          "oldImage": "sha256:f818900e82bdbbfb9fc84e699dab867221e1fa634f26807bb3b67ef3bd4f89d5",
+          "newImage": "sha256:f818900e82bdbbfb9fc84e699dab867221e1fa634f26807bb3b67ef3bd4f89d5"
+        },
+        {
+          "name": "utilibre-unfurl-proxy-1",
+          "service": "proxy",
+          "oldRef": "utilibre-wallabag-proxy:sqlite-security-20261109",
+          "newRef": "utilibre-wallabag-proxy:sqlite-security-20261109",
+          "oldImage": "sha256:3f5af0e842ed90e5329e9a545c33025ba416abc7d03461da0fc02142d8ba5fb7",
+          "newImage": "sha256:3f5af0e842ed90e5329e9a545c33025ba416abc7d03461da0fc02142d8ba5fb7"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/qemu/native/release.json",
+      "sha256": "990aeda3e2f78911da3d2cf21b9d73cedbb27bef950f24de700ed4e57a4dbe53",
+      "completedAt": "2026-11-14T15:28:22.276542+00:00",
+      "rows": []
+    },
+    {
+      "receipt": "security-20261114/reader-evaluation-fourget/release.json",
+      "sha256": "b4d18d06fbec7ae0ad80b54ba09d9e8b732133a2d10d8ae4f410f41bfcace2aa",
+      "completedAt": "2026-11-14T14:31:43.900Z",
+      "rows": [
+        {
+          "name": "utilibre-reader-evaluation-fourget-1",
+          "service": "fourget",
+          "oldImage": "sha256:37eb013e433dfdc4135fd0eb2c8db7b5782962a9e872ed242b35484ce9edc8eb",
+          "newImage": "sha256:545248543b020415c2de4a999440cdead3802afbf2baccb8713d0fdc3e12f555",
+          "oldRef": "utilibre-zlib-reader-evaluation-fourget:candidate-20261109",
+          "newRef": "utilibre-vendor-reader-evaluation-fourget:20261114"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/services-privatebin/release-utilibre-services.json",
+      "sha256": "79417d6d54941392aef96df7980455504b449eb5953c67a2f071b3b7587763a3",
+      "completedAt": "2026-11-14T14:41:22.888Z",
+      "rows": [
+        {
+          "name": "utilibre-services-privatebin-1",
+          "service": "privatebin",
+          "oldRef": "utilibre-abuse-privatebin:20261109",
+          "newRef": "utilibre-vendor-services-privatebin:20261114",
+          "oldImage": "sha256:e6a3f0c563c225e055524197f59261f34a805e38d49e4c03c051dcfa19643d6f",
+          "newImage": "sha256:7d671a189db9520bdde8e31a4d92ff8cb5164c8629d5ddc726e2244382188ca6"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/vendor-debian/identity-worker/release-utilibre-identity.json",
+      "sha256": "f0582db7939b481a446c8119dd8aa74753afaaafc2dc547339bcdae5187508e3",
+      "completedAt": "2026-11-14T14:47:46.706Z",
+      "rows": [
+        {
+          "name": "utilibre-identity-worker-1",
+          "service": "worker",
+          "oldRef": "utilibre-krb5-identity-server:1.22.3-20261110",
+          "newRef": "utilibre-vendor-identity-worker:20261114",
+          "oldImage": "sha256:524a835ac72bf3f619e3cbdebf2962996a1111e873532029c2f88f286df6cca2",
+          "newImage": "sha256:848a88c44e4ee938628e88624cf452193ab6b15723142fba53e61f0cba534e88"
+        },
+        {
+          "name": "utilibre-identity-server-1",
+          "service": "server",
+          "oldRef": "utilibre-krb5-identity-server:1.22.3-20261110",
+          "newRef": "utilibre-vendor-identity-worker:20261114",
+          "oldImage": "sha256:524a835ac72bf3f619e3cbdebf2962996a1111e873532029c2f88f286df6cca2",
+          "newImage": "sha256:848a88c44e4ee938628e88624cf452193ab6b15723142fba53e61f0cba534e88"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/vendor-debian/kitchenowl-app/release-utilibre-kitchenowl.json",
+      "sha256": "ff5a34b3c6b0628962f2dfa58511156136350d90b98cc5457a23205b7a10575a",
+      "completedAt": "2026-11-14T14:52:55.344Z",
+      "rows": [
+        {
+          "name": "utilibre-kitchenowl-app-1",
+          "service": "app",
+          "oldRef": "utilibre-kitchenowl:0.8.1-startup-fixed",
+          "newRef": "utilibre-vendor-kitchenowl-app:20261114",
+          "oldImage": "sha256:c8fc1a7e79c48e8f5644bfb5e2df37e5a81a77cc92f3212d869013d9e1868960",
+          "newImage": "sha256:8c1fbe868778a0ea86ea287b84f4825c6f9edaf6cecf3a1552469111f8658dc6"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/vendor-debian/linkding-linkding/release-utilibre-linkding.json",
+      "sha256": "93b325bc2f047723a7f6c543081971b5cec566dbf850e10a150b7caf33355aea",
+      "completedAt": "2026-11-14T14:42:11.719Z",
+      "rows": [
+        {
+          "name": "utilibre-linkding-linkding-1",
+          "service": "linkding",
+          "oldRef": "utilibre-krb5-linkding-linkding:1.22.3-20261110",
+          "newRef": "utilibre-vendor-linkding-linkding:20261114",
+          "oldImage": "sha256:14793c0212c6f8e0dcfffa03741e42a9fdd0a6683ef861629b09af12409931ac",
+          "newImage": "sha256:f4a81e949b4484ba18e8cf0ded53fe7fd611581514c77c7d06945d5922742f08"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/vendor-debian/pack-forms-app/release-utilibre-pack-forms.json",
+      "sha256": "38742c4be50b8c05c32fff7edf5bdd730c4d03da9818b9607cb5638d34a05e0b",
+      "completedAt": "2026-11-14T14:51:05.940Z",
+      "rows": [
+        {
+          "name": "utilibre-pack-forms-app-1",
+          "service": "app",
+          "oldRef": "utilibre-krb5-pack-forms-app:1.22.3-20261110",
+          "newRef": "utilibre-vendor-pack-forms-app:20261114",
+          "oldImage": "sha256:de382dcb06b5aaccb879b97d93b2f7fa90a1fce9507425f232ab8d24b63496ff",
+          "newImage": "sha256:838c602f7550049c394120f2bda7247e96379ae6481a54d371549531e177fcde"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/vendor-debian/services-freshrss/release.json",
+      "sha256": "97beaa3e84d9d4f49b04bc19badb678b4007b447482c97b82de1a2ff87da25f2",
+      "completedAt": "2026-11-14T14:31:26.337Z",
+      "rows": [
+        {
+          "name": "utilibre-services-freshrss-1",
+          "service": "freshrss",
+          "oldImage": "sha256:102838f13a118e05a408c86b7ae6397039351c1dfb081888fcc7f70381bd4b4b",
+          "newImage": "sha256:6b822ac5ed23b8e5da16bacebb9980583190bc8d4f1a11202c8c1b00d7c383c9",
+          "oldRef": "utilibre-krb5-services-freshrss:1.22.3-20261110",
+          "newRef": "utilibre-vendor-services-freshrss:20261114"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/vendor-debian/turn-option-turn/release-utilibre-galene-turn.json",
+      "sha256": "d13897b71bd11a3364b781dd9cc380ba6e42f6dc01806ba304c46776485b6b48",
+      "completedAt": "2026-11-14T14:56:20.296Z",
+      "rows": [
+        {
+          "name": "utilibre-galene-turn-turn-1",
+          "service": "turn",
+          "oldRef": "utilibre-krb5-galene-turn-turn:1.22.3-20261110",
+          "newRef": "utilibre-vendor-turn-option-turn:20261114",
+          "oldImage": "sha256:39dd887419d6f88c62e0157ffeaf6a3c4fe412b96285e3fd0e9d1b27ef0b7e96",
+          "newImage": "sha256:96e7f9e76bb68a9e98fd998c6f9c59c9870eb9fde702ff276daeabd90c6f0cb9"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/vendor-debian/turn-option-turn/release-utilibre-turn-option.json",
+      "sha256": "08eddfe7e17ee2fddc7b6285e59d3e66e783e4632eccc6cbe0c184c68a5d7987",
+      "completedAt": "2026-11-14T14:55:07.810Z",
+      "rows": [
+        {
+          "name": "utilibre-turn-option-turn-1",
+          "service": "turn",
+          "oldRef": "utilibre-krb5-galene-turn-turn:1.22.3-20261110",
+          "newRef": "utilibre-vendor-turn-option-turn:20261114",
+          "oldImage": "sha256:39dd887419d6f88c62e0157ffeaf6a3c4fe412b96285e3fd0e9d1b27ef0b7e96",
+          "newImage": "sha256:96e7f9e76bb68a9e98fd998c6f9c59c9870eb9fde702ff276daeabd90c6f0cb9"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/xserver/release-exporter.json",
+      "sha256": "870947fa64bf52bae5c49ed9c1f415e38a4a82ddc8cda9c27e87f4f4240b6c9d",
+      "completedAt": "2026-11-14T15:25:01.849Z",
+      "rows": [
+        {
+          "name": "utilibre-expanded-penpot-exporter-1",
+          "service": "penpot-exporter",
+          "oldRef": "utilibre-krb5-expanded-penpot-exporter:1.22.3-20261110",
+          "newRef": "utilibre-penpot-exporter:xserver-20261114",
+          "oldImage": "sha256:bf748ae83b9d9e0b8ef9ddf4ea57e892cef6614a33f38e573d862f15cc3d40c4",
+          "newImage": "sha256:18437fd8e5d3395501acdc7046e629ae6df39f25dbd1b3ef7e339a4959b1431a"
+        }
+      ]
+    },
+    {
+      "receipt": "security-20261114/xserver/release-host.json",
+      "sha256": "14df99ec63cb7ba0ec6683866088d2c2bae29c256d667c96e395b4f1cd1a4af9",
+      "completedAt": "2026-11-14T15:23:06.441Z",
+      "rows": []
+    }
+  ],
+  "retainedImageProofs": 21,
+  "runtime": {
+    "runningContainers": 175,
+    "healthyChecks": 90,
+    "unhealthyChecks": 0
+  },
+  "remaining": [
+    {
+      "component": "libacl1",
+      "advisory": "CVE-2026-54369",
+      "packageTargetRecords": 30,
+      "status": "unresolved caller migration; not waived"
+    }
+  ],
+  "limitations": [
+    "Raw scanner findings retained; exact reviews expire.",
+    "The confirmed kernel reboot is complete; no separate SSH/guest-agent package replacement, database migration or retention change.",
+    "Separate Proxmox/Caddy hardware and firmware not assessed.",
+    "No byte-identical rebuild or universal device/provider availability claim."
+  ],
+  "focusedTests": {
+    "assessmentPolicy": 8,
+    "privatebinUpdater": 18,
+    "triageAndHeaders": 21,
+    "overlayAncestry": 12,
+    "failed": 0,
+    "hostRefresh": 2
+  },
+  "privatebinUpdater": {
+    "version": "2.1.1",
+    "status": "up-to-date",
+    "scannerVersion": "0.76.2",
+    "reconciliationRepeatedNoOp": true,
+    "serviceRestarted": false,
+    "receipt": "/var/lib/utilibre-privatebin-updater/last-run.json"
+  },
+  "hostRefreshedAt": "2026-11-14T16:17:20.938Z",
+  "hostPackagesAfterKernel": 508,
+  "kernel": {
+    "date": "2026-11-14T16:07:59.531656+00:00",
+    "status": "boot-verified",
+    "oldKernel": "6.12.116+deb13-cloud-amd64",
+    "newKernel": "6.12.117+deb13-cloud-amd64",
+    "rebooted": true,
+    "rollback": "Keep prior kernel and initramfs; select 6.12.116 from GRUB via Proxmox console if boot fails. No automatic package removal.",
+    "completedAt": "2026-11-14T16:08:06.287752+00:00",
+    "kernelSha256": "ed8f0dbdbefe3994093937f5ee934818ae902b88cb0b6bc423811c10d55b87b0",
+    "initramfsSha256": "a3b2379f0cffd840d40e28db484c04a2571acfe8639885dac5002190f1ef02a7",
+    "oldKernelRetained": true,
+    "postBootVerifiedAt": "2026-11-14T16:17:55.124489+00:00",
+    "runningKernel": "6.12.117+deb13-cloud-amd64",
+    "containersRunning": 175,
+    "healthChecksPassed": 90,
+    "imageDigestsUnchanged": true,
+    "systemFailedUnits": 0,
+    "proxmoxAgentConfirmation": "requested; guest-side agent service active"
+  },
+  "sourceOffer": {
+    "passed": true,
+    "file": "security-native-20261114-source.tar.gz",
+    "sha256": "b2cf1a87ad3884a4da12b94927c709dd5dddaa3a60760f69cb78947a00009282",
+    "bytes": 66100739,
+    "files": 84,
+    "published": true
+  },
+  "compilerArchive": {
+    "passed": true,
+    "date": "2026-11-14T16:24:40.075497+00:00",
+    "snapshot": "194a14aff086edbb54e760ca9eea4465772e6c3324285ce4c10f0a7e8f90b07f",
+    "tag": "maintenance-compiler-images-20261114",
+    "archivePath": "/dev/shm/utilibre-compiler-archive-9h6ajy0q/compiler-images-20261114.tar.zst",
+    "archiveSha256": "986f80e993a3648395bbf1dbf3dd7d40d4c2604a0da16de604465ec9b225f863",
+    "archiveBytes": 477648184,
+    "restoredAndVerified": true,
+    "freeBefore": 7949135872,
+    "scope": "Five exact unused compiler images only; all runtime/rollback images and account backups preserved.",
+    "freeAfter": 9729191936,
+    "removedCompilerImages": 5
+  },
+  "updatedAt": "2026-11-14T16:26:02.416751+00:00"
+}

@@ -1,0 +1,14 @@
+{
+  "version": "0.0.6",
+  "file": "qemu_qmp-0.0.6-py3-none-any.whl",
+  "url": "https://files.pythonhosted.org/packages/47/8e/0d41329b82879ee1d4b522566c6d06368119650f8143168f3c3edf2a8afe/qemu_qmp-0.0.6-py3-none-any.whl",
+  "sha256": "5d7c5af0e9de427696e3bf72e333965c3a697929f77f6b7ddc30c989fc7b539b",
+  "license": "LGPL-2.0-or-later AND GPL-2.0-only (upstream includes both license files; build-time only)",
+  "project": {
+    "Changelog": "https://qemu.readthedocs.io/projects/python-qemu-qmp/en/latest/main.html#changelog",
+    "Documentation": "https://qemu.readthedocs.io/projects/python-qemu-qmp/en/latest/",
+    "Homepage": "https://www.qemu.org/",
+    "Issues": "https://gitlab.com/qemu-project/python-qemu-qmp/-/issues",
+    "Source": "https://gitlab.com/qemu-project/python-qemu-qmp"
+  }
+}

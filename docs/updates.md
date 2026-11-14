@@ -1,3 +1,12 @@
+## 14 November release checkpoint
+
+Native dependency repairs, runtime pins and replay evidence are deployed.
+PrivateBin's scheduled updater recognizes its libpq-patched runtime. The confirmed
+kernel maintenance window completed with 6.12.117 running, the previous kernel
+retained, 175 containers running and 90 health checks passing. The pending queue
+is **0 critical / 30 high ACL records**; the caller migration is still unresolved.
+[Checks, source offers, remaining boundary and rollback](records/security-2026-11-14.md).
+
 ## 9 November release checkpoint
 
 ChartDB 1.21.0, Addy/4get's tested GLib parser repair and musl fixes in 20 static

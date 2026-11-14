@@ -61,7 +61,7 @@ services:
 
   breezewiki:
     <<: *runtime
-    image: utilibre-krb5-expanded-breezewiki:1.22.3-20261110
+    image: utilibre-git-breezewiki:2.54.1-20261114
     read_only: true
     user: "1000:1000"
     environment:
@@ -303,7 +303,7 @@ services:
 
   penpot-exporter:
     <<: *runtime
-    image: utilibre-krb5-expanded-penpot-exporter:1.22.3-20261110
+    image: utilibre-git-penpot-exporter:2.54.1-20261114
     environment:
       PENPOT_PUBLIC_URI: https://design.utilibre.org
       PENPOT_INTERNAL_URI: http://penpot-frontend:8080

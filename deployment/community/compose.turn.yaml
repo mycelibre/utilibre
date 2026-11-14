@@ -21,6 +21,7 @@ services:
     volumes: ["/opt/utilibre/turn-lab/turnserver.conf:/run/config/turnserver.conf:ro"]
   turn:
     <<: *turn
+    image: utilibre-vendor-turn-option-turn:20261114
     # Dedicated UID makes host-network egress filtering independent of Galene.
     user: "4005:4005"
     profiles: [public-turn]

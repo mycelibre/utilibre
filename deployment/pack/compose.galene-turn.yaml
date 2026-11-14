@@ -1,7 +1,7 @@
 name: utilibre-galene-turn
 services:
   turn:
-    image: utilibre-krb5-galene-turn-turn:1.22.3-20261110
+    image: utilibre-vendor-turn-option-turn:20261114
     build: {context: ../community/turn}
     user: '4004:4004'
     entrypoint: [turnserver, -c, /run/config/turnserver.conf]

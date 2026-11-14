@@ -1,0 +1,20 @@
+{
+  "commit": "fdeb8e48253ae1f8a1fff9ce217c1122de45a0c2",
+  "records": [
+    {
+      "id": "CVE-2026-99288",
+      "url": "https://raw.githubusercontent.com/CVEProject/cvelistV5/fdeb8e48253ae1f8a1fff9ce217c1122de45a0c2/cves/2026/99xxx/CVE-2026-99288.json",
+      "sha256": "8cf5a98d6d21ffe1475b3c44eddf9cc141e11c26ccf214048436a06f6a04c7c7"
+    },
+    {
+      "id": "CVE-2026-0004",
+      "url": "https://raw.githubusercontent.com/CVEProject/cvelistV5/fdeb8e48253ae1f8a1fff9ce217c1122de45a0c2/cves/2026/0xxx/CVE-2026-0004.json",
+      "sha256": "0dbb57b73d826c087dec6b3a7ec26b2a28bfb85c7c313dd55d8c7979b7050ed5"
+    },
+    {
+      "id": "CVE-2024-21963",
+      "url": "https://raw.githubusercontent.com/CVEProject/cvelistV5/fdeb8e48253ae1f8a1fff9ce217c1122de45a0c2/cves/2024/21xxx/CVE-2024-21963.json",
+      "sha256": "bb816be123cb3819e3502efa88347adb1fe0c7a464a637f6d0923b5e12a3bdb5"
+    }
+  ]
+}

@@ -3,12 +3,12 @@
   "approved": true,
   "family": "2.1",
   "minimum": "2.1.1",
-  "runtimeImage": "sha256:e6a3f0c563c225e055524197f59261f34a805e38d49e4c03c051dcfa19643d6f",
+  "runtimeImage": "sha256:7d671a189db9520bdde8e31a4d92ff8cb5164c8629d5ddc726e2244382188ca6",
   "bootstrapVersion": "2.1.0",
   "maxDatabaseAgeHours": 48,
   "minimumFreeGiB": 8,
-  "scannerVersion": "0.75.0",
-  "scannerSha256": "93f9da8e4ba5e0c1c76d8234ed2494cf9afb0a96fd21953e424bb795f3299b8e",
+  "scannerVersion": "0.76.2",
+  "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
   "templatePatchSha256": "bc377f92d0b4aba939a2192726bb85b59b1787720ec148318bb2ebfd88219b7e",
   "sourceContracts": {
     "composer.json": "3b4f7026604ab0af724f603a6a7b73552134a002d9ada718f58599a736002652",
@@ -36,13 +36,13 @@
   "applicationAdvisorySnapshotSha256": "2d991927eb54da335f7b3811dc77b9a138aa07ed5c1e7593281878a9cbb19d54",
   "reviewedRuntimeTransition": {
     "approved": true,
-    "previousImage": "sha256:95d4a7ef121809772bbae5021badc46f0188361677da1e4aa41bc56cddb63f9d",
-    "image": "sha256:e6a3f0c563c225e055524197f59261f34a805e38d49e4c03c051dcfa19643d6f",
+    "previousImage": "sha256:e6a3f0c563c225e055524197f59261f34a805e38d49e4c03c051dcfa19643d6f",
+    "image": "sha256:7d671a189db9520bdde8e31a4d92ff8cb5164c8629d5ddc726e2244382188ca6",
     "version": "2.1.1",
     "revision": "802b834509628a94a376112ea6561914741d649e",
     "archiveSha256": "5b8e6600b03b2a0cd945de1508a636eeb43390afb6ccbba9712b1c4cd44aa5f0",
-    "deployedAt": "2026-11-09T17:39:05.078Z",
-    "purpose": "Reconcile the already-deployed, reviewed musl and abuse-notice rebuild; same PrivateBin application source, no activation.",
+    "deployedAt": "2026-11-14T14:41:22.888Z",
+    "purpose": "Reconcile the deployed libpq 18.7-r0 repair; identical PrivateBin 2.1.1 application, privacy settings, upload guard and template. No activation.",
     "payloadHashes": {
       "/usr/share/doc/privatebin/utilibre-release.json": "7de3b0e0b7906312c6e463d19ec407e92f749d1439bde4452f19757962e59aa7",
       "/srv/tpl/bootstrap5-utilibre.php": "0f89c81214cc605ece521188200b020aa55343c2d2b9901c79a8df2b0cd22b16",
@@ -50,28 +50,28 @@
     },
     "evidence": {
       "native": {
-        "path": "security-20261109/abuse-reporting/images.json",
-        "sha256": "21a81087396b9f693d7f4aa0e5a4fede29e0f4efb60880c6c746f8b64a8facd6"
+        "path": "security-20261114/services-privatebin/application.json",
+        "sha256": "b00ef5bb7a10d0d4cabe15e2bfa3d06b3d4f3f76d2b2650222f9afda5bf0f63a"
       },
       "deployment": {
-        "path": "security-20261109/abuse-reporting/release.json",
-        "sha256": "109cd13a8cafc46f23beaae8732d900b526964ff278effd9ab4beda279746de2"
+        "path": "security-20261114/services-privatebin/release-utilibre-services.json",
+        "sha256": "79417d6d54941392aef96df7980455504b449eb5953c67a2f071b3b7587763a3"
       },
       "runtimeBuild": {
-        "path": "security-20261109/musl/services-privatebin/build.json",
-        "sha256": "199fe7a5d948c79789a39217a098adfad818e8d8b86b9433b17b31d22c79e313"
+        "path": "security-20261114/services-privatebin/build.json",
+        "sha256": "fed0f789bc8d5e86ae021d03e686e2522fc7ee18edce90e139f8ae3266eb67b1"
       },
       "runtimeConsumer": {
-        "path": "security-20261109/musl/services-privatebin/consumer.json",
-        "sha256": "4986a198811a29e3cc22c9584c2f232a875d98f1fc3d8335a1303a9c5b66af9b"
+        "path": "security-20261114/services-privatebin/consumer.json",
+        "sha256": "aa49d85d982b35139713232b373e477f4327bcd3884d3c047cfd6f1172b32d07"
       },
       "runtimeScan": {
-        "path": "security-20261109/musl/services-privatebin/scan-gate.json",
-        "sha256": "e543d481dc2f6b0cb28c519dd437ff3b3cb5fb876e1eb1250e7edbbffde624f3"
+        "path": "security-20261114/services-privatebin/scan-gate.json",
+        "sha256": "ef1d781d52ae0100f07227c999259b5f6e7fcd302f317d3fe574c6cd30b0e68d"
       },
       "sourceReplay": {
-        "path": "security-20261109/abuse-reporting/privatebin-updater-replay.json",
-        "sha256": "76ecc68dc5f4d98b0871ea8f4573016c731ffd71ab06968037a35beffb8b3b28"
+        "path": "security-20261114/retained/e6a3f0c563c2-7d671a189db9.json",
+        "sha256": "e421f3c0e40394612b7b28da82ffe79be03173c84076a93b55dffb875c31fc6d"
       }
     }
   }

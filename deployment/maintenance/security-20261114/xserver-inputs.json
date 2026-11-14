@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "patches": [
+    {
+      "advisory": "CVE-2026-109091",
+      "commit": "d88f0f7fdb2834c24feca63c0af5f46a57f4a04c",
+      "url": "https://gitlab.freedesktop.org/xorg/xserver/-/commit/d88f0f7fdb2834c24feca63c0af5f46a57f4a04c.patch",
+      "file": "d88f0f7fdb2834c24feca63c0af5f46a57f4a04c.patch",
+      "sha256": "51543024c895e9ebc24b5b2902f294172eb11b4853d4408e714d3d86a5f066f7"
+    },
+    {
+      "advisory": "CVE-2026-109091",
+      "commit": "56e4ab6e8d94222480c8d7a28f530334059e3ab7",
+      "url": "https://gitlab.freedesktop.org/xorg/xserver/-/commit/56e4ab6e8d94222480c8d7a28f530334059e3ab7.patch",
+      "file": "56e4ab6e8d94222480c8d7a28f530334059e3ab7.patch",
+      "sha256": "f87122587ea9ca4eaa8fcf9c812e61fb8e7a446f4be4b55467ea79bbaad51fd8"
+    },
+    {
+      "advisory": "CVE-2026-109092",
+      "commit": "a4d7800f0f56469a082e3755bfa6b148c707075c",
+      "url": "https://gitlab.freedesktop.org/xorg/xserver/-/commit/a4d7800f0f56469a082e3755bfa6b148c707075c.patch",
+      "file": "a4d7800f0f56469a082e3755bfa6b148c707075c.patch",
+      "sha256": "0b6b7cb2e80b038dd0ee35da33ba79ac3b4d7654d9c6d0e3461da5c2cbba63c4"
+    },
+    {
+      "advisory": "CVE-2026-109093",
+      "commit": "99ce069ae814b39048543062e073320f14723ee0",
+      "url": "https://gitlab.freedesktop.org/xorg/xserver/-/commit/99ce069ae814b39048543062e073320f14723ee0.patch",
+      "file": "99ce069ae814b39048543062e073320f14723ee0.patch",
+      "sha256": "acc354afa37361f1a8b83c1a318f1b5caeb67d9eabb345a72cbce30d006b590e"
+    },
+    {
+      "advisory": "CVE-2026-109095",
+      "commit": "99e647e914d947a791e92253a071955a9703647a",
+      "url": "https://gitlab.freedesktop.org/xorg/xserver/-/commit/99e647e914d947a791e92253a071955a9703647a.patch",
+      "file": "99e647e914d947a791e92253a071955a9703647a.patch",
+      "sha256": "ab54181256d3581555422aeb8dd66c7c96a45a93c675fcf6aa3edb8d9ad4363f"
+    },
+    {
+      "advisory": "CVE-2026-109096",
+      "commit": "1376ac1f0edad6bd44dc6db3b4e49370a60d8e2f",
+      "url": "https://gitlab.freedesktop.org/xorg/xserver/-/commit/1376ac1f0edad6bd44dc6db3b4e49370a60d8e2f.patch",
+      "file": "1376ac1f0edad6bd44dc6db3b4e49370a60d8e2f.patch",
+      "sha256": "e6d987df2299e209b9613d4322e0ba42956192eb859581cadbee2f32037b75d2"
+    },
+    {
+      "advisory": "CVE-2026-109903",
+      "commit": "a11d070e4ea78c6c97a7e88c57277d766cd9050b",
+      "url": "https://gitlab.freedesktop.org/xorg/xserver/-/commit/a11d070e4ea78c6c97a7e88c57277d766cd9050b.patch",
+      "file": "a11d070e4ea78c6c97a7e88c57277d766cd9050b.patch",
+      "sha256": "b8d4c06069939164b800c8e36d30b6814727515b91075066a47271cd01d88165"
+    }
+  ],
+  "vendorSourceReceipt": "/var/lib/utilibre-maintenance/xvfb-single-screen-final-20261012/source.json",
+  "vendorSourceReceiptSha256": "50c9664a162dd67429b96dc3db6c0fbeef5c286b0add16dd4e6869b68fbc6c7d",
+  "dhiBackport": {
+    "advisory": "CVE-2026-109095",
+    "patch": "xserver-dhi-glamor-overflow.patch",
+    "sha256": "83544c1095a73100634c5e2825bb2b4d4efada8b7b5a5c436949e190e5699b26",
+    "sourceBeforeSha256": "72e281fa44dd39df3af430b8e9b96f7f16724345b538d3492be372212696cf83",
+    "sourceAfterSha256": "66292c27769db5e3bce3f556865dc0809751b991fdeeb4d3f4ff9b199d184302",
+    "upstreamCommit": "99e647e914d947a791e92253a071955a9703647a",
+    "reason": "The 21.1.16 branch has no packed-format cases and uses a combined NV12 offset assignment; retain native layout and apply the same int64 and INT_MAX checks."
+  }
+}

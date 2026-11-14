@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "approval": "preparation-only",
+  "wheels": {
+    "dnspython": {
+      "version": "2.9.2",
+      "file": "dnspython-2.9.2-py3-none-any.whl",
+      "sha256": "af15f7d385a6ae2fb35a796fde2138004c8c42c7389090e2addc83e3b3340fd8",
+      "url": "https://files.pythonhosted.org/packages/1e/0c/5346358b3a20275d256978c35203ddc2c8617f78c1b23795b79ba22ced6d/dnspython-2.9.2-py3-none-any.whl",
+      "requiresPython": ">=3.11",
+      "license": "ISC",
+      "source": {
+        "documentation": "https://dnspython.readthedocs.io/en/stable/",
+        "homepage": "https://www.dnspython.org",
+        "issues": "https://github.com/rthalley/dnspython/issues",
+        "repository": "https://github.com/rthalley/dnspython.git"
+      }
+    },
+    "soupsieve": {
+      "version": "4.0.1",
+      "file": "soupsieve-4.0.1-py3-none-any.whl",
+      "sha256": "2e68cf7dd5a0f29d81f9d485275ccf294e6475f615e211895d91cb81f8614f04",
+      "url": "https://files.pythonhosted.org/packages/2c/5c/4f68370847b561a389dd9a2d7eb3d19fd8cbb8acbae543a0c6b8d0d9700b/soupsieve-4.0.1-py3-none-any.whl",
+      "requiresPython": ">=3.11.5",
+      "license": "MIT",
+      "source": {
+        "Homepage": "https://github.com/facelessuser/soupsieve"
+      }
+    }
+  },
+  "rows": [
+    {
+      "base": "sha256:11eb7cdaf08f0465d15e48be2b06bdf2ea2939b95a6e620d5d6b364a3ddde2f5",
+      "containers": [
+        "utilibre-simplelogin-web-1",
+        "utilibre-simplelogin-jobs-1",
+        "utilibre-simplelogin-smtp-1"
+      ],
+      "packages": {
+        "dnspython": {
+          "version": "2.7.0",
+          "site": "/code/.venv/lib/python3.12/site-packages"
+        }
+      },
+      "python": "/code/.venv/bin/python",
+      "version": "3.12.8",
+      "key": "simplelogin-web",
+      "candidate": "utilibre-python-simplelogin-web:20261114"
+    },
+    {
+      "base": "sha256:f4a81e949b4484ba18e8cf0ded53fe7fd611581514c77c7d06945d5922742f08",
+      "containers": [
+        "utilibre-linkding-linkding-1"
+      ],
+      "packages": {
+        "soupsieve": {
+          "version": "2.9",
+          "site": "/etc/linkding/.venv/lib/python3.13/site-packages"
+        }
+      },
+      "python": "/etc/linkding/.venv/bin/python",
+      "version": "3.13.7",
+      "key": "linkding-linkding",
+      "candidate": "utilibre-python-linkding-linkding:20261114",
+      "assessmentOriginalBase": "sha256:14793c0212c6f8e0dcfffa03741e42a9fdd0a6683ef861629b09af12409931ac",
+      "baselineRawScan": "/var/lib/utilibre-maintenance/security-20261114/vendor-debian/linkding-linkding/after-scan.json"
+    },
+    {
+      "base": "sha256:848a88c44e4ee938628e88624cf452193ab6b15723142fba53e61f0cba534e88",
+      "containers": [
+        "utilibre-identity-worker-1",
+        "utilibre-identity-server-1"
+      ],
+      "packages": {
+        "dnspython": {
+          "version": "2.9.0",
+          "site": "/ak-root/.venv/lib/python3.14/site-packages"
+        }
+      },
+      "python": "/ak-root/.venv/bin/python",
+      "version": "3.14.7",
+      "key": "identity-worker",
+      "candidate": "utilibre-python-identity-worker:20261114",
+      "assessmentOriginalBase": "sha256:524a835ac72bf3f619e3cbdebf2962996a1111e873532029c2f88f286df6cca2",
+      "baselineRawScan": "/var/lib/utilibre-maintenance/security-20261114/vendor-debian/identity-worker/after-scan.json"
+    },
+    {
+      "base": "sha256:c5986394f0853a13bb6f90abcfb33738a5ca5d52a0e6b577afad6c388b19f1bd",
+      "containers": [
+        "utilibre-records-candlr-1"
+      ],
+      "packages": {
+        "dnspython": {
+          "version": "2.9.0",
+          "site": "/usr/local/lib/python3.12/site-packages"
+        }
+      },
+      "python": "/usr/local/bin/python",
+      "version": "3.12.15",
+      "key": "records-candlr",
+      "candidate": "utilibre-python-records-candlr:20261114"
+    },
+    {
+      "base": "sha256:cfdd5a535e9e27b7007c9942f0bb31e7551280714783613a7a9bf7b8fd82d5e8",
+      "containers": [
+        "utilibre-13ft-app-1"
+      ],
+      "packages": {
+        "soupsieve": {
+          "version": "2.10",
+          "site": "/usr/local/lib/python3.13/site-packages"
+        }
+      },
+      "python": "/usr/local/bin/python",
+      "version": "3.13.16",
+      "key": "13ft-app",
+      "candidate": "utilibre-python-13ft-app:20261114"
+    },
+    {
+      "base": "sha256:838c602f7550049c394120f2bda7247e96379ae6481a54d371549531e177fcde",
+      "containers": [
+        "utilibre-pack-forms-app-1"
+      ],
+      "packages": {
+        "dnspython": {
+          "version": "2.9.0",
+          "site": "/app/venv/lib/python3.13/site-packages"
+        },
+        "soupsieve": {
+          "version": "2.9",
+          "site": "/app/venv/lib/python3.13/site-packages"
+        }
+      },
+      "python": "/app/venv/bin/python",
+      "version": "3.13.16",
+      "key": "pack-forms-app",
+      "candidate": "utilibre-python-pack-forms-app:20261114",
+      "assessmentOriginalBase": "sha256:de382dcb06b5aaccb879b97d93b2f7fa90a1fce9507425f232ab8d24b63496ff",
+      "baselineRawScan": "/var/lib/utilibre-maintenance/security-20261114/vendor-debian/pack-forms-app/after-scan.json"
+    },
+    {
+      "base": "sha256:e6c3c9bc5b13d85435610e42ecb039ca5e9b4edfee1e227bfe84e370983e9522",
+      "containers": [
+        "utilibre-unfurl-app-1"
+      ],
+      "packages": {
+        "soupsieve": {
+          "version": "2.10",
+          "site": "/usr/local/lib/python3.13/site-packages"
+        }
+      },
+      "python": "/usr/local/bin/python",
+      "version": "3.13.16",
+      "key": "unfurl-app",
+      "candidate": "utilibre-python-unfurl-app:20261114"
+    },
+    {
+      "base": "sha256:e93519e3e6760c28a624c8ffca1891d5fb81935383c41333655842a078f0a4d4",
+      "containers": [
+        "utilibre-trip-app-1"
+      ],
+      "packages": {
+        "dnspython": {
+          "version": "2.9.0",
+          "site": "/usr/local/lib/python3.12/site-packages"
+        }
+      },
+      "python": "/usr/local/bin/python",
+      "version": "3.12.15",
+      "key": "trip-app",
+      "candidate": "utilibre-python-trip-app:20261114"
+    },
+    {
+      "base": "sha256:f69e4f9d79757281d1f2314e89047aae9ab7a834aceb0f44bdb26a03055fd2f2",
+      "containers": [
+        "utilibre-beaverhabits-app-1"
+      ],
+      "packages": {
+        "dnspython": {
+          "version": "2.9.0",
+          "site": "/app/.venv/lib/python3.13/site-packages"
+        }
+      },
+      "python": "/app/.venv/bin/python",
+      "version": "3.13.16",
+      "key": "beaverhabits-app",
+      "candidate": "utilibre-python-beaverhabits-app:20261114"
+    }
+  ]
+}

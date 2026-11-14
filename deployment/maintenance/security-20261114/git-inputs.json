@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "packages": {
+    "git": {
+      "file": "git_2.54.1+utilibre1_amd64.deb",
+      "version": "1:2.54.1+utilibre1",
+      "sha256": "dc02ed856d99e4109a1f9ee70bf4c791cee770c472cbd9b41054bc67f17be46b"
+    },
+    "git-dhi": {
+      "file": "git-dhi_2.54.1+utilibre1_amd64.deb",
+      "version": "1:2.54.1+utilibre1",
+      "sha256": "be635bd7e2f61603cc170bd2c423d081de291be7c19a0f23e7b49cc027c123a7"
+    }
+  },
+  "rows": [
+    {
+      "key": "rsshub",
+      "kind": "debian",
+      "base": "sha256:1e8305310f2bdb807c19391a06846169d9d95097b8648594f3cd966b152be2c3",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "candidate": "utilibre-git-rsshub:2.54.1-20261114",
+      "packages": {
+        "git": {
+          "installed": "1:2.47.3-0+deb13u1",
+          "package": "git"
+        }
+      },
+      "assessmentOriginalBase": "sha256:1e8305310f2bdb807c19391a06846169d9d95097b8648594f3cd966b152be2c3"
+    },
+    {
+      "key": "priviblur",
+      "kind": "debian",
+      "base": "sha256:3cb8b0ae9222b67e5cd800a1432df8f7b8347c275d7f69e7ebd788a4bb7efefe",
+      "containers": [
+        "utilibre-priviblur-priviblur-1"
+      ],
+      "candidate": "utilibre-git-priviblur:2.54.1-20261114",
+      "packages": {
+        "git": {
+          "installed": "1:2.47.3-0+deb13u1",
+          "package": "git"
+        }
+      },
+      "assessmentOriginalBase": "sha256:3cb8b0ae9222b67e5cd800a1432df8f7b8347c275d7f69e7ebd788a4bb7efefe"
+    },
+    {
+      "key": "breezewiki",
+      "kind": "debian",
+      "base": "sha256:93a08e0802d255f04e1f15f170d11c382b9bd59493c69952f25b9dbdff3d53d4",
+      "containers": [
+        "utilibre-expanded-breezewiki-1"
+      ],
+      "candidate": "utilibre-git-breezewiki:2.54.1-20261114",
+      "packages": {
+        "git": {
+          "installed": "1:2.47.3-0+deb13u1",
+          "package": "git"
+        }
+      },
+      "assessmentOriginalBase": "sha256:93a08e0802d255f04e1f15f170d11c382b9bd59493c69952f25b9dbdff3d53d4"
+    },
+    {
+      "key": "penpot-exporter",
+      "kind": "debian",
+      "base": "sha256:18437fd8e5d3395501acdc7046e629ae6df39f25dbd1b3ef7e339a4959b1431a",
+      "containers": [
+        "utilibre-expanded-penpot-exporter-1"
+      ],
+      "candidate": "utilibre-git-penpot-exporter:2.54.1-20261114",
+      "packages": {
+        "git": {
+          "installed": "1:2.47.3-0+deb13u1+dhi2",
+          "package": "git-dhi"
+        }
+      },
+      "assessmentOriginalBase": "sha256:bf748ae83b9d9e0b8ef9ddf4ea57e892cef6614a33f38e573d862f15cc3d40c4",
+      "baselineRawScan": "/var/lib/utilibre-maintenance/security-20261114/xserver/after-scan.json"
+    }
+  ]
+}

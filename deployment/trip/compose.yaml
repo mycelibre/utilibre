@@ -9,7 +9,7 @@ x-limits: &limits
 services:
   app:
     <<: *limits
-    image: utilibre-trip:oauth-security-20261109
+    image: utilibre-python-trip-app:20261114
     user: '1000:1000'
     cpus: 1
     mem_limit: 512m

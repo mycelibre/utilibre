@@ -1,0 +1,22 @@
+"""Finite native Git package overlay with complete-image scope and ordinary workflows."""
+import os,json,subprocess,hashlib,importlib.util,shutil,sys
+from pathlib import Path
+from datetime import datetime,timezone
+os.umask(0o077)
+h=Path(__file__).resolve().parent;r=Path('/var/lib/utilibre-maintenance/security-20261114/git');i=json.loads((h/'git-inputs.json').read_text());p=json.load(open(r/'package.json'));sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();helperpath=h.parent/'security-20261109/zlib-check.py';assert sha(helperpath)=='cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08';sp=importlib.util.spec_from_file_location('image_scope',helperpath);helper=importlib.util.module_from_spec(sp);sp.loader.exec_module(helper)
+fixture=h.parent/'releases-20261112/git/native-git.sh';assert p['passed'] and sha(Path(p['package']))==p['sha256']
+limits=['--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--cpus','.75','--memory','384m','--pids-limit','96','--log-driver','none','--tmpfs','/tmp:rw,exec,size=64m,mode=1777']
+def docker(*args):return subprocess.check_output(['docker',*args],text=True,stderr=subprocess.PIPE,timeout=240).strip()
+def inventory(image):return docker('run','--rm',*limits,'--entrypoint','dpkg-query',image,'-W','-f=${Package} ${Version}\n').splitlines()
+for key in sys.argv[1:]:
+ s=next(x for x in i['rows'] if x['key']==key);p=json.load(open(r/('dhi-package.json' if key=='penpot-exporter' else 'package.json')));out=r/key;out.mkdir(exist_ok=True);assert not (out/'build.json').exists();assert docker('inspect','--format','{{.Image}}',s['containers'][0])==s['base'];cfg=json.loads(docker('image','inspect','--format','{{json .Config}}',s['base']));before=inventory(s['base']);assert 'git '+s['packages']['git']['installed'] in before
+ files=set(docker('run','--rm',*limits,'--entrypoint','dpkg-query',s['base'],'-L','git').splitlines());files.update('/'+str(x.relative_to(r/'package')) for x in (r/'package').rglob('*') if 'DEBIAN' not in x.relative_to(r/'package').parts)
+ ctx=out/'context';ctx.mkdir(exist_ok=True);shutil.copyfile(p['package'],ctx/'git.deb');(ctx/'git.deb').chmod(0o644);user=cfg.get('User','');assert all(c.isalnum() or c in '_:.-' for c in user)
+ (ctx/'Dockerfile').write_text('FROM '+s['base']+'\n'+('USER 0\n' if user else '')+'COPY git.deb /usr/lib/utilibre-git.deb\nRUN dpkg -i /usr/lib/utilibre-git.deb && test -z "$(dpkg --audit)" && rm /usr/lib/utilibre-git.deb\n'+('USER '+user+'\n' if user else ''))
+ with (out/'build.log').open('wb') as f:result=subprocess.run(['docker','build','--network','none','--pull=false','--memory','512m','--cpu-period','100000','--cpu-quota','100000','-t',s['candidate'],str(ctx)],stdout=f,stderr=f,timeout=240,env={**os.environ,'DOCKER_BUILDKIT':'0'})
+ assert result.returncode==0,'Private build log retained';image=docker('image','inspect','--format','{{.Id}}',s['candidate']);assert json.loads(docker('image','inspect','--format','{{json .Config}}',image))==cfg;after=inventory(image);assert [l for l in before if not l.startswith('git ')]==[l for l in after if not l.startswith('git ')];assert 'git '+p['version'] in after
+ a,b=[helper.export_manifest(x) for x in (s['base'],image)];changes={k:{'before':a.get(k),'after':b.get(k)} for k in sorted(a.keys()|b.keys()) if a.get(k)!=b.get(k)};allowed=lambda k:'/'+k in files or k.startswith('var/lib/dpkg/info/git.') or k in ['var/lib/dpkg/status','var/lib/dpkg/status-old','var/log/dpkg.log','var/log/alternatives.log'];bad=[k for k in changes if not allowed(k)];assert not bad,bad[:30]
+ native=[]
+ for v in [s['base'],image]:
+  log=docker('run','--rm',*limits,'--user','65534:65534','-v',str(fixture)+':/native.sh:ro','--entrypoint','sh',v,'/native.sh');assert log.endswith('GIT_NATIVE_COMPATIBILITY_PASSED');native.append({'imageId':v,'passed':True})
+ (out/'scope.json').write_text(json.dumps({'passed':True,'base':s['base'],'imageId':image,'allUnrelatedFilesUnchanged':True,'allowedFiles':sorted(files),'changes':changes},indent=2)+'\n');proof={'passed':True,'date':datetime.now(timezone.utc).isoformat(),**s,'imageId':image,'packageSha256':p['sha256'],'configurationUnchanged':True,'unrelatedPackagesUnchanged':True,'scopeSha256':sha(out/'scope.json'),'fixtureSha256':sha(fixture),'nativeRows':native,'deployed':False};(out/'build.json').write_text(json.dumps(proof,indent=2)+'\n');print(key+': native Git package, full-image scope and ordinary merge/clone/import passed',flush=True)

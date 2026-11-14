@@ -1,0 +1,1363 @@
+{
+  "schemaVersion": 1,
+  "rows": [
+    {
+      "name": "native-builder",
+      "input": {
+        "base": "sha256:53f0cb1d3d6a36a39290caedc32bfd4ddf6d4dcec26bd0476beb58bcf6c29c69",
+        "packagesRequested": [
+          "build-essential",
+          "dpkg-dev",
+          "autoconf",
+          "automake",
+          "libtool",
+          "pkgconf",
+          "flex",
+          "bison",
+          "quilt",
+          "xutils-dev",
+          "xfonts-utils",
+          "x11proto-dev",
+          "xtrans-dev",
+          "libxau-dev",
+          "libxdmcp-dev",
+          "libxfont-dev",
+          "libpixman-1-dev",
+          "libxkbfile-dev",
+          "nettle-dev",
+          "libudev-dev",
+          "libselinux1-dev",
+          "libaudit-dev",
+          "libdrm-dev",
+          "libglvnd-dev",
+          "mesa-common-dev",
+          "libunwind-dev",
+          "libxshmfence-dev",
+          "libepoxy-dev",
+          "libegl1-mesa-dev",
+          "libgbm-dev",
+          "libdbus-1-dev",
+          "libsystemd-dev",
+          "libbsd-dev",
+          "xauth",
+          "x11-utils",
+          "x11-xkb-utils",
+          "xkb-data",
+          "qpdf",
+          "libcurl4-gnutls-dev",
+          "libpcre2-dev",
+          "gettext"
+        ],
+        "archives": [
+          {
+            "file": "bison_2%3a3.8.2+dfsg-1+b2_amd64.deb",
+            "sha256": "ce6eb1f7aad18850e32d223a68f54bcbe756d74f138c8ec5460ad9d220f4d335",
+            "bytes": 1169636,
+            "control": "Package: bison\nVersion: 2:3.8.2+dfsg-1+b2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "comerr-dev_2.1-1.47.2-3+b12_amd64.deb",
+            "sha256": "8edac804c86b5c0713497af4a692caae425cee95bb7931256a57b7393b4be90a",
+            "bytes": 56720,
+            "control": "Package: comerr-dev\nVersion: 2.1-1.47.2-3+b12\nArchitecture: amd64\n"
+          },
+          {
+            "file": "flex_2.6.4-8.2+b4_amd64.deb",
+            "sha256": "75f963765232c356d0a2fb70e780dfa9de2425aca036ec60eefb7fc98a2c905b",
+            "bytes": 423136,
+            "control": "Package: flex\nVersion: 2.6.4-8.2+b4\nArchitecture: amd64\n"
+          },
+          {
+            "file": "krb5-multidev_1.21.3-5+deb13u1_amd64.deb",
+            "sha256": "8f8735ab56020070d8d448c13d214f6d6ba5a2c1d4661b24fa3ba63491cb3f80",
+            "bytes": 126392,
+            "control": "Package: krb5-multidev\nVersion: 1.21.3-5+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libaudit-dev_1%3a4.0.2-2+deb13u1_amd64.deb",
+            "sha256": "33ace5c256e4df63be78e57bab6f13575c056b7099d0a5283b5ce77d85df073e",
+            "bytes": 91976,
+            "control": "Package: libaudit-dev\nVersion: 1:4.0.2-2+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libbsd-dev_0.12.2-2_amd64.deb",
+            "sha256": "6cd56a2ee4f5cb0cb3c97fe92f98fe263d80ba7c27c92e935a433014f1015c1d",
+            "bytes": 257952,
+            "control": "Package: libbsd-dev\nVersion: 0.12.2-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libcap-dev_1%3a2.75-10+deb13u1+b3_amd64.deb",
+            "sha256": "795983cf2cbc2e12e9440383d701229966c35bc40712ccbfd03e5c93d9af619d",
+            "bytes": 545636,
+            "control": "Package: libcap-dev\nVersion: 1:2.75-10+deb13u1+b3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libcap-ng-dev_0.8.5-4+b1_amd64.deb",
+            "sha256": "7449720e421e353feb94e48aa90d7580efc8118217e1e43d64ad2f25d4f9e238",
+            "bytes": 34600,
+            "control": "Package: libcap-ng-dev\nVersion: 0.8.5-4+b1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libcom-err2_1.47.2-3+b12_amd64.deb",
+            "sha256": "bd43e020b8fed399db3eebf098111f10fba4c436fff99ccad72cc7e27c9764ec",
+            "bytes": 25036,
+            "control": "Package: libcom-err2\nVersion: 1.47.2-3+b12\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libcurl3t64-gnutls_8.14.1-2+deb13u7_amd64.deb",
+            "sha256": "9475c591b338b81859ee6d06bf2a9fbb01b52f184c235afa7f6e7f1652136e55",
+            "bytes": 384636,
+            "control": "Package: libcurl3t64-gnutls\nVersion: 8.14.1-2+deb13u7\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libcurl4-gnutls-dev_8.14.1-2+deb13u7_amd64.deb",
+            "sha256": "2aa21dd4794f5f86da93fe9a26ccd3b2da1aea021dd68d2e0fa369d7aa5d95f6",
+            "bytes": 504168,
+            "control": "Package: libcurl4-gnutls-dev\nVersion: 8.14.1-2+deb13u7\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libdbus-1-3_1.16.2-2_amd64.deb",
+            "sha256": "bbcb711daff7e104b5f80f9b05475b6142674bfe65518a36a56e96a91068a3f5",
+            "bytes": 177904,
+            "control": "Package: libdbus-1-3\nVersion: 1.16.2-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libdbus-1-dev_1.16.2-2_amd64.deb",
+            "sha256": "83767cf52f88de6d6f370cee30e717828c6fd22cb55d1fb84b38a3e911742887",
+            "bytes": 214548,
+            "control": "Package: libdbus-1-dev\nVersion: 1.16.2-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libdrm-dev_2.4.124-2_amd64.deb",
+            "sha256": "83b84b1207c4dda3d64ebad7725a7ad237c69c870668db3b01eabad1052f0dcb",
+            "bytes": 296368,
+            "control": "Package: libdrm-dev\nVersion: 2.4.124-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libdrm-nouveau2_2.4.124-2_amd64.deb",
+            "sha256": "634dcb46487fb2ca267850261291463845ada90b81d16a926ca40d333ce57180",
+            "bytes": 19892,
+            "control": "Package: libdrm-nouveau2\nVersion: 2.4.124-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libdrm-radeon1_2.4.124-2_amd64.deb",
+            "sha256": "7a82b1c88b45235e314a15b71781b47ed472dafbbf697481ec8427079840fc32",
+            "bytes": 22564,
+            "control": "Package: libdrm-radeon1\nVersion: 2.4.124-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libegl-dev_1.7.0-1+b2_amd64.deb",
+            "sha256": "97fcfff08a5de0a510066d55260a30fbd3ccbd87da6c2f317e6efe17566b9f5a",
+            "bytes": 19520,
+            "control": "Package: libegl-dev\nVersion: 1.7.0-1+b2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libegl-mesa0_25.0.7-2+deb13u1_amd64.deb",
+            "sha256": "0ddebd7e91b048aac812611d6bd008343386cb140b51e5e66df74c6b6263be65",
+            "bytes": 128456,
+            "control": "Package: libegl-mesa0\nVersion: 25.0.7-2+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libegl1-mesa-dev_25.0.7-2+deb13u1_amd64.deb",
+            "sha256": "72ced3905011abdcd77cf10b76b8763bdc8b70c5167747f903a3bc121df49fcd",
+            "bytes": 23944,
+            "control": "Package: libegl1-mesa-dev\nVersion: 25.0.7-2+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libegl1_1.7.0-1+b2_amd64.deb",
+            "sha256": "62e7bc8ccd47a60e55aad17f83d8d474310d782eb8589bbce2ab714c31712406",
+            "bytes": 34588,
+            "control": "Package: libegl1\nVersion: 1.7.0-1+b2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libepoxy-dev_1.5.10-2_amd64.deb",
+            "sha256": "c53e04d0ef7348542b4e94ddc373a3791304e56b4a78cd72c72ec0cc86e40a44",
+            "bytes": 126680,
+            "control": "Package: libepoxy-dev\nVersion: 1.5.10-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libepoxy0_1.5.10-2_amd64.deb",
+            "sha256": "4c4c8024f2175086de65bca9fdc3fbb967f2863ebf249d489c66d0c8103dd3a3",
+            "bytes": 192728,
+            "control": "Package: libepoxy0\nVersion: 1.5.10-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libevent-2.1-7t64_2.1.13-stable-1~deb13u1_amd64.deb",
+            "sha256": "9a2a9a6c4ceaafe280f8f39ffa217bb50719c5e79feb75f412755c4036a76ca0",
+            "bytes": 182984,
+            "control": "Package: libevent-2.1-7t64\nVersion: 2.1.13-stable-1~deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libfontenc-dev_1%3a1.1.8-1+b2_amd64.deb",
+            "sha256": "41af694eafa686879f8c7f64601d69637f0598256298309fab4e2e3e521b6276",
+            "bytes": 25248,
+            "control": "Package: libfontenc-dev\nVersion: 1:1.1.8-1+b2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgbm-dev_25.0.7-2+deb13u1_amd64.deb",
+            "sha256": "8e3f9958fbcd4838953ebc7cb11e661e26652059473278d8f7e130c246f97c2a",
+            "bytes": 23764,
+            "control": "Package: libgbm-dev\nVersion: 25.0.7-2+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgl-dev_1.7.0-1+b2_amd64.deb",
+            "sha256": "2c5044a44bc7cd7a196d554ca6ff78ae0358fbb98b7d2cce49176bdc6a816fe4",
+            "bytes": 100680,
+            "control": "Package: libgl-dev\nVersion: 1.7.0-1+b2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgles-dev_1.7.0-1+b2_amd64.deb",
+            "sha256": "87af52464cb40d54e78ecf2046db019bf1ab19a8bed7511ab282be623d1216de",
+            "bytes": 50776,
+            "control": "Package: libgles-dev\nVersion: 1.7.0-1+b2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgles1_1.7.0-1+b2_amd64.deb",
+            "sha256": "ef909f784ed99a849bfdf69abaa0747cf842abbb6d3f4f119481a2f9e3431284",
+            "bytes": 12148,
+            "control": "Package: libgles1\nVersion: 1.7.0-1+b2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgles2_1.7.0-1+b2_amd64.deb",
+            "sha256": "e12c18aa77939d122ee1dea520ba0440b97dc19200b7396e03dff03a3ece74c1",
+            "bytes": 17256,
+            "control": "Package: libgles2\nVersion: 1.7.0-1+b2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libglvnd-core-dev_1.7.0-1+b2_amd64.deb",
+            "sha256": "260d9dad9d9f17b0ca355dc18699893c8d9ea8600e31d048e86f7323dcb57939",
+            "bytes": 13372,
+            "control": "Package: libglvnd-core-dev\nVersion: 1.7.0-1+b2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libglvnd-dev_1.7.0-1+b2_amd64.deb",
+            "sha256": "3076d220a658adc9f4a505bac97d1ca7a896957c2ea641e058a85a2b384a4367",
+            "bytes": 5148,
+            "control": "Package: libglvnd-dev\nVersion: 1.7.0-1+b2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libglx-dev_1.7.0-1+b2_amd64.deb",
+            "sha256": "93d456321c07009491b942783db8c57065b616db713ef5f6a0c629ca078c4ea0",
+            "bytes": 15804,
+            "control": "Package: libglx-dev\nVersion: 1.7.0-1+b2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgmp-dev_2%3a6.3.0+dfsg-3_amd64.deb",
+            "sha256": "68f392cc03f896ecc3764eb4844d2a898ff016f47dda160465f152f811152b81",
+            "bytes": 642124,
+            "control": "Package: libgmp-dev\nVersion: 2:6.3.0+dfsg-3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgmpxx4ldbl_2%3a6.3.0+dfsg-3_amd64.deb",
+            "sha256": "344c4cc65d955ac1b0f0a390d8bf5ad288fb1fda9e9f31f86d43ea6098eae603",
+            "bytes": 329016,
+            "control": "Package: libgmpxx4ldbl\nVersion: 2:6.3.0+dfsg-3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgnutls-dane0t64_3.8.9-3+deb13u4_amd64.deb",
+            "sha256": "119a357b321614be7e17655cccbf767bd55b136d1ad722d3e80fb99d862fe2f4",
+            "bytes": 455908,
+            "control": "Package: libgnutls-dane0t64\nVersion: 3.8.9-3+deb13u4\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgnutls-openssl27t64_3.8.9-3+deb13u4_amd64.deb",
+            "sha256": "b7d1252b21d4e10bb46dcd97b5f8dd5a6412f166e945f386bc908c9b2cb82b44",
+            "bytes": 455752,
+            "control": "Package: libgnutls-openssl27t64\nVersion: 3.8.9-3+deb13u4\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgnutls28-dev_3.8.9-3+deb13u4_amd64.deb",
+            "sha256": "f7048cead574f6142449a3b4089b042a42372a6b76d900324156ae97dbeb08ed",
+            "bytes": 1410552,
+            "control": "Package: libgnutls28-dev\nVersion: 3.8.9-3+deb13u4\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgnutls30t64_3.8.9-3+deb13u4_amd64.deb",
+            "sha256": "18a8bdfd91c7e3bcb01719d55a2b56849c7160b34f1f52b1c4fdfdd41bf1352b",
+            "bytes": 1469024,
+            "control": "Package: libgnutls30t64\nVersion: 3.8.9-3+deb13u4\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgssapi-krb5-2_1.21.3-5+deb13u1_amd64.deb",
+            "sha256": "30847c1fde4240567d7ed3aeab4f655dd591203758b857e85e824045aae70299",
+            "bytes": 138356,
+            "control": "Package: libgssapi-krb5-2\nVersion: 1.21.3-5+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgssrpc4t64_1.21.3-5+deb13u1_amd64.deb",
+            "sha256": "ff88e52a6b6599851f3d44f7223f15123d9e5a0b02ed9a308c05c31fa88f7d73",
+            "bytes": 60132,
+            "control": "Package: libgssrpc4t64\nVersion: 1.21.3-5+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libidn2-0_2.3.8-2_amd64.deb",
+            "sha256": "90b039bcdc4578f8e1c4935adf8dbb525e36a164deefdbbb8c45bac347d48278",
+            "bytes": 109096,
+            "control": "Package: libidn2-0\nVersion: 2.3.8-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libidn2-dev_2.3.8-2_amd64.deb",
+            "sha256": "aeb3e0b149c7ca594065891c1f16e800689680f08f9119f90f95d1089f322a15",
+            "bytes": 102624,
+            "control": "Package: libidn2-dev\nVersion: 2.3.8-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libjpeg62-turbo_1%3a2.1.5-4_amd64.deb",
+            "sha256": "5504299ad0e3c0a9ca9f962a68a650a040db52f9f416a109e74df48d55601d3f",
+            "bytes": 168152,
+            "control": "Package: libjpeg62-turbo\nVersion: 1:2.1.5-4\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libk5crypto3_1.21.3-5+deb13u1_amd64.deb",
+            "sha256": "7da07ee674b47f1f0be7cc89317c25310086a1f1761217d0f72e6ae2c5a69b84",
+            "bytes": 81152,
+            "control": "Package: libk5crypto3\nVersion: 1.21.3-5+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libkadm5clnt-mit12_1.21.3-5+deb13u1_amd64.deb",
+            "sha256": "9d1271f9ef8d3d308e1d9373cccc59de0e2b2b62b0ddd39cffd76cb18af24bb2",
+            "bytes": 42648,
+            "control": "Package: libkadm5clnt-mit12\nVersion: 1.21.3-5+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libkadm5srv-mit12_1.21.3-5+deb13u1_amd64.deb",
+            "sha256": "ab608b7692bcb980957c2dc83da291fa58e065955fdc6c0882c66d26502693ca",
+            "bytes": 54440,
+            "control": "Package: libkadm5srv-mit12\nVersion: 1.21.3-5+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libkdb5-10t64_1.21.3-5+deb13u1_amd64.deb",
+            "sha256": "d6d4ec516fe87c545862b117bc5cec294cabf06319c400720ec6c01bc215b79f",
+            "bytes": 42788,
+            "control": "Package: libkdb5-10t64\nVersion: 1.21.3-5+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libkeyutils1_1.6.3-6_amd64.deb",
+            "sha256": "0b11ad17be0300b63ad4eeb4c6450fed24d34b7b740f23e5363dcb29ee6d5eba",
+            "bytes": 9456,
+            "control": "Package: libkeyutils1\nVersion: 1.6.3-6\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libkrb5-3_1.21.3-5+deb13u1_amd64.deb",
+            "sha256": "47d71d6a7f2e59b9bae5f89602397594805113b95889ad18fa703cd53abafc97",
+            "bytes": 326056,
+            "control": "Package: libkrb5-3\nVersion: 1.21.3-5+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libkrb5-dev_1.21.3-5+deb13u1_amd64.deb",
+            "sha256": "62c3dbd746163878e73e22206d1dcc01f0f5296d3ca4ece5fb8cb7cb80396e4f",
+            "bytes": 16204,
+            "control": "Package: libkrb5-dev\nVersion: 1.21.3-5+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libkrb5support0_1.21.3-5+deb13u1_amd64.deb",
+            "sha256": "3a0acd8b37955c0e102c756b52c97df2a31f67b96453c35dab70df218d309117",
+            "bytes": 33124,
+            "control": "Package: libkrb5support0\nVersion: 1.21.3-5+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libldap-dev_2.6.10+dfsg-1_amd64.deb",
+            "sha256": "f8543c82b923b0e137a0843e57d6fb96e3b9ca3f2e98fdb6d65e8b6d9c20e592",
+            "bytes": 311848,
+            "control": "Package: libldap-dev\nVersion: 2.6.10+dfsg-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libldap2_2.6.10+dfsg-1_amd64.deb",
+            "sha256": "60069e4a550ca890113fa89d3001417781b18e146ec5d637d31e368dec9909bd",
+            "bytes": 193576,
+            "control": "Package: libldap2\nVersion: 2.6.10+dfsg-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libmd-dev_1.1.0-2+b1_amd64.deb",
+            "sha256": "94904db4c531e3a7ec42a1ad0be8a2a9a2b6d2ac8c4e3b1c1d24853ea0be49c8",
+            "bytes": 55328,
+            "control": "Package: libmd-dev\nVersion: 1.1.0-2+b1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libnghttp2-14_1.64.0-1.1+deb13u1_amd64.deb",
+            "sha256": "896cb217537c09251fb909b8541349010ac279d802d871e98c06a62a2c67ce2c",
+            "bytes": 76188,
+            "control": "Package: libnghttp2-14\nVersion: 1.64.0-1.1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libnghttp2-dev_1.64.0-1.1+deb13u1_amd64.deb",
+            "sha256": "8729ae4b34c3884ecd068c66a7643a1c7a5a89597b9d8879bac85ec335df6179",
+            "bytes": 116548,
+            "control": "Package: libnghttp2-dev\nVersion: 1.64.0-1.1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libnghttp3-9_1.8.0-1_amd64.deb",
+            "sha256": "388e4c33b72829cbf0d098afdc8539fa5ba7458eddb077f5538fdb4d5538716b",
+            "bytes": 67656,
+            "control": "Package: libnghttp3-9\nVersion: 1.8.0-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libnghttp3-dev_1.8.0-1_amd64.deb",
+            "sha256": "47089a3bfde3562ea4524ceb768186045398012a466499268b8a5fb115b81a4e",
+            "bytes": 91280,
+            "control": "Package: libnghttp3-dev\nVersion: 1.8.0-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libngtcp2-16_1.11.0-1+deb13u1_amd64.deb",
+            "sha256": "627eec81ebbd48c4e6091f5cd9dc5070b792b7075000eed60ab08c7daa961caf",
+            "bytes": 131904,
+            "control": "Package: libngtcp2-16\nVersion: 1.11.0-1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libngtcp2-crypto-gnutls-dev_1.11.0-1+deb13u1_amd64.deb",
+            "sha256": "813b822f0eeeb502c31bbb60d70c4aa1ef48e2b9055000ad02526b4a814dc2fe",
+            "bytes": 34384,
+            "control": "Package: libngtcp2-crypto-gnutls-dev\nVersion: 1.11.0-1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libngtcp2-crypto-gnutls8_1.11.0-1+deb13u1_amd64.deb",
+            "sha256": "2a7f109c0c4db6a800e4661c5e5e34e1f1f83c8162482276183d1ada9da7c96c",
+            "bytes": 29524,
+            "control": "Package: libngtcp2-crypto-gnutls8\nVersion: 1.11.0-1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libngtcp2-dev_1.11.0-1+deb13u1_amd64.deb",
+            "sha256": "456afe694be7a290f8ca0a38207f0ce203cf6460725d0194550188775f0f698e",
+            "bytes": 183444,
+            "control": "Package: libngtcp2-dev\nVersion: 1.11.0-1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libopengl-dev_1.7.0-1+b2_amd64.deb",
+            "sha256": "fe63853277e05a3b02f9339fff85ab68af1c7ef63c4663b716930b8c88b29d52",
+            "bytes": 5388,
+            "control": "Package: libopengl-dev\nVersion: 1.7.0-1+b2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libopengl0_1.7.0-1+b2_amd64.deb",
+            "sha256": "50ea65a1141cbf6b02e41492963656ad0ba71d257cc4066ee9756bca7a6c1ac3",
+            "bytes": 30940,
+            "control": "Package: libopengl0\nVersion: 1.7.0-1+b2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libp11-kit-dev_0.25.5-3_amd64.deb",
+            "sha256": "6a19763ae89f584085cd7333f1923ccbd9eaeccb9fd2bf32e7cedd302e720b9a",
+            "bytes": 207740,
+            "control": "Package: libp11-kit-dev\nVersion: 0.25.5-3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libp11-kit0_0.25.5-3_amd64.deb",
+            "sha256": "784bf2063e166c8bc851a32623b74ebd85c499043a9d57c5bbd64fa63447f45a",
+            "bytes": 425240,
+            "control": "Package: libp11-kit0\nVersion: 0.25.5-3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libpciaccess-dev_0.17-3+b3_amd64.deb",
+            "sha256": "dfaa687d4ccb943f5b222261a11a1678992bc499abe472d539aa59c4787a0c33",
+            "bytes": 55448,
+            "control": "Package: libpciaccess-dev\nVersion: 0.17-3+b3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libpcre2-16-0_10.46-1~deb13u3_amd64.deb",
+            "sha256": "e25b12fcd1f62185962a81499388fb9c25a7614b9513b6017489275bc7011a51",
+            "bytes": 281748,
+            "control": "Package: libpcre2-16-0\nVersion: 10.46-1~deb13u3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libpcre2-32-0_10.46-1~deb13u3_amd64.deb",
+            "sha256": "d6095c7eebb3e783243ec9784b9b6774434aa5c16aca8f179483215fadb4313c",
+            "bytes": 268704,
+            "control": "Package: libpcre2-32-0\nVersion: 10.46-1~deb13u3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libpcre2-dev_10.46-1~deb13u3_amd64.deb",
+            "sha256": "6740621a0062e4b4cdeaa12a51f03ed0a3de0a04b949c8fa6a92c5f4c3c6b127",
+            "bytes": 851360,
+            "control": "Package: libpcre2-dev\nVersion: 10.46-1~deb13u3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libpcre2-posix3_10.46-1~deb13u3_amd64.deb",
+            "sha256": "4a7f75f6f3b7e67a9a7f1dcdfca6377db6564057bac2a225cbd0583fe878f7df",
+            "bytes": 64104,
+            "control": "Package: libpcre2-posix3\nVersion: 10.46-1~deb13u3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libpixman-1-dev_0.44.0-3_amd64.deb",
+            "sha256": "091478a78864d25257788473a36b9545ae2e0bc3f621bad3c229090b54b67e1e",
+            "bytes": 11380,
+            "control": "Package: libpixman-1-dev\nVersion: 0.44.0-3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libpsl-dev_0.21.2-1.1+b1_amd64.deb",
+            "sha256": "3f609ce40be2e3a259b98dd8b7f1b0520044ca495adf7d7b9f55f5d93de5a15e",
+            "bytes": 77628,
+            "control": "Package: libpsl-dev\nVersion: 0.21.2-1.1+b1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libpsl5t64_0.21.2-1.1+b1_amd64.deb",
+            "sha256": "59d42bb1f9ebc0d1776fe616efb08a7a8568b05982e00f70b03c63863db768ab",
+            "bytes": 57188,
+            "control": "Package: libpsl5t64\nVersion: 0.21.2-1.1+b1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libqpdf30_12.2.0-1_amd64.deb",
+            "sha256": "913cb4ff2ff58c7ffb8ec0f6883d6d04a63c06bf6e55408d15f9ca23fa038812",
+            "bytes": 986200,
+            "control": "Package: libqpdf30\nVersion: 12.2.0-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "librtmp-dev_2.4+20151223.gitfa8646d.1-2+b5_amd64.deb",
+            "sha256": "a888ac5f02cc5a51668a04d1d5477b6a1f29d32288c244839094dd7a26ac889c",
+            "bytes": 68032,
+            "control": "Package: librtmp-dev\nVersion: 2.4+20151223.gitfa8646d.1-2+b5\nArchitecture: amd64\n"
+          },
+          {
+            "file": "librtmp1_2.4+20151223.gitfa8646d.1-2+b5_amd64.deb",
+            "sha256": "93baa2004cbe6c8721b9e81beed078612540aef120970b4751305c51c6697368",
+            "bytes": 58840,
+            "control": "Package: librtmp1\nVersion: 2.4+20151223.gitfa8646d.1-2+b5\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libsasl2-2_2.1.28+dfsg1-9_amd64.deb",
+            "sha256": "66e49d7ae026811b49a0050f18b0325960a2625ffd1ff60d91b7844a815fa9d2",
+            "bytes": 57512,
+            "control": "Package: libsasl2-2\nVersion: 2.1.28+dfsg1-9\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libsasl2-modules-db_2.1.28+dfsg1-9_amd64.deb",
+            "sha256": "a5c38659fbd62c33c6d9bfa2be43e75a572d1818531aad32dd74d0a58cc4bd19",
+            "bytes": 19768,
+            "control": "Package: libsasl2-modules-db\nVersion: 2.1.28+dfsg1-9\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libselinux1-dev_3.8.1-1_amd64.deb",
+            "sha256": "0107595c65dd5cfe7ce3643d400e7b2be2c2528bcd110ad5af8605711a858921",
+            "bytes": 169104,
+            "control": "Package: libselinux1-dev\nVersion: 3.8.1-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libsepol-dev_3.8.1-1_amd64.deb",
+            "sha256": "c085881d0546f6d539909f5710d7a3243aeb24338f6dc455b0ef6199f45bd753",
+            "bytes": 372908,
+            "control": "Package: libsepol-dev\nVersion: 3.8.1-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libssh2-1-dev_1.11.1-1+deb13u2_amd64.deb",
+            "sha256": "d3267add3544b2ad8fc28b9f57c462e85448045a049725e97e4ba1e59922ea7b",
+            "bytes": 393840,
+            "control": "Package: libssh2-1-dev\nVersion: 1.11.1-1+deb13u2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libssh2-1t64_1.11.1-1+deb13u2_amd64.deb",
+            "sha256": "dbb1024c192d4d292b7cfa902b96076cfe81b56a5eed4fb28da36e8bf543e49a",
+            "bytes": 245240,
+            "control": "Package: libssh2-1t64\nVersion: 1.11.1-1+deb13u2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libsystemd-dev_257.13-1~deb13u1_amd64.deb",
+            "sha256": "4db2d02ce32dfd9f2994a565a51c640b8e7a96a2e2b277484f9a2de7c0cd63e4",
+            "bytes": 1358540,
+            "control": "Package: libsystemd-dev\nVersion: 257.13-1~deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libtasn1-6-dev_4.20.0-2+deb13u1_amd64.deb",
+            "sha256": "5e00e22434b179100b94c80483eb22793029bf2d1c2fa40688825f0062395a54",
+            "bytes": 99324,
+            "control": "Package: libtasn1-6-dev\nVersion: 4.20.0-2+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libtasn1-6_4.20.0-2+deb13u1_amd64.deb",
+            "sha256": "23fec6e06583ce2bad9b2c04c9b485e90440e259b1abf8677cd80d3ce60831ad",
+            "bytes": 50112,
+            "control": "Package: libtasn1-6\nVersion: 4.20.0-2+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libudev-dev_257.13-1~deb13u1_amd64.deb",
+            "sha256": "73c3ed98a435ec420b327ef267d89ece81bf23c2c19391265bb4f261cbf5d558",
+            "bytes": 75256,
+            "control": "Package: libudev-dev\nVersion: 257.13-1~deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libunbound8_1.26.2-0+deb13u1_amd64.deb",
+            "sha256": "5b057b041a39f40208ddf9aeff1b5581a6c3af68c9a96c784a0d6270f1943a1a",
+            "bytes": 644244,
+            "control": "Package: libunbound8\nVersion: 1.26.2-0+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libunwind-dev_1.8.1-0.1_amd64.deb",
+            "sha256": "75a4f9c3951039bca66ad7e6c83ef74deed9999919c8208b54296d60d9832026",
+            "bytes": 500480,
+            "control": "Package: libunwind-dev\nVersion: 1.8.1-0.1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libwayland-client0_1.23.1-3_amd64.deb",
+            "sha256": "d1607e1db1a7c5378a2e5c6ae7b20f64dc6acf134f953d84a7f5204b74339f33",
+            "bytes": 26816,
+            "control": "Package: libwayland-client0\nVersion: 1.23.1-3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libxcb-shape0_1.17.0-2+b1_amd64.deb",
+            "sha256": "eb94a643d66714929053e78ff8f38a90ce8af4ed854e3cbca0b14f8bbccc7bfc",
+            "bytes": 105624,
+            "control": "Package: libxcb-shape0\nVersion: 1.17.0-2+b1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libxcomposite1_1%3a0.4.6-1_amd64.deb",
+            "sha256": "20e3c1d9b2135f0c8c4246a9fd26a51a57d5850c3b36ecc173c45d6be7328af3",
+            "bytes": 16348,
+            "control": "Package: libxcomposite1\nVersion: 1:0.4.6-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libxfont-dev_1%3a2.0.6-1+deb13u1_amd64.deb",
+            "sha256": "cef239836034e5ed10ede825115fbb5a5a3353432ace4217e4672768ddc72e25",
+            "bytes": 161624,
+            "control": "Package: libxfont-dev\nVersion: 1:2.0.6-1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libxi6_2%3a1.8.2-1_amd64.deb",
+            "sha256": "093d0903f35bb7a9f6815180ee040e6951fecf9b66c128cd72f064710210606e",
+            "bytes": 78896,
+            "control": "Package: libxi6\nVersion: 2:1.8.2-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libxinerama1_2%3a1.1.4-3+b4_amd64.deb",
+            "sha256": "49d4e1628960407b8be2880a42428e7629801715a8a5697d42c0b0ca0a479911",
+            "bytes": 15992,
+            "control": "Package: libxinerama1\nVersion: 2:1.1.4-3+b4\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libxkbfile-dev_1%3a1.1.0-1+b4_amd64.deb",
+            "sha256": "ac7c7ce69714195291e299bebab9d349f69579be540364a9280e97db6d9ac71d",
+            "bytes": 87992,
+            "control": "Package: libxkbfile-dev\nVersion: 1:1.1.0-1+b4\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libxshmfence-dev_1.3.3-1_amd64.deb",
+            "sha256": "52a0a738552cd340c6cf237341e708ceecb1a2547307131d214c20de816be423",
+            "bytes": 10448,
+            "control": "Package: libxshmfence-dev\nVersion: 1.3.3-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libxtst6_2%3a1.2.5-1_amd64.deb",
+            "sha256": "4f254f80b8984203474745d6428e8c2de2148f19b37aa01a601dbe9ac03196eb",
+            "bytes": 25756,
+            "control": "Package: libxtst6\nVersion: 2:1.2.5-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libxv1_2%3a1.0.11-1.1+b3_amd64.deb",
+            "sha256": "e19f6bdcd20c1c28fefea29f0a95c33232dd5f0d26e0079675ac8ba4af4eda07",
+            "bytes": 23356,
+            "control": "Package: libxv1\nVersion: 2:1.0.11-1.1+b3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libxxf86dga1_2%3a1.1.5-1+b3_amd64.deb",
+            "sha256": "5585791fed815875b6d9cfbcd48a4df454472696c5b1b6d4240b6c53d80d75b2",
+            "bytes": 20780,
+            "control": "Package: libxxf86dga1\nVersion: 2:1.1.5-1+b3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libzstd-dev_1.5.7+dfsg-1_amd64.deb",
+            "sha256": "de5f8aabcf4cb5cd1b441495ea4c24838e88ecbb30ae22c032a1b3b68a9d6f1e",
+            "bytes": 371112,
+            "control": "Package: libzstd-dev\nVersion: 1.5.7+dfsg-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "mesa-common-dev_25.0.7-2+deb13u1_amd64.deb",
+            "sha256": "c4093979dd1538882de4e6a5d4a042f26e72bcc06b6a0b364a1af3aa195aca88",
+            "bytes": 2931940,
+            "control": "Package: mesa-common-dev\nVersion: 25.0.7-2+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "nettle-dev_3.10.1-1_amd64.deb",
+            "sha256": "686dc13aaa2804161dbc7c916a664bf37fb7bb9a8128b6e025fa45ab06804e3a",
+            "bytes": 1317924,
+            "control": "Package: nettle-dev\nVersion: 3.10.1-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "qpdf_12.2.0-1_amd64.deb",
+            "sha256": "c3971a154f25854865547037b0316f445e2f5573d9721ea4386b48bc48f1ea04",
+            "bytes": 153136,
+            "control": "Package: qpdf\nVersion: 12.2.0-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "sgml-base_1.31+nmu1_all.deb",
+            "sha256": "a355b832d9f0f4dc9eca1a661080db5dc118e6c435f107a5c4dd201d7af59ba8",
+            "bytes": 10868,
+            "control": "Package: sgml-base\nVersion: 1.31+nmu1\nArchitecture: all\n"
+          },
+          {
+            "file": "x11-utils_7.7+7_amd64.deb",
+            "sha256": "239d8a87b464cbe370d63029820218a52c5bfa1f0dfeb74f7cfe7d0df017046b",
+            "bytes": 181524,
+            "control": "Package: x11-utils\nVersion: 7.7+7\nArchitecture: amd64\n"
+          },
+          {
+            "file": "xfonts-encodings_1%3a1.0.4-2.2_all.deb",
+            "sha256": "56143f317d241b6dee0275aa1066df936a776810d3bb83fe58563965d9bbe3d3",
+            "bytes": 577104,
+            "control": "Package: xfonts-encodings\nVersion: 1:1.0.4-2.2\nArchitecture: all\n"
+          },
+          {
+            "file": "xfonts-utils_1%3a7.7+7_amd64.deb",
+            "sha256": "36e77ba3fd25a42d4b807808de93eba87c0bd53981ee94d27da4cee502387f35",
+            "bytes": 93340,
+            "control": "Package: xfonts-utils\nVersion: 1:7.7+7\nArchitecture: amd64\n"
+          },
+          {
+            "file": "xml-core_0.19_all.deb",
+            "sha256": "079ec5e10b1c49aa23a6c53ae8e55e33aec121d1c87a131d2172bdabc3f4030e",
+            "bytes": 20088,
+            "control": "Package: xml-core\nVersion: 0.19\nArchitecture: all\n"
+          },
+          {
+            "file": "xutils-dev_1%3a7.7+7_amd64.deb",
+            "sha256": "7f39801ce1c0316d7f3288721357acafabfdd452474361d3caca840ee9bb7770",
+            "bytes": 239576,
+            "control": "Package: xutils-dev\nVersion: 1:7.7+7\nArchitecture: amd64\n"
+          }
+        ],
+        "aptAuthenticatedIndexes": {
+          "deb.debian.org_debian-security_dists_trixie-security_main_binary-amd64_Packages.lz4": "2e5791f340281134aa7068518d5da24327ff27abdf8458ed6c038f940d833b19",
+          "deb.debian.org_debian_dists_sid_main_source_Sources.lz4": "cee422a6ed9b1e497554e3001a67bb790da4ec2bb811bf838f0da002475f8d26",
+          "deb.debian.org_debian-security_dists_trixie-security_InRelease": "b72db10993d56fc10352d5f0d34b10af5ffe76ab0e9b8542f293bc9f06f58dcb",
+          "deb.debian.org_debian_dists_trixie_InRelease": "0584fba32e13e0ab8285fb16c27adea1ec03a73669c18702821094fd6ca86675",
+          "deb.debian.org_debian_dists_trixie-updates_InRelease": "7f5364dc07a0f23a304b8dbe6eec8366fee09f5ba5691e1a4c1e677a1f8dd7d9",
+          "deb.debian.org_debian_dists_trixie_main_binary-amd64_Packages.lz4": "31c37ab52e49bc16fd5116607198838519beb0fa5defaa99ad33e1d45666d551",
+          "deb.debian.org_debian_dists_trixie-updates_main_binary-amd64_Packages.lz4": "d13f2682f6d034ded79a907486be05e83de21dd80c8696b7107bf5502e8a7c2b",
+          "lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "deb.debian.org_debian_dists_sid_InRelease": "0854d61f111d232420989c0b534b5e9ae201085a95079e59eedf20375d2c0e44"
+        },
+        "baseInventorySha256": "b80068eb22d35a1462e8d8be1dcff2f528e56c1c8c637a2048e5d0224e1d11df",
+        "method": "APT authenticated finite compiler dependency acquisition; archived DEBs replayed offline"
+      },
+      "inputSha256": "5a507e3767aa62e0c6d379e284843dd4ec510f739117c40c79083634933ce8b4",
+      "builtImage": "sha256:839ca69583715483e9b97d2466f47f2d2aeff43300150c957ece8c6cb7ab78f6",
+      "dockerfile": "FROM sha256:53f0cb1d3d6a36a39290caedc32bfd4ddf6d4dcec26bd0476beb58bcf6c29c69\nCOPY *.deb /tmp/native-deps/\nRUN printf '#!/bin/sh\\nexit 101\\n' > /usr/sbin/policy-rc.d && chmod 755 /usr/sbin/policy-rc.d && dpkg -i /tmp/native-deps/*.deb && test -z \"$(dpkg --audit)\" && rm -r /tmp/native-deps\n"
+    },
+    {
+      "name": "qemu-builder",
+      "input": {
+        "base": "sha256:839ca69583715483e9b97d2466f47f2d2aeff43300150c957ece8c6cb7ab78f6",
+        "packagesRequested": [
+          "meson",
+          "ninja-build",
+          "python3-venv",
+          "python3-pyelftools",
+          "libglib2.0-dev",
+          "libaio-dev",
+          "liburing-dev",
+          "libnuma-dev",
+          "libfdt-dev",
+          "libfuse3-dev",
+          "libgnutls28-dev",
+          "libssh-dev",
+          "libcap-ng-dev",
+          "libslirp-dev",
+          "libspice-server-dev",
+          "libiscsi-dev",
+          "libnfs-dev",
+          "librbd-dev",
+          "libzstd-dev",
+          "libbz2-dev",
+          "liblzma-dev",
+          "libcurl4-gnutls-dev",
+          "libgcrypt20-dev",
+          "libpmem-dev",
+          "liburing-dev"
+        ],
+        "archives": [
+          {
+            "file": "adduser_3.152_all.deb",
+            "sha256": "e50984d2e1ef6300e3fd51303839842189a077b10cb5cadff1923df10c61c493",
+            "bytes": 190932,
+            "control": "Package: adduser\nVersion: 3.152\nArchitecture: all\n"
+          },
+          {
+            "file": "dmsetup_2%3a1.02.205-2_amd64.deb",
+            "sha256": "4771f7ab0a907a8e5d02a6358ff016ae7cb49124906bada02fa882e141b615a0",
+            "bytes": 82344,
+            "control": "Package: dmsetup\nVersion: 2:1.02.205-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "girepository-tools_2.84.4-3~deb13u5_amd64.deb",
+            "sha256": "2498e412b01d5d77049829d525b7ff559fd4be269a59cc4a50479337a50d8619",
+            "bytes": 152356,
+            "control": "Package: girepository-tools\nVersion: 2.84.4-3~deb13u5\nArchitecture: amd64\n"
+          },
+          {
+            "file": "iso-codes_4.18.0-1_all.deb",
+            "sha256": "969582afb02fd3f0833a666b2112931a999c4f6b23e7fe514f8051dfd7672a45",
+            "bytes": 3124584,
+            "control": "Package: iso-codes\nVersion: 4.18.0-1\nArchitecture: all\n"
+          },
+          {
+            "file": "libaio-dev_0.3.113-8+b1_amd64.deb",
+            "sha256": "c7a522b2d18195aa3d230cb049db7b67429d64cc07d74805c03bbba34c4e1089",
+            "bytes": 31384,
+            "control": "Package: libaio-dev\nVersion: 0.3.113-8+b1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libaio1t64_0.3.113-8+b1_amd64.deb",
+            "sha256": "490c8a2d116001a5f3b0a6d7a7aabf6a7b629366590dc5c3f75b078e931dd129",
+            "bytes": 14888,
+            "control": "Package: libaio1t64\nVersion: 0.3.113-8+b1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libblkid-dev_2.41.5-0+deb13u1_amd64.deb",
+            "sha256": "775bc91f7a265d21cdfc6b710813017b2366e5c5bb665cd2e6979af5dd8a03a8",
+            "bytes": 208756,
+            "control": "Package: libblkid-dev\nVersion: 2.41.5-0+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libboost-iostreams1.83.0_1.83.0-4.2_amd64.deb",
+            "sha256": "65db6c6900a35c44a23e680aa9f5b93ce6fd51c6b18eb74f64cecbd824077386",
+            "bytes": 253636,
+            "control": "Package: libboost-iostreams1.83.0\nVersion: 1.83.0-4.2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libboost-program-options1.83.0_1.83.0-4.2_amd64.deb",
+            "sha256": "dc5fa835e9362fd3d285ccb0aeaecada4954b9a2ccf765891af868482edeb6f4",
+            "bytes": 347316,
+            "control": "Package: libboost-program-options1.83.0\nVersion: 1.83.0-4.2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libboost-thread1.83.0_1.83.0-4.2_amd64.deb",
+            "sha256": "00d3ec4fa47bb2bab1afa3ef5cd354e1afd47eacf08bb7db6c4092218008ebbb",
+            "bytes": 269544,
+            "control": "Package: libboost-thread1.83.0\nVersion: 1.83.0-4.2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libcap2-bin_1%3a2.75-10+deb13u1+b3_amd64.deb",
+            "sha256": "6404b8ee315ce3eb8e273981650e419ff0e91aed5213d4975a6895f98944ea80",
+            "bytes": 36456,
+            "control": "Package: libcap2-bin\nVersion: 1:2.75-10+deb13u1+b3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libcryptsetup12_2%3a2.7.5-2_amd64.deb",
+            "sha256": "84f6596296c346c1c8f6bb16b0d4d485215b7a23a23ff21e9c28e35822d45a7b",
+            "bytes": 254056,
+            "control": "Package: libcryptsetup12\nVersion: 2:2.7.5-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libdaxctl1_81-1_amd64.deb",
+            "sha256": "6296eb5c976743ba0defb7a061ef081238ca072cf569c6bb96fd3f9095c58a30",
+            "bytes": 22188,
+            "control": "Package: libdaxctl1\nVersion: 81-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libdevmapper1.02.1_2%3a1.02.205-2_amd64.deb",
+            "sha256": "e924e0df8823987f271b7d3a375dc2f8adcd76db66f09d0273043c885edb0af0",
+            "bytes": 134640,
+            "control": "Package: libdevmapper1.02.1\nVersion: 2:1.02.205-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libfdt-dev_1.7.2-2+b1_amd64.deb",
+            "sha256": "887d342dbf900697d830fcb72364afca3f15101edabf850e60c984e3733c898f",
+            "bytes": 33368,
+            "control": "Package: libfdt-dev\nVersion: 1.7.2-2+b1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libfdt1_1.7.2-2+b1_amd64.deb",
+            "sha256": "8e37034d7864807ae2063efcc82fc79aad59069546212e6e0908ed67f9f7e107",
+            "bytes": 19996,
+            "control": "Package: libfdt1\nVersion: 1.7.2-2+b1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libfmt10_10.1.1+ds1-4_amd64.deb",
+            "sha256": "da77a5254e5c7cdac6ecf6f8f21a9cc93d64392765f0f0a4dd06805238950fbe",
+            "bytes": 126732,
+            "control": "Package: libfmt10\nVersion: 10.1.1+ds1-4\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libfuse3-4_3.17.2-3_amd64.deb",
+            "sha256": "92e2d521ff872755a13aa69dba7b24025a7dc0f0f5aa708c9a86cd3565f570da",
+            "bytes": 98748,
+            "control": "Package: libfuse3-4\nVersion: 3.17.2-3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libfuse3-dev_3.17.2-3_amd64.deb",
+            "sha256": "ed2a1a9ce9cea889aa29cd5dd2124d0f31c8a9e7b1b9578615a5b1ff316e6d54",
+            "bytes": 154964,
+            "control": "Package: libfuse3-dev\nVersion: 3.17.2-3\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgcrypt20-dev_1.11.0-7+deb13u1_amd64.deb",
+            "sha256": "04b1e35e841907620c650e3da6035979e670aaa2c13bd5350ebd03fbffb9d9eb",
+            "bytes": 890568,
+            "control": "Package: libgcrypt20-dev\nVersion: 1.11.0-7+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgio-2.0-dev-bin_2.84.4-3~deb13u5_amd64.deb",
+            "sha256": "d43dddb9b306cb8427bd383e100b8510da8cfa03b5968624f3787bc66a5a95b8",
+            "bytes": 168564,
+            "control": "Package: libgio-2.0-dev-bin\nVersion: 2.84.4-3~deb13u5\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgio-2.0-dev_2.84.4-3~deb13u5_amd64.deb",
+            "sha256": "a9bbd748ddd40a08b336e8d6b1755e698957ac640d081ddc4c330b716c6b89c3",
+            "bytes": 1691796,
+            "control": "Package: libgio-2.0-dev\nVersion: 2.84.4-3~deb13u5\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgirepository-2.0-0_2.84.4-3~deb13u5_amd64.deb",
+            "sha256": "c87a2d4dac81be719fb3dc2e3a1d78376151d8c5c34071e08c10304b8d1fd3c3",
+            "bytes": 144928,
+            "control": "Package: libgirepository-2.0-0\nVersion: 2.84.4-3~deb13u5\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libglib2.0-0t64_2.84.4-3~deb13u5_amd64.deb",
+            "sha256": "e2baf92c57d1db1753e5781a61450d9a01e7833c7bd2dfe87776a6811c11ecc2",
+            "bytes": 1521120,
+            "control": "Package: libglib2.0-0t64\nVersion: 2.84.4-3~deb13u5\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libglib2.0-bin_2.84.4-3~deb13u5_amd64.deb",
+            "sha256": "733e0bbb4aaa7846a23a02cc3f6af71b41cdfcc833538aae0c35eb2c1160c15a",
+            "bytes": 132488,
+            "control": "Package: libglib2.0-bin\nVersion: 2.84.4-3~deb13u5\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libglib2.0-data_2.84.4-3~deb13u5_all.deb",
+            "sha256": "11c671d0a21dd99215bc62fc0219a1fcbb1482f36329ab6b85732e09ddff9e1c",
+            "bytes": 1286548,
+            "control": "Package: libglib2.0-data\nVersion: 2.84.4-3~deb13u5\nArchitecture: all\n"
+          },
+          {
+            "file": "libglib2.0-dev-bin_2.84.4-3~deb13u5_amd64.deb",
+            "sha256": "d35ef75a4b04ea10081d484e025b0a4fecd0232ffc0e76403bcd249b3b47e643",
+            "bytes": 56944,
+            "control": "Package: libglib2.0-dev-bin\nVersion: 2.84.4-3~deb13u5\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libglib2.0-dev_2.84.4-3~deb13u5_amd64.deb",
+            "sha256": "ad98b1a769da55a8007ea9953306b0deb6092205d4fac8d915e2bd83d4ecc8a5",
+            "bytes": 57744,
+            "control": "Package: libglib2.0-dev\nVersion: 2.84.4-3~deb13u5\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgpg-error-dev_1.51-4_amd64.deb",
+            "sha256": "7b238b6142580750e31cc2f45e50245d4d93548c3ca5c6888901ca1927323685",
+            "bytes": 140104,
+            "control": "Package: libgpg-error-dev\nVersion: 1.51-4\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgstreamer-plugins-base1.0-0_1.26.2-1+deb13u2_amd64.deb",
+            "sha256": "b476f0e622edf46394c8f7eb40032a5db30d60eccae3332d2cd8d03ac65b8a8a",
+            "bytes": 996672,
+            "control": "Package: libgstreamer-plugins-base1.0-0\nVersion: 1.26.2-1+deb13u2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libgstreamer1.0-0_1.26.2-2_amd64.deb",
+            "sha256": "08b463307fbde5496a346b1bb300b465cd22bd326f6f4634f482bf441af28a9b",
+            "bytes": 1421116,
+            "control": "Package: libgstreamer1.0-0\nVersion: 1.26.2-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libibverbs1_56.1-1_amd64.deb",
+            "sha256": "4c3b889607586e6328964a5f98e01ef01daa415be24334d743d6654aab4c47a4",
+            "bytes": 62428,
+            "control": "Package: libibverbs1\nVersion: 56.1-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libiscsi-dev_1.20.0-4_amd64.deb",
+            "sha256": "1735ea691f43b0fa08132f05a42ec777af4f173134dae2165bff8dc2442dc44a",
+            "bytes": 88200,
+            "control": "Package: libiscsi-dev\nVersion: 1.20.0-4\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libiscsi7_1.20.0-4_amd64.deb",
+            "sha256": "bfebedb2c3671db07c5bdfa73c7ed054668bd9df5da00eb218144d370204a66b",
+            "bytes": 69728,
+            "control": "Package: libiscsi7\nVersion: 1.20.0-4\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libjson-c5_0.18+ds-1_amd64.deb",
+            "sha256": "4fbd5fb4d54c626f05d68abf38a31533fbf1bf4a87068696abe041ee9c974fe0",
+            "bytes": 45956,
+            "control": "Package: libjson-c5\nVersion: 0.18+ds-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libkmod2_34.2-2_amd64.deb",
+            "sha256": "ee6c50ebac79aa9795e8bf9aa01d94c99984d09d22598c66be0f8ba917b62179",
+            "bytes": 63196,
+            "control": "Package: libkmod2\nVersion: 34.2-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libmount-dev_2.41.5-0+deb13u1_amd64.deb",
+            "sha256": "2bef03b918e927648c6552143e17e82aa7ed2a4ce180fabd07a7d1cac7ff8686",
+            "bytes": 30740,
+            "control": "Package: libmount-dev\nVersion: 2.41.5-0+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libndctl6_81-1_amd64.deb",
+            "sha256": "fe60a05d42e61cb9f49a90b872aa5ca569363b13459ee0d405243c37a7de7c93",
+            "bytes": 62312,
+            "control": "Package: libndctl6\nVersion: 81-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libnfs-dev_5.0.2-1+deb13u1_amd64.deb",
+            "sha256": "ff0f4513829fead88a0735f10a9081e88376f0101c807dccc717a07d4b301333",
+            "bytes": 138380,
+            "control": "Package: libnfs-dev\nVersion: 5.0.2-1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libnfs14_5.0.2-1+deb13u1_amd64.deb",
+            "sha256": "a8c430428c3cf8cecc66be6a03ba292c85c1ad20d557dfb798fb5f95758e9e3e",
+            "bytes": 106204,
+            "control": "Package: libnfs14\nVersion: 5.0.2-1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libnl-3-200_3.7.0-2_amd64.deb",
+            "sha256": "ce5c153953016be42def7b105f37d55eae07a9608d1dfe6bcb03cc017fc384cb",
+            "bytes": 59432,
+            "control": "Package: libnl-3-200\nVersion: 3.7.0-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libnl-route-3-200_3.7.0-2_amd64.deb",
+            "sha256": "1c8c95542688996cff8e954583642b10a3bd78b69954f565fda62144c2bc3897",
+            "bytes": 181704,
+            "control": "Package: libnl-route-3-200\nVersion: 3.7.0-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libnuma-dev_2.0.19-1_amd64.deb",
+            "sha256": "7fea9248b09311b008dc6707c201671e7b14ce5f9278dda4694e726990897436",
+            "bytes": 36528,
+            "control": "Package: libnuma-dev\nVersion: 2.0.19-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libnuma1_2.0.19-1_amd64.deb",
+            "sha256": "e578583f73f8208564e5035b18aa729c441fc7ecb389c666923552e123f4d655",
+            "bytes": 22212,
+            "control": "Package: libnuma1\nVersion: 2.0.19-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libopus0_1.5.2-2_amd64.deb",
+            "sha256": "794056db33d71b2ac4bd8b5a4eb23b627bcb8a49d123c33b6e841a996253a067",
+            "bytes": 2851932,
+            "control": "Package: libopus0\nVersion: 1.5.2-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "liborc-0.4-0t64_1%3a0.4.41-1_amd64.deb",
+            "sha256": "5b9afe78be0dd71399c0d4d7e5f26beb6ddf207279997942d8280be1b20bd58c",
+            "bytes": 189604,
+            "control": "Package: liborc-0.4-0t64\nVersion: 1:0.4.41-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libpmem-dev_1.13.1-1.1+b1_amd64.deb",
+            "sha256": "197c48c8a8484c0ed6cab17e4884f25a29e23a6987b041add5674c34277d4115",
+            "bytes": 107516,
+            "control": "Package: libpmem-dev\nVersion: 1.13.1-1.1+b1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libpmem1_1.13.1-1.1+b1_amd64.deb",
+            "sha256": "7d972d6958e915ce602e4b90debc6b4b91a01dfea1fe003d0b013756e7d9d863",
+            "bytes": 91708,
+            "control": "Package: libpmem1\nVersion: 1.13.1-1.1+b1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "librados-dev_18.2.7+ds-1+deb13u1_amd64.deb",
+            "sha256": "b1570fa613f0bbd64b4546d0a1bb377d4b380af785d90febad875a6f6f9998ec",
+            "bytes": 64828,
+            "control": "Package: librados-dev\nVersion: 18.2.7+ds-1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "librados2_18.2.7+ds-1+deb13u1_amd64.deb",
+            "sha256": "aac6a2d69bad05bcb5bd9c0d55962297ed6e09b9d84be81233d36f5c6c8f6d33",
+            "bytes": 3586344,
+            "control": "Package: librados2\nVersion: 18.2.7+ds-1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "librbd-dev_18.2.7+ds-1+deb13u1_amd64.deb",
+            "sha256": "a454eb6fcfba1bf16cd8433d4c4037c541780b2bd0b83e827021555c33fa1796",
+            "bytes": 48328,
+            "control": "Package: librbd-dev\nVersion: 18.2.7+ds-1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "librbd1_18.2.7+ds-1+deb13u1_amd64.deb",
+            "sha256": "a7e7b50ccd3770a173186097632bc3aeec9eed1bc7953c4605b6a65e6b1ebc65",
+            "bytes": 2505696,
+            "control": "Package: librbd1\nVersion: 18.2.7+ds-1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "librdmacm1t64_56.1-1_amd64.deb",
+            "sha256": "5b56911725905b8e2a8389c99416ca078395c4ca8ce0d516bc758d5be0134687",
+            "bytes": 70396,
+            "control": "Package: librdmacm1t64\nVersion: 56.1-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libslirp-dev_4.8.0-1+deb13u1_amd64.deb",
+            "sha256": "9ea7af81a74fbf88c53b489a53c508c4d021a26e175a9e2fe7f19d5da81f860f",
+            "bytes": 11900,
+            "control": "Package: libslirp-dev\nVersion: 4.8.0-1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libslirp0_4.8.0-1+deb13u1_amd64.deb",
+            "sha256": "6125698173f8be0d0de01ff897a0df3c5e50fb09f70238b26dd6574aaa0934e1",
+            "bytes": 66544,
+            "control": "Package: libslirp0\nVersion: 4.8.0-1+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libspice-protocol-dev_0.14.3-1_all.deb",
+            "sha256": "ef726bfb09b01d5f54767c2d8e8904ece66ac0916a728eaf97d0a8dd5c6e9c2e",
+            "bytes": 25044,
+            "control": "Package: libspice-protocol-dev\nVersion: 0.14.3-1\nArchitecture: all\n"
+          },
+          {
+            "file": "libspice-server-dev_0.15.2-1+b1_amd64.deb",
+            "sha256": "db8e3bdc6d7bf6f93bac5ea4acd13d073cbcf26e59c6db790f9dcb4e3328d464",
+            "bytes": 21752,
+            "control": "Package: libspice-server-dev\nVersion: 0.15.2-1+b1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libspice-server1_0.15.2-1+b1_amd64.deb",
+            "sha256": "ca2a88454be47543896524f4135777f5cd9910cdaf037ff514ba1d93e4fc0e42",
+            "bytes": 349460,
+            "control": "Package: libspice-server1\nVersion: 0.15.2-1+b1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libssh-4_0.11.5-0+deb13u1_amd64.deb",
+            "sha256": "bc8cbc13617d1b21fa6f686f9f269a4f849f00624d5bb179785a058981701233",
+            "bytes": 211924,
+            "control": "Package: libssh-4\nVersion: 0.11.5-0+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libssh-dev_0.11.5-0+deb13u1_amd64.deb",
+            "sha256": "c59f3c7159a63d7569c08c8fd51f667a4776a7e83570a86f952ce97dad9f9d7e",
+            "bytes": 268564,
+            "control": "Package: libssh-dev\nVersion: 0.11.5-0+deb13u1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libsysprof-capture-4-dev_48.0-2_amd64.deb",
+            "sha256": "3cb76e124187700f5977a0acb914b3f82b2bd28105fce6f1cf2a34497b234af2",
+            "bytes": 49864,
+            "control": "Package: libsysprof-capture-4-dev\nVersion: 48.0-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "liburing-dev_2.9-1_amd64.deb",
+            "sha256": "8c01e6ea3f3e83e62c6bc238b94d4f2320781d277afef9c12cb543395b8d1b70",
+            "bytes": 232372,
+            "control": "Package: liburing-dev\nVersion: 2.9-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "liburing2_2.9-1_amd64.deb",
+            "sha256": "4b589c00c7a51172aace2cb2fb3d3ff32daf86c644023126dcfcaa840cc941ea",
+            "bytes": 26448,
+            "control": "Package: liburing2\nVersion: 2.9-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "meson_1.7.0-1_all.deb",
+            "sha256": "e92d04e60e784336883d537755d09b7dcb856809fa318a0931df3898e84ded95",
+            "bytes": 639072,
+            "control": "Package: meson\nVersion: 1.7.0-1\nArchitecture: all\n"
+          },
+          {
+            "file": "native-architecture_0.2.6_all.deb",
+            "sha256": "cb065efb2dd0ad8de45ace298bdb959e4d66478ca8599312bde4fa543d8b7532",
+            "bytes": 2264,
+            "control": "Package: native-architecture\nVersion: 0.2.6\nArchitecture: all\n"
+          },
+          {
+            "file": "ninja-build_1.12.1-1_amd64.deb",
+            "sha256": "bc172ce9270bd6fcd6d5335a83ff9d3c7ba0d13ec624cfdfa1b5aa06901dc453",
+            "bytes": 142132,
+            "control": "Package: ninja-build\nVersion: 1.12.1-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "python3-autocommand_2.2.2-3_all.deb",
+            "sha256": "1e62ac22ff83466228c051c6c2402a40f521646e15b5aa54cf2391206a848bad",
+            "bytes": 13608,
+            "control": "Package: python3-autocommand\nVersion: 2.2.2-3\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-inflect_7.3.1-2_all.deb",
+            "sha256": "6c10dca4d4aa0eb0b4e16e8b62b74a073a8d22be8809c3f61c56b06fdd1451f8",
+            "bytes": 32396,
+            "control": "Package: python3-inflect\nVersion: 7.3.1-2\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-jaraco.context_6.0.1-1+deb13u1_all.deb",
+            "sha256": "f909ec7b00dd96a1905322acba7cdd2df09747ceddeef6e426a97b33ab227f80",
+            "bytes": 8492,
+            "control": "Package: python3-jaraco.context\nVersion: 6.0.1-1+deb13u1\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-jaraco.functools_4.1.0-1_all.deb",
+            "sha256": "f5ac3e5f79b6394191d76ea7cde9255d8bae98f639886cb981444128f6545796",
+            "bytes": 11984,
+            "control": "Package: python3-jaraco.functools\nVersion: 4.1.0-1\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-jaraco.text_4.0.0-1_all.deb",
+            "sha256": "d5e060c9ba9d5206b53670cf2473681b45030cc6a55d18a8c6d87419a924e502",
+            "bytes": 11432,
+            "control": "Package: python3-jaraco.text\nVersion: 4.0.0-1\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-more-itertools_10.7.0-1_all.deb",
+            "sha256": "385d785fa84261838732ec97627b4e95ec7399fc449d8a2aaaef66fb5f961c25",
+            "bytes": 67416,
+            "control": "Package: python3-more-itertools\nVersion: 10.7.0-1\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-packaging_25.0-1_all.deb",
+            "sha256": "d70c8469f6e9c6105e1ebcd3ebdc963f11dadbeddd89d2d1a2a3cb1c97d2ecbc",
+            "bytes": 56568,
+            "control": "Package: python3-packaging\nVersion: 25.0-1\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-pkg-resources_78.1.1-0.1_all.deb",
+            "sha256": "cf8749251172abc945216cf878367f614cf91d3d9a1043ba3bacc5a74e8cc1a8",
+            "bytes": 224360,
+            "control": "Package: python3-pkg-resources\nVersion: 78.1.1-0.1\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-pyelftools_0.32-1_all.deb",
+            "sha256": "812d79302b70b375e69b44ee19d2625f1da61f69165567bf4617e7a7dc393005",
+            "bytes": 122768,
+            "control": "Package: python3-pyelftools\nVersion: 0.32-1\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-setuptools_78.1.1-0.1_all.deb",
+            "sha256": "90c4bc8e311873e5b571b407ce6b1fd38195dff77f9de056301a0f950e6df5a5",
+            "bytes": 738228,
+            "control": "Package: python3-setuptools\nVersion: 78.1.1-0.1\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-typeguard_4.4.2-1_all.deb",
+            "sha256": "81e512101d7ab94e73646b9a8e4fb9b948836e3172dc5719ad3acbcde65bca01",
+            "bytes": 37300,
+            "control": "Package: python3-typeguard\nVersion: 4.4.2-1\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-typing-extensions_4.13.2-1_all.deb",
+            "sha256": "b67662f211c35c17c74a0725bc7c8ffc3b126c650e2a2525593adee06f2bbf69",
+            "bytes": 90500,
+            "control": "Package: python3-typing-extensions\nVersion: 4.13.2-1\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-venv_3.13.5-1_amd64.deb",
+            "sha256": "744ea5038e645ed22299e1bca47f76169b5665dd640df3492bdd1e21eba6cb76",
+            "bytes": 1180,
+            "control": "Package: python3-venv\nVersion: 3.13.5-1\nArchitecture: amd64\n"
+          },
+          {
+            "file": "python3-zipp_3.21.0-1_all.deb",
+            "sha256": "6cd0f768a5e5c574c7ae4b9d56603f8399b31de732167007e42fc17decc5cc6a",
+            "bytes": 10584,
+            "control": "Package: python3-zipp\nVersion: 3.21.0-1\nArchitecture: all\n"
+          },
+          {
+            "file": "python3.13-venv_3.13.5-2+deb13u5_amd64.deb",
+            "sha256": "b079db533ff9d9d11585d06c3b2a5c034d01453a1e915502ffece42fb0ce4a3f",
+            "bytes": 5476,
+            "control": "Package: python3.13-venv\nVersion: 3.13.5-2+deb13u5\nArchitecture: amd64\n"
+          }
+        ],
+        "aptAuthenticatedIndexes": {
+          "deb.debian.org_debian-security_dists_trixie-security_main_binary-amd64_Packages.lz4": "2e5791f340281134aa7068518d5da24327ff27abdf8458ed6c038f940d833b19",
+          "deb.debian.org_debian_dists_sid_main_source_Sources.lz4": "cee422a6ed9b1e497554e3001a67bb790da4ec2bb811bf838f0da002475f8d26",
+          "deb.debian.org_debian-security_dists_trixie-security_InRelease": "b72db10993d56fc10352d5f0d34b10af5ffe76ab0e9b8542f293bc9f06f58dcb",
+          "deb.debian.org_debian_dists_trixie_InRelease": "0584fba32e13e0ab8285fb16c27adea1ec03a73669c18702821094fd6ca86675",
+          "deb.debian.org_debian_dists_trixie-updates_InRelease": "7f5364dc07a0f23a304b8dbe6eec8366fee09f5ba5691e1a4c1e677a1f8dd7d9",
+          "deb.debian.org_debian_dists_trixie_main_binary-amd64_Packages.lz4": "31c37ab52e49bc16fd5116607198838519beb0fa5defaa99ad33e1d45666d551",
+          "deb.debian.org_debian_dists_trixie-updates_main_binary-amd64_Packages.lz4": "d13f2682f6d034ded79a907486be05e83de21dd80c8696b7107bf5502e8a7c2b",
+          "lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "deb.debian.org_debian_dists_sid_InRelease": "0854d61f111d232420989c0b534b5e9ae201085a95079e59eedf20375d2c0e44"
+        },
+        "baseInventorySha256": "1b723dae664dcaa9578aee57f3071a485c3183206079acbf54730405b4a49938",
+        "method": "APT authenticated finite compiler dependency acquisition; archived DEBs replayed offline"
+      },
+      "inputSha256": "71052b105e1d76c1177ec83ff25652eef6ff1982a5bd0334f9b9e31bd0e01187",
+      "builtImage": "sha256:1904034cc949c9323f6231959698e2aaf1e5c0912a35023607d28d2004cdf133",
+      "dockerfile": "FROM sha256:839ca69583715483e9b97d2466f47f2d2aeff43300150c957ece8c6cb7ab78f6\nCOPY *.deb /tmp/native-deps/\nRUN printf '#!/bin/sh\\nexit 101\\n' > /usr/sbin/policy-rc.d && chmod 755 /usr/sbin/policy-rc.d && dpkg -i /tmp/native-deps/*.deb && test -z \"$(dpkg --audit)\" && rm -r /tmp/native-deps\n"
+    },
+    {
+      "name": "qemu-builder-final",
+      "input": {
+        "base": "sha256:1904034cc949c9323f6231959698e2aaf1e5c0912a35023607d28d2004cdf133",
+        "packagesRequested": [
+          "python3-pycotap",
+          "libblkio-dev"
+        ],
+        "archives": [
+          {
+            "file": "libblkio-dev_1.5.0-2_amd64.deb",
+            "sha256": "0b254075bc65dc0c4dfefefe8c175a3c068115dada89d7b2a4d8c9fc9b27f3d6",
+            "bytes": 41700,
+            "control": "Package: libblkio-dev\nVersion: 1.5.0-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "libblkio1_1.5.0-2_amd64.deb",
+            "sha256": "b9f848d8707d35b8c0f89c5766db45907d57069ed0e8394f41c51b34df6a28e3",
+            "bytes": 249924,
+            "control": "Package: libblkio1\nVersion: 1.5.0-2\nArchitecture: amd64\n"
+          },
+          {
+            "file": "python3-pycotap_1.3.1-2_all.deb",
+            "sha256": "7e8dbf3ac06434275a461d0de79792e2b80126febc53866c89027adde5192ac9",
+            "bytes": 5024,
+            "control": "Package: python3-pycotap\nVersion: 1.3.1-2\nArchitecture: all\n"
+          }
+        ],
+        "aptAuthenticatedIndexes": {
+          "deb.debian.org_debian-security_dists_trixie-security_main_binary-amd64_Packages.lz4": "2e5791f340281134aa7068518d5da24327ff27abdf8458ed6c038f940d833b19",
+          "deb.debian.org_debian_dists_sid_main_source_Sources.lz4": "cee422a6ed9b1e497554e3001a67bb790da4ec2bb811bf838f0da002475f8d26",
+          "deb.debian.org_debian-security_dists_trixie-security_InRelease": "b72db10993d56fc10352d5f0d34b10af5ffe76ab0e9b8542f293bc9f06f58dcb",
+          "deb.debian.org_debian_dists_trixie_InRelease": "0584fba32e13e0ab8285fb16c27adea1ec03a73669c18702821094fd6ca86675",
+          "deb.debian.org_debian_dists_trixie-updates_InRelease": "7f5364dc07a0f23a304b8dbe6eec8366fee09f5ba5691e1a4c1e677a1f8dd7d9",
+          "deb.debian.org_debian_dists_trixie_main_binary-amd64_Packages.lz4": "31c37ab52e49bc16fd5116607198838519beb0fa5defaa99ad33e1d45666d551",
+          "deb.debian.org_debian_dists_trixie-updates_main_binary-amd64_Packages.lz4": "d13f2682f6d034ded79a907486be05e83de21dd80c8696b7107bf5502e8a7c2b",
+          "lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "deb.debian.org_debian_dists_sid_InRelease": "0854d61f111d232420989c0b534b5e9ae201085a95079e59eedf20375d2c0e44"
+        },
+        "baseInventorySha256": "f4b81fde81bfaa428f45ccb835e3147064f8cbedd379cb0c5497c6b6025911af",
+        "method": "APT authenticated finite compiler dependency acquisition; archived DEBs replayed offline"
+      },
+      "inputSha256": "0c1fdc9de43f8658e41456457a3c2a691072b2d9b00a390d4ca2807f7116756b",
+      "builtImage": "sha256:544dd2afd94b170fb0a99faf0b0eacdddfa93e8d8b5c531e5985aa5efef1c5b6",
+      "dockerfile": "FROM sha256:1904034cc949c9323f6231959698e2aaf1e5c0912a35023607d28d2004cdf133\nCOPY *.deb /tmp/native-deps/\nRUN printf '#!/bin/sh\\nexit 101\\n' > /usr/sbin/policy-rc.d && chmod 755 /usr/sbin/policy-rc.d && dpkg -i /tmp/native-deps/*.deb && test -z \"$(dpkg --audit)\" && rm -r /tmp/native-deps\n"
+    },
+    {
+      "name": "qemu-builder-complete",
+      "input": {
+        "base": "sha256:544dd2afd94b170fb0a99faf0b0eacdddfa93e8d8b5c531e5985aa5efef1c5b6",
+        "packagesRequested": [
+          "python3-pip",
+          "python3-distlib",
+          "python3-wheel"
+        ],
+        "archives": [
+          {
+            "file": "python3-distlib_0.3.9-1_all.deb",
+            "sha256": "e463db51fa1115c68f9eadae270acb429820cc28f0a71f58121ae2af986c0b0f",
+            "bytes": 257064,
+            "control": "Package: python3-distlib\nVersion: 0.3.9-1\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-pip_25.1.1+dfsg-1_all.deb",
+            "sha256": "065695050e5fe10f162201a5bbe8759837427c76c95b5fe57b0701bcd6070c56",
+            "bytes": 1456608,
+            "control": "Package: python3-pip\nVersion: 25.1.1+dfsg-1\nArchitecture: all\n"
+          },
+          {
+            "file": "python3-wheel_0.46.1-2_all.deb",
+            "sha256": "17b788ad15f8231e5058ed386cd6841d42b31937075b56caf4cf63263910e992",
+            "bytes": 21672,
+            "control": "Package: python3-wheel\nVersion: 0.46.1-2\nArchitecture: all\n"
+          }
+        ],
+        "aptAuthenticatedIndexes": {
+          "deb.debian.org_debian-security_dists_trixie-security_main_binary-amd64_Packages.lz4": "2e5791f340281134aa7068518d5da24327ff27abdf8458ed6c038f940d833b19",
+          "deb.debian.org_debian_dists_sid_main_source_Sources.lz4": "cee422a6ed9b1e497554e3001a67bb790da4ec2bb811bf838f0da002475f8d26",
+          "deb.debian.org_debian-security_dists_trixie-security_InRelease": "b72db10993d56fc10352d5f0d34b10af5ffe76ab0e9b8542f293bc9f06f58dcb",
+          "deb.debian.org_debian_dists_trixie_InRelease": "0584fba32e13e0ab8285fb16c27adea1ec03a73669c18702821094fd6ca86675",
+          "deb.debian.org_debian_dists_trixie-updates_InRelease": "7f5364dc07a0f23a304b8dbe6eec8366fee09f5ba5691e1a4c1e677a1f8dd7d9",
+          "deb.debian.org_debian_dists_trixie_main_binary-amd64_Packages.lz4": "31c37ab52e49bc16fd5116607198838519beb0fa5defaa99ad33e1d45666d551",
+          "deb.debian.org_debian_dists_trixie-updates_main_binary-amd64_Packages.lz4": "d13f2682f6d034ded79a907486be05e83de21dd80c8696b7107bf5502e8a7c2b",
+          "lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "deb.debian.org_debian_dists_sid_InRelease": "0854d61f111d232420989c0b534b5e9ae201085a95079e59eedf20375d2c0e44"
+        },
+        "baseInventorySha256": "662dfdc59c8ce8c6ebef2fb5448e73dd27fefbde11a3008a8e5037bee4f508a7",
+        "method": "APT authenticated finite compiler dependency acquisition; archived DEBs replayed offline"
+      },
+      "inputSha256": "17ba07c8a9884ffbccc02f0e2c2b0a6137833783d842ad7c0f66eaf1c98d5254",
+      "builtImage": "sha256:bc0870ffe37ae1fda6074292964dc1a50bb04f879831eb2f5c12cda582dc0805",
+      "dockerfile": "FROM sha256:544dd2afd94b170fb0a99faf0b0eacdddfa93e8d8b5c531e5985aa5efef1c5b6\nCOPY *.deb /tmp/native-deps/\nRUN printf '#!/bin/sh\\nexit 101\\n' > /usr/sbin/policy-rc.d && chmod 755 /usr/sbin/policy-rc.d && dpkg -i /tmp/native-deps/*.deb && test -z \"$(dpkg --audit)\" && rm -r /tmp/native-deps\n"
+    }
+  ],
+  "scope": "Archived compiler replay; no host installation, dependency resolution or production activation"
+}

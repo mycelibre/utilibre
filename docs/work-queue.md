@@ -1,3 +1,17 @@
+## Security checkpoint — 14 November 2026
+
+The verified release reduces pending package-target records from **5 critical /
+452 high to 0 critical / 30 high**. All 30 concern the unresolved ACL caller
+migration. Native Apache/libpq/Node/Python/Git/Xvfb/QEMU repairs are deployed;
+PrivateBin's guarded updater retains the new runtime. Kernel 6.12.117 is installed
+and boot-verified after the confirmed maintenance window. All 175 containers and
+90 configured health checks pass. The fleet scan covers 109 images / 120 inputs;
+a separate same-database post-boot scan covers 508 host packages. Raw findings
+remain visible; this is not full remediation. [Release and exact remaining gap](records/security-2026-11-14.md).
+
+The checkpoints below are historical; their counts and “current” labels do not
+replace this dated result.
+
 # Work queue
 
 ## Current held-upgrade checkpoint — 11 November 2026

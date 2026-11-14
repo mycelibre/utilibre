@@ -14,7 +14,7 @@ x-runtime: &runtime
 services:
   priviblur:
     <<: *runtime
-    image: utilibre-krb5-priviblur-priviblur:1.22.3-20261110
+    image: utilibre-git-priviblur:2.54.1-20261114
     user: "1000:1000"
     environment:
       PRIVIBLUR_ACCESS_LOG: "false"

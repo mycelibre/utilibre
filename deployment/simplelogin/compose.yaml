@@ -45,12 +45,14 @@ services:
     restart: 'no'
   web:
     <<: *app
+    image: utilibre-headers-simplelogin-web:20261114
     command: [gunicorn, 'wsgi:app', -b, '0.0.0.0:7777', -w, '1', --timeout, '30', --log-level, warning]
     networks: {data: {ipv4_address: 172.29.135.10}, ingress: {ipv4_address: 172.29.136.10}}
     restart: unless-stopped
     depends_on: {initialize: {condition: service_completed_successfully}}
   smtp:
     <<: *app
+    image: utilibre-headers-simplelogin-web:20261114
     command: [python, email_handler.py]
     networks: {data: {ipv4_address: 172.29.135.11}, ingress: {ipv4_address: 172.29.136.11}}
     ports: ['127.0.0.1:2528:20381']
@@ -58,6 +60,7 @@ services:
     depends_on: {initialize: {condition: service_completed_successfully}}
   jobs:
     <<: *app
+    image: utilibre-headers-simplelogin-web:20261114
     command: [python, job_runner.py]
     networks: {data: {ipv4_address: 172.29.135.12}, ingress: {ipv4_address: 172.29.136.12}}
     restart: unless-stopped

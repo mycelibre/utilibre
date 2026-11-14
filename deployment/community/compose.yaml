@@ -87,7 +87,7 @@ services:
     memswap_limit: 256m
     <<: *runtime
     logging: {driver: none}
-    image: utilibre-community-pairdrop:musl-security-20261109
+    image: utilibre-vendor-community-pairdrop:20261114
     user: "1000:1000"
     environment:
       PORT: "3000"

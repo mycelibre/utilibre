@@ -9,7 +9,7 @@ x-limits: &limits
 services:
   app:
     <<: *limits
-    image: utilibre-13ft-app:sqlite-security-20261109
+    image: utilibre-python-13ft-app:20261114
     cpus: 1
     mem_limit: 256m
     tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']

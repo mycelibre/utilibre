@@ -81,7 +81,7 @@ services:
     logging: *default-logging
 
   freshrss:
-    image: utilibre-krb5-services-freshrss:1.22.3-20261110
+    image: utilibre-vendor-services-freshrss:20261114
     init: true
     restart: unless-stopped
     <<: *default-security
@@ -129,7 +129,7 @@ services:
   rsshub:
     ulimits: {core: 0}
     memswap_limit: 1536m
-    image: utilibre-krb5-services-rsshub:1.22.3-20261110
+    image: utilibre-git-rsshub:2.54.1-20261114
     init: true
     restart: unless-stopped
     read_only: true
@@ -170,7 +170,7 @@ services:
     logging: *default-logging
 
   privatebin:
-    image: sha256:95d4a7ef121809772bbae5021badc46f0188361677da1e4aa41bc56cddb63f9d
+    image: utilibre-vendor-services-privatebin:20261114
     user: "65534:82"
     restart: unless-stopped
     read_only: true

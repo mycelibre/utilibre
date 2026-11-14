@@ -1,6 +1,37 @@
 // Explicit completed release locations, not a glob or a scanner exemption.
 // Reviewers still require an exact role/image chain and recheck live payloads.
 export const additionalOverlayReceipts = [
+  // 14 November: completed exact package releases; payloads still rechecked.
+  'security-20261114/community-pairdrop/release-utilibre-community.json',
+  'security-20261114/git/breezewiki/release-utilibre-expanded.json',
+  'security-20261114/git/penpot-exporter/release-utilibre-expanded.json',
+  'security-20261114/git/priviblur/release-utilibre-priviblur.json',
+  'security-20261114/git/rsshub/release-utilibre-services.json',
+  'security-20261114/headers/vendor-debian/gathio-postgres/release-utilibre-gathio.json',
+  'security-20261114/headers/vendor-debian/kitchenowl-app/release-utilibre-kitchenowl.json',
+  'security-20261114/headers/vendor-debian/linkding-linkding/release-utilibre-linkding.json',
+  'security-20261114/headers/vendor-debian/simplelogin-web/release-utilibre-simplelogin.json',
+  'security-20261114/pollaris-pollaris/release-utilibre-pollaris.json',
+  'security-20261114/python/13ft-app/release-utilibre-13ft.json',
+  'security-20261114/python/beaverhabits-app/release-utilibre-beaverhabits.json',
+  'security-20261114/python/identity-worker/release-utilibre-identity.json',
+  'security-20261114/python/linkding-linkding/release-utilibre-linkding.json',
+  'security-20261114/python/pack-forms-app/release-utilibre-pack-forms.json',
+  'security-20261114/python/records-candlr/release-utilibre-records.json',
+  'security-20261114/python/simplelogin-web/release-utilibre-simplelogin.json',
+  'security-20261114/python/trip-app/release-utilibre-trip.json',
+  'security-20261114/python/unfurl-app/release-utilibre-unfurl.json',
+  'security-20261114/reader-evaluation-fourget/release.json',
+  'security-20261114/services-privatebin/release-utilibre-services.json',
+  'security-20261114/vendor-debian/identity-worker/release-utilibre-identity.json',
+  'security-20261114/vendor-debian/kitchenowl-app/release-utilibre-kitchenowl.json',
+  'security-20261114/vendor-debian/linkding-linkding/release-utilibre-linkding.json',
+  'security-20261114/vendor-debian/pack-forms-app/release-utilibre-pack-forms.json',
+  'security-20261114/vendor-debian/services-freshrss/release.json',
+  'security-20261114/vendor-debian/turn-option-turn/release-utilibre-galene-turn.json',
+  'security-20261114/vendor-debian/turn-option-turn/release-utilibre-turn-option.json',
+  'security-20261114/xserver/release-exporter.json',
+
 
   // Reviewers verify each retained native repair in the successor image.
   // This records release lineage; it is not a blanket waiver.

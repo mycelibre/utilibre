@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "packages": {
+    "trixie/linux-libc-dev": {
+      "name": "linux-libc-dev",
+      "version": "6.12.117-1",
+      "file": "linux-libc-dev_6.12.117-1_all.deb",
+      "sha256": "8b4848725a2705e5b1612f2135c44300716690ba762368ab87df127e9a5ed416",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/l/linux/linux-libc-dev_6.12.117-1_all.deb",
+      "distribution": "trixie-security",
+      "depends": "",
+      "preDepends": ""
+    },
+    "bookworm/linux-libc-dev": {
+      "name": "linux-libc-dev",
+      "version": "6.1.190-1",
+      "file": "linux-libc-dev_6.1.190-1_amd64.deb",
+      "sha256": "a88a129991cbb7db1715bed232c9808b91ac0fb7149660558b9df0d074348f05",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/l/linux/linux-libc-dev_6.1.190-1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "",
+      "preDepends": ""
+    },
+    "jammy/linux-libc-dev": {
+      "name": "linux-libc-dev",
+      "version": "5.15.0-203.213",
+      "file": "linux-libc-dev_5.15.0-203.213_amd64.deb",
+      "sha256": "52d7d16b56a2c415afe35a91fa64b7db37cd7e3c825a5976531e0c9561be2e4d",
+      "url": "https://security.ubuntu.com/ubuntu/pool/main/l/linux/linux-libc-dev_5.15.0-203.213_amd64.deb",
+      "distribution": "jammy-security",
+      "depends": "",
+      "preDepends": ""
+    }
+  },
+  "rows": [
+    {
+      "key": "linkding-linkding",
+      "kind": "debian",
+      "base": "sha256:fa556833be294cd17a40b035cd8f7921de95dca556aa7e492f308422293f7310",
+      "containers": [
+        "utilibre-linkding-linkding-1"
+      ],
+      "candidate": "utilibre-headers-linkding-linkding:20261114",
+      "packages": {
+        "linux-libc-dev": {
+          "installed": "6.12.111-1",
+          "package": "trixie/linux-libc-dev"
+        }
+      },
+      "assessmentOriginalBase": "sha256:14793c0212c6f8e0dcfffa03741e42a9fdd0a6683ef861629b09af12409931ac",
+      "targetAdvisories": [
+        "CVE-2026-99288"
+      ],
+      "baselineRawScan": "/var/lib/utilibre-maintenance/security-20261114/python/linkding-linkding/after-scan.json"
+    },
+    {
+      "key": "kitchenowl-app",
+      "kind": "debian",
+      "base": "sha256:8c1fbe868778a0ea86ea287b84f4825c6f9edaf6cecf3a1552469111f8658dc6",
+      "containers": [
+        "utilibre-kitchenowl-app-1"
+      ],
+      "candidate": "utilibre-headers-kitchenowl-app:20261114",
+      "packages": {
+        "linux-libc-dev": {
+          "installed": "6.12.111-1",
+          "package": "trixie/linux-libc-dev"
+        }
+      },
+      "assessmentOriginalBase": "sha256:c8fc1a7e79c48e8f5644bfb5e2df37e5a81a77cc92f3212d869013d9e1868960",
+      "targetAdvisories": [
+        "CVE-2026-99288"
+      ],
+      "baselineRawScan": "/var/lib/utilibre-maintenance/security-20261114/vendor-debian/kitchenowl-app/after-scan.json"
+    },
+    {
+      "key": "simplelogin-web",
+      "kind": "ubuntu",
+      "base": "sha256:05858de90e51d3e6b07b38e914ef7be4d7c5c49586469b3fa232c6e28d536f44",
+      "containers": [
+        "utilibre-simplelogin-web-1",
+        "utilibre-simplelogin-jobs-1",
+        "utilibre-simplelogin-smtp-1"
+      ],
+      "candidate": "utilibre-headers-simplelogin-web:20261114",
+      "packages": {
+        "linux-libc-dev": {
+          "installed": "5.15.0-198.208",
+          "package": "jammy/linux-libc-dev"
+        }
+      },
+      "assessmentOriginalBase": "sha256:11eb7cdaf08f0465d15e48be2b06bdf2ea2939b95a6e620d5d6b364a3ddde2f5",
+      "targetAdvisories": [
+        "CVE-2026-80833",
+        "CVE-2026-80834",
+        "CVE-2026-89489"
+      ],
+      "baselineRawScan": "/var/lib/utilibre-maintenance/security-20261114/python/simplelogin-web/after-scan.json"
+    },
+    {
+      "key": "gathio-postgres",
+      "kind": "debian",
+      "base": "sha256:d75618fdee5a53508e391383bef49fbd2deed09fa45c4ecf0203c12a10c3a34f",
+      "containers": [
+        "utilibre-gathio-postgres-1"
+      ],
+      "candidate": "utilibre-headers-gathio-postgres:20261114",
+      "packages": {
+        "linux-libc-dev": {
+          "installed": "6.1.187-1",
+          "package": "bookworm/linux-libc-dev"
+        }
+      },
+      "assessmentOriginalBase": "sha256:d75618fdee5a53508e391383bef49fbd2deed09fa45c4ecf0203c12a10c3a34f",
+      "targetAdvisories": [
+        "CVE-2026-89965",
+        "CVE-2026-90071",
+        "CVE-2026-90414",
+        "CVE-2026-97564"
+      ]
+    }
+  ],
+  "host": {
+    "package": "trixie/linux-libc-dev",
+    "installed": "6.12.116-1",
+    "targetAdvisories": [
+      "CVE-2026-99288"
+    ]
+  }
+}
