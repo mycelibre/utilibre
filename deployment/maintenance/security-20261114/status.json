@@ -634,7 +634,9 @@
     "healthChecksPassed": 90,
     "imageDigestsUnchanged": true,
     "systemFailedUnits": 0,
-    "proxmoxAgentConfirmation": "requested; guest-side agent service active"
+    "proxmoxAgentConfirmation": "Operator reported ping succeeded and fsfreeze-status thawed; not independently observed from the guest.",
+    "operatorConfirmationReceivedAt": "2026-11-14T16:40:08.135946+00:00",
+    "maintenanceWindow": "closed; backups and snapshots may resume"
   },
   "sourceOffer": {
     "passed": true,
@@ -658,5 +660,5 @@
     "freeAfter": 9729191936,
     "removedCompilerImages": 5
   },
-  "updatedAt": "2026-11-14T16:26:02.416751+00:00"
+  "updatedAt": "2026-11-14T16:40:08.135946+00:00"
 }
