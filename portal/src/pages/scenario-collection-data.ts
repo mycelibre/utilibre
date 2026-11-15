@@ -65,8 +65,8 @@ export const scenarioCollections: readonly ScenarioCollection[] = [
       es: 'Los pasos de PDF e imágenes procesan archivos en el navegador. PairDrop tiene sus propios límites de transferencia y conexión: leé su guía antes de enviar. Las descargas no se cifran automáticamente. No dejés documentos personales ni descargas en un dispositivo compartido.',
     },
     mobile: {
-      en: 'A larger screen helps with miniPaint’s controls. On a phone, start with the small sample, keep the guide in its own tab and find the result in your browser’s downloads or Files app. OCR may need an initial language-data download. These instructions are not a claim of real-phone compatibility.',
-      es: 'Una pantalla grande facilita los controles de miniPaint. En un teléfono, empezá con el ejemplo pequeño, dejá la guía en su propia pestaña y buscá el resultado en Descargas del navegador o en Archivos. El OCR puede necesitar descargar datos del idioma al principio. Estas indicaciones no equivalen a una prueba en teléfonos reales.',
+      en: 'A larger screen helps with miniPaint’s controls. On a phone, start with the small sample, keep the guide in its own tab and find the result in your browser’s downloads or Files app. OCR may need an initial language-data download. Keep both devices awake during transfer and reopen the received file before closing either tab.',
+      es: 'Una pantalla grande facilita los controles de miniPaint. En un teléfono, empezá con el ejemplo pequeño, dejá la guía en su propia pestaña y buscá el resultado en Descargas del navegador o en Archivos. El OCR puede necesitar descargar datos del idioma al principio. Mantené ambos dispositivos despiertos durante la transferencia y reabrí el archivo recibido antes de cerrar las pestañas.',
     },
   },
   {

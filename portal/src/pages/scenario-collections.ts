@@ -1,6 +1,9 @@
 import { catalogEntry } from '../catalog/catalog.ts';
 import { entryLaunch, immediatelyUsable } from '../catalog/discovery.ts';
 import { accessText, privacyAnswers } from '../catalog/guidance.ts';
+import { localizedServiceUrl } from '../catalog/locale-links.ts';
+import { renderProblemReport } from '../components/problem-report.ts';
+import { routePath } from '../routes.ts';
 import type { PublicConfig } from '../config.ts';
 import type { Language } from '../i18n/index.ts';
 import { actionButton, append, element, setStatus, statusRegion } from '../utilities/dom.ts';
@@ -113,6 +116,17 @@ export function renderScenarioCollection(id: string, language: Language, config:
     ? (es ? 'Estas herramientas no piden cuenta. Podés empezar con un archivo ficticio y guardar tu propia copia.' : 'These tools do not require an account. Start with a fictional file and save your own copy.')
     : (es ? 'Revisá el acceso indicado en cada herramienta: alguna puede no estar disponible ahora.' : 'Check each tool’s access information: some may be unavailable right now.')));
   const begin = element('div', 'guide-actions'); append(begin, link('#collection-example', es ? 'Probalo con un ejemplo' : 'Try a worked example', 'button'), link('#collection-tools', es ? 'Elegir una herramienta' : 'Choose a tool', 'button button-secondary'), saveCollectionLink(collection, language, true)); header.append(begin); main.append(header);
+  const report = renderProblemReport(language, config);
+  if (collection.id === 'documents') {
+    const shortcuts = element('nav', 'guide-links');
+    shortcuts.setAttribute('aria-label', es ? 'Empezar por una tarea' : 'Start with a task');
+    append(shortcuts,
+      link(routePath('pdf', language), es ? 'Unir, comprimir o leer un PDF' : 'Merge, compress or read a PDF'),
+      link(practicalGuidePath('image', language), es ? 'Reducir una imagen' : 'Resize an image'),
+      link(practicalGuidePath('transfer', language), es ? 'Pasar el archivo al otro dispositivo' : 'Move the file to another device'));
+    if (report) shortcuts.append(link('#problem-report', es ? 'Algo no funciona' : 'Something is not working'));
+    header.append(shortcuts);
+  }
 
   const tools = section(es ? 'Elegí lo que necesitás' : 'Choose what you need'); tools.id = 'collection-tools';
   const list = element('ul', 'collection-tools-list');
@@ -125,6 +139,14 @@ export function renderScenarioCollection(id: string, language: Language, config:
       const a = link(launch.href, `${entry.launchLabel?.[language] || entry.name[language]} · ${es ? 'pestaña nueva' : 'new tab'}`, 'button'); a.target = '_blank'; a.rel = 'noopener noreferrer'; actions.append(a);
     } else actions.append(element('span', 'notice', es ? 'No disponible por ahora' : 'Currently unavailable'));
     actions.append(link(guidePath(selection.guide, language), es ? 'Ver los pasos' : 'See the steps')); li.append(actions);
+    if (launch && entry.id === 'bentopdf') {
+      const operations = element('p', 'guide-links');
+      for (const operation of entry.quickLinks || []) {
+        const a = link(localizedServiceUrl(entry.providerId, launch.href, language, operation.path), operation.label[language]);
+        a.target = '_blank'; a.rel = 'noopener noreferrer'; operations.append(a);
+      }
+      li.append(operations);
+    }
     const details = element('details', 'inventory-entry'); details.append(element('summary', '', `${es ? 'Datos y límites' : 'Data and limits'} · ${entry.upstreamProject}`));
     const dl = element('dl', 'privacy-answers'); for (const [question, answer] of privacyAnswers(entry, language)) append(dl, element('dt', '', question), element('dd', '', answer));
     append(details, dl, link(entry.upstreamSourceUrl, `${es ? 'Software libre' : 'Powered by'}: ${entry.upstreamProject} · ${entry.license}`)); li.append(details); list.append(li);
@@ -135,7 +157,31 @@ export function renderScenarioCollection(id: string, language: Language, config:
   append(example, renderExamplePreview(collection, language), element('p', 'collection-result', collection.example.result[language]));
   const sample = link(`/examples/${collection.example.sample.replace('{lang}', language)}`, collection.example.sampleLabel[language], 'button button-secondary'); sample.setAttribute('download', ''); example.append(sample);
   const steps = element('ol'); for (const step of collection.example.steps[language]) steps.append(element('li', '', step)); example.append(steps, link(practicalGuidePath(collection.example.guide, language), es ? 'Seguir la guía completa' : 'Follow the complete guide')); main.append(example, tools);
+  if (collection.id === 'documents') {
+    const finish = section(es ? 'Del PDF al archivo recibido' : 'From a PDF to the received file', es
+      ? 'Practicá el recorrido completo con dos páginas ficticias. Si tu trámite solo pide una imagen, usá la del ejemplo anterior. Cada paso es manual y conserva el original.'
+      : 'Practice the complete journey with two fictional pages. If your submission only needs an image, use the one above. Each step is manual and preserves the original.');
+    const samples = element('p', 'guide-links');
+    for (const name of ['a', 'b']) {
+      const a = link(`/examples/pdf-${language}-${name}.pdf`, `${es ? 'Página de práctica' : 'Practice page'} ${name.toUpperCase()} (PDF)`); a.download = ''; samples.append(a);
+    }
+    const sequence = element('ol');
+    for (const text of es ? [
+      'Descargá A y B. En «Unir PDF», seleccioná ambos en ese orden y descargá el resultado. Abrilo: debe tener dos páginas, A seguida de B.',
+      'Revisá el límite de tamaño que pide el destinatario. Si hace falta comprimir, guardá otra copia y comprobá su peso y legibilidad. Comprimir no garantiza alcanzar cualquier límite.',
+      'Abrí PairDrop en ambos dispositivos y confirmá el destinatario. Enviá la copia revisada; aceptala y guardala en el otro dispositivo.',
+      'En el dispositivo receptor, abrí la descarga desde Archivos o Descargas. Comprobá las dos páginas y su orden antes de usarla. Conservá los originales.',
+    ] : [
+      'Download A and B. In Merge PDFs, select both in that order and download the result. Open it: it should contain two pages, A followed by B.',
+      'Check the recipient’s file-size requirement. If compression is needed, save another copy and check its actual size and readability. Compression cannot guarantee any requested limit.',
+      'Open PairDrop on both devices and confirm the recipient. Send the checked copy; accept and save it on the other device.',
+      'On the receiving device, open the download in Files or Downloads. Check both pages and their order before using it. Keep the originals.',
+    ]) sequence.append(element('li', '', text));
+    append(finish, samples, sequence, link(routePath('pdf', language) + '#merge', es ? 'Pasos para unir PDF' : 'PDF merge steps'), element('span', '', ' · '), link(practicalGuidePath('transfer', language), es ? 'Ayuda para la transferencia' : 'Transfer help'));
+    main.append(finish);
+  }
   main.append(section(es ? 'Tus archivos y tu privacidad' : 'Your files and privacy', collection.privacy[language]), section(es ? 'Si usás un teléfono' : 'If you are using a phone', collection.mobile[language]), renderSharing(collection, language, config, interactive));
+  if (report) main.append(report);
   const help = element('p', 'guide-links'); append(help, link(`/${language}/${es ? 'guias' : 'guides'}`, es ? 'Todas las guías' : 'All guides'));
   if (config.contactUrl) help.append(link(config.contactUrl, es ? 'Reportar un problema o sugerir una corrección' : 'Report a problem or suggest a correction'));
   main.append(help); return main;

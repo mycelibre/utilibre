@@ -74,3 +74,23 @@ test('copy fallback and voluntary support need neither tracking nor funding pres
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
   }
 });
+
+test('document journeys offer private failure reporting without sending task state', async ({ page, context }) => {
+  for (const path of ['/es/colecciones/documentos-y-tramites', '/en/collections/documents-and-applications', '/es/guias/preparar-imagen', '/en/guides/file-transfer', '/en/pdf-tools']) {
+    await page.goto(path);
+    const report = page.locator('#problem-report');
+    await expect(report.getByRole('link')).toHaveAttribute('href', 'https://liberaforms.example.test/feedback');
+    await expect(report.getByRole('link')).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
+  }
+  const requests: { url: string; method: string; referer: string | undefined }[] = [];
+  await context.route('https://liberaforms.example.test/**', route => {
+    requests.push({ url: route.request().url(), method: route.request().method(), referer: route.request().headers().referer });
+    return route.fulfill({ contentType: 'text/html', body: '<title>Controlled feedback destination</title>' });
+  });
+  const popup = context.waitForEvent('page');
+  await page.locator('#problem-report a').click();
+  await (await popup).waitForLoadState();
+  expect(requests).toEqual([{ url: 'https://liberaforms.example.test/feedback', method: 'GET', referer: undefined }]);
+  await expect(page).toHaveURL(/\/en\/pdf-tools$/);
+});

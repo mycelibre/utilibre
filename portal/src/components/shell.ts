@@ -3,6 +3,7 @@ import type { Language, TranslationKey } from '../i18n';
 import { routePath, translatedPath, type Route } from '../routes';
 import { append, element, type Translate } from '../utilities/dom';
 import { abuseReportLink } from './abuse-report-link';
+import { problemReportLink } from './problem-report';
 
 export type Theme = 'system' | 'light' | 'dark';
 interface ShellOptions {
@@ -115,6 +116,8 @@ export function renderFooter(currentRoute: Route, config: PublicConfig, t: Trans
     links.append(link);
   }
   links.append(abuseReportLink(currentRoute.language, t('report.title'), ''));
+  const problem = problemReportLink(currentRoute.language, config);
+  if (problem) links.append(problem);
   if (config.sourceCodeUrl) {
     const source = element('a', '', t('footer.source'));
     source.href = config.sourceCodeUrl;

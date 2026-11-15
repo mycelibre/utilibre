@@ -57,7 +57,7 @@ describe('curated everyday collections', () => {
       expect(url.pathname).toBe(`/${language}/${language === 'es' ? 'mi-utilibre' : 'my-utilibre'}`);
       expect(readSharedFragment(url.hash)).toEqual({ version: 1, language, collection: { label: collection.title[language], tools: collection.tools.map(tool => tool.id) } });
       expect(main.querySelectorAll('.collection-tools-list > li')).toHaveLength(collection.tools.length);
-      expect(main.querySelectorAll('.collection-tools-list a[target="_blank"]')).toHaveLength(collection.tools.length);
+      expect(main.querySelectorAll('.collection-tools-list a[target="_blank"]')).toHaveLength(collection.tools.length + (collection.id === 'documents' ? 3 : 0));
       expect(main.querySelector('header a[href*="#collection="]')).not.toBeNull();
       expect([...main.querySelectorAll('a[href*="#collection="]')].map(a => a.getAttribute('href'))).toEqual([save.getAttribute('href'), save.getAttribute('href')]);
       expect(main.children[1]?.id).toBe('collection-example');

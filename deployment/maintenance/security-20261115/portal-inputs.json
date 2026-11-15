@@ -1,0 +1,25 @@
+{
+  "approved": true,
+  "reviewedAt": "2026-11-15T23:16:03.262413+00:00",
+  "scope": "Portal only: document workflow and voluntary feedback; no application/config changes",
+  "base": "sha256:a9cdd99d55808fd4471feb7b8cc6dcdca3cb88521431419d15a5e6d6f0295fbe",
+  "imageId": "sha256:0f6098fddf71b14f6045984cc30378eccbd64406a1448b3cad71c022cbe692af",
+  "candidate": "utilibre-portal:documents-feedback-20261115",
+  "sourceRevision": "002f2a33d7ed5d432b24c93299a91abf938a8cb9",
+  "sourceFiles": {
+    "portal/src/components/problem-report.ts": "ae4cf29a492256679d3d7f5e3b43c9cff5739cd1f832956b138c001c82d68072",
+    "portal/src/components/catalog-ledger.ts": "490b80eedbda768abf8aa05b44125ba3bd15bc1f53d30cb36a2d3592ef249cdf",
+    "portal/src/components/shell.ts": "984431575fa3178450c12e109f347db20b09ba8d4378852d1b3f9811d41c7af1",
+    "portal/src/pages/scenario-collections.ts": "73ac1390455269ac6878cb866eafead601bcda71aa8f6d3ea980db6df0edbb0b",
+    "portal/src/pages/scenario-collection-data.ts": "96958a80163bd85942e2cc593cbd023659c135cea4f0f3eb3808ffc9aaece995",
+    "portal/src/pages/practical-guides.ts": "dc85bdb4470e12843b0a8b3ea836b174b907fb9fd5c712affb64408de574b08c",
+    "portal/src/pages/task-guides.ts": "5924a5d61dd19b08649cea99cdc02f40783a8e08b2334e6254f43526739f4eeb",
+    "portal/src/pages/guide-discovery.ts": "5449686d821aa62be348ff74b174664a3b641a66ab1479e67cadb17bd5b15a3e"
+  },
+  "evidence": {
+    "portal-scan-gate.json": "d5e982cc18636d919c7f2128732331058d164e33a3e8da8e383d3f70a7c5b2a1",
+    "portal-staging.json": "18c9d826d474149baf78f42ca1f7d3de04538e1c2b1fa3ff325f2aaaca6c77eb",
+    "final-e2e.log": "d22be5d28949d8c2099b3798d9a01d4459f120461646610e7f7c65dcc53ef5f6",
+    "portal-source-inputs.json": "498d03e0821db56018bb51540b48ebf72e735601179abe37966edb2e48a3618c"
+  }
+}

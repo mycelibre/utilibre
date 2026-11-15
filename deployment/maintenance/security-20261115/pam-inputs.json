@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "advisory": "CVE-2025-6020",
+  "packageVersion": "1.5.2-6+deb12u2",
+  "targets": [
+    {
+      "container": "utilibre-community-uptime-kuma-1",
+      "image": "sha256:342a78264eb0b69ea78826a31bf1f4cd7dfac2b8fb8ac825bb17a35e72363b4c"
+    },
+    {
+      "container": "utilibre-gathio-postgres-1",
+      "image": "sha256:43bc9dd264170991cca34544965aeabbea2e9f34b3af5b4f653cc5ba263aa1e6"
+    },
+    {
+      "container": "utilibre-expanded-actual-1",
+      "image": "sha256:44f704ae9920d5791c4b11fb713aaa86ce9886e4c2077f50513ea308291e919e"
+    },
+    {
+      "container": "utilibre-community-rssbridge-1",
+      "image": "sha256:5299186b36ea0e7f68d1f9d67b9e6fdc8f95bece6d89b54f4b09afca34edc7d8"
+    },
+    {
+      "container": "utilibre-expanded-resume-1",
+      "image": "sha256:5776c66bedaa1faf91806748ba84d2c47e3515fdb0818352fc1054872563f1cb"
+    },
+    {
+      "container": "utilibre-pack-cryptpad-cryptpad-1",
+      "image": "sha256:ce2467088bf841400262efc8e995cdd28812e59c6a917e7ddcc05092dd33c1bc"
+    },
+    {
+      "container": "utilibre-community-rallly-1",
+      "image": "sha256:da56d2ad99df1b1706f42d4ea0ea9d01744f69e4430aeee40894dc328c042725"
+    },
+    {
+      "container": "utilibre-wishlist-app-1",
+      "image": "sha256:e01160fc2f9e9603b22f5ad1656786d0e573b6a6cdcf52ed34a095b3cef62f1b"
+    }
+  ]
+}

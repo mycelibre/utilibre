@@ -7,6 +7,7 @@ import type { Language } from '../i18n';
 import { append, element, type Translate } from '../utilities/dom';
 import { privacyLabels } from './privacy-labels';
 import { practicalGuides, practicalGuidePath } from '../pages/guide-index';
+import { problemReportLink } from './problem-report';
 import { routePath } from '../routes';
 import { abuseReportLink, reportableServices } from './abuse-report-link';
 import { pinToStartingCollection } from '../utilities/toolkits';
@@ -164,6 +165,10 @@ export function renderCatalogRow(
   }
   if (entry.bestFor) details.append(element('p', 'catalog-ledger-best-for', `${t('home.catalog.bestFor')}: ${entry.bestFor[language]}`));
   if (entry.help) details.append(element('p', '', localized(entry.help, language)));
+  if (['bentopdf', 'minipaint', 'omni-compress-image', 'pairdrop'].includes(entry.id)) {
+    const report = problemReportLink(language, config, 'catalog-guide-link');
+    if (report) details.append(report);
+  }
   if (entry.accountAccess) details.append(element('p', '', accountRecoveryText(entry, language)));
   if (entry.accountAccess === 'invite-required') {
     details.append(element('p', '', language === 'es'

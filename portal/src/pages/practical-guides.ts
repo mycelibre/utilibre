@@ -11,6 +11,7 @@ import { shareFragment } from '../utilities/toolkits';
 import { discoverGuides, featuredGuideIds, guideStarts } from './guide-discovery';
 import { renderCollectionLinks } from './scenario-collections';
 import { renderResumeExamples } from './resume-example-view';
+import { renderProblemReport } from '../components/problem-report';
 
 const link = (href: string, label: string) => { const a = element('a', '', label); a.href = href; return a; };
 function section(title: string, text: string): HTMLElement {
@@ -82,6 +83,8 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
   if (guide.samples.length) jump.append(link('#practice', es ? 'Archivo de práctica' : 'Practice file'));
   if (guide.id === 'openresume') jump.append(link('#cv-examples', es ? 'Ver tres ejemplos' : 'See three examples'));
   jump.append(link('#steps', es ? 'Ir a los pasos' : 'Go to the steps'));
+  const report = ['scan', 'image', 'transfer'].includes(guide.id) ? renderProblemReport(language, config) : null;
+  if (report) jump.append(link('#problem-report', es ? 'Algo no funciona' : 'Something is not working'));
   header.append(jump);
   const startBox = start ? section(es ? 'Empezá con el ejemplo' : 'Start with the example', start.result) : null;
   if (startBox && start) {
@@ -140,6 +143,7 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
   steps.id = 'steps';
   const list = element('ol'); for (const text of copy.steps) list.append(element('li', '', text)); steps.append(list); main.append(steps);
   main.append(section(es ? 'Comprobá el resultado' : 'Check the result', copy.success), section(es ? 'Si algo no funciona' : 'Troubleshooting', copy.troubleshooting));
+  if (report) main.append(report);
   const privacy = section(es ? 'Tus datos en este recorrido' : 'Your data in this workflow', copy.privacy);
   const distinctTools = guide.tools.filter((tool, index, tools) => tools.findIndex(other => other.id === tool.id) === index);
   for (const tool of distinctTools) {

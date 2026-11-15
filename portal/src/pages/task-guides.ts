@@ -5,6 +5,7 @@ import type { PublicConfig } from '../config';
 import type { Language } from '../i18n';
 import { routePath } from '../routes';
 import { append, element } from '../utilities/dom';
+import { renderProblemReport } from '../components/problem-report';
 
 // Editorial help, not a second implementation of the upstream applications.
 // Launch destinations use the same enabled/configured gate as the catalog.
@@ -35,6 +36,7 @@ export function renderTaskGuide(kind: 'pdf' | 'qr', language: Language, config: 
   if (kind === 'pdf') {
     append(actions,
       launch('bentopdf', 'merge-pdf.html', es ? 'Unir PDF' : 'Merge PDFs', language, config),
+      launch('bentopdf', 'compress-pdf.html', es ? 'Comprimir PDF' : 'Compress a PDF', language, config),
       launch('bentopdf', 'ocr-pdf.html', es ? 'Reconocer texto con OCR' : 'Recognize text with OCR', language, config),
     );
   } else {
@@ -47,6 +49,11 @@ export function renderTaskGuide(kind: 'pdf' | 'qr', language: Language, config: 
   main.append(header);
   if (kind === 'pdf') renderPdf(main, language);
   else renderQr(main, language);
+  const report = renderProblemReport(language, config);
+  if (report) {
+    header.append(link('#problem-report', es ? 'Algo no funciona' : 'Something is not working'));
+    main.append(report);
+  }
   const responsibility = section(es ? 'Sobre esta guía' : 'About this guide', es
     ? 'Utilibre mantiene esta guía y aloja las herramientas; los proyectos originales desarrollan el software. Revisado el 7 de octubre de 2026. Las pruebas con archivos ficticios no garantizan resultados con cualquier documento, teléfono o impresora.'
     : 'Utilibre maintains this guide and hosts the tools; the upstream projects develop the software. Reviewed on 7 October 2026. Tests with synthetic files do not guarantee results for every document, phone or printer.');
