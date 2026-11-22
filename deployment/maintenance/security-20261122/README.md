@@ -25,6 +25,24 @@ The separately installed libc successor has passed payload and native checks,
 but old host consumers still require a separate coordinated restart window.
 No second restart is authorized by the completed OpenSSL window.
 
+`review-rssbridge-nginx.py --http2` checks the running RSS-Bridge NGINX
+executable, mounted configuration, effective `nginx -T` output and current
+scanner artifact. Its single plain HTTP listener does not enable HTTP/2, so
+the two internal NGINX Rapid Reset records received a seven-day scoped review.
+This does not assess the separate public Caddy edge. The parser's negative
+tests reject either `http2 on` or a `listen ... http2` option; the raw findings
+are retained. Evidence: private `rssbridge-nginx-http2-reviewed-batch.json`.
+
+`acquire-fontenc.py` authenticates the exact Debian libfontenc 1.1.8 source,
+build-only protocol headers and one upstream source patch. `prepare-fontenc.py
+--build` runs without network or production mounts and returns the verified
+candidate on repeat. Its synthetic encoding file triggers an ASan heap-buffer
+overflow in the unpatched source and passes after the patch; ten ordinary API
+checks pass on both sides. The changed source file is only `src/encparse.c`.
+This remains an **isolated candidate**, not a host or Penpot exporter release:
+Debian/DHI package integration, full runtime checks and the scoped release gate
+are still required. Private evidence: `fontenc/build-b983ce36662e1d2b/`.
+
 `check-qemu-successor-source.py` and `review-host-successors.py` verify the
 authenticated QEMU successor's exact retained source patches, complete binary
 subpackage scope, native tools and operator-confirmed guest-agent postcheck.
