@@ -32,6 +32,13 @@ export const currentImages={
  'utilibre-expanded-penpot-frontend-1':'sha256:9014d15a057c3b41a61144ce09aab08f6837fa40671587191fcad8b4d334a88d',
  'utilibre-expanded-penpot-exporter-1':'sha256:e4c763754370a6043153c7bb594b9223242bcfb3389991407f820e75cc422c9c',
 };
+// The 22 November libc and libfontenc releases preserve these separate Perl
+// and systemd package payloads. The reviewer still checks the complete release
+// lineage and every current file against its authenticated archive.
+export const successorImages={
+ 'utilibre-expanded-penpot-frontend-1':'sha256:30755120cf221a00d19bcee7c4af9b469153f5c2ab4dfe7a1a95e2e62d649ffe',
+ 'utilibre-expanded-penpot-exporter-1':'sha256:b6d52037f225436ad0c5ed4130aef591a09048a9c71cd3feaaabf4928954ea20',
+};
 export const restrictedXvfb='620f43dd4999c7602e86730c208e2c78f0007170451669fb9220f1a0a32c4891';
 export const archives=Object.freeze({
  'libperl5.40':{version:perlVersion,sha256:'6c04a71ed211300491d9d16fb8ad4d77c38426b99a80441d6a8500a85d877d73'},
@@ -51,7 +58,7 @@ export function matchingRow(i){
  // Current payload attribution is independent of the Xvfb executable: require
  // complete original-to-current ancestry, then inspect the actual Perl/systemd
  // files against their signed archives. Do not inherit an image-wide decision.
- if(currentImages[original.container]===i.artifact)return {...original,artifact:i.artifact,chainFrom:original.artifact};
+ if([currentImages[original.container],successorImages[original.container]].includes(i.artifact))return {...original,artifact:i.artifact,chainFrom:original.artifact};
  if([novemberImages[original.container],novemberSqliteImages[original.container],novemberAptImages[original.container],...(original.container==='utilibre-expanded-penpot-exporter-1'?[novemberKerberosExporter]:[])].includes(i.artifact))return {...original,artifact:i.artifact,chainFrom:original.artifact,...(original.artifact===exporterBefore?{predecessor:exporterBefore}:{})};
  // Only the separately proved one-screen transition; never arbitrary descendants.
  if(original.artifact===exporterBefore&&[exporterAfter,exporterCurrent].includes(i.artifact))return {...original,artifact:i.artifact,predecessor:exporterBefore};

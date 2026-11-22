@@ -1,16 +1,17 @@
 // Existing Rallly isolated stack, expanded with native authentication, poll,
 // guest response and cross-account permission checks. Only synthetic tmpfs data.
 import assert from 'node:assert/strict';
-import {execFileSync as exec,spawn} from 'node:child_process';
+import {execFileSync as exec,spawn,spawnSync} from 'node:child_process';
 import {randomBytes} from 'node:crypto';
 import fs from 'node:fs';
 import {chromium} from '../../../portal/node_modules/playwright-core/index.mjs';
 process.umask(0o077);
-assert(process.argv.slice(2).length===0||JSON.stringify(process.argv.slice(2))==='["--oct22"]');
+assert(process.argv.slice(2).length===0||['--oct22','--effect22'].includes(process.argv[2])&&process.argv.length===3);
 const oct22=process.argv.includes('--oct22');
-const dir=oct22?'/var/lib/utilibre-maintenance/security-20261022/rallly':'/var/lib/utilibre-maintenance/openldap-followup-20261012/images/rallly';
-const resultFile=dir+(oct22?'/native.json':'/application.json');
-const proof=JSON.parse(fs.readFileSync(dir+'/build.json')),image=proof.imageId;
+const effect22=process.argv.includes('--effect22');
+const dir=effect22?'/var/lib/utilibre-maintenance/security-20261122/rallly-effect':oct22?'/var/lib/utilibre-maintenance/security-20261022/rallly':'/var/lib/utilibre-maintenance/openldap-followup-20261012/images/rallly';
+const resultFile=dir+(effect22?'/native.json':oct22?'/native.json':'/application.json');
+const proof=JSON.parse(fs.readFileSync(dir+(effect22?'/stage-v2.json':'/build.json'))),image=proof.imageId;
 assert(proof.passed);assert(!fs.existsSync(resultFile));
 const tag=randomBytes(4).toString('hex'),network='utilibre-openldap-rallly-'+tag,db=network+'-db',app=network+'-app',base='http://127.0.0.1:3435';
 const docker=(...args)=>exec('docker',args,{encoding:'utf8',timeout:120000,maxBuffer:4e6,stdio:['ignore','pipe','pipe']}).trim();
@@ -22,7 +23,7 @@ try{
  const password=randomBytes(32).toString('hex');
  docker('run','-d','--name',db,'--network',network,'--memory','256m','--cpus','1','--pids-limit','128','--log-driver','none','--tmpfs','/var/lib/postgresql/data:rw,size=256m','-e','POSTGRES_USER=rallly','-e','POSTGRES_DB=rallly','-e','POSTGRES_PASSWORD='+password,'postgres@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73');
  await ready(()=>{docker('exec',db,'pg_isready','-U','rallly');return true;});
- docker('run','-d','--name',app,'--network',network,'--memory','768m','--cpus','1','--pids-limit','128','--log-driver','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--tmpfs','/tmp:rw,size=64m,mode=1777','--tmpfs','/app/apps/web/.next/cache:rw,size=64m,uid=1001,gid=1001','-e',`DATABASE_URL=postgres://rallly:${password}@${db}:5432/rallly`,'-e','SECRET_PASSWORD='+randomBytes(32).toString('hex'),'-e','NEXT_PUBLIC_BASE_URL='+base,'-e','NEXT_TELEMETRY_DISABLED=1','-e','SUPPORT_EMAIL=operator@example.invalid','-e','NOREPLY_EMAIL=no-reply@example.invalid','-e','REGISTRATION_ENABLED=false','-e','EMAIL_LOGIN_ENABLED=true',image);
+ docker('run','-d','--name',app,'--network',network,'--memory','768m','--cpus','1','--pids-limit','128','--log-driver','local','--log-opt','max-size=1m','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--tmpfs','/tmp:rw,size=64m,mode=1777','--tmpfs','/app/apps/web/.next/cache:rw,size=64m,uid=1001,gid=1001','-e',`DATABASE_URL=postgres://rallly:${password}@${db}:5432/rallly`,'-e','SECRET_PASSWORD='+randomBytes(32).toString('hex'),'-e','NEXT_PUBLIC_BASE_URL='+base,'-e','NEXT_TELEMETRY_DISABLED=1','-e','SUPPORT_EMAIL=operator@example.invalid','-e','NOREPLY_EMAIL=no-reply@example.invalid','-e','REGISTRATION_ENABLED=false','-e','EMAIL_LOGIN_ENABLED=true',image);
  const ip=docker('inspect',app,'--format','{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}');
  bridge=spawn('socat',['TCP4-LISTEN:3435,bind=127.0.0.1,reuseaddr,fork',`TCP4:${ip}:3000`],{detached:true,stdio:'ignore'});
  await ready(async()=>{assert(bridge.exitCode===null);return (await fetch(base+'/login',{signal:AbortSignal.timeout(1000)})).ok;});
@@ -59,5 +60,5 @@ try{
  assert.deepEqual([...outside],[]);assert.deepEqual(errors,[]);
  fs.writeFileSync(resultFile,JSON.stringify({date:new Date().toISOString(),imageId:image,passed:true,nativeMigrations:true,nativePasswordSetupAndLogin:true,twoIndependentAccounts:true,nativePollCreated:true,fictionalInviteRendered:true,guestVoteSaved:true,reloadPersistence:true,otherAccountAndGuestDeleteDenied:true,ownerDeleteAllowed:true,fictionalDataOnly:true,network:'internal; no external browser origins',limitations:['Approved synthetic account/space and reset-token rows were seeded in disposable PostgreSQL; native password creation/sign-in and app permissions then exercised. No email delivery or production OIDC check.']},null,2)+'\n');
  console.log('Rallly: native two-account login, poll create, guest vote, reload, cross-account denial and owner deletion passed.');
-}catch(e){fs.writeFileSync(dir+'/application-error.txt',String(e.stderr||e.stack||e));if(lastPage)try{fs.writeFileSync(dir+'/application-page.txt',await lastPage.locator('body').innerText());}catch{}throw Error('Rallly candidate failed; private synthetic diagnostics retained.');}
+}catch(e){fs.writeFileSync(dir+'/application-error.txt',String(e.stderr||e.stack||e));const logs=spawnSync('docker',['logs','--tail','80',app],{encoding:'utf8',timeout:5000,maxBuffer:256000});fs.writeFileSync(dir+'/application-container-log.txt',(logs.stdout||'')+(logs.stderr||''));if(lastPage)try{fs.writeFileSync(dir+'/application-page.txt',await lastPage.locator('body').innerText());}catch{}throw Error('Rallly candidate failed; private synthetic diagnostics retained.');}
 finally{if(browser)await browser.close();if(bridge?.pid)try{process.kill(-bridge.pid,'SIGTERM');}catch{}for(const name of [app,db])try{docker('rm','-f','-v',name);}catch{}try{docker('network','rm',network);}catch{}}

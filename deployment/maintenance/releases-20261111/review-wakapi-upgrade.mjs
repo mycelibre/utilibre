@@ -21,5 +21,15 @@ const matches=queue.items.filter(i=>i.scope==='runtime-image'&&i.artifact===s.im
 assert.equal(matches.length,1,'Changed or missing runtime inventory requires review');
 const reason='Wakapi 2.18.2 exact runtime retains the previously reviewed JOSE v3 source backport (SHA-256 7593d1576566ed8330ceb98c8f0d077a82e6ab2fa5801f60abd24533e1e9293b), mandatory in the locked vendor build. All 99 runtime dependency versions and image configuration are preserved; only /app/wakapi changes. Five isolated native account/heartbeat, persistence and rollback stages pass. The live executable matches the approved build. Raw v3.0.5 metadata remains; no new vulnerability reproduction or real OIDC-provider test is claimed. Evidence: releases-20261111/upgrade-inputs.json and private upgrade-closure-20261111/wakapi/{compiled,migration,scope,scan-gate}.json. Re-review a changed artifact, builder, patch or lock. https://github.com/go-jose/go-jose/commit/a0111f82742fa92bceec9ede40845e73319e6230';
 const decisions=matches.map(i=>validateDecision({key:i.key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason}));
+const lock='deployment/maintenance/security-20261109/xnet-locks/wakapi/go.mod';
+const lockHash=fileHash(new URL('../../../'+lock,import.meta.url));
+assert.equal(lockHash,s.recipes[lock]);
+assert.equal(lockHash,build.locks['go.mod']);
+assert.equal(lockHash,fileHash(upgradeRoot+'/wakapi/wakapi-go.mod'));
+assert.equal(build.network,'none');
+assert.equal(read(upgradeRoot+'/wakapi/source-offer.json').passed,true);
+const input=queue.items.filter(i=>i.status==='needs-review'&&i.scope==='tracked-build-input'&&i.artifact===lock+'@sha256:'+lockHash&&i.target==='go.mod'&&i.id==='CVE-2026-116587'&&i.package==='github.com/go-jose/go-jose/v3'&&i.installed==='v3.0.5');
+assert.equal(input.length,1,'Changed or missing Wakapi source lock requires review');
+decisions.push(validateDecision({key:input[0].key,status:'mitigated',expiresAt:new Date(Date.now()+7*86400000).toISOString(),reason:'This exact Wakapi 2.18.2 go.mod input is consumed only by the reviewed offline vendor build, which requires the SHA-bound JOSE v3 RSA backport in vendor/github.com/go-jose/go-jose/v3/jwk.go before Go tests and compilation. The completed build, source offer, source-lock hashes, image-scope comparison and live binary match the approved release evidence; no unpatched module is compiled from this lock. The raw v3.0.5 metadata is retained. This decision covers only this lock and advisory; a changed build path, source, patch, lock, image or binary requires a new review. Evidence: releases-20261111/upgrade-inputs.json and private upgrade-closure-20261111/wakapi/{compiled,source-offer,scope,migration}.json. https://github.com/go-jose/go-jose/commit/a0111f82742fa92bceec9ede40845e73319e6230'}));
 fs.writeFileSync(upgradeRoot+'/wakapi/v3-review.json',JSON.stringify({schemaVersion:1,scanDate:scan.completedAt,decisions},null,2)+'\n',{mode:0o600});
-console.log('One exact runtime review prepared; raw finding retained.');
+console.log('Exact runtime and source-input reviews prepared; raw findings retained.');

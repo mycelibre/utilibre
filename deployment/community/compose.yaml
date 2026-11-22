@@ -144,7 +144,7 @@ services:
   rallly:
     <<: *runtime
     profiles: [rallly]
-    image: utilibre-openssl-bookworm-community-rallly:20261122
+    image: utilibre-rallly:4.15.4-effect3221-permissions-20261122
     environment:
       DATABASE_URL: postgres://rallly:${RALLLY_DB_PASSWORD:-UNCONFIGURED}@rallly-db:5432/rallly
       SECRET_PASSWORD: ${RALLLY_SECRET_PASSWORD:-UNCONFIGURED}

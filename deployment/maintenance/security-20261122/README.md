@@ -5,12 +5,45 @@ vulnerabilities. Private evidence is under
 `/var/lib/utilibre-maintenance/security-20261122/`. Raw findings are retained.
 The current dated checkpoint is in `docs/records/security-2026-11-22.md`.
 
-Latest continuation: both relay roles have completed their Mongo and OpenSSL
+Latest checkpoint: the 22:59 UTC fresh fleet scan and exact reviews leave
+0 critical / 30 high records awaiting review; all 30 are the unresolved
+Debian ACL caller issue CVE-2026-54369. There are also 5,697 medium, 5,714
+low and 744 unknown occurrences awaiting review. The raw 22,115 records
+remain intact. Rallly's fixed Effect 3.22.1 successor is deployed and its
+matching AGPL source archive is published. The current Penpot exporter
+FreeType package, PAM workaround and util-linux executable-provider mismatch
+have separate, expiring reviews; no broad package-level suppression is used.
+This is not security clearance. Exact evidence and rollback boundaries are in
+`docs/records/security-2026-11-22.md`.
+
+`rallly-effect-build.mjs`, `rallly-effect-inner.sh`,
+`rallly-effect-stage.mjs`, `rallly-effect-scope.py`,
+`rallly-effect-scan.py`, `rallly-effect-source.mjs` and
+`rallly-effect-release.mjs` capture the exact fixed Rallly build, disposable
+two-account/guest poll check, complete file scope, frozen scanner comparison,
+source publication and scoped release. `rallly-effect-retain.py` carries only
+unexpired decisions for unchanged Debian package bytes across the image
+replacement. The initial candidate that failed isolated startup is retained
+as a failed proof and was not released. A replay requires the pinned source
+archive and old image in the private maintenance store; no moving tag is
+resolved automatically. To roll back a concrete regression, run the release
+script's `rollback` mode after reviewing its exact-image/source preconditions.
+
+`review-freetype-exporter.py` checks the installed signed DHI payload and
+source patch against the current Penpot exporter image. `review-pam-namespace.py`
+checks the upstream-supported mitigation in every affected current Bookworm
+role. `review-util-linux-chfn.py` checks the provider of the exact affected
+executables in every affected image role and the host.
+`review-util-linux-login-bookworm.py` checks the separate Bookworm `login`
+provider, explicitly leaving Trixie images open. Each writes a private proof
+and exact, expiring triage batch; none changes a service or hides the
+underlying scanner records.
+
+Earlier continuation: both relay roles completed their Mongo and OpenSSL
 successors after independent idle checks. Spliit and Wishlist's Effect update,
 Yopass's distroless crypto update and the private Penpot admin console's finite
-Vite/Rolldown dependency update are deployed and verified. The 20:51 UTC fresh
-fleet scan and exact reviews leave 0 critical / 70 high records awaiting review;
-lower-severity records remain open too. This is not security clearance.
+Vite/Rolldown dependency update were deployed and verified. The 20:51 UTC
+scan's 0 critical / 70 high pending count is historical.
 `retain-reviews.py --successors` accepts only completed, exact role receipts,
 explicitly records the unreleased role and retains original decision expiries.
 `review-successor-payloads.py --mongo --released-only` verifies the actual signed
