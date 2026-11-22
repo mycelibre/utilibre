@@ -1,0 +1,7 @@
+# Build context is the private, SHA-verified Debian .deb download directory.
+# The compiler image ID and package set are checked by the preparation script.
+FROM utilibre-kerberos-compiler-trixie:20261110@sha256:0aa7f81d9268988debf996645427f83e9e72dbc5f1030fa5ec080510edab9994
+ENV DEBIAN_FRONTEND=noninteractive
+COPY *.deb /tmp/fontenc-debs/
+RUN dpkg -i /tmp/fontenc-debs/*.deb && rm -rf /tmp/fontenc-debs
+USER 65534:65534

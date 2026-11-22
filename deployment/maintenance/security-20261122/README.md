@@ -39,9 +39,27 @@ build-only protocol headers and one upstream source patch. `prepare-fontenc.py
 candidate on repeat. Its synthetic encoding file triggers an ASan heap-buffer
 overflow in the unpatched source and passes after the patch; ten ordinary API
 checks pass on both sides. The changed source file is only `src/encparse.c`.
-This remains an **isolated candidate**, not a host or Penpot exporter release:
-Debian/DHI package integration, full runtime checks and the scoped release gate
-are still required. Private evidence: `fontenc/build-b983ce36662e1d2b/`.
+`acquire-fontenc-builddeps.py --download` authenticates the finite Debian
+build dependencies. `prepare-fontenc-package.py --build` builds and checks a
+native Debian package in a networkless container; a repeat returns the same
+hash-bound candidate without rebuilding. This package is **not installed** on
+the host. Private evidence: `fontenc/build-b983ce36662e1d2b/` and
+`fontenc/package-9a53935cc80bd9a2/`.
+
+`acquire-dhi-fontenc.py --download` authenticates DHI's exact successor from
+its signed repository index. `fontenc-dhi-native.py` proves its patched source
+file matches the independently tested upstream patch and that its actual binary
+passes the ordinary and boundary API checks. `Dockerfile.penpot-fontenc` pins
+the live exporter parent and installs only that vendor package in an isolated
+candidate. The frozen Trivy comparison found no new or removed advisory,
+severity or package identities; its raw finding for this CVE persists because
+the frozen database does not recognize the DHI fix. These checks do not approve
+or deploy the candidate. DHI's fixed `+deb13u0+dhi1` package compares lower than
+the currently installed `+dhi0` version under Debian version ordering; an
+eventual exporter release must explicitly handle this and retain the pinned
+fixed artifact on rebuild. Private evidence: `fontenc/dhi-source/`,
+`fontenc/dhi-native/` and `fontenc/dhi-candidate/`. The scoped host and exporter
+release gates and final runtime verification remain open.
 
 `check-qemu-successor-source.py` and `review-host-successors.py` verify the
 authenticated QEMU successor's exact retained source patches, complete binary

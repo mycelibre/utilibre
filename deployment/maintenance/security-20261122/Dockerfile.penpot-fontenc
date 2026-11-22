@@ -1,0 +1,7 @@
+# Exact signed DHI libfontenc successor; build context is its private download.
+# The parent image is the currently deployed Penpot exporter artifact.
+FROM utilibre-dhi-penpot-exporter:20261122@sha256:e4c763754370a6043153c7bb594b9223242bcfb3389991407f820e75cc422c9c
+USER root
+COPY libfontenc1_1.1.8-1+deb13u0+dhi1_amd64.deb /tmp/libfontenc1.deb
+RUN dpkg -i /tmp/libfontenc1.deb && rm /tmp/libfontenc1.deb
+USER penpot:penpot

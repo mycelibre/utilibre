@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "approval": "isolated-preparation-only",
+  "productionAllowed": false,
+  "builderImage": "sha256:3796b1a3dcd4c750db7ebddee955bd0ee8244051e24beaf8fbf5a4ddf06d1d9d",
+  "builderDockerfileSha256": "f9b7bd0e5747380d487eed2cf76fbf84ed79b1a251df86cd34442a31e5da0c7c",
+  "builddepsAuthenticatedSha256": "ef09eef483a1c98eaa64ac8146c76867251c9cd91d209c318a8048d44b427551",
+  "sourceAuthenticatedSha256": "674e851c8cb15130cd0449b3ccddd1a49cab84bc7700ad9cbebeb33ccb6a4218",
+  "packageVersion": "1:1.1.8-1+deb13u0+utilibre1",
+  "minimumFreeBytes": 8589934592,
+  "network": "none during packaging",
+  "limits": {"cpus": 2, "memoryMiB": 1024, "tmpfsMiB": 512, "timeoutSeconds": 330}
+}
