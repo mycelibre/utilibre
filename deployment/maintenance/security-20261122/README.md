@@ -8,8 +8,8 @@ The current dated checkpoint is in `docs/records/security-2026-11-22.md`.
 Latest continuation: both relay roles have completed their Mongo and OpenSSL
 successors after independent idle checks. Spliit and Wishlist's Effect update,
 Yopass's distroless crypto update and the private Penpot admin console's finite
-Vite/Rolldown dependency update are deployed and verified. The 20:30 UTC fresh
-fleet scan and exact reviews leave 0 critical / 79 high records awaiting review;
+Vite/Rolldown dependency update are deployed and verified. The 20:51 UTC fresh
+fleet scan and exact reviews leave 0 critical / 70 high records awaiting review;
 lower-severity records remain open too. This is not security clearance.
 `retain-reviews.py --successors` accepts only completed, exact role receipts,
 explicitly records the unreleased role and retains original decision expiries.
@@ -50,6 +50,40 @@ git -C /var/lib/utilibre-maintenance/security-20261122/rsshub-history.git fetch 
   a7d400051d8dc73c0a0a60197920df9d3f80b75c
 ```
 
+`review-admin-quic.mjs` checks four OpenSSL package-label matches for
+CVE-2026-124709 in the private Penpot admin console. The upstream advisory
+requires an OpenSSL QUIC server. This exact role starts its built Node HTTP
+server on TCP 3000, has no UDP port exposed and has no live UDP socket apart
+from Docker's loopback DNS stub. The seven-day decision is scoped to that
+image, entrypoint and runtime protocol; it does not claim the library is fixed
+or cover other roles. A future QUIC or network change must reopen the review.
+The four raw findings remain in the private scan.
+
+The existing `vendor-leaves-final/review-npm.mjs` revalidated the signed
+Penpot exporter npm 11.20.0 archive and all 2,198 installed files/links. Its
+bundled pacote 21.5.1 contains the upstream ReDoS correction. Two exact
+CVE-2026-9496 package-label matches received expiring decisions. The prior
+private proof was copied before rerunning the reviewer; no image was changed.
+
+`release-git-lfs-host.mjs` uses the official upstream Git LFS 3.8.1 Debian 13
+package. It verifies the frozen PackageCloud InRelease signature using the
+exact isolated GPG builder, the SHA256 chain to Packages.gz and the package,
+the official release archive digest, package control scripts and file scope.
+`test-git-lfs-offline.sh` checks a synthetic pointer, local checkout and fsck
+with both the predecessor and successor. The release gate requires a one-package
+APT simulation, clean dpkg, matching system Git settings, no active host Git
+LFS process and unchanged Docker/SSH PIDs. The final package is installed and
+verified as 3.8.1; no service restarted. Two rejected applies are recorded
+privately. The predecessor was restored after each; the second rollback's
+semantic Git settings were independently verified after a byte-order check had
+labelled it unverified. The first gate compared Git config bytes despite
+equivalent values, and the second checked an unescaped blacklist pattern. The
+final gate compares all four parsed Git settings and the generated blacklist
+pattern correctly. The old Debian package remains in the private input folder
+for rollback. To roll back for a concrete regression, install only that exact
+`git-lfs_3.6.1-1+deb13u1_amd64.deb`, then verify dpkg, the four Git settings
+and the offline synthetic test. Rolling back reintroduces the upstream issues.
+
 `acquire-fontenc.py` authenticates the exact Debian libfontenc 1.1.8 source,
 build-only protocol headers and one upstream source patch. `prepare-fontenc.py
 --build` runs without network or production mounts and returns the verified
@@ -85,6 +119,16 @@ then install only `fontenc/builddeps/libfontenc1_1.1.8-1+b2_amd64.deb` from the
 private maintenance directory. Check `dpkg -V libfontenc1` and the resulting
 version `1:1.1.8-1+b2`. This would restore the vulnerable predecessor, so use
 it only for a concrete regression and repeat the security review afterward.
+
+The original libfontenc release verifier intentionally binds the complete host
+package inventory at release time. Installing the separately approved Git LFS
+successor makes that historical inventory differ, so the original verifier now
+rejects a direct repeat. `verify-fontenc-after-git-lfs.mjs` checks both immutable
+release receipts, reconstructs the exact predecessor inventory by reversing only
+the approved Git LFS version change, and then checks current libfontenc files,
+package integrity, a native unprivileged API call and old-library mappings. A
+changed package beyond Git LFS fails closed. The libfontenc reviewer uses this
+successor proof for future renewals; neither receipt is edited or waived.
 
 `acquire-dhi-fontenc.py --download` authenticates DHI's exact successor from
 its signed repository index. `fontenc-dhi-native.py` proves its patched source

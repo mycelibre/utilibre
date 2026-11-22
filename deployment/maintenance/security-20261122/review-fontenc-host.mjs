@@ -26,12 +26,16 @@ assert.equal(r.nextHash, build.packages.find(p => p.file.startsWith('libfontenc1
 assert.equal(r.nextVersion, build.version);
 assert(build.passed && build.nativeChecks.join(',') === 'ordinary,boundary' && build.network === 'none');
 assert.equal(build.patchSha256, sha(root + '/security-20261122/fontenc/source/fontenc-fix.patch'));
-assert.equal(execFileSync('node', [here + 'release-fontenc-host.mjs', 'verify'], {encoding: 'utf8', timeout: 30000}).trim(), JSON.stringify({status: 'passed', version: r.nextVersion, noServiceRestart: true}));
+const continuity = JSON.parse(execFileSync(process.execPath, [here + 'verify-fontenc-after-git-lfs.mjs'], {encoding: 'utf8', timeout: 30000}).trim());
+assert.equal(continuity.status, 'passed');
+assert.equal(continuity.fontencVersion, r.nextVersion);
+assert.equal(continuity.gitLfsVersion, '3.8.1');
+assert.equal(continuity.fontencReceiptSha256, sha(release));
 const matches = queue.items.filter(i => i.status === 'needs-review' && i.id === 'CVE-2026-109908' && i.package === 'libfontenc1' && i.scope === 'host-os');
 assert(matches.length <= 1);
 const decisions = matches.map(i => {
   assert.equal(i.installed, r.nextVersion);
-  return validateDecision({key: i.key, status: 'mitigated', expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(), reason: `Exact host libfontenc1 ${r.nextVersion} is the authenticated Debian 1.1.8 source with upstream encoding-bounds fix 5920c6ee144fffff84b62f5b479171f734f15316. The original encoding fixture triggers an ASan heap overflow and the patched source passes; ten ordinary checks and the boundary check pass in the networkless build. The signed predecessor archive, source/patch hashes, unchanged ABI exports and dependencies, exact installed files, native unprivileged host API and completed release receipt ${sha(release)} were rechecked after the fleet scan. No host process uses an old mapped library. This covers only CVE-2026-109908 in this host package; the DHI exporter is separate and raw finding retained. Evidence: security-20261122/fontenc/host-release/release.json. https://security-tracker.debian.org/tracker/CVE-2026-109908`});
+  return validateDecision({key: i.key, status: 'mitigated', expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(), reason: `Exact host libfontenc1 ${r.nextVersion} is the authenticated Debian 1.1.8 source with upstream encoding-bounds fix 5920c6ee144fffff84b62f5b479171f734f15316. The original encoding fixture overflows under ASan; patched source and ordinary tests pass. Signed predecessor and candidate archives, source/patch hashes, unchanged ABI, exact installed files, native unprivileged API and completed release receipt ${sha(release)} were rechecked. The later Git LFS 3.8.1 receipt proves that package alone changed in the host inventory; the original libfontenc recipe hash remains bound. This covers only this host CVE; DHI exporter is separate and raw match retained. Evidence: security-20261122/fontenc/host-release/release.json. https://security-tracker.debian.org/tracker/CVE-2026-109908`});
 });
 const output = root + '/security-20261122/fontenc/host-reviewed-batch.json';
 fs.writeFileSync(output, JSON.stringify({schemaVersion: 1, scanDate: scan.completedAt, decisions, releaseSha256: sha(release)}, null, 2) + '\n', {mode: 0o600});
