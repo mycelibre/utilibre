@@ -8,8 +8,8 @@ The current dated checkpoint is in `docs/records/security-2026-11-22.md`.
 Latest continuation: both relay roles have completed their Mongo and OpenSSL
 successors after independent idle checks. Spliit and Wishlist's Effect update,
 Yopass's distroless crypto update and the private Penpot admin console's finite
-Vite/Rolldown dependency update are deployed and verified. The 08:11 UTC frozen
-scan and exact reviews leave 0 critical / 106 high records awaiting review;
+Vite/Rolldown dependency update are deployed and verified. The 20:30 UTC fresh
+fleet scan and exact reviews leave 0 critical / 79 high records awaiting review;
 lower-severity records remain open too. This is not security clearance.
 `retain-reviews.py --successors` accepts only completed, exact role receipts,
 explicitly records the unreleased role and retains original decision expiries.
@@ -33,6 +33,23 @@ This does not assess the separate public Caddy edge. The parser's negative
 tests reject either `http2 on` or a `listen ... http2` option; the raw findings
 are retained. Evidence: private `rssbridge-nginx-http2-reviewed-batch.json`.
 
+`review-rsshub-2021.mjs` checks one historical RSSHub route-injection match.
+Its input is the exact official source revision labelled in the running image,
+fetched once as blobless Git history under the private maintenance directory.
+The reviewer proves the upstream fix commit is an ancestor, confirms all seven
+removed route files remain absent from that revision, and checks that the four
+affected path families are absent from the running compiled bundles. It rejects
+a changed image, revision or scan. It makes no network request and does not
+clear other RSSHub advisories. The raw match remains visible; its exact decision
+expires after seven days. The one-time fetch was:
+
+```sh
+git init --bare /var/lib/utilibre-maintenance/security-20261122/rsshub-history.git
+git -C /var/lib/utilibre-maintenance/security-20261122/rsshub-history.git fetch \
+  --filter=blob:none --no-tags https://github.com/DIYgod/RSSHub.git \
+  a7d400051d8dc73c0a0a60197920df9d3f80b75c
+```
+
 `acquire-fontenc.py` authenticates the exact Debian libfontenc 1.1.8 source,
 build-only protocol headers and one upstream source patch. `prepare-fontenc.py
 --build` runs without network or production mounts and returns the verified
@@ -42,9 +59,32 @@ checks pass on both sides. The changed source file is only `src/encparse.c`.
 `acquire-fontenc-builddeps.py --download` authenticates the finite Debian
 build dependencies. `prepare-fontenc-package.py --build` builds and checks a
 native Debian package in a networkless container; a repeat returns the same
-hash-bound candidate without rebuilding. This package is **not installed** on
-the host. Private evidence: `fontenc/build-b983ce36662e1d2b/` and
+hash-bound candidate without rebuilding. Preparation alone does not install it.
+Private evidence: `fontenc/build-b983ce36662e1d2b/` and
 `fontenc/package-9a53935cc80bd9a2/`.
+
+The host package was subsequently released through `release-fontenc-host.mjs`:
+`check`, `apply`, then `verify`. It requires the exact authenticated predecessor
+archive, source/patch/build hashes, unchanged ABI exports and dependencies,
+an APT simulation affecting only `libfontenc1`, a clean dpkg database, no host
+process using the library and an unprivileged native API check against the exact
+candidate file. The installed version is `1:1.1.8-1+deb13u0+utilibre1`; no
+service restarted. A first apply was rejected after installation because its
+inventory check incorrectly included the Multi-Arch spelling of the package
+being updated. The exact original archive was restored and verified. The
+failed receipt is preserved; a corrected preflight and second apply passed.
+The package is protected from unattended replacement. The release receipt is
+`fontenc/host-release/release.json` and binds the exact recipe hash. The DHI
+Penpot exporter candidate remains separate and is not deployed by this host
+release.
+
+For emergency rollback, first confirm no host process maps `libfontenc.so`,
+verify the preserved predecessor archive SHA256
+`49f7330e1bbe3f48946fee5c07870df660374f9f77b378840d6edf1a3b3444cd`,
+then install only `fontenc/builddeps/libfontenc1_1.1.8-1+b2_amd64.deb` from the
+private maintenance directory. Check `dpkg -V libfontenc1` and the resulting
+version `1:1.1.8-1+b2`. This would restore the vulnerable predecessor, so use
+it only for a concrete regression and repeat the security review afterward.
 
 `acquire-dhi-fontenc.py --download` authenticates DHI's exact successor from
 its signed repository index. `fontenc-dhi-native.py` proves its patched source
@@ -58,8 +98,8 @@ or deploy the candidate. DHI's fixed `+deb13u0+dhi1` package compares lower than
 the currently installed `+dhi0` version under Debian version ordering; an
 eventual exporter release must explicitly handle this and retain the pinned
 fixed artifact on rebuild. Private evidence: `fontenc/dhi-source/`,
-`fontenc/dhi-native/` and `fontenc/dhi-candidate/`. The scoped host and exporter
-release gates and final runtime verification remain open.
+`fontenc/dhi-native/` and `fontenc/dhi-candidate/`. The exporter release gate
+and final runtime verification remain open; the separate host release passed.
 
 `check-qemu-successor-source.py` and `review-host-successors.py` verify the
 authenticated QEMU successor's exact retained source patches, complete binary
