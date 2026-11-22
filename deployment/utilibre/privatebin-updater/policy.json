@@ -33,7 +33,7 @@
     "uploads.ini": "946ebc1b94b1d03dc969de98baa8102f2411960a9c7abc179c0e0271e01819b8"
   },
   "scope": "PrivateBin application-only stable 2.1.x; unchanged runtime, dependencies, config contract; exact template patch and isolated regressions required. No migrations, data copy, notification or other service activation.",
-  "applicationAdvisorySnapshotSha256": "2d991927eb54da335f7b3811dc77b9a138aa07ed5c1e7593281878a9cbb19d54",
+  "applicationAdvisorySnapshotSha256": "497b11bc556f99e68f15fd4be393ba4852a6ddbd904eae6a9ff573797937e529",
   "reviewedRuntimeTransition": {
     "approved": true,
     "previousImage": "sha256:f9c49c1da111096408a0d9e6ef7d82bd56f43fe9191e4218b2bc7cfe3cf9cb87",

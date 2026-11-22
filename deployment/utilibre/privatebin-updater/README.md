@@ -179,3 +179,15 @@ state. Restore the preserved installed/public receipts together only if they
 describe the intended running baseline; an older image identity deliberately
 puts routine updates back on hold. This does not roll back an image, configuration
 or user data. A new runtime needs new reviewed transition evidence.
+
+On 22 November the runtime receipt was reconciled to the already reviewed
+libxml2 successor after the scheduled updater correctly rejected the new image.
+The next check stopped on a newly published advisory,
+[`GHSA-25f7-crmw-3rfx`](https://github.com/PrivateBin/PrivateBin/security/advisories/GHSA-25f7-crmw-3rfx).
+The old and current advisory snapshots differ only by this one record. It
+affects PrivateBin through 2.0.5 and was fixed in 2.0.6; the installed 2.1.1
+also has the later SVG hardening described in the upstream advisory. The exact
+reviewed snapshot hash in `policy.json` was advanced after this comparison.
+This changes the updater's advisory gate, not PrivateBin's image, access,
+retention or upload settings. The private comparison snapshot is retained under
+`/var/lib/utilibre-privatebin-updater/`.

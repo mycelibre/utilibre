@@ -26,6 +26,12 @@ export const novemberAptImages={
 // Exact November 10 Kerberos overlay; the reviewer still verifies ancestry,
 // complete signed Perl payloads, and the separately retained DHI status fragment.
 export const novemberKerberosExporter='sha256:bf748ae83b9d9e0b8ef9ddf4ea57e892cef6614a33f38e573d862f15cc3d40c4';
+// Current exact images after the completed November application/library releases.
+// The full role lineage and every signed package file are checked by review.mjs.
+export const currentImages={
+ 'utilibre-expanded-penpot-frontend-1':'sha256:9014d15a057c3b41a61144ce09aab08f6837fa40671587191fcad8b4d334a88d',
+ 'utilibre-expanded-penpot-exporter-1':'sha256:e4c763754370a6043153c7bb594b9223242bcfb3389991407f820e75cc422c9c',
+};
 export const restrictedXvfb='620f43dd4999c7602e86730c208e2c78f0007170451669fb9220f1a0a32c4891';
 export const archives=Object.freeze({
  'libperl5.40':{version:perlVersion,sha256:'6c04a71ed211300491d9d16fb8ad4d77c38426b99a80441d6a8500a85d877d73'},
@@ -42,6 +48,10 @@ export function matchingRow(i){
  if(i?.status!=='needs-review'||i.scope!=='runtime-image'||i.type!=='debian'||i.targetName!==i.artifact||!Array.isArray(i.containers)||i.containers.length!==1)return null;
  const original=rows.find(r=>r.package===i.package&&r.id===i.id&&r.container===i.containers[0]&&r.stale===i.installed);if(!original)return null;
  if(original.artifact===i.artifact)return original;
+ // Current payload attribution is independent of the Xvfb executable: require
+ // complete original-to-current ancestry, then inspect the actual Perl/systemd
+ // files against their signed archives. Do not inherit an image-wide decision.
+ if(currentImages[original.container]===i.artifact)return {...original,artifact:i.artifact,chainFrom:original.artifact};
  if([novemberImages[original.container],novemberSqliteImages[original.container],novemberAptImages[original.container],...(original.container==='utilibre-expanded-penpot-exporter-1'?[novemberKerberosExporter]:[])].includes(i.artifact))return {...original,artifact:i.artifact,chainFrom:original.artifact,...(original.artifact===exporterBefore?{predecessor:exporterBefore}:{})};
  // Only the separately proved one-screen transition; never arbitrary descendants.
  if(original.artifact===exporterBefore&&[exporterAfter,exporterCurrent].includes(i.artifact))return {...original,artifact:i.artifact,predecessor:exporterBefore};

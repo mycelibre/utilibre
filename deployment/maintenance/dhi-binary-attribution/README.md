@@ -68,3 +68,13 @@ It then repeats the full signed Perl-package inventory and unchanged residual
 fragment checks above. Both original records remain supported; unknown later
 images, changed package files and affected sibling modules still fail closed.
 Frontend scope and versions are unchanged.
+
+On 22 November, the reviewer was extended to the exact current frontend and
+exporter images. For these images it checks the complete role-specific release
+lineage from the original image, then compares every installed regular file and
+symlink of each affected binary package with its authenticated DHI archive. It
+also verifies the stale scanner version in the unchanged status fragment and
+the absence of Archive::Tar or systemd-homed from the specific package. This
+package attribution is independent of later Xvfb changes. Five current records
+passed; the raw scan and affected sibling packages remain unchanged. The new
+negative test rejects altered lineage, package payload and unlisted images.
