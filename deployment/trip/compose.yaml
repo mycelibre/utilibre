@@ -9,7 +9,7 @@ x-limits: &limits
 services:
   app:
     <<: *limits
-    image: utilibre-python-trip-app:20261114
+    image: utilibre-openssl-trip-app:20261122
     user: '1000:1000'
     cpus: 1
     mem_limit: 512m
@@ -36,7 +36,7 @@ services:
     networks: {isolated: {ipv4_address: 172.29.152.10}}
   proxy:
     <<: *limits
-    image: utilibre-wallabag-proxy:sqlite-security-20261109
+    image: utilibre-openssl-unfurl-proxy:20261122
     cpus: 0.25
     mem_limit: 192m
     tmpfs: ['/tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777']
@@ -46,7 +46,7 @@ services:
     networks: {isolated: {ipv4_address: 172.29.152.20}, egress: {ipv4_address: 172.29.153.20}}
   gateway:
     <<: *limits
-    image: utilibre-vendor-calendar-calino:20261111
+    image: utilibre-security-shared-nginx:20261122
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.25

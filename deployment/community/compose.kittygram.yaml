@@ -37,7 +37,7 @@ services:
     depends_on: [cache]
   cache:
     <<: *runtime
-    image: utilibre-zlib-valkey:candidate-20261109
+    image: utilibre-crypto-services-valkey:20261122
     user: "999:999"
     mem_limit: 192m
     command: [valkey-server, --save, "", --appendonly, "no", --maxmemory, 128mb, --maxmemory-policy, allkeys-lru]
@@ -45,7 +45,7 @@ services:
       instagram: {ipv4_address: 172.29.91.30}
   gateway:
     <<: *runtime
-    image: utilibre-vendor-calendar-calino:20261111
+    image: utilibre-security-shared-nginx:20261122
     user: "101:101"
     mem_limit: 128m
     tmpfs: ["/tmp:rw,nosuid,nodev,noexec,size=128m,mode=1777"]

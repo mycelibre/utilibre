@@ -1,0 +1,553 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "packages": {
+    "trixie/libfreetype6": {
+      "name": "libfreetype6",
+      "version": "2.13.3+dfsg-1+deb13u2",
+      "file": "libfreetype6_2.13.3+dfsg-1+deb13u2_amd64.deb",
+      "sha256": "b57a449c874f2cc126a48149daa27b8d1a8935fbf1609ccfe28ca1610d00ee29",
+      "url": "https://deb.debian.org/debian/pool/main/f/freetype/libfreetype6_2.13.3+dfsg-1+deb13u2_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libbrotli1 (>= 0.6.0), libbz2-1.0, libc6 (>= 2.33), libpng16-16t64 (>= 1.6.46), zlib1g (>= 1:1.1.4)",
+      "preDepends": ""
+    },
+    "trixie/libheif-plugin-aomenc": {
+      "name": "libheif-plugin-aomenc",
+      "version": "1.23.6-2~deb13u1",
+      "file": "libheif-plugin-aomenc_1.23.6-2~deb13u1_amd64.deb",
+      "sha256": "abb7c7255402f6a6e393ffa508bb85e1bda2772849902dceebdf2c6706f49712",
+      "url": "https://deb.debian.org/debian/pool/main/libh/libheif/libheif-plugin-aomenc_1.23.6-2~deb13u1_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libheif1 (= 1.23.6-2~deb13u1), libaom3 (>= 3.2.0), libc6 (>= 2.14), libgcc-s1 (>= 3.0), libstdc++6 (>= 13)",
+      "preDepends": ""
+    },
+    "trixie/libheif-plugin-dav1d": {
+      "name": "libheif-plugin-dav1d",
+      "version": "1.23.6-2~deb13u1",
+      "file": "libheif-plugin-dav1d_1.23.6-2~deb13u1_amd64.deb",
+      "sha256": "952194072fd0fb66bf8923fab262f38bb008dfaee53f351828c27b907e0fa4cd",
+      "url": "https://deb.debian.org/debian/pool/main/libh/libheif/libheif-plugin-dav1d_1.23.6-2~deb13u1_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libheif1 (= 1.23.6-2~deb13u1), libc6 (>= 2.14), libdav1d7 (>= 0.1.0), libgcc-s1 (>= 3.0), libstdc++6 (>= 13)",
+      "preDepends": ""
+    },
+    "trixie/libheif-plugin-libde265": {
+      "name": "libheif-plugin-libde265",
+      "version": "1.23.6-2~deb13u1",
+      "file": "libheif-plugin-libde265_1.23.6-2~deb13u1_amd64.deb",
+      "sha256": "87ceca51500055813fb4f435423df0290461e5e1104b8581ed71afb8620581c5",
+      "url": "https://deb.debian.org/debian/pool/main/libh/libheif/libheif-plugin-libde265_1.23.6-2~deb13u1_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libheif1 (= 1.23.6-2~deb13u1), libc6 (>= 2.14), libde265-0 (>= 1.0.7), libgcc-s1 (>= 3.0), libstdc++6 (>= 13)",
+      "preDepends": ""
+    },
+    "trixie/libheif-plugin-x265": {
+      "name": "libheif-plugin-x265",
+      "version": "1.23.6-2~deb13u1",
+      "file": "libheif-plugin-x265_1.23.6-2~deb13u1_amd64.deb",
+      "sha256": "396a14ac5a912c4c46c5d3f8565a226c70ea030185327153cbe2752cc9296f84",
+      "url": "https://deb.debian.org/debian/pool/main/libh/libheif/libheif-plugin-x265_1.23.6-2~deb13u1_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libheif1 (= 1.23.6-2~deb13u1), libc6 (>= 2.14), libgcc-s1 (>= 3.0), libstdc++6 (>= 13), libx265-215 (>= 4.1)",
+      "preDepends": ""
+    },
+    "trixie/libheif1": {
+      "name": "libheif1",
+      "version": "1.23.6-2~deb13u1",
+      "file": "libheif1_1.23.6-2~deb13u1_amd64.deb",
+      "sha256": "66e992705f29ebc4499b7b9c142f2ed92cfca1e17df81b7a646c82d42cd28864",
+      "url": "https://deb.debian.org/debian/pool/main/libh/libheif/libheif1_1.23.6-2~deb13u1_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libbrotli1 (>= 0.6.0), libc6 (>= 2.38), libgcc-s1 (>= 3.0), libsharpyuv0 (>= 1.5.0), libstdc++6 (>= 13.1), zlib1g (>= 1:1.1.4), libheif-plugin-libde265 (= 1.23.6-2~deb13u1), libheif-plugin-dav1d (= 1.23.6-2~deb13u1) | libheif-plugin-aomdec (= 1.23.6-2~deb13u1)",
+      "preDepends": ""
+    },
+    "trixie/libnghttp2-14": {
+      "name": "libnghttp2-14",
+      "version": "1.64.0-1.1+deb13u2",
+      "file": "libnghttp2-14_1.64.0-1.1+deb13u2_amd64.deb",
+      "sha256": "a5c10b427f9dc625754a9f323b07f2a76932a10161888e6e040c8f9448c13f05",
+      "url": "https://deb.debian.org/debian/pool/main/n/nghttp2/libnghttp2-14_1.64.0-1.1+deb13u2_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.17)",
+      "preDepends": ""
+    },
+    "trixie/libgpgme11t64": {
+      "name": "libgpgme11t64",
+      "version": "1.24.2-3+deb13u1",
+      "file": "libgpgme11t64_1.24.2-3+deb13u1_amd64.deb",
+      "sha256": "a3d10819eb2210a377676976544c605a16723461ce5613489ee2d2128e3ed853",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/g/gpgme1.0/libgpgme11t64_1.24.2-3+deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "gnupg (>= 2.1.21-4) | gpg, libassuan9 (>= 2.4.2), libc6 (>= 2.38), libgpg-error0 (>= 1.50)",
+      "preDepends": ""
+    },
+    "trixie/libgpgmepp6t64": {
+      "name": "libgpgmepp6t64",
+      "version": "1.24.2-3+deb13u1",
+      "file": "libgpgmepp6t64_1.24.2-3+deb13u1_amd64.deb",
+      "sha256": "c7ca6dae0f926a6d8424550b5924629ffc52b4a99c17964ba02464702ff4274a",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/g/gpgme1.0/libgpgmepp6t64_1.24.2-3+deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "libc6 (>= 2.38), libgcc-s1 (>= 3.0), libgpgme11t64 (>= 1.24.1), libstdc++6 (>= 13.1)",
+      "preDepends": ""
+    },
+    "bookworm/libsasl2-2": {
+      "name": "libsasl2-2",
+      "version": "2.1.28+dfsg-10+deb12u1",
+      "file": "libsasl2-2_2.1.28+dfsg-10+deb12u1_amd64.deb",
+      "sha256": "d6f20408e2be92ebd9f5e3b1c1935b075efb3f03abb5f48f7b991a0ad3e2d6a5",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/c/cyrus-sasl2/libsasl2-2_2.1.28+dfsg-10+deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "libsasl2-modules-db (>= 2.1.28+dfsg-10+deb12u1), libc6 (>= 2.34)",
+      "preDepends": ""
+    },
+    "bookworm/libsasl2-modules-db": {
+      "name": "libsasl2-modules-db",
+      "version": "2.1.28+dfsg-10+deb12u1",
+      "file": "libsasl2-modules-db_2.1.28+dfsg-10+deb12u1_amd64.deb",
+      "sha256": "6c86ca8fe9a7d652e618874b8753b4b6ec6b42ed7649b3f388e38d0a99047ba5",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/c/cyrus-sasl2/libsasl2-modules-db_2.1.28+dfsg-10+deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "libc6 (>= 2.14), libdb5.3",
+      "preDepends": ""
+    }
+  },
+  "rows": [
+    {
+      "key": "expanded-penpot-backend",
+      "base": "sha256:7b83a6b57fdd32365c8eecf8b1399a755f9d7bced25ae22800e8be73056049a2",
+      "containers": [
+        "utilibre-expanded-penpot-backend-1"
+      ],
+      "packages": {
+        "libfreetype6": {
+          "installed": "2.13.3+dfsg-1+deb13u1",
+          "package": "trixie/libfreetype6"
+        },
+        "libheif-plugin-dav1d": {
+          "installed": "1.23.4-1~deb13u1",
+          "package": "trixie/libheif-plugin-dav1d"
+        },
+        "libheif-plugin-libde265": {
+          "installed": "1.23.4-1~deb13u1",
+          "package": "trixie/libheif-plugin-libde265"
+        },
+        "libheif1": {
+          "installed": "1.23.4-1~deb13u1",
+          "package": "trixie/libheif1"
+        },
+        "libnghttp2-14": {
+          "installed": "1.64.0-1.1+deb13u1",
+          "package": "trixie/libnghttp2-14"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-vendor-leaf-expanded-penpot-backend:20261122",
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libheif.so.1",
+        "/usr/lib/x86_64-linux-gnu/libfreetype.so.6",
+        "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14"
+      ],
+      "approval": "reviewed-signed-vendor-update",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "73184ad3d580a20102adb14983ae8da4e3ab8027a59f1c17cc2b2f46d517fd49",
+        "scope.json": "a6fc89dc809053a551b9dce16b6483d99789d672ff17802845b8689fff5c50ee",
+        "application.json": "df87d7fe152ec74a927635a73b1a61f10738f7f2fc86e6edd5a0a9a32a512af6",
+        "scan-gate.json": "3920708962bbdc2b97e1d24b62038a242b8e701d412cca0b07c98135ca132ef4",
+        "after-scan.json": "e7e6e1d7ecd12537c6683bb5df0b7158ff57f20296ba1955b2752acf6796129c"
+      },
+      "completeInventorySha256": "d6cf432ebc0530ab25d2ecc2d03dd9ac66b5253919dd0e667283b614b9b29294",
+      "retainedTargetedFindingsSha256": "0f2cec9097703dc79a1a66072d7027579f76ff6486a938457701f4f27a7679f7",
+      "reviewRationale": "Exact authenticated vendor library successors; complete image scope and exported ABI preserved, existing application workflow passes, frozen all-severity comparison introduces no new finding. Remaining matches are retained for individual review; no scanner clearance or external-provider success is inferred. Existing release/rollback and relay-idle boundaries remain required.",
+      "nativeHeifEvidence": "51a7ca7a6d12bc575b83d4938154ab75d6ae2ca32b64efdda085f10befcfccca",
+      "nativeHttp2Evidence": "ea429ca41f1e42fd132721a1a3d1e553134ddbe45c0fff3c15142f00f4f1b144"
+    },
+    {
+      "key": "expanded-penpot-exporter",
+      "base": "sha256:5e117430ae0e4bbac92039308555757e58800c658b65488b04e2cdcefae1fe84",
+      "containers": [
+        "utilibre-expanded-penpot-exporter-1"
+      ],
+      "packages": {
+        "libgpgme11t64": {
+          "installed": "1.24.2-3",
+          "package": "trixie/libgpgme11t64"
+        },
+        "libgpgmepp6t64": {
+          "installed": "1.24.2-3",
+          "package": "trixie/libgpgmepp6t64"
+        },
+        "libheif-plugin-aomenc": {
+          "installed": "1.23.4-1~deb13u1",
+          "package": "trixie/libheif-plugin-aomenc"
+        },
+        "libheif-plugin-dav1d": {
+          "installed": "1.23.4-1~deb13u1",
+          "package": "trixie/libheif-plugin-dav1d"
+        },
+        "libheif-plugin-libde265": {
+          "installed": "1.23.4-1~deb13u1",
+          "package": "trixie/libheif-plugin-libde265"
+        },
+        "libheif-plugin-x265": {
+          "installed": "1.23.4-1~deb13u1",
+          "package": "trixie/libheif-plugin-x265"
+        },
+        "libheif1": {
+          "installed": "1.23.4-1~deb13u1",
+          "package": "trixie/libheif1"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-vendor-leaf-expanded-penpot-exporter:20261122",
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libheif.so.1",
+        "/usr/lib/x86_64-linux-gnu/libgpgme.so.11",
+        "/usr/lib/x86_64-linux-gnu/libgpgmepp.so.6"
+      ],
+      "approval": "reviewed-signed-vendor-update",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "4e84726e2e078404d8e78ba5e11de985db215e4fc6ca859cd2c2ea4a3722ebbf",
+        "scope.json": "386cffd32db68db6ba41030b8e65fa35bed7c917d08312bba6bb20dda928774f",
+        "application.json": "0376bc95fabc0f6ddaff7a184a84bd75bb282ec762d05fc02a6e3124c7c9e7fd",
+        "scan-gate.json": "836d0af597bab1b8bba18bed5fa285a47b3d2d428818ffea985f94ac5e0e171c",
+        "after-scan.json": "3ba845d709afdbab896813a7df388b2f4fc472aca2314dd385ddb4fecccf02eb"
+      },
+      "completeInventorySha256": "e72701b4685eef1518055ad03386698aa475f2c563bca8056b57f9087fcaba5b",
+      "retainedTargetedFindingsSha256": "5db4b1033b7e8cfbd64cc5ec40e01ea3202b5fc5ce4093f65ecc014607e6e520",
+      "reviewRationale": "Exact authenticated vendor library successors; complete image scope and exported ABI preserved, existing application workflow passes, frozen all-severity comparison introduces no new finding. Remaining matches are retained for individual review; no scanner clearance or external-provider success is inferred. Existing release/rollback and relay-idle boundaries remain required. Exact baseline raw inventory confirms 27 inherited duplicate-version entries; both versions and every raw finding are preserved.",
+      "nativeHeifEvidence": "0801d411b0c963c84f4102dd9bb493c0a1cab1a73e7f993aef674e0057f4eae8"
+    },
+    {
+      "key": "kitchenowl-app",
+      "base": "sha256:02669c2eeaefa8d6492208f46c99e0075383e3aee5fe8d051c150406e8c63056",
+      "containers": [
+        "utilibre-kitchenowl-app-1"
+      ],
+      "packages": {
+        "libnghttp2-14": {
+          "installed": "1.64.0-1.1+deb13u1",
+          "package": "trixie/libnghttp2-14"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-vendor-leaf-kitchenowl-app:20261122",
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14"
+      ],
+      "approval": "reviewed-signed-vendor-update",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "6a72dc66405df4b9860a64d00fcbebdb9b7b78e22d7f93f9143cde070df2ae31",
+        "scope.json": "e7ded193815e3f59560186b792f33787829ab4bf949daafd768aefc744b17c2f",
+        "application.json": "d9b7167b13d703edcc7dd01cc2305d15a898df35a0e954451f46a41ae51f0619",
+        "scan-gate.json": "1f0e632b3f998a7abcafe7e3cf0a7a5a3553c9ec7141cf27ccb0309df9c9033b",
+        "after-scan.json": "0cab08392f796794697a7a6395d28589bba80be95112597b306d5fc9aa4df3e0"
+      },
+      "completeInventorySha256": "9e816df366685956ace11ff9e7f5a1ce52d7fcf944a9fe3c5ee2c65c34387887",
+      "retainedTargetedFindingsSha256": "15127e4d951df37ff550c97cbdb19d239da6d9f33cff1068f7892d83b1c362fa",
+      "reviewRationale": "Exact authenticated vendor library successors; complete image scope and exported ABI preserved, existing application workflow passes, frozen all-severity comparison introduces no new finding. Remaining matches are retained for individual review; no scanner clearance or external-provider success is inferred. Existing release/rollback and relay-idle boundaries remain required.",
+      "nativeHttp2Evidence": "0aea92d485ba03ddd0105766ad2944c611c32ec4a4ded55f7f5997160b1e7427"
+    },
+    {
+      "key": "services-freshrss",
+      "base": "sha256:3b72251a24cd636de95cb0e29134b690067622039f8b05e261e3df88a3d21b35",
+      "containers": [
+        "utilibre-services-freshrss-1"
+      ],
+      "packages": {
+        "libnghttp2-14": {
+          "installed": "1.64.0-1.1+deb13u1",
+          "package": "trixie/libnghttp2-14"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-vendor-leaf-services-freshrss:20261122",
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14"
+      ],
+      "approval": "reviewed-signed-vendor-update",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "34f229386e69592c05fca10d90a037eab55f20bb34b5a144204092239f6a57af",
+        "scope.json": "c5dd44ba93bf2fca55e66194756dc2b83a6d1511cb1783609d4bf3817b1cffef",
+        "application.json": "3e63ef8e192d49816ba58be8170ab7db6c187e715ebf0941af64e40e7433a217",
+        "scan-gate.json": "aec67ac3960b9bb7ce5a09e1d84b1f5fa309a2ca34f5b13b17eeb8225acfdfbf",
+        "after-scan.json": "499d138b1e1c33d6376b48986ba0dcee5e361d88690985b6afa97f3a00e46c55"
+      },
+      "completeInventorySha256": "86c578e31c01ab180d3e5cf13fe8ce4797cfee53bc4338cb135116964c3cb799",
+      "retainedTargetedFindingsSha256": "b28fbbbacba5990cac41a2c8245bef1ff78873938ce36013589910f563f2d5d1",
+      "reviewRationale": "Exact authenticated vendor library successors; complete image scope and exported ABI preserved, existing application workflow passes, frozen all-severity comparison introduces no new finding. Remaining matches are retained for individual review; no scanner clearance or external-provider success is inferred. Existing release/rollback and relay-idle boundaries remain required.",
+      "nativeHttp2Evidence": "f968b31246104f63f28a5b0c01f98cb946cab92b1e14d01e7f09c5bfcdb8acaf"
+    },
+    {
+      "key": "priviblur-priviblur",
+      "base": "sha256:937ba5936b8b2145e5d6e790b4ae1a378c20475fab56b025b38ed20d2abd0ceb",
+      "containers": [
+        "utilibre-priviblur-priviblur-1"
+      ],
+      "packages": {
+        "libnghttp2-14": {
+          "installed": "1.64.0-1.1+deb13u1",
+          "package": "trixie/libnghttp2-14"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-vendor-leaf-priviblur-priviblur:20261122",
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14"
+      ],
+      "approval": "reviewed-signed-vendor-update",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "44282e89d42843cabc54e203d4ce7b3963896cf1d5e88d81f91f192eff5cecb8",
+        "scope.json": "7dafe2b457d3576a6d276d14c99e1be1f24cab3a074ba60cd65e258da4e0cb08",
+        "application.json": "087a2de66b50ea5d0fea09c39073ed26fe9a3467d4ab33b16d94b7623e573af3",
+        "scan-gate.json": "39ebd4e29e85fda054a7c511a4fdade8901bf195590680f105ead5c8ca4b85af",
+        "after-scan.json": "c02224a23c93f956f8d974d3bfc60ba8af9c8d32d827cd23fa8b20c71c7174ee"
+      },
+      "completeInventorySha256": "d0acb402af8d454de138b35571abd6270fffb8b918afe21cc12f03d2fc36715c",
+      "retainedTargetedFindingsSha256": "7b461528f203c129ff20e11b60cf5a74c78b04246f9bff435b39c8e8ea46d0bf",
+      "reviewRationale": "Exact authenticated vendor library successors; complete image scope and exported ABI preserved, existing application workflow passes, frozen all-severity comparison introduces no new finding. Remaining matches are retained for individual review; no scanner clearance or external-provider success is inferred. Existing release/rollback and relay-idle boundaries remain required."
+    },
+    {
+      "key": "records-grist",
+      "base": "sha256:213041e771eadceb88751e266ad6012858f6ebb9f882fa3914ec0b277612ef15",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "packages": {
+        "libnghttp2-14": {
+          "installed": "1.64.0-1.1+deb13u1",
+          "package": "trixie/libnghttp2-14"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-vendor-leaf-records-grist:20261122",
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14"
+      ],
+      "approval": "reviewed-signed-vendor-update",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "ff7c8042bcd3fb9d18c27e0de814a915b320bbdaf9fb9b2e5ad33ab1f609c08b",
+        "scope.json": "256d5dc77b0dbe9334fdd4250ce9d21dacb917312744a31c6323b41129749733",
+        "application.json": "ec30fd66a5a04a135fbee35ec31659129b58f76bb2fe5818fffc38c5a703f8f1",
+        "scan-gate.json": "01d3bdfa49032af941beaf753068cc5e204dd697fe4c29d54e619a2fde9061ce",
+        "after-scan.json": "c803ba02f86029d0709f26f37e549c8938ceb041cf2d9ebfb1cdc0589a0952a8"
+      },
+      "completeInventorySha256": "5e996f6c3be40d01f21f6a260a2068271628cf242cd2741113e426047deec983",
+      "retainedTargetedFindingsSha256": "bccbaed38510f51368521adff0d2df01e0856e525d18aaef118e40b21dd450eb",
+      "reviewRationale": "Exact authenticated vendor library successors; complete image scope and exported ABI preserved, existing application workflow passes, frozen all-severity comparison introduces no new finding. Remaining matches are retained for individual review; no scanner clearance or external-provider success is inferred. Existing release/rollback and relay-idle boundaries remain required.",
+      "nativeHttp2Evidence": "712f360a5c5bbcbc24c5511a29c87b31eff2a9a46446f19ad58b07e606d3b847"
+    },
+    {
+      "key": "services-rsshub",
+      "base": "sha256:8f3b353a689b1952e62807d18ffe0952024464d00bdcee62ec8d91b89a1992fd",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "packages": {
+        "libnghttp2-14": {
+          "installed": "1.64.0-1.1+deb13u1",
+          "package": "trixie/libnghttp2-14"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-vendor-leaf-services-rsshub:20261122",
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14"
+      ],
+      "approval": "reviewed-signed-vendor-update",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "9308cb64e5a0bf7349d3a45086effc59f86b60874dfd84186496a2038dda093b",
+        "scope.json": "fb50df37acdd2e64da3ae51a5320b5121cc586ebf5e01c116a3b58b3dfe0f7d0",
+        "application.json": "acdf12128bd41fb2f287002cd5363366a2807d87104584b2df55bd3df22e86b5",
+        "scan-gate.json": "8d8733787e4167687e8b71d15d6ee7df997cc83e54b78b1a6f01e3a689713b0b",
+        "after-scan.json": "614fc532bdcba6a21f334a852affccc5af77db93234f2f6a56e8f84e89c39fbf"
+      },
+      "completeInventorySha256": "ecd5e7df83fe89cf0c13dd2c4df31f126ce3eb30e2d582f1b1c8e8d0556e7331",
+      "retainedTargetedFindingsSha256": "ed536ee80b22888f9d4ffa8dc2a1cab81573dd09e5700f3d340f297e25a74882",
+      "reviewRationale": "Exact authenticated vendor library successors; complete image scope and exported ABI preserved, existing application workflow passes, frozen all-severity comparison introduces no new finding. Remaining matches are retained for individual review; no scanner clearance or external-provider success is inferred. Existing release/rollback and relay-idle boundaries remain required.",
+      "nativeHttp2Evidence": "07bd5da7549426c473e8d14c735c810374c1359970bacf1bd0661556daff2ce4"
+    },
+    {
+      "key": "linkding-linkding",
+      "base": "sha256:aa51aaabb9ad69b63b442ff5409e6eac32c0c579d0719de9a3b54af17e9a6967",
+      "containers": [
+        "utilibre-linkding-linkding-1"
+      ],
+      "packages": {
+        "libnghttp2-14": {
+          "installed": "1.64.0-1.1+deb13u1",
+          "package": "trixie/libnghttp2-14"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-vendor-leaf-linkding-linkding:20261122",
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14"
+      ],
+      "approval": "reviewed-signed-vendor-update",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "2f0af08ca4292098bb06f8e3b804372d09380fcff6344a69d3b257830dd94586",
+        "scope.json": "139bb765a6c22b168134adc6ffff38e6e0071887644b1ac1ca6430db9246f505",
+        "application.json": "9fc0784256c70c4dbf4fb417621be85a0893016b9685e41f66862a83a9d0f23e",
+        "scan-gate.json": "f90cc7272b2e4f44aaea20417b80b03c4c44eafe390232beb8291f5d26032ffd",
+        "after-scan.json": "95b17de104b333bac7d875471b1ee4f0101d6525ba13dbd6d8a5dd2fed501943"
+      },
+      "completeInventorySha256": "a1871cab1481044dde5356d3da2f437d86843b2cdc4276e1dac9ceb9d05d2b7a",
+      "retainedTargetedFindingsSha256": "63dee17edd825b9f7399b6328501ba1334196c11902cdd21ba86364b0a02d5fa",
+      "reviewRationale": "Exact authenticated vendor library successors; complete image scope and exported ABI preserved, existing application workflow passes, frozen all-severity comparison introduces no new finding. Remaining matches are retained for individual review; no scanner clearance or external-provider success is inferred. Existing release/rollback and relay-idle boundaries remain required.",
+      "nativeHttp2Evidence": "512a02261768ba08b239c8cf44719b345f15bcacc5460d07f72e6dec4093b4fd"
+    },
+    {
+      "key": "expanded-breezewiki",
+      "base": "sha256:0775edbe010b62f34a4549661b354367cd61e5a000d5588349bd123140636e57",
+      "containers": [
+        "utilibre-expanded-breezewiki-1"
+      ],
+      "packages": {
+        "libfreetype6": {
+          "installed": "2.13.3+dfsg-1+deb13u1",
+          "package": "trixie/libfreetype6"
+        },
+        "libnghttp2-14": {
+          "installed": "1.64.0-1.1+deb13u1",
+          "package": "trixie/libnghttp2-14"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-vendor-leaf-expanded-breezewiki:20261122",
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libfreetype.so.6",
+        "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14"
+      ],
+      "approval": "reviewed-signed-vendor-update",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "6ed11b07a65e34675847a45f9fbaeca709e916cd693abdd64df767a3bee94837",
+        "scope.json": "f5eaac215a9114839557232af319a2f15018c1df05adf093ddfaf084ece1f1d6",
+        "application.json": "c9a8324cba0ad7b4c983b65e01eabb3a9337e3019a52c59672f1974da923ec0f",
+        "scan-gate.json": "ff0c5330430da7bc8639c919dfeb99ee0d5a9c4fea56e1bf65b442194e980db2",
+        "after-scan.json": "9bddc8d419de3b34011f791e4eb6342badf6777cefe4ba4b31193d57d47389d7"
+      },
+      "completeInventorySha256": "b3cbed63e1876488e2ea5ccbaae6c56ba2b840550086b4fdb8e1406219a926d3",
+      "retainedTargetedFindingsSha256": "6a3085341e4513377354ba23b933db7932394efcd911d2216ef2627787a905bc",
+      "reviewRationale": "Exact authenticated vendor library successors; complete image scope and exported ABI preserved, existing application workflow passes, frozen all-severity comparison introduces no new finding. Remaining matches are retained for individual review; no scanner clearance or external-provider success is inferred. Existing release/rollback and relay-idle boundaries remain required.",
+      "nativeHttp2Evidence": "6df8f6841dd83a8e26ae37d81f31b9ee1ddd4cb335443b43ac1cf6e918ad1559"
+    },
+    {
+      "key": "galene-turn-turn",
+      "base": "sha256:b99ddc36e383a44f406f229bd625f208363a52a651e916cdb0330d660a13dc98",
+      "containers": [
+        "utilibre-turn-option-turn-1",
+        "utilibre-galene-turn-turn-1"
+      ],
+      "packages": {
+        "libnghttp2-14": {
+          "installed": "1.64.0-1.1+deb13u1",
+          "package": "trixie/libnghttp2-14"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-vendor-leaf-galene-turn-turn:20261122",
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14"
+      ],
+      "approval": "reviewed-signed-vendor-update",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "71bfc343fa3ec6ab4d687f6a95b0580cc99c9da87129e17057fb9e4a247e13ea",
+        "scope.json": "307e3057b02e4ce42c127a264dc9f99ba207f125fc75f422a0295969af219d15",
+        "application.json": "fda95e8f4f98f1bf332a241b95939933029c22d38509e91d01fed276c1b295c8",
+        "scan-gate.json": "d355fdbaf5ece900d986bf5bcb9817eaa00ba50e7c43018ede718234e057e061",
+        "after-scan.json": "e73564592d541df80589845603b3e05ad43e3a239839c7c09581a76e0f866103"
+      },
+      "completeInventorySha256": "c88af6a62bc8dd8f1bd88de08611cd63f2bd31fbf2ab1f00583ccfc87bde69e3",
+      "retainedTargetedFindingsSha256": "93907c45e7ce068f89c67221306c50e1eedaf1c837b04ecdfb6c6abee157bee7",
+      "reviewRationale": "Exact authenticated vendor library successors; complete image scope and exported ABI preserved, existing application workflow passes, frozen all-severity comparison introduces no new finding. Remaining matches are retained for individual review; no scanner clearance or external-provider success is inferred. Existing release/rollback and relay-idle boundaries remain required."
+    },
+    {
+      "key": "pack-forms-app",
+      "base": "sha256:6b75ba861e28fff3257f6d28defa21c06e9678c490719abb0b10cec1f4c4aea0",
+      "containers": [
+        "utilibre-pack-forms-app-1"
+      ],
+      "packages": {
+        "libfreetype6": {
+          "installed": "2.13.3+dfsg-1+deb13u1",
+          "package": "trixie/libfreetype6"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-vendor-leaf-pack-forms-app:20261122",
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libfreetype.so.6"
+      ],
+      "approval": "reviewed-signed-vendor-update",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "9631bcc330441c5585b898d6f1e45f135ff9b1c24f3af2912c59d4e44925b58d",
+        "scope.json": "492bc4b4f840a74c88f93161e5843331bbdff38bc16d604d37c3a3bc80731d4c",
+        "application.json": "b34186eb6b3cc25585d0a7c0d067e9c16575238e05efa1beccb042e00ac08e55",
+        "scan-gate.json": "d58ea4e12376b64dd5f438efa72a8453caf9a9cbdfcc2b198ca9a6046e4fef99",
+        "after-scan.json": "3adaebd49343c14ebb1055d201df8a9648e1d92364d68c241ff7474f77a1991e"
+      },
+      "completeInventorySha256": "288b6243cd63e4982c991f04f39c9c9bad765ea4e4cf75f51a75a84d0a968793",
+      "retainedTargetedFindingsSha256": "29db1043cb7eb02d2d5d38469380382765757fc8fded39fd5c8e969d44e20bbe",
+      "reviewRationale": "Exact authenticated vendor library successors; complete image scope and exported ABI preserved, existing application workflow passes, frozen all-severity comparison introduces no new finding. Remaining matches are retained for individual review; no scanner clearance or external-provider success is inferred. Existing release/rollback and relay-idle boundaries remain required."
+    }
+  ],
+  "acquisitionSha256": "086d71b473fd5389fb376818f9d7e689c97e45dca99a123377a7ca05029ed707",
+  "heifFixtures": {
+    "fictional.heic": "90ac9157c8ef2fe77cd71788a16acf5c625a46f8b33af7ea457f20113e496acb",
+    "fictional.avif": "204bc2d2c24be0aedbe93c057f58e3f38cbf55d33258a4d47d740553b1cde835"
+  },
+  "http2Fixture": {
+    "serverImage": "sha256:09b83e26e45864276fd88f375c35e78184e575b58dd23a05f1d1d900210c239b",
+    "serverSha256": "6fbc66927f7a19457f3fb11d366b945fa86e2084303579d8e11571a58918ab7e",
+    "cliSourceImage": "sha256:7b83a6b57fdd32365c8eecf8b1399a755f9d7bced25ae22800e8be73056049a2",
+    "cliSha256": "2285fa3ee855c7ee26fe7ab864489bf15cc75267f88d7195dab6bced53928390",
+    "selectedKeys": [
+      "expanded-penpot-backend",
+      "kitchenowl-app",
+      "services-freshrss",
+      "records-grist",
+      "services-rsshub",
+      "linkding-linkding",
+      "expanded-breezewiki"
+    ]
+  }
+}

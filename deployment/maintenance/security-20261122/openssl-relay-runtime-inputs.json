@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "sourceBuildSha256": "7261c48d81372166a3c28e16aaf5d24608de91590f8235296b6bbcccfaa03ddf",
+  "packages": {
+    "libssl3t64": {
+      "name": "libssl3t64",
+      "version": "3.5.9-1~deb13u1+utilibre1",
+      "file": "libssl3t64_3.5.9-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "35b8e27e62949a9a96b498f331bc5ba9b76ba112ba7493ce823b466c8f7906fa",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.38), libzstd1 (>= 1.5.5), zlib1g (>= 1:1.1.4), openssl-provider-legacy",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight pinned upstream patches; completed offline native build"
+    },
+    "openssl-provider-legacy": {
+      "name": "openssl-provider-legacy",
+      "version": "3.5.9-1~deb13u1+utilibre1",
+      "file": "openssl-provider-legacy_3.5.9-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "ce23e4a9735e45bbe73efd1e82064b562ee8d5dff6a8e553abc3cf70dfccbac4",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.14), libssl3t64 (>= 3.0.3)",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight pinned upstream patches; completed offline native build"
+    },
+    "openssl": {
+      "name": "openssl",
+      "version": "3.5.9-1~deb13u1+utilibre1",
+      "file": "openssl_3.5.9-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "6cc87e80b75429e24ef7880a72f17439827f299e7991c77c592a9422ba1b4680",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.34), libssl3t64 (>= 3.5.0)",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight pinned upstream patches; completed offline native build"
+    },
+    "libssl-dev": {
+      "name": "libssl-dev",
+      "version": "3.5.9-1~deb13u1+utilibre1",
+      "file": "libssl-dev_3.5.9-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "aa29349aa0b28946c0021c381c6871071e64a4e5d4ca171cc1a8fad3dd32ce89",
+      "distribution": "trixie",
+      "depends": "libssl3t64 (= 3.5.9-1~deb13u1+utilibre1)",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight pinned upstream patches; completed offline native build"
+    }
+  },
+  "nativeFixture": {
+    "cliSha256": "acc10176d038aeb7b2a77d9ec972ac2985857a7191f7aecb7c54ef0e2c7e9549",
+    "cliOrigin": {
+      "imageId": "sha256:9253d4ba4d02d712da5bafb84e5acb3f725d4584a38cbf752ee72b4cd1b4f7a4",
+      "path": "/usr/bin/openssl",
+      "sha256": "acc10176d038aeb7b2a77d9ec972ac2985857a7191f7aecb7c54ef0e2c7e9549"
+    },
+    "cryptoSha256": "c53842644f9cbd9568ee4f1f25d6a960862ad1499ad8bd9c89c006eec45589b7",
+    "tlsServerSha256": "9614aa6fa6d4db4f96eeec390d8b7f2cbd26a3dea43935dd8cae7ebf4ede71a0",
+    "tlsImage": "sha256:9253d4ba4d02d712da5bafb84e5acb3f725d4584a38cbf752ee72b4cd1b4f7a4"
+  },
+  "predecessorReleaseSha256": "3097aa0cee749f8aac9a6b506db382f33e07806837e9343dd2b387c5d5a41dc5",
+  "rows": [
+    {
+      "key": "galene-turn-turn",
+      "base": "sha256:b38202f365f226ea87c162c518810fabc1693589aa22b08fbf84a1a680d732f0",
+      "containers": [
+        "utilibre-galene-turn-turn-1",
+        "utilibre-turn-option-turn-1"
+      ],
+      "oldRefs": [
+        "utilibre-mongo-successors:20261122"
+      ],
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libssl.so.3",
+        "/usr/lib/x86_64-linux-gnu/libcrypto.so.3"
+      ],
+      "candidate": "utilibre-openssl-relays:20261122",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T07:13:44.490491+00:00",
+      "reviewedEvidence": {
+        "build.json": "8040283aed4816825e8ebab313350e070949a098479a28b940f2d9d8632873a0",
+        "scope.json": "b92355ad68bd561859ee818d3319c2cc66c87c6c81c0299984a1c096aae02856",
+        "application.json": "4549b9b9a64ae941f48367dc7034a697767aa4da1c8652479e0a4a8311b54d5e",
+        "scan-gate.json": "0f14c87df675c41a77eb880a93fb9605ad556127b6dd07c9c2ac4f4d109380a7",
+        "after-scan.json": "12c7e90e553df260e96f761747883180dff89de5a0bd9babc5d5c21cf68dbb7b"
+      },
+      "completeInventorySha256": "6ae8aba9b938e3bd808d5c8d9b2b03010bc4f15eb4c56f8c937ea1a2b77d73bf",
+      "retainedTargetedFindingsSha256": "92361a24b501d1150ce3167d31476f38cc73ae7da706c44c579b8ee2d4b75206",
+      "opensslEvidence": {
+        "native-tls.json": "94a67baba1b4055cde8bf85358ae75c493d8d63036c2d2e47e1c2795154bb392",
+        "upstream-regression.json": "7a8a5235a4ebf710dde926018cb5c5afc1983143d9bf83709c8a588b80a70940",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      }
+    }
+  ],
+  "relayIdleHelperSha256": "d6c7781ff9fb84416ce8f2b0b49fb41945c40ec6c72cf5b08ad23b02c2b99953",
+  "relayIdleReview": "Exact PID/comm/start time, thread socket ownership and stable before/after descriptor sets; rejects unknown child processes. Synthetic owned/unowned/range/malformed tests pass; read-only actual two TURN process checks report zero owned allocations. Old host-wide range failures retained. No peer addresses or socket identifiers persisted."
+}

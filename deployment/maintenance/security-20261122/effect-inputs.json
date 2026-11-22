@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Native Effect 3.22.1 dependency update for two consumers with external package loading; Rallly's embedded server chunks need a separate full application rebuild.",
+  "advisory": "https://github.com/Effect-TS/effect/security/advisories/GHSA-7589-6fvf-x4pw",
+  "approval": "isolated-preparation-only",
+  "network": {
+    "destinations": [
+      "registry.npmjs.org"
+    ],
+    "buildDownloadRequests": 0,
+    "tests": "isolated; no external requests",
+    "acquisitionRequestsAlreadyPerformed": 4,
+    "acquisitionNote": "One metadata lookup, initial builder metadata/tarball lookup rejected by its 4 MiB limit, one exact tarball acquisition retained for offline retries."
+  },
+  "packages": {
+    "effect": {
+      "version": "3.22.1",
+      "integrity": "sha512-TNoXushmPOBAjJlthF5d2QwnX2xBPEtcNJr5XKNKbRLbDvBcOYkXlYDfvGfSA0zriwLFuCll5MDtNMAdZL17PQ==",
+      "dependencies": {
+        "fast-check": "^3.23.1",
+        "@standard-schema/spec": "^1.0.0"
+      }
+    }
+  },
+  "rows": [
+    {
+      "key": "spliit",
+      "container": "utilibre-spliit-app-1",
+      "base": "sha256:2b3ed2bff9dd62f9d331de2936a5314569768b42af52b34cc013ed859a22c1fb",
+      "candidate": "utilibre-effect-spliit:20261122",
+      "roots": [
+        "/usr/app"
+      ],
+      "paths": {
+        "effect": [
+          "/usr/app/node_modules/effect"
+        ]
+      },
+      "kind": "js",
+      "containers": [
+        "utilibre-spliit-app-1"
+      ],
+      "packages": {
+        "effect": {
+          "installed": "3.20.0",
+          "package": "effect"
+        }
+      },
+      "reviewedEvidence": {
+        "build.json": "43de57fe861116852fa97317c435f71f33fef93796ba47897b982cfca7076026",
+        "library.json": "1b839bc35c77291a57b4b757f7c76888ab4c10b0bcba643dbda6f3137981c074",
+        "application.json": "0ecba198c60351aeb26ab77bd5cfed9b9c0c01935f81c5ce357dda270229e71c",
+        "application-fixture.json": "83ea55971eeac17822706f6f86aedbd6e39759630b5a1075754ff2d4287df00d",
+        "scan-gate.json": "f26d7d3dc33105b9ba52516fbb7e872e1424d3f76c99054d3bcdc69e1037d7ba",
+        "after-scan.json": "61b237be30f2f57d0949282d0f57c0279648c44fb6f6919ddd82edcb2dba9f29",
+        "changed-files.json": "1a985adb827a8a3a9858cfcc0a4762483f0fdeb5c326ed1acce7cc6d1d5cb46e",
+        "scope.json": "767a347756069fa4371f9e72625c294975dd86b2d268f93aac88d009f4dafa88"
+      },
+      "releaseApproval": "approved",
+      "releaseReview": "Exact 3.22.1 native dependency; all unrelated application files/configuration and complete package inventory retained. Nine normal contracts pass before/after; old string-span fixture times out after four seconds, candidate passes below one second. Native synthetic app workflow and complete frozen all-severity comparison pass. Rallly is not included."
+    },
+    {
+      "key": "wishlist",
+      "container": "utilibre-wishlist-app-1",
+      "base": "sha256:9af6a3fd598b67c7062e330d471dc908a76be21f74846a63ca50441d3e74845f",
+      "candidate": "utilibre-effect-wishlist:20261122",
+      "roots": [
+        "/usr/src/app"
+      ],
+      "paths": {
+        "effect": [
+          "/usr/src/app/node_modules/.pnpm/effect@3.20.0/node_modules/effect"
+        ]
+      },
+      "kind": "js",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "packages": {
+        "effect": {
+          "installed": "3.20.0",
+          "package": "effect"
+        }
+      },
+      "reviewedEvidence": {
+        "build.json": "84bc241b2daab68490ac2eaaf72f63e24688337202708f2e72e007124d3a23f2",
+        "library.json": "95c23a0d0d3df787fda4fa80f4bb8d0d222b5c8b661de599ec9bfddff2798c9c",
+        "application.json": "88a265edb222424039100701d234809d40e66e4d4b904ba2ab1f521da1b0b755",
+        "application-fixture.json": "8bf5432c8599a73351982798246d6bc6c39127fddbb54c8f28b2b87d211fe03e",
+        "scan-gate.json": "7a3eb05d249e292a227fc0c94140721695873973e8b8abc5c2146b356d330ed4",
+        "after-scan.json": "3b42b4e4240798a28316057102c848b84a730db87f2f1acf286db60c41aaacf4",
+        "changed-files.json": "e38a34363e4e81921a823b0b1fc62f0a7ed0437c72d6f9ab2cf264c157e2435d",
+        "scope.json": "22730cbe9980cd1f31af3d36ec260abaac4da3f0a0275e3d899fcc1659536126"
+      },
+      "releaseApproval": "approved",
+      "releaseReview": "Exact 3.22.1 native dependency; all unrelated application files/configuration and complete package inventory retained. Nine normal contracts pass before/after; old string-span fixture times out after four seconds, candidate passes below one second. Native synthetic app workflow and complete frozen all-severity comparison pass. Rallly is not included."
+    }
+  ],
+  "limitations": "No Rallly clearance from swapping node_modules: matching Effect code is embedded in seven Next server chunks. The upstream correction does not replace the Union-span or TemplateLiteralParser regex paths. Package lock inputs and old pnpm directory labels remain historical; the exact new artifact and package checksums are pinned here.",
+  "cachedInputs": {
+    "registry-3.22.1.json": {
+      "sha256": "55a2548360d67fd291826211f4c2d3cfe253bcc1c8128b53c7f5b7c449ad8214",
+      "bytes": 31617
+    },
+    "effect-3.22.1.tgz": {
+      "sha256": "94d00b7672f53dcb7482c3eea269ae0ce704ff138d07e9103a26433b2bb3d986",
+      "bytes": 4215337
+    }
+  },
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "minimumFreeBytes": 8589934592
+}

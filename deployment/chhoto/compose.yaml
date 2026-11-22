@@ -34,7 +34,7 @@ services:
     networks: [backend]
   gateway:
     <<: *runtime
-    image: utilibre-vendor-calendar-calino:20261111
+    image: utilibre-security-shared-nginx:20261122
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.25

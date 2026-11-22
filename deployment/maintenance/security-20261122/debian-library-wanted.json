@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "packages": {
+    "trixie": {
+      "liblzma5": "5.8.1-1+deb13u2",
+      "xz-utils": "5.8.1-1+deb13u2",
+      "liblzma-dev": "5.8.1-1+deb13u2"
+    }
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "sourceBuildSha256": "3b82d9446a6bc95020839ad1e711b2eefcda3dbbd27fd5a165e8dd5e44f2814d",
+  "selectionSha256": "893f3210b5750236ed389d994385e143077014ade6084a4d5813957de990f849",
+  "packages": {
+    "libssl-dev": {
+      "name": "libssl-dev",
+      "version": "3.5.9-1~deb13u1+utilibre1akfips1",
+      "file": "libssl-dev_3.5.9-1~deb13u1+utilibre1akfips1_amd64.deb",
+      "sha256": "d094f4d3128ed2783614842eb355ae803c7fae5fbb4e42276ad0013b04c85b0a",
+      "distribution": "trixie",
+      "depends": "libssl3t64 (= 3.5.9-1~deb13u1+utilibre1akfips1)",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight upstream fixes and retained Authentik build metadata; existing FIPS module is not replaced"
+    },
+    "libssl3t64": {
+      "name": "libssl3t64",
+      "version": "3.5.9-1~deb13u1+utilibre1akfips1",
+      "file": "libssl3t64_3.5.9-1~deb13u1+utilibre1akfips1_amd64.deb",
+      "sha256": "35926687758bc7ec0698a1aab4d259595fc17f25ebfea2cd1b88b6bbd42be1c0",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.38), libzstd1 (>= 1.5.5), zlib1g (>= 1:1.1.4), openssl-provider-legacy",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight upstream fixes and retained Authentik build metadata; existing FIPS module is not replaced"
+    },
+    "openssl": {
+      "name": "openssl",
+      "version": "3.5.9-1~deb13u1+utilibre1akfips1",
+      "file": "openssl_3.5.9-1~deb13u1+utilibre1akfips1_amd64.deb",
+      "sha256": "98515865f11756f12804148c014fce389648fa8b24ebdf630c47f713da32e362",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.34), libssl3t64 (>= 3.5.0)",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight upstream fixes and retained Authentik build metadata; existing FIPS module is not replaced"
+    },
+    "openssl-provider-legacy": {
+      "name": "openssl-provider-legacy",
+      "version": "3.5.9-1~deb13u1+utilibre1akfips1",
+      "file": "openssl-provider-legacy_3.5.9-1~deb13u1+utilibre1akfips1_amd64.deb",
+      "sha256": "2bcf7aab692c0904cf99ca9f2d0769ab43778a3fc8e076e5b10b82c7e0bc37c1",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.14), libssl3t64 (>= 3.0.3)",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight upstream fixes and retained Authentik build metadata; existing FIPS module is not replaced"
+    }
+  },
+  "rows": [
+    {
+      "key": "identity-server",
+      "base": "sha256:dfab0b3f65c58354cb8f7bbceb4e4a0cf0053ba657afc9c6302cd9be06defc42",
+      "containers": [
+        "utilibre-identity-server-1",
+        "utilibre-identity-worker-1"
+      ],
+      "packages": {
+        "libssl-dev": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl-dev"
+        },
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-authentik-fips:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "1fdfcfc8a308de178619f9994e65fe30ab5e57a8a80845701a6e478248aaa031",
+        "scope.json": "103195d9e97636f9f27768db95797ee17df29d562d247752d3f7887edb6884df",
+        "application.json": "2701095122ce9620bbd0198d071631c44cd0dc02bec6d2de3d857e525f602b0e",
+        "scan-gate.json": "c396aa8ddfbc57fb1ecf33c08d118b98d0ce43714e372168ede243dfe62f6844",
+        "after-scan.json": "0c2c9998351e230d42ece3ec30a64d1b327c8911b2039dc7f7a7bc0d67141a32"
+      },
+      "opensslEvidence": {
+        "native-tls.json": "85b70ccafbf5ee0d6af4e50b61f0d5a5a37b757a90cbea613f0b445c93ad44d6",
+        "upstream-regression.json": "faad0da0b54436f30c76667e150691104104b4255d7212834f0dc76c7ac5312f",
+        "fips-native.json": "977109785ed556ae7b98d55f7d4760b40fae8198a1704448e90de951cd7acff0",
+        "sourceArchiveSha256": "2343dbc5995357f1869f9577f800b47f044243a7f91562b639894e54b8f448df"
+      },
+      "completeInventorySha256": "451373ee53beda10e85ff20c1c7c1f9f994ee75dc00114080c6337f1003c7ac9",
+      "retainedTargetedFindingsSha256": "5ecf2e57e859f303eb8c6b6eba80d3b8d769ae4d90d684cc042b106921aa2403",
+      "reviewRationale": "Eight exact upstream corrections, complete 4932-test native suite, unchanged vendor FIPS module/configuration/self-check and held-package policy, preserved exported ABI/full file scope, native password/TOTP/OAuth/JWKS/rejection behavior, TLS 1.2/1.3 and wrong-host checks, and upstream PEM/EC candidate checks. No new frozen findings. Explicitly retains two other OpenSSL advisories and no FIPS certification claim. Failed candidates retained and not released."
+    }
+  ],
+  "nativeFixture": {
+    "cliSha256": "acc10176d038aeb7b2a77d9ec972ac2985857a7191f7aecb7c54ef0e2c7e9549",
+    "cliOrigin": {
+      "imageId": "sha256:9253d4ba4d02d712da5bafb84e5acb3f725d4584a38cbf752ee72b4cd1b4f7a4",
+      "path": "/usr/bin/openssl",
+      "sha256": "acc10176d038aeb7b2a77d9ec972ac2985857a7191f7aecb7c54ef0e2c7e9549"
+    },
+    "cryptoSha256": "c53842644f9cbd9568ee4f1f25d6a960862ad1499ad8bd9c89c006eec45589b7",
+    "tlsServerSha256": "9614aa6fa6d4db4f96eeec390d8b7f2cbd26a3dea43935dd8cae7ebf4ede71a0",
+    "tlsImage": "sha256:9253d4ba4d02d712da5bafb84e5acb3f725d4584a38cbf752ee72b4cd1b4f7a4"
+  }
+}

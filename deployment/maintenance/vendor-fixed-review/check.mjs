@@ -26,6 +26,8 @@ const turnContainers=['utilibre-galene-turn-turn-1','utilibre-turn-option-turn-1
 // still exactly match the signed 2.15.1 artifact and pass native checks.
 const jwtFixedIds=['CVE-2026-102268','CVE-2026-101917','CVE-2026-101918','CVE-2026-102271','CVE-2026-102272','CVE-2026-102273','CVE-2026-102274','CVE-2026-102275','CVE-2026-48526'];
 const mariaServerIds=['CVE-2026-107815','CVE-2026-107818','CVE-2026-107823','CVE-2026-44168','CVE-2026-44171','CVE-2026-48163','CVE-2026-48165'];
+const mariaNov22Ids='107816 107817 107821 107822 44169 44173 47023 60184 60331 60585 60747 61081 85745 85985'.split(' ').map(n=>'CVE-2026-'+n);
+const mariaPrimarySha256='56ab97cc2791c8dd0476b7d3d060a7a76c9bb9f13a8185131507a6889373759c';
 export const specs=[
  {kind:'click',artifact:'sha256:a30210737c27fd8a9e0e162e472377ad1692348eee9001e4ccaee4d245a731ca',containers:['utilibre-community-uptime-kuma-1'],package:'python3-click',version:'8.3.3-3',ids:['CVE-2026-7246'],deb:'click-followup-20261012/packages/python3-click_8.3.3-3_all.deb',debSha:'b8ce2b18bb602844e05c67d75cff576a91ca7727af2726175dba84536de04d12'},
  {kind:'aom',artifact:aomId,containers:['utilibre-gathio-postgres-1'],package:'libaom3',version:'3.14.1-1',ids:['CVE-2023-6879','CVE-2023-39616'],deb:'aom-final-20261011/libaom3_3.14.1-1_amd64.deb',debSha:'8f932e686c8a0e3e09ef211b924bac0a43d3d6fd774e0dfbeba9c301aa129fca'},
@@ -121,7 +123,8 @@ export function reasonFor(item,spec,proof){
  const basis=spec.kind==='click'?'Debian marks Click 8.3.3 fixed; exact upstream b96c2601 replaces shell-based editor execution. Pallets disputes this CVE: this is defense in depth, not confirmation of a public exploit. Seven native source/CLI/Unicode/editor checks, Apprise compatibility and isolated Kuma setup/login passed; all installed Click source files match the signed package.':
  spec.kind==='aom'?(item.id==='CVE-2023-39616'?'Debian marks aom 3.14.1-1 fixed; AV1 frame-buffer fixes 35254736, cbce0616, 54e4b8ff and df38eb16 are included since upstream 3.7.0_rc2. Native HEIF/AVIF and actual GDAL consumers passed; not a separate exploit reproduction.':'Debian marks aom 3.14.1-1 fixed (upstream fix 7ae7bef246e85c8f349513d668b4571c79a43c5c, since 3.7.1).'):
  spec.kind==='jwt'?(item.id==='CVE-2026-102268'?'Upstream GHSA-ffc3-869f-jxw9 and Debian mark the PEM/HMAC confusion fixed in 2.14.0. All installed PyJWT 2.15.1 source files match the retained signed Debian package. Isolated native checks reject canonical and whitespace/CR/single-line RSA and EC public keys as HMAC secrets; legitimate HS256/RS256/ES256 round trips pass. No live authentication probe.':'Debian primary tracker marks this advisory fixed by PyJWT 2.15.0 or earlier; installed 2.15.1 source matches the signed Debian package. Native algorithms, empty-JWK and loopback JWKS-redirect checks passed; not an exploit reproduction for every advisory.'):
- mariaServerIds.includes(item.id)?'Advisory affects MariaDB server/CONNECT/Galera/SST/backup components, fixed by server 11.8.9 or earlier. Coturn has only exact signed 11.8.9 client/config payloads; server/Galera packages and binaries are absent.':
+ mariaNov22Ids.includes(item.id)?'Pinned November 22 Debian primary tracker marks this exact advisory resolved in both sid and trixie at versions no newer than installed 1:11.8.9+ds-4. All runtime client/plugin bytes and selected configuration/notice files match authenticated packages; retained release checks passed and the native client reports 3.4.10. Server/Galera components are absent. This is fixed-payload evidence, not an individual exploit reproduction.':
+ mariaServerIds.includes(item.id)?'Advisory affects MariaDB server/CONNECT/Galera/SST/backup components. Coturn has only exact signed 11.8.9 client/config payloads; server/Galera packages and binaries are absent. This is a component-absence decision, not a claim that every server advisory is fixed in 11.8.9.':
  item.id==='CVE-2026-49261'?'MariaDB fixes wsrep_notify_cmd in server 11.8.8; exact source 11.8.9+ds-4 is fixed. Coturn has client/config packages, no installed server/Galera package or daemon.':
  'Connector/C Big5 escaping is fixed in 3.3.19/3.4.9. Debian marks source 11.8.9+ds-4 fixed; installed signed client library and plugins match byte-for-byte (common contains only configuration/docs).';
  return `${basis} Exact ${spec.artifact}, ${spec.package} ${spec.version}; package SHA256 ${spec.debSha}, live payload manifest SHA256 ${proof.manifestSha256}. https://security-tracker.debian.org/tracker/${item.id} . This is an individual fixed-package/component review against the base-distribution scanner match, not an exemption for other CVEs or versions. Raw findings retained. Native/release evidence: deployment/maintenance/vendor-fixed-review/README.md.`;
@@ -130,6 +133,7 @@ import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 export function reviewOptions(args=[]){
  const options={output:root+'vendor-fixed-review.json'},seen=new Set();
  for(const arg of args){
+  if(arg==='--mariadb-nov22'){assert(!options.mariaNov22);options.mariaNov22=true;continue;}
   if(arg==='--ordinary-jwt'){assert(!options.ordinaryJwt);options.ordinaryJwt=true;continue;}
   const match=/^--(only-cve|only-kind|output|host-sandbox)=(.+)$/.exec(arg);
   assert(match,'Supported options: --only-cve=CVE-YYYY-NNNN --output=/absolute/path --host-sandbox=/absolute/bwrap');
@@ -143,12 +147,28 @@ export function reviewOptions(args=[]){
  if(options.onlyCve)assert(specs.some(s=>s.ids.includes(options.onlyCve)),'CVE has no reviewed proof adapter');
  if(options.ordinaryJwt)assert.equal(options.onlyKind,'jwt');
  if(options.onlyKind==='jwt')assert(options.ordinaryJwt,'Explicit JWT subset requires ordinary compatibility mode');
+ if(options.mariaNov22){assert.equal(options.onlyKind,'mariadb');assert(!options.onlyCve);}
  return options;
+}
+// Select before resolving historical release chains: an unrelated stale chain
+// must not prevent an independently requested, exact-payload review.
+export function selectSpecs(options){
+ const selected=specs.filter(s=>(!options.onlyKind||s.kind===options.onlyKind)&&(!options.onlyCve||s.ids.includes(options.onlyCve)));
+ return options.mariaNov22?selected.map(s=>({...s,ids:[...mariaNov22Ids]})):selected;
 }
 export function run(options=reviewOptions(process.argv.slice(2))){
  process.umask(0o077);const queue=read('security-queue.json'),scan=read('security.json');freshScan(queue,scan);
+ if(options.mariaNov22){
+  const bytes=fs.readFileSync(root+'security-20261122/primary/debian-security-tracker.json');assert.equal(sha(bytes),mariaPrimarySha256);
+  const primary=JSON.parse(bytes).mariadb;
+  for(const id of mariaNov22Ids)for(const suite of ['sid','trixie']){
+   const release=primary[id]?.releases?.[suite];assert.equal(release?.status,'resolved');assert(release.fixed_version&&release.fixed_version!=='0');
+   command('dpkg',['--compare-versions','1:11.8.9+ds-4','ge',release.fixed_version]);
+  }
+ }
  const decisions=[],proofs=[],skipped=[],cache=new Map();
- const currentSpecs=followOverlaySpecs(specs,['closure-followup-20261012/bookworm-release.json','closure-followup-20261012/ncurses-release.json','closure-followup-20261012/rsync-release.json','closure-followup-20261012/util-linux-release.json','closure-followup-20261012/curl-release.json','closure-followup-20261012/gzip-release.json','closure-followup-20261012/sqlite-fts-release.json','closure-followup-20261012/urllib3-release.json','closure-followup-20261012/python-system-release.json',...additionalOverlayReceipts].filter(receipt=>fs.existsSync(root+receipt)).map(receipt=>({path:receipt,report:read(receipt)})));
+ const selectedSpecs=selectSpecs(options);
+ const currentSpecs=followOverlaySpecs(selectedSpecs,['closure-followup-20261012/bookworm-release.json','closure-followup-20261012/ncurses-release.json','closure-followup-20261012/rsync-release.json','closure-followup-20261012/util-linux-release.json','closure-followup-20261012/curl-release.json','closure-followup-20261012/gzip-release.json','closure-followup-20261012/sqlite-fts-release.json','closure-followup-20261012/urllib3-release.json','closure-followup-20261012/python-system-release.json',...additionalOverlayReceipts].filter(receipt=>fs.existsSync(root+receipt)).map(receipt=>({path:receipt,report:read(receipt)})));
  for(const item of queue.items){if(options.onlyCve&&item.id!==options.onlyCve)continue;const spec=currentSpecs.find(s=>matches(item,s));if(!spec||options.onlyKind&&spec.kind!==options.onlyKind)continue;
   try{
    const key=spec.artifact+spec.package;let proof=cache.get(key);
@@ -196,7 +216,7 @@ export function run(options=reviewOptions(process.argv.slice(2))){
  }
  const report={date:new Date().toISOString(),scanDate:scan.completedAt,applied:false,onlyCve:options.onlyCve||null,onlyKind:options.onlyKind||null,
   inputs:{queueSha256:sha(fs.readFileSync(root+'security-queue.json')),scanSha256:sha(fs.readFileSync(root+'security.json')),
-   checkerSha256:sha(fs.readFileSync(fileURLToPath(import.meta.url))),fixtureSha256:sha(fs.readFileSync(options.ordinaryJwt?here+'/../security-20261110/jwt-ordinary.py':here+'/jwt-regressions.py')),ordinaryJwt:!!options.ordinaryJwt,
+   checkerSha256:sha(fs.readFileSync(fileURLToPath(import.meta.url))),mariaPrimarySha256:options.mariaNov22?mariaPrimarySha256:null,fixtureSha256:sha(fs.readFileSync(options.ordinaryJwt?here+'/../security-20261110/jwt-ordinary.py':here+'/jwt-regressions.py')),ordinaryJwt:!!options.ordinaryJwt,
    adapterSha256:sha(fs.readFileSync(here+'/isolated-jwt.mjs')),node:process.version},decisions,proofs,skipped};
  fs.writeFileSync(options.output,JSON.stringify(report,null,2)+'\n',{mode:0o600});
  console.log(JSON.stringify({prepared:decisions.length,skipped:skipped.length,applied:false,report:options.output}));return report;

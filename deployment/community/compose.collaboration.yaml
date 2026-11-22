@@ -3,7 +3,7 @@ services:
   wbo:
     ulimits: {core: 0}
     profiles: [pilot]
-    image: utilibre-wbo:2.18.33-candidate
+    image: utilibre-crypto-collaboration-pilot-wbo:20261122
     build:
       context: /opt/utilibre/src/whitebophir
       dockerfile: /home/ubuntu/freetools/deployment/community/wbo/Dockerfile
@@ -48,7 +48,7 @@ services:
   gateway:
     ulimits: {core: 0}
     profiles: [pilot]
-    image: utilibre-vendor-calendar-calino:20261111
+    image: utilibre-security-shared-nginx:20261122
     entrypoint: [nginx, -g, "daemon off;"]
     restart: "no"
     user: "101:101"

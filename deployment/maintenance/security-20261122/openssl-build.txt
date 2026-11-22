@@ -1,0 +1,33 @@
+OpenSSL native repair source / Código de la corrección de OpenSSL
+
+Debian source: 3.5.9-1~deb13u1
+Local package: 3.5.9-1~deb13u1+utilibre1
+License: Apache-2.0; preserve upstream LICENSE.txt and debian/copyright.
+
+English
+The native directory contains complete upstream and modified Debian source.
+In an isolated Trixie build environment with the build dependencies declared
+in the .dsc installed, run from native/:
+  dpkg-source -x openssl_3.5.9-1~deb13u1+utilibre1.dsc
+  cd openssl-3.5.9
+  dpkg-buildpackage -b -us -uc
+Keep the native tests enabled. The .buildinfo and build-packages.lock record
+the actual compiler/dependency versions used for this candidate. Patches are
+already included in debian/patches/series; do not apply them a second time.
+The integration directory contains Utilibre's finite offline-build procedure;
+its exact compiler image and inputs are recorded in openssl-inputs.json.
+Application compatibility, source publication and release approval are separate
+checks in the repository. No production installation is performed by this source
+archive. Byte-for-byte reproducible binaries are not claimed.
+
+Español
+La carpeta native contiene el código original completo y el código Debian
+modificado. En un entorno aislado de compilación de Trixie, con las dependencias
+declaradas en el archivo .dsc instaladas, ejecutá desde native/ los tres comandos
+anteriores. Mantené habilitadas las pruebas nativas. Los archivos .buildinfo y
+build-packages.lock registran las versiones usadas. Los parches ya están en
+debian/patches/series; no los apliqués de nuevo. La carpeta integration contiene
+el procedimiento de compilación sin red de Utilibre y sus archivos fijados.
+La compatibilidad de cada aplicación, la publicación del código y la aprobación
+del despliegue se verifican por separado. Este archivo no instala nada en
+producción. No se afirma que los binarios sean reproducibles byte por byte.

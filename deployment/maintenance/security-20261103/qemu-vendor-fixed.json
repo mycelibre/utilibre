@@ -1,6 +1,6 @@
 {
   "version": "1:11.1.2+ds-3~bpo13+4",
-  "primaryRetrievedAt": "2026-11-03T14:54:10.849Z",
+  "primaryRetrievedAt": "2026-11-22T00:36:43.793657+00:00",
   "primaryUrl": "https://security-tracker.debian.org/tracker/data/json",
   "records": {
     "CVE-2026-12080": {
@@ -18,7 +18,7 @@
         "forky": {
           "status": "resolved",
           "repositories": {
-            "forky": "1:11.1.2+ds-3"
+            "forky": "1:11.1.3+ds-1"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -26,7 +26,7 @@
         "sid": {
           "status": "resolved",
           "repositories": {
-            "sid": "1:11.1.3+ds-1"
+            "sid": "1:11.1.3+ds-2"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -57,7 +57,7 @@
         "forky": {
           "status": "resolved",
           "repositories": {
-            "forky": "1:11.1.2+ds-3"
+            "forky": "1:11.1.3+ds-1"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -65,7 +65,7 @@
         "sid": {
           "status": "resolved",
           "repositories": {
-            "sid": "1:11.1.3+ds-1"
+            "sid": "1:11.1.3+ds-2"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -96,7 +96,7 @@
         "forky": {
           "status": "resolved",
           "repositories": {
-            "forky": "1:11.1.2+ds-3"
+            "forky": "1:11.1.3+ds-1"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -104,7 +104,7 @@
         "sid": {
           "status": "resolved",
           "repositories": {
-            "sid": "1:11.1.3+ds-1"
+            "sid": "1:11.1.3+ds-2"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -135,7 +135,7 @@
         "forky": {
           "status": "resolved",
           "repositories": {
-            "forky": "1:11.1.2+ds-3"
+            "forky": "1:11.1.3+ds-1"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -143,7 +143,7 @@
         "sid": {
           "status": "resolved",
           "repositories": {
-            "sid": "1:11.1.3+ds-1"
+            "sid": "1:11.1.3+ds-2"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -174,7 +174,7 @@
         "forky": {
           "status": "resolved",
           "repositories": {
-            "forky": "1:11.1.2+ds-3"
+            "forky": "1:11.1.3+ds-1"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -182,7 +182,7 @@
         "sid": {
           "status": "resolved",
           "repositories": {
-            "sid": "1:11.1.3+ds-1"
+            "sid": "1:11.1.3+ds-2"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -213,7 +213,7 @@
         "forky": {
           "status": "resolved",
           "repositories": {
-            "forky": "1:11.1.2+ds-3"
+            "forky": "1:11.1.3+ds-1"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -221,7 +221,7 @@
         "sid": {
           "status": "resolved",
           "repositories": {
-            "sid": "1:11.1.3+ds-1"
+            "sid": "1:11.1.3+ds-2"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -255,7 +255,7 @@
         "forky": {
           "status": "resolved",
           "repositories": {
-            "forky": "1:11.1.2+ds-3"
+            "forky": "1:11.1.3+ds-1"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -263,7 +263,7 @@
         "sid": {
           "status": "resolved",
           "repositories": {
-            "sid": "1:11.1.3+ds-1"
+            "sid": "1:11.1.3+ds-2"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -294,7 +294,7 @@
         "forky": {
           "status": "resolved",
           "repositories": {
-            "forky": "1:11.1.2+ds-3"
+            "forky": "1:11.1.3+ds-1"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -302,7 +302,7 @@
         "sid": {
           "status": "resolved",
           "repositories": {
-            "sid": "1:11.1.3+ds-1"
+            "sid": "1:11.1.3+ds-2"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -336,7 +336,7 @@
         "forky": {
           "status": "resolved",
           "repositories": {
-            "forky": "1:11.1.2+ds-3"
+            "forky": "1:11.1.3+ds-1"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"
@@ -344,7 +344,7 @@
         "sid": {
           "status": "resolved",
           "repositories": {
-            "sid": "1:11.1.3+ds-1"
+            "sid": "1:11.1.3+ds-2"
           },
           "fixed_version": "1:11.1.2+ds-1",
           "urgency": "not yet assigned"

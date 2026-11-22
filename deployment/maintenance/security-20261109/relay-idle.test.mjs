@@ -10,3 +10,13 @@ test('relay guard counts both range endpoints and rejects unknown input',()=>{
  assert.throws(()=>boundRelaySockets([header+'\nmalformed'],1,2));
  assert.throws(()=>boundRelaySockets([header],2,1));
 });
+test('host-network guard counts relay-owned allocations, not foreign ephemeral ports',()=>{
+ const text=header+'\n'+row(49700)+'\n'+row(49731).replace(/123$/,'456');
+ assert.equal(boundRelaySockets([text],49700,49731,new Set(['123'])),1);
+ assert.equal(boundRelaySockets([text],49700,49731,new Set(['456'])),1);
+ assert.equal(boundRelaySockets([text],49700,49731,new Set(['789'])),0);
+ assert.equal(boundRelaySockets([text,text],49700,49731,new Set(['123','456'])),4);
+ assert.throws(()=>boundRelaySockets([text],49700,49731,new Set()));
+ assert.throws(()=>boundRelaySockets([text],49700,49731,new Set(['unknown'])));
+ assert.throws(()=>boundRelaySockets([text.replace(/456$/,'bad')],49700,49731,new Set(['123'])));
+});

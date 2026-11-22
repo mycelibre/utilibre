@@ -1,7 +1,7 @@
 name: utilibre-pack-forms
 services:
   db:
-    image: utilibre-vendor-simplelogin-db:20261111
+    image: utilibre-xml-simplelogin-db:20261122
     user: '70:70'
     restart: unless-stopped
     cap_drop: [ALL]
@@ -21,7 +21,7 @@ services:
       timeout: 3s
       retries: 5
   app:
-    image: utilibre-python-pack-forms-app:20261114
+    image: utilibre-vendor-leaf-pack-forms-app:20261122
     restart: unless-stopped
     depends_on: {db: {condition: service_healthy}}
     user: '4002:4002'
@@ -73,7 +73,7 @@ services:
       - ./liberaforms-logging.py:/app/liberaforms/config/logging.py:ro
     networks: {forms: {ipv4_address: 172.29.98.3}}
   web:
-    image: utilibre-vendor-calendar-calino:20261111
+    image: utilibre-security-shared-nginx:20261122
     entrypoint: [nginx, -g, 'daemon off;']
     restart: unless-stopped
     depends_on: [app]

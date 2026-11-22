@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "approval": "preparation-only",
+  "sourceVersion": "3.5.9-1~deb13u1",
+  "candidateVersion": "3.5.9-1~deb13u1+utilibre1",
+  "compiler": "sha256:0aa7f81d9268988debf996645427f83e9e72dbc5f1030fa5ec080510edab9994",
+  "sourceFiles": [
+    {
+      "file": "openssl_3.5.9-1~deb13u1.dsc",
+      "sha256": "b038dfab5ee111242b7439e07c820d228519273e7fd1f514014b039e929aad9f",
+      "size": 2707,
+      "url": "https://deb.debian.org/debian/pool/main/o/openssl/openssl_3.5.9-1~deb13u1.dsc"
+    },
+    {
+      "file": "openssl_3.5.9.orig.tar.gz",
+      "sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+      "size": 53279637,
+      "url": "https://deb.debian.org/debian/pool/main/o/openssl/openssl_3.5.9.orig.tar.gz"
+    },
+    {
+      "file": "openssl_3.5.9.orig.tar.gz.asc",
+      "sha256": "bdccf2057a7c4ae377b40e832cb8c632ae8b532d4fb64cc7b843066eee748f89",
+      "size": 931,
+      "url": "https://deb.debian.org/debian/pool/main/o/openssl/openssl_3.5.9.orig.tar.gz.asc"
+    },
+    {
+      "file": "openssl_3.5.9-1~deb13u1.debian.tar.xz",
+      "sha256": "7d5158a87cd24641316b050de419be4ebddb1f180afd7ebaa3bc990036c38ec6",
+      "size": 54612,
+      "url": "https://deb.debian.org/debian/pool/main/o/openssl/openssl_3.5.9-1~deb13u1.debian.tar.xz"
+    }
+  ],
+  "patches": [
+    {
+      "advisory": "CVE-2026-107493",
+      "commit": "c8f6d04f8e6d40b1bf83334e4a2ec9daf5943a3d",
+      "sha256": "6176d694ac38251bfa4e11198d002d8720f9efb05deffb35703adb93be6173e1",
+      "file": "CVE-2026-107493.patch",
+      "url": "https://github.com/openssl/openssl/commit/c8f6d04f8e6d40b1bf83334e4a2ec9daf5943a3d.patch"
+    },
+    {
+      "advisory": "CVE-2026-124709",
+      "commit": "f3acb0a3328046741479482c51cec815839e1b05",
+      "sha256": "d52a6af23bc966daaa9eded816a392d429a67bb76faafd922f4c4cf35a9349f4",
+      "file": "CVE-2026-124709.patch",
+      "url": "https://github.com/openssl/openssl/commit/f3acb0a3328046741479482c51cec815839e1b05.patch"
+    },
+    {
+      "advisory": "CVE-2026-35190",
+      "commit": "9491b0d9cc7950af1f3dc89499bd5433b9cd4f43",
+      "sha256": "e1b45282a8876fdda6b930273e28bad1cdb1c6915ccd25fe0b61789281489ed1",
+      "file": "CVE-2026-35190.patch",
+      "url": "https://github.com/openssl/openssl/commit/9491b0d9cc7950af1f3dc89499bd5433b9cd4f43.patch"
+    },
+    {
+      "advisory": "CVE-2026-88823",
+      "commit": "159e1de0c448d7b9f09ad768c8e141def4aa1eb4",
+      "sha256": "a945077c0a978dbfe5af5e4f7174a2151466547f8fb94562f395baa7b6b7c147",
+      "file": "CVE-2026-88823.patch",
+      "url": "https://github.com/openssl/openssl/commit/159e1de0c448d7b9f09ad768c8e141def4aa1eb4.patch"
+    },
+    {
+      "advisory": "CVE-2026-107496",
+      "commit": "a0051cfe699bf5a047bc1c4faef65f80f7987366",
+      "sha256": "77d3759d279c71af59629c4a0fa82d8272a099762f2fa9e3f66d7ca5ed544157",
+      "file": "CVE-2026-107496.patch",
+      "url": "https://github.com/openssl/openssl/commit/a0051cfe699bf5a047bc1c4faef65f80f7987366.patch"
+    },
+    {
+      "advisory": "CVE-2026-88822",
+      "commit": "1a73dc590cbad62d6f0329ea4779eadaa8d8fd75",
+      "sha256": "50f7cc52fb146703379ca043d17e204c4fda99c684efe3db6d6f3ae1d175bd2a",
+      "file": "CVE-2026-88822.patch",
+      "url": "https://github.com/openssl/openssl/commit/1a73dc590cbad62d6f0329ea4779eadaa8d8fd75.patch"
+    },
+    {
+      "advisory": "CVE-2026-95691",
+      "commit": "f6244675833e097c2429a40d1b206d95385bd42f",
+      "sha256": "93d8e82fdc995172a6d5cc6952491658106191bd5ac221d34596adbddfcd1afe",
+      "file": "CVE-2026-95691.patch",
+      "url": "https://github.com/openssl/openssl/commit/f6244675833e097c2429a40d1b206d95385bd42f.patch"
+    },
+    {
+      "advisory": "CVE-2026-95692",
+      "commit": "257a3427aa0ef8d9dd2ef5b3e2d1c021a221b116",
+      "sha256": "0e328604c0038de6629a29322ae5f02d2f5f5128c2625b57ca64262efab99e05",
+      "file": "CVE-2026-95692.patch",
+      "url": "https://github.com/openssl/openssl/commit/257a3427aa0ef8d9dd2ef5b3e2d1c021a221b116.patch"
+    }
+  ],
+  "minimumFreeBytes": 8589934592,
+  "network": "none during build and verification",
+  "productionAllowed": false,
+  "reference": "https://openssl-library.org/news/vulnerabilities-3.5/"
+}

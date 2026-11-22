@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Replace RSS-Bridge's NGINX executable with the signed upstream Debian 12 stable binary, preserving PHP, application files and all configuration",
+  "version": "1.30.7",
+  "advisories": [
+    "CVE-2026-123634",
+    "CVE-2026-123007",
+    "CVE-2026-121810",
+    "CVE-2026-123633",
+    "CVE-2026-118899",
+    "CVE-2026-113425",
+    "CVE-2026-125283",
+    "CVE-2026-120967",
+    "CVE-2026-123640"
+  ],
+  "package": {
+    "url": "https://nginx.org/packages/debian/pool/nginx/n/nginx/nginx_1.30.7-1~bookworm_amd64.deb",
+    "file": "nginx_1.30.7-1~bookworm_amd64.deb",
+    "sha256": "0e5325ab48a0995d09650132073920993b0b8949b7af51194240e33105755857",
+    "binarySha256": "4a56e4d221295038a568e7dac10a70fd664844be0e9f004cdb69f72cd03a7fb8",
+    "copyrightSha256": "4f72e2bccf0bcd839dd447ab6f359336f428caa1987a9afec2bc9ade5711658a",
+    "keySha256": "55385da31d198fa6a5012d40ae98ecb272a6c4e8fffffba94719ffd3e87de37a",
+    "signingFingerprint": "8540A6F18833A80E9C1653A42FD21310B49F6B46",
+    "inReleaseSha256": "6fc16f378a6078b8cf886b85b98b9c43801ae177600ea41b3ac6177e8acae218",
+    "packagesSha256": "d710b6493a2369c81af1a4ce7cbd755cba4da004e9577ddd253c474a0d78d7e8",
+    "packagesBytes": 53131
+  },
+  "rows": [
+    {
+      "key": "rssbridge",
+      "base": "sha256:034a3624b82093cf00363e002cce8e12c94537838103da33be6b9d11a2828b67",
+      "candidate": "utilibre-rssbridge:nginx1307-security-20261122",
+      "containers": [
+        "utilibre-community-rssbridge-1"
+      ],
+      "previous": "1.30.6",
+      "binary": "/usr/sbin/nginx",
+      "packages": {},
+      "approval": "preparation-only",
+      "kind": "debian",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "bd9f8cd111ab80b3f7fcfc83a6e4852495beddc57899d50848a33a2d5a055d2d",
+        "scope.json": "da05b79d6dc2b4aa38eb188e01c0210fc4061770f54239c8cabbf41dfb3042dc",
+        "application.json": "5586027c6f7c3148f432a274bee41c5a1e5372b3be4bf935e2be2379b47ff25b",
+        "scan-gate.json": "54678ccba167b3f6f051cc942b16699a7770aa3a88fddc6a4b3232820fd5172d",
+        "after-scan.json": "9f694e3339285d51d1cc0163ecd0fcf63b8a15d8c8156204bf933e63c5b89da5"
+      },
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "completeInventorySha256": "2da76f7a5972fb0cd3c498c4bb6e4b4ea8ba7dbd8630d09be5b362b0d5408f1f",
+      "approvalBasis": "Owner-authorized repair; official signed upstream 1.30.7 executable replaces 1.30.6. Only executable/license changes; old/new native Nginx-PHP/privacy/rate-limit/HTTP2/feed tests passed. Raw distro metadata findings retained pending exact binary attribution; no migrations."
+    }
+  ],
+  "acquisition": "Pinned files from nginx.org only. Archived signature/index evidence is required; replay never refreshes it implicitly.",
+  "verification": "No network outside disposable loopback fixtures; exact image file comparison and same-database assessment. Debian package labels remain unchanged and require explicit binary-attribution review.",
+  "rollback": "Previous immutable image and unchanged Compose configuration; no database migration or persistent-data change.",
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "minimumFreeBytes": 8589934592,
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08"
+}

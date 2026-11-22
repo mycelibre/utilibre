@@ -7,6 +7,14 @@ test('later Expat reviews require an unambiguous completed same-role lineage',()
  assert.equal(expatDescendant('service','a',start,end,[]),'a');
  for(const rows of [[row,{...row,newImage:'c'}],[{...row,completedAt:'2026-11-03T13:00:00Z'}],[row,{...row,oldImage:'b',newImage:'a'}]])assert.throws(()=>expatDescendant('service','a',start,end,rows));
 });
+test('completed overlays may be listed in reverse order without losing a retained repair',()=>{
+ const start='2026-11-03T10:00:00Z',end='2026-11-03T14:00:00Z';
+ const first={name:'service',oldImage:'a',newImage:'b',completedAt:'2026-11-03T11:00:00Z'};
+ const second={name:'service',oldImage:'b',newImage:'c',completedAt:'2026-11-03T12:00:00Z'};
+ assert.equal(expatDescendant('service','a',start,end,[second,first]),'c');
+ assert.throws(()=>expatDescendant('service','a',start,end,[second,first,{...first,newImage:'unreviewed'}]));
+ assert.equal(expatDescendant('service','a',start,end,[second,{...first,name:'other'}]),'a');
+});
 test('comparison retains other CVEs, packages, severity and paths',()=>{
  const a={id:advisories[0],package:'libexpat1',installed:'2.9.0-1',severity:'HIGH',target:'debian'};
  assert.equal(expatComparison(a),expatComparison({...a,installed:'2.10.0-1'}));

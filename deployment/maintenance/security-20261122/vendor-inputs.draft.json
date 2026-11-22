@@ -1,0 +1,677 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "fixtures": {
+    "zlib": {
+      "path": "/var/lib/utilibre-maintenance/libraries-20261111/fixture/native",
+      "sha256": "b72fedab8a8ab4ab006b043b6ebcedbea746d5035caeaca42fcc149e78f0b4d2"
+    },
+    "libxpm": {
+      "path": "/var/lib/utilibre-maintenance/libraries-20261111/fixture/xpm-native",
+      "sha256": "fcabfc1cebb8b1644a19f06b8907930bdac694febdd0275f12ee1695fb432625"
+    },
+    "libxml2": {
+      "path": "/var/lib/utilibre-maintenance/vendor-libs-20261111/fixture/xslt-native",
+      "sha256": "1843be009dfa91fc50cb7d9b1e401c8e5e75debd6cfbb4a3e526e4f73cf247f5"
+    }
+  },
+  "rows": [
+    {
+      "key": "wallabag",
+      "base": "sha256:3b869709d9174e5933249d087e7a04e13420397a30d6dee719f362f2165e6789",
+      "oldRefs": [
+        "utilibre-wallabag:http-client-security-20261110"
+      ],
+      "containers": [
+        "utilibre-wallabag-app-1"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "candidate": "utilibre-security-wallabag:20261122",
+      "approval": "preparation-only",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0",
+        "php84": "8.4.27-r0",
+        "php84-bcmath": "8.4.27-r0",
+        "php84-common": "8.4.27-r0",
+        "php84-ctype": "8.4.27-r0",
+        "php84-curl": "8.4.27-r0",
+        "php84-dom": "8.4.27-r0",
+        "php84-fileinfo": "8.4.27-r0",
+        "php84-fpm": "8.4.27-r0",
+        "php84-gd": "8.4.27-r0",
+        "php84-gettext": "8.4.27-r0",
+        "php84-iconv": "8.4.27-r0",
+        "php84-intl": "8.4.27-r0",
+        "php84-mbstring": "8.4.27-r0",
+        "php84-opcache": "8.4.27-r0",
+        "php84-openssl": "8.4.27-r0",
+        "php84-pdo": "8.4.27-r0",
+        "php84-pdo_sqlite": "8.4.27-r0",
+        "php84-phar": "8.4.27-r0",
+        "php84-session": "8.4.27-r0",
+        "php84-simplexml": "8.4.27-r0",
+        "php84-sockets": "8.4.27-r0",
+        "php84-sodium": "8.4.27-r0",
+        "php84-tidy": "8.4.27-r0",
+        "php84-tokenizer": "8.4.27-r0",
+        "php84-xml": "8.4.27-r0",
+        "php84-xmlreader": "8.4.27-r0",
+        "php84-xmlwriter": "8.4.27-r0",
+        "php84-zip": "8.4.27-r0"
+      },
+      "compatibility": "Only signed maintenance packages; full image scope, existing modules and application tests required. No musl/base-distribution upgrade."
+    },
+    {
+      "key": "fourget",
+      "base": "sha256:545248543b020415c2de4a999440cdead3802afbf2baccb8713d0fdc3e12f555",
+      "oldRefs": [
+        "utilibre-vendor-reader-evaluation-fourget:20261114"
+      ],
+      "containers": [
+        "utilibre-reader-evaluation-fourget-1"
+      ],
+      "release": "3.23.6",
+      "kind": "alpine",
+      "candidate": "utilibre-security-fourget:20261122",
+      "approval": "preparation-only",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0",
+        "php84": "8.4.27-r0",
+        "php84-apache2": "8.4.27-r0",
+        "php84-common": "8.4.27-r0",
+        "php84-curl": "8.4.27-r0",
+        "php84-dom": "8.4.27-r0",
+        "php84-fileinfo": "8.4.27-r0",
+        "php84-iconv": "8.4.27-r0",
+        "php84-mbstring": "8.4.27-r0",
+        "php84-openssl": "8.4.27-r0",
+        "php84-sodium": "8.4.27-r0"
+      },
+      "compatibility": "Only signed maintenance packages; full image scope, existing modules and application tests required. No musl/base-distribution upgrade."
+    },
+    {
+      "key": "binternet",
+      "base": "sha256:70567fb093d0041fe177c77595938d3c291863e3f1c1fadc8bcba7a15c4c66d8",
+      "oldRefs": [
+        "utilibre-zlib-binternet-onion-binternet-onion:candidate-20261109"
+      ],
+      "containers": [
+        "utilibre-binternet-binternet-1",
+        "utilibre-binternet-onion-binternet-onion-1"
+      ],
+      "release": "3.23.6",
+      "kind": "alpine",
+      "candidate": "utilibre-security-binternet:20261122",
+      "approval": "preparation-only",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0",
+        "php84": "8.4.27-r0",
+        "php84-common": "8.4.27-r0",
+        "php84-curl": "8.4.27-r0",
+        "php84-dom": "8.4.27-r0",
+        "php84-fileinfo": "8.4.27-r0",
+        "php84-fpm": "8.4.27-r0",
+        "php84-openssl": "8.4.27-r0"
+      },
+      "compatibility": "Only signed maintenance packages; full image scope, existing modules and application tests required. No musl/base-distribution upgrade."
+    },
+    {
+      "key": "degoog",
+      "base": "sha256:7bd321b2ed315ad08d0aa5dbbdf392204d16a04e9496d89af4d76a692e218b15",
+      "oldRefs": [
+        "utilibre-vendor-evaluation-degoog:20261111"
+      ],
+      "containers": [
+        "utilibre-evaluation-degoog-1"
+      ],
+      "release": "3.22.4",
+      "kind": "alpine",
+      "candidate": "utilibre-security-degoog:20261122",
+      "approval": "preparation-only",
+      "packages": {
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "php84": "8.4.27-r0",
+        "php84-common": "8.4.27-r0",
+        "php84-mbstring": "8.4.27-r0",
+        "php84-openssl": "8.4.27-r0",
+        "php84-sodium": "8.4.27-r0"
+      },
+      "compatibility": "Only signed maintenance packages; full image scope, existing modules and application tests required. No musl/base-distribution upgrade."
+    },
+    {
+      "key": "privatebin",
+      "base": "sha256:7d671a189db9520bdde8e31a4d92ff8cb5164c8629d5ddc726e2244382188ca6",
+      "oldRefs": [
+        "utilibre-vendor-services-privatebin:20261114"
+      ],
+      "containers": [
+        "utilibre-services-privatebin-1"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "candidate": "utilibre-security-privatebin:20261122",
+      "approval": "preparation-only",
+      "packages": {
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "php85": "8.5.12-r0",
+        "php85-common": "8.5.12-r0",
+        "php85-fpm": "8.5.12-r0",
+        "php85-gd": "8.5.12-r0",
+        "php85-iconv": "8.5.12-r0",
+        "php85-mysqlnd": "8.5.12-r0",
+        "php85-openssl": "8.5.12-r0",
+        "php85-pdo": "8.5.12-r0",
+        "php85-pdo_mysql": "8.5.12-r0",
+        "php85-pdo_pgsql": "8.5.12-r0",
+        "php85-simplexml": "8.5.12-r0",
+        "nginx": "1.30.6-r0"
+      },
+      "compatibility": "Only signed maintenance packages; full image scope, existing modules and application tests required. No musl/base-distribution upgrade."
+    },
+    {
+      "key": "translite",
+      "base": "sha256:7f1edb9f3553c54a8258d4375fcf31887a15c8ea890a15511003717374c8886b",
+      "oldRefs": [
+        "utilibre-zlib-translite-translite:candidate-20261109"
+      ],
+      "containers": [
+        "utilibre-translite-translite-1"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "candidate": "utilibre-security-translite:20261122",
+      "approval": "preparation-only",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0",
+        "php85": "8.5.12-r0",
+        "php85-common": "8.5.12-r0",
+        "php85-curl": "8.5.12-r0",
+        "php85-dom": "8.5.12-r0",
+        "php85-fpm": "8.5.12-r0",
+        "php85-mbstring": "8.5.12-r0",
+        "php85-openssl": "8.5.12-r0",
+        "php85-session": "8.5.12-r0"
+      },
+      "compatibility": "Only signed maintenance packages; full image scope, existing modules and application tests required. No musl/base-distribution upgrade."
+    },
+    {
+      "key": "addy",
+      "base": "sha256:f658ff59bd7b51bdff958de65f46604034106d90d153455a40ee37129cfff209",
+      "oldRefs": [
+        "utilibre-addy-app:musl-security-20261109"
+      ],
+      "containers": [
+        "utilibre-addy-app-1"
+      ],
+      "release": "3.23.5",
+      "kind": "alpine",
+      "candidate": "utilibre-security-addy:20261122",
+      "approval": "preparation-only",
+      "packages": {
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "openssl": "3.5.9-r0",
+        "php84": "8.4.27-r0",
+        "php84-common": "8.4.27-r0",
+        "php84-ctype": "8.4.27-r0",
+        "php84-curl": "8.4.27-r0",
+        "php84-dom": "8.4.27-r0",
+        "php84-fileinfo": "8.4.27-r0",
+        "php84-fpm": "8.4.27-r0",
+        "php84-gd": "8.4.27-r0",
+        "php84-gmp": "8.4.27-r0",
+        "php84-iconv": "8.4.27-r0",
+        "php84-intl": "8.4.27-r0",
+        "php84-mbstring": "8.4.27-r0",
+        "php84-mysqlnd": "8.4.27-r0",
+        "php84-opcache": "8.4.27-r0",
+        "php84-openssl": "8.4.27-r0",
+        "php84-pdo": "8.4.27-r0",
+        "php84-pdo_mysql": "8.4.27-r0",
+        "php84-phar": "8.4.27-r0",
+        "php84-session": "8.4.27-r0",
+        "php84-simplexml": "8.4.27-r0",
+        "php84-sockets": "8.4.27-r0",
+        "php84-sodium": "8.4.27-r0",
+        "php84-tokenizer": "8.4.27-r0",
+        "php84-xml": "8.4.27-r0",
+        "php84-xmlreader": "8.4.27-r0",
+        "php84-xmlwriter": "8.4.27-r0",
+        "php84-zip": "8.4.27-r0"
+      },
+      "compatibility": "Only signed maintenance packages; full image scope, existing modules and application tests required. No musl/base-distribution upgrade."
+    }
+  ],
+  "packages": {
+    "libcrypto3": {
+      "file": "libcrypto3-3.5.9-r1.apk",
+      "version": "3.5.9-r1",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libcrypto3-3.5.9-r1.apk",
+      "sourceCommit": "0f4c7e8d0f5f7cebbdc2156eca4391080b732bf2",
+      "license": "Apache-2.0",
+      "indexSha256": "edaea06c2fc31b1a15bfd9c02274bd74b882a4410d6b157e08a5b260c9e8aba8"
+    },
+    "libssl3": {
+      "file": "libssl3-3.5.9-r1.apk",
+      "version": "3.5.9-r1",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libssl3-3.5.9-r1.apk",
+      "sourceCommit": "0f4c7e8d0f5f7cebbdc2156eca4391080b732bf2",
+      "license": "Apache-2.0",
+      "indexSha256": "edaea06c2fc31b1a15bfd9c02274bd74b882a4410d6b157e08a5b260c9e8aba8"
+    },
+    "php84": {
+      "file": "php84-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-bcmath": {
+      "file": "php84-bcmath-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-bcmath-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-common": {
+      "file": "php84-common-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-common-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-ctype": {
+      "file": "php84-ctype-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-ctype-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-curl": {
+      "file": "php84-curl-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-curl-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-dom": {
+      "file": "php84-dom-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-dom-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-fileinfo": {
+      "file": "php84-fileinfo-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-fileinfo-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-fpm": {
+      "file": "php84-fpm-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-fpm-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-gd": {
+      "file": "php84-gd-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-gd-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-gettext": {
+      "file": "php84-gettext-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-gettext-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-iconv": {
+      "file": "php84-iconv-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-iconv-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-intl": {
+      "file": "php84-intl-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-intl-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-mbstring": {
+      "file": "php84-mbstring-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-mbstring-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-opcache": {
+      "file": "php84-opcache-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-opcache-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-openssl": {
+      "file": "php84-openssl-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-openssl-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-pdo": {
+      "file": "php84-pdo-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-pdo-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-pdo_sqlite": {
+      "file": "php84-pdo_sqlite-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-pdo_sqlite-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-phar": {
+      "file": "php84-phar-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-phar-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-session": {
+      "file": "php84-session-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-session-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-simplexml": {
+      "file": "php84-simplexml-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-simplexml-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-sockets": {
+      "file": "php84-sockets-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-sockets-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-sodium": {
+      "file": "php84-sodium-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-sodium-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-tidy": {
+      "file": "php84-tidy-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-tidy-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-tokenizer": {
+      "file": "php84-tokenizer-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-tokenizer-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-xml": {
+      "file": "php84-xml-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-xml-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-xmlreader": {
+      "file": "php84-xmlreader-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-xmlreader-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-xmlwriter": {
+      "file": "php84-xmlwriter-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-xmlwriter-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-zip": {
+      "file": "php84-zip-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-zip-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-apache2": {
+      "file": "php84-apache2-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-apache2-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85": {
+      "file": "php85-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85-common": {
+      "file": "php85-common-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-common-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85-fpm": {
+      "file": "php85-fpm-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-fpm-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85-gd": {
+      "file": "php85-gd-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-gd-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85-iconv": {
+      "file": "php85-iconv-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-iconv-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85-mysqlnd": {
+      "file": "php85-mysqlnd-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-mysqlnd-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85-openssl": {
+      "file": "php85-openssl-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-openssl-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85-pdo": {
+      "file": "php85-pdo-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-pdo-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85-pdo_mysql": {
+      "file": "php85-pdo_mysql-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-pdo_mysql-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85-pdo_pgsql": {
+      "file": "php85-pdo_pgsql-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-pdo_pgsql-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85-simplexml": {
+      "file": "php85-simplexml-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-simplexml-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "nginx": {
+      "file": "nginx-1.30.7-r0.apk",
+      "version": "1.30.7-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/nginx-1.30.7-r0.apk",
+      "sourceCommit": "58441ec48848459218e437686825f1113ab80bff",
+      "license": "BSD-2-Clause",
+      "indexSha256": "edaea06c2fc31b1a15bfd9c02274bd74b882a4410d6b157e08a5b260c9e8aba8"
+    },
+    "php85-curl": {
+      "file": "php85-curl-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-curl-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85-dom": {
+      "file": "php85-dom-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-dom-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85-mbstring": {
+      "file": "php85-mbstring-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-mbstring-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php85-session": {
+      "file": "php85-session-8.5.13-r0.apk",
+      "version": "8.5.13-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php85-session-8.5.13-r0.apk",
+      "sourceCommit": "f36cc7daedbe51cbaa4ef50931de1893b22509cd",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0 Apache-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "openssl": {
+      "file": "openssl-3.5.9-r1.apk",
+      "version": "3.5.9-r1",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/openssl-3.5.9-r1.apk",
+      "sourceCommit": "0f4c7e8d0f5f7cebbdc2156eca4391080b732bf2",
+      "license": "Apache-2.0",
+      "indexSha256": "edaea06c2fc31b1a15bfd9c02274bd74b882a4410d6b157e08a5b260c9e8aba8"
+    },
+    "php84-gmp": {
+      "file": "php84-gmp-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-gmp-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-mysqlnd": {
+      "file": "php84-mysqlnd-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-mysqlnd-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    },
+    "php84-pdo_mysql": {
+      "file": "php84-pdo_mysql-8.4.28-r0.apk",
+      "version": "8.4.28-r0",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/php84-pdo_mysql-8.4.28-r0.apk",
+      "sourceCommit": "279061702db96da35ba70267c13430eb590fb323",
+      "license": "PHP-3.01 BSD-3-Clause LGPL-2.0-or-later MIT Zend-2.0",
+      "indexSha256": "5316173c447f47cca8b7a25798e44f84c40ebebcc7fd319ff76ad15f34a3a37e"
+    }
+  }
+}

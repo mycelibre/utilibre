@@ -1,3 +1,18 @@
+## 22 November maintenance in progress
+
+The complete 08:11 UTC frozen assessment and exact repair reviews leave
+0 critical, 106 high, 5,751 medium, 5,841 low and 744 unknown package/target
+records pending. Raw findings remain visible; this is not security clearance.
+Both relay roles, Yopass, the additional crypto/XML consumers, Spliit/Wishlist
+Effect and the private Penpot admin build dependencies are now deployed and
+verified. All 175 running containers / 90 health checks pass; no systemd unit
+is failed. Host OpenSSL is active and Proxmox guest-agent ping/thaw passed.
+A separate post-boot APT upgrade left old libc consumers; installed payload and
+native checks pass, but a new coordinated restart window is still required.
+The original host inventory-drift failure remains recorded. Vendor-open and
+unverified findings remain unresolved. Older checkpoints below are historical.
+[Completed releases, evidence, limits and rollback](records/security-2026-11-22.md).
+
 ## 14 November release checkpoint
 
 Native dependency repairs, runtime pins and replay evidence are deployed.

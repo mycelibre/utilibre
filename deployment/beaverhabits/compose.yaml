@@ -11,7 +11,7 @@ x-runtime: &runtime
 services:
   app:
     <<: *runtime
-    image: utilibre-python-beaverhabits-app:20261114
+    image: utilibre-openssl-beaverhabits-app:20261122
     user: '1000:1000'
     env_file: /opt/utilibre/beaverhabits/private/app.env
     environment:
@@ -44,7 +44,7 @@ services:
       app: {ipv4_address: 172.29.145.10}
   gateway:
     <<: *runtime
-    image: utilibre-vendor-calendar-calino:20261111
+    image: utilibre-security-shared-nginx:20261122
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     mem_limit: 96m

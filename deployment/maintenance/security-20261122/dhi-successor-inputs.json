@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "nativeFixture": {
+    "cliSha256": "acc10176d038aeb7b2a77d9ec972ac2985857a7191f7aecb7c54ef0e2c7e9549",
+    "cliOrigin": {
+      "imageId": "sha256:9253d4ba4d02d712da5bafb84e5acb3f725d4584a38cbf752ee72b4cd1b4f7a4",
+      "path": "/usr/bin/openssl",
+      "sha256": "acc10176d038aeb7b2a77d9ec972ac2985857a7191f7aecb7c54ef0e2c7e9549"
+    },
+    "cryptoSha256": "c53842644f9cbd9568ee4f1f25d6a960862ad1499ad8bd9c89c006eec45589b7",
+    "tlsServerSha256": "9614aa6fa6d4db4f96eeec390d8b7f2cbd26a3dea43935dd8cae7ebf4ede71a0",
+    "tlsImage": "sha256:9253d4ba4d02d712da5bafb84e5acb3f725d4584a38cbf752ee72b4cd1b4f7a4"
+  },
+  "packages": {
+    "dhi/libfreetype6": {
+      "name": "libfreetype6",
+      "version": "2.13.3+dfsg-1+deb13u1+dhi1",
+      "file": "libfreetype6_2.13.3+dfsg-1+deb13u1+dhi1_amd64.deb",
+      "sha256": "f1304f3aa4148838812741abbd84bcea545368a2d8a59a89e8f2a02ed5df45c6",
+      "url": "https://dhi.io/deb/debian/main/pool/trixie/main/l/li/libfreetype6_2.13.3+dfsg-1+deb13u1+dhi1/libfreetype6_2.13.3+dfsg-1+deb13u1+dhi1_amd64.deb",
+      "distribution": "dhi-trixie",
+      "depends": "libbrotli1 (>= 1.1.0), libbz2-1.0, libc6 (>= 2.41), libpng16-16t64 (>= 1.6.48), zlib1g (>= 1:1.2.3.3.dfsg-1)",
+      "preDepends": "",
+      "source": "freetype"
+    },
+    "dhi/libnghttp2-14": {
+      "name": "libnghttp2-14",
+      "version": "1.64.0-1.1+deb13u2+dhi0",
+      "file": "libnghttp2-14_1.64.0-1.1+deb13u2+dhi0_amd64.deb",
+      "sha256": "e0cf69476408d242823d2b54372345ae87c33ed62f316839668814436870f944",
+      "url": "https://dhi.io/deb/debian/main/pool/trixie/main/l/li/libnghttp2-14_1.64.0-1.1+deb13u2+dhi0/libnghttp2-14_1.64.0-1.1+deb13u2+dhi0_amd64.deb",
+      "distribution": "dhi-trixie",
+      "depends": "libc6 (>= 2.41)",
+      "preDepends": "",
+      "source": "nghttp2"
+    },
+    "dhi/libssl3t64": {
+      "name": "libssl3t64",
+      "version": "3.5.9-1~deb13u1+dhi0",
+      "file": "libssl3t64_3.5.9-1~deb13u1+dhi0_amd64.deb",
+      "sha256": "7c7e6f12ae371104b01d2110e2778e69906e34d9dd0ce6491c1ea9119ff78ba5",
+      "url": "https://dhi.io/deb/debian/main/pool/trixie/main/l/li/libssl3t64_3.5.9-1~deb13u1+dhi0/libssl3t64_3.5.9-1~deb13u1+dhi0_amd64.deb",
+      "distribution": "dhi-trixie",
+      "depends": "libc6 (>= 2.41), libzstd1 (>= 1.5.5), zlib1g (>= 1:1.2.3.3.dfsg-1), openssl-provider-legacy",
+      "preDepends": "",
+      "source": "openssl"
+    },
+    "dhi/openssl-provider-legacy": {
+      "name": "openssl-provider-legacy",
+      "version": "3.5.9-1~deb13u1+dhi0",
+      "file": "openssl-provider-legacy_3.5.9-1~deb13u1+dhi0_amd64.deb",
+      "sha256": "060d7b6b16954750d734c99fda4d09cdd59a480df2b57d0b3dd347fcbb30319f",
+      "url": "https://dhi.io/deb/debian/main/pool/trixie/main/o/op/openssl-provider-legacy_3.5.9-1~deb13u1+dhi0/openssl-provider-legacy_3.5.9-1~deb13u1+dhi0_amd64.deb",
+      "distribution": "dhi-trixie",
+      "depends": "libc6 (>= 2.41), libssl3t64 (>= 3.0.3)",
+      "preDepends": "",
+      "source": "openssl"
+    },
+    "dhi/openssl": {
+      "name": "openssl",
+      "version": "3.5.9-1~deb13u1+dhi0",
+      "file": "openssl_3.5.9-1~deb13u1+dhi0_amd64.deb",
+      "sha256": "350b8c2fd4878e63ef6cb8400fe71472902db805c0c40e7c375882e2166fe392",
+      "url": "https://dhi.io/deb/debian/main/pool/trixie/main/o/op/openssl_3.5.9-1~deb13u1+dhi0/openssl_3.5.9-1~deb13u1+dhi0_amd64.deb",
+      "distribution": "dhi-trixie",
+      "depends": "libc6 (>= 2.41), libssl3t64 (>= 3.5.0)",
+      "preDepends": "",
+      "source": "openssl"
+    }
+  },
+  "rows": [
+    {
+      "key": "expanded-penpot-frontend",
+      "containers": [
+        "utilibre-expanded-penpot-frontend-1"
+      ],
+      "kind": "debian",
+      "suite": "trixie",
+      "base": "sha256:2b7368079850bcd17c58b5e7da21ddf72d1665b0ef7188b46e444b8364e92772",
+      "oldRefs": [
+        "utilibre-apt-penpot-frontend:security-20261109"
+      ],
+      "packages": {
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3+dhi0",
+          "package": "dhi/openssl"
+        },
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3+dhi0",
+          "package": "dhi/libssl3t64"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3+dhi0",
+          "package": "dhi/openssl-provider-legacy"
+        }
+      },
+      "candidate": "utilibre-dhi-penpot-frontend:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "static-nginx",
+      "nativeEvidence": {
+        "native-tls.json": "d6b75a197fbe4cdd1358ccb307b9b183089a3c7f82273d115ee2479cbe4ab3c6",
+        "upstream-regression.json": "8c0f70030e769827394a132f989b73f4d907353730e9cf7947fa207f5029b61f"
+      },
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T05:49:22.534200+00:00",
+      "approvalReason": "Signed vendor-variant update preserves exact upstream crypto fixes and application/configuration/file scope. Native crypto, TLS, two upstream regressions and actual page/raster checks pass; exporter also passes HTTP/2 and font checks. All inherited scanner versions and raw findings retained. No migration, identity, access, storage or network policy change; no new all-severity advisory identities.",
+      "reviewedEvidence": {
+        "build.json": "7170b7db8800b32dc039a991e9d4a3fd426966d27c0eb40eceb368ddcda95628",
+        "scope.json": "5bf01f5b2403fc480982afa6f4d9277e3eb212109abcd5140f0cc405834ef7af",
+        "application.json": "12e66a2436870232f05e0eed533169143ab84947f5e3b52a613fea4e3af63a3e",
+        "scan-gate.json": "3646f94190596902f8751b3e25585080a2821041b0b98c5018f9e7550449fa62",
+        "after-scan.json": "b9007a8b374ab505c25c50b96c32f7409148a3fca2a3d29e99bf9ffbd2ec9a40"
+      },
+      "completeInventorySha256": "ccdb41207915fe2a8c2ea986ec666d92659c4508a5f4594cce6a46ad5994c3ba",
+      "retainedTargetedFindingsSha256": "1c18329d9d6ae27b47aa4aa86c0a1908cd7b454688e17235ff15be0c1b5dddf8"
+    },
+    {
+      "key": "expanded-penpot-exporter",
+      "containers": [
+        "utilibre-expanded-penpot-exporter-1"
+      ],
+      "kind": "debian",
+      "suite": "trixie",
+      "base": "sha256:3c3680e456ea6f78118668190f1cc639417febfb4faaed3ceda1f65425b05bb3",
+      "oldRefs": [
+        "utilibre-vendor-leaf-expanded-penpot-exporter:20261122"
+      ],
+      "packages": {
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3+dhi0",
+          "package": "dhi/openssl"
+        },
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3+dhi0",
+          "package": "dhi/libssl3t64"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3+dhi0",
+          "package": "dhi/openssl-provider-legacy"
+        },
+        "libfreetype6": {
+          "installed": "2.13.3+dfsg-1+deb13u1+dhi0",
+          "package": "dhi/libfreetype6"
+        },
+        "libnghttp2-14": {
+          "installed": "1.64.0-1.1+deb13u1+dhi3",
+          "package": "dhi/libnghttp2-14"
+        }
+      },
+      "candidate": "utilibre-dhi-penpot-exporter:20261122",
+      "approval": "preparation-only",
+      "nativeEvidence": {
+        "native-tls.json": "01634a2cf63a11ee798d0fed6766af68857de8ba552d5596d8fe9cd83ffe85aa",
+        "upstream-regression.json": "feca956a751e315af98201be33238045b5f3514e7217b2930124de14c206cd40",
+        "http2-native.json": "8b0063099eefb1886395335d5c2028d18cabc80ac9eaa40f6e6ee3f5cc82ae4a",
+        "font-native.json": "c985373a09d634413d2eb1c0ab348b1a9cf79bc2093641ccd0539e790f865dd5"
+      },
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T05:49:22.541612+00:00",
+      "approvalReason": "Signed vendor-variant update preserves exact upstream crypto fixes and application/configuration/file scope. Native crypto, TLS, two upstream regressions and actual page/raster checks pass; exporter also passes HTTP/2 and font checks. All inherited scanner versions and raw findings retained. No migration, identity, access, storage or network policy change; no new all-severity advisory identities.",
+      "reviewedEvidence": {
+        "build.json": "0f3ae9d58903224bb9c63b015569d1a5ae1119b0cf6dfe7a4c0aff41a01dc0e8",
+        "scope.json": "14836c931d21480b17876d92c5b899a983857040f3a1a3b12f9ecac6f2e30dde",
+        "application.json": "a2b5384635d1af47142baf6c51d49b35853393d03aad890e6451519f62385d69",
+        "scan-gate.json": "87c0b9e2456f99f35ac85b8b8462c6b061d031e00c046b7fdffc65171641d66e",
+        "after-scan.json": "7a8fb4b76a8ae7e3450d97683f724cf3ccacf603b37744d353b26a6d5ccd1b2c"
+      },
+      "completeInventorySha256": "75920b702b1bfde9f19dceeaa26b6eacf441ed4945836d0fa7e6e2ee7db41f23",
+      "retainedTargetedFindingsSha256": "9ae85a988ec577f0c43ffe62fe59bc0c1944959bd18de427fff5de40598c9e86"
+    }
+  ],
+  "sourceProofSha256": "9c4b529b2d19f6dd367b5837e5e407070a167ca8ab8d76421bbdb18e8f15b4f9",
+  "http2Fixture": {
+    "serverImage": "sha256:09b83e26e45864276fd88f375c35e78184e575b58dd23a05f1d1d900210c239b",
+    "serverSha256": "6fbc66927f7a19457f3fb11d366b945fa86e2084303579d8e11571a58918ab7e",
+    "cliSourceImage": "sha256:7b83a6b57fdd32365c8eecf8b1399a755f9d7bced25ae22800e8be73056049a2",
+    "cliSha256": "2285fa3ee855c7ee26fe7ab864489bf15cc75267f88d7195dab6bced53928390",
+    "selectedKeys": [
+      "expanded-penpot-exporter"
+    ]
+  },
+  "sourceBuildSha256": "7261c48d81372166a3c28e16aaf5d24608de91590f8235296b6bbcccfaa03ddf",
+  "baselineInventorySha256": "b8d85ccd96baf81d82ac7d7d8aeb66bd00f4a88c353b22d291a42bcba21cf13d"
+}

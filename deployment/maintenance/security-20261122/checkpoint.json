@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "state": "in-progress",
+  "scanCompletedAt": "2026-11-22T08:11:28.148Z",
+  "rawFindings": 22896,
+  "awaitingReviewBySeverity": {
+    "HIGH": 106,
+    "LOW": 5841,
+    "MEDIUM": 5751,
+    "UNKNOWN": 744
+  },
+  "assessmentClassification": {
+    "vendor-open": 10043,
+    "no-resolved-vendor-boundary": 37,
+    "requires-other-ecosystem-assessment": 1803,
+    "metadata-unavailable": 117,
+    "scanner-label-differs-from-native-version": 269,
+    "vendor-fix-candidate": 86,
+    "vendor-fixed-version-needs-payload-proof": 87
+  },
+  "coverage": {
+    "images": 109,
+    "sourceInputs": 120,
+    "hostPackages": 507,
+    "runningContainers": 175,
+    "healthyChecks": 90
+  },
+  "fullRemediation": false,
+  "archivedDatabaseIsCurrentClearance": false,
+  "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+  "privateEvidenceRoot": "/var/lib/utilibre-maintenance/security-20261122",
+  "evidenceSha256": {
+    "admin-build-deps/admin/library.json": "fec34d37c9432f43706a12d3033b6ee9fa4448aaeb53dac465b7a85ec2bc29bf",
+    "admin-build-deps/admin/application.json": "b5f19f80c3ab81596d0f3dcf042f3ce57f0ca433f5fb58412f72555af69c1d80",
+    "admin-build-deps/admin/scope.json": "f411ca072ceac040e356a4add91817ab54f5e328b5f57489110fa8022366013f",
+    "admin-build-deps/admin/scan-gate.json": "b02053eb9ca4b43fff1aaa035dc411a504101d4098024cd02147249b329ae521",
+    "admin-build-deps/admin/release-utilibre-expanded.json": "79409854126c87ce6ba839428a705c9fa369f9d0c78e2e17486b8de6da2f0128",
+    "host-openssl/activated-component.json": "1e64e1b16f4a663279c617503798b9f7608ab958432ea20bb831d3da7f1b3a56",
+    "host-successors/qemu-successor-source.json": "e3aa127c65f09facfb165de2a9f50dfa29bb702aeafc74b4203ce30fcc78745b",
+    "host-successors/libc-payloads.json": "21e33e543d8b3d550ef8d3fd34e60695e575f6945b29858227a8e5b94848a0c9",
+    "host-successors/libc-native.json": "6c0ed3f157846caa3e59fb47685daa48eb950f09bdacabea12172a8c2c2c2109",
+    "primary/assessment-post-admin.json": "98136466e35bf7af94a2ff10278cd5efbc97817748165e3d72707145dc6daf38"
+  },
+  "hostRestart": {
+    "opensslActivated": true,
+    "guestAgentOperatorPostcheck": "ping passed; thawed",
+    "originalReleaseInventoryGate": "failed: independent post-boot APT changes",
+    "libcInstalledPayloadVerified": true,
+    "libcActivation": "separate maintenance window required"
+  },
+  "openWork": [
+    "Vendor-open findings remain unresolved",
+    "ACL caller migration has no approved repair",
+    "Rallly embedded Effect requires full rebuild",
+    "Private admin crypto and additional package attributions require follow-up",
+    "Other-ecosystem and missing metadata findings remain assessment gaps"
+  ],
+  "changesToPrivacyAccessRetention": false
+}

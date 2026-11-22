@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "sourceBuildSha256": "7261c48d81372166a3c28e16aaf5d24608de91590f8235296b6bbcccfaa03ddf",
+  "packages": {
+    "libssl3t64": {
+      "name": "libssl3t64",
+      "version": "3.5.9-1~deb13u1+utilibre1",
+      "file": "libssl3t64_3.5.9-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "35b8e27e62949a9a96b498f331bc5ba9b76ba112ba7493ce823b466c8f7906fa",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.38), libzstd1 (>= 1.5.5), zlib1g (>= 1:1.1.4), openssl-provider-legacy",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight pinned upstream patches; completed offline native build"
+    },
+    "openssl-provider-legacy": {
+      "name": "openssl-provider-legacy",
+      "version": "3.5.9-1~deb13u1+utilibre1",
+      "file": "openssl-provider-legacy_3.5.9-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "ce23e4a9735e45bbe73efd1e82064b562ee8d5dff6a8e553abc3cf70dfccbac4",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.14), libssl3t64 (>= 3.0.3)",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight pinned upstream patches; completed offline native build"
+    },
+    "openssl": {
+      "name": "openssl",
+      "version": "3.5.9-1~deb13u1+utilibre1",
+      "file": "openssl_3.5.9-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "6cc87e80b75429e24ef7880a72f17439827f299e7991c77c592a9422ba1b4680",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.34), libssl3t64 (>= 3.5.0)",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight pinned upstream patches; completed offline native build"
+    },
+    "libssl-dev": {
+      "name": "libssl-dev",
+      "version": "3.5.9-1~deb13u1+utilibre1",
+      "file": "libssl-dev_3.5.9-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "aa29349aa0b28946c0021c381c6871071e64a4e5d4ca171cc1a8fad3dd32ce89",
+      "distribution": "trixie",
+      "depends": "libssl3t64 (= 3.5.9-1~deb13u1+utilibre1)",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight pinned upstream patches; completed offline native build"
+    }
+  },
+  "nativeFixture": {
+    "cliSha256": "acc10176d038aeb7b2a77d9ec972ac2985857a7191f7aecb7c54ef0e2c7e9549",
+    "cliOrigin": {
+      "imageId": "sha256:9253d4ba4d02d712da5bafb84e5acb3f725d4584a38cbf752ee72b4cd1b4f7a4",
+      "path": "/usr/bin/openssl",
+      "sha256": "acc10176d038aeb7b2a77d9ec972ac2985857a7191f7aecb7c54ef0e2c7e9549"
+    },
+    "cryptoSha256": "c53842644f9cbd9568ee4f1f25d6a960862ad1499ad8bd9c89c006eec45589b7",
+    "tlsServerSha256": "9614aa6fa6d4db4f96eeec390d8b7f2cbd26a3dea43935dd8cae7ebf4ede71a0",
+    "tlsImage": "sha256:9253d4ba4d02d712da5bafb84e5acb3f725d4584a38cbf752ee72b4cd1b4f7a4"
+  },
+  "rows": [
+    {
+      "key": "kitchenowl-app",
+      "base": "sha256:106c5a140dc7217cf714c4e7f850ff17fedf79ef106d5ea9f64adf365ff72760",
+      "containers": [
+        "utilibre-kitchenowl-app-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-leaf-kitchenowl-app:20261122"
+      ],
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libssl.so.3",
+        "/usr/lib/x86_64-linux-gnu/libcrypto.so.3"
+      ],
+      "candidate": "utilibre-openssl-extra-kitchenowl-app:20261122",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "afbe5b0b05d474e0e62a00aba90b700ea0b6d06fa4fec48eaefda64e64db98fc",
+        "scope.json": "153ab990e73770fbcf52cd08b32f75a65ecc25fe344e70a25373799f5e1e8883",
+        "application.json": "db92c7bb462bc6e1321ed92d0f40e7f52469c1ac28b1319a7899e5dd7254b97b",
+        "scan-gate.json": "f6c458ba9ce2bd23731d05da19d9602c0d96cd062d78a51c439f935aa95090d3",
+        "after-scan.json": "0b844b6e637e1d4da93a727ecca933947f681786156e3577766c910a55be73ab"
+      },
+      "retainedTargetedFindingsSha256": "d6c13ee9bf1b5a240aa9363d03e573f8730b5ad5d8285cf013717842dc4fe427",
+      "completeInventorySha256": "996549415e6cbe49771af0955904e15e13e776c93b11219f8efa9eae704b2134",
+      "opensslEvidence": {
+        "native-tls.json": "97d69c9fc97eeb0dbd690708257b608a4d744322a944d2bdd4e8886ae4311684",
+        "upstream-regression.json": "136e7874f5cf2684c7c89eaddf2ac690fc10c887775f51a3a329612c19e1ef7c",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "releaseReview": "Exact eight already-reviewed patches and authenticated source; native crypto, TLS, regression and application checks, complete scope and frozen all-severity gate passed. Other advisories remain open."
+    },
+    {
+      "key": "linkding-linkding",
+      "base": "sha256:a600d501f4a3ac63d74e16082d1c5a1d9aa1c53fbb6a7ea396bfdc68c0d0fa4c",
+      "containers": [
+        "utilibre-linkding-linkding-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-leaf-linkding-linkding:20261122"
+      ],
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        },
+        "libssl-dev": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl-dev"
+        }
+      },
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libssl.so.3",
+        "/usr/lib/x86_64-linux-gnu/libcrypto.so.3"
+      ],
+      "candidate": "utilibre-openssl-extra-linkding-linkding:20261122",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "0bdecaa7cf07402607f35ad3c08b07dc2ddf10533a3fe95e31b6d048b1a783df",
+        "scope.json": "7ec68756b7aec3a39311c27ed510687505a9af45ff9363d57c2f96f8e84b3964",
+        "application.json": "67e995d4a5e4987a1dfa25d1e9feab79db44c0e98ff7663d3e4014de2d5cff63",
+        "scan-gate.json": "ecf96f975b0de329b31cc153d1cd50682d963db0d95834d345c0a16f79445b0d",
+        "after-scan.json": "396b40769a46d7846a812db870d94248a6c91fb4d5713a76f06c844a829e5b47"
+      },
+      "retainedTargetedFindingsSha256": "62b9ca40f5cfa258c8fc1ea0c3c5afb111b5ddb4e4c28c3c147a440effb38222",
+      "completeInventorySha256": "5344e64d57b13b1fb6433326e7baabb9cb61f2a659d2533cc4ec0f8b477ee406",
+      "opensslEvidence": {
+        "native-tls.json": "de63f7a9911369238a0318c682e0a533f7f85063b57c8afd6872a915eb1ab973",
+        "upstream-regression.json": "f57cd626170a54eb2f3a6df25ebd20b32fe5cdcf5f359c93191491d73e3ecf7f",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "releaseReview": "Exact eight already-reviewed patches and authenticated source; native crypto, TLS, regression and application checks, complete scope and frozen all-severity gate passed. Other advisories remain open."
+    }
+  ]
+}

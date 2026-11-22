@@ -1,0 +1,310 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Exact Vite and native Rolldown build-dependency successor, preserving the existing private evaluation boundary and production server",
+  "approval": "isolated-preparation-only",
+  "upstream": [
+    "https://github.com/vitejs/vite/security/advisories/GHSA-p4f5-76q4-ffq7",
+    "https://github.com/vitejs/vite/releases/tag/v8.3.7"
+  ],
+  "packages": {
+    "@oxc-project/types": {
+      "version": "0.156.0",
+      "integrity": "sha512-1Duyg48TdJNdyhEB8Xn1L36bT9Pv6GUtlKjHxOys8xkaF/rQq3XJE+bAurSK/AgIz5mGFsb77cn9Pb20+WCScw==",
+      "dependencies": {},
+      "optionalDependencies": {},
+      "license": "MIT",
+      "metadata": "@oxc-project_types-0.156.0-metadata.json",
+      "archive": "@oxc-project_types-0.156.0.tgz"
+    },
+    "@rolldown/binding-linux-x64-gnu": {
+      "version": "1.2.18",
+      "integrity": "sha512-xX1Tt4o5jUMma0vJsXp5eRZA9nOuyigb2dKJMMzZRmzMxLYGE9PaKKSqHPzPvSQgM8ZOEacSTQwDQcwWfh0xmQ==",
+      "dependencies": {},
+      "optionalDependencies": {},
+      "license": "MIT",
+      "metadata": "@rolldown_binding-linux-x64-gnu-1.2.18-metadata.json",
+      "archive": "@rolldown_binding-linux-x64-gnu-1.2.18.tgz"
+    },
+    "nanoid": {
+      "version": "3.3.20",
+      "integrity": "sha512-uKdg2G3GNCKQn9byYOpxbGqrT2fGO5KRt5J/8b3pok8rT6qxGWF6hxMyJiEYtAf+FVyYuD9hRaDqX5uPFYJ4ZQ==",
+      "dependencies": {},
+      "optionalDependencies": {},
+      "license": "MIT",
+      "metadata": "nanoid-3.3.20-metadata.json",
+      "archive": "nanoid-3.3.20.tgz"
+    },
+    "postcss": {
+      "version": "8.5.32",
+      "integrity": "sha512-LJlKCCAUFKOuZxipUdYw1NzIITEsPcgyOG9LkvRJvuKj/bRzbuRY0ARXvL0pWGpsZvn8jku+LMep2eU0seHp8g==",
+      "dependencies": {
+        "nanoid": "^3.3.20",
+        "picocolors": "^1.1.1",
+        "source-map-js": "^1.2.2"
+      },
+      "optionalDependencies": {},
+      "license": "MIT",
+      "metadata": "postcss-8.5.32-metadata.json",
+      "archive": "postcss-8.5.32.tgz"
+    },
+    "rolldown": {
+      "version": "1.2.18",
+      "integrity": "sha512-C1uuT3UR60SShuCaPQFAAZyefJCWZlAKB02BV3BuPE2Rs4fevRQltEKoFO2tV5W9/eJhU5RieV6vJj3euulfNQ==",
+      "dependencies": {
+        "@oxc-project/types": "=0.156.0",
+        "@rolldown/pluginutils": "^1.0.0"
+      },
+      "optionalDependencies": {
+        "@rolldown/binding-darwin-x64": "1.2.18",
+        "@rolldown/binding-freebsd-x64": "1.2.18",
+        "@rolldown/binding-darwin-arm64": "1.2.18",
+        "@rolldown/binding-android-arm64": "1.2.18",
+        "@rolldown/binding-linux-x64-gnu": "1.2.18",
+        "@rolldown/binding-linux-x64-musl": "1.2.18",
+        "@rolldown/binding-win32-x64-msvc": "1.2.18",
+        "@rolldown/binding-linux-arm64-gnu": "1.2.18",
+        "@rolldown/binding-linux-ppc64-gnu": "1.2.18",
+        "@rolldown/binding-linux-s390x-gnu": "1.2.18",
+        "@rolldown/binding-android-arm-eabi": "1.2.18",
+        "@rolldown/binding-linux-arm64-musl": "1.2.18",
+        "@rolldown/binding-win32-arm64-msvc": "1.2.18",
+        "@rolldown/binding-openharmony-arm64": "1.2.18",
+        "@rolldown/binding-linux-arm-gnueabihf": "1.2.18"
+      },
+      "license": "MIT",
+      "metadata": "rolldown-1.2.18-metadata.json",
+      "archive": "rolldown-1.2.18.tgz"
+    },
+    "vite": {
+      "version": "8.3.7",
+      "integrity": "sha512-oxh0dMxrayBr33ScJvvBJ2HBQ2jc1TBrXKR2NyL/MJ9WPuX19mN2DXWUmywKdyw5RFVQBo8hmtb2FMC0LHrnng==",
+      "dependencies": {
+        "postcss": "^8.5.32",
+        "rolldown": "~1.2.18",
+        "picomatch": "^4.0.7",
+        "tinyglobby": "^0.2.17",
+        "lightningcss": "^1.33.0"
+      },
+      "optionalDependencies": {
+        "fsevents": "~2.3.3"
+      },
+      "license": "MIT",
+      "metadata": "vite-8.3.7-metadata.json",
+      "archive": "vite-8.3.7.tgz"
+    }
+  },
+  "cachedInputs": {
+    "@oxc-project_types-0.156.0-metadata.json": {
+      "bytes": 1698,
+      "sha256": "8728aaa27311d76eaec05fcadae24fa47d82fde4c9fea50d0548901fa30a806b"
+    },
+    "@oxc-project_types-0.156.0.tgz": {
+      "bytes": 7629,
+      "sha256": "9ea3e4ff27f4c9c7bc9b5a8feb7b7d4f2181dd2b1d90067d52f267b6c5897dbc"
+    },
+    "@rolldown_binding-linux-x64-gnu-1.2.18-metadata.json": {
+      "bytes": 2206,
+      "sha256": "cfd112ddbcbe7bff8a2b3011072de656a7af181b6ea6542d6c7597198b34f2b1"
+    },
+    "@rolldown_binding-linux-x64-gnu-1.2.18.tgz": {
+      "bytes": 8836592,
+      "sha256": "b701286d57748c957331922925291e182ea997f18658226170881288efa93e4d"
+    },
+    "nanoid-3.3.20-metadata.json": {
+      "bytes": 3116,
+      "sha256": "f21b4d3855702d4b4054748e5e3cc3a2bccdfdd98936946be0110d2198edae96"
+    },
+    "nanoid-3.3.20.tgz": {
+      "bytes": 5721,
+      "sha256": "5ae134779aa22c2c04b691d361bc1f3c004c354e81c7ee166ea1c6e848eedc4f"
+    },
+    "postcss-8.5.32-metadata.json": {
+      "bytes": 3287,
+      "sha256": "9a29a73945980f4c243743e34b01fac170a2679ba9e1ca42f02c39d52ac0eddc"
+    },
+    "postcss-8.5.32.tgz": {
+      "bytes": 52987,
+      "sha256": "8e8eb3453860bfc35cd0e51653a3565980a2d83e4ddcf93f8fa5455754cf9066"
+    },
+    "rolldown-1.2.18-metadata.json": {
+      "bytes": 6482,
+      "sha256": "75ef2e4a21d24a5e95a052b936971dacd3e687a527c62b69cadb9103fddd80ae"
+    },
+    "rolldown-1.2.18.tgz": {
+      "bytes": 205236,
+      "sha256": "249e637c26d5e996adb05b643e8008f1ceef511b56d2d48f6c42714566d2e24a"
+    },
+    "vite-8.3.7-metadata.json": {
+      "bytes": 5170,
+      "sha256": "07ffb22e094c876f786f101a0ffc3b012e52a38361d7143079ed30a94d282582"
+    },
+    "vite-8.3.7.tgz": {
+      "bytes": 588031,
+      "sha256": "88296b635f664eb07c07d593a3c4ea06ef295b05205c03adb43d2e381246c319"
+    }
+  },
+  "rows": [
+    {
+      "key": "admin",
+      "container": "utilibre-expanded-penpot-admin-console-1",
+      "containers": [
+        "utilibre-expanded-penpot-admin-console-1"
+      ],
+      "base": "sha256:c02dbff28a6598a01b86fe0c196c1827f444a9deacd2dd98abdbd91731c0fe60",
+      "candidate": "utilibre-admin:build-deps-20261122",
+      "roots": [
+        "/nitrate"
+      ],
+      "paths": {
+        "vite": [
+          "/nitrate/apps/admin-console/node_modules/.pnpm/vite@8.3.0_jiti@2.7.0/node_modules/vite"
+        ],
+        "rolldown": [
+          "/nitrate/apps/admin-console/node_modules/.pnpm/rolldown@1.2.8/node_modules/rolldown"
+        ],
+        "@rolldown/binding-linux-x64-gnu": [
+          "/nitrate/apps/admin-console/node_modules/.pnpm/@rolldown+binding-linux-x64-gnu@1.2.8/node_modules/@rolldown/binding-linux-x64-gnu"
+        ],
+        "postcss": [
+          "/nitrate/apps/admin-console/node_modules/.pnpm/postcss@8.5.28/node_modules/postcss"
+        ],
+        "@oxc-project/types": [
+          "/nitrate/apps/admin-console/node_modules/.pnpm/@oxc-project+types@0.149.0/node_modules/@oxc-project/types"
+        ],
+        "nanoid": [
+          "/nitrate/apps/admin-console/node_modules/.pnpm/nanoid@3.3.18/node_modules/nanoid"
+        ]
+      },
+      "kind": "js",
+      "packages": {
+        "vite": {
+          "package": "vite",
+          "installed": "8.3.0"
+        },
+        "rolldown": {
+          "package": "rolldown",
+          "installed": "1.2.8"
+        },
+        "@rolldown/binding-linux-x64-gnu": {
+          "package": "@rolldown/binding-linux-x64-gnu",
+          "installed": "1.2.8"
+        },
+        "postcss": {
+          "package": "postcss",
+          "installed": "8.5.28"
+        },
+        "@oxc-project/types": {
+          "package": "@oxc-project/types",
+          "installed": "0.149.0"
+        },
+        "nanoid": {
+          "package": "nanoid",
+          "installed": "3.3.18"
+        }
+      },
+      "runtimeRemoval": "node",
+      "preserveNestedDependencies": [
+        "/nitrate/apps/admin-console/node_modules/.pnpm/vite@8.3.0_jiti@2.7.0/node_modules/vite",
+        "/nitrate/apps/admin-console/node_modules/.pnpm/rolldown@1.2.8/node_modules/rolldown",
+        "/nitrate/apps/admin-console/node_modules/.pnpm/postcss@8.5.28/node_modules/postcss",
+        "/nitrate/apps/admin-console/node_modules/.pnpm/nanoid@3.3.18/node_modules/nanoid"
+      ],
+      "reviewedEvidence": {
+        "build.json": "5a0c09456ac90b8fd01b8462a4373596ce7c516b9c5836255267bf277eb0f751",
+        "scope.json": "f411ca072ceac040e356a4add91817ab54f5e328b5f57489110fa8022366013f",
+        "library.json": "fec34d37c9432f43706a12d3033b6ee9fa4448aaeb53dac465b7a85ec2bc29bf",
+        "application.json": "b5f19f80c3ab81596d0f3dcf042f3ce57f0ca433f5fb58412f72555af69c1d80",
+        "application-adapter.json": "bd43fd7c2c4100a688ea41c9b6f165a1e55160491576fec825eb58b4633b1f77",
+        "scan-gate.json": "b02053eb9ca4b43fff1aaa035dc411a504101d4098024cd02147249b329ae521",
+        "after-scan.json": "9e52c96a558451fd0a01c30c33e55facea6aad08bcefcd294ac03d09427c6217",
+        "changed-files.json": "12fe7ee7b472d19621d9bcc713193a66c040a9c66fbfdd8948303cbb09eeeec7"
+      },
+      "releaseApproval": "approved",
+      "releaseReview": "Vite 8.3.7, Rolldown/native binding 1.2.18 and exact required transitives. Both ordinary native TypeScript/CSS builds and all dependency ranges pass; compiled server authentication, ordinary server function, wrong-method rejection, migrations and tables remain identical in isolated empty state. Full image scope restricted to six package trees with retained nested shims. Frozen comparison removes six Vite findings with no new findings. Private deployment, configuration and existing application code unchanged. No exploit or real account tested."
+    }
+  ],
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "network": {
+    "acquisitionRequests": 13,
+    "failedMetadataRequests": 1,
+    "buildAndTests": "none"
+  },
+  "limitations": [
+    "Vite 8.3.7 registry metadata requires Rolldown 1.2.18; use that exact native successor rather than the advisory text\u2019s 1.2.17.",
+    "Existing pnpm directory labels and lock describe the upstream image; exact runtime overlay identities are recorded here. No runtime dependency resolution.",
+    "Existing server uses .output/server/index.mjs, not a Vite development server; build-time exposure is still assessed separately."
+  ],
+  "verificationSemver": {
+    "version": "7.8.5",
+    "license": "ISC",
+    "files": {
+      "range.bnf": "15d0baf9b7b98e6d862c0cb9e822d2533d2bc23e136bb75314d802ca1fcb0392",
+      "README.md": "f1a789dcec285150be24db2ea04dd3175031554fa9834ec92fab83fb5e025a57",
+      "LICENSE": "4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b",
+      "package.json": "7c94cb7f2a53c27b20d76386ec144c062894dbcc909cfabd0f728c37874b1776",
+      "preload.js": "edb6808911bebcb324b2df57e5c9935149e56984ff083b74c6cfe215f5b710ba",
+      "index.js": "4b3e57d3d40e29e0706002eba113d09f35aea593578376bbeec83b777b9912ab",
+      "internal/lrucache.js": "14d087c87da87b6f5c36fc4cdd7d2d14077874b14a68e20fce5b6138fa2ca34f",
+      "internal/debug.js": "8a9f420572260f3cf944463b5090d62a60f0730589dc23a7ec4ca25e2ee41bb3",
+      "internal/constants.js": "38a112baf27ceca0260082ff26ac2fd7a9861cab1af12dd65e720277f68e6ce9",
+      "internal/parse-options.js": "fdf51d0de8d5442c35a997ef58cd530d239ce206f961d14c5121354451b01d01",
+      "internal/re.js": "5833262888e2b5d843a69193f83c05e374818dbe55379b497819b5bf58e48cd8",
+      "internal/identifiers.js": "b4916b09dc7869ae0eb05e71c855c942a3a7365f7e6e89185d59a9e45a2451d7",
+      "classes/semver.js": "813b2c185512d30c9b931c2fed8140889d9d7490ceeeedc370da30337dc8ca57",
+      "classes/range.js": "a6544485aa8575aa9854c67e2caa67726815de18a482d0ceb8a1003244de3bc1",
+      "classes/comparator.js": "054202956430d63d5ff4599fae09760ce465b489e4f0b5ef5ce7cc7ac21157ac",
+      "classes/index.js": "3bb69280c2a788d0eb16f915bb9df4dbe812075182024c753dca2283bcea1b17",
+      "ranges/min-version.js": "fefba0a88c2bf74d5cede504b5ae50a8dc3edfd69cf0174a491e2cf3e442614b",
+      "ranges/outside.js": "3a2b0b23593d2f49419c06af2af75450cab103b0c25d665d48fe5bca495a21ca",
+      "ranges/simplify.js": "7b78581c13322bc68ece2088685386b2a9b51c15b94d0a2063bdf2546bd41934",
+      "ranges/to-comparators.js": "6c5e966210cff270fa2850668aaf8460fac7759f8d99f282521ef7a78f4564e9",
+      "ranges/ltr.js": "e5186fcc03018acf9be6d968755d4c49727aeb0d981d179eb568ae5fbe983038",
+      "ranges/max-satisfying.js": "e1a2c0d6144cc772cd20bbc8ecb9e8a3a4074e9172a3d8e794838b591cdeb416",
+      "ranges/valid.js": "5ef6f995af801868925940cf8df5735d565ebabb090b068695cae65218bcd3ac",
+      "ranges/min-satisfying.js": "2681abf54098aa670f12826b76a6ec77a2441186ae4243afde3be8ae4908f7ca",
+      "ranges/gtr.js": "8fadad28e36d28e93d498ac7ac20badba2a407312845eabc18e82e90a0732b19",
+      "ranges/subset.js": "ceb9eb6ed5bfc6c7ac7af7f47e5c3535444a4e66a0e2b58cdad4bd02a35d454d",
+      "ranges/intersects.js": "fe87ac5d3020010ad3ec00636dadbf0c669ff07d0f57e0a8165a8264f79a676f",
+      "bin/semver.js": "bd6c871026985937dc945011fc54b74b47f5998154216d7b8d40d5ed782e4402",
+      "functions/gte.js": "991c5bbe48ecb210a562646872f05862ad9fc0d42186d85aa60bdc6fa323eb9d",
+      "functions/compare-loose.js": "07b6a3a1db0a5210ceb784c1708bd4679f3a94fc73a9c9eb349349e7070a6f78",
+      "functions/gt.js": "135523704aa48cd98834dd170ee9f74f0e68043b379f32d021db11e6304c5c93",
+      "functions/parse.js": "29a69e15b6d02fe381d573f861881a89590e9d0f0f0ca740c5f85eaf0234c4ad",
+      "functions/coerce.js": "28a251c5ab210ddf9e97551b9f37a53329fcce91f0c3943dcbc02de1a1de915a",
+      "functions/lt.js": "1c897a9bc849320e2e9dc0f6c09555c01ee3ddf30734515d717b88ad7740ea25",
+      "functions/eq.js": "b6e30a7168e52723216fc163d300e2bbabf92ec0251f9ac5438bb6ccf57c8936",
+      "functions/patch.js": "f02d3c1b059fe3d96ce124886f7eef321d381a95638fd3c4a8d5ccd8e76ffadd",
+      "functions/sort.js": "c2fe2d3ed0be8a4e9de8f02abdfd5d9c0d3bcc510d88e87af84185592882c4b8",
+      "functions/minor.js": "1b051794f1713adec2a236517196691687c35f82e0b596ff3316a78b3cc10ae6",
+      "functions/satisfies.js": "8cf5e122b757251671ed6c9d9680904b71cd375845853f05312e608cf2cc2946",
+      "functions/truncate.js": "e145833a250311927c92f424f56498c52f1b7bb1271ce6afbf006db87773ff43",
+      "functions/cmp.js": "a63d74e87b73788e78e9ce0a4892b5333d6b809c0de88b31e4ed76cbf17f94b3",
+      "functions/valid.js": "0de7ea736cb7807179d46dfac09c830a9338e02b6a07db12d7040cde2def6025",
+      "functions/major.js": "5c678480d882f511200fed2c16ec3847dfedb08a1d70328dc2f031d35d825276",
+      "functions/prerelease.js": "baedbf503d5610ad041bfb56071efa48feb331ca278295c399537d35d3ffb593",
+      "functions/rcompare.js": "84fa5e88adf08d15c993cac8cdec6d1a65045b7e95a9c55184230a7f807f4dc0",
+      "functions/compare-build.js": "5ab651d5b40af289bd85c645a92b6d8cfe1a986dc413c797cfcc8d623d7c844c",
+      "functions/compare.js": "d404b5aa48aaddc8a654c5da8fb7d4443404b7948589b21ac4b045d1cee4e34c",
+      "functions/clean.js": "4eadb0892844cf3ae295121a86163a66c73f89acd1b7f0b114ec115b4539512f",
+      "functions/neq.js": "a662883751918822c162183b46b9e20d09489132f82686c92ab78bee67f3a127",
+      "functions/diff.js": "7a11fd39b987cdf06c65e928cb1aca49bec583feb86fb5c8fe47a6fd61d7de31",
+      "functions/lte.js": "3a8d0b1d00423f60cc7cb810b36ab77b61330831ad237dbe73eb5cecfa412800",
+      "functions/rsort.js": "6ec659ce3b6c2b173c719286caab04409adba046c0917874ec3b5e36ddfbc7e3",
+      "functions/inc.js": "952069fc8690b7d3af0fe9d55f7c54fe2ac067b48c5e74f6a54f9ce19a334493"
+    }
+  },
+  "minimumFreeBytes": 8589934592
+}

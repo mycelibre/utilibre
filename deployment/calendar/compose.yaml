@@ -14,7 +14,7 @@ x-runtime: &runtime
 services:
   radicale:
     <<: *runtime
-    image: utilibre-calendar-radicale:sqlite-security-20261109
+    image: utilibre-openssl-calendar-radicale:20261122
     build:
       context: .
       dockerfile: Dockerfile.radicale
@@ -31,7 +31,7 @@ services:
       retries: 3
   calino:
     <<: *runtime
-    image: utilibre-vendor-calendar-calino:20261111
+    image: utilibre-security-shared-nginx:20261122
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     cpus: 0.5

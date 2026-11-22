@@ -1,0 +1,499 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "acquisitionSha256": "b731e1e5041060ddba2c2f5123c3a993dbef545ee32180a4954ae4957a29efae",
+  "packages": {
+    "trixie/liblzma-dev": {
+      "name": "liblzma-dev",
+      "version": "5.8.1-1+deb13u2",
+      "file": "liblzma-dev_5.8.1-1+deb13u2_amd64.deb",
+      "sha256": "7b5104b0418b2e958447f74c135841aefda555293ac7f7494cfc7a16b7180816",
+      "url": "https://deb.debian.org/debian/pool/main/x/xz-utils/liblzma-dev_5.8.1-1+deb13u2_amd64.deb",
+      "distribution": "trixie",
+      "depends": "liblzma5 (= 5.8.1-1+deb13u2)",
+      "preDepends": ""
+    },
+    "trixie/liblzma5": {
+      "name": "liblzma5",
+      "version": "5.8.1-1+deb13u2",
+      "file": "liblzma5_5.8.1-1+deb13u2_amd64.deb",
+      "sha256": "b38acab30f295bf1066a6632e31cbd0a1980f2924b38040cda131d5dea5384ec",
+      "url": "https://deb.debian.org/debian/pool/main/x/xz-utils/liblzma5_5.8.1-1+deb13u2_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.34)",
+      "preDepends": ""
+    },
+    "trixie/xz-utils": {
+      "name": "xz-utils",
+      "version": "5.8.1-1+deb13u2",
+      "file": "xz-utils_5.8.1-1+deb13u2_amd64.deb",
+      "sha256": "66b060ef2f09722c947ba019da5e9a63f6bac9d7bf90b32339a72c0390acc53f",
+      "url": "https://deb.debian.org/debian/pool/main/x/xz-utils/xz-utils_5.8.1-1+deb13u2_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.34), liblzma5 (>= 5.6.2)",
+      "preDepends": ""
+    }
+  },
+  "rows": [
+    {
+      "key": "services-rsshub",
+      "base": "sha256:06ac95d0bcd6352bd17aa11f7d35e06c6f2404719a7b4001769054fbaea63005",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "candidate": "utilibre-xz-services-rsshub:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "0d8d30100078dfaeaba172f056b3e7e0313cab3c02da7faa5989113774f1d363",
+        "scope.json": "ed26442580ee51830b1337f971c194a801b6c8979f5a699eb62454985b7af2d5",
+        "application.json": "63c4e1256ef16f514c42ebf25728dd8b4cffcd8f09029f5708e8d0cbfc230d68",
+        "scan-gate.json": "9750f0827dcdd9dc51243acb5d0dd1bab47f33d98a1f0c3fcf8e11ab02a484f0",
+        "after-scan.json": "37b1fbede1f89c32ff0c13e62ee2405a4a56d049ce52032bc37fd544e8acde6e"
+      },
+      "completeInventorySha256": "62c20fa2534296c37a255aa9f368bdbaf4609c22510559e116a615c36fa4aa51",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "trip-app",
+      "base": "sha256:0f64ffaace7ef9f8b271a9d4687ed099e18d84eb9e7cef05c1978b509558cb35",
+      "containers": [
+        "utilibre-trip-app-1"
+      ],
+      "candidate": "utilibre-xz-trip-app:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "7ad4e199a2b8acc3f7188a313473131ab314bdf2060db4f1b1f4ea16391d56d6",
+        "scope.json": "0c749dd03845a51851c59d48063fc20295ec01df61872f6aed445160e3cd5815",
+        "application.json": "2bc45da1659d376ab53e98c94247744e1a7b98cec74cfb49220e54b5bcc0ecc5",
+        "scan-gate.json": "d1bf7d393e22f523f99fb7c07d485ca80e727da595b223ac854b7829d6676adb",
+        "after-scan.json": "06a2dd03261bcee57202e663005ab96afa557df8616831de001fe3f583bf047a"
+      },
+      "completeInventorySha256": "d9e8f62507a0f7841d177ea6229a4269f4b6e571e1d4c1e10431ed5a56487ede",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "identity-server",
+      "base": "sha256:0fb8f34ab67fbad1f3db091d977c2a3fa30eb6b38719d4ee224b1142cc69fe68",
+      "containers": [
+        "utilibre-identity-server-1",
+        "utilibre-identity-worker-1"
+      ],
+      "candidate": "utilibre-xz-identity-server:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "0bd2097ef7a7d67f4062c88a64a2dd54bc1db522dc782cfffceb16f2713bb392",
+        "scope.json": "3a0c139599fd85297d0d26a9b71826acd2f28ad253110e7204d2df465acdbb37",
+        "application.json": "24358d6b63425ff34e5f1cc27db5c0c79d61184487a313018d633bbba9a3d578",
+        "scan-gate.json": "133cb5002170b610dff85b48d84f51bc8e60b546f3fadd9823ceaffb33eaa44c",
+        "after-scan.json": "63119f4699f37d246c46ba2307bf59618c563d766874d8ab84934c98d3da1584"
+      },
+      "completeInventorySha256": "68deb13e41c7dfa51488660f5621d2fefa91091a64ab78d8b0306ce6ecd9f9d7",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "records-candlr",
+      "base": "sha256:1b65518ef658352246f1af916650baffcfff83b5467cd96aa5ebc69b3487b012",
+      "containers": [
+        "utilibre-records-candlr-1"
+      ],
+      "candidate": "utilibre-xz-records-candlr:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "17e20e5af00f6fd92a8f963ceac7a31e0cb2ff24e3abb87d5ef58972e1873d23",
+        "scope.json": "7c91caa5c7788e46105b7e0336bfba495fa27aabfb361db7bc5de769bc19e75e",
+        "application.json": "30556ccaeaee42c0610198013ef1e81d5a50ebc7f2ad816afe0f6f796bf7b7a1",
+        "scan-gate.json": "9821821326cfc7ddbe51153f12f1f52ac2ffe7681320cc15f92bf626fe1a2819",
+        "after-scan.json": "84c8c4c64f0267a6d7c9bd7cc691d7623b4e75a3f8d13b69e31592df31f529a1"
+      },
+      "completeInventorySha256": "839a24b63874e5926d46757b51fcb8e7de11e8528d9a3d061aba944407fde9b9",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "priviblur-priviblur",
+      "base": "sha256:3ec0df0a670fe23572b5cc222d9c1925736e1811160f013dc1176a552889db8e",
+      "containers": [
+        "utilibre-priviblur-priviblur-1"
+      ],
+      "candidate": "utilibre-xz-priviblur-priviblur:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "7ae722254879b645bebb5983334c029dd1325e1d069c7124e8d923d7bb925bde",
+        "scope.json": "797da97e8e70708f28ee1fce1bc2ea0c72fbe137b43b6b255ad7548c05565af3",
+        "application.json": "949287a1276ec94e95eaed6f061059f986f8e8872296c5cfde18d6dabc1ffeda",
+        "scan-gate.json": "9ac137eaaf1cc1242eee27bdb834e473881c1b72324d9cee87adc8ec20145340",
+        "after-scan.json": "fc460aa69e971767a681b68f719be13ddf8652e44c18ea98f8b1ab5578787408"
+      },
+      "completeInventorySha256": "3cbc6445da438eae39aea820d4ef42922a74c132b8ea7233406da9e2405908f3",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "pack-forms-app",
+      "base": "sha256:407d31c4778b4c7a735d8a9fb45d5684d91357fef989e675c0e1d88953f994c9",
+      "containers": [
+        "utilibre-pack-forms-app-1"
+      ],
+      "candidate": "utilibre-xz-pack-forms-app:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "e125a06c8a3590bb63c35a300e557938d3c2e8f161e9bcdcfa03003e18a6b87c",
+        "scope.json": "a007af287e289b0a62f2855cd38caa462c620b49430be8dd6294e23e79c8de14",
+        "application.json": "66c733e44c1c42f728f2c5db731c44dc9fddcfe45823fa846d7d3723a448fe61",
+        "scan-gate.json": "13110963644b9cfba335ef7f5bdf0eb1d02707ded3d8fa9ee8a33a067af5c9a4",
+        "after-scan.json": "263ff6d38f999968f300f055b3f2584854da5bcc8cfbac2dace1e664447c14b7"
+      },
+      "completeInventorySha256": "bea265a8c0cd7885c6d95bc9267043cd7af04b8349eaac790872bd698f2f7e3a",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "13ft-app",
+      "base": "sha256:6b7cd7cbeeae54a2b5b7f70f41e9bffd9d63b8bf9c284e6fa92c891903de615c",
+      "containers": [
+        "utilibre-13ft-app-1"
+      ],
+      "candidate": "utilibre-xz-13ft-app:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "222c0e2b2d93adc14ac39e7eeab5682dd4172030c4aedc88b2e1588725b99920",
+        "scope.json": "d6409cda3fe4660d7b9ec5d48d2e309c4de5f6b84fda81a800d90f139fa60b1e",
+        "application.json": "1942f0cb5adc928829a5eb8bb4f179959028d854df3614a35c0fea08833e7239",
+        "scan-gate.json": "3a3f76f76e0f239d60343a2c35f98e50b302627fc594636c93ae81304a1af0cf",
+        "after-scan.json": "af8ce1969d7aab165c7859b34bb006d3bf60e8f2ca392f863d53361063a7af45"
+      },
+      "completeInventorySha256": "60832086e3b647696c550064b54c0a06917d08863952026ded3a7beec628f094",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "unfurl-proxy",
+      "base": "sha256:882cc10135b73e5f65a8e1585e4b408c4d919eb083a83245b30fd2924f436317",
+      "containers": [
+        "utilibre-wallabag-proxy-1",
+        "utilibre-trip-proxy-1",
+        "utilibre-13ft-proxy-1",
+        "utilibre-records-egress-1",
+        "utilibre-unfurl-proxy-1"
+      ],
+      "candidate": "utilibre-xz-unfurl-proxy:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "820b73f74ccc487637778036ec7c30f2a78520687a09a8b5696557f5c74ef9fa",
+        "scope.json": "67abe6126845c5fc1a8815c13297fc99b163bf6696291eaa2f4fadde94a65423",
+        "application.json": "4d31b8b80121634c0791cd5b629f9dad21d03dd8e302db91a76ac54261302f84",
+        "scan-gate.json": "39c7f59c9191416f14de82f95861c1cdf1a05e8bdefea0ee5d17244359ce69f3",
+        "after-scan.json": "367171e906605d0d7deee88aad849292ab22f3f9bdf17d63952590497ef72fc5"
+      },
+      "completeInventorySha256": "e8261de8b2d2b7da9ec7f9bfa298ad012181dc63c84e0841c4c0eb4ebc3a9d04",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "family-chess-app",
+      "base": "sha256:893258c742f38829a2d064ff147367ca76c08b11eb3dd1a60993d6ba35072586",
+      "containers": [
+        "utilibre-family-chess-app-1"
+      ],
+      "candidate": "utilibre-xz-family-chess-app:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "f95dad956054782520ea5ba33b18a1dac9e9d4fd6ff13183e90b48cbd27d37ed",
+        "scope.json": "58005bdaffe39ebbb1f2fb1b69e7232c8a626405e956f83c9acc805fe1faa467",
+        "application.json": "a8d228d315bfb27e5889d5a2779b64ae83c77d35e2fd2a36a3d5a4784a12ebfa",
+        "scan-gate.json": "b322f04a7371d03c1fed3be6738555b3e0f0721770fe2ff7bab7b9cb61a5c68e",
+        "after-scan.json": "67812c7df8c4f5ed92e40e66c7c1df1ef639ae2d079b9f16e04dc6b128bd359b"
+      },
+      "completeInventorySha256": "1e43b094fb224cceb169b1087199889d9f6cf1ca6a0405ed63851ea5d6fd0da4",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "beaverhabits-app",
+      "base": "sha256:9d5c0de52968c381fac2bfe3a58f7e5bc46bdee7f1e945461e7f036fe09cda6e",
+      "containers": [
+        "utilibre-beaverhabits-app-1"
+      ],
+      "candidate": "utilibre-xz-beaverhabits-app:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "5afaeb294914e71ffa0be8a5c45b5bc2be080ed7f850d361646c2073e267caa2",
+        "scope.json": "8d55e0f8e2c8a5933abd561c366f47c7a7fe3c169018d5b7ec70f44197043b6c",
+        "application.json": "b894b474f09944777ee0ff268e0f99fa16aa7b9f471c1d28be92161c3446b3e6",
+        "scan-gate.json": "689c5aeeb420fb39d8f8fc5697ba6ac5a2a73b7c590d6fbf26898c0e9d05bf73",
+        "after-scan.json": "ab9347dc78d96519b4191f664e84e36ada148d9522a3e93c8bd4ac5c96ddb1b3"
+      },
+      "completeInventorySha256": "dfa000b8c1bab20e09c6d216aa9faaf6a52c9ca2bffd42a631b7914f2095970b",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "unfurl-app",
+      "base": "sha256:9f06d24ec57cd96584ee83bcaae69e99ebb6e18e992f0768cad5d2eec02a3d68",
+      "containers": [
+        "utilibre-unfurl-app-1"
+      ],
+      "candidate": "utilibre-xz-unfurl-app:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "14a1540de4a42a0e5db3bfb5dca5ffe6590dd2ab0ec1a4cfd5c92a8ca4e4eb66",
+        "scope.json": "6b362d76675a2198017b28a96432949e083d4011d8f7b029e08ace021b0941e1",
+        "application.json": "720ea5379ce350b74fc5654f222fc2a8a052a625c6842225c1bca0451c612f18",
+        "scan-gate.json": "bd87cd1ae77d3ae4c54b48ff0f87d46c40170468b10ff2068749b7e00698ae38",
+        "after-scan.json": "f99f0b66aa4ee990d83c80b3f2ffacaef97878723bf5615c670ac55269863b3e"
+      },
+      "completeInventorySha256": "4d544be672d95bb6dcb8e1cc4517a38ea5120c6a664e936386f40dfec480a97b",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "expanded-breezewiki",
+      "base": "sha256:a31f39d7cc574fadaa0f8be82870958989d05e3a51875f6d7f3b187672f3c5fa",
+      "containers": [
+        "utilibre-expanded-breezewiki-1"
+      ],
+      "candidate": "utilibre-xz-expanded-breezewiki:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "8553096385303535306fd7c5074ae960806ecb57be680860540a75419571dce7",
+        "scope.json": "c25875c71c6addc1d7a0f414857dd886b59da28d60dcb9d7c655c39a7daca8d7",
+        "application.json": "a69937ab385ee3fe2993e54a12bc1859a4c141b9668ff2fbd1c9fc755b169312",
+        "scan-gate.json": "d099dd98ae824af8c5d100fdcc1a89a376c8b863af68fc88ec876a5dc5a568d8",
+        "after-scan.json": "61fe7795eb9a81679efea92954d710bf54385f168d6dcb03354ebfcdc08d6d64"
+      },
+      "completeInventorySha256": "0cf4b484437d1058c1a25209b0181819bc3169239c60c109f0c9f06bc0094c58",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "calendar-radicale",
+      "base": "sha256:cd934d9d60697b571e17b3959b3e9e5624eadf161b62c1510f07bf3f475ef02d",
+      "containers": [
+        "utilibre-calendar-radicale-1"
+      ],
+      "candidate": "utilibre-xz-calendar-radicale:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "2612a34a93a093c94b286843bef7cfc25f31723e2dbf80ee7c34ae1fbddf8210",
+        "scope.json": "558de2e8d3dbc9bbc46563056b0cec2cb430286af46e79c274f544117e9b3a53",
+        "application.json": "11fbaa2f5330069517e97c8f430481fa9bd1ccfd33d582a2d0bfb556265cd7d5",
+        "scan-gate.json": "8e72763be37da65cb2fd23e408f1396913c4487c15e50a34b641194a1f85d6d7",
+        "after-scan.json": "3312fa8275790ab03d56dcdc8b19261564892dc1683cea589ccbe00e867dc569"
+      },
+      "completeInventorySha256": "818e7d93474751e3a841243c5ab527ca8fed61339b78962c59418318a483bb0d",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "services-freshrss",
+      "base": "sha256:e503cf0ae15ecf1c6ad0728c8a6e7ff18ca52847acc4eb0609f4b11f5dbd2b89",
+      "containers": [
+        "utilibre-services-freshrss-1"
+      ],
+      "candidate": "utilibre-xz-services-freshrss:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "9c1aa595238efb92bc311fd587bd4e59280ab292ed54643f6af747b33efe7f75",
+        "scope.json": "f8102132f559e47b5d0f246fa8c47d2cda246254851e46209f2741fd4c9e761c",
+        "application.json": "9681842898f213ba35077e3f4756c577a7e378871114b0b4fcf0f6d9a33650c4",
+        "scan-gate.json": "13cdddab1dba24ac932a359137905dffde0d712763b7e7f274be2aead81337a4",
+        "after-scan.json": "0f2a70ec362c7c6ec9fe23764a6c2431cce9b83d533364ef01f02e88c369726b"
+      },
+      "completeInventorySha256": "5957f53c0ead39ea42a94df988a0e181343a8ed046c38539906c979d81538d64",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "expanded-penpot-backend",
+      "base": "sha256:e8c728e7a8aee22cc1eda7c1323dccc24c2f25ea5d3ee9780b6e310da174b77d",
+      "containers": [
+        "utilibre-expanded-penpot-backend-1"
+      ],
+      "candidate": "utilibre-xz-expanded-penpot-backend:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "048483cf8b4bb466eb69aca50bc407cd9db1f96f09a60174e6a368b5acf04efc",
+        "scope.json": "ddfe9746e5334b68b7ee80751f22799ae2c209189aedc42656c9180d7d7e578a",
+        "application.json": "5c1c63a4eede104542f45be81710985e7826afb27cf67bb1a783ffe2a191117d",
+        "scan-gate.json": "0d993815b273738a0dafbd808ce3f3918589fcd69b30d22ae65fe2d30658652a",
+        "after-scan.json": "e0e08e83cccaea84f0e864f46da0f01750033eda24bb30cb5c24f3703f5fe5a4"
+      },
+      "completeInventorySha256": "2b4c45bb0dc364ec990161cb395cf5d2c40a13618d06c8465c9719162c6ba4a1",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "records-grist",
+      "base": "sha256:f5d9fca438372859123949def5f5479a9d8d755bc79384d10c767058bcba7d74",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "candidate": "utilibre-xz-records-grist:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "liblzma5": {
+          "installed": "5.8.1-1+deb13u1",
+          "package": "trixie/liblzma5"
+        }
+      },
+      "approval": "reviewed-native-maintenance",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "c0aab50ae9612e032f862a38d44d8c534d05b69d1ea58de871ef61c4ff2b2f6c",
+        "scope.json": "fba534e9b16e2dcaaa70012e7abe660dbd33b4f47e737827d9affb035169759d",
+        "application.json": "9e628577ac8dd8f0f9c34486dccce39a7406fec67db620b86d71191eaf246e46",
+        "scan-gate.json": "2a22055ca59f7cca529d0697d84b318023226d60512818543a3392c3a6bfc057",
+        "after-scan.json": "81cb1c676ba40afb0da95ef8f91e321da168cf83ad34d93081f08fa21f5b7f26"
+      },
+      "completeInventorySha256": "51a4ede571589a8292627bec4a8769097f403aeac9e1304c71300d11ccbcecb6",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ],
+  "purpose": "Finite signed Debian stable liblzma security update; existing app/privacy/configuration and ABI gates required",
+  "lzmaFixture": {
+    "sourceSha256": "78449e70921660b85fc2feaf8d312964e2470936be75970435067888f9cfd29f",
+    "binarySha256": "408de9bb0de7d9ea7e407d51ffac560ff0933661d1b27da1e64ae95a3c547433",
+    "compiler": "cc (Debian 14.2.0-19) 14.2.0"
+  },
+  "network": "none except the explicit finite signed package acquisition",
+  "rollback": "Previous immutable image; no migrations; preserve existing source and operational boundaries"
+}

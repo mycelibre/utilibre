@@ -1,0 +1,1024 @@
+{
+  "schemaVersion": 1,
+  "scope": "Signed same-branch NGINX and native libraries; all unrelated image bytes/configuration must remain identical; no application or data migration",
+  "minimumFreeBytes": 8589934592,
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "packages": {
+    "nginx": {
+      "version": "1.30.7-r1",
+      "file": "nginx-1.30.7-r1.apk",
+      "url": "https://nginx.org/packages/alpine/v3.24/main/x86_64/nginx-1.30.7-r1.apk",
+      "sha256": "1113c37494eea2acc208b4e1c84210555aa8092616ef0368d3af2765e0170e7b",
+      "signature": "Must pass apk verify against existing image keys"
+    },
+    "nginx-module-geoip": {
+      "version": "1.30.7-r1",
+      "file": "nginx-module-geoip-1.30.7-r1.apk",
+      "url": "https://nginx.org/packages/alpine/v3.24/main/x86_64/nginx-module-geoip-1.30.7-r1.apk",
+      "sha256": "231e993f3e86edee509237c9dab71d67aedfa3e8d739b40d8fb4bf52b41f8ec8",
+      "signature": "Must pass apk verify against existing image keys"
+    },
+    "nginx-module-image-filter": {
+      "version": "1.30.7-r1",
+      "file": "nginx-module-image-filter-1.30.7-r1.apk",
+      "url": "https://nginx.org/packages/alpine/v3.24/main/x86_64/nginx-module-image-filter-1.30.7-r1.apk",
+      "sha256": "692b15afe043be7ff15ebb09c76e769750dfb491d4c0465dfa52ce1867b7960a",
+      "signature": "Must pass apk verify against existing image keys"
+    },
+    "nginx-module-njs": {
+      "version": "1.30.7.1.0.2-r1",
+      "file": "nginx-module-njs-1.30.7.1.0.2-r1.apk",
+      "url": "https://nginx.org/packages/alpine/v3.24/main/x86_64/nginx-module-njs-1.30.7.1.0.2-r1.apk",
+      "sha256": "b10ab85287fd42959f8178c99f4e9f0028fabbcf04174a8194e5aaca8cdba6ec",
+      "signature": "Must pass apk verify against existing image keys"
+    },
+    "nginx-module-xslt": {
+      "version": "1.30.7-r1",
+      "file": "nginx-module-xslt-1.30.7-r1.apk",
+      "url": "https://nginx.org/packages/alpine/v3.24/main/x86_64/nginx-module-xslt-1.30.7-r1.apk",
+      "sha256": "1f97d4ff76df9f6fa4a01d0234ccd75c38446acbf49ea31ae64fdc4b47aa4928",
+      "signature": "Must pass apk verify against existing image keys"
+    },
+    "libcrypto3": {
+      "version": "3.5.9-r1",
+      "file": "libcrypto3-3.5.9-r1.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libcrypto3-3.5.9-r1.apk",
+      "sha256": "042026082cc9bc7872d1baa81755c50efa70b05f03b5369fdc5f0a1303009720",
+      "signature": "Must pass apk verify against existing image keys"
+    },
+    "libssl3": {
+      "version": "3.5.9-r1",
+      "file": "libssl3-3.5.9-r1.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libssl3-3.5.9-r1.apk",
+      "sha256": "18c5778cbe52e1991303f8531970b05d4e6e036ea08349322f7422f42a689dc7",
+      "signature": "Must pass apk verify against existing image keys"
+    },
+    "libxml2": {
+      "version": "2.13.9-r3",
+      "file": "libxml2-2.13.9-r3.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libxml2-2.13.9-r3.apk",
+      "sha256": "8b37229c4761cf0eef5089045283526ef43bf335073050515010d34a313186ed",
+      "signature": "Must pass apk verify against existing image keys"
+    },
+    "libxpm": {
+      "version": "3.5.20-r0",
+      "file": "libxpm-3.5.20-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libxpm-3.5.20-r0.apk",
+      "sha256": "1ed312a00abac5a5840c1f3721921ea8183e664566c19763ed00aa9f35bb2178",
+      "signature": "Must pass apk verify against existing image keys"
+    },
+    "zlib": {
+      "version": "1.4-r0",
+      "file": "zlib-1.4-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/zlib-1.4-r0.apk",
+      "sha256": "7b05bc778b8b25cd880835b40114182bd4d1581717504d0129c810c0a14291cb",
+      "signature": "Must pass apk verify against existing image keys"
+    }
+  },
+  "fixtures": {
+    "zlib": {
+      "path": "/var/lib/utilibre-maintenance/libraries-20261111/fixture/native",
+      "sha256": "b72fedab8a8ab4ab006b043b6ebcedbea746d5035caeaca42fcc149e78f0b4d2"
+    },
+    "libxpm": {
+      "path": "/var/lib/utilibre-maintenance/libraries-20261111/fixture/xpm-native",
+      "sha256": "fcabfc1cebb8b1644a19f06b8907930bdac694febdd0275f12ee1695fb432625"
+    },
+    "libxml2": {
+      "path": "/var/lib/utilibre-maintenance/vendor-libs-20261111/fixture/xslt-native",
+      "sha256": "1843be009dfa91fc50cb7d9b1e401c8e5e75debd6cfbb4a3e526e4f73cf247f5"
+    }
+  },
+  "rows": [
+    {
+      "key": "browser-tools-audiomass",
+      "base": "sha256:0e5f539deedf3c8f450ba6b3e17f3fc90e023b7d8f44653c310a2923f5176f53",
+      "containers": [
+        "utilibre-browser-tools-audiomass-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-browser-tools-audiomass:20261111"
+      ],
+      "candidate": "utilibre-security-browser-tools-audiomass:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "addb627e5d1d9b3f803e3ba8e94042943a4cccf1d2b30b801b6476abd97398a2",
+        "application.json": "ed87debc40543f72b9e7eef2d1b00e1603022156af1b3e9fca3d97799b9ca1d9",
+        "scope.json": "69c50631e22195ea01b21dc693d554192f93eea025fedce2f25dbeaab8afac02",
+        "scan-gate.json": "326cf466f171aebf1a8cc342fc601215e59bdebeea230dda54a7e5f2459a8c73",
+        "after-scan.json": "27f2f1c12d9a215fdc5c18746b3b3c2ffe06419dfdf3c24bce825a1787bbd209"
+      }
+    },
+    {
+      "key": "toolbox-drawio",
+      "base": "sha256:1ca2fd9fbf94758fd4726446a77924883c59bc3baf805885a87eace5d68973c6",
+      "containers": [
+        "utilibre-toolbox-drawio-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-toolbox-drawio:20261111"
+      ],
+      "candidate": "utilibre-security-toolbox-drawio:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "1df0074a31e7beff3286321289916cbff3ed721505b6993d7f2359fef74f38d4",
+        "application.json": "329b1e60f648582994c9a58091ae1af4a46278a88971c85ec2effa50ddfe8b35",
+        "scope.json": "453f9112fb0896f7bc286cefcea240060bf2144bd78571256dfb85323b52a54a",
+        "scan-gate.json": "52cc9355572c4def32fbfbbc5225fd0e0f396d8a684f5a16a667c0c1943de4b3",
+        "after-scan.json": "aa8d246eb48a10b3e079453edcd322e591d61f436522301ddfff5d772392dad4"
+      }
+    },
+    {
+      "key": "browser-tools-cyberchef",
+      "base": "sha256:1da1db80583f97b2ef6375e43c3ab005946c3921fb6fa6daf7541c7156c3fb74",
+      "containers": [
+        "utilibre-browser-tools-cyberchef-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-browser-tools-cyberchef:20261111"
+      ],
+      "candidate": "utilibre-security-browser-tools-cyberchef:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "55899eca7f04ff6c7515ecb5ded65eef54fa1e07a2851671a5b9b819eb32ce4a",
+        "application.json": "0409eeba730d4391bb02c9f52b6b1331eaa7f615962d730a678577f94ded1545",
+        "scope.json": "3f0dd0a5b0f5ecd1f952c5b9e78fb67c628fd723d79443702a84fabcf02450af",
+        "scan-gate.json": "deb29291e58993036f12d2785e6af6dc3d5218d1dd3ddc4b7c4f7aebfc99172e",
+        "after-scan.json": "684d1017397bd4d239c41d74b78a2679ca59e08a22c0001b8cef60c4457b6c8d"
+      }
+    },
+    {
+      "key": "browser-tools-svgedit",
+      "base": "sha256:211bb113471223f363bc15911a53994fa424dd9b72b47f537b15fa8c067e6f35",
+      "containers": [
+        "utilibre-browser-tools-svgedit-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-browser-tools-svgedit:20261111"
+      ],
+      "candidate": "utilibre-security-browser-tools-svgedit:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "0b5f6d5dabd575fb1147094e0b04a204938e96911487bf05e6ff1143c2e1eaa1",
+        "application.json": "88c2531158d40aa857ffdb8b5de353af7697ae75c0b94b592245ab9197912236",
+        "scope.json": "b808ba3a8a3c5a4ab47e12740394c5f6c26cbec6c748f96cc3b4f1b3ecf0971f",
+        "scan-gate.json": "071d5da4914f62117deef10695b49347734ef034c8748331b6e44ac7eef3f756",
+        "after-scan.json": "8dc7c18a1d12eaf2a84d9dd305202489e1967c06ddd340017020936030871842"
+      }
+    },
+    {
+      "key": "reader-evaluation-safetwitch",
+      "base": "sha256:3c97ef2b794a731cb33c320af517a5e9cf572579bc8e05b77a44ca59323dce7c",
+      "containers": [
+        "utilibre-reader-evaluation-safetwitch-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-reader-evaluation-safetwitch:20261111"
+      ],
+      "candidate": "utilibre-security-reader-evaluation-safetwitch:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "2c3b432d9632580ae803c963e4cf5b4d0c931fa79e15216f374fdc0960c628d2",
+        "application.json": "ede6da5a1118bb799025e13cebe167ac52f41eef67e3991d5dd966e6abe02d67",
+        "scope.json": "276ce59060be9191a2809de60b174bd163085a274964d02594589245f8b2af0d",
+        "scan-gate.json": "30f686c6376c236a640c6a3375dc7a843e692e1bd792974ae3863b57eb3ea700",
+        "after-scan.json": "b3cc1570516001521a79ace6c7ea4df436fed8fa80c7046abcf365cfd9b091da"
+      }
+    },
+    {
+      "key": "qr-offline-qr-offline",
+      "base": "sha256:4750e2f441c6fe307ea4d0b32320f25ca56a6e6ea86fe4392c99f38bd62a3d1c",
+      "containers": [
+        "utilibre-qr-offline-qr-offline-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-qr-offline-qr-offline:20261111"
+      ],
+      "candidate": "utilibre-security-qr-offline-qr-offline:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "f6e98f1364ef9e86f8d5aa1444cd201eb1ce271d26e4c1a051cbd5f81ffe57c8",
+        "application.json": "5bf7b91e369962f77fe5ff7138690c9bb55ecbe3f34f2ecfbe247a2006e4b0b0",
+        "scope.json": "c54f04ac9d829f6fed3a2d2721a412f9aabc2cda3d9c069073d8c95756754e81",
+        "scan-gate.json": "75545516f193a51cd1bc1ea0be7f3209aa05606ab1b968614af7bffd46175152",
+        "after-scan.json": "7137a49d5c3dc2b9fa1f8ab4b3bce99c2581b8b0db4f33b5b98524278e6096b2"
+      }
+    },
+    {
+      "key": "expanded-whisper",
+      "base": "sha256:4a04c59fa746582a542499e5abca91f3ba6ce3b4baec0163debd50b780f3b278",
+      "containers": [
+        "utilibre-expanded-whisper-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-expanded-whisper:20261111"
+      ],
+      "candidate": "utilibre-security-expanded-whisper:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "d31db91b8e3907231c10e7d4219284dfc461ff7ae8c84a989901adf307f04dbc",
+        "application.json": "c81a99b6079a92410a621503385a43f738abc6427d428ea6b290226976debbaf",
+        "scope.json": "142d87d6103dfa87378c0ec74f63b5dce5e6d3644ad889be7d7a08617a34c237",
+        "scan-gate.json": "87452bbaa0cd51a524c59b6c3211ec22786ca44c9dca4b0ddc61194bfd9aa725",
+        "after-scan.json": "2ac162ee6d8630f48eb91245c347b81d83b4cec8fc96dddb6672459dab558554"
+      }
+    },
+    {
+      "key": "toolbox-vert",
+      "base": "sha256:4b6c9ce308c878a9188e9f4256616ba1711a6ddcea002877a2bee23766beee2d",
+      "containers": [
+        "utilibre-toolbox-vert-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-toolbox-vert:20261111"
+      ],
+      "candidate": "utilibre-security-toolbox-vert:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "3f08d99358a13eb577ff17bf187b30639df11a67db17916bd9bd73df0d34f2c3",
+        "application.json": "d15f7b1b6fe308cce1cb0d67fb20e6a5cfceede532ae2012fe088d57584befa9",
+        "scope.json": "a92ccf9bf5adddd612436156dbb676588f6b159bd383304be7350f4563371c26",
+        "scan-gate.json": "0ec6e25311fb18cd58257bf106dcaf05cd3328220d9e421e761db5a3fda9979e",
+        "after-scan.json": "7da67987623d219f8f4fe9231bb4490429193fd49b514705138209208cd46348"
+      }
+    },
+    {
+      "key": "expanded-jupyterlite",
+      "base": "sha256:4dff46b18e4d0f62d7a4236248ce148741abf6c7fc44fd748ad9ff4ab12f605c",
+      "containers": [
+        "utilibre-expanded-jupyterlite-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-expanded-jupyterlite:20261111"
+      ],
+      "candidate": "utilibre-security-expanded-jupyterlite:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "ea84efec55cb2a9fccfb06b114732244273a874cfb1bf460c4d312b947d25355",
+        "application.json": "cfe92d6e99b6956b766589f4affbfcc0fdd2c5f28f6bbfeecaf1e7444f0e12b3",
+        "scope.json": "795f4c28fe6c3960ffd2f416555bd7fb3f527608f3e957b29362ecc19f89151b",
+        "scan-gate.json": "6be467a75a3a65319c4a317258fb79236db834ab736cde4bbce62ba5ec1ce9b6",
+        "after-scan.json": "bb566c612f6f8874bc944d36a15f41cce59cb74d84b24864db959147635f7bea"
+      }
+    },
+    {
+      "key": "openresume-web",
+      "base": "sha256:51d3e64265feda0f79e4e0a6751e23ee34ff2ac16ab46bd1e82e6cc10af59488",
+      "containers": [
+        "utilibre-openresume-web-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-openresume-web:20261111"
+      ],
+      "candidate": "utilibre-security-openresume-web:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "5951d1390dcebc6ad8e40de9ab5477e4b314e14dd9603390681e4667ce085393",
+        "application.json": "be07826f5e0398ba40ae3aa053c2688d04af051710e29f32ea31a4cf4d1024d6",
+        "scope.json": "3fee994727327de484124c5db0eb8cfe5e0aebe916c5cd846074c08254312806",
+        "scan-gate.json": "c97a90b661995aa70e03e37239034b1b542c707821fc247d59caf711d23506ae",
+        "after-scan.json": "94e54b1a92de2b13ffc5995359560a0a0972f9c566afc01d48baa8f65bbfe206"
+      }
+    },
+    {
+      "key": "translite-gateway",
+      "base": "sha256:7165bb08a0704caa83ddce9dd3c7dafcdbdcb08af8acd469e728f7a29145a5ac",
+      "containers": [
+        "utilibre-translite-gateway-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-translite-gateway:20261111"
+      ],
+      "candidate": "utilibre-security-translite-gateway:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2",
+        "libxpm": "3.5.19-r0",
+        "zlib": "1.3.2-r1"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "8ecbc5b725c441e2db80a4c8408e1db1198c8c08a5bcff2dbb4ae595bc8aed5e",
+        "application.json": "0a193a2e0f07fc6e46e1dcb01b6859c2e5edd29bae23594586b4b59885af8eb9",
+        "scope.json": "1f0f259eff1408a1f4de7f62ff81a9396632c75350fc539f3f081503b6925c3b",
+        "scan-gate.json": "2b0bd3c62e6174ba4347536bbc500147512b3f3ccaa894844cc2c85649e5708e",
+        "after-scan.json": "741a367f60693f1318c6b846abc9ae4527f6e4587fd2b250a45cf9f879e0723a"
+      }
+    },
+    {
+      "key": "toolbox-hatsh",
+      "base": "sha256:8a04695c7ab9d5f34d9636a9e0596bae9d436b01ea72ec4cd6e02e56b1988fa8",
+      "containers": [
+        "utilibre-toolbox-hatsh-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-toolbox-hatsh:20261111"
+      ],
+      "candidate": "utilibre-security-toolbox-hatsh:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "ec133c3539ca02d0712e980a5b577d1d1eb446198dc683ade51eea855e8a794e",
+        "application.json": "7c203fd93281069ff6173ef9d3e90217767e09c87bda50f35e122b92425df68f",
+        "scope.json": "2406f75e7419d5941f512e2b88a1322fff44c6da665d1a6c6c1e3c0ecb5ee38e",
+        "scan-gate.json": "b19608ec41762d8f1f3c291576b6a7be0c625c6af0f3b8330575f40dcedfbe2d",
+        "after-scan.json": "9f5c0bceed1a7bf1dfc2bb6e93ab3bee0ff568d315946cfa9997f5caa86df55b"
+      }
+    },
+    {
+      "key": "pollaris-gateway",
+      "base": "sha256:8a8773d5148ccb2a74ffba53fe5da9d69934e14ca0f7be1c233049785dd8f1f8",
+      "containers": [
+        "utilibre-pollaris-gateway-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-pollaris-gateway:20261111"
+      ],
+      "candidate": "utilibre-security-pollaris-gateway:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2",
+        "libxpm": "3.5.19-r0",
+        "zlib": "1.3.2-r1"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "960b0319658542d9d7507de7804be0d6d6b04c2b70d612f739d8d81dc365eca4",
+        "application.json": "ebfee7e15a61a6000f898282cbfa5ea41e207add411c6b6bc110a086b3a2f45d",
+        "scope.json": "5bf522744381fff3e12bcf374f682e79fee43679c593b9056f9c558397c943a3",
+        "scan-gate.json": "e87e2488b7aa60439ea181c76dc95686376f20a567aee04d9f9f286b41056aa6",
+        "after-scan.json": "a164fc0c484123940bcfa086efa08217e13ce69de36688f245d4000faa97ea6d"
+      }
+    },
+    {
+      "key": "browser-tools-minipaint",
+      "base": "sha256:8b30b7f8f49ab90c4598fb8a0314f79719959174d86c26ad806f8e59fa61f321",
+      "containers": [
+        "utilibre-browser-tools-minipaint-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-browser-tools-minipaint:20261111"
+      ],
+      "candidate": "utilibre-security-browser-tools-minipaint:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "e591764df07c017dd8715dd838432c19c934a7dd03c113d8b10ffdcc7b1f3a71",
+        "application.json": "e514066672f0bd15d69c839ead29cdea8e37000a48b169f81141354a2d37738f",
+        "scope.json": "98e6ae15d1dbc4a75b6393ba690f9b2966529997c6c43645b50a42231b309cd3",
+        "scan-gate.json": "6487f7c4d996252a1d9189d48b866eb96352c7a71bb9357562805e238e9e4764",
+        "after-scan.json": "16d1da2d875ac7fc8bdf2e1b119b20823db3c43977ba6c2cceeeb3c1bb069f7e"
+      }
+    },
+    {
+      "key": "browser-tools-excalidraw",
+      "base": "sha256:a0bfed120dc26ab3bd13c3e79e2970ecd961a7da7957ce109ef896bcd731dc2f",
+      "containers": [
+        "utilibre-browser-tools-excalidraw-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-browser-tools-excalidraw:20261111"
+      ],
+      "candidate": "utilibre-security-browser-tools-excalidraw:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "503042d4b1859edc86c0eea738e94fbfe0b1b01b3d641e7c75ff830101a09c9b",
+        "application.json": "3c9f27f91ef0349396758fb43a58f74d52696d8af266f259391bb6529c377b61",
+        "scope.json": "5d473f0a7e8f5e801db201d0f4a8d92433d2a29edd14d2c4246f1568b2b54477",
+        "scan-gate.json": "28e616d7d8b2fa77550b991fda5f5c2d457602fba22a2313f2674f38d7c145d0",
+        "after-scan.json": "a2e4cd9ed3f13a2ea1c9c27b55ecc988c1afad3947408e59eaf6b7a25cd57713"
+      }
+    },
+    {
+      "key": "browser-tools-image-scrubber",
+      "base": "sha256:b19d6df9b9f5ca5a452e500553257ea3d7b375fad8c6354e246784ccd4195d77",
+      "containers": [
+        "utilibre-browser-tools-image-scrubber-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-browser-tools-image-scrubber:20261111"
+      ],
+      "candidate": "utilibre-security-browser-tools-image-scrubber:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "b025aba99680d9c7874e13619845a2b394851bb2537426a6097c8e1d645952e3",
+        "application.json": "50b0fa0c00beec3115a1f1f068df864b1fa921d583fcfc34650e157f9d60441b",
+        "scope.json": "ebd970376aa65c55b763a589d29970ed1c43e94369e99bb6c7ebf0ded4138956",
+        "scan-gate.json": "9f393ee6959c724804d0e0a07a8a352e72f0d92cefd15c71f81de96daaa6c3a9",
+        "after-scan.json": "9440e7c98018c3aa1ab231369c0498c18c5b23f4944802c46bcd6467a9bcd634"
+      }
+    },
+    {
+      "key": "binternet-onion-gateway",
+      "base": "sha256:b90c610484865c1203ef9058d082698fc0dd82aad6a08f0f293d7a12df79b6cf",
+      "containers": [
+        "utilibre-binternet-onion-gateway-1",
+        "utilibre-binternet-gateway-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-binternet-gateway:20261111"
+      ],
+      "candidate": "utilibre-security-binternet-onion-gateway:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2",
+        "libxpm": "3.5.19-r0",
+        "zlib": "1.3.2-r1"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "70d0bbad5fc757090d5cc9a4c37f061188dfce6e0fe11bf919b22219f66f788a",
+        "application.json": "cb50f9815925974ae2b6d5cf5d6c490a95d422ddd919beff587914945f8fb7ee",
+        "scope.json": "8f1474bd8832a940775ff8394485c6f5ba91762b429fa7cb70428a8122e0b536",
+        "scan-gate.json": "dc0a64fd8edd1ddcabe274b680f44e1f3e6e05077a81a9eecd668f33c4e9cf22",
+        "after-scan.json": "e524437242a499aa79407aa6ee2eed827e974f17e2021b74c73d466d5f91ddf1"
+      }
+    },
+    {
+      "key": "toolbox-ittools",
+      "base": "sha256:bee2e6a1b421fdcbf6e3ada8bfc84437901c2801c2e80644eacebe1054dc5396",
+      "containers": [
+        "utilibre-toolbox-ittools-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-toolbox-ittools:20261111"
+      ],
+      "candidate": "utilibre-security-toolbox-ittools:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "586c1a3166cf9d45f407e998d9b56e30e4d4218a6f5764fa808b00623d492926",
+        "application.json": "35786f04e089f49d7c31a83f631e2cce2d43e93c6cfd418516c09cccef190a2b",
+        "scope.json": "bd4f33c0e933d45aae041040776ec888baae9b0f1abc6321c2046f7058768973",
+        "scan-gate.json": "6ee0e8ed4f36278d66fe5550454d53c44d9f6bf7c2c943e701bc2e5da8daf4f2",
+        "after-scan.json": "bba76d92e92daab479fda8741f573c8f14ce77fb325b3f7bc01de676df86b96e"
+      }
+    },
+    {
+      "key": "wallabag-web",
+      "base": "sha256:c2e46139f13e5dba78e2d92bf7fd4eeda44cc203a9233568b536dc4cf6e6429f",
+      "containers": [
+        "utilibre-wallabag-web-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-wallabag-web:20261111"
+      ],
+      "candidate": "utilibre-security-wallabag-web:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2",
+        "libxpm": "3.5.19-r0",
+        "zlib": "1.3.2-r1"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "174dedc239fffdafa762f1f7b7768bff7fccb42db2b15ed07aff3fe18b2cea0d",
+        "application.json": "f7a7d746400b09b7532295f5bab5e0d7164b8e672d5d37d1255756a489764ff7",
+        "scope.json": "8e0d6837ea413759e4407f336a75a4dd1538d4c3a7983de428676aa0f3d86439",
+        "scan-gate.json": "5ccd0dfc179aaec7cb0eedb259d685419791da9328dbbe0f0cc17cad6f7845a9",
+        "after-scan.json": "8ebe2789a36cdee9b001f0c735accf9ea6eb357fbc431d9b1bb16613af07858b"
+      }
+    },
+    {
+      "key": "browser-tools-markmap",
+      "base": "sha256:c7173c515af0a040b9264f1def4ebf08690f7a9bd424c147d99d1b3c81fd0999",
+      "containers": [
+        "utilibre-browser-tools-markmap-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-browser-tools-markmap:20261111"
+      ],
+      "candidate": "utilibre-security-browser-tools-markmap:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "0d98f37e939783f4c4affc89da77dac87a908add77a571e172406fd57a060de1",
+        "application.json": "03deed3413a2eb257a6fbbf00b7b79580eb6a057fa88f29fb5368484dc473ea1",
+        "scope.json": "6f253f806940b9b554d253ccbfe891821d9a65b879bb81117a9e4ff275537606",
+        "scan-gate.json": "3027fe6ab7a67d2dbc609b0dc42b2cfa8e59d58146ac955d3717a4a597addeba",
+        "after-scan.json": "4e961a1a61475a3b5df5ed951925442c8cf6d634bc5f90eeddd8b2e4700a22dd"
+      }
+    },
+    {
+      "key": "browser-tools-zip-manager",
+      "base": "sha256:d3a69169efb0d961ed4d5a675668b38145b5a9f09ffd512e9c6720f688065f4b",
+      "containers": [
+        "utilibre-browser-tools-zip-manager-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-browser-tools-zip-manager:20261111"
+      ],
+      "candidate": "utilibre-security-browser-tools-zip-manager:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "c798d2932a65c017069de0d99d3816dc73d538e169021fd5c7dcefb661914807",
+        "application.json": "538990432749f086725bdd29738623a4dd57bd361e23bca25d2f9f3b3a9cdf17",
+        "scope.json": "e835017dbd208ff17941870fab59c33a9f5bb4d80dbe9eedde7162cce664b131",
+        "scan-gate.json": "d055a9906b47680e0935184e5debc8870bb48b02b633df99d2278beff823c0d2",
+        "after-scan.json": "6626ff0c84885ddb2d71e11542923efc165becf22d8e69e6397c4c9606e52fc1"
+      }
+    },
+    {
+      "key": "toolbox-miniqr",
+      "base": "sha256:d4438f0de17cebcc1cd40bc7933ed8e47c88ad706064295c9636c7e55e2f49b6",
+      "containers": [
+        "utilibre-toolbox-miniqr-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-toolbox-miniqr:20261111"
+      ],
+      "candidate": "utilibre-security-toolbox-miniqr:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "16902ccca5bfd54823699b72e819cf3a0b48c49aeb9ac7a099ef01db68c81cb3",
+        "application.json": "10626453f1d3a1e25e7e268c07a67fc14e93958d809b183a9835c633914957ff",
+        "scope.json": "d60cb132d848fb566e50f4fa10e679b07b95d60c8570cd649d1184e516b60fd2",
+        "scan-gate.json": "bd5283b7be9618689cb25743b20848363d4711626baf5f811fde275a3d126fc5",
+        "after-scan.json": "f60ab2930f8eafecaa796a8753653d71a3c5b8ae512b3682eb67854cb9044ab2"
+      }
+    },
+    {
+      "key": "creative-batch-glyphr",
+      "base": "sha256:da58a576530611471798d74f48c9d79f9114fe247b5a9837ba89c260e29165f9",
+      "containers": [
+        "utilibre-creative-batch-glyphr-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-creative-batch-glyphr:20261111"
+      ],
+      "candidate": "utilibre-security-creative-batch-glyphr:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "51d46dc73e0b47b8ce082278d041d2ea9ea1dc3eb1ebabf4b6e8db896b43b54c",
+        "application.json": "4951143ef9899fa38caad167e296681322327be55af1a9dacde04d517a9d03a9",
+        "scope.json": "da76427762cf266240e0176a52bacaad5261659195c9c9967d5acbff3be6b8fa",
+        "scan-gate.json": "3b7670bf3f88c88f81fbb6f4b8fdd4db3f1ceebf0e79861a3d2b3b448fc3c6aa",
+        "after-scan.json": "f4ee80f87ffdefba1ddec989254dd8fadab17c1f3cef93755a61847c1e0ce0f8"
+      }
+    },
+    {
+      "key": "toolbox-omnitools",
+      "base": "sha256:e2357562115a5c2efc11eb3a63bdbc5a762b2eaef05ff05e8790bd2abb3ca686",
+      "containers": [
+        "utilibre-toolbox-omnitools-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-toolbox-omnitools:20261111"
+      ],
+      "candidate": "utilibre-security-toolbox-omnitools:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "034d06c1693f63ed12dd582b90b6eb56cf8d0dfbe5146a0daecec4f946519674",
+        "application.json": "06cf2684b36e7ed69f919ab28546998462e1291863f2a1960b334702b96c2dbb",
+        "scope.json": "8fdc221ec5bdd3e045ac7364f8d1b5acfa9737c0885cfd949a482521a4f61b33",
+        "scan-gate.json": "a24dc646403ea35c51a34517bd55d7f72313b651708a1e60c6a6a384326845d2",
+        "after-scan.json": "e195819ae66f9e8c4d83475512f5d6786b6916264f72dce30f1f28fc8ce56410"
+      }
+    },
+    {
+      "key": "toolbox-bentopdf",
+      "base": "sha256:e2c11ea4f7ead52c029b49065efe859cab4c786643ada84ac0fb01082f756a0c",
+      "containers": [
+        "utilibre-toolbox-bentopdf-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-toolbox-bentopdf:20261111"
+      ],
+      "candidate": "utilibre-security-toolbox-bentopdf:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "81c884a53c5eb0e455e8bcebce4a6ab5104fb7b6bf85d59a84d1756b16b65088",
+        "application.json": "c404c3558de47447b779dd63fdd63eea52b331b290a46586c3132cd46fdd1e76",
+        "scope.json": "a486d7d67db8e61839f7c13dcca85fa7eb3bc9f966454cf9884a42fbc07a1deb",
+        "scan-gate.json": "76fc1a5d08d4346ce9cad5f9197e55bb72fca1f589a82f7d913e9bd39be6619b",
+        "after-scan.json": "1998eb51c62c2db49d5b2f5b7ad6a8918a5ae14ef7bf9e7a2cae4b3a99464065"
+      }
+    },
+    {
+      "key": "browser-tools-rawgraphs",
+      "base": "sha256:f6cd8a4630bd7fdfb31397fe592944b3c1b099e147b129cb7d9a23931527e68f",
+      "containers": [
+        "utilibre-browser-tools-rawgraphs-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-browser-tools-rawgraphs:20261111"
+      ],
+      "candidate": "utilibre-security-browser-tools-rawgraphs:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "55058da7a2d22546578afff546087aa41a5e7d1ea78badb66308daface3c8aa1",
+        "application.json": "335e2958bdedb1a4ff4c55f752b41fe97e42e362cf4e6157514e6e26940c4baf",
+        "scope.json": "14c47f89da74fb39c77b2c13163624e3792c6fbafc8af6872f47c044da42a28e",
+        "scan-gate.json": "980fcde6f37b7ed84d3af9c4360d2f333493176c1cd1975921bed4c56a7dbf89",
+        "after-scan.json": "d5f7debae83bceacfb984390c5ffa6932ad05df559bcf1f01ee91c2ceb4562d1"
+      }
+    },
+    {
+      "key": "shared-nginx",
+      "base": "sha256:f818900e82bdbbfb9fc84e699dab867221e1fa634f26807bb3b67ef3bd4f89d5",
+      "containers": [
+        "utilibre-wishlist-gateway-1",
+        "utilibre-vikunja-gateway-1",
+        "utilibre-unfurl-gateway-1",
+        "utilibre-trip-gateway-1",
+        "utilibre-spliit-gateway-1",
+        "utilibre-simplelogin-gateway-1",
+        "utilibre-rimgo-gateway-1",
+        "utilibre-records-gateway-1",
+        "utilibre-reader-evaluation-anonymousoverflow-gateway-1",
+        "utilibre-reader-evaluation-gothub-gateway-1",
+        "utilibre-reader-evaluation-fourget-gateway-1",
+        "utilibre-razzia-gateway-1",
+        "utilibre-projects-gateway-1",
+        "utilibre-priviblur-gateway-1",
+        "utilibre-pack-static-static-1",
+        "utilibre-pack-forms-web-1",
+        "utilibre-opengist-gateway-1",
+        "utilibre-newsletters-gateway-1",
+        "utilibre-linkding-gateway-1",
+        "utilibre-kittygram-gateway-1",
+        "utilibre-kitchenowl-gateway-1",
+        "utilibre-gathio-gateway-1",
+        "utilibre-family-chess-gateway-1",
+        "utilibre-expanded-wiki-gateway-1",
+        "utilibre-evaluation-degoog-gateway-1",
+        "utilibre-donetick-gateway-1",
+        "utilibre-creative-batch-static-1",
+        "utilibre-community-gateway-1",
+        "utilibre-community-rallly-gateway-1",
+        "utilibre-collaboration-pilot-gateway-1",
+        "utilibre-chitchatter-gateway-1",
+        "utilibre-chhoto-gateway-1",
+        "utilibre-calendar-calino-1",
+        "utilibre-bytestash-gateway-1",
+        "utilibre-biblioreads-gateway-1",
+        "utilibre-beaverhabits-gateway-1",
+        "utilibre-addy-gateway-1",
+        "utilibre-additions-mezzo-gateway-1",
+        "utilibre-additions-fmd-gateway-1",
+        "utilibre-additions-dumb-gateway-1",
+        "utilibre-13ft-gateway-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-calendar-calino:20261111"
+      ],
+      "candidate": "utilibre-security-shared-nginx:20261122",
+      "release": "3.24.2",
+      "packages": {
+        "nginx": "1.30.6-r1",
+        "nginx-module-geoip": "1.30.6-r1",
+        "nginx-module-image-filter": "1.30.6-r1",
+        "nginx-module-njs": "1.30.6.1.0.2-r1",
+        "nginx-module-xslt": "1.30.6-r1",
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "libxml2": "2.13.9-r2",
+        "libxpm": "3.5.19-r0",
+        "zlib": "1.3.2-r1"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "approvalBasis": "Reviewed signed vendor maintenance packages, unchanged complete application/configuration payload, isolated HTTP/TLS/native fixtures, every configuration syntax check, zero all-severity candidate findings and successful scoped preflight.",
+      "reviewedEvidence": {
+        "build.json": "fe8b761d35bd55866b862d35264e8d57e38e063324b0cf7f2d290998295f14df",
+        "application.json": "50146fe20ce1f280ee9b454aea8a223d4408c6b83aea54c6e3196119005140df",
+        "scope.json": "907beb32b8a44d35395a54f117abe7c880b82b6829789de44c3bf4376c1f9896",
+        "scan-gate.json": "0f3a3537f6a58b16279feebc7c8c662f7064f77fcdb2415910fb751448524ecf",
+        "after-scan.json": "103d35061976163d2e9b8d297ec6f995ae7a6d2e2db025a680e9324223b103b8"
+      }
+    }
+  ]
+}

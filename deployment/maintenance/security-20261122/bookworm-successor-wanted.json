@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "packages": {
+    "bookworm": {
+      "libssl3": "3.0.22-1~deb12u2",
+      "openssl": "3.0.22-1~deb12u2",
+      "libssl-dev": "3.0.22-1~deb12u2"
+    }
+  }
+}

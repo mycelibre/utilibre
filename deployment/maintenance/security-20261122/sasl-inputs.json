@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "packages": {
+    "bookworm/libsasl2-2": {
+      "name": "libsasl2-2",
+      "version": "2.1.28+dfsg-10+deb12u1",
+      "file": "libsasl2-2_2.1.28+dfsg-10+deb12u1_amd64.deb",
+      "sha256": "d6f20408e2be92ebd9f5e3b1c1935b075efb3f03abb5f48f7b991a0ad3e2d6a5",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/c/cyrus-sasl2/libsasl2-2_2.1.28+dfsg-10+deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "libsasl2-modules-db (>= 2.1.28+dfsg-10+deb12u1), libc6 (>= 2.34)",
+      "preDepends": ""
+    },
+    "bookworm/libsasl2-modules-db": {
+      "name": "libsasl2-modules-db",
+      "version": "2.1.28+dfsg-10+deb12u1",
+      "file": "libsasl2-modules-db_2.1.28+dfsg-10+deb12u1_amd64.deb",
+      "sha256": "6c86ca8fe9a7d652e618874b8753b4b6ec6b42ed7649b3f388e38d0a99047ba5",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/c/cyrus-sasl2/libsasl2-modules-db_2.1.28+dfsg-10+deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "libc6 (>= 2.14), libdb5.3",
+      "preDepends": ""
+    }
+  },
+  "rows": [
+    {
+      "key": "community-rallly",
+      "containers": [
+        "utilibre-community-rallly-1"
+      ],
+      "base": "sha256:da56d2ad99df1b1706f42d4ea0ea9d01744f69e4430aeee40894dc328c042725",
+      "oldRefs": [
+        "utilibre-krb5-community-rallly:1.22.3-20261110"
+      ],
+      "kind": "debian",
+      "suite": "bookworm",
+      "packages": {
+        "libsasl2-2": {
+          "installed": "2.1.28+dfsg-10",
+          "package": "bookworm/libsasl2-2"
+        },
+        "libsasl2-modules-db": {
+          "installed": "2.1.28+dfsg-10",
+          "package": "bookworm/libsasl2-modules-db"
+        }
+      },
+      "consumerProfile": "node-runtime",
+      "candidate": "utilibre-sasl-community-rallly:20261122",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T05:16:11.158044+00:00",
+      "approvalReason": "Signed same-suite SASL vendor fix. Complete image/package/configuration scope, preserved ABI, public SASL API and consumer checks, retained synthetic native application workflows, and frozen all-severity comparison passed. No account, retention, migration or network-policy change; unresolved findings remain visible.",
+      "reviewedEvidence": {
+        "build.json": "45dc3ce5836c2a28161b9a02944776d07a64e3f92c9b3d064270ae713deca2e2",
+        "scope.json": "b1546a06acec5e489b29542eb9c133ed149453bb9bde591903b6a1c5389859df",
+        "application.json": "e6733fbe94d306dbec6399d9678b175e426ed4a060453758f14e7b739b1b6184",
+        "scan-gate.json": "a749cdada11ec7b5f187831f43aff846be65da278d57f50ec173f5133b47c413",
+        "after-scan.json": "20b2962128e36dd880bfa4261c3dce82cc4edbdbc312b688d333f2de185a5841"
+      },
+      "completeInventorySha256": "e1a284dd00a176203e8a4c121540722588702cac67b5b6387521648229e920bf",
+      "retainedTargetedFindingsSha256": "42e48ba92ef95baf9e18742d06e2d15994c1e438c1b08e6419a964a3ca369e9f"
+    },
+    {
+      "key": "community-uptime-kuma",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "base": "sha256:342a78264eb0b69ea78826a31bf1f4cd7dfac2b8fb8ac825bb17a35e72363b4c",
+      "oldRefs": [
+        "utilibre-kuma:without-apprise-20261110"
+      ],
+      "kind": "debian",
+      "suite": "bookworm",
+      "packages": {
+        "libsasl2-2": {
+          "installed": "2.1.28+dfsg-10",
+          "package": "bookworm/libsasl2-2"
+        },
+        "libsasl2-modules-db": {
+          "installed": "2.1.28+dfsg-10",
+          "package": "bookworm/libsasl2-modules-db"
+        }
+      },
+      "consumerProfile": "node-runtime",
+      "candidate": "utilibre-sasl-community-uptime-kuma:20261122",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T05:16:11.172027+00:00",
+      "approvalReason": "Signed same-suite SASL vendor fix. Complete image/package/configuration scope, preserved ABI, public SASL API and consumer checks, retained synthetic native application workflows, and frozen all-severity comparison passed. No account, retention, migration or network-policy change; unresolved findings remain visible.",
+      "reviewedEvidence": {
+        "build.json": "68153c441c0ca7751c32bec36447f82b2527f1b5f601fe88218d140b4ca65765",
+        "scope.json": "0db48721481ddb5639fa9200c6206ff7ac1c50310c6031c72630369cf348c507",
+        "application.json": "fe27343dffaac519101105c473b86c3cbc9fef12049db369c2a1a21d26592c96",
+        "scan-gate.json": "9b4a58fecf1950f76827a26cdf9713557309005b9582ac7a29248efede67d886",
+        "after-scan.json": "1d903a4041de1697d80cef29010bc5bb1399c7ec958027628325be35e5bcd419"
+      },
+      "completeInventorySha256": "76c41df545b8b6008f9f9aec518f1930bb7b9e72852efd52f88d77acffa215f7",
+      "retainedTargetedFindingsSha256": "3034be9575f46b909a0a85b7da7206b074153e841a0f9f1716c815fd6908e9c2"
+    },
+    {
+      "key": "gathio-postgres",
+      "containers": [
+        "utilibre-gathio-postgres-1"
+      ],
+      "base": "sha256:43bc9dd264170991cca34544965aeabbea2e9f34b3af5b4f653cc5ba263aa1e6",
+      "oldRefs": [
+        "utilibre-headers-gathio-postgres:20261114"
+      ],
+      "kind": "debian",
+      "suite": "bookworm",
+      "packages": {
+        "libsasl2-2": {
+          "installed": "2.1.28+dfsg-10",
+          "package": "bookworm/libsasl2-2"
+        },
+        "libsasl2-modules-db": {
+          "installed": "2.1.28+dfsg-10",
+          "package": "bookworm/libsasl2-modules-db"
+        }
+      },
+      "consumerProfile": "postgres-runtime",
+      "candidate": "utilibre-sasl-gathio-postgres:20261122",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T05:16:11.191619+00:00",
+      "approvalReason": "Signed same-suite SASL vendor fix. Complete image/package/configuration scope, preserved ABI, public SASL API and consumer checks, retained synthetic native application workflows, and frozen all-severity comparison passed. No account, retention, migration or network-policy change; unresolved findings remain visible.",
+      "reviewedEvidence": {
+        "build.json": "b671d0b863abb9ff7babd9f52a9d053741dd9cc03d5a67782bd3ad0f86970d30",
+        "scope.json": "45d8f19c238f94da1760ca9c074b21ac957e5015515b46b89d2875afcc80a7c3",
+        "application.json": "3d80040438765f7fa890994eb72baee2ae6ebf27f8cab7f75e94652d0fadd2b2",
+        "scan-gate.json": "f8d7f67857c8a0a325e8ff5459908f2dbeb608ac3b0f51f99b9bd1c6d4d6a862",
+        "after-scan.json": "4d603a12faea3a0550034abdea9f8dcf69cc4556ab57cbe44b8a67d9f068a5c6"
+      },
+      "completeInventorySha256": "3027eb2ca3c0eadc598b159c0bbda2a35c4af7ed7e7cc8ca770d0b6aebe9806b",
+      "retainedTargetedFindingsSha256": "ed7a706e2f7316de1cd96fe3c9c8242a07e0cb95c2f343200c3d0f1c9d1a40f8"
+    },
+    {
+      "key": "community-rssbridge",
+      "containers": [
+        "utilibre-community-rssbridge-1"
+      ],
+      "base": "sha256:dc6cd1717cf15c235c0d7fba874f9b39068f6b5fa920e0140b5ed4dcf9aa5bea",
+      "oldRefs": [
+        "utilibre-rssbridge:nginx1307-security-20261122"
+      ],
+      "kind": "debian",
+      "suite": "bookworm",
+      "packages": {
+        "libsasl2-2": {
+          "installed": "2.1.28+dfsg-10",
+          "package": "bookworm/libsasl2-2"
+        },
+        "libsasl2-modules-db": {
+          "installed": "2.1.28+dfsg-10",
+          "package": "bookworm/libsasl2-modules-db"
+        }
+      },
+      "consumerProfile": "php-runtime",
+      "candidate": "utilibre-sasl-community-rssbridge:20261122",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T05:16:11.245127+00:00",
+      "approvalReason": "Signed same-suite SASL vendor fix. Complete image/package/configuration scope, preserved ABI, public SASL API and consumer checks, retained synthetic native application workflows, and frozen all-severity comparison passed. No account, retention, migration or network-policy change; unresolved findings remain visible.",
+      "reviewedEvidence": {
+        "build.json": "27fdd7a56c2ca3fa43b3f88e01754529b11dc9484610adb051087408be3b6fe2",
+        "scope.json": "057a14850ccd62feeda0364e63b6d2ac9a06ffe004b9bf5f1d2f2bedb84f2ad8",
+        "application.json": "e990e9747e510fa910129760d9318731e8801666f4a477f76d02e483a3f7b16f",
+        "scan-gate.json": "7d10172a69857322dd117d68b8021d6a73361e4abaeb18fa636d555047b590be",
+        "after-scan.json": "1364baa2bcd648966d09aae32c99bf4005f76d9142b2776c667138438f489b60"
+      },
+      "completeInventorySha256": "8ebfb88b368a5fb55117c4b5b7296db4d1f38d7d4aeac6c79ba3c0c72720aeb1",
+      "retainedTargetedFindingsSha256": "b3bcde32ad123aa7a9e6ff4da17db8832eebda41b0901241c26a21e859209f62"
+    }
+  ],
+  "sasLFixture": {
+    "compiler": "sha256:e507823c91540e6b8a1c495dab33635af42d3ed59f909457a0b0810c471aa6cc",
+    "sourceSha256": "d667adbf7d5bb816eca600c3475017703ee75f7d85df312334e21e82589d7105",
+    "binarySha256": "5b92217e3b5a47a87189c13a744c76de9a55fccf2bf1912635c2326f20bb99da",
+    "network": "none",
+    "passed": true,
+    "path": "/var/lib/utilibre-maintenance/security-20261122/sasl/fixture/sasl-native"
+  },
+  "consumerFixtureSha256": "5f9a6aecd1e1a135c5d1aa353c7e356e70cdd7d6b6b2789e82ff23d1082f6d53",
+  "gathioPostgresVersion": "postgres (PostgreSQL) 17.11 (Debian 17.11-1.pgdg12+2)"
+}

@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "consumerFixtureSha256": "5f9a6aecd1e1a135c5d1aa353c7e356e70cdd7d6b6b2789e82ff23d1082f6d53",
+  "gathioPostgresVersion": "postgres (PostgreSQL) 17.11 (Debian 17.11-1.pgdg12+2)",
+  "packages": {
+    "bookworm/libssl-dev": {
+      "name": "libssl-dev",
+      "version": "3.0.22-1~deb12u2",
+      "file": "libssl-dev_3.0.22-1~deb12u2_amd64.deb",
+      "sha256": "c5f948bf6cd6e8e6e8539364bed3280ff67bc2e058de484a1f6cce8d5afcc90e",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/o/openssl/libssl-dev_3.0.22-1~deb12u2_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "libssl3 (= 3.0.22-1~deb12u2)",
+      "preDepends": ""
+    },
+    "bookworm/libssl3": {
+      "name": "libssl3",
+      "version": "3.0.22-1~deb12u2",
+      "file": "libssl3_3.0.22-1~deb12u2_amd64.deb",
+      "sha256": "cb4784740daa9b3b0eaea2b444bbefa686794afbbf3d678d238c1fd9875f2efd",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/o/openssl/libssl3_3.0.22-1~deb12u2_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "libc6 (>= 2.34)",
+      "preDepends": ""
+    },
+    "bookworm/openssl": {
+      "name": "openssl",
+      "version": "3.0.22-1~deb12u2",
+      "file": "openssl_3.0.22-1~deb12u2_amd64.deb",
+      "sha256": "5cdf0b735b1c8a96ae0bf83ed328c83c2170f8320dedb035e98705b60b2d0cfe",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.0.22-1~deb12u2_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "libc6 (>= 2.34), libssl3 (>= 3.0.9)",
+      "preDepends": ""
+    }
+  },
+  "rows": [
+    {
+      "key": "community-rallly",
+      "containers": [
+        "utilibre-community-rallly-1"
+      ],
+      "kind": "debian",
+      "suite": "bookworm",
+      "base": "sha256:e1dd6553cd73ddfd66d0b5b346af9ec376a420247fa3285960be9cc5012592a2",
+      "oldRefs": [
+        "utilibre-sasl-community-rallly:20261122"
+      ],
+      "packages": {
+        "openssl": {
+          "installed": "3.0.22-1~deb12u1+utilibre1",
+          "package": "bookworm/openssl"
+        },
+        "libssl3": {
+          "installed": "3.0.22-1~deb12u1+utilibre1",
+          "package": "bookworm/libssl3"
+        }
+      },
+      "consumerProfile": "node-runtime",
+      "candidate": "utilibre-openssl-bookworm-community-rallly:20261122",
+      "approval": "preparation-only",
+      "nativeEvidence": {
+        "native-tls.json": "e61ffb61d5dea482154a9da79d9f8d0410aa8ab4ad8eb80f932ce0050962319d",
+        "dtls-regression.json": "4114685d509e7254d1ba36584bec19e59af7cec33cd221428db3dd176d218825",
+        "consumer.json": "9b691f3a78eec41a8f42fa59baa0b72f6b74aef87f445bd82bc0575418e724a7",
+        "application-native.json": "ad5025a6b689dc082b12888f4b4583d28f3e65ed7e299b653905d6f57ec1a4e5"
+      },
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T05:39:08.462203+00:00",
+      "approvalReason": "Signed same-suite OpenSSL vendor successor; retained DTLS runtime fix byte parity, full image/configuration/package scope, crypto/ABI, TLS certificate rejection, DTLS and synthetic native application checks passed. Frozen all-severity scan introduces no findings. No migration, access, retention or network-policy change; unresolved advisories remain visible.",
+      "reviewedEvidence": {
+        "build.json": "2f6753eec5ceb84d52c2e820aaa45923eee7ac9d01837cd7431a6f20e09154f9",
+        "scope.json": "8cef905613a7c24c6d33a7d3410a9f43c32e47469dad4fa892b6499378f0b4bf",
+        "application.json": "26b6b3c1d019201d68bd6ad42a28a8c5d707ec95c306322d71c39ae52c91d133",
+        "scan-gate.json": "9d00ad0d3fe6607b9d89962361ecafa59ff0c55fd6138746367b38ecc4ccca13",
+        "after-scan.json": "33c805f83a3f7e5eca38726c6d5c60a81f239a94ecfd308a7379ad8173d42ba9"
+      },
+      "completeInventorySha256": "35ac5213f72bea00cd0a27d27882351c1e8160a78dc90b4e4c61db5232150acd",
+      "retainedTargetedFindingsSha256": "317c715092f5306851b5bc0f2baea02cb8fefd94f49e6fb6c8fecfe68bcd9161"
+    },
+    {
+      "key": "community-uptime-kuma",
+      "containers": [
+        "utilibre-community-uptime-kuma-1"
+      ],
+      "kind": "debian",
+      "suite": "bookworm",
+      "base": "sha256:a0c19fa533c9d79d77d9f973ce00f9ad85f9a3b855086ed25d56788b301af510",
+      "oldRefs": [
+        "utilibre-sasl-community-uptime-kuma:20261122"
+      ],
+      "packages": {
+        "openssl": {
+          "installed": "3.0.22-1~deb12u1+utilibre1",
+          "package": "bookworm/openssl"
+        },
+        "libssl3": {
+          "installed": "3.0.22-1~deb12u1+utilibre1",
+          "package": "bookworm/libssl3"
+        }
+      },
+      "consumerProfile": "node-runtime",
+      "candidate": "utilibre-openssl-bookworm-community-uptime-kuma:20261122",
+      "approval": "preparation-only",
+      "nativeEvidence": {
+        "native-tls.json": "92f7769f5c13b4fdfb4fe68fdb7a9058d4aaef97439019bc3e8e89c6a7adeabc",
+        "dtls-regression.json": "adc6d0d1212d42b39590de38117441db3bb051756ba8c3975b10b8db41380ffb",
+        "consumer.json": "2ede8796565260c3b5bdf5a3831b0b14c3c771ace092e602a0075848d4068fa3",
+        "application-native.json": "b6ac0487268c11bd3fd3b39c574785d8c74be7aac1634685ae8210cc64819677"
+      },
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T05:39:08.469977+00:00",
+      "approvalReason": "Signed same-suite OpenSSL vendor successor; retained DTLS runtime fix byte parity, full image/configuration/package scope, crypto/ABI, TLS certificate rejection, DTLS and synthetic native application checks passed. Frozen all-severity scan introduces no findings. No migration, access, retention or network-policy change; unresolved advisories remain visible.",
+      "reviewedEvidence": {
+        "build.json": "6736c60e558dde2bcfd481d38c3a791a18c76f73948f6e25f1ffe089a9f509ea",
+        "scope.json": "a963717fd6d1db301783c89e2d46db41800b6bf5008d3c932f038cdd1e29325d",
+        "application.json": "e73de3246c105c3c5263bbf92387c9d00955588d6e9eea44f0b571319f1115a7",
+        "scan-gate.json": "9d1a91e7e9bf26ae7e6b3163ff9f863ac4691f0247866c02ba72bc7747912a89",
+        "after-scan.json": "11400d9dabc6d843cb34870b10c1d76b058ba4be23c0e67e3fcc6c049ad106a6"
+      },
+      "completeInventorySha256": "5ca7e59090ac9c4f6a7d2a2f9d2409fa6387b907b6441b105b7795fe2e6153d7",
+      "retainedTargetedFindingsSha256": "1a3837c054f0c3c749b9d945dadfa38b66277c14428f449c4688e4ce2063a9ab"
+    },
+    {
+      "key": "gathio-postgres",
+      "containers": [
+        "utilibre-gathio-postgres-1"
+      ],
+      "kind": "debian",
+      "suite": "bookworm",
+      "base": "sha256:83a7cae6e3b74a626e96ab4e992b3663644b3a5a6a8135a905349c88cc3345ee",
+      "oldRefs": [
+        "utilibre-sasl-gathio-postgres:20261122"
+      ],
+      "packages": {
+        "openssl": {
+          "installed": "3.0.22-1~deb12u1+utilibre1",
+          "package": "bookworm/openssl"
+        },
+        "libssl3": {
+          "installed": "3.0.22-1~deb12u1+utilibre1",
+          "package": "bookworm/libssl3"
+        },
+        "libssl-dev": {
+          "installed": "3.0.22-1~deb12u1+utilibre1",
+          "package": "bookworm/libssl-dev"
+        }
+      },
+      "consumerProfile": "postgres-runtime",
+      "candidate": "utilibre-openssl-bookworm-gathio-postgres:20261122",
+      "approval": "preparation-only",
+      "nativeEvidence": {
+        "native-tls.json": "8a1d8a0edaeb4134efad58df8b3ef10564866ca6e98f1dc7960dc13074b8187a",
+        "dtls-regression.json": "ef01cae5b559dd467694b3e14d356f9bd2ee16bb1e0879a6c8b6e8f6f78dfbd8",
+        "consumer.json": "f53442d1e49c628eaedffe401bcfa2a4c82f30cd27731d3b0c4453a08f47e26c",
+        "application-native.json": "7b45b248045a9a8ac01d0f6b37001b3b40d7fc82759d2c8106112a522727d8f3"
+      },
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T05:39:08.481209+00:00",
+      "approvalReason": "Signed same-suite OpenSSL vendor successor; retained DTLS runtime fix byte parity, full image/configuration/package scope, crypto/ABI, TLS certificate rejection, DTLS and synthetic native application checks passed. Frozen all-severity scan introduces no findings. No migration, access, retention or network-policy change; unresolved advisories remain visible.",
+      "reviewedEvidence": {
+        "build.json": "72d522719b2b7dbba89cb4b3a3465d7ac11b0c76403eb64cfb116cf10579924e",
+        "scope.json": "43e7e67a2f580ea20b7eb01451ffd2d455513d35f21a31935d870ad09814fa22",
+        "application.json": "5fe1dc7b979619c2dd1ef7d6b9be24d6c5b8056fad6057475e3a890a0842cb3e",
+        "scan-gate.json": "c134b10f444dcaf4b319278c00a45b9b13e172b901e91bae64e15de9b7ee1aac",
+        "after-scan.json": "ff583f03891a6138e980f861d39b48c04737d9208535392d6a077004eee45261"
+      },
+      "completeInventorySha256": "bad1a9cf5c5f99a30fabe5c14ed2036dc1a3e856db81c08e80d1a3a02b819e82",
+      "retainedTargetedFindingsSha256": "3ead85aba295d0054500a76c70ad2af3268a4e3fc6764519f28699fec7cfa4ed"
+    },
+    {
+      "key": "community-rssbridge",
+      "containers": [
+        "utilibre-community-rssbridge-1"
+      ],
+      "kind": "debian",
+      "suite": "bookworm",
+      "base": "sha256:ce3635f951ef30e5f227a31ba23f331b06808906e6470b177ebfc2ee3c300b4b",
+      "oldRefs": [
+        "utilibre-sasl-community-rssbridge:20261122"
+      ],
+      "packages": {
+        "openssl": {
+          "installed": "3.0.22-1~deb12u1+utilibre1",
+          "package": "bookworm/openssl"
+        },
+        "libssl3": {
+          "installed": "3.0.22-1~deb12u1+utilibre1",
+          "package": "bookworm/libssl3"
+        }
+      },
+      "consumerProfile": "php-runtime",
+      "candidate": "utilibre-openssl-bookworm-community-rssbridge:20261122",
+      "approval": "preparation-only",
+      "nativeEvidence": {
+        "native-tls.json": "81951c00e81929d10548974783ac8e80390ed14d690056b71b7723816904de35",
+        "dtls-regression.json": "f88efc7cd0c40a9cb2328281701d09cfff10ce8eaf8dd702f81731f0672a2784",
+        "consumer.json": "c4a8843288aec8389eb2938937a9b94514d15610a903f9355b17109e2d2be2d7",
+        "application-native.json": "f1791c7acf8942582bc67bf76658fd1232f9b3f8a88b82113895802f1ab82a00"
+      },
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T05:39:08.533262+00:00",
+      "approvalReason": "Signed same-suite OpenSSL vendor successor; retained DTLS runtime fix byte parity, full image/configuration/package scope, crypto/ABI, TLS certificate rejection, DTLS and synthetic native application checks passed. Frozen all-severity scan introduces no findings. No migration, access, retention or network-policy change; unresolved advisories remain visible.",
+      "reviewedEvidence": {
+        "build.json": "8be6ece4aebd7b62b9a56f86162a017c216a39a98598a34386c4ea423a864f94",
+        "scope.json": "a4c6f23bd4d483ef79beae2b7fa51c4a59043a3f339575e15f826c5c3b25193c",
+        "application.json": "4093e121e7ce49c2e44fab2e5e9f29826871490a231bdb28e2b9d324a25d34e9",
+        "scan-gate.json": "e5cfbcae4a5ee73677073f01ee0c7269e35da2297ece450f4c8e08925b5ee4e6",
+        "after-scan.json": "5c76cc753673b70913e466cc7b1a1c94765e06efd69d621f1ea18bfad0cac413"
+      },
+      "completeInventorySha256": "9d1a240cf7ffa0fe17d66c0aa16267cf9db082b8db7ed6ca7b2925f2170ff4d6",
+      "retainedTargetedFindingsSha256": "452373c14460240f72a77226ace35d74e3bae67a68e4b2e18d5715c5fc11fbae"
+    },
+    {
+      "key": "wishlist-app",
+      "containers": [
+        "utilibre-wishlist-app-1"
+      ],
+      "kind": "debian",
+      "suite": "bookworm",
+      "base": "sha256:e01160fc2f9e9603b22f5ad1656786d0e573b6a6cdcf52ed34a095b3cef62f1b",
+      "oldRefs": [
+        "utilibre-caddy-wishlist:xnet-security-20261109"
+      ],
+      "packages": {
+        "openssl": {
+          "installed": "3.0.22-1~deb12u1+utilibre1",
+          "package": "bookworm/openssl"
+        },
+        "libssl3": {
+          "installed": "3.0.22-1~deb12u1+utilibre1",
+          "package": "bookworm/libssl3"
+        }
+      },
+      "consumerProfile": "node-runtime",
+      "candidate": "utilibre-openssl-bookworm-wishlist-app:20261122",
+      "approval": "preparation-only",
+      "nativeEvidence": {
+        "native-tls.json": "60dd8d08741f70e2929800e08ab3e00afdad9d5f8a41a73a85fb1a7d1a0e1f0d",
+        "dtls-regression.json": "8977a285d8a58255f9a7fb7497400793af0e2eefbf14b1aefc35d88ecf657bd0",
+        "consumer.json": "12878691fff14b4fe39ec8f8975e7cff66e9a5672bab584cc034bf1c61d7cef1",
+        "application-native.json": "25d0dffc571c6878ac4ff2d274695a6fd4355fed2107671e3f892a7695602e26"
+      },
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T05:39:08.540611+00:00",
+      "approvalReason": "Signed same-suite OpenSSL vendor successor; retained DTLS runtime fix byte parity, full image/configuration/package scope, crypto/ABI, TLS certificate rejection, DTLS and synthetic native application checks passed. Frozen all-severity scan introduces no findings. No migration, access, retention or network-policy change; unresolved advisories remain visible.",
+      "reviewedEvidence": {
+        "build.json": "12f10491a6ab53d7800d4772f86ccfdcc377c0a4b76872eb8ff87051452c566d",
+        "scope.json": "393511952c48efe73064eecf00fc76665c7da1368179e8d42ab278fba6d3c369",
+        "application.json": "dfbafb40870e7caea8bd8740f6bd3cd1255e2d1d0d3cc1abae16bffeac5492ba",
+        "scan-gate.json": "df4c193e0ee5c8b28c96daecef57ac0a75550e1b7a82b02c8a3264d7a57637be",
+        "after-scan.json": "002f032c9a57a44ba11d47b670c987556e193c3ba45f56e5bafa592699f41d47"
+      },
+      "completeInventorySha256": "e0a16515d0b69a09d878931e1faab8802e0b058b58620e625fe58402dbc37092",
+      "retainedTargetedFindingsSha256": "1b768c58adac8005da682ac141d7b613fabc689d8925266a5d70e5aff70c9998"
+    }
+  ],
+  "retainedSourceProofSha256": "dbb25cbafd8fe118673210a672eb3c61fd64f48f2617c69e327c01539976944f",
+  "nativeFixture": {
+    "cryptoSha256": "c53842644f9cbd9568ee4f1f25d6a960862ad1499ad8bd9c89c006eec45589b7",
+    "cliSha256": "66521161cfad981e189bbc746560e0cc71a141b3765b3fe3658704d877c6ad7d",
+    "tlsServerSha256": "9614aa6fa6d4db4f96eeec390d8b7f2cbd26a3dea43935dd8cae7ebf4ede71a0",
+    "tlsImage": "sha256:a0c19fa533c9d79d77d9f973ce00f9ad85f9a3b855086ed25d56788b301af510",
+    "dtlsBinarySha256": "ffcd361a6d530e009dd916fb5f245d1e3e079c0fbf5f3add97783abdffe142eb",
+    "dtlsCertificateSha256": "ffdc8d77eb82b815de5235d93d1b733bf7a6934a8276862cd3b0d842b7dcc53d"
+  }
+}

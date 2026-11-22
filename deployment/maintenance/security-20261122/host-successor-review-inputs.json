@@ -1,0 +1,703 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Exact installed vendor successors and primary fixed-version evidence, not a new host release",
+  "evidence": {
+    "authenticated.json": "e1d5cbb38e2b035d47d29159b8f8befd74e16366adc0d984e96b784cb1d98c97",
+    "verified.json": "64fa23df11776ab77f01bdb7dc2d2ccaf53c8527fc0c8ac1d4145f041b0dbe1c",
+    "sudo-full-source-parity.json": "f6a0e6b5eceb228064fd6fc95adca642cef115aeb03d1eaac202f628476663e0",
+    "native-check.json": "7981e5666bd24ac294bdec23bbc758bda1b98b13c447d3534d483523e69939b2",
+    "operator-postcheck.json": "2cc94475f50ebc135f1030222a4b85e98190e4202e83f8e54df04045e014015f"
+  },
+  "primarySha256": "983264c00a4cb6c8a4e3dd57e25f09eaefe131e8cf72d2bd2113faf650477cf7",
+  "primaryRecords": {
+    "qemu/CVE-2026-12080": {
+      "description": "A flaw was found in the QEMU Guest Agent (qga). A local unprivileged user can exploit a vulnerability in the guest-ssh-add-authorized-keys command handler by manipulating symbolic links. This can occur either through a deterministic directory-symlink bypass or a Time-of-Check to Time-of-Use (TOCTOU) file-symlink race. Successful exploitation allows the attacker to gain ownership of arbitrary root-owned files or directories, leading to root access. This vulnerability requires an external management layer (e.g., libvirt) to trigger the affected code path.",
+      "scope": "local",
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-16271": {
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-17588": {
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-66899": {
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-66900": {
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-77913": {
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-81627": {
+      "description": "A flaw was found in QEMU. The VAPIC setup hypercall in hw/i386/vapic.c does not validate that the writable RAM alias remains within the option ROM window. A privileged guest user on a Q35/KVM machine can position this alias over locked SMRAM, bypassing chipset D_LCK protection and injecting code into System Management Mode memory.",
+      "debianbug": 1148473,
+      "scope": "local",
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-84788": {
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-93834": {
+      "description": "A use-after-free vulnerability was found in QEMU's 9pfs subsystem. A race condition between the main thread and a worker thread when processing concurrent Tlcreate and Twalk requests allows a malicious guest user to craft a fid path containing stale heap data, bypassing directory traversal restrictions and escaping the shared directory boundary. This can lead to arbitrary host file read/write and code execution (VM escape) as the QEMU process user.",
+      "debianbug": 1149064,
+      "scope": "local",
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.2+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-101291": {
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "sudo/CVE-2026-96512": {
+      "description": "A flaw was found in sudo. When sudoers rules use NOTBEFORE or NOTAFTER time-based access restrictions with timestamps that omit the trailing 'Z' timezone indicator, the time evaluation relies on the TZ environment variable inherited from the calling user. Because sudo is a setuid-root program, an unprivileged local user can set TZ to an extreme timezone offset to shift the authorization window by up to approximately 25 hours, causing expired rules to be treated as valid. This allows the user to execute commands outside the intended time window. Authentication is not bypassed; only the time-based authorization check is affected.",
+      "debianbug": 1148890,
+      "scope": "local",
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1.9.13p3-1+deb12u4",
+            "bookworm-security": "1.9.13p3-1+deb12u2"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "postponed"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1.9.17p2-11"
+          },
+          "fixed_version": "1.9.17p2-9",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1.9.17p2-11"
+          },
+          "fixed_version": "1.9.17p2-9",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "resolved",
+          "repositories": {
+            "trixie": "1.9.16p2-3+deb13u5"
+          },
+          "fixed_version": "1.9.16p2-3+deb13u5",
+          "urgency": "not yet assigned"
+        }
+      }
+    },
+    "qemu/CVE-2026-111819": {
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-18204": {
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-18410": {
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-18609": {
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-7180": {
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    },
+    "qemu/CVE-2026-97889": {
+      "releases": {
+        "bookworm": {
+          "status": "open",
+          "repositories": {
+            "bookworm": "1:7.2+dfsg-7+deb12u18",
+            "bookworm-security": "1:7.2+dfsg-7+deb12u15"
+          },
+          "urgency": "not yet assigned"
+        },
+        "forky": {
+          "status": "resolved",
+          "repositories": {
+            "forky": "1:11.1.3+ds-1"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "sid": {
+          "status": "resolved",
+          "repositories": {
+            "sid": "1:11.1.3+ds-2"
+          },
+          "fixed_version": "1:11.1.3+ds-1",
+          "urgency": "not yet assigned"
+        },
+        "trixie": {
+          "status": "open",
+          "repositories": {
+            "trixie": "1:10.0.13+ds-0+deb13u1",
+            "trixie-security": "1:10.0.2+ds-2+deb13u1"
+          },
+          "urgency": "not yet assigned",
+          "nodsa": "Minor issue",
+          "nodsa_reason": "",
+          "next_point_update": true
+        }
+      }
+    }
+  },
+  "qemuAdditional": {
+    "patchManifestSha256": "2f52bb71238808db15926c7fdf7cf541fc6f43be83bcf9d6410b29e3c2face52",
+    "fixedAdvisories": [
+      "CVE-2026-111819",
+      "CVE-2026-18204",
+      "CVE-2026-18410",
+      "CVE-2026-18609",
+      "CVE-2026-7180",
+      "CVE-2026-97889"
+    ],
+    "componentAdvisories": [
+      "CVE-2022-3872",
+      "CVE-2023-1386"
+    ],
+    "proofSha256": "e3aa127c65f09facfb165de2a9f50dfa29bb702aeafc74b4203ce30fcc78745b"
+  }
+}

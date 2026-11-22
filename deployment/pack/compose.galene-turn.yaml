@@ -1,7 +1,7 @@
 name: utilibre-galene-turn
 services:
   turn:
-    image: utilibre-vendor-turn-option-turn:20261114
+    image: utilibre-openssl-relays:20261122
     build: {context: ../community/turn}
     user: '4004:4004'
     entrypoint: [turnserver, -c, /run/config/turnserver.conf]

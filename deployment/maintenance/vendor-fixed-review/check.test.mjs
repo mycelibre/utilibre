@@ -1,10 +1,19 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {matches,verifyPayload,reasonFor,specs,reviewOptions} from './check.mjs';
+import {matches,verifyPayload,reasonFor,specs,reviewOptions,selectSpecs} from './check.mjs';
 import {runNativeJwt} from './isolated-jwt.mjs';
 import {freshScan} from '../review-native-backports.mjs';
 import {validateDecision} from '../triage.mjs';
 const spec=specs[0];
+test('subset selection excludes unrelated release chains before resolution',()=>{
+ const options=reviewOptions(['--only-kind=jwt','--ordinary-jwt','--only-cve=CVE-2026-102267']);
+ const selected=selectSpecs(options);
+ assert(selected.length>0);
+ assert(selected.every(s=>s.kind==='jwt'&&s.ids.includes(options.onlyCve)));
+ assert(!selected.some(s=>s.kind==='mariadb'));
+ assert.deepEqual(selectSpecs({onlyKind:'jwt',onlyCve:'CVE-2099-9999'}),[]);
+ assert.equal(selectSpecs({}).length,specs.length);
+});
 const item={key:'a'.repeat(64),status:'needs-review',type:'debian',scope:'runtime-image',artifact:spec.artifact,package:spec.package,installed:spec.version,id:spec.ids[0],containers:[...spec.containers]};
 test('exact reviewed finding accepted',()=>assert(matches(item,spec)));
 for(const [key,value] of Object.entries({status:'mitigated',type:'npm',scope:'host-os',artifact:'sha256:'+'0'.repeat(64),package:'libaom-dev',installed:'3.14.2-1',id:'CVE-2099-0001',containers:['unreviewed-container']}))
@@ -73,4 +82,16 @@ test('explicit MariaDB-only review does not select authentication probes',()=>{a
 test('ordinary JWT compatibility selection is explicit and bounded',()=>{
  assert.equal(reviewOptions(['--only-kind=jwt','--ordinary-jwt']).ordinaryJwt,true);
  for(const args of [['--ordinary-jwt'],['--only-kind=mariadb','--ordinary-jwt'],['--only-kind=jwt','--ordinary-jwt','--ordinary-jwt'],['--only-kind=unknown']])assert.throws(()=>reviewOptions(args));
+});
+test('November MariaDB reassessment is explicit, finite and leaves archived scopes unchanged',()=>{
+ const original=structuredClone(specs);
+ const options=reviewOptions(['--only-kind=mariadb','--mariadb-nov22']);
+ const chosen=selectSpecs(options);
+ assert.equal(chosen.length,2);assert(chosen.every(s=>s.kind==='mariadb'&&s.ids.length===14));
+ assert(chosen.every(s=>s.ids.includes('CVE-2026-107816')&&!s.ids.includes('CVE-2026-44172')));
+ assert.deepEqual(specs,original);
+ for(const args of [['--mariadb-nov22'],['--only-kind=aom','--mariadb-nov22'],['--only-kind=mariadb','--mariadb-nov22','--mariadb-nov22']])assert.throws(()=>reviewOptions(args));
+ const s=chosen[0],i={...item,artifact:s.artifact,scope:'runtime-image',package:s.package,installed:s.version,containers:s.containers,id:'CVE-2026-107816'};
+ assert(matches(i,s));assert(!matches({...i,installed:'1:11.8.8-1'},s));assert(!matches({...i,id:'CVE-2099-99999'},s));
+ assert(reasonFor(i,s,{manifestSha256:'e'.repeat(64)}).includes('fixed-payload evidence'));
 });

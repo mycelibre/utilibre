@@ -14,14 +14,14 @@ x-runtime: &runtime
 services:
   socket:
     <<: *runtime
-    image: utilibre-zlib-razzia-socket:candidate-20261109
+    image: utilibre-crypto-razzia-socket:20261122
     volumes: ["/opt/utilibre/razzia-data:/app/config"]
     networks: [quiz]
     # Native connection messages contain client identifiers; do not retain them.
     logging: {driver: none}
   gateway:
     <<: *runtime
-    image: utilibre-vendor-calendar-calino:20261111
+    image: utilibre-security-shared-nginx:20261122
     user: "101:101"
     entrypoint: [nginx, -g, "daemon off;"]
     cpus: 0.5

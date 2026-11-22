@@ -1,0 +1,1127 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "acquisitionSha256": "3e2db99efb1b50abe7d2fdcfc4bac738b4012c70c1205c821b2ce53658292e35",
+  "packages": {
+    "trixie/libc-bin": {
+      "name": "libc-bin",
+      "version": "2.41-12+deb13u5",
+      "file": "libc-bin_2.41-12+deb13u5_amd64.deb",
+      "sha256": "f30ee7381a9c6a3936165259bcd58e65f4b288e351606d200c8435724c5876dd",
+      "url": "https://deb.debian.org/debian/pool/main/g/glibc/libc-bin_2.41-12+deb13u5_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libc6 (>> 2.41), libc6 (<< 2.42)",
+      "preDepends": ""
+    },
+    "trixie/libc-dev-bin": {
+      "name": "libc-dev-bin",
+      "version": "2.41-12+deb13u5",
+      "file": "libc-dev-bin_2.41-12+deb13u5_amd64.deb",
+      "sha256": "9546268f031bd598f32262ea3ca8f2558cd41dcaada13dd1af9ad329c3dbf30c",
+      "url": "https://deb.debian.org/debian/pool/main/g/glibc/libc-dev-bin_2.41-12+deb13u5_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libc6 (>> 2.41), libc6 (<< 2.42)",
+      "preDepends": ""
+    },
+    "trixie/libc-l10n": {
+      "name": "libc-l10n",
+      "version": "2.41-12+deb13u5",
+      "file": "libc-l10n_2.41-12+deb13u5_all.deb",
+      "sha256": "2973fcad6e05fcc7e96076ecc327fada86c3a1483087d635284cf39f0f4b754a",
+      "url": "https://deb.debian.org/debian/pool/main/g/glibc/libc-l10n_2.41-12+deb13u5_all.deb",
+      "distribution": "trixie",
+      "depends": "",
+      "preDepends": ""
+    },
+    "trixie/libc6": {
+      "name": "libc6",
+      "version": "2.41-12+deb13u5",
+      "file": "libc6_2.41-12+deb13u5_amd64.deb",
+      "sha256": "b59b0625cd1a791375d40dab23a4d5d3d0641e3d0a773501becdc3725b7f99cf",
+      "url": "https://deb.debian.org/debian/pool/main/g/glibc/libc6_2.41-12+deb13u5_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libgcc-s1",
+      "preDepends": ""
+    },
+    "trixie/libc6-dev": {
+      "name": "libc6-dev",
+      "version": "2.41-12+deb13u5",
+      "file": "libc6-dev_2.41-12+deb13u5_amd64.deb",
+      "sha256": "858f4d477cc39324f3c6582cdebcf38928fb385bb17b40518c77a7dccd296428",
+      "url": "https://deb.debian.org/debian/pool/main/g/glibc/libc6-dev_2.41-12+deb13u5_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libc6 (= 2.41-12+deb13u5), libc-dev-bin (= 2.41-12+deb13u5), linux-libc-dev, libcrypt-dev, rpcsvc-proto",
+      "preDepends": ""
+    },
+    "trixie/locales": {
+      "name": "locales",
+      "version": "2.41-12+deb13u5",
+      "file": "locales_2.41-12+deb13u5_all.deb",
+      "sha256": "b80a4fa51108cf50410d28341bad4c95f43b776103a1f154317b610a4523a3c8",
+      "url": "https://deb.debian.org/debian/pool/main/g/glibc/locales_2.41-12+deb13u5_all.deb",
+      "distribution": "trixie",
+      "depends": "libc-bin (>> 2.41), libc-l10n (>> 2.41), debconf (>= 0.5) | debconf-2.0",
+      "preDepends": ""
+    },
+    "trixie/libapache2-mod-php8.4": {
+      "name": "libapache2-mod-php8.4",
+      "version": "8.4.28-1~deb13u1",
+      "file": "libapache2-mod-php8.4_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "52cd6b5358dc1c45fb808502f2042dfc8eb0707a646b37dbf04243dc1059436a",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/libapache2-mod-php8.4_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "media-types | mime-support, php8.4-cli, php8.4-common (= 8.4.28-1~deb13u1), php8.4-opcache, tzdata, ucf, apache2-api-20120211, apache2-bin (>= 2.4.16), libargon2-1 (>= 0~20171227), libc6 (>= 2.38), libpcre2-8-0 (>= 10.32), libsodium23 (>= 1.0.18), libssl3t64 (>= 3.0.0), libxml2 (>= 2.9.4), zlib1g (>= 1:1.1.4)",
+      "preDepends": ""
+    },
+    "trixie/php8.4-cli": {
+      "name": "php8.4-cli",
+      "version": "8.4.28-1~deb13u1",
+      "file": "php8.4-cli_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "6baa58c1d7f6ab44ebafc8810db669d07d8a469e156dd5a2e114537dcd7b72f2",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/php8.4-cli_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "libedit2 (>= 2.11-20080614-4), media-types | mime-support, php8.4-common (= 8.4.28-1~deb13u1), php8.4-opcache, php8.4-readline, tzdata, ucf, libargon2-1 (>= 0~20171227), libc6 (>= 2.38), libpcre2-8-0 (>= 10.32), libsodium23 (>= 1.0.18), libssl3t64 (>= 3.0.0), libxml2 (>= 2.9.4), zlib1g (>= 1:1.1.4)",
+      "preDepends": ""
+    },
+    "trixie/php8.4-common": {
+      "name": "php8.4-common",
+      "version": "8.4.28-1~deb13u1",
+      "file": "php8.4-common_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "63eddb32417e655e405b62fb5bc95dad5180814e2c7ece2e245d98a899652347",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/php8.4-common_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "php-common (>= 2:95~), ucf, libc6 (>= 2.38), libffi8 (>= 3.4), libssl3t64 (>= 3.0.0)",
+      "preDepends": ""
+    },
+    "trixie/php8.4-curl": {
+      "name": "php8.4-curl",
+      "version": "8.4.28-1~deb13u1",
+      "file": "php8.4-curl_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "47388ea355cecf3f7935ce05b62f8d12105d0af8a4860507e14da8e5f2f3b5ba",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/php8.4-curl_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "php-common (>= 2:95~), ucf, php8.4-common (= 8.4.28-1~deb13u1), libc6 (>= 2.14), libcurl4t64 (>= 7.63.0)",
+      "preDepends": ""
+    },
+    "trixie/php8.4-gmp": {
+      "name": "php8.4-gmp",
+      "version": "8.4.28-1~deb13u1",
+      "file": "php8.4-gmp_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "3b26f5221276345f823a65b9d3fc1936cdb5f65ea1c875b8d3828aed9a1047bf",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/php8.4-gmp_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "php-common (>= 2:95~), ucf, php8.4-common (= 8.4.28-1~deb13u1), libc6 (>= 2.4), libgmp10 (>= 2:6.3.0+dfsg)",
+      "preDepends": ""
+    },
+    "trixie/php8.4-intl": {
+      "name": "php8.4-intl",
+      "version": "8.4.28-1~deb13u1",
+      "file": "php8.4-intl_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "01f9a3d852924dd8eaf4c27249c2adf511a8a751469beed2c0619c6b37227945",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/php8.4-intl_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "php-common (>= 2:95~), ucf, php8.4-common (= 8.4.28-1~deb13u1), libc6 (>= 2.14), libgcc-s1 (>= 3.0), libicu76 (>= 76.1-1~), libstdc++6 (>= 5)",
+      "preDepends": ""
+    },
+    "trixie/php8.4-mbstring": {
+      "name": "php8.4-mbstring",
+      "version": "8.4.28-1~deb13u1",
+      "file": "php8.4-mbstring_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "ad972566fa9e5cfd29a6f9cffaebe5dafa32fc50fac2cf0b1ed385a3928ae7a9",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/php8.4-mbstring_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "php-common (>= 2:95~), ucf, php8.4-common (= 8.4.28-1~deb13u1), libc6 (>= 2.38), libonig5 (>= 6.8.1)",
+      "preDepends": ""
+    },
+    "trixie/php8.4-mysql": {
+      "name": "php8.4-mysql",
+      "version": "8.4.28-1~deb13u1",
+      "file": "php8.4-mysql_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "09cb51b1248e7b8ef83bd18104eeee7449d191ce9c0954018a5a60dccab9d72e",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/php8.4-mysql_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "php-common (>= 2:95~), ucf, php8.4-common (= 8.4.28-1~deb13u1), libc6 (>= 2.38), libssl3t64 (>= 3.0.0), zlib1g (>= 1:1.1.4)",
+      "preDepends": ""
+    },
+    "trixie/php8.4-opcache": {
+      "name": "php8.4-opcache",
+      "version": "8.4.28-1~deb13u1",
+      "file": "php8.4-opcache_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "e11715f1c4eeb54996d2e0ae537775ac50486ef43aa6053ad6e8c2daf61e1d14",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/php8.4-opcache_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "php-common (>= 2:95~), ucf, php8.4-common (= 8.4.28-1~deb13u1), libc6 (>= 2.38), libgcc-s1 (>= 3.3)",
+      "preDepends": ""
+    },
+    "trixie/php8.4-pgsql": {
+      "name": "php8.4-pgsql",
+      "version": "8.4.28-1~deb13u1",
+      "file": "php8.4-pgsql_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "07b0bce459977533259b9a250989df11d41c1fc0d0e47a116a97668e6c82698f",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/php8.4-pgsql_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "php-common (>= 2:95~), ucf, php8.4-common (= 8.4.28-1~deb13u1), libc6 (>= 2.38), libpq5 (>= 17~~)",
+      "preDepends": ""
+    },
+    "trixie/php8.4-readline": {
+      "name": "php8.4-readline",
+      "version": "8.4.28-1~deb13u1",
+      "file": "php8.4-readline_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "af0de5d29cfbb3b46517ffb3186e8aa5e1f52ea7835a351b26ad5624d90590a1",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/php8.4-readline_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "php-common (>= 2:95~), ucf, php8.4-common (= 8.4.28-1~deb13u1), libc6 (>= 2.34), libedit2 (>= 3.1-20230828-1)",
+      "preDepends": ""
+    },
+    "trixie/php8.4-sqlite3": {
+      "name": "php8.4-sqlite3",
+      "version": "8.4.28-1~deb13u1",
+      "file": "php8.4-sqlite3_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "8b8ab11a81ff24f4aac41b6d369dbb604a30fabe17ab526b89bbde6de351c70c",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/php8.4-sqlite3_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "php-common (>= 2:95~), ucf, php8.4-common (= 8.4.28-1~deb13u1), libc6 (>= 2.14), libsqlite3-0 (>= 3.14.0)",
+      "preDepends": ""
+    },
+    "trixie/php8.4-xml": {
+      "name": "php8.4-xml",
+      "version": "8.4.28-1~deb13u1",
+      "file": "php8.4-xml_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "4360dd9174631c32e0f843ab737cdf4f94648f1bce8f2d8fc121170608e7cae9",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/php8.4-xml_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "php-common (>= 2:95~), ucf, php8.4-common (= 8.4.28-1~deb13u1), libc6 (>= 2.33), libxml2 (>= 2.9.4), libxslt1.1 (>= 1.1.27)",
+      "preDepends": ""
+    },
+    "trixie/php8.4-zip": {
+      "name": "php8.4-zip",
+      "version": "8.4.28-1~deb13u1",
+      "file": "php8.4-zip_8.4.28-1~deb13u1_amd64.deb",
+      "sha256": "0859536d3ed9c4aede1f52f0e28731bcb2e1b68719979c9e84d74104fe09ce99",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.4/php8.4-zip_8.4.28-1~deb13u1_amd64.deb",
+      "distribution": "trixie-security",
+      "depends": "php-common (>= 2:95~), ucf, php8.4-common (= 8.4.28-1~deb13u1), libc6 (>= 2.33), libzip5 (>= 1.11.1)",
+      "preDepends": ""
+    },
+    "bookworm/php8.2-cli": {
+      "name": "php8.2-cli",
+      "version": "8.2.36-1~deb12u1",
+      "file": "php8.2-cli_8.2.36-1~deb12u1_amd64.deb",
+      "sha256": "a9a57edd7ea11c1e702e2b189c3f2427df8e0d5f3c00e380def5283f2c150b7c",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.2/php8.2-cli_8.2.36-1~deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "libedit2 (>= 2.11-20080614-4), libmagic1, media-types | mime-support, php8.2-common (= 8.2.36-1~deb12u1), php8.2-opcache, php8.2-readline, tzdata, ucf, libargon2-1 (>= 0~20171227), libc6 (>= 2.35), libpcre2-8-0 (>= 10.32), libsodium23 (>= 1.0.18), libssl3 (>= 3.0.0), libxml2 (>= 2.8.0), zlib1g (>= 1:1.1.4)",
+      "preDepends": ""
+    },
+    "bookworm/php8.2-common": {
+      "name": "php8.2-common",
+      "version": "8.2.36-1~deb12u1",
+      "file": "php8.2-common_8.2.36-1~deb12u1_amd64.deb",
+      "sha256": "605d2e226045c58158722332806f5e87d66d6a2220b23c7158133c1b1c118ae2",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.2/php8.2-common_8.2.36-1~deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "php-common (>= 1:81~), ucf, libc6 (>= 2.34), libffi8 (>= 3.4), libssl3 (>= 3.0.0)",
+      "preDepends": ""
+    },
+    "bookworm/php8.2-curl": {
+      "name": "php8.2-curl",
+      "version": "8.2.36-1~deb12u1",
+      "file": "php8.2-curl_8.2.36-1~deb12u1_amd64.deb",
+      "sha256": "970bd4265e662299f16514316fa3718eee813691cf207f12fe48137b75c0ea1d",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.2/php8.2-curl_8.2.36-1~deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "php-common (>= 1:81~), ucf, php8.2-common (= 8.2.36-1~deb12u1), libc6 (>= 2.14), libcurl4 (>= 7.63.0)",
+      "preDepends": ""
+    },
+    "bookworm/php8.2-fpm": {
+      "name": "php8.2-fpm",
+      "version": "8.2.36-1~deb12u1",
+      "file": "php8.2-fpm_8.2.36-1~deb12u1_amd64.deb",
+      "sha256": "6139728dc0998b023c341a831228a3e11b4f71cd8b7d92bc98c34922dfc62770",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.2/php8.2-fpm_8.2.36-1~deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "libmagic1, media-types | mime-support, php8.2-cli, php8.2-common (= 8.2.36-1~deb12u1), php8.2-opcache, procps, systemd | systemd-tmpfiles, tzdata, ucf, libacl1 (>= 2.2.23), libapparmor1 (>= 2.7.0~beta1+bzr1772), libargon2-1 (>= 0~20171227), libc6 (>= 2.35), libpcre2-8-0 (>= 10.32), libsodium23 (>= 1.0.18), libssl3 (>= 3.0.0), libsystemd0, libxml2 (>= 2.8.0), zlib1g (>= 1:1.1.4)",
+      "preDepends": ""
+    },
+    "bookworm/php8.2-intl": {
+      "name": "php8.2-intl",
+      "version": "8.2.36-1~deb12u1",
+      "file": "php8.2-intl_8.2.36-1~deb12u1_amd64.deb",
+      "sha256": "894852b3552b8597be6a586506ebf1c186d576f650541c67cb55ccf561c03892",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.2/php8.2-intl_8.2.36-1~deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "php-common (>= 1:81~), ucf, php8.2-common (= 8.2.36-1~deb12u1), libc6 (>= 2.14), libgcc-s1 (>= 3.0), libicu72 (>= 72.1~rc-1~), libstdc++6 (>= 4.3)",
+      "preDepends": ""
+    },
+    "bookworm/php8.2-mbstring": {
+      "name": "php8.2-mbstring",
+      "version": "8.2.36-1~deb12u1",
+      "file": "php8.2-mbstring_8.2.36-1~deb12u1_amd64.deb",
+      "sha256": "e1459c974514df81c46453e0059e1b210cb2b86423992488c0a1111ecc750e5c",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.2/php8.2-mbstring_8.2.36-1~deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "php-common (>= 1:81~), ucf, php8.2-common (= 8.2.36-1~deb12u1), libc6 (>= 2.14), libonig5 (>= 6.8.1)",
+      "preDepends": ""
+    },
+    "bookworm/php8.2-opcache": {
+      "name": "php8.2-opcache",
+      "version": "8.2.36-1~deb12u1",
+      "file": "php8.2-opcache_8.2.36-1~deb12u1_amd64.deb",
+      "sha256": "ac765af2890806a8047a626994ee6966517b90a4073591bc05adb54ecd4d82f2",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.2/php8.2-opcache_8.2.36-1~deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "php-common (>= 1:81~), ucf, php8.2-common (= 8.2.36-1~deb12u1), libc6 (>= 2.34), libgcc-s1 (>= 3.3)",
+      "preDepends": ""
+    },
+    "bookworm/php8.2-readline": {
+      "name": "php8.2-readline",
+      "version": "8.2.36-1~deb12u1",
+      "file": "php8.2-readline_8.2.36-1~deb12u1_amd64.deb",
+      "sha256": "338f55d7b77a1a188dbc8330f7e51fe9989a6cfa2a22fdd61f5a9e559783777b",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.2/php8.2-readline_8.2.36-1~deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "php-common (>= 1:81~), ucf, php8.2-common (= 8.2.36-1~deb12u1), libc6 (>= 2.34), libedit2 (>= 3.1-20160903-0)",
+      "preDepends": ""
+    },
+    "bookworm/php8.2-sqlite3": {
+      "name": "php8.2-sqlite3",
+      "version": "8.2.36-1~deb12u1",
+      "file": "php8.2-sqlite3_8.2.36-1~deb12u1_amd64.deb",
+      "sha256": "c58006936e2dd4b0b417e85f07344c247a9a5ee714db618fd9dc3927d11c3fd2",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.2/php8.2-sqlite3_8.2.36-1~deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "php-common (>= 1:81~), ucf, php8.2-common (= 8.2.36-1~deb12u1), libc6 (>= 2.14), libsqlite3-0 (>= 3.14.0)",
+      "preDepends": ""
+    },
+    "bookworm/php8.2-xml": {
+      "name": "php8.2-xml",
+      "version": "8.2.36-1~deb12u1",
+      "file": "php8.2-xml_8.2.36-1~deb12u1_amd64.deb",
+      "sha256": "d15dac399d8dabb8ef323c0f12c2890e6ecf1b5efd803d02d7585fba640a3bba",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.2/php8.2-xml_8.2.36-1~deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "php-common (>= 1:81~), ucf, php8.2-common (= 8.2.36-1~deb12u1), libc6 (>= 2.33), libxml2 (>= 2.9.0), libxslt1.1 (>= 1.1.25)",
+      "preDepends": ""
+    },
+    "bookworm/php8.2-zip": {
+      "name": "php8.2-zip",
+      "version": "8.2.36-1~deb12u1",
+      "file": "php8.2-zip_8.2.36-1~deb12u1_amd64.deb",
+      "sha256": "585b56a530618c3227b8db1b91448b1ec73e407cb55f09706deb98d247335f14",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/php8.2/php8.2-zip_8.2.36-1~deb12u1_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "php-common (>= 1:81~), ucf, php8.2-common (= 8.2.36-1~deb12u1), libc6 (>= 2.33), libzip4 (>= 1.7.0)",
+      "preDepends": ""
+    }
+  },
+  "rows": [
+    {
+      "key": "linkding-linkding",
+      "base": "sha256:71772c6276f17a9523a69a365d6d704d7d99b5dc12b8e0297b342db90bdef257",
+      "containers": [
+        "utilibre-linkding-linkding-1"
+      ],
+      "candidate": "utilibre-debian-linkding-linkding:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc-dev-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-dev-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        },
+        "libc6-dev": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6-dev"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "39d1187c97c73f3dc059f4d2a042db91e75056411d07c4a36e470671469fad6d",
+        "scope.json": "bd72d3cdbbd37bcd253a31bfa065a830c8a6d80070c1dd4c38084b20bef5ab86",
+        "application.json": "b6ec26cc4fb40439ff61addf5dc49c951391cf8593df27d76fe82bc4df704794",
+        "scan-gate.json": "0602ff17898ef2079a91f142dacf336d2029777f874bc623778c5d1fd5bcef47",
+        "after-scan.json": "4eadbe305476e07d6f65bf7d7566fac3c86318900a017b5b8a584e010b319405"
+      },
+      "completeInventorySha256": "7beb3be133ee71b2121921254cca148301924cdc593b011e147dffbd9ddde8b3",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "4bd1b33482d295c2070004019ad1e34ae975dea89c5606caa026f1b1a63472e0"
+    },
+    {
+      "key": "records-grist",
+      "base": "sha256:4f5cbcbbacc96ac7b2f80214ba620097da116f68574111e73c652a997d0a538d",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "candidate": "utilibre-debian-records-grist:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "10aeb5bd3c8e2c06884e1c54e0d477f9e28c66c7c1b954fbc9692bca6758bc93",
+        "scope.json": "c710ed56a47ad44c72809d2b2b3b859b300931eca664fc94f5c90c850a64023a",
+        "application.json": "645e07c5f19a8ffc991c006ffcf9814be5478331969ab54316386c2d058f0790",
+        "scan-gate.json": "e1f6d6b14e708f428e2b02a33bb0c0af3018461812d5ebc179d454b45ebee2d5",
+        "after-scan.json": "293ebb27ab1c298b337845575779eb5f0d9322351bd9981bd14ed3768cea47a2"
+      },
+      "completeInventorySha256": "1b77657d4705900c2a9befa39d8dedf8f4a527a83286c365e4af2e4d161d8fc5",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "142791fd2cbf486090d32362030ca029eb16f0ff91b8f61ae65e3170e41c5880"
+    },
+    {
+      "key": "services-rsshub",
+      "base": "sha256:d2e2e968fb02f4f918a0742d4ea1282a4a800eb58ec8f8fedf89b02522ebf9fb",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "candidate": "utilibre-debian-services-rsshub:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "ef8fd13742ad3c850c24802bdb0f926c8c799d5d8b27e6905c6eed77c0869430",
+        "scope.json": "aac1c0f00dd72fdec92ab11e962ad2fd5e879f049aa4f764c17d1a50af86500a",
+        "application.json": "2b2222298e0745561124a1310ae3bfe167280854afbcc0de64fc9414799f9104",
+        "scan-gate.json": "cb883820a952b5ba225f15d057a057e655907e83a4e79db2feeb688552afabcd",
+        "after-scan.json": "f3363baf5ed8001ac891deaaf7b523e630a9d5df366426fa21badd498f4cf32d"
+      },
+      "completeInventorySha256": "efded4eb84c6a3d25e71923d0cd4b4509d4ed8028253b9a6494cd778a86dbb2d",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "b8bb717b84c843f99b04dc0aa601800ada2780f6fa4852fddd9c1f07dac4a247"
+    },
+    {
+      "key": "services-freshrss",
+      "base": "sha256:6b822ac5ed23b8e5da16bacebb9980583190bc8d4f1a11202c8c1b00d7c383c9",
+      "containers": [
+        "utilibre-services-freshrss-1"
+      ],
+      "candidate": "utilibre-debian-services-freshrss:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libapache2-mod-php8.4": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/libapache2-mod-php8.4"
+        },
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        },
+        "php8.4-cli": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/php8.4-cli"
+        },
+        "php8.4-common": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/php8.4-common"
+        },
+        "php8.4-curl": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/php8.4-curl"
+        },
+        "php8.4-gmp": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/php8.4-gmp"
+        },
+        "php8.4-intl": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/php8.4-intl"
+        },
+        "php8.4-mbstring": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/php8.4-mbstring"
+        },
+        "php8.4-mysql": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/php8.4-mysql"
+        },
+        "php8.4-opcache": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/php8.4-opcache"
+        },
+        "php8.4-pgsql": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/php8.4-pgsql"
+        },
+        "php8.4-readline": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/php8.4-readline"
+        },
+        "php8.4-sqlite3": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/php8.4-sqlite3"
+        },
+        "php8.4-xml": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/php8.4-xml"
+        },
+        "php8.4-zip": {
+          "installed": "8.4.27-1~deb13u1",
+          "package": "trixie/php8.4-zip"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "f227f9b66da8ee6ea69b05968b6d58657b1646f5b59f89728ce26a0f3d1fe0ee",
+        "scope.json": "1b6ededcf42f55dab7aa937618b7e4b00fa6e8b1c3d280f77a2cd990972a343d",
+        "application.json": "7a3a6a7e09f8a523c8094eb6f784dd060eb1ac43bf9c88e866a316a5f3e62d4a",
+        "scan-gate.json": "6d616a50a513433a00ecdbe4973a031933a7b95a0c5b1a4ed332358f048dd7e9",
+        "after-scan.json": "745887f0f5bb9c9b94be9c9882c45e72787dc2d6f6bcb018d668349d4cce2203"
+      },
+      "completeInventorySha256": "4d09fcabf77a82fa7e0862be1fc0ac743ef1db4dbd2a2db290ed07752e9883a9",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "4656f52edf55015fbd3f7b3c9034393798b04f5c615b6f157ae286ef8e745c09"
+    },
+    {
+      "key": "trip-app",
+      "base": "sha256:98e47c60d603032f695077c889625fe3f662edb306fe14d35f51c3ac1492e0ae",
+      "containers": [
+        "utilibre-trip-app-1"
+      ],
+      "candidate": "utilibre-debian-trip-app:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "26427c2332b257acad42fd4fdf03fa1d0cb4b8e0a2515bd6634938d82fd01cc7",
+        "scope.json": "8fbb0b958de0a7e1dde5c613097c81b9f46772aabf5590501f36cd46dcd7c882",
+        "application.json": "49e3591ac730c02979b21c2230b81f535d721dc729861c997c01e2a3816fb2de",
+        "scan-gate.json": "bd0664566af53a6720e57bb22a062b984267a0ca78fed08b096cc35a8b59770d",
+        "after-scan.json": "59341ec741a7dea8b6324b3af0df5e301eeb0020c69411294cb65686ef994dac"
+      },
+      "completeInventorySha256": "d0603aaa67b8971cc07964e3159688e8ffd2bf602188f5840b521c2690e3b406",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "76735075621fd7d365f531ac05b473876550f41ff903d2d1b07a1e66b3fc232c"
+    },
+    {
+      "key": "community-rssbridge",
+      "base": "sha256:5299186b36ea0e7f68d1f9d67b9e6fdc8f95bece6d89b54f4b09afca34edc7d8",
+      "containers": [
+        "utilibre-community-rssbridge-1"
+      ],
+      "candidate": "utilibre-debian-community-rssbridge:20261122",
+      "kind": "debian",
+      "suite": "bookworm",
+      "approval": "preparation-only",
+      "packages": {
+        "php8.2-cli": {
+          "installed": "8.2.35-1~deb12u1",
+          "package": "bookworm/php8.2-cli"
+        },
+        "php8.2-common": {
+          "installed": "8.2.35-1~deb12u1",
+          "package": "bookworm/php8.2-common"
+        },
+        "php8.2-curl": {
+          "installed": "8.2.35-1~deb12u1",
+          "package": "bookworm/php8.2-curl"
+        },
+        "php8.2-fpm": {
+          "installed": "8.2.35-1~deb12u1",
+          "package": "bookworm/php8.2-fpm"
+        },
+        "php8.2-intl": {
+          "installed": "8.2.35-1~deb12u1",
+          "package": "bookworm/php8.2-intl"
+        },
+        "php8.2-mbstring": {
+          "installed": "8.2.35-1~deb12u1",
+          "package": "bookworm/php8.2-mbstring"
+        },
+        "php8.2-opcache": {
+          "installed": "8.2.35-1~deb12u1",
+          "package": "bookworm/php8.2-opcache"
+        },
+        "php8.2-readline": {
+          "installed": "8.2.35-1~deb12u1",
+          "package": "bookworm/php8.2-readline"
+        },
+        "php8.2-sqlite3": {
+          "installed": "8.2.35-1~deb12u1",
+          "package": "bookworm/php8.2-sqlite3"
+        },
+        "php8.2-xml": {
+          "installed": "8.2.35-1~deb12u1",
+          "package": "bookworm/php8.2-xml"
+        },
+        "php8.2-zip": {
+          "installed": "8.2.35-1~deb12u1",
+          "package": "bookworm/php8.2-zip"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "ba79ce8a25b60eb87289075a298ad686b50914b83d9864f25e8f1e03f95cf016",
+        "scope.json": "92f6c2e8b7e5a237a208359d2a9c6831d305d20b15b089e78612e5ba793c435d",
+        "application.json": "c2611308eba32d9a926c84865144d5968b2a195e25412e554aed588423f5a321",
+        "scan-gate.json": "b4a0004c11471de0c68c2d7198f7012cfa67e208b61b6d74c3bf3dde68fe13b8",
+        "after-scan.json": "21a84a478d50721c66c8245e22711f22bfb91c0ba65c5821e79d96729118a570"
+      },
+      "completeInventorySha256": "6ce6b86bc6819a046e76104d2f6d823ac6ff91112000bd8a3e0648b484e5d3c6",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "key": "priviblur-priviblur",
+      "base": "sha256:ae5bedde3da5e9de32dae2ba431c525fc8a2fcdfe0ffd7c610b7164acf0bbb3f",
+      "containers": [
+        "utilibre-priviblur-priviblur-1"
+      ],
+      "candidate": "utilibre-debian-priviblur-priviblur:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "782ba76e693e013c4a2cd4b75e708019751995a1d94e8132162d7899274ead09",
+        "scope.json": "bf32b802a128fd7bf5daa529e8031c6d69319bcc7f5b7eb8adf20dfa6352e4ec",
+        "application.json": "dffd3505264631489cffb40723a285fa1b1d7f09667cf4cdf6c8c34e290cab33",
+        "scan-gate.json": "25f1bfc8509d01d216618a92b3241ebbb9879ac83a3603dbd305b7fd138fa4a1",
+        "after-scan.json": "ced7702154bdce2de388458c8f7bf663eee5cc9d102c24ce173e04a7a8454810"
+      },
+      "completeInventorySha256": "dbccf52baf1d8bd52cfc07e06f38e01353871bf7fed4fcef65d932ec8ac088b9",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "85d7a6bf1d8bfee8224af5b43638e03f9bf9482a0e1a1c4777e712a7a34ba3c7"
+    },
+    {
+      "key": "kitchenowl-app",
+      "base": "sha256:76f194a524acf433828029bdacb836b90cf02882a44a587f6dd20eceaf9fad6b",
+      "containers": [
+        "utilibre-kitchenowl-app-1"
+      ],
+      "candidate": "utilibre-debian-kitchenowl-app:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc-dev-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-dev-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        },
+        "libc6-dev": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6-dev"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "5a4d2f69ea92af2745aca906dd00f5bf2da6201905887fc90d2cda42ac69a7e1",
+        "scope.json": "a832b21a02acca9287d4405fa5e20b736e93312d2c5983076b351e309c369df9",
+        "application.json": "93cf7b89664fc2ee462e3ea547ccf5673befe77d1a1ac51695996b106907b980",
+        "scan-gate.json": "dc3c1fcbcf46770676b26500bf879c7fea76d334c4f9d4751c9a7153a06912e6",
+        "after-scan.json": "adb129ba704fdecd799318202693eaa39dfcdc289725baf59a8c72fcbc65bc81"
+      },
+      "completeInventorySha256": "2f726aecc2015a4c5f31a6a9644fee0776823a716117e870c989391afdc3dfa0",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "e26b5786c072fb7dc71fa89acc1a5366d1b8b9238f057a0bcc0d1960a486cbef"
+    },
+    {
+      "key": "expanded-penpot-backend",
+      "base": "sha256:59c1c6b908be50ee32e25d098a360d7e581a7181deb745431e92e1328ae9f83e",
+      "containers": [
+        "utilibre-expanded-penpot-backend-1"
+      ],
+      "candidate": "utilibre-debian-expanded-penpot-backend:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "232ba92360abd91c83897be33062fb262718f5e4c2b65e890c237d77fd95039b",
+        "scope.json": "095a21196a608b8f55d4fc1860b30982e5a1c5a916b6558cc41e440688639c07",
+        "application.json": "649ea4c09a73653c962b638e899c672c0b9945a20656efed9797c1c3bc7630a0",
+        "scan-gate.json": "d09319780e7bbe808a1b11354185f828fdf0f335eb3ba7bfd2cc4430239f38ee",
+        "after-scan.json": "c3e2bf777006813678b7087d9a3674754a82a4edb166ee21dcb21e0ba9ca5c2e"
+      },
+      "completeInventorySha256": "fc2d014296d47f422d135d44d779586c2fec94a3ab8c95488d1bcbe7946bea70",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "f78f771252a31df9ca154b2be07d11b9022995b39b2f2995edb600b572487fa1"
+    },
+    {
+      "key": "family-chess-app",
+      "base": "sha256:b13045cd3fd19a5e6b14eefddf38e5d9fcbbef85a65bda399bd5b449895fcc9f",
+      "containers": [
+        "utilibre-family-chess-app-1"
+      ],
+      "candidate": "utilibre-debian-family-chess-app:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "e37555cbd030e9b73b9db93b0229708a46ee7fde5f1a6169a20f5e66ba1b4066",
+        "scope.json": "4292c5611edc5804b004bdc2ae698e2561d3ccd382041b622481f73dd77d614a",
+        "application.json": "520b85e7147afbd52887629f028f685a1881599eda57e42f38cd9e183b50386c",
+        "scan-gate.json": "7c49f82731f5f30d920eb308e8f9564f08a482e007c5f12318dc79e0f6ccecc4",
+        "after-scan.json": "cda8c6f51812ac0543f1853edc5139db08be739225a06feca1dcdc69404cc44e"
+      },
+      "completeInventorySha256": "66f8d32affd9dcbc87a4a7c91944bdab733a68b056863a223c3313eefbbd8fa7",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "402408bba08e8e7f75f5122a5ceb59d4c584834dc123387de1abc3f6a16303d0"
+    },
+    {
+      "key": "galene-turn-turn",
+      "base": "sha256:96e7f9e76bb68a9e98fd998c6f9c59c9870eb9fde702ff276daeabd90c6f0cb9",
+      "containers": [
+        "utilibre-galene-turn-turn-1",
+        "utilibre-turn-option-turn-1"
+      ],
+      "candidate": "utilibre-debian-galene-turn-turn:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "a318c3b7810a351bec0dd47bd3615840bb6ee059aeed59097f60a799c5b81c17",
+        "scope.json": "89a556d6fbe38b952f376be7ce65310ca7520e6f406cacbc9e44a6ab333c6799",
+        "application.json": "9dc3fb500f6c29f186808abd3739ffc45edc1162f98c61b13fa6b0a9844cf7d9",
+        "scan-gate.json": "e8816fd2d26e051fb99561351ee3e07b301aef2365369546f3b001bbc015f3bb",
+        "after-scan.json": "3c5778dcdc4dd72d15da60e03a38ea30266fa499c1a848d1cfd43f586d7726da"
+      },
+      "completeInventorySha256": "b85dbb9b2b51b9a80ef2ce20603edc268bd41cde408b3ec5f3f58b0745fbe5e0",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "a09d434367712ef38e1368a5f2737c35c8de03b09fffb3858e8a4b5ade4ef3e7"
+    },
+    {
+      "key": "calendar-radicale",
+      "base": "sha256:2c58fab3e28bba0ae592138d3797cee5ea2c9a1b4ebfcdd3743436d02495ebd7",
+      "containers": [
+        "utilibre-calendar-radicale-1"
+      ],
+      "candidate": "utilibre-debian-calendar-radicale:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "11b0c5528a23a7d66e2e486a6aaca3f96284af0609534ed40b5297e44332541c",
+        "scope.json": "18ccee2c0444ad8eac83c8754c6a800847921d51246d919af631a444af3fbebc",
+        "application.json": "2f5c7e3ed2e6129febd18b461446d53915815d6fefc5d86d3f0f8c9e18b3effb",
+        "scan-gate.json": "e0a007f2f0e958fb303e0bc1466a551fd0597365b336657a2050b1b216da3088",
+        "after-scan.json": "e67c3d4db244902e476d5969ebeb7bb4a922bca6084241d72cf7a794bf66bc78"
+      },
+      "completeInventorySha256": "6a3669a5d104970567ef4b2de372b22d985d8650d99f6d9830f7d2f0bb68cb2a",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "a81665dba4cabd8443ac10fb685963a3877e3022dd6c5988e8506a676140bc8c"
+    },
+    {
+      "key": "13ft-app",
+      "base": "sha256:f6fa1dc812ba068d176435b99ed8baab80d51baf217120706810405742b3d775",
+      "containers": [
+        "utilibre-13ft-app-1"
+      ],
+      "candidate": "utilibre-debian-13ft-app:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "ea061a4b7292407b761476df86bcd70db376f74c4b6066e27c2d9e6aba3b8d94",
+        "scope.json": "35cf1fa5760dee1e0a2a4fa6d84a3eb5b7dd4951214d60beecf41ec57606ae40",
+        "application.json": "e5eff5008781f48c4375dd75ac3b29367341caa8ebb6e863552e92c2a1e866d2",
+        "scan-gate.json": "b739becf3aa84bea0c69a0d4c2732cc4673c6ed4c3b3dbf4abebc8219ec60575",
+        "after-scan.json": "53b5ed23e390196e7674aa8c0c240dd43c1be7b1c37fa62a53935726d9741b8b"
+      },
+      "completeInventorySha256": "556f8d9713728fac3a7c006a3d5f836152043a00af40fe3780d8dcfdeb639928",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "38bf238e97d0eb05973922181ae51cf71950f80645590a15720ba7b7bfc9f5b8"
+    },
+    {
+      "key": "expanded-breezewiki",
+      "base": "sha256:dde5bb3d0ecdf415847292ab12f219033615a9a8e553f06006a2d3409dd18a89",
+      "containers": [
+        "utilibre-expanded-breezewiki-1"
+      ],
+      "candidate": "utilibre-debian-expanded-breezewiki:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "da4d1f5f8055ef4209f9ebf57b23ad5180bb4a2d0337b307d87ffb01b3df150e",
+        "scope.json": "03588690889d06490e7327f465ac7eb8e8ca9e8b93c8c966807dbee6ac1e5788",
+        "application.json": "8508e9c1b2a47bc6b17f058d55de61f9de9a9aac71a7643f131399e2432b987d",
+        "scan-gate.json": "a827e1afaec64aef04eeec80ea58cee432ce477eb378c22f111afa7b31036137",
+        "after-scan.json": "20f4be8a1674b38d2256cc0d5603a695ec04b6b5881fcb06e68427ea06ec4ca2"
+      },
+      "completeInventorySha256": "1f595d31eece4737feace05c79b0f1e867c1b8b309f81664dce8ed649c0745bd",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "75cd298da0112046b914c52f19678a56676474e7a8d1c4e814598bc65b5c315e"
+    },
+    {
+      "key": "unfurl-app",
+      "base": "sha256:f335dcee2ca75041d03eb5a632fa1b70de30e3b6332c7b64a41f1194ab671e73",
+      "containers": [
+        "utilibre-unfurl-app-1"
+      ],
+      "candidate": "utilibre-debian-unfurl-app:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "354ce2ade562a6513ddae6decb1d2d528c78b32e0c5504eb060822fa9ebe9884",
+        "scope.json": "8c6756fb39c2ac9dc5b186098e94c6067450589d3b5750b174e39bd7b0a9166e",
+        "application.json": "2e762c6b2324afb8ab0974c0b2aaf114bc949a1f23c9da33f8fafa741da1af33",
+        "scan-gate.json": "418ec045388c5aa5edb03052cf84cd3dcc04a05e35e4f524e1b27ae31e814730",
+        "after-scan.json": "ad9b686b8f6ce9b4e52da7c9ccc11f0c1a076533bc4066b1d08cd7bf34cc15bb"
+      },
+      "completeInventorySha256": "6abc12bab31043f29a1244852afff54ea47037a7d77b4b9ff8ab4fdd3fe56660",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "2a764eb53d4451cb456a778562fd30c18ac0bc6b247911aac7270bd5c327455f"
+    },
+    {
+      "key": "community-yopass",
+      "base": "sha256:bf4dbe6b6e37c794de993a49a25cf512dab60c267e87d2a8e03b24bfa83a1bca",
+      "containers": [
+        "utilibre-community-yopass-1"
+      ],
+      "candidate": "utilibre-debian-community-yopass:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "reviewedEvidence": {
+        "build.json": "7323f4a69729ef840ce287bf3571e73fe948e7add26fd2440cefd790131fb45b",
+        "scope.json": "b40e22c3eba27b7e9312a70d6c7ccc1dd5062d33351b968ee15b1b87fe9d7361",
+        "application.json": "456a731cd43e7239cf5dbd8bfb74d6c82430e7df0b27ceeee3d69f60a36f4d6c",
+        "scan-gate.json": "e2611320114a1b84e19912dcd12901590c63fe3d625d5570bb8b4dbac252a0d6",
+        "after-scan.json": "30e2b808308f2cb86dac5cbe06710e87a385df9f10dc8e127a60b666914fb040"
+      },
+      "retainedTargetedFindingsSha256": "744a2d1f50903b3b5603402a2d9c7260256fd3cf9828a8a1f13aef76590939c4",
+      "completeInventorySha256": "94eb577e82e991e01fc78987285142e85b76d52d0d6af183ceec3f124d404976",
+      "releaseApproval": "approved",
+      "approvalBasis": "Exact signed Debian libc6 u5; reviewed distroless assembly; native C-locale ABI and EN/ES encrypted sharing tests; full image scope; no new all-severity findings. Other glibc advisories remain open."
+    },
+    {
+      "key": "records-candlr",
+      "base": "sha256:04564418838894d524b13be8a411eb78f27c309bdefe7c1a34a68f38985bc1f2",
+      "containers": [
+        "utilibre-records-candlr-1"
+      ],
+      "candidate": "utilibre-debian-records-candlr:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "38a1138d8379b8017825992a9344cea2c6f9600a2b0437d5c4659dce90f46a2b",
+        "scope.json": "0e521a302e523136f11485e981220021d3f9563b0c4afc88bb5e5b79d4c67604",
+        "application.json": "d53314ef875742cb3975e106a2742fc4e5b16c08cffebfcd03cb8d50078e3ebf",
+        "scan-gate.json": "1c9da1d4e6899bdd0649f607812e0f8ebd75e64efdf207d94646a17843eff9cc",
+        "after-scan.json": "f92b80dc8a185d08791b113d2366bcec2b648d6c2d438d38623f7257132f6565"
+      },
+      "completeInventorySha256": "75e17856d1a32c11ad4e6f456a8a2d35013d86e4a07e98da431ed787f071cb1b",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "cae42d9fe99265265ceb80966ff30714f834139ec1a0139a1d1db8ca53048aa7"
+    },
+    {
+      "key": "unfurl-proxy",
+      "base": "sha256:3f5af0e842ed90e5329e9a545c33025ba416abc7d03461da0fc02142d8ba5fb7",
+      "containers": [
+        "utilibre-unfurl-proxy-1",
+        "utilibre-records-egress-1",
+        "utilibre-13ft-proxy-1",
+        "utilibre-trip-proxy-1",
+        "utilibre-wallabag-proxy-1"
+      ],
+      "candidate": "utilibre-debian-unfurl-proxy:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "fd372e4c925e04e28f4fb7aed486518111251e083c6ec7a10a0c61216da8adab",
+        "scope.json": "44c34fd79640d8d5a4aec50601f98eba664daa9fa2d3171aee6454ad0dd50866",
+        "application.json": "e8091e9a684fca2062b428c4649f8f263205247c8862df97692ab1e814efee01",
+        "scan-gate.json": "5e9cff7804ab9eefef6348bce0a5d41e0646b45796eef2e8c9c5704854084959",
+        "after-scan.json": "eb235d962a25d335fab0213ba74024608db8ed4241e35491df80e2c0da357eb8"
+      },
+      "completeInventorySha256": "49b8f9c0f5962c5f6e89513b1fded356f802a761973590d176c301855c9eacd0",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "4d298e4fcbe42c7e42af5c372fc01ba51800f48ccc18c7ae513ff31b481bfbb5"
+    },
+    {
+      "key": "beaverhabits-app",
+      "base": "sha256:30772b5c6358b3bcdd524f1ff7a1c18a9284ffe8741f055db902b5633d0bca71",
+      "containers": [
+        "utilibre-beaverhabits-app-1"
+      ],
+      "candidate": "utilibre-debian-beaverhabits-app:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "df3dcd39a8aba8e4cb7ea1e3cabb1684e18efce614ffa7931e155dd04dfb9316",
+        "scope.json": "c752ed89b2671b3252d68216e4721702fb62c7b3f972169d45c74454cfc5627e",
+        "application.json": "134352efa8301c16e0c88d1cb04e761619ccf3c01544c74393ee2da341a051ca",
+        "scan-gate.json": "862d12371c7e5926d5d4e2c41062b9fa4ffacb6e78202178120026ec43c67e02",
+        "after-scan.json": "10653fe82ee02b3971dc6998bcd9553f0e564ad491d214e0f421971200cc1924"
+      },
+      "completeInventorySha256": "e3ac98834dc924614767f1dd7f8085063493fa24dc272849300e8a966cf9ae3d",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "c9993475c5fac1626584f9af84ecec4ac7d14ed34a8e7daaf01782e34d30fe42"
+    },
+    {
+      "key": "identity-server",
+      "base": "sha256:750992ab3b4bbe0802c629d64b35dbeb59120c06e35899feb0a3ae719de4a95e",
+      "containers": [
+        "utilibre-identity-server-1",
+        "utilibre-identity-worker-1"
+      ],
+      "candidate": "utilibre-debian-identity-server:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "9e84a950a96bf014f72dd5d0876ea9e56abdd1d70285cd9d9d026978a95b2568",
+        "scope.json": "fa8f37ff5e43f99a3866beb6bfff2f85f7873ef9af6b7d327d6e52bcb296131e",
+        "application.json": "b5c630209054c6649c14b35acea40d6b7202c83e08246f05cdabf22187f4b926",
+        "scan-gate.json": "9e14f35affe5936fa5d39b2dae20d2a126b09159ca421f3e8ef072e500be99a5",
+        "after-scan.json": "dad0658a72c987184118b4c32f5fd36096b4e822a0a627ad2ca647507e637c07"
+      },
+      "completeInventorySha256": "1e8ca954547dd668e0d4be4b76f4334ae97c55a9bd76837d662eebd8e09fbe1a",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "87f7aa361c2d45f4930141ced2c5881ec66ad57ad06d335d6f9031c6ab3f5a29"
+    },
+    {
+      "key": "pack-forms-app",
+      "base": "sha256:c926925189b4f783a9cdc5ab438727f42809ff0d18ac4b9582914b33f1b23f95",
+      "containers": [
+        "utilibre-pack-forms-app-1"
+      ],
+      "candidate": "utilibre-debian-pack-forms-app:20261122",
+      "kind": "debian",
+      "suite": "trixie",
+      "approval": "preparation-only",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4",
+          "package": "trixie/libc6"
+        }
+      },
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "7c76d931a1b80b906291fe271b8623df0564d49d323c9de69c4043cd4b71ce2e",
+        "scope.json": "798e7c572c9c78111a0955dad048a2e1d0608ee5a0144dfcbc84d1c00ec9c63b",
+        "application.json": "de69e8a6e7a39ee4e48461853d358a674555c49c28df7b8e7881295012214b25",
+        "scan-gate.json": "f28126729516692d4d7097d1cce75d8ba8adac7f646aef357817c3f6bc7da289",
+        "after-scan.json": "9cbff0d46b3ca75adf9e8146ee62935687efe0a138f19cb3be3032a5b297afeb"
+      },
+      "completeInventorySha256": "dd31a6212be4d8815584f49317462b39bddfc1be37d0b675f72056d655f3c323",
+      "approvalScope": "Exact signed stable-suite libc/PHP update, unchanged application/configuration and complete file/ABI scope; listed native synthetic checks passed. No new findings at any severity. Remaining glibc advisories stay unresolved; this is not a triage exception or a security clearance.",
+      "retainedTargetedFindingsSha256": "feb359e37e4a76e9f3f1acf368c459e939974886fe1d9fb8082e37c7a043af22"
+    }
+  ],
+  "libcFixture": {
+    "sourceSha256": "afe6acae3c77ff728fee224130406e4b84d8440e92e9c996260e8261b01bed1e",
+    "binarySha256": "b47b2aff5a8fd6c3848ae83a11fd0ae20db47c3e98929e19f22bfd69d4db6938",
+    "compiler": "cc (Debian 14.2.0-19) 14.2.0"
+  },
+  "libcDistrolessFixture": {
+    "sourceSha256": "59b85947941b0708c07a83a45645dbbe55ecb5a240b09858536b917bb35bf0ae",
+    "binarySha256": "21fae9916af03c3537632c8a77f663b081cd1225e70f19b67d3b8f4bcf517c89",
+    "compiler": "14.2.0",
+    "environment": "Host Debian compiler; no network; C locale matches minimal distroless runtime. Native app tests separately verify EN/ES Unicode."
+  }
+}

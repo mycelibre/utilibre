@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "packages": {
+    "bookworm/nginx": {
+      "name": "nginx",
+      "version": "1.22.1-9+deb12u11",
+      "file": "nginx_1.22.1-9+deb12u11_amd64.deb",
+      "sha256": "4e2778e675c07d0f2d8d3b6f5ff84f6483ade1d82c21c910eb9a2787e1cf1b1a",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/n/nginx/nginx_1.22.1-9+deb12u11_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "libc6 (>= 2.34), libcrypt1 (>= 1:4.1.0), libpcre2-8-0 (>= 10.22), libssl3 (>= 3.0.0), zlib1g (>= 1:1.1.4), iproute2, nginx-common (<< 1.22.1-9+deb12u11.1~), nginx-common (>= 1.22.1-9+deb12u11)",
+      "preDepends": ""
+    },
+    "bookworm/nginx-common": {
+      "name": "nginx-common",
+      "version": "1.22.1-9+deb12u11",
+      "file": "nginx-common_1.22.1-9+deb12u11_all.deb",
+      "sha256": "8ef1715ff5a9764fb5f810116acee417f4e092032212b6e4f392e8d2cd6b0952",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/n/nginx/nginx-common_1.22.1-9+deb12u11_all.deb",
+      "distribution": "bookworm-security",
+      "depends": "debconf (>= 0.5) | debconf-2.0",
+      "preDepends": ""
+    }
+  },
+  "rows": [
+    {
+      "key": "community-rssbridge",
+      "base": "sha256:034a3624b82093cf00363e002cce8e12c94537838103da33be6b9d11a2828b67",
+      "containers": [
+        "utilibre-community-rssbridge-1"
+      ],
+      "candidate": "utilibre-rssbridge-nginx:20261122",
+      "kind": "debian",
+      "suite": "bookworm",
+      "packages": {
+        "nginx": {
+          "installed": "1.22.1-9+deb12u10",
+          "package": "bookworm/nginx"
+        },
+        "nginx-common": {
+          "installed": "1.22.1-9+deb12u10",
+          "package": "bookworm/nginx-common"
+        }
+      },
+      "approval": "rejected"
+    }
+  ],
+  "acquisitionSha256": "bd27c14ecb8b5516a2db362c62cdc4871a475c5f8e2195a09cafcc4a30be1f31",
+  "status": "rejected",
+  "reason": "Installed RSS-Bridge executable was already upstream NGINX 1.30.6 despite older distro metadata. This Debian candidate would downgrade it. Never deployed; superseded by the signed 1.30.7 binary-only manifest."
+}

@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "packages": {
+    "noble/libxml2": {
+      "name": "libxml2",
+      "version": "2.9.14+dfsg-1.3ubuntu3.10",
+      "file": "libxml2_2.9.14+dfsg-1.3ubuntu3.10_amd64.deb",
+      "sha256": "c5a065f85c1e6f605741e365e40cad71c3ceb0e85e2791400bd35b8896e12ad1",
+      "url": "https://security.ubuntu.com/ubuntu/pool/main/libx/libxml2/libxml2_2.9.14+dfsg-1.3ubuntu3.10_amd64.deb",
+      "distribution": "noble-security",
+      "depends": "libc6 (>= 2.38), libicu74 (>= 74.1-1~), liblzma5 (>= 5.1.1alpha+20120614), zlib1g (>= 1:1.2.3.3)",
+      "preDepends": ""
+    }
+  },
+  "acquisitionSha256": "a93be25e6ecfcd0bcd450c7b06a031af7b9566f14949cdd96778fa5a90fdb4b8",
+  "xmlFixture": {
+    "binarySha256": "9d6b05452a86d744add240211c58a2fe6e1c36b3face6f6b13a47af6ad4b3860",
+    "sourceSha256": "1eb1d6751bc71925b0ae2e3dcbbc3734dab24fb75c5c433be7feb51105e50ed5",
+    "source": "deployment/maintenance/native-final/libxml2-old-abi.c"
+  },
+  "rows": [
+    {
+      "key": "mumble-mumble",
+      "base": "sha256:2d5253cdc3025ec167a993caff0b5da43b28eb3d72da71d9a056515a81cf6900",
+      "oldRefs": [
+        "utilibre-apt-mumble:security-20261109"
+      ],
+      "containers": [
+        "utilibre-mumble-mumble-1"
+      ],
+      "kind": "ubuntu",
+      "suite": "noble",
+      "packages": {
+        "libxml2": {
+          "installed": "2.9.14+dfsg-1.3ubuntu3.9",
+          "package": "noble/libxml2"
+        }
+      },
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libxml2.so.2"
+      ],
+      "candidate": "utilibre-mumble-xml:20261122",
+      "approval": "preparation-only",
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T07:09:18.614076+00:00",
+      "reviewedEvidence": {
+        "build.json": "5078562d4270b4ac77207a29e104a2fbbeb0c7f9e048badca7eaae9f543e60a3",
+        "scope.json": "611c5115a56a5896638b5e5ebc43f23f871c92e5359fd125edf42aa19f75beef",
+        "application.json": "c0cc8ba8ed0b0812584934226af346b1202278f1f74e17e5834da2c5b2728a6a",
+        "scan-gate.json": "21e71cfe040ffe575ebe4dc55ebd52c30fbe47157ca04f74cef2b31eeff2ca4b",
+        "after-scan.json": "6b01f98cfce777164123d349cf8be9a2975f28d422ae0da44180f5a2859b2ae4"
+      },
+      "completeInventorySha256": "a5b474f679eedcf129acf3c899b9bc5c3433dc0510a516c2a16b7ed1d75cf916",
+      "retainedTargetedFindingsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ]
+}

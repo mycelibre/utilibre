@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "rows": [
+    {
+      "key": "wallabag",
+      "base": "sha256:18d91cfb5a67626dc56d1acd07c9fbdc6f766cd38e3aaf7f52da0f1a817bbb18",
+      "containers": [
+        "utilibre-wallabag-app-1"
+      ],
+      "oldRefs": [
+        "utilibre-security-wallabag:20261122"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "candidate": "utilibre-xml-wallabag:20261122",
+      "approval": "preparation-only",
+      "packages": {
+        "libxml2": "2.13.9-r2"
+      },
+      "consumerProfile": "php-runtime",
+      "signatureEvidenceSha256": "fe77415a4daa4ca690736efb16bad9beb76f39e54baf3a7a64d265b9de796be2",
+      "reviewedEvidence": {
+        "build.json": "0e6482e5284dfc1f35f77ed046f6cecfb304038c20502b462c410a3f3f5e5a25",
+        "scope.json": "d5fe7045fdd22d772b5d992a84a6b7023c0f89b7d39ee8f3cda626a132d347c3",
+        "application.json": "742749e5ff5fcae617d4436678552637266de2af2cd7e5f14d374bb7a098e1dc",
+        "scan-gate.json": "db7ffa23947e65fc7648a953f29bd53537d96f990d62c0f5a5e56014eab2f92d",
+        "after-scan.json": "a6fd3ef06b000a0b6d328ebe5eaccd5801f202dc14bfc53ac6c58fd90942036c"
+      },
+      "xmlConsumerSha256": "7e12643fe97afbd3ba06b7e869ac32d803dd8b3a2fcaeb0069bc66b946e5e377",
+      "releaseApproval": "approved",
+      "releaseReview": "Signed maintenance-only libxml2 update; unchanged configuration and all unrelated files, native XML/ABI and existing application or PostgreSQL dump/restore tests, frozen complete scan passed. No vulnerability exception or migration."
+    },
+    {
+      "key": "translite",
+      "base": "sha256:30040d214d618e7edfb55729dc05a1221adaacc4b5443df9b1580e30ac048de2",
+      "containers": [
+        "utilibre-translite-translite-1"
+      ],
+      "oldRefs": [
+        "utilibre-security-translite:20261122"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "candidate": "utilibre-xml-translite:20261122",
+      "approval": "preparation-only",
+      "packages": {
+        "libxml2": "2.13.9-r2"
+      },
+      "consumerProfile": "php-runtime",
+      "signatureEvidenceSha256": "fe77415a4daa4ca690736efb16bad9beb76f39e54baf3a7a64d265b9de796be2",
+      "reviewedEvidence": {
+        "build.json": "85d0796e2315a5f4fc1203e84ee81f3d3dab58f7b1fa1c2b2f1752331771069e",
+        "scope.json": "f1208e062db250f8a5c4359958d3797805a3d390e74eb08d8f667ab0743b73a0",
+        "application.json": "f09e89b523fe4fc1220eff589ce0066c5bf50e1a40ac014add77c3709dd974bd",
+        "scan-gate.json": "913c946b5dd64cf84506e2ceceecdd37b1b7e321dec9ee801819d8672c9dca42",
+        "after-scan.json": "3e5ef8f107ecb2d5c079abb1fd30656fbc024d8dbf74527dd7038371a0c31256"
+      },
+      "xmlConsumerSha256": "77e94d4f1c7649affc36c04f5304a491532854f8d122b8a62d60c964de4cd587",
+      "releaseApproval": "approved",
+      "releaseReview": "Signed maintenance-only libxml2 update; unchanged configuration and all unrelated files, native XML/ABI and existing application or PostgreSQL dump/restore tests, frozen complete scan passed. No vulnerability exception or migration."
+    },
+    {
+      "key": "privatebin",
+      "base": "sha256:f9c49c1da111096408a0d9e6ef7d82bd56f43fe9191e4218b2bc7cfe3cf9cb87",
+      "containers": [
+        "utilibre-services-privatebin-1"
+      ],
+      "oldRefs": [
+        "utilibre-security-privatebin:20261122"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "candidate": "utilibre-xml-privatebin:20261122",
+      "approval": "preparation-only",
+      "packages": {
+        "libxml2": "2.13.9-r2"
+      },
+      "consumerProfile": "php-runtime",
+      "signatureEvidenceSha256": "fe77415a4daa4ca690736efb16bad9beb76f39e54baf3a7a64d265b9de796be2",
+      "reviewedEvidence": {
+        "build.json": "bee8cbacdcbc25c42c546103d33c0e048faeffac86473be6ebf1d9b0d6aa83a4",
+        "scope.json": "e96857a2f79e5c0577748f6b222cf2cf69c56cbf77fa6bf0d7af95c4cf529403",
+        "application.json": "805a746c85e4fcdaa88a6bc9edd273e7acfccefe2ee7abbf7fb877f16a62a3c2",
+        "scan-gate.json": "53dafdbf0dc7b4c10f72cfff7fb3814cd24f9bcce40e4eafdb057f90b3bcb8aa",
+        "after-scan.json": "4841f27b767ba0e7e00594aa822a82cd05884e7add72bfa655695d1d1b0a8515"
+      },
+      "xmlConsumerSha256": "b2f8e00613afeb9f5b94585efccb4d94e6a5a3cfefb06f93bdd8df29b937ab44",
+      "releaseApproval": "approved",
+      "releaseReview": "Signed maintenance-only libxml2 update; unchanged configuration and all unrelated files, native XML/ABI and existing application or PostgreSQL dump/restore tests, frozen complete scan passed. No vulnerability exception or migration."
+    },
+    {
+      "key": "records-db",
+      "base": "sha256:490cadc4822a65b9a7f075fde1662a09eec7619f9e63d5aecbcefe7b1c0fd1bd",
+      "containers": [
+        "utilibre-identity-postgresql-1",
+        "utilibre-projects-db-1",
+        "utilibre-records-db-1"
+      ],
+      "oldRefs": [
+        "utilibre-crypto-records-db:20261122"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "candidate": "utilibre-xml-records-db:20261122",
+      "approval": "preparation-only",
+      "packages": {
+        "libxml2": "2.13.9-r2"
+      },
+      "consumerProfile": "postgres-runtime",
+      "signatureEvidenceSha256": "fe77415a4daa4ca690736efb16bad9beb76f39e54baf3a7a64d265b9de796be2",
+      "reviewedEvidence": {
+        "build.json": "cef45a7a4c6175a56d2cf7e9f6adc100a79833179f13d687309408dbc9e55d5c",
+        "scope.json": "d2913a008bed14aac7d541e765e19b1e13be0628a7ebe158b5071745e4b2953a",
+        "application.json": "d93a663e348bda326b64894624d1c6f0127c601f6811b85c3c1a3b95038d6dfc",
+        "scan-gate.json": "58337adc07c549737282a53d8a19738cb453808de1c6576ef4b367cc542f3095",
+        "after-scan.json": "8c28fe805a4b11495bdee90cf806c4b8c117767ed924b43cc25beb94b5039b2f"
+      },
+      "xmlConsumerSha256": "d93a663e348bda326b64894624d1c6f0127c601f6811b85c3c1a3b95038d6dfc",
+      "releaseApproval": "approved",
+      "releaseReview": "Signed maintenance-only libxml2 update; unchanged configuration and all unrelated files, native XML/ABI and existing application or PostgreSQL dump/restore tests, frozen complete scan passed. No vulnerability exception or migration."
+    },
+    {
+      "key": "simplelogin-db",
+      "base": "sha256:54953290e601456e00d0782e3284505933e2b4e70fbffa0bcc54a15b1290193e",
+      "containers": [
+        "utilibre-community-rallly-db-1",
+        "utilibre-expanded-resume-db-1",
+        "utilibre-expanded-penpot-db-1",
+        "utilibre-pack-forms-db-1",
+        "utilibre-pollaris-pollaris-db-1",
+        "utilibre-services-postgres-1",
+        "utilibre-simplelogin-db-1",
+        "utilibre-spliit-db-1"
+      ],
+      "oldRefs": [
+        "utilibre-crypto-simplelogin-db:20261122"
+      ],
+      "release": "3.24.1",
+      "kind": "alpine",
+      "candidate": "utilibre-xml-simplelogin-db:20261122",
+      "approval": "preparation-only",
+      "packages": {
+        "libxml2": "2.13.9-r2"
+      },
+      "consumerProfile": "postgres-runtime",
+      "signatureEvidenceSha256": "e44f7d94573f7fbf5b06df15a7cb0f27683bbcb1f52fa9c6231576ca12773275",
+      "reviewedEvidence": {
+        "build.json": "a50d8799ff562fcfa530940a7ec1911e365e59625278f97442f3c7b27b244637",
+        "scope.json": "766e649771a53f95e381fe6bf145b85c86d9a3362949a791be60c4bdb82a8ce3",
+        "application.json": "fd0ad14b2293cf3adaa8f84c68d024f2d81894929a1f1f09cf9790231f172dd4",
+        "scan-gate.json": "1f555d61beeaeea6f002f80c74d08d170ab0db77433eca3cbf094575d94b174b",
+        "after-scan.json": "e1c3b60e4057da0ece2c21261d3b25982737b329fcafdb315846df79a5987306"
+      },
+      "xmlConsumerSha256": "fd0ad14b2293cf3adaa8f84c68d024f2d81894929a1f1f09cf9790231f172dd4",
+      "releaseApproval": "approved",
+      "releaseReview": "Signed maintenance-only libxml2 update; unchanged configuration and all unrelated files, native XML/ABI and existing application or PostgreSQL dump/restore tests, frozen complete scan passed. No vulnerability exception or migration."
+    }
+  ],
+  "fixtures": {},
+  "packages": {
+    "libxml2": {
+      "file": "libxml2-2.13.9-r3.apk",
+      "version": "2.13.9-r3",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libxml2-2.13.9-r3.apk",
+      "sha256": "8b37229c4761cf0eef5089045283526ef43bf335073050515010d34a313186ed",
+      "size": 495394
+    }
+  },
+  "upstream": "https://pkgs.alpinelinux.org/packages?arch=x86_64&branch=v3.24&name=libxml2",
+  "acquisition": {
+    "requestsMaximum": 1,
+    "signatureCheckedOfflineInEachExactBaseline": true
+  }
+}

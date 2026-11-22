@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "packages": {
+    "trixie": {
+      "libbson-1.0-0t64": "1.30.4-1+deb13u5",
+      "libmongoc-1.0-0t64": "1.30.4-1+deb13u5",
+      "libmongocrypt0": "1.13.2-1+deb13u2"
+    }
+  }
+}

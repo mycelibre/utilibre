@@ -1,0 +1,704 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "fixtures": {},
+  "packages": {
+    "openssl": {
+      "file": "openssl-3.5.9-r1.apk",
+      "version": "3.5.9-r1",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/openssl-3.5.9-r1.apk",
+      "sourceCommit": "0f4c7e8d0f5f7cebbdc2156eca4391080b732bf2",
+      "license": "Apache-2.0",
+      "indexSha256": "edaea06c2fc31b1a15bfd9c02274bd74b882a4410d6b157e08a5b260c9e8aba8",
+      "sha256": "ed11241475e5757ce8eb9788b18116a804a579395d4813605df12989a2acbabf"
+    },
+    "libcrypto3": {
+      "file": "libcrypto3-3.5.9-r1.apk",
+      "version": "3.5.9-r1",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libcrypto3-3.5.9-r1.apk",
+      "sourceCommit": "0f4c7e8d0f5f7cebbdc2156eca4391080b732bf2",
+      "license": "Apache-2.0",
+      "indexSha256": "edaea06c2fc31b1a15bfd9c02274bd74b882a4410d6b157e08a5b260c9e8aba8",
+      "sha256": "042026082cc9bc7872d1baa81755c50efa70b05f03b5369fdc5f0a1303009720"
+    },
+    "libssl3": {
+      "file": "libssl3-3.5.9-r1.apk",
+      "version": "3.5.9-r1",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/libssl3-3.5.9-r1.apk",
+      "sourceCommit": "0f4c7e8d0f5f7cebbdc2156eca4391080b732bf2",
+      "license": "Apache-2.0",
+      "indexSha256": "edaea06c2fc31b1a15bfd9c02274bd74b882a4410d6b157e08a5b260c9e8aba8",
+      "sha256": "18c5778cbe52e1991303f8531970b05d4e6e036ea08349322f7422f42a689dc7"
+    }
+  },
+  "rows": [
+    {
+      "key": "community-ntfy",
+      "base": "sha256:0039b6246d07abc1d65121da5e632c276e791eb15775e11d7aa5e19d512307e0",
+      "containers": [
+        "utilibre-community-ntfy-1"
+      ],
+      "oldRefs": [
+        "utilibre-ntfy:xnet-security-20261109"
+      ],
+      "release": "3.24.1",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0"
+      },
+      "candidate": "utilibre-crypto-community-ntfy:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "native-app",
+      "inventorySha256": "ec46d62f046bd7233d9dd8567061880b00a386e2190bf72aa904fef2a8e6ba69",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed OpenSSL library overlay. Exact full-file scope preserves application, configuration, hooks and musl. Native crypto/TLS and unchanged consumer checks pass; frozen all-severity comparison has no new findings. No migration, retention, secret or access-policy change.",
+      "reviewedEvidence": {
+        "build.json": "144bb2ccad0f664e74a468fd46ee59c5a304c0edef3e31c48dbec81abf97c2a3",
+        "scope.json": "288ff45257b6964fb84b0810f19ecf653d94dd0f7e4e1af1a5918d8b9b67e756",
+        "application.json": "4a2dae8d62a1d84332343ce81a7acfc6ca87c512abafecc67f4c5708a2a355a9",
+        "scan-gate.json": "f5693d05ad83b88018843c5eeac7b33cc5302fa5e1c26fb8c0063595438642d8",
+        "after-scan.json": "05859d50f95428ba575985705c48b4394bc71ca7cc06ba339ee5fd1822c1ca39"
+      }
+    },
+    {
+      "key": "public-utility-portal",
+      "base": "sha256:0f6098fddf71b14f6045984cc30378eccbd64406a1448b3cad71c022cbe692af",
+      "containers": [
+        "public-utility-portal-1"
+      ],
+      "oldRefs": [
+        "utilibre-portal:documents-feedback-20261115"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-public-utility-portal:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "node-runtime",
+      "inventorySha256": "db7e87307b268569d064d2a024167f7f1cf357021bea78823b899721c784ba93",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed OpenSSL library overlay. Exact full-file scope preserves application, configuration, hooks and musl. Native crypto/TLS and unchanged consumer checks pass; frozen all-severity comparison has no new findings. No migration, retention, secret or access-policy change.",
+      "reviewedEvidence": {
+        "build.json": "ae3aec791f13a3492c71010326c03a5c2efe27d2ea702357cbaa55357caa0e95",
+        "scope.json": "b5e1f919118d000ecb89709b76779d26c3da2e3016c36f73f5764b3df68211fd",
+        "application.json": "bffb2d12a1cd9ec87667d0d4df8f6a0f3c504f117a912c3625afbcecc8098a2b",
+        "scan-gate.json": "316a7af54da494e9636da5322b104d3304945986d182ba1258f18840cb870b18",
+        "after-scan.json": "74492849b8e64f96af089a189776dec05e8c5fdd0478bfc013064baf50b6efa6"
+      },
+      "portalNativeSha256": "14284623cb871e3b3a8842d34b3a78bbed2c7e23d66b3170bc424c4b96deaa2a",
+      "reviewedAt": "2026-11-22T04:48:10.652086+00:00"
+    },
+    {
+      "key": "chitchatter-tracker",
+      "base": "sha256:248033d97821c81157a017fd933aaa411ee902835dccd0408abed78c6d25ea44",
+      "containers": [
+        "utilibre-chitchatter-tracker-1"
+      ],
+      "oldRefs": [
+        "utilibre-zlib-chitchatter-tracker:candidate-20261109"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-chitchatter-tracker:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "node-runtime",
+      "inventorySha256": "f5881b7795129a2fa6ebe2cd292bee0924d122c1814db262fdcbd938267c8555",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed OpenSSL library overlay. Exact full-file scope preserves application, configuration, hooks and musl. Native crypto/TLS and unchanged consumer checks pass; frozen all-severity comparison has no new findings. No migration, retention, secret or access-policy change.",
+      "reviewedEvidence": {
+        "build.json": "894efa502f0306a82174bb9135e8f2086bd587ee7c09a6517d0272139027b4fd",
+        "scope.json": "24d877f461e1af564bfaed86831b24cd35c26e9522c2cff2e4db8a26a876cd02",
+        "application.json": "47ef6039181d6aa8142ff2bec8bf1adcc4dec11f2a6879a4f2ad41211f9842a4",
+        "scan-gate.json": "13c7e7dad184bddf75418e0defe09b5826b3a05f09f35e5412411cb10ca80531",
+        "after-scan.json": "4c14c233129c99605882b33e9867d576554d5048745e1e9ce72ed9582462ec09"
+      }
+    },
+    {
+      "key": "collaboration-pilot-wbo",
+      "base": "sha256:27f24ce0c306f14e86981b2456cbc8d2528af41106834887f44a364c6d6fb60a",
+      "containers": [
+        "utilibre-collaboration-pilot-wbo-1"
+      ],
+      "oldRefs": [
+        "utilibre-wbo:2.18.33-candidate"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-collaboration-pilot-wbo:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "node-runtime",
+      "inventorySha256": "737605ca224c4d9a4017292a5200acfc7c85a4eabfb48818379ce1e577845e57",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed OpenSSL library overlay. Exact full-file scope preserves application, configuration, hooks and musl. Native crypto/TLS and unchanged consumer checks pass; frozen all-severity comparison has no new findings. No migration, retention, secret or access-policy change.",
+      "reviewedEvidence": {
+        "build.json": "0cb9a9d1df7fb5fb80a7bd710838dece85bcd1ee371b9bb0bea714d0326dd5e8",
+        "scope.json": "dd8eff7195c5864dbdf12460fa988526496e50bf58de86ac34d3c44c976b0406",
+        "application.json": "0ed62be3b8977a8c81d3a5e80bf3ef3adf19d12c432e0569ab304b7f982d48d4",
+        "scan-gate.json": "6a0ddb94a167decc4808aaa4726f25d946f89806f35e3ae9bf8e9293f676258a",
+        "after-scan.json": "3d3801f48ef4d4f698f39da1f0341fa836e225ea4deeea77140eaea7334652ef"
+      }
+    },
+    {
+      "key": "additions-dumb",
+      "base": "sha256:29e6a0286f0222fb4f2d0d09bc317d1c9dc9a2f96a656a6384469e33ce81d967",
+      "containers": [
+        "utilibre-additions-dumb-1"
+      ],
+      "oldRefs": [
+        "utilibre-zlib-additions-dumb:candidate-20261109"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-additions-dumb:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "node-runtime",
+      "inventorySha256": "5d71b3d50b0cb6bb19fdc27f71151a39d723a985a5c5207d334959a33c62908e",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed OpenSSL library overlay. Exact full-file scope preserves application, configuration, hooks and musl. Native crypto/TLS and unchanged consumer checks pass; frozen all-severity comparison has no new findings. No migration, retention, secret or access-policy change.",
+      "reviewedEvidence": {
+        "build.json": "e3dabf359251c97d1df5ffa9c97f1b43e5ec647eaa4d7d7fb23ff3e006a72f6b",
+        "scope.json": "3df41482a78416825911ffdecc09f771e3f6e5d147447896f18ac19bb1cd5db6",
+        "application.json": "213fda1504495ed379aff6b70b4b12e9ae57e39dea4bf13cfc80017d40aeb76e",
+        "scan-gate.json": "1ae2661da113b0de07761367527f9af235cd2335780ccd64e8778cebfbb886cc",
+        "after-scan.json": "361d71944104b1e56c63935a37ff9b79ebf8133ea9a48da85dfeeb35b5c9e5f4"
+      }
+    },
+    {
+      "key": "newsletters-smtp",
+      "base": "sha256:2a93e71af15883beb34e5526ef9b04b094f86ea542f3594f20ab489ce8be7ea2",
+      "containers": [
+        "utilibre-newsletters-smtp-1",
+        "utilibre-newsletters-jobs-1"
+      ],
+      "oldRefs": [
+        "utilibre-caddy-newsletters-mail-jobs:xnet-security-20261109"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-newsletters-smtp:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "node-runtime",
+      "inventorySha256": "eb629f2db50d99a29cd4c1ceb2191a5b05fc5c903ef34a509345ab43f44a2d1d",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed OpenSSL library overlay. Exact full-file scope preserves application, configuration, hooks and musl. Native crypto/TLS and unchanged consumer checks pass; frozen all-severity comparison has no new findings. No migration, retention, secret or access-policy change.",
+      "reviewedEvidence": {
+        "build.json": "35e8c7bfe68e4609e935972d249e87f812116088848ca3251fa678e58fffec78",
+        "scope.json": "2d697a9c1caad44d3e6ab12f277377efd54eecbc579f4edf28dae8387ef86191",
+        "application.json": "ae01690bcb698184f72952cacb38415758b6247115f35b42108872a0c8a1a9cb",
+        "scan-gate.json": "2d65eac7c1a6b33c01f317975e921d199efafcaa28bfe3a2de03d6c8561ac493",
+        "after-scan.json": "10b53b14325d45ec268dbf15c05ec409814fb11fe5df2f6b84d38a255d6abfab"
+      }
+    },
+    {
+      "key": "biblioreads-biblioreads",
+      "base": "sha256:3932fa96d05d2e1d2423ec2d098d67137d64bfe2ed08ece3ce092d10274d8f22",
+      "containers": [
+        "utilibre-biblioreads-biblioreads-1"
+      ],
+      "oldRefs": [
+        "utilibre-zlib-biblioreads-biblioreads:candidate-20261109"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-biblioreads-biblioreads:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "node-runtime",
+      "inventorySha256": "e66069223bcab96df202e19c65de04999fd715de1a2f90e75ef160a59dc64bf8",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed OpenSSL library overlay. Exact full-file scope preserves application, configuration, hooks and musl. Native crypto/TLS and unchanged consumer checks pass; frozen all-severity comparison has no new findings. No migration, retention, secret or access-policy change.",
+      "reviewedEvidence": {
+        "build.json": "122ffff452f257b09f02e4ac7d5f05112fbe4c4f8b0230b1325df0aef3cc11be",
+        "scope.json": "b563ba7416ef9307f35586b3c703b764a8386b57e72a58e783d7c392d156fe7a",
+        "application.json": "1ccfd7210908d4a7f33b40083f1e0fbb35d7a1415b29e7b397fb2b8d206d48d8",
+        "scan-gate.json": "aa186e414b57833f0039f4fc16075b5abf87faec09c6664eb6c2f70e458cb97e",
+        "after-scan.json": "4dfd3b3efafd4b52b0be07a9032ac31de7ccdcbe4f5b786cd8768154cfe8e255"
+      }
+    },
+    {
+      "key": "bytestash-bytestash",
+      "base": "sha256:3e7ee6694aab40d09766f19929f389ddba7583ff80d1bff12d8aeb1ce0a3a01e",
+      "containers": [
+        "utilibre-bytestash-bytestash-1"
+      ],
+      "oldRefs": [
+        "utilibre-bytestash:1.6.2-candidate"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-bytestash-bytestash:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "node-runtime",
+      "inventorySha256": "8d463d513912d4fb2c1db6f829dfce030758370af0ea0e474ee4971ef60f21ea",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed OpenSSL library overlay. Exact full-file scope preserves application, configuration, hooks and musl. Native crypto/TLS and unchanged consumer checks pass; frozen all-severity comparison has no new findings. No migration, retention, secret or access-policy change.",
+      "reviewedEvidence": {
+        "build.json": "3326fa44f86bf5ec52c38995f476fda61801a811f27e7c1c99e56ba0f41c500f",
+        "scope.json": "a7915bfdde2a70003063a4cf9cecf940bfba4e426be0042d267e5c7109ae30d6",
+        "application.json": "2b471540c28d43c0a5148134068e97149061b5a3c9e11f4c1f5722f2820d12c3",
+        "scan-gate.json": "3ca752ebce191cb9caf2191d0f5eb2acbedcf841c922b16b1c00a360e21f3ea7",
+        "after-scan.json": "cf26c46fd78ba56deeadc0e82c58d28b849cea93fa24d74528d30a5e738f8e32"
+      }
+    },
+    {
+      "key": "additions-fmd",
+      "base": "sha256:40917c761519f01194e52e15132bea881db2d49e750fda0fe0c06e4c9bcd1219",
+      "containers": [
+        "utilibre-additions-fmd-1"
+      ],
+      "oldRefs": [
+        "utilibre-zlib-additions-fmd:candidate-20261109"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-additions-fmd:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "special-native",
+      "inventorySha256": "2013b44a5bad498f0fdbae60001f4327ce7a2680054f08bb0f9598e0f96612ba",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed OpenSSL library overlay. Exact full-file scope preserves application, configuration, hooks and musl. Native crypto/TLS and unchanged consumer checks pass; frozen all-severity comparison has no new findings. No migration, retention, secret or access-policy change.",
+      "reviewedEvidence": {
+        "build.json": "a4a420b1cda7fab06a4f6f6d5b425e2390c7b577211036c87c6a6a32e00bb862",
+        "scope.json": "b056d850eefc0a5c75905de173751582f670de6cf72530a0aca4af26def15389",
+        "application.json": "455c17550b9b95fa872555939a56a8119ba2fc9971d4f510c11c417d25ab1957",
+        "scan-gate.json": "80dc55bc4defbce1094c47afec81f339c3db4e1340841f62974d3d4339b672f5",
+        "after-scan.json": "34431a3342834916f95a5344c2edfabdb851f3fca55499fd76028ba66be3dd78"
+      }
+    },
+    {
+      "key": "pack-galene-galene",
+      "base": "sha256:50ecfa1f4eb1ac42d85db033ea61afa3eeebda15fa224831c8ab38f5417eb538",
+      "containers": [
+        "utilibre-pack-galene-galene-1"
+      ],
+      "oldRefs": [
+        "utilibre-galene:xnet-security-20261109"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-pack-galene-galene:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "special-native",
+      "inventorySha256": "4177d3e3c2eb467ddf7120150fc1d40c838943376b239b8a6ae6b7a1de1c438f",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed OpenSSL library overlay. Exact full-file scope preserves application, configuration, hooks and musl. Native crypto/TLS and unchanged consumer checks pass; frozen all-severity comparison has no new findings. No migration, retention, secret or access-policy change.",
+      "reviewedEvidence": {
+        "build.json": "ef6b42caf042c8f5b0c2f19b454a7be1ded514c7b8d316d2a531a4052e5dc501",
+        "scope.json": "e55e5aa132ea3d5021e35d76bc2e661f05c4c08e49e4d18ac9ee77ad2cf70be8",
+        "application.json": "62a85ce0cc79c5ea76a1f47d5a5c8b36005d7e710a0d56f4800db2ac4421da83",
+        "scan-gate.json": "13019499e489478d89364b337e8a9a79b3988907bcd1ba47bdb44a55532734f9",
+        "after-scan.json": "688a9013a9e3fcbd9eeaa3467ba4de5fcd20678223b1a38130d6caf886301e8e"
+      }
+    },
+    {
+      "key": "records-bookplate",
+      "base": "sha256:6a07c48827ab12a10a6dfa989a7641029cf47ec8d5af9cd6acb31a73a3f64179",
+      "containers": [
+        "utilibre-records-bookplate-1"
+      ],
+      "oldRefs": [
+        "utilibre-zlib-records-bookplate:candidate-20261109"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-records-bookplate:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "node-runtime",
+      "inventorySha256": "118b45517e49e6222ca2278e56daa1dff52df072050140c7d0011d30f1cb19f0",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed OpenSSL library overlay. Exact full-file scope preserves application, configuration, hooks and musl. Native crypto/TLS and unchanged consumer checks pass; frozen all-severity comparison has no new findings. No migration, retention, secret or access-policy change.",
+      "reviewedEvidence": {
+        "build.json": "6f93b547841ae457c67f0cd159a6d74cecf1b3c6f6ff524d803b85d3587e02fe",
+        "scope.json": "ecf691bdc0a97774c60eb915f5ade626e82cbf21ab4cf03c8843e7d8dde8e2e9",
+        "application.json": "bc820a02877e54d82dbbdfaa970d49ffb3f557a4134f0263a8dcbe82b34588f0",
+        "scan-gate.json": "76720c6eb202d7d611aee3999126324b9184994c308534891e051d5e6b749c72",
+        "after-scan.json": "be6c362b01ffb148a7fc5b7f4216466f3434aa55dd22c60e4aab49b293fea737"
+      }
+    },
+    {
+      "key": "records-db",
+      "base": "sha256:7ea8e74b630e1837d31e28771667522147c990ba586e3f8c297c85a328c24a15",
+      "containers": [
+        "utilibre-records-db-1",
+        "utilibre-projects-db-1",
+        "utilibre-identity-postgresql-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-records-db:20261111"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0"
+      },
+      "candidate": "utilibre-crypto-records-db:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "postgres-runtime",
+      "inventorySha256": "e2ec39e5ebe7b9a22fdedee6b708051707c54414d979c9108ad1ed47b4ec8ade",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed OpenSSL library overlay. Exact full-file scope preserves application, configuration, hooks and musl. Native crypto/TLS and unchanged consumer checks pass; frozen all-severity comparison has no new findings. No migration, retention, secret or access-policy change.",
+      "reviewedEvidence": {
+        "build.json": "ee7b08b686d3586dd3639eba7bd96cfbaffe94295c963dced6c130ddb68567fb",
+        "scope.json": "ce3b59a719ae118814a89defecd8be0b8aef017879a30405fa2e35b829f2532f",
+        "application.json": "fd111420b139e6602c3210c2e331ee408e3f2d3491f59f898e8ef0df850925ec",
+        "scan-gate.json": "f71dc2d4f1e01e8785979c8beaa2f065f0796430177fd745156d67cfb8c08851",
+        "after-scan.json": "c73d04763daa5a80ca59fec3d43f61b4448a383cced636d9deb154fc0d387ba9"
+      }
+    },
+    {
+      "key": "opengist-opengist",
+      "base": "sha256:8733803eb5bf9ddc7044016ab92f9725107b615c13e05e4057f4ab1646af5414",
+      "containers": [
+        "utilibre-opengist-opengist-1"
+      ],
+      "oldRefs": [
+        "utilibre-opengist:git-vendor-20261112"
+      ],
+      "release": "3.24.1",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0"
+      },
+      "candidate": "utilibre-crypto-opengist-opengist:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "native-app",
+      "inventorySha256": "fc97c6dba214fadd4f905250c68b985dcf763994ebf2d33465f76709f7cf76c5",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed OpenSSL library overlay. Exact full-file scope preserves application, configuration, hooks and musl. Native crypto/TLS and unchanged consumer checks pass; frozen all-severity comparison has no new findings. No migration, retention, secret or access-policy change.",
+      "reviewedEvidence": {
+        "build.json": "d88cb71b4307072b3b677c18081b9aadb7ba5a5b8042fe028fcee1ceba6965db",
+        "scope.json": "a5cea320396766563353e3fe488256d03624f63b593dac91651593ef1b0d348a",
+        "application.json": "cfc745b4e44d27e7c9a80f9379bc30365d1868bd3fabc6e61f5a141ceaf8a274",
+        "scan-gate.json": "d3c45f8b5866f85d7090f36b9b2ced165b4937101b9fde9ac8a3c025a83007e3",
+        "after-scan.json": "fab129d1fcdbd546991abb98657de0dee43368e49450b4d2593f41ba67ce7df6"
+      }
+    },
+    {
+      "key": "gathio-gathio",
+      "base": "sha256:8b176a07cca77afe65cca25920aeb21d376207954374e0b04021beea58bf83a2",
+      "containers": [
+        "utilibre-gathio-gathio-1"
+      ],
+      "oldRefs": [
+        "utilibre-gathio:mongoose-6.13.12-20261112"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-gathio-gathio:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "node-runtime",
+      "inventorySha256": "9e22d56690b344d1248991200f85f536cb09247cafe4babe22dfd326d8a8928a",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed crypto overlay, unchanged app/configuration/hooks/musl, native TLS/crypto plus retained runtime/database tests and frozen all-severity scan. No migration, secret or retention change.",
+      "reviewedAt": "2026-11-22T04:44:34.462128+00:00",
+      "reviewedEvidence": {
+        "build.json": "c7febd51bf2a5722aa38cd307f5a8e601005b6c54e8328ed3be07caceb02b6b0",
+        "scope.json": "051ea9008e438e6290cf7396a45b3b2cbd27ea0ec2bb8df9910c302d60adeb11",
+        "application.json": "76051cecd21cea4a5743a4ef19c7717ad2b82b5cda1bf82d720b20b08ca02fe4",
+        "scan-gate.json": "117482a0384746290b89e7d0d2a1eccf43a1bed8bfe5db62e29d4beae8bc4b47",
+        "after-scan.json": "6366e9d2a6938b1a766f689d5a2a1029cd35eb2092ddfa58753a1eedce123f00"
+      }
+    },
+    {
+      "key": "spliit-app",
+      "base": "sha256:9a70b244c51aae11d1152df374166c0ef2a1cd996efb757aa14d0cf1b27183a3",
+      "containers": [
+        "utilibre-spliit-app-1"
+      ],
+      "oldRefs": [
+        "utilibre-zlib-spliit-app:candidate-20261109"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "openssl": "3.5.9-r0"
+      },
+      "candidate": "utilibre-crypto-spliit-app:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "node-runtime",
+      "inventorySha256": "e5f474728e1f60fd190dd9820b6a6b460ad212dbec1d3bf7d6c17dc764c2458f",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed crypto overlay, unchanged app/configuration/hooks/musl, native TLS/crypto plus retained runtime/database tests and frozen all-severity scan. No migration, secret or retention change.",
+      "reviewedAt": "2026-11-22T04:44:34.463963+00:00",
+      "reviewedEvidence": {
+        "build.json": "6a4d21c22d0b483fb14e08f8f78ae65f25317b755259df0327ef1c4653308c1e",
+        "scope.json": "b243e330f8160957d504fa5cdbcc54b4fcab9c268d551146e08302c902700174",
+        "application.json": "254c59feb6e3e716d294f97eb840c6bc2f1e6004f1b708f415e29fe01895795b",
+        "scan-gate.json": "12a4567e4b4e27fb955a9ac7ef9ad2cd57e290d8e3a260a6918dfd907b148c97",
+        "after-scan.json": "8e9d2d27525b38dd0552e622ffc7e1a35e36d294732afa9e9715465b0a4fdf1e"
+      }
+    },
+    {
+      "key": "services-valkey",
+      "base": "sha256:c4933a33cb53af268518a70ba92045dd2c9d812100446a543985e1eaa9c557fb",
+      "containers": [
+        "utilibre-kittygram-cache-1",
+        "utilibre-priviblur-cache-1",
+        "utilibre-expanded-penpot-valkey-1",
+        "utilibre-community-secret-cache-1",
+        "utilibre-services-valkey-1",
+        "public-utility-valkey-1"
+      ],
+      "oldRefs": [
+        "utilibre-zlib-valkey:candidate-20261109"
+      ],
+      "release": "3.24.1",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0",
+        "openssl": "3.5.9-r0"
+      },
+      "candidate": "utilibre-crypto-services-valkey:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "redis-runtime",
+      "inventorySha256": "f081ffb63360b4f1aa5da13aa5244f44ca37465895b387c36f97c843f6b061e1",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed crypto overlay, unchanged app/configuration/hooks/musl, native TLS/crypto plus retained runtime/database tests and frozen all-severity scan. No migration, secret or retention change.",
+      "reviewedAt": "2026-11-22T04:44:34.465272+00:00",
+      "reviewedEvidence": {
+        "build.json": "2eff508961918361f3b40ca103f11ee4822de33d0c691f1c49807a56251955bf",
+        "scope.json": "133a99fcd7ea432d654c46ef5a44bd1dc5f27e30ef3a151c3e4fcc101c69fbc8",
+        "application.json": "51b2a1c9187a6a692b129405efba4808e9360ddadd0cd238532cbe68c78ec839",
+        "scan-gate.json": "569d744756cacaf6756458eca3794cf1f85185b21bf8c615d8728cfed99b8af7",
+        "after-scan.json": "f5ae2dd9401a7d48bf7f79645bd4fb0b30e073c9056ae317d954a85bf0483cd1"
+      },
+      "sourceMirrorPreviousRef": "utilibre-valkey:9.1.1-vendor-security-20261011",
+      "mirrorNote": "Checked-in core Compose retains this older exact source pin; active core uses the recorded patched base. Update both via the existing mirror mechanism without changing other service settings."
+    },
+    {
+      "key": "newsletters-web",
+      "base": "sha256:df25366f8a0a8f48d7548f7c20dee1950e238b4ce64719ab94c091c9fd044dcf",
+      "containers": [
+        "utilibre-newsletters-web-1"
+      ],
+      "oldRefs": [
+        "utilibre-caddy-newsletters-web:xnet-security-20261109"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-newsletters-web:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "node-runtime",
+      "inventorySha256": "5e9a2dbbd26e15c015e717ffbc6ee83754171f091fcbda8a9e9187a292a4653c",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed crypto overlay, unchanged app/configuration/hooks/musl, native TLS/crypto plus retained runtime/database tests and frozen all-severity scan. No migration, secret or retention change.",
+      "reviewedAt": "2026-11-22T04:44:34.465701+00:00",
+      "reviewedEvidence": {
+        "build.json": "2e7e3c7bdbaacaab23fda200218e8f62109f44614bc99a8d490ef291ddbeb75f",
+        "scope.json": "704d3ec7d9f5fd95958f751019825810b80775778774c74318cb15cbd550e8ec",
+        "application.json": "0f2e57c4f1bc9d2d18f622e1be2ef98d6b83ca6500e4b8f60f6e0783113f1a0d",
+        "scan-gate.json": "d79631ec7ef4e7e96cc77bd3b6cb6d461c765418ea959a9676b946bd5ed9db63",
+        "after-scan.json": "1620a6232668094d7e99a218669243ffed83e9a65454cb6ecf99dd520884db6c"
+      },
+      "namespaceCompanions": [
+        {
+          "name": "utilibre-newsletters-gateway-1",
+          "service": "gateway",
+          "parent": "utilibre-newsletters-web-1",
+          "imageId": "sha256:96d4be7924616e09a198476517f18f880b443d18784521fd43ec3a9cd3bb7bec"
+        }
+      ]
+    },
+    {
+      "key": "projects-app",
+      "base": "sha256:ebe1a04ffa3bdfb3f0fcfe9f383c04f068682198e0516e37714d4139829f47d4",
+      "containers": [
+        "utilibre-projects-app-1"
+      ],
+      "oldRefs": [
+        "utilibre-zlib-projects-app:candidate-20261109"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-projects-app:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "node-runtime",
+      "inventorySha256": "94b72d7cc4ee642bb2492d82f7e71b7b3c7f064407f49b2d529cd3d0c18315dc",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed crypto overlay, unchanged app/configuration/hooks/musl, native TLS/crypto plus retained runtime/database tests and frozen all-severity scan. No migration, secret or retention change.",
+      "reviewedAt": "2026-11-22T04:44:34.466887+00:00",
+      "reviewedEvidence": {
+        "build.json": "e407ec0dff84bd14154be7e30f2879d04fa9a1aba6541e6d4dcdf34a80332cff",
+        "scope.json": "803b1b30de62548e483548bd5efb8177db0c36588b5a63c5639875db05ba63c4",
+        "application.json": "8494ac09cbacc06caad64ee1a14345848c74c5a2c961407ba1f63b9a5da43ff7",
+        "scan-gate.json": "3a06dc8f92f85df5cb7f3c104a1c45afcb52d72df3477290bd52074cf5a48ff2",
+        "after-scan.json": "4cb54d3f48f42d517b14b7c20c9bdaeb380b75ba8d451687bba08f9bc2d8918e"
+      }
+    },
+    {
+      "key": "razzia-socket",
+      "base": "sha256:f60671c852d1bb1da51b89b9f75f5d20f610582125011001a26aa2a6e72fa2e7",
+      "containers": [
+        "utilibre-razzia-socket-1"
+      ],
+      "oldRefs": [
+        "utilibre-zlib-razzia-socket:candidate-20261109"
+      ],
+      "release": "3.24.2",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.8-r0",
+        "libssl3": "3.5.8-r0"
+      },
+      "candidate": "utilibre-crypto-razzia-socket:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "node-runtime",
+      "inventorySha256": "b6506f345e0ac4fef7543fe596e1d7425091272c94d941e9908c496e288a23f6",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed crypto overlay, unchanged app/configuration/hooks/musl, native TLS/crypto plus retained runtime/database tests and frozen all-severity scan. No migration, secret or retention change.",
+      "reviewedAt": "2026-11-22T04:44:34.468946+00:00",
+      "reviewedEvidence": {
+        "build.json": "eded46916ca54fd0cfe71026e24da82ac91da76b5ef81cae88067721ce742297",
+        "scope.json": "b28204504b0ee6b44a9fd345f08cea4175b47bd1c83e0b5155abc0fdc476f97a",
+        "application.json": "a024c239b093aa6ca99636857a85c17361c3fb8560e668243f2917a78a482f3c",
+        "scan-gate.json": "38b7bf8fe5310a7d2f86abdb43c0961f6220364d4e574e60e8f72a09beb76a1c",
+        "after-scan.json": "2514327c4424252f588f7bcdaabe87a58f57ac2a50ee8cbabf3d51ec86105b92"
+      }
+    },
+    {
+      "key": "simplelogin-db",
+      "base": "sha256:fced8ac82a30f0ae11e14660841b6d6a3085a82dfb1d8691cf8c2c2ee6184807",
+      "containers": [
+        "utilibre-spliit-db-1",
+        "utilibre-simplelogin-db-1",
+        "utilibre-services-postgres-1",
+        "utilibre-pollaris-pollaris-db-1",
+        "utilibre-pack-forms-db-1",
+        "utilibre-expanded-penpot-db-1",
+        "utilibre-expanded-resume-db-1",
+        "utilibre-community-rallly-db-1"
+      ],
+      "oldRefs": [
+        "utilibre-vendor-simplelogin-db:20261111"
+      ],
+      "release": "3.24.1",
+      "kind": "alpine",
+      "packages": {
+        "libcrypto3": "3.5.9-r0",
+        "libssl3": "3.5.9-r0"
+      },
+      "candidate": "utilibre-crypto-simplelogin-db:20261122",
+      "approval": "preparation-only",
+      "consumerProfile": "postgres-runtime",
+      "inventorySha256": "30dd0cc6be504feba716c33fcf394da420eec25fee48020f4a458c156e1aca0c",
+      "compatibility": "Exact signed OpenSSL overlay only; unchanged app, musl, package hooks and configuration; native crypto/TLS and retained consumer checks required.",
+      "releaseApproval": "approved",
+      "approvalReason": "Maintainer-reviewed same-branch signed crypto overlay, unchanged app/configuration/hooks/musl, native TLS/crypto plus retained runtime/database tests and frozen all-severity scan. No migration, secret or retention change.",
+      "reviewedAt": "2026-11-22T04:44:34.469654+00:00",
+      "reviewedEvidence": {
+        "build.json": "c592d5aec994cb94f9d6d22a94b853aea7a64c8dbe845e236bc7a3f52e7662cc",
+        "scope.json": "44a157b63a11de4bae89f42f1c19f02a704556751c754be36c409d626c093e0f",
+        "application.json": "9832c2bc07ec0205db69d87c6248eea62604c0c9e15562c53dae2d6bf81d47e5",
+        "scan-gate.json": "96732779599e575e1c6c0d3cfe158a36e0ae7a5d131ae3e00c761aa568b13a57",
+        "after-scan.json": "c8964e0787a58edeb2258a2cf789f9d5689a33f14205db8a743a0f4f47748299"
+      }
+    }
+  ],
+  "nativeFixture": {
+    "cliSha256": "28def3c5ebd2a6e3a6e5e7d11ec629ae92769b518feb18193b0745620bbda7ab",
+    "cliOrigin": {
+      "imageId": "sha256:9253d4ba4d02d712da5bafb84e5acb3f725d4584a38cbf752ee72b4cd1b4f7a4",
+      "path": "/usr/bin/openssl",
+      "sha256": "acc10176d038aeb7b2a77d9ec972ac2985857a7191f7aecb7c54ef0e2c7e9549"
+    },
+    "cryptoSha256": "c53842644f9cbd9568ee4f1f25d6a960862ad1499ad8bd9c89c006eec45589b7",
+    "tlsServerSha256": "9614aa6fa6d4db4f96eeec390d8b7f2cbd26a3dea43935dd8cae7ebf4ede71a0",
+    "tlsImage": "sha256:9253d4ba4d02d712da5bafb84e5acb3f725d4584a38cbf752ee72b4cd1b4f7a4",
+    "cryptoScriptSha256": "c53842644f9cbd9568ee4f1f25d6a960862ad1499ad8bd9c89c006eec45589b7",
+    "consumerSha256": "5f9a6aecd1e1a135c5d1aa353c7e356e70cdd7d6b6b2789e82ff23d1082f6d53"
+  },
+  "limitations": [
+    "No source/app upgrade; unchanged Node bundled crypto is not proof of OS OpenSSL behavior.",
+    "Only vendor-fixed package findings are eligible for removal by the scanner; no automatic advisory exception."
+  ]
+}

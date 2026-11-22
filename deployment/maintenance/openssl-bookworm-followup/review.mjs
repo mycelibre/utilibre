@@ -1,6 +1,7 @@
 // Prepare only the exact CVE-2026-84782 backport decisions. Never waive a service.
 import fs from 'node:fs';import cp from 'node:child_process';import path from 'node:path';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 import {validateDecision} from '../triage.mjs';import {freshScan,overlayRows} from '../review-native-backports.mjs';import {additionalOverlayReceipts} from '../followup-overlays.mjs';import {suites} from './policy.mjs';
+import {expatDescendant} from '../security-20261103/expat-policy.mjs';
 process.umask(0o077);assert.equal(process.argv.length,2);
 const root='/var/lib/utilibre-maintenance',dir=root+'/openssl-bookworm-followup-20261012',cve='CVE-2026-84782',version='3.0.22-1~deb12u1+utilibre1';
 const read=f=>JSON.parse(fs.readFileSync(f)),sha=b=>createHash('sha256').update(b).digest('hex'),run=(p,a)=>cp.execFileSync(p,a,{encoding:'utf8',timeout:60000,maxBuffer:16*1024**2,stdio:['ignore','pipe','pipe']}).trim();
@@ -13,8 +14,8 @@ const actual=cp.execFileSync('tar',['-xOf',dir+'/build/openssl_'+version+'.debia
 const changes=s=>s.split('\n').filter(l=>/^[+-]/.test(l)).join('\n');assert.equal(changes(actual),changes(original));assert.match(actual,/e961062f6b86727b63b0381ceeec7fa074026fef/);assert.match(actual,/WRITE_STATE_TRANSITION/);assert.match(actual,/init_off = 0/);
 const upstreamSuites=suites(fs.readFileSync(dir+'/build/build.log','utf8'));assert.deepEqual(upstreamSuites,[{files:259,tests:2980},{files:259,tests:3415}]);
 const release=read(root+'/closure-followup-20261012/openssl-bookworm-release.json');assert.equal(release.status,'passed');assert.equal(release.groups.length,5);
-const originalRows=overlayRows(release),rows=[...originalRows];
-for(const p of additionalOverlayReceipts){if(p==='closure-followup-20261012/openssl-bookworm-release.json'||!fs.existsSync(root+'/'+p))continue;for(const next of overlayRows(read(root+'/'+p)))if(next.oldImage!==next.newImage&&rows.some(r=>r.name===next.name&&r.newImage===next.oldImage))rows.push(next);}
+const originalRows=overlayRows(release);
+const descendants=additionalOverlayReceipts.filter(p=>fs.existsSync(root+'/'+p)).flatMap(p=>overlayRows(read(root+'/'+p)));
 const specs=read(new URL('./specs.json',import.meta.url)),payloads=new Map(),decisions=[],proofs=[],skipped=[];
 function files(d,p=''){return fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?files(d+'/'+e.name,p+'/'+e.name):e.isFile()?[p+'/'+e.name]:[]);}
 function nativeProof(spec){
@@ -36,7 +37,7 @@ function nativeProof(spec){
 const hashes={libssl3:'f112c901b8629d43e5812739f2f189d1f8c0e22ec73f6a14a286415b2c42d1d5',openssl:'ca9e03e6c2d98df60b0707d26b5b53c54084b1f744cdd6d6be3178efed9b0b99','libssl-dev':'405a0f9a30ca5961a4db927858ac437c299a19b0ab9717b4706d137056639047'};
 for(const item of queue.items.filter(i=>i.status==='needs-review'&&i.id===cve&&i.scope==='runtime-image'&&i.type==='debian'&&i.installed===version&&Object.hasOwn(hashes,i.package))){
  try{
-  assert(item.containers.length>0);for(const name of item.containers){const spec=specs.find(s=>s.container===name);assert(spec&&spec.packages.includes(item.package));nativeProof(spec);const row=rows.find(r=>r.name===name&&r.newImage===item.artifact);assert(row&&Date.parse(row.completedAt)<=Date.parse(scan.date));assert.equal(run('docker',['inspect',name,'--format','{{.Image}}']),item.artifact);}
+  assert(item.containers.length>0);for(const name of item.containers){const spec=specs.find(s=>s.container===name);assert(spec&&spec.packages.includes(item.package));const build=nativeProof(spec);const row=originalRows.find(r=>r.name===name&&r.newImage===build.imageId);assert(row);assert.equal(expatDescendant(name,build.imageId,row.completedAt,scan.completedAt,descendants),item.artifact);assert.equal(run('docker',['inspect',name,'--format','{{.Image}}']),item.artifact);}
   if(!payloads.has(item.package)){
    const deb=dir+'/build/'+item.package+'_'+version+'_amd64.deb';assert.equal(sha(fs.readFileSync(deb)),hashes[item.package]);assert.equal(run('dpkg-deb',['-f',deb,'Version']),version);const temp=fs.mkdtempSync('/dev/shm/utilibre-openssl-payload-');
    try{run('dpkg-deb',['-x',deb,temp]);const paths=files(temp).filter(p=>p.startsWith('/usr/')&&!p.startsWith('/usr/share/'));assert(paths.length);payloads.set(item.package,{debSha256:hashes[item.package],files:paths.map(p=>({path:p,sha256:sha(fs.readFileSync(temp+p))}))});}finally{assert(path.basename(temp).startsWith('utilibre-openssl-payload-'));fs.rmSync(temp,{recursive:true});}

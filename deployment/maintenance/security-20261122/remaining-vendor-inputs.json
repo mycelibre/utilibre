@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "packages": {
+    "trixie/libnghttp2-14": {
+      "name": "libnghttp2-14",
+      "version": "1.64.0-1.1+deb13u2",
+      "file": "libnghttp2-14_1.64.0-1.1+deb13u2_amd64.deb",
+      "sha256": "a5c10b427f9dc625754a9f323b07f2a76932a10161888e6e040c8f9448c13f05",
+      "url": "https://deb.debian.org/debian/pool/main/n/nghttp2/libnghttp2-14_1.64.0-1.1+deb13u2_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.17)",
+      "preDepends": ""
+    },
+    "bookworm/linux-libc-dev": {
+      "name": "linux-libc-dev",
+      "version": "6.1.192-2",
+      "file": "linux-libc-dev_6.1.192-2_amd64.deb",
+      "sha256": "e0632f8e55ec0d2d1c56f9c65a8bcb64ad5d79add297266bc89c616dfef9a7fe",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/l/linux/linux-libc-dev_6.1.192-2_amd64.deb",
+      "distribution": "bookworm-security",
+      "depends": "",
+      "preDepends": "",
+      "indexSha256": "8575ec1f224d635ce30646a2a1388bee267a7f37fae3f997687643c9ebb8fb43",
+      "releaseSha256": "ddcdf4e1bf60ba944b7978e8ca426cc3bcd6d3cfa1a86963a647e1ba8f9b106e"
+    }
+  },
+  "rows": [
+    {
+      "key": "identity-server",
+      "base": "sha256:de6429a7bda14350c058824ed237b9328198bee30bd8146ac7f1db00e9fd6166",
+      "containers": [
+        "utilibre-identity-server-1",
+        "utilibre-identity-worker-1"
+      ],
+      "oldRefs": [
+        "utilibre-openssl-authentik-fips:20261122"
+      ],
+      "kind": "debian",
+      "suite": "trixie",
+      "packages": {
+        "libnghttp2-14": {
+          "installed": "1.64.0-1.1+deb13u1",
+          "package": "trixie/libnghttp2-14"
+        }
+      },
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14"
+      ],
+      "candidate": "utilibre-remaining-identity-server:20261122",
+      "approval": "preparation-only",
+      "reviewedEvidence": {
+        "build.json": "51cca6464b3895b04c55bca9079bceb2fc17839c8ee01c120386632947ff04d5",
+        "scope.json": "7288563511c61e95eecd33a954087441553dc79b83d1eaf788e817fea1617ea4",
+        "application.json": "45e8777d610cc47f356fe186c7eb5314ebec51b12aa8b826b6ef37b0833236d4",
+        "scan-gate.json": "9a00cd1ef99ecf35b2e7ac39750f76381f763a7c92cceb72822d0f2ed6cea6bc",
+        "after-scan.json": "3b6478fc2103c53dec408af1c48fe051b5eb68ae8a779c7dfa5393a5d272e651"
+      },
+      "retainedTargetedFindingsSha256": "38b97afea6732b1d7799ae0a7d85d3ac742dfd72b3e88e9ac9419c0da494152b",
+      "completeInventorySha256": "b55af2249ea83d9b9993344b38ed88a6e07355e44cf59361eed9a80dd121ecd9",
+      "releaseApproval": "approved",
+      "releaseReview": "Exact signed same-branch package; unchanged configuration and unrelated files; required native checks and frozen all-severity comparison passed. Unresolved findings retained; no vulnerability exception inferred.",
+      "nativeHttp2Evidence": "daf841f172bc98d0e50ca988f277256e5d5c4085782803ac3ebf2caea3147190"
+    },
+    {
+      "key": "gathio-postgres",
+      "base": "sha256:4b8a58c82f8c3c21c03044d14ad5e1814425a240564d9d66b9631fddfef56433",
+      "containers": [
+        "utilibre-gathio-postgres-1"
+      ],
+      "oldRefs": [
+        "utilibre-openssl-bookworm-gathio-postgres:20261122"
+      ],
+      "kind": "debian",
+      "suite": "bookworm",
+      "packages": {
+        "linux-libc-dev": {
+          "installed": "6.1.190-1",
+          "package": "bookworm/linux-libc-dev"
+        }
+      },
+      "loadLibraries": [],
+      "candidate": "utilibre-remaining-gathio-postgres:20261122",
+      "approval": "preparation-only",
+      "reviewedEvidence": {
+        "build.json": "4b1f78448d65a50a5bbf2a150601edfccc25c96aad00ae29a5ed165b8e0005bd",
+        "scope.json": "bf2ed636ab6e6ef315ef8b684b30a82999f85fe16f0ebe76432ea8240b339813",
+        "application.json": "8b7dfa38491b91ece88dfb276f424570bfef0fbe779576979d933684422649ff",
+        "scan-gate.json": "b105b49974200c339e92da451e4034b91ca8907e18e2c55bac3fd5e66c31616b",
+        "after-scan.json": "509d0c5a2b1cbf93f47aee1e768a83cbb4036149d28b319b2bd02cd2191ba780"
+      },
+      "retainedTargetedFindingsSha256": "b94d4376b3cfd9def14b62f833fc4a9934629155c502def48264aceb612e90e2",
+      "completeInventorySha256": "ab32acecd58369760530dcfdddb873c7e90c9ff2643b80c1e82bb99577f0fc60",
+      "releaseApproval": "approved",
+      "releaseReview": "Exact signed same-branch package; unchanged configuration and unrelated files; required native checks and frozen all-severity comparison passed. Unresolved findings retained; no vulnerability exception inferred."
+    }
+  ],
+  "http2Fixture": {
+    "serverImage": "sha256:09b83e26e45864276fd88f375c35e78184e575b58dd23a05f1d1d900210c239b",
+    "serverSha256": "6fbc66927f7a19457f3fb11d366b945fa86e2084303579d8e11571a58918ab7e",
+    "cliSourceImage": "sha256:7b83a6b57fdd32365c8eecf8b1399a755f9d7bced25ae22800e8be73056049a2",
+    "cliSha256": "2285fa3ee855c7ee26fe7ab864489bf15cc75267f88d7195dab6bced53928390",
+    "selectedKeys": [
+      "identity-server"
+    ],
+    "clientDependenciesSha256": "f1e849f73eabe93685313c9133f997ce46960ea3d6c3d0d0a3218f877a3d1e15"
+  },
+  "headerCompiler": "sha256:0aa7f81d9268988debf996645427f83e9e72dbc5f1030fa5ec080510edab9994"
+}

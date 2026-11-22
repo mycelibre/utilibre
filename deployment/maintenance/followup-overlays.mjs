@@ -1,6 +1,35 @@
 // Explicit completed release locations, not a glob or a scanner exemption.
 // Reviewers still require an exact role/image chain and recheck live payloads.
 export const additionalOverlayReceipts = [
+  // November 22 vendor overlays: complete individual receipts are SHA-bound
+  // by the aggregate. Existing reviewers still verify exact live payloads.
+  'security-20261122/nginx/release.json',
+  'security-20261122/vendor/release-completed-6.json',
+  'security-20261122/vendor-debian/release.json',
+  'security-20261122/vendor-debian/community-yopass/release-utilibre-community.json',
+  'security-20261122/addy-nginx/addy/release-utilibre-addy.json',
+  'security-20261122/rssbridge-nginx/rssbridge/release-utilibre-community.json',
+  'security-20261122/libraries/vendor-debian/release.json',
+  'security-20261122/openssl-runtime/vendor-debian/release.json',
+  'security-20261122/openssl-fips-runtime/vendor-debian/release.json',
+  'security-20261122/openssl-penpot-runtime/vendor-debian/release.json',
+  'security-20261122/leaves/vendor-debian/release.json',
+  'security-20261122/alpine-crypto/release.json',
+  'security-20261122/sasl/vendor-debian/release.json',
+  'security-20261122/bookworm-successor/vendor-debian/release.json',
+  'security-20261122/dhi-successors/vendor-debian/release.json',
+  'security-20261122/remaining-vendor/vendor-debian/release.json',
+  'security-20261122/openssl-extra-runtime/vendor-debian/release.json',
+  'security-20261122/openssl-distroless-runtime/vendor-debian/release.json',
+  'security-20261122/openssl-relay-runtime/vendor-debian/release.json',
+  'security-20261122/effect/spliit/release-utilibre-spliit.json',
+  'security-20261122/effect/wishlist/release-utilibre-wishlist.json',
+  'security-20261122/admin-build-deps/admin/release-utilibre-expanded.json',
+  'security-20261122/xml-successor/images/release.json',
+  'security-20261122/mumble-xml/vendor-debian/mumble-mumble/release-utilibre-mumble.json',
+  // Both relay roles completed independently after their idle checks.
+  'security-20261122/successors/vendor-debian/release.json',
+  'git-vendor-20261112/release.json',
   // 14 November: completed exact package releases; payloads still rechecked.
   'security-20261114/community-pairdrop/release-utilibre-community.json',
   'security-20261114/git/breezewiki/release-utilibre-expanded.json',
@@ -28,8 +57,9 @@ export const additionalOverlayReceipts = [
   'security-20261114/vendor-debian/linkding-linkding/release-utilibre-linkding.json',
   'security-20261114/vendor-debian/pack-forms-app/release-utilibre-pack-forms.json',
   'security-20261114/vendor-debian/services-freshrss/release.json',
-  'security-20261114/vendor-debian/turn-option-turn/release-utilibre-galene-turn.json',
-  'security-20261114/vendor-debian/turn-option-turn/release-utilibre-turn-option.json',
+  // Both roles share one image; the aggregate retains each original timestamp
+  // and the SHA-256 identities of the two completed project receipts.
+  'security-20261122/turn-nov14-completed.json',
   'security-20261114/xserver/release-exporter.json',
 
 

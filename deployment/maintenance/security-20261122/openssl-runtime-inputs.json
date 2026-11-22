@@ -1,0 +1,705 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "sourceBuildSha256": "7261c48d81372166a3c28e16aaf5d24608de91590f8235296b6bbcccfaa03ddf",
+  "selectionSha256": "893f3210b5750236ed389d994385e143077014ade6084a4d5813957de990f849",
+  "packages": {
+    "libssl3t64": {
+      "name": "libssl3t64",
+      "version": "3.5.9-1~deb13u1+utilibre1",
+      "file": "libssl3t64_3.5.9-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "35b8e27e62949a9a96b498f331bc5ba9b76ba112ba7493ce823b466c8f7906fa",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.38), libzstd1 (>= 1.5.5), zlib1g (>= 1:1.1.4), openssl-provider-legacy",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight pinned upstream patches; completed offline native build"
+    },
+    "openssl-provider-legacy": {
+      "name": "openssl-provider-legacy",
+      "version": "3.5.9-1~deb13u1+utilibre1",
+      "file": "openssl-provider-legacy_3.5.9-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "ce23e4a9735e45bbe73efd1e82064b562ee8d5dff6a8e553abc3cf70dfccbac4",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.14), libssl3t64 (>= 3.0.3)",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight pinned upstream patches; completed offline native build"
+    },
+    "openssl": {
+      "name": "openssl",
+      "version": "3.5.9-1~deb13u1+utilibre1",
+      "file": "openssl_3.5.9-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "6cc87e80b75429e24ef7880a72f17439827f299e7991c77c592a9422ba1b4680",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.34), libssl3t64 (>= 3.5.0)",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight pinned upstream patches; completed offline native build"
+    },
+    "libssl-dev": {
+      "name": "libssl-dev",
+      "version": "3.5.9-1~deb13u1+utilibre1",
+      "file": "libssl-dev_3.5.9-1~deb13u1+utilibre1_amd64.deb",
+      "sha256": "aa29349aa0b28946c0021c381c6871071e64a4e5d4ca171cc1a8fad3dd32ce89",
+      "distribution": "trixie",
+      "depends": "libssl3t64 (= 3.5.9-1~deb13u1+utilibre1)",
+      "preDepends": "",
+      "origin": "Authenticated Debian source plus eight pinned upstream patches; completed offline native build"
+    }
+  },
+  "rows": [
+    {
+      "key": "services-rsshub",
+      "base": "sha256:8ee35c5a31857cb78d849913792e34f47ffd12a40264b0749fd1bc7452070e50",
+      "containers": [
+        "utilibre-services-rsshub-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-services-rsshub:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "4603cab307bea416b1a1ddd2f1c29976ed1616e5aa2b6639d35a825e17e0f107",
+        "scope.json": "b33a3651ef9877ba38d6d42b7d29793a449ec7e45dc436ba3d46445d31938790",
+        "application.json": "4360c98a37f9fe42b545bafb4e2f64db1da7fa8dfee0f83a841e0defb4cf1193",
+        "scan-gate.json": "d653ed4404ab38607e15408b1ceb38df49da37085f38a77204fef422c841bcd4",
+        "after-scan.json": "87d45b27e9a8d78e90d44179db3ad14f3b3ccf5c21e116a12660e61e8e07e2f8"
+      },
+      "completeInventorySha256": "3ac15f84e775983410924c144fbbe145bc6d17ae97efca9803a19c245d551d84",
+      "retainedTargetedFindingsSha256": "2c2b720e4f21508ecb8f1541800f3e19cdedf3d11c4986e555d9d740fa3bd439",
+      "opensslEvidence": {
+        "native-tls.json": "df19fbb3e65277a5e403c94ded955b69e8dd4f1cdf27c90c2c4ef0cc7a8aed17",
+        "upstream-regression.json": "7f7abad309d54ed7e29951eebd4fe554d30979d52b428e87577f337c9872f23c",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "reviewRationale": "Exact eight upstream patches; 4932 native tests, preserved exported ABI and configuration, ordinary crypto/TLS/application checks. PEM regression fails before and passes after; EC baseline already passes. Frozen raw findings are retained for separate exact-payload review; not fleet security clearance."
+    },
+    {
+      "key": "trip-app",
+      "base": "sha256:6ecd6d5ccb1014c39e531bd87ff0ceb91f3d790707f1d0930a5f8b924ebda347",
+      "containers": [
+        "utilibre-trip-app-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-trip-app:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "505f311df44189e64d8d443f476216eb7dc430750d0a011401f353d30734fc31",
+        "scope.json": "e403edfdd37a52b5efcd14d37ad704a260f991ef81115933b9a4102c03c231e8",
+        "application.json": "7a8d6331985d10104c3ac2915e4cf5db7e3a16e75a15401f08e401d298bcb281",
+        "scan-gate.json": "4588d8b236a1be8e332dfff9e9bd6f22697f02dcaff5bc5c05449561a8e62472",
+        "after-scan.json": "31d9c00bb520941bb738b9cd38a337f51f99b56c116840a9c10ca78af59b6e28"
+      },
+      "completeInventorySha256": "93fe5c7c979b8297d11871a4756f626c10c1033c8f5ebd008ac0a7ec59774b7f",
+      "retainedTargetedFindingsSha256": "f6ad9882351b7d9f7946d3490f9fe3c84d2b47ff0c3c92572054e845d3d35b66",
+      "opensslEvidence": {
+        "native-tls.json": "398600729cd537a21a8c17fe7aa5b9d302c1a807c43e73b4e39c1f6fdf11a0a7",
+        "upstream-regression.json": "8a9d2f05df88dbbb7328de7e2e230873b5026106a67186e1cfc929a0fef1010a",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "reviewRationale": "Same eight upstream fixes and native suite as RSSHub; complete unchanged application/configuration scope, preserved ABI, ordinary crypto/TLS and native TRIP workflow passed. Raw scanner matches require separate exact-payload review; no blanket clearance."
+    },
+    {
+      "key": "identity-server",
+      "base": "sha256:dfab0b3f65c58354cb8f7bbceb4e4a0cf0053ba657afc9c6302cd9be06defc42",
+      "containers": [
+        "utilibre-identity-server-1",
+        "utilibre-identity-worker-1"
+      ],
+      "packages": {
+        "libssl-dev": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl-dev"
+        },
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-identity-server:20261122",
+      "approval": "preparation-only",
+      "releaseApproval": "rejected-incompatible-vendor-variant",
+      "releaseRejectionReason": "The ordinary Debian build loses Authentik ak-fips metadata and fails its retained native application gate. No production release. A separate offline vendor-variant build must preserve the existing provider bytes, configuration and package holds."
+    },
+    {
+      "key": "records-candlr",
+      "base": "sha256:cac1658d6c723fd7d2cb26f5bf8f8ec3a7814da723942eca359a029b539c6304",
+      "containers": [
+        "utilibre-records-candlr-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-records-candlr:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "f05903b8a49bbeb3c4127d5fda9b862e6bf0d73ca246580fda8bb36a12f9da3b",
+        "scope.json": "ae1acfd1f2a0fb2af59b7c7299976cfdf6591d251fa2b11d2e06ce821534037b",
+        "application.json": "8fd47a906abf0e079d404c74e680142edba1a645bc1ef8277fe7692ff3c53955",
+        "scan-gate.json": "c3b5803f7190da55170144d0caa49a579c35af387c602b07b97268321f8031f1",
+        "after-scan.json": "50755f56c7003009821b19a4e90ce74c9b5e9aeaf8d859079ac8272d94e76fe7"
+      },
+      "opensslEvidence": {
+        "native-tls.json": "bd4f88cb7fac9e6de1a26bc11f73b85c2d5891b00b7a02bf9a2f18483fa26cd9",
+        "upstream-regression.json": "fab2dd876b75b9ba7b21d6b2503ee81f6990c7d3c2c03b49b0946e50f6e0fc2e",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "completeInventorySha256": "6c38ee48e6e776744c65aeae94481e31a1a77e7da7eb442acc8e46738da510d1",
+      "retainedTargetedFindingsSha256": "517eb0c317d128fdfe8108b098d0f42ab8f5ee38be80611a16321bca1210b940",
+      "reviewRationale": "Eight exact upstream fixes and complete native suite; unchanged application/configuration and preserved exported ABI. Native task checks, ordinary crypto, TLS 1.2/1.3 and rejection checks pass. Squid coverage is configuration parse plus shared crypto/TLS, not a new public transfer test. Raw findings retained for separate exact-payload review; not fleet clearance."
+    },
+    {
+      "key": "priviblur-priviblur",
+      "base": "sha256:4cbccf8d979da2b85e31822cdcad483ea0ed745cd496db432b5df5555d406daa",
+      "containers": [
+        "utilibre-priviblur-priviblur-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-priviblur-priviblur:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "081993d9f391bf8f2f786b587ee65ce984fd9c4e194af210e9e3d7d0a1fa77f1",
+        "scope.json": "f47ee045099e3a65fb1f43ed42ab57b5f90fe6ca78d16842fa23696bfbbdd74f",
+        "application.json": "e3f816abe7b0519a2ae006a5948ec6322b319ad4b45086491a5bb0e441b7abdb",
+        "scan-gate.json": "b985314a2d7c1c55b3de83033f954d56b0df23830e599ac36acdf756e046bdb8",
+        "after-scan.json": "75ede37d3060f995300daf06e422573c0b3908d4699939db17979dc79838a910"
+      },
+      "opensslEvidence": {
+        "native-tls.json": "28f0a49e5d236231f9ceb7f73b245025987803609961407a26e82d5ce1569b09",
+        "upstream-regression.json": "86689bd0b1668e9b4a4b1d13ce7503c5fb833e0f0914a087d019fe4be34e97ff",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "completeInventorySha256": "d23679ac6dec41006d1d2017e7d70d97febe93724b7de3a9561673001e544be7",
+      "retainedTargetedFindingsSha256": "29f04ada7a0b1c6880b92f6c3262f34e975b002cbf23da90484f520ee682091e",
+      "reviewRationale": "Eight exact upstream fixes and complete native suite; unchanged application/configuration and preserved exported ABI. Native task checks, ordinary crypto, TLS 1.2/1.3 and rejection checks pass. Squid coverage is configuration parse plus shared crypto/TLS, not a new public transfer test. Raw findings retained for separate exact-payload review; not fleet clearance."
+    },
+    {
+      "key": "pack-forms-app",
+      "base": "sha256:9253d4ba4d02d712da5bafb84e5acb3f725d4584a38cbf752ee72b4cd1b4f7a4",
+      "containers": [
+        "utilibre-pack-forms-app-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-pack-forms-app:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "02a1d4febf6b59f54d8f4867d851ce1ce64825dc35ba8b154ed655fc25a733c9",
+        "scope.json": "c4c547df314fa968317fda63f964a29bbc9a52b003bf16e339f442c6895659e5",
+        "application.json": "835ceeaf8369be512368c55dcdbab9f1809f090796350ea0b08700e48e69e467",
+        "scan-gate.json": "23082d9d0c9c33289d53e4403c5e8131f8b5bd1224b5f38efb1b8eb840f7e2b3",
+        "after-scan.json": "b5e93b66c1362905800c6553b4d67ddad6875baee8b191db79affdff19bc43a4"
+      },
+      "opensslEvidence": {
+        "native-tls.json": "632100ba9c9fa294b156d6bc8278bb58f53cafbf9a849d418c8d54ccfe56b5be",
+        "upstream-regression.json": "d31e5343cd59dc4e4f57105e20c15d81c3ffdff2ef8662a00caa623ffffc7861",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "completeInventorySha256": "d209290c0015b2e28c50d96832e120a062f958395442851296e7b064aa39795c",
+      "retainedTargetedFindingsSha256": "d22c2b0154727df7bec46c69ef8292b4288ea2216a5eb4776b18dab14a2c31ab",
+      "reviewRationale": "Eight exact upstream fixes and complete native suite; unchanged application/configuration and preserved exported ABI. Native task checks, ordinary crypto, TLS 1.2/1.3 and rejection checks pass. Squid coverage is configuration parse plus shared crypto/TLS, not a new public transfer test. Raw findings retained for separate exact-payload review; not fleet clearance."
+    },
+    {
+      "key": "13ft-app",
+      "base": "sha256:c3ddc227083551efd9f94e99aaea80d82b1968ea2f3aaec85703d3f604ee5d51",
+      "containers": [
+        "utilibre-13ft-app-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-13ft-app:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "25891f634f45104a94e50f0d377d2a1a359ef329d8573950d557c140f379d21e",
+        "scope.json": "0108c0a897811913600695168e3694b051bbebc6e843961d3155c49edda377bb",
+        "application.json": "856fda0426f4db8bec54d01768ddc905664e1170085b014f813900a9b9d2fd49",
+        "scan-gate.json": "fc203f0b629fb561b80cac320624c6d8a106b6fca50b6e6fe7469d137114c1f9",
+        "after-scan.json": "c74064a48ef419cf68e1badefd8960536d9a462839fbfaed647dd517b0f56035"
+      },
+      "opensslEvidence": {
+        "native-tls.json": "8b357fca2758de2e7601263209100abab686020503765c509339240b15e6aa2c",
+        "upstream-regression.json": "5afedf183791d67a5726583ad9033dc24b34f261a1abd652a3d56404b6b2e4fb",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "completeInventorySha256": "d411629ea0cb3ac05def75bff37810a5402ca67fd091f8af59b2873a1aa2daaf",
+      "retainedTargetedFindingsSha256": "34ea774801cef0ba54f7f098839c119868c445500d88e5fd83ad3ff145882272",
+      "reviewRationale": "Eight exact upstream fixes and complete native suite; unchanged application/configuration and preserved exported ABI. Native task checks, ordinary crypto, TLS 1.2/1.3 and rejection checks pass. Squid coverage is configuration parse plus shared crypto/TLS, not a new public transfer test. Raw findings retained for separate exact-payload review; not fleet clearance."
+    },
+    {
+      "key": "unfurl-proxy",
+      "base": "sha256:edb11455d7551288ecea281c84ca634d30a865ef2d266016e7f380b296538285",
+      "containers": [
+        "utilibre-wallabag-proxy-1",
+        "utilibre-trip-proxy-1",
+        "utilibre-13ft-proxy-1",
+        "utilibre-records-egress-1",
+        "utilibre-unfurl-proxy-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-unfurl-proxy:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "f244360831ba36a1eb5d33339b3e5a4181e1fc0ce4bc6fb7321ac3bf218d7e11",
+        "scope.json": "3d627f205ccfa73e43f71a77b2cba1b3da77775e91f95acfa6fc8e8995ef498f",
+        "application.json": "4121aaf20823803b7bb580e5e8d1a45562479ca3341ee90b866a8229a5b28df5",
+        "scan-gate.json": "b5420b0e95f8ff314be31d2143722b08c5c46607d24e4c62adbcdc571c69c456",
+        "after-scan.json": "56ffe8467c0a271acad615ce1cede4de3e0edce6f4f2fa680d40182d4faab522"
+      },
+      "opensslEvidence": {
+        "native-tls.json": "75d15ae794b2babae69ff7fd6b65808d1cee74fd5676528a05cb6452d0253c28",
+        "upstream-regression.json": "8b91151eb85fd23e95cb01176c6d0b622e296b8a1c16bde74a585f510ef44a3c",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "completeInventorySha256": "a167a71ec20ae0bf22ba986aa01263cdad8755e6480455b77d4d48302743e534",
+      "retainedTargetedFindingsSha256": "3ab07623411f79e0901a6898e1e89b2a3ec741df40ebfc65637b0886c3e7ac39",
+      "reviewRationale": "Eight exact upstream fixes and complete native suite; unchanged application/configuration and preserved exported ABI. Native task checks, ordinary crypto, TLS 1.2/1.3 and rejection checks pass. Squid coverage is configuration parse plus shared crypto/TLS, not a new public transfer test. Raw findings retained for separate exact-payload review; not fleet clearance."
+    },
+    {
+      "key": "family-chess-app",
+      "base": "sha256:5d38106a14b8f9dd82d028bf3ac237f38fb96dd66faf9b3200f54b05ec0391f5",
+      "containers": [
+        "utilibre-family-chess-app-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-family-chess-app:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "7c0e54b31b697c50c794df10eff8f1c8473a57ec900d19d64bed13867f12756e",
+        "scope.json": "5a988c87f712f18fd2d0fca3b15d9eb1d646618792061848d34dc63c35dcc53e",
+        "application.json": "3ca30ee033d4c51eb2e1a3800eede58940c5aec656a9c8471209612b8ff19d27",
+        "scan-gate.json": "4e35d865561b0dce4da9007cee6fa283a1b003ef82d142c8835c178672710a05",
+        "after-scan.json": "e3536d2d797122fa7d757ce8a1789a39b411ec0e846e383dfa8cea830b183ad3"
+      },
+      "opensslEvidence": {
+        "native-tls.json": "ffa7a9292665fc4ff83eb72c63c27dc645757c901b9176191fc4ced027175dff",
+        "upstream-regression.json": "7c56b4009305dc83f7fbe0f9baa55e3188b2b735a5d32a412067bf4d7a33bd66",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "completeInventorySha256": "39864f8151823304a3c2b7766332bc47bae0e4091e1e2bd74508071ca0a99f34",
+      "retainedTargetedFindingsSha256": "cd4e2ef57adfadcb4a3b85da088e4cded8ce7e2aeed095e4bd518f821857ca70",
+      "reviewRationale": "Eight exact upstream fixes and complete native suite; unchanged application/configuration and preserved exported ABI. Native task checks, ordinary crypto, TLS 1.2/1.3 and rejection checks pass. Squid coverage is configuration parse plus shared crypto/TLS, not a new public transfer test. Raw findings retained for separate exact-payload review; not fleet clearance."
+    },
+    {
+      "key": "beaverhabits-app",
+      "base": "sha256:c7865e1c07b1e2698db4117b35192b18b428b5de8fc2b339538cc6e9a982166a",
+      "containers": [
+        "utilibre-beaverhabits-app-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-beaverhabits-app:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "f14caa786d0a0813a01f29f6298d276eed32b68b2a149e0731887c8c4fbd79d3",
+        "scope.json": "c0f1afbafee24df7539e8b3183c5a50580ba39a503a9a7c52d8c3ced104f5708",
+        "application.json": "8104a7cd3039e764f9bf72dea04b0441038643db884ed38008fa41990eb5726d",
+        "scan-gate.json": "89114f3d511c1441dd5d8eefdefb3dba1cd0dedd113c74d8258b0b40c55bd786",
+        "after-scan.json": "bbd1154727da9c875107d6125783d077b4ba54f9bc05f39d94c8eaf165780a07"
+      },
+      "opensslEvidence": {
+        "native-tls.json": "df3c4ab0ba1c1e8b72079b9217cfe453ed72fc067d64aa2bb0f7f25a744c48d8",
+        "upstream-regression.json": "a80d4eb84404b1f59ed8224d88c5414a1e2228c10c64cb0632b085d587b342ef",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "completeInventorySha256": "24cafb8750edaf68187353ef13d2e408cb6d04adb3e168ed3f7614ad300edd01",
+      "retainedTargetedFindingsSha256": "74544d81de267ea1fb45362fa8700205c895c236390858ede15a47f0314b14fa",
+      "reviewRationale": "Eight exact upstream patches, 4932 native-suite tests, complete scope and ABI preservation, native application checks and TLS/crypto/regressions passed. Beaverhabits verifies startup/auth denial, not a new real-account export; remote feeds/providers and device testing remain outside these synthetic checks. Raw scanner matches remain for exact-payload review."
+    },
+    {
+      "key": "unfurl-app",
+      "base": "sha256:721f428b5e1648026cd4994b160425a72e3004f28f48299b04d65a2421dcb6c6",
+      "containers": [
+        "utilibre-unfurl-app-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-unfurl-app:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "10857fa3b3b9e475a5552e0aaf864e62181a1a6d056c4e683e22a62667799159",
+        "scope.json": "60cbba5396d21bb043a370796700f8360b6f0f4e09a8163b3e431c57f4c83bd7",
+        "application.json": "08086798339e77d055160ffb594290bebb9407343d4e4fa463250e6438e2e809",
+        "scan-gate.json": "c70208a3610a90ec9f2f7225a212873978d346159f63d1d3f49cb8ce7c8e5d0e",
+        "after-scan.json": "75bd39481b322756255f642ddd5bd6dc77e72ffb098a788de7bfc8a95b103ea8"
+      },
+      "opensslEvidence": {
+        "native-tls.json": "137f55bdb25b879819981193d82a6392d36e619268029f8ed37745f96d28aa19",
+        "upstream-regression.json": "f5245a44be8aa4628b7631ecc78b795993b61025e40df95b9e0bc4caae27c1b6",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "completeInventorySha256": "2dc52c2aeb7c8210b6b8e1a68984a60d525c01aafc5c1188c6cec17d35c838a4",
+      "retainedTargetedFindingsSha256": "754235d82ecdeee975d58780195350255811200a6cefd8697d2aadcc1ad7a6ce",
+      "reviewRationale": "Eight exact upstream patches, 4932 native-suite tests, complete scope and ABI preservation, native application checks and TLS/crypto/regressions passed. Beaverhabits verifies startup/auth denial, not a new real-account export; remote feeds/providers and device testing remain outside these synthetic checks. Raw scanner matches remain for exact-payload review."
+    },
+    {
+      "key": "expanded-breezewiki",
+      "base": "sha256:b44477a9161b21254b4494a7ccff2d6a227358eb998b56628ea3c31c6251ff45",
+      "containers": [
+        "utilibre-expanded-breezewiki-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-expanded-breezewiki:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "9e151f728a3afa5f0d3d144868638e75eec5f2d5e3b67cfbd0a4c3f2ac1fbbc8",
+        "scope.json": "39c99f109d699e4bd1bbcc357c33beaa8bec117a456d81ecd14f53ecd40a9ed0",
+        "application.json": "270f9f4abe0b634c8d6206b5675f86594ad7a1b5c91a516745bfd13f82bcd975",
+        "scan-gate.json": "391a15e322933a88b13b9e9508d3fd9edb40b237e8b175faace072d9854687c0",
+        "after-scan.json": "a68ce51c88d79d83925a23f768a559804b2ae99283cbd375191836c5cadc330c"
+      },
+      "opensslEvidence": {
+        "native-tls.json": "9188a0ff7dd08a59f95654aca7de9db834b343a0b5c2726a09e2c15b88d6968d",
+        "upstream-regression.json": "6b7daee88409235763b13d9770d2bb5ba0d0f9877ce50aee08f86c3aa9816767",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "completeInventorySha256": "553d767cf48e3050863f06069abf34ef47f61e6672f25f90dfbdbf03baa733a1",
+      "retainedTargetedFindingsSha256": "4fadf8a5288b4ecd0c9bbea1189c909622878b3abe1b67bc606fda01140ae4bc",
+      "reviewRationale": "Eight exact upstream patches, 4932 native-suite tests, complete scope and ABI preservation, native application checks and TLS/crypto/regressions passed. Beaverhabits verifies startup/auth denial, not a new real-account export; remote feeds/providers and device testing remain outside these synthetic checks. Raw scanner matches remain for exact-payload review."
+    },
+    {
+      "key": "calendar-radicale",
+      "base": "sha256:af745f79dae13e5364178a5485f3fd7390902e8d00c5f4f74a51a0e0b134433b",
+      "containers": [
+        "utilibre-calendar-radicale-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-calendar-radicale:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "faa2d7f3612f65be331ddf821d5b62732a53593896c6347b0d35709909db8035",
+        "scope.json": "1f7e3d4a193627147a359ea937f686390bef1ab4d2039f4c9b5fbdfbec794a0d",
+        "application.json": "61f6a978f0c09c353b4e9736276c985a89decaa55f8cf1515b69a75242184a06",
+        "scan-gate.json": "7e6066ff9926b177d79dd95f20bb054547d28770cbb5aacdf85f37fc527f5369",
+        "after-scan.json": "4c46520f99324e97c43f5ef14f08f7347c53da6f99f5713eb3884104582e06b2"
+      },
+      "opensslEvidence": {
+        "native-tls.json": "73435f564aa483ea3b6f9a60530cca9bed0baa3cf3a12b08836809344427ab50",
+        "upstream-regression.json": "ee2793d645875f784af72d0a12a642e6d47a12fe77586da696d521238eb9bd2f",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "completeInventorySha256": "f1e7d655668a3124eee45e8b41794e07b284172cd61f1511ddd374fc497833b2",
+      "retainedTargetedFindingsSha256": "310887cb68e22476c24ef6061913bacdadf0474497e2328d9e441e50fdf3bf01",
+      "reviewRationale": "Eight exact upstream patches, 4932 native-suite tests, complete scope and ABI preservation, native application checks and TLS/crypto/regressions passed. Beaverhabits verifies startup/auth denial, not a new real-account export; remote feeds/providers and device testing remain outside these synthetic checks. Raw scanner matches remain for exact-payload review."
+    },
+    {
+      "key": "services-freshrss",
+      "base": "sha256:3540d7ebe242c7834ce8295ea8f5f86298951ccf0733be55ed5abc4c329390af",
+      "containers": [
+        "utilibre-services-freshrss-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-services-freshrss:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "96bd74596ea947d9b59d04fc4153f3e26fada71fe0cd5f7b5c7a9c5159a93100",
+        "scope.json": "40bcb902e7d5cb7f9d17f6644be6dd0b5580afac348ca1892158e582a0bc1457",
+        "application.json": "48f73f4dce533103e8679c27af8a7e3f9afd59ca658affbdb4de8c65d46d2dd9",
+        "scan-gate.json": "66ebd2f69c81069a1949ea2c57a85b13846a37dfc7bb74fea4fd6aec5368d749",
+        "after-scan.json": "31bec983151123726e9c538e944c72b094491d8731eba33be2c54db2eab46fec"
+      },
+      "opensslEvidence": {
+        "native-tls.json": "f8cbe848b809e9b09a45f331f2f373886fa2be920f61a4cb285f9f651745ee76",
+        "upstream-regression.json": "510fc1df7a7050394535bf1323041a06b413eeb8a81118ab480b1672fdd5c289",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "completeInventorySha256": "d0893d8931999035da5be4b5c4dc891de5be1724c0c8273f49a4e0cd4cecd733",
+      "retainedTargetedFindingsSha256": "97a71618c2af2ccae47e0f2ab6187e816d5e87adf5f4923841b4011ce480713c",
+      "reviewRationale": "Eight exact upstream patches, 4932 native-suite tests, complete scope and ABI preservation, native application checks and TLS/crypto/regressions passed. Beaverhabits verifies startup/auth denial, not a new real-account export; remote feeds/providers and device testing remain outside these synthetic checks. Raw scanner matches remain for exact-payload review."
+    },
+    {
+      "key": "expanded-penpot-backend",
+      "base": "sha256:03be9391bdd84596e3f5d3d28e34d819ab07527d2f1f6a2afca5ba4d447cd16a",
+      "containers": [
+        "utilibre-expanded-penpot-backend-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-expanded-penpot-backend:20261122",
+      "approval": "preparation-only",
+      "releaseApproval": "rejected-incomplete-private-library",
+      "releaseRejectionReason": "System-only candidate leaves the private ImageMagick libcrypto selected by LD_LIBRARY_PATH unchanged; retained PEM regression still fails. Separate candidate must repair that explicitly scoped file too."
+    },
+    {
+      "key": "records-grist",
+      "base": "sha256:82f6f59249378a42940124d44306608dc7ca7fc380a987eb95f8e8802e18047f",
+      "containers": [
+        "utilibre-records-grist-1"
+      ],
+      "packages": {
+        "libssl3t64": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "libssl3t64"
+        },
+        "openssl-provider-legacy": {
+          "installed": "3.5.7-1~deb13u3",
+          "package": "openssl-provider-legacy"
+        }
+      },
+      "kind": "debian",
+      "suite": "trixie",
+      "candidate": "utilibre-openssl-records-grist:20261122",
+      "approval": "reviewed-upstream-native-repair",
+      "releaseApproval": "approved",
+      "reviewedEvidence": {
+        "build.json": "dc593796782b7b42ee548822251242d9b368307ebd5ee52b73bafcb99e017a00",
+        "scope.json": "6a6855bfd517e1c7ced5f23140c3ff7206b3beb78cb962afdb4a17e349a1eb4f",
+        "application.json": "8ba381992e2237484d6242bd2e5c53efb987f4cd7ded77a5559048b5f46cad6d",
+        "scan-gate.json": "14f7494f3c7367419f069140d4dee7189b46313662522db7c43e77a312425b9a",
+        "after-scan.json": "b6007421e8dba555b43718f0990b738ce89cb012b805b58bd664983d85ca35a2"
+      },
+      "opensslEvidence": {
+        "native-tls.json": "e60b9350c544e217f584fa9ea6dc973c53c3983b35d22bac1fec1623df20abf6",
+        "upstream-regression.json": "6ef3cf47ffa3e336a826775a5d4dba64145a5691ec91d14f2af04a08d26aa96f",
+        "sourceArchiveSha256": "66a2a0d1ed1bf415f9f41e49de25b015bdedb2936ea33e51dbf51355f6565fa6"
+      },
+      "completeInventorySha256": "8343a69749dca2cc69cc977fed1ec6a10a9ddae0330bd41e797b33a4b1e41d00",
+      "retainedTargetedFindingsSha256": "f4f30222c78bb513e39498462a35e7d5a6812c65035ec2fc9ba6d169b7da1408",
+      "reviewRationale": "Eight exact upstream patches, full native suite and ABI/scope checks. Native Grist documents, formula sandbox, API isolation and synthetic export/restore pass; TLS and crypto/regression checks pass. Scanner findings retained for separate review. Deno permission/source binding needs renewed evidence after image change."
+    }
+  ],
+  "nativeFixture": {
+    "cliSha256": "acc10176d038aeb7b2a77d9ec972ac2985857a7191f7aecb7c54ef0e2c7e9549",
+    "cliOrigin": {
+      "imageId": "sha256:9253d4ba4d02d712da5bafb84e5acb3f725d4584a38cbf752ee72b4cd1b4f7a4",
+      "path": "/usr/bin/openssl",
+      "sha256": "acc10176d038aeb7b2a77d9ec972ac2985857a7191f7aecb7c54ef0e2c7e9549"
+    },
+    "cryptoSha256": "c53842644f9cbd9568ee4f1f25d6a960862ad1499ad8bd9c89c006eec45589b7",
+    "tlsServerSha256": "9614aa6fa6d4db4f96eeec390d8b7f2cbd26a3dea43935dd8cae7ebf4ede71a0",
+    "tlsImage": "sha256:9253d4ba4d02d712da5bafb84e5acb3f725d4584a38cbf752ee72b4cd1b4f7a4"
+  }
+}

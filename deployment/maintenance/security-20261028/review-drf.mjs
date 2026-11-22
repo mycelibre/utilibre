@@ -6,6 +6,7 @@ import {createHash} from 'node:crypto';
 import {freshScan,overlayRows} from '../review-native-backports.mjs';
 import {validateDecision} from '../triage.mjs';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
+import {expatDescendant} from '../security-20261103/expat-policy.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/security-20261028/drf';
 const read=f=>JSON.parse(fs.readFileSync(f)),sha=b=>createHash('sha256').update(b).digest('hex');
@@ -17,10 +18,7 @@ for(const p of inputs.patches)assert.equal(sha(fs.readFileSync(new URL('./'+p.fi
 const decisions=[],rows=overlayRows(release);
 // Follow completed same-role artifact transitions; live repaired bytes are still
 // checked below. An unrelated role or an incomplete receipt cannot inherit proof.
-for(const receipt of additionalOverlayReceipts){
- const p=root+'/'+receipt;if(!fs.existsSync(p)||p===dir+'/release.json')continue;
- for(const r of overlayRows(read(p)))if(rows.some(a=>a.name===r.name&&a.newImage===r.oldImage)&&Date.parse(r.completedAt)<=Date.parse(scan.completedAt))rows.push(r);
-}
+const descendants=additionalOverlayReceipts.filter(receipt=>fs.existsSync(root+'/'+receipt)).flatMap(receipt=>overlayRows(read(root+'/'+receipt)));
 const docker=(...a)=>cp.execFileSync('docker',a,{encoding:'utf8',timeout:10000,stdio:['ignore','pipe','pipe']}).trim();
 for(const s of inputs.rows){
  const b=read(dir+'/'+s.key+'/build.json'),v=read(dir+'/'+s.key+'/inventory.json'),g=read(dir+'/'+s.key+'/scan-gate.json'),a=read(dir+'/'+s.key+'/stage.json');
@@ -34,7 +32,7 @@ for(const s of inputs.rows){
  const liveImages=new Set;
  for(const name of s.containers){
   const r=rows.find(r=>r.name===name);assert(r&&r.oldImage===s.base&&r.newImage===b.imageId&&Date.parse(r.completedAt)<=Date.parse(scan.completedAt));
-  const live=docker('inspect','--format','{{.Image}}',name);assert(rows.some(row=>row.name===name&&row.newImage===live),'Unverified artifact transition');liveImages.add(live);
+  const live=docker('inspect','--format','{{.Image}}',name);assert.equal(expatDescendant(name,b.imageId,r.completedAt,scan.completedAt,descendants),live,'Unverified artifact transition');liveImages.add(live);
   const hashes=docker('exec',name,'sha256sum',...s.files.map(f=>s.site+'/'+f.path)).split('\n').map(line=>line.split(/\s+/));
   for(const f of s.files)assert(hashes.some(([hash,path])=>path===s.site+'/'+f.path&&hash===f.afterSha256));
  }

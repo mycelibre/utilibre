@@ -1,7 +1,7 @@
 name: utilibre-chitchatter
 services:
   tracker:
-    image: utilibre-zlib-chitchatter-tracker:candidate-20261109
+    image: utilibre-crypto-chitchatter-tracker:20261122
     build: {context: ., dockerfile: Dockerfile.tracker}
     restart: unless-stopped
     read_only: true
@@ -18,7 +18,7 @@ services:
       timeout: 5s
       retries: 3
   gateway:
-    image: utilibre-vendor-calendar-calino:20261111
+    image: utilibre-security-shared-nginx:20261122
     entrypoint: [nginx, -g, 'daemon off;']
     restart: unless-stopped
     read_only: true

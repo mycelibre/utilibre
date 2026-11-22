@@ -1,6 +1,6 @@
 // Signed vendor release, exact installed payload and completed native gates.
 import fs from 'node:fs';import cp from 'node:child_process';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
-import {freshScan,overlayRows} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';
+import {freshScan,overlayRows,followOverlaySpecs} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 process.umask(0o077);
 const root='/var/lib/utilibre-maintenance',dir=root+'/closure-followup-20261012',read=p=>JSON.parse(fs.readFileSync(p));
@@ -10,12 +10,9 @@ const q=read(root+'/security-queue.json'),scan=read(root+'/security.json');fresh
 const primary=read(dir+'/debian-primary.json');assert(Date.now()-Date.parse(primary.date)<86400000);
 const release=read(dir+'/urllib3-release.json'),host=read(dir+'/urllib3-host.json');assert.equal(release.status,'passed');assert.equal(host.status,'passed');
 const rows=overlayRows(release),specs=read(new URL('./urllib3-specs.json',import.meta.url));
-for(const receipt of additionalOverlayReceipts)if(fs.existsSync(root+'/'+receipt)){
- for(const next of overlayRows(read(root+'/'+receipt))){
-  const prior=rows.find(r=>r.name===next.name&&r.newImage===next.oldImage);
-  if(prior&&next.newImage!==next.oldImage)rows.push({...next,originalImage:prior.originalImage||prior.newImage});
- }
-}
+const lineage=followOverlaySpecs(rows.map(r=>({...r,artifact:r.newImage,containers:[r.name],originalImage:r.newImage})),
+ additionalOverlayReceipts.filter(path=>fs.existsSync(root+'/'+path)).map(path=>({path,report:read(root+'/'+path)})));
+rows.splice(0,rows.length,...lineage.map(r=>({...r,newImage:r.artifact})));
 const deb=dir+'/sources/python3-urllib3_2.8.0-2_all.deb',hash='d48b157c65ac9b28a86cd2d6f5af3baa841208bae724bed3a33b0058727b0ff3';assert.equal(sha(deb),hash);
 const temp=fs.mkdtempSync('/dev/shm/utilibre-urllib3-proof-'),decisions=[],proofs=[];
 try{

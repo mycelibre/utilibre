@@ -9,7 +9,7 @@ x-security: &default-security
 
 services:
   postgres:
-    image: utilibre-vendor-simplelogin-db:20261111
+    image: utilibre-xml-simplelogin-db:20261122
     user: "70:70"
     restart: unless-stopped
     <<: *default-security
@@ -59,7 +59,7 @@ services:
   valkey:
     ulimits: {core: 0}
     memswap_limit: 384m
-    image: utilibre-valkey:9.1.1-vendor-security-20261011
+    image: utilibre-crypto-services-valkey:20261122
     user: "999:1000"
     restart: unless-stopped
     read_only: true
@@ -81,7 +81,7 @@ services:
     logging: *default-logging
 
   freshrss:
-    image: utilibre-vendor-services-freshrss:20261114
+    image: utilibre-vendor-leaf-services-freshrss:20261122
     init: true
     restart: unless-stopped
     <<: *default-security
@@ -129,7 +129,7 @@ services:
   rsshub:
     ulimits: {core: 0}
     memswap_limit: 1536m
-    image: utilibre-git-rsshub:2.54.1-20261114
+    image: utilibre-vendor-leaf-services-rsshub:20261122
     init: true
     restart: unless-stopped
     read_only: true
@@ -170,7 +170,7 @@ services:
     logging: *default-logging
 
   privatebin:
-    image: utilibre-vendor-services-privatebin:20261114
+    image: utilibre-xml-privatebin:20261122
     user: "65534:82"
     restart: unless-stopped
     read_only: true

@@ -3,10 +3,22 @@
 import fs from 'node:fs';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 import {inventory,command} from '../component-followup/inventory.mjs';
 import {freshScan} from '../review-native-backports.mjs';import {validateDecision} from '../triage.mjs';
+import {overlayRows} from '../review-native-backports.mjs';
+import {additionalOverlayReceipts} from '../followup-overlays.mjs';
+import {expatDescendant} from '../security-20261103/expat-policy.mjs';
 process.umask(0o077);
+const containersOnly=process.argv[2]==='--reassess-container-fixes';
+const librariesOnly=process.argv[2]==='--reassess-git-xserver';
+const reassess=containersOnly||librariesOnly||process.argv[2]==='--reassess-known-fixes';
+assert.deepEqual(process.argv.slice(2),containersOnly?['--reassess-container-fixes']:librariesOnly?['--reassess-git-xserver']:reassess?['--reassess-known-fixes']:[]);
 const root='/var/lib/utilibre-maintenance',r=root+'/security-20261114',read=p=>JSON.parse(fs.readFileSync(p)),sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 const scan=read(root+'/security.json'),q=read(root+'/security-queue.json');freshScan(q,scan);assert.equal(scan.status,'checked');
-assert.equal(scan.database.updatedAt,read(r+'/before-security.json').database.updatedAt);
+const originalDatabase=read(r+'/before-security.json').database;
+// Archived replay keeps its original database requirement. Deliberate current
+// reassessment may only cover this file's enumerated, proven fixes, never new
+// advisory IDs or generic package versions. Every live byte check still runs.
+if(!reassess)assert.equal(scan.database.updatedAt,originalDatabase.updatedAt);
+const overlays=reassess?additionalOverlayReceipts.filter(p=>fs.existsSync(root+'/'+p)).flatMap(p=>overlayRows(read(root+'/'+p))):[];
 const expiresAt=new Date(Date.now()+7*86400000).toISOString(),decisions=[],proofs=[];
 const wanted=i=>i.status==='needs-review'&&['HIGH','CRITICAL'].includes(i.severity);
 const decide=(i,status,reason)=>decisions.push(validateDecision({key:i.key,status,expiresAt,reason}));
@@ -15,10 +27,10 @@ const gitInputs=read(new URL('./git-inputs.json',import.meta.url));
 const gitBuild=read(r+'/git/build.json');assert(gitBuild.passed&&gitBuild.network==='none');
 assert.equal(gitBuild.sourceSha256,'ca988eb9af7d8770339df7cdc38106fec8244664ff886840767cb9be3ef0e16c');
 const gitPackage=read(r+'/git/package.json');assert(gitPackage.passed&&gitPackage.allNativeExecutablesUpdated);
-for(const [container,folder] of [[null,'host'],...gitInputs.rows.map(s=>[s.containers[0],s.key])]){
+for(const [container,folder] of [...(containersOnly?[]:[[null,'host']]),...gitInputs.rows.map(s=>[s.containers[0],s.key])]){
  const receipt=read(r+'/git/'+(container?folder+'/release-'+(folder==='rsshub'?'utilibre-services':folder==='priviblur'?'utilibre-priviblur':'utilibre-expanded')+'.json':'host-release.json'));assert.equal(receipt.status,'passed');
  const id=container?command('docker',['inspect','--format','{{.Image}}',container]):'host-dpkg';
- if(container){const b=read(r+'/git/'+folder+'/build.json');assert.equal(id,b.imageId);assert(read(r+'/git/'+folder+'/application.json').passed);}
+ if(container){const b=read(r+'/git/'+folder+'/build.json');assert.equal(id,reassess?expatDescendant(container,b.imageId,receipt.completedAt,scan.completedAt,overlays):b.imageId);assert(read(r+'/git/'+folder+'/application.json').passed);}
  const native=inventory('git',container);assert.equal(native.installed,'1:2.54.1+utilibre1');
  // Compare every shipped native executable with the packaged upstream build.
  for(const p of native.records.filter(p=>p.magic==='7f454c46'))assert.equal(p.sha256,sha(r+'/git/package'+p.path));
@@ -32,23 +44,57 @@ for(const [container,folder] of [[null,'host'],...gitInputs.rows.map(s=>[s.conta
 }
 const xs=read(r+'/xserver/packages.json');assert(xs.passed);const xInputs=read(new URL('./xserver-inputs.json',import.meta.url));
 const xIds=[...new Set(xInputs.patches.map(p=>p.advisory))],oldXIds=['CVE-2023-5574','CVE-2026-88812','CVE-2026-93516','CVE-2026-93521','CVE-2026-93523'];
+// New finite platform attribution, separate from the six repaired CVEs above.
+// The tracker explicitly confines this XRes overflow to 32-bit systems.
+const xresId='CVE-2026-109094';
+if(reassess){
+ const primary=root+'/security-20261122/primary/debian-security-tracker.json';
+ assert.equal(sha(primary),'56ab97cc2791c8dd0476b7d3d060a7a76c9bb9f13a8185131507a6889373759c');
+ const record=read(primary)['xorg-server'][xresId];
+ assert(record.description.includes('XRes QueryResourceBytes Swap Path')&&record.description.includes('on 32bit systems'));
+}
 for(const s of xs.records){
+ if(containersOnly&&s.role==='host')continue;
  const container=s.role==='host'?null:'utilibre-expanded-penpot-exporter-1',id=container?command('docker',['inspect','--format','{{.Image}}',container]):'host-dpkg';
  const b=read(r+'/xserver/'+s.role+'/build.json'),native=read(r+'/xserver/'+s.role+'-native.json');assert(b.passed&&b.nativeUpstreamCheckPassed&&b.oneScreenBuildPreserved&&native.passed);
  assert.equal(read(r+'/xserver/release-'+(container?'exporter':'host')+'.json').status,'passed');
  const inv=inventory('xvfb',container);assert.equal(inv.installed,s.newVersion);assert.equal(inv.records.find(x=>x.path==='/usr/bin/Xvfb').sha256,s.binarySha256);assert.equal(b.binarySha256,s.binarySha256);
  proofs.push({kind:'xvfb',container,inventory:inv,buildSha256:sha(r+'/xserver/'+s.role+'/build.json')});
+ if(reassess){
+  // Read the installed ELF header in-place; no X client/protocol probe.
+  const header=container?command('docker',['exec',container,'od','-An','-tx1','-N20','/usr/bin/Xvfb']).replace(/\s/g,''):fs.readFileSync('/usr/bin/Xvfb').subarray(0,20).toString('hex');
+  assert.equal(header.slice(0,12),'7f454c460201');assert.equal(header.slice(36,40),'3e00');
+  proofs.push({kind:'xres-platform',container,elfHeader:header,primarySha256:'56ab97cc2791c8dd0476b7d3d060a7a76c9bb9f13a8185131507a6889373759c'});
+  for(const i of q.items.filter(i=>wanted(i)&&i.artifact===id&&i.package==='xvfb'&&i.id===xresId))
+   decide(i,'not-affected',`Exact installed Xvfb ${inv.installed} payload matches the retained tested build; its ELF header is 64-bit little-endian x86-64, verified on the actual executable. Debian's primary description confines CVE-2026-109094 (XRes QueryResourceBytes swap overflow) to 32-bit systems. This is platform attribution, not a patched-source or blanket X server safety claim; a 32-bit build or changed executable requires a new review. Existing native X11/export compatibility evidence retained; no exploit probe. Evidence: security-20261114/native-reassessment report and security-20261122/primary/debian-security-tracker.json; https://security-tracker.debian.org/tracker/CVE-2026-109094`);
+ }
  for(const i of q.items.filter(i=>wanted(i)&&i.artifact===id&&i.package==='xvfb'&&[...xIds,...oldXIds].includes(i.id)))
   decide(i,'mitigated',`Exact installed Xvfb ${inv.installed} executable matches the tested native rebuild (${s.binarySha256}). All seven pinned upstream patches for six new CVEs are applied on the authenticated native vendor source; the DHI glamor context adaptation is checksum-pinned. Previous vendor fixes and MAXSCREENS=1 remain present. Upstream make check and authenticated X11 pixel/modifier/reset tests passed; Penpot two-account PNG/PDF exports passed. Kernel/Proxmox and other X servers are outside this review. Evidence: security-20261114/xserver/{${s.role}/build,${s.role}-native,packages}.json and xserver-inputs.json. https://security-tracker.debian.org/tracker/${i.id}`);
- const common=inventory('xserver-common',container);assert(!common.records.some(x=>x.magic==='7f454c46'));assert(common.records.every(x=>x.type==='directory'||x.path.startsWith('/usr/share/')||['/usr/lib/xorg/protocol.txt','/var/lib/xkb/README.compiled'].includes(x.path)));proofs.push({kind:'xserver-common',container,inventory:common});
- for(const i of q.items.filter(i=>wanted(i)&&i.artifact===id&&i.package==='xserver-common'&&xIds.includes(i.id)))
+ const common=inventory('xserver-common',container);
+ const dataFiles=['/usr/lib/xorg/protocol.txt','/usr/share/doc/xserver-common/changelog.Debian.gz','/usr/share/doc/xserver-common/changelog.gz','/usr/share/doc/xserver-common/copyright','/usr/share/man/man1/Xserver.1.gz','/var/lib/xkb/README.compiled'];
+ assert.deepEqual(common.records.filter(x=>x.type!=='directory').map(x=>x.path).sort(),dataFiles.sort());
+assert(!common.records.some(x=>x.magic==='7f454c46'));assert(common.records.every(x=>x.type==='directory'||x.path.startsWith('/usr/share/')||['/usr/lib/xorg/protocol.txt','/var/lib/xkb/README.compiled'].includes(x.path)));proofs.push({kind:'xserver-common',container,inventory:common});
+ for(const i of q.items.filter(i=>wanted(i)&&i.artifact===id&&i.package==='xserver-common'&&[...xIds,...oldXIds,...(reassess?[xresId]:[])].includes(i.id)))
   decide(i,'not-affected',`Complete installed xserver-common ${common.installed} inventory contains documentation/protocol/cache notes, no X server executable or library. ${i.id} affects the X server implementation, not those sibling data files. The actual Xvfb binary is separately repaired and tested. Exact inventory and executable proof: security-20261114/native-review.json; raw source-package matching retained. https://security-tracker.debian.org/tracker/${i.id}`);
 }
+// Current host successors have their own independently bound review.
+// This explicit subset cannot clear any host record.
+if(!containersOnly&&!librariesOnly){
 const qp=read(r+'/qemu/native/package.json'),qb=read(r+'/qemu/native/build.json'),qr=read(r+'/qemu/native/release.json');assert(qp.passed&&qb.passed&&qr.status==='passed');assert.equal(qr.packageSha256,qp.packageSha256);
 const qpatches=read(r+'/qemu/patches.json');for(const p of qpatches)assert.equal(sha(r+'/qemu/'+p.commit+'.patch'),p.sha256);
 const compile=read(r+'/qemu/native/compile_commands.json');assert(compile.length>100);for(const p of qpatches.filter(p=>p.id!=='CVE-2026-101291'))for(const f of p.files)assert(!compile.some(c=>c.file.endsWith('/'+f)),'Emulated-device source compiled into candidate');
 const source=root+'/security-20261103/remaining/qemu-components/source';const qga=fs.readFileSync(source+'/qga/meson.build','utf8');assert(!/system_ss|hw_arch|io_ss|chardev_ss/.test(qga));
 const beforeQueue=read(r+'/before-security-queue.json');
+const qemuVendor=read(new URL('../security-20261103/qemu-vendor-fixed.json',import.meta.url));
+const qemuSource=read(new URL('../security-20261103/qemu-components.json',import.meta.url));
+const qemuPrimary=reassess?read(root+'/closure-followup-20261012/debian-primary.json'):null;
+if(reassess){
+ assert(Date.now()-Date.parse(qemuPrimary.date)<86400000);
+ assert.equal(qb.sourceReceiptSha256,sha(new URL('../security-20261103/qemu-components.json',import.meta.url)));
+ assert.equal(qemuSource.version,qp.oldVersion);assert.equal(qemuVendor.version,qp.oldVersion);
+ for(const f of qemuSource.files)assert.equal(sha(root+'/security-20261103/remaining/qemu-components/'+f.file),f.sha256);
+ for(const [p,h] of Object.entries(qemuSource.sourceFiles))assert.equal(sha(source+'/'+p),h);
+}
 for(const name of ['qemu-utils','qemu-guest-agent']){
  const inv=inventory(name);assert.equal(inv.installed,name==='qemu-utils'?qp.newVersion:qp.oldVersion);
  const elf=inv.records.filter(p=>p.magic==='7f454c46');
@@ -66,8 +112,17 @@ for(const name of ['qemu-utils','qemu-guest-agent']){
     if(component)assert(!compile.some(c=>/\/hw\/(?:sd|9pfs)\//.test(c.file)));
     else {const v=read(new URL('../security-20261103/qemu-vendor-fixed.json',import.meta.url));assert.equal(v.version,qp.oldVersion);assert(v.records[i.id]);assert.equal(v.records[i.id].releases.sid.status,'resolved');}
     decisions.push(validateDecision({key:i.key,status:'not-affected',expiresAt:old.decision.expiresAt,reason:`Retained exact QEMU review ${old.key}: ${component?'the SDHCI/9p system-emulator sources remain absent from the tools-only compilation':'the same authenticated 11.1.2 Debian backport source retains its previously verified upstream fix; the only new source patch is the websocket bounds repair'}. All installed binaries and supported formats/QMP command surfaces verified. Original advisory-specific rationale remains in SHA-bound security-20261114/before-security-queue.json; expiry unchanged. Evidence: security-20261114/qemu/native/{compile_commands,build,release}.json and native-review.json. Separate Proxmox hypervisor is not assessed.`}));
+   }else if(reassess){
+    const component=['CVE-2022-3872','CVE-2023-1386'].includes(i.id),vendor=qemuVendor.records[i.id];
+    if(component||vendor){
+     if(component)assert(!compile.some(c=>/\/hw\/(?:sd|9pfs)\//.test(c.file)));
+     else{assert.deepEqual(qemuPrimary.sources.qemu[i.id],vendor);assert.equal(vendor.releases.sid.status,'resolved');assert.equal(vendor.releases.sid.fixed_version,'1:11.1.2+ds-1');}
+     decide(i,'not-affected',`Current exact QEMU tools-only source and payload review: ${component?'the SDHCI/9p system-emulator implementation is absent from the complete compiler input graph':'the authenticated 11.1.2 Debian source contains this upstream correction; the current Debian advisory still fixes it in 1:11.1.2+ds-1'}. All four installed native executables match the tested rebuild; its source-receipt SHA256 ${qb.sourceReceiptSha256}, authenticated source archives, Meson files and completed release were rechecked. The sole source change from that baseline is the separately reviewed websocket bounds patch. Native format/QMP and synthetic block-file workflows remain recorded. This is a new evidence-bound assessment, not renewal of an expired exception. Other CVEs and the separate Proxmox hypervisor are not cleared. Evidence: security-20261114/qemu/native/{build,compile_commands,package,release}.json; https://security-tracker.debian.org/tracker/${i.id}`);
+    }
    }
   }
  }
 }
-fs.writeFileSync(r+'/native-review.json',JSON.stringify({schemaVersion:1,scanDate:scan.completedAt,decisions,proofs},null,2)+'\n');console.log(JSON.stringify({prepared:decisions.length,applied:false}));
+}
+const output=r+(reassess?'/native-reassessment-'+Date.now()+'.json':'/native-review.json');
+fs.writeFileSync(output,JSON.stringify({schemaVersion:1,scanDate:scan.completedAt,decisions,proofs,coverage:containersOnly?'known container Git/Xvfb repairs only; host excluded explicitly':librariesOnly?'known Git/Xvfb repairs only; QEMU excluded explicitly':'original full scope',assessmentContext:reassess?'current-known-fix-revalidation':'archived-database-replay',originalDatabase,currentDatabase:scan.database},null,2)+'\n');console.log(JSON.stringify({prepared:decisions.length,report:output,applied:false}));

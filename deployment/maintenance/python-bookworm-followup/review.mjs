@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import cp from 'node:child_process';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {freshScan,overlayRows} from '../review-native-backports.mjs';
+import {freshScan,overlayRows,followOverlaySpecs} from '../review-native-backports.mjs';
 import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 import {validateDecision} from '../triage.mjs';
 import {proveExpat} from '../security-20261103/expat-policy.mjs';
@@ -26,10 +26,9 @@ assert.equal(sha(dir+'/sources/expat_2.9.0.orig.tar.gz'),'6e8ce7b52ebbaa423c59be
 assert.match(fs.readFileSync(dir+'/build/expat-native-tests.log','utf8'),/100%: Checks: 5196, Failed: 0/);
 assert.match(fs.readFileSync(dir+'/build/python-tests.log','utf8'),/All 10 tests OK/);
 const rows=overlayRows(release);
-for(const receipt of additionalOverlayReceipts)if(fs.existsSync(root+'/'+receipt))for(const next of overlayRows(read(root+'/'+receipt))){
- const previous=rows.find(r=>r.name===next.name&&r.newImage===next.oldImage);
- if(previous&&next.newImage!==next.oldImage&&!rows.some(r=>r.name===next.name&&r.newImage===next.newImage))rows.push({...next,originalImage:previous.originalImage||previous.newImage});
-}
+const lineage=followOverlaySpecs(rows.map(r=>({...r,artifact:r.newImage,containers:[r.name],originalImage:r.newImage})),
+ additionalOverlayReceipts.filter(path=>fs.existsSync(root+'/'+path)).map(path=>({path,report:read(root+'/'+path)})));
+rows.splice(0,rows.length,...lineage.map(r=>({...r,newImage:r.artifact})));
 const sums=new Map(fs.readFileSync(dir+'/build/SHA256SUMS','utf8').trim().split('\n').map(l=>[l.slice(66).split('/').at(-1),l.slice(0,64)]));
 const manifests=new Map(),checked=new Map(),mitigations=[],notAffected=[],proofs=[];
 function walk(d,p=''){return fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(d+'/'+e.name,p+'/'+e.name):e.isFile()?[p+'/'+e.name]:[]);}

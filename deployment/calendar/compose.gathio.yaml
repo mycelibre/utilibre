@@ -11,7 +11,7 @@ x-bounded: &bounded
 services:
   postgres:
     <<: *bounded
-    image: utilibre-headers-gathio-postgres:20261114
+    image: utilibre-remaining-gathio-postgres:20261122
     user: '999:999'
     cpus: 1.0
     mem_limit: 768m
@@ -50,7 +50,7 @@ services:
       postgres: {condition: service_healthy}
   gathio:
     <<: *bounded
-    image: utilibre-gathio:mongoose-6.13.12-20261112
+    image: utilibre-crypto-gathio-gathio:20261122
     user: '1000:1000'
     cpus: 1.0
     mem_limit: 512m
@@ -70,7 +70,7 @@ services:
       retries: 3
   gateway:
     <<: *bounded
-    image: utilibre-vendor-calendar-calino:20261111
+    image: utilibre-security-shared-nginx:20261122
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.25

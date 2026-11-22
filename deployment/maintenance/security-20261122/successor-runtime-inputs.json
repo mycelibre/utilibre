@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "packages": {
+    "trixie/libmongocrypt0": {
+      "name": "libmongocrypt0",
+      "version": "1.13.2-1+deb13u2",
+      "file": "libmongocrypt0_1.13.2-1+deb13u2_amd64.deb",
+      "sha256": "cb11926633eb964474f48953761131591577a27114c5110011f9e6320a8e3464",
+      "url": "https://deb.debian.org/debian/pool/main/libm/libmongocrypt/libmongocrypt0_1.13.2-1+deb13u2_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libbson-1.0-0t64 (>= 1.30.4), libc6 (>= 2.34), libssl3t64 (>= 3.0.0)",
+      "preDepends": ""
+    },
+    "trixie/libbson-1.0-0t64": {
+      "name": "libbson-1.0-0t64",
+      "version": "1.30.4-1+deb13u5",
+      "file": "libbson-1.0-0t64_1.30.4-1+deb13u5_amd64.deb",
+      "sha256": "c3973dd860196b7581e4997d2bbd1804e63a756ac25b439c2ac45ab297dd3da5",
+      "url": "https://deb.debian.org/debian/pool/main/m/mongo-c-driver/libbson-1.0-0t64_1.30.4-1+deb13u5_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libc6 (>= 2.38)",
+      "preDepends": ""
+    },
+    "trixie/libmongoc-1.0-0t64": {
+      "name": "libmongoc-1.0-0t64",
+      "version": "1.30.4-1+deb13u5",
+      "file": "libmongoc-1.0-0t64_1.30.4-1+deb13u5_amd64.deb",
+      "sha256": "e9371dbdca22a4d582e4cb64fe592f468fb4b871bf5257f2583dc1d8ba459b68",
+      "url": "https://deb.debian.org/debian/pool/main/m/mongo-c-driver/libmongoc-1.0-0t64_1.30.4-1+deb13u5_amd64.deb",
+      "distribution": "trixie",
+      "depends": "libbson-1.0-0t64 (>= 1.30.4), libc6 (>= 2.34), libmongocrypt0, libsasl2-2 (>= 2.1.28+dfsg1), libsnappy1v5 (>= 1.2.2), libssl3t64 (>= 3.0.0), libutf8proc3 (>= 2.9.0), libzstd1 (>= 1.5.5), zlib1g (>= 1:1.2.0)",
+      "preDepends": ""
+    }
+  },
+  "rows": [
+    {
+      "key": "galene-turn-turn",
+      "containers": [
+        "utilibre-turn-option-turn-1",
+        "utilibre-galene-turn-turn-1"
+      ],
+      "kind": "debian",
+      "base": "sha256:070cf53a57874c2c0ea1411778bf11a1c584a1049febda3b9312fb5bd80d0d65",
+      "oldRefs": [
+        "utilibre-vendor-leaf-galene-turn-turn:20261122"
+      ],
+      "candidate": "utilibre-mongo-successors:20261122",
+      "approval": "preparation-only",
+      "packages": {
+        "libmongocrypt0": {
+          "installed": "1.13.2-1+deb13u1+utilibre1",
+          "package": "trixie/libmongocrypt0"
+        },
+        "libbson-1.0-0t64": {
+          "installed": "1.30.4-1+deb13u3+utilibre1",
+          "package": "trixie/libbson-1.0-0t64"
+        },
+        "libmongoc-1.0-0t64": {
+          "installed": "1.30.4-1+deb13u3+utilibre1",
+          "package": "trixie/libmongoc-1.0-0t64"
+        }
+      },
+      "loadLibraries": [
+        "/usr/lib/x86_64-linux-gnu/libmongoc-1.0.so.0",
+        "/usr/lib/x86_64-linux-gnu/libmongocrypt.so.0"
+      ],
+      "compatibility": "Vendor maintenance source preserves four earlier local fixes; full file scope, ABI, existing client/relay and crypto tests remain required.",
+      "releaseApproval": "approved",
+      "reviewedAt": "2026-11-22T04:54:29.852718+00:00",
+      "approvalReason": "Reviewed authenticated vendor successors, all six retained source fixes preserved, native BSON normal/boundary and upstream encryption/decryption checks, native relay workflow and full unchanged application/configuration scope. Remaining scanner matches retained for individual review; no migration or retention change.",
+      "reviewedEvidence": {
+        "build.json": "bcc34a7a0477bc2dfdb04e54a63e03f1a3c4c9791f281fbeb3d3bb141d46aeed",
+        "scope.json": "88922ed15053687ac7d1bcff6bdfdfb450310216e3aeed451e8f0bf01abfec7b",
+        "application.json": "fd86358aeb0b196ff67c600371d1f1c5db9491677779d3e4d833dc2975a356c5",
+        "scan-gate.json": "8e83add702a26b350a41586a9eec72ba5391acc3142737bde41a1c2a61f918be",
+        "after-scan.json": "3b72d3bf25008b5d301374bf6aca61c16af978f7699f6dcfc433da2cc66f1783"
+      },
+      "nativeEvidence": {
+        "retained-mongo.json": "3c80d47d50654ced6f75cf9435ceb898d797d51d2309ae0087fe89985b8d5998",
+        "crypto-example.json": "32fc11e3e7c31314021aa4c23c2fcfffed121e541c8aa053db346946c7299edc"
+      },
+      "retainedTargetedFindingsSha256": "c7e8061288348296b904efb2c761539ed8146e13022d2c1110594818687b7a3d",
+      "completeInventorySha256": "1e6c5b566a44ac894978166fa4744b6f60c6ebfdf9b526c7971cb7bcf42c26bf"
+    }
+  ],
+  "retainedSourceProofSha256": "d902417def131679f1c8a61fb4a85a8e7081c2ee24558cdff8aefe6e584464aa",
+  "mongoFixture": {
+    "path": "/var/lib/utilibre-maintenance/coturn-bson-final-20261012/output/mongo-native",
+    "sha256": "63e7adc281e9b7e8fcefabd649747f83c903ef6ce8f474e7067df2ad19941695"
+  },
+  "status": "exact-candidate-reviewed-not-deployed"
+}

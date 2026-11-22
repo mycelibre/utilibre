@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "scope": "Signed same-branch NGINX and native libraries; all unrelated image bytes/configuration must remain identical; no application or data migration",
+  "minimumFreeBytes": 8589934592,
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "packages": {
+    "nginx": {
+      "version": "1.28.3-r9",
+      "file": "nginx-1.28.3-r9.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/nginx-1.28.3-r9.apk",
+      "sha256": "b9283c17df82be92731113d0c2e56cb57cb9e1f515639e67cbcbeb9c953a2144",
+      "signature": "apk verify against existing Alpine signing keys"
+    }
+  },
+  "fixtures": {},
+  "rows": [
+    {
+      "key": "addy",
+      "base": "sha256:f658ff59bd7b51bdff958de65f46604034106d90d153455a40ee37129cfff209",
+      "containers": [
+        "utilibre-addy-app-1"
+      ],
+      "candidate": "utilibre-addy-nginx:20261122",
+      "release": "3.23.5",
+      "packages": {
+        "nginx": "1.28.3-r7"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "approvalBasis": "Existing authorized all-severity repair; same-branch authenticated nginx only; full image/config scope and native Addy/nginx checks passed; no mail sent or database migration.",
+      "reviewedEvidence": {
+        "build.json": "c611f19df9184f40c7c656d5ea58a718c9b634820406130a23e1a38c8b4908dc",
+        "scope.json": "1c7c3f53bc41c3be3db35d2fb118014039d2388fdc3fb2d0571ae2f783a7e171",
+        "application.json": "b2a8840a51a46a91f9eeb68c1d907f4d4625e04da8e6cc6a5d570ae7011646ff",
+        "scan-gate.json": "6020be1cb67dd2fa5112dfe300f171f7f720fd9532d731a31afa42fafff5c4d2",
+        "after-scan.json": "d45a7e27ebf047586e351ceb5dfadb86de7e9ea1815e2e412f0ff2931f1bb99f"
+      }
+    }
+  ]
+}

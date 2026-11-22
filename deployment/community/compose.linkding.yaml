@@ -11,7 +11,7 @@ x-bounded: &bounded
 services:
   linkding:
     <<: *bounded
-    image: utilibre-headers-linkding-linkding:20261114
+    image: utilibre-openssl-extra-linkding-linkding:20261122
     user: '33:33'
     cpus: 1.0
     mem_limit: 512m
@@ -47,7 +47,7 @@ services:
       - ./linkding/custom.py:/etc/linkding/bookmarks/settings/custom.py:ro
   gateway:
     <<: *bounded
-    image: utilibre-vendor-calendar-calino:20261111
+    image: utilibre-security-shared-nginx:20261122
     user: '101:101'
     entrypoint: [nginx, -g, 'daemon off;']
     cpus: 0.25

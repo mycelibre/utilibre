@@ -12,6 +12,8 @@ import {additionalOverlayReceipts} from '../followup-overlays.mjs';
 import {expatDescendant} from '../security-20261103/expat-policy.mjs';
 import {proveVendorDebian} from '../security-20261109/vendor-debian-policy.mjs';
 process.umask(0o077);
+const recordedPrimary=process.argv[2]==='--nov22-primary';
+assert.deepEqual(process.argv.slice(2),recordedPrimary?['--nov22-primary']:[]);
 const dir='/var/lib/utilibre-maintenance/vendor-leaves-final-20261011',out=dir+'/dhi-fixed',sha=b=>createHash('sha256').update(b).digest('hex');fs.mkdirSync(out,{recursive:true});
 const images=[['utilibre-expanded-penpot-frontend-1','sha256:ca4f4adc5367a40e1597bea7d6032de0d08266b6d65cdf083ae4c695d54d23a7'],['utilibre-expanded-penpot-exporter-1','sha256:a3102615b1349f141d787dd806bc3464a49d223a5336471b3e09b1bc74a6d8da']];
 // Only the recorded Expat overlay may advance this exact exporter. All DHI
@@ -47,6 +49,7 @@ const versions={'libpcre2-8-0':['pcre2','10.46-1~deb13u3+dhi0'],'libsqlite3-0':[
 const allowed=new Set('103111 86145 89157 89161 89156 89158 89160 89162 11822 11824 84782 42772 54872 54873 54875 72897 75804 75805 75806 77696 84784 35189 35191 14456 18798 63072 63076 14457 54874 63073 63074 63075 75803 53612 53613 53614 13595 27456 53615'.split(' ').map(x=>'CVE-2026-'+x));allowed.add('CVE-2025-14104');
 const docker=(args)=>{try{return execFileSync('docker',args,{encoding:'utf8',timeout:180000,maxBuffer:4*1024**2,stdio:['ignore','pipe','pipe']});}catch(e){fs.writeFileSync(out+'/error.log',String(e.stdout||'')+String(e.stderr||e));throw Error('DHI proof failed; private diagnostic retained');}};
 const specs=Object.entries(versions).map(([p,[s,v]])=>p+'='+v).join(' ');
+if(recordedPrimary)assert(fs.existsSync(out+'/package-index.txt'),'Recorded reassessment requires retained signed packages; acquisition is separate');
 if(!fs.existsSync(out+'/package-index.txt'))docker(['run','--rm','--name','maintenance-dhi-fixed-proof','--user','0','--cpus','1','--memory','256m','--pids-limit','64','--log-driver','none','--mount','type=bind,src='+out+',dst=/proof','--entrypoint','sh',images[0][1],'-ec',`apt-get update > /proof/apt-index.log 2>&1; cd /proof; apt-get download ${specs} >> /proof/apt-index.log 2>&1; apt-cache show ${specs} > package-index.txt; for a in *.deb; do p=$(dpkg-deb -f "$a" Package); dpkg-deb --control "$a" "$p-control"; done`]);
 const index=fs.readFileSync(out+'/package-index.txt','utf8'),archives=fs.readdirSync(out).filter(n=>n.endsWith('.deb')).map(file=>({file,sha256:sha(fs.readFileSync(out+'/'+file))}));assert.equal(archives.length,Object.keys(versions).length);
 const manifests=new Map();
@@ -65,8 +68,15 @@ for(const archive of archives){
  }finally{fs.rmSync(scratch,{recursive:true});}
 }
 const sourceUrl='https://security-tracker.debian.org/tracker/data/json';
-const response=await fetch(sourceUrl,{signal:AbortSignal.timeout(30000)});assert(response.ok);const bytes=Buffer.from(await response.arrayBuffer());assert(bytes.length<128*1024**2);const tracker=JSON.parse(bytes);
-const sourceEvidence={url:sourceUrl,checkedAt:new Date().toISOString(),sha256:sha(bytes),records:{}};
+let bytes;
+if(recordedPrimary){
+ bytes=fs.readFileSync('/var/lib/utilibre-maintenance/security-20261122/primary/debian-security-tracker.json');
+ assert.equal(sha(bytes),'56ab97cc2791c8dd0476b7d3d060a7a76c9bb9f13a8185131507a6889373759c');
+}else{
+ const response=await fetch(sourceUrl,{signal:AbortSignal.timeout(30000)});assert(response.ok);bytes=Buffer.from(await response.arrayBuffer());
+}
+assert(bytes.length<128*1024**2);const tracker=JSON.parse(bytes);
+const sourceEvidence={url:sourceUrl,checkedAt:new Date().toISOString(),sha256:sha(bytes),context:recordedPrimary?'recorded November 22 primary snapshot; no network refresh':'fresh primary retrieval',records:{}};
 const queue=JSON.parse(fs.readFileSync('/var/lib/utilibre-maintenance/security-queue.json')),scan=JSON.parse(fs.readFileSync('/var/lib/utilibre-maintenance/security.json')),decisions=[],proofs=[],skipped=[];
 freshScan(queue,scan);
 // The November APT overlays use a separately authenticated DHI snapshot.
