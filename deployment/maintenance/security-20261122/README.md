@@ -263,6 +263,35 @@ need no LLM. Byte-for-byte reproducible build output is **not** claimed.
 
 ## Commands and boundaries
 
+### 22 November Addy and Penpot successors
+
+`addy-mariadb-inputs.json` pins the three Alpine MariaDB client packages and
+their source index. `prepare-addy-mariadb.py`, `check-addy-mariadb.py`,
+`scan-addy-mariadb.py` and `release-addy-mariadb.py` reuse the existing exact
+image, native fixture, frozen-scan and scoped Compose gates. The running Addy
+image is `utilibre-addy-mariadb:20261122`.
+
+`penpot-glibc-inputs.json` pins the signed DHI libc and libfontenc archives,
+source-index hashes and both immutable parent images. The
+`inventory-penpot-glibc.py`, `prepare-penpot-glibc.py`,
+`scope-penpot-glibc.py`, `check-penpot-glibc.py`,
+`record-penpot-exporter-glibc.py`, `scan-penpot-glibc.py` and
+`release-penpot-glibc.py` adapters retain the existing builder, native
+checks and exact Compose release gate. Both `apply` operations completed;
+`verify` returns “already deployed; no restart.” All scanner findings left
+on the newer Penpot images remain in the review queue.
+
+The current source record and private release receipts give the exact prior
+image references. A later approved rollback should restore only the affected
+Compose image pins and recreate only those roles through the existing
+supervised project process, then verify their health and image IDs. Neither
+release includes a database migration or retention change. Do not discard
+the old images or receipts before that verification. The dedicated reviewers
+for the changed images are `review-penpot-crypto-successor.py`, the existing
+`review-native-backports.mjs`, `sandbox-inventory/review.mjs` and
+`security-20261028/review-gosu.mjs`; every decision remains exact-image and
+expires in seven days.
+
 | Command | Effect |
 | --- | --- |
 | `inventory.py before` / `after` | Private read-only checkpoint; refuses overwrite |

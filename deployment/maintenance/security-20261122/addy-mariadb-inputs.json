@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "scope": "Signed Alpine v3.23 MariaDB client packages only in the Addy application image",
+  "minimumFreeBytes": 8589934592,
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "packages": {
+    "mariadb-client": {
+      "version": "11.4.14-r0",
+      "file": "mariadb-client-11.4.14-r0.apk",
+      "sha256": "4bbf4a506c46e4441f9adc2617d10820920b03e793c7da7fd8793b35a6a3acce",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/mariadb-client-11.4.14-r0.apk"
+    },
+    "mariadb-common": {
+      "version": "11.4.14-r0",
+      "file": "mariadb-common-11.4.14-r0.apk",
+      "sha256": "2be19ff8bb625a38ecc75872d2a8f4cf6d03f00b7007a2c1def3d868d3588dbb",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/mariadb-common-11.4.14-r0.apk"
+    },
+    "mysql-client": {
+      "version": "11.4.14-r0",
+      "file": "mysql-client-11.4.14-r0.apk",
+      "sha256": "16e66a42e1bbb052a3ed3124146075b64c2f8aa9bbfc97dc2a6ad56ca0f93376",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/mysql-client-11.4.14-r0.apk"
+    }
+  },
+  "fixtures": {},
+  "rows": [
+    {
+      "key": "addy-mariadb",
+      "base": "sha256:83c730ab5a0657b9f45c11cb2521efd6522d0fd4fefa5df32232f3e57d3ff48a",
+      "containers": [
+        "utilibre-addy-app-1"
+      ],
+      "oldRefs": [
+        "utilibre-addy-nginx:20261122"
+      ],
+      "candidate": "utilibre-addy-mariadb:20261122",
+      "release": "3.23.5",
+      "packages": {
+        "mariadb-client": "11.4.12-r0",
+        "mariadb-common": "11.4.12-r0",
+        "mysql-client": "11.4.12-r0"
+      },
+      "approval": "preparation-only",
+      "kind": "alpine",
+      "releaseApproval": "approved",
+      "approvalBasis": "Exact Alpine v3.23 signed packages, complete image/configuration scope, Addy native synthetic checks without mail or database writes, frozen all-severity comparison and read-only Compose preflight passed; no new findings or data migration.",
+      "reviewedEvidence": {
+        "build.json": "0b188fb56000ca05f755a4049c28a63f5cd23f18010461904610bc68696fe325",
+        "scope.json": "4c7462bb43242af63d4f9e5806adcb0a5f60fe8b29790b3174105c7de8744366",
+        "application.json": "1716c3f74d54c5c795f71143b3e03a42ec92e84532c794519f175f81aca486e7",
+        "scan-gate.json": "21807def1d65d0089d74960f210b9ec8f752b4d88a28ddeaba95fb5df4b5d2a7",
+        "after-scan.json": "85745c14a12c4af553a8d8f6f7b751b3075be68c9c862b94bf1cbc764fab25b6"
+      }
+    }
+  ],
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  }
+}

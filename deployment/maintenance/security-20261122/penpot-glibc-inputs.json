@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "minimumFreeBytes": 8589934592,
+  "database": {
+    "databaseSha256": "dba1402419927d3bc4790fbad3eb4309504ee2fb781f431abeebe2ddcce563d9",
+    "metadata": {
+      "Version": 2,
+      "NextUpdate": "2026-11-22T07:02:51.626719593Z",
+      "UpdatedAt": "2026-11-21T07:02:51.626719824Z",
+      "DownloadedAt": "2026-11-21T10:30:44.648413178Z"
+    },
+    "scannerSha256": "6a972c69606c7b3ea4c6bdcc6fc9332ea9ad38381624310c1e85cc77345909f3",
+    "javaDatabase": {
+      "trivy-java.db": "006111b317688276025a139ee028af2a27381680db14add8bb4f6b5f425a2a84",
+      "metadata.json": "c634a1a4023e98ca98808985bca11dc2a2e8790f82cd64999e7c7cdcf76da658"
+    }
+  },
+  "exporterSha256": "cdc9aabef1034e18a3951d0d83caf32f9cf5b03dd7b72ac5bd8575d8e57bbf08",
+  "libcFixture": {
+    "sourceSha256": "afe6acae3c77ff728fee224130406e4b84d8440e92e9c996260e8261b01bed1e",
+    "binarySha256": "b47b2aff5a8fd6c3848ae83a11fd0ae20db47c3e98929e19f22bfd69d4db6938",
+    "compiler": "cc (Debian 14.2.0-19) 14.2.0"
+  },
+  "dhiIndex": {
+    "releaseSha256": "bd7582e9db409cfa14407832773121ad663ea5d6c6e707bb4a5033cbf35e25f0",
+    "binaryIndexSha256": "5cfc4a8b73063e37acd8ea35d50215421f2cde6f3784aa28fd163e640f69f69e",
+    "sourceIndexSha256": "7ac5bc16d54c6f857b172d3f22263c343fbab0359c4191a9fcbac2b9cafc5032",
+    "keySha256": "6f3fec0bd867abb05443bf0487f27426815ce2fa5d75e1136021560518ce78f3",
+    "verifiedDate": "2026-11-22T20:25:30Z"
+  },
+  "packages": {
+    "dhi/libc-bin": {
+      "name": "libc-bin",
+      "version": "2.41-12+deb13u5+dhi0",
+      "file": "libc-bin_2.41-12+deb13u5+dhi0_amd64.deb",
+      "sha256": "b8b895f103bbe5ba69b363a379eea1ff67634a401d75ed719535d3d7bbfcc886",
+      "url": "https://dhi.io/deb/debian/main/pool/trixie/main/l/li/libc-bin_2.41-12+deb13u5+dhi0/libc-bin_2.41-12+deb13u5+dhi0_amd64.deb",
+      "distribution": "dhi-trixie",
+      "depends": "libc6 (>> 2.41), libc6 (<< 2.42)",
+      "preDepends": ""
+    },
+    "dhi/libc-l10n": {
+      "name": "libc-l10n",
+      "version": "2.41-12+deb13u5+dhi0",
+      "file": "libc-l10n_2.41-12+deb13u5+dhi0_all.deb",
+      "sha256": "423ba78303e90c748426823298f3882af453601733726eb9b1132249efd66f73",
+      "url": "https://dhi.io/deb/debian/main/pool/trixie/main/l/li/libc-l10n_2.41-12+deb13u5+dhi0/libc-l10n_2.41-12+deb13u5+dhi0_all.deb",
+      "distribution": "dhi-trixie",
+      "depends": "",
+      "preDepends": ""
+    },
+    "dhi/libc6": {
+      "name": "libc6",
+      "version": "2.41-12+deb13u5+dhi0",
+      "file": "libc6_2.41-12+deb13u5+dhi0_amd64.deb",
+      "sha256": "aac69f1cf6530116124c290595e641d3871d556fb5c019ca244787e11787b933",
+      "url": "https://dhi.io/deb/debian/main/pool/trixie/main/l/li/libc6_2.41-12+deb13u5+dhi0/libc6_2.41-12+deb13u5+dhi0_amd64.deb",
+      "distribution": "dhi-trixie",
+      "depends": "libgcc-s1",
+      "preDepends": ""
+    },
+    "dhi/locales": {
+      "name": "locales",
+      "version": "2.41-12+deb13u5+dhi0",
+      "file": "locales_2.41-12+deb13u5+dhi0_all.deb",
+      "sha256": "1d85149e7de01fcef8ca9f18174de470770e6f95b007f6e8d35f30196f349770",
+      "url": "https://dhi.io/deb/debian/main/pool/trixie/main/l/lo/locales_2.41-12+deb13u5+dhi0/locales_2.41-12+deb13u5+dhi0_all.deb",
+      "distribution": "dhi-trixie",
+      "depends": "libc-bin (>> 2.41), libc-l10n (>> 2.41), debconf (>= 0.5) | debconf-2.0",
+      "preDepends": ""
+    },
+    "dhi/libfontenc1": {
+      "name": "libfontenc1",
+      "version": "1:1.1.8-1+deb13u0+dhi1",
+      "file": "libfontenc1_1.1.8-1+deb13u0+dhi1_amd64.deb",
+      "sha256": "c66cac8b4da2a64a76b1f1a1141992f2ce153372c7d3dbaee2511e407655d24f",
+      "url": "https://dhi.io/deb/debian/main/pool/trixie/main/l/li/libfontenc1_1:1.1.8-1+deb13u0+dhi1/libfontenc1_1.1.8-1+deb13u0+dhi1_amd64.deb",
+      "distribution": "dhi-trixie",
+      "depends": "libc6 (>= 2.41), zlib1g (>= 1:1.2.3.3.dfsg-1)",
+      "preDepends": ""
+    }
+  },
+  "rows": [
+    {
+      "key": "expanded-penpot-frontend-glibc",
+      "base": "sha256:9014d15a057c3b41a61144ce09aab08f6837fa40671587191fcad8b4d334a88d",
+      "containers": [
+        "utilibre-expanded-penpot-frontend-1"
+      ],
+      "oldRefs": [
+        "utilibre-dhi-penpot-frontend:20261122"
+      ],
+      "candidate": "utilibre-dhi-penpot-frontend-glibc:20261122",
+      "kind": "debian",
+      "suite": "dhi-trixie",
+      "consumerProfile": "static-nginx",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4+dhi1",
+          "package": "dhi/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4+dhi1",
+          "package": "dhi/libc6"
+        }
+      },
+      "approval": "preparation-only",
+      "completeInventorySha256": "07f3b33100e39d6287087c6d38c5a76384b099674978250a9876cd39230ae7d1",
+      "reviewedEvidence": {
+        "build.json": "3b522a727c88cda02083f529cfca1a7b4fbf4195583d11b66f66694d24b5a830",
+        "scope.json": "bccd7a4e32fca72ce62048fbd573772364ed5f9a192dd141c55edd2e2f7d300d",
+        "application.json": "e3a108dfd6d6950880c4a8ad4997f9136d39b662e66d25a04feb157ff5a3873f",
+        "scan-gate.json": "782f7b2be9618cf6ff9b5e0798d0b2d8e626739c6b343274909eee2ccaae74f9",
+        "after-scan.json": "5f123ab2ff31bdb7a14c859183e4b5bee39127940032245e79cac2740025a348"
+      },
+      "retainedTargetedFindingsSha256": "b3a51ef839d34fc926c51ea1eeb47eb6bfc7b74a64b098be7a7661b8b0977c60",
+      "reviewedAt": "2026-11-22T21:37:26.790085+00:00",
+      "releaseApproval": "approved",
+      "approvalScope": "Exact signed DHI package update with complete file and native-package scope; frontend route or exporter raster and font checks pass. No change in frozen scanner findings; all unresolved advisories remain in triage. Only the selected Penpot image may change; no data migration or access/retention change."
+    },
+    {
+      "key": "expanded-penpot-exporter-glibc",
+      "base": "sha256:e4c763754370a6043153c7bb594b9223242bcfb3389991407f820e75cc422c9c",
+      "containers": [
+        "utilibre-expanded-penpot-exporter-1"
+      ],
+      "oldRefs": [
+        "utilibre-dhi-penpot-exporter:20261122"
+      ],
+      "candidate": "utilibre-dhi-penpot-exporter-glibc:20261122",
+      "kind": "debian",
+      "suite": "dhi-trixie",
+      "packages": {
+        "libc-bin": {
+          "installed": "2.41-12+deb13u4+dhi1",
+          "package": "dhi/libc-bin"
+        },
+        "libc6": {
+          "installed": "2.41-12+deb13u4+dhi1",
+          "package": "dhi/libc6"
+        },
+        "libc-l10n": {
+          "installed": "2.41-12+deb13u4+dhi1",
+          "package": "dhi/libc-l10n"
+        },
+        "locales": {
+          "installed": "2.41-12+deb13u4+dhi1",
+          "package": "dhi/locales"
+        },
+        "libfontenc1": {
+          "installed": "1:1.1.8-1+dhi0",
+          "package": "dhi/libfontenc1"
+        }
+      },
+      "approval": "preparation-only",
+      "completeInventorySha256": "bc2fb4514a00e3f169ac93df276e2ebb9682d761ef68531df41d4bd9dc560008",
+      "reviewedEvidence": {
+        "build.json": "5abebdbe33bea425e40fb4aa0c4ebd43421626ddc1bd9df4ed4128aeab6bd4d0",
+        "scope.json": "8c3631e7857b330c9659d2aac80477b07376a1f82240dd9659ddce345193eac4",
+        "application.json": "9183482f9b16e9f05273bd402bcee2ded9e9a1cde1441ca23ad671ca9b157fa5",
+        "scan-gate.json": "bf88ff2fb0ab52674e7f5f60663a3c7856dc919744762c5027bc59ee5fb574b0",
+        "after-scan.json": "7f44203af1ad4e3fcc784c142cbb76fb95e947c61921c883a4ab7890053db101"
+      },
+      "retainedTargetedFindingsSha256": "746fdd7d51c02d21252155ee3f815b621671d8b836b399cc4783555c3b8c65df",
+      "reviewedAt": "2026-11-22T21:37:26.809363+00:00",
+      "releaseApproval": "approved",
+      "approvalScope": "Exact signed DHI package update with complete file and native-package scope; frontend route or exporter raster and font checks pass. No change in frozen scanner findings; all unresolved advisories remain in triage. Only the selected Penpot image may change; no data migration or access/retention change."
+    }
+  ]
+}

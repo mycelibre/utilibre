@@ -25,6 +25,9 @@ export const additionalOverlayReceipts = [
   'security-20261122/effect/spliit/release-utilibre-spliit.json',
   'security-20261122/effect/wishlist/release-utilibre-wishlist.json',
   'security-20261122/admin-build-deps/admin/release-utilibre-expanded.json',
+  'security-20261122/addy-mariadb/addy-mariadb/release-utilibre-addy.json',
+  'security-20261122/vendor-debian/expanded-penpot-frontend-glibc/release-utilibre-expanded.json',
+  'security-20261122/vendor-debian/expanded-penpot-exporter-glibc/release-utilibre-expanded.json',
   'security-20261122/xml-successor/images/release.json',
   'security-20261122/mumble-xml/vendor-debian/mumble-mumble/release-utilibre-mumble.json',
   // Both relay roles completed independently after their idle checks.
