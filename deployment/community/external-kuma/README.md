@@ -99,8 +99,12 @@ paths before installing `nginx-public-status-tls.conf` in place of the HTTP
 site. The TLS file keeps the webroot challenge on HTTP for renewals, redirects
 other HTTP requests to HTTPS, and serves only the public Kuma routes over
 HTTPS. Check `nginx -t`, reload Nginx, inspect the certificate and page/API,
-and run `certbot renew --dry-run` to test renewal. Keep the old status service
-available until the new public route passes.
+and run `certbot renew --dry-run` to test renewal. The selected VM had no
+Certbot deploy hook, so install `certbot-nginx-deploy-hook.sh` with executable
+mode in `/etc/letsencrypt/renewal-hooks/deploy/`. It tests and reloads Nginx
+after a successful renewal, including the existing Nextcloud certificate.
+Run the hook once manually after installation and verify both HTTPS sites.
+Keep the old status service available until the new public route passes.
 
 Obtain a valid certificate for `status.utilibre.org` and add the equivalent
 HTTPS site **before** claiming the outside page is public. The current outside
@@ -157,4 +161,5 @@ the outside Kuma data directory using its established backup procedure.
 References: [Uptime Kuma 2 migration](https://github.com/louislam/uptime-kuma/wiki/Migration-From-v1-To-v2),
 [status pages](https://github.com/louislam/uptime-kuma/wiki/Status-Page),
 [Kuma reverse proxy](https://github.com/louislam/uptime-kuma/wiki/Reverse-Proxy),
-[Nextcloud AIO reverse proxy](https://github.com/nextcloud/all-in-one/blob/main/reverse-proxy.md).
+[Nextcloud AIO reverse proxy](https://github.com/nextcloud/all-in-one/blob/main/reverse-proxy.md),
+[Certbot 1.21 renewal hooks](https://github.com/certbot/certbot/blob/v1.21.0/certbot/docs/using.rst#pre-and-post-validation-hooks).
