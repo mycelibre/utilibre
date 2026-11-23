@@ -1,0 +1,1032 @@
+{
+  "schemaVersion": 1,
+  "source": "Utilibre public catalogue and /_portal/config",
+  "enabledServiceCount": 106,
+  "targets": [
+    {
+      "id": "portal-health",
+      "name": "Portal health",
+      "group": "Core",
+      "type": "http",
+      "url": "https://utilibre.org/healthz",
+      "interval": 120,
+      "services": []
+    },
+    {
+      "id": "portal-page",
+      "name": "Portal homepage",
+      "group": "Core",
+      "type": "http",
+      "url": "https://utilibre.org/en/",
+      "interval": 300,
+      "services": []
+    },
+    {
+      "id": "openplan3d",
+      "name": "OpenPlan3D",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://floorplan.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "openplan3d"
+      ]
+    },
+    {
+      "id": "blockbench",
+      "name": "Blockbench",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://blockbench.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "blockbench"
+      ]
+    },
+    {
+      "id": "glyphr",
+      "name": "Glyphr Studio",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://glyphr.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "glyphr"
+      ]
+    },
+    {
+      "id": "jscad",
+      "name": "JSCAD",
+      "group": "Data",
+      "type": "http",
+      "url": "https://jscad.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "jscad"
+      ]
+    },
+    {
+      "id": "fossflow",
+      "name": "FossFLOW",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://fossflow.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "fossflow"
+      ]
+    },
+    {
+      "id": "vvveb",
+      "name": "VvvebJs",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://vvveb.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "vvveb"
+      ]
+    },
+    {
+      "id": "grid",
+      "name": "GridSpace",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://grid.utilibre.org/kiri/",
+      "interval": 600,
+      "services": [
+        "grid"
+      ]
+    },
+    {
+      "id": "openreel",
+      "name": "OpenReel",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://openreel.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "openreel"
+      ]
+    },
+    {
+      "id": "grist",
+      "name": "Grist",
+      "group": "Data",
+      "type": "http",
+      "url": "https://grist.utilibre.org/healthz",
+      "interval": 600,
+      "services": [
+        "grist"
+      ]
+    },
+    {
+      "id": "candlr",
+      "name": "Candlr",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://candlr.utilibre.org/login",
+      "interval": 600,
+      "services": [
+        "candlr"
+      ]
+    },
+    {
+      "id": "bookplate",
+      "name": "Bookplate",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://bookplate.utilibre.org/login",
+      "interval": 600,
+      "services": [
+        "bookplate"
+      ]
+    },
+    {
+      "id": "texlyre",
+      "name": "TeXlyre",
+      "group": "Documents",
+      "type": "http",
+      "url": "https://latex.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "texlyre"
+      ]
+    },
+    {
+      "id": "librespeed",
+      "name": "LibreSpeed",
+      "group": "Data",
+      "type": "http",
+      "url": "https://speed.utilibre.org/healthz",
+      "interval": 600,
+      "services": [
+        "librespeed"
+      ]
+    },
+    {
+      "id": "one-file-core",
+      "name": "The One File Core",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://tools.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "one-file-core",
+        "tiddlywiki",
+        "moocup",
+        "rustpad",
+        "autoredact",
+        "gravity",
+        "knit",
+        "newton",
+        "kokoro-web",
+        "link-cleaner",
+        "moodist",
+        "sketchforge",
+        "chartdb",
+        "drawdb",
+        "bookbinder",
+        "omnitools"
+      ]
+    },
+    {
+      "id": "family-chess",
+      "name": "Family Chess",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://chess.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "family-chess"
+      ]
+    },
+    {
+      "id": "projects",
+      "name": "La Suite Projects",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://projects.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "projects"
+      ]
+    },
+    {
+      "id": "trip",
+      "name": "TRIP",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://trip.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "trip"
+      ]
+    },
+    {
+      "id": "wallabag",
+      "name": "Wallabag",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://wallabag.utilibre.org/login",
+      "interval": 600,
+      "services": [
+        "wallabag"
+      ]
+    },
+    {
+      "id": "donetick",
+      "name": "Donetick",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://chores.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "donetick"
+      ]
+    },
+    {
+      "id": "beaverhabits",
+      "name": "Beaver Habit Tracker",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://habits.utilibre.org/login",
+      "interval": 600,
+      "services": [
+        "beaverhabits"
+      ]
+    },
+    {
+      "id": "newsletters",
+      "name": "Kill the Newsletter!",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://newsletters.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "newsletters"
+      ]
+    },
+    {
+      "id": "addy",
+      "name": "addy.io",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://aliases.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "addy"
+      ]
+    },
+    {
+      "id": "spliit",
+      "name": "Spliit",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://expenses.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "spliit"
+      ]
+    },
+    {
+      "id": "wishlist",
+      "name": "Wishlist",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://wishlist.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "wishlist"
+      ]
+    },
+    {
+      "id": "kitchenowl",
+      "name": "KitchenOwl",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://kitchen.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "kitchenowl"
+      ]
+    },
+    {
+      "id": "opengist",
+      "name": "Opengist",
+      "group": "Data",
+      "type": "http",
+      "url": "https://snippets.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "opengist"
+      ]
+    },
+    {
+      "id": "linkding",
+      "name": "linkding",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://bookmarks.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "linkding"
+      ]
+    },
+    {
+      "id": "vikunja",
+      "name": "Vikunja",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://tasks.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "vikunja"
+      ]
+    },
+    {
+      "id": "bytestash",
+      "name": "ByteStash",
+      "group": "Data",
+      "type": "http",
+      "url": "https://snippets-library.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "bytestash"
+      ]
+    },
+    {
+      "id": "openresume",
+      "name": "OpenResume",
+      "group": "Documents",
+      "type": "http",
+      "url": "https://resume-builder.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "openresume"
+      ]
+    },
+    {
+      "id": "calino",
+      "name": "Calino",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://calendar.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "calino",
+        "radicale"
+      ]
+    },
+    {
+      "id": "chitchatter",
+      "name": "Chitchatter",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://chat.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "chitchatter"
+      ]
+    },
+    {
+      "id": "gathio",
+      "name": "Gathio",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://events.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "gathio"
+      ]
+    },
+    {
+      "id": "razzia",
+      "name": "Razzia",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://quiz.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "razzia"
+      ]
+    },
+    {
+      "id": "chhoto",
+      "name": "Chhoto URL",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://links.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "chhoto"
+      ]
+    },
+    {
+      "id": "unfurl",
+      "name": "Unfurl",
+      "group": "Data",
+      "type": "http",
+      "url": "https://expand.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "unfurl"
+      ]
+    },
+    {
+      "id": "13ft",
+      "name": "13ft",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://read.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "13ft"
+      ]
+    },
+    {
+      "id": "cryptpad",
+      "name": "CryptPad",
+      "group": "Documents",
+      "type": "http",
+      "url": "https://pad.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "cryptpad"
+      ]
+    },
+    {
+      "id": "liberaforms",
+      "name": "LiberaForms",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://forms.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "liberaforms"
+      ]
+    },
+    {
+      "id": "galene",
+      "name": "Galene",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://meet.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "galene"
+      ]
+    },
+    {
+      "id": "wbo",
+      "name": "WBO",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://collab.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "wbo"
+      ]
+    },
+    {
+      "id": "pollaris",
+      "name": "Pollaris",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://pollaris.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "pollaris"
+      ]
+    },
+    {
+      "id": "reactive-resume",
+      "name": "Reactive Resume",
+      "group": "Documents",
+      "type": "http",
+      "url": "https://cv.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "reactive-resume"
+      ]
+    },
+    {
+      "id": "penpot",
+      "name": "Penpot",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://design.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "penpot"
+      ]
+    },
+    {
+      "id": "actual",
+      "name": "Actual Budget",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://budget.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "actual"
+      ]
+    },
+    {
+      "id": "rallly",
+      "name": "Rallly",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://poll.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "rallly"
+      ]
+    },
+    {
+      "id": "wakapi",
+      "name": "Wakapi",
+      "group": "Data",
+      "type": "http",
+      "url": "https://wakapi.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "wakapi"
+      ]
+    },
+    {
+      "id": "priviblur",
+      "name": "Priviblur",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://tumblr.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "priviblur"
+      ]
+    },
+    {
+      "id": "mezzo",
+      "name": "Mezzo",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://tenor.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "mezzo"
+      ]
+    },
+    {
+      "id": "fmd",
+      "name": "FMD Server",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://fmd.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "fmd"
+      ]
+    },
+    {
+      "id": "lrclib",
+      "name": "LRCLIB",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://lyrics.utilibre.org/healthz",
+      "interval": 600,
+      "services": [
+        "lrclib"
+      ]
+    },
+    {
+      "id": "degoog",
+      "name": "DeGoog",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://degoog.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "degoog"
+      ]
+    },
+    {
+      "id": "fourget",
+      "name": "4get",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://4get.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "fourget"
+      ]
+    },
+    {
+      "id": "safetwitch",
+      "name": "SafeTwitch",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://twitch.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "safetwitch"
+      ]
+    },
+    {
+      "id": "anonymousoverflow",
+      "name": "AnonymousOverflow",
+      "group": "Data",
+      "type": "http",
+      "url": "https://overflow.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "anonymousoverflow"
+      ]
+    },
+    {
+      "id": "kittygram",
+      "name": "Kittygram",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://gram.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "kittygram"
+      ]
+    },
+    {
+      "id": "mumble-tcp",
+      "name": "Mumble TCP listener",
+      "group": "Sharing",
+      "type": "port",
+      "hostname": "mumble.utilibre.org",
+      "port": 64738,
+      "interval": 300,
+      "services": [
+        "mumble"
+      ]
+    },
+    {
+      "id": "biblioreads",
+      "name": "BiblioReads",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://biblioreads.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "biblioreads"
+      ]
+    },
+    {
+      "id": "gothub",
+      "name": "GotHub",
+      "group": "Data",
+      "type": "http",
+      "url": "https://gothub.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "gothub"
+      ]
+    },
+    {
+      "id": "binternet",
+      "name": "Binternet",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://binternet.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "binternet"
+      ]
+    },
+    {
+      "id": "translite",
+      "name": "TransLite",
+      "group": "Data",
+      "type": "http",
+      "url": "https://translate.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "translite"
+      ]
+    },
+    {
+      "id": "jupyterlite",
+      "name": "JupyterLite",
+      "group": "Data",
+      "type": "http",
+      "url": "https://python.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "jupyterlite"
+      ]
+    },
+    {
+      "id": "rssbridge",
+      "name": "RSS-Bridge",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://bridge.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "rssbridge"
+      ]
+    },
+    {
+      "id": "ntfy",
+      "name": "ntfy",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://notify.utilibre.org/v1/health",
+      "interval": 600,
+      "services": [
+        "ntfy"
+      ]
+    },
+    {
+      "id": "yopass",
+      "name": "Yopass",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://secret.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "yopass"
+      ]
+    },
+    {
+      "id": "pairdrop",
+      "name": "PairDrop",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://drop.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "pairdrop"
+      ]
+    },
+    {
+      "id": "uptime-kuma",
+      "name": "Uptime Kuma",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://status.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "uptime-kuma"
+      ]
+    },
+    {
+      "id": "super-productivity",
+      "name": "Super Productivity",
+      "group": "Data",
+      "type": "http",
+      "url": "https://plan.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "super-productivity"
+      ]
+    },
+    {
+      "id": "mapshaper",
+      "name": "Mapshaper",
+      "group": "Data",
+      "type": "http",
+      "url": "https://maps.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "mapshaper"
+      ]
+    },
+    {
+      "id": "numbat",
+      "name": "Numbat",
+      "group": "Data",
+      "type": "http",
+      "url": "https://calc.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "numbat"
+      ]
+    },
+    {
+      "id": "markmap",
+      "name": "Markmap",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://mindmap.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "markmap"
+      ]
+    },
+    {
+      "id": "excalidraw",
+      "name": "Excalidraw",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://whiteboard.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "excalidraw"
+      ]
+    },
+    {
+      "id": "svgedit",
+      "name": "SVGEdit",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://svg.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "svgedit"
+      ]
+    },
+    {
+      "id": "cyberchef",
+      "name": "CyberChef",
+      "group": "Data",
+      "type": "http",
+      "url": "https://cyberchef.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "cyberchef"
+      ]
+    },
+    {
+      "id": "image-scrubber",
+      "name": "Image Scrubber",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://scrub.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "image-scrubber"
+      ]
+    },
+    {
+      "id": "zip-manager",
+      "name": "ZIP Manager",
+      "group": "Documents",
+      "type": "http",
+      "url": "https://zip.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "zip-manager"
+      ]
+    },
+    {
+      "id": "rawgraphs",
+      "name": "RAWGraphs",
+      "group": "Data",
+      "type": "http",
+      "url": "https://charts.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "rawgraphs"
+      ]
+    },
+    {
+      "id": "audiomass",
+      "name": "AudioMass",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://audio.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "audiomass"
+      ]
+    },
+    {
+      "id": "minipaint",
+      "name": "miniPaint",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://paint.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "minipaint"
+      ]
+    },
+    {
+      "id": "bentopdf",
+      "name": "BentoPDF",
+      "group": "Documents",
+      "type": "http",
+      "url": "https://pdf.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "bentopdf"
+      ]
+    },
+    {
+      "id": "vert",
+      "name": "VERT",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://convert.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "vert"
+      ]
+    },
+    {
+      "id": "hatsh",
+      "name": "hat.sh",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://hat.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "hatsh"
+      ]
+    },
+    {
+      "id": "drawio",
+      "name": "draw.io",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://draw.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "drawio"
+      ]
+    },
+    {
+      "id": "miniqr",
+      "name": "Mini QR",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://qr.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "miniqr"
+      ]
+    },
+    {
+      "id": "qr-offline",
+      "name": "QR Generator Offline",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://qrtools.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "qr-offline"
+      ]
+    },
+    {
+      "id": "ittools",
+      "name": "IT Tools",
+      "group": "Data",
+      "type": "http",
+      "url": "https://dev.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "ittools"
+      ]
+    },
+    {
+      "id": "searxng",
+      "name": "SearXNG",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://search.utilibre.org/healthz",
+      "interval": 300,
+      "services": [
+        "searxng"
+      ]
+    },
+    {
+      "id": "freshrss",
+      "name": "FreshRSS",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://rss.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "freshrss"
+      ]
+    },
+    {
+      "id": "redlib",
+      "name": "Redlib",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://redlib.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "redlib"
+      ]
+    },
+    {
+      "id": "privatebin",
+      "name": "PrivateBin",
+      "group": "Sharing",
+      "type": "http",
+      "url": "https://paste.utilibre.org/",
+      "interval": 600,
+      "services": [
+        "privatebin"
+      ]
+    }
+  ]
+}
