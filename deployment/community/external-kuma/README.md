@@ -71,34 +71,41 @@ reachability from another host too. The process environment must be persisted
 before a reboot; an application `.env` setting is an additional supported way
 to keep the same binding.
 
-If Caddy runs on the outside VM, its site block is:
+The selected outside VM now has Nginx serving `valoracion.xyz` and proxying
+Nextcloud AIO to `127.0.0.1:11000`. Keep that site intact. Add a **separate**
+`status.utilibre.org` Nginx site that proxies only Kuma's public status routes
+to `127.0.0.1:3001`. Reuse the tested path allowlist from
+`deployment/community/gateway.conf`; do not publish Kuma's dashboard, setup,
+administrative WebSocket or login routes. Set `access_log off` in the status
+site; the Nginx global default currently enables request logging.
 
-```caddyfile
-status.utilibre.org {
-    redir / /status/utilibre 308
-    reverse_proxy 127.0.0.1:3001
-}
-```
+First prepare an HTTP site and test it against the outside IP with `curl
+--resolve` while public DNS still points to the existing status service. The
+site must return 200 for `/status/utilibre` and its status-page API, and 404
+for `/dashboard` and `/setup`. Create
+`/var/www/letsencrypt/.well-known/acme-challenge` before activating the site.
+The reviewed site file is `nginx-public-status.conf`. It uses short, explicit
+locations because a pasted long regular expression was wrapped and failed
+`nginx -t` on the selected VM. It passed an isolated Nginx syntax check; run
+`nginx -t` against the actual server before reloading it. Do not overwrite
+Nextcloud's `valoracion.xyz` site or its certificate.
 
-On the currently selected outside VM, Nextcloud AIO already binds public TCP
-443 through its Apache container. Do **not** start a second Caddy listener on
-443 or edit the generated AIO Apache container to fit Kuma. Nextcloud AIO has
-a documented reverse-proxy mode, but changing that deployment is a separate
-maintenance operation; the observed AIO mastercontainer restart loop must be
-resolved first. Until a supported HTTPS route exists, keep the existing
-Utilibre status hostname on its original server and keep Kuma's new page
-private, with administration over an SSH tunnel.
-
-Caddy's reverse proxy handles Kuma's WebSocket connection. Do not add access
-logging for this host. After the `utilibre` page exists, point the hostname's A
-record to the outside VM and open HTTPS (and HTTP for certificate issuance) in
-the VM and provider firewalls. A DNS-only record keeps the status page reachable
-if the main site's HTTP proxy is down. Confirm the public HTTPS page and API
-return 200 before removing the existing same-server status route. Then remove
-public ingress to TCP 3001 at the provider and VM firewall; verify that
-`ss -ltnp` shows Kuma listening on `127.0.0.1:3001`, and that a request to the
-outside VM's public IP on port 3001 fails. The page slug is `utilibre`; there is
-no need to create a duplicate `default` page or attach monitors by hand.
+Obtain a valid certificate for `status.utilibre.org` and add the equivalent
+HTTPS site **before** claiming the outside page is public. The current outside
+server presents a certificate for `valoracion.xyz` when asked for
+`status.utilibre.org`. An ACME DNS challenge can issue the certificate before
+the public A record moves, provided the outside VM has a scoped, protected
+credential and a renewal procedure. If using Certbot's HTTP challenge instead,
+create an explicit DNS-only `status` A record for the outside VM immediately
+before issuance; the existing wildcard points at the main Utilibre edge. This
+causes a brief status-page interruption until the certificate is installed.
+Keep the old status service ready for DNS rollback. A DNS-only record keeps the
+status page reachable if the main site's HTTP proxy is down. Verify the normal
+public HTTPS page and API return 200, the certificate matches, and the
+dashboard/setup return 404 before removing the existing same-server status
+route. Keep Kuma bound to
+`127.0.0.1:3001`; direct public access to port 3001 must fail. The page slug
+is `utilibre`; there is no need for a duplicate `default` page.
 
 Keep the portal's existing language-specific status pages until their links and
 data-handling description are updated to reflect the outside monitor. They
@@ -136,4 +143,6 @@ other websites remains untouched. Before any database-level restore, back up
 the outside Kuma data directory using its established backup procedure.
 
 References: [Uptime Kuma 2 migration](https://github.com/louislam/uptime-kuma/wiki/Migration-From-v1-To-v2),
-[status pages](https://github.com/louislam/uptime-kuma/wiki/Status-Page).
+[status pages](https://github.com/louislam/uptime-kuma/wiki/Status-Page),
+[Kuma reverse proxy](https://github.com/louislam/uptime-kuma/wiki/Reverse-Proxy),
+[Nextcloud AIO reverse proxy](https://github.com/nextcloud/all-in-one/blob/main/reverse-proxy.md).
