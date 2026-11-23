@@ -54,6 +54,41 @@ than attaching an email notification to every monitor immediately. Map a
 public status hostname to the **outside** VM only after its HTTPS route works;
 do not proxy that hostname through the Utilibre VM.
 
+## Publish from the outside VM
+
+Keep port 3001 private. A direct public `http://SERVER:3001` route exposes the
+Kuma login over plaintext HTTP. On a native installation, the supported
+`UPTIME_KUMA_HOST=127.0.0.1` setting in the application `.env` makes Kuma listen
+only on loopback. Identify its actual process supervisor before restarting it;
+do not assume Docker or systemd. Use a local SSH tunnel for administration until
+the HTTPS route is ready.
+
+If Caddy runs on the outside VM, its site block is:
+
+```caddyfile
+status.utilibre.org {
+    redir / /status/utilibre 308
+    reverse_proxy 127.0.0.1:3001
+}
+```
+
+Caddy's reverse proxy handles Kuma's WebSocket connection. Do not add access
+logging for this host. After the `utilibre` page exists, point the hostname's A
+record to the outside VM and open HTTPS (and HTTP for certificate issuance) in
+the VM and provider firewalls. A DNS-only record keeps the status page reachable
+if the main site's HTTP proxy is down. Confirm the public HTTPS page and API
+return 200 before removing the existing same-server status route. Then remove
+public ingress to TCP 3001 at the provider and VM firewall; verify that
+`ss -ltnp` shows Kuma listening on `127.0.0.1:3001`, and that a request to the
+outside VM's public IP on port 3001 fails. The page slug is `utilibre`; there is
+no need to create a duplicate `default` page or attach monitors by hand.
+
+Keep the portal's existing language-specific status pages until their links and
+data-handling description are updated to reflect the outside monitor. They
+measure a different, same-server path. If anyone used the login over direct
+HTTP, change that admin password over HTTPS and enable Kuma's native two-factor
+authentication.
+
 ## Scope and limits
 
 These are public, synthetic GET/TCP checks. They send no user files, search

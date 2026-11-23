@@ -68,7 +68,7 @@ const base = 'http://127.0.0.1:' + port;
 const socket = io(base, { transports: ['websocket'], reconnection: false });
 const deadline = setTimeout(() => { console.error('Kuma operation timed out'); process.exit(1); }, 600000);
 const call = (name, ...args) => new Promise((resolve, reject) =>
-  socket.timeout(20000).emit(name, ...args, (error, result) =>
+  socket.timeout(60000).emit(name, ...args, (error, result) =>
     error ? reject(Error(name + ' timed out')) :
     result?.ok === false ? reject(Error(name + ': ' + result.msg)) : resolve(result)));
 const monitorKey = target => target.type === 'http'
@@ -109,9 +109,11 @@ socket.on('connect', async () => {
         name, type: target.type, interval: target.interval,
         retryInterval: 60, resendInterval: 0, maxretries: 2, timeout: 20,
         active: true, upsideDown: false, notificationIDList: {}, conditions: [],
+        // Kuma 2.5 validates this field for every monitor type, including TCP.
+        accepted_statuscodes: ['200-299'],
       };
       if (target.type === 'http') Object.assign(settings, {
-        url: target.url, method: 'GET', accepted_statuscodes: ['200-299'],
+        url: target.url, method: 'GET',
         maxredirects: 5, ignoreTls: false, cacheBust: false,
       });
       else Object.assign(settings, { hostname: target.hostname, port: target.port });
@@ -122,18 +124,26 @@ socket.on('connect', async () => {
       added++;
     }
     if (mode === 'apply') {
-      let pageResponse = await fetch(base + '/api/status-page/utilibre');
       let createdPage = false;
-      if (pageResponse.status === 404) {
+      let pageSettings;
+      try {
+        pageSettings = await call('getStatusPage', 'utilibre');
+      } catch (error) {
+        if (error.message !== 'getStatusPage: No slug?') throw error;
         await call('addStatusPage', 'Utilibre', 'utilibre');
         createdPage = true;
-        pageResponse = await fetch(base + '/api/status-page/utilibre');
+        pageSettings = await call('getStatusPage', 'utilibre');
       }
-      if (!pageResponse.ok) throw Error('Cannot load Utilibre status page: HTTP ' + pageResponse.status);
-      const publicPage = await pageResponse.json();
-      const groups = Array.isArray(publicPage.publicGroupList) ? publicPage.publicGroupList : [];
-      const settings = await call('getStatusPage', 'utilibre');
-      const config = settings.config;
+      let groups = [];
+      if (!createdPage) {
+        // Kuma caches this API for five minutes, including a prior 404.
+        const pageResponse = await fetch(base + '/api/status-page/utilibre?import=' + Date.now());
+        if (!pageResponse.ok) throw Error('Cannot load Utilibre status page: HTTP ' + pageResponse.status);
+        const publicPage = await pageResponse.json();
+        if (!Array.isArray(publicPage.publicGroupList)) throw Error('Invalid Utilibre status page groups');
+        groups = publicPage.publicGroupList;
+      }
+      const config = pageSettings.config;
       if (!config) throw Error('Cannot read status page settings');
       for (const target of manifest.targets) {
         let group = groups.find(g => g.name === target.group);
