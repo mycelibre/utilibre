@@ -113,22 +113,17 @@ after a successful renewal, including the existing Nextcloud certificate.
 Run the hook once manually after installation and verify both HTTPS sites.
 Keep the old status service available until the new public route passes.
 
-Obtain a valid certificate for `status.utilibre.org` and add the equivalent
-HTTPS site **before** claiming the outside page is public. The current outside
-server presents a certificate for `valoracion.xyz` when asked for
-`status.utilibre.org`. An ACME DNS challenge can issue the certificate before
-the public A record moves, provided the outside VM has a scoped, protected
-credential and a renewal procedure. If using Certbot's HTTP challenge instead,
-create an explicit DNS-only `status` A record for the outside VM immediately
-before issuance; the existing wildcard points at the main Utilibre edge. This
-causes a brief status-page interruption until the certificate is installed.
-Keep the old status service ready for DNS rollback. A DNS-only record keeps the
-status page reachable if the main site's HTTP proxy is down. Verify the normal
-public HTTPS page and API return 200, the certificate matches, and the
-dashboard/setup return 404 before removing the existing same-server status
-route. Keep Kuma bound to
-`127.0.0.1:3001`; direct public access to port 3001 must fail. The page slug
-is `utilibre`; there is no need for a duplicate `default` page.
+On 23 November 2026 the explicit DNS-only A record for `status.utilibre.org`
+points to the outside VM (`132.145.156.141`). Its valid certificate expires on
+21 February 2027; Certbot 1.21.0's renewal dry run passed, and the reviewed
+deploy hook reloads Nginx after successful renewal. Public HTTPS
+`/status/utilibre` and its status-page API returned 200 with 92 monitors in six
+groups; `/dashboard`, `/setup`, and the administrative socket returned 404.
+Nextcloud's separate HTTPS host still worked, and Kuma listened only on
+`127.0.0.1:3001`. The page slug is `utilibre`, without a duplicate `default`
+page. Preserve the previous same-server status service for a DNS rollback until
+its retirement is separately reviewed. The external page does not depend on
+the Utilibre VM's HTTP proxy.
 
 Keep the portal's existing language-specific status pages until their links and
 data-handling description are updated to reflect the outside monitor. They
