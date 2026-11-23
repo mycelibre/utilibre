@@ -2,9 +2,10 @@
 
 ## Current root-disk headroom — 23 November 2026
 
-The verified cleanup ended with **69.97 GiB available, 78% used** on the 330 GiB
-root filesystem. The [recovery record](records/space-recovery-2026-11-23.md)
-contains the exact off-host snapshots, restore checks, and retained inputs.
+The verified additional cleanup ended with **79.85 GiB available, 75% used** on
+the 330 GiB root filesystem. The
+[recovery record](records/space-recovery-2026-11-23.md) contains the exact
+off-host snapshots, restore checks, and retained inputs.
 The 15 GiB temporary-data disk is separate and cannot absorb root build work.
 
 The aggregate performance history shows free space falling from about 22.5 GiB
@@ -15,15 +16,22 @@ report now flag root space below **60 GiB**. The existing weekly digest includes
 free space and its change since the previous digest; neither change adds a
 notification schedule or collects visitor activity.
 
-The weekly `utilibre-disk-reclaim.timer` uses the existing reviewed BuildKit
-selector only when less than **80 GiB** is available. It removes reclaimable,
-unshared regular cache records of at least 50 MiB that were last used at least
-12 hours ago. It does not prune images, containers, volumes, source trees or
-backups. Cache cleanup may slow the next build and cannot compensate for large
-retained release workspaces; the unit is monitored for failures. Its report is
-stored under `/opt/utilibre/reports/disk-headroom-20261009`. The timer was
-enabled on November 23; a manual unit run succeeded with zero eligible cache
-records after that day's cleanup. Its next scheduled run is November 29.
+The weekly `utilibre-disk-reclaim.timer` first bounds official SearXNG image
+history. `python3 scripts/reclaim-searxng-images.py` is read-only by default;
+the installed unit uses `--apply`. It protects images referenced by any
+container, configured pins and repair records, the three newest images, and
+images younger than 14 days. It does not pull images or restart search. An
+older image needed for a historical rollback may require the encrypted OCI
+archive described in the recovery record or a fresh registry pull. The same
+unit then uses the reviewed BuildKit selector only when less than **80 GiB** is
+available. That step removes reclaimable, unshared regular cache records of at
+least 50 MiB last used at least 12 hours ago. Neither step prunes containers,
+volumes, source trees or backups. Cache cleanup may slow the next build and
+cannot compensate for large retained release workspaces. The unit is monitored
+for failures; its BuildKit report is stored under
+`/opt/utilibre/reports/disk-headroom-20261009`. The installed unit's manual
+run passed on November 23 with zero remaining SearXNG candidates and zero
+eligible BuildKit records. Its next scheduled run is November 29.
 
 After a build or upgrade, check the available space and the exact new image,
 BuildKit and maintenance-workspace allocations. Keep current release inputs

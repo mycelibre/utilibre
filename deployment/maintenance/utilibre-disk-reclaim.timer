@@ -1,5 +1,5 @@
 [Unit]
-Description=Weekly bounded Utilibre build-cache cleanup
+Description=Weekly bounded Utilibre image-history and build-cache cleanup
 
 [Timer]
 OnCalendar=Sun *-*-* 14:00:00 UTC
