@@ -43,8 +43,15 @@ def validate_manifest(data):
                     parsed.query or parsed.fragment or not parsed.hostname or
                     not (parsed.hostname == "utilibre.org" or parsed.hostname.endswith(".utilibre.org"))):
                 raise ValueError("Only credential-free Utilibre HTTPS targets are allowed")
+            if "replacesUrl" in target and not (
+                    target["id"] == "gothub" and
+                    target["url"] == "https://gothub.utilibre.org/api/v1/version" and
+                    target["replacesUrl"] == "https://gothub.utilibre.org/"):
+                raise ValueError("Unreviewed monitor URL replacement")
             endpoint = ("http", target["url"])
         elif target.get("type") == "port":
+            if "replacesUrl" in target:
+                raise ValueError("Only HTTP monitors may replace a URL")
             if target.get("hostname") != "mumble.utilibre.org" or target.get("port") != 64738:
                 raise ValueError("Only the reviewed Mumble TCP port is allowed")
             endpoint = ("port", target["hostname"], target["port"])
@@ -89,14 +96,31 @@ socket.on('connect', async () => {
     ]);
     const byEndpoint = new Map(Object.values(existing || {}).map(m => [currentKey(m), m]));
     const byName = new Map(Object.values(existing || {}).map(m => [m.name, m]));
-    let added = 0, reused = 0, paused = 0;
+    let added = 0, reused = 0, updated = 0, wouldUpdate = 0, paused = 0;
     const ids = new Map();
     for (const target of manifest.targets) {
       const key = monitorKey(target);
       const name = 'Utilibre · ' + target.name;
       const prior = byEndpoint.get(key);
       if (byName.has(name) && byName.get(name) !== prior) {
-        throw Error('Monitor name already points elsewhere: ' + name);
+        const old = byName.get(name);
+        const reviewedOld = target.replacesUrl && byEndpoint.get('http:' + target.replacesUrl);
+        if (target.id !== 'gothub' || old !== reviewedOld || old.type !== 'http' ||
+            !Number.isInteger(old.id) || Object.keys(old.notificationIDList || {}).length) {
+          throw Error('Monitor name already points elsewhere: ' + name);
+        }
+        if (mode === 'apply') {
+          await call('editMonitor', { ...old, url: target.url });
+          updated++;
+        } else wouldUpdate++;
+        const migrated = { ...old, url: target.url };
+        byEndpoint.delete(currentKey(old));
+        byEndpoint.set(key, migrated);
+        byName.set(name, migrated);
+        ids.set(target.id, old.id);
+        reused++;
+        if (!old.active) paused++;
+        continue;
       }
       if (prior) {
         reused++;
@@ -161,6 +185,7 @@ socket.on('connect', async () => {
       await call('saveStatusPage', 'utilibre', config, config.icon || '', groups);
     }
     console.log(JSON.stringify({ version, targets: manifest.targets.length, added, reused,
+      updated, wouldUpdate,
       missing: manifest.targets.length - added - reused, paused, statusPage: mode === 'apply' ? 'utilibre' : 'unchanged' }));
     clearTimeout(deadline);
     socket.disconnect();
@@ -181,7 +206,7 @@ def main():
     parser.add_argument("--app-dir", type=Path, help="Uptime Kuma application directory for a non-Docker install")
     parser.add_argument("--credentials-file", type=Path, help="Mode-0600 JSON with username/password")
     parser.add_argument("--check", action="store_true", help="Read-only comparison with the running instance")
-    parser.add_argument("--apply", action="store_true", help="Add missing monitors and publish the Utilibre page")
+    parser.add_argument("--apply", action="store_true", help="Add missing monitors, apply reviewed URL moves, and publish the Utilibre page")
     args = parser.parse_args()
     manifest = validate_manifest(json.loads(args.manifest.read_text()))
     if args.check and args.apply or args.container and args.app_dir:

@@ -17,6 +17,8 @@ const specialPaths = {
   bookplate: '/login',
   wallabag: '/login',
   beaverhabits: '/login',
+  // The public root has a browser challenge; this native JSON route is exempt.
+  gothub: '/api/v1/version',
 };
 const groupNames = {
   files: 'Documents', documents: 'Documents',
@@ -75,6 +77,7 @@ export function buildTargets(config) {
       id: serviceId, name: entry.upstreamProject, group: groupNames[entry.discoveryGroup] ?? 'Other',
       type: 'http', url: key, interval: serviceId === 'searxng' ? 300 : 600,
       services: [serviceId],
+      ...(serviceId === 'gothub' ? { replacesUrl: 'https://gothub.utilibre.org/' } : {}),
     });
   }
   const missing = [...enabled].filter(id => !covered.has(id));

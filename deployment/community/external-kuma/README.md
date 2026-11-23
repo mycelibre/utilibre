@@ -16,6 +16,13 @@ has two retries, a 20-second timeout, and **no notification**. The importer
 creates or extends only the `utilibre` public status page. It preserves existing
 monitors, notification settings, status pages for other websites, and history.
 Running it again reuses matching endpoints. It never deletes monitors.
+GotHub's public root has a Cloudflare browser challenge; its native
+`/api/v1/version` route is explicitly exempt and returned HTTP 200 from this
+outside VM. The inventory checks that route. The importer permits only the
+reviewed GotHub root-to-version URL migration, preserving its monitor ID; it
+rejects a different old URL or attached notifications for operator review.
+`--check` reports the pending change as `wouldUpdate`, while `--apply` reports
+it as `updated`. Other changed endpoints still fail on a name collision.
 
 ## Prepare on the outside VM
 

@@ -40,6 +40,20 @@ class ManifestTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_manifest(invalid)
 
+    def test_only_reviewed_gothub_replacement_is_allowed(self):
+        manifest = validate_manifest(self.manifest)
+        gothub = next(target for target in manifest["targets"] if target["id"] == "gothub")
+        self.assertEqual(gothub["url"], "https://gothub.utilibre.org/api/v1/version")
+        self.assertEqual(gothub["replacesUrl"], "https://gothub.utilibre.org/")
+        for field, value in (("replacesUrl", "https://gothub.utilibre.org/other"),
+                             ("url", "https://gothub.utilibre.org/"),
+                             ("id", "other")):
+            invalid = copy.deepcopy(self.manifest)
+            item = next(target for target in invalid["targets"] if target["id"] == "gothub")
+            item[field] = value
+            with self.assertRaises(ValueError):
+                validate_manifest(invalid)
+
 
 if __name__ == "__main__":
     unittest.main()

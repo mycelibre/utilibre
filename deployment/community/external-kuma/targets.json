@@ -681,11 +681,12 @@
       "name": "GotHub",
       "group": "Data",
       "type": "http",
-      "url": "https://gothub.utilibre.org/",
+      "url": "https://gothub.utilibre.org/api/v1/version",
       "interval": 600,
       "services": [
         "gothub"
-      ]
+      ],
+      "replacesUrl": "https://gothub.utilibre.org/"
     },
     {
       "id": "binternet",
