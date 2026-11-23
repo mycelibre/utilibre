@@ -1,6 +1,43 @@
 # Resource usage and operating limits
 
-## Root disk attribution and bounded cleanup — 23 November 2026
+## Current root-disk headroom — 23 November 2026
+
+The verified cleanup ended with **69.97 GiB available, 78% used** on the 330 GiB
+root filesystem. The [recovery record](records/space-recovery-2026-11-23.md)
+contains the exact off-host snapshots, restore checks, and retained inputs.
+The 15 GiB temporary-data disk is separate and cannot absorb root build work.
+
+The aggregate performance history shows free space falling from about 22.5 GiB
+on November 17 to 20.0 GiB on November 21, then to 8.5 GiB during the
+November 22 maintenance work. That large one-day change makes the old
+10–15 GiB alert too late. The existing five-minute monitor and performance
+report now flag root space below **60 GiB**. The existing weekly digest includes
+free space and its change since the previous digest; neither change adds a
+notification schedule or collects visitor activity.
+
+The weekly `utilibre-disk-reclaim.timer` uses the existing reviewed BuildKit
+selector only when less than **80 GiB** is available. It removes reclaimable,
+unshared regular cache records of at least 50 MiB that were last used at least
+12 hours ago. It does not prune images, containers, volumes, source trees or
+backups. Cache cleanup may slow the next build and cannot compensate for large
+retained release workspaces; the unit is monitored for failures. Its report is
+stored under `/opt/utilibre/reports/disk-headroom-20261009`. The timer was
+enabled on November 23; a manual unit run succeeded with zero eligible cache
+records after that day's cleanup. Its next scheduled run is November 29.
+
+After a build or upgrade, check the available space and the exact new image,
+BuildKit and maintenance-workspace allocations. Keep current release inputs
+and a compatible rollback. Use the reviewed cache cleanup helpers for
+regenerable dependencies. Archive older candidates to the encrypted Storage
+Box, verify a restore and file comparison, then remove only paths with no
+running use or maintained recipe reference. The off-host copy is recovery
+evidence, not extra root capacity until the local copy is actually removed.
+Do not schedule blanket image, volume, backup, source or scanner-database
+pruning: many of those inputs are still needed for reproducible fixes or saved
+account work. Recheck the aggregate trend and the largest allocations in the
+weekly maintenance review, particularly after several releases in one day.
+
+## Earlier root disk attribution and bounded cleanup — 23 November 2026
 
 The 330 GiB root filesystem had about **8.5 GiB free** (98% used) at the start
 of this pass. These measured directories explain most of the pressure; their

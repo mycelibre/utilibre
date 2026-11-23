@@ -1,8 +1,15 @@
 // One operator digest per week. Counts refer to software checks, never visitors.
 import {readFile,writeFile,rename} from 'node:fs/promises';
+import {statfsSync} from 'node:fs';
 import {sendOperatorMail} from './mail.mjs';
 const directory='/var/lib/utilibre-maintenance';
 async function read(name){try{return JSON.parse(await readFile(directory+'/'+name,'utf8'));}catch{return null;}}
+const filesystem=statfsSync('/opt/utilibre');
+const diskFreeGiB=Math.round(filesystem.bavail*filesystem.bsize/1024**3*10)/10;
+const lastDigest=await read('digest.json');
+const previousDiskFreeGiB=Number.isFinite(lastDigest?.diskFreeGiB)?lastDigest.diskFreeGiB:null;
+const diskChange=previousDiskFreeGiB===null?'previous weekly sample unavailable':
+ `${(diskFreeGiB-previousDiskFreeGiB).toFixed(1)} GiB since the previous digest`;
 const upstream=await read('latest.json'),security=await read('security-queue.json'),journeys=await read('journeys.json'),recovery=await read('recovery.json');
 const candidates=upstream?.results?.filter(x=>x.releaseComparison==='newer-release')||[];
 const manual=upstream?.results?.filter(x=>x.advisories?.coverage!=='repository-published')||[];
@@ -18,6 +25,7 @@ const body=[
  `Vulnerability review: ${security?.date||'UNAVAILABLE'}; ${findings.length} package/target findings (${severe.length} high/critical); ${overdue.length} past their triage target.`,
  `Daily synthetic tasks: ${journeys?.status||'UNAVAILABLE'} (${journeys?.date||'unknown'}).`,
  `Weekly representative restore: ${recovery?.status||'UNAVAILABLE'} (${recovery?.date||'unknown'}).`,
+ `Root disk: ${diskFreeGiB.toFixed(1)} GiB free; ${diskChange}. An operator alert starts below 60 GiB.`,
  '',
  'Actions: review critical findings within 24h, high within 72h, medium within 7d; test and patch or document an effective mitigation. These are review targets, not guaranteed repair times.',
  'Review release candidates weekly; a changed branch or available tag does not establish that our deployed build needs that release.',
@@ -38,7 +46,7 @@ const body=[
 if(process.argv.includes('--preview'))console.log(body);
 else{
  sendOperatorMail('Utilibre weekly maintenance review',body);
- await writeFile(directory+'/digest.json.tmp',JSON.stringify({date:new Date().toISOString(),status:'relay-accepted',note:'SMTP relay acceptance is not evidence of inbox reading.'})+'\n',{mode:0o600});
+ await writeFile(directory+'/digest.json.tmp',JSON.stringify({date:new Date().toISOString(),status:'relay-accepted',diskFreeGiB,note:'SMTP relay acceptance is not evidence of inbox reading.'})+'\n',{mode:0o600});
  await rename(directory+'/digest.json.tmp',directory+'/digest.json');
  console.log('Weekly maintenance digest accepted by the verified SMTP relay.');
 }

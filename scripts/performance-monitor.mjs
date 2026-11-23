@@ -129,7 +129,7 @@ export function evaluate(metrics, previous = {}, consecutive = true) {
   }
   if (streak('host:cpu', metrics.host.cpuPercent >= 85)) issues.push('Host: sustained CPU usage above 85%');
   if (metrics.host.availableMiB < metrics.host.totalMiB * .1) issues.push('Host: available memory below 10%');
-  if (metrics.host.diskFreeGiB < 15) issues.push('Host: application disk has less than 15 GiB free');
+  if (metrics.host.diskFreeGiB < 60) issues.push('Host: application disk has less than 60 GiB free');
   if (metrics.probeError) issues.push('Kuma: probe telemetry unavailable');
   return { streaks, issues: issues.sort() };
 }

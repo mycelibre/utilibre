@@ -42,7 +42,8 @@ try{
  console.log(`Read ${report.services.length} configured catalogue endpoint probes.`);
 }catch{issues.push('Catalogue endpoint monitoring unavailable or stale')}
 const disk=statfsSync('/opt/utilibre');
-if(disk.bavail*disk.bsize<10*1024**3)issues.push('Application disk has less than 10 GiB free');
+// Warn while there is still room for a large release build and a recovery copy.
+if(disk.bavail*disk.bsize<60*1024**3)issues.push('Application disk has less than 60 GiB free; review build artifacts and backups');
 if(disk.files&&disk.ffree/disk.files<0.05)issues.push('Application disk has less than 5% free inodes');
 const memory=Object.fromEntries([...readFileSync('/proc/meminfo','utf8').matchAll(/^(\w+):\s+(\d+)/gm)].map(([,name,value])=>[name,Number(value)]));
 if(memory.MemAvailable/memory.MemTotal<0.05)issues.push('Available host memory is below 5%');
@@ -51,7 +52,7 @@ let backupUnits=[];
 try{
  backupUnits=execFileSync('systemctl',['list-unit-files','--type=timer','--state=enabled','--no-legend','--no-pager'],{encoding:'utf8',timeout:5000}).split('\n').map(x=>x.split(/\s+/)[0]).filter(x=>/^utilibre-(?:[a-z0-9-]+-)?backup\.timer$/.test(x)).map(x=>x.replace(/\.timer$/,'.service'));
 }catch{issues.push('Cannot enumerate enabled backup timers');}
-for(const unit of new Set([...backupUnits,'utilibre-pack-forms-maintenance.service','utilibre-maintenance-review.service','utilibre-searx-update.service','utilibre-redlib-update.service','utilibre-privatebin-update.service','utilibre-security-review.service','utilibre-journeys.service','utilibre-recovery-check.service','utilibre-maintenance-digest.service'])) {
+for(const unit of new Set([...backupUnits,'utilibre-pack-forms-maintenance.service','utilibre-maintenance-review.service','utilibre-searx-update.service','utilibre-redlib-update.service','utilibre-privatebin-update.service','utilibre-security-review.service','utilibre-journeys.service','utilibre-recovery-check.service','utilibre-maintenance-digest.service','utilibre-disk-reclaim.service'])) {
   if(!existsSync(`/etc/systemd/system/${unit}`))continue;
   try {
     const result=execFileSync('systemctl',['show',unit,'--property=Result','--value'],{encoding:'utf8',timeout:5000}).trim();

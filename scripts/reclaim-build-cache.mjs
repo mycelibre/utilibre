@@ -3,13 +3,21 @@
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {mkdirSync, writeFileSync, statfsSync} from 'node:fs';
-import {disposableCache} from './cleanup-selection.mjs';
+import {disposableCache,needsCacheReclaim} from './cleanup-selection.mjs';
 
 const apply = process.argv.includes('--apply');
 const olderBuilds = process.argv.includes('--older-builds');
-assert(process.argv.slice(2).every(arg => ['--apply', '--older-builds'].includes(arg)), 'Use --apply and/or --older-builds');
+const pressureOnly = process.argv.includes('--pressure-only');
+assert(process.argv.slice(2).every(arg => ['--apply', '--older-builds', '--pressure-only'].includes(arg)),
+  'Use --apply, --older-builds and/or --pressure-only');
 const docker = args => execFileSync('docker', args, {encoding:'utf8', timeout:120000, maxBuffer:8*1024*1024});
 const free = () => { const s=statfsSync('/opt/utilibre'); return s.bavail*s.bsize; };
+// Scheduled cleanup runs only when headroom falls below the reviewed reserve.
+// It can reclaim BuildKit cache, but never images, volumes or application data.
+if (pressureOnly && !needsCacheReclaim(free())) {
+  console.log(JSON.stringify({apply,pressureOnly,skipped:'At least 80 GiB free'}));
+  process.exit(0);
+}
 const ids = args => [...new Set(docker(args).trim().split('\n').filter(Boolean))].sort();
 const bytes = value => {
   const match=value.match(/^([\d.]+)(B|kB|MB|GB|TB)$/);
@@ -21,7 +29,7 @@ const rows=docker(['buildx','du','--format','{{json .}}']).trim().split('\n').fi
 // Keep recent builds, download/cache mounts, frontends and internal records.
 const selected=rows.filter(r=>disposableCache(r,olderBuilds,bytes(r.Size)));
 for(const row of selected) assert.match(row.ID,/^[a-z0-9]{20,32}$/);
-const report={at:new Date().toISOString(),apply,freeBytesBefore:free(),
+const report={at:new Date().toISOString(),apply,pressureOnly,freeBytesBefore:free(),
   scope:olderBuilds?'Exact selected reclaimable regular/source.local BuildKit records last used >=7 days; no images/containers/volumes or original source trees':'Unshared reclaimable regular BuildKit cache >=50 MiB, last used >=12 hours; no images/containers/volumes/snapshots',
   records:selected.map(({ID,Size,LastUsedAt,Type,Shared})=>({id:ID,size:Size,lastUsed:LastUsedAt,type:Type,shared:Shared})),
   estimatedBytes:selected.reduce((sum,r)=>sum+bytes(r.Size),0)};

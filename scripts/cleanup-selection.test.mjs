@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { oldEnough, retirableDangling, disposableCache } from './cleanup-selection.mjs';
+import { oldEnough, retirableDangling, disposableCache, needsCacheReclaim } from './cleanup-selection.mjs';
 const now = Date.parse('2026-10-28T00:00:00Z');
 const image = () => ({ Id: 'sha256:' + 'a'.repeat(64), RepoTags: [], RepoDigests: [], Created: '2026-10-10T00:00:00Z' });
 test('dangling retirement preserves references and recent or ambiguous images', () => {
@@ -31,4 +31,12 @@ test('older build cleanup excludes active, recent, mutable cache mounts and help
   for (const change of [{ Reclaimable: false }, { LastUsedAt: '6 days ago' },
     ...['exec.cachemount', 'frontend', 'internal', 'source.git.checkout', 'unknown'].map(Type => ({ Type }))])
     assert(!disposableCache({ ...row, ...change }, true, 1));
+});
+test('scheduled cache cleanup runs only below the 80 GiB reserve', () => {
+  const gib = 1024 ** 3;
+  assert(needsCacheReclaim(79 * gib));
+  assert(!needsCacheReclaim(80 * gib));
+  assert(!needsCacheReclaim(90 * gib));
+  assert(!needsCacheReclaim(-1));
+  assert(!needsCacheReclaim(NaN));
 });

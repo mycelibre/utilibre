@@ -1,0 +1,23 @@
+[Unit]
+Description=Reclaim reviewed disposable BuildKit cache if Utilibre disk headroom is low
+After=docker.service
+Requires=docker.service
+ConditionPathExists=/var/run/docker.sock
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/ubuntu/freetools
+Environment=PATH=/root/.nvm/versions/node/v24.22.3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/bin/flock -n /run/utilibre-disk-reclaim.lock /usr/bin/env node scripts/reclaim-build-cache.mjs --apply --pressure-only
+TimeoutStartSec=15min
+Nice=10
+IOSchedulingClass=idle
+CPUQuota=25%
+MemoryMax=512M
+UMask=0077
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/opt/utilibre/reports /run
+PrivateTmp=true
+NoNewPrivileges=true

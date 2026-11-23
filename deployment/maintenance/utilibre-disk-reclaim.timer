@@ -1,0 +1,11 @@
+[Unit]
+Description=Weekly bounded Utilibre build-cache cleanup
+
+[Timer]
+OnCalendar=Sun *-*-* 14:00:00 UTC
+RandomizedDelaySec=15min
+Persistent=true
+Unit=utilibre-disk-reclaim.service
+
+[Install]
+WantedBy=timers.target

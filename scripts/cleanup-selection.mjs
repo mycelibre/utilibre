@@ -18,3 +18,7 @@ export function disposableCache(row, olderBuilds, sizeBytes) {
     (olderBuilds ? ['regular', 'source.local'].includes(row.Type) :
       row.Shared === false && row.Type === 'regular' && sizeBytes >= 50 * 1024 ** 2);
 }
+
+export function needsCacheReclaim(freeBytes) {
+  return Number.isSafeInteger(freeBytes) && freeBytes >= 0 && freeBytes < 80 * 1024 ** 3;
+}

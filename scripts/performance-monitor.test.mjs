@@ -57,7 +57,14 @@ test('restarts, recreation and counter resets cannot become negative or inflated
   assert.equal(containerMetrics({ ...baseline, quota: null }, baseline, 60).quotaPercent, null);
 });
 const metrics = (cpu = 90) => ({ containers: [{ name: 'test', quotaPercent: cpu, memoryPercent: 10 }],
-  probes: [], host: { cpuPercent: 10, availableMiB: 5000, totalMiB: 10000, diskFreeGiB: 30 } });
+  probes: [], host: { cpuPercent: 10, availableMiB: 5000, totalMiB: 10000, diskFreeGiB: 70 } });
+test('disk headroom warns before a large release can fill the root filesystem', () => {
+  const sample = metrics(10);
+  sample.host.diskFreeGiB = 60;
+  assert.equal(evaluate(sample).issues.length, 0);
+  sample.host.diskFreeGiB = 59.9;
+  assert.deepEqual(evaluate(sample).issues, ['Host: application disk has less than 60 GiB free']);
+});
 test('CPU recommendation needs sustained readings and resets after a gap or recovery', () => {
   let state = evaluate(metrics()); assert.equal(state.issues.length, 0);
   state = evaluate(metrics(), state); assert.equal(state.issues.length, 0);
