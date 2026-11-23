@@ -90,6 +90,18 @@ locations because a pasted long regular expression was wrapped and failed
 `nginx -t` against the actual server before reloading it. Do not overwrite
 Nextcloud's `valoracion.xyz` site or its certificate.
 
+For this VM, Certbot 1.21.0 is installed and the HTTP webroot challenge is the
+smallest renewable option. After the direct HTTP route passes, create the
+DNS-only record and wait for it to resolve to the outside VM. Then run
+`certbot certonly --webroot -w /var/www/letsencrypt -d status.utilibre.org
+--cert-name status.utilibre.org`. Inspect the resulting certificate name and
+paths before installing `nginx-public-status-tls.conf` in place of the HTTP
+site. The TLS file keeps the webroot challenge on HTTP for renewals, redirects
+other HTTP requests to HTTPS, and serves only the public Kuma routes over
+HTTPS. Check `nginx -t`, reload Nginx, inspect the certificate and page/API,
+and run `certbot renew --dry-run` to test renewal. Keep the old status service
+available until the new public route passes.
+
 Obtain a valid certificate for `status.utilibre.org` and add the equivalent
 HTTPS site **before** claiming the outside page is public. The current outside
 server presents a certificate for `valoracion.xyz` when asked for
