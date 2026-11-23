@@ -63,6 +63,14 @@ only on loopback. Identify its actual process supervisor before restarting it;
 do not assume Docker or systemd. Use a local SSH tunnel for administration until
 the HTTPS route is ready.
 
+The selected outside VM runs Kuma under PM2 as process `uptime-kuma`. The
+reviewed loopback operation is
+`UPTIME_KUMA_HOST=127.0.0.1 pm2 restart uptime-kuma --update-env`, followed by
+`pm2 save` and a check that `ss -ltnp` shows `127.0.0.1:3001`. Check public
+reachability from another host too. The process environment must be persisted
+before a reboot; an application `.env` setting is an additional supported way
+to keep the same binding.
+
 If Caddy runs on the outside VM, its site block is:
 
 ```caddyfile
