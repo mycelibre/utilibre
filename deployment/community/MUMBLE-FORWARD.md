@@ -31,6 +31,20 @@ UDP transport. Wait for the outside Kuma monitor's next five-minute check.
 The application VM's own connection to its public IP is subject to NAT hairpin
 behavior and is not an independent external test.
 
+## Restoration observed on 23 November 2026
+
+The operator installed the checksum-verified script on Proxmox and ran it once
+without restarting networking. The `nic0` stanza now has exactly one Mumble
+`post-up` line immediately after the existing TURN hook. Independent
+[GitHub run 45271942012](https://github.com/mycelibre/utilibre/actions/runs/45271942012)
+passed pinned TLS and invalid-password rejection at 21:40 UTC. Its three
+12-byte UDP probes reached the application VM; the capture retained packet
+headers only and no voice data. This verifies public TCP and inbound UDP
+routing, not sustained voice or authenticated UDP audio. The outside Kuma TCP
+monitor turned up at 21:44:26 UTC; all 92 published checks had a latest up
+heartbeat when inspected immediately afterward. This is a point-in-time
+observation, not an uptime or end-to-end quality guarantee.
+
 Rollback: remove just the `utilibre-mumble-forward` `post-up` line and script,
 then delete the script's two exact PREROUTING and two exact FORWARD rules with
 `iptables -D`. Leave the existing TURN rules and the application data alone.
