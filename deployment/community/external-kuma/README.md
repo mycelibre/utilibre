@@ -72,6 +72,15 @@ status.utilibre.org {
 }
 ```
 
+On the currently selected outside VM, Nextcloud AIO already binds public TCP
+443 through its Apache container. Do **not** start a second Caddy listener on
+443 or edit the generated AIO Apache container to fit Kuma. Nextcloud AIO has
+a documented reverse-proxy mode, but changing that deployment is a separate
+maintenance operation; the observed AIO mastercontainer restart loop must be
+resolved first. Until a supported HTTPS route exists, keep the existing
+Utilibre status hostname on its original server and keep Kuma's new page
+private, with administration over an SSH tunnel.
+
 Caddy's reverse proxy handles Kuma's WebSocket connection. Do not add access
 logging for this host. After the `utilibre` page exists, point the hostname's A
 record to the outside VM and open HTTPS (and HTTP for certificate issuance) in
