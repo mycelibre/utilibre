@@ -5,9 +5,10 @@ vulnerabilities. Private evidence is under
 `/var/lib/utilibre-maintenance/security-20261122/`. Raw findings are retained.
 The current dated checkpoint is in `docs/records/security-2026-11-22.md`.
 
-Latest checkpoint: the 22:59 UTC fresh fleet scan and exact reviews leave
+Latest checkpoint: the 22:59 UTC fresh fleet scan and exact reviews through
+00:01 UTC on 23 November leave
 0 critical / 30 high records awaiting review; all 30 are the unresolved
-Debian ACL caller issue CVE-2026-54369. There are also 5,697 medium, 5,714
+Debian ACL caller issue CVE-2026-54369. There are also 5,686 medium, 5,154
 low and 744 unknown occurrences awaiting review. The raw 22,115 records
 remain intact. Rallly's fixed Effect 3.22.1 successor is deployed and its
 matching AGPL source archive is published. The current Penpot exporter
@@ -15,6 +16,23 @@ FreeType package, PAM workaround and util-linux executable-provider mismatch
 have separate, expiring reviews; no broad package-level suppression is used.
 This is not security clearance. Exact evidence and rollback boundaries are in
 `docs/records/security-2026-11-22.md`.
+
+The later low-severity pass recorded 560 exact, expiring reviews: 60 library
+matches in roles without journald, 11 host matches mitigated by a verified
+`ForwardToWall=no` drop-in, 138 systemd context matches, 219 Kerberos
+component-absence matches, 104 more sealed-journal matches, and 28
+Power8-only glibc matches on amd64 images. The Power8 check also reviewed 11
+medium matches. None changes scanner severity or deletes raw records. The
+reviewers and host drop-in are `review-journald-absent.py`,
+`review-host-journald-wall.py`, `review-systemd-context.py`,
+`review-krb5-components.py`, `review-sealed-journal.py`,
+`review-glibc-power8.py`, and `80-utilibre-journald.conf`. They check exact
+current images and roles against the frozen official tracker and store proof
+under `/var/lib/utilibre-maintenance/security-20261122/`. A fresh scan,
+changed role/image/configuration or expiry requires revalidation. The host
+journal is capped at 512 MiB; its service stayed active and a synthetic
+write/read passed. This is a configuration mitigation, not a patched systemd
+binary.
 
 `rallly-effect-build.mjs`, `rallly-effect-inner.sh`,
 `rallly-effect-stage.mjs`, `rallly-effect-scope.py`,

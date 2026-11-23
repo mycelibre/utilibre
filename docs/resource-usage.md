@@ -1,5 +1,42 @@
 # Resource usage and operating limits
 
+## Root disk attribution and bounded cleanup — 23 November 2026
+
+The 330 GiB root filesystem had about **8.5 GiB free** (98% used) at the start
+of this pass. These measured directories explain most of the pressure; their
+values are not additive because Docker/containerd layers and maintenance
+artifacts can overlap in accounting:
+
+| Area | Measured size | What it includes |
+| --- | ---: | --- |
+| `/var/lib/containerd` | 164 GiB | Unpacked image snapshots and content blobs for running services and retained versions. |
+| `/var/lib/utilibre-maintenance` | 75 GiB | Security build inputs, candidates, reports and replay evidence. |
+| `/opt/utilibre` | 45 GiB | Application source/build trees, public static assets, reports and community backups. |
+| `/var/lib/docker` | 40 GiB | Docker image metadata/layers and build-related storage. |
+| `/var/cache` | 3.5 GiB | Mainly the active security scanner's advisory database. |
+| `/var/log` | 1.5 GiB before the change | Mainly systemd journal files. |
+
+The separate **15 GiB** backup-excluded disk at `/opt/utilibre/temporary` is
+for bounded temporary application data; it is not additional root headroom.
+Docker reported 1,659 image records, of which 125 were active, and about
+49 GiB *logically* reclaimable. That estimate includes shared layers and
+retained rollback artifacts; it is not a safe deletion list or a prediction
+of physical savings.
+
+The host journald drop-in at
+`deployment/maintenance/security-20261122/80-utilibre-journald.conf` caps
+system journal storage at 512 MiB and disables terminal forwarding for the
+reviewed CVE. After a journald-only restart and rotation, measured journal
+use was 497 MiB, down from about 1.4 GiB; a synthetic log write/read and
+service-active check passed. The existing `scripts/reclaim-build-cache.mjs`
+removed nine exact, unshared, unused BuildKit records. Docker reported
+**1.39 GB actually reclaimed**, and the script verified that images and
+containers were preserved. Root now has about **10.7 GiB available** (97%
+used). No app, backup, user file, image or volume was removed or restarted.
+The image-retirement dry run timed out without deleting anything. Large
+maintenance directories and older images remain until their replay and
+rollback roles can be checked individually; no blanket pruning is scheduled.
+
 ## Root disk expanded to 200 GiB — 12 October 2026
 
 At 12:49 UTC Proxmox already exposed a **200 GiB** main virtual disk, while
