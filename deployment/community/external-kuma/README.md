@@ -54,7 +54,8 @@ of the repository and backups sent to others. This is a one-shot operation, so
 interactive entry is preferred.
 
 The final JSON line reports `added`, `reused`, `missing`, and `paused`. `--check`
-must report 92 targets. After `--apply`, it should report 92 `added + reused`
+must report 95 targets for this inventory. After `--apply`, it should report
+95 `added + reused`
 and zero `missing`; inspect `/status/utilibre` on the outside VM and wait for at
 least one check cycle. Configure a single alert after results settle, rather
 than attaching an email notification to every monitor immediately. Map a
