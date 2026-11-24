@@ -6,7 +6,20 @@ stuffing, spam, oversized requests, storage exhaustion, upstream blocking,
 container compromise, and operator error. This document records controls and
 residual risks; it is not a claim of complete security.
 
-## Current maintenance status, 12 October 2026
+## Current maintenance status, 24 November 2026
+
+The latest complete VM scan and exact review leave **0 critical and 50 high
+package-target records pending**. Thirty high records concern the ACL caller
+issue across installed artifacts; 20 are host `linux-libc-dev` header-package
+matches awaiting separate review. This is not a count of exploitable defects.
+The scan covers the VM's running images, host packages and listed source
+manifests, with the three new reader images and portal image checked separately.
+The distinct Caddy and Proxmox hosts remain outside that scan. The installed
+6.12.118 kernel is not active until a coordinated reboot. See the
+[dated checkpoint](records/security-status-2026-11-24.md) for scope, evidence
+and the repaired community-backup restore check.
+
+## Historical maintenance status, 12 October 2026
 
 The running-image, host-package and listed source-manifest scans now complete;
 the earlier execution/inventory failures described below are historical.
