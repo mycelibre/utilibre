@@ -1,7 +1,7 @@
 name: utilibre-structables
 services:
   structables:
-    image: utilibre-structables:0.4.5-p1-20261027
+    image: utilibre-structables:0.4.6-p1-20261124
     restart: unless-stopped
     user: '65532:65532'
     read_only: true

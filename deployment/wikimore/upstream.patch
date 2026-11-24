@@ -1,0 +1,187 @@
+diff --git a/src/wikimore/app.py b/src/wikimore/app.py
+index 0b40972..74689d6 100644
+--- a/src/wikimore/app.py
++++ b/src/wikimore/app.py
+@@ -7,7 +7,7 @@ import re
+ import sys
+ import time
+ import urllib.error
+-from urllib.parse import quote, unquote, urlencode, urlparse
++from urllib.parse import parse_qsl, quote, unquote, urlencode, urlparse, urlsplit, urlunsplit
+ 
+ from bs4 import BeautifulSoup
+ from flask import (
+@@ -29,6 +29,7 @@ from .fetchers import (
+     get_wikimedia_projects,
+ )
+ from .wiki import Wiki
++from .media import open_media
+ 
+ logger = logging.getLogger(__name__)
+ 
+@@ -159,7 +160,7 @@ for _extra_entry in filter(
+ 
+ # Proxy allowlist: always include Wikimedia CDNs; add WIKIMORE_EXTRA_PROXY_DOMAINS for others.
+ # Example: WIKIMORE_EXTRA_PROXY_DOMAINS=static.wikia.nocookie.net
+-PROXY_ALLOWED_HOSTS: set[str] = {"upload.wikimedia.org", "maps.wikimedia.org"}
++PROXY_ALLOWED_HOSTS: set[str] = {"upload.wikimedia.org", "maps.wikimedia.org", "thumb.wikimedia.org"}
+ for _proxy_host in filter(
+     None,
+     (h.strip() for h in os.environ.get("WIKIMORE_EXTRA_PROXY_DOMAINS", "").split(",")),
+@@ -184,18 +185,28 @@ def render_template(*args, **kwargs) -> str:
+ 
+ 
+ def get_proxy_url(url: str) -> str:
+-    """Return a ``/proxy?url=...`` URL for allowed CDN hosts; pass other URLs unchanged."""
++    """Return a local media URL only for approved Wikimedia hosts."""
+     if url.startswith("//"):
+         url = "https:" + url
+ 
+     if not any(url.startswith(f"https://{host}/") for host in PROXY_ALLOWED_HOSTS):
+         logger.debug(f"Not generating proxy URL for {url}")
+-        return url
++        return url if url.startswith("/") and not url.startswith("//") else ""
+ 
+-    logger.debug(f"Generating proxy URL for {url}")
++    parts = urlsplit(url)
++    query = urlencode([(key, value) for key, value in parse_qsl(parts.query, keep_blank_values=True)
++                       if not key.lower().startswith("utm_")])
++    url = urlunsplit(parts._replace(query=query))
+     return f"/proxy?{urlencode({'url': url})}"
+ 
+ 
++def rewrite_media_tag(tag):
++    """Use the first image candidate locally and drop remote srcset fallbacks."""
++    source = tag.get("src") or tag.get("srcset", "").split(",", 1)[0].strip().split(" ")[0]
++    tag["src"] = get_proxy_url(source)
++    tag.attrs.pop("srcset", None)
++
++
+ def render_rate_limited(
+     retry_after: int | None,
+     lang: str = "en",
+@@ -265,15 +276,16 @@ def proxy() -> bytes:
+     if not url or not any(
+         url.startswith(f"https://{host}/") for host in PROXY_ALLOWED_HOSTS
+     ):
+-        logger.error(f"Invalid URL for proxying: {url}")
+-        return "Invalid URL"
++        return Response("Invalid URL", status=400)
+ 
+     logger.debug(f"Proxying {url}")
+ 
+     try:
+-        response = urlopen(url)
++        response = open_media(url)
+     except urllib.error.HTTPError as e:
+         return Response(status=e.code)
++    except (ValueError, urllib.error.URLError):
++        return Response(status=502)
+ 
+     content_type = response.headers.get("Content-Type", "application/octet-stream")
+ 
+@@ -719,15 +731,15 @@ def _wiki_article_response(
+             for span in desc_soup.find_all("span", class_="mw-editsection"):
+                 span.decompose()
+ 
+-            for style in desc_soup.find_all("style"):
+-                style.decompose()
++            for unsafe in desc_soup.find_all(["style", "script"]):
++                unsafe.decompose()
+ 
+             for img in desc_soup.find_all("img"):
+-                img["src"] = get_proxy_url(img["src"])
++                rewrite_media_tag(img)
+                 img["loading"] = "lazy"
+ 
+             for source in desc_soup.find_all("source"):
+-                source["src"] = get_proxy_url(source["src"])
++                rewrite_media_tag(source)
+ 
+             file_desc_html = str(desc_soup)
+ 
+@@ -879,15 +891,15 @@ def _wiki_article_response(
+                     }
+                 )
+ 
+-    for style in soup.find_all("style"):
+-        style.decompose()
++    for unsafe in soup.find_all(["style", "script"]):
++        unsafe.decompose()
+ 
+     for img in soup.find_all("img"):
+-        img["src"] = get_proxy_url(img["src"])
++        rewrite_media_tag(img)
+         img["loading"] = "lazy"
+ 
+     for source in soup.find_all("source"):
+-        source["src"] = get_proxy_url(source["src"])
++        rewrite_media_tag(source)
+ 
+     for video in soup.find_all("video"):
+         video["poster"] = get_proxy_url(video["poster"])
+diff --git a/src/wikimore/cache.py b/src/wikimore/cache.py
+index 6b4cce5..0da2205 100644
+--- a/src/wikimore/cache.py
++++ b/src/wikimore/cache.py
+@@ -7,6 +7,7 @@ config = {
+     "CACHE_TYPE": os.environ.get(
+         "WIKIMORE_CACHE_TYPE", os.environ.get("CACHE_TYPE", "SimpleCache")
+     ),
++    "CACHE_THRESHOLD": int(os.environ.get("WIKIMORE_CACHE_THRESHOLD", "64")),
+     "CACHE_DEFAULT_TIMEOUT": int(
+         os.environ.get(
+             "WIKIMORE_CACHE_TIMEOUT", os.environ.get("CACHE_TIMEOUT", "3600")
+diff --git a/src/wikimore/templates/interactivemap.html b/src/wikimore/templates/interactivemap.html
+index 96c42bc..1a61c88 100644
+--- a/src/wikimore/templates/interactivemap.html
++++ b/src/wikimore/templates/interactivemap.html
+@@ -1,8 +1,8 @@
+ {% extends "base.html" %}
+ {% block head %}
+-    <link rel="stylesheet" href="https://nobsdelivr.private.coffee/npm/leaflet@1.9.4/dist/leaflet.css"
++    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet-1.9.4/leaflet.css') }}"
+           crossorigin="">
+-    <script src="https://nobsdelivr.private.coffee/npm/leaflet@1.9.4/dist/leaflet.js"
++    <script src="{{ url_for('static', filename='vendor/leaflet-1.9.4/leaflet.js') }}"
+             crossorigin=""></script>
+     <style>
+         #wm-imap { width: 100%; height: 70vh; border: 1px solid var(--border-color, #ccc); }
+@@ -108,15 +108,32 @@
+             var popupDesc = popup.description || '';
+             var popupLink = (popup.link && popup.link.url) ? popup.link : null;
+ 
+-            var popupHtml = '<strong>' + popupTitle + '</strong>';
+-            if (popupDesc) popupHtml += '<br>' + popupDesc;
++            var popupNode = document.createElement('div');
++            var heading = document.createElement('strong');
++            heading.textContent = popupTitle;
++            popupNode.appendChild(heading);
++            if (popupDesc) {
++                popupNode.appendChild(document.createElement('br'));
++                popupNode.appendChild(document.createTextNode(popupDesc));
++            }
+             if (popupLink) {
+-                popupHtml += '<br><a href="' + popupLink.url + '" target="_blank">' +
+-                             (popupLink.label || popupLink.url) + '</a>';
++                try {
++                    var target = new URL(popupLink.url);
++                    if (target.protocol === 'https:' || target.protocol === 'http:') {
++                        popupNode.appendChild(document.createElement('br'));
++                        var link = document.createElement('a');
++                        link.href = target.href;
++                        link.textContent = popupLink.label || popupLink.url;
++                        link.target = '_blank';
++                        link.rel = 'noopener noreferrer';
++                        link.referrerPolicy = 'no-referrer';
++                        popupNode.appendChild(link);
++                    }
++                } catch (_) { /* Ignore invalid source links. */ }
+             }
+ 
+             L.circleMarker([lat, lng], {radius: 7, color: '#3388ff', fillOpacity: 0.8})
+-             .bindPopup(popupHtml)
++             .bindPopup(popupNode)
+              .addTo(layer);
+         });
+ 

@@ -74,6 +74,23 @@ class WebTests(unittest.TestCase):
         self.assertIn("frame-src 'none'", r.headers['Content-Security-Policy'])
         self.assertNotIn('Set-Cookie', r.headers)
 
+    def test_native_article_includes_none_embedtype_images(self):
+        fixture = {
+            'title': 'A paper project', 'author': {'screenName': 'Example'},
+            'classifications': [{'title': 'Craft', 'name': 'craft',
+                                 'channels': [{'title': 'Paper', 'name': 'paper'}]}],
+            'views': 1, 'favorites': 0,
+            'steps': [{'title': 'Fold', 'body': '<p>Fold paper.</p>',
+                       'files': [{'image': True, 'embedType': 'NONE',
+                                  'downloadUrl': 'https://content.instructables.com/F00/example.jpg',
+                                  'name': 'Folded paper'}]}],
+        }
+        with patch('structables.routes.main.get_cached_json', return_value=fixture):
+            response = self.client.get('/A-paper-project', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'/proxy/?url=', response.data)
+        self.assertIn(b'Folded paper', response.data)
+
     def test_native_search_post_reaches_upstream_function(self):
         with patch('structables.routes.main.project_list', return_value='fixture results') as search:
             r = self.client.post('/search', data={'q': 'paper airplane'})

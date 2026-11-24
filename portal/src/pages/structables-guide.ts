@@ -3,12 +3,12 @@ import type { PracticalGuide } from './practical-guide-data.ts';
 export const structablesGuides: PracticalGuide[] = [{
   id: 'read-instructables', paths: { en: 'guides/read-instructables', es: 'guias/leer-instructables' },
   tools: [{ id: 'structables', label: { en: 'Explore projects with Structables', es: 'Explorar proyectos con Structables' } }],
-  samples: [], reviewedOn: '2026-10-27',
+  samples: [], reviewedOn: '2026-11-24',
   references: [{ url: 'https://git.private.coffee/PrivateCoffee/structables', label: { en: 'Structables project and documentation', es: 'Proyecto y documentación de Structables' } }],
   copy: {
     en: {
       title: 'Find and read an Instructables project',
-      intro: 'This service is not open yet because project images are unreliable. These instructions describe its tested interface. Look through a public project’s materials, instructions and pictures using Structables. No account is needed. The interface is in English and each project keeps its original language.',
+      intro: 'Look through a public project’s materials, instructions and pictures using Structables. No account is needed. The interface is in English and each project keeps its original language.',
       prerequisites: 'A browser with an Internet connection. Check the tool’s availability before starting. This is a reader for public projects, not a place to upload your own work. Instructions come from their authors; assess their suitability and safety before trying them.',
       steps: [
         'Open Structables. Choose a category such as Craft or Workshop, or use the Search field in the header.',
@@ -24,7 +24,7 @@ export const structablesGuides: PracticalGuide[] = [{
     },
     es: {
       title: 'Encontrá y leé un proyecto de Instructables',
-      intro: 'El servicio todavía no está abierto porque las imágenes de los proyectos fallan. Estas instrucciones describen la interfaz probada. Consultá materiales, instrucciones e imágenes de un proyecto público con Structables. No necesitás cuenta. La interfaz está en inglés y cada proyecto conserva su idioma original.',
+      intro: 'Consultá materiales, instrucciones e imágenes de un proyecto público con Structables. No necesitás cuenta. La interfaz está en inglés y cada proyecto conserva su idioma original.',
       prerequisites: 'Un navegador con conexión a Internet. Revisá la disponibilidad de la herramienta antes de empezar. Es un lector de proyectos públicos, no un lugar para subir tu trabajo. Las instrucciones pertenecen a sus autores; evaluá si son adecuadas y seguras antes de probarlas.',
       steps: [
         'Abrí Structables. Elegí una categoría como Craft o Workshop, o usá el campo Search del encabezado.',

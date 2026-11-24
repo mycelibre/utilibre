@@ -1,48 +1,55 @@
 diff --git a/src/structables/routes/main.py b/src/structables/routes/main.py
-index 51faf38..51a7da7 100644
+index cea6240..82b1362 100644
 --- a/src/structables/routes/main.py
 +++ b/src/structables/routes/main.py
-@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
- from urllib.parse import quote
- from werkzeug.exceptions import InternalServerError
- from markdown2 import Markdown
--from traceback import print_exc
-+
- 
- import pathlib
+@@ -1,6 +1,5 @@
  import logging
-@@ -92,7 +92,7 @@ def init_main_routes(app):
+ import pathlib
+-from traceback import print_exc
+ from urllib.error import HTTPError
+ from urllib.parse import quote
  
-         except Exception as e:
-             logger.error(f"Error rendering explore page: {str(e)}")
+@@ -95,7 +94,7 @@ def init_main_routes(app):
+ 
+         except Exception as e:  # noqa: BLE001
+             logger.error(f"Error rendering explore page: {e!s}")
 -            print_exc()
 +            # Request-bearing tracebacks are not logged.
  
              # Fallback to a static version if API fails
              return render_template(
-@@ -414,7 +414,7 @@ def init_main_routes(app):
+@@ -232,7 +231,7 @@ def init_main_routes(app):
  
-         except Exception as e:
-             logger.error(f"Error processing article: {str(e)}")
+                     for file in step["files"]:
+                         if file["image"]:
+-                            if "embedType" not in file:
++                            if file.get("embedType") in (None, "NONE"):
+                                 step_imgs.append(
+                                     {
+                                         "src": thumbnail(file["downloadUrl"], 1024),
+@@ -429,7 +428,7 @@ def init_main_routes(app):
+ 
+         except Exception as e:  # noqa: BLE001
+             logger.error(f"Error processing article: {e!s}")
 -            print_exc()
 +            # Request-bearing tracebacks are not logged.
              raise InternalServerError()
  
      @app.route("/search", methods=["POST", "GET"])
 diff --git a/src/structables/routes/proxy.py b/src/structables/routes/proxy.py
-index 8a02a5f..c9b2620 100644
+index 3e455b0..cba6446 100644
 --- a/src/structables/routes/proxy.py
 +++ b/src/structables/routes/proxy.py
-@@ -2,7 +2,8 @@ from flask import render_template, request, Response, abort
- from werkzeug.exceptions import BadRequest
- from werkzeug.http import dump_options_header
+@@ -5,7 +5,8 @@ import shutil
+ import time
  from urllib.error import HTTPError
+ from urllib.parse import quote
 -from urllib.request import Request, urlopen
 +from urllib.request import Request
 +from ..safe_http import urlopen
- from urllib.parse import quote
- import logging
- import os
+ 
+ from flask import Response, abort, render_template, request
+ from werkzeug.exceptions import BadRequest
 diff --git a/src/structables/templates/article.html b/src/structables/templates/article.html
 index 060e984..86985ca 100644
 --- a/src/structables/templates/article.html
@@ -121,13 +128,15 @@ index 2f0be76..b150ac5 100644
      cached = cache.get(url)
      if cached is not None and monotonic() - cached[0] < max_age:
 diff --git a/src/structables/utils/helpers.py b/src/structables/utils/helpers.py
-index 2cd85da..20a5bbf 100644
+index 6cbfa77..70c11c7 100644
 --- a/src/structables/utils/helpers.py
 +++ b/src/structables/utils/helpers.py
-@@ -1,5 +1,5 @@
- from urllib.parse import urlencode, urlparse, quote, urlsplit, urlunsplit, parse_qsl
+@@ -2,7 +2,7 @@ import logging
+ import math
+ import re
+ from urllib.parse import parse_qsl, quote, urlencode, urlparse, urlsplit, urlunsplit
 -from urllib.request import urlopen
 +from ..safe_http import urlopen
+ 
  from bs4 import BeautifulSoup
- import re
- import logging
+ from flask import abort, render_template, request

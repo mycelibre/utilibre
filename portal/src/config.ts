@@ -29,6 +29,8 @@ export interface PublicConfig {
   publicExpandUrl?: string;
   publicReaderUrl?: string;
   publicStructablesUrl?: string;
+  publicWikimoreUrl?: string;
+  publicFreetarUrl?: string;
   publicCalendarUrl?: string;
   publicExpensesUrl?: string;
   publicWishlistUrl?: string;
@@ -127,6 +129,8 @@ const defaults: PublicConfig = {
   publicExpandUrl: '',
   publicReaderUrl: '',
   publicStructablesUrl: '',
+  publicWikimoreUrl: '',
+  publicFreetarUrl: '',
   publicCalendarUrl: '',
   publicExpensesUrl: '',
   publicWishlistUrl: '',

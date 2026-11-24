@@ -1,0 +1,186 @@
+diff --git a/freetar/backend.py b/freetar/backend.py
+index 505a4d2..53bae8a 100644
+--- a/freetar/backend.py
++++ b/freetar/backend.py
+@@ -5,7 +5,6 @@ import os
+ from pathlib import Path
+ from flask import Flask, render_template, request
+ from flask_caching import Cache
+-from flask_minify import Minify
+ 
+ level = logging.DEBUG if os.getenv("DEBUG") == "1" else logging.INFO
+ logging.getLogger("urllib3").setLevel(logging.INFO)
+@@ -51,7 +50,6 @@ else:
+ app = Flask(__name__)
+ cache = Cache(config=cache_config)
+ cache.init_app(app)
+-Minify(app=app, html=True, js=True, cssless=True)
+ 
+ 
+ @app.context_processor
+@@ -111,7 +109,7 @@ def show_about():
+ @app.errorhandler(500)
+ @app.errorhandler(FreetarError)
+ def internal_error(error):
+-    logger.exception("Exception occured")
++    logger.error("A requested tab or search could not be displayed")
+     search_term = request.args.get("search_term")
+     return render_template('error.html',
+                            search_term=search_term,
+diff --git a/freetar/static/custom.js b/freetar/static/custom.js
+index 0e4c1fc..4278181 100644
+--- a/freetar/static/custom.js
++++ b/freetar/static/custom.js
+@@ -102,7 +102,7 @@ function stopScrolling() {
+ 
+ function colorize_favs() {
+     // make every entry yellow if we faved it before
+-    const favorites = JSON.parse(localStorage.getItem("favorites")) || {};
++    const favorites = readFavorites();
+ 
+     document.querySelectorAll("#results tr").forEach((row) => {
+         const tab_url = row.querySelector(".song a")?.getAttribute("href");
+@@ -222,7 +222,7 @@ document.getElementById("dark_mode")?.addEventListener("click", function () {
+ 
+ document.querySelectorAll(".favorite").forEach((item) => {
+     item.addEventListener("click", (event) => {
+-        const favorites = JSON.parse(localStorage.getItem("favorites")) || {};
++        const favorites = readFavorites();
+         const elm = event.currentTarget;
+         const tab_url = elm.getAttribute("data-url");
+         if (tab_url in favorites) {
+diff --git a/freetar/templates/base.html b/freetar/templates/base.html
+index 0096a1b..09f5f62 100644
+--- a/freetar/templates/base.html
++++ b/freetar/templates/base.html
+@@ -26,6 +26,12 @@
+   <title>{{ title or "Freetar - guitar chords from Ultimate Guitar" }}</title>
+   <link rel="icon" type="image/png" href="/static/guitar.png" />
+   <script>
++    function readFavorites() {
++      try {
++        const value = JSON.parse(localStorage.getItem("favorites") || "{}");
++        return value && typeof value === "object" && !Array.isArray(value) ? value : {};
++      } catch { return {}; }
++    }
+     let isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+     if (JSON.parse(localStorage.getItem("dark_mode")) || isDarkMode)
+       document.documentElement.setAttribute('data-bs-theme', 'dark')
+diff --git a/freetar/templates/index.html b/freetar/templates/index.html
+index cf589bc..ee585c2 100644
+--- a/freetar/templates/index.html
++++ b/freetar/templates/index.html
+@@ -78,20 +78,33 @@
+ 
+     if (window.location.pathname === "/") {
+ 
+-        const favorites = JSON.parse(localStorage.getItem("favorites")) || {};
++        const favorites = readFavorites();
+         const resultsBody = document.querySelector('#results tbody');
+ 
+         Object.values(favorites).forEach(song => {
++            if (!song || typeof song !== 'object' ||
++                typeof song.tab_url !== 'string' ||
++                !/^\/tab\/[A-Za-z0-9/_-]+$/.test(song.tab_url)) return;
+             const row = document.createElement('tr');
+-            row.innerHTML = `
+-                <td>${song.artist_name}</td>
+-                <td class="song">
+-                    <a href="${song.tab_url}">${song.song}</a>
+-                </td>
+-                <td>${song.rating}</td>
+-                <td>${song.type}</td>
+-                <td><span data-artist="${song.artist_name}" data-song="${song.song}" data-type="${song.type}" data-rating="${song.rating}" data-url="${song.tab_url}" class="favorite">★</span></td>
+-            `;
++            for (const value of [song.artist_name, null, song.rating, song.type]) {
++                const cell = row.insertCell();
++                if (value !== null) cell.textContent = String(value ?? '');
++                else {
++                    cell.className = 'song';
++                    const link = document.createElement('a');
++                    link.href = song.tab_url;
++                    link.textContent = String(song.song ?? '');
++                    cell.appendChild(link);
++                }
++            }
++            const star = document.createElement('span');
++            for (const [name, value] of Object.entries({artist: song.artist_name,
++                    song: song.song, type: song.type, rating: song.rating, url: song.tab_url})) {
++                star.dataset[name] = String(value ?? '');
++            }
++            star.className = 'favorite';
++            star.textContent = '★';
++            row.insertCell().appendChild(star);
+             resultsBody.appendChild(row);
+         });
+     }
+@@ -122,7 +135,7 @@
+ </script>
+ 
+ <script>
+-    const favoritesData = JSON.parse(localStorage.getItem("favorites")) || {};
++    const favoritesData = readFavorites();
+     const favorites_url = Object.keys(favoritesData);
+     for (const fav of document.querySelectorAll('.favorite')) {
+       if (favorites_url.includes(fav.getAttribute('data-url').split("?")[0])) {
+diff --git a/freetar/templates/tab.html b/freetar/templates/tab.html
+index 4cfe16b..59dae33 100644
+--- a/freetar/templates/tab.html
++++ b/freetar/templates/tab.html
+@@ -146,7 +146,7 @@
+     document.addEventListener("DOMContentLoaded", function () {
+         requestWakeLock();
+         
+-        const favorites = JSON.parse(localStorage.getItem("favorites")) || {};
++        const favorites = readFavorites();
+         if (window.location.pathname in favorites) {
+             document.querySelectorAll(".favorite").forEach(el => {
+                 el.style.color = "#ffae00";
+diff --git a/freetar/ug.py b/freetar/ug.py
+index a2dfcca..4cec8d9 100644
+--- a/freetar/ug.py
++++ b/freetar/ug.py
+@@ -1,3 +1,4 @@
++import html
+ import requests
+ from bs4 import BeautifulSoup
+ from urllib.parse import quote, urlparse
+@@ -83,7 +84,7 @@ class SongDetail:
+         return f"{self.artist_name} - {self.song_name}"
+ 
+     def fix_tab(self):
+-        tab = self.tab
++        tab = html.escape(self.tab)
+         tab = tab.replace("\r\n", "<br/>")
+         tab = tab.replace("\n", "<br/>")
+         tab = tab.replace(" ", "&nbsp;")
+@@ -120,7 +121,7 @@ class Search:
+                 resp = requests.get("https://www.ultimate-guitar.com/search.php",
+                                     params={"page": page, "search_type": "title", "value": value},
+                                     timeout=UPSTREAM_TIMEOUT,
+-                                    headers=REQUEST_HEADERS)
++                                    headers=REQUEST_HEADERS, allow_redirects=False)
+             else:
+                 resp = requests.get(f"https://proxy.freetar.de/search.php?page={page}&search_type=title&value={quote(value)}",
+                                     timeout=UPSTREAM_TIMEOUT)
+@@ -210,7 +211,7 @@ def ug_tab(url_path: str):
+         if LOCAL_MODE:
+             resp = requests.get("https://tabs.ultimate-guitar.com/tab/" + str(url_path),
+                                 timeout=UPSTREAM_TIMEOUT,
+-                                headers=REQUEST_HEADERS)
++                                headers=REQUEST_HEADERS, allow_redirects=False)
+         else:
+             resp = requests.get("https://tabs.proxy.freetar.de/tab/" + url_path,
+                                 timeout=UPSTREAM_TIMEOUT)
+diff --git a/pyproject.toml b/pyproject.toml
+index d4f29d0..84d7839 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -10,7 +10,6 @@ dependencies = [
+     "beautifulsoup4>=4.12.0",
+     "flask>=3.1",
+     "waitress>=3.0.2",
+-    "flask-minify>=0.50",
+     "flask-caching>=2.3.1",
+ ]
+ 

@@ -18,6 +18,7 @@ import { newsletterGuides } from './newsletters-guide.ts';
 import { addyGuides } from './addy-guide.ts';
 import { unfurlGuides } from './unfurl-guide.ts';
 import { structablesGuides } from './structables-guide.ts';
+import { referenceReaderGuides } from './reference-readers-guide.ts';
 import { readerAdditionGuides } from './reader-addition-guide.ts';
 import { razziaGuides } from './razzia-guide.ts';
 import { chhotoGuides } from './chhoto-guide.ts';
@@ -79,6 +80,7 @@ export const practicalGuides: PracticalGuide[] = [
   ...unfurlGuides,
   ...readerAdditionGuides,
   ...structablesGuides,
+  ...referenceReaderGuides,
   ...everydayGuides,
   ...nextFeatureGuides,
   ...servicePackGuides,

@@ -19,6 +19,7 @@ import { newsletterAdditions } from './newsletters-addition.ts';
 import { addyAdditions } from './addy-addition.ts';
 import { unfurlAdditions } from './unfurl-addition.ts';
 import { structablesAdditions } from './structables-addition.ts';
+import { referenceReaderAdditions } from './reference-readers-addition.ts';
 import { readerAdditions } from './reader-addition.ts';
 import { razziaAdditions } from './razzia-addition.ts';
 import { chhotoAdditions } from './chhoto-addition.ts';
@@ -123,6 +124,7 @@ const entries: CatalogEntry[] = [
   ...unfurlAdditions,
   ...readerAdditions,
   ...structablesAdditions,
+  ...referenceReaderAdditions,
   ...newBrowserTools(),
   ...packServices(),
   {

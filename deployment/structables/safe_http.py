@@ -1,4 +1,4 @@
-"""Narrow outbound boundary for Structables 0.4.5; not a general proxy."""
+"""Narrow outbound boundary for Structables 0.4.6; not a general proxy."""
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener

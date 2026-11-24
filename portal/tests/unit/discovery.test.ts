@@ -108,7 +108,7 @@ describe('catalog discovery metadata', () => {
       'texlyre', 'librespeed', 'one-file-core', 'tiddlywiki', 'moocup', 'rustpad', 'autoredact', 'gravity', 'knit', 'newton', 'family-chess', 'projects', 'trip', 'wallabag', 'donetick', 'beaverhabits', 'kokoro-web',
       'newsletters', 'addy',
       'spliit', 'wishlist', 'kitchenowl', 'opengist', 'linkding', 'vikunja', 'bytestash', 'openresume',
-      'calino', 'radicale', 'chitchatter', 'gathio', 'link-cleaner', 'razzia', 'chhoto', 'unfurl', '13ft', 'structables',
+      'calino', 'radicale', 'chitchatter', 'gathio', 'link-cleaner', 'razzia', 'chhoto', 'unfurl', '13ft', 'structables', 'wikimore', 'freetar',
       'moodist', 'sketchforge', 'chartdb', 'drawdb', 'bookbinder',
       'cryptpad', 'liberaforms', 'galene', 'wbo',
       'pollaris',

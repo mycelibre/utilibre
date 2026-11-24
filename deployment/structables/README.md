@@ -1,8 +1,8 @@
 # Structables
 
-Operator-requested addition, 27 October 2026. Structables is Private.coffee's
-complete AGPLv3 Instructables reader, version 0.4.5, source revision
-`4f10ce078543685db88d8ed57606aaa14fae84d9` (19 October). Use the canonical
+Operator-requested addition, 27 October 2026; refreshed 24 November 2026. Structables is Private.coffee's
+complete AGPLv3 Instructables reader, version 0.4.6, source revision
+`2f6b7965b2427d4d57d65388bd5fd7f0a4358661` (19 October). Use the canonical
 Forgejo repository: the GitHub mirror is older. No Instructables login or
 personal token is used. Native public-site search key discovery is upstream
 behavior, not a Utilibre credential service.
@@ -11,7 +11,8 @@ behavior, not a Utilibre credential service.
 
 Run `sh deployment/structables/prepare.sh /absolute/new/candidate`.
 It verifies exact source and integration hashes, applies the reviewed patch
-without fallback, downloads only hash-pinned wheels, builds with networking
+without fallback, downloads hash-pinned wheels and exact Alpine security
+updates, builds with networking
 disabled, then runs offline tests. It never deploys. The existing daily
 maintenance inventory reads the catalogue provider; the existing image scanner
 covers running containers. No new scheduler or LLM is involved.
@@ -35,7 +36,8 @@ record its identity/date and do not call an archived scan current clearance.
 
 - `upstream.patch`: route all upstream fetches through `safe_http.py`, bound
   native JSON cache entries to 32/worker and reuse to 15 minutes, sanitize
-  upstream HTML through nh3, and remove request-bearing traceback output.
+  upstream HTML through nh3, remove request-bearing traceback output, and
+  recognize the upstream's `embedType: NONE` as an ordinary step image.
 - `safe_http.py`: HTTPS host allowlist, no environmental proxy or redirects,
   ten-second socket timeout, eight-MiB response bound. Exact known upstream
   hosts only; no arbitrary host fetches or visitor headers are forwarded.
@@ -53,7 +55,8 @@ Reserved backend port: **3242**. Intended URL:
 Use the Caddyfile here, setting its existing `UTILIBRE_APP_IP` environment
 variable. Keep global access/error logging exclusions in place. DNS already
 resolves through the existing Cloudflare setup; TLS must be checked after
-the site block is installed. The portal remains non-launchable until both the image-retrieval and edge checks pass.
+the site block is installed. The October image-retrieval blocker passed its
+24 November retest; the portal remains non-launchable until public edge checks pass.
 
 Validate with `docker compose --env-file .env -f deployment/structables/compose.yaml config --quiet`.
 The service binds only `PRIVATE_BIND_IP`; no wildcard, database or cache port.
@@ -64,9 +67,12 @@ upstream query. Media caching is disabled; JSON memory is ephemeral, with no
 content backup. Browser history/downloads/theme and source-provider retention
 are separate. No registration or uploads are offered.
 
-Before exposing the route, publish the complete reviewed `source` tree plus
+Before exposing the route, run
+`deployment/reference-readers/publish-source.sh structables /absolute/candidate /absolute/archive`
+to package the complete reviewed `source` tree plus
 Dockerfile, requirements.lock, upstream.patch, safe_http.py, wsgi.py, tests,
-prepare script, input hashes, compose config, policy and this README as
+prepare script, input hashes, the shared Alpine package manifest, compose
+config, policy and this README as
 `/opt/utilibre/toolbox-public/structables-utilibre.tar.gz`. Do not include the
 private evidence directory, `.git`, secrets, runtime state or fetched content.
 The native policy page links `/utilibre-source/structables-utilibre.tar.gz`.

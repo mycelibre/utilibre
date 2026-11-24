@@ -1,5 +1,5 @@
 import { creativeProviders } from './creative-providers.ts';
-export type FossProviderId = keyof typeof creativeProviders | 'structables' | 'texlyre' | 'librespeed' | 'wallabag' | 'addy' | 'trip' | 'donetick' | 'beaverhabits' | 'projects' | 'kokoro-web' | 'family-chess' | 'newton' | 'knit' | 'gravity' | 'autoredact' | 'rustpad' | 'moocup' | 'one-file-core' | 'tiddlywiki' | 'newsletters' | 'unfurl' | '13ft' | 'razzia' | 'chhoto' | 'chitchatter' | 'gathio' | 'link-cleaner' | 'calino' | 'radicale' | 'spliit' | 'wishlist' | 'kitchenowl' | 'opengist' | 'linkding' | 'vikunja' | 'bytestash' | 'openresume' | 'moodist' | 'sketchforge' | 'chartdb' | 'drawdb' | 'bookbinder' | 'cryptpad' | 'liberaforms' | 'galene' | 'super-productivity' | 'mapshaper' | 'numbat' | 'wbo' | 'markmap' | 'excalidraw' | 'svgedit' | 'cyberchef' | 'image-scrubber' | 'zip-manager' | 'rawgraphs' | 'audiomass' | 'minipaint' | 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'lrclib' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris' | 'binternet' | 'translite' | 'biblioreads' | 'qr-offline' | 'kittygram' | 'rimgo' | 'mumble';
+export type FossProviderId = keyof typeof creativeProviders | 'wikimore' | 'freetar' | 'structables' | 'texlyre' | 'librespeed' | 'wallabag' | 'addy' | 'trip' | 'donetick' | 'beaverhabits' | 'projects' | 'kokoro-web' | 'family-chess' | 'newton' | 'knit' | 'gravity' | 'autoredact' | 'rustpad' | 'moocup' | 'one-file-core' | 'tiddlywiki' | 'newsletters' | 'unfurl' | '13ft' | 'razzia' | 'chhoto' | 'chitchatter' | 'gathio' | 'link-cleaner' | 'calino' | 'radicale' | 'spliit' | 'wishlist' | 'kitchenowl' | 'opengist' | 'linkding' | 'vikunja' | 'bytestash' | 'openresume' | 'moodist' | 'sketchforge' | 'chartdb' | 'drawdb' | 'bookbinder' | 'cryptpad' | 'liberaforms' | 'galene' | 'super-productivity' | 'mapshaper' | 'numbat' | 'wbo' | 'markmap' | 'excalidraw' | 'svgedit' | 'cyberchef' | 'image-scrubber' | 'zip-manager' | 'rawgraphs' | 'audiomass' | 'minipaint' | 'searxng' | 'redlib' | 'freshrss' | 'privatebin' | 'bentopdf' | 'vert' | 'hatsh' | 'omnitools' | 'ittools' | 'drawio' | 'miniqr' | 'rssbridge' | 'ntfy' | 'yopass' | 'pairdrop' | 'uptime-kuma' | 'jupyterlite' | 'whisper-web' | 'reactive-resume' | 'penpot' | 'actual' | 'rallly' | 'breezewiki' | 'wakapi' | 'priviblur' | 'mezzo' | 'fmd' | 'lrclib' | 'libremdb' | 'degoog' | 'fourget' | 'safetwitch' | 'anonymousoverflow' | 'gothub' | 'pollaris' | 'binternet' | 'translite' | 'biblioreads' | 'qr-offline' | 'kittygram' | 'rimgo' | 'mumble';
 
 // Explicit human descriptions below are not SPDX identifiers. They retain the
 // verified GNU licence family without inventing an -only / -or-later grant.
@@ -32,7 +32,7 @@ export interface ReviewedFossProvider {
   installedVersion: string;
   integration: 'container' | 'source-build';
   reviewStatus: 'deployed' | 'staged';
-  reviewDocument: 'docs/records/held-upgrades-2026-11-11.md' | 'docs/records/bentopdf-updater-2026-11-11.md' | 'docs/records/security-maintenance-2026-11-09.md' | 'docs/records/structables-2026-10-27.md' | 'docs/updates.md' | 'docs/records/creative-batch-2026-10-11.md' | 'docs/records/texlyre-2026-10-11.md' | 'docs/records/librespeed-latex-chat-2026-10-11.md' | 'docs/records/addy-deployment-2026-10-09.md' | 'docs/records/privatebin-discovery-2026-10-09.md' | 'docs/records/trip-review-2026-10-09.md' | 'docs/records/donetick-deployment-2026-10-09.md' | 'docs/records/beaverhabits-deployment-2026-10-09.md' | 'docs/records/projects-deployment-2026-10-09.md' | 'docs/records/kokoro-web-deployment-2026-10-09.md' | 'docs/records/family-chess-deployment-2026-10-09.md' | 'docs/records/gravity-deployment-2026-10-09.md' | 'docs/records/knit-deployment-2026-10-09.md' | 'docs/records/newton-deployment-2026-10-09.md' | 'docs/records/autoredact-deployment-2026-10-09.md' | 'docs/records/rustpad-deployment-2026-10-09.md' | 'docs/records/moocup-deployment-2026-10-09.md' | 'docs/services.md' | 'docs/toolbox-review.md' | 'docs/service-pack.md' | 'docs/records/newsletters-deployment-2026-10-09.md' | 'docs/records/one-file-core-deployment-2026-10-09.md' | 'docs/records/tiddlywiki-deployment-2026-10-09.md';
+  reviewDocument: 'docs/records/reference-readers-2026-11-24.md' | 'docs/records/held-upgrades-2026-11-11.md' | 'docs/records/bentopdf-updater-2026-11-11.md' | 'docs/records/security-maintenance-2026-11-09.md' | 'docs/records/structables-2026-10-27.md' | 'docs/updates.md' | 'docs/records/creative-batch-2026-10-11.md' | 'docs/records/texlyre-2026-10-11.md' | 'docs/records/librespeed-latex-chat-2026-10-11.md' | 'docs/records/addy-deployment-2026-10-09.md' | 'docs/records/privatebin-discovery-2026-10-09.md' | 'docs/records/trip-review-2026-10-09.md' | 'docs/records/donetick-deployment-2026-10-09.md' | 'docs/records/beaverhabits-deployment-2026-10-09.md' | 'docs/records/projects-deployment-2026-10-09.md' | 'docs/records/kokoro-web-deployment-2026-10-09.md' | 'docs/records/family-chess-deployment-2026-10-09.md' | 'docs/records/gravity-deployment-2026-10-09.md' | 'docs/records/knit-deployment-2026-10-09.md' | 'docs/records/newton-deployment-2026-10-09.md' | 'docs/records/autoredact-deployment-2026-10-09.md' | 'docs/records/rustpad-deployment-2026-10-09.md' | 'docs/records/moocup-deployment-2026-10-09.md' | 'docs/services.md' | 'docs/toolbox-review.md' | 'docs/service-pack.md' | 'docs/records/newsletters-deployment-2026-10-09.md' | 'docs/records/one-file-core-deployment-2026-10-09.md' | 'docs/records/tiddlywiki-deployment-2026-10-09.md';
   role: 'public-application';
   maintainer: 'independent-upstream';
   selfHostable: true;
@@ -46,17 +46,39 @@ export interface ReviewedFossProvider {
  */
 export const reviewedFossProviders: Record<FossProviderId, ReviewedFossProvider> = {
   ...creativeProviders,
+  wikimore: {
+    project: 'Wikimore', sourceUrl: 'https://git.private.coffee/PrivateCoffee/wikimore',
+    reviewedSourceUrl: 'https://git.private.coffee/PrivateCoffee/wikimore/src/commit/70b39146f36f54317ccda71fcc007caa5a555a1e',
+    license: 'MIT', licenseEvidenceUrls: ['https://git.private.coffee/PrivateCoffee/wikimore/src/commit/70b39146f36f54317ccda71fcc007caa5a555a1e/LICENSE'],
+    selfHostingEvidenceUrl: 'https://git.private.coffee/PrivateCoffee/wikimore/src/commit/70b39146f36f54317ccda71fcc007caa5a555a1e/README.md',
+    maintenanceEvidenceUrl: 'https://git.private.coffee/PrivateCoffee/wikimore/commits/branch/main',
+    artifactReference: 'source:70b39146f36f54317ccda71fcc007caa5a555a1e+deployment/wikimore',
+    installedVersion: '0.1.27-p1', integration: 'source-build', reviewStatus: 'staged',
+    reviewDocument: 'docs/records/reference-readers-2026-11-24.md', role: 'public-application', maintainer: 'independent-upstream',
+    selfHostable: true, reviewedOn: '2026-11-24',
+  },
+  freetar: {
+    project: 'Freetar', sourceUrl: 'https://github.com/kmille/freetar',
+    reviewedSourceUrl: 'https://github.com/kmille/freetar/tree/0418035548a5d42f6252621514cd0949a7845b1b',
+    license: 'GNU GPLv3 (version scope unconfirmed)', licenseEvidenceUrls: ['https://github.com/kmille/freetar/blob/0418035548a5d42f6252621514cd0949a7845b1b/LICENSE'],
+    selfHostingEvidenceUrl: 'https://github.com/kmille/freetar/blob/0418035548a5d42f6252621514cd0949a7845b1b/README.md',
+    maintenanceEvidenceUrl: 'https://github.com/kmille/freetar/commits/main/',
+    artifactReference: 'source:0418035548a5d42f6252621514cd0949a7845b1b+deployment/freetar',
+    installedVersion: '0.22.0-p1', integration: 'source-build', reviewStatus: 'staged',
+    reviewDocument: 'docs/records/reference-readers-2026-11-24.md', role: 'public-application', maintainer: 'independent-upstream',
+    selfHostable: true, reviewedOn: '2026-11-24',
+  },
   structables: {
     project: 'Structables', sourceUrl: 'https://git.private.coffee/PrivateCoffee/structables',
-    reviewedSourceUrl: 'https://git.private.coffee/PrivateCoffee/structables/src/commit/4f10ce078543685db88d8ed57606aaa14fae84d9',
+    reviewedSourceUrl: 'https://git.private.coffee/PrivateCoffee/structables/src/commit/2f6b7965b2427d4d57d65388bd5fd7f0a4358661',
     license: 'GNU AGPLv3 (version scope unconfirmed)',
-    licenseEvidenceUrls: ['https://git.private.coffee/PrivateCoffee/structables/src/commit/4f10ce078543685db88d8ed57606aaa14fae84d9/LICENSE'],
-    selfHostingEvidenceUrl: 'https://git.private.coffee/PrivateCoffee/structables/src/commit/4f10ce078543685db88d8ed57606aaa14fae84d9/README.md',
+    licenseEvidenceUrls: ['https://git.private.coffee/PrivateCoffee/structables/src/commit/2f6b7965b2427d4d57d65388bd5fd7f0a4358661/LICENSE'],
+    selfHostingEvidenceUrl: 'https://git.private.coffee/PrivateCoffee/structables/src/commit/2f6b7965b2427d4d57d65388bd5fd7f0a4358661/README.md',
     maintenanceEvidenceUrl: 'https://git.private.coffee/PrivateCoffee/structables/commits/branch/main',
-    artifactReference: 'source:4f10ce078543685db88d8ed57606aaa14fae84d9+deployment/structables',
-    installedVersion: '0.4.5-p1', integration: 'source-build', reviewStatus: 'staged',
-    reviewDocument: 'docs/records/structables-2026-10-27.md', role: 'public-application', maintainer: 'independent-upstream',
-    selfHostable: true, reviewedOn: '2026-10-27',
+    artifactReference: 'source:2f6b7965b2427d4d57d65388bd5fd7f0a4358661+deployment/structables',
+    installedVersion: '0.4.6-p1', integration: 'source-build', reviewStatus: 'staged',
+    reviewDocument: 'docs/records/reference-readers-2026-11-24.md', role: 'public-application', maintainer: 'independent-upstream',
+    selfHostable: true, reviewedOn: '2026-11-24',
   },
   texlyre: { ...browserProvider('TeXlyre', 'TeXlyre/texlyre', '697759981a2a7291fdd3855ea6e09cc6ca5c7723', 'AGPL-3.0-or-later', 'LICENSE', '0.14.1-p1'), reviewStatus: 'deployed', reviewedOn: '2026-11-11', reviewDocument: 'docs/records/texlyre-2026-10-11.md', artifactReference: 'source:697759981a2a7291fdd3855ea6e09cc6ca5c7723+deployment/texlyre', licenseEvidenceUrls: ['https://github.com/TeXlyre/texlyre/blob/v0.14.1/LICENSE', 'https://github.com/TeXlyre/texlyre/blob/v0.14.1/src/main.tsx'] },
   librespeed: { ...browserProvider('LibreSpeed', 'librespeed/speedtest-go', '7bbfadeeed710500752496f952bbcfb66ab3bdb9', 'LGPL-3.0-or-later', 'LICENSE', '1.1.6-p1'), reviewStatus: 'deployed', reviewedOn: '2026-10-11', reviewDocument: 'docs/records/librespeed-latex-chat-2026-10-11.md', artifactReference: 'source:7bbfadeeed710500752496f952bbcfb66ab3bdb9+deployment/librespeed', licenseEvidenceUrls: ['https://github.com/librespeed/speedtest-go/blob/v1.1.6/LICENSE', 'https://github.com/librespeed/speedtest-go/blob/v1.1.6/README.md#license'] },
