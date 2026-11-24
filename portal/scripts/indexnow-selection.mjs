@@ -19,6 +19,7 @@ export const publicSeoPaths = Object.freeze([
   '/en/transparency', '/es/transparencia',
   '/en/acceptable-use', '/es/uso-aceptable',
   '/en/support', '/es/apoyar',
+  '/en/abuse', '/es/denunciar-abuso',
   '/en/software', '/es/software',
   '/en/privacy-labels', '/es/etiquetas-privacidad',
   '/en/pdf-tools', '/es/herramientas-pdf',
