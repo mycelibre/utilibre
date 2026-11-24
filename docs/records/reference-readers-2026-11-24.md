@@ -134,8 +134,18 @@ pull request or issue, including an issue on GitHub. A current-source issue
 draft was prepared instead.
 
 GitHub accepted the fork pushes; the Wikimore and Freetar upstream comparisons
-are each one commit ahead and zero behind. The available fine-grained GitHub
-token returned HTTP 403 when creating an upstream pull request or issue; no
-request was opened at this point. A separate GitHub device authorization was
-requested to complete submission. Publication still requires each upstream
-maintainer's review and merge; a submitted request is not an accepted listing.
+were each one commit ahead and zero behind. The available fine-grained GitHub
+token returned HTTP 403 when creating an upstream pull request or issue. The
+operator authorized a separate GitHub device session, which identified the
+`traficogt` account. To satisfy GitHub's head-branch ownership rule, the same
+reviewed commits were pushed to forks owned by that account. Submissions were
+opened and confirmed **open** on 24 November 2026:
+
+- [Wikimore PR #18](https://github.com/PrivateCoffee/wikimore/pull/18)
+- [Freetar PR #91](https://github.com/kmille/freetar/pull/91)
+- [Structables issue #1](https://github.com/PrivateCoffee/structables/issues/1)
+
+The Structables issue uses the current Forgejo revision and exact public
+address; it does not ask for a pull request against the stale GitHub mirror.
+Publication still requires each upstream maintainer's review and merge; an
+open request is not an accepted listing.
