@@ -164,8 +164,8 @@ export function renderPracticalGuides(language: Language, config: PublicConfig, 
   main.append(related);
   const reviewedOn = guide.reviewedOn || '2026-10-07';
   const responsibility = section(es ? 'Revisión y ayuda' : 'Review and help', es
-    ? `Utilibre mantiene estas instrucciones. Última revisión: ${reviewedOn}. Los controles de la aplicación pueden cambiar. Conservá tus descargas importantes: borrar datos del navegador puede eliminar borradores y preferencias.`
-    : `Utilibre maintains these instructions. Last reviewed: ${reviewedOn}. Application controls can change. Keep important downloads: clearing browser data can remove drafts and preferences.`);
+    ? `Utilibre mantiene estas instrucciones. Última revisión: ${reviewedOn}. Si un paso ya no coincide con la aplicación, podés reportarlo desde el contacto de Utilibre.`
+    : `Utilibre maintains these instructions. Last reviewed: ${reviewedOn}. If a step no longer matches the application, you can report it through Utilibre’s contact page.`);
   const sources = element('p', 'guide-links');
   for (const reference of guide.references || []) { const a = link(reference.url, reference.label[language]); a.rel = 'noreferrer'; sources.append(a); }
   for (const tool of distinctTools) { const entry = catalogEntry(tool.id); if (entry) sources.append(link(entry.upstreamSourceUrl, `${entry.upstreamProject} · ${es ? 'código fuente' : 'source'}`)); }
