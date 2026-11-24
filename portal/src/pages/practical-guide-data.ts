@@ -92,7 +92,7 @@ export const practicalGuides: PracticalGuide[] = [
       en: {
         title: 'Turn an outline into a mind map',
         intro: 'Use a short study outline to make a map, then save both an editable backup and an SVG picture. No account is needed.',
-        prerequisites: 'Use a current browser with JavaScript and file downloads. A keyboard and larger screen help with editing; the narrow layout places the preview below the outline. The practice data is fictional. The tool link appears only when public access is enabled.',
+        prerequisites: 'A keyboard and larger screen help with editing; on a phone, the preview appears below the outline. The practice data is fictional.',
         steps: [
           'Download the fictional study outline below. Open Markmap, choose Import Markdown and select the .md file. Confirm replacement only if you no longer need the current outline. English and Spanish controls are available in the Language selector.',
           'Read the Your outline field. A line beginning with # names the map; ## introduces a branch; a line starting with - adds a list item. The example has Read, Practice and Review branches. Change “Choose a chapter” to a specific fictional topic, such as “Read about rivers”.',
@@ -109,7 +109,7 @@ export const practicalGuides: PracticalGuide[] = [
       es: {
         title: 'Convertí un esquema en un mapa mental',
         intro: 'Usá un esquema breve de estudio para crear un mapa y guardá una copia editable y una imagen SVG. No necesitás cuenta.',
-        prerequisites: 'Necesitás un navegador actual con JavaScript y descargas. Un teclado y una pantalla grande facilitan editar; en pantallas pequeñas, la vista previa aparece debajo del esquema. Los datos de práctica son ficticios. El enlace a la herramienta aparece solo cuando se habilita el acceso público.',
+        prerequisites: 'Un teclado y una pantalla grande facilitan la edición; en el teléfono, la vista previa aparece debajo del esquema. Los datos de práctica son ficticios.',
         steps: [
           'Descargá el esquema ficticio que aparece abajo. Abrí Markmap, elegí Importar Markdown y seleccioná el archivo .md. Confirmá el reemplazo solo si ya no necesitás el esquema actual. Podés elegir Español o English en Idioma.',
           'Leé el campo Tu esquema. Una línea con # nombra el mapa; ## abre una rama; - agrega un elemento de lista. El ejemplo tiene Leer, Practicar y Repasar. Cambiá “Elegir un capítulo” por un tema ficticio concreto, por ejemplo “Leer sobre los ríos”.',
@@ -135,7 +135,7 @@ export const practicalGuides: PracticalGuide[] = [
         seoTitle: 'Extract text from a scanned PDF with OCR',
         seoDescription: 'Recognize English or Spanish text with BentoPDF in your browser. Try a sample scan, review the words and download a searchable PDF. No account needed.',
         intro: 'Use BentoPDF to recognize a page, check the result and save a searchable PDF or share corrected text. No account is needed.',
-        prerequisites: 'Keep the original. Start with the fictional notice below and a browser that can download files. OCR downloads processing components and language data on first use; allow time and network access. A small, upright scan is a better starting point than a large document.',
+        prerequisites: 'Keep the original and start with the fictional notice below. The first OCR run may take longer while it downloads its language data. A small, upright scan is a better starting point than a large document.',
         steps: [
           'First try selecting a sentence in the original PDF. If its text already copies correctly, skip OCR: copy the needed text, check it against the page and continue to sharing. A scanned image needs recognition.',
           'Open Recognize scanned text and select the fictional PDF. Select English for the English sample or Spanish; Castilian for the Spanish sample. The interface language does not choose the OCR language. Deselect languages you do not need.',
@@ -154,7 +154,7 @@ export const practicalGuides: PracticalGuide[] = [
         seoTitle: 'Extraer texto de un PDF escaneado con OCR',
         seoDescription: 'Reconocé texto en español o inglés con BentoPDF en el navegador. Probá un escaneo, revisá las palabras y guardá un PDF con texto seleccionable. Sin cuenta.',
         intro: 'Usá BentoPDF para reconocer una página, revisar el resultado y guardar un PDF con texto seleccionable o compartir texto corregido. No necesitás cuenta.',
-        prerequisites: 'Conservá el original. Empezá con el aviso ficticio de abajo y un navegador que permita descargar archivos. El primer OCR descarga componentes y datos del idioma: dejá tiempo y acceso a la red. Conviene empezar con una página pequeña y derecha.',
+        prerequisites: 'Conservá el original y empezá con el aviso ficticio de abajo. El primer OCR puede tardar más mientras descarga los datos del idioma. Conviene empezar con una página pequeña y derecha.',
         steps: [
           'Intentá seleccionar una frase en el PDF original. Si se copia correctamente, no necesitás OCR: copiá el texto útil, comparalo con la página y pasá a compartirlo. Una imagen escaneada sí necesita reconocimiento.',
           'Abrí Reconocer texto escaneado y seleccioná el PDF ficticio. Elegí Spanish; Castilian para el ejemplo en español o English para el ejemplo en inglés. El idioma de la interfaz no elige el del OCR. Desmarcá los idiomas que no necesités.',
@@ -350,7 +350,7 @@ export const practicalGuides: PracticalGuide[] = [
         seoTitle: 'Send a file from your phone to your computer',
         seoDescription: 'Open PairDrop on both devices, choose a file, accept it and check the download. Try a small sample first; network restrictions can prevent a connection.',
         intro: 'Try a small file with PairDrop before sending something important. Both devices need the page open and must be able to establish a peer connection.',
-        prerequisites: 'Download the harmless text sample to the sending device. Use an up-to-date browser with WebRTC and downloads enabled. Start on the same trusted local network. Direct transfers and encrypted relay transfers over UDP, TCP and TLS were checked with synthetic files in Chromium, including from an external test machine. Physical phones and every network combination were not tested.',
+        prerequisites: 'Download the small text sample to the sending device. Keep both devices awake and start on the same trusted Wi-Fi network. PairDrop needs browser support for WebRTC and file downloads; some restrictive networks can prevent a connection.',
         steps: [
           'Open the same Utilibre PairDrop address on the phone and computer. Keep both pages visible. Each device receives a display name; compare the names shown at the bottom of the pages before selecting a destination.',
           'On a compatible local network the other device appears as a peer. Select its name on the sending device and choose transfer-example.txt. If discovery does not work, use the app’s pairing control on both devices and follow the displayed code instructions; pairing helps discovery but cannot force a blocked connection to work.',
@@ -369,7 +369,7 @@ export const practicalGuides: PracticalGuide[] = [
         seoTitle: 'Pasar archivos del teléfono a la computadora',
         seoDescription: 'Abrí PairDrop en ambos dispositivos, elegí un archivo, aceptalo y revisá la descarga. Probá un ejemplo pequeño: algunas redes pueden impedir la conexión.',
         intro: 'Probá un archivo pequeño con PairDrop antes de enviar algo importante. Ambos dispositivos necesitan la página abierta y una conexión entre pares que funcione.',
-        prerequisites: 'Descargá el texto de práctica al dispositivo emisor. Usá un navegador actualizado con WebRTC y descargas habilitadas. Empezá en la misma red local de confianza. Se probaron archivos ficticios en Chromium por conexión directa y por retransmisión cifrada UDP, TCP y TLS, también desde un equipo externo. No se probaron teléfonos físicos ni todas las combinaciones de redes.',
+        prerequisites: 'Descargá el archivo de texto pequeño al dispositivo emisor. Mantené ambos dispositivos despiertos y empezá en la misma red Wi-Fi de confianza. PairDrop necesita un navegador compatible con WebRTC y descargas; algunas redes restringidas pueden impedir la conexión.',
         steps: [
           'Abrí la misma dirección de PairDrop de Utilibre en el teléfono y la computadora. Dejá ambas páginas visibles. Cada dispositivo recibe un nombre: compará los nombres que aparecen al pie antes de elegir destino.',
           'En una red compatible, el otro dispositivo aparece como par. Seleccioná su nombre desde el emisor y elegí transfer-example.txt. Si no aparece, usá el control de emparejamiento en ambos y seguí las instrucciones del código. Emparejar ayuda a encontrarlos, pero no fuerza una conexión bloqueada.',

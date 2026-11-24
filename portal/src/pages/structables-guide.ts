@@ -9,7 +9,7 @@ export const structablesGuides: PracticalGuide[] = [{
     en: {
       title: 'Find and read an Instructables project',
       intro: 'Look through a public project’s materials, instructions and pictures using Structables. No account is needed. The interface is in English and each project keeps its original language.',
-      prerequisites: 'A browser with an Internet connection. Check the tool’s availability before starting. This is a reader for public projects, not a place to upload your own work. Instructions come from their authors; assess their suitability and safety before trying them.',
+      prerequisites: 'Structables reads public projects; it cannot publish your own. The instructions come from their authors, so assess their suitability and safety before trying a physical project.',
       steps: [
         'Open Structables. Choose a category such as Craft or Workshop, or use the Search field in the header.',
         'For a harmless practice search, enter paper airplane. Open a result with materials and step-by-step photographs. This is a search example, not a Utilibre-authored project.',
@@ -25,7 +25,7 @@ export const structablesGuides: PracticalGuide[] = [{
     es: {
       title: 'Encontrá y leé un proyecto de Instructables',
       intro: 'Consultá materiales, instrucciones e imágenes de un proyecto público con Structables. No necesitás cuenta. La interfaz está en inglés y cada proyecto conserva su idioma original.',
-      prerequisites: 'Un navegador con conexión a Internet. Revisá la disponibilidad de la herramienta antes de empezar. Es un lector de proyectos públicos, no un lugar para subir tu trabajo. Las instrucciones pertenecen a sus autores; evaluá si son adecuadas y seguras antes de probarlas.',
+      prerequisites: 'Structables muestra proyectos públicos; no sirve para publicar los tuyos. Las instrucciones pertenecen a sus autores: evaluá si son adecuadas y seguras antes de hacer un proyecto físico.',
       steps: [
         'Abrí Structables. Elegí una categoría como Craft o Workshop, o usá el campo Search del encabezado.',
         'Para practicar con una búsqueda sencilla, escribí paper airplane. Abrí un resultado con materiales y fotografías de los pasos. Es un ejemplo de búsqueda, no un proyecto creado por Utilibre.',

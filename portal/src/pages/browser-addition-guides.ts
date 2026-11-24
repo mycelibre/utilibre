@@ -10,7 +10,7 @@ export const browserAdditionGuides: PracticalGuide[] = [
       en: {
         title: 'Draw a database schema and keep an editable copy',
         intro: 'Inspect two related tables in drawDB, then save SQL and an editable diagram. This browser application does not connect to your database.',
-        prerequisites: 'Download the fictional SQL sample. It defines authors and books with one foreign key, without records or credentials. Use a current desktop browser and start with a small schema.',
+        prerequisites: 'Download the fictional SQL sample. It defines authors and books with one foreign key, without records or credentials. A larger screen makes it easier to arrange the diagram.',
         steps: [
           'Open drawDB, choose PostgreSQL and Confirm. Choose File → Import from SQL → Upload file, select the sample and choose Import.',
           'Check Tables (2) and Relationships (1). The books.author_id field refers to authors.id. Move a table and inspect its fields: the diagram describes structure, not stored book or author records.',
@@ -18,7 +18,7 @@ export const browserAdditionGuides: PracticalGuide[] = [
           'Choose File → Export as → JSON, then Export. Keep this editable drawDB backup; SQL alone does not preserve every diagram preference or visual arrangement.',
           'In a fresh diagram or browser profile, choose File → Import from → JSON, select the saved JSON and Import. Confirm both tables and their relationship return before removing your working copy.',
         ],
-        success: 'The deployed application imported the fictional SQL, exported both definitions and their foreign key, and restored the JSON in a fresh browser context. A reload retained the local diagram. No real database was contacted.',
+        success: "The diagram shows authors and books connected by a foreign key. Its JSON reopens as an editable diagram, and the exported SQL contains both table definitions.",
         troubleshooting: 'Online sharing is unavailable here. Send a checked JSON or SQL file yourself. Supported syntax differs by database; complex schemas need manual review. Start with fewer tables if the browser becomes slow.',
         privacy: 'This workflow processes schema data in your browser. Diagrams persist after tab closure; downloads remain until you delete them. Applications on tools.utilibre.org share an origin, so clearing all site data can erase other tools’ work too. App delivery creates connection metadata. Exports are ordinary unencrypted files.',
         next: 'Keep the editable JSON and reviewed SQL independently. Remove sensitive table names, comments and defaults before sharing.',
@@ -26,7 +26,7 @@ export const browserAdditionGuides: PracticalGuide[] = [
       es: {
         title: 'Dibujá un esquema y guardá una copia editable',
         intro: 'Revisá dos tablas relacionadas en drawDB y guardá SQL y un diagrama editable. Esta aplicación del navegador no se conecta a tu base de datos.',
-        prerequisites: 'Descargá el SQL ficticio. Define authors y books con una clave foránea, sin registros ni credenciales. Usá un navegador de escritorio actual y empezá con un esquema pequeño.',
+        prerequisites: 'Descargá el SQL ficticio. Define authors y books con una clave foránea, sin registros ni credenciales. Una pantalla grande facilita ordenar el diagrama.',
         steps: [
           'Abrí drawDB, elegí PostgreSQL y Confirm. Elegí File → Import from SQL → Upload file, seleccioná el ejemplo y pulsá Import. Estos son los rótulos en inglés; también podés elegir español.',
           'Revisá Tables (2) y Relationships (1). El campo books.author_id apunta a authors.id. Mové una tabla e inspeccioná sus campos: el diagrama describe la estructura, no registros de libros o autores.',
@@ -34,7 +34,7 @@ export const browserAdditionGuides: PracticalGuide[] = [
           'Elegí File → Export as → JSON y después Export. Conservá ese respaldo editable de drawDB; el SQL solo no guarda todas las preferencias ni la disposición visual.',
           'En un diagrama o perfil de navegador nuevo, elegí File → Import from → JSON, seleccioná el JSON guardado y pulsá Import. Comprobá que vuelvan las tablas y su relación antes de quitar tu copia de trabajo.',
         ],
-        success: 'La aplicación publicada importó el SQL ficticio, exportó las definiciones y la clave foránea y recuperó el JSON en un contexto nuevo. El diagrama local sobrevivió a una recarga. No se contactó una base real.',
+        success: "El diagrama muestra authors y books unidos por una clave foránea. El JSON vuelve a abrir como diagrama editable y el SQL exportado contiene ambas tablas.",
         troubleshooting: 'Acá no está disponible compartir en línea. Enviá vos un JSON o SQL revisado. La sintaxis admitida varía según la base: revisá manualmente los esquemas complejos. Empezá con menos tablas si el navegador se vuelve lento.',
         privacy: 'Este recorrido procesa el esquema en tu navegador. Los diagramas persisten al cerrar la pestaña; las descargas quedan hasta que las eliminés. Las aplicaciones de tools.utilibre.org comparten origen: borrar todos sus datos puede quitar trabajo de otras herramientas. Descargar la aplicación genera metadatos de conexión. Las exportaciones no están cifradas.',
         next: 'Conservá el JSON editable y el SQL revisado por separado. Quitá nombres, comentarios y valores sensibles antes de compartir.',
@@ -48,7 +48,7 @@ export const browserAdditionGuides: PracticalGuide[] = [
     copy: {
       en: {
         title: 'Prepare a PDF for booklet binding', intro: "Arrange PDF pages into folded sections and add binding marks with Bookbinder JS. Start with a small digital check before spending paper.",
-        prerequisites: 'Keep the original PDF and download the eight-page fictional sample. Controls are in English. This guide checks generated order; physical printing, folding and binding have not been tested on your equipment.',
+        prerequisites: 'Keep the original PDF and download the eight-page fictional sample. Controls are in English. Check the exported page order before printing; your printer and folding method can change the physical result.',
         steps: [
           'Choose the sample in the PDF picker. Set Page Layout to Folio, choose Booklet and set flyleaf pages to 0 for this first check.',
           'Choose Duplex for printer type and the aggregated output option. Review paper size and margins. Do not assume one duplex flip setting works with every printer.',
@@ -56,14 +56,14 @@ export const browserAdditionGuides: PracticalGuide[] = [
           'Open the extracted PDF. These settings produce four sides with left-to-right page pairs 5/4, 3/6, 7/2 and 1/8: the application’s center-out order. Check that each input page occurs once.',
           'Make a small physical trial on your printer, mark paper orientation and check folds before printing a long book. Change one setting at a time. For larger projects, explore signature length, margins, creep and binding marks and verify that output separately.',
         ],
-        success: 'The deployed app produced a ZIP with a four-side PDF containing all eight numbered pages in that order. This verifies digital imposition only, not printer alignment, paper handling or binding quality.',
+        success: "The downloaded ZIP contains a PDF with the eight sample pages arranged across four sides. Check their order in a PDF viewer before printing.",
         troubleshooting: 'Blank pages can be intentional padding or flyleaves; check those settings. Large PDFs need browser memory. BentoPDF’s basic booklet uses a different ordering: do not mix the instructions.',
         privacy: 'The tested PDF processing stays in your browser. Preferences can remain after tab closure. Originals, ZIPs and PDFs stay on your device. App delivery creates connection metadata; clearing tools.utilibre.org site data can also remove other tools’ local work. This process does not encrypt the PDFs.',
         next: 'Keep the original and checked imposed PDF separately. Record the settings that worked for your printer and binding method.',
       },
       es: {
         title: 'Prepará un PDF para encuadernar', intro: "Ordená las páginas de un PDF para doblarlas en cuadernillos y agregá marcas con Bookbinder JS. Empezá con una prueba digital pequeña antes de gastar papel.",
-        prerequisites: 'Conservá el original y descargá el PDF ficticio de ocho páginas. Los controles están en inglés. Esta guía verifica el orden generado: no se probaron impresión, dobleces ni encuadernación en tu equipo.',
+        prerequisites: 'Conservá el original y descargá el PDF ficticio de ocho páginas. Los controles están en inglés. Revisá el orden exportado antes de imprimir; la impresora y la forma de doblar pueden cambiar el resultado físico.',
         steps: [
           "Seleccioná el ejemplo en el selector de PDF. Elegí Folio en Page Layout, Booklet y 0 páginas de guarda (flyleaf) para esta primera prueba.",
           'Elegí Duplex como tipo de impresora y la salida agregada. Revisá tamaño y márgenes. No asumás que un mismo ajuste de volteo a doble cara sirve en todas las impresoras.',
@@ -71,7 +71,7 @@ export const browserAdditionGuides: PracticalGuide[] = [
           'Abrí el PDF extraído. Con estos ajustes, las cuatro caras muestran de izquierda a derecha 5/4, 3/6, 7/2 y 1/8: el orden desde el centro hacia afuera de la aplicación. Comprobá que cada página aparezca una vez.',
           'Hacé una prueba física pequeña, marcá la orientación del papel y revisá los dobleces antes de imprimir un libro largo. Cambiá un ajuste por vez. Para trabajos mayores, explorá longitud del cuadernillo, márgenes, compensación por grosor y marcas; verificá esa salida por separado.',
         ],
-        success: 'La aplicación publicada produjo un ZIP con un PDF de cuatro caras y las ocho páginas en ese orden. Solo verifica la imposición digital, no alineación, manejo del papel ni calidad de encuadernación.',
+        success: "El ZIP descargado contiene un PDF con las ocho páginas de ejemplo distribuidas en cuatro caras. Revisá el orden en un visor antes de imprimir.",
         troubleshooting: 'Las páginas blancas pueden ser relleno o guardas: revisá esos ajustes. Los PDF grandes consumen memoria. El folleto básico de BentoPDF usa otro orden: no mezclés las instrucciones.',
         privacy: 'El procesamiento probado queda en tu navegador. Las preferencias pueden persistir al cerrar la pestaña. Originales, ZIP y PDF permanecen en tu dispositivo. Descargar la aplicación genera metadatos de conexión; borrar los datos de tools.utilibre.org puede quitar trabajo de otras herramientas. Este proceso no cifra los PDF.',
         next: 'Conservá por separado el original y el PDF impuesto revisado. Anotá los ajustes que funcionaron con tu impresora y encuadernación.',
@@ -84,7 +84,7 @@ export const browserAdditionGuides: PracticalGuide[] = [
     copy: {
       en: {
         title: 'Create a 3D box and save its editable project', intro: "Build a simple box, then keep two copies: an editable SKF project and an STL mesh for your slicer.",
-        prerequisites: 'Use a current browser with WebGL, WebAssembly and downloads. The first load includes sizeable geometry components. Start with a fictional box; no account or server library is needed. Controls are in English.',
+        prerequisites: 'The editor needs WebGL and WebAssembly support. Its first load includes sizeable geometry components. Start with a fictional box; no account or server library is needed. Controls are in English.',
         steps: [
           'Choose Create new 3D design, then Add shape → Box. Inspect the shape on the workplane before trying complex geometry.',
           'Choose Export, the STL format and Export STL. Save the mesh. STL describes triangle geometry: it is not the full editable project or proof that a physical print will succeed.',
@@ -92,14 +92,14 @@ export const browserAdditionGuides: PracticalGuide[] = [
           'Return to Home dashboard and reload. Your local work should remain available through Continue workplane. Browser storage is working state, not your only backup.',
           'Choose Import → Open SketchForge Project and select the saved .skf. Check the box and export another STL. Compare the reopened model before deleting an original or local project.',
         ],
-        success: 'A fictional box produced a valid binary STL. Native import reopened its SKF after a reload and produced an STL with the same triangle count. Complex assemblies, all formats and physical printing were not tested.',
+        success: "The saved SKF reopens with the practice box, and the exported STL opens in a compatible model viewer. Keep the SKF for further editing.",
         troubleshooting: 'Heavy models can exceed your device’s memory or graphics capability. This static installation has no shared server library, server API or update service. Importing a mesh does not recreate its original modeling history.',
         privacy: 'Geometry runs in the browser with locally served components. Native project state persists after tab closure. SKF and STL downloads remain until deleted and are not automatically encrypted. Tools share the tools.utilibre.org origin: clearing all site data can remove other apps’ work. App delivery creates connection metadata.',
         next: 'Use your slicer to inspect scale, orientation and manufacturability before printing. Keep an independent SKF backup when making significant changes.',
       },
       es: {
         title: 'Creá una caja 3D y guardá su proyecto editable', intro: "Creá una caja sencilla y guardá dos copias: el proyecto editable SKF y una malla STL para tu programa de laminado.",
-        prerequisites: 'Usá un navegador actual con WebGL, WebAssembly y descargas. La primera carga incluye componentes geométricos grandes. Empezá con una caja ficticia: no necesitás cuenta ni biblioteca del servidor. Los controles están en inglés.',
+        prerequisites: 'El editor necesita WebGL y WebAssembly. La primera carga incluye componentes geométricos grandes. Empezá con una caja ficticia: no necesitás cuenta ni biblioteca del servidor. Los controles están en inglés.',
         steps: [
           'Elegí Create new 3D design y Add shape → Box. Inspeccioná la forma en el plano de trabajo antes de probar geometría compleja.',
           'Elegí Export, el formato STL y Export STL. Guardá la malla. STL describe triángulos: no es el proyecto editable completo ni demuestra que una impresión física funcione.',
@@ -107,7 +107,7 @@ export const browserAdditionGuides: PracticalGuide[] = [
           'Volvé a Home dashboard y recargá. El trabajo local debería seguir disponible en Continue workplane. El almacenamiento del navegador sirve para trabajar, no como único respaldo.',
           'Elegí Import → Open SketchForge Project y seleccioná el .skf. Revisá la caja y exportá otro STL. Compará el modelo recuperado antes de borrar un original o proyecto local.',
         ],
-        success: 'Una caja ficticia produjo un STL binario válido. La importación nativa recuperó el SKF después de recargar y generó un STL con la misma cantidad de triángulos. No se probaron conjuntos complejos, todos los formatos ni impresión física.',
+        success: "El SKF guardado vuelve a abrir con la caja de práctica y el STL se abre en un visor compatible. Conservá el SKF para seguir editando.",
         troubleshooting: 'Los modelos pesados pueden superar la memoria o capacidad gráfica de tu dispositivo. Esta instalación estática no tiene biblioteca compartida, API de servidor ni actualizador. Importar una malla no reconstruye su historial original.',
         privacy: 'La geometría se procesa en el navegador con componentes servidos localmente. Los proyectos persisten al cerrar la pestaña. Los SKF y STL quedan hasta que los eliminés y no se cifran automáticamente. Las herramientas comparten tools.utilibre.org: borrar sus datos puede quitar trabajo de otras aplicaciones. Descargar la aplicación genera metadatos de conexión.',
         next: 'Usá tu programa de laminado para revisar escala, orientación y viabilidad antes de imprimir. Guardá un SKF independiente cuando hagás cambios importantes.',
@@ -120,7 +120,7 @@ export const browserAdditionGuides: PracticalGuide[] = [
     copy: {
       en: {
         title: 'Make a background sound mix', intro: 'Choose rain, forest birds, waves, a stream, wind, a fire, café sounds, crickets, a train or thunder. You can combine them with white, pink or brown noise and save a mix for later.',
-        prerequisites: 'Use a current browser with audio enabled and start at low volume. Opening the app can download about 21 MiB for its offline cache. Main controls remain in English. Audio and timers can pause when a device sleeps; do not rely on them for a critical alarm.',
+        prerequisites: 'Start playback at low volume. Opening the app can download about 21 MiB for its offline cache. Main controls remain in English. Audio and timers can pause when a device sleeps; do not rely on them for a critical alarm.',
         steps: [
           'Open Moodist and select Rain. Adjust its slider and the master volume, then add Coffee Shop at a lower level. Select a sound again to remove it from the mix.',
           'For a starting combination, choose Play a mix, then Rainy café, Forest stream, By the fire or Seaside. This replaces the current selection; you can adjust every sound afterward.',
@@ -135,7 +135,7 @@ export const browserAdditionGuides: PracticalGuide[] = [
       },
       es: {
         title: 'Armá una mezcla de sonidos de fondo', intro: 'Elegí lluvia, pájaros, olas, un arroyo, viento, fuego, una cafetería, grillos, un tren o truenos. Podés combinarlos con ruido blanco, rosa o marrón y guardar una mezcla para después.',
-        prerequisites: 'Usá un navegador actual con audio habilitado y empezá a volumen bajo. Abrir la aplicación puede descargar unos 21 MiB para la caché sin conexión. Los controles principales están en inglés. Audio y temporizadores pueden pausarse cuando el dispositivo duerme: no los usés como alarma crítica.',
+        prerequisites: 'Empezá la reproducción a volumen bajo. Abrir la aplicación puede descargar unos 21 MiB para la caché sin conexión. Los controles principales están en inglés. Audio y temporizadores pueden pausarse cuando el dispositivo duerme: no los usés como alarma crítica.',
         steps: [
           'Abrí Moodist y elegí Rain (lluvia). Ajustá su control de volumen y el volumen general; después agregá Coffee Shop (cafetería) a un nivel más bajo. Elegí un sonido otra vez para quitarlo de la mezcla.',
           'Para empezar con una combinación, elegí Play a mix y después Rainy café, Forest stream, By the fire o Seaside. Esto reemplaza la selección actual; después podés ajustar cada sonido.',
@@ -157,7 +157,7 @@ export const browserAdditionGuides: PracticalGuide[] = [
     copy: {
       en: {
         title: 'Inspect SQL and back up a ChartDB diagram', intro: 'ChartDB turns schema definitions into a diagram without connecting to your database. Save a native JSON backup for later editing.',
-        prerequisites: 'Download the fictional SQL and open it in a text editor. It describes authors and books with one relationship, not real records. Use a current browser and start small.',
+        prerequisites: 'Download the fictional SQL and open it in a text editor. It describes authors and books with one relationship, not real records. Keep an untouched copy before importing or editing it.',
         steps: [
           'Open ChartDB and choose PostgreSQL. In the import dialog, choose SQL Script, paste the fictional SQL and choose Import.',
           'Check authors, books and the relationship from author_id to authors.id. Inspect before editing. A diagram does not prove that a live database has the same structure.',
@@ -165,14 +165,14 @@ export const browserAdditionGuides: PracticalGuide[] = [
           'Choose Backup → Export Diagram → Export and save the JSON. It contains diagram metadata, tables, relationships, dependencies, areas, custom types and notes, not database rows or a complete database backup.',
           'Check it in a fresh browser profile: choose Import from File, select the JSON and Import. Confirm both tables return. Keep independent copies before deleting a diagram or clearing browser data.',
         ],
-        success: 'The deployed app imported the fictional schema, generated PostgreSQL SQL and copied it through the native control. JSON restored both tables in a fresh context; reload retained the local diagram. No live metadata query was run.',
+        success: "The diagram shows both tables and their relationship. Reimporting the JSON restores the editable diagram; the SQL contains the same table definitions.",
         troubleshooting: 'Check filters when exporting: excluded parts can affect output. Native metadata-query instructions require you to run queries yourself on a database you control. Read queries and inspect output before using it; never paste credentials. Large schemas consume browser memory.',
         privacy: 'This workflow processes schemas in the browser and keeps diagrams locally after tab closure. Cloud sharing, analytics and AI services are disabled here. SQL and JSON downloads are unencrypted. Other apps share tools.utilibre.org: clearing all site data can remove their work too. App delivery creates connection metadata.',
         next: 'Keep JSON for compatible ChartDB imports. Review SQL before running it; remove sensitive identifiers, comments and defaults before sharing.',
       },
       es: {
         title: 'Inspeccioná SQL y respaldá un diagrama de ChartDB', intro: 'ChartDB convierte esquemas en diagramas sin conectarse a tu base de datos. Guardá un JSON nativo para editar después.',
-        prerequisites: 'Descargá el SQL ficticio y abrilo en un editor de texto. Describe authors y books con una relación, no registros reales. Usá un navegador actual y empezá con poco.',
+        prerequisites: 'Descargá el SQL ficticio y abrilo en un editor de texto. Describe authors y books con una relación, no registros reales. Conservá una copia intacta antes de importarlo o editarlo.',
         steps: [
           'Abrí ChartDB y elegí PostgreSQL. En el diálogo, elegí SQL Script, pegá el SQL ficticio y pulsá Import. Estos pasos usan los rótulos en inglés.',
           'Revisá authors, books y la relación de author_id con authors.id antes de editar. Un diagrama no demuestra que una base real tenga esa estructura.',
@@ -180,7 +180,7 @@ export const browserAdditionGuides: PracticalGuide[] = [
           'Elegí Backup → Export Diagram → Export y guardá el JSON. Incluye metadatos, tablas, relaciones, dependencias, áreas, tipos propios y notas, no registros ni un respaldo completo de tu base.',
           'Probalo en un perfil de navegador nuevo: elegí Import from File, seleccioná el JSON y pulsá Import. Comprobá ambas tablas. Conservá copias independientes antes de borrar un diagrama o los datos del navegador.',
         ],
-        success: 'La aplicación publicada importó el esquema ficticio, generó su SQL PostgreSQL y lo copió con el control nativo. El JSON recuperó ambas tablas en un contexto nuevo; recargar conservó el diagrama local. No se ejecutó una consulta en una base real.',
+        success: "El diagrama muestra ambas tablas y su relación. Al importar el JSON vuelve el diagrama editable; el SQL contiene las definiciones de las mismas tablas.",
         troubleshooting: 'Revisá los filtros: las partes excluidas pueden afectar la exportación. Las consultas nativas requieren que las ejecutés vos en una base bajo tu control. Leelas e inspeccioná su salida; nunca pegués credenciales. Los esquemas grandes consumen memoria.',
         privacy: 'Este recorrido procesa esquemas en el navegador y conserva los diagramas al cerrar la pestaña. Acá están desactivados compartir en la nube, analítica y servicios de IA. SQL y JSON se descargan sin cifrado. Otras aplicaciones comparten tools.utilibre.org: borrar sus datos puede quitar trabajo de ellas. Descargar la aplicación genera metadatos de conexión.',
         next: 'Conservá el JSON para importaciones compatibles. Revisá SQL antes de ejecutarlo y quitá identificadores, comentarios y valores sensibles antes de compartir.',

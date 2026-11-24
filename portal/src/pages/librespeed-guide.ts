@@ -8,7 +8,7 @@ export const librespeedGuides: PracticalGuide[] = [{
     en: {
       title: 'Check your connection to Utilibre',
       intro: 'Run a short LibreSpeed test to compare download, upload and response time. It measures one route to a shared server, not the whole Internet.',
-      prerequisites: 'Use a current browser with JavaScript and workers. No account or personal file is needed. A test may consume hundreds of MB or several GB, so avoid it on a limited mobile-data plan. Stop your own optional large downloads before comparing results; do not disable security protections.',
+      prerequisites: 'No account or personal file is needed. A test may consume hundreds of MB or several GB, so avoid it on a limited mobile-data plan. Stop your own optional large downloads before comparing results; do not disable security protections.',
       steps: [
         'Open LibreSpeed and read its limits. The page does not start a test automatically. Pick English or Español before starting.',
         'Choose Start test. The app measures Ping and Jitter, then Download and Upload using generated data. Leave the tab visible. Choose Stop test if you need to cancel.',
@@ -24,7 +24,7 @@ export const librespeedGuides: PracticalGuide[] = [{
     es: {
       title: 'Revisá tu conexión con Utilibre',
       intro: 'Hacé una prueba breve con LibreSpeed para comparar descarga, subida y tiempo de respuesta. Mide una ruta hacia un servidor compartido, no todo Internet.',
-      prerequisites: 'Usá un navegador actual con JavaScript y workers. No necesitás cuenta ni archivo personal. Una prueba puede consumir cientos de MB o varios GB: evitala con un plan de datos móviles limitado. Detené tus descargas grandes opcionales antes de comparar; no desactivés protecciones de seguridad.',
+      prerequisites: 'No necesitás cuenta ni archivo personal. Una prueba puede consumir cientos de MB o varios GB: evitala con un plan de datos móviles limitado. Detené tus descargas grandes opcionales antes de comparar; no desactivés protecciones de seguridad.',
       steps: [
         'Abrí LibreSpeed y leé sus límites. La página no inicia pruebas automáticamente. Elegí Español o English antes de comenzar.',
         'Elegí Iniciar prueba. La aplicación mide Latencia y Variación, y luego Descarga y Subida con datos generados. Dejá visible la pestaña. Elegí Detener prueba si necesitás cancelar.',

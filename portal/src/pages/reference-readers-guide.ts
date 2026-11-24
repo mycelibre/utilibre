@@ -9,8 +9,8 @@ export const referenceReaderGuides: PracticalGuide[] = [
     copy: {
       en: {
         title: 'Look up and read a Wikimedia article',
-        intro: 'Read a public Wikimedia article through a simpler interface. No account is needed. Wikimore has its own interface language; this guide is available in English and Spanish.',
-        prerequisites: 'Use a browser with Internet access. Wikimedia content and references can change. Verify important claims against the cited source or original Wikimedia page.',
+        intro: 'Read a public Wikimedia article through a simpler interface. Choose the project and article language in Wikimore; no account is needed.',
+        prerequisites: 'This example uses Spanish Wikipedia. Articles and citations can change; check the cited source when a fact matters.',
         steps: [
           'Open Wikimore. Choose Wikipedia under Project and Español under Language, then search for Volcán de Fuego.',
           'Open the matching article and read the introduction and source citations. Follow an internal link to another topic and use your browser Back control to return.',
@@ -24,8 +24,8 @@ export const referenceReaderGuides: PracticalGuide[] = [
       },
       es: {
         title: 'Buscá y leé un artículo de Wikimedia',
-        intro: 'Leé un artículo público de Wikimedia en una interfaz más simple. No necesitás cuenta. Wikimore tiene su propio idioma de interfaz; esta guía está en español e inglés.',
-        prerequisites: 'Necesitás un navegador con Internet. El contenido y las referencias de Wikimedia pueden cambiar. Verificá afirmaciones importantes en la fuente citada o en la página original.',
+        intro: 'Leé un artículo público de Wikimedia en una interfaz más simple. Elegí el proyecto y el idioma del artículo en Wikimore; no necesitás cuenta.',
+        prerequisites: 'El ejemplo usa Wikipedia en español. Los artículos y sus fuentes pueden cambiar; verificá los datos importantes en la fuente citada.',
         steps: [
           'Abrí Wikimore. Elegí Wikipedia en Project y Español en Language; buscá Volcán de Fuego.',
           'Abrí el artículo y leé la introducción y las fuentes. Seguí un enlace interno y usá Atrás en el navegador para volver.',
@@ -48,7 +48,7 @@ export const referenceReaderGuides: PracticalGuide[] = [
       en: {
         title: 'Find chords and practice a song',
         intro: 'Look up a song on Freetar, adjust the practice view and keep a browser favorite. No account is needed. The app interface is in English.',
-        prerequisites: 'Use a browser with Internet access. Results come from Ultimate Guitar and belong to their publishers. A keyboard or larger screen helps with transposing and print preview.',
+        prerequisites: 'Freetar retrieves songs from Ultimate Guitar, so a missing result may depend on that site. A keyboard or larger screen helps with transposing and print preview.',
         steps: [
           'Open Freetar and search for Guantanamera. Choose a Chords result from the list.',
           'Read the chord sheet. Try Autoscroll, adjust its speed, then turn it off before leaving the page.',
@@ -63,7 +63,7 @@ export const referenceReaderGuides: PracticalGuide[] = [
       es: {
         title: 'Buscá acordes y practicá una canción',
         intro: 'Encontrá una canción en Freetar, ajustá la vista para practicar y guardá un favorito en el navegador. No necesitás cuenta. La aplicación está en inglés.',
-        prerequisites: 'Necesitás un navegador con Internet. Los resultados provienen de Ultimate Guitar y pertenecen a sus autores. Un teclado o pantalla grande ayuda con la transposición y la vista de impresión.',
+        prerequisites: 'Freetar obtiene canciones de Ultimate Guitar; si falta un resultado, puede depender de ese sitio. Un teclado o una pantalla grande facilitan la transposición y la vista de impresión.',
         steps: [
           'Abrí Freetar y buscá Guantanamera. Elegí un resultado Chords de la lista.',
           'Leé los acordes. Probá Autoscroll, ajustá la velocidad y apagalo antes de salir.',

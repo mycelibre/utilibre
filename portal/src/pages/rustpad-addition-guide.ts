@@ -8,7 +8,7 @@ export const rustpadAdditionGuides: PracticalGuide[] = [{
     en: {
       title: 'Edit a short code example together',
       intro: 'Use Rustpad when you want another person to see and edit the same text while you discuss it. It is a temporary scratchpad, so keep your own file too.',
-      prerequisites: 'Use a current browser with JavaScript, WebAssembly and WebSockets enabled. Use fictional or non-confidential text: Utilibre processes readable document content, and anyone with the sharing link can read and change it. The interface uses English labels.',
+      prerequisites: 'Your browser must support WebAssembly and your network must allow WebSocket connections. Use fictional or non-confidential text: Utilibre processes readable document content, and anyone with the sharing link can read and change it. The interface uses English labels.',
       steps: [
         'Open Rustpad. The browser generates a random document link. Keep that generated address rather than replacing its identifier with a guessable word.',
         'Type a short example in the editor. On a wider screen, Language changes syntax highlighting. Choose your entry marked (you) under Active Users to open Update Info and change your display name. A name does not verify who someone is, and choosing a language does not execute the code.',
@@ -24,7 +24,7 @@ export const rustpadAdditionGuides: PracticalGuide[] = [{
     es: {
       title: 'Editá un ejemplo breve de código en grupo',
       intro: 'Usá Rustpad cuando querás que otra persona vea y edite el mismo texto mientras lo comentan. Es un espacio temporal, así que conservá también tu propio archivo.',
-      prerequisites: 'Usá un navegador actual con JavaScript, WebAssembly y WebSockets habilitados. Usá texto ficticio o no confidencial: Utilibre procesa el contenido legible y cualquiera que tenga el enlace puede leerlo y modificarlo. La interfaz usa etiquetas en inglés.',
+      prerequisites: 'Tu navegador debe admitir WebAssembly y la red debe permitir conexiones WebSocket. Usá texto ficticio o no confidencial: Utilibre procesa el contenido legible y cualquiera que tenga el enlace puede leerlo y modificarlo. La interfaz usa etiquetas en inglés.',
       steps: [
         'Abrí Rustpad. El navegador genera un enlace aleatorio para el documento. Conservá esa dirección en vez de sustituir su identificador por una palabra fácil de adivinar.',
         'Escribí un ejemplo breve en el editor. En una pantalla amplia, Language cambia el resaltado de sintaxis. Elegí tu entrada marcada (you) en Active Users para abrir Update Info y cambiar tu nombre visible. Ese nombre no verifica la identidad y elegir un lenguaje no ejecuta el código.',

@@ -4,8 +4,8 @@ export const familyChessGuides: PracticalGuide[] = [{
   copy: {
     en: {
       title: 'Play a game of chess with someone you know',
-      intro: 'Family Chess gives two people a shared board. Create a game, send the link and choose your sides; there is no account to set up. Public HTTPS multiplayer and live updates were checked with a fictional game.',
-      prerequisites: 'Use a browser with JavaScript and keep the connection open. The interface offers English and Spanish. Anyone with the eight-digit code can watch or occupy an empty seat, so use this for ordinary games rather than confidential communication.',
+      intro: 'Family Chess gives two people a shared board. Create a game, send the link and choose your sides; there is no account to set up.',
+      prerequisites: 'Keep the game open on both devices until you finish. The interface offers English and Spanish. Anyone with the eight-digit code can watch or occupy an empty seat, so use this for ordinary games rather than confidential communication.',
       steps: [
         'Open Family Chess and choose Create New Game. Copy the address with Share Link and send it to the other player.',
         'Choose White or Black, then confirm with the readiness button. The other player chooses the remaining side and confirms too. A color reservation lasts three minutes.',
@@ -20,8 +20,8 @@ export const familyChessGuides: PracticalGuide[] = [{
     },
     es: {
       title: 'Jugá una partida de ajedrez con alguien que conocés',
-      intro: 'Family Chess les da un tablero compartido a dos personas. Creá la partida, enviá el enlace y elijan sus lados; no hace falta crear una cuenta. El juego compartido por HTTPS público y las actualizaciones en vivo se verificaron con una partida ficticia.',
-      prerequisites: 'Usá un navegador con JavaScript y mantené la conexión. La interfaz ofrece inglés y español. Cualquiera con el código de ocho dígitos puede mirar u ocupar un lugar vacío; usalo para partidas comunes, no para comunicar información confidencial.',
+      intro: 'Family Chess les da un tablero compartido a dos personas. Creá la partida, enviá el enlace y elijan sus lados; no hace falta crear una cuenta.',
+      prerequisites: 'Mantené la partida abierta en ambos dispositivos hasta terminar. La interfaz ofrece inglés y español. Cualquiera con el código de ocho dígitos puede mirar u ocupar un lugar vacío; usalo para partidas comunes, no para comunicar información confidencial.',
       steps: [
         'Abrí Family Chess y elegí Crear partida. Copiá la dirección con Compartir enlace y enviásela a la otra persona.',
         'Elegí blancas o negras y confirmá que estás listo con el botón de preparación. La otra persona elige el lado restante y también confirma. La reserva de color dura tres minutos.',
