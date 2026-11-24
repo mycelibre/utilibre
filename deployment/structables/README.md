@@ -55,9 +55,10 @@ Reserved backend port: **3242**. Intended URL:
 `https://structables.utilibre.org/`. Edge routing is on the separate Caddy VM.
 Use the Caddyfile here, setting its existing `UTILIBRE_APP_IP` environment
 variable. Keep global access/error logging exclusions in place. DNS already
-resolves through the existing Cloudflare setup; TLS must be checked after
-the site block is installed. The October image-retrieval blocker passed its
-24 November retest; the portal remains non-launchable until public edge checks pass.
+resolves through the existing Cloudflare setup. The October image-retrieval
+blocker passed its 24 November retest; public HTTPS, a real search/project
+journey and portal activation are recorded in
+`docs/records/reference-readers-2026-11-24.md`.
 
 Validate with `docker compose --env-file .env -f deployment/structables/compose.yaml config --quiet`.
 The service binds only `PRIVATE_BIND_IP`; no wildcard, database or cache port.

@@ -112,6 +112,30 @@ applied its site blocks. Public journeys passed, and the catalogue IDs were
 enabled in the portal release. The portal now serves all three bilingual
 catalogue entries and guides. The outside Uptime Kuma inventory was regenerated
 from the live public configuration: 95 checks cover 109 enabled IDs. Applying
-that inventory on its separate VM still needs operator access. Upstream instance-list submissions are
-separate external review requests; submitting them does not establish
-acceptance or listing.
+that inventory on its separate VM still needs operator access.
+
+## Upstream public-instance lists
+
+Wikimore and Freetar entries were prepared against their current upstream
+lists and pushed as one-commit branches in public forks:
+
+- Wikimore: `mycelibre/wikimore:add-utilibre-instance` (`adc3f83`), updating
+  `instances.json` and its generated README with
+  `https://wikimore.utilibre.org/`.
+- Freetar: `mycelibre/freetar:add-utilibre-instance` (`c099580`), updating the
+  README with `https://tabs.utilibre.org/`.
+
+The Structables entry was also pushed to a public GitHub fork
+(`mycelibre/structables:add-utilibre-instance`, `451a760`), but a later
+comparison showed that GitHub's default branch is behind the canonical Forgejo
+source (`eb243f7` versus `2f6b796`). That fork branch must not be proposed as a
+current-source pull request. The current Forgejo README explicitly accepts a
+pull request or issue, including an issue on GitHub. A current-source issue
+draft was prepared instead.
+
+GitHub accepted the fork pushes; the Wikimore and Freetar upstream comparisons
+are each one commit ahead and zero behind. The available fine-grained GitHub
+token returned HTTP 403 when creating an upstream pull request or issue; no
+request was opened at this point. A separate GitHub device authorization was
+requested to complete submission. Publication still requires each upstream
+maintainer's review and merge; a submitted request is not an accepted listing.
