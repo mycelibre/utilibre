@@ -59,8 +59,30 @@ limits, source and rollback. No production account or user data is migrated.
   not a load test or concurrency claim. At that point the VM had 21 GiB
   available RAM and 80 GiB available root-disk space.
 - All three release images now run behind private IP ports 3242–3244 and their
-  health routes and representative project/article routes return 200. The
-  external Caddy site blocks and public HTTPS journeys remain to be checked.
+  health routes and representative project/article routes return 200.
+
+## Public checks observed
+
+- The operator validated and reloaded three edge Caddy site blocks. Public
+  HTTPS now returns 200 at `wikimore.utilibre.org`, `tabs.utilibre.org` and
+  `structables.utilibre.org`. The pre-existing `wiki.utilibre.org` still serves
+  BreezeWiki. Edge configuration itself was not readable from this VM; these
+  are route observations, not a claim to have independently audited that VM.
+- Native public searches returned results: Spanish `Volcán de Fuego` in
+  Wikimore, `guantanamera` in Freetar, and `paper airplane` in Structables.
+  The selected article, chord sheet and numbered project returned 200.
+- Clean Playwright Chromium desktop and iPhone-size emulation loaded three
+  Wikimore article images, the Freetar sheet's 71 chord spans and six
+  Structables project images. The desktop view loaded more Wikimore images.
+  Both views reported zero unrelated browser origins and zero page-script
+  errors. Freetar saved a favorite in its own localStorage and exported the
+  native `freetar-favorites.json` download. These are synthetic tests;
+  physical-phone behavior remains unverified.
+- The three public corresponding-source routes return 200 and `no-store`.
+  The first Structables response exposed a four-hour cache header; a focused
+  application change now serves the archive with `no-store` at the public URL.
+  Final Structables archive SHA-256 is
+  `105b44636ab2a49ce469141564e5facd353c7029306c057963359c7ab498b9fe`.
 
 ## Privacy and maintenance
 
@@ -85,9 +107,8 @@ represented as accepted upstream.
 
 ## Release boundary
 
-The separate edge Caddy VM is not SSH-accessible from this VM. The private
-backends can be activated and checked here, but public HTTPS and upstream
-instance-list submissions require the three reviewed Caddy site blocks,
-followed by public-route/browser checks. Catalogue IDs must remain disabled
-until those checks pass. Maintainer acceptance of instance submissions is
-external and cannot be asserted by Utilibre.
+The separate edge Caddy VM is not SSH-accessible from this VM. The operator
+applied its site blocks. Public journeys passed, so the catalogue IDs can be
+enabled in the portal release. Upstream instance-list submissions are
+separate external review requests; submitting them does not establish
+acceptance or listing.

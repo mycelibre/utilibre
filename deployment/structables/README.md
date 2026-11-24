@@ -44,7 +44,8 @@ record its identity/date and do not call an archived scan current clearance.
 - `wsgi.py`: native Flask/Gunicorn integration, HTML sanitizer, narrow method
   and form limits, CSP, no-referrer/noindex, safe media download headers,
   health and fixed corresponding-source routes. Public cron and frame routes
-  are disabled. The native theme script is hash-authorized; no telemetry.
+  are disabled. The source archive is marked no-store so a corrected bundle
+  is served immediately. The native theme script is hash-authorized; no telemetry.
 - `privacy.md`: uses the upstream-supported policy file, with catalogue and
   exact-source links. Native upstream identity and notices remain.
 

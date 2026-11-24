@@ -75,7 +75,7 @@ def response_boundary(response):
         if response.mimetype not in ('image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/avif'):
             response.headers['Content-Disposition'] = 'attachment'
             response.headers['Content-Type'] = 'application/octet-stream'
-    elif not request.path.startswith(('/static/', '/utilibre-source/')):
+    elif not request.path.startswith('/static/'):
         response.headers['Cache-Control'] = 'no-store'
     return response
 

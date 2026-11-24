@@ -155,6 +155,7 @@ services:
         librespeed=https://speed.utilibre.org/healthz,
         texlyre=https://latex.utilibre.org/,
         wallabag=https://wallabag.utilibre.org/login,
+        wikimore=https://wikimore.utilibre.org/healthz,freetar=https://tabs.utilibre.org/healthz,structables=https://structables.utilibre.org/healthz,
         knit=https://tools.utilibre.org/apps/knit/,newton=https://tools.utilibre.org/apps/newton/,
         family-chess=https://chess.utilibre.org/,donetick=https://chores.utilibre.org/,beaverhabits=https://habits.utilibre.org/login,projects=https://projects.utilibre.org/,trip=https://trip.utilibre.org/,
         kokoro-web=https://tools.utilibre.org/apps/kokoro-web/,rustpad=https://tools.utilibre.org/apps/rustpad/,autoredact=https://tools.utilibre.org/apps/autoredact/,gravity=https://tools.utilibre.org/apps/gravity/,

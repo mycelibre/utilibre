@@ -3,6 +3,7 @@ import io
 import unittest
 from urllib.error import URLError
 from unittest.mock import patch
+from flask import send_file
 from structables import safe_http
 
 
@@ -73,6 +74,13 @@ class WebTests(unittest.TestCase):
         self.assertEqual(r.headers['Referrer-Policy'], 'no-referrer')
         self.assertIn("frame-src 'none'", r.headers['Content-Security-Policy'])
         self.assertNotIn('Set-Cookie', r.headers)
+        with patch.object(self.wsgi, 'send_from_directory',
+                          side_effect=lambda *_args, **_kwargs: send_file(
+                              io.BytesIO(b'archive'), download_name='source.tar.gz')):
+            source = self.client.get('/utilibre-source/structables-utilibre.tar.gz')
+        self.assertEqual(source.status_code, 200)
+        self.assertEqual(source.data, b'archive')
+        self.assertEqual(source.headers['Cache-Control'], 'no-store')
 
     def test_native_article_includes_none_embedtype_images(self):
         fixture = {
