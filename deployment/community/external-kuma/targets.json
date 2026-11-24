@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "source": "Utilibre public catalogue and /_portal/config",
-  "enabledServiceCount": 106,
+  "enabledServiceCount": 109,
   "targets": [
     {
       "id": "portal-health",
@@ -442,6 +442,39 @@
       "interval": 600,
       "services": [
         "13ft"
+      ]
+    },
+    {
+      "id": "structables",
+      "name": "Structables",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://structables.utilibre.org/healthz",
+      "interval": 600,
+      "services": [
+        "structables"
+      ]
+    },
+    {
+      "id": "wikimore",
+      "name": "Wikimore",
+      "group": "Reading",
+      "type": "http",
+      "url": "https://wikimore.utilibre.org/healthz",
+      "interval": 600,
+      "services": [
+        "wikimore"
+      ]
+    },
+    {
+      "id": "freetar",
+      "name": "Freetar",
+      "group": "Creative",
+      "type": "http",
+      "url": "https://tabs.utilibre.org/healthz",
+      "interval": 600,
+      "services": [
+        "freetar"
       ]
     },
     {

@@ -16,6 +16,9 @@ const specialPaths = {
   candlr: '/login',
   bookplate: '/login',
   wallabag: '/login',
+  wikimore: '/healthz',
+  freetar: '/healthz',
+  structables: '/healthz',
   beaverhabits: '/login',
   // The public root has a browser challenge; this native JSON route is exempt.
   gothub: '/api/v1/version',

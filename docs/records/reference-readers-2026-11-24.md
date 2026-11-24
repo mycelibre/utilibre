@@ -108,7 +108,10 @@ represented as accepted upstream.
 ## Release boundary
 
 The separate edge Caddy VM is not SSH-accessible from this VM. The operator
-applied its site blocks. Public journeys passed, so the catalogue IDs can be
-enabled in the portal release. Upstream instance-list submissions are
+applied its site blocks. Public journeys passed, and the catalogue IDs were
+enabled in the portal release. The portal now serves all three bilingual
+catalogue entries and guides. The outside Uptime Kuma inventory was regenerated
+from the live public configuration: 95 checks cover 109 enabled IDs. Applying
+that inventory on its separate VM still needs operator access. Upstream instance-list submissions are
 separate external review requests; submitting them does not establish
 acceptance or listing.

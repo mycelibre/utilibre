@@ -7,9 +7,9 @@ Socket.IO management interface already used by Utilibre's internal Kuma scripts.
 No companion service or scheduler remains running after import. This does not use
 GitHub for checks or status hosting.
 
-The current inventory covers all 106 enabled catalogue service IDs with 89
+The current inventory covers all 109 enabled catalogue service IDs with 92
 distinct application HTTPS endpoints, the portal health and homepage endpoints,
-and one Mumble TCP listener: **92 checks**. Shared application URLs are checked
+and one Mumble TCP listener: **95 checks**. Shared application URLs are checked
 once. Normal application checks run every 10 minutes, SearXNG and the portal
 homepage every 5 minutes, and portal health every 2 minutes. Each new monitor
 has two retries, a 20-second timeout, and **no notification**. The importer
